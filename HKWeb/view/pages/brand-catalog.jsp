@@ -2,7 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="com.hk.web.action.BrandCatalogAction" var="sbbaBean"/>
+<s:useActionBean beanclass="com.hk.web.action.core.catalog.BrandCatalogAction" var="sbbaBean"/>
 
 <s:layout-render name="/layouts/catalogLayout.jsp" pageTitle="${sbbaBean.seoData.title}">
 

@@ -229,7 +229,7 @@
             Brand:
           </span>
           <span class='info'>
-            <s:link beanclass="com.hk.web.action.BrandCatalogAction" class="bl">
+            <s:link beanclass="com.hk.web.action.core.catalog.BrandCatalogAction" class="bl">
               ${pa.product.brand}
               <s:param name="brand" value="${fn:toLowerCase(pa.product.brand)}"/>
               <s:param name="topLevelCategory" value="${pa.topCategoryUrlSlug}"/>
