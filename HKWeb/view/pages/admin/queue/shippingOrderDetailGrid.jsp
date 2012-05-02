@@ -2,10 +2,10 @@
 <%@ page import="com.hk.constants.order.EnumOrderStatus" %>
 <%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus" %>
 <%@ page import="mhc.domain.order.ShippingOrder" %>
-<%@ page import="mhc.web.json.HealthkartResponse" %>
+<%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="java.util.Set" %>
-<%@ page import="mhc.service.dao.MasterDataDao" %>
-<%@ page import="com.hk.constants.RoleConstants" %>
+<%@ page import="com.hk.dao.MasterDataDao" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="com.hk.constants.*" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>

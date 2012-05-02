@@ -1,7 +1,7 @@
-<%@ page import="app.bootstrap.guice.InjectorFactory" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.google.inject.Key" %>
 <%@ page import="com.google.inject.name.Names" %>
-<%@ page import="mhc.web.json.HealthkartResponse" %>
+<%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="com.hk.constants.*" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>

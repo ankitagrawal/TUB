@@ -1,8 +1,8 @@
 <%--
-<%@ page import="com.hk.constants.Keys" %>
+<%@ page import="com.hk.constants.core.Keys" %>
 <%@ page import="com.google.inject.name.Names" %>
 <%@ page import="com.google.inject.Key" %>
-<%@ page import="app.bootstrap.guice.InjectorFactory" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%
   boolean jqueryCdn = InjectorFactory.getInjector().getInstance(Key.get(Boolean.class, Names.named(Keys.Env.jqueryCdn)));

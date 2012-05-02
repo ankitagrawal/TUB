@@ -1,8 +1,8 @@
-<%@ page import="app.bootstrap.guice.InjectorFactory" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="com.hk.constants.EnumCartLineItemType" %>
 <%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus" %>
-<%@ page import="mhc.service.dao.CategoryDao" %>
+<%@ page import="com.hk.dao.catalog.category.CategoryDao" %>
 <%@ page import="mhc.service.shippingOrder.ShippingOrderStatusService" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>

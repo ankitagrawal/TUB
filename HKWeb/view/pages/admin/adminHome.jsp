@@ -1,6 +1,6 @@
-<%@ page import="com.hk.constants.PermissionConstants" %>
-<%@ page import="com.hk.constants.RoleConstants" %>
-<%@ page import="app.bootstrap.guice.InjectorFactory" %>
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="mhc.service.WarehouseService" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>

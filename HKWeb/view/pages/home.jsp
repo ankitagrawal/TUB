@@ -1,5 +1,5 @@
-<%@ page import="com.hk.constants.EnumImageSize" %>
-<%@ page import="com.hk.constants.RoleConstants" %>
+<%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="web.action.HomeAction" var="homeBean" event="pre"/>

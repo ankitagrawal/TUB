@@ -7,7 +7,7 @@
 <%@ page import="mhc.util.FacebookRequest" %>
 <%@ page import="com.google.gson.Gson" %>
 <%@ page import="org.apache.commons.codec.binary.Base64" %>
-<%@ page import="mhc.web.json.HealthkartResponse" %>
+<%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="org.joda.time.DateTime" %>
 <%@ page import="java.util.Date" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>

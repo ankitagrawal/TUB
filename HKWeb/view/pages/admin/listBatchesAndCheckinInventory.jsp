@@ -1,6 +1,6 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="java.util.Date" %>
-<%@ page import="com.hk.constants.RoleConstants" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="web.action.admin.ListBatchesAndCheckinInventory" var="ica"/>

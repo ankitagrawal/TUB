@@ -1,5 +1,5 @@
-<%@ page import="mhc.web.json.HealthkartResponse" %>
-<%@ page import="mhc.service.dao.MasterDataDao" %>
+<%@ page import="com.hk.web.HealthkartResponse" %>
+<%@ page import="com.hk.dao.MasterDataDao" %>
 <%@ page import="com.hk.constants.*" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>

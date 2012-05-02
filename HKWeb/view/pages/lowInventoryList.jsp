@@ -1,4 +1,4 @@
-<%@ page import="app.bootstrap.guice.InjectorFactory" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="mhc.domain.LowInventory" %>
 <%@ page import="mhc.domain.sku.Sku" %>
 <%@ page import="mhc.service.inventory.SkuService" %>

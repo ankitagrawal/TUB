@@ -1,5 +1,5 @@
-<%@ page import="com.hk.constants.HealthkartConstants" %>
-<%@ page import="mhc.web.json.HealthkartResponse" %>
+<%@ page import="com.hk.constants.core.HealthkartConstants" %>
+<%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="web.action.RequestCallbackAction" var="sdcActionBean" event="pre"/>

@@ -1,8 +1,8 @@
-<%@ page import="app.bootstrap.guice.InjectorFactory" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="mhc.service.dao.ComboDao" %>
 <%@ page import="mhc.domain.Combo" %>
-<%@ page import="mhc.web.json.HealthkartResponse" %>
-<%@ page import="com.hk.constants.PermissionConstants" %>
+<%@ page import="com.hk.web.HealthkartResponse" %>
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 

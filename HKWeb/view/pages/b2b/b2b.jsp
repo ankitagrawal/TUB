@@ -1,6 +1,6 @@
 <%@ page import="org.stripesstuff.plugin.security.J2EESecurityManager" %>
-<%@ page import="mhc.web.json.HealthkartResponse" %>
-<%@ page import="web.action.core.auth.LoginAction" %>
+<%@ page import="com.hk.web.HealthkartResponse" %>
+<%@ page import="com.hk.web.action.core.auth.LoginAction" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 

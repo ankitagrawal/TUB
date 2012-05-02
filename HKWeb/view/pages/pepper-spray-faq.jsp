@@ -2,7 +2,7 @@
 <%@page import="mhc.servlet.action.FAQAction"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="java.util.List"%>
-<%@page import="mhc.enums.Level1Category"%>
+<%@page import="com.hk.constants.Level1Category"%>
 <div id="datacontainer"
 	style="position: absolute; left: 1px; top: 10px; width: 100%"
 	onMouseover="scrollspeed=0" onMouseout="scrollspeed=cache">

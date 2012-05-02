@@ -1,11 +1,11 @@
 of<%@ page import="com.hk.taglibs.Functions" %>
 <%@ page import="org.joda.time.DateTime" %>
 <%@ page import="java.util.Date" %>
-<%@ page import="com.hk.constants.Keys" %>
+<%@ page import="com.hk.constants.core.Keys" %>
 <%@ page import="org.joda.time.DateTimeFieldType" %>
-<%@ page import="com.hk.constants.RoleConstants" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.MenuAction" var="menuAction" event="pre"/>
+<s:useActionBean beanclass="web.action.core.menu.MenuAction" var="menuAction" event="pre"/>
 
 <s:layout-definition>
   <c:set var="topCategoryUrl" value="/${topCategory}"/>

@@ -8,7 +8,7 @@
 <%@page import="mhc.pojo.WMProduct"%>
 <%@page import="mhc.servlet.action.DiabetesProductAction"%>
 <%@page import="mhc.pojo.DiabetesProduct"%>
-<%@page import="mhc.enums.Level1Category"%>
+<%@page import="com.hk.constants.Level1Category"%>
 <%@page import="mhc.servlet.action.BabyProductAction"%>
 <%@page import="mhc.pojo.BabyProduct"%>
 <%@page import="java.util.List"%>

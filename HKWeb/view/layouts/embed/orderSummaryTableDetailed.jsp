@@ -1,5 +1,5 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
-<%@ page import="com.hk.constants.EnumImageSize" %>
+<%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
 <%@ page import="mhc.common.dto.PricingDto" %>
 <%@ page import="java.util.Date" %>
 <%@include file="/includes/_taglibInclude.jsp" %>

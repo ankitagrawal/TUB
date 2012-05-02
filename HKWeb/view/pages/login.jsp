@@ -1,9 +1,9 @@
 <%@ page import="org.stripesstuff.plugin.security.J2EESecurityManager" %>
-<%@ page import="mhc.web.json.HealthkartResponse" %>
-<%@ page import="web.action.core.auth.LoginAction" %>
+<%@ page import="com.hk.web.HealthkartResponse" %>
+<%@ page import="com.hk.web.action.core.auth.LoginAction" %>
 <%@ page import="net.tanesha.recaptcha.ReCaptcha" %>
 <%@ page import="net.tanesha.recaptcha.ReCaptchaFactory" %>
-<%@ page import="com.hk.constants.HealthkartConstants" %>
+<%@ page import="com.hk.constants.core.HealthkartConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 

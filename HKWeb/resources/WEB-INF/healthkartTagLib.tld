@@ -337,7 +337,7 @@
     </description>
     <name>topLevelCategory</name>
     <function-class>com.hk.taglibs.Functions</function-class>
-    <function-signature>mhc.domain.Category topLevelCategory(java.lang.Object)</function-signature>
+    <function-signature>com.hk.domain.catalog.category.Category topLevelCategory(java.lang.Object)</function-signature>
     <example>
       ${hk:topLevelCategory(${object})}
     </example>

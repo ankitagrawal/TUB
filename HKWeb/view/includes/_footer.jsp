@@ -1,6 +1,6 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@ page import="com.shiro.PrincipalImpl" %>
-<%@ page import="com.hk.constants.RoleConstants" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
 
 <s:layout-definition>
 
@@ -32,7 +32,7 @@
         <h5>
           Categories
         </h5>
-        <s:useActionBean beanclass="web.action.MenuAction" var="menuAction" event="pre"/>
+        <s:useActionBean beanclass="web.action.core.menu.MenuAction" var="menuAction" event="pre"/>
         <ul>
           <c:forEach items="${menuAction.menuNodes}" var="topMenuNode" varStatus="idx">
             <c:if test="${topMenuNode.name != 'Baby'}">
