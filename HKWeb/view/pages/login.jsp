@@ -1,6 +1,6 @@
 <%@ page import="org.stripesstuff.plugin.security.J2EESecurityManager" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
-<%@ page import="web.action.core.auth.LoginAction" %>
+<%@ page import="com.hk.web.action.core.auth.LoginAction" %>
 <%@ page import="net.tanesha.recaptcha.ReCaptcha" %>
 <%@ page import="net.tanesha.recaptcha.ReCaptchaFactory" %>
 <%@ page import="com.hk.constants.core.HealthkartConstants" %>

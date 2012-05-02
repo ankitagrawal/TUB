@@ -1,5 +1,5 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
-<%@ page import="web.action.core.order.OrderSummaryAction" %>
+<%@ page import="com.hk.web.action.core.order.OrderSummaryAction" %>
 <%@ page import="mhc.common.dto.PricingDto" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%--

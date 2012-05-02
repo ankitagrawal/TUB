@@ -1,6 +1,6 @@
 <%@ page import="org.stripesstuff.plugin.security.J2EESecurityManager" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
-<%@ page import="web.action.core.affiliate.AffiliateAction" %>
+<%@ page import="com.hk.web.action.core.affiliate.AffiliateAction" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 

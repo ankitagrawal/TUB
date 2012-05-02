@@ -1,4 +1,4 @@
-<%@ page import="web.action.core.discount.ApplyCouponAction" %>
+<%@ page import="com.hk.web.action.core.discount.ApplyCouponAction" %>
 <%@ page import="com.hk.constants.OfferConstants" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
