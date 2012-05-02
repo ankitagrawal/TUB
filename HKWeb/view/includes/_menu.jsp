@@ -34,10 +34,10 @@ of<%@ page import="com.hk.taglibs.Functions" %>
     <div class="siteNotice">
       <div style="border-top: 5px solid #ff9999; border-bottom: 5px solid #ff6666; height: 24px; padding-top: 6px; font-size: 1em;">
           <%--<shiro:hasRole name="<%=RoleConstants.TEMP_USER%>">--%>
-          <%--<strong>Happy Children's Day</strong>: Get flat <strong>15%</strong> on all products as store credit. <strong><s:link beanclass="web.action.LoginAction"><s:param name="redirectUrl" value="<%=originalUrlMenu%>"/>Login/Signup</s:link></strong> to reveal coupon code.--%>
+          <%--<strong>Happy Children's Day</strong>: Get flat <strong>15%</strong> on all products as store credit. <strong><s:link beanclass="com.hk.web.action.core.auth.LoginAction"><s:param name="redirectUrl" value="<%=originalUrlMenu%>"/>Login/Signup</s:link></strong> to reveal coupon code.--%>
           <%--</shiro:hasRole>--%>
           <%--<shiro:guest>--%>
-          <%--<strong>Happy Children's Day</strong>: Get flat <strong>15%</strong> on all products as store credit. <strong><s:link beanclass="web.action.LoginAction"><s:param name="redirectUrl" value="<%=originalUrlMenu%>"/>Login/Signup</s:link></strong> to reveal coupon code.--%>
+          <%--<strong>Happy Children's Day</strong>: Get flat <strong>15%</strong> on all products as store credit. <strong><s:link beanclass="com.hk.web.action.core.auth.LoginAction"><s:param name="redirectUrl" value="<%=originalUrlMenu%>"/>Login/Signup</s:link></strong> to reveal coupon code.--%>
           <%--</shiro:guest>--%>
           <%--<shiro:user>--%>
           <%--<shiro:lacksRole name="<%=RoleConstants.TEMP_USER%>">--%>

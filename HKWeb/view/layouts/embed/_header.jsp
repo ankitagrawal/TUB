@@ -76,12 +76,12 @@
           </c:if>
           <div class='links'>
             <shiro:hasRole name="<%=RoleConstants.TEMP_USER%>">
-              <s:link beanclass="com.hk.web.action.LoginAction" class="toplinksSecondary" rel="noFollow"><%if (attachRedirectParam) {%><s:param name="redirectUrl" value="<%=originalUrlHeader%>"/><%}%>Login</s:link> |
-              <s:link beanclass="com.hk.web.action.LoginAction" class="toplinksSecondary" rel="noFollow"><%if (attachRedirectParam) {%><s:param name="redirectUrl" value="<%=originalUrlHeader%>"/><%}%>Signup</s:link>
+              <s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="toplinksSecondary" rel="noFollow"><%if (attachRedirectParam) {%><s:param name="redirectUrl" value="<%=originalUrlHeader%>"/><%}%>Login</s:link> |
+              <s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="toplinksSecondary" rel="noFollow"><%if (attachRedirectParam) {%><s:param name="redirectUrl" value="<%=originalUrlHeader%>"/><%}%>Signup</s:link>
             </shiro:hasRole>
             <shiro:guest>
-              <s:link beanclass="com.hk.web.action.LoginAction" class="toplinksSecondary" rel="noFollow"><%if (attachRedirectParam) {%><s:param name="redirectUrl" value="<%=originalUrlHeader%>"/><%}%>Login</s:link> |
-              <s:link beanclass="com.hk.web.action.LoginAction" class="toplinksSecondary" rel="noFollow"><%if (attachRedirectParam) {%><s:param name="redirectUrl" value="<%=originalUrlHeader%>"/><%}%>Signup</s:link>
+              <s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="toplinksSecondary" rel="noFollow"><%if (attachRedirectParam) {%><s:param name="redirectUrl" value="<%=originalUrlHeader%>"/><%}%>Login</s:link> |
+              <s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="toplinksSecondary" rel="noFollow"><%if (attachRedirectParam) {%><s:param name="redirectUrl" value="<%=originalUrlHeader%>"/><%}%>Signup</s:link>
             </shiro:guest>
             <shiro:user>
               <shiro:lacksRole name="<%=RoleConstants.TEMP_USER%>">

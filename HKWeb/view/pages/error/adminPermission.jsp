@@ -12,7 +12,7 @@
     <p>You are not allowed to take this action as you may not have the authorization to do so, or you need to login again.</p>
 
     <p>
-    <s:form beanclass="com.hk.web.action.LoginAction">
+    <s:form beanclass="com.hk.web.action.core.auth.LoginAction">
       <s:errors/>
       <div class="label">Email</div>
       <s:text name="email" id="loginName" style="width:250px;"/>

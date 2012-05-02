@@ -62,7 +62,7 @@
         </h3>
 
         <div class='login'>
-          <s:form beanclass="com.hk.web.action.LoginAction">
+          <s:form beanclass="com.hk.web.action.core.auth.LoginAction">
             <s:errors/>
             <div class="label">Email</div>
             <s:text name="email" id="loginName"/>

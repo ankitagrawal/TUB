@@ -63,7 +63,7 @@
 
     <shiro:notAuthenticated>
 
-      <div class="buttons" align="left"><s:link beanclass="com.hk.web.action.LoginAction" event="pre">
+      <div class="buttons" align="left"><s:link beanclass="com.hk.web.action.core.auth.LoginAction" event="pre">
         Login
       </s:link></div>
     </shiro:notAuthenticated>

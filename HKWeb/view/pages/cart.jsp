@@ -494,7 +494,7 @@
   <shiro:hasAnyRoles name="<%=RoleConstants.TEMP_USER%>">
     Got a discount coupon?
     <br/>
-    <s:link beanclass="com.hk.web.action.LoginAction" class="lrg" event="pre"> login / signup
+    <s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="lrg" event="pre"> login / signup
       <s:param name="redirectUrl" value="${pageContext.request.contextPath}/Cart.action"/>
     </s:link>
     to redeem it.

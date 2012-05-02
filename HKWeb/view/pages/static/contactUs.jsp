@@ -16,7 +16,7 @@
 
   <s:layout-component name="left_col">
     <div style="width: 45%; float: left; background: #fcfcfc; padding: 15px; ">
-      <s:form beanclass="com.hk.web.action.pages.ContactAction">
+      <s:form beanclass="com.hk.com.hk.web.action.pages.ContactAction">
         <div class="left">
           <h2>Use the contact form below &darr;</h2>
 

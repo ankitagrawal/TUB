@@ -26,7 +26,7 @@
         <h2>Support</h2>
 
         <p>Please try again. If it still does not work
-          <s:link beanclass="com.hk.web.action.pages.ContactAction">write to us</s:link> with the above details.</p>
+          <s:link beanclass="com.hk.com.hk.web.action.pages.ContactAction">write to us</s:link> with the above details.</p>
         </div>
         
       </c:when>
