@@ -1,7 +1,7 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="com.hk.constants.payment.EnumPaymentMode" %>
-<%@ page import="com.hk.constants.EnumPaymentStatus" %>
+<%@ page import="com.hk.constants.payment.EnumPaymentStatus" %>
 <%@ page import="com.hk.constants.order.EnumOrderStatus" %>
 <%@ page import="com.hk.dao.catalog.category.CategoryDao" %>
 <%@ page import="mhc.service.payment.PaymentService" %>
@@ -421,7 +421,7 @@
                 Name : <span class="or">${order.user.name}</span>
               </div>
               <div class="floatright">
-                Email: (<s:link beanclass="com.hk.web.action.admin.SearchUserAction" event="search">
+                Email: (<s:link beanclass="com.hk.web.action.admin.user.SearchUserAction" event="search">
                 <s:param name="userFilterDto.login" value="${order.user.login}"/>
                 ${order.user.login}
               </s:link>)

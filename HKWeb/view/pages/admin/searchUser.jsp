@@ -3,7 +3,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="com.hk.web.action.admin.SearchUserAction" event="pre" var="userBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.user.SearchUserAction" event="pre" var="userBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp">
 
@@ -18,7 +18,7 @@
   <s:layout-component name="content">
 
 
-    <s:form beanclass="com.hk.web.action.admin.SearchUserAction" method="get" renderFieldsPresent="false" renderSourcePage="false">
+    <s:form beanclass="com.hk.web.action.admin.user.SearchUserAction" method="get" renderFieldsPresent="false" renderSourcePage="false">
       <fieldset class="top_label">
         <ul>
           <div class="grouped">

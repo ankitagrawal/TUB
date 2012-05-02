@@ -9,7 +9,7 @@
                 <tr>
                     <td>
                         <c:if test="${!empty refUser.id}">
-                            <s:link beanclass="com.hk.web.action.admin.SearchUserAction">
+                            <s:link beanclass="com.hk.web.action.admin.user.SearchUserAction">
                                 <s:param name="userFilterDto.login" value="${refUser.login}"/>
                                 ${refUser.id}
                             </s:link>

@@ -1,7 +1,7 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="com.hk.constants.order.EnumCartLineItemType" %>
 <%@ page import="com.hk.constants.payment.EnumPaymentMode" %>
-<%@ page import="com.hk.constants.EnumPaymentStatus" %>
+<%@ page import="com.hk.constants.payment.EnumPaymentStatus" %>
 <%@ page import="com.hk.constants.order.EnumOrderStatus" %>
 <%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus" %>
 <%@ page import="com.hk.dao.MasterDataDao" %>
@@ -345,7 +345,7 @@
     <c:when test="${order.user.email == order.user.login}">
       <%-- Usual case , seems like a registered user --%>
       <span class="upc lgry sml">Email</span>
-      <s:link beanclass="com.hk.web.action.admin.SearchUserAction" event="search">
+      <s:link beanclass="com.hk.web.action.admin.user.SearchUserAction" event="search">
         <s:param name="userFilterDto.login" value="${order.user.login}"/>
         ${order.user.login}
       </s:link>
@@ -353,7 +353,7 @@
     <c:otherwise>
       <%-- Probably a guest user account --%>
       <span class="upc lgry sml">Login</span>
-      <s:link beanclass="com.hk.web.action.admin.SearchUserAction" event="search">
+      <s:link beanclass="com.hk.web.action.admin.user.SearchUserAction" event="search">
       <s:param name="userFilterDto.login" value="${order.user.login}"/>
       ${order.user.login}
       </s:link><br/>

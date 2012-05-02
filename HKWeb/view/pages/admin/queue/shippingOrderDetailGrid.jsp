@@ -197,7 +197,7 @@
         Name : <span class="or">${baseOrder.user.name}</span>
       </div>
       <span style="margin-left:10px;">
-        Email: (<s:link beanclass="com.hk.web.action.admin.SearchUserAction" event="search">
+        Email: (<s:link beanclass="com.hk.web.action.admin.user.SearchUserAction" event="search">
         <s:param name="userFilterDto.login" value="${baseOrder.user.login}"/>
         ${baseOrder.user.login}
       </s:link>)

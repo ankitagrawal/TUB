@@ -55,7 +55,7 @@
               </td>
               <td>
                 <c:if test="${!empty couponBean.coupon.referrerUser.id}">
-                  <s:link beanclass="com.hk.web.action.admin.SearchUserAction">
+                  <s:link beanclass="com.hk.web.action.admin.user.SearchUserAction">
                     <s:param name="userFilterDto.login" value="${couponBean.coupon.referrerUser.login}"/>
                     ${couponBean.coupon.referrerUser.id}
                   </s:link>
@@ -93,7 +93,7 @@
                 </td>
                 <td width="25px">
                     <c:if test="${!empty offerInstance.user.id}">
-                      <s:link beanclass="com.hk.web.action.admin.SearchUserAction">
+                      <s:link beanclass="com.hk.web.action.admin.user.SearchUserAction">
                         <s:param name="userFilterDto.login" value="${offerInstance.user.email}"/>
                         ${offerInstance.user.id}
                       </s:link>

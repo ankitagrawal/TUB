@@ -29,7 +29,7 @@
         <em>Ticket context data</em><br/>
         <c:if test="${ticketBean.ticket.associatedUser != null}">
           <span class="sml gry">Associated User:</span>
-          <s:link beanclass="com.hk.web.action.admin.SearchUserAction" event="search">
+          <s:link beanclass="com.hk.web.action.admin.user.SearchUserAction" event="search">
             ${ticketBean.ticket.associatedUser.email}
             <s:param name="userFilterDto.email" value="${ticketBean.ticket.associatedUser.email}"/>
           </s:link><br/>

@@ -101,7 +101,7 @@
               </c:when>
               <c:otherwise>
                 <c:if test="${ticket.associatedUser != null}">
-                  [<s:link beanclass="com.hk.web.action.admin.SearchUserAction" event="search">
+                  [<s:link beanclass="com.hk.web.action.admin.user.SearchUserAction" event="search">
                   ${ticket.associatedUser.name} - ${ticket.associatedUser.email}
                   <s:param name="userFilterDto.email" value="${ticket.associatedUser.email}"/>
                 </s:link>]
