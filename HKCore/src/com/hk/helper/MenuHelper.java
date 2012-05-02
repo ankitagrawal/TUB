@@ -28,7 +28,8 @@ public class MenuHelper {
   }*/
   
   public MenuHelper() {
-    menuFile = new File("D:/eclipse_wrk/rewrite/HKWeb/view/menu.txt");
+    //menuFile = new File("D:/eclipse_wrk/rewrite/HKWeb/view/menu.txt");
+    menuFile = new File("C:/Users/Rahul/Project/HKRejuvenate/HKWeb/view/menu.txt");
     initMenuNodes();
   }
 

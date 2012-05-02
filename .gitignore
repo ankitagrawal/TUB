@@ -8,3 +8,4 @@ bin-groovy/*
 bin/*
 dist/*
 .metadata/*
+/*/dist/*
