@@ -1,6 +1,6 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="mhc.service.dao.ProductVariantDao" %>
-<%@ page import="mhc.domain.ProductVariant" %>
+<%@ page import="com.hk.domain.catalog.product.ProductVariant" %>
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
 <%@ page import="java.text.DecimalFormat" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>

@@ -1,14 +1,14 @@
 <%@ page import="com.hk.dto.menu.MenuNode" %>
 <%@ page import="java.util.Stack" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
-<%@ page import="mhc.service.MenuHelper" %>
-<%@ page import="mhc.domain.Product" %>
+<%@ page import="com.hk.helper.MenuHelper" %>
+<%@ page import="com.hk.domain.catalog.product.Product" %>
 <%@ page import="org.apache.commons.lang.StringUtils" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-definition>
   <%
-    MenuHelper menuHelper = InjectorFactory.getInjector().getInstance(MenuHelper.class);
+    MenuHelper menuHelper = ServiceLocatorFactory.getService("MenuHelper");
 
     String breadcrumbUrlFragment = (String) pageContext.getAttribute("breadcrumbUrlFragment");
     if (breadcrumbUrlFragment == null) {

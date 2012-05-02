@@ -3,7 +3,7 @@
 <%@ page import="com.hk.dao.catalog.category.CategoryDao" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.hk.dto.menu.MenuNode" %>
-<%@ page import="mhc.service.MenuHelper" %>
+<%@ page import="com.hk.helper.MenuHelper" %>
 <%@ page import="java.util.ArrayList" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.category.CatalogAction" var="ca"/>
