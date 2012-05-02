@@ -17,7 +17,7 @@
           </li>
           <li><a href="${pageContext.request.contextPath}/affiliate"><span class="txt-white">Affiliate</span></a></li>
           <li><a href="${pageContext.request.contextPath}/b2b"><span class="txt-white">For Business</span></a></li>
-          <li><s:link beanclass="web.action.pages.ContactAction"><span class="txt-white">Contact Us</span></s:link>
+          <li><s:link beanclass="com.hk.web.action.pages.ContactAction"><span class="txt-white">Contact Us</span></s:link>
           </li>
           <li><a href="${pageContext.request.contextPath}/pages/termsAndConditions.jsp"><span class="txt-white">Terms & Conditions</span></a>
           </li>
@@ -47,19 +47,19 @@
         </h5>
         <ul>
           <shiro:hasRole name="<%=RoleConstants.TEMP_USER%>">
-            <li><s:link beanclass="web.action.LoginAction" class="toplinksSecondary">Login</s:link></li>
-            <li><s:link beanclass="web.action.LoginAction" class="toplinksSecondary">Signup</s:link></li>
+            <li><s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="toplinksSecondary">Login</s:link></li>
+            <li><s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="toplinksSecondary">Signup</s:link></li>
           </shiro:hasRole>
           <shiro:notAuthenticated>
-            <li><s:link beanclass="web.action.LoginAction" class="toplinksSecondary">Login</s:link></li>
-            <li><s:link beanclass="web.action.LoginAction" class="toplinksSecondary">Signup</s:link></li>
+            <li><s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="toplinksSecondary">Login</s:link></li>
+            <li><s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="toplinksSecondary">Signup</s:link></li>
           </shiro:notAuthenticated>
           <shiro:lacksRole name="<%=RoleConstants.TEMP_USER%>">
             <li>
-              <s:link beanclass="web.action.MyAccountAction" title='view past orders / edit personal details'>Your Account</s:link></li>
-            <li><s:link beanclass="web.action.LogoutAction" class="toplinksSecondary">Logout</s:link></li>
-            <li><s:link beanclass="web.action.CustomerOrderHistoryAction">Order History</s:link></li>
-            <li><s:link beanclass="web.action.ReferralProgramAction">Referral Program</s:link></li>
+              <s:link beanclass="com.hk.web.action.core.user.MyAccountAction" title='view past orders / edit personal details'>Your Account</s:link></li>
+            <li><s:link beanclass="com.hk.web.action.core.auth.LogoutAction" class="toplinksSecondary">Logout</s:link></li>
+            <li><s:link beanclass="com.hk.web.action.core.user.CustomerOrderHistoryAction">Order History</s:link></li>
+            <li><s:link beanclass="com.hk.web.action.core.referral.ReferralProgramAction">Referral Program</s:link></li>
           </shiro:lacksRole>
         </ul>
       </div>

@@ -33,7 +33,7 @@
       <div style='float: left; margin-left: 180px;' title='Call us on our customer care number for help regarding anything'>
         <span style="font-size: .8em;">Customer Care: 0124-4551616 <span style="color: gray;">(10am - 9pm, 7 days a week)</span></span>
         <div style="cursor:default; margin-top: 2px; width: 313px;">
-          <s:form beanclass="com.hk.web.action.SearchAction" method="get" renderFieldsPresent="false" renderSourcePage="false" autocomplete="off" style="position: relative;">
+          <s:form beanclass="com.hk.web.action.core.search.SearchAction" method="get" renderFieldsPresent="false" renderSourcePage="false" autocomplete="off" style="position: relative;">
             <input type="text" name="query" id="searchbox" class="input_tip" title='search our catalog' style="height: 14px; font-size: .8em;" value="${param['query']}"/>
             <s:image name="search" src="/images/icons/search2.png" style="position: absolute; right: 3px; top: 1px;"/>
           </s:form>
@@ -76,16 +76,16 @@
           </c:if>
           <div class='links'>
             <shiro:hasRole name="<%=RoleConstants.TEMP_USER%>">
-              <s:link beanclass="com.hk.web.action.LoginAction" class="toplinksSecondary" rel="noFollow"><%if (attachRedirectParam) {%><s:param name="redirectUrl" value="<%=originalUrlHeader%>"/><%}%>Login</s:link> |
-              <s:link beanclass="com.hk.web.action.LoginAction" class="toplinksSecondary" rel="noFollow"><%if (attachRedirectParam) {%><s:param name="redirectUrl" value="<%=originalUrlHeader%>"/><%}%>Signup</s:link>
+              <s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="toplinksSecondary" rel="noFollow"><%if (attachRedirectParam) {%><s:param name="redirectUrl" value="<%=originalUrlHeader%>"/><%}%>Login</s:link> |
+              <s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="toplinksSecondary" rel="noFollow"><%if (attachRedirectParam) {%><s:param name="redirectUrl" value="<%=originalUrlHeader%>"/><%}%>Signup</s:link>
             </shiro:hasRole>
             <shiro:guest>
-              <s:link beanclass="com.hk.web.action.LoginAction" class="toplinksSecondary" rel="noFollow"><%if (attachRedirectParam) {%><s:param name="redirectUrl" value="<%=originalUrlHeader%>"/><%}%>Login</s:link> |
-              <s:link beanclass="com.hk.web.action.LoginAction" class="toplinksSecondary" rel="noFollow"><%if (attachRedirectParam) {%><s:param name="redirectUrl" value="<%=originalUrlHeader%>"/><%}%>Signup</s:link>
+              <s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="toplinksSecondary" rel="noFollow"><%if (attachRedirectParam) {%><s:param name="redirectUrl" value="<%=originalUrlHeader%>"/><%}%>Login</s:link> |
+              <s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="toplinksSecondary" rel="noFollow"><%if (attachRedirectParam) {%><s:param name="redirectUrl" value="<%=originalUrlHeader%>"/><%}%>Signup</s:link>
             </shiro:guest>
             <shiro:user>
               <shiro:lacksRole name="<%=RoleConstants.TEMP_USER%>">
-                <s:link beanclass="com.hk.web.action.MyAccountAction"
+                <s:link beanclass="com.hk.web.action.core.user.MyAccountAction"
                         title='view past orders / edit personal details' rel="noFollow">Your Account</s:link> |
                 <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_ADMINS%>">
                   <s:link beanclass="com.hk.web.action.admin.AdminHomeAction" class="sml" rel="noFollow">Admin</s:link> |
@@ -99,7 +99,7 @@
                 <%
                   }
                 %>
-                <s:link beanclass="com.hk.web.action.LogoutAction" class="toplinksSecondary" rel="noFollow">Logout</s:link>
+                <s:link beanclass="com.hk.com.hk.web.action.core.auth.LogoutAction" class="toplinksSecondary" rel="noFollow">Logout</s:link>
               </shiro:lacksRole>
             </shiro:user>
           </div>

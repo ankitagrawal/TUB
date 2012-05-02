@@ -56,14 +56,14 @@
      START SHOPPING
     </s:link></div>
 
-    <div class="buttons" align="left"><s:link beanclass="com.hk.web.action.ReferralProgramAction" event="pre">
+    <div class="buttons" align="left"><s:link beanclass="com.hk.com.hk.web.action.core.referral.ReferralProgramAction" event="pre">
       REFER YOUR FRIENDS
     </s:link></div>
 
 
     <shiro:notAuthenticated>
 
-      <div class="buttons" align="left"><s:link beanclass="com.hk.web.action.LoginAction" event="pre">
+      <div class="buttons" align="left"><s:link beanclass="com.hk.web.action.core.auth.LoginAction" event="pre">
         Login
       </s:link></div>
     </shiro:notAuthenticated>

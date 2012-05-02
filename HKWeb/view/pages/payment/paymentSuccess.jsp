@@ -116,7 +116,7 @@
 <c:choose>
   <c:when test="${actionBean.payment != null}">
     <div class="right" style="float: right;">
-      <s:link beanclass="com.hk.web.action.ReferralProgramAction">
+      <s:link beanclass="com.hk.com.hk.web.action.core.referral.ReferralProgramAction">
         <img src="<hk:vhostImage/>/images/banners/refer_earn.jpg">
       </s:link>
     </div>
@@ -186,7 +186,7 @@
 
     <h2>Customer Support</h2>
 
-    <p><s:link beanclass="com.hk.web.action.pages.ContactAction">Write to us</s:link> with your Order ID if you have any questions or call us on 0124-4551616</p>
+    <p><s:link beanclass="com.hk.com.hk.web.action.pages.ContactAction">Write to us</s:link> with your Order ID if you have any questions or call us on 0124-4551616</p>
 
     <c:if test="${actionBean.payment.order.offerInstance != null && actionBean.payment.order.offerInstance.coupon != null && hk:isNotBlank(actionBean.payment.order.offerInstance.coupon.complimentaryCoupon)}">
       <div style="background-color: lightgoldenrodyellow;">

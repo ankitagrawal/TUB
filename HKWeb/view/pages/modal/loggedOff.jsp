@@ -7,7 +7,7 @@
   <s:layout-component name="heading">Session Expired!</s:layout-component>
 
   <s:layout-component name="content">
-    <p class="lrg">Your session has expired. Please <s:link beanclass="com.hk.web.action.LoginAction" class="loggedOffLoginLink">Login</s:link> again to continue.</p>
+    <p class="lrg">Your session has expired. Please <s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="loggedOffLoginLink">Login</s:link> again to continue.</p>
 
     <script type="text/javascript">
       var params = {};

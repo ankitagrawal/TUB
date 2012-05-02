@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.MyAccountAction" var="maa"/>
+<s:useActionBean beanclass="com.hk.web.action.core.user.MyAccountAction" var="maa"/>
 <s:layout-render name="/layouts/default.jsp">
   <s:layout-component name="heading">Mandatory Info</s:layout-component>
   <s:layout-component name="lhsContent">
@@ -9,7 +9,7 @@
 
   <s:layout-component name="rhsContent">
     <div>
-      <s:form beanclass="com.hk.web.action.affiliate.AffiliateManageAddressAction" id="newAddressForm">
+      <s:form beanclass="com.hk.web.action.core.affiliate.AffiliateManageAddressAction" id="newAddressForm">
         <s:hidden name="address.id"/>
         <span class="aster special">Pls fill in your contact details, so that our team can contact you. (Fields marked * are required.)</span>
         <div class='label'>Name<span class="aster">*</span></div>

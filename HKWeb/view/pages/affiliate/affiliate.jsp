@@ -40,7 +40,7 @@
           <div class="msg" style="text-align: center; padding: 2px 0 2px 0; font-size: 1em;"></div>
 
           <div>
-            <s:form beanclass="com.hk.web.action.ForgotPasswordAction" id="forgotPassowrdForm">
+            <s:form beanclass="com.hk.com.hk.web.action.core.user.ForgotPasswordAction" id="forgotPassowrdForm">
               <div style="text-align: center; padding: 5px 0 5px 0; font-size: 1em;">
                 Enter your email address:
                 <s:text id="forgotEmail" name="email"/>
@@ -70,7 +70,7 @@
         </p>
 
         <div style="float:left; font-size: 1.2em; width: 85%; margin-top: 5px; margin-left:20px">
-          <s:link beanclass="com.hk.web.action.affiliate.AffiliateAction" event="goToSignUp" class="button_orange">Join Now for Free
+          <s:link beanclass="com.hk.web.action.core.affiliate.AffiliateAction" event="goToSignUp" class="button_orange">Join Now for Free
           </s:link>
         </div>
 
@@ -83,7 +83,7 @@
         </h3>
 
         <div class='login'>
-          <s:form beanclass="com.hk.web.action.affiliate.AffiliateAction">
+          <s:form beanclass="com.hk.web.action.core.affiliate.AffiliateAction">
             <s:errors/>
             <s:messages/>
             <div class="label">Email</div>

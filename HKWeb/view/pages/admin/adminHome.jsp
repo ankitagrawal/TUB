@@ -220,7 +220,7 @@
 
   <h3><s:link beanclass="com.hk.web.action.VerifyAffiliateAction">Verify Affiliates</s:link></h3>
 
-  <h3><s:link beanclass="com.hk.web.action.affiliate.AffiliatePaymentAction">Affiliate Account</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.core.affiliate.AffiliatePaymentAction">Affiliate Account</s:link></h3>
 
   <h3><s:link beanclass="com.hk.web.action.CategoryLevelDiscountAction">Category Level Discount</s:link></h3>
 </div>

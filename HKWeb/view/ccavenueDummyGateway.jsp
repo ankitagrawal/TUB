@@ -1,4 +1,4 @@
-<%@ page import="mhc.service.manager.payment.CCAvenueDummyPaymentGatewayWrapper" %>
+<%@ page import="com.hk.manager.payment.CCAvenueDummyPaymentGatewayWrapper" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp"%>
 <%
