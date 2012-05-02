@@ -1,5 +1,5 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
-<%@ page import="com.hk.constants.AnalyticsConstants" %>
+<%@ page import="com.hk.constants.marketing.AnalyticsConstants" %>
 <%
   if (AnalyticsConstants.analytics) {
 %>
