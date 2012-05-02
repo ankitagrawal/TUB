@@ -1,4 +1,4 @@
-<%@ page import="com.hk.constants.EnumPaymentMode" %>
+<%@ page import="com.hk.constants.payment.EnumPaymentMode" %>
 <%@ page import="com.hk.constants.core.EnumRole" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>

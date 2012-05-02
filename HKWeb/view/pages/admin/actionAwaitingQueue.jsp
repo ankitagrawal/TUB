@@ -1,6 +1,6 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
-<%@ page import="com.hk.constants.EnumPaymentMode" %>
+<%@ page import="com.hk.constants.payment.EnumPaymentMode" %>
 <%@ page import="com.hk.constants.EnumPaymentStatus" %>
 <%@ page import="com.hk.constants.order.EnumOrderStatus" %>
 <%@ page import="com.hk.dao.catalog.category.CategoryDao" %>

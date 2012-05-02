@@ -1,6 +1,6 @@
 <%@ page import="com.hk.constants.order.EnumOrderStatus" %>
 <%@ page import="com.hk.constants.EnumPaymentStatus" %>
-<%@ page import="com.hk.constants.EnumPaymentMode" %>
+<%@ page import="com.hk.constants.payment.EnumPaymentMode" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
