@@ -1,5 +1,5 @@
 <%@ page import="com.hk.domain.catalog.product.Product" %>
-<%@ page import="mhc.service.dao.ProductDao" %>
+<%@ page import="com.hk.dao.catalog.product.ProductDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>

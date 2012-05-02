@@ -1,6 +1,6 @@
 <%@ page import="com.hk.domain.catalog.product.Product" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
-<%@ page import="mhc.service.dao.ProductDao" %>
+<%@ page import="com.hk.dao.catalog.product.ProductDao" %>
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
 <%@ page import="com.hk.dao.catalog.category.CategoryDao" %>
 <%@ page import="com.hk.domain.catalog.category.Category" %>

@@ -8,7 +8,7 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-definition>
   <%
-    MenuHelper menuHelper = ServiceLocatorFactory.getService("MenuHelper");
+    MenuHelper menuHelper = (MenuHelper)ServiceLocatorFactory.getService("MenuHelper");
 
     String breadcrumbUrlFragment = (String) pageContext.getAttribute("breadcrumbUrlFragment");
     if (breadcrumbUrlFragment == null) {
