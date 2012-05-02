@@ -168,14 +168,14 @@
               <td>
                 <c:if test="${payment.paymentMode.id != paymentModeCod}">
                   <span class="xsml">
-                    <s:link beanclass="com.hk.web.action.admin.CreateTicketAction" event="createPaymentTypeTicket">
+                    <s:link beanclass="com.hk.web.action.admin.ticket.CreateTicketAction" event="createPaymentTypeTicket">
                       Create Ticket to track with TechProcess
                       <s:param name="order" value="${payment.order.id}"/>
                       <s:param name="message" value="Track With TechProcess"/>
                       <s:param name="gatewayOrderId" value="${payment.gatewayOrderId}"/>
                       <s:param name="paymentDate" value="${hk:formatDate(payment.paymentDate)}"/>
                     </s:link> <br/>
-                    <s:link beanclass="com.hk.web.action.admin.CreateTicketAction" event="createPaymentTypeTicket">
+                    <s:link beanclass="com.hk.web.action.admin.ticket.CreateTicketAction" event="createPaymentTypeTicket">
                       create Refund Ticket
                       <s:param name="order" value="${payment.order.id}"/>
                       <s:param name="message" value="Payment Refund"/>

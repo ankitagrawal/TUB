@@ -383,7 +383,7 @@
 
   <i><fmt:formatDate value="${order.payment.createDate}" type="both"/></i> <br/>
       <span class="sml">
-        <s:link beanclass="com.hk.web.action.admin.CreateTicketAction" event="createOrderRelatedTicket">
+        <s:link beanclass="com.hk.web.action.admin.ticket.CreateTicketAction" event="createOrderRelatedTicket">
           Create Ticket
           <s:param name="order" value="${order.id}"/>
         </s:link> <br/>
