@@ -7,3 +7,4 @@ build/*
 bin-groovy/*
 bin/*
 dist/*
+.metadata/*
