@@ -1,6 +1,6 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
-<%@ page import="mhc.service.dao.ComboDao" %>
-<%@ page import="mhc.domain.Combo" %>
+<%@ page import="com.hk.dao.catalog.combo.ComboDao" %>
+<%@ page import="com.hk.domain.catalog.product.combo.Combo" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
