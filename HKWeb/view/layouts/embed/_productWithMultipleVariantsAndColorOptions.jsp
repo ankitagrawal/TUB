@@ -6,9 +6,9 @@
 
 <s:layout-definition>
   <%
-    ProductDao productDao = InjectorFactory.getInjector().getInstance(ProductDao.class);
+    ProductDao productDao = (ProductDao)ServiceLocatorFactory.getService("ProductDao");
     String productId = (String) pageContext.getAttribute("productId");
-    Product product = productDao.find(productId);
+    Product product = productDao.getProductById(productId);
     pageContext.setAttribute("product", product);
   %>
 <div class='variants'>

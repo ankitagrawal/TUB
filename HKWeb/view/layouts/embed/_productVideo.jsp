@@ -8,9 +8,9 @@
 
 
   <%
-    ProductDao productDao = InjectorFactory.getInjector().getInstance(ProductDao.class);
+    ProductDao productDao = (ProductDao)ServiceLocatorFactory.getService("ProductDao");
     String product_productThumbId = (String) pageContext.getAttribute("productId");
-    Product product = productDao.find(product_productThumbId);
+    Product product = productDao.getProductById(product_productThumbId);
     pageContext.setAttribute("product", product);
   %>
 

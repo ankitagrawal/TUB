@@ -15,13 +15,13 @@
 
 
   <%
-    ProductDao productDao = InjectorFactory.getInjector().getInstance(ProductDao.class);
+    ProductDao productDao = (ProductDao)ServiceLocatorFactory.getService("ProductDao");
     String product_productThumbId = (String) pageContext.getAttribute("productId");
-    Product product_productThumb = productDao.find(product_productThumbId);
+    Product product_productThumb = productDao.getProductById(product_productThumbId);
     pageContext.setAttribute("product", product_productThumb);
 
-    ComboDao comboDao = InjectorFactory.getInjector().getInstance(ComboDao.class);
-    Combo combo = comboDao.find(product_productThumbId);
+    ComboDao comboDao = (ComboDao)ServiceLocatorFactory.getService("ComboDao.class");
+    Combo combo = comboDao.get(Combo.class, product_productThumbId);
     pageContext.setAttribute("combo", combo);
   %>
 

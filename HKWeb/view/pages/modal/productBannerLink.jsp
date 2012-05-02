@@ -2,18 +2,18 @@
 <%@ page import="com.hk.dao.catalog.product.ProductDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
-<%@ page import="mhc.service.dao.AffiliateDao" %>
-<%@ page import="mhc.domain.Affiliate" %>
+<%@ page import="com.hk.dao.affiliate.AffiliateDao" %>
+<%@ page import="com.hk.domain.affiliate.Affiliate" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-definition>
   <%
-    ProductDao productDao = InjectorFactory.getInjector().getInstance(ProductDao.class);
+    ProductDao productDao = (ProductDao)ServiceLocatorFactory.getService("ProductDao");
     String productId = (String) pageContext.getAttribute("productId");
-    Product product = productDao.find(productId);
+    Product product = productDao.getProductById(productId);
     pageContext.setAttribute("product", product);
 
-    AffiliateDao affiliateDao = InjectorFactory.getInjector().getInstance(AffiliateDao.class);
+    AffiliateDao affiliateDao = (AffiliateDao)ServiceLocatorFactory.getService("AffiliateDao");
     Affiliate affiliate = null;
     Long affiliateId = (Long) pageContext.getAttribute("affiliateId");
     if (affiliateId != null) {
