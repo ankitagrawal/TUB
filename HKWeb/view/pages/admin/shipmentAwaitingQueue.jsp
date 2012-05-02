@@ -1,5 +1,5 @@
 <%@ page import="com.hk.dao.MasterDataDao" %>
-<%@ page import="com.hk.constants.EnumCartLineItemType" %>
+<%@ page import="com.hk.constants.order.EnumCartLineItemType" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 

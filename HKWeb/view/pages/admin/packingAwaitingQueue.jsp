@@ -1,6 +1,6 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
-<%@ page import="com.hk.constants.EnumCartLineItemType" %>
+<%@ page import="com.hk.constants.order.EnumCartLineItemType" %>
 <%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus" %>
 <%@ page import="com.hk.dao.catalog.category.CategoryDao" %>
 <%@ page import="mhc.service.shippingOrder.ShippingOrderStatusService" %>

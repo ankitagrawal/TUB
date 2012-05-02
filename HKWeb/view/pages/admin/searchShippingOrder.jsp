@@ -1,5 +1,5 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
-<%@ page import="com.hk.constants.EnumCartLineItemType" %>
+<%@ page import="com.hk.constants.order.EnumCartLineItemType" %>
 <%@ page import="com.hk.constants.EnumPaymentMode" %>
 <%@ page import="com.hk.constants.EnumPaymentStatus" %>
 <%@ page import="com.hk.constants.order.EnumOrderStatus" %>

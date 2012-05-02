@@ -1,12 +1,12 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
-<%@ page import="com.hk.constants.EnumCartLineItemType" %>
+<%@ page import="com.hk.constants.order.EnumCartLineItemType" %>
 <%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus" %>
 <%@ page import="com.hk.dao.catalog.category.CategoryDao" %>
 <%@ page import="mhc.service.shippingOrder.ShippingOrderStatusService" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="com.hk.web.action.admin.ChooseOrdersForPrintPickAction" var="printPickBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.queue.ChooseOrdersForPrintPickAction" var="printPickBean"/>
 <c:set var="lineItemTypeId_Product" value="<%=EnumCartLineItemType.Product.getId()%>"/>
 <%
   int lineItemGlobalCtr = 0;
@@ -81,7 +81,7 @@
       </c:if>
     </div>
     <div align="center">
-      <s:form beanclass="com.hk.web.action.admin.ChooseOrdersForPrintPickAction" method="get" autocomplete="false">
+      <s:form beanclass="com.hk.web.action.admin.queue.ChooseOrdersForPrintPickAction" method="get" autocomplete="false">
         Category
         <s:select name="category" value="${printPickBean.category.name}">
           <c:forEach items="${categoryList}" var="category">
@@ -98,7 +98,7 @@
       </s:form>
     </div>
 
-    <s:form beanclass="com.hk.web.action.admin.ChooseOrdersForPrintPickAction" autocomplete="off">
+    <s:form beanclass="com.hk.web.action.admin.queue.ChooseOrdersForPrintPickAction" autocomplete="off">
       <%--  <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${printPickBean}"/>
     <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${printPickBean}"/>--%>
       <s:layout-render name="/pages/admin/queue/shippingOrderDetailGrid.jsp"
