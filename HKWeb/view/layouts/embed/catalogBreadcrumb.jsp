@@ -1,4 +1,4 @@
-<%@ page import="mhc.common.dto.MenuNode" %>
+<%@ page import="com.hk.dto.menu.MenuNode" %>
 <%@ page import="java.util.Stack" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="mhc.service.MenuHelper" %>

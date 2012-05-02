@@ -2,7 +2,7 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.dao.catalog.category.CategoryDao" %>
 <%@ page import="java.util.List" %>
-<%@ page import="mhc.common.dto.MenuNode" %>
+<%@ page import="com.hk.dto.menu.MenuNode" %>
 <%@ page import="mhc.service.MenuHelper" %>
 <%@ page import="java.util.ArrayList" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
