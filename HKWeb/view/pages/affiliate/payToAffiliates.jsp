@@ -2,7 +2,7 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.affiliate.AffiliatePaymentAction" var="paymentAction"/>
+<s:useActionBean beanclass="com.hk.web.action.core.affiliate.AffiliatePaymentAction" var="paymentAction"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp">
   <s:layout-component name="content">
     <table>
@@ -27,7 +27,7 @@
       <th>CALL</th>
     </tr>
 
-    <s:form beanclass="com.hk.web.action.affiliate.AffiliatePaymentAction" autocomplete="off">
+    <s:form beanclass="com.hk.web.action.core.affiliate.AffiliatePaymentAction" autocomplete="off">
       <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${paymentAction}"/>
       <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${paymentAction}"/>
       <c:forEach items="${paymentAction.affiliatePaymentDtoList}" var="affiliateDetails" varStatus="ctr">
@@ -46,12 +46,12 @@
             <fmt:formatNumber value=" ${affiliateDetails.amount}" pattern="<%=FormatUtils.currencyFormatPattern%>"/>             
           </td>
            <td>
-            <s:link beanclass="com.hk.web.action.affiliate.AffiliatePaymentAction" event="showAffiliatePlan">Manage Plan
+            <s:link beanclass="com.hk.web.action.core.affiliate.AffiliatePaymentAction" event="showAffiliatePlan">Manage Plan
               <s:param name="affiliate" value="${affiliateDetails.affiliate.id}"/>
             </s:link>
           </td>
           <td>
-            <s:link beanclass="com.hk.web.action.affiliate.AffiliatePaymentAction" event="showAffiliateDetails">Transaction Details
+            <s:link beanclass="com.hk.web.action.core.affiliate.AffiliatePaymentAction" event="showAffiliateDetails">Transaction Details
               <s:param name="affiliate" value="${affiliateDetails.affiliate.id}"/>
             </s:link>
           </td>
