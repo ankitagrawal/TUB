@@ -9,7 +9,7 @@
 <c:set var="lineItemTypeId_Product" value="<%=EnumCartLineItemType.Product.getId()%>"/>
 <c:set var="orderStatusActionAwaiting" value="<%=EnumOrderStatus.Placed.getId()%>"/>
 
-<s:useActionBean beanclass="com.hk.web.action.admin.ReportAction" var="reportBean"/>
+<s:useActionBean beanclass="com.hk.web.action.report.ReportAction" var="reportBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Unescalated Escalable Order List">
 

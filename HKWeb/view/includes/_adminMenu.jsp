@@ -31,7 +31,7 @@
     <li class='lvl1 menuItem' title="">
       <s:link class="invert" beanclass="com.hk.web.action.admin.user.SearchUserAction">Search Users</s:link></li>
       <li class='lvl1 menuItem' title="">
-        <s:link class="invert" beanclass="com.hk.web.action.admin.ReportAction">Report Manager</s:link></li>
+        <s:link class="invert" beanclass="com.hk.web.action.report.ReportAction">Report Manager</s:link></li>
 
     <li class='lvl1 menuItem' title="" style="float:right;">
       <s:link beanclass="com.hk.web.action.HomeAction">Site Home</s:link>

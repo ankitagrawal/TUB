@@ -203,7 +203,7 @@
 
   <h3><s:link beanclass="com.hk.web.action.admin.SMSHomeAction">Send SMS</s:link></h3>
 
-  <h3><s:link beanclass="com.hk.web.action.admin.ReportAction">Report Manager</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.report.ReportAction">Report Manager</s:link></h3>
 
   <h3><s:link beanclass="com.hk.web.action.admin.GoogleBannedWordAction">Google Banned Words Report</s:link></h3>
 
