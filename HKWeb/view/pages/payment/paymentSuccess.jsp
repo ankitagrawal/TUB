@@ -116,7 +116,7 @@
 <c:choose>
   <c:when test="${actionBean.payment != null}">
     <div class="right" style="float: right;">
-      <s:link beanclass="com.hk.web.action.ReferralProgramAction">
+      <s:link beanclass="com.hk.com.hk.web.action.core.referral.ReferralProgramAction">
         <img src="<hk:vhostImage/>/images/banners/refer_earn.jpg">
       </s:link>
     </div>

@@ -99,7 +99,7 @@
                 <%
                   }
                 %>
-                <s:link beanclass="com.hk.web.action.LogoutAction" class="toplinksSecondary" rel="noFollow">Logout</s:link>
+                <s:link beanclass="com.hk.com.hk.web.action.core.auth.LogoutAction" class="toplinksSecondary" rel="noFollow">Logout</s:link>
               </shiro:lacksRole>
             </shiro:user>
           </div>

@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.CustomerOrderHistoryAction" var="coha"/>
+<s:useActionBean beanclass="com.hk.com.hk.web.action.core.user.CustomerOrderHistoryAction" var="coha"/>
 <s:layout-render name="/layouts/default.jsp">
   <s:layout-component name="heading">Order History</s:layout-component>
   <s:layout-component name="lhsContent">

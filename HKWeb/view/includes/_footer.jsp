@@ -57,9 +57,9 @@
           <shiro:lacksRole name="<%=RoleConstants.TEMP_USER%>">
             <li>
               <s:link beanclass="com.hk.web.action.core.user.MyAccountAction" title='view past orders / edit personal details'>Your Account</s:link></li>
-            <li><s:link beanclass="web.action.LogoutAction" class="toplinksSecondary">Logout</s:link></li>
-            <li><s:link beanclass="web.action.CustomerOrderHistoryAction">Order History</s:link></li>
-            <li><s:link beanclass="web.action.ReferralProgramAction">Referral Program</s:link></li>
+            <li><s:link beanclass="com.hk.web.action.core.auth.LogoutAction" class="toplinksSecondary">Logout</s:link></li>
+            <li><s:link beanclass="com.hk.web.action.core.user.CustomerOrderHistoryAction">Order History</s:link></li>
+            <li><s:link beanclass="com.hk.web.action.core.referral.ReferralProgramAction">Referral Program</s:link></li>
           </shiro:lacksRole>
         </ul>
       </div>
