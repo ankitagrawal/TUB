@@ -20,7 +20,7 @@
     </description>
     <display-name>master-data-collection</display-name>
     <name>master-data-collection</name>
-    <tag-class>mhc.web.tag.MasterDataOptionsTag</tag-class>
+    <tag-class>com.hk.web.tag.MasterDataOptionsTag</tag-class>
     <body-content>empty</body-content>
     <attribute>
       <description>
@@ -89,7 +89,7 @@
     </description>
     <display-name>vhostImage</display-name>
     <name>vhostImage</name>
-    <tag-class>web.tag.VirtualHostImageTag</tag-class>
+    <tag-class>com.hk.web.tag.VirtualHostImageTag</tag-class>
     <body-content>empty</body-content>
   </tag>
 
@@ -99,7 +99,7 @@
     </description>
     <display-name>vhostJs</display-name>
     <name>vhostJs</name>
-    <tag-class>web.tag.VirtualHostJavascriptTag</tag-class>
+    <tag-class>com.hk.web.tag.VirtualHostJavascriptTag</tag-class>
     <body-content>empty</body-content>
   </tag>
 
@@ -109,7 +109,7 @@
     </description>
     <display-name>vhostCss</display-name>
     <name>vhostCss</name>
-    <tag-class>web.tag.VirtualHostCssTag</tag-class>
+    <tag-class>com.hk.web.tag.VirtualHostCssTag</tag-class>
     <body-content>empty</body-content>
   </tag>
 
@@ -117,7 +117,7 @@
     <description>Renders product image thumbs</description>
     <display-name>productImage</display-name>
     <name>productImage</name>
-    <tag-class>web.tag.ProductImageTag</tag-class>
+    <tag-class>com.hk.web.tag.ProductImageTag</tag-class>
     <body-content>empty</body-content>
     <attribute>
       <name>imageId</name>
@@ -136,7 +136,7 @@
      <description>Renders category home page banners</description>
      <display-name>categoryImage</display-name>
      <name>categoryImage</name>
-     <tag-class>web.tag.CategoryImageTag</tag-class>
+     <tag-class>com.hk.web.tag.CategoryImageTag</tag-class>
      <body-content>empty</body-content>
      <attribute>
        <name>imageId</name>
