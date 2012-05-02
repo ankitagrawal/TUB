@@ -34,7 +34,7 @@
     pageContext.setAttribute("orderStatusList", orderStatusService.getOrderStatuses(EnumOrderStatus.getStatusForActionQueue()));
     pageContext.setAttribute("shippingOrderStatusList", shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForActionQueue()));
 
-    CategoryDao categoryDao = InjectorFactory.getInjector().getInstance(CategoryDao.class);
+    CategoryDao categoryDao = (CategoryDao)ServiceLocatorFactory.getService("CategoryDao");
     pageContext.setAttribute("categoryList", categoryDao.getPrimaryCategories());
   %>
   <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>

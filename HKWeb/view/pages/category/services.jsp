@@ -1,6 +1,6 @@
 <%@ page import="com.hk.dao.MasterDataDao" %>
 <%@ page import="com.akube.framework.util.BaseUtils" %>
-<%@ page import="mhc.web.filter.WebContext" %>
+<%@ page import="com.hk.web.filter.WebContext" %>
 <%@ page import="com.hk.constants.core.HealthkartConstants" %>
 <%@ page import="net.sourceforge.stripes.util.CryptoUtil" %>
 <%@ page import="com.hk.dao.location.MapIndiaDao" %>
@@ -16,7 +16,7 @@
 <s:layout-render name="/layouts/category-homeG.jsp" pageTitle="Services | Buy Services Online in India">
 
   <%
-    MapIndiaDao mapIndiaDao = InjectorFactory.getInjector().getInstance(MapIndiaDao.class);
+    MapIndiaDao mapIndiaDao = (MapIndiaDao)ServiceLocatorFactory.getService("MapIndiaDao");
     Cookie preferredZoneCookie = BaseUtils.getCookie(WebContext.getRequest(), HealthkartConstants.Cookie.preferredZone);
     if (preferredZoneCookie != null && preferredZoneCookie.getValue() != null) {
       MapIndia mapIndia = mapIndiaDao.findByCity(preferredZoneCookie.getValue());

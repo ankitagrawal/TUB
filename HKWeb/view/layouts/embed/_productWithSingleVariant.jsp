@@ -13,8 +13,8 @@
     Product product = productDao.getProductById(productId);
     pageContext.setAttribute("product", product);
 
-    CategoryDao categoryDao = InjectorFactory.getInjector().getInstance(CategoryDao.class);
-    Category eyeGlass = categoryDao.find("eyeglasses");
+    CategoryDao categoryDao = (CategoryDao)ServiceLocatorFactory.getService("CategoryDao");
+    Category eyeGlass = categoryDao.getCategoryByName("eyeglasses");
     pageContext.setAttribute("eyeGlass", eyeGlass);
 
   %>

@@ -16,7 +16,7 @@
   <%
     ShippingOrderStatusService shippingOrderStatusService = InjectorFactory.getInjector().getInstance(ShippingOrderStatusService.class);
     pageContext.setAttribute("applicableOrderStatusList", shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForProcessingQueue()));
-    CategoryDao categoryDao = InjectorFactory.getInjector().getInstance(CategoryDao.class);
+    CategoryDao categoryDao = (CategoryDao)ServiceLocatorFactory.getService("CategoryDao");
     pageContext.setAttribute("categoryList", categoryDao.getPrimaryCategories());
   %>
 

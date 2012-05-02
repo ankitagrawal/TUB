@@ -20,7 +20,7 @@
       TaxDao taxDao = InjectorFactory.getInjector().getInstance(TaxDao.class);
       pageContext.setAttribute("taxList", taxDao.taxListForReport());
 
-      CategoryDao categoryDao = InjectorFactory.getInjector().getInstance(CategoryDao.class);
+      CategoryDao categoryDao = (CategoryDao)ServiceLocatorFactory.getService("CategoryDao");
       pageContext.setAttribute("primaryCategories",categoryDao.getPrimaryCategories());
 
     %>
