@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.admin.assistly.OrderInfoAction" event="pre" var="orderSummary"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.assistly.OrderInfoAction" event="pre" var="orderSummary"/>
 
 <s:layout-render name="/layouts/assistly.jsp">
   <s:layout-component name="content">

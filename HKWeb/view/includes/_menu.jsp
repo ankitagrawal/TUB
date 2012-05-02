@@ -5,7 +5,7 @@ of<%@ page import="com.hk.taglibs.Functions" %>
 <%@ page import="org.joda.time.DateTimeFieldType" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.core.menu.MenuAction" var="menuAction" event="pre"/>
+<s:useActionBean beanclass="com.hk.web.action.core.menu.MenuAction" var="menuAction" event="pre"/>
 
 <s:layout-definition>
   <c:set var="topCategoryUrl" value="/${topCategory}"/>
