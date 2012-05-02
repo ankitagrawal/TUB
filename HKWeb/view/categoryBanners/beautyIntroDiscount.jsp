@@ -1,6 +1,6 @@
 <%@ page import="org.joda.time.DateTime" %>
 <%@ page import="java.util.Date" %>
-<%@ page import="com.akube.framework.taglibs.Functions" %>
+<%@ page import="com.hk.taglibs.Functions" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%
   DateTime dateTime = new DateTime();
@@ -17,7 +17,7 @@
   }
 </style>
 <div style="margin-left: auto; margin-right: auto; width:960px;">
-  <s:link beanclass="web.action.SendDiscountCouponAction" id="sendCouponLink">
+  <s:link beanclass="com.hk.web.action.core.discount.SendDiscountCouponAction" id="sendCouponLink">
     <img src="${pageContext.request.contextPath}/images/banners/top/beauty_strip_banner.jpg" alt="Introductory Beauty Discount - 10% off">
     <%
       if (dateTime.isBefore(endOfOfferDate.getTime())) {
