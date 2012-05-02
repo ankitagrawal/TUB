@@ -1,10 +1,10 @@
 <%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
-<%@ page import="mhc.service.WarehouseService" %>
+<%@ page import="com.hk.service.WarehouseService" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.admin.SelectWHAction" var="whAction" event="getUserWarehouse"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Admin Home">
 
 <s:layout-component name="heading">Admin Home</s:layout-component>
@@ -17,7 +17,7 @@
   <table>
     <tr>
       <td><b>Select a WH: </b></td>
-      <td><s:form beanclass="com.hk.web.action.admin.SelectWHAction" id="selectWHForm">
+      <td><s:form beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" id="selectWHForm">
         <s:select name="setWarehouse" style="height:30px;font-size:1.2em;padding:1px;">
           <s:option value="0">-None-</s:option>
           <c:forEach items="${whList}" var="wh">
