@@ -68,7 +68,7 @@
             <s:text name="email" id="loginName"/>
             <div class="label">Password</div>
             <s:password name="password"/>
-            <s:link beanclass="com.hk.web.action.ForgotPasswordAction" id="forgotPasswordLink">Forgot password?</s:link>
+            <s:link beanclass="com.hk.com.hk.web.action.core.user.ForgotPasswordAction" id="forgotPasswordLink">Forgot password?</s:link>
 
             <div>
               <s:submit name="login" value="Login" class="button"/>

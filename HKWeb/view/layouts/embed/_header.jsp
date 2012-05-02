@@ -85,7 +85,7 @@
             </shiro:guest>
             <shiro:user>
               <shiro:lacksRole name="<%=RoleConstants.TEMP_USER%>">
-                <s:link beanclass="com.hk.web.action.MyAccountAction"
+                <s:link beanclass="com.hk.web.action.core.user.MyAccountAction"
                         title='view past orders / edit personal details' rel="noFollow">Your Account</s:link> |
                 <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_ADMINS%>">
                   <s:link beanclass="com.hk.web.action.admin.AdminHomeAction" class="sml" rel="noFollow">Admin</s:link> |

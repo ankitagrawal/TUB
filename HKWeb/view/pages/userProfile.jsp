@@ -2,7 +2,7 @@
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.MyAccountAction" var="maa"/>
+<s:useActionBean beanclass="com.hk.web.action.core.user.MyAccountAction" var="maa"/>
 <s:layout-render name="/layouts/default.jsp">
   <s:layout-component name="heading">Your Account</s:layout-component>
   <s:layout-component name="lhsContent">
@@ -11,7 +11,7 @@
 
   <s:layout-component name="rhsContent">
     <div>
-      <s:form beanclass="com.hk.web.action.MyAccountAction">
+      <s:form beanclass="com.hk.web.action.core.user.MyAccountAction">
         <s:errors/>
         <h4 class="strikeline"> Basic Information</h4>
         <shiro:hasRole name="<%=RoleConstants.HK_UNVERIFIED%>">
@@ -73,7 +73,7 @@
       </s:form>
     </div>
     <div style="margin-top: 50px;">
-      <s:form beanclass="com.hk.web.action.MyAccountAction">
+      <s:form beanclass="com.hk.web.action.core.user.MyAccountAction">
         <s:errors/>
         <h4 class="strikeline"> Change Password</h4>
 
