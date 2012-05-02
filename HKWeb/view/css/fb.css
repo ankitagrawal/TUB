@@ -1,0 +1,285 @@
+/*****************************************************
+	CSS Reset modified from Yahoo UI.
+*****************************************************/
+
+*{margin:0; padding:0;}
+a {text-decoration:none;}
+
+:focus { outline:0; }
+
+table {border-collapse:collapse;border-spacing:0;font-size:inherit;}
+table tr td{padding:0; vertical-align:top;}
+caption,th { text-align:left; }
+
+fieldset,img { border:0; }
+
+ul li{list-style:none;}
+
+h1,h2,h3,h4,h5,h6 {font-size:100%;font-weight:normal;}
+
+input,textarea,select, button{font-family:inherit;font-size:inherit;font-weight:inherit;}
+
+/*What about line-height?*/
+
+/*
+html {background:#FFF;color:#000;}
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td {margin:0;padding:0;}
+address,caption,cite,code,dfn,em,strong,th,var {font-style:normal;font-weight:normal;}
+q:before,q:after { content:''; }
+abbr,acronym {border:0;font-variant:normal;}
+*/
+
+/* To preserve line-height and selector appearance */
+/*sup {vertical-align:text-top;}
+sub {vertical-align:text-bottom;}*/
+
+/* Because legend doesn't inherit in IE */
+/*legend { color:#000; }*/
+
+/*Unreset
+Use this for resetting basic typography and content elements such as lists, tables, links, buttons etc.
+*/
+
+h2,h3,p,ul.cont, ol.cont{margin-bottom:10px;}
+blockquote{margin-bottom:10px;}
+h1{margin-bottom:10px;}
+.item_list ul.cont{line-height:18px;}
+ul.cont ul li{margin-left:3.5em; list-style:disc;}
+
+h1{font-size:2em;}
+h2{font-size:1.5em ; font-weight:bold; color:#7885ba;}
+h2{text-transform:uppercase; font-weight:normal; font-size:1.3em; color:#666;}
+h3{font-size:1.2em;}
+h3, h4{font-weight:bold;}
+h3.mod{font-weight:normal;}
+
+ol.cont li{margin-left:2em;}
+ul.cont li{list-style:circle; margin-left:2em;}
+
+a{color:/*#ef923b*/#ce4a27;
+/*background:#f2ebe1;*/
+}
+/*Differentiate between links in running text (may have background color) vs. links as link set.*/
+a:hover{text-decoration:underline;}
+a:hover img{opacity:0.7;
+    /*-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=70)"; filter: alpha(opacity=70); */
+    text-decoration:none;}
+p img.l, img.left_float{float:left; margin-right:10px; margin-bottom:10px;}
+p img.r, img.right_float{float:right; margin-left:10px; margin-bottom:10px;}
+p img.block_img{display:block; margin:10px auto;}
+p img{vertical-align:text-bottom;}/*CHECK - for photos india*/
+img.brdr{border:1px solid #f1f1f1; padding:5px; margin-bottom:10px;}
+
+table.cont {width:100%; margin-bottom:10px;}
+table.cont td{padding:7px 5px; border:1px solid #CCC; vertical-align:top;}
+table.cont th, table.cont td.thish{padding:7px 5px; border:1px solid #CCC; text-align:left;  vertical-align:top; background:#f1f1f1; font-weight:bold;}
+table.cont_2 {width:100%; margin-bottom:10px;}
+table.cont_2 td{padding:7px 5px; border-bottom:1px solid #f1f1f1; vertical-align:top;}
+table.cont_2 th{padding:7px 5px; border-bottom:1px solid #f1f1f1; text-align:left; vertical-align:top; background:#f1f1f1;} /*f0e4c5*/
+table.item_list_table tr td{border:none; border-bottom:1px solid #CCC;}
+table.item_list_table tr th{border:solid #CCC; border-width:1px 0;}
+table.item_list_table tr:last-child td{border:none}/*browser test*/
+
+table.just_pad td{padding:5px;}
+
+input[type=checkbox], input.cbox{vertical-align:text-bottom;}
+input[type=radio], input.radio{vertical-align:text-bottom; vertical-align:0;}
+input[type=radio].mid, input.radio.mid, input.mid{vertical-align:middle;}
+input.disabled_text{background:#f1f1f1; border:1px solid #ccc;}
+.blocked{margin-bottom:10px;}
+.half_mar{margin-bottom:5px;}
+.cart_qty{width:30px; vertical-align:top;}
+
+.dim{font-size:0.9em; color:#666; line-height:1.4em;}
+.gry{color:#666;}
+.grn{color: #009933;}
+.upc{text-transform:uppercase;}
+.lgry{color:#ccc;}
+.em{font-style:italic;}
+.sml{font-size:0.9em;}
+.xsml{font-size:0.8em;}
+.lrg{font-size:1.2em;}
+.rt{text-align:right;}
+.red{color:Tomato}
+.wht{color:white;}
+.yel{color:#FC0;}
+.gwht{color:GHOSTWHITE;}
+.uln{text-decoration:underline;}
+.ulta_margin{margin-bottom:0; margin-top:10px;}
+/*em.unit{text-transform:uppercase; font-style:normal; padding-left:3px; color:#666; font-size:0.8em;}*/
+label b{font-weight:normal; color:#666; padding-left:3px;}
+.bdr{border:1px solid #f1f1f1;}
+
+h1{padding:0 10px}
+
+div.hr, hr{height:1px; border:none; color:#e2e2e2; background-color:#e2e2e2; margin-bottom:10px;}
+ hr.no_margin{margin-bottom:0px;}
+
+
+body{font:normal 12px/1.6em 'Segoe UI', 'Trebuchet MS', 'Lucida Grande', Arial, sans-serif; color:#333;}
+
+.dummy_img{border:1px solid #CCC; background:#CCC}
+
+/*body h2:first-child{margin-top:20px;}*/
+
+.container_8{margin-left:auto; margin-right:auto; width:744px}
+
+.grid_1,
+.grid_2,
+.grid_3,
+.grid_4,
+.grid_5,
+.grid_6,
+.grid_7,
+.grid_8{display:inline; float:left; position:relative; margin-left:10px; margin-right:10px}
+
+.alpha{margin-left:0}
+
+.omega{margin-right:0}
+.container_8 .grid_1{width:73px}
+.container_8 .grid_2{width:166px}
+.container_8 .grid_3{width:259px}
+.container_8 .grid_4{width:352px}
+.container_8 .grid_5{width:445px}
+.container_8 .grid_6{width:538px}
+.container_8 .grid_7{width:631px}
+.container_8 .grid_8{width:724px}
+.container_8 .prefix_1{padding-left:93px}
+.container_8 .prefix_2{padding-left:186px}
+.container_8 .prefix_3{padding-left:279px}
+.container_8 .prefix_4{padding-left:372px}
+.container_8 .prefix_5{padding-left:465px}
+.container_8 .prefix_6{padding-left:558px}
+.container_8 .prefix_7{padding-left:651px}
+.container_8 .suffix_1{padding-right:93px}
+.container_8 .suffix_2{padding-right:186px}
+.container_8 .suffix_3{padding-right:279px}
+.container_8 .suffix_4{padding-right:372px}
+.container_8 .suffix_5{padding-right:465px}
+.container_8 .suffix_6{padding-right:558px}
+.container_8 .suffix_7{padding-right:651px}
+.container_8 .push_1{left:93px}
+.container_8 .push_2{left:186px}
+.container_8 .push_3{left:279px}
+.container_8 .push_4{left:372px}
+.container_8 .push_5{left:465px}
+.container_8 .push_6{left:558px}
+.container_8 .push_7{left:651px}
+.container_8 .pull_1{left:-93px}
+.container_8 .pull_2{left:-186px}
+.container_8 .pull_3{left:-279px}
+.container_8 .pull_4{left:-372px}
+.container_8 .pull_5{left:-465px}
+.container_8 .pull_6{left:-558px}
+.container_8 .pull_7{left:-651px}
+.clear{clear:both; display:block; overflow:hidden; visibility:hidden; width:0; height:0}
+.clearfix:after{clear:both; content:' '; display:block; font-size:0; line-height:0; visibility:hidden; width:0; height:0}
+.clearfix{display:inline-block}
+* html .clearfix{height:1%}
+.clearfix{display:block}
+
+body {
+  background: #FFF;
+}
+
+/*Buttons*/
+    div.btns{margin-bottom:10px;}
+    ul.btns, div.btns, p.btns{overflow:auto;}
+    ul.btns li{float:left; margin-right:10px;}
+    ul.toolbar_btns>li{float:left; margin-right:10px;}
+    table.btns tr td{vertical-align:middle; padding:0 10px 0 0;}
+    .toolbar table.btns tr td{vertical-align:top; padding:0 10px 0 0;}
+    /*simple buttons*/
+        input.btn, a.btn{ font-size:1.2em; border:2px solid;}
+        /*dimensions need different setting fopr anchor and input, fixed height necessary for equi-height buttons*/
+        input.btn{padding:0 5px;height:30px;}
+        a.btn{padding:3px 5px; height:20px; display:inline-block;}
+        /*hover and active states*/
+        input.btn:hover, a.btn:hover{background:#BC4F1C; text-decoration:none;} /*hover does not work on ie6, ie6 also adds a black outline*/
+        a.btn:active{padding:4px 4px 2px 6px;}
+        input.btn:active{padding-top:1px; padding-left:6px;} /*Needed for webkit and firefox*/
+
+    /*base style*/
+        input.btn, a.btn{color:white; background-color:#6E8D24; border-color:#ccc #666 #666 #ccc;}
+        input.btn:hover, a.btn:hover{background:#BC4F1C;}
+
+    /*cool buttons*/
+        /*resetting stuff*/
+        button{border:none; position:relative; overflow: visible; cursor:pointer}
+        button::-moz-focus-inner {border: none; margin:0; padding:0; /* overrides extra padding in Firefox */}
+        @media screen and (-webkit-min-device-pixel-ratio:0) {button span {margin-top: -1px;margin-right: -3px;}}/* Safari and Google Chrome only - fix margins */
+        button span {position: relative;display: block;white-space: nowrap;} /*both position relative and whitespace needed for ie6*/
+
+        /*base resets*/
+            a.cool_btn, a.round_btn, a.cool_btn_s, div.cool_btn a{display:block; cursor:pointer; float:left; white-space:nowrap;} /*Displaying anchors as blocks*/
+            div.cool_btn, div.round_btn, div.cool_btn_s{float:left; clear:right;} /*floating container divs so that they fit content width and contain content height*/
+            a.round_btn img, a.cool_btn_s img{vertical-align:middle;} /*Align images if any*/
+            a.cool_btn span, a.round_btn span, a.cool_btn_s span{display:inline-block;} /*inline-block works in ie6. yay!. can also use block and float*/
+            a.cool_btn:hover, a.cool_btn_s:hover, button.cool_btn:hover, div.cool_btn a:hover, div.cool_btn_s a:hover, a.round_btn:hover {text-decoration:none;}
+            div.cool_btn div, div.round_btn div, div.cool_btn_s div{float:left;}
+            div.cool_btn input, div.round_btn input, div.cool_btn_s input{background:transparent; border:none; cursor:pointer;}/*makes input transparent - v. imp*/
+
+        /*height and widths*/
+            a.cool_btn, div.cool_btn{padding-left:2px;}
+            div.th{padding-left:7px;}
+            a.cool_btn span, div.cool_btn a, button.cool_btn span{padding:5px 12px 5px 8px;height:25px;}
+            a.round_btn span, div.cool_btn_s a, a.cool_btn_s span{margin-left:7px; padding:2px 13px 3px 2px; height:20px;}
+            div.cool_btn div{height:35px;}
+            div.cool_btn input{height:30px; padding:0 12px 2px 10px;} /*bottom padding does not change height and fixes some text-positioning in IE, Chrome, Mozilla - esp in Mozilla*/
+            div.round_btn input{height:25px; padding:2px 12px 2px 0; font-weight:normal;}
+            div.cool_btn_s input{height:25px; padding:1px 10px 2px 8px; font-weight:normal;}
+
+            div.round_btn{padding-left:9px;}
+            /*click effect*/
+                button:active span{padding:7px 10px 3px 10px;}
+                /*a.cool_btn:active span{padding:7px 10px 3px 10px;}*/
+                /*a.cool_btn:active{margin:1px 0px 0px 1px;}*/
+                div.cool_btn input:active{padding:0 10px 0 12px;} /*Needed for webkit and firefox*/
+                div.disabled input:active{padding:0 12px 2px 10px;} /*Needed for webkit and firefox*/
+
+        /*font styling*/
+            a.cool_btn, button.cool_btn, div.cool_btn input, div.cool_btn a{color:white;font-size:1.2em; font-weight:bold;}
+            a.round_btn{color:#666!important;}
+            a.cool_btn_s, div.cool_btn_s input, div.cool_btn_s a{color:white; font-weight:bold;}
+            a.round_btn:hover{color:#333;}
+
+        /*Images*/
+            a.cool_btn, button.cool_btn, div.cool_btn, a.cool_btn span, div.cool_btn a, div.cool_btn div{background:url(../images/btn_sprite.png);}
+
+            a.cool_btn, button.cool_btn, div.cool_btn{background-position:top left;}
+            a.cool_btn span, div.cool_btn a, button.cool_btn span, div.cool_btn div{background-position:top right;}
+
+            a.cool_btn:hover, button.cool_btn:hover, div.cool_btn:hover {background-position:left -65px}
+            a.cool_btn:hover span, button.cool_btn:hover span, div.cool_btn:hover div, div.cool_btn a:hover{background-position:right -65px}
+
+            a.org, button.org, div.org{background-position:left -120px;}
+            a.org span, button.org span, div.org div, div.org a{background-position:right -120px;}
+            a.org:hover, button.org:hover, div.org:hover {background-position:left -185px} /*120 + 65 px*/
+            a.org:hover span, button.org:hover span, div.org:hover div, div.org a:hover{background-position:right -185px}
+
+            div.disabled a, a.disabled, button.disabled, div.disabled,
+                a.disabled:hover, button.disabled:hover, div.disabled:hover{background-position:left -240px;}
+            div.disabled a, a.disabled, button.disabled, div.disabled input{color:#333000;}
+            a.disabled span, button.disabled span, div.disabled div, div.disabled a,
+                a.disabled:hover span, button.disabled:hover span, div.disabled:hover div, div.disabled a:hover{background-position:right -240px; cursor:default;}
+
+
+
+            a.round_btn span, div.round_btn div, a.round_btn, div.round_btn, a.cool_btn_s, button.cool_btn_s, div.cool_btn_s, a.cool_btn_s span, div.cool_btn_s a, div.cool_btn_s div{background:url(../images/btn_s_sprite.png);}
+            a.cool_btn_s, div.cool_btn_s{background-position:top left;}
+            a.cool_btn_s span, div.cool_btn_s div{background-position:top right;}
+
+
+            a.cool_btn_s:hover, div.cool_btn_s:hover{background-position:left -65px;}
+            a.cool_btn_s:hover span, div.cool_btn_s div:hover{background-position:right -65px;}
+
+            a.org_s{background-position:left -100px;}
+            a.org_s span{background-position:right -100px;}
+            a.org_s:hover{background-position:left -165px;}
+            a.org_s:hover span{background-position:right -165px;}
+
+            a.round_btn, div.round_btn{background-position:left -240px;}
+            a.round_btn span, div.round_btn div{background-position:right -240px;}
+
+            a.disabled_round{background-position:left -280px; color:#CCC!important; cursor:default;}
+            a.disabled_round span{background-position:right -280px;}

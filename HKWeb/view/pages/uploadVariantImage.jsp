@@ -1,0 +1,23 @@
+<%@ page import="mhc.service.dao.ProductDao" %>
+<%@ page import="mhc.service.dao.ProductVariantDao" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ include file="/includes/_taglibInclude.jsp" %>
+<s:useActionBean beanclass="web.action.UploadImageAction" var="imageBean"/>
+
+<s:layout-render name="/layouts/defaultAdmin.jsp">
+
+  <s:layout-component name="content">
+    <s:form beanclass="web.action.UploadImageAction">
+      File to Upload
+      <s:file name="fileBean" size="30"/>
+      <s:select name="productVariant" >
+       <c:forEach items="${imageBean.productVariant.product.productVariants}" var="variant" varStatus="ctr">
+         <s:option value="${variant}">${variant.id},Color:${variant.colorOptionsValue}</s:option>
+       </c:forEach>
+      </s:select>
+      <s:submit name="uploadProductVariantImage" value="Upload Image"/>
+      <s:hidden name="productVariant" value="${imageBean.productVariant.id}"/>
+    </s:form>
+  </s:layout-component>
+
+</s:layout-render>

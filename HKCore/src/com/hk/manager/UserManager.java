@@ -1,0 +1,390 @@
+package com.hk.manager;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.mgt.SecurityManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.akube.framework.util.BaseUtils;
+import com.hk.constants.core.RoleConstants;
+import com.hk.constants.order.EnumOrderStatus;
+import com.hk.dao.core.AddressDao;
+import com.hk.dao.core.TempTokenDao;
+import com.hk.dao.offer.OfferInstanceDao;
+import com.hk.dao.order.OrderDao;
+import com.hk.dao.order.cartLineItem.CartLineItemDao;
+import com.hk.domain.TempToken;
+import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.offer.OfferInstance;
+import com.hk.domain.order.CartLineItem;
+import com.hk.domain.order.Order;
+import com.hk.domain.user.Address;
+import com.hk.domain.user.Role;
+import com.hk.domain.user.User;
+import com.hk.domain.warehouse.Warehouse;
+import com.hk.dto.user.UserLoginDto;
+import com.hk.exception.HealthkartLoginException;
+import com.hk.exception.HealthkartSignupException;
+import com.hk.service.RoleService;
+import com.hk.service.UserService;
+import com.hk.util.TokenUtils;
+import com.shiro.PrincipalImpl;
+
+@Component
+public class UserManager {
+
+    // private static final int MAX_UNVERIFIED_DAYS = 15;
+    private static final int ACTIVATION_LINK_EXPIRY_DAYS = 100;
+
+    @Autowired
+    private UserService      userService;
+    @Autowired
+    private OrderManager     orderManager;
+    @Autowired
+    private RoleService      roleService;
+
+    private SecurityManager  securityManager;
+    @Autowired
+    private EmailManager     emailManager;
+    @Autowired
+    private LinkManager      linkManager;
+
+    @Autowired
+    private TempTokenDao     tempTokenDao;
+    @Autowired
+    private CartLineItemDao  cartLineItemDao;
+    @Autowired
+    private OrderDao         orderDao;
+    @Autowired
+    private OfferInstanceDao offerInstanceDao;
+    @Autowired
+    private AddressDao       addressDao;
+
+    public UserLoginDto login(String email, String password, boolean rememberMe) throws HealthkartLoginException {
+        /**
+         * Check whether any user is logged in or not. if yes then if the user is TEMP_USER then save a reference to
+         * this user we're doing this so that any data that the temp user has created, like images, cart etc are
+         * automatically transferred to the correct logged in user. after the login is successful, this data
+         * merge/transfer will be done
+         */
+        User tempUser = null;
+        if (getPrincipal() != null) {
+            User currentUser = getUserService().getUserById(getPrincipal().getId());
+            Role tempUserRole = getRoleService().getRoleByName(RoleConstants.TEMP_USER);
+            if (currentUser != null && currentUser.getRoles().contains(tempUserRole)) {
+                tempUser = currentUser;
+            }
+        }
+
+        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(email, password);
+        usernamePasswordToken.setRememberMe(rememberMe);
+
+        try {
+            getSecurityManager().login(null, usernamePasswordToken);
+        } catch (AuthenticationException e) {
+            // Note: if the login fails, existing subject is still retained
+            throw new HealthkartLoginException(e);
+        }
+
+        /*
+         * Here we are checking whether user has verified his email account or not. If user has not yet verified even
+         * after MAX_UNVERIFIED_DAYS limit exceed then we will change the user's role to ITV_DEACTIVATED
+         */
+        User user = getUserService().getUserById(getPrincipal().getId());
+
+        if (user != null) {
+            // change last login date before proceeding
+            user.setLastLoginDate(BaseUtils.getCurrentTimestamp());
+
+            // save user to save the last login date and roles change etc if any.
+            getUserService().save(user);
+        }
+        /**
+         * Now to transfer any data created by a temp user.
+         */
+        if (tempUser != null) {
+            // Merge order/address/offer instances of Guest user
+            this.mergeUsers(tempUser, user);
+        }
+
+        return new UserLoginDto(user);
+    }
+
+    private PrincipalImpl getPrincipal() {
+        return (PrincipalImpl) getSecurityManager().getSubject().getPrincipal();
+    }
+
+    @SuppressWarnings("deprecation")
+    public Warehouse getAssignedWarehouse() {
+        if (getPrincipal() != null) {
+            User currentUser = getUserService().getUserById(getPrincipal().getId());
+            if (currentUser != null && !currentUser.getWarehouses().isEmpty()) {
+                return currentUser.getWarehouses().iterator().next();
+            }
+        }
+        return null;
+    }
+
+    public User signup(String email, String name, String password, User referredBy) throws HealthkartSignupException {
+        return signup(email, name, password, referredBy, null);
+    }
+
+    public User signup(String email, String name, String password, User referredBy, String roleName) throws HealthkartSignupException {
+        if (getUserService().findByLogin(email) != null) {
+            throw new HealthkartSignupException("User already exists by this email");
+        }
+
+        User user;
+        User tempUser = null;
+        /**
+         * Check whether any user is logged in or not. if yes then if the user is TEMP_USER then remove the role
+         * TEMP_USER and proceed. else create a new User object and proceeed. we're doing this so that any data that the
+         * temp user has created, like images, cart etc are automatically transferred to the new account.
+         */
+        if (getPrincipal() != null) {
+            user = getUserService().getUserById(getPrincipal().getId());
+            Role tempUserRole = getRoleService().getRoleByName(RoleConstants.TEMP_USER);
+            if (user != null && user.getRoles().contains(tempUserRole)) {
+                tempUser = user;
+                user.getRoles().remove(tempUserRole);
+            } else {
+                user = new User();
+            }
+        } else {
+            user = new User();
+        }
+
+        user.setName(name);
+        user.setLogin(email);
+        user.setEmail(email);
+        user.setPasswordChecksum(BaseUtils.passwordEncrypt(password));
+
+        // to prevent overwriting referredBy we are checking for null
+        // if this user is already referred by any other user then we will not override
+        if (user.getReferredBy() == null) {
+            user.setReferredBy(referredBy);
+        }
+
+        if (StringUtils.isBlank(roleName)) {
+            Role role = getRoleService().getRoleByName(RoleConstants.HK_UNVERIFIED);
+            roleName = role.getName();
+            user.getRoles().add(role);
+        } else {
+            user.getRoles().add(getRoleService().getRoleByName(roleName));
+        }
+        user = getUserService().save(user);
+
+        /**
+         * Now to transfer any data created by a temp user.
+         */
+        if (tempUser != null) {
+            // Merge order/address/offer instances of Guest user
+            this.mergeUsers(tempUser, user);
+        }
+
+        // logging in the just created user
+        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(email, password);
+        usernamePasswordToken.setRememberMe(true);
+
+        getSecurityManager().login(null, usernamePasswordToken);
+
+        user.setPassword(password); // is required by the email template.
+
+        // generate user activation link
+        if (RoleConstants.HK_UNVERIFIED.equals(roleName)) {
+            String userActivationLink = getUserActivationLink(user);
+            getEmailManager().sendWelcomeEmail(user, userActivationLink);
+        }
+
+        return user;
+    }
+
+    public String getUserActivationLink(User user) {
+        TempToken tempToken = getTempTokenDao().createNew(user, ACTIVATION_LINK_EXPIRY_DAYS);
+        String userActivationLink = getLinkManager().getUserActivationLink(tempToken);
+        // System.out.println("Account activation link: " + userActivationLink);
+        return userActivationLink;
+    }
+
+    public User createAndLoginAsGuestUser(String email, String name) {
+        User user = createGuestUser(email, name);
+
+        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(user.getLogin(), user.getLogin());
+        usernamePasswordToken.setRememberMe(true);
+
+        getSecurityManager().login(null, usernamePasswordToken);
+        return user;
+    }
+
+    @Transactional
+    public User createGuestUser(String email, String name) {
+        User user = new User();
+        user.setName(StringUtils.isBlank(name) ? "Guest" : name);
+        String randomLogin = TokenUtils.generateGuestLogin();
+        user.setLogin(randomLogin);
+        user.setEmail(email);
+        user.setPasswordChecksum(BaseUtils.passwordEncrypt(randomLogin));
+        user.getRoles().add(getRoleService().getRoleByName(RoleConstants.TEMP_USER));
+        user = getUserService().save(user);
+        return user;
+    }
+
+    @Transactional
+    public void mergeUsers(User srcUser, User dstUser) {
+        Order guestOrder = getOrderManager().getOrCreateOrder(srcUser);
+        Order loggedOnUserOrder = getOrderManager().getOrCreateOrder(dstUser);
+        Set<CartLineItem> guestLineItems = guestOrder.getCartLineItems();
+        for (CartLineItem guestLineItem : guestLineItems) {
+            // The variant is not added in user account already
+            if (getCartLineItemDao().getLineItem(guestLineItem.getProductVariant(), loggedOnUserOrder) == null) {
+                guestLineItem.setOrder(loggedOnUserOrder);
+                getCartLineItemDao().save(guestLineItem);
+            }
+        }
+        getOrderDao().save(loggedOnUserOrder);
+
+        // Offer Instances
+        List<OfferInstance> guestOfferInsatnces = srcUser.getOfferInstances();
+        for (OfferInstance guestOfferInsatnce : guestOfferInsatnces) {
+            guestOfferInsatnce.setUser(dstUser);
+            getOfferInstanceDao().save(guestOfferInsatnce);
+        }
+
+        // Address
+        List<Address> guestAddresses = srcUser.getAddresses();
+        for (Address guestAddress : guestAddresses) {
+            guestAddress.setUser(dstUser);
+            getAddressDao().save(guestAddress);
+        }
+    }
+
+    public Long getProcessedOrdersCount(User user) {
+        Long count = 0L;
+        List<Long> validOrderStatusIds = Arrays.asList(EnumOrderStatus.Shipped.getId(), EnumOrderStatus.Delivered.getId());
+        for (Order order : user.getOrders()) {
+            if (validOrderStatusIds.contains(order.getOrderStatus().getId())) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public Double getApplicableOfferPriceForUser(ProductVariant pv) {
+        if (pv != null) {
+            if (getPrincipal() != null) {
+                User sessionUser = getUserService().getUserById(getPrincipal().getId());
+                if (sessionUser != null) {
+                    return pv.getHkPrice(sessionUser.getRoleStrings());
+                }
+            }
+            return pv.getHkPrice(null);
+        }
+        return 0D;
+    }
+
+    public Double getApplicableOfferPriceForUser(ProductVariant pv, Order order) {
+        if (order != null) {
+            User user = order.getUser();
+            if (user != null) {
+                return pv.getHkPrice(user.getRoleStrings());
+            }
+        }
+        return pv.getHkPrice(null);
+    }
+
+    public UserService getUserService() {
+        return userService;
+    }
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    public OrderManager getOrderManager() {
+        return orderManager;
+    }
+
+    public void setOrderManager(OrderManager orderManager) {
+        this.orderManager = orderManager;
+    }
+
+    public RoleService getRoleService() {
+        return roleService;
+    }
+
+    public void setRoleService(RoleService roleService) {
+        this.roleService = roleService;
+    }
+
+    public SecurityManager getSecurityManager() {
+        return securityManager;
+    }
+
+    public void setSecurityManager(SecurityManager securityManager) {
+        this.securityManager = securityManager;
+    }
+
+    public EmailManager getEmailManager() {
+        return emailManager;
+    }
+
+    public void setEmailManager(EmailManager emailManager) {
+        this.emailManager = emailManager;
+    }
+
+    public LinkManager getLinkManager() {
+        return linkManager;
+    }
+
+    public void setLinkManager(LinkManager linkManager) {
+        this.linkManager = linkManager;
+    }
+
+    public TempTokenDao getTempTokenDao() {
+        return tempTokenDao;
+    }
+
+    public void setTempTokenDao(TempTokenDao tempTokenDao) {
+        this.tempTokenDao = tempTokenDao;
+    }
+
+    public CartLineItemDao getCartLineItemDao() {
+        return cartLineItemDao;
+    }
+
+    public void setCartLineItemDao(CartLineItemDao cartLineItemDao) {
+        this.cartLineItemDao = cartLineItemDao;
+    }
+
+    public OrderDao getOrderDao() {
+        return orderDao;
+    }
+
+    public void setOrderDao(OrderDao orderDao) {
+        this.orderDao = orderDao;
+    }
+
+    public OfferInstanceDao getOfferInstanceDao() {
+        return offerInstanceDao;
+    }
+
+    public void setOfferInstanceDao(OfferInstanceDao offerInstanceDao) {
+        this.offerInstanceDao = offerInstanceDao;
+    }
+
+    public AddressDao getAddressDao() {
+        return addressDao;
+    }
+
+    public void setAddressDao(AddressDao addressDao) {
+        this.addressDao = addressDao;
+    }
+
+}

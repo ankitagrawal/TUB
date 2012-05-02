@@ -1,0 +1,2 @@
+The folder is added to store barcode images at run time.
+The barcodes are used at respective invoices. 

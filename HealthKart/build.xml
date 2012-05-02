@@ -1,0 +1,175 @@
+<project name="HealthKart" basedir="." default="build">
+
+	<property file="build.properties" />
+
+	<!-- Remove classes directory for clean build -->
+	<target name="clean" description="Prepare for clean build">
+		<delete dir="${package.target.dir}" />
+		<delete dir="${project.dist.dir}" />
+		<ant dir="${project.common.dir}" target="clean" inheritall="false" />
+		<ant dir="${project.core.dir}" target="clean" inheritall="false" />
+		<ant dir="${project.admin.core.dir}" target="clean" inheritall="false" />
+		<ant dir="${project.report.dir}" target="clean" inheritall="false" />
+		<ant dir="${project.web.dir}" target="clean" inheritall="false" />
+		<!--
+		
+		<ant dir="${project.admin.web.dir}" target="clean" inheritall="false" />
+		
+		-->
+	</target>
+
+
+	<target name="build.common.jar" depends="prepare" description="Create binary distribution">
+		<ant dir="${project.common.dir}" target="build" inheritall="false">
+			<property name="build.env" value="${build.env}" />
+		</ant>
+	</target>
+
+	<target name="collect-resources">
+		<copy todir="${project.dist.dir}/WEB-INF/classes/spring">
+			<fileset dir="${project.common.dir}/resources/spring" />
+		</copy>
+		<!-- <copy todir="${project.dist.dir}/WEB-INF/classes/spring">
+			<fileset dir="${project.web.dir}/resources/spring" />
+		</copy> -->
+		<copy todir="${project.dist.dir}/WEB-INF">
+			<fileset dir="${project.common.dir}/resources/logging" />
+		</copy>
+		<copy todir="${project.dist.dir}/WEB-INF/lib">
+			<fileset dir="${lib.barcode.root}">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
+		<copy todir="${project.dist.dir}/WEB-INF/lib">
+			<fileset dir="${lib.commons.root}">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
+		<copy todir="${project.dist.dir}/WEB-INF/lib">
+			<fileset dir="${lib.facebook.root}">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
+		<copy todir="${project.dist.dir}/WEB-INF/lib">
+			<fileset dir="${lib.freemarker.root}">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
+		<copy todir="${project.dist.dir}/WEB-INF/lib">
+			<fileset dir="${lib.hibernate.root}">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
+		<copy todir="${project.dist.dir}/WEB-INF/lib">
+			<fileset dir="${lib.http.root}">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
+		<copy todir="${project.dist.dir}/WEB-INF/lib">
+			<fileset dir="${lib.itext.root}">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
+		<copy todir="${project.dist.dir}/WEB-INF/lib">
+			<fileset dir="${lib.json.root}">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
+		<copy todir="${project.dist.dir}/WEB-INF/lib">
+			<fileset dir="${lib.logger.root}">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
+		<copy todir="${project.dist.dir}/WEB-INF/lib">
+			<fileset dir="${lib.mysql.root}">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
+		<copy todir="${project.dist.dir}/WEB-INF/lib">
+			<fileset dir="${lib.rest.root}">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
+		<copy todir="${project.dist.dir}/WEB-INF/lib">
+			<fileset dir="${lib.solr.root}">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
+		<copy todir="${project.dist.dir}/WEB-INF/lib">
+			<fileset dir="${lib.spring.root}">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
+		<copy todir="${project.dist.dir}/WEB-INF/lib">
+			<fileset dir="${lib.stripes.root}">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
+		<copy todir="${project.dist.dir}/WEB-INF/lib">
+			<fileset dir="${lib.thirdParty.root}">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
+		<copy todir="${project.dist.dir}/WEB-INF/lib">
+			<fileset dir="${lib.xml.root}">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="collect-jar">
+		<mkdir dir="${project.dist.dir}/WEB-INF/lib" />
+		<copy todir="${project.dist.dir}/WEB-INF/lib" file="${project.common.dir}/dist/hk-common.jar" />
+		<copy todir="${project.dist.dir}/WEB-INF/lib" file="${project.core.dir}/dist/hk-core.jar" />
+		<copy todir="${project.dist.dir}/WEB-INF/lib" file="${project.admin.core.dir}/dist/hk-admin-core.jar" />
+		<copy todir="${project.dist.dir}/WEB-INF/lib" file="${project.report.dir}/dist/hk-report.jar" />
+	</target>
+
+	<target name="collect-web">
+		<copy todir="${project.dist.dir}">
+			<fileset dir="${project.web.dir}/dist" />
+		</copy>
+	</target>
+
+	<target name="build" depends="build-dependencies,collect-web,collect-jar,collect-resources">
+		<!--<war destfile="${dist.root}/${app.name}.war" webxml="${dist.war.root}/WEB-INF/web.xml">
+			<fileset dir="${dist.war.root}" />
+		</war>-->
+	</target>
+
+	<!-- Create binary distribution for production-->
+	<target name="build-dependencies" depends="prepare,build.common.jar" description="Create binary distribution">
+
+		<ant dir="${project.core.dir}" target="build" inheritall="false">
+			<property name="build.env" value="${build.env}" />
+		</ant>
+		<ant dir="${project.web.dir}" target="build" inheritall="false">
+			<property name="build.env" value="${build.env}" />
+		</ant>
+		<ant dir="${project.admin.core.dir}" target="build" inheritall="false">
+			<property name="build.env" value="${build.env}" />
+		</ant>
+		<!-- <ant dir="${project.admin.web.dir}" target="build" inheritall="false">
+			<property name="build.env" value="${build.env}" />
+		</ant>
+		<ant dir="${project.report.dir}" target="build" inheritall="false">
+			<property name="build.env" value="${build.env}" />
+		</ant> -->
+	</target>
+
+
+	<!-- Check timestamp on files -->
+	<target name="prepare">
+		<mkdir dir="${package.target.dir}" />
+		<mkdir dir="${project.dist.dir}" />
+		<tstamp />
+	</target>
+
+	<target name="deploy.view">
+
+	</target>
+	<target name="deploy.admin.view">
+
+	</target>
+
+</project>

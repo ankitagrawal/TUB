@@ -1,0 +1,45 @@
+/*
+# ------------------------------------------------------------------------
+# JA Rasite - Stable - Version 1.0 - Licence Owner JA115884
+# ------------------------------------------------------------------------
+# Copyright (C) 2004-2009 J.O.O.M Solutions Co., Ltd. All Rights Reserved.
+# @license - Copyrighted Commercial Software
+# Author: J.O.O.M Solutions Co., Ltd
+# Websites:  http://www.joomlart.com -  http://www.joomlancers.com
+# This file may not be redistributed in whole or significant part.
+# ------------------------------------------------------------------------
+*/
+
+
+/* Eric Meyer's CSS Tools: Reset CSS (Modified by Hieu Nguyen)
+-------------------------------------------------------------*/
+/* http://meyerweb.com/eric/tools/css/reset/ */
+/* v1.0 | 20080212 */
+
+
+/* Clearfix
+-------------------------------------------------------------*/
+
+
+.clearfix:after { /* FF, O, etc. */
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
+
+/* Generic Styles
+-------------------------------------------------------------*/
+.clear, .divider {clear: both;}
+
+
+.no-padding {padding: 0 !important}
+.no-margin 	{margin: 0 !important;}
+
+/*Alignment---*/
+.v-top 		{vertical-align: top;}
+.v-middle	{vertical-align: middle;}
+.v-bottom 	{vertical-align: bottom;}
+
+.auto-width {width: auto;}

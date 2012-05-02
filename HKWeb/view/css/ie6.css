@@ -1,0 +1,9 @@
+.login_details .right_details p{float:left; width:345px; font-size:14px; line-height:16px; color:#0084b5; padding:0 0 68px 57px; border-bottom:1px solid #c5c5c5;}
+.login_details .right_details ul{padding:0 0 71px 57px;}
+#left_container .concerts_details .right_details{float:right;width:428px; padding:24px 15px 0px 0px;}
+
+#home_body_container #left_container .slider_box .pagination li a{display:block; width:8px; height:8px; cursor:pointer; background:url(../images/pagination_normal.gif) 0 0 no-repeat; border:none;}
+#home_body_container #left_container .slider_box .pagination li a:hover{ background:url(../images/pagination_hover.gif) 0 0 no-repeat;}
+#left_container .search_details .list_details{margin-top:-8px; position:relative;}
+#right_container .ticket_ranking_details .contents ul li{float:left; width:auto; padding-bottom:33px;}
+

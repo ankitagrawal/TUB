@@ -1,0 +1,121 @@
+URL fragment
+/home-devices
+>/home-devices/blood-pressure
+>>/home-devices/blood-pressure/bp-monitor
+>>/home-devices/blood-pressure/ecg-machines
+>/home-devices/respiratory-care
+>>/home-devices/ventilator
+>>/home-devices/oxygen-concentrator
+>>/home-devices/spirometer
+>>/home-devices/pulse-oximeters
+>>/home-devices/nasal-face-masks
+>>/home-devices/nebulizer
+>/home-devices/sleep-apnea
+>>/home-devices/sleep-apnea/bilevel-bipap-vpap-devices
+>>/home-devices/sleep-apnea/cpap-machines
+>>/home-devices/sleep-apnea/accessories
+>/home-devices/temperature
+>>/home-devices/temperature/digital-thermometer
+>/home-devices/pain-relief
+>>/home-devices/pain-relief/hot-water-bottle
+>>/home-devices/pain-relief/massager
+>>/home-devices/pain-relief/heat-therapy
+>/home-devices/weight-management
+>>/home-devices/weight-management/body-fat-monitor
+>>/home-devices/weight-management/step-counter
+
+/diabetes
+>/diabetes/testing-supplies
+>>/diabetes/testing-supplies/lancing-devices
+>>/diabetes/testing-supplies/meters
+>>/diabetes/testing-supplies/lancets
+>>/diabetes/testing-supplies/strips
+>/diabetes/diabetic-food
+>>/diabetes/diabetic-food/sweetener
+>>/diabetes/diabetic-food/sugar-free-drinks
+>>/diabetes/diabetic-food/sugar-free-food-candy : Sugar Free Food & Candy
+>/diabetes/devices
+>>/diabetes/devices/step-counter
+>>/diabetes/devices/body-fat-monitor
+>>/diabetes/devices/bp-monitor
+>/diabetes/foot-care
+>>/diabetes/foot-care/foot-care-products
+>>/diabetes/foot-care/foot-wear
+
+/baby
+>/baby/diapering
+>>/baby/diapering/diapers
+>>/baby/diapering/wipes
+>>/baby/diapering/diaper-rash-cream
+>>/baby/diapering/cloth-diapers-nappies : Cloth Diapers/Nappies
+>/baby/baby-food
+>>/baby/baby-food/cereal
+>>/baby/baby-food/puree
+>>/baby/baby-food/formula
+>>/baby/baby-food/supplements
+>>/baby/baby-food/mom-supplements
+>/baby/feeding-nursing : Feeding & Nursing
+>>/baby/feeding-nursing/breast-feeding
+>>/baby/feeding-nursing/bottles-accessories : Bottles & Accessories
+>>/baby/feeding-nursing/bottle-cleaning-sterlization : Bottle Cleaning & Sterlization
+>>/baby/feeding-nursing/sippers-cups : Sippers & Cups
+>>/baby/feeding-nursing/dishes-utensils : Dishes & Utensils
+>/baby/bath-skincare : Bath & Skincare
+">>/baby/bath-skincare/soaps-shampoos-body-wash : Soaps, Shampoos & Body Wash"
+">>/baby/bath-skincare/lotions-oils-powders : Lotions, Oils & Powders"
+>/baby/health-safety : Health & Safety
+>>/baby/health-safety/thermometers
+>>/baby/health-safety/oral-care
+>>/baby/health-safety/pacifiers-teethers : Pacifiers & Teethers
+>>/baby/health-safety/health-baby-care : Health & Baby Care
+>/baby/baby-gear
+>>/baby/baby-gear/strollers-prams : Strollers & Prams
+>>/baby/baby-gear/car-seats
+
+/nutrition
+>/nutrition/sports-nutrition
+>>/nutrition/sports-nutrition/protein
+>>/nutrition/sports-nutrition/creatine
+>>/nutrition/sports-nutrition/weight-gain
+>>/nutrition/sports-nutrition/recovery-drink
+>>/nutrition/sports-nutrition/energy-gel
+>>/nutrition/sports-nutrition/nutrition-bar
+>/nutrition/vitamins-minerals : Vitamins & Minerals
+>>/nutrition/vitamins-minerals/multivitamins
+>>/nutrition/vitamins-minerals/vitamin-c
+>>/nutrition/vitamins-minerals/hair-loss
+>/nutrition/health-wellness : Health & Wellness
+>>/nutrition/health-wellness/joint-care
+>>/nutrition/health-wellness/hair-loss
+>>/nutrition/health-wellness/skin-care
+>>/nutrition/health-wellness/cholestrol
+>>/nutrition/health-wellness/digestive
+>>/nutrition/health-wellness/well-being
+>/nutrition/sex-supplements
+>>/nutrition/sex-supplements
+>/nutrition/herbal-supplements
+>>/nutrition/herbal-supplements/genseng
+>/nutrition/weight-management
+>>/nutrition/weight-management/devices
+>>/nutrition/weight-management/low-calorie-food
+>>/nutrition/weight-management/fat-burner
+>>/nutrition/weight-management/sweetener
+
+/personal-care
+>/personal-care/grooming
+>>/personal-care/grooming/women
+>>/personal-care/grooming/men
+>/personal-care/women-hygiene
+>>/personal-care/women-hygiene/sanitary-napkins
+>/personal-care/sexual-care
+>>/personal-care/sexual-care/accessories
+>>/personal-care/sexual-care/condoms
+>/personal-care/adult-diapers
+>>/personal-care/adult-diapers
+>>/personal-care/adult-diapers/underpad
+>/personal-care/pepper-spray
+>>/personal-care/pepper-spray
+>/personal-care/foot-care-pedicure : Foot Care/Pedicure
+>>/personal-care/foot-care-pedicure/fresh-feet
+>>/personal-care/foot-care-pedicure/beautiful-feet
+>>/personal-care/foot-care-pedicure/comfortable-feet

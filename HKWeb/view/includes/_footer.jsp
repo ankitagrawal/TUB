@@ -1,0 +1,96 @@
+<%@include file="/includes/_taglibInclude.jsp" %>
+<%@ page import="com.shiro.PrincipalImpl" %>
+<%@ page import="com.hk.constants.RoleConstants" %>
+
+<s:layout-definition>
+
+  <div class='footer'>
+    <div class='contents'>
+      <div class='column'>
+        <h5>
+          HEALTHKART
+        </h5>
+        <ul>
+          <li><a href="/"><span class="txt-white">Home</span></a></li>
+          <li>
+            <a href="${pageContext.request.contextPath}/pages/aboutCompany.jsp"><span class="txt-white">About Us</span></a>
+          </li>
+          <li><a href="${pageContext.request.contextPath}/affiliate"><span class="txt-white">Affiliate</span></a></li>
+          <li><a href="${pageContext.request.contextPath}/b2b"><span class="txt-white">For Business</span></a></li>
+          <li><s:link beanclass="web.action.pages.ContactAction"><span class="txt-white">Contact Us</span></s:link>
+          </li>
+          <li><a href="${pageContext.request.contextPath}/pages/termsAndConditions.jsp"><span class="txt-white">Terms & Conditions</span></a>
+          </li>
+          <li><a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp"><span class="txt-white">Return and Cancellations</span></a>
+          </li>
+          <li><a href="http://www.healthkart.com/blog" target="_blank"><span class="txt-white">Blog</span></a></li>
+          <li><a href="${pageContext.request.contextPath}/pages/careers.jsp"><span class="txt-white">Careers</span></a>
+          </li>
+        </ul>
+      </div>
+      <div class='column'>
+        <h5>
+          Categories
+        </h5>
+        <s:useActionBean beanclass="web.action.MenuAction" var="menuAction" event="pre"/>
+        <ul>
+          <c:forEach items="${menuAction.menuNodes}" var="topMenuNode" varStatus="idx">
+            <c:if test="${topMenuNode.name != 'Baby'}">
+            <li><a href="${pageContext.request.contextPath}${topMenuNode.url}">${topMenuNode.name}</a></li>
+            </c:if>
+          </c:forEach>
+        </ul>
+      </div>
+      <div class='column'>
+        <h5>
+          Your Account
+        </h5>
+        <ul>
+          <shiro:hasRole name="<%=RoleConstants.TEMP_USER%>">
+            <li><s:link beanclass="web.action.LoginAction" class="toplinksSecondary">Login</s:link></li>
+            <li><s:link beanclass="web.action.LoginAction" class="toplinksSecondary">Signup</s:link></li>
+          </shiro:hasRole>
+          <shiro:notAuthenticated>
+            <li><s:link beanclass="web.action.LoginAction" class="toplinksSecondary">Login</s:link></li>
+            <li><s:link beanclass="web.action.LoginAction" class="toplinksSecondary">Signup</s:link></li>
+          </shiro:notAuthenticated>
+          <shiro:lacksRole name="<%=RoleConstants.TEMP_USER%>">
+            <li>
+              <s:link beanclass="web.action.MyAccountAction" title='view past orders / edit personal details'>Your Account</s:link></li>
+            <li><s:link beanclass="web.action.LogoutAction" class="toplinksSecondary">Logout</s:link></li>
+            <li><s:link beanclass="web.action.CustomerOrderHistoryAction">Order History</s:link></li>
+            <li><s:link beanclass="web.action.ReferralProgramAction">Referral Program</s:link></li>
+          </shiro:lacksRole>
+        </ul>
+      </div>
+      <div style="float:right;">
+        <img src="<hk:vhostImage/>/images/banners/home/safe_secure_footer.gif" alt="safe and secure shopping at healthkart">
+      </div>
+      <script type="text/javascript">
+        $("#contactBox").click(function() {
+          document.location.href = '${pageContext.request.contextPath}/contact';
+        });
+      </script>
+      <div class='floatfix'></div>
+    </div>
+    <div class='floatfix'></div>
+    <div class="footer-bottom" style=" padding: 1 linink kahomepx 0;">
+      <div class="fb-contents">
+        <span style="color: white;" class="serif"> &copy; 2012 healthkart.com</span>
+
+        <a href="http://www.facebook.com/healthkart" target="_blank" style="border-bottom:none">
+          <img src="<hk:vhostImage/>/images/banners/home/facebook.png"></a>
+        <a href="http://www.twitter.com/healthkart" target="_blank" style="border-bottom:none">
+          <img src="<hk:vhostImage/>/images/banners/home/twitter.png" alt="HealthKart Twitter">
+        </a>
+        <a href="http://www.healthkart.com/blog" target="_blank" style="border-bottom:none">
+          <img src="<hk:vhostImage/>/images/banners/home/Blog.png" alt="HealthKart Blog"></a>
+
+        <div class='floatfix'></div>
+      </div>
+    </div>
+  </div>
+  <div class='floatfix'></div>
+  </div>
+
+</s:layout-definition>

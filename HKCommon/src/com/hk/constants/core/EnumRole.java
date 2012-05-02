@@ -1,0 +1,61 @@
+package com.hk.constants.core;
+
+import com.hk.domain.user.Role;
+
+public enum EnumRole {
+
+  GOD                 (RoleConstants.GOD),
+  PO_APPROVER         (RoleConstants.PO_APPROVER),
+  ROCKSTAR            (RoleConstants.ROCKSTAR),
+  ADMIN               (RoleConstants.ADMIN),
+  HK_USER             (RoleConstants.HK_USER),
+  B2B_USER            (RoleConstants.B2B_USER),
+  HK_IHO_USER         (RoleConstants.HK_IHO_USER),
+  TEMP_USER           (RoleConstants.TEMP_USER),
+  HK_UNVERIFIED       (RoleConstants.HK_UNVERIFIED),
+  HK_DEACTIVATED      (RoleConstants.HK_DEACTIVATED),
+  HK_BLOCKED          (RoleConstants.HK_BLOCKED),
+  HK_DELETED          (RoleConstants.HK_DELETED),
+  COD_BLOCKED         (RoleConstants.COD_BLOCKED),
+  BASIC_ROLES         (RoleConstants.BASIC_ROLES),
+  RECONCILIATION      (RoleConstants.RECONCILIATION),
+  OPS_MANAGER_L1      (RoleConstants.OPS_MANAGER_L1),
+  OPS_MANAGER_L2      (RoleConstants.OPS_MANAGER_L2),
+  OPS_MANAGER         (RoleConstants.OPS_MANAGER),
+  WH_EMPLOYEE         (RoleConstants.WH_EMPLOYEE),
+  WH_MANAGER          (RoleConstants.WH_MANAGER),
+  WH_MANAGER_L1       (RoleConstants.WH_MANAGER_L1),
+  CUSTOMER_SUPPORT    (RoleConstants.CUSTOMER_SUPPORT),
+  CUSTOMER_SUPPORT_L2 (RoleConstants.CUSTOMER_SUPPORT_L2),
+  CUSTOMER_SUPPORT_L3 (RoleConstants.CUSTOMER_SUPPORT_L3),
+  CATEGORY_MANAGER_L1 (RoleConstants.CATEGORY_MANAGER_L1),
+  CATEGORY_MANAGER_L2 (RoleConstants.CATEGORY_MANAGER_L2),
+  CATEGORY_MANAGER    (RoleConstants.CATEGORY_MANAGER),
+  SUPPLIER            (RoleConstants.SUPPLIER),
+  TICKETADMIN         (RoleConstants.TICKETADMIN),
+  SITE_CONTENT_MANAGER(RoleConstants.SITE_CONTENT_MANAGER),
+  REPORT_ADMIN        (RoleConstants.REPORT_ADMIN),
+  FINANCE             (RoleConstants.FINANCE),
+  MARKETING           (RoleConstants.MARKETING),
+  UNSUBSCRIBED_USER   (RoleConstants.UNSUBSCRIBED_USER),
+  HK_AFFILIATE(RoleConstants.HK_AFFILIATE),
+  HK_AFFILIATE_UNVERIFIED(RoleConstants.HK_AFFILIATE_UNVERIFIED),
+  MASTER_BUG_RESOLVER(RoleConstants.MASTER_BUG_RESOLVER),
+  HK_EMPLOYEE(RoleConstants.HK_EMPLOYEE);
+
+  String roleName;
+
+  EnumRole(String roleName) {
+    this.roleName = roleName;
+  }
+
+  public String getRoleName() {
+    return roleName;
+  }
+
+  public Role toRole() {
+    Role role = new Role();
+    role.setName(this.getRoleName());
+    return role;
+  }
+}

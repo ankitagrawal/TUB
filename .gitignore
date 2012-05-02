@@ -1,0 +1,9 @@
+build/*
+*.class
+*.bak
+*.log
+.classpath
+.project
+bin-groovy/*
+bin/*
+dist/*

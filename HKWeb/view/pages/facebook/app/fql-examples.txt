@@ -1,0 +1,166 @@
+http://developers.facebook.com/tools/console/
+
+
+// get latest posts from wall. get details of attachments too.
+
+<div id="info"></div>
+<script>
+var
+  info   = document.getElementById('info'),
+  update = function(response) {
+    if (!response.session) {
+      info.innerHTML = '<em>You must login using the controls at the top.</em>';
+      return;
+    }
+
+    FB.api(
+      {
+        method: 'fql.query',
+        query: 'SELECT actor_id, target_id, message, attachment FROM stream WHERE source_id = me() limit 50'
+      },
+      function(response) {
+        info.innerHTML =
+        response[0].message + ', target = ' + response[0].target_id + ", actor_id = " + response[0].actor_id + ", source_id = " + response[0].source_id + ", attachment = " + response[0].attachment +" | "
+        ;
+      for (var attKey in response[0].attachment) {
+        info.innerHTML += "<br/>"+ attKey + "=" + response[0].attachment[attKey];
+      }
+      }
+    );
+  };
+
+// update on login, logout, and once on page load
+FB.Event.subscribe('auth.login', update);
+FB.Event.subscribe('auth.logout', update);
+FB.getLoginStatus(update);
+</script>
+
+
+
+
+
+
+// get share counts for links
+
+<div id="info"></div>
+<script>
+var
+  info   = document.getElementById('info'),
+  update = function(response) {
+    if (!response.session) {
+      info.innerHTML = '<em>You must login using the controls at the top.</em>';
+      return;
+    }
+
+    FB.api(
+      {
+        method: 'fql.query',
+        query: 'SELECT share_count, like_count, comment_count, total_count, normalized_url FROM link_stat WHERE url="http://www.zoomin.com/89flipbook-facebook_Dealsv2new.htm"'
+      },
+      function(response) {
+        info.innerHTML =
+        response[0].share_count + " " + response[0].normalized_url;
+      for (var attKey in response[0].attachment) {
+        info.innerHTML += "<br/>"+ attKey + "=" + response[0].attachment[attKey];
+      }
+      }
+    );
+  };
+
+// update on login, logout, and once on page load
+FB.Event.subscribe('auth.login', update);
+FB.Event.subscribe('auth.logout', update);
+FB.getLoginStatus(update);
+</script>
+
+
+
+
+
+// get the latest links from a user. can be useful to check if the user has shared your link
+
+<div id="info"></div>
+<script>
+var
+  info   = document.getElementById('info'),
+  update = function(response) {
+    if (!response.session) {
+      info.innerHTML = '<em>You must login using the controls at the top.</em>';
+      return;
+    }
+
+    FB.api(
+      {
+        method: 'fql.query',
+        query: 'SELECT owner, link_id, url FROM link where owner = me()'
+      },
+      function(response) {
+        for (var responseId in response) {
+          info.innerHTML += '<br/>' + response[responseId].owner + " " + response[responseId].link_id + " " + response[responseId].url;
+        }
+
+      }
+    );
+  };
+
+// update on login, logout, and once on page load
+FB.Event.subscribe('auth.login', update);
+FB.Event.subscribe('auth.logout', update);
+FB.getLoginStatus(update);
+</script>
+
+
+
+
+// check if a user is a fan of a page. empty array is returned if user is not a fan
+// FB Doc Bug : target_id is indexable, says not indexable in docs - http://developers.facebook.com/docs/reference/fql/connection
+
+<div id="info"></div>
+<script>
+var
+  info   = document.getElementById('info'),
+  update = function(response) {
+    if (!response.session) {
+      info.innerHTML = '<em>You must login using the controls at the top.</em>';
+      return;
+    }
+
+    FB.api(
+      {
+        method: 'fql.query',
+        query: 'SELECT target_id FROM connection WHERE source_id = me() AND target_id = 19473165518'
+      },
+      function(response) {
+        for (var responseId in response) {
+          info.innerHTML += '<br/>' + response[responseId].target_id;
+        }
+
+      }
+    );
+  };
+
+// update on login, logout, and once on page load
+FB.Event.subscribe('auth.login', update);
+FB.Event.subscribe('auth.logout', update);
+FB.getLoginStatus(update);
+</script>
+
+
+
+// another way of calling FQL. seems like the more correct way. it is parametrized.
+
+    var query = FB.Data.query('select name, uid from user where uid= me()');
+    query.wait(function(response) {
+      alert(response);
+      var msg = "";
+      for (var resKey in response) {
+        msg += resKey + "=" + response[resKey] + ",";
+      }
+      alert(msg + " ------------ <%=request.getQueryString()%>");
+
+      if (response[0]) {
+        $('.isFan').show();
+      } else {
+        $('.isNotFan').show();
+      }
+    });

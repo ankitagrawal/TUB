@@ -1,0 +1,69 @@
+package com.hk.dao.marketing;
+
+import java.util.Date;
+import java.util.List;
+
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.akube.framework.util.BaseUtils;
+import com.hk.dao.impl.BaseDaoImpl;
+import com.hk.domain.email.EmailCampaign;
+
+@SuppressWarnings("unchecked")
+@Repository
+public class EmailCampaignDao extends BaseDaoImpl {
+
+  /*public EmailCampaignDao() {
+    super(EmailCampaign.class);
+  }*/
+
+  @Transactional
+  public EmailCampaign save(EmailCampaign emailCampaign) {
+    if (emailCampaign != null) {
+      if (emailCampaign.getCreateDate() == null) emailCampaign.setCreateDate(BaseUtils.getCurrentTimestamp());
+    }
+    return (EmailCampaign) super.save(emailCampaign);
+  }
+
+  @Transactional
+  public EmailCampaign getOrCreateEmailCampaign(String campaignName, Long minDayGap, String emailTemplate){
+    EmailCampaign emailCampaign = null;
+    emailCampaign = findCampaignByName(campaignName);
+    if(emailCampaign == null){
+      emailCampaign = new EmailCampaign();
+      emailCampaign.setName(campaignName);
+      emailCampaign.setCreateDate(new Date());
+      emailCampaign.setMinDayGap(minDayGap);
+      emailCampaign.setTemplate(emailTemplate);
+      emailCampaign = save(emailCampaign);
+    }
+    return emailCampaign;
+  }
+
+  @Transactional
+  private EmailCampaign findCampaignByName(String campaignName) {
+    Criteria criteria = getSession().createCriteria(EmailCampaign.class);
+    criteria.add(Restrictions.eq("name", campaignName));
+    return (EmailCampaign) criteria.uniqueResult();
+  }
+
+  public List<EmailCampaign> listAllExceptNotifyMe() {
+    Criteria criteria = getSession().createCriteria(EmailCampaign.class);
+    criteria.add(Restrictions.not(Restrictions.eq("template", "/notifyUserEmailProductNew.ftl")));
+    criteria.add(Restrictions.not(Restrictions.eq("template", "/notifyUserEmailProduct.ftl")));
+    criteria.add(Restrictions.not(Restrictions.eq("template", "/marketing/missYouUserEmailNew.ftl")));
+    return criteria.list();
+  }
+
+  
+public List<EmailCampaign> listAllMissYouCampaigns() {
+    Criteria criteria = getSession().createCriteria(EmailCampaign.class);
+    criteria.add(Restrictions.eq("template", "/missYouUserEmailNew.ftl"));
+    return criteria.list();
+  }
+
+}
+

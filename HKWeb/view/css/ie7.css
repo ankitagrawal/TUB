@@ -1,0 +1,14 @@
+.main_container{
+    display: block;
+    visibility: visible;
+}
+.topBar{
+    display: block;
+    visibility: hidden;
+}
+ul{
+    list-style:  none;
+}
+.lvl2Bar li.lvl2 {
+    clear: none;
+}

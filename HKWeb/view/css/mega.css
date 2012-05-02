@@ -1,0 +1,389 @@
+/*
+# ------------------------------------------------------------------------
+# JA Rasite - Stable - Version 1.0 - Licence Owner JA115884
+# ------------------------------------------------------------------------
+# Copyright (C) 2004-2009 J.O.O.M Solutions Co., Ltd. All Rights Reserved.
+# @license - Copyrighted Commercial Software
+# Author: J.O.O.M Solutions Co., Ltd
+# Websites:  http://www.joomlart.com -  http://www.joomlancers.com
+# This file may not be redistributed in whole or significant part.
+# ------------------------------------------------------------------------
+*/
+
+.ja-megamenu { margin: 0; padding: 0; }
+.ja-megamenu a.over, .ja-megamenu a.active { color: #57222b; }
+
+ul.megamenu { margin: 2px; /* menu's gutter */ } 
+
+/* lv - 0
+-----------------------------------*/
+/* Styling ---*/
+ul.level0 {
+	float: left;
+	margin: 0;
+	padding: 0;
+}
+
+ul.level0 li.mega {
+	background: none;
+	display: block;
+	float: left;
+	margin: 0;
+	padding: 0;
+}
+
+ul.level0 li.mega a.mega {
+	color: #fff;
+	display: block;
+	padding:0px 32px 12px 32px;
+    font-size:12px!important;
+	font-weight:bold;
+	}
+
+ul.level0 li.mega a.mega span {
+	padding: 0px 0px 0px 0;
+}
+
+/*ul.level0 li.mega .has-image {
+	padding-left: 25px;
+	display: block;
+	background-repeat: no-repeat;
+	background-position: left top;
+}*/
+
+ul.level0 li.mega span.menu-title { display: block; }
+
+ul.level0 li.mega span.menu-desc {
+	display: block;
+	font-weight: normal;
+	font-size: 92%;
+	color: #999;
+}
+
+ul.level0 li.mega a img {
+	float: left;
+	padding-right: 5px;
+}
+
+ul.level0 li.over, ul.level0 li.haschild-over {}
+
+ul.level0 li.mega a.over, ul.level0 li.haschild-over a.over {
+	
+}
+
+ul.level0 li.mega a.over span.menu-title,
+ul.level0 li.haschild-over a.over span.menu-title {
+	
+}
+
+ul.level0 li.haschild a.mega span.menu-desc,
+ul.level0 li.haschild-over a.mega span.menu-desc {
+	padding-left: 12px;
+}
+
+ul.level0 li.active a.mega,
+ul.level0 li.active a.over {
+
+}
+
+ul.level0 li.active a.mega span,
+ul.level0 li.active a.over span.menu-title {
+	
+}
+
+/* lv - 1 and below
+-----------------------------------*/
+/* Layout ---*/
+.ja-megamenu li.mega .childcontent { display: block; height: auto; position: absolute; }
+
+.ja-megamenu li.mega .childcontent,
+.ja-megamenu li.haschild-over li.mega .childcontent,
+.ja-megamenu li.mega li.haschild-over li.mega .childcontent ,
+.ja-megamenu li.mega li.mega li.haschild-over li.mega .childcontent, 
+.ja-megamenu li.mega li.mega li.mega li.haschild-over li.mega .childcontent, 
+.ja-megamenu li.mega li.mega li.mega li.mega li.haschild-over li.mega .childcontent { left: -999em; /*hide the menu*/ }
+
+.ja-megamenu li.haschild-over .childcontent,
+.ja-megamenu li.mega li.haschild-over .childcontent,
+.ja-megamenu li.mega li.mega li.haschild-over .childcontent,
+.ja-megamenu li.mega li.mega li.mega li.haschild-over .childcontent,
+.ja-megamenu li.mega li.mega li.mega li.mega li.haschild-over .childcontent,
+.ja-megamenu li.mega li.mega li.mega li.mega li.mega li.haschild-over .childcontent { left: auto; /*show on parent:hover*/ }
+
+.ja-megamenu li.mega .right,
+.ja-megamenu li.haschild-over li.mega .right,
+.ja-megamenu li.mega li.haschild-over li.mega .right ,
+.ja-megamenu li.mega li.mega li.haschild-over li.mega .right, 
+.ja-megamenu li.mega li.mega li.mega li.haschild-over li.mega .right, 
+.ja-megamenu li.mega li.mega li.mega li.mega li.haschild-over li.mega .right { right: auto; /*hide the menu*/ }
+
+.ja-megamenu li.haschild-over .right
+{ right: 0; /*show on parent:hover*/ }
+.ja-megamenu li.mega li.haschild-over .right,
+.ja-megamenu li.mega li.mega li.haschild-over .right,
+.ja-megamenu li.mega li.mega li.mega li.haschild-over .right,
+.ja-megamenu li.mega li.mega li.mega li.mega li.haschild-over .right,
+.ja-megamenu li.mega li.mega li.mega li.mega li.mega li.haschild-over .right 
+{ right: 12em; /*show on parent:hover*/ }
+
+ul.level1 li.mega { float: none; }
+
+ul.level1 .childcontent { margin: -32px 0 0 160px; }
+
+ /* Columns ---*/
+.megacol { float: left;  }
+/*
+.cols1 .megacol { width: 100px }
+.cols2 .megacol { width: 50%; }
+.cols3 .megacol { width: 33.3%; }
+.cols4 .megacol { width: 25%; }
+.cols5 .megacol { width: 20%; }
+.cols6 .megacol { width: 16.6%; }
+.cols7 .megacol { width: 14.2%; }
+.cols8 .megacol { width: 12.5%; }
+.cols9 .megacol { width: 11.1%; }
+.cols10 .megacol { width: 10%; }
+
+
+.ja-megamenu .cols1 { width: 200px; }
+.ja-megamenu .cols2 { width: 400px; }
+.ja-megamenu .cols3 { width: 600px; }
+.ja-megamenu .cols4 { width: 800px; }
+.ja-megamenu .cols5 { width: 1000px; }
+.ja-megamenu .cols6 { width: 1200px; }
+.ja-megamenu .cols7 { width: 1400px; }
+.ja-megamenu .cols8 { width: 1800px; }
+.ja-megamenu .cols9 { width: 2000px; }
+.ja-megamenu .cols10 { width: 2200px; }
+*/
+
+/* Styling ---*/
+ul.level1 li.mega { border-top: 1px solid #4D4D4D; background:none!important; width:100%!important;  }
+
+ul.level1 li.first { border-top: 0; }
+
+ul.level1 li.mega a.mega {
+	background: none!important;
+	border: 0;
+	color: #999;
+	font-weight: normal;
+	padding: 7px 5px!important;
+	text-transform: none;
+	font-size:11px!important;
+}
+ul.level1 li.mega a.mega span {
+	background: none!important;
+	padding:0px!important;
+	}
+ul.level1 li.mega a.mega span.menu-title { background: none; padding: 0; }
+
+ul.level1 li.haschild {
+	background: url(../images/arrow.png) no-repeat 95% center;
+	padding: 0;
+}
+
+ul.level1 li.over, ul.level1 li.haschild-over { background: #444; }
+
+ul.level1 li.over a.over, ul.level1 li.haschild-over a.over {
+	color: #fff;
+}
+
+ul.level1 li.active a.active {
+	color: #fff;
+	font-weight: bold;
+}
+
+ul.level1 li.group { background: none; }
+
+ul.level1 .childcontent .tl {
+	background-image: url(../images/mega-corner2.png);
+}
+
+ /* CHILD CONTENT
+-----------------------------------*/
+.childcontent { z-index: 999; padding-left: 10px; }
+
+.childcontent-inner { color: #ccc;}
+
+.childcontent .ja-moduletable {
+	color: #ccc;
+	border-bottom: 0;
+	line-height: 1.5;
+	margin: 0px 0;
+	padding: 0;
+	padding-top:10px;
+}
+
+/* Top ---*/
+.childcontent .top {
+	background: url(../images/mega-tb.png) repeat-x left top;
+	margin: 0 13px 0 45px;
+	padding: 0;
+	height: 14px;
+	position: relative;
+}
+
+.childcontent .tl {
+	background: url(../images/mega-corner.png) no-repeat left top;
+	width: 55px;
+	height: 14px;
+	position: absolute;
+	left: -55px;
+	top: 0;
+}
+
+.childcontent .tr {
+	background: url(../images/mega-corner.png) no-repeat right top;
+	width: 23px;
+	height: 14px;
+	position: absolute;
+	right: -23px;
+	top: 0;
+}
+
+/* Middle ---*/
+.childcontent .ml {
+	background: url(../images/mega-mid-l.png) no-repeat left bottom;
+	width: 10px;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: -10px;
+}
+
+.childcontent .mid {
+	position: relative;
+	z-index: 10;
+}
+
+.childcontent .childcontent-inner {
+	background:#fff; url(../images/mega-mid-bot.png) repeat-x left bottom;
+}
+
+.childcontent .mr {
+	background: url(../images/mega-mid-r.png) no-repeat right bottom;
+	width: 10px;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	right: -10px;
+}
+
+/* Bottom ---*/
+.childcontent .bot {
+	background: url(../images/mega-tb.png) repeat-x left bottom;
+	margin: 0 13px 0 45px;
+	padding: 0;
+	height: 10px;
+	position: relative;
+}
+
+.childcontent .bl {
+	background: url(../images/mega-corner.png) no-repeat left bottom;
+	width: 55px;
+	height: 10px;
+	position: absolute;
+	left: -55px;
+	top: 0;
+}
+
+.childcontent .br {
+	background: url(../images/mega-corner.png) no-repeat right bottom;
+	width: 23px;
+	height: 10px;
+	position: absolute;
+	right: -23px;
+	top: 0;
+}
+
+.childcontent .ja-moduletable h3 {
+	background: none;
+	color: #fff;
+	border-bottom: 1px dotted #444;
+	margin-left: 10px;
+	margin-right: 10px;
+	text-indent: 5px;
+	text-transform: none;
+}
+
+.childcontent .ja-moduletable .ja-box-ct {
+	padding: 0 0px;
+}
+.childcontent .ja-moduletable li {
+border-bottom: 1px dotted #ACACAC; background:none!important; width:100%!important;
+padding:0px 0px 0px 5px;
+}
+
+.childcontent .ja-moduletable a {
+color:#747474;
+font-size:11px;
+display:block;
+background:none!important;
+padding:0px!important;
+font-weight:bold;
+}
+.childcontent .ja-moduletable a span {
+background:none!important;
+padding:0px!important;
+}
+
+
+
+.childcontent .ja-moduletable a:hover,
+.childcontent .ja-moduletable a:focus,
+.childcontent .ja-moduletable a:active {
+	color: #000;
+	text-decoration: none;
+	}
+
+.childcontent .ja-moduletable ul:first-child {
+	margin-top: 0 !important;
+}
+
+.childcontent .ja-moduletable li {
+	background: url(../images/bullet2.gif) no-repeat 2px 7px    !important;
+	margin-bottom: 5px;
+}
+
+/* Grouped --- */
+.group {}
+
+.group-title {
+	background: #29adc3;
+	border: 1px solid #9b9b9b;
+	overflow: hidden;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+}
+.group-title a{
+	cursor: default;
+}
+
+.group-title .menu-title {
+	color: #fff;
+	text-transform: uppercase;
+	font-weight: bold;
+	font-size: 12px!important;
+}
+
+.group-title .menu-desc {
+	color: #999;
+	padding-left: 0 !important;
+}
+
+.group-content .ja-moduletable,
+.group-content ul.megamenu  {
+	margin: 10px; /* Group-content's gutter*/
+}
+
+/* reset --- */
+.childcontent ul.megamenu .ja-moduletable {
+	padding: 0;
+	
+}
+
+.childcontent ul.megamenu .ja-moduletable h3 {
+	margin-left: 0;
+	margin-right: 0;
+}
+
