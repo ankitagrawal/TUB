@@ -1,7 +1,7 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
 <%@ page import="com.hk.domain.catalog.product.Product" %>
-<%@ page import="mhc.service.dao.ProductDao" %>
+<%@ page import="com.hk.dao.catalog.product.ProductDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
