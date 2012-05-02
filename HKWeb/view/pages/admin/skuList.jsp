@@ -9,7 +9,7 @@
 <%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.admin.SkuAction" var="skuAction"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.SkuAction" var="skuAction"/>
 <%
     TaxDao taxDao = InjectorFactory.getInjector().getInstance(TaxDao.class);
   List<Tax> taxList = taxDao.getTaxList();
@@ -19,7 +19,7 @@
   pageContext.setAttribute("whList", warehouseDao.listAll());
 %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Edit Sku">
-<s:useActionBean beanclass="web.action.admin.SkuAction" var="skuBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.SkuAction" var="skuBean"/>
 <s:layout-component name="htmlHead">
   <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
   <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
@@ -105,7 +105,7 @@
 
 <s:layout-component name="content">
 
-  <s:form beanclass="web.action.admin.SkuAction">
+  <s:form beanclass="com.hk.web.action.admin.SkuAction">
     <fieldset>
       <legend>Add New SKU</legend>
       <s:submit name="addSku" value="Add a New SKU"/>
@@ -114,7 +114,7 @@
 
   <fieldset class="right_label">
   <legend>Search And Edit SKU</legend>
-  <s:form beanclass="web.action.admin.SkuAction">
+  <s:form beanclass="com.hk.web.action.admin.SkuAction">
 
     <label>Category:</label><s:text name="category" class="category"/> /
 
@@ -132,7 +132,7 @@
     <%--
         <c:when test="${skuList != null && fn:length(skuList) > 0 }">
     --%>
-    <s:form beanclass="web.action.admin.SkuAction">
+    <s:form beanclass="com.hk.web.action.admin.SkuAction">
       <table class="zebra_vert">
         <thead>
         <tr>
@@ -191,7 +191,7 @@
     <%--</c:otherwise>--%>
   <%--</c:choose>--%>
 
-  <%--<s:form beanclass="web.action.admin.SkuAction">
+  <%--<s:form beanclass="com.hk.web.action.admin.SkuAction">
   <table class="zebra_vert">
     <thead>
     <tr>

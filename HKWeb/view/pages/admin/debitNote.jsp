@@ -4,8 +4,8 @@
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.admin.DebitNoteAction" var="pa"/>
-<s:useActionBean beanclass="web.action.admin.SelectWHAction" var="whAction" event="getUserWarehouse"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.DebitNoteAction" var="pa"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.SelectWHAction" var="whAction" event="getUserWarehouse"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Debit Note">
 <s:layout-component name="htmlHead">
   <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
@@ -79,10 +79,10 @@
 </s:layout-component>
 <s:layout-component name="content">
   <div style="display: none;">
-    <s:link beanclass="web.action.admin.EditPurchaseOrderAction" id="pvInfoLink" event="getPVDetails"></s:link>
+    <s:link beanclass="com.hk.web.action.admin.EditPurchaseOrderAction" id="pvInfoLink" event="getPVDetails"></s:link>
   </div>
 
-  <s:form beanclass="web.action.admin.DebitNoteAction">
+  <s:form beanclass="com.hk.web.action.admin.DebitNoteAction">
     <s:hidden name="debitNote" value="${pa.debitNote.id}"/>
     <s:hidden name="debitNote.supplier" value="${pa.debitNote.supplier.id}"/>
     <table>

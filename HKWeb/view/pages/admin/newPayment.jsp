@@ -5,9 +5,9 @@
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Welcome">
 
   <s:layout-component name="content">
-    <s:useActionBean beanclass="web.action.admin.NewPaymentAction" var="paymentBean"/>
+    <s:useActionBean beanclass="com.hk.web.action.admin.NewPaymentAction" var="paymentBean"/>
 
-    <s:form beanclass="web.action.admin.NewPaymentAction">
+    <s:form beanclass="com.hk.web.action.admin.NewPaymentAction">
       <s:hidden name="order"/>
       <fieldset>
         <label>Order Id</label> ${paymentBean.order}<br/>

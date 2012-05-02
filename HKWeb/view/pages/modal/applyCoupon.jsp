@@ -5,7 +5,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.ApplyCouponAction" var="couponBean"/>
+<s:useActionBean beanclass="com.hk.web.action.ApplyCouponAction" var="couponBean"/>
 
 <c:set var="error_role" value="<%=ApplyCouponAction.error_role%>"/>
 <c:set var="error_alreadyUsed" value="<%=ApplyCouponAction.error_alreadyUsed%>"/>
@@ -68,7 +68,7 @@
               <br/>
 
               <p><strong>If you haven't received the mail,
-                <s:link beanclass="web.action.ResendAccountActivationLinkAction" event="pre" class="resendActivationEmailLink" style="text-decoration: underline;" >click here to resend it.</s:link>
+                <s:link beanclass="com.hk.web.action.ResendAccountActivationLinkAction" event="pre" class="resendActivationEmailLink" style="text-decoration: underline;" >click here to resend it.</s:link>
               </strong> <br/>
                 <span class="emailSendMessage alert" style="display:none;"></span>
                 <br/>
@@ -144,7 +144,7 @@
     </script>
     </c:if>
 
-    <%--<s:form beanclass="web.action.ApplyCouponAction">--%>
+    <%--<s:form beanclass="com.hk.web.action.ApplyCouponAction">--%>
       <%--<table>--%>
         <%--<tr>--%>
           <%--<td><h3>Enter Coupon Code</h3></td>--%>

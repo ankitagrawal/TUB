@@ -68,7 +68,7 @@
       <c:when test="${variant.outOfStock}">
         <span class="outOfStock">Sold Out</span>
 
-        <div align="center"><s:link beanclass="web.action.NotifyMeAction"
+        <div align="center"><s:link beanclass="com.hk.web.action.NotifyMeAction"
                                     class="notifyMe button_orange"><b>Notify Me!!</b>
           <s:param name="productVariant" value="${variant}"/> </s:link></div>
       </c:when>
@@ -382,7 +382,7 @@
     </div>
 
     <div class="floatright" style="height:80px;border-left:solid #CCCCCC;padding:20px;">
-      <s:form beanclass="web.action.AddToCartWithLineItemConfigAction" onsubmit="return false;">
+      <s:form beanclass="com.hk.web.action.AddToCartWithLineItemConfigAction" onsubmit="return false;">
         <s:submit name="buyNow" id="buyNow" value="Buy Now" class=""
             />
       </s:form>

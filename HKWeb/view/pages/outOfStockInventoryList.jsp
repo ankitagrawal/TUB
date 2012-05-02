@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.admin.InventoryHealthStatusAction" var="niaBean" event="listOutOfStock"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.InventoryHealthStatusAction" var="niaBean" event="listOutOfStock"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Out of Stock Inventory List">
   <s:layout-component name="htmlHead">
     <%--<script type="text/javascript">--%>
@@ -25,7 +25,7 @@
   </s:layout-component>
   <s:layout-component name="heading">Low Inventory List</s:layout-component>
   <s:layout-component name="content">
-    <s:form beanclass="web.action.admin.InventoryHealthStatusAction" autocomplete="off">
+    <s:form beanclass="com.hk.web.action.admin.InventoryHealthStatusAction" autocomplete="off">
       <fieldset>
         <legend>Search List</legend>
 
@@ -43,7 +43,7 @@
     <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${niaBean}"/>
           <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${niaBean}"/>
              <div class="clear"></div>
-    <s:form beanclass="web.action.admin.InventoryHealthStatusAction">
+    <s:form beanclass="com.hk.web.action.admin.InventoryHealthStatusAction">
 
       <table border="1">
         <tr>

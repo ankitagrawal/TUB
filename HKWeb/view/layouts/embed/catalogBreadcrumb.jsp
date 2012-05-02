@@ -33,7 +33,7 @@
   %>
   <s:layout-component name="breadcrumb">
     <div class='crumb_outer'>
-    <s:link beanclass="web.action.HomeAction" class="crumb">Home</s:link>
+    <s:link beanclass="com.hk.web.action.HomeAction" class="crumb">Home</s:link>
       <%
         while (!menuNodeStack.isEmpty()) {
         MenuNode menuNode = menuNodeStack.pop();

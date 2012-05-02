@@ -17,7 +17,7 @@
 
   <div class='product'>
     <h2>
-      <s:link beanclass="web.action.ProductAction" title="${product.name}" class="prod_top_link">
+      <s:link beanclass="com.hk.web.action.ProductAction" title="${product.name}" class="prod_top_link">
         <s:param name="productId" value="${product.id}"/>
         <s:param name="productSlug" value="${product.slug}"/>
         ${product.name}
@@ -39,7 +39,7 @@
         </c:choose>
       </s:link>
     </h2>
-    <s:link class="img128" beanclass="web.action.ProductAction" title="${product.name}">
+    <s:link class="img128" beanclass="com.hk.web.action.ProductAction" title="${product.name}">
       <s:param name="productId" value="${product.id}"/>
       <s:param name="productSlug" value="${product.slug}"/>
       <c:choose>
@@ -105,7 +105,7 @@
       </c:choose>
         ${product.overview}
       <div class='more'>
-        <s:link beanclass="web.action.ProductAction" title="${product.name}">
+        <s:link beanclass="com.hk.web.action.ProductAction" title="${product.name}">
           <s:param name="productId" value="${product.id}"/>
           <s:param name="productSlug" value="${product.slug}"/>
           read more and place order &rarr;

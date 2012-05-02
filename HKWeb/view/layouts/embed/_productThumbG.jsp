@@ -31,13 +31,13 @@
       </c:when>
       <c:otherwise>
         <h3>
-          <s:link beanclass="web.action.ProductAction" title="${product.name}" class="prod_link">
+          <s:link beanclass="com.hk.web.action.ProductAction" title="${product.name}" class="prod_link">
             <s:param name="productId" value="${product.id}"/>
             <s:param name="productSlug" value="${product.slug}"/>
             ${product.name}
           </s:link>
         </h3>
-        <s:link beanclass="web.action.ProductAction" class="prod_link" title="${product.name}">
+        <s:link beanclass="com.hk.web.action.ProductAction" class="prod_link" title="${product.name}">
           <s:param name="productId" value="${product.id}"/>
           <s:param name="productSlug" value="${product.slug}"/>
           <div class='img128'>

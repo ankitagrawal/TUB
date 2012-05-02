@@ -26,7 +26,7 @@
   </s:layout-component>
   <s:layout-component name="steps">
     <div class='steps'>
-      <s:link beanclass="web.action.SelectAddressAction" style="margin-top: 0; margin-bottom: 0;">
+      <s:link beanclass="com.hk.web.action.SelectAddressAction" style="margin-top: 0; margin-bottom: 0;">
         <div class='step prev_step'>
           <h2>Step 1</h2>
 
@@ -54,7 +54,7 @@
   </s:layout-component>
 
   <s:layout-component name="steps_content">
-    <s:useActionBean beanclass="web.action.OrderSummaryAction" event="pre" var="orderSummary"/>
+    <s:useActionBean beanclass="com.hk.web.action.OrderSummaryAction" event="pre" var="orderSummary"/>
     <div class='current_step_content step2'>
 
     <jsp:include page="/includes/checkoutNotice.jsp"/>
@@ -98,7 +98,7 @@
         </div>
       </div>
         <span class="small">
-          <s:link beanclass="web.action.SelectAddressAction" style="color: #888; float: right;">
+          <s:link beanclass="com.hk.web.action.SelectAddressAction" style="color: #888; float: right;">
             (change) </s:link>
         </span>
     </div>
@@ -117,7 +117,7 @@
                 <strong><fmt:formatNumber value="${orderSummary.redeemableRewardPoints}" type="currency" currencySymbol=" "/></strong> reward points.<br/>
                 Reward points left after this order =
                 <strong><fmt:formatNumber value="${orderSummary.redeemableRewardPoints - orderSummary.pricingDto.redeemedRewardPoints}" type="currency" currencySymbol=" "/></strong><br/>
-                <s:link beanclass="web.action.OrderSummaryAction" event="pre">
+                <s:link beanclass="com.hk.web.action.OrderSummaryAction" event="pre">
                   <s:param name="useRewardPoints" value="false"/>
                   <span>Don't Redeem Points</span>
                 </s:link>
@@ -126,7 +126,7 @@
                 You have
                 <strong><fmt:formatNumber value="${orderSummary.redeemableRewardPoints}" type="currency" currencySymbol=" "/></strong> reward points.<br/>
                 You can use these points to pay for your order.<br/>
-                <s:link beanclass="web.action.OrderSummaryAction" event="pre">
+                <s:link beanclass="com.hk.web.action.OrderSummaryAction" event="pre">
                   <s:param name="useRewardPoints" value="true"/>
                   <span>Redeem Points</span>
                 </s:link>
@@ -141,7 +141,7 @@
         <h5>
           Instructions if any (e.g Preferred Delivery Time/Flavour Needed)
         </h5>
-        <s:form beanclass="web.action.OrderSummaryAction" method="post">
+        <s:form beanclass="com.hk.web.action.OrderSummaryAction" method="post">
         <s:hidden name="order" value="${orderSummary.order.id}"/>
         <s:textarea name="order.userComments" rows="2" cols="20" style="width:175px;height:110px"/>
           <div class="title">

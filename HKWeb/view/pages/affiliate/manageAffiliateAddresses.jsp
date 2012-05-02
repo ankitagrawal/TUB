@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.affiliate.AffiliateManageAddressAction" var="affiliateBean" event="showAddressBook"/>
+<s:useActionBean beanclass="com.hk.web.action.affiliate.AffiliateManageAddressAction" var="affiliateBean" event="showAddressBook"/>
 <s:layout-render name="/layouts/default.jsp">
   <s:layout-component name="heading">Your Account</s:layout-component>
   <s:layout-component name="lhsContent">
@@ -10,7 +10,7 @@
   <s:layout-component name="rhsContent">
     <div class='left2'>
       <div>
-        <s:form beanclass="web.action.affiliate.AffiliateManageAddressAction">
+        <s:form beanclass="com.hk.web.action.affiliate.AffiliateManageAddressAction">
 
           <c:if test="${!empty affiliateBean.addresses}">
             <h3 style="text-align: left;">
@@ -30,12 +30,12 @@
                 <div class='phone'>${address.phone}</div>
                 </br>
                 <s:checkbox name="addresses[${addressCount.index}].selected"/>
-                <s:link beanclass="web.action.affiliate.AffiliateManageAddressAction" event="setAsDefaultAddress" class="save" onclick="return confirm('Your cheque will sent here!!')">
+                <s:link beanclass="com.hk.web.action.affiliate.AffiliateManageAddressAction" event="setAsDefaultAddress" class="save" onclick="return confirm('Your cheque will sent here!!')">
                   <s:param name="address" value="${address.id}"/>
                   <s:param name="affiliate" value="${affiliateBean.affiliate.id}"/>
                   (Set as Default)
                 </s:link>
-                <s:link beanclass="web.action.affiliate.AffiliateManageAddressAction" event="remove" class="delete" onclick="return confirm('Are you sure you want to delete this address?')">
+                <s:link beanclass="com.hk.web.action.affiliate.AffiliateManageAddressAction" event="remove" class="delete" onclick="return confirm('Are you sure you want to delete this address?')">
                   <s:param name="address" value="${address.id}"/>
                   (delete)
                 </s:link>
@@ -43,7 +43,7 @@
             </c:forEach>
           </c:if>
           <div class='tip'>
-            <s:link beanclass="web.action.affiliate.AffiliateManageAddressAction" event="addNewAddress">Add New Address</s:link>
+            <s:link beanclass="com.hk.web.action.affiliate.AffiliateManageAddressAction" event="addNewAddress">Add New Address</s:link>
           </div>
         </s:form>
       </div>

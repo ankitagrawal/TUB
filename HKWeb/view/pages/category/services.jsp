@@ -12,7 +12,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="redirectParam" value="<%=J2EESecurityManager.redirectAfterLoginParam%>"/>
-<s:useActionBean beanclass="web.action.category.ServiceAction" var="sa" event="pre"/>
+<s:useActionBean beanclass="com.hk.web.action.category.ServiceAction" var="sa" event="pre"/>
 <s:layout-render name="/layouts/category-homeG.jsp" pageTitle="Services | Buy Services Online in India">
 
   <%
@@ -38,7 +38,7 @@
 
   <s:layout-component name="breadcrumbs">
     <div class='crumb_outer'>
-      <s:link beanclass="web.action.HomeAction" class="crumb">Home</s:link>
+      <s:link beanclass="com.hk.web.action.HomeAction" class="crumb">Home</s:link>
       <span class="crumb last" style="font-size: 12px;">Services</span>
       &gt;
       <h1 class="title">
@@ -74,7 +74,7 @@
       </ul>
 
       <div class='grid_6'>
-        <s:link beanclass="web.action.ReferralProgramAction" event="pre">
+        <s:link beanclass="com.hk.web.action.ReferralProgramAction" event="pre">
           <img src="<hk:vhostImage/>/images/banners/refer_earn.jpg" alt="refer a friend and earn" class="small_banner"/>
         </s:link>
         <img src="<hk:vhostImage/>/images/banners/freeshipping_cod_250.jpg" alt="cash on delivery" class="small_banner"/>
@@ -90,7 +90,7 @@
         <s:layout-render name="/layouts/modal.jsp">
           <s:layout-component name="heading">Select City</s:layout-component>
           <s:layout-component name="content">
-            <s:form beanclass="web.action.category.ServiceAction">
+            <s:form beanclass="com.hk.web.action.category.ServiceAction">
               <s:errors/>
               <div class="round-cont" style="width:650px;margin-top: 20px;">
                 <label>To find the relevant deals, Please select your city</label>
@@ -125,11 +125,11 @@
     <div class="products">
       <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_CATALOG%>">
         <br/>
-        <div><s:link beanclass="web.action.UploadCategoryImageAction" event="pre" target="_blank" class="popup"> Upload
+        <div><s:link beanclass="com.hk.web.action.UploadCategoryImageAction" event="pre" target="_blank" class="popup"> Upload
           <s:param name="category" value="services"/>
         </s:link>
           &nbsp;|&nbsp;
-          <s:link beanclass="web.action.UploadCategoryImageAction" event="manageCategoryImages" target="_blank" class="popup">
+          <s:link beanclass="com.hk.web.action.UploadCategoryImageAction" event="manageCategoryImages" target="_blank" class="popup">
             <s:param name="category" value="services"/>
             Manage Images
           </s:link>

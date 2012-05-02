@@ -1,11 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.UploadCategoryImageAction" var="categoryImageBean"/>
+<s:useActionBean beanclass="com.hk.web.action.UploadCategoryImageAction" var="categoryImageBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp">
 
  <s:layout-component name="content">
-    <s:form beanclass="web.action.UploadCategoryImageAction">
+    <s:form beanclass="com.hk.web.action.UploadCategoryImageAction">
       <%--<s:messages key="generalMessages"/>--%>
       <strong>
         ${categoryImageBean.errorMessage}

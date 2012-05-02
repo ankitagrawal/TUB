@@ -1,7 +1,7 @@
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.CompareAction" var="compareBean"/>
+<s:useActionBean beanclass="com.hk.web.action.CompareAction" var="compareBean"/>
 
 <s:layout-render name="/layouts/default.jsp">
   <s:layout-component name="topHeading">Product Comparison</s:layout-component>
@@ -56,7 +56,7 @@
         </td>
         <c:forEach var="product" items="${compareBean.products}">
           <td>
-            <s:link beanclass="web.action.ProductAction" title="${product.name}" class="prod_link">
+            <s:link beanclass="com.hk.web.action.ProductAction" title="${product.name}" class="prod_link">
               <s:param name="productId" value="${product.id}"/>
               <s:param name="productSlug" value="${product.slug}"/>
               Buy Now

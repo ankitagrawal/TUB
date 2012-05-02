@@ -3,7 +3,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.admin.shippingOrder.SplitShippingOrderAction" var="splitShippingOrderActionBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.shippingOrder.SplitShippingOrderAction" var="splitShippingOrderActionBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp">
   <s:layout-component name="htmlHead">
@@ -15,7 +15,7 @@
   </s:layout-component>
   <s:layout-component name="heading">Split Shipping Order Manually</s:layout-component>
   <s:layout-component name="content">
-    <s:form beanclass="web.action.admin.shippingOrder.SplitShippingOrderAction">
+    <s:form beanclass="com.hk.web.action.admin.shippingOrder.SplitShippingOrderAction">
       <table width="80%" class="align_top">
         <thead>
         <tr>

@@ -1,14 +1,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.admin.SelectAddressAction" event="pre" var="addressBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.SelectAddressAction" event="pre" var="addressBean"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Welcome">
 
   <s:layout-component name="heading">${addressBean.currentBreadcrumb.name}</s:layout-component>
 
   <s:layout-component name="content">
 
-    <s:form beanclass="web.action.admin.SelectAddressAction" method="get">
+    <s:form beanclass="com.hk.web.action.admin.SelectAddressAction" method="get">
       <s:hidden name="order" value="${addressBean.order.id}"/>
       <table class="cont item_list_table">
         <c:forEach items="${addressBean.addresses}" var="address" varStatus="addressCount">
@@ -31,7 +31,7 @@
       </table>
       <s:submit name="selectAddress" value="Continue"/>
     </s:form>
-    <s:link beanclass="web.action.admin.CheckPaymentAction" event="show">
+    <s:link beanclass="com.hk.web.action.admin.CheckPaymentAction" event="show">
       Cancel
       <s:param name="order" value="${addressBean.order.id}"/>
     </s:link>

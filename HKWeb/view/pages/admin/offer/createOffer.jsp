@@ -2,7 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.admin.offer.CreateOfferAction" var="offerBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.offer.CreateOfferAction" var="offerBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp">
 
@@ -16,7 +16,7 @@
   <s:layout-component name="heading">Step 3: Create offer</s:layout-component>
   <s:layout-component name="content">
 
-    <s:form beanclass="web.action.admin.offer.CreateOfferAction">
+    <s:form beanclass="com.hk.web.action.admin.offer.CreateOfferAction">
       <s:errors/>
       <fieldset class="right_label">
         <legend>Create an offer</legend>

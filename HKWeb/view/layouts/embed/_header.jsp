@@ -5,8 +5,8 @@
 <%@ page import="com.shiro.PrincipalImpl" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.CartAction" var="cartAction" event="getCartItems"/>
-<s:useActionBean beanclass="web.action.RewardPointTxnStatementAction" event="pre" var="rpBean"/>
+<s:useActionBean beanclass="com.hk.web.action.CartAction" var="cartAction" event="getCartItems"/>
+<s:useActionBean beanclass="com.hk.web.action.RewardPointTxnStatementAction" event="pre" var="rpBean"/>
 
 <%
   String roles = RoleConstants.HK_USER + "," + RoleConstants.HK_UNVERIFIED;
@@ -33,7 +33,7 @@
       <div style='float: left; margin-left: 180px;' title='Call us on our customer care number for help regarding anything'>
         <span style="font-size: .8em;">Customer Care: 0124-4551616 <span style="color: gray;">(10am - 9pm, 7 days a week)</span></span>
         <div style="cursor:default; margin-top: 2px; width: 313px;">
-          <s:form beanclass="web.action.SearchAction" method="get" renderFieldsPresent="false" renderSourcePage="false" autocomplete="off" style="position: relative;">
+          <s:form beanclass="com.hk.web.action.SearchAction" method="get" renderFieldsPresent="false" renderSourcePage="false" autocomplete="off" style="position: relative;">
             <input type="text" name="query" id="searchbox" class="input_tip" title='search our catalog' style="height: 14px; font-size: .8em;" value="${param['query']}"/>
             <s:image name="search" src="/images/icons/search2.png" style="position: absolute; right: 3px; top: 1px;"/>
           </s:form>
@@ -45,7 +45,7 @@
       <div class="message">
         <div class="arrow"></div>
         <span class="line1"></span>
-        <s:link beanclass="web.action.CartAction" id="message_cart_link" rel="noFollow">
+        <s:link beanclass="com.hk.web.action.CartAction" id="message_cart_link" rel="noFollow">
           <span class="line2">
             Proceed to checkout &rarr;
           </span>
@@ -71,41 +71,41 @@
                 </strong>              
             </span>
           <c:if test="${(rpBean.redeemablePoint - rpBean.user.userAccountInfo.overusedRewardPoints) > 0}">
-            <s:link beanclass="web.action.RewardPointTxnStatementAction" title="RewardPointTxnStatement"><span class="orange">(<fmt:formatNumber value="${rpBean.redeemablePoint - rpBean.user.userAccountInfo.overusedRewardPoints}" pattern="<%=FormatUtils.currencyFormatPattern%>"/>)</span>
+            <s:link beanclass="com.hk.web.action.RewardPointTxnStatementAction" title="RewardPointTxnStatement"><span class="orange">(<fmt:formatNumber value="${rpBean.redeemablePoint - rpBean.user.userAccountInfo.overusedRewardPoints}" pattern="<%=FormatUtils.currencyFormatPattern%>"/>)</span>
             </s:link>
           </c:if>
           <div class='links'>
             <shiro:hasRole name="<%=RoleConstants.TEMP_USER%>">
-              <s:link beanclass="web.action.LoginAction" class="toplinksSecondary" rel="noFollow"><%if (attachRedirectParam) {%><s:param name="redirectUrl" value="<%=originalUrlHeader%>"/><%}%>Login</s:link> |
-              <s:link beanclass="web.action.LoginAction" class="toplinksSecondary" rel="noFollow"><%if (attachRedirectParam) {%><s:param name="redirectUrl" value="<%=originalUrlHeader%>"/><%}%>Signup</s:link>
+              <s:link beanclass="com.hk.web.action.LoginAction" class="toplinksSecondary" rel="noFollow"><%if (attachRedirectParam) {%><s:param name="redirectUrl" value="<%=originalUrlHeader%>"/><%}%>Login</s:link> |
+              <s:link beanclass="com.hk.web.action.LoginAction" class="toplinksSecondary" rel="noFollow"><%if (attachRedirectParam) {%><s:param name="redirectUrl" value="<%=originalUrlHeader%>"/><%}%>Signup</s:link>
             </shiro:hasRole>
             <shiro:guest>
-              <s:link beanclass="web.action.LoginAction" class="toplinksSecondary" rel="noFollow"><%if (attachRedirectParam) {%><s:param name="redirectUrl" value="<%=originalUrlHeader%>"/><%}%>Login</s:link> |
-              <s:link beanclass="web.action.LoginAction" class="toplinksSecondary" rel="noFollow"><%if (attachRedirectParam) {%><s:param name="redirectUrl" value="<%=originalUrlHeader%>"/><%}%>Signup</s:link>
+              <s:link beanclass="com.hk.web.action.LoginAction" class="toplinksSecondary" rel="noFollow"><%if (attachRedirectParam) {%><s:param name="redirectUrl" value="<%=originalUrlHeader%>"/><%}%>Login</s:link> |
+              <s:link beanclass="com.hk.web.action.LoginAction" class="toplinksSecondary" rel="noFollow"><%if (attachRedirectParam) {%><s:param name="redirectUrl" value="<%=originalUrlHeader%>"/><%}%>Signup</s:link>
             </shiro:guest>
             <shiro:user>
               <shiro:lacksRole name="<%=RoleConstants.TEMP_USER%>">
-                <s:link beanclass="web.action.MyAccountAction"
+                <s:link beanclass="com.hk.web.action.MyAccountAction"
                         title='view past orders / edit personal details' rel="noFollow">Your Account</s:link> |
                 <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_ADMINS%>">
-                  <s:link beanclass="web.action.admin.AdminHomeAction" class="sml" rel="noFollow">Admin</s:link> |
+                  <s:link beanclass="com.hk.web.action.admin.AdminHomeAction" class="sml" rel="noFollow">Admin</s:link> |
                 </shiro:hasAnyRoles>
                 <%
                   PrincipalImpl principal = (PrincipalImpl) SecurityUtils.getSubject().getPrincipal();
                   if (principal != null && principal.isAssumed()) {
                 %>
-                <s:link beanclass="web.action.admin.AssumedLogoutAction" class="sml" rel="noFollow">(Release assumed
+                <s:link beanclass="com.hk.web.action.admin.AssumedLogoutAction" class="sml" rel="noFollow">(Release assumed
                   identity)</s:link> |
                 <%
                   }
                 %>
-                <s:link beanclass="web.action.LogoutAction" class="toplinksSecondary" rel="noFollow">Logout</s:link>
+                <s:link beanclass="com.hk.web.action.LogoutAction" class="toplinksSecondary" rel="noFollow">Logout</s:link>
               </shiro:lacksRole>
             </shiro:user>
           </div>
         </div>
         <div class='right'>
-          <s:link beanclass="web.action.CartAction" rel="noFollow">
+          <s:link beanclass="com.hk.web.action.CartAction" rel="noFollow">
             <div class='cartButton' title='view your shopping cart'>
 
              <c:choose>

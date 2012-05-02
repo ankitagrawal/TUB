@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.admin.EmailListByCategoryAction" event="pre" var="userBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.EmailListByCategoryAction" event="pre" var="userBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="EmailListByCategoryAction">
 

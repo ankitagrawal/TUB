@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.ReferralManagerAction" var="couponBean" event="pre"/>
+<s:useActionBean beanclass="com.hk.web.action.ReferralManagerAction" var="couponBean" event="pre"/>
 <s:layout-render name="/layouts/default.jsp" pageTitle="Referral Program">
 
   <s:layout-component name="htmlHead">
@@ -50,9 +50,9 @@
 
     <p style="text-align:right;">
       Referral Program |
-      <s:link beanclass="web.action.ReferralManagerAction">My Referrals</s:link> |
+      <s:link beanclass="com.hk.web.action.ReferralManagerAction">My Referrals</s:link> |
       
-      <s:link beanclass="web.action.ReferralTermsAction" class="referralTerms">T&C</s:link>
+      <s:link beanclass="com.hk.web.action.ReferralTermsAction" class="referralTerms">T&C</s:link>
     </p>
     <br/>
 
@@ -98,7 +98,7 @@
           <tr>
             <td><%--<img src="${pageContext.request.contextPath}/images/email.jpg" width="" alt="">--%></td>
             <td>
-              <s:form beanclass="web.action.ReferralProgramAction">
+              <s:form beanclass="com.hk.web.action.ReferralProgramAction">
                 <fieldset class="top_label" style="border:0px;">
                   <ul style="margin-bottom:0; padding-left:10px">
                     <s:hidden name="senderName"/>

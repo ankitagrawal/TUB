@@ -2,7 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.admin.offer.CreateCouponAction" event="pre" var="couponBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.offer.CreateCouponAction" event="pre" var="couponBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp">
 
@@ -20,18 +20,18 @@
     <h3>
       Generate a single coupon:
     </h3>
-    <s:form beanclass="web.action.admin.offer.CreateCouponAction" method="post">
+    <s:form beanclass="com.hk.web.action.admin.offer.CreateCouponAction" method="post">
       <label>Offer: </label>
       <c:choose>
         <c:when test="${couponBean.offer == null}">
-          <s:link beanclass="web.action.admin.offer.SelectOfferAction">
+          <s:link beanclass="com.hk.web.action.admin.offer.SelectOfferAction">
             Select Offer
           </s:link>
         </c:when>
         <c:otherwise>
           <s:hidden name="offer" value="${couponBean.offer}"/>
           ${couponBean.offer.description}
-          <s:link beanclass="web.action.admin.offer.SelectOfferAction">
+          <s:link beanclass="com.hk.web.action.admin.offer.SelectOfferAction">
             <s:param name="offer" value="${couponBean.offer.id}"/>
             Change Offer
           </s:link>
@@ -60,18 +60,18 @@
     <h3>
       Generate a multiple coupons:
     </h3>
-    <s:form beanclass="web.action.admin.offer.CreateCouponAction" method="post">
+    <s:form beanclass="com.hk.web.action.admin.offer.CreateCouponAction" method="post">
       <label>Offer: </label>
       <c:choose>
         <c:when test="${couponBean.offer == null}">
-          <s:link beanclass="web.action.admin.offer.SelectOfferAction">
+          <s:link beanclass="com.hk.web.action.admin.offer.SelectOfferAction">
             Select Offer
           </s:link>
         </c:when>
         <c:otherwise>
           <s:hidden name="offer" value="${couponBean.offer}"/>
           ${couponBean.offer.description}
-          <s:link beanclass="web.action.admin.offer.SelectOfferAction">
+          <s:link beanclass="com.hk.web.action.admin.offer.SelectOfferAction">
             <s:param name="offer" value="${couponBean.offer.id}"/>
             Change Offer
           </s:link>

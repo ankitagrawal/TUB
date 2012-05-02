@@ -9,7 +9,7 @@
 <c:set var="lineItemTypeId_Product" value="<%=EnumCartLineItemType.Product.getId()%>"/>
 <c:set var="orderStatusActionAwaiting" value="<%=EnumOrderStatus.Placed.getId()%>"/>
 
-<s:useActionBean beanclass="web.action.admin.ReportAction" var="reportBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.ReportAction" var="reportBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Unescalated Escalable Order List">
 
@@ -52,7 +52,7 @@
         <tr class="orderRow">
           <td><fmt:formatDate value="${order.payment.paymentDate}" pattern="yyyy-MM-dd HH:mm"/><br>
             <c:if test="${! empty order.orderLifecycles}">
-              <s:link beanclass="web.action.admin.order.OrderLifecycleAction" event="pre" target="_blank">
+              <s:link beanclass="com.hk.web.action.admin.order.OrderLifecycleAction" event="pre" target="_blank">
                 <label style="font-weight:bold;">Last Activity:</label><br>
                 ${order.orderLifecycles[fn:length(order.orderLifecycles)-1].orderLifecycleActivity.name} on <br>
                 <fmt:formatDate value="${order.orderLifecycles[fn:length(order.orderLifecycles)-1].activityDate}" type="both"/> by
@@ -64,19 +64,19 @@
           <td><fmt:formatDate value="${order.payment.paymentDate}" pattern="E"/></td>
           <td class="basketCategory">${order.basketCategory}</td>
           <td>
-            Order#<s:link beanclass="web.action.admin.order.search.SearchOrderAction" event="searchOrders" target="_blank">
+            Order#<s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" event="searchOrders" target="_blank">
             <s:param name="orderId" value="${order.id}"/>
             ${order.id}
           </s:link><br/>
             Payment Mode: ${order.payment.paymentMode.name}<br/>
             Name: ${order.user.name}<br/>
             Email: ${order.user.email}<br/>
-            <%--<s:link beanclass="web.action.admin.order.OrderLifecycleAction" event="pre" target="_blank">
+            <%--<s:link beanclass="com.hk.web.action.admin.order.OrderLifecycleAction" event="pre" target="_blank">
               Order Lifecycle
               <s:param name="order" value="${order}"/>
             </s:link>
 
-            <s:link beanclass="web.action.admin.order.OrderLifecycleAction" event="pre" target="_blank">
+            <s:link beanclass="com.hk.web.action.admin.order.OrderLifecycleAction" event="pre" target="_blank">
               <c:if test="${!empty hk:orderComments(order)}">
                 <text style="color:#f88; font-weight:bold">Comments!</text>
               </c:if>

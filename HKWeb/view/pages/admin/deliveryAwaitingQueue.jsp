@@ -3,7 +3,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.admin.queue.DeliveryAwaitingQueueAction" var="deliveryQueueBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.queue.DeliveryAwaitingQueueAction" var="deliveryQueueBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp">
 <s:layout-component name="htmlHead">
@@ -14,7 +14,7 @@
 </s:layout-component>
 <s:layout-component name="heading">Delivery Awaiting Queue</s:layout-component>
 <s:layout-component name="content">
-  <s:form beanclass="web.action.admin.queue.DeliveryAwaitingQueueAction" method="get" autocomplete="false">
+  <s:form beanclass="com.hk.web.action.admin.queue.DeliveryAwaitingQueueAction" method="get" autocomplete="false">
     <fieldset class="top_label">
       <ul>
         <div class="grouped">
@@ -46,7 +46,7 @@
     </fieldset>
   </s:form>
 
-  <s:form beanclass="web.action.admin.queue.DeliveryAwaitingQueueAction" autocomplete="off">
+  <s:form beanclass="com.hk.web.action.admin.queue.DeliveryAwaitingQueueAction" autocomplete="off">
     <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${deliveryQueueBean}"/>
     <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${deliveryQueueBean}"/>
     <s:layout-render name="/pages/admin/queue/shippingOrderDetailGrid.jsp"

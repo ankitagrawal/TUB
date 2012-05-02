@@ -6,7 +6,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.admin.ChooseOrdersForPrintPickAction" var="printPickBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.ChooseOrdersForPrintPickAction" var="printPickBean"/>
 <c:set var="lineItemTypeId_Product" value="<%=EnumCartLineItemType.Product.getId()%>"/>
 <%
   int lineItemGlobalCtr = 0;
@@ -81,7 +81,7 @@
       </c:if>
     </div>
     <div align="center">
-      <s:form beanclass="web.action.admin.ChooseOrdersForPrintPickAction" method="get" autocomplete="false">
+      <s:form beanclass="com.hk.web.action.admin.ChooseOrdersForPrintPickAction" method="get" autocomplete="false">
         Category
         <s:select name="category" value="${printPickBean.category.name}">
           <c:forEach items="${categoryList}" var="category">
@@ -98,7 +98,7 @@
       </s:form>
     </div>
 
-    <s:form beanclass="web.action.admin.ChooseOrdersForPrintPickAction" autocomplete="off">
+    <s:form beanclass="com.hk.web.action.admin.ChooseOrdersForPrintPickAction" autocomplete="off">
       <%--  <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${printPickBean}"/>
     <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${printPickBean}"/>--%>
       <s:layout-render name="/pages/admin/queue/shippingOrderDetailGrid.jsp"
@@ -123,7 +123,7 @@
           <div style="float:left; font-size: 0.9em; margin-top: 7px; margin-left:50px">
             <s:submit name="sendOrdersBackToProcessingQueue" id="sendOrdersBackToProcessingQueue"
                       value="Move orders to processing Queue"/>
-            <s:link beanclass="web.action.admin.JobCartAction" target="_blank" class="button_orange">
+            <s:link beanclass="com.hk.web.action.admin.JobCartAction" target="_blank" class="button_orange">
               <s:param name="category" value="${printPickBean.category}"/>
               <s:hidden name="baseGatewayOrderId" value="${printPickBean.baseGatewayOrderId}"/>
               <s:hidden name="gatewayOrderId" value="${printPickBean.gatewayOrderId}"/>

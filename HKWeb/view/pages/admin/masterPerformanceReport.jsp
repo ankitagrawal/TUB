@@ -8,7 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.admin.ReportAction" var="reportBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.ReportAction" var="reportBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Master Performance Report">
 
@@ -63,7 +63,7 @@
           <td>${fn:length(olcstDto.ordersEscalatedToPackingQeueue)}</td>
           <td>${fn:length(olcstDto.ordersPushedBackToActionQueue)}</td>
           <td>
-            <s:link beanclass="web.action.admin.ReportAction" event="getUnescalatedOrders" target="_blank">
+            <s:link beanclass="com.hk.web.action.admin.ReportAction" event="getUnescalatedOrders" target="_blank">
               <s:param name="activityDate" value="${olcstDto.activityDate}"/>
               <fmt:formatNumber value="${(fn:length(olcstDto.ordersEscalatedToPackingQeueue) - fn:length(olcstDto.ordersPushedBackToActionQueue))/(fn:length(olcstDto.escalableOrders)) * 100}" pattern="#.#"/>%
             </s:link></td>

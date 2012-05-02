@@ -7,7 +7,7 @@
     <jsp:include page="/pages/affiliate/aboutAffiliateProgram.jsp"/>
   </s:layout-component>
   <s:layout-component name="rhsContent">
-    <s:form beanclass="web.action.affiliate.AffiliateAction">
+    <s:form beanclass="com.hk.web.action.affiliate.AffiliateAction">
       <fieldset class="right_label">
         <%--<legend>Signup Existing User as affiliate</legend>--%>
         <ul>

@@ -2,7 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.OrderDetailsAction" var="oa"/>
+<s:useActionBean beanclass="com.hk.web.action.OrderDetailsAction" var="oa"/>
 <c:set var="shippingOrderStatus_shipped" value="<%=EnumShippingOrderStatus.SO_Shipped.getId()%>"/>
 
 <s:layout-render name="/layouts/default.jsp">
@@ -38,7 +38,7 @@
                 ${lineItem.shippingOrder.baseOrder.orderStatus.name}
                 <c:if test="${lineItem.shippingOrder.orderStatus.id == shippingOrderStatus_shipped && shipment != null}">
                   by ${shipment.courier.name} - ${shipment.trackingId} on <fmt:formatDate value="${shipment.shipDate}"/><br/>
-                  <s:link beanclass="web.action.TrackCourierAction" target="_blank">
+                  <s:link beanclass="com.hk.web.action.TrackCourierAction" target="_blank">
                     <s:param name="courierId" value="${shipment.courier.id}"/>
                     <s:param name="trackingId" value="${shipment.trackingId}"/>
                     (Track this)

@@ -1,9 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.VerifyAffiliateAction" var="verifyAction"/>
+<s:useActionBean beanclass="com.hk.web.action.VerifyAffiliateAction" var="verifyAction"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp">
   <s:layout-component name="content">
-    <s:form beanclass="web.action.VerifyAffiliateAction">
+    <s:form beanclass="com.hk.web.action.VerifyAffiliateAction">
       <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${verifyAction}"/>
       <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${verifyAction}"/>
       <table>

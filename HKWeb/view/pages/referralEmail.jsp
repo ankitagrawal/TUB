@@ -35,13 +35,13 @@
     <p class="lrg em">
       You can recommend HealthKart to your friends by sending this referral email. You can add a custom message to this
       email.<br/>
-      <s:form beanclass="web.action.ReferralEmailPreviewAction" target="_blank">
+      <s:form beanclass="com.hk.web.action.ReferralEmailPreviewAction" target="_blank">
         <s:hidden name="senderName" id="senderNamePreview"/>
         <a href="#" id="previewLink">Click here</a> to preview how the email will look.
       </s:form>
     </p>
 
-    <s:form beanclass="web.action.ReferralEmailAction">
+    <s:form beanclass="com.hk.web.action.ReferralEmailAction">
 
       <fieldset class="top_label">
         <ul>

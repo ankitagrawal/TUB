@@ -3,7 +3,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.admin.SearchUserAction" event="pre" var="userBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.SearchUserAction" event="pre" var="userBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp">
 
@@ -18,7 +18,7 @@
   <s:layout-component name="content">
 
 
-    <s:form beanclass="web.action.admin.SearchUserAction" method="get" renderFieldsPresent="false" renderSourcePage="false">
+    <s:form beanclass="com.hk.web.action.admin.SearchUserAction" method="get" renderFieldsPresent="false" renderSourcePage="false">
       <fieldset class="top_label">
         <ul>
           <div class="grouped">
@@ -68,15 +68,15 @@
           <td>${userCount.count}</td>
           <td>
               ${user.login}<br/>
-            <s:link beanclass="web.action.admin.AssumedLoginAction">
+            <s:link beanclass="com.hk.web.action.admin.AssumedLoginAction">
               <s:param name="user" value="${user.id}"/>
               [Super login]
             </s:link>
-            <s:link beanclass="web.action.admin.EditUserAction">
+            <s:link beanclass="com.hk.web.action.admin.EditUserAction">
               <s:param name="user" value="${user}"/>
               [Edit User]
             </s:link>
-            <s:link beanclass="web.action.admin.CustomerLifeCycleAction">
+            <s:link beanclass="com.hk.web.action.admin.CustomerLifeCycleAction">
                <s:param name="user" value="${user}"/>
                [View Customer LifeCycle]
             </s:link>
@@ -87,25 +87,25 @@
               ${user.email}
           </td>
           <td>
-            <s:link beanclass="web.action.admin.order.search.SearchOrderAction">
+            <s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction">
               <s:param name="email" value="${user.login}"/>
               View orders
             </s:link>
           </td>
           <td>
-            <s:link beanclass="web.action.admin.AddRewardPointAction" event="pre">
+            <s:link beanclass="com.hk.web.action.admin.AddRewardPointAction" event="pre">
               Add Reward Point
               <s:param name="user" value="${user.id}"/>
             </s:link>
           </td>
           <td>
-            <s:link beanclass="web.action.admin.RewardPointTxnStatementAction" event="pre">
+            <s:link beanclass="com.hk.web.action.admin.RewardPointTxnStatementAction" event="pre">
               Reward Points Txn History                     
               <s:param name="user" value="${user.id}"/>
             </s:link>
           </td>
           <td>
-              <s:link beanclass="web.action.admin.UserReferrralsAddressesAction" event="referralList">
+              <s:link beanclass="com.hk.web.action.admin.UserReferrralsAddressesAction" event="referralList">
                 User Referrals
                 <s:param name="user" value="${user.id}"/>
               </s:link>

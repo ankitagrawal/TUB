@@ -2,7 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.PasswordResetAction" var="resetBean" event="pre"/>
+<s:useActionBean beanclass="com.hk.web.action.PasswordResetAction" var="resetBean" event="pre"/>
 
 <s:layout-render name="/layouts/default.jsp" pageTitle="Password Reset">
   <s:layout-component name="heading">Change Password</s:layout-component>
@@ -10,7 +10,7 @@
 
     <div>
       <div>
-        <s:form beanclass="web.action.PasswordResetAction" method="post">
+        <s:form beanclass="com.hk.web.action.PasswordResetAction" method="post">
             <s:errors/>
             <h4 class="strikeline"> Change Password</h4>
               <s:errors/>

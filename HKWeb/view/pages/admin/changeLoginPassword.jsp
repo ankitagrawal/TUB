@@ -1,16 +1,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.admin.ChangeLoginPasswordAction" var="userBean" event="pre"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.ChangeLoginPasswordAction" var="userBean" event="pre"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Welcome">
 
   <s:layout-component name="heading">${userBean.currentBreadcrumb.name}</s:layout-component>
   <s:layout-component name="content">
 
-    <s:useActionBean beanclass="web.action.admin.ChangeLoginPasswordAction" var="userBean"/>
+    <s:useActionBean beanclass="com.hk.web.action.admin.ChangeLoginPasswordAction" var="userBean"/>
     Name: ${userBean.user.name}<br/>
     Login: ${userBean.user.login}<br/>
-    <s:form beanclass="web.action.admin.ChangeLoginPasswordAction" method="post">
+    <s:form beanclass="com.hk.web.action.admin.ChangeLoginPasswordAction" method="post">
       Enter new password: <s:password name="password"/><br/>
       Confirm Password: <s:password name="passwordConfirm"/> <br/>
       <s:hidden name="user" value="${userBean.user.id}"/>

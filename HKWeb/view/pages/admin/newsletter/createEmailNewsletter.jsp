@@ -5,7 +5,7 @@
   <s:layout-component name="heading">Create Email Newsletter</s:layout-component>
   <s:layout-component name="content">
 
-    <s:form beanclass="web.action.admin.newsletter.CreateEmailNewsletterCampaign">
+    <s:form beanclass="com.hk.web.action.admin.newsletter.CreateEmailNewsletterCampaign">
       Name: <s:text name="emailCampaign.name"/><br/>
       Template: <s:text name="emailCampaign.template"/><br/>
       Minimum Day gap : <s:text name="emailCampaign.minDayGap" value="5"/><br/>

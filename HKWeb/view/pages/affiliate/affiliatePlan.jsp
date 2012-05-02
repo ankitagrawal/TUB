@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.affiliate.AffiliatePaymentAction" var="paymentAction"/>
+<s:useActionBean beanclass="com.hk.web.action.affiliate.AffiliatePaymentAction" var="paymentAction"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp">
   <s:layout-component name="content">
     <h2>
@@ -8,7 +8,7 @@
     </h2>
     <br/>
 
-    <s:form beanclass="web.action.affiliate.AffiliatePaymentAction">
+    <s:form beanclass="com.hk.web.action.affiliate.AffiliatePaymentAction">
       <s:errors/>
       <table>
       <thead>

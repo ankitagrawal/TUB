@@ -12,13 +12,13 @@
     <p>You are not allowed to take this action as you may not have the authorization to do so, or you need to login again.</p>
 
     <p>
-    <s:form beanclass="web.action.LoginAction">
+    <s:form beanclass="com.hk.web.action.LoginAction">
       <s:errors/>
       <div class="label">Email</div>
       <s:text name="email" id="loginName" style="width:250px;"/>
       <div class="label">Password</div>
       <s:password name="password"/>
-      <s:link beanclass="web.action.ForgotPasswordAction" id="forgotPasswordLink">Forgot password?</s:link>
+      <s:link beanclass="com.hk.web.action.ForgotPasswordAction" id="forgotPasswordLink">Forgot password?</s:link>
 
       <div>
         <s:submit name="login" value="Login" class="button"/>

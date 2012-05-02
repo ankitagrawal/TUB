@@ -4,7 +4,7 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.admin.CreatePurchaseOrderAction" var="pa"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.CreatePurchaseOrderAction" var="pa"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp">
    <%
     WarehouseDao warehouseDao = InjectorFactory.getInjector().getInstance(WarehouseDao.class);
@@ -77,7 +77,7 @@
   <s:layout-component name="content">
     <div style="display:inline;float:left;">
       <h2>Create New PO</h2>
-      <s:form beanclass="web.action.admin.CreatePurchaseOrderAction">
+      <s:form beanclass="com.hk.web.action.admin.CreatePurchaseOrderAction">
         <table>
           <tr>
             <s:hidden name="purchaseOrder.supplier" value="${pa.supplier.id}"/>

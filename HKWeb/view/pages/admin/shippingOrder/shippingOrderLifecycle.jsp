@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.admin.shippingOrder.ShippingOrderLifecycleAction" var="orderLifeCycleBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderLifecycleAction" var="orderLifeCycleBean"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Shipping Order Lifecycle">
   <s:layout-component name="heading">Order Lifecycle : Order#${orderLifeCycleBean.shippingOrder.gatewayOrderId}</s:layout-component>
   <s:layout-component name="content">
@@ -25,7 +25,7 @@
     <fieldset class="right_label" style="float:left;margin-top:25px;">
       <legend>New Comment</legend>
       <table>
-        <s:form beanclass="web.action.admin.shippingOrder.ShippingOrderLifecycleAction">
+        <s:form beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderLifecycleAction">
           <s:hidden name="shippingOrder" value="${orderLifeCycleBean.shippingOrder}"/>
 
           <tr>

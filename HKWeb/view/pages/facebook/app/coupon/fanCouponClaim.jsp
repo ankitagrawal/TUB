@@ -2,7 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.facebook.app.coupon.FanCouponClaimAction" var="couponClaimBean"/>
+<s:useActionBean beanclass="com.hk.web.action.facebook.app.coupon.FanCouponClaimAction" var="couponClaimBean"/>
 
 <s:layout-render name="/layouts/fbDefault.jsp">
 
@@ -116,7 +116,7 @@
 
     <div style="display:none;">
       <a target="_top"></a>
-      <s:link id="bonusLink" beanclass="web.action.facebook.app.coupon.FanCouponClaimBonusAction">
+      <s:link id="bonusLink" beanclass="com.hk.web.action.facebook.app.coupon.FanCouponClaimBonusAction">
         <s:param name="fbcouponCampaign" value="${couponClaimBean.fbcouponCampaign}"/>
         <s:param name="fbcouponUser" value="${couponClaimBean.fbcouponUser}"/>
         Bonus

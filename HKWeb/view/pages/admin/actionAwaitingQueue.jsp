@@ -13,7 +13,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.admin.queue.ActionAwaitingQueueAction" var="actionQueueBean" event="pre"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.queue.ActionAwaitingQueueAction" var="actionQueueBean" event="pre"/>
 
 <c:set var="orderStatusHold" value="<%=EnumOrderStatus.OnHold.getId()%>"/>
 
@@ -215,7 +215,7 @@
 <fieldset class="top_label">
   <ul>
     <div class="grouped grid_12">
-      <s:form beanclass="web.action.admin.queue.ActionAwaitingQueueAction" method="get" autocomplete="false">
+      <s:form beanclass="com.hk.web.action.admin.queue.ActionAwaitingQueueAction" method="get" autocomplete="false">
         <li><label>Order ID</label> <s:text name="orderId"/> &nbsp; <label>Gateway Order ID</label> <s:text
             name="gatewayOrderId" id="gatewayOrderId"/>
           <label>Start
@@ -303,7 +303,7 @@
   </ul>
 </fieldset>
 
-<s:form beanclass="web.action.admin.queue.ActionAwaitingQueueAction" autocomplete="off">
+<s:form beanclass="com.hk.web.action.admin.queue.ActionAwaitingQueueAction" autocomplete="off">
   <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${actionQueueBean}"/>
   <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${actionQueueBean}"/>
 
@@ -327,9 +327,9 @@
               <span style="margin-left:30px;"> Basket category: <strong>${order.basketCategory}</strong></span>
             </div>
             <div class="floatright">
-              (<s:link beanclass="web.action.BOInvoiceAction" event="pre" target="_blank">
+              (<s:link beanclass="com.hk.web.action.BOInvoiceAction" event="pre" target="_blank">
               <s:param name="order" value="${order}"/> Invoice
-            </s:link>) (<s:link beanclass="web.action.admin.order.search.SearchOrderAction" event="searchOrders"
+            </s:link>) (<s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" event="searchOrders"
                                 target="_blank">
               <s:param name="orderId" value="${order}"/> Search order
             </s:link>)
@@ -339,14 +339,14 @@
               <span class="orderStatusName">Order Status: <strong>${order.orderStatus.name}</strong></span>
               <c:choose>
                 <c:when test="${order.orderStatus.id == orderStatusHold}">
-                  <s:link beanclass="web.action.admin.order.OrderOnHoldAction" event="unHoldOrder"
+                  <s:link beanclass="com.hk.web.action.admin.order.OrderOnHoldAction" event="unHoldOrder"
                           title="Unhold Order" class="orderStatusLink onHoldStatusLink">
                     <s:param name="order" value="${order.id}"/>
                     <img src="<hk:vhostImage/>/images/admin/icon_unhold.png" alt="Unhold Order" title="Unhold Order"/>
                   </s:link>
                 </c:when>
                 <c:otherwise>
-                  <s:link beanclass="web.action.admin.order.OrderOnHoldAction" event="holdOrder"
+                  <s:link beanclass="com.hk.web.action.admin.order.OrderOnHoldAction" event="holdOrder"
                           title="Put Order on Hold"
                           class="orderStatusLink normalStatusLink">
                     <s:param name="order" value="${order.id}"/>
@@ -357,11 +357,11 @@
               </c:choose>
             </div>
             <div class="floatright">
-              (<s:link beanclass="web.action.admin.order.OrderLifecycleAction" event="pre" target="_blank">
+              (<s:link beanclass="com.hk.web.action.admin.order.OrderLifecycleAction" event="pre" target="_blank">
               Order Lifecycle
               <s:param name="order" value="${order}"/>
             </s:link>)
-              (<s:link beanclass="web.action.admin.order.OrderLifecycleAction" event="pre" target="_blank">
+              (<s:link beanclass="com.hk.web.action.admin.order.OrderLifecycleAction" event="pre" target="_blank">
               <c:if test="${!empty hk:orderComments(order)}">
                 <text style="color:#f88; font-weight:bold">Comments!</text>
               </c:if>
@@ -383,13 +383,13 @@
               <c:if test="${order.payment.paymentStatus.id == paymentStatusPending}">
                 <c:choose>
                   <c:when test="${order.payment.paymentMode.id == paymentModeCod}">
-                    (<s:link beanclass="web.action.admin.VerifyCodAction" class="confirmCodLink">
+                    (<s:link beanclass="com.hk.web.action.admin.VerifyCodAction" class="confirmCodLink">
                     <s:param name="order" value="${order.id}"/>
                     Confirm COD
                   </s:link>)
                   </c:when>
                   <c:otherwise>
-                    (<s:link beanclass="web.action.admin.CheckPaymentAction">
+                    (<s:link beanclass="com.hk.web.action.admin.CheckPaymentAction">
                     Update as successful
                     <s:param name="order" value="${order.id}"/>
                   </s:link>)
@@ -421,7 +421,7 @@
                 Name : <span class="or">${order.user.name}</span>
               </div>
               <div class="floatright">
-                Email: (<s:link beanclass="web.action.admin.SearchUserAction" event="search">
+                Email: (<s:link beanclass="com.hk.web.action.admin.SearchUserAction" event="search">
                 <s:param name="userFilterDto.login" value="${order.user.login}"/>
                 ${order.user.login}
               </s:link>)
@@ -431,7 +431,7 @@
                 Processed Orders# ${hk:getProcessedOrdersCount(order.user)}
               </div>
               <div class="floatright">
-                (<s:link beanclass="web.action.admin.order.search.SearchOrderAction" event="searchOrders"
+                (<s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" event="searchOrders"
                          target="_blank"><s:param
                   name="email" value="${order.user.login}"/>See previous orders</s:link>)
               </div>
@@ -470,7 +470,7 @@
             <td width="60%" style="border:1px solid red; padding:3px;">
               Need to split order manually could not be split automatically
               <br/><br/><strong>
-              (<s:link beanclass="web.action.admin.order.SplitBaseOrderAction"><s:param
+              (<s:link beanclass="com.hk.web.action.admin.order.SplitBaseOrderAction"><s:param
                 name="baseOrder" value="${order}"/>Split order</s:link>)
               </strong>
             </td>

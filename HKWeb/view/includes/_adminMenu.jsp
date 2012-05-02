@@ -2,39 +2,39 @@
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.admin.SelectWHAction" var="whAction" event="getUserWarehouse"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.SelectWHAction" var="whAction" event="getUserWarehouse"/>
 <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_ADMINS%>">
 <div class="menuBar adminMenuBar" style="width:100%; margin:0px;">
   <ul class='lvl1'>
     <li class='lvl1 menuItem' title="">
-      <s:link class="invert" beanclass="web.action.admin.AdminHomeAction">Admin Home</s:link>
+      <s:link class="invert" beanclass="com.hk.web.action.admin.AdminHomeAction">Admin Home</s:link>
     </li>
     <c:choose>
      <c:when test="${whAction.setWarehouse == null}">
 
     <li class='lvl1 menuItem' title="">
-      <s:link class="invert" beanclass="web.action.admin.queue.ActionAwaitingQueueAction">Action Queue</s:link></li>
+      <s:link class="invert" beanclass="com.hk.web.action.admin.queue.ActionAwaitingQueueAction">Action Queue</s:link></li>
     </c:when>
       <c:otherwise>
     <li class='lvl1 menuItem' title="">
-      <s:link class="invert" beanclass="web.action.admin.queue.PackingAwaitingQueueAction">Packing Queue</s:link></li>
+      <s:link class="invert" beanclass="com.hk.web.action.admin.queue.PackingAwaitingQueueAction">Packing Queue</s:link></li>
     <li class='lvl1 menuItem' title="">
-      <s:link class="invert" beanclass="web.action.admin.ChooseOrdersForPrintPickAction">Print Pick Orders</s:link></li>
+      <s:link class="invert" beanclass="com.hk.web.action.admin.ChooseOrdersForPrintPickAction">Print Pick Orders</s:link></li>
     <li class='lvl1 menuItem' title="">
-      <s:link class="invert" beanclass="web.action.admin.queue.ShipmentAwaitingQueueAction">Shipment Queue</s:link></li>
+      <s:link class="invert" beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction">Shipment Queue</s:link></li>
      </c:otherwise>
     </c:choose>
     <li class='lvl1 menuItem' title="">
-      <s:link class="invert" beanclass="web.action.admin.order.search.SearchOrderAction">Search Base Orders</s:link></li>
+      <s:link class="invert" beanclass="com.hk.web.action.admin.order.search.SearchOrderAction">Search Base Orders</s:link></li>
     <li class='lvl1 menuItem' title="">
-      <s:link class="invert" beanclass="web.action.admin.order.search.SearchShippingOrderAction">Search Shipping Orders</s:link></li>
+      <s:link class="invert" beanclass="com.hk.web.action.admin.order.search.SearchShippingOrderAction">Search Shipping Orders</s:link></li>
     <li class='lvl1 menuItem' title="">
-      <s:link class="invert" beanclass="web.action.admin.SearchUserAction">Search Users</s:link></li>
+      <s:link class="invert" beanclass="com.hk.web.action.admin.SearchUserAction">Search Users</s:link></li>
       <li class='lvl1 menuItem' title="">
-        <s:link class="invert" beanclass="web.action.admin.ReportAction">Report Manager</s:link></li>
+        <s:link class="invert" beanclass="com.hk.web.action.admin.ReportAction">Report Manager</s:link></li>
 
     <li class='lvl1 menuItem' title="" style="float:right;">
-      <s:link beanclass="web.action.HomeAction">Site Home</s:link>
+      <s:link beanclass="com.hk.web.action.HomeAction">Site Home</s:link>
     </li>
     <div class="floatfix"></div>
   </ul>

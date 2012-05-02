@@ -7,7 +7,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.admin.queue.PackingAwaitingQueueAction" var="shipmentQueueBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.queue.PackingAwaitingQueueAction" var="shipmentQueueBean"/>
 <c:set var="lineItemTypeId_Product" value="<%=EnumCartLineItemType.Product.getId()%>"/>
 
 
@@ -81,7 +81,7 @@
 <fieldset class="top_label">
   <ul>
     <div class="grouped grid_12">
-      <s:form beanclass="web.action.admin.queue.PackingAwaitingQueueAction" method="get" autocomplete="false">
+      <s:form beanclass="com.hk.web.action.admin.queue.PackingAwaitingQueueAction" method="get" autocomplete="false">
         <label>SO Gateway ID </label><s:text name="gatewayOrderId" id="gatewayOrderId"/>
         <label>SO Order ID </label> <s:text name="shippingOrderId"/>
         <label>BO Gateway ID </label><s:text name="baseGatewayOrderId" id="baseGatewayOrderId"/>
@@ -120,7 +120,7 @@
   </ul>
 </fieldset>
 
-<s:form beanclass="web.action.admin.queue.PackingAwaitingQueueAction" autocomplete="off">
+<s:form beanclass="com.hk.web.action.admin.queue.PackingAwaitingQueueAction" autocomplete="off">
 
 
   <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${shipmentQueueBean}"/>
@@ -143,10 +143,10 @@
 <tr class="${ctr.index % 2 == 0 ? '' : 'alt'} orderRow">
 <td>
 <strong class="orderId">${order.gatewayOrderId}</strong><br/>
-(<s:link beanclass="web.action.InvoiceAction" event="partialInvoice" target="_blank">
+(<s:link beanclass="com.hk.web.action.InvoiceAction" event="partialInvoice" target="_blank">
 <s:param name="order" value="${order}"/>
 Invoice
-</s:link>)(<s:link beanclass="web.action.InvoiceAction" event="partialInvoice"
+</s:link>)(<s:link beanclass="com.hk.web.action.InvoiceAction" event="partialInvoice"
                            target="_blank" class="invoiceLink">
 <s:param name="order" value="${order}"/>
 <s:param name="printable" value="true"/>
@@ -154,11 +154,11 @@ Partial PC Invoice
 </s:link>)<br/>
 Escalation <fmt:formatDate value="${(hk:getEscalationDate(order))}" type="both" timeStyle="short"/><br/>
 Order <fmt:formatDate value="${order.payment.paymentDate}" pattern="dd/MM/yyyy"/><br/>
-<s:link beanclass="web.action.admin.order.OrderLifecycleAction" event="pre" target="_blank">
+<s:link beanclass="com.hk.web.action.admin.order.OrderLifecycleAction" event="pre" target="_blank">
   Lifecycle
   <s:param name="order" value="${order}"/>
 </s:link>
-<s:link beanclass="web.action.admin.order.OrderLifecycleAction" event="pre" target="_blank">
+<s:link beanclass="com.hk.web.action.admin.order.OrderLifecycleAction" event="pre" target="_blank">
   <c:if test="${!empty hk:orderComments(order)}">
     <text style="color:#f88; font-weight:bold">Comments!</text>
   </c:if>

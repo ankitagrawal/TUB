@@ -7,7 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp"%>
-<s:useActionBean beanclass="web.action.test.DoAdditionAction" var="addBean"/>
+<s:useActionBean beanclass="com.hk.web.action.test.DoAdditionAction" var="addBean"/>
 
 <html>
   <head>
@@ -19,7 +19,7 @@
   </style>
   </head>
   <body>
-  <s:form beanclass="web.action.test.DoAdditionAction">
+  <s:form beanclass="com.hk.web.action.test.DoAdditionAction">
     <s:errors/>
     <table>
       <tr>

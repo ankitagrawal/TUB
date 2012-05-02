@@ -17,7 +17,7 @@
 
       <div class="cart_error" id="cart_error2"></div>
       <s:layout-component name="content">
-        <s:form beanclass="web.action.AddToCartAction" class="addToCartForm">
+        <s:form beanclass="com.hk.web.action.AddToCartAction" class="addToCartForm">
           <s:hidden name="productVariantList[0]" value="${product.productVariants[0].id}"/>
           <s:hidden name="productVariantList[0].qty" value="1" class="lineItemQty"/>
           <s:hidden name="productVariantList[0].selected" value="true"/>

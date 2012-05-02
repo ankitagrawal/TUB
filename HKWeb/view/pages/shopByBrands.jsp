@@ -2,7 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.ShopByBrandsAction" var="brandAction"/>
+<s:useActionBean beanclass="com.hk.web.action.ShopByBrandsAction" var="brandAction"/>
 
 <s:layout-render name="/layouts/default100.jsp" pageTitle="Shop by Brands">
   <s:layout-component name="htmlHead">
@@ -25,7 +25,7 @@
               <tr>
             </c:if>
             <td class="col">
-              <s:link beanclass="web.action.BrandCatalogAction" class="bl">
+              <s:link beanclass="com.hk.web.action.BrandCatalogAction" class="bl">
                 ${brand}
                 <s:param name="brand" value="${brand}"/>
                 <s:param name="topLevelCategory" value="${category.name}"/>

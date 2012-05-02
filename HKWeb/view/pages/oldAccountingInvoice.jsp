@@ -69,7 +69,7 @@
                var summaryPayableTweleveDotFive = 0.0;
 </script>
 
-<s:useActionBean beanclass="web.action.AccountingInvoiceAction" event="pre" var="orderSummary"/>
+<s:useActionBean beanclass="com.hk.web.action.AccountingInvoiceAction" event="pre" var="orderSummary"/>
 
 <div align="center"><h2>TAX INVOICE/RETAIL INVOICE/ CASH MEMO</h2></div>
 <br>

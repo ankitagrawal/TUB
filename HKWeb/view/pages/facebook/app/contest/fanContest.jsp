@@ -2,7 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.facebook.app.contest.FanContestAction" var="fanContestBean"/>
+<s:useActionBean beanclass="com.hk.web.action.facebook.app.contest.FanContestAction" var="fanContestBean"/>
 
 <s:layout-render name="/layouts/fbDefault.jsp">
   <s:layout-component name="htmlHead">

@@ -2,12 +2,12 @@
 <%@ page import="mhc.service.dao.ProductVariantDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.UploadImageAction" var="imageBean"/>
+<s:useActionBean beanclass="com.hk.web.action.UploadImageAction" var="imageBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp">
 
   <s:layout-component name="content">
-    <s:form beanclass="web.action.UploadImageAction">
+    <s:form beanclass="com.hk.web.action.UploadImageAction">
       File to Upload
       <s:file name="fileBean" size="30"/>
       <s:select name="productVariant" >

@@ -52,7 +52,7 @@
 </head>
 <body>
 
-<s:useActionBean beanclass="web.action.admin.GRNAction" var="orderSummary"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.GRNAction" var="orderSummary"/>
 <table class="header">
   <tr>
     <td>

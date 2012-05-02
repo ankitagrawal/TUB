@@ -4,7 +4,7 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Search/Add Pincode">
-	<s:useActionBean beanclass="web.action.admin.courier.ChangeDefaultCourierAction" var="mpaBean"/>
+	<s:useActionBean beanclass="com.hk.web.action.admin.courier.ChangeDefaultCourierAction" var="mpaBean"/>
 	<s:layout-component name="heading">
 		Search and Add Pincode
 	</s:layout-component>
@@ -21,7 +21,7 @@
        })
     </script>
       <fieldset class="right_label">
-			<s:form beanclass="web.action.admin.courier.ChangeDefaultCourierAction">
+			<s:form beanclass="com.hk.web.action.admin.courier.ChangeDefaultCourierAction">
 				<label>Search Pincode</label>
 				<br/><br/>
 				<s:text name="pincodeString" id="pincodeString" style="width:200px;"/>
@@ -34,7 +34,7 @@
        <fieldset class="right_label">
     	<ul>
 
-				<s:form beanclass="web.action.admin.courier.ChangeDefaultCourierAction">
+				<s:form beanclass="com.hk.web.action.admin.courier.ChangeDefaultCourierAction">
 				<div >
 					<li><label>File to Upload</label>
 						<s:file name="fileBean" size="30"/>
@@ -51,7 +51,7 @@
        <fieldset style="float:left;">
            <c:forEach items="${mpaBean.pincodeDefaultCouriers}" var="defaultCourier" varStatus="pincodeDefaultCouriersCount">
             <table>
-                <s:form beanclass="web.action.admin.courier.ChangeDefaultCourierAction">
+                <s:form beanclass="com.hk.web.action.admin.courier.ChangeDefaultCourierAction">
                     <s:hidden name="pincodeDefaultCourier" value="${defaultCourier.id}"/>
                     <tr>
                         <td>Pincode:</td>
@@ -96,7 +96,7 @@
             <fieldset style="float:left; display:none;" id="new-default-courier-form">
                     <label>Add New</label>
                     <table>
-                        <s:form beanclass="web.action.admin.courier.ChangeDefaultCourierAction">
+                        <s:form beanclass="com.hk.web.action.admin.courier.ChangeDefaultCourierAction">
                             <tr>
                                 <td>Pincode:</td>
                                 <td><s:text name="pincodeString"  />

@@ -1,7 +1,7 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.admin.offer.EditCouponAction" var="couponBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.offer.EditCouponAction" var="couponBean"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp">
   <s:layout-component name="heading">Edit Coupon</s:layout-component>
   <s:layout-component name="htmlHead">
@@ -13,13 +13,13 @@
   </s:layout-component>
   <s:layout-component name="content">
     <div>
-      <s:form beanclass="web.action.admin.offer.EditCouponAction">
+      <s:form beanclass="com.hk.web.action.admin.offer.EditCouponAction">
         <s:errors/>
         <s:text name="code"/>
         <s:submit name="find" value="Edit Coupon"/>
         <s:submit name="findOfferInstanceListByCoupon" value="Find Offer Instances"/>
       </s:form>
-      <s:form beanclass="web.action.admin.offer.EditCouponAction">
+      <s:form beanclass="com.hk.web.action.admin.offer.EditCouponAction">
         <s:errors/>
         <div class="round-cont" style="width:650px;margin-top: 20px;">
           <table width="100%" border="0" cellspacing="0" cellpadding="0" style="font-size: 14px;">
@@ -55,7 +55,7 @@
               </td>
               <td>
                 <c:if test="${!empty couponBean.coupon.referrerUser.id}">
-                  <s:link beanclass="web.action.admin.SearchUserAction">
+                  <s:link beanclass="com.hk.web.action.admin.SearchUserAction">
                     <s:param name="userFilterDto.login" value="${couponBean.coupon.referrerUser.login}"/>
                     ${couponBean.coupon.referrerUser.id}
                   </s:link>
@@ -74,7 +74,7 @@
         <s:hidden name="code" value="${couponBean.code}"/>
         <s:submit name="save" value="Save"/>
       </s:form>
-        <s:form beanclass="web.action.admin.offer.EditCouponAction">
+        <s:form beanclass="com.hk.web.action.admin.offer.EditCouponAction">
           <s:errors/>
           <div class="round-cont" style="width:650px;margin-top: 20px;">
             <table width="100%" border="0" cellspacing="0" cellpadding="0" style="font-size: 14px;">
@@ -93,7 +93,7 @@
                 </td>
                 <td width="25px">
                     <c:if test="${!empty offerInstance.user.id}">
-                      <s:link beanclass="web.action.admin.SearchUserAction">
+                      <s:link beanclass="com.hk.web.action.admin.SearchUserAction">
                         <s:param name="userFilterDto.login" value="${offerInstance.user.email}"/>
                         ${offerInstance.user.id}
                       </s:link>

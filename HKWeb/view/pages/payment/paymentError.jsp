@@ -12,7 +12,7 @@
   </s:layout-component>
 
   <s:layout-component name="left_col">
-    <s:useActionBean beanclass="web.action.payment.PaymentErrorAction" var="actionBean"/>
+    <s:useActionBean beanclass="com.hk.web.action.payment.PaymentErrorAction" var="actionBean"/>
 
     <c:choose>
       <c:when test="${actionBean.payment != null}">
@@ -26,7 +26,7 @@
         <h2>Support</h2>
 
         <p>Please try again. If it still does not work
-          <s:link beanclass="web.action.pages.ContactAction">write to us</s:link> with the above details.</p>
+          <s:link beanclass="com.hk.web.action.pages.ContactAction">write to us</s:link> with the above details.</p>
         </div>
         
       </c:when>

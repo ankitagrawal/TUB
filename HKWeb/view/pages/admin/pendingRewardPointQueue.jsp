@@ -2,7 +2,7 @@
 <%@ page import="com.hk.dao.MasterDataDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.admin.PendingRewardPointQueueAction" event="pre" var="rpBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.PendingRewardPointQueueAction" event="pre" var="rpBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Pending Reward Points Queue">
 
@@ -11,7 +11,7 @@
     <fieldset class="top_label">
       <ul>
         <div class="grouped grid_12">
-          <s:form beanclass="web.action.admin.PendingRewardPointQueueAction" method="get" autocomplete="false">
+          <s:form beanclass="com.hk.web.action.admin.PendingRewardPointQueueAction" method="get" autocomplete="false">
 
             <li><label style="float:left;">Reward Point Type </label>
 
@@ -38,7 +38,7 @@
 
     </fieldset>
 
-    <s:form beanclass="web.action.admin.PendingRewardPointQueueAction">
+    <s:form beanclass="com.hk.web.action.admin.PendingRewardPointQueueAction">
 
       <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${rpBean}"/>
       <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${rpBean}"/>
@@ -91,7 +91,7 @@
               Name: ${rewardPoint.referredUser.name} <br/>
               Email: ${rewardPoint.referredUser.email}
               <br/>
-              <s:link beanclass="web.action.admin.UserReferrralsAddressesAction" event="pre" target="_blank">
+              <s:link beanclass="com.hk.web.action.admin.UserReferrralsAddressesAction" event="pre" target="_blank">
                 <s:param name="user" value="${rewardPoint.user}"/>
                 Previous Referral Addresses
               </s:link>
@@ -114,7 +114,7 @@
             </td>
             <td class="has_table">
               Order Id:
-              <s:link beanclass="web.action.admin.order.search.SearchOrderAction" event="searchOrders" target="_blank">
+              <s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" event="searchOrders" target="_blank">
                 <s:param name="orderId" value="${rewardPoint.referredOrder.id}"/>
                 ${rewardPoint.referredOrder.id}
               </s:link>

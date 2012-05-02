@@ -32,7 +32,7 @@
       </script>
       <s:layout-component name="content">
         <h4 class="strikeline">Product Name:- ${product.name}</h4>
-        <s:form beanclass="web.action.ProductAction">
+        <s:form beanclass="com.hk.web.action.ProductAction">
           <s:errors/>
           <div class="round-cont" style="width:610px;margin-top: 20px;">
             <div class="hk_banner" style="margin-left:200px">

@@ -50,7 +50,7 @@
 </head>
 <body>
 
-<s:useActionBean beanclass="web.action.admin.JobCartAction" var="orderSummary"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.JobCartAction" var="orderSummary"/>
 <table class="header">
   <tr>
     <td>

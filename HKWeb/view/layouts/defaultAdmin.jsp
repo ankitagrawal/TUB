@@ -15,7 +15,7 @@
   </head>
   <body id="${bodyId}">
   <s:layout-component name="modal"/>
-  <%--<span style="display:none;"><s:link beanclass="web.action.HeartbeatAction" id="heartbeat">H</s:link></span>--%>
+  <%--<span style="display:none;"><s:link beanclass="com.hk.web.action.HeartbeatAction" id="heartbeat">H</s:link></span>--%>
 
   <div class="container_12">
     <div class="grid_12">

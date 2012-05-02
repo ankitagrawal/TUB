@@ -10,7 +10,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.admin.SearchOrderAndEnterCourierInfoAction" var="shipmentQueueBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.SearchOrderAndEnterCourierInfoAction" var="shipmentQueueBean"/>
 <%
   BoxSizeDao boxSizeDao = InjectorFactory.getInjector().getInstance(BoxSizeDao.class);
   MasterDataDao masterDataDao = InjectorFactory.getInjector().getInstance(MasterDataDao.class);
@@ -32,7 +32,7 @@
     <c:choose>
       <c:when test="${shipmentQueueBean.shippingOrder == null}">
         <div height="500px" align="center">
-          <s:form beanclass="web.action.admin.SearchOrderAndEnterCourierInfoAction" method="get"
+          <s:form beanclass="com.hk.web.action.admin.SearchOrderAndEnterCourierInfoAction" method="get"
                   autocomplete="false">
             <label>Search Order:</label>
             <br/><br/>
@@ -51,7 +51,7 @@
       </c:when>
       <c:otherwise>
         <fieldset class="top_label">
-          <s:form beanclass="web.action.admin.SearchOrderAndEnterCourierInfoAction">
+          <s:form beanclass="com.hk.web.action.admin.SearchOrderAndEnterCourierInfoAction">
               <s:hidden name="shipment" value="${shipmentQueueBean.shipment.id}"/>
              <c:if test="${! empty shipmentQueueBean.availableCouriers}">
               <div style="margin-top:5px;margin-bottom:5px;font-size:.9em">Available Couriers:

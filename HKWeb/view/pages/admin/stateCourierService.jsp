@@ -1,14 +1,14 @@
 <%@ page import="com.hk.dao.MasterDataDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.admin.StateCourierServiceAction" var="scsaBean" event="pre"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.StateCourierServiceAction" var="scsaBean" event="pre"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="State Courier Service">
 
   <s:layout-component name="heading">State Courier Service</s:layout-component>
   <s:layout-component name="content">
 
-    <s:form beanclass="web.action.admin.StateCourierServiceAction" method="post">
+    <s:form beanclass="com.hk.web.action.admin.StateCourierServiceAction" method="post">
       <table>
         <tr>
           <th>S.No.</th>

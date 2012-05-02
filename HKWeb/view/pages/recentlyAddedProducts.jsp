@@ -4,7 +4,7 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.admin.RecentlyAddedProductsAction" var="rapa"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.RecentlyAddedProductsAction" var="rapa"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Recently Added Products">
 
   <s:layout-component name="content">

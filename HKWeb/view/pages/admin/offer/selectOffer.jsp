@@ -1,12 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.admin.offer.SelectOfferAction" var="offerBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.offer.SelectOfferAction" var="offerBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp">
   <s:layout-component name="heading">Select Offer</s:layout-component>
   <s:layout-component name="content">
-    <s:form beanclass="web.action.admin.offer.SelectOfferAction">
+    <s:form beanclass="com.hk.web.action.admin.offer.SelectOfferAction">
       <table class="cont">
         <thead>
         <tr>

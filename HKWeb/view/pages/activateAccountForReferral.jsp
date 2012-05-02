@@ -22,7 +22,7 @@
       <p class="lrg">Please click on the activation link sent to you via e-mail when signing up.</p>
 
       <p><strong>If you haven't received the mail,
-        <s:link beanclass="web.action.ResendAccountActivationLinkAction" event="pre" class="resendActivationEmailLink">click here to resend it.</s:link>
+        <s:link beanclass="com.hk.web.action.ResendAccountActivationLinkAction" event="pre" class="resendActivationEmailLink">click here to resend it.</s:link>
       </strong>
         <span class="emailSendMessage alert" style="display: none;"></span>
         
@@ -37,7 +37,7 @@
 
     <br/>
 
-    <div class="buttons" align="left"><s:link beanclass="web.action.HomeAction" event="pre">
+    <div class="buttons" align="left"><s:link beanclass="com.hk.web.action.HomeAction" event="pre">
      Continue Shopping
     </s:link></div>
 

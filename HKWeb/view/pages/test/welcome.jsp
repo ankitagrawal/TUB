@@ -4,7 +4,7 @@
   <head><title>Simple jsp page</title></head>
   <body>
 
-  <s:form beanclass="web.action.test.SayHelloAction">
+  <s:form beanclass="com.hk.web.action.test.SayHelloAction">
     <s:text name="name"/>
     <s:submit name="pre"/>
   </s:form>

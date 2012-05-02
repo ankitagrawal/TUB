@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.CategoryAction" var="ca"/>
+<s:useActionBean beanclass="com.hk.web.action.CategoryAction" var="ca"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Edit Category Headings">
 
@@ -46,7 +46,7 @@
 
   <s:layout-component name="content">
     <center><h2>CATEGORY:${ca.category.name}</h2></center>
-    <s:form beanclass="web.action.PrimaryCategoryHeadingAction">
+    <s:form beanclass="com.hk.web.action.PrimaryCategoryHeadingAction">
       <table>
         <tr>
           <th></th>
@@ -100,14 +100,14 @@
 
         <c:choose>
           <c:when test="${ca.category.name != 'home'}">
-            <s:link beanclass="web.action.CategoryAction" event="pre">
+            <s:link beanclass="com.hk.web.action.CategoryAction" event="pre">
               <div align="right" style="font-weight:bold; font-size:150%">BACK</div>
               <s:param name="category.name" value="${ca.category.name}"/>
             </s:link>
           </c:when>
 
           <c:otherwise>
-            <s:link beanclass="web.action.HomeAction" event="pre">
+            <s:link beanclass="com.hk.web.action.HomeAction" event="pre">
               <div align="right" style="font-weight:bold; font-size:150%">BACK</div>
               <%--<s:param name="category.name" value="${ca.category.name}"/>--%>
             </s:link>

@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.admin.order.OrderCommentAction" var="orderCommentAction"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.order.OrderCommentAction" var="orderCommentAction"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp">
   <s:layout-component name="heading">Comments for Order#${orderCommentAction.order.gatewayOrderId}</s:layout-component>
   <s:layout-component name="content"><br/><br/>
@@ -31,7 +31,7 @@
     <fieldset class="right_label" style="float:left;margin-top:25px;">
       <legend>New Comment</legend>
       <table>
-        <s:form beanclass="web.action.admin.order.OrderCommentAction">
+        <s:form beanclass="com.hk.web.action.admin.order.OrderCommentAction">
           <s:hidden name="order" value="${orderCommentAction.order}"/>          
           <tr>
             <td>Comment:</td>

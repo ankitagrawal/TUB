@@ -6,7 +6,7 @@
 	  </s:layout-component>
 	<br/><br/><br/>
 	<s:layout-component name="content">
-		<s:form beanclass="web.action.admin.PurchaseInvoiceAction">
+		<s:form beanclass="com.hk.web.action.admin.PurchaseInvoiceAction">
 		<s:submit name="pre" value="Back"/>
 		</s:form>
 		</s:layout-component>

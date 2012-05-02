@@ -4,7 +4,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.VerifyUserAction" var="verifyUserBean"/>
+<s:useActionBean beanclass="com.hk.web.action.VerifyUserAction" var="verifyUserBean"/>
 
 <c:set var="outcome_alreadyVerified" value="<%=VerifyUserAction.outcome_alreadyVerified%>"/>
 <c:set var="outcome_invalidLink" value="<%=VerifyUserAction.outcome_invalidLink%>"/>
@@ -37,7 +37,7 @@
       <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_NEEDS_ACTIVATION%>">
         <p>
           You can request a fresh activation link by going to the
-          <s:link beanclass="web.action.WelcomeAction"><strong>Activation page</strong></s:link>.
+          <s:link beanclass="com.hk.web.action.WelcomeAction"><strong>Activation page</strong></s:link>.
           If you are unable to receive the activation email then please check your spam/junk folder. For further help please write to us at info@healthkart.com
         </p>
       </shiro:hasAnyRoles>
@@ -49,21 +49,21 @@
 
       <br/>
 
-      <div class="buttons" align="left"><s:link beanclass="web.action.CartAction">PROCEED TO CART</s:link></div>
+      <div class="buttons" align="left"><s:link beanclass="com.hk.web.action.CartAction">PROCEED TO CART</s:link></div>
     </c:if>
 
-    <div class="buttons" align="left"><s:link beanclass="web.action.HomeAction" event="pre">
+    <div class="buttons" align="left"><s:link beanclass="com.hk.web.action.HomeAction" event="pre">
      START SHOPPING
     </s:link></div>
 
-    <div class="buttons" align="left"><s:link beanclass="web.action.ReferralProgramAction" event="pre">
+    <div class="buttons" align="left"><s:link beanclass="com.hk.web.action.ReferralProgramAction" event="pre">
       REFER YOUR FRIENDS
     </s:link></div>
 
 
     <shiro:notAuthenticated>
 
-      <div class="buttons" align="left"><s:link beanclass="web.action.LoginAction" event="pre">
+      <div class="buttons" align="left"><s:link beanclass="com.hk.web.action.LoginAction" event="pre">
         Login
       </s:link></div>
     </shiro:notAuthenticated>

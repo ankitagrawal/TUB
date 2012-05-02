@@ -11,7 +11,7 @@
     <div style="display:inline;float:left;">
       <h2>Update Reconciliation using Excel</h2>
       <br/>
-      <s:form beanclass="web.action.admin.ReconciliationAction">
+      <s:form beanclass="com.hk.web.action.admin.ReconciliationAction">
         <%--<s:messages key="generalMessages"/>--%>
         <h2>File to Upload
             <%--<s:text name="category"/>--%>

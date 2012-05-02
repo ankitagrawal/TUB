@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.admin.shippingOrder.EditShippingOrderAction" var="orderAdmin" event="pre"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.shippingOrder.EditShippingOrderAction" var="orderAdmin" event="pre"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Edit Order">
   <s:layout-component name="heading">Edit Order#${orderAdmin.shippingOrder.id}</s:layout-component>
@@ -10,7 +10,7 @@
 
   <s:layout-component name="content">
     <s:errors/>
-    <s:form beanclass="web.action.admin.shippingOrder.EditShippingOrderAction">
+    <s:form beanclass="com.hk.web.action.admin.shippingOrder.EditShippingOrderAction">
       <s:hidden name="shippingOrder" value="${orderAdmin.shippingOrder}"/>
       <table class="cont" width="100%">
         <thead>

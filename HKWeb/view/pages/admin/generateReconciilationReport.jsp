@@ -3,7 +3,7 @@
 <%@ page import="com.hk.dao.MasterDataDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.admin.GenerateReconcilationReportAction" var="reportActionBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.GenerateReconcilationReportAction" var="reportActionBean"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Report Master">
 
 <s:layout-component name="htmlHead">
@@ -30,7 +30,7 @@
 
 <s:layout-component name="content">
 <div class="reportBox">
-  <s:form beanclass="web.action.admin.GenerateReconcilationReportAction" >
+  <s:form beanclass="com.hk.web.action.admin.GenerateReconcilationReportAction" >
     <s:errors/>
     <fieldset class="right_label">
       <legend>Reconciliation Reports</legend>

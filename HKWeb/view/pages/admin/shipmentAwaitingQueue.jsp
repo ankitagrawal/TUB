@@ -3,7 +3,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.admin.queue.ShipmentAwaitingQueueAction" var="shipmentQueueBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction" var="shipmentQueueBean"/>
 
 <c:set var="lineItemTypeId_Product" value="<%=EnumCartLineItemType.Product.getId()%>"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Shipment Awaiting Queue">
@@ -18,7 +18,7 @@
     <fieldset class="top_label">
       <ul>
         <div class="grouped grid_12">
-          <s:form beanclass="web.action.admin.queue.ShipmentAwaitingQueueAction" method="get" autocomplete="false">
+          <s:form beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction" method="get" autocomplete="false">
             <label>Gateway ID </label><s:text name="gatewayOrderId" id="gatewayOrderId"/>
             <label>Order ID </label> <s:text name="orderId"/>
             <s:select name="courier" class="courierService">
@@ -40,7 +40,7 @@
     <fieldset class="top_label">
       <ul>
         <div class="grouped grid_12">
-          <s:form beanclass="web.action.admin.queue.ShipmentAwaitingQueueAction" target="_blank">
+          <s:form beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction" target="_blank">
             <label>Courier</label>
             <s:select name="courier" class="courierService">
               <s:option value="">All Couriers</s:option>
@@ -53,7 +53,7 @@
       </ul>
     </fieldset>
 
-    <s:form beanclass="web.action.admin.queue.ShipmentAwaitingQueueAction" autocomplete="off">
+    <s:form beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction" autocomplete="off">
       <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${shipmentQueueBean}"/>
       <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${shipmentQueueBean}"/>
       <div style="float:right"><input type="submit" value="Mark All" id="markAll"/></div>

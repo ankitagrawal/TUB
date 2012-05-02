@@ -11,7 +11,7 @@
 <%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.admin.PurchaseInvoiceAction" var="pia"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.PurchaseInvoiceAction" var="pia"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Purchase Invoice">
 
 <%
@@ -237,10 +237,10 @@
 </s:layout-component>
 <s:layout-component name="content">
 	<div style="display: none;">
-		<s:link beanclass="web.action.admin.PurchaseInvoiceAction" id="pvInfoLink" event="getPVDetails"></s:link>
+		<s:link beanclass="com.hk.web.action.admin.PurchaseInvoiceAction" id="pvInfoLink" event="getPVDetails"></s:link>
 	</div>
 
-	<s:form beanclass="web.action.admin.PurchaseInvoiceAction">
+	<s:form beanclass="com.hk.web.action.admin.PurchaseInvoiceAction">
 		<s:hidden name="purchaseInvoice" value="${pia.purchaseInvoice}"/>
 		<table>
 			<tr>

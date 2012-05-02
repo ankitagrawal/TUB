@@ -1,13 +1,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.admin.marketing.SendWeMissYouEmailer" var="emailBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.marketing.SendWeMissYouEmailer" var="emailBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp">
   <s:layout-component name="heading">Send Missing Users Email Campaign</s:layout-component>
   <s:layout-component name="content">
     <p>
-      <s:form beanclass="web.action.admin.marketing.SendWeMissYouEmailer">
+      <s:form beanclass="com.hk.web.action.admin.marketing.SendWeMissYouEmailer">
         <h2>Select campaign, Enter Coupon Code to be mailed, and the no of days the user has been missing</h2><br/>
         Coupon Code <s:text name="couponCode"/><br/>
         No Of Days <s:text name="noOfDays"/>

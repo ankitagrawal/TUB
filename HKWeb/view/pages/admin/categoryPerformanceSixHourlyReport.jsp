@@ -5,7 +5,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.admin.ReportAction" var="reportBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.ReportAction" var="reportBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Report Generator">
 
@@ -92,7 +92,7 @@
     </table>
 
 
-    <s:form beanclass="web.action.admin.ReportAction" autocomplete="off">
+    <s:form beanclass="com.hk.web.action.admin.ReportAction" autocomplete="off">
       <%--<div class="buttons"><s:submit name="generateSalesByDateReport" value="Download"/></div>--%>
       <%--<s:hidden name="startDate" value="${startDate}"/>--%>
       <%--<s:hidden name="endDate" value="${endDate}"/>--%>

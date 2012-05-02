@@ -8,7 +8,7 @@
     <fieldset class="right_label">
       <legend>Download Courier AWB Info Excel</legend>
       <ul>
-        <s:form beanclass="web.action.admin.courier.CourierAWBAction">
+        <s:form beanclass="com.hk.web.action.admin.courier.CourierAWBAction">
           <li><label>Courier AWB numbers to download : </label><s:select name="courier" class="codModeSelect">
             <s:option value="">-All-</s:option>
             <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList" value="id" label="name"/>
@@ -28,7 +28,7 @@
       <legend>Upload Courier Airway Bill Nos Excel</legend>
       <ul>
 
-        <s:form beanclass="web.action.admin.courier.CourierAWBAction">
+        <s:form beanclass="com.hk.web.action.admin.courier.CourierAWBAction">
         <div class="grid_4">
           <li><label>File to Upload</label>
             <s:file name="fileBean" size="30"/>

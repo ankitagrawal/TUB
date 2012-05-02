@@ -9,7 +9,7 @@
 
 <s:layout-component name="breadcrumbs">
   <div class='crumb_outer'>
-    <s:link beanclass="web.action.HomeAction" class="crumb">Home</s:link>
+    <s:link beanclass="com.hk.web.action.HomeAction" class="crumb">Home</s:link>
     &gt;
     <span class="crumb last" style="font-size: 12px;">Personal Care</span>
 
@@ -49,7 +49,7 @@
       </li>
     </ul>
     <div class='grid_6'>
-      <s:link beanclass="web.action.ReferralProgramAction" event="pre">
+      <s:link beanclass="com.hk.web.action.ReferralProgramAction" event="pre">
         <img src="<hk:vhostImage/>/images/banners/refer_earn.jpg" alt="refer a friend and earn" class="small_banner"/>
       </s:link>
       <img src="<hk:vhostImage/>/images/banners/freeshipping_cod_250.jpg" alt="cash on delivery" class="small_banner"/>
@@ -84,11 +84,11 @@
   <div class="products">
     <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_CATALOG%>">
       <br/>
-      <div><s:link beanclass="web.action.UploadCategoryImageAction" event="pre" target="_blank" class="popup"> Upload
+      <div><s:link beanclass="com.hk.web.action.UploadCategoryImageAction" event="pre" target="_blank" class="popup"> Upload
         <s:param name="category" value="personal-care"/>
       </s:link>
         &nbsp;|&nbsp;
-        <s:link beanclass="web.action.UploadCategoryImageAction" event="manageCategoryImages" target="_blank" class="popup">
+        <s:link beanclass="com.hk.web.action.UploadCategoryImageAction" event="manageCategoryImages" target="_blank" class="popup">
           <s:param name="category" value="personal-care"/>
           Manage Images
         </s:link>

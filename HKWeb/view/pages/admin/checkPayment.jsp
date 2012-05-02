@@ -4,7 +4,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.admin.CheckPaymentAction" var="checkPaymentBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.CheckPaymentAction" var="checkPaymentBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Welcome">
 
@@ -25,7 +25,7 @@
 
     <h3>
       <c:if test="${!(checkPaymentBean.order.orderStatus.id == orderStatusCancelled || checkPaymentBean.order.orderStatus.id == orderStatusInCart)}">
-        <s:link beanclass="web.action.admin.order.CancelOrderAction" event="pre" onclick="return confirm('Are you sure?')">
+        <s:link beanclass="com.hk.web.action.admin.order.CancelOrderAction" event="pre" onclick="return confirm('Are you sure?')">
           Cancel Order
           <s:param name="order" value="${checkPaymentBean.order.id}"/>
         </s:link>
@@ -88,13 +88,13 @@
       <c:choose>
         <c:when test="${checkPaymentBean.order.address == null}">
           No address associated with this order.
-          <s:link beanclass="web.action.admin.SelectAddressAction" event="pre">
+          <s:link beanclass="com.hk.web.action.admin.SelectAddressAction" event="pre">
             Please select atleast 1 address to continue.
             <s:param name="order" value="${checkPaymentBean.order.id}"/>
           </s:link>
         </c:when>
         <c:otherwise>
-          <s:link beanclass="web.action.admin.ChangeOrderAddressAction" event="pre">
+          <s:link beanclass="com.hk.web.action.admin.ChangeOrderAddressAction" event="pre">
             Change Address
             <s:param name="order" value="${checkPaymentBean.order.id}"/>
           </s:link>
@@ -117,7 +117,7 @@
     </ul>
     </p>
 
-    <s:form beanclass="web.action.admin.CheckPaymentAction">
+    <s:form beanclass="com.hk.web.action.admin.CheckPaymentAction">
 
       <div>
         <table class="cont">
@@ -126,7 +126,7 @@
             <th colspan="10">
               Payment List
               (
-              <s:link beanclass="web.action.admin.NewPaymentAction">
+              <s:link beanclass="com.hk.web.action.admin.NewPaymentAction">
                 <s:param name="order" value="${checkPaymentBean.order}"/>
                 <s:param name="amount" value="${checkPaymentBean.pricingDto.grandTotalPayable}"/>
                 <s:param name="paymentMode" value="<%=EnumPaymentMode.TECHPROCESS_TEST.getId()%>"/>
@@ -156,7 +156,7 @@
               <td><s:radio value="${payment.id}" name="payment" disabled="${radioDisabled}" /></td>
               <td>
                 ${payment.gatewayOrderId}
-                (<s:link beanclass="web.action.admin.EditPaymentAction">
+                (<s:link beanclass="com.hk.web.action.admin.EditPaymentAction">
                   <s:param name="paymentId" value="${payment.id}"/>
                   Edit Payment
                 </s:link>)
@@ -168,14 +168,14 @@
               <td>
                 <c:if test="${payment.paymentMode.id != paymentModeCod}">
                   <span class="xsml">
-                    <s:link beanclass="web.action.admin.CreateTicketAction" event="createPaymentTypeTicket">
+                    <s:link beanclass="com.hk.web.action.admin.CreateTicketAction" event="createPaymentTypeTicket">
                       Create Ticket to track with TechProcess
                       <s:param name="order" value="${payment.order.id}"/>
                       <s:param name="message" value="Track With TechProcess"/>
                       <s:param name="gatewayOrderId" value="${payment.gatewayOrderId}"/>
                       <s:param name="paymentDate" value="${hk:formatDate(payment.paymentDate)}"/>
                     </s:link> <br/>
-                    <s:link beanclass="web.action.admin.CreateTicketAction" event="createPaymentTypeTicket">
+                    <s:link beanclass="com.hk.web.action.admin.CreateTicketAction" event="createPaymentTypeTicket">
                       create Refund Ticket
                       <s:param name="order" value="${payment.order.id}"/>
                       <s:param name="message" value="Payment Refund"/>
@@ -187,7 +187,7 @@
               </td>
               <td>
                 <%--<c:if test="${payment.paymentStatus.id == paymentStatusRequested && fn:length(checkPaymentBean.order.addresses) > 0}">--%>
-                  <%--<s:link beanclass="web.action.admin.BackedUpOrderSummaryAction" event="pre">--%>
+                  <%--<s:link beanclass="com.hk.web.action.admin.BackedUpOrderSummaryAction" event="pre">--%>
                     <%--View BackedUp Order Summary--%>
                     <%--<s:param name="payment" value="${payment.id}"/>--%>
                   <%--</s:link>--%>

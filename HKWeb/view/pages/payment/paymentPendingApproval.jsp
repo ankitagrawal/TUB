@@ -12,7 +12,7 @@
   </s:layout-component>
 
   <s:layout-component name="left_col">
-    <s:useActionBean beanclass="web.action.payment.PaymentPendingApprovalAction" var="actionBean"/>
+    <s:useActionBean beanclass="com.hk.web.action.payment.PaymentPendingApprovalAction" var="actionBean"/>
 
     <c:choose>
       <c:when test="${actionBean.payment != null}">
@@ -31,7 +31,7 @@
 
         <h2>Customer Support</h2>
 
-        <p><s:link beanclass="web.action.pages.ContactAction">Write to us</s:link> with your Order ID if you have
+        <p><s:link beanclass="com.hk.web.action.pages.ContactAction">Write to us</s:link> with your Order ID if you have
           any questions.</p>
       </c:when>
       <c:otherwise>

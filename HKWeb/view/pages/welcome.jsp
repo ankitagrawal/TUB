@@ -52,7 +52,7 @@
       <br/>
 
       <p><strong>If you haven't received the mail,
-        <s:link beanclass="web.action.ResendAccountActivationLinkAction" event="pre" class="resendActivationEmailLink">click here to resend it.</s:link>
+        <s:link beanclass="com.hk.web.action.ResendAccountActivationLinkAction" event="pre" class="resendActivationEmailLink">click here to resend it.</s:link>
       </strong> <br/>
         <span class="emailSendMessage alert" style="display: none;"></span>
         <br/>
@@ -67,7 +67,7 @@
 
     <br/>
 
-    <div class="buttons" align="left"><s:link beanclass="web.action.HomeAction" event="pre">
+    <div class="buttons" align="left"><s:link beanclass="com.hk.web.action.HomeAction" event="pre">
      START SHOPPING
     </s:link></div>
 

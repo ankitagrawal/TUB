@@ -5,7 +5,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.admin.SearchOrderAndReCheckinRTOInventoryAction" var="orderAdmin"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.SearchOrderAndReCheckinRTOInventoryAction" var="orderAdmin"/>
 <%
   int lineItemGlobalCtr = 0;
 %>
@@ -31,7 +31,7 @@
   <s:layout-component name="heading">Search Order and Checkin RTO Units</s:layout-component>
 
   <s:layout-component name="content">
-    <s:form beanclass="web.action.admin.SearchOrderAndReCheckinRTOInventoryAction" method="get" autocomplete="false">
+    <s:form beanclass="com.hk.web.action.admin.SearchOrderAndReCheckinRTOInventoryAction" method="get" autocomplete="false">
       <fieldset class="top_label">
         <ul>
           <div class="grouped">
@@ -44,7 +44,7 @@
     </s:form>
 
     <c:if test="${orderAdmin.shippingOrder != null}">
-      <s:form beanclass="web.action.admin.SearchOrderAndReCheckinRTOInventoryAction" autocomplete="off">
+      <s:form beanclass="com.hk.web.action.admin.SearchOrderAndReCheckinRTOInventoryAction" autocomplete="off">
         <s:hidden name="orderId" value="${orderAdmin.shippingOrder.id}"/>
         <c:set var="order" value="${orderAdmin.shippingOrder.baseOrder}"/>
         <table class="align_top" width="100%">
@@ -60,10 +60,10 @@
           <tr>
             <td>
               <strong>${order.gatewayOrderId}</strong>
-              (<s:link beanclass="web.action.SOInvoiceAction" target="_blank">
+              (<s:link beanclass="com.hk.web.action.SOInvoiceAction" target="_blank">
               <s:param name="shippingOrder" value="${orderAdmin.shippingOrder}"/>
               Invoice
-            </s:link>)<br>(<s:link beanclass="web.action.SOInvoiceAction" target="_blank">
+            </s:link>)<br>(<s:link beanclass="com.hk.web.action.SOInvoiceAction" target="_blank">
               <s:param name="shippingOrder" value="${orderAdmin.shippingOrder}"/>
               <s:param name="printable" value="true"/>
               Personal Care
@@ -144,12 +144,12 @@
                 </c:forEach>
               </table>
 
-              <s:link beanclass="web.action.admin.order.OrderLifecycleAction" event="pre" target="_blank">
+              <s:link beanclass="com.hk.web.action.admin.order.OrderLifecycleAction" event="pre" target="_blank">
                 Order Lifecycle
                 <s:param name="order" value="${order}"/>
               </s:link>
 
-              <s:link beanclass="web.action.admin.order.OrderLifecycleAction" event="pre" target="_blank">
+              <s:link beanclass="com.hk.web.action.admin.order.OrderLifecycleAction" event="pre" target="_blank">
                 <c:if test="${!empty hk:orderComments(order)}">
                   <text style="color:#f88; font-weight:bold">Comments!</text>
                 </c:if>

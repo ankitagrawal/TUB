@@ -1,12 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.UploadComboImageAction" var="imageBean"/>
+<s:useActionBean beanclass="com.hk.web.action.UploadComboImageAction" var="imageBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp">
 
   <s:layout-component name="content">
 
-    <s:form beanclass="web.action.UploadComboImageAction">
+    <s:form beanclass="com.hk.web.action.UploadComboImageAction">
       <%--<s:messages key="generalMessages"/>--%>
       File to Upload for Combo
       <s:file name="fileBean" size="30"/>

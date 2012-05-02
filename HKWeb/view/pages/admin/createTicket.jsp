@@ -2,14 +2,14 @@
 <%@ page import="com.hk.dao.MasterDataDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.admin.CreateTicketAction" event="pre" var="ticketBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.CreateTicketAction" event="pre" var="ticketBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Welcome">
   <s:layout-component name="heading">${ticketBean.currentBreadcrumb.name}</s:layout-component>
 
   <s:layout-component name="content">
 
-    <s:form beanclass="web.action.admin.CreateTicketAction" method="post">
+    <s:form beanclass="com.hk.web.action.admin.CreateTicketAction" method="post">
       <s:errors/>
       <fieldset class="top_label">
         <ul>

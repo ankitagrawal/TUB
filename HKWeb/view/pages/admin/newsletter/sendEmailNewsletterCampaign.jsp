@@ -1,14 +1,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.admin.newsletter.SendEmailNewsletterCampaign" var="emailBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.newsletter.SendEmailNewsletterCampaign" var="emailBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp">
   <s:layout-component name="heading">Send Email Newsletter Campaign</s:layout-component>
   <s:layout-component name="content">
     <h2>Step 1: Select a campaign</h2>
     <p>
-      <s:form beanclass="web.action.admin.newsletter.SendEmailNewsletterCampaign">
+      <s:form beanclass="com.hk.web.action.admin.newsletter.SendEmailNewsletterCampaign">
         <table>
           <thead>
           <tr>

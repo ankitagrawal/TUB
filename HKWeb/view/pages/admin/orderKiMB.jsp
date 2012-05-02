@@ -5,7 +5,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.admin.order.OrderKiMBAction" var="orderAdmin" event="pre"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.order.OrderKiMBAction" var="orderAdmin" event="pre"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Order Search">
 
@@ -107,11 +107,11 @@
 
     <s:layout-component name="content">
         <div style="display: none;">
-          <s:link beanclass="web.action.admin.order.OrderKiMBAction" id="pvInfoLink" event="getPVDetails"></s:link>
+          <s:link beanclass="com.hk.web.action.admin.order.OrderKiMBAction" id="pvInfoLink" event="getPVDetails"></s:link>
         </div>
         <div style="display:inline;float:left;">
         <s:errors/>
-        <s:form beanclass="web.action.admin.order.OrderKiMBAction" method="get" autocomplete="false">
+        <s:form beanclass="com.hk.web.action.admin.order.OrderKiMBAction" method="get" autocomplete="false">
             <fieldset class="top_label">
                 <ul>
                     <div class="grouped">
@@ -124,7 +124,7 @@
         </s:form>
 
         <c:if test="${orderAdmin.order != null}">
-            <s:form beanclass="web.action.admin.order.OrderKiMBAction">
+            <s:form beanclass="com.hk.web.action.admin.order.OrderKiMBAction">
             <table class="cont" width="100%" id="poTable">
                 <thead>
                 <tr>
@@ -225,7 +225,7 @@
                     <th>Selected</th>
                 </tr>
                 </thead>
-            <s:form beanclass="web.action.admin.order.OrderKiMBAction">
+            <s:form beanclass="com.hk.web.action.admin.order.OrderKiMBAction">
                 <c:forEach items="${orderAdmin.paymentList}" var="payment" varStatus="ctr">
                     <tr>
                         <td>

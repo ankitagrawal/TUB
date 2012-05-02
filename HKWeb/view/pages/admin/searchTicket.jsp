@@ -2,7 +2,7 @@
 <%@ page import="com.hk.dao.MasterDataDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.admin.SearchTicketAction" var="ticketBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.SearchTicketAction" var="ticketBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Welcome">
 
@@ -16,7 +16,7 @@
   <s:layout-component name="heading">${ticketBean.currentBreadcrumb.name}</s:layout-component>
   <s:layout-component name="content">
 
-    <s:form beanclass="web.action.admin.SearchTicketAction" method="get" renderFieldsPresent="false" renderSourcePage="false">
+    <s:form beanclass="com.hk.web.action.admin.SearchTicketAction" method="get" renderFieldsPresent="false" renderSourcePage="false">
       <s:errors/>
       <fieldset class="left_label">
         <ul>
@@ -83,14 +83,14 @@
           <td>${ticket.id}</td>
           <td>${ticket.owner.name}</td>
           <td>
-            <s:link beanclass="web.action.admin.ViewAndEditTicketAction" event="pre">
+            <s:link beanclass="com.hk.web.action.admin.ViewAndEditTicketAction" event="pre">
               ${ticket.shortDescription}
               <s:param name="ticket" value="${ticket.id}"/>
             </s:link> <br/>
 
             <c:if test="${ticket.associatedOrder != null}">
               [Order Id -
-              <s:link beanclass="web.action.admin.order.search.SearchOrderAction" event="searchOrders">
+              <s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" event="searchOrders">
                 ${ticket.associatedOrder.id}
                 <s:param name="orderId" value="${ticket.associatedOrder.id}"/>
               </s:link>]
@@ -101,7 +101,7 @@
               </c:when>
               <c:otherwise>
                 <c:if test="${ticket.associatedUser != null}">
-                  [<s:link beanclass="web.action.admin.SearchUserAction" event="search">
+                  [<s:link beanclass="com.hk.web.action.admin.SearchUserAction" event="search">
                   ${ticket.associatedUser.name} - ${ticket.associatedUser.email}
                   <s:param name="userFilterDto.email" value="${ticket.associatedUser.email}"/>
                 </s:link>]
@@ -113,7 +113,7 @@
             </c:if>
             <c:if test="${hk:isNotBlank(ticket.associatedTrackingId)}">
               [Tracking Id -
-              <s:link beanclass="web.action.TrackCourierAction" event="pre" target="_blank">
+              <s:link beanclass="com.hk.web.action.TrackCourierAction" event="pre" target="_blank">
                 ${ticket.associatedTrackingId}
                 <s:param name="trackingId" value="${ticket.associatedTrackingId}"/>
                 <s:param name="courierId" value="${ticket.associatedCourier.id}"/>

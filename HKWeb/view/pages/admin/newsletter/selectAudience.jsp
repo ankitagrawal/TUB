@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.admin.newsletter.SendEmailNewsletterCampaign" var="emailBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.newsletter.SendEmailNewsletterCampaign" var="emailBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp">
   <s:layout-component name="heading">Select Audience</s:layout-component>
@@ -9,7 +9,7 @@
     <h3>Campaign selected: ${emailBean.emailCampaign.name}</h3>
     <h2>Step 2: Select Audience to send to</h2>
     <p>
-      <s:form beanclass="web.action.admin.newsletter.SendEmailNewsletterCampaign">
+      <s:form beanclass="com.hk.web.action.admin.newsletter.SendEmailNewsletterCampaign">
         Enter comma separated emails/categories<br/><br/>
 
         Test User emails (note: these must be valid users in healthkart): <s:text name="testEmails"/><br/>

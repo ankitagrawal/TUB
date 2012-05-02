@@ -1,12 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.test.EditFeaturesAction" var="featuresBean"/>
+<s:useActionBean beanclass="com.hk.web.action.test.EditFeaturesAction" var="featuresBean"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp">
 
   <s:layout-component name="content">
     <h2>${featuresBean.product.name}</h2>
     
-    <s:form beanclass="web.action.test.EditFeaturesAction">
+    <s:form beanclass="com.hk.web.action.test.EditFeaturesAction">
       <table>
         <tr>
           <td>

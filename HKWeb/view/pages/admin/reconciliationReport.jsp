@@ -5,7 +5,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.admin.ReportAction" var="reportBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.ReportAction" var="reportBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Reconciliation Report">
 
@@ -22,7 +22,7 @@
       </tr>
     </table>
     <br>
-    <s:form beanclass="web.action.admin.ReportAction" autocomplete="off">
+    <s:form beanclass="com.hk.web.action.admin.ReportAction" autocomplete="off">
       <table class="align_top" width="100%">
         <thead>
         <tr>

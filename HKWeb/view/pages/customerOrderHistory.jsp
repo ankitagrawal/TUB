@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.CustomerOrderHistoryAction" var="coha"/>
+<s:useActionBean beanclass="com.hk.web.action.CustomerOrderHistoryAction" var="coha"/>
 <s:layout-render name="/layouts/default.jsp">
   <s:layout-component name="heading">Order History</s:layout-component>
   <s:layout-component name="lhsContent">
@@ -37,7 +37,7 @@
                 </td>
                 <%--<td>
                   <c:forEach items="${order.accountingInvoices}" var="accountingInvoice">
-                    <s:link beanclass="web.action.AccountingInvoiceAction" event="pre" target="_blank">
+                    <s:link beanclass="com.hk.web.action.AccountingInvoiceAction" event="pre" target="_blank">
                       <s:param name="accountingInvoice" value="${accountingInvoice.id}"/>
                       R-${accountingInvoice.retailInvoiceId} &lt;%&ndash;on
                       <fmt:formatDate value="${accountingInvoice.invoiceDate}" pattern="dd/MM/yyyy hh:mm"/>&ndash;%&gt;
@@ -45,13 +45,13 @@
                 </td>--%>
                 <td>
                     ${order.orderStatus.name}
-                  <s:link beanclass="web.action.OrderDetailsAction">
+                  <s:link beanclass="com.hk.web.action.OrderDetailsAction">
                     <s:param name="order" value="${order}"/>
                     (View Details)
                   </s:link>
                 </td>
                 <td>
-                  <s:link beanclass="web.action.BOInvoiceAction" target="_blank">
+                  <s:link beanclass="com.hk.web.action.BOInvoiceAction" target="_blank">
                                   <s:param name="order" value="${order}"/>
                                   View Order
                   </s:link>

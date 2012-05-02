@@ -1,6 +1,6 @@
 <%@ page import="org.joda.time.DateTime" %>
 <%@ page import="java.util.Date" %>
-<%@ page import="com.hk.taglibs.Functions" %>
+<%@ page import="com.akube.framework.taglibs.Functions" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%
   DateTime dateTime = new DateTime();
@@ -20,7 +20,7 @@
   }
 </style>
 <div style="margin-left: auto; margin-right: auto; width:960px;">
-  <s:link beanclass="com.hk.web.action.core.discount.SendDiscountCouponAction" id="sendCouponLink">
+  <s:link beanclass="com.hk.web.action.SendDiscountCouponAction" id="sendCouponLink">
     <%--<img src="${pageContext.request.contextPath}/images/banners/top/nutrition_strip_banner.jpg" alt="Introductory Nutrition Discount - 10% off">--%>
     <img src="${pageContext.request.contextPath}/images/banners/top/nutrition_strip_banner2.jpg" alt="Nutrition Week Special Discount - 10% off">
     <div style="text-align: center; padding-bottom: 3px;">Sports nutrition products are excluded. Special offer for Nutrition Week: Only <strong><%=Functions.periodFromNow(endOfOfferDate)%></strong> remaining</div>

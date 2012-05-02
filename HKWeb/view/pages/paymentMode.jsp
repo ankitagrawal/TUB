@@ -9,8 +9,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.OrderSummaryAction" event="pre" var="orderSummary"/>
-<s:useActionBean beanclass="web.action.PaymentModeAction" event="pre" var="paymentModeBean"/>
+<s:useActionBean beanclass="com.hk.web.action.OrderSummaryAction" event="pre" var="orderSummary"/>
+<s:useActionBean beanclass="com.hk.web.action.PaymentModeAction" event="pre" var="paymentModeBean"/>
 
 <%
   Double codMaxAmount = InjectorFactory.getInjector().getInstance(Key.get(Double.class, Names.named(Keys.Env.codMaxAmount)));
@@ -29,7 +29,7 @@
 </s:layout-component>
 <s:layout-component name="steps">
   <div class='steps'>
-    <s:link beanclass="web.action.SelectAddressAction" style="margin-top: 0; margin-bottom: 0;">
+    <s:link beanclass="com.hk.web.action.SelectAddressAction" style="margin-top: 0; margin-bottom: 0;">
       <div class='step prev_step' id="step1">
         <h2>Step 1</h2>
 
@@ -38,7 +38,7 @@
         </div>
       </div>
     </s:link>
-    <s:link beanclass="web.action.OrderSummaryAction" style="margin-top: 0; margin-bottom: 0;">
+    <s:link beanclass="com.hk.web.action.OrderSummaryAction" style="margin-top: 0; margin-bottom: 0;">
       <div class='step prev_step' id="step2">
         <h2>Step 2</h2>
 
@@ -91,7 +91,7 @@
 <div class='payment_container'>
 <c:choose>
 <c:when test="${orderSummary.pricingDto.grandTotalPayable == 0 && orderSummary.pricingDto.productLineCount > 0}">
-  <s:form beanclass="web.action.payment.FreeCheckoutConfirmAction" method="post">
+  <s:form beanclass="com.hk.web.action.payment.FreeCheckoutConfirmAction" method="post">
     <div class="buttons">
       <s:submit name="confirm" value="Confirm Order" class="butt" disabled="${fn:length(orderSummary.pricingDto.outOfStockLineItems) > 0 ? 'true':'false'}"/>
     </div>
@@ -103,7 +103,7 @@
 <img src="<hk:vhostImage/>/images/banners/pay_online_banner.jpg">
 </div>
 <div style="display: none;">
-  <s:link beanclass="web.action.admin.SetInSessionAction" id="setInSessionLink"/>
+  <s:link beanclass="com.hk.web.action.admin.SetInSessionAction" id="setInSessionLink"/>
 </div>
 <div class='outer'>
 <div class='left_controls tabs'>
@@ -134,7 +134,7 @@
 </div>
 <div class='right_content'>
 <div id="tabs_content1" class="tab_content">
-  <s:form beanclass="web.action.payment.PaymentAction" method="post">
+  <s:form beanclass="com.hk.web.action.payment.PaymentAction" method="post">
     <s:hidden name="order" value="${orderSummary.order.id}"/>
     <s:hidden name="paymentMode" value="<%=defaultGateway%>"/>
     <p>
@@ -153,7 +153,7 @@
   </s:form>
 </div>
 <div id="tabs_content2" class="tab_content" style="display:none;">
-  <s:form beanclass="web.action.payment.PaymentAction" method="post">
+  <s:form beanclass="com.hk.web.action.payment.PaymentAction" method="post">
     <s:hidden name="order" value="${orderSummary.order.id}"/>
     <s:hidden name="paymentMode" value="<%=defaultGateway%>"/>
     <p>
@@ -172,7 +172,7 @@
   </s:form>
 </div>
 <div id="tabs_content3" class="tab_content" style="display:none;">
-  <s:form beanclass="web.action.payment.PaymentAction" method="post">
+  <s:form beanclass="com.hk.web.action.payment.PaymentAction" method="post">
     <s:hidden name="order" value="${orderSummary.order.id}"/>
     <s:hidden name="paymentMode" value="<%=defaultGateway%>"/>
 
@@ -224,7 +224,7 @@
         <p>Please verify the name and contact number of the person who will receive this order. You will receive
           a phone
           call within 1 business day to confirm your order before it is sent for processing.</p>
-        <s:form beanclass="web.action.payment.CodPaymentReceiveAction" method="post">
+        <s:form beanclass="com.hk.web.action.payment.CodPaymentReceiveAction" method="post">
           <s:hidden name="order" value="${orderSummary.order}"/>
           <div class="label">Contact Name</div>
           <s:text name="codContactName" value="${orderSummary.order.address.name}"/>
@@ -270,7 +270,7 @@
     <h2 class="offer">Payment Details</h2>
 
     <div class="left" style="padding-left: 20px;">
-      <s:form beanclass="web.action.payment.ChequeCashPaymentReceiveAction" method="post" id="paymentForm">
+      <s:form beanclass="com.hk.web.action.payment.ChequeCashPaymentReceiveAction" method="post" id="paymentForm">
         <s:hidden name="order" value="${orderSummary.order}"/>
         <div class="label"> Bank Name <span class="aster">*</span></div>
         <s:text name="bankName"/>
@@ -337,7 +337,7 @@
   <h2 class="offer">Payment Details</h2>
 
   <div class="left" style="padding-left: 20px;">
-    <s:form beanclass="web.action.payment.CounterCashPaymentReceiveAction" method="post" id="paymentForm">
+    <s:form beanclass="com.hk.web.action.payment.CounterCashPaymentReceiveAction" method="post" id="paymentForm">
       <s:hidden name="order" value="${orderSummary.order}"/>
       <s:hidden name="paymentMode" value="<%=EnumPaymentMode.COUNTER_CASH.getId()%>"/>
       <div class="label"> Total Payable Amount</div>

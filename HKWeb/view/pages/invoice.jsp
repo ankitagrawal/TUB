@@ -54,7 +54,7 @@
 </head>
 <body>
 <c:set var="b2bUser" value="<%=EnumRole.B2B_USER.getRoleName()%>"/>
-<s:useActionBean beanclass="web.action.BOInvoiceAction" event="pre" var="orderSummary"/>
+<s:useActionBean beanclass="com.hk.web.action.BOInvoiceAction" event="pre" var="orderSummary"/>
 
 <div class="container_12" style="border: 1px solid; padding-top: 10px;">
 <div class="grid_4">

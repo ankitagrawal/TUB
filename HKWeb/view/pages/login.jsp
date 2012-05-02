@@ -31,7 +31,7 @@
         </h3>
 
         <div class='signup'>
-          <s:form beanclass="web.action.SignupAction">
+          <s:form beanclass="com.hk.web.action.SignupAction">
             <s:errors/>
             <div class='label'>Name <span class='aster' title="this field is required">*</span></div>
             <s:text name="name" placeholder="Enter your name"/>
@@ -62,13 +62,13 @@
         </h3>
 
         <div class='login'>
-          <s:form beanclass="web.action.LoginAction">
+          <s:form beanclass="com.hk.web.action.LoginAction">
             <s:errors/>
             <div class="label">Email</div>
             <s:text name="email" id="loginName"/>
             <div class="label">Password</div>
             <s:password name="password"/>
-            <s:link beanclass="web.action.ForgotPasswordAction" id="forgotPasswordLink">Forgot password?</s:link>
+            <s:link beanclass="com.hk.web.action.ForgotPasswordAction" id="forgotPasswordLink">Forgot password?</s:link>
 
             <div>
               <s:submit name="login" value="Login" class="button"/>

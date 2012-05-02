@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.admin.newsletter.SendEmailNewsletterCampaign" var="emailBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.newsletter.SendEmailNewsletterCampaign" var="emailBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp">
   <s:layout-component name="heading">Confirm campaign send</s:layout-component>
@@ -9,7 +9,7 @@
     <h2>Please verify your campaign before sending : </h2>
     Your campaign : ${emailBean.emailCampaign.name}<br/>
     No. of users : ${emailBean.userCount}<br/>
-    <s:form beanclass="web.action.admin.newsletter.SendEmailNewsletterCampaign">
+    <s:form beanclass="com.hk.web.action.admin.newsletter.SendEmailNewsletterCampaign">
       <s:hidden name="emailCampaign"/>
       <s:hidden name="categories"/>
       <s:hidden name="testEmails"/>

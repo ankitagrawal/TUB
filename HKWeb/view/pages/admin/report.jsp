@@ -7,7 +7,7 @@
 <%@ page import="com.hk.dao.catalog.category.CategoryDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.admin.ReportAction" var="reportActionBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.ReportAction" var="reportActionBean"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Report Master">
 
 <s:layout-component name="htmlHead">
@@ -70,7 +70,7 @@
 
 <s:layout-component name="content">
 <div class="reportBox">
-  <s:form beanclass="web.action.admin.ReportAction" target="_blank">
+  <s:form beanclass="com.hk.web.action.admin.ReportAction" target="_blank">
     <s:errors/>
     <fieldset class="right_label">
       <legend>Sales Reports</legend>
@@ -104,7 +104,7 @@
 </div>
 
 <div class="reportBox">
-  <s:form beanclass="web.action.admin.ReportAction" target="_blank">
+  <s:form beanclass="com.hk.web.action.admin.ReportAction" target="_blank">
     <s:errors/>
     <fieldset class="right_label">
       <legend>Product Variant Sales Report</legend>
@@ -149,7 +149,7 @@
 </div>
 
 <div class="reportBox">
-  <s:form beanclass="web.action.admin.ReportAction" target="_blank">
+  <s:form beanclass="com.hk.web.action.admin.ReportAction" target="_blank">
     <s:errors/>
     <fieldset class="right_label">
       <legend>Performance Reports</legend>
@@ -178,7 +178,7 @@
 </div>
 
 <div class="reportBox">
-  <s:form beanclass="web.action.admin.ReportAction" target="_blank">
+  <s:form beanclass="com.hk.web.action.admin.ReportAction" target="_blank">
     <s:errors/>
     <fieldset class="right_label">
       <legend>CRM Report</legend>
@@ -208,7 +208,7 @@
 </div>
 
 <%--<div class="reportBox">
-  <s:form beanclass="web.action.admin.ReportAction" target="_blank">
+  <s:form beanclass="com.hk.web.action.admin.ReportAction" target="_blank">
     <s:errors/>
     <fieldset class="right_label">
       <legend>Categories Performance Report</legend>
@@ -261,7 +261,7 @@
 </div>--%>
 
 <%--<div class="reportBox">--%>
-<%--<s:form beanclass="web.action.admin.ReportAction" target="_blank">--%>
+<%--<s:form beanclass="com.hk.web.action.admin.ReportAction" target="_blank">--%>
 <%--<fieldset class="right_label">--%>
 <%--<legend>Reconciliation Report</legend>--%>
 <%--<ul>--%>
@@ -313,7 +313,7 @@
 <%--</li>--%>
 <%--<li>--%>
 <%--<s:submit name="generateReconciliationReport" value="Generate"/>--%>
-<%--<s:link beanclass="web.action.admin.ReconciliationAction"--%>
+<%--<s:link beanclass="com.hk.web.action.admin.ReconciliationAction"--%>
 <%--target="_blank">Update Reconciliation Status</s:link>--%>
 <%--</li>--%>
 <%--</ul>--%>
@@ -325,7 +325,7 @@
 <%--</div>--%>
 
 <div class="reportBox">
-  <s:form beanclass="web.action.admin.ReportAction">
+  <s:form beanclass="com.hk.web.action.admin.ReportAction">
     <s:errors/>
     <fieldset class="right_label">
       <legend>Courier Delivery Report</legend>
@@ -355,7 +355,7 @@
 </div>
 
 <%--<div class="reportBox">
-  <s:form beanclass="web.action.admin.ReportAction" target="_blank">
+  <s:form beanclass="com.hk.web.action.admin.ReportAction" target="_blank">
     <s:errors/>
     <fieldset class="right_label">
       <legend>Sales Reports By Ship Date</legend>
@@ -410,7 +410,7 @@
   </s:form>
 </div>--%>
 <%--<div class="reportBox">
-  <s:form beanclass="web.action.admin.ReportAction" target="_blank">
+  <s:form beanclass="com.hk.web.action.admin.ReportAction" target="_blank">
     <fieldset class="right_label">
       <legend>Net Margin Report Per Product Variant</legend>
       <ul>
@@ -429,7 +429,7 @@
   </s:form>
 </div>--%>
 <div class="reportBox">
-  <s:form beanclass="web.action.admin.ReportAction" target="_blank">
+  <s:form beanclass="com.hk.web.action.admin.ReportAction" target="_blank">
     <fieldset class="right_label">
       <legend>Sales Report By Product</legend>
       <ul>

@@ -8,7 +8,7 @@
   <s:layout-component name="heading">Forgot Password</s:layout-component>
   <s:layout-component name="lhsContent">
 
-    <s:form beanclass="web.action.ForgotPasswordAction" method="post">
+    <s:form beanclass="com.hk.web.action.ForgotPasswordAction" method="post">
       <p class="lrg em">Please enter the email address used to make your account. We will send you an e-mail with instructions to reset it.</p>
       <fieldset class="top_label">
         <ul>

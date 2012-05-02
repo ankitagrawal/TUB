@@ -14,7 +14,7 @@
 <c:set var="cashBackPercentage" value="<%=cashBackPercentage%>"/>
 <c:set var="paymentModeTechProcess" value="<%=EnumPaymentMode.TECHPROCESS.getId()%>"/>
 
-<s:useActionBean beanclass="web.action.payment.PaymentSuccessAction" var="actionBean"/>
+<s:useActionBean beanclass="com.hk.web.action.payment.PaymentSuccessAction" var="actionBean"/>
 <s:layout-render name="/layouts/default.jsp" pageTitle="Payment Successful">
 
 <%--<s:layout-component name="htmlHead">
@@ -29,7 +29,7 @@
 </s:layout-component>
 <s:layout-component name="modal">
   <div class="jqmWindow" id="publishOnFBWindow" style="display: none; width:auto;padding:10px;">
-    <s:link beanclass="web.action.PublishOnFBAction" id="publishOnFBLink" style="visibility:hidden;">
+    <s:link beanclass="com.hk.web.action.PublishOnFBAction" id="publishOnFBLink" style="visibility:hidden;">
       <s:param name="order" value="${actionBean.payment.order.id}"/>
       Publish on facebook
     </s:link>
@@ -116,7 +116,7 @@
 <c:choose>
   <c:when test="${actionBean.payment != null}">
     <div class="right" style="float: right;">
-      <s:link beanclass="web.action.ReferralProgramAction">
+      <s:link beanclass="com.hk.web.action.ReferralProgramAction">
         <img src="<hk:vhostImage/>/images/banners/refer_earn.jpg">
       </s:link>
     </div>
@@ -136,7 +136,7 @@
             we get to know that you have a valid email id and we can send special offers on your email.</p>
 
           <p><strong>If you haven't received the mail,
-            <s:link beanclass="web.action.ResendAccountActivationLinkAction" event="pre" class="resendActivationEmailLink">click here to resend it.</s:link>
+            <s:link beanclass="com.hk.web.action.ResendAccountActivationLinkAction" event="pre" class="resendActivationEmailLink">click here to resend it.</s:link>
           </strong>
             <br/><br/>
             <span class="emailSendMessage alert" style="display: none; font-weight:bold;"></span>
@@ -186,7 +186,7 @@
 
     <h2>Customer Support</h2>
 
-    <p><s:link beanclass="web.action.pages.ContactAction">Write to us</s:link> with your Order ID if you have any questions or call us on 0124-4551616</p>
+    <p><s:link beanclass="com.hk.web.action.pages.ContactAction">Write to us</s:link> with your Order ID if you have any questions or call us on 0124-4551616</p>
 
     <c:if test="${actionBean.payment.order.offerInstance != null && actionBean.payment.order.offerInstance.coupon != null && hk:isNotBlank(actionBean.payment.order.offerInstance.coupon.complimentaryCoupon)}">
       <div style="background-color: lightgoldenrodyellow;">

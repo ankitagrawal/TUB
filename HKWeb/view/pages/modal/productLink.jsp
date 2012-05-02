@@ -47,7 +47,7 @@
           }
         </script>
         <h4 class="strikeline">Product Name: ${product.name}</h4>
-        <s:form beanclass="web.action.ProductAction">
+        <s:form beanclass="com.hk.web.action.ProductAction">
           <s:errors/>
           <div class="round-cont" style="width:650px;margin-top: 20px;">
 

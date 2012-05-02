@@ -3,7 +3,7 @@
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.admin.EditProductAttributesAction" var="pa"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.EditProductAttributesAction" var="pa"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="${pa.product.name}">
 
   <s:layout-component name="menu"> </s:layout-component>
@@ -28,7 +28,7 @@
 
   <s:layout-component name="content">
     <h2>Edit Product Variants for Product - ${pa.product.name}</h2>
-    <s:form beanclass="web.action.admin.EditProductAttributesAction">
+    <s:form beanclass="com.hk.web.action.admin.EditProductAttributesAction">
        <table>
         <tr>
           <th>Variant ID</th>
@@ -137,7 +137,7 @@
              <td>
               <s:checkbox name="productVariants[${ctr.index}].clearanceSale" class="clearanceSale"/>
             </td>
-            <td><s:link beanclass="web.action.admin.ListBatchesAndCheckinInventory" target="_blank">
+            <td><s:link beanclass="com.hk.web.action.admin.ListBatchesAndCheckinInventory" target="_blank">
               <s:param name="upc" value="${productVariant.id}"/>${hk:netInventory(productVariant)}</s:link>
             </td>
             <td>
@@ -162,7 +162,7 @@
       </table>
       <br/>
 
-      <s:link beanclass="web.action.admin.CreateOrSelectProductAction" event="select" target="_blank">
+      <s:link beanclass="com.hk.web.action.admin.CreateOrSelectProductAction" event="select" target="_blank">
         <s:param name="product" value="${pa.product.id}"/> Create New Variant
       </s:link>
 

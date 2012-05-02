@@ -2,7 +2,7 @@
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Upload Estimated Expenses">
 	<s:layout-component name="content">
-		<s:form beanclass="web.action.admin.ParseEstimatedCourierExpensesExcelAction">
+		<s:form beanclass="com.hk.web.action.admin.ParseEstimatedCourierExpensesExcelAction">
 			<p style="color:red; font-size:20px">This is the <strong style="color:green;">ESTIMATED</strong> courier expenses
 				excel upload. Please verify your excel before uploading. </p><br/><br/>
 

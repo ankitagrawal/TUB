@@ -7,7 +7,7 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.admin.EditPurchaseOrderAction" var="pa"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.EditPurchaseOrderAction" var="pa"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp">
 <%
     WarehouseDao warehouseDao = InjectorFactory.getInjector().getInstance(WarehouseDao.class);
@@ -105,10 +105,10 @@
 
 <s:layout-component name="content">
 <div style="display: none;">
-  <s:link beanclass="web.action.admin.EditPurchaseOrderAction" id="pvInfoLink" event="getPVDetails"></s:link>
+  <s:link beanclass="com.hk.web.action.admin.EditPurchaseOrderAction" id="pvInfoLink" event="getPVDetails"></s:link>
 </div>
 <h2>Edit PO# ${pa.purchaseOrder.id}</h2>
-<s:form beanclass="web.action.admin.EditPurchaseOrderAction">
+<s:form beanclass="com.hk.web.action.admin.EditPurchaseOrderAction">
   <s:hidden name="purchaseOrder" value="${pa.purchaseOrder}"/>
   <table>
     <tr>
@@ -321,7 +321,7 @@
       <br/>
       <span class="large gry">(VARIANT_ID, QTY, COST, MRP) as excel headers</span>
       <br/><br/>
-      <s:form beanclass="web.action.admin.EditPurchaseOrderAction">
+      <s:form beanclass="com.hk.web.action.admin.EditPurchaseOrderAction">
         <h2>File to Upload: <s:file name="fileBean" size="30"/></h2>
         <s:hidden name="purchaseOrder" value="${pa.purchaseOrder.id}"/>
 

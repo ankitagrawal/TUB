@@ -6,7 +6,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.admin.queue.ShipmentEmailAwaitingQueueAction" var="shipmentQueueBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.queue.ShipmentEmailAwaitingQueueAction" var="shipmentQueueBean"/>
 <c:set var="lineItemTypeId_Product" value="<%=EnumLineItemType.Product.getId()%>"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Shipped and Shipment Email Awaiting Queue">
@@ -17,7 +17,7 @@
   <fieldset class="top_label">
     <ul>
       <div class="grouped grid_6">
-        <s:form beanclass="web.action.admin.queue.ShipmentEmailAwaitingQueueAction" method="get" autocomplete="false">
+        <s:form beanclass="com.hk.web.action.admin.queue.ShipmentEmailAwaitingQueueAction" method="get" autocomplete="false">
           <li><label>Order ID</label> <s:text name="orderId"/></li>
           <li><label>Gateway Order ID</label> <s:text name="gatewayOrderId"/></li>
           <li>
@@ -31,11 +31,11 @@
             <div class="buttons"><s:submit name="searchOrders" value="Search"/></div>
           </li>
         </s:form>
-        <s:form beanclass="web.action.admin.queue.ShipmentEmailAwaitingQueueAction" target="_blank">
+        <s:form beanclass="com.hk.web.action.admin.queue.ShipmentEmailAwaitingQueueAction" target="_blank">
           <div class="buttons"><s:submit name="generateCourierReport" value="Download Courier Excel"/></div>
         </s:form>
 
-        <s:link class="" beanclass="web.action.admin.UpdateOrderStatusAndSendEmailAction">Send shipping emails<br/><span class="sml gry">(and updated order status)</span></s:link>
+        <s:link class="" beanclass="com.hk.web.action.admin.UpdateOrderStatusAndSendEmailAction">Send shipping emails<br/><span class="sml gry">(and updated order status)</span></s:link>
 
 
       </div>
@@ -43,7 +43,7 @@
 
   </fieldset>
 
-  <s:form beanclass="web.action.admin.queue.ShipmentEmailAwaitingQueueAction" autocomplete="off">
+  <s:form beanclass="com.hk.web.action.admin.queue.ShipmentEmailAwaitingQueueAction" autocomplete="off">
 
     <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${shipmentQueueBean}"/>
     <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${shipmentQueueBean}"/>

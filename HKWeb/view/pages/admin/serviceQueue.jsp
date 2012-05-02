@@ -4,7 +4,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.admin.ServiceQueueAction" var="serviceQueueBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.ServiceQueueAction" var="serviceQueueBean"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Service Queue">
 <s:layout-component name="htmlHead">
   <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
@@ -18,7 +18,7 @@
   <fieldset class="top_label">
     <ul>
       <div class="grouped grid_6">
-        <s:form beanclass="web.action.admin.ServiceQueueAction" method="get" autocomplete="false">
+        <s:form beanclass="com.hk.web.action.admin.ServiceQueueAction" method="get" autocomplete="false">
           <li><label>Order ID</label> <s:text name="orderId"/></li>
           <li><label>Gateway Order ID</label> <s:text name="gatewayOrderId" id="gatewayOrderId"/></li>
           <li>
@@ -38,7 +38,7 @@
     </ul>
   </fieldset>
 
-  <s:form beanclass="web.action.admin.ServiceQueueAction" autocomplete="off">
+  <s:form beanclass="com.hk.web.action.admin.ServiceQueueAction" autocomplete="off">
     <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${serviceQueueBean}"/>
     <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${serviceQueueBean}"/>
     <s:layout-render name="/pages/admin/queue/shippingOrderDetailGrid.jsp"

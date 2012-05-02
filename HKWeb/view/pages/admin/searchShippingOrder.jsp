@@ -9,7 +9,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.admin.order.search.SearchShippingOrderAction" var="searchShippingOrderBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.order.search.SearchShippingOrderAction" var="searchShippingOrderBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Shipping Order Search">
 
@@ -42,7 +42,7 @@
 <c:set var="paymentStatusPending" value="<%=EnumPaymentStatus.AUTHORIZATION_PENDING.getId()%>"/>
 
 <s:errors/>
-<s:form beanclass="web.action.admin.order.search.SearchShippingOrderAction" method="get" var="searchShippingOrderBean" autocomplete="false">
+<s:form beanclass="com.hk.web.action.admin.order.search.SearchShippingOrderAction" method="get" var="searchShippingOrderBean" autocomplete="false">
   <fieldset class="top_label">
     <ul>
       <div class="grouped">

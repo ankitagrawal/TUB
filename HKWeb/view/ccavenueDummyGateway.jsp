@@ -17,7 +17,7 @@
   <body>
     <div>
       Rs. <%=request.getParameter(CCAvenueDummyPaymentGatewayWrapper.param_Amount)%>
-      <s:form beanclass="web.action.payment.CCAvenueDummyGatewaySendReceiveAction">
+      <s:form beanclass="com.hk.web.action.payment.CCAvenueDummyGatewaySendReceiveAction">
         <input type="hidden" name="<%=CCAvenueDummyPaymentGatewayWrapper.param_OrderId%>" value="<%=request.getParameter(CCAvenueDummyPaymentGatewayWrapper.param_OrderId)%>"/>
         <input type="hidden" name="<%=CCAvenueDummyPaymentGatewayWrapper.param_MerchantId%>" value="<%=request.getParameter(CCAvenueDummyPaymentGatewayWrapper.param_MerchantId)%>"/>
         <input type="hidden" name="<%=CCAvenueDummyPaymentGatewayWrapper.param_MerchantParam%>" value="<%=request.getParameter(CCAvenueDummyPaymentGatewayWrapper.param_MerchantParam)%>"/>

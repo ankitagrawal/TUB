@@ -9,8 +9,8 @@
     WarehouseDao warehouseDao = InjectorFactory.getInjector().getInstance(WarehouseDao.class);
     pageContext.setAttribute("whList", warehouseDao.listAll());
   %>
-  <s:useActionBean beanclass="web.action.admin.GRNAction" var="poa"/>
-  <s:useActionBean beanclass="web.action.admin.SelectWHAction" var="whAction" event="getUserWarehouse"/>
+  <s:useActionBean beanclass="com.hk.web.action.admin.GRNAction" var="poa"/>
+  <s:useActionBean beanclass="com.hk.web.action.admin.SelectWHAction" var="whAction" event="getUserWarehouse"/>
   <s:layout-component name="htmlHead">
     <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
@@ -26,7 +26,7 @@
   <s:layout-component name="content">
     <fieldset class="right_label">
       <legend>Download GRN</legend>
-      <s:form beanclass="web.action.admin.GRNAction">
+      <s:form beanclass="com.hk.web.action.admin.GRNAction">
         <label>Start
           Date:</label><s:text class="date_input startDate" style="width:150px" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startDate"/>
         &nbsp; &nbsp;
@@ -62,7 +62,7 @@
 
     <fieldset class="right_label">
       <legend>Search GRN</legend>
-      <s:form beanclass="web.action.admin.GRNAction">
+      <s:form beanclass="com.hk.web.action.admin.GRNAction">
         <label>GRN ID:</label><s:text name="grn"/>
         <label>VariantID:</label><s:text name="productVariant"/>
         <label>Invoice Number:</label><s:text name="invoiceNumber"/>
@@ -100,7 +100,7 @@
 
     <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${poa}"/>
     <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${poa}"/>
-	  <s:form beanclass="web.action.admin.GRNAction">
+	  <s:form beanclass="com.hk.web.action.admin.GRNAction">
       <s:submit name="generatePurchaseInvoiceCheck" value="Generate Purchase Invoice"/>
     <table class="zebra_vert">
       <thead>
@@ -126,14 +126,14 @@
         <tr class="grnRow">
           <td>${grn.id}</td>
           <td>
-            <s:link beanclass="web.action.admin.EditPurchaseOrderAction" event="pre">
+            <s:link beanclass="com.hk.web.action.admin.EditPurchaseOrderAction" event="pre">
               <s:param name="purchaseOrder" value="${grn.purchaseOrder.id}"/>
               ${grn.purchaseOrder.id}
             </s:link>
           </td>
           <td>
             <c:forEach var="purchaseInvoice" items="${grn.purchaseInvoices}">
-              <s:link beanclass="web.action.admin.PurchaseInvoiceAction" event="view" target="_blank">
+              <s:link beanclass="com.hk.web.action.admin.PurchaseInvoiceAction" event="view" target="_blank">
                 <s:param name="purchaseInvoice" value="${purchaseInvoice.id}"/>
                 ${purchaseInvoice.id}
               </s:link>
@@ -160,17 +160,17 @@
             <fmt:formatNumber value="${grn.payable}" type="currency" currencySymbol=" " maxFractionDigits="0"/></td>
           <td>${grn.paymentDetails}</td>
           <td>
-            <s:link beanclass="web.action.admin.GRNAction" event="view">Edit
+            <s:link beanclass="com.hk.web.action.admin.GRNAction" event="view">Edit
               <s:param name="grn" value="${grn.id}"/></s:link>
             &nbsp;
-            <s:link beanclass="web.action.admin.GRNAction" event="print" target="_blank">Print
+            <s:link beanclass="com.hk.web.action.admin.GRNAction" event="print" target="_blank">Print
               <s:param name="grn" value="${grn.id}"/></s:link>
             &nbsp;
-            <s:link beanclass="web.action.admin.InventoryCheckinAction" event="pre">
+            <s:link beanclass="com.hk.web.action.admin.InventoryCheckinAction" event="pre">
               Inventory Checkin
               <s:param name="grn" value="${grn.id}"/></s:link>
            <%-- &nbsp;
-            <s:link beanclass="web.action.admin.DebitNoteAction" event="view">
+            <s:link beanclass="com.hk.web.action.admin.DebitNoteAction" event="view">
               Raise Debit Note
               <s:param name="grn" value="${grn.id}"/></s:link>--%>
           </td>

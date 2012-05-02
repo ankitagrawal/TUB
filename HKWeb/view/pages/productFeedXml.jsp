@@ -3,7 +3,7 @@
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
 <%@ page import="mhc.util.ImageManager" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.ProductAction" var="productBean"/>
+<s:useActionBean beanclass="com.hk.web.action.ProductAction" var="productBean"/>
 <product id="${productBean.product.id}">
   <name>${hk:escapeHtml(productBean.product.name)}</name>
   <url>http://www.healthkart.com/product/${productBean.product.slug}/${productBean.product.id}</url>

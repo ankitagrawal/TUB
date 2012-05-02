@@ -1,5 +1,5 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.core.menu.MenuAction" var="menuAction" event="pre"/>
+<s:useActionBean beanclass="com.hk.web.action..core.menu.MenuAction" var="menuAction" event="pre"/>
 <s:layout-definition>
   <%--<script type="text/javascript" src="${pageContext.request.contextPath}/js/menu.jsp"></script>--%>
 

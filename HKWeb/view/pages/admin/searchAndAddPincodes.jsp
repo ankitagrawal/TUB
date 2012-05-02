@@ -3,7 +3,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Search/Add Pincode">
-	<s:useActionBean beanclass="web.action.admin.MasterPincodeAction" var="mpaBean"/>
+	<s:useActionBean beanclass="com.hk.web.action.admin.MasterPincodeAction" var="mpaBean"/>
 	<s:layout-component name="heading">
 		Search and Add Pincode
 	</s:layout-component>
@@ -15,7 +15,7 @@
       <fieldset class="right_label">
         <legend>Search Pincode</legend>
 
-			<s:form beanclass="web.action.admin.MasterPincodeAction">
+			<s:form beanclass="com.hk.web.action.admin.MasterPincodeAction">
 							<br/><br/>
 				<s:text name="pincodeString" id="pincodeString" style="width:200px;"/>
 				<script language=javascript type=text/javascript>
@@ -30,7 +30,7 @@
        <fieldset class="right_label">
     	   <legend>Upload Pincode List</legend>
          <ul>
-        <s:form beanclass="web.action.admin.MasterPincodeAction">
+        <s:form beanclass="com.hk.web.action.admin.MasterPincodeAction">
           <br/>
 				<div >
 					<li><label>File to Upload</label>
@@ -47,7 +47,7 @@
        <fieldset style="float:left;">
          <legend>Add Pincode Or Edit Picode Details</legend>
 			<table>
-				<s:form beanclass="web.action.admin.MasterPincodeAction">
+				<s:form beanclass="com.hk.web.action.admin.MasterPincodeAction">
 					<s:hidden name="pincode.id" value="${mpaBean.pincode.id}"/>
 					<tr>
 						<td>Pincode:</td>

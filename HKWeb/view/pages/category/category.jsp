@@ -13,8 +13,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="redirectParam" value="<%=J2EESecurityManager.redirectAfterLoginParam%>"/>
-<s:useActionBean beanclass="web.action.CategoryAction" var="categoryBean" event="pre"/>
-<s:useActionBean beanclass="web.action.category.CatalogAction" var="ca"/>
+<s:useActionBean beanclass="com.hk.web.action.CategoryAction" var="categoryBean" event="pre"/>
+<s:useActionBean beanclass="com.hk.web.action.category.CatalogAction" var="ca"/>
 <s:layout-render name="/layouts/category-homeG.jsp" pageTitle="${categoryBean.seoData.title}">
 
 <c:if test="${categoryBean.category.name == 'services'}">
@@ -62,7 +62,7 @@
 <s:layout-component name="breadcrumbs">
 
   <div class='crumb_outer'>
-    <s:link beanclass="web.action.HomeAction" class="crumb">Home</s:link>
+    <s:link beanclass="com.hk.web.action.HomeAction" class="crumb">Home</s:link>
     &gt;
     <span class="crumb last" style="font-size: 12px;">${categoryBean.category}</span>
 
@@ -70,7 +70,7 @@
 
     <shiro:hasPermission name="<%=PermissionConstants.UPDATE_SEO_METADATA%>">
       <div align="center">
-        <s:link beanclass="web.action.SeoAction" event="pre" target="_blank" class="popup">Edit MetaData
+        <s:link beanclass="com.hk.web.action.SeoAction" event="pre" target="_blank" class="popup">Edit MetaData
           <s:param name="seoData" value="${categoryBean.seoData.id}"/>
         </s:link>
       </div>
@@ -86,7 +86,7 @@
       <s:layout-render name="/layouts/modal.jsp">
         <s:layout-component name="heading">Select City</s:layout-component>
         <s:layout-component name="content">
-          <s:form beanclass="web.action.category.ServiceAction">
+          <s:form beanclass="com.hk.web.action.category.ServiceAction">
             <s:errors/>
             <div class="round-cont" style="width:650px;margin-top: 20px;">
               <label>To find the relevant deals, Please select your city</label>
@@ -143,7 +143,7 @@
     </ul>
   </div>
   <div class='grid_6'>
-    <s:link beanclass="web.action.ReferralProgramAction" event="pre">
+    <s:link beanclass="com.hk.web.action.ReferralProgramAction" event="pre">
       <img src="<hk:vhostImage/>/images/banners/refer_earn.jpg" alt="refer a friend and earn"
            class="small_banner"/>
     </s:link>
@@ -156,11 +156,11 @@
   <div class="container_24">
     <shiro:hasPermission name="<%=PermissionConstants.UPLOAD_PRODUCT_CATALOG%>">
       <div class="grid_24 alpha omega">
-        <s:link beanclass="web.action.UploadCategoryImageAction" event="pre" target="_blank" class="popup"> Upload
+        <s:link beanclass="com.hk.web.action.UploadCategoryImageAction" event="pre" target="_blank" class="popup"> Upload
           <s:param name="category" value="${categoryBean.category.name}"/>
         </s:link>
         &nbsp;|&nbsp;
-        <s:link beanclass="web.action.UploadCategoryImageAction" event="manageCategoryImages" target="_blank"
+        <s:link beanclass="com.hk.web.action.UploadCategoryImageAction" event="manageCategoryImages" target="_blank"
                 class="popup">
           <s:param name="category" value="${categoryBean.category.name}"/>
           Manage Images
@@ -172,7 +172,7 @@
 
       <%--<shiro:hasPermission name="<%=PermissionConstants.UPLOAD_PRODUCT_CATALOG%>">--%>
       <div class="grid_24 alpha omega">
-        <s:link beanclass="web.action.CategoryAction" event="editPrimaryCategoryHeadings"
+        <s:link beanclass="com.hk.web.action.CategoryAction" event="editPrimaryCategoryHeadings"
                 class="popup" style="font-size:larger; background-color:#003399; color:white;" target="_blank">
           Add/Edit Headings for ${categoryBean.category.name} category
           <s:param name="category" value="${categoryBean.category.name}"/>
@@ -211,7 +211,7 @@
 
         <shiro:hasPermission name="<%=PermissionConstants.UPLOAD_PRODUCT_CATALOG%>">
           <div class="grid_24 alpha omega" style="width: 950px;">
-            <s:link beanclass="web.action.PrimaryCategoryHeadingAction"
+            <s:link beanclass="com.hk.web.action.PrimaryCategoryHeadingAction"
                     event="editPrimaryCategoryHeadingProducts"
                     class="popup" style="background-color:#003399; color:white;" target="_blank">
               Add/Edit Products for Heading
@@ -236,7 +236,7 @@
       <shiro:hasPermission name="<%=PermissionConstants.UPLOAD_PRODUCT_CATALOG%>">
         <c:if test="${empty heading.products}">
           <div class="grid_24 alpha omega" style="width: 950px;">
-            <s:link beanclass="web.action.PrimaryCategoryHeadingAction"
+            <s:link beanclass="com.hk.web.action.PrimaryCategoryHeadingAction"
                     event="addPrimaryCategoryHeadingProducts"
                     class="popup" style="background-color:#003399; color:white;">
               <strong>ADD PRODUCTS FOR HEADING: ${heading.name} (Heading not visible as no products are set for

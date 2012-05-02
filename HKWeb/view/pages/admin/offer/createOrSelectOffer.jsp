@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.admin.offer.CreateOrSelectOfferActionAction" var="offerActionBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.offer.CreateOrSelectOfferActionAction" var="offerActionBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp">
 
@@ -21,7 +21,7 @@
       </c:choose>
     </div>
 
-    <s:form beanclass="web.action.admin.offer.CreateOrSelectOfferActionAction">
+    <s:form beanclass="com.hk.web.action.admin.offer.CreateOrSelectOfferActionAction">
       <s:errors/>
       <fieldset class="right_label">
         <legend>Select an existing offer action</legend>
@@ -40,7 +40,7 @@
         </ul>
       </fieldset>
     </s:form>
-    <s:form beanclass="web.action.admin.offer.CreateOrSelectOfferActionAction">
+    <s:form beanclass="com.hk.web.action.admin.offer.CreateOrSelectOfferActionAction">
       <fieldset class="right_label">
         <legend>Create a new offer action</legend>
         <ul>

@@ -13,9 +13,9 @@
   </s:layout-component>
 
   <s:layout-component name="content">
-    <s:useActionBean beanclass="web.action.admin.EditPaymentAction" var="paymentBean"/>
+    <s:useActionBean beanclass="com.hk.web.action.admin.EditPaymentAction" var="paymentBean"/>
 
-    <s:form beanclass="web.action.admin.EditPaymentAction">
+    <s:form beanclass="com.hk.web.action.admin.EditPaymentAction">
       <s:hidden name="payment.id"/>
       <fieldset>
         <label>Order Id</label> ${paymentBean.payment.order.id}<br/>

@@ -6,7 +6,7 @@
   <s:layout-component name="content">
     Create new campaign
 
-    <s:form beanclass="web.action.facebook.app.coupon.FanCouponNewCampaignAction">
+    <s:form beanclass="com.hk.web.action.facebook.app.coupon.FanCouponNewCampaignAction">
       <fieldset>
         <ul>
           <li><label>Name*</label><s:text name="name"/></li>

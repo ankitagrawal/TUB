@@ -7,7 +7,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.ProductAction" var="pa" event="pre"/>
+<s:useActionBean beanclass="com.hk.web.action.ProductAction" var="pa" event="pre"/>
 <c:set var="imageLargeSize" value="<%=EnumImageSize.LargeSize%>"/>
 <c:set var="imageMediumSize" value="<%=EnumImageSize.MediumSize%>"/>
 <c:set var="imageSmallSize" value="<%=EnumImageSize.TinySize%>"/>
@@ -141,21 +141,21 @@
 
   <div>
     <shiro:hasPermission name="<%=PermissionConstants.UPDATE_SEO_METADATA%>">
-      <s:link beanclass="web.action.SeoAction" event="pre" target="_blank" class="popup">Edit MetaData
+      <s:link beanclass="com.hk.web.action.SeoAction" event="pre" target="_blank" class="popup">Edit MetaData
         <s:param name="seoData" value="${pa.seoData.id}"/>
       </s:link>
       &nbsp;|&nbsp;
     </shiro:hasPermission>
     <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_CATALOG%>">
-      <s:link beanclass="web.action.admin.EditProductAttributesAction" event="editProductVariantDetails" target="_blank" class="popup">
+      <s:link beanclass="com.hk.web.action.admin.EditProductAttributesAction" event="editProductVariantDetails" target="_blank" class="popup">
         Edit Variant Attributes
         <s:param name="product" value="${pa.product}"/>
       </s:link>
-      <s:link beanclass="web.action.admin.EditProductAttributesAction" event="editProductDetails" target="_blank" class="popup">
+      <s:link beanclass="com.hk.web.action.admin.EditProductAttributesAction" event="editProductDetails" target="_blank" class="popup">
         Edit Product Attributes
         <s:param name="product" value="${pa.product}"/>
       </s:link>
-      <s:link beanclass="web.action.admin.SkuAction" event="searchSKUs" target="_blank" class="popup">
+      <s:link beanclass="com.hk.web.action.admin.SkuAction" event="searchSKUs" target="_blank" class="popup">
         Edit Sku Attributes
         <s:param name="productId" value="${pa.product.id}"/>
       </s:link>
@@ -196,10 +196,10 @@
     <shiro:hasPermission name="<%=PermissionConstants.MANAGE_IMAGE%>">
       <br/>
 
-      <div><s:link beanclass="web.action.UploadImageAction" event="pre" target="_blank" class="popup"> Upload
+      <div><s:link beanclass="com.hk.web.action.UploadImageAction" event="pre" target="_blank" class="popup"> Upload
         <s:param name="product" value="${pa.product.id}"/>
       </s:link>
-        <s:link beanclass="web.action.admin.EditProductAttributesAction" event="manageProductImages" target="_blank" class="popup">Manage
+        <s:link beanclass="com.hk.web.action.admin.EditProductAttributesAction" event="manageProductImages" target="_blank" class="popup">Manage
           Images
           <s:param name="productId" value="${pa.product.id}"/>
         </s:link>
@@ -229,7 +229,7 @@
             Brand:
           </span>
           <span class='info'>
-            <s:link beanclass="web.action.BrandCatalogAction" class="bl">
+            <s:link beanclass="com.hk.web.action.BrandCatalogAction" class="bl">
               ${pa.product.brand}
               <s:param name="brand" value="${fn:toLowerCase(pa.product.brand)}"/>
               <s:param name="topLevelCategory" value="${pa.topCategoryUrlSlug}"/>
@@ -307,7 +307,7 @@
   </c:if>
   <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_DESCRIPTIONS%>">
     <div>
-      <s:link beanclass="web.action.admin.EditProductAttributesAction" event="editOverview" class="popup">
+      <s:link beanclass="com.hk.web.action.admin.EditProductAttributesAction" event="editOverview" class="popup">
         Edit Overview
         <s:param name="productId" value="${pa.product.id}"/>
       </s:link>
@@ -373,7 +373,7 @@
   </c:if>
   <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_DESCRIPTIONS%>">
     <div>
-      <s:link beanclass="web.action.admin.EditProductAttributesAction" event="editDescription" class="popup">
+      <s:link beanclass="com.hk.web.action.admin.EditProductAttributesAction" event="editDescription" class="popup">
         Edit Description
         <s:param name="productId" value="${pa.product.id}"/>
       </s:link>
@@ -416,7 +416,7 @@
   </c:if>
 
   <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_DESCRIPTIONS%>">
-    <s:link beanclass="web.action.admin.EditProductAttributesAction" event="editFeatures" class="popup">
+    <s:link beanclass="com.hk.web.action.admin.EditProductAttributesAction" event="editFeatures" class="popup">
       Edit Features
       <s:param name="product" value="${pa.product}"/>
     </s:link>
@@ -433,7 +433,7 @@
       <br/>
 
       <div>
-        <s:link beanclass="web.action.admin.EditProductAttributesAction" event="editRelatedProducts" class="popup">
+        <s:link beanclass="com.hk.web.action.admin.EditProductAttributesAction" event="editRelatedProducts" class="popup">
           Edit Related Products
           <s:param name="productId" value="${pa.product.id}"/>
         </s:link>
@@ -500,7 +500,7 @@
 
       <c:if test="${pa.combo == null}">
       $('.addToCartButton').click(function(e) {
-        $(this).parent().append('<span class="add_message">added to <s:link beanclass="web.action.CartAction" id="message_cart_link"><img class="icon16" src="${pageContext.request.contextPath}/images/icons/cart.png"> cart</s:link></span>');
+        $(this).parent().append('<span class="add_message">added to <s:link beanclass="com.hk.web.action.CartAction" id="message_cart_link"><img class="icon16" src="${pageContext.request.contextPath}/images/icons/cart.png"> cart</s:link></span>');
         $(this).hide();
         e.stopPropagation();
       });

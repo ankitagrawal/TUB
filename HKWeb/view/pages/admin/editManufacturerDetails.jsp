@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.admin.ManufacturerAction" var="ma"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.ManufacturerAction" var="ma"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp">
 
   <s:layout-component name="htmlHead">
@@ -21,7 +21,7 @@
 
   <s:layout-component name="content">
     <div>
-      <s:form beanclass="web.action.admin.ManufacturerAction">
+      <s:form beanclass="com.hk.web.action.admin.ManufacturerAction">
         <fieldset class="top_label">
           <legend>Create/Edit Merchant Details</legend>
           <div style="float: left; width:50%">

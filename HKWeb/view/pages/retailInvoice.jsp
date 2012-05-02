@@ -8,7 +8,7 @@
 <head>
   <title>RETAIL INVOICE/ CASH MEMO</title>
 
-  <s:useActionBean beanclass="web.action.AccountingInvoiceAction" event="retailInvoice" var="orderSummary"/>
+  <s:useActionBean beanclass="com.hk.web.action.AccountingInvoiceAction" event="retailInvoice" var="orderSummary"/>
 
   <c:set var="paymentModeCod" value="<%=EnumPaymentMode.COD.getId()%>"/>
   <c:set var="partialRatio" value="${(orderSummary.partialPricingDto.productsHkSubTotal/orderSummary.pricingDto.productsHkSubTotal)}"/>

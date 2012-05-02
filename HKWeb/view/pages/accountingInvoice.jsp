@@ -76,7 +76,7 @@
 </script>
 --%>
 
-<s:useActionBean beanclass="web.action.AccountingInvoiceAction" event="pre" var="orderSummary"/>
+<s:useActionBean beanclass="com.hk.web.action.AccountingInvoiceAction" event="pre" var="orderSummary"/>
 
 <div class="container_12">
 <div class="grid_12" style="text-align: center;"><h4>RETAIL INVOICE/ CASH MEMO</h4></div>

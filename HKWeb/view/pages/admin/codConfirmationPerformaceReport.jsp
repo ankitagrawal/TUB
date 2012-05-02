@@ -5,7 +5,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.admin.ReportAction" var="reportBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.ReportAction" var="reportBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="COD Confirmation Report">
 
@@ -40,7 +40,7 @@
         <td>
           <fmt:formatDate value="${CODUnConfirmedOrderList.orderPlacedDate}" pattern="<%=FormatUtils.defaultDateFormatPattern%>"/></td>
         <td><fmt:formatDate value="${CODUnConfirmedOrderList.orderPlacedDate}" pattern="E"/></td>
-        <td><s:link beanclass="web.action.admin.order.search.SearchOrderAction" event="searchOrders" target="_blank">
+        <td><s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" event="searchOrders" target="_blank">
           <s:param name="orderId" value="${CODUnConfirmedOrderList.order.id}"/>
           ${CODUnConfirmedOrderList.order.id}
         </s:link></td>
@@ -87,7 +87,7 @@
         <td>
           <fmt:formatDate value="${CODConfirmedOrderList.orderConfirmationDate}" pattern="<%=FormatUtils.defaultDateFormatPattern%>"/></td>
         <td><fmt:formatDate value="${CODConfirmedOrderList.orderConfirmationDate}" pattern="E"/></td>
-        <td><s:link beanclass="web.action.admin.order.search.SearchOrderAction" event="searchOrders" target="_blank">
+        <td><s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" event="searchOrders" target="_blank">
           <s:param name="orderId" value="${CODConfirmedOrderList.order.id}"/>
           ${CODConfirmedOrderList.order.id}
         </s:link></td>
@@ -101,7 +101,7 @@
       </c:forEach>
     </table>
 
-    <s:form beanclass="web.action.admin.ReportAction" autocomplete="off">
+    <s:form beanclass="com.hk.web.action.admin.ReportAction" autocomplete="off">
       <div class="buttons"><s:submit name="generateCODConfirmationReportXls" value="Download"/></div>
       <s:hidden name="startDate" value="${reportBean.startDate}"/>
       <s:hidden name="endDate" value="${reportBean.endDate}"/>

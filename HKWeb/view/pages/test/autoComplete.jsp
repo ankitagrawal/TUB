@@ -38,7 +38,7 @@
 
     --%>
 <%--
-        <s:form beanclass="web.action.test.AutoCompleteAction" id="aucompleteForm" method="get" renderFieldsPresent="false" renderSourcePage="false">
+        <s:form beanclass="com.hk.web.action.test.AutoCompleteAction" id="aucompleteForm" method="get" renderFieldsPresent="false" renderSourcePage="false">
           <h1><s:text name="q" style="width:500px" id="searchBox" autocomplete="off"/></h1>
           <s:text id="search" name="limit"/>
           <s:submit name="pre"/>

@@ -14,7 +14,7 @@
   <s:layout-component name="left_col">
     <p>Your payment has failed. Please try again.</p>
     <h2>Support</h2>
-    <p><s:link beanclass="web.action.pages.ContactAction">Write to us</s:link> if you have any questions.</p>
+    <p><s:link beanclass="com.hk.web.action.pages.ContactAction">Write to us</s:link> if you have any questions.</p>
   </s:layout-component>
 
 </s:layout-render>

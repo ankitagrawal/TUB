@@ -1,7 +1,7 @@
 <%@ page import="com.hk.dao.MasterDataDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.admin.BulkEditProductAction" var="bep"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.BulkEditProductAction" var="bep"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp">
 
 <s:layout-component name="content">
@@ -25,7 +25,7 @@
 
 </div>
 
-<s:form beanclass="web.action.admin.BulkEditProductAction">
+<s:form beanclass="com.hk.web.action.admin.BulkEditProductAction">
 <s:hidden name="category" value="${bep.category}"/>
 <s:hidden name="brand" value="${bep.brand}"/>
 <s:hidden name="toBeEditedOptionsObject" value="${bep.toBeEditedOptionsObject}"/>
@@ -491,7 +491,7 @@
 
   <c:if test="${bep.toBeEditedOptions['productVariantInventory']}">
     <td width="100px" align="right">
-      <s:link beanclass="web.action.admin.ListBatchesAndCheckinInventory" target="_blank">
+      <s:link beanclass="com.hk.web.action.admin.ListBatchesAndCheckinInventory" target="_blank">
         <strong>${hk:netInventory(variant)}</strong>
         <s:param name="upc" value="${variant.id}"/>
       </s:link>

@@ -28,7 +28,7 @@ body {background:url(../images/valentine/bg_valentine.jpg) repeat #FFFFFF;}
 
 <s:layout-component name="breadcrumbs">
   <div class='crumb_outer'>
-    <s:link beanclass="web.action.HomeAction" class="crumb">Home</s:link>
+    <s:link beanclass="com.hk.web.action.HomeAction" class="crumb">Home</s:link>
     &gt;
     <span class="crumb last" style="font-size: 12px;">Valentine Gifts</span>
 

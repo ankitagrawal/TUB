@@ -3,12 +3,12 @@
 <%@ include file="/includes/_taglibInclude.jsp" %>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp">
-	<s:useActionBean beanclass="web.action.admin.courier.CourierServiceInfoAction" var="csiaBean"/>
+	<s:useActionBean beanclass="com.hk.web.action.admin.courier.CourierServiceInfoAction" var="csiaBean"/>
 	<s:layout-component name="content">
 		<fieldset class="right_label">
 			<legend>Download Courier Service Info Excel</legend>
 			<ul>
-				<s:form beanclass="web.action.admin.courier.CourierServiceInfoAction">
+				<s:form beanclass="com.hk.web.action.admin.courier.CourierServiceInfoAction">
 					<li><label>Courier Service Info to download : </label><s:select name="courier" class="codModeSelect">
 						<s:option value="">-All-</s:option>
 						<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList" value="id"
@@ -29,7 +29,7 @@
 			<legend>Upload Courier Service Info Excel</legend>
 			<ul>
 
-				<s:form beanclass="web.action.admin.courier.CourierServiceInfoAction">
+				<s:form beanclass="com.hk.web.action.admin.courier.CourierServiceInfoAction">
 				<div class="grid_4">
 					<li><label>File to Upload</label>
 						<s:file name="fileBean" size="30"/>
@@ -44,7 +44,7 @@
 		</fieldset>
 		<fieldset class="right_label">
 			<legend>Update Courier Service</legend>
-			<s:form beanclass="web.action.admin.courier.CourierServiceInfoAction">
+			<s:form beanclass="com.hk.web.action.admin.courier.CourierServiceInfoAction">
 				<table>
 					<tr>
 						<td>Pincode:</td>

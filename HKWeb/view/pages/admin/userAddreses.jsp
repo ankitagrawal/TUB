@@ -4,8 +4,8 @@
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Welcome">
 
   <s:layout-component name="content">
-    <s:useActionBean beanclass="web.action.admin.AddressListAction" var="addressBean"/>
-    <s:form beanclass="web.action.admin.ChangeOrderAddressAction" method="post">
+    <s:useActionBean beanclass="com.hk.web.action.admin.AddressListAction" var="addressBean"/>
+    <s:form beanclass="com.hk.web.action.admin.ChangeOrderAddressAction" method="post">
       <h2>Select Address: </h2>
       <table>
         <c:forEach items="${addressBean.addressList}" var="address" varStatus="addressCount">
@@ -27,7 +27,7 @@
       </table>
       <s:submit name="replace" value="submit" class="butt"/>
     </s:form>
-    <s:link beanclass="web.action.admin.ChangeOrderAddressAction">
+    <s:link beanclass="com.hk.web.action.admin.ChangeOrderAddressAction">
       cancel
       <s:param name="order" value="${addressBean.order}"/>
     </s:link>

@@ -2,7 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.BrandCatalogAction" var="sbbaBean"/>
+<s:useActionBean beanclass="com.hk.web.action.BrandCatalogAction" var="sbbaBean"/>
 
 <s:layout-render name="/layouts/catalogLayout.jsp" pageTitle="${sbbaBean.seoData.title}">
 
@@ -54,12 +54,12 @@
     <div class='catalog_header'>
       <div>
         <shiro:hasPermission name="<%=PermissionConstants.UPDATE_SEO_METADATA%>">
-            <s:link beanclass="web.action.SeoAction" event="pre" target="_blank" class="popup">Edit MetaData
+            <s:link beanclass="com.hk.web.action.SeoAction" event="pre" target="_blank" class="popup">Edit MetaData
               <s:param name="seoData" value="${sbbaBean.brand}"/>
             </s:link>
         </shiro:hasPermission>
         <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_CATALOG%>">
-            <s:link beanclass="web.action.admin.BulkEditProductAction" event="pre" target="_blank"
+            <s:link beanclass="com.hk.web.action.admin.BulkEditProductAction" event="pre" target="_blank"
                     class="popup">Edit All Product Variants
               <s:param name="brand" value="${sbbaBean.brand}"/>
             </s:link>

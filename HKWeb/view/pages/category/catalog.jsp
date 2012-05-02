@@ -12,8 +12,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.category.CatalogAction" var="ca"/>
-<s:useActionBean beanclass="web.action.CompareAction" var="compareBean"/>
+<s:useActionBean beanclass="com.hk.web.action.category.CatalogAction" var="ca"/>
+<s:useActionBean beanclass="com.hk.web.action.CompareAction" var="compareBean"/>
 
 <s:layout-render name="/layouts/catalogLayoutG.jsp"
                  pageTitle="${ca.seoData.title}">
@@ -110,7 +110,7 @@
                      topHeading="${ca.seoData.h1}"/>
     <shiro:hasPermission name="<%=PermissionConstants.UPDATE_SEO_METADATA%>">
         <div align="center">
-            <s:link beanclass="web.action.SeoAction" event="pre" target="_blank" class="popup">Edit MetaData
+            <s:link beanclass="com.hk.web.action.SeoAction" event="pre" target="_blank" class="popup">Edit MetaData
                 <s:param name="seoData" value="${ca.seoData.id}"/>
             </s:link>
         </div>
@@ -118,7 +118,7 @@
 
   <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_CATALOG%>">
         <div align="center">
-            <s:link beanclass="web.action.admin.BulkEditProductAction" event="pre" target="_blank" class="popup">Edit All Product Variants
+            <s:link beanclass="com.hk.web.action.admin.BulkEditProductAction" event="pre" target="_blank" class="popup">Edit All Product Variants
                 <s:param name="category" value="${ca.category.name}"/>
             </s:link>
         </div>
@@ -138,7 +138,7 @@
             <s:layout-render name="/layouts/modal.jsp">
                 <s:layout-component name="heading"><h3>Select City</h3></s:layout-component>
                 <s:layout-component name="content">
-                    <s:form beanclass="web.action.category.ServiceAction">
+                    <s:form beanclass="com.hk.web.action.category.ServiceAction">
                         <s:errors/>
                         <div class="round-cont" style="width:650px;margin-top: 20px;">
                             <label>To find the relevant deals, Please select your city</label>
@@ -168,7 +168,7 @@
 <input type="hidden" id="topLevelCategory" value="${ca.topCategoryUrlSlug}">
 
 <div style="display: none;">
-    <s:link beanclass="web.action.category.ServiceAction" id="setDefaultZoneLink" event="setDefaultCookie"/>
+    <s:link beanclass="com.hk.web.action.category.ServiceAction" id="setDefaultZoneLink" event="setDefaultCookie"/>
 </div>
 <div class='catalog_header'>
 
@@ -199,7 +199,7 @@
     </a>
 
     <div class='per grid_10'>
-        <s:link beanclass="web.action.category.CatalogAction" id="sort-popularity" class='active control' rel="nofollow">
+        <s:link beanclass="com.hk.web.action.category.CatalogAction" id="sort-popularity" class='active control' rel="nofollow">
             Popularity
             <c:choose>
                 <c:when test="${ca.sortOrder =='desc'}">&uarr;</c:when>
@@ -217,7 +217,7 @@
             <s:param name="sortOrder" value="${ca.sortOrder =='asc' ? 'desc' : 'asc'}"/>
             <s:param name="perPage" value="${ca.perPage}"/>
         </s:link>
-        <s:link beanclass="web.action.category.CatalogAction" id="sort-price" class='control' rel="nofollow">
+        <s:link beanclass="com.hk.web.action.category.CatalogAction" id="sort-price" class='control' rel="nofollow">
             Price
             <c:choose>
                 <c:when test="${ca.sortOrder =='desc'}">&darr;</c:when>
@@ -238,7 +238,7 @@
 
     <div class='per grid_11'>
         show
-        <s:link beanclass="web.action.category.CatalogAction" class="per_page active" rel="nofollow">
+        <s:link beanclass="com.hk.web.action.category.CatalogAction" class="per_page active" rel="nofollow">
             20
             <s:param name="rootCategorySlug" value="${ca.rootCategorySlug}"/>
             <s:param name="childCategorySlug" value="${ca.childCategorySlug}"/>
@@ -253,7 +253,7 @@
             <s:param name="sortOrder" value="${ca.sortOrder}"/>
         </s:link>
         |
-        <s:link beanclass="web.action.category.CatalogAction" class="per_page" rel="nofollow">
+        <s:link beanclass="com.hk.web.action.category.CatalogAction" class="per_page" rel="nofollow">
             40
             <s:param name="rootCategorySlug" value="${ca.rootCategorySlug}"/>
             <s:param name="childCategorySlug" value="${ca.childCategorySlug}"/>
@@ -268,7 +268,7 @@
             <s:param name="sortOrder" value="${ca.sortOrder}"/>
         </s:link>
         |
-        <s:link beanclass="web.action.category.CatalogAction" class="per_page" rel="nofollow">
+        <s:link beanclass="com.hk.web.action.category.CatalogAction" class="per_page" rel="nofollow">
             60
             <s:param name="rootCategorySlug" value="${ca.rootCategorySlug}"/>
             <s:param name="childCategorySlug" value="${ca.childCategorySlug}"/>
@@ -283,7 +283,7 @@
             <s:param name="sortOrder" value="${ca.sortOrder}"/>
         </s:link>
         |
-        <s:link beanclass="web.action.category.CatalogAction" class="per_page" rel="nofollow">
+        <s:link beanclass="com.hk.web.action.category.CatalogAction" class="per_page" rel="nofollow">
             80
             <s:param name="rootCategorySlug" value="${ca.rootCategorySlug}"/>
             <s:param name="childCategorySlug" value="${ca.childCategorySlug}"/>
@@ -302,7 +302,7 @@
 </div>
 
 <div id="prod_grid" class="grid_18" style="${ca.rootCategorySlug == "services"?"display:none":""}">
-    <s:form beanclass="web.action.CompareAction" target="_blank">
+    <s:form beanclass="com.hk.web.action.CompareAction" target="_blank">
         <c:forEach items="${ca.productList}" var="product">
           <c:if test="${!product.googleAdDisallowed}">
             <div class="product_box grid_4">

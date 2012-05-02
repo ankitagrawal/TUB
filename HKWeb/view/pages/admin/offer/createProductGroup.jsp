@@ -4,7 +4,7 @@
 <s:layout-render name="/layouts/defaultAdmin.jsp">
   <s:layout-component name="heading">Create Product Group</s:layout-component>
   <s:layout-component name="content">
-    <s:form beanclass="web.action.admin.offer.CreateProductGroupAction">
+    <s:form beanclass="com.hk.web.action.admin.offer.CreateProductGroupAction">
       <fieldset class="right_label">
         <s:errors/>
         <legend>Product Group Details</legend>

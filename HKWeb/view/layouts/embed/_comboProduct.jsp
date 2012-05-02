@@ -14,19 +14,19 @@
   pageContext.setAttribute("combo", combo);
 %>
 <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_CATALOG%>">
-  <s:link beanclass="web.action.admin.CreateEditComboAction" event="pre" target="_blank" class="popup">Edit Combo
+  <s:link beanclass="com.hk.web.action.admin.CreateEditComboAction" event="pre" target="_blank" class="popup">Edit Combo
     <s:param name="combo" value="${combo.id}"/>
   </s:link>
 </shiro:hasPermission>
 <div>
-<s:form beanclass="web.action.AddToCartAction" class="addToCartForm" onsubmit="return validQty();">
+<s:form beanclass="com.hk.web.action.AddToCartAction" class="addToCartForm" onsubmit="return validQty();">
 <table width="100%" style="border:1px solid #CCCCCC;">
   <s:hidden name="combo" value="${combo}"/>
   <s:hidden name="combo.qty" value="1"/>
   <c:set var="globalCtr" value="0"/>
   <c:forEach items="${combo.comboProducts}" var="comboProduct" varStatus="ctr">
     <tr style="background:#EEEEEE; border:1px solid #DDDDDD">
-      <td style="padding:2px;"><s:link beanclass="web.action.ProductAction"
+      <td style="padding:2px;"><s:link beanclass="com.hk.web.action.ProductAction"
                                        style="font-size:1.1em;color:black;">
         <s:param name="productId" value="${comboProduct.product.id}"/>
         <s:param name="productSlug" value="${comboProduct.product.slug}"/>${comboProduct.product.name}

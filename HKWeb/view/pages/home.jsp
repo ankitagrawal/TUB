@@ -2,7 +2,7 @@
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.HomeAction" var="homeBean" event="pre"/>
+<s:useActionBean beanclass="com.hk.web.action.HomeAction" var="homeBean" event="pre"/>
 <s:layout-render name="/layouts/genericG.jsp"
                  pageTitle="HealthKart.com: Buy Nutrition, Health Care, Beauty & Personal Care Products Online in India">
 
@@ -67,11 +67,11 @@
     <div class="container_24">
       <shiro:hasRole name="<%=RoleConstants.GOD%>">
         <%--<div class="grid_24 alpha omega">--%>
-          <%--<s:link beanclass="web.action.UploadCategoryImageAction" event="pre" target="_blank" class="popup"> Upload--%>
+          <%--<s:link beanclass="com.hk.web.action.UploadCategoryImageAction" event="pre" target="_blank" class="popup"> Upload--%>
             <%--<s:param name="category" value="${homeBean.category.name}"/>--%>
           <%--</s:link>--%>
           <%--&nbsp;|&nbsp;--%>
-          <%--<s:link beanclass="web.action.UploadCategoryImageAction" event="manageCategoryImages" target="_blank"--%>
+          <%--<s:link beanclass="com.hk.web.action.UploadCategoryImageAction" event="manageCategoryImages" target="_blank"--%>
                   <%--class="popup">--%>
             <%--<s:param name="category" value="${homeBean.category.name}"/>--%>
             <%--Manage Images--%>
@@ -81,7 +81,7 @@
         <%--<div class="clear"></div>--%>
 
         <div class="grid_24 alpha omega">
-          <s:link beanclass="web.action.CategoryAction" event="editPrimaryCategoryHeadings"
+          <s:link beanclass="com.hk.web.action.CategoryAction" event="editPrimaryCategoryHeadings"
                   class="popup" style="font-size:larger; background-color:#003399; color:white;" target="_blank">
             Add/Edit Headings for home
             <s:param name="category" value="${homeBean.category.name}"/>
@@ -120,7 +120,7 @@
 
           <shiro:hasRole name="<%=RoleConstants.GOD%>">
             <div class="grid_24 alpha omega" style="width: 950px;">
-              <s:link beanclass="web.action.PrimaryCategoryHeadingAction"
+              <s:link beanclass="com.hk.web.action.PrimaryCategoryHeadingAction"
                       event="editPrimaryCategoryHeadingProducts"
                       class="popup" style="background-color:#003399; color:white;" target="_blank">
                 Add/Edit Products for Heading
@@ -144,7 +144,7 @@
         <shiro:hasRole name="<%=RoleConstants.GOD%>">
           <c:if test="${empty heading.products}">
             <div class="grid_24 alpha omega" style="width: 950px;">
-              <s:link beanclass="web.action.PrimaryCategoryHeadingAction"
+              <s:link beanclass="com.hk.web.action.PrimaryCategoryHeadingAction"
                       event="addPrimaryCategoryHeadingProducts"
                       class="popup" style="background-color:#003399; color:white;">
                 <strong>ADD PRODUCTS FOR HEADING: ${heading.name} (Heading not visible as no products are set for

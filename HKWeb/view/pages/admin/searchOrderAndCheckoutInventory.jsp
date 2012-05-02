@@ -5,7 +5,7 @@
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Search Order and Checkout Inventory">
   <s:layout-component name="content">
     <div height="500px" align="center">
-      <s:form beanclass="web.action.admin.InventoryCheckoutAction">
+      <s:form beanclass="com.hk.web.action.admin.InventoryCheckoutAction">
         <label>Search Order:</label>
         <br/><br/>
         <s:text name="gatewayOrderId" id="gatewayOrderId" style="font-size:16px; padding:5px;height:30px;width:300px;"/>

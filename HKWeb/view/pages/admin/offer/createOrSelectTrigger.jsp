@@ -1,16 +1,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.admin.offer.CreateOrSelectTriggerAction" var="triggerBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.offer.CreateOrSelectTriggerAction" var="triggerBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp">
   <s:layout-component name="heading">Step 1: Create / Select offer trigger</s:layout-component>
   <s:layout-component name="content">
     <h3>
-      OR <s:link beanclass="web.action.admin.offer.CreateOrSelectOfferActionAction">Skip to offer action</s:link>
+      OR <s:link beanclass="com.hk.web.action.admin.offer.CreateOrSelectOfferActionAction">Skip to offer action</s:link>
     </h3>
     <s:errors/>
-    <s:form beanclass="web.action.admin.offer.CreateOrSelectTriggerAction">
+    <s:form beanclass="com.hk.web.action.admin.offer.CreateOrSelectTriggerAction">
       <fieldset class="right_label">
         <legend>Select an existing trigger</legend>
         <ul>
@@ -24,7 +24,7 @@
         </ul>
       </fieldset>
     </s:form>
-    <s:form beanclass="web.action.admin.offer.CreateOrSelectTriggerAction">
+    <s:form beanclass="com.hk.web.action.admin.offer.CreateOrSelectTriggerAction">
       <fieldset class="right_label">
         <legend>Create a new trigger</legend>
         <ul>

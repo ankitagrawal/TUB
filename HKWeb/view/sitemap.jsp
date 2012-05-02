@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <% response.setContentType("text/xml"); %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.SitemapAction" var="sitemapBean"/>
+<s:useActionBean beanclass="com.hk.web.action.SitemapAction" var="sitemapBean"/>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>http://www.healthkart.com</loc>

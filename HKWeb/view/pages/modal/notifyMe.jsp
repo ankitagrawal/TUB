@@ -2,7 +2,7 @@
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.core.user.RequestCallbackAction" var="sdcActionBean" event="pre"/>
+<s:useActionBean beanclass="com.hk.web.action..core.user.RequestCallbackAction" var="sdcActionBean" event="pre"/>
 <s:layout-render name="/layouts/modal.jsp">
 	<s:layout-component name="modal">
 		<script type="text/javascript">

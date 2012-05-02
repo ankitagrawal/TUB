@@ -2,7 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.ComboAction" var="comboActionBean"/>
+<s:useActionBean beanclass="com.hk.web.action.ComboAction" var="comboActionBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp">
 
@@ -11,7 +11,7 @@
     <h2>
       ${comboActionBean.combo.name}
     </h2>
-    <s:form beanclass="web.action.ComboAction">
+    <s:form beanclass="com.hk.web.action.ComboAction">
       <table>
         <tr>
           <th>

@@ -6,7 +6,7 @@
 <%@ page import="mhc.service.MenuHelper" %>
 <%@ page import="java.util.ArrayList" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.category.CatalogAction" var="ca"/>
+<s:useActionBean beanclass="com.hk.web.action.category.CatalogAction" var="ca"/>
 <s:layout-definition>
 
   <%
@@ -90,7 +90,7 @@
     <ul>
       <c:forEach items="${brandList}" var="navBrand">
         <li>
-          <s:link beanclass="web.action.category.CatalogAction" style="${currentBrand == navBrand ? 'font-weight:bold;' : ''}">
+          <s:link beanclass="com.hk.web.action.category.CatalogAction" style="${currentBrand == navBrand ? 'font-weight:bold;' : ''}">
             ${navBrand}
             <s:param name="brand" value="${navBrand}"/>
             <c:if test="${hk:isNotBlank(ca.startRange)}"><s:param name="startRange" value="${ca.startRange}"/></c:if>
@@ -111,7 +111,7 @@
     </h5>
     <ul>
       <li>
-        <s:link beanclass="web.action.category.CatalogAction">
+        <s:link beanclass="com.hk.web.action.category.CatalogAction">
           Below Rs 500
           <s:param name="startRange" value="0"/>
           <s:param name="endRange" value="500"/>
@@ -126,7 +126,7 @@
           <s:param name="perPage" value="${ca.perPage}"/>
         </s:link>
       </li>
-      <li><s:link beanclass="web.action.category.CatalogAction">
+      <li><s:link beanclass="com.hk.web.action.category.CatalogAction">
         Between Rs 500-1000
         <s:param name="startRange" value="500"/>
         <s:param name="endRange" value="1000"/>
@@ -141,7 +141,7 @@
         <s:param name="perPage" value="${ca.perPage}"/>
       </s:link>
       </li>
-      <li><s:link beanclass="web.action.category.CatalogAction">
+      <li><s:link beanclass="com.hk.web.action.category.CatalogAction">
         Between Rs 1000-2500
         <s:param name="startRange" value="1000"/>
         <s:param name="endRange" value="2500"/>
@@ -155,7 +155,7 @@
         <c:if test="${hk:isNotBlank(ca.preferredZone)}"><s:param name="preferredZone" value="${ca.preferredZone}"/></c:if>
       </s:link>
       </li>
-      <li><s:link beanclass="web.action.category.CatalogAction">
+      <li><s:link beanclass="com.hk.web.action.category.CatalogAction">
         Above Rs 2500
         <s:param name="startRange" value="2500"/>
         <s:param name="endRange" value="1000000"/>

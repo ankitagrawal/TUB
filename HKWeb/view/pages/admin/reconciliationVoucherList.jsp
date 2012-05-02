@@ -2,8 +2,8 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.admin.ReconciliationVoucherAction" var="poa"/>
- <s:useActionBean beanclass="web.action.admin.SelectWHAction" var="whAction" event="getUserWarehouse"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.ReconciliationVoucherAction" var="poa"/>
+ <s:useActionBean beanclass="com.hk.web.action.admin.SelectWHAction" var="whAction" event="getUserWarehouse"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Reconciliation Voucher List">
    <%
     WarehouseDao warehouseDao = InjectorFactory.getInjector().getInstance(WarehouseDao.class);
@@ -18,10 +18,10 @@
 
   <s:layout-component name="content">
     <c:if test="${whAction.setWarehouse != null}">
-      <s:link beanclass="web.action.admin.ReconciliationVoucherAction"
+      <s:link beanclass="com.hk.web.action.admin.ReconciliationVoucherAction"
               event="view">Create New Reconciliation Voucher</s:link>
     </c:if>
-    <s:form beanclass="web.action.admin.ReconciliationVoucherAction">
+    <s:form beanclass="com.hk.web.action.admin.ReconciliationVoucherAction">
 
       <fieldset>
         <legend>Search Reconciliation Voucher List</legend>
@@ -69,7 +69,7 @@
           <td>${purchaseOrder.createdBy.name} <br/>(${purchaseOrder.createdBy.login})</td>
           <td><fmt:formatDate value="${purchaseOrder.reconciliationDate}" type="both" timeStyle="short"/></td>
           <td>
-            <s:link beanclass="web.action.admin.ReconciliationVoucherAction" event="view">Edit
+            <s:link beanclass="com.hk.web.action.admin.ReconciliationVoucherAction" event="view">Edit
               <s:param name="reconciliationVoucher" value="${purchaseOrder.id}"/></s:link>
           </td>
         </tr>

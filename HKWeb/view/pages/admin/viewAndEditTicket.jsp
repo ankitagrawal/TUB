@@ -2,7 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.admin.ViewAndEditTicketAction" var="ticketBean" event="pre"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.ViewAndEditTicketAction" var="ticketBean" event="pre"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Welcome">
   <s:layout-component name="heading">${ticketBean.currentBreadcrumb.name}
@@ -29,14 +29,14 @@
         <em>Ticket context data</em><br/>
         <c:if test="${ticketBean.ticket.associatedUser != null}">
           <span class="sml gry">Associated User:</span>
-          <s:link beanclass="web.action.admin.SearchUserAction" event="search">
+          <s:link beanclass="com.hk.web.action.admin.SearchUserAction" event="search">
             ${ticketBean.ticket.associatedUser.email}
             <s:param name="userFilterDto.email" value="${ticketBean.ticket.associatedUser.email}"/>
           </s:link><br/>
         </c:if>
         <c:if test="${ticketBean.ticket.associatedOrder != null}">
           <span class="sml gry">Associated Order:</span>
-          <s:link beanclass="web.action.admin.order.search.SearchOrderAction" event="searchOrders">
+          <s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" event="searchOrders">
             ${ticketBean.ticket.associatedOrder.id}
             <s:param name="orderId" value="${ticketBean.ticket.associatedOrder.id}"/>
           </s:link>
@@ -50,7 +50,7 @@
         </c:if>
         <c:if test="${ticketBean.ticket.associatedTrackingId != null}">
           <span class="sml gry">Associated Tracking Id:</span>
-          <s:link beanclass="web.action.TrackCourierAction" event="pre" target="_blank">
+          <s:link beanclass="com.hk.web.action.TrackCourierAction" event="pre" target="_blank">
             ${ticketBean.ticket.associatedTrackingId}
             <s:param name="trackingId" value="${ticketBean.ticket.associatedTrackingId}"/>
             <s:param name="courierId" value="${ticketBean.ticket.associatedCourier.id}"/>
@@ -122,7 +122,7 @@
       </c:choose>
     </div>
 
-    <s:form beanclass="web.action.admin.ViewAndEditTicketAction" method="post">
+    <s:form beanclass="com.hk.web.action.admin.ViewAndEditTicketAction" method="post">
       <hr/>
       <div>
         <h2>Update</h2>

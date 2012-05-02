@@ -4,7 +4,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.ReferralSignupAction" var="referralBean"/>
+<s:useActionBean beanclass="com.hk.web.action.ReferralSignupAction" var="referralBean"/>
 
 <s:layout-render name="/layouts/default.jsp" pageTitle="Check out HealthKart.com (and get a Rs. 100 discount)">
   <s:layout-component name="htmlHead">
@@ -38,7 +38,7 @@
   <s:layout-component name="left_col">
 
 
-    <s:form beanclass="web.action.SignupAction">
+    <s:form beanclass="com.hk.web.action.SignupAction">
       <fieldset class="right_label">
           <%--<h2>Login Details</h2>--%>
         <div style="width: 600px; margin: 10px auto; background: #fafafa; padding: 20px;">

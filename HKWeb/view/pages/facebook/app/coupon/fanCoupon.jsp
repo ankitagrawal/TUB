@@ -13,7 +13,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="web.action.facebook.app.coupon.FanCouponAction" var="fanCouponBean"/>
+<s:useActionBean beanclass="com.hk.web.action.facebook.app.coupon.FanCouponAction" var="fanCouponBean"/>
 <%--
 
 To update app, following tasks need to be done :
@@ -174,8 +174,8 @@ C) Update endOfOfferFanCouponDate to the date the campaign is ending on. ideally
     </script>
 
     <div style="display:none;">
-      <s:link beanclass="web.action.facebook.app.coupon.FanCouponClaimAction" id="couponClaimLink"></s:link>
-      <s:link beanclass="web.action.facebook.app.coupon.FanCouponClaimAction" event="share" id="couponShareLink"></s:link>
+      <s:link beanclass="com.hk.web.action.facebook.app.coupon.FanCouponClaimAction" id="couponClaimLink"></s:link>
+      <s:link beanclass="com.hk.web.action.facebook.app.coupon.FanCouponClaimAction" event="share" id="couponShareLink"></s:link>
     </div>
 
     <%--

@@ -1,13 +1,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.admin.GenerateExcelAction" var="excelBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.GenerateExcelAction" var="excelBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp">
 
   <s:layout-component name="content">
 
     <div style="display:inline;float:left; width:450px">
-      <s:form beanclass="web.action.admin.GenerateExcelAction">
+      <s:form beanclass="com.hk.web.action.admin.GenerateExcelAction">
         <h2> Primary Category to download : <s:text name="category"/></h2>
         <br>
         <s:submit name="generateCatalogByCategory" value="Download Catalog By Primary Category"/>
@@ -15,7 +15,7 @@
     </div>
 
     <div style="display:inline;">
-      <s:form beanclass="web.action.admin.GenerateExcelAction">
+      <s:form beanclass="com.hk.web.action.admin.GenerateExcelAction">
         <h2> Brand to download : <s:text name="brand"/></h2>
         <br>
         <s:submit name="generateCatalogByBrand" value="Download Catalog By Brand"/>
@@ -25,7 +25,7 @@
     <br><br>
 
     <div style="display:inline;float:left; width:450px">
-      <s:form beanclass="web.action.admin.GenerateExcelAction">
+      <s:form beanclass="com.hk.web.action.admin.GenerateExcelAction">
         <h2> Amazon : <s:text name="category"/></h2>
         <br>
         <s:submit name="generateAmazonCatalogByCategory" value="Download Amazon feed By Category"/>
@@ -34,7 +34,7 @@
     </div>
 
     <div style="display:inline;">
-      <s:form beanclass="web.action.admin.GenerateExcelAction">
+      <s:form beanclass="com.hk.web.action.admin.GenerateExcelAction">
         <h2> Sub Category to download : <s:text name="category"/></h2>
         <br>
         <s:submit name="generateCatalogBySubCategory" value="Download Catalog By Sub Category"/>

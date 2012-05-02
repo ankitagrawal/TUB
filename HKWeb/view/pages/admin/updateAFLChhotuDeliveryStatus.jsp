@@ -1,7 +1,7 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.admin.UpdateAFLChhotuDeliveryStatusAction" var="AFLDelivery"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.UpdateAFLChhotuDeliveryStatusAction" var="AFLDelivery"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Report Master">
 
     <s:layout-component name="htmlHead">
@@ -40,7 +40,7 @@
             <tr>
                 <td>
                     <div class="reportBox">
-                        <s:form beanclass="web.action.admin.UpdateAFLChhotuDeliveryStatusAction">
+                        <s:form beanclass="com.hk.web.action.admin.UpdateAFLChhotuDeliveryStatusAction">
                             <s:errors/>
                             <fieldset class="right_label">
                                 <legend>AFL Orders</legend>
@@ -70,7 +70,7 @@
                 </td>
                 <td>
                     <div class="reportBox">
-                        <s:form beanclass="web.action.admin.UpdateAFLChhotuDeliveryStatusAction">
+                        <s:form beanclass="com.hk.web.action.admin.UpdateAFLChhotuDeliveryStatusAction">
                             <s:errors/>
                             <fieldset class="right_label">
                                 <legend>Chhotu Orders</legend>

@@ -1,5 +1,5 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.category.ServiceAction" var="sa"/>
+<s:useActionBean beanclass="com.hk.web.action.category.ServiceAction" var="sa"/>
 <s:layout-definition>
   <%
     String urlFragment = (String) pageContext.getAttribute("filterUrlFragment");
@@ -10,7 +10,7 @@
       $('.submit_button').click();
     }
   </script>
-  <s:form beanclass="web.action.category.ServiceAction" name="setCityForm">
+  <s:form beanclass="com.hk.web.action.category.ServiceAction" name="setCityForm">
     <s:errors/>
     <div width="960px" align="center">
       <label style="font-size:1.3em; font-weight:bold; color:navy;">To view deals in other cities</label>

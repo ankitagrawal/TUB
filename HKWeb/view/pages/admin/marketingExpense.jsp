@@ -6,7 +6,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Add/Edit Marketing Expense">
-	<s:useActionBean beanclass="web.action.admin.MarketingExpenseAction" var="mea"/>
+	<s:useActionBean beanclass="com.hk.web.action.admin.MarketingExpenseAction" var="mea"/>
 	<s:layout-component name="htmlHead">
 		<%
     AdNetworksDao adNetworksDao = InjectorFactory.getInjector().getInstance(AdNetworksDao.class);
@@ -43,7 +43,7 @@
 	<s:layout-component name="content">
 		<div class="reportBox">
 			<table>
-				<s:form beanclass="web.action.admin.MarketingExpenseAction">
+				<s:form beanclass="com.hk.web.action.admin.MarketingExpenseAction">
 					<s:hidden name="marketingExpense.id" value="${mea.marketingExpense.id}"/>
 					<tr>
 						<td>Date:<span class='aster' title="this field is required">*</span></td>

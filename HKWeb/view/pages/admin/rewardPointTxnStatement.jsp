@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.admin.RewardPointTxnStatementAction" event="pre" var="rpBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.RewardPointTxnStatementAction" event="pre" var="rpBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Reward Point Txn Statement">
 
@@ -39,7 +39,7 @@
           <td align="center">${rewardPointTxn.rewardPoint.id}</td>
           <td align="center">
             <c:if test="${rewardPointTxn.redeemedOrder != null}">
-              <s:link beanclass="web.action.admin.order.search.SearchOrderAction" event="searchOrders">
+              <s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" event="searchOrders">
                 ${rewardPointTxn.redeemedOrder.id}
                 <s:param name="orderId" value="${rewardPointTxn.redeemedOrder.id}"/>
               </s:link>
