@@ -13,9 +13,9 @@
     Long orderId = (Long) pageContext.getAttribute("orderId");
 //    System.out.println("orderId: " + orderId);
     pageContext.setAttribute("orderId", orderId);
-    ProductVariantDao variantDao = InjectorFactory.getInjector().getInstance(ProductVariantDao.class);
+    ProductVariantDao variantDao = (ProductVariantDao)ServiceLocatorFactory.getService("ProductVariantDao");
     String variantId = (String) pageContext.getAttribute("variantId");
-    ProductVariant variant = variantDao.find(variantId);
+    ProductVariant variant = variantDao.getVariantById(variantId);
     pageContext.setAttribute("topOrderedVariant", variant);
     DecimalFormat decimalFormat = new DecimalFormat("#");
     pageContext.setAttribute("discountPercentage", decimalFormat.format((variant.getMarkedPrice() - variant.getHkPrice(null)) / variant.getMarkedPrice() * 100));
