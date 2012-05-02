@@ -1,6 +1,6 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="com.hk.web.action.core.order.OrderSummaryAction" %>
-<%@ page import="mhc.common.dto.PricingDto" %>
+<%@ page import="com.hk.dto.pricing.PricingDto" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%--
 Pass an attribute called pricingDto to render a table with pricing details
