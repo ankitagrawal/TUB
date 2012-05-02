@@ -8,9 +8,9 @@
 
 <s:layout-definition>
 <%
-  ComboDao comboDao = InjectorFactory.getInjector().getInstance(ComboDao.class);
+  ComboDao comboDao = (ComboDao)ServiceLocatorFactory.getService("ComboDao");
   String productId = (String) pageContext.getAttribute("productId");
-  Combo combo = comboDao.find(productId);
+  Combo combo = comboDao.get(Combo.class, productId);
   pageContext.setAttribute("combo", combo);
 %>
 <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_CATALOG%>">

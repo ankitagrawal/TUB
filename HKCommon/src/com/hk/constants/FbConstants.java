@@ -6,30 +6,30 @@ public class FbConstants {
     
     //TODO: rewrite
     
-  /*public static final String fbFanAppId;
+  public static final String fbFanAppId="";
   
-  public static final String fbFanPageId;
+  public static final String fbFanPageId="";
 
-  public static final String apiKey;
-  public static final String apiSecret;
-  public static final String appId;
-  public static final String appUrl;
+  public static final String apiKey="";
+  public static final String apiSecret="";
+  public static final String appId="";
+  public static final String appUrl="";
 
-  public static final String contestApiKey;
-  public static final String contestApiSecret;
-  public static final String contestAppId;
-  public static final String contestAppUrl;
+  public static final String contestApiKey="";
+  public static final String contestApiSecret="";
+  public static final String contestAppId="";
+  public static final String contestAppUrl="";
 
-  public static final String promoApiKey;
-  public static final String promoApiSecret;
-  public static final String promoAppId;
-  public static final String promoAppUrl;
+  public static final String promoApiKey="";
+  public static final String promoApiSecret="";
+  public static final String promoAppId="";
+  public static final String promoAppUrl="";
 
-  public static final String promo2ApiKey;
-  public static final String promo2ApiSecret;
-  public static final String promo2AppId;
-  public static final String promo2AppUrl;
-*/
+  public static final String promo2ApiKey="";
+  public static final String promo2ApiSecret="";
+  public static final String promo2AppId="";
+  public static final String promo2AppUrl ="";
+
   static {
   /*  fbFanAppId = ServiceLocatorFactory.getService(Key.get(String.class, Names.named(Keys.Env.fbFanAppId)));
     fbFanPageId = ServiceLocatorFactory.getService(Key.get(String.class, Names.named(Keys.Env.fbFanPageId)));

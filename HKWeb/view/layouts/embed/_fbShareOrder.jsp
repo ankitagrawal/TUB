@@ -1,5 +1,5 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
-<%@ page import="mhc.service.dao.ProductVariantDao" %>
+<%@ page import="com.hk.dao.catalog.product.ProductVariantDao" %>
 <%@ page import="com.hk.domain.catalog.product.ProductVariant" %>
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
 <%@ page import="java.text.DecimalFormat" %>
@@ -13,9 +13,9 @@
     Long orderId = (Long) pageContext.getAttribute("orderId");
 //    System.out.println("orderId: " + orderId);
     pageContext.setAttribute("orderId", orderId);
-    ProductVariantDao variantDao = InjectorFactory.getInjector().getInstance(ProductVariantDao.class);
+    ProductVariantDao variantDao = (ProductVariantDao)ServiceLocatorFactory.getService("ProductVariantDao");
     String variantId = (String) pageContext.getAttribute("variantId");
-    ProductVariant variant = variantDao.find(variantId);
+    ProductVariant variant = variantDao.getVariantById(variantId);
     pageContext.setAttribute("topOrderedVariant", variant);
     DecimalFormat decimalFormat = new DecimalFormat("#");
     pageContext.setAttribute("discountPercentage", decimalFormat.format((variant.getMarkedPrice() - variant.getHkPrice(null)) / variant.getMarkedPrice() * 100));
