@@ -1,6 +1,6 @@
 <%@ page import="web.action.core.user.VerifyUserAction" %>
 <%@ page import="com.hk.constants.OfferConstants" %>
-<%@ page import="com.hk.constants.RoleConstants" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 

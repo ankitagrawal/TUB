@@ -1,4 +1,4 @@
-<%@ page import="com.hk.constants.EnumImageSize" %>
+<%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="web.action.admin.EditProductAttributesAction" var="pa"/>

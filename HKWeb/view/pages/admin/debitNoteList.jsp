@@ -1,5 +1,5 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
-<%@ page import="mhc.service.dao.MasterDataDao" %>
+<%@ page import="com.hk.dao.MasterDataDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Debit Note List">

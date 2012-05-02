@@ -1,4 +1,4 @@
-<%@ page import="com.hk.constants.HealthkartConstants" %>
+<%@ page import="com.hk.constants.core.HealthkartConstants" %>
 <%@ page import="net.tanesha.recaptcha.ReCaptchaFactory" %>
 <%@ page import="net.tanesha.recaptcha.ReCaptcha" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>

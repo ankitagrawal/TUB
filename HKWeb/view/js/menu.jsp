@@ -1,5 +1,5 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.MenuAction" var="menuAction" event="pre"/>
+<s:useActionBean beanclass="web.action.core.menu.MenuAction" var="menuAction" event="pre"/>
 
 <%--
 DONT DELETE : Work in progress! This is not being used anywhere as of now.

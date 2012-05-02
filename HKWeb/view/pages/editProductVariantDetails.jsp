@@ -1,6 +1,6 @@
-<%@ page import="mhc.service.dao.MasterDataDao" %>
-<%@ page import="com.hk.constants.PermissionConstants" %>
-<%@ page import="com.hk.constants.RoleConstants" %>
+<%@ page import="com.hk.dao.MasterDataDao" %>
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="web.action.admin.EditProductAttributesAction" var="pa"/>

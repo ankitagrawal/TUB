@@ -1,10 +1,10 @@
 <%@ taglib prefix="s" uri="http://stripes.sourceforge.net/stripes-dynattr.tld" %>
-<%@ page import="app.bootstrap.guice.InjectorFactory" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
-<%@ page import="mhc.service.dao.MasterDataDao" %>
+<%@ page import="com.hk.dao.MasterDataDao" %>
 <%@ page import="mhc.service.dao.order.OrderStatusDao" %>
 <%@ page import="mhc.service.dao.TaxDao" %>
-<%@ page import="mhc.service.dao.CategoryDao" %>
+<%@ page import="com.hk.dao.catalog.category.CategoryDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="web.action.admin.ReportAction" var="reportActionBean"/>

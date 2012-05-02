@@ -1,14 +1,14 @@
-<%@ page import="com.hk.constants.RoleConstants" %>
-<%@ page import="com.hk.constants.PermissionConstants" %>
-<%@ page import="mhc.domain.Category" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
+<%@ page import="com.hk.domain.catalog.category.Category" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
-<%@ page import="mhc.service.dao.CategoryDao" %>
-<%@ page import="app.bootstrap.guice.InjectorFactory" %>
-<%@ page import="mhc.service.dao.MapIndiaDao" %>
+<%@ page import="com.hk.dao.catalog.category.CategoryDao" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.dao.location.MapIndiaDao" %>
 <%@ page import="com.akube.framework.util.BaseUtils" %>
-<%@ page import="com.hk.constants.HealthkartConstants" %>
-<%@ page import="mhc.domain.MapIndia" %>
+<%@ page import="com.hk.constants.core.HealthkartConstants" %>
+<%@ page import="com.hk.domain.MapIndia" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 

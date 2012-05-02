@@ -1,8 +1,8 @@
 <%@ page import="mhc.domain.Product" %>
 <%@ page import="mhc.service.dao.ProductDao" %>
-<%@ page import="app.bootstrap.guice.InjectorFactory" %>
-<%@ page import="mhc.domain.Category" %>
-<%@ page import="mhc.service.dao.CategoryDao" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.domain.catalog.category.Category" %>
+<%@ page import="com.hk.dao.catalog.category.CategoryDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 

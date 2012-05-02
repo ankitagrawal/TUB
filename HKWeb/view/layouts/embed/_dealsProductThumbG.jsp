@@ -1,9 +1,9 @@
 <%@ page import="mhc.domain.Product" %>
-<%@ page import="app.bootstrap.guice.InjectorFactory" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="mhc.service.dao.ProductDao" %>
-<%@ page import="com.hk.constants.EnumImageSize" %>
-<%@ page import="mhc.service.dao.CategoryDao" %>
-<%@ page import="mhc.domain.Category" %>
+<%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
+<%@ page import="com.hk.dao.catalog.category.CategoryDao" %>
+<%@ page import="com.hk.domain.catalog.category.Category" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>

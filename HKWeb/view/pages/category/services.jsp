@@ -1,14 +1,14 @@
-<%@ page import="mhc.service.dao.MasterDataDao" %>
+<%@ page import="com.hk.dao.MasterDataDao" %>
 <%@ page import="com.akube.framework.util.BaseUtils" %>
 <%@ page import="mhc.web.filter.WebContext" %>
-<%@ page import="com.hk.constants.HealthkartConstants" %>
+<%@ page import="com.hk.constants.core.HealthkartConstants" %>
 <%@ page import="net.sourceforge.stripes.util.CryptoUtil" %>
-<%@ page import="mhc.service.dao.MapIndiaDao" %>
-<%@ page import="app.bootstrap.guice.InjectorFactory" %>
+<%@ page import="com.hk.dao.location.MapIndiaDao" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="org.stripesstuff.plugin.security.J2EESecurityManager" %>
-<%@ page import="mhc.domain.MapIndia" %>
+<%@ page import="com.hk.domain.MapIndia" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.hk.constants.PermissionConstants" %>
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="redirectParam" value="<%=J2EESecurityManager.redirectAfterLoginParam%>"/>

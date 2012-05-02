@@ -1,7 +1,7 @@
-<%@ page import="mhc.web.json.HealthkartResponse" %>
-<%@ page import="com.hk.constants.EnumImageSize" %>
-<%@ page import="mhc.service.dao.MasterDataDao" %>
-<%@ page import="com.hk.constants.RoleConstants" %>
+<%@ page import="com.hk.web.HealthkartResponse" %>
+<%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
+<%@ page import="com.hk.dao.MasterDataDao" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="web.action.admin.DebitNoteAction" var="pa"/>

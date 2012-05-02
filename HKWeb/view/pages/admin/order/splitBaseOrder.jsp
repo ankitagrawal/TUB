@@ -1,4 +1,4 @@
-<%@ page import="app.bootstrap.guice.InjectorFactory" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="mhc.service.WarehouseService" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>

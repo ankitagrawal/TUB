@@ -1,7 +1,7 @@
 <%@ page import="mhc.domain.Product" %>
-<%@ page import="app.bootstrap.guice.InjectorFactory" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="mhc.service.dao.ProductDao" %>
-<%@ page import="com.hk.constants.EnumImageSize" %>
+<%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
 <%@ page import="mhc.domain.Combo" %>
 <%@ page import="mhc.service.dao.ComboDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>

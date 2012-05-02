@@ -1,4 +1,4 @@
-package com.hk.web.interceptor;
+package com.hk.web1.interceptor;
 
 import javax.servlet.ServletContext;
 

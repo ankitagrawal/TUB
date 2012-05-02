@@ -1,4 +1,4 @@
-package com.hk.web.action;
+package com.hk.web1.action;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

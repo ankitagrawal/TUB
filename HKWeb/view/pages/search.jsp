@@ -1,7 +1,7 @@
-<%@ page import="com.hk.constants.Keys" %>
+<%@ page import="com.hk.constants.core.Keys" %>
 <%@ page import="com.google.inject.name.Names" %>
 <%@ page import="com.google.inject.Key" %>
-<%@ page import="app.bootstrap.guice.InjectorFactory" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="web.action.SearchAction" var="searchAction"/>
@@ -24,7 +24,7 @@
           <h5 class='heading1'>
             Product Categories
           </h5>
-          <s:useActionBean beanclass="web.action.MenuAction" var="menuAction" event="pre"/>
+          <s:useActionBean beanclass="web.action.core.menu.MenuAction" var="menuAction" event="pre"/>
           <ul>
             <c:forEach items="${menuAction.menuNodes}" var="topMenuNode" varStatus="idx">
               <li><a href="${pageContext.request.contextPath}${topMenuNode.url}">${topMenuNode.name}</a></li>

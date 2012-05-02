@@ -1,9 +1,9 @@
-<%@ page import="app.bootstrap.guice.InjectorFactory" %>
-<%@ page import="com.hk.constants.EnumImageSize" %>
-<%@ page import="com.hk.constants.PermissionConstants" %>
-<%@ page import="mhc.domain.Category" %>
-<%@ page import="mhc.service.dao.CategoryDao" %>
-<%@ page import="mhc.web.json.HealthkartResponse" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
+<%@ page import="com.hk.domain.catalog.category.Category" %>
+<%@ page import="com.hk.dao.catalog.category.CategoryDao" %>
+<%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -12,8 +12,8 @@
 <c:set var="imageMediumSize" value="<%=EnumImageSize.MediumSize%>"/>
 <c:set var="imageSmallSize" value="<%=EnumImageSize.TinySize%>"/>
 <%
-  CategoryDao categoryDao = InjectorFactory.getInjector().getInstance(CategoryDao.class);
-  Category eyeGlass = categoryDao.find("eyeglasses");
+  CategoryDao categoryDao = (CategoryDao) ServiceLocatorFactory.getService("CategoryDao");
+  Category eyeGlass = categoryDao.getCategoryByName("eyeglasses");
   pageContext.setAttribute("eyeGlass", eyeGlass);
 
 %>

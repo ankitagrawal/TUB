@@ -1,4 +1,4 @@
-package com.hk.web.servlet;
+package com.hk.web1.servlet;
 
 import org.apache.solr.client.solrj.response.TermsResponse;
 import org.apache.solr.client.solrj.response.QueryResponse;

@@ -1,4 +1,4 @@
-<%@ page import="com.hk.constants.RoleConstants" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <!-- Start of Zopim Live Chat Script -->
 <script type="text/javascript">

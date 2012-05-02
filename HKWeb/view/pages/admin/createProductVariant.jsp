@@ -1,5 +1,5 @@
-<%@ page import="mhc.service.dao.MasterDataDao" %>
-<%@ page import="mhc.web.json.HealthkartResponse" %>
+<%@ page import="com.hk.dao.MasterDataDao" %>
+<%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="web.action.admin.CreateOrSelectProductAction" var="csp"/>

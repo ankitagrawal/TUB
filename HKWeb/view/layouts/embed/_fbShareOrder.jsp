@@ -1,9 +1,9 @@
-<%@ page import="app.bootstrap.guice.InjectorFactory" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="mhc.service.dao.ProductVariantDao" %>
 <%@ page import="mhc.domain.ProductVariant" %>
-<%@ page import="com.hk.constants.EnumImageSize" %>
+<%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
 <%@ page import="java.text.DecimalFormat" %>
-<%@ page import="mhc.web.json.HealthkartResponse" %>
+<%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="com.hk.constants.FbConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>

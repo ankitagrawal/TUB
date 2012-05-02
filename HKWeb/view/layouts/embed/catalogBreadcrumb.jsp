@@ -1,6 +1,6 @@
 <%@ page import="mhc.common.dto.MenuNode" %>
 <%@ page import="java.util.Stack" %>
-<%@ page import="app.bootstrap.guice.InjectorFactory" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="mhc.service.MenuHelper" %>
 <%@ page import="mhc.domain.Product" %>
 <%@ page import="org.apache.commons.lang.StringUtils" %>

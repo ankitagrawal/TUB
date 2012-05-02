@@ -1,4 +1,4 @@
-<%@ page import="com.hk.constants.PermissionConstants" %>
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 

@@ -1,7 +1,7 @@
 <%@ page import="mhc.domain.Product" %>
 <%@ page import="java.util.List" %>
 <%@ page import="mhc.service.dao.ProductDao" %>
-<%@ page import="app.bootstrap.guice.InjectorFactory" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="web.action.admin.RecentlyAddedProductsAction" var="rapa"/>

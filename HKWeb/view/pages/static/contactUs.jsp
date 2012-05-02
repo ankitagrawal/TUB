@@ -1,7 +1,7 @@
-<%@ page import="mhc.service.dao.MasterDataDao" %>
+<%@ page import="com.hk.dao.MasterDataDao" %>
 <%@ page import="net.tanesha.recaptcha.ReCaptchaFactory" %>
 <%@ page import="net.tanesha.recaptcha.ReCaptcha" %>
-<%@ page import="com.hk.constants.HealthkartConstants" %>
+<%@ page import="com.hk.constants.core.HealthkartConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 

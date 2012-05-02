@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <% response.setContentType("text/xml"); %>
-<%@ page import="com.hk.constants.EnumImageSize" %>
+<%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
 <%@ page import="mhc.util.ImageManager" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="web.action.ProductAction" var="productBean"/>

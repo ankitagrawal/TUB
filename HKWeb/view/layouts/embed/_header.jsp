@@ -1,5 +1,5 @@
 <%@ page import="com.hk.constants.core.EnumRole" %>
-<%@ page import="com.hk.constants.RoleConstants" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="org.apache.commons.lang.StringUtils" %>
 <%@ page import="org.apache.shiro.SecurityUtils" %>
 <%@ page import="com.shiro.PrincipalImpl" %>

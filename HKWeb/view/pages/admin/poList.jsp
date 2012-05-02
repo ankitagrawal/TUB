@@ -1,8 +1,8 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="com.hk.constants.inventory.EnumPurchaseOrderStatus" %>
-<%@ page import="mhc.service.dao.MasterDataDao" %>
+<%@ page import="com.hk.dao.MasterDataDao" %>
 <%@ page import="mhc.service.dao.WarehouseDao" %>
-<%@ page import="app.bootstrap.guice.InjectorFactory" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="approved" value="<%=EnumPurchaseOrderStatus.Approved.getId()%>"/>

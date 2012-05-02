@@ -1,4 +1,4 @@
-<%@ page import="app.bootstrap.guice.InjectorFactory" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="mhc.domain.Tax" %>
 <%@ page import="mhc.service.dao.TaxDao" %>
 <%@ page import="mhc.service.dao.WarehouseDao" %>
