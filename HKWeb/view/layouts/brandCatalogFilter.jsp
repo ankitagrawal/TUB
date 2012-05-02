@@ -1,7 +1,7 @@
 <%@ page import="java.util.Set" %>
-<%@ page import="mhc.common.dto.MenuNode" %>
+<%@ page import="com.hk.dto.menu.MenuNode" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.BrandCatalogAction" var="ca"/>
+<s:useActionBean beanclass="com.hk.web.action.core.catalog.BrandCatalogAction" var="ca"/>
 <s:layout-definition>
 <%
   Set<MenuNode> menuNodes = (Set<MenuNode>) pageContext.getAttribute("menuNodeList");

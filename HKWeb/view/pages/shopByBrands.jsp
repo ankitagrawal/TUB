@@ -25,7 +25,7 @@
               <tr>
             </c:if>
             <td class="col">
-              <s:link beanclass="com.hk.web.action.BrandCatalogAction" class="bl">
+              <s:link beanclass="com.hk.web.action.core.catalog.BrandCatalogAction" class="bl">
                 ${brand}
                 <s:param name="brand" value="${brand}"/>
                 <s:param name="topLevelCategory" value="${category.name}"/>
