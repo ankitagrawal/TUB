@@ -24,6 +24,7 @@ import net.sourceforge.stripes.validation.Validate;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -82,6 +83,7 @@ public class GRNAction extends BasePaginatedAction {
     private SkuService              skuService;
 
     // @Named(Keys.Env.adminDownloads)
+    @Value("#{hkEnvProps['adminDownloads']}")
     String                          adminDownloads;
 
     private File                    xlsFile;

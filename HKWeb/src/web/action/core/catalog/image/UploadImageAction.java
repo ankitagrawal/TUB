@@ -2,8 +2,6 @@ package web.action.core.catalog.image;
 
 import java.io.File;
 
-import org.springframework.stereotype.Component;
-
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.FileBean;
@@ -12,10 +10,12 @@ import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.Validate;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.EnumS3UploadStatus;
-import com.hk.constants.core.Keys;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.util.ImageManager;
@@ -29,6 +29,7 @@ public class UploadImageAction extends BaseAction {
   ProductVariant productVariant;
 
    //@Named(Keys.Env.adminUploads) 
+  @Value("#{hkEnvProps['adminUploads']}")
    String adminUploadsPath;
 
    ImageManager imageManager;

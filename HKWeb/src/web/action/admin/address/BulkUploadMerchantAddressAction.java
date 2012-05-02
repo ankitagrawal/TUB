@@ -12,6 +12,7 @@ import net.sourceforge.stripes.validation.Validate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import web.action.admin.catalog.ParseExcelAction;
@@ -37,6 +38,7 @@ public class BulkUploadMerchantAddressAction extends BaseAction {
    ManufacturerDao manufacturerDao;
 
    //@Named(Keys.Env.adminUploads) 
+   @Value("#{hkEnvProps['adminUploads']}")
    String adminUploadsPath;
 
   @Validate(required = true)

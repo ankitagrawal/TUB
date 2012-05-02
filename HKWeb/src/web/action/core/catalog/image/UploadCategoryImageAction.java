@@ -12,13 +12,12 @@ import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.controller.StripesFilter;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.EnumS3UploadStatus;
-import com.hk.constants.core.Keys;
 import com.hk.dao.catalog.category.CategoryDao;
 import com.hk.dao.catalog.category.CategoryImageDao;
 import com.hk.domain.catalog.category.Category;
@@ -45,6 +44,7 @@ public class UploadCategoryImageAction extends BaseAction {
 
 	
 	//@Named(Keys.Env.adminUploads)
+	@Value("#{hkEnvProps['adminUploads']}")
 	String adminUploadsPath;
 
 	

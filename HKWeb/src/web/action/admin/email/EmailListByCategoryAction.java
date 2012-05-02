@@ -10,13 +10,13 @@ import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.validation.Validate;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.manager.MailingListManager;
 import com.hk.constants.core.RoleConstants;
-import com.hk.dao.catalog.category.CategoryDao;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.user.User;
 import com.hk.service.CategoryService;
@@ -38,6 +38,7 @@ public class EmailListByCategoryAction extends BaseAction {
 
     
     // @Named(Keys.Env.mailingListDir)
+    @Value("#{hkEnvProps['mailingListDir']}")
     String             mailingListDirPath;
 
     @DefaultHandler

@@ -12,6 +12,7 @@ import net.sourceforge.stripes.validation.Validate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -38,6 +39,7 @@ public class ParseCourierCollectionChargeExcelAction extends BaseAction {
     XslParser             xslParser;
 
     // @Named(Keys.Env.adminUploads)
+    @Value("#{hkEnvProps['adminUploads']}")
     String                adminUploadsPath;
 
     EmailManager          emailManager;

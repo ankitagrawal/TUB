@@ -22,6 +22,7 @@ import net.sourceforge.stripes.action.SimpleMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -55,6 +56,7 @@ public class CourierServiceInfoAction extends BaseAction {
 
   
   //@Named(Keys.Env.adminDownloads)
+  @Value("#{hkEnvProps['adminDownloads']}")
   String adminDownloadsPath;
 
   Courier courier;

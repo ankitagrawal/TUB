@@ -8,6 +8,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -62,13 +63,18 @@ public class PaymentManager {
     private PaymentService         paymentService;
 
     // @Named(Keys.Env.cashBackPercentage)
+    @Value("#{hkEnvProps['cashBackPercentage']}")
     private Double                 cashBackPercentage;
     // @Named(Keys.Env.cashBackLimit)
+    @Value("#{hkEnvProps['cashBackLimit']}")
     private Double                 cashBackLimit;
     // @Named(Keys.Env.defaultGateway)
+    @Value("#{hkEnvProps['defaultGateway']}")
     private Long                   defaultGateway;
 
+    @Autowired
     private PaymentDao             paymentDao;
+    @Autowired
     private PaymentStatusDao       paymentStatusDao;
 
     /*@Autowired

@@ -9,10 +9,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
+
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.akube.framework.util.BaseUtils;
 import com.akube.framework.util.DateUtils;
 import com.hk.admin.dto.DisplayTicketHistoryDto;
 import com.hk.admin.dto.marketing.GoogleBannedWordDto;
@@ -41,23 +45,51 @@ import com.hk.util.NotifyMeListUtil;
 @Component
 public class AdminEmailManager {
 
-    public static final String GOOGLE_BANNED_WORD_LIST = "googleBannedWordList";
+    public static final String GOOGLE_BANNED_WORD_LIST       = "googleBannedWordList";
 
-    private final Set<String>  hkAdminEmails = null;
-    private final Set<String>  hkReportAdminEmails= null;
+    private  Set<String>  hkAdminEmails                 = null;
+    private  Set<String>  hkReportAdminEmails           = null;
+    private  Set<String>  babyAdminEmails               = null;
+    private  Set<String>  beautyAdminEmails             = null;
+    private  Set<String>  diabetesAdminEmails           = null;
+    private  Set<String>  eyeAdminEmails                = null;
+    private  Set<String>  homeDevicesAdminEmails        = null;
+    private  Set<String>  nutritionAdminEmails          = null;
+    private  Set<String>  personalCareAdminEmails       = null;
+    private  Set<String>  logisticsAdminEmails          = null;
+    private  Set<String>  sportsAdminEmails             = null;
+    private  Set<String>  servicesAdminEmails           = null;
+    private  Set<String>  marketingAdminEmails          = null;
+    private  Set<String>  categoryHealthkartList        = null;
 
-    private final Set<String>  babyAdminEmails= null;
-    private final Set<String>  beautyAdminEmails= null;
-    private final Set<String>  diabetesAdminEmails= null;
-    private final Set<String>  eyeAdminEmails= null;
-    private final Set<String>  homeDevicesAdminEmails= null;
-    private final Set<String>  nutritionAdminEmails= null;
-    private final Set<String>  personalCareAdminEmails= null;
-    private final Set<String>  logisticsAdminEmails= null;
-    private final Set<String>  sportsAdminEmails= null;
-    private final Set<String>  servicesAdminEmails= null;
-    private final Set<String>  marketingAdminEmails= null;
-    private final Set<String>  categoryHealthkartList= null;
+    @Value("#{hkEnvProps['hkAdminEmails']}")
+    private String             hkAdminEmailsString;
+    @Value("#{hkEnvProps['hkReportAdminEmails']}")
+    private String             hkReportAdminEmailsString     = null;
+    @Value("#{hkEnvProps['babyAdminEmails']}")
+    private String             babyAdminEmailsString         = null;
+    @Value("#{hkEnvProps['beautyAdminEmails']}")
+    private String             beautyAdminEmailsString       = null;
+    @Value("#{hkEnvProps['diabetesAdminEmails']}")
+    private String             diabetesAdminEmailsString     = null;
+    @Value("#{hkEnvProps['eyeAdminEmails']}")
+    private String             eyeAdminEmailsString          = null;
+    @Value("#{hkEnvProps['homeDevicesAdminEmails']}")
+    private String             homeDevicesAdminEmailsString  = null;
+    @Value("#{hkEnvProps['nutritionAdminEmails']}")
+    private String             nutritionAdminEmailsString    = null;
+    @Value("#{hkEnvProps['personalCareAdminEmails']}")
+    private String             personalCareAdminEmailsString = null;
+    @Value("#{hkEnvProps['logisticsAdminEmails']}")
+    private String             logisticsAdminEmailsString    = null;
+    @Value("#{hkEnvProps['sportsAdminEmails']}")
+    private String             sportsAdminEmailsString       = null;
+    @Value("#{hkEnvProps['servicesAdminEmails']}")
+    private String             servicesAdminEmailsString     = null;
+    @Value("#{hkEnvProps['marketingAdminEmails']}")
+    private String             marketingAdminEmailsString    = null;
+    @Value("#{hkEnvProps['categoryHealthkart']}")
+    private String             categoryHealthkartListString  = null;
 
     @Autowired
     private EmailService       emailService;
@@ -74,37 +106,46 @@ public class AdminEmailManager {
     @Autowired
     private LinkManager        linkManager;
 
-    /*private AdminEmailManager(EmailService emailService, // @Named(Keys.Env.hkAdminEmails)
-            String hkAdminEmails, // @Named(Keys.Env.hkReportAdminEmails)
-            String hkReportAdminEmails, // @Named(Keys.Env.babyAdminEmails)
-            String babyAdminEmails, // @Named(Keys.Env.beautyAdminEmails)
-            String beautyAdminEmails, // @Named(Keys.Env.diabetesAdminEmails)
-            String diabetesAdminEmails, // @Named(Keys.Env.eyeAdminEmails)
-            String eyeAdminEmails, // @Named(Keys.Env.homeDevicesAdminEmails)
-            String homeDevicesAdminEmails, // @Named(Keys.Env.nutritionAdminEmails)
-            String nutritionAdminEmails, // @Named(Keys.Env.personalCareAdminEmails)
-            String personalCareAdminEmails, // @Named(Keys.Env.sportsAdminEmails)
-            String sportsAdminEmails, // @Named(Keys.Env.servicesAdminEmails)
-            String servicesAdminEmails, // @Named(Keys.Env.logisticsAdminEmails)
-            String logisticsAdminEmails, // @Named(Keys.Env.marketingAdminEmails)
-            String marketingAdminEmails, // @Named(Keys.Env.categoryHealthkart)
-            String categoryHealthkartList) {
-        this.emailService = emailService;
-        this.hkReportAdminEmails = BaseUtils.split(hkReportAdminEmails, ",");
-        this.hkAdminEmails = BaseUtils.split(hkAdminEmails, ",");
-        this.babyAdminEmails = BaseUtils.split(babyAdminEmails, ",");
-        this.beautyAdminEmails = BaseUtils.split(beautyAdminEmails, ",");
-        this.diabetesAdminEmails = BaseUtils.split(diabetesAdminEmails, ",");
-        this.eyeAdminEmails = BaseUtils.split(eyeAdminEmails, ",");
-        this.homeDevicesAdminEmails = BaseUtils.split(homeDevicesAdminEmails, ",");
-        this.nutritionAdminEmails = BaseUtils.split(nutritionAdminEmails, ",");
-        this.personalCareAdminEmails = BaseUtils.split(personalCareAdminEmails, ",");
-        this.logisticsAdminEmails = BaseUtils.split(logisticsAdminEmails, ",");
-        this.sportsAdminEmails = BaseUtils.split(sportsAdminEmails, ",");
-        this.servicesAdminEmails = BaseUtils.split(servicesAdminEmails, ",");
-        this.marketingAdminEmails = BaseUtils.split(marketingAdminEmails, ",");
-        this.categoryHealthkartList = BaseUtils.split(categoryHealthkartList, ",");
-    }*/
+    @PostConstruct
+    public void postConstruction() {
+        this.hkReportAdminEmails = BaseUtils.split(hkReportAdminEmailsString, ",");
+        this.hkAdminEmails = BaseUtils.split(hkAdminEmailsString, ",");
+        this.babyAdminEmails = BaseUtils.split(babyAdminEmailsString, ",");
+        this.beautyAdminEmails = BaseUtils.split(beautyAdminEmailsString, ",");
+        this.diabetesAdminEmails = BaseUtils.split(diabetesAdminEmailsString, ",");
+        this.eyeAdminEmails = BaseUtils.split(eyeAdminEmailsString, ",");
+        this.homeDevicesAdminEmails = BaseUtils.split(homeDevicesAdminEmailsString, ",");
+        this.nutritionAdminEmails = BaseUtils.split(nutritionAdminEmailsString, ",");
+        this.personalCareAdminEmails = BaseUtils.split(personalCareAdminEmailsString, ",");
+        this.logisticsAdminEmails = BaseUtils.split(logisticsAdminEmailsString, ",");
+        this.sportsAdminEmails = BaseUtils.split(sportsAdminEmailsString, ",");
+        this.servicesAdminEmails = BaseUtils.split(servicesAdminEmailsString, ",");
+        this.marketingAdminEmails = BaseUtils.split(marketingAdminEmailsString, ",");
+        this.categoryHealthkartList = BaseUtils.split(categoryHealthkartListString, ",");
+    }
+
+    /*
+     * private AdminEmailManager(EmailService emailService, // @Named(Keys.Env.hkAdminEmails) String hkAdminEmails, //
+     * @Named(Keys.Env.hkReportAdminEmails) String hkReportAdminEmails, // @Named(Keys.Env.babyAdminEmails) String
+     * babyAdminEmails, // @Named(Keys.Env.beautyAdminEmails) String beautyAdminEmails, //
+     * @Named(Keys.Env.diabetesAdminEmails) String diabetesAdminEmails, // @Named(Keys.Env.eyeAdminEmails) String
+     * eyeAdminEmails, // @Named(Keys.Env.homeDevicesAdminEmails) String homeDevicesAdminEmails, //
+     * @Named(Keys.Env.nutritionAdminEmails) String nutritionAdminEmails, // @Named(Keys.Env.personalCareAdminEmails)
+     * String personalCareAdminEmails, // @Named(Keys.Env.sportsAdminEmails) String sportsAdminEmails, //
+     * @Named(Keys.Env.servicesAdminEmails) String servicesAdminEmails, // @Named(Keys.Env.logisticsAdminEmails) String
+     * logisticsAdminEmails, // @Named(Keys.Env.marketingAdminEmails) String marketingAdminEmails, //
+     * @Named(Keys.Env.categoryHealthkart) String categoryHealthkartList) { this.emailService = emailService;
+     * this.hkReportAdminEmails = BaseUtils.split(hkReportAdminEmails, ","); this.hkAdminEmails =
+     * BaseUtils.split(hkAdminEmails, ","); this.babyAdminEmails = BaseUtils.split(babyAdminEmails, ",");
+     * this.beautyAdminEmails = BaseUtils.split(beautyAdminEmails, ","); this.diabetesAdminEmails =
+     * BaseUtils.split(diabetesAdminEmails, ","); this.eyeAdminEmails = BaseUtils.split(eyeAdminEmails, ",");
+     * this.homeDevicesAdminEmails = BaseUtils.split(homeDevicesAdminEmails, ","); this.nutritionAdminEmails =
+     * BaseUtils.split(nutritionAdminEmails, ","); this.personalCareAdminEmails =
+     * BaseUtils.split(personalCareAdminEmails, ","); this.logisticsAdminEmails = BaseUtils.split(logisticsAdminEmails,
+     * ","); this.sportsAdminEmails = BaseUtils.split(sportsAdminEmails, ","); this.servicesAdminEmails =
+     * BaseUtils.split(servicesAdminEmails, ","); this.marketingAdminEmails = BaseUtils.split(marketingAdminEmails,
+     * ","); this.categoryHealthkartList = BaseUtils.split(categoryHealthkartList, ","); }
+     */
 
     @SuppressWarnings("unchecked")
     public boolean sendCampaignMails(Set<User> emailersList, EmailCampaign emailCampaign, String xsmtpapi) {
@@ -178,7 +219,7 @@ public class AdminEmailManager {
         }
         return true;
     }
-    
+
     public boolean sendGRNEmail(GoodsReceivedNote grn) {
         HashMap valuesMap = new HashMap();
         valuesMap.put("grn", grn);

@@ -8,6 +8,7 @@ import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.hk.service.EmailService;
@@ -20,11 +21,16 @@ public class EmailServiceImpl implements EmailService {
 
     private static Logger   logger = LoggerFactory.getLogger(EmailService.class);
 
-    final FreeMarkerService freeMarkerService = null;
-    final String            noReplyEmail = "";
-    final String            noReplyName = "";
-    final String            contactEmail = "";
-    final String            contactName = "";
+    
+    FreeMarkerService freeMarkerService ;
+    @Value("#{hkEnvProps['hkNoReplyEmail']}")
+    private String            noReplyEmail;
+    @Value("#{hkEnvProps['hkNoReplyName']}")
+    private String            noReplyName;
+    @Value("#{hkEnvProps['hkContactEmail']}")
+    private String            contactEmail;
+    @Value("#{hkEnvProps['hkContactName']}")
+    private String            contactName;
 
     
     //TODO: rewrite

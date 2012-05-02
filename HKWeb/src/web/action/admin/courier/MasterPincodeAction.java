@@ -22,9 +22,9 @@ import net.sourceforge.stripes.action.SimpleMessage;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
-
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.impl.dao.courier.CourierServiceInfoDao;
@@ -46,9 +46,11 @@ public class MasterPincodeAction extends BaseAction {
     XslGenerator                     xslGenerator;
 
     // @Named(Keys.Env.adminDownloads)
+    @Value("#{hkEnvProps['adminDownloads']}")
     String                           adminDownloadsPath;
 
     // @Named(Keys.Env.adminUploads)
+    @Value("#{hkEnvProps['adminUploads']}")
     String                           adminUploadsPath;
 
     XslParser                        xslParser;

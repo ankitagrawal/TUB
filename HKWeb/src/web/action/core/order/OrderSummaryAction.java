@@ -10,6 +10,7 @@ import net.sourceforge.stripes.action.Resolution;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 import org.stripesstuff.plugin.session.Session;
@@ -72,15 +73,19 @@ public class OrderSummaryAction extends BaseAction {
   PaymentModeDao paymentModeDao;
   
   //@Named(Keys.Env.codCharges)
+  @Value("#{hkEnvProps['codCharges']}")
   private Double codCharges;
   
   //@Named(Keys.Env.codFreeAfter)
+  @Value("#{hkEnvProps['codFreeAfter']}")
   private Double codFreeAfter;
   
   //@Named(Keys.Env.codMinAmount)
+  @Value("#{hkEnvProps['codMinAmount']}")
   private Double codMinAmount;
   
   //@Named(Keys.Env.codMaxAmount)
+  @Value("#{hkEnvProps['codMaxAmount']}")
   private Double codMaxAmount;
 
   @DefaultHandler

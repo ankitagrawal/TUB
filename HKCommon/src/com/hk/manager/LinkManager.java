@@ -2,6 +2,7 @@ package com.hk.manager;
 
 import java.util.Locale;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import net.sourceforge.stripes.action.RedirectResolution;
@@ -14,13 +15,15 @@ import com.hk.domain.email.EmailRecepient;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.User;
+import com.hk.web.AppConstants;
 import com.hk.web.filter.WebContext;
 import com.sun.istack.internal.Nullable;
 @Component
 public class LinkManager {
 
    //@Named(Keys.App.contextPath)
-   String contextPath;
+   /* @Value("#{hkEnvProps['contextPath']}")
+   String contextPath;*/
 
   public String getAuthRedirectUrl() {
     RedirectResolution redirectResolution = new RedirectResolution("AuthRequiredAction.class");
@@ -39,6 +42,7 @@ public class LinkManager {
     if (WebContext.getRequest() != null && WebContext.getResponse() != null) {
       return SslUtil.encodeUrlFullForced(WebContext.getRequest(), WebContext.getResponse(), url, null);
     }
+    String contextPath = AppConstants.contextPath;
     return SslUtil.encodeUrlFullForced(WebContext.getRequest(), WebContext.getResponse(), url, contextPath);
   }
 

@@ -23,6 +23,7 @@ import net.sourceforge.stripes.validation.SimpleError;
 import net.sourceforge.stripes.validation.ValidationMethod;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -87,6 +88,7 @@ public class InventoryHealthStatusAction extends BasePaginatedAction {
     private ProductService        productService;
 
     // @Named(Keys.Env.adminDownloads)
+    @Value("#{hkEnvProps['adminDownloads']}")
     String                        adminDownloadsPath;
 
     private SimpleDateFormat      sdf            = new SimpleDateFormat("yyyy-MM-dd");

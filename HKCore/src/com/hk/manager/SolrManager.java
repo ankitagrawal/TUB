@@ -19,6 +19,7 @@ import org.apache.solr.common.SolrDocumentList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.akube.framework.dao.Page;
 import com.hk.constants.catalog.SolrSchemaConstants;
@@ -37,6 +38,7 @@ public class SolrManager {
     private static Logger logger = LoggerFactory.getLogger(SolrManager.class);
 
     // @Named(Keys.Env.solrUrl)
+    @Value("#{hkEnvProps['solrUrl']}")
     String                solrUrl;
 
     @Autowired

@@ -11,12 +11,14 @@ import org.krysalis.barcode4j.output.bitmap.BitmapCanvasProvider;
 import org.krysalis.barcode4j.tools.UnitConv;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 public class BarcodeGenerator {
 
   
   //@Named(Keys.Env.barcodeDir)
+    @Value("#{hkEnvProps['barcodeDir']}")
   String barcodeDir;
 
   public static Logger logger = LoggerFactory.getLogger(BarcodeGenerator.class);

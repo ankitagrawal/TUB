@@ -8,6 +8,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -97,12 +98,15 @@ public class OrderManager {
     private BaseDao                baseDao;
 
     // @Named(Keys.Env.codCharges)
+    @Value("#{hkEnvProps['codCharges']}")
     private Double                 codCharges;
 
     // @Named(Keys.Env.codFreeAfter)
+    @Value("#{hkEnvProps['codFreeAfter']}")
     private Double                 codFreeAfter;
 
     // @Named(Keys.Env.adminDownloads)
+    @Value("#{hkEnvProps['adminDownloads']}")
     String                         adminDownloadsPath;
 
     Affiliate                      affiliate;

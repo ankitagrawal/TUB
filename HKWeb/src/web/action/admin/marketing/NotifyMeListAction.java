@@ -28,6 +28,7 @@ import net.sourceforge.stripes.validation.ValidationErrors;
 import net.sourceforge.stripes.validation.ValidationMethod;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -70,6 +71,7 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
     File                      xlsFile;
 
     // @Named(Keys.Env.adminDownloads)
+    @Value("#{hkEnvProps['adminDownloads']}")
     String                    adminDownloads;
 
     private Date              startDate;

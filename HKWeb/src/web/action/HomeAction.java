@@ -21,6 +21,7 @@ import com.hk.dao.content.PrimaryCategoryHeadingDao;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.category.CategoryImage;
 import com.hk.domain.content.PrimaryCategoryHeading;
+import com.hk.helper.MenuHelper;
 import com.hk.manager.UserManager;
 import com.hk.service.CategoryService;
 
@@ -38,16 +39,20 @@ public class HomeAction extends BaseAction {
     private CategoryService      categoryService;
     @Autowired
     UserManager                  userManager;
+    
+    @Autowired
+    MenuHelper menuHelper;
 
     @Autowired
     CategoryImageDao             categoryImageDao;
     @Autowired
     PrimaryCategoryHeadingDao    primaryCategoryHeadingDao;
     
-    @Value("#{envProps['hkNoReplyEmail']}")
-    String testProperty;
+    @Value("#{hkEnvProps['hkNoReplyEmail']}")
+    private String testProperty;
 
     public Resolution pre() {
+        menuHelper.postConstruction();
         // IN CASE OF REVERT COMMENT EVERYTHING EXCEPT THE FORWARD RESOLUTION TO HOME.JSP AND ALSO REPLACE THE DYNAMIC
         // HOME.JSP WITH THE HARD CODED ONE
         System.out.println("1");

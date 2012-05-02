@@ -4,35 +4,59 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.ServletContext;
+
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.ServletContextAware;
 
 import com.hk.domain.catalog.product.Product;
 import com.hk.dto.menu.MenuNode;
 import com.hk.util.MenuParser;
+import com.hk.web.AppConstants;
 
 @Component
-public class MenuHelper {
+public class MenuHelper implements ServletContextAware{
 
-  final String appBasePath ="/";
+  //@Value("#{hkEnvProps['appBasePath']}")
+  private String appBasePath;
   File menuFile;
 
   List<MenuNode> menuNodes;
   List<MenuNode> menuNodesFlat;
+  
 
   
-  /*public MenuHelper(//@Na.appBasePath) 
-          String appbasePath) {
-    this.appBasePath = appbasePath;
-    menuFile = new File(appbasePath + "menu.txt");
-    initMenuNodes();
-  }*/
-  
-  public MenuHelper() {
-    menuFile = new File("D:/eclipse_wrk/rewrite/HKWeb/view/menu.txt");
-    initMenuNodes();
+  public void postConstruction() {
+      System.out.println("abxxxxxxxxxxxxxxx");
+     /* this.appBasePath = AppConstants.appBasePath;
+      menuFile = new File(appBasePath + "menu.txt");
+      initMenuNodes();*/
   }
+  
+  public MenuHelper(){
 
-  private void initMenuNodes() {
+  }
+  
+  @Override
+  public void setServletContext(ServletContext servletContext) {
+      this.appBasePath = servletContext.getRealPath("/");
+      menuFile = new File(appBasePath + "menu.txt");
+      initMenuNodes();
+  }
+  
+  /*
+     * public MenuHelper() { menuFile = new File("D:/eclipse_wrk/rewrite/HKWeb/view/menu.txt"); initMenuNodes(); }
+     */
+
+ /* public MenuHelper() {
+      this.appBasePath = AppConstants.appBasePath;
+      menuFile = new File(appBasePath + "menu.txt");
+      initMenuNodes();
+  }*/
+
+
+
+private void initMenuNodes() {
     menuNodes = MenuParser.parseMenu(menuFile);
     menuNodesFlat = new ArrayList<MenuNode>();
 
@@ -170,5 +194,8 @@ public class MenuHelper {
     }
     return categoryNames;
   }
+
+
+
 
 }

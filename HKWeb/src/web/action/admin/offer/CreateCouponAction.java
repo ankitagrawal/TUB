@@ -28,6 +28,7 @@ import net.sourceforge.stripes.validation.Validate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -55,6 +56,7 @@ public class CreateCouponAction extends BaseAction {
     private FanCouponManager fanCouponManager;
 
     // @Named(Keys.Env.adminDownloads)
+    @Value("#{hkEnvProps['adminDownloads']}")
     private String           adminDownloads;
 
     @Validate(required = true)
@@ -76,6 +78,7 @@ public class CreateCouponAction extends BaseAction {
 
     private String           endPart;
     // @Named(Keys.Env.adminUploads)
+    @Value("#{hkEnvProps['adminUploads']}")
     String                   adminUploadsPath;
     FileBean                 fileBean;
 

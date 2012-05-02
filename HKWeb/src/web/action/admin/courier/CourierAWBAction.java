@@ -20,6 +20,7 @@ import net.sourceforge.stripes.action.SimpleMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -34,33 +35,28 @@ import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.util.XslGenerator;
 
 /**
- * Created by IntelliJ IDEA.
- * User: user
- * Date: Dec 27, 2011
- * Time: 3:04:14 PM
- * To change this template use File | Settings | File Templates.
+ * Created by IntelliJ IDEA. User: user Date: Dec 27, 2011 Time: 3:04:14 PM To change this template use File | Settings |
+ * File Templates.
  */
 @Component
-public class CourierAWBAction extends BaseAction{
+public class CourierAWBAction extends BaseAction {
     private static Logger logger = LoggerFactory.getLogger(CourierServiceInfoAction.class);
 
-      XslGenerator xslGenerator;
-      CourierServiceInfoDao courierServiceInfoDao;
+    XslGenerator          xslGenerator;
+    CourierServiceInfoDao courierServiceInfoDao;
 
-    
-    //@Named(Keys.Env.adminDownloads)
-    String adminDownloadsPath;
+    // @Named(Keys.Env.adminDownloads)
+    @Value("#{hkEnvProps['adminDownloads']}")
+    String                adminDownloadsPath;
 
-    Courier courier;
+    Courier               courier;
 
-    
-    //@Named(Keys.Env.adminUploads)
-    String adminUploadsPath;
+    // @Named(Keys.Env.adminUploads)
+    String                adminUploadsPath;
 
-    
-    XslParser xslParser;
+    XslParser             xslParser;
 
-    FileBean fileBean;
+    FileBean              fileBean;
 
     public void setFileBean(FileBean fileBean) {
         this.fileBean = fileBean;
@@ -68,12 +64,12 @@ public class CourierAWBAction extends BaseAction{
 
     @DefaultHandler
     @DontValidate
-    @Secure(hasAnyPermissions = {PermissionConstants.VIEW_COURIER_INFO}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = { PermissionConstants.VIEW_COURIER_INFO }, authActionBean = AdminPermissionAction.class)
     public Resolution pre() {
         return new ForwardResolution("/pages/admin/updateCourierAWB.jsp");
     }
 
-    @Secure(hasAnyPermissions = {PermissionConstants.VIEW_COURIER_INFO}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = { PermissionConstants.VIEW_COURIER_INFO }, authActionBean = AdminPermissionAction.class)
     public Resolution generateCourierAWBExcel() throws Exception {
         String courierName = "All";
         List<CourierServiceInfo> courierServiceInfoList = new ArrayList<CourierServiceInfo>();
@@ -108,34 +104,25 @@ public class CourierAWBAction extends BaseAction{
         };
     }
 
-    @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_COURIER_INFO}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_COURIER_INFO }, authActionBean = AdminPermissionAction.class)
     public Resolution uploadCourierAWBExcel() throws Exception {
         String excelFilePath = adminUploadsPath + "/courierFiles/" + System.currentTimeMillis() + ".xls";
         File excelFile = new File(excelFilePath);
         excelFile.getParentFile().mkdirs();
         fileBean.save(excelFile);
         CourierServiceInfo tmpObj = null;
-        /*try {
-          Set<CourierServiceInfo> courierServiceInfoSet = xslParser.readCourierServiceInfoList(excelFile);
-          for (CourierServiceInfo courierServiceInfo : courierServiceInfoSet) {
-            tmpObj = courierServiceInfo;
-            CourierServiceInfo tmpObj2 = courierServiceInfoDao.findByPincodeAndCourier(courierServiceInfo.getPincode(), courierServiceInfo.getCourier());
-            if (tmpObj2 != null) {
-              if (courierServiceInfo.isDelete()) {
-                courierServiceInfoDao.remove(tmpObj2.getId());
-              } else {
-                tmpObj2.setCodAvailable(courierServiceInfo.isCodAvailable());
-                courierServiceInfoDao.save(tmpObj2);
-              }
-            } else {
-              courierServiceInfoDao.save(courierServiceInfo);
-            }
-          }
-        } catch (Exception e) {
-          logger.error("Exception while reading excel sheet.", e);
-          addRedirectAlertMessage(new SimpleMessage("Upload failed for -  " + tmpObj.getPincode() + "; length - " + tmpObj.getPincode().length()));
-          return new ForwardResolution("/pages/admin/updateCourierServiceInfo.jsp");
-        }*/
+        /*
+         * try { Set<CourierServiceInfo> courierServiceInfoSet = xslParser.readCourierServiceInfoList(excelFile); for
+         * (CourierServiceInfo courierServiceInfo : courierServiceInfoSet) { tmpObj = courierServiceInfo;
+         * CourierServiceInfo tmpObj2 = courierServiceInfoDao.findByPincodeAndCourier(courierServiceInfo.getPincode(),
+         * courierServiceInfo.getCourier()); if (tmpObj2 != null) { if (courierServiceInfo.isDelete()) {
+         * courierServiceInfoDao.remove(tmpObj2.getId()); } else {
+         * tmpObj2.setCodAvailable(courierServiceInfo.isCodAvailable()); courierServiceInfoDao.save(tmpObj2); } } else {
+         * courierServiceInfoDao.save(courierServiceInfo); } } } catch (Exception e) { logger.error("Exception while
+         * reading excel sheet.", e); addRedirectAlertMessage(new SimpleMessage("Upload failed for - " +
+         * tmpObj.getPincode() + "; length - " + tmpObj.getPincode().length())); return new
+         * ForwardResolution("/pages/admin/updateCourierServiceInfo.jsp"); }
+         */
 
         excelFile.delete();
         addRedirectAlertMessage(new SimpleMessage("Database Updated"));

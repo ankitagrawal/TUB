@@ -27,6 +27,7 @@ import net.sourceforge.stripes.validation.Validate;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -95,15 +96,19 @@ public class InventoryCheckinAction extends BaseAction {
     File                          printBarcode;
 
     // @Named (Keys.Env.adminUploads)
+    @Value("#{hkEnvProps['adminUploads']}")
     String                        adminUploadsPath;
 
     // @Named (Keys.Env.adminDownloads)
+    @Value("#{hkEnvProps['adminDownloads']}")
     String                        adminDownloadsPath;
 
     // @Named (Keys.Env.barcodeGurgaon)
+    @Value("#{hkEnvProps['barcodeGurgaon']}")
     String                        barcodeGurgaon;
 
     // @Named (Keys.Env.barcodeMumbai)
+    @Value("#{hkEnvProps['barcodeMumbai']}")
     String                        barcodeMumbai;
 
     @Validate(required = true, on = "parse")

@@ -9,6 +9,7 @@
 		<fileset file="${lib.root.dir}/spring/org.springframework.beans-3.0.2.RELEASE.jar" />
 		<fileset file="${lib.root.dir}/spring/org.springframework.context-3.0.2.RELEASE.jar" />
 		<fileset file="${lib.root.dir}/spring/org.springframework.orm-3.0.2.RELEASE.jar" />
+		<fileset file="${lib.root.dir}/spring/org.springframework.web-3.0.2.RELEASE.jar" />
 		<fileset file="${lib.root.dir}/hibernate/hibernate-core-3.3.1.GA.jar" />
 		<fileset file="${lib.root.dir}/logger/slf4j-api-1.5.10.jar" />
 		<fileset file="${lib.root.dir}/thirdParty/joda-time-1.6.jar" />

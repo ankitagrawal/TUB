@@ -8,6 +8,7 @@ import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.validation.Validate;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -28,6 +29,7 @@ public class ReconciliationAction extends BaseAction {
    ReconciliationStatusDao reconciliationStatusDao;
 
    //@Named(Keys.Env.adminUploads) 
+   @Value("#{hkEnvProps['adminUploads']}")
    String adminUploadsPath;
 
   @Validate(required = true)

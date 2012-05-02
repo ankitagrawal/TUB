@@ -6,9 +6,9 @@ import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.Validate;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
-
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
@@ -38,9 +38,11 @@ public class CodPaymentReceiveAction extends BaseAction {
     private PaymentManager paymentManager;
 
     // @Named(Keys.Env.codMinAmount)
+    @Value("#{hkEnvProps['codMinAmount']}")
     private Double         codMinAmount;
 
     // @Named(Keys.Env.codMaxAmount)
+    @Value("#{hkEnvProps['codMaxAmount']}")
     private Double         codMaxAmount;
 
     @Validate(required = true)

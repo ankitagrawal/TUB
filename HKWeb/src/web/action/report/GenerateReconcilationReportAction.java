@@ -18,6 +18,7 @@ import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -59,6 +60,7 @@ public class GenerateReconcilationReportAction extends BaseAction {
 
   
   //@Named (Keys.Env.adminDownloads)
+  @Value("#{hkEnvProps['adminUploads']}")
   String adminDownloadsPath;
    
   private Date startDate;

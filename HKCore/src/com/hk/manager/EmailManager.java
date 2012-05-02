@@ -8,12 +8,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
+
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.akube.framework.util.BaseUtils;
 import com.hk.constants.core.EnumEmailType;
 import com.hk.constants.email.EmailTemplateConstants;
 import com.hk.constants.order.EnumCartLineItemType;
@@ -53,21 +57,20 @@ public class EmailManager {
 
     private static Logger     logger                  = LoggerFactory.getLogger(EmailManager.class);
 
-    private final Set<String> hkAdminEmails           = null;
-    private final Set<String> hkReportAdminEmails     = null;
-
-    private final Set<String> babyAdminEmails         = null;
-    private final Set<String> beautyAdminEmails       = null;
-    private final Set<String> diabetesAdminEmails     = null;
-    private final Set<String> eyeAdminEmails          = null;
-    private final Set<String> homeDevicesAdminEmails  = null;
-    private final Set<String> nutritionAdminEmails    = null;
-    private final Set<String> personalCareAdminEmails = null;
-    private final Set<String> logisticsAdminEmails    = null;
-    private final Set<String> sportsAdminEmails       = null;
-    private final Set<String> servicesAdminEmails     = null;
-    private final Set<String> marketingAdminEmails    = null;
-    private final Set<String> categoryHealthkartList  = null;
+    private  Set<String>  hkAdminEmails                 = null;
+    private  Set<String>  hkReportAdminEmails           = null;
+    private  Set<String>  babyAdminEmails               = null;
+    private  Set<String>  beautyAdminEmails             = null;
+    private  Set<String>  diabetesAdminEmails           = null;
+    private  Set<String>  eyeAdminEmails                = null;
+    private  Set<String>  homeDevicesAdminEmails        = null;
+    private  Set<String>  nutritionAdminEmails          = null;
+    private  Set<String>  personalCareAdminEmails       = null;
+    private  Set<String>  logisticsAdminEmails          = null;
+    private  Set<String>  sportsAdminEmails             = null;
+    private  Set<String>  servicesAdminEmails           = null;
+    private  Set<String>  marketingAdminEmails          = null;
+    private  Set<String>  categoryHealthkartList        = null;
 
     @Autowired
     private BaseDao           baseDao;
@@ -91,6 +94,54 @@ public class EmailManager {
     @Autowired
     private UserService       userService;
 
+    
+    @Value("#{hkEnvProps['hkAdminEmails']}")
+    private String             hkAdminEmailsString;
+    @Value("#{hkEnvProps['hkReportAdminEmails']}")
+    private String             hkReportAdminEmailsString     = null;
+    @Value("#{hkEnvProps['babyAdminEmails']}")
+    private String             babyAdminEmailsString         = null;
+    @Value("#{hkEnvProps['beautyAdminEmails']}")
+    private String             beautyAdminEmailsString       = null;
+    @Value("#{hkEnvProps['diabetesAdminEmails']}")
+    private String             diabetesAdminEmailsString     = null;
+    @Value("#{hkEnvProps['eyeAdminEmails']}")
+    private String             eyeAdminEmailsString          = null;
+    @Value("#{hkEnvProps['homeDevicesAdminEmails']}")
+    private String             homeDevicesAdminEmailsString  = null;
+    @Value("#{hkEnvProps['nutritionAdminEmails']}")
+    private String             nutritionAdminEmailsString    = null;
+    @Value("#{hkEnvProps['personalCareAdminEmails']}")
+    private String             personalCareAdminEmailsString = null;
+    @Value("#{hkEnvProps['logisticsAdminEmails']}")
+    private String             logisticsAdminEmailsString    = null;
+    @Value("#{hkEnvProps['sportsAdminEmails']}")
+    private String             sportsAdminEmailsString       = null;
+    @Value("#{hkEnvProps['servicesAdminEmails']}")
+    private String             servicesAdminEmailsString     = null;
+    @Value("#{hkEnvProps['marketingAdminEmails']}")
+    private String             marketingAdminEmailsString    = null;
+    @Value("#{hkEnvProps['categoryHealthkart']}")
+    private String             categoryHealthkartListString  = null;
+    
+    @PostConstruct
+    public void postConstruction() {
+        this.hkReportAdminEmails = BaseUtils.split(hkReportAdminEmailsString, ",");
+        this.hkAdminEmails = BaseUtils.split(hkAdminEmailsString, ",");
+        this.babyAdminEmails = BaseUtils.split(babyAdminEmailsString, ",");
+        this.beautyAdminEmails = BaseUtils.split(beautyAdminEmailsString, ",");
+        this.diabetesAdminEmails = BaseUtils.split(diabetesAdminEmailsString, ",");
+        this.eyeAdminEmails = BaseUtils.split(eyeAdminEmailsString, ",");
+        this.homeDevicesAdminEmails = BaseUtils.split(homeDevicesAdminEmailsString, ",");
+        this.nutritionAdminEmails = BaseUtils.split(nutritionAdminEmailsString, ",");
+        this.personalCareAdminEmails = BaseUtils.split(personalCareAdminEmailsString, ",");
+        this.logisticsAdminEmails = BaseUtils.split(logisticsAdminEmailsString, ",");
+        this.sportsAdminEmails = BaseUtils.split(sportsAdminEmailsString, ",");
+        this.servicesAdminEmails = BaseUtils.split(servicesAdminEmailsString, ",");
+        this.marketingAdminEmails = BaseUtils.split(marketingAdminEmailsString, ",");
+        this.categoryHealthkartList = BaseUtils.split(categoryHealthkartListString, ",");
+    }
+    
     /*
      * @Autowired public EmailManager(EmailService emailService, // @Named(Keys.Env.hkAdminEmails) String hkAdminEmails, //
      * @Named(Keys.Env.hkReportAdminEmails) String hkReportAdminEmails, // @Named(Keys.Env.babyAdminEmails) String

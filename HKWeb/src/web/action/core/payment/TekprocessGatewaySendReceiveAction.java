@@ -9,6 +9,7 @@ import net.sourceforge.stripes.action.Resolution;
 import org.apache.commons.lang.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.CheckSumRequestBean;
@@ -32,6 +33,7 @@ public class TekprocessGatewaySendReceiveAction extends BasePaymentGatewaySendRe
    PaymentManager paymentManager;
    EmailManager emailManager;
    //@Named(Keys.App.environmentDir) 
+   @Value("#{hkEnvProps['environmentDir']}")
    String environmemtDir;
 
   protected TekprocessPaymentGatewayWrapper getPaymentGatewayWrapperFromTransactionData(BasePaymentGatewayWrapper.TransactionData data) {

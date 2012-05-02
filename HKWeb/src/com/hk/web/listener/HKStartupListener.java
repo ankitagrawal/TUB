@@ -1,9 +1,7 @@
 package com.hk.web.listener;
 
 import java.io.File;
-import java.util.Locale;
 import java.util.Properties;
-import java.util.TimeZone;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -11,8 +9,11 @@ import javax.servlet.ServletContextListener;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.akube.framework.util.BaseUtils;
+import com.hk.helper.MenuHelper;
+import com.hk.web.AppConstants;
 
 public class HKStartupListener implements ServletContextListener {
 
@@ -25,6 +26,7 @@ public class HKStartupListener implements ServletContextListener {
     public static String contextPath;
     public static String appBasePath;
     public static String environmentDir;
+    
 
     // private BatchProcessManager batchProcessManager;
 
@@ -33,6 +35,10 @@ public class HKStartupListener implements ServletContextListener {
     }
 
     public void contextInitialized(ServletContextEvent event) {
+        
+        AppConstants.contextPath = event.getServletContext().getContextPath();
+        AppConstants.appBasePath = event.getServletContext().getRealPath("/");
+        
         /*
          * This method is called when the servlet context is initialized(when the Web application is deployed). You can
          * initialize servlet context related data here.

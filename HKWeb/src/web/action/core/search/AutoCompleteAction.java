@@ -18,16 +18,15 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.TermsResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-
+import org.springframework.beans.factory.annotation.Value;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.constants.core.Keys;
 import com.hk.web.HealthkartResponse;
 
 @UrlBinding("/autocomplete-search")
 public class AutoCompleteAction extends BaseAction {
   // @Named(Keys.Env.solrUrl)
+    @Value("#{hkEnvProps['solrUrl']}")
   String solrUrl;
 
   private static Logger logger = LoggerFactory.getLogger(SearchAction.class);

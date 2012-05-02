@@ -3,16 +3,18 @@ package com.hk.service;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.servlet.ServletContext;
+
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.MessageSource;
+import org.springframework.web.context.ServletContextAware;
 
-
-
-public class ServiceLocatorFactory implements ApplicationContextAware {
+public class ServiceLocatorFactory implements ApplicationContextAware, ServletContextAware {
 
     private static ApplicationContext applicationContext;
+    private static ServletContext     servletContext;
 
     /**
      * Holds a class to object mapping. Yes it is synchronized. It needs to be. Note that charAt() is also synchronized,
@@ -34,6 +36,11 @@ public class ServiceLocatorFactory implements ApplicationContextAware {
      */
     public synchronized void setApplicationContext(ApplicationContext appContext) {
         applicationContext = appContext;
+    }
+
+    @Override
+    public void setServletContext(ServletContext servletContext) {
+        this.servletContext = servletContext;
     }
 
     /**
@@ -59,7 +66,7 @@ public class ServiceLocatorFactory implements ApplicationContextAware {
             int servicePackageLength = interfaceClass.getPackage().getName().length() + 1;
             StringBuffer serviceName = new StringBuffer(interfaceClass.getName().substring(servicePackageLength));
             serviceName.setCharAt(0, Character.toLowerCase(serviceName.charAt(0)));
-            serviceName.append("Impl");
+            // serviceName.append("Impl");
             cachedServiceName = serviceName.toString();
             nameMap.put(interfaceClass, cachedServiceName);
         }
@@ -87,11 +94,8 @@ public class ServiceLocatorFactory implements ApplicationContextAware {
         }
     }
 
-   
-
     public MessageSource getMessageSource() {
         return getApplicationContext();
     }
 
 }
-

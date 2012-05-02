@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.imaging.ImageUtils;
@@ -29,9 +30,11 @@ public class ImageManager {
     private static Logger      logger  = Logger.getLogger(ImageManager.class);
 
     // @Named(Keys.Env.accessKey)
+    @Value("#{hkEnvProps['awsAccessKey']}")
     String                     awsAccessKey;
 
     // @Named(Keys.Env.secretKey)
+    @Value("#{hkEnvProps['awsSecretKey']}")
     String                     awsSecretKey;
 
     ImageTagReader             imageTagReader;

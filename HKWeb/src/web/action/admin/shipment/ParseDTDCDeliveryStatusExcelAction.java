@@ -13,6 +13,7 @@ import net.sourceforge.stripes.validation.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -22,7 +23,6 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.manager.DeliveryStatusUpdateManager;
 import com.hk.admin.manager.ProductManager;
 import com.hk.admin.util.XslParser;
-import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.user.User;
 import com.hk.service.UserService;
@@ -59,6 +59,7 @@ public class ParseDTDCDeliveryStatusExcelAction extends BaseAction {
     private UserService                 userService;
 
     //@Named(Keys.Env.adminUploads)
+    @Value("#{hkEnvProps['adminUploads']}")
     String                              adminUploadsPath;
 
     String                              messagePostUpdation;

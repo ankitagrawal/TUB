@@ -14,6 +14,7 @@ import net.sourceforge.stripes.action.SimpleMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -46,9 +47,11 @@ public class ChangeDefaultCourierAction extends BaseAction {
     XslGenerator                        xslGenerator;
 
     // @Named(Keys.Env.adminDownloads)
+    @Value("#{hkEnvProps['adminDownloads']}")
     String                              adminDownloadsPath;
 
     // @Named(Keys.Env.adminUploads)
+    @Value("#{hkEnvProps['adminUploads']}")
     String                              adminUploadsPath;
 
     XslParser                           xslParser;

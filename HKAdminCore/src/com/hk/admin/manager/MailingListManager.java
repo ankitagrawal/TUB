@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.dao.Page;
@@ -24,6 +25,7 @@ public class MailingListManager {
     private CategoryService categoryService;
     
     // @Named(Keys.Env.mailingListDir)
+    @Value("#{hkEnvProps['mailingListDir']}")
     String         mailingListDirPath;
 
     public List<User> getUserList(Category category, int pageNo, int perPage) {
