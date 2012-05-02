@@ -10,8 +10,8 @@
 <s:layout-definition>
 
   <%
-    MenuHelper menuHelper = InjectorFactory.getInjector().getInstance(MenuHelper.class);
-    CategoryDao categoryDao = InjectorFactory.getInjector().getInstance(CategoryDao.class);
+    MenuHelper menuHelper = (MenuHelper)ServiceLocatorFactory.getService("MenuHelper");
+    CategoryDao categoryDao = (CategoryDao)ServiceLocatorFactory.getService("CategoryDao");
 
     String urlFragment = (String) pageContext.getAttribute("filterUrlFragment");
 
@@ -27,7 +27,7 @@
     // this is passed through an attribute in layout-render tag
     pageContext.setAttribute("filterUrlFragment", urlFragment);
 
-    Category category = categoryDao.find(menuNode.getSlug());
+    Category category = categoryDao.getCategoryByName(menuNode.getSlug());
     pageContext.setAttribute("filterCategory", category);
 
     String currentBrand = request.getParameter("brand");
@@ -39,7 +39,7 @@
     }
     Category secondaryCategory = null;
     if (menuNode.getParentNode() != null) {
-      secondaryCategory = categoryDao.find(menuNode.getParentNode().getSlug());
+      secondaryCategory = categoryDao.getCategoryByName(menuNode.getParentNode().getSlug());
     }
     if (secondaryCategory != null) {
       categoryNames.add(secondaryCategory.getName());

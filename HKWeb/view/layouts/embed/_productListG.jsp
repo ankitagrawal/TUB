@@ -2,8 +2,8 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.dao.catalog.product.ProductDao" %>
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
-<%@ page import="mhc.domain.Combo" %>
-<%@ page import="mhc.service.dao.ComboDao" %>
+<%@ page import="com.hk.domain.catalog.product.combo.Combo" %>
+<%@ page import="com.hk.dao.catalog.combo.ComboDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -11,13 +11,13 @@
 
 
   <%
-    ProductDao productDao = InjectorFactory.getInjector().getInstance(ProductDao.class);
+    ProductDao productDao = (ProductDao)ServiceLocatorFactory.getService("ProductDao");
     String product_productThumbId = (String) pageContext.getAttribute("productId");
-    Product product_productThumb = productDao.find(product_productThumbId);
+    Product product_productThumb = productDao.getProductById(product_productThumbId);
     pageContext.setAttribute("product", product_productThumb);
 
-    ComboDao comboDao = InjectorFactory.getInjector().getInstance(ComboDao.class);
-    Combo combo = comboDao.find(product_productThumbId);
+    ComboDao comboDao = (ComboDao)ServiceLocatorFactory.getService(ComboDao.class);
+    Combo combo = comboDao.get(Combo.class, product_productThumbId);
     pageContext.setAttribute("combo", combo);
   %>
 
