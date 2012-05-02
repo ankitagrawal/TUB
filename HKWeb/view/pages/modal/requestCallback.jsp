@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action..core.user.RequestCallbackAction" var="sdcActionBean" event="pre"/>
+<s:useActionBean beanclass="com.hk.web.action.core.user.RequestCallbackAction" var="sdcActionBean" event="pre"/>
 <s:layout-render name="/layouts/modal.jsp">
   <s:layout-component name="heading">
     Request Nutrition advice from experts
@@ -13,7 +13,7 @@
       <div style="display:none; background-color: #ffff99; padding: 5px;" id="sendCouponForm-messages" class="messages"></div>
 
       <div class='signup'>
-        <s:form beanclass="com.hk.web.action..core.user.RequestCallbackAction" id="sendCouponForm">
+        <s:form beanclass="com.hk.web.action.core.user.RequestCallbackAction" id="sendCouponForm">
           <div class='label'>Name </div>
           <s:text name="name" placeholder="Enter your name" value="${sdcActionBean.name}"/>
           <div class='label'>Mobile</div>

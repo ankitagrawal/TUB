@@ -10,7 +10,7 @@
   </li>
   <li><s:link beanclass="com.hk.web.action.ReferralProgramAction" title="Referral Program"> <span id="rpLink">Referral Program</span> </s:link>
   </li>
-  <li><s:link beanclass="com.hk.web.action.RewardPointTxnStatementAction" title="RewardPointTxnStatement"> <span id="rpsLink">Reward Point Txn Statement</span> </s:link>
+  <li><s:link beanclass="com.hk.web.action.core.discount.RewardPointTxnStatementAction" title="RewardPointTxnStatement"> <span id="rpsLink">Reward Point Txn Statement</span> </s:link>
   </li>
  <shiro:hasAnyRoles name="<%=RoleConstants.AFFILIATE%>">
     <li>

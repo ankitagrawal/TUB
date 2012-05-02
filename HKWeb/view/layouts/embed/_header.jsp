@@ -5,8 +5,8 @@
 <%@ page import="com.shiro.PrincipalImpl" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.CartAction" var="cartAction" event="getCartItems"/>
-<s:useActionBean beanclass="com.hk.web.action.RewardPointTxnStatementAction" event="pre" var="rpBean"/>
+<s:useActionBean beanclass="com.hk.web.action.core.cart.CartAction" var="cartAction" event="getCartItems"/>
+<s:useActionBean beanclass="com.hk.web.action.core.discount.RewardPointTxnStatementAction" event="pre" var="rpBean"/>
 
 <%
   String roles = RoleConstants.HK_USER + "," + RoleConstants.HK_UNVERIFIED;
@@ -45,7 +45,7 @@
       <div class="message">
         <div class="arrow"></div>
         <span class="line1"></span>
-        <s:link beanclass="com.hk.web.action.CartAction" id="message_cart_link" rel="noFollow">
+        <s:link beanclass="com.hk.web.action.core.cart.CartAction" id="message_cart_link" rel="noFollow">
           <span class="line2">
             Proceed to checkout &rarr;
           </span>
@@ -71,7 +71,7 @@
                 </strong>              
             </span>
           <c:if test="${(rpBean.redeemablePoint - rpBean.user.userAccountInfo.overusedRewardPoints) > 0}">
-            <s:link beanclass="com.hk.web.action.RewardPointTxnStatementAction" title="RewardPointTxnStatement"><span class="orange">(<fmt:formatNumber value="${rpBean.redeemablePoint - rpBean.user.userAccountInfo.overusedRewardPoints}" pattern="<%=FormatUtils.currencyFormatPattern%>"/>)</span>
+            <s:link beanclass="com.hk.web.action.core.discount.RewardPointTxnStatementAction" title="RewardPointTxnStatement"><span class="orange">(<fmt:formatNumber value="${rpBean.redeemablePoint - rpBean.user.userAccountInfo.overusedRewardPoints}" pattern="<%=FormatUtils.currencyFormatPattern%>"/>)</span>
             </s:link>
           </c:if>
           <div class='links'>
@@ -105,7 +105,7 @@
           </div>
         </div>
         <div class='right'>
-          <s:link beanclass="com.hk.web.action.CartAction" rel="noFollow">
+          <s:link beanclass="com.hk.web.action.core.cart.CartAction" rel="noFollow">
             <div class='cartButton' title='view your shopping cart'>
 
              <c:choose>

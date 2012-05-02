@@ -500,7 +500,7 @@
 
       <c:if test="${pa.combo == null}">
       $('.addToCartButton').click(function(e) {
-        $(this).parent().append('<span class="add_message">added to <s:link beanclass="com.hk.web.action.CartAction" id="message_cart_link"><img class="icon16" src="${pageContext.request.contextPath}/images/icons/cart.png"> cart</s:link></span>');
+        $(this).parent().append('<span class="add_message">added to <s:link beanclass="com.hk.web.action.core.cart.CartAction" id="message_cart_link"><img class="icon16" src="${pageContext.request.contextPath}/images/icons/cart.png"> cart</s:link></span>');
         $(this).hide();
         e.stopPropagation();
       });

@@ -4,7 +4,7 @@
 <%@ include file="/includes/_taglibInclude.jsp" %>
 
 <s:useActionBean beanclass="com.hk.web.action.SelectAddressAction" event="pre" var="addressBean"/>
-<s:useActionBean beanclass="com.hk.web.action.CartAction" var="cartAction" event="pre"/>
+<s:useActionBean beanclass="com.hk.web.action.core.cart.CartAction" var="cartAction" event="pre"/>
 
 <s:layout-render name="/layouts/checkoutLayout.jsp" pageTitle="Select a shipping address">
 

@@ -6,7 +6,7 @@
 <%--
 Pass an attribute called pricingDto to render a table with pricing details
 --%>
-<s:useActionBean beanclass="com.hk.web.action.CartAction" var="cartAction"/>
+<s:useActionBean beanclass="com.hk.web.action.core.cart.CartAction" var="cartAction"/>
 <s:layout-definition>
 <%
   PricingDto pricingDto = (PricingDto) pageContext.getAttribute("pricingDto");

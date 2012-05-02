@@ -49,7 +49,7 @@
 
       <br/>
 
-      <div class="buttons" align="left"><s:link beanclass="com.hk.web.action.CartAction">PROCEED TO CART</s:link></div>
+      <div class="buttons" align="left"><s:link beanclass="com.hk.web.action.core.cart.CartAction">PROCEED TO CART</s:link></div>
     </c:if>
 
     <div class="buttons" align="left"><s:link beanclass="com.hk.web.action.HomeAction" event="pre">

@@ -1,7 +1,7 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.RewardPointTxnStatementAction" event="pre" var="rpBean"/>
+<s:useActionBean beanclass="com.hk.web.action.core.discount.RewardPointTxnStatementAction" event="pre" var="rpBean"/>
 
 <s:layout-render name="/layouts/default.jsp" pageTitle="Reward Point Txn Statement">
   <s:layout-component name="htmlHead">

@@ -5,7 +5,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="lineItem_Service_Postpaid" value="<%=EnumProductVariantPaymentType.Postpaid.getId()%>"/>
-<s:useActionBean beanclass="com.hk.web.action.CartAction" var="cartAction"/>
+<s:useActionBean beanclass="com.hk.web.action.core.cart.CartAction" var="cartAction"/>
 
 <s:layout-render name="/layouts/cartLayout.jsp" pageTitle="Shopping Cart">
 
@@ -245,11 +245,11 @@
   </div>
   <div class='floatfix'></div>
 </div>
-<s:form beanclass="com.hk.web.action.CartAction" id="cartForm">
+<s:form beanclass="com.hk.web.action.core.cart.CartAction" id="cartForm">
 <div style="display: none;">
   <s:link beanclass="com.hk.web.action.CartLineItemUpdateAction" id="lineItemUpdateLink"></s:link>
   <s:link beanclass="com.hk.web.action.ApplyCouponAction" style="display:none;" id="couponBaseLink"></s:link>
-  <s:link beanclass="com.hk.web.action.CartAction" style="display:none;" id="updatePricingLink" event="pricing"></s:link>
+  <s:link beanclass="com.hk.web.action.core.cart.CartAction" style="display:none;" id="updatePricingLink" event="pricing"></s:link>
 </div>
 
 <c:forEach items="${cartAction.order.exclusivelyProductCartLineItems}" var="cartLineItem" varStatus="ctr">
