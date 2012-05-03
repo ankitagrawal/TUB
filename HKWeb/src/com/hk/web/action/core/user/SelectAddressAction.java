@@ -17,6 +17,7 @@ import net.sourceforge.stripes.validation.ValidationMethod;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -41,13 +42,17 @@ public class SelectAddressAction extends BaseAction {
 
     private static Logger logger    = LoggerFactory.getLogger(SelectAddressAction.class);
 
+    @Autowired
     AddressDao            addressDao;
+    @Autowired
     OrderManager          orderManager;
-
+    @Autowired
     OrderDao              orderDao;
-
+    @Autowired
     private UserService   userService;
+    @Autowired
     private RoleService   roleService;
+    
     private List<Address> addresses = new ArrayList<Address>(1);
 
     @Validate(required = true, on = "remove")

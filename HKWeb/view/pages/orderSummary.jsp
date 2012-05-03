@@ -26,7 +26,7 @@
   </s:layout-component>
   <s:layout-component name="steps">
     <div class='steps'>
-      <s:link beanclass="com.hk.web.action.SelectAddressAction" style="margin-top: 0; margin-bottom: 0;">
+      <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" style="margin-top: 0; margin-bottom: 0;">
         <div class='step prev_step'>
           <h2>Step 1</h2>
 
@@ -98,7 +98,7 @@
         </div>
       </div>
         <span class="small">
-          <s:link beanclass="com.hk.web.action.SelectAddressAction" style="color: #888; float: right;">
+          <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" style="color: #888; float: right;">
             (change) </s:link>
         </span>
     </div>

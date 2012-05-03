@@ -29,7 +29,7 @@
 </s:layout-component>
 <s:layout-component name="steps">
   <div class='steps'>
-    <s:link beanclass="com.hk.web.action.SelectAddressAction" style="margin-top: 0; margin-bottom: 0;">
+    <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" style="margin-top: 0; margin-bottom: 0;">
       <div class='step prev_step' id="step1">
         <h2>Step 1</h2>
 
