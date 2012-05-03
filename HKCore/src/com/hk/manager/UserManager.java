@@ -49,7 +49,7 @@ public class UserManager {
     private OrderManager     orderManager;
     @Autowired
     private RoleService      roleService;
-
+    @Autowired
     private SecurityManager  securityManager;
     @Autowired
     private EmailManager     emailManager;

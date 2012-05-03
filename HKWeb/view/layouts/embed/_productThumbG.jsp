@@ -20,7 +20,7 @@
     Product product_productThumb = productDao.getProductById(product_productThumbId);
     pageContext.setAttribute("product", product_productThumb);
 
-    ComboDao comboDao = (ComboDao)ServiceLocatorFactory.getService("ComboDao.class");
+    ComboDao comboDao = (ComboDao)ServiceLocatorFactory.getService("ComboDao");
     Combo combo = comboDao.get(Combo.class, product_productThumbId);
     pageContext.setAttribute("combo", combo);
   %>

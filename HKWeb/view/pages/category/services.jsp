@@ -12,7 +12,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="redirectParam" value="<%=J2EESecurityManager.redirectAfterLoginParam%>"/>
-<s:useActionBean beanclass="com.hk.web.action.category.ServiceAction" var="sa" event="pre"/>
+<s:useActionBean beanclass="com.hk.web.action.core.catalog.category.ServiceAction" var="sa" event="pre"/>
 <s:layout-render name="/layouts/category-homeG.jsp" pageTitle="Services | Buy Services Online in India">
 
   <%
@@ -90,7 +90,7 @@
         <s:layout-render name="/layouts/modal.jsp">
           <s:layout-component name="heading">Select City</s:layout-component>
           <s:layout-component name="content">
-            <s:form beanclass="com.hk.web.action.category.ServiceAction">
+            <s:form beanclass="com.hk.web.action.core.catalog.category.ServiceAction">
               <s:errors/>
               <div class="round-cont" style="width:650px;margin-top: 20px;">
                 <label>To find the relevant deals, Please select your city</label>

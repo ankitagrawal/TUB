@@ -138,7 +138,7 @@
             <s:layout-render name="/layouts/modal.jsp">
                 <s:layout-component name="heading"><h3>Select City</h3></s:layout-component>
                 <s:layout-component name="content">
-                    <s:form beanclass="com.hk.web.action.category.ServiceAction">
+                    <s:form beanclass="com.hk.web.action.core.catalog.category.ServiceAction">
                         <s:errors/>
                         <div class="round-cont" style="width:650px;margin-top: 20px;">
                             <label>To find the relevant deals, Please select your city</label>
@@ -168,7 +168,7 @@
 <input type="hidden" id="topLevelCategory" value="${ca.topCategoryUrlSlug}">
 
 <div style="display: none;">
-    <s:link beanclass="com.hk.web.action.category.ServiceAction" id="setDefaultZoneLink" event="setDefaultCookie"/>
+    <s:link beanclass="com.hk.web.action.core.catalog.category.ServiceAction" id="setDefaultZoneLink" event="setDefaultCookie"/>
 </div>
 <div class='catalog_header'>
 

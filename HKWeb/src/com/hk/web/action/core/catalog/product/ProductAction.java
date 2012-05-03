@@ -12,9 +12,9 @@ import net.sourceforge.stripes.action.UrlBinding;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.session.Session;
-
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.HealthkartConstants;
@@ -67,19 +67,27 @@ public class ProductAction extends BaseAction {
     @Session(key = HealthkartConstants.Cookie.preferredZone)
     private String                   preferredZone;
 
+    @Autowired
     private SeoManager               seoManager;
-
+    @Autowired
     private ProductService           productService;
-    private BaseDao                  baseDao;
-    MenuHelper                       menuHelper;
-    AffiliateDao                     affiliateDao;
+    @Autowired
+    private MenuHelper               menuHelper;
+    @Autowired
+    private AffiliateDao             affiliateDao;
 
-    ComboDao                         comboDao;
-    MapIndiaDao                      mapIndiaDao;
-    LocalityMapDao                   localityMapDao;
-    ProductCountDao                  productCountDao;
-    UserProductHistoryDao            userProductHistoryDao;
-    AddressDao                       addressDao;
+    @Autowired
+    private ComboDao                 comboDao;
+    @Autowired
+    private MapIndiaDao              mapIndiaDao;
+    @Autowired
+    private LocalityMapDao           localityMapDao;
+    @Autowired
+    private ProductCountDao          productCountDao;
+    @Autowired
+    private UserProductHistoryDao    userProductHistoryDao;
+    @Autowired
+    private AddressDao               addressDao;
 
     @DefaultHandler
     @DontValidate
@@ -90,7 +98,7 @@ public class ProductAction extends BaseAction {
             return new ForwardResolution(SearchAction.class).addParameter("query", productSlug);
         }
         try {
-            combo = getBaseDao().get(Combo.class,productId);
+            combo = getBaseDao().get(Combo.class, productId);
         } catch (Exception e) {
 
         }
@@ -270,12 +278,5 @@ public class ProductAction extends BaseAction {
         this.productService = productService;
     }
 
-    public BaseDao getBaseDao() {
-        return baseDao;
-    }
-
-    public void setBaseDao(BaseDao baseDao) {
-        this.baseDao = baseDao;
-    }
 
 }
