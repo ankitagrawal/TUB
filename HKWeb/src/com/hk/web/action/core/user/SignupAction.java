@@ -74,12 +74,12 @@ public class SignupAction extends BaseAction {
         }
     }
 
-    @ValidationMethod
+/*    @ValidationMethod
     public void signupValidation() {
         if (!agreeToTerms) {
             getContext().getValidationErrors().add("terms", new LocalizableError("/Signup.action.terms.notAgree", getLinkManager().getTermsAndConditionsUrl()));
         }
-    }
+    }*/
 
     public Resolution signup() {
         User referredBy = null;
