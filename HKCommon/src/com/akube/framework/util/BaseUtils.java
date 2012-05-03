@@ -39,6 +39,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.shiro.crypto.hash.Md5Hash;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.dom4j.Document;
 import org.dom4j.io.OutputFormat;
@@ -48,6 +49,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 
+import com.akube.framework.shiro.realm.HibernateSecurityRealm;
 import com.hk.exception.FileDownloadException;
 import com.twmacinta.util.MD5;
 
@@ -58,6 +60,8 @@ import com.twmacinta.util.MD5;
 public class BaseUtils {
 	private static Logger logger = LoggerFactory.getLogger(BaseUtils.class);
 	public static String newline = System.getProperty("line.separator");
+	
+	
 
 	public static Properties getPropertyFile(String propertyFileName) {
 		Properties properties = null;
@@ -84,10 +88,7 @@ public class BaseUtils {
 	}
 
 	public static String passwordEncrypt(String password) {
-		//return new Md5Hash(password, HibernateSecurityRealm.passwordSalt, HibernateSecurityRealm.hashIterations).toBase64();
-        //TODO: rewrite
-	    
-	    return null;
+		return new Md5Hash(password, HibernateSecurityRealm.passwordSalt, HibernateSecurityRealm.hashIterations).toBase64();
 	}
 
 	public static String passwordEncryptPools(String password) {

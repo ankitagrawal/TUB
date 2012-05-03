@@ -86,7 +86,6 @@ public class UserServiceImpl implements UserService {
         getUserCartDao().updateIsProductBought(order);
     }
 
-    @Transactional(readOnly = false)
     public User save(User user) {
         return getUserDao().save(user);
     }

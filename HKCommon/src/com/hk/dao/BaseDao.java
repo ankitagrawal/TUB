@@ -48,7 +48,7 @@ public interface BaseDao {
      * @param entity
      * @return
      */
-    public Serializable save(Object entity);
+    public Object save(Object entity);
 
     /**
      * @param c

@@ -8,7 +8,6 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
-import org.hibernate.FlushMode;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
@@ -209,14 +208,14 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
         return (List<T>) getHibernateTemplate().loadAll(c);
     }
 
-    @Transactional(readOnly = false)
-    public Serializable save(Object entity) {
+    @Transactional
+    public Object save(Object entity) {
         enableWriteForSession();
-        return getHibernateTemplate().save(entity);
+        return getHibernateTemplate().merge(entity);
     }
-    
-    private void enableWriteForSession(){
-        //getHibernateTemplate().setFlushMode(HibernateTemplate.FLUSH_COMMIT);
+
+    private void enableWriteForSession() {
+        getHibernateTemplate().setFlushMode(HibernateTemplate.FLUSH_AUTO);
         getHibernateTemplate().setCheckWriteOperations(false);
     }
 
@@ -235,7 +234,6 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
     public void update(Object entity) {
         enableWriteForSession();
         getHibernateTemplate().update(entity);
-
     }
 
     public <T> T findDataObject(Class<T> dataObjectClass, String[] propertyNames, Object[] values) {
@@ -388,7 +386,7 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
         if (hasDistinctRootEntity) {
             criteria.setResultTransformer(Criteria.ROOT_ENTITY);
         }
-        List resultList = findByCriteria(criteria,pageNo,perPage);
+        List resultList = findByCriteria(criteria, pageNo, perPage);
         return new Page(resultList, perPage, pageNo, totalResults);
     }
 
