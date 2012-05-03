@@ -36,7 +36,7 @@
       </div>
       <div class='table_body'>
         <c:set value="${product.productVariants[0]}" var="variant"/>
-        <s:form beanclass="com.hk.web.action.AddToCartAction" class="addToCartForm">
+        <s:form beanclass="com.hk.web.action.core.cart.AddToCartAction" class="addToCartForm">
 
           <div class='row prods'>
             <div class='prod' style="text-align: center;">
@@ -103,7 +103,7 @@
               <c:choose>
                 <c:when test="${variant.outOfStock}">
                   <span class="outOfStock">Sold Out</span>
-                  <div align="center"><s:link beanclass="com.hk.web.action.NotifyMeAction"
+                  <div align="center"><s:link beanclass="com.hk.web.action.core.user.NotifyMeAction"
                                               class="notifyMe button_orange"><b>Notify Me!!</b>
                     <s:param name="productVariant" value="${product.productVariants[0]}"/> </s:link></div>
                 </c:when>

@@ -37,7 +37,7 @@
 
         <c:forEach items="${product.productVariantsWithOutOfStockListedBelow}" var="variant" varStatus="ctr">
           <c:if test="${!variant.deleted}">
-            <s:form beanclass="com.hk.web.action.AddToCartAction" class="addToCartForm">
+            <s:form beanclass="com.hk.web.action.core.cart.AddToCartAction" class="addToCartForm">
 
               <div class='row prods'>
                 <div class='prod' style="text-align: center;">
@@ -113,7 +113,7 @@
                           <span class="outOfStock">Sold Out</span><br/>
 
                           <div align="center">
-                            <s:link beanclass="com.hk.web.action.NotifyMeAction" class="notifyMe button_orange"><b>Notify
+                            <s:link beanclass="com.hk.web.action.core.user.NotifyMeAction" class="notifyMe button_orange"><b>Notify
                                                                                                                 Me!!</b>
                               <s:param name="productVariant" value="${variant}"/> </s:link></div>
                         <%--</c:otherwise>--%>

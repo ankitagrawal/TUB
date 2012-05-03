@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import com.akube.framework.dao.Page;
 import com.hk.constants.catalog.SolrSchemaConstants;
@@ -34,6 +35,7 @@ import com.hk.domain.user.Address;
 import com.hk.service.CategoryService;
 import com.hk.service.ProductService;
 
+@Component
 public class SolrManager {
     private static Logger logger = LoggerFactory.getLogger(SolrManager.class);
 

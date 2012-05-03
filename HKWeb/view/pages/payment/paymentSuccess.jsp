@@ -29,7 +29,7 @@
 </s:layout-component>
 <s:layout-component name="modal">
   <div class="jqmWindow" id="publishOnFBWindow" style="display: none; width:auto;padding:10px;">
-    <s:link beanclass="com.hk.web.action.PublishOnFBAction" id="publishOnFBLink" style="visibility:hidden;">
+    <s:link beanclass="com.hk.web.action.core.user.PublishOnFBAction" id="publishOnFBLink" style="visibility:hidden;">
       <s:param name="order" value="${actionBean.payment.order.id}"/>
       Publish on facebook
     </s:link>

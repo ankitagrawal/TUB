@@ -14,7 +14,7 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="redirectParam" value="<%=J2EESecurityManager.redirectAfterLoginParam%>"/>
 <s:useActionBean beanclass="com.hk.web.action.CategoryAction" var="categoryBean" event="pre"/>
-<s:useActionBean beanclass="com.hk.web.action.category.CatalogAction" var="ca"/>
+<s:useActionBean beanclass="com.hk.web.action.core.catalog.category.CatalogAction" var="ca"/>
 <s:layout-render name="/layouts/category-homeG.jsp" pageTitle="${categoryBean.seoData.title}">
 
 <c:if test="${categoryBean.category.name == 'services'}">

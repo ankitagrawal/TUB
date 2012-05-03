@@ -19,7 +19,7 @@ public class CategoryDao extends BaseDaoImpl {
     
     public List<String> getBrandsByCategory(List<String> categoryNames) {
         String queryString = "select distinct p.brand from Product p inner join p.categories c where c.name in (:categories) and p.deleted=:deleted  group by p.id having count(*) = :tagCount order by p.brand asc";
-        return findByNamedParams(queryString, new String[] { "categories", "deleted", "tagCount" }, new Object[] { categoryNames, false, categoryNames.size() });
+        return findByNamedParams(queryString, new String[] { "categories", "deleted", "tagCount" }, new Object[] { categoryNames, false, new Long(categoryNames.size()) });
     }
 
     public List<Category> getCategoriesByBrand(String brand, String topLevelCategory) {

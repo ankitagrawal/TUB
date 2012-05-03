@@ -1,7 +1,7 @@
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.ProductAction" var="pa"/>
+<s:useActionBean beanclass="com.hk.web.action.core.catalog.product.ProductAction" var="pa"/>
 
 <s:layout-render name="/layouts/default.jsp">
   <s:layout-component name="heading">Customise Product Link</s:layout-component>
@@ -9,7 +9,7 @@
     <div>
       <h4 class="strikeline">Product Name:- ${pa.product.name}
       </h4>
-      <s:form beanclass="com.hk.web.action.ProductAction">
+      <s:form beanclass="com.hk.web.action.core.catalog.product.ProductAction">
         <s:errors/>
         <div class="round-cont" style="width:650px;margin-top: 20px;">
             <%--

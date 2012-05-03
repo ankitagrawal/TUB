@@ -6,7 +6,7 @@
 <html>
   <head><title></title></head>
   <body>
-  <s:form beanclass="com.hk.web.action.ProductAction" method="get">
+  <s:form beanclass="com.hk.web.action.core.catalog.product.ProductAction" method="get">
     <table>
       <tr>
         <td>

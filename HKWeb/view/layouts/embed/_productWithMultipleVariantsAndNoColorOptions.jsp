@@ -59,11 +59,11 @@
 
   <br>
 
-  <s:form beanclass="com.hk.web.action.AddToCartAction" class="addToCartForm">
+  <s:form beanclass="com.hk.web.action.core.cart.AddToCartAction" class="addToCartForm">
     <div style="display: none;">
       <s:link beanclass="com.hk.web.action.ProductVariantAction" id="updateProductVariantImageLink"
               event="changeProductLink"/>
-        <%--<s:link beanclass="com.hk.web.action.ProductAction" id="updateProductImageLink" event="changeProductImage"/>--%>
+        <%--<s:link beanclass="com.hk.web.action.core.catalog.product.ProductAction" id="updateProductImageLink" event="changeProductImage"/>--%>
     </div>
     <c:forEach items="${product.productVariants}" var="variant" varStatus="ctr">
       <c:if test="${!variant.outOfStock && !variant.deleted}">
@@ -103,7 +103,7 @@
         <c:when test="${product.outOfStock}">
           <span class="outOfStock">Sold Out</span>
 
-              <div align="center"><s:link beanclass="com.hk.web.action.NotifyMeAction" class="notifyMe button_orange"><b>Notify
+              <div align="center"><s:link beanclass="com.hk.web.action.core.user.NotifyMeAction" class="notifyMe button_orange"><b>Notify
                                                                                                                       Me!!</b>
                 <s:param name="productVariant" value="${product.productVariants[0]}"/> </s:link></div>
          </c:when>

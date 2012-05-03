@@ -86,8 +86,11 @@ public class ServiceLocatorFactory implements ApplicationContextAware, ServletCo
             if (applicationContext == null) {
                 return null;
             }
+            
+            StringBuffer serviceNameToLookUp = new StringBuffer(serviceName);
+            serviceNameToLookUp.setCharAt(0, Character.toLowerCase(serviceName.charAt(0)));
 
-            Object o = applicationContext.getBean(serviceName);
+            Object o = applicationContext.getBean(serviceNameToLookUp.toString());
             return o;
         } catch (NoSuchBeanDefinitionException e) {
             return null;

@@ -15,6 +15,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
  
 @Intercepts(LifecycleStage.ActionBeanResolution)
+//@Intercepts(LifecycleStage.ResolutionExecution)
 public class StripesSpringInterceptor implements Interceptor
 {
  

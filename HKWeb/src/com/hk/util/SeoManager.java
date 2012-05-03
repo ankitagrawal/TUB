@@ -1,5 +1,6 @@
 package com.hk.util;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.hk.dao.BaseDao;
@@ -13,10 +14,11 @@ import com.hk.service.ProductService;
 public class SeoManager {
 
     public static final String KEY_BRAND_IN_CAT = "#brand=";
-
+    @Autowired
     private ProductService     productService;
+    @Autowired
     private BaseDao            baseDao;
-
+    @Autowired
     private MenuHelper         menuHelper;
 
     public SeoData generateSeo(String id) {

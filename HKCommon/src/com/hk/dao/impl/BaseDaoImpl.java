@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
@@ -37,14 +38,12 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
     public void init(SessionFactory factory) {
         setSessionFactory(factory);
     }
-    
 
     @SuppressWarnings("unchecked")
     public boolean containsKey(Class entityClass, Serializable key) {
         return containsKey(entityClass.getName(), key);
     }
 
-    
     public boolean containsKey(final String entityName, final Serializable key) {
         Boolean contains = (Boolean) getHibernateTemplate().execute(new HibernateCallback() {
             public Object doInHibernate(Session session) throws HibernateException, SQLException {
@@ -142,7 +141,7 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
         return getHibernateTemplate().findByCriteria(criteria, firstResult, maxResults);
     }
 
-    @SuppressWarnings({ "unchecked", "hiding" })
+    @SuppressWarnings( { "unchecked", "hiding" })
     public <T> List<T> findByExample(T object) {
         return getHibernateTemplate().findByExample(object);
     }
@@ -176,7 +175,7 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
         return null;
     }
 
-    @SuppressWarnings({ "unchecked", "hiding" })
+    @SuppressWarnings( { "unchecked", "hiding" })
     public <T> T get(Class<T> c, Serializable key) {
         return (T) getHibernateTemplate().get(c, key);
     }
@@ -186,7 +185,6 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
         return (List<T>) getHibernateTemplate().find("from " + c.getName());
     }
 
-    
     public <T> List<T> getAll(Class<T> c, List<Long> ids, String idPropertyName) {
         if (ids == null || ids.isEmpty()) {
             return Collections.EMPTY_LIST;
@@ -341,10 +339,10 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
         List result = find(sql, params);
         return ((Number) result.get(0)).longValue();
     }
-    
+
     @SuppressWarnings("unchecked")
     @Override
-    public long countByNamedParams(String queryString, String[] params, Object[]values) {
+    public long countByNamedParams(String queryString, String[] params, Object[] values) {
         List result = findByNamedParams(queryString, params, values);
         return ((Number) result.get(0)).longValue();
     }
@@ -370,7 +368,12 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
 
     @Override
     public Page list(DetachedCriteria criteria, boolean hasDistinctRootEntity, int pageNo, int perPage) {
+
         int totalResults = count(criteria, hasDistinctRootEntity);
+        criteria.setProjection(null);
+        if (hasDistinctRootEntity) {
+            criteria.setResultTransformer(Criteria.ROOT_ENTITY);
+        }
         List resultList = findByCriteria(criteria);
         return new Page(resultList, perPage, pageNo, totalResults);
     }
@@ -379,7 +382,7 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
     public Page list(DetachedCriteria criteria, int pageNo, int perPage) {
         return list(criteria, false, pageNo, perPage);
     }
-    
+
     @Override
     public void refresh(Object entity) {
         getHibernateTemplate().refresh(entity);

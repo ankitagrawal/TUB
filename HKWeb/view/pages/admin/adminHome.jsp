@@ -78,7 +78,7 @@
         beanclass="com.hk.web.action.admin.CreateOrSelectProductAction">Create new product and product variant</s:link></h3>
 
   <h3>
-    <s:link beanclass="com.hk.web.action.admin.CreateEditComboAction">Create Combo</s:link></h3>
+    <s:link beanclass="com.hk.web.action.admin.catalog.product.CreateEditComboAction">Create Combo</s:link></h3>
 
   <h3><s:link beanclass="com.hk.web.action.admin.RecentlyAddedProductsAction">Recently Added Products</s:link></h3>
   <h3><s:link beanclass="com.hk.web.action.admin.RelatedProductAction">Update Related Products</s:link></h3>

@@ -61,7 +61,7 @@
 
     </div>
     <div class="right_col">
-      <s:form beanclass="com.hk.web.action.AddToCartAction" class="addToCartForm">
+      <s:form beanclass="com.hk.web.action.core.cart.AddToCartAction" class="addToCartForm">
         <c:choose>
           <c:when test="${product.productVariants[0].outOfStock}">
             <%--<c:choose>--%>
@@ -71,7 +71,7 @@
               <%--<c:otherwise> `--%>
                 <span class="outOfStock">Sold Out</span>
 
-                <div align="center"><s:link beanclass="com.hk.web.action.NotifyMeAction"
+                <div align="center"><s:link beanclass="com.hk.web.action.core.user.NotifyMeAction"
                                             class="notifyMe button_orange"><b>Notify
                                                                               Me!!</b>
                   <s:param name="productVariant" value="${product.productVariants[0]}"/> </s:link></div>

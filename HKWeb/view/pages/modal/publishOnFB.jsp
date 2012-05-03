@@ -2,7 +2,7 @@
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.PublishOnFBAction" var="actionBean"/>
+<s:useActionBean beanclass="com.hk.web.action.core.user.PublishOnFBAction" var="actionBean"/>
 <div class="modal_header">
   <div class="jqDrag" style="padding: 5px 3px;">Share and Earn!</div>
 

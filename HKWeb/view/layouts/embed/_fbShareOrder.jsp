@@ -83,7 +83,7 @@
   </script>
 
   <div style="display:none;">
-    <s:link beanclass="com.hk.web.action.PublishOnFBAction" event="share" id="orderShareLink"></s:link>
+    <s:link beanclass="com.hk.web.action.core.user.PublishOnFBAction" event="share" id="orderShareLink"></s:link>
   </div>
 
 </s:layout-definition>

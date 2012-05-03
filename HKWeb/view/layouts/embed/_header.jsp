@@ -94,7 +94,7 @@
                   PrincipalImpl principal = (PrincipalImpl) SecurityUtils.getSubject().getPrincipal();
                   if (principal != null && principal.isAssumed()) {
                 %>
-                <s:link beanclass="com.hk.web.action.admin.AssumedLogoutAction" class="sml" rel="noFollow">(Release assumed
+                <s:link beanclass="com.hk.web.action.admin.user.AssumedLogoutAction" class="sml" rel="noFollow">(Release assumed
                   identity)</s:link> |
                 <%
                   }

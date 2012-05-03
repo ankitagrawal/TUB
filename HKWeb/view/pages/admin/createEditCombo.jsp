@@ -1,7 +1,7 @@
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.admin.CreateEditComboAction" var="comboAction"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.catalog.product.CreateEditComboAction" var="comboAction"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp">
 
   <s:layout-component name="htmlHead">
@@ -84,10 +84,10 @@
   </s:layout-component>
   <s:layout-component name="content">
     <div style="display: none;">
-      <s:link beanclass="com.hk.web.action.admin.CreateEditComboAction" id="productInfoLink"
+      <s:link beanclass="com.hk.web.action.admin.catalog.product.CreateEditComboAction" id="productInfoLink"
               event="getProductDetails"></s:link>
     </div>
-    <s:form beanclass="com.hk.web.action.admin.CreateEditComboAction">
+    <s:form beanclass="com.hk.web.action.admin.catalog.product.CreateEditComboAction">
       <s:hidden name="combo" value="${comboAction.combo}"/>
       <div style="font-size:1.4em" class="invalidProduct"></div>
       <div class="grid_6">
@@ -117,7 +117,7 @@
                           name="comboProductAndAllowedVariantsDtoList[${ctr.index}].allowedVariants"/>
                 </td>
                 <td>
-                  <s:link beanclass="com.hk.web.action.admin.CreateEditComboAction" event="deleteComboProduct">
+                  <s:link beanclass="com.hk.web.action.admin.catalog.product.CreateEditComboAction" event="deleteComboProduct">
                     <s:param name="comboProduct" value="${productDto.id}"/>
                     Delete</s:link>
                 </td>
