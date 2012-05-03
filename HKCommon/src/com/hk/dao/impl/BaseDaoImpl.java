@@ -154,6 +154,16 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
     public List findByNamedParams(String queryString, String[] params, Object[] values) {
         return getHibernateTemplate().findByNamedParam(queryString, params, values);
     }
+    
+    public Object findUniqueByNamedParams(String queryString, String[] params, Object[] values) {
+        List<Object> results =  getHibernateTemplate().findByNamedParam(queryString, params, values);
+        
+        if (results.size() == 1) {
+            return results.get(0);
+        }
+
+        return null;
+    }
 
     @SuppressWarnings("unchecked")
     public Object findUnique(String queryString, Object[] binds) {

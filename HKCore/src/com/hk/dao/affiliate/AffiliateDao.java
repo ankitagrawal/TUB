@@ -21,7 +21,7 @@ public class AffiliateDao extends BaseDaoImpl {
 
     public Affiliate getAffilateByUser(User user) {
         String queryString = "from Affiliate a where a.user=:user ";
-        return (Affiliate) findUniqueByNamedQueryAndNamedParam(queryString, new String[] { "user" }, new Object[] { user });
+        return (Affiliate) findUniqueByNamedParams(queryString, new String[] { "user" }, new Object[] { user });
 
     }
 
@@ -29,12 +29,12 @@ public class AffiliateDao extends BaseDaoImpl {
 
     public Affiliate getAffiliateByCode(String code) {
         String queryString = "from Affiliate a where a.code=:code ";
-        return (Affiliate) findUniqueByNamedQueryAndNamedParam(queryString, new String[] { "code" }, new Object[] { code });
+        return (Affiliate) findUniqueByNamedParams(queryString, new String[] { "code" }, new Object[] { code });
     }
 
     public Affiliate getAffiliateByUserId(Long userId) {
         String queryString = "from Affiliate a where a.user.id = :userId";
-        return (Affiliate) findUniqueByNamedQueryAndNamedParam(queryString, new String[] { "userId" }, new Object[] { userId });
+        return (Affiliate) findUniqueByNamedParams(queryString, new String[] { "userId" }, new Object[] { userId });
     }
 
     @SuppressWarnings("unchecked")

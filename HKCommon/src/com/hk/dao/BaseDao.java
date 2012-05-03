@@ -99,6 +99,16 @@ public interface BaseDao {
      * @return
      */
     public Object findUnique(String query, Object[] binds);
+    
+    
+    /**
+     * 
+     * @param queryString
+     * @param params
+     * @param values
+     * @return
+     */
+    public Object findUniqueByNamedParams(String queryString, String[] params, Object[] values);
 
     /**
      * Finds the objects within the range defined by the start row and max row

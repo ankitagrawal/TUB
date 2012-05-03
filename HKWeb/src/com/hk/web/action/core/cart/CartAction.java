@@ -61,15 +61,24 @@ private static Logger logger = LoggerFactory.getLogger(CartAction.class);
 
   @Autowired
   private UserService userService;
+  @Autowired
    AffiliateDao affiliateDao;
-   UserManager userManager;
-   PricingEngine pricingEngine;
-   OrderManager orderManager;
-   LineItemDao lineItemDao;
-   CouponDao couponDao;
-   OfferInstanceDao offerInstanceDao;
-   OfferManager offerManager;
-   OrderDao orderDao;
+  @Autowired 
+  UserManager userManager;
+  @Autowired 
+  PricingEngine pricingEngine;
+  @Autowired 
+  OrderManager orderManager;
+  @Autowired 
+  LineItemDao lineItemDao;
+  @Autowired 
+  CouponDao couponDao;
+  @Autowired 
+  OfferInstanceDao offerInstanceDao;
+  @Autowired 
+  OfferManager offerManager;
+  @Autowired 
+  OrderDao orderDao;
 
   boolean verifyMessage = false;
 
