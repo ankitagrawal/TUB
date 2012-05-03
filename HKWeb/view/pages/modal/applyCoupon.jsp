@@ -5,7 +5,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="com.hk.web.action.ApplyCouponAction" var="couponBean"/>
+<s:useActionBean beanclass="com.hk.web.action.core.discount.ApplyCouponAction" var="couponBean"/>
 
 <c:set var="error_role" value="<%=ApplyCouponAction.error_role%>"/>
 <c:set var="error_alreadyUsed" value="<%=ApplyCouponAction.error_alreadyUsed%>"/>
@@ -144,7 +144,7 @@
     </script>
     </c:if>
 
-    <%--<s:form beanclass="com.hk.web.action.ApplyCouponAction">--%>
+    <%--<s:form beanclass="com.hk.web.action.core.discount.ApplyCouponAction">--%>
       <%--<table>--%>
         <%--<tr>--%>
           <%--<td><h3>Enter Coupon Code</h3></td>--%>
