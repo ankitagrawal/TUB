@@ -24,7 +24,6 @@ import com.hk.dao.BaseDao;
 import com.hk.dao.coupon.CouponDao;
 import com.hk.dao.offer.OfferInstanceDao;
 import com.hk.dao.order.OrderDao;
-import com.hk.dao.user.UserDaoImpl;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.order.Order;
