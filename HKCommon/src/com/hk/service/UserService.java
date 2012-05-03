@@ -38,7 +38,6 @@ public interface UserService {
     
     public User findByUserHash(String userHash);
 
-    @Transactional
     public User save(User user);
 
     public List<User> findByRole(Role role);

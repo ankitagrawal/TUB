@@ -45,7 +45,6 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao {
     }
 
 
-    @Transactional(readOnly = false)
     public User save(User user) {
         // set defaults
         if (user != null) {
@@ -66,6 +65,7 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao {
     }
 
     public User findByLogin(String login) {
+        
         return (User) getSession().getNamedQuery("user.findByLogin").setString("login", login).uniqueResult();
     }
 

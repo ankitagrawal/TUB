@@ -57,13 +57,13 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
     }
 
     public void delete(Object entity) {
-        enableWriteForSession();
+        prepareHibernateForWrite();
         getHibernateTemplate().delete(entity);
     }
 
     @SuppressWarnings("unchecked")
     public void deleteAll(Collection entities) {
-        enableWriteForSession();
+        prepareHibernateForWrite();
         getHibernateTemplate().deleteAll(entities);
     }
 
@@ -208,31 +208,30 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
         return (List<T>) getHibernateTemplate().loadAll(c);
     }
 
-    @Transactional
     public Object save(Object entity) {
-        enableWriteForSession();
+        prepareHibernateForWrite();
         return getHibernateTemplate().merge(entity);
     }
 
-    private void enableWriteForSession() {
-        getHibernateTemplate().setFlushMode(HibernateTemplate.FLUSH_AUTO);
+    private void prepareHibernateForWrite() {
+        getHibernateTemplate().setFlushMode(HibernateTemplate.FLUSH_EAGER);
         getHibernateTemplate().setCheckWriteOperations(false);
     }
 
     public void saveOrUpdate(Object entity) {
+        prepareHibernateForWrite();
         getHibernateTemplate().saveOrUpdate(entity);
-
     }
 
     @SuppressWarnings("unchecked")
     public void saveOrUpdate(Collection entities) throws DataAccessException {
-        enableWriteForSession();
+        prepareHibernateForWrite();
         getHibernateTemplate().saveOrUpdateAll(entities);
 
     }
 
     public void update(Object entity) {
-        enableWriteForSession();
+        prepareHibernateForWrite();
         getHibernateTemplate().update(entity);
     }
 

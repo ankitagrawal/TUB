@@ -47,7 +47,7 @@
 				<prop key="hibernate.connection.release_mode">
 					on_close
 				</prop>
-				<prop key="hibernate.connection.isolation">2</prop>
+				<prop key="hibernate.connection.isolation">1</prop>
 				<prop
 					key="hibernate.bytecode.use_reflection_optimizer">
 					true
@@ -91,7 +91,7 @@
 		<property name="initialSize">
 			<value>50</value>
 		</property>
-		<property name="defaultTransactionIsolation" value="2" />
+		<property name="defaultTransactionIsolation" value="1" />
 		<property name="poolPreparedStatements" value="true" />
 		<property name="maxOpenPreparedStatements" value="30" />
 		<property name="timeBetweenEvictionRunsMillis" value="-1" />
