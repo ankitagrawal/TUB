@@ -2,6 +2,8 @@ package com.hk.service;
 
 import java.util.List;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import com.akube.framework.dao.Page;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.order.Order;
@@ -36,6 +38,7 @@ public interface UserService {
     
     public User findByUserHash(String userHash);
 
+    @Transactional
     public User save(User user);
 
     public List<User> findByRole(Role role);

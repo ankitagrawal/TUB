@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
+import org.hibernate.FlushMode;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
@@ -24,8 +25,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.dao.DataAccessException;
 import org.springframework.orm.hibernate3.HibernateCallback;
+import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.akube.framework.dao.Page;
 import com.hk.dao.BaseDao;
@@ -55,11 +58,13 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
     }
 
     public void delete(Object entity) {
+        enableWriteForSession();
         getHibernateTemplate().delete(entity);
     }
 
     @SuppressWarnings("unchecked")
     public void deleteAll(Collection entities) {
+        enableWriteForSession();
         getHibernateTemplate().deleteAll(entities);
     }
 
@@ -204,8 +209,15 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
         return (List<T>) getHibernateTemplate().loadAll(c);
     }
 
+    @Transactional(readOnly = false)
     public Serializable save(Object entity) {
+        enableWriteForSession();
         return getHibernateTemplate().save(entity);
+    }
+    
+    private void enableWriteForSession(){
+        //getHibernateTemplate().setFlushMode(HibernateTemplate.FLUSH_COMMIT);
+        getHibernateTemplate().setCheckWriteOperations(false);
     }
 
     public void saveOrUpdate(Object entity) {
@@ -215,11 +227,13 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
 
     @SuppressWarnings("unchecked")
     public void saveOrUpdate(Collection entities) throws DataAccessException {
+        enableWriteForSession();
         getHibernateTemplate().saveOrUpdateAll(entities);
 
     }
 
     public void update(Object entity) {
+        enableWriteForSession();
         getHibernateTemplate().update(entity);
 
     }
@@ -374,7 +388,7 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
         if (hasDistinctRootEntity) {
             criteria.setResultTransformer(Criteria.ROOT_ENTITY);
         }
-        List resultList = findByCriteria(criteria);
+        List resultList = findByCriteria(criteria,pageNo,perPage);
         return new Page(resultList, perPage, pageNo, totalResults);
     }
 

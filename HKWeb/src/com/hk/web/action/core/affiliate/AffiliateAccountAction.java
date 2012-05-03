@@ -19,7 +19,7 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.RoleConstants;
 import com.hk.dao.CheckDetailsDao;
 import com.hk.dao.affiliate.AffiliateDao;
-import com.hk.dao.user.UserDao;
+import com.hk.dao.user.UserDaoImpl;
 import com.hk.domain.CheckDetails;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.user.User;

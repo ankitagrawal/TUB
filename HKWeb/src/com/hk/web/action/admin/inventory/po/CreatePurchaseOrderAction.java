@@ -19,7 +19,7 @@ import com.hk.admin.impl.dao.inventory.PurchaseOrderDao;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
 import com.hk.dao.BaseDao;
-import com.hk.dao.user.UserDao;
+import com.hk.dao.user.UserDaoImpl;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.core.PurchaseOrderStatus;
 import com.hk.domain.inventory.po.PurchaseOrder;
@@ -37,7 +37,7 @@ public class CreatePurchaseOrderAction extends BaseAction {
     @Autowired
     BaseDao               baseDao;
     @Autowired
-    UserDao               userDao;
+    UserDaoImpl               userDao;
 
     private Supplier      supplier;
     private PurchaseOrder purchaseOrder;
@@ -96,11 +96,11 @@ public class CreatePurchaseOrderAction extends BaseAction {
         this.baseDao = baseDao;
     }
 
-    public UserDao getUserDao() {
+    public UserDaoImpl getUserDao() {
         return userDao;
     }
 
-    public void setUserDao(UserDao userDao) {
+    public void setUserDao(UserDaoImpl userDao) {
         this.userDao = userDao;
     }
     

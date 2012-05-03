@@ -11,7 +11,7 @@ import net.sourceforge.stripes.validation.Validate;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.dao.payment.PaymentDao;
-import com.hk.dao.user.UserDao;
+import com.hk.dao.user.UserDaoImpl;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.payment.Payment;
 import com.hk.dto.pricing.PricingDto;
@@ -31,7 +31,7 @@ public class PaymentSuccessAction extends BaseAction {
 
   private PaymentDao paymentDao;
   
-  UserDao userDao;
+  UserDaoImpl userDao;
   
   InventoryService inventoryService;
 

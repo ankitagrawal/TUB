@@ -213,6 +213,7 @@ public class UserManager {
         return userActivationLink;
     }
 
+    @Transactional(readOnly = false)
     public User createAndLoginAsGuestUser(String email, String name) {
         User user = createGuestUser(email, name);
 
@@ -223,7 +224,7 @@ public class UserManager {
         return user;
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     public User createGuestUser(String email, String name) {
         User user = new User();
         user.setName(StringUtils.isBlank(name) ? "Guest" : name);

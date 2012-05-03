@@ -26,7 +26,7 @@ import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.core.RoleConstants;
 import com.hk.dao.impl.RoleDao;
-import com.hk.dao.user.UserDao;
+import com.hk.dao.user.UserDaoImpl;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.web.action.error.AdminPermissionAction;
@@ -42,7 +42,7 @@ public class ChangeUserRolesAction extends BaseAction{
 
   private static Logger auditLogger = LoggerFactory.getLogger("adminAuditLogger");
 
-   UserDao userDao;
+   UserDaoImpl userDao;
    RoleDao roleDao;
 
   @Validate(required = true)

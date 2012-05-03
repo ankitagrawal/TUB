@@ -19,7 +19,7 @@ import com.akube.framework.util.DateUtils;
 import com.hk.constants.core.RoleConstants;
 import com.hk.dao.affiliate.AffiliateDao;
 import com.hk.dao.affiliate.AffiliateTrafficDetailsDao;
-import com.hk.dao.user.UserDao;
+import com.hk.dao.user.UserDaoImpl;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.affiliate.AffiliateTrafficDetails;
 import com.hk.domain.user.User;
@@ -43,7 +43,7 @@ public class AffiliateStatisticsAction extends BasePaginatedAction {
   private Page affiliateTrafficDetailsPage;
 
    AffiliateDao affiliateDao;
-   UserDao userDao;
+   UserDaoImpl userDao;
    AffiliateTrafficDetailsDao affiliateTrafficDetailsDao;
 
   @DefaultHandler

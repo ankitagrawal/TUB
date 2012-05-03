@@ -19,7 +19,7 @@ import net.sourceforge.stripes.validation.ValidationErrors;
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.dao.core.TempTokenDao;
-import com.hk.dao.user.UserDao;
+import com.hk.dao.user.UserDaoImpl;
 import com.hk.domain.TempToken;
 import com.hk.domain.user.User;
 import com.hk.manager.EmailManager;
@@ -32,7 +32,7 @@ public class ForgotPasswordAction extends BaseAction implements ValidationErrorH
   @Validate(required = true, converter = EmailTypeConverter.class)
   private String email;
 
-   UserDao userDao;
+   UserDaoImpl userDao;
    TempTokenDao tempTokenDao;
    LinkManager linkManager;
    EmailManager emailManager;

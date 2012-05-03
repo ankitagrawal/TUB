@@ -16,7 +16,7 @@ import com.hk.dao.catalog.category.CategoryDao;
 import com.hk.dao.core.AddressDao;
 import com.hk.dao.order.OrderDao;
 import com.hk.dao.payment.PaymentModeDao;
-import com.hk.dao.user.UserDao;
+import com.hk.dao.user.UserDaoImpl;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.order.Order;
 import com.hk.dto.pricing.PricingDto;
@@ -39,7 +39,7 @@ public class BOInvoiceAction extends BaseAction {
   
   ReferrerProgramManager referrerProgramManager;
   
-  UserDao userDao;
+  UserDaoImpl userDao;
   
   OrderDao orderDao;
   

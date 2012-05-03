@@ -18,7 +18,7 @@ import com.akube.framework.util.DateUtils;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.dao.coupon.CouponDao;
 import com.hk.dao.offer.OfferInstanceDao;
-import com.hk.dao.user.UserDao;
+import com.hk.dao.user.UserDaoImpl;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.user.User;
@@ -43,7 +43,7 @@ public class EditCouponAction extends BaseAction {
   List<OfferInstance> offerInstanceList;
    CouponDao couponDao;
    OfferInstanceDao offerInstanceDao;
-   UserDao userDao;
+   UserDaoImpl userDao;
 
   @DefaultHandler
   @DontValidate

@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.hk.dao.impl.BaseDaoImpl;
-import com.hk.dao.user.UserDao;
+import com.hk.dao.user.UserDaoImpl;
 import com.hk.domain.email.EmailRecepient;
 import com.hk.domain.user.User;
 import com.hk.util.TokenUtils;
@@ -18,7 +18,7 @@ import com.hk.util.TokenUtils;
 public class EmailRecepientDao extends BaseDaoImpl {
 
   @Autowired
-  private UserDao userDao;
+  private UserDaoImpl userDao;
 
 
   public EmailRecepient getOrCreateEmailRecepient(String recepientEmail) {
@@ -51,11 +51,11 @@ public class EmailRecepientDao extends BaseDaoImpl {
         .uniqueResult();
   }
 
-public UserDao getUserDao() {
+public UserDaoImpl getUserDao() {
     return userDao;
 }
 
-public void setUserDao(UserDao userDao) {
+public void setUserDao(UserDaoImpl userDao) {
     this.userDao = userDao;
 }
   

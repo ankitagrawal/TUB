@@ -25,7 +25,7 @@ import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.dao.catalog.category.CategoryDao;
 import com.hk.dao.catalog.product.ProductDao;
-import com.hk.dao.user.UserDao;
+import com.hk.dao.user.UserDaoImpl;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.content.SeoData;
@@ -60,7 +60,7 @@ public class BrandCatalogAction extends BasePaginatedAction {
    SolrManager solrManager;
    CategoryDao categoryDao;
    MenuHelper menuHelper;
-   UserDao userDao;
+   UserDaoImpl userDao;
    UserManager userManager;
    SeoManager seoManager;
   List<Category> categories;

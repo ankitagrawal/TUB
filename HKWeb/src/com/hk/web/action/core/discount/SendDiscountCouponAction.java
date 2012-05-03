@@ -22,7 +22,7 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.admin.manager.SMSManager;
 import com.hk.dao.coupon.DiscountCouponMailingListDao;
-import com.hk.dao.user.UserDao;
+import com.hk.dao.user.UserDaoImpl;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.coupon.DiscountCouponMailingList;
 import com.hk.domain.user.User;

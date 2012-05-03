@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.hk.dao.BaseDao;
-import com.hk.dao.user.UserDao;
+import com.hk.dao.user.UserDaoImpl;
 import com.hk.domain.user.User;
 
 @Component
@@ -21,7 +21,7 @@ public class UserTypeConverter implements TypeConverter<User> {
     @Autowired
     private BaseDao baseDao;
 
-    UserDao         userDao;
+    UserDaoImpl         userDao;
 
     public User convert(String s, Class<? extends User> aClass, Collection<ValidationError> validationErrors) {
         Long idLong = null;

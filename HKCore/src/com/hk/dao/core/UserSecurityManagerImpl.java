@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.akube.framework.shiro.Principal;
 import com.akube.framework.shiro.manager.UserSecurityManager;
 import com.hk.dao.impl.RoleDao;
-import com.hk.dao.user.UserDao;
+import com.hk.dao.user.UserDaoImpl;
 import com.hk.domain.user.Permission;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
@@ -22,11 +22,11 @@ import com.shiro.PrincipalImpl;
 @Repository
 public class UserSecurityManagerImpl implements UserSecurityManager {
 
-    private UserDao userDao;
+    private UserDaoImpl userDao;
     private RoleDao roleDao;
 
     @Autowired
-    public UserSecurityManagerImpl(UserDao userDao, RoleDao roleDao) {
+    public UserSecurityManagerImpl(UserDaoImpl userDao, RoleDao roleDao) {
         this.userDao = userDao;
         this.roleDao = roleDao;
     }
@@ -84,11 +84,11 @@ public class UserSecurityManagerImpl implements UserSecurityManager {
         return permissions;
     }
 
-    public UserDao getUserDao() {
+    public UserDaoImpl getUserDao() {
         return userDao;
     }
 
-    public void setUserDao(UserDao userDao) {
+    public void setUserDao(UserDaoImpl userDao) {
         this.userDao = userDao;
     }
 

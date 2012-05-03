@@ -20,7 +20,7 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.dao.reward.RewardPointDao;
-import com.hk.dao.user.UserDao;
+import com.hk.dao.user.UserDaoImpl;
 import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.offer.rewardPoint.RewardPointMode;
 import com.hk.domain.user.User;
@@ -39,7 +39,7 @@ public class AddRewardPointAction extends BaseAction {
   private static Logger logger = LoggerFactory.getLogger(AddRewardPointAction.class);
 
   
-  UserDao userDao;
+  UserDaoImpl userDao;
   
   RewardPointDao rewardPointDao;
   

@@ -28,7 +28,7 @@ import com.hk.constants.email.EmailTemplateConstants;
 import com.hk.dao.coupon.CouponDao;
 import com.hk.dao.marketing.EmailCampaignDao;
 import com.hk.dao.order.OrderDao;
-import com.hk.dao.user.UserDao;
+import com.hk.dao.user.UserDaoImpl;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.email.EmailCampaign;
 import com.hk.domain.user.User;
@@ -51,7 +51,7 @@ public class SendWeMissYouEmailer extends BaseAction {
 
     EmailCampaignDao    emailCampaignDao;
 
-    UserDao             userDao;
+    UserDaoImpl             userDao;
 
     CouponDao           couponDao;
     EmailManager        emailManager;

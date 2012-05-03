@@ -23,7 +23,7 @@ import com.akube.framework.util.BaseUtils;
 import com.hk.constants.core.EnumEmailType;
 import com.hk.constants.core.RoleConstants;
 import com.hk.dao.impl.RoleDao;
-import com.hk.dao.user.UserDao;
+import com.hk.dao.user.UserDaoImpl;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.user.User;
 import com.hk.manager.ReferrerProgramManager;
@@ -35,7 +35,7 @@ import com.hk.web.action.core.user.ActivateAccountForReferralAction;
 public class ReferralProgramAction extends BaseAction {
 
    WOMMEmailManager wommEmailManager;
-   UserDao userDao;
+   UserDaoImpl userDao;
    RoleDao roleDao;
    ReferrerProgramManager referrerProgramManager;
 

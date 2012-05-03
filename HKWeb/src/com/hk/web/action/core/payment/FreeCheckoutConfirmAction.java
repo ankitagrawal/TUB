@@ -21,7 +21,7 @@ import com.hk.constants.core.RoleConstants;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.dao.impl.RoleDao;
 import com.hk.dao.payment.PaymentModeDao;
-import com.hk.dao.user.UserDao;
+import com.hk.dao.user.UserDaoImpl;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.order.Order;
 import com.hk.domain.payment.Payment;
@@ -46,7 +46,7 @@ public class FreeCheckoutConfirmAction extends BaseAction {
 
    PaymentManager paymentManager;
    OrderManager orderManager;
-   UserDao userDao;
+   UserDaoImpl userDao;
    RoleDao roleDao;
   
   PaymentModeDao paymentModeDao;

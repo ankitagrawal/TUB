@@ -18,7 +18,7 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.Breadcrumb;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.dao.user.UserDao;
+import com.hk.dao.user.UserDaoImpl;
 import com.hk.domain.user.User;
 import com.hk.web.action.error.AdminPermissionAction;
 
@@ -31,7 +31,7 @@ import com.hk.web.action.error.AdminPermissionAction;
 @Component
 public class EditUserAction extends BaseAction {
 
-   UserDao userDao;
+   UserDaoImpl userDao;
 
   @ValidateNestedProperties({
       @Validate(field = "name", required = true, on="save"),

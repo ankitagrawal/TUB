@@ -15,7 +15,7 @@ import net.sourceforge.stripes.validation.Validate;
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
 import com.hk.dao.core.TempTokenDao;
-import com.hk.dao.user.UserDao;
+import com.hk.dao.user.UserDaoImpl;
 import com.hk.domain.TempToken;
 import com.hk.domain.user.User;
 import com.hk.web.action.core.auth.LoginAction;
@@ -33,7 +33,7 @@ public class PasswordResetAction extends BaseAction {
   private String passwordConfirm;
 
    TempTokenDao tempTokenDao;
-   UserDao userDao;
+   UserDaoImpl userDao;
 
   @DontValidate
   @DefaultHandler

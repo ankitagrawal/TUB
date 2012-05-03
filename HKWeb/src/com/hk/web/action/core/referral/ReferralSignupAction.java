@@ -14,7 +14,7 @@ import net.sourceforge.stripes.validation.ValidationMethod;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.HealthkartConstants;
-import com.hk.dao.user.UserDao;
+import com.hk.dao.user.UserDaoImpl;
 import com.hk.domain.user.User;
 
 @UrlBinding("/action/invite/{userHash}")
@@ -26,7 +26,7 @@ public class ReferralSignupAction extends BaseAction {
 
   private User user;
 
-   UserDao userDao;
+   UserDaoImpl userDao;
 
   @ValidationMethod
   public void validate() {

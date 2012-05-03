@@ -34,7 +34,7 @@ import com.hk.dao.catalog.combo.ComboDao;
 import com.hk.dao.catalog.product.ProductDao;
 import com.hk.dao.location.LocalityMapDao;
 import com.hk.dao.location.MapIndiaDao;
-import com.hk.dao.user.UserDao;
+import com.hk.dao.user.UserDaoImpl;
 import com.hk.domain.LocalityMap;
 import com.hk.domain.MapIndia;
 import com.hk.domain.catalog.Manufacturer;
@@ -108,7 +108,7 @@ public class CatalogAction extends BasePaginatedAction {
   @Autowired
   SolrManager solrManager;
   @Autowired
-  UserDao userDao;
+  UserDaoImpl userDao;
   @Autowired
   UserManager userManager;
 

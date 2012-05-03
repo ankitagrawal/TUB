@@ -21,7 +21,7 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.Breadcrumb;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.dao.user.UserDao;
+import com.hk.dao.user.UserDaoImpl;
 import com.hk.dao.warehouse.WarehouseDao;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
@@ -34,7 +34,7 @@ public class AssignWarehouseAction extends BaseAction{
 
   private static Logger auditLogger = LoggerFactory.getLogger("adminAuditLogger");
 
-   UserDao userDao;
+   UserDaoImpl userDao;
    WarehouseDao warehouseDao;
 
   @Validate(required = true)

@@ -20,7 +20,7 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.dao.payment.PaymentModeDao;
-import com.hk.dao.user.UserDao;
+import com.hk.dao.user.UserDaoImpl;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.order.Order;
@@ -45,7 +45,7 @@ public class OrderSummaryAction extends BaseAction {
   
   private CourierService courierService;
   
-  UserDao userDao;
+  UserDaoImpl userDao;
   
   OrderManager orderManager;
   

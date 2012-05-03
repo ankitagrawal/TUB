@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.akube.framework.dao.Page;
 import com.hk.dao.user.UserCartDao;
-import com.hk.dao.user.UserDao;
+import com.hk.dao.user.UserDaoImpl;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.Role;
@@ -22,7 +22,7 @@ import com.shiro.PrincipalImpl;
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    private UserDao         userDao;
+    private UserDaoImpl         userDao;
     @Autowired
     private UserCartDao     userCartDao;
     //@Autowired
@@ -86,7 +86,7 @@ public class UserServiceImpl implements UserService {
         getUserCartDao().updateIsProductBought(order);
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     public User save(User user) {
         return getUserDao().save(user);
     }
@@ -101,11 +101,11 @@ public class UserServiceImpl implements UserService {
         return getUserDao().findByRole(role, pageNo, perPage);
     }
 
-    public UserDao getUserDao() {
+    public UserDaoImpl getUserDao() {
         return userDao;
     }
 
-    public void setUserDao(UserDao userDao) {
+    public void setUserDao(UserDaoImpl userDao) {
         this.userDao = userDao;
     }
 

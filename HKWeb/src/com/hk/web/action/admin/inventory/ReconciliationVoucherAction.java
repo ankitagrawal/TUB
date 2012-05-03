@@ -29,7 +29,7 @@ import com.hk.constants.inventory.EnumReconciliationType;
 import com.hk.dao.BaseDao;
 import com.hk.dao.catalog.product.ProductVariantDao;
 import com.hk.dao.sku.SkuGroupDao;
-import com.hk.dao.user.UserDao;
+import com.hk.dao.user.UserDaoImpl;
 import com.hk.domain.inventory.rv.ReconciliationType;
 import com.hk.domain.inventory.rv.ReconciliationVoucher;
 import com.hk.domain.inventory.rv.RvLineItem;
@@ -54,7 +54,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 
     ProductVariantDao                   productVariantDao;
 
-    UserDao                             userDao;
+    UserDaoImpl                             userDao;
 
     SkuGroupDao                         skuGroupDao;
 

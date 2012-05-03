@@ -19,7 +19,7 @@ import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.dao.user.UserDao;
+import com.hk.dao.user.UserDaoImpl;
 import com.hk.domain.user.User;
 import com.hk.dto.user.UserFilterDto;
 import com.hk.web.action.error.AdminPermissionAction;
@@ -27,7 +27,7 @@ import com.hk.web.action.error.AdminPermissionAction;
 @Secure(hasAnyPermissions = {PermissionConstants.SEARCH_USERS}, authActionBean = AdminPermissionAction.class)
 @Component
 public class SearchUserAction extends BasePaginatedAction {
-   UserDao userDao;
+   UserDaoImpl userDao;
 
   @Session(key = HealthkartConstants.Session.userSearchFilterKey)
   private UserFilterDto userFilterDto;

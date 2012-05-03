@@ -20,7 +20,7 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.admin.impl.dao.courier.AwbDao;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.dao.user.UserDao;
+import com.hk.dao.user.UserDaoImpl;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.user.User;
@@ -36,7 +36,7 @@ public class GetAvailableAWBNumberAction extends BaseAction implements Validatio
     AwbDao awbDao;
 
     
-    UserDao userDao;
+    UserDaoImpl userDao;
 
     @Validate(required = true)
     private Courier courier;

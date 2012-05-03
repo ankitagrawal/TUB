@@ -16,7 +16,7 @@ import com.akube.framework.stripes.controller.Breadcrumb;
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.dao.user.UserDao;
+import com.hk.dao.user.UserDaoImpl;
 import com.hk.domain.user.User;
 import com.hk.web.action.error.AdminPermissionAction;
 
@@ -29,7 +29,7 @@ import com.hk.web.action.error.AdminPermissionAction;
 @Component
 public class ChangeLoginPasswordAction extends BaseAction {
 
-   UserDao userDao;
+   UserDaoImpl userDao;
 
   @Validate(required = true)
   private User user;

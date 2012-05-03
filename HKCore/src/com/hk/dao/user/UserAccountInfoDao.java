@@ -12,7 +12,7 @@ import com.hk.domain.user.UserAccountInfo;
 public class UserAccountInfoDao extends BaseDaoImpl {
 
     @Autowired
-    private UserDao userDao;
+    private UserDaoImpl userDao;
 
     @Transactional
     public UserAccountInfo getOrCreateUserAccountInfo(User user) {
@@ -36,11 +36,11 @@ public class UserAccountInfoDao extends BaseDaoImpl {
         return (UserAccountInfo) super.save(userAccountInfo);
     }
 
-    public UserDao getUserDao() {
+    public UserDaoImpl getUserDao() {
         return userDao;
     }
 
-    public void setUserDao(UserDao userDao) {
+    public void setUserDao(UserDaoImpl userDao) {
         this.userDao = userDao;
     }
 

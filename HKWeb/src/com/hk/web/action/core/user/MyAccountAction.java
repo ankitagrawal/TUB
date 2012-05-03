@@ -17,7 +17,7 @@ import com.hk.constants.core.EnumRole;
 import com.hk.constants.core.RoleConstants;
 import com.hk.dao.impl.RoleDao;
 import com.hk.dao.user.B2bUserDetailsDao;
-import com.hk.dao.user.UserDao;
+import com.hk.dao.user.UserDaoImpl;
 import com.hk.domain.user.B2bUserDetails;
 import com.hk.domain.user.User;
 import com.hk.manager.UserManager;
@@ -34,7 +34,7 @@ public class MyAccountAction extends BaseAction {
   String newPassword;
   String confirmPassword;
 
-   UserDao userDao;
+   UserDaoImpl userDao;
    B2bUserDetailsDao b2bUserDetailsDao;
    UserManager userManager;
    RoleDao roleDao;

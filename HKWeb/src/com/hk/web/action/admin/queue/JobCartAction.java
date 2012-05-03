@@ -20,7 +20,7 @@ import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.dao.catalog.category.CategoryDao;
 import com.hk.dao.payment.PaymentModeDao;
 import com.hk.dao.sku.SkuItemDao;
-import com.hk.dao.user.UserDao;
+import com.hk.dao.user.UserDaoImpl;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.Bin;
@@ -59,7 +59,7 @@ public class JobCartAction extends BaseAction {
   
   ReferrerProgramManager referrerProgramManager;
   
-  UserDao userDao;
+  UserDaoImpl userDao;
   
   BarcodeGenerator barcodeGenerator;
   
