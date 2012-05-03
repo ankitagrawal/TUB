@@ -38,7 +38,7 @@
   <s:layout-component name="left_col">
 
 
-    <s:form beanclass="com.hk.web.action.SignupAction">
+    <s:form beanclass="com.hk.web.action.core.user.SignupAction">
       <fieldset class="right_label">
           <%--<h2>Login Details</h2>--%>
         <div style="width: 600px; margin: 10px auto; background: #fafafa; padding: 20px;">
