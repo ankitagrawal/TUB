@@ -53,6 +53,20 @@
 				com.hk.web.interceptor.StripesSpringInterceptor
 			</param-value>
 		</init-param>
+		<init-param>
+			<param-name>Stripes.EncryptionKey</param-name>
+			<param-value>szsdvfmulwl#@$jfdhm38nszfn</param-value>
+		</init-param>
+		<init-param>
+			<param-name>Extension.Packages</param-name>
+			<param-value>com.hk.web.validation</param-value>
+		</init-param>
+		<init-param>
+			<param-name>TypeConverterFactory.Class</param-name>
+			<param-value>
+				com.hk.core.factory.SpringTypeConverterFactory
+			</param-value>
+		</init-param>
 	</filter>
 
 	<servlet>
@@ -127,6 +141,15 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 
+
+	<filter>
+		<filter-name>WebContextFilter</filter-name>
+		<filter-class>com.hk.web.filter.WebContextFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>WebContextFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 
 	<filter>
 		<filter-name>ShiroFilter</filter-name>

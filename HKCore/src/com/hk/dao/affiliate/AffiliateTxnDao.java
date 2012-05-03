@@ -28,7 +28,7 @@ public class AffiliateTxnDao extends BaseDaoImpl {
 
     public AffiliateTxn getTxnByOrder(Order order) {
         String queryString = "from AffiliateTxn aT where aT.order =:order";
-        return (AffiliateTxn) findUniqueByNamedQueryAndNamedParam(queryString, new String[] { "order" }, new Object[] { order });
+        return (AffiliateTxn) findUniqueByNamedParams(queryString, new String[] { "order" }, new Object[] { order });
     }
 
     public AffiliateTxn saveTxn(Affiliate affiliate, Double amountToAdd, AffiliateTxnType affiliateTxnType, Order order) {
