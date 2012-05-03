@@ -8,6 +8,7 @@ import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,7 @@ public class EmailServiceImpl implements EmailService {
 
     private static Logger   logger = LoggerFactory.getLogger(EmailService.class);
 
-    
+    @Autowired
     FreeMarkerService freeMarkerService ;
     @Value("#{hkEnvProps['hkNoReplyEmail']}")
     private String            noReplyEmail;

@@ -8,7 +8,6 @@ import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.util.CryptoUtil;
-import net.sourceforge.stripes.validation.EmailTypeConverter;
 import net.sourceforge.stripes.validation.LocalizableError;
 import net.sourceforge.stripes.validation.Validate;
 import net.sourceforge.stripes.validation.ValidationMethod;
@@ -16,7 +15,6 @@ import net.sourceforge.stripes.validation.ValidationMethod;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
@@ -28,11 +26,12 @@ import com.hk.manager.UserManager;
 import com.hk.service.UserService;
 import com.hk.web.action.HomeAction;
 import com.hk.web.action.core.auth.LoginAction;
+import com.hk.web.validation.EmailTypeTypeConverter;
 
 @Component
 public class SignupAction extends BaseAction {
 
-    @Validate(required = true, converter = EmailTypeConverter.class)
+    @Validate(required = true)
     private String      email;
 
     @Validate(required = true)
