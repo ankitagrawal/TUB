@@ -74,6 +74,7 @@ public class EmailManager {
 
     @Autowired
     private BaseDao           baseDao;
+    @Autowired
     private EmailService      emailService;
     @Autowired
     private OrderManager      orderManager;

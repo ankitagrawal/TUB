@@ -11,7 +11,7 @@
 <s:layout-component name="content">
 <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_MULTIPLE_WAREHOUSE%>">
   <%
-    WarehouseService warehouseService = InjectorFactory.getInjector().getInstance(WarehouseService.class);
+    WarehouseService warehouseService = (WarehouseService)ServiceLocatorFactory.getService("WarehouseService");
     pageContext.setAttribute("whList", warehouseService.getAllWarehouses());
   %>
   <table>
@@ -107,8 +107,8 @@
 
   <h3><s:link beanclass="com.hk.web.action.admin.queue.DeliveryAwaitingQueueAction">Delivery Awaiting Queue</s:link></h3>
 
-  <h3>
   </c:if>
+  <h3>
     <s:link
         beanclass="com.hk.web.action.admin.InventoryHealthStatusAction" event="downloadWHInventorySnapshot">WH Inventory Excel
     </s:link></h3>
