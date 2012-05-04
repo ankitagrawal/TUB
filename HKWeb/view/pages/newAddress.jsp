@@ -3,7 +3,7 @@
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.NewAddressAction" event="show" var="addressBean"/>
+<s:useActionBean beanclass="com.hk.web.action.core.user.NewAddressAction" event="show" var="addressBean"/>
 <s:layout-render name="/layouts/modal.jsp">
   <s:layout-component name="heading">New address</s:layout-component>
   <s:layout-component name="content">
@@ -12,7 +12,7 @@
 
       <h2>Please enter a Shipping Address</h2>
 
-      <s:form beanclass="com.hk.web.action.NewAddressAction" id="newAddressForm">
+      <s:form beanclass="com.hk.web.action.core.user.NewAddressAction" id="newAddressForm">
         <p class="gry sml">Field marked * are required.</p>
         <fieldset class="right_label short_label">
           <ul>

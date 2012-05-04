@@ -11,6 +11,7 @@ import net.sourceforge.stripes.validation.ValidateNestedProperties;
 import net.sourceforge.stripes.validation.ValidationErrorHandler;
 import net.sourceforge.stripes.validation.ValidationErrors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -34,10 +35,15 @@ import com.hk.web.action.core.order.OrderSummaryAction;
 @Component
 public class NewAddressAction extends BaseAction implements ValidationErrorHandler {
 
+    @Autowired
     AddressDao                  addressDao;
+    @Autowired
     LinkManager                 linkManager;
+    @Autowired
     OrderManager                orderManager;
+    @Autowired
     OrderDao                    orderDao;
+    @Autowired
     AddressMatchScoreCalculator addressMatchScoreCalculator;
 
     private UserService         userService;
