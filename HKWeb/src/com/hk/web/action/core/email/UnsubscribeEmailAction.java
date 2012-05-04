@@ -1,5 +1,6 @@
 package com.hk.web.action.core.email;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -13,7 +14,7 @@ import com.hk.domain.email.EmailRecepient;
 
 @Component
 public class UnsubscribeEmailAction extends BaseAction {
-
+    @Autowired
    EmailRecepientDao emailRecepientDao;
 
   @Validate(required = true)

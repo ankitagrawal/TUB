@@ -1,5 +1,6 @@
 package com.hk.web.action.core.payment;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import net.sourceforge.stripes.action.RedirectResolution;
@@ -27,12 +28,15 @@ import com.hk.service.UserService;
  */
 @Component
 public class CounterCashPaymentReceiveAction extends BaseAction {
-
+    @Autowired
     private PaymentManager paymentManager;
-
+    @Autowired
     private PaymentService paymentService;
+    @Autowired
     private RoleService    roleService;
+    @Autowired
     private UserService    userService;
+    @Autowired
     private OrderManager   orderManager;
 
     // PaymentModeDao paymentModeDao;

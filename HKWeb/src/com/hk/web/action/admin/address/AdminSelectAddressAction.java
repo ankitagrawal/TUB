@@ -11,9 +11,9 @@ import net.sourceforge.stripes.validation.Validate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
-
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.PermissionConstants;
@@ -25,67 +25,68 @@ import com.hk.domain.user.User;
 import com.hk.web.action.admin.AdminHomeAction;
 import com.hk.web.action.error.AdminPermissionAction;
 
-@Secure(hasAnyPermissions = {PermissionConstants.UPDATE_ORDER}, authActionBean = AdminPermissionAction.class)
+@Secure(hasAnyPermissions = { PermissionConstants.UPDATE_ORDER }, authActionBean = AdminPermissionAction.class)
 @Component
 public class AdminSelectAddressAction extends BaseAction {
 
-  private static Logger logger = LoggerFactory.getLogger(AdminSelectAddressAction.class);
-  
-  @Validate(required = true)
-  private Order order;
+    private static Logger logger = LoggerFactory.getLogger(AdminSelectAddressAction.class);
 
-  @Validate(on = "selectAddress", required = true)
-  private Address selectedAddress;
+    @Validate(required = true)
+    private Order         order;
 
-  private List<Address> addresses;
+    @Validate(on = "selectAddress", required = true)
+    private Address       selectedAddress;
 
-   AddressDao addressDao;
-  
-  OrderDao orderDao;
+    private List<Address> addresses;
 
-  @DefaultHandler
-  public Resolution pre() {
-    User user = order.getUser();
-    addresses = addressDao.getVisibleAddresses(user);
-    selectedAddress = order.getAddress();
-    if (selectedAddress == null) {
-      // get the last order address? for not selecting just first non deleted one.
-      if (addresses != null && addresses.size() > 0) {
-        selectedAddress = addresses.get(0);
-      }
+    @Autowired
+    AddressDao            addressDao;
+    @Autowired
+    OrderDao              orderDao;
+
+    @DefaultHandler
+    public Resolution pre() {
+        User user = order.getUser();
+        addresses = addressDao.getVisibleAddresses(user);
+        selectedAddress = order.getAddress();
+        if (selectedAddress == null) {
+            // get the last order address? for not selecting just first non deleted one.
+            if (addresses != null && addresses.size() > 0) {
+                selectedAddress = addresses.get(0);
+            }
+        }
+        return new ForwardResolution("/pages/admin/addressBook.jsp");
     }
-    return new ForwardResolution("/pages/admin/addressBook.jsp");
-  }
 
-  public Resolution selectAddress() {
-    order.setAddress(selectedAddress);
-    orderDao.save(order);
+    public Resolution selectAddress() {
+        order.setAddress(selectedAddress);
+        orderDao.save(order);
 
-    addRedirectAlertMessage(new SimpleMessage("address has been updated for order "+order.getGatewayOrderId()));
-    return new RedirectResolution(AdminHomeAction.class);
-  }
+        addRedirectAlertMessage(new SimpleMessage("address has been updated for order " + order.getGatewayOrderId()));
+        return new RedirectResolution(AdminHomeAction.class);
+    }
 
-  public Order getOrder() {
-    return order;
-  }
+    public Order getOrder() {
+        return order;
+    }
 
-  public void setOrder(Order order) {
-    this.order = order;
-  }
+    public void setOrder(Order order) {
+        this.order = order;
+    }
 
-  public List<Address> getAddresses() {
-    return addresses;
-  }
+    public List<Address> getAddresses() {
+        return addresses;
+    }
 
-  public void setAddresses(List<Address> addresses) {
-    this.addresses = addresses;
-  }
+    public void setAddresses(List<Address> addresses) {
+        this.addresses = addresses;
+    }
 
-  public Address getSelectedAddress() {
-    return selectedAddress;
-  }
+    public Address getSelectedAddress() {
+        return selectedAddress;
+    }
 
-  public void setSelectedAddress(Address selectedAddress) {
-    this.selectedAddress = selectedAddress;
-  }
+    public void setSelectedAddress(Address selectedAddress) {
+        this.selectedAddress = selectedAddress;
+    }
 }

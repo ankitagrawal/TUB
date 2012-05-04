@@ -15,6 +15,7 @@ import net.sourceforge.stripes.validation.ValidationMethod;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BasePaginatedAction;
@@ -32,7 +33,7 @@ public class SearchShippingOrderAction extends BasePaginatedAction {
   private String trackingId;
   private List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>();
 
-  
+  @Autowired
   ShippingOrderService shippingOrderService;
 
   @ValidationMethod(on = "searchShippingOrder")

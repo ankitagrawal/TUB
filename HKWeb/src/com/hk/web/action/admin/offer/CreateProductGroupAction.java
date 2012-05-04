@@ -55,8 +55,6 @@ public class CreateProductGroupAction extends BaseAction {
     ProductService        productService;
     @Autowired
     ProductVariantService productVariantService;
-    @Autowired
-    BaseDao               baseDao;
 
     @ValidationMethod
     public void validateCreate() {
@@ -180,12 +178,5 @@ public class CreateProductGroupAction extends BaseAction {
         this.productVariantService = productVariantService;
     }
 
-    public BaseDao getBaseDao() {
-        return baseDao;
-    }
-
-    public void setBaseDao(BaseDao baseDao) {
-        this.baseDao = baseDao;
-    }
 
 }

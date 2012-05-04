@@ -76,9 +76,9 @@ public class SkuParseExcelAction extends BaseAction {
     public Resolution pre() {
         return new ForwardResolution("/pages/admin/bulkUploadSKU.jsp");
     }
-
+    @Autowired
     SkuXslParser                  skuXslParser;
-
+    @Autowired
     SkuService                    skuService;
 
     @Autowired
@@ -92,7 +92,7 @@ public class SkuParseExcelAction extends BaseAction {
 
     @Autowired
     private InventoryService              inventoryService;
-    
+    @Autowired
     private AdminInventoryService adminInventoryService;
 
     // @Named(Keys.Env.adminUploads)

@@ -13,9 +13,9 @@ import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
-
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
@@ -26,10 +26,9 @@ import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.inventory.EnumReconciliationType;
-import com.hk.dao.BaseDao;
 import com.hk.dao.catalog.product.ProductVariantDao;
 import com.hk.dao.sku.SkuGroupDao;
-import com.hk.dao.user.UserDaoImpl;
+import com.hk.dao.user.UserDao;
 import com.hk.domain.inventory.rv.ReconciliationType;
 import com.hk.domain.inventory.rv.ReconciliationVoucher;
 import com.hk.domain.inventory.rv.RvLineItem;
@@ -47,25 +46,24 @@ import com.hk.web.action.error.AdminPermissionAction;
 public class ReconciliationVoucherAction extends BasePaginatedAction {
 
     private static Logger               logger                 = Logger.getLogger(ReconciliationVoucherAction.class);
-
+    @Autowired
     ReconciliationVoucherDao            reconciliationVoucherDao;
 
-    BaseDao                             baseDao;
-
+    @Autowired
     ProductVariantDao                   productVariantDao;
-
-    UserDaoImpl                             userDao;
-
+    @Autowired
+    UserDao                             userDao;
+    @Autowired
     SkuGroupDao                         skuGroupDao;
-
+    @Autowired
     AdminSkuItemDao                     adminSkuItemDao;
-
+    @Autowired
     AdminInventoryService               adminInventoryService;
-
+    @Autowired
     private InventoryService            inventoryService;
-
+    @Autowired
     AdminProductVariantInventoryDao     productVariantInventoryDao;
-
+    @Autowired
     SkuService                          skuService;
 
     private ReconciliationVoucher       reconciliationVoucher;
@@ -115,12 +113,12 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
                 sku = skuService.getSKU(rvLineItem.getProductVariant(), reconciliationVoucher.getWarehouse());
             }
             if (rvLineItem.getQty() != null && rvLineItem.getQty() == 0 && rvLineItem.getId() != null) {
-                baseDao.delete(rvLineItem);
+                getBaseDao().delete(rvLineItem);
             } else if (rvLineItem.getId() == null) {
                 if (rvLineItem.getReconciliationType().equals(reconciliationVoucherDao.get(ReconciliationType.class, EnumReconciliationType.Add.getId()))) {
                     rvLineItem.setSku(sku);
                     rvLineItem.setReconciliationVoucher(reconciliationVoucher);
-                    rvLineItem = (RvLineItem) baseDao.save(rvLineItem);
+                    rvLineItem = (RvLineItem) getBaseDao().save(rvLineItem);
                     if (productVariantInventoryDao.getPVIForRV(sku, rvLineItem).isEmpty()) {
                         // Create batch and checkin inv
                         SkuGroup skuGroup = adminInventoryService.createSkuGroup(rvLineItem.getBatchNumber(), rvLineItem.getMfgDate(), rvLineItem.getExpiryDate(), null,
@@ -133,7 +131,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
                     if (!instockSkuItems.isEmpty()) {
                         rvLineItem.setSku(sku);
                         rvLineItem.setReconciliationVoucher(reconciliationVoucher);
-                        rvLineItem = (RvLineItem) baseDao.save(rvLineItem);
+                        rvLineItem = (RvLineItem) getBaseDao().save(rvLineItem);
 
                         if (productVariantInventoryDao.getPVIForRV(sku, rvLineItem).isEmpty()) {
                             // Delete from available batches.
@@ -154,7 +152,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
                     if (!instockSkuItems.isEmpty()) {
                         rvLineItem.setSku(sku);
                         rvLineItem.setReconciliationVoucher(reconciliationVoucher);
-                        rvLineItem = (RvLineItem) baseDao.save(rvLineItem);
+                        rvLineItem = (RvLineItem) getBaseDao().save(rvLineItem);
                         if (productVariantInventoryDao.getPVIForRV(sku, rvLineItem).isEmpty()) {
                             // Delete from available batches.
                             int counter = 0;
@@ -175,7 +173,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
                     if (!instockSkuItems.isEmpty()) {
                         rvLineItem.setSku(sku);
                         rvLineItem.setReconciliationVoucher(reconciliationVoucher);
-                        rvLineItem = (RvLineItem) baseDao.save(rvLineItem);
+                        rvLineItem = (RvLineItem) getBaseDao().save(rvLineItem);
                         if (productVariantInventoryDao.getPVIForRV(sku, rvLineItem).isEmpty()) {
                             // Delete from available batches.
                             int counter = 0;

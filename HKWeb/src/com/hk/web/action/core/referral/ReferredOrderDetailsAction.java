@@ -3,6 +3,7 @@ package com.hk.web.action.core.referral;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -26,6 +27,7 @@ public class ReferredOrderDetailsAction extends BaseAction {
 
   PricingDto pricingDto;
 
+  @Autowired
    PricingEngine pricingEngine;
 
   public Resolution pre() {

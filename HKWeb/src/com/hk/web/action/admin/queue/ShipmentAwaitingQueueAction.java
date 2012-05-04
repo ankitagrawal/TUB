@@ -28,7 +28,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.impl.dao.courier.CourierDao;
@@ -51,226 +50,222 @@ import com.hk.web.action.error.AdminPermissionAction;
 @Component
 public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
 
-  private static Logger logger = LoggerFactory.getLogger(ShipmentAwaitingQueueAction.class);
+    private static Logger              logger            = LoggerFactory.getLogger(ShipmentAwaitingQueueAction.class);
 
-  Page shippingOrderPage;
+    Page                               shippingOrderPage;
 
-  List<LineItem> lineItems = new ArrayList<LineItem>();
+    List<LineItem>                     lineItems         = new ArrayList<LineItem>();
 
-  @Autowired
-  private ShippingOrderService shippingOrderService;
-  @Autowired
-  private AdminShippingOrderService adminShippingOrderService;
-	private SeekInvoiceNumService seekInvoiceNumService;
-  private ShippingOrderStatusService shippingOrderStatusService;
-  private CourierService courierService;
-  private CourierDao courierDao;
+    @Autowired
+    private ShippingOrderService       shippingOrderService;
+    @Autowired
+    private AdminShippingOrderService  adminShippingOrderService;
+    @Autowired
+    private SeekInvoiceNumService      seekInvoiceNumService;
+    @Autowired
+    private ShippingOrderStatusService shippingOrderStatusService;
+    @Autowired
+    private CourierService             courierService;
+    @Autowired
+    private CourierDao                 courierDao;
 
-  List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>();
+    List<ShippingOrder>                shippingOrderList = new ArrayList<ShippingOrder>();
 
-  private Long orderId;
-  private String gatewayOrderId;
-  private Courier courier;
+    private Long                       orderId;
+    private String                     gatewayOrderId;
+    private Courier                    courier;
 
-  
-  //@Named(Keys.Env.adminDownloads)
-  @Value("#{hkEnvProps['adminDownloads']}")
-  String adminDownloads;
-  File xlsFile;
+    // @Named(Keys.Env.adminDownloads)
+    @Value("#{hkEnvProps['adminDownloads']}")
+    String                             adminDownloads;
+    File                               xlsFile;
 
-  
-  ReportManager reportGenerator;
+    ReportManager                      reportGenerator;
 
-  private Integer defaultPerPage = 30;
+    private Integer                    defaultPerPage    = 30;
 
-
-  @DontValidate
-  @DefaultHandler
-  @Secure(hasAnyPermissions = {PermissionConstants.VIEW_SHIPMENT_QUEUE}, authActionBean = AdminPermissionAction.class)
-  public Resolution pre() {
-    return searchOrders();
-  }
-
-  public Resolution searchOrders() {
-    List<Courier> courierList = new ArrayList<Courier>();
-    if (courier == null) {
-      courierList = courierService.getAllCouriers();
-    } else {
-      courierList.add(courier);
+    @DontValidate
+    @DefaultHandler
+    @Secure(hasAnyPermissions = { PermissionConstants.VIEW_SHIPMENT_QUEUE }, authActionBean = AdminPermissionAction.class)
+    public Resolution pre() {
+        return searchOrders();
     }
 
-    ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
-    shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForShipmentAwaiting()));
-    shippingOrderSearchCriteria.setOrderId(orderId).setGatewayOrderId(gatewayOrderId);
-	  shippingOrderSearchCriteria.setOrderAsc(true);
-    shippingOrderSearchCriteria.setCourierList(courierList);
-
-    shippingOrderPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, getPageNo(), getPerPage());
-    if (shippingOrderPage != null) {
-      shippingOrderList = shippingOrderPage.getList();
-    }
-
-    return new ForwardResolution("/pages/admin/shipmentAwaitingQueue.jsp");
-  }
-
-  @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_SHIPMENT_QUEUE}, authActionBean = AdminPermissionAction.class)
-  public Resolution moveToActionAwaiting() {
-    logger.info("shipment queue move to action awaiting");
-    for (ShippingOrder shippingOrder : shippingOrderList) {
-        adminShippingOrderService.moveShippingOrderBackToActionQueue(shippingOrder);
-    }
-    addRedirectAlertMessage(new SimpleMessage("Orders have been moved back to Action Awaiting"));
-    return new RedirectResolution(ShipmentAwaitingQueueAction.class);
-  }
-
-  @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_SHIPMENT_QUEUE}, authActionBean = AdminPermissionAction.class)
-  public Resolution markShippingOrdersAsShipped() {
-    logger.info("shipment queue mark as shipped");
-    if (shippingOrderList != null && !shippingOrderList.isEmpty()) {
-      for (ShippingOrder shippingOrder : shippingOrderList) {
-				//shippingOrder.setAccountingInvoiceNumber();
-	      String invoiceType = InvoiceNumHelper.getInvoiceType(shippingOrder.isServiceOrder() , shippingOrder.getBaseOrder().isB2bOrder());
-	      shippingOrder.setAccountingInvoiceNumber(seekInvoiceNumService.getInvoiceNum(invoiceType, shippingOrder.getWarehouse()));
-	      adminShippingOrderService.markShippingOrderAsShipped(shippingOrder);
-      }
-      addRedirectAlertMessage(new SimpleMessage("Orders have been marked as shipped"));
-    } else {
-      addRedirectAlertMessage(new SimpleMessage("Please select at least one order to be marked as shipped"));
-    }
-    return new RedirectResolution(ShipmentAwaitingQueueAction.class);
-  }
-
-  @DontValidate
-  @Secure(hasAnyPermissions = {PermissionConstants.DOWNLOAD_COURIER_EXCEL}, authActionBean = AdminPermissionAction.class)
-  public Resolution generateCourierReport() {
-    //TODO: #warehouse fix this
-
-    try {
-      SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-      xlsFile = new File(adminDownloads + "/reports/courier-report-" + sdf.format(new Date()) + ".xls");
-      List<Courier> courierList = new ArrayList<Courier>();
-      if (courier == null) {
-        courierList = courierService.getAllCouriers();
-      } else {
-        courierList.add(courier);
-      }
-      if (courier != null) {
-        if (courier.equals(courierDao.getCourierById(EnumCourier.BlueDart.getId())) || courier.equals(courierDao.getCourierById(EnumCourier.BlueDart_COD.getId()))) {
-          xlsFile = reportGenerator.generateCourierReportXslForBlueDart(xlsFile.getPath(), EnumShippingOrderStatus.SO_Packed, courierList);
+    public Resolution searchOrders() {
+        List<Courier> courierList = new ArrayList<Courier>();
+        if (courier == null) {
+            courierList = courierService.getAllCouriers();
         } else {
-          xlsFile = reportGenerator.generateCourierReportXsl(xlsFile.getPath(), EnumShippingOrderStatus.SO_Packed, courierList);
+            courierList.add(courier);
         }
-      } else {
-        xlsFile = reportGenerator.generateCourierReportXsl(xlsFile.getPath(), EnumShippingOrderStatus.SO_Packed, courierList);
-      }
-      addRedirectAlertMessage(new SimpleMessage("Courier report successfully generated."));
-    } catch (Exception e) {
-      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-      addRedirectAlertMessage(new SimpleMessage("Courier report generation failed"));
+
+        ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
+        shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForShipmentAwaiting()));
+        shippingOrderSearchCriteria.setOrderId(orderId).setGatewayOrderId(gatewayOrderId);
+        shippingOrderSearchCriteria.setOrderAsc(true);
+        shippingOrderSearchCriteria.setCourierList(courierList);
+
+        shippingOrderPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, getPageNo(), getPerPage());
+        if (shippingOrderPage != null) {
+            shippingOrderList = shippingOrderPage.getList();
+        }
+
+        return new ForwardResolution("/pages/admin/shipmentAwaitingQueue.jsp");
     }
 
-    return new HTTPResponseResolution();
-  }
-
-  /**
-   * Custom resolution for HTTP response. The resolution will write the output file in response
-   */
-
-  public class HTTPResponseResolution implements Resolution {
-    public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
-      OutputStream out = null;
-      InputStream in = new BufferedInputStream(new FileInputStream(xlsFile));
-      res.setContentLength((int) xlsFile.length());
-      res.setHeader("Content-Disposition", "attachment; filename=\"" + xlsFile.getName() + "\";");
-      out = res.getOutputStream();
-
-      // Copy the contents of the file to the output stream
-      byte[] buf = new byte[4096];
-      int count = 0;
-      while ((count = in.read(buf)) >= 0) {
-        out.write(buf, 0, count);
-      }
+    @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_SHIPMENT_QUEUE }, authActionBean = AdminPermissionAction.class)
+    public Resolution moveToActionAwaiting() {
+        logger.info("shipment queue move to action awaiting");
+        for (ShippingOrder shippingOrder : shippingOrderList) {
+            adminShippingOrderService.moveShippingOrderBackToActionQueue(shippingOrder);
+        }
+        addRedirectAlertMessage(new SimpleMessage("Orders have been moved back to Action Awaiting"));
+        return new RedirectResolution(ShipmentAwaitingQueueAction.class);
     }
-  }
 
-  public int getPerPageDefault() {
-    return 30;
-  }
+    @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_SHIPMENT_QUEUE }, authActionBean = AdminPermissionAction.class)
+    public Resolution markShippingOrdersAsShipped() {
+        logger.info("shipment queue mark as shipped");
+        if (shippingOrderList != null && !shippingOrderList.isEmpty()) {
+            for (ShippingOrder shippingOrder : shippingOrderList) {
+                // shippingOrder.setAccountingInvoiceNumber();
+                String invoiceType = InvoiceNumHelper.getInvoiceType(shippingOrder.isServiceOrder(), shippingOrder.getBaseOrder().isB2bOrder());
+                shippingOrder.setAccountingInvoiceNumber(seekInvoiceNumService.getInvoiceNum(invoiceType, shippingOrder.getWarehouse()));
+                adminShippingOrderService.markShippingOrderAsShipped(shippingOrder);
+            }
+            addRedirectAlertMessage(new SimpleMessage("Orders have been marked as shipped"));
+        } else {
+            addRedirectAlertMessage(new SimpleMessage("Please select at least one order to be marked as shipped"));
+        }
+        return new RedirectResolution(ShipmentAwaitingQueueAction.class);
+    }
 
-  public int getPageCount() {
-    return shippingOrderPage == null ? 0 : shippingOrderPage.getTotalPages();
-  }
+    @DontValidate
+    @Secure(hasAnyPermissions = { PermissionConstants.DOWNLOAD_COURIER_EXCEL }, authActionBean = AdminPermissionAction.class)
+    public Resolution generateCourierReport() {
+        // TODO: #warehouse fix this
 
-  public int getResultCount() {
-    return shippingOrderPage == null ? 0 : shippingOrderPage.getTotalResults();
-  }
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+            xlsFile = new File(adminDownloads + "/reports/courier-report-" + sdf.format(new Date()) + ".xls");
+            List<Courier> courierList = new ArrayList<Courier>();
+            if (courier == null) {
+                courierList = courierService.getAllCouriers();
+            } else {
+                courierList.add(courier);
+            }
+            if (courier != null) {
+                if (courier.equals(courierDao.getCourierById(EnumCourier.BlueDart.getId())) || courier.equals(courierDao.getCourierById(EnumCourier.BlueDart_COD.getId()))) {
+                    xlsFile = reportGenerator.generateCourierReportXslForBlueDart(xlsFile.getPath(), EnumShippingOrderStatus.SO_Packed, courierList);
+                } else {
+                    xlsFile = reportGenerator.generateCourierReportXsl(xlsFile.getPath(), EnumShippingOrderStatus.SO_Packed, courierList);
+                }
+            } else {
+                xlsFile = reportGenerator.generateCourierReportXsl(xlsFile.getPath(), EnumShippingOrderStatus.SO_Packed, courierList);
+            }
+            addRedirectAlertMessage(new SimpleMessage("Courier report successfully generated."));
+        } catch (Exception e) {
+            e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.
+            addRedirectAlertMessage(new SimpleMessage("Courier report generation failed"));
+        }
 
-  public Set<String> getParamSet() {
-    return null;
-  }
+        return new HTTPResponseResolution();
+    }
 
-  public List<ShippingOrder> getShippingOrderList() {
-    return shippingOrderList;
-  }
+    /**
+     * Custom resolution for HTTP response. The resolution will write the output file in response
+     */
 
-  public void setShippingOrderList(List<ShippingOrder> shippingOrderList) {
-    this.shippingOrderList = shippingOrderList;
-  }
+    public class HTTPResponseResolution implements Resolution {
+        public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
+            OutputStream out = null;
+            InputStream in = new BufferedInputStream(new FileInputStream(xlsFile));
+            res.setContentLength((int) xlsFile.length());
+            res.setHeader("Content-Disposition", "attachment; filename=\"" + xlsFile.getName() + "\";");
+            out = res.getOutputStream();
 
-  public List<LineItem> getLineItems() {
-    return lineItems;
-  }
+            // Copy the contents of the file to the output stream
+            byte[] buf = new byte[4096];
+            int count = 0;
+            while ((count = in.read(buf)) >= 0) {
+                out.write(buf, 0, count);
+            }
+        }
+    }
 
-  public void setLineItems(List<LineItem> lineItems) {
-    this.lineItems = lineItems;
-  }
+    public int getPerPageDefault() {
+        return 30;
+    }
 
-  public void setOrderId(Long orderId) {
-    this.orderId = orderId;
-  }
+    public int getPageCount() {
+        return shippingOrderPage == null ? 0 : shippingOrderPage.getTotalPages();
+    }
 
-  public void setGatewayOrderId(String gatewayOrderId) {
-    this.gatewayOrderId = gatewayOrderId;
-  }
+    public int getResultCount() {
+        return shippingOrderPage == null ? 0 : shippingOrderPage.getTotalResults();
+    }
 
-  public Courier getCourier() {
-    return courier;
-  }
+    public Set<String> getParamSet() {
+        return null;
+    }
 
-  public void setCourier(Courier courier) {
-    this.courier = courier;
-  }
+    public List<ShippingOrder> getShippingOrderList() {
+        return shippingOrderList;
+    }
 
-  public Integer getDefaultPerPage() {
-    return defaultPerPage;
-  }
+    public void setShippingOrderList(List<ShippingOrder> shippingOrderList) {
+        this.shippingOrderList = shippingOrderList;
+    }
 
-  public void setDefaultPerPage(Integer defaultPerPage) {
-    this.defaultPerPage = defaultPerPage;
-  }
+    public List<LineItem> getLineItems() {
+        return lineItems;
+    }
 
-  
-  public void setShippingOrderService(ShippingOrderService shippingOrderService) {
-    this.shippingOrderService = shippingOrderService;
-  }
+    public void setLineItems(List<LineItem> lineItems) {
+        this.lineItems = lineItems;
+    }
 
-  
-  public void setShippingOrderStatusService(ShippingOrderStatusService shippingOrderStatusService) {
-    this.shippingOrderStatusService = shippingOrderStatusService;
-  }
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
+    }
 
-  
-  public void setCourierService(CourierService courierService) {
-    this.courierService = courierService;
-  }
+    public void setGatewayOrderId(String gatewayOrderId) {
+        this.gatewayOrderId = gatewayOrderId;
+    }
 
-  
-  public void setCourierDao(CourierDao courierDao) {
-    this.courierDao = courierDao;
-  }
+    public Courier getCourier() {
+        return courier;
+    }
 
-  
-	public void setSeekInvoiceNumService(SeekInvoiceNumService seekInvoiceNumService) {
-	  this.seekInvoiceNumService = seekInvoiceNumService;
-  }
+    public void setCourier(Courier courier) {
+        this.courier = courier;
+    }
+
+    public Integer getDefaultPerPage() {
+        return defaultPerPage;
+    }
+
+    public void setDefaultPerPage(Integer defaultPerPage) {
+        this.defaultPerPage = defaultPerPage;
+    }
+
+    public void setShippingOrderService(ShippingOrderService shippingOrderService) {
+        this.shippingOrderService = shippingOrderService;
+    }
+
+    public void setShippingOrderStatusService(ShippingOrderStatusService shippingOrderStatusService) {
+        this.shippingOrderStatusService = shippingOrderStatusService;
+    }
+
+    public void setCourierService(CourierService courierService) {
+        this.courierService = courierService;
+    }
+
+    public void setCourierDao(CourierDao courierDao) {
+        this.courierDao = courierDao;
+    }
+
+    public void setSeekInvoiceNumService(SeekInvoiceNumService seekInvoiceNumService) {
+        this.seekInvoiceNumService = seekInvoiceNumService;
+    }
 }

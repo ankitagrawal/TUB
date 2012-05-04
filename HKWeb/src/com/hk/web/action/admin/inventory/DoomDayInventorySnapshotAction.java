@@ -10,6 +10,7 @@ import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
@@ -20,106 +21,110 @@ import com.hk.service.InventoryService;
 
 @Component
 public class DoomDayInventorySnapshotAction extends BaseAction {
-   ProductVariantDao productVariantDao;
-  
-  InventoryService inventoryService;
-   DoomDayDao doomDayDao;
+    @Autowired
+    ProductVariantDao            productVariantDao;
+    @Autowired
+    InventoryService             inventoryService;
+    @Autowired
+    DoomDayDao                   doomDayDao;
 
-  private String barcode;
-  private String qty;
+    private String               barcode;
+    private String               qty;
 
-  private List<ProductVariant> productVariants;
-  private ProductVariant productVariant;
+    private List<ProductVariant> productVariants;
+    private ProductVariant       productVariant;
 
-  @DontValidate
-  @DefaultHandler
-  public Resolution pre() {
-    return new ForwardResolution("/pages/admin/inventorySnapshot.jsp");
-  }
-
-  public Resolution saveSnapshot() {
-    if (StringUtils.isBlank(barcode)) {
-      addRedirectAlertMessage(new SimpleMessage("Please enter the barcode"));
-    }
-    if (StringUtils.isBlank(qty)) {
-      addRedirectAlertMessage(new SimpleMessage("Please enter the qty"));
+    @DontValidate
+    @DefaultHandler
+    public Resolution pre() {
+        return new ForwardResolution("/pages/admin/inventorySnapshot.jsp");
     }
 
-    productVariants = productVariantDao.findVariantFromBarcode(barcode);
-    if (productVariants == null || productVariants.isEmpty()) {
-      addRedirectAlertMessage(new SimpleMessage("No product found"));
-    } else if (productVariants.size() == 1) {
-      if (barcode.equals(qty)) {
-        doomDayDao.saveSnapShot(barcode, 1L);
-        addRedirectAlertMessage(new SimpleMessage("SAVED!!!"));
-        String productVariantSaved = productVariants.get(0).getProduct().getName() + "\t" + productVariants.get(0).getOptionsCommaSeparated();
-        return new RedirectResolution(DoomDayInventorySnapshotAction.class).addParameter("productVariantSaved", productVariantSaved).addParameter("variantSaved", "true");
-      } else {
-        try {
-          doomDayDao.saveSnapShot(barcode, Long.valueOf(qty));
-          addRedirectAlertMessage(new SimpleMessage("SAVED!!!"));
-          String productVariantSaved = productVariants.get(0).getProduct().getName() + "\t" + productVariants.get(0).getOptionsCommaSeparated();
-          return new RedirectResolution(DoomDayInventorySnapshotAction.class).addParameter("productVariantSaved", productVariantSaved).addParameter("variantSaved", "true");
-        } catch (NumberFormatException e) {
-          addRedirectAlertMessage(new SimpleMessage("Quantity should be a number or should be equal to the barcode"));
+    public Resolution saveSnapshot() {
+        if (StringUtils.isBlank(barcode)) {
+            addRedirectAlertMessage(new SimpleMessage("Please enter the barcode"));
         }
-      }
-    } else {
+        if (StringUtils.isBlank(qty)) {
+            addRedirectAlertMessage(new SimpleMessage("Please enter the qty"));
+        }
 
-      if (productVariant != null) {
-        try {
-          if (barcode.equals(qty)) {
-            doomDayDao.saveSnapShot(productVariant.getId(), 1L);
-            addRedirectAlertMessage(new SimpleMessage("SAVED!!!"));
-          } else {
-            doomDayDao.saveSnapShot(productVariant.getId(), Long.valueOf(qty));
-            addRedirectAlertMessage(new SimpleMessage("SAVED!!!"));
-          }
-        } catch (NumberFormatException e) {
-          addRedirectAlertMessage(new SimpleMessage("Quantity should be a number or should be equal to the barcode"));
-        }
-      } else {
-        addRedirectAlertMessage(new SimpleMessage("Multiple variants available. Please select appropriate variant."));
-        RedirectResolution redirectResolution = new RedirectResolution(DoomDayInventorySnapshotAction.class).addParameter("qty", qty).addParameter("barcode", barcode).addParameter("showVariants", "true");
-        for (ProductVariant productVariant : productVariants) {
-          redirectResolution.addParameter("productVariants", productVariant.getId());
-        }
-        return redirectResolution;
-      }
+        productVariants = productVariantDao.findVariantFromBarcode(barcode);
+        if (productVariants == null || productVariants.isEmpty()) {
+            addRedirectAlertMessage(new SimpleMessage("No product found"));
+        } else if (productVariants.size() == 1) {
+            if (barcode.equals(qty)) {
+                doomDayDao.saveSnapShot(barcode, 1L);
+                addRedirectAlertMessage(new SimpleMessage("SAVED!!!"));
+                String productVariantSaved = productVariants.get(0).getProduct().getName() + "\t" + productVariants.get(0).getOptionsCommaSeparated();
+                return new RedirectResolution(DoomDayInventorySnapshotAction.class).addParameter("productVariantSaved", productVariantSaved).addParameter("variantSaved", "true");
+            } else {
+                try {
+                    doomDayDao.saveSnapShot(barcode, Long.valueOf(qty));
+                    addRedirectAlertMessage(new SimpleMessage("SAVED!!!"));
+                    String productVariantSaved = productVariants.get(0).getProduct().getName() + "\t" + productVariants.get(0).getOptionsCommaSeparated();
+                    return new RedirectResolution(DoomDayInventorySnapshotAction.class).addParameter("productVariantSaved", productVariantSaved).addParameter("variantSaved",
+                            "true");
+                } catch (NumberFormatException e) {
+                    addRedirectAlertMessage(new SimpleMessage("Quantity should be a number or should be equal to the barcode"));
+                }
+            }
+        } else {
 
+            if (productVariant != null) {
+                try {
+                    if (barcode.equals(qty)) {
+                        doomDayDao.saveSnapShot(productVariant.getId(), 1L);
+                        addRedirectAlertMessage(new SimpleMessage("SAVED!!!"));
+                    } else {
+                        doomDayDao.saveSnapShot(productVariant.getId(), Long.valueOf(qty));
+                        addRedirectAlertMessage(new SimpleMessage("SAVED!!!"));
+                    }
+                } catch (NumberFormatException e) {
+                    addRedirectAlertMessage(new SimpleMessage("Quantity should be a number or should be equal to the barcode"));
+                }
+            } else {
+                addRedirectAlertMessage(new SimpleMessage("Multiple variants available. Please select appropriate variant."));
+                RedirectResolution redirectResolution = new RedirectResolution(DoomDayInventorySnapshotAction.class).addParameter("qty", qty).addParameter("barcode", barcode).addParameter(
+                        "showVariants", "true");
+                for (ProductVariant productVariant : productVariants) {
+                    redirectResolution.addParameter("productVariants", productVariant.getId());
+                }
+                return redirectResolution;
+            }
+
+        }
+        return new RedirectResolution(DoomDayInventorySnapshotAction.class);
     }
-    return new RedirectResolution(DoomDayInventorySnapshotAction.class);
-  }
 
-  public String getBarcode() {
-    return barcode;
-  }
+    public String getBarcode() {
+        return barcode;
+    }
 
-  public void setBarcode(String barcode) {
-    this.barcode = barcode;
-  }
+    public void setBarcode(String barcode) {
+        this.barcode = barcode;
+    }
 
-  public List<ProductVariant> getProductVariants() {
-    return productVariants;
-  }
+    public List<ProductVariant> getProductVariants() {
+        return productVariants;
+    }
 
-  public void setProductVariants(List<ProductVariant> productVariants) {
-    this.productVariants = productVariants;
-  }
+    public void setProductVariants(List<ProductVariant> productVariants) {
+        this.productVariants = productVariants;
+    }
 
-  public ProductVariant getProductVariant() {
-    return productVariant;
-  }
+    public ProductVariant getProductVariant() {
+        return productVariant;
+    }
 
-  public void setProductVariant(ProductVariant productVariant) {
-    this.productVariant = productVariant;
-  }
+    public void setProductVariant(ProductVariant productVariant) {
+        this.productVariant = productVariant;
+    }
 
-  public String getQty() {
-    return qty;
-  }
+    public String getQty() {
+        return qty;
+    }
 
-  public void setQty(String qty) {
-    this.qty = qty;
-  }
+    public void setQty(String qty) {
+        this.qty = qty;
+    }
 }

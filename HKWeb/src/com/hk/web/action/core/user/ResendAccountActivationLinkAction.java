@@ -8,6 +8,7 @@ import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.validation.EmailTypeConverter;
 import net.sourceforge.stripes.validation.Validate;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -25,9 +26,13 @@ import com.hk.web.HealthkartResponse;
 @Component
 public class ResendAccountActivationLinkAction extends BaseAction {
 
+    @Autowired
     private UserManager  userManager;
+    @Autowired    
     private EmailManager emailManager;
+    @Autowired
     private UserService  userService;
+    @Autowired
     private RoleService  roleService;
 
     @Validate(required = true, on = "activateNonLoggedInUser", converter = EmailTypeConverter.class)

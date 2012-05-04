@@ -8,13 +8,13 @@ import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.RoleConstants;
-import com.hk.dao.user.UserDaoImpl;
+import com.hk.dao.user.UserDao;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.service.UserService;
@@ -25,10 +25,10 @@ import com.hk.web.action.error.AdminPermissionAction;
 public class SelectWHAction extends BaseAction {
 
   
-  UserDaoImpl userDao;
-
+  @Autowired
+  UserDao userDao;
+  @Autowired
   private UserService userService;
-
   private Warehouse setWarehouse;
 
   @DefaultHandler

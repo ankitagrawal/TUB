@@ -2,10 +2,13 @@ package com.hk.service;
 
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 
+@Component
 public class InvoiceService {
 
   

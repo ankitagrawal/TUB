@@ -13,6 +13,7 @@ import net.sourceforge.stripes.action.SimpleMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -38,10 +39,13 @@ public class SplitShippingOrderAction extends BaseAction {
 
   private ShippingOrder shippingOrder;
   private List<LineItem> lineItems;
+  @Autowired
   private ShippingOrderService shippingOrderService;
+  @Autowired
   private ShippingOrderStatusService shippingOrderStatusService;
+  @Autowired
   private LineItemDao lineItemDao;
-  
+  @Autowired
   ShippingOrderDao shippingOrderDao;
 
   @DontValidate

@@ -14,6 +14,7 @@ import net.sourceforge.stripes.action.SimpleMessage;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
@@ -33,15 +34,16 @@ public class NotifyMeAction extends BaseAction {
     private static Logger   logger      = LoggerFactory.getLogger(NotifyMeAction.class);
 
     private ProductVariant  productVariant;
-
+    @Autowired
     TempTokenDao            tempTokenDao;
-
+    @Autowired
     LinkManager             linkManager;
-
+    @Autowired
     EmailManager            emailManager;
-
+    @Autowired
     NotifyMeDao             notifyMeDao;
 
+    
     NotifyMe                notifyMe;
 
     public static final int EXPIRY_DAYS = 10;

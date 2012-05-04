@@ -17,6 +17,7 @@ import net.sourceforge.stripes.action.SimpleMessage;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -49,17 +50,17 @@ import com.hk.web.action.error.AdminPermissionAction;
 @Secure(hasAnyPermissions = { PermissionConstants.PURCHASE_INVOICE_MANAGEMENT }, authActionBean = AdminPermissionAction.class)
 @Component
 public class PurchaseInvoiceAction extends BasePaginatedAction {
-
+    @Autowired
     PurchaseInvoiceDao                    purchaseInvoiceDao;
-
+    @Autowired
     ProductVariantDao                     productVariantDao;
-
+    @Autowired
     GoodsReceivedNoteDao                  goodsReceivedNoteDao;
-
+    @Autowired
     SkuService                            skuService;
-
+    @Autowired
     UserService                           userService;
-
+    @Autowired
     private ProductVariantService         productVariantService;
 
     private static Logger                 logger                    = Logger.getLogger(PurchaseInvoiceAction.class);

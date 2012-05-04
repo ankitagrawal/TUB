@@ -1,6 +1,4 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
-<%@ page import="com.google.inject.Key" %>
-<%@ page import="com.google.inject.name.Names" %>
 <%@ page import="org.joda.time.DateTime" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="com.hk.constants.payment.EnumPaymentMode" %>
@@ -9,9 +7,9 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 
 <%
-  Double codMaxAmount = InjectorFactory.getInjector().getInstance(Key.get(Double.class, Names.named(Keys.Env.codMaxAmount)));
-  Double codMinAmount = InjectorFactory.getInjector().getInstance(Key.get(Double.class, Names.named(Keys.Env.codMinAmount)));
-  Double codCharges = InjectorFactory.getInjector().getInstance(Key.get(Double.class, Names.named(Keys.Env.codCharges)));
+  Double codMaxAmount = Double.parseDouble((String)ServiceLocatorFactory.getProperty(Keys.Env.codMaxAmount));
+  Double codMinAmount = Double.parseDouble((String)ServiceLocatorFactory.getProperty(Keys.Env.codMinAmount));
+  Double codCharges = Double.parseDouble((String)ServiceLocatorFactory.getProperty(Keys.Env.codCharges));
 %>
 <c:set var="codMaxAmount" value="<%=codMaxAmount%>"/>
 <c:set var="codMinAmount" value="<%=codMinAmount%>"/>
@@ -54,7 +52,7 @@
   </s:layout-component>
 
   <s:layout-component name="steps_content">
-    <s:useActionBean beanclass="com.hk.web.action.OrderSummaryAction" event="pre" var="orderSummary"/>
+    <s:useActionBean beanclass="com.hk.web.action.core.order.OrderSummaryAction" event="pre" var="orderSummary"/>
     <div class='current_step_content step2'>
 
     <jsp:include page="/includes/checkoutNotice.jsp"/>
@@ -117,7 +115,7 @@
                 <strong><fmt:formatNumber value="${orderSummary.redeemableRewardPoints}" type="currency" currencySymbol=" "/></strong> reward points.<br/>
                 Reward points left after this order =
                 <strong><fmt:formatNumber value="${orderSummary.redeemableRewardPoints - orderSummary.pricingDto.redeemedRewardPoints}" type="currency" currencySymbol=" "/></strong><br/>
-                <s:link beanclass="com.hk.web.action.OrderSummaryAction" event="pre">
+                <s:link beanclass="com.hk.web.action.core.order.OrderSummaryAction" event="pre">
                   <s:param name="useRewardPoints" value="false"/>
                   <span>Don't Redeem Points</span>
                 </s:link>
@@ -126,7 +124,7 @@
                 You have
                 <strong><fmt:formatNumber value="${orderSummary.redeemableRewardPoints}" type="currency" currencySymbol=" "/></strong> reward points.<br/>
                 You can use these points to pay for your order.<br/>
-                <s:link beanclass="com.hk.web.action.OrderSummaryAction" event="pre">
+                <s:link beanclass="com.hk.web.action.core.order.OrderSummaryAction" event="pre">
                   <s:param name="useRewardPoints" value="true"/>
                   <span>Redeem Points</span>
                 </s:link>
@@ -141,7 +139,7 @@
         <h5>
           Instructions if any (e.g Preferred Delivery Time/Flavour Needed)
         </h5>
-        <s:form beanclass="com.hk.web.action.OrderSummaryAction" method="post">
+        <s:form beanclass="com.hk.web.action.core.order.OrderSummaryAction" method="post">
         <s:hidden name="order" value="${orderSummary.order.id}"/>
         <s:textarea name="order.userComments" rows="2" cols="20" style="width:175px;height:110px"/>
           <div class="title">

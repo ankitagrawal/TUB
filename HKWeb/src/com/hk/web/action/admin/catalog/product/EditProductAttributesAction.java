@@ -82,23 +82,23 @@ public class EditProductAttributesAction extends BaseAction {
 
     @Autowired
     private BaseDao               baseDao;
-
+    @Autowired
     MenuHelper                    menuHelper;
-
+    @Autowired
     ProductManager                productManager;
-
+    @Autowired
     AffiliateDao                  affiliateDao;
-
+    @Autowired
     ComboDao                      comboDao;
-
+    @Autowired
     MapIndiaDao                   mapIndiaDao;
-
+    @Autowired
     XslParser                     xslParser;
-
+    @Autowired
     XslGenerator                  xslGenerator;
-
+    @Autowired
     SupplierDao                   supplierDao;
-
+    @Autowired
     CategoryDao                   categoryDao;
 
     @Session(key = HealthkartConstants.Cookie.preferredZone)

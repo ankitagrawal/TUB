@@ -13,6 +13,7 @@ import net.sourceforge.stripes.validation.Validate;
 import net.sourceforge.stripes.validation.ValidateNestedProperties;
 import net.sourceforge.stripes.validation.ValidationMethod;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -45,13 +46,15 @@ import com.hk.web.action.error.AdminPermissionAction;
 @Breadcrumb(level = 4, name = "Create Ticket", context = HealthkartConstants.BreadcrumbContext.admin)
 @Component
 public class CreateTicketAction extends BaseAction {
-
+    @Autowired
     TicketManager       ticketManager;
+    @Autowired
     LinkManager         linkManager;
+    @Autowired
     EmailManager        emailManager;
+    @Autowired
     OrderDao            orderDao;
-    private BaseDao     baseDao;
-
+    @Autowired
     private UserService userService;
 
     @Validate(required = true, on = { "createOrderTrackingTicket", "createOrderRelatedTicket", "createPaymentTypeTicket" })
@@ -238,14 +241,6 @@ public class CreateTicketAction extends BaseAction {
 
     public void setUserService(UserService userService) {
         this.userService = userService;
-    }
-
-    public BaseDao getBaseDao() {
-        return baseDao;
-    }
-
-    public void setBaseDao(BaseDao baseDao) {
-        this.baseDao = baseDao;
     }
 
 }

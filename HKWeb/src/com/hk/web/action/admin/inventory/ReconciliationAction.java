@@ -8,6 +8,7 @@ import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.validation.Validate;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
@@ -24,8 +25,9 @@ import com.hk.web.action.error.AdminPermissionAction;
 public class ReconciliationAction extends BaseAction {
 
   private static Logger logger = Logger.getLogger(ReconciliationAction.class);
-
+  @Autowired
    XslParser xslParser;
+  @Autowired
    ReconciliationStatusDao reconciliationStatusDao;
 
    //@Named(Keys.Env.adminUploads) 

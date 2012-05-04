@@ -20,10 +20,10 @@ import net.sourceforge.stripes.action.SimpleMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
-
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.impl.dao.courier.CourierServiceInfoDao;
@@ -41,8 +41,9 @@ import com.hk.web.action.error.AdminPermissionAction;
 @Component
 public class CourierAWBAction extends BaseAction {
     private static Logger logger = LoggerFactory.getLogger(CourierServiceInfoAction.class);
-
+    @Autowired
     XslGenerator          xslGenerator;
+    @Autowired
     CourierServiceInfoDao courierServiceInfoDao;
 
     // @Named(Keys.Env.adminDownloads)

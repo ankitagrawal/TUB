@@ -38,8 +38,6 @@ public class OrderLifecycleAction extends BaseAction {
     @Autowired
     private OrderService orderService;
 
-    @Autowired
-    private BaseDao      baseDao;
 
     @Validate(required = true)
     private String       comment;
@@ -100,12 +98,5 @@ public class OrderLifecycleAction extends BaseAction {
         this.orderService = orderService;
     }
 
-    public BaseDao getBaseDao() {
-        return baseDao;
-    }
-
-    public void setBaseDao(BaseDao baseDao) {
-        this.baseDao = baseDao;
-    }
 
 }

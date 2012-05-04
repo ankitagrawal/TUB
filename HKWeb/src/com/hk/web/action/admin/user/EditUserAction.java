@@ -10,15 +10,15 @@ import net.sourceforge.stripes.validation.Validate;
 import net.sourceforge.stripes.validation.ValidateNestedProperties;
 import net.sourceforge.stripes.validation.ValidationMethod;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
-
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.Breadcrumb;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.dao.user.UserDaoImpl;
+import com.hk.dao.user.UserDao;
 import com.hk.domain.user.User;
 import com.hk.web.action.error.AdminPermissionAction;
 
@@ -30,8 +30,8 @@ import com.hk.web.action.error.AdminPermissionAction;
 @Breadcrumb(level = 2, name = "Edit User: {user.login}", context = HealthkartConstants.BreadcrumbContext.admin)
 @Component
 public class EditUserAction extends BaseAction {
-
-   UserDaoImpl userDao;
+    @Autowired
+   UserDao userDao;
 
   @ValidateNestedProperties({
       @Validate(field = "name", required = true, on="save"),

@@ -15,6 +15,7 @@ import net.sourceforge.stripes.validation.ValidationMethod;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
@@ -40,7 +41,7 @@ public class RequestCallbackAction extends BaseAction implements ValidationError
 
     private String               srcUrl;
     private Category             topLevelCategory;
-
+    @Autowired
     DiscountCouponMailingListDao discountCouponMailingListDao;
 
     public Resolution handleValidationErrors(ValidationErrors validationErrors) throws Exception {

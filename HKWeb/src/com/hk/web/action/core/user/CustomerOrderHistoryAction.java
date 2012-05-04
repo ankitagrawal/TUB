@@ -7,6 +7,7 @@ import java.util.Set;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -25,7 +26,7 @@ public class CustomerOrderHistoryAction extends BasePaginatedAction {
 
   List<Order> orderList;
   Page orderPage;
-
+  @Autowired
    OrderService orderService;
 
   public Resolution pre() {

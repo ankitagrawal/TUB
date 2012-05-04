@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import net.sourceforge.stripes.action.DefaultHandler;
@@ -35,11 +36,11 @@ public class ManufacturerAction extends BasePaginatedAction {
   List<Manufacturer> manufacturerList = new ArrayList<Manufacturer>();
   Page manufacturerPage;
 
-  
+  @Autowired
   ManufacturerDao manufacturerDao;
-  
+  @Autowired
   LatLongGenerator latLongGenerator;
-  
+  @Autowired
   LocalityMapDao localityMapDao;
 
   @DefaultHandler

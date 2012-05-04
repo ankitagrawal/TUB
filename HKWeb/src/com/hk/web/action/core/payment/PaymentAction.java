@@ -2,13 +2,14 @@ package com.hk.web.action.core.payment;
 
 import java.util.Random;
 
-import org.springframework.stereotype.Component;
-
 import net.sourceforge.stripes.action.LocalizableMessage;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.Validate;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.akube.framework.stripes.action.BaseAction;
@@ -18,7 +19,7 @@ import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.dao.impl.RoleDao;
 import com.hk.dao.offer.OfferInstanceDao;
 import com.hk.dao.payment.PaymentModeDao;
-import com.hk.dao.user.UserDaoImpl;
+import com.hk.dao.user.UserDao;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.order.Order;
 import com.hk.domain.payment.Payment;
@@ -45,13 +46,17 @@ public class PaymentAction extends BaseAction {
 
     private User            user;
     PreferredBankGateway    bank;
-
+    @Autowired
     PaymentManager          paymentManager;
+    @Autowired
     OrderManager            orderManager;
+    @Autowired
     OfferInstanceDao        offerInstanceDao;
-    UserDaoImpl                 userDao;
+    @Autowired
+    UserDao                 userDao;
+    @Autowired
     RoleDao                 roleDao;
-
+    @Autowired
     PaymentModeDao          paymentModeDao;
 
     @SuppressWarnings("unchecked")

@@ -12,6 +12,7 @@ import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -38,13 +39,19 @@ import com.hk.web.action.error.AdminPermissionAction;
 @Component
 public class SearchOrderAndReCheckinRTOInventoryAction extends BaseAction {
 
+    @Autowired
     private UserService                     userService;
+    @Autowired
     private AdminInventoryService           adminInventoryService;
+    @Autowired
     private InventoryService                inventoryService;
+    @Autowired
     private ShippingOrderService            shippingOrderService;
+    @Autowired
     private OrderService                    orderService;
-
+    @Autowired
     private AdminProductVariantInventoryDao adminProductVariantInventoryDao;
+    @Autowired
     private PVDamageInventoryDao            productVariantDamageInventoryDao;
 
     Map<LineItem, Long>                     lineItemRecheckinQtyMap = new HashMap<LineItem, Long>();

@@ -13,9 +13,9 @@ import net.sourceforge.stripes.action.Resolution;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
-
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
@@ -28,202 +28,198 @@ import com.hk.search.OrderSearchCriteria;
 import com.hk.service.order.OrderService;
 import com.hk.web.action.error.AdminPermissionAction;
 
-@Secure(hasAnyPermissions = {PermissionConstants.SEARCH_ORDERS}, authActionBean = AdminPermissionAction.class)
+@Secure(hasAnyPermissions = { PermissionConstants.SEARCH_ORDERS }, authActionBean = AdminPermissionAction.class)
 @Component
 public class SearchOrderAction extends BasePaginatedAction {
 
-  private static Logger logger = LoggerFactory.getLogger(SearchOrderAction.class);
-  
-  
-  OrderService orderService;
+    private static Logger logger    = LoggerFactory.getLogger(SearchOrderAction.class);
 
-  private OrderStatus orderStatus;
-  private Long orderId;
-  //private Long shippingOrderId;
+    @Autowired
+    OrderService          orderService;
 
+    private OrderStatus   orderStatus;
+    private Long          orderId;
+    // private Long shippingOrderId;
 
-  //TODO: # warehouse to be used only in case of shipping order search
-  //private String trackingId;
-  private String gatewayOrderId;
-  private PaymentMode paymentMode;
+    // TODO: # warehouse to be used only in case of shipping order search
+    // private String trackingId;
+    private String        gatewayOrderId;
+    private PaymentMode   paymentMode;
 
-  private String login;
-  private String email;
-  private String name;
-  private String phone;
+    private String        login;
+    private String        email;
+    private String        name;
+    private String        phone;
 
-  private Date startDate;
-  private Date endDate;
+    private Date          startDate;
+    private Date          endDate;
 
-  private List<Order> orderList = new ArrayList<Order>();
-  private Page orderPage;
-  private Order order;
-  private ShippingOrder shippingOrder;
+    private List<Order>   orderList = new ArrayList<Order>();
+    private Page          orderPage;
+    private Order         order;
+    private ShippingOrder shippingOrder;
 
-  @DefaultHandler
-  public Resolution pre() {
-    return new ForwardResolution("/pages/admin/searchOrder.jsp");
-  }
-
-  public Resolution searchOrders() {
-    OrderSearchCriteria orderSearchCriteria = new OrderSearchCriteria();
-    orderSearchCriteria.setOrderId(orderId);
-    orderSearchCriteria.setGatewayOrderId(gatewayOrderId);
-    //We need to do this not null check otherwise there would an 'in' clause for empty list
-    if (orderStatus != null)
-      orderSearchCriteria.setOrderStatusList(Arrays.asList(orderStatus));
-    if (paymentMode != null) {
-      orderSearchCriteria.setPaymentModes(Arrays.asList(paymentMode));
+    @DefaultHandler
+    public Resolution pre() {
+        return new ForwardResolution("/pages/admin/searchOrder.jsp");
     }
-    orderSearchCriteria.setPaymentStartDate(startDate).setPaymentEndDate(endDate);
-    orderSearchCriteria.setEmail(email).setLogin(login).setName(name).setPhone(phone);
-    orderSearchCriteria.setOrderAsc(false);
 
-    orderPage = orderService.searchOrders(orderSearchCriteria, getPageNo(), getPerPage());
+    public Resolution searchOrders() {
+        OrderSearchCriteria orderSearchCriteria = new OrderSearchCriteria();
+        orderSearchCriteria.setOrderId(orderId);
+        orderSearchCriteria.setGatewayOrderId(gatewayOrderId);
+        // We need to do this not null check otherwise there would an 'in' clause for empty list
+        if (orderStatus != null)
+            orderSearchCriteria.setOrderStatusList(Arrays.asList(orderStatus));
+        if (paymentMode != null) {
+            orderSearchCriteria.setPaymentModes(Arrays.asList(paymentMode));
+        }
+        orderSearchCriteria.setPaymentStartDate(startDate).setPaymentEndDate(endDate);
+        orderSearchCriteria.setEmail(email).setLogin(login).setName(name).setPhone(phone);
+        orderSearchCriteria.setOrderAsc(false);
 
-//  orderPage = orderDao.searchOrders(startDate, endDate, orderId, email, name, phone, orderStatus,paymentMode, gatewayOrderId, trackingId, getPageNo(), getPerPage());
-    orderList = orderPage.getList();
-    return new ForwardResolution("/pages/admin/searchOrder.jsp");
-  }
+        orderPage = orderService.searchOrders(orderSearchCriteria, getPageNo(), getPerPage());
 
-  public int getPerPageDefault() {
-    return 20;
-  }
+        // orderPage = orderDao.searchOrders(startDate, endDate, orderId, email, name, phone, orderStatus,paymentMode,
+        // gatewayOrderId, trackingId, getPageNo(), getPerPage());
+        orderList = orderPage.getList();
+        return new ForwardResolution("/pages/admin/searchOrder.jsp");
+    }
 
-  public int getPageCount() {
-    return orderPage == null ? 0 : orderPage.getTotalPages();
-  }
+    public int getPerPageDefault() {
+        return 20;
+    }
 
-  public int getResultCount() {
-    return orderPage == null ? 0 : orderPage.getTotalResults();
-  }
+    public int getPageCount() {
+        return orderPage == null ? 0 : orderPage.getTotalPages();
+    }
 
-  public Set<String> getParamSet() {
-    Set<String> params = new HashSet<String>();
-    params.add("orderStatus");
-    params.add("paymentMode");
-    params.add("email");
-    params.add("orderId");
-    params.add("gatewayOrderId");
-    params.add("login");
-   // params.add("trackingId");
-    params.add("name");
-    params.add("phone");
-    params.add("startDate");
-    params.add("endDate");
-    return params;
-  }
+    public int getResultCount() {
+        return orderPage == null ? 0 : orderPage.getTotalResults();
+    }
 
-  public List<Order> getOrderList() {
-    return orderList;
-  }
+    public Set<String> getParamSet() {
+        Set<String> params = new HashSet<String>();
+        params.add("orderStatus");
+        params.add("paymentMode");
+        params.add("email");
+        params.add("orderId");
+        params.add("gatewayOrderId");
+        params.add("login");
+        // params.add("trackingId");
+        params.add("name");
+        params.add("phone");
+        params.add("startDate");
+        params.add("endDate");
+        return params;
+    }
 
-  public void setOrderList(List<Order> orderList) {
-    this.orderList = orderList;
-  }
+    public List<Order> getOrderList() {
+        return orderList;
+    }
 
-  public void setOrderStatus(OrderStatus orderStatus) {
-    this.orderStatus = orderStatus;
-  }
+    public void setOrderList(List<Order> orderList) {
+        this.orderList = orderList;
+    }
 
-  public void setOrderId(Long orderId) {
-    this.orderId = orderId;
-  }
+    public void setOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
+    }
 
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
+    }
 
-  public void setEmail(String email) {
-    this.email = email;
-  }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-  public OrderStatus getOrderStatus() {
-    return orderStatus;
-  }
+    public OrderStatus getOrderStatus() {
+        return orderStatus;
+    }
 
-  public Long getOrderId() {
-    return orderId;
-  }
+    public Long getOrderId() {
+        return orderId;
+    }
 
-  public String getEmail() {
-    return email;
-  }
+    public String getEmail() {
+        return email;
+    }
 
-  public String getName() {
-    return name;
-  }
+    public String getName() {
+        return name;
+    }
 
-  public void setName(String name) {
-    this.name = name;
-  }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-  public String getPhone() {
-    return phone;
-  }
+    public String getPhone() {
+        return phone;
+    }
 
-  public void setPhone(String phone) {
-    this.phone = phone;
-  }
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
-  /*public String getTrackingId() {
-    return trackingId;
-  }
+    /*
+     * public String getTrackingId() { return trackingId; } public void setTrackingId(String trackingId) {
+     * this.trackingId = trackingId; }
+     */
 
-  public void setTrackingId(String trackingId) {
-    this.trackingId = trackingId;
-  }*/
+    public String getGatewayOrderId() {
+        return gatewayOrderId;
+    }
 
-  public String getGatewayOrderId() {
-    return gatewayOrderId;
-  }
+    public void setGatewayOrderId(String gatewayOrderId) {
+        this.gatewayOrderId = gatewayOrderId;
+    }
 
-  public void setGatewayOrderId(String gatewayOrderId) {
-    this.gatewayOrderId = gatewayOrderId;
-  }
+    public Date getStartDate() {
+        return startDate;
+    }
 
-  public Date getStartDate() {
-    return startDate;
-  }
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
 
-  public void setStartDate(Date startDate) {
-    this.startDate = startDate;
-  }
+    public Date getEndDate() {
+        return endDate;
+    }
 
-  public Date getEndDate() {
-    return endDate;
-  }
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
 
-  public void setEndDate(Date endDate) {
-    this.endDate = endDate;
-  }
+    public Order getOrder() {
+        return order;
+    }
 
-  public Order getOrder() {
-    return order;
-  }
+    public void setOrder(Order order) {
+        this.order = order;
+    }
 
-  public void setOrder(Order order) {
-    this.order = order;
-  }
+    public PaymentMode getPaymentMode() {
+        return paymentMode;
+    }
 
-  public PaymentMode getPaymentMode() {
-    return paymentMode;
-  }
+    public void setPaymentMode(PaymentMode paymentMode) {
+        this.paymentMode = paymentMode;
+    }
 
-  public void setPaymentMode(PaymentMode paymentMode) {
-    this.paymentMode = paymentMode;
-  }
+    public ShippingOrder getShippingOrder() {
+        return shippingOrder;
+    }
 
-  public ShippingOrder getShippingOrder() {
-    return shippingOrder;
-  }
+    public void setShippingOrder(ShippingOrder shippingOrder) {
+        this.shippingOrder = shippingOrder;
+    }
 
-  public void setShippingOrder(ShippingOrder shippingOrder) {
-    this.shippingOrder = shippingOrder;
-  }
+    public String getLogin() {
+        return login;
+    }
 
-  public String getLogin() {
-    return login;
-  }
-
-  public void setLogin(String login) {
-    this.login = login;
-  }
+    public void setLogin(String login) {
+        this.login = login;
+    }
 }

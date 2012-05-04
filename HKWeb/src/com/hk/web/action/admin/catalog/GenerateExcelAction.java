@@ -20,6 +20,7 @@ import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.SimpleError;
 import net.sourceforge.stripes.validation.ValidationMethod;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
@@ -36,10 +37,15 @@ import com.hk.web.BatchProcessWorkManager;
 @Secure(hasAnyPermissions = { PermissionConstants.DOWNLOAD_PRDOUCT_CATALOG })
 @Component
 public class GenerateExcelAction extends BaseAction {
+    @Autowired
     XslGenerator             xslGenerator;
+    @Autowired
     AmazonXslGenerator       amazonXslGenerator;
+    @Autowired
     ProductDao               productDao;
+    @Autowired
     BatchProcessWorkManager  workManager;
+    @Autowired
     CategoryDao              categoryDao;
 
     // @Named(Keys.Env.adminDownloads)

@@ -22,6 +22,7 @@ import net.sourceforge.stripes.action.SimpleMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
@@ -45,13 +46,13 @@ public class CourierServiceInfoAction extends BaseAction {
 
   private static Logger logger = LoggerFactory.getLogger(CourierServiceInfoAction.class);
 
-  
+  @Autowired
   XslGenerator xslGenerator;
-  
+  @Autowired
   BatchProcessWorkManager workManager;
-  
+  @Autowired
   CourierServiceInfoDao courierServiceInfoDao;
-  
+  @Autowired
   PincodeDao pincodeDao;
 
   

@@ -19,7 +19,6 @@ import com.hk.web.action.error.AdminPermissionAction;
 public class SeoAction extends BaseAction {
     private SeoData seoData;
 
-    private BaseDao baseDao;
 
     @DefaultHandler
     public Resolution pre() {
@@ -39,13 +38,6 @@ public class SeoAction extends BaseAction {
         this.seoData = seoData;
     }
 
-    public BaseDao getBaseDao() {
-        return baseDao;
-    }
-
-    public void setBaseDao(BaseDao baseDao) {
-        this.baseDao = baseDao;
-    }
     
     
 }

@@ -1,5 +1,6 @@
 package com.hk.web.action.core.accounting;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import net.sourceforge.stripes.action.DefaultHandler;
@@ -21,9 +22,9 @@ public class AccountingInvoiceAction extends BaseAction {
   private PricingDto partialPricingDto;*/
   private String defaultCourier;
 
-  
+  @Autowired
   OrderManager orderManager;
-  
+  @Autowired
   B2bUserDetailsDao b2bUserDetailsDao;
 
 /*

@@ -42,8 +42,6 @@ public class CreateOrSelectOfferActionAction extends BaseAction {
     List<OfferAction>  offerActionList;
     List<ProductGroup> productGroupList;
 
-    @Autowired
-    private BaseDao    baseDao;
 
     @After(stages = LifecycleStage.BindingAndValidation)
     public void popoulateOnError() {
@@ -107,12 +105,5 @@ public class CreateOrSelectOfferActionAction extends BaseAction {
         return productGroupList;
     }
 
-    public BaseDao getBaseDao() {
-        return baseDao;
-    }
-
-    public void setBaseDao(BaseDao baseDao) {
-        this.baseDao = baseDao;
-    }
 
 }

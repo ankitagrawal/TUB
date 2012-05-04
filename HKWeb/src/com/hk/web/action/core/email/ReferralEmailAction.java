@@ -31,7 +31,7 @@ import com.hk.web.WOMMEmailManager;
 @Secure
 @Component
 public class ReferralEmailAction extends BaseAction {
-
+    @Autowired
     private WOMMEmailManager       wommEmailManager;
     @Autowired
     private ReferrerProgramManager referrerProgramManager;

@@ -12,6 +12,7 @@ import net.sourceforge.stripes.validation.Validate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -33,9 +34,12 @@ import com.hk.web.action.admin.catalog.ParseExcelAction;
 public class BulkUploadMerchantAddressAction extends BaseAction {
   private static Logger logger = LoggerFactory.getLogger(ParseExcelAction.class);
 
+  @Autowired
    BatchProcessWorkManager batchProcessWorkManager;
-   LatLongGenerator latLongGenerator;
-   ManufacturerDao manufacturerDao;
+  @Autowired 
+  LatLongGenerator latLongGenerator;
+  @Autowired 
+  ManufacturerDao manufacturerDao;
 
    //@Named(Keys.Env.adminUploads) 
    @Value("#{hkEnvProps['adminUploads']}")

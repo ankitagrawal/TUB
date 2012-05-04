@@ -39,11 +39,9 @@ public class BulkSeoAction extends BaseAction {
 
     @Validate(required = true)
     private String              category;
-
+    @Autowired
     SeoManager                  seoManager;
 
-    @Autowired
-    private BaseDao                    baseDao;
 
     @Autowired
     private ProductService      productService;
@@ -121,11 +119,5 @@ public class BulkSeoAction extends BaseAction {
         
 }
 
-    public BaseDao getBaseDao() {
-        return baseDao;
-    }
-
-    public void setBaseDao(BaseDao baseDao) {
-        this.baseDao = baseDao;
-    }
+    
 }

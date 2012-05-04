@@ -46,7 +46,7 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
 
     @Autowired
     private ShippingOrderStatusService shippingOrderStatusService;
-
+    @Autowired
     CategoryDao                        categoryDao;
 
     Page                shippingOrdersPage;

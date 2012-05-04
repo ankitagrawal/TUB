@@ -7,6 +7,7 @@ import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.akube.framework.stripes.action.BaseAction;
@@ -17,6 +18,7 @@ public class BulkUploadPVImageAction extends BaseAction {
    //@Named(Keys.Env.adminUploads)
     @Value("#{hkEnvProps['adminUploads']}")
    String adminUploadsPath;
+    @Autowired
    ImageManager imageManager;
 
   @DefaultHandler

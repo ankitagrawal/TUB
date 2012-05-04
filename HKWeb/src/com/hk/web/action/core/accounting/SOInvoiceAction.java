@@ -7,6 +7,7 @@ import net.sourceforge.stripes.validation.Validate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
@@ -33,14 +34,14 @@ public class SOInvoiceAction extends BaseAction {
 
     @Validate(required = true, encrypted = true)
     private ShippingOrder          shippingOrder;
-
+    @Autowired
     private ReferrerProgramManager referrerProgramManager;
+    @Autowired
     private BarcodeGenerator       barcodeGenerator;
-
+    @Autowired
     private CategoryService        categoryService;
+    @Autowired
     private CourierService         courierService;
-
-    private BaseDao                baseDao;
 
     private String                 barcodePath;
     private Coupon                 coupon;
@@ -141,12 +142,5 @@ public class SOInvoiceAction extends BaseAction {
         this.courierService = courierService;
     }
 
-    public BaseDao getBaseDao() {
-        return baseDao;
-    }
-
-    public void setBaseDao(BaseDao baseDao) {
-        this.baseDao = baseDao;
-    }
 
 }

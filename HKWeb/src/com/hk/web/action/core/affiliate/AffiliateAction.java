@@ -12,6 +12,7 @@ import net.sourceforge.stripes.validation.Validate;
 import net.sourceforge.stripes.validation.ValidationMethod;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
@@ -46,10 +47,13 @@ public class AffiliateAction extends BaseAction {
     boolean               rememberMe;
 
     private static Logger logger = Logger.getLogger(AffiliateAction.class);
-
+    @Autowired
     LinkManager           linkManager;
+    @Autowired
     UserManager           userManager;
+    @Autowired
     AffiliateManager      affiliateManager;
+    @Autowired
     RoleDao               roleDao;
 
     @DefaultHandler

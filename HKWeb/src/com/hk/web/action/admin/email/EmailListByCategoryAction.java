@@ -34,6 +34,7 @@ public class EmailListByCategoryAction extends BaseAction {
 
     @Autowired
     CategoryService    categoryService;
+    @Autowired
     MailingListManager mailingListManager;
 
     

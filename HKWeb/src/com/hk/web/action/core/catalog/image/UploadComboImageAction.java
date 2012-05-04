@@ -9,6 +9,7 @@ import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.validation.Validate;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +29,7 @@ public class UploadComboImageAction extends BaseAction {
     // @Named(Keys.Env.adminUploads)
     @Value("#{hkEnvProps['adminUploads']}")
     String       adminUploadsPath;
-
+    @Autowired
     ImageManager imageManager;
 
     @DefaultHandler

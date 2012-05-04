@@ -25,6 +25,7 @@ import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.Validate;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
@@ -93,31 +94,33 @@ public class ReportAction extends BaseAction {
     @Value("#{hkEnvProps['adminDownloads']}")
     String                                         adminDownloads;
     File                                           xlsFile;
-
+    @Autowired
     ReportShippingOrderService                     shippingOrderReportingService;
+    @Autowired
     ReportOrderService                             reportOrderService;
+    @Autowired
     private ReportProductVariantService            reportProductVariantService;
-
+    @Autowired
     ReportManager                                  reportGenerator;
-
+    @Autowired
     OrderDao                                       orderDao;
-
+    @Autowired
     PaymentModeDao                                 paymentModeDao;
-
+    @Autowired
     ProductManager                                 productManager;
-
+    @Autowired
     ReconciliationStatusDao                        reconciliationStatusDao;
-
+    @Autowired
     private CategoryService                        categoryService;
-
+    @Autowired
     OrderManager                                   orderManager;
-
+    @Autowired
     EmailManager                                   emailManager;
-
+    @Autowired
     ProductVariantDao                              productVariantDao;
-
+    @Autowired
     OrderService                                   orderService;
-
+    @Autowired
     OrderStatusService                             orderStatusService;
 
     private List<CategorySalesDto>                 categorySalesDtoList                 = new ArrayList<CategorySalesDto>();

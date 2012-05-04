@@ -13,9 +13,9 @@ import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
-
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
@@ -37,17 +37,17 @@ import com.hk.web.action.error.AdminPermissionAction;
  */
 @Component
 public class DeliveryAwaitingQueueAction extends BasePaginatedAction {
-
+    @Autowired
     private OrderService               orderService;
-
+    @Autowired
     private ShippingOrderService       shippingOrderService;
-
+    @Autowired
     private AdminShippingOrderService  adminShippingOrderService;
-
+    @Autowired
     private ShippingOrderStatusService shippingOrderStatusService;
 
-    Page                shippingOrderPage;
-
+    Page                               shippingOrderPage;
+    @Autowired
     CourierService                     courierService;
 
     List<ShippingOrder>                shippingOrderList = new ArrayList<ShippingOrder>();

@@ -2,16 +2,17 @@ package com.hk.web.action.core.payment;
 
 import java.util.Set;
 
-import org.springframework.stereotype.Component;
-
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.validation.Validate;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.dao.payment.PaymentDao;
-import com.hk.dao.user.UserDaoImpl;
+import com.hk.dao.user.UserDao;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.payment.Payment;
 import com.hk.dto.pricing.PricingDto;
@@ -28,11 +29,11 @@ public class PaymentSuccessAction extends BaseAction {
   private Payment payment;
   private PricingDto pricingDto;
 
-
+  @Autowired
   private PaymentDao paymentDao;
-  
-  UserDaoImpl userDao;
-  
+  @Autowired
+  UserDao userDao;
+  @Autowired
   InventoryService inventoryService;
 
   public Resolution pre() {

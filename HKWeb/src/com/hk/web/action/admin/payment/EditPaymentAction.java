@@ -10,6 +10,7 @@ import net.sourceforge.stripes.validation.Validate;
 import net.sourceforge.stripes.validation.ValidateNestedProperties;
 import net.sourceforge.stripes.validation.ValidationMethod;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -35,7 +36,7 @@ public class EditPaymentAction extends BaseAction {
   private Payment payment;
 
   private Payment existingPayment;
-
+  @Autowired
    PaymentDao paymentDao;
 
   @ValidationMethod(on = "pre")

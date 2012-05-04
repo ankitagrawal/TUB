@@ -52,19 +52,20 @@ import com.hk.web.action.error.AdminPermissionAction;
 public class EditPurchaseOrderAction extends BaseAction {
     // EditPurchaseOrderAction
     private static Logger    logger      = LoggerFactory.getLogger(EditPurchaseOrderAction.class);
-
+    @Autowired
     PurchaseOrderDao         purchaseOrderDao;
-
+    @Autowired
     PoLineItemDao            poLineItemDao;
-
+    @Autowired
     PurchaseOrderManager     purchaseOrderManager;
 
     @Autowired
     private ProductVariantService    productVariantService;
+    @Autowired
     XslParser                xslParser;
-
+    @Autowired
     EmailManager             emailManager;
-
+    @Autowired
     SkuService               skuService;
 
     // @Named(Keys.Env.adminUploads)

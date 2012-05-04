@@ -6,6 +6,7 @@ import net.sourceforge.stripes.validation.Validate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
@@ -25,17 +26,17 @@ public class VerifyUserAction extends BaseAction {
 
     @SuppressWarnings("unused")
     private static Logger      logger                  = LoggerFactory.getLogger(VerifyUserAction.class);
-
+    @Autowired
     TempTokenDao               tempTokenDao;
-
+    @Autowired
     OfferManager               offerManager;
-
+    @Autowired
     UserManager                userManager;
-
+    @Autowired
     OfferInstanceDao           offerInstanceDao;
-
+    @Autowired
     CouponDao                  couponDao;
-
+    @Autowired
     private RoleService        roleService;
 
     @Validate(required = true)

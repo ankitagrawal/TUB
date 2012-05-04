@@ -14,6 +14,7 @@ import net.sourceforge.stripes.action.SimpleMessage;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
@@ -44,13 +45,13 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 
     List<ShippingOrder>                shippingOrderList = new ArrayList<ShippingOrder>(0);
     ShippingOrder                      shippingOrder;
-
+    @Autowired
     ShippingOrderDao                   shippingOrderDao;
-
+    @Autowired
     ShippingOrderService               shippingOrderService;
-
+    @Autowired
     UserService                        userService;
-
+    @Autowired
     PincodeDao                         pincodeDao;
 
     private String                     gatewayOrderId;
