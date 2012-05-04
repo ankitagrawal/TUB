@@ -6,6 +6,7 @@ import net.sourceforge.stripes.action.FreeMarkerResolution;
 import net.sourceforge.stripes.action.Resolution;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -22,9 +23,11 @@ import com.hk.service.impl.FreeMarkerService;
 public class ReferralEmailPreviewAction extends BaseAction {
 
     private String            senderName;
-
+    @Autowired
     private FreeMarkerService freeMarkerService;
+    @Autowired
     LinkManager               linkManager;
+    @Autowired
     ReferrerProgramManager    referrerProgramManager;
 
     @SuppressWarnings("unchecked")

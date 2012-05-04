@@ -6,6 +6,7 @@ import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.Validate;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
@@ -31,10 +32,13 @@ import com.hk.service.PaymentService;
 @Component
 public class CodPaymentReceiveAction extends BaseAction {
 
+    @Autowired
     private CourierService courierService;
+    @Autowired
     private OrderManager   orderManager;
+    @Autowired
     private PaymentService paymentService;
-    
+    @Autowired
     private PaymentManager paymentManager;
 
     // @Named(Keys.Env.codMinAmount)

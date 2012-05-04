@@ -9,6 +9,7 @@ import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -27,11 +28,11 @@ import com.hk.web.action.error.AdminPermissionAction;
 @Secure(hasAnyPermissions = { PermissionConstants.VERIFY_AFFILIATES }, authActionBean = AdminPermissionAction.class)
 @Component
 public class VerifyAffiliateAction extends BasePaginatedAction {
-
+    @Autowired
     private RoleService roleService;
-
+    @Autowired
     AffiliateDao        affiliateDao;
-
+    @Autowired
     AffiliateManager    affiliateManager;
 
     Page          userPage;

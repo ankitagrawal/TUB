@@ -45,7 +45,7 @@ public class NewAddressAction extends BaseAction implements ValidationErrorHandl
     OrderDao                    orderDao;
     @Autowired
     AddressMatchScoreCalculator addressMatchScoreCalculator;
-
+    @Autowired
     private UserService         userService;
 
     @ValidateNestedProperties( {

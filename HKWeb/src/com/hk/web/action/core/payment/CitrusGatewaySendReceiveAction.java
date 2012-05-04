@@ -11,6 +11,7 @@ import net.sourceforge.stripes.action.Resolution;
 import org.apache.commons.lang.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -34,16 +35,17 @@ public class CitrusGatewaySendReceiveAction extends BasePaymentGatewaySendReceiv
 
   private static Logger logger = LoggerFactory.getLogger(CitrusGatewaySendReceiveAction.class);
 
-  
+  @Autowired
   PaymentDao paymentDao;
-  
+  @Autowired
   PaymentManager paymentManager;
-  
+  @Autowired
   LinkManager linkManager;
    //@Named(Keys.App.environmentDir) 
   @Value("#{hkEnvProps['environmentDir']}")
    String environmemtDir;
-   EmailManager emailManager;
+  @Autowired 
+  EmailManager emailManager;
 
   protected CitrusTestPaymentGatewayWrapper getPaymentGatewayWrapperFromTransactionData(BasePaymentGatewayWrapper.TransactionData data) {
     CitrusTestPaymentGatewayWrapper citrusTestPaymentGatewayWrapper = new CitrusTestPaymentGatewayWrapper(environmemtDir);

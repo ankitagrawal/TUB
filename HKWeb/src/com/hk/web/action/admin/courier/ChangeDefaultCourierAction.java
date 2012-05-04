@@ -14,6 +14,7 @@ import net.sourceforge.stripes.action.SimpleMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
@@ -35,15 +36,15 @@ import com.hk.util.XslGenerator;
 @Secure(hasAnyPermissions = { PermissionConstants.SEARCH_ORDERS })
 @Component
 public class ChangeDefaultCourierAction extends BaseAction {
-
+    @Autowired
     PincodeDao                          pincodeDao;
-
+    @Autowired
     private PincodeService              pincodeService;
-
+    @Autowired
     CourierServiceInfoDao               courierServiceInfoDao;
-
+    @Autowired
     WarehouseDao                        warehouseDao;
-
+    @Autowired
     XslGenerator                        xslGenerator;
 
     // @Named(Keys.Env.adminDownloads)
@@ -254,6 +255,5 @@ public class ChangeDefaultCourierAction extends BaseAction {
     public void setPincodeService(PincodeService pincodeService) {
         this.pincodeService = pincodeService;
     }
-    
-    
+
 }

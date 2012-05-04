@@ -24,6 +24,7 @@ import net.sourceforge.stripes.validation.Validate;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
@@ -65,21 +66,21 @@ import com.hk.web.action.error.AdminPermissionAction;
 public class GRNAction extends BasePaginatedAction {
 
     private static Logger           logger                    = Logger.getLogger(GRNAction.class);
-
+    @Autowired
     private GRNManager              grnManager;
-
+    @Autowired
     private GoodsReceivedNoteDao    goodsReceivedNoteDao;
-
+    @Autowired
     private GrnLineItemDao          grnLineItemDao;
-
+    @Autowired
     private ProductVariantService   productVariantService;
-
+    @Autowired
     private UserService             userService;
-
+    @Autowired
     private PurchaseInvoiceDao      purchaseInvoiceDao;
-
+    @Autowired
     private SupplierDao             supplierDao;
-
+    @Autowired
     private SkuService              skuService;
 
     // @Named(Keys.Env.adminDownloads)

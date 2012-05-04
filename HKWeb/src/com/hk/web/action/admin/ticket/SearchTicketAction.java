@@ -11,9 +11,9 @@ import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.validation.ValidationMethod;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
-
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
@@ -26,84 +26,82 @@ import com.hk.domain.Ticket;
 import com.hk.web.action.error.AdminPermissionAction;
 
 /**
- * User: rahul
- * Time: 10 Mar, 2010 2:33:56 PM
+ * User: rahul Time: 10 Mar, 2010 2:33:56 PM
  */
-@Secure(hasAnyPermissions = {PermissionConstants.VIEW_TICKETS}, authActionBean = AdminPermissionAction.class)
+@Secure(hasAnyPermissions = { PermissionConstants.VIEW_TICKETS }, authActionBean = AdminPermissionAction.class)
 @Breadcrumb(level = 2, name = "Search Tickets", context = HealthkartConstants.BreadcrumbContext.admin)
 @Component
 public class SearchTicketAction extends BasePaginatedAction {
+    @Autowired
+    TicketDao               ticketDao;
 
-   TicketDao ticketDao;
+    private TicketFilterDto ticketFilterDto;
 
-  private TicketFilterDto ticketFilterDto;
+    private List<Ticket>    ticketList = new ArrayList<Ticket>(0);
 
-  private List<Ticket> ticketList = new ArrayList<Ticket>(0);
+    private Page            ticketPage;
 
-  private Page ticketPage;
+    public Set<String> getParamSet() {
+        Set<String> params = new HashSet<String>();
+        params.add("ticketFilterDto.ticketId");
+        params.add("ticketFilterDto.keywords");
+        params.add("ticketFilterDto.owner");
+        params.add("ticketFilterDto.reporter");
+        params.add("ticketFilterDto.ticketType");
+        params.add("ticketFilterDto.ticketStatus");
+        params.add("ticketFilterDto.createDateFrom");
+        params.add("ticketFilterDto.createDateTo");
+        params.add("ticketFilterDto.associatedUserId");
+        params.add("ticketFilterDto.associatedOrderId");
+        params.add("ticketFilterDto.associatedLogin");
+        params.add("ticketFilterDto.associatedPhone");
+        return params;
+    }
 
-  public Set<String> getParamSet() {
-    Set<String> params = new HashSet<String>();
-    params.add("ticketFilterDto.ticketId");
-    params.add("ticketFilterDto.keywords");
-    params.add("ticketFilterDto.owner");
-    params.add("ticketFilterDto.reporter");
-    params.add("ticketFilterDto.ticketType");
-    params.add("ticketFilterDto.ticketStatus");
-    params.add("ticketFilterDto.createDateFrom");
-    params.add("ticketFilterDto.createDateTo");
-    params.add("ticketFilterDto.associatedUserId");
-    params.add("ticketFilterDto.associatedOrderId");
-    params.add("ticketFilterDto.associatedLogin");
-    params.add("ticketFilterDto.associatedPhone");
-    return params;
-  }
+    @DefaultHandler
+    @DontValidate
+    public Resolution pre() {
+        return new ForwardResolution("/pages/admin/searchTicket.jsp");
+    }
 
-  @DefaultHandler
-  @DontValidate
-  public Resolution pre() {
-    return new ForwardResolution("/pages/admin/searchTicket.jsp");
-  }
+    @ValidationMethod
+    public void validate() {
+        if (ticketFilterDto == null)
+            ticketFilterDto = new TicketFilterDto();
+    }
 
-  @ValidationMethod
-  public void validate() {
-    if(ticketFilterDto == null)
-      ticketFilterDto = new TicketFilterDto();
-  }
+    public Resolution search() {
+        ticketPage = ticketDao.search(ticketFilterDto, getPageNo(), getPerPage());
+        ticketList = ticketPage.getList();
+        return new ForwardResolution("/pages/admin/searchTicket.jsp");
+    }
 
+    public TicketFilterDto getTicketFilterDto() {
+        return ticketFilterDto;
+    }
 
-  public Resolution search() {
-    ticketPage = ticketDao.search(ticketFilterDto, getPageNo(), getPerPage());
-    ticketList = ticketPage.getList();
-    return new ForwardResolution("/pages/admin/searchTicket.jsp");
-  }
+    public void setTicketFilterDto(TicketFilterDto ticketFilterDto) {
+        this.ticketFilterDto = ticketFilterDto;
+    }
 
-  public TicketFilterDto getTicketFilterDto() {
-    return ticketFilterDto;
-  }
+    public List<Ticket> getTicketList() {
+        return ticketList;
+    }
 
-  public void setTicketFilterDto(TicketFilterDto ticketFilterDto) {
-    this.ticketFilterDto = ticketFilterDto;
-  }
+    public void setTicketList(List<Ticket> ticketList) {
+        this.ticketList = ticketList;
+    }
 
-  public List<Ticket> getTicketList() {
-    return ticketList;
-  }
+    public int getPerPageDefault() {
+        return 50;
+    }
 
-  public void setTicketList(List<Ticket> ticketList) {
-    this.ticketList = ticketList;
-  }
+    public int getPageCount() {
+        return ticketPage == null ? 0 : ticketPage.getTotalPages();
+    }
 
-  public int getPerPageDefault() {
-    return 50;
-  }
-
-  public int getPageCount() {
-    return ticketPage == null ? 0 : ticketPage.getTotalPages();
-  }
-
-  public int getResultCount() {
-    return ticketPage == null ? 0 : ticketPage.getTotalResults();
-  }
+    public int getResultCount() {
+        return ticketPage == null ? 0 : ticketPage.getTotalResults();
+    }
 
 }

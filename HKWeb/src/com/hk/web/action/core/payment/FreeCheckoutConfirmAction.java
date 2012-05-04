@@ -11,6 +11,7 @@ import net.sourceforge.stripes.validation.ValidationMethod;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -43,16 +44,19 @@ import com.hk.web.action.core.order.OrderSummaryAction;
 public class FreeCheckoutConfirmAction extends BaseAction {
 
   private static Logger logger = LoggerFactory.getLogger(FreeCheckoutConfirmAction.class);
-
+  @Autowired
    PaymentManager paymentManager;
+  @Autowired
    OrderManager orderManager;
+  @Autowired
    UserDaoImpl userDao;
+  @Autowired
    RoleDao roleDao;
-  
+  @Autowired
   PaymentModeDao paymentModeDao;
-   PricingEngine pricingEngine;
+  @Autowired 
+  PricingEngine pricingEngine;
 
-  @Validate(converter = EmailTypeConverter.class)
   private String email;
 
   private User user;

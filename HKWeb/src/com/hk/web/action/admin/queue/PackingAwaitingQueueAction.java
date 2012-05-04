@@ -49,6 +49,7 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
   private ShippingOrderService shippingOrderService;
   @Autowired
   private AdminShippingOrderService adminShippingOrderService;
+  @Autowired
   private ShippingOrderStatusService shippingOrderStatusService;
 
   private Long shippingOrderId;

@@ -23,6 +23,7 @@ import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.Validate;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
@@ -59,15 +60,19 @@ import com.hk.web.action.error.AdminPermissionAction;
 public class POAction extends BasePaginatedAction {
 
     private static Logger        logger            = Logger.getLogger(POAction.class);
-
+    @Autowired
     private PurchaseOrderDao     purchaseOrderDao;
+    @Autowired
     private GoodsReceivedNoteDao goodsReceivedNoteDao;
+    @Autowired
     private GrnLineItemDao       grnLineItemDao;
-
+    @Autowired
     private UserService          userService;
+    @Autowired
     private SkuService           skuService;
-
+    @Autowired
     private AdminEmailManager    adminEmailManager;
+    @Autowired
     private PurchaseOrderManager purchaseOrderManager;
 
     // @Named(Keys.Env.adminDownloads)

@@ -62,26 +62,26 @@ public class InventoryHealthStatusAction extends BasePaginatedAction {
     Category                      categoryName;
     ProductVariant                productVariant;
     Product                       product;
-
+    @Autowired
     ProductManager                productManager;
-
+    @Autowired
     ProductVariantInventoryDao    productVariantInventoryDao;
-
+    @Autowired
     LowInventoryDao               lowInventoryDao;
-
+    @Autowired
     AdminInventoryService         adminInventoryService;
 
     @Autowired
     private ProductVariantService productVariantService;
-
+    @Autowired
     CategoryDao                   categoryDao;
-
+    @Autowired
     InventoryService              inventoryService;
-
+    @Autowired
     SkuService                    skuService;
-
+    @Autowired
     UserService                   userService;
-
+    @Autowired
     WarehouseService              warehouseService;
 
     @Autowired

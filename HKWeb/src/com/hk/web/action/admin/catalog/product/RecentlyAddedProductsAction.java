@@ -6,6 +6,7 @@ import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -19,7 +20,7 @@ import com.hk.web.action.error.AdminPermissionAction;
 @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PRODUCT_CATALOG}, authActionBean = AdminPermissionAction.class)
 @Component
 public class RecentlyAddedProductsAction extends BaseAction {
-
+    @Autowired
    ProductDao productDao;
 
   List<Product> productList;

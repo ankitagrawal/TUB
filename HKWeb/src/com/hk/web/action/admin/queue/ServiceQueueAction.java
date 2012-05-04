@@ -13,6 +13,7 @@ import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.Validate;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -33,9 +34,11 @@ import com.hk.web.action.error.AdminPermissionAction;
 
 @Component
 public class ServiceQueueAction extends BasePaginatedAction {
-
+    @Autowired
     private ShippingOrderStatusService shippingOrderStatusService;
+    @Autowired
     private ShippingOrderService       shippingOrderService;
+    @Autowired
     private AdminShippingOrderService  adminShippingOrderService;
 
     Page                        orderPage;

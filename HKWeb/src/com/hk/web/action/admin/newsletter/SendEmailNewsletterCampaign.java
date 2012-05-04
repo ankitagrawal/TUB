@@ -71,9 +71,11 @@ public class SendEmailNewsletterCampaign extends BaseAction {
 
     @Autowired
     private UserService        userService;
-
+    @Autowired
     private CategoryService    categoryService;
+    @Autowired
     private AdminEmailManager  adminEmailManager;
+    @Autowired
     private MailingListManager mailingListManager;
 
     @DefaultHandler

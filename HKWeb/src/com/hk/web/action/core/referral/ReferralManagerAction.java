@@ -3,6 +3,7 @@ package com.hk.web.action.core.referral;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -17,8 +18,9 @@ import com.hk.manager.UserManager;
 @Component
 public class ReferralManagerAction extends BaseAction {
 
-
+    @Autowired
    ReferrerProgramManager referrerProgramManager;
+    @Autowired
    UserManager userManager;
 
   private Coupon coupon;

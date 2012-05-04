@@ -16,9 +16,9 @@ import net.sourceforge.stripes.action.SimpleMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
-
 
 import com.akube.framework.gson.JsonUtils;
 import com.akube.framework.stripes.action.BaseAction;
@@ -28,7 +28,7 @@ import com.hk.constants.email.EmailTemplateConstants;
 import com.hk.dao.coupon.CouponDao;
 import com.hk.dao.marketing.EmailCampaignDao;
 import com.hk.dao.order.OrderDao;
-import com.hk.dao.user.UserDaoImpl;
+import com.hk.dao.user.UserDao;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.email.EmailCampaign;
 import com.hk.domain.user.User;
@@ -48,13 +48,15 @@ public class SendWeMissYouEmailer extends BaseAction {
     int                 userCount;
     EmailCampaign       emailCampaign;
     List<EmailCampaign> emailCampaigns;
-
+    @Autowired
     EmailCampaignDao    emailCampaignDao;
-
-    UserDaoImpl             userDao;
-
+    @Autowired
+    UserDao            userDao;
+    @Autowired
     CouponDao           couponDao;
+    @Autowired
     EmailManager        emailManager;
+    @Autowired
     OrderDao            orderDao;
 
     Logger              logger = LoggerFactory.getLogger(SendWeMissYouEmailer.class);

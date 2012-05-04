@@ -11,9 +11,9 @@ import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
-
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
@@ -27,73 +27,75 @@ import com.hk.manager.ReferrerProgramManager;
 import com.hk.service.order.RewardPointService;
 import com.hk.web.action.error.AdminPermissionAction;
 
-@Secure(hasAnyPermissions = {PermissionConstants.MODERATE_REWARD_POINTS}, authActionBean = AdminPermissionAction.class)
+@Secure(hasAnyPermissions = { PermissionConstants.MODERATE_REWARD_POINTS }, authActionBean = AdminPermissionAction.class)
 @Component
 public class PendingRewardPointQueueAction extends BasePaginatedAction {
 
-  Page rewardPointPage;
-  List<RewardPoint> rewardPointList;
+    Page                       rewardPointPage;
+    List<RewardPoint>          rewardPointList;
+    @Autowired
+    RewardPointDao             rewardPointDao;
+    @Autowired
+    ReferrerProgramManager     referrerProgramManager;
+    @Autowired
+    private RewardPointService rewardPointService;
 
-   RewardPointDao rewardPointDao;
-   ReferrerProgramManager referrerProgramManager;
-   private RewardPointService rewardPointService;
+    private Integer            defaultPerPage = 30;
+    private RewardPointMode    rewardPointMode;
 
-  private Integer defaultPerPage = 30;
-  private RewardPointMode rewardPointMode;
+    @DefaultHandler
+    @DontValidate
+    public Resolution pre() {
+        List<RewardPointMode> rpmList = new ArrayList<RewardPointMode>();
+        if (rewardPointMode != null) {
+            rpmList.add(rewardPointMode);
+        }
+        List<RewardPointStatus> rpsList = new ArrayList<RewardPointStatus>();
+        rpsList.add(rewardPointService.getRewardPointStatus(EnumRewardPointStatus.PENDING));
 
-  @DefaultHandler
-  @DontValidate
-  public Resolution pre() {
-    List<RewardPointMode> rpmList = new ArrayList<RewardPointMode>();
-    if (rewardPointMode != null) {
-      rpmList.add(rewardPointMode);
-    } 
-    List<RewardPointStatus> rpsList = new ArrayList<RewardPointStatus>();
-    rpsList.add(rewardPointService.getRewardPointStatus(EnumRewardPointStatus.PENDING));
-    
-    rewardPointPage = rewardPointDao.searchRewardPoints(rpmList, rpsList, getPageNo(), getPerPage());
-    if (rewardPointPage != null) {
-      rewardPointList = rewardPointPage.getList();
+        rewardPointPage = rewardPointDao.searchRewardPoints(rpmList, rpsList, getPageNo(), getPerPage());
+        if (rewardPointPage != null) {
+            rewardPointList = rewardPointPage.getList();
+        }
+        return new ForwardResolution("/pages/admin/pendingRewardPointQueue.jsp");
     }
-    return new ForwardResolution("/pages/admin/pendingRewardPointQueue.jsp");
-  }
 
-  public Resolution save() {
-    referrerProgramManager.approveRewardPoints(rewardPointList, null);
-    return new RedirectResolution(PendingRewardPointQueueAction.class).addParameter("rewardPointMode", rewardPointMode);
-  }
+    public Resolution save() {
+        referrerProgramManager.approveRewardPoints(rewardPointList, null);
+        return new RedirectResolution(PendingRewardPointQueueAction.class).addParameter("rewardPointMode", rewardPointMode);
+    }
 
-  public List<RewardPoint> getRewardPointList() {
-    return rewardPointList;
-  }
+    public List<RewardPoint> getRewardPointList() {
+        return rewardPointList;
+    }
 
-  public void setRewardPointList(List<RewardPoint> rewardPointList) {
-    this.rewardPointList = rewardPointList;
-  }
+    public void setRewardPointList(List<RewardPoint> rewardPointList) {
+        this.rewardPointList = rewardPointList;
+    }
 
-  public RewardPointMode getRewardPointMode() {
-    return rewardPointMode;
-  }
+    public RewardPointMode getRewardPointMode() {
+        return rewardPointMode;
+    }
 
-  public void setRewardPointMode(RewardPointMode rewardPointMode) {
-    this.rewardPointMode = rewardPointMode;
-  }
+    public void setRewardPointMode(RewardPointMode rewardPointMode) {
+        this.rewardPointMode = rewardPointMode;
+    }
 
-  public int getPerPageDefault() {
-    return defaultPerPage;
-  }
+    public int getPerPageDefault() {
+        return defaultPerPage;
+    }
 
-  public int getPageCount() {
-    return rewardPointPage == null ? 0 : rewardPointPage.getTotalPages();
-  }
+    public int getPageCount() {
+        return rewardPointPage == null ? 0 : rewardPointPage.getTotalPages();
+    }
 
-  public int getResultCount() {
-    return rewardPointPage == null ? 0 : rewardPointPage.getTotalResults();
-  }
+    public int getResultCount() {
+        return rewardPointPage == null ? 0 : rewardPointPage.getTotalResults();
+    }
 
-  public Set<String> getParamSet() {
-    HashSet<String> params = new HashSet<String>();
-    params.add("rewardPointMode");
-    return params;
-  }
+    public Set<String> getParamSet() {
+        HashSet<String> params = new HashSet<String>();
+        params.add("rewardPointMode");
+        return params;
+    }
 }

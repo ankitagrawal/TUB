@@ -16,6 +16,7 @@ import net.sourceforge.stripes.validation.Validate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
@@ -33,7 +34,7 @@ import com.hk.web.action.error.AdminPermissionAction;
 public class RelatedProductAction extends BaseAction {
 
     private static Logger logger = LoggerFactory.getLogger(RelatedProductAction.class);
-
+    @Autowired
     XslParser             xslParser;
 
     // @Named (Keys.Env.adminUploads)

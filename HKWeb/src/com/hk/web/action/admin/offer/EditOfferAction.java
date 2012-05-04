@@ -7,6 +7,7 @@ import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.Validate;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -30,6 +31,7 @@ import com.hk.web.action.error.AdminPermissionAction;
 public class EditOfferAction extends BaseAction {
   @Validate(required = true)
   private Offer offer;
+  @Autowired
    OfferDao offerDao;
 
   @DontValidate

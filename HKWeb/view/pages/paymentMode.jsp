@@ -1,5 +1,5 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
-<%@ page import="com.google.inject.Key" %>
+
 <%@ page import="com.google.inject.name.Names" %>
 <%@ page import="org.joda.time.DateTime" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
@@ -9,7 +9,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="com.hk.web.action.OrderSummaryAction" event="pre" var="orderSummary"/>
+<s:useActionBean beanclass="com.hk.web.action.core.order.OrderSummaryAction" event="pre" var="orderSummary"/>
 <s:useActionBean beanclass="com.hk.web.action.PaymentModeAction" event="pre" var="paymentModeBean"/>
 
 <%
@@ -38,7 +38,7 @@
         </div>
       </div>
     </s:link>
-    <s:link beanclass="com.hk.web.action.OrderSummaryAction" style="margin-top: 0; margin-bottom: 0;">
+    <s:link beanclass="com.hk.web.action.core.order.OrderSummaryAction" style="margin-top: 0; margin-bottom: 0;">
       <div class='step prev_step' id="step2">
         <h2>Step 2</h2>
 

@@ -16,6 +16,7 @@ import net.sourceforge.stripes.validation.Validate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -58,31 +59,30 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 
   List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>();
 
-  
+  @Autowired
   OrderManager orderManager;
-  
+  @Autowired
   ProductManager productManager;
-  
+  @Autowired
   OrderStatusDao orderStatusDao;
-  
+  @Autowired
   PaymentModeDao paymentModeDao;
-  
+  @Autowired
   PaymentStatusDao paymentStatusDao;
-  
+  @Autowired
   CategoryDao categoryDao;
-  
+  @Autowired
   InvoiceService invoiceService;
-  
+  @Autowired
   OrderStatusService orderStatusService;
-  
+  @Autowired
   PaymentService paymentService;
-  
+  @Autowired
   OrderService orderService;
-  
+  @Autowired
   ShippingOrderService shippingOrderService;
-  
+  @Autowired
   ShippingOrderStatusService shippingOrderStatusService;
-
 
   private Long orderId;
   private String gatewayOrderId;

@@ -27,6 +27,7 @@ import net.sourceforge.stripes.validation.Validate;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
@@ -63,18 +64,24 @@ import com.hk.web.action.error.AdminPermissionAction;
 public class InventoryCheckinAction extends BaseAction {
 
     private static Logger         logger    = Logger.getLogger(InventoryCheckinAction.class);
-
+    @Autowired
     private InventoryService      inventoryService;
-    private AdminInventoryService adminInventoryService; 
+    @Autowired
+    private AdminInventoryService adminInventoryService;
+    @Autowired
     private ProductVariantService productVariantService;
+    @Autowired
     private SkuService            skuService;
+    @Autowired
     private UserService           userService;
-
+    @Autowired
     private GrnLineItemDao        grnLineItemDao;
+    @Autowired
     private GoodsReceivedNoteDao  goodsReceivedNoteDao;
     // private LowInventoryDao lowInventoryDao;
-
+    @Autowired
     private XslGenerator          xslGenerator;
+    @Autowired
     private XslParser             xslParser;
 
     // SkuGroupDao skuGroupDao;

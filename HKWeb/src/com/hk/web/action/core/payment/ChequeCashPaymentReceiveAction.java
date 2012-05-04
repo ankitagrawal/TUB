@@ -7,6 +7,7 @@ import net.sourceforge.stripes.validation.SimpleError;
 import net.sourceforge.stripes.validation.Validate;
 import net.sourceforge.stripes.validation.ValidationMethod;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -31,11 +32,15 @@ import com.hk.service.UserService;
 @Secure
 @Component
 public class ChequeCashPaymentReceiveAction extends BaseAction {
-
+    @Autowired
     private PaymentManager paymentManager;
+    @Autowired
     private OrderManager   orderManager;
+    @Autowired
     private RoleService    roleService;
+    @Autowired
     private UserService    userService;
+    @Autowired
     private PaymentService paymentService;
 
     @Validate(required = true)

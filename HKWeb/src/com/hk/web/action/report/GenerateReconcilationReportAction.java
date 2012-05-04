@@ -18,10 +18,10 @@ import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
-
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.impl.dao.courier.ShipmentDao;
@@ -37,162 +37,155 @@ import com.hk.service.UserService;
 import com.hk.util.io.HkXlsWriter;
 import com.hk.web.action.error.AdminPermissionAction;
 
-@Secure (hasAnyPermissions = {PermissionConstants.VIEW_RECONCILIATION_REPORTS}, authActionBean = AdminPermissionAction.class)
+@Secure(hasAnyPermissions = { PermissionConstants.VIEW_RECONCILIATION_REPORTS }, authActionBean = AdminPermissionAction.class)
 @Component
 public class GenerateReconcilationReportAction extends BaseAction {
- 
- UserService userService;
+    @Autowired
+    UserService                userService;
 
- 
- OrderDao orderDao;
+    @Autowired
+    OrderDao                   orderDao;
 
- 
- ShipmentDao shipmentDao;
+    @Autowired
+    ShipmentDao                shipmentDao;
+    @Autowired
+    ShippingOrderDao           shippingOrderDao;
+    @Autowired
+    ReportShippingOrderService shippingOrderReportingService;
+    @Autowired
+    WarehouseDao               warehouseDao;
 
- 
- ShippingOrderDao shippingOrderDao;
+    // @Named (Keys.Env.adminDownloads)
+    @Value("#{hkEnvProps['adminUploads']}")
+    String                     adminDownloadsPath;
 
- 
-  ReportShippingOrderService shippingOrderReportingService;
+    private Date               startDate;
+    private Date               endDate;
+    private SimpleDateFormat   sdf = new SimpleDateFormat("yyyy-MM-dd");
+    private String             paymentProcess;
+    private CourierServiceInfo courierServiceInfo;
 
- 
-  WarehouseDao warehouseDao;
+    private Long               warehouseId;
+    private Courier            courier;
 
-  
-  //@Named (Keys.Env.adminDownloads)
-  @Value("#{hkEnvProps['adminUploads']}")
-  String adminDownloadsPath;
-   
-  private Date startDate;
-  private Date endDate;
-  private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-  private String paymentProcess;
-  private CourierServiceInfo courierServiceInfo;
-  
-  private Long warehouseId;
-  private Courier courier;
-
-  @DefaultHandler
-  public Resolution pre() {
-    return new ForwardResolution("/pages/admin/generateReconciilationReport.jsp");
-  }
-
-  public Resolution generateReconilationReport() {
-    List<ReconcilationReportDto> reconcilationReportDtoList = new ArrayList<ReconcilationReportDto>();
-    reconcilationReportDtoList = shippingOrderReportingService.findReconcilationReportByDate(startDate, endDate, paymentProcess, courier, warehouseId);
-    if(reconcilationReportDtoList.isEmpty() ==  true){
-      addRedirectAlertMessage(new SimpleMessage("No order for given search criteria."));
-      return new ForwardResolution("/pages/admin/generateReconciilationReport.jsp");
+    @DefaultHandler
+    public Resolution pre() {
+        return new ForwardResolution("/pages/admin/generateReconciilationReport.jsp");
     }
 
-    String excelFilePath = adminDownloadsPath + "/reports/ReconReport" + sdf.format(new Date()) + ".xls";
-    final File excelFile = new File(excelFilePath);
-
-    HkXlsWriter xlsWriter = new HkXlsWriter();
-    xlsWriter.addHeader("SHIPPING ORDER ID", "SHIPPING ORDER ID");
-    xlsWriter.addHeader("ORDER DATE", "ORDER DATE");
-    xlsWriter.addHeader("NAME", "NAME");
-    xlsWriter.addHeader("CITY", "CITY");
-    xlsWriter.addHeader("PAYMENT", "PAYMENT");
-    xlsWriter.addHeader("TOTAL", "TOTAL");
-    xlsWriter.addHeader("COURIER", "COURIER");
-    xlsWriter.addHeader("AWB", "AWB");
-    xlsWriter.addHeader("SHIPMENT DATE", "SHIPMENT DAT");
-    xlsWriter.addHeader("DELIVERY DATE", "DELIVERY DATE");
-    xlsWriter.addHeader("RECONCILED", "RECONCILED");
-    xlsWriter.addHeader("ORDER STATUS", "ORDER STATU");
-    xlsWriter.addHeader("BOX WEIGHT", "BOX WEIGHT");
-    xlsWriter.addHeader("BOX SIZE", "BOX SIZE");
-    xlsWriter.addHeader("WAREHOUSE", "WAREHOUSE");
-
-    int row = 1;
-    for (ReconcilationReportDto reconcilationReportDto : reconcilationReportDtoList) {
-      xlsWriter.addCell(row, reconcilationReportDto.getInvoiceId());
-      xlsWriter.addCell(row, reconcilationReportDto.getOrderDate());
-      xlsWriter.addCell(row, reconcilationReportDto.getName());
-      xlsWriter.addCell(row, reconcilationReportDto.getCity());
-      xlsWriter.addCell(row, reconcilationReportDto.getPayment());
-      xlsWriter.addCell(row, reconcilationReportDto.getTotal());
-      xlsWriter.addCell(row, reconcilationReportDto.getCourier().getName());
-      xlsWriter.addCell(row, reconcilationReportDto.getAwb());
-      xlsWriter.addCell(row, reconcilationReportDto.getShipmentDate());
-      if(reconcilationReportDto.getDeliveryDate() == null){
-        xlsWriter.addCell(row, "");
-      }
-      else{
-        xlsWriter.addCell(row, reconcilationReportDto.getDeliveryDate());
-      }
-
-      xlsWriter.addCell(row, reconcilationReportDto.getReconciled());
-      xlsWriter.addCell(row, reconcilationReportDto.getOrderStatus());
-      xlsWriter.addCell(row, reconcilationReportDto.getBoxWeight());
-      xlsWriter.addCell(row, reconcilationReportDto.getBoxSize());
-      xlsWriter.addCell(row, reconcilationReportDto.getWarehouse().getName());
-      row++;
-    }
-    xlsWriter.writeData(excelFile, "Reconciliation_report");
-    addRedirectAlertMessage(new SimpleMessage("Downlaod complete"));
-
-    return new Resolution() {
-
-      public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
-        OutputStream out = null;
-        InputStream in = new BufferedInputStream(new FileInputStream(excelFile));
-        res.setContentLength((int) excelFile.length());
-        res.setHeader("Content-Disposition", "attachment; filename=\"" + excelFile.getName() + "\";");
-        out = res.getOutputStream();
-
-        // Copy the contents of the file to the output stream
-        byte[] buf = new byte[8192];
-        int count = 0;
-        while ((count = in.read(buf)) >= 0) {
-          out.write(buf, 0, count);
+    public Resolution generateReconilationReport() {
+        List<ReconcilationReportDto> reconcilationReportDtoList = new ArrayList<ReconcilationReportDto>();
+        reconcilationReportDtoList = shippingOrderReportingService.findReconcilationReportByDate(startDate, endDate, paymentProcess, courier, warehouseId);
+        if (reconcilationReportDtoList.isEmpty() == true) {
+            addRedirectAlertMessage(new SimpleMessage("No order for given search criteria."));
+            return new ForwardResolution("/pages/admin/generateReconciilationReport.jsp");
         }
-      }
-    };
 
+        String excelFilePath = adminDownloadsPath + "/reports/ReconReport" + sdf.format(new Date()) + ".xls";
+        final File excelFile = new File(excelFilePath);
 
-//    return new ForwardResolution("/pages/admin/generateReconciilationReport.jsp");
-  }
+        HkXlsWriter xlsWriter = new HkXlsWriter();
+        xlsWriter.addHeader("SHIPPING ORDER ID", "SHIPPING ORDER ID");
+        xlsWriter.addHeader("ORDER DATE", "ORDER DATE");
+        xlsWriter.addHeader("NAME", "NAME");
+        xlsWriter.addHeader("CITY", "CITY");
+        xlsWriter.addHeader("PAYMENT", "PAYMENT");
+        xlsWriter.addHeader("TOTAL", "TOTAL");
+        xlsWriter.addHeader("COURIER", "COURIER");
+        xlsWriter.addHeader("AWB", "AWB");
+        xlsWriter.addHeader("SHIPMENT DATE", "SHIPMENT DAT");
+        xlsWriter.addHeader("DELIVERY DATE", "DELIVERY DATE");
+        xlsWriter.addHeader("RECONCILED", "RECONCILED");
+        xlsWriter.addHeader("ORDER STATUS", "ORDER STATU");
+        xlsWriter.addHeader("BOX WEIGHT", "BOX WEIGHT");
+        xlsWriter.addHeader("BOX SIZE", "BOX SIZE");
+        xlsWriter.addHeader("WAREHOUSE", "WAREHOUSE");
 
-  public Date getStartDate(){
-    return startDate;
-  }
+        int row = 1;
+        for (ReconcilationReportDto reconcilationReportDto : reconcilationReportDtoList) {
+            xlsWriter.addCell(row, reconcilationReportDto.getInvoiceId());
+            xlsWriter.addCell(row, reconcilationReportDto.getOrderDate());
+            xlsWriter.addCell(row, reconcilationReportDto.getName());
+            xlsWriter.addCell(row, reconcilationReportDto.getCity());
+            xlsWriter.addCell(row, reconcilationReportDto.getPayment());
+            xlsWriter.addCell(row, reconcilationReportDto.getTotal());
+            xlsWriter.addCell(row, reconcilationReportDto.getCourier().getName());
+            xlsWriter.addCell(row, reconcilationReportDto.getAwb());
+            xlsWriter.addCell(row, reconcilationReportDto.getShipmentDate());
+            if (reconcilationReportDto.getDeliveryDate() == null) {
+                xlsWriter.addCell(row, "");
+            } else {
+                xlsWriter.addCell(row, reconcilationReportDto.getDeliveryDate());
+            }
 
-  public void setStartDate(Date startDate){
-    this.startDate = startDate;
-  }
+            xlsWriter.addCell(row, reconcilationReportDto.getReconciled());
+            xlsWriter.addCell(row, reconcilationReportDto.getOrderStatus());
+            xlsWriter.addCell(row, reconcilationReportDto.getBoxWeight());
+            xlsWriter.addCell(row, reconcilationReportDto.getBoxSize());
+            xlsWriter.addCell(row, reconcilationReportDto.getWarehouse().getName());
+            row++;
+        }
+        xlsWriter.writeData(excelFile, "Reconciliation_report");
+        addRedirectAlertMessage(new SimpleMessage("Downlaod complete"));
 
+        return new Resolution() {
 
-  public Date getEndDate(){
-    return endDate;
-  }
+            public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
+                OutputStream out = null;
+                InputStream in = new BufferedInputStream(new FileInputStream(excelFile));
+                res.setContentLength((int) excelFile.length());
+                res.setHeader("Content-Disposition", "attachment; filename=\"" + excelFile.getName() + "\";");
+                out = res.getOutputStream();
 
-  public void setEndDate(Date endDate){
-    this.endDate = endDate;
-  }
+                // Copy the contents of the file to the output stream
+                byte[] buf = new byte[8192];
+                int count = 0;
+                while ((count = in.read(buf)) >= 0) {
+                    out.write(buf, 0, count);
+                }
+            }
+        };
 
-  public String getPaymentProcess(){
-    return paymentProcess;
-  }
+        // return new ForwardResolution("/pages/admin/generateReconciilationReport.jsp");
+    }
 
-  public void setPaymentProcess(String paymentProcess){
-    this.paymentProcess = paymentProcess;
-  }
+    public Date getStartDate() {
+        return startDate;
+    }
 
-  public Long getWarehouseId(){
-    return warehouseId;
-  }
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
 
-  public void setWarehouseId(Long warehouseId){
-    this.warehouseId = warehouseId;
-  }
+    public Date getEndDate() {
+        return endDate;
+    }
 
-  public Courier getCourier() {
-    return courier;
-  }
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
 
-  public void setCourier(Courier courier) {
-    this.courier = courier;
-  }
+    public String getPaymentProcess() {
+        return paymentProcess;
+    }
+
+    public void setPaymentProcess(String paymentProcess) {
+        this.paymentProcess = paymentProcess;
+    }
+
+    public Long getWarehouseId() {
+        return warehouseId;
+    }
+
+    public void setWarehouseId(Long warehouseId) {
+        this.warehouseId = warehouseId;
+    }
+
+    public Courier getCourier() {
+        return courier;
+    }
+
+    public void setCourier(Courier courier) {
+        this.courier = courier;
+    }
 }

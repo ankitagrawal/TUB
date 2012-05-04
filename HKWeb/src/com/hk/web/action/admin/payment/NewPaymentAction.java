@@ -7,6 +7,7 @@ import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.validation.Validate;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -37,7 +38,7 @@ public class NewPaymentAction extends BaseAction {
   @Validate(required = true, on = "update")
   private PaymentStatus paymentStatus;
 
-  
+  @Autowired
   PaymentDao paymentDao;
 
   @DefaultHandler

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import net.sourceforge.stripes.action.DefaultHandler;
@@ -54,28 +55,29 @@ public class JobCartAction extends BaseAction {
   Category category;
   String baseGatewayOrderId;
 
-  
+  @Autowired
   CategoryDao categoryDao;
-  
+  @Autowired
   ReferrerProgramManager referrerProgramManager;
-  
+  @Autowired
   UserDaoImpl userDao;
-  
+  @Autowired
   BarcodeGenerator barcodeGenerator;
-  
+  @Autowired
   OrderManager orderManager;
-  
+  @Autowired
   PaymentModeDao paymentModeDao;
-  
+  @Autowired
   SkuItemDao skuItemDao;
+  @Autowired
   AdminSkuItemDao adminSkuItemDao;
-  
+  @Autowired
   BinDao binDao;
-  
+  @Autowired
   ShippingOrderService shippingOrderService;
-  
+  @Autowired
   UserService userService;
-  
+  @Autowired
   ShippingOrderStatusService shippingOrderStatusService;
 
 

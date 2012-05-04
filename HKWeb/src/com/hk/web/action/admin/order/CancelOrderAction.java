@@ -30,7 +30,7 @@ import com.hk.web.action.error.AdminPermissionAction;
 @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_ORDER }, authActionBean = AdminPermissionAction.class)
 @Component
 public class CancelOrderAction extends BaseAction {
-
+    @Autowired
     AdminOrderService             adminOrderService;
     @Autowired
     private UserService      userService;

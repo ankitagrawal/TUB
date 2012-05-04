@@ -3,6 +3,7 @@ package com.hk.web.action.core.menu;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -22,9 +23,12 @@ public class SitemapAction extends BaseAction {
 
     List<String>           categoryUrls = new ArrayList<String>();
     List<String>           productUrls  = new ArrayList<String>();
-
+    @Autowired
     MenuHelper             menuHelper;
+    
+    @Autowired
     LinkManager            linkManager;
+    @Autowired
     private ProductService productService;
 
     public Resolution pre() {

@@ -51,9 +51,9 @@ public class AddToCartWithLineItemConfigAction extends BaseAction {
 
     @Autowired
     private UserService                   userService;
-
+    @Autowired
     private UserManager                   userManager;
-
+    @Autowired
     private OrderManager                  orderManager;
 
     @Autowired

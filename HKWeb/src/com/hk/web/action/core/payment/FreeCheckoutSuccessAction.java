@@ -1,5 +1,6 @@
 package com.hk.web.action.core.payment;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -22,7 +23,7 @@ public class FreeCheckoutSuccessAction extends BaseAction {
 
   private Payment payment;
 
-  
+  @Autowired
   PaymentDao paymentDao;
 
   public Resolution pre() {

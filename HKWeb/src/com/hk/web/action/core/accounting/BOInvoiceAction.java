@@ -7,6 +7,7 @@ import net.sourceforge.stripes.validation.Validate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
@@ -16,7 +17,7 @@ import com.hk.dao.catalog.category.CategoryDao;
 import com.hk.dao.core.AddressDao;
 import com.hk.dao.order.OrderDao;
 import com.hk.dao.payment.PaymentModeDao;
-import com.hk.dao.user.UserDaoImpl;
+import com.hk.dao.user.UserDao;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.order.Order;
 import com.hk.dto.pricing.PricingDto;
@@ -28,31 +29,30 @@ import com.hk.util.BarcodeGenerator;
 public class BOInvoiceAction extends BaseAction {
 
   private static Logger logger = LoggerFactory.getLogger(BOInvoiceAction.class);
-
   private PricingDto pricingDto;
 
   @Validate (required = true, encrypted = true)
   private Order order;
 
-  
+  @Autowired
   CategoryDao categoryDao;
-  
+  @Autowired
   ReferrerProgramManager referrerProgramManager;
-  
-  UserDaoImpl userDao;
-  
+  @Autowired
+  UserDao userDao;
+  @Autowired
   OrderDao orderDao;
-  
+  @Autowired
   BarcodeGenerator barcodeGenerator;
-  
+  @Autowired
   OrderManager orderManager;
-  
+  @Autowired
   PaymentModeDao paymentModeDao;
-  
+  @Autowired
   CourierServiceInfoDao courierServiceInfoDao;
-  
+  @Autowired
   AddressDao addressDao;
-  
+  @Autowired
   CourierDao courierDao;
 
   private String barcodePath;

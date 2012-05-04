@@ -9,6 +9,7 @@ import net.sourceforge.stripes.action.Resolution;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
@@ -37,17 +38,17 @@ public class LineItemUpdateAction extends BaseAction {
   ComboInstance comboInstance;
   PricingSubDto pricingSubDto;
 
-  
+  @Autowired
   LineItemDao lineItemDao;
-  
+  @Autowired
   CartLineItemDao cartLineItemDao;
-  
+  @Autowired
   OrderManager orderManager;
-  
+  @Autowired
   PricingEngine pricingEngine;
-  
+  @Autowired
   ComboInstanceDao comboInstanceDao;
-  
+  @Autowired
   ComboInstanceHasProductVariantDao comboInstanceHasProductVariantDao;
 
   Logger logger = LoggerFactory.getLogger(LineItemUpdateAction.class);

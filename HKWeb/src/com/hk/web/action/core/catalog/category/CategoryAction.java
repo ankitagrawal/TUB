@@ -9,8 +9,8 @@ import net.sourceforge.stripes.action.HttpCache;
 import net.sourceforge.stripes.action.Resolution;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.dao.catalog.category.CategoryDao;
@@ -24,80 +24,84 @@ import com.hk.domain.content.SeoData;
 import com.hk.util.SeoManager;
 import com.hk.web.action.core.catalog.product.ProductAction;
 
-@HttpCache(expires=10000)
+@HttpCache(expires = 10000)
 @Component
 public class CategoryAction extends BaseAction {
-  private static Logger logger = Logger.getLogger(ProductAction.class);
+    private static Logger        logger = Logger.getLogger(ProductAction.class);
 
-  Category category;
-  List<PrimaryCategoryHeading> headings;
-  SeoData seoData;
-  List<CategoryImage> categoryImages;
+    Category                     category;
+    List<PrimaryCategoryHeading> headings;
+    SeoData                      seoData;
+    List<CategoryImage>          categoryImages;
+    @Autowired
+    PrimaryCategoryHeadingDao    primaryCategoryHeadingDao;
+    @Autowired
+    ProductDao                   productDao;
+    @Autowired
+    CategoryDao                  categoryDao;
+    @Autowired
+    SeoManager                   seoManager;
+    @Autowired
+    CategoryImageDao             categoryImageDao;
 
-   PrimaryCategoryHeadingDao primaryCategoryHeadingDao;
-   ProductDao productDao;
-   CategoryDao categoryDao;
-   SeoManager seoManager;
-   CategoryImageDao categoryImageDao;
-
-  @DontValidate
-  @DefaultHandler
-  public Resolution pre() {
-    headings = primaryCategoryHeadingDao.getHeadingsByCategory(category);
-    String categoryName = "default";
-    if(category != null){
-      categoryName = category.getName();
+    @DontValidate
+    @DefaultHandler
+    public Resolution pre() {
+        headings = primaryCategoryHeadingDao.getHeadingsByCategory(category);
+        String categoryName = "default";
+        if (category != null) {
+            categoryName = category.getName();
+        }
+        seoData = seoManager.generateSeo("/" + categoryName);
+        categoryImages = categoryImageDao.getCategoryImageByCategoryHome(category);
+        return new ForwardResolution("/pages/category/category.jsp");
     }
-    seoData = seoManager.generateSeo("/" + categoryName);
-    categoryImages = categoryImageDao.getCategoryImageByCategoryHome(category);
-    return new ForwardResolution("/pages/category/category.jsp");
-  }
 
-  public Resolution editPrimaryCategoryHeadings() {
-    logger.debug("headings to be edited for category: " + category.getName());
-    headings = primaryCategoryHeadingDao.getHeadingsByCategory(category);
-    return new ForwardResolution("/pages/editPrimaryCategoryHeadings.jsp").addParameter("category", category.getName());
-  }
+    public Resolution editPrimaryCategoryHeadings() {
+        logger.debug("headings to be edited for category: " + category.getName());
+        headings = primaryCategoryHeadingDao.getHeadingsByCategory(category);
+        return new ForwardResolution("/pages/editPrimaryCategoryHeadings.jsp").addParameter("category", category.getName());
+    }
 
-  public SeoData getSeoData() {
-    return seoData;
-  }
+    public SeoData getSeoData() {
+        return seoData;
+    }
 
-  public void setSeoData(SeoData seoData) {
-    this.seoData = seoData;
-  }
+    public void setSeoData(SeoData seoData) {
+        this.seoData = seoData;
+    }
 
-  public List<CategoryImage> getCategoryImages() {
-    return categoryImages;
-  }
+    public List<CategoryImage> getCategoryImages() {
+        return categoryImages;
+    }
 
-  public void setCategoryImages(List<CategoryImage> categoryImages) {
-    this.categoryImages = categoryImages;
-  }
+    public void setCategoryImages(List<CategoryImage> categoryImages) {
+        this.categoryImages = categoryImages;
+    }
 
-  public List<PrimaryCategoryHeading> getHeadings() {
-    return headings;
-  }
+    public List<PrimaryCategoryHeading> getHeadings() {
+        return headings;
+    }
 
-  public void setHeadings(List<PrimaryCategoryHeading> headings) {
-    this.headings = headings;
-  }
+    public void setHeadings(List<PrimaryCategoryHeading> headings) {
+        this.headings = headings;
+    }
 
-  public Category getCategory() {
-    return category;
-  }
+    public Category getCategory() {
+        return category;
+    }
 
-  public void setCategory(Category category) {
-    this.category = category;
-  }
+    public void setCategory(Category category) {
+        this.category = category;
+    }
 
-  public List<PrimaryCategoryHeading> getHeadingsWithRankingSetSortedByRanking() {
-    headings = primaryCategoryHeadingDao.getHeadingsWithRankingByCategory(category);
-    return headings;
-  }
+    public List<PrimaryCategoryHeading> getHeadingsWithRankingSetSortedByRanking() {
+        headings = primaryCategoryHeadingDao.getHeadingsWithRankingByCategory(category);
+        return headings;
+    }
 
-  public List<PrimaryCategoryHeading> getHeadingsSortedByRanking() {
-    headings = primaryCategoryHeadingDao.getHeadingsOrderedByRankingByCategory(category);
-    return headings;
-  }
+    public List<PrimaryCategoryHeading> getHeadingsSortedByRanking() {
+        headings = primaryCategoryHeadingDao.getHeadingsOrderedByRankingByCategory(category);
+        return headings;
+    }
 }

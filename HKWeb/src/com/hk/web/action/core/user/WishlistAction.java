@@ -3,6 +3,7 @@ package com.hk.web.action.core.user;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -15,7 +16,7 @@ import com.hk.service.UserService;
 public class WishlistAction extends BaseAction {
 
     User                user;
-
+    @Autowired
     private UserService userService;
 
     public Resolution pre() {

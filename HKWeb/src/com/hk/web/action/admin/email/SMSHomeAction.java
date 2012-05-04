@@ -17,9 +17,9 @@ import net.sourceforge.stripes.validation.ValidationMethod;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
-
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.manager.SMSManager;
@@ -31,126 +31,128 @@ import com.hk.domain.catalog.category.Category;
 import com.hk.domain.user.Address;
 import com.hk.web.action.error.AdminPermissionAction;
 
-@Secure(hasAnyPermissions = {PermissionConstants.SEND_SMS}, authActionBean = AdminPermissionAction.class)
+@Secure(hasAnyPermissions = { PermissionConstants.SEND_SMS }, authActionBean = AdminPermissionAction.class)
 @Component
 public class SMSHomeAction extends BaseAction {
 
-  private static Logger logger = LoggerFactory.getLogger(SMSHomeAction.class);
+    private static Logger logger = LoggerFactory.getLogger(SMSHomeAction.class);
 
-  private boolean bulkSMS;
-  private String name;
-  private String mobile;
-  private String mobiles;
+    private boolean       bulkSMS;
+    private String        name;
+    private String        mobile;
+    private String        mobiles;
 
-  @Validate(required = true)
-  private String message;
+    @Validate(required = true)
+    private String        message;
 
-  private Category topLevelCategory;
+    private Category      topLevelCategory;
+    @Autowired
+    SMSManager            smsManager;
+    @Autowired
+    AddressDao            addressDao;
+    @Autowired
+    RoleDao               roleDao;
 
-   SMSManager smsManager;
-   AddressDao addressDao;
-   RoleDao roleDao;
-
-  @DefaultHandler
-  @DontValidate
-  public Resolution pre() {
-    return new ForwardResolution("/pages/admin/smsHome.jsp");
-  }
-
-  @ValidationMethod
-  public void validateSMSRequiredFields() {
-    if (!bulkSMS) {
-      if (StringUtils.isBlank(mobile) && StringUtils.isBlank(mobiles)) {
-        getContext().getValidationErrors().add("mobileNumber", new SimpleError("Mobile number(s) is a required field for non-bulk sms or send bulk sms"));
-      }
-    }
-  }
-
-  public Resolution sendSMS() {
-    Set<String> mobileNumbers = new HashSet<String>();
-    if (!bulkSMS) {
-      if (StringUtils.isNotBlank(mobiles)) {
-        String[] mobileArray = mobiles.split(",");
-        for (String mobile : mobileArray) {
-          smsManager.sendSMS(message, StringUtils.trim(mobile));
-        }
-      } else if (StringUtils.isNotBlank(mobile)) {
-        smsManager.sendSMS(message, mobile);
-      }
-    } else if (topLevelCategory != null) {
-      List<Category> categories = new ArrayList<Category>();
-      categories.add(topLevelCategory);
-      List<Address> addresses = addressDao.getAllAddressesByCategories(categories);
-      logger.info("addresses: " + addresses.size());
-      for (Address address : addresses) {
-        if (!address.getUser().getRoles().contains(roleDao.find(RoleConstants.UNSUBSCRIBED_USER))) {
-          if (!mobileNumbers.contains(address.getPhone())) {
-            smsManager.sendSMS(message, address.getPhone());
-            mobileNumbers.add(address.getPhone());
-          }
-        }
-      }
-    } else {
-      List<Address> addresses = addressDao.getAllAddresses();
-      logger.info("addresses: " + addresses.size());
-      for (Address address : addresses) {
-        if (!address.getUser().getRoles().contains(roleDao.find(RoleConstants.UNSUBSCRIBED_USER))) {
-          if (!mobileNumbers.contains(address.getPhone())) {
-            smsManager.sendSMS(message, address.getPhone());
-            mobileNumbers.add(address.getPhone());
-          }
-        }
-      }
+    @DefaultHandler
+    @DontValidate
+    public Resolution pre() {
+        return new ForwardResolution("/pages/admin/smsHome.jsp");
     }
 
-    return new RedirectResolution(SMSHomeAction.class);
-  }
+    @ValidationMethod
+    public void validateSMSRequiredFields() {
+        if (!bulkSMS) {
+            if (StringUtils.isBlank(mobile) && StringUtils.isBlank(mobiles)) {
+                getContext().getValidationErrors().add("mobileNumber", new SimpleError("Mobile number(s) is a required field for non-bulk sms or send bulk sms"));
+            }
+        }
+    }
 
-  public boolean isBulkSMS() {
-    return bulkSMS;
-  }
+    public Resolution sendSMS() {
+        Set<String> mobileNumbers = new HashSet<String>();
+        if (!bulkSMS) {
+            if (StringUtils.isNotBlank(mobiles)) {
+                String[] mobileArray = mobiles.split(",");
+                for (String mobile : mobileArray) {
+                    smsManager.sendSMS(message, StringUtils.trim(mobile));
+                }
+            } else if (StringUtils.isNotBlank(mobile)) {
+                smsManager.sendSMS(message, mobile);
+            }
+        } else if (topLevelCategory != null) {
+            List<Category> categories = new ArrayList<Category>();
+            categories.add(topLevelCategory);
+            List<Address> addresses = addressDao.getAllAddressesByCategories(categories);
+            logger.info("addresses: " + addresses.size());
+            for (Address address : addresses) {
+                if (!address.getUser().getRoles().contains(roleDao.find(RoleConstants.UNSUBSCRIBED_USER))) {
+                    if (!mobileNumbers.contains(address.getPhone())) {
+                        smsManager.sendSMS(message, address.getPhone());
+                        mobileNumbers.add(address.getPhone());
+                    }
+                }
+            }
+        } else {
+            List<Address> addresses = addressDao.getAllAddresses();
+            logger.info("addresses: " + addresses.size());
+            for (Address address : addresses) {
+                if (!address.getUser().getRoles().contains(roleDao.find(RoleConstants.UNSUBSCRIBED_USER))) {
+                    if (!mobileNumbers.contains(address.getPhone())) {
+                        smsManager.sendSMS(message, address.getPhone());
+                        mobileNumbers.add(address.getPhone());
+                    }
+                }
+            }
+        }
 
-  public void setBulkSMS(boolean bulkSMS) {
-    this.bulkSMS = bulkSMS;
-  }
+        return new RedirectResolution(SMSHomeAction.class);
+    }
 
-  public String getName() {
-    return name;
-  }
+    public boolean isBulkSMS() {
+        return bulkSMS;
+    }
 
-  public void setName(String name) {
-    this.name = name;
-  }
+    public void setBulkSMS(boolean bulkSMS) {
+        this.bulkSMS = bulkSMS;
+    }
 
-  public String getMobile() {
-    return mobile;
-  }
+    public String getName() {
+        return name;
+    }
 
-  public void setMobile(String mobile) {
-    this.mobile = mobile;
-  }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-  public String getMobiles() {
-    return mobiles;
-  }
+    public String getMobile() {
+        return mobile;
+    }
 
-  public void setMobiles(String mobiles) {
-    this.mobiles = mobiles;
-  }
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
 
-  public String getMessage() {
-    return message;
-  }
+    public String getMobiles() {
+        return mobiles;
+    }
 
-  public void setMessage(String message) {
-    this.message = message;
-  }
+    public void setMobiles(String mobiles) {
+        this.mobiles = mobiles;
+    }
 
-  public Category getTopLevelCategory() {
-    return topLevelCategory;
-  }
+    public String getMessage() {
+        return message;
+    }
 
-  public void setTopLevelCategory(Category topLevelCategory) {
-    this.topLevelCategory = topLevelCategory;
-  }
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public Category getTopLevelCategory() {
+        return topLevelCategory;
+    }
+
+    public void setTopLevelCategory(Category topLevelCategory) {
+        this.topLevelCategory = topLevelCategory;
+    }
 }

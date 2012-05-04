@@ -13,6 +13,7 @@ import net.sourceforge.stripes.action.SimpleMessage;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -59,24 +60,34 @@ public class InventoryCheckoutAction extends BaseAction {
     // InvTxnTypeDao invTxnTypeDao;
     // OrderStatusDao orderStatusDao;
     // ShippingOrderDao shippingOrderDao;
-
+    @Autowired
     private AdminSkuItemDao skuItemDao;
+    @Autowired
     private LineItemDao lineItemDao;
+    @Autowired
     private  AdminProductVariantInventoryDao adminProductVariantInventoryDao;
-    
+    @Autowired
     private ShippingOrderService       shippingOrderService;
+    @Autowired
     private UserService                userService;
+    @Autowired
     private ShippingOrderStatusService shippingOrderStatusService;
+    @Autowired
     private OrderStatusService         orderStatusService;
+    @Autowired
     private OrderService               orderService;
+    @Autowired
     private AdminInventoryService      adminInventoryService;
+    @Autowired
     private InventoryService           inventoryService;
+    @Autowired
     private SkuService                 skuService;
+    @Autowired
     private ProductVariantService      productVariantService;
-
+    @Autowired
     private OrderManager               orderManager;
-
     private ShippingOrder              shippingOrder;
+    
     private LineItem                   lineItem;
     private String                     upc;
     private ProductVariant             productVariant;

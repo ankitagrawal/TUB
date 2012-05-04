@@ -2,6 +2,7 @@ package com.hk.web.action.core.catalog;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -13,7 +14,7 @@ import com.hk.service.ProductService;
 
 @Component
 public class VizuryCatalogAction extends BaseAction {
-
+    @Autowired
     private ProductService productService;
 
     private List<Product>  products;

@@ -7,6 +7,7 @@ import net.sourceforge.stripes.action.JsonResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.validation.Validate;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -32,10 +33,11 @@ import com.hk.web.action.error.AdminPermissionAction;
 @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_ORDER }, authActionBean = AdminPermissionAction.class)
 @Component
 public class VerifyCodAction extends BaseAction {
-
+    @Autowired
     private PaymentManager       paymentManager;
+    @Autowired
     private UserService          userService;
-
+    @Autowired
     private OrderService         orderService;
 
 

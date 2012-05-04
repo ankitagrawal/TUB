@@ -12,15 +12,15 @@ import net.sourceforge.stripes.validation.Validate;
 import net.sourceforge.stripes.validation.ValidationErrorHandler;
 import net.sourceforge.stripes.validation.ValidationErrors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
-
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.admin.impl.dao.courier.AwbDao;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.dao.user.UserDaoImpl;
+import com.hk.dao.user.UserDao;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.user.User;
@@ -32,11 +32,11 @@ import com.hk.web.action.error.AdminPermissionAction;
 @Secure(hasAnyPermissions = {PermissionConstants.SEARCH_ORDERS}, authActionBean = AdminPermissionAction.class)
 @Component
 public class GetAvailableAWBNumberAction extends BaseAction implements ValidationErrorHandler {
-    
+    @Autowired
     AwbDao awbDao;
 
-    
-    UserDaoImpl userDao;
+    @Autowired
+    UserDao userDao;
 
     @Validate(required = true)
     private Courier courier;

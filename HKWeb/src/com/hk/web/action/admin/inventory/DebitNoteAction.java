@@ -45,9 +45,9 @@ public class DebitNoteAction extends BasePaginatedAction {
 
     @Autowired
     private BaseDao                 baseDao;
-
+    @Autowired
     GRNManager                      grnManager;
-
+    @Autowired
     SkuService                      skuService;
 
     Page                            debitNotePage;

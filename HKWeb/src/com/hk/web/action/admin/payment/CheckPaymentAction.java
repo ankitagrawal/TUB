@@ -9,6 +9,7 @@ import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.validation.Validate;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -45,18 +46,21 @@ public class CheckPaymentAction extends BaseAction {
     private Payment              payment;
 
     private PricingDto           pricingDto;
-
+    @Autowired
     private PaymentService       paymentService;
+    @Autowired
     private UserService          userService;
+    @Autowired
     private OrderService         orderService;
+    @Autowired
     private OrderStatusService   orderStatusService;
-
+    @Autowired
     private ShippingOrderService shippingOrderService;
-
+    @Autowired
     private OrderManager         orderManager;
-
+    @Autowired
     private PricingEngine        pricingEngine;
-
+    @Autowired
     private PaymentManager       paymentManager;
 
     // PaymentManager paymentManager;

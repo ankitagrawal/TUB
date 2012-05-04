@@ -14,9 +14,9 @@ import net.sourceforge.stripes.action.SimpleMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
-
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
@@ -41,124 +41,122 @@ import com.hk.web.action.error.AdminPermissionAction;
 @Component
 public class SplitBaseOrderAction extends BaseAction {
 
-  private static Logger logger = LoggerFactory.getLogger(SplitBaseOrderAction.class);
+    private static Logger              logger                   = LoggerFactory.getLogger(SplitBaseOrderAction.class);
 
-  private Order baseOrder;
-  private ShippingOrderService shippingOrderService;
-  private AdminShippingOrderService adminShippingOrderService;
-  private WarehouseService warehouseService;
-  private OrderService orderService;
-  private OrderStatusService orderStatusService;
-  private ShippingOrderStatusService shippingOrderStatusService;
+    private Order                      baseOrder;
+    @Autowired
+    private ShippingOrderService       shippingOrderService;
+    @Autowired
+    private AdminShippingOrderService  adminShippingOrderService;
+    @Autowired
+    private WarehouseService           warehouseService;
+    @Autowired
+    private OrderService               orderService;
+    @Autowired
+    private OrderStatusService         orderStatusService;
+    @Autowired
+    private ShippingOrderStatusService shippingOrderStatusService;
 
+    Map<CartLineItem, Warehouse>       cartLineItemWarehouseMap = new HashMap<CartLineItem, Warehouse>();
 
-  Map<CartLineItem, Warehouse> cartLineItemWarehouseMap = new HashMap<CartLineItem, Warehouse>();
-
-
-  @DontValidate
-  @DefaultHandler
-  @Secure(hasAnyRoles = {RoleConstants.ADMIN, RoleConstants.GOD, RoleConstants.CATEGORY_MANAGER}, authActionBean = AdminPermissionAction.class)
-  public Resolution pre() {
-    return new ForwardResolution("/pages/admin/order/splitBaseOrder.jsp");
-  }
-
-  public Resolution splitBaseOrder() {
-
-    if (baseOrder != null && EnumOrderStatus.Placed.getId().equals(baseOrder.getOrderStatus().getId())) {
-      Map<Warehouse, Set<CartLineItem>> warehouseCartLineItemsMap = new HashMap<Warehouse, Set<CartLineItem>>();
-      for (Map.Entry<CartLineItem, Warehouse> cartLineItemWarehouseEntry : cartLineItemWarehouseMap.entrySet()) {
-        if (warehouseCartLineItemsMap.get(cartLineItemWarehouseEntry.getValue()) != null) {
-          warehouseCartLineItemsMap.get(cartLineItemWarehouseEntry.getValue()).add(cartLineItemWarehouseEntry.getKey());
-        } else {
-          Set<CartLineItem> cartLineItemsInWH = new HashSet<CartLineItem>();
-          cartLineItemsInWH.add(cartLineItemWarehouseEntry.getKey());
-          warehouseCartLineItemsMap.put(cartLineItemWarehouseEntry.getValue(), cartLineItemsInWH);
-        }
-      }
-
-      for (Map.Entry<Warehouse, Set<CartLineItem>> warehouseSetEntry : warehouseCartLineItemsMap.entrySet()) {
-
-        try {
-          adminShippingOrderService.createSOforManualSplit(warehouseSetEntry.getValue(), warehouseSetEntry.getKey());
-        } catch (NoSkuException e) {
-          logger.error("No sku found", e);
-          addRedirectAlertMessage(new SimpleMessage(e.getMessage()));
-          return new RedirectResolution(ActionAwaitingQueueAction.class);
-        } catch (OrderSplitException e) {
-          logger.error("Could not split order", e);
-          addRedirectAlertMessage(new SimpleMessage(e.getMessage()));
-          return new RedirectResolution(ActionAwaitingQueueAction.class);
-        }
-      }
-
-      /**
-       * if order has any services products create a shipping order and send it to service queue
-       */
-      if (baseOrder.getContainsServices()) {
-        Set<CartLineItem> serviceCartLineItems = new CartLineItemFilter(baseOrder.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).hasOnlyServiceLineItems(true).filter();
-        for (CartLineItem serviceCartLineItem : serviceCartLineItems) {
-          try {
-            adminShippingOrderService.createSOForService(serviceCartLineItem);
-          }
-          catch (NoSkuException e) {
-            logger.error("No sku found", e);
-            addRedirectAlertMessage(new SimpleMessage(e.getMessage()));
-            return new RedirectResolution(ActionAwaitingQueueAction.class);
-          }
-        }
-      }
-
-      baseOrder.setOrderStatus(orderStatusService.find(EnumOrderStatus.InProcess));
-      baseOrder = orderService.save(baseOrder);
-      orderService.logOrderActivity(baseOrder, EnumOrderLifecycleActivity.OrderSplit);
-
-      addRedirectAlertMessage(new SimpleMessage("Order : " + baseOrder.getGatewayOrderId() + " was split manually."));
-      return new RedirectResolution(ActionAwaitingQueueAction.class);
-    } else {
-      addRedirectAlertMessage(new SimpleMessage("Order : " + baseOrder.getGatewayOrderId() + " is in incorrect status cannot be split."));
-      return new RedirectResolution(ActionAwaitingQueueAction.class);
+    @DontValidate
+    @DefaultHandler
+    @Secure(hasAnyRoles = { RoleConstants.ADMIN, RoleConstants.GOD, RoleConstants.CATEGORY_MANAGER }, authActionBean = AdminPermissionAction.class)
+    public Resolution pre() {
+        return new ForwardResolution("/pages/admin/order/splitBaseOrder.jsp");
     }
-  }
 
+    public Resolution splitBaseOrder() {
 
-  public Order getBaseOrder() {
-    return baseOrder;
-  }
+        if (baseOrder != null && EnumOrderStatus.Placed.getId().equals(baseOrder.getOrderStatus().getId())) {
+            Map<Warehouse, Set<CartLineItem>> warehouseCartLineItemsMap = new HashMap<Warehouse, Set<CartLineItem>>();
+            for (Map.Entry<CartLineItem, Warehouse> cartLineItemWarehouseEntry : cartLineItemWarehouseMap.entrySet()) {
+                if (warehouseCartLineItemsMap.get(cartLineItemWarehouseEntry.getValue()) != null) {
+                    warehouseCartLineItemsMap.get(cartLineItemWarehouseEntry.getValue()).add(cartLineItemWarehouseEntry.getKey());
+                } else {
+                    Set<CartLineItem> cartLineItemsInWH = new HashSet<CartLineItem>();
+                    cartLineItemsInWH.add(cartLineItemWarehouseEntry.getKey());
+                    warehouseCartLineItemsMap.put(cartLineItemWarehouseEntry.getValue(), cartLineItemsInWH);
+                }
+            }
 
-  public void setBaseOrder(Order baseOrder) {
-    this.baseOrder = baseOrder;
-  }
+            for (Map.Entry<Warehouse, Set<CartLineItem>> warehouseSetEntry : warehouseCartLineItemsMap.entrySet()) {
 
-  public Map<CartLineItem, Warehouse> getCartLineItemWarehouseMap() {
-    return cartLineItemWarehouseMap;
-  }
+                try {
+                    adminShippingOrderService.createSOforManualSplit(warehouseSetEntry.getValue(), warehouseSetEntry.getKey());
+                } catch (NoSkuException e) {
+                    logger.error("No sku found", e);
+                    addRedirectAlertMessage(new SimpleMessage(e.getMessage()));
+                    return new RedirectResolution(ActionAwaitingQueueAction.class);
+                } catch (OrderSplitException e) {
+                    logger.error("Could not split order", e);
+                    addRedirectAlertMessage(new SimpleMessage(e.getMessage()));
+                    return new RedirectResolution(ActionAwaitingQueueAction.class);
+                }
+            }
 
-  public void setCartLineItemWarehouseMap(Map<CartLineItem, Warehouse> cartLineItemWarehouseMap) {
-    this.cartLineItemWarehouseMap = cartLineItemWarehouseMap;
-  }
+            /**
+             * if order has any services products create a shipping order and send it to service queue
+             */
+            if (baseOrder.getContainsServices()) {
+                Set<CartLineItem> serviceCartLineItems = new CartLineItemFilter(baseOrder.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).hasOnlyServiceLineItems(
+                        true).filter();
+                for (CartLineItem serviceCartLineItem : serviceCartLineItems) {
+                    try {
+                        adminShippingOrderService.createSOForService(serviceCartLineItem);
+                    } catch (NoSkuException e) {
+                        logger.error("No sku found", e);
+                        addRedirectAlertMessage(new SimpleMessage(e.getMessage()));
+                        return new RedirectResolution(ActionAwaitingQueueAction.class);
+                    }
+                }
+            }
 
-  
-  public void setShippingOrderService(ShippingOrderService shippingOrderService) {
-    this.shippingOrderService = shippingOrderService;
-  }
+            baseOrder.setOrderStatus(orderStatusService.find(EnumOrderStatus.InProcess));
+            baseOrder = orderService.save(baseOrder);
+            orderService.logOrderActivity(baseOrder, EnumOrderLifecycleActivity.OrderSplit);
 
-  
-  public void setOrderService(OrderService orderService) {
-    this.orderService = orderService;
-  }
+            addRedirectAlertMessage(new SimpleMessage("Order : " + baseOrder.getGatewayOrderId() + " was split manually."));
+            return new RedirectResolution(ActionAwaitingQueueAction.class);
+        } else {
+            addRedirectAlertMessage(new SimpleMessage("Order : " + baseOrder.getGatewayOrderId() + " is in incorrect status cannot be split."));
+            return new RedirectResolution(ActionAwaitingQueueAction.class);
+        }
+    }
 
-  
-  public void setOrderStatusService(OrderStatusService orderStatusService) {
-    this.orderStatusService = orderStatusService;
-  }
+    public Order getBaseOrder() {
+        return baseOrder;
+    }
 
-  
-  public void setWarehouseService(WarehouseService warehouseService) {
-    this.warehouseService = warehouseService;
-  }
+    public void setBaseOrder(Order baseOrder) {
+        this.baseOrder = baseOrder;
+    }
 
-  
-  public void setShippingOrderStatusService(ShippingOrderStatusService shippingOrderStatusService) {
-    this.shippingOrderStatusService = shippingOrderStatusService;
-  }
+    public Map<CartLineItem, Warehouse> getCartLineItemWarehouseMap() {
+        return cartLineItemWarehouseMap;
+    }
+
+    public void setCartLineItemWarehouseMap(Map<CartLineItem, Warehouse> cartLineItemWarehouseMap) {
+        this.cartLineItemWarehouseMap = cartLineItemWarehouseMap;
+    }
+
+    public void setShippingOrderService(ShippingOrderService shippingOrderService) {
+        this.shippingOrderService = shippingOrderService;
+    }
+
+    public void setOrderService(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
+    public void setOrderStatusService(OrderStatusService orderStatusService) {
+        this.orderStatusService = orderStatusService;
+    }
+
+    public void setWarehouseService(WarehouseService warehouseService) {
+        this.warehouseService = warehouseService;
+    }
+
+    public void setShippingOrderStatusService(ShippingOrderStatusService shippingOrderStatusService) {
+        this.shippingOrderStatusService = shippingOrderStatusService;
+    }
 }

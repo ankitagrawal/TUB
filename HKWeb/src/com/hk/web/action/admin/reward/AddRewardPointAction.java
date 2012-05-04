@@ -12,15 +12,15 @@ import net.sourceforge.stripes.validation.Validate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
-
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.dao.reward.RewardPointDao;
-import com.hk.dao.user.UserDaoImpl;
+import com.hk.dao.user.UserDao;
 import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.offer.rewardPoint.RewardPointMode;
 import com.hk.domain.user.User;
@@ -38,11 +38,11 @@ import com.hk.web.action.error.AdminPermissionAction;
 public class AddRewardPointAction extends BaseAction {
   private static Logger logger = LoggerFactory.getLogger(AddRewardPointAction.class);
 
-  
-  UserDaoImpl userDao;
-  
+  @Autowired
+  UserDao userDao;
+  @Autowired
   RewardPointDao rewardPointDao;
-  
+  @Autowired
   ReferrerProgramManager referrerProgramManager;
 
   @Validate(required = true, on = "add")

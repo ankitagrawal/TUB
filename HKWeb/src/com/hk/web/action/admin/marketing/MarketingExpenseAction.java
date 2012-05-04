@@ -13,6 +13,7 @@ import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -38,10 +39,12 @@ import com.hk.web.action.error.AdminPermissionAction;
 public class MarketingExpenseAction extends BasePaginatedAction {
 
 	private static Logger logger = Logger.getLogger(MarketingExpenseAction.class);
-	
+	@Autowired
 	MarketingExpenseDao marketingExpenseDao;
-	
+	@Autowired
 	CategoryDao categoryDao;
+	
+	
 	private Date startDate;
 	private Date endDate;
 	private Category category;

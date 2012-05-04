@@ -12,6 +12,7 @@ import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.Validate;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -34,9 +35,9 @@ public class ShippingOrderLifecycleAction extends BaseAction {
   private ShippingOrder shippingOrder;
   private Set<ShippingOrderLifecycle> shippingOrderLifeCycles = new TreeSet<ShippingOrderLifecycle>();
 
-  
+  @Autowired
   UserService userService;
-  
+  @Autowired
   ShippingOrderLifecycleDao shippingOrderLifecycleDao;
   
   

@@ -12,6 +12,7 @@ import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -37,7 +38,7 @@ import com.hk.web.action.error.AdminPermissionAction;
 public class SkuAction extends BaseAction {
 
   private static Logger logger = Logger.getLogger(SkuAction.class);
-  
+  @Autowired
   SkuService skuService;
   private Warehouse warehouse;
   private ProductVariant productVariant;

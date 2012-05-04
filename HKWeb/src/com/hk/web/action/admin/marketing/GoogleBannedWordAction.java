@@ -8,9 +8,9 @@ import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
-
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.dto.marketing.GoogleBannedWordDto;
@@ -19,21 +19,18 @@ import com.hk.manager.EmailManager;
 import com.hk.report.manager.ReportManager;
 import com.hk.web.action.error.AdminPermissionAction;
 
-
 /**
- * Created by IntelliJ IDEA.
- * User: Rahul
- * Date: Dec 31, 2011
- * Time: 5:02:17 PM
- * To change this template use File | Settings | File Templates.
+ * Created by IntelliJ IDEA. User: Rahul Date: Dec 31, 2011 Time: 5:02:17 PM To change this template use File | Settings |
+ * File Templates.
  */
 
-@Secure(hasAnyPermissions = {PermissionConstants.REPORT_ADMIN}, authActionBean = AdminPermissionAction.class)
+@Secure(hasAnyPermissions = { PermissionConstants.REPORT_ADMIN }, authActionBean = AdminPermissionAction.class)
 @Component
 public class GoogleBannedWordAction extends BaseAction {
-
-     ReportManager reportManager;
-     EmailManager emailManager;
+    @Autowired
+    ReportManager                     reportManager;
+    @Autowired
+    EmailManager                      emailManager;
 
     private List<GoogleBannedWordDto> googleBannedWordDtoList = new ArrayList<GoogleBannedWordDto>();
 
@@ -41,10 +38,11 @@ public class GoogleBannedWordAction extends BaseAction {
     @DontValidate
     public Resolution pre() {
 
-        //googleBannedWordDtoList = reportManager.generateDailyGoogleAdsBannedWords();
-        /*if (!googleBannedWordDtoList.isEmpty()) {
-            emailManager.sendDailyGoogleAdsBannedWords(googleBannedWordDtoList);
-        }*/
+        // googleBannedWordDtoList = reportManager.generateDailyGoogleAdsBannedWords();
+        /*
+         * if (!googleBannedWordDtoList.isEmpty()) {
+         * emailManager.sendDailyGoogleAdsBannedWords(googleBannedWordDtoList); }
+         */
         return new ForwardResolution("/pages/admin/googleBannedWordReport.jsp");
     }
 

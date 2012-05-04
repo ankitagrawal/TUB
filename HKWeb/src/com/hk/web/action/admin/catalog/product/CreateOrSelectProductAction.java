@@ -15,6 +15,7 @@ import net.sourceforge.stripes.validation.ValidateNestedProperties;
 import net.sourceforge.stripes.validation.ValidationMethod;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -58,11 +59,13 @@ public class CreateOrSelectProductAction extends BaseAction {
     String                        secondaryCategory;
     // private List<Category>categories;
     private static Logger         logger = Logger.getLogger(CreateOrSelectProductAction.class);
-
+    @Autowired
     private ProductService        productService;
+    @Autowired
     private ProductVariantService productVariantService;
+    @Autowired
     private CategoryService       categoryService;
-
+    @Autowired
     private ManufacturerDao       manufacturerDao;
 
     @ValidationMethod(on = "select")

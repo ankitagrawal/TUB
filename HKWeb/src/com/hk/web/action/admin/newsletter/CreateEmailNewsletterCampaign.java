@@ -1,5 +1,6 @@
 package com.hk.web.action.admin.newsletter;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import net.sourceforge.stripes.action.DefaultHandler;
@@ -25,7 +26,7 @@ public class CreateEmailNewsletterCampaign extends BaseAction {
   })
   EmailCampaign emailCampaign;
 
-  
+  @Autowired
   EmailCampaignDao emailCampaignDao;
 
   @DontValidate

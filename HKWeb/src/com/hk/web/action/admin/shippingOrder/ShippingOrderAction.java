@@ -24,14 +24,14 @@ import com.hk.web.HealthkartResponse;
 public class ShippingOrderAction extends BaseAction {
 
     private ShippingOrder             shippingOrder;
-
+    @Autowired
     WarehouseService                  warehouseService;
 
     @Autowired
     private ShippingOrderService      shippingOrderService;
     @Autowired
     private AdminShippingOrderService adminShippingOrderService;
-
+    @Autowired
     SkuService                        skuService;
 
     public Resolution flipWarehouse() {

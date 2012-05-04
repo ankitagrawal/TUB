@@ -7,6 +7,7 @@ import net.sourceforge.stripes.action.JsonResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.validation.Validate;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -24,7 +25,7 @@ import com.hk.web.action.error.AdminPermissionAction;
 @Secure(hasAnyPermissions = {PermissionConstants.SEARCH_ORDERS}, authActionBean = AdminPermissionAction.class)
 @Component
 public class SetDefaultCourierAction extends BaseAction {
-
+    @Autowired
    AddressDao addressDao;
 
   @Validate(required = true)

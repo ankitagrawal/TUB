@@ -56,6 +56,7 @@ public class BulkEditProductAction extends BasePaginatedAction {
     private Integer               defaultPerPage    = 20;
     Page                 productPage;
 
+    @Autowired
     ProductDao                    productDao;
 
     @Autowired
@@ -63,8 +64,9 @@ public class BulkEditProductAction extends BasePaginatedAction {
 
     @Autowired
     private CategoryService       categoryService;
+    @Autowired
     CategoryDao                   categoryDao;
-
+    @Autowired
     XslParser                     xslParser;
 
     @ValidationMethod(on = "bulkEdit")

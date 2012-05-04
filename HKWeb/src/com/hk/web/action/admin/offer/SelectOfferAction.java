@@ -13,9 +13,9 @@ import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.Validate;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
-
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
@@ -27,25 +27,25 @@ import com.hk.web.action.error.AdminPermissionAction;
 @Component
 public class SelectOfferAction extends BasePaginatedAction {
 
-    private Page offerPage;
+    private Page        offerPage;
 
     @Validate(required = true)
-    private Offer offer;
+    private Offer       offer;
 
     private List<Offer> offers = new ArrayList<Offer>();
-
-     OfferDao offerDao;
+    @Autowired
+    OfferDao            offerDao;
 
     @DefaultHandler
     @DontValidate
-    @Secure(hasAnyPermissions = {PermissionConstants.VIEW_OFFER}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = { PermissionConstants.VIEW_OFFER }, authActionBean = AdminPermissionAction.class)
     public Resolution pre() {
-        offerPage = offerDao.listAll(getPageNo(),getPerPage());
-        offers=offerPage.getList();
+        offerPage = offerDao.listAll(getPageNo(), getPerPage());
+        offers = offerPage.getList();
         return new ForwardResolution("/pages/admin/offer/selectOffer.jsp");
     }
 
-  @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_OFFER}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_OFFER }, authActionBean = AdminPermissionAction.class)
     public Resolution selectOffer() {
         if (offer.getEndDate() == null || offer.getEndDate().after(new Date())) {
             return new RedirectResolution(CreateCouponAction.class).addParameter("offer", offer.getId());
@@ -54,7 +54,7 @@ public class SelectOfferAction extends BasePaginatedAction {
         return new RedirectResolution(SelectOfferAction.class);
     }
 
-  @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_OFFER}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_OFFER }, authActionBean = AdminPermissionAction.class)
     public Resolution editOffer() {
         return new RedirectResolution(EditOfferAction.class).addParameter("offer", offer.getId());
     }

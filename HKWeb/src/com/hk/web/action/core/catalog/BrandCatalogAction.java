@@ -17,6 +17,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.session.Session;
 
@@ -25,7 +26,7 @@ import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.dao.catalog.category.CategoryDao;
 import com.hk.dao.catalog.product.ProductDao;
-import com.hk.dao.user.UserDaoImpl;
+import com.hk.dao.user.UserDao;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.content.SeoData;
@@ -40,6 +41,7 @@ import com.hk.util.SeoManager;
 public class BrandCatalogAction extends BasePaginatedAction {
 
   private static Logger logger = LoggerFactory.getLogger(BrandCatalogAction.class);
+  @Autowired
    ProductDao productDao;
 
   String urlFragment;
@@ -57,11 +59,17 @@ public class BrandCatalogAction extends BasePaginatedAction {
   private String preferredZone;
 
   private int defaultPerPage = 20;
+  @Autowired
    SolrManager solrManager;
+  @Autowired
    CategoryDao categoryDao;
+  @Autowired
    MenuHelper menuHelper;
-   UserDaoImpl userDao;
+  @Autowired
+   UserDao userDao;
+  @Autowired
    UserManager userManager;
+  @Autowired
    SeoManager seoManager;
   List<Category> categories;
 

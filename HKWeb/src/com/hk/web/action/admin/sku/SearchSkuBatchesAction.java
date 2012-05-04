@@ -1,5 +1,6 @@
 package com.hk.web.action.admin.sku;
 
+
 import java.util.List;
 
 import net.sourceforge.stripes.action.DefaultHandler;
@@ -12,6 +13,7 @@ import net.sourceforge.stripes.validation.Validate;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -30,8 +32,9 @@ import com.hk.web.action.error.AdminPermissionAction;
 public class SearchSkuBatchesAction extends BaseAction {
 
     private static Logger         logger = Logger.getLogger(SearchSkuBatchesAction.class);
-
+    @Autowired
     private ProductVariantService productVariantService;
+    @Autowired
     private AdminInventoryService adminInventoryService;
 
     @Validate(required = true)

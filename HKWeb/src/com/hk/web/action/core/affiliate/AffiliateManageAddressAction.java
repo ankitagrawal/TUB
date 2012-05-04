@@ -46,10 +46,13 @@ public class AffiliateManageAddressAction extends BaseAction {
             @Validate(field = "state", required = true, on = "saveAddress"),
             @Validate(field = "pin", required = true, on = "saveAddress"),
             @Validate(field = "phone", required = true, on = "saveAddress") })
+    @Autowired
     AffiliateDao          affiliateDao;
+    @Autowired
     AffiliateManager      affiliateManager;
     @Autowired
     private UserService   userService;
+    @Autowired
     AddressDao            addressDao;
 
     @DefaultHandler

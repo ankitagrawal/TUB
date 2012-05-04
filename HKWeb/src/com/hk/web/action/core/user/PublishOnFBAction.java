@@ -10,6 +10,7 @@ import net.sourceforge.stripes.action.Resolution;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
@@ -26,8 +27,9 @@ import com.hk.web.HealthkartResponse;
 public class PublishOnFBAction extends BaseAction {
 
     private static Logger      logger = LoggerFactory.getLogger(PublishOnFBAction.class);
-
+    @Autowired
     ReferrerProgramManager     referrerProgramManager;
+    @Autowired
     private RewardPointService rewardPointService;
 
     private Order              order;

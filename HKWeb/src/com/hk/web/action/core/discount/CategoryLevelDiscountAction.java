@@ -9,6 +9,7 @@ import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.validation.Validate;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -35,13 +36,17 @@ import com.hk.web.action.error.AdminPermissionAction;
 @Secure(hasAnyPermissions = { PermissionConstants.MANAGE_AFFILIATES }, authActionBean = AdminPermissionAction.class)
 @Component
 public class CategoryLevelDiscountAction extends BaseAction {
-
+    @Autowired
     private ProductManager                  productManager;
+    @Autowired
     private ProductService                  productService;
+    @Autowired
     private AffilateService                 affiliateService;
+    @Autowired
     private CategoryService                 categoryService;
+    @Autowired
     private ProductVariantService           productVariantService;
-    private BaseDao                         baseDao;
+    @Autowired
     private AffiliateCategoryDao affiliateCategoryCommissionDao;
     
     // AffiliateCategoryDao affiliateCategoryDao;
@@ -207,12 +212,5 @@ public class CategoryLevelDiscountAction extends BaseAction {
         this.productVariantService = productVariantService;
     }
 
-    public BaseDao getBaseDao() {
-        return baseDao;
-    }
-
-    public void setBaseDao(BaseDao baseDao) {
-        this.baseDao = baseDao;
-    }
 
 }

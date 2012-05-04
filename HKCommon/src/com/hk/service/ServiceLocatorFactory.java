@@ -1,6 +1,7 @@
 package com.hk.service;
 
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.ServletContext;
@@ -95,6 +96,11 @@ public class ServiceLocatorFactory implements ApplicationContextAware, ServletCo
         } catch (NoSuchBeanDefinitionException e) {
             return null;
         }
+    }
+    
+    public static Object getProperty(String key){
+        Properties props = applicationContext.getBean("hkEnvProps", Properties.class);
+        return props.get(key);
     }
 
     public MessageSource getMessageSource() {

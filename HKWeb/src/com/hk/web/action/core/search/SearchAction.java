@@ -14,6 +14,7 @@ import net.sourceforge.stripes.action.UrlBinding;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.session.Session;
 
@@ -34,10 +35,12 @@ public class SearchAction extends BasePaginatedAction {
 
   Page productPage;
   List<Product> productList = new ArrayList<Product>();
-
+  @Autowired
    ProductDao productDao;
-  @Session(key = HealthkartConstants.Session.perPageCatalog) private int perPage;
-   SolrManager solrManager;
+  @Session(key = HealthkartConstants.Session.perPageCatalog) 
+  private int perPage;
+  @Autowired
+  SolrManager solrManager;
 
   private int defaultPerPage = 20;
 

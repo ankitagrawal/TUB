@@ -13,8 +13,8 @@ import net.sourceforge.stripes.validation.Validate;
 import net.sourceforge.stripes.validation.ValidationMethod;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.EnumRole;
@@ -48,12 +48,13 @@ public class B2BAction extends BaseAction {
     boolean               rememberMe;
 
     private static Logger logger = Logger.getLogger(B2BAction.class);
-
-    private LinkManager           linkManager;
-
-    private UserManager           userManager;
-
+    @Autowired
+    private LinkManager   linkManager;
+    @Autowired
+    private UserManager   userManager;
+    @Autowired
     private RoleService   roleService;
+    @Autowired
     private UserService   userService;
 
     @DefaultHandler
@@ -204,6 +205,5 @@ public class B2BAction extends BaseAction {
     public void setUserService(UserService userService) {
         this.userService = userService;
     }
-    
-    
+
 }

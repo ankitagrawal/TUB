@@ -38,8 +38,9 @@ public class OrderOnHoldAction extends BaseAction {
      * OrderManager orderManager; OrderStatusDao orderStatusDao; OrderDao orderDao; UserDao userDao;
      * OrderLifecycleActivityDao orderLifecycleActivityDao;
      */
-
+    @Autowired
     private UserService               userService;
+    @Autowired
     private AdminOrderService         adminOrderService;
 
     @Autowired

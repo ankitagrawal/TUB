@@ -13,15 +13,15 @@ import net.sourceforge.stripes.validation.Validate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
-
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.Breadcrumb;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.dao.user.UserDaoImpl;
+import com.hk.dao.user.UserDao;
 import com.hk.dao.warehouse.WarehouseDao;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
@@ -34,8 +34,10 @@ public class AssignWarehouseAction extends BaseAction{
 
   private static Logger auditLogger = LoggerFactory.getLogger("adminAuditLogger");
 
-   UserDaoImpl userDao;
-   WarehouseDao warehouseDao;
+  @Autowired
+   UserDao userDao;
+  @Autowired 
+  WarehouseDao warehouseDao;
 
   @Validate(required = true)
   private User user;

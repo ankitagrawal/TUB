@@ -9,6 +9,7 @@ import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.controller.StripesFilter;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
@@ -34,9 +35,9 @@ public class PrimaryCategoryHeadingAction extends BaseAction {
     List<PrimaryCategoryHeading>                   headingList;
     HashMap<PrimaryCategoryHeading, List<Product>> headingHasProducts;
     Long                                           headingId;
-
+    @Autowired
     PrimaryCategoryHeadingDao                      primaryCategoryHeadingDao;
-
+    @Autowired
     private CategoryService                        categoryService;
 
     public Resolution create() throws Exception {

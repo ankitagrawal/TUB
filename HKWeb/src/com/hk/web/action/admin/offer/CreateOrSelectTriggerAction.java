@@ -39,8 +39,6 @@ public class CreateOrSelectTriggerAction extends BaseAction {
     @ValidateNestedProperties( { @Validate(field = "description", required = true, on = "create") })
     OfferTrigger       offerTriggerCreate;
 
-    @Autowired
-    private BaseDao    baseDao;
 
     @After(stages = LifecycleStage.BindingAndValidation)
     public void populateOnError() {
@@ -98,12 +96,5 @@ public class CreateOrSelectTriggerAction extends BaseAction {
         return productGroupList;
     }
 
-    public BaseDao getBaseDao() {
-        return baseDao;
-    }
-
-    public void setBaseDao(BaseDao baseDao) {
-        this.baseDao = baseDao;
-    }
 
 }

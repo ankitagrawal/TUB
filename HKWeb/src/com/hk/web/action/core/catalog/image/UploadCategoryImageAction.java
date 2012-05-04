@@ -12,6 +12,7 @@ import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.controller.StripesFilter;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -35,9 +36,8 @@ public class UploadCategoryImageAction extends BaseAction {
 	String categoryName;
 	String errorMessage = null;
 
-	
-	public
-	CategoryImageDao categoryImageDao;
+	@Autowired
+	public CategoryImageDao categoryImageDao;
 	private static Logger logger = Logger.getLogger(UploadCategoryImageAction.class);
 	List<CategoryImage> categoryImages;
 

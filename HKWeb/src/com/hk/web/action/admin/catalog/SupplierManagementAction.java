@@ -15,6 +15,7 @@ import net.sourceforge.stripes.validation.ValidationMethod;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -33,7 +34,7 @@ public class SupplierManagementAction extends BasePaginatedAction {
 
   private static Logger logger = Logger.getLogger(SupplierManagementAction.class);
 
-  
+  @Autowired
   SupplierDao supplierDao;
 
   private List<Supplier> supplierList = new ArrayList<Supplier>();

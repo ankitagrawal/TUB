@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
@@ -37,10 +36,8 @@ public class OrderCommentAction extends BaseAction {
 
     @Autowired
     private UserService  userService;
-
+    @Autowired
     private OrderService orderService;
-
-    private BaseDao      baseDao;
 
     @DefaultHandler
     @DontValidate
@@ -98,12 +95,5 @@ public class OrderCommentAction extends BaseAction {
         this.orderService = orderService;
     }
 
-    public BaseDao getBaseDao() {
-        return baseDao;
-    }
-
-    public void setBaseDao(BaseDao baseDao) {
-        this.baseDao = baseDao;
-    }
 
 }

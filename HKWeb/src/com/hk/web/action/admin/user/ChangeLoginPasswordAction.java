@@ -7,16 +7,16 @@ import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.validation.Validate;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
-
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.Breadcrumb;
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.dao.user.UserDaoImpl;
+import com.hk.dao.user.UserDao;
 import com.hk.domain.user.User;
 import com.hk.web.action.error.AdminPermissionAction;
 
@@ -28,8 +28,8 @@ import com.hk.web.action.error.AdminPermissionAction;
 @Breadcrumb(level = 3, name = "change password for user: {user.login}", context = HealthkartConstants.BreadcrumbContext.admin)
 @Component
 public class ChangeLoginPasswordAction extends BaseAction {
-
-   UserDaoImpl userDao;
+    @Autowired
+   UserDao userDao;
 
   @Validate(required = true)
   private User user;

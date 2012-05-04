@@ -40,14 +40,19 @@ public class ListBatchesAndCheckinInventory extends BaseAction {
 
     @Autowired
     private ProductVariantService   productVariantService;
-
+    @Autowired
     SkuGroupDao                     skuGroupDao;
+    @Autowired
     SkuItemDao                      skuItemDao;
+    @Autowired
     PoLineItemDao                   poLineItemDao;
-
+    @Autowired
     PurchaseOrderDao                purchaseOrderDao;
+    @Autowired
     LowInventoryDao                 lowInventoryDao;
+    @Autowired
     AdminInventoryService           adminInventoryService;
+    @Autowired
     AdminProductVariantInventoryDao productVariantInventoryDao;
 
     @Validate(required = true)
