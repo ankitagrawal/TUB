@@ -36,7 +36,7 @@ import com.hk.service.UserService;
 import com.hk.web.action.core.auth.LoginAction;
 import com.hk.web.action.core.order.OrderSummaryAction;
 
-@Secure(hasAnyRoles = { RoleConstants.HK_UNVERIFIED, RoleConstants.HK_USER }, authUrl = "/Login.action?source=" + LoginAction.SOURCE_CHECKOUT, disallowRememberMe = true)
+@Secure(hasAnyRoles = { RoleConstants.HK_UNVERIFIED, RoleConstants.HK_USER }, authUrl = "/core/auth/Login.action?source=" + LoginAction.SOURCE_CHECKOUT, disallowRememberMe = true)
 @Component
 public class SelectAddressAction extends BaseAction {
 
