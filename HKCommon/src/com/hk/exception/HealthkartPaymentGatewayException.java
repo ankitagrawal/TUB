@@ -1,5 +1,7 @@
 package com.hk.exception;
 
+import com.hk.constants.url.URLConstants;
+
 import net.sourceforge.stripes.action.RedirectResolution;
 
 @SuppressWarnings("serial")
@@ -51,7 +53,7 @@ public class HealthkartPaymentGatewayException extends Exception {
   }
 
   public RedirectResolution getRedirectResolution() {
-    return new RedirectResolution("PaymentErrorAction.class").addParameter("errorCode", error.getCode());
+    return new RedirectResolution(URLConstants.PAYMENT_ERROR_LINK).addParameter("errorCode", error.getCode());
   }
 
   public Error getError() {

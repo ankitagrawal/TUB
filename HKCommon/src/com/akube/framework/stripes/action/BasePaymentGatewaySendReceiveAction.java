@@ -1,8 +1,9 @@
 package com.akube.framework.stripes.action;
 
-import org.springframework.stereotype.Component;
-
+import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
+
+import org.springframework.stereotype.Component;
 
 import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.akube.framework.service.PaymentGatewayWrapper;
@@ -28,17 +29,13 @@ public abstract class BasePaymentGatewaySendReceiveAction<T extends PaymentGatew
      * @return
      */
     public Resolution proceed() {
-        /*
-         * String encodedData =
-         * getContext().getRequest().getParameter(BasePaymentGatewayWrapper.TRANSACTION_DATA_PARAM);
-         * BasePaymentGatewayWrapper.TransactionData data =
-         * BasePaymentGatewayWrapper.decodeTransactionDataParam(encodedData); PaymentGatewayWrapper
-         * paymentGatewayWrapper = getPaymentGatewayWrapperFromTransactionData(data);
-         * getContext().getRequest().setAttribute("PaymentGatewayWrapper", paymentGatewayWrapper); return new
-         * ForwardResolution("/gatewayProcess.jsp");
-         */
-        //TODO: rewrite
-        return null;
+
+        String encodedData = getContext().getRequest().getParameter(BasePaymentGatewayWrapper.TRANSACTION_DATA_PARAM);
+        BasePaymentGatewayWrapper.TransactionData data = BasePaymentGatewayWrapper.decodeTransactionDataParam(encodedData);
+        PaymentGatewayWrapper paymentGatewayWrapper = getPaymentGatewayWrapperFromTransactionData(data);
+        getContext().getRequest().setAttribute("PaymentGatewayWrapper", paymentGatewayWrapper);
+        return new ForwardResolution("/gatewayProcess.jsp");
+
     }
 
     /**
@@ -77,7 +74,7 @@ public abstract class BasePaymentGatewaySendReceiveAction<T extends PaymentGatew
          * .getUrlBinding(sendReceiveAction.getClass()); return SslUtil.encodeUrlFullForced(getContext().getRequest(),
          * getContext().getResponse(), redirectUrl, null);
          */
-        //TODO: rewrite
+        // TODO: rewrite
         return null;
     }
 
