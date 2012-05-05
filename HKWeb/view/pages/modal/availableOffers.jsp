@@ -3,7 +3,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="com.hk.web.action.AvailabeOfferListAction" event="pre" var="offerBean"/>
+<s:useActionBean beanclass="com.hk.web.action.core.discount.AvailabeOfferListAction" event="pre" var="offerBean"/>
 <c:set var="infiniteQty" value="<%=OfferConstants.INFINITE_QTY%>"/>
 
 <s:layout-render name="/layouts/modal.jsp" pageTitle="Available offers">
@@ -14,7 +14,7 @@
 
     <c:choose>
       <c:when test="${fn:length(offerBean.offerInstanceList) > 0}">
-        <s:form beanclass="com.hk.web.action.AvailabeOfferListAction" method="post" id="offerForm">
+        <s:form beanclass="com.hk.web.action.core.discount.AvailabeOfferListAction" method="post" id="offerForm">
           <p class="lrg gry em">Please select the offer to be applied. Offers cannot be coupled.</p>
           <table class="cont_2 offerTable">
             <thead>
