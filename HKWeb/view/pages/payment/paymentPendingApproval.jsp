@@ -12,7 +12,7 @@
   </s:layout-component>
 
   <s:layout-component name="left_col">
-    <s:useActionBean beanclass="com.hk.web.action.payment.PaymentPendingApprovalAction" var="actionBean"/>
+    <s:useActionBean beanclass="com.hk.web.action.core.payment.PaymentPendingApprovalAction" var="actionBean"/>
 
     <c:choose>
       <c:when test="${actionBean.payment != null}">

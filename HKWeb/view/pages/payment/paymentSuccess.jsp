@@ -1,6 +1,6 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 
-<%@ page import="com.google.inject.name.Names" %>
+
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="com.hk.constants.*" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
@@ -8,13 +8,13 @@
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <%
   Double cashBackPercentage = InjectorFactory.getInjector().getInstance(Key.get(Double.class, Names.named(Keys.Env.cashBackPercentage)));
-  Long defaultGateway = InjectorFactory.getInjector().getInstance(Key.get(Long.class, Names.named(Keys.Env.defaultGateway)));
+  Long defaultGateway = Long.parseLong((String)ServiceLocatorFactory.getProperty(Keys.Env.defaultGateway)));
 %>
 <c:set var="paymentModeId_DefaultGateway" value="<%=defaultGateway%>"/>
 <c:set var="cashBackPercentage" value="<%=cashBackPercentage%>"/>
 <c:set var="paymentModeTechProcess" value="<%=EnumPaymentMode.TECHPROCESS.getId()%>"/>
 
-<s:useActionBean beanclass="com.hk.web.action.payment.PaymentSuccessAction" var="actionBean"/>
+<s:useActionBean beanclass="com.hk.web.action.core.payment.PaymentSuccessAction" var="actionBean"/>
 <s:layout-render name="/layouts/default.jsp" pageTitle="Payment Successful">
 
 <%--<s:layout-component name="htmlHead">

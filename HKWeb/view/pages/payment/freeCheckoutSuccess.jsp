@@ -6,7 +6,7 @@
   <s:layout-component name="heading">Order Confirmed</s:layout-component>
 
   <s:layout-component name="lhsContent">
-    <s:useActionBean beanclass="com.hk.web.action.payment.FreeCheckoutSuccessAction" var="actionBean"/>
+    <s:useActionBean beanclass="com.hk.web.action.core.payment.FreeCheckoutSuccessAction" var="actionBean"/>
 
     <c:choose>
       <c:when test="${actionBean.payment != null}">
