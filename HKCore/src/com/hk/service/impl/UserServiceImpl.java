@@ -5,7 +5,6 @@ import java.util.List;
 import org.apache.shiro.mgt.SecurityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.akube.framework.dao.Page;
 import com.hk.dao.user.UserCartDao;
@@ -25,7 +24,7 @@ public class UserServiceImpl implements UserService {
     private UserDaoImpl         userDao;
     @Autowired
     private UserCartDao     userCartDao;
-    //@Autowired
+    @Autowired
     private SecurityManager securityManager;
 
     public User getUserById(Long userId) {

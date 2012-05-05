@@ -488,7 +488,7 @@
     <input placeholder='d-i-s-c-o-u-n-t' type='text' id="couponCode"/>
     <s:link beanclass="com.hk.web.action.core.discount.ApplyCouponAction" id="couponLink" onclick="return false;"
             class="button_grey">Apply Coupon</s:link>
-    <s:link beanclass="com.hk.web.action.AvailabeOfferListAction"
+    <s:link beanclass="com.hk.web.action.core.discount.AvailabeOfferListAction"
             id="availableOffersLink">(see previously applied offers)</s:link>
   </shiro:hasAnyRoles>
   <shiro:hasAnyRoles name="<%=RoleConstants.TEMP_USER%>">
