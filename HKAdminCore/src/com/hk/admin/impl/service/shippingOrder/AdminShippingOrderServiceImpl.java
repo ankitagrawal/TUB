@@ -31,9 +31,9 @@ import com.hk.helper.ShippingOrderHelper;
 import com.hk.service.InventoryService;
 import com.hk.service.SkuService;
 import com.hk.service.WarehouseService;
+import com.hk.service.order.OrderService;
 import com.hk.service.shippingOrder.ShippingOrderService;
 import com.hk.service.shippingOrder.ShippingOrderStatusService;
-import com.hk.util.OrderUtil;
 
 @Service
 public class AdminShippingOrderServiceImpl implements AdminShippingOrderService {
@@ -45,6 +45,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 
     @Autowired
     private InventoryService           inventoryService;
+    private OrderService               orderService;
 
     @Autowired
     private ShippingOrderStatusService shippingOrderStatusService;
@@ -124,7 +125,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
                 }
             }
 
-            shippingOrder.setBasketCategory(OrderUtil.getBasketCategory(shippingOrder).getName());
+            shippingOrder.setBasketCategory(getOrderService().getBasketCategory(shippingOrder).getName());
             ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, baseOrder);
             shippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(shippingOrder));
             shippingOrder = getShippingOrderService().save(shippingOrder);
@@ -344,5 +345,15 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     public void setAdminShippingOrderDao(AdminShippingOrderDao adminShippingOrderDao) {
         this.adminShippingOrderDao = adminShippingOrderDao;
     }
+
+    public OrderService getOrderService() {
+        return orderService;
+    }
+
+    public void setOrderService(OrderService orderService) {
+        this.orderService = orderService;
+    }
+    
+    
 
 }

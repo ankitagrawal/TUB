@@ -98,7 +98,7 @@
           <tr>
             <td><%--<img src="${pageContext.request.contextPath}/images/email.jpg" width="" alt="">--%></td>
             <td>
-              <s:form beanclass="com.hk.com.hk.web.action.core.referral.ReferralProgramAction">
+              <s:form beanclass="com.hk.web.action.core.referral.ReferralProgramAction">
                 <fieldset class="top_label" style="border:0px;">
                   <ul style="margin-bottom:0; padding-left:10px">
                     <s:hidden name="senderName"/>

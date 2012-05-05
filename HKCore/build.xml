@@ -18,6 +18,7 @@
 		<fileset file="${lib.root.dir}/thirdParty/shiro-all-1.0-incubating-SNAPSHOT.jar" />
 		<fileset file="${lib.root.dir}/thirdParty/google-collect-1.0-rc2.jar" />
 		<fileset file="${lib.root.dir}/thirdParty/lambdaj-2.0-with-dependencies.jar" />
+		<fileset file="${lib.root.dir}/thirdParty/testng-5.8-jdk15.jar" />
 		<fileset file="${lib.root.dir}/stripes/stripes-1.5.3-patched.jar" />
 		<fileset file="${lib.root.dir}/solr/apache-solr-solrj-3.3.0.jar" />
 		<fileset file="${lib.root.dir}/hibernate/hibernate-annotations-3.4.0.GA.jar" />

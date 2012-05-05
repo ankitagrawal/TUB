@@ -6,10 +6,12 @@ import java.util.Set;
 import com.akube.framework.dao.Page;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
+import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.OrderLifecycleActivity;
 import com.hk.domain.core.OrderStatus;
 import com.hk.domain.order.Order;
+import com.hk.domain.order.OrderCategory;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.User;
 import com.hk.exception.OrderSplitException;
@@ -37,6 +39,10 @@ public interface OrderService {
 
     public Order escalateOrderFromActionQueue(Order order, String shippingOrderGatewayId);
 
+    public  Set<OrderCategory> getCategoriesForBaseOrder(Order order);
+    
+    public  Category getBasketCategory(ShippingOrder shippingOrder);
+    
     public Order getLatestOrderForUser(User user);
 
     public Page listOrdersForUser(User user, int page, int perPage);

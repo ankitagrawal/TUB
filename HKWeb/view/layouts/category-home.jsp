@@ -64,7 +64,7 @@
           });
         </script>
         <div class='small_banners'>
-          <s:link beanclass="com.hk.com.hk.web.action.core.referral.ReferralProgramAction" event="pre">
+          <s:link beanclass="com.hk.web.action.core.referral.ReferralProgramAction" event="pre">
             <img src="<hk:vhostImage/>/images/banners/refer_earn.jpg" alt="refer a friend and earn" class="small_banner"/>
           </s:link>
           <img src="<hk:vhostImage/>/images/banners/freeshipping_cod_250.jpg" alt="cash on delivery" class="small_banner"/>

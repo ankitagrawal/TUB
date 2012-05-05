@@ -143,7 +143,7 @@
     </ul>
   </div>
   <div class='grid_6'>
-    <s:link beanclass="com.hk.com.hk.web.action.core.referral.ReferralProgramAction" event="pre">
+    <s:link beanclass="com.hk.web.action.core.referral.ReferralProgramAction" event="pre">
       <img src="<hk:vhostImage/>/images/banners/refer_earn.jpg" alt="refer a friend and earn"
            class="small_banner"/>
     </s:link>

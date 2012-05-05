@@ -25,7 +25,7 @@
   </s:layout-component>
   <s:layout-component name="rhsContent">
     <p style="text-align:right;">
-      <s:link beanclass="com.hk.com.hk.web.action.core.referral.ReferralProgramAction">Referral Program</s:link> |
+      <s:link beanclass="com.hk.web.action.core.referral.ReferralProgramAction">Referral Program</s:link> |
       My Referrals |
       <s:link beanclass="com.hk.web.action.ReferralTermsAction" class="referralTerms">T&C</s:link>
     </p>

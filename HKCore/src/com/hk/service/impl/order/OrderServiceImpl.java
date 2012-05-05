@@ -1,6 +1,7 @@
 package com.hk.service.impl.order;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -16,10 +17,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.akube.framework.dao.Page;
+import com.hk.comparator.BasketCategory;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.dao.BaseDao;
 import com.hk.dao.order.OrderDao;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -27,6 +30,7 @@ import com.hk.domain.core.OrderLifecycleActivity;
 import com.hk.domain.core.OrderStatus;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
+import com.hk.domain.order.OrderCategory;
 import com.hk.domain.order.OrderLifecycle;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
@@ -59,6 +63,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private ShippingOrderService   shippingOrderService;
+    
+    @Autowired
+    private BaseDao baseDao;
 
     @Autowired
     private UserService            userService;
@@ -119,6 +126,78 @@ public class OrderServiceImpl implements OrderService {
         return getOrderDao().getCountOfOrdersWithStatus(EnumOrderStatus.Placed);
     }
 
+    public  Set<OrderCategory> getCategoriesForBaseOrder(Order order) {
+
+        // Map<BasketCategory, Category> basketCategoryMap = new HashMap<BasketCategory, Category>();
+
+        List<BasketCategory> basketCategories = new ArrayList<BasketCategory>();
+
+        Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
+        for (CartLineItem lineItem : cartLineItems) {
+            Category lineItemPrimaryCategory = lineItem.getProductVariant().getProduct().getPrimaryCategory();
+            BasketCategory lineItemBasketCategory = new BasketCategory(lineItemPrimaryCategory);
+
+            if (basketCategories.contains(lineItemBasketCategory)) {
+                BasketCategory basketCategoryToUpdate = basketCategories.get(basketCategories.indexOf(lineItemBasketCategory));
+                basketCategoryToUpdate.addQty(lineItem.getQty()).addAmount(lineItem.getHkPrice());
+            } else {
+                lineItemBasketCategory.addQty(lineItem.getQty()).addAmount(lineItem.getHkPrice());
+                basketCategories.add(lineItemBasketCategory);
+            }
+
+        }
+
+        Collections.sort(basketCategories);
+
+        Set<OrderCategory> orderCategories = new HashSet<OrderCategory>();
+        boolean primaryCategory = true;
+
+        for (BasketCategory basketCategory : basketCategories) {
+            OrderCategory orderCategory = new OrderCategory();
+            orderCategory.setOrder(order);
+            orderCategory.setCategory(basketCategory.getCategory());
+            if (primaryCategory) {
+                orderCategory.setPrimary(true);
+                primaryCategory = false;
+            }
+            orderCategory = (OrderCategory) getBaseDao().save(orderCategory);
+            orderCategories.add(orderCategory);
+        }
+
+        return orderCategories;
+
+    }
+    
+    public  Category getBasketCategory(ShippingOrder shippingOrder) {
+        List<BasketCategory> basketCategories = new ArrayList<BasketCategory>();
+
+         for (LineItem lineItem : shippingOrder.getLineItems()) {
+           Category lineItemPrimaryCategory = lineItem.getSku().getProductVariant().getProduct().getPrimaryCategory();
+           BasketCategory lineItemBasketCategory = new BasketCategory(lineItemPrimaryCategory);
+
+           if (basketCategories.contains(lineItemBasketCategory)) {
+             BasketCategory basketCategoryToUpdate = basketCategories.get(basketCategories.indexOf(lineItemBasketCategory));
+             basketCategoryToUpdate.addQty(lineItem.getQty()).addAmount(lineItem.getHkPrice());
+           } else {
+             lineItemBasketCategory.addQty(lineItem.getQty()).addAmount(lineItem.getHkPrice());
+             basketCategories.add(lineItemBasketCategory);
+           }
+
+         }
+
+         Collections.sort(basketCategories);
+
+         LineItem firstLineItem = shippingOrder.getLineItems().iterator().next();
+         Category basketCategory = firstLineItem.getSku().getProductVariant().getProduct().getPrimaryCategory();
+
+         if (!basketCategories.isEmpty()) {
+           basketCategory = basketCategories.get(0).getCategory();
+         }
+             
+         return basketCategory;
+       }
+
+
     public Set<ShippingOrder> createShippingOrders(Order order) {
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
         try {
@@ -139,7 +218,6 @@ public class OrderServiceImpl implements OrderService {
 
         return shippingOrders;
     }
-
 
     /**
      * if all shipping orders for a order are in shipped/delievered or escalted to packing queue status update base
@@ -316,7 +394,7 @@ public class OrderServiceImpl implements OrderService {
                     LineItem shippingOrderLineItem = LineItemHelper.createLineItemWithBasicDetails(sku, shippingOrder, cartLineItem);
                     shippingOrder.getLineItems().add(shippingOrderLineItem);
                 }
-                shippingOrder.setBasketCategory(OrderUtil.getBasketCategory(shippingOrder).getName());
+                shippingOrder.setBasketCategory(getBasketCategory(shippingOrder).getName());
                 ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, order);
                 shippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(shippingOrder));
                 shippingOrder = shippingOrderService.save(shippingOrder);
@@ -386,7 +464,6 @@ public class OrderServiceImpl implements OrderService {
         }
         return topOrderedVariant;
     }
-
 
     public void approvePendingRewardPointsForOrder(Order order) {
         rewardPointService.approvePendingRewardPointsForOrder(order);
@@ -520,5 +597,15 @@ public class OrderServiceImpl implements OrderService {
     public void setCategoryService(CategoryService categoryService) {
         this.categoryService = categoryService;
     }
+
+    public BaseDao getBaseDao() {
+        return baseDao;
+    }
+
+    public void setBaseDao(BaseDao baseDao) {
+        this.baseDao = baseDao;
+    }
+    
+    
 
 }

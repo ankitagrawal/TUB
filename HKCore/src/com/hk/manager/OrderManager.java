@@ -317,7 +317,7 @@ public class OrderManager {
         // save order with placed status since amount has been applied
         order.setOrderStatus(getOrderStatusService().find(EnumOrderStatus.Placed));
 
-        Set<OrderCategory> categories = OrderUtil.getCategoriesForBaseOrder(order);
+        Set<OrderCategory> categories = getOrderService().getCategoriesForBaseOrder(order);
         order.setCategories(categories);
         order = getOrderService().save(order);
 
@@ -396,6 +396,7 @@ public class OrderManager {
         for (CartLineItem cartLineItem : cartLineItems) {
             cartLineItem.setOrder(order);
             OrderUtil.roundOffPricesOnCartLineItem(cartLineItem);
+            cartLineItem = getCartLineItemService().save(cartLineItem);
             finalCartLineItems.add(cartLineItem);
         }
         return finalCartLineItems;
@@ -404,20 +405,23 @@ public class OrderManager {
     @Transactional
     private CartLineItem createCodLineItem(Order order, Double codAmount) {
         Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.CodCharges).filter();
+        CartLineItem codLine = null;
         if (cartLineItems == null || cartLineItems.size() == 0) {
             CartLineItem cartLineItem = new CartLineItemBuilder().ofType(EnumCartLineItemType.CodCharges)
             // .tax(serviceTaxProvider.get())
             .hkPrice(codAmount).build();
             cartLineItem.setOrder(order);
-            return cartLineItem;
+            codLine =  cartLineItem;
         } else {
             for (CartLineItem cartLineItem : cartLineItems) {
                 cartLineItem.setHkPrice(codAmount);
                 cartLineItem.setOrder(order);
                 cartLineItem.setQty(1L);
             }
-            return cartLineItems.iterator().next();
+            codLine= cartLineItems.iterator().next();
         }
+        
+        return getCartLineItemService().save(codLine);
         // cartLineItem.setLineItemStatus(lineItemStatusDao.find(EnumLineItemStatus.NA.getId()));
         // return cartLineItemService.save(cartLineItem);
     }

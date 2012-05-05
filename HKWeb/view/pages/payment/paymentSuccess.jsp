@@ -1,14 +1,16 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
-
-
+<%@ page import="com.hk.constants.core.Keys"%>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="com.hk.constants.*" %>
+<%@ page import="com.hk.constants.payment.EnumPaymentMode"%>
+<%@ page import="com.hk.constants.core.RoleConstants"%>
+<%@ page import="com.hk.constants.marketing.AnalyticsConstants"%>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <%
-  Double cashBackPercentage = InjectorFactory.getInjector().getInstance(Key.get(Double.class, Names.named(Keys.Env.cashBackPercentage)));
-  Long defaultGateway = Long.parseLong((String)ServiceLocatorFactory.getProperty(Keys.Env.defaultGateway)));
+  Double cashBackPercentage = Double.parseDouble((String)ServiceLocatorFactory.getProperty(Keys.Env.cashBackPercentage));
+  Long defaultGateway = Long.parseLong((String)ServiceLocatorFactory.getProperty(Keys.Env.defaultGateway));
 %>
 <c:set var="paymentModeId_DefaultGateway" value="<%=defaultGateway%>"/>
 <c:set var="cashBackPercentage" value="<%=cashBackPercentage%>"/>
@@ -116,7 +118,7 @@
 <c:choose>
   <c:when test="${actionBean.payment != null}">
     <div class="right" style="float: right;">
-      <s:link beanclass="com.hk.com.hk.web.action.core.referral.ReferralProgramAction">
+      <s:link beanclass="com.hk.web.action.core.referral.ReferralProgramAction">
         <img src="<hk:vhostImage/>/images/banners/refer_earn.jpg">
       </s:link>
     </div>
@@ -186,7 +188,7 @@
 
     <h2>Customer Support</h2>
 
-    <p><s:link beanclass="com.hk.com.hk.web.action.pages.ContactAction">Write to us</s:link> with your Order ID if you have any questions or call us on 0124-4551616</p>
+    <p><s:link beanclass="com.hk.web.action.pages.ContactAction">Write to us</s:link> with your Order ID if you have any questions or call us on 0124-4551616</p>
 
     <c:if test="${actionBean.payment.order.offerInstance != null && actionBean.payment.order.offerInstance.coupon != null && hk:isNotBlank(actionBean.payment.order.offerInstance.coupon.complimentaryCoupon)}">
       <div style="background-color: lightgoldenrodyellow;">

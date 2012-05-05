@@ -8,7 +8,7 @@
   </li>
   <li><s:link beanclass="com.hk.com.hk.web.action.core.user.CustomerOrderHistoryAction" title="Order History"> <span id="ohLink">Order History</span> </s:link>
   </li>
-  <li><s:link beanclass="com.hk.com.hk.web.action.core.referral.ReferralProgramAction" title="Referral Program"> <span id="rpLink">Referral Program</span> </s:link>
+  <li><s:link beanclass="com.hk.web.action.core.referral.ReferralProgramAction" title="Referral Program"> <span id="rpLink">Referral Program</span> </s:link>
   </li>
   <li><s:link beanclass="com.hk.web.action.core.discount.RewardPointTxnStatementAction" title="RewardPointTxnStatement"> <span id="rpsLink">Reward Point Txn Statement</span> </s:link>
   </li>

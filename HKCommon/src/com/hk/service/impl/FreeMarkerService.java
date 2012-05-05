@@ -1,5 +1,6 @@
 package com.hk.service.impl;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 
@@ -8,8 +9,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.akube.framework.util.BaseUtils;
+import com.hk.web.AppConstants;
 
 import freemarker.template.Configuration;
+import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
@@ -18,7 +21,7 @@ public class FreeMarkerService {
 
     private static Logger logger = LoggerFactory.getLogger(FreeMarkerService.class);
 
-    final Configuration   cfg = null;
+    private  Configuration   cfg = null;
 
     //TODO: rewrite
     /*@Autowired
@@ -41,7 +44,12 @@ public class FreeMarkerService {
         Template template;
         RenderOutput renderOutput = null;
         try {
+            File freemarkerDir = new File(AppConstants.appBasePath + "/freemarker");
+            Configuration cfg = new Configuration();
+            cfg.setDirectoryForTemplateLoading(freemarkerDir);
+            cfg.setObjectWrapper(new DefaultObjectWrapper());
             // load a freemarker template from a pre-configured directory
+            
             template = cfg.getTemplate(templatePath);
 
             // process template with the given input
