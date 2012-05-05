@@ -67,6 +67,31 @@
 				com.hk.core.factory.SpringTypeConverterFactory
 			</param-value>
 		</init-param>
+		<init-param>
+			<param-name>CoreInterceptor.Classes</param-name>
+			<param-value>
+				org.stripesstuff.plugin.security.SecurityInterceptor,
+				net.sourceforge.stripes.controller.BeforeAfterMethodInterceptor,
+				net.sourceforge.stripes.controller.HttpCacheInterceptor
+			</param-value>
+		</init-param>
+		<init-param>
+			<param-name>SecurityManager.Class</param-name>
+			<param-value>
+				org.stripesstuff.plugin.security.J2EESecurityManager
+			</param-value>
+		</init-param>
+		<init-param>
+			<param-name>SecurityManager.AuthBeanClass</param-name>
+			<param-value>com.hk.web.action.core.auth.LoginAction</param-value>
+		</init-param>
+		<init-param>
+			<param-name>SecurityManager.modal.AuthBeanClass</param-name>
+			<param-value>
+				com.hk.web.action.core.auth.LoggedOffModalAction
+			</param-value>
+		</init-param>
+
 	</filter>
 
 	<servlet>
@@ -195,6 +220,7 @@
 		<url-pattern>/autocomplete-search</url-pattern>
 		<url-pattern>/autocomplete-search/*</url-pattern>
 		<url-pattern>/admin</url-pattern>
+		<url-pattern>/core</url-pattern>
 		<url-pattern>/affiliate</url-pattern>
 		<url-pattern>/b2b</url-pattern>
 		<url-pattern>/contact</url-pattern>
