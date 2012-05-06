@@ -11,7 +11,7 @@
 <s:layout-component name="content">
 <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_MULTIPLE_WAREHOUSE%>">
   <%
-    WarehouseService warehouseService = (WarehouseService)ServiceLocatorFactory.getService("WarehouseService");
+    WarehouseService warehouseService = (WarehouseService)ServiceLocatorFactory.getService(WarehouseService.class);
     pageContext.setAttribute("whList", warehouseService.getAllWarehouses());
   %>
   <table>
@@ -46,14 +46,14 @@
 
   <h3><s:link beanclass="com.hk.web.action.admin.user.SearchUserAction">Search Users</s:link></h3>
 
-  <h3><s:link beanclass="com.hk.web.action.MenuRefreshAction">Refresh Menu</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.core.menu.MenuRefreshAction">Refresh Menu</s:link></h3>
 
-  <h3><s:link beanclass="com.hk.web.action.DataIndexRefreshAction">Refresh Data Indexes</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.core.menu.DataIndexRefreshAction">Refresh Data Indexes</s:link></h3>
 
   <c:if test="${whAction.setWarehouse == null}">
   <h3><s:link beanclass="com.hk.web.action.admin.queue.ActionAwaitingQueueAction">Action Awaiting Queue</s:link></h3>
   </c:if>
-  <h3><s:link beanclass="com.hk.web.action.admin.NotifyMeListAction"> Notify Me List </s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.admin.marketing.NotifyMeListAction"> Notify Me List </s:link></h3>
 </div>
 
 <div class="cl"></div>
@@ -63,10 +63,10 @@
 
   <h3>
     <s:link
-        beanclass="com.hk.web.action.admin.GenerateExcelAction">Generate Catalog Excel by Category<br/><span class="sml gry">(also shows Inventory status)</span></s:link>
+        beanclass="com.hk.web.action.admin.catalog.GenerateExcelAction">Generate Catalog Excel by Category<br/><span class="sml gry">(also shows Inventory status)</span></s:link>
   </h3>
 
-  <h3><s:link beanclass="com.hk.web.action.admin.ParseExcelAction">Upload Catalog Excel<br/><span class="sml gry" style="color:red">(SKUs need to be created manually for new variants)</span></s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.admin.catalog.ParseExcelAction">Upload Catalog Excel<br/><span class="sml gry" style="color:red">(SKUs need to be created manually for new variants)</span></s:link></h3>
 
   <h3><s:link beanclass="com.hk.web.action.admin.AmazonParseExcelAction">Upload Amazon Excel</s:link></h3>
 

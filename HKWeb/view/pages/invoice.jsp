@@ -54,7 +54,7 @@
 </head>
 <body>
 <c:set var="b2bUser" value="<%=EnumRole.B2B_USER.getRoleName()%>"/>
-<s:useActionBean beanclass="com.hk.web.action.BOInvoiceAction" event="pre" var="orderSummary"/>
+<s:useActionBean beanclass="com.hk.web.action.core.accounting.BOInvoiceAction" event="pre" var="orderSummary"/>
 
 <div class="container_12" style="border: 1px solid; padding-top: 10px;">
 <div class="grid_4">
@@ -340,21 +340,7 @@
   </div>
   <hr/>
   <c:choose>
-    <c:when test="${public String _elExpression13420()
-		throws java.io.IOException, javax.servlet.ServletException {
-javax.servlet.jsp.PageContext pageContext = null;
-java.util.Map param = null;
-java.util.Map paramValues = null;
-java.util.Map header = null;
-java.util.Map headerValues = null;
-java.util.Map cookie = null;
-java.util.Map initParam = null;
-java.util.Map pageScope = null;
-java.util.Map requestScope = null;
-java.util.Map sessionScope = null;
-java.util.Map applicationScope = null;
-return ""+hk:collectionContains(orderSummary.order.user.roleStrings, b2bUser;
-})}">
+    <c:when test="${hk:collectionContains(orderSummary.order.user.roleStrings, b2bUser)}">
       <p style="font-size: .8em;">Bright Lifecare Pvt. Ltd. | Khasra No. 146/25/2/1, Jail Road, Dhumaspur, Badshahpur |
         Gurgaon, Haryana- 122101 | TIN:
         06101832036 </p>

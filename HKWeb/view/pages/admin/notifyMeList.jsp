@@ -5,7 +5,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="com.hk.web.action.admin.NotifyMeListAction" var="notifyMeBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.marketing.NotifyMeListAction" var="notifyMeBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Notify Me List Generator">
   <s:layout-component name="htmlHead">
@@ -57,7 +57,7 @@
   </s:layout-component>
   <s:layout-component name="heading">Notify Me List</s:layout-component>
   <s:layout-component name="content">
-	   <s:form beanclass="com.hk.web.action.admin.NotifyMeListAction">
+	   <s:form beanclass="com.hk.web.action.admin.marketing.NotifyMeListAction">
 		    <s:submit name="getNotifyMeProductVariantListInStock" value="Get Product Variant In Stock"/>
 		    <shiro:hasAnyRoles name="<%=RoleConstants.ADMIN%>">
 		    <s:submit name="sendEmailToNotifiedUsersForProductVariantInStock" value="Fire Emails for PV In Stock"/>
@@ -67,7 +67,7 @@
     <h2>Quick Search <i>(by Primary Category)</i>: <input type="text" id="liveSearchBox"/></h2>
     <fieldset>
       <legend>Search/Download Notification List</legend>
-      <s:form beanclass="com.hk.web.action.admin.NotifyMeListAction">
+      <s:form beanclass="com.hk.web.action.admin.marketing.NotifyMeListAction">
         <s:errors/>
         <br/>
         <label>Start
@@ -88,7 +88,7 @@
 
     <fieldset>
       <legend>Send Notification Email</legend>
-      <s:form beanclass="com.hk.web.action.admin.NotifyMeListAction">
+      <s:form beanclass="com.hk.web.action.admin.marketing.NotifyMeListAction">
         <label>Start
           Date:</label><s:text class="date_input startDate" style="width:150px" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startDate"/>
         &nbsp; &nbsp;
@@ -167,7 +167,7 @@
     </div>
 	  </c:when>
 		    <c:otherwise>
-			     <s:form beanclass="com.hk.web.action.admin.NotifyMeListAction">
+			     <s:form beanclass="com.hk.web.action.admin.marketing.NotifyMeListAction">
 				     <br/><br/><br/>
 			    There are no more notifications left for PV in stock. All notification emails for PV in stock have been sent.
 				     <br/> <br/><br/>

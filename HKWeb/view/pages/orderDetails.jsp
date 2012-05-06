@@ -2,7 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="com.hk.web.action.OrderDetailsAction" var="oa"/>
+<s:useActionBean beanclass="com.hk.web.action.core.order.OrderDetailsAction" var="oa"/>
 <c:set var="shippingOrderStatus_shipped" value="<%=EnumShippingOrderStatus.SO_Shipped.getId()%>"/>
 
 <s:layout-render name="/layouts/default.jsp">

@@ -327,7 +327,7 @@
               <span style="margin-left:30px;"> Basket category: <strong>${order.basketCategory}</strong></span>
             </div>
             <div class="floatright">
-              (<s:link beanclass="com.hk.web.action.BOInvoiceAction" event="pre" target="_blank">
+              (<s:link beanclass="com.hk.web.action.core.accounting.BOInvoiceAction" event="pre" target="_blank">
               <s:param name="order" value="${order}"/> Invoice
             </s:link>) (<s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" event="searchOrders"
                                 target="_blank">

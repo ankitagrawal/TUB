@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.ReferralManagerAction" var="couponBean" event="pre"/>
+<s:useActionBean beanclass="com.hk.web.action.core.referral.ReferralManagerAction" var="couponBean" event="pre"/>
 
 <s:layout-render name="/layouts/default.jsp" pageTitle="Referral manager">
 
@@ -27,7 +27,7 @@
     <p style="text-align:right;">
       <s:link beanclass="com.hk.web.action.core.referral.ReferralProgramAction">Referral Program</s:link> |
       My Referrals |
-      <s:link beanclass="com.hk.web.action.ReferralTermsAction" class="referralTerms">T&C</s:link>
+      <s:link beanclass="com.hk.web.action.core.referral.ReferralTermsAction" class="referralTerms">T&C</s:link>
     </p>
 
 

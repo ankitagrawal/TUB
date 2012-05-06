@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.com.hk.web.action.core.user.CustomerOrderHistoryAction" var="coha"/>
+<s:useActionBean beanclass="com.hk.web.action.core.user.CustomerOrderHistoryAction" var="coha"/>
 <s:layout-render name="/layouts/default.jsp">
   <s:layout-component name="heading">Order History</s:layout-component>
   <s:layout-component name="lhsContent">
@@ -45,13 +45,13 @@
                 </td>--%>
                 <td>
                     ${order.orderStatus.name}
-                  <s:link beanclass="com.hk.web.action.OrderDetailsAction">
+                  <s:link beanclass="com.hk.web.action.core.order.OrderDetailsAction">
                     <s:param name="order" value="${order}"/>
                     (View Details)
                   </s:link>
                 </td>
                 <td>
-                  <s:link beanclass="com.hk.web.action.BOInvoiceAction" target="_blank">
+                  <s:link beanclass="com.hk.web.action.core.accounting.BOInvoiceAction" target="_blank">
                                   <s:param name="order" value="${order}"/>
                                   View Order
                   </s:link>

@@ -383,13 +383,13 @@ public class Functions {
     }
 
     public static Double getApplicableOfferPrice(Object o) {
-        UserManager userManager = ServiceLocatorFactory.getService(UserManager.class);
+        UserManager userManager = (UserManager) ServiceLocatorFactory.getService("UserManager");
         ProductVariant pv = (ProductVariant) o;
         return userManager.getApplicableOfferPriceForUser(pv);
     }
 
     public static Double getApplicableOfferPrice(Object o1, Object o2) {
-        UserManager userManager = ServiceLocatorFactory.getService(UserManager.class);
+        UserManager userManager = (UserManager) ServiceLocatorFactory.getService("UserManager");
         ProductVariant pv = (ProductVariant) o1;
         Order order = (Order) o2;
         return userManager.getApplicableOfferPriceForUser(pv, order);

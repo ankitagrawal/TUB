@@ -22,35 +22,35 @@ import com.hk.domain.user.User;
 @Component
 public class ReferralSignupAction extends BaseAction {
 
-  @Validate(required = true)
-  private String userHash;
+    @Validate(required = true)
+    private String userHash;
 
-  private User user;
-  @Autowired
-   UserDao userDao;
+    private User   user;
+    @Autowired
+    UserDao        userDao;
 
-  @ValidationMethod
-  public void validate() {
-    user = userDao.findByUserHash(userHash);
-    if (user == null) {
-      getContext().getValidationErrors().add("invalidHash", new SimpleError("Invalid user."));
+    @ValidationMethod
+    public void validate() {
+        user = userDao.findByUserHash(userHash);
+        if (user == null) {
+            getContext().getValidationErrors().add("invalidHash", new SimpleError("Invalid user."));
+        }
     }
-  }
 
-  public Resolution pre() {
-    Cookie referredByCookie = new Cookie(HealthkartConstants.Cookie.referred_by, CryptoUtil.encrypt(user.getUserHash()));
-    referredByCookie.setMaxAge(15*24*3600); //15 days
-    referredByCookie.setPath("/");
-    getContext().getResponse().addCookie(referredByCookie);
+    public Resolution pre() {
+        Cookie referredByCookie = new Cookie(HealthkartConstants.Cookie.referred_by, CryptoUtil.encrypt(user.getUserHash()));
+        referredByCookie.setMaxAge(15 * 24 * 3600); // 15 days
+        referredByCookie.setPath("/");
+        getContext().getResponse().addCookie(referredByCookie);
 
-    return new ForwardResolution("/pages/referralSignup.jsp");
-  }
+        return new ForwardResolution("/pages/referralSignup.jsp");
+    }
 
-  public void setUserHash(String userHash) {
-    this.userHash = userHash;
-  }
+    public void setUserHash(String userHash) {
+        this.userHash = userHash;
+    }
 
-  public User getUser() {
-    return user;
-  }
+    public User getUser() {
+        return user;
+    }
 }
