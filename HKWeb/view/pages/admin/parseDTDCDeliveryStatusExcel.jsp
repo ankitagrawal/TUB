@@ -5,7 +5,7 @@
 <s:layout-render name="/layouts/defaultAdmin.jsp">
 
   <s:layout-component name="content">
-    <s:form beanclass="com.hk.web.action.admin.ParseDTDCDeliveryStatusExcelAction">
+    <s:form beanclass="com.hk.web.action.admin.shipment.ParseDTDCDeliveryStatusExcelAction">
       <%--<s:messages key="generalMessages"/>--%>
       <h2>File to Upload
           <%--<s:text name="category"/>--%>

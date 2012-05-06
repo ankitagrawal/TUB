@@ -6,7 +6,7 @@
 <%@ page import="mhc.service.dao.WarehouseDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.admin.ReconciliationVoucherAction" var="pa"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" var="pa"/>
 <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Create/Edit Reconciliation Voucher">
 <jsp:useBean id="now" class="java.util.Date" scope="request" />
@@ -111,7 +111,7 @@
               event="getPVDetails"></s:link>
     </div>
     <h2>Create/Edit Reconciliation Voucher</h2>
-    <s:form beanclass="com.hk.web.action.admin.ReconciliationVoucherAction">
+    <s:form beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction">
       <s:hidden name="reconciliationVoucher" value="${pa.reconciliationVoucher.id}"/>
       <table>
         <tr>

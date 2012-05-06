@@ -4,7 +4,7 @@
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.admin.DebitNoteAction" var="pa"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.inventory.DebitNoteAction" var="pa"/>
 <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Debit Note">
 <s:layout-component name="htmlHead">
@@ -82,7 +82,7 @@
     <s:link beanclass="com.hk.web.action.admin.EditPurchaseOrderAction" id="pvInfoLink" event="getPVDetails"></s:link>
   </div>
 
-  <s:form beanclass="com.hk.web.action.admin.DebitNoteAction">
+  <s:form beanclass="com.hk.web.action.admin.inventory.DebitNoteAction">
     <s:hidden name="debitNote" value="${pa.debitNote.id}"/>
     <s:hidden name="debitNote.supplier" value="${pa.debitNote.supplier.id}"/>
     <table>

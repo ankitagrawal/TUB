@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="com.hk.web.action.admin.AdsProductMetaDataAction" var="adBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.marketing.AdsProductMetaDataAction" var="adBean"/>
 <html>
 <head><title>Ads Product Meta Data : ${adBean.category.displayName}</title></head>
 <body>

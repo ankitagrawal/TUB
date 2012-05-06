@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="com.hk.constants.StateList" %>
+<%@ page import="com.hk.constants.courier.StateList" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.admin.SupplierManagementAction" var="sma"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.catalog.SupplierManagementAction" var="sma"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Add/Edit Supplier">
 
   <s:layout-component name="content">
@@ -13,7 +13,7 @@
       </c:otherwise>
     </c:choose>
 
-    <s:form beanclass="com.hk.web.action.admin.SupplierManagementAction">
+    <s:form beanclass="com.hk.web.action.admin.catalog.SupplierManagementAction">
       <s:hidden name="supplier.id" value="${sma.supplier.id}"/>
       <table>
         <tr>

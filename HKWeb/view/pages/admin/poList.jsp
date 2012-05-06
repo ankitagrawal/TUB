@@ -12,7 +12,7 @@
     pageContext.setAttribute("whList", warehouseDao.listAll());
   %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Purchase Order List">
-  <s:useActionBean beanclass="com.hk.web.action.admin.POAction" var="poa"/>
+  <s:useActionBean beanclass="com.hk.web.action.admin.inventory.POAction" var="poa"/>
   <s:layout-component name="htmlHead">
     <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
@@ -28,7 +28,7 @@
 
     <fieldset class="right_label">
       <legend>Search PO</legend>
-      <s:form beanclass="com.hk.web.action.admin.POAction">
+      <s:form beanclass="com.hk.web.action.admin.inventory.POAction">
         <label>PO ID:</label><s:text name="purchaseOrder"/>
         <label>VariantID:</label><s:text name="productVariant"/>
         <label>Tin Number:</label><s:text name="tinNumber"/>
@@ -102,7 +102,7 @@
           <td>${purchaseOrder.paymentDetails}</td>
           <td>
             <c:forEach var="grn" items="${purchaseOrder.goodsReceivedNotes}">
-              <s:link beanclass="com.hk.web.action.admin.GRNAction" event="view" target="_blank">
+              <s:link beanclass="com.hk.web.action.admin.inventory.GRNAction" event="view" target="_blank">
                 <s:param name="grn" value="${grn.id}"/>
                 ${grn.id}
               </s:link>
@@ -113,14 +113,14 @@
             <s:link beanclass="com.hk.web.action.admin.EditPurchaseOrderAction">Edit
               <s:param name="purchaseOrder" value="${purchaseOrder.id}"/></s:link>
             &nbsp;
-            <s:link beanclass="com.hk.web.action.admin.POAction" event="print" target="_blank">Print
+            <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="print" target="_blank">Print
               <s:param name="purchaseOrder" value="${purchaseOrder.id}"/></s:link>
             &nbsp;
-            <s:link beanclass="com.hk.web.action.admin.POAction" event="poInExcel" target="_blank">Excel
+            <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="poInExcel" target="_blank">Excel
               <s:param name="purchaseOrder" value="${purchaseOrder.id}"/></s:link>
             <c:if test="${purchaseOrder.purchaseOrderStatus.id >= approved}">
                 <br/>
-                <s:link beanclass="com.hk.web.action.admin.POAction" event="generateGRNCheck">Create GRN
+                <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="generateGRNCheck">Create GRN
                   <s:param name="purchaseOrder" value="${purchaseOrder.id}"/></s:link>
             </c:if>
           </td>

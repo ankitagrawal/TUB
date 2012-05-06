@@ -22,13 +22,7 @@ import com.hk.domain.user.User;
 import com.hk.util.CustomDateTypeConvertor;
 import com.hk.web.action.error.AdminPermissionAction;
 
-/**
- * Created by IntelliJ IDEA.
- * User: USER
- * Date: Oct 13, 2011
- * Time: 5:17:37 PM
- * To change this template use File | Settings | File Templates.
- */
+
 @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_DELIVERY_QUEUE}, authActionBean = AdminPermissionAction.class)
 @Component
 public class UpdateAFLChhotuDeliveryStatusAction extends BaseAction{

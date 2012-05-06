@@ -8,7 +8,7 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Purchase Order List">
-  <s:useActionBean beanclass="com.hk.web.action.admin.MarketingExpenseAction" var="mea"/>
+  <s:useActionBean beanclass="com.hk.web.action.admin.marketing.MarketingExpenseAction" var="mea"/>
   <s:layout-component name="htmlHead">
     <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
@@ -33,13 +33,13 @@
   </s:layout-component>
 
   <s:layout-component name="content">
-	  <s:form beanclass="com.hk.web.action.admin.MarketingExpenseAction">
+	  <s:form beanclass="com.hk.web.action.admin.marketing.MarketingExpenseAction">
 		  <s:submit name="addMarketingExpense" value="Add New Marketing Expense"/>
 	  </s:form>
 
     <fieldset class="right_label">
       <legend>Search Marketing Expense</legend>
-      <s:form beanclass="com.hk.web.action.admin.MarketingExpenseAction">
+      <s:form beanclass="com.hk.web.action.admin.marketing.MarketingExpenseAction">
         <label>Category:</label><s:select name="category">
           <s:option value="">-All-</s:option>
           <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="marketExpenseCategoriesList" value="name" label="displayName"/>
@@ -80,7 +80,7 @@
           <td>${marketingExpense.costOfConversion}</td>
           <td>${marketingExpense.adNetworks.name}</td>
           <td>
-            <s:link beanclass="com.hk.web.action.admin.MarketingExpenseAction" event="view">Edit
+            <s:link beanclass="com.hk.web.action.admin.marketing.MarketingExpenseAction" event="view">Edit
               <s:param name="marketingExpenseId" value="${marketingExpense.id}"/></s:link>
         </tr>
       </c:forEach>

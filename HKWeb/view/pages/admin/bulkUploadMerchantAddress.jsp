@@ -5,7 +5,7 @@
 <s:layout-render name="/layouts/defaultAdmin.jsp">
 
     <s:layout-component name="content">
-        <s:form beanclass="com.hk.web.action.admin.BulkUploadMerchantAddressAction">
+        <s:form beanclass="com.hk.web.action.admin.address.BulkUploadMerchantAddressAction">
             <h2>Merchant Name
                 <s:text name="manufacturerName" size="100"/></h2>
 

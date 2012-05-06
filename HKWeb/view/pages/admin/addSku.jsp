@@ -6,7 +6,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Add SKUs">
-	<s:useActionBean beanclass="com.hk.web.action.admin.SkuAction" var="skuAction"/>
+	<s:useActionBean beanclass="com.hk.web.action.admin.sku.SkuAction" var="skuAction"/>
 	<s:layout-component name="htmlHead">
 		<%
 			TaxDao taxDao = InjectorFactory.getInjector().getInstance(TaxDao.class);
@@ -45,7 +45,7 @@
 	<s:layout-component name="content">
 		<div class="reportBox">
 			<table>
-				<s:form beanclass="com.hk.web.action.admin.SkuAction">
+				<s:form beanclass="com.hk.web.action.admin.sku.SkuAction">
 					<s:hidden name="sku.id" value="${skuAction.sku.id}"/>
 					<tr>
 						<td>Product Variant:<span class='aster' title="this field is required">*</span></td>

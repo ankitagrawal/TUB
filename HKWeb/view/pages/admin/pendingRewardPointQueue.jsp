@@ -2,7 +2,7 @@
 <%@ page import="com.hk.dao.MasterDataDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.admin.PendingRewardPointQueueAction" event="pre" var="rpBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.user.PendingRewardPointQueueAction" event="pre" var="rpBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Pending Reward Points Queue">
 
@@ -11,7 +11,7 @@
     <fieldset class="top_label">
       <ul>
         <div class="grouped grid_12">
-          <s:form beanclass="com.hk.web.action.admin.PendingRewardPointQueueAction" method="get" autocomplete="false">
+          <s:form beanclass="com.hk.web.action.admin.user.PendingRewardPointQueueAction" method="get" autocomplete="false">
 
             <li><label style="float:left;">Reward Point Type </label>
 
@@ -38,7 +38,7 @@
 
     </fieldset>
 
-    <s:form beanclass="com.hk.web.action.admin.PendingRewardPointQueueAction">
+    <s:form beanclass="com.hk.web.action.admin.user.PendingRewardPointQueueAction">
 
       <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${rpBean}"/>
       <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${rpBean}"/>

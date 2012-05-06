@@ -13,11 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.manager.ProductManager;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.dao.BaseDao;
 import com.hk.dao.affiliate.AffiliateCategoryDao;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.affiliate.AffiliateCategory;

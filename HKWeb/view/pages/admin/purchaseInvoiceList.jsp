@@ -4,7 +4,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Purchase Invoice List">
-  <s:useActionBean beanclass="com.hk.web.action.admin.PurchaseInvoiceAction" var="pia"/>
+  <s:useActionBean beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction" var="pia"/>
   <s:layout-component name="htmlHead">
     <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
@@ -20,7 +20,7 @@
 
     <fieldset class="right_label">
       <legend>Search Purchase Invoice</legend>
-      <s:form beanclass="com.hk.web.action.admin.PurchaseInvoiceAction">
+      <s:form beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction">
         <label>Purchase Invoice ID:</label><s:text name="purchaseInvoice"/>
         <label>VariantID:</label><s:text name="productVariant"/>
         <label>Tin Number:</label><s:text name="tinNumber"/>
@@ -76,7 +76,7 @@
           <td>${purchaseInvoice.paymentDetails}</td>
           <td>
             <c:forEach var="grn" items="${purchaseInvoice.goodsReceivedNotes}">
-              <s:link beanclass="com.hk.web.action.admin.GRNAction" event="view" target="_blank">
+              <s:link beanclass="com.hk.web.action.admin.inventory.GRNAction" event="view" target="_blank">
                 <s:param name="grn" value="${grn.id}"/>
                 ${grn.id}
               </s:link>
@@ -89,7 +89,7 @@
             </c:forEach>
           </td>
           <td>
-            <s:link beanclass="com.hk.web.action.admin.PurchaseInvoiceAction" event="view" target="_blank">Edit/View
+            <s:link beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction" event="view" target="_blank">Edit/View
               <s:param name="purchaseInvoice" value="${purchaseInvoice.id}"/></s:link>
           </td>
         </tr>

@@ -1,11 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.admin.SupplierManagementAction" var="sma"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.catalog.SupplierManagementAction" var="sma"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Supplier List">
   <s:layout-component name="content">
 
-    <s:form beanclass="com.hk.web.action.admin.SupplierManagementAction">
-      <s:link beanclass="com.hk.web.action.admin.SupplierManagementAction" class="buttons"
+    <s:form beanclass="com.hk.web.action.admin.catalog.SupplierManagementAction">
+      <s:link beanclass="com.hk.web.action.admin.catalog.SupplierManagementAction" class="buttons"
               event="createOrEdit">Add New Supplier</s:link>
 
       <fieldset>
@@ -41,13 +41,13 @@
           <td>${supplier.contactPerson}</td>
           <td>${supplier.contactNumber}</td>
           <td>
-            <s:link beanclass="com.hk.web.action.admin.SupplierManagementAction" event="createOrEdit">Edit
+            <s:link beanclass="com.hk.web.action.admin.catalog.SupplierManagementAction" event="createOrEdit">Edit
               <s:param name="supplier" value="${supplier.id}"/></s:link>
             &nbsp;
             <s:link beanclass="com.hk.web.action.admin.CreatePurchaseOrderAction">Create PO
               <s:param name="supplier" value="${supplier.id}"/></s:link>
             &nbsp;
-            <s:link beanclass="com.hk.web.action.admin.DebitNoteAction" event="view">
+            <s:link beanclass="com.hk.web.action.admin.inventory.DebitNoteAction" event="view">
               Raise Debit Note
               <s:param name="supplier" value="${supplier.id}"/></s:link>
           </td>

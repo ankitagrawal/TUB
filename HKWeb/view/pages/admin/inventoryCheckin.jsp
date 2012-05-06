@@ -2,7 +2,7 @@
 <%@ page import="java.util.Date" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.admin.InventoryCheckinAction" var="ica"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction" var="ica"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Inventory Checkin">
   <s:layout-component name="htmlHead">
     <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
@@ -14,7 +14,7 @@
   <s:layout-component name="content">
     <div style="display:inline;float:left;">
       <h2>Item Checkin against GRN#${ica.grn.id}</h2>
-      <s:form beanclass="com.hk.web.action.admin.InventoryCheckinAction">
+      <s:form beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction">
         <s:hidden name="grn" value="${ica.grn.id}"/>
         <table border="1">
           <tr>
@@ -61,7 +61,7 @@
         <br/>
         <s:submit name="save" value="Save"/>
       </s:form>
-      <span style="display:inline;float:right;"><h2><s:link beanclass="com.hk.web.action.admin.GRNAction">&lang;&lang;&lang;
+      <span style="display:inline;float:right;"><h2><s:link beanclass="com.hk.web.action.admin.inventory.GRNAction">&lang;&lang;&lang;
         Back to GRN List</s:link></h2></span>
     </div>
     <div style="display:inline;" align="center">
@@ -94,7 +94,7 @@
       </table>
       <%--<hr/>
       <div style="display:inline;float:right; width:450px">
-        <s:form beanclass="com.hk.web.action.admin.InventoryCheckinAction">
+        <s:form beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction">
           <s:hidden name="grn" value="${actionBean.grn.id}"/>
           <s:submit name="generateGRNExcel" value="Download GRN"/>
         </s:form>
@@ -104,7 +104,7 @@
         <fieldset>
           <legend>Upload Excel to Checkin</legend>
           <br/>
-          <s:form beanclass="com.hk.web.action.admin.InventoryCheckinAction">
+          <s:form beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction">
             <h2>File to Upload: <s:file name="fileBean" size="30"/></h2>
             <s:hidden name="grn" value="${actionBean.grn.id}"/>
 

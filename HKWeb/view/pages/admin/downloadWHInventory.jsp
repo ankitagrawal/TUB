@@ -1,13 +1,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.admin.InventoryHealthStatusAction" var="excelBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.inventory.InventoryHealthStatusAction" var="excelBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp">
 
   <s:layout-component name="content">
 
     <%--<div style="display:inline;">
-      <s:form beanclass="com.hk.web.action.admin.InventoryHealthStatusAction">
+      <s:form beanclass="com.hk.web.action.admin.inventory.InventoryHealthStatusAction">
         <h2><label>Category:</label><s:text name="category" class="category"/></h2>
 
         <h2><label>Brand:</label><s:text name="brand" class="brand"/></h2>
@@ -19,7 +19,7 @@
     <br/>--%>
 
     <div style="display:inline;">
-      <s:form beanclass="com.hk.web.action.admin.InventoryHealthStatusAction">
+      <s:form beanclass="com.hk.web.action.admin.inventory.InventoryHealthStatusAction">
         <fieldset>
           <legend><h2>Download WH Inventory Excel</h2></legend>
           <br>

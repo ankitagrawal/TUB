@@ -45,13 +45,13 @@
               <tr>
                 <td>
                   <c:if test="${skuGroup.goodsReceivedNote != null}">
-                    <s:link beanclass="com.hk.web.action.admin.GRNAction" event="view" target="_blank">
+                    <s:link beanclass="com.hk.web.action.admin.inventory.GRNAction" event="view" target="_blank">
                       <s:param name="grn" value="${skuGroup.goodsReceivedNote.id}"/>
                       ${skuGroup.goodsReceivedNote.id}
                     </s:link>
                   </c:if>
                   <c:if test="${skuGroup.reconciliationVoucher != null}">
-                    <s:link beanclass="com.hk.web.action.admin.ReconciliationVoucherAction" event="view" target="_blank">
+                    <s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" event="view" target="_blank">
                       <s:param name="reconciliationVoucher" value="${skuGroup.reconciliationVoucher.id}"/>
                       ${skuGroup.reconciliationVoucher.id}
                     </s:link>
@@ -93,7 +93,7 @@
       </c:choose>
 
       <div align="right">
-        <s:link beanclass="com.hk.web.action.admin.SearchSkuBatchesAction" style="font-size:1.2em">
+        <s:link beanclass="com.hk.web.action.admin.sku.SearchSkuBatchesAction" style="font-size:1.2em">
           <-- Back to Search Sku Batches</s:link>
       </div>
       <br/>
@@ -124,13 +124,13 @@
               <tr>
                 <td>
                   <c:if test="${skuGroup.goodsReceivedNote != null}">
-                    <s:link beanclass="com.hk.web.action.admin.GRNAction" event="view" target="_blank">
+                    <s:link beanclass="com.hk.web.action.admin.inventory.GRNAction" event="view" target="_blank">
                       <s:param name="grn" value="${skuGroup.goodsReceivedNote.id}"/>
                       ${skuGroup.goodsReceivedNote.id}
                     </s:link>
                   </c:if>
                   <c:if test="${skuGroup.reconciliationVoucher != null}">
-                    <s:link beanclass="com.hk.web.action.admin.ReconciliationVoucherAction" event="view" target="_blank">
+                    <s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" event="view" target="_blank">
                       <s:param name="reconciliationVoucher" value="${skuGroup.reconciliationVoucher.id}"/>
                       ${skuGroup.reconciliationVoucher.id}
                     </s:link>

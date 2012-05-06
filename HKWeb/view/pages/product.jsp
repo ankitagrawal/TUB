@@ -155,7 +155,7 @@
         Edit Product Attributes
         <s:param name="product" value="${pa.product}"/>
       </s:link>
-      <s:link beanclass="com.hk.web.action.admin.SkuAction" event="searchSKUs" target="_blank" class="popup">
+      <s:link beanclass="com.hk.web.action.admin.sku.SkuAction" event="searchSKUs" target="_blank" class="popup">
         Edit Sku Attributes
         <s:param name="productId" value="${pa.product.id}"/>
       </s:link>

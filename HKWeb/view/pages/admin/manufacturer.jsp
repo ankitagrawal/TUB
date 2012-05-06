@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.admin.ManufacturerAction" var="ma"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.catalog.ManufacturerAction" var="ma"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Manufacturer List">
   <s:layout-component name="htmlHead">
@@ -28,7 +28,7 @@
   <s:layout-component name="content">
     <div style="text-align: center;"><h2>Manufacturer List</h2></div>
 
-    <p><s:link beanclass="com.hk.web.action.admin.ManufacturerAction"
+    <p><s:link beanclass="com.hk.web.action.admin.catalog.ManufacturerAction"
                event="createOrEditManufacturer" target="_blank">Add New Manufacturer</s:link></p>
 
     <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${ma}"/>
@@ -50,7 +50,7 @@
           <td>${manufacturerVar.description}<br/>
           <td>${manufacturerVar.email}</td>
           <td>
-            <s:link beanclass="com.hk.web.action.admin.ManufacturerAction" event="createOrEditManufacturer"
+            <s:link beanclass="com.hk.web.action.admin.catalog.ManufacturerAction" event="createOrEditManufacturer"
                     target="_blank">Edit
               <s:param name="manufacturer" value="${manufacturerVar.id}"/></s:link>
             &nbsp;

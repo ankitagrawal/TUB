@@ -2,7 +2,7 @@
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Upload Courier Collection">
   <s:layout-component name="content">
-    <s:form beanclass="com.hk.web.action.admin.ParseCourierCollectionChargeExcelAction">
+    <s:form beanclass="com.hk.web.action.admin.shipment.ParseCourierCollectionChargeExcelAction">
 	    <h2 style="color:red;">This is the actual courier collection charges excel upload. Please verify your excel before uploading.</h2> <br/><br/>
       <h2>File to Upload
         <s:file name="fileBean" size="30"/></h2>

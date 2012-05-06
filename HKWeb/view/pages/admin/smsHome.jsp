@@ -2,7 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="com.hk.web.action.admin.SMSHomeAction" var="smsHome" event="pre"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.email.SMSHomeAction" var="smsHome" event="pre"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="SMS Home">
 
@@ -10,7 +10,7 @@
 
   <s:layout-component name="content">
 
-    <s:form beanclass="com.hk.web.action.admin.SMSHomeAction" method="get" autocomplete="false">
+    <s:form beanclass="com.hk.web.action.admin.email.SMSHomeAction" method="get" autocomplete="false">
       <fieldset class="right_label" style="float:left;">
       <legend>Send SMS</legend>
       <ul>

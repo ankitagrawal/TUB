@@ -7,7 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.admin.GoogleBannedWordAction" var="googleBannedWordReportBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.marketing.GoogleBannedWordAction" var="googleBannedWordReportBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Google Banned Word Report">
     <div align="center">

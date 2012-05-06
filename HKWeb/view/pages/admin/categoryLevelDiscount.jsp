@@ -2,13 +2,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp">
-  <s:useActionBean beanclass="com.hk.web.action.CategoryLevelDiscountAction" var="categoryCommission"/>
+  <s:useActionBean beanclass="com.hk.web.action.core.discount.CategoryLevelDiscountAction" var="categoryCommission"/>
   <s:layout-component name="htmlHead">
   </s:layout-component>
 
   <s:layout-component name="content">
 
-    <s:form beanclass="com.hk.web.action.CategoryLevelDiscountAction">
+    <s:form beanclass="com.hk.web.action.core.discount.CategoryLevelDiscountAction">
       <s:errors/>
       <table>
         <thead>
@@ -47,7 +47,7 @@
       <div class="buttons"><s:submit name="deleteExisting" value="Delete"/></div>
     </s:form>
 
-    <s:form beanclass="com.hk.web.action.CategoryLevelDiscountAction">
+    <s:form beanclass="com.hk.web.action.core.discount.CategoryLevelDiscountAction">
       <br><br><br><br>
       <fieldset style="float:left;">
         <legend>Add New Category</legend>

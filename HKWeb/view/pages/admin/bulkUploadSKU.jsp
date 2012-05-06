@@ -1,7 +1,7 @@
 <%@ taglib prefix="s" uri="http://stripes.sourceforge.net/stripes-dynattr.tld" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.admin.SkuParseExcelAction" var="skuExcelBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.sku.SkuParseExcelAction" var="skuExcelBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Upload SKU Excel">
 
@@ -12,7 +12,7 @@
         <h1> Download SKU Excel </h1>
       </legend>
       <br>
-      <s:form beanclass="com.hk.web.action.admin.SkuParseExcelAction">
+      <s:form beanclass="com.hk.web.action.admin.sku.SkuParseExcelAction">
         <label>Category :</label><s:text name="category" size="30"/>
         <label>Brand :</label><s:text name="brand" size="30"/>
         <s:submit name="generateSkuExcel" value="Download Excel"/>
@@ -25,7 +25,7 @@
         <h1> Upload SKUs by Excel </h1>
       </legend>
       <br>
-      <s:form beanclass="com.hk.web.action.admin.SkuParseExcelAction">
+      <s:form beanclass="com.hk.web.action.admin.sku.SkuParseExcelAction">
         <label>File to Upload:</label><s:file name="fileBean" size="30"/>
         <br>
         <label>Category to Upload:</label><s:text name="category" size="30"/>

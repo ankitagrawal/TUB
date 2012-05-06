@@ -7,7 +7,7 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.admin.GRNAction" var="pa"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.inventory.GRNAction" var="pa"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="GRN">
 <%
     WarehouseDao warehouseDao = InjectorFactory.getInjector().getInstance(WarehouseDao.class);
@@ -176,7 +176,7 @@
 		<s:link beanclass="com.hk.web.action.admin.EditPurchaseOrderAction" id="pvInfoLink" event="getPVDetails"></s:link>
 	</div>
 
-	<s:form beanclass="com.hk.web.action.admin.GRNAction">
+	<s:form beanclass="com.hk.web.action.admin.inventory.GRNAction">
 		<s:hidden name="grn" value="${pa.grn.id}"/>
 		<table>
 			<tr>
