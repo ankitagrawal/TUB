@@ -4,7 +4,9 @@ package com.hk.db.seed.reward;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hk.constants.review.EnumReviewStatus;
 import com.hk.db.seed.BaseSeedData;
+import com.hk.domain.userReview.ReviewStatus;
 
 
 public class ReviewStatusSeedData  extends BaseSeedData {
@@ -14,7 +16,7 @@ public class ReviewStatusSeedData  extends BaseSeedData {
     ReviewStatus reviewStatus = new ReviewStatus();
     reviewStatus.setName(name);
     reviewStatus.setId(id);
-    reviewStatusDao.save(reviewStatus);
+    save(reviewStatus);
   }
 
   public void invokeInsert() {

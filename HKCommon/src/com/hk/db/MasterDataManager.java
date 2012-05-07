@@ -1,9 +1,42 @@
 package com.hk.db;
 
-import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
-import com.google.inject.Inject;
-import db.seed.master.*;
+import org.slf4j.LoggerFactory;
+
+import com.hk.db.seed.catalog.ProductVariantPaymentTypeSeedData;
+import com.hk.db.seed.catalog.ProductVariantServiceTypeSeedData;
+import com.hk.db.seed.core.AffiliateTxnTypeSeedData;
+import com.hk.db.seed.core.CancellationTypeSeedData;
+import com.hk.db.seed.core.PermissionSeedData;
+import com.hk.db.seed.core.RoleHasPermissionSeedData;
+import com.hk.db.seed.core.RoleSeedData;
+import com.hk.db.seed.core.SurchargeSeedData;
+import com.hk.db.seed.core.TaxSeedData;
+import com.hk.db.seed.courier.BoxSizeSeedData;
+import com.hk.db.seed.courier.CourierSeedData;
+import com.hk.db.seed.email.EmailTypeSeedData;
+import com.hk.db.seed.inventory.DebitNoteStatusSeedData;
+import com.hk.db.seed.inventory.GrnStatusSeedData;
+import com.hk.db.seed.inventory.InvTxnTypeSeedData;
+import com.hk.db.seed.inventory.PurchaseInvoiceStatusSeedData;
+import com.hk.db.seed.inventory.PurchaseOrderStatusSeedData;
+import com.hk.db.seed.inventory.ReconciliationStatusSeedData;
+import com.hk.db.seed.inventory.ReconciliationTypeSeedData;
+import com.hk.db.seed.marketing.AdNetworksSeedData;
+import com.hk.db.seed.marketing.GoogleBannedWordSeedData;
+import com.hk.db.seed.order.CartLineItemTypeSeedData;
+import com.hk.db.seed.order.OrderLifecycleActivitySeedData;
+import com.hk.db.seed.order.OrderStatusSeedData;
+import com.hk.db.seed.order.ShippingOrderLifecycleActivitySeedData;
+import com.hk.db.seed.order.ShippingOrderStatusSeedData;
+import com.hk.db.seed.payment.PaymentModeSeedData;
+import com.hk.db.seed.payment.PaymentStatusSeedData;
+import com.hk.db.seed.reward.ReviewStatusSeedData;
+import com.hk.db.seed.reward.RewardPointModeSeedData;
+import com.hk.db.seed.reward.RewardPointStatusSeedData;
+import com.hk.db.seed.reward.RewardPointTxnTypeSeedData;
+import com.hk.db.seed.ticket.TicketStatusSeedData;
+import com.hk.db.seed.ticket.TicketTypeSeedData;
 
 /**
  * Author: Kani
@@ -12,42 +45,42 @@ import db.seed.master.*;
 public class MasterDataManager {
   private static Logger logger = LoggerFactory.getLogger(MasterDataManager.class);
 
-  @Inject RoleSeedData roleSeedData;
-  @Inject PermissionSeedData permissionSeedData;
-  @Inject RoleHasPermissionSeedData roleHasPermissionSeedData;
-  @Inject CourierSeedData courierSeedData;
- /* @Inject CartLineItemTypeSeedData lineItemStatusSeedData;*/
-  @Inject
+   RoleSeedData roleSeedData;
+   PermissionSeedData permissionSeedData;
+   RoleHasPermissionSeedData roleHasPermissionSeedData;
+   CourierSeedData courierSeedData;
+ /*  CartLineItemTypeSeedData lineItemStatusSeedData;*/
+  
   CartLineItemTypeSeedData cartLineItemTypeSeedData;
-  @Inject OrderStatusSeedData orderStatusSeedData;
-  @Inject ShippingOrderStatusSeedData shippingOrderStatusSeedData;
-  @Inject PaymentModeSeedData paymentModeSeedData;
-  @Inject PaymentStatusSeedData paymentStatusSeedData;
-  @Inject TaxSeedData taxSeedData;
-  @Inject RewardPointStatusSeedData rewardPointStatusSeedData;
-  @Inject RewardPointTxnTypeSeedData rewardPointTxnTypeSeedData;
-  @Inject EmailTypeSeedData emailTypeSeedData;
-  @Inject TicketTypeSeedData ticketTypeSeedData;
-  @Inject TicketStatusSeedData ticketStatusSeedData;
-  @Inject ReconciliationStatusSeedData reconciliationStatusSeedData;
-  @Inject CancellationTypeSeedData cancellationTypeSeedData;
-  @Inject AffiliateTxnTypeSeedData affiliateTxnTypeSeedData;
-  @Inject OrderLifecycleActivitySeedData orderLifecycleActivitySeedData;
-  @Inject ShippingOrderLifecycleActivitySeedData shippingOrderLifecycleActivitySeedData;
-  @Inject BoxSizeSeedData boxSizeSeedData;
-  @Inject PurchaseOrderStatusSeedData poStatusSeedData;
-  @Inject RewardPointModeSeedData rewardPointModeSeedData;
-  @Inject ProductVariantServiceTypeSeedData productVariantServiceTypeSeedData;
-  @Inject ProductVariantPaymentTypeSeedData productVariantPaymentTypeSeedData;
-  @Inject GrnStatusSeedData grnStatusSeedData;
-  @Inject InvTxnTypeSeedData invTxnTypeSeedData;
-  @Inject GoogleBannedWordSeedData googleBannedWordSeedData;
-  @Inject DebitNoteStatusSeedData debitNoteStatusSeedData;
-	@Inject PurchaseInvoiceStatusSeedData purchaseInvoiceStatusSeedData;
-	@Inject SurchargeSeedData surchargeSeedData;
-	@Inject AdNetworksSeedData adNetworksSeedData;
-	@Inject ReconciliationTypeSeedData reconciliationTypeSeedData;
-	@Inject ReviewStatusSeedData reviewStatusSeedData;
+   OrderStatusSeedData orderStatusSeedData;
+   ShippingOrderStatusSeedData shippingOrderStatusSeedData;
+   PaymentModeSeedData paymentModeSeedData;
+   PaymentStatusSeedData paymentStatusSeedData;
+   TaxSeedData taxSeedData;
+   RewardPointStatusSeedData rewardPointStatusSeedData;
+   RewardPointTxnTypeSeedData rewardPointTxnTypeSeedData;
+   EmailTypeSeedData emailTypeSeedData;
+   TicketTypeSeedData ticketTypeSeedData;
+   TicketStatusSeedData ticketStatusSeedData;
+   ReconciliationStatusSeedData reconciliationStatusSeedData;
+   CancellationTypeSeedData cancellationTypeSeedData;
+   AffiliateTxnTypeSeedData affiliateTxnTypeSeedData;
+   OrderLifecycleActivitySeedData orderLifecycleActivitySeedData;
+   ShippingOrderLifecycleActivitySeedData shippingOrderLifecycleActivitySeedData;
+   BoxSizeSeedData boxSizeSeedData;
+   PurchaseOrderStatusSeedData poStatusSeedData;
+   RewardPointModeSeedData rewardPointModeSeedData;
+   ProductVariantServiceTypeSeedData productVariantServiceTypeSeedData;
+   ProductVariantPaymentTypeSeedData productVariantPaymentTypeSeedData;
+   GrnStatusSeedData grnStatusSeedData;
+   InvTxnTypeSeedData invTxnTypeSeedData;
+   GoogleBannedWordSeedData googleBannedWordSeedData;
+   DebitNoteStatusSeedData debitNoteStatusSeedData;
+	 PurchaseInvoiceStatusSeedData purchaseInvoiceStatusSeedData;
+	 SurchargeSeedData surchargeSeedData;
+	 AdNetworksSeedData adNetworksSeedData;
+	 ReconciliationTypeSeedData reconciliationTypeSeedData;
+	 ReviewStatusSeedData reviewStatusSeedData;
 
   public void insert() {
 

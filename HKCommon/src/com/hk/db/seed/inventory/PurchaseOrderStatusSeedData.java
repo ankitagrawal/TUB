@@ -1,40 +1,33 @@
-package db.seed.master;
+package com.hk.db.seed.inventory;
 
-
-import com.google.inject.Inject;
-import mhc.domain.PurchaseOrderStatus;
-import mhc.service.dao.PurchaseOrderStatusDao;
-import mhc.common.constants.EnumPurchaseOrderStatus;
-
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Generated
- */
-@SuppressWarnings({"InjectOfNonPublicMember"})
-public class PurchaseOrderStatusSeedData {
+import com.hk.constants.inventory.EnumPurchaseOrderStatus;
+import com.hk.db.seed.BaseSeedData;
+import com.hk.domain.core.PurchaseOrderStatus;
 
-  @Inject
-  PurchaseOrderStatusDao purchaseOrderStatusDao;
+public class PurchaseOrderStatusSeedData extends BaseSeedData {
 
-  public void insert(java.lang.String name, java.lang.Long id) {
-    PurchaseOrderStatus purchaseOrderStatus = new PurchaseOrderStatus();
-      purchaseOrderStatus.setName(name);
-      purchaseOrderStatus.setId(id);
-    purchaseOrderStatusDao.save(purchaseOrderStatus);
-  }
-
-  public void invokeInsert(){
-    List<Long> pkList = new ArrayList<Long>();
-
-    for (EnumPurchaseOrderStatus enumPOStatus : EnumPurchaseOrderStatus.values()) {
-
-      if (pkList.contains(enumPOStatus.getId())) throw new RuntimeException("Duplicate key "+ enumPOStatus.getId());
-      else pkList.add(enumPOStatus.getId());
-
-      insert(enumPOStatus.getName(), enumPOStatus.getId());
+    public void insert(java.lang.String name, java.lang.Long id) {
+        PurchaseOrderStatus purchaseOrderStatus = new PurchaseOrderStatus();
+        purchaseOrderStatus.setName(name);
+        purchaseOrderStatus.setId(id);
+        save(purchaseOrderStatus);
     }
-  }
+
+    public void invokeInsert() {
+        List<Long> pkList = new ArrayList<Long>();
+
+        for (EnumPurchaseOrderStatus enumPOStatus : EnumPurchaseOrderStatus.values()) {
+
+            if (pkList.contains(enumPOStatus.getId()))
+                throw new RuntimeException("Duplicate key " + enumPOStatus.getId());
+            else
+                pkList.add(enumPOStatus.getId());
+
+            insert(enumPOStatus.getName(), enumPOStatus.getId());
+        }
+    }
 
 }

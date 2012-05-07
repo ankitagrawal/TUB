@@ -1,29 +1,27 @@
-package db.seed.master;
+package com.hk.db.seed.core;
 
-import mhc.domain.AffiliateTxnType;
-import mhc.service.dao.AffiliateTxnTypeDao;
-import mhc.common.constants.EnumAffiliateTxnType;
-import com.google.inject.Inject;
+import com.hk.constants.EnumAffiliateTxnType;
+import com.hk.db.seed.BaseSeedData;
+import com.hk.domain.affiliate.AffiliateTxnType;
 
-public class AffiliateTxnTypeSeedData {
-  @Inject
-  AffiliateTxnTypeDao affiliateTxnTypeDao;
-  public void insert(Long id,java.lang.String name) {
-    AffiliateTxnType affiliateTxnType = new AffiliateTxnType();
-    affiliateTxnType.setId(id);
-    affiliateTxnType.setName(name);
-    affiliateTxnTypeDao.save(affiliateTxnType);
-  }
+public class AffiliateTxnTypeSeedData extends BaseSeedData {
 
-  public void invokeInsert() {
-    for (EnumAffiliateTxnType enumAffiliateTxnType : EnumAffiliateTxnType.values()) {
-      AffiliateTxnType affiliateTxnType = affiliateTxnTypeDao.find(enumAffiliateTxnType.getId());
-      if (affiliateTxnType == null) {
-        insert(enumAffiliateTxnType.getId(),enumAffiliateTxnType.getName());
-      } else {
-        affiliateTxnType.setName(enumAffiliateTxnType.getName());
-        affiliateTxnTypeDao.save(affiliateTxnType);
-      }
+    public void insert(Long id, java.lang.String name) {
+        AffiliateTxnType affiliateTxnType = new AffiliateTxnType();
+        affiliateTxnType.setId(id);
+        affiliateTxnType.setName(name);
+        save(affiliateTxnType);
     }
-  }
+
+    public void invokeInsert() {
+        for (EnumAffiliateTxnType enumAffiliateTxnType : EnumAffiliateTxnType.values()) {
+            AffiliateTxnType affiliateTxnType = getBaseDao().get(AffiliateTxnType.class, enumAffiliateTxnType.getId());
+            if (affiliateTxnType == null) {
+                insert(enumAffiliateTxnType.getId(), enumAffiliateTxnType.getName());
+            } else {
+                affiliateTxnType.setName(enumAffiliateTxnType.getName());
+                save(affiliateTxnType);
+            }
+        }
+    }
 }

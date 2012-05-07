@@ -1,40 +1,33 @@
-package db.seed.master;
+package com.hk.db.seed.inventory;
 
-
-import com.google.inject.Inject;
-import mhc.common.constants.EnumGrnStatus;
-import mhc.domain.GrnStatus;
-import mhc.service.dao.GrnStatusDao;
-
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Generated
- */
-@SuppressWarnings({"InjectOfNonPublicMember"})
-public class GrnStatusSeedData {
+import com.hk.constants.inventory.EnumGrnStatus;
+import com.hk.db.seed.BaseSeedData;
+import com.hk.domain.inventory.GrnStatus;
 
-  @Inject
-  GrnStatusDao grnStatusDao;
+public class GrnStatusSeedData extends BaseSeedData {
 
-  public void insert(java.lang.String name, java.lang.Long id) {
-    GrnStatus grnStatus = new GrnStatus();
-    grnStatus.setName(name);
-    grnStatus.setId(id);
-    grnStatusDao.save(grnStatus);
-  }
-
-  public void invokeInsert() {
-    List<Long> pkList = new ArrayList<Long>();
-
-    for (EnumGrnStatus enumGrnStatus : EnumGrnStatus.values()) {
-
-      if (pkList.contains(enumGrnStatus.getId())) throw new RuntimeException("Duplicate key " + enumGrnStatus.getId());
-      else pkList.add(enumGrnStatus.getId());
-
-      insert(enumGrnStatus.getName(), enumGrnStatus.getId());
+    public void insert(java.lang.String name, java.lang.Long id) {
+        GrnStatus grnStatus = new GrnStatus();
+        grnStatus.setName(name);
+        grnStatus.setId(id);
+        save(grnStatus);
     }
-  }
+
+    public void invokeInsert() {
+        List<Long> pkList = new ArrayList<Long>();
+
+        for (EnumGrnStatus enumGrnStatus : EnumGrnStatus.values()) {
+
+            if (pkList.contains(enumGrnStatus.getId()))
+                throw new RuntimeException("Duplicate key " + enumGrnStatus.getId());
+            else
+                pkList.add(enumGrnStatus.getId());
+
+            insert(enumGrnStatus.getName(), enumGrnStatus.getId());
+        }
+    }
 
 }

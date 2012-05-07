@@ -1,39 +1,36 @@
-package db.seed.master;
+package com.hk.db.seed.courier;
 
-
-import com.google.inject.Inject;
-import mhc.common.constants.EnumBoxSize;
-import mhc.domain.BoxSize;
-import mhc.service.dao.BoxSizeDao;
-
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+
+import com.hk.constants.shipment.EnumBoxSize;
+import com.hk.db.seed.BaseSeedData;
+import com.hk.domain.courier.BoxSize;
 
 /**
  * Generated
  */
-@SuppressWarnings({"InjectOfNonPublicMember"})
-public class BoxSizeSeedData {
+public class BoxSizeSeedData extends BaseSeedData {
 
-  @Inject BoxSizeDao boxSizeDao;
-
-  public void insert(String name, Long id) {
-    BoxSize boxSize = new BoxSize();
-    boxSize.setName(name);
-    boxSize.setId(id);
-    boxSizeDao.save(boxSize);
-  }
-
-  public void invokeInsert() {
-    List<Long> pkList = new ArrayList<Long>();
-
-    for (EnumBoxSize enumBoxSize : EnumBoxSize.values()) {
-
-      if (pkList.contains(enumBoxSize.getId())) throw new RuntimeException("Duplicate key " + enumBoxSize.getId());
-      else pkList.add(enumBoxSize.getId());
-
-      insert(enumBoxSize.getName(), enumBoxSize.getId());
+    public void insert(String name, Long id) {
+        BoxSize boxSize = new BoxSize();
+        boxSize.setName(name);
+        boxSize.setId(id);
+        save(boxSize);
     }
-  }
+
+    public void invokeInsert() {
+        List<Long> pkList = new ArrayList<Long>();
+
+        for (EnumBoxSize enumBoxSize : EnumBoxSize.values()) {
+
+            if (pkList.contains(enumBoxSize.getId()))
+                throw new RuntimeException("Duplicate key " + enumBoxSize.getId());
+            else
+                pkList.add(enumBoxSize.getId());
+
+            insert(enumBoxSize.getName(), enumBoxSize.getId());
+        }
+    }
 
 }

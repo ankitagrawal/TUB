@@ -1,39 +1,33 @@
-package db.seed.master;
+package com.hk.db.seed.reward;
 
-
-import com.google.inject.Inject;
-import mhc.common.constants.EnumRewardPointTxnType;
-import mhc.domain.RewardPointTxnType;
-import mhc.service.dao.RewardPointTxnTypeDao;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Generated
- */
-@SuppressWarnings({"InjectOfNonPublicMember"})
-public class RewardPointTxnTypeSeedData {
+import com.hk.constants.discount.EnumRewardPointTxnType;
+import com.hk.db.seed.BaseSeedData;
+import com.hk.domain.offer.rewardPoint.RewardPointTxnType;
 
-  @Inject
-  RewardPointTxnTypeDao rewardPointTxnTypeDao;
+public class RewardPointTxnTypeSeedData extends BaseSeedData {
 
-  public void insert(java.lang.String name, java.lang.Long id) {
-    RewardPointTxnType rewardPointTxnType = new RewardPointTxnType();
-      rewardPointTxnType.setName(name);
-      rewardPointTxnType.setId(id);
-    rewardPointTxnTypeDao.save(rewardPointTxnType);
-  }
-
-  public void invokeInsert(){
-    List<Long> pkList = new ArrayList<Long>();
-
-    for (EnumRewardPointTxnType enumRewardPointTxnType : EnumRewardPointTxnType.values()) {
-
-      if (pkList.contains(enumRewardPointTxnType.getId())) throw new RuntimeException("Duplicate key "+enumRewardPointTxnType.getId());
-      else pkList.add(enumRewardPointTxnType.getId());
-
-      insert(enumRewardPointTxnType.getName(), enumRewardPointTxnType.getId());
+    public void insert(java.lang.String name, java.lang.Long id) {
+        RewardPointTxnType rewardPointTxnType = new RewardPointTxnType();
+        rewardPointTxnType.setName(name);
+        rewardPointTxnType.setId(id);
+        save(rewardPointTxnType);
     }
-  }
+
+    public void invokeInsert() {
+        List<Long> pkList = new ArrayList<Long>();
+
+        for (EnumRewardPointTxnType enumRewardPointTxnType : EnumRewardPointTxnType.values()) {
+
+            if (pkList.contains(enumRewardPointTxnType.getId()))
+                throw new RuntimeException("Duplicate key " + enumRewardPointTxnType.getId());
+            else
+                pkList.add(enumRewardPointTxnType.getId());
+
+            insert(enumRewardPointTxnType.getName(), enumRewardPointTxnType.getId());
+        }
+    }
 
 }

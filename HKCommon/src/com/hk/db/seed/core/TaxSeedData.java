@@ -1,34 +1,29 @@
-package db.seed.master;
+package com.hk.db.seed.core;
 
-import com.google.inject.Inject;
-import mhc.service.dao.TaxDao;
-import mhc.domain.Courier;
-import mhc.domain.Tax;
-import mhc.common.constants.EnumCourier;
-import mhc.common.constants.EnumTax;
+import com.hk.constants.core.EnumTax;
+import com.hk.db.seed.BaseSeedData;
+import com.hk.domain.core.Tax;
 
-public class TaxSeedData {
+public class TaxSeedData extends BaseSeedData {
 
-  @Inject TaxDao taxDao;
-
-  public void insert(java.lang.String name, java.lang.Double value) {
-    Tax tax = new Tax();
-    tax.setName(name);
-    tax.setValue(value);
-    taxDao.save(tax);
-  }
-
-  public void invokeInsert() {
-    for (EnumTax enumTax : EnumTax.values()) {
-
-      Tax tax = taxDao.findByName(enumTax.getName());
-      if (tax == null) {
-        insert(enumTax.getName(), enumTax.getValue());
-      } else {
-        tax.setValue(enumTax.getValue());
-        taxDao.save(tax);
-      }
+    public void insert(java.lang.String name, java.lang.Double value) {
+        Tax tax = new Tax();
+        tax.setName(name);
+        tax.setValue(value);
+        save(tax);
     }
-  }
+
+    public void invokeInsert() {
+        for (EnumTax enumTax : EnumTax.values()) {
+
+            Tax tax = getBaseDao().get(Tax.class, enumTax.getName());
+            if (tax == null) {
+                insert(enumTax.getName(), enumTax.getValue());
+            } else {
+                tax.setValue(enumTax.getValue());
+                save(tax);
+            }
+        }
+    }
 
 }

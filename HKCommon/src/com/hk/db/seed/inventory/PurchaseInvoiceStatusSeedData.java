@@ -1,29 +1,23 @@
 
-package db.seed.master;
+package com.hk.db.seed.inventory;
 
-
-import com.google.inject.Inject;
-import mhc.common.constants.EnumPurchaseInvoiceStatus;
-import mhc.domain.PurchaseInvoiceStatus;
-import mhc.service.dao.PurchaseInvoiceStatusDao;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Generated
- */
-@SuppressWarnings({"InjectOfNonPublicMember"})
-public class PurchaseInvoiceStatusSeedData {
+import com.hk.constants.inventory.EnumPurchaseInvoiceStatus;
+import com.hk.db.seed.BaseSeedData;
+import com.hk.domain.inventory.po.PurchaseInvoiceStatus;
 
-  @Inject
-  PurchaseInvoiceStatusDao purchaseInvoiceStatusDao;
+
+public class PurchaseInvoiceStatusSeedData extends BaseSeedData {
+
 
   public void insert(java.lang.String name, java.lang.Long id) {
     PurchaseInvoiceStatus purchaseInvoiceStatus = new PurchaseInvoiceStatus();
     purchaseInvoiceStatus.setName(name);
     purchaseInvoiceStatus.setId(id);
-    purchaseInvoiceStatusDao.save(purchaseInvoiceStatus);
+    save(purchaseInvoiceStatus);
   }
 
   public void invokeInsert() {

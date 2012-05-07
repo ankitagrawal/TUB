@@ -1,39 +1,34 @@
-package db.seed.master;
+package com.hk.db.seed.core;
 
-
-import com.google.inject.Inject;
-import mhc.common.constants.EnumCancellationType;
-import mhc.domain.CancellationType;
-import mhc.service.dao.CancellationTypeDao;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Generated
- */
-@SuppressWarnings({"InjectOfNonPublicMember"})
-public class CancellationTypeSeedData {
+import com.hk.constants.core.EnumCancellationType;
+import com.hk.db.seed.BaseSeedData;
+import com.hk.domain.core.CancellationType;
 
-  @Inject
-  CancellationTypeDao cancellationTypeDao;
 
-  public void insert(java.lang.String name, java.lang.Long id) {
-    CancellationType cancellationType = new CancellationType();
-      cancellationType.setName(name);
-      cancellationType.setId(id);
-    cancellationTypeDao.save(cancellationType);
-  }
+public class CancellationTypeSeedData extends BaseSeedData {
 
-  public void invokeInsert(){
-    List<Long> pkList = new ArrayList<Long>();
-
-    for (EnumCancellationType enumCancellationType : EnumCancellationType.values()) {
-
-      if (pkList.contains(enumCancellationType.getId())) throw new RuntimeException("Duplicate key "+enumCancellationType.getId());
-      else pkList.add(enumCancellationType.getId());
-
-      insert(enumCancellationType.getName(), enumCancellationType.getId());
+    public void insert(java.lang.String name, java.lang.Long id) {
+        CancellationType cancellationType = new CancellationType();
+        cancellationType.setName(name);
+        cancellationType.setId(id);
+        save(cancellationType);
     }
-  }
+
+    public void invokeInsert() {
+        List<Long> pkList = new ArrayList<Long>();
+
+        for (EnumCancellationType enumCancellationType : EnumCancellationType.values()) {
+
+            if (pkList.contains(enumCancellationType.getId()))
+                throw new RuntimeException("Duplicate key " + enumCancellationType.getId());
+            else
+                pkList.add(enumCancellationType.getId());
+
+            insert(enumCancellationType.getName(), enumCancellationType.getId());
+        }
+    }
 
 }

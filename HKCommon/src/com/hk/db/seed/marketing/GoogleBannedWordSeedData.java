@@ -1,40 +1,34 @@
-package db.seed.master;
+package com.hk.db.seed.marketing;
 
-
-import com.google.inject.Inject;
-import mhc.common.constants.EnumGoogleBannedWord;
-import mhc.domain.GoogleBannedWord;
-import mhc.service.dao.GoogleBannedWordDao;
-
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Generated
- */
-@SuppressWarnings({"InjectOfNonPublicMember"})
-public class GoogleBannedWordSeedData {
+import com.hk.constants.marketing.EnumGoogleBannedWord;
+import com.hk.db.seed.BaseSeedData;
+import com.hk.domain.marketing.GoogleBannedWord;
 
-  @Inject
-  GoogleBannedWordDao googleBannedWordDao;
 
-  public void insert(java.lang.String bannedWords, java.lang.Long id) {
-    GoogleBannedWord googleBannedWord = new GoogleBannedWord();
-      googleBannedWord.setBannedWord(bannedWords);
-      googleBannedWord.setId(id);
-    googleBannedWordDao.save(googleBannedWord);
-  }
+public class GoogleBannedWordSeedData extends BaseSeedData {
 
-  public void invokeInsert(){
-    List<Long> pkList = new ArrayList<Long>();
-
-    for (EnumGoogleBannedWord enumGoogleBannedWord : EnumGoogleBannedWord.values()) {
-
-      if (pkList.contains(enumGoogleBannedWord.getId())) throw new RuntimeException("Duplicate key "+ enumGoogleBannedWord.getId());
-      else pkList.add(enumGoogleBannedWord.getId());
-
-      insert(enumGoogleBannedWord.getBannedWord(), enumGoogleBannedWord.getId());
+    public void insert(java.lang.String bannedWords, java.lang.Long id) {
+        GoogleBannedWord googleBannedWord = new GoogleBannedWord();
+        googleBannedWord.setBannedWord(bannedWords);
+        googleBannedWord.setId(id);
+        save(googleBannedWord);
     }
-  }
+
+    public void invokeInsert() {
+        List<Long> pkList = new ArrayList<Long>();
+
+        for (EnumGoogleBannedWord enumGoogleBannedWord : EnumGoogleBannedWord.values()) {
+
+            if (pkList.contains(enumGoogleBannedWord.getId()))
+                throw new RuntimeException("Duplicate key " + enumGoogleBannedWord.getId());
+            else
+                pkList.add(enumGoogleBannedWord.getId());
+
+            insert(enumGoogleBannedWord.getBannedWord(), enumGoogleBannedWord.getId());
+        }
+    }
 
 }

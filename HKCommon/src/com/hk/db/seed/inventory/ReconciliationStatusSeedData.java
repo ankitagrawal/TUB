@@ -1,47 +1,39 @@
-package db.seed.master;
-
-import com.google.inject.Inject;
-import mhc.common.constants.EnumReconciliationStatus;
-import mhc.common.constants.EnumTicketStatus;
-import mhc.domain.ReconciliationStatus;
-import mhc.domain.TicketStatus;
-import mhc.service.dao.ReconciliationStatusDao;
-import mhc.service.dao.TicketStatusDao;
+package com.hk.db.seed.inventory;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hk.constants.inventory.EnumReconciliationStatus;
+import com.hk.db.seed.BaseSeedData;
+import com.hk.domain.inventory.rv.ReconciliationStatus;
+
 /**
- * Created by IntelliJ IDEA.
- * User: Pratham
- * Date: Jul 5, 2011
- * Time: 2:00:18 PM
- * To change this template use File | Settings | File Templates.
+ * Created by IntelliJ IDEA. User: Pratham Date: Jul 5, 2011 Time: 2:00:18 PM To change this template use File |
+ * Settings | File Templates.
  */
 
-@SuppressWarnings({"InjectOfNonPublicMember"})
-public class ReconciliationStatusSeedData {
+public class ReconciliationStatusSeedData extends BaseSeedData {
 
-  @Inject
-  ReconciliationStatusDao reconciliationStatusDao;
 
-  public void insert(java.lang.String name, java.lang.Long id) {
-    ReconciliationStatus reconciliationStatus = new ReconciliationStatus();
-      reconciliationStatus.setName(name);
-      reconciliationStatus.setId(id);
-    reconciliationStatusDao.save(reconciliationStatus);
-  }
-
-  public void invokeInsert(){
-    List<Long> pkList = new ArrayList<Long>();
-
-    for (EnumReconciliationStatus enumReconciliationStatus : EnumReconciliationStatus.values()) {
-
-      if (pkList.contains(enumReconciliationStatus.getId())) throw new RuntimeException("Duplicate key "+enumReconciliationStatus.getId());
-      else pkList.add(enumReconciliationStatus.getId());
-
-      insert(enumReconciliationStatus.getName(), enumReconciliationStatus.getId());
+    public void insert(java.lang.String name, java.lang.Long id) {
+        ReconciliationStatus reconciliationStatus = new ReconciliationStatus();
+        reconciliationStatus.setName(name);
+        reconciliationStatus.setId(id);
+        save(reconciliationStatus);
     }
-  }
+
+    public void invokeInsert() {
+        List<Long> pkList = new ArrayList<Long>();
+
+        for (EnumReconciliationStatus enumReconciliationStatus : EnumReconciliationStatus.values()) {
+
+            if (pkList.contains(enumReconciliationStatus.getId()))
+                throw new RuntimeException("Duplicate key " + enumReconciliationStatus.getId());
+            else
+                pkList.add(enumReconciliationStatus.getId());
+
+            insert(enumReconciliationStatus.getName(), enumReconciliationStatus.getId());
+        }
+    }
 
 }

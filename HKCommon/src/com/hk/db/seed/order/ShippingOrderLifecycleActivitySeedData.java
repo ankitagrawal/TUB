@@ -1,44 +1,33 @@
-package db.seed.master;
+package com.hk.db.seed.order;
 
-
-import com.google.inject.Inject;
-import mhc.common.constants.order.EnumOrderLifecycleActivity;
-import mhc.common.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
-import mhc.domain.OrderLifecycleActivity;
-import mhc.domain.order.ShippingOrderLifeCycleActivity;
-import mhc.service.dao.order.OrderLifecycleActivityDao;
-import mhc.service.dao.shippingOrder.ShippingOrderLifeCycleActivityDao;
-
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Generated
- */
-@SuppressWarnings({"InjectOfNonPublicMember"})
-public class ShippingOrderLifecycleActivitySeedData {
+import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
+import com.hk.db.seed.BaseSeedData;
+import com.hk.domain.order.ShippingOrderLifeCycleActivity;
 
-  @Inject
-  ShippingOrderLifeCycleActivityDao shippingOrderLifeCycleActivityDao;
+public class ShippingOrderLifecycleActivitySeedData extends BaseSeedData {
 
-  public void insert(String name, Long id) {
-    ShippingOrderLifeCycleActivity shippingOrderLifeCycleActivity = new ShippingOrderLifeCycleActivity();
-    shippingOrderLifeCycleActivity.setName(name);
-    shippingOrderLifeCycleActivity.setId(id);
-    shippingOrderLifeCycleActivityDao.save(shippingOrderLifeCycleActivity);
-  }
-
-  public void invokeInsert() {
-    List<Long> pkList = new ArrayList<Long>();
-
-    for (EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity : EnumShippingOrderLifecycleActivity.values()) {
-
-      if (pkList.contains(enumShippingOrderLifecycleActivity.getId()))
-        throw new RuntimeException("Duplicate key " + enumShippingOrderLifecycleActivity.getId());
-      else pkList.add(enumShippingOrderLifecycleActivity.getId());
-
-      insert(enumShippingOrderLifecycleActivity.getName(), enumShippingOrderLifecycleActivity.getId());
+    public void insert(String name, Long id) {
+        ShippingOrderLifeCycleActivity shippingOrderLifeCycleActivity = new ShippingOrderLifeCycleActivity();
+        shippingOrderLifeCycleActivity.setName(name);
+        shippingOrderLifeCycleActivity.setId(id);
+        save(shippingOrderLifeCycleActivity);
     }
-  }
+
+    public void invokeInsert() {
+        List<Long> pkList = new ArrayList<Long>();
+
+        for (EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity : EnumShippingOrderLifecycleActivity.values()) {
+
+            if (pkList.contains(enumShippingOrderLifecycleActivity.getId()))
+                throw new RuntimeException("Duplicate key " + enumShippingOrderLifecycleActivity.getId());
+            else
+                pkList.add(enumShippingOrderLifecycleActivity.getId());
+
+            insert(enumShippingOrderLifecycleActivity.getName(), enumShippingOrderLifecycleActivity.getId());
+        }
+    }
 
 }

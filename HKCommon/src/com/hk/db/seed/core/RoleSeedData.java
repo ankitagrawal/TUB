@@ -1,36 +1,35 @@
-package db.seed.master;
+package com.hk.db.seed.core;
 
-import com.google.inject.Inject;
-import app.dao.RoleDao;
-import app.domain.Role;
-
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
-import mhc.common.constants.EnumRole;
+import com.hk.constants.core.EnumRole;
+import com.hk.db.seed.BaseSeedData;
+import com.hk.domain.user.Role;
+import com.hk.pact.dao.RoleDao;
 
-public class RoleSeedData {
+public class RoleSeedData extends BaseSeedData {
 
-  @Inject
     RoleDao roleDao;
 
-  public void insert(java.lang.String name) {
-    Role role = new Role();
-    role.setName(name);
-    roleDao.save(role);
-  }
-
-  public void invokeInsert() {
-    List<String> pkList = new ArrayList<String>();
-
-    for (EnumRole role : EnumRole.values()) {
-
-      if (pkList.contains(role.getRoleName()))
-        throw new RuntimeException("Duplicate key " + role.getRoleName());
-      else pkList.add(role.getRoleName());
-
-      insert(role.getRoleName());
+    public void insert(java.lang.String name) {
+        Role role = new Role();
+        role.setName(name);
+        roleDao.save(role);
     }
-  }
+
+    public void invokeInsert() {
+        List<String> pkList = new ArrayList<String>();
+
+        for (EnumRole role : EnumRole.values()) {
+
+            if (pkList.contains(role.getRoleName()))
+                throw new RuntimeException("Duplicate key " + role.getRoleName());
+            else
+                pkList.add(role.getRoleName());
+
+            insert(role.getRoleName());
+        }
+    }
 
 }

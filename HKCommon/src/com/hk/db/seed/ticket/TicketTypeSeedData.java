@@ -1,29 +1,22 @@
-package db.seed.master;
+package com.hk.db.seed.ticket;
 
-import com.google.inject.Inject;
-
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
-import mhc.service.dao.TicketTypeDao;
-import mhc.domain.TicketType;
-import mhc.common.constants.EnumTicketType;
+import com.hk.constants.ticket.EnumTicketType;
+import com.hk.db.seed.BaseSeedData;
+import com.hk.domain.TicketType;
 
-/**
- * Generated
- */
-@SuppressWarnings({"InjectOfNonPublicMember"})
-public class TicketTypeSeedData {
 
-  @Inject
-  TicketTypeDao ticketTypeDao;
+public class TicketTypeSeedData extends BaseSeedData{
+
 
   public void insert(java.lang.String name, java.lang.Long id, java.lang.String description) {
     TicketType ticketType = new TicketType();
     ticketType.setName(name);
     ticketType.setId(id);
     ticketType.setDescription(description);
-    ticketTypeDao.save(ticketType);
+    save(ticketType);
   }
 
   public void invokeInsert() {

@@ -1,41 +1,33 @@
-package db.seed.master;
+package com.hk.db.seed.inventory;
 
-
-import com.google.inject.Inject;
-import mhc.common.constants.EnumInvTxnType;
-import mhc.domain.InvTxnType;
-import mhc.service.dao.InvTxnTypeDao;
-
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Generated
- */
-@SuppressWarnings({"InjectOfNonPublicMember"})
-public class InvTxnTypeSeedData {
+import com.hk.constants.inventory.EnumInvTxnType;
+import com.hk.db.seed.BaseSeedData;
+import com.hk.domain.core.InvTxnType;
 
-  @Inject
-  InvTxnTypeDao invTxnTypeDao;
+public class InvTxnTypeSeedData extends BaseSeedData {
 
-  public void insert(java.lang.String name, java.lang.Long id) {
-    InvTxnType invTxnType = new InvTxnType();
-    invTxnType.setName(name);
-    invTxnType.setId(id);
-    invTxnTypeDao.save(invTxnType);
-  }
-
-  public void invokeInsert() {
-    List<Long> pkList = new ArrayList<Long>();
-
-    for (EnumInvTxnType enumInvTxnType : EnumInvTxnType.values()) {
-
-      if (pkList.contains(enumInvTxnType.getId()))
-        throw new RuntimeException("Duplicate key " + enumInvTxnType.getId());
-      else pkList.add(enumInvTxnType.getId());
-
-      insert(enumInvTxnType.getName(), enumInvTxnType.getId());
+    public void insert(java.lang.String name, java.lang.Long id) {
+        InvTxnType invTxnType = new InvTxnType();
+        invTxnType.setName(name);
+        invTxnType.setId(id);
+        save(invTxnType);
     }
-  }
+
+    public void invokeInsert() {
+        List<Long> pkList = new ArrayList<Long>();
+
+        for (EnumInvTxnType enumInvTxnType : EnumInvTxnType.values()) {
+
+            if (pkList.contains(enumInvTxnType.getId()))
+                throw new RuntimeException("Duplicate key " + enumInvTxnType.getId());
+            else
+                pkList.add(enumInvTxnType.getId());
+
+            insert(enumInvTxnType.getName(), enumInvTxnType.getId());
+        }
+    }
 
 }

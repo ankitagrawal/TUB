@@ -1,39 +1,33 @@
-package db.seed.master;
+package com.hk.db.seed.courier;
 
-
-import com.google.inject.Inject;
-import mhc.common.constants.EnumCourier;
-import mhc.domain.Courier;
-import mhc.service.dao.CourierDao;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Generated
- */
-@SuppressWarnings({"InjectOfNonPublicMember"})
-public class CourierSeedData {
+import com.hk.constants.shipment.EnumCourier;
+import com.hk.db.seed.BaseSeedData;
+import com.hk.domain.courier.Courier;
 
-  @Inject
-  CourierDao courierDao;
+public class CourierSeedData extends BaseSeedData {
 
-  public void insert(java.lang.String name, java.lang.Long id) {
-    Courier courier = new Courier();
-      courier.setName(name);
-      courier.setId(id);
-    courierDao.save(courier);
-  }
-
-  public void invokeInsert(){
-    List<Long> pkList = new ArrayList<Long>();
-
-    for (EnumCourier enumCourier : EnumCourier.values()) {
-
-      if (pkList.contains(enumCourier.getId())) throw new RuntimeException("Duplicate key "+enumCourier.getId());
-      else pkList.add(enumCourier.getId());
-
-      insert(enumCourier.getName(), enumCourier.getId());
+    public void insert(java.lang.String name, java.lang.Long id) {
+        Courier courier = new Courier();
+        courier.setName(name);
+        courier.setId(id);
+        save(courier);
     }
-  }
+
+    public void invokeInsert() {
+        List<Long> pkList = new ArrayList<Long>();
+
+        for (EnumCourier enumCourier : EnumCourier.values()) {
+
+            if (pkList.contains(enumCourier.getId()))
+                throw new RuntimeException("Duplicate key " + enumCourier.getId());
+            else
+                pkList.add(enumCourier.getId());
+
+            insert(enumCourier.getName(), enumCourier.getId());
+        }
+    }
 
 }

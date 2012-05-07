@@ -1,39 +1,33 @@
-package db.seed.master;
+package com.hk.db.seed.inventory;
 
-
-import com.google.inject.Inject;
-import mhc.common.constants.EnumReconciliationType;
-import mhc.domain.ReconciliationType;
-import mhc.service.dao.ReconciliationTypeDao;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Generated
- */
-@SuppressWarnings({"InjectOfNonPublicMember"})
-public class ReconciliationTypeSeedData {
+import com.hk.constants.inventory.EnumReconciliationType;
+import com.hk.db.seed.BaseSeedData;
+import com.hk.domain.inventory.rv.ReconciliationType;
 
-  @Inject
-  ReconciliationTypeDao reconciliationTypeDao;
+public class ReconciliationTypeSeedData extends BaseSeedData {
 
-  public void insert(java.lang.String name,java.lang.Long id) {
-    ReconciliationType reconciliationType = new ReconciliationType();
-      reconciliationType.setName(name);
-      reconciliationType.setId(id);
-    reconciliationTypeDao.save(reconciliationType);
-  }
-
-  public void invokeInsert(){
-    List<Long> pkList = new ArrayList<Long>();
-
-    for (EnumReconciliationType enumReconciliationType : EnumReconciliationType.values()) {
-
-      if (pkList.contains(enumReconciliationType.getId())) throw new RuntimeException("Duplicate key "+enumReconciliationType.getId());
-      else pkList.add(enumReconciliationType.getId());
-
-      insert(enumReconciliationType.getName(),enumReconciliationType.getId());
+    public void insert(java.lang.String name, java.lang.Long id) {
+        ReconciliationType reconciliationType = new ReconciliationType();
+        reconciliationType.setName(name);
+        reconciliationType.setId(id);
+        save(reconciliationType);
     }
-  }
+
+    public void invokeInsert() {
+        List<Long> pkList = new ArrayList<Long>();
+
+        for (EnumReconciliationType enumReconciliationType : EnumReconciliationType.values()) {
+
+            if (pkList.contains(enumReconciliationType.getId()))
+                throw new RuntimeException("Duplicate key " + enumReconciliationType.getId());
+            else
+                pkList.add(enumReconciliationType.getId());
+
+            insert(enumReconciliationType.getName(), enumReconciliationType.getId());
+        }
+    }
 
 }

@@ -1,41 +1,35 @@
-package db.seed.master;
-
-
-import com.google.inject.Inject;
-import mhc.common.constants.EnumSurcharge;
-import mhc.domain.Surcharge;
-import mhc.service.dao.SurchargeDao;
+package com.hk.db.seed.core;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Generated
- */
-@SuppressWarnings({"InjectOfNonPublicMember"})
-public class SurchargeSeedData {
+import com.hk.constants.core.EnumSurcharge;
+import com.hk.db.seed.BaseSeedData;
+import com.hk.domain.core.Surcharge;
 
-	@Inject
-	SurchargeDao surchargeDao;
+public class SurchargeSeedData extends BaseSeedData {
 
-	public void insert(Long id, String name, Double value) {
-		Surcharge surcharge = new Surcharge();
-		surcharge.setName(name);
-		surcharge.setId(id);
-		surcharge.setValue(value);
-		surchargeDao.save(surcharge);
-	}
 
-	public void invokeInsert() {
-		List<Long> pkList = new ArrayList<Long>();
+    public void insert(Long id, String name, Double value) {
+        Surcharge surcharge = new Surcharge();
+        surcharge.setName(name);
+        surcharge.setId(id);
+        surcharge.setValue(value);
+        save(surcharge);
+    }
 
-		for (EnumSurcharge enumSurcharge : EnumSurcharge.values()) {
+    public void invokeInsert() {
+        List<Long> pkList = new ArrayList<Long>();
 
-			if (pkList.contains(enumSurcharge.getId())) throw new RuntimeException("Duplicate key " + enumSurcharge.getId());
-			else pkList.add(enumSurcharge.getId());
+        for (EnumSurcharge enumSurcharge : EnumSurcharge.values()) {
 
-			insert(enumSurcharge.getId(), enumSurcharge.getName(), enumSurcharge.getValue());
-		}
-	}
+            if (pkList.contains(enumSurcharge.getId()))
+                throw new RuntimeException("Duplicate key " + enumSurcharge.getId());
+            else
+                pkList.add(enumSurcharge.getId());
+
+            insert(enumSurcharge.getId(), enumSurcharge.getName(), enumSurcharge.getValue());
+        }
+    }
 
 }
