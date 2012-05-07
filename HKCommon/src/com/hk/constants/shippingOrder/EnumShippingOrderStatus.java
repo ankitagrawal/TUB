@@ -21,6 +21,7 @@ public enum EnumShippingOrderStatus {
   SO_Delivered(190L, "SO Delivered"),
   SO_Returned(200L, "SO Returned"),
   SO_Lost(210L, "SO Lost"),
+  SO_Replaced(220L, "SO Replaced"),
   SO_Cancelled(999L, "SO Cancelled");
 
 
@@ -113,4 +114,11 @@ public enum EnumShippingOrderStatus {
 				EnumShippingOrderStatus.SO_Delivered);
 	}
 
+	public static List<ShippingOrderStatus> getStatusForChangingShipmentDetails(){
+	    return Arrays.asList(EnumShippingOrderStatus.SO_Shipped.asShippingOrderStatus(),
+	                EnumShippingOrderStatus.SO_Delivered.asShippingOrderStatus(),
+	        EnumShippingOrderStatus.SO_Returned.asShippingOrderStatus(),
+	                EnumShippingOrderStatus.SO_Lost.asShippingOrderStatus(),
+	        EnumShippingOrderStatus.SO_Replaced.asShippingOrderStatus());
+	  }
 }

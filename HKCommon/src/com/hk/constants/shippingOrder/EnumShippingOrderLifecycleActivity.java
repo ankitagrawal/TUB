@@ -42,7 +42,8 @@ public enum EnumShippingOrderLifecycleActivity {
   SO_LineItemUpdated(714L, "SO Line Item Updated"),
   SO_PaymentUpdated(715L, "SO Order Payment Updated"),
   SO_RewardPointLineItemAdded(716L, "SO Reward Point Line Item Added"),
-  SO_Cancelled(999L, "SO  Cancelled");
+  SO_Cancelled(999L, "SO  Cancelled"),
+  SO_StatusChanged(750L,"SO Status changed");
 
 
   private String name;

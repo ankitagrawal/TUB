@@ -4,11 +4,12 @@ import com.hk.domain.core.Tax;
 
 public enum EnumTax {
 
-  SERVICE_10_3("0.103", .103D),
-  VAT_0("0.0", 0.0D),
-  VAT_5("0.05", .05D),
-  VAT_12_5("0.125", .125D),
-  NA("NA", .0D),;
+    SERVICE_10_3("0.103", .103D),
+    VAT_0("0.0", 0.0D),
+    VAT_5("0.05", .05D),
+    VAT_12_5("0.125", .125D),
+    VAT_12_36("0.1236", .1236D),
+    NA("NA", .0D),;
 
   private Double value;
   private String name;

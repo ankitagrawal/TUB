@@ -82,7 +82,8 @@ public enum EnumRoleHasPermission {
           EnumPermission.SEND_MARKETING_MAILS,
           EnumPermission.ASSIGN_BIN,
           EnumPermission.MARKETING_EXPENSE_MANAGEMENT,
-          EnumPermission.CREATE_EDIT_SKU
+          EnumPermission.CREATE_EDIT_SKU,
+          EnumPermission.MANAGE_PAYMENT_HISTORY
       )
   ),
 
@@ -143,6 +144,7 @@ public enum EnumRoleHasPermission {
   OPS_MANAGER_L1(
       EnumRole.OPS_MANAGER_L1,
       Arrays.asList(
+          EnumPermission.SKU_SALES_REPORT,
           EnumPermission.UPDATE_PRODUCT_CATALOG,
           EnumPermission.DOWNLOAD_PRDOUCT_CATALOG
       )
@@ -233,7 +235,8 @@ public enum EnumRoleHasPermission {
           EnumPermission.MANAGE_AFFILIATES,
           EnumPermission.HK_EMPLOYEE,
           EnumPermission.CREATE_EDIT_SKU,
-          EnumPermission.EDIT_LINEITEM
+          EnumPermission.EDIT_LINEITEM,
+          EnumPermission.MANAGE_PAYMENT_HISTORY
       )
   ),
 
@@ -289,7 +292,8 @@ public enum EnumRoleHasPermission {
           EnumPermission.ACCOUNTING_SALES_REPORT,
           EnumPermission.UPDATE_RECONCILIATION_REPORTS,
           EnumPermission.VIEW_RECONCILIATION_REPORTS,
-	        EnumPermission.PURCHASE_INVOICE_MANAGEMENT
+          EnumPermission.PURCHASE_INVOICE_MANAGEMENT,
+          EnumPermission.MANAGE_PAYMENT_HISTORY
       )
   ),
 

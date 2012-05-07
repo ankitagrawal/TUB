@@ -84,7 +84,8 @@ public enum EnumPermission {
   MARKETING_EXPENSE_MANAGEMENT(PermissionConstants.MARKETING_EXPENSE_MANAGEMENT),
   ASSIGN_BIN(PermissionConstants.ASSIGN_BIN),
   SEND_MARKETING_MAILS(PermissionConstants.SEND_MARKETING_MAILS),
-  CREATE_EDIT_SKU(PermissionConstants.CREATE_EDIT_SKU);
+  CREATE_EDIT_SKU(PermissionConstants.CREATE_EDIT_SKU),
+  MANAGE_PAYMENT_HISTORY(PermissionConstants.MANAGE_PAYMENT_HISTORY);
 
   String permissionName;
 

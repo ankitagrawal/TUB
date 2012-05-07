@@ -169,8 +169,7 @@ public class StateList {
     }
   };
 
-  public static final Double CST = 0.02;
-  public static final Double SURCHARGE = 0.05;
+  
 
 
 }
