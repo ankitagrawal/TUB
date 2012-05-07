@@ -18,7 +18,6 @@ import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.user.User;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.offer.OfferInstanceDao;
-import com.sun.istack.internal.Nullable;
 
 @SuppressWarnings("unchecked")
 @Repository
@@ -68,7 +67,6 @@ public class OfferInstanceDaoImpl extends BaseDaoImpl implements OfferInstanceDa
         return (List<OfferInstance>) criteria.list();
     }
 
-    @Nullable
     public OfferInstance getLatestActiveOffer(User user) {
         List<OfferInstance> offerInstances = getActiveOffers(user);
         return offerInstances.size() > 0 ? offerInstances.get(0) : null;
@@ -103,9 +101,7 @@ public class OfferInstanceDaoImpl extends BaseDaoImpl implements OfferInstanceDa
      * @param offerInstanceEndDate
      * @return
      */
-    public OfferInstance createOfferInstance(Offer offer, @Nullable
-    Coupon coupon, User user, @Nullable
-    Date offerInstanceEndDate) {
+    public OfferInstance createOfferInstance(Offer offer, Coupon coupon, User user, Date offerInstanceEndDate) {
 
         // todo to check whether this offer is valid for the user or not i.e role permissions etc.
 
