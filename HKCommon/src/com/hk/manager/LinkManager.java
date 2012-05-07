@@ -2,11 +2,10 @@ package com.hk.manager;
 
 import java.util.Locale;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.util.ssl.SslUtil;
+
+import org.springframework.stereotype.Component;
 
 import com.hk.domain.TempToken;
 import com.hk.domain.Ticket;
