@@ -6,8 +6,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
-import org.springframework.stereotype.Component;
-
 public class SMSUtility {
 
 	public static void main(String[] args) {

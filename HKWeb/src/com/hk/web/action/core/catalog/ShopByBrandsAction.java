@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.dao.catalog.category.CategoryDao;
 import com.hk.domain.catalog.category.Category;
+import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
 
 @UrlBinding("/brands")
 @Component
@@ -21,7 +21,7 @@ public class ShopByBrandsAction extends BaseAction {
 
   private static Logger logger = LoggerFactory.getLogger(ShopByBrandsAction.class);
   @Autowired
-   CategoryDao categoryDao;
+   CategoryDaoImpl categoryDao;
   private List<Category> categories;
 
 

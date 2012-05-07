@@ -20,11 +20,11 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.admin.impl.dao.courier.AwbDao;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.dao.user.UserDao;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.pact.dao.user.UserDao;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.error.AdminPermissionAction;
 

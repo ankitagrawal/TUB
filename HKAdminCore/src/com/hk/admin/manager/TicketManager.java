@@ -24,7 +24,7 @@ import com.hk.domain.TicketType;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
-import com.hk.service.UserService;
+import com.hk.pact.service.UserService;
 
 @Component
 public class TicketManager {

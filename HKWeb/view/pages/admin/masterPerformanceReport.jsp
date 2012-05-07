@@ -2,7 +2,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
-<%@ page import="com.hk.dao.MasterDataDao" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="com.hk.constants.*" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>

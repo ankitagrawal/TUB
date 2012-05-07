@@ -1,8 +1,8 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.constants.order.EnumCartLineItemType" %>
 <%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus" %>
-<%@ page import="com.hk.dao.catalog.category.CategoryDao" %>
-<%@ page import="mhc.service.shippingOrder.ShippingOrderStatusService" %>
+<%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
+<%@ page import="com.hk.pact.service.shippingOrder.ShippingOrderStatusService" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -15,12 +15,11 @@
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Print Pack Awaiting Queue">
   <s:layout-component name="htmlHead">
     <%
-
-      ShippingOrderStatusService shippingOrderStatusService = InjectorFactory.getInjector().getInstance(ShippingOrderStatusService.class);
-      pageContext.setAttribute("statusForPrinting", shippingOrderStatusService.find(EnumShippingOrderStatus.SO_ReadyForProcess));
-      pageContext.setAttribute("statusForPicking", shippingOrderStatusService.find(EnumShippingOrderStatus.SO_MarkedForPrinting));
-      CategoryDao categoryDao = (CategoryDao)ServiceLocatorFactory.getService("CategoryDao");
-      pageContext.setAttribute("categoryList", categoryDao.getPrimaryCategories());
+        ShippingOrderStatusService shippingOrderStatusService = ServiceLocatorFactory.getService(ShippingOrderStatusService.class);
+              pageContext.setAttribute("statusForPrinting", shippingOrderStatusService.find(EnumShippingOrderStatus.SO_ReadyForProcess));
+              pageContext.setAttribute("statusForPicking", shippingOrderStatusService.find(EnumShippingOrderStatus.SO_MarkedForPrinting));
+              CategoryDao categoryDao = (CategoryDao)ServiceLocatorFactory.getService(CategoryDao.class);
+              pageContext.setAttribute("categoryList", categoryDao.getPrimaryCategories());
     %>
 
     <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>

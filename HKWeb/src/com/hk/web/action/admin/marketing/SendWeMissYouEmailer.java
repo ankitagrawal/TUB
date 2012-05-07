@@ -25,14 +25,14 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.google.gson.Gson;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.email.EmailTemplateConstants;
-import com.hk.dao.coupon.CouponDao;
-import com.hk.dao.marketing.EmailCampaignDao;
-import com.hk.dao.order.OrderDao;
-import com.hk.dao.user.UserDao;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.email.EmailCampaign;
 import com.hk.domain.user.User;
 import com.hk.manager.EmailManager;
+import com.hk.pact.dao.coupon.CouponDao;
+import com.hk.pact.dao.marketing.EmailCampaignDao;
+import com.hk.pact.dao.order.OrderDao;
+import com.hk.pact.dao.user.UserDao;
 import com.hk.web.action.error.AdminPermissionAction;
 
 /**

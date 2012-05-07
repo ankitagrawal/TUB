@@ -14,10 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.dao.DoomDayDao;
-import com.hk.dao.catalog.product.ProductVariantDao;
 import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.service.InventoryService;
+import com.hk.impl.dao.DoomDayDaoImpl;
+import com.hk.pact.dao.catalog.product.ProductVariantDao;
+import com.hk.pact.service.inventory.InventoryService;
 
 @Component
 public class DoomDayInventorySnapshotAction extends BaseAction {
@@ -26,7 +26,7 @@ public class DoomDayInventorySnapshotAction extends BaseAction {
     @Autowired
     InventoryService             inventoryService;
     @Autowired
-    DoomDayDao                   doomDayDao;
+    DoomDayDaoImpl                   doomDayDao;
 
     private String               barcode;
     private String               qty;

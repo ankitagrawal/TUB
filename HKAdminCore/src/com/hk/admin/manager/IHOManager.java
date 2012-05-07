@@ -9,16 +9,16 @@ import org.springframework.stereotype.Component;
 
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.discount.OfferConstants;
-import com.hk.dao.offer.OfferDao;
-import com.hk.dao.offer.OfferInstanceDao;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.offer.Offer;
 import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.user.User;
 import com.hk.manager.OfferManager;
-import com.hk.service.CouponService;
-import com.hk.service.RoleService;
-import com.hk.service.UserService;
+import com.hk.pact.dao.offer.OfferDao;
+import com.hk.pact.dao.offer.OfferInstanceDao;
+import com.hk.pact.service.RoleService;
+import com.hk.pact.service.UserService;
+import com.hk.pact.service.discount.CouponService;
 
 /**
  * Created by IntelliJ IDEA. User: Ajeet Date: Nov 5, 2011 Time: 8:27:26 PM To change this template use File | Settings |

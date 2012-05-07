@@ -13,10 +13,9 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
-import com.hk.dao.user.UserDaoImpl;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
-import com.hk.service.order.OrderService;
+import com.hk.pact.service.order.OrderService;
 
 @Secure
 @Component

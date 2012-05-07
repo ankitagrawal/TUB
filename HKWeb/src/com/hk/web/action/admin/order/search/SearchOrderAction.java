@@ -20,12 +20,12 @@ import org.stripesstuff.plugin.security.Secure;
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.constants.core.PermissionConstants;
+import com.hk.core.search.OrderSearchCriteria;
 import com.hk.domain.core.OrderStatus;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
-import com.hk.search.OrderSearchCriteria;
-import com.hk.service.order.OrderService;
+import com.hk.pact.service.order.OrderService;
 import com.hk.web.action.error.AdminPermissionAction;
 
 @Secure(hasAnyPermissions = { PermissionConstants.SEARCH_ORDERS }, authActionBean = AdminPermissionAction.class)

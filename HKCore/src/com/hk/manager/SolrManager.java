@@ -24,16 +24,16 @@ import org.springframework.stereotype.Component;
 
 import com.akube.framework.dao.Page;
 import com.hk.constants.catalog.SolrSchemaConstants;
-import com.hk.dao.location.LocalityMapDao;
-import com.hk.dao.location.MapIndiaDao;
 import com.hk.domain.LocalityMap;
 import com.hk.domain.MapIndia;
 import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.user.Address;
-import com.hk.service.CategoryService;
-import com.hk.service.ProductService;
+import com.hk.pact.dao.location.LocalityMapDao;
+import com.hk.pact.dao.location.MapIndiaDao;
+import com.hk.pact.service.catalog.CategoryService;
+import com.hk.pact.service.catalog.ProductService;
 
 @Component
 public class SolrManager {

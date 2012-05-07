@@ -5,7 +5,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
 import com.hk.domain.catalog.product.Product;
-import com.hk.service.ProductService;
+import com.hk.pact.service.catalog.ProductService;
 import com.hk.service.ServiceLocatorFactory;
 
 @Path("/product")

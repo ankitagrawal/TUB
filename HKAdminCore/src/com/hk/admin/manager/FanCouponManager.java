@@ -7,15 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hk.dao.coupon.FbcouponCampaignDao;
-import com.hk.dao.coupon.FbcouponCouponDao;
-import com.hk.dao.coupon.FbcouponUserCampaignDao;
-import com.hk.dao.coupon.FbcouponUserDao;
 import com.hk.domain.coupon.FbcouponCoupon;
 import com.hk.domain.coupon.FbcouponUser;
 import com.hk.domain.coupon.FbcouponUserCampaign;
 import com.hk.domain.marketing.FbcouponCampaign;
 import com.hk.domain.pk.FbcouponUserCampaignPk;
+import com.hk.pact.dao.coupon.FbcouponCampaignDao;
+import com.hk.pact.dao.coupon.FbcouponCouponDao;
+import com.hk.pact.dao.coupon.FbcouponUserCampaignDao;
+import com.hk.pact.dao.coupon.FbcouponUserDao;
 
 @Component
 public class FanCouponManager {

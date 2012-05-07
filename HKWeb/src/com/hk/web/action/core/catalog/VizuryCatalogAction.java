@@ -2,15 +2,15 @@ package com.hk.web.action.core.catalog;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.domain.catalog.product.Product;
-import com.hk.service.ProductService;
+import com.hk.pact.service.catalog.ProductService;
 
 @Component
 public class VizuryCatalogAction extends BaseAction {

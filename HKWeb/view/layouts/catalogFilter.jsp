@@ -1,6 +1,6 @@
 <%@ page import="com.hk.domain.catalog.category.Category" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
-<%@ page import="com.hk.dao.catalog.category.CategoryDao" %>
+<%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.hk.dto.menu.MenuNode" %>
 <%@ page import="com.hk.helper.MenuHelper" %>
@@ -11,7 +11,7 @@
 
   <%
     MenuHelper menuHelper = (MenuHelper)ServiceLocatorFactory.getService("MenuHelper");
-    CategoryDao categoryDao = (CategoryDao)ServiceLocatorFactory.getService("CategoryDao");
+    CategoryDao categoryDao = (CategoryDao)ServiceLocatorFactory.getService(CategoryDao.class);
 
     String urlFragment = (String) pageContext.getAttribute("filterUrlFragment");
 

@@ -10,7 +10,6 @@ import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.JsonResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.UrlBinding;
 
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -18,17 +17,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.constants.discount.OfferConstants;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderStatus;
-import com.hk.dao.affiliate.AffiliateDao;
-import com.hk.dao.coupon.CouponDao;
-import com.hk.dao.offer.OfferInstanceDao;
-import com.hk.dao.order.OrderDao;
-import com.hk.dao.shippingOrder.lineItem.LineItemDao;
+import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.combo.ComboInstance;
 import com.hk.domain.coupon.Coupon;
@@ -38,13 +32,17 @@ import com.hk.domain.order.Order;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.dto.pricing.PricingDto;
-import com.hk.filter.CartLineItemFilter;
 import com.hk.manager.OfferManager;
 import com.hk.manager.OrderManager;
 import com.hk.manager.UserManager;
+import com.hk.pact.dao.affiliate.AffiliateDao;
+import com.hk.pact.dao.coupon.CouponDao;
+import com.hk.pact.dao.offer.OfferInstanceDao;
+import com.hk.pact.dao.order.OrderDao;
+import com.hk.pact.dao.shippingOrder.LineItemDao;
+import com.hk.pact.service.UserService;
 import com.hk.pricing.PricingEngine;
 import com.hk.report.dto.pricing.PricingSubDto;
-import com.hk.service.UserService;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.core.user.SelectAddressAction;
 

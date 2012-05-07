@@ -2,18 +2,18 @@ package com.hk.web.action.admin.user;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.dao.user.UserCartDao;
-import com.hk.dao.user.UserProductHistoryDao;
 import com.hk.domain.user.User;
 import com.hk.domain.user.UserCart;
 import com.hk.domain.user.UserProductHistory;
+import com.hk.pact.dao.user.UserCartDao;
+import com.hk.pact.dao.user.UserProductHistoryDao;
 
 /**
  * Created by IntelliJ IDEA. User: PRATHAM Date: 1/2/12 Time: 1:07 AM To change this template use File | Settings | File

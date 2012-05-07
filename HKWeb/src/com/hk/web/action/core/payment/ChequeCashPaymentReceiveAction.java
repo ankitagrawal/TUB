@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.order.EnumOrderStatus;
@@ -22,9 +21,9 @@ import com.hk.domain.user.User;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.manager.OrderManager;
 import com.hk.manager.payment.PaymentManager;
-import com.hk.service.PaymentService;
-import com.hk.service.RoleService;
-import com.hk.service.UserService;
+import com.hk.pact.service.RoleService;
+import com.hk.pact.service.UserService;
+import com.hk.pact.service.payment.PaymentService;
 
 /**
  * User: kani Time: 12 Feb, 2010 3:59:02 PM

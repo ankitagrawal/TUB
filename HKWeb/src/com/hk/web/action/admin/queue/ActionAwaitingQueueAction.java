@@ -20,17 +20,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.manager.ProductManager;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
-import com.hk.dao.OrderStatusDao;
-import com.hk.dao.catalog.category.CategoryDao;
-import com.hk.dao.payment.PaymentModeDao;
-import com.hk.dao.payment.PaymentStatusDao;
+import com.hk.core.search.OrderSearchCriteria;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.core.OrderStatus;
 import com.hk.domain.core.PaymentMode;
@@ -38,14 +34,17 @@ import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderStatus;
+import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
 import com.hk.manager.OrderManager;
-import com.hk.search.OrderSearchCriteria;
-import com.hk.service.InvoiceService;
-import com.hk.service.OrderStatusService;
-import com.hk.service.PaymentService;
-import com.hk.service.order.OrderService;
-import com.hk.service.shippingOrder.ShippingOrderService;
-import com.hk.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.pact.dao.OrderStatusDao;
+import com.hk.pact.dao.payment.PaymentModeDao;
+import com.hk.pact.dao.payment.PaymentStatusDao;
+import com.hk.pact.service.OrderStatusService;
+import com.hk.pact.service.accounting.InvoiceService;
+import com.hk.pact.service.order.OrderService;
+import com.hk.pact.service.payment.PaymentService;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.util.CustomDateTypeConvertor;
 import com.hk.web.action.error.AdminPermissionAction;
 
@@ -70,7 +69,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
   @Autowired
   PaymentStatusDao paymentStatusDao;
   @Autowired
-  CategoryDao categoryDao;
+  CategoryDaoImpl categoryDao;
   @Autowired
   InvoiceService invoiceService;
   @Autowired

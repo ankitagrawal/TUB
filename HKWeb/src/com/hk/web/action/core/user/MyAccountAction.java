@@ -16,12 +16,12 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.core.RoleConstants;
-import com.hk.dao.impl.RoleDao;
-import com.hk.dao.user.B2bUserDetailsDao;
-import com.hk.dao.user.UserDao;
 import com.hk.domain.user.B2bUserDetails;
 import com.hk.domain.user.User;
 import com.hk.manager.UserManager;
+import com.hk.pact.dao.RoleDao;
+import com.hk.pact.dao.user.B2bUserDetailsDao;
+import com.hk.pact.dao.user.UserDao;
 
 @Secure(hasAnyRoles = { RoleConstants.HK_USER, RoleConstants.HK_UNVERIFIED }, disallowRememberMe = true)
 @Component

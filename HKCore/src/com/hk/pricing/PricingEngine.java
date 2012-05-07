@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.testng.Assert;
 
-
-import com.hk.constants.core.Keys;
 import com.hk.constants.discount.OfferConstants;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.domain.builder.CartLineItemBuilder;
@@ -25,7 +23,7 @@ import com.hk.domain.sku.Sku;
 import com.hk.domain.user.Address;
 import com.hk.dto.pricing.PricingDto;
 import com.hk.manager.OrderManager;
-import com.hk.service.SkuService;
+import com.hk.pact.service.inventory.SkuService;
 import com.hk.util.CartLineItemWrapper;
 import com.hk.util.OfferTriggerMatcher;
 

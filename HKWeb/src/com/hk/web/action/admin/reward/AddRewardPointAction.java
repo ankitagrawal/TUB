@@ -19,13 +19,13 @@ import org.stripesstuff.plugin.security.Secure;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.discount.EnumRewardPointStatus;
-import com.hk.dao.reward.RewardPointDao;
-import com.hk.dao.user.UserDao;
 import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.offer.rewardPoint.RewardPointMode;
 import com.hk.domain.user.User;
 import com.hk.exception.InvalidRewardPointsException;
 import com.hk.manager.ReferrerProgramManager;
+import com.hk.pact.dao.reward.RewardPointDao;
+import com.hk.pact.dao.user.UserDao;
 import com.hk.web.action.admin.user.SearchUserAction;
 import com.hk.web.action.error.AdminPermissionAction;
 

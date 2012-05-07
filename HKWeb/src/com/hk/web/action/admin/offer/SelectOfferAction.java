@@ -20,8 +20,8 @@ import org.stripesstuff.plugin.security.Secure;
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.dao.offer.OfferDao;
 import com.hk.domain.offer.Offer;
+import com.hk.pact.dao.offer.OfferDao;
 import com.hk.web.action.error.AdminPermissionAction;
 
 @Component

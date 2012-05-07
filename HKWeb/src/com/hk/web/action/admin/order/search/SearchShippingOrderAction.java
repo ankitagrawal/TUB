@@ -19,9 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BasePaginatedAction;
+import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.order.ShippingOrder;
-import com.hk.search.ShippingOrderSearchCriteria;
-import com.hk.service.shippingOrder.ShippingOrderService;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
 
 @Component
 public class SearchShippingOrderAction extends BasePaginatedAction {

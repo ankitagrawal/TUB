@@ -12,10 +12,10 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.Breadcrumb;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.dao.core.TempTokenDao;
 import com.hk.domain.TempToken;
 import com.hk.domain.user.User;
 import com.hk.manager.LinkManager;
+import com.hk.pact.dao.core.TempTokenDao;
 import com.hk.web.action.core.user.ForgotPasswordAction;
 import com.hk.web.action.error.AdminPermissionAction;
 

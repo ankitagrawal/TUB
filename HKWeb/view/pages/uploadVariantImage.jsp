@@ -1,5 +1,5 @@
-<%@ page import="com.hk.dao.catalog.product.ProductDao" %>
-<%@ page import="com.hk.dao.catalog.product.ProductVariantDao" %>
+<%@ page import="com.hk.pact.dao.catalog.product.ProductDao" %>
+<%@ page import="com.hk.pact.dao.catalog.product.ProductVariantDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.UploadImageAction" var="imageBean"/>

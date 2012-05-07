@@ -5,9 +5,9 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hk.dao.impl.BaseDaoImpl;
 import com.hk.domain.inventory.Bin;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.impl.dao.BaseDaoImpl;
 
 @Repository
 public class BinDao extends BaseDaoImpl {

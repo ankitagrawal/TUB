@@ -6,7 +6,6 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
-import com.hk.dao.impl.BaseDaoImpl;
 import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.inventory.ProductVariantInventory;
 import com.hk.domain.inventory.rv.RvLineItem;
@@ -14,6 +13,7 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItem;
+import com.hk.impl.dao.BaseDaoImpl;
 
 @SuppressWarnings("unchecked")
 @Repository

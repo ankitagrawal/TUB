@@ -18,14 +18,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.core.EnumEmailType;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.user.User;
 import com.hk.manager.ReferrerProgramManager;
-import com.hk.service.UserService;
+import com.hk.pact.service.UserService;
 import com.hk.web.WOMMEmailManager;
 
 @Secure

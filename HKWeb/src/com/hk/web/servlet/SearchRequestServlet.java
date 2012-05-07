@@ -1,17 +1,18 @@
 package com.hk.web.servlet;
 
-import org.apache.solr.client.solrj.response.TermsResponse;
-import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.impl.CommonsHttpSolrServer;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.io.PrintWriter;
-import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.impl.CommonsHttpSolrServer;
+import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.client.solrj.response.TermsResponse;
 
 /**
  * Created by IntelliJ IDEA.

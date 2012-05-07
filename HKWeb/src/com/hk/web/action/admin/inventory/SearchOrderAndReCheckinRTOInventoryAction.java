@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.impl.dao.inventory.AdminProductVariantInventoryDao;
 import com.hk.admin.impl.dao.inventory.PVDamageInventoryDao;
@@ -29,10 +28,10 @@ import com.hk.domain.inventory.ProductVariantInventory;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.User;
-import com.hk.service.InventoryService;
-import com.hk.service.UserService;
-import com.hk.service.order.OrderService;
-import com.hk.service.shippingOrder.ShippingOrderService;
+import com.hk.pact.service.UserService;
+import com.hk.pact.service.inventory.InventoryService;
+import com.hk.pact.service.order.OrderService;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.web.action.error.AdminPermissionAction;
 
 @Secure(hasAnyPermissions = { PermissionConstants.INVENTORY_CHECKIN }, authActionBean = AdminPermissionAction.class)

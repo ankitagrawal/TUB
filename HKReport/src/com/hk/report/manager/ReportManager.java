@@ -33,13 +33,9 @@ import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.report.ReportConstants;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
-import com.hk.dao.OrderStatusDao;
-import com.hk.dao.catalog.category.CategoryDao;
-import com.hk.dao.email.NotifyMeDao;
-import com.hk.dao.impl.TaxDao;
-import com.hk.dao.order.OrderDao;
-import com.hk.dao.payment.PaymentModeDao;
-import com.hk.dao.shippingOrder.lineItem.LineItemDao;
+import com.hk.core.fliter.CartLineItemFilter;
+import com.hk.core.fliter.ShippingOrderFilter;
+import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.ProductOption;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -55,22 +51,26 @@ import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.Address;
-import com.hk.filter.CartLineItemFilter;
-import com.hk.filter.ShippingOrderFilter;
+import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
 import com.hk.manager.OrderManager;
+import com.hk.pact.dao.OrderStatusDao;
+import com.hk.pact.dao.TaxDao;
+import com.hk.pact.dao.email.NotifyMeDao;
+import com.hk.pact.dao.order.OrderDao;
+import com.hk.pact.dao.payment.PaymentModeDao;
+import com.hk.pact.dao.shippingOrder.LineItemDao;
+import com.hk.pact.service.OrderStatusService;
+import com.hk.pact.service.catalog.CategoryService;
+import com.hk.pact.service.order.CartLineItemService;
+import com.hk.pact.service.order.OrderService;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.report.dto.order.CategoriesOrderReportDto;
 import com.hk.report.dto.payment.CODConfirmationDto;
 import com.hk.report.dto.sales.DaySaleDto;
 import com.hk.report.dto.sales.DaySaleShipDateWiseDto;
 import com.hk.report.pact.service.order.ReportOrderService;
 import com.hk.report.pact.service.shippingOrder.ReportShippingOrderService;
-import com.hk.search.ShippingOrderSearchCriteria;
-import com.hk.service.CategoryService;
-import com.hk.service.OrderStatusService;
-import com.hk.service.order.CartLineItemService;
-import com.hk.service.order.OrderService;
-import com.hk.service.shippingOrder.ShippingOrderService;
-import com.hk.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.util.io.HkXlsWriter;
 
 /**
@@ -117,7 +117,7 @@ public class ReportManager {
 
     OrderStatusDao                orderStatusDaoProvider;
 
-    CategoryDao                   categoryDaoProvider;
+    CategoryDaoImpl                   categoryDaoProvider;
 
 
     OrderDao                      orderDaoProvider;

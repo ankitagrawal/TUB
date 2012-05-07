@@ -9,9 +9,7 @@ import com.akube.framework.util.BaseUtils;
 import com.hk.constants.EnumAffiliateTxnType;
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.order.EnumCartLineItemType;
-import com.hk.dao.CheckDetailsDao;
-import com.hk.dao.affiliate.AffiliateCategoryDao;
-import com.hk.dao.affiliate.AffiliateTxnDao;
+import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.CheckDetails;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.affiliate.AffiliateCategory;
@@ -25,11 +23,13 @@ import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.exception.HealthkartLoginException;
 import com.hk.exception.HealthkartSignupException;
-import com.hk.filter.CartLineItemFilter;
-import com.hk.service.AffilateService;
-import com.hk.service.CouponService;
-import com.hk.service.RoleService;
-import com.hk.service.UserService;
+import com.hk.impl.dao.CheckDetailsDaoImpl;
+import com.hk.impl.dao.affiliate.AffiliateCategoryDaoImpl;
+import com.hk.impl.dao.affiliate.AffiliateTxnDaoImpl;
+import com.hk.pact.service.RoleService;
+import com.hk.pact.service.UserService;
+import com.hk.pact.service.core.AffilateService;
+import com.hk.pact.service.discount.CouponService;
 
 @Component
 public class AffiliateManager {
@@ -52,11 +52,11 @@ public class AffiliateManager {
     private OfferManager                   offerManager;
 
     @Autowired
-    private AffiliateTxnDao                affiliateTxnDao;
+    private AffiliateTxnDaoImpl                affiliateTxnDao;
     @Autowired
-    private CheckDetailsDao                checkDetailsDao;
+    private CheckDetailsDaoImpl                checkDetailsDao;
     @Autowired
-    private AffiliateCategoryDao affiliateCategoryCommissionDao;
+    private AffiliateCategoryDaoImpl affiliateCategoryCommissionDao;
 
     private String createCode(User user) {
         String code = user.getName().replace(" ", "");
@@ -239,11 +239,11 @@ public class AffiliateManager {
         this.userManager = userManager;
     }
 
-    public AffiliateTxnDao getAffiliateTxnDao() {
+    public AffiliateTxnDaoImpl getAffiliateTxnDao() {
         return affiliateTxnDao;
     }
 
-    public void setAffiliateTxnDao(AffiliateTxnDao affiliateTxnDao) {
+    public void setAffiliateTxnDao(AffiliateTxnDaoImpl affiliateTxnDao) {
         this.affiliateTxnDao = affiliateTxnDao;
     }
 
@@ -263,11 +263,11 @@ public class AffiliateManager {
         this.offerManager = offerManager;
     }
 
-    public CheckDetailsDao getCheckDetailsDao() {
+    public CheckDetailsDaoImpl getCheckDetailsDao() {
         return checkDetailsDao;
     }
 
-    public void setCheckDetailsDao(CheckDetailsDao checkDetailsDao) {
+    public void setCheckDetailsDao(CheckDetailsDaoImpl checkDetailsDao) {
         this.checkDetailsDao = checkDetailsDao;
     }
 
@@ -279,11 +279,11 @@ public class AffiliateManager {
         this.affilateService = affilateService;
     }
 
-    public AffiliateCategoryDao getAffiliateCategoryCommissionDao() {
+    public AffiliateCategoryDaoImpl getAffiliateCategoryCommissionDao() {
         return affiliateCategoryCommissionDao;
     }
 
-    public void setAffiliateCategoryCommissionDao(AffiliateCategoryDao affiliateCategoryCommissionDao) {
+    public void setAffiliateCategoryCommissionDao(AffiliateCategoryDaoImpl affiliateCategoryCommissionDao) {
         this.affiliateCategoryCommissionDao = affiliateCategoryCommissionDao;
     }
 

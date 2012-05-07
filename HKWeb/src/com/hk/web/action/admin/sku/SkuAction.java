@@ -16,14 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.service.SkuService;
+import com.hk.pact.service.inventory.SkuService;
 import com.hk.web.action.error.AdminPermissionAction;
 
 /**

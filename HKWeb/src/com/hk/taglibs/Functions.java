@@ -19,7 +19,6 @@ import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 import com.akube.framework.util.FormatUtils;
 import com.hk.admin.impl.dao.inventory.AdminProductVariantInventoryDao;
@@ -33,11 +32,7 @@ import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
-import com.hk.dao.BaseDao;
-import com.hk.dao.catalog.category.CategoryDao;
-import com.hk.dao.reward.RewardPointDao;
-import com.hk.dao.shippingOrder.ShippingOrderLifecycleDao;
-import com.hk.dao.sku.SkuDao;
+import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
@@ -57,14 +52,18 @@ import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.user.User;
 import com.hk.dto.menu.MenuNode;
-import com.hk.filter.CartLineItemFilter;
 import com.hk.helper.MenuHelper;
+import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
 import com.hk.manager.OrderManager;
 import com.hk.manager.UserManager;
-import com.hk.service.CategoryService;
-import com.hk.service.InvoiceService;
+import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.reward.RewardPointDao;
+import com.hk.pact.dao.shippingOrder.ShippingOrderLifecycleDao;
+import com.hk.pact.dao.sku.SkuDao;
+import com.hk.pact.service.accounting.InvoiceService;
+import com.hk.pact.service.catalog.CategoryService;
+import com.hk.pact.service.order.OrderService;
 import com.hk.service.ServiceLocatorFactory;
-import com.hk.service.order.OrderService;
 import com.hk.util.ImageManager;
 
 
@@ -169,12 +168,14 @@ public class Functions {
         return s.replaceAll(" ", "_").replaceAll("[^a-zA-Z0-9_]", "");
     }
 
+    @SuppressWarnings("unchecked")
     public static boolean collectionContains(Collection c, Object o) {
         if (c == null)
             return false;
         return c.contains(o);
     }
 
+    @SuppressWarnings("unchecked")
     public static boolean collectionContainsBoth(Collection c, Object o1, Object o2) {
         if (c == null)
             return false;
@@ -187,6 +188,7 @@ public class Functions {
         return s1.contains(s2);
     }
 
+    @SuppressWarnings("unchecked")
     public static boolean collectionContainsCollection(Collection c1, Collection c2) {
         if (c1 == null || c2 == null)
             return false;
@@ -231,7 +233,7 @@ public class Functions {
     }
 
     public static List<String> brandsInCategory(Object o) {
-        CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
+        CategoryDaoImpl categoryDao = ServiceLocatorFactory.getService(CategoryDaoImpl.class);
         return categoryDao.getBrandsByCategory(Arrays.asList(((Category) o).getName()));
     }
 

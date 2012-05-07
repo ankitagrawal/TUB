@@ -10,9 +10,9 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.dao.catalog.product.ProductDao;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductFeature;
+import com.hk.pact.dao.catalog.product.ProductDao;
 
 @Component
 public class EditFeaturesAction extends BaseAction {

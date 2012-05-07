@@ -14,8 +14,6 @@ import java.security.NoSuchAlgorithmException;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 
-import org.springframework.stereotype.Component;
-
 public abstract class CrawlerUtils {
     public static void setHttpsRequestConfig() throws NoSuchAlgorithmException, KeyManagementException {
         SSLContext sslContext = SSLContext.getInstance("SSL");

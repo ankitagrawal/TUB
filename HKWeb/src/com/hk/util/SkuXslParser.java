@@ -33,10 +33,10 @@ import com.hk.domain.core.Tax;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.exception.HealthKartCatalogUploadException;
-import com.hk.service.ProductVariantService;
-import com.hk.service.SkuService;
-import com.hk.service.TaxService;
-import com.hk.service.WarehouseService;
+import com.hk.pact.service.catalog.ProductVariantService;
+import com.hk.pact.service.core.TaxService;
+import com.hk.pact.service.core.WarehouseService;
+import com.hk.pact.service.inventory.SkuService;
 
 /**
  * Created by IntelliJ IDEA. User: Rajni Date: Apr 3, 2012 Time: 12:15:53 PM To change this template use File | Settings |

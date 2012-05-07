@@ -13,7 +13,9 @@ import net.sourceforge.stripes.util.bean.ParseException;
 import com.hk.service.ServiceLocatorFactory;
 
 
+@SuppressWarnings("unchecked")
 public class MasterDataOptionsTag extends InputOptionsCollectionTag implements Tag {
+    
     private Class service;
     private String serviceProperty;
 

@@ -32,20 +32,19 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.manager.AdminEmailManager;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.email.EmailTemplateConstants;
-import com.hk.dao.email.NotifyMeDao;
-import com.hk.dao.marketing.EmailCampaignDao;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.email.EmailCampaign;
 import com.hk.domain.marketing.NotifyMe;
 import com.hk.domain.user.User;
+import com.hk.pact.dao.email.NotifyMeDao;
+import com.hk.pact.dao.marketing.EmailCampaignDao;
 import com.hk.report.manager.ReportManager;
 import com.hk.util.NotifyMeListUtil;
 import com.hk.web.action.error.AdminPermissionAction;

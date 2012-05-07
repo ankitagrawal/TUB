@@ -28,7 +28,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.dto.inventory.PurchaseOrderDto;
@@ -50,8 +49,8 @@ import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.service.SkuService;
-import com.hk.service.UserService;
+import com.hk.pact.service.UserService;
+import com.hk.pact.service.inventory.SkuService;
 import com.hk.util.CustomDateTypeConvertor;
 import com.hk.web.action.error.AdminPermissionAction;
 

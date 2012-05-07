@@ -13,7 +13,7 @@ import net.sourceforge.stripes.action.Resolution;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hk.domain.catalog.product.Product;
-import com.hk.service.ProductService;
+import com.hk.pact.service.catalog.ProductService;
 import com.hk.service.ServiceLocatorFactory;
 
 public class HelloAction implements ActionBean {

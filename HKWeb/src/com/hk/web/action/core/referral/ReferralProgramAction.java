@@ -22,11 +22,11 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.core.EnumEmailType;
 import com.hk.constants.core.RoleConstants;
-import com.hk.dao.impl.RoleDao;
-import com.hk.dao.user.UserDao;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.user.User;
 import com.hk.manager.ReferrerProgramManager;
+import com.hk.pact.dao.RoleDao;
+import com.hk.pact.dao.user.UserDao;
 import com.hk.web.WOMMEmailManager;
 import com.hk.web.action.core.user.ActivateAccountForReferralAction;
 

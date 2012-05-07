@@ -12,14 +12,13 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
-import com.hk.dao.content.PrimaryCategoryHeadingDao;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.content.PrimaryCategoryHeading;
-import com.hk.service.CategoryService;
+import com.hk.pact.dao.content.PrimaryCategoryHeadingDao;
+import com.hk.pact.service.catalog.CategoryService;
 import com.hk.web.action.HomeAction;
 import com.hk.web.filter.WebContext;
 

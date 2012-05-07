@@ -19,7 +19,7 @@ import com.hk.admin.manager.MailingListManager;
 import com.hk.constants.core.RoleConstants;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.user.User;
-import com.hk.service.CategoryService;
+import com.hk.pact.service.catalog.CategoryService;
 
 @Secure(hasAnyRoles = { RoleConstants.MARKETING })
 @Component

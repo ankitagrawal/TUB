@@ -26,11 +26,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.hk.admin.impl.dao.marketing.AmazonFeedDao;
-import com.hk.dao.catalog.product.ProductVariantDao;
 import com.hk.domain.amazon.AmazonFeed;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.exception.HealthKartCatalogUploadException;
+import com.hk.pact.dao.catalog.product.ProductVariantDao;
 
 @Component
 public class AmazonXslParser {

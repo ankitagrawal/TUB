@@ -1,5 +1,5 @@
 <%@ page import="com.hk.web.HealthkartResponse" %>
-<%@ page import="com.hk.dao.MasterDataDao" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="mhc.domain.ReconciliationType" %>
 <%@ page import="java.util.List" %>
@@ -13,10 +13,10 @@
   <s:layout-component name="htmlHead">
 
  <%
-	MasterDataDao masterDataDao = InjectorFactory.getInjector().getInstance(MasterDataDao.class);
-  List<ReconciliationType> reconciliationTypeList  = masterDataDao.getReconciliationTypeList();
-  pageContext.setAttribute("reconciliationTypeList", reconciliationTypeList);
-%>
+     MasterDataDaoImpl masterDataDao = InjectorFactory.getInjector().getInstance(MasterDataDaoImpl.class);
+   List<ReconciliationType> reconciliationTypeList  = masterDataDao.getReconciliationTypeList();
+   pageContext.setAttribute("reconciliationTypeList", reconciliationTypeList);
+ %>
 
 
     <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>

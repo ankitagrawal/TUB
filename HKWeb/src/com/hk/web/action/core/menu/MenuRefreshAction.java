@@ -1,9 +1,9 @@
 package com.hk.web.action.core.menu;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.helper.MenuHelper;

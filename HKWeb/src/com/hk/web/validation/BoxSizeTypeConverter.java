@@ -8,8 +8,8 @@ import net.sourceforge.stripes.validation.ValidationError;
 
 import org.springframework.stereotype.Component;
 
-import com.hk.dao.BaseDao;
 import com.hk.domain.courier.BoxSize;
+import com.hk.pact.dao.BaseDao;
 
 @Component
 public class BoxSizeTypeConverter implements TypeConverter<BoxSize> {

@@ -15,11 +15,11 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.dao.core.AddressDao;
-import com.hk.dao.order.OrderDao;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.Address;
 import com.hk.manager.AddressBookManager;
+import com.hk.pact.dao.core.AddressDao;
+import com.hk.pact.dao.order.OrderDao;
 import com.hk.util.AddressMatchScoreCalculator;
 
 /**

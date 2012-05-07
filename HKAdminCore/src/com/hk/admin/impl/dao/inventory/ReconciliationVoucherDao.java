@@ -9,9 +9,9 @@ import org.springframework.stereotype.Repository;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.util.DateUtils;
-import com.hk.dao.impl.BaseDaoImpl;
 import com.hk.domain.inventory.rv.ReconciliationVoucher;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.impl.dao.BaseDaoImpl;
 
 @Repository
 public class ReconciliationVoucherDao extends BaseDaoImpl {

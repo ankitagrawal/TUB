@@ -17,15 +17,15 @@ import org.stripesstuff.plugin.security.Secure;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
-import com.hk.dao.order.cartLineItem.CartLineItemDao;
-import com.hk.dao.shippingOrder.lineItem.LineItemDao;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
-import com.hk.service.SkuService;
-import com.hk.service.UserService;
-import com.hk.service.shippingOrder.ShippingOrderService;
+import com.hk.pact.dao.order.cartLineItem.CartLineItemDao;
+import com.hk.pact.dao.shippingOrder.LineItemDao;
+import com.hk.pact.service.UserService;
+import com.hk.pact.service.inventory.SkuService;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.web.action.error.AdminPermissionAction;
 
 @Component

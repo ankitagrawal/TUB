@@ -1,12 +1,12 @@
 package com.hk.web.action.core.payment;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.Validate;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
@@ -18,9 +18,9 @@ import com.hk.domain.user.User;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.manager.OrderManager;
 import com.hk.manager.payment.PaymentManager;
-import com.hk.service.PaymentService;
-import com.hk.service.RoleService;
-import com.hk.service.UserService;
+import com.hk.pact.service.RoleService;
+import com.hk.pact.service.UserService;
+import com.hk.pact.service.payment.PaymentService;
 
 /**
  * Created by IntelliJ IDEA. User: rahul Date: Nov 25, 2011 Time: 12:50:58 PM To change this template use File |

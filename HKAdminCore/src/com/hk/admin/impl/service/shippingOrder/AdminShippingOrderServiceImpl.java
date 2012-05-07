@@ -28,12 +28,12 @@ import com.hk.domain.warehouse.Warehouse;
 import com.hk.exception.NoSkuException;
 import com.hk.helper.LineItemHelper;
 import com.hk.helper.ShippingOrderHelper;
-import com.hk.service.InventoryService;
-import com.hk.service.SkuService;
-import com.hk.service.WarehouseService;
-import com.hk.service.order.OrderService;
-import com.hk.service.shippingOrder.ShippingOrderService;
-import com.hk.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.pact.service.core.WarehouseService;
+import com.hk.pact.service.inventory.InventoryService;
+import com.hk.pact.service.inventory.SkuService;
+import com.hk.pact.service.order.OrderService;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 
 @Service
 public class AdminShippingOrderServiceImpl implements AdminShippingOrderService {

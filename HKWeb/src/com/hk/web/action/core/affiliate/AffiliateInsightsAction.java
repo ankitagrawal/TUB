@@ -17,12 +17,12 @@ import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.akube.framework.util.DateUtils;
 import com.hk.constants.core.RoleConstants;
-import com.hk.dao.affiliate.AffiliateDao;
-import com.hk.dao.affiliate.AffiliateTxnDao;
-import com.hk.dao.user.UserDao;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.affiliate.AffiliateTxn;
 import com.hk.domain.user.User;
+import com.hk.impl.dao.affiliate.AffiliateTxnDaoImpl;
+import com.hk.pact.dao.affiliate.AffiliateDao;
+import com.hk.pact.dao.user.UserDao;
 
 /**
  * Created by IntelliJ IDEA. User: Pratham Date: Sep 13, 2011 Time: 6:05:35 PM To change this template use File |
@@ -43,7 +43,7 @@ public class AffiliateInsightsAction extends BasePaginatedAction {
     @Autowired
     UserDao                    userDao;
     @Autowired
-    AffiliateTxnDao            affiliateTxnDao;
+    AffiliateTxnDaoImpl            affiliateTxnDao;
 
     public Resolution getReferredOrderDetails() {
         if (getPrincipal() != null) {

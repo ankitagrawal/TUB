@@ -14,11 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.dao.payment.PaymentDao;
 import com.hk.domain.payment.Payment;
+import com.hk.pact.dao.payment.PaymentDao;
 import com.hk.web.action.error.AdminPermissionAction;
 
 @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PAYMENT}, authActionBean = AdminPermissionAction.class)

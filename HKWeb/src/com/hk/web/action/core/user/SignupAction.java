@@ -23,10 +23,9 @@ import com.hk.domain.user.User;
 import com.hk.exception.HealthkartSignupException;
 import com.hk.manager.LinkManager;
 import com.hk.manager.UserManager;
-import com.hk.service.UserService;
+import com.hk.pact.service.UserService;
 import com.hk.web.action.HomeAction;
 import com.hk.web.action.core.auth.LoginAction;
-import com.hk.web.validation.EmailTypeTypeConverter;
 
 @Component
 public class SignupAction extends BaseAction {

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import com.hk.admin.impl.dao.inventory.AdminSkuItemDao;
 import com.hk.admin.impl.dao.warehouse.BinDao;
-import com.hk.dao.sku.SkuDao;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -16,9 +15,10 @@ import com.hk.domain.inventory.Bin;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.service.ProductService;
-import com.hk.service.SkuService;
-import com.hk.service.UserService;
+import com.hk.pact.dao.sku.SkuDao;
+import com.hk.pact.service.UserService;
+import com.hk.pact.service.catalog.ProductService;
+import com.hk.pact.service.inventory.SkuService;
 
 /**
  * Created by IntelliJ IDEA. User: PRATHAM Date: 1/16/12 Time: 7:01 PM To change this template use File | Settings |

@@ -1,5 +1,5 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
-<%@ page import="com.hk.service.WarehouseService" %>
+<%@ page import="com.hk.pact.service.core.WarehouseService" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 

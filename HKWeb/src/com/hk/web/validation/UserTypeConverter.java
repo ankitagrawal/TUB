@@ -9,9 +9,9 @@ import net.sourceforge.stripes.validation.ValidationError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.hk.dao.BaseDao;
-import com.hk.dao.user.UserDaoImpl;
 import com.hk.domain.user.User;
+import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.user.UserDao;
 
 @Component
 public class UserTypeConverter implements TypeConverter<User> {
@@ -21,7 +21,7 @@ public class UserTypeConverter implements TypeConverter<User> {
     @Autowired
     private BaseDao baseDao;
 
-    UserDaoImpl         userDao;
+    UserDao         userDao;
 
     public User convert(String s, Class<? extends User> aClass, Collection<ValidationError> validationErrors) {
         Long idLong = null;

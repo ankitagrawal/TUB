@@ -3,8 +3,6 @@ package com.hk.web.action.facebook.app.coupon;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.stereotype.Component;
-
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.JsonResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -12,14 +10,16 @@ import net.sourceforge.stripes.validation.Validate;
 import net.sourceforge.stripes.validation.ValidationErrorHandler;
 import net.sourceforge.stripes.validation.ValidationErrors;
 
+import org.springframework.stereotype.Component;
+
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.admin.manager.FanCouponManager;
-import com.hk.dao.coupon.FbcouponUserCampaignDao;
-import com.hk.dao.coupon.FbcouponUserDao;
 import com.hk.domain.coupon.FbcouponUser;
 import com.hk.domain.coupon.FbcouponUserCampaign;
 import com.hk.domain.marketing.FbcouponCampaign;
+import com.hk.pact.dao.coupon.FbcouponUserCampaignDao;
+import com.hk.pact.dao.coupon.FbcouponUserDao;
 import com.hk.web.HealthkartResponse;
 import com.restfb.Connection;
 import com.restfb.DefaultFacebookClient;

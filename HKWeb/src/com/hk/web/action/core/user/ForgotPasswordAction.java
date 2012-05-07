@@ -8,7 +8,6 @@ import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.JsonResolution;
 import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.validation.EmailTypeConverter;
 import net.sourceforge.stripes.validation.LocalizableError;
 import net.sourceforge.stripes.validation.Validate;
 import net.sourceforge.stripes.validation.ValidationErrorHandler;
@@ -19,12 +18,12 @@ import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
-import com.hk.dao.core.TempTokenDao;
-import com.hk.dao.user.UserDao;
 import com.hk.domain.TempToken;
 import com.hk.domain.user.User;
 import com.hk.manager.EmailManager;
 import com.hk.manager.LinkManager;
+import com.hk.pact.dao.core.TempTokenDao;
+import com.hk.pact.dao.user.UserDao;
 import com.hk.web.HealthkartResponse;
 
 @Component

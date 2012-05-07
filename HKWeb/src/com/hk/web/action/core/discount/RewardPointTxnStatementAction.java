@@ -1,15 +1,15 @@
 package com.hk.web.action.core.discount;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.domain.user.User;
 import com.hk.manager.ReferrerProgramManager;
-import com.hk.service.UserService;
+import com.hk.pact.service.UserService;
 
 @Component
 public class RewardPointTxnStatementAction extends BaseAction {

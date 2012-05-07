@@ -17,11 +17,11 @@ import com.CheckSumRequestBean;
 import com.TPSLUtil;
 import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.akube.framework.stripes.action.BasePaymentGatewaySendReceiveAction;
-import com.hk.dao.payment.PaymentDao;
 import com.hk.domain.payment.Payment;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.manager.payment.TekprocessTestPaymentGatewayWrapper;
+import com.hk.pact.dao.payment.PaymentDao;
 
 @Component
 public class TekprocessTestGatewaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<TekprocessTestPaymentGatewayWrapper> {

@@ -11,8 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.hk.dao.BaseDao;
 import com.hk.domain.order.CartLineItem;
+import com.hk.pact.dao.BaseDao;
 
 @Component
 public class CartLineItemTypeConverter implements TypeConverter<CartLineItem> {

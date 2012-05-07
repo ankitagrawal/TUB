@@ -8,8 +8,8 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.hk.constants.marketing.EnumAdNetworks;
-import com.hk.dao.impl.BaseDaoImpl;
 import com.hk.domain.marketing.AdNetworks;
+import com.hk.impl.dao.BaseDaoImpl;
 
 @Repository
 public class AdNetworksDao extends BaseDaoImpl {

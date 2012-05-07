@@ -14,14 +14,13 @@ import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 import org.stripesstuff.plugin.session.Session;
 
-
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.dao.user.UserDaoImpl;
 import com.hk.domain.user.User;
 import com.hk.dto.user.UserFilterDto;
+import com.hk.impl.dao.user.UserDaoImpl;
 import com.hk.web.action.error.AdminPermissionAction;
 
 @Secure(hasAnyPermissions = {PermissionConstants.SEARCH_USERS}, authActionBean = AdminPermissionAction.class)

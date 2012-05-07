@@ -27,15 +27,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.impl.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.util.XslParser;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.dao.courier.PincodeDao;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierServiceInfo;
+import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.util.XslGenerator;
 import com.hk.web.BatchProcessWorkManager;
 import com.hk.web.action.error.AdminPermissionAction;

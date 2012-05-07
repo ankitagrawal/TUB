@@ -23,7 +23,7 @@ import com.hk.domain.user.User;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.manager.OrderManager;
 import com.hk.manager.payment.PaymentManager;
-import com.hk.service.PaymentService;
+import com.hk.pact.service.payment.PaymentService;
 
 /**
  * User: kani Time: 12 Feb, 2010 3:59:02 PM

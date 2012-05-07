@@ -18,8 +18,8 @@ import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.manager.EmailManager;
 import com.hk.manager.LinkManager;
-import com.hk.service.shippingOrder.ShippingOrderService;
-import com.hk.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.web.action.admin.AdminHomeAction;
 import com.hk.web.action.error.AdminPermissionAction;
 

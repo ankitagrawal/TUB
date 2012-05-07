@@ -18,14 +18,6 @@ import org.stripesstuff.plugin.session.Session;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.HealthkartConstants;
-import com.hk.dao.BaseDao;
-import com.hk.dao.affiliate.AffiliateDao;
-import com.hk.dao.catalog.combo.ComboDao;
-import com.hk.dao.catalog.product.ProductCountDao;
-import com.hk.dao.core.AddressDao;
-import com.hk.dao.location.LocalityMapDao;
-import com.hk.dao.location.MapIndiaDao;
-import com.hk.dao.user.UserProductHistoryDao;
 import com.hk.domain.MapIndia;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.catalog.Manufacturer;
@@ -39,7 +31,13 @@ import com.hk.domain.user.User;
 import com.hk.dto.AddressDistanceDto;
 import com.hk.dto.menu.MenuNode;
 import com.hk.helper.MenuHelper;
-import com.hk.service.ProductService;
+import com.hk.pact.dao.affiliate.AffiliateDao;
+import com.hk.pact.dao.catalog.product.ProductCountDao;
+import com.hk.pact.dao.core.AddressDao;
+import com.hk.pact.dao.location.LocalityMapDao;
+import com.hk.pact.dao.location.MapIndiaDao;
+import com.hk.pact.dao.user.UserProductHistoryDao;
+import com.hk.pact.service.catalog.ProductService;
 import com.hk.util.SeoManager;
 import com.hk.web.action.core.search.SearchAction;
 import com.hk.web.filter.WebContext;
@@ -76,8 +74,8 @@ public class ProductAction extends BaseAction {
     @Autowired
     private AffiliateDao             affiliateDao;
 
-    @Autowired
-    private ComboDao                 comboDao;
+    /*@Autowired
+    private ComboDao                 comboDao;*/
     @Autowired
     private MapIndiaDao              mapIndiaDao;
     @Autowired

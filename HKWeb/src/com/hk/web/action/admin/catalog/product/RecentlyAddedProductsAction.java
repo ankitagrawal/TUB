@@ -10,11 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.dao.catalog.product.ProductDao;
 import com.hk.domain.catalog.product.Product;
+import com.hk.pact.dao.catalog.product.ProductDao;
 import com.hk.web.action.error.AdminPermissionAction;
 
 @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PRODUCT_CATALOG}, authActionBean = AdminPermissionAction.class)

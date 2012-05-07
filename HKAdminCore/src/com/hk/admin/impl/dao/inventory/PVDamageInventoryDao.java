@@ -2,10 +2,10 @@ package com.hk.admin.impl.dao.inventory;
 
 import org.springframework.stereotype.Repository;
 
-import com.hk.dao.impl.BaseDaoImpl;
 import com.hk.domain.inventory.ProductVariantDamageInventory;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.SkuItem;
+import com.hk.impl.dao.BaseDaoImpl;
 
 @Repository
 public class PVDamageInventoryDao extends BaseDaoImpl {

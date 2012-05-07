@@ -2,10 +2,10 @@ package com.hk.admin.impl.dao.inventory;
 
 import org.springframework.stereotype.Repository;
 
-import com.hk.dao.impl.BaseDaoImpl;
 import com.hk.domain.RetailLineItem;
 import com.hk.domain.shippingOrder.LineItem;
 // Generated Jan 9, 2012 11:17:59 PM by Hibernate Tools 3.2.4.CR1
+import com.hk.impl.dao.BaseDaoImpl;
 
 
 

@@ -33,7 +33,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
 import com.hk.admin.manager.FanCouponManager;
@@ -41,7 +40,7 @@ import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.offer.Offer;
 import com.hk.exception.HealthKartCouponException;
-import com.hk.service.CouponService;
+import com.hk.pact.service.discount.CouponService;
 import com.hk.util.ParseCsvFile;
 import com.hk.web.action.error.AdminPermissionAction;
 

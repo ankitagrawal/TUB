@@ -12,8 +12,8 @@ import org.springframework.stereotype.Component;
 import com.akube.framework.dao.Page;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.user.User;
-import com.hk.service.CategoryService;
-import com.hk.service.UserService;
+import com.hk.pact.service.UserService;
+import com.hk.pact.service.catalog.CategoryService;
 
 @Component
 public class MailingListManager {

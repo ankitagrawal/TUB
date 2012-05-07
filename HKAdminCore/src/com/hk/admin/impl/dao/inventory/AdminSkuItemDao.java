@@ -6,12 +6,12 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import com.hk.dao.impl.BaseDaoImpl;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.impl.dao.BaseDaoImpl;
 
 @SuppressWarnings("unchecked")
 @Repository

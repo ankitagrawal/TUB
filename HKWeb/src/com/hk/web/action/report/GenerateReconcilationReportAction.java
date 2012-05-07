@@ -26,14 +26,14 @@ import org.stripesstuff.plugin.security.Secure;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.impl.dao.courier.ShipmentDao;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.dao.order.OrderDao;
-import com.hk.dao.shippingOrder.ShippingOrderDao;
-import com.hk.dao.warehouse.WarehouseDao;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierServiceInfo;
+import com.hk.impl.dao.warehouse.WarehouseDaoImpl;
+import com.hk.pact.dao.order.OrderDao;
+import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
+import com.hk.pact.service.UserService;
 import com.hk.report.dto.order.reconcilation.ReconcilationReportDto;
 import com.hk.report.pact.service.shippingOrder.ReportShippingOrderService;
-import com.hk.service.UserService;
 import com.hk.util.io.HkXlsWriter;
 import com.hk.web.action.error.AdminPermissionAction;
 
@@ -53,7 +53,7 @@ public class GenerateReconcilationReportAction extends BaseAction {
     @Autowired
     ReportShippingOrderService shippingOrderReportingService;
     @Autowired
-    WarehouseDao               warehouseDao;
+    WarehouseDaoImpl               warehouseDao;
 
     // @Named (Keys.Env.adminDownloads)
     @Value("#{hkEnvProps['adminUploads']}")

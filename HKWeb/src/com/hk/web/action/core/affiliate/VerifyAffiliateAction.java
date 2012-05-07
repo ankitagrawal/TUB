@@ -13,16 +13,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.core.RoleConstants;
-import com.hk.dao.affiliate.AffiliateDao;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.user.User;
 import com.hk.manager.AffiliateManager;
-import com.hk.service.RoleService;
+import com.hk.pact.dao.affiliate.AffiliateDao;
+import com.hk.pact.service.RoleService;
 import com.hk.web.action.error.AdminPermissionAction;
 
 @Secure(hasAnyPermissions = { PermissionConstants.VERIFY_AFFILIATES }, authActionBean = AdminPermissionAction.class)

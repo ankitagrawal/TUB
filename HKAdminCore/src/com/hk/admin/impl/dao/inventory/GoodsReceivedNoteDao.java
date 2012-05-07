@@ -14,12 +14,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import com.akube.framework.dao.Page;
-import com.hk.dao.impl.BaseDaoImpl;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.GrnStatus;
 import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.impl.dao.BaseDaoImpl;
 
 @SuppressWarnings("unchecked")
 @Repository

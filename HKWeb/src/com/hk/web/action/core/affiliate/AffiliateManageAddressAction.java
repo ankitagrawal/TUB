@@ -18,13 +18,13 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.RoleConstants;
-import com.hk.dao.affiliate.AffiliateDao;
-import com.hk.dao.core.AddressDao;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.manager.AffiliateManager;
-import com.hk.service.UserService;
+import com.hk.pact.dao.affiliate.AffiliateDao;
+import com.hk.pact.dao.core.AddressDao;
+import com.hk.pact.service.UserService;
 
 /**
  * Created by IntelliJ IDEA. User: Pratham Date: Sep 13, 2011 Time: 6:18:48 PM To change this template use File |

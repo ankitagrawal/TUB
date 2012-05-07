@@ -21,10 +21,10 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.Breadcrumb;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.dao.user.UserDao;
-import com.hk.dao.warehouse.WarehouseDao;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.impl.dao.warehouse.WarehouseDaoImpl;
+import com.hk.pact.dao.user.UserDao;
 import com.hk.web.action.error.AdminPermissionAction;
 
 @Secure(hasAnyPermissions = {PermissionConstants.CHANGE_USER_ROLES}, authActionBean = AdminPermissionAction.class)
@@ -37,7 +37,7 @@ public class AssignWarehouseAction extends BaseAction{
   @Autowired
    UserDao userDao;
   @Autowired 
-  WarehouseDao warehouseDao;
+  WarehouseDaoImpl warehouseDao;
 
   @Validate(required = true)
   private User user;

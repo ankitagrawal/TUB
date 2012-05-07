@@ -9,16 +9,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.hk.dao.inventory.LowInventoryDao;
-import com.hk.dao.inventory.ProductVariantInventoryDao;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.LowInventory;
 import com.hk.domain.sku.Sku;
-import com.hk.service.InventoryService;
-import com.hk.service.ProductVariantService;
-import com.hk.service.SkuService;
-import com.hk.service.order.OrderService;
-import com.hk.service.shippingOrder.ShippingOrderService;
+import com.hk.pact.dao.inventory.LowInventoryDao;
+import com.hk.pact.dao.inventory.ProductVariantInventoryDao;
+import com.hk.pact.service.catalog.ProductVariantService;
+import com.hk.pact.service.inventory.InventoryService;
+import com.hk.pact.service.inventory.SkuService;
+import com.hk.pact.service.order.OrderService;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
 
 /**
  * Created by IntelliJ IDEA. User: PRATHAM Date: 1/19/12 Time: 3:14 PM To change this template use File | Settings |

@@ -14,10 +14,10 @@ import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.dao.catalog.product.ProductDao;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.helper.MenuHelper;
+import com.hk.pact.dao.catalog.product.ProductDao;
 import com.hk.report.dto.marketing.AdsProductMetaDataDto;
 
 @Secure

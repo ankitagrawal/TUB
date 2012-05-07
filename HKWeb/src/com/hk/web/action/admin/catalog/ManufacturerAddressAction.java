@@ -5,8 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.stereotype.Component;
-
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.LocalizableMessage;
@@ -18,14 +16,16 @@ import net.sourceforge.stripes.validation.Validate;
 import net.sourceforge.stripes.validation.ValidateNestedProperties;
 import net.sourceforge.stripes.validation.ValidationMethod;
 
+import org.springframework.stereotype.Component;
+
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
-import com.hk.dao.core.AddressDao;
-import com.hk.dao.core.ManufacturerDao;
-import com.hk.dao.location.LocalityMapDao;
 import com.hk.domain.LocalityMap;
 import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.user.Address;
+import com.hk.pact.dao.core.AddressDao;
+import com.hk.pact.dao.core.ManufacturerDao;
+import com.hk.pact.dao.location.LocalityMapDao;
 import com.hk.util.LatLongGenerator;
 
 /**

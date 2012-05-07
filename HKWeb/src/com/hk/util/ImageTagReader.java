@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.springframework.stereotype.Component;
 
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.metadata.Directory;

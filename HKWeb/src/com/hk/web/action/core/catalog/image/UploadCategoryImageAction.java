@@ -19,10 +19,10 @@ import org.springframework.stereotype.Component;
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.EnumS3UploadStatus;
-import com.hk.dao.catalog.category.CategoryDao;
-import com.hk.dao.catalog.category.CategoryImageDao;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.category.CategoryImage;
+import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
+import com.hk.impl.dao.catalog.category.CategoryImageDaoImpl;
 import com.hk.util.ImageManager;
 import com.hk.web.filter.WebContext;
 
@@ -37,7 +37,7 @@ public class UploadCategoryImageAction extends BaseAction {
 	String errorMessage = null;
 
 	@Autowired
-	public CategoryImageDao categoryImageDao;
+	public CategoryImageDaoImpl categoryImageDao;
 	private static Logger logger = Logger.getLogger(UploadCategoryImageAction.class);
 	List<CategoryImage> categoryImages;
 
@@ -50,7 +50,7 @@ public class UploadCategoryImageAction extends BaseAction {
 	
 	ImageManager imageManager;
 	
-	CategoryDao categoryDao;
+	CategoryDaoImpl categoryDao;
 
 
 	@DefaultHandler

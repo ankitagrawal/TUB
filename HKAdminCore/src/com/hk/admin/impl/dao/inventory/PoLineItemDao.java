@@ -2,10 +2,10 @@ package com.hk.admin.impl.dao.inventory;
 
 import org.springframework.stereotype.Repository;
 
-import com.hk.dao.impl.BaseDaoImpl;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.po.PurchaseOrder;
+import com.hk.impl.dao.BaseDaoImpl;
 
 @Repository
 public class PoLineItemDao extends BaseDaoImpl {

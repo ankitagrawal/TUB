@@ -13,17 +13,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.impl.dao.inventory.PurchaseOrderDao;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
-import com.hk.dao.BaseDao;
-import com.hk.dao.user.UserDaoImpl;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.core.PurchaseOrderStatus;
 import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.user.User;
+import com.hk.impl.dao.user.UserDaoImpl;
+import com.hk.pact.dao.BaseDao;
 import com.hk.web.action.error.AdminPermissionAction;
 
 @Secure(hasAnyPermissions = { PermissionConstants.PO_MANAGEMENT }, authActionBean = AdminPermissionAction.class)

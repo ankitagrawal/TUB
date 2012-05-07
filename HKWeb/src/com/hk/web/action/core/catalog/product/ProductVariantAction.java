@@ -14,9 +14,9 @@ import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.catalog.image.EnumImageSize;
-import com.hk.dao.catalog.product.ProductVariantDao;
 import com.hk.domain.catalog.product.ProductImage;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.pact.dao.catalog.product.ProductVariantDao;
 import com.hk.util.ImageManager;
 import com.hk.web.HealthkartResponse;
 

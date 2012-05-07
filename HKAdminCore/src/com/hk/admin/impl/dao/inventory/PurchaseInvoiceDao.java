@@ -8,11 +8,11 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.akube.framework.dao.Page;
-import com.hk.dao.impl.BaseDaoImpl;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.po.PurchaseInvoice;
 import com.hk.domain.inventory.po.PurchaseInvoiceStatus;
 import com.hk.domain.user.User;
+import com.hk.impl.dao.BaseDaoImpl;
 
 @SuppressWarnings("unchecked")
 @Repository

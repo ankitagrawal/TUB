@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
-import com.hk.dao.BaseDao;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.VariantConfigOption;
 import com.hk.domain.catalog.product.VariantConfigOptionParam;
@@ -28,9 +27,10 @@ import com.hk.exception.OutOfStockException;
 import com.hk.manager.LinkManager;
 import com.hk.manager.OrderManager;
 import com.hk.manager.UserManager;
+import com.hk.pact.dao.BaseDao;
+import com.hk.pact.service.UserService;
+import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.report.dto.order.LineItemConfigValuesDTO;
-import com.hk.service.ProductVariantService;
-import com.hk.service.UserService;
 import com.hk.web.HealthkartResponse;
 
 /**
@@ -40,6 +40,7 @@ import com.hk.web.HealthkartResponse;
 
 @Component
 public class AddToCartWithLineItemConfigAction extends BaseAction {
+    @SuppressWarnings("unused")
     private static Logger                 logger       = Logger.getLogger(AddToCartWithLineItemConfigAction.class);
 
     private String                        variantId;

@@ -15,9 +15,9 @@ import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.service.SkuService;
-import com.hk.service.WarehouseService;
-import com.hk.service.shippingOrder.ShippingOrderService;
+import com.hk.pact.service.core.WarehouseService;
+import com.hk.pact.service.inventory.SkuService;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.web.HealthkartResponse;
 
 @Component

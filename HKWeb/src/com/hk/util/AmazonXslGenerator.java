@@ -16,12 +16,12 @@ import org.springframework.stereotype.Component;
 
 import com.hk.admin.impl.dao.marketing.AmazonFeedDao;
 import com.hk.constants.catalog.image.EnumImageSize;
-import com.hk.dao.DoomDayDao;
-import com.hk.dao.catalog.product.ProductVariantDao;
 import com.hk.domain.amazon.AmazonFeed;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductOption;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.impl.dao.DoomDayDaoImpl;
+import com.hk.pact.dao.catalog.product.ProductVariantDao;
 @Component
 public class AmazonXslGenerator {
 
@@ -30,7 +30,7 @@ public class AmazonXslGenerator {
   
   AmazonFeedDao amazonFeedDao;
   
-  DoomDayDao doomDayDao;
+  DoomDayDaoImpl doomDayDao;
   
   ProductVariantDao productVariantDao;
 

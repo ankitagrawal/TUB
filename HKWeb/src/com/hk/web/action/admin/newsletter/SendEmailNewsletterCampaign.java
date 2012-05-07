@@ -26,19 +26,18 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-
 import com.akube.framework.gson.JsonUtils;
 import com.akube.framework.stripes.action.BaseAction;
 import com.google.gson.Gson;
 import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.manager.MailingListManager;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.dao.marketing.EmailCampaignDao;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.email.EmailCampaign;
 import com.hk.domain.user.User;
-import com.hk.service.CategoryService;
-import com.hk.service.UserService;
+import com.hk.pact.dao.marketing.EmailCampaignDao;
+import com.hk.pact.service.UserService;
+import com.hk.pact.service.catalog.CategoryService;
 import com.hk.util.ParseCsvFile;
 import com.hk.web.action.error.AdminPermissionAction;
 

@@ -19,8 +19,8 @@ import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.manager.EmailManager;
 import com.hk.manager.UserManager;
-import com.hk.service.RoleService;
-import com.hk.service.UserService;
+import com.hk.pact.service.RoleService;
+import com.hk.pact.service.UserService;
 import com.hk.web.HealthkartResponse;
 
 @Component

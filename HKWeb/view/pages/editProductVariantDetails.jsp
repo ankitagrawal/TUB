@@ -1,4 +1,4 @@
-<%@ page import="com.hk.dao.MasterDataDao" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>

@@ -18,12 +18,12 @@ import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.akube.framework.util.DateUtils;
 import com.hk.constants.core.RoleConstants;
-import com.hk.dao.affiliate.AffiliateDao;
-import com.hk.dao.affiliate.AffiliateTrafficDetailsDao;
-import com.hk.dao.user.UserDao;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.affiliate.AffiliateTrafficDetails;
 import com.hk.domain.user.User;
+import com.hk.pact.dao.affiliate.AffiliateDao;
+import com.hk.pact.dao.affiliate.AffiliateTrafficDetailsDao;
+import com.hk.pact.dao.user.UserDao;
 
 /**
  * Created by IntelliJ IDEA. User: Pratham Date: Sep 13, 2011 Time: 6:13:38 PM To change this template use File |

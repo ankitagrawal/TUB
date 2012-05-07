@@ -1,16 +1,16 @@
 package com.hk.web.action.core.email;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.Validate;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.dao.email.EmailRecepientDao;
 import com.hk.domain.email.EmailRecepient;
+import com.hk.pact.dao.email.EmailRecepientDao;
 
 @Component
 public class UnsubscribeEmailAction extends BaseAction {

@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.hk.domain.catalog.product.Product;
-import com.hk.service.ProductService;
+import com.hk.pact.service.catalog.ProductService;
 import com.hk.service.ServiceLocatorFactory;
 
 @Component

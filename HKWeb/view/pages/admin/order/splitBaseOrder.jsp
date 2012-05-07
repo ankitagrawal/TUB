@@ -1,11 +1,11 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
-<%@ page import="com.hk.service.WarehouseService" %>
+<%@ page import="com.hk.pact.service.core.WarehouseService" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
 <s:useActionBean beanclass="com.hk.web.action.admin.order.SplitBaseOrderAction" var="splitBaseOrderAction"/>
 <%
-  WarehouseService warehouseService = (WarehouseService) ServiceLocatorFactory.getService("WarehouseService");
+  WarehouseService warehouseService = (WarehouseService) ServiceLocatorFactory.getService(WarehouseService.class);
   pageContext.setAttribute("warehouses", warehouseService.getAllWarehouses());
   pageContext.setAttribute("corporateOffice", warehouseService.getCorporateOffice());
 %>

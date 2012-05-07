@@ -12,9 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.akube.framework.util.DateUtils;
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.discount.OfferConstants;
-import com.hk.dao.impl.RoleDao;
-import com.hk.dao.offer.OfferDao;
-import com.hk.dao.offer.OfferInstanceDao;
 import com.hk.domain.builder.OfferActionBuilder;
 import com.hk.domain.builder.OfferBuilder;
 import com.hk.domain.builder.OfferTriggerBuilder;
@@ -24,8 +21,11 @@ import com.hk.domain.offer.OfferAction;
 import com.hk.domain.offer.OfferTrigger;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
-import com.hk.service.CouponService;
-import com.hk.service.ProductService;
+import com.hk.pact.dao.RoleDao;
+import com.hk.pact.dao.offer.OfferDao;
+import com.hk.pact.dao.offer.OfferInstanceDao;
+import com.hk.pact.service.catalog.ProductService;
+import com.hk.pact.service.discount.CouponService;
 
 @Component
 public class OfferManager {

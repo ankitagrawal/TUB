@@ -8,12 +8,12 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
-import com.hk.dao.impl.BaseDaoImpl;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.domain.courier.PincodeDefaultCourier;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.impl.dao.BaseDaoImpl;
 
 @SuppressWarnings("unchecked")
 @Repository

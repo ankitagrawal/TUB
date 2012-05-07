@@ -2,7 +2,7 @@
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
 <%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page import="com.hk.domain.catalog.category.Category" %>
-<%@ page import="com.hk.dao.catalog.category.CategoryDao" %>
+<%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
@@ -12,10 +12,9 @@
 <c:set var="imageMediumSize" value="<%=EnumImageSize.MediumSize%>"/>
 <c:set var="imageSmallSize" value="<%=EnumImageSize.TinySize%>"/>
 <%
-  CategoryDao categoryDao = (CategoryDao) ServiceLocatorFactory.getService("CategoryDao");
+    CategoryDaoImpl categoryDao = (CategoryDaoImpl) ServiceLocatorFactory.getService(CategoryDao.class);
   Category eyeGlass = categoryDao.getCategoryByName("eyeglasses");
   pageContext.setAttribute("eyeGlass", eyeGlass);
-
 %>
 
 <s:layout-render name="/layouts/productLayout.jsp" pageTitle="${pa.seoData.title}">

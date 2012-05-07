@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
@@ -25,12 +24,12 @@ import com.hk.domain.user.User;
 import com.hk.dto.pricing.PricingDto;
 import com.hk.manager.OrderManager;
 import com.hk.manager.payment.PaymentManager;
+import com.hk.pact.service.OrderStatusService;
+import com.hk.pact.service.UserService;
+import com.hk.pact.service.order.OrderService;
+import com.hk.pact.service.payment.PaymentService;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pricing.PricingEngine;
-import com.hk.service.OrderStatusService;
-import com.hk.service.PaymentService;
-import com.hk.service.UserService;
-import com.hk.service.order.OrderService;
-import com.hk.service.shippingOrder.ShippingOrderService;
 import com.hk.web.action.error.AdminPermissionAction;
 
 @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_PAYMENT }, authActionBean = AdminPermissionAction.class)

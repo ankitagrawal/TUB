@@ -40,16 +40,18 @@ import com.hk.admin.util.ChhotuCourierDelivery;
 import com.hk.constants.report.ReportConstants;
 import com.hk.constants.shipment.EnumCourier;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
-import com.hk.dao.shippingOrder.lineItem.LineItemDao;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.User;
-import com.hk.service.shippingOrder.ShippingOrderService;
+import com.hk.pact.dao.shippingOrder.LineItemDao;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
 
+@SuppressWarnings("unchecked")
 @Component
 public class DeliveryStatusUpdateManager {
 
     private static Logger     logger                   = LoggerFactory.getLogger(DeliveryStatusUpdateManager.class);
+
 
     List                      sheetData                = new ArrayList();
     ShippingOrder             shippingOrder;
@@ -61,7 +63,7 @@ public class DeliveryStatusUpdateManager {
     String                    courierName              = "Delivered by ";
     String                    prefixComments           = "Delivered Items :<br/>";
     public static final int   digitsInGatewayId        = 5;
-    private static int        acceptableDeliveryPeriod = 50;
+    //private static int        acceptableDeliveryPeriod = 50;
 
     LineItemDao               lineItemDaoProvider;
 

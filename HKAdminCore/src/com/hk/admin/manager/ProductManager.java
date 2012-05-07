@@ -15,19 +15,19 @@ import org.springframework.stereotype.Component;
 import com.akube.framework.gson.JsonUtils;
 import com.google.gson.Gson;
 import com.hk.admin.util.XslParser;
-import com.hk.dao.BaseDao;
-import com.hk.dao.core.ManufacturerDao;
-import com.hk.dao.core.SupplierDao;
 import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductOption;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.user.User;
-import com.hk.service.CategoryService;
-import com.hk.service.ProductService;
-import com.hk.service.ProductVariantService;
-import com.hk.service.TaxService;
+import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.core.ManufacturerDao;
+import com.hk.pact.dao.core.SupplierDao;
+import com.hk.pact.service.catalog.CategoryService;
+import com.hk.pact.service.catalog.ProductService;
+import com.hk.pact.service.catalog.ProductVariantService;
+import com.hk.pact.service.core.TaxService;
 
 @Component
 public class ProductManager {

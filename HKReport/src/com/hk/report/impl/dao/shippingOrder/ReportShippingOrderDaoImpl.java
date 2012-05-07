@@ -13,9 +13,9 @@ import org.springframework.stereotype.Repository;
 
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
-import com.hk.dao.impl.BaseDaoImpl;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.report.dto.order.reconcilation.ReconcilationReportDto;
 import com.hk.report.pact.dao.shippingOrder.ReportShippingOrderDao;
 

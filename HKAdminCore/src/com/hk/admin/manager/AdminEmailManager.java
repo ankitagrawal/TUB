@@ -23,11 +23,6 @@ import com.hk.admin.dto.marketing.GoogleBannedWordDto;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.core.EnumEmailType;
 import com.hk.constants.email.EmailTemplateConstants;
-import com.hk.dao.BaseDao;
-import com.hk.dao.email.EmailRecepientDao;
-import com.hk.dao.email.EmailerHistoryDao;
-import com.hk.dao.email.NotifyMeDao;
-import com.hk.dao.marketing.EmailCampaignDao;
 import com.hk.domain.Ticket;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -38,7 +33,12 @@ import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.marketing.NotifyMe;
 import com.hk.domain.user.User;
 import com.hk.manager.LinkManager;
-import com.hk.service.EmailService;
+import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.email.EmailRecepientDao;
+import com.hk.pact.dao.email.EmailerHistoryDao;
+import com.hk.pact.dao.email.NotifyMeDao;
+import com.hk.pact.dao.marketing.EmailCampaignDao;
+import com.hk.pact.service.EmailService;
 import com.hk.util.NotifyMeListUtil;
 
 @SuppressWarnings("unchecked")

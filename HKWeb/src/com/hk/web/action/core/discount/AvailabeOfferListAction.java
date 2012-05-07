@@ -18,14 +18,14 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
-import com.hk.dao.offer.OfferInstanceDao;
-import com.hk.dao.order.OrderDao;
 import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
 import com.hk.manager.OfferManager;
 import com.hk.manager.OrderManager;
-import com.hk.service.UserService;
+import com.hk.pact.dao.offer.OfferInstanceDao;
+import com.hk.pact.dao.order.OrderDao;
+import com.hk.pact.service.UserService;
 import com.hk.web.HealthkartResponse;
 
 @Secure

@@ -1,6 +1,6 @@
 package com.akube.framework.imaging;
 
-import com.akube.framework.exception.ImagingException;
+import com.hk.exception.ImagingException;
 import com.sun.media.jai.codec.JPEGEncodeParam;
 import com.sun.media.jai.codec.SeekableStream;
 import mediautil.image.jpeg.LLJTran;

@@ -25,10 +25,10 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.manager.SMSManager;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.core.RoleConstants;
-import com.hk.dao.core.AddressDao;
-import com.hk.dao.impl.RoleDao;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.user.Address;
+import com.hk.pact.dao.RoleDao;
+import com.hk.pact.dao.core.AddressDao;
 import com.hk.web.action.error.AdminPermissionAction;
 
 @Secure(hasAnyPermissions = { PermissionConstants.SEND_SMS }, authActionBean = AdminPermissionAction.class)

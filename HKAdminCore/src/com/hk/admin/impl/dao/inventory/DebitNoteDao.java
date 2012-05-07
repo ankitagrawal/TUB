@@ -10,11 +10,11 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.akube.framework.dao.Page;
-import com.hk.dao.impl.BaseDaoImpl;
 import com.hk.domain.accounting.DebitNote;
 import com.hk.domain.accounting.DebitNoteStatus;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.po.PurchaseOrder;
+import com.hk.impl.dao.BaseDaoImpl;
 
 @SuppressWarnings("unchecked")
 @Repository

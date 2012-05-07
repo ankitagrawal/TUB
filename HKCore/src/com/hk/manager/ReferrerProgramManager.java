@@ -17,9 +17,6 @@ import com.google.common.collect.TreeMultimap;
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.constants.discount.EnumRewardPointTxnType;
-import com.hk.dao.reward.RewardPointDao;
-import com.hk.dao.reward.RewardPointTxnDao;
-import com.hk.dao.user.UserAccountInfoDao;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.offer.Offer;
 import com.hk.domain.offer.rewardPoint.RewardPoint;
@@ -27,7 +24,10 @@ import com.hk.domain.offer.rewardPoint.RewardPointTxn;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
 import com.hk.domain.user.UserAccountInfo;
-import com.hk.service.CouponService;
+import com.hk.pact.dao.reward.RewardPointDao;
+import com.hk.pact.dao.reward.RewardPointTxnDao;
+import com.hk.pact.dao.user.UserAccountInfoDao;
+import com.hk.pact.service.discount.CouponService;
 import com.sun.istack.internal.Nullable;
 
 /**

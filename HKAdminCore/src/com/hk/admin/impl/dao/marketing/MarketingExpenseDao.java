@@ -7,10 +7,10 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.akube.framework.dao.Page;
-import com.hk.dao.impl.BaseDaoImpl;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.marketing.AdNetworks;
 import com.hk.domain.marketing.MarketingExpense;
+import com.hk.impl.dao.BaseDaoImpl;
 
 
 @Repository

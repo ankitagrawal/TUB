@@ -7,8 +7,8 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.hk.constants.shipment.EnumCourier;
-import com.hk.dao.impl.BaseDaoImpl;
 import com.hk.domain.courier.Courier;
+import com.hk.impl.dao.BaseDaoImpl;
 
 @Repository
 public class CourierDao extends BaseDaoImpl {

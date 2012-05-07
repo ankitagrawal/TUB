@@ -4,7 +4,7 @@
 <%@ page import="com.hk.constants.payment.EnumPaymentStatus" %>
 <%@ page import="com.hk.constants.order.EnumOrderStatus" %>
 <%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus" %>
-<%@ page import="com.hk.dao.MasterDataDao" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>

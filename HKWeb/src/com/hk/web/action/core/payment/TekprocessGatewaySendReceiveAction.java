@@ -17,12 +17,12 @@ import com.CheckSumRequestBean;
 import com.TPSLUtil;
 import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.akube.framework.stripes.action.BasePaymentGatewaySendReceiveAction;
-import com.hk.dao.payment.PaymentDao;
 import com.hk.domain.payment.Payment;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.manager.EmailManager;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.manager.payment.TekprocessPaymentGatewayWrapper;
+import com.hk.pact.dao.payment.PaymentDao;
 
 @Component
 public class TekprocessGatewaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<TekprocessPaymentGatewayWrapper> {

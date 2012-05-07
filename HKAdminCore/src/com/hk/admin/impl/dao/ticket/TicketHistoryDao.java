@@ -5,8 +5,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.akube.framework.util.BaseUtils;
 import com.hk.admin.dto.ticket.TicketHistoryDto;
-import com.hk.dao.impl.BaseDaoImpl;
 import com.hk.domain.TicketHistory;
+import com.hk.impl.dao.BaseDaoImpl;
 
 @Repository
 public class TicketHistoryDao extends BaseDaoImpl {

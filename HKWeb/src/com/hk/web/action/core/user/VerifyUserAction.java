@@ -11,15 +11,15 @@ import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.RoleConstants;
-import com.hk.dao.core.TempTokenDao;
-import com.hk.dao.coupon.CouponDao;
-import com.hk.dao.offer.OfferInstanceDao;
 import com.hk.domain.TempToken;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.manager.OfferManager;
 import com.hk.manager.UserManager;
-import com.hk.service.RoleService;
+import com.hk.pact.dao.core.TempTokenDao;
+import com.hk.pact.dao.coupon.CouponDao;
+import com.hk.pact.dao.offer.OfferInstanceDao;
+import com.hk.pact.service.RoleService;
 
 @Component
 public class VerifyUserAction extends BaseAction {

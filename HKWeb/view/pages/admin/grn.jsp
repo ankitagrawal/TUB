@@ -1,6 +1,6 @@
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
 <%@ page import="com.hk.constants.core.PermissionConstants" %>
-<%@ page import="com.hk.dao.MasterDataDao" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="mhc.service.dao.TaxDao" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="mhc.service.dao.WarehouseDao" %>
@@ -10,9 +10,9 @@
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.GRNAction" var="pa"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="GRN">
 <%
-    WarehouseDao warehouseDao = InjectorFactory.getInjector().getInstance(WarehouseDao.class);
+    WarehouseDaoImpl warehouseDao = InjectorFactory.getInjector().getInstance(WarehouseDaoImpl.class);
     pageContext.setAttribute("whList", warehouseDao.listAll());
-  %>
+%>
 <s:layout-component name="htmlHead">
 
 	<link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>

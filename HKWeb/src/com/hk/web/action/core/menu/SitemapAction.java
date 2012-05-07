@@ -3,19 +3,19 @@ package com.hk.web.action.core.menu;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.UrlBinding;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.domain.catalog.product.Product;
 import com.hk.dto.menu.MenuNode;
 import com.hk.helper.MenuHelper;
 import com.hk.manager.LinkManager;
-import com.hk.service.ProductService;
+import com.hk.pact.service.catalog.ProductService;
 
 @UrlBinding("/sitemap.xml")
 @Component

@@ -17,15 +17,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.dao.BaseDao;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.content.SeoData;
+import com.hk.pact.service.catalog.CategoryService;
+import com.hk.pact.service.catalog.ProductService;
 import com.hk.report.dto.content.seo.SeoProductDto;
-import com.hk.service.CategoryService;
-import com.hk.service.ProductService;
 import com.hk.util.SeoManager;
 import com.hk.web.action.error.AdminPermissionAction;
 

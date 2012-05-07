@@ -3,9 +3,7 @@ package com.hk.web.action.core.payment;
 import net.sourceforge.stripes.action.LocalizableMessage;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.validation.EmailTypeConverter;
 import net.sourceforge.stripes.validation.LocalizableError;
-import net.sourceforge.stripes.validation.Validate;
 import net.sourceforge.stripes.validation.ValidationMethod;
 
 import org.apache.commons.lang.StringUtils;
@@ -15,22 +13,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.payment.EnumPaymentMode;
-import com.hk.dao.impl.RoleDao;
-import com.hk.dao.payment.PaymentModeDao;
-import com.hk.dao.user.UserDaoImpl;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.order.Order;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.dto.pricing.PricingDto;
+import com.hk.impl.dao.user.UserDaoImpl;
 import com.hk.manager.OrderManager;
 import com.hk.manager.payment.PaymentManager;
+import com.hk.pact.dao.RoleDao;
+import com.hk.pact.dao.payment.PaymentModeDao;
 import com.hk.pricing.PricingEngine;
 import com.hk.web.action.core.cart.CartAction;
 import com.hk.web.action.core.order.OrderSummaryAction;

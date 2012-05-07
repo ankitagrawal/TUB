@@ -7,7 +7,7 @@ import java.util.List;
 import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
 
-import com.hk.dao.impl.BaseDaoImpl;
+import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.report.dto.inventory.InventorySoldDto;
 import com.hk.report.pact.dao.catalog.product.ReportProductVariantDao;
 

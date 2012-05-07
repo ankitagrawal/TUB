@@ -23,12 +23,12 @@ import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.order.ShippingOrder;
-import com.hk.search.ShippingOrderSearchCriteria;
-import com.hk.service.order.OrderService;
-import com.hk.service.shippingOrder.ShippingOrderService;
-import com.hk.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.pact.service.order.OrderService;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.web.action.error.AdminPermissionAction;
 
 /**

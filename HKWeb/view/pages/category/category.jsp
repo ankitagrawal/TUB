@@ -5,8 +5,8 @@
 <%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page import="com.hk.domain.catalog.category.Category" %>
 <%@ page import="com.hk.domain.MapIndia" %>
-<%@ page import="com.hk.dao.catalog.category.CategoryDao" %>
-<%@ page import="com.hk.dao.location.MapIndiaDao" %>
+<%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
+<%@ page import="com.hk.pact.dao.location.MapIndiaDao" %>
 <%@ page import="com.hk.web.filter.WebContext" %>
 <%@ page import="org.stripesstuff.plugin.security.J2EESecurityManager" %>
 <%@ page import="java.util.List" %>
@@ -20,10 +20,10 @@
 <c:if test="${categoryBean.category.name == 'services'}">
   <s:layout-render name="/layouts/embed/changePreferredZone.jsp" filterUrlFragment=""/>
   <%
-    CategoryDao categoryDao = (CategoryDao)ServiceLocatorFactory.getService("CategoryDao");
+    CategoryDao categoryDao = (CategoryDao)ServiceLocatorFactory.getService(CategoryDao.class);
     Category services = categoryDao.getCategoryByName("services");
     pageContext.setAttribute("services", services);
-    MapIndiaDao mapIndiaDao = (MapIndiaDao)ServiceLocatorFactory.getService("MapIndiaDao");
+    MapIndiaDao mapIndiaDao = (MapIndiaDao)ServiceLocatorFactory.getService(MapIndiaDao.class);
     Cookie preferredZoneCookie = BaseUtils.getCookie(WebContext.getRequest(), HealthkartConstants.Cookie.preferredZone);
     if (preferredZoneCookie != null && preferredZoneCookie.getValue() != null) {
       MapIndia mapIndia = mapIndiaDao.findByCity(preferredZoneCookie.getValue());

@@ -11,8 +11,6 @@ package com.hk.util;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import org.springframework.stereotype.Component;
-
 public class ExceptionUtils {
   public static String getStackTrace(Throwable ex) {
     StringWriter sw = new StringWriter();

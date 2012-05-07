@@ -42,11 +42,6 @@ import com.hk.constants.core.EnumRole;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.inventory.EnumReconciliationStatus;
 import com.hk.constants.report.ReportConstants;
-import com.hk.dao.BaseDao;
-import com.hk.dao.ReconciliationStatusDao;
-import com.hk.dao.affiliate.AffiliateCategoryDao;
-import com.hk.dao.core.SupplierDao;
-import com.hk.dao.inventory.LowInventoryDao;
 import com.hk.domain.RetailLineItem;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.Manufacturer;
@@ -73,18 +68,23 @@ import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.exception.HealthKartCatalogUploadException;
-import com.hk.service.CategoryService;
-import com.hk.service.InventoryService;
-import com.hk.service.PaymentService;
-import com.hk.service.PincodeService;
-import com.hk.service.ProductService;
-import com.hk.service.ProductVariantService;
-import com.hk.service.RoleService;
+import com.hk.impl.dao.ReconciliationStatusDaoImpl;
+import com.hk.impl.dao.affiliate.AffiliateCategoryDaoImpl;
+import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.core.SupplierDao;
+import com.hk.pact.dao.inventory.LowInventoryDao;
+import com.hk.pact.service.RoleService;
+import com.hk.pact.service.catalog.CategoryService;
+import com.hk.pact.service.catalog.ProductService;
+import com.hk.pact.service.catalog.ProductVariantService;
+import com.hk.pact.service.core.PincodeService;
+import com.hk.pact.service.core.TaxService;
+import com.hk.pact.service.core.WarehouseService;
+import com.hk.pact.service.inventory.InventoryService;
+import com.hk.pact.service.inventory.SkuService;
+import com.hk.pact.service.payment.PaymentService;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.service.ServiceLocatorFactory;
-import com.hk.service.SkuService;
-import com.hk.service.TaxService;
-import com.hk.service.WarehouseService;
-import com.hk.service.shippingOrder.ShippingOrderService;
 
 @Component
 public class XslParser {
@@ -119,7 +119,7 @@ public class XslParser {
     @Autowired
     private RetailLineItemDao     retailLineItemDao;
     @Autowired
-    private AffiliateCategoryDao  affiliateCategoryDao;
+    private AffiliateCategoryDaoImpl  affiliateCategoryDao;
 
     @Autowired
     private ProductService        productService;
@@ -755,7 +755,7 @@ public class XslParser {
         HashMap<ReconciliationStatus, List<String>> reconciliationMap = new HashMap<ReconciliationStatus, List<String>>();
         List<String> reconciledOrders = new ArrayList<String>();
         List<String> reconcilationPendingOrders = new ArrayList<String>();
-        ReconciliationStatusDao reconciliationStatusDao = ServiceLocatorFactory.getService(ReconciliationStatusDao.class);
+        ReconciliationStatusDaoImpl reconciliationStatusDao = ServiceLocatorFactory.getService(ReconciliationStatusDaoImpl.class);
         logger.debug("parsing reconciled order excel: " + objInFile.getAbsolutePath());
 
         InputStream poiInputStream = new FileInputStream(objInFile);
@@ -1581,11 +1581,11 @@ public class XslParser {
         this.paymentService = paymentService;
     }
 
-    public AffiliateCategoryDao getAffiliateCategoryDao() {
+    public AffiliateCategoryDaoImpl getAffiliateCategoryDao() {
         return affiliateCategoryDao;
     }
 
-    public void setAffiliateCategoryDao(AffiliateCategoryDao affiliateCategoryDao) {
+    public void setAffiliateCategoryDao(AffiliateCategoryDaoImpl affiliateCategoryDao) {
         this.affiliateCategoryDao = affiliateCategoryDao;
     }
 

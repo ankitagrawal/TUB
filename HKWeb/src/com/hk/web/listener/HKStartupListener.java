@@ -9,10 +9,8 @@ import javax.servlet.ServletContextListener;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.akube.framework.util.BaseUtils;
-import com.hk.helper.MenuHelper;
 import com.hk.web.AppConstants;
 
 public class HKStartupListener implements ServletContextListener {

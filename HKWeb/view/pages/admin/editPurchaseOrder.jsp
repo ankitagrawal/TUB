@@ -1,5 +1,5 @@
 <%@ page import="com.hk.web.HealthkartResponse" %>
-<%@ page import="com.hk.dao.MasterDataDao" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.constants.inventory.EnumPurchaseOrderStatus" %>
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>

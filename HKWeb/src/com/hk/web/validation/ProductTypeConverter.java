@@ -9,9 +9,9 @@ import net.sourceforge.stripes.validation.ValidationError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.hk.dao.BaseDao;
-import com.hk.dao.catalog.product.ProductDao;
 import com.hk.domain.catalog.product.Product;
+import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.catalog.product.ProductDao;
 
 @Component
 public class ProductTypeConverter implements TypeConverter<Product> {

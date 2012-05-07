@@ -31,9 +31,9 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.impl.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.util.XslParser;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.dao.courier.PincodeDao;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.CourierServiceInfo;
+import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.util.XslGenerator;
 
 @Secure(hasAnyPermissions = { PermissionConstants.SEARCH_ORDERS })

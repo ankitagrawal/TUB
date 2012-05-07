@@ -9,8 +9,8 @@ import net.sourceforge.stripes.validation.ValidationError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.hk.dao.BaseDao;
 import com.hk.domain.user.B2bUserDetails;
+import com.hk.pact.dao.BaseDao;
 
 @Component
 public class B2bUserDetailsTypeConverter implements TypeConverter<B2bUserDetails> {

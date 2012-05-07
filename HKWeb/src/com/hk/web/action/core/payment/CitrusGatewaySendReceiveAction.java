@@ -22,13 +22,13 @@ import com.ecs.epg.sfa.java.Merchant;
 import com.ecs.epg.sfa.java.PGResponse;
 import com.ecs.epg.sfa.java.PostLib;
 import com.hk.constants.payment.EnumCitrusResponseCodes;
-import com.hk.dao.payment.PaymentDao;
 import com.hk.domain.payment.Payment;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.manager.EmailManager;
 import com.hk.manager.LinkManager;
 import com.hk.manager.payment.CitrusTestPaymentGatewayWrapper;
 import com.hk.manager.payment.PaymentManager;
+import com.hk.pact.dao.payment.PaymentDao;
 
 @Component
 public class CitrusGatewaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<CitrusTestPaymentGatewayWrapper> {

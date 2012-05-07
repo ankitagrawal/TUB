@@ -9,8 +9,6 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import org.springframework.stereotype.Component;
-
 public class GMailUtility {
 
 	private static final String SMTP_HOST_NAME = "smtp.gmail.com";

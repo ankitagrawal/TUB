@@ -3,9 +3,9 @@
 <%@ page import="com.hk.domain.catalog.category.Category" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.hk.dao.catalog.category.CategoryDao" %>
+<%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
-<%@ page import="com.hk.dao.location.MapIndiaDao" %>
+<%@ page import="com.hk.pact.dao.location.MapIndiaDao" %>
 <%@ page import="com.akube.framework.util.BaseUtils" %>
 <%@ page import="com.hk.constants.core.HealthkartConstants" %>
 <%@ page import="com.hk.domain.MapIndia" %>
@@ -24,7 +24,7 @@
     <meta name="keywords" content="${ca.seoData.metaKeyword}"/>
     <meta name="description" content="${ca.seoData.metaDescription}"/>
     <%
-        CategoryDao categoryDao = (CategoryDao)ServiceLocatorFactory.getService("CategoryDao");
+        CategoryDao categoryDao = (CategoryDao)ServiceLocatorFactory.getService(CategoryDao.class);
         List<Category> applicableCategories = new ArrayList<Category>();
         applicableCategories.add(categoryDao.getCategoryByName("bp-monitor"));
         pageContext.setAttribute("applicableCategories", applicableCategories);
@@ -32,7 +32,7 @@
         Category services = categoryDao.getCategoryByName("services");
         pageContext.setAttribute("services", services);
         if (ca.getRootCategorySlug().equals("services")) {
-            MapIndiaDao mapIndiaDao = (MapIndiaDao)ServiceLocatorFactory.getService("MapIndiaDao");
+            MapIndiaDao mapIndiaDao = (MapIndiaDao)ServiceLocatorFactory.getService(MapIndiaDao.class);
             Cookie preferredZoneCookie = BaseUtils.getCookie(request, HealthkartConstants.Cookie.preferredZone);
             if (preferredZoneCookie != null && preferredZoneCookie.getValue() != null) {
                 MapIndia mapIndia = mapIndiaDao.findByCity(preferredZoneCookie.getValue());

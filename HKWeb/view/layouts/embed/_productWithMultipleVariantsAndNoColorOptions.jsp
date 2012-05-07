@@ -1,5 +1,5 @@
 <%@ page import="com.hk.domain.catalog.product.Product" %>
-<%@ page import="com.hk.dao.catalog.product.ProductDao" %>
+<%@ page import="com.hk.pact.dao.catalog.product.ProductDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
@@ -8,7 +8,7 @@
 
 <s:layout-definition>
   <%
-    ProductDao productDao = (ProductDao)ServiceLocatorFactory.getService("ProductDao");
+    ProductDao productDao = (ProductDao)ServiceLocatorFactory.getService(ProductDao.class);
     String productId = (String) pageContext.getAttribute("productId");
     Product product = productDao.getProductById(productId);
     pageContext.setAttribute("product", product);

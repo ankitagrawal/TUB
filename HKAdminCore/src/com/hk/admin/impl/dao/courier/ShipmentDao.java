@@ -2,7 +2,7 @@ package com.hk.admin.impl.dao.courier;
 
 import org.springframework.stereotype.Repository;
 
-import com.hk.dao.impl.BaseDaoImpl;
+import com.hk.impl.dao.BaseDaoImpl;
 
 /**
  * Created by IntelliJ IDEA. User: Rahul Date: Mar 6, 2012 Time: 6:40:31 PM To change this template use File | Settings |

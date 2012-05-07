@@ -4,16 +4,14 @@ package com.hk.web.validation;
 import java.util.Collection;
 import java.util.Locale;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import net.sourceforge.stripes.validation.TypeConverter;
 import net.sourceforge.stripes.validation.ValidationError;
 
-import com.hk.dao.BaseDao;
-import com.hk.dao.payment.PaymentStatusDao;
-import com.hk.domain.TicketStatus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.hk.domain.core.PaymentStatus;
+import com.hk.pact.dao.BaseDao;
 
 /**
  * Generated

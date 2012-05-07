@@ -6,34 +6,34 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.impl.dao.inventory.AdminSkuItemDao;
 import com.hk.admin.impl.dao.warehouse.BinDao;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
-import com.hk.dao.catalog.category.CategoryDao;
-import com.hk.dao.payment.PaymentModeDao;
-import com.hk.dao.sku.SkuItemDao;
-import com.hk.dao.user.UserDaoImpl;
+import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.Bin;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.SkuItem;
+import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
+import com.hk.impl.dao.user.UserDaoImpl;
 import com.hk.manager.OrderManager;
 import com.hk.manager.ReferrerProgramManager;
-import com.hk.search.ShippingOrderSearchCriteria;
-import com.hk.service.UserService;
-import com.hk.service.shippingOrder.ShippingOrderService;
-import com.hk.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.pact.dao.payment.PaymentModeDao;
+import com.hk.pact.dao.sku.SkuItemDao;
+import com.hk.pact.service.UserService;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.util.BarcodeGenerator;
 
 /**
@@ -56,7 +56,7 @@ public class JobCartAction extends BaseAction {
   String baseGatewayOrderId;
 
   @Autowired
-  CategoryDao categoryDao;
+  CategoryDaoImpl categoryDao;
   @Autowired
   ReferrerProgramManager referrerProgramManager;
   @Autowired

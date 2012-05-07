@@ -24,16 +24,16 @@ import org.stripesstuff.plugin.session.Session;
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.constants.core.HealthkartConstants;
-import com.hk.dao.catalog.category.CategoryDao;
-import com.hk.dao.catalog.product.ProductDao;
-import com.hk.dao.user.UserDao;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.content.SeoData;
 import com.hk.dto.menu.MenuNode;
 import com.hk.helper.MenuHelper;
+import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
 import com.hk.manager.SolrManager;
 import com.hk.manager.UserManager;
+import com.hk.pact.dao.catalog.product.ProductDao;
+import com.hk.pact.dao.user.UserDao;
 import com.hk.util.SeoManager;
 
 @UrlBinding("/brand/{topLevelCategory}/{brand}")
@@ -62,7 +62,7 @@ public class BrandCatalogAction extends BasePaginatedAction {
   @Autowired
    SolrManager solrManager;
   @Autowired
-   CategoryDao categoryDao;
+   CategoryDaoImpl categoryDao;
   @Autowired
    MenuHelper menuHelper;
   @Autowired

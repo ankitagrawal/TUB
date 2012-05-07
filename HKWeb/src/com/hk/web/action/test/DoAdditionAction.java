@@ -1,11 +1,12 @@
 package com.hk.web.action.test;
 
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.validation.Validate;
+
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.validation.Validate;
 
 @Component
 public class DoAdditionAction extends BaseAction {

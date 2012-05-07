@@ -11,8 +11,8 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.dao.user.UserDao;
 import com.hk.domain.user.User;
+import com.hk.pact.dao.user.UserDao;
 import com.hk.web.action.error.AdminPermissionAction;
 
 /**

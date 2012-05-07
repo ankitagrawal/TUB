@@ -1,11 +1,11 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
-<%@ page import="com.hk.service.WarehouseService" %>
+<%@ page import="com.hk.pact.service.core.WarehouseService" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/default.jsp">
   <%
-    WarehouseService warehouseService = InjectorFactory.getInjector().getInstance(WarehouseService.class);
-    pageContext.setAttribute("whList", warehouseService.getAllWarehouses());
+      WarehouseService warehouseService = InjectorFactory.getInjector().getInstance(WarehouseService.class);
+        pageContext.setAttribute("whList", warehouseService.getAllWarehouses());
   %>
 
   <s:layout-component name="rhsContent">

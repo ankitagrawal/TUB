@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.hk.admin.dto.marketing.GoogleBannedWordDto;
 import com.hk.admin.pact.dao.marketing.GoogleBannedWordDao;
-import com.hk.dao.impl.BaseDaoImpl;
+import com.hk.impl.dao.BaseDaoImpl;
 
 
 @Repository

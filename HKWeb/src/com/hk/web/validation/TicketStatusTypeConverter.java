@@ -3,14 +3,14 @@ package com.hk.web.validation;
 import java.util.Collection;
 import java.util.Locale;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import net.sourceforge.stripes.validation.TypeConverter;
 import net.sourceforge.stripes.validation.ValidationError;
 
-import com.hk.dao.BaseDao;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.hk.domain.TicketStatus;
+import com.hk.pact.dao.BaseDao;
 
 @Component
 public class TicketStatusTypeConverter implements TypeConverter<TicketStatus> {

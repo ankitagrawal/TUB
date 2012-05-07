@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.springframework.stereotype.Component;
 
 /*
  * User: Pratham

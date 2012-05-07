@@ -19,12 +19,12 @@ import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.discount.EnumRewardPointStatus;
-import com.hk.dao.reward.RewardPointDao;
 import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.offer.rewardPoint.RewardPointMode;
 import com.hk.domain.offer.rewardPoint.RewardPointStatus;
 import com.hk.manager.ReferrerProgramManager;
-import com.hk.service.order.RewardPointService;
+import com.hk.pact.dao.reward.RewardPointDao;
+import com.hk.pact.service.order.RewardPointService;
 import com.hk.web.action.error.AdminPermissionAction;
 
 @Secure(hasAnyPermissions = { PermissionConstants.MODERATE_REWARD_POINTS }, authActionBean = AdminPermissionAction.class)

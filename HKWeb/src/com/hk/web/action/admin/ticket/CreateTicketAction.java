@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.Breadcrumb;
 import com.akube.framework.util.FormatUtils;
@@ -26,8 +25,6 @@ import com.hk.admin.manager.TicketManager;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.ticket.EnumTicketType;
-import com.hk.dao.BaseDao;
-import com.hk.dao.order.OrderDao;
 import com.hk.domain.Ticket;
 import com.hk.domain.TicketType;
 import com.hk.domain.courier.Courier;
@@ -36,7 +33,8 @@ import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.manager.EmailManager;
 import com.hk.manager.LinkManager;
-import com.hk.service.UserService;
+import com.hk.pact.dao.order.OrderDao;
+import com.hk.pact.service.UserService;
 import com.hk.web.action.error.AdminPermissionAction;
 
 /**

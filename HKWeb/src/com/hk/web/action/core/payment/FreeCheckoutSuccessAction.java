@@ -1,15 +1,15 @@
 package com.hk.web.action.core.payment;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.validation.Validate;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.dao.payment.PaymentDao;
 import com.hk.domain.payment.Payment;
+import com.hk.pact.dao.payment.PaymentDao;
 
 /**
  * User: kani

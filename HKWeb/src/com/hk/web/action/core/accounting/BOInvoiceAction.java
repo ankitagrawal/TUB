@@ -13,16 +13,16 @@ import org.springframework.stereotype.Component;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.impl.dao.courier.CourierDao;
 import com.hk.admin.impl.dao.courier.CourierServiceInfoDao;
-import com.hk.dao.catalog.category.CategoryDao;
-import com.hk.dao.core.AddressDao;
-import com.hk.dao.order.OrderDao;
-import com.hk.dao.payment.PaymentModeDao;
-import com.hk.dao.user.UserDao;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.order.Order;
 import com.hk.dto.pricing.PricingDto;
+import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
 import com.hk.manager.OrderManager;
 import com.hk.manager.ReferrerProgramManager;
+import com.hk.pact.dao.core.AddressDao;
+import com.hk.pact.dao.order.OrderDao;
+import com.hk.pact.dao.payment.PaymentModeDao;
+import com.hk.pact.dao.user.UserDao;
 import com.hk.util.BarcodeGenerator;
 
 @Component
@@ -35,7 +35,7 @@ public class BOInvoiceAction extends BaseAction {
   private Order order;
 
   @Autowired
-  CategoryDao categoryDao;
+  CategoryDaoImpl categoryDao;
   @Autowired
   ReferrerProgramManager referrerProgramManager;
   @Autowired

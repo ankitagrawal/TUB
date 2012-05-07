@@ -32,7 +32,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.impl.dao.inventory.GoodsReceivedNoteDao;
 import com.hk.admin.impl.dao.inventory.GrnLineItemDao;
@@ -51,10 +50,10 @@ import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.service.InventoryService;
-import com.hk.service.ProductVariantService;
-import com.hk.service.SkuService;
-import com.hk.service.UserService;
+import com.hk.pact.service.UserService;
+import com.hk.pact.service.catalog.ProductVariantService;
+import com.hk.pact.service.inventory.InventoryService;
+import com.hk.pact.service.inventory.SkuService;
 import com.hk.util.XslGenerator;
 import com.hk.web.action.admin.AdminHomeAction;
 import com.hk.web.action.error.AdminPermissionAction;

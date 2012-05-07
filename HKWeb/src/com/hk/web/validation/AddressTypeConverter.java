@@ -9,8 +9,8 @@ import net.sourceforge.stripes.validation.ValidationError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.hk.dao.BaseDao;
 import com.hk.domain.user.Address;
+import com.hk.pact.dao.BaseDao;
 
 /**
  * User: rahul Time: 4 Dec, 2009 4:53:15 PM

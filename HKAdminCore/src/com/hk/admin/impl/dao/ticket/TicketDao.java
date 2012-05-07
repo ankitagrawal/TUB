@@ -11,10 +11,10 @@ import com.akube.framework.dao.Page;
 import com.akube.framework.util.BaseUtils;
 import com.akube.framework.util.DateUtils;
 import com.hk.admin.dto.ticket.TicketFilterDto;
-import com.hk.dao.impl.BaseDaoImpl;
 import com.hk.domain.Ticket;
 import com.hk.domain.user.User;
-import com.hk.service.UserService;
+import com.hk.impl.dao.BaseDaoImpl;
+import com.hk.pact.service.UserService;
 
 @Repository
 public class TicketDao extends BaseDaoImpl {

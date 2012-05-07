@@ -1,6 +1,6 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="com.hk.constants.inventory.EnumPurchaseOrderStatus" %>
-<%@ page import="com.hk.dao.MasterDataDao" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="mhc.service.dao.WarehouseDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -8,9 +8,9 @@
 <c:set var="approved" value="<%=EnumPurchaseOrderStatus.Approved.getId()%>"/>
 <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
  <%
-    WarehouseDao warehouseDao = InjectorFactory.getInjector().getInstance(WarehouseDao.class);
-    pageContext.setAttribute("whList", warehouseDao.listAll());
-  %>
+     WarehouseDaoImpl warehouseDao = InjectorFactory.getInjector().getInstance(WarehouseDaoImpl.class);
+     pageContext.setAttribute("whList", warehouseDao.listAll());
+ %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Purchase Order List">
   <s:useActionBean beanclass="com.hk.web.action.admin.inventory.POAction" var="poa"/>
   <s:layout-component name="htmlHead">

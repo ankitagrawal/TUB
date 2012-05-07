@@ -1,5 +1,5 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
-<%@ page import="com.hk.dao.MasterDataDao" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.constants.EnumCourier" %>
 <%@ page import="mhc.service.dao.BoxSizeDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
@@ -12,8 +12,8 @@
 
 <s:useActionBean beanclass="com.hk.web.action.admin.SearchOrderAndEnterCourierInfoAction" var="shipmentQueueBean"/>
 <%
-  BoxSizeDao boxSizeDao = InjectorFactory.getInjector().getInstance(BoxSizeDao.class);
-  MasterDataDao masterDataDao = InjectorFactory.getInjector().getInstance(MasterDataDao.class);
+    BoxSizeDao boxSizeDao = InjectorFactory.getInjector().getInstance(BoxSizeDao.class);
+  MasterDataDaoImpl masterDataDao = InjectorFactory.getInjector().getInstance(MasterDataDaoImpl.class);
   pageContext.setAttribute("boxSizeList", boxSizeDao.listAll());
   pageContext.setAttribute("courierList", masterDataDao.getCourierList());
 %>

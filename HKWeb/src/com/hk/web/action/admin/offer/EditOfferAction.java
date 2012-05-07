@@ -11,11 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.dao.offer.OfferDao;
 import com.hk.domain.offer.Offer;
+import com.hk.pact.dao.offer.OfferDao;
 import com.hk.web.action.error.AdminPermissionAction;
 
 /**

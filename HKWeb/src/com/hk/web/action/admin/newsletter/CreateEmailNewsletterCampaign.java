@@ -1,8 +1,5 @@
 package com.hk.web.action.admin.newsletter;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -12,9 +9,12 @@ import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.Validate;
 import net.sourceforge.stripes.validation.ValidateNestedProperties;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.dao.marketing.EmailCampaignDao;
 import com.hk.domain.email.EmailCampaign;
+import com.hk.pact.dao.marketing.EmailCampaignDao;
 
 @Component
 public class CreateEmailNewsletterCampaign extends BaseAction {

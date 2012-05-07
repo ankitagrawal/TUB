@@ -1,19 +1,19 @@
 package com.hk.web.action.core.accounting;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.dao.user.B2bUserDetailsDao;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.B2bUserDetails;
 import com.hk.manager.OrderManager;
+import com.hk.pact.dao.user.B2bUserDetailsDao;
 import com.hk.report.dto.accounting.InvoiceDto;
 @Component
 public class AccountingInvoiceAction extends BaseAction {

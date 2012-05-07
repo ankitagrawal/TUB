@@ -4,8 +4,6 @@ import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.constants.FbConstants;
-import com.hk.util.FbSessionHelper;
 import com.restfb.types.Page;
 import com.restfb.types.User;
 

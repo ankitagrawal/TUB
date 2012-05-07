@@ -10,12 +10,11 @@ import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.J2EESecurityManager;
 import org.stripesstuff.plugin.security.Secure;
 
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.RoleConstants;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
-import com.hk.service.RoleService;
+import com.hk.pact.service.RoleService;
 import com.hk.web.action.core.auth.LoginAction;
 
 @Secure

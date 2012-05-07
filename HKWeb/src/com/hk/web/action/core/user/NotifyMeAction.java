@@ -19,13 +19,13 @@ import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
-import com.hk.dao.core.TempTokenDao;
-import com.hk.dao.email.NotifyMeDao;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.marketing.NotifyMe;
 import com.hk.domain.user.User;
 import com.hk.manager.EmailManager;
 import com.hk.manager.LinkManager;
+import com.hk.pact.dao.core.TempTokenDao;
+import com.hk.pact.dao.email.NotifyMeDao;
 import com.hk.web.HealthkartResponse;
 
 @Component

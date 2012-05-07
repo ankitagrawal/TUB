@@ -33,9 +33,9 @@ import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.GrnLineItem;
-import com.hk.service.InventoryService;
+import com.hk.pact.service.inventory.InventoryService;
+import com.hk.pact.service.inventory.SkuService;
 import com.hk.service.ServiceLocatorFactory;
-import com.hk.service.SkuService;
 
 @Component
 public class XslGenerator {

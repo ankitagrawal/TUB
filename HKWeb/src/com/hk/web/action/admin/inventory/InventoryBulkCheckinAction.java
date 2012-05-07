@@ -23,11 +23,11 @@ import com.hk.admin.impl.dao.inventory.PoLineItemDao;
 import com.hk.admin.impl.dao.inventory.PurchaseOrderDao;
 import com.hk.admin.util.XslParser;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.dao.catalog.product.ProductVariantDao;
-import com.hk.dao.sku.SkuGroupDao;
-import com.hk.dao.sku.SkuItemDao;
 import com.hk.domain.sku.SkuGroup;
-import com.hk.service.InventoryService;
+import com.hk.pact.dao.catalog.product.ProductVariantDao;
+import com.hk.pact.dao.sku.SkuGroupDao;
+import com.hk.pact.dao.sku.SkuItemDao;
+import com.hk.pact.service.inventory.InventoryService;
 import com.hk.web.action.error.AdminPermissionAction;
 
 @Secure(hasAnyPermissions = { PermissionConstants.INVENTORY_CHECKIN }, authActionBean = AdminPermissionAction.class)

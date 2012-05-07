@@ -9,7 +9,7 @@
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Low Inventory List">
 
   <%
-    SkuService skuService = InjectorFactory.getInjector().getInstance(SkuService.class);
+      SkuService skuService = InjectorFactory.getInjector().getInstance(SkuService.class);
   %>
 
   <s:layout-component name="htmlHead">

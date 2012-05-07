@@ -1,10 +1,10 @@
 package com.hk.web.action.core;
 
-import com.hk.web.action.core.menu.SitemapAction;
-
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.UrlBinding;
+
+import com.hk.web.action.core.menu.SitemapAction;
 
 @UrlBinding("/ror.xml")
 public class RorAction extends SitemapAction {

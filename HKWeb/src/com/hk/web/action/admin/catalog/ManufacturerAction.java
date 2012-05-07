@@ -4,19 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
-import com.hk.dao.core.ManufacturerDao;
-import com.hk.dao.location.LocalityMapDao;
 import com.hk.domain.catalog.Manufacturer;
+import com.hk.pact.dao.core.ManufacturerDao;
+import com.hk.pact.dao.location.LocalityMapDao;
 import com.hk.util.LatLongGenerator;
 
 /**

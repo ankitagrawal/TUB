@@ -20,17 +20,17 @@ import com.akube.framework.stripes.controller.Modal;
 import com.hk.admin.manager.EmployeeManager;
 import com.hk.admin.manager.IHOManager;
 import com.hk.constants.discount.OfferConstants;
-import com.hk.dao.BaseDao;
-import com.hk.dao.coupon.CouponDao;
-import com.hk.dao.offer.OfferInstanceDao;
-import com.hk.dao.order.OrderDao;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
 import com.hk.manager.OfferManager;
 import com.hk.manager.OrderManager;
-import com.hk.service.UserService;
+import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.coupon.CouponDao;
+import com.hk.pact.dao.offer.OfferInstanceDao;
+import com.hk.pact.dao.order.OrderDao;
+import com.hk.pact.service.UserService;
 
 /**
  * User: rahul Time: 8 Jan, 2010 6:19:28 PM

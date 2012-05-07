@@ -9,9 +9,9 @@ import net.sourceforge.stripes.validation.ValidationError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.hk.dao.BaseDao;
-import com.hk.dao.ReconciliationStatusDao;
 import com.hk.domain.inventory.rv.ReconciliationStatus;
+import com.hk.impl.dao.ReconciliationStatusDaoImpl;
+import com.hk.pact.dao.BaseDao;
 
 @Component
 public class ReconciliationStatusTypeConverter implements TypeConverter<ReconciliationStatus> {
@@ -23,7 +23,7 @@ public class ReconciliationStatusTypeConverter implements TypeConverter<Reconcil
         // nothing
     }
 
-    ReconciliationStatusDao reconciliationStatusDao;
+    ReconciliationStatusDaoImpl reconciliationStatusDao;
 
     public ReconciliationStatus convert(String id, Class<? extends ReconciliationStatus> aClass, Collection<ValidationError> validationErrors) {
         Long idLong = null;

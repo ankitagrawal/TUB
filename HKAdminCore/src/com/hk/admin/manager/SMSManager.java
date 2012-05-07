@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.hk.domain.user.Address;
-import com.hk.service.impl.SMSService;
+import com.hk.impl.service.SMSService;
 
 /**
  * Created by IntelliJ IDEA.

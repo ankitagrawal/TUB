@@ -7,7 +7,7 @@
 <%@ page import="com.hk.domain.order.ShippingOrder" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="java.util.Set" %>
-<%@ page import="com.hk.dao.MasterDataDao" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="com.hk.constants.*" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>

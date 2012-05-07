@@ -13,11 +13,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.util.XslParser;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.dao.ReconciliationStatusDao;
+import com.hk.impl.dao.ReconciliationStatusDaoImpl;
 import com.hk.web.action.error.AdminPermissionAction;
 
 @Secure(hasAnyPermissions = {PermissionConstants.SALES_REPORT}, authActionBean = AdminPermissionAction.class)
@@ -28,7 +27,7 @@ public class ReconciliationAction extends BaseAction {
   @Autowired
    XslParser xslParser;
   @Autowired
-   ReconciliationStatusDao reconciliationStatusDao;
+   ReconciliationStatusDaoImpl reconciliationStatusDao;
 
    //@Named(Keys.Env.adminUploads) 
    @Value("#{hkEnvProps['adminUploads']}")

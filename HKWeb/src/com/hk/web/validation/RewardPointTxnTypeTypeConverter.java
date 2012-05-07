@@ -10,8 +10,8 @@ import net.sourceforge.stripes.validation.ValidationError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.hk.dao.BaseDao;
 import com.hk.domain.offer.rewardPoint.RewardPointTxnType;
+import com.hk.pact.dao.BaseDao;
 
 
 @Component

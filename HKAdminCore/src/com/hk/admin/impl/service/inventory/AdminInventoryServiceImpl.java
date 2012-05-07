@@ -13,10 +13,6 @@ import com.hk.admin.impl.dao.inventory.PVDamageInventoryDao;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.util.BarcodeUtil;
 import com.hk.constants.inventory.EnumInvTxnType;
-import com.hk.dao.BaseDao;
-import com.hk.dao.inventory.ProductVariantInventoryDao;
-import com.hk.dao.order.OrderDao;
-import com.hk.dao.shippingOrder.ShippingOrderDao;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.InvTxnType;
 import com.hk.domain.inventory.GoodsReceivedNote;
@@ -33,10 +29,14 @@ import com.hk.domain.sku.SkuItem;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.manager.UserManager;
-import com.hk.service.InventoryService;
-import com.hk.service.ProductVariantService;
-import com.hk.service.SkuService;
-import com.hk.service.UserService;
+import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.inventory.ProductVariantInventoryDao;
+import com.hk.pact.dao.order.OrderDao;
+import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
+import com.hk.pact.service.UserService;
+import com.hk.pact.service.catalog.ProductVariantService;
+import com.hk.pact.service.inventory.InventoryService;
+import com.hk.pact.service.inventory.SkuService;
 
 @Service
 public class AdminInventoryServiceImpl implements AdminInventoryService {

@@ -1,6 +1,5 @@
 package com.hk.util;
 
-import org.springframework.stereotype.Component;
 
 /**
  * Created by IntelliJ IDEA.

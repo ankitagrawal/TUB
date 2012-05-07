@@ -1,7 +1,7 @@
 <%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
-<%@ page import="com.hk.service.WarehouseService" %>
+<%@ page import="com.hk.pact.service.core.WarehouseService" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
@@ -11,8 +11,8 @@
 <s:layout-component name="content">
 <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_MULTIPLE_WAREHOUSE%>">
   <%
-    WarehouseService warehouseService = (WarehouseService)ServiceLocatorFactory.getService(WarehouseService.class);
-    pageContext.setAttribute("whList", warehouseService.getAllWarehouses());
+      WarehouseService warehouseService = (WarehouseService)ServiceLocatorFactory.getService(WarehouseService.class);
+        pageContext.setAttribute("whList", warehouseService.getAllWarehouses());
   %>
   <table>
     <tr>

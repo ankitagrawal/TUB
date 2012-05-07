@@ -6,9 +6,9 @@
  <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Reconciliation Voucher List">
    <%
-    WarehouseDao warehouseDao = InjectorFactory.getInjector().getInstance(WarehouseDao.class);
-    pageContext.setAttribute("whList", warehouseDao.listAll());
-  %>
+       WarehouseDaoImpl warehouseDao = InjectorFactory.getInjector().getInstance(WarehouseDaoImpl.class);
+       pageContext.setAttribute("whList", warehouseDao.listAll());
+   %>
   <s:layout-component name="htmlHead">
     <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>

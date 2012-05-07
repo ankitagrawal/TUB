@@ -3,12 +3,12 @@ package com.hk.util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.hk.dao.BaseDao;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.content.SeoData;
 import com.hk.dto.menu.MenuNode;
 import com.hk.helper.MenuHelper;
-import com.hk.service.ProductService;
+import com.hk.pact.dao.BaseDao;
+import com.hk.pact.service.catalog.ProductService;
 
 @Component
 public class SeoManager {

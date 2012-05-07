@@ -16,14 +16,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.dao.catalog.category.CategoryImageDao;
-import com.hk.dao.content.PrimaryCategoryHeadingDao;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.category.CategoryImage;
 import com.hk.domain.content.PrimaryCategoryHeading;
 import com.hk.helper.MenuHelper;
+import com.hk.impl.dao.catalog.category.CategoryImageDaoImpl;
 import com.hk.manager.UserManager;
-import com.hk.service.CategoryService;
+import com.hk.pact.dao.content.PrimaryCategoryHeadingDao;
+import com.hk.pact.service.catalog.CategoryService;
 
 // @HttpCache(expires=20000)
 @Component
@@ -44,7 +44,7 @@ public class HomeAction extends BaseAction {
     MenuHelper menuHelper;
 
     @Autowired
-    CategoryImageDao             categoryImageDao;
+    CategoryImageDaoImpl             categoryImageDao;
     @Autowired
     PrimaryCategoryHeadingDao    primaryCategoryHeadingDao;
     

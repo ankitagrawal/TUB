@@ -21,13 +21,12 @@ import org.springframework.stereotype.Component;
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.admin.manager.SMSManager;
-import com.hk.dao.coupon.DiscountCouponMailingListDao;
-import com.hk.dao.user.UserDaoImpl;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.coupon.DiscountCouponMailingList;
 import com.hk.domain.user.User;
 import com.hk.manager.EmailManager;
-import com.hk.service.UserService;
+import com.hk.pact.dao.coupon.DiscountCouponMailingListDao;
+import com.hk.pact.service.UserService;
 import com.hk.web.HealthkartResponse;
 
 @Component

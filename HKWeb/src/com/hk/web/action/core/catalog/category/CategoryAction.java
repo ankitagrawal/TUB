@@ -13,14 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.dao.catalog.category.CategoryDao;
-import com.hk.dao.catalog.category.CategoryImageDao;
-import com.hk.dao.catalog.product.ProductDao;
-import com.hk.dao.content.PrimaryCategoryHeadingDao;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.category.CategoryImage;
 import com.hk.domain.content.PrimaryCategoryHeading;
 import com.hk.domain.content.SeoData;
+import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
+import com.hk.impl.dao.catalog.category.CategoryImageDaoImpl;
+import com.hk.pact.dao.catalog.product.ProductDao;
+import com.hk.pact.dao.content.PrimaryCategoryHeadingDao;
 import com.hk.util.SeoManager;
 import com.hk.web.action.core.catalog.product.ProductAction;
 
@@ -38,11 +38,11 @@ public class CategoryAction extends BaseAction {
     @Autowired
     ProductDao                   productDao;
     @Autowired
-    CategoryDao                  categoryDao;
+    CategoryDaoImpl                  categoryDao;
     @Autowired
     SeoManager                   seoManager;
     @Autowired
-    CategoryImageDao             categoryImageDao;
+    CategoryImageDaoImpl             categoryImageDao;
 
     @DontValidate
     @DefaultHandler

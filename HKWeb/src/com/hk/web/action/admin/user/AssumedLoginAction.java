@@ -11,14 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.user.User;
 import com.hk.manager.EmailManager;
-import com.hk.service.RoleService;
-import com.hk.service.UserService;
+import com.hk.pact.service.RoleService;
+import com.hk.pact.service.UserService;
 import com.hk.web.action.HomeAction;
 import com.hk.web.action.error.AdminPermissionAction;
 

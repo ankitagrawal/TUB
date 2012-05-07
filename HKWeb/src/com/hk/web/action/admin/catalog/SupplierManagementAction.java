@@ -19,13 +19,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.StateList;
-import com.hk.dao.core.SupplierDao;
 import com.hk.domain.catalog.Supplier;
+import com.hk.pact.dao.core.SupplierDao;
 import com.hk.web.action.error.AdminPermissionAction;
 
 @Secure(hasAnyPermissions = {PermissionConstants.SUPPLIER_MANAGEMENT}, authActionBean = AdminPermissionAction.class)

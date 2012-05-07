@@ -6,9 +6,9 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
-import com.hk.dao.impl.BaseDaoImpl;
 import com.hk.domain.amazon.AmazonFeed;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.impl.dao.BaseDaoImpl;
 
 
 @Repository

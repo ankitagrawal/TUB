@@ -27,14 +27,6 @@ import org.stripesstuff.plugin.session.Session;
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.constants.core.HealthkartConstants;
-import com.hk.constants.core.Keys;
-import com.hk.dao.catalog.category.CategoryDao;
-import com.hk.dao.catalog.category.CategoryImageDao;
-import com.hk.dao.catalog.combo.ComboDao;
-import com.hk.dao.catalog.product.ProductDao;
-import com.hk.dao.location.LocalityMapDao;
-import com.hk.dao.location.MapIndiaDao;
-import com.hk.dao.user.UserDaoImpl;
 import com.hk.domain.LocalityMap;
 import com.hk.domain.MapIndia;
 import com.hk.domain.catalog.Manufacturer;
@@ -44,8 +36,15 @@ import com.hk.domain.content.SeoData;
 import com.hk.domain.user.Address;
 import com.hk.dto.menu.MenuNode;
 import com.hk.helper.MenuHelper;
+import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
+import com.hk.impl.dao.catalog.category.CategoryImageDaoImpl;
+import com.hk.impl.dao.user.UserDaoImpl;
 import com.hk.manager.SolrManager;
 import com.hk.manager.UserManager;
+import com.hk.pact.dao.catalog.combo.ComboDao;
+import com.hk.pact.dao.catalog.product.ProductDao;
+import com.hk.pact.dao.location.LocalityMapDao;
+import com.hk.pact.dao.location.MapIndiaDao;
 import com.hk.util.SeoManager;
 import com.hk.web.ConvertEncryptedToNormalDouble;
 import com.hk.web.filter.WebContext;
@@ -93,7 +92,7 @@ public class CatalogAction extends BasePaginatedAction {
   @Autowired
   MapIndiaDao mapIndiaDao;
   @Autowired
-  CategoryImageDao categoryImageDao;
+  CategoryImageDaoImpl categoryImageDao;
   @Autowired
   ProductDao productDao;
   @Autowired
@@ -102,7 +101,7 @@ public class CatalogAction extends BasePaginatedAction {
   //@Named(Keys.App.appBasePath)
   String appBasePath;
   @Autowired
-  CategoryDao categoryDao;
+  CategoryDaoImpl categoryDao;
   @Autowired
   SeoManager seoManager;
   @Autowired

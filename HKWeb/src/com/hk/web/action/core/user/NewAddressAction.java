@@ -15,17 +15,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.Modal;
-import com.hk.dao.core.AddressDao;
-import com.hk.dao.order.OrderDao;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.manager.LinkManager;
 import com.hk.manager.OrderManager;
-import com.hk.service.UserService;
+import com.hk.pact.dao.core.AddressDao;
+import com.hk.pact.dao.order.OrderDao;
+import com.hk.pact.service.UserService;
 import com.hk.util.AddressMatchScoreCalculator;
 import com.hk.web.action.core.affiliate.AffiliateAccountAction;
 import com.hk.web.action.core.order.OrderSummaryAction;

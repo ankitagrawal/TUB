@@ -12,10 +12,10 @@ import org.apache.commons.lang.StringUtils;
 
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.sku.Sku;
-import com.hk.service.InventoryService;
-import com.hk.service.ProductVariantService;
+import com.hk.pact.service.catalog.ProductVariantService;
+import com.hk.pact.service.inventory.InventoryService;
+import com.hk.pact.service.inventory.SkuService;
 import com.hk.service.ServiceLocatorFactory;
-import com.hk.service.SkuService;
 import com.hk.util.json.JSONResponseBuilder;
 
 /**

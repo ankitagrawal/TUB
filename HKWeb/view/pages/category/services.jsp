@@ -1,9 +1,9 @@
-<%@ page import="com.hk.dao.MasterDataDao" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.akube.framework.util.BaseUtils" %>
 <%@ page import="com.hk.web.filter.WebContext" %>
 <%@ page import="com.hk.constants.core.HealthkartConstants" %>
 <%@ page import="net.sourceforge.stripes.util.CryptoUtil" %>
-<%@ page import="com.hk.dao.location.MapIndiaDao" %>
+<%@ page import="com.hk.pact.dao.location.MapIndiaDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="org.stripesstuff.plugin.security.J2EESecurityManager" %>
 <%@ page import="com.hk.domain.MapIndia" %>
@@ -16,7 +16,7 @@
 <s:layout-render name="/layouts/category-homeG.jsp" pageTitle="Services | Buy Services Online in India">
 
   <%
-    MapIndiaDao mapIndiaDao = (MapIndiaDao)ServiceLocatorFactory.getService("MapIndiaDao");
+    MapIndiaDao mapIndiaDao = (MapIndiaDao)ServiceLocatorFactory.getService(MapIndiaDao.class);
     Cookie preferredZoneCookie = BaseUtils.getCookie(WebContext.getRequest(), HealthkartConstants.Cookie.preferredZone);
     if (preferredZoneCookie != null && preferredZoneCookie.getValue() != null) {
       MapIndia mapIndia = mapIndiaDao.findByCity(preferredZoneCookie.getValue());

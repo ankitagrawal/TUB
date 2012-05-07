@@ -1,6 +1,6 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
-<%@ page import="com.hk.dao.MasterDataDao" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.GenerateReconcilationReportAction" var="reportActionBean"/>

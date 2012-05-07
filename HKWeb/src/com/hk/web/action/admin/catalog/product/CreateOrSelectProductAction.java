@@ -19,19 +19,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.dao.core.ManufacturerDao;
 import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductExtraOption;
 import com.hk.domain.catalog.product.ProductOption;
 import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.service.CategoryService;
-import com.hk.service.ProductService;
-import com.hk.service.ProductVariantService;
+import com.hk.pact.dao.core.ManufacturerDao;
+import com.hk.pact.service.catalog.CategoryService;
+import com.hk.pact.service.catalog.ProductService;
+import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.web.action.error.AdminPermissionAction;
 
 @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_PRODUCT_CATALOG }, authActionBean = AdminPermissionAction.class)

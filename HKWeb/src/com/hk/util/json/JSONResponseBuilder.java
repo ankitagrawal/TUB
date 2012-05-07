@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.springframework.stereotype.Component;
-
 import com.hk.domain.core.JSONObject;
 /**
  *

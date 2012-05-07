@@ -27,9 +27,9 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.dao.catalog.category.CategoryDao;
-import com.hk.dao.catalog.product.ProductDao;
 import com.hk.domain.catalog.product.Product;
+import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
+import com.hk.pact.dao.catalog.product.ProductDao;
 import com.hk.util.AmazonXslGenerator;
 import com.hk.util.XslGenerator;
 import com.hk.web.BatchProcessWorkManager;
@@ -46,7 +46,7 @@ public class GenerateExcelAction extends BaseAction {
     @Autowired
     BatchProcessWorkManager  workManager;
     @Autowired
-    CategoryDao              categoryDao;
+    CategoryDaoImpl              categoryDao;
 
     // @Named(Keys.Env.adminDownloads)
     @Value("#{hkEnvProps['adminDownloads']}")

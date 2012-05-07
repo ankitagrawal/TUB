@@ -3,13 +3,13 @@
 <%@ page import="com.hk.constants.payment.EnumPaymentMode" %>
 <%@ page import="com.hk.constants.payment.EnumPaymentStatus" %>
 <%@ page import="com.hk.constants.order.EnumOrderStatus" %>
-<%@ page import="com.hk.dao.catalog.category.CategoryDao" %>
-<%@ page import="com.hk.service.PaymentService" %>
+<%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
+<%@ page import="com.hk.pact.service.payment.PaymentService" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
-<%@ page import="mhc.service.order.OrderService" %>
-<%@ page import="mhc.service.order.OrderStatusService" %>
+<%@ page import="com.hk.pact.service.order.OrderService" %>
+<%@ page import="com.hk.pact.service.OrderStatusService" %>
 <%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus" %>
-<%@ page import="mhc.service.shippingOrder.ShippingOrderStatusService" %>
+<%@ page import="com.hk.pact.service.shippingOrder.ShippingOrderStatusService" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -26,16 +26,16 @@
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Action Awaiting Queue">
 <s:layout-component name="htmlHead">
   <%
-    PaymentService paymentService = InjectorFactory.getInjector().getInstance(PaymentService.class);
-    OrderStatusService orderStatusService = InjectorFactory.getInjector().getInstance(OrderStatusService.class);
-    ShippingOrderStatusService shippingOrderStatusService = InjectorFactory.getInjector().getInstance(ShippingOrderStatusService.class);
-    pageContext.setAttribute("paymentModeList", paymentService.listWorkingPaymentModes());
-    pageContext.setAttribute("paymentStatusList", paymentService.listWorkingPaymentStatuses());
-    pageContext.setAttribute("orderStatusList", orderStatusService.getOrderStatuses(EnumOrderStatus.getStatusForActionQueue()));
-    pageContext.setAttribute("shippingOrderStatusList", shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForActionQueue()));
+      PaymentService paymentService =  ServiceLocatorFactory.getService(PaymentService.class);
+      OrderStatusService orderStatusService = ServiceLocatorFactory.getService(OrderStatusService.class);
+      ShippingOrderStatusService shippingOrderStatusService = ServiceLocatorFactory.getService(ShippingOrderStatusService.class);
+      pageContext.setAttribute("paymentModeList", paymentService.listWorkingPaymentModes());
+      pageContext.setAttribute("paymentStatusList", paymentService.listWorkingPaymentStatuses());
+      pageContext.setAttribute("orderStatusList", orderStatusService.getOrderStatuses(EnumOrderStatus.getStatusForActionQueue()));
+      pageContext.setAttribute("shippingOrderStatusList", shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForActionQueue()));
 
-    CategoryDao categoryDao = (CategoryDao)ServiceLocatorFactory.getService("CategoryDao");
-    pageContext.setAttribute("categoryList", categoryDao.getPrimaryCategories());
+      CategoryDao categoryDao = (CategoryDao)ServiceLocatorFactory.getService(CategoryDao.class);
+      pageContext.setAttribute("categoryList", categoryDao.getPrimaryCategories());
   %>
   <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
   <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>

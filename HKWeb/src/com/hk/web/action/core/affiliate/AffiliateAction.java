@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.RoleConstants;
-import com.hk.dao.impl.RoleDao;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.user.User;
 import com.hk.dto.user.UserLoginDto;
@@ -26,6 +25,7 @@ import com.hk.exception.HealthkartSignupException;
 import com.hk.manager.AffiliateManager;
 import com.hk.manager.LinkManager;
 import com.hk.manager.UserManager;
+import com.hk.pact.dao.RoleDao;
 
 @UrlBinding("/affiliate")
 @Component

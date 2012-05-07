@@ -23,14 +23,14 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.impl.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.util.XslParser;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.dao.courier.PincodeDao;
-import com.hk.dao.warehouse.WarehouseDao;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.domain.courier.PincodeDefaultCourier;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.service.PincodeService;
+import com.hk.impl.dao.warehouse.WarehouseDaoImpl;
+import com.hk.pact.dao.courier.PincodeDao;
+import com.hk.pact.service.core.PincodeService;
 import com.hk.util.XslGenerator;
 
 @Secure(hasAnyPermissions = { PermissionConstants.SEARCH_ORDERS })
@@ -43,7 +43,7 @@ public class ChangeDefaultCourierAction extends BaseAction {
     @Autowired
     CourierServiceInfoDao               courierServiceInfoDao;
     @Autowired
-    WarehouseDao                        warehouseDao;
+    WarehouseDaoImpl                        warehouseDao;
     @Autowired
     XslGenerator                        xslGenerator;
 

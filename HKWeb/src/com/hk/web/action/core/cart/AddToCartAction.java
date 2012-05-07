@@ -16,12 +16,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
-import com.hk.dao.BaseDao;
-import com.hk.dao.user.UserCartDao;
-import com.hk.dao.user.UserProductHistoryDao;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.catalog.product.combo.ComboInstance;
@@ -32,7 +28,10 @@ import com.hk.domain.user.User;
 import com.hk.exception.OutOfStockException;
 import com.hk.manager.OrderManager;
 import com.hk.manager.UserManager;
-import com.hk.service.UserService;
+import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.user.UserCartDao;
+import com.hk.pact.dao.user.UserProductHistoryDao;
+import com.hk.pact.service.UserService;
 import com.hk.web.HealthkartResponse;
 
 @Component

@@ -5,7 +5,7 @@
 <%@ page import="mhc.domain.Tax" %>
 <%@ page import="mhc.service.dao.TaxDao" %>
 <%@ page import="mhc.service.dao.WarehouseDao" %>
-<%@ page import="com.hk.dao.catalog.category.CategoryDao" %>
+<%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
 <%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
@@ -15,7 +15,7 @@
   List<Tax> taxList = taxDao.getTaxList();
   pageContext.setAttribute("taxList", taxList);
 
-  WarehouseDao warehouseDao = InjectorFactory.getInjector().getInstance(WarehouseDao.class);
+  WarehouseDaoImpl warehouseDao = InjectorFactory.getInjector().getInstance(WarehouseDaoImpl.class);
   pageContext.setAttribute("whList", warehouseDao.listAll());
 %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Edit Sku">

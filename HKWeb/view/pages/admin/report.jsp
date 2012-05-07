@@ -1,10 +1,10 @@
 <%@ taglib prefix="s" uri="http://stripes.sourceforge.net/stripes-dynattr.tld" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
-<%@ page import="com.hk.dao.MasterDataDao" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="mhc.service.dao.order.OrderStatusDao" %>
 <%@ page import="mhc.service.dao.TaxDao" %>
-<%@ page import="com.hk.dao.catalog.category.CategoryDao" %>
+<%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.report.ReportAction" var="reportActionBean"/>
@@ -20,7 +20,7 @@
       TaxDao taxDao = InjectorFactory.getInjector().getInstance(TaxDao.class);
       pageContext.setAttribute("taxList", taxDao.taxListForReport());
 
-      CategoryDao categoryDao = (CategoryDao)ServiceLocatorFactory.getService("CategoryDao");
+      CategoryDao categoryDao = (CategoryDao)ServiceLocatorFactory.getService(CategoryDao.class);
       pageContext.setAttribute("primaryCategories",categoryDao.getPrimaryCategories());
 
     %>

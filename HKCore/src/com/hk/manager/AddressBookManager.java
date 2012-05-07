@@ -4,11 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hk.dao.core.AddressDao;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
-import com.hk.service.UserService;
+import com.hk.pact.dao.core.AddressDao;
+import com.hk.pact.service.UserService;
 import com.hk.util.AddressMatchScoreCalculator;
 
 @Component

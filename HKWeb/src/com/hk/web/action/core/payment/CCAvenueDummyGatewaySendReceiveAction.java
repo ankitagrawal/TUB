@@ -10,12 +10,12 @@ import org.springframework.stereotype.Component;
 
 import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.akube.framework.stripes.action.BasePaymentGatewaySendReceiveAction;
-import com.hk.dao.payment.PaymentDao;
 import com.hk.domain.payment.Payment;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.manager.EmailManager;
 import com.hk.manager.payment.CCAvenueDummyPaymentGatewayWrapper;
 import com.hk.manager.payment.PaymentManager;
+import com.hk.pact.dao.payment.PaymentDao;
 
 /**
  * Author: Kani Date: Jan 14, 2009

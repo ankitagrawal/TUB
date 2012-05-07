@@ -24,8 +24,8 @@ import com.hk.exception.HealthkartLoginException;
 import com.hk.exception.HealthkartSignupException;
 import com.hk.manager.LinkManager;
 import com.hk.manager.UserManager;
-import com.hk.service.RoleService;
-import com.hk.service.UserService;
+import com.hk.pact.service.RoleService;
+import com.hk.pact.service.UserService;
 import com.hk.web.action.HomeAction;
 
 @UrlBinding("/b2b")

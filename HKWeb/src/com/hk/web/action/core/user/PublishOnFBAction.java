@@ -20,7 +20,7 @@ import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.order.Order;
 import com.hk.manager.ReferrerProgramManager;
-import com.hk.service.order.RewardPointService;
+import com.hk.pact.service.order.RewardPointService;
 import com.hk.web.HealthkartResponse;
 
 @Component

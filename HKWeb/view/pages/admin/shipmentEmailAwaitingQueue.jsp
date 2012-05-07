@@ -1,6 +1,6 @@
 <%@ page import="com.hk.constants.EnumLineItemType" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
-<%@ page import="com.hk.dao.MasterDataDao" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.constants.EnumLineItemStatus" %>
 <%@ page import="com.hk.constants.EnumCourier" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>

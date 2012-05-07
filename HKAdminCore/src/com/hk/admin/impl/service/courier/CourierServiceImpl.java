@@ -17,9 +17,9 @@ import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.domain.order.Order;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.service.PaymentService;
-import com.hk.service.PincodeService;
-import com.hk.service.UserService;
+import com.hk.pact.service.UserService;
+import com.hk.pact.service.core.PincodeService;
+import com.hk.pact.service.payment.PaymentService;
 
 @Service
 public class CourierServiceImpl implements CourierService {

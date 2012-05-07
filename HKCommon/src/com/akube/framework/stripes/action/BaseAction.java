@@ -19,9 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.controller.BreadcrumbInterceptor;
-import com.hk.dao.BaseDao;
 import com.hk.domain.user.User;
-import com.hk.service.UserService;
+import com.hk.pact.dao.BaseDao;
+import com.hk.pact.service.UserService;
 import com.shiro.PrincipalImpl;
 
 /**

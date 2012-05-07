@@ -8,8 +8,6 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import org.springframework.stereotype.Component;
-
 public class DBConnector {
 
   String jdbcDriver = "com.mysql.jdbc.Driver";

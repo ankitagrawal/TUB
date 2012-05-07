@@ -12,17 +12,17 @@ import com.akube.framework.imaging.ImageUtils;
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.EnumS3UploadStatus;
 import com.hk.constants.catalog.image.EnumImageSize;
-import com.hk.dao.BaseDao;
-import com.hk.dao.catalog.category.CategoryImageDao;
-import com.hk.dao.catalog.combo.ComboDao;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.category.CategoryImage;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductImage;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.combo.Combo;
-import com.hk.service.ProductService;
-import com.hk.service.ProductVariantService;
+import com.hk.impl.dao.catalog.category.CategoryImageDaoImpl;
+import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.catalog.combo.ComboDao;
+import com.hk.pact.service.catalog.ProductService;
+import com.hk.pact.service.catalog.ProductVariantService;
 
 @Component
 public class ImageManager {
@@ -56,7 +56,7 @@ public class ImageManager {
 
     ImageUtils                 imageUtils;
 
-    CategoryImageDao           categoryImageDao;
+    CategoryImageDaoImpl           categoryImageDao;
     private static final float QUALITY = 0.95F;
 
     static final String        imageUploadsPath ="";

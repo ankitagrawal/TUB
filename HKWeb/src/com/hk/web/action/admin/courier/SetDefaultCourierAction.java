@@ -11,14 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-
 import com.akube.framework.gson.JsonUtils;
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.dao.core.AddressDao;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.user.Address;
+import com.hk.pact.dao.core.AddressDao;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.error.AdminPermissionAction;
 

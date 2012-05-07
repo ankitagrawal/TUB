@@ -6,8 +6,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Locale;
 
-import org.springframework.stereotype.Component;
-
 import net.sourceforge.stripes.validation.TypeConverter;
 import net.sourceforge.stripes.validation.ValidationError;
 

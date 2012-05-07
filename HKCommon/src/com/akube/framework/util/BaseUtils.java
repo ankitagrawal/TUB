@@ -51,7 +51,7 @@ import org.testng.Assert;
 
 import com.akube.framework.shiro.realm.HibernateSecurityRealm;
 import com.hk.exception.FileDownloadException;
-import com.twmacinta.util.MD5;
+import com.hk.util.md5.MD5;
 
 /**
  * Author: Kani

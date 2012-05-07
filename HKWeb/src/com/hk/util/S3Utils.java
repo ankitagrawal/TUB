@@ -11,7 +11,6 @@ import org.jets3t.service.impl.rest.httpclient.RestS3Service;
 import org.jets3t.service.model.S3Bucket;
 import org.jets3t.service.model.S3Object;
 import org.jets3t.service.security.AWSCredentials;
-import org.springframework.stereotype.Component;
 
 
 public class S3Utils {

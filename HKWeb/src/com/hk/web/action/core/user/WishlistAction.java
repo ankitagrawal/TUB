@@ -9,7 +9,7 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.domain.user.User;
-import com.hk.service.UserService;
+import com.hk.pact.service.UserService;
 
 @Secure
 @Component

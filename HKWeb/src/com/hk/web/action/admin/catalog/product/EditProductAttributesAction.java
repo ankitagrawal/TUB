@@ -14,18 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.session.Session;
 
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.manager.ProductManager;
 import com.hk.admin.util.XslParser;
 import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.core.HealthkartConstants;
-import com.hk.dao.BaseDao;
-import com.hk.dao.affiliate.AffiliateDao;
-import com.hk.dao.catalog.category.CategoryDao;
-import com.hk.dao.catalog.combo.ComboDao;
-import com.hk.dao.core.SupplierDao;
-import com.hk.dao.location.MapIndiaDao;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.Supplier;
@@ -38,8 +31,14 @@ import com.hk.domain.catalog.product.ProductOption;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.helper.MenuHelper;
-import com.hk.service.ProductService;
-import com.hk.service.ProductVariantService;
+import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
+import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.affiliate.AffiliateDao;
+import com.hk.pact.dao.catalog.combo.ComboDao;
+import com.hk.pact.dao.core.SupplierDao;
+import com.hk.pact.dao.location.MapIndiaDao;
+import com.hk.pact.service.catalog.ProductService;
+import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.util.ImageManager;
 import com.hk.util.XslGenerator;
 import com.hk.web.HealthkartResponse;
@@ -99,7 +98,7 @@ public class EditProductAttributesAction extends BaseAction {
     @Autowired
     SupplierDao                   supplierDao;
     @Autowired
-    CategoryDao                   categoryDao;
+    CategoryDaoImpl                   categoryDao;
 
     @Session(key = HealthkartConstants.Cookie.preferredZone)
     private String                preferredZone;

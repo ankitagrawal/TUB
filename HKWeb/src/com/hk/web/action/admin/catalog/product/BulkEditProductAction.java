@@ -23,20 +23,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hk.admin.util.XslParser;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.dao.catalog.category.CategoryDao;
-import com.hk.dao.catalog.product.ProductDao;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.service.CategoryService;
-import com.hk.service.ProductVariantService;
+import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
+import com.hk.pact.dao.catalog.product.ProductDao;
+import com.hk.pact.service.catalog.CategoryService;
+import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.web.action.error.AdminPermissionAction;
 
 @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_PRODUCT_CATALOG }, authActionBean = AdminPermissionAction.class)
@@ -65,7 +64,7 @@ public class BulkEditProductAction extends BasePaginatedAction {
     @Autowired
     private CategoryService       categoryService;
     @Autowired
-    CategoryDao                   categoryDao;
+    CategoryDaoImpl                   categoryDao;
     @Autowired
     XslParser                     xslParser;
 

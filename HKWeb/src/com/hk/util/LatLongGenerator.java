@@ -19,14 +19,14 @@ import org.springframework.stereotype.Component;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-import com.hk.dao.core.AddressDao;
-import com.hk.dao.core.ManufacturerDao;
-import com.hk.dao.location.LocalityMapDao;
-import com.hk.dao.location.MapIndiaDao;
 import com.hk.domain.LocalityMap;
 import com.hk.domain.MapIndia;
 import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.user.Address;
+import com.hk.pact.dao.core.AddressDao;
+import com.hk.pact.dao.core.ManufacturerDao;
+import com.hk.pact.dao.location.LocalityMapDao;
+import com.hk.pact.dao.location.MapIndiaDao;
 
 /**
  * Created by IntelliJ IDEA.

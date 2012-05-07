@@ -16,15 +16,15 @@ import org.stripesstuff.plugin.security.Secure;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.manager.ProductManager;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.dao.affiliate.AffiliateCategoryDao;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.affiliate.AffiliateCategory;
 import com.hk.domain.affiliate.AffiliateCategoryCommission;
 import com.hk.domain.affiliate.DefaultCategoryCommission;
-import com.hk.service.AffilateService;
-import com.hk.service.CategoryService;
-import com.hk.service.ProductService;
-import com.hk.service.ProductVariantService;
+import com.hk.impl.dao.affiliate.AffiliateCategoryDaoImpl;
+import com.hk.pact.service.catalog.CategoryService;
+import com.hk.pact.service.catalog.ProductService;
+import com.hk.pact.service.catalog.ProductVariantService;
+import com.hk.pact.service.core.AffilateService;
 import com.hk.web.action.error.AdminPermissionAction;
 
 /**
@@ -45,7 +45,7 @@ public class CategoryLevelDiscountAction extends BaseAction {
     @Autowired
     private ProductVariantService           productVariantService;
     @Autowired
-    private AffiliateCategoryDao affiliateCategoryCommissionDao;
+    private AffiliateCategoryDaoImpl affiliateCategoryCommissionDao;
     
     // AffiliateCategoryDao affiliateCategoryDao;
     // CategoryDao categoryDao;

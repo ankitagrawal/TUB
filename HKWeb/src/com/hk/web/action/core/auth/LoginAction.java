@@ -5,7 +5,6 @@ import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.UrlBinding;
 import net.sourceforge.stripes.validation.LocalizableError;
 import net.sourceforge.stripes.validation.Validate;
 
@@ -15,13 +14,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.RoleConstants;
-import com.hk.dao.impl.RoleDao;
 import com.hk.dto.user.UserLoginDto;
 import com.hk.exception.HealthkartLoginException;
 import com.hk.manager.UserManager;
+import com.hk.pact.dao.RoleDao;
 import com.hk.web.action.HomeAction;
 import com.hk.web.action.admin.AdminHomeAction;
 

@@ -9,9 +9,9 @@ import net.sourceforge.stripes.validation.ValidationError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.hk.dao.BaseDao;
 import com.hk.domain.order.ShippingOrderStatus;
-import com.hk.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.pact.dao.BaseDao;
+import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 
 
 @Component

@@ -6,9 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.hk.constants.core.EnumEmailType;
-import com.hk.dao.BaseDao;
-import com.hk.dao.email.EmailRecepientDao;
-import com.hk.dao.email.EmailerHistoryDao;
 import com.hk.domain.core.EmailType;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.email.EmailCampaign;
@@ -16,6 +13,9 @@ import com.hk.domain.email.EmailRecepient;
 import com.hk.domain.user.User;
 import com.hk.manager.EmailManager;
 import com.hk.manager.LinkManager;
+import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.email.EmailRecepientDao;
+import com.hk.pact.dao.email.EmailerHistoryDao;
 
 /**
  * User: rahul Time: 5 May, 2010 6:06:18 PM

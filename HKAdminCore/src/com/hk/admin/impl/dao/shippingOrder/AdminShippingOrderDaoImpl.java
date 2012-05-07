@@ -8,7 +8,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.hk.admin.pact.dao.shippingOrder.AdminShippingOrderDao;
-import com.hk.dao.impl.BaseDaoImpl;
+import com.hk.impl.dao.BaseDaoImpl;
 
 @Repository
 public class AdminShippingOrderDaoImpl extends BaseDaoImpl implements AdminShippingOrderDao {

@@ -25,10 +25,10 @@ import com.akube.framework.stripes.controller.Breadcrumb;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.core.RoleConstants;
-import com.hk.dao.impl.RoleDao;
-import com.hk.dao.user.UserDao;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
+import com.hk.pact.dao.RoleDao;
+import com.hk.pact.dao.user.UserDao;
 import com.hk.web.action.error.AdminPermissionAction;
 
 /**

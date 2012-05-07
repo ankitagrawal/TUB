@@ -23,18 +23,18 @@ import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.core.RoleConstants;
-import com.hk.dao.CheckDetailsDao;
-import com.hk.dao.affiliate.AffiliateCategoryDao;
-import com.hk.dao.affiliate.AffiliateDao;
-import com.hk.dao.core.AddressDao;
 import com.hk.domain.CheckDetails;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.affiliate.AffiliateCategoryCommission;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.Role;
+import com.hk.impl.dao.CheckDetailsDaoImpl;
+import com.hk.impl.dao.affiliate.AffiliateCategoryDaoImpl;
 import com.hk.manager.AffiliateManager;
+import com.hk.pact.dao.affiliate.AffiliateDao;
+import com.hk.pact.dao.core.AddressDao;
+import com.hk.pact.service.RoleService;
 import com.hk.report.dto.payment.AffiliatePaymentDto;
-import com.hk.service.RoleService;
 import com.hk.web.action.error.AdminPermissionAction;
 
 @Secure(hasAnyPermissions = { PermissionConstants.MANAGE_AFFILIATES }, authActionBean = AdminPermissionAction.class)
@@ -45,11 +45,11 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
     @Autowired
     AffiliateManager                  affiliateManager;
     @Autowired
-    CheckDetailsDao                   checkDetailsDao;
+    CheckDetailsDaoImpl                   checkDetailsDao;
     @Autowired
     AddressDao                        addressDao;
     @Autowired
-    AffiliateCategoryDao              affiliateCategoryCommissionDao;
+    AffiliateCategoryDaoImpl              affiliateCategoryCommissionDao;
 
     List<AffiliatePaymentDto>         affiliatePaymentDtoList = new ArrayList<AffiliatePaymentDto>();
     Affiliate                         affiliate;
@@ -242,11 +242,11 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
         this.affiliateManager = affiliateManager;
     }
 
-    public CheckDetailsDao getCheckDetailsDao() {
+    public CheckDetailsDaoImpl getCheckDetailsDao() {
         return checkDetailsDao;
     }
 
-    public void setCheckDetailsDao(CheckDetailsDao checkDetailsDao) {
+    public void setCheckDetailsDao(CheckDetailsDaoImpl checkDetailsDao) {
         this.checkDetailsDao = checkDetailsDao;
     }
 
@@ -258,11 +258,11 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
         this.addressDao = addressDao;
     }
 
-    public AffiliateCategoryDao getAffiliateCategoryCommissionDao() {
+    public AffiliateCategoryDaoImpl getAffiliateCategoryCommissionDao() {
         return affiliateCategoryCommissionDao;
     }
 
-    public void setAffiliateCategoryCommissionDao(AffiliateCategoryDao affiliateCategoryCommissionDao) {
+    public void setAffiliateCategoryCommissionDao(AffiliateCategoryDaoImpl affiliateCategoryCommissionDao) {
         this.affiliateCategoryCommissionDao = affiliateCategoryCommissionDao;
     }
 

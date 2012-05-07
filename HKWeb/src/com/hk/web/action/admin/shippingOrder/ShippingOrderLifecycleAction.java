@@ -16,16 +16,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
-import com.hk.dao.shippingOrder.ShippingOrderLifecycleDao;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderLifeCycleActivity;
 import com.hk.domain.order.ShippingOrderLifecycle;
 import com.hk.domain.user.User;
-import com.hk.service.UserService;
+import com.hk.pact.dao.shippingOrder.ShippingOrderLifecycleDao;
+import com.hk.pact.service.UserService;
 import com.hk.web.action.error.AdminPermissionAction;
 
 @Secure(hasAnyPermissions = {PermissionConstants.SEARCH_ORDERS}, authActionBean = AdminPermissionAction.class)

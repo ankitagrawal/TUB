@@ -17,21 +17,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.dto.inventory.DebitNoteDto;
 import com.hk.admin.impl.dao.inventory.DebitNoteDao;
 import com.hk.admin.manager.GRNManager;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.dao.BaseDao;
 import com.hk.domain.accounting.DebitNote;
 import com.hk.domain.accounting.DebitNoteLineItem;
 import com.hk.domain.accounting.DebitNoteStatus;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.sku.Sku;
-import com.hk.service.SkuService;
+import com.hk.pact.dao.BaseDao;
+import com.hk.pact.service.inventory.SkuService;
 import com.hk.web.action.error.AdminPermissionAction;
 
 @Secure(hasAnyPermissions = { PermissionConstants.PO_MANAGEMENT }, authActionBean = AdminPermissionAction.class)

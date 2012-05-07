@@ -13,7 +13,12 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
- 
+
+/**
+ * 
+ * @author vaibhav.adlakha
+ *
+ */
 @Intercepts(LifecycleStage.ActionBeanResolution)
 //@Intercepts(LifecycleStage.ResolutionExecution)
 public class StripesSpringInterceptor implements Interceptor

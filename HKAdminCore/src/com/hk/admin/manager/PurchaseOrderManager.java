@@ -28,8 +28,8 @@ import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.dto.TaxComponent;
-import com.hk.service.InventoryService;
-import com.hk.service.SkuService;
+import com.hk.pact.service.inventory.InventoryService;
+import com.hk.pact.service.inventory.SkuService;
 
 /**
  * Created by IntelliJ IDEA.

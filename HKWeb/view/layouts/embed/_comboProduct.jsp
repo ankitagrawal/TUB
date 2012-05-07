@@ -1,5 +1,5 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
-<%@ page import="com.hk.dao.catalog.combo.ComboDao" %>
+<%@ page import="com.hk.pact.dao.catalog.combo.ComboDao" %>
 <%@ page import="com.hk.domain.catalog.product.combo.Combo" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="com.hk.constants.core.PermissionConstants" %>
@@ -8,7 +8,7 @@
 
 <s:layout-definition>
 <%
-  ComboDao comboDao = (ComboDao)ServiceLocatorFactory.getService("ComboDao");
+  ComboDao comboDao = (ComboDao)ServiceLocatorFactory.getService(ComboDao.class);
   String productId = (String) pageContext.getAttribute("productId");
   Combo combo = comboDao.get(Combo.class, productId);
   pageContext.setAttribute("combo", combo);

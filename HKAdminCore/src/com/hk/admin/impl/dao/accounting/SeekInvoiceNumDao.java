@@ -7,9 +7,9 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.stereotype.Repository;
 
-import com.hk.dao.impl.BaseDaoImpl;
 import com.hk.domain.accounting.SeekInvoiceNum;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.impl.dao.BaseDaoImpl;
 
 @Repository
 public class SeekInvoiceNumDao extends BaseDaoImpl{

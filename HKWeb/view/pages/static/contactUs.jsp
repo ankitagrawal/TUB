@@ -1,4 +1,4 @@
-<%@ page import="com.hk.dao.MasterDataDao" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="net.tanesha.recaptcha.ReCaptchaFactory" %>
 <%@ page import="net.tanesha.recaptcha.ReCaptcha" %>
 <%@ page import="com.hk.constants.core.HealthkartConstants" %>

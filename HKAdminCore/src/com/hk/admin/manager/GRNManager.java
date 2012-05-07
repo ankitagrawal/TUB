@@ -34,7 +34,7 @@ import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.dto.TaxComponent;
-import com.hk.service.SkuService;
+import com.hk.pact.service.inventory.SkuService;
 
 @Component
 public class GRNManager {

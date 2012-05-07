@@ -15,8 +15,8 @@ import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.HealthkartConstants;
-import com.hk.dao.user.UserDao;
 import com.hk.domain.user.User;
+import com.hk.pact.dao.user.UserDao;
 
 @UrlBinding("/action/invite/{userHash}")
 @Component

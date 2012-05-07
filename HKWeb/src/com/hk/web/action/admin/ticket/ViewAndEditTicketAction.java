@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.Breadcrumb;
 import com.hk.admin.dto.DisplayTicketHistoryDto;
@@ -26,7 +25,7 @@ import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.Ticket;
 import com.hk.domain.TicketHistory;
 import com.hk.domain.user.User;
-import com.hk.service.UserService;
+import com.hk.pact.service.UserService;
 import com.hk.web.action.error.AdminPermissionAction;
 
 /**

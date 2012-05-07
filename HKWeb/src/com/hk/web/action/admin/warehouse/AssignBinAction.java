@@ -18,7 +18,7 @@ import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.Bin;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.service.UserService;
+import com.hk.pact.service.UserService;
 import com.hk.web.action.error.AdminPermissionAction;
 
 /**

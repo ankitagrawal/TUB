@@ -30,17 +30,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.DateUtils;
 import com.hk.admin.manager.ProductManager;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.order.EnumOrderStatus;
-import com.hk.dao.ReconciliationStatusDao;
-import com.hk.dao.catalog.product.ProductVariantDao;
-import com.hk.dao.order.OrderDao;
-import com.hk.dao.payment.PaymentModeDao;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.core.OrderStatus;
 import com.hk.domain.core.PaymentMode;
@@ -48,8 +43,15 @@ import com.hk.domain.core.Tax;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.inventory.rv.ReconciliationStatus;
 import com.hk.domain.order.Order;
+import com.hk.impl.dao.ReconciliationStatusDaoImpl;
 import com.hk.manager.EmailManager;
 import com.hk.manager.OrderManager;
+import com.hk.pact.dao.catalog.product.ProductVariantDao;
+import com.hk.pact.dao.order.OrderDao;
+import com.hk.pact.dao.payment.PaymentModeDao;
+import com.hk.pact.service.OrderStatusService;
+import com.hk.pact.service.catalog.CategoryService;
+import com.hk.pact.service.order.OrderService;
 import com.hk.report.dto.catalog.CategoryPerformanceDto;
 import com.hk.report.dto.inventory.InventorySoldDto;
 import com.hk.report.dto.order.CategoriesOrderReportDto;
@@ -63,9 +65,6 @@ import com.hk.report.manager.ReportManager;
 import com.hk.report.pact.service.catalog.product.ReportProductVariantService;
 import com.hk.report.pact.service.order.ReportOrderService;
 import com.hk.report.pact.service.shippingOrder.ReportShippingOrderService;
-import com.hk.service.CategoryService;
-import com.hk.service.OrderStatusService;
-import com.hk.service.order.OrderService;
 import com.hk.util.CustomDateTypeConvertor;
 import com.hk.web.action.error.AdminPermissionAction;
 
@@ -109,7 +108,7 @@ public class ReportAction extends BaseAction {
     @Autowired
     ProductManager                                 productManager;
     @Autowired
-    ReconciliationStatusDao                        reconciliationStatusDao;
+    ReconciliationStatusDaoImpl                        reconciliationStatusDao;
     @Autowired
     private CategoryService                        categoryService;
     @Autowired

@@ -14,10 +14,10 @@ import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
-import com.hk.dao.core.TempTokenDao;
-import com.hk.dao.user.UserDao;
 import com.hk.domain.TempToken;
 import com.hk.domain.user.User;
+import com.hk.pact.dao.core.TempTokenDao;
+import com.hk.pact.dao.user.UserDao;
 import com.hk.web.action.core.auth.LoginAction;
 
 @Component

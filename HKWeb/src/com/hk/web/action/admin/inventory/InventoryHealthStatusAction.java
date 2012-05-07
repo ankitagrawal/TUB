@@ -27,27 +27,26 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.manager.ProductManager;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.dao.catalog.category.CategoryDao;
-import com.hk.dao.inventory.LowInventoryDao;
-import com.hk.dao.inventory.ProductVariantInventoryDao;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.LowInventory;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.service.InventoryService;
-import com.hk.service.ProductService;
-import com.hk.service.ProductVariantService;
-import com.hk.service.SkuService;
-import com.hk.service.UserService;
-import com.hk.service.WarehouseService;
+import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
+import com.hk.pact.dao.inventory.LowInventoryDao;
+import com.hk.pact.dao.inventory.ProductVariantInventoryDao;
+import com.hk.pact.service.UserService;
+import com.hk.pact.service.catalog.ProductService;
+import com.hk.pact.service.catalog.ProductVariantService;
+import com.hk.pact.service.core.WarehouseService;
+import com.hk.pact.service.inventory.InventoryService;
+import com.hk.pact.service.inventory.SkuService;
 import com.hk.util.io.HkXlsWriter;
 import com.hk.web.action.error.AdminPermissionAction;
 
@@ -74,7 +73,7 @@ public class InventoryHealthStatusAction extends BasePaginatedAction {
     @Autowired
     private ProductVariantService productVariantService;
     @Autowired
-    CategoryDao                   categoryDao;
+    CategoryDaoImpl                   categoryDao;
     @Autowired
     InventoryService              inventoryService;
     @Autowired

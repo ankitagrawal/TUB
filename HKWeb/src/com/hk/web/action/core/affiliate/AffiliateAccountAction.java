@@ -17,13 +17,12 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.RoleConstants;
-import com.hk.dao.CheckDetailsDao;
-import com.hk.dao.affiliate.AffiliateDao;
-import com.hk.dao.user.UserDaoImpl;
 import com.hk.domain.CheckDetails;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.user.User;
+import com.hk.impl.dao.CheckDetailsDaoImpl;
 import com.hk.manager.AffiliateManager;
+import com.hk.pact.dao.affiliate.AffiliateDao;
 import com.hk.web.action.core.auth.LogoutAction;
 
 @Secure(hasAnyRoles = { RoleConstants.HK_AFFILIATE, RoleConstants.ADMIN })
@@ -40,7 +39,7 @@ public class AffiliateAccountAction extends BaseAction {
     @Autowired
     AffiliateManager      affiliateManager;
     @Autowired
-    CheckDetailsDao       checkDetailsDao;
+    CheckDetailsDaoImpl       checkDetailsDao;
 
     @DefaultHandler
     @DontValidate

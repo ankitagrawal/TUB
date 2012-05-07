@@ -3,9 +3,9 @@ package com.hk.report.dto.accounting;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.hk.core.fliter.LineItemFilter;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
-import com.hk.filter.LineItemFilter;
 
 /**
  * Created by IntelliJ IDEA.
