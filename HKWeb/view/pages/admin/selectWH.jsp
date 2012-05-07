@@ -4,7 +4,7 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/default.jsp">
   <%
-      WarehouseService warehouseService = InjectorFactory.getInjector().getInstance(WarehouseService.class);
+      WarehouseService warehouseService = ServiceLocatorFactory.getService(WarehouseService.class);
         pageContext.setAttribute("whList", warehouseService.getAllWarehouses());
   %>
 

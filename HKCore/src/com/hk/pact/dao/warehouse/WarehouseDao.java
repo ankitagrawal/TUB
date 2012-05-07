@@ -2,8 +2,6 @@ package com.hk.pact.dao.warehouse;
 
 import java.util.List;
 
-import org.springframework.stereotype.Repository;
-
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.BaseDao;
 

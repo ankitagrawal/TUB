@@ -3,7 +3,7 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="mhc.domain.ReconciliationType" %>
 <%@ page import="java.util.List" %>
-<%@ page import="mhc.service.dao.WarehouseDao" %>
+<%@ page import="com.hk.pact.dao.warehouse.WarehouseDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" var="pa"/>

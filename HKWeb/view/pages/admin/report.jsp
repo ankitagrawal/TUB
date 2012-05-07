@@ -2,8 +2,8 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
-<%@ page import="mhc.service.dao.order.OrderStatusDao" %>
-<%@ page import="mhc.service.dao.TaxDao" %>
+<%@ page import="com.hk.pact.dao.OrderStatusDao" %>
+<%@ page import="com.hk.pact.dao.TaxDao" %>
 <%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
@@ -14,10 +14,10 @@
   <%--
 
     <%
-      OrderStatusDao orderStatusDao = InjectorFactory.getInjector().getInstance(OrderStatusDao.class);
+      OrderStatusDao orderStatusDao = ServiceLocatorFactory.getService(OrderStatusDao.class);
       pageContext.setAttribute("orderStatusListForReporting", orderStatusDao.listOrderStatusForReporting());
 
-      TaxDao taxDao = InjectorFactory.getInjector().getInstance(TaxDao.class);
+      TaxDao taxDao = ServiceLocatorFactory.getService(TaxDao.class);
       pageContext.setAttribute("taxList", taxDao.taxListForReport());
 
       CategoryDao categoryDao = (CategoryDao)ServiceLocatorFactory.getService(CategoryDao.class);

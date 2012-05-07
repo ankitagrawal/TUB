@@ -5,7 +5,7 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%
-  boolean jqueryCdn = InjectorFactory.getInjector().getInstance(Key.get(Boolean.class, Names.named(Keys.Env.jqueryCdn)));
+  boolean jqueryCdn = ServiceLocatorFactory.getService(Key.get(Boolean.class, Names.named(Keys.Env.jqueryCdn)));
 %>
 <s:layout-render name="/layouts/default.jsp" pageTitle="Auto Complete">
 

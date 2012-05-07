@@ -1,16 +1,16 @@
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
 <%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
-<%@ page import="mhc.service.dao.TaxDao" %>
+<%@ page import="com.hk.pact.dao.TaxDao" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
-<%@ page import="mhc.service.dao.WarehouseDao" %>
+<%@ page import="com.hk.pact.dao.warehouse.WarehouseDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.GRNAction" var="pa"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="GRN">
 <%
-    WarehouseDaoImpl warehouseDao = InjectorFactory.getInjector().getInstance(WarehouseDaoImpl.class);
+    WarehouseDaoImpl warehouseDao = ServiceLocatorFactory.getService(WarehouseDaoImpl.class);
     pageContext.setAttribute("whList", warehouseDao.listAll());
 %>
 <s:layout-component name="htmlHead">
