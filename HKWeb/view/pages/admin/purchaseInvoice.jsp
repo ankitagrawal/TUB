@@ -19,7 +19,7 @@
   List<Tax> taxList  = taxDao.getTaxList();
   pageContext.setAttribute("taxList", taxList);
 
-	MasterDataDaoImpl masterDataDao = InjectorFactory.getInjector().getInstance(MasterDataDaoImpl.class);
+	MasterDataDao masterDataDao = (MasterDataDao)ServiceLocatorFactory.getService(MasterDataDao.class);
   List<Surcharge> surchargeList  = masterDataDao.getSurchargeList();
   pageContext.setAttribute("surchargeList", surchargeList);
 %>

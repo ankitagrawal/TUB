@@ -13,7 +13,7 @@
   <s:layout-component name="htmlHead">
 
  <%
-     MasterDataDaoImpl masterDataDao = InjectorFactory.getInjector().getInstance(MasterDataDaoImpl.class);
+     MasterDataDao masterDataDao = (MasterDataDao)ServiceLocatorFactory.getService(MasterDataDao.class);
    List<ReconciliationType> reconciliationTypeList  = masterDataDao.getReconciliationTypeList();
    pageContext.setAttribute("reconciliationTypeList", reconciliationTypeList);
  %>

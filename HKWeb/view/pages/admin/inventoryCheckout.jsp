@@ -4,7 +4,7 @@
 <%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.admin.InventoryCheckoutAction" var="icBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.inventory.InventoryCheckoutAction" var="icBean"/>
 <c:set var="lineItemStatusId_picking" value="<%=EnumShippingOrderStatus.SO_Picking.getId()%>"/>
 <c:set var="lineItemStatusId_shipped" value="<%=EnumShippingOrderStatus.SO_Shipped.getId()%>"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Inventory Checkout">
@@ -53,7 +53,7 @@
             <fieldset class="top_label">
 
               <div style="width:450px">
-                <s:form beanclass="com.hk.web.action.admin.InventoryCheckoutAction" method="get" autocomplete="false">
+                <s:form beanclass="com.hk.web.action.admin.inventory.InventoryCheckoutAction" method="get" autocomplete="false">
                   <ul>
                     <s:hidden name="shippingOrder" value="${icBean.shippingOrder.id}"/>
                     <li><label>UPC (Barcode)</label>
@@ -69,12 +69,12 @@
                 $('#upc').focus();
               </script>
             </fieldset>
-            <div><s:link beanclass="com.hk.web.action.admin.InventoryCheckoutAction" style="font-size:1.2em;">
+            <div><s:link beanclass="com.hk.web.action.admin.inventory.InventoryCheckoutAction" style="font-size:1.2em;">
               &lang;&lang;&lang;Back
               to Search Order</s:link></div>
           </c:when>
           <c:otherwise>
-            <s:form beanclass="com.hk.web.action.admin.InventoryCheckoutAction">
+            <s:form beanclass="com.hk.web.action.admin.inventory.InventoryCheckoutAction">
               <s:hidden name="shippingOrder" value="${icBean.shippingOrder.id}"/>
               <s:hidden name="upc" value="${icBean.upc}"/>
               <s:hidden name="lineItem" value="${icBean.lineItem.id}"/>
@@ -89,7 +89,7 @@
         </c:choose>
       </c:when>
         <c:otherwise>
-          <s:form beanclass="com.hk.web.action.admin.InventoryCheckoutAction">
+          <s:form beanclass="com.hk.web.action.admin.inventory.InventoryCheckoutAction">
             <s:hidden name="shippingOrder" value="${icBean.shippingOrder.id}"/>
             <s:hidden name="upc" value="${icBean.upc}"/>
             <s:hidden name="lineItem" value="${icBean.lineItem.id}"/>
@@ -161,7 +161,7 @@
     </div>
     <div style="display:inline;float:right;">
       <div style="display: none;">
-        <s:link beanclass="com.hk.web.action.admin.InventoryCheckoutAction" id="upcUpdateLink" event="updateUPC"></s:link>
+        <s:link beanclass="com.hk.web.action.admin.inventory.InventoryCheckoutAction" id="upcUpdateLink" event="updateUPC"></s:link>
       </div>
       <table class="align_top" width="100%">
         <thead>
@@ -192,7 +192,7 @@
             <c:choose><c:when
                 test="${icBean.shippingOrder.orderStatus.id == lineItemStatusId_picking || icBean.shippingOrder.orderStatus.id == lineItemStatusId_shipped}">
               <td title="Click to fing SKU Groups/Batch">
-                <s:link beanclass="com.hk.web.action.admin.InventoryCheckoutAction" event="findSkuGroups">
+                <s:link beanclass="com.hk.web.action.admin.inventory.InventoryCheckoutAction" event="findSkuGroups">
                   ${productVariant.id}
                   <s:param name="shippingOrder" value="${icBean.shippingOrder}"/>
                   <s:param name="upc" value="${productVariant.id}"/>

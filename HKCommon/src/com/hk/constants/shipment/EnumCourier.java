@@ -7,9 +7,7 @@ import java.util.List;
 import com.hk.domain.courier.Courier;
 
 
-/**
- * Generated
- */
+
 public enum EnumCourier {
 
   DTDC_Plus(10L, "DTDC Plus"),

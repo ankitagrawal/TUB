@@ -1,7 +1,7 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
-<%@ page import="com.hk.constants.EnumCourier" %>
-<%@ page import="mhc.service.dao.BoxSizeDao" %>
+<%@ page import="com.hk.constants.shipment.EnumCourier" %>
+<%@ page import="com.hk.pact.dao.BaseDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="com.hk.constants.order.EnumOrderStatus" %>
@@ -10,11 +10,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="com.hk.web.action.admin.SearchOrderAndEnterCourierInfoAction" var="shipmentQueueBean"/>
+<%@page import="com.hk.domain.courier.BoxSize"%>
+<s:useActionBean beanclass="com.hk.web.action.admin.courier.SearchOrderAndEnterCourierInfoAction" var="shipmentQueueBean"/>
 <%
-    BoxSizeDao boxSizeDao = InjectorFactory.getInjector().getInstance(BoxSizeDao.class);
-  MasterDataDaoImpl masterDataDao = InjectorFactory.getInjector().getInstance(MasterDataDaoImpl.class);
-  pageContext.setAttribute("boxSizeList", boxSizeDao.listAll());
+    BaseDao boxSizeDao =ServiceLocatorFactory.getService(BaseDao.class);
+  MasterDataDao masterDataDao = (MasterDataDao)ServiceLocatorFactory.getService(MasterDataDao.class);
+  pageContext.setAttribute("boxSizeList", boxSizeDao.getAll(BoxSize.class));
   pageContext.setAttribute("courierList", masterDataDao.getCourierList());
 %>
 
@@ -32,7 +33,7 @@
     <c:choose>
       <c:when test="${shipmentQueueBean.shippingOrder == null}">
         <div height="500px" align="center">
-          <s:form beanclass="com.hk.web.action.admin.SearchOrderAndEnterCourierInfoAction" method="get"
+          <s:form beanclass="com.hk.web.action.admin.courier.SearchOrderAndEnterCourierInfoAction" method="get"
                   autocomplete="false">
             <label>Search Order:</label>
             <br/><br/>
@@ -51,7 +52,7 @@
       </c:when>
       <c:otherwise>
         <fieldset class="top_label">
-          <s:form beanclass="com.hk.web.action.admin.SearchOrderAndEnterCourierInfoAction">
+          <s:form beanclass="com.hk.web.action.admin.courier.SearchOrderAndEnterCourierInfoAction">
               <s:hidden name="shipment" value="${shipmentQueueBean.shipment.id}"/>
              <c:if test="${! empty shipmentQueueBean.availableCouriers}">
               <div style="margin-top:5px;margin-bottom:5px;font-size:.9em">Available Couriers:

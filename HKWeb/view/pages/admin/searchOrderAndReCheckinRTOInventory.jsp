@@ -5,7 +5,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="com.hk.web.action.admin.SearchOrderAndReCheckinRTOInventoryAction" var="orderAdmin"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.inventory.SearchOrderAndReCheckinRTOInventoryAction" var="orderAdmin"/>
 <%
   int lineItemGlobalCtr = 0;
 %>
@@ -31,7 +31,7 @@
   <s:layout-component name="heading">Search Order and Checkin RTO Units</s:layout-component>
 
   <s:layout-component name="content">
-    <s:form beanclass="com.hk.web.action.admin.SearchOrderAndReCheckinRTOInventoryAction" method="get" autocomplete="false">
+    <s:form beanclass="com.hk.web.action.admin.inventory.SearchOrderAndReCheckinRTOInventoryAction" method="get" autocomplete="false">
       <fieldset class="top_label">
         <ul>
           <div class="grouped">
@@ -44,7 +44,7 @@
     </s:form>
 
     <c:if test="${orderAdmin.shippingOrder != null}">
-      <s:form beanclass="com.hk.web.action.admin.SearchOrderAndReCheckinRTOInventoryAction" autocomplete="off">
+      <s:form beanclass="com.hk.web.action.admin.inventory.SearchOrderAndReCheckinRTOInventoryAction" autocomplete="off">
         <s:hidden name="orderId" value="${orderAdmin.shippingOrder.id}"/>
         <c:set var="order" value="${orderAdmin.shippingOrder.baseOrder}"/>
         <table class="align_top" width="100%">

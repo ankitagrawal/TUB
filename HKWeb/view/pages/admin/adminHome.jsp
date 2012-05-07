@@ -91,19 +91,19 @@
 <div class="left roundBox">
   <h2>Logistics</h2>
   <c:if test="${whAction.setWarehouse != null}">
-  <h3><s:link beanclass="com.hk.web.action.admin.AssignBinAction">Assign Bin</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.admin.warehouse.AssignBinAction">Assign Bin</s:link></h3>
 
   <h3><s:link beanclass="com.hk.web.action.admin.queue.PackingAwaitingQueueAction">Packing Awaiting Queue</s:link></h3>
   <h3>
     <s:link
-        beanclass="com.hk.web.action.admin.InventoryCheckoutAction">Search Shipping Order & Checkout</s:link></h3>
+        beanclass="com.hk.web.action.admin.inventory.InventoryCheckoutAction">Search Shipping Order & Checkout</s:link></h3>
   <h3>
     <s:link
-        beanclass="com.hk.web.action.admin.SearchOrderAndEnterCourierInfoAction">Search Shipping Order & Enter Courier</s:link></h3>
+        beanclass="com.hk.web.action.admin.courier.SearchOrderAndEnterCourierInfoAction">Search Shipping Order & Enter Courier</s:link></h3>
 
   <h3><s:link beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction">Shipment Awaiting Queue</s:link></h3>   
   <h3><s:link
-      beanclass="com.hk.web.action.admin.SearchOrderAndReCheckinRTOInventoryAction">Search Shipping Order & Checkin RTO</s:link></h3>
+      beanclass="com.hk.web.action.admin.inventory.SearchOrderAndReCheckinRTOInventoryAction">Search Shipping Order & Checkin RTO</s:link></h3>
 
   <h3><s:link beanclass="com.hk.web.action.admin.queue.DeliveryAwaitingQueueAction">Delivery Awaiting Queue</s:link></h3>
 
@@ -265,7 +265,7 @@
   <h2>Site Content Management</h2>
 
   <h3>
-    <s:link beanclass="com.hk.web.action.BulkSeoAction"
+    <s:link beanclass="com.hk.web.action.core.content.seo.BulkSeoAction"
             title="Change MetaData by Category">Change MetaData</s:link></h3>
 
 </div>

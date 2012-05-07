@@ -1,11 +1,11 @@
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.admin.AssignBinAction" var="assignBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.warehouse.AssignBinAction" var="assignBean"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Assign Bin">
 
   <s:layout-component name="content">
-    <s:form beanclass="com.hk.web.action.admin.AssignBinAction">
+    <s:form beanclass="com.hk.web.action.admin.warehouse.AssignBinAction">
       <fieldset>
         <ul>
           <s:hidden name="bin"/>
