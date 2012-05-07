@@ -2,11 +2,13 @@ package com.hk.impl.service.core;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.mgt.SecurityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.akube.framework.dao.Page;
+import com.akube.framework.util.BaseUtils;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.Role;
@@ -15,17 +17,21 @@ import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.user.UserDaoImpl;
 import com.hk.pact.dao.user.UserCartDao;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.store.StoreService;
+import com.hk.util.TokenUtils;
 import com.shiro.PrincipalImpl;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    private UserDaoImpl         userDao;
+    private UserDaoImpl     userDao;
     @Autowired
     private UserCartDao     userCartDao;
     @Autowired
     private SecurityManager securityManager;
+    @Autowired
+    private StoreService    storeService;
 
     public User getUserById(Long userId) {
         return userDao.getUserById(userId);
@@ -86,6 +92,18 @@ public class UserServiceImpl implements UserService {
     }
 
     public User save(User user) {
+        if (user != null) {
+            if (user.getCreateDate() == null)
+                user.setCreateDate(BaseUtils.getCurrentTimestamp());
+            if (user.getLastLoginDate() == null)
+                user.setLastLoginDate(BaseUtils.getCurrentTimestamp());
+            if (StringUtils.isBlank(user.getUserHash()))
+                user.setUserHash(TokenUtils.generateUserHash());
+            user.setUpdateDate(BaseUtils.getCurrentTimestamp());
+            if (user.getStore() == null) {
+                user.setStore(getStoreService().getDefaultStore());
+            }
+        }
         return getUserDao().save(user);
     }
 
@@ -121,6 +139,14 @@ public class UserServiceImpl implements UserService {
 
     public void setSecurityManager(SecurityManager securityManager) {
         this.securityManager = securityManager;
+    }
+
+    public StoreService getStoreService() {
+        return storeService;
+    }
+
+    public void setStoreService(StoreService storeService) {
+        this.storeService = storeService;
     }
 
 }

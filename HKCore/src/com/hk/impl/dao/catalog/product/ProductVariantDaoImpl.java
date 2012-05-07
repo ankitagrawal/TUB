@@ -31,6 +31,10 @@ public class ProductVariantDaoImpl extends BaseDaoImpl implements ProductVariant
      * enumProductVariantPaymentType.getId()); }
      */
 
+    public List<ProductVariant> findVariantsFromFreeVariant(ProductVariant freeProductVariant) {
+        return getSession().createQuery("from ProductVariant p where p.freeProductVariant = :freeProductVariant").setParameter("freeProductVariant", freeProductVariant).list();
+    }
+
     public Set<ProductVariant> getProductVariantsFromProductVariantIds(String productVariantIds) {
         Set<ProductVariant> productVariants = new HashSet<ProductVariant>();
 

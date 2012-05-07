@@ -57,7 +57,7 @@ public class AssignWarehouseAction extends BaseAction{
     Set<Warehouse> warehouses = new HashSet<Warehouse>();
     warehouses.add(userWarehouse);
     user.setWarehouses(warehouses);
-    userDao.save(user);
+    getUserService().save(user);
     auditLogger.info("Admin ["+getPrincipal().getId()+"] - "+getPrincipal().getEmail()+" has updated roles for user ["+user.getId()+"] - "+user.getLogin());
     addRedirectAlertMessage(new LocalizableMessage("/AssignWarehouse.action.warehouse.assigned.successfully"));
     return new RedirectResolution(AssignWarehouseAction.class).addParameter("user", user.getId());

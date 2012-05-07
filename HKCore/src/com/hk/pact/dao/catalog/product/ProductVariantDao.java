@@ -28,6 +28,8 @@ public interface ProductVariantDao extends BaseDao {
     public List<ProductVariant> findVariantFromBarcode(String barcode);
 
     public Long findNetInventory(ProductVariant productVariant);
+    
+    public List<ProductVariant> findVariantsFromFreeVariant(ProductVariant freeProductVariant);
 
     public ProductVariant save(ProductVariant productVariant);
 

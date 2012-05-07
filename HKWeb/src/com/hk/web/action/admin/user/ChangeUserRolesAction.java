@@ -93,7 +93,7 @@ public class ChangeUserRolesAction extends BaseAction {
 
     public Resolution change() {
         user.setRoles(roleSet);
-        userDao.save(user);
+        getUserService().save(user);
         auditLogger.info("Admin [" + getPrincipal().getId() + "] - " + getPrincipal().getEmail() + " has updated roles for user [" + user.getId() + "] - " + user.getLogin());
         addRedirectAlertMessage(new LocalizableMessage("/ChangeUserRoles.action.role.changed.successfully"));
         return new RedirectResolution(EditUserAction.class).addParameter("user", user.getId());

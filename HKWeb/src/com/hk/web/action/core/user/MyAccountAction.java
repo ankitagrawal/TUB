@@ -62,7 +62,7 @@ public class MyAccountAction extends BaseAction {
 
     public Resolution save() {
         getPrincipal().setName(user.getName());
-        userDao.save(user);
+        getUserService().save(user);
         if (user.getRoles().contains(roleDao.find(EnumRole.B2B_USER.getRoleName()))) {
             b2bUserDetailsDao.save(b2bUserDetails);
         }
@@ -87,7 +87,7 @@ public class MyAccountAction extends BaseAction {
             } else
                 addValidationError("e1", new LocalizableError("/MyAccountAction.action.oldpassword.incorrect"));
         }
-        userDao.save(user);
+        getUserService().save(user);
 
         addRedirectAlertMessage(new SimpleMessage("Password has been updated successfully."));
         return new RedirectResolution(MyAccountAction.class);

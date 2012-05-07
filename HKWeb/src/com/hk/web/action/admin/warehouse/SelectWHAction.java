@@ -46,7 +46,7 @@ public class SelectWHAction extends BaseAction {
       warehouses.add(setWarehouse);
     }
     loggedOnUser.setWarehouses(warehouses);
-    userDao.save(loggedOnUser);
+    userService.save(loggedOnUser);
 
     return new RedirectResolution(AdminHomeAction.class);
   }

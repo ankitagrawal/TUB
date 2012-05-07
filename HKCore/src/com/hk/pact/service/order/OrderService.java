@@ -46,6 +46,8 @@ public interface OrderService {
     public Order getLatestOrderForUser(User user);
 
     public Page listOrdersForUser(User user, int page, int perPage);
+    
+    public List<Order> getOrdersForUserSortedByDate(List<OrderStatus> orderStatusList, User user);
 
     /**
      * @param order

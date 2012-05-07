@@ -315,6 +315,10 @@ public class OrderServiceImpl implements OrderService {
     public Order getLatestOrderForUser(User user) {
         return getOrderDao().getLatestOrderForUser(user);
     }
+    
+    public List<Order> getOrdersForUserSortedByDate(List<OrderStatus> orderStatusList, User user){
+        return getOrderDao().getOrdersForUserSortedByDate(orderStatusList, user);
+    }
 
     public Page listOrdersForUser(User user, int page, int perPage) {
         List<OrderStatus> orderStatusList = orderStatusService.getOrderStatuses(EnumOrderStatus.getStatusForCustomers());

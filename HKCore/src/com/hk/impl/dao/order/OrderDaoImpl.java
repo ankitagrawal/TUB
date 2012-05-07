@@ -33,11 +33,10 @@ import com.hk.pact.dao.order.OrderLifecycleDao;
 @SuppressWarnings("unchecked")
 public class OrderDaoImpl extends BaseDaoImpl implements OrderDao {
 
-    private static Logger      logger  = LoggerFactory.getLogger(OrderDaoImpl.class);
-
+    private static Logger     logger = LoggerFactory.getLogger(OrderDaoImpl.class);
 
     @Autowired
-    private OrderLifecycleDao  orderLifecycleDao;
+    private OrderLifecycleDao orderLifecycleDao;
 
     public Order getLatestOrderForUser(User user) {
         @SuppressWarnings( { "unchecked" })
@@ -103,6 +102,16 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao {
 
     public Long getCountOfOrdersWithStatus(EnumOrderStatus enumOrderStatus) {
         return (Long) getSession().createQuery("select count(*) from Order o where o.orderStatus.id = :orderStatusId").setLong("orderStatusId", enumOrderStatus.getId()).uniqueResult();
+    }
+
+    public List<Order> getOrdersForUserSortedByDate(List<OrderStatus> orderStatusList, User user) {
+        DetachedCriteria orderCriteria = DetachedCriteria.forClass(Order.class);
+        DetachedCriteria userCriteria = orderCriteria.createCriteria("user");
+        userCriteria.add(Restrictions.eq("id", user.getId()));
+
+        orderCriteria.add(Restrictions.in("orderStatus", orderStatusList));
+        orderCriteria.addOrder(org.hibernate.criterion.Order.desc("createDate"));
+        return findByCriteria(orderCriteria);
     }
 
     public Long getBookedQtyOfProductVariantInQueue(ProductVariant productVariant) {

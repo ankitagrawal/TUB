@@ -57,6 +57,7 @@ import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
 import com.hk.manager.OrderManager;
 import com.hk.manager.UserManager;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.catalog.product.ProductVariantDao;
 import com.hk.pact.dao.reward.RewardPointDao;
 import com.hk.pact.dao.shippingOrder.ShippingOrderLifecycleDao;
 import com.hk.pact.dao.sku.SkuDao;
@@ -64,14 +65,14 @@ import com.hk.pact.service.accounting.InvoiceService;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.service.ServiceLocatorFactory;
+import com.hk.util.CartLineItemUtil;
 import com.hk.util.ImageManager;
-
 
 public class Functions {
 
     @SuppressWarnings("unused")
     private static final PeriodFormatter formatter;
-     private static final MenuHelper menuHelper = null;
+    private static final MenuHelper      menuHelper = null;
     // TODO: rewrite
     static {
         formatter = new PeriodFormatterBuilder().appendYears().appendSuffix(" year, ", " years, ").appendMonths().appendSuffix(" month, ", " months, ").appendWeeks().appendSuffix(
@@ -83,9 +84,8 @@ public class Functions {
         // TODO: rewrite
     }
 
-    private static Logger                logger = LoggerFactory.getLogger(Functions.class);
+    private static Logger                logger     = LoggerFactory.getLogger(Functions.class);
 
-    
     public static boolean isNotBlank(String str) {
         return StringUtils.isNotBlank(str);
     }
@@ -289,7 +289,7 @@ public class Functions {
 
     public static Long checkedinUnitsCount(Object o1, Object o2) {
         AdminInventoryService adminInventoryService = ServiceLocatorFactory.getService(AdminInventoryService.class);
-       // ProductVariant productVariant = (ProductVariant) o1;
+        // ProductVariant productVariant = (ProductVariant) o1;
         GrnLineItem grnLineItem = (GrnLineItem) o2;
         return adminInventoryService.countOfCheckedInUnitsForGrnLineItem(grnLineItem);
     }
@@ -335,6 +335,24 @@ public class Functions {
         }
         return imageManager.getS3ImageUrl(imageSize, imageId);
     }
+
+    public static Boolean isFreeVariant(Object o) {
+        ProductVariantDao productVariantDao = ServiceLocatorFactory.getService(ProductVariantDao.class);
+        List<ProductVariant> productVariants = productVariantDao.findVariantsFromFreeVariant((ProductVariant) o);
+        return productVariants != null && !productVariants.isEmpty();
+    }
+    
+    public static String getExtraOptionsAsString(Object o1,String str) {
+        CartLineItem cartLineItem = (CartLineItem) o1;
+//        String seperator = (String) o2;
+        return CartLineItemUtil.getExtraOptionsAsString(cartLineItem, str);
+      }
+
+      public static String getConfigOptionsAsString(Object o1,String str) {
+        CartLineItem cartLineItem = (CartLineItem) o1;
+//        Character seperator = (Character) o2;
+        return CartLineItemUtil.getConfigOptionsAsString(cartLineItem, str);
+      }
 
     public static Boolean alreadyPublishedDeal(Object o) {
         RewardPointDao rewardPointDao = ServiceLocatorFactory.getService(RewardPointDao.class);

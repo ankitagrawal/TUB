@@ -47,7 +47,7 @@ public class ChangeLoginPasswordAction extends BaseAction {
 
   public Resolution change() {
     user.setPasswordChecksum(BaseUtils.passwordEncrypt(password));
-    userDao.save(user);
+    getUserService().save(user);
     addRedirectAlertMessage(new LocalizableMessage("/ChangeLoginPassword.action.password.changed.successfully"));
     return new RedirectResolution(EditUserAction.class).addParameter("user", user.getId());
   }

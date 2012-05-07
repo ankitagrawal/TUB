@@ -8,12 +8,16 @@ import com.hk.domain.user.User;
 import com.hk.domain.user.UserAccountInfo;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.user.UserAccountInfoDao;
+import com.hk.pact.dao.user.UserDao;
+import com.hk.pact.service.UserService;
 
 @Repository
 public class UserAccountInfoDaoImpl extends BaseDaoImpl implements UserAccountInfoDao {
 
     @Autowired
-    private UserDaoImpl userDao;
+    private UserDao     userDao;
+    @Autowired
+    private UserService userService;
 
     @Transactional
     public UserAccountInfo getOrCreateUserAccountInfo(User user) {
@@ -23,7 +27,7 @@ public class UserAccountInfoDaoImpl extends BaseDaoImpl implements UserAccountIn
             userAccountInfo.setUser(user);
             userAccountInfo = save(userAccountInfo);
             user.getUserAccountInfos().add(userAccountInfo);
-            userDao.save(user);
+            userService.save(user);
         }
         return userAccountInfo;
     }
@@ -37,11 +41,11 @@ public class UserAccountInfoDaoImpl extends BaseDaoImpl implements UserAccountIn
         return (UserAccountInfo) super.save(userAccountInfo);
     }
 
-    public UserDaoImpl getUserDao() {
+    public UserDao getUserDao() {
         return userDao;
     }
 
-    public void setUserDao(UserDaoImpl userDao) {
+    public void setUserDao(UserDao userDao) {
         this.userDao = userDao;
     }
 

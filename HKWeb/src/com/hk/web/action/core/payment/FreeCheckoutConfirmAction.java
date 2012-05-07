@@ -88,7 +88,7 @@ public class FreeCheckoutConfirmAction extends BaseAction {
 
     if (email != null) {
       user.setEmail(email);
-      user = userDao.save(user);
+      user = getUserService().save(user);
     }
 
     // recalculate the pricing before creating a payment.

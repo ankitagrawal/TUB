@@ -46,7 +46,7 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao {
 
     public User save(User user) {
         // set defaults
-        if (user != null) {
+        /*if (user != null) {
             if (user.getCreateDate() == null)
                 user.setCreateDate(BaseUtils.getCurrentTimestamp());
             if (user.getLastLoginDate() == null)
@@ -54,7 +54,7 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao {
             if (StringUtils.isBlank(user.getUserHash()))
                 user.setUserHash(TokenUtils.generateUserHash());
             user.setUpdateDate(BaseUtils.getCurrentTimestamp());
-        }
+        }*/
 
         return (User) super.save(user);
     }
@@ -167,6 +167,7 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao {
         rolesCriteria.add(Restrictions.in("name", Arrays.asList(RoleConstants.HK_UNVERIFIED)));
         return list(criteria1, pageNo, perPage);
     }
+    
 
     public List<User> getAllMissingUsersLastOrderId(Integer missingSinceDays) {
         Calendar missingSinceDate = Calendar.getInstance();

@@ -39,357 +39,395 @@ import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.offer.rewardPoint.RewardPointTxn;
 import com.hk.domain.order.Order;
+import com.hk.domain.store.Store;
 import com.hk.domain.warehouse.Warehouse;
 
-
 /**
- * Author: Kani
- * Date: Aug 29, 2008
+ * Author: Kani Date: Aug 29, 2008
  */
 @Entity
 @Table(name = "user")
-@NamedQueries({
-    @NamedQuery(name = "user.findByEmail", query = "from User u where u.email = :email"),
-    @NamedQuery(name = "user.findByLogin", query = "from User u where u.login = :login"),
-    @NamedQuery(name = "user.findByEmailAndPassword", query = "from User u where u.email = :email and u.passwordChecksum = :passwordEncrypted")
-})
+@NamedQueries( {
+        @NamedQuery(name = "user.findByEmail", query = "from User u where u.email = :email"),
+        @NamedQuery(name = "user.findByLogin", query = "from User u where u.login = :login"),
+        @NamedQuery(name = "user.findByEmailAndPassword", query = "from User u where u.email = :email and u.passwordChecksum = :passwordEncrypted") })
 @Inheritance(strategy = InheritanceType.JOINED)
-/*@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)*/
+/* @Cache(usage = CacheConcurrencyStrategy.READ_WRITE) */
 public class User {
 
-  @Id
-  @Column(name = "id")
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private Long id;
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long                  id;
 
-  @Column(name = "login", nullable = false, length = 80, unique = true)
-  private String login;
+    @Column(name = "login", nullable = false, length = 80, unique = true)
+    private String                login;
 
-  @Column(name = "email", nullable = true, length = 80)
-  private String email;
+    @Column(name = "email", nullable = true, length = 80)
+    private String                email;
 
-  @Column(name = "name", nullable = true, length = 80)
-  private String name;
+    @Column(name = "name", nullable = true, length = 80)
+    private String                name;
 
-  @Column(name = "password_checksum", nullable = false)
-  private String passwordChecksum;
+    @Column(name = "password_checksum", nullable = false)
+    private String                passwordChecksum;
 
-  @Temporal(TemporalType.TIMESTAMP)
-  @Column(name = "create_date", nullable = false, length = 19)
-  private Date createDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "birth_date", nullable = true, length = 19)
+    private Date                  birthDate;
 
-  @Temporal(TemporalType.TIMESTAMP)
-  @Column(name = "update_date", nullable = false, length = 19)
-  private Date updateDate;
+    @Column(name = "gender", nullable = true, length = 6)
+    private String                gender;
 
-  @Temporal(TemporalType.TIMESTAMP)
-  @Column(name = "last_login_date", nullable = false, length = 19)
-  private Date lastLoginDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "create_date", nullable = false, length = 19)
+    private Date                  createDate;
 
-  @Transient
-  private String password;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "update_date", nullable = false, length = 19)
+    private Date                  updateDate;
 
-  @Transient
-  private String confirmPassword;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "last_login_date", nullable = false, length = 19)
+    private Date                  lastLoginDate;
 
-  @ManyToMany(fetch = FetchType.EAGER)
-  @Fetch(value = FetchMode.SELECT)
-  @JoinTable(name = "user_has_role",
-      joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-      inverseJoinColumns = @JoinColumn(name = "role_name", referencedColumnName = "name")
-  )
-  /*@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)*/
-  private Set<Role> roles = new HashSet<Role>();
+    @Transient
+    private String                password;
 
-  @Column(name = "user_hash", nullable = false, length = 32, unique = true)
-  private String userHash;
+    @Transient
+    private String                confirmPassword;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "referred_by", nullable = true)
-  private User referredBy;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SELECT)
+    @JoinTable(name = "user_has_role", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_name", referencedColumnName = "name"))
+    /* @Cache(usage = CacheConcurrencyStrategy.READ_WRITE) */
+    private Set<Role>             roles              = new HashSet<Role>();
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "affiliate_to", nullable = true)
-  private User affiliateTo;
+    @Column(name = "user_hash", nullable = false, length = 32, unique = true)
+    private String                userHash;
 
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "referrerUser")
-  private List<Coupon> referrerCoupons = new ArrayList<Coupon>(1);
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "referred_by", nullable = true)
+    private User                  referredBy;
 
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-  @OrderBy("createDate desc")
-  private List<RewardPoint> rewardPointList = new ArrayList<RewardPoint>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "affiliate_to", nullable = true)
+    private User                  affiliateTo;
 
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-  private List<RewardPointTxn> rewardPointTxnList = new ArrayList<RewardPointTxn>();
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "referrerUser")
+    private List<Coupon>          referrerCoupons    = new ArrayList<Coupon>(1);
 
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-  private List<UserAccountInfo> userAccountInfos = new ArrayList<UserAccountInfo>(1);
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @OrderBy("createDate desc")
+    private List<RewardPoint>     rewardPointList    = new ArrayList<RewardPoint>();
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<RewardPointTxn>  rewardPointTxnList = new ArrayList<RewardPointTxn>();
 
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-  private List<Address> addresses = new ArrayList<Address>();
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<UserAccountInfo> userAccountInfos   = new ArrayList<UserAccountInfo>(1);
 
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-  private List<OfferInstance> offerInstances = new ArrayList<OfferInstance>();
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<Address>         addresses          = new ArrayList<Address>();
 
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-  private List<Order> orders = new ArrayList<Order>();
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<OfferInstance>   offerInstances     = new ArrayList<OfferInstance>();
 
-  @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  @JoinTable(name = "warehouse_has_user", uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "warehouse_id"}), joinColumns = {
-      @JoinColumn(name = "user_id", nullable = false, updatable = false)}, inverseJoinColumns = {
-      @JoinColumn(name = "warehouse_id", nullable = false, updatable = false)})
-  private Set<Warehouse> warehouses = new HashSet<Warehouse>(0);
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<Order>           orders             = new ArrayList<Order>();
 
-  public List<Address> getAddresses() {
-    return addresses;
-  }
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "warehouse_has_user", uniqueConstraints = @UniqueConstraint(columnNames = { "user_id", "warehouse_id" }), joinColumns = { @JoinColumn(name = "user_id", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "warehouse_id", nullable = false, updatable = false) })
+    private Set<Warehouse>        warehouses         = new HashSet<Warehouse>(0);
 
-  public void setAddresses(List<Address> addresses) {
-    this.addresses = addresses;
-  }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "store_id", nullable = true)
+    private Store                 store;
 
-  public List<OfferInstance> getOfferInstances() {
-    return offerInstances;
-  }
-
-  public void setOfferInstances(List<OfferInstance> offerInstances) {
-    this.offerInstances = offerInstances;
-  }
-
-  public List<Order> getOrders() {
-    return orders;
-  }
-
-  public void setOrders(List<Order> orders) {
-    this.orders = orders;
-  }
-
-  @Deprecated
-  public Set<Warehouse> getWarehouses() {
-    return this.warehouses;
-  }
-
-  public void setWarehouses(Set<Warehouse> warehouses) {
-    this.warehouses = warehouses;
-  }
-
-  public Warehouse getSelectedWarehouse() {
-    if (warehouses != null && !warehouses.isEmpty()) {
-      return warehouses.iterator().next();
+    public List<Address> getAddresses() {
+        return addresses;
     }
 
-    return null;
-  }
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  public Date getCreateDate() {
-    return this.createDate;
-  }
-
-  public String getPassword() {
-    return password;
-  }
-
-  public Date getUpdateDate() {
-    return this.updateDate;
-  }
-
-  public void setPassword(String password) {
-    this.password = password;
-  }
-
-  public String getConfirmPassword() {
-    return confirmPassword;
-  }
-
-  public void setConfirmPassword(String confirmPassword) {
-    this.confirmPassword = confirmPassword;
-  }
-
-  public String getLogin() {
-    return this.login;
-  }
-
-  public void setLogin(String login) {
-    this.login = login;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public void setEmail(String email) {
-    this.email = email;
-  }
-
-
-  public Set<Role> getRoles() {
-    return roles;
-  }
-
-  public Set<String> getRoleStrings() {
-    Set<String> roleStrings = new HashSet<String>();
-    for (Role role : roles) {
-      roleStrings.add(role.getName());
+    public void setAddresses(List<Address> addresses) {
+        this.addresses = addresses;
     }
-    return roleStrings;
-  }
 
-  public void setRoles(Set<Role> roles) {
-    this.roles = roles;
-  }
-
-  public String getPasswordChecksum() {
-    return passwordChecksum;
-  }
-
-  public void setPasswordChecksum(String passwordChecksum) {
-    this.passwordChecksum = passwordChecksum;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public String getFirstName() {
-    String firstName = "";
-    try {
-      if (name != null) {
-        String[] nameArr = name.split(" ");
-        if (nameArr.length > 0)
-          firstName = nameArr[0];
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
+    public List<OfferInstance> getOfferInstances() {
+        return offerInstances;
     }
-    return firstName;
-  }
 
-  public void setCreateDate(Timestamp createDate) {
-    this.createDate = createDate;
-  }
-
-  public void setUpdateDate(Timestamp updateDate) {
-    this.updateDate = updateDate;
-  }
-
-  public String toString() {
-    return id == null ? "" : id.toString();
-  }
-
-  public Date getLastLoginDate() {
-    return lastLoginDate;
-  }
-
-  public void setLastLoginDate(Date lastLoginDate) {
-    this.lastLoginDate = lastLoginDate;
-  }
-
-  public String getUserHash() {
-    return userHash;
-  }
-
-  public void setUserHash(String userHash) {
-    this.userHash = userHash;
-  }
-
-  public User getReferredBy() {
-    return referredBy;
-  }
-
-  public void setReferredBy(User referredBy) {
-    this.referredBy = referredBy;
-  }
-
-  public List<Coupon> getReferrerCoupons() {
-    return referrerCoupons;
-  }
-
-  public void setReferrerCoupons(List<Coupon> referrerCoupons) {
-    this.referrerCoupons = referrerCoupons;
-  }
-
-  public List<RewardPoint> getRewardPointList() {
-    return rewardPointList;
-  }
-
-  public void setRewardPointList(List<RewardPoint> rewardPointList) {
-    this.rewardPointList = rewardPointList;
-  }
-
-  public List<RewardPointTxn> getRewardPointTxnList() {
-    return rewardPointTxnList;
-  }
-
-  public void setRewardPointTxnList(List<RewardPointTxn> rewardPointTxnList) {
-    this.rewardPointTxnList = rewardPointTxnList;
-  }
-
-  public List<UserAccountInfo> getUserAccountInfos() {
-    return userAccountInfos;
-  }
-
-  public void setUserAccountInfos(List<UserAccountInfo> userAccountInfos) {
-    this.userAccountInfos = userAccountInfos;
-  }
-
-  public UserAccountInfo getUserAccountInfo() {
-    return userAccountInfos != null && userAccountInfos.size() > 0 ? userAccountInfos.get(0) : null;
-  }
-
-  public Coupon getReferrerCoupon() {
-    return referrerCoupons != null && referrerCoupons.size() > 0 ? referrerCoupons.get(0) : null;
-  }
-
-  public User getAffiliateTo() {
-    return affiliateTo;
-  }
-
-  public void setAffiliateTo(User affiliateTo) {
-    this.affiliateTo = affiliateTo;
-  }
-
-  public boolean hasPermission(EnumPermission enumPermission) {
-    if (roles == null || roles.isEmpty()) {
-      return false;
+    public void setOfferInstances(List<OfferInstance> offerInstances) {
+        this.offerInstances = offerInstances;
     }
-    Permission permission = new Permission();
-    permission.setName(enumPermission.getPermissionName());
-    for (Role role : roles) {
-      if (role.getPermissions().contains(permission)) {
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
+
+    @Deprecated
+    public Set<Warehouse> getWarehouses() {
+        return this.warehouses;
+    }
+
+    public void setWarehouses(Set<Warehouse> warehouses) {
+        this.warehouses = warehouses;
+    }
+
+    public Warehouse getSelectedWarehouse() {
+        if (warehouses != null && !warehouses.isEmpty()) {
+            return warehouses.iterator().next();
+        }
+
+        return null;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Date getCreateDate() {
+        return this.createDate;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public Date getUpdateDate() {
+        return this.updateDate;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
+    }
+
+    public String getLogin() {
+        return this.login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public Set<String> getRoleStrings() {
+        Set<String> roleStrings = new HashSet<String>();
+        for (Role role : roles) {
+            roleStrings.add(role.getName());
+        }
+        return roleStrings;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public String getPasswordChecksum() {
+        return passwordChecksum;
+    }
+
+    public void setPasswordChecksum(String passwordChecksum) {
+        this.passwordChecksum = passwordChecksum;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getFirstName() {
+        String firstName = "";
+        try {
+            if (name != null) {
+                String[] nameArr = name.split(" ");
+                if (nameArr.length > 0)
+                    firstName = nameArr[0];
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return firstName;
+    }
+
+    public void setCreateDate(Timestamp createDate) {
+        this.createDate = createDate;
+    }
+
+    public void setUpdateDate(Timestamp updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public String toString() {
+        return id == null ? "" : id.toString();
+    }
+
+    public Date getLastLoginDate() {
+        return lastLoginDate;
+    }
+
+    public void setLastLoginDate(Date lastLoginDate) {
+        this.lastLoginDate = lastLoginDate;
+    }
+
+    public String getUserHash() {
+        return userHash;
+    }
+
+    public void setUserHash(String userHash) {
+        this.userHash = userHash;
+    }
+
+    public User getReferredBy() {
+        return referredBy;
+    }
+
+    public void setReferredBy(User referredBy) {
+        this.referredBy = referredBy;
+    }
+
+    public List<Coupon> getReferrerCoupons() {
+        return referrerCoupons;
+    }
+
+    public void setReferrerCoupons(List<Coupon> referrerCoupons) {
+        this.referrerCoupons = referrerCoupons;
+    }
+
+    public List<RewardPoint> getRewardPointList() {
+        return rewardPointList;
+    }
+
+    public void setRewardPointList(List<RewardPoint> rewardPointList) {
+        this.rewardPointList = rewardPointList;
+    }
+
+    public List<RewardPointTxn> getRewardPointTxnList() {
+        return rewardPointTxnList;
+    }
+
+    public void setRewardPointTxnList(List<RewardPointTxn> rewardPointTxnList) {
+        this.rewardPointTxnList = rewardPointTxnList;
+    }
+
+    public List<UserAccountInfo> getUserAccountInfos() {
+        return userAccountInfos;
+    }
+
+    public void setUserAccountInfos(List<UserAccountInfo> userAccountInfos) {
+        this.userAccountInfos = userAccountInfos;
+    }
+
+    public UserAccountInfo getUserAccountInfo() {
+        return userAccountInfos != null && userAccountInfos.size() > 0 ? userAccountInfos.get(0) : null;
+    }
+
+    public Coupon getReferrerCoupon() {
+        return referrerCoupons != null && referrerCoupons.size() > 0 ? referrerCoupons.get(0) : null;
+    }
+
+    public User getAffiliateTo() {
+        return affiliateTo;
+    }
+
+    public void setAffiliateTo(User affiliateTo) {
+        this.affiliateTo = affiliateTo;
+    }
+
+    public Date getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(Date birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public Store getStore() {
+        return store;
+    }
+
+    public void setStore(Store store) {
+        this.store = store;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public boolean hasPermission(EnumPermission enumPermission) {
+        if (roles == null || roles.isEmpty()) {
+            return false;
+        }
+        Permission permission = new Permission();
+        permission.setName(enumPermission.getPermissionName());
+        for (Role role : roles) {
+            if (role.getPermissions().contains(permission)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null)
+            return false;
+        if (!(o instanceof User))
+            return false;
+
+        User user = (User) o;
+
+        if (!id.equals(user.getId()))
+            return false;
+
         return true;
-      }
     }
-    return false;
-  }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null) return false;
-    if (!(o instanceof User)) return false;
-
-    User user = (User) o;
-
-    if (!id.equals(user.getId())) return false;
-
-    return true;
-  }
-
-  @Override
-  public int hashCode() {
-    return id.hashCode();
-  }
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }

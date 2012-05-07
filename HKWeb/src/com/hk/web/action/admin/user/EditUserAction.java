@@ -54,7 +54,7 @@ public class EditUserAction extends BaseAction {
   }
 
   public Resolution save() {
-    userDao.save(user);
+    getUserService().save(user);
     addRedirectAlertMessage(new LocalizableMessage("/EditUser.action.user.saved.successfully", user.getLogin()));
     return new RedirectResolution(SearchUserAction.class, "search");
   }

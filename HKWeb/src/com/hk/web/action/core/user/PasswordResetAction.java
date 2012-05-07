@@ -57,7 +57,7 @@ public class PasswordResetAction extends BaseAction {
 
         User user = tempToken.getUser();
         user.setPasswordChecksum(BaseUtils.passwordEncrypt(password));
-        userDao.save(user);
+        getUserService().save(user);
 
         tempTokenDao.expire(tempToken);
 
