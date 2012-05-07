@@ -162,7 +162,7 @@
       </table>
       <br/>
 
-      <s:link beanclass="com.hk.web.action.admin.CreateOrSelectProductAction" event="select" target="_blank">
+      <s:link beanclass="com.hk.web.action.admin.catalog.product.CreateOrSelectProductAction" event="select" target="_blank">
         <s:param name="product" value="${pa.product.id}"/> Create New Variant
       </s:link>
 

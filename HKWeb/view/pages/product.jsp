@@ -12,7 +12,7 @@
 <c:set var="imageMediumSize" value="<%=EnumImageSize.MediumSize%>"/>
 <c:set var="imageSmallSize" value="<%=EnumImageSize.TinySize%>"/>
 <%
-    CategoryDaoImpl categoryDao = (CategoryDaoImpl) ServiceLocatorFactory.getService(CategoryDao.class);
+    CategoryDao categoryDao = (CategoryDao) ServiceLocatorFactory.getService(CategoryDao.class);
   Category eyeGlass = categoryDao.getCategoryByName("eyeglasses");
   pageContext.setAttribute("eyeGlass", eyeGlass);
 %>

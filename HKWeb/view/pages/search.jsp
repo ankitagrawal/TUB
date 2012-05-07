@@ -4,7 +4,7 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="web.action.SearchAction" var="searchAction"/>
+<s:useActionBean beanclass="com.hk.web.action.core.search.SearchAction" var="searchAction"/>
 <s:layout-render name="/layouts/catalogLayout.jsp">
   <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${searchAction}"/>
   <s:layout-component name="catalog">
@@ -46,25 +46,25 @@
 
           <div class='per'>
             show
-            <s:link beanclass="web.action.SearchAction" class="per_page active">
+            <s:link beanclass="com.hk.web.action.core.search.SearchAction" class="per_page active">
               20
               <s:param name="query" value="${searchAction.query}"/>
               <s:param name="perPage" value="20"/>
             </s:link>
             |
-            <s:link beanclass="web.action.SearchAction" class="per_page">
+            <s:link beanclass="com.hk.web.action.core.search.SearchAction" class="per_page">
               40
               <s:param name="query" value="${searchAction.query}"/>
               <s:param name="perPage" value="40"/>
             </s:link>
             |
-            <s:link beanclass="web.action.SearchAction" class="per_page">
+            <s:link beanclass="com.hk.web.action.core.search.SearchAction" class="per_page">
               60
               <s:param name="query" value="${searchAction.query}"/>
               <s:param name="perPage" value="60"/>
             </s:link>
             |
-            <s:link beanclass="web.action.SearchAction" class="per_page">
+            <s:link beanclass="com.hk.web.action.core.search.SearchAction" class="per_page">
               80
               <s:param name="query" value="${searchAction.query}"/>
               <s:param name="perPage" value="80"/>

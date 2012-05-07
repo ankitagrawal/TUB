@@ -59,7 +59,7 @@
             </s:link>
         </shiro:hasPermission>
         <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_CATALOG%>">
-            <s:link beanclass="com.hk.web.action.admin.BulkEditProductAction" event="pre" target="_blank"
+            <s:link beanclass="com.hk.web.action.admin.catalog.product.BulkEditProductAction" event="pre" target="_blank"
                     class="popup">Edit All Product Variants
               <s:param name="brand" value="${sbbaBean.brand}"/>
             </s:link>

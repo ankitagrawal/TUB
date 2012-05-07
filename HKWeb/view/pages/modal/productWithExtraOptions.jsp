@@ -27,7 +27,7 @@
               <th>${headerExtraOption.name}</th>
             </c:forEach>
           </tr>
-          <s:form beanclass="com.hk.web.action.AddToCartWithExtraOptionsAction" class="addToCartForm2">
+          <s:form beanclass="com.hk.web.action.core.cart.AddToCartWithExtraOptionsAction" class="addToCartForm2">
             <c:set value="${product.productVariants[0]}" var="variant"/>
             <tr height="50px;">
               <s:hidden name="productLineItemWithExtraOptionsDtos[0].productVariant"

@@ -1,7 +1,7 @@
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.admin.CreateOrSelectProductAction" var="csp"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.catalog.product.CreateOrSelectProductAction" var="csp"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp">
 
   <s:layout-component name="htmlHead">
@@ -12,7 +12,7 @@
     <script type="text/javascript" src="${pageContext.request.contextPath}/ckeditor/ckeditor.js"></script>
     <script src="${pageContext.request.contextPath}/ckeditor/_samples/sample.js" type="text/javascript"></script>
 
-    <s:form beanclass="com.hk.web.action.admin.CreateOrSelectProductAction">
+    <s:form beanclass="com.hk.web.action.admin.catalog.product.CreateOrSelectProductAction">
       <fieldset class="right_label">
         <h2>Select an existing Product</h2>
         <ul>
@@ -30,7 +30,7 @@
         </ul>
       </fieldset>
     </s:form>
-    <s:form beanclass="com.hk.web.action.admin.CreateOrSelectProductAction">
+    <s:form beanclass="com.hk.web.action.admin.catalog.product.CreateOrSelectProductAction">
       <fieldset class="top_label">
         <h2>Create a new Product</h2>
         <ul>
