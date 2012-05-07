@@ -25,7 +25,6 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import com.hk.constants.order.EnumCartLineItemType;
-import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.Comment;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.comparator.OrderLifecycleComparator;

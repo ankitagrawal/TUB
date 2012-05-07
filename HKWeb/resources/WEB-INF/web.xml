@@ -59,7 +59,15 @@
 		</init-param>
 		<init-param>
 			<param-name>Extension.Packages</param-name>
-			<param-value>com.hk.web.validation</param-value>
+			<param-value>
+				com.hk.web.validation
+			</param-value>
+		</init-param>
+		<init-param>
+			<param-name>ActionBeanPropertyBinder.Class</param-name>
+			<param-value>
+				net.sourceforge.stripes.controller.SafeActionBeanPropertyBinder
+			</param-value>
 		</init-param>
 		<init-param>
 			<param-name>TypeConverterFactory.Class</param-name>
@@ -83,7 +91,9 @@
 		</init-param>
 		<init-param>
 			<param-name>SecurityManager.AuthBeanClass</param-name>
-			<param-value>com.hk.web.action.core.auth.LoginAction</param-value>
+			<param-value>
+				com.hk.web.action.core.auth.LoginAction
+			</param-value>
 		</init-param>
 		<init-param>
 			<param-name>SecurityManager.modal.AuthBeanClass</param-name>
@@ -220,6 +230,7 @@
 		<url-pattern>/autocomplete-search</url-pattern>
 		<url-pattern>/autocomplete-search/*</url-pattern>
 		<url-pattern>/admin</url-pattern>
+		<url-pattern>/admin/*</url-pattern>
 		<url-pattern>/core</url-pattern>
 		<url-pattern>/core/*</url-pattern>
 		<url-pattern>/affiliate</url-pattern>

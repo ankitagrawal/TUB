@@ -15,8 +15,6 @@ import net.sourceforge.stripes.validation.Validate;
 import net.sourceforge.stripes.validation.ValidationMethod;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
@@ -39,7 +37,7 @@ import com.hk.web.action.core.order.OrderSummaryAction;
 @Component
 public class SelectAddressAction extends BaseAction {
 
-    private static Logger logger    = LoggerFactory.getLogger(SelectAddressAction.class);
+    //private static Logger logger    = LoggerFactory.getLogger(SelectAddressAction.class);
 
     @Autowired
     AddressDao            addressDao;

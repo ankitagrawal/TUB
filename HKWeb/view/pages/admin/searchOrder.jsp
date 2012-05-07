@@ -253,7 +253,7 @@
   <span class="xsml gry">Payment :</span>
   <span
       class="paymentStatusName">${order.payment.paymentStatus != null ? order.payment.paymentStatus.name : 'N/A'}</span><br/>
-  <s:link beanclass="com.hk.web.action.admin.CheckPaymentAction">
+  <s:link beanclass="com.hk.web.action.admin.payment.CheckPaymentAction">
     <s:param name="order" value="${order.id}"/>
     Manage Payments
   </s:link>

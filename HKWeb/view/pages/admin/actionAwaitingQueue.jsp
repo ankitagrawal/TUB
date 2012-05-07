@@ -389,7 +389,7 @@
                   </s:link>)
                   </c:when>
                   <c:otherwise>
-                    (<s:link beanclass="com.hk.web.action.admin.CheckPaymentAction">
+                    (<s:link beanclass="com.hk.web.action.admin.payment.CheckPaymentAction">
                     Update as successful
                     <s:param name="order" value="${order.id}"/>
                   </s:link>)

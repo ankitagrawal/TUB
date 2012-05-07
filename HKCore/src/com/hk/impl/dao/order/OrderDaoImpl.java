@@ -56,8 +56,8 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao {
 
     public Page searchOrders(OrderSearchCriteria orderSearchCriteria, int pageNo, int perPage) {
         DetachedCriteria searchCriteria = orderSearchCriteria.getSearchCriteria();
-        searchCriteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-        return list(searchCriteria, pageNo, perPage);
+//        searchCriteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        return list(searchCriteria, true, pageNo, perPage);
     }
 
     @SuppressWarnings("unchecked")

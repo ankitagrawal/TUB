@@ -4,7 +4,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="com.hk.web.action.admin.CheckPaymentAction" var="checkPaymentBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.payment.CheckPaymentAction" var="checkPaymentBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Welcome">
 
@@ -117,7 +117,7 @@
     </ul>
     </p>
 
-    <s:form beanclass="com.hk.web.action.admin.CheckPaymentAction">
+    <s:form beanclass="com.hk.web.action.admin.payment.CheckPaymentAction">
 
       <div>
         <table class="cont">

@@ -31,7 +31,7 @@
       </table>
       <s:submit name="selectAddress" value="Continue"/>
     </s:form>
-    <s:link beanclass="com.hk.web.action.admin.CheckPaymentAction" event="show">
+    <s:link beanclass="com.hk.web.action.admin.payment.CheckPaymentAction" event="show">
       Cancel
       <s:param name="order" value="${addressBean.order.id}"/>
     </s:link>
