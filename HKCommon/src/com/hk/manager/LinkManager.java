@@ -35,7 +35,7 @@ public class LinkManager {
    * @param redirectResolution
    * @return
    */
-  @Nullable
+  
   private String getUrlFromResolution(RedirectResolution redirectResolution) {
     String url = redirectResolution.getUrl(Locale.getDefault());
     if (WebContext.getRequest() != null && WebContext.getResponse() != null) {
@@ -67,14 +67,14 @@ public class LinkManager {
     return getUrlFromResolution(redirectResolution);
   }
 
-  @Nullable
+  
   public String getOrderInvoiceLink(Order order) {
     RedirectResolution redirectResolution = new RedirectResolution("core/accounting/SOInvoice.action")
         .addParameter("order", order.getId());
     return getUrlFromResolution(redirectResolution);
   }
 
-  @Nullable
+  
   public String getShippingOrderInvoiceLink(ShippingOrder shippingOrder) {
     RedirectResolution redirectResolution = new RedirectResolution("core/accounting/SOInvoice.action")
         .addParameter("shippingOrder", shippingOrder.getId());
@@ -92,7 +92,7 @@ public class LinkManager {
     return getUrlFromResolution(redirectResolution);
   }
 
-   @Nullable public String getUserActivationLink(TempToken token) {
+    public String getUserActivationLink(TempToken token) {
     RedirectResolution redirectResolution = new RedirectResolution("core/user/VerifyUser.action").addParameter("token", token.getToken());
     return getUrlFromResolution(redirectResolution);
   }
@@ -119,12 +119,12 @@ public class LinkManager {
     return getUrlFromResolution(redirectResolution);
   }
 
-  @Nullable public String getResetPasswordLink(TempToken token) {
+   public String getResetPasswordLink(TempToken token) {
     RedirectResolution redirectResolution = new RedirectResolution("core/user/PasswordReset.action").addParameter("token", token.getToken());
     return getUrlFromResolution(redirectResolution);
   }
 
-  @Nullable public String getCitrusPaymentGatewayUrl() {
+   public String getCitrusPaymentGatewayUrl() {
     RedirectResolution redirectResolution = new RedirectResolution("core/payment/CitrusGatewaySendReceive.action");
     return getUrlFromResolution(redirectResolution);
    }
