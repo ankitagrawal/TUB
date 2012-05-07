@@ -12,6 +12,7 @@ import com.akube.framework.imaging.ImageUtils;
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.EnumS3UploadStatus;
 import com.hk.constants.catalog.image.EnumImageSize;
+import com.hk.constants.core.Keys;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.category.CategoryImage;
 import com.hk.domain.catalog.product.Product;
@@ -23,55 +24,56 @@ import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.catalog.combo.ComboDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
+import com.hk.service.ServiceLocatorFactory;
 
 @Component
 public class ImageManager {
 
-    private static Logger      logger  = Logger.getLogger(ImageManager.class);
+    private static Logger         logger                       = Logger.getLogger(ImageManager.class);
 
     // @Named(Keys.Env.accessKey)
     @Value("#{hkEnvProps['awsAccessKey']}")
-    String                     awsAccessKey;
+    String                        awsAccessKey;
 
     // @Named(Keys.Env.secretKey)
     @Value("#{hkEnvProps['awsSecretKey']}")
-    String                     awsSecretKey;
+    String                        awsSecretKey;
 
-    ImageTagReader             imageTagReader;
+    ImageTagReader                imageTagReader;
 
-    ComboDao                   comboDao;
+    ComboDao                      comboDao;
 
     @Autowired
-    private ProductService             productService;
+    private ProductService        productService;
     @Autowired
-    private BaseDao                    baseDao;
+    private BaseDao               baseDao;
     @Autowired
-    private ProductVariantService      productVariantService;
+    private ProductVariantService productVariantService;
 
     /*
      * ComboImageDao comboImageDao;
      */
 
-    S3Utils                    s3Utils;
+    S3Utils                       s3Utils;
 
-    ImageUtils                 imageUtils;
+    ImageUtils                    imageUtils;
 
-    CategoryImageDaoImpl           categoryImageDao;
-    private static final float QUALITY = 0.95F;
+    CategoryImageDaoImpl          categoryImageDao;
+    private static final float    QUALITY                      = 0.95F;
 
-    static final String        imageUploadsPath ="";
-    static final int           noOfImagesInRepositorySubDir = 0;
-    static final String        awsBucket = "";
-    static final String        awsReadBucket ="";
+    static String                 imageUploadsPath             = "/usr/local/projects/production/HealthKartWork/imageUploads";
+    static int                    noOfImagesInRepositorySubDir = 100;
+    static String                 awsBucket                    = "healthkart-prod";
+    static String                 awsReadBucket                = "healthkart-prod";
 
     static {
-        /*
-         * imageUploadsPath = ServiceLocatorFactory.getService(Key.get(String.class,
-         * Names.named(Keys.Env.imageUploads))); noOfImagesInRepositorySubDir =
-         * ServiceLocatorFactory.getService(Key.get(Integer.class, Names.named(Keys.Env.noOfImagesInRepositorySubDir)));
-         * awsBucket = ServiceLocatorFactory.getService(Key.get(String.class, Names.named(Keys.Env.bucket)));
-         * awsReadBucket = ServiceLocatorFactory.getService(Key.get(String.class, Names.named(Keys.Env.readBucket)));
-         */
+
+        /*imageUploadsPath = (String) ServiceLocatorFactory.getProperty(Keys.Env.imageUploads);
+        noOfImagesInRepositorySubDir = Integer.parseInt((String) ServiceLocatorFactory.getProperty(Keys.Env.noOfImagesInRepositorySubDir));
+        awsBucket = (String) ServiceLocatorFactory.getProperty(Keys.Env.bucket);
+        awsReadBucket = (String) ServiceLocatorFactory.getProperty(Keys.Env.readBucket);
+*/
+        // TODO: rewrite
     }
 
     /**
