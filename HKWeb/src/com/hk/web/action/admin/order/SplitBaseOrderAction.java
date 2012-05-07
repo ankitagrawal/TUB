@@ -31,10 +31,7 @@ import com.hk.domain.warehouse.Warehouse;
 import com.hk.exception.NoSkuException;
 import com.hk.exception.OrderSplitException;
 import com.hk.pact.service.OrderStatusService;
-import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.order.OrderService;
-import com.hk.pact.service.shippingOrder.ShippingOrderService;
-import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.web.action.admin.queue.ActionAwaitingQueueAction;
 import com.hk.web.action.error.AdminPermissionAction;
 
@@ -45,17 +42,11 @@ public class SplitBaseOrderAction extends BaseAction {
 
     private Order                      baseOrder;
     @Autowired
-    private ShippingOrderService       shippingOrderService;
-    @Autowired
     private AdminShippingOrderService  adminShippingOrderService;
-    @Autowired
-    private WarehouseService           warehouseService;
     @Autowired
     private OrderService               orderService;
     @Autowired
     private OrderStatusService         orderStatusService;
-    @Autowired
-    private ShippingOrderStatusService shippingOrderStatusService;
 
     Map<CartLineItem, Warehouse>       cartLineItemWarehouseMap = new HashMap<CartLineItem, Warehouse>();
 
@@ -140,9 +131,6 @@ public class SplitBaseOrderAction extends BaseAction {
         this.cartLineItemWarehouseMap = cartLineItemWarehouseMap;
     }
 
-    public void setShippingOrderService(ShippingOrderService shippingOrderService) {
-        this.shippingOrderService = shippingOrderService;
-    }
 
     public void setOrderService(OrderService orderService) {
         this.orderService = orderService;
@@ -152,11 +140,4 @@ public class SplitBaseOrderAction extends BaseAction {
         this.orderStatusService = orderStatusService;
     }
 
-    public void setWarehouseService(WarehouseService warehouseService) {
-        this.warehouseService = warehouseService;
-    }
-
-    public void setShippingOrderStatusService(ShippingOrderStatusService shippingOrderStatusService) {
-        this.shippingOrderStatusService = shippingOrderStatusService;
-    }
 }
