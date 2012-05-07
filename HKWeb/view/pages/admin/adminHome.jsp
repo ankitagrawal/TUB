@@ -28,7 +28,7 @@
       </s:form></td>
       <td>
         <shiro:hasRole name="<%=RoleConstants.GOD%>">
-          <s:link beanclass="com.hk.web.action.admin.UpdateOrderStatusAndSendEmailAction"
+          <s:link beanclass="com.hk.web.action.admin.order.UpdateOrderStatusAndSendEmailAction"
                   style="color:red; font-size:1.3em; padding:3px;">Send shipping emails</s:link>
         </shiro:hasRole>
       </td>

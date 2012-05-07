@@ -7,31 +7,34 @@ import net.sourceforge.stripes.validation.TypeConverter;
 import net.sourceforge.stripes.validation.ValidationError;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-import com.hk.domain.user.User;
+import com.hk.domain.userReview.ReviewStatus;
 import com.hk.pact.dao.BaseDao;
 
-@Component
-public class UserTypeConverter implements TypeConverter<User> {
+/**
+ * Generated
+ */
+public class ReviewStatusTypeConverter implements TypeConverter<ReviewStatus> {
+
     public void setLocale(Locale locale) {
+        // nothing
     }
 
     @Autowired
     private BaseDao baseDao;
 
-    public User convert(String s, Class<? extends User> aClass, Collection<ValidationError> validationErrors) {
+    public ReviewStatus convert(String id, Class<? extends ReviewStatus> aClass, Collection<ValidationError> validationErrors) {
         Long idLong = null;
         try {
-            idLong = Long.parseLong(s);
+            idLong = Long.parseLong(id);
         } catch (NumberFormatException e) {
         }
         if (idLong == null) {
             return null;
         } else {
-            // return userDao.find(idLong);
-            return getBaseDao().get(User.class, idLong);
+            return getBaseDao().get(ReviewStatus.class, idLong);
         }
+
     }
 
     public BaseDao getBaseDao() {

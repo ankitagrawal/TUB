@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.B2bUserDetails;
 import com.hk.manager.OrderManager;
@@ -34,7 +33,7 @@ public class AccountingInvoiceAction extends BaseAction {
 
   private ShippingOrder shippingOrder;
   private InvoiceDto invoiceDto;
-  private Order order;
+ // private Order order;
   private B2bUserDetails b2bUserDetails;
 
   @DefaultHandler

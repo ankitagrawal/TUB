@@ -65,7 +65,7 @@
         </h3>
 
         <div class='signup'>
-          <s:form beanclass="com.hk.web.action.b2b.B2BAction">
+          <s:form beanclass="com.hk.web.action.core.b2b.B2BAction">
 
             <div class='label'>Name <span class='aster' title="this field is required">*</span></div>
             <s:text name="name" placeholder="Enter your name"/>

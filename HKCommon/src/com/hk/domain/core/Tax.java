@@ -1,5 +1,4 @@
 package com.hk.domain.core;
-// Generated 25 Mar, 2011 11:57:39 AM by Hibernate Tools 3.2.4.CR1
 
 
 import javax.persistence.Column;

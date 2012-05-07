@@ -25,7 +25,7 @@ public class LinkManager {
    String contextPath;*/
 
   public String getAuthRedirectUrl() {
-    RedirectResolution redirectResolution = new RedirectResolution("AuthRequiredAction.class");
+    RedirectResolution redirectResolution = new RedirectResolution("/core/auth/AuthRequired.action");
     return getUrlFromResolution(redirectResolution);
   }
 
@@ -50,20 +50,18 @@ public class LinkManager {
     return "terms.jsp";
   }
 
-  @Nullable
   public String getCodGatewayUrl() {
-    RedirectResolution redirectResolution = new RedirectResolution("CodGatewaySendReceiveAction.class");
+    RedirectResolution redirectResolution = new RedirectResolution("core/payment/CodGatewaySendReceive.action");
     return getUrlFromResolution(redirectResolution);
   }
 
-  @Nullable
   public String getSelectAddressUrl() {
-    RedirectResolution redirectResolution = new RedirectResolution("SelectAddressAction.class");
+    RedirectResolution redirectResolution = new RedirectResolution("core/user/SelectAddress.action");
     return getUrlFromResolution(redirectResolution);
   }
 
   public String getOrderTrackLink(String trackingId, Long courierId) {
-    RedirectResolution redirectResolution = new RedirectResolution("TrackCourierAction.class")
+    RedirectResolution redirectResolution = new RedirectResolution("core/order/TrackCourier.action")
         .addParameter("trackingId", trackingId)
         .addParameter("courierId", courierId);
     return getUrlFromResolution(redirectResolution);
@@ -71,63 +69,63 @@ public class LinkManager {
 
   @Nullable
   public String getOrderInvoiceLink(Order order) {
-    RedirectResolution redirectResolution = new RedirectResolution("SOInvoiceAction.class")
+    RedirectResolution redirectResolution = new RedirectResolution("core/accounting/SOInvoice.action")
         .addParameter("order", order.getId());
     return getUrlFromResolution(redirectResolution);
   }
 
   @Nullable
   public String getShippingOrderInvoiceLink(ShippingOrder shippingOrder) {
-    RedirectResolution redirectResolution = new RedirectResolution("SOInvoiceAction.class")
+    RedirectResolution redirectResolution = new RedirectResolution("core/accounting/SOInvoice.action")
         .addParameter("shippingOrder", shippingOrder.getId());
     return getUrlFromResolution(redirectResolution);
   }
 
   public String getRetailInvoiceLink(AccountingInvoice accountingInvoice) {
-    RedirectResolution redirectResolution = new RedirectResolution("AccountingInvoiceAction.class")
+    RedirectResolution redirectResolution = new RedirectResolution("core/accounting/AccountingInvoice.action")
         .addParameter("accountingInvoice", accountingInvoice.getId());
     return getUrlFromResolution(redirectResolution);
   }
 
   public String getCartUrl() {
-    RedirectResolution redirectResolution = new RedirectResolution("CartAction.class");
+    RedirectResolution redirectResolution = new RedirectResolution("/core/cart/Cart.action");
     return getUrlFromResolution(redirectResolution);
   }
 
    @Nullable public String getUserActivationLink(TempToken token) {
-    RedirectResolution redirectResolution = new RedirectResolution("VerifyUserAction.class").addParameter("token", token.getToken());
+    RedirectResolution redirectResolution = new RedirectResolution("core/user/VerifyUser.action").addParameter("token", token.getToken());
     return getUrlFromResolution(redirectResolution);
   }
 
   public String getReferralSignupLink(User user) {
-    RedirectResolution redirectResolution = new RedirectResolution("ReferralSignupAction.class").addParameter("userHash", user.getUserHash());
+    RedirectResolution redirectResolution = new RedirectResolution("core/referral/ReferralSignup.action").addParameter("userHash", user.getUserHash());
     return getUrlFromResolution(redirectResolution);
   }
 
    public String getReferralProgramUrl() {
-    RedirectResolution redirectResolution = new RedirectResolution("ReferralProgramAction.class");
+    RedirectResolution redirectResolution = new RedirectResolution("core/referral/ReferralProgram.action");
     return getUrlFromResolution(redirectResolution);
   }
 
-  @Nullable public String getEmailUnsubscribeLink(EmailRecepient emailRecepient) {
-    RedirectResolution redirectResolution = new RedirectResolution("UnsubscribeEmailAction.class")
+  public String getEmailUnsubscribeLink(EmailRecepient emailRecepient) {
+    RedirectResolution redirectResolution = new RedirectResolution("core/email/UnsubscribeEmail.action")
         .addParameter("unsubscribeToken", emailRecepient.getUnsubscribeToken());
     return getUrlFromResolution(redirectResolution);
   }
 
-  @Nullable public String getViewTicketUrl(Ticket ticket) {
-    RedirectResolution redirectResolution = new RedirectResolution("ViewAndEditTicketAction.class")
+   public String getViewTicketUrl(Ticket ticket) {
+    RedirectResolution redirectResolution = new RedirectResolution("admin/ticket/ViewAndEditTicket.action")
         .addParameter("ticket", ticket.getId());
     return getUrlFromResolution(redirectResolution);
   }
 
   @Nullable public String getResetPasswordLink(TempToken token) {
-    RedirectResolution redirectResolution = new RedirectResolution("PasswordResetAction.class").addParameter("token", token.getToken());
+    RedirectResolution redirectResolution = new RedirectResolution("core/user/PasswordReset.action").addParameter("token", token.getToken());
     return getUrlFromResolution(redirectResolution);
   }
 
   @Nullable public String getCitrusPaymentGatewayUrl() {
-    RedirectResolution redirectResolution = new RedirectResolution("CitrusGatewaySendReceiveAction.class");
+    RedirectResolution redirectResolution = new RedirectResolution("core/payment/CitrusGatewaySendReceive.action");
     return getUrlFromResolution(redirectResolution);
    }
 }

@@ -1,4 +1,4 @@
-<%@ page import="mhc.service.dao.WarehouseDao" %>
+<%@ page import="com.hk.pact.dao.warehouse.WarehouseDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
@@ -6,7 +6,7 @@
  <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Reconciliation Voucher List">
    <%
-       WarehouseDaoImpl warehouseDao = InjectorFactory.getInjector().getInstance(WarehouseDaoImpl.class);
+       WarehouseDaoImpl warehouseDao = ServiceLocatorFactory.getService(WarehouseDaoImpl.class);
        pageContext.setAttribute("whList", warehouseDao.listAll());
    %>
   <s:layout-component name="htmlHead">

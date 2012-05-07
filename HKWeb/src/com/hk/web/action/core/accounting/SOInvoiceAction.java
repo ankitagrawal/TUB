@@ -5,8 +5,6 @@ import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.validation.Validate;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +24,7 @@ import com.hk.util.BarcodeGenerator;
 @Component
 public class SOInvoiceAction extends BaseAction {
 
-    private static Logger          logger = LoggerFactory.getLogger(SOInvoiceAction.class);
+    //private static Logger          logger = LoggerFactory.getLogger(SOInvoiceAction.class);
 
     private boolean                printable;
     private Category               sexualCareCategory;

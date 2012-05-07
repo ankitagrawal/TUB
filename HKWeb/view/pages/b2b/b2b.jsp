@@ -79,7 +79,7 @@
            or email at: info@healthkart.com</p>
 
         <div style="float:left; font-size: 1.2em; width: 85%; margin-top: 5px; margin-left:20px">
-          <s:link beanclass="com.hk.web.action.b2b.B2BAction" event="goToSignUp" class="button_orange">Sign up Now!!
+          <s:link beanclass="com.hk.web.action.core.b2b.B2BAction" event="goToSignUp" class="button_orange">Sign up Now!!
           </s:link>
         </div>
 
@@ -92,7 +92,7 @@
         </h3>
 
         <div class='login'>
-          <s:form beanclass="com.hk.web.action.b2b.B2BAction">
+          <s:form beanclass="com.hk.web.action.core.b2b.B2BAction">
             <s:errors/>
             <s:messages/>
             <div class="label">Email</div>

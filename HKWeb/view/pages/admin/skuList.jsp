@@ -2,21 +2,22 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="hk" uri="http://healthkart.com/taglibs/hkTagLib" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
-<%@ page import="mhc.domain.Tax" %>
-<%@ page import="mhc.service.dao.TaxDao" %>
-<%@ page import="mhc.service.dao.WarehouseDao" %>
+<%@ page import="com.hk.domain.core.Tax" %>
+<%@ page import="com.hk.pact.dao.TaxDao" %>
+<%@ page import="com.hk.pact.dao.warehouse.WarehouseDao" %>
 <%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
 <%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
+<%@page import="com.hk.domain.warehouse.Warehouse"%>
 <s:useActionBean beanclass="com.hk.web.action.admin.sku.SkuAction" var="skuAction"/>
 <%
-    TaxDao taxDao = InjectorFactory.getInjector().getInstance(TaxDao.class);
+    TaxDao taxDao = ServiceLocatorFactory.getService(TaxDao.class);
   List<Tax> taxList = taxDao.getTaxList();
   pageContext.setAttribute("taxList", taxList);
 
-  WarehouseDaoImpl warehouseDao = InjectorFactory.getInjector().getInstance(WarehouseDaoImpl.class);
-  pageContext.setAttribute("whList", warehouseDao.listAll());
+  WarehouseDao warehouseDao = ServiceLocatorFactory.getService(WarehouseDao.class);
+  pageContext.setAttribute("whList", warehouseDao.getAll(Warehouse.class));
 %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Edit Sku">
 <s:useActionBean beanclass="com.hk.web.action.admin.sku.SkuAction" var="skuBean"/>

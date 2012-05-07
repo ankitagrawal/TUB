@@ -1,13 +1,13 @@
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="java.util.Date" %>
-<%@ page import="mhc.service.dao.WarehouseDao" %>
+<%@ page import="com.hk.pact.dao.warehouse.WarehouseDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.CreatePurchaseOrderAction" var="pa"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp">
    <%
-    WarehouseDao warehouseDao = InjectorFactory.getInjector().getInstance(WarehouseDao.class);
+    WarehouseDao warehouseDao = ServiceLocatorFactory.getService(WarehouseDao.class);
     pageContext.setAttribute("whList", warehouseDao.listAll());
   %>
   <s:layout-component name="htmlHead">

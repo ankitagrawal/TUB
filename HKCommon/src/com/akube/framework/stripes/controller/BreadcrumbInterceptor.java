@@ -11,11 +11,14 @@ import net.sourceforge.stripes.controller.Interceptor;
 import net.sourceforge.stripes.controller.Intercepts;
 import net.sourceforge.stripes.controller.LifecycleStage;
 import net.sourceforge.stripes.controller.StripesConstants;
+import net.sourceforge.stripes.controller.StripesFilter;
 import net.sourceforge.stripes.util.bean.BeanUtil;
 import net.sourceforge.stripes.util.bean.EvaluationException;
 import net.sourceforge.stripes.util.bean.ParseException;
 
 import org.apache.commons.lang.StringUtils;
+
+import com.hk.web.AppConstants;
 
 /**
  * Author: Kani
@@ -193,13 +196,13 @@ private Stack<Crumb> getBreadcrumbStack(ExecutionContext executionContext) {
   private static Stack<Crumb> getDefaulBreadcrumb(HttpSession session) {
     Stack<Crumb> stack;
     stack = new Stack<Crumb>();
-    /*String contextPath = ServiceLocatorFactory.getService(Key.get(String.class, Names.named(Keys.App.contextPath)));
-    String url = new StringBuilder().append(contextPath).append(StripesFilter.getConfiguration().getActionResolver().getUrlBinding(HomeAction.class)).toString();
+    String contextPath = AppConstants.contextPath;
+    //String url = new StringBuilder().append(contextPath).append(StripesFilter.getConfiguration().getActionResolver().getUrlBinding(HomeAction.class)).toString();
+    String url = new StringBuilder().append(contextPath).append("/Home.action").toString();
     Crumb homeCrumb = new Crumb(0, url, "Home", null);
     stack.push(homeCrumb);
-    session.setAttribute(BREADCRUMB_STACK_SESSION, stack);*/
+    session.setAttribute(BREADCRUMB_STACK_SESSION, stack);
     
-    //TODO: rewrite
     return stack;
   }
 

@@ -35,7 +35,7 @@
           <div class="buttons"><s:submit name="generateCourierReport" value="Download Courier Excel"/></div>
         </s:form>
 
-        <s:link class="" beanclass="com.hk.web.action.admin.UpdateOrderStatusAndSendEmailAction">Send shipping emails<br/><span class="sml gry">(and updated order status)</span></s:link>
+        <s:link class="" beanclass="com.hk.web.action.admin.order.UpdateOrderStatusAndSendEmailAction">Send shipping emails<br/><span class="sml gry">(and updated order status)</span></s:link>
 
 
       </div>

@@ -9,7 +9,7 @@
 	<s:useActionBean beanclass="com.hk.web.action.admin.marketing.MarketingExpenseAction" var="mea"/>
 	<s:layout-component name="htmlHead">
 		<%
-    AdNetworksDao adNetworksDao = InjectorFactory.getInjector().getInstance(AdNetworksDao.class);
+    AdNetworksDao adNetworksDao = ServiceLocatorFactory.getService(AdNetworksDao.class);
     pageContext.setAttribute("adNetworksList", adNetworksDao.listAdNetworks());
 		%>
     <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>

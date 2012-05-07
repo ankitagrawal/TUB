@@ -321,7 +321,7 @@ public class Functions {
     }
 
     public static Long getProcessedOrdersCount(Object o) {
-        UserManager userManager = ServiceLocatorFactory.getService(UserManager.class);
+        UserManager userManager = (UserManager) ServiceLocatorFactory.getService("UserManager");
         User user = (User) o;
         return userManager.getProcessedOrdersCount(user);
     }

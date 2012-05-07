@@ -3,10 +3,10 @@
 <%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
  <%@ page import="mhc.domain.Surcharge" %>
-<%@ page import="mhc.domain.Tax" %>
+<%@ page import="com.hk.domain.core.Tax" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="mhc.service.dao.SurchargeDao" %>
-<%@ page import="mhc.service.dao.TaxDao" %>
+<%@ page import="com.hk.pact.dao.TaxDao" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -15,7 +15,7 @@
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Purchase Invoice">
 
 <%
-    TaxDao taxDao = InjectorFactory.getInjector().getInstance(TaxDao.class);
+    TaxDao taxDao = ServiceLocatorFactory.getService(TaxDao.class);
   List<Tax> taxList  = taxDao.getTaxList();
   pageContext.setAttribute("taxList", taxList);
 

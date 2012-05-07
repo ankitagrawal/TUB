@@ -53,7 +53,7 @@ public class CartAction extends BaseAction {
 private static Logger logger = LoggerFactory.getLogger(CartAction.class);
 
   private Order order;
-  private List<CartLineItem> cartLineItems;
+ // private List<CartLineItem> cartLineItems;
   private List<ComboInstance> comboInstances;
   private PricingDto pricingDto;
   private Long itemsInCart = 0L;
