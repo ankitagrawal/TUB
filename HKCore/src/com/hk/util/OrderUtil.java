@@ -1,19 +1,6 @@
 package com.hk.util;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import com.hk.comparator.BasketCategory;
-import com.hk.constants.order.EnumCartLineItemType;
-import com.hk.core.fliter.CartLineItemFilter;
-import com.hk.domain.catalog.category.Category;
 import com.hk.domain.order.CartLineItem;
-import com.hk.domain.order.Order;
-import com.hk.domain.order.OrderCategory;
-import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 
 

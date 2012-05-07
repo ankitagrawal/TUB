@@ -1,8 +1,12 @@
 package org.stripesstuff.plugin.security;
 
-import net.sourceforge.stripes.action.ActionBean;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import java.lang.annotation.*;
+import net.sourceforge.stripes.action.ActionBean;
 
 /**
  * Annotation used to secure ActionBean classes and methods with roles and permissions within the web appliction.

@@ -2,13 +2,19 @@ package org.stripesstuff.plugin.jstl;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.jstl.core.Config;
 import javax.servlet.jsp.jstl.fmt.LocalizationContext;
 
 import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.config.*;
-import net.sourceforge.stripes.controller.*;
+import net.sourceforge.stripes.config.BootstrapPropertyResolver;
+import net.sourceforge.stripes.config.ConfigurableComponent;
+import net.sourceforge.stripes.config.Configuration;
+import net.sourceforge.stripes.controller.ExecutionContext;
+import net.sourceforge.stripes.controller.Interceptor;
+import net.sourceforge.stripes.controller.Intercepts;
+import net.sourceforge.stripes.controller.LifecycleStage;
 import net.sourceforge.stripes.exception.StripesRuntimeException;
 import net.sourceforge.stripes.localization.LocalizationBundleFactory;
 import net.sourceforge.stripes.util.Log;

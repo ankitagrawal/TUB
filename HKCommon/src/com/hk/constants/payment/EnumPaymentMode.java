@@ -44,7 +44,6 @@ public enum EnumPaymentMode {
     return paymentMode;
   }
 
-  //@Nullable
   public static EnumPaymentMode getPaymentModeFromId(Long id) {
     for (EnumPaymentMode paymentMode : values()) {
       if (paymentMode.getId().equals(id)) return paymentMode;

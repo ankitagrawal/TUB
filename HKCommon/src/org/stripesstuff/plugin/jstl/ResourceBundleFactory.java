@@ -1,6 +1,8 @@
 package org.stripesstuff.plugin.jstl;
 
-import java.util.*;
+import java.util.Locale;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 
 /**

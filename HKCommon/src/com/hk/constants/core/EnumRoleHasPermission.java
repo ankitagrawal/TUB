@@ -1,7 +1,7 @@
 package com.hk.constants.core;
 
-import java.util.List;
 import java.util.Arrays;
+import java.util.List;
 
 
 public enum EnumRoleHasPermission {

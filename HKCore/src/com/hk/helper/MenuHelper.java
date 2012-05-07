@@ -12,7 +12,6 @@ import org.springframework.web.context.ServletContextAware;
 import com.hk.domain.catalog.product.Product;
 import com.hk.dto.menu.MenuNode;
 import com.hk.util.MenuParser;
-import com.hk.web.AppConstants;
 
 @Component
 public class MenuHelper implements ServletContextAware{

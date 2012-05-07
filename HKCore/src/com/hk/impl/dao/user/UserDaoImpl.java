@@ -26,7 +26,6 @@ import com.hk.dto.user.UserFilterDto;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.RoleDao;
 import com.hk.pact.dao.user.UserDao;
-import com.hk.util.TokenUtils;
 
 /**
  * Author: Kani Date: Sep 1, 2008

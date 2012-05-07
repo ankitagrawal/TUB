@@ -2,11 +2,13 @@ package com.hk.domain.email;
 // Generated 28 Sep, 2011 8:19:31 PM by Hibernate Tools 3.2.4.CR1
 
 
+import static javax.persistence.GenerationType.AUTO;
+
 import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.AUTO;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;

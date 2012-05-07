@@ -1,6 +1,5 @@
 package com.hk.report.dto.inventory;
 
-import java.math.BigInteger;
 
 /**
  * Created by IntelliJ IDEA.

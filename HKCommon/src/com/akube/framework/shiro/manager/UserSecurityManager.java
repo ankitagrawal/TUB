@@ -1,8 +1,8 @@
 package com.akube.framework.shiro.manager;
 
-import com.akube.framework.shiro.Principal;
-
 import java.util.Set;
+
+import com.akube.framework.shiro.Principal;
 
 /**
  * Author: Kani

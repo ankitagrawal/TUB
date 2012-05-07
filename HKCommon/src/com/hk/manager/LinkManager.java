@@ -16,7 +16,6 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.User;
 import com.hk.web.AppConstants;
 import com.hk.web.filter.WebContext;
-import com.sun.istack.internal.Nullable;
 @Component
 public class LinkManager {
 

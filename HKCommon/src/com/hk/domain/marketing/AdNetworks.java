@@ -1,9 +1,9 @@
 package com.hk.domain.marketing;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Id;
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @SuppressWarnings("serial")
 @Entity

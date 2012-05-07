@@ -1,10 +1,11 @@
 package net.sourceforge.stripes.action;
 
+import java.io.IOException;
+
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
-import javax.servlet.ServletException;
-import java.io.IOException;
 
 public class PermanentRedirectResolution extends RedirectResolution {
   public PermanentRedirectResolution(String url) {

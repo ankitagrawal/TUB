@@ -1,6 +1,7 @@
 package com.hk.util.io;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * Copyright (c) 2001, 2002 by Pensamos Digital, All Rights Reserved.<p>

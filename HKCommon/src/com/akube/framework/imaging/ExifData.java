@@ -1,15 +1,15 @@
 package com.akube.framework.imaging;
 
-import org.apache.sanselan.common.IImageMetadata;
-import org.apache.sanselan.Sanselan;
-import org.apache.sanselan.ImageReadException;
-import org.apache.sanselan.formats.jpeg.JpegImageMetadata;
-import org.apache.sanselan.formats.tiff.constants.TagInfo;
-import org.apache.sanselan.formats.tiff.constants.TiffConstants;
-import org.apache.sanselan.formats.tiff.TiffField;
-
 import java.io.File;
 import java.io.IOException;
+
+import org.apache.sanselan.ImageReadException;
+import org.apache.sanselan.Sanselan;
+import org.apache.sanselan.common.IImageMetadata;
+import org.apache.sanselan.formats.jpeg.JpegImageMetadata;
+import org.apache.sanselan.formats.tiff.TiffField;
+import org.apache.sanselan.formats.tiff.constants.TagInfo;
+import org.apache.sanselan.formats.tiff.constants.TiffConstants;
 
 /**
  * User: rahul

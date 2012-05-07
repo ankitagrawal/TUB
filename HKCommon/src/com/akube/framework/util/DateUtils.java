@@ -17,35 +17,30 @@ public class DateUtils {
 
   private static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm a");
 
-  //@Nullable
   public static Date getStartOfDay(Date date) {
     if (date==null) return null;
     DateTime dateTime = new DateTime(date);
     return new Timestamp(dateTime.toDateMidnight().getMillis());
   }
 
- // @Nullable
   public static Date getEndOfDay(Date date) {
     if (date==null) return null;
     DateTime dateTime = new DateTime(date);
     return new Timestamp(dateTime.plusDays(1).toDateMidnight().toDateTime().minusMillis(1).getMillis());
   }
 
- // @Nullable
   public static Date getStartOfNextDay(Date date) {
    if (date==null) return null;
    DateTime dateTime = new DateTime(date);
    return new Timestamp(dateTime.plusDays(1).toDateMidnight().getMillis());
   }
 
- // @Nullable
   public static Date getEndOfNextDay(Date date) {
     if (date==null) return null;
     DateTime dateTime = new DateTime(date);
     return new Timestamp(dateTime.plusDays(2).toDateMidnight().toDateTime().minusMillis(1).getMillis());
   }
 
-  //@Nullable
   public static Date getStartOfPreviousDay(Date date){
     if(date == null){
       return null;
@@ -54,7 +49,6 @@ public class DateUtils {
     return new Timestamp(dateTime.minusDays(1).toDateMidnight().toDateTime().getMillis());
   }
 
-  //@Nullable
    public static Date getEndOfPreviousDay(Date date){
      if(date == null){
        return null;
@@ -63,7 +57,6 @@ public class DateUtils {
      return new Timestamp(dateTime.toDateMidnight().toDateTime().minusMillis(1).getMillis());
    }
 
- // @Nullable
   public static Date getStartOfPreviousSixHours(Date date){
     if(date==null)
       return null;
@@ -71,7 +64,6 @@ public class DateUtils {
     return new Timestamp(dateTime.minusHours(6).toDateTime().getMillis());
   }
   
-  //@Nullable
   public static Date getEndOfPreviousSixHours(Date date){
     if(date==null)
       return null;
@@ -80,14 +72,12 @@ public class DateUtils {
   }
 
 
-  //@Nullable
   public static Date getDateWithTime(Date date, String time) {
     DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     String dateString = dateFormat.format(date);
     return getDate(dateString, time);
   }
 
-  //@Nullable
   public static Date getStartOfThisDay(Date date){
     if(date==null)
       return null;
@@ -95,7 +85,6 @@ public class DateUtils {
     return new Timestamp(dateTime.toDateMidnight().toDateTime().getMillis());
   }
   
-  //@Nullable
   public static Date getDate(String date, String time) {
     String datetime = date.trim()+" "+getProperTimeString(time.trim());
     Date d = null;
@@ -107,7 +96,6 @@ public class DateUtils {
     return (d==null)?null:new Timestamp(d.getTime());
   }
 
-  //@NotNull
   private static String getProperTimeString( String timeString) {
     return timeString.replaceAll(timeRegex,"$1 $3");
   }

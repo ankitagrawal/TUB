@@ -1,7 +1,6 @@
 package com.akube.framework.shiro.filter;
 
 import org.apache.shiro.web.servlet.ShiroFilter;
-import com.akube.framework.shiro.filter.GuiceWebConfiguration;
 
 /**
  * <p>Extension of ShiroFilter that uses {@link GuiceWebConfiguration} to configure the Shiro instance.</p>

@@ -32,7 +32,6 @@ public enum EnumIssuer {
     return id;
   }
 
-  //@Nullable
   public static EnumIssuer getIssuerFromId(String id) {
     for (EnumIssuer issuer : values()) {
       if (issuer.getId().equals(id)) return issuer;

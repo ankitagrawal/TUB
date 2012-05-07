@@ -22,7 +22,6 @@ import javax.persistence.Transient;
 
 import org.hibernate.annotations.Where;
 
-import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.accounting.AccountingInvoice;
 import com.hk.domain.core.CancellationType;
 import com.hk.domain.courier.Shipment;

@@ -113,7 +113,6 @@ public class BaseUtils {
 		return md5.Final();
 	}
 
-	//@Nullable
 	public static String getMD5Checksum( File file) {
 		String md5 = null;
 		if (file == null || !file.exists()) {
@@ -126,7 +125,6 @@ public class BaseUtils {
 		return md5;
 	}
 
-	//@Nullable
 	public static byte[] getMD5ChecksumInBytes( File file) {
 		byte[] md5 = null;
 		if (file == null || !file.exists()) {
@@ -149,7 +147,6 @@ public class BaseUtils {
 		return new Timestamp(System.currentTimeMillis());
 	}
 
-	//@Nullable
 	public static Long copyFile( File srcFile, File destFile, boolean verify)
 		throws IOException {
 		if (srcFile.getAbsolutePath().equals(destFile.getAbsolutePath())) {
@@ -198,7 +195,6 @@ public class BaseUtils {
 		}
 	}
 
-	//@NotNull
 	public static String getFilenameWithoutExtension( String filename) {
 		String extension = getFileExtension(filename);
 		if (extension.length() > 0) {
@@ -207,7 +203,6 @@ public class BaseUtils {
 		return filename;
 	}
 
-	//@NotNull
 	public static String getFileExtension( String filename) {
 		String extension = "";
 		Pattern pattern = Pattern.compile("(?<=\\.)[a-zA-Z0-9]+$");
@@ -222,7 +217,6 @@ public class BaseUtils {
 		return filename.substring(0, filename.lastIndexOf(".") + 1) + ext;
 	}
 
-	//@NotNull
 	public static String getRandomString(int length) {
 		char[] pw = new char[length];
 		int c = 'A';
@@ -431,7 +425,6 @@ public class BaseUtils {
 		return true;
 	}
 
-	//@Nullable
 	public static Cookie getCookie(HttpServletRequest request, String cookieKey) {
 		if (request.getCookies() != null) {
 			for (Cookie cookie : request.getCookies()) {

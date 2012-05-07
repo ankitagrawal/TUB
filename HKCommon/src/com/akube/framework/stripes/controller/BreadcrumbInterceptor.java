@@ -11,7 +11,6 @@ import net.sourceforge.stripes.controller.Interceptor;
 import net.sourceforge.stripes.controller.Intercepts;
 import net.sourceforge.stripes.controller.LifecycleStage;
 import net.sourceforge.stripes.controller.StripesConstants;
-import net.sourceforge.stripes.controller.StripesFilter;
 import net.sourceforge.stripes.util.bean.BeanUtil;
 import net.sourceforge.stripes.util.bean.EvaluationException;
 import net.sourceforge.stripes.util.bean.ParseException;

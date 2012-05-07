@@ -1,9 +1,9 @@
 package net.sourceforge.stripes.action;
 
-import org.dom4j.Document;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.dom4j.Document;
 
 /**
  * User: kani

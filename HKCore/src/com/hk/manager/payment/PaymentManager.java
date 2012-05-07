@@ -35,8 +35,6 @@ import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.payment.PaymentService;
 import com.hk.util.TokenUtils;
 import com.hk.web.filter.WebContext;
-import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
 
 /**
  * Author: Kani Date: Jan 3, 2009
@@ -44,9 +42,8 @@ import com.sun.istack.internal.Nullable;
 @Component
 @SuppressWarnings("unused")
 public class PaymentManager {
-    private static Logger          logger = LoggerFactory.getLogger(PaymentManager.class);
+    private static Logger          logger     = LoggerFactory.getLogger(PaymentManager.class);
 
-    
     private final Double           codCharges = 0D;
 
     @Autowired
@@ -77,17 +74,13 @@ public class PaymentManager {
     @Autowired
     private PaymentStatusDao       paymentStatusDao;
 
-    /*@Autowired
-    public PaymentManager(PaymentDao paymentDao, PaymentStatusDao paymentStatusDao,
-    // @Named(Keys.Env.codCharges)
-            Double codCharges) {
-        this.paymentDao = paymentDao;
-        this.paymentStatusDao = paymentStatusDao;
-        this.codCharges = codCharges;
-    }*/
-    
-    //TODO: rewrite
+    /*
+     * @Autowired public PaymentManager(PaymentDao paymentDao, PaymentStatusDao paymentStatusDao, //
+     * @Named(Keys.Env.codCharges) Double codCharges) { this.paymentDao = paymentDao; this.paymentStatusDao =
+     * paymentStatusDao; this.codCharges = codCharges; }
+     */
 
+    // TODO: rewrite
     /**
      * This method will throw an {@link com.hk.exception.HealthkartPaymentGatewayException} if the payment request
      * cannot be verified
@@ -97,10 +90,7 @@ public class PaymentManager {
      * @param merchantParam
      * @throws com.hk.exception.HealthkartPaymentGatewayException
      */
-    public void verifyPayment(@NotNull
-    String gatewayOrderId, @NotNull
-    Double amount, @Nullable
-    String merchantParam) throws HealthkartPaymentGatewayException {
+    public void verifyPayment(String gatewayOrderId, Double amount, String merchantParam) throws HealthkartPaymentGatewayException {
         Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
         if (payment == null) {
             logger.info("Payment not found with gateway order id {}", gatewayOrderId);
@@ -148,10 +138,7 @@ public class PaymentManager {
      * @param remoteAddr
      * @return
      */
-    public Payment createNewPayment(@NotNull
-    Order order, @NotNull
-    PaymentMode paymentMode, @Nullable
-    String remoteAddr, String bankCode) {
+    public Payment createNewPayment(Order order, PaymentMode paymentMode, String remoteAddr, String bankCode) {
         Payment payment = new Payment();
         payment.setAmount(order.getAmount());
         payment.setOrder(order);
@@ -178,9 +165,7 @@ public class PaymentManager {
         return payment;
     }
 
-    @NotNull
-    public static String getUniqueGatewayOrderId(@NotNull
-    Order order) {
+    public static String getUniqueGatewayOrderId(Order order) {
         return TokenUtils.generateGatewayOrderId(order);
         /*
          * Set<Payment> payments = order.getPayments(); if(payments != null){ for (Payment payment : payments) {
@@ -196,9 +181,7 @@ public class PaymentManager {
      * @param order
      * @return
      */
-    @NotNull
-    public static String getOrderChecksum(@NotNull
-    Order order) {
+    public static String getOrderChecksum(Order order) {
         // lets simply do an md5 checksum of line item ids + scaffold id's + qty's
         StringBuffer checksumString = new StringBuffer();
         Set<CartLineItem> cartLineItems = order.getCartLineItems();

@@ -1,8 +1,8 @@
 package org.stripesstuff.plugin.security;
 
-import net.sourceforge.stripes.action.ActionBean;
-
 import java.lang.reflect.Method;
+
+import net.sourceforge.stripes.action.ActionBean;
 
 
 /**

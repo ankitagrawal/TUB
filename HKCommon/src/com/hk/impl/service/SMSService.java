@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import com.hk.domain.user.Address;
 import com.hk.service.impl.FreeMarkerService;
-import com.hk.service.impl.FreeMarkerService.RenderOutput;
 
 @Service
 public class SMSService {

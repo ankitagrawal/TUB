@@ -4,6 +4,19 @@
  */
 package org.stripesstuff.plugin.session;
 
+import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import net.sourceforge.stripes.action.ActionBean;
 import net.sourceforge.stripes.action.ActionBeanContext;
 import net.sourceforge.stripes.action.Resolution;
@@ -12,15 +25,9 @@ import net.sourceforge.stripes.controller.Interceptor;
 import net.sourceforge.stripes.controller.Intercepts;
 import net.sourceforge.stripes.controller.LifecycleStage;
 import net.sourceforge.stripes.util.ReflectUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Interceptor that stores or restores session objects.

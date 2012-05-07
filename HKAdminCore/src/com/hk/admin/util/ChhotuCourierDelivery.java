@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gson.annotations.SerializedName;
-import com.sun.istack.internal.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -26,7 +25,6 @@ public class ChhotuCourierDelivery {
   @SerializedName("delivery_type")
   private String deliveryType;
 
-  @Nullable
   @SerializedName("cod_amount")
   private String codAmount;
 
@@ -36,7 +34,6 @@ public class ChhotuCourierDelivery {
   @SerializedName("pin_code")
   private String pinCode;
 
-  @Nullable
   @SerializedName("delivery_date")
   private String deliveryDate;
 

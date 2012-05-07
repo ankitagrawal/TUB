@@ -2,9 +2,7 @@ package com.hk.domain.warehouse;
 // Generated Dec 29, 2011 4:35:17 PM by Hibernate Tools 3.2.4.CR1
 
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.CascadeType;

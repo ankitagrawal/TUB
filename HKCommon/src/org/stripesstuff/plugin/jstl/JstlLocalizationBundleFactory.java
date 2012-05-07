@@ -1,9 +1,14 @@
 package org.stripesstuff.plugin.jstl;
 
-import java.util.*;
+import java.util.Locale;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+
 import javax.servlet.jsp.jstl.core.Config;
 
-import net.sourceforge.stripes.config.*;
+import net.sourceforge.stripes.config.ConfigurableComponent;
+import net.sourceforge.stripes.config.Configuration;
+import net.sourceforge.stripes.config.DontAutoLoad;
 import net.sourceforge.stripes.exception.StripesRuntimeException;
 import net.sourceforge.stripes.localization.LocalizationBundleFactory;
 

@@ -14,33 +14,10 @@
  */
 package net.sourceforge.stripes.controller;
 
-import net.sourceforge.stripes.action.ActionBean;
-import net.sourceforge.stripes.action.ActionBeanContext;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.HandlesEvent;
-import net.sourceforge.stripes.action.SessionScope;
-import net.sourceforge.stripes.config.BootstrapPropertyResolver;
-import net.sourceforge.stripes.config.Configuration;
-import net.sourceforge.stripes.config.DontAutoLoad;
-import net.sourceforge.stripes.exception.ActionBeanNotFoundException;
-import net.sourceforge.stripes.exception.StripesRuntimeException;
-import net.sourceforge.stripes.exception.StripesServletException;
-import net.sourceforge.stripes.util.HttpUtil;
-import net.sourceforge.stripes.util.Log;
-import net.sourceforge.stripes.util.ResolverUtil;
-import net.sourceforge.stripes.util.StringUtil;
-
-import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+
+import net.sourceforge.stripes.action.ActionBean;
+import net.sourceforge.stripes.exception.StripesServletException;
 
 /**
  * <p>Uses Annotations on classes to identify the ActionBean that corresponds to the current

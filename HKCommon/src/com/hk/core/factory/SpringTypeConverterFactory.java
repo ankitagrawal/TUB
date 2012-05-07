@@ -4,16 +4,13 @@ import java.util.Locale;
 
 import javax.servlet.ServletContext;
 
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
-
 import net.sourceforge.stripes.controller.StripesFilter;
 import net.sourceforge.stripes.validation.DefaultTypeConverterFactory;
 import net.sourceforge.stripes.validation.TypeConverter;
 
-import com.hk.service.ServiceLocatorFactory;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
  * 

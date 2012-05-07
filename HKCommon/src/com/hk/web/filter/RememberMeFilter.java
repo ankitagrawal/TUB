@@ -11,7 +11,6 @@ import javax.servlet.ServletResponse;
 
 import org.apache.shiro.web.DefaultWebSecurityManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import com.hk.service.ServiceLocatorFactory;
 import com.shiro.PrincipalImpl;

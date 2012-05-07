@@ -1,8 +1,8 @@
 package com.hk.exception;
 
-import com.hk.constants.url.URLConstants;
-
 import net.sourceforge.stripes.action.RedirectResolution;
+
+import com.hk.constants.url.URLConstants;
 
 @SuppressWarnings("serial")
 public class HealthkartPaymentGatewayException extends Exception {

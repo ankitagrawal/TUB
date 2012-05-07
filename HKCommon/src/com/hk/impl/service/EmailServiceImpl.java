@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import com.hk.pact.service.EmailService;
 import com.hk.service.impl.FreeMarkerService;
-import com.hk.service.impl.FreeMarkerService.RenderOutput;
 
 /**
  * Author: Kani Date: Dec 17, 2008
