@@ -28,6 +28,7 @@ import com.hk.domain.user.User;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.dao.order.OrderLifecycleDao;
+import com.hk.pact.service.store.StoreService;
 
 @Repository
 @SuppressWarnings("unchecked")
@@ -37,6 +38,8 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao {
 
     @Autowired
     private OrderLifecycleDao orderLifecycleDao;
+    @Autowired
+    private StoreService      storeService;
 
     public Order getLatestOrderForUser(User user) {
         @SuppressWarnings( { "unchecked" })
@@ -55,7 +58,7 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao {
 
     public Page searchOrders(OrderSearchCriteria orderSearchCriteria, int pageNo, int perPage) {
         DetachedCriteria searchCriteria = orderSearchCriteria.getSearchCriteria();
-//        searchCriteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        // searchCriteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         return list(searchCriteria, true, pageNo, perPage);
     }
 
@@ -96,6 +99,9 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao {
                 order.setAmount(FormatUtils.getCurrencyPrecision(order.getAmount()));
             }
             order.setUpdateDate(BaseUtils.getCurrentTimestamp());
+            if (order.getStore() == null) {
+                order.setStore(storeService.getDefaultStore());
+            }
         }
         return (Order) super.save(order);
     }

@@ -81,7 +81,7 @@
         <%--<div class="clear"></div>--%>
 
         <div class="grid_24 alpha omega">
-          <s:link beanclass="com.hk.web.action.CategoryAction" event="editPrimaryCategoryHeadings"
+          <s:link beanclass="com.hk.web.action.core.catalog.category.CategoryAction" event="editPrimaryCategoryHeadings"
                   class="popup" style="font-size:larger; background-color:#003399; color:white;" target="_blank">
             Add/Edit Headings for home
             <s:param name="category" value="${homeBean.category.name}"/>
@@ -120,7 +120,7 @@
 
           <shiro:hasRole name="<%=RoleConstants.GOD%>">
             <div class="grid_24 alpha omega" style="width: 950px;">
-              <s:link beanclass="com.hk.web.action.PrimaryCategoryHeadingAction"
+              <s:link beanclass="com.hk.web.action.core.catalog.category.PrimaryCategoryHeadingAction"
                       event="editPrimaryCategoryHeadingProducts"
                       class="popup" style="background-color:#003399; color:white;" target="_blank">
                 Add/Edit Products for Heading
@@ -144,7 +144,7 @@
         <shiro:hasRole name="<%=RoleConstants.GOD%>">
           <c:if test="${empty heading.products}">
             <div class="grid_24 alpha omega" style="width: 950px;">
-              <s:link beanclass="com.hk.web.action.PrimaryCategoryHeadingAction"
+              <s:link beanclass="com.hk.web.action.core.catalog.category.PrimaryCategoryHeadingAction"
                       event="addPrimaryCategoryHeadingProducts"
                       class="popup" style="background-color:#003399; color:white;">
                 <strong>ADD PRODUCTS FOR HEADING: ${heading.name} (Heading not visible as no products are set for

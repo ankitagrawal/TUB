@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="com.hk.web.action.PrimaryCategoryHeadingAction" var="ha"/>
+<s:useActionBean beanclass="com.hk.web.action.core.catalog.category.PrimaryCategoryHeadingAction" var="ha"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Add Category Heading Products">
 
@@ -47,7 +47,7 @@
 
   <s:layout-component name="content">
     <h2>${ha.heading.name}</h2>
-    <s:form beanclass="com.hk.web.action.PrimaryCategoryHeadingAction">
+    <s:form beanclass="com.hk.web.action.core.catalog.category.PrimaryCategoryHeadingAction">
       <table border="1" id="featureTable">
         <c:forEach var="product" items="${ha.heading.products}" varStatus="ctr">
           <tr count="${ctr.index}" class="${ctr.last ? 'lastRow':''}">
@@ -69,7 +69,7 @@
 
       <c:choose>
         <c:when test="${ha.heading.category.name != 'home'}">
-          <s:link beanclass="com.hk.web.action.CategoryAction" event="pre">
+          <s:link beanclass="com.hk.web.action.core.catalog.category.CategoryAction" event="pre">
             <div align="right" style="font-weight:bold; font-size:150%">BACK</div>
             <s:param name="category.name" value="${ha.heading.category.name}"/>
           </s:link>

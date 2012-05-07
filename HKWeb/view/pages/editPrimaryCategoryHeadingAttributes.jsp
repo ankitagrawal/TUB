@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.PrimaryCategoryHeadingAction" var="ha"/>
+<s:useActionBean beanclass="com.hk.web.action.core.catalog.category.PrimaryCategoryHeadingAction" var="ha"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="${ha.heading.name}">
 
   <s:layout-component name="menu"> </s:layout-component>
@@ -11,7 +11,7 @@
   </s:layout-component>
 
   <s:layout-component name="content">
-    <s:form beanclass="com.hk.web.action.PrimaryCategoryHeadingAction">
+    <s:form beanclass="com.hk.web.action.core.catalog.category.PrimaryCategoryHeadingAction">
       <fieldset>
         <table>
           <tr>
@@ -40,7 +40,7 @@
 
       <div class="buttons">
         <s:submit name="savePrimaryCategoryHeadingAttributes" value="Save"/>
-        <s:link beanclass="com.hk.web.action.CategoryAction" event="editPrimaryCategoryHeadings">
+        <s:link beanclass="com.hk.web.action.core.catalog.category.CategoryAction" event="editPrimaryCategoryHeadings">
           <div align="right" style="font-weight:bold; font-size:150%">BACK</div>
           <s:param name="category.name" value="${ha.heading.category.name}"/>
         </s:link>
