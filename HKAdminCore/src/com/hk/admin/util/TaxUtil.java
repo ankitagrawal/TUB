@@ -14,6 +14,9 @@ import com.hk.dto.TaxComponent;
  * To change this template use File | Settings | File Templates.
  */
 public class TaxUtil {
+    
+    public static final Double CST = 0.02;
+    public static final Double SURCHARGE = 0.05;
 
 	public static TaxComponent getSupplierTaxForPV(Supplier supplier, Sku sku, Double taxable) {
 		Double tax = 0.0D, surcharge = 0.0, payable = 0.0;
@@ -28,11 +31,11 @@ public class TaxUtil {
 				 * Surchage calculated only for Haryana
 				 */
 				if (warehouseState.equalsIgnoreCase(StateList.HARYANA)) {
-					surcharge = tax * StateList.SURCHARGE;
+					surcharge = tax * SURCHARGE;
 				}
 			} else {
 				if (skuTax.getValue() != 0.0) {
-					tax = StateList.CST * taxable;
+					tax = CST * taxable;
 					//surcharge = tax * StateList.SURCHARGE;
 				}
 			}
