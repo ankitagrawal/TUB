@@ -6,11 +6,11 @@
 	<target name="clean" description="Prepare for clean build">
 		<delete dir="${package.target.dir}" />
 		<delete dir="${project.dist.dir}" />
-		<ant dir="${project.common.dir}" target="clean" inheritall="false" />
-		<ant dir="${project.core.dir}" target="clean" inheritall="false" />
+		<ant dir="${project.web.dir}" target="clean" inheritall="false" />
 		<ant dir="${project.admin.core.dir}" target="clean" inheritall="false" />
 		<ant dir="${project.report.dir}" target="clean" inheritall="false" />
-		<ant dir="${project.web.dir}" target="clean" inheritall="false" />
+		<ant dir="${project.common.dir}" target="clean" inheritall="false" />
+		<ant dir="${project.core.dir}" target="clean" inheritall="false" />
 		<!--
 		
 		<ant dir="${project.admin.web.dir}" target="clean" inheritall="false" />
@@ -19,7 +19,7 @@
 	</target>
 
 
-	<target name="build.common.jar" depends="prepare" description="Create binary distribution">
+	<target name="build.common.jar" description="Create binary distribution">
 		<ant dir="${project.common.dir}" target="build" inheritall="false">
 			<property name="build.env" value="${build.env}" />
 		</ant>
@@ -165,6 +165,11 @@
 	<target name="prepare">
 		<mkdir dir="${package.target.dir}" />
 		<mkdir dir="${project.dist.dir}" />
+		<ant dir="${project.common.dir}" target="prepare" inheritall="false" />
+		<ant dir="${project.core.dir}" target="prepare" inheritall="false" />
+		<ant dir="${project.admin.core.dir}" target="prepare" inheritall="false" />
+		<ant dir="${project.report.dir}" target="prepare" inheritall="false" />
+		<ant dir="${project.web.dir}" target="prepare" inheritall="false" />
 		<tstamp />
 	</target>
 
