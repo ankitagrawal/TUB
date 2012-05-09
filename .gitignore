@@ -2,6 +2,9 @@ build/*
 *.class
 *.bak
 *.log
+*.ipr
+*.iws
+*.iml
 .classpath
 .project
 bin-groovy/*
