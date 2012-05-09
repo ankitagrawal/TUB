@@ -27,182 +27,193 @@ import com.hk.domain.user.User;
 @Table(name = "product_variant_inventory")
 public class ProductVariantInventory implements java.io.Serializable {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "id", nullable = false, length = 12)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", nullable = false, length = 12)
+    private Long                  id;
 
-  /*@Deprecated
-  @JsonSkip
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "product_variant_id", nullable = false)
-  private ProductVariant productVariant;*/
+    /*
+     * @Deprecated @JsonSkip @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "product_variant_id", nullable =
+     *             false) private ProductVariant productVariant;
+     */
 
-  @JsonSkip
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "sku_id", nullable = false)
-  private Sku sku;
+    @JsonSkip
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sku_id", nullable = false)
+    private Sku                   sku;
 
-  @JsonSkip
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "sku_item_id")
-  private SkuItem skuItem;
+    @JsonSkip
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sku_item_id")
+    private SkuItem               skuItem;
 
-  @JsonSkip
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "shipping_order_id")
-  private ShippingOrder shippingOrder;
+    @JsonSkip
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "shipping_order_id")
+    private ShippingOrder         shippingOrder;
 
-  @JsonSkip
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "line_item_id")
-  private LineItem lineItem;
+    @JsonSkip
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "line_item_id")
+    private LineItem              lineItem;
 
-  @JsonSkip
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "grn_line_item_id")
-  private GrnLineItem grnLineItem;
+    @JsonSkip
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "grn_line_item_id")
+    private GrnLineItem           grnLineItem;
 
-  @JsonSkip
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "rv_line_item_id")
-  private RvLineItem rvLineItem;
+    @JsonSkip
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "rv_line_item_id")
+    private RvLineItem            rvLineItem;
 
-  @Column(name = "qty", nullable = false)
-  private Long qty;
+    @JsonSkip
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "stock_transfer_line_item_id")
+    private StockTransferLineItem stockTransferLineItem;
 
-  @JsonSkip
-  @Temporal(TemporalType.TIMESTAMP)
-  @Column(name = "txn_date", length = 19)
-  private Date txnDate;
+    @Column(name = "qty", nullable = false)
+    private Long                  qty;
 
-  @JsonSkip
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "inv_txn_type_id", nullable = false)
-  private InvTxnType invTxnType;
+    @JsonSkip
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "txn_date", length = 19)
+    private Date                  txnDate;
 
-  @JsonSkip
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id")
-  private User txnBy;
+    @JsonSkip
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "inv_txn_type_id", nullable = false)
+    private InvTxnType            invTxnType;
 
-  public Long getId() {
-    return id;
-  }
+    @JsonSkip
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User                  txnBy;
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+    public Long getId() {
+        return id;
+    }
 
- /* public ProductVariant getProductVariant() {
-    return productVariant;
-  }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-  public void setProductVariant(ProductVariant productVariant) {
-    this.productVariant = productVariant;
-  }*/ 
+    /*
+     * public ProductVariant getProductVariant() { return productVariant; } public void setProductVariant(ProductVariant
+     * productVariant) { this.productVariant = productVariant; }
+     */
 
-  public Sku getSku() {
-    return sku;
-  }
+    public Sku getSku() {
+        return sku;
+    }
 
-  public void setSku(Sku sku) {
-    this.sku = sku;
-  }
+    public void setSku(Sku sku) {
+        this.sku = sku;
+    }
 
-  public SkuItem getSkuItem() {
-    return skuItem;
-  }
+    public SkuItem getSkuItem() {
+        return skuItem;
+    }
 
-  public void setSkuItem(SkuItem skuItem) {
-    this.skuItem = skuItem;
-  }
-  
-  public ShippingOrder getShippingOrder() {
-    return shippingOrder;
-  }
+    public void setSkuItem(SkuItem skuItem) {
+        this.skuItem = skuItem;
+    }
 
-  public void setShippingOrder(ShippingOrder shippingOrder) {
-    this.shippingOrder = shippingOrder;
-  }
+    public ShippingOrder getShippingOrder() {
+        return shippingOrder;
+    }
 
-  public LineItem getLineItem() {
-    return lineItem;
-  }
+    public void setShippingOrder(ShippingOrder shippingOrder) {
+        this.shippingOrder = shippingOrder;
+    }
 
-  public void setLineItem(LineItem lineItem) {
-    this.lineItem = lineItem;
-  }
+    public LineItem getLineItem() {
+        return lineItem;
+    }
 
-  public GrnLineItem getGrnLineItem() {
-    return grnLineItem;
-  }
+    public void setLineItem(LineItem lineItem) {
+        this.lineItem = lineItem;
+    }
 
-  public void setGrnLineItem(GrnLineItem grnLineItem) {
-    this.grnLineItem = grnLineItem;
-  }
+    public GrnLineItem getGrnLineItem() {
+        return grnLineItem;
+    }
 
-  public RvLineItem getRvLineItem() {
-    return rvLineItem;
-  }
+    public void setGrnLineItem(GrnLineItem grnLineItem) {
+        this.grnLineItem = grnLineItem;
+    }
 
-  public void setRvLineItem(RvLineItem rvLineItem) {
-    this.rvLineItem = rvLineItem;
-  }
+    public RvLineItem getRvLineItem() {
+        return rvLineItem;
+    }
 
-  public Long getQty() {
-    return qty;
-  }
+    public void setRvLineItem(RvLineItem rvLineItem) {
+        this.rvLineItem = rvLineItem;
+    }
 
-  public void setQty(Long qty) {
-    this.qty = qty;
-  }
+    public StockTransferLineItem getStockTransferLineItem() {
+        return stockTransferLineItem;
+    }
 
-  public Date getTxnDate() {
-    return txnDate;
-  }
+    public void setStockTransferLineItem(StockTransferLineItem stockTransferLineItem) {
+        this.stockTransferLineItem = stockTransferLineItem;
+    }
 
-  public void setTxnDate(Date txnDate) {
-    this.txnDate = txnDate;
-  }
+    public Long getQty() {
+        return qty;
+    }
 
-  public InvTxnType getInvTxnType() {
-    return invTxnType;
-  }
+    public void setQty(Long qty) {
+        this.qty = qty;
+    }
 
-  public void setInvTxnType(InvTxnType invTxnType) {
-    this.invTxnType = invTxnType;
-  }
+    public Date getTxnDate() {
+        return txnDate;
+    }
 
-  public User getTxnBy() {
-    return txnBy;
-  }
+    public void setTxnDate(Date txnDate) {
+        this.txnDate = txnDate;
+    }
 
-  public void setTxnBy(User txnBy) {
-    this.txnBy = txnBy;
-  }
+    public InvTxnType getInvTxnType() {
+        return invTxnType;
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof ProductVariantInventory)) return false;
+    public void setInvTxnType(InvTxnType invTxnType) {
+        this.invTxnType = invTxnType;
+    }
 
-    ProductVariantInventory that = (ProductVariantInventory) o;
+    public User getTxnBy() {
+        return txnBy;
+    }
 
-    if (id != null ? !id.equals(that.getId()) : that.getId() != null) return false;
+    public void setTxnBy(User txnBy) {
+        this.txnBy = txnBy;
+    }
 
-    return true;
-  }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (!(o instanceof ProductVariantInventory))
+            return false;
 
-  @Override
-  public int hashCode() {
-    return id != null ? id.hashCode() : 0;
-  }
+        ProductVariantInventory that = (ProductVariantInventory) o;
 
-  @Override
-  public String toString() {
-    return id == null ? "" : id.toString();
-  }
+        if (id != null ? !id.equals(that.getId()) : that.getId() != null)
+            return false;
 
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return id == null ? "" : id.toString();
+    }
 
 }

@@ -16,6 +16,8 @@ public class TaxDaoImpl extends BaseDaoImpl implements TaxDao {
         return (Tax) getSession().createQuery("from Tax t where t.name = :name").setString("name", name).uniqueResult();
     }
 
+    
+    //TODO: change these querry styles execute one query only.  
     public List<Tax> taxListForReport() {
         List<Tax> taxList = new ArrayList<Tax>();
         taxList.add(this.findByName(EnumTax.VAT_0.getName()));
@@ -31,7 +33,11 @@ public class TaxDaoImpl extends BaseDaoImpl implements TaxDao {
         taxList.add(this.findByName(EnumTax.VAT_5.getName()));
         taxList.add(this.findByName(EnumTax.VAT_12_5.getName()));
         taxList.add(this.findByName(EnumTax.SERVICE_10_3.getName()));
+        taxList.add(this.findByName(EnumTax.VAT_12_36.getName()));
+        taxList.add(this.findByName(EnumTax.VAT_12_5.getName()));
         return taxList;
     }
+    
+    
 
 }

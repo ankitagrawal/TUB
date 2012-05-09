@@ -5,6 +5,7 @@ import java.util.List;
 import com.hk.admin.dto.inventory.CreateInventoryFileDto;
 import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.inventory.ProductVariantInventory;
+import com.hk.domain.inventory.StockTransferLineItem;
 import com.hk.domain.inventory.rv.RvLineItem;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
@@ -29,14 +30,14 @@ public interface AdminProductVariantInventoryDao extends BaseDao {
 
     public List<ProductVariantInventory> getPVIByLineItem(LineItem lineItem);
 
-    public List<ProductVariantInventory> getCheckedOutSkuItems(ShippingOrder shippingOrder, Sku sku);
-
     public List<ProductVariantInventory> getCheckedOutSkuItems(ShippingOrder shippingOrder, LineItem lineItem);
-
-    public List<ProductVariantInventory> getCheckedOutSkuItems(ShippingOrder shippingOrder);
 
     public List<CreateInventoryFileDto> getDetailsForUncheckedItems(String brand);
     
     public List<CreateInventoryFileDto> getDetailsForUncheckedItems(String brand, Warehouse warehouse);
+    
+    public Long getCheckedinItemCountForStockTransferLineItem(StockTransferLineItem stockTransferLineItem) ;
+    
+    public List<ProductVariantInventory> getPVIForStockTransfer(Sku sku, StockTransferLineItem stockTransferLineItem);
 
 }

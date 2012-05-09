@@ -1,4 +1,4 @@
-package com.hk.domain.userReview;
+package com.hk.domain.review;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

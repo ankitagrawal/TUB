@@ -17,4 +17,6 @@ public interface SkuGroupDao extends BaseDao {
 
     public void resetInventory(ProductVariant productVariant);
 
+    public SkuGroup getSkuGroup(String barcode);
+
 }

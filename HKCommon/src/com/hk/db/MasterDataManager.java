@@ -39,156 +39,156 @@ import com.hk.db.seed.ticket.TicketStatusSeedData;
 import com.hk.db.seed.ticket.TicketTypeSeedData;
 
 /**
- * Author: Kani
- * Date: Jul 23, 2009
+ * Author: Kani Date: Jul 23, 2009
  */
 public class MasterDataManager {
-  private static Logger logger = LoggerFactory.getLogger(MasterDataManager.class);
+    private static Logger                  logger = LoggerFactory.getLogger(MasterDataManager.class);
 
-   RoleSeedData roleSeedData;
-   PermissionSeedData permissionSeedData;
-   RoleHasPermissionSeedData roleHasPermissionSeedData;
-   CourierSeedData courierSeedData;
- /*  CartLineItemTypeSeedData lineItemStatusSeedData;*/
-  
-  CartLineItemTypeSeedData cartLineItemTypeSeedData;
-   OrderStatusSeedData orderStatusSeedData;
-   ShippingOrderStatusSeedData shippingOrderStatusSeedData;
-   PaymentModeSeedData paymentModeSeedData;
-   PaymentStatusSeedData paymentStatusSeedData;
-   TaxSeedData taxSeedData;
-   RewardPointStatusSeedData rewardPointStatusSeedData;
-   RewardPointTxnTypeSeedData rewardPointTxnTypeSeedData;
-   EmailTypeSeedData emailTypeSeedData;
-   TicketTypeSeedData ticketTypeSeedData;
-   TicketStatusSeedData ticketStatusSeedData;
-   ReconciliationStatusSeedData reconciliationStatusSeedData;
-   CancellationTypeSeedData cancellationTypeSeedData;
-   AffiliateTxnTypeSeedData affiliateTxnTypeSeedData;
-   OrderLifecycleActivitySeedData orderLifecycleActivitySeedData;
-   ShippingOrderLifecycleActivitySeedData shippingOrderLifecycleActivitySeedData;
-   BoxSizeSeedData boxSizeSeedData;
-   PurchaseOrderStatusSeedData poStatusSeedData;
-   RewardPointModeSeedData rewardPointModeSeedData;
-   ProductVariantServiceTypeSeedData productVariantServiceTypeSeedData;
-   ProductVariantPaymentTypeSeedData productVariantPaymentTypeSeedData;
-   GrnStatusSeedData grnStatusSeedData;
-   InvTxnTypeSeedData invTxnTypeSeedData;
-   GoogleBannedWordSeedData googleBannedWordSeedData;
-   DebitNoteStatusSeedData debitNoteStatusSeedData;
-	 PurchaseInvoiceStatusSeedData purchaseInvoiceStatusSeedData;
-	 SurchargeSeedData surchargeSeedData;
-	 AdNetworksSeedData adNetworksSeedData;
-	 ReconciliationTypeSeedData reconciliationTypeSeedData;
-	 ReviewStatusSeedData reviewStatusSeedData;
+    RoleSeedData                           roleSeedData;
+    PermissionSeedData                     permissionSeedData;
+    RoleHasPermissionSeedData              roleHasPermissionSeedData;
+    CourierSeedData                        courierSeedData;
+    /* CartLineItemTypeSeedData lineItemStatusSeedData; */
 
-  public void insert() {
+    CartLineItemTypeSeedData               cartLineItemTypeSeedData;
+    OrderStatusSeedData                    orderStatusSeedData;
+    ShippingOrderStatusSeedData            shippingOrderStatusSeedData;
+    PaymentModeSeedData                    paymentModeSeedData;
+    PaymentStatusSeedData                  paymentStatusSeedData;
+    TaxSeedData                            taxSeedData;
+    RewardPointStatusSeedData              rewardPointStatusSeedData;
+    RewardPointTxnTypeSeedData             rewardPointTxnTypeSeedData;
+    EmailTypeSeedData                      emailTypeSeedData;
+    TicketTypeSeedData                     ticketTypeSeedData;
+    TicketStatusSeedData                   ticketStatusSeedData;
+    ReconciliationStatusSeedData           reconciliationStatusSeedData;
+    CancellationTypeSeedData               cancellationTypeSeedData;
+    AffiliateTxnTypeSeedData               affiliateTxnTypeSeedData;
+    OrderLifecycleActivitySeedData         orderLifecycleActivitySeedData;
+    ShippingOrderLifecycleActivitySeedData shippingOrderLifecycleActivitySeedData;
+    BoxSizeSeedData                        boxSizeSeedData;
+    PurchaseOrderStatusSeedData            poStatusSeedData;
+    RewardPointModeSeedData                rewardPointModeSeedData;
+    ProductVariantServiceTypeSeedData      productVariantServiceTypeSeedData;
+    ProductVariantPaymentTypeSeedData      productVariantPaymentTypeSeedData;
+    GrnStatusSeedData                      grnStatusSeedData;
+    InvTxnTypeSeedData                     invTxnTypeSeedData;
+    GoogleBannedWordSeedData               googleBannedWordSeedData;
+    DebitNoteStatusSeedData                debitNoteStatusSeedData;
+    PurchaseInvoiceStatusSeedData          purchaseInvoiceStatusSeedData;
+    SurchargeSeedData                      surchargeSeedData;
+    AdNetworksSeedData                     adNetworksSeedData;
+    ReconciliationTypeSeedData             reconciliationTypeSeedData;
+    ReviewStatusSeedData                   reviewStatusSeedData;
 
-    logger.debug("inserting roles");
-    roleSeedData.invokeInsert();
+    public void insert() {
 
-    logger.debug("inserting permissions");
-    permissionSeedData.invokeInsert();
+        logger.debug("inserting roles");
+        roleSeedData.invokeInsert();
 
-    logger.debug("inserting role has permissions");
-    roleHasPermissionSeedData.invokeInsert();
+        logger.debug("inserting permissions");
+        permissionSeedData.invokeInsert();
 
-    logger.debug("inserting couriers");
-    courierSeedData.invokeInsert();
+        logger.debug("inserting role has permissions");
+        roleHasPermissionSeedData.invokeInsert();
 
-   /* logger.debug("inserting lineItemStatus");
-    lineItemStatusSeedData.invokeInsert();*/
+        logger.debug("inserting couriers");
+        courierSeedData.invokeInsert();
 
-    logger.debug("inserting lineItemTypes");
-    cartLineItemTypeSeedData.invokeInsert();
+        /*
+         * logger.debug("inserting lineItemStatus"); lineItemStatusSeedData.invokeInsert();
+         */
 
-    logger.debug("inserting orderStatus");
-    orderStatusSeedData.invokeInsert();
+        logger.debug("inserting lineItemTypes");
+        cartLineItemTypeSeedData.invokeInsert();
 
-    logger.debug("inserting shippingOrderStatus");
-    shippingOrderStatusSeedData.invokeInsert();
+        logger.debug("inserting orderStatus");
+        orderStatusSeedData.invokeInsert();
 
-    logger.debug("inserting paymentMode");
-    paymentModeSeedData.invokeInsert();
+        logger.debug("inserting shippingOrderStatus");
+        shippingOrderStatusSeedData.invokeInsert();
 
-    logger.debug("inserting paymentStatus");
-    paymentStatusSeedData.invokeInsert();
+        logger.debug("inserting paymentMode");
+        paymentModeSeedData.invokeInsert();
 
-    logger.debug("inserting tax");
-    taxSeedData.invokeInsert();
+        logger.debug("inserting paymentStatus");
+        paymentStatusSeedData.invokeInsert();
 
-    logger.debug("inserting rewardPointStatus");
-    rewardPointStatusSeedData.invokeInsert();
+        logger.debug("inserting tax");
+        taxSeedData.invokeInsert();
 
-    logger.debug("inserting rewardPointTxnType");
-    rewardPointTxnTypeSeedData.invokeInsert();
+        logger.debug("inserting rewardPointStatus");
+        rewardPointStatusSeedData.invokeInsert();
 
-    logger.debug("inserting emailType");
-    emailTypeSeedData.invokeInsert();
+        logger.debug("inserting rewardPointTxnType");
+        rewardPointTxnTypeSeedData.invokeInsert();
 
-    logger.debug("inserting/updating ticket type domain..");
-    ticketTypeSeedData.invokeInsert();
+        logger.debug("inserting emailType");
+        emailTypeSeedData.invokeInsert();
 
-    logger.debug("inserting/updating ticket status domain..");
-    ticketStatusSeedData.invokeInsert();
+        logger.debug("inserting/updating ticket type domain..");
+        ticketTypeSeedData.invokeInsert();
 
-    logger.debug("inserting/updating reconciliation status domain..");
-    reconciliationStatusSeedData.invokeInsert();
+        logger.debug("inserting/updating ticket status domain..");
+        ticketStatusSeedData.invokeInsert();
 
-    logger.debug("inserting/updating cancellation type domain..");
-    cancellationTypeSeedData.invokeInsert();
+        logger.debug("inserting/updating reconciliation status domain..");
+        reconciliationStatusSeedData.invokeInsert();
 
-    logger.debug("inserting affiliateTxnType");
-    affiliateTxnTypeSeedData.invokeInsert();
+        logger.debug("inserting/updating cancellation type domain..");
+        cancellationTypeSeedData.invokeInsert();
 
-    logger.debug("inserting orderLifecycleActivity");
-    orderLifecycleActivitySeedData.invokeInsert();
+        logger.debug("inserting affiliateTxnType");
+        affiliateTxnTypeSeedData.invokeInsert();
 
-    logger.debug("inserting shippingOrderLifecycleActivity");
-    shippingOrderLifecycleActivitySeedData.invokeInsert();
+        logger.debug("inserting orderLifecycleActivity");
+        orderLifecycleActivitySeedData.invokeInsert();
 
-    logger.debug("inserting boxSize");
-    boxSizeSeedData.invokeInsert();
+        logger.debug("inserting shippingOrderLifecycleActivity");
+        shippingOrderLifecycleActivitySeedData.invokeInsert();
 
-    logger.debug("inserting purchaseOrderStatus");
-    poStatusSeedData.invokeInsert();
+        logger.debug("inserting boxSize");
+        boxSizeSeedData.invokeInsert();
 
-    logger.debug("inserting rewardPointMode");
-    rewardPointModeSeedData.invokeInsert();
+        logger.debug("inserting purchaseOrderStatus");
+        poStatusSeedData.invokeInsert();
 
-    logger.debug("inserting servicePaymentType");
-    productVariantPaymentTypeSeedData.invokeInsert();
+        logger.debug("inserting rewardPointMode");
+        rewardPointModeSeedData.invokeInsert();
 
-    logger.debug("inserting serviceType");
-    productVariantServiceTypeSeedData.invokeInsert();
+        logger.debug("inserting servicePaymentType");
+        productVariantPaymentTypeSeedData.invokeInsert();
 
-    logger.debug("inserting grn status");
-    grnStatusSeedData.invokeInsert();
+        logger.debug("inserting serviceType");
+        productVariantServiceTypeSeedData.invokeInsert();
 
-    logger.debug("inserting inv txn type");
-    invTxnTypeSeedData.invokeInsert();
+        logger.debug("inserting grn status");
+        grnStatusSeedData.invokeInsert();
 
-    logger.debug("inserting google banned words");
-    googleBannedWordSeedData.invokeInsert();
+        logger.debug("inserting inv txn type");
+        invTxnTypeSeedData.invokeInsert();
 
-    logger.debug("inserting debit note status");
-    debitNoteStatusSeedData.invokeInsert();
+        logger.debug("inserting google banned words");
+        googleBannedWordSeedData.invokeInsert();
 
-	  logger.debug("inserting purchase invoice status seed data");
-    purchaseInvoiceStatusSeedData.invokeInsert();
-	  
-	  logger.debug("inserting surcharge seed data");
-    surchargeSeedData.invokeInsert();
+        logger.debug("inserting debit note status");
+        debitNoteStatusSeedData.invokeInsert();
 
-	  logger.debug("inserting ad_networks seed data");
-    adNetworksSeedData.invokeInsert();
+        logger.debug("inserting purchase invoice status seed data");
+        purchaseInvoiceStatusSeedData.invokeInsert();
 
-    logger.debug("inserting reconcillation seed data");
-    reconciliationTypeSeedData.invokeInsert();
+        logger.debug("inserting surcharge seed data");
+        surchargeSeedData.invokeInsert();
 
-    logger.debug("inserting review status seed data");
-    reviewStatusSeedData.invokeInsert();
+        logger.debug("inserting ad_networks seed data");
+        adNetworksSeedData.invokeInsert();
 
-  }
+        logger.debug("inserting reconcillation seed data");
+        reconciliationTypeSeedData.invokeInsert();
+
+        logger.debug("inserting review status seed data");
+        reviewStatusSeedData.invokeInsert();
+
+    }
 
 }

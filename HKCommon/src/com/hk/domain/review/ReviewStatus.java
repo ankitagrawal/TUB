@@ -1,4 +1,4 @@
-package com.hk.domain.userReview;
+package com.hk.domain.review;
 // Generated 24 Apr, 2012 3:41:21 PM by Hibernate Tools 3.2.4.CR1
 
 

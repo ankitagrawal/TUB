@@ -17,4 +17,6 @@ public interface SupplierDao extends BaseDao {
     public Page getSupplierByTinAndName(String tinNumber, String name, int page, int perPage);
 
     public boolean doesTinNumberExist(String tinNumber);
+    
+    public Supplier save(Supplier supplier);
 }

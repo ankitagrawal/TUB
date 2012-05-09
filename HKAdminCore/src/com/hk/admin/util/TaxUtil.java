@@ -1,5 +1,6 @@
 package com.hk.admin.util;
 
+import com.hk.constants.core.TaxConstants;
 import com.hk.constants.courier.StateList;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.core.Tax;
@@ -15,10 +16,7 @@ import com.hk.dto.TaxComponent;
  */
 public class TaxUtil {
     
-    public static final Double CST = 0.02;
-    public static final Double SURCHARGE = 0.05;
-
-	public static TaxComponent getSupplierTaxForPV(Supplier supplier, Sku sku, Double taxable) {
+    public static TaxComponent getSupplierTaxForPV(Supplier supplier, Sku sku, Double taxable) {
 		Double tax = 0.0D, surcharge = 0.0, payable = 0.0;
 		String warehouseState = sku.getWarehouse().getState();
 		if (supplier != null && supplier.getState() != null
@@ -31,11 +29,11 @@ public class TaxUtil {
 				 * Surchage calculated only for Haryana
 				 */
 				if (warehouseState.equalsIgnoreCase(StateList.HARYANA)) {
-					surcharge = tax * SURCHARGE;
+					surcharge = tax * TaxConstants.SURCHARGE;
 				}
 			} else {
 				if (skuTax.getValue() != 0.0) {
-					tax = CST * taxable;
+					tax = TaxConstants.CST * taxable;
 					//surcharge = tax * StateList.SURCHARGE;
 				}
 			}

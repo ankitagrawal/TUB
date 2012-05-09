@@ -17,10 +17,10 @@ import com.hk.impl.dao.BaseDaoImpl;
 
 @SuppressWarnings("unchecked")
 @Repository
-public class PurchaseInvoiceDaoImpl extends BaseDaoImpl implements PurchaseInvoiceDao{
+public class PurchaseInvoiceDaoImpl extends BaseDaoImpl implements PurchaseInvoiceDao {
 
-    public Page searchPurchaseInvoice(PurchaseInvoice purchaseInvoice, PurchaseInvoiceStatus purchaseInvoiceStatus, User createdBy, String invoiceNumber,
-            String tinNumber, String supplierName, int pageNo, int perPage) {
+    public Page searchPurchaseInvoice(PurchaseInvoice purchaseInvoice, PurchaseInvoiceStatus purchaseInvoiceStatus, User createdBy, String invoiceNumber, String tinNumber,
+            String supplierName, int pageNo, int perPage, Boolean isReconciled) {
 
         DetachedCriteria purchaseInvoiceCriteria = DetachedCriteria.forClass(PurchaseInvoice.class);
 
@@ -45,6 +45,13 @@ public class PurchaseInvoiceDaoImpl extends BaseDaoImpl implements PurchaseInvoi
         }
         if (StringUtils.isNotBlank(invoiceNumber)) {
             purchaseInvoiceCriteria.add(Restrictions.eq("invoiceNumber", invoiceNumber));
+        }
+        if (isReconciled != null) {
+            if (!isReconciled) {
+                purchaseInvoiceCriteria.add(Restrictions.or(Restrictions.isNull("reconciled"), Restrictions.eq("reconciled", isReconciled)));
+            } else {
+                purchaseInvoiceCriteria.add(Restrictions.eq("reconciled", isReconciled));
+            }
         }
 
         purchaseInvoiceCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));

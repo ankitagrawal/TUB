@@ -17,6 +17,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.SQLDelete;
+
 import com.hk.domain.courier.Courier;
 
 /**
@@ -25,6 +27,7 @@ import com.hk.domain.courier.Courier;
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "address")
+@SQLDelete(sql = "UPDATE line_item SET deleted = 1  WHERE id = ? ")
 public class Address implements java.io.Serializable {
 
   @Id
@@ -170,6 +173,11 @@ public class Address implements java.io.Serializable {
   public Boolean isDeleted() {
     return deleted;
   }
+  
+  public Boolean getDeleted() {
+      return deleted;
+    }
+
 
   public void setDeleted(Boolean deleted) {
     this.deleted = deleted;

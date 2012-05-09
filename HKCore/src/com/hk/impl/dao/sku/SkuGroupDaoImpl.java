@@ -29,6 +29,14 @@ public class SkuGroupDaoImpl extends BaseDaoImpl implements SkuGroupDao {
             getSession().createQuery("delete from SkuGroup sg where sg.id in (:toBeRemovedIds)").setParameterList("toBeRemovedIds", toBeRemovedIds).executeUpdate();
         }
     }
+    
+    public SkuGroup getSkuGroup(String barcode) {
+        List<SkuGroup> skuGroups = getSession().
+           createQuery("from SkuGroup sg where sg.barcode = :barcode").
+           setParameter("barcode", barcode).
+           list();
+       return skuGroups != null && !skuGroups.isEmpty() ? skuGroups.get(0) : null;
+     }
 
     public void resetInventory(ProductVariant productVariant) {
         List<Long> toBeRemovedIds = (List<Long>) getSession().createQuery("select id from SkuGroup sg where sg.sku.productVariant = :productVariant").setParameter(

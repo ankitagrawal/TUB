@@ -19,16 +19,9 @@ import javax.persistence.UniqueConstraint;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.sku.Sku;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Developer
- * Date: Apr 27, 2012
- * Time: 11:50:32 AM
- * To change this template use File | Settings | File Templates.
- */
+
 @Entity
 @Table(name = "stock_transfer_line_item", uniqueConstraints = @UniqueConstraint(columnNames = {"stock_transfer_id", "sku_id"}))
-
 public class StockTransferLineItem implements java.io.Serializable {
 
 	@Id

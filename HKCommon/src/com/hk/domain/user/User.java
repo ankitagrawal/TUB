@@ -32,6 +32,7 @@ import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.Where;
 
 import com.hk.constants.core.EnumPermission;
 import com.hk.domain.coupon.Coupon;
@@ -128,6 +129,7 @@ public class User {
     private List<UserAccountInfo> userAccountInfos   = new ArrayList<UserAccountInfo>(1);
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @Where(clause = "deleted = 0")
     private List<Address>         addresses          = new ArrayList<Address>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
