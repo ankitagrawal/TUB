@@ -55,7 +55,7 @@
 		</ant>
 	</target>
 
-	<target name="compile" depends="build.dependencies">
+	<target name="compile" depends="prepare, build.dependencies">
 		<mkdir dir="${package.target.dir}" />
 		<javac srcdir="src" destdir="${package.target.dir}" debug="true" debuglevel="lines,vars,source" source="1.5" deprecation="false" nowarn="true">
 			<classpath refid="compile.classpath" />
@@ -71,7 +71,7 @@
 
 	<taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpathref="compile.classpath" />
 
-	<target name="compile.groovy" description="Compile Java classes for project">
+	<target name="compile.groovy" depends = "prepare" description="Compile Java classes for project">
 		<groovyc srcdir="src" destdir="${package.target.dir}" fork="true" listfiles="true">
 			<classpath refid="compile.classpath" />
 			<javac debug="${compiler.debug}">
@@ -89,8 +89,7 @@
 
 
 
-	<target name="build" depends="compile,compile.groovy" description="build report jar">
-		<mkdir dir="${project.dist.dir}" />
+	<target name="build" depends="compile.groovy, compile" description="build report jar">
 		<jar destfile="${project.dist.dir}/${package.jar.name}">
 			<zipfileset dir="${package.target.dir}" includes="**/**" excludes="test/**/**" />
 		</jar>
