@@ -17,7 +17,7 @@ public class TaxDaoImpl extends BaseDaoImpl implements TaxDao {
     }
 
     
-    //TODO: change these querry styles execute one query only.
+    //TODO: change these querry styles execute one query only.  
     public List<Tax> taxListForReport() {
         List<Tax> taxList = new ArrayList<Tax>();
         taxList.add(this.findByName(EnumTax.VAT_0.getName()));
@@ -37,5 +37,7 @@ public class TaxDaoImpl extends BaseDaoImpl implements TaxDao {
         taxList.add(this.findByName(EnumTax.VAT_12_5.getName()));
         return taxList;
     }
+    
+    
 
 }
