@@ -8,6 +8,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.akube.framework.util.BaseUtils;
 import com.hk.constants.core.EnumTax;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -24,7 +25,7 @@ import com.hk.pact.service.inventory.SkuService;
  * @author vaibhav.adlakha
  */
 @Service
-public class SkuServiceImpl  implements SkuService{
+public class SkuServiceImpl implements SkuService {
 
     @Autowired
     private SkuDao                skuDao;
@@ -42,6 +43,7 @@ public class SkuServiceImpl  implements SkuService{
      * @param warehouse
      * @return
      */
+    @SuppressWarnings("unused")
     private Sku createSku(ProductVariant productVariant, Warehouse warehouse) {
 
         Sku sku = new Sku();
@@ -56,6 +58,10 @@ public class SkuServiceImpl  implements SkuService{
     }
 
     public Sku saveSku(Sku sku) {
+        if (sku.getCreateDate() == null) {
+            sku.setCreateDate(BaseUtils.getCurrentTimestamp());
+        }
+        sku.setUpdateDate(BaseUtils.getCurrentTimestamp());
         return (Sku) getSkuDao().save(sku);
     }
 

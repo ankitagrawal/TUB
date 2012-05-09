@@ -62,9 +62,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private ShippingOrderService   shippingOrderService;
-    
+
     @Autowired
-    private BaseDao baseDao;
+    private BaseDao                baseDao;
 
     @Autowired
     private UserService            userService;
@@ -125,7 +125,7 @@ public class OrderServiceImpl implements OrderService {
         return getOrderDao().getCountOfOrdersWithStatus(EnumOrderStatus.Placed);
     }
 
-    public  Set<OrderCategory> getCategoriesForBaseOrder(Order order) {
+    public Set<OrderCategory> getCategoriesForBaseOrder(Order order) {
 
         // Map<BasketCategory, Category> basketCategoryMap = new HashMap<BasketCategory, Category>();
 
@@ -166,36 +166,35 @@ public class OrderServiceImpl implements OrderService {
         return orderCategories;
 
     }
-    
-    public  Category getBasketCategory(ShippingOrder shippingOrder) {
+
+    public Category getBasketCategory(ShippingOrder shippingOrder) {
         List<BasketCategory> basketCategories = new ArrayList<BasketCategory>();
 
-         for (LineItem lineItem : shippingOrder.getLineItems()) {
-           Category lineItemPrimaryCategory = lineItem.getSku().getProductVariant().getProduct().getPrimaryCategory();
-           BasketCategory lineItemBasketCategory = new BasketCategory(lineItemPrimaryCategory);
+        for (LineItem lineItem : shippingOrder.getLineItems()) {
+            Category lineItemPrimaryCategory = lineItem.getSku().getProductVariant().getProduct().getPrimaryCategory();
+            BasketCategory lineItemBasketCategory = new BasketCategory(lineItemPrimaryCategory);
 
-           if (basketCategories.contains(lineItemBasketCategory)) {
-             BasketCategory basketCategoryToUpdate = basketCategories.get(basketCategories.indexOf(lineItemBasketCategory));
-             basketCategoryToUpdate.addQty(lineItem.getQty()).addAmount(lineItem.getHkPrice());
-           } else {
-             lineItemBasketCategory.addQty(lineItem.getQty()).addAmount(lineItem.getHkPrice());
-             basketCategories.add(lineItemBasketCategory);
-           }
+            if (basketCategories.contains(lineItemBasketCategory)) {
+                BasketCategory basketCategoryToUpdate = basketCategories.get(basketCategories.indexOf(lineItemBasketCategory));
+                basketCategoryToUpdate.addQty(lineItem.getQty()).addAmount(lineItem.getHkPrice());
+            } else {
+                lineItemBasketCategory.addQty(lineItem.getQty()).addAmount(lineItem.getHkPrice());
+                basketCategories.add(lineItemBasketCategory);
+            }
 
-         }
+        }
 
-         Collections.sort(basketCategories);
+        Collections.sort(basketCategories);
 
-         LineItem firstLineItem = shippingOrder.getLineItems().iterator().next();
-         Category basketCategory = firstLineItem.getSku().getProductVariant().getProduct().getPrimaryCategory();
+        LineItem firstLineItem = shippingOrder.getLineItems().iterator().next();
+        Category basketCategory = firstLineItem.getSku().getProductVariant().getProduct().getPrimaryCategory();
 
-         if (!basketCategories.isEmpty()) {
-           basketCategory = basketCategories.get(0).getCategory();
-         }
-             
-         return basketCategory;
-       }
+        if (!basketCategories.isEmpty()) {
+            basketCategory = basketCategories.get(0).getCategory();
+        }
 
+        return basketCategory;
+    }
 
     public Set<ShippingOrder> createShippingOrders(Order order) {
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
@@ -315,8 +314,8 @@ public class OrderServiceImpl implements OrderService {
     public Order getLatestOrderForUser(User user) {
         return getOrderDao().getLatestOrderForUser(user);
     }
-    
-    public List<Order> getOrdersForUserSortedByDate(List<OrderStatus> orderStatusList, User user){
+
+    public List<Order> getOrdersForUserSortedByDate(List<OrderStatus> orderStatusList, User user) {
         return getOrderDao().getOrdersForUserSortedByDate(orderStatusList, user);
     }
 
@@ -608,7 +607,5 @@ public class OrderServiceImpl implements OrderService {
     public void setBaseDao(BaseDao baseDao) {
         this.baseDao = baseDao;
     }
-    
-    
 
 }
