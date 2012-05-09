@@ -9,6 +9,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.akube.framework.dao.Page;
+import com.akube.framework.util.BaseUtils;
 import com.hk.domain.catalog.Supplier;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.core.SupplierDao;
@@ -28,6 +29,15 @@ public class SupplierDaoImpl extends BaseDaoImpl implements SupplierDao {
     public List<Supplier> getListOrderedByName() {
         return (List<Supplier>) getSession().createQuery("from Supplier s order by s.name asc").list();
     }
+    
+    public Supplier save(Supplier supplier){
+
+        if(supplier.getCreateDate() == null){
+          supplier.setCreateDate(BaseUtils.getCurrentTimestamp());
+        }
+        supplier.setUpdateDate(BaseUtils.getCurrentTimestamp());
+        return (Supplier) super.save(supplier);
+      }
 
     public Page getSupplierByTinAndName(String tinNumber, String name, int page, int perPage) {
         DetachedCriteria criteria = DetachedCriteria.forClass(Supplier.class);
