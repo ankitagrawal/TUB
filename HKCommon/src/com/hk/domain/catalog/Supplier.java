@@ -1,5 +1,6 @@
 package com.hk.domain.catalog;
 
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,148 +8,175 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "supplier")
-/*@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)*/
+/* @Cache(usage = CacheConcurrencyStrategy.READ_WRITE) */
 public class Supplier implements java.io.Serializable {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "id", unique = true, nullable = false)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", unique = true, nullable = false)
+    private Long   id;
 
-	@Column(name = "name", nullable = false, length = 100)
-	private String name;
+    @Column(name = "name", nullable = false, length = 100)
+    private String name;
 
-	@Column(name = "line1")
-	private String line1;
+    @Column(name = "line1")
+    private String line1;
 
-	@Column(name = "line2")
-	private String line2;
+    @Column(name = "line2")
+    private String line2;
 
-	@Column(name = "city")
-	private String city;
+    @Column(name = "city")
+    private String city;
 
-	@Column(name = "state")
-	private String state;
+    @Column(name = "state")
+    private String state;
 
-	@Column(name = "pincode")
-	private String pincode;
+    @Column(name = "pincode")
+    private String pincode;
 
-	@Column(name = "tin_number", unique = true)
-	private String tinNumber;
+    @Column(name = "tin_number", unique = true)
+    private String tinNumber;
 
-	@Column(name = "contact_person")
-	private String contactPerson;
+    @Column(name = "contact_person")
+    private String contactPerson;
 
-	@Column(name = "contact_number")
-	private String contactNumber;
+    @Column(name = "contact_number")
+    private String contactNumber;
 
-	public Long getId() {
-		return id;
-	}
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "create_date", length = 19)
+    private Date   createDate;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "update_date", length = 19)
+    private Date   updateDate;
 
-	public String getName() {
-		return name;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getLine1() {
-		return line1;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setLine1(String line1) {
-		this.line1 = line1;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getLine2() {
-		return line2;
-	}
+    public String getLine1() {
+        return line1;
+    }
 
-	public void setLine2(String line2) {
-		this.line2 = line2;
-	}
+    public void setLine1(String line1) {
+        this.line1 = line1;
+    }
 
-	public String getCity() {
-		return city;
-	}
+    public String getLine2() {
+        return line2;
+    }
 
-	public void setCity(String city) {
-		this.city = city;
-	}
+    public void setLine2(String line2) {
+        this.line2 = line2;
+    }
 
-	public String getState() {
-		return state;
-	}
+    public String getCity() {
+        return city;
+    }
 
-	public void setState(String state) {
-		this.state = state;
-	}
+    public void setCity(String city) {
+        this.city = city;
+    }
 
-	public String getPincode() {
-		return pincode;
-	}
+    public String getState() {
+        return state;
+    }
 
-	public void setPincode(String pincode) {
-		this.pincode = pincode;
-	}
+    public void setState(String state) {
+        this.state = state;
+    }
 
-	public String getTinNumber() {
-		return tinNumber;
-	}
+    public String getPincode() {
+        return pincode;
+    }
 
-	public void setTinNumber(String tinNumber) {
-		this.tinNumber = tinNumber;
-	}
+    public void setPincode(String pincode) {
+        this.pincode = pincode;
+    }
 
-	public String getContactPerson() {
-		return contactPerson;
-	}
+    public String getTinNumber() {
+        return tinNumber;
+    }
 
-	public void setContactPerson(String contactPerson) {
-		this.contactPerson = contactPerson;
-	}
+    public void setTinNumber(String tinNumber) {
+        this.tinNumber = tinNumber;
+    }
 
-	public String getContactNumber() {
-		return contactNumber;
-	}
+    public String getContactPerson() {
+        return contactPerson;
+    }
 
-	public void setContactNumber(String contactNumber) {
-		this.contactNumber = contactNumber;
-	}
+    public void setContactPerson(String contactPerson) {
+        this.contactPerson = contactPerson;
+    }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		//if (o == null || getClass() != o.getClass()) return false;
+    public Date getCreateDate() {
+        return createDate;
+    }
 
-		if (o instanceof Supplier) {
-			Supplier that = (Supplier) o;
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
 
-			if (getTinNumber() != null ? !getTinNumber().equals(that.getTinNumber()) : that.getTinNumber() != null) return false;
+    public Date getUpdateDate() {
+        return updateDate;
+    }
 
-			return true;
-		} else {
-			return false;
-		}
-	}
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
 
-	@Override
-	public int hashCode() {
-		return getName() != null ? getName().hashCode() : 0;
-	}
+    public String getContactNumber() {
+        return contactNumber;
+    }
 
-	@Override
-  public String toString() {
-    return this.id != null ? this.id.toString() : "";
-  }
+    public void setContactNumber(String contactNumber) {
+        this.contactNumber = contactNumber;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        // if (o == null || getClass() != o.getClass()) return false;
+
+        if (o instanceof Supplier) {
+            Supplier that = (Supplier) o;
+
+            if (getTinNumber() != null ? !getTinNumber().equals(that.getTinNumber()) : that.getTinNumber() != null)
+                return false;
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return getName() != null ? getName().hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return this.id != null ? this.id.toString() : "";
+    }
 }

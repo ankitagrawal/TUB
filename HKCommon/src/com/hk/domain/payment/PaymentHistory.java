@@ -20,7 +20,6 @@ import com.hk.domain.inventory.po.PurchaseOrder;
 @Entity
 @Table(name = "payment_history")
 public class PaymentHistory implements java.io.Serializable {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", unique = true, nullable = false)

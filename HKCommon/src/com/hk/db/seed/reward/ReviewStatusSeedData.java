@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.hk.constants.review.EnumReviewStatus;
 import com.hk.db.seed.BaseSeedData;
-import com.hk.domain.userReview.ReviewStatus;
+import com.hk.domain.review.ReviewStatus;
 
 
 public class ReviewStatusSeedData  extends BaseSeedData {

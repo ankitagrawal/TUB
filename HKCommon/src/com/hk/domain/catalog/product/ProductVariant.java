@@ -160,6 +160,23 @@ public class ProductVariant implements java.io.Serializable {
     @Column(name = "lead_time", nullable = true)
     private Long                      leadTime;
 
+    @Column(name = "lead_time_factor", nullable = true)
+    private Double                    leadTimeFactor;
+
+    @Column(name = "buffer_time", nullable = true)
+    private Long                      bufferTime;
+
+    @Column(name = "consumption_time", nullable = true)
+    private Long                      consumptionTime;
+
+    @Temporal(TemporalType.DATE)
+    @Column(name = "next_available_date", nullable = true, length = 19)
+    private Date                      nextAvailableDate;
+
+    @Temporal(TemporalType.DATE)
+    @Column(name = "following_available_date", nullable = true, length = 19)
+    private Date                      followingAvailableDate;
+
     public List<ProductImage> getProductImages() {
         return productImages;
     }
@@ -330,6 +347,46 @@ public class ProductVariant implements java.io.Serializable {
 
     public void setServiceType(ProductVariantServiceType serviceType) {
         this.serviceType = serviceType;
+    }
+
+    public Double getLeadTimeFactor() {
+        return leadTimeFactor;
+    }
+
+    public void setLeadTimeFactor(Double leadTimeFactor) {
+        this.leadTimeFactor = leadTimeFactor;
+    }
+
+    public Long getBufferTime() {
+        return bufferTime;
+    }
+
+    public void setBufferTime(Long bufferTime) {
+        this.bufferTime = bufferTime;
+    }
+
+    public Long getConsumptionTime() {
+        return consumptionTime;
+    }
+
+    public void setConsumptionTime(Long consumptionTime) {
+        this.consumptionTime = consumptionTime;
+    }
+
+    public Date getNextAvailableDate() {
+        return nextAvailableDate;
+    }
+
+    public void setNextAvailableDate(Date nextAvailableDate) {
+        this.nextAvailableDate = nextAvailableDate;
+    }
+
+    public Date getFollowingAvailableDate() {
+        return followingAvailableDate;
+    }
+
+    public void setFollowingAvailableDate(Date followingAvailableDate) {
+        this.followingAvailableDate = followingAvailableDate;
     }
 
     public Double getShippingForQty(Long qty) {

@@ -8,7 +8,7 @@ import net.sourceforge.stripes.validation.ValidationError;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.hk.domain.userReview.UserReview;
+import com.hk.domain.review.UserReview;
 import com.hk.pact.dao.BaseDao;
 
 /**

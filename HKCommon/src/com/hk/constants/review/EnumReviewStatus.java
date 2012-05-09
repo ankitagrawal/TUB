@@ -3,7 +3,7 @@ package com.hk.constants.review;
 import java.util.Arrays;
 import java.util.List;
 
-import com.hk.domain.userReview.ReviewStatus;
+import com.hk.domain.review.ReviewStatus;
 
 public enum EnumReviewStatus {
 
