@@ -74,19 +74,35 @@
 		</bean>-->
 
 
+
 	<bean id="dataSource"
 		class="org.apache.commons.dbcp.BasicDataSource">
 		<property name="driverClassName">
 			<value>com.mysql.jdbc.Driver</value>
 		</property>
 		<property name="url">
-			<value>jdbc:mysql://localhost:3306/healthkart_dev</value>
+			<value>jdbc:mysql://localhost:3306/healthkart_stag</value>
 		</property>
 		<property name="username">
 			<value>root</value>
 		</property>
 		<property name="password">
-			<value></value>
+			<value>admin2K11!</value>
+		</property>
+		<property name="maxActive">
+			<value>50</value>
+		</property>
+		<property name="maxWait">
+			<value>15000</value>
+		</property>
+		<property name="removeAbandoned">
+			<value>true</value>
+		</property>
+		<property name="removeAbandonedTimeout">
+			<value>30</value>
+		</property>
+		<property name="maxIdle">
+			<value>20</value>
 		</property>
 		<property name="initialSize">
 			<value>50</value>
@@ -96,6 +112,7 @@
 		<property name="maxOpenPreparedStatements" value="30" />
 		<property name="timeBetweenEvictionRunsMillis" value="-1" />
 	</bean>
+
 
 	<!--  bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
 		<property name="driverClass">
