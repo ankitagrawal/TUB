@@ -17,7 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.admin.pact.dao.inventory.PurchaseInvoiceDao;
+import com.hk.admin.pact.dao.inventory.PurchaseOrderDao;
 import com.hk.admin.pact.dao.payment.PaymentHistoryDao;
+import com.hk.admin.util.StockProcurementHelper;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.inventory.po.PurchaseInvoice;
@@ -27,14 +30,10 @@ import com.hk.domain.payment.PaymentHistory;
 @Secure(hasAnyPermissions = { PermissionConstants.MANAGE_PAYMENT_HISTORY })
 public class PaymentHistoryAction extends BaseAction {
     private static Logger        logger             = LoggerFactory.getLogger(PaymentHistoryAction.class);
-    /*@Autowired
-    PurchaseOrderDao             purchaseOrderDao;
 
+    
     @Autowired
-    PurchaseInvoiceDao           purchaseInvoiceDao;*/
-
-    @Autowired
-    private PaymentHistoryDao            paymentHistoryDao;
+    private PaymentHistoryDao    paymentHistoryDao;
 
     private PaymentHistory       paymentHistory;
     private Long                 purchaseOrderId;
@@ -50,17 +49,16 @@ public class PaymentHistoryAction extends BaseAction {
 
     @DefaultHandler
     public Resolution pre() {
-        
+
         if (purchaseOrderId != null) {
             purchaseOrder = getBaseDao().get(PurchaseOrder.class, purchaseOrderId);
             paymentHistories = paymentHistoryDao.getByPurchaseOrder(purchaseOrder);
             Collections.reverse(paymentHistories);
         } else if (purchaseInvoiceId != null) {
             outstandingAmount = 0.00;
-            purchaseInvoice = purchaseInvoiceDao.find(purchaseInvoiceId);
-            StockProcurementService stopProcurementService = new StockProcurementService();
-            purchaseOrder = stopProcurementService.getPurchaseOrderForPurchaseInvoice(purchaseInvoice);
-            purchaseInvoice = purchaseInvoiceDao.find(purchaseInvoiceId);
+            purchaseInvoice = getBaseDao().get(PurchaseInvoice.class, purchaseInvoiceId);
+            purchaseOrder = StockProcurementHelper.getPurchaseOrderForPurchaseInvoice(purchaseInvoice);
+            //purchaseInvoice = purchaseInvoiceDao.find(purchaseInvoiceId);
             supplier = purchaseInvoice.getSupplier();
             paymentHistories = paymentHistoryDao.getByPurchaseInvoice(purchaseInvoice);
             if (purchaseOrder != null && paymentHistories.isEmpty()) {
@@ -97,15 +95,15 @@ public class PaymentHistoryAction extends BaseAction {
                 addRedirectAlertMessage(new SimpleMessage("Please add either purchase invoice id or purchase order id."));
                 return new RedirectResolution(PaymentHistoryAction.class);
             } else if (purchaseOrderId != null) {
-                purchaseOrder = purchaseOrderDao.find(purchaseOrderId);
+                purchaseOrder = getBaseDao().get(PurchaseOrder.class, purchaseOrderId);
                 paymentHistories = paymentHistoryDao.getByPurchaseOrder(purchaseOrder);
                 return new RedirectResolution(PaymentHistoryAction.class).addParameter("purchaseOrderId", purchaseOrderId);
             } else {
                 outstandingAmount = 0.00;
-                purchaseInvoice = purchaseInvoiceDao.find(purchaseInvoiceId);
+                purchaseInvoice = getBaseDao().get(PurchaseInvoice.class, purchaseInvoiceId);
                 supplier = purchaseInvoice.getSupplier();
-                StockProcurementService stopProcurementService = new StockProcurementService();
-                purchaseOrder = stopProcurementService.getPurchaseOrderForPurchaseInvoice(purchaseInvoice);
+                //StockProcurementService stopProcurementService = new StockProcurementService();
+                purchaseOrder = StockProcurementHelper.getPurchaseOrderForPurchaseInvoice(purchaseInvoice);
                 paymentHistories = paymentHistoryDao.getByPurchaseInvoice(purchaseInvoice);
                 if (purchaseOrder != null && paymentHistories.isEmpty()) {
                     paymentHistoriesPO = paymentHistoryDao.getByPurchaseOrder(purchaseOrder);
@@ -163,7 +161,7 @@ public class PaymentHistoryAction extends BaseAction {
 
     public Resolution delete() {
         // pincodeDefaultCourierDao.save(pincodeDefaultCourier);
-        paymentHistoryDao.remove(paymentHistory.getId());
+        getBaseDao().delete(paymentHistory);
         addRedirectAlertMessage(new SimpleMessage("Payment History record deleted.."));
         if (purchaseOrderId != null) {
             return new RedirectResolution(PaymentHistoryAction.class).addParameter("purchaseOrderId", purchaseOrderId);
@@ -183,13 +181,13 @@ public class PaymentHistoryAction extends BaseAction {
         try {
             PaymentHistory paymentHistoryNew = new PaymentHistory();
             if (purchaseOrderId != null) {
-                paymentHistoryNew.setPurchaseOrder(purchaseOrderDao.find(purchaseOrderId));
+                paymentHistoryNew.setPurchaseOrder(getBaseDao().get(PurchaseOrder.class, purchaseOrderId));
             }
             if (purchaseInvoiceId != null) {
 
-                purchaseInvoice = purchaseInvoiceDao.find(purchaseInvoiceId);
-                StockProcurementService stopProcurementService = new StockProcurementService();
-                purchaseOrder = stopProcurementService.getPurchaseOrderForPurchaseInvoice(purchaseInvoice);
+                purchaseInvoice = getBaseDao().get(PurchaseInvoice.class, purchaseInvoiceId);
+                //StockProcurementService stopProcurementService = new StockProcurementService();
+                purchaseOrder = StockProcurementHelper.getPurchaseOrderForPurchaseInvoice(purchaseInvoice);
                 paymentHistoryNew.setPurchaseInvoice(purchaseInvoice);
             }
             if (paymentHistory.getAmount() != null) {
@@ -210,7 +208,7 @@ public class PaymentHistoryAction extends BaseAction {
             paymentHistoryDao.save(paymentHistoryNew);
         } catch (Exception e) {
             logger.error("Could not insert new payment detail: ", e); // To change body of catch statement use File |
-                                                                        // Settings | File Templates.
+            // Settings | File Templates.
         }
 
         if (purchaseOrderId != null) {

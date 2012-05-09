@@ -12,7 +12,7 @@ import com.hk.pact.dao.BaseDao;
 public interface PurchaseInvoiceDao extends BaseDao {
 
     public Page searchPurchaseInvoice(PurchaseInvoice purchaseInvoice, PurchaseInvoiceStatus purchaseInvoiceStatus, User createdBy, String invoiceNumber, String tinNumber,
-            String supplierName, int pageNo, int perPage);
+            String supplierName, int pageNo, int perPage,Boolean isReconciled);
 
     public List<PurchaseInvoice> listPurchaseInvoiceWithProductVariant(ProductVariant productVariant);
 
