@@ -47,6 +47,16 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao {
                 "incartOrderStatusId", EnumOrderStatus.InCart.getId()).setParameter("user", user).setMaxResults(1).list();
         return orders == null || orders.isEmpty() ? null : orders.get(0);
     }
+    
+    public List<Order> getOrdersForUserSortedByDate(List<OrderStatus> orderStatusList, User user) {
+        DetachedCriteria orderCriteria = DetachedCriteria.forClass(Order.class);
+        DetachedCriteria userCriteria = orderCriteria.createCriteria("user");
+        userCriteria.add(Restrictions.eq("id", user.getId()));
+
+        orderCriteria.add(Restrictions.in("orderStatus", orderStatusList));
+        orderCriteria.addOrder(org.hibernate.criterion.Order.desc("createDate"));
+        return findByCriteria(orderCriteria);
+    }
 
     public Page listOrdersForUser(List<OrderStatus> orderStatusList, User user, int page, int perPage) {
         DetachedCriteria criteria = DetachedCriteria.forClass(Order.class);
@@ -110,15 +120,7 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao {
         return (Long) getSession().createQuery("select count(*) from Order o where o.orderStatus.id = :orderStatusId").setLong("orderStatusId", enumOrderStatus.getId()).uniqueResult();
     }
 
-    public List<Order> getOrdersForUserSortedByDate(List<OrderStatus> orderStatusList, User user) {
-        DetachedCriteria orderCriteria = DetachedCriteria.forClass(Order.class);
-        DetachedCriteria userCriteria = orderCriteria.createCriteria("user");
-        userCriteria.add(Restrictions.eq("id", user.getId()));
-
-        orderCriteria.add(Restrictions.in("orderStatus", orderStatusList));
-        orderCriteria.addOrder(org.hibernate.criterion.Order.desc("createDate"));
-        return findByCriteria(orderCriteria);
-    }
+   
 
     public Long getBookedQtyOfProductVariantInQueue(ProductVariant productVariant) {
         // TODO : A BO can be put onhold even after split.
