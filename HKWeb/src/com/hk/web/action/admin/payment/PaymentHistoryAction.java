@@ -17,8 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.admin.pact.dao.inventory.PurchaseInvoiceDao;
-import com.hk.admin.pact.dao.inventory.PurchaseOrderDao;
+import com.hk.admin.pact.dao.payment.PaymentHistoryDao;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.inventory.po.PurchaseInvoice;
@@ -35,7 +34,7 @@ public class PaymentHistoryAction extends BaseAction {
     PurchaseInvoiceDao           purchaseInvoiceDao;*/
 
     @Autowired
-    PaymentHistoryDao            paymentHistoryDao;
+    private PaymentHistoryDao            paymentHistoryDao;
 
     private PaymentHistory       paymentHistory;
     private Long                 purchaseOrderId;

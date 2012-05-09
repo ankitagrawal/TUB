@@ -1,5 +1,7 @@
 package com.hk.impl.dao.email;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,9 +44,10 @@ public class EmailerHistoryDaoImpl extends BaseDaoImpl implements EmailerHistory
         return save(emailerHistory);
     }
 
-    public EmailerHistory findEmailRecipientByCampaign(EmailRecepient emailRecepient, EmailCampaign emailCampaign) {
-        return (EmailerHistory) getSession().createQuery("from EmailerHistory where emailRecepient =:emailRecepient and emailCampaign =:emailCampaign").setParameter(
-                "emailCampaign", emailCampaign).setParameter("emailRecepient", emailRecepient).uniqueResult();
+    @SuppressWarnings("unchecked")
+    public List<EmailerHistory> findEmailRecipientByCampaign(EmailRecepient emailRecepient, EmailCampaign emailCampaign) {
+        return getSession().createQuery("from EmailerHistory eh where eh.emailRecepient.email =:email and eh.emailCampaign.id =:emailCampaignId").setParameter("email",
+                emailRecepient.getEmail()).setParameter("emailCampaignId", emailCampaign.getId()).list();
     }
 
     public EmailerHistory findEmailRecipientByCampaignAndEmailType(EmailRecepient emailRecepient, EmailCampaign emailCampaign, EmailType emailType) {

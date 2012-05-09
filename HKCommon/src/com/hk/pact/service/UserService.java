@@ -1,9 +1,11 @@
 package com.hk.pact.service;
 
 import java.util.List;
+import java.util.Set;
 
 import com.akube.framework.dao.Page;
 import com.hk.domain.catalog.category.Category;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
@@ -16,8 +18,7 @@ public interface UserService {
     public User getUserById(Long userId);
 
     public User findByLogin(String email);
-    
-    
+
     public List<User> findByEmail(String email);
 
     public User getAdminUser();
@@ -33,7 +34,7 @@ public interface UserService {
     public Page getAllUnverifiedMailingList(int pageNo, int perPage);
 
     public void updateIsProductBought(Order order);
-    
+
     public User findByUserHash(String userHash);
 
     public User save(User user);

@@ -1,5 +1,7 @@
 package com.hk.pact.dao.email;
 
+import java.util.List;
+
 import com.hk.domain.core.EmailType;
 import com.hk.domain.email.EmailCampaign;
 import com.hk.domain.email.EmailRecepient;
@@ -13,7 +15,7 @@ public interface EmailerHistoryDao extends BaseDao {
     public EmailerHistory createEmailerHistory(String senderEmail, String senderName, EmailType emailType, EmailRecepient emailRecepient, EmailCampaign emailCampaign,
             String customText);
 
-    public EmailerHistory findEmailRecipientByCampaign(EmailRecepient emailRecepient, EmailCampaign emailCampaign);
+    public List<EmailerHistory>  findEmailRecipientByCampaign(EmailRecepient emailRecepient, EmailCampaign emailCampaign);
 
     public EmailerHistory findEmailRecipientByCampaignAndEmailType(EmailRecepient emailRecepient, EmailCampaign emailCampaign, EmailType emailType);
 

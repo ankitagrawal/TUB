@@ -2,12 +2,15 @@ package com.hk.admin.impl.dao.payment;
 
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import com.hk.admin.pact.dao.payment.PaymentHistoryDao;
 import com.hk.domain.inventory.po.PurchaseInvoice;
 import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.payment.PaymentHistory;
 import com.hk.impl.dao.BaseDaoImpl;
 
+@Repository
 public class PaymentHistoryDaoImpl extends BaseDaoImpl implements PaymentHistoryDao  {
 
     public List<PaymentHistory> getByPurchaseOrder(PurchaseOrder purchaseOrder) {
