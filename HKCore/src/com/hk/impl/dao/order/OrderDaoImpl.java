@@ -43,7 +43,8 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao {
 
     public Order getLatestOrderForUser(User user) {
         @SuppressWarnings( { "unchecked" })
-        List<Order> orders = getSession().createQuery("from Order o where o.user = :user and " + "o.orderStatus.id <> :incartOrderStatusId order by o.payment.paymentDate desc").setParameter(
+        List<Order> orders = getSession().createQuery("from Order o where o.user = :user and " + "o.orderStatus.id <> :incartOrderStatusId " +
+        		"order by o.payment.paymentDate desc").setParameter(
                 "incartOrderStatusId", EnumOrderStatus.InCart.getId()).setParameter("user", user).setMaxResults(1).list();
         return orders == null || orders.isEmpty() ? null : orders.get(0);
     }
