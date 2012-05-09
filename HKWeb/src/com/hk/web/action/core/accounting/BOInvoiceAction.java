@@ -11,8 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.admin.impl.dao.courier.CourierDao;
-import com.hk.admin.impl.dao.courier.CourierServiceInfoDao;
+import com.hk.admin.pact.dao.courier.CourierDao;
+import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.order.Order;
 import com.hk.dto.pricing.PricingDto;

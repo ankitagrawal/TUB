@@ -7,8 +7,8 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.hk.admin.impl.dao.courier.CourierDao;
-import com.hk.admin.impl.dao.courier.CourierServiceInfoDao;
+import com.hk.admin.pact.dao.courier.CourierDao;
+import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.shipment.EnumCourier;

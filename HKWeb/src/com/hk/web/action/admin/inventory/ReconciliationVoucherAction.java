@@ -19,9 +19,9 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
-import com.hk.admin.impl.dao.inventory.AdminProductVariantInventoryDao;
-import com.hk.admin.impl.dao.inventory.AdminSkuItemDao;
-import com.hk.admin.impl.dao.inventory.ReconciliationVoucherDao;
+import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
+import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
+import com.hk.admin.pact.dao.inventory.ReconciliationVoucherDao;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.inventory.EnumInvTxnType;

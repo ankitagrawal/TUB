@@ -1,12 +1,12 @@
-<%@ page import="com.hk.service.ServiceLocatorFactory" %>
-<%@ page import="com.hk.constants.order.EnumCartLineItemType" %>
-<%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus" %>
-<%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
-<%@ page import="com.hk.pact.service.shippingOrder.ShippingOrderStatusService" %>
+<%@ page import="app.bootstrap.guice.InjectorFactory" %>
+<%@ page import="mhc.common.constants.EnumCartLineItemType" %>
+<%@ page import="mhc.common.constants.shippingOrder.EnumShippingOrderStatus" %>
+<%@ page import="mhc.service.dao.CategoryDao" %>
+<%@ page import="mhc.service.shippingOrder.ShippingOrderStatusService" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="com.hk.web.action.admin.queue.ChooseOrdersForPrintPickAction" var="printPickBean"/>
+<s:useActionBean beanclass="mhc.web.action.admin.ChooseOrdersForPrintPickAction" var="printPickBean"/>
 <c:set var="lineItemTypeId_Product" value="<%=EnumCartLineItemType.Product.getId()%>"/>
 <%
   int lineItemGlobalCtr = 0;
@@ -15,11 +15,12 @@
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Print Pack Awaiting Queue">
   <s:layout-component name="htmlHead">
     <%
-        ShippingOrderStatusService shippingOrderStatusService = ServiceLocatorFactory.getService(ShippingOrderStatusService.class);
-              pageContext.setAttribute("statusForPrinting", shippingOrderStatusService.find(EnumShippingOrderStatus.SO_ReadyForProcess));
-              pageContext.setAttribute("statusForPicking", shippingOrderStatusService.find(EnumShippingOrderStatus.SO_MarkedForPrinting));
-              CategoryDao categoryDao = (CategoryDao)ServiceLocatorFactory.getService(CategoryDao.class);
-              pageContext.setAttribute("categoryList", categoryDao.getPrimaryCategories());
+
+      ShippingOrderStatusService shippingOrderStatusService = InjectorFactory.getInjector().getInstance(ShippingOrderStatusService.class);
+      pageContext.setAttribute("statusForPrinting", shippingOrderStatusService.find(EnumShippingOrderStatus.SO_ReadyForProcess));
+      pageContext.setAttribute("statusForPicking", shippingOrderStatusService.find(EnumShippingOrderStatus.SO_MarkedForPrinting));
+      CategoryDao categoryDao = InjectorFactory.getInjector().getInstance(CategoryDao.class);
+      pageContext.setAttribute("categoryList", categoryDao.getPrimaryCategories());
     %>
 
     <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
@@ -80,15 +81,18 @@
       </c:if>
     </div>
     <div align="center">
-      <s:form beanclass="com.hk.web.action.admin.queue.ChooseOrdersForPrintPickAction" method="get" autocomplete="false">
+      <s:form beanclass="mhc.web.action.admin.ChooseOrdersForPrintPickAction" method="get" autocomplete="false">
+        <label width="5" style="font-weight:bold;color:red;font-size:1.2em">Brand To Restrict:</label><s:text name="brand" class="brand" />
         Category
         <s:select name="category" value="${printPickBean.category.name}">
           <c:forEach items="${categoryList}" var="category">
             <s:option value="${category.name}">${category.displayName} </s:option>
           </c:forEach>
         </s:select>
-
         <s:submit name="searchOrdersForPrinting" value="Search By Basket Category" style="font-size:0.9em"/>
+    </div>
+     <div align="center">   
+
 
         SO Gateway Order Id:<s:text name="gatewayOrderId"/>
         BO Gateway Order Id:<s:text name="baseGatewayOrderId"/>
@@ -97,7 +101,7 @@
       </s:form>
     </div>
 
-    <s:form beanclass="com.hk.web.action.admin.queue.ChooseOrdersForPrintPickAction" autocomplete="off">
+    <s:form beanclass="mhc.web.action.admin.ChooseOrdersForPrintPickAction" autocomplete="off">
       <%--  <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${printPickBean}"/>
     <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${printPickBean}"/>--%>
       <s:layout-render name="/pages/admin/queue/shippingOrderDetailGrid.jsp"
@@ -122,7 +126,7 @@
           <div style="float:left; font-size: 0.9em; margin-top: 7px; margin-left:50px">
             <s:submit name="sendOrdersBackToProcessingQueue" id="sendOrdersBackToProcessingQueue"
                       value="Move orders to processing Queue"/>
-            <s:link beanclass="com.hk.web.action.admin.JobCartAction" target="_blank" class="button_orange">
+            <s:link beanclass="mhc.web.action.admin.JobCartAction" target="_blank" class="button_orange">
               <s:param name="category" value="${printPickBean.category}"/>
               <s:hidden name="baseGatewayOrderId" value="${printPickBean.baseGatewayOrderId}"/>
               <s:hidden name="gatewayOrderId" value="${printPickBean.gatewayOrderId}"/>

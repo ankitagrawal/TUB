@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.admin.impl.dao.warehouse.BinDao;
 import com.hk.admin.manager.BinManager;
+import com.hk.admin.pact.dao.warehouse.BinDao;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;

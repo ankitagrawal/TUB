@@ -5,31 +5,33 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.hk.admin.impl.dao.courier.ShipmentDao;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.domain.courier.Shipment;
+import com.hk.pact.dao.BaseDao;
 
 @Service
 public class ShipmentServiceImpl implements ShipmentService {
 
     @Autowired
-    private ShipmentDao shipmentDao;
+    private BaseDao baseDao;
 
     public Shipment saveShipmentDate(Shipment shipment) {
         shipment.setShipDate(new Date());
-        return (Shipment) getShipmentDao().save(shipment);
+        return (Shipment) getBaseDao().save(shipment);
     }
 
     public Shipment save(Shipment shipment) {
-        return (Shipment) getShipmentDao().save(shipment);
+        return (Shipment) getBaseDao().save(shipment);
     }
 
-    public ShipmentDao getShipmentDao() {
-        return shipmentDao;
+    public BaseDao getBaseDao() {
+        return baseDao;
     }
 
-    public void setShipmentDao(ShipmentDao shipmentDao) {
-        this.shipmentDao = shipmentDao;
+    public void setBaseDao(BaseDao baseDao) {
+        this.baseDao = baseDao;
     }
+
+   
 
 }

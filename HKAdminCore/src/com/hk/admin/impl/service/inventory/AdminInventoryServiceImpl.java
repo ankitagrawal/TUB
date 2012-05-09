@@ -7,9 +7,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.hk.admin.impl.dao.inventory.AdminProductVariantInventoryDao;
-import com.hk.admin.impl.dao.inventory.AdminSkuItemDao;
-import com.hk.admin.impl.dao.inventory.PVDamageInventoryDao;
+import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
+import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
+import com.hk.admin.pact.dao.inventory.PVDamageInventoryDao;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.util.BarcodeUtil;
 import com.hk.constants.inventory.EnumInvTxnType;

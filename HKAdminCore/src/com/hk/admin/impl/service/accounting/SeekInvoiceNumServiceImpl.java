@@ -2,7 +2,7 @@ package com.hk.admin.impl.service.accounting;
 
 import org.springframework.stereotype.Service;
 
-import com.hk.admin.impl.dao.accounting.SeekInvoiceNumDao;
+import com.hk.admin.pact.dao.accounting.SeekInvoiceNumDao;
 import com.hk.admin.pact.service.accounting.SeekInvoiceNumService;
 import com.hk.domain.warehouse.Warehouse;
 

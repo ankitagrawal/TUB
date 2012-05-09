@@ -88,7 +88,7 @@ public class SeoManager {
         Product product = getProductService().getProductById(id);
         seoData.setId(id);
         seoData.setH1(product.getName());
-        seoData.setTitle("${product.name} | Buy Online ${product.name} in India");
+        seoData.setTitle( "${product.name} | Buy Online ${product.name} in India");
         seoData.setMetaKeyword("buy ${product.name}, ${product.name} india, buy ${product.name} india, buy ${product.name} online, but ${product.name} online india");
         seoData.setMetaDescription("Buy ${product.name} Online in India at HealthKart.com. Free home delivery across India on orders above Rs. 250");
         seoData.setDescriptionTitle("About ${product.name}");

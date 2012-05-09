@@ -19,7 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import com.hk.admin.impl.dao.courier.CourierDao;
+import com.hk.admin.pact.dao.courier.CourierDao;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.constants.XlsConstants;
 import com.hk.domain.catalog.Manufacturer;

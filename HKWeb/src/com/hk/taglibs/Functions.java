@@ -21,10 +21,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.akube.framework.util.FormatUtils;
-import com.hk.admin.impl.dao.inventory.AdminProductVariantInventoryDao;
-import com.hk.admin.impl.dao.inventory.AdminSkuItemDao;
-import com.hk.admin.impl.dao.inventory.PVDamageInventoryDao;
-import com.hk.admin.impl.dao.inventory.PoLineItemDao;
+import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
+import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
+import com.hk.admin.pact.dao.inventory.PVDamageInventoryDao;
+import com.hk.admin.pact.dao.inventory.PoLineItemDao;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.constants.catalog.image.EnumImageSize;

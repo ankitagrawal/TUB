@@ -34,9 +34,9 @@ import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderStatus;
-import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
 import com.hk.manager.OrderManager;
 import com.hk.pact.dao.OrderStatusDao;
+import com.hk.pact.dao.catalog.category.CategoryDao;
 import com.hk.pact.dao.payment.PaymentModeDao;
 import com.hk.pact.dao.payment.PaymentStatusDao;
 import com.hk.pact.service.OrderStatusService;
@@ -69,7 +69,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
   @Autowired
   PaymentStatusDao paymentStatusDao;
   @Autowired
-  CategoryDaoImpl categoryDao;
+  CategoryDao categoryDao;
   @Autowired
   InvoiceService invoiceService;
   @Autowired

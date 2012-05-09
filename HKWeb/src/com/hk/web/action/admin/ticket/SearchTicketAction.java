@@ -19,7 +19,7 @@ import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.akube.framework.stripes.controller.Breadcrumb;
 import com.hk.admin.dto.ticket.TicketFilterDto;
-import com.hk.admin.impl.dao.ticket.TicketDao;
+import com.hk.admin.pact.dao.ticket.TicketDao;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.Ticket;

@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.hk.admin.impl.dao.marketing.AmazonFeedDao;
+import com.hk.admin.pact.dao.marketing.AmazonFeedDao;
 import com.hk.domain.amazon.AmazonFeed;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;

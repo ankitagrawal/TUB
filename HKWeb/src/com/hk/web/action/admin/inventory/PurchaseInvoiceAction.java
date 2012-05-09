@@ -23,8 +23,8 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
-import com.hk.admin.impl.dao.inventory.GoodsReceivedNoteDao;
-import com.hk.admin.impl.dao.inventory.PurchaseInvoiceDao;
+import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
+import com.hk.admin.pact.dao.inventory.PurchaseInvoiceDao;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;

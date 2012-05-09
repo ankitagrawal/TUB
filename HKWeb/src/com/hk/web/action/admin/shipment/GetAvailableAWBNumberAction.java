@@ -18,7 +18,7 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
-import com.hk.admin.impl.dao.courier.AwbDao;
+import com.hk.admin.pact.dao.courier.AwbDao;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Courier;

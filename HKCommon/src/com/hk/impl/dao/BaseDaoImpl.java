@@ -21,20 +21,20 @@ import org.hibernate.engine.PersistenceContext;
 import org.hibernate.engine.SessionImplementor;
 import org.hibernate.persister.entity.EntityPersister;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.dao.DataAccessException;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.akube.framework.dao.Page;
 import com.hk.pact.dao.BaseDao;
 
 /**
- * 
  * @author vaibhav.adlakha
- *
  */
 @Repository
 @Primary
@@ -158,10 +158,10 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
     public List findByNamedParams(String queryString, String[] params, Object[] values) {
         return getHibernateTemplate().findByNamedParam(queryString, params, values);
     }
-    
+
     public Object findUniqueByNamedParams(String queryString, String[] params, Object[] values) {
-        List<Object> results =  getHibernateTemplate().findByNamedParam(queryString, params, values);
-        
+        List<Object> results = getHibernateTemplate().findByNamedParam(queryString, params, values);
+
         if (results.size() == 1) {
             return results.get(0);
         }

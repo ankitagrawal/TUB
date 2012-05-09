@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.hk.admin.pact.dao.accounting.AccountingInvoiceDao;
 import com.hk.domain.accounting.AccountingInvoice;
 import com.hk.impl.dao.BaseDaoImpl;
 

@@ -6,8 +6,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import com.hk.admin.impl.dao.inventory.AdminSkuItemDao;
-import com.hk.admin.impl.dao.warehouse.BinDao;
+import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
+import com.hk.admin.pact.dao.warehouse.BinDao;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;

@@ -10,6 +10,7 @@ import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,8 @@ import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderStatus;
-import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
+import com.hk.domain.shippingOrder.LineItem;
+import com.hk.pact.dao.catalog.category.CategoryDao;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.web.action.error.AdminPermissionAction;
@@ -46,9 +48,9 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
     @Autowired
     private ShippingOrderStatusService shippingOrderStatusService;
     @Autowired
-    CategoryDaoImpl                        categoryDao;
+    CategoryDao                        categoryDao;
 
-    Page                shippingOrdersPage;
+    Page                               shippingOrdersPage;
     List<ShippingOrder>                shippingOrdersList = new ArrayList<ShippingOrder>();
     Category                           category;
     String                             gatewayOrderId;
@@ -57,6 +59,8 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
 
     private static final int           PRINTING           = 1;
     private static final int           PICKING            = 2;
+
+    private String                     brand;
 
     private String getActionMessage(int action) {
         switch (action) {
@@ -135,7 +139,8 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
         ShippingOrderSearchCriteria shippingOrderSearchCriteria = getShippingOrderSearchCriteria(EnumShippingOrderStatus.getStatusForPrinting());
         shippingOrderSearchCriteria.setOrderAsc(true);
         shippingOrdersPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, 1, 10);
-        shippingOrdersList = shippingOrdersPage.getList();
+        // shippingOrdersList = shippingOrdersPage.getList();
+        shippingOrdersList = filterShippingOrdersByBrand(shippingOrdersPage);
         return shippingOrdersList;
     }
 
@@ -187,6 +192,28 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
          */
 
         return searchOrdersForPrinting();
+    }
+
+    private List<ShippingOrder> filterShippingOrdersByBrand(Page shippingOrdersPage) {
+        List<ShippingOrder> shippingOrdersTempList = shippingOrdersPage.getList();
+
+        for (ShippingOrder shippingOrder : shippingOrdersTempList) {
+            if (shippingOrdersList.size() == 10) {
+                break;
+            }
+            boolean shouldAdd = true;
+            for (LineItem lineItem : shippingOrder.getLineItems()) {
+                String brandName = lineItem.getSku().getProductVariant().getProduct().getBrand();
+                if (StringUtils.isNotBlank(brandName) && brandName.equalsIgnoreCase(brand)) {
+                    shouldAdd = false;
+                    break;
+                }
+            }
+            if (shouldAdd) {
+                shippingOrdersList.add(shippingOrder);
+            }
+        }
+        return shippingOrdersList;
     }
 
     public int getPerPageDefault() {
@@ -281,6 +308,14 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
 
     public ShippingOrderStatusService getShippingOrderStatusService() {
         return shippingOrderStatusService;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
     }
 
 }

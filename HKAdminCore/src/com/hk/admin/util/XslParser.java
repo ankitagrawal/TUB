@@ -28,10 +28,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.hk.admin.impl.dao.inventory.GrnLineItemDao;
-import com.hk.admin.impl.dao.inventory.PoLineItemDao;
-import com.hk.admin.impl.dao.inventory.PurchaseOrderDao;
-import com.hk.admin.impl.dao.inventory.RetailLineItemDao;
+import com.hk.admin.pact.dao.inventory.GrnLineItemDao;
+import com.hk.admin.pact.dao.inventory.PoLineItemDao;
+import com.hk.admin.pact.dao.inventory.PurchaseOrderDao;
+import com.hk.admin.pact.dao.inventory.RetailLineItemDao;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;

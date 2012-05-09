@@ -1,7 +1,7 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.admin.shipment.UpdateAFLChhotuDeliveryStatusAction" var="AFLDelivery"/>
+<s:useActionBean beanclass="mhc.web.action.admin.UpdateAFLChhotuDeliveryStatusAction" var="AFLDelivery"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Report Master">
 
     <s:layout-component name="htmlHead">
@@ -40,7 +40,7 @@
             <tr>
                 <td>
                     <div class="reportBox">
-                        <s:form beanclass="com.hk.web.action.admin.shipment.UpdateAFLChhotuDeliveryStatusAction">
+                        <s:form beanclass="mhc.web.action.admin.UpdateAFLChhotuDeliveryStatusAction">
                             <s:errors/>
                             <fieldset class="right_label">
                                 <legend>AFL Orders</legend>
@@ -70,7 +70,7 @@
                 </td>
                 <td>
                     <div class="reportBox">
-                        <s:form beanclass="com.hk.web.action.admin.shipment.UpdateAFLChhotuDeliveryStatusAction">
+                        <s:form beanclass="mhc.web.action.admin.UpdateAFLChhotuDeliveryStatusAction">
                             <s:errors/>
                             <fieldset class="right_label">
                                 <legend>Chhotu Orders</legend>
@@ -91,6 +91,36 @@
 
                                     <li>
                                         <s:submit name="updateChhotuStatus" value="Update Delivery Status" class="verifyDateChhotu"/>
+
+                                    </li>
+                                </ul>
+                            </fieldset>
+                        </s:form>
+                    </div>
+                </td>
+                <td>
+                    <div class="reportBox">
+                        <s:form beanclass="mhc.web.action.admin.UpdateAFLChhotuDeliveryStatusAction">
+                            <s:errors/>
+                            <fieldset class="right_label">
+                                <legend>Delhivery Orders</legend>
+                                <ul>
+
+                                    <li>
+                                        <label>Start
+                                            date</label><s:text class="date_input startDate startDateDelhivery" style="width:150px"
+                                                                formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
+                                                                name="startDate"/>
+                                    </li>
+                                    <li>
+                                        <label>End
+                                            date</label><s:text class="date_input endDate endDateDelhivery" style="width:150px"
+                                                                formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
+                                                                name="endDate"/>
+                                    </li>
+
+                                    <li>
+                                        <s:submit name="updateDelhiveryStatus" value="Update Delivery Status" class="verifyDateDelhivery"/>
 
                                     </li>
                                 </ul>

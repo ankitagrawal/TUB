@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hk.admin.impl.dao.marketing.AmazonFeedDao;
+import com.hk.admin.pact.dao.marketing.AmazonFeedDao;
 import com.hk.admin.util.AmazonXslParser;
 import com.hk.domain.amazon.AmazonFeed;
 

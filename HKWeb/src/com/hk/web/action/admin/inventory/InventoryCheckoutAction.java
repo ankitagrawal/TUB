@@ -19,8 +19,8 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
-import com.hk.admin.impl.dao.inventory.AdminProductVariantInventoryDao;
-import com.hk.admin.impl.dao.inventory.AdminSkuItemDao;
+import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
+import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.inventory.EnumInvTxnType;

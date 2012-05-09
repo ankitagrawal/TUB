@@ -14,7 +14,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.jsoup.Jsoup;
 import org.springframework.stereotype.Component;
 
-import com.hk.admin.impl.dao.marketing.AmazonFeedDao;
+import com.hk.admin.pact.dao.marketing.AmazonFeedDao;
 import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.domain.amazon.AmazonFeed;
 import com.hk.domain.catalog.product.Product;

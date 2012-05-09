@@ -1,6 +1,7 @@
 package com.hk.admin.util;
 
 import java.util.HashMap;
+import org.springframework.stereotype.Component
 
 public class AFLResponseParser{
 

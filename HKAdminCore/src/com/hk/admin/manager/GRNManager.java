@@ -22,7 +22,7 @@ import com.hk.admin.dto.inventory.DebitNoteDto;
 import com.hk.admin.dto.inventory.DebitNoteLineItemDto;
 import com.hk.admin.dto.inventory.GRNDto;
 import com.hk.admin.dto.inventory.GrnLineItemDto;
-import com.hk.admin.impl.dao.inventory.GoodsReceivedNoteDao;
+import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.util.TaxUtil;
 import com.hk.domain.accounting.DebitNote;

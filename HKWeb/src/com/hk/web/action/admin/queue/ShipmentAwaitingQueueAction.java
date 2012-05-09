@@ -30,7 +30,7 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
-import com.hk.admin.impl.dao.courier.CourierDao;
+import com.hk.admin.pact.dao.courier.CourierDao;
 import com.hk.admin.pact.service.accounting.SeekInvoiceNumService;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;

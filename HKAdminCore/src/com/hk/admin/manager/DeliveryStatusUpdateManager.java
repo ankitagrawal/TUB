@@ -34,6 +34,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.admin.util.AFLResponseParser;
 import com.hk.admin.util.ChhotuCourierDelivery;
@@ -50,30 +52,29 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 @Component
 public class DeliveryStatusUpdateManager {
 
-    private static Logger     logger                   = LoggerFactory.getLogger(DeliveryStatusUpdateManager.class);
+    private static Logger       logger                       = LoggerFactory.getLogger(DeliveryStatusUpdateManager.class);
 
+    List                        sheetData                    = new ArrayList();
+    ShippingOrder               shippingOrder;
+    String                      addedItems;
+    int                         itemsDeliveredCount;
+    int                         allItemsDeliveredCount;
+    int                         ordersDelivered              = 0;
+    int                         orderDeliveryCount           = 0;
+    String                      courierName                  = "Delivered by ";
+    String                      prefixComments               = "Delivered Items :<br/>";
+    public static final int     digitsInGatewayId            = 5;
+    // private static int acceptableDeliveryPeriod = 50;
 
-    List                      sheetData                = new ArrayList();
-    ShippingOrder             shippingOrder;
-    String                    addedItems;
-    int                       itemsDeliveredCount;
-    int                       allItemsDeliveredCount;
-    int                       ordersDelivered          = 0;
-    int                       orderDeliveryCount       = 0;
-    String                    courierName              = "Delivered by ";
-    String                    prefixComments           = "Delivered Items :<br/>";
-    public static final int   digitsInGatewayId        = 5;
-    //private static int        acceptableDeliveryPeriod = 50;
+    private static final String authenticationIdForDelhivery = "9aaa943a0c74e29b340074d859b2690e07c7fb25";
 
-    LineItemDao               lineItemDaoProvider;
-
-    @Autowired
-    AdminShippingOrderService adminShippingOrderService;
+    LineItemDao                 lineItemDaoProvider;
 
     @Autowired
-    ShippingOrderService      shippingOrderService;
-    
-    
+    AdminShippingOrderService   adminShippingOrderService;
+
+    @Autowired
+    ShippingOrderService        shippingOrderService;
 
     public String updateDeliveryStatusDTDC(File excelFile) throws Exception {
         String messagePostUpdation = "";
@@ -430,6 +431,89 @@ public class DeliveryStatusUpdateManager {
                     - digitsInGatewayId, order_gateway_id.length()));
         }
         return order_gateway_id;
+    }
+
+    public int updateDeliveryStatusDelhivery(Date startDate, Date endDate, User loggedOnUser) {
+
+        List<Long> shippingOrderList = adminShippingOrderService.getShippingOrderListByCourier(startDate, endDate, EnumCourier.Delhivery.getId());
+        // courierName += " Delhivery";
+
+        ordersDelivered = 0;
+        orderDeliveryCount = 0;
+
+        if (shippingOrderList != null || shippingOrderList.size() != 0) {
+            for (Long shippingOrderId : shippingOrderList) {
+
+                ShippingOrder shippingOrderInList = getShippingOrderService().find(shippingOrderId);
+                Shipment shipment = shippingOrderInList.getShipment();
+                String trackingId = shipment.getTrackingId();
+                String ref_no = shippingOrderInList.getGatewayOrderId();
+                addedItems = "";
+                itemsDeliveredCount = 0;
+                allItemsDeliveredCount = 0;
+                try {
+
+                    URL url = new URL("http://track.delhivery.com/api/packages/json/?token=" + authenticationIdForDelhivery + "&ref_nos=" + ref_no);
+                    BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+                    String inputLine;
+                    String jsonFormattedResponse = "";
+
+                    while ((inputLine = in.readLine()) != null) {
+                        jsonFormattedResponse += inputLine;
+                    }
+                    in.close();
+
+                    JsonParser jsonParser = new JsonParser();
+                    JsonObject shipmentObj = jsonParser.parse(jsonFormattedResponse).getAsJsonObject().getAsJsonArray("ShipmentData").get(0).getAsJsonObject().getAsJsonObject(
+                            "Shipment");
+
+                    String status = shipmentObj.getAsJsonObject("Status").get("Status").getAsString();
+                    String awb = shipmentObj.get("AWB").getAsString();
+                    String deliveryDate = shipmentObj.getAsJsonObject("Status").get("StatusDateTime").getAsString();
+
+                    Date delivery_date = getFormattedDeliveryDate(deliveryDate);
+
+                    if (delivery_date != null && status.equalsIgnoreCase("DELIVERED")) {
+                        ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shipment, trackingId, delivery_date);
+                    } else {
+                        logger.error("Delivery date not avaialable or status is not delieved for : " + shipment.getTrackingId());
+                    }
+
+                } catch (MalformedURLException mue) {
+                    logger.error("malformed url for shipping order id " + shippingOrderId);
+                    mue.printStackTrace();
+                    continue;
+                } catch (IOException ioe) {
+                    logger.error("ioexception encounter for shipping order id " + shippingOrderId);
+                    ioe.printStackTrace();
+                    continue;
+                } catch (NullPointerException npe) {
+                    logger.error("null pointer exception encountered for shipping order id " + shippingOrderId);
+                    npe.printStackTrace();
+                    continue;
+                } catch (Exception e) {
+                    logger.error("Exception encountered for shipping order id " + shippingOrderId);
+                    e.printStackTrace();
+                    continue;
+                }
+            }
+        }
+        return ordersDelivered;
+
+    }
+
+    public Date getFormattedDeliveryDate(String deliveryDate) {
+        Date formattedDate = null;
+        if (deliveryDate != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                formattedDate = sdf.parse(deliveryDate);
+            } catch (Exception e) {
+                logger.error(" exception in parsing chhotu courier deliver format : date was :" + deliveryDate);
+            }
+        }
+
+        return formattedDate;
     }
 
     @SuppressWarnings("unchecked")

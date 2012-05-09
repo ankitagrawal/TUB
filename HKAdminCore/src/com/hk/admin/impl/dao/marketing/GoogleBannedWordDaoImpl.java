@@ -17,6 +17,7 @@ public class GoogleBannedWordDaoImpl extends BaseDaoImpl implements GoogleBanned
 
 
   public List<GoogleBannedWordDto> getGoogleBannedWordDtoList() {
+    @SuppressWarnings("unused")
     List<GoogleBannedWordDto> googleBannedWordDtoList = new ArrayList<GoogleBannedWordDto>();
 
     String percentageSymbol = "%";

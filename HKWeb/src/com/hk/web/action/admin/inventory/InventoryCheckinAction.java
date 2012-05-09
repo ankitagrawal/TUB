@@ -33,8 +33,8 @@ import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.admin.impl.dao.inventory.GoodsReceivedNoteDao;
-import com.hk.admin.impl.dao.inventory.GrnLineItemDao;
+import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
+import com.hk.admin.pact.dao.inventory.GrnLineItemDao;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.util.XslParser;
 import com.hk.constants.core.PermissionConstants;

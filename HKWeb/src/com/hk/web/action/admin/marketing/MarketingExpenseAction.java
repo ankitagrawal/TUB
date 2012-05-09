@@ -19,7 +19,7 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
-import com.hk.admin.impl.dao.marketing.MarketingExpenseDao;
+import com.hk.admin.pact.dao.marketing.MarketingExpenseDao;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.marketing.MarketingExpense;

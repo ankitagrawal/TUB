@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 
 import com.hk.admin.dto.inventory.PoLineItemDto;
 import com.hk.admin.dto.inventory.PurchaseOrderDto;
-import com.hk.admin.impl.dao.inventory.PurchaseOrderDao;
+import com.hk.admin.pact.dao.inventory.PurchaseOrderDao;
 import com.hk.admin.util.TaxUtil;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.product.ProductOption;
