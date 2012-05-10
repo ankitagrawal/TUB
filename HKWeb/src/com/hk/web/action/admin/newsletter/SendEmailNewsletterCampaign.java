@@ -237,13 +237,13 @@ public class SendEmailNewsletterCampaign extends BaseAction {
         boolean firstTime = true;
 
         while (tempUsers.size() > 0 || firstTime) {
-            logger.info("Reached Level 0");
+            //logger.info("Reached Level 0");
             users.clear();
             if (categories.equalsIgnoreCase("all")) {
-                logger.info("Reached Level 1");
+                //logger.info("Reached Level 1");
                 users.addAll(mailingListManager.getAllUserList(pageNo, perPage));
             } else if (categories.equalsIgnoreCase("all-unverified")) {
-                logger.info("Reached Level 2");
+                //logger.info("Reached Level 2");
                 users.addAll(mailingListManager.getAllUnverifiedUserList(pageNo, perPage));
             }
 
@@ -252,12 +252,12 @@ public class SendEmailNewsletterCampaign extends BaseAction {
             }
 
             getAdminEmailManager().sendCampaignMails(users, emailCampaign, xsmtpapi);
-            logger.info("Reached Level 4");
+            //logger.info("Reached Level 4");
             if (users.size() == 0 || users.size() < perPage) {
-                logger.info("Reached Level 5");
+                //logger.info("Reached Level 5");
                 break;
             }
-            logger.info("Reached Level 6");
+            //logger.info("Reached Level 6");
             tempUsers = users;
             firstTime = false;
             ++pageNo;
