@@ -656,10 +656,13 @@ public class XslParser {
                         logger.debug("checkinQty of variant - " + productVariant.getId() + " is - " + checkinQty);
                         if (checkinQty != null && checkinQty > 0) {
                             String batch = getCellValue(XlsConstants.BATCH_NUMBER, rowMap, headerMap);
-                            SkuGroup skuGroup = getAdminInventoryService().createSkuGroup(batch, getDate(getCellValue(XlsConstants.MFG_DATE, rowMap, headerMap)),
+                            SkuGroup skuGroup = inventoryService.createSkuGroup(batch, getDate(getCellValue(MFG_DATE, rowMap, headerMap)), getDate(getCellValue(EXP_DATE, rowMap, headerMap)), goodsReceivedNote, null, null, null);
+                            inventoryService.createSkuItemsAndCheckinInventory(skuGroup, checkinQty, null, grnLineItem, null, null, invTxnTypeDao.find(EnumInvTxnType.INV_CHECKIN.getId()), null);
+                            
+                            /*SkuGroup skuGroup = getAdminInventoryService().createSkuGroup(batch, getDate(getCellValue(XlsConstants.MFG_DATE, rowMap, headerMap)),
                                     getDate(getCellValue(XlsConstants.EXP_DATE, rowMap, headerMap)), goodsReceivedNote, null, null);
                             getAdminInventoryService().createSkuItemsAndCheckinInventory(skuGroup, checkinQty, null, grnLineItem, null,
-                                    getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKIN), null);
+                                    getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKIN), null);*/
                             getInventoryService().checkInventoryHealth(productVariant);
                         }
 
