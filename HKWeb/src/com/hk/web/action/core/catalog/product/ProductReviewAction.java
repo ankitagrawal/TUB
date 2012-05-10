@@ -22,7 +22,7 @@ import com.hk.constants.review.EnumReviewStatus;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.content.SeoData;
 import com.hk.domain.review.UserReview;
-import com.hk.pact.dao.review.UserReviewDao;
+import com.hk.pact.dao.review.ReviewDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.review.ReviewService;
@@ -45,7 +45,7 @@ public class ProductReviewAction extends BasePaginatedAction {
     @Autowired
     private UserService      userService;
     @Autowired
-    private UserReviewDao    userReviewDao;
+    private ReviewDao    userReviewDao;
     @Autowired
     private ReviewService    reviewService;
 
@@ -127,7 +127,7 @@ public class ProductReviewAction extends BasePaginatedAction {
         this.userService = userService;
     }
 
-    public void setUserReviewDao(UserReviewDao userReviewDao) {
+    public void setUserReviewDao(ReviewDao userReviewDao) {
         this.userReviewDao = userReviewDao;
     }
 

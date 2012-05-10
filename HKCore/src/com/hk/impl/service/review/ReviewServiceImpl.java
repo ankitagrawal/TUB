@@ -7,14 +7,14 @@ import org.springframework.stereotype.Service;
 
 import com.akube.framework.dao.Page;
 import com.hk.domain.catalog.product.Product;
-import com.hk.pact.dao.review.UserReviewDao;
+import com.hk.pact.dao.review.ReviewDao;
 import com.hk.pact.service.review.ReviewService;
 
 @Service
 public class ReviewServiceImpl implements ReviewService {
 
     @Autowired
-    private UserReviewDao userReviewDao;
+    private ReviewDao userReviewDao;
     
     
     @Override
