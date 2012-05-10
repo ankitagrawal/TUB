@@ -71,6 +71,7 @@ import com.hk.report.dto.sales.DaySaleDto;
 import com.hk.report.dto.sales.DaySaleShipDateWiseDto;
 import com.hk.report.pact.service.order.ReportOrderService;
 import com.hk.report.pact.service.shippingOrder.ReportShippingOrderService;
+import com.hk.util.CartLineItemUtil;
 import com.hk.util.io.HkXlsWriter;
 
 /**
@@ -1461,11 +1462,11 @@ public class ReportManager {
                 xlsWriter.addCell(rowCounter, productVariant.getProduct().getName());
                 xlsWriter.addCell(rowCounter, productVariant.getProduct().getBrand());
                 String variantDetails = productVariant.getOptionsPipeSeparated();
-                String cartLineItemExtraOptions = cartLineItemService.getExtraOptionsPipeSeparated(cartLineItem);
+                String cartLineItemExtraOptions = CartLineItemUtil.getExtraOptionsAsString(cartLineItem, "|");
                 if (!StringUtils.isBlank(cartLineItemExtraOptions)) {
                     variantDetails = variantDetails.concat(" |" + cartLineItemExtraOptions);
                 }
-                String cartLineItemConfigOptions = cartLineItemService.getConfigOptionsPipeSeparated(cartLineItem);
+                String cartLineItemConfigOptions = CartLineItemUtil.getConfigOptionsAsString(cartLineItem, "|");
                 if (!StringUtils.isBlank(cartLineItemConfigOptions)) {
                     variantDetails = variantDetails.concat(cartLineItemConfigOptions);
                 }

@@ -247,7 +247,7 @@ public class SolrManager {
                         for (Address serviceAddress : manufacturerAddresses) {
                             LocalityMap lm = getLocalityMapDao().findByAddress(serviceAddress);
                             if (lm != null) {
-                                if (getLocalityMapDao().getDistanceInMeters(lm.getLattitude(), lm.getLongitude(), mi.getLattitude(), mi.getLongitude()) < 100) {
+                                if (getLocalityMapDao().getDistanceInMeters(lm.getLattitude(), lm.getLongitude(), mi.getLattitude(), mi.getLongitude()) < 60) {
                                     cityFiltered.add(product);
                                     break;
                                 }

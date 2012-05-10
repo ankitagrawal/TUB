@@ -24,7 +24,4 @@ public interface CartLineItemService {
 
     public CartLineItem getMatchingCartLineItemFromOrder(Order order, CartLineItemMatcher cartLineItemMatcher);
 
-    public String getExtraOptionsPipeSeparated(CartLineItem cartLineItem);
-
-    public String getConfigOptionsPipeSeparated(CartLineItem cartLineItem);
 }

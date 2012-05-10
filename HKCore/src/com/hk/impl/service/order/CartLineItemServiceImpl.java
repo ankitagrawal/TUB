@@ -92,7 +92,7 @@ public class CartLineItemServiceImpl implements CartLineItemService {
      * null; }
      */
 
-    public String getExtraOptionsPipeSeparated(CartLineItem cartLineItem) {
+    /*public String getExtraOptionsPipeSeparated(CartLineItem cartLineItem) {
         StringBuffer stringBuffer = new StringBuffer();
         List<CartLineItemExtraOption> cartLineItemExtraOptions = cartLineItem.getCartLineItemExtraOptions();
         if (cartLineItemExtraOptions != null) {
@@ -125,7 +125,7 @@ public class CartLineItemServiceImpl implements CartLineItemService {
             }
         }
         return stringBuffer.toString();
-    }
+    }*/
 
     public CartLineItemDao getCartLineItemDao() {
         return cartLineItemDao;

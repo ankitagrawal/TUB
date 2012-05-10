@@ -29,9 +29,11 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hk.admin.util.XslParser;
 import com.hk.constants.core.PermissionConstants;
+import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
 import com.hk.pact.dao.catalog.product.ProductDao;
 import com.hk.pact.service.catalog.CategoryService;
@@ -47,13 +49,14 @@ public class BulkEditProductAction extends BasePaginatedAction {
     List<Product>                 products          = new ArrayList<Product>();
     String                        category;
     List<String>                  secondaryCategory;
+    List<String>                  supplierTin;
     String                        brand;
     // List<String> options;
     // List<String> extraOptions;
     Map<String, Boolean>          toBeEditedOptions = new HashMap<String, Boolean>();
     Object                        toBeEditedOptionsObject;
     private Integer               defaultPerPage    = 20;
-    Page                 productPage;
+    Page                          productPage;
 
     @Autowired
     ProductDao                    productDao;
@@ -64,7 +67,7 @@ public class BulkEditProductAction extends BasePaginatedAction {
     @Autowired
     private CategoryService       categoryService;
     @Autowired
-    CategoryDaoImpl                   categoryDao;
+    CategoryDaoImpl               categoryDao;
     @Autowired
     XslParser                     xslParser;
 
@@ -90,6 +93,7 @@ public class BulkEditProductAction extends BasePaginatedAction {
         toBeEditedOptions.put("productBrand,", Boolean.FALSE);
         toBeEditedOptions.put("productCategories,", Boolean.FALSE);
         toBeEditedOptions.put("productName,", Boolean.FALSE);
+        toBeEditedOptions.put("productSupplierTin,", Boolean.FALSE);
         toBeEditedOptions.put("productColorOptions,", Boolean.FALSE);
         toBeEditedOptions.put("productGoogleAd,", Boolean.FALSE);
         toBeEditedOptions.put("productAmazonProduct,", Boolean.FALSE);
@@ -116,6 +120,13 @@ public class BulkEditProductAction extends BasePaginatedAction {
         // toBeEditedOptions.put("productVariantLength,", Boolean.FALSE);
         // toBeEditedOptions.put("productVariantBreadth,", Boolean.FALSE);
         // toBeEditedOptions.put("productVariantHeigth;", Boolean.FALSE);
+
+        toBeEditedOptions.put("productVariantConsumptionTime,", Boolean.FALSE);
+        toBeEditedOptions.put("productVariantLeadTime,", Boolean.FALSE);
+        toBeEditedOptions.put("productVariantLeadTimeFactor,", Boolean.FALSE);
+        toBeEditedOptions.put("productVariantBufferTime,", Boolean.FALSE);
+        toBeEditedOptions.put("productVariantNextAvailDate,", Boolean.FALSE);
+        toBeEditedOptions.put("productVariantFollAvailDate,", Boolean.FALSE);
 
         return new ForwardResolution("/pages/bulkProductDetails.jsp");
     }
@@ -191,6 +202,17 @@ public class BulkEditProductAction extends BasePaginatedAction {
                     }
                     product.setSecondaryCategory(secondaryCat);
                 }
+
+                if (supplierTin != null) {
+                    Combo combo = comboDao.find(product.getId());
+                    Supplier supplier = supplierDao.findByTIN(supplierTin.get(ctr));
+                    if (combo == null && supplier == null) {
+                        addRedirectAlertMessage(new SimpleMessage("Supplier corresponding to given tin does not exist for product: " + product.getId()));
+                        return new ForwardResolution("/pages/bulkEditProductDetails.jsp");
+                    }
+                    product.setSupplier(supplier);
+                }
+
                 product = productDao.save(product);
                 ctr++;
             }
@@ -322,6 +344,14 @@ public class BulkEditProductAction extends BasePaginatedAction {
         params.add("toBeEditedOptions");
         params.add("toBeEditedOptionsObject");
         return params;
+    }
+
+    public List<String> getSupplierTin() {
+        return supplierTin;
+    }
+
+    public void setSupplierTin(List<String> supplierTin) {
+        this.supplierTin = supplierTin;
     }
 
     public ProductVariantService getProductVariantService() {

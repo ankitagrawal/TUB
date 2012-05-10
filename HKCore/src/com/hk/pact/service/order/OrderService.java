@@ -6,6 +6,7 @@ import java.util.Set;
 import com.akube.framework.dao.Page;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.OrderSearchCriteria;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -39,14 +40,14 @@ public interface OrderService {
 
     public Order escalateOrderFromActionQueue(Order order, String shippingOrderGatewayId);
 
-    public  Set<OrderCategory> getCategoriesForBaseOrder(Order order);
-    
-    public  Category getBasketCategory(ShippingOrder shippingOrder);
-    
+    public Set<OrderCategory> getCategoriesForBaseOrder(Order order);
+
+    public Category getBasketCategory(ShippingOrder shippingOrder);
+
     public Order getLatestOrderForUser(User user);
 
     public Page listOrdersForUser(User user, int page, int perPage);
-    
+
     public List<Order> getOrdersForUserSortedByDate(List<OrderStatus> orderStatusList, User user);
 
     /**
@@ -56,6 +57,8 @@ public interface OrderService {
      */
 
     public Set<ShippingOrder> splitOrder(Order order) throws OrderSplitException;
+
+    public boolean updateOrderStatusFromShippingOrders(Order order, EnumShippingOrderStatus soStatus, EnumOrderStatus boStatusOnSuccess);
 
     public void approvePendingRewardPointsForOrder(Order order);
 

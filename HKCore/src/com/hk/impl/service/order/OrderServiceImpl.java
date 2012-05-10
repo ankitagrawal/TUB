@@ -222,7 +222,7 @@ public class OrderServiceImpl implements OrderService {
      * order's status to statusToUpdate
      */
     @Transactional
-    private boolean updateOrderStatusFromShippingOrders(Order order, EnumShippingOrderStatus soStatus, EnumOrderStatus boStatusOnSuccess) {
+    public boolean updateOrderStatusFromShippingOrders(Order order, EnumShippingOrderStatus soStatus, EnumOrderStatus boStatusOnSuccess) {
 
         boolean shouldUpdate = true;
 

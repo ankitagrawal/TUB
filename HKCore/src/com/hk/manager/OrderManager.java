@@ -309,6 +309,10 @@ public class OrderManager {
         // order.setAmount(pricingDto.getGrandTotalPayable());
         order.setAmount(pricingDto.getGrandTotalPayable() + codCharges);
         order.setRewardPointsUsed(pricingDto.getRedeemedRewardPoints());
+
+        cartLineItems = addFreeVariantsToCart(cartLineItems); // function made to handle deals and offers which are
+                                                                // associated with a variant, this will help in
+                                                                // minimizing brutal use of free checkout
         order.setCartLineItems(cartLineItems);
 
         // award reward points, if using a reward point offer coupon
@@ -390,6 +394,47 @@ public class OrderManager {
         }
     }
 
+    private Set<CartLineItem> addFreeVariantsToCart(Set<CartLineItem> cartLineItems) {
+        Set<CartLineItem> updatedCartLineItems = new HashSet<CartLineItem>();
+        updatedCartLineItems.addAll(cartLineItems);
+        for (CartLineItem cartLineItem : cartLineItems) {
+            if (cartLineItem.getLineItemType().getId().equals(EnumCartLineItemType.Product.getId())) {
+                ProductVariant freeVariant = cartLineItem.getProductVariant().getFreeProductVariant();
+                if (freeVariant != null) {
+                    CartLineItem existingCartLineItem = getCartLineItemDao().getLineItem(freeVariant, cartLineItem.getOrder());
+                    if (existingCartLineItem != null) {
+                        updatedCartLineItems.remove(existingCartLineItem);
+                    }
+                    CartLineItem freeLineItem = createFreeLineItem(cartLineItem, freeVariant);
+                    if (freeLineItem != null) {
+                        updatedCartLineItems.add(freeLineItem);
+                    }
+                }
+            }
+        }
+        return updatedCartLineItems;
+    }
+
+    // If you dont know what this method does, dont use it, strictly made to handle deals and offers/ free goodies
+    // associated with a variant, hence they are given for free
+    public CartLineItem createFreeLineItem(CartLineItem cartLineItem, ProductVariant freeVariant) throws OutOfStockException {
+        Order order = cartLineItem.getOrder();
+        freeVariant.setQty(cartLineItem.getQty());
+        if (!freeVariant.isOutOfStock()) {
+            CartLineItem existingCartLineItem = getCartLineItemDao().getLineItem(freeVariant, order);
+            if (existingCartLineItem == null) { // The variant is not added in user account already
+                CartLineItem freeCartLineItem = cartLineItemService.createCartLineItemWithBasicDetails(freeVariant, order);
+                freeCartLineItem.setDiscountOnHkPrice(freeVariant.getHkPrice());
+                return cartLineItemService.save(freeCartLineItem);
+            } else {
+                existingCartLineItem.setQty(existingCartLineItem.getQty() + freeVariant.getQty());
+                existingCartLineItem.setDiscountOnHkPrice(existingCartLineItem.getDiscountOnHkPrice() + (freeVariant.getHkPrice() * freeVariant.getQty()));
+                return cartLineItemService.save(existingCartLineItem);
+            }
+        }
+        return null;
+    }
+
     @Transactional
     private Set<CartLineItem> getCartLineItemsFromPricingCartLi(Order order, Set<CartLineItem> cartLineItems) {
         Set<CartLineItem> finalCartLineItems = new HashSet<CartLineItem>();
@@ -411,16 +456,16 @@ public class OrderManager {
             // .tax(serviceTaxProvider.get())
             .hkPrice(codAmount).build();
             cartLineItem.setOrder(order);
-            codLine =  cartLineItem;
+            codLine = cartLineItem;
         } else {
             for (CartLineItem cartLineItem : cartLineItems) {
                 cartLineItem.setHkPrice(codAmount);
                 cartLineItem.setOrder(order);
                 cartLineItem.setQty(1L);
             }
-            codLine= cartLineItems.iterator().next();
+            codLine = cartLineItems.iterator().next();
         }
-        
+
         return getCartLineItemService().save(codLine);
         // cartLineItem.setLineItemStatus(lineItemStatusDao.find(EnumLineItemStatus.NA.getId()));
         // return cartLineItemService.save(cartLineItem);

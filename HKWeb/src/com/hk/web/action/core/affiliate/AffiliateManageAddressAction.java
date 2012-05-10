@@ -30,7 +30,7 @@ import com.hk.pact.service.UserService;
  * Created by IntelliJ IDEA. User: Pratham Date: Sep 13, 2011 Time: 6:18:48 PM To change this template use File |
  * Settings | File Templates.
  */
-@Secure(hasAnyRoles = { RoleConstants.HK_AFFILIATE, RoleConstants.HK_AFFILIATE_UNVERIFIED, RoleConstants.ADMIN })
+/*@Secure(hasAnyRoles = { RoleConstants.HK_AFFILIATE, RoleConstants.HK_AFFILIATE_UNVERIFIED, RoleConstants.ADMIN })
 @Component
 public class AffiliateManageAddressAction extends BaseAction {
     private static Logger logger = Logger.getLogger(AffiliateManageAddressAction.class);
@@ -184,3 +184,4 @@ public class AffiliateManageAddressAction extends BaseAction {
         this.userService = userService;
     }
 }
+*/

@@ -1,17 +1,23 @@
 package com.hk.admin.manager;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -21,17 +27,22 @@ import com.akube.framework.util.DateUtils;
 import com.hk.admin.dto.DisplayTicketHistoryDto;
 import com.hk.admin.dto.marketing.GoogleBannedWordDto;
 import com.hk.constants.catalog.category.CategoryConstants;
+import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.core.EnumEmailType;
+import com.hk.constants.email.EmailMapKeyConstants;
 import com.hk.constants.email.EmailTemplateConstants;
 import com.hk.domain.Ticket;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.EmailType;
+import com.hk.domain.coupon.Coupon;
 import com.hk.domain.email.EmailCampaign;
 import com.hk.domain.email.EmailRecepient;
+import com.hk.domain.email.EmailerHistory;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.marketing.NotifyMe;
 import com.hk.domain.user.User;
+import com.hk.manager.EmailManager;
 import com.hk.manager.LinkManager;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.email.EmailRecepientDao;
@@ -39,28 +50,33 @@ import com.hk.pact.dao.email.EmailerHistoryDao;
 import com.hk.pact.dao.email.NotifyMeDao;
 import com.hk.pact.dao.marketing.EmailCampaignDao;
 import com.hk.pact.service.EmailService;
+import com.hk.pact.service.catalog.ProductService;
 import com.hk.util.NotifyMeListUtil;
+import com.hk.util.io.ExcelSheetParser;
+import com.hk.util.io.HKRow;
 
 @SuppressWarnings("unchecked")
 @Component
 public class AdminEmailManager {
 
+    private static Logger      logger                        = LoggerFactory.getLogger(EmailManager.class);
+
     public static final String GOOGLE_BANNED_WORD_LIST       = "googleBannedWordList";
 
-    private  Set<String>  hkAdminEmails                 = null;
-    private  Set<String>  hkReportAdminEmails           = null;
-    private  Set<String>  babyAdminEmails               = null;
-    private  Set<String>  beautyAdminEmails             = null;
-    private  Set<String>  diabetesAdminEmails           = null;
-    private  Set<String>  eyeAdminEmails                = null;
-    private  Set<String>  homeDevicesAdminEmails        = null;
-    private  Set<String>  nutritionAdminEmails          = null;
-    private  Set<String>  personalCareAdminEmails       = null;
-    private  Set<String>  logisticsAdminEmails          = null;
-    private  Set<String>  sportsAdminEmails             = null;
-    private  Set<String>  servicesAdminEmails           = null;
-    private  Set<String>  marketingAdminEmails          = null;
-    private  Set<String>  categoryHealthkartList        = null;
+    private Set<String>        hkAdminEmails                 = null;
+    private Set<String>        hkReportAdminEmails           = null;
+    private Set<String>        babyAdminEmails               = null;
+    private Set<String>        beautyAdminEmails             = null;
+    private Set<String>        diabetesAdminEmails           = null;
+    private Set<String>        eyeAdminEmails                = null;
+    private Set<String>        homeDevicesAdminEmails        = null;
+    private Set<String>        nutritionAdminEmails          = null;
+    private Set<String>        personalCareAdminEmails       = null;
+    private Set<String>        logisticsAdminEmails          = null;
+    private Set<String>        sportsAdminEmails             = null;
+    private Set<String>        servicesAdminEmails           = null;
+    private Set<String>        marketingAdminEmails          = null;
+    private Set<String>        categoryHealthkartList        = null;
 
     @Value("#{hkEnvProps['hkAdminEmails']}")
     private String             hkAdminEmailsString;
@@ -154,25 +170,32 @@ public class AdminEmailManager {
         headerMap.put("X-SMTPAPI", xsmtpapi);
 
         for (User user : emailersList) {
-            // find exisitng receipients or create receipients thru the emails ids passed
-            EmailRecepient emailRecepient = getEmailRecepientDao().getOrCreateEmailRecepient(user.getEmail());
-            // values that may be used in FTL
-            HashMap valuesMap = new HashMap();
-            valuesMap.put("unsubscribeLink", getLinkManager().getEmailUnsubscribeLink(emailRecepient));
-            valuesMap.put("user", user);
-            // subscribed user + same camapaign mail not yet sent
-            if (emailRecepient.isSubscribed() && getEmailerHistoryDao().findEmailRecipientByCampaign(emailRecepient, emailCampaign) == null) {
-                // last mail date null or last mail date > campaign min date
-                if (emailRecepient.getLastEmailDate() == null
-                        || new DateTime().minusDays(emailCampaign.getMinDayGap().intValue()).isAfter(emailRecepient.getLastEmailDate().getTime())) {
-                    emailService.sendHtmlEmail(emailCampaign.getTemplate(), valuesMap, emailRecepient.getEmail(), user.getName(), "info@healthkart.com", headerMap);
-                    // keep a record in history
-                    emailRecepient.setEmailCount(emailRecepient.getEmailCount() + 1);
-                    emailRecepient.setLastEmailDate(new Date());
-                    getEmailRecepientDao().save(emailRecepient);
-                    getEmailerHistoryDao().createEmailerHistory("no-reply@healthkart.com", "HealthKart", getBaseDao().get(EmailType.class, EnumEmailType.CampaignEmail.getId()),
-                            emailRecepient, emailCampaign, "");
+            try {
+                // find exisitng receipients or create receipients thru the emails ids passed
+                EmailRecepient emailRecepient = getEmailRecepientDao().getOrCreateEmailRecepient(user.getEmail());
+                // values that may be used in FTL
+                HashMap valuesMap = new HashMap();
+                valuesMap.put("unsubscribeLink", getLinkManager().getEmailUnsubscribeLink(emailRecepient));
+                valuesMap.put("user", user);
+                // subscribed user + same camapaign mail not yet sent
+                List<EmailerHistory> emailerHistoryList = getEmailerHistoryDao().findEmailRecipientByCampaign(emailRecepient, emailCampaign);
+                if (emailRecepient.isSubscribed()) {
+                    if (emailerHistoryList != null && emailerHistoryList.isEmpty()) {
+                        // last mail date null or last mail date > campaign min date
+                        if (emailRecepient.getLastEmailDate() == null
+                                || new DateTime().minusDays(emailCampaign.getMinDayGap().intValue()).isAfter(emailRecepient.getLastEmailDate().getTime())) {
+                            emailService.sendHtmlEmail(emailCampaign.getTemplate(), valuesMap, emailRecepient.getEmail(), user.getName(), "info@healthkart.com", headerMap);
+                            // keep a record in history
+                            emailRecepient.setEmailCount(emailRecepient.getEmailCount() + 1);
+                            emailRecepient.setLastEmailDate(new Date());
+                            getEmailRecepientDao().save(emailRecepient);
+                            getEmailerHistoryDao().createEmailerHistory("no-reply@healthkart.com", "HealthKart",
+                                    getBaseDao().get(EmailType.class, EnumEmailType.CampaignEmail.getId()), emailRecepient, emailCampaign, "");
+                        }
+                    }
                 }
+            } catch (Exception e) {
+                logger.info("Some exception occured while sending email to one of the uses, user id being" + user.getId(), e);
             }
         }
         // logger.info("Reached Level 3.5");
@@ -246,7 +269,8 @@ public class AdminEmailManager {
             }
             valuesMap.put("emailCampaign", emailCampaign);
             // subscribed user + same campaign mail not yet sent
-            if (getEmailerHistoryDao().findEmailRecipientByCampaign(emailRecepient, emailCampaign) == null) {
+            List<EmailerHistory> emailerHistoryList = getEmailerHistoryDao().findEmailRecipientByCampaign(emailRecepient, emailCampaign);
+            if (emailerHistoryList != null && emailerHistoryList.isEmpty() && notifyMeObject.getNotifiedByUser() == null) {
                 // last mail date null or last mail date > campaign min date
                 if (emailRecepient.getLastEmailDate() == null
                         || new DateTime().minusDays(emailCampaign.getMinDayGap().intValue()).isAfter(emailRecepient.getLastEmailDate().getTime())) {
@@ -279,6 +303,141 @@ public class AdminEmailManager {
         }
         return true;
     }
+    
+    
+    /**
+     * email_id is a mandatory header for the excel
+     * if a user doesnt exist for an email_id,that entry will be removed
+     * in case the excel file contains product or product variant: the headers need to be product_id,product_variant_id respectively
+     *
+     * @throws IOException
+     */
+    public void sendMailMergeCampaign(EmailCampaign emailCampaign, String excelFilePath, String sheetName) throws IOException {
+      List<String> tags = new ArrayList<String>();
+      ExcelSheetParser parser = new ExcelSheetParser(excelFilePath, sheetName);
+      Iterator<HKRow> rowIterator = parser.parse();
+      int i;
+
+      while (rowIterator != null && rowIterator.hasNext()) {
+        HashMap excelMap = new HashMap();
+        i = 0;
+        HKRow curHkRow = rowIterator.next();
+        while (null != curHkRow && curHkRow.columnValues != null && i < curHkRow.columnValues.length) {
+          String key = parser.getHeadingNames(i);
+          String value = curHkRow.getColumnValue(i);
+          excelMap.put(key.toLowerCase(), value);
+          i++;
+        }
+
+        EmailRecepient emailRecepient = emailRecepientDaoProvider.get().getOrCreateEmailRecepient(excelMap.get(EmailMapKeyConstants.emailId).toString());
+        if (emailRecepient.isSubscribed()) {
+          Boolean emailSentToRecepientRecently = Boolean.FALSE;
+          if (emailRecepient.getLastEmailDate() != null) {
+            Date lastDateCampaignMailSentToEmailRecepient = emailCampaignDaoProvider.get().getLastDateOfEmailCampaignMailSentToEmailRecepient(emailCampaign, emailRecepient);
+            if (lastDateCampaignMailSentToEmailRecepient != null) {
+              emailSentToRecepientRecently = new DateTime().minusDays(emailCampaign.getMinDayGap().intValue()).isBefore(lastDateCampaignMailSentToEmailRecepient.getTime());
+            }
+          }
+          if (!emailSentToRecepientRecently) {
+            HashMap extraMapEntries = getExtraMapEntriesForMailMerge(excelMap);
+            if (extraMapEntries != null) {
+              excelMap.putAll(extraMapEntries);
+            } else {
+              excelMap.clear();
+              continue;
+            }
+
+            excelMap.put(EmailMapKeyConstants.unsubscribeLink, linkManagerProvider.get().getEmailUnsubscribeLink(emailRecepient));
+
+            if (excelMap.containsKey(EmailMapKeyConstants.tags)) {
+              tags = Arrays.asList(StringUtils.split(excelMap.get(EmailMapKeyConstants.tags).toString(), ","));
+            }
+
+            // construct the headers to send
+            String xsmtpapi = SendEmailNewsletterCampaign.getSendgridHeaderJson(tags, emailCampaign);
+            Map<String, String> headerMap = new HashMap<String, String>();
+            headerMap.put("X-SMTPAPI", xsmtpapi);
+
+            emailService.sendHtmlEmail(emailCampaign.getTemplate(), excelMap, (String) excelMap.get(EmailMapKeyConstants.emailId), "", "info@healthkart.com", headerMap);
+
+            emailRecepient.setEmailCount(emailRecepient.getEmailCount() + 1);
+            emailRecepient.setLastEmailDate(new Date());
+            emailRecepientDaoProvider.get().save(emailRecepient);
+            emailerHistoryDaoProvider.get().createEmailerHistory("no-reply@healthkart.com", "HealthKart", emailCampaign.getEmailType(), emailRecepient, emailCampaign, "");
+          }
+        }
+      }
+    }
+    
+    
+    private HashMap getExtraMapEntriesForMailMerge(HashMap excelMap) {
+        List<User> users = userDaoProvider.get().findByEmail(excelMap.get(EmailMapKeyConstants.emailId).toString());
+        if (users != null && users.size() > 0) {
+          excelMap.put(EmailMapKeyConstants.user, users.get(0));
+        } else {
+          return null;
+        }
+
+        if (excelMap.containsKey(EmailMapKeyConstants.couponCode)) {
+          Coupon coupon = couponDaoProvider.get().findByCode(excelMap.get(EmailMapKeyConstants.couponCode).toString());
+          excelMap.put(EmailMapKeyConstants.coupon, coupon);
+        }
+
+        if (excelMap.containsKey(EmailMapKeyConstants.productId)) {
+          Product product = productDaoProvider.get().find(excelMap.get(EmailMapKeyConstants.productId).toString());
+          if (product != null) {
+            Long productMainImageId = product.getMainImageId();
+            excelMap.put(EmailMapKeyConstants.product, product);
+            excelMap.put(EmailMapKeyConstants.productUrl, ProductService.getProductUrl(product));
+
+            if (productMainImageId != null) {
+              excelMap.put(EmailMapKeyConstants.productImageUrlMedium, ImageManager.getS3ImageUrl(EnumImageSize.MediumSize, productMainImageId));
+              excelMap.put(EmailMapKeyConstants.productImageUrlTiny, ImageManager.getS3ImageUrl(EnumImageSize.TinySize, productMainImageId));
+            } else {
+              excelMap.put(EmailMapKeyConstants.productImageUrlMedium, "");
+              excelMap.put(EmailMapKeyConstants.productImageUrlTiny, "");
+            }
+          } else {
+            excelMap.put(EmailMapKeyConstants.product, null);
+            excelMap.put(EmailMapKeyConstants.productUrl, "");
+            excelMap.put(EmailMapKeyConstants.productImageUrlMedium, "");
+            excelMap.put(EmailMapKeyConstants.productImageUrlTiny, "");
+          }
+        }
+
+        if (excelMap.containsKey(EmailMapKeyConstants.productVariantId)) {
+          ProductVariant productVariant = productVariantDaoProvider.get().find(excelMap.get(EmailMapKeyConstants.productVariantId).toString());
+          if (productVariant != null) {
+            excelMap.put(EmailMapKeyConstants.productVariant, productVariant);
+
+            if (!excelMap.containsKey(EmailMapKeyConstants.productId)) {
+              Product product = productVariant.getProduct();
+              Long productMainImageId = product.getMainImageId();
+
+              excelMap.put(EmailMapKeyConstants.product, product);
+              excelMap.put(EmailMapKeyConstants.productUrl, ProductService.getProductUrl(product));
+
+              if (productMainImageId != null) {
+                excelMap.put(EmailMapKeyConstants.productImageUrlMedium, ImageManager.getS3ImageUrl(EnumImageSize.MediumSize, productMainImageId));
+                excelMap.put(EmailMapKeyConstants.productImageUrlTiny, ImageManager.getS3ImageUrl(EnumImageSize.TinySize, productMainImageId));
+              } else {
+                excelMap.put(EmailMapKeyConstants.productImageUrlMedium, "");
+                excelMap.put(EmailMapKeyConstants.productImageUrlTiny, "");
+              }
+            }
+          } else {
+            excelMap.put(EmailMapKeyConstants.productVariant, null);
+            if (!excelMap.containsKey(EmailMapKeyConstants.productId)) {
+              excelMap.put(EmailMapKeyConstants.product, null);
+              excelMap.put(EmailMapKeyConstants.productUrl, "");
+              excelMap.put(EmailMapKeyConstants.productImageUrlMedium, "");
+              excelMap.put(EmailMapKeyConstants.productImageUrlTiny, "");
+            }
+          }
+        }
+        return excelMap;
+      }
+
 
     public boolean sendNotifyUserMailsForPVInStock(List<NotifyMe> notifyMeList, User notifiedByUser) {
         Map<String, String> headerMap = new HashMap<String, String>();
