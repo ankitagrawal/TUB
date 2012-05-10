@@ -13,6 +13,7 @@ import net.sourceforge.stripes.validation.Validate;
 import net.sourceforge.stripes.validation.ValidateNestedProperties;
 
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
@@ -29,6 +30,7 @@ import com.hk.pact.service.UserService;
 @Secure(hasAnyRoles = { RoleConstants.HK_USER, RoleConstants.HK_UNVERIFIED, RoleConstants.ADMIN })
 public class UserManageAddressAction extends BaseAction {
     private static Logger logger = Logger.getLogger(UserManageAddressAction.class);
+    
     Address               address;
     List<Address>         addresses;
     String                mainAddressId;
@@ -43,15 +45,15 @@ public class UserManageAddressAction extends BaseAction {
             @Validate(field = "state", required = true, on = "saveAddress"),
             @Validate(field = "pin", required = true, on = "saveAddress"),
             @Validate(field = "phone", required = true, on = "saveAddress") })
-    @Inject
+    @Autowired
     AffiliateDao          affiliateDao;
-    @Inject
+    @Autowired
     AffiliateManager      affiliateManager;
-    @Inject
+    @Autowired
     UserDao               userDao;
-    @Inject
+    @Autowired
     AddressDao            addressDao;
-    @Inject
+    @Autowired
     UserService           userService;
 
     @DefaultHandler
@@ -59,7 +61,7 @@ public class UserManageAddressAction extends BaseAction {
     public Resolution showAddressBook() {
         // User user = userDao.find(getPrincipal().getId());
         if (user == null) {
-            user = userDao.find(getPrincipal().getId());
+            user = getUserService().getUserById(getPrincipal().getId());
         } else {
             userDao.refresh(user);
         }
@@ -71,7 +73,7 @@ public class UserManageAddressAction extends BaseAction {
 
     public Resolution editUserAddresses() {
         if (getPrincipal() != null) {
-            user = userDao.find(getPrincipal().getId());
+            user = getUserService().getUserById(getPrincipal().getId());
             affiliate = affiliateDao.getAffilateByUser(user);
         }
         // return new RedirectResolution("/pages/editUserAddresses.jsp").addParameter("address", address.getId());
@@ -121,7 +123,7 @@ public class UserManageAddressAction extends BaseAction {
         List<Address> addresses = new ArrayList<Address>();
         if (getPrincipal() != null) {
             // User user = userDao.find(getPrincipal().getId());
-            user = userDao.find(getPrincipal().getId());
+            user = getUserService().getUserById(getPrincipal().getId());
             affiliate = affiliateDao.getAffilateByUser(user);
             addresses = user.getAddresses();
             if (affiliate != null) {
@@ -139,7 +141,7 @@ public class UserManageAddressAction extends BaseAction {
     public Resolution remove() {
         if (getPrincipal() != null) {
             // User user = userDao.find(getPrincipal().getId());
-            user = userDao.find(getPrincipal().getId());
+            user = getUserService().getUserById(getPrincipal().getId());
             affiliate = affiliateDao.getAffilateByUser(user);
             if (affiliate != null && affiliate.getMainAddressId() != null) {
                 if (affiliate.getMainAddressId().equals(address.getId())) {
@@ -159,7 +161,7 @@ public class UserManageAddressAction extends BaseAction {
     public Resolution setAsDefaultAddress() {
         if (getPrincipal() != null) {
             // User user = userDao.find(getPrincipal().getId());
-            user = userDao.find(getPrincipal().getId());
+            user = getUserService().getUserById(getPrincipal().getId());
             affiliate = affiliateDao.getAffilateByUser(user);
             affiliate.setMainAddressId(address.getId());
             mainAddressId = affiliate.getMainAddressId() != null ? affiliate.getMainAddressId().toString() : "";
