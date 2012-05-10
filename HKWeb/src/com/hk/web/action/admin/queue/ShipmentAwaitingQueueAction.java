@@ -34,6 +34,7 @@ import com.hk.admin.pact.dao.courier.CourierDao;
 import com.hk.admin.pact.service.accounting.SeekInvoiceNumService;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
+import com.hk.admin.util.InvoicePDFGenerator;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.shipment.EnumCourier;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
@@ -68,12 +69,15 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
     private CourierService             courierService;
     @Autowired
     private CourierDao                 courierDao;
+    @Autowired
+    InvoicePDFGenerator                invoicePDFgenerator;
 
     List<ShippingOrder>                shippingOrderList = new ArrayList<ShippingOrder>();
 
     private Long                       orderId;
     private String                     gatewayOrderId;
     private Courier                    courier;
+    private SimpleDateFormat           sdf               = new SimpleDateFormat("yyyyMMdd");
 
     // @Named(Keys.Env.adminDownloads)
     @Value("#{hkEnvProps['adminDownloads']}")
@@ -137,6 +141,61 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
         } else {
             addRedirectAlertMessage(new SimpleMessage("Please select at least one order to be marked as shipped"));
         }
+        return new RedirectResolution(ShipmentAwaitingQueueAction.class);
+    }
+
+    public Resolution generatePDFs() {
+        String pdfFilePath = null;
+        if (courier != null) {
+            pdfFilePath = adminDownloads + "/invoicePDFs/" + sdf.format(new Date()) + "/" + courier.getName() + ".pdf";
+        } else {
+            pdfFilePath = adminDownloads + "/invoicePDFs/" + sdf.format(new Date()) + "/All_Couriers.pdf";
+        }
+        final File pdfFile = new File(pdfFilePath);
+        pdfFile.getParentFile().mkdirs();
+        try {
+            List<Courier> courierList = new ArrayList<Courier>();
+            if (courier == null) {
+                courierList = courierService.getAllCouriers();
+            } else {
+                courierList.add(courier);
+            }
+            ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
+            shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForShipmentAwaiting()));
+            shippingOrderSearchCriteria.setCourierList(courierList);
+            shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, true);
+
+            if (shippingOrderList != null & shippingOrderList.size() > 0) {
+                invoicePDFgenerator.generateMasterInvoicePDF(shippingOrderList, pdfFilePath);
+                return new Resolution() {
+
+                    public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
+                        OutputStream out = null;
+                        InputStream in = null;
+                        try {
+                            in = new BufferedInputStream(new FileInputStream(pdfFile));
+                            res.setContentLength((int) pdfFile.length());
+                            res.setHeader("Content-Disposition", "attachment; filename=\"" + pdfFile.getName() + "\";");
+                            out = res.getOutputStream();
+
+                            // Copy the contents of the file to the output stream
+                            byte[] buf = new byte[8192];
+                            int count = 0;
+                            while ((count = in.read(buf)) >= 0) {
+                                out.write(buf, 0, count);
+                            }
+                        } finally {
+                            out.flush();
+                            out.close();
+                            in.close();
+                        }
+                    }
+                };
+            }
+        } catch (Exception ex) {
+            logger.error("Exception occurred while generating pdf.", ex);
+        }
+        addRedirectAlertMessage(new SimpleMessage("Sorry! No shipping orders exist for courier:" + courier.getName().toUpperCase()));
         return new RedirectResolution(ShipmentAwaitingQueueAction.class);
     }
 
