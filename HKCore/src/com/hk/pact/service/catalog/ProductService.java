@@ -35,6 +35,8 @@ public interface ProductService {
      */
     public boolean doesBrandExist(String brandName);
     
+    public String getProductUrl(Product product);
+    
     public List<Product> getAllProducts();
 
     public List<Product> getAllProductBySubCategory(String category);

@@ -3,6 +3,8 @@ package com.hk.impl.service.catalog;
 import java.util.List;
 import java.util.Set;
 
+import net.sourceforge.stripes.controller.StripesFilter;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,7 @@ import com.hk.domain.catalog.product.ProductImage;
 import com.hk.domain.catalog.product.ProductOption;
 import com.hk.pact.dao.catalog.product.ProductDao;
 import com.hk.pact.service.catalog.ProductService;
+import com.hk.web.filter.WebContext;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -49,6 +52,13 @@ public class ProductServiceImpl implements ProductService {
     public ProductOption findProductOptionByNameAndValue(String name, String value) {
         return getProductDAO().findProductOptionByNameAndValue(name, value);
     }
+    
+    public String getProductUrl(Product product) {
+        String host = "http://".concat(StripesFilter.getConfiguration().getSslConfiguration().getUnsecureHost());
+        String contextPath = WebContext.getRequest().getContextPath();
+        String urlString = host.concat(contextPath).concat("/product/");
+        return urlString + product.getSlug() + "/" + product.getId();
+      }
 
     @Override
     public List<Product> getAllProductByBrand(String brand) {
