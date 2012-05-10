@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +34,10 @@ import com.hk.pact.service.order.RewardPointService;
 @Service
 public class AdminOrderServiceImpl implements AdminOrderService {
 
+    
+    private static Logger logger = LoggerFactory.getLogger(AdminOrderService.class);
+    
+    
     @Autowired
     private UserService               userService;
     @Autowired
@@ -74,35 +80,50 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
     @Transactional
     public void cancelOrder(Order order, CancellationType cancellationType, String cancellationRemark, User loggedOnUser) {
-        order.setOrderStatus((orderStatusService.find(EnumOrderStatus.Cancelled)));
-        order.setCancellationType(cancellationType);
-        order.setCancellationRemark(cancellationRemark);
-        order = getOrderDao().save(order);
+        boolean shouldCancel = true;
 
-        Set<ShippingOrder> shippingOrders = order.getShippingOrders();
-        if (shippingOrders != null) {
+        for (ShippingOrder shippingOrder : order.getShippingOrders()) {
+          if (!EnumShippingOrderStatus.SO_ActionAwaiting.getId().equals(shippingOrder.getOrderStatus().getId())) {
+            shouldCancel = false;
+            break;
+          }
+        }
+
+        if (shouldCancel) {
+          order.setOrderStatus((orderStatusService.find(EnumOrderStatus.Cancelled)));
+          order.setCancellationType(cancellationType);
+          order.setCancellationRemark(cancellationRemark);
+          order = orderDaoProvider.get().save(order);
+
+          Set<ShippingOrder> shippingOrders = order.getShippingOrders();
+          if (shippingOrders != null) {
             for (ShippingOrder shippingOrder : order.getShippingOrders()) {
-                getAdminShippingOrderService().cancelShippingOrder(shippingOrder);
+              shippingOrderService.cancelShippingOrder(shippingOrder);
             }
-        }
+          }
 
-        affilateService.cancelTxn(order);
+          affilateService.cancelTxn(order);
 
-        if (order.getRewardPointsUsed() != null && order.getRewardPointsUsed() > 0) {
+          if (order.getRewardPointsUsed() != null && order.getRewardPointsUsed() > 0) {
             referrerProgramManager.refundRedeemedPoints(order);
-        }
+          }
 
-        List<RewardPoint> rewardPointList = getRewardPointService().findByReferredOrder(order);
-        if (rewardPointList != null && rewardPointList.size() > 0) {
+          List<RewardPoint> rewardPointList = rewardPointDaoProvider.get().findByReferredOrder(order);
+          if (rewardPointList != null && rewardPointList.size() > 0) {
             for (RewardPoint rewardPoint : rewardPointList) {
-                referrerProgramManager.cancelReferredOrderRewardPoint(rewardPoint);
+              referrerProgramManager.cancelReferredOrderRewardPoint(rewardPoint);
             }
+          }
+
+          emailManager.sendOrderCancelEmailToUser(order);
+          emailManager.sendOrderCancelEmailToAdmin(order);
+
+          this.logOrderActivity(order, loggedOnUser, orderLifecycleActivityDaoProvider.get().find(EnumOrderLifecycleActivity.OrderCancelled.getId()), null);
+        } else {
+          String comment = "All SOs of BO#" + order.getGatewayOrderId() + " are not in Action Awaiting Status - Aborting Cancellation.";
+          logger.info(comment);
+          this.logOrderActivityByAdmin(order, EnumOrderLifecycleActivity.LoggedComment, comment);
         }
-
-        emailManager.sendOrderCancelEmailToUser(order);
-        emailManager.sendOrderCancelEmailToAdmin(order);
-
-        this.logOrderActivity(order, loggedOnUser, getOrderService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCancelled), null);
     }
 
     @Transactional

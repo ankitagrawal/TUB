@@ -21,6 +21,7 @@ import com.hk.comparator.BasketCategory;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
+import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.core.search.OrderSearchCriteria;
@@ -88,6 +89,10 @@ public class OrderServiceImpl implements OrderService {
     private RewardPointService     rewardPointService;
     @Autowired
     private CategoryService        categoryService;
+    
+    @Inject
+    @Named (Keys.Env.codMinAmount)
+    private Double codMinAmount;
 
     @Transactional
     public Order save(Order order) {
@@ -203,7 +208,7 @@ public class OrderServiceImpl implements OrderService {
             // defined below, then Y a special check??
             if (order.getContainsServices()) {
                 String comments = "Order has services,abort system split and do a manual split";
-                logOrderActivity(order, userService.getAdminUser(), getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), comments);
+                logOrderActivityByAdmin(order, EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit, comments);
                 logger.debug("order with gatewayId:" + order.getGatewayOrderId() + " has services. abort system split and do a manual split");
             } else if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
                 shippingOrders = splitOrder(order);
@@ -387,6 +392,26 @@ public class OrderServiceImpl implements OrderService {
             }
 
             // phase 2 complete
+
+            // COD Amount Check
+            if (order.getPayment().getPaymentMode().getId() == EnumPaymentMode.COD.getId()) {
+                for (Map.Entry<Warehouse, Set<CartLineItem>> warehouseSetEntry : warehouseLineItemSetMap.entrySet()) {
+                    ShippingOrder shippingOrder = shippingOrderService.createSOWithBasicDetails(order, warehouseSetEntry.getKey());
+                    for (CartLineItem cartLineItem : warehouseSetEntry.getValue()) {
+                        Sku sku = skuService.getSKU(cartLineItem.getProductVariant(), warehouseSetEntry.getKey());
+                        LineItem shippingOrderLineItem = LineItemHelper.createLineItemWithBasicDetails(sku, shippingOrder, cartLineItem);
+                        shippingOrder.getLineItems().add(shippingOrderLineItem);
+                    }
+                    ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, order);
+                    if (ShippingOrderHelper.getAmountForSO(shippingOrder) <= codMinAmount) {
+                        String comments = "One of the SO amount was computed below " + codMinAmount;
+                        logOrderActivityByAdmin(order, EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit, comments);
+                        throw new OrderSplitException(comments + ". Aborting splitting of order.", order);
+                    }
+                }
+            }
+
+            // Create Shipping orders and Save it in DB
 
             for (Map.Entry<Warehouse, Set<CartLineItem>> warehouseSetEntry : warehouseLineItemSetMap.entrySet()) {
 
