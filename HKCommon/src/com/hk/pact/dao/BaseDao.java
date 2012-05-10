@@ -252,5 +252,5 @@ public interface BaseDao {
     
     public Page list(DetachedCriteria criteria,  int pageNo, int perPage);
 
-    void refresh(Object entity);
+    public void refresh(Object entity);
 }

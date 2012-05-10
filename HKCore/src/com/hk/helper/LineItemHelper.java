@@ -10,6 +10,8 @@ import com.hk.domain.sku.Sku;
  */
 public class LineItemHelper {
 
+    
+    //TODO: may be move it to line item service
     public static LineItem createLineItemWithBasicDetails(Sku sku, ShippingOrder shippingOrder, CartLineItem cartLineItem) {
         LineItem shippingOrderLineItem = new LineItem();
         shippingOrderLineItem.setSku(sku);

@@ -177,6 +177,11 @@ public class ProductVariant implements java.io.Serializable {
     @Column(name = "following_available_date", nullable = true, length = 19)
     private Date                      followingAvailableDate;
 
+    @JsonSkip
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "free_product_variant_id", nullable = true)
+    private ProductVariant            freeProductVariant;
+
     public List<ProductImage> getProductImages() {
         return productImages;
     }
@@ -667,4 +672,13 @@ public class ProductVariant implements java.io.Serializable {
     public void setLeadTime(Long leadTime) {
         this.leadTime = leadTime;
     }
+
+    public ProductVariant getFreeProductVariant() {
+        return freeProductVariant;
+    }
+
+    public void setFreeProductVariant(ProductVariant freeProductVariant) {
+        this.freeProductVariant = freeProductVariant;
+    }
+
 }

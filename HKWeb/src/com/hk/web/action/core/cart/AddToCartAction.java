@@ -145,9 +145,16 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
         if (selectedProductVariants != null && selectedProductVariants.size() > 0) {
             if (combo != null) {
                 dataMap.put("name", combo.getName());
+                dataMap.put("addedProducts", combo.getName());
             } else {
                 dataMap.put("name", selectedProductVariants.get(0).getProduct().getName());
+                String addedProducts = "";
+                for (ProductVariant selectedProductVariant : selectedProductVariants) {
+                    addedProducts = addedProducts.concat(selectedProductVariant.getProduct().getName()).concat("  |");
+                }
+                dataMap.put("addedProducts", addedProducts);
             }
+            
             dataMap.put("options", selectedProductVariants.get(0).getOptionsCommaSeparated());
             dataMap.put("qty", selectedProductVariants.get(0).getQty());
             dataMap.put("itemsInCart", Long.valueOf(order.getExclusivelyProductCartLineItems().size() + order.getExclusivelyComboCartLineItems().size()) + 1L);

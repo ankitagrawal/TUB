@@ -1,5 +1,6 @@
 package com.hk.impl.service.catalog;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.hk.constants.catalog.product.EnumProductVariantServiceType;
 import com.hk.domain.affiliate.AffiliateCategory;
+import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.ProductVariantServiceType;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
@@ -25,6 +27,32 @@ public class ProductVariantServiceImpl implements ProductVariantService {
     public ProductVariant getVariantById(String variantId) {
         return getProductVariantDao().getVariantById(variantId);
     }
+    
+    public List<ProductVariant> getAllNonDeletedProductVariants(String category, String brand, boolean isPrimaryCategory) {
+        List<ProductVariant> allProductVariantList = new ArrayList<ProductVariant>();
+        List<ProductVariant> subProductVariantList = new ArrayList<ProductVariant>();
+        List<Product> productList = new ArrayList<Product>();
+
+        if (category != null && brand != null) {
+          productList = productDaoProvider.get().getProductByCategoryAndBrand(category, brand);
+        } else if (category != null) {
+          if (isPrimaryCategory) {
+            productList = productDaoProvider.get().getAllProductByCategory(category);
+          } else {
+            productList = productDaoProvider.get().getAllProductBySubCategory(category);
+          }
+        } else {
+          productList = productDaoProvider.get().getAllProductByBrand(brand);
+        }
+
+        if (productList.size() > 0) {
+          for (Product productObj : productList) {
+            subProductVariantList = productVariantDao.getProductVariantsByProductId(productObj.getId());
+            allProductVariantList.addAll(subProductVariantList);
+          }
+        }
+        return allProductVariantList;
+      }
     
 
     public ProductVariantServiceType getVariantServiceType(EnumProductVariantServiceType enumProductVariantServiceType) {

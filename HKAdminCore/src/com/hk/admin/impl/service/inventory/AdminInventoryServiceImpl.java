@@ -19,6 +19,8 @@ import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.inventory.ProductVariantDamageInventory;
 import com.hk.domain.inventory.ProductVariantInventory;
+import com.hk.domain.inventory.StockTransfer;
+import com.hk.domain.inventory.StockTransferLineItem;
 import com.hk.domain.inventory.rv.ReconciliationVoucher;
 import com.hk.domain.inventory.rv.RvLineItem;
 import com.hk.domain.order.ShippingOrder;
@@ -33,6 +35,7 @@ import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.inventory.ProductVariantInventoryDao;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
+import com.hk.pact.dao.sku.SkuGroupDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.InventoryService;
@@ -65,6 +68,8 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
     private OrderDao                        orderDao;
     @Autowired
     private ProductVariantInventoryDao      productVariantInventoryDao;
+    @Autowired
+    private SkuGroupDao                     skuGroupDao;
 
     @Override
     public List<SkuGroup> getInStockSkuGroups(String upc) {
@@ -126,13 +131,15 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
         }
     }
 
-    public SkuGroup createSkuGroup(String batch, Date mfgDate, Date expiryDate, GoodsReceivedNote goodsReceivedNote, ReconciliationVoucher reconciliationVoucher, Sku sku) {
+    public SkuGroup createSkuGroup(String batch, Date mfgDate, Date expiryDate, GoodsReceivedNote goodsReceivedNote, ReconciliationVoucher reconciliationVoucher,
+            StockTransfer stockTransfer, Sku sku) {
         SkuGroup skuGroup = new SkuGroup();
         skuGroup.setBatchNumber(batch);
         skuGroup.setMfgDate(mfgDate);
         skuGroup.setExpiryDate(expiryDate);
         skuGroup.setGoodsReceivedNote(goodsReceivedNote);
         skuGroup.setReconciliationVoucher(reconciliationVoucher);
+        skuGroup.setStockTransfer(stockTransfer);
         skuGroup.setSku(sku);
         skuGroup.setCreateDate(new Date());
         skuGroup = (SkuGroup) getBaseDao().save(skuGroup);
@@ -145,7 +152,8 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
         return skuGroup;
     }
 
-    public void createSkuItemsAndCheckinInventory(SkuGroup skuGroup, Long qty, LineItem lineItem, GrnLineItem grnLineItem, RvLineItem rvLineItem, InvTxnType invTxnType, User txnBy) {
+    public void createSkuItemsAndCheckinInventory(SkuGroup skuGroup, Long qty, LineItem lineItem, GrnLineItem grnLineItem, RvLineItem rvLineItem,
+            StockTransferLineItem stockTransferLineItem, InvTxnType invTxnType, User txnBy) {
         for (int i = 0; i < qty; i++) {
             SkuItem skuItem = new SkuItem();
             skuItem.setSkuGroup(skuGroup);
@@ -155,12 +163,12 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
             skuItem.setBarcode(skuItem.getId().toString());
             skuItem = (SkuItem) getBaseDao().save(skuItem);
 
-            this.inventoryCheckinCheckout(skuGroup.getSku(), skuItem, lineItem, null, grnLineItem, rvLineItem, invTxnType, 1L, txnBy);
+            this.inventoryCheckinCheckout(skuGroup.getSku(), skuItem, lineItem, null, grnLineItem, rvLineItem, stockTransferLineItem, invTxnType, 1L, txnBy);
         }
     }
 
     public void inventoryCheckinCheckout(Sku sku, SkuItem skuItem, LineItem lineItem, ShippingOrder shippingOrder, GrnLineItem grnLineItem, RvLineItem rvLineItem,
-            InvTxnType invTxnType, Long qty, User txnBy) {
+            StockTransferLineItem stockTransferLineItem, InvTxnType invTxnType, Long qty, User txnBy) {
         ProductVariantInventory pvi = new ProductVariantInventory();
         // pvi.setProductVariant(sku.getProductVariant());
         pvi.setSku(sku);
@@ -169,6 +177,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
         pvi.setShippingOrder(shippingOrder);
         pvi.setGrnLineItem(grnLineItem);
         pvi.setRvLineItem(rvLineItem);
+        pvi.setStockTransferLineItem(stockTransferLineItem);
         pvi.setInvTxnType(invTxnType);
         pvi.setQty(qty);// +1 = Checkin -1 = Checkout
         pvi.setTxnBy(txnBy);
@@ -232,20 +241,29 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 
     public void reCheckInInventory(ShippingOrder shippingOrder) {
         // Recheckin InventoInry against checked out qty
-        // if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_CheckedOut.getId())) {
         for (LineItem lineItem : shippingOrder.getLineItems()) {
             List<ProductVariantInventory> checkedOutInventories = getAdminPVIDao().getCheckedOutSkuItems(lineItem.getShippingOrder(), lineItem);
             for (ProductVariantInventory checkedOutInventory : checkedOutInventories) {
                 this.inventoryCheckinCheckout(checkedOutInventory.getSku(), checkedOutInventory.getSkuItem(), lineItem, lineItem.getShippingOrder(),
-                        checkedOutInventory.getGrnLineItem(), checkedOutInventory.getRvLineItem(), getInventoryService().getInventoryTxnType(EnumInvTxnType.CANCEL_CHECKIN), 1L,
-                        getUserService().getLoggedInUser());
-                // Bug Fix deleting checked out pvi to maintain sanity instead of re-checkin.
-                // productVariantInventoryDaoProvider.get().remove(checkedOutInventory.getId());
+                        checkedOutInventory.getGrnLineItem(), checkedOutInventory.getRvLineItem(), checkedOutInventory.getStockTransferLineItem(),
+                        getInventoryService().getInventoryTxnType(EnumInvTxnType.CANCEL_CHECKIN), 1L, userService.getLoggedInUser());
                 // Rechecking Inventory Health to mark variants instock/outofstock properly.
                 getInventoryService().checkInventoryHealth(checkedOutInventory.getSku().getProductVariant());
             }
         }
         // }
+    }
+
+    public Long countOfCheckedInUnitsForStockTransferLineItem(StockTransferLineItem stockTransferLineItem) {
+        Long count = getAdminPVIDao().getCheckedinItemCountForStockTransferLineItem(stockTransferLineItem);
+        if (count == null) {
+            count = 0L;
+        }
+        return count;
+    }
+
+    public SkuGroup getSkuGroupByHkBarcode(String barcode) {
+        return getSkuGroupDao().getSkuGroup(barcode);
     }
 
     public BaseDao getBaseDao() {
@@ -343,5 +361,15 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
     public void setProductVariantInventoryDao(ProductVariantInventoryDao productVariantInventoryDao) {
         this.productVariantInventoryDao = productVariantInventoryDao;
     }
+
+    public SkuGroupDao getSkuGroupDao() {
+        return skuGroupDao;
+    }
+
+    public void setSkuGroupDao(SkuGroupDao skuGroupDao) {
+        this.skuGroupDao = skuGroupDao;
+    }
+    
+    
 
 }

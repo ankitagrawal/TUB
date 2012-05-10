@@ -38,13 +38,14 @@ public class ShippingOrderDaoImpl extends BaseDaoImpl implements ShippingOrderDa
 
     public Page searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, int pageNo, int perPage) {
         DetachedCriteria searchCriteria = shippingOrderSearchCriteria.getSearchCriteria();
-        searchCriteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        //searchCriteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         return list(searchCriteria, pageNo, perPage);
     }
 
     public List<ShippingOrder> searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria) {
         DetachedCriteria searchCriteria = shippingOrderSearchCriteria.getSearchCriteria();
         searchCriteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        searchCriteria.setMaxResults(1000);
         return findByCriteria(searchCriteria);
     }
 

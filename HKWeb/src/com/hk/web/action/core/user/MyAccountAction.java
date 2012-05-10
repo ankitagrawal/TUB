@@ -5,123 +5,166 @@ import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
-import net.sourceforge.stripes.validation.LocalizableError;
+import net.sourceforge.stripes.validation.SimpleError;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.core.RoleConstants;
+import com.hk.domain.affiliate.Affiliate;
+import com.hk.domain.user.Address;
 import com.hk.domain.user.B2bUserDetails;
 import com.hk.domain.user.User;
 import com.hk.manager.UserManager;
 import com.hk.pact.dao.RoleDao;
+import com.hk.pact.dao.affiliate.AffiliateDao;
+import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.dao.user.B2bUserDetailsDao;
 import com.hk.pact.dao.user.UserDao;
 
-@Secure(hasAnyRoles = { RoleConstants.HK_USER, RoleConstants.HK_UNVERIFIED }, disallowRememberMe = true)
-@Component
+@Secure(hasAnyRoles = {RoleConstants.HK_USER, RoleConstants.HK_UNVERIFIED}, disallowRememberMe = true)
 public class MyAccountAction extends BaseAction {
+  private static Logger logger = LoggerFactory.getLogger(MyAccountAction.class);
 
-    User              user;
-    B2bUserDetails    b2bUserDetails;
+  User user;
+  Affiliate affiliate;
+  Address affiliateDefaultAddress;
+  B2bUserDetails b2bUserDetails;
 
-    String            oldPassword;
-    String            newPassword;
-    String            confirmPassword;
-    @Autowired
-    UserDao           userDao;
-    @Autowired
-    B2bUserDetailsDao b2bUserDetailsDao;
-    @Autowired
-    UserManager       userManager;
-    @Autowired
-    RoleDao           roleDao;
+  String oldPassword;
+  String newPassword;
+  String confirmPassword;
 
-    @DefaultHandler
-    public Resolution pre() {
-        if (getPrincipal() != null) {
-            user = getUserService().getUserById(getPrincipal().getId());
-            b2bUserDetails = b2bUserDetailsDao.getB2bUserDetails(user);
-        }
+  @Autowired
+  AddressDao addressDao;
+  @Autowired
+  UserDao userDao;
+  @Autowired
+  AffiliateDao affiliateDao;
+  @Autowired
+  B2bUserDetailsDao b2bUserDetailsDao;
+  @Autowired
+  UserManager userManager;
+  @Autowired
+  RoleDao roleDao;
 
-        return new ForwardResolution("/pages/userProfile.jsp");
+  @DefaultHandler
+  public Resolution pre() {
+    if (getPrincipal() != null) {
+      user = getUserService().getUserById(getPrincipal().getId());
+      affiliate = affiliateDao.getAffilateByUser(user);
+      if (affiliate != null && affiliate.getMainAddressId() != null) {
+        affiliateDefaultAddress = addressDao.get(Address.class,affiliate.getMainAddressId());
+      }
+      b2bUserDetails = b2bUserDetailsDao.getB2bUserDetails(user);
     }
 
-    public User getUser() {
-        return user;
+    return new ForwardResolution("/pages/userProfile.jsp");
+  }
+
+  public User getUser() {
+    return user;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
+  }
+
+  public String getOldPassword() {
+    return oldPassword;
+  }
+
+  public void setOldPassword(String oldPassword) {
+    this.oldPassword = oldPassword;
+  }
+
+  public String getNewPassword() {
+    return newPassword;
+  }
+
+  public void setNewPassword(String newPassword) {
+    this.newPassword = newPassword;
+  }
+
+  public String getConfirmPassword() {
+    return confirmPassword;
+  }
+
+  public void setConfirmPassword(String confirmPassword) {
+    this.confirmPassword = confirmPassword;
+  }
+
+  public Resolution editBasicInformation() {
+    logger.debug("Editing basic information for " + user.getName());
+    return new ForwardResolution("/pages/editBasicInformation.jsp");
+  }
+
+  public Resolution saveBasicInformation() {
+    if (user.getName().length() > 80) {
+      logger.debug("new user name entered exceeded the allowed limit");
+      addRedirectAlertMessage(new SimpleMessage("Please enter a valid name!"));
+      return new ForwardResolution("/pages/editBasicInformation.jsp");
+    }
+    if (!BaseUtils.isValidEmail(user.getEmail())) {
+      logger.info("email id  " + user.getEmail() + " invalid!");
+      addRedirectAlertMessage(new SimpleMessage("PLEASE A VALID EMAIL ID!"));
+      return new ForwardResolution("/pages/editBasicInformation.jsp");
+    }
+    user = userDao.save(user);
+    if (user.getRoles().contains(roleDao.find(EnumRole.B2B_USER.getRoleName()))) {
+      b2bUserDetailsDao.save(b2bUserDetails);
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+    addRedirectAlertMessage(new SimpleMessage("Your basic information has been updated"));
+    return new RedirectResolution(MyAccountAction.class);
+  }
 
-    public Resolution save() {
-        getPrincipal().setName(user.getName());
-        getUserService().save(user);
-        if (user.getRoles().contains(roleDao.find(EnumRole.B2B_USER.getRoleName()))) {
-            b2bUserDetailsDao.save(b2bUserDetails);
-        }
+  public Resolution editPassword() {
+    logger.debug("Editing password for " + user.getName());
+    return new ForwardResolution("/pages/editPassword.jsp");
+  }
 
-        addRedirectAlertMessage(new SimpleMessage("User information has been updated"));
-        return new RedirectResolution(MyAccountAction.class);
-    }
+  public Resolution changePassword() {
+    user = getUserService().getUserById(getPrincipal().getId());
 
-    public Resolution changePassword() {
-        user = getUserService().getUserById(getPrincipal().getId());
+    if (StringUtils.equals(user.getPasswordChecksum(), BaseUtils.passwordEncrypt(oldPassword))) {
+      user.setPassword(newPassword);
+      user.setPasswordChecksum(BaseUtils.passwordEncrypt(newPassword));
+      userDao.save(user);
+      addRedirectAlertMessage(new SimpleMessage("Password has been updated successfully."));
+      return new RedirectResolution(MyAccountAction.class);
+    } else
+      addValidationError("Error message", new SimpleError("Invalid old password"));
+    return new ForwardResolution(MyAccountAction.class);
+  }
 
-        if (!StringUtils.isBlank(oldPassword)) {
-            if (StringUtils.equals(user.getPasswordChecksum(), BaseUtils.passwordEncrypt(oldPassword))) {
-                if (!StringUtils.isBlank(newPassword) && !StringUtils.isBlank(confirmPassword)) {
-                    if (StringUtils.equals(newPassword, confirmPassword)) {
-                        user.setPassword(newPassword);
-                        user.setPasswordChecksum(BaseUtils.passwordEncrypt(newPassword));
-                    } else {
-                        addValidationError("e1", new LocalizableError("/MyAccountAction.action.password.mismatch"));
-                    }
-                }
-            } else
-                addValidationError("e1", new LocalizableError("/MyAccountAction.action.oldpassword.incorrect"));
-        }
-        getUserService().save(user);
+  public B2bUserDetails getB2bUserDetails() {
+    return b2bUserDetails;
+  }
 
-        addRedirectAlertMessage(new SimpleMessage("Password has been updated successfully."));
-        return new RedirectResolution(MyAccountAction.class);
-    }
+  public void setB2bUserDetails(B2bUserDetails b2bUserDetails) {
+    this.b2bUserDetails = b2bUserDetails;
+  }
 
-    public String getOldPassword() {
-        return oldPassword;
-    }
+  public Affiliate getAffiliate() {
+    return affiliate;
+  }
 
-    public void setOldPassword(String oldPassword) {
-        this.oldPassword = oldPassword;
-    }
+  public void setAffiliate(Affiliate affiliate) {
+    this.affiliate = affiliate;
+  }
 
-    public String getNewPassword() {
-        return newPassword;
-    }
+  public Address getAffiliateDefaultAddress() {
+    return affiliateDefaultAddress;
+  }
 
-    public void setNewPassword(String newPassword) {
-        this.newPassword = newPassword;
-    }
-
-    public String getConfirmPassword() {
-        return confirmPassword;
-    }
-
-    public void setConfirmPassword(String confirmPassword) {
-        this.confirmPassword = confirmPassword;
-    }
-
-    public B2bUserDetails getB2bUserDetails() {
-        return b2bUserDetails;
-    }
-
-    public void setB2bUserDetails(B2bUserDetails b2bUserDetails) {
-        this.b2bUserDetails = b2bUserDetails;
-    }
+  public void setAffiliateDefaultAddress(Address affiliateDefaultAddress) {
+    this.affiliateDefaultAddress = affiliateDefaultAddress;
+  }
 }

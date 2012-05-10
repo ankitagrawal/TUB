@@ -15,6 +15,7 @@ import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -66,15 +67,20 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     }
 
     public void cancelShippingOrder(ShippingOrder shippingOrder) {
-        shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_Cancelled));
-        shippingOrder = (ShippingOrder) getShippingOrderService().save(shippingOrder);
-        getAdminInventoryService().reCheckInInventory(shippingOrder);
-        // TODO : Write a generic ROLLBACK util which will essentially release all attached laibilities i.e. inventory,
-        // reward points, shipment, discount
-        for (LineItem lineItem : shippingOrder.getLineItems()) {
-            getInventoryService().checkInventoryHealth(lineItem.getSku().getProductVariant());
+        // Check if Order is in Action Queue before cancelling it.
+        if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
+            shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Cancelled));
+            shippingOrder = shippingOrderDaoProvider.get().save(shippingOrder);
+            inventoryService.reCheckInInventory(shippingOrder);
+            // TODO : Write a generic ROLLBACK util which will essentially release all attached laibilities i.e.
+            // inventory, reward points, shipment, discount
+            for (LineItem lineItem : shippingOrder.getLineItems()) {
+                inventoryService.checkInventoryHealth(lineItem.getSku().getProductVariant());
+            }
+            logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Cancelled);
+
+            orderService.updateOrderStatusFromShippingOrders(shippingOrder.getBaseOrder(), EnumShippingOrderStatus.SO_Cancelled, EnumOrderStatus.Cancelled);
         }
-        getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Cancelled);
     }
 
     public boolean updateWarehouseForShippingOrder(ShippingOrder shippingOrder, Warehouse warehouse) {
@@ -353,7 +359,5 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     public void setOrderService(OrderService orderService) {
         this.orderService = orderService;
     }
-    
-    
 
 }

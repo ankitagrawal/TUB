@@ -17,6 +17,8 @@ public interface ProductVariantService {
 
     public ProductVariant getVariantById(String variantId);
     
+    public List<ProductVariant> getAllNonDeletedProductVariants(String category, String brand, boolean isPrimaryCategory) ;
+    
     public ProductVariantServiceType getVariantServiceType(EnumProductVariantServiceType enumProductVariantServiceType);
 
     public Set<ProductVariant> getProductVariantsFromProductVariantIds(String productVariantIds);
