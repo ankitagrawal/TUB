@@ -3,20 +3,43 @@ package com.hk.admin.util;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Date;
-import java.util.Set;
-import java.util.HashSet;
-import java.net.URL;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.DecimalFormat;
+import java.util.HashSet;
+import java.util.Set;
 
-import com.itextpdf.text.*;
+import org.krysalis.barcode4j.BarcodeGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.hk.admin.dto.accounting.InvoiceDto;
+import com.hk.admin.dto.accounting.InvoiceLineItemDto;
+import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
+import com.hk.constants.core.EnumRole;
+import com.hk.constants.core.Keys;
+import com.hk.constants.payment.EnumPaymentMode;
+import com.hk.constants.shipment.EnumCourier;
+import com.hk.domain.catalog.category.Category;
+import com.hk.domain.coupon.Coupon;
+import com.hk.domain.courier.CourierServiceInfo;
+import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.user.Address;
+import com.hk.manager.ReferrerProgramManager;
+import com.hk.pact.dao.catalog.category.CategoryDao;
+import com.hk.pact.dao.core.AddressDao;
+import com.itextpdf.text.BadElementException;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.lowagie.text.pdf.PdfCell;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 
@@ -186,7 +209,7 @@ public class InvoicePDFGenerator {
         copyrightsParagraph.add(new Paragraph("Note: This is to certify that items inside do not contain any prohibited or hazardous material.", new Font(
                 Font.FontFamily.TIMES_ROMAN, 8, Font.BOLD)));
         // addEmptyLine(copyrightsParagraph,1);
-        if (Functions.collectionContains(shippingOrder.getBaseOrder().getUser().getRoles(), EnumRole.B2B_USER.getRoleName())) {
+        if (shippingOrder.getBaseOrder().getUser().getRoles().contains(EnumRole.B2B_USER.getRoleName())) {
             copyrightsParagraph.add(new Paragraph("Bright Lifecare Pvt. Ltd. | Khasra No. 146/25/2/1, Jail Road, Dhumaspur, Badshahpur |"
                     + " Gurgaon, Haryana- 122101 | TIN:06101832036", new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.NORMAL)));
         } else {
@@ -254,7 +277,7 @@ public class InvoicePDFGenerator {
         if (!invoiceLineItems.isEmpty()) {
             for (InvoiceLineItemDto invoiceLineItemDto : invoiceLineItems) {
                 StringBuffer itemDetail = new StringBuffer();
-                if (Functions.collectionContains(invoiceLineItemDto.getProductCategories(), sexualCareCategory)) {
+                if (invoiceLineItemDto.getProductCategories().contains(sexualCareCategory)) {
                     itemDetail.append("Personal Care Product");
                 } else {
                     itemDetail.append(invoiceLineItemDto.getProductName().toString());

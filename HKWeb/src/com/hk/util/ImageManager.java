@@ -27,7 +27,7 @@ import com.hk.pact.service.catalog.ProductVariantService;
 @Component
 public class ImageManager {
 
-    private static Logger         logger                       = Logger.getLogger(ImageManager.class);
+    private static Logger         logger        = Logger.getLogger(ImageManager.class);
 
     // @Named(Keys.Env.accessKey)
     @Value("#{hkEnvProps['awsAccessKey']}")
@@ -57,20 +57,20 @@ public class ImageManager {
     ImageUtils                    imageUtils;
 
     CategoryImageDaoImpl          categoryImageDao;
-    private static final float    QUALITY                      = 0.95F;
+    private static final float    QUALITY       = 0.95F;
 
-    static String                 imageUploadsPath             = "/usr/local/projects/production/HealthKartWork/imageUploads";
-    static int                    noOfImagesInRepositorySubDir = 100;
-    static String                 awsBucket                    = "healthkart-prod";
-    static String                 awsReadBucket                = "healthkart-prod";
+    static String                 awsReadBucket = "healthkart-prod";
+    static String                 awsBucket     = "healthkart-prod";
 
     static {
 
-        /*imageUploadsPath = (String) ServiceLocatorFactory.getProperty(Keys.Env.imageUploads);
-        noOfImagesInRepositorySubDir = Integer.parseInt((String) ServiceLocatorFactory.getProperty(Keys.Env.noOfImagesInRepositorySubDir));
-        awsBucket = (String) ServiceLocatorFactory.getProperty(Keys.Env.bucket);
-        awsReadBucket = (String) ServiceLocatorFactory.getProperty(Keys.Env.readBucket);
-*/
+        /*
+         * imageUploadsPath = (String) ServiceLocatorFactory.getProperty(Keys.Env.imageUploads);
+         * noOfImagesInRepositorySubDir = Integer.parseInt((String)
+         * ServiceLocatorFactory.getProperty(Keys.Env.noOfImagesInRepositorySubDir)); awsBucket = (String)
+         * ServiceLocatorFactory.getProperty(Keys.Env.bucket); awsReadBucket = (String)
+         * ServiceLocatorFactory.getProperty(Keys.Env.readBucket);
+         */
         // TODO: rewrite
     }
 
@@ -426,15 +426,15 @@ public class ImageManager {
         Long id = productImage.getId();
 
         // saving original image
-        String imageUrl = getS3ImageKey(EnumImageSize.Original, id);
+        String imageUrl = HKImageUtils.getS3ImageKey(EnumImageSize.Original, id);
         s3Utils.uploadImage(awsAccessKey, awsSecretKey, filePath, imageUrl, awsBucket);
 
         // saving thumbnails for all sizes
         for (EnumImageSize enumImageSize : EnumImageSize.values()) {
             if (enumImageSize != EnumImageSize.Original) {
-                repositoryFilePath = getRepositoryImagePath(enumImageSize, id);
+                repositoryFilePath = HKImageUtils.getRepositoryImagePath(enumImageSize, id);
                 imageUtils.createThumbnail(filePath, repositoryFilePath, enumImageSize.getDimension(), QUALITY, false, false, .5F);
-                imageUrl = getS3ImageKey(enumImageSize, id);
+                imageUrl = HKImageUtils.getS3ImageKey(enumImageSize, id);
                 s3Utils.uploadImage(awsAccessKey, awsSecretKey, repositoryFilePath, imageUrl, awsBucket);
             }
         }
@@ -448,15 +448,15 @@ public class ImageManager {
         Long id = categoryImage.getId();
 
         // saving original image
-        String imageUrl = getS3CategoryImageKey(EnumImageSize.Original, id);
+        String imageUrl = HKImageUtils.getS3CategoryImageKey(EnumImageSize.Original, id);
         s3Utils.uploadImage(awsAccessKey, awsSecretKey, filePath, imageUrl, awsBucket);
 
         // saving thumbnails for all sizes
         for (EnumImageSize enumImageSize : EnumImageSize.values()) {
             if (enumImageSize != EnumImageSize.Original) {
-                repositoryFilePath = getRepositoryImagePath(enumImageSize, id);
+                repositoryFilePath = HKImageUtils.getRepositoryImagePath(enumImageSize, id);
                 imageUtils.createThumbnail(filePath, repositoryFilePath, enumImageSize.getDimension(), QUALITY, false, false, .5F);
-                imageUrl = getS3CategoryImageKey(enumImageSize, id);
+                imageUrl = HKImageUtils.getS3CategoryImageKey(enumImageSize, id);
                 s3Utils.uploadImage(awsAccessKey, awsSecretKey, repositoryFilePath, imageUrl, awsBucket);
             }
         }
@@ -473,26 +473,6 @@ public class ImageManager {
      * .5F); imageUrl = getS3ImageKey(enumImageSize, id); s3Utils.uploadImage(awsAccessKey, awsSecretKey,
      * repositoryFilePath, imageUrl, awsBucket); } } }
      */
-
-    public static String getS3CategoryImageKey(EnumImageSize imageSize, Long imageId) {
-        return (imageId / noOfImagesInRepositorySubDir + 1) + "/" + "c_" + imageId + "_" + imageSize.getSuffix() + ".jpg";
-    }
-
-    public static String getS3ImageKey(EnumImageSize imageSize, Long imageId) {
-        return (imageId / noOfImagesInRepositorySubDir + 1) + "/" + imageId + "_" + imageSize.getSuffix() + ".jpg";
-    }
-
-    public static String getS3CategoryImageUrl(EnumImageSize imageSize, Long imageId) {
-        return "http://" + awsReadBucket + ".s3.amazonaws.com/" + (imageId / noOfImagesInRepositorySubDir + 1) + "/" + "c_" + imageId + "_" + imageSize.getSuffix() + ".jpg";
-    }
-
-    public static String getS3ImageUrl(EnumImageSize imageSize, Long imageId) {
-        return "http://" + awsReadBucket + ".s3.amazonaws.com/" + (imageId / noOfImagesInRepositorySubDir + 1) + "/" + imageId + "_" + imageSize.getSuffix() + ".jpg";
-    }
-
-    public static String getRepositoryImagePath(EnumImageSize imageSize, Long imageId) {
-        return imageUploadsPath + "/" + getS3ImageKey(imageSize, imageId);
-    }
 
     public ProductService getProductService() {
         return productService;

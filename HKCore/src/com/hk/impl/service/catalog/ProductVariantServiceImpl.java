@@ -13,6 +13,7 @@ import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.ProductVariantServiceType;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
+import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
 
 /**
@@ -23,6 +24,8 @@ public class ProductVariantServiceImpl implements ProductVariantService {
 
     @Autowired
     private ProductVariantDao productVariantDao;
+    @Autowired
+    private ProductService productService;
 
     public ProductVariant getVariantById(String variantId) {
         return getProductVariantDao().getVariantById(variantId);
@@ -34,15 +37,15 @@ public class ProductVariantServiceImpl implements ProductVariantService {
         List<Product> productList = new ArrayList<Product>();
 
         if (category != null && brand != null) {
-          productList = productDaoProvider.get().getProductByCategoryAndBrand(category, brand);
+          productList = getProductService().getProductByCategoryAndBrand(category, brand);
         } else if (category != null) {
           if (isPrimaryCategory) {
-            productList = productDaoProvider.get().getAllProductByCategory(category);
+            productList = getProductService().getAllProductByCategory(category);
           } else {
-            productList = productDaoProvider.get().getAllProductBySubCategory(category);
+            productList = getProductService().getAllProductBySubCategory(category);
           }
         } else {
-          productList = productDaoProvider.get().getAllProductByBrand(brand);
+          productList = getProductService().getAllProductByBrand(brand);
         }
 
         if (productList.size() > 0) {
@@ -114,6 +117,20 @@ public class ProductVariantServiceImpl implements ProductVariantService {
         return getProductVariantDao().save(productVariant);
     }
 
+    @Override
+    public List<ProductVariant> getAllProductVariant() {
+        return getProductVariantDao().getAllProductVariant();
+    }
+    
+    
+    public ProductService getProductService() {
+        return productService;
+    }
+
+    public void setProductService(ProductService productService) {
+        this.productService = productService;
+    }
+
     public ProductVariantDao getProductVariantDao() {
         return productVariantDao;
     }
@@ -123,8 +140,5 @@ public class ProductVariantServiceImpl implements ProductVariantService {
     }
 
 
-    @Override
-    public List<ProductVariant> getAllProductVariant() {
-        return getProductVariantDao().getAllProductVariant();
-    }
+    
 }

@@ -2,9 +2,9 @@ package com.hk.helper;
 
 public class InvoiceNumHelper {
 
-    private static final String SERVICE_INVOICE_IDENTIFIER = "S";
-    private static final String B2B_INVOICE_IDENTIFIER = "T";
-    private static final String RETAIL_INVOICE_IDENTIFIER = "R";
+    public static final String PREFIX_FOR_SERVICE_ORDER = "S";
+    public static final String PREFIX_FOR_RETAIL_ORDER = "T";
+    public static final String PREFIX_FOR_B2B_ORDER = "R";
 
     /**
      * @param isServiceOrder
@@ -14,10 +14,10 @@ public class InvoiceNumHelper {
     public static String getInvoiceType(boolean isServiceOrder, Boolean isB2bOrder) {
 
         if (isServiceOrder) {
-            return SERVICE_INVOICE_IDENTIFIER;
+            return PREFIX_FOR_SERVICE_ORDER;
         } else if (Boolean.TRUE.equals(isB2bOrder)) {
-            return B2B_INVOICE_IDENTIFIER;
+            return PREFIX_FOR_RETAIL_ORDER;
         }
-        return RETAIL_INVOICE_IDENTIFIER;
+        return PREFIX_FOR_B2B_ORDER;
     }
 }

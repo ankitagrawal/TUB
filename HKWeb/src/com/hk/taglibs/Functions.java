@@ -66,6 +66,7 @@ import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.CartLineItemUtil;
+import com.hk.util.HKImageUtils;
 import com.hk.util.ImageManager;
 
 public class Functions {
@@ -333,7 +334,7 @@ public class Functions {
         if (imageId == null) {
             return "";
         }
-        return imageManager.getS3ImageUrl(imageSize, imageId);
+        return HKImageUtils.getS3ImageUrl(imageSize, imageId);
     }
 
     public static Boolean isFreeVariant(Object o) {

@@ -22,6 +22,7 @@ import com.hk.dto.pricing.PricingDto;
 import com.hk.manager.OrderManager;
 import com.hk.pact.dao.catalog.combo.ComboInstanceDao;
 import com.hk.pact.dao.catalog.combo.ComboInstanceHasProductVariantDao;
+import com.hk.pact.service.order.CartFreebieService;
 import com.hk.pact.service.order.CartLineItemService;
 import com.hk.pricing.PricingEngine;
 import com.hk.report.dto.pricing.PricingSubDto;
@@ -47,6 +48,8 @@ public class CartLineItemUpdateAction extends BaseAction {
     ComboInstanceHasProductVariantDao comboInstanceHasProductVariantDao;
     @Autowired
     CartLineItemService               cartLineItemService;
+    @Autowired
+    CartFreebieService                cartFreebieService;
 
     @JsonHandler
     public Resolution pre() {
@@ -86,7 +89,9 @@ public class CartLineItemUpdateAction extends BaseAction {
             } else {
                 pricingSubDto = new PricingSubDto(pricingDto, cartLineItem);
             }
-            HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "success", pricingSubDto);
+            String freebieBanner = cartFreebieService.getFreebieBanner(order);
+            HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, freebieBanner, pricingSubDto);
+
 
             return new JsonResolution(healthkartResponse);
         } else {
