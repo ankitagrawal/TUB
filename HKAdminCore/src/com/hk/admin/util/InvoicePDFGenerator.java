@@ -1,17 +1,5 @@
 package com.hk.admin.util;
 
-import mhc.domain.order.ShippingOrder;
-import mhc.domain.*;
-import mhc.common.constants.EnumPaymentMode;
-import mhc.common.constants.EnumRole;
-import mhc.common.constants.EnumCourier;
-import mhc.common.constants.Keys;
-import mhc.common.dto.accounting.InvoiceDto;
-import mhc.common.dto.accounting.InvoiceLineItemDto;
-import mhc.service.manager.ReferrerProgramManager;
-import mhc.service.dao.CategoryDao;
-import mhc.service.dao.CourierServiceInfoDao;
-import mhc.service.dao.AddressDao;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -26,12 +14,10 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
-import com.akube.framework.taglibs.Functions;
 import com.lowagie.text.pdf.PdfCell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 
 public class InvoicePDFGenerator {
@@ -42,17 +28,16 @@ public class InvoicePDFGenerator {
 
     private static Logger  logger = LoggerFactory.getLogger(InvoicePDFGenerator.class);
 
-    @Inject
+    @Autowired
     ReferrerProgramManager referrerProgramManager;
-    @Inject
+    @Autowired
     BarcodeGenerator       barcodeGenerator;
-    @Inject
+    @Autowired
     CategoryDao            categoryDao;
-    @Inject
+    @Autowired
     CourierServiceInfoDao  courierServiceInfoDao;
-    @Inject
+    @Autowired
     AddressDao             addressDao;
-    @Inject
     @Named(Keys.Env.adminDownloads)
     String                 adminDownloadsPath;
 
