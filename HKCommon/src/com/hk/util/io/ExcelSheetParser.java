@@ -3,6 +3,7 @@ package com.hk.util.io;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -15,124 +16,209 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Row;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author vaibhav.adlakha
  */
 public class ExcelSheetParser implements FileParser {
 
-  private File file;
-  private boolean containsHeader = true;
-  private String sheetName;
+    private static Logger        logger         = LoggerFactory.getLogger(ExcelSheetParser.class);
 
-  public ExcelSheetParser(String filePath, String sheetName, boolean containsHeader) {
-    this(filePath, sheetName);
-    this.containsHeader = containsHeader;
-  }
+    private File                 file;
+    private boolean              containsHeader = true;
+    private String               sheetName;
+    private HKRow                curHkRow;
+    private Map<Object, Integer> columnTypesToIndex;
+    public Map<Integer, String>  indexToColumn;
 
-  public ExcelSheetParser(String filePath, boolean containsHeader) {
-    this(filePath);
-    this.containsHeader = containsHeader;
-  }
-
-  public ExcelSheetParser(String filePath, String sheetName) {
-    this(filePath);
-    this.sheetName = sheetName;
-  }
-
-  public ExcelSheetParser(String filePath) {
-    this.file = new File(filePath);
-    if (!this.file.exists()) {
-      throw new IllegalArgumentException("No such file exists at path :" + filePath);
+    public ExcelSheetParser(String filePath, String sheetName, boolean containsHeader) {
+        this(filePath, sheetName);
+        this.containsHeader = containsHeader;
     }
-  }
 
-  public Iterator<HKRow> parse() {
-    try {
-      POIFSFileSystem objInFileSys = new POIFSFileSystem(new FileInputStream(file));
-      HSSFWorkbook workbook = new HSSFWorkbook(objInFileSys);
-
-      HSSFSheet s;
-      if (StringUtils.isEmpty(sheetName)) {
-        throw new UnsupportedOperationException("cannot parse without a sheet name");
-      } else {
-        HSSFSheet productSheet = workbook.getSheet("vaibhav");
-        s = workbook.getSheet(sheetName);
-      }
-      return new SheetIterator(s, containsHeader);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
+    public ExcelSheetParser(String filePath, boolean containsHeader) {
+        this(filePath);
+        this.containsHeader = containsHeader;
     }
-  }
 
-  public static class SheetIterator implements Iterator<HKRow> {
+    public ExcelSheetParser(String filePath, String sheetName) {
+        this(filePath);
+        this.sheetName = sheetName;
+    }
 
-    private HSSFSheet sheet;
-    private int lineNo;
-    private Map<Object, Integer> columnNamesToIndex;
-
-    public SheetIterator(HSSFSheet sheet, boolean containsHeader) {
-      this.sheet = sheet;
-      if (containsHeader) {
-        // read the column names and store the position for headers
-        Object[] columnNames = getColumnValues(sheet.getRow(lineNo++));
-        columnNamesToIndex = new HashMap<Object, Integer>(columnNames.length);
-        for (int i = 0; i < columnNames.length; i++) {
-          columnNamesToIndex.put(columnNames[i], i);
+    public ExcelSheetParser(String filePath) {
+        this.file = new File(filePath);
+        if (!this.file.exists()) {
+            throw new IllegalArgumentException("No such file exists at path :" + filePath);
         }
-      }
     }
 
-    private Object[] getColumnValues(Row row) {
-      List<Object> columnValues = new ArrayList<Object>();
-
-      Iterator<Cell> cellItr = row.cellIterator();
-      while (cellItr.hasNext()) {
-        Cell cell = cellItr.next();
-        //columnValues.add(cell.getCellType())
-      }
-      /*for (int i = 0; i < row.length; i++) {
-          columnValues[i] = row[i].getContents().trim();
-      }*/
-      return (Object[]) columnValues.toArray();
+    public String getHeadingNames(int index) {
+        return indexToColumn.get(index);
     }
 
-    public boolean hasNext() {
-      return lineNo < sheet.getLastRowNum();
-    }
+    public Iterator<HKRow> parse() {
+        try {
+            POIFSFileSystem objInFileSys = new POIFSFileSystem(new FileInputStream(file));
+            HSSFWorkbook workbook = new HSSFWorkbook(objInFileSys);
 
-    public HKRow next() {
-      if (hasNext()) {
-        Object[] columnValues = getColumnValues(sheet.getRow(lineNo++));
-        if (columnNamesToIndex != null) {
-          return new HKRow(lineNo, columnValues, columnNamesToIndex);
-        } else {
-          return new HKRow(lineNo, columnValues);
+            HSSFSheet s;
+            if (StringUtils.isEmpty(sheetName)) {
+                throw new UnsupportedOperationException("cannot parse without a sheet name");
+            } else {
+                HSSFSheet productSheet = workbook.getSheet(sheetName);
+                s = workbook.getSheet(sheetName);
+            }
+            return new SheetIterator(s, containsHeader);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-      }
-      throw new NoSuchElementException();
     }
 
-    public void remove() {
-      throw new UnsupportedOperationException();
+    public Iterator<HKRow> parse(int rowNum) {
+        try {
+            POIFSFileSystem objInFileSys = new POIFSFileSystem(new FileInputStream(file));
+            HSSFWorkbook workbook = new HSSFWorkbook(objInFileSys);
+
+            HSSFSheet s;
+            if (StringUtils.isEmpty(sheetName)) {
+                throw new UnsupportedOperationException("cannot parse without a sheet name");
+            } else {
+                HSSFSheet productSheet = workbook.getSheet(sheetName);
+                s = workbook.getSheet(sheetName);
+            }
+            return new SheetIterator(s, containsHeader, rowNum);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-  }
+    public class SheetIterator implements Iterator<HKRow> {
 
-  public static void main(String[] args) {
-    ExcelSheetParser parser = new ExcelSheetParser("D:" + "/" + "test.xls","rahul");
+        private HSSFSheet            sheet  = null;
+        private int                  lineNo = 0;
 
-    Iterator<HKRow> rowIterator = parser.parse();
+        private Map<String, Integer> columnNamesToIndex;
 
-    while(rowIterator.hasNext()){
-      HKRow curHkRow = rowIterator.next();
+        public SheetIterator(HSSFSheet sheet, boolean containsHeader, int rowNum) {
+            this.lineNo = rowNum;
+            this.sheet = sheet;
+            if (containsHeader) {
+                // read the column names and store the position for headers
+                Object[] columnTypes = getColumnTypes(sheet.getRow(lineNo));
+                String[] columnNames = getColumnNames(sheet.getRow(lineNo));
+                columnTypesToIndex = new HashMap<Object, Integer>(columnTypes.length);
+                columnNamesToIndex = new HashMap<String, Integer>(columnNames.length);
+                indexToColumn = new HashMap<Integer, String>(columnNames.length);
 
-      Object column1 = curHkRow.getColumnValue("Test1");
-      System.out.println("by name:" + column1);
-      Object colum1Idx = curHkRow.getColumnValue(1);
-      System.out.println("by idx:" + colum1Idx);
+                for (int i = 0; i < columnNames.length; i++) {
+                    columnTypesToIndex.put(columnTypes[i], i);
+                    columnNamesToIndex.put(columnNames[i], i);
+                    indexToColumn.put(i, columnNames[i]);
+                }
+            }
+        }
+
+        public SheetIterator(HSSFSheet sheet, boolean containsHeader) {
+            this(sheet, containsHeader, 0);
+        }
+
+        // get column types
+        private Object[] getColumnTypes(Row row) {
+            List<Object> columnTypes = new ArrayList<Object>();
+
+            Iterator<Cell> cellItr = row.cellIterator();
+            while (cellItr.hasNext()) {
+                Cell cell = cellItr.next();
+                columnTypes.add(cell.getCellType());
+            }
+            return (Object[]) columnTypes.toArray();
+        }
+
+        // get column values , it is always in form of string which will be converted later on
+        private String[] getColumnNames(Row row) {
+            List<String> columnValues = new ArrayList<String>();
+            String cellValue = null;
+            if (row != null) {
+                Iterator<Cell> cellItr = row.cellIterator();
+                while (cellItr.hasNext()) {
+                    Cell cell = cellItr.next();
+                    if (cell != null) {
+                        try {
+                            switch (cell.getCellType()) {
+                                case Cell.CELL_TYPE_STRING:
+                                    cellValue = cell.getStringCellValue().trim();
+                                    break;
+                                case Cell.CELL_TYPE_NUMERIC:
+                                    if (DateUtil.isCellDateFormatted(cell)) {
+                                        System.out.println("doub" + cell.getNumericCellValue());
+                                        Double doub = cell.getNumericCellValue();
+                                        SimpleDateFormat sd = new SimpleDateFormat("mm/dd/yyyy");
+                                        cellValue = sd.format(cell.getDateCellValue());
+                                    } else {
+                                        try {
+                                            Double doub = cell.getNumericCellValue();
+                                            Long longValue = doub.longValue();
+                                            cellValue = longValue.toString().trim();
+                                        } catch (IllegalStateException IS) {
+                                            logger.debug("error trying to read column " + columnValues + " as String on Row " + sheet.getLastRowNum());
+                                            logger.debug("Now trying to read as numeric");
+                                            System.out.println("error in reading cell value" + IS.getMessage());
+                                        }
+                                    }
+                                    break;
+                                case Cell.CELL_TYPE_BOOLEAN:
+                                    break;
+                            }
+                            cellValue = cellValue.trim();
+                            // System.out.println("cell value" + cellValue);
+                        } catch (IllegalStateException ISE) {
+                            System.out.println("error in switch case" + ISE.getMessage());
+                        }
+                        columnValues.add(cellValue);
+                    }
+                }
+            }
+            if (cellValue != null) {
+                String[] val = columnValues.toArray(new String[columnValues.size()]);
+                return val;
+            } else
+                return null;
+        }
+
+        public boolean hasNext() {
+            return lineNo < sheet.getLastRowNum();
+        }
+
+        public HKRow next() {
+
+            if (hasNext()) {
+                String[] columnNames = getColumnNames(sheet.getRow(++lineNo));
+
+                if (columnNamesToIndex != null) {
+
+                    return new HKRow(lineNo, columnNames, columnNamesToIndex);
+                } else {
+                    return new HKRow(lineNo, columnNames);
+                }
+
+            }
+            throw new NoSuchElementException();
+        }
+
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
 
     }
-  }
+
+    public static void main(String[] args) {
+        
+    }
+
+    
 }

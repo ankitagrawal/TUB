@@ -19,6 +19,7 @@ import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.core.CancellationType;
 import com.hk.domain.core.CartLineItemType;
+import com.hk.domain.core.EmailType;
 import com.hk.domain.core.OrderStatus;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.core.PaymentStatus;
@@ -195,6 +196,10 @@ public class MasterDataDaoImpl implements MasterDataDao {
     public List<ReconciliationType> getReconciliationTypeList() {
         return getBaseDao().getAll(ReconciliationType.class);
         // return reconciliationTypeDaoProvider.get().listAll();
+    }
+
+    public List<EmailType> getEmailTypeList() {
+        return getBaseDao().getAll(EmailType.class);
     }
 
     public BaseDao getBaseDao() {
