@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hk.domain.order.Order;
@@ -21,6 +22,7 @@ public class CartFreeBieServiceImpl implements CartFreebieService {
     private String         revitalYogaDVD  =  "/pages/lp/revital/images/banner-yoga_dvd.jpg";
     private String         revitalMovieDVD =  "/pages/lp/revital/images/banner-free_dvd.jpg";
 
+    @Autowired
     private CartFreeBieDao cartFreeBieDao;
 
     public String getFreebieBanner(Order order) {
