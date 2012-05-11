@@ -26,13 +26,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
+import com.akube.framework.dao.Page;
 import com.akube.framework.gson.JsonUtils;
-import com.akube.framework.stripes.action.BaseAction;
+import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.google.gson.Gson;
 import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.manager.MailingListManager;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.catalog.category.Category;
+import com.hk.domain.core.EmailType;
 import com.hk.domain.email.EmailCampaign;
 import com.hk.domain.user.User;
 import com.hk.pact.dao.marketing.EmailCampaignDao;
@@ -43,7 +45,7 @@ import com.hk.web.action.error.AdminPermissionAction;
 
 @Secure(hasAnyPermissions = { PermissionConstants.SEND_MARKETING_MAILS }, authActionBean = AdminPermissionAction.class)
 @Component
-public class SendEmailNewsletterCampaign extends BaseAction {
+public class SendEmailNewsletterCampaign extends BasePaginatedAction {
 
     List<EmailCampaign>        emailCampaigns;
 
@@ -66,7 +68,7 @@ public class SendEmailNewsletterCampaign extends BaseAction {
     FileBean                   fileBean;
     FileBean                   fileBeanForUserList;
 
-    private Logger             logger = LoggerFactory.getLogger(SendEmailNewsletterCampaign.class);
+    private Logger             logger         = LoggerFactory.getLogger(SendEmailNewsletterCampaign.class);
 
     @Autowired
     private UserService        userService;
@@ -77,10 +79,19 @@ public class SendEmailNewsletterCampaign extends BaseAction {
     @Autowired
     private MailingListManager mailingListManager;
 
+    EmailType                  emailType;
+    String                     sheetName;
+    Page                       emailCampaignPage;
+    private Integer            defaultPerPage = 20;
+
     @DefaultHandler
     @DontValidate
     public Resolution pre() {
-        emailCampaigns = getEmailCampaignDao().listAllExceptNotifyMe();
+        emailCampaignPage = emailCampaignDao.getEmailCampaignByEmailType(emailType, getPageNo(), getPerPage());
+        if (emailCampaignPage != null) {
+            emailCampaigns = emailCampaignPage.getList();
+        }
+        //emailCampaigns = getEmailCampaignDao().listAllExceptNotifyMe();
         return new ForwardResolution("/pages/admin/newsletter/sendEmailNewsletterCampaign.jsp");
     }
 
@@ -237,13 +248,13 @@ public class SendEmailNewsletterCampaign extends BaseAction {
         boolean firstTime = true;
 
         while (tempUsers.size() > 0 || firstTime) {
-            //logger.info("Reached Level 0");
+            // logger.info("Reached Level 0");
             users.clear();
             if (categories.equalsIgnoreCase("all")) {
-                //logger.info("Reached Level 1");
+                // logger.info("Reached Level 1");
                 users.addAll(mailingListManager.getAllUserList(pageNo, perPage));
             } else if (categories.equalsIgnoreCase("all-unverified")) {
-                //logger.info("Reached Level 2");
+                // logger.info("Reached Level 2");
                 users.addAll(mailingListManager.getAllUnverifiedUserList(pageNo, perPage));
             }
 
@@ -252,12 +263,12 @@ public class SendEmailNewsletterCampaign extends BaseAction {
             }
 
             getAdminEmailManager().sendCampaignMails(users, emailCampaign, xsmtpapi);
-            //logger.info("Reached Level 4");
+            // logger.info("Reached Level 4");
             if (users.size() == 0 || users.size() < perPage) {
-                //logger.info("Reached Level 5");
+                // logger.info("Reached Level 5");
                 break;
             }
-            //logger.info("Reached Level 6");
+            // logger.info("Reached Level 6");
             tempUsers = users;
             firstTime = false;
             ++pageNo;
@@ -402,5 +413,4 @@ public class SendEmailNewsletterCampaign extends BaseAction {
         this.mailingListManager = mailingListManager;
     }
 
-    
 }
