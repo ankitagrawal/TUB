@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.akube.framework.dao.Page;
 import com.hk.domain.catalog.product.Product;
+import com.hk.domain.review.ReviewStatus;
 import com.hk.pact.dao.review.ReviewDao;
 import com.hk.pact.service.review.ReviewService;
 
@@ -25,6 +26,11 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public Double getProductStarRating(Product product) {
         return userReviewDao.getStarRating(product);
+    }
+
+    @Override
+    public ReviewStatus getReviewStatus(Long reviewStatusId) {
+        return userReviewDao.get(ReviewStatus.class, reviewStatusId);
     }
 
 }
