@@ -32,6 +32,7 @@ import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.google.gson.Gson;
 import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.manager.MailingListManager;
+import com.hk.constants.core.EnumEmailType;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.core.EmailType;
@@ -315,10 +316,14 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
         return new RedirectResolution(EmailNewsletterAdmin.class);
     }
 
-    private static String getSendgridHeaderJson(List<String> finalCategories, EmailCampaign emailCampaign) {
+    public static String getSendgridHeaderJson(List<String> finalCategories, EmailCampaign emailCampaign) {
         List<String> categories = new ArrayList<String>();
-        categories.add("hk_newsletters");
-        categories.add("campaign_" + emailCampaign.getName());
+        if (emailCampaign.getEmailType().getId().equals(EnumEmailType.CustomEmail.getId())) {
+            categories.add("mailmerge_" + emailCampaign.getName());
+        } else {
+            categories.add("hk_newsletters");
+            categories.add("campaign_" + emailCampaign.getName());
+        }
         categories.addAll(finalCategories);
 
         Map sendgridHeaderMap = new HashMap();
@@ -431,6 +436,40 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
 
     public void setEmailManager(EmailManager emailManager) {
         this.emailManager = emailManager;
+    }
+
+    public EmailType getEmailType() {
+        return emailType;
+    }
+
+    public String getSheetName() {
+        return sheetName;
+    }
+
+    public void setSheetName(String sheetName) {
+        this.sheetName = sheetName;
+    }
+
+    public void setEmailType(EmailType emailType) {
+        this.emailType = emailType;
+    }
+
+    public int getPerPageDefault() {
+        return defaultPerPage;
+    }
+
+    public int getPageCount() {
+        return emailCampaignPage == null ? 0 : emailCampaignPage.getTotalPages();
+    }
+
+    public int getResultCount() {
+        return emailCampaignPage == null ? 0 : emailCampaignPage.getTotalResults();
+    }
+
+    public Set<String> getParamSet() {
+        HashSet<String> params = new HashSet<String>();
+        params.add("emailType");
+        return params;
     }
 
 }
