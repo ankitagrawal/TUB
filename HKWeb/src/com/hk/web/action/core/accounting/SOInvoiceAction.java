@@ -78,6 +78,7 @@ public class SOInvoiceAction extends BaseAction {
           addRedirectAlertMessage(new SimpleMessage("Given shipping order doesnot exist"));
           return new ForwardResolution("pages/admin/adminHome.jsp");
         }
+}
 
     public Category getSexualCareCategory() {
         return sexualCareCategory;

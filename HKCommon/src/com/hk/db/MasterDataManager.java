@@ -13,6 +13,7 @@ import com.hk.db.seed.core.RoleSeedData;
 import com.hk.db.seed.core.SurchargeSeedData;
 import com.hk.db.seed.core.TaxSeedData;
 import com.hk.db.seed.courier.BoxSizeSeedData;
+import com.hk.db.seed.courier.CourierGroupSeedData;
 import com.hk.db.seed.courier.CourierSeedData;
 import com.hk.db.seed.email.EmailTypeSeedData;
 import com.hk.db.seed.inventory.DebitNoteStatusSeedData;

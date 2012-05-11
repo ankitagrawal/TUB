@@ -1,11 +1,6 @@
 package com.hk.impl.service.core;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.mgt.SecurityManager;
@@ -14,12 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.util.BaseUtils;
-import com.hk.constants.order.EnumCartLineItemType;
-import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
@@ -127,8 +117,8 @@ public class UserServiceImpl implements UserService {
         return getUserDao().findByRole(role, pageNo, perPage);
     }
     
-    
-    private Set<ProductVariant> getRecentlyOrderedProductVariantsForUser(User user) {
+    //TODO: move such methods and methods getOrdersForUserSortedByDate to a user profile service
+    /*private Set<ProductVariant> getRecentlyOrderedProductVariantsForUser(User user) {
         Map<String, ProductVariant> recentlyOrderedProductVariantsMap = new HashMap<String, ProductVariant>();
         List<Order> ordersByRecentDate = new ArrayList<Order>(getOrdersForUserSortedByDate(user));
         Product product;
@@ -155,7 +145,9 @@ public class UserServiceImpl implements UserService {
           }
         }
         return new HashSet<ProductVariant>(recentlyOrderedProductVariantsMap.values());
-      }
+      }*/
+    
+    
 
     public UserDaoImpl getUserDao() {
         return userDao;
