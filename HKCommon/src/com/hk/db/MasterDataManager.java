@@ -80,6 +80,7 @@ public class MasterDataManager {
     AdNetworksSeedData                     adNetworksSeedData;
     ReconciliationTypeSeedData             reconciliationTypeSeedData;
     ReviewStatusSeedData                   reviewStatusSeedData;
+    CourierGroupSeedData                   courierGroupSeedData;
 
     public void insert() {
 
@@ -188,6 +189,9 @@ public class MasterDataManager {
 
         logger.debug("inserting review status seed data");
         reviewStatusSeedData.invokeInsert();
+        
+        logger.debug("inserting courier group seed data");
+        courierGroupSeedData.invokeInsert();
 
     }
 
