@@ -37,6 +37,7 @@ import com.hk.domain.catalog.category.Category;
 import com.hk.domain.core.EmailType;
 import com.hk.domain.email.EmailCampaign;
 import com.hk.domain.user.User;
+import com.hk.manager.EmailManager;
 import com.hk.pact.dao.marketing.EmailCampaignDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.CategoryService;
@@ -78,7 +79,8 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
     private AdminEmailManager  adminEmailManager;
     @Autowired
     private MailingListManager mailingListManager;
-
+    @Autowired
+    private EmailManager       emailManager;
     EmailType                  emailType;
     String                     sheetName;
     Page                       emailCampaignPage;
@@ -91,7 +93,7 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
         if (emailCampaignPage != null) {
             emailCampaigns = emailCampaignPage.getList();
         }
-        //emailCampaigns = getEmailCampaignDao().listAllExceptNotifyMe();
+        // emailCampaigns = getEmailCampaignDao().listAllExceptNotifyMe();
         return new ForwardResolution("/pages/admin/newsletter/sendEmailNewsletterCampaign.jsp");
     }
 
@@ -325,6 +327,16 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
         return gson.toJson(sendgridHeaderMap);
     }
 
+    public Resolution sendEmailViaExcel() throws IOException {
+        String excelFilePath = adminUploadsPath + "/emailList/" + System.currentTimeMillis() + ".xls";
+        File excelFile = new File(excelFilePath);
+        excelFile.getParentFile().mkdirs();
+        fileBean.save(excelFile);
+
+        emailManager.sendMailMergeCampaign(emailCampaign, excelFilePath, sheetName);
+        return new ForwardResolution(SendEmailNewsletterCampaign.class, "selectCampaign");
+    }
+
     public List<EmailCampaign> getEmailCampaigns() {
         return emailCampaigns;
     }
@@ -411,6 +423,14 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
 
     public void setMailingListManager(MailingListManager mailingListManager) {
         this.mailingListManager = mailingListManager;
+    }
+
+    public EmailManager getEmailManager() {
+        return emailManager;
+    }
+
+    public void setEmailManager(EmailManager emailManager) {
+        this.emailManager = emailManager;
     }
 
 }
