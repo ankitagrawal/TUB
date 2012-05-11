@@ -1,4 +1,4 @@
-Your order ${order.gatewayOrderId} has been shipped.
+Your order ${order.baseOrder.gatewayOrderId} has been shipped.
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -53,7 +53,7 @@ Your order ${order.gatewayOrderId} has been shipped.
         <tr>
           <td width="579" valign="top">Hi ${order.baseOrder.address.name}!<br/>
             
-            Your order number ${order.baseOrder.gatewayOrderId}, on date ${order.baseOrder.payment.paymentDate} has been dispatched. Here are
+            Following items of your order ${order.baseOrder.gatewayOrderId}, placed on ${order.baseOrder.payment.paymentDate} has been dispatched. Here are
             the details:<br/>
             <br/>
             <table style="font-size:12px;" cellpadding="5" cellspacing="0" border="1">

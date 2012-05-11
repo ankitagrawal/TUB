@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.dto.accounting.InvoiceDto;
+import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.util.BarcodeGenerator;
 import com.hk.constants.shipment.EnumCourier;
@@ -19,8 +20,10 @@ import com.hk.domain.coupon.Coupon;
 import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.Address;
+import com.hk.domain.user.B2bUserDetails;
 import com.hk.helper.InvoiceNumHelper;
 import com.hk.manager.ReferrerProgramManager;
+import com.hk.pact.dao.user.B2bUserDetailsDao;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.order.CartFreebieService;
 
@@ -43,42 +46,48 @@ public class SOInvoiceAction extends BaseAction {
     @Autowired
     private CourierService         courierService;
     @Autowired
-    private CartFreebieService cartFreebieService;
+    private CartFreebieService     cartFreebieService;
+    private B2bUserDetailsDao      b2bUserDetailsDao;
+    private CourierServiceInfoDao  courierServiceInfoDao;
 
     private String                 barcodePath;
     private Coupon                 coupon;
     private String                 routingCode;
     private InvoiceDto             invoiceDto;
+    private B2bUserDetails         b2bUserDetails;
+    private String                 freebieBanner;
 
     @DefaultHandler
     public Resolution pre() {
-        if (invoiceType.equals(InvoiceNumHelper.PREFIX_FOR_B2B_ORDER)) {
-            b2bUserDetails = b2bUserDetailsDao.getB2bUserDetails(shippingOrder.getBaseOrder().getUser());
-          }
-          invoiceDto = new InvoiceDto(shippingOrder, b2bUserDetails);
-          sexualCareCategory = categoryDao.find("sexual-care");
-          coupon = referrerProgramManager.getOrCreateRefferrerCoupon(shippingOrder.getBaseOrder().getUser());
-          barcodePath = barcodeGenerator.getBarcodePath(shippingOrder.getGatewayOrderId());
-          Address address = addressDao.find(shippingOrder.getBaseOrder().getAddress().getId());
-          // As of now we have routing codes for BlueDart only so printing it by default.
-          boolean isCod = shippingOrder.isCOD();
-          CourierServiceInfo courierServiceInfo = null;
-          if (isCod) {
-            courierServiceInfo = courierServiceInfoDao.getCourierServiceByPincodeAndCourier(EnumCourier.BlueDart_COD.getId(), address.getPin(), true);
-          } else {
-            courierServiceInfo = courierServiceInfoDao.getCourierServiceByPincodeAndCourier(EnumCourier.BlueDart.getId(), address.getPin(), false);
-          }
+        if (shippingOrder != null) {
+            String invoiceType = InvoiceNumHelper.getInvoiceType(shippingOrder.isServiceOrder(), shippingOrder.getBaseOrder().getB2bOrder());
+            if (invoiceType.equals(InvoiceNumHelper.PREFIX_FOR_B2B_ORDER)) {
+                b2bUserDetails = b2bUserDetailsDao.getB2bUserDetails(shippingOrder.getBaseOrder().getUser());
+            }
+            invoiceDto = new InvoiceDto(shippingOrder, b2bUserDetails);
+            sexualCareCategory = categoryService.getCategoryByName("sexual-care");
+            coupon = referrerProgramManager.getOrCreateRefferrerCoupon(shippingOrder.getBaseOrder().getUser());
+            barcodePath = barcodeGenerator.getBarcodePath(shippingOrder.getGatewayOrderId());
+            Address address = getBaseDao().get(Address.class, shippingOrder.getBaseOrder().getAddress().getId());
+            // As of now we have routing codes for BlueDart only so printing it by default.
+            boolean isCod = shippingOrder.isCOD();
+            CourierServiceInfo courierServiceInfo = null;
+            if (isCod) {
+                courierServiceInfo = courierServiceInfoDao.getCourierServiceByPincodeAndCourier(EnumCourier.BlueDart_COD.getId(), address.getPin(), true);
+            } else {
+                courierServiceInfo = courierServiceInfoDao.getCourierServiceByPincodeAndCourier(EnumCourier.BlueDart.getId(), address.getPin(), false);
+            }
 
-          if (courierServiceInfo != null) {
-            routingCode = courierServiceInfo.getRoutingCode();
-          }
-          freebieBanner = cartFreebieService.getFreebieBanner(shippingOrder.getBaseOrder());
-          return new ForwardResolution("/pages/shippingOrderInvoice.jsp");
+            if (courierServiceInfo != null) {
+                routingCode = courierServiceInfo.getRoutingCode();
+            }
+            freebieBanner = cartFreebieService.getFreebieBanner(shippingOrder.getBaseOrder());
+            return new ForwardResolution("/pages/shippingOrderInvoice.jsp");
         } else {
-          addRedirectAlertMessage(new SimpleMessage("Given shipping order doesnot exist"));
-          return new ForwardResolution("pages/admin/adminHome.jsp");
+            addRedirectAlertMessage(new SimpleMessage("Given shipping order doesnot exist"));
+            return new ForwardResolution("pages/admin/adminHome.jsp");
         }
-}
+    }
 
     public Category getSexualCareCategory() {
         return sexualCareCategory;
@@ -151,6 +160,5 @@ public class SOInvoiceAction extends BaseAction {
     public void setCourierService(CourierService courierService) {
         this.courierService = courierService;
     }
-
 
 }
