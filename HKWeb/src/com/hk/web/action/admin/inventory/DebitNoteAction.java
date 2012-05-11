@@ -70,6 +70,14 @@ public class DebitNoteAction extends BasePaginatedAction {
         return new ForwardResolution("/pages/admin/debitNoteList.jsp");
     }
 
+    public Resolution print() {
+        if (debitNote != null) {
+            debitNoteDto = grnManager.generateDebitNoteDto(debitNote);
+            return new ForwardResolution("/pages/admin/debitNotePrintView.jsp");
+        } else
+            return new ForwardResolution("/pages/admin/debitNoteList.jsp");
+    }
+
     public Resolution view() {
         if (debitNote != null) {
             logger.debug("debitNote@view: " + debitNote.getId());

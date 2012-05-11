@@ -39,6 +39,7 @@ import com.hk.pact.dao.core.SupplierDao;
 import com.hk.pact.dao.location.MapIndiaDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
+import com.hk.util.HKImageUtils;
 import com.hk.util.ImageManager;
 import com.hk.util.XslGenerator;
 import com.hk.web.HealthkartResponse;
@@ -368,7 +369,7 @@ public class EditProductAttributesAction extends BaseAction {
         product = getProductService().getProductById(productId);
         productImages = product.getProductImages();
         if (productImageId != null) {
-            String productImageLink = ImageManager.getS3ImageUrl(EnumImageSize.MediumSize, Long.parseLong(productImageId));
+            String productImageLink = HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, Long.parseLong(productImageId));
             HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "success", productImageLink);
             return new JsonResolution(healthkartResponse);
         } else {
@@ -394,10 +395,10 @@ public class EditProductAttributesAction extends BaseAction {
         return new ForwardResolution("/pages/close.jsp");
     }
 
-    public Resolution productBanner() {
+   /* public Resolution productBanner() {
         affiliate = affiliateDao.getAffiliateByCode(affid);
         return new ForwardResolution("/pages/affiliate/productBanner.jsp");
-    }
+    }*/
 
     /*
      * public Resolution getClosestServiceCenters() throws IOException { product =
