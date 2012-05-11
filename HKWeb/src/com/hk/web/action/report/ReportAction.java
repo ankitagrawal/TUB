@@ -108,7 +108,7 @@ public class ReportAction extends BaseAction {
     @Autowired
     ProductManager                                 productManager;
     @Autowired
-    ReconciliationStatusDaoImpl                        reconciliationStatusDao;
+    ReconciliationStatusDaoImpl                    reconciliationStatusDao;
     @Autowired
     private CategoryService                        categoryService;
     @Autowired
@@ -186,7 +186,7 @@ public class ReportAction extends BaseAction {
         return new ForwardResolution("/pages/admin/report.jsp");
     }
 
-    @Secure(hasAnyPermissions = { PermissionConstants.ACCOUNTING_SALES_REPORT }, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = { PermissionConstants.SKU_SALES_REPORT }, authActionBean = AdminPermissionAction.class)
     public Resolution generateOrderReportExcel() {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
