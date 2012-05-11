@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 
 import com.hk.admin.pact.dao.courier.CourierDao;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
-import com.hk.constants.XlsConstants;
+import com.hk.constants.XslConstants;
 import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
@@ -95,51 +95,51 @@ public class XslGenerator {
 
 
     int cellCounter = 0;
-    setHeaderCellValue(row, cellCounter++, XlsConstants.PRODUCT_ID);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.CATEGORY);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.PRIMARY_CATEGORY);
-	  setHeaderCellValue(row, cellCounter++, XlsConstants.SECONDARY_CATEGORY);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.PRODUCT_NAME);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.SORTING);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.BRAND);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.MANUFACTURER);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.SUPPLIER_TIN);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.SUPPLIER_STATE);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.MIN_DAYS_TO_PROCESS);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.MAX_DAYS_TO_PROCESS);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.OVERVIEW);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.DESCRIPTION);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.RELATED_PRODUCTS);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.COLOR_PRODUCT);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.IS_SERVICE);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.IS_GOOGLE_AD_DISALLOWED);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.VARIANT_ID);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.VARIANT_SORTING);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.VARIANT_NAME);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.OPTIONS);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.EXTRA_OPTIONS);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.MRP);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.COST);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.TAX);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.PERCENTAGE_DISCOUNT);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.HK_PRICE);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.POSTPAID_AMOUNT);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.SHIPPING);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.AVAILABILITY);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.MANUFACTURER_CODE);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.DELETED);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.INVENTORY);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.CUTOFF_INVENTORY);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.AFFILIATE_CATEGORY);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.COLOR_HEX);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.MAIN_IMAGE_ID);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.LENGTH);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.BREADTH);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.HEIGHT);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.WEIGHT);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.UPC);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.SERVICE_TYPE);
-    setHeaderCellValue(row, cellCounter++, XlsConstants.PAYMENT_TYPE);
+    setHeaderCellValue(row, cellCounter++, XslConstants.PRODUCT_ID);
+    setHeaderCellValue(row, cellCounter++, XslConstants.CATEGORY);
+    setHeaderCellValue(row, cellCounter++, XslConstants.PRIMARY_CATEGORY);
+	  setHeaderCellValue(row, cellCounter++, XslConstants.SECONDARY_CATEGORY);
+    setHeaderCellValue(row, cellCounter++, XslConstants.PRODUCT_NAME);
+    setHeaderCellValue(row, cellCounter++, XslConstants.SORTING);
+    setHeaderCellValue(row, cellCounter++, XslConstants.BRAND);
+    setHeaderCellValue(row, cellCounter++, XslConstants.MANUFACTURER);
+    setHeaderCellValue(row, cellCounter++, XslConstants.SUPPLIER_TIN);
+    setHeaderCellValue(row, cellCounter++, XslConstants.SUPPLIER_STATE);
+    setHeaderCellValue(row, cellCounter++, XslConstants.MIN_DAYS_TO_PROCESS);
+    setHeaderCellValue(row, cellCounter++, XslConstants.MAX_DAYS_TO_PROCESS);
+    setHeaderCellValue(row, cellCounter++, XslConstants.OVERVIEW);
+    setHeaderCellValue(row, cellCounter++, XslConstants.DESCRIPTION);
+    setHeaderCellValue(row, cellCounter++, XslConstants.RELATED_PRODUCTS);
+    setHeaderCellValue(row, cellCounter++, XslConstants.COLOR_PRODUCT);
+    setHeaderCellValue(row, cellCounter++, XslConstants.IS_SERVICE);
+    setHeaderCellValue(row, cellCounter++, XslConstants.IS_GOOGLE_AD_DISALLOWED);
+    setHeaderCellValue(row, cellCounter++, XslConstants.VARIANT_ID);
+    setHeaderCellValue(row, cellCounter++, XslConstants.VARIANT_SORTING);
+    setHeaderCellValue(row, cellCounter++, XslConstants.VARIANT_NAME);
+    setHeaderCellValue(row, cellCounter++, XslConstants.OPTIONS);
+    setHeaderCellValue(row, cellCounter++, XslConstants.EXTRA_OPTIONS);
+    setHeaderCellValue(row, cellCounter++, XslConstants.MRP);
+    setHeaderCellValue(row, cellCounter++, XslConstants.COST);
+    setHeaderCellValue(row, cellCounter++, XslConstants.TAX);
+    setHeaderCellValue(row, cellCounter++, XslConstants.PERCENTAGE_DISCOUNT);
+    setHeaderCellValue(row, cellCounter++, XslConstants.HK_PRICE);
+    setHeaderCellValue(row, cellCounter++, XslConstants.POSTPAID_AMOUNT);
+    setHeaderCellValue(row, cellCounter++, XslConstants.SHIPPING);
+    setHeaderCellValue(row, cellCounter++, XslConstants.AVAILABILITY);
+    setHeaderCellValue(row, cellCounter++, XslConstants.MANUFACTURER_CODE);
+    setHeaderCellValue(row, cellCounter++, XslConstants.DELETED);
+    setHeaderCellValue(row, cellCounter++, XslConstants.INVENTORY);
+    setHeaderCellValue(row, cellCounter++, XslConstants.CUTOFF_INVENTORY);
+    setHeaderCellValue(row, cellCounter++, XslConstants.AFFILIATE_CATEGORY);
+    setHeaderCellValue(row, cellCounter++, XslConstants.COLOR_HEX);
+    setHeaderCellValue(row, cellCounter++, XslConstants.MAIN_IMAGE_ID);
+    setHeaderCellValue(row, cellCounter++, XslConstants.LENGTH);
+    setHeaderCellValue(row, cellCounter++, XslConstants.BREADTH);
+    setHeaderCellValue(row, cellCounter++, XslConstants.HEIGHT);
+    setHeaderCellValue(row, cellCounter++, XslConstants.WEIGHT);
+    setHeaderCellValue(row, cellCounter++, XslConstants.UPC);
+    setHeaderCellValue(row, cellCounter++, XslConstants.SERVICE_TYPE);
+    setHeaderCellValue(row, cellCounter++, XslConstants.PAYMENT_TYPE);
 
 
     int initialRowNo = 1;
@@ -156,70 +156,70 @@ public class XslGenerator {
           row.createCell(columnNo);
         }
         if (variantCtr == 1) {
-          setCellValue(row, this.getColumnIndex(XlsConstants.PRODUCT_ID), product.getId());
-          setCellValue(row, this.getColumnIndex(XlsConstants.CATEGORY), getCategories(product));
+          setCellValue(row, this.getColumnIndex(XslConstants.PRODUCT_ID), product.getId());
+          setCellValue(row, this.getColumnIndex(XslConstants.CATEGORY), getCategories(product));
           if (product.getPrimaryCategory() != null) {
-            setCellValue(row, this.getColumnIndex(XlsConstants.PRIMARY_CATEGORY), product.getPrimaryCategory().getDisplayName());
+            setCellValue(row, this.getColumnIndex(XslConstants.PRIMARY_CATEGORY), product.getPrimaryCategory().getDisplayName());
           } else {
-            setCellValue(row, this.getColumnIndex(XlsConstants.PRIMARY_CATEGORY), "");
+            setCellValue(row, this.getColumnIndex(XslConstants.PRIMARY_CATEGORY), "");
           }
 	        if (product.getSecondaryCategory() != null) {
-            setCellValue(row, this.getColumnIndex(XlsConstants.SECONDARY_CATEGORY), product.getSecondaryCategory().getDisplayName());
+            setCellValue(row, this.getColumnIndex(XslConstants.SECONDARY_CATEGORY), product.getSecondaryCategory().getDisplayName());
           } else {
-            setCellValue(row, this.getColumnIndex(XlsConstants.SECONDARY_CATEGORY), "");
+            setCellValue(row, this.getColumnIndex(XslConstants.SECONDARY_CATEGORY), "");
           }
-          setCellValue(row, this.getColumnIndex(XlsConstants.PRODUCT_NAME), product.getName());
-          setCellValue(row, this.getColumnIndex(XlsConstants.SORTING), product.getOrderRanking());
-          setCellValue(row, this.getColumnIndex(XlsConstants.BRAND), product.getBrand());
+          setCellValue(row, this.getColumnIndex(XslConstants.PRODUCT_NAME), product.getName());
+          setCellValue(row, this.getColumnIndex(XslConstants.SORTING), product.getOrderRanking());
+          setCellValue(row, this.getColumnIndex(XslConstants.BRAND), product.getBrand());
           if (product.getManufacturer() != null) {
-            setCellValue(row, this.getColumnIndex(XlsConstants.MANUFACTURER), product.getManufacturer().getName());
+            setCellValue(row, this.getColumnIndex(XslConstants.MANUFACTURER), product.getManufacturer().getName());
           }
           if (product.getSupplier() != null) {
-            setCellValue(row, this.getColumnIndex(XlsConstants.SUPPLIER_TIN), product.getSupplier().getTinNumber());
-            setCellValue(row, this.getColumnIndex(XlsConstants.SUPPLIER_STATE), product.getSupplier().getState());
+            setCellValue(row, this.getColumnIndex(XslConstants.SUPPLIER_TIN), product.getSupplier().getTinNumber());
+            setCellValue(row, this.getColumnIndex(XslConstants.SUPPLIER_STATE), product.getSupplier().getState());
           }
-          setCellValue(row, this.getColumnIndex(XlsConstants.MIN_DAYS_TO_PROCESS), product.getMinDays());
-          setCellValue(row, this.getColumnIndex(XlsConstants.MAX_DAYS_TO_PROCESS), product.getMaxDays());
-          setCellValue(row, this.getColumnIndex(XlsConstants.OVERVIEW), "");
-          setCellValue(row, this.getColumnIndex(XlsConstants.DESCRIPTION), "");
-          setCellValue(row, this.getColumnIndex(XlsConstants.RELATED_PRODUCTS), getRelatedProducts(product));
-          setCellValue(row, this.getColumnIndex(XlsConstants.COLOR_PRODUCT), product.isProductHaveColorOptions() != null ? product.isProductHaveColorOptions() ? "Y" : "N" : null);
-          setCellValue(row, this.getColumnIndex(XlsConstants.IS_SERVICE), product.isService() != null ? product.isService() ? "Y" : "N" : null);
-          setCellValue(row, this.getColumnIndex(XlsConstants.IS_GOOGLE_AD_DISALLOWED), product.isGoogleAdDisallowed() != null ? product.isGoogleAdDisallowed() ? "Y" : "N" : null);
+          setCellValue(row, this.getColumnIndex(XslConstants.MIN_DAYS_TO_PROCESS), product.getMinDays());
+          setCellValue(row, this.getColumnIndex(XslConstants.MAX_DAYS_TO_PROCESS), product.getMaxDays());
+          setCellValue(row, this.getColumnIndex(XslConstants.OVERVIEW), "");
+          setCellValue(row, this.getColumnIndex(XslConstants.DESCRIPTION), "");
+          setCellValue(row, this.getColumnIndex(XslConstants.RELATED_PRODUCTS), getRelatedProducts(product));
+          setCellValue(row, this.getColumnIndex(XslConstants.COLOR_PRODUCT), product.isProductHaveColorOptions() != null ? product.isProductHaveColorOptions() ? "Y" : "N" : null);
+          setCellValue(row, this.getColumnIndex(XslConstants.IS_SERVICE), product.isService() != null ? product.isService() ? "Y" : "N" : null);
+          setCellValue(row, this.getColumnIndex(XslConstants.IS_GOOGLE_AD_DISALLOWED), product.isGoogleAdDisallowed() != null ? product.isGoogleAdDisallowed() ? "Y" : "N" : null);
         }
         if (productVariant.getId().startsWith(product.getId() + "-")) {
-          setCellValue(row, this.getColumnIndex(XlsConstants.VARIANT_ID), productVariant.getId());
-          setCellValue(row, this.getColumnIndex(XlsConstants.VARIANT_SORTING), productVariant.getOrderRanking());
-          setCellValue(row, this.getColumnIndex(XlsConstants.VARIANT_NAME), productVariant.getVariantName());
-          setCellValue(row, this.getColumnIndex(XlsConstants.OPTIONS), getOptions(productVariant));
-          setCellValue(row, this.getColumnIndex(XlsConstants.EXTRA_OPTIONS), getExtraOptions(productVariant));
-          setCellValue(row, this.getColumnIndex(XlsConstants.MRP), productVariant.getMarkedPrice());
-	        setCellValue(row, this.getColumnIndex(XlsConstants.COST), productVariant.getCostPrice());
-          setCellValue(row, this.getColumnIndex(XlsConstants.POSTPAID_AMOUNT), productVariant.getPostpaidAmount());
-          setCellValue(row, this.getColumnIndex(XlsConstants.HK_PRICE), productVariant.getHkPrice(null));
+          setCellValue(row, this.getColumnIndex(XslConstants.VARIANT_ID), productVariant.getId());
+          setCellValue(row, this.getColumnIndex(XslConstants.VARIANT_SORTING), productVariant.getOrderRanking());
+          setCellValue(row, this.getColumnIndex(XslConstants.VARIANT_NAME), productVariant.getVariantName());
+          setCellValue(row, this.getColumnIndex(XslConstants.OPTIONS), getOptions(productVariant));
+          setCellValue(row, this.getColumnIndex(XslConstants.EXTRA_OPTIONS), getExtraOptions(productVariant));
+          setCellValue(row, this.getColumnIndex(XslConstants.MRP), productVariant.getMarkedPrice());
+	        setCellValue(row, this.getColumnIndex(XslConstants.COST), productVariant.getCostPrice());
+          setCellValue(row, this.getColumnIndex(XslConstants.POSTPAID_AMOUNT), productVariant.getPostpaidAmount());
+          setCellValue(row, this.getColumnIndex(XslConstants.HK_PRICE), productVariant.getHkPrice(null));
 
           //not applicable now as part of catalog.
           
           /*setCellValue(row, this.getColumnIndex(XslParser.TAX), productVariant.getTax().getName());*/
-          setCellValue(row, this.getColumnIndex(XlsConstants.PERCENTAGE_DISCOUNT), productVariant.getDiscountPercent());
-          setCellValue(row, this.getColumnIndex(XlsConstants.SHIPPING), productVariant.getShippingBasePrice());
-          setCellValue(row, this.getColumnIndex(XlsConstants.AVAILABILITY), productVariant.isOutOfStock() ? "N" : "Y");
-          setCellValue(row, this.getColumnIndex(XlsConstants.MANUFACTURER_CODE), "");
-          setCellValue(row, this.getColumnIndex(XlsConstants.DELETED), productVariant.isDeleted() ? "Y" : "N");
+          setCellValue(row, this.getColumnIndex(XslConstants.PERCENTAGE_DISCOUNT), productVariant.getDiscountPercent());
+          setCellValue(row, this.getColumnIndex(XslConstants.SHIPPING), productVariant.getShippingBasePrice());
+          setCellValue(row, this.getColumnIndex(XslConstants.AVAILABILITY), productVariant.isOutOfStock() ? "N" : "Y");
+          setCellValue(row, this.getColumnIndex(XslConstants.MANUFACTURER_CODE), "");
+          setCellValue(row, this.getColumnIndex(XslConstants.DELETED), productVariant.isDeleted() ? "Y" : "N");
           Long inventory = getAdminInventoryService().getNetInventory(productVariant);
-          setCellValue(row, this.getColumnIndex(XlsConstants.INVENTORY), inventory);
+          setCellValue(row, this.getColumnIndex(XslConstants.INVENTORY), inventory);
           Long cutoffInventory = inventoryService.getAggregateCutoffInventory(productVariant);
-          setCellValue(row, this.getColumnIndex(XlsConstants.CUTOFF_INVENTORY), cutoffInventory);
-          setCellValue(row, this.getColumnIndex(XlsConstants.AFFILIATE_CATEGORY), productVariant.getAffiliateCategory() != null ? productVariant.getAffiliateCategory().getAffiliateCategoryName() : "");
-          setCellValue(row, this.getColumnIndex(XlsConstants.COLOR_HEX), productVariant.getColorHex() == null ? "" : productVariant.getColorHex());
-          setCellValue(row, this.getColumnIndex(XlsConstants.MAIN_IMAGE_ID), productVariant.getMainImageId() == null ? null : productVariant.getMainImageId());
-          setCellValue(row, this.getColumnIndex(XlsConstants.LENGTH), productVariant.getLength() == null ? null : productVariant.getLength());
-          setCellValue(row, this.getColumnIndex(XlsConstants.BREADTH), productVariant.getBreadth() == null ? null : productVariant.getBreadth());
-          setCellValue(row, this.getColumnIndex(XlsConstants.HEIGHT), productVariant.getHeight() == null ? null : productVariant.getHeight());
-          setCellValue(row, this.getColumnIndex(XlsConstants.WEIGHT), productVariant.getWeight() == null ? null : productVariant.getWeight());
-          setCellValue(row, this.getColumnIndex(XlsConstants.UPC), productVariant.getUpc() == null ? null : productVariant.getUpc());
-          setCellValue(row, this.getColumnIndex(XlsConstants.SERVICE_TYPE), productVariant.getServiceType() != null ? productVariant.getServiceType().getName() : null);
-          setCellValue(row, this.getColumnIndex(XlsConstants.PAYMENT_TYPE), productVariant.getPaymentType() != null ? productVariant.getPaymentType().getName() : null);
+          setCellValue(row, this.getColumnIndex(XslConstants.CUTOFF_INVENTORY), cutoffInventory);
+          setCellValue(row, this.getColumnIndex(XslConstants.AFFILIATE_CATEGORY), productVariant.getAffiliateCategory() != null ? productVariant.getAffiliateCategory().getAffiliateCategoryName() : "");
+          setCellValue(row, this.getColumnIndex(XslConstants.COLOR_HEX), productVariant.getColorHex() == null ? "" : productVariant.getColorHex());
+          setCellValue(row, this.getColumnIndex(XslConstants.MAIN_IMAGE_ID), productVariant.getMainImageId() == null ? null : productVariant.getMainImageId());
+          setCellValue(row, this.getColumnIndex(XslConstants.LENGTH), productVariant.getLength() == null ? null : productVariant.getLength());
+          setCellValue(row, this.getColumnIndex(XslConstants.BREADTH), productVariant.getBreadth() == null ? null : productVariant.getBreadth());
+          setCellValue(row, this.getColumnIndex(XslConstants.HEIGHT), productVariant.getHeight() == null ? null : productVariant.getHeight());
+          setCellValue(row, this.getColumnIndex(XslConstants.WEIGHT), productVariant.getWeight() == null ? null : productVariant.getWeight());
+          setCellValue(row, this.getColumnIndex(XslConstants.UPC), productVariant.getUpc() == null ? null : productVariant.getUpc());
+          setCellValue(row, this.getColumnIndex(XslConstants.SERVICE_TYPE), productVariant.getServiceType() != null ? productVariant.getServiceType().getName() : null);
+          setCellValue(row, this.getColumnIndex(XslConstants.PAYMENT_TYPE), productVariant.getPaymentType() != null ? productVariant.getPaymentType().getName() : null);
           initialRowNo++;
         }
       }
@@ -234,11 +234,11 @@ public class XslGenerator {
       cell = row.createCell(columnNo);
       cell.setCellStyle(style);
     }
-    setCellValue(row, 0, XlsConstants.MANUFACTURER_NAME);
-    setCellValue(row, 1, XlsConstants.MANUFACTURER_WEBSITE);
-    setCellValue(row, 2, XlsConstants.MANUFACTURER_DESCRIPTION);
-    setCellValue(row, 3, XlsConstants.MANUFACTURER_EMAIL);
-    setCellValue(row, 4, XlsConstants.MANUFACTURER_PAN_INDIA);
+    setCellValue(row, 0, XslConstants.MANUFACTURER_NAME);
+    setCellValue(row, 1, XslConstants.MANUFACTURER_WEBSITE);
+    setCellValue(row, 2, XslConstants.MANUFACTURER_DESCRIPTION);
+    setCellValue(row, 3, XslConstants.MANUFACTURER_EMAIL);
+    setCellValue(row, 4, XslConstants.MANUFACTURER_PAN_INDIA);
 
     int rowNo = 1;
     for (Manufacturer manufacturer : manufacturers) {
@@ -374,15 +374,15 @@ public class XslGenerator {
       cell = row.createCell(columnNo);
       cell.setCellStyle(style);
     }
-    setCellValue(row, 0, XlsConstants.GRN_LINE_ITEM_ID);
-    setCellValue(row, 1, XlsConstants.VARIANT_ID);
-    setCellValue(row, 2, XlsConstants.QTY);
-    setCellValue(row, 3, XlsConstants.COST);
-    setCellValue(row, 4, XlsConstants.MRP);
-    setCellValue(row, 5, XlsConstants.BATCH_NUMBER);
-    setCellValue(row, 6, XlsConstants.MFG_DATE);
-    setCellValue(row, 7, XlsConstants.EXP_DATE);
-    setCellValue(row, 8, XlsConstants.CHECKIN_QTY);
+    setCellValue(row, 0, XslConstants.GRN_LINE_ITEM_ID);
+    setCellValue(row, 1, XslConstants.VARIANT_ID);
+    setCellValue(row, 2, XslConstants.QTY);
+    setCellValue(row, 3, XslConstants.COST);
+    setCellValue(row, 4, XslConstants.MRP);
+    setCellValue(row, 5, XslConstants.BATCH_NUMBER);
+    setCellValue(row, 6, XslConstants.MFG_DATE);
+    setCellValue(row, 7, XslConstants.EXP_DATE);
+    setCellValue(row, 8, XslConstants.CHECKIN_QTY);
 
 
     int initialRowNo = 1;

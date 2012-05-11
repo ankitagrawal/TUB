@@ -8,7 +8,6 @@ import java.text.DecimalFormat;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.krysalis.barcode4j.BarcodeGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
