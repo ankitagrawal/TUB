@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.hk.constants.courier.EnumCourierGroup;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierGroup;
 import com.hk.pact.dao.BaseDao;
@@ -13,13 +14,12 @@ import com.hk.pact.dao.BaseDao;
 /**
  * Generated
  */
-@SuppressWarnings({"InjectOfNonPublicMember"})
 public class CourierGroupSeedData {
 
 	@Autowired
 	BaseDao baseDao;
 
-	public void insert(java.lang.Long id, java.lang.String name, Courier courier) {
+	public void insert(Long id, String name, Courier courier) {
 		CourierGroup courierGroup = new CourierGroup();
 		courierGroup.setName(name);
 		courierGroup.setId(id);
@@ -36,7 +36,7 @@ public class CourierGroupSeedData {
 				throw new RuntimeException("Duplicate key " + enumCourierGroup.getId());
 			else pkList.add(enumCourierGroup.getId());
 
-			insert(enumCourierGroup.getId(), enumCourierGroup.getName(), courierDao.find(enumCourierGroup.getCourierId()));
+			insert(enumCourierGroup.getId(), enumCourierGroup.getName(), getBaseDao().get(Courier.class, enumCourierGroup.getCourierId()));
 		}
 	}
 
