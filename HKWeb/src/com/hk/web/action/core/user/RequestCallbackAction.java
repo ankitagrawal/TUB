@@ -1,9 +1,12 @@
 package com.hk.web.action.core.user;
 
+import java.util.Date;
+
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.JsonResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.validation.EmailTypeConverter;
 import net.sourceforge.stripes.validation.SimpleError;
@@ -99,9 +102,30 @@ public class RequestCallbackAction extends BaseAction implements ValidationError
         dcml.setCouponCode(couponCode);
         dcml.setSubscribeEmail(subscribe);
         dcml.setSubscribeMobile(subscribe);
+        dcml.setRequestDate(new Date());
         discountCouponMailingListDao.save(dcml);
 
         return new JsonResolution(new HealthkartResponse(HealthkartResponse.STATUS_OK, "Your information has been received, we will get in touch with you shortly."));
+    }
+
+    public Resolution requestConsultation() {
+
+        logger.debug("srcUrl: " + srcUrl);
+
+        String couponCode = "n.a.";
+        DiscountCouponMailingList dcml = new DiscountCouponMailingList();
+        dcml.setName(name);
+        dcml.setMobile(mobile);
+        dcml.setEmail(email);
+        dcml.setSrcUrl(srcUrl);
+        dcml.setCategory(topLevelCategory.getName());
+        dcml.setCouponCode(couponCode);
+        dcml.setSubscribeEmail(true);
+        dcml.setSubscribeMobile(true);
+        dcml.setRequestDate(new Date());
+        discountCouponMailingListDao.save(dcml);
+
+        return new RedirectResolution("/" + topLevelCategory);
     }
 
     public String getMobile() {
