@@ -28,6 +28,7 @@ import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.manager.MailingListManager;
+import com.hk.constants.core.EnumEmailType;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.core.EmailType;
@@ -312,6 +313,7 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
         return new RedirectResolution(EmailNewsletterAdmin.class);
     }
 
+
     public Resolution sendEmailViaExcel() throws IOException {
         String excelFilePath = adminUploadsPath + "/emailList/" + System.currentTimeMillis() + ".xls";
         File excelFile = new File(excelFilePath);
@@ -322,23 +324,6 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
         return new ForwardResolution(SendEmailNewsletterCampaign.class, "selectCampaign");
     }
 
-    public int getPerPageDefault() {
-        return defaultPerPage;
-    }
-
-    public int getPageCount() {
-        return emailCampaignPage == null ? 0 : emailCampaignPage.getTotalPages();
-    }
-
-    public int getResultCount() {
-        return emailCampaignPage == null ? 0 : emailCampaignPage.getTotalResults();
-    }
-
-    public Set<String> getParamSet() {
-        HashSet<String> params = new HashSet<String>();
-        params.add("emailType");
-        return params;
-    }
 
     public List<EmailCampaign> getEmailCampaigns() {
         return emailCampaigns;
@@ -434,6 +419,40 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
 
     public void setEmailManager(EmailManager emailManager) {
         this.emailManager = emailManager;
+    }
+
+    public EmailType getEmailType() {
+        return emailType;
+    }
+
+    public String getSheetName() {
+        return sheetName;
+    }
+
+    public void setSheetName(String sheetName) {
+        this.sheetName = sheetName;
+    }
+
+    public void setEmailType(EmailType emailType) {
+        this.emailType = emailType;
+    }
+
+    public int getPerPageDefault() {
+        return defaultPerPage;
+    }
+
+    public int getPageCount() {
+        return emailCampaignPage == null ? 0 : emailCampaignPage.getTotalPages();
+    }
+
+    public int getResultCount() {
+        return emailCampaignPage == null ? 0 : emailCampaignPage.getTotalResults();
+    }
+
+    public Set<String> getParamSet() {
+        HashSet<String> params = new HashSet<String>();
+        params.add("emailType");
+        return params;
     }
 
 }
