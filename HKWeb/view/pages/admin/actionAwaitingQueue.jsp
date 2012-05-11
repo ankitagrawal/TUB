@@ -1,15 +1,14 @@
-<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
+<%@ page import="com.hk.constants.order.EnumOrderStatus" %>
 <%@ page import="com.hk.constants.payment.EnumPaymentMode" %>
 <%@ page import="com.hk.constants.payment.EnumPaymentStatus" %>
-<%@ page import="com.hk.constants.order.EnumOrderStatus" %>
-<%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
-<%@ page import="com.hk.pact.service.payment.PaymentService" %>
-<%@ page import="com.hk.web.HealthkartResponse" %>
-<%@ page import="com.hk.pact.service.order.OrderService" %>
-<%@ page import="com.hk.pact.service.OrderStatusService" %>
 <%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus" %>
+<%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
+<%@ page import="com.hk.pact.service.OrderStatusService" %>
+<%@ page import="com.hk.pact.service.payment.PaymentService" %>
 <%@ page import="com.hk.pact.service.shippingOrder.ShippingOrderStatusService" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -383,7 +382,7 @@
               <c:if test="${order.payment.paymentStatus.id == paymentStatusPending}">
                 <c:choose>
                   <c:when test="${order.payment.paymentMode.id == paymentModeCod}">
-                    (<s:link beanclass="com.hk.web.action.admin.VerifyCodAction" class="confirmCodLink">
+                    (<s:link beanclass="com.hk.web.action.admin.payment.VerifyCodAction" class="confirmCodLink">
                     <s:param name="order" value="${order.id}"/>
                     Confirm COD
                   </s:link>)
