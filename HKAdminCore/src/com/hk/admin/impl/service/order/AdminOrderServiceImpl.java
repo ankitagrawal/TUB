@@ -90,15 +90,15 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         }
 
         if (shouldCancel) {
-          order.setOrderStatus((orderStatusService.find(EnumOrderStatus.Cancelled)));
+          order.setOrderStatus((getOrderStatusService().find(EnumOrderStatus.Cancelled)));
           order.setCancellationType(cancellationType);
           order.setCancellationRemark(cancellationRemark);
-          order = orderDaoProvider.get().save(order);
+          order = getOrderService().save(order);
 
           Set<ShippingOrder> shippingOrders = order.getShippingOrders();
           if (shippingOrders != null) {
             for (ShippingOrder shippingOrder : order.getShippingOrders()) {
-              shippingOrderService.cancelShippingOrder(shippingOrder);
+              getAdminShippingOrderService().cancelShippingOrder(shippingOrder);
             }
           }
 
@@ -108,7 +108,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             referrerProgramManager.refundRedeemedPoints(order);
           }
 
-          List<RewardPoint> rewardPointList = rewardPointDaoProvider.get().findByReferredOrder(order);
+          List<RewardPoint> rewardPointList = getRewardPointService().findByReferredOrder(order);
           if (rewardPointList != null && rewardPointList.size() > 0) {
             for (RewardPoint rewardPoint : rewardPointList) {
               referrerProgramManager.cancelReferredOrderRewardPoint(rewardPoint);
@@ -118,7 +118,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
           emailManager.sendOrderCancelEmailToUser(order);
           emailManager.sendOrderCancelEmailToAdmin(order);
 
-          this.logOrderActivity(order, loggedOnUser, orderLifecycleActivityDaoProvider.get().find(EnumOrderLifecycleActivity.OrderCancelled.getId()), null);
+          this.logOrderActivity(order, loggedOnUser, getOrderService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCancelled), null);
         } else {
           String comment = "All SOs of BO#" + order.getGatewayOrderId() + " are not in Action Awaiting Status - Aborting Cancellation.";
           logger.info(comment);

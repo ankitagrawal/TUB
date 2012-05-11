@@ -50,10 +50,12 @@ import com.hk.pact.dao.email.EmailerHistoryDao;
 import com.hk.pact.dao.email.NotifyMeDao;
 import com.hk.pact.dao.marketing.EmailCampaignDao;
 import com.hk.pact.service.EmailService;
+import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
+import com.hk.pact.service.discount.CouponService;
 import com.hk.util.HKImageUtils;
-import com.hk.util.NotifyMeListUtil;
+import com.hk.util.SendGridUtil;
 import com.hk.util.io.ExcelSheetParser;
 import com.hk.util.io.HKRow;
 
@@ -127,6 +129,8 @@ public class AdminEmailManager {
     private ProductService        productService;
     @Autowired
     private ProductVariantService productVariantService;
+    private UserService           userService;
+    private CouponService         couponService;
 
     @PostConstruct
     public void postConstruction() {
@@ -360,7 +364,7 @@ public class AdminEmailManager {
                     }
 
                     // construct the headers to send
-                    String xsmtpapi = SendEmailNewsletterCampaign.getSendgridHeaderJson(tags, emailCampaign);
+                    String xsmtpapi = SendGridUtil.getSendGridEmailNewsLetterHeaderJson(tags, emailCampaign);
                     Map<String, String> headerMap = new HashMap<String, String>();
                     headerMap.put("X-SMTPAPI", xsmtpapi);
 
@@ -376,7 +380,7 @@ public class AdminEmailManager {
     }
 
     private HashMap getExtraMapEntriesForMailMerge(HashMap excelMap) {
-        List<User> users = userDaoProvider.get().findByEmail(excelMap.get(EmailMapKeyConstants.emailId).toString());
+        List<User> users = userService.findByEmail(excelMap.get(EmailMapKeyConstants.emailId).toString());
         if (users != null && users.size() > 0) {
             excelMap.put(EmailMapKeyConstants.user, users.get(0));
         } else {
@@ -384,12 +388,12 @@ public class AdminEmailManager {
         }
 
         if (excelMap.containsKey(EmailMapKeyConstants.couponCode)) {
-            Coupon coupon = couponDaoProvider.get().findByCode(excelMap.get(EmailMapKeyConstants.couponCode).toString());
+            Coupon coupon = couponService.findByCode(excelMap.get(EmailMapKeyConstants.couponCode).toString());
             excelMap.put(EmailMapKeyConstants.coupon, coupon);
         }
 
         if (excelMap.containsKey(EmailMapKeyConstants.productId)) {
-            Product product = productDaoProvider.get().find(excelMap.get(EmailMapKeyConstants.productId).toString());
+            Product product = productService.getProductById(excelMap.get(EmailMapKeyConstants.productId).toString());
             if (product != null) {
                 Long productMainImageId = product.getMainImageId();
                 excelMap.put(EmailMapKeyConstants.product, product);
@@ -452,7 +456,7 @@ public class AdminEmailManager {
                     : notifyMeObject.getProductVariant() != null ? notifyMeObject.getProductVariant().getProduct().getId() : "";
             emailCampaignName += "_" + sdf.format(new Date());
             EmailCampaign emailCampaign = getEmailCampaignDao().getOrCreateEmailCampaign(emailCampaignName, 0l, EmailTemplateConstants.notifyUserEmail);
-            String xsmtpapi = NotifyMeListUtil.getSendGridHeaderJson(notifyMeObject.getProductVariant().getProduct(), notifyMeObject.getProductVariant(), emailCampaign);
+            String xsmtpapi = SendGridUtil.getNotifyMeSendGridHeaderJson(notifyMeObject.getProductVariant().getProduct(), notifyMeObject.getProductVariant(), emailCampaign);
             HashMap valuesMap = new HashMap();
             EmailRecepient emailRecepient = getEmailRecepientDao().getOrCreateEmailRecepient(notifyMeObject.getEmail());
             valuesMap.put("unsubscribeLink", getLinkManager().getEmailUnsubscribeLink(emailRecepient));

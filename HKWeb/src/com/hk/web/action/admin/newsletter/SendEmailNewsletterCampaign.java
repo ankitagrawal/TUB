@@ -3,10 +3,8 @@ package com.hk.web.action.admin.newsletter;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import net.sourceforge.stripes.action.DefaultHandler;
@@ -27,9 +25,7 @@ import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.dao.Page;
-import com.akube.framework.gson.JsonUtils;
 import com.akube.framework.stripes.action.BasePaginatedAction;
-import com.google.gson.Gson;
 import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.manager.MailingListManager;
 import com.hk.constants.core.EnumEmailType;
@@ -43,6 +39,7 @@ import com.hk.pact.dao.marketing.EmailCampaignDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.util.ParseCsvFile;
+import com.hk.util.SendGridUtil;
 import com.hk.web.action.error.AdminPermissionAction;
 
 @Secure(hasAnyPermissions = { PermissionConstants.SEND_MARKETING_MAILS }, authActionBean = AdminPermissionAction.class)
@@ -194,7 +191,7 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
         finalCategories.add("User Ids Excel");
 
         // construct the headers to send
-        String xsmtpapi = getSendgridHeaderJson(finalCategories, emailCampaign);
+        String xsmtpapi = SendGridUtil.getSendGridEmailNewsLetterHeaderJson(finalCategories, emailCampaign);
 
         // send campaign to user emails
         getAdminEmailManager().sendCampaignMails(users, emailCampaign, xsmtpapi);
@@ -215,7 +212,7 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
         finalCategories.add("User Ids Excel");
 
         // construct the headers to send
-        String xsmtpapi = getSendgridHeaderJson(finalCategories, emailCampaign);
+        String xsmtpapi = SendGridUtil.getSendGridEmailNewsLetterHeaderJson(finalCategories, emailCampaign);
 
         // send campaign to user emails
         getAdminEmailManager().sendCampaignMailsToListOfEmailIds(users, emailCampaign, xsmtpapi);
@@ -247,7 +244,7 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
             }
         }
 
-        String xsmtpapi = getSendgridHeaderJson(finalCategories, emailCampaign);
+        String xsmtpapi = SendGridUtil.getSendGridEmailNewsLetterHeaderJson(finalCategories, emailCampaign);
         boolean firstTime = true;
 
         while (tempUsers.size() > 0 || firstTime) {
@@ -316,21 +313,6 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
         return new RedirectResolution(EmailNewsletterAdmin.class);
     }
 
-    public static String getSendgridHeaderJson(List<String> finalCategories, EmailCampaign emailCampaign) {
-        List<String> categories = new ArrayList<String>();
-        if (emailCampaign.getEmailType().getId().equals(EnumEmailType.CustomEmail.getId())) {
-            categories.add("mailmerge_" + emailCampaign.getName());
-        } else {
-            categories.add("hk_newsletters");
-            categories.add("campaign_" + emailCampaign.getName());
-        }
-        categories.addAll(finalCategories);
-
-        Map sendgridHeaderMap = new HashMap();
-        sendgridHeaderMap.put("category", categories);
-        Gson gson = JsonUtils.getGsonDefault();
-        return gson.toJson(sendgridHeaderMap);
-    }
 
     public Resolution sendEmailViaExcel() throws IOException {
         String excelFilePath = adminUploadsPath + "/emailList/" + System.currentTimeMillis() + ".xls";
@@ -338,9 +320,10 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
         excelFile.getParentFile().mkdirs();
         fileBean.save(excelFile);
 
-        emailManager.sendMailMergeCampaign(emailCampaign, excelFilePath, sheetName);
+        getAdminEmailManager().sendMailMergeCampaign(emailCampaign, excelFilePath, sheetName);
         return new ForwardResolution(SendEmailNewsletterCampaign.class, "selectCampaign");
     }
+
 
     public List<EmailCampaign> getEmailCampaigns() {
         return emailCampaigns;

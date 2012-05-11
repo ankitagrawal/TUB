@@ -35,7 +35,7 @@ import com.hk.admin.pact.dao.inventory.RetailLineItemDao;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
-import com.hk.constants.XlsConstants;
+import com.hk.constants.XslConstants;
 import com.hk.constants.catalog.product.EnumProductVariantPaymentType;
 import com.hk.constants.catalog.product.EnumProductVariantServiceType;
 import com.hk.constants.core.EnumRole;
@@ -186,22 +186,22 @@ public class XslParser {
                 rowMap = getRowMap(objRowIt);
 
                 // checking if variantId is present. if no variant id is present then tis is a blank row, continue
-                String variantId = getCellValue(XlsConstants.VARIANT_ID, rowMap, headerMap);
+                String variantId = getCellValue(XslConstants.VARIANT_ID, rowMap, headerMap);
                 if (StringUtils.isBlank(variantId))
                     continue;
 
-                if (StringUtils.isBlank(getCellValue(XlsConstants.PRODUCT_ID, rowMap, headerMap))) {
+                if (StringUtils.isBlank(getCellValue(XslConstants.PRODUCT_ID, rowMap, headerMap))) {
                     // this is not a new product. add a new product variant
 
                 } else {
                     // this is a new product
                     productVariants = new ArrayList<ProductVariant>();
 
-                    String productId = getCellValue(XlsConstants.PRODUCT_ID, rowMap, headerMap);
+                    String productId = getCellValue(XslConstants.PRODUCT_ID, rowMap, headerMap);
                     refProdId = productId;
                     refProduct = getProductService().getProductById(refProdId);
-                    String overview = getCellValue(XlsConstants.OVERVIEW, rowMap, headerMap);
-                    String description = getCellValue(XlsConstants.DESCRIPTION, rowMap, headerMap);
+                    String overview = getCellValue(XslConstants.OVERVIEW, rowMap, headerMap);
+                    String description = getCellValue(XslConstants.DESCRIPTION, rowMap, headerMap);
 
                     Product productInDB = getProductService().getProductById(productId);
                     if (loggedOnUser != null && !loggedOnUser.getRoles().contains(getRoleService().getRoleByName(EnumRole.GOD.getRoleName()))) {
@@ -219,12 +219,12 @@ public class XslParser {
                         videoEmbedCode = productInDB.getVideoEmbedCode();
                     }
                     product = new Product();
-                    product.setCategories(getCategroyListFromCategoryString(getCellValue(XlsConstants.CATEGORY, rowMap, headerMap)));
-                    List<Category> listFromPrimaryCategoryString = getCategroyListFromCategoryString(getCellValue(XlsConstants.PRIMARY_CATEGORY, rowMap, headerMap));
+                    product.setCategories(getCategroyListFromCategoryString(getCellValue(XslConstants.CATEGORY, rowMap, headerMap)));
+                    List<Category> listFromPrimaryCategoryString = getCategroyListFromCategoryString(getCellValue(XslConstants.PRIMARY_CATEGORY, rowMap, headerMap));
                     if (listFromPrimaryCategoryString != null && !listFromPrimaryCategoryString.isEmpty()) {
                         product.setPrimaryCategory(listFromPrimaryCategoryString.get(0));
                     }
-                    String secondaryCategory = getCellValue(XlsConstants.SECONDARY_CATEGORY, rowMap, headerMap);
+                    String secondaryCategory = getCellValue(XslConstants.SECONDARY_CATEGORY, rowMap, headerMap);
                     if (StringUtils.isNotBlank(secondaryCategory)) {
                         Category secondaryCat = getCategoryService().getCategoryByName(Category.getNameFromDisplayName(secondaryCategory));
                         if (secondaryCat != null && secondaryCat.getName() != null) {
@@ -237,49 +237,49 @@ public class XslParser {
                             }
                         }
                     }
-                    List<Category> listFromSecondaryCategoryString = getCategroyListFromCategoryString(getCellValue(XlsConstants.SECONDARY_CATEGORY, rowMap, headerMap));
+                    List<Category> listFromSecondaryCategoryString = getCategroyListFromCategoryString(getCellValue(XslConstants.SECONDARY_CATEGORY, rowMap, headerMap));
                     if (listFromSecondaryCategoryString != null && !listFromSecondaryCategoryString.isEmpty()) {
                         product.setSecondaryCategory(listFromSecondaryCategoryString.get(0));
                     }
-                    product.setId(getCellValue(XlsConstants.PRODUCT_ID, rowMap, headerMap));
-                    product.setName(getCellValue(XlsConstants.PRODUCT_NAME, rowMap, headerMap));
-                    Double sortingOrder = getDouble(getCellValue(XlsConstants.SORTING, rowMap, headerMap));
+                    product.setId(getCellValue(XslConstants.PRODUCT_ID, rowMap, headerMap));
+                    product.setName(getCellValue(XslConstants.PRODUCT_NAME, rowMap, headerMap));
+                    Double sortingOrder = getDouble(getCellValue(XslConstants.SORTING, rowMap, headerMap));
                     if (sortingOrder == null) {
                         sortingOrder = 100000.0;
                     }
                     product.setOrderRanking(sortingOrder);
-                    product.setBrand(getCellValue(XlsConstants.BRAND, rowMap, headerMap));
-                    product.setManufacturer(getManufacturerDetails(getCellValue(XlsConstants.MANUFACTURER, rowMap, headerMap), manufacturerSheet));
+                    product.setBrand(getCellValue(XslConstants.BRAND, rowMap, headerMap));
+                    product.setManufacturer(getManufacturerDetails(getCellValue(XslConstants.MANUFACTURER, rowMap, headerMap), manufacturerSheet));
                     product.setOverview(overview);
                     product.setDescription(description);
                     product.setVideoEmbedCode(videoEmbedCode);
-                    product.setThumbUrl(getCellValue(XlsConstants.Image, rowMap, headerMap));
-                    String isProductHaveColorOptions = getCellValue(XlsConstants.COLOR_PRODUCT, rowMap, headerMap);
+                    product.setThumbUrl(getCellValue(XslConstants.Image, rowMap, headerMap));
+                    String isProductHaveColorOptions = getCellValue(XslConstants.COLOR_PRODUCT, rowMap, headerMap);
                     boolean isProductHaveColorOptionsBoolean = StringUtils.isNotBlank(isProductHaveColorOptions) && isProductHaveColorOptions.trim().toLowerCase().equals("y") ? true
                             : false;
                     product.setProductHaveColorOptions(isProductHaveColorOptionsBoolean);
-                    String isService = getCellValue(XlsConstants.IS_SERVICE, rowMap, headerMap);
+                    String isService = getCellValue(XslConstants.IS_SERVICE, rowMap, headerMap);
                     boolean isServiceBoolean = StringUtils.isNotBlank(isService) && isService.trim().toLowerCase().equals("y") ? true : false;
                     refIsService = isServiceBoolean;
                     product.setService(isServiceBoolean);
-                    String isGoogleAdDisallowed = getCellValue(XlsConstants.IS_GOOGLE_AD_DISALLOWED, rowMap, headerMap);
+                    String isGoogleAdDisallowed = getCellValue(XslConstants.IS_GOOGLE_AD_DISALLOWED, rowMap, headerMap);
                     boolean isGoogleAdDisallowedBoolean = StringUtils.isNotBlank(isGoogleAdDisallowed) && isGoogleAdDisallowed.trim().toLowerCase().equals("y") ? true : false;
                     product.setGoogleAdDisallowed(isGoogleAdDisallowedBoolean);
                     product.setProductVariants(productVariants);
-                    product.setRelatedProducts(getRelatedProductsFromExcel(getCellValue(XlsConstants.RELATED_PRODUCTS, rowMap, headerMap)));
+                    product.setRelatedProducts(getRelatedProductsFromExcel(getCellValue(XslConstants.RELATED_PRODUCTS, rowMap, headerMap)));
                     productDeleted = true;
                     product.setDeleted(productDeleted);
-                    product.setSupplier(getSupplierDetails(getCellValue(XlsConstants.SUPPLIER_TIN, rowMap, headerMap), getCellValue(XlsConstants.SUPPLIER_STATE, rowMap, headerMap), rowCount));
+                    product.setSupplier(getSupplierDetails(getCellValue(XslConstants.SUPPLIER_TIN, rowMap, headerMap), getCellValue(XslConstants.SUPPLIER_STATE, rowMap, headerMap), rowCount));
 
-                    product.setMaxDays(getLong(getCellValue(XlsConstants.MAX_DAYS_TO_PROCESS, rowMap, headerMap)));
-                    product.setMinDays(getLong(getCellValue(XlsConstants.MIN_DAYS_TO_PROCESS, rowMap, headerMap)));
+                    product.setMaxDays(getLong(getCellValue(XslConstants.MAX_DAYS_TO_PROCESS, rowMap, headerMap)));
+                    product.setMinDays(getLong(getCellValue(XslConstants.MIN_DAYS_TO_PROCESS, rowMap, headerMap)));
                     colProductList.add(product);
                 }
 
                 // product options
-                List<ProductOption> productOptions = getProductOptions(getCellValue(XlsConstants.OPTIONS, rowMap, headerMap));
+                List<ProductOption> productOptions = getProductOptions(getCellValue(XslConstants.OPTIONS, rowMap, headerMap));
                 // product extra options - For Eye
-                List<ProductExtraOption> productExtraOptions = getProductExtraOptions(getCellValue(XlsConstants.EXTRA_OPTIONS, rowMap, headerMap));
+                List<ProductExtraOption> productExtraOptions = getProductExtraOptions(getCellValue(XslConstants.EXTRA_OPTIONS, rowMap, headerMap));
                 ProductVariant productVariantDb = getProductVariantService().getVariantById(variantId);
                 if (loggedOnUser != null && !loggedOnUser.getRoles().contains(getRoleService().getRoleByName(EnumRole.GOD.getRoleName()))) {
                     if (productVariantDb != null) {
@@ -291,13 +291,13 @@ public class XslParser {
                     throw new HealthKartCatalogUploadException("Exception @ Row: Variant Id is not correct", rowCount);
                 }
                 productVariant.setId(variantId);
-                productVariant.setColorHex(getCellValue(XlsConstants.COLOR_HEX, rowMap, headerMap));
-                productVariant.setLength(getDouble(getCellValue(XlsConstants.LENGTH, rowMap, headerMap)) == null ? 0.0 : Double.parseDouble(getCellValue(XlsConstants.LENGTH, rowMap, headerMap)));
-                productVariant.setBreadth(getDouble(getCellValue(XlsConstants.BREADTH, rowMap, headerMap)) == null ? 0.0 : Double.parseDouble(getCellValue(XlsConstants.BREADTH, rowMap, headerMap)));
-                productVariant.setHeight(getDouble(getCellValue(XlsConstants.HEIGHT, rowMap, headerMap)) == null ? 0.0 : Double.parseDouble(getCellValue(XlsConstants.HEIGHT, rowMap, headerMap)));
-                productVariant.setWeight(getDouble(getCellValue(XlsConstants.WEIGHT, rowMap, headerMap)) == null ? 0.0 : Double.parseDouble(getCellValue(XlsConstants.WEIGHT, rowMap, headerMap)));
+                productVariant.setColorHex(getCellValue(XslConstants.COLOR_HEX, rowMap, headerMap));
+                productVariant.setLength(getDouble(getCellValue(XslConstants.LENGTH, rowMap, headerMap)) == null ? 0.0 : Double.parseDouble(getCellValue(XslConstants.LENGTH, rowMap, headerMap)));
+                productVariant.setBreadth(getDouble(getCellValue(XslConstants.BREADTH, rowMap, headerMap)) == null ? 0.0 : Double.parseDouble(getCellValue(XslConstants.BREADTH, rowMap, headerMap)));
+                productVariant.setHeight(getDouble(getCellValue(XslConstants.HEIGHT, rowMap, headerMap)) == null ? 0.0 : Double.parseDouble(getCellValue(XslConstants.HEIGHT, rowMap, headerMap)));
+                productVariant.setWeight(getDouble(getCellValue(XslConstants.WEIGHT, rowMap, headerMap)) == null ? 0.0 : Double.parseDouble(getCellValue(XslConstants.WEIGHT, rowMap, headerMap)));
                 if (refIsService != null && refIsService) {
-                    String serviceTypeString = getCellValue(XlsConstants.SERVICE_TYPE, rowMap, headerMap);
+                    String serviceTypeString = getCellValue(XslConstants.SERVICE_TYPE, rowMap, headerMap);
                     if (serviceTypeString != null) {
                         if (serviceTypeString.equalsIgnoreCase(EnumProductVariantServiceType.Merchant2Home.getName())) {
                             productVariant.setServiceType(getProductVariantService().getVariantServiceType(EnumProductVariantServiceType.Merchant2Home));
@@ -307,7 +307,7 @@ public class XslParser {
                             productVariant.setServiceType(getProductVariantService().getVariantServiceType(EnumProductVariantServiceType.BothWays));
                         }
                     }
-                    String paymentTypeString = getCellValue(XlsConstants.PAYMENT_TYPE, rowMap, headerMap);
+                    String paymentTypeString = getCellValue(XslConstants.PAYMENT_TYPE, rowMap, headerMap);
                     if (paymentTypeString != null) {
                         if (paymentTypeString.equalsIgnoreCase(EnumProductVariantPaymentType.Prepaid.getName())) {
                             productVariant.setPaymentType(getPaymentService().findVariantPaymentType(EnumProductVariantPaymentType.Prepaid));
@@ -316,23 +316,23 @@ public class XslParser {
                         }
                     }
                 }
-                productVariant.setUpc(getCellValue(XlsConstants.UPC, rowMap, headerMap) == null ? "" : getCellValue(XlsConstants.UPC, rowMap, headerMap));
-                productVariant.setColorHex(getCellValue(XlsConstants.COLOR_HEX, rowMap, headerMap));
-                productVariant.setVariantName(getCellValue(XlsConstants.VARIANT_NAME, rowMap, headerMap));
-                Double mrp = Double.parseDouble(getCellValue(XlsConstants.MRP, rowMap, headerMap));
+                productVariant.setUpc(getCellValue(XslConstants.UPC, rowMap, headerMap) == null ? "" : getCellValue(XslConstants.UPC, rowMap, headerMap));
+                productVariant.setColorHex(getCellValue(XslConstants.COLOR_HEX, rowMap, headerMap));
+                productVariant.setVariantName(getCellValue(XslConstants.VARIANT_NAME, rowMap, headerMap));
+                Double mrp = Double.parseDouble(getCellValue(XslConstants.MRP, rowMap, headerMap));
                 if (mrp == 0.0) {
                     logger.error("Exception @ Row: MRP is zero " + rowCount + " ");
                     throw new Exception("MRP is zero Exception @ Row:" + rowCount + " ");
                 }
                 productVariant.setMarkedPrice(mrp);
-                Double postpaidAmount = getDouble(getCellValue(XlsConstants.POSTPAID_AMOUNT, rowMap, headerMap)) == null ? 0.0 : Double.parseDouble(getCellValue(XlsConstants.POSTPAID_AMOUNT, rowMap,
+                Double postpaidAmount = getDouble(getCellValue(XslConstants.POSTPAID_AMOUNT, rowMap, headerMap)) == null ? 0.0 : Double.parseDouble(getCellValue(XslConstants.POSTPAID_AMOUNT, rowMap,
                         headerMap));
                 productVariant.setPostpaidAmount(postpaidAmount);
-                Double hkprice = Double.parseDouble(getCellValue(XlsConstants.HK_PRICE, rowMap, headerMap));
+                Double hkprice = Double.parseDouble(getCellValue(XslConstants.HK_PRICE, rowMap, headerMap));
                 productVariant.setHkPrice(hkprice);
                 Double discountPercent = mrp - (hkprice + postpaidAmount);
                 productVariant.setDiscountPercent(discountPercent / mrp);
-                String costString = getCellValue(XlsConstants.COST, rowMap, headerMap);
+                String costString = getCellValue(XslConstants.COST, rowMap, headerMap);
                 if (!StringUtils.isNotBlank(costString)) {
                     logger.error("Exception @ Row: Cost Price is null or blank " + rowCount + " ");
                     throw new HealthKartCatalogUploadException("<br>Cost price cannot be blank:  " + rowCount, rowCount);
@@ -352,10 +352,10 @@ public class XslParser {
 
                 productVariant.setProductOptions(productOptions);
                 productVariant.setProductExtraOptions(productExtraOptions);
-                String availability = getCellValue(XlsConstants.AVAILABILITY, rowMap, headerMap);
+                String availability = getCellValue(XslConstants.AVAILABILITY, rowMap, headerMap);
                 boolean outOfStock = StringUtils.isNotBlank(availability) && availability.trim().toLowerCase().equals("y") ? false : true;
                 productVariant.setOutOfStock(outOfStock);
-                String deleted = getCellValue(XlsConstants.DELETED, rowMap, headerMap);
+                String deleted = getCellValue(XslConstants.DELETED, rowMap, headerMap);
                 boolean deletedBoolean = StringUtils.isNotBlank(deleted) && deleted.trim().toLowerCase().equals("y") ? true : false;
                 productVariant.setDeleted(deletedBoolean);
                 if (!deletedBoolean) {
@@ -363,16 +363,16 @@ public class XslParser {
                     product.setDeleted(productDeleted);
                     colProductList.add(product);
                 }
-                Double variantSortingOrder = getDouble(getCellValue(XlsConstants.VARIANT_SORTING, rowMap, headerMap));
+                Double variantSortingOrder = getDouble(getCellValue(XslConstants.VARIANT_SORTING, rowMap, headerMap));
                 if (variantSortingOrder == null) {
                     variantSortingOrder = 1000.0;
                 }
                 productVariant.setOrderRanking(variantSortingOrder);
                 productVariant.setAffiliateCategory(getAffiliateCategoryDao().getAffiliateCategoryByName(
-                        (getCellValue(XlsConstants.AFFILIATE_CATEGORY, rowMap, headerMap)) != null ? (getCellValue(XlsConstants.AFFILIATE_CATEGORY, rowMap, headerMap)) : ""));
-                if (StringUtils.isNotBlank(getCellValue(XlsConstants.MAIN_IMAGE_ID, rowMap, headerMap))) {
-                    if (getBaseDao().get(ProductImage.class, getLong(getCellValue(XlsConstants.MAIN_IMAGE_ID, rowMap, headerMap))) != null) {
-                        productVariant.setMainImageId(getLong(getCellValue(XlsConstants.MAIN_IMAGE_ID, rowMap, headerMap)));
+                        (getCellValue(XslConstants.AFFILIATE_CATEGORY, rowMap, headerMap)) != null ? (getCellValue(XslConstants.AFFILIATE_CATEGORY, rowMap, headerMap)) : ""));
+                if (StringUtils.isNotBlank(getCellValue(XslConstants.MAIN_IMAGE_ID, rowMap, headerMap))) {
+                    if (getBaseDao().get(ProductImage.class, getLong(getCellValue(XslConstants.MAIN_IMAGE_ID, rowMap, headerMap))) != null) {
+                        productVariant.setMainImageId(getLong(getCellValue(XslConstants.MAIN_IMAGE_ID, rowMap, headerMap)));
                     }
                 }
                 // productVariant.setQty(getLong(getCellValue(INVENTORY, rowMap, headerMap)));
@@ -421,32 +421,32 @@ public class XslParser {
             while (objRowIt.hasNext()) {
                 rowMap = getRowMap(objRowIt);
                 CourierServiceInfo courierServiceInfo = new CourierServiceInfo();
-                String id = getCellValue(XlsConstants.ID, rowMap, headerMap);
+                String id = getCellValue(XslConstants.ID, rowMap, headerMap);
                 if (StringUtils.isNotBlank(id)) {
                     courierServiceInfo.setId(getLong(id));
                 }
                 String lPincode = null;
                 try {
-                    lPincode = getCellValue(XlsConstants.PINCODE, rowMap, headerMap).replace(".0", "");
+                    lPincode = getCellValue(XslConstants.PINCODE, rowMap, headerMap).replace(".0", "");
                     if (lPincode != null) {
                         Pincode pincode = getPincodeService().getByPincode(lPincode);
                         if (pincode != null) {
                             courierServiceInfo.setPincode(pincode);
-                            String codAvailable = getCellValue(XlsConstants.COD_AVAILABLE, rowMap, headerMap);
+                            String codAvailable = getCellValue(XslConstants.COD_AVAILABLE, rowMap, headerMap);
                             boolean isCODAvailable = StringUtils.isNotBlank(codAvailable) && codAvailable.trim().toLowerCase().equals("y") ? true : false;
                             courierServiceInfo.setCodAvailable(isCODAvailable);
-                            Courier courier = getCourierService().getCourierById(getLong(getCellValue(XlsConstants.COURIER_ID, rowMap, headerMap)));
+                            Courier courier = getCourierService().getCourierById(getLong(getCellValue(XslConstants.COURIER_ID, rowMap, headerMap)));
                             courierServiceInfo.setCourier(courier);
-                            String deleted = getCellValue(XlsConstants.IS_DELETED, rowMap, headerMap);
+                            String deleted = getCellValue(XslConstants.IS_DELETED, rowMap, headerMap);
                             boolean isDeleted = StringUtils.isNotBlank(deleted) && deleted.trim().toLowerCase().equals("y") ? true : false;
                             courierServiceInfo.setDeleted(isDeleted);
-                            String preferred = getCellValue(XlsConstants.IS_PREFERRED, rowMap, headerMap);
+                            String preferred = getCellValue(XslConstants.IS_PREFERRED, rowMap, headerMap);
                             boolean isPreferred = StringUtils.isNotBlank(preferred) && preferred.trim().toLowerCase().equals("y") ? true : false;
                             courierServiceInfo.setPreferred(isPreferred);
-                            String preferredCod = getCellValue(XlsConstants.IS_PREFERRED_COD, rowMap, headerMap);
+                            String preferredCod = getCellValue(XslConstants.IS_PREFERRED_COD, rowMap, headerMap);
                             boolean isPreferredCod = StringUtils.isNotBlank(preferredCod) && preferredCod.trim().toLowerCase().equals("y") ? true : false;
                             courierServiceInfo.setPreferredCod(isPreferredCod);
-                            courierServiceInfo.setRoutingCode(getCellValue(XlsConstants.ROUTING_CODE, rowMap, headerMap));
+                            courierServiceInfo.setRoutingCode(getCellValue(XslConstants.ROUTING_CODE, rowMap, headerMap));
 
                             courierServiceInfoList.add(courierServiceInfo);
                         }
@@ -496,7 +496,7 @@ public class XslParser {
         try {
             while (objRowIt.hasNext()) {
                 rowMap = getRowMap(objRowIt);
-                String pincodeValue = getCellValue(XlsConstants.PINCODE, rowMap, headerMap).replace(".0", "");
+                String pincodeValue = getCellValue(XslConstants.PINCODE, rowMap, headerMap).replace(".0", "");
                 if (StringUtils.isEmpty(pincodeValue)) {
                     logger.error("Pincode cannot be null @ Row:" + rowCount);
                     throw new NullPointerException("Pincode cannot be null @row" + rowCount);
@@ -506,12 +506,12 @@ public class XslParser {
                     pincode = new Pincode();
                 }
                 pincode.setPincode(pincodeValue);
-                pincode.setCity(getCellValue(XlsConstants.CITY, rowMap, headerMap));
-                pincode.setState(getCellValue(XlsConstants.STATE, rowMap, headerMap));
-                pincode.setLocality(getCellValue(XlsConstants.LOCALITY, rowMap, headerMap));
-                String courierId = getCellValue(XlsConstants.DEFAULT_COURIER_ID, rowMap, headerMap);
+                pincode.setCity(getCellValue(XslConstants.CITY, rowMap, headerMap));
+                pincode.setState(getCellValue(XslConstants.STATE, rowMap, headerMap));
+                pincode.setLocality(getCellValue(XslConstants.LOCALITY, rowMap, headerMap));
+                String courierId = getCellValue(XslConstants.DEFAULT_COURIER_ID, rowMap, headerMap);
                 if (StringUtils.isNotEmpty(courierId)) {
-                    Courier courier = getCourierService().getCourierById(getLong(getCellValue(XlsConstants.DEFAULT_COURIER_ID, rowMap, headerMap)));
+                    Courier courier = getCourierService().getCourierById(getLong(getCellValue(XslConstants.DEFAULT_COURIER_ID, rowMap, headerMap)));
                     if (courier == null) {
                         logger.error("Exception @ Row:" + rowCount);
                         throw new Exception("Courier Id is incorrect @ Row:" + rowCount);
@@ -557,8 +557,8 @@ public class XslParser {
         try {
             while (objRowIt.hasNext()) {
                 rowMap = getRowMap(objRowIt);
-                String pincodeValue = getCellValue(XlsConstants.PINCODE, rowMap, headerMap).replace(".0", "");
-                String wareHouseValue = getCellValue(XlsConstants.WAREHOUSE, rowMap, headerMap);
+                String pincodeValue = getCellValue(XslConstants.PINCODE, rowMap, headerMap).replace(".0", "");
+                String wareHouseValue = getCellValue(XslConstants.WAREHOUSE, rowMap, headerMap);
                 if (StringUtils.isEmpty(pincodeValue)) {
                     logger.error("Pincode cannot be null @ Row:" + rowCount);
                     throw new NullPointerException("Pincode cannot be null @row" + rowCount);
@@ -579,8 +579,8 @@ public class XslParser {
                     throw new NullPointerException("Warehouse does not exists @row" + rowCount);
                 }
 
-                String codCourierId = getCellValue(XlsConstants.COD_COURIER_ID, rowMap, headerMap);
-                String techCourierId = getCellValue(XlsConstants.TECH_PROCESS_COURIER_ID, rowMap, headerMap);
+                String codCourierId = getCellValue(XslConstants.COD_COURIER_ID, rowMap, headerMap);
+                String techCourierId = getCellValue(XslConstants.TECH_PROCESS_COURIER_ID, rowMap, headerMap);
                 if (StringUtils.isNotEmpty(codCourierId) || StringUtils.isNotEmpty(techCourierId)) {
                     Courier courier_cod = getCourierService().getCourierById(getLong(codCourierId));
                     Courier courier_tech = getCourierService().getCourierById(getLong(techCourierId));
@@ -589,8 +589,8 @@ public class XslParser {
                         throw new Exception("Courier Id is incorrect @ Row:" + rowCount);
                     }
 
-                    Double estimatedShippingCostCod = getDouble(getCellValue(XlsConstants.ESTIMATED_SHIPPING_COST_COD, rowMap, headerMap));
-                    Double estimatedShippingCostNonCod = getDouble(getCellValue(XlsConstants.ESTIMATED_SHIPPING_COST_NON_COD, rowMap, headerMap));
+                    Double estimatedShippingCostCod = getDouble(getCellValue(XslConstants.ESTIMATED_SHIPPING_COST_COD, rowMap, headerMap));
+                    Double estimatedShippingCostNonCod = getDouble(getCellValue(XslConstants.ESTIMATED_SHIPPING_COST_NON_COD, rowMap, headerMap));
 
                     PincodeDefaultCourier pincodeDefaultCourier = new PincodeDefaultCourier();
                     pincodeDefaultCourier.setPincode(pincode);
@@ -637,10 +637,10 @@ public class XslParser {
             headerMap = getRowMap(objRowIt);
             while (objRowIt.hasNext()) {
                 rowMap = getRowMap(objRowIt);
-                ProductVariant productVariant = getProductVariantService().getVariantById(getCellValue(XlsConstants.VARIANT_ID, rowMap, headerMap));
+                ProductVariant productVariant = getProductVariantService().getVariantById(getCellValue(XslConstants.VARIANT_ID, rowMap, headerMap));
                 if (productVariant != null) {
                     // Long qty = getLong(getCellValue(QTY, rowMap, headerMap));
-                    Long checkinQty = getLong(getCellValue(XlsConstants.CHECKIN_QTY, rowMap, headerMap));
+                    Long checkinQty = getLong(getCellValue(XslConstants.CHECKIN_QTY, rowMap, headerMap));
                     Long askedQty = 0L;
                     // GrnLineItem grnLineItem = grnLineItemDao.find(getLong(getCellValue(GRN_LINE_ITEM_ID, rowMap,
                     // headerMap)));
@@ -655,9 +655,9 @@ public class XslParser {
                         }
                         logger.debug("checkinQty of variant - " + productVariant.getId() + " is - " + checkinQty);
                         if (checkinQty != null && checkinQty > 0) {
-                            String batch = getCellValue(XlsConstants.BATCH_NUMBER, rowMap, headerMap);
-                            SkuGroup skuGroup = inventoryService.createSkuGroup(batch, getDate(getCellValue(MFG_DATE, rowMap, headerMap)), getDate(getCellValue(EXP_DATE, rowMap, headerMap)), goodsReceivedNote, null, null, null);
-                            inventoryService.createSkuItemsAndCheckinInventory(skuGroup, checkinQty, null, grnLineItem, null, null, invTxnTypeDao.find(EnumInvTxnType.INV_CHECKIN.getId()), null);
+                            String batch = getCellValue(XslConstants.BATCH_NUMBER, rowMap, headerMap);
+                            SkuGroup skuGroup = adminInventoryService.createSkuGroup(batch, getDate(getCellValue(XslConstants.MFG_DATE, rowMap, headerMap)), getDate(getCellValue(XslConstants.EXP_DATE, rowMap, headerMap)), goodsReceivedNote, null, null, null);
+                            adminInventoryService.createSkuItemsAndCheckinInventory(skuGroup, checkinQty, null, grnLineItem, null, null, getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKIN), null);
                             
                             /*SkuGroup skuGroup = getAdminInventoryService().createSkuGroup(batch, getDate(getCellValue(XlsConstants.MFG_DATE, rowMap, headerMap)),
                                     getDate(getCellValue(XlsConstants.EXP_DATE, rowMap, headerMap)), goodsReceivedNote, null, null);
@@ -712,17 +712,17 @@ public class XslParser {
             headerMap = getRowMap(objRowIt);
             while (objRowIt.hasNext()) {
                 rowMap = getRowMap(objRowIt);
-                ProductVariant productVariant = getProductVariantService().getVariantById(getCellValue(XlsConstants.VARIANT_ID, rowMap, headerMap));
+                ProductVariant productVariant = getProductVariantService().getVariantById(getCellValue(XslConstants.VARIANT_ID, rowMap, headerMap));
                 if (productVariant != null) {
 
-                    Long qty = getLong(getCellValue(XlsConstants.QTY, rowMap, headerMap));
+                    Long qty = getLong(getCellValue(XslConstants.QTY, rowMap, headerMap));
                     logger.debug("qty of variant - " + productVariant.getId() + " is - " + qty);
                     if (qty != null && qty > 0) {
-                        Double cost = getDouble(getCellValue(XlsConstants.COST, rowMap, headerMap));
+                        Double cost = getDouble(getCellValue(XslConstants.COST, rowMap, headerMap));
                         if (cost == null || cost == 0D) {
                             cost = productVariant.getCostPrice();
                         }
-                        Double mrp = getDouble(getCellValue(XlsConstants.MRP, rowMap, headerMap));
+                        Double mrp = getDouble(getCellValue(XslConstants.MRP, rowMap, headerMap));
                         if (mrp == null || mrp == 0D) {
                             mrp = productVariant.getMarkedPrice();
                         }
@@ -1175,10 +1175,10 @@ public class XslParser {
                     List<Product> relatedProducts = new ArrayList<Product>();
                     while (objRowIt.hasNext()) {
                         rowMap = getRowMap(objRowIt);
-                        if (StringUtils.isBlank(getCellValue(XlsConstants.PRODUCT_ID, rowMap, headerMap))) {
+                        if (StringUtils.isBlank(getCellValue(XslConstants.PRODUCT_ID, rowMap, headerMap))) {
                             // this is not a new product. add a new product variant
                         } else {
-                            Product product = getProductService().getProductById(getCellValue(XlsConstants.PRODUCT_ID, rowMap, headerMap));
+                            Product product = getProductService().getProductById(getCellValue(XslConstants.PRODUCT_ID, rowMap, headerMap));
                             if (mainProduct == null || !mainProduct.equals(product)) {
                                 if (mainProduct != null) {
                                     getProductService().save(mainProduct);
@@ -1190,7 +1190,7 @@ public class XslParser {
                             }
                         }
                         if (mainProduct != null && relatedProducts.size() < 6) {
-                            Product crossProduct = getProductService().getProductById(getCellValue(XlsConstants.CROSS_PRODUCT_ID, rowMap, headerMap));
+                            Product crossProduct = getProductService().getProductById(getCellValue(XslConstants.CROSS_PRODUCT_ID, rowMap, headerMap));
                             if (crossProduct != null && !crossProduct.equals(mainProduct) && !crossProduct.isDeleted()) {
                                 relatedProducts.add(crossProduct);
                                 mainProduct.setRelatedProducts(relatedProducts);
@@ -1371,14 +1371,14 @@ public class XslParser {
             while (rowIterator.hasNext()) {
                 Map<Integer, String> rowMap = getRowMap(rowIterator);
 
-                String name = getCellValue(XlsConstants.MANUFACTURER_NAME, rowMap, headerMap);
+                String name = getCellValue(XslConstants.MANUFACTURER_NAME, rowMap, headerMap);
                 if (name != null && name.equals(manufacturerName)) {
                     manufacturer = new Manufacturer();
                     manufacturer.setName(name);
-                    manufacturer.setDescription(getCellValue(XlsConstants.MANUFACTURER_DESCRIPTION, rowMap, headerMap));
-                    manufacturer.setWebsite(getCellValue(XlsConstants.MANUFACTURER_WEBSITE, rowMap, headerMap));
-                    manufacturer.setEmail(getCellValue(XlsConstants.MANUFACTURER_EMAIL, rowMap, headerMap));
-                    String isPanIndia = getCellValue(XlsConstants.MANUFACTURER_PAN_INDIA, rowMap, headerMap);
+                    manufacturer.setDescription(getCellValue(XslConstants.MANUFACTURER_DESCRIPTION, rowMap, headerMap));
+                    manufacturer.setWebsite(getCellValue(XslConstants.MANUFACTURER_WEBSITE, rowMap, headerMap));
+                    manufacturer.setEmail(getCellValue(XslConstants.MANUFACTURER_EMAIL, rowMap, headerMap));
+                    String isPanIndia = getCellValue(XslConstants.MANUFACTURER_PAN_INDIA, rowMap, headerMap);
                     boolean isPanIndiaBoolean = StringUtils.isNotBlank(isPanIndia) && isPanIndia.trim().toLowerCase().equals("y") ? true : false;
                     manufacturer.setAvailableAllOverIndia(isPanIndiaBoolean);
                     break;

@@ -46,7 +46,7 @@ import com.hk.domain.user.User;
 import com.hk.pact.dao.email.NotifyMeDao;
 import com.hk.pact.dao.marketing.EmailCampaignDao;
 import com.hk.report.manager.ReportManager;
-import com.hk.util.NotifyMeListUtil;
+import com.hk.util.SendGridUtil;
 import com.hk.web.action.error.AdminPermissionAction;
 
 /**
@@ -163,7 +163,7 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
         // get or create emailCampaign
         EmailCampaign emailCampaign = emailCampaignDao.getOrCreateEmailCampaign(emailCampaignName, 0l, EmailTemplateConstants.notifyUserEmail);
 
-        String xsmtpapi = NotifyMeListUtil.getSendGridHeaderJson(product, productVariant, emailCampaign);
+        String xsmtpapi = SendGridUtil.getNotifyMeSendGridHeaderJson(product, productVariant, emailCampaign);
         // send email to users, one per unique email id and unique email campaign
         getAdminEmailManager().sendNotifyUsersMails(notifyMeList, emailCampaign, xsmtpapi, product, productVariant, user);
 

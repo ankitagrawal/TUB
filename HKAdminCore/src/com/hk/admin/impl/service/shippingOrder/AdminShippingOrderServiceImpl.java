@@ -70,14 +70,14 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         // Check if Order is in Action Queue before cancelling it.
         if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
             shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Cancelled));
-            shippingOrder = shippingOrderDaoProvider.get().save(shippingOrder);
-            inventoryService.reCheckInInventory(shippingOrder);
+            shippingOrder = getShippingOrderService().save(shippingOrder);
+            getAdminInventoryService().reCheckInInventory(shippingOrder);
             // TODO : Write a generic ROLLBACK util which will essentially release all attached laibilities i.e.
             // inventory, reward points, shipment, discount
             for (LineItem lineItem : shippingOrder.getLineItems()) {
-                inventoryService.checkInventoryHealth(lineItem.getSku().getProductVariant());
+                getInventoryService().checkInventoryHealth(lineItem.getSku().getProductVariant());
             }
-            logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Cancelled);
+            getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Cancelled);
 
             orderService.updateOrderStatusFromShippingOrders(shippingOrder.getBaseOrder(), EnumShippingOrderStatus.SO_Cancelled, EnumOrderStatus.Cancelled);
         }

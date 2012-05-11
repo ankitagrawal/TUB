@@ -11,10 +11,10 @@ import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.email.EmailCampaign;
 
-public class NotifyMeListUtil {
+public class SendGridUtil {
 
     @SuppressWarnings("unchecked")
-    public static String getSendGridHeaderJson(Product product, ProductVariant productVariant, EmailCampaign emailCampaign) {
+    public static String getNotifyMeSendGridHeaderJson(Product product, ProductVariant productVariant, EmailCampaign emailCampaign) {
         List<String> categories = new ArrayList<String>();
         categories.add("NotifyUsers");
         categories.add("campaign_" + emailCampaign.getName());
@@ -24,6 +24,20 @@ public class NotifyMeListUtil {
         sendGridHeaderMap.put("category", categories);
         Gson gson = JsonUtils.getGsonDefault();
         return gson.toJson(sendGridHeaderMap);
+    }
+    
+    
+    @SuppressWarnings("unchecked")
+    public static String getSendGridEmailNewsLetterHeaderJson(List<String> finalCategories, EmailCampaign emailCampaign) {
+        List<String> categories = new ArrayList<String>();
+        categories.add("hk_newsletters");
+        categories.add("campaign_" + emailCampaign.getName());
+        categories.addAll(finalCategories);
+
+        Map sendgridHeaderMap = new HashMap();
+        sendgridHeaderMap.put("category", categories);
+        Gson gson = JsonUtils.getGsonDefault();
+        return gson.toJson(sendgridHeaderMap);
     }
 
 }

@@ -4,25 +4,25 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hk.domain.order.Order;
-import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.order.CartFreeBieDao;
 import com.hk.pact.service.order.CartFreebieService;
 import com.hk.web.filter.WebContext;
 
 @Service
 public class CartFreeBieServiceImpl implements CartFreebieService {
 
-    private static String context         = WebContext.getRequest().getContextPath();
+    private static String  context         = WebContext.getRequest().getContextPath();
 
+    private String         revitalTshirt   = context + "/pages/lp/revital/images/banner_tshirt.jpg";  // 630
+    private String         revitalWatch    = context + "/pages/lp/revital/images/banner_watch.jpg";   // 1260
+    private String         revitalSunglass = context + "/pages/lp/revital/images/banner-sunglass.jpg"; // 2520
+    private String         revitalYogaDVD  = context + "/pages/lp/revital/images/banner-yoga_dvd.jpg";
+    private String         revitalMovieDVD = context + "/pages/lp/revital/images/banner-free_dvd.jpg";
 
-    private String        revitalTshirt   = context + "/pages/lp/revital/images/banner_tshirt.jpg";  // 630
-    private String        revitalWatch    = context + "/pages/lp/revital/images/banner_watch.jpg";   // 1260
-    private String        revitalSunglass = context + "/pages/lp/revital/images/banner-sunglass.jpg"; // 2520
-    private String        revitalYogaDVD  = context + "/pages/lp/revital/images/banner-yoga_dvd.jpg";
-    private String        revitalMovieDVD = context + "/pages/lp/revital/images/banner-free_dvd.jpg";
+    private CartFreeBieDao cartFreeBieDao;
 
     public String getFreebieBanner(Order order) {
         String imageURL = null;
@@ -58,17 +58,23 @@ public class CartFreeBieServiceImpl implements CartFreebieService {
     }
 
     private Double getCartValueForProducts(List<String> productList, Order order) {
-        String query = "select sum(cli.hkPrice*cli.qty) from CartLineItem cli where cli.productVariant.product.id in (:productList)  and cli.order = :order";
-        Double value = (Double) getSessionProvider().get().createQuery(query).setParameterList("productList", productList).setParameter("order", order).uniqueResult();
+        Double value = getCartFreeBieDao().getCartValueForProducts(productList, order);
         return value != null ? value : 0.0;
     }
 
     private Double getCartValueForVariants(List<String> productVariantList, Order order) {
-        String query = "select sum(cli.hkPrice*cli.qty) from CartLineItem cli where cli.productVariant.id in (:productVariantList)  and cli.order = :order";
-        Double value = (Double) getSessionProvider().get().createQuery(query).setParameterList("productVariantList", productVariantList).setParameter("order", order).uniqueResult();
+        Double value = getCartFreeBieDao().getCartValueForVariants(productVariantList, order);
         return value != null ? value : 0.0;
     }
 
+    public CartFreeBieDao getCartFreeBieDao() {
+        return cartFreeBieDao;
+    }
+
+    public void setCartFreeBieDao(CartFreeBieDao cartFreeBieDao) {
+        this.cartFreeBieDao = cartFreeBieDao;
+    }
+    
     
 
 }
