@@ -1,9 +1,6 @@
 package com.hk.api.rest.models.order;
 
 import com.hk.api.rest.models.user.APIUser;
-import com.hk.api.rest.models.order.APIOrderDetails;
-import com.hk.api.rest.models.order.APIPayment;
-import com.hk.api.rest.models.order.APIAddress;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
