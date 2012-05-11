@@ -1,0 +1,82 @@
+body {
+margin:0;
+padding:0;
+font-family: Arial, Helvetica, sans-serif;
+font-size:14px;
+color:#ffffff;
+line-height:1.5em;
+background: repeat-x #001219 url(images/Top-Background.jpg) center top;
+}
+
+table {
+border-collapse:collapse;
+border-spacing:0;}
+
+a {text-decoration:none;}
+a img{
+border:none;
+}
+
+div, h1, h2, h3, h4, span, ul, ol, p {margin:0; padding:0;}
+
+.cl {
+clear:both;}
+
+.floatl {float:left;}
+
+.floatr {float:right;}
+
+
+
+#wraper { width:840px; margin:0 auto;
+}
+
+
+/*-------------- header class ---------------*/
+
+#header {
+height:85px; position:relative;}
+
+.logo { margin:25px 20px 0 20px; float:left;}
+
+.slogen { float:left; margin-top:15px; border-left:solid 1px #cdcdcd; font-size:13px; color:#666666; padding:15px; vertical-align:middle; }
+
+.customer { float:left; margin:55px 0 0 35px; font-size:15px; font-weight:bold; color:#1e91cc;}
+
+.main_banner {margin:30px 0 15px 0; height:340px; background:url(images/top_banner.jpg) no-repeat;}
+
+.advice_box { margin:25px 25px 0 0; float:right; width:235px; height:290px;}
+
+.advice_form { width:215px; height:auto; background-color:#001621; border:1px solid #00435f; border-radius: 0px 0px 5px 5px; -moz-border-radius: 0px 0px 5px 5px; margin:0 auto;  }
+
+
+.advice_form form{ padding:10px 10px 0 10px;}
+.advice_form label{ font-size:12px; color:#FFFFFF; font-weight:bold;}
+.advice_form input{font-size:12px; padding-left:5px; color:#CCCCCC; background-color:#002737; border:1px solid #024e69; border-radius:3px; -moz-border-radius:3px; width:190px; height:25px; margin-bottom:8px; }
+.advice_form input.submit{height:35px; color:transparent; background: url(images/form_button.png) no-repeat center center; width:195px; font-size:0px; cursor:pointer; margin-top:5px;  }
+
+
+
+
+
+
+.contant01 { margin-top:25px;}
+.contant01 img{float:left; width:225px; height:247px; }
+.txt_cont  { float:left; margin-left:25px; width:590px;}
+.txt_big { font-size:20px; margin-bottom:10px; font-family:"Arial Black", Arial, Helvetica, sans-serif; color:#27bbf5; font-weight:900; text-decoration:none; width:590px; background:url(images/blue-fade.png) no-repeat right;}
+
+.point_box { width:590px; border:1px solid #00283b; margin-top:15px;}
+
+.point_box h2{width:580px; font-size:14px; padding:7px 0 0 10px; height:30px;  background-color:#00283b; font-weight:bold;}
+
+.point_box ul{ list-style:none; padding:5px 0px; margin:0 0 10px 15px; }
+
+.point_box li{ background:url(images/bullet.jpg) no-repeat 0 top; background-position:0px 8px; line-height:1.5em; margin-top:5px; text-indent:15px; }
+
+.divider { height:14px; background:url(images/divider.jpg) repeat-x; margin:20px 0;}
+
+
+/*---------- contant class ---------------------*/
+
+.footer { font-size:12px; margin:-10px 0 10px 0;}
+

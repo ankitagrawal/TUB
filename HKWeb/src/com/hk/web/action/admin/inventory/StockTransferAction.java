@@ -16,7 +16,10 @@ import org.apache.log4j.Logger;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
+import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
+import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
 import com.hk.admin.pact.dao.inventory.StockTransferDao;
+import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.domain.inventory.StockTransfer;
 import com.hk.domain.inventory.StockTransferLineItem;
@@ -24,8 +27,6 @@ import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.pact.dao.inventory.ProductVariantInventoryDao;
-import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.inventory.InventoryService;
@@ -37,10 +38,11 @@ public class StockTransferAction extends BasePaginatedAction {
 
     StockTransferDao                    stockTransferDao;
     UserDao                             userDao;
-    SkuItemDao                          skuItemDao;
-    ProductVariantInventoryDao          productVariantInventoryDao;
+    AdminSkuItemDao                     adminSkuItemDao;
+    AdminProductVariantInventoryDao     adminProductVariantInventoryDao;
     SkuService                          skuService;
     UserService                         userService;
+    AdminInventoryService               adminInventoryService;
     InventoryService                    inventoryService;
 
     private StockTransfer               stockTransfer;
@@ -89,8 +91,8 @@ public class StockTransferAction extends BasePaginatedAction {
 
             for (StockTransferLineItem stockTransferLineItem : stockTransferLineItems) {
                 if (stockTransferLineItem.getId() != null) {
-                    StockTransferLineItem stockTransferLineItemInDb = stockTransferDao.find(stockTransferLineItem.getId());
-                    stockTransferLineItem = stockTransferDao.save(stockTransferLineItemInDb);
+                    StockTransferLineItem stockTransferLineItemInDb = stockTransferDao.get(StockTransferLineItem.class, stockTransferLineItem.getId());
+                    stockTransferLineItem = (StockTransferLineItem) stockTransferDao.save(stockTransferLineItemInDb);
                 } else {
                     Sku sku = stockTransferLineItem.getSku();
                     if (sku == null) {
@@ -104,7 +106,7 @@ public class StockTransferAction extends BasePaginatedAction {
                     if (stockTransferLineItem.getCheckedoutQty() != null && stockTransferLineItem.getCheckedoutQty() == 0 && stockTransferLineItem.getId() != null) {
                         stockTransferDao.delete(stockTransferLineItem);
                     }
-                    List<SkuItem> instockSkuItems = skuItemDaoProvider.get().getInStockSkuItemsBySku(sku);
+                    List<SkuItem> instockSkuItems = adminSkuItemDao.getInStockSkuItemsBySku(sku);
                     if (!instockSkuItems.isEmpty()) {
                         stockTransferLineItem.setSku(sku);
                         stockTransferLineItem.setStockTransfer(stockTransfer);
@@ -116,13 +118,13 @@ public class StockTransferAction extends BasePaginatedAction {
                             return new RedirectResolution(StockTransferAction.class).addParameter("stockTransfer", stockTransfer.getId());
                         }
 
-                        if (productVariantInventoryDaoProvider.get().getPVIForStockTransfer(sku, stockTransferLineItem).isEmpty()) {
+                        if (adminProductVariantInventoryDao.getPVIForStockTransfer(sku, stockTransferLineItem).isEmpty()) {
                             // Delete from available batches.
                             int counter = 0;
                             for (SkuItem instockSkuItem : instockSkuItems) {
                                 if (counter < Math.abs(stockTransferLineItem.getCheckedoutQty())) {
-                                    inventoryService.inventoryCheckinCheckout(sku, instockSkuItem, null, null, null, null, stockTransferLineItem, invTxnTypeDaoProvider.get().find(
-                                            EnumInvTxnType.STOCK_TRANSFER_CHECKOUT.getId()), -1L, loggedOnUser);
+                                    adminInventoryService.inventoryCheckinCheckout(sku, instockSkuItem, null, null, null, null, stockTransferLineItem,
+                                            inventoryService.getInventoryTxnType(EnumInvTxnType.STOCK_TRANSFER_CHECKOUT), -1L, loggedOnUser);
                                     counter++;
                                 } else {
                                     break;
