@@ -188,9 +188,9 @@ public class InventoryHealthStatusAction extends BasePaginatedAction {
             Sku ggnSKU = skuService.findSKU(variant, whGurgaon);
             Sku mumSKU = skuService.findSKU(variant, whMumbai);
             Sku loggedInSKU = skuService.findSKU(variant, loggedInWarehouse);
-            loggedInWHInventory = inventoryService.getNetInventory(loggedInSKU);
-            ggnInventory = inventoryService.getNetInventory(ggnSKU);
-            mumInventory = inventoryService.getNetInventory(mumSKU);
+            loggedInWHInventory = adminInventoryService.getNetInventory(loggedInSKU);
+            ggnInventory = adminInventoryService.getNetInventory(ggnSKU);
+            mumInventory = adminInventoryService.getNetInventory(mumSKU);
             if (loggedInWarehouse != null) {
                 if (loggedInSKU != null) {
                     xlsWriter.addCell(row, variant.getId());

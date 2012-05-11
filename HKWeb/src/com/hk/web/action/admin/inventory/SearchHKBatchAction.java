@@ -14,9 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.sku.SkuGroup;
-import com.hk.pact.service.inventory.InventoryService;
 import com.hk.web.action.error.AdminPermissionAction;
 
 @Secure(hasAnyPermissions = { PermissionConstants.INVENTORY_CHECKIN }, authActionBean = AdminPermissionAction.class)
@@ -25,7 +25,7 @@ public class SearchHKBatchAction extends BaseAction {
     private static Logger logger = Logger.getLogger(SearchHKBatchAction.class);
 
     @Autowired
-    InventoryService      inventoryService;
+    AdminInventoryService      adminInventoryService;
 
     @Validate(required = true)
     private String        hkBarcode;
@@ -41,7 +41,7 @@ public class SearchHKBatchAction extends BaseAction {
     public Resolution showBatchInfo() {
         logger.debug("upc: " + hkBarcode);
         if (StringUtils.isNotBlank(hkBarcode)) {
-            skuGroup = inventoryService.getSkuGroupByHkBarcode(hkBarcode);
+            skuGroup = adminInventoryService.getSkuGroupByHkBarcode(hkBarcode);
             return new ForwardResolution("/pages/admin/searchHKBatch.jsp");
         } else {
             addRedirectAlertMessage(new SimpleMessage("Invalid HK Barcode."));
