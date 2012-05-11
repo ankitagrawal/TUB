@@ -3,6 +3,7 @@ package com.hk.web.action.core.accounting;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.Validate;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,14 +18,16 @@ import com.hk.domain.coupon.Coupon;
 import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.Address;
+import com.hk.helper.InvoiceNumHelper;
 import com.hk.manager.ReferrerProgramManager;
 import com.hk.pact.service.catalog.CategoryService;
+import com.hk.pact.service.order.CartFreebieService;
 import com.hk.util.BarcodeGenerator;
 
 @Component
 public class SOInvoiceAction extends BaseAction {
 
-    //private static Logger          logger = LoggerFactory.getLogger(SOInvoiceAction.class);
+    // private static Logger logger = LoggerFactory.getLogger(SOInvoiceAction.class);
 
     private boolean                printable;
     private Category               sexualCareCategory;
@@ -39,6 +42,8 @@ public class SOInvoiceAction extends BaseAction {
     private CategoryService        categoryService;
     @Autowired
     private CourierService         courierService;
+    @Autowired
+    private CartFreebieService cartFreebieService;
 
     private String                 barcodePath;
     private Coupon                 coupon;
@@ -47,7 +52,7 @@ public class SOInvoiceAction extends BaseAction {
 
     @DefaultHandler
     public Resolution pre() {
-        if (invoiceType.equals(SeekInvoiceNumService.PREFIX_FOR_B2B_ORDER)) {
+        if (invoiceType.equals(InvoiceNumHelper.PREFIX_FOR_B2B_ORDER)) {
             b2bUserDetails = b2bUserDetailsDao.getB2bUserDetails(shippingOrder.getBaseOrder().getUser());
           }
           invoiceDto = new InvoiceDto(shippingOrder, b2bUserDetails);
@@ -55,7 +60,7 @@ public class SOInvoiceAction extends BaseAction {
           coupon = referrerProgramManager.getOrCreateRefferrerCoupon(shippingOrder.getBaseOrder().getUser());
           barcodePath = barcodeGenerator.getBarcodePath(shippingOrder.getGatewayOrderId());
           Address address = addressDao.find(shippingOrder.getBaseOrder().getAddress().getId());
-          //As of now we have routing codes for BlueDart only so printing it by default.
+          // As of now we have routing codes for BlueDart only so printing it by default.
           boolean isCod = shippingOrder.isCOD();
           CourierServiceInfo courierServiceInfo = null;
           if (isCod) {
@@ -73,7 +78,6 @@ public class SOInvoiceAction extends BaseAction {
           addRedirectAlertMessage(new SimpleMessage("Given shipping order doesnot exist"));
           return new ForwardResolution("pages/admin/adminHome.jsp");
         }
-    }
 
     public Category getSexualCareCategory() {
         return sexualCareCategory;

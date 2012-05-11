@@ -1,6 +1,5 @@
 package com.hk.admin.util;
 
-
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -13,12 +12,12 @@ import org.krysalis.barcode4j.BarcodeGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.hk.admin.dto.accounting.InvoiceDto;
 import com.hk.admin.dto.accounting.InvoiceLineItemDto;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.constants.core.EnumRole;
-import com.hk.constants.core.Keys;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.shipment.EnumCourier;
 import com.hk.domain.catalog.category.Category;
@@ -41,8 +40,6 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
-
-
 public class InvoicePDFGenerator {
     private InvoiceDto     invoiceDto;
     private Coupon         coupon;
@@ -61,7 +58,9 @@ public class InvoicePDFGenerator {
     CourierServiceInfoDao  courierServiceInfoDao;
     @Autowired
     AddressDao             addressDao;
-    @Named(Keys.Env.adminDownloads)
+
+    // @Named(Keys.Env.adminDownloads)
+    @Value("#{hkEnvProps['adminDownloads']}")
     String                 adminDownloadsPath;
 
     /*
