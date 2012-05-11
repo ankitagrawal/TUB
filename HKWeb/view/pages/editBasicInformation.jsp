@@ -2,7 +2,7 @@
 <%@ page import="mhc.common.constants.RoleConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="mhc.web.action.MyAccountAction" var="maa"/>
+<s:useActionBean beanclass="com.hk.web.action.core.user.MyAccountAction" var="maa"/>
 <s:layout-render name="/layouts/default.jsp">
   <s:layout-component name="heading">Your Account</s:layout-component>
   <s:layout-component name="htmlHead">
@@ -16,7 +16,7 @@
   </s:layout-component>
 
   <s:layout-component name="rhsContent">
-    <s:form beanclass="mhc.web.action.MyAccountAction">
+    <s:form beanclass="com.hk.web.action.core.user.MyAccountAction">
       <s:errors/>
       <div>
         <h4 class="strikeline"> Basic Information</h4>

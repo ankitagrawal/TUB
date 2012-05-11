@@ -7,7 +7,7 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 
 <s:useActionBean beanclass="mhc.web.action.OrderDetailsAction" var="oa"/>
-<s:useActionBean beanclass="mhc.web.action.MyAccountAction" var="maa" event="pre"/>
+<s:useActionBean beanclass="com.hk.web.action.core.user.MyAccountAction" var="maa" event="pre"/>
 
 
 <s:layout-render name="/layouts/default.jsp">
@@ -109,7 +109,7 @@
 
   <div style="margin-top: 10px"></div>
 
-  <s:form beanclass="mhc.web.action.MyAccountAction">
+  <s:form beanclass="com.hk.web.action.core.user.MyAccountAction">
     <s:errors/>
     <h4 class="strikeline"> Basic Information</h4>
 
@@ -208,7 +208,7 @@
 </div>
 
 <div class="contactInformation" style="width: 100%; margin-top: 5px; margin-bottom: 5px; float:left;">
-  <s:form beanclass="mhc.web.action.UserManageAddressAction">
+  <s:form beanclass="com.hk.web.action.core.user.UserManageAddressAction">
     <h4 class="strikeline"> Contact Information</h4>
 
     <div style="margin-top: 10px"></div>
@@ -243,7 +243,7 @@
             <p>Phone: ${address.phone}</p>
           </div>
           <div style="float: right; font-size: 0.7em; margin-top:65px; margin-right:15px; width:20%">
-            <s:link beanclass="mhc.web.action.UserManageAddressAction" event="manageAddresses"
+            <s:link beanclass="com.hk.web.action.core.user.UserManageAddressAction" event="manageAddresses"
                     style="font-size:small; color:black; text-align:center;">View all addresses
               <%--<s:param name="address.id" value="${address.id}"/>--%>
               <%--<s:param name="user" value="${maa.user}"/>--%>
@@ -253,7 +253,7 @@
       </c:when>
       <c:otherwise>
         <div style="font-size: small;">&nbsp No contact information yet</div>
-        <s:link beanclass="mhc.web.action.UserManageAddressAction" event="manageAddresses"
+        <s:link beanclass="com.hk.web.action.core.user.UserManageAddressAction" event="manageAddresses"
                 style="float:right; font-size:small; color:black; text-align:center;">Add Address
         </s:link>
       </c:otherwise>
@@ -264,7 +264,7 @@
 <div class="recentOrders" style="width:100%; margin-top: 5px; margin-bottom: 5px; float:left;">
   <div style="margin-top: 10px"></div>
   <c:if test="${!empty recentOrders}">
-    <s:form beanclass="mhc.web.action.MyAccountAction">
+    <s:form beanclass="com.hk.web.action.core.user.MyAccountAction">
       <h4 class="strikeline"> Recent Orders</h4>
       <table class="cont footer_color">
         <th>Order Id</th>

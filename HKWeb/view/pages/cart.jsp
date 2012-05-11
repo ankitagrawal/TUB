@@ -508,7 +508,7 @@
   <shiro:hasAnyRoles name="<%=RoleConstants.HK_UNVERIFIED%>">
     Got a discount coupon?
     <br/>
-    <s:link beanclass="mhc.web.action.MyAccountAction" class="lrg" event="pre"> Verify your Account
+    <s:link beanclass="com.hk.web.action.core.user.MyAccountAction" class="lrg" event="pre"> Verify your Account
     </s:link>
     to redeem it.
     <br/>

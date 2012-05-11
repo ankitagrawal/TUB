@@ -1,7 +1,7 @@
 <%@ page import="mhc.common.constants.RoleConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="mhc.web.action.UserManageAddressAction" var="userBean" event="showAddressBook"/>
+<s:useActionBean beanclass="com.hk.web.action.core.user.UserManageAddressAction" var="userBean" event="showAddressBook"/>
 <s:layout-render name="/layouts/default.jsp">
   <s:layout-component name="heading">My Account</s:layout-component>
   <s:layout-component name="lhsContent">
@@ -9,7 +9,7 @@
   </s:layout-component>
 
   <s:layout-component name="rhsContent">
-    <s:form beanclass="mhc.web.action.UserManageAddressAction">
+    <s:form beanclass="com.hk.web.action.core.user.UserManageAddressAction">
       <div class='left2' style="width:100%">
         <div class="address" style="font-size: 0.813em; border: 0">
           <c:set var="addresses" value="${userBean.user.addresses}"/>
@@ -32,7 +32,7 @@
                     name='<%=RoleConstants.HK_AFFILIATE + "," + RoleConstants.HK_AFFILIATE_UNVERIFIED%>'>
                   <c:choose>
                     <c:when test="${mainAddressId != address.id}">
-                      <s:link beanclass="mhc.web.action.UserManageAddressAction" event="setAsDefaultAddress"
+                      <s:link beanclass="com.hk.web.action.core.user.UserManageAddressAction" event="setAsDefaultAddress"
                               class="save" onclick="return confirm('Your cheque will sent here!!')">
                         <s:param name="address" value="${address.id}"/>
                         <s:param name="affiliate" value="${userBean.affiliate.id}"/>
@@ -43,7 +43,7 @@
                       <strong>(Default Address Set)</strong>
                     </c:otherwise>
                   </c:choose>
-                  <%--<s:link beanclass="mhc.web.action.UserManageAddressAction" event="setAsDefaultAddress"--%>
+                  <%--<s:link beanclass="com.hk.web.action.core.user.UserManageAddressAction" event="setAsDefaultAddress"--%>
                   <%--class="save" onclick="return confirm('Your cheque will sent here!!')">--%>
                   <%--<s:param name="address" value="${address.id}"/>--%>
                   <%--<s:param name="affiliate" value="${userBean.affiliate.id}"/>--%>
@@ -51,12 +51,12 @@
                   <%--</s:link>--%>
                 </shiro:hasAnyRoles>
 
-                <s:link beanclass="mhc.web.action.UserManageAddressAction" event="editUserAddresses" class="edit">
+                <s:link beanclass="com.hk.web.action.core.user.UserManageAddressAction" event="editUserAddresses" class="edit">
                   <s:param name="address" value="${address.id}"/>
                   (edit)
                 </s:link>
 
-                <s:link beanclass="mhc.web.action.UserManageAddressAction" event="remove" class="delete"
+                <s:link beanclass="com.hk.web.action.core.user.UserManageAddressAction" event="remove" class="delete"
                         onclick="return confirm('Are you sure you want to delete this address?')">
                   <s:param name="address" value="${address.id}"/>
                   (delete)
@@ -68,7 +68,7 @@
           </c:if>
 
           <div class='tip' style="float:right;">
-            <s:link beanclass="mhc.web.action.UserManageAddressAction" event="editUserAddresses">Add New Address</s:link>
+            <s:link beanclass="com.hk.web.action.core.user.UserManageAddressAction" event="editUserAddresses">Add New Address</s:link>
           </div>
         </div>
       </div>

@@ -10,7 +10,7 @@
   <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.hkCommonPlugins.js"></script>
 </head>
 <body>
-<s:useActionBean beanclass="mhc.web.action.AccountingInvoiceAction" event="pre" var="orderSummary"/>
+<s:useActionBean beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="pre" var="orderSummary"/>
 
 <div class="container_12">
 <div class="grid_12" style="text-align: center;">

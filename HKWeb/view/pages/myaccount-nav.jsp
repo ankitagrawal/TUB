@@ -4,7 +4,7 @@
 <fieldset>
   <ul style="list-style: none; line-height: 25px;">
     <li>
-      <s:link beanclass="mhc.web.action.MyAccountAction" title="My Account"><span
+      <s:link beanclass="com.hk.web.action.core.user.MyAccountAction" title="My Account"><span
           id="myAccountLink">MY ACCOUNT</span> </s:link>
     </li>
     <li>
@@ -15,7 +15,7 @@
     </li>
     <%--<shiro:hasAnyRoles name="<%=RoleConstants.AFFILIATE%>">--%>
       <li>
-        <s:link beanclass="mhc.web.action.UserManageAddressAction" event="manageAddresses"
+        <s:link beanclass="com.hk.web.action.core.user.UserManageAddressAction" event="manageAddresses"
                 title="My Addresses"><span id="myAddressesLink">My Addresses</span></s:link>
       </li>
     <%--</shiro:hasAnyRoles>--%>

@@ -1,24 +1,5 @@
 package com.hk.web.action.core.user;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.DontValidate;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.validation.EmailTypeConverter;
-import net.sourceforge.stripes.validation.LocalizableError;
-import net.sourceforge.stripes.validation.SimpleError;
-import net.sourceforge.stripes.validation.Validate;
-import net.sourceforge.stripes.validation.ValidationMethod;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.RoleConstants;
 import com.hk.domain.order.Order;
@@ -32,6 +13,15 @@ import com.hk.pact.service.RoleService;
 import com.hk.pact.service.UserService;
 import com.hk.web.action.core.auth.LoginAction;
 import com.hk.web.action.core.order.OrderSummaryAction;
+import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.validation.*;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Secure(hasAnyRoles = { RoleConstants.HK_UNVERIFIED, RoleConstants.HK_USER }, authUrl = "/core/auth/Login.action?source=" + LoginAction.SOURCE_CHECKOUT, disallowRememberMe = true)
 @Component
@@ -49,7 +39,7 @@ public class SelectAddressAction extends BaseAction {
     private UserService   userService;
     @Autowired
     private RoleService   roleService;
-    
+
     private List<Address> addresses = new ArrayList<Address>(1);
 
     @Validate(required = true, on = "remove")
@@ -58,6 +48,8 @@ public class SelectAddressAction extends BaseAction {
     @Validate(converter = EmailTypeConverter.class)
     private String        email;
 
+	  @Validate(required = true)
+    private Order order;
     @ValidationMethod(on = "checkout")
     public void validate() {
         Role tempUserRole = getRoleService().getRoleByName(RoleConstants.TEMP_USER);
@@ -161,7 +153,15 @@ public class SelectAddressAction extends BaseAction {
         this.email = email;
     }
 
-    public UserService getUserService() {
+	public Order getOrder() {
+		return order;
+	}
+
+	public void setOrder(Order order) {
+		this.order = order;
+	}
+
+	public UserService getUserService() {
         return userService;
     }
 

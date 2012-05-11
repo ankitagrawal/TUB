@@ -129,7 +129,7 @@
     PC Invoice
   </s:link>)
     <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_ACCOUNTING_INVOICE%>">
-    (<s:link beanclass="mhc.web.action.AccountingInvoiceAction" event="pre" target="_blank">
+    (<s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="pre" target="_blank">
     <s:param name="shippingOrder" value="${shippingOrder}"/>
     Accounting Invoice
   </s:link>)
@@ -204,7 +204,7 @@
         Name : <span class="or">${baseOrder.user.name}</span>
       </div>
       <span style="margin-left:10px;">
-        Email: (<s:link beanclass="mhc.web.action.admin.SearchUserAction" event="search">
+        Email: (<s:link beanclass="com.hk.web.action.admin.user.SearchUserAction" event="search">
         <s:param name="userFilterDto.login" value="${baseOrder.user.login}"/>
         ${baseOrder.user.login}
       </s:link>)

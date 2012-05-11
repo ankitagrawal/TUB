@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="mhc.web.action.MyAccountAction" var="maa"/>
+<s:useActionBean beanclass="com.hk.web.action.core.user.MyAccountAction" var="maa"/>
 <s:layout-render name="/layouts/default.jsp">
   <s:layout-component name="heading">Your Account</s:layout-component>
   <s:layout-component name="lhsContent">
@@ -8,7 +8,7 @@
   </s:layout-component>
 
   <s:layout-component name="rhsContent">
-    <s:form beanclass="mhc.web.action.UserManageAddressAction" id="newAddressForm">
+    <s:form beanclass="com.hk.web.action.core.user.UserManageAddressAction" id="newAddressForm">
       <h4 class="strikeline">New Address</h4>
 
       <div style="margin-top:15px"></div>

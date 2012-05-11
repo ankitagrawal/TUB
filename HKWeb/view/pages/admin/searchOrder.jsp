@@ -322,23 +322,23 @@
     Invoice <s:param name="order" value="${order.id}"/>
   </s:link>) <br/>
   </c:if>
-    <%--<br/>(<s:link beanclass="mhc.web.action.AccountingInvoiceAction" event="oldAccountingInvoice" target="_blank">--%>
+    <%--<br/>(<s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="oldAccountingInvoice" target="_blank">--%>
     <%--Prime Accounting Invoice <s:param name="order" value="${order.id}"/></s:link>) <br>--%>
     <%--<br/><b>Retail Invoice:</b> <br/>--%>
     <%--<c:forEach items="${order.retailInvoices}" var="accountingInvoice">--%>
-    <%--<s:link beanclass="mhc.web.action.AccountingInvoiceAction" event="retailInvoice" target="_blank">--%>
+    <%--<s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="retailInvoice" target="_blank">--%>
     <%--<s:param name="accountingInvoice" value="${accountingInvoice.id}"/>--%>
     <%--R-${accountingInvoice.retailInvoiceId} on <fmt:formatDate value="${accountingInvoice.invoiceDate}" type="both"/>--%>
     <%--</s:link><br/></c:forEach>--%>
     <%--<br/><b>B2B Invoice:</b> <br/>--%>
     <%--<c:forEach items="${order.b2BInvoices}" var="accountingInvoice">--%>
-    <%--<s:link beanclass="mhc.web.action.AccountingInvoiceAction" event="b2bInvoice" target="_blank">--%>
+    <%--<s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="b2bInvoice" target="_blank">--%>
     <%--<s:param name="accountingInvoice" value="${accountingInvoice.id}"/>--%>
     <%--T-${accountingInvoice.retailInvoiceId} on--%>
     <%--<fmt:formatDate value="${accountingInvoice.invoiceDate}" type="both"/>--%>
     <%--</s:link><br/></c:forEach><br/><br/><b>Service Invoice:</b> <br/>--%>
     <%--<c:forEach items="${order.seviceInvoices}" var="accountingInvoice">--%>
-    <%--<s:link beanclass="mhc.web.action.AccountingInvoiceAction" event="serviceInvoice" target="_blank">--%>
+    <%--<s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="serviceInvoice" target="_blank">--%>
     <%--<s:param name="accountingInvoice" value="${accountingInvoice.id}"/>--%>
     <%--S-${accountingInvoice.serviceInvoiceId} on--%>
     <%--<fmt:formatDate value="${accountingInvoice.invoiceDate}" type="both"/>--%>
@@ -350,7 +350,7 @@
     <c:when test="${order.user.email == order.user.login}">
       <%-- Usual case , seems like a registered user --%>
       <span class="upc lgry sml">Email</span>
-      <s:link beanclass="mhc.web.action.admin.SearchUserAction" event="search">
+      <s:link beanclass="com.hk.web.action.admin.user.SearchUserAction" event="search">
         <s:param name="userFilterDto.login" value="${order.user.login}"/>
         ${order.user.login}
       </s:link>
@@ -358,7 +358,7 @@
     <c:otherwise>
       <%-- Probably a guest user account --%>
       <span class="upc lgry sml">Login</span>
-      <s:link beanclass="mhc.web.action.admin.SearchUserAction" event="search">
+      <s:link beanclass="com.hk.web.action.admin.user.SearchUserAction" event="search">
       <s:param name="userFilterDto.login" value="${order.user.login}"/>
       ${order.user.login}
       </s:link><br/>
