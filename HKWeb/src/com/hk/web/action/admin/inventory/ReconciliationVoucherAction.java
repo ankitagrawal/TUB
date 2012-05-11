@@ -121,10 +121,8 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
                     rvLineItem = (RvLineItem) getBaseDao().save(rvLineItem);
                     if (productVariantInventoryDao.getPVIForRV(sku, rvLineItem).isEmpty()) {
                         // Create batch and checkin inv
-                        SkuGroup skuGroup = adminInventoryService.createSkuGroup(rvLineItem.getBatchNumber(), rvLineItem.getMfgDate(), rvLineItem.getExpiryDate(), null,
-                                reconciliationVoucher, sku);
-                        adminInventoryService.createSkuItemsAndCheckinInventory(skuGroup, rvLineItem.getQty(), null, null, rvLineItem,
-                                inventoryService.getInventoryTxnType(EnumInvTxnType.RV_CHECKIN), loggedOnUser);
+                        SkuGroup skuGroup = adminInventoryService.createSkuGroup(rvLineItem.getBatchNumber(), rvLineItem.getMfgDate(), rvLineItem.getExpiryDate(), null, reconciliationVoucher, null, sku);
+                        adminInventoryService.createSkuItemsAndCheckinInventory(skuGroup, rvLineItem.getQty(), null, null, rvLineItem, null, inventoryService.getInventoryTxnType(EnumInvTxnType.RV_CHECKIN), loggedOnUser);
                     }
                 } else if (rvLineItem.getReconciliationType().equals(reconciliationVoucherDao.get(ReconciliationType.class, EnumReconciliationType.Subtract.getId()))) {
                     List<SkuItem> instockSkuItems = adminSkuItemDao.getInStockSkuItemsBySku(sku);
@@ -138,7 +136,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
                             int counter = 0;
                             for (SkuItem instockSkuItem : instockSkuItems) {
                                 if (counter < Math.abs(rvLineItem.getQty())) {
-                                    adminInventoryService.inventoryCheckinCheckout(sku, instockSkuItem, null, null, null, rvLineItem,
+                                    adminInventoryService.inventoryCheckinCheckout(sku, instockSkuItem, null, null, null, rvLineItem,null,
                                             inventoryService.getInventoryTxnType(EnumInvTxnType.RV_LOST_PILFERAGE), -1L, loggedOnUser);
                                     counter++;
                                 } else {
@@ -158,7 +156,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
                             int counter = 0;
                             for (SkuItem instockSkuItem : instockSkuItems) {
                                 if (counter < Math.abs(rvLineItem.getQty())) {
-                                    adminInventoryService.inventoryCheckinCheckout(sku, instockSkuItem, null, null, null, rvLineItem,
+                                    adminInventoryService.inventoryCheckinCheckout(sku, instockSkuItem, null, null, null, rvLineItem,null,
                                             inventoryService.getInventoryTxnType(EnumInvTxnType.RV_DAMAGED), -1L, loggedOnUser);
                                     adminInventoryService.damageInventoryCheckin(instockSkuItem, null);
                                     counter++;
@@ -179,7 +177,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
                             int counter = 0;
                             for (SkuItem instockSkuItem : instockSkuItems) {
                                 if (counter < Math.abs(rvLineItem.getQty())) {
-                                    adminInventoryService.inventoryCheckinCheckout(sku, instockSkuItem, null, null, null, rvLineItem,
+                                    adminInventoryService.inventoryCheckinCheckout(sku, instockSkuItem, null, null, null, rvLineItem,null,
                                             inventoryService.getInventoryTxnType(EnumInvTxnType.RV_EXPIRED), -1L, loggedOnUser);
                                     // inventoryService.damageInventoryCheckin(instockSkuItem, null);
                                     counter++;
