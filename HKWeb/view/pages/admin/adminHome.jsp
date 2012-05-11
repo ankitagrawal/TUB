@@ -141,7 +141,7 @@
 
 	<h3><s:link beanclass="mhc.web.action.admin.ParseEstimatedCourierExpensesExcelAction">Upload Estimated Courier Collection Charges</s:link> </h3>
 
-  <h3><s:link beanclass="mhc.web.action.admin.ChangeShipmentDetailsAction">Change shipment details</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.admin.shipment.ChangeShipmentDetailsAction">Change shipment details</s:link></h3>
 
 </div>
 

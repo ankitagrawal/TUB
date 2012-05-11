@@ -4,7 +4,7 @@
 <%@ page import="mhc.domain.order.ShippingOrder" %>
 <%@ page import="mhc.web.json.HealthkartResponse" %>
 <%@ page import="java.util.Set" %>
-<%@ page import="mhc.service.dao.MasterDataDao" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="mhc.common.constants.*" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>

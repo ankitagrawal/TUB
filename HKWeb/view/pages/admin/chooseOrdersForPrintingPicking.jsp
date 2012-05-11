@@ -1,8 +1,8 @@
-<%@ page import="app.bootstrap.guice.InjectorFactory" %>
-<%@ page import="mhc.common.constants.EnumCartLineItemType" %>
-<%@ page import="mhc.common.constants.shippingOrder.EnumShippingOrderStatus" %>
-<%@ page import="mhc.service.dao.CategoryDao" %>
-<%@ page import="mhc.service.shippingOrder.ShippingOrderStatusService" %>
+<%@ page import="com.hk.constants.order.EnumCartLineItemType" %>
+<%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus" %>
+<%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
+<%@ page import="com.hk.pact.service.shippingOrder.ShippingOrderStatusService" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -16,10 +16,10 @@
   <s:layout-component name="htmlHead">
     <%
 
-      ShippingOrderStatusService shippingOrderStatusService = InjectorFactory.getInjector().getInstance(ShippingOrderStatusService.class);
+      ShippingOrderStatusService shippingOrderStatusService = ServiceLocatorFactory.getService(ShippingOrderStatusService.class);
       pageContext.setAttribute("statusForPrinting", shippingOrderStatusService.find(EnumShippingOrderStatus.SO_ReadyForProcess));
       pageContext.setAttribute("statusForPicking", shippingOrderStatusService.find(EnumShippingOrderStatus.SO_MarkedForPrinting));
-      CategoryDao categoryDao = InjectorFactory.getInjector().getInstance(CategoryDao.class);
+      CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
       pageContext.setAttribute("categoryList", categoryDao.getPrimaryCategories());
     %>
 

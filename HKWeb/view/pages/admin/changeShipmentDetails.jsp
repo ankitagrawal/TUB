@@ -1,5 +1,5 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
-<%@ page import="mhc.service.dao.MasterDataDao" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%--
   Created by IntelliJ IDEA.
@@ -9,7 +9,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Edit shipment details">
-  <s:useActionBean beanclass="mhc.web.action.admin.ChangeShipmentDetailsAction" var="csda"/>
+  <s:useActionBean beanclass="com.hk.web.action.admin.shipment.ChangeShipmentDetailsAction" var="csda"/>
   <s:layout-component name="heading">
     Edit Shipment Details
   </s:layout-component>
@@ -54,7 +54,7 @@
   <s:layout-component name="content">
     <div>
       <div style="float: left; width:40%">
-        <s:form beanclass="mhc.web.action.admin.ChangeShipmentDetailsAction">
+        <s:form beanclass="com.hk.web.action.admin.shipment.ChangeShipmentDetailsAction">
           <fieldset class="top_label">
             <legend> Search Shipping Order</legend>
             <s:label name="gatewayOrderId" class="label">Gateway Order Id</s:label>
@@ -72,7 +72,7 @@
       <div style="margin-top:40px;"></div>
       <div style="float: left; width:40%">
         <c:if test="${csda.visible == true}">
-          <s:form beanclass="mhc.web.action.admin.ChangeShipmentDetailsAction" id="newFormForAWB">
+          <s:form beanclass="com.hk.web.action.admin.shipment.ChangeShipmentDetailsAction" id="newFormForAWB">
             <fieldset>
               <legend> Edit Courier Or Tracking Id</legend>
 

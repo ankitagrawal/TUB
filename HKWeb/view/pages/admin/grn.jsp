@@ -1,6 +1,6 @@
 <%@ page import="mhc.common.constants.EnumImageSize" %>
 <%@ page import="mhc.common.constants.PermissionConstants" %>
-<%@ page import="mhc.service.dao.MasterDataDao" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="mhc.service.dao.TaxDao" %>
 <%@ page import="mhc.web.json.HealthkartResponse" %>
 <%@ page import="mhc.service.dao.WarehouseDao" %>

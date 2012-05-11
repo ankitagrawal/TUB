@@ -1,5 +1,5 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
-<%@ page import="mhc.service.dao.MasterDataDao" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="mhc.common.constants.EnumCourier" %>
 <%@ page import="mhc.service.dao.BoxSizeDao" %>
 <%@ page import="app.bootstrap.guice.InjectorFactory" %>

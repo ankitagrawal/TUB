@@ -1,5 +1,5 @@
 <%@ page import="mhc.web.json.HealthkartResponse" %>
-<%@ page import="mhc.service.dao.MasterDataDao" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="app.bootstrap.guice.InjectorFactory" %>
 <%@ page import="mhc.domain.ReconciliationType" %>
 <%@ page import="java.util.List" %>
