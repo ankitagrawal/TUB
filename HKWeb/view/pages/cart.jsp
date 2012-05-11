@@ -1,7 +1,7 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="mhc.common.constants.EnumImageSize" %>
 <%@ page import="mhc.common.constants.EnumProductVariantPaymentType" %>
-<%@ page import="mhc.common.constants.RoleConstants" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="lineItem_Service_Postpaid" value="<%=EnumProductVariantPaymentType.Postpaid.getId()%>"/>

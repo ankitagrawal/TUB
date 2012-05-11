@@ -1,9 +1,9 @@
 <%@ page import="com.akube.framework.gson.JsonUtils" %>
-<%@ page import="mhc.common.constants.RoleConstants" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="mhc.web.action.SelectAddressAction" event="pre" var="addressBean"/>
+<s:useActionBean beanclass="com.hk.web.action.core.user.SelectAddressAction" event="pre" var="addressBean"/>
 <s:useActionBean beanclass="mhc.web.action.CartAction" var="cartAction" event="pre"/>
 
 <s:layout-render name="/layouts/checkoutLayout.jsp" pageTitle="Select a shipping address">
@@ -79,7 +79,7 @@
       </h3>
 
       <c:forEach items="${addressBean.addresses}" var="address" varStatus="addressCount">
-        <s:link beanclass="mhc.web.action.SelectAddressAction" event="checkout" title="Click to use this address and proceed">
+        <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" event="checkout" title="Click to use this address and proceed">
           <s:param name="selectedAddress" value="${address.id}"/>
           <div class="address" style="position: relative;">
             <h5 class="name">${address.name}</h5>
@@ -93,7 +93,7 @@
             <div class='pin'>${address.pin}</div>
             <div class='phone'>${address.phone}</div>
             <br/>
-            <s:link beanclass="mhc.web.action.SelectAddressAction" event="remove" class="delete" onclick="return confirm('Are you sure you want to delete this address?')">
+            <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" event="remove" class="delete" onclick="return confirm('Are you sure you want to delete this address?')">
               <s:param name="deleteAddress" value="${address.id}"/>
               (delete)
             </s:link>

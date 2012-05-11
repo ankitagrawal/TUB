@@ -1,5 +1,5 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
-<%@ page import="mhc.common.constants.RoleConstants" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.core.user.MyAccountAction" var="maa"/>

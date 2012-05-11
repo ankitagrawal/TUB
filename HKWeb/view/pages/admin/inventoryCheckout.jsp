@@ -2,7 +2,7 @@
 <%@ page import="java.util.Date" %>
 <%@ page import="mhc.common.constants.order.EnumOrderStatus" %>
 <%@ page import="mhc.common.constants.shippingOrder.EnumShippingOrderStatus" %>
-<%@ page import="mhc.common.constants.RoleConstants" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="mhc.web.action.admin.InventoryCheckoutAction" var="icBean"/>

@@ -1,4 +1,4 @@
-<%@ page import="mhc.common.constants.RoleConstants" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
 <ul style="list-style: none; line-height: 25px;">

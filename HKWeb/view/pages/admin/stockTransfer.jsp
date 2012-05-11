@@ -4,7 +4,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="mhc.web.action.admin.StockTransferAction" var="sta"/>
-<s:useActionBean beanclass="mhc.web.action.admin.SelectWHAction" var="whAction" event="getUserWarehouse"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Create/Edit Stock Transfer">
 	<jsp:useBean id="now" class="java.util.Date" scope="request"/>
 	<s:layout-component name="htmlHead">

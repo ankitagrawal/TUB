@@ -1,5 +1,5 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
-<%@ page import="mhc.common.constants.RoleConstants" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="mhc.web.json.HealthkartResponse" %>
 <%@ page import="mhc.service.UserService" %>
 <%@ page import="app.bootstrap.guice.InjectorFactory" %>

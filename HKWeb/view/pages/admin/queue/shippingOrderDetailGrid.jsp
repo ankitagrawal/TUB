@@ -5,7 +5,7 @@
 <%@ page import="mhc.web.json.HealthkartResponse" %>
 <%@ page import="java.util.Set" %>
 <%@ page import="mhc.service.dao.MasterDataDao" %>
-<%@ page import="mhc.common.constants.RoleConstants" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="mhc.common.constants.*" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
@@ -107,10 +107,10 @@
     <div class="clear"></div>
   </c:if>
   <div class="floatleft">
-    (<s:link beanclass="mhc.web.action.admin.order.search.SearchOrderAction" event="searchOrders" target="_blank">
+    (<s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" event="searchOrders" target="_blank">
     <s:param name="orderId" value="${shippingOrder.baseOrder.id}"/> Search BO
   </s:link>)
-    (<s:link beanclass="mhc.web.action.admin.order.search.SearchShippingOrderAction" event="searchShippingOrder"
+    (<s:link beanclass="com.hk.web.action.admin.order.search.SearchShippingOrderAction" event="searchShippingOrder"
              target="_blank">
     <s:param name="shippingOrderGatewayId" value="${shippingOrder.gatewayOrderId}"/> Search SO
   </s:link>)
@@ -215,7 +215,7 @@
         Processed Orders# ${hk:getProcessedOrdersCount(baseOrder.user)}
       </div>
       <span style="margin-left:10px;">
-        (<s:link beanclass="mhc.web.action.admin.order.search.SearchOrderAction" event="searchOrders"
+        (<s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" event="searchOrders"
                  target="_blank"><s:param
           name="email" value="${baseOrder.user.login}"/>See previous orders</s:link>)
       </span>

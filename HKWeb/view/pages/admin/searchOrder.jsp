@@ -9,7 +9,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="mhc.web.action.admin.order.search.SearchOrderAction" var="orderAdmin" event="pre"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" var="orderAdmin" event="pre"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Base Order Search">
 
@@ -164,7 +164,7 @@
 <c:set var="paymentStatusPending" value="<%=EnumPaymentStatus.AUTHORIZATION_PENDING.getId()%>"/>
 
 <s:errors/>
-<s:form beanclass="mhc.web.action.admin.order.search.SearchOrderAction" method="get" autocomplete="false">
+<s:form beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" method="get" autocomplete="false">
   <fieldset class="top_label">
     <ul>
       <div class="grouped">
@@ -253,7 +253,7 @@
   <span class="xsml gry">Payment :</span>
   <span
       class="paymentStatusName">${order.payment.paymentStatus != null ? order.payment.paymentStatus.name : 'N/A'}</span><br/>
-  <s:link beanclass="mhc.web.action.admin.CheckPaymentAction">
+  <s:link beanclass="com.hk.web.action.admin.payment.CheckPaymentAction">
     <s:param name="order" value="${order.id}"/>
     Manage Payments
   </s:link>
@@ -372,7 +372,7 @@
           View Tickets
           <s:param name="ticketFilterDto.associatedLogin" value="${order.user.email}"/>
         </s:link>) <br/>
-        (<s:link beanclass="mhc.web.action.admin.order.search.SearchOrderAction" event="searchOrders">
+        (<s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" event="searchOrders">
           View Orders
           <s:param name="login" value="${order.user.login}"/>
         </s:link>)
@@ -493,7 +493,7 @@
         <tr>
           <td>
             GatewayId:
-            <s:link beanclass="mhc.web.action.admin.order.search.SearchShippingOrderAction"
+            <s:link beanclass="com.hk.web.action.admin.order.search.SearchShippingOrderAction"
                     event="searchShippingOrder"
                     target="_blank">
               <s:param name="shippingOrderGatewayId" value="${shippingOrder.gatewayOrderId}"/>

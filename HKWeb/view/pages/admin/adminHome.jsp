@@ -1,23 +1,23 @@
-<%@ page import="mhc.common.constants.PermissionConstants" %>
-<%@ page import="mhc.common.constants.RoleConstants" %>
-<%@ page import="app.bootstrap.guice.InjectorFactory" %>
-<%@ page import="mhc.service.WarehouseService" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
+<%@ page import="com.hk.pact.service.core.WarehouseService" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.manager.LinkManager" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="mhc.web.action.admin.SelectWHAction" var="whAction" event="getUserWarehouse"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Admin Home">
 
 <s:layout-component name="heading">Admin Home</s:layout-component>
 <s:layout-component name="content">
 <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_MULTIPLE_WAREHOUSE%>">
   <%
-    WarehouseService warehouseService = InjectorFactory.getInjector().getInstance(WarehouseService.class);
+    WarehouseService warehouseService = ServiceLocatorFactory.getService(WarehouseService.class);
     pageContext.setAttribute("whList", warehouseService.getAllWarehouses());
   %>
   <table>
     <tr>
       <td><b>Select a WH: </b></td>
-      <td><s:form beanclass="mhc.web.action.admin.SelectWHAction" id="selectWHForm">
+      <td><s:form beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" id="selectWHForm">
         <s:select name="setWarehouse" style="height:30px;font-size:1.2em;padding:1px;">
           <s:option value="0">-None-</s:option>
           <c:forEach items="${whList}" var="wh">
@@ -28,7 +28,7 @@
       </s:form></td>
       <td>
         <shiro:hasRole name="<%=RoleConstants.GOD%>">
-          <s:link beanclass="mhc.web.action.admin.UpdateOrderStatusAndSendEmailAction"
+          <s:link beanclass="com.hk.web.action.admin.order.UpdateOrderStatusAndSendEmailAction"
                   style="color:red; font-size:1.3em; padding:3px;">Send shipping emails</s:link>
         </shiro:hasRole>
       </td>
@@ -40,20 +40,20 @@
 
   <h2>Basic Functionalities</h2>
 
-  <h3><s:link beanclass="mhc.web.action.admin.order.search.SearchOrderAction">Search Base Orders</s:link></h3>
 
-  <h3><s:link beanclass="mhc.web.action.admin.order.search.SearchShippingOrderAction">Search Shipping Orders</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction">Search Base Orders</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.admin.order.search.SearchShippingOrderAction">Search Shipping Orders</s:link></h3>
 
   <h3><s:link beanclass="com.hk.web.action.admin.user.SearchUserAction">Search Users</s:link></h3>
 
-  <h3><s:link beanclass="mhc.web.action.MenuRefreshAction">Refresh Menu</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.core.menu.MenuRefreshAction">Refresh Menu</s:link></h3>
 
-  <h3><s:link beanclass="mhc.web.action.DataIndexRefreshAction">Refresh Data Indexes</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.core.menu.DataIndexRefreshAction">Refresh Data Indexes</s:link></h3>
 
   <c:if test="${whAction.setWarehouse == null}">
-  <h3><s:link beanclass="mhc.web.action.admin.queue.ActionAwaitingQueueAction">Action Awaiting Queue</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.admin.queue.ActionAwaitingQueueAction">Action Awaiting Queue</s:link></h3>
   </c:if>
-  <h3><s:link beanclass="mhc.web.action.admin.NotifyMeListAction"> Notify Me List </s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.admin.marketing.NotifyMeListAction"> Notify Me List </s:link></h3>
   <%--<h3><s:link beanclass="mhc.web.action.admin.PaymentHistoryAction"> Check Payment History </s:link></h3>--%>  
 </div>
 
@@ -64,7 +64,7 @@
 
   <h3>
     <s:link
-        beanclass="mhc.web.action.admin.GenerateExcelAction">Generate Catalog Excel by Category<br/><span class="sml gry">(also shows Inventory status)</span></s:link>
+        beanclass="com.hk.web.action.admin.catalog.GenerateExcelAction">Generate Catalog Excel by Category<br/><span class="sml gry">(also shows Inventory status)</span></s:link>
   </h3>
 
   <h3><s:link beanclass="mhc.web.action.admin.ParseExcelAction">Upload Catalog Excel<br/><span class="sml gry" style="color:red">(SKUs need to be created manually for new variants)</span></s:link></h3>

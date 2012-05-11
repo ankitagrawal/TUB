@@ -87,7 +87,7 @@
               ${user.email}
           </td>
           <td>
-            <s:link beanclass="mhc.web.action.admin.order.search.SearchOrderAction">
+            <s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction">
               <s:param name="email" value="${user.login}"/>
               View orders
             </s:link>

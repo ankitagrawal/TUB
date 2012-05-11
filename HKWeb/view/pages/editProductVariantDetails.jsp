@@ -1,6 +1,6 @@
 <%@ page import="mhc.service.dao.MasterDataDao" %>
 <%@ page import="mhc.common.constants.PermissionConstants" %>
-<%@ page import="mhc.common.constants.RoleConstants" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>

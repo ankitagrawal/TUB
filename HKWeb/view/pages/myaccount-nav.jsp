@@ -1,4 +1,4 @@
-<%@ page import="mhc.common.constants.RoleConstants" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
 <fieldset>
