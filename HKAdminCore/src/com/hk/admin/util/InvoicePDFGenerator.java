@@ -27,6 +27,7 @@ import com.hk.domain.user.Address;
 import com.hk.manager.ReferrerProgramManager;
 import com.hk.pact.dao.catalog.category.CategoryDao;
 import com.hk.pact.dao.core.AddressDao;
+import com.hk.pact.service.catalog.CategoryService;
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -52,8 +53,6 @@ public class InvoicePDFGenerator {
     @Autowired
     BarcodeGenerator       barcodeGenerator;
     @Autowired
-    CategoryDao            categoryDao;
-    @Autowired
     CourierServiceInfoDao  courierServiceInfoDao;
     @Autowired
     AddressDao             addressDao;
@@ -61,6 +60,8 @@ public class InvoicePDFGenerator {
     // @Named(Keys.Env.adminDownloads)
     @Value("#{hkEnvProps['adminDownloads']}")
     String                 adminDownloadsPath;
+    
+    private CategoryService categoryService;
 
     /*
      * public void generateInvoicePDF(ShippingOrder shippingOrder) { try { Document orderDetailsDocument = new
@@ -95,7 +96,7 @@ public class InvoicePDFGenerator {
         barcodePath = barcodeGenerator.getBarcodePath(shippingOrder.getGatewayOrderId());
         Image barcodeImage = Image.getInstance(barcodePath);
         String routingCode = null;
-        Address address = addressDao.find(shippingOrder.getBaseOrder().getAddress().getId());
+        Address address = addressDao.get(Address.class, shippingOrder.getBaseOrder().getAddress().getId());
         boolean isCod = shippingOrder.isCOD();
         CourierServiceInfo courierServiceInfo = null;
         if (EnumCourier.BlueDart_COD.getId() == shippingOrder.getShipment().getCourier().getId()) {
@@ -252,7 +253,7 @@ public class InvoicePDFGenerator {
         float[] widths = { 50f, 15f, 15f, 15f };
         orderDetailTable.setWidths(widths);
         orderDetailTable.setWidthPercentage(100f);
-        sexualCareCategory = categoryDao.find("sexual-care");
+        sexualCareCategory = getCategoryService().getCategoryByName("sexual-care"); 
 
         PdfPCell c1 = new PdfPCell(new Phrase("Item", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.BOLD)));
         c1.setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -415,4 +416,14 @@ public class InvoicePDFGenerator {
     public String getBarcodePath() {
         return barcodePath;
     }
+
+    public CategoryService getCategoryService() {
+        return categoryService;
+    }
+
+    public void setCategoryService(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
+    
+    
 }

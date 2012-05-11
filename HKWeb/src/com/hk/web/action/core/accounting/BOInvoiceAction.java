@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.dao.courier.CourierDao;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
+import com.hk.admin.util.BarcodeGenerator;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.order.Order;
 import com.hk.dto.pricing.PricingDto;
@@ -23,7 +24,6 @@ import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.dao.payment.PaymentModeDao;
 import com.hk.pact.dao.user.UserDao;
-import com.hk.util.BarcodeGenerator;
 
 @Component
 public class BOInvoiceAction extends BaseAction {

@@ -35,7 +35,9 @@ import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
+import com.hk.pact.dao.catalog.combo.ComboDao;
 import com.hk.pact.dao.catalog.product.ProductDao;
+import com.hk.pact.dao.core.SupplierDao;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.web.action.error.AdminPermissionAction;
@@ -70,6 +72,9 @@ public class BulkEditProductAction extends BasePaginatedAction {
     CategoryDaoImpl               categoryDao;
     @Autowired
     XslParser                     xslParser;
+
+    private ComboDao              comboDao;
+    private SupplierDao           supplierDao;
 
     @ValidationMethod(on = "bulkEdit")
     public void validateCategoryAndBrand() {
@@ -204,7 +209,7 @@ public class BulkEditProductAction extends BasePaginatedAction {
                 }
 
                 if (supplierTin != null) {
-                    Combo combo = comboDao.find(product.getId());
+                    Combo combo = comboDao.get(Combo.class, product.getId());
                     Supplier supplier = supplierDao.findByTIN(supplierTin.get(ctr));
                     if (combo == null && supplier == null) {
                         addRedirectAlertMessage(new SimpleMessage("Supplier corresponding to given tin does not exist for product: " + product.getId()));

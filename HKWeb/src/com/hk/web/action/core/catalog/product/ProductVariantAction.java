@@ -17,6 +17,7 @@ import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.domain.catalog.product.ProductImage;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
+import com.hk.util.HKImageUtils;
 import com.hk.util.ImageManager;
 import com.hk.web.HealthkartResponse;
 
@@ -72,7 +73,7 @@ public class ProductVariantAction extends BaseAction {
 
     public Resolution changeProductLink() {
         if (mainProductImageId != null) {
-            String productImageLink = ImageManager.getS3ImageUrl(EnumImageSize.MediumSize, Long.parseLong(mainProductImageId));
+            String productImageLink = HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, Long.parseLong(mainProductImageId));
             HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "success", productImageLink);
             return new JsonResolution(healthkartResponse);
         } else {

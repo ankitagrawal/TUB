@@ -161,7 +161,7 @@ public class InventoryCheckinAction extends BaseAction {
                         return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
                     }
 
-                    SkuGroup skuGroup = getAdminInventoryService().createSkuGroup(batch, mfgDate, expiryDate, grn, null, sku);
+                    SkuGroup skuGroup = getAdminInventoryService().createSkuGroup(batch, mfgDate, expiryDate, grn, null,null, sku);
                     getAdminInventoryService().createSkuItemsAndCheckinInventory(skuGroup, qty, null, grnLineItem, null, null,
                             getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKIN), user);
                     getInventoryService().checkInventoryHealth(productVariant);
@@ -224,22 +224,22 @@ public class InventoryCheckinAction extends BaseAction {
     public Resolution saveInventoryAgainstStockTransfer() {
         User user = null;
         if (getPrincipal() != null) {
-            user = userDaoProvider.get().find(getPrincipal().getId());
+            user = getUserService().getUserById(getPrincipal().getId());
         }
         stockTransfer.setReceivedBy(user);
         logger.debug("upc: " + upc);
         try {
-            ProductVariant productVariant = productVariantDao.findVariantFromUPC(upc);
+            ProductVariant productVariant = getProductVariantService().findVariantFromUPC(upc);
             if (productVariant == null) {
-                productVariant = productVariantDao.find(upc);
+                productVariant = getProductVariantService().getVariantById(upc);
             }
             if (productVariant != null) {
                 Sku sku = skuService.findSKU(productVariant, stockTransfer.getToWarehouse());
                 Long askedQty = 0L;
-                StockTransferLineItem stockTransferLineItem = stockTransferLineItemDaoProvider.get().getStockTransferLineItem(stockTransfer, productVariant);
+                StockTransferLineItem stockTransferLineItem = stockTransferDao.getStockTransferLineItem(stockTransfer, productVariant);
                 if (stockTransferLineItem != null && sku != null) {
                     askedQty = stockTransferLineItem.getCheckedoutQty();
-                    Long alreadyCheckedInQty = inventoryService.countOfCheckedInUnitsForStockTransferLineItem(stockTransferLineItem);
+                    Long alreadyCheckedInQty = adminInventoryService.countOfCheckedInUnitsForStockTransferLineItem(stockTransferLineItem);
                     // logger.info("Inventory Checkin ->
                     // ProductVariant="+productVariant.getId()+";askedQty="+askedQty+";alreadyCheckedInQty="+alreadyCheckedInQty+";qty="+qty);
                     if (qty > (askedQty - alreadyCheckedInQty)) {
@@ -248,15 +248,15 @@ public class InventoryCheckinAction extends BaseAction {
                                 "checkinInventoryAgainstStockTransfer", stockTransfer.getId());
                     }
 
-                    SkuGroup skuGroup = inventoryService.createSkuGroup(batch, mfgDate, expiryDate, null, null, stockTransfer, sku);
-                    inventoryService.createSkuItemsAndCheckinInventory(skuGroup, qty, null, null, null, stockTransferLineItem,
-                            invTxnTypeDao.find(EnumInvTxnType.STOCK_TRANSFER_CHECKIN.getId()), user);
+                    SkuGroup skuGroup = adminInventoryService.createSkuGroup(batch, mfgDate, expiryDate, null, null, stockTransfer, sku);
+                    adminInventoryService.createSkuItemsAndCheckinInventory(skuGroup, qty, null, null, null, stockTransferLineItem,
+                            inventoryService.getInventoryTxnType(EnumInvTxnType.STOCK_TRANSFER_CHECKIN), user);
                     inventoryService.checkInventoryHealth(productVariant);
                     stockTransferLineItem.setCheckedinQty(alreadyCheckedInQty + qty);
                     stockTransferLineItem.setBatchNumber(batch);
                     stockTransferLineItem.setMfgDate(mfgDate);
                     stockTransferLineItem.setExpiryDate(expiryDate);
-                    stockTransferLineItem = stockTransferLineItemDaoProvider.get().save(stockTransferLineItem);
+                    stockTransferLineItem = (StockTransferLineItem) stockTransferDao.save(stockTransferLineItem);
                 }
             } else {
                 addRedirectAlertMessage(new SimpleMessage("No such UPC or Variant Id"));
