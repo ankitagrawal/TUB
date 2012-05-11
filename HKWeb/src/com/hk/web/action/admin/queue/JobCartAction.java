@@ -17,6 +17,7 @@ import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
 import com.hk.admin.pact.dao.warehouse.BinDao;
+import com.hk.admin.util.BarcodeGenerator;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.catalog.category.Category;
@@ -34,7 +35,6 @@ import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
-import com.hk.util.BarcodeGenerator;
 
 /**
  * Created by IntelliJ IDEA.

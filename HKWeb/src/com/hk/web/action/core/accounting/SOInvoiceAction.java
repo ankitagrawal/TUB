@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.dto.accounting.InvoiceDto;
 import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.admin.util.BarcodeGenerator;
 import com.hk.constants.shipment.EnumCourier;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.coupon.Coupon;
@@ -22,7 +23,6 @@ import com.hk.helper.InvoiceNumHelper;
 import com.hk.manager.ReferrerProgramManager;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.order.CartFreebieService;
-import com.hk.util.BarcodeGenerator;
 
 @Component
 public class SOInvoiceAction extends BaseAction {
