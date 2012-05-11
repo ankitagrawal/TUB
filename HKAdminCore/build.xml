@@ -20,6 +20,8 @@
 		<fileset file="${lib.root.dir}/stripes/stripes-1.5.3-patched.jar" />
 		<fileset file="${project.common.dir}/dependencies/javaee.jar" />
 		<fileset file="${lib.root.dir}/thirdParty/testng-5.8-jdk15.jar" />
+		<fileset file="${lib.root.dir}/thirdParty/itextpdf-5.2.1.jar" />
+		<fileset file="${lib.root.dir}/barcode/barcode4j.jar" />
 		<fileset file="${project.common.dir}/dependencies/groovy-all-1.5.6.jar" />
 		<fileset file="${project.common.dir}/dist/hk-common.jar" />
 		<fileset file="${project.core.dir}/dist/hk-core.jar" />

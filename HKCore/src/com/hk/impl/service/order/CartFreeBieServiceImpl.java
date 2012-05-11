@@ -14,13 +14,12 @@ import com.hk.web.filter.WebContext;
 @Service
 public class CartFreeBieServiceImpl implements CartFreebieService {
 
-    private static String  context         = WebContext.getRequest().getContextPath();
 
-    private String         revitalTshirt   = context + "/pages/lp/revital/images/banner_tshirt.jpg";  // 630
-    private String         revitalWatch    = context + "/pages/lp/revital/images/banner_watch.jpg";   // 1260
-    private String         revitalSunglass = context + "/pages/lp/revital/images/banner-sunglass.jpg"; // 2520
-    private String         revitalYogaDVD  = context + "/pages/lp/revital/images/banner-yoga_dvd.jpg";
-    private String         revitalMovieDVD = context + "/pages/lp/revital/images/banner-free_dvd.jpg";
+    private String         revitalTshirt   =  "/pages/lp/revital/images/banner_tshirt.jpg";  // 630
+    private String         revitalWatch    =  "/pages/lp/revital/images/banner_watch.jpg";   // 1260
+    private String         revitalSunglass =  "/pages/lp/revital/images/banner-sunglass.jpg"; // 2520
+    private String         revitalYogaDVD  =  "/pages/lp/revital/images/banner-yoga_dvd.jpg";
+    private String         revitalMovieDVD =  "/pages/lp/revital/images/banner-free_dvd.jpg";
 
     private CartFreeBieDao cartFreeBieDao;
 
@@ -41,17 +40,17 @@ public class CartFreeBieServiceImpl implements CartFreebieService {
         productVariantList.add("NUT412-01");// Revital Form Seniors 30cps
 
         Double rv30CpsValue = getCartValueForVariants(productVariantList, order);
-
+        String  context         = WebContext.getRequest().getContextPath();
         if (cartValue > 2520.0) {
-            imageURL = revitalSunglass;
+            imageURL = context + revitalSunglass;
         } else if (cartValue > 1260) {
-            imageURL = revitalWatch;
+            imageURL = context + revitalWatch;
         } else if (cartValue > 630) {
-            imageURL = revitalTshirt;
+            imageURL = context + revitalTshirt;
         } else if (rvWValue >= 210) {
-            imageURL = revitalYogaDVD;
+            imageURL = context + revitalYogaDVD;
         } else if (rv30CpsValue >= 240) {
-            imageURL = revitalMovieDVD;
+            imageURL = context + revitalMovieDVD;
         }
 
         return imageURL;
