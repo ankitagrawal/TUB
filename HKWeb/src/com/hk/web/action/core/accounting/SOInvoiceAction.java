@@ -47,24 +47,32 @@ public class SOInvoiceAction extends BaseAction {
 
     @DefaultHandler
     public Resolution pre() {
-        invoiceDto = new InvoiceDto(shippingOrder);
-        sexualCareCategory = getCategoryService().getCategoryByName("sexual-care");
-        coupon = getReferrerProgramManager().getOrCreateRefferrerCoupon(shippingOrder.getBaseOrder().getUser());
-        barcodePath = getBarcodeGenerator().getBarcodePath(shippingOrder.getGatewayOrderId());
-        Address address = getBaseDao().get(Address.class, shippingOrder.getBaseOrder().getAddress().getId());
-        // As of now we have routing codes for BlueDart only so printing it by default.
-        boolean isCod = shippingOrder.isCOD();
-        CourierServiceInfo courierServiceInfo = null;
-        if (isCod) {
-            courierServiceInfo = getCourierService().getCourierServiceByPincodeAndCourier(EnumCourier.BlueDart_COD.getId(), address.getPin(), true);
-        } else {
-            courierServiceInfo = getCourierService().getCourierServiceByPincodeAndCourier(EnumCourier.BlueDart.getId(), address.getPin(), false);
-        }
+        if (invoiceType.equals(SeekInvoiceNumService.PREFIX_FOR_B2B_ORDER)) {
+            b2bUserDetails = b2bUserDetailsDao.getB2bUserDetails(shippingOrder.getBaseOrder().getUser());
+          }
+          invoiceDto = new InvoiceDto(shippingOrder, b2bUserDetails);
+          sexualCareCategory = categoryDao.find("sexual-care");
+          coupon = referrerProgramManager.getOrCreateRefferrerCoupon(shippingOrder.getBaseOrder().getUser());
+          barcodePath = barcodeGenerator.getBarcodePath(shippingOrder.getGatewayOrderId());
+          Address address = addressDao.find(shippingOrder.getBaseOrder().getAddress().getId());
+          //As of now we have routing codes for BlueDart only so printing it by default.
+          boolean isCod = shippingOrder.isCOD();
+          CourierServiceInfo courierServiceInfo = null;
+          if (isCod) {
+            courierServiceInfo = courierServiceInfoDao.getCourierServiceByPincodeAndCourier(EnumCourier.BlueDart_COD.getId(), address.getPin(), true);
+          } else {
+            courierServiceInfo = courierServiceInfoDao.getCourierServiceByPincodeAndCourier(EnumCourier.BlueDart.getId(), address.getPin(), false);
+          }
 
-        if (courierServiceInfo != null) {
+          if (courierServiceInfo != null) {
             routingCode = courierServiceInfo.getRoutingCode();
+          }
+          freebieBanner = cartFreebieService.getFreebieBanner(shippingOrder.getBaseOrder());
+          return new ForwardResolution("/pages/shippingOrderInvoice.jsp");
+        } else {
+          addRedirectAlertMessage(new SimpleMessage("Given shipping order doesnot exist"));
+          return new ForwardResolution("pages/admin/adminHome.jsp");
         }
-        return new ForwardResolution("/pages/shippingOrderInvoice.jsp");
     }
 
     public Category getSexualCareCategory() {
