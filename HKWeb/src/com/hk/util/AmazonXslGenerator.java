@@ -400,8 +400,8 @@ public class AmazonXslGenerator {
   }
 
   private String getImageUrl(Product product) {
-    if (product.getMainImageId() != null && ImageManager.getS3ImageUrl(EnumImageSize.MediumSize, product.getMainImageId()) != null) {
-      return ImageManager.getS3ImageUrl(EnumImageSize.MediumSize, product.getMainImageId());
+    if (product.getMainImageId() != null && HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, product.getMainImageId()) != null) {
+      return HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, product.getMainImageId());
     } else {
       return "http://img.healthkart.com/images/ProductImages/ProductImagesOriginal/" + product.getId();
     }
