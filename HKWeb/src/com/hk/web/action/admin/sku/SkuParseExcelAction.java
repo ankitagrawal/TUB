@@ -75,6 +75,7 @@ public class SkuParseExcelAction extends BaseAction {
     public Resolution pre() {
         return new ForwardResolution("/pages/admin/bulkUploadSKU.jsp");
     }
+
     @Autowired
     SkuXslParser                  skuXslParser;
     @Autowired
@@ -90,7 +91,7 @@ public class SkuParseExcelAction extends BaseAction {
     private SkuService            service;
 
     @Autowired
-    private InventoryService              inventoryService;
+    private InventoryService      inventoryService;
     @Autowired
     private AdminInventoryService adminInventoryService;
 
@@ -139,9 +140,14 @@ public class SkuParseExcelAction extends BaseAction {
     public Resolution generateSkuExcel() {
 
         List<Sku> skuList = new ArrayList<Sku>();
+        String excelFilePath = null;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         skuList = getSkuList(category, brand);
-        String excelFilePath = adminDownloadsPath + "/SkuExcelFiles/" + category + "_sku_" + sdf.format(new Date()) + ".xls";
+        if (category != null) {
+            excelFilePath = adminDownloadsPath + "/SkuExcelFiles/" + category + "_sku_" + sdf.format(new Date()) + ".xls";
+        } else {
+            excelFilePath = adminDownloadsPath + "/SkuExcelFiles/" + brand + "_sku_" + sdf.format(new Date()) + ".xls";
+        }
         final File excelFile = new File(excelFilePath);
         HkXlsWriter xlsWriter = null;
 
@@ -299,5 +305,4 @@ public class SkuParseExcelAction extends BaseAction {
         this.adminInventoryService = adminInventoryService;
     }
 
-    
 }

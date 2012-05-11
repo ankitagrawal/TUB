@@ -55,7 +55,8 @@ public class InventoryHealthStatusAction extends BasePaginatedAction {
 
     Page                          lowInventoryPage;
     List<LowInventory>            lowInventories;
-    String                        category;
+    String                        primaryCategory;
+    String                        subCategory;
     String                        brand;
     String                        brandName;
     Category                      categoryName;
@@ -73,7 +74,7 @@ public class InventoryHealthStatusAction extends BasePaginatedAction {
     @Autowired
     private ProductVariantService productVariantService;
     @Autowired
-    CategoryDaoImpl                   categoryDao;
+    CategoryDaoImpl               categoryDao;
     @Autowired
     InventoryService              inventoryService;
     @Autowired
@@ -102,17 +103,23 @@ public class InventoryHealthStatusAction extends BasePaginatedAction {
 
     @ValidationMethod(on = { "generateWHInventoryExcel" })
     public void validateCategoryAndBrand() {
-        if (category == null & brand == null) {
+        if (primaryCategory == null && subCategory == null && brand == null) {
             getContext().getValidationErrors().add("1", new SimpleError("Please enter Category/Brand or Both."));
         }
     }
 
     @ValidationMethod(on = { "generateWHInventoryExcel" })
     public void validateCategory() {
-        if (category != null) {
-            if (categoryDao.find(category) == null) {
+        if (primaryCategory != null & subCategory == null) {
+            if (categoryDao.find(Category.getNameFromDisplayName(primaryCategory)) == null) {
                 getContext().getValidationErrors().add("1", new SimpleError("Category not found.Enter valid category."));
             }
+        } else if (subCategory != null & primaryCategory == null) {
+            if (categoryDao.find(Category.getNameFromDisplayName(subCategory)) == null) {
+                getContext().getValidationErrors().add("1", new SimpleError("Category not found.Enter valid category."));
+            }
+        } else if (primaryCategory != null & subCategory != null) {
+            getContext().getValidationErrors().add("1", new SimpleError("Please enter Primary Category/Sub Category,not both."));
         }
     }
 
@@ -144,14 +151,24 @@ public class InventoryHealthStatusAction extends BasePaginatedAction {
         Long mumInventory = 0L;
         Long loggedInWHInventory = 0L;
         String categoryName = null;
-        if (category != null) {
-            categoryName = Category.getNameFromDisplayName(category);
+        List<ProductVariant> variants = null;
+        // Fetching all non-deleted product-variants.
+        if (primaryCategory != null) {
+            categoryName = Category.getNameFromDisplayName(primaryCategory);
+            variants = productVariantService.getAllNonDeletedProductVariants(categoryName, brand, true);
+        } else if (subCategory != null) {
+            categoryName = Category.getNameFromDisplayName(subCategory);
+            variants = productVariantService.getAllNonDeletedProductVariants(categoryName, brand, false);
+        } else {
+            variants = productVariantService.getAllNonDeletedProductVariants(categoryName, brand, false);
         }
 
-        // Fetching all non-deleted product-variants.
-        List<ProductVariant> variants = getAllNonDeletedProductVariants(categoryName, brand);
-
-        String excelFilePath = adminDownloadsPath + "/categoryExcelFiles/" + category + "_inv_" + sdf.format(new Date()) + ".xls";
+        String excelFilePath = null;
+        if (categoryName != null) {
+            excelFilePath = adminDownloadsPath + "/categoryExcelFiles/" + categoryName + "_inv_" + sdf.format(new Date()) + ".xls";
+        } else if (brand != null) {
+            excelFilePath = adminDownloadsPath + "/categoryExcelFiles/" + brand + "_inv_" + sdf.format(new Date()) + ".xls";
+        }
         final File excelFile = new File(excelFilePath);
         HkXlsWriter xlsWriter = null;
 
@@ -168,46 +185,62 @@ public class InventoryHealthStatusAction extends BasePaginatedAction {
         }
         int row = 1;
         for (ProductVariant variant : variants) {
-
             Sku ggnSKU = skuService.findSKU(variant, whGurgaon);
             Sku mumSKU = skuService.findSKU(variant, whMumbai);
             Sku loggedInSKU = skuService.findSKU(variant, loggedInWarehouse);
-            loggedInWHInventory = adminInventoryService.getNetInventory(loggedInSKU);
-            ggnInventory = adminInventoryService.getNetInventory(ggnSKU);
-            mumInventory = adminInventoryService.getNetInventory(mumSKU);
-            if (loggedInSKU != null || ggnSKU != null || mumSKU != null) {
-                xlsWriter.addCell(row, variant.getId());
-                xlsWriter.addCell(row, variant.getProduct().getBrand());
-                xlsWriter.addCell(row, variant.getProduct().getName());
-                xlsWriter.addCell(row, variant.getOptionsCommaSeparated());
-                if (loggedInWarehouse != null) {
-                    if (loggedInWHInventory != 0) {
-                        xlsWriter.addCell(row, loggedInWHInventory);
-                    } else {
-                        xlsWriter.addCell(row, NOT_APPLICABLE);
-                    }
-                } else {
-                    if (ggnInventory != 0) {
-                        xlsWriter.addCell(row, ggnInventory);
-                    } else {
-                        xlsWriter.addCell(row, NOT_APPLICABLE);
-                    }
-                    // for mum inventory
-                    if (mumInventory != 0) {
-                        xlsWriter.addCell(row, mumInventory);
-                    } else {
-                        xlsWriter.addCell(row, NOT_APPLICABLE);
-                    }
+            loggedInWHInventory = inventoryService.getNetInventory(loggedInSKU);
+            ggnInventory = inventoryService.getNetInventory(ggnSKU);
+            mumInventory = inventoryService.getNetInventory(mumSKU);
+            if (loggedInWarehouse != null) {
+                if (loggedInSKU != null) {
+                    xlsWriter.addCell(row, variant.getId());
+                    xlsWriter.addCell(row, variant.getProduct().getBrand());
+                    xlsWriter.addCell(row, variant.getProduct().getName());
+                    xlsWriter.addCell(row, variant.getOptionsCommaSeparated());
+                    xlsWriter.addCell(row, loggedInWHInventory);
+                    row++;
                 }
-                row++;
+            } else {
+                if (ggnSKU != null & mumSKU == null) {
+                    xlsWriter.addCell(row, variant.getId());
+                    xlsWriter.addCell(row, variant.getProduct().getBrand());
+                    xlsWriter.addCell(row, variant.getProduct().getName());
+                    xlsWriter.addCell(row, variant.getOptionsCommaSeparated());
+                    xlsWriter.addCell(row, ggnInventory);
+                    xlsWriter.addCell(row, NOT_APPLICABLE);
+                    row++;
+
+                } else if (mumSKU != null & ggnSKU == null) {
+                    xlsWriter.addCell(row, variant.getId());
+                    xlsWriter.addCell(row, variant.getProduct().getBrand());
+                    xlsWriter.addCell(row, variant.getProduct().getName());
+                    xlsWriter.addCell(row, variant.getOptionsCommaSeparated());
+                    xlsWriter.addCell(row, NOT_APPLICABLE);
+                    xlsWriter.addCell(row, mumInventory);
+                    row++;
+                } else if (ggnSKU != null & mumSKU != null) {
+                    xlsWriter.addCell(row, variant.getId());
+                    xlsWriter.addCell(row, variant.getProduct().getBrand());
+                    xlsWriter.addCell(row, variant.getProduct().getName());
+                    xlsWriter.addCell(row, variant.getOptionsCommaSeparated());
+                    xlsWriter.addCell(row, ggnInventory);
+                    xlsWriter.addCell(row, mumInventory);
+                    row++;
+                }
             }
         }
-
         if (loggedInWarehouse != null) {
-            xlsWriter.writeData(excelFile, category + "_Inventory_" + loggedInWarehouse.getCity());
-
+            if (categoryName != null) {
+                xlsWriter.writeData(excelFile, categoryName + "_Inventory_" + loggedInWarehouse.getCity());
+            } else if (brand != null) {
+                xlsWriter.writeData(excelFile, brand + "_Inventory_" + loggedInWarehouse.getCity());
+            }
         } else {
-            xlsWriter.writeData(excelFile, category + "_Inventory_All_Warehouse");
+            if (categoryName != null) {
+                xlsWriter.writeData(excelFile, categoryName + "_Inventory_All_Warehouse");
+            } else if (brand != null) {
+                xlsWriter.writeData(excelFile, brand + "_Inventory_All_Warehouse");
+            }
         }
         addRedirectAlertMessage(new SimpleMessage("Download complete"));
 
@@ -268,12 +301,20 @@ public class InventoryHealthStatusAction extends BasePaginatedAction {
         this.lowInventories = lowInventories;
     }
 
-    public String getCategory() {
-        return category;
+    public String getPrimaryCategory() {
+        return primaryCategory;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setPrimaryCategory(String primaryCategory) {
+        this.primaryCategory = primaryCategory;
+    }
+
+    public String getSubCategory() {
+        return subCategory;
+    }
+
+    public void setSubCategory(String subCategory) {
+        this.subCategory = subCategory;
     }
 
     public String getBrand() {
