@@ -65,7 +65,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
     private static Logger                 logger                    = Logger.getLogger(PurchaseInvoiceAction.class);
 
     private Integer                       defaultPerPage            = 20;
-    Page                 purchaseInvoicePage;
+    Page                                  purchaseInvoicePage;
 
     private List<PurchaseInvoice>         purchaseInvoiceList       = new ArrayList<PurchaseInvoice>();
     private PurchaseInvoice               purchaseInvoice;
@@ -81,6 +81,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
     private User                          createdBy;
     private List<GoodsReceivedNote>       grnListForPurchaseInvoice = new ArrayList<GoodsReceivedNote>();
     private String                        productVariantId;
+    private Boolean                       isReconciled;
 
     @DefaultHandler
     public Resolution pre() {
@@ -89,7 +90,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
             purchaseInvoiceList = purchaseInvoiceDao.listPurchaseInvoiceWithProductVariant(productVariant);
         } else {
             purchaseInvoicePage = purchaseInvoiceDao.searchPurchaseInvoice(purchaseInvoice, purchaseInvoiceStatus, createdBy, invoiceNumber, tinNumber, supplierName, getPageNo(),
-                    getPerPage());
+                    getPerPage(), isReconciled);
             purchaseInvoiceList = purchaseInvoicePage.getList();
         }
         // purchaseInvoiceList = purchaseInvoiceDao.listAll();
@@ -291,5 +292,13 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 
     public void setProductVariantId(String productVariantId) {
         this.productVariantId = productVariantId;
+    }
+
+    public Boolean isReconciled() {
+        return isReconciled;
+    }
+
+    public void setReconciled(Boolean reconciled) {
+        isReconciled = reconciled;
     }
 }

@@ -171,7 +171,7 @@ public class InventoryCheckoutAction extends BaseAction {
 
                         List<SkuItem> inStockSkuItems = skuItemDao.getInStockSkuItems(skuGroup);
                         if (inStockSkuItems != null && inStockSkuItems.size() > 0) {
-                            getAdminInventoryService().inventoryCheckinCheckout(skuGroup.getSku(), inStockSkuItems.get(0), lineItem, shippingOrder, null, null,
+                            getAdminInventoryService().inventoryCheckinCheckout(skuGroup.getSku(), inStockSkuItems.get(0), lineItem, shippingOrder, null, null,null,
                                     getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKOUT), -1L, loggedOnUser);
                             addRedirectAlertMessage(new SimpleMessage("SkuItem from selected Batch is checked out."));
 
@@ -189,7 +189,7 @@ public class InventoryCheckoutAction extends BaseAction {
 
                         List<SkuItem> inStockSkuItems = skuItemDao.getInStockSkuItems(skuGroup);
                         if (inStockSkuItems != null && inStockSkuItems.size() > 0) {
-                            getAdminInventoryService().inventoryCheckinCheckout(skuGroup.getSku(), inStockSkuItems.get(0), lineItem, shippingOrder, null, null,
+                            getAdminInventoryService().inventoryCheckinCheckout(skuGroup.getSku(), inStockSkuItems.get(0), lineItem, shippingOrder, null, null,null,
                                     getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_REPEAT_CHECKOUT), -1L, loggedOnUser);
                             addRedirectAlertMessage(new SimpleMessage("SkuItem from selected Batch is checked out."));
 
@@ -227,7 +227,7 @@ public class InventoryCheckoutAction extends BaseAction {
                 logger.debug("productVariant: " + productVariant);
                 List<SkuItem> inStockSkuItems = skuItemDao.getInStockSkuItems(skuGroup);
                 if (inStockSkuItems != null && inStockSkuItems.size() > 0) {
-                    getAdminInventoryService().inventoryCheckinCheckout(skuGroup.getSku(), inStockSkuItems.get(0), null, shippingOrder, null, null,
+                    getAdminInventoryService().inventoryCheckinCheckout(skuGroup.getSku(), inStockSkuItems.get(0), null, shippingOrder, null, null,null,
                             getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKOUT), -1L, user);
                     addRedirectAlertMessage(new SimpleMessage("SkuItem from selected Batch is checked out."));
 
