@@ -1,5 +1,6 @@
 package com.hk.web.action.core.catalog.product;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -26,6 +27,7 @@ import com.hk.domain.catalog.product.ProductImage;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.content.SeoData;
+import com.hk.domain.review.UserReview;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.dto.AddressDistanceDto;
@@ -48,7 +50,7 @@ import com.hk.web.filter.WebContext;
 public class ProductAction extends BaseAction {
 
     @SuppressWarnings("unused")
-    private static Logger            logger = Logger.getLogger(ProductAction.class);
+    private static Logger            logger      = Logger.getLogger(ProductAction.class);
 
     String                           productId;
     Product                          product;
@@ -61,21 +63,25 @@ public class ProductAction extends BaseAction {
     Affiliate                        affiliate;
     Combo                            combo;
     String                           feed;
+    String                           affid;
+    Double                           starRating;
+    List<UserReview>                 userReviews = new ArrayList<UserReview>();
 
     @Session(key = HealthkartConstants.Cookie.preferredZone)
     private String                   preferredZone;
+    private String                   urlFragment;
 
     @Autowired
     private SeoManager               seoManager;
-    @Autowired
-    private ProductService           productService;
+
     @Autowired
     private MenuHelper               menuHelper;
     @Autowired
     private AffiliateDao             affiliateDao;
 
-    /*@Autowired
-    private ComboDao                 comboDao;*/
+    /*
+     * @Autowired private ComboDao comboDao;
+     */
     @Autowired
     private MapIndiaDao              mapIndiaDao;
     @Autowired
@@ -86,6 +92,8 @@ public class ProductAction extends BaseAction {
     private UserProductHistoryDao    userProductHistoryDao;
     @Autowired
     private AddressDao               addressDao;
+    @Autowired
+    private ProductService           productService;
 
     @DefaultHandler
     @DontValidate
@@ -143,6 +151,7 @@ public class ProductAction extends BaseAction {
                 }
             }
         }
+        urlFragment = getContext().getRequest().getRequestURI().replaceAll(getContext().getRequest().getContextPath(), "");
         productImages = getProductService().getImagesByProductForProductMainPage(product);
         seoData = seoManager.generateSeo(productId);
         String breadcrumbUrlFragment = menuHelper.getUrlFragementFromProduct(product);
@@ -156,6 +165,18 @@ public class ProductAction extends BaseAction {
             }
         }
         return new ForwardResolution("/pages/product.jsp");
+    }
+
+    // User Reviews
+    /*
+     * starRating = productService.getStarRating(product); Page<UserReview> userReviewPage =
+     * productService.getProductReviews(product, Arrays.asList(EnumReviewStatus.Published.getId()), 1, 5); if
+     * (userReviewPage != null) { userReviews = userReviewPage.getList(); }
+     */
+
+    public Resolution productBanner() {
+        affiliate = affiliateDao.getAffiliateByCode(affid);
+        return new ForwardResolution("/pages/affiliate/productBanner.jsp");
     }
 
     public List<AddressDistanceDto> getSortedByDistanceList(List<AddressDistanceDto> addressDistanceDtos) {
@@ -268,6 +289,22 @@ public class ProductAction extends BaseAction {
         this.preferredZone = preferredZone;
     }
 
+    public String getAffid() {
+        return affid;
+    }
+
+    public void setAffid(String affid) {
+        this.affid = affid;
+    }
+
+    public Double getStarRating() {
+        return starRating;
+    }
+
+    public List<UserReview> getUserReviews() {
+        return userReviews;
+    }
+
     public ProductService getProductService() {
         return productService;
     }
@@ -276,5 +313,12 @@ public class ProductAction extends BaseAction {
         this.productService = productService;
     }
 
+    public String getUrlFragment() {
+        return urlFragment;
+    }
+
+    public void setUrlFragment(String urlFragment) {
+        this.urlFragment = urlFragment;
+    }
 
 }
