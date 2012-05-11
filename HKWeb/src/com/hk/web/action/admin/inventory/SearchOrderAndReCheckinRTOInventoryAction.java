@@ -91,7 +91,7 @@ public class SearchOrderAndReCheckinRTOInventoryAction extends BaseAction {
                     if (recheckinQty > 0 && recheckinCounter < recheckinQty) {
                         recheckinCounter++;
                         getAdminInventoryService().inventoryCheckinCheckout(checkedOutInventory.getSku(), checkedOutInventory.getSkuItem(), lineItem, shippingOrder, null, null,
-                                getInventoryService().getInventoryTxnType(EnumInvTxnType.RTO_CHECKIN), 1L, loggedOnUser);
+                                null,getInventoryService().getInventoryTxnType(EnumInvTxnType.RTO_CHECKIN), 1L, loggedOnUser);
                         // Bug Fix deleting checked out pvi to maintain sanity instead of re-checkin.
                         // productVariantInventoryDao.remove(checkedOutInventory.getId());
                         inventoryService.checkInventoryHealth(productVariant);
