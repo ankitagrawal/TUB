@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.util.DateUtils;
@@ -16,6 +17,7 @@ import com.hk.domain.inventory.StockTransferLineItem;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
 
+@Repository
 public class StockTransferDaoImpl extends BaseDaoImpl implements StockTransferDao {
 
     public Page searchStockTransfer(Date createDate, String userLogin, Warehouse fromWarehouse, Warehouse toWarehouse, int pageNo, int perPage) {

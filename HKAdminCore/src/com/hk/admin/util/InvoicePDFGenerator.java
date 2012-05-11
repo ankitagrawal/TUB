@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import com.hk.admin.dto.accounting.InvoiceDto;
 import com.hk.admin.dto.accounting.InvoiceLineItemDto;
@@ -25,7 +26,6 @@ import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.Address;
 import com.hk.manager.ReferrerProgramManager;
-import com.hk.pact.dao.catalog.category.CategoryDao;
 import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.service.catalog.CategoryService;
 import com.itextpdf.text.BadElementException;
@@ -40,6 +40,7 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
+@Component
 public class InvoicePDFGenerator {
     private InvoiceDto     invoiceDto;
     private Coupon         coupon;

@@ -2,10 +2,13 @@ package com.hk.impl.dao.order;
 
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import com.hk.domain.order.Order;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.order.CartFreeBieDao;
 
+@Repository
 public class CartFreeBieDaoImpl extends BaseDaoImpl implements CartFreeBieDao {
 
     public Double getCartValueForProducts(List<String> productList, Order order) {

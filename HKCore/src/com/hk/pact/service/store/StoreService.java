@@ -17,4 +17,6 @@ public interface StoreService {
      */
     public Store getDefaultStore() ;
 
+  public Store getStoreById(Long storeId);
+
 }
