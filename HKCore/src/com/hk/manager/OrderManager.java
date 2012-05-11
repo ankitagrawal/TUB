@@ -24,7 +24,7 @@ import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.catalog.product.combo.ComboInstance;
-import com.hk.domain.catalog.product.combo.ComboProduct;
+import com.hk.domain.catalog.product.combo.ComboInstanceHasProductVariant;
 import com.hk.domain.matcher.CartLineItemMatcher;
 import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.order.CartLineItem;
@@ -39,6 +39,7 @@ import com.hk.domain.user.User;
 import com.hk.dto.pricing.PricingDto;
 import com.hk.exception.OutOfStockException;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.catalog.combo.ComboInstanceHasProductVariantDao;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.dao.order.cartLineItem.CartLineItemDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
@@ -96,6 +97,8 @@ public class OrderManager {
     private OrderStatusService     orderStatusService;
     @Autowired
     private BaseDao                baseDao;
+    
+    private ComboInstanceHasProductVariantDao comboInstanceHasProductVariantDao;
 
     // @Named(Keys.Env.codCharges)
     @Value("#{hkEnvProps['codCharges']}")
@@ -144,14 +147,19 @@ public class OrderManager {
         boolean isCartLineItemCreated = false;
         Double totalActualHkPriceofComboVariants = 0D;
         if (combo != null && combo.getId() != null) {
-            for (ComboProduct comboProduct : combo.getComboProducts()) {
+            
+            for (ComboInstanceHasProductVariant variant : comboInstanceHasProductVariantDao.findByComboInstance(comboInstance)) {
+                totalActualHkPriceofComboVariants += variant.getProductVariant().getHkPrice(null) * variant.getQty();
+              }
+            
+            /*for (ComboProduct comboProduct : combo.getComboProducts()) {
                 for (ProductVariant variant : comboProduct.getAllowedProductVariants()) {
                     if (variant.getProduct().equals(comboProduct.getProduct())) {
                         totalActualHkPriceofComboVariants += variant.getHkPrice(null) * comboProduct.getQty();
                         break;
                     }
                 }
-            }
+            }*/
         }
 
         for (ProductVariant productVariant : productVariants) {
@@ -182,7 +190,8 @@ public class OrderManager {
                         cartLineItem = getCartLineItemService().createCartLineItemWithBasicDetails(productVariant, order);
                         Double totalDiscount = totalActualHkPriceofComboVariants - combo.getHkPrice();
                         Double percentDiscount = totalDiscount / totalActualHkPriceofComboVariants;
-                        cartLineItem.setHkPrice(productVariant.getHkPrice(null) - (percentDiscount * productVariant.getHkPrice(null) * productVariant.getQty()));
+                        cartLineItem.setHkPrice(productVariant.getHkPrice(null) * (1 - percentDiscount));
+                        //cartLineItem.setHkPrice(productVariant.getHkPrice(null) - (percentDiscount * productVariant.getHkPrice(null) * productVariant.getQty()));
                         cartLineItem.setComboInstance(comboInstance);
                     } else {
                         cartLineItem = getCartLineItemService().createCartLineItemWithBasicDetails(productVariant, order);
