@@ -1,5 +1,5 @@
 <%@ page import="java.text.DateFormat" %>
-<%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
+<%@ page import="mhc.common.constants.EnumImageSize" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -52,14 +52,21 @@
 </head>
 <body>
 
-<s:useActionBean beanclass="com.hk.web.action.admin.inventory.POAction" var="orderSummary"/>
+<s:useActionBean beanclass="mhc.web.action.admin.POAction" var="orderSummary"/>
 <table class="header">
   <tr>
     <td>
+      <%--Bright Lifecare Pvt. Ltd.<br/>--%>
+      <%--3th Floor, Parsvnath Arcadia,<br/>--%>
+      <%--1 MG Road, Gurgaon - 122001<br/>--%>
+      <%--TIN: 06101832036--%>
       Bright Lifecare Pvt. Ltd.<br/>
-      3th Floor, Parsvnath Arcadia,<br/>
-      1 MG Road, Gurgaon - 122001<br/>
-      TIN: 06101832036
+      ${orderSummary.purchaseOrder.warehouse.line1}<br/>
+      ${orderSummary.purchaseOrder.warehouse.line2}<br/>
+      ${orderSummary.purchaseOrder.warehouse.city} &nbsp;
+      -${orderSummary.purchaseOrder.warehouse.pincode} <br/>
+      ${orderSummary.purchaseOrder.warehouse.state}<br/>
+      TIN: ${orderSummary.purchaseOrder.warehouse.tin}
     </td>
     <td align="right">
       <img src="${pageContext.request.contextPath}/images/logo.png" alt=""/>
@@ -122,7 +129,7 @@
               ${poLineItemDto.poLineItem.productVariant.upc}
           </td>
           <td>${poLineItemDto.poLineItem.productVariant.product.name}<br/>${poLineItemDto.poLineItem.productVariant.optionsCommaSeparated}
-          </td>          
+          </td>
           <td>${poLineItemDto.poLineItem.qty}
           </td>
           <td>${poLineItemDto.poLineItem.costPrice}
@@ -157,7 +164,15 @@
       </tr>
       </tfoot>
     </table>
-
-
+<br>
+<b>1) Please indicate Purchase Order number on all invoice and challan and correspondence.</b>
+<br>
+<br>
+<b>2) The item supplied will be subject to our approval and all rejections will be to your account.</b>
+<br>
+<br>
+<b>3) No excess supply will be accepted,unless agreed in writing by us.</b>
+<br>
+<br>
 </body>
 </html>

@@ -1,20 +1,21 @@
-<%@ page import="com.hk.service.ServiceLocatorFactory" %>
-<%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
-<%@ page import="com.hk.constants.core.PermissionConstants" %>
-<%@ page import="com.hk.domain.catalog.category.Category" %>
-<%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
-<%@ page import="com.hk.web.HealthkartResponse" %>
+<%@ page import="app.bootstrap.guice.InjectorFactory" %>
+<%@ page import="mhc.common.constants.EnumImageSize" %>
+<%@ page import="mhc.common.constants.PermissionConstants" %>
+<%@ page import="mhc.domain.Category" %>
+<%@ page import="mhc.service.dao.CategoryDao" %>
+<%@ page import="mhc.web.json.HealthkartResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="com.hk.web.action.core.catalog.product.ProductAction" var="pa" event="pre"/>
+<s:useActionBean beanclass="mhc.web.action.ProductAction" var="pa" event="pre"/>
 <c:set var="imageLargeSize" value="<%=EnumImageSize.LargeSize%>"/>
 <c:set var="imageMediumSize" value="<%=EnumImageSize.MediumSize%>"/>
 <c:set var="imageSmallSize" value="<%=EnumImageSize.TinySize%>"/>
 <%
-    CategoryDao categoryDao = (CategoryDao) ServiceLocatorFactory.getService(CategoryDao.class);
-  Category eyeGlass = categoryDao.getCategoryByName("eyeglasses");
+  CategoryDao categoryDao = InjectorFactory.getInjector().getInstance(CategoryDao.class);
+  Category eyeGlass = categoryDao.find("eyeglasses");
   pageContext.setAttribute("eyeGlass", eyeGlass);
+
 %>
 
 <s:layout-render name="/layouts/productLayout.jsp" pageTitle="${pa.seoData.title}">
@@ -133,28 +134,34 @@
 
 <s:layout-component name="topBanner">
   <s:layout-render name="/layouts/embed/_categoryTopBanners.jsp" topCategories="${pa.topCategoryUrlSlug}"/>
-</s:layout-component>
+  <div class="clear"></div>
+  <c:if test="${pa.product.service}">
+    <s:layout-render name="/layouts/embed/changePreferredZone.jsp" filterUrlFragment="${pa.urlFragment}"/>
+  </c:if>
 
+</s:layout-component>
 <s:layout-component name="prod_title">
 
 
   <div>
     <shiro:hasPermission name="<%=PermissionConstants.UPDATE_SEO_METADATA%>">
-      <s:link beanclass="com.hk.web.action.SeoAction" event="pre" target="_blank" class="popup">Edit MetaData
+      <s:link beanclass="mhc.web.action.SeoAction" event="pre" target="_blank" class="popup">Edit MetaData
         <s:param name="seoData" value="${pa.seoData.id}"/>
       </s:link>
       &nbsp;|&nbsp;
     </shiro:hasPermission>
     <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_CATALOG%>">
-      <s:link beanclass="com.hk.web.action.admin.EditProductAttributesAction" event="editProductVariantDetails" target="_blank" class="popup">
+      <s:link beanclass="mhc.web.action.admin.EditProductAttributesAction" event="editProductVariantDetails"
+              target="_blank" class="popup">
         Edit Variant Attributes
         <s:param name="product" value="${pa.product}"/>
       </s:link>
-      <s:link beanclass="com.hk.web.action.admin.EditProductAttributesAction" event="editProductDetails" target="_blank" class="popup">
+      <s:link beanclass="mhc.web.action.admin.EditProductAttributesAction" event="editProductDetails" target="_blank"
+              class="popup">
         Edit Product Attributes
         <s:param name="product" value="${pa.product}"/>
       </s:link>
-      <s:link beanclass="com.hk.web.action.admin.sku.SkuAction" event="searchSKUs" target="_blank" class="popup">
+      <s:link beanclass="mhc.web.action.admin.SkuAction" event="searchSKUs" target="_blank" class="popup">
         Edit Sku Attributes
         <s:param name="productId" value="${pa.product.id}"/>
       </s:link>
@@ -195,10 +202,11 @@
     <shiro:hasPermission name="<%=PermissionConstants.MANAGE_IMAGE%>">
       <br/>
 
-      <div><s:link beanclass="com.hk.web.action.UploadImageAction" event="pre" target="_blank" class="popup"> Upload
+      <div><s:link beanclass="mhc.web.action.UploadImageAction" event="pre" target="_blank" class="popup"> Upload
         <s:param name="product" value="${pa.product.id}"/>
       </s:link>
-        <s:link beanclass="com.hk.web.action.admin.EditProductAttributesAction" event="manageProductImages" target="_blank" class="popup">Manage
+        <s:link beanclass="mhc.web.action.admin.EditProductAttributesAction" event="manageProductImages" target="_blank"
+                class="popup">Manage
           Images
           <s:param name="productId" value="${pa.product.id}"/>
         </s:link>
@@ -228,7 +236,7 @@
             Brand:
           </span>
           <span class='info'>
-            <s:link beanclass="com.hk.web.action.core.catalog.BrandCatalogAction" class="bl">
+            <s:link beanclass="mhc.web.action.BrandCatalogAction" class="bl">
               ${pa.product.brand}
               <s:param name="brand" value="${fn:toLowerCase(pa.product.brand)}"/>
               <s:param name="topLevelCategory" value="${pa.topCategoryUrlSlug}"/>
@@ -306,7 +314,7 @@
   </c:if>
   <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_DESCRIPTIONS%>">
     <div>
-      <s:link beanclass="com.hk.web.action.admin.EditProductAttributesAction" event="editOverview" class="popup">
+      <s:link beanclass="mhc.web.action.admin.EditProductAttributesAction" event="editOverview" class="popup">
         Edit Overview
         <s:param name="productId" value="${pa.product.id}"/>
       </s:link>
@@ -322,12 +330,12 @@
         <c:when test="${fn:length(pa.product.productVariants) > 1}">
           <c:choose>
             <c:when test="${!pa.product.productHaveColorOptions}">
-              <s:layout-render name="/layouts/embed/_productWithMultipleVariantsAndColorOptions.jsp"
+              <s:layout-render name="/layouts/embed/_productWithMultipleVariantsWithNoColorOptions.jsp"
                                productId="${pa.product.id}"/>
               <s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>
             </c:when>
             <c:otherwise>
-              <s:layout-render name="/layouts/embed/_productWithMultipleVariantsAndNoColorOptions.jsp"
+              <s:layout-render name="/layouts/embed/_productWithMultipleVariantsWithColorOptions.jsp"
                                productId="${pa.product.id}"/>
               <s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>
             </c:otherwise>
@@ -366,28 +374,33 @@
 
       <p>
           ${pa.product.description}
-        <a class='go_to_top' href='#top'>go to top &uarr;</a>
+
       </p>
     </div>
   </c:if>
+
+  <c:if test="${pa.addressDistanceDtos != null && fn:length(pa.addressDistanceDtos) > 0}">
+      <h3> Service Centres Available Near to You : <br>
+        <ul>
+          <c:forEach items="${pa.addressDistanceDtos}" var="addressDto">
+            <li>  ${addressDto.localityMap.address.line1}, ${addressDto.localityMap.address.line2}<br></li>
+          </c:forEach>
+        </ul>
+      </h3>
+    </c:if>
+  <p>
+      <a class='go_to_top' href='#top' style="float:right;">go to top &uarr;</a>
+  </p>
+
   <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_DESCRIPTIONS%>">
     <div>
-      <s:link beanclass="com.hk.web.action.admin.EditProductAttributesAction" event="editDescription" class="popup">
+      <s:link beanclass="mhc.web.action.admin.EditProductAttributesAction" event="editDescription" class="popup">
         Edit Description
         <s:param name="productId" value="${pa.product.id}"/>
       </s:link>
     </div>
   </shiro:hasPermission>
 
-  <c:if test="${pa.addressDistanceDtos != null && fn:length(pa.addressDistanceDtos) > 0}">
-    <h3> Service Centres Available Near to You : <br>
-      <ul>
-        <c:forEach items="${pa.addressDistanceDtos}" var="addressDto">
-        <li>${addressDto.localityMap.address.line1}, ${addressDto.localityMap.address.line2}<br>
-          </c:forEach>
-      </ul>
-    </h3>
-  </c:if>
 
   <c:if test="${!empty (pa.product.productFeatures)}">
     <div class="content" id="features">
@@ -415,7 +428,7 @@
   </c:if>
 
   <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_DESCRIPTIONS%>">
-    <s:link beanclass="com.hk.web.action.admin.EditProductAttributesAction" event="editFeatures" class="popup">
+    <s:link beanclass="mhc.web.action.admin.EditProductAttributesAction" event="editFeatures" class="popup">
       Edit Features
       <s:param name="product" value="${pa.product}"/>
     </s:link>
@@ -424,30 +437,32 @@
 </s:layout-component>
 
 <s:layout-component name="related_products">
-  <div class='products content' id="related_products">
-    <h4>
-      People who bought this also bought these products
-    </h4>
-    <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_CATALOG%>">
-      <br/>
+  <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_CATALOG%>">
+    <br/>
 
-      <div>
-        <s:link beanclass="com.hk.web.action.admin.EditProductAttributesAction" event="editRelatedProducts" class="popup">
-          Edit Related Products
-          <s:param name="productId" value="${pa.product.id}"/>
-        </s:link>
-      </div>
-    </shiro:hasPermission>
-    <c:forEach items="${pa.product.relatedProducts}" var="relatedProduct">
-      <c:if test="${!relatedProduct.deleted}">
-        <s:layout-render name="/layouts/embed/_productThumb.jsp" productId="${relatedProduct.id}"/>
-      </c:if>
-    </c:forEach>
+    <div>
+      <s:link beanclass="mhc.web.action.admin.EditProductAttributesAction" event="editRelatedProducts" class="popup">
+        Edit Related Products
+        <s:param name="productId" value="${pa.product.id}"/>
+      </s:link>
+    </div>
+  </shiro:hasPermission>
+  <c:if test="${!empty pa.product.relatedProducts}">
+    <div class='products content' id="related_products">
+      <h4>
+        People who bought this also bought these products
+      </h4>
+      <c:forEach items="${pa.product.relatedProducts}" var="relatedProduct">
+        <c:if test="${!relatedProduct.deleted}">
+          <s:layout-render name="/layouts/embed/_productThumb.jsp" productId="${relatedProduct.id}"/>
+        </c:if>
+      </c:forEach>
 
-    <div class="floatfix"></div>
-    <a class='go_to_top' href='#top'>go to top &uarr;</a>
+      <div class="floatfix"></div>
+      <a class='go_to_top' href='#top'>go to top &uarr;</a>
 
-  </div>
+    </div>
+  </c:if>
 </s:layout-component>
 
 <%--<s:layout-component name="foot_price">
@@ -471,9 +486,53 @@
                             maxFractionDigits="0"/></span></c:if>
   </h5>
 </s:layout-component>--%>
+
+<%--<s:layout-component name="user_reviews">
+  <div class='products content' id="user_reviews">
+  <hr/>
+  <h3>Reviews of ${pa.product.name}</h3>
+  <c:choose>
+    <c:when test="${!empty pa.userReviews}">
+
+
+      Average Rating : ${pa.starRating}/5
+
+      <s:link beanclass="mhc.web.action.ProductReviewAction" event="writeNewReview">
+        <s:param name="product" value="${pa.product.id}"/>
+        Write a Review
+      </s:link>
+
+      <s:link beanclass="mhc.web.action.ProductReviewAction">
+        <s:param name="product" value="${pa.product.id}"/>
+        All Review
+      </s:link>
+      <hr/>
+
+      <c:forEach items="${pa.userReviews}" var="review">
+        <div class="grid_4">${review.postedBy.name}</div>
+
+        <div class="grid_12">
+          <pre>${review.review}</pre>
+        </div>
+        <hr/>
+      </c:forEach>
+      </div>
+    </c:when>
+    <c:otherwise>
+      <h3>No Reviews!!</h3>
+      Be the first one to <s:link beanclass="mhc.web.action.ProductReviewAction" event="writeNewReview">
+        <s:param name="product" value="${pa.product.id}"/>
+        <strong>Write</strong>
+      </s:link> the product review
+    </c:otherwise>
+  </c:choose>
+
+</s:layout-component>--%>
+
 <s:layout-component name="endScripts">
   <script type="text/javascript">
     $(document).ready(function() {
+
       function _addToCart(res) {
         if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
           $('.message .line1').html("<strong>" + res.data.name + "</strong> has been added to your shopping cart");
@@ -497,13 +556,13 @@
         $('.progressLoader').hide();
       }
 
-      <c:if test="${pa.combo == null}">
+    <c:if test="${pa.combo == null}">
       $('.addToCartButton').click(function(e) {
-        $(this).parent().append('<span class="add_message">added to <s:link beanclass="com.hk.web.action.core.cart.CartAction" id="message_cart_link"><img class="icon16" src="${pageContext.request.contextPath}/images/icons/cart.png"> cart</s:link></span>');
+        $(this).parent().append('<span class="add_message">added to <s:link beanclass="mhc.web.action.CartAction" id="message_cart_link"><img class="icon16" src="${pageContext.request.contextPath}/images/icons/cart.png"> cart</s:link></span>');
         $(this).hide();
         e.stopPropagation();
       });
-      </c:if>
+    </c:if>
 
       $(".message .close").click(function() {
         hide_message();
@@ -532,8 +591,13 @@
         event.preventDefault();
         $('html,body').animate({scrollTop:($(this.hash).offset().top - 45)}, 300);
       });
+
+      $('#productBannerTextArea').val($('#productBannerTextArea').val().replace(/\s+/g, " "));
+
     });
   </script>
-  <iframe src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e300&pid=${pa.product.id}&catid=${pa.product.primaryCategory.name}&subcat1id=&subcat2id=&section=1&level=1" scrolling="no" width="1" height="1" marginheight="0" marginwidth="0" frameborder="0"></iframe>
+  <iframe
+      src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e300&pid=${pa.product.id}&catid=${pa.product.primaryCategory.name}&subcat1id=&subcat2id=&section=1&level=1"
+      scrolling="no" width="1" height="1" marginheight="0" marginwidth="0" frameborder="0"></iframe>
 </s:layout-component>
 </s:layout-render>

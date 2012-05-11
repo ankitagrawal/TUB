@@ -1,23 +1,23 @@
-<%@ page import="com.hk.domain.catalog.product.Product" %>
-<%@ page import="com.hk.pact.dao.catalog.product.ProductDao" %>
-<%@ page import="com.hk.service.ServiceLocatorFactory" %>
-<%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
-<%@ page import="com.hk.pact.dao.affiliate.AffiliateDao" %>
-<%@ page import="com.hk.domain.affiliate.Affiliate" %>
+<%@ page import="mhc.domain.Product" %>
+<%@ page import="mhc.service.dao.ProductDao" %>
+<%@ page import="app.bootstrap.guice.InjectorFactory" %>
+<%@ page import="mhc.common.constants.EnumImageSize" %>
+<%@ page import="mhc.service.dao.AffiliateDao" %>
+<%@ page import="mhc.domain.Affiliate" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-definition>
   <%
-    ProductDao productDao = (ProductDao)ServiceLocatorFactory.getService(ProductDao.class);
+    ProductDao productDao = InjectorFactory.getInjector().getInstance(ProductDao.class);
     String productId = (String) pageContext.getAttribute("productId");
-    Product product = productDao.getProductById(productId);
+    Product product = productDao.find(productId);
     pageContext.setAttribute("product", product);
 
-    AffiliateDao affiliateDao = (AffiliateDao)ServiceLocatorFactory.getService(AffiliateDao.class);
+    AffiliateDao affiliateDao = InjectorFactory.getInjector().getInstance(AffiliateDao.class);
     Affiliate affiliate = null;
     Long affiliateId = (Long) pageContext.getAttribute("affiliateId");
     if (affiliateId != null) {
-      affiliate = affiliateDao.get(Affiliate.class, affiliateId);
+      affiliate = affiliateDao.find(affiliateId);
     }
     pageContext.setAttribute("affiliate", affiliate);
   %>
@@ -32,10 +32,10 @@
       </script>
       <s:layout-component name="content">
         <h4 class="strikeline">Product Name:- ${product.name}</h4>
-        <s:form beanclass="com.hk.web.action.core.catalog.product.ProductAction">
+        <s:form beanclass="mhc.web.action.ProductAction">
           <s:errors/>
           <div class="round-cont" style="width:610px;margin-top: 20px;">
-            <div class="hk_banner" style="margin-left:200px">
+            <div class="hk_banner" style="margin-left:200px; height:auto;">
               <div>
                 <a href="http://www.healthkart.com/product/${product.slug}/${product.id}?affid=${affiliate.code}"
                    title="${product.name}" target="_blank">
@@ -86,18 +86,28 @@
             </div>
 
             <div class="label">
-              <label>Copy the following code and paste it in your website</label>
+              <s:label name="Copy the following code and paste it in your website"/>
               <a href="javascript:void(0);"
                  onclick="document.getElementById('productBannerTextArea').focus();document.getElementById('productBannerTextArea').select();">(Select
-                                                                                                                                               This
-                                                                                                                                               Code)</a>
+                This
+                Code)</a>
+
               <textarea id="productBannerTextArea" readonly="readonly" class="productBannerTextArea"
-                        name="productBannerTextArea" rows="3" cols="50"
-                        style="margin-top:20px;height:80px;word-wrap:normal;white-space:pre-wrap;">
+                        name="productBannerTextArea" rows="3" cols="65"
+                        style="text-align:left; margin-top:20px;height:auto;">
                 <iframe
                     src="http://www.healthkart.com/product?productBanner=&product=${product.id}&affid=${affiliate.code}"
                     width="180" height="325" scrolling="no"></iframe>
               </textarea>
+
+
+                <%--<textarea id="productBannerTextArea" readonly="readonly" class="productBannerTextArea"--%>
+                <%--name="productBannerTextArea" rows="3" cols="50"--%>
+                <%--style="margin-top:20px;height:80px;word-wrap:normal;white-space:pre-wrap;">--%>
+                <%--<iframe--%>
+                <%--src="http://www.healthkart.com/product?productBanner=&product=${product.id}&affid=${affiliate.code}"--%>
+                <%--width="180" height="325" scrolling="no"></iframe>--%>
+                <%--</textarea>--%>
             </div>
           </div>
           <s:hidden name="product" value="${product.id}"/>

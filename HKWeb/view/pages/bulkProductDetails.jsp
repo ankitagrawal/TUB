@@ -8,7 +8,7 @@
     <div style="float: left;">Kindly select the options to be edited</div>
 
     <div class="clear"></div>
-    <s:form beanclass="com.hk.web.action.admin.catalog.product.BulkEditProductAction">
+    <s:form beanclass="mhc.web.action.admin.BulkEditProductAction">
       <div>
         <div style="float: left; width: 50%">
           <div>
@@ -27,18 +27,21 @@
                 <s:checkbox name="toBeEditedOptions['productSecondaryCategory']"/>SECONDARY CATEGORY
                 <div style="margin-top: 10px"></div>
 
+                <s:checkbox name="toBeEditedOptions['productSupplierTin']"/>SUPPLIER TIN
+                <div style="margin-top: 10px"></div>
+
                 <s:checkbox name="toBeEditedOptions['productAmazonProduct']"/>IS AMAZON PRODUCT
                 <div style="margin-top: 10px"></div>
 
                 <s:checkbox name="toBeEditedOptions['productColorOptions']"/>HAS COLOUR OPTIONS
                 <div style="margin-top: 10px"></div>
-
-                <s:checkbox name="toBeEditedOptions['productGoogleAd']"/>IS GOOGLE AD DISALLOWED
-                <div style="margin-top: 10px"></div>
               </div>
 
               <div style="float:right; width: 50%">
                 <s:checkbox name="toBeEditedOptions['productJit']"/>IS JIT
+                <div style="margin-top: 10px"></div>
+
+                <s:checkbox name="toBeEditedOptions['productGoogleAd']"/>IS GOOGLE AD DISALLOWED
                 <div style="margin-top: 10px"></div>
 
                 <s:checkbox name="toBeEditedOptions['productOrderRanking']"/>SORTING
@@ -57,6 +60,16 @@
               </div>
             </fieldset>
           </div>
+
+          <div class="clear"></div>
+
+          <fieldset style="margin-top:20px;">
+            <div style="text-align: center;">
+              Category : <s:text name="category" id="category"/>
+              &nbsp; &nbsp;Brand : <s:text name="brand" id="brand"/>
+              <s:submit name="bulkEdit" value="Bulk Edit" class="submitButton" style="font-size: 0.9em"/>
+            </div>
+          </fieldset>
         </div>
 
         <div style="float: right;  width: 50%">
@@ -84,21 +97,20 @@
                 <s:checkbox name="toBeEditedOptions['productVariantB2BPrice']"/>B2B PRICE
                 <div style="margin-top: 10px"></div>
 
+                <s:checkbox name="toBeEditedOptions['productVariantPostpaidAmount']"/>POSTPAID AMOUNT
+                <div style="margin-top: 10px"></div>
+
+                <s:checkbox name="toBeEditedOptions['productVariantAffiliateCategory']"/>AFFILIATE CATEGORY
+                <div style="margin-top: 10px"></div>
+
+                <s:checkbox name="toBeEditedOptions['productVariantOutOfStock']"/>IS OUT OF STOCK
+                <div style="margin-top: 10px"></div>
+
+                <s:checkbox name="toBeEditedOptions['productVariantDeleted']"/>IS DELETED
+                <div style="margin-top: 10px"></div>
               </div>
 
               <div style="float: right; width: 50%;">
-                  <s:checkbox name="toBeEditedOptions['productVariantPostpaidAmount']"/>POSTPAID AMOUNT
-                <div style="margin-top: 10px"></div>
-
-                  <s:checkbox name="toBeEditedOptions['productVariantAffiliateCategory']"/>AFFILIATE CATEGORY
-                <div style="margin-top: 10px"></div>
-
-                  <s:checkbox name="toBeEditedOptions['productVariantOutOfStock']"/>IS OUT OF STOCK
-                <div style="margin-top: 10px"></div>
-
-                  <s:checkbox name="toBeEditedOptions['productVariantDeleted']"/>IS DELETED
-                <div style="margin-top: 10px"></div>
-
                   <s:checkbox name="toBeEditedOptions['productVariantInventory']"/>INVENTORY
                 <div style="margin-top: 10px"></div>
 
@@ -119,23 +131,38 @@
 
                   <%--<s:checkbox name="toBeEditedOptions['productVariantHeigth']"/>HEIGHT--%>
                   <%--<div style="margin-top: 10px"></div>--%>
+
+                  <s:checkbox name="toBeEditedOptions['productVariantConsumptionTime']"/>CONSUMPTION TIME
+                <div style="margin-top: 10px"></div>
+
+                  <s:checkbox name="toBeEditedOptions['productVariantLeadTime']"/>LEAD TIME
+                <div style="margin-top: 10px"></div>
+
+                  <s:checkbox name="toBeEditedOptions['productVariantLeadTimeFactor']"/>LEAD TIME FACTOR
+                <div style="margin-top: 10px"></div>
+
+                  <s:checkbox name="toBeEditedOptions['productVariantBufferTime']"/>BUFFER TIME
+                <div style="margin-top: 10px"></div>
+
+                  <s:checkbox name="toBeEditedOptions['productVariantNextAvailDate']"/>NEXT AVAILABLE DATE
+                <div style="margin-top: 10px"></div>
+
+                  <s:checkbox name="toBeEditedOptions['productVariantFollAvailDate']"/>FOLLWING AVAILABLE DATE
+                <div style="margin-top: 10px"></div>
             </fieldset>
           </div>
         </div>
       </div>
 
-      <div class="clear"></div>
+      <%--<div class="clear"></div>--%>
 
-      <fieldset>
-        <div style="text-align: center;">
-          Category : <s:text name="category" id="category"/>
-          &nbsp; &nbsp;Brand : <s:text name="brand" id="brand"/>
-          <s:submit name="bulkEdit" value="Bulk Edit" class="submitButton" style="font-size: 0.9em"/>
-        </div>
-      </fieldset>
+      <%--<fieldset>--%>
+      <%--<div style="text-align: center;">--%>
+      <%--Category : <s:text name="category" id="category"/>--%>
+      <%--&nbsp; &nbsp;Brand : <s:text name="brand" id="brand"/>--%>
+      <%--<s:submit name="bulkEdit" value="Bulk Edit" class="submitButton" style="font-size: 0.9em"/>--%>
       <%--</div>--%>
-      <%--</div>--%>
-      <%--</div>--%>
+      <%--</fieldset>--%>
       </div>
     </s:form>
   </s:layout-component>
@@ -145,7 +172,6 @@
     $('#hkPrice').click(function() {
       if ($(this).attr("checked") == "checked") {
         $('#discount').attr('disabled', 'disabled');
-        //        alert("HK Price and discount cannot be selected simultaneously! Kindly uncheck HK PRICE to enable DISCOUNT.");
       } else {
         $('#discount').removeAttr('disabled');
       }
@@ -154,7 +180,6 @@
     $('#discount').click(function() {
       if ($(this).attr("checked") == "checked") {
         $('#hkPrice').attr('disabled', 'disabled');
-        //        alert("HK Price and discount cannot be selected simultaneously! Kindly uncheck DISCOUNT to enable HK PRICE.");
       } else {
         $('#hkPrice').removeAttr('disabled');
       }

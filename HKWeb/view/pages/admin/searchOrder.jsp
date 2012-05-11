@@ -1,15 +1,15 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
-<%@ page import="com.hk.constants.order.EnumCartLineItemType" %>
-<%@ page import="com.hk.constants.payment.EnumPaymentMode" %>
-<%@ page import="com.hk.constants.payment.EnumPaymentStatus" %>
-<%@ page import="com.hk.constants.order.EnumOrderStatus" %>
-<%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus" %>
-<%@ page import="com.hk.pact.dao.MasterDataDao" %>
-<%@ page import="com.hk.web.HealthkartResponse" %>
+<%@ page import="mhc.common.constants.EnumCartLineItemType" %>
+<%@ page import="mhc.common.constants.EnumPaymentMode" %>
+<%@ page import="mhc.common.constants.EnumPaymentStatus" %>
+<%@ page import="mhc.common.constants.order.EnumOrderStatus" %>
+<%@ page import="mhc.common.constants.shippingOrder.EnumShippingOrderStatus" %>
+<%@ page import="mhc.service.dao.MasterDataDao" %>
+<%@ page import="mhc.web.json.HealthkartResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" var="orderAdmin" event="pre"/>
+<s:useActionBean beanclass="mhc.web.action.admin.order.search.SearchOrderAction" var="orderAdmin" event="pre"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Base Order Search">
 
@@ -164,7 +164,7 @@
 <c:set var="paymentStatusPending" value="<%=EnumPaymentStatus.AUTHORIZATION_PENDING.getId()%>"/>
 
 <s:errors/>
-<s:form beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" method="get" autocomplete="false">
+<s:form beanclass="mhc.web.action.admin.order.search.SearchOrderAction" method="get" autocomplete="false">
   <fieldset class="top_label">
     <ul>
       <div class="grouped">
@@ -228,13 +228,13 @@
 
   <span class="orderStatusName or">${order.orderStatus.name}</span>
   <c:if test="${order.orderStatus.id == orderStatusPending || order.orderStatus.id == orderStatusHold}">
-    <s:link beanclass="com.hk.web.action.admin.order.OrderOnHoldAction" event="unHoldOrder" title="Unhold Order"
+    <s:link beanclass="mhc.web.action.admin.order.OrderOnHoldAction" event="unHoldOrder" title="Unhold Order"
             class="orderStatusLink onHoldStatusLink"
             style="${order.orderStatus.id == orderStatusHold ? '': 'display:none;'}">
       <s:param name="order" value="${order.id}"/>
       <img src="<hk:vhostImage/>/images/admin/icon_unhold.png" alt="Unhold Order" title="Unhold Order"/>
     </s:link>
-    <s:link beanclass="com.hk.web.action.admin.order.OrderOnHoldAction" event="holdOrder" title="Put Order on Hold"
+    <s:link beanclass="mhc.web.action.admin.order.OrderOnHoldAction" event="holdOrder" title="Put Order on Hold"
             class="orderStatusLink normalStatusLink"
             style="${order.orderStatus.id == orderStatusHold ? 'display:none;': ''}">
       <s:param name="order" value="${order.id}"/>
@@ -253,21 +253,21 @@
   <span class="xsml gry">Payment :</span>
   <span
       class="paymentStatusName">${order.payment.paymentStatus != null ? order.payment.paymentStatus.name : 'N/A'}</span><br/>
-  <s:link beanclass="com.hk.web.action.admin.payment.CheckPaymentAction">
+  <s:link beanclass="mhc.web.action.admin.CheckPaymentAction">
     <s:param name="order" value="${order.id}"/>
     Manage Payments
   </s:link>
   <c:if
       test="${order.payment.paymentStatus.id == paymentStatusPending && order.payment.paymentMode.id == paymentModeCod}">
     <span class="codOrderText">&middot;</span>
-    <s:link beanclass="com.hk.web.action.admin.VerifyCodAction" class="confirmCodLink">
+    <s:link beanclass="mhc.web.action.admin.VerifyCodAction" class="confirmCodLink">
       <s:param name="order" value="${order.id}"/>
       Confirm COD
     </s:link>
   </c:if>
   <hr/>
   <c:if test="${! empty order.orderLifecycles}">
-    <s:link beanclass="com.hk.web.action.admin.order.OrderLifecycleAction" event="pre" target="_blank">
+    <s:link beanclass="mhc.web.action.admin.order.OrderLifecycleAction" event="pre" target="_blank">
       <label style="font-weight:bold;">Last Activity:</label><br>
       ${order.orderLifecycles[fn:length(order.orderLifecycles)-1].orderLifecycleActivity.name} on <br>
       <fmt:formatDate value="${order.orderLifecycles[fn:length(order.orderLifecycles)-1].activityDate}" type="both"/> by
@@ -278,7 +278,7 @@
   <br/>
   <c:if test="${!(order.orderStatus.id == orderStatusCancelled || order.orderStatus.id == orderStatusCart)}">
     <br/>
-    <s:form beanclass="com.hk.web.action.admin.order.CancelOrderAction" class="cancelOrderForm">
+    <s:form beanclass="mhc.web.action.admin.order.CancelOrderAction" class="cancelOrderForm">
       <s:param name="order" value="${order.id}"/>
       Reason:
       <s:select name="cancellationType" class="cancellationTypeId">
@@ -301,7 +301,12 @@
 
       function _cancelOrder(res) {
         if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
-          alert("Order cancelled");
+          var status = res.data.orderStatus.name;
+          if (status == "Cancelled") {
+            alert("Base order cancelled");
+          } else {
+            alert("Base order cannot be cancelled");
+          }
         }
       }
     </script>
@@ -313,27 +318,27 @@
   <span class="upc lgry sml">ID
   <strong><span class="or"> ${order.id}</span></strong>
   <c:if test="${order.orderStatus.id != orderStatusCart}">
-    (<s:link beanclass="com.hk.web.action.core.accounting.BOInvoiceAction" event="pre" target="_blank">
+    (<s:link beanclass="mhc.web.action.BOInvoiceAction" event="pre" target="_blank">
     Invoice <s:param name="order" value="${order.id}"/>
   </s:link>) <br/>
   </c:if>
-    <%--<br/>(<s:link beanclass="com.hk.web.action.AccountingInvoiceAction" event="oldAccountingInvoice" target="_blank">--%>
+    <%--<br/>(<s:link beanclass="mhc.web.action.AccountingInvoiceAction" event="oldAccountingInvoice" target="_blank">--%>
     <%--Prime Accounting Invoice <s:param name="order" value="${order.id}"/></s:link>) <br>--%>
     <%--<br/><b>Retail Invoice:</b> <br/>--%>
     <%--<c:forEach items="${order.retailInvoices}" var="accountingInvoice">--%>
-    <%--<s:link beanclass="com.hk.web.action.AccountingInvoiceAction" event="retailInvoice" target="_blank">--%>
+    <%--<s:link beanclass="mhc.web.action.AccountingInvoiceAction" event="retailInvoice" target="_blank">--%>
     <%--<s:param name="accountingInvoice" value="${accountingInvoice.id}"/>--%>
     <%--R-${accountingInvoice.retailInvoiceId} on <fmt:formatDate value="${accountingInvoice.invoiceDate}" type="both"/>--%>
     <%--</s:link><br/></c:forEach>--%>
     <%--<br/><b>B2B Invoice:</b> <br/>--%>
     <%--<c:forEach items="${order.b2BInvoices}" var="accountingInvoice">--%>
-    <%--<s:link beanclass="com.hk.web.action.AccountingInvoiceAction" event="b2bInvoice" target="_blank">--%>
+    <%--<s:link beanclass="mhc.web.action.AccountingInvoiceAction" event="b2bInvoice" target="_blank">--%>
     <%--<s:param name="accountingInvoice" value="${accountingInvoice.id}"/>--%>
     <%--T-${accountingInvoice.retailInvoiceId} on--%>
     <%--<fmt:formatDate value="${accountingInvoice.invoiceDate}" type="both"/>--%>
     <%--</s:link><br/></c:forEach><br/><br/><b>Service Invoice:</b> <br/>--%>
     <%--<c:forEach items="${order.seviceInvoices}" var="accountingInvoice">--%>
-    <%--<s:link beanclass="com.hk.web.action.AccountingInvoiceAction" event="serviceInvoice" target="_blank">--%>
+    <%--<s:link beanclass="mhc.web.action.AccountingInvoiceAction" event="serviceInvoice" target="_blank">--%>
     <%--<s:param name="accountingInvoice" value="${accountingInvoice.id}"/>--%>
     <%--S-${accountingInvoice.serviceInvoiceId} on--%>
     <%--<fmt:formatDate value="${accountingInvoice.invoiceDate}" type="both"/>--%>
@@ -345,7 +350,7 @@
     <c:when test="${order.user.email == order.user.login}">
       <%-- Usual case , seems like a registered user --%>
       <span class="upc lgry sml">Email</span>
-      <s:link beanclass="com.hk.web.action.admin.user.SearchUserAction" event="search">
+      <s:link beanclass="mhc.web.action.admin.SearchUserAction" event="search">
         <s:param name="userFilterDto.login" value="${order.user.login}"/>
         ${order.user.login}
       </s:link>
@@ -353,7 +358,7 @@
     <c:otherwise>
       <%-- Probably a guest user account --%>
       <span class="upc lgry sml">Login</span>
-      <s:link beanclass="com.hk.web.action.admin.user.SearchUserAction" event="search">
+      <s:link beanclass="mhc.web.action.admin.SearchUserAction" event="search">
       <s:param name="userFilterDto.login" value="${order.user.login}"/>
       ${order.user.login}
       </s:link><br/>
@@ -363,11 +368,11 @@
   </c:choose>
 
         <span class="sml">
-        (<s:link beanclass="com.hk.web.action.admin.SearchTicketAction" event="search" target="_blank">
+        (<s:link beanclass="mhc.web.action.admin.SearchTicketAction" event="search" target="_blank">
           View Tickets
           <s:param name="ticketFilterDto.associatedLogin" value="${order.user.email}"/>
         </s:link>) <br/>
-        (<s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" event="searchOrders">
+        (<s:link beanclass="mhc.web.action.admin.order.search.SearchOrderAction" event="searchOrders">
           View Orders
           <s:param name="login" value="${order.user.login}"/>
         </s:link>)
@@ -383,11 +388,11 @@
 
   <i><fmt:formatDate value="${order.payment.createDate}" type="both"/></i> <br/>
       <span class="sml">
-        <s:link beanclass="com.hk.web.action.admin.ticket.CreateTicketAction" event="createOrderRelatedTicket">
+        <s:link beanclass="mhc.web.action.admin.CreateTicketAction" event="createOrderRelatedTicket">
           Create Ticket
           <s:param name="order" value="${order.id}"/>
         </s:link> <br/>
-        <s:link beanclass="com.hk.web.action.admin.SearchTicketAction" event="search" target="_blank">
+        <s:link beanclass="mhc.web.action.admin.SearchTicketAction" event="search" target="_blank">
           View Tickets
           <s:param name="ticketFilterDto.associatedOrderId" value="${order.id}"/>
         </s:link>
@@ -418,13 +423,13 @@
           </c:otherwise>
         </c:choose>
         <br/>
-        <s:form beanclass="com.hk.web.action.HomeAction" autocomplete="false">
+        <s:form beanclass="mhc.web.action.HomeAction" autocomplete="false">
           <s:select name="" value="${order.address.courier != null ? order.address.courier.id : '0'}" class="courierId">
             <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList" value="id"
                                        label="name"/>
           </s:select>
         </s:form>
-        <s:link beanclass="com.hk.web.action.admin.SetDefaultCourierAction" event="pre" class="setAsDefaultCourierLink">
+        <s:link beanclass="mhc.web.action.admin.SetDefaultCourierAction" event="pre" class="setAsDefaultCourierLink">
           Set as default
           <s:param name="address" value="${order.address.id}"/>
         </s:link>
@@ -433,7 +438,7 @@
 
     <c:if test="${order.orderStatus.id == orderStatusPending || order.orderStatus.id == orderStatusHold}">
       <tr>
-        <td><s:link beanclass="com.hk.web.action.admin.ChangeOrderAddressAction" event="pre">
+        <td><s:link beanclass="mhc.web.action.admin.ChangeOrderAddressAction" event="pre">
           <img src="<hk:vhostImage/>/images/admin/icon_edit_add.png" alt="Change Address"
                title="Change Address"/> Change Address
           <s:param name="order" value="${order.id}"/>
@@ -468,12 +473,12 @@
     </c:forEach>
   </table>
 
-  <s:link beanclass="com.hk.web.action.admin.order.OrderLifecycleAction" event="pre" target="_blank">
+  <s:link beanclass="mhc.web.action.admin.order.OrderLifecycleAction" event="pre" target="_blank">
     Order Lifecycle
     <s:param name="order" value="${order}"/>
   </s:link>
 
-  <s:link beanclass="com.hk.web.action.admin.order.OrderCommentAction" event="pre" target="_blank">
+  <s:link beanclass="mhc.web.action.admin.order.OrderCommentAction" event="pre" target="_blank">
     <c:if test="${!empty order.comments}">
       <text style="color:red; font-weight:bold">Comments</text>
     </c:if>
@@ -488,14 +493,14 @@
         <tr>
           <td>
             GatewayId:
-            <s:link beanclass="com.hk.web.action.admin.order.search.SearchShippingOrderAction"
+            <s:link beanclass="mhc.web.action.admin.order.search.SearchShippingOrderAction"
                     event="searchShippingOrder"
                     target="_blank">
               <s:param name="shippingOrderGatewayId" value="${shippingOrder.gatewayOrderId}"/>
               ${shippingOrder.gatewayOrderId} </s:link><br/>
             Status: ${shippingOrder.orderStatus.name} <br/>
             <c:if test="${shippingOrder.shipment !=null}">
-              Track Link: <s:link beanclass="com.hk.web.action.TrackCourierAction" target="_blank">
+              Track Link: <s:link beanclass="mhc.web.action.TrackCourierAction" target="_blank">
               <s:param name="courierId" value="${shippingOrder.shipment.courier.id}"/>
               <s:param name="trackingId" value="${shippingOrder.shipment.trackingId}"/>
               ${shippingOrder.shipment.trackingId}

@@ -1,9 +1,12 @@
-<%@ page import="com.hk.pact.dao.MasterDataDao" %>
-<%@ page import="com.hk.constants.order.EnumCartLineItemType" %>
+<%@ taglib prefix="s" uri="http://stripes.sourceforge.net/stripes-dynattr.tld" %>
+<%@ taglib prefix="hk" uri="http://healthkart.com/taglibs/hkTagLib" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="mhc.service.dao.MasterDataDao" %>
+<%@ page import="mhc.common.constants.EnumCartLineItemType" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction" var="shipmentQueueBean"/>
+<s:useActionBean beanclass="mhc.web.action.admin.queue.ShipmentAwaitingQueueAction" var="shipmentQueueBean"/>
 
 <c:set var="lineItemTypeId_Product" value="<%=EnumCartLineItemType.Product.getId()%>"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Shipment Awaiting Queue">
@@ -18,7 +21,7 @@
     <fieldset class="top_label">
       <ul>
         <div class="grouped grid_12">
-          <s:form beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction" method="get" autocomplete="false">
+          <s:form beanclass="mhc.web.action.admin.queue.ShipmentAwaitingQueueAction" method="get" autocomplete="false">
             <label>Gateway ID </label><s:text name="gatewayOrderId" id="gatewayOrderId"/>
             <label>Order ID </label> <s:text name="orderId"/>
             <s:select name="courier" class="courierService">
@@ -40,7 +43,7 @@
     <fieldset class="top_label">
       <ul>
         <div class="grouped grid_12">
-          <s:form beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction" target="_blank">
+          <s:form beanclass="mhc.web.action.admin.queue.ShipmentAwaitingQueueAction" >
             <label>Courier</label>
             <s:select name="courier" class="courierService">
               <s:option value="">All Couriers</s:option>
@@ -48,12 +51,13 @@
                                          label="name"/>
             </s:select>
             <s:submit name="generateCourierReport" value="Download Courier Excel"/>
+            <s:submit name="generatePDFs" value="Download Invoice PDF"/>
           </s:form>
         </div>
       </ul>
     </fieldset>
 
-    <s:form beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction" autocomplete="off">
+    <s:form beanclass="mhc.web.action.admin.queue.ShipmentAwaitingQueueAction" autocomplete="off">
       <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${shipmentQueueBean}"/>
       <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${shipmentQueueBean}"/>
       <div style="float:right"><input type="submit" value="Mark All" id="markAll"/></div>
@@ -64,7 +68,7 @@
         <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${shipmentQueueBean}"/>
       </div>
       <div id="hiddenShippingIds"></div>
-     <div style="display:inline;float:left;">
+      <div style="display:inline;float:left;">
         <s:submit name="moveToActionAwaiting" id="moveToActionAwaiting" value="Move Back to Action Awaiting"/>
       </div>
       <div style="display:inline;float:right;">
@@ -103,7 +107,7 @@
         });
         return false;
       });
-      
+
     </script>
   </s:layout-component>
 </s:layout-render>

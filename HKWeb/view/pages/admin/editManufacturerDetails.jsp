@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.admin.catalog.ManufacturerAction" var="ma"/>
+<s:useActionBean beanclass="mhc.web.action.admin.ManufacturerAction" var="ma"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp">
 
   <s:layout-component name="htmlHead">
@@ -21,7 +21,7 @@
 
   <s:layout-component name="content">
     <div>
-      <s:form beanclass="com.hk.web.action.admin.catalog.ManufacturerAction">
+      <s:form beanclass="mhc.web.action.admin.ManufacturerAction">
         <fieldset class="top_label">
           <legend>Create/Edit Merchant Details</legend>
           <div style="float: left; width:50%">
@@ -45,8 +45,10 @@
             <s:text name="manufacturer.email" class="text"/>
 
             <div class="clear"></div>
-          </div>
 
+            <s:label name="IsAvilableAllOverIndia" class="label"> Is Available All over India<span class="aster">*</span> </s:label>
+            <s:checkbox name="manufacturer.availableAllOverIndia" class="text"/>
+          </div>
           <div class="clear"></div>
           <div style="margin-top:15px;"></div>
           <s:hidden name="manufacturer" value="${ma.manufacturer.id}"/>

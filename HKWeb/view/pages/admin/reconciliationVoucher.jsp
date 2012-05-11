@@ -1,22 +1,22 @@
-<%@ page import="com.hk.web.HealthkartResponse" %>
-<%@ page import="com.hk.pact.dao.MasterDataDao" %>
-<%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="mhc.web.json.HealthkartResponse" %>
+<%@ page import="mhc.service.dao.MasterDataDao" %>
+<%@ page import="app.bootstrap.guice.InjectorFactory" %>
 <%@ page import="mhc.domain.ReconciliationType" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.hk.pact.dao.warehouse.WarehouseDao" %>
+<%@ page import="mhc.service.dao.WarehouseDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" var="pa"/>
-<s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
+<s:useActionBean beanclass="mhc.web.action.admin.ReconciliationVoucherAction" var="pa"/>
+<s:useActionBean beanclass="mhc.web.action.admin.SelectWHAction" var="whAction" event="getUserWarehouse"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Create/Edit Reconciliation Voucher">
 <jsp:useBean id="now" class="java.util.Date" scope="request" />
   <s:layout-component name="htmlHead">
 
  <%
-     MasterDataDao masterDataDao = (MasterDataDao)ServiceLocatorFactory.getService(MasterDataDao.class);
-   List<ReconciliationType> reconciliationTypeList  = masterDataDao.getReconciliationTypeList();
-   pageContext.setAttribute("reconciliationTypeList", reconciliationTypeList);
- %>
+	MasterDataDao masterDataDao = InjectorFactory.getInjector().getInstance(MasterDataDao.class);
+  List<ReconciliationType> reconciliationTypeList  = masterDataDao.getReconciliationTypeList();
+  pageContext.setAttribute("reconciliationTypeList", reconciliationTypeList);
+%>
 
 
     <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
@@ -107,11 +107,11 @@
 
   <s:layout-component name="content">
     <div style="display: none;">
-      <s:link beanclass="com.hk.web.action.admin.EditPurchaseOrderAction" id="pvInfoLink"
+      <s:link beanclass="mhc.web.action.admin.EditPurchaseOrderAction" id="pvInfoLink"
               event="getPVDetails"></s:link>
     </div>
     <h2>Create/Edit Reconciliation Voucher</h2>
-    <s:form beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction">
+    <s:form beanclass="mhc.web.action.admin.ReconciliationVoucherAction">
       <s:hidden name="reconciliationVoucher" value="${pa.reconciliationVoucher.id}"/>
       <table>
         <tr>
@@ -190,9 +190,16 @@
       <br/>
       <a href="reconciliationVoucher.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>
 
-      <s:submit name="save" value="Save"/>
+      <s:submit name="save" value="Save" class="saveButton"/>
     </s:form>
-
+   <script type="text/javascript">
+    $(document).ready(function() {
+       $('.saveButton').click(function disableSaveButton(){
+        $(this).css("display", "none");
+      });
+    });
+  </script>
   </s:layout-component>
+
 
 </s:layout-render>

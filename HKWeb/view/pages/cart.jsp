@@ -1,11 +1,11 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
-<%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
-<%@ page import="com.hk.constants.catalog.product.EnumProductVariantPaymentType" %>
-<%@ page import="com.hk.constants.core.RoleConstants" %>
+<%@ page import="mhc.common.constants.EnumImageSize" %>
+<%@ page import="mhc.common.constants.EnumProductVariantPaymentType" %>
+<%@ page import="mhc.common.constants.RoleConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="lineItem_Service_Postpaid" value="<%=EnumProductVariantPaymentType.Postpaid.getId()%>"/>
-<s:useActionBean beanclass="com.hk.web.action.core.cart.CartAction" var="cartAction"/>
+<s:useActionBean beanclass="mhc.web.action.CartAction" var="cartAction"/>
 
 <s:layout-render name="/layouts/cartLayout.jsp" pageTitle="Shopping Cart">
 
@@ -26,6 +26,8 @@
             function(responseData) {
               _updateTotals(responseData);
               _updateLineItem(responseData, lineItemRow);
+              //document.getElementById("freebieBanner").src = responseData.message;
+              $(".freebieBanner").attr("src", responseData.message);
             }
             );
       });
@@ -81,6 +83,7 @@
           $('#numProdTitle').html(count - 1);
           $('.cartButton').glow('#f99', 500, 10);
           _updateTotals(responseData);
+          $(".freebieBanner").attr("src", responseData.message);
         });
         return false;
       });
@@ -245,11 +248,11 @@
   </div>
   <div class='floatfix'></div>
 </div>
-<s:form beanclass="com.hk.web.action.core.cart.CartAction" id="cartForm">
+<s:form beanclass="mhc.web.action.CartAction" id="cartForm">
 <div style="display: none;">
-  <s:link beanclass="com.hk.web.action.core.order.CartLineItemUpdateAction" id="lineItemUpdateLink"></s:link>
-  <s:link beanclass="com.hk.web.action.core.discount.ApplyCouponAction" style="display:none;" id="couponBaseLink"></s:link>
-  <s:link beanclass="com.hk.web.action.core.cart.CartAction" style="display:none;" id="updatePricingLink" event="pricing"></s:link>
+  <s:link beanclass="mhc.web.action.CartLineItemUpdateAction" id="lineItemUpdateLink"></s:link>
+  <s:link beanclass="mhc.web.action.ApplyCouponAction" style="display:none;" id="couponBaseLink"></s:link>
+  <s:link beanclass="mhc.web.action.CartAction" style="display:none;" id="updatePricingLink" event="pricing"></s:link>
 </div>
 
 <c:forEach items="${cartAction.order.exclusivelyProductCartLineItems}" var="cartLineItem" varStatus="ctr">
@@ -470,11 +473,13 @@
   </div>
 </c:forEach>
 
+<s:layout-render name="/layouts/embed/_cartFreebies.jsp" freebieBanner="${cartAction.freebieBanner}"/>
+
 <c:if test="${cartAction.pricingDto.productLineCount > 0}">
-  <s:link beanclass="com.hk.web.action.HomeAction" class="back"> &larr; go back to add more products</s:link>
+  <s:link beanclass="mhc.web.action.HomeAction" class="back"> &larr; go back to add more products</s:link>
 </c:if>
 <c:if test="${cartAction.pricingDto.productLineCount == 0}">
-  <s:link beanclass="com.hk.web.action.HomeAction"
+  <s:link beanclass="mhc.web.action.HomeAction"
           class="back"> &larr; go back to add products to your shopping cart</s:link>
 </c:if>
 </div>
@@ -486,15 +491,15 @@
     Enter Coupon Code
 
     <input placeholder='d-i-s-c-o-u-n-t' type='text' id="couponCode"/>
-    <s:link beanclass="com.hk.web.action.core.discount.ApplyCouponAction" id="couponLink" onclick="return false;"
+    <s:link beanclass="mhc.web.action.ApplyCouponAction" id="couponLink" onclick="return false;"
             class="button_grey">Apply Coupon</s:link>
-    <s:link beanclass="com.hk.web.action.core.discount.AvailabeOfferListAction"
+    <s:link beanclass="mhc.web.action.AvailabeOfferListAction"
             id="availableOffersLink">(see previously applied offers)</s:link>
   </shiro:hasAnyRoles>
   <shiro:hasAnyRoles name="<%=RoleConstants.TEMP_USER%>">
     Got a discount coupon?
     <br/>
-    <s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="lrg" event="pre"> login / signup
+    <s:link beanclass="mhc.web.action.LoginAction" class="lrg" event="pre"> login / signup
       <s:param name="redirectUrl" value="${pageContext.request.contextPath}/Cart.action"/>
     </s:link>
     to redeem it.
@@ -503,7 +508,7 @@
   <shiro:hasAnyRoles name="<%=RoleConstants.HK_UNVERIFIED%>">
     Got a discount coupon?
     <br/>
-    <s:link beanclass="com.hk.web.action.core.user.MyAccountAction" class="lrg" event="pre"> Verify your Account
+    <s:link beanclass="mhc.web.action.MyAccountAction" class="lrg" event="pre"> Verify your Account
     </s:link>
     to redeem it.
     <br/>

@@ -1,7 +1,7 @@
-<%@ page import="com.hk.pact.dao.MasterDataDao" %>
+<%@ page import="mhc.service.dao.MasterDataDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.admin.EditProductAttributesAction" var="pa"/>
+<s:useActionBean beanclass="mhc.web.action.admin.EditProductAttributesAction" var="pa"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="${pa.product.name}">
 
   <s:layout-component name="menu"> </s:layout-component>
@@ -13,7 +13,7 @@
   </s:layout-component>
 
   <s:layout-component name="content">
-    <s:form beanclass="com.hk.web.action.admin.EditProductAttributesAction">
+    <s:form beanclass="mhc.web.action.admin.EditProductAttributesAction">
        <fieldset>
         <ul>
           <s:hidden name="product"/>
@@ -35,6 +35,7 @@
           <li><label>Is Amazon Product</label><s:checkbox name="product.amazonProduct"/></li>
           <li><label>Is Hidden</label><s:checkbox name="product.hidden"/></li>
           <li><label>Is JIT</label><s:checkbox name="product.jit"/></li>
+          <li><label>Is Drop Shipping</label><s:checkbox name="product.dropShipping"/></li>
           <li>
 
             <label>Select Manufacturer</label>
@@ -48,7 +49,7 @@
             Manufacturer: ${pa.product.manufacturer.name}
           </li>
           <c:if test="${pa.product.primaryCategory=='services'}">
-          <s:link beanclass="com.hk.web.action.admin.ManufacturerAddressAction" target="_blank" event="getManufacturerAddresses">
+          <s:link beanclass="mhc.web.action.admin.ManufacturerAddressAction" target="_blank" event="getManufacturerAddresses">
             Edit/View Manufacturer addresses
             <s:param name="manufacturer" value="${pa.product.manufacturer.id}"/>
             </s:link>

@@ -1,9 +1,8 @@
-<%@ page import="com.akube.framework.util.FormatUtils" %>
-<%@ page import="com.hk.pact.dao.MasterDataDao" %>
+<%@ page import="mhc.service.dao.MasterDataDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Debit Note List">
-  <s:useActionBean beanclass="com.hk.web.action.admin.inventory.DebitNoteAction" var="poa"/>
+  <s:useActionBean beanclass="mhc.web.action.admin.DebitNoteAction" var="poa"/>
 
   <s:layout-component name="heading">
     Debit Note List
@@ -13,13 +12,14 @@
 
     <fieldset class="right_label">
       <legend>Search Debit Note</legend>
-      <s:form beanclass="com.hk.web.action.admin.inventory.DebitNoteAction">
+      <s:form beanclass="mhc.web.action.admin.DebitNoteAction">
         <%--<label>GRN ID:</label><s:text name="grn"/>--%>
         <label>Tin Number:</label><s:text name="tinNumber"/>
         <label>Supplier Name:</label><s:text name="supplierName"/>
         <label>Status:</label><s:select name="debitNoteStatus">
         <s:option value="">-All-</s:option>
-        <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="debitNoteStatusList" value="id" label="name"/>
+        <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="debitNoteStatusList" value="id"
+                                   label="name"/>
       </s:select>
         <s:submit name="pre" value="Search Debit Note"/>
       </s:form>
@@ -32,7 +32,7 @@
       <thead>
       <tr>
         <th>DN ID</th>
-        <%--<th>GRN ID</th>--%>
+          <%--<th>GRN ID</th>--%>
         <th>Create Date</th>
         <th>Supplier</th>
         <th>Supplier TIN</th>
@@ -44,12 +44,12 @@
       <c:forEach items="${poa.debitNoteList}" var="debitNote" varStatus="ctr">
         <tr>
           <td>${debitNote.id}</td>
-          <%--<td>
-            <s:link beanclass="com.hk.web.action.admin.inventory.GRNAction" event="view">
-              <s:param name="grn" value="${debitNote.goodsReceivedNote.id}"/>
-              ${debitNote.goodsReceivedNote.id}
-            </s:link>
-          </td>--%>
+            <%--<td>
+              <s:link beanclass="mhc.web.action.admin.GRNAction" event="view">
+                <s:param name="grn" value="${debitNote.goodsReceivedNote.id}"/>
+                ${debitNote.goodsReceivedNote.id}
+              </s:link>
+            </td>--%>
           <td><fmt:formatDate value="${debitNote.createDate}" type="both" timeStyle="short"/></td>
           <td>${debitNote.supplier.name}</td>
           <td>${debitNote.supplier.tinNumber}</td>
@@ -65,7 +65,11 @@
             </c:choose>
           </td>
           <td>
-            <s:link beanclass="com.hk.web.action.admin.inventory.DebitNoteAction" event="view">Edit
+            <s:link beanclass="mhc.web.action.admin.DebitNoteAction" event="view">Edit
+              <s:param name="debitNote" value="${debitNote.id}"/>
+              <s:param name="grn" value="${debitNote.goodsReceivedNote.id}"/></s:link>
+            &nbsp;
+            <s:link beanclass="mhc.web.action.admin.DebitNoteAction" event="print">Print
               <s:param name="debitNote" value="${debitNote.id}"/>
               <s:param name="grn" value="${debitNote.goodsReceivedNote.id}"/></s:link>
           </td>

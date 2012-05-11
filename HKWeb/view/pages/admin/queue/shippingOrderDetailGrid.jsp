@@ -1,15 +1,12 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
-<%@ page import="com.hk.constants.core.PermissionConstants" %>
-<%@ page import="com.hk.constants.payment.EnumPaymentStatus" %>
-<%@ page import="com.hk.constants.order.EnumOrderStatus" %>
-<%@ page import="com.hk.constants.catalog.product.EnumProductVariantPaymentType" %>
-<%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus" %>
-<%@ page import="com.hk.domain.order.ShippingOrder" %>
-<%@ page import="com.hk.web.HealthkartResponse" %>
+<%@ page import="mhc.common.constants.order.EnumOrderStatus" %>
+<%@ page import="mhc.common.constants.shippingOrder.EnumShippingOrderStatus" %>
+<%@ page import="mhc.domain.order.ShippingOrder" %>
+<%@ page import="mhc.web.json.HealthkartResponse" %>
 <%@ page import="java.util.Set" %>
-<%@ page import="com.hk.pact.dao.MasterDataDao" %>
-<%@ page import="com.hk.constants.core.RoleConstants" %>
-<%@ page import="com.hk.constants.*" %>
+<%@ page import="mhc.service.dao.MasterDataDao" %>
+<%@ page import="mhc.common.constants.RoleConstants" %>
+<%@ page import="mhc.common.constants.*" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 
@@ -45,8 +42,9 @@
 %>
 
 <s:layout-definition>
-<c:set var="orderStatusActionAwaiting" value="<%=EnumShippingOrderStatus.SO_ActionAwaiting.getId()%>"/>
+<c:set var="shippingOrderStatusActionAwaiting" value="<%=EnumShippingOrderStatus.SO_ActionAwaiting.getId()%>"/>
 <c:set var="orderStatusHold" value="<%=EnumOrderStatus.OnHold.getId()%>"/>
+<c:set var="shippingOrderStatusHold" value="<%=EnumShippingOrderStatus.SO_OnHold.getId()%>"/>
 <c:set var="paymentStatusAuthPending" value="<%=EnumPaymentStatus.AUTHORIZATION_PENDING.getId()%>"/>
 <c:set var="shippingOrderStatusShipped" value="<%=EnumShippingOrderStatus.SO_Shipped.getId()%>"/>
 <c:set var="shippingOrderStatusDelivered" value="<%=EnumShippingOrderStatus.SO_Delivered.getId()%>"/>
@@ -109,47 +107,53 @@
     <div class="clear"></div>
   </c:if>
   <div class="floatleft">
-    (<s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" event="searchOrders" target="_blank">
+    (<s:link beanclass="mhc.web.action.admin.order.search.SearchOrderAction" event="searchOrders" target="_blank">
     <s:param name="orderId" value="${shippingOrder.baseOrder.id}"/> Search BO
   </s:link>)
-    (<s:link beanclass="com.hk.web.action.admin.order.search.SearchShippingOrderAction" event="searchShippingOrder"
+    (<s:link beanclass="mhc.web.action.admin.order.search.SearchShippingOrderAction" event="searchShippingOrder"
              target="_blank">
     <s:param name="shippingOrderGatewayId" value="${shippingOrder.gatewayOrderId}"/> Search SO
   </s:link>)
-    (<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderLifecycleAction" event="pre" target="_blank">
+    (<s:link beanclass="mhc.web.action.admin.shippingOrder.ShippingOrderLifecycleAction" event="pre" target="_blank">
     SO Lifecycle
     <s:param name="shippingOrder" value="${shippingOrder}"/>
   </s:link>)
-    (<s:link beanclass="com.hk.web.action.SOInvoiceAction" class="invoiceLink" event="pre" target="_blank">
+    (<s:link beanclass="mhc.web.action.SOInvoiceAction" class="invoiceLink" event="pre" target="_blank">
     <s:param name="shippingOrder" value="${shippingOrder}"/>
     Invoice
   </s:link>)
-    &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.SOInvoiceAction" event="pre"
+    &nbsp;&nbsp;&nbsp;(<s:link beanclass="mhc.web.action.SOInvoiceAction" event="pre"
                          target="_blank" class="personalCareInvoiceLink">
     <s:param name="shippingOrder" value="${shippingOrder}"/>
     <s:param name="printable" value="true"/>
     PC Invoice
   </s:link>)
+    <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_ACCOUNTING_INVOICE%>">
+    (<s:link beanclass="mhc.web.action.AccountingInvoiceAction" event="pre" target="_blank">
+    <s:param name="shippingOrder" value="${shippingOrder}"/>
+    Accounting Invoice
+  </s:link>)
+    </shiro:hasAnyRoles>
     <c:if test="${isActionQueue == true}">
       <shiro:hasPermission name="<%=PermissionConstants.EDIT_LINEITEM%>">
-        &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.EditShippingOrderAction" class="editSO">
+        &nbsp;&nbsp;(<s:link beanclass="mhc.web.action.admin.shippingOrder.EditShippingOrderAction" class="editSO">
         <s:param name="shippingOrder" value="${shippingOrder}"/>
         Edit SO
       </s:link>)
       </shiro:hasPermission>
       <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_CATMAN_ADMIN%>">
-        &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction" event="flipWarehouse"
+        &nbsp;&nbsp;(<s:link beanclass="mhc.web.action.admin.shippingOrder.ShippingOrderAction" event="flipWarehouse"
                              class="flipWarehouse">
         <s:param name="shippingOrder" value="${shippingOrder}"/>
         Flip Warehouse
       </s:link>)
-        &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.SplitShippingOrderAction"
+        &nbsp;&nbsp;(<s:link beanclass="mhc.web.action.admin.shippingOrder.SplitShippingOrderAction"
                              class="splitShippingOrder">
         <s:param name="shippingOrder" value="${shippingOrder}"/>
         Split Shipping Order
       </s:link>)
       </shiro:hasAnyRoles>
-       &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction" event="cancelShippingOrder"
+       &nbsp;&nbsp;(<s:link beanclass="mhc.web.action.admin.shippingOrder.ShippingOrderAction" event="cancelShippingOrder"
                              class="cancelSO">
         <s:param name="shippingOrder" value="${shippingOrder}"/>
         Cancel SO
@@ -157,7 +161,7 @@
     </c:if>
     <c:if test="${isSearchShippingOrder}">
       <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_CATMAN_ADMIN%>">
-        &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction" event="flipWarehouse"
+        &nbsp;&nbsp;(<s:link beanclass="mhc.web.action.admin.shippingOrder.ShippingOrderAction" event="flipWarehouse"
                              class="flipWarehouse">
         <s:param name="shippingOrder" value="${shippingOrder}"/>
         Flip Warehouse
@@ -168,7 +172,7 @@
         <c:if
             test="${shippingOrderStatusId == shippingOrderStatusShipped || shippingOrderStatusId == shippingOrderStatusDelivered}">
           <br/>
-          <s:form beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction" class="markRTOForm">
+          <s:form beanclass="mhc.web.action.admin.shippingOrder.ShippingOrderAction" class="markRTOForm">
             <s:param name="shippingOrder" value="${shippingOrder.id}"/>
             <div class="buttons">
               <s:submit name="markRTO" value="Mark RTO" class="markRTOButton"/>
@@ -200,7 +204,7 @@
         Name : <span class="or">${baseOrder.user.name}</span>
       </div>
       <span style="margin-left:10px;">
-        Email: (<s:link beanclass="com.hk.web.action.admin.user.SearchUserAction" event="search">
+        Email: (<s:link beanclass="mhc.web.action.admin.SearchUserAction" event="search">
         <s:param name="userFilterDto.login" value="${baseOrder.user.login}"/>
         ${baseOrder.user.login}
       </s:link>)
@@ -211,7 +215,7 @@
         Processed Orders# ${hk:getProcessedOrdersCount(baseOrder.user)}
       </div>
       <span style="margin-left:10px;">
-        (<s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" event="searchOrders"
+        (<s:link beanclass="mhc.web.action.admin.order.search.SearchOrderAction" event="searchOrders"
                  target="_blank"><s:param
           name="email" value="${baseOrder.user.login}"/>See previous orders</s:link>)
       </span>
@@ -237,7 +241,7 @@
       <%--<tr>--%>
       <c:choose>
         <%--if order is in action awaiting state draw appropriate colour border for line item div--%>
-        <c:when test="${orderStatusActionAwaiting == shippingOrder.orderStatus.id}">
+        <c:when test="${shippingOrderStatusActionAwaiting == shippingOrder.orderStatus.id}">
           <c:choose>
             <c:when test="${hk:bookedQty(sku) <= skuNetInventory}">
               <tr style="border-left:5px solid green;">
@@ -371,8 +375,8 @@
                   <span
                       class="orderStatusName"><strong>${shippingOrder.orderStatus.name}</strong></span>
   <c:choose>
-    <c:when test="${shippingOrder.orderStatus.id == orderStatusHold}">
-      <s:link beanclass="com.hk.web.action.admin.order.OrderOnHoldAction" event="unHoldShippingOrder"
+    <c:when test="${shippingOrder.orderStatus.id == shippingOrderStatusHold}">
+      <s:link beanclass="mhc.web.action.admin.order.OrderOnHoldAction" event="unHoldShippingOrder"
               title="Unhold Shipping Order" class="orderStatusLink onHoldStatusLink">
         <s:param name="shippingOrder" value="${shippingOrder.id}"/>
         <img src="<hk:vhostImage/>/images/admin/icon_unhold.png" alt="Unhold Shipping Order"
@@ -381,8 +385,8 @@
     </c:when>
     <c:otherwise>
       <c:choose>
-        <c:when test="${shippingOrder.orderStatus.id == orderStatusActionAwaiting}">
-          <s:link beanclass="com.hk.web.action.admin.order.OrderOnHoldAction" event="holdShippingOrder"
+        <c:when test="${shippingOrder.orderStatus.id == shippingOrderStatusActionAwaiting}">
+          <s:link beanclass="mhc.web.action.admin.order.OrderOnHoldAction" event="holdShippingOrder"
                   title="Put Shipping Order on Hold"
                   class="orderStatusLink normalStatusLink">
             <s:param name="shippingOrder" value="${shippingOrder.id}"/>

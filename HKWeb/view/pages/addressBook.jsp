@@ -1,10 +1,10 @@
 <%@ page import="com.akube.framework.gson.JsonUtils" %>
-<%@ page import="com.hk.constants.core.RoleConstants" %>
+<%@ page import="mhc.common.constants.RoleConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="com.hk.web.action.core.user.SelectAddressAction" event="pre" var="addressBean"/>
-<s:useActionBean beanclass="com.hk.web.action.core.cart.CartAction" var="cartAction" event="pre"/>
+<s:useActionBean beanclass="mhc.web.action.SelectAddressAction" event="pre" var="addressBean"/>
+<s:useActionBean beanclass="mhc.web.action.CartAction" var="cartAction" event="pre"/>
 
 <s:layout-render name="/layouts/checkoutLayout.jsp" pageTitle="Select a shipping address">
 
@@ -30,7 +30,7 @@
         $(this).parents('tr').addClass('item_selected');
       } else {
         $(this).parents('tr').removeClass('item_selected');
-      }
+      }                                                                           l
     }
 
 
@@ -79,7 +79,7 @@
       </h3>
 
       <c:forEach items="${addressBean.addresses}" var="address" varStatus="addressCount">
-        <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" event="checkout" title="Click to use this address and proceed">
+        <s:link beanclass="mhc.web.action.SelectAddressAction" event="checkout" title="Click to use this address and proceed">
           <s:param name="selectedAddress" value="${address.id}"/>
           <div class="address" style="position: relative;">
             <h5 class="name">${address.name}</h5>
@@ -93,7 +93,7 @@
             <div class='pin'>${address.pin}</div>
             <div class='phone'>${address.phone}</div>
             <br/>
-            <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" event="remove" class="delete" onclick="return confirm('Are you sure you want to delete this address?')">
+            <s:link beanclass="mhc.web.action.SelectAddressAction" event="remove" class="delete" onclick="return confirm('Are you sure you want to delete this address?')">
               <s:param name="deleteAddress" value="${address.id}"/>
               (delete)
             </s:link>
@@ -132,22 +132,31 @@
           form.find("input[type='hidden'][name='address.id']").val(id);
         });
         $(document).ready(function() {
-          $('.address').hover(
-              function() {
-                $(this).children('.hidden').slideDown(100);
-                $(this).children('.edit').click(function(){
-                  return false;
-                });
-              },
-              function() {
-                $(this).children('.hidden').slideUp(50);
-              }
-          );
-          $('.address').click(function(){
-            var add_url = $(this).children('a').attr('href');
-            document.location.href = add_url;
-          });
+	        $('.address').hover(
+			        function() {
+				        $(this).children('.hidden').slideDown(100);
+				        $(this).children('.edit').click(function() {
+					        return false;
+				        });
+			        },
+			        function() {
+				        $(this).children('.hidden').slideUp(50);
+			        }
+			        );
+	        $('.address').click(function() {
+		        var add_url = $(this).children('a').attr('href');
+		        document.location.href = add_url;
+	        });
+	        $('.addressValidation').click(function() {
+		        var pincodeRegEx = /^([0-9]{6})$/;
+		        var pincode = $('.pincode').val();
+		        if (!pincodeRegEx.test(pincode)) {
+			        alert("Please enter a valid (6 digit) Pincode.");
+			        return false;
+		        }
+	        });
         });
+
       </script>
 
 
@@ -165,7 +174,7 @@
           <s:errors/>
         </div>
         <div class="newAddress-errors alert messages"><s:messages key="generalMessages"/></div>
-        <s:form beanclass="com.hk.web.action.core.user.NewAddressAction" id="newAddressForm">
+        <s:form beanclass="mhc.web.action.NewAddressAction" id="newAddressForm">
           <s:hidden name="address.id"/>
           <span class="aster special">(Fields marked * are required.)</span>
 
@@ -180,10 +189,10 @@
           <div class='label'>State<span class="aster">*</span></div>
           <s:text name="address.state"/>
           <div class='label'>PIN Code<span class="aster">*</span></div>
-          <s:text name="address.pin"/>
+          <s:text name="address.pin" class="pincode" maxlength="6"/>
           <div class='label'>Phone / Mobile<span class="aster">*</span></div>
           <s:text name="address.phone"/>
-          <s:submit name="create" value="Use this address and continue >" class="button" style="left: 50px;"/>
+          <s:submit name="create" value="Use this address and continue >" class="button addressValidation" style="left: 50px;"/>
           <div class="special" style="text-align: right;">
             Proceed to Order Confirmation <br/>(This address will be added to your address book so you can use it later)
           </div>

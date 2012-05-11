@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.admin.inventory.CreateInventoryFileAction" var="creatingFile"/>
+<s:useActionBean beanclass="mhc.web.action.admin.CreateInventoryFileAction" var="creatingFile"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" >
 

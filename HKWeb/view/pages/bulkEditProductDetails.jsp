@@ -1,8 +1,16 @@
-<%@ page import="com.hk.pact.dao.MasterDataDao" %>
+<%@ page import="mhc.service.dao.MasterDataDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.admin.catalog.product.BulkEditProductAction" var="bep"/>
+<s:useActionBean beanclass="mhc.web.action.admin.BulkEditProductAction" var="bep"/>
+
 <s:layout-render name="/layouts/defaultAdmin.jsp">
+
+<s:layout-component name="htmlHead">
+  <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
+  <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
+  <script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
+  <jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
+</s:layout-component>
 
 <s:layout-component name="content">
 
@@ -25,7 +33,7 @@
 
 </div>
 
-<s:form beanclass="com.hk.web.action.admin.catalog.product.BulkEditProductAction">
+<s:form beanclass="mhc.web.action.admin.BulkEditProductAction">
 <s:hidden name="category" value="${bep.category}"/>
 <s:hidden name="brand" value="${bep.brand}"/>
 <s:hidden name="toBeEditedOptionsObject" value="${bep.toBeEditedOptionsObject}"/>
@@ -53,6 +61,12 @@
   <th>
     Secondary Category
   </th>
+
+  <c:if test="${bep.toBeEditedOptions['productSupplierTin']}">
+    <th>
+      Supplier Tin
+    </th>
+  </c:if>
 
   <c:if test="${bep.toBeEditedOptions['productOrderRanking']}">
     <th>
@@ -154,6 +168,19 @@
             value="${product.secondaryCategory.displayName}"
             style="width: 150px;"
             placeholder="eg. Sports Nutrition"/>
+  </c:if>
+</td>
+
+<td valign="top">
+  <c:if test="${!bep.toBeEditedOptions['productSupplierTin']}">
+    <s:text class="productSupplierTin" name="supplierTin[${ctr.index}]"
+            value="${product.supplier.tinNumber}"
+            style="width: 150px; border: 0" readonly="readonly"/>
+  </c:if>
+  <c:if test="${bep.toBeEditedOptions['productSupplierTin']}">
+    <s:text class="productSupplierTin" name="supplierTin[${ctr.index}]"
+            value="${product.supplier.tinNumber}"
+            style="width: 150px;"/>
   </c:if>
 </td>
 
@@ -329,209 +356,275 @@
     <%--<c:if test="${bep.toBeEditedOptions['productVariantHeigth']}">--%>
     <%--<th style="text-align:center;">H(cm)</th>--%>
     <%--</c:if>--%>
+  <c:if test="${bep.toBeEditedOptions['productVariantConsumptionTime']}">
+    <th style="text-align:center;">Consumption Time(in days)</th>
+  </c:if>
+
+  <c:if test="${bep.toBeEditedOptions['productVariantLeadTime']}">
+    <th style="text-align:center;">Laed Time</th>
+  </c:if>
+
+  <c:if test="${bep.toBeEditedOptions['productVariantLeadTimeFactor']}">
+    <th style="text-align:center;">Lead Time Factor</th>
+  </c:if>
+
+  <c:if test="${bep.toBeEditedOptions['productVariantBufferTime']}">
+    <th style="text-align:center;">Buffer Time</th>
+  </c:if>
+
+  <c:if test="${bep.toBeEditedOptions['productVariantNextAvailDate']}">
+    <th style="text-align:center;">Next Available Date</th>
+  </c:if>
+
+  <c:if test="${bep.toBeEditedOptions['productVariantFollAvailDate']}">
+    <th style="text-align:center;">Following Available Date</th>
+  </c:if>
 </tr>
 <tr class="variantRow">
-  <s:hidden name="products[${ctr.index}].productVariants[${ctrVariant.index}]"/>
-  <td width="100px">
-      ${variant.id}
-      ${variant.optionsCommaSeparated}
+<s:hidden name="products[${ctr.index}].productVariants[${ctrVariant.index}]"/>
+<td width="100px">
+    ${variant.id}
+    ${variant.optionsCommaSeparated}
+</td>
+
+<c:if test="${bep.toBeEditedOptions['productVariantUpc']}">
+  <td width="80px">
+    <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].upc" style="width:70px"/>
   </td>
+</c:if>
 
-  <c:if test="${bep.toBeEditedOptions['productVariantUpc']}">
-    <td width="80px">
-      <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].upc" style="width:70px"/>
+<c:if test="${bep.toBeEditedOptions['productVariantCostPrice']}">
+  <td width="50px">
+    <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].costPrice" size="5"
+            style="width:50px"/>
+  </td>
+</c:if>
+
+<c:choose>
+  <c:when
+      test="${bep.toBeEditedOptions['productVariantMRP'] && (bep.toBeEditedOptions['productVariantMRP'] || bep.toBeEditedOptions['productVariantPostpaidAmount'] || bep.toBeEditedOptions['productVariantHKPrice'] || bep.toBeEditedOptions['productVariantDiscount'])}">
+    <td width="50px" align="center">
+      <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].markedPrice"
+              class="markedPrice" size="5" style="width:50px"/>
     </td>
-  </c:if>
-
-  <c:if test="${bep.toBeEditedOptions['productVariantCostPrice']}">
-    <td width="50px">
-      <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].costPrice" size="5"
-              style="width:50px"/>
+  </c:when>
+  <c:when
+      test="${bep.toBeEditedOptions['productVariantPostpaidAmount'] || bep.toBeEditedOptions['productVariantHKPrice'] || bep.toBeEditedOptions['productVariantDiscount']}">
+    <td width="50px" align="center">
+      <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].markedPrice"
+              class="markedPrice" size="5" style="width:50px; border: 0;" readonly="readonly"/>
     </td>
-  </c:if>
+  </c:when>
+</c:choose>
 
-  <c:choose>
-    <c:when
-        test="${bep.toBeEditedOptions['productVariantMRP'] && (bep.toBeEditedOptions['productVariantMRP'] || bep.toBeEditedOptions['productVariantPostpaidAmount'] || bep.toBeEditedOptions['productVariantHKPrice'] || bep.toBeEditedOptions['productVariantDiscount'])}">
-      <td width="50px" align="center">
-        <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].markedPrice"
-                class="markedPrice" size="5" style="width:50px"/>
-      </td>
-    </c:when>
-    <c:when
-        test="${bep.toBeEditedOptions['productVariantPostpaidAmount'] || bep.toBeEditedOptions['productVariantHKPrice'] || bep.toBeEditedOptions['productVariantDiscount']}">
-      <td width="50px" align="center">
-        <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].markedPrice"
-                class="markedPrice" size="5" style="width:50px; border: 0;" readonly="readonly"/>
-      </td>
-    </c:when>
-  </c:choose>
+<c:if test="${bep.toBeEditedOptions['productVariantB2BPrice']}">
+  <td width="50px" align="right">
+    <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].b2bPrice" size="5"
+            style="width:50px"
+            class="b2bPrice"/>
+  </td>
+</c:if>
 
-  <c:if test="${bep.toBeEditedOptions['productVariantB2BPrice']}">
+<c:choose>
+  <c:when
+      test="${bep.toBeEditedOptions['productVariantPostpaidAmount'] && (bep.toBeEditedOptions['productVariantPostpaidAmount'] || bep.toBeEditedOptions['productVariantMRP'] || bep.toBeEditedOptions['productVariantHKPrice'] || bep.toBeEditedOptions['productVariantDiscount'])}">
     <td width="50px" align="right">
-      <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].b2bPrice" size="5"
+      <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].postpaidAmount" size="5"
               style="width:50px"
-              class="b2bPrice"/>
+              class="postpaidAmount"/>
     </td>
-  </c:if>
-
-  <c:choose>
-    <c:when
-        test="${bep.toBeEditedOptions['productVariantPostpaidAmount'] && (bep.toBeEditedOptions['productVariantPostpaidAmount'] || bep.toBeEditedOptions['productVariantMRP'] || bep.toBeEditedOptions['productVariantHKPrice'] || bep.toBeEditedOptions['productVariantDiscount'])}">
-      <td width="50px" align="right">
-        <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].postpaidAmount" size="5"
-                style="width:50px"
-                class="postpaidAmount"/>
-      </td>
-    </c:when>
-    <c:when
-        test="${bep.toBeEditedOptions['productVariantMRP'] || bep.toBeEditedOptions['productVariantHKPrice'] || bep.toBeEditedOptions['productVariantDiscount']}">
-      <td width="50px" align="right">
-        <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].postpaidAmount" size="5"
-                style="width:50px; border: 0;" readonly="readonly"
-                class="postpaidAmount"/>
-      </td>
-    </c:when>
-  </c:choose>
-
-  <c:choose>
-    <c:when
-        test="${bep.toBeEditedOptions['productVariantHKPrice']}">
-      <td width="50px" align="right">
-        <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].hkPrice" size="5"
-                style="width:50px"
-                class="hkPrice"/>
-      </td>
-
-      <td width="50px" align="center">
-        <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].discountPercent"
-                class="discountPercent" size="5" style="width:50px; border: 0;" readonly="readonly"/>
-      </td>
-    </c:when>
-
-    <c:when
-        test="${bep.toBeEditedOptions['productVariantDiscount']}">
-      <td width="50px" align="right">
-        <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].hkPrice" size="5"
-                style="width:50px; border: 0;"
-                class="hkPrice" readonly="readonly"/>
-      </td>
-
-      <td width="50px" align="center">
-        <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].discountPercent"
-                class="discountPercent" size="5" style="width:50px"/>
-      </td>
-    </c:when>
-
-    <c:when
-        test="${bep.toBeEditedOptions['productVariantMRP'] || bep.toBeEditedOptions['productVariantPostpaidAmount']}">
-      <td width="50px" align="right">
-        <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].hkPrice" size="5"
-                style="width:50px; border: 0;"
-                class="hkPrice" readonly="readonly"/>
-      </td>
-
-      <td width="50px" align="center">
-        <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].discountPercent"
-                class="discountPercent" size="5" style="width:50px; border: 0;" readonly="readonly"/>
-      </td>
-    </c:when>
-  </c:choose>
-
-  <c:if test="${bep.toBeEditedOptions['productVariantAffiliateCategory']}">
-    <td width="100px">
-      <s:select name="products[${ctr.index}].productVariants[${ctrVariant.index}].affiliateCategory"
-                value="${variant.affiliateCategory.affiliateCategoryName}" class="affiliateCategory"
-                style="width:100px;">
-        <s:option value="">None</s:option>
-        <hk:master-data-collection service="<%=MasterDataDao.class%>"
-                                   serviceProperty="allAffiliateCategories" label="affiliateCategoryName"
-                                   value="affiliateCategoryName"/>
-      </s:select><br/>
-    </td>
-  </c:if>
-
-  <c:if test="${bep.toBeEditedOptions['productVariantClearanceSale']}">
-    <td width="60px" align="right" class="productVariantClearanceSale">
-        <%--<s:text name="productVariantClearanceSale" class="productVariantClearanceSaleText" value="${variant.clearanceSale}"--%>
-        <%--readonly="readonly" style="border: 0;"/>--%>
-      <s:select name="products[${ctr.index}].productVariants[${ctrVariant.index}].clearanceSale"
-                class="productVariantClearanceSaleDropDown">
-        <s:option value="${variant.clearanceSale}" selected="selected">${variant.clearanceSale}</s:option>
-        <c:choose>
-          <c:when test="${variant.clearanceSale == true}">
-            <s:option value="0" class="false">false</s:option>
-          </c:when>
-          <c:otherwise>
-            <s:option value="1" class="true">true</s:option>
-          </c:otherwise>
-        </c:choose>
-      </s:select>
-    </td>
-  </c:if>
-
-  <c:if test="${bep.toBeEditedOptions['productVariantOutOfStock']}">
+  </c:when>
+  <c:when
+      test="${bep.toBeEditedOptions['productVariantMRP'] || bep.toBeEditedOptions['productVariantHKPrice'] || bep.toBeEditedOptions['productVariantDiscount']}">
     <td width="50px" align="right">
+      <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].postpaidAmount" size="5"
+              style="width:50px; border: 0;" readonly="readonly"
+              class="postpaidAmount"/>
+    </td>
+  </c:when>
+</c:choose>
+
+<c:choose>
+  <c:when
+      test="${bep.toBeEditedOptions['productVariantHKPrice']}">
+    <td width="50px" align="right">
+      <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].hkPrice" size="5"
+              style="width:50px"
+              class="hkPrice"/>
+    </td>
+
+    <td width="50px" align="center">
+      <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].discountPercent"
+              class="discountPercent" size="5" style="width:50px; border: 0;" readonly="readonly"/>
+    </td>
+  </c:when>
+
+  <c:when
+      test="${bep.toBeEditedOptions['productVariantDiscount']}">
+    <td width="50px" align="right">
+      <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].hkPrice" size="5"
+              style="width:50px; border: 0;"
+              class="hkPrice" readonly="readonly"/>
+    </td>
+
+    <td width="50px" align="center">
+      <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].discountPercent"
+              class="discountPercent" size="5" style="width:50px"/>
+    </td>
+  </c:when>
+
+  <c:when
+      test="${bep.toBeEditedOptions['productVariantMRP'] || bep.toBeEditedOptions['productVariantPostpaidAmount']}">
+    <td width="50px" align="right">
+      <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].hkPrice" size="5"
+              style="width:50px; border: 0;"
+              class="hkPrice" readonly="readonly"/>
+    </td>
+
+    <td width="50px" align="center">
+      <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].discountPercent"
+              class="discountPercent" size="5" style="width:50px; border: 0;" readonly="readonly"/>
+    </td>
+  </c:when>
+</c:choose>
+
+<c:if test="${bep.toBeEditedOptions['productVariantAffiliateCategory']}">
+  <td width="100px">
+    <s:select name="products[${ctr.index}].productVariants[${ctrVariant.index}].affiliateCategory"
+              value="${variant.affiliateCategory.affiliateCategoryName}" class="affiliateCategory"
+              style="width:100px;">
+      <s:option value="">None</s:option>
+      <hk:master-data-collection service="<%=MasterDataDao.class%>"
+                                 serviceProperty="allAffiliateCategories" label="affiliateCategoryName"
+                                 value="affiliateCategoryName"/>
+    </s:select><br/>
+  </td>
+</c:if>
+
+<c:if test="${bep.toBeEditedOptions['productVariantClearanceSale']}">
+  <td width="60px" align="right" class="productVariantClearanceSale">
+      <%--<s:text name="productVariantClearanceSale" class="productVariantClearanceSaleText" value="${variant.clearanceSale}"--%>
+      <%--readonly="readonly" style="border: 0;"/>--%>
+    <s:select name="products[${ctr.index}].productVariants[${ctrVariant.index}].clearanceSale"
+              class="productVariantClearanceSaleDropDown">
+      <s:option value="${variant.clearanceSale}" selected="selected">${variant.clearanceSale}</s:option>
       <c:choose>
-        <c:when test="${!variant.product.jit}">
-          ${variant.outOfStock}
+        <c:when test="${variant.clearanceSale == true}">
+          <s:option value="0" class="false">false</s:option>
         </c:when>
         <c:otherwise>
-          <s:checkbox name="products[${ctr.index}].productVariants[${ctrVariant.index}].outOfStock"/>
+          <s:option value="1" class="true">true</s:option>
         </c:otherwise>
       </c:choose>
-    </td>
-  </c:if>
+    </s:select>
+  </td>
+</c:if>
 
-  <c:if test="${bep.toBeEditedOptions['productVariantDeleted']}">
-    <td width="60px" align="right">
-      <s:checkbox name="products[${ctr.index}].productVariants[${ctrVariant.index}].deleted"/>
-    </td>
-  </c:if>
+<c:if test="${bep.toBeEditedOptions['productVariantOutOfStock']}">
+  <td width="50px" align="right">
+    <c:choose>
+      <c:when test="${!variant.product.jit}">
+        ${variant.outOfStock}
+      </c:when>
+      <c:otherwise>
+        <s:checkbox name="products[${ctr.index}].productVariants[${ctrVariant.index}].outOfStock"/>
+      </c:otherwise>
+    </c:choose>
+  </td>
+</c:if>
 
-  <c:if test="${bep.toBeEditedOptions['productVariantInventory']}">
-    <td width="100px" align="right">
-      <s:link beanclass="com.hk.web.action.admin.ListBatchesAndCheckinInventory" target="_blank">
-        <strong>${hk:netInventory(variant)}</strong>
-        <s:param name="upc" value="${variant.id}"/>
-      </s:link>
-    </td>
-  </c:if>
+<c:if test="${bep.toBeEditedOptions['productVariantDeleted']}">
+  <td width="60px" align="right">
+    <s:checkbox name="products[${ctr.index}].productVariants[${ctrVariant.index}].deleted"/>
+  </td>
+</c:if>
 
-    <%--<c:if test="${bep.toBeEditedOptions['productVariantCutOffInventory']}">--%>
-    <%--<td>--%>
-    <%--<s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].cutOffInventory" size="2"--%>
-    <%--style="width:30px"/>--%>
-    <%--</td>--%>
-    <%--</c:if>--%>
+<c:if test="${bep.toBeEditedOptions['productVariantInventory']}">
+  <td width="100px" align="right">
+    <s:link beanclass="mhc.web.action.admin.ListBatchesAndCheckinInventory" target="_blank">
+      <strong>${hk:netInventory(variant)}</strong>
+      <s:param name="upc" value="${variant.id}"/>
+    </s:link>
+  </td>
+</c:if>
 
-  <c:if test="${bep.toBeEditedOptions['productVariantWeight']}">
-    <td>
-      <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].weight" size="2"
-              style="width:40px"/>
-    </td>
-  </c:if>
+  <%--<c:if test="${bep.toBeEditedOptions['productVariantCutOffInventory']}">--%>
+  <%--<td>--%>
+  <%--<s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].cutOffInventory" size="2"--%>
+  <%--style="width:30px"/>--%>
+  <%--</td>--%>
+  <%--</c:if>--%>
 
-    <%--<c:if test="${bep.toBeEditedOptions['productVariantLength']}">--%>
-    <%--<td>--%>
-    <%--<s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].length" size="2"--%>
-    <%--style="width:40px"/>--%>
-    <%--</td>--%>
-    <%--</c:if>--%>
+<c:if test="${bep.toBeEditedOptions['productVariantWeight']}">
+  <td>
+    <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].weight" size="2"
+            style="width:40px"/>
+  </td>
+</c:if>
 
-    <%--<c:if test="${bep.toBeEditedOptions['productVariantBreadth']}">--%>
-    <%--<td>--%>
-    <%--<s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].breadth" size="2"--%>
-    <%--style="width:40px"/>--%>
-    <%--</td>--%>
-    <%--</c:if>--%>
+  <%--<c:if test="${bep.toBeEditedOptions['productVariantLength']}">--%>
+  <%--<td>--%>
+  <%--<s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].length" size="2"--%>
+  <%--style="width:40px"/>--%>
+  <%--</td>--%>
+  <%--</c:if>--%>
 
-    <%--<c:if test="${bep.toBeEditedOptions['productVariantHeigth']}">--%>
-    <%--<td>--%>
-    <%--<s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].height" size="2"--%>
-    <%--style="width:40px"/>--%>
-    <%--</td>--%>
-    <%--</c:if>--%>
+  <%--<c:if test="${bep.toBeEditedOptions['productVariantBreadth']}">--%>
+  <%--<td>--%>
+  <%--<s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].breadth" size="2"--%>
+  <%--style="width:40px"/>--%>
+  <%--</td>--%>
+  <%--</c:if>--%>
+
+  <%--<c:if test="${bep.toBeEditedOptions['productVariantHeigth']}">--%>
+  <%--<td>--%>
+  <%--<s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].height" size="2"--%>
+  <%--style="width:40px"/>--%>
+  <%--</td>--%>
+  <%--</c:if>--%>
+
+<c:if test="${bep.toBeEditedOptions['productVariantConsumptionTime']}">
+  <td>
+    <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].consumptionTime" size="2"
+            style="width:40px"/>
+  </td>
+</c:if>
+
+<c:if test="${bep.toBeEditedOptions['productVariantLeadTime']}">
+  <td>
+    <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].leadTime" size="2"
+            style="width:40px"/>
+  </td>
+</c:if>
+
+<c:if test="${bep.toBeEditedOptions['productVariantLeadTimeFactor']}">
+  <td>
+    <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].leadTimeFactor" size="2"
+            style="width:40px"/>
+  </td>
+</c:if>
+
+<c:if test="${bep.toBeEditedOptions['productVariantBufferTime']}">
+  <td>
+    <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].bufferTime" size="2"
+            style="width:40px"/>
+  </td>
+</c:if>
+
+<c:if test="${bep.toBeEditedOptions['productVariantNextAvailDate']}">
+  <td>
+    <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].nextAvailableDate" class="date_input"
+            formatPattern="yyyy-MM-dd" style="width:100px"/>
+  </td>
+</c:if>
+
+<c:if test="${bep.toBeEditedOptions['productVariantFollAvailDate']}">
+  <td>
+    <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].followingAvailableDate" class="date_input"
+            formatPattern="yyyy-MM-dd" style="width:100px"/>
+  </td>
+</c:if>
+
 </tr>
 </c:forEach>
 </table>
@@ -555,10 +648,6 @@
 <script type="text/javascript">
   $(document).ready(function() {
     $('.errors').hide();
-    //    $('.productDeletedDropDown').hide();
-    //    $('.productVariantClearanceSaleDropDown').hide();
-    //    $('.productDeletedMessage').hide();
-
     if (!($('.discountPercent').attr("readonly") == "readonly")) {
       $('.discountPercent').change(_updateHkPrice);
     }
@@ -567,33 +656,6 @@
     if (!($('.hkPrice').attr("readonly") == "readonly")) {
       $('.hkPrice').change(_updateDiscountonMrp);
     }
-
-    //    $('.productDeleted').each(function() {
-    //        $(this).mouseover(function() {
-    //          $(this).parents('.productRow').find('.productDeletedMessage').show();
-    //        });
-    //
-    //        $(this).mouseout(function() {
-    //          $(this).parents('.productRow').find('.productDeletedMessage').hide();
-    //        });
-    //    });
-
-    //    $('.productDeletedText').each(function() {
-    //      $(this).click(function() {
-    //        $(this).hide();
-    //        $(this).parents('.productRow').find('.productDeletedDropDown').attr("disabled") = false;
-    //        $(this).parents('.productRow').find('.productDeletedDropDown').show();
-
-    //      });
-    //    });
-
-    //    $('.productVariantClearanceSaleText').each(function() {
-    //      $(this).click(function() {
-    //        $(this).hide();
-    //        $(this).parents('.productRow').find('.productVariantClearanceSaleDropDown').attr("disabled") = false;
-    //        $(this).parents('.variantRow').find('.productVariantClearanceSaleDropDown').show();
-    //      });
-    //    });
 
     $('.submitButton').click(function() {
       $('.errors').empty();
@@ -612,8 +674,15 @@
           $('.errors').append("<br/> Please enter brand for: " + productId);
         }
       });
+      $('.productSupplierTin').each(function() {
+        if ($(this).val().trim() === "") {
+          ctr = 1;
+          var productId = $(this).parents('.productRow').find('.productId').val();
+          $('.errors').append("<br/> Please enter supplier's tin number for: " + productId);
+        }
+      });
       if (ctr) {
-        alert("Errors encoountered! Kindly go to the top of the page to view.")
+        alert("Errors encoountered! Kindly go to the top of the page to view.");
         $('.errors').show();
       }
       return !ctr;

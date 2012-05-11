@@ -1,113 +1,482 @@
-<%@ page import="com.hk.constants.core.RoleConstants" %>
-<%@ page import="com.hk.web.HealthkartResponse" %>
+<%@ page import="com.akube.framework.util.FormatUtils" %>
+<%@ page import="mhc.common.constants.RoleConstants" %>
+<%@ page import="mhc.web.json.HealthkartResponse" %>
+<%@ page import="mhc.service.UserService" %>
+<%@ page import="app.bootstrap.guice.InjectorFactory" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.core.user.MyAccountAction" var="maa"/>
+
+<s:useActionBean beanclass="mhc.web.action.OrderDetailsAction" var="oa"/>
+<s:useActionBean beanclass="mhc.web.action.MyAccountAction" var="maa" event="pre"/>
+
+
 <s:layout-render name="/layouts/default.jsp">
-  <s:layout-component name="heading">Your Account</s:layout-component>
-  <s:layout-component name="lhsContent">
-    <jsp:include page="myaccount-nav.jsp"/>
-  </s:layout-component>
 
-  <s:layout-component name="rhsContent">
+<s:layout-component name="htmlHead">
+  <link href="<hk:vhostCss/>/css/new.css" rel="stylesheet" type="text/css"/>
+</s:layout-component>
+
+<s:layout-component name="heading">My Account</s:layout-component>
+
+<s:layout-component name="lhsContent">
+  <jsp:include page="myaccount-nav.jsp"/>
+  <%
+    UserService userService = InjectorFactory.getInjector().getInstance(UserService.class);
+  %>
+  <c:set var="productVariants" value="<%=userService.getRecentlyOrderedProductVariantsForUser(maa.getUser())%>"/>
+  <c:set var="recentOrders" value="<%=userService.getOrdersForUserSortedByDate(maa.getUser())%>"/>
+  <c:set var="addresses" value="${maa.user.addresses}"/>
+
+  <fieldset>
+    <c:if test="${!empty productVariants}">
+      <ul style="list-style: none; line-height: 25px;">
+        <li>
+          <s:link beanclass="mhc.web.action.CustomerOrderHistoryAction" title="My Orders"> <span
+              id="ohLink">MY ORDERS</span> </s:link>
+        </li>
+        <s:label name="Recently Ordered Items" style="color:darkblue;"/>
+
+        <s:form beanclass="mhc.web.action.AddToCartAction" class="addToCartForm">
+          <fieldset>
+            <c:forEach items="${productVariants}" var="variant" varStatus="ctr">
+              <div class="cont footer_color" width="100%" style="font-size: smaller;">
+                <div style="border-bottom: 1px solid #f0f0f0;">
+                  <s:hidden name="productVariantList[${ctr.index}]" value="${variant.id}"/>
+                  <s:checkbox name="productVariantList[${ctr.index}].selected" class="lineItemCheckBox"/>
+                  <s:hidden name="productVariantList[${ctr.index}}].qty" value="1" class="lineItemQty"/>
+                  <s:link beanclass="mhc.web.action.ProductAction" class="prod_link">
+                    <s:param name="productId" value="${variant.product.id}"/>
+                    <s:param name="productSlug" value="${variant.product.slug}"/>
+                    ${variant.product.name}
+                  </s:link>
+                </div>
+              </div>
+            </c:forEach>
+            <div align="center">
+              <s:submit name="addToCart" value="Place Order" class="addToCartButton"/>
+            </div>
+
+          </fieldset>
+        </s:form>
+
+      </ul>
+    </c:if>
+  </fieldset>
+</s:layout-component>
+
+<s:layout-component name="rhsContent">
+<div>
+  <shiro:hasRole name="<%=RoleConstants.HK_UNVERIFIED%>">
+    <div class="prom yellow help" style="margin-bottom:20px; padding:5px;">
+      <p class="lrg"><strong>Unverified Account</strong><br/>
+        To verify, please click on the activation link sent to you via e-mail when signing up.</p>
+
+      <p><strong>If you haven't received the mail,
+        <s:link beanclass="mhc.web.action.ResendAccountActivationLinkAction" event="pre"
+                class="resendActivationEmailLink">click here to resend it.</s:link>
+      </strong>
+        <br/><br/>
+        <span class="emailSendMessage alert" style="display: none; font-weight:bold;"></span>
+      </p>
+
+      <p style="display:none;" class="emailNotReceived">
+        If you do not receive this email, please check your spam/bulk folder.
+        <br/>Write to us at info@healthkart.com if you face problems.
+      </p>
+    </div>
+    <script type="text/javascript">
+
+      <%-- Re-Send Activation Link --%>
+      $('.resendActivationEmailLink').click(function() {
+
+        var clickedLink = $(this);
+        var clickedP = clickedLink.parents('p');
+        clickedP.find('.emailSendMessage').html($('#ajaxLoader').html()).show();
+        $.getJSON(clickedLink.attr('href'), function(res) {
+          if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+            clickedP.find('.emailSendMessage').html(res.data.message).show();
+            $('.emailNotReceived').show();
+          }
+        });
+        return false;
+      });
+
+    </script>
+  </shiro:hasRole>
+</div>
+
+<div class="basicInformation" style="float:left; margin-top: 5px; margin-bottom: 5px; width: 100%;">
+
+  <div style="margin-top: 10px"></div>
+
+  <s:form beanclass="mhc.web.action.MyAccountAction">
+    <s:errors/>
+    <h4 class="strikeline"> Basic Information</h4>
+
+    <div style="font-size:0.8em; float:left; width:58%">
+
+      <div class="row">
+        <label class="rowLabel">Name</label>
+        <label class="rowText">${maa.user.name}</label>
+      </div>
+
+      <div class="clear"></div>
+
+      <div class="row">
+        <label class="rowLabel">Email id</label>
+        <label class="rowText">${maa.user.email}</label>
+      </div>
+
+      <div class="clear"></div>
+
+      <shiro:hasRole name="<%=RoleConstants.B2B_USER%>">
+        <s:hidden name="b2bUserDetails" value="${maa.b2bUserDetails.id}"/>
+        <s:hidden name="b2bUserDetails.user" value="${maa.user}"/>
+        <div class="row">
+          <label class="rowLabel">TIN#</label>
+          <label class="rowText">
+            <c:choose>
+              <c:when test="${maa.b2bUserDetails.tin != null}">
+                ${maa.b2bUserDetails.tin}
+              </c:when>
+              <c:otherwise>
+                --
+              </c:otherwise>
+            </c:choose>
+          </label>
+        </div>
+
+        <div class="clear"></div>
+
+        <div class="row">
+          <label class="rowLabel">DL Number</label>
+          <label class="rowText">
+            <c:choose>
+              <c:when test="${maa.b2bUserDetails.dlNumber != null}">
+                ${maa.b2bUserDetails.dlNumber}
+              </c:when>
+              <c:otherwise>
+                --
+              </c:otherwise>
+            </c:choose>
+          </label>
+        </div>
+
+        <div class="clear"></div>
+      </shiro:hasRole>
+
+      <div class="row">
+        <label class="rowLabel">Gender</label>
+        <label class="rowText">
+          <c:choose>
+            <c:when test="${maa.user.gender != null}">
+              ${maa.user.gender}
+            </c:when>
+            <c:otherwise>
+              --
+            </c:otherwise>
+          </c:choose>
+        </label>
+      </div>
+    </div>
+    <div class="clear"></div>
+
     <div>
-      <s:form beanclass="com.hk.web.action.core.user.MyAccountAction">
-        <s:errors/>
-        <h4 class="strikeline"> Basic Information</h4>
-        <shiro:hasRole name="<%=RoleConstants.HK_UNVERIFIED%>">
-          <div class="prom yellow help" style="margin-bottom:20px; padding:5px;">
-            <p class="lrg"><strong>Unverified Account</strong><br/>
-              To verify, please click on the activation link sent to you via e-mail when signing up.</p>
+      <div class="row">
+        <label class="rowLabel">DOB</label>
+        <label class="rowText" style="font-size: 0.8em;">
+          <c:choose>
+            <c:when test="${maa.user.birthDate != null}">
+              <%--<s:label class="rowText" name="<%=FormatUtils.getFormattedDateForUserEnd(maa.getUser().getBirthDate())%>" style=" font-size: 0.8em;"/>--%>
+              <%=FormatUtils.getFormattedDateForUserEnd(maa.getUser().getBirthDate())%>
+            </c:when>
+            <c:otherwise>
+              --
+            </c:otherwise>
+          </c:choose>
+        </label>
+      </div>
 
-            <p><strong>If you haven't received the mail,
-              <s:link beanclass="com.hk.web.action.ResendAccountActivationLinkAction" event="pre" class="resendActivationEmailLink">click here to resend it.</s:link>
-            </strong>
-              <br/><br/>
-              <span class="emailSendMessage alert" style="display: none; font-weight:bold;"></span>
-            </p>
+      <s:hidden name="user" value="${maa.user}"/>
 
-            <p style="display:none;" class="emailNotReceived">
-              If you do not receive this email, please check your spam/bulk folder.
-              <br/>Write to us at info@healthkart.com if you face problems.
-            </p>
+      <div style="float: right;font-size: 0.7em;">
+        <s:submit name="editPassword" value="Change Password"/>
+        <s:submit name="editBasicInformation" value="Edit Profile"/>
+      </div>
+    </div>
+  </s:form>
+</div>
+
+<div class="contactInformation" style="width: 100%; margin-top: 5px; margin-bottom: 5px; float:left;">
+  <s:form beanclass="mhc.web.action.UserManageAddressAction">
+    <h4 class="strikeline"> Contact Information</h4>
+
+    <div style="margin-top: 10px"></div>
+
+    <%--<c:if test="${!empty addresses}">--%>
+    <c:set var="address" value="${maa.affiliateDefaultAddress}"/>
+    <%--</c:if>--%>
+
+    <c:choose>
+      <c:when test="${!empty addresses}">
+        <c:choose>
+          <c:when test="${address == null}">
+            <c:choose>
+              <c:when test="${!(empty recentOrders || (recentOrders[0].address.deleted == true))}">
+                <c:set var="address" value="${recentOrders[0].address}"/>
+              </c:when>
+              <c:otherwise>
+                <c:set var="address" value="${addresses[0]}"/>
+              </c:otherwise>
+            </c:choose>
+          </c:when>
+        </c:choose>
+
+        <div>
+          <div style="float:left; font-size:small; width:70%">
+            <p>${address.line1} ${address.line2}</p>
+
+            <p>${address.city}</p>
+
+            <p>${address.state} ${address.pin}</p>
+
+            <p>Phone: ${address.phone}</p>
           </div>
-          <script type="text/javascript">
-
-            <%-- Re-Send Activation Link --%>
-            $('.resendActivationEmailLink').click(function() {
-
-              var clickedLink = $(this);
-              var clickedP = clickedLink.parents('p');
-              clickedP.find('.emailSendMessage').html($('#ajaxLoader').html()).show();
-              $.getJSON(clickedLink.attr('href'), function(res) {
-                if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
-                  clickedP.find('.emailSendMessage').html(res.data.message).show();
-                  $('.emailNotReceived').show();
-                }
-              });
-              return false;
-            });
-
-          </script>
-        </shiro:hasRole>
-        <s:hidden name="user" value="${maa.user.id}"/>
-        <div class="label">Name</div>
-        <s:text name="user.name"/>
-
-        <div class="label">Email</div>
-        <s:text name="user.email"/>
-
-        <shiro:hasRole name="<%=RoleConstants.B2B_USER%>">
-          <s:hidden name="b2bUserDetails" value="${maa.b2bUserDetails.id}"/>
-          <s:hidden name="b2bUserDetails.user" value="${maa.user.id}"/>
-          <div class="label">TIN#</div>
-          <s:text name="b2bUserDetails.tin"/>
-
-          <div class="label">DL Number</div>
-          <s:text name="b2bUserDetails.dlNumber"/>
-        </shiro:hasRole>
-
-        <div style="float: right; font-size: 0.7em; width: 65%; margin-top: 10px;">
-          <s:submit name="save" value="Update" class="button_orange"/>
+          <div style="float: right; font-size: 0.7em; margin-top:65px; margin-right:15px; width:20%">
+            <s:link beanclass="mhc.web.action.UserManageAddressAction" event="manageAddresses"
+                    style="font-size:small; color:black; text-align:center;">View all addresses
+              <%--<s:param name="address.id" value="${address.id}"/>--%>
+              <%--<s:param name="user" value="${maa.user}"/>--%>
+            </s:link>
+          </div>
         </div>
-      </s:form>
-    </div>
-    <div style="margin-top: 50px;">
-      <s:form beanclass="com.hk.web.action.core.user.MyAccountAction">
-        <s:errors/>
-        <h4 class="strikeline"> Change Password</h4>
+      </c:when>
+      <c:otherwise>
+        <div style="font-size: small;">&nbsp No contact information yet</div>
+        <s:link beanclass="mhc.web.action.UserManageAddressAction" event="manageAddresses"
+                style="float:right; font-size:small; color:black; text-align:center;">Add Address
+        </s:link>
+      </c:otherwise>
+    </c:choose>
+  </s:form>
+</div>
 
+<div class="recentOrders" style="width:100%; margin-top: 5px; margin-bottom: 5px; float:left;">
+  <div style="margin-top: 10px"></div>
+  <c:if test="${!empty recentOrders}">
+    <s:form beanclass="mhc.web.action.MyAccountAction">
+      <h4 class="strikeline"> Recent Orders</h4>
+      <table class="cont footer_color">
+        <th>Order Id</th>
+        <th>Order Date</th>
+        <th>Invoices</th>
+        <th>Order Status</th>
 
-        <input type="hidden" name="login" value="${maa.user.login}"
-               onfocus="if(this.value=='${maa.user.login}')this.value=''"
-               onblur="if(this.value=='')this.value='${maa.user.login}'"/>
-
-        <div class="label">Old Password</div>
-        <s:password name="oldPassword" value=""
-                    onfocus="if(this.value=='')this.value=''"
-                    onblur="if(this.value=='')this.value=''"/>
-        <div class="label">New Password</div>
-        <input type="password" name="newPassword" value=""
-               onfocus="if(this.value=='')this.value=''"
-               onblur="if(this.value=='')this.value=''"/>
-
-        <div class="label">Re-enter new password</div>
-        <input type="password" name="confirmPassword" value=""
-               onfocus="if(this.value=='')this.value=''"
-               onblur="if(this.value=='')this.value=''"/>
-
-        <div style="float: right; font-size: 0.7em; width: 75%; margin-top: 10px;">
-          <s:submit name="changePassword" value="Change Password" class="button_orange"/>
-        </div>
-      </s:form>
-    </div>
-
-  </s:layout-component>
-
+        <c:forEach items="${recentOrders}" end="2" var="order">
+          <tr>
+            <td>
+                ${order.gatewayOrderId}
+              <s:link beanclass="mhc.web.action.BOInvoiceAction" target="_blank">
+                <s:param name="order" value="${order}"/>
+                (View Order)
+              </s:link>
+            </td>
+            <td>
+              <fmt:formatDate value="${order.payment.paymentDate}" pattern="dd/MM/yyyy"/>
+            </td>
+            <td>
+              <c:set var="shippingOrders" value="${order.shippingOrders}"/>
+              <c:choose>
+                <c:when test="${!empty shippingOrders}">
+                  <c:forEach items="${shippingOrders}" var="shippingOrder">
+                    <%--<p>--%>
+                    <s:link beanclass="mhc.web.action.SOInvoiceAction" event="pre" target="_blank">
+                      <s:param name="shippingOrder" value="${shippingOrder.id}"/>
+                      R-${shippingOrder.id}
+                    </s:link>
+                    <%--</p>--%>
+                  </c:forEach>
+                </c:when>
+                <c:otherwise>
+                  <%--<p>--%>
+                  <s:link beanclass="mhc.web.action.BOInvoiceAction" event="pre" target="_blank">
+                    <s:param name="order" value="${order.id}"/>
+                    R-${order.id}
+                  </s:link>
+                  <%--</p>--%>
+                </c:otherwise>
+              </c:choose>
+            </td>
+            <td>
+                ${order.orderStatus.name}
+              <s:link beanclass="mhc.web.action.OrderDetailsAction" event="pre" target="_blank">
+                <s:param name="order" value="${order.id}"/>
+                (View Order Details)
+              </s:link>
+            </td>
+          </tr>
+        </c:forEach>
+      </table>
+    </s:form>
+  </c:if>
+</div>
+</s:layout-component>
 </s:layout-render>
-
 <script type="text/javascript">
   window.onload = function() {
     document.getElementById('myAccountLink').style.fontWeight = "bold";
+    document.getElementById('ohLink').style.fontWeight = "bold";
   };
+
+  $(document).ready(function() {
+
+    $('.addToCartButton').click(function(e) {
+      var check = 0;
+      $('.lineItemCheckBox').each(function() {
+        if ($(this).attr("checked") == "checked") {
+          check = 1;
+        }
+      });
+      if (!check) {
+        alert("Please select the product(s) to be ordered!");
+        return false;
+      }
+      else {
+        show_message();
+        e.stopPropagation();
+      }
+    });
+
+    $(".message .close").click(function() {
+      hide_message();
+      location.reload(true);
+    });
+
+    $(document).click(function() {
+      hide_message();
+    });
+
+    $('.addToCartForm').ajaxForm({dataType: 'json', success: _addToCart});
+    $('.addToCartForm2').ajaxForm({dataType: 'json', success: _addToCart2});
+    $('.addToCartButton').click(function() {
+      $(this).parents('td').find('.progressLoader').show();
+      $('#cartWindow').jqm();
+    });
+
+    $(".top_link, .go_to_top").click(function(event) {
+      event.preventDefault();
+      $('html,body').animate({scrollTop:($(this.hash).offset().top - 45)}, 300);
+    });
+
+    function hide_message() {
+      $('.message').animate({
+        top: '-170px',
+        opacity: 0
+      }, 100);
+    }
+
+    function show_message() {
+      $('.message').css("top", "70px");
+      $('.message').animate({
+        opacity: 1
+      }, 500);
+    }
+
+    function _addToCart(res) {
+      if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+        $('.lineItemCheckBox').each(function() {
+          if ($(this).attr("checked") == "checked") {
+            this.checked = false;
+            this.disabled = true;
+          }
+        });
+        $('.message .line1').html("<strong>" + res.data.addedProducts + "</strong> has been added to your shopping cart");
+        $('.cartButton').html("<img class='icon' src='${pageContext.request.contextPath}/images/icons/cart.png'/><span class='num' id='productsInCart'>" + res.data.itemsInCart + "</span> items in<br/>your shopping cart");
+        //        $('.progressLoader').hide();
+      } else if (res.code == '<%=HealthkartResponse.STATUS_ERROR%>') {
+        $('#cart_error1').html(getErrorHtmlFromJsonResponse(res))
+            .slowFade(3000, 2000);
+      } else if (res.code == '<%=HealthkartResponse.STATUS_REDIRECT%>') {
+        window.location.replace(res.data.url);
+      }
+      $('.progressLoader').hide();
+    }
+
+    function _addToCart2(res) {
+      if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+        $('.lineItemCheckBox').each(function() {
+          if ($(this).attr("checked") == "checked") {
+            this.checked = false;
+            this.disabled = true;
+          }
+        });
+        $('.message .line1').html("<strong>" + res.data.name + "</strong> is added to your shopping cart");
+      } else if (res.code == '<%=HealthkartResponse.STATUS_ERROR%>') {
+        $('#cart_error1').html(getErrorHtmlFromJsonResponse(res))
+            .slowFade(3000, 2000);
+      } else if (res.code == '<%=HealthkartResponse.STATUS_REDIRECT%>') {
+        window.location.replace(res.data.url);
+      }
+      $('.lineItemCheckBox').each(function() {
+        if ($(this).attr("checked") == "checked") {
+          this.checked = false;
+          $(this).attr("disable") = true;
+        }
+      });
+      $('.progressLoader').hide();
+    }
+
+  });
 </script>
+<style type="text/css">
+  .row {
+    margin-top: 0;
+    float: left;
+    margin-left: 0;
+    padding-top: 2px;
+    padding-left: 26px;
+  }
+
+  .rowLabel {
+    float: left;
+    padding-right: 5px;
+    padding-left: 5px;
+    width: 70px;
+    height: 24px;
+    margin-top: 5px;
+    font-weight: bold;
+  }
+
+  .rowText {
+    float: left;
+    padding-right: 5px;
+    padding-left: 5px;
+    height: 24px;
+    margin-top: 5px;
+  }
+
+  p {
+    margin-top: 2px;
+    margin-bottom: 2px;
+  }
+
+  table {
+    width: 100%;
+    margin-bottom: 10px;
+    margin-top: 5px;
+    border: 1px solid;
+    border-collapse: separate;
+  }
+
+  table th {
+    background: #f0f0f0;
+    padding: 5px;
+    text-align: left;
+  }
+
+  table td {
+    padding: 5px;
+    text-align: left;
+    font-size: small;
+  }
+</style>

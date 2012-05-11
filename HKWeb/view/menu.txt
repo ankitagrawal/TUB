@@ -3,9 +3,11 @@
 --/nutrition/sports-nutrition/proteins
 --/nutrition/sports-nutrition/creatine
 --/nutrition/sports-nutrition/pre-workout : Pre Workout
+--/nutrition/sports-nutrition/intra-workout  :Intra Workout
 --/nutrition/sports-nutrition/post-workout : Post Workout
 --/nutrition/sports-nutrition/weight-gainer : Weight Gainer
 --/nutrition/sports-nutrition/protein-bars  : Protein Bars
+--/nutrition/sports-nutrition/athletes      :  Athletes
 --/nutrition/sports-nutrition/shakers-accessories        :Shakers & Accessories
 --/nutrition/sports-nutrition/combos
 --/nutrition/sports-nutrition/clearance-sale  :Clearance Sale
@@ -63,6 +65,8 @@
 ---/nutrition/fitness-accessories/strength-training/upper-body
 ---/nutrition/fitness-accessories/strength-training/arm-leg-weights : Arm & Leg Weights
 ---/nutrition/fitness-accessories/strength-training/medicine-balls
+---/sports/fitness-accessories/strength-training/dumbbells
+---/sports/fitness-accessories/strength-training/kettlebells
 --/nutrition/fitness-accessories/aerobics-general-fitness : Aerobics & General Fitness
 ---/nutrition/fitness-accessories/aerobics-general-fitness/aerobic-steppers
 ---/nutrition/fitness-accessories/aerobics-general-fitness/hand-grips
@@ -89,6 +93,8 @@
 ---/sports/fitness-accessories/strength-training/upper-body
 ---/sports/fitness-accessories/strength-training/arm-leg-weights : Arm & Leg Weights
 ---/sports/fitness-accessories/strength-training/medicine-balls
+---/sports/fitness-accessories/strength-training/dumbbells
+---/sports/fitness-accessories/strength-training/kettlebells
 --/sports/fitness-accessories/aerobics-general-fitness : Aerobics & General Fitness
 ---/sports/fitness-accessories/aerobics-general-fitness/aerobic-steppers
 ---/sports/fitness-accessories/aerobics-general-fitness/hand-grips
@@ -129,7 +135,6 @@
 --/sports/sports-equipment/swimming
 ---/sports/sports-equipment/swimming/goggles
 ---/sports/sports-equipment/swimming/caps
----/sports/sports-equipment/swimming/arm-bands
 ---/sports/sports-equipment/swimming/accessories
 ---/sports/sports-equipment/swimming/combos
 --/sports/sports-equipment/tennis
@@ -149,6 +154,7 @@
 --/sports/sports-equipment/other-balls
 --/sports/sports-equipment/combos
 -/sports/apparel
+--/sports/apparel/ipl-merchandise: IPL Merchandise
 --/sports/apparel/men
 --/sports/apparel/women
 --/sports/apparel/kids
@@ -164,7 +170,7 @@
 --/sports/footwear/jogging-shoes
 --/sports/footwear/kids-shoes
 --/sports/footwear/other-shoes
---/sports/footwear/sandals-slip-ins : Sandals/Slip-ins
+--/sports/footwear/accessories
 
 /diabetes
 -/diabetes/what-s-new : What's New
@@ -198,7 +204,8 @@
 --/home-devices/blood-pressure/bp-monitor : BP Monitors
 ---/home-devices/blood-pressure/bp-monitor/arm-bp-monitor
 ---/home-devices/blood-pressure/bp-monitor/wrist-bp-monitor
---/home-devices/blood-pressure/bp : Sphygmomanometer/ BP Apparatus
+--/home-devices/blood-pressure/heart-rate-monitor
+--/home-devices/blood-pressure/bp : BP Apparatus
 --/home-devices/blood-pressure/ecg : ECG Machines
 --/home-devices/blood-pressure/accessories
 --/home-devices/blood-pressure/combo
@@ -212,16 +219,16 @@
 --/home-devices/respiratory-care/lung-exerciser
 --/home-devices/respiratory-care/accessories
 -/home-devices/supports
---/home-devices/supports/knee-support
---/home-devices/supports/ankle-support
---/home-devices/supports/elbow-support
+--/home-devices/supports/cervical-support
 --/home-devices/supports/shoulder-support
---/home-devices/supports/back-support
+--/home-devices/supports/elbow-support
 --/home-devices/supports/wrist-support
+--/home-devices/supports/finger-splints
+--/home-devices/supports/back-support
+--/home-devices/supports/knee-support
 --/home-devices/supports/thigh-support
 --/home-devices/supports/calf-support
---/home-devices/supports/cervical-support
---/home-devices/supports/finger-splints
+--/home-devices/supports/ankle-support
 --/home-devices/supports/backrest
 --/home-devices/supports/walking-aids
 ---/home-devices/supports/walking-aids/wheel-chair
@@ -229,6 +236,7 @@
 ---/home-devices/supports/walking-aids/crutches
 ---/home-devices/supports/walking-aids/walkers
 -/home-devices/rehabilitation-aids
+--/home-devices/rehabilitation-aids/physiotherapy-aids
 --/home-devices/rehabilitation-aids/traction-kits
 --/home-devices/rehabilitation-aids/bandages
 ---/home-devices/rehabilitation-aids/bandages/crepe-bandages
@@ -290,6 +298,13 @@
 ---/home-devices/miscellaneous/weight-management/step-counter
 ---/home-devices/miscellaneous/weight-management/slimming-products : Slimming
 --/home-devices/miscellaneous/massager
+---/home-devices/miscellaneous/massager/neck-massager
+---/home-devices/miscellaneous/massager/back-massager
+---/home-devices/miscellaneous/massager/infrared-massager
+---/home-devices/miscellaneous/massager/handheld
+---/home-devices/miscellaneous/massager/waist-massager
+---/home-devices/miscellaneous/massager/foot-massage
+---/home-devices/miscellaneous/massager/footbath
 --/home-devices/miscellaneous/pain-management
 --/home-devices/miscellaneous/light-therapy
 --/home-devices/miscellaneous/heat-treatment : Heat/Cold Treatment
@@ -313,15 +328,16 @@
 --/eye/lenses/toric-lenses
 --/eye/lenses/color-lenses
 -/eye/sunglasses
---/eye/sunglasses/aviator:Aviator
---/eye/sunglasses/hip-hop
---/eye/sunglasses/bikers
---/eye/sunglasses/denim
---/eye/sunglasses/girls
---/eye/sunglasses/retro-style:Retro Style
---/eye/sunglasses/summer
+--/eye/sunglasses/aviator       :Aviator
+--/eye/sunglasses/square         :Square
+--/eye/sunglasses/cat-eye       :Cat Eye
+--/eye/sunglasses/wayfarer      :Wayfarer
+--/eye/sunglasses/wrap          :Wrap
+--/eye/sunglasses/retro         :Retro
+--/eye/sunglasses/women
 --/eye/sunglasses/men
 --/eye/sunglasses/unisex
+--/eye/sunglasses/swimming
 -/eye/eyeglasses :Eyeglasses
 --/eye/eyeglasses/half-rim :Half Rim
 --/eye/eyeglasses/full-rim :Full Rim
@@ -334,6 +350,7 @@
 --/eye/accessories/eye-patches : Eye Patches
 --/eye/accessories/under-eye-creams : Under Eye Creams
 --/eye/accessories/relaxing-masks : Relaxing Masks
+--/eye/accessories/eye-supplements  :Eye Supplements
 -/eye/what-s-new  :What's New
 --/eye/what-s-new/just-in :Just In
 --/eye/what-s-new/top-deals:Top Deals
@@ -381,6 +398,11 @@
 --/personal-care/foot-care-pedicure/fresh-feet
 --/personal-care/foot-care-pedicure/beautiful-feet
 --/personal-care/foot-care-pedicure/comfortable-feet
+--/personal-care/foot-care-pedicure/nail-care : Nail Care
+---/personal-care/foot-care-pedicure/nail-care/nail-clippers : Nail Clippers
+---/personal-care/foot-care-pedicure/nail-care/nail-cleaners : Nail Cleaners
+---/personal-care/foot-care-pedicure/nail-care/nail-file : Nail File
+---/personal-care/foot-care-pedicure/nail-care/miscellaneous
 --/personal-care/foot-care-pedicure/combo-offers
 -/personal-care/oral-hygiene
 --/personal-care/oral-hygiene/special-toothbrushes : Special Toothbrushes
@@ -394,12 +416,14 @@
 -/personal-care/misc
 --/personal-care/misc/deals
 --/personal-care/misc/mosquito-repellents : Mosquito Repellents
+--/personal-care/misc/smoking-cessation: Smoking Cessation
 --/personal-care/misc/wipes-tissues: Wipes & Tissues
 --/personal-care/misc/self-defense : Self Defense
 ---/personal-care/misc/pepper-spray:Pepper Spray
 ---/personal-care/misc/alarms
 --/personal-care/misc/travel-kits:Travel Kits
 --/personal-care/misc/sanitizers
+--/personal-care/misc/safety-scissors
 --/personal-care/misc/pain-relief : Pain Relief
 --/personal-care/misc/air-freshener : Air Freshener
 --/personal-care/misc/buds
@@ -414,6 +438,7 @@
 --/beauty/what-s-new/limited-period-offers
 --/beauty/what-s-new/natural-products
 --/beauty/what-s-new/home-spa-products
+--/beauty/what-s-new/spas-salons : Spas & Salons
 -/beauty/face-care
 --/beauty/face-care/cleanser
 ---/beauty/face-care/cleanser/normal
@@ -502,6 +527,7 @@
 ---/beauty/make-up/tools/other
 --/beauty/make-up/wipes-tissues : Wipes & Tissues
 --/beauty/make-up/sindoor
+--/beauty/make-up/coloured lenses
 -/beauty/hair-care
 --/beauty/hair-care/shampoo
 --/beauty/hair-care/conditioner
@@ -539,6 +565,7 @@
 --/beauty/men/face-mask
 --/beauty/men/talc
 --/beauty/men/fragrances
+
 
 /baby
 -/baby/diapering
@@ -580,17 +607,29 @@
 -/parenting/planning-your-baby
 --/parenting/planning-your-baby/am-i-pregnant : Am I Pregnant?
 --/parenting/planning-your-baby/ovulation-kits
--/parenting/mom-maternity : Mom & Maternity
+-/parenting/mom-maternity/ : Mom & Maternity
 --/parenting/mom-maternity/personal-care
 --/parenting/mom-maternity/skin-care
 --/parenting/mom-maternity/maternity-belts
 --/parenting/mom-maternity/maternity-bags
 --/parenting/mom-maternity/child-safety
 --/parenting/mom-maternity/breast-feeding
+---/parenting/mom-maternity/breast-feeding/breast-pumps
+---/parenting/mom-maternity/breast-feeding/breast-pads
+---/parenting/mom-maternity/breast-feeding/breast-milk-bottles
 --/parenting/mom-maternity/multivitamins-nutrition : Multivitamins & Nutrition
 -/parenting/infant
 --/parenting/infant/diapering
+---/parenting/infant/diapering/diapers
+---/parenting/infant/diapering/wipes
+---/parenting/infant/diapering/diaper-rash-cream
+--/parenting/infant/formula-baby-food : Formula & Baby Food
 --/parenting/infant/nursing-feeding : Nursing & Feeding
+---/parenting/infant/nursing-feeding/feeding-bottles
+---/parenting/infant/nursing-feeding/feeding-accessories
+---/parenting/infant/nursing-feeding/sterilizers-warmers : Sterilizers & Warmers
+---/parenting/infant/nursing-feeding/bottle-cleaning
+--/parenting/infant/sippers-mugs :Sippers & Mugs
 --/parenting/infant/gifts-combos : Gifts & Combos
 --/parenting/infant/health-safety : Health & Safety
 ---/parenting/infant/health-safety/thermometers
@@ -603,26 +642,51 @@
 --/parenting/infant/walkers
 --/parenting/infant/bedtime
 --/parenting/infant/bathtime
+---/parenting/infant/bathtime/soaps-and-bath-foams: soaps & bath foams
+---/parenting/infant/bathtime/oil
+---/parenting/infant/bathtime/powder
+---/parenting/infant/bathtime/shampoo
+---/parenting/infant/bathtime/lotions
+---/parenting/infant/bathtime/creams
 -/parenting/toddler
 --/parenting/toddler/diapering
+---/parenting/toddler/diapering/diapers
+---/parenting/toddler/diapering/wipes
 --/parenting/toddler/formula-baby-food : Formula & Baby Food
+--/parenting/toddler/sippers-and-mugs:Sippers & Mugs
 --/parenting/toddler/nursing-feeding
+---/parenting/toddler/nursing-feeding/feeding-bottles
+---/parenting/toddler/nursing-feeding/feeding-accessories
+---/parenting/toddler/nursing-feeding/warmers-and-sterlizers : Sterilizers & Warmers
+---/parenting/toddler/nursing-feeding/bottle-cleaning
 --/parenting/toddler/bedtime
 --/parenting/toddler/bathtime
+---/parenting/toddler/bathtime/soaps-and-bath-foams: soaps & bath foams
+---/parenting/toddler/bathtime/oil
+---/parenting/toddler/bathtime/powder
+---/parenting/toddler/bathtime/shampoo
+---/parenting/toddler/bathtime/lotions
+---/parenting/toddler/bathtime/creams
 --/parenting/toddler/oral-care
+---/parenting/toddler/oral-care/toothbrushes
+---/parenting/toddler/oral-care/toothpaste-and-tooth-gel:toothpaste & tooth gel
 --/parenting/toddler/furniture
 --/parenting/toddler/travel-safety : Travel & Safety
+---/parenting/toddler/travel-safety/baby-prams-and-strollers
+---/parenting/toddler/travel-safety/baby-nursing-bags
+---/parenting/toddler/travel-safety/baby-carriers
 --/parenting/toddler/toys
+--/parenting/toddler/funtime:DVDs,Comics & Drawing Books
 -/parenting/pre-school
+--/parenting/pre-school/apparels
 --/parenting/pre-school/oral-care
---/parenting/pre-school/school-accessories
+---/parenting/pre-school/oral-care/toothbrushes
+---/parenting/pre-school/oral-care/toothpaste-and-tooth-gel:toothpaste & tooth gel
+--/parenting/pre-school/school-bags
+--/parenting/pre-school/lunch-boxes
+--/parenting/pre-school/water-bottles
+--/parenting/pre-school/sippers
 --/parenting/pre-school/toys
---/parenting/pre-school/slides
---/parenting/pre-school/nutrition
---/parenting/pre-school/out-door
---/parenting/pre-school/sand-picnic-tables : Sand & Picnic Tables
---/parenting/pre-school/bicycles-tricycles
---/parenting/pre-school/play-house
 
 /services
 -/services/health-checkups
@@ -657,6 +721,8 @@
 --/services/weight-management/centre-specific-programs  :Centre Specific Programs
 --/services/weight-management/online-programs  :Online Programs
 -/services/health-cards
+--/services/health-cards/indian-health-organisation
+--/services/health-cards/others
 -/services/hair-spa-beauty : Hair,Spa & Beauty
 --/services/hair-spa-beauty/massages-spa  : Massages & Spa
 --/services/hair-spa-beauty/beauty-care  :Beauty Care

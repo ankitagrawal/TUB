@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.core.user.CustomerOrderHistoryAction" var="coha"/>
+<s:useActionBean beanclass="mhc.web.action.CustomerOrderHistoryAction" var="coha"/>
 <s:layout-render name="/layouts/default.jsp">
   <s:layout-component name="heading">Order History</s:layout-component>
   <s:layout-component name="lhsContent">
@@ -15,17 +15,15 @@
           <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${coha}"/>
           <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${coha}"/>
 
-          <table class="zebra_vert" width="100%">
-            <thead>
+          <table class="cont footer_color">
             <tr>
-              <td>Order Id</td>
-              <td>Order Date</td>
-              <%--<td>Invoices</td>--%>
-              <td>Order Status</td>
-              <td>View Order</td>
+              <th>Order Id</th>
+              <th>Order Date</th>
+              <th>Invoices</th>
+              <th>Order Status</th>
+              <th>View Order</th>
 
             </tr>
-            </thead>
             <tbody>
             <c:forEach items="${coha.orderList}" var="order">
               <tr>
@@ -35,25 +33,36 @@
                 <td>
                   <fmt:formatDate value="${order.payment.paymentDate}" pattern="dd/MM/yyyy"/>
                 </td>
-                <%--<td>
-                  <c:forEach items="${order.accountingInvoices}" var="accountingInvoice">
-                    <s:link beanclass="com.hk.web.action.AccountingInvoiceAction" event="pre" target="_blank">
-                      <s:param name="accountingInvoice" value="${accountingInvoice.id}"/>
-                      R-${accountingInvoice.retailInvoiceId} &lt;%&ndash;on
-                      <fmt:formatDate value="${accountingInvoice.invoiceDate}" pattern="dd/MM/yyyy hh:mm"/>&ndash;%&gt;
-                    </s:link><br/></c:forEach>
-                </td>--%>
+                <td>
+                  <c:set var="shippingOrders" value="${order.shippingOrders}"/>
+                  <c:choose>
+                    <c:when test="${!empty shippingOrders}">
+                      <c:forEach items="${shippingOrders}" var="shippingOrder">
+                        <s:link beanclass="mhc.web.action.SOInvoiceAction" event="pre" target="_blank">
+                          <s:param name="shippingOrder" value="${shippingOrder.id}"/>
+                          R-${shippingOrder.id}
+                        </s:link>
+                      </c:forEach>
+                    </c:when>
+                    <c:otherwise>
+                      <s:link beanclass="mhc.web.action.BOInvoiceAction" event="pre" target="_blank">
+                        <s:param name="order" value="${order.id}"/>
+                        R-${order.id}
+                      </s:link>
+                    </c:otherwise>
+                  </c:choose>
+                </td>
                 <td>
                     ${order.orderStatus.name}
-                  <s:link beanclass="com.hk.web.action.core.order.OrderDetailsAction">
+                  <s:link beanclass="mhc.web.action.OrderDetailsAction" target="_blank">
                     <s:param name="order" value="${order}"/>
                     (View Details)
                   </s:link>
                 </td>
                 <td>
-                  <s:link beanclass="com.hk.web.action.core.accounting.BOInvoiceAction" target="_blank">
-                                  <s:param name="order" value="${order}"/>
-                                  View Order
+                  <s:link beanclass="mhc.web.action.BOInvoiceAction" target="_blank">
+                    <s:param name="order" value="${order}"/>
+                    View Order
                   </s:link>
                 </td>
               </tr>
@@ -74,3 +83,24 @@
     document.getElementById("ohLink").style.fontWeight = "bold";
   };
 </script>
+<style type="text/css">
+  table {
+    width: 100%;
+    margin-bottom: 10px;
+    margin-top: 5px;
+    border: 1px solid;
+    border-collapse: separate;
+  }
+
+  table th {
+    background: #f0f0f0;
+    padding: 5px;
+    text-align: left;
+  }
+
+  table td {
+    padding: 5px;
+    text-align: left;
+    font-size: small;
+  }
+</style>

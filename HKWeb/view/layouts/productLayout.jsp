@@ -18,14 +18,13 @@
       </c:choose>
       | HealthKart.com
     </title>
-    <s:layout-component name="htmlHead"/>
     <jsp:include page="/includes/_style.jsp"/>
     <script type="text/javascript" src="<hk:vhostJs/>/js/jquery-1.6.2.min.js"></script>
     <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.hkCommonPlugins.js"></script>
     <script type="text/javascript" src="<hk:vhostJs/>/otherScripts/jquery.glow.js"></script>
 
     <s:layout-render name="/includes/_dynaMenu.jsp" topCategory="${topCategory}" allCategories="${topCategory}"/>
-
+    <s:layout-component name="htmlHead"/>
   </head>
   <body id="${bodyId}">
   <div class="jqmWindow" id="discountCouponModal"></div>
@@ -67,6 +66,8 @@
 
       <s:layout-component name="related_products">
       </s:layout-component>
+
+      <s:layout-component name="user_reviews"/>
 
       <div class="floatfix"></div>
       <s:layout-component name="foot_price"/>

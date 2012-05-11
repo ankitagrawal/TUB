@@ -1,18 +1,18 @@
-<%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
-<%@ page import="com.hk.constants.core.PermissionConstants" %>
-<%@ page import="com.hk.pact.dao.MasterDataDao" %>
-<%@ page import="com.hk.pact.dao.TaxDao" %>
-<%@ page import="com.hk.web.HealthkartResponse" %>
-<%@ page import="com.hk.pact.dao.warehouse.WarehouseDao" %>
-<%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="mhc.common.constants.EnumImageSize" %>
+<%@ page import="mhc.common.constants.PermissionConstants" %>
+<%@ page import="mhc.service.dao.MasterDataDao" %>
+<%@ page import="mhc.service.dao.TaxDao" %>
+<%@ page import="mhc.web.json.HealthkartResponse" %>
+<%@ page import="mhc.service.dao.WarehouseDao" %>
+<%@ page import="app.bootstrap.guice.InjectorFactory" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.admin.inventory.GRNAction" var="pa"/>
+<s:useActionBean beanclass="mhc.web.action.admin.GRNAction" var="pa"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="GRN">
 <%
-    WarehouseDaoImpl warehouseDao = ServiceLocatorFactory.getService(WarehouseDaoImpl.class);
+    WarehouseDao warehouseDao = InjectorFactory.getInjector().getInstance(WarehouseDao.class);
     pageContext.setAttribute("whList", warehouseDao.listAll());
-%>
+  %>
 <s:layout-component name="htmlHead">
 
 	<link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
@@ -162,6 +162,7 @@
 						alert("Enter values in correct format.");
 						return false;
 					}
+          $(this).css("display", "none");
 				} );
 
 			updateTotal('.receivedQuantity','.totalQuantity');
@@ -173,10 +174,10 @@
 </s:layout-component>
 <s:layout-component name="content">
 	<div style="display: none;">
-		<s:link beanclass="com.hk.web.action.admin.EditPurchaseOrderAction" id="pvInfoLink" event="getPVDetails"></s:link>
+		<s:link beanclass="mhc.web.action.admin.EditPurchaseOrderAction" id="pvInfoLink" event="getPVDetails"></s:link>
 	</div>
 
-	<s:form beanclass="com.hk.web.action.admin.inventory.GRNAction">
+	<s:form beanclass="mhc.web.action.admin.GRNAction">
 		<s:hidden name="grn" value="${pa.grn.id}"/>
 		<table>
 			<tr>
@@ -366,7 +367,7 @@
 
 		<s:submit name="save" value="Save" class="requiredFieldValidator"/>
 	</s:form>
-
+  
 </s:layout-component>
 
 </s:layout-render>

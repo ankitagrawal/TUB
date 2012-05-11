@@ -1,5 +1,8 @@
-<%@ page import="com.hk.constants.payment.EnumPaymentMode" %>
-<%@ page import="com.hk.constants.core.EnumRole" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="s" uri="http://stripes.sourceforge.net/stripes-dynattr.tld" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page import="mhc.common.constants.EnumPaymentMode" %>
+<%@ page import="mhc.common.constants.EnumRole" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="paymentMode_COD" value="<%=EnumPaymentMode.COD.getId()%>"/>
@@ -55,7 +58,7 @@
   <link href="<hk:vhostCss/>/css/960.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
-<s:useActionBean beanclass="com.hk.web.action.SOInvoiceAction" event="pre" var="orderSummary"/>
+<s:useActionBean beanclass="mhc.web.action.SOInvoiceAction" event="pre" var="orderSummary"/>
 <c:set var="b2bUser" value="<%=EnumRole.B2B_USER.getRoleName()%>"/>
 <c:set var="baseOrder" value="${orderSummary.shippingOrder.baseOrder}"/>
 <c:set var="address" value="${baseOrder.address}"/>
@@ -93,13 +96,21 @@
   <div class="grid_8 alpha omega">
     <div class="formatting" style="margin-top: 30px;">
       <p style="margin-bottom: 2px;">Proforma Invoice for
-        Order#${orderSummary.shippingOrder.gatewayOrderId}</p>
+                                     Order#${orderSummary.shippingOrder.gatewayOrderId}</p>
 
       <p>placed on: <fmt:formatDate
           value="${baseOrder.payment.createDate}" type="both" timeStyle="short"/>
       </p>
 
-      <c:if test="${baseOrder.payment.paymentMode.id == paymentMode_COD}">
+      <p>Fulfillment Centre: ${orderSummary.shippingOrder.warehouse.name}</p>
+      <c:if test="${orderSummary.shippingOrder.warehouse.id == 1}">
+        <p>Return Location: <b>DEL/ITG/111117</b></p>
+      </c:if>
+      <c:if test="${orderSummary.shippingOrder.warehouse.id == 2}">
+        <p>Return Location: <b>BOM/BPT/421302</b></p>
+      </c:if>
+
+      <c:if test="${baseOrder.payment.paymentMode.id == paymentMode_COD && orderSummary.invoiceDto.grandTotal > 0}">
         <h2>Cash on Delivery :
           <fmt:formatNumber value="${orderSummary.invoiceDto.grandTotal}" type="currency"
                             currencySymbol="Rs. " maxFractionDigits="0"/></h2>
@@ -113,24 +124,25 @@
   <div class="grid_4 alpha omega" style="width: 320px;">
     <div class="formatting" style="float: right;">
       <c:if test="${orderSummary.shippingOrder.baseOrder.user.login != 'support@madeinhealth.com'}">
-      <div
-          style="float:right; width: 300px; padding: 10px; font-size: .7em; outline: 1px dotted gray; font-family: sans-serif;">
-        <p style="margin-bottom: 4px;">Introducing the <strong>Refer and Earn</strong> program</p>
+        <div
+            style="float:right; width: 300px; padding: 10px; font-size: .7em; outline: 1px dotted gray; font-family: sans-serif;">
+          <p style="margin-bottom: 4px;">Introducing the <strong>Refer and Earn</strong> program</p>
 
-        <p>Your referral coupon code is</p>
+          <p>Your referral coupon code is</p>
 
-        <p><strong
-            style="text-transform:uppercase; font-size: 1.2em;">${orderSummary.coupon.code}</strong></p>
+          <p><strong
+              style="text-transform:uppercase; font-size: 1.2em;">${orderSummary.coupon.code}</strong></p>
 
-        <p><strong>How it works: </strong></p>
+          <p><strong>How it works: </strong></p>
 
-        <p>
-          Pass this coupon code to your friends and family. They get a <strong>Rs. 100 discount on their first
-          purchase*</strong> at healthkart.com and you
-          <strong>get reward points worth Rs. 100</strong> in your account for your referral*.
-        </p>
-      </div>
-       </c:if>
+          <p>
+            Pass this coupon code to your friends and family. They get a <strong>Rs. 100 discount on their first
+                                                                                 purchase*</strong> at healthkart.com
+            and you
+            <strong>get reward points worth Rs. 100</strong> in your account for your referral*.
+          </p>
+        </div>
+      </c:if>
     </div>
   </div>
 </div>
@@ -234,45 +246,45 @@
           </c:if>
           <em>
             <p>
-              ${invoiceLineItem.productOptionsPipeSeparated}
-              <%--<c:forEach items="${invoiceLineItem.productOptions}" var="productOption">--%>
+                ${invoiceLineItem.productOptionsPipeSeparated}
+                <%--<c:forEach items="${invoiceLineItem.productOptions}" var="productOption">--%>
                 <%--${productOption.name} ${productOption.value}&nbsp--%>
-              <%--</c:forEach>--%>
+                <%--</c:forEach>--%>
             </p>
 
             <p>
-              ${invoiceLineItem.extraOptionsPipeSeparated}
-              <%--<c:forEach items="${invoiceLineItem.cartLineItemExtraOptions}" var="extraOption">--%>
+                ${invoiceLineItem.extraOptionsPipeSeparated}
+                <%--<c:forEach items="${invoiceLineItem.cartLineItemExtraOptions}" var="extraOption">--%>
                 <%--<label>${extraOption.name} : ${extraOption.value}</label>&nbsp--%>
-              <%--</c:forEach>--%>
+                <%--</c:forEach>--%>
 
-               ${invoiceLineItem.configOptionsPipeSeparated}
-              <%--<c:if test="${not empty invoiceLineItem.cartLineItemConfigValues}">--%>
+                ${invoiceLineItem.configOptionsPipeSeparated}
+                <%--<c:if test="${not empty invoiceLineItem.cartLineItemConfigValues}">--%>
 
                 <%--<c:set var="TH" value="TH"/>--%>
                 <%--<c:set var="THBF" value="THBF"/>--%>
                 <%--<c:set var="CO" value="CO"/>--%>
                 <%--<c:set var="COBF" value="COBF"/>--%>
                 <%--<c:forEach items="${invoiceLineItem.cartLineItemConfigValues}" var="configValue"--%>
-                           <%--varStatus="configCtr">--%>
-                  <%--<c:set var="variantConfigOption" value="${configValue.variantConfigOption}"/>--%>
-                  <%--<c:set var="additionalParam" value="${variantConfigOption.additionalParam}"/>--%>
-                  <%--${variantConfigOption.displayName} : ${configValue.value}--%>
-                  <%--<c:if--%>
-                      <%--test="${(additionalParam ne TH) or (additionalParam ne THBF) or (additionalParam ne CO) or (additionalParam ne COBF) }">--%>
-                    <%--<c:if--%>
-                        <%--test="${fn:startsWith(variantConfigOption.name, 'R')==true}">--%>
-                      <%--(R)--%>
-                    <%--</c:if>--%>
-                    <%--<c:if--%>
-                        <%--test="${fn:startsWith(variantConfigOption.name, 'L')==true}">--%>
-                      <%--(L)--%>
-                    <%--</c:if>--%>
-                  <%--</c:if>--%>
-                  <%--${!configCtr.last?',':''}--%>
+                <%--varStatus="configCtr">--%>
+                <%--<c:set var="variantConfigOption" value="${configValue.variantConfigOption}"/>--%>
+                <%--<c:set var="additionalParam" value="${variantConfigOption.additionalParam}"/>--%>
+                <%--${variantConfigOption.displayName} : ${configValue.value}--%>
+                <%--<c:if--%>
+                <%--test="${(additionalParam ne TH) or (additionalParam ne THBF) or (additionalParam ne CO) or (additionalParam ne COBF) }">--%>
+                <%--<c:if--%>
+                <%--test="${fn:startsWith(variantConfigOption.name, 'R')==true}">--%>
+                <%--(R)--%>
+                <%--</c:if>--%>
+                <%--<c:if--%>
+                <%--test="${fn:startsWith(variantConfigOption.name, 'L')==true}">--%>
+                <%--(L)--%>
+                <%--</c:if>--%>
+                <%--</c:if>--%>
+                <%--${!configCtr.last?',':''}--%>
 
                 <%--</c:forEach>--%>
-              <%--</c:if>--%>
+                <%--</c:if>--%>
 
 
                 <%--<c:forEach items="${invoiceLineItem.cartLineItemConfigValues}" var="configValue">--%>
@@ -294,6 +306,15 @@
       </tr>
       <%-- </c:if>--%>
     </c:forEach>
+
+    <%--<c:if test="${orderSummary.freebieItem != null && orderSummary.freebieItem != ''}">
+      <tr>
+        <td>${orderSummary.freebieItem}</td>
+        <td>1</td>
+        <td>0.0</td>
+        <td>0.0</td>
+      </tr>
+    </c:if>--%>
 
   </table>
 
@@ -353,28 +374,18 @@
 <div class="clear"></div>
 <div style="margin-top: 5px;"></div>
 
+
 <div class="grid_12">
+  <div style="font-size:.8em">Note: This is to certify that items inside do not contain any prohibited or hazardous
+                              material.
+  </div>
   <hr/>
   <c:set var="warehouse" value="${orderSummary.shippingOrder.warehouse}"/>
   <c:choose>
-    <c:when test="${public String _elExpression13306()
-		throws java.io.IOException, javax.servlet.ServletException {
-javax.servlet.jsp.PageContext pageContext = null;
-java.util.Map param = null;
-java.util.Map paramValues = null;
-java.util.Map header = null;
-java.util.Map headerValues = null;
-java.util.Map cookie = null;
-java.util.Map initParam = null;
-java.util.Map pageScope = null;
-java.util.Map requestScope = null;
-java.util.Map sessionScope = null;
-java.util.Map applicationScope = null;
-return ""+hk:collectionContains(baseOrder.user.roleStrings, b2bUser;
-})}">
+    <c:when test="${hk:collectionContains(baseOrder.user.roleStrings, b2bUser)}">
       <p style="font-size: .8em;">Bright Lifecare Pvt. Ltd. | Khasra No. 146/25/2/1, Jail Road, Dhumaspur, Badshahpur |
-        Gurgaon, Haryana- 122101 | TIN:
-        06101832036 </p>
+                                  Gurgaon, Haryana- 122101 | TIN:
+                                  06101832036 </p>
     </c:when>
     <c:otherwise>
       <p style="font-size: .8em;">Aquamarine Healthcare Pvt. Ltd. | ${warehouse.line1}, ${warehouse.line2} |

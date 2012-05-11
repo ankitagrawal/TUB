@@ -1,17 +1,17 @@
-<%@ page import="com.hk.domain.catalog.category.Category" %>
-<%@ page import="com.hk.service.ServiceLocatorFactory" %>
-<%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
+<%@ page import="mhc.domain.Category" %>
+<%@ page import="app.bootstrap.guice.InjectorFactory" %>
+<%@ page import="mhc.service.dao.CategoryDao" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.hk.dto.menu.MenuNode" %>
-<%@ page import="com.hk.helper.MenuHelper" %>
+<%@ page import="mhc.common.dto.MenuNode" %>
+<%@ page import="mhc.service.MenuHelper" %>
 <%@ page import="java.util.ArrayList" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.core.catalog.category.CatalogAction" var="ca"/>
+<s:useActionBean beanclass="mhc.web.action.category.CatalogAction" var="ca"/>
 <s:layout-definition>
 
   <%
-    MenuHelper menuHelper = (MenuHelper)ServiceLocatorFactory.getService("MenuHelper");
-    CategoryDao categoryDao = (CategoryDao)ServiceLocatorFactory.getService(CategoryDao.class);
+    MenuHelper menuHelper = InjectorFactory.getInjector().getInstance(MenuHelper.class);
+    CategoryDao categoryDao = InjectorFactory.getInjector().getInstance(CategoryDao.class);
 
     String urlFragment = (String) pageContext.getAttribute("filterUrlFragment");
 
@@ -27,7 +27,7 @@
     // this is passed through an attribute in layout-render tag
     pageContext.setAttribute("filterUrlFragment", urlFragment);
 
-    Category category = categoryDao.getCategoryByName(menuNode.getSlug());
+    Category category = categoryDao.find(menuNode.getSlug());
     pageContext.setAttribute("filterCategory", category);
 
     String currentBrand = request.getParameter("brand");
@@ -39,11 +39,19 @@
     }
     Category secondaryCategory = null;
     if (menuNode.getParentNode() != null) {
-      secondaryCategory = categoryDao.getCategoryByName(menuNode.getParentNode().getSlug());
-    }
-    if (secondaryCategory != null) {
+      secondaryCategory = categoryDao.find(menuNode.getParentNode().getSlug());
+      if (secondaryCategory != null) {
       categoryNames.add(secondaryCategory.getName());
     }
+    }
+    Category primaryCategory = null;
+    if (menuNode.getParentNode() != null && menuNode.getParentNode().getParentNode() != null) {
+      primaryCategory = categoryDao.find(menuNode.getParentNode().getParentNode().getSlug());
+      if (primaryCategory != null) {
+      categoryNames.add(primaryCategory.getName());
+    }
+    }
+
     List<String> brandList = categoryDao.getBrandsByCategory(categoryNames);
 
     pageContext.setAttribute("brandList", brandList);
@@ -90,7 +98,7 @@
     <ul>
       <c:forEach items="${brandList}" var="navBrand">
         <li>
-          <s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction" style="${currentBrand == navBrand ? 'font-weight:bold;' : ''}">
+          <s:link beanclass="mhc.web.action.category.CatalogAction" style="${currentBrand == navBrand ? 'font-weight:bold;' : ''}">
             ${navBrand}
             <s:param name="brand" value="${navBrand}"/>
             <c:if test="${hk:isNotBlank(ca.startRange)}"><s:param name="startRange" value="${ca.startRange}"/></c:if>
@@ -111,7 +119,7 @@
     </h5>
     <ul>
       <li>
-        <s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction">
+        <s:link beanclass="mhc.web.action.category.CatalogAction">
           Below Rs 500
           <s:param name="startRange" value="0"/>
           <s:param name="endRange" value="500"/>
@@ -126,7 +134,7 @@
           <s:param name="perPage" value="${ca.perPage}"/>
         </s:link>
       </li>
-      <li><s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction">
+      <li><s:link beanclass="mhc.web.action.category.CatalogAction">
         Between Rs 500-1000
         <s:param name="startRange" value="500"/>
         <s:param name="endRange" value="1000"/>
@@ -141,7 +149,7 @@
         <s:param name="perPage" value="${ca.perPage}"/>
       </s:link>
       </li>
-      <li><s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction">
+      <li><s:link beanclass="mhc.web.action.category.CatalogAction">
         Between Rs 1000-2500
         <s:param name="startRange" value="1000"/>
         <s:param name="endRange" value="2500"/>
@@ -155,7 +163,7 @@
         <c:if test="${hk:isNotBlank(ca.preferredZone)}"><s:param name="preferredZone" value="${ca.preferredZone}"/></c:if>
       </s:link>
       </li>
-      <li><s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction">
+      <li><s:link beanclass="mhc.web.action.category.CatalogAction">
         Above Rs 2500
         <s:param name="startRange" value="2500"/>
         <s:param name="endRange" value="1000000"/>
