@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="mhc.web.action.ProductReviewAction" var="pa" event="pre"/>
+<s:useActionBean beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction" var="pa" event="pre"/>
 <s:layout-render name="/layouts/genericG.jsp" pageTitle="${pa.seoData.title}">
 
 <s:layout-component name="htmlHead">
@@ -18,7 +18,7 @@
 <s:layout-component name="content">
   <h2>Let others know what you liked/disliked about ${pa.product.name}</h2>
 
-  <s:form beanclass="mhc.web.action.ProductReviewAction">
+  <s:form beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction">
     <label>Title*</label><s:text name="review.title"></s:text><br/>
     <label>Review*</label><s:textarea name="review.review"/><br/>
     <label>Rating*</label><s:text name="review.starRating" maxlength="1" value="3"/><br/>

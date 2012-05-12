@@ -59,11 +59,11 @@
 
   <br>
 
-  <s:form beanclass="mhc.web.action.AddToCartAction" class="addToCartForm">
+  <s:form beanclass="com.hk.web.action.core.cart.AddToCartAction" class="addToCartForm">
     <div style="display: none;">
       <s:link beanclass="mhc.web.action.ProductVariantAction" id="updateProductVariantImageLink"
               event="changeProductLink"/>
-        <%--<s:link beanclass="mhc.web.action.ProductAction" id="updateProductImageLink" event="changeProductImage"/>--%>
+        <%--<s:link beanclass="com.hk.web.action.core.catalog.product.ProductAction" id="updateProductImageLink" event="changeProductImage"/>--%>
     </div>
     <c:forEach items="${product.productVariants}" var="variant" varStatus="ctr">
       <c:if test="${!variant.outOfStock && !variant.deleted}">
@@ -127,7 +127,7 @@
 
   <shiro:hasPermission name="<%=PermissionConstants.MANAGE_IMAGE%>">
     <div>
-      <s:link beanclass="mhc.web.action.UploadImageAction" event="uploadVariantImage" target="_blank"
+      <s:link beanclass="com.hk.web.action.core.catalog.image.UploadImageAction" event="uploadVariantImage" target="_blank"
               class="popup"> Upload
         <s:param name="productVariant" value="${product.productVariants[0]}"/>
       </s:link>

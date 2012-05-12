@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="mhc.web.action.ProductReviewAction" var="pa" event="pre"/>
+<s:useActionBean beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction" var="pa" event="pre"/>
 <s:layout-render name="/layouts/genericG.jsp" pageTitle="${pa.seoData.title}">
 
 <s:layout-component name="htmlHead">
@@ -16,12 +16,12 @@
 </s:layout-component>
 
 <s:layout-component name="content">
-  <h2>Review of <s:link beanclass="mhc.web.action.ProductAction">
+  <h2>Review of <s:link beanclass="com.hk.web.action.core.catalog.product.ProductAction">
    ${pa.product.name}
     <s:param name="productSlug" value="${pa.product.slug}"/>
     <s:param name="productId" value="${pa.product.id}"/>
   </s:link> </h2>
-   <s:link beanclass="mhc.web.action.ProductReviewAction" event="writeNewReview">
+   <s:link beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction" event="writeNewReview">
      <s:param name="product" value="${pa.product.id}"/>
      Write a Review
    </s:link>

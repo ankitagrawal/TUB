@@ -1,8 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="s" uri="http://stripes.sourceforge.net/stripes-dynattr.tld" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ page import="mhc.common.constants.EnumPaymentMode" %>
-<%@ page import="mhc.common.constants.EnumRole" %>
+<%@ page import="com.hk.constants.core.EnumRole" %>
+<%@ page import="com.hk.constants.payment.EnumPaymentMode" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="paymentMode_COD" value="<%=EnumPaymentMode.COD.getId()%>"/>

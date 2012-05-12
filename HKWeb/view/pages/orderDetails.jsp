@@ -6,7 +6,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="mhc.web.action.OrderDetailsAction" event="pre" var="oa"/>
+<s:useActionBean beanclass="com.hk.web.action.core.order.OrderDetailsAction" event="pre" var="oa"/>
 <c:set var="shippingOrderStatus_shipped" value="<%=EnumShippingOrderStatus.SO_Shipped.getId()%>"/>
 <c:set var="shippingOrderStatus_delivered" value="<%=EnumShippingOrderStatus.SO_Delivered.getId()%>"/>
 <c:set var="shippingOrderStatus_returned" value="<%=EnumShippingOrderStatus.SO_Returned.getId()%>"/>
@@ -17,7 +17,7 @@
   <s:layout-component name="heading">Order Details</s:layout-component>
   <s:layout-component name="left_col">
     <div id="error"></div>
-    <s:form beanclass="mhc.web.action.AddToCartAction" class="addToCartForm">
+    <s:form beanclass="com.hk.web.action.core.cart.AddToCartAction" class="addToCartForm">
       <table class="cont footer_color" style="font-size: 14px;">
         <tr>
           <th><s:checkbox name="" id="markAll"/>Mark All</th>
@@ -44,7 +44,7 @@
                       <strong>${variant.product.name}</strong><span class="gry" id="message">&nbsp;&nbsp;(Product not available)</span>
                     </c:when>
                     <c:otherwise>
-                      <s:link beanclass="mhc.web.action.ProductAction" class="prod_link" id="productLink">
+                      <s:link beanclass="com.hk.web.action.core.catalog.product.ProductAction" class="prod_link" id="productLink">
                         <s:param name="productId" value="${variant.product.id}"/>
                         <s:param name="productSlug" value="${variant.product.slug}"/>
                         <strong>${variant.product.name}</strong>
@@ -129,7 +129,7 @@
                       <strong>${cartLineItem.productVariant.product.name}</strong><span class="gry" id="message">&nbsp;&nbsp;(Product out of stock)</span>
                     </c:when>
                     <c:otherwise>
-                      <s:link beanclass="mhc.web.action.ProductAction" class="prod_link" id="productLink">
+                      <s:link beanclass="com.hk.web.action.core.catalog.product.ProductAction" class="prod_link" id="productLink">
                         <s:param name="productId" value="${variant.product.id}"/>
                         <s:param name="productSlug" value="${variant.product.slug}"/>
                         <strong>${cartLineItem.productVariant.product.name}</strong>

@@ -1,7 +1,7 @@
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="mhc.web.action.admin.EditProductAttributesAction" var="pa"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction" var="pa"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="${pa.product.name}">
 
   <s:layout-component name="menu"> </s:layout-component>
@@ -13,7 +13,7 @@
   </s:layout-component>
 
   <s:layout-component name="content">
-    <s:form beanclass="mhc.web.action.admin.EditProductAttributesAction">
+    <s:form beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction">
        <fieldset>
         <ul>
           <s:hidden name="product"/>

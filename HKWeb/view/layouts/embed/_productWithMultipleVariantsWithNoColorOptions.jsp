@@ -37,7 +37,7 @@
 
         <c:forEach items="${product.productVariantsWithOutOfStockListedBelow}" var="variant" varStatus="ctr">
           <c:if test="${!variant.deleted}">
-            <s:form beanclass="mhc.web.action.AddToCartAction" class="addToCartForm">
+            <s:form beanclass="com.hk.web.action.core.cart.AddToCartAction" class="addToCartForm">
 
               <div class='row prods'>
                 <div class='prod' style="text-align: center;">

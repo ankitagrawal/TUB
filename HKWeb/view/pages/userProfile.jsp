@@ -1,12 +1,12 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
+<%@ page import="com.hk.pact.service.UserService" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
-<%@ page import="mhc.service.UserService" %>
-<%@ page import="app.bootstrap.guice.InjectorFactory" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="mhc.web.action.OrderDetailsAction" var="oa"/>
+<s:useActionBean beanclass="com.hk.web.action.core.order.OrderDetailsAction" var="oa"/>
 <s:useActionBean beanclass="com.hk.web.action.core.user.MyAccountAction" var="maa" event="pre"/>
 
 
@@ -31,12 +31,12 @@
     <c:if test="${!empty productVariants}">
       <ul style="list-style: none; line-height: 25px;">
         <li>
-          <s:link beanclass="mhc.web.action.CustomerOrderHistoryAction" title="My Orders"> <span
+          <s:link beanclass="com.hk.web.action.core.user.CustomerOrderHistoryAction" title="My Orders"> <span
               id="ohLink">MY ORDERS</span> </s:link>
         </li>
         <s:label name="Recently Ordered Items" style="color:darkblue;"/>
 
-        <s:form beanclass="mhc.web.action.AddToCartAction" class="addToCartForm">
+        <s:form beanclass="com.hk.web.action.core.cart.AddToCartAction" class="addToCartForm">
           <fieldset>
             <c:forEach items="${productVariants}" var="variant" varStatus="ctr">
               <div class="cont footer_color" width="100%" style="font-size: smaller;">
@@ -44,7 +44,7 @@
                   <s:hidden name="productVariantList[${ctr.index}]" value="${variant.id}"/>
                   <s:checkbox name="productVariantList[${ctr.index}].selected" class="lineItemCheckBox"/>
                   <s:hidden name="productVariantList[${ctr.index}}].qty" value="1" class="lineItemQty"/>
-                  <s:link beanclass="mhc.web.action.ProductAction" class="prod_link">
+                  <s:link beanclass="com.hk.web.action.core.catalog.product.ProductAction" class="prod_link">
                     <s:param name="productId" value="${variant.product.id}"/>
                     <s:param name="productSlug" value="${variant.product.slug}"/>
                     ${variant.product.name}
@@ -72,7 +72,7 @@
         To verify, please click on the activation link sent to you via e-mail when signing up.</p>
 
       <p><strong>If you haven't received the mail,
-        <s:link beanclass="mhc.web.action.ResendAccountActivationLinkAction" event="pre"
+        <s:link beanclass="com.hk.web.action.core.user.ResendAccountActivationLinkAction" event="pre"
                 class="resendActivationEmailLink">click here to resend it.</s:link>
       </strong>
         <br/><br/>
@@ -276,7 +276,7 @@
           <tr>
             <td>
                 ${order.gatewayOrderId}
-              <s:link beanclass="mhc.web.action.BOInvoiceAction" target="_blank">
+              <s:link beanclass="com.hk.web.action.core.accounting.BOInvoiceAction" target="_blank">
                 <s:param name="order" value="${order}"/>
                 (View Order)
               </s:link>
@@ -299,7 +299,7 @@
                 </c:when>
                 <c:otherwise>
                   <%--<p>--%>
-                  <s:link beanclass="mhc.web.action.BOInvoiceAction" event="pre" target="_blank">
+                  <s:link beanclass="com.hk.web.action.core.accounting.BOInvoiceAction" event="pre" target="_blank">
                     <s:param name="order" value="${order.id}"/>
                     R-${order.id}
                   </s:link>
@@ -309,7 +309,7 @@
             </td>
             <td>
                 ${order.orderStatus.name}
-              <s:link beanclass="mhc.web.action.OrderDetailsAction" event="pre" target="_blank">
+              <s:link beanclass="com.hk.web.action.core.order.OrderDetailsAction" event="pre" target="_blank">
                 <s:param name="order" value="${order.id}"/>
                 (View Order Details)
               </s:link>

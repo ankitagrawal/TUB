@@ -313,7 +313,7 @@
   <span class="upc lgry sml">ID
   <strong><span class="or"> ${order.id}</span></strong>
   <c:if test="${order.orderStatus.id != orderStatusCart}">
-    (<s:link beanclass="mhc.web.action.BOInvoiceAction" event="pre" target="_blank">
+    (<s:link beanclass="com.hk.web.action.core.accounting.BOInvoiceAction" event="pre" target="_blank">
     Invoice <s:param name="order" value="${order.id}"/>
   </s:link>) <br/>
   </c:if>

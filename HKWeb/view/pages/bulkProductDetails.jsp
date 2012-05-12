@@ -8,7 +8,7 @@
     <div style="float: left;">Kindly select the options to be edited</div>
 
     <div class="clear"></div>
-    <s:form beanclass="mhc.web.action.admin.BulkEditProductAction">
+    <s:form beanclass="com.hk.web.action.admin.catalog.product.BulkEditProductAction">
       <div>
         <div style="float: left; width: 50%">
           <div>

@@ -1,11 +1,5 @@
-<%@ page import="app.bootstrap.guice.InjectorFactory" %>
 <%@ page import="com.akube.framework.util.BaseUtils" %>
-<%@ page import="mhc.common.constants.HealthkartConstants" %>
-<%@ page import="mhc.common.constants.PermissionConstants" %>
-<%@ page import="mhc.domain.Category" %>
-<%@ page import="mhc.domain.MapIndia" %>
-<%@ page import="mhc.service.dao.CategoryDao" %>
-<%@ page import="mhc.service.dao.MapIndiaDao" %>
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -109,7 +103,7 @@
                    topHeading="${ca.seoData.h1}"/>
   <shiro:hasPermission name="<%=PermissionConstants.UPDATE_SEO_METADATA%>">
     <div align="center">
-      <s:link beanclass="mhc.web.action.SeoAction" event="pre" target="_blank" class="popup">Edit MetaData
+      <s:link beanclass="com.hk.web.action.core.content.seo.SeoAction" event="pre" target="_blank" class="popup">Edit MetaData
         <s:param name="seoData" value="${ca.seoData.id}"/>
       </s:link>
     </div>
@@ -117,7 +111,7 @@
 
   <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_CATALOG%>">
     <div align="center">
-      <s:link beanclass="mhc.web.action.admin.BulkEditProductAction" event="pre" target="_blank"
+      <s:link beanclass="com.hk.web.action.admin.catalog.product.BulkEditProductAction" event="pre" target="_blank"
               class="popup">Edit All Product Variants
         <s:param name="category" value="${ca.category.name}"/>
       </s:link>
@@ -138,7 +132,7 @@
       <s:layout-render name="/layouts/modal.jsp">
         <s:layout-component name="heading"><h3>Select City</h3></s:layout-component>
         <s:layout-component name="content">
-          <s:form beanclass="mhc.web.action.category.ServiceAction">
+          <s:form beanclass="com.hk.web.action.core.catalog.category.category.ServiceAction">
             <s:errors/>
             <div class="round-cont" style="width:650px;margin-top: 20px;">
               <label>To find the relevant deals, Please select your city</label>
@@ -168,7 +162,7 @@
 <input type="hidden" id="topLevelCategory" value="${ca.topCategoryUrlSlug}">
 
 <div style="display: none;">
-  <s:link beanclass="mhc.web.action.category.ServiceAction" id="setDefaultZoneLink" event="setDefaultCookie"/>
+  <s:link beanclass="com.hk.web.action.core.catalog.category.category.ServiceAction" id="setDefaultZoneLink" event="setDefaultCookie"/>
 </div>
 <div class='catalog_header'>
 

@@ -72,7 +72,7 @@
   <h3><s:link beanclass="com.hk.web.action.admin.marketing.AmazonParseExcelAction">Upload Amazon Excel</s:link></h3>
 
   <h3>
-    <s:link beanclass="mhc.web.action.admin.BulkEditProductAction">Bulk Edit Product And Variant Attributes</s:link></h3>
+    <s:link beanclass="com.hk.web.action.admin.catalog.product.BulkEditProductAction">Bulk Edit Product And Variant Attributes</s:link></h3>
 
   <h3>
     <s:link
@@ -196,7 +196,7 @@
 	</shiro:hasPermission>
 
 	<h3>
-    <s:link beanclass="mhc.web.action.admin.SkuAction">Add/Edit SKUs</s:link></h3>
+    <s:link beanclass="com.hk.web.action.admin.sku.SkuAction">Add/Edit SKUs</s:link></h3>
 
 <h3>
     <s:link beanclass="mhc.web.action.admin.SkuParseExcelAction">Upload SKU Excel</s:link></h3>

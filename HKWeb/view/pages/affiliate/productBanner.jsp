@@ -2,7 +2,7 @@
 <%@ page import="mhc.common.constants.EnumImageSize" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="mhc.web.action.ProductAction" var="pa" event="pre"/>
+<s:useActionBean beanclass="com.hk.web.action.core.catalog.product.ProductAction" var="pa" event="pre"/>
 
 <head>
   <title>HealthKart.com Affiliate Program: Refer Customers and Earn Money</title>

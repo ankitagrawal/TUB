@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="mhc.web.action.CustomerOrderHistoryAction" var="coha"/>
+<s:useActionBean beanclass="com.hk.web.action.core.user.CustomerOrderHistoryAction" var="coha"/>
 <s:layout-render name="/layouts/default.jsp">
   <s:layout-component name="heading">Order History</s:layout-component>
   <s:layout-component name="lhsContent">
@@ -45,7 +45,7 @@
                       </c:forEach>
                     </c:when>
                     <c:otherwise>
-                      <s:link beanclass="mhc.web.action.BOInvoiceAction" event="pre" target="_blank">
+                      <s:link beanclass="com.hk.web.action.core.accounting.BOInvoiceAction" event="pre" target="_blank">
                         <s:param name="order" value="${order.id}"/>
                         R-${order.id}
                       </s:link>
@@ -54,13 +54,13 @@
                 </td>
                 <td>
                     ${order.orderStatus.name}
-                  <s:link beanclass="mhc.web.action.OrderDetailsAction" target="_blank">
+                  <s:link beanclass="com.hk.web.action.core.order.OrderDetailsAction" target="_blank">
                     <s:param name="order" value="${order}"/>
                     (View Details)
                   </s:link>
                 </td>
                 <td>
-                  <s:link beanclass="mhc.web.action.BOInvoiceAction" target="_blank">
+                  <s:link beanclass="com.hk.web.action.core.accounting.BOInvoiceAction" target="_blank">
                     <s:param name="order" value="${order}"/>
                     View Order
                   </s:link>

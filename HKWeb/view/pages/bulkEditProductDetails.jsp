@@ -1,7 +1,7 @@
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="mhc.web.action.admin.BulkEditProductAction" var="bep"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.catalog.product.BulkEditProductAction" var="bep"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp">
 
@@ -33,7 +33,7 @@
 
 </div>
 
-<s:form beanclass="mhc.web.action.admin.BulkEditProductAction">
+<s:form beanclass="com.hk.web.action.admin.catalog.product.BulkEditProductAction">
 <s:hidden name="category" value="${bep.category}"/>
 <s:hidden name="brand" value="${bep.brand}"/>
 <s:hidden name="toBeEditedOptionsObject" value="${bep.toBeEditedOptionsObject}"/>
