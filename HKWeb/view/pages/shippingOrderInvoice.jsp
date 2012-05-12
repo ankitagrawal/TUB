@@ -58,7 +58,7 @@
   <link href="<hk:vhostCss/>/css/960.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
-<s:useActionBean beanclass="mhc.web.action.SOInvoiceAction" event="pre" var="orderSummary"/>
+<s:useActionBean beanclass="com.hk.web.action.core.accounting.SOInvoiceAction" event="pre" var="orderSummary"/>
 <c:set var="b2bUser" value="<%=EnumRole.B2B_USER.getRoleName()%>"/>
 <c:set var="baseOrder" value="${orderSummary.shippingOrder.baseOrder}"/>
 <c:set var="address" value="${baseOrder.address}"/>

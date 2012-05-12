@@ -1,9 +1,9 @@
 <%@ taglib prefix="itv" uri="http://healthkart.com/taglibs/hkTagLib" %>
+<%@ page import="com.hk.constants.review.EnumReviewStatus" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
-<%@ page import="mhc.common.constants.EnumReviewStatus" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="mhc.web.action.admin.PendingProductReviewAction" event="pre" var="rpBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.catalog.product.PendingProductReviewAction" event="pre" var="rpBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Pending Reward Points Queue">
 
@@ -12,7 +12,7 @@
     <fieldset class="top_label">
       <ul>
         <div class="grouped grid_12">
-          <s:form beanclass="mhc.web.action.admin.PendingProductReviewAction" method="get" autocomplete="false">
+          <s:form beanclass="com.hk.web.action.admin.catalog.product.PendingProductReviewAction" method="get" autocomplete="false">
             <li><label>Product</label> <s:text name="product"/></li>
             <li><label style="float:left;">Review Status </label>
 
@@ -31,7 +31,7 @@
 
     </fieldset>
 
-    <s:form beanclass="mhc.web.action.admin.PendingProductReviewAction">
+    <s:form beanclass="com.hk.web.action.admin.catalog.product.PendingProductReviewAction">
 
       <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${rpBean}"/>
       <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${rpBean}"/>

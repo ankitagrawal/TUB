@@ -54,7 +54,7 @@
   <h3><s:link beanclass="com.hk.web.action.admin.queue.ActionAwaitingQueueAction">Action Awaiting Queue</s:link></h3>
   </c:if>
   <h3><s:link beanclass="com.hk.web.action.admin.marketing.NotifyMeListAction"> Notify Me List </s:link></h3>
-  <%--<h3><s:link beanclass="mhc.web.action.admin.PaymentHistoryAction"> Check Payment History </s:link></h3>--%>  
+  <%--<h3><s:link beanclass="com.hk.web.action.admin.payment.PaymentHistoryAction"> Check Payment History </s:link></h3>--%>
 </div>
 
 <div class="cl"></div>
@@ -97,10 +97,10 @@
   <h3><s:link beanclass="mhc.web.action.admin.queue.PackingAwaitingQueueAction">Packing Awaiting Queue</s:link></h3>
   <h3>
     <s:link
-        beanclass="mhc.web.action.admin.InventoryCheckoutAction">Search Shipping Order & Checkout</s:link></h3>
+        beanclass="com.hk.web.action.admin.inventory.InventoryCheckoutAction">Search Shipping Order & Checkout</s:link></h3>
   <h3>
     <s:link
-        beanclass="mhc.web.action.admin.SearchOrderAndEnterCourierInfoAction">Search Shipping Order & Enter Courier</s:link></h3>
+        beanclass="com.hk.web.action.admin.courier.SearchOrderAndEnterCourierInfoAction">Search Shipping Order & Enter Courier</s:link></h3>
 
   <h3><s:link beanclass="mhc.web.action.admin.queue.ShipmentAwaitingQueueAction">Shipment Awaiting Queue</s:link></h3>   
   <h3><s:link
@@ -155,7 +155,7 @@
         class="sml gry">(Create PO or Raise a Debit Note)</span></s:link>
   </h3>
   <h3>
-    <s:link beanclass="mhc.web.action.admin.POAction">PO List</s:link>
+    <s:link beanclass="com.hk.web.action.admin.inventory.POAction">PO List</s:link>
   </h3>
 
   <h3>
@@ -163,7 +163,7 @@
         class="sml gry">(Checkin against GRN)</span></s:link>
   </h3>
 	  <h3>
-    <s:link beanclass="mhc.web.action.admin.PurchaseInvoiceAction">Purchase Invoice List</s:link>
+    <s:link beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction">Purchase Invoice List</s:link>
   </h3>
   <c:if test="${whAction.setWarehouse != null}">
   <h3>
@@ -171,7 +171,7 @@
   </h3>
   </c:if>
   <h3>
-    <s:link beanclass="mhc.web.action.admin.ReconciliationVoucherAction">Reconciliation Voucher List</s:link>
+    <s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction">Reconciliation Voucher List</s:link>
   </h3>
 
 	 <h3>
@@ -217,7 +217,7 @@
 
   <h3><s:link beanclass="mhc.web.action.admin.PendingRewardPointQueueAction">Pending Reward Points</s:link></h3>
 
-  <h3><s:link beanclass="mhc.web.action.admin.PendingProductReviewAction">Pending Product Reviews</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.admin.catalog.product.PendingProductReviewAction">Pending Product Reviews</s:link></h3>
 
 </div>
 

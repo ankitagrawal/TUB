@@ -1,11 +1,6 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
-<%@ page import="mhc.common.constants.EnumCartLineItemType" %>
-<%@ page import="mhc.common.constants.EnumPaymentMode" %>
-<%@ page import="mhc.common.constants.EnumPaymentStatus" %>
-<%@ page import="mhc.common.constants.order.EnumOrderStatus" %>
-<%@ page import="mhc.common.constants.shippingOrder.EnumShippingOrderStatus" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
-<%@ page import="mhc.web.json.HealthkartResponse" %>
+<%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -228,13 +223,13 @@
 
   <span class="orderStatusName or">${order.orderStatus.name}</span>
   <c:if test="${order.orderStatus.id == orderStatusPending || order.orderStatus.id == orderStatusHold}">
-    <s:link beanclass="mhc.web.action.admin.order.OrderOnHoldAction" event="unHoldOrder" title="Unhold Order"
+    <s:link beanclass="com.hk.web.action.admin.order.OrderOnHoldAction" event="unHoldOrder" title="Unhold Order"
             class="orderStatusLink onHoldStatusLink"
             style="${order.orderStatus.id == orderStatusHold ? '': 'display:none;'}">
       <s:param name="order" value="${order.id}"/>
       <img src="<hk:vhostImage/>/images/admin/icon_unhold.png" alt="Unhold Order" title="Unhold Order"/>
     </s:link>
-    <s:link beanclass="mhc.web.action.admin.order.OrderOnHoldAction" event="holdOrder" title="Put Order on Hold"
+    <s:link beanclass="com.hk.web.action.admin.order.OrderOnHoldAction" event="holdOrder" title="Put Order on Hold"
             class="orderStatusLink normalStatusLink"
             style="${order.orderStatus.id == orderStatusHold ? 'display:none;': ''}">
       <s:param name="order" value="${order.id}"/>

@@ -1,5 +1,4 @@
 <%@ page import="java.text.DateFormat" %>
-<%@ page import="mhc.common.constants.EnumImageSize" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -52,7 +51,7 @@
 </head>
 <body>
 
-<s:useActionBean beanclass="mhc.web.action.admin.POAction" var="orderSummary"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.inventory.POAction" var="orderSummary"/>
 <table class="header">
   <tr>
     <td>

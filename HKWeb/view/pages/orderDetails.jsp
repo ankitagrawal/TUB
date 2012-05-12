@@ -1,5 +1,5 @@
 <%@ page import="mhc.common.constants.shippingOrder.EnumShippingOrderStatus" %>
-<%@ page import="mhc.web.json.HealthkartResponse" %>
+<%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="app.bootstrap.guice.InjectorFactory" %>
 <%@ page import="mhc.service.order.CartLineItemService" %>
 <%@ page import="org.jsoup.Jsoup" %>

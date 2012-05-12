@@ -1,4 +1,3 @@
-<%@ page import="mhc.common.constants.StateList" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -6,7 +5,7 @@
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Payment History">
 
-	<s:useActionBean beanclass="mhc.web.action.admin.PaymentHistoryAction" var="paymentHistoryBean"/>
+	<s:useActionBean beanclass="com.hk.web.action.admin.payment.PaymentHistoryAction" var="paymentHistoryBean"/>
     
   <s:layout-component name="htmlHead">
   <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
@@ -62,7 +61,7 @@
         </table>
     </fieldset>    
       <fieldset class="right_label" style="display:none;">
-			<s:form beanclass="mhc.web.action.admin.PaymentHistoryAction">
+			<s:form beanclass="com.hk.web.action.admin.payment.PaymentHistoryAction">
 				<label>Search by Purchase Order ID</label>
 				&nbsp;&nbsp;&nbsp;
 				<s:text name="purchaseOrderId" id="purchaseOrderId" style="width:200px;"/>
@@ -99,7 +98,7 @@
                        <th>Actual Payment Date  <br/> (yyyy-mm-dd)</th>
                        <th>Remarks</th>
                        <th>Payment Reference</th>
-                    <s:form beanclass="mhc.web.action.admin.PaymentHistoryAction">
+                    <s:form beanclass="com.hk.web.action.admin.payment.PaymentHistoryAction">
                     <c:forEach items="${paymentHistoryBean.paymentHistories}" var="paymentHistory" varStatus="paymentHistoryCount">
                           <tr>
                             <s:hidden name="purchaseInvoiceId" value="${paymentHistoryBean.purchaseInvoiceId}" />
@@ -136,7 +135,7 @@
                             <td><s:text name="paymentHistories[${paymentHistoryCount.index}].remarks" value="${paymentHistory.remarks}"/></td>
                             <td><s:text name="paymentHistories[${paymentHistoryCount.index}].paymentReference" value="${paymentHistory.paymentReference}"/></td>
                             <td>
-                              <s:link beanclass="mhc.web.action.admin.PaymentHistoryAction" event="delete">
+                              <s:link beanclass="com.hk.web.action.admin.payment.PaymentHistoryAction" event="delete">
                                 <s:param name="paymentHistory" value="${paymentHistory.id}"/>
                                 <s:param name="purchaseInvoiceId" value="${paymentHistoryBean.purchaseInvoiceId}" />
                                 <s:param name="purchaseOrderId" value="${paymentHistoryBean.purchaseOrderId}" />
@@ -156,7 +155,7 @@
           </fieldset>
            <br />
           <fieldset style="float:left; display:none;" id="new-payment-history-form">
-            <s:form beanclass="mhc.web.action.admin.PaymentHistoryAction">
+            <s:form beanclass="com.hk.web.action.admin.payment.PaymentHistoryAction">
                   <c:if test="${paymentHistoryBean.purchaseOrderId != null}">
                  <label>
                     Add a Payment detail against purchase order ${paymentHistoryBean.purchaseOrderId}

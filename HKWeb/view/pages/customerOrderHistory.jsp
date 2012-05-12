@@ -38,7 +38,7 @@
                   <c:choose>
                     <c:when test="${!empty shippingOrders}">
                       <c:forEach items="${shippingOrders}" var="shippingOrder">
-                        <s:link beanclass="mhc.web.action.SOInvoiceAction" event="pre" target="_blank">
+                        <s:link beanclass="com.hk.web.action.core.accounting.SOInvoiceAction" event="pre" target="_blank">
                           <s:param name="shippingOrder" value="${shippingOrder.id}"/>
                           R-${shippingOrder.id}
                         </s:link>

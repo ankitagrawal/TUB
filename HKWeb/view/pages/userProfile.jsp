@@ -1,6 +1,6 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
-<%@ page import="mhc.web.json.HealthkartResponse" %>
+<%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="mhc.service.UserService" %>
 <%@ page import="app.bootstrap.guice.InjectorFactory" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -290,7 +290,7 @@
                 <c:when test="${!empty shippingOrders}">
                   <c:forEach items="${shippingOrders}" var="shippingOrder">
                     <%--<p>--%>
-                    <s:link beanclass="mhc.web.action.SOInvoiceAction" event="pre" target="_blank">
+                    <s:link beanclass="com.hk.web.action.core.accounting.SOInvoiceAction" event="pre" target="_blank">
                       <s:param name="shippingOrder" value="${shippingOrder.id}"/>
                       R-${shippingOrder.id}
                     </s:link>
