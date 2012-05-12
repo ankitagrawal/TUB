@@ -1,13 +1,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="mhc.web.action.admin.InventoryHealthStatusAction" var="excelBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.inventory.InventoryHealthStatusAction" var="excelBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp">
 
   <s:layout-component name="content">
 
     <div style="display:inline;">
-      <s:form beanclass="mhc.web.action.admin.InventoryHealthStatusAction">
+      <s:form beanclass="com.hk.web.action.admin.inventory.InventoryHealthStatusAction">
         <fieldset>
           <legend><h2>Download WH Inventory Excel</h2></legend>
           <br>

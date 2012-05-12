@@ -2,7 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Debit Note List">
-  <s:useActionBean beanclass="mhc.web.action.admin.DebitNoteAction" var="poa"/>
+  <s:useActionBean beanclass="com.hk.web.action.admin.inventory.DebitNoteAction" var="poa"/>
 
   <s:layout-component name="heading">
     Debit Note List
@@ -12,7 +12,7 @@
 
     <fieldset class="right_label">
       <legend>Search Debit Note</legend>
-      <s:form beanclass="mhc.web.action.admin.DebitNoteAction">
+      <s:form beanclass="com.hk.web.action.admin.inventory.DebitNoteAction">
         <%--<label>GRN ID:</label><s:text name="grn"/>--%>
         <label>Tin Number:</label><s:text name="tinNumber"/>
         <label>Supplier Name:</label><s:text name="supplierName"/>
@@ -65,11 +65,11 @@
             </c:choose>
           </td>
           <td>
-            <s:link beanclass="mhc.web.action.admin.DebitNoteAction" event="view">Edit
+            <s:link beanclass="com.hk.web.action.admin.inventory.DebitNoteAction" event="view">Edit
               <s:param name="debitNote" value="${debitNote.id}"/>
               <s:param name="grn" value="${debitNote.goodsReceivedNote.id}"/></s:link>
             &nbsp;
-            <s:link beanclass="mhc.web.action.admin.DebitNoteAction" event="print">Print
+            <s:link beanclass="com.hk.web.action.admin.inventory.DebitNoteAction" event="print">Print
               <s:param name="debitNote" value="${debitNote.id}"/>
               <s:param name="grn" value="${debitNote.goodsReceivedNote.id}"/></s:link>
           </td>

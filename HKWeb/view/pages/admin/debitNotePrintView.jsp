@@ -50,7 +50,7 @@
 </head>
 <body>
 
-<s:useActionBean beanclass="mhc.web.action.admin.DebitNoteAction" var="debitNoteSummary"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.inventory.DebitNoteAction" var="debitNoteSummary"/>
 <table class="header">
   <tr>
     <td>

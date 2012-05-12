@@ -67,9 +67,9 @@
         beanclass="com.hk.web.action.admin.catalog.GenerateExcelAction">Generate Catalog Excel by Category<br/><span class="sml gry">(also shows Inventory status)</span></s:link>
   </h3>
 
-  <h3><s:link beanclass="mhc.web.action.admin.ParseExcelAction">Upload Catalog Excel<br/><span class="sml gry" style="color:red">(SKUs need to be created manually for new variants)</span></s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.admin.catalog.ParseExcelAction">Upload Catalog Excel<br/><span class="sml gry" style="color:red">(SKUs need to be created manually for new variants)</span></s:link></h3>
 
-  <h3><s:link beanclass="mhc.web.action.admin.AmazonParseExcelAction">Upload Amazon Excel</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.admin.marketing.AmazonParseExcelAction">Upload Amazon Excel</s:link></h3>
 
   <h3>
     <s:link beanclass="mhc.web.action.admin.BulkEditProductAction">Bulk Edit Product And Variant Attributes</s:link></h3>
@@ -111,7 +111,7 @@
   <h3>
   </c:if>
     <s:link
-        beanclass="mhc.web.action.admin.InventoryHealthStatusAction" event="downloadWHInventorySnapshot">WH Inventory Excel
+        beanclass="com.hk.web.action.admin.inventory.InventoryHealthStatusAction" event="downloadWHInventorySnapshot">WH Inventory Excel
     </s:link></h3>
   <h3><s:link beanclass="mhc.web.action.admin.CreateInventoryFileAction">Create Inventory File</s:link></h3>
 
@@ -167,7 +167,7 @@
   </h3>
   <c:if test="${whAction.setWarehouse != null}">
   <h3>
-    <s:link beanclass="mhc.web.action.admin.DebitNoteAction">Debit Note List</s:link>
+    <s:link beanclass="com.hk.web.action.admin.inventory.DebitNoteAction">Debit Note List</s:link>
   </h3>
   </c:if>
   <h3>
@@ -182,10 +182,10 @@
     <s:link beanclass="mhc.web.action.admin.SearchSkuBatchesAction">Search Available Batches </s:link></h3>
 
   <h3>
-    <s:link beanclass="mhc.web.action.admin.InventoryHealthStatusAction">Low Inventory List</s:link></h3>
+    <s:link beanclass="com.hk.web.action.admin.inventory.InventoryHealthStatusAction">Low Inventory List</s:link></h3>
 
   <h3>
-    <s:link beanclass="mhc.web.action.admin.InventoryHealthStatusAction" event="listOutOfStock">Out of Stock List</s:link></h3>
+    <s:link beanclass="com.hk.web.action.admin.inventory.InventoryHealthStatusAction" event="listOutOfStock">Out of Stock List</s:link></h3>
 
 	<shiro:hasPermission name="<%=PermissionConstants.GRN_CREATION%>">
 		<h3>
@@ -241,7 +241,7 @@
   <h3><s:link beanclass="mhc.web.action.admin.ServiceQueueAction">Service Queue</s:link></h3>
 
   <h3>
-    <s:link beanclass="mhc.web.action.admin.ManufacturerAction">View/Edit Merchant Details</s:link></h3>
+    <s:link beanclass="com.hk.web.action.admin.catalog.ManufacturerAction">View/Edit Merchant Details</s:link></h3>
 
   <h3>
     <s:link

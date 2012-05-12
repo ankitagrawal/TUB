@@ -72,7 +72,7 @@
               <s:param name="user" value="${user.id}"/>
               [Super login]
             </s:link>
-            <s:link beanclass="mhc.web.action.admin.EditUserAction">
+            <s:link beanclass="com.hk.web.action.admin.user.EditUserAction">
               <s:param name="user" value="${user}"/>
               [Edit User]
             </s:link>
