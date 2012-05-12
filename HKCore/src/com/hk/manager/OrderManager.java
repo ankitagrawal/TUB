@@ -385,11 +385,14 @@ public class OrderManager {
          * orderLifecycleActivityDaoProvider.get().find(EnumOrderLifecycleActivity.AutoEscalatedToProcessingQueue.getId()),
          * null); }
          */
-
-        // Send mail to Customer
-        getPaymentService().sendPaymentEmailForOrder(order);
-        // Send referral program intro email
-        sendReferralProgramEmail(order.getUser());
+      
+        //Check if HK order then only send emails
+        if(order.getStore() != null && order.getStore().getId().equals(1L)){
+          // Send mail to Customer
+          getPaymentService().sendPaymentEmailForOrder(order);
+          // Send referral program intro email
+          sendReferralProgramEmail(order.getUser());
+        }
         // Send mail to Admin
         getEmailManager().sendOrderConfirmEmailToAdmin(order);
 
@@ -506,6 +509,15 @@ public class OrderManager {
                 if (lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Product.getId()) && lineItem.getQty() <= 0) {
                     iterator.remove();
                     getCartLineItemDao().delete(lineItem);
+                } else {
+                  //Max Qty Check for Last Possible Order based on available unbooked inventory
+                  ProductVariant productVariant = lineItem.getProductVariant();
+                  Long unbookedInventory = inventoryService.getAvailableUnbookedInventory(skuService.getSKUsForProductVariant(productVariant));
+                  if (unbookedInventory != null && unbookedInventory < lineItem.getQty()) {
+                    lineItem.setQty(unbookedInventory);
+                    cartLineItemService.save(lineItem);
+                    logger.debug("Set LineItem Qty equals to available unbooked Inventory: " + unbookedInventory + " for Variant:" + productVariant.getId());
+                  }
                 }
             }
             order = getOrderService().save(order);

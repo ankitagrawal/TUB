@@ -78,7 +78,10 @@
     style="margin-bottom: 5px;border: 1px dotted;overflow: hidden;padding: 3px;">
   <%--<div id="shippingOrder-${shippingOrder.id}" class="detailDiv">--%>
 <td id="shippingOrderDetail-${shippingOrder.id}">
-    <%--<div id="shippingOrderDetail-${shippingOrder.id}" class="floatleft">--%>
+   <div class="floatleft">
+    Store ID: <strong>${shippingOrder.baseOrder.store.prefix}</strong>
+  </div>
+  <div class="clear" style=""></div>
   <div class="floatleft">
     Gateway Id: <strong>${shippingOrder.gatewayOrderId}</strong>
                 <span

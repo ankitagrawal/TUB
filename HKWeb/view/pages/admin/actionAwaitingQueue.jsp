@@ -320,7 +320,7 @@
       <tr class="${ctr.index % 2 == 0 ? '' : 'alt'} addressRow orderRow">
         <td width="40%" style="border:1px solid darkgoldenrod; padding:3px;">
           <div id="orderDetails-${order.id}" class="detailDiv">
-            <div class="headingLabel">Order Details:</div>
+            <div class="headingLabel">Order Details: ${order.store.prefix}</div>
             <div class="floatleft">
               Gateway Order Id: <strong>${order.gatewayOrderId}</strong>
               <span style="margin-left:30px;"> Basket category: <strong>${order.basketCategory}</strong></span>
@@ -330,7 +330,7 @@
               <s:param name="order" value="${order}"/> Invoice
             </s:link>) (<s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" event="searchOrders"
                                 target="_blank">
-              <s:param name="orderId" value="${order}"/> Search order
+              <s:param name="orderId" value="${order}"/> Search order          
             </s:link>)
             </div>
             <div class="clear"></div>
