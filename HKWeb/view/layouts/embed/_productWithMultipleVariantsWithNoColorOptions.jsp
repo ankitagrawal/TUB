@@ -1,6 +1,6 @@
-<%@ page import="mhc.domain.Product" %>
-<%@ page import="mhc.service.dao.ProductDao" %>
-<%@ page import="app.bootstrap.guice.InjectorFactory" %>
+<%@ page import="com.hk.domain.catalog.product.Product" %>
+<%@ page import="com.hk.pact.dao.catalog.product.ProductDao" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -8,7 +8,7 @@
   <%
     ProductDao productDao = ServiceLocatorFactory.getService(ProductDao.class);
     String productId = (String) pageContext.getAttribute("productId");
-    Product product = productDao.find(productId);
+    Product product = productDao.getProductById(productId);
     pageContext.setAttribute("product", product);
   %>
 <div class='variants'>

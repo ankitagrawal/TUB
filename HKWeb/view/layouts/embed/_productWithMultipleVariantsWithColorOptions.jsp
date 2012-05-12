@@ -10,7 +10,7 @@
   <%
     ProductDao productDao = ServiceLocatorFactory.getService(ProductDao.class);
     String productId = (String) pageContext.getAttribute("productId");
-    Product product = productDao.find(productId);
+    Product product = productDao.getProductById(productId);
     pageContext.setAttribute("product", product);
   %>
   <div class='variants'>

@@ -21,7 +21,11 @@ import com.hk.pact.dao.catalog.combo.ComboDao;
 @Repository
 public class ComboDaoImpl extends BaseDaoImpl implements ComboDao {
 
-    public ComboProduct getComboProduct(Product product, Combo combo) {
+	public Combo getComboById(String id) {
+		return get(Combo.class, id);
+	}
+
+	public ComboProduct getComboProduct(Product product, Combo combo) {
         return (ComboProduct) getSession().createQuery("select p from Combo c left join c.comboProducts p where c = :combo and p.product = :product").setParameter("combo", combo).setParameter(
                 "product", product).uniqueResult();
     }

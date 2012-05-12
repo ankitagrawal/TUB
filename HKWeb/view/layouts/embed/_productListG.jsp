@@ -1,9 +1,9 @@
-<%@ page import="app.bootstrap.guice.InjectorFactory" %>
-<%@ page import="mhc.common.constants.EnumImageSize" %>
-<%@ page import="mhc.domain.Combo" %>
-<%@ page import="mhc.domain.Product" %>
-<%@ page import="mhc.service.dao.ComboDao" %>
-<%@ page import="mhc.service.dao.ProductDao" %>
+<%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
+<%@ page import="com.hk.domain.catalog.product.Product" %>
+<%@ page import="com.hk.domain.catalog.product.combo.Combo" %>
+<%@ page import="com.hk.pact.dao.catalog.combo.ComboDao" %>
+<%@ page import="com.hk.pact.dao.catalog.product.ProductDao" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -13,11 +13,11 @@
   <%
     ProductDao productDao = ServiceLocatorFactory.getService(ProductDao.class);
     String product_productThumbId = (String) pageContext.getAttribute("productId");
-    Product product_productThumb = productDao.find(product_productThumbId);
+    Product product_productThumb = productDao.getProductById(product_productThumbId);
     pageContext.setAttribute("product", product_productThumb);
 
     ComboDao comboDao = ServiceLocatorFactory.getService(ComboDao.class);
-    Combo combo = comboDao.find(product_productThumbId);
+    Combo combo = comboDao.getComboById(product_productThumbId);
     pageContext.setAttribute("combo", combo);
   %>
 
