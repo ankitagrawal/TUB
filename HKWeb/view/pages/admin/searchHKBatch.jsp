@@ -3,12 +3,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Search Batches for UPC/VariantID">
-  <s:useActionBean beanclass="mhc.web.action.admin.SearchHKBatchAction" var="ssba"/>
+  <s:useActionBean beanclass="com.hk.web.action.admin.inventory.SearchHKBatchAction" var="ssba"/>
   <s:layout-component name="content">
     <table width="100%">
       <tr>
         <td width="50%" valign="top">
-          <s:form beanclass="mhc.web.action.admin.SearchHKBatchAction">
+          <s:form beanclass="com.hk.web.action.admin.inventory.SearchHKBatchAction">
             <label>Search HK Batch</label>
             <br/><br/>
             <s:text name="hkBarcode" id="upc" style="font-size:16px; padding:5px;height:30px;width:300px;"/>

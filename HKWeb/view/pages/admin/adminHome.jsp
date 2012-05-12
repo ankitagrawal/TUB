@@ -1,7 +1,7 @@
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="com.hk.pact.service.core.WarehouseService" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
-<%@ page import="com.hk.manager.LinkManager" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
@@ -79,11 +79,11 @@
         beanclass="com.hk.web.action.admin.catalog.product.CreateOrSelectProductAction">Create new product and product variant</s:link></h3>
 
   <h3>
-    <s:link beanclass="mhc.web.action.admin.CreateEditComboAction">Create Combo</s:link></h3>
+    <s:link beanclass="com.hk.web.action.admin.catalog.product.CreateEditComboAction">Create Combo</s:link></h3>
 
-  <h3><s:link beanclass="mhc.web.action.admin.RecentlyAddedProductsAction">Recently Added Products</s:link></h3>
-  <h3><s:link beanclass="mhc.web.action.admin.RelatedProductAction">Update Related Products</s:link></h3>
-  <h3><s:link beanclass="mhc.web.action.admin.GenerateReconcilationReportAction">Generate Reconcilation Report</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.admin.catalog.product.RecentlyAddedProductsAction">Recently Added Products</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.admin.catalog.product.RelatedProductAction">Update Related Products</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.report.GenerateReconcilationReportAction">Generate Reconcilation Report</s:link></h3>
 
 </div>
 
@@ -92,9 +92,9 @@
 <div class="left roundBox">
   <h2>Warehouse</h2>
   <c:if test="${whAction.setWarehouse != null}">
-  <h3><s:link beanclass="mhc.web.action.admin.AssignBinAction">Assign Bin</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.admin.warehouse.AssignBinAction">Assign Bin</s:link></h3>
 
-  <h3><s:link beanclass="mhc.web.action.admin.queue.PackingAwaitingQueueAction">Packing Awaiting Queue</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.admin.queue.PackingAwaitingQueueAction">Packing Awaiting Queue</s:link></h3>
   <h3>
     <s:link
         beanclass="com.hk.web.action.admin.inventory.InventoryCheckoutAction">Search Shipping Order & Checkout</s:link></h3>
@@ -104,9 +104,9 @@
 
   <h3><s:link beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction">Shipment Awaiting Queue</s:link></h3>   
   <h3><s:link
-      beanclass="mhc.web.action.admin.SearchOrderAndReCheckinRTOInventoryAction">Search Shipping Order & Checkin RTO</s:link></h3>
+      beanclass="com.hk.web.action.admin.inventory.SearchOrderAndReCheckinRTOInventoryAction">Search Shipping Order & Checkin RTO</s:link></h3>
 
-  <h3><s:link beanclass="mhc.web.action.admin.queue.DeliveryAwaitingQueueAction">Delivery Awaiting Queue</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.admin.queue.DeliveryAwaitingQueueAction">Delivery Awaiting Queue</s:link></h3>
 
   <h3>
   </c:if>
@@ -115,7 +115,7 @@
     </s:link></h3>
   <h3><s:link beanclass="com.hk.web.action.admin.inventory.CreateInventoryFileAction">Create Inventory File</s:link></h3>
 
-  <h3><s:link beanclass="mhc.web.action.admin.SearchHKBatchAction">Search HK Batch</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.admin.inventory.SearchHKBatchAction">Search HK Batch</s:link></h3>
 </div>
 
 <div class="cl"></div>
@@ -123,7 +123,7 @@
 <div class="left roundBox">
   <h2>Courier and Services</h2>
   
-  <h3><s:link beanclass="mhc.web.action.admin.MasterPincodeAction">Update Master Pincode List</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.admin.courier.MasterPincodeAction">Update Master Pincode List</s:link></h3>
 
   <h3><s:link beanclass="mhc.web.action.admin.courier.CourierServiceInfoAction">Update Courier Service Info</s:link></h3>
 
