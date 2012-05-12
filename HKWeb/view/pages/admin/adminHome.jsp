@@ -175,7 +175,7 @@
   </h3>
 
 	 <h3>
-    <s:link beanclass="mhc.web.action.admin.StockTransferAction">Stock Transfer List</s:link>
+    <s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction">Stock Transfer List</s:link>
   </h3>
 
   <h3>
@@ -189,10 +189,10 @@
 
 	<shiro:hasPermission name="<%=PermissionConstants.GRN_CREATION%>">
 		<h3>
-    <s:link beanclass="mhc.web.action.admin.InventoryCheckinAction" event="downloadPrintBarcodeFile">Download Print Barcode File</s:link></h3>
+    <s:link beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction" event="downloadPrintBarcodeFile">Download Print Barcode File</s:link></h3>
 
 	<h3>
-    <s:link beanclass="mhc.web.action.admin.InventoryCheckinAction" event="clearPrintBarcodeFile">Clear Print Barcode File</s:link></h3>
+    <s:link beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction" event="clearPrintBarcodeFile">Clear Print Barcode File</s:link></h3>
 	</shiro:hasPermission>
 
 	<h3>

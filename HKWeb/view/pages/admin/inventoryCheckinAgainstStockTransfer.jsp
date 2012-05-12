@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="mhc.web.action.admin.InventoryCheckinAction" var="ica"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction" var="ica"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Stock Transfer Inventory Checkin">
 	<jsp:useBean id="now" class="java.util.Date" scope="request"/>
 	<s:layout-component name="htmlHead">
@@ -13,7 +13,7 @@
 	<s:layout-component name="content">
 		<div style="display:inline;float:left;">
 			<h2>Item Checkin against Stock Transfer#${ica.stockTransfer.id}</h2>
-			<s:form beanclass="mhc.web.action.admin.InventoryCheckinAction">
+			<s:form beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction">
 				<s:hidden name="stockTransfer" value="${ica.stockTransfer.id}"/>
 				<table border="1">
 					<tr>
@@ -70,7 +70,7 @@
 				<br/>
 				<s:submit name="saveInventoryAgainstStockTransfer" value="Save" class="requiredFieldValidator"/>
 			</s:form>
-      <span style="display:inline;float:right;"><h2><s:link beanclass="mhc.web.action.admin.StockTransferAction">&lang;&lang;&lang;
+      <span style="display:inline;float:right;"><h2><s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction">&lang;&lang;&lang;
 	      Back to Stock Transfer List</s:link></h2></span>
 		</div>
 		<div style="display:inline;" align="center">

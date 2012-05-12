@@ -2,7 +2,7 @@
 <%@ page import="mhc.service.dao.WarehouseDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="mhc.web.action.admin.StockTransferAction" var="sta"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.inventory.StockTransferAction" var="sta"/>
 <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Stock Transfer List">
 	<%
@@ -17,10 +17,10 @@
 	</s:layout-component>
 	<s:layout-component name="content">
 		<c:if test="${whAction.setWarehouse != null}">
-			<s:link beanclass="mhc.web.action.admin.StockTransferAction"
+			<s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction"
 			        event="view">Create New Stock Transfer</s:link>
 		</c:if>
-		<s:form beanclass="mhc.web.action.admin.StockTransferAction">
+		<s:form beanclass="com.hk.web.action.admin.inventory.StockTransferAction">
 
 			<fieldset>
 				<legend>Search Stock Transfer List</legend>
@@ -70,11 +70,11 @@
 					<td><fmt:formatDate value="${stockTransfer.checkinDate}" type="both" timeStyle="short"/></td>
 					<td>
 						<c:if test="${stockTransfer.fromWarehouse.id == whAction.setWarehouse.id}">
-						<s:link beanclass="mhc.web.action.admin.StockTransferAction" event="view">Edit
+						<s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction" event="view">Edit
 							<s:param name="stockTransfer" value="${stockTransfer.id}"/></s:link>
 						</c:if>&nbsp;
 						<c:if test="${stockTransfer.toWarehouse.id == whAction.setWarehouse.id}">
-						<s:link beanclass="mhc.web.action.admin.StockTransferAction" event="checkinInventoryAgainstStockTransfer">Inventory Checkin
+						<s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction" event="checkinInventoryAgainstStockTransfer">Inventory Checkin
 							<s:param name="stockTransfer" value="${stockTransfer.id}"/></s:link>
 						</c:if>
 					</td>

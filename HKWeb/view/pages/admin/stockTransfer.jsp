@@ -3,7 +3,7 @@
 <%@ page import="mhc.web.json.HealthkartResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="mhc.web.action.admin.StockTransferAction" var="sta"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.inventory.StockTransferAction" var="sta"/>
 <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Create/Edit Stock Transfer">
 	<jsp:useBean id="now" class="java.util.Date" scope="request"/>
@@ -108,7 +108,7 @@
 			        event="getPVDetails"></s:link>
 		</div>
 		<h2>Create/Edit Stock Transfer</h2>
-		<s:form beanclass="mhc.web.action.admin.StockTransferAction">
+		<s:form beanclass="com.hk.web.action.admin.inventory.StockTransferAction">
 			<s:hidden name="stockTransfer" value="${sta.stockTransfer.id}"/>
 			<table>
 				<tr>
