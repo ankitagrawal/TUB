@@ -1,12 +1,11 @@
-<%@ page import="mhc.domain.Category" %>
-<%@ page import="app.bootstrap.guice.InjectorFactory" %>
-<%@ page import="mhc.service.dao.CategoryDao" %>
-<%@ page import="java.util.List" %>
-<%@ page import="mhc.common.dto.MenuNode" %>
-<%@ page import="mhc.service.MenuHelper" %>
+<%@ page import="com.hk.dto.menu.MenuNode" %>
+<%@ page import="com.hk.helper.MenuHelper" %>
+<%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.List" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="mhc.web.action.category.CatalogAction" var="ca"/>
+<s:useActionBean beanclass="com.hk.web.action.core.catalog.category.CatalogAction" var="ca"/>
 <s:layout-definition>
 
   <%
@@ -98,7 +97,7 @@
     <ul>
       <c:forEach items="${brandList}" var="navBrand">
         <li>
-          <s:link beanclass="mhc.web.action.category.CatalogAction" style="${currentBrand == navBrand ? 'font-weight:bold;' : ''}">
+          <s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction" style="${currentBrand == navBrand ? 'font-weight:bold;' : ''}">
             ${navBrand}
             <s:param name="brand" value="${navBrand}"/>
             <c:if test="${hk:isNotBlank(ca.startRange)}"><s:param name="startRange" value="${ca.startRange}"/></c:if>
@@ -119,7 +118,7 @@
     </h5>
     <ul>
       <li>
-        <s:link beanclass="mhc.web.action.category.CatalogAction">
+        <s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction">
           Below Rs 500
           <s:param name="startRange" value="0"/>
           <s:param name="endRange" value="500"/>
@@ -134,7 +133,7 @@
           <s:param name="perPage" value="${ca.perPage}"/>
         </s:link>
       </li>
-      <li><s:link beanclass="mhc.web.action.category.CatalogAction">
+      <li><s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction">
         Between Rs 500-1000
         <s:param name="startRange" value="500"/>
         <s:param name="endRange" value="1000"/>
@@ -149,7 +148,7 @@
         <s:param name="perPage" value="${ca.perPage}"/>
       </s:link>
       </li>
-      <li><s:link beanclass="mhc.web.action.category.CatalogAction">
+      <li><s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction">
         Between Rs 1000-2500
         <s:param name="startRange" value="1000"/>
         <s:param name="endRange" value="2500"/>
@@ -163,7 +162,7 @@
         <c:if test="${hk:isNotBlank(ca.preferredZone)}"><s:param name="preferredZone" value="${ca.preferredZone}"/></c:if>
       </s:link>
       </li>
-      <li><s:link beanclass="mhc.web.action.category.CatalogAction">
+      <li><s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction">
         Above Rs 2500
         <s:param name="startRange" value="2500"/>
         <s:param name="endRange" value="1000000"/>

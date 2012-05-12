@@ -1,12 +1,18 @@
 <%@ page import="com.akube.framework.util.BaseUtils" %>
+<%@ page import="com.hk.constants.core.HealthkartConstants" %>
 <%@ page import="com.hk.constants.core.PermissionConstants" %>
+<%@ page import="com.hk.domain.MapIndia" %>
+<%@ page import="com.hk.domain.catalog.category.Category" %>
+<%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
+<%@ page import="com.hk.pact.dao.location.MapIndiaDao" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="mhc.web.action.category.CatalogAction" var="ca"/>
-<s:useActionBean beanclass="mhc.web.action.CompareAction" var="compareBean"/>
+<s:useActionBean beanclass="com.hk.web.action.core.catalog.category.CatalogAction" var="ca"/>
+<s:useActionBean beanclass="com.hk.web.action.core.catalog.CompareAction" var="compareBean"/>
 
 <s:layout-render name="/layouts/catalogLayoutG.jsp"
                  pageTitle="${ca.seoData.title}">
@@ -19,10 +25,10 @@
   <%
     CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
     List<Category> applicableCategories = new ArrayList<Category>();
-    applicableCategories.add(categoryDao.find("bp-monitor"));
+    applicableCategories.add(categoryDao.getCategoryByName("bp-monitor"));
     pageContext.setAttribute("applicableCategories", applicableCategories);
 
-    Category services = categoryDao.find("services");
+    Category services = categoryDao.getCategoryByName("services");
     pageContext.setAttribute("services", services);
     if (ca.getRootCategorySlug().equals("services")) {
       MapIndiaDao mapIndiaDao = ServiceLocatorFactory.getService(MapIndiaDao.class);
@@ -132,7 +138,7 @@
       <s:layout-render name="/layouts/modal.jsp">
         <s:layout-component name="heading"><h3>Select City</h3></s:layout-component>
         <s:layout-component name="content">
-          <s:form beanclass="com.hk.web.action.core.catalog.category.category.ServiceAction">
+          <s:form beanclass="com.hk.web.action.core.catalog.category.ServiceAction">
             <s:errors/>
             <div class="round-cont" style="width:650px;margin-top: 20px;">
               <label>To find the relevant deals, Please select your city</label>
@@ -162,7 +168,7 @@
 <input type="hidden" id="topLevelCategory" value="${ca.topCategoryUrlSlug}">
 
 <div style="display: none;">
-  <s:link beanclass="com.hk.web.action.core.catalog.category.category.ServiceAction" id="setDefaultZoneLink" event="setDefaultCookie"/>
+  <s:link beanclass="com.hk.web.action.core.catalog.category.ServiceAction" id="setDefaultZoneLink" event="setDefaultCookie"/>
 </div>
 <div class='catalog_header'>
 
@@ -193,7 +199,7 @@
   </a>
 
   <div class='per grid_10'>
-    <s:link beanclass="mhc.web.action.category.CatalogAction" id="sort-popularity" class='active control'
+    <s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction" id="sort-popularity" class='active control'
             rel="nofollow">
       Popularity
       <c:choose>
@@ -216,7 +222,7 @@
       <s:param name="sortOrder" value="${ca.sortOrder =='asc' ? 'desc' : 'asc'}"/>
       <s:param name="perPage" value="${ca.perPage}"/>
     </s:link>
-    <s:link beanclass="mhc.web.action.category.CatalogAction" id="sort-price" class='control' rel="nofollow">
+    <s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction" id="sort-price" class='control' rel="nofollow">
       Price
       <c:choose>
         <c:when test="${ca.sortOrder =='desc'}">&darr;</c:when>
@@ -241,7 +247,7 @@
 
   <div class='per grid_11'>
     show
-    <s:link beanclass="mhc.web.action.category.CatalogAction" class="per_page active" rel="nofollow">
+    <s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction" class="per_page active" rel="nofollow">
       20
       <s:param name="rootCategorySlug" value="${ca.rootCategorySlug}"/>
       <s:param name="childCategorySlug" value="${ca.childCategorySlug}"/>
@@ -256,7 +262,7 @@
       <s:param name="sortOrder" value="${ca.sortOrder}"/>
     </s:link>
     |
-    <s:link beanclass="mhc.web.action.category.CatalogAction" class="per_page" rel="nofollow">
+    <s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction" class="per_page" rel="nofollow">
       40
       <s:param name="rootCategorySlug" value="${ca.rootCategorySlug}"/>
       <s:param name="childCategorySlug" value="${ca.childCategorySlug}"/>
@@ -271,7 +277,7 @@
       <s:param name="sortOrder" value="${ca.sortOrder}"/>
     </s:link>
     |
-    <s:link beanclass="mhc.web.action.category.CatalogAction" class="per_page" rel="nofollow">
+    <s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction" class="per_page" rel="nofollow">
       60
       <s:param name="rootCategorySlug" value="${ca.rootCategorySlug}"/>
       <s:param name="childCategorySlug" value="${ca.childCategorySlug}"/>
@@ -286,7 +292,7 @@
       <s:param name="sortOrder" value="${ca.sortOrder}"/>
     </s:link>
     |
-    <s:link beanclass="mhc.web.action.category.CatalogAction" class="per_page" rel="nofollow">
+    <s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction" class="per_page" rel="nofollow">
       80
       <s:param name="rootCategorySlug" value="${ca.rootCategorySlug}"/>
       <s:param name="childCategorySlug" value="${ca.childCategorySlug}"/>
@@ -305,7 +311,7 @@
 </div>
 
 <div id="prod_grid" class="grid_18" style="${ca.rootCategorySlug == "services"?"display:none":""}">
-  <s:form beanclass="mhc.web.action.CompareAction" target="_blank">
+  <s:form beanclass="com.hk.web.action.core.catalog.CompareAction" target="_blank">
     <c:forEach items="${ca.productList}" var="product">
       <c:if test="${!product.googleAdDisallowed}">
         <div class="product_box grid_4">

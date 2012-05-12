@@ -113,7 +113,7 @@
     <s:link
         beanclass="com.hk.web.action.admin.inventory.InventoryHealthStatusAction" event="downloadWHInventorySnapshot">WH Inventory Excel
     </s:link></h3>
-  <h3><s:link beanclass="mhc.web.action.admin.CreateInventoryFileAction">Create Inventory File</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.admin.inventory.CreateInventoryFileAction">Create Inventory File</s:link></h3>
 
   <h3><s:link beanclass="mhc.web.action.admin.SearchHKBatchAction">Search HK Batch</s:link></h3>
 </div>
