@@ -22,7 +22,7 @@
 				<div class="advice_box">
 					<img src="images/form_banner.png" />
 					<div class="advice_form">
-					<s:form beanclass="mhc.web.action.RequestCallbackAction">
+					<s:form beanclass="com.hk.web.action.core.user.RequestCallbackAction">
 							<label for="name">Name</label>
 							<s:text name="name"/>
 

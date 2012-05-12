@@ -48,7 +48,7 @@ India's No. 1 REVITAL!</div>
 </div>
 <div class="cl"></div>
 <div class="buy_online">TO BUY ONLINE</div>
-<div class="click_here"><s:link beanclass="mhc.web.action.RevitalLandingPageAction" event="addRevitalProductsAndGoToCart">CLICK HERE</s:link></div>
+<div class="click_here"><s:link beanclass="com.hk.web.action.core.catalog.RevitalLandingPageAction" event="addRevitalProductsAndGoToCart">CLICK HERE</s:link></div>
 </div>
 
 

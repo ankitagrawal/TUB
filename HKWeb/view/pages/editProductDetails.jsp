@@ -49,7 +49,7 @@
             Manufacturer: ${pa.product.manufacturer.name}
           </li>
           <c:if test="${pa.product.primaryCategory=='services'}">
-          <s:link beanclass="mhc.web.action.admin.ManufacturerAddressAction" target="_blank" event="getManufacturerAddresses">
+          <s:link beanclass="com.hk.web.action.admin.catalog.ManufacturerAddressAction" target="_blank" event="getManufacturerAddresses">
             Edit/View Manufacturer addresses
             <s:param name="manufacturer" value="${pa.product.manufacturer.id}"/>
             </s:link>

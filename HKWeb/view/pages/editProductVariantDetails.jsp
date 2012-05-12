@@ -1,5 +1,4 @@
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
-<%@ page import="mhc.common.constants.PermissionConstants" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -149,7 +148,7 @@
              <td>
               <s:checkbox name="productVariants[${ctr.index}].clearanceSale" class="clearanceSale"/>
             </td>
-            <td><s:link beanclass="mhc.web.action.admin.ListBatchesAndCheckinInventory" target="_blank">
+            <td><s:link beanclass="com.hk.web.action.admin.inventory.ListBatchesAndCheckinInventory" target="_blank">
               <s:param name="upc" value="${productVariant.id}"/>${hk:netInventory(productVariant)}</s:link>
             </td>
             <td>
@@ -180,7 +179,7 @@
       </table>
       <br/>
 
-      <s:link beanclass="mhc.web.action.admin.CreateOrSelectProductAction" event="select" target="_blank">
+      <s:link beanclass="com.hk.web.action.admin.catalog.product.CreateOrSelectProductAction" event="select" target="_blank">
         <s:param name="product" value="${pa.product.id}"/> Create New Variant
       </s:link>
 

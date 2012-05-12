@@ -76,7 +76,7 @@
 
   <h3>
     <s:link
-        beanclass="mhc.web.action.admin.CreateOrSelectProductAction">Create new product and product variant</s:link></h3>
+        beanclass="com.hk.web.action.admin.catalog.product.CreateOrSelectProductAction">Create new product and product variant</s:link></h3>
 
   <h3>
     <s:link beanclass="mhc.web.action.admin.CreateEditComboAction">Create Combo</s:link></h3>
