@@ -59,7 +59,7 @@ public class UserManageAddressAction extends BaseAction {
     @DefaultHandler
     @DontValidate
     public Resolution showAddressBook() {
-        // User user = userDao.find(getPrincipal().getId());
+        // User user = userDao.getUserById(getPrincipal().getId());
         if (user == null) {
             user = getUserService().getUserById(getPrincipal().getId());
         } else {
@@ -83,10 +83,10 @@ public class UserManageAddressAction extends BaseAction {
 
     /*
      * public Resolution addNewAddress() { if (getPrincipal() != null) { // User user =
-     * userDao.find(getPrincipal().getId()); user = userDao.find(getPrincipal().getId()); affiliate =
+     * userDao.getUserById(getPrincipal().getId()); user = userDao.getUserById(getPrincipal().getId()); affiliate =
      * affiliateDao.getAffilateByUser(user); } // return new ForwardResolution("/pages/addUserAddress.jsp"); return new
      * ForwardResolution("/pages/editUserAddresses.jsp"); } public Resolution editUserAddress() { if (getPrincipal() !=
-     * null) { // User user = userDao.find(getPrincipal().getId()); user = userDao.find(getPrincipal().getId());
+     * null) { // User user = userDao.getUserById(getPrincipal().getId()); user = userDao.getUserById(getPrincipal().getId());
      * logger.debug("Editing address " + address.getId() + " for " + user.getName()); } return new
      * RedirectResolution("/pages/editUserAddresses.jsp").addParameter("address", address.getId()); }
      */
@@ -105,14 +105,14 @@ public class UserManageAddressAction extends BaseAction {
 
     /*
      * public Resolution saveEditedAddress() { if (getPrincipal() != null) { // User user =
-     * userDao.find(getPrincipal().getId()); user = userDao.find(getPrincipal().getId()); affiliate =
+     * userDao.getUserById(getPrincipal().getId()); user = userDao.getUserById(getPrincipal().getId()); affiliate =
      * affiliateDao.getAffilateByUser(user); if (affiliate != null) { //checking that mainAddressId should not be null ,
      * otherwise may throw exception. if (mainAddressId != null)
      * affiliate.setMainAddressId(Long.parseLong(mainAddressId)); affiliateDao.save(affiliate); } address.setUser(user);
      * address = addressDao.save(address); } addRedirectAlertMessage(new SimpleMessage("changes saved.")); return new
      * ForwardResolution(UserManageAddressAction.class, "showAddressBook"); } public Resolution saveNewAddress() { if
-     * (getPrincipal() != null) { // User user = userDao.find(getPrincipal().getId()); user =
-     * userDao.find(getPrincipal().getId()); address.setUser(user); address.setPhone("0".concat(address.getPhone()));
+     * (getPrincipal() != null) { // User user = userDao.getUserById(getPrincipal().getId()); user =
+     * userDao.getUserById(getPrincipal().getId()); address.setUser(user); address.setPhone("0".concat(address.getPhone()));
      * address = addressDao.save(address); affiliate = affiliateDao.getAffilateByUser(user); if (affiliate != null) {
      * mainAddressId = affiliate.getMainAddressId() != null ? affiliate.getMainAddressId().toString() : ""; }
      * addRedirectAlertMessage(new SimpleMessage("New Address successfully added.")); } // return new
@@ -122,7 +122,7 @@ public class UserManageAddressAction extends BaseAction {
     public Resolution manageAddresses() {
         List<Address> addresses = new ArrayList<Address>();
         if (getPrincipal() != null) {
-            // User user = userDao.find(getPrincipal().getId());
+            // User user = userDao.getUserById(getPrincipal().getId());
             user = getUserService().getUserById(getPrincipal().getId());
             affiliate = affiliateDao.getAffilateByUser(user);
             addresses = user.getAddresses();
@@ -140,7 +140,7 @@ public class UserManageAddressAction extends BaseAction {
 
     public Resolution remove() {
         if (getPrincipal() != null) {
-            // User user = userDao.find(getPrincipal().getId());
+            // User user = userDao.getUserById(getPrincipal().getId());
             user = getUserService().getUserById(getPrincipal().getId());
             affiliate = affiliateDao.getAffilateByUser(user);
             if (affiliate != null && affiliate.getMainAddressId() != null) {
@@ -160,7 +160,7 @@ public class UserManageAddressAction extends BaseAction {
 
     public Resolution setAsDefaultAddress() {
         if (getPrincipal() != null) {
-            // User user = userDao.find(getPrincipal().getId());
+            // User user = userDao.getUserById(getPrincipal().getId());
             user = getUserService().getUserById(getPrincipal().getId());
             affiliate = affiliateDao.getAffilateByUser(user);
             affiliate.setMainAddressId(address.getId());

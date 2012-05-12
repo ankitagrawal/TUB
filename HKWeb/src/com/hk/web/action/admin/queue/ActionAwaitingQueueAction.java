@@ -233,7 +233,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 
     /* User loggedOnUser = null;
 if (getPrincipal() != null) {
-loggedOnUser = userDao.find(getPrincipal().getId());
+loggedOnUser = userDao.getUserById(getPrincipal().getId());
 }
 Courier orderCourier = null;
 for (Order order : orderList) {

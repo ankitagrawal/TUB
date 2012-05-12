@@ -102,7 +102,7 @@
     <s:link
         beanclass="com.hk.web.action.admin.courier.SearchOrderAndEnterCourierInfoAction">Search Shipping Order & Enter Courier</s:link></h3>
 
-  <h3><s:link beanclass="mhc.web.action.admin.queue.ShipmentAwaitingQueueAction">Shipment Awaiting Queue</s:link></h3>   
+  <h3><s:link beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction">Shipment Awaiting Queue</s:link></h3>   
   <h3><s:link
       beanclass="mhc.web.action.admin.SearchOrderAndReCheckinRTOInventoryAction">Search Shipping Order & Checkin RTO</s:link></h3>
 
@@ -133,7 +133,7 @@
 
   <h3><s:link beanclass="mhc.web.action.admin.courier.ChangeDefaultCourierAction">Change Default Courier</s:link></h3>
 
-    <h3><s:link beanclass="mhc.web.action.admin.UpdateAFLChhotuDeliveryStatusAction">Update Delivery Status of AFL/CHHOTU</s:link></h3>
+    <h3><s:link beanclass="com.hk.web.action.admin.shipment.UpdateAFLChhotuDeliveryStatusAction">Update Delivery Status of AFL/CHHOTU</s:link></h3>
 
   <h3><s:link beanclass="mhc.web.action.admin.ParseDTDCDeliveryStatusExcelAction">Upload Delivery Status Excel of DTDC</s:link></h3>
 

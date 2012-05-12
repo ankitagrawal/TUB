@@ -2,6 +2,7 @@ package com.hk.web.action.core.discount;
 
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.validation.Validate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,8 @@ public class RewardPointTxnStatementAction extends BaseAction {
 
     @Autowired
     private UserService    userService;
+
+		@Validate(required = true)
     private User           user;
 
     private Double         redeemablePoint;
@@ -41,7 +44,11 @@ public class RewardPointTxnStatementAction extends BaseAction {
         return user;
     }
 
-    public UserService getUserService() {
+		public void setUser(User user) {
+			this.user = user;
+		}
+
+	public UserService getUserService() {
         return userService;
     }
 

@@ -79,7 +79,7 @@
 </s:layout-component>
 <s:layout-component name="content">
   <div style="display: none;">
-    <s:link beanclass="com.hk.web.action.admin.EditPurchaseOrderAction" id="pvInfoLink" event="getPVDetails"></s:link>
+    <s:link beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction" id="pvInfoLink" event="getPVDetails"></s:link>
   </div>
 
   <s:form beanclass="com.hk.web.action.admin.inventory.DebitNoteAction">

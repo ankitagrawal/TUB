@@ -7,7 +7,7 @@
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Goods Received Note (GRN) List">
   <%
       WarehouseDaoImpl warehouseDao = ServiceLocatorFactory.getService(WarehouseDaoImpl.class);
-      pageContext.setAttribute("whList", warehouseDao.listAll());
+      pageContext.setAttribute("whList", warehouseDao.getAllWarehouses());
   %>
   <s:useActionBean beanclass="com.hk.web.action.admin.inventory.GRNAction" var="poa"/>
   <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
@@ -126,7 +126,7 @@
         <tr class="grnRow">
           <td>${grn.id}</td>
           <td>
-            <s:link beanclass="com.hk.web.action.admin.EditPurchaseOrderAction" event="pre">
+            <s:link beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction" event="pre">
               <s:param name="purchaseOrder" value="${grn.purchaseOrder.id}"/>
               ${grn.purchaseOrder.id}
             </s:link>

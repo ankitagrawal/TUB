@@ -29,7 +29,7 @@ public class UserTypeConverter implements TypeConverter<User> {
         if (idLong == null) {
             return null;
         } else {
-            // return userDao.find(idLong);
+            // return userDao.getUserById(idLong);
             return getBaseDao().get(User.class, idLong);
         }
     }

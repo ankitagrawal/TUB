@@ -68,7 +68,7 @@
           <td>${userCount.count}</td>
           <td>
               ${user.login}<br/>
-            <s:link beanclass="mhc.web.action.admin.AssumedLoginAction">
+            <s:link beanclass="com.hk.web.action.admin.user.AssumedLoginAction">
               <s:param name="user" value="${user.id}"/>
               [Super login]
             </s:link>
@@ -76,7 +76,7 @@
               <s:param name="user" value="${user}"/>
               [Edit User]
             </s:link>
-            <s:link beanclass="mhc.web.action.admin.CustomerLifeCycleAction">
+            <s:link beanclass="com.hk.web.action.admin.user.CustomerLifeCycleAction">
                <s:param name="user" value="${user}"/>
                [View Customer LifeCycle]
             </s:link>
@@ -93,19 +93,19 @@
             </s:link>
           </td>
           <td>
-            <s:link beanclass="mhc.web.action.admin.AddRewardPointAction" event="pre">
+            <s:link beanclass="com.hk.web.action.admin.reward.AddRewardPointAction" event="pre">
               Add Reward Point
               <s:param name="user" value="${user.id}"/>
             </s:link>
           </td>
           <td>
-            <s:link beanclass="mhc.web.action.admin.RewardPointTxnStatementAction" event="pre">
+            <s:link beanclass="com.hk.web.action.core.discount.RewardPointTxnStatementAction" event="pre">
               Reward Points Txn History                     
               <s:param name="user" value="${user.id}"/>
             </s:link>
           </td>
           <td>
-              <s:link beanclass="mhc.web.action.admin.UserReferrralsAddressesAction" event="referralList">
+              <s:link beanclass="com.hk.web.action.admin.user.UserReferrralsAddressesAction" event="referralList">
                 User Referrals
                 <s:param name="user" value="${user.id}"/>
               </s:link>

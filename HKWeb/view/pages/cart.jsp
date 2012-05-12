@@ -1,6 +1,6 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
-<%@ page import="mhc.common.constants.EnumImageSize" %>
-<%@ page import="mhc.common.constants.EnumProductVariantPaymentType" %>
+<%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
+<%@ page import="com.hk.constants.catalog.product.EnumProductVariantPaymentType" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
@@ -250,8 +250,8 @@
 </div>
 <s:form beanclass="com.hk.web.action.core.cart.CartAction" id="cartForm">
 <div style="display: none;">
-  <s:link beanclass="mhc.web.action.CartLineItemUpdateAction" id="lineItemUpdateLink"></s:link>
-  <s:link beanclass="mhc.web.action.ApplyCouponAction" style="display:none;" id="couponBaseLink"></s:link>
+  <s:link beanclass="com.hk.web.action.core.order.CartLineItemUpdateAction" id="lineItemUpdateLink"></s:link>
+  <s:link beanclass="com.hk.web.action.core.discount.ApplyCouponAction" style="display:none;" id="couponBaseLink"></s:link>
   <s:link beanclass="com.hk.web.action.core.cart.CartAction" style="display:none;" id="updatePricingLink" event="pricing"></s:link>
 </div>
 
@@ -476,10 +476,10 @@
 <s:layout-render name="/layouts/embed/_cartFreebies.jsp" freebieBanner="${cartAction.freebieBanner}"/>
 
 <c:if test="${cartAction.pricingDto.productLineCount > 0}">
-  <s:link beanclass="mhc.web.action.HomeAction" class="back"> &larr; go back to add more products</s:link>
+  <s:link beanclass="com.hk.web.action.HomeAction" class="back"> &larr; go back to add more products</s:link>
 </c:if>
 <c:if test="${cartAction.pricingDto.productLineCount == 0}">
-  <s:link beanclass="mhc.web.action.HomeAction"
+  <s:link beanclass="com.hk.web.action.HomeAction"
           class="back"> &larr; go back to add products to your shopping cart</s:link>
 </c:if>
 </div>
@@ -491,15 +491,15 @@
     Enter Coupon Code
 
     <input placeholder='d-i-s-c-o-u-n-t' type='text' id="couponCode"/>
-    <s:link beanclass="mhc.web.action.ApplyCouponAction" id="couponLink" onclick="return false;"
+    <s:link beanclass="com.hk.web.action.core.discount.ApplyCouponAction" id="couponLink" onclick="return false;"
             class="button_grey">Apply Coupon</s:link>
-    <s:link beanclass="mhc.web.action.AvailabeOfferListAction"
+    <s:link beanclass="com.hk.web.action.core.discount.AvailabeOfferListAction"
             id="availableOffersLink">(see previously applied offers)</s:link>
   </shiro:hasAnyRoles>
   <shiro:hasAnyRoles name="<%=RoleConstants.TEMP_USER%>">
     Got a discount coupon?
     <br/>
-    <s:link beanclass="mhc.web.action.LoginAction" class="lrg" event="pre"> login / signup
+    <s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="lrg" event="pre"> login / signup
       <s:param name="redirectUrl" value="${pageContext.request.contextPath}/Cart.action"/>
     </s:link>
     to redeem it.

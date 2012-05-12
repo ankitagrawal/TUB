@@ -1,4 +1,9 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
+<%@ page import="com.hk.constants.order.EnumCartLineItemType" %>
+<%@ page import="com.hk.constants.order.EnumOrderStatus" %>
+<%@ page import="com.hk.constants.payment.EnumPaymentMode" %>
+<%@ page import="com.hk.constants.payment.EnumPaymentStatus" %>
+<%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -255,14 +260,14 @@
   <c:if
       test="${order.payment.paymentStatus.id == paymentStatusPending && order.payment.paymentMode.id == paymentModeCod}">
     <span class="codOrderText">&middot;</span>
-    <s:link beanclass="mhc.web.action.admin.VerifyCodAction" class="confirmCodLink">
+    <s:link beanclass="com.hk.web.action.admin.payment.VerifyCodAction" class="confirmCodLink">
       <s:param name="order" value="${order.id}"/>
       Confirm COD
     </s:link>
   </c:if>
   <hr/>
   <c:if test="${! empty order.orderLifecycles}">
-    <s:link beanclass="mhc.web.action.admin.order.OrderLifecycleAction" event="pre" target="_blank">
+    <s:link beanclass="com.hk.web.action.admin.order.OrderLifecycleAction" event="pre" target="_blank">
       <label style="font-weight:bold;">Last Activity:</label><br>
       ${order.orderLifecycles[fn:length(order.orderLifecycles)-1].orderLifecycleActivity.name} on <br>
       <fmt:formatDate value="${order.orderLifecycles[fn:length(order.orderLifecycles)-1].activityDate}" type="both"/> by
@@ -273,7 +278,7 @@
   <br/>
   <c:if test="${!(order.orderStatus.id == orderStatusCancelled || order.orderStatus.id == orderStatusCart)}">
     <br/>
-    <s:form beanclass="mhc.web.action.admin.order.CancelOrderAction" class="cancelOrderForm">
+    <s:form beanclass="com.hk.web.action.admin.order.CancelOrderAction" class="cancelOrderForm">
       <s:param name="order" value="${order.id}"/>
       Reason:
       <s:select name="cancellationType" class="cancellationTypeId">
@@ -418,7 +423,7 @@
           </c:otherwise>
         </c:choose>
         <br/>
-        <s:form beanclass="mhc.web.action.HomeAction" autocomplete="false">
+        <s:form beanclass="com.hk.web.action.HomeAction" autocomplete="false">
           <s:select name="" value="${order.address.courier != null ? order.address.courier.id : '0'}" class="courierId">
             <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList" value="id"
                                        label="name"/>
@@ -468,7 +473,7 @@
     </c:forEach>
   </table>
 
-  <s:link beanclass="mhc.web.action.admin.order.OrderLifecycleAction" event="pre" target="_blank">
+  <s:link beanclass="com.hk.web.action.admin.order.OrderLifecycleAction" event="pre" target="_blank">
     Order Lifecycle
     <s:param name="order" value="${order}"/>
   </s:link>

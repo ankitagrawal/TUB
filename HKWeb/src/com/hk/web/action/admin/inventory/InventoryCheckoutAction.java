@@ -1,22 +1,5 @@
 package com.hk.web.action.admin.inventory;
 
-import java.util.List;
-import java.util.Set;
-
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.JsonResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
@@ -44,6 +27,16 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.error.AdminPermissionAction;
+import net.sourceforge.stripes.action.*;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+
+import java.util.List;
+import java.util.Set;
 
 @Secure(hasAnyPermissions = { PermissionConstants.INVENTORY_CHECKOUT }, authActionBean = AdminPermissionAction.class)
 @Component
@@ -150,7 +143,7 @@ public class InventoryCheckoutAction extends BaseAction {
 
     public Resolution selectItemFromSkuGroup() {
         /*
-         * User loggedOnUser = null; if (getPrincipal() != null) { loggedOnUser = userDao.find(getPrincipal().getId()); }
+         * User loggedOnUser = null; if (getPrincipal() != null) { loggedOnUser = userDao.getUserById(getPrincipal().getId()); }
          */
         User loggedOnUser = userService.getLoggedInUser();
         logger.debug("lineItem: " + lineItem);
@@ -216,7 +209,7 @@ public class InventoryCheckoutAction extends BaseAction {
     public Resolution inventoryCheckoutOfItemThatIsNotInOrderLineItem() { // Written for Combo may be used to adjust
         // invs too.
         /*
-         * User user = null; if (getPrincipal() != null) { user = userDao.find(getPrincipal().getId()); }
+         * User user = null; if (getPrincipal() != null) { user = userDao.getUserById(getPrincipal().getId()); }
          */
         User user = userService.getLoggedInUser();
         logger.debug("Free Checkout of involved or replacing items for order: " + shippingOrder);

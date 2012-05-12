@@ -113,7 +113,7 @@
                           <span class="outOfStock">Sold Out</span><br/>
 
                           <div align="center">
-                            <s:link beanclass="mhc.web.action.NotifyMeAction" class="notifyMe button_orange"><b>Notify
+                            <s:link beanclass="com.hk.web.action.core.user.NotifyMeAction" class="notifyMe button_orange"><b>Notify
                                                                                                                 Me!!</b>
                               <s:param name="productVariant" value="${variant}"/> </s:link></div>
                         <%--</c:otherwise>--%>

@@ -69,7 +69,7 @@ public class OrderKiMBAction extends BaseAction {
 
     order = orderDao.find(orderId);
     if (getPrincipal() != null) {
-      user = userDao.find(getPrincipal().getId());
+      user = userDao.getUserById(getPrincipal().getId());
     }
     formerOrderString = order.getOrderDetails();
     paymentList = paymentDao.listByOrderId(orderId);
@@ -100,7 +100,7 @@ public class OrderKiMBAction extends BaseAction {
      User user = null;
  order = orderDao.find(orderId);
  if (getPrincipal() != null) {
-   user = userDao.find(getPrincipal().getId());
+   user = userDao.getUserById(getPrincipal().getId());
  }
 
  for (LineItem lineItem : lineItems) {
@@ -143,7 +143,7 @@ public class OrderKiMBAction extends BaseAction {
     User user = null;
     order = orderDao.find(orderId);
     if (getPrincipal() != null) {
-      user = userDao.find(getPrincipal().getId());
+      user = userDao.getUserById(getPrincipal().getId());
     }
     for (LineItem lineItem : lineItems) {
       if (lineItem.isSelected()) {
@@ -181,7 +181,7 @@ public class OrderKiMBAction extends BaseAction {
     User user = null;
     order = orderDao.find(orderId);
     if (getPrincipal() != null) {
-      user = userDao.find(getPrincipal().getId());
+      user = userDao.getUserById(getPrincipal().getId());
     }
     for (LineItem lineItem : lineItems) {
       if (lineItem.isSelected()) {
@@ -211,7 +211,7 @@ public class OrderKiMBAction extends BaseAction {
     User user = null;
     order = orderDao.find(orderId);
     if (getPrincipal() != null) {
-      user = userDao.find(getPrincipal().getId());
+      user = userDao.getUserById(getPrincipal().getId());
     }
     Double shippingAmount = 30.0;
     String shippingLineItemString = "";
@@ -243,7 +243,7 @@ public class OrderKiMBAction extends BaseAction {
  order = orderDao.find(orderId);
  paymentList = paymentDao.listByOrderId(orderId);
  if (getPrincipal() != null) {
-   user = userDao.find(getPrincipal().getId());
+   user = userDao.getUserById(getPrincipal().getId());
  }
  StringBuilder sb = new StringBuilder();
  for (Payment payment1 : paymentList) {
@@ -271,7 +271,7 @@ public class OrderKiMBAction extends BaseAction {
     User user = null;
     order = orderDao.find(orderId);
     if (getPrincipal() != null) {
-      user = userDao.find(getPrincipal().getId());
+      user = userDao.getUserById(getPrincipal().getId());
     }
     String rewardPointLineItemString = "";
 
