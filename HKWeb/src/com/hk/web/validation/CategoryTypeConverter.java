@@ -28,7 +28,7 @@ public class CategoryTypeConverter implements TypeConverter<Category> {
             return null;
         } else {
             return getBaseDao().get(Category.class, id);
-            // return categoryDao.find(id);
+            // return categoryDao.getCategoryByName(id);
         }
     }
 

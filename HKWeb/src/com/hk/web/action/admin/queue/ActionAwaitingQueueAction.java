@@ -189,7 +189,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     Set<Category> categoryList = new HashSet<Category>();
     for (String category : categories) {
       if (category != null) {
-        categoryList.add((Category) categoryDao.find(category));
+        categoryList.add((Category) categoryDao.getCategoryByName(category));
       }
     }
     if (categoryList.size() == 0) {
@@ -203,7 +203,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     Set<String> basketCategoryList = new HashSet<String>();
     for (String category : basketCategories) {
       if (category != null) {
-        Category basketCategory = (Category) categoryDao.find(category);
+        Category basketCategory = (Category) categoryDao.getCategoryByName(category);
         if (basketCategory != null) {
           basketCategoryList.add(basketCategory.getName());
         }

@@ -1,11 +1,11 @@
 package com.hk.constants.catalog.category;
 
+import com.hk.domain.catalog.category.Category;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.hk.domain.catalog.category.Category;
 
 
 @SuppressWarnings("serial")
@@ -91,15 +91,15 @@ public class CategoryConstants {
   public static final List<Category> allCategoriesList = new ArrayList<Category>() {
     {
 /*      CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
-      add(categoryDao.find(CategoryConstants.BABY));
-      add(categoryDao.find(CategoryConstants.BEAUTY));
-      add(categoryDao.find(CategoryConstants.DIABETES));
-      add(categoryDao.find(CategoryConstants.EYE));
-      add(categoryDao.find(CategoryConstants.HOME_DEVICES));
-      add(categoryDao.find(CategoryConstants.NUTRITION));
-      add(categoryDao.find(CategoryConstants.PERSONAL_CARE));
-      add(categoryDao.find(CategoryConstants.SERVICES));
-      add(categoryDao.find(CategoryConstants.SPORTS));
+      add(categoryDao.getCategoryByName(CategoryConstants.BABY));
+      add(categoryDao.getCategoryByName(CategoryConstants.BEAUTY));
+      add(categoryDao.getCategoryByName(CategoryConstants.DIABETES));
+      add(categoryDao.getCategoryByName(CategoryConstants.EYE));
+      add(categoryDao.getCategoryByName(CategoryConstants.HOME_DEVICES));
+      add(categoryDao.getCategoryByName(CategoryConstants.NUTRITION));
+      add(categoryDao.getCategoryByName(CategoryConstants.PERSONAL_CARE));
+      add(categoryDao.getCategoryByName(CategoryConstants.SERVICES));
+      add(categoryDao.getCategoryByName(CategoryConstants.SPORTS));
 */    }
     
 //TODO: rewrite
@@ -108,16 +108,16 @@ public class CategoryConstants {
 public static final List<Category> marketExpenseCategoriesList = new ArrayList<Category>() {
     {
      /* CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
-	    add(categoryDao.find(CategoryConstants.HK_BRAND));
-      add(categoryDao.find(CategoryConstants.BEAUTY));
-      add(categoryDao.find(CategoryConstants.DIABETES));
-      add(categoryDao.find(CategoryConstants.EYE));
-      add(categoryDao.find(CategoryConstants.HOME_DEVICES));
-      add(categoryDao.find(CategoryConstants.NUTRITION));
-      add(categoryDao.find(CategoryConstants.BABY));
-      add(categoryDao.find(CategoryConstants.PERSONAL_CARE));
-      add(categoryDao.find(CategoryConstants.SERVICES));
-      add(categoryDao.find(CategoryConstants.SPORTS));*/
+	    add(categoryDao.getCategoryByName(CategoryConstants.HK_BRAND));
+      add(categoryDao.getCategoryByName(CategoryConstants.BEAUTY));
+      add(categoryDao.getCategoryByName(CategoryConstants.DIABETES));
+      add(categoryDao.getCategoryByName(CategoryConstants.EYE));
+      add(categoryDao.getCategoryByName(CategoryConstants.HOME_DEVICES));
+      add(categoryDao.getCategoryByName(CategoryConstants.NUTRITION));
+      add(categoryDao.getCategoryByName(CategoryConstants.BABY));
+      add(categoryDao.getCategoryByName(CategoryConstants.PERSONAL_CARE));
+      add(categoryDao.getCategoryByName(CategoryConstants.SERVICES));
+      add(categoryDao.getCategoryByName(CategoryConstants.SPORTS));*/
         
         //TODO: rewrite   
     }

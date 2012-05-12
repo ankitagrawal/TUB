@@ -1,38 +1,27 @@
 package com.hk.web.action.admin.catalog;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.DontValidate;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
+import com.akube.framework.stripes.action.BaseAction;
+import com.hk.constants.core.PermissionConstants;
+import com.hk.domain.catalog.product.Product;
+import com.hk.pact.dao.catalog.category.CategoryDao;
+import com.hk.pact.dao.catalog.product.ProductDao;
+import com.hk.util.AmazonXslGenerator;
+import com.hk.util.XslGenerator;
+import com.hk.web.BatchProcessWorkManager;
+import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.SimpleError;
 import net.sourceforge.stripes.validation.ValidationMethod;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-import com.akube.framework.stripes.action.BaseAction;
-import com.hk.constants.core.PermissionConstants;
-import com.hk.domain.catalog.product.Product;
-import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
-import com.hk.pact.dao.catalog.product.ProductDao;
-import com.hk.util.AmazonXslGenerator;
-import com.hk.util.XslGenerator;
-import com.hk.web.BatchProcessWorkManager;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 @Secure(hasAnyPermissions = { PermissionConstants.DOWNLOAD_PRDOUCT_CATALOG })
 @Component
@@ -46,7 +35,7 @@ public class GenerateExcelAction extends BaseAction {
     @Autowired
     BatchProcessWorkManager  workManager;
     @Autowired
-    CategoryDaoImpl              categoryDao;
+    CategoryDao categoryDao;
 
     // @Named(Keys.Env.adminDownloads)
     @Value("#{hkEnvProps['adminDownloads']}")
@@ -66,7 +55,7 @@ public class GenerateExcelAction extends BaseAction {
 
     @ValidationMethod(on = { "generateCatalogByCategory", "generateCatalogBySubCategory" })
     public void validateCategory() {
-        if (categoryDao.find(category) == null) {
+        if (categoryDao.getCategoryByName(category) == null) {
             getContext().getValidationErrors().add("1", new SimpleError("Category not found"));
         }
     }

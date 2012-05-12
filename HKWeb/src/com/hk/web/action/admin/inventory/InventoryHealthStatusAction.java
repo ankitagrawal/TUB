@@ -111,11 +111,11 @@ public class InventoryHealthStatusAction extends BasePaginatedAction {
     @ValidationMethod(on = { "generateWHInventoryExcel" })
     public void validateCategory() {
         if (primaryCategory != null & subCategory == null) {
-            if (categoryDao.find(Category.getNameFromDisplayName(primaryCategory)) == null) {
+            if (categoryDao.getCategoryByName(Category.getNameFromDisplayName(primaryCategory)) == null) {
                 getContext().getValidationErrors().add("1", new SimpleError("Category not found.Enter valid category."));
             }
         } else if (subCategory != null & primaryCategory == null) {
-            if (categoryDao.find(Category.getNameFromDisplayName(subCategory)) == null) {
+            if (categoryDao.getCategoryByName(Category.getNameFromDisplayName(subCategory)) == null) {
                 getContext().getValidationErrors().add("1", new SimpleError("Category not found.Enter valid category."));
             }
         } else if (primaryCategory != null & subCategory != null) {

@@ -34,7 +34,7 @@ import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.combo.Combo;
-import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
+import com.hk.pact.dao.catalog.category.CategoryDao;
 import com.hk.pact.dao.catalog.combo.ComboDao;
 import com.hk.pact.dao.catalog.product.ProductDao;
 import com.hk.pact.dao.core.SupplierDao;
@@ -69,7 +69,7 @@ public class BulkEditProductAction extends BasePaginatedAction {
     @Autowired
     private CategoryService       categoryService;
     @Autowired
-    CategoryDaoImpl               categoryDao;
+    CategoryDao                   categoryDao;
     @Autowired
     XslParser                     xslParser;
 
@@ -85,7 +85,7 @@ public class BulkEditProductAction extends BasePaginatedAction {
         }
 
         if (!StringUtils.isBlank(category)) {
-            if (categoryDao.find(category) == null) {
+            if (categoryDao.getCategoryByName(category) == null) {
                 getContext().getValidationErrors().add("1", new SimpleError("Category not found"));
             }
         }

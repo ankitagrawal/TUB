@@ -49,7 +49,7 @@ public class EmailListByCategoryAction extends BaseAction {
     }
 
     /*
-     * public Resolution showMailingList() { Category cat = categoryDao.find(category);
+     * public Resolution showMailingList() { Category cat = categoryDao.getCategoryByName(category);
      * this.setUserList(mailingListManager.getUserList(cat));
      * this.setMailingListCSV_URL("mailingList/"+cat+"MailingList.csv"); //return new
      * RedirectResolution(EmailAListByCategoryAction.class).addParameter("mailingList", mailingList); return new

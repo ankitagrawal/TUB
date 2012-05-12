@@ -1,3 +1,4 @@
+<%@ page import="com.hk.domain.catalog.category.Category" %>
 <%@ page import="com.hk.dto.menu.MenuNode" %>
 <%@ page import="com.hk.helper.MenuHelper" %>
 <%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
@@ -26,7 +27,7 @@
     // this is passed through an attribute in layout-render tag
     pageContext.setAttribute("filterUrlFragment", urlFragment);
 
-    Category category = categoryDao.find(menuNode.getSlug());
+    Category category = categoryDao.getCategoryByName(menuNode.getSlug());
     pageContext.setAttribute("filterCategory", category);
 
     String currentBrand = request.getParameter("brand");
@@ -38,14 +39,14 @@
     }
     Category secondaryCategory = null;
     if (menuNode.getParentNode() != null) {
-      secondaryCategory = categoryDao.find(menuNode.getParentNode().getSlug());
+      secondaryCategory = categoryDao.getCategoryByName(menuNode.getParentNode().getSlug());
       if (secondaryCategory != null) {
       categoryNames.add(secondaryCategory.getName());
     }
     }
     Category primaryCategory = null;
     if (menuNode.getParentNode() != null && menuNode.getParentNode().getParentNode() != null) {
-      primaryCategory = categoryDao.find(menuNode.getParentNode().getParentNode().getSlug());
+      primaryCategory = categoryDao.getCategoryByName(menuNode.getParentNode().getParentNode().getSlug());
       if (primaryCategory != null) {
       categoryNames.add(primaryCategory.getName());
     }

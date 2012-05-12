@@ -436,7 +436,7 @@ public class ReportAction extends BaseAction {
         /*
          * System.out.println("categoryList: " + categoryList); List<Category> applicableCategories = new ArrayList<Category>();
          * if (categoryList != null && categoryList.size() > 0) { for (String category : categoryList) { if (category !=
-         * null && !category.equals("")) { Category cat = categoryDao.find(category); if (cat != null)
+         * null && !category.equals("")) { Category cat = categoryDao.getCategoryByName(category); if (cat != null)
          * applicableCategories.add(cat); } } } if (applicableCategories.size() == 0) {
          * applicableCategories.addAll(categoryDao.getPrimaryCategories()); } Double orderLevelDiscounts = 0D; Set<Order>
          * distinctOrderBucket = new HashSet<Order>(); for (Category applicableCategory : applicableCategories) {
