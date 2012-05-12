@@ -368,7 +368,7 @@
   </c:choose>
 
         <span class="sml">
-        (<s:link beanclass="mhc.web.action.admin.SearchTicketAction" event="search" target="_blank">
+        (<s:link beanclass="com.hk.web.action.admin.ticket.SearchTicketAction" event="search" target="_blank">
           View Tickets
           <s:param name="ticketFilterDto.associatedLogin" value="${order.user.email}"/>
         </s:link>) <br/>
@@ -388,11 +388,11 @@
 
   <i><fmt:formatDate value="${order.payment.createDate}" type="both"/></i> <br/>
       <span class="sml">
-        <s:link beanclass="mhc.web.action.admin.CreateTicketAction" event="createOrderRelatedTicket">
+        <s:link beanclass="com.hk.web.action.admin.ticket.CreateTicketAction" event="createOrderRelatedTicket">
           Create Ticket
           <s:param name="order" value="${order.id}"/>
         </s:link> <br/>
-        <s:link beanclass="mhc.web.action.admin.SearchTicketAction" event="search" target="_blank">
+        <s:link beanclass="com.hk.web.action.admin.ticket.SearchTicketAction" event="search" target="_blank">
           View Tickets
           <s:param name="ticketFilterDto.associatedOrderId" value="${order.id}"/>
         </s:link>
@@ -429,7 +429,8 @@
                                        label="name"/>
           </s:select>
         </s:form>
-        <s:link beanclass="mhc.web.action.admin.SetDefaultCourierAction" event="pre" class="setAsDefaultCourierLink">
+        <s:link
+            beanclass="com.hk.web.action.admin.courier.SetDefaultCourierAction" event="pre" class="setAsDefaultCourierLink">
           Set as default
           <s:param name="address" value="${order.address.id}"/>
         </s:link>
@@ -438,7 +439,7 @@
 
     <c:if test="${order.orderStatus.id == orderStatusPending || order.orderStatus.id == orderStatusHold}">
       <tr>
-        <td><s:link beanclass="mhc.web.action.admin.ChangeOrderAddressAction" event="pre">
+        <td><s:link beanclass="com.hk.web.action.admin.address.ChangeOrderAddressAction" event="pre">
           <img src="<hk:vhostImage/>/images/admin/icon_edit_add.png" alt="Change Address"
                title="Change Address"/> Change Address
           <s:param name="order" value="${order.id}"/>
@@ -478,7 +479,7 @@
     <s:param name="order" value="${order}"/>
   </s:link>
 
-  <s:link beanclass="mhc.web.action.admin.order.OrderCommentAction" event="pre" target="_blank">
+  <s:link beanclass="com.hk.web.action.admin.order.OrderCommentAction" event="pre" target="_blank">
     <c:if test="${!empty order.comments}">
       <text style="color:red; font-weight:bold">Comments</text>
     </c:if>
