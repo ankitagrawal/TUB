@@ -23,7 +23,7 @@
   <meta name="keywords" content="${ca.seoData.metaKeyword}"/>
   <meta name="description" content="${ca.seoData.metaDescription}"/>
   <%
-    CategoryDao categoryDao = InjectorFactory.getInjector().getInstance(CategoryDao.class);
+    CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
     List<Category> applicableCategories = new ArrayList<Category>();
     applicableCategories.add(categoryDao.find("bp-monitor"));
     pageContext.setAttribute("applicableCategories", applicableCategories);
@@ -31,7 +31,7 @@
     Category services = categoryDao.find("services");
     pageContext.setAttribute("services", services);
     if (ca.getRootCategorySlug().equals("services")) {
-      MapIndiaDao mapIndiaDao = InjectorFactory.getInjector().getInstance(MapIndiaDao.class);
+      MapIndiaDao mapIndiaDao = ServiceLocatorFactory.getService(MapIndiaDao.class);
       Cookie preferredZoneCookie = BaseUtils.getCookie(request, HealthkartConstants.Cookie.preferredZone);
       if (preferredZoneCookie != null && preferredZoneCookie.getValue() != null) {
         MapIndia mapIndia = mapIndiaDao.findByCity(preferredZoneCookie.getValue());

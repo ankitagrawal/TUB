@@ -1,17 +1,15 @@
-<%@ page import="mhc.common.constants.EnumImageSize" %>
-<%@ page import="mhc.common.constants.PermissionConstants" %>
+<%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
-<%@ page import="mhc.service.dao.TaxDao" %>
-<%@ page import="mhc.web.json.HealthkartResponse" %>
-<%@ page import="mhc.service.dao.WarehouseDao" %>
-<%@ page import="app.bootstrap.guice.InjectorFactory" %>
+<%@ page import="com.hk.pact.dao.warehouse.WarehouseDao" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="mhc.web.action.admin.GRNAction" var="pa"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.inventory.GRNAction" var="pa"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="GRN">
 <%
-    WarehouseDao warehouseDao = InjectorFactory.getInjector().getInstance(WarehouseDao.class);
-    pageContext.setAttribute("whList", warehouseDao.listAll());
+    WarehouseDao warehouseDao = ServiceLocatorFactory.getService(WarehouseDao.class);
+    pageContext.setAttribute("whList", warehouseDao.getAllWarehouses());
   %>
 <s:layout-component name="htmlHead">
 
@@ -174,10 +172,10 @@
 </s:layout-component>
 <s:layout-component name="content">
 	<div style="display: none;">
-		<s:link beanclass="mhc.web.action.admin.EditPurchaseOrderAction" id="pvInfoLink" event="getPVDetails"></s:link>
+		<s:link beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction" id="pvInfoLink" event="getPVDetails"></s:link>
 	</div>
 
-	<s:form beanclass="mhc.web.action.admin.GRNAction">
+	<s:form beanclass="com.hk.web.action.admin.inventory.GRNAction">
 		<s:hidden name="grn" value="${pa.grn.id}"/>
 		<table>
 			<tr>

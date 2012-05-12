@@ -13,7 +13,7 @@
   <s:layout-component name="htmlHead">
 
  <%
-	MasterDataDao masterDataDao = InjectorFactory.getInjector().getInstance(MasterDataDao.class);
+	MasterDataDao masterDataDao = ServiceLocatorFactory.getService(MasterDataDao.class);
   List<ReconciliationType> reconciliationTypeList  = masterDataDao.getReconciliationTypeList();
   pageContext.setAttribute("reconciliationTypeList", reconciliationTypeList);
 %>
@@ -107,7 +107,7 @@
 
   <s:layout-component name="content">
     <div style="display: none;">
-      <s:link beanclass="mhc.web.action.admin.EditPurchaseOrderAction" id="pvInfoLink"
+      <s:link beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction" id="pvInfoLink"
               event="getPVDetails"></s:link>
     </div>
     <h2>Create/Edit Reconciliation Voucher</h2>

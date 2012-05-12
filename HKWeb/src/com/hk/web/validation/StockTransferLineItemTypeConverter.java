@@ -1,15 +1,13 @@
 package com.hk.web.validation;
 
-import java.util.Collection;
-import java.util.Locale;
-
-import net.sourceforge.stripes.validation.TypeConverter;
-import net.sourceforge.stripes.validation.ValidationError;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.hk.domain.inventory.StockTransferLineItem;
 import com.hk.pact.dao.BaseDao;
+import net.sourceforge.stripes.validation.TypeConverter;
+import net.sourceforge.stripes.validation.ValidationError;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Collection;
+import java.util.Locale;
 
 /**
  * Created by IntelliJ IDEA. User: Developer Date: May 1, 2012 Time: 11:00:52 AM To change this template use File |
@@ -26,7 +24,7 @@ public class StockTransferLineItemTypeConverter implements TypeConverter<StockTr
 
     public StockTransferLineItem convert(String id, Class<? extends StockTransferLineItem> aClass, Collection<ValidationError> validationErrors) {
         // StockTransferLineItemDao stockTransferLineItemDao =
-        // InjectorFactory.getInjector().getInstance(StockTransferLineItemDao.class);
+        // ServiceLocatorFactory.getService(StockTransferLineItemDao.class);
         Long idLong = null;
         try {
             idLong = Long.parseLong(id);

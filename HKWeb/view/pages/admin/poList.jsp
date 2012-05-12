@@ -8,7 +8,7 @@
 <c:set var="approved" value="<%=EnumPurchaseOrderStatus.Approved.getId()%>"/>
 <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
  <%
-    WarehouseDao warehouseDao = InjectorFactory.getInjector().getInstance(WarehouseDao.class);
+    WarehouseDao warehouseDao = ServiceLocatorFactory.getService(WarehouseDao.class);
     pageContext.setAttribute("whList", warehouseDao.listAll());
   %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Purchase Order List">
@@ -108,7 +108,7 @@
           </td>
           <td>
             <c:forEach var="grn" items="${purchaseOrder.goodsReceivedNotes}">
-              <s:link beanclass="mhc.web.action.admin.GRNAction" event="view" target="_blank">
+              <s:link beanclass="com.hk.web.action.admin.inventory.GRNAction" event="view" target="_blank">
                 <s:param name="grn" value="${grn.id}"/>
                 ${grn.id}
               </s:link>
@@ -116,7 +116,7 @@
             </c:forEach>
           </td>
           <td>
-            <s:link beanclass="mhc.web.action.admin.EditPurchaseOrderAction">Edit
+            <s:link beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction">Edit
               <s:param name="purchaseOrder" value="${purchaseOrder.id}"/></s:link>
             &nbsp;
             <s:link beanclass="mhc.web.action.admin.POAction" event="print" target="_blank">Print

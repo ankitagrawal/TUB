@@ -6,7 +6,7 @@
 <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Stock Transfer List">
 	<%
-		WarehouseDao warehouseDao = InjectorFactory.getInjector().getInstance(WarehouseDao.class);
+		WarehouseDao warehouseDao = ServiceLocatorFactory.getService(WarehouseDao.class);
 		pageContext.setAttribute("whList", warehouseDao.listAll());
 	%>
 	<s:layout-component name="htmlHead">

@@ -97,7 +97,7 @@
           </td>
           <td>
             <c:forEach var="grn" items="${purchaseInvoice.goodsReceivedNotes}">
-              <s:link beanclass="mhc.web.action.admin.GRNAction" event="view" target="_blank">
+              <s:link beanclass="com.hk.web.action.admin.inventory.GRNAction" event="view" target="_blank">
                 <s:param name="grn" value="${grn.id}"/>
                 ${grn.id}
               </s:link>

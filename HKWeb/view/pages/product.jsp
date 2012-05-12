@@ -12,7 +12,7 @@
 <c:set var="imageMediumSize" value="<%=EnumImageSize.MediumSize%>"/>
 <c:set var="imageSmallSize" value="<%=EnumImageSize.TinySize%>"/>
 <%
-  CategoryDao categoryDao = InjectorFactory.getInjector().getInstance(CategoryDao.class);
+  CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
   Category eyeGlass = categoryDao.find("eyeglasses");
   pageContext.setAttribute("eyeGlass", eyeGlass);
 

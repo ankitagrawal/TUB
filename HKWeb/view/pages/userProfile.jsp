@@ -21,7 +21,7 @@
 <s:layout-component name="lhsContent">
   <jsp:include page="myaccount-nav.jsp"/>
   <%
-    UserService userService = InjectorFactory.getInjector().getInstance(UserService.class);
+    UserService userService = ServiceLocatorFactory.getService(UserService.class);
   %>
   <c:set var="productVariants" value="<%=userService.getRecentlyOrderedProductVariantsForUser(maa.getUser())%>"/>
   <c:set var="recentOrders" value="<%=userService.getOrdersForUserSortedByDate(maa.getUser())%>"/>

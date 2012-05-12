@@ -12,8 +12,8 @@
 
 <s:useActionBean beanclass="mhc.web.action.admin.SearchOrderAndEnterCourierInfoAction" var="shipmentQueueBean"/>
 <%
-  BoxSizeDao boxSizeDao = InjectorFactory.getInjector().getInstance(BoxSizeDao.class);
-  MasterDataDao masterDataDao = InjectorFactory.getInjector().getInstance(MasterDataDao.class);
+  BoxSizeDao boxSizeDao = ServiceLocatorFactory.getService(BoxSizeDao.class);
+  MasterDataDao masterDataDao = ServiceLocatorFactory.getService(MasterDataDao.class);
   pageContext.setAttribute("boxSizeList", boxSizeDao.listAll());
   pageContext.setAttribute("courierList", masterDataDao.getCourierList());
 %>

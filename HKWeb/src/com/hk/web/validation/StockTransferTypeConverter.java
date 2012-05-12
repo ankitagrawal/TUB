@@ -25,7 +25,7 @@ public class StockTransferTypeConverter implements TypeConverter<StockTransfer> 
     private BaseDao baseDao;
 
     public StockTransfer convert(String id, Class<? extends StockTransfer> aClass, Collection<ValidationError> validationErrors) {
-        // StockTransferDao stockTransferDao = InjectorFactory.getInjector().getInstance(StockTransferDao.class);
+        // StockTransferDao stockTransferDao = ServiceLocatorFactory.getService(StockTransferDao.class);
         Long idLong = null;
         try {
             idLong = Long.parseLong(id);

@@ -8,12 +8,12 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-definition>
   <%
-    ProductDao productDao = InjectorFactory.getInjector().getInstance(ProductDao.class);
+    ProductDao productDao = ServiceLocatorFactory.getService(ProductDao.class);
     String productId = (String) pageContext.getAttribute("productId");
     Product product = productDao.find(productId);
     pageContext.setAttribute("product", product);
 
-    AffiliateDao affiliateDao = InjectorFactory.getInjector().getInstance(AffiliateDao.class);
+    AffiliateDao affiliateDao = ServiceLocatorFactory.getService(AffiliateDao.class);
     Affiliate affiliate = null;
     Long affiliateId = (Long) pageContext.getAttribute("affiliateId");
     if (affiliateId != null) {

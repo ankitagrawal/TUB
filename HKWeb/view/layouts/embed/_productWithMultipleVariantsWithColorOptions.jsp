@@ -8,7 +8,7 @@
 
 <s:layout-definition>
   <%
-    ProductDao productDao = InjectorFactory.getInjector().getInstance(ProductDao.class);
+    ProductDao productDao = ServiceLocatorFactory.getService(ProductDao.class);
     String productId = (String) pageContext.getAttribute("productId");
     Product product = productDao.find(productId);
     pageContext.setAttribute("product", product);

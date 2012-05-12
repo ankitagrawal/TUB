@@ -11,12 +11,12 @@
 
 
   <%
-    ProductDao productDao = InjectorFactory.getInjector().getInstance(ProductDao.class);
+    ProductDao productDao = ServiceLocatorFactory.getService(ProductDao.class);
     String product_productThumbId = (String) pageContext.getAttribute("productId");
     Product product_productThumb = productDao.find(product_productThumbId);
     pageContext.setAttribute("product", product_productThumb);
 
-    ComboDao comboDao = InjectorFactory.getInjector().getInstance(ComboDao.class);
+    ComboDao comboDao = ServiceLocatorFactory.getService(ComboDao.class);
     Combo combo = comboDao.find(product_productThumbId);
     pageContext.setAttribute("combo", combo);
   %>

@@ -45,7 +45,7 @@
         <tr>
           <td>${debitNote.id}</td>
             <%--<td>
-              <s:link beanclass="mhc.web.action.admin.GRNAction" event="view">
+              <s:link beanclass="com.hk.web.action.admin.inventory.GRNAction" event="view">
                 <s:param name="grn" value="${debitNote.goodsReceivedNote.id}"/>
                 ${debitNote.goodsReceivedNote.id}
               </s:link>

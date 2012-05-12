@@ -10,8 +10,8 @@
 <s:layout-definition>
 
   <%
-    MenuHelper menuHelper = InjectorFactory.getInjector().getInstance(MenuHelper.class);
-    CategoryDao categoryDao = InjectorFactory.getInjector().getInstance(CategoryDao.class);
+    MenuHelper menuHelper = ServiceLocatorFactory.getService(MenuHelper.class);
+    CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
 
     String urlFragment = (String) pageContext.getAttribute("filterUrlFragment");
 
