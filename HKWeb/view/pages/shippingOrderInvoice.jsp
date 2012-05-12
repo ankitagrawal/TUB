@@ -1,8 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="s" uri="http://stripes.sourceforge.net/stripes-dynattr.tld" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ page import="com.hk.constants.core.EnumRole" %>
-<%@ page import="com.hk.constants.payment.EnumPaymentMode" %>
+<%@ page import="mhc.common.constants.EnumPaymentMode" %>
+<%@ page import="mhc.common.constants.EnumRole" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="paymentMode_COD" value="<%=EnumPaymentMode.COD.getId()%>"/>
@@ -58,7 +58,7 @@
   <link href="<hk:vhostCss/>/css/960.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
-<s:useActionBean beanclass="com.hk.web.action.core.accounting.SOInvoiceAction" event="pre" var="orderSummary"/>
+<s:useActionBean beanclass="mhc.web.action.SOInvoiceAction" event="pre" var="orderSummary"/>
 <c:set var="b2bUser" value="<%=EnumRole.B2B_USER.getRoleName()%>"/>
 <c:set var="baseOrder" value="${orderSummary.shippingOrder.baseOrder}"/>
 <c:set var="address" value="${baseOrder.address}"/>
@@ -78,7 +78,7 @@
 <div class="grid_4">
   <div style="float: right;">
     <c:choose>
-      <c:when test="${orderSummary.shippingOrder.baseOrder.user.login == 'support@madeinhealth.com'}">
+      <c:when test="${orderSummary.shippingOrder.baseOrder.store.id == 2}">
         <img src="${pageContext.request.contextPath}/images/mih-logo.jpg" alt="MadeInHealth Logo"/>
       </c:when>
       <c:otherwise>
