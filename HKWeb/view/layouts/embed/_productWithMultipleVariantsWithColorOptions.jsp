@@ -1,8 +1,8 @@
-<%@ page import="mhc.domain.Product" %>
-<%@ page import="mhc.service.dao.ProductDao" %>
-<%@ page import="app.bootstrap.guice.InjectorFactory" %>
-<%@ page import="mhc.common.constants.PermissionConstants" %>
-<%@ page import="mhc.common.constants.EnumImageSize" %>
+<%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
+<%@ page import="com.hk.domain.catalog.product.Product" %>
+<%@ page import="com.hk.pact.dao.catalog.product.ProductDao" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -61,7 +61,7 @@
 
   <s:form beanclass="com.hk.web.action.core.cart.AddToCartAction" class="addToCartForm">
     <div style="display: none;">
-      <s:link beanclass="mhc.web.action.ProductVariantAction" id="updateProductVariantImageLink"
+      <s:link beanclass="com.hk.web.action.core.catalog.product.ProductVariantAction" id="updateProductVariantImageLink"
               event="changeProductLink"/>
         <%--<s:link beanclass="com.hk.web.action.core.catalog.product.ProductAction" id="updateProductImageLink" event="changeProductImage"/>--%>
     </div>
@@ -103,7 +103,7 @@
         <c:when test="${product.outOfStock}">
           <span class="outOfStock">Sold Out</span>
 
-              <div align="center"><s:link beanclass="mhc.web.action.NotifyMeAction" class="notifyMe button_orange"><b>Notify
+              <div align="center"><s:link beanclass="com.hk.web.action.core.user.NotifyMeAction" class="notifyMe button_orange"><b>Notify
                                                                                                                       Me!!</b>
                 <s:param name="productVariant" value="${product.productVariants[0]}"/> </s:link></div>
          </c:when>
@@ -132,7 +132,7 @@
         <s:param name="productVariant" value="${product.productVariants[0]}"/>
       </s:link>
       &nbsp;|&nbsp;
-      <s:link beanclass="mhc.web.action.ProductVariantAction" event="renderManageImages" target="_blank" class="popup">Manage
+      <s:link beanclass="com.hk.web.action.core.catalog.product.ProductVariantAction" event="renderManageImages" target="_blank" class="popup">Manage
                                                                                                                        Images
         <s:param name="productVariant" value="${product.productVariants[0]}"/>
       </s:link>

@@ -8,7 +8,7 @@
 <s:layout-render name="/layouts/defaultAdmin.jsp">
    <%
     WarehouseDao warehouseDao = ServiceLocatorFactory.getService(WarehouseDao.class);
-    pageContext.setAttribute("whList", warehouseDao.listAll());
+    pageContext.setAttribute("whList", warehouseDao.getAllWarehouses());
   %>
   <s:layout-component name="htmlHead">
     <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>

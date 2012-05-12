@@ -1,5 +1,5 @@
-<%@ page import="app.bootstrap.guice.InjectorFactory" %>
-<%@ page import="mhc.service.dao.WarehouseDao" %>
+<%@ page import="com.hk.pact.dao.warehouse.WarehouseDao" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
@@ -11,7 +11,7 @@
 
 		<%
 			WarehouseDao warehouseDao = ServiceLocatorFactory.getService(WarehouseDao.class);
-			pageContext.setAttribute("whList", warehouseDao.listAll());
+			pageContext.setAttribute("whList", warehouseDao.getAllWarehouses());
 		%>
 
 

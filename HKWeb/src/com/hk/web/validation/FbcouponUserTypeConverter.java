@@ -34,7 +34,7 @@ public class FbcouponUserTypeConverter implements TypeConverter<FbcouponUser> {
             return null;
         }
         return getBaseDao().get(FbcouponUser.class, fbcouponUserId);
-        // return fbcouponUserDao.find(fbcouponUserId);
+        // return fbcouponuserDao.getUserById(fbcouponUserId);
     }
 
     public BaseDao getBaseDao() {

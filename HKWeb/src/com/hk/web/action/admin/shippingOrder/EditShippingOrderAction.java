@@ -90,7 +90,7 @@ public class EditShippingOrderAction extends BaseAction {
     @Secure(hasAnyPermissions = { PermissionConstants.DELETE_LINEITEM }, authActionBean = AdminPermissionAction.class)
     public Resolution deleteLineItem() {
         /*
-         * User user = null; if (getPrincipal() != null) { user = userDao.find(getPrincipal().getId()); } String
+         * User user = null; if (getPrincipal() != null) { user = userDao.getUserById(getPrincipal().getId()); } String
          * deletedItem = "Deleted Item: "; Double amountToBeLess = lineItem.getHkPrice() * lineItem.getQty() -
          * lineItem.getDiscountOnHkPrice(); LineItem orderLevelDiscountLineItem =
          * lineItemDao.getOrderLevelDiscountLineItem(lineItem); if (orderLevelDiscountLineItem != null) { amountToBeLess -=

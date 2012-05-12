@@ -55,7 +55,7 @@ public class OrderOnHoldAction extends BaseAction {
     @JsonHandler
     public Resolution pre() {
         /*
-         * User loggedOnUser = null; if (getPrincipal() != null) { loggedOnUser = userDao.find(getPrincipal().getId()); }
+         * User loggedOnUser = null; if (getPrincipal() != null) { loggedOnUser = userDao.getUserById(getPrincipal().getId()); }
          * order = orderManager.putOrderOnHold(order, loggedOnUser); Map<String, Object> data = new HashMap<String,
          * Object>(); data.put("orderStatus", JsonUtils.hydrateHibernateObject(order.getOrderStatus()));
          * HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "", data);
@@ -93,7 +93,7 @@ public class OrderOnHoldAction extends BaseAction {
 
         /*
          * order.setOrderStatus(orderStatusDao.find(EnumOrderStatus.Pending.getId())); order = orderDao.save(order);
-         * User loggedOnUser = null; if (getPrincipal() != null) { loggedOnUser = userDao.find(getPrincipal().getId()); }
+         * User loggedOnUser = null; if (getPrincipal() != null) { loggedOnUser = userDao.getUserById(getPrincipal().getId()); }
          *//**
              * Order lifecycle activity logging - Order Removed OnHold
              */

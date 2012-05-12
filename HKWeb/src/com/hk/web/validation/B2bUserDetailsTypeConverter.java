@@ -33,7 +33,7 @@ public class B2bUserDetailsTypeConverter implements TypeConverter<B2bUserDetails
       return null;
     } else {
         return getBaseDao().get(B2bUserDetails.class, idLong);
-     // return userDao.find(idLong);
+     // return userDao.getUserById(idLong);
     }
   }
   
