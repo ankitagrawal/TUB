@@ -495,7 +495,7 @@
               ${shippingOrder.gatewayOrderId} </s:link><br/>
             Status: ${shippingOrder.orderStatus.name} <br/>
             <c:if test="${shippingOrder.shipment !=null}">
-              Track Link: <s:link beanclass="mhc.web.action.TrackCourierAction" target="_blank">
+              Track Link: <s:link beanclass="com.hk.web.action.core.order.TrackCourierAction" target="_blank">
               <s:param name="courierId" value="${shippingOrder.shipment.courier.id}"/>
               <s:param name="trackingId" value="${shippingOrder.shipment.trackingId}"/>
               ${shippingOrder.shipment.trackingId}

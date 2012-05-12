@@ -1,12 +1,5 @@
 package com.hk.impl.dao.affiliate;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.stereotype.Repository;
-
 import com.akube.framework.dao.Page;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.core.RoleConstants;
@@ -16,6 +9,12 @@ import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.affiliate.AffiliateDao;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public class AffiliateDaoImpl extends BaseDaoImpl implements AffiliateDao {
@@ -36,7 +35,11 @@ public class AffiliateDaoImpl extends BaseDaoImpl implements AffiliateDao {
         return (Affiliate) findUniqueByNamedParams(queryString, new String[] { "userId" }, new Object[] { userId });
     }
 
-    @SuppressWarnings("unchecked")
+	public Affiliate getAffiliateById(Long affiliateId) {
+		return get(Affiliate.class , affiliateId);
+	}
+
+	@SuppressWarnings("unchecked")
     public List<AffiliateCategoryCommission> getAffiliatePlan(Affiliate affiliate) {
         String queryString = "from AffiliateCategoryCommission acc where acc.affiliate = :affiliate";
         return findByNamedParams(queryString, new String[] { "affiliate" }, new Object[] { affiliate });

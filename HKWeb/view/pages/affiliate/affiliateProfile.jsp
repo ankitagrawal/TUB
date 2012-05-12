@@ -1,7 +1,7 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="mhc.web.action.affiliate.AffiliateAccountAction" var="affiliateBean"/>
+<s:useActionBean beanclass="com.hk.web.action.core.affiliate.AffiliateAccountAction" var="affiliateBean"/>
 <s:layout-render name="/layouts/default.jsp">
   <s:layout-component name="heading">Your Address</s:layout-component>
   <s:layout-component name="lhsContent">
@@ -13,7 +13,7 @@
     <h4 class="strikeline"> Basic Information</h4>
 
     <div style="margin-top:15px"></div>
-    <s:form beanclass="mhc.web.action.affiliate.AffiliateAccountAction">
+    <s:form beanclass="com.hk.web.action.core.affiliate.AffiliateAccountAction">
       <s:errors/>
 
       <div class="row">

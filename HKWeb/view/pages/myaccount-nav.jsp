@@ -8,9 +8,9 @@
           id="myAccountLink">MY ACCOUNT</span> </s:link>
     </li>
     <li>
-      <s:link beanclass="mhc.web.action.ReferralProgramAction" title="Referral Program"> <span id="rpLink">Referral Program</span> </s:link>
+      <s:link beanclass="com.hk.web.action.core.referral.ReferralProgramAction" title="Referral Program"> <span id="rpLink">Referral Program</span> </s:link>
     </li>
-    <li><s:link beanclass="mhc.web.action.RewardPointTxnStatementAction" title="RewardPointTxnStatement"> <span
+    <li><s:link beanclass="com.hk.web.action.core.discount.RewardPointTxnStatementAction" title="RewardPointTxnStatement"> <span
         id="rpsLink">Reward Point Txn Statement</span> </s:link>
     </li>
     <%--<shiro:hasAnyRoles name="<%=RoleConstants.AFFILIATE%>">--%>
@@ -21,15 +21,15 @@
     <%--</shiro:hasAnyRoles>--%>
     <shiro:hasRole name="<%=RoleConstants.HK_AFFILIATE%>">
       <li>
-        <s:link beanclass="mhc.web.action.affiliate.AffiliateAccountAction" title="Affiliate Account"><span
+        <s:link beanclass="com.hk.web.action.core.affiliate.AffiliateAccountAction" title="Affiliate Account"><span
             id="affiliateAccountLink">Affiliate Account</span> </s:link>
       </li>
-      <li><s:link beanclass="mhc.web.action.affiliate.AffiliateAccountAction" event="checksToAffiliate"
+      <li><s:link beanclass="com.hk.web.action.core.affiliate.AffiliateAccountAction" event="checksToAffiliate"
                   title="Checks sent to me">
         <span id="myChecksLink">Checks Sent</span> </s:link></li>
-      <li><s:link beanclass="mhc.web.action.affiliate.AffiliateStatisticsAction" title="Statistics">
+      <li><s:link beanclass="com.hk.web.action.core.affiliate.AffiliateStatisticsAction" title="Statistics">
         <span id="myTrafficStats">Statistics</span> </s:link></li>
-      <li><s:link beanclass="mhc.web.action.affiliate.AffiliateInsightsAction" title="Insights">
+      <li><s:link beanclass="com.hk.web.action.core.affiliate.AffiliateInsightsAction" title="Insights">
         <span id="myReferredOrders">Insights</span> </s:link></li>
     </shiro:hasRole>
   </ul>
