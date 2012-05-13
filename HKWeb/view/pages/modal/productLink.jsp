@@ -17,7 +17,7 @@
     Affiliate affiliate = null;
     Long affiliateId = (Long) pageContext.getAttribute("affiliateId");
     if (affiliateId != null) {
-      affiliate = (Affiliate)affiliateDao.get(Affiliate.class, affiliateId);
+      affiliate = affiliateDao.getAffiliateById(affiliateId);
     }
     pageContext.setAttribute("affiliate", affiliate);
   %>

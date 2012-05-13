@@ -5,7 +5,7 @@
 
 <s:useActionBean beanclass="com.hk.web.action.admin.order.SplitBaseOrderAction" var="splitBaseOrderAction"/>
 <%
-  WarehouseService warehouseService = (WarehouseService) ServiceLocatorFactory.getService(WarehouseService.class);
+  WarehouseService warehouseService = ServiceLocatorFactory.getService(WarehouseService.class);
   pageContext.setAttribute("warehouses", warehouseService.getAllWarehouses());
   pageContext.setAttribute("corporateOffice", warehouseService.getCorporateOffice());
 %>

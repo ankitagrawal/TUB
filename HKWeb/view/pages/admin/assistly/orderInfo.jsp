@@ -7,7 +7,7 @@
   <s:layout-component name="content">
     <p>
       Invoice for Order#${orderSummary.order.gatewayOrderId}
-      [<s:link beanclass="web.action.admin.order.search.SearchOrderAction" event="searchOrders" target="_blank">
+      [<s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" event="searchOrders" target="_blank">
         <s:param name="orderId" value="${orderSummary.order.id}"/>
         search order
       </s:link>]

@@ -6,9 +6,9 @@
 
   <s:layout-component name="content">
 
-    <s:useActionBean beanclass="com.hk.web.action.admin.ChangeOrderAddressAction" var="addressBean" event="edit"/>
+    <s:useActionBean beanclass="com.hk.web.action.admin.address.ChangeOrderAddressAction" var="addressBean" event="edit"/>
 
-    <s:form beanclass="com.hk.web.action.admin.ChangeOrderAddressAction">
+    <s:form beanclass="com.hk.web.action.admin.address.ChangeOrderAddressAction">
       <s:param name="newAddress.user" value="${addressBean.order.user}"/>
       Name: <s:text name="newAddress.name"/><br/>
       Address line1: <s:text name="newAddress.line1"/><br/>
@@ -20,7 +20,7 @@
       <s:hidden name="order" value="${addressBean.order}"/>
       Copy This Address to user's address book <s:checkbox name="copyToUserAddressBook"/><br/>
       <s:submit name="save" value="save"/>
-      <s:link beanclass="com.hk.web.action.admin.ChangeOrderAddressAction">
+      <s:link beanclass="com.hk.web.action.admin.address.ChangeOrderAddressAction">
         cancel
         <s:param name="order" value="${addressBean.order.id}"/>
       </s:link>

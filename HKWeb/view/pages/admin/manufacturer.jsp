@@ -54,10 +54,10 @@
                     target="_blank">Edit
               <s:param name="manufacturer" value="${manufacturerVar.id}"/></s:link>
             &nbsp;
-            <s:link beanclass="com.hk.web.action.admin.ManufacturerAddressAction"
+            <s:link beanclass="com.hk.web.action.admin.catalog.ManufacturerAddressAction"
                     event="getManufacturerAddresses" target="_blank">get addresses
               <s:param name="manufacturer" value="${manufacturerVar.id}"/></s:link>
-            <s:link beanclass="com.hk.web.action.admin.ManufacturerAddressAction" event="addOrEditNewAddresses"
+            <s:link beanclass="com.hk.web.action.admin.catalog.ManufacturerAddressAction" event="addOrEditNewAddresses"
                     target="_blank">add new address
               <s:param name="manufacturer" value="${manufacturerVar.id}"/></s:link>
           </td>

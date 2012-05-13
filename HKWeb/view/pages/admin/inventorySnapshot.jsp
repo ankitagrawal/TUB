@@ -3,7 +3,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="com.hk.web.action.admin.DoomDayInventorySnapshotAction" var="ddis"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.inventory.DoomDayInventorySnapshotAction" var="ddis"/>
 
 <s:layout-render name="/layouts/inventory.jsp" pageTitle="Search Batches for UPC/VariantID">
   <s:layout-component name="heading">
@@ -15,7 +15,7 @@
   </s:layout-component>
   <s:layout-component name="content">
     <div style="margin-top:100px" height="500px" align="center">
-      <s:form beanclass="com.hk.web.action.admin.DoomDayInventorySnapshotAction" autocomplete="off">
+      <s:form beanclass="com.hk.web.action.admin.inventory.DoomDayInventorySnapshotAction" autocomplete="off">
         <div id="savedVariant">
           <c:if test="${param['variantSaved'] == 'true'}">
             ${param['productVariantSaved']}

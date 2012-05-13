@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.admin.ChangeOrderAddressAction" var="orderBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.address.ChangeOrderAddressAction" var="orderBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Welcome">
   <s:layout-component name="heading">${orderBean.currentBreadcrumb.name}</s:layout-component>
@@ -30,7 +30,7 @@
             </s:link>
           </td>
           <td width="75">
-            <s:link beanclass="com.hk.web.action.admin.ChangeOrderAddressAction" event="edit">
+            <s:link beanclass="com.hk.web.action.admin.address.ChangeOrderAddressAction" event="edit">
               edit
               <s:param name="order" value="${orderBean.order.id}"/>
             </s:link>
