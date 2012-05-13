@@ -538,6 +538,22 @@ public class OrderManager {
         return order;
     }
 
+  public boolean isStepUpAllowed(CartLineItem cartLineItem) {
+    ProductVariant productVariant = cartLineItem.getProductVariant();
+    Product product = productVariant.getProduct();
+    boolean isService = false;
+    if (product.isService() != null && product.isService()) isService = true;
+    boolean isJit = false;
+    if (product.isJit() != null && product.isJit()) isJit = true;
+    if (!isJit && !isService) {
+      Long unbookedInventory = inventoryService.getAvailableUnbookedInventory(skuService.getSKUsForProductVariant(productVariant));
+      if (unbookedInventory != null && unbookedInventory > 0 && unbookedInventory < cartLineItem.getQty()) {
+        return false;
+      }
+    }
+    return true;
+  }
+
     /**
      * This method is responsible for updating the order status to shipped and sending order shipped emails. Email could
      * be order shiiped email order shipped email in parts or partial order shipped email. <p/> To check what type of

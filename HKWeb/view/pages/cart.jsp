@@ -2,6 +2,7 @@
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
 <%@ page import="com.hk.constants.catalog.product.EnumProductVariantPaymentType" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
+<%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="lineItem_Service_Postpaid" value="<%=EnumProductVariantPaymentType.Postpaid.getId()%>"/>
@@ -21,15 +22,20 @@
         var lineItemRow = $(this).parents('.lineItemRow');
         var lineItemId = lineItemRow.find('.lineItemId').val();
         var lineItemQty = $(this).val();
+        var elm = $(this);
         $.getJSON(
             $('#lineItemUpdateLink').attr('href'), {cartLineItem: lineItemId, "cartLineItem.qty": lineItemQty},
             function(responseData) {
+              if(responseData.code == '<%=HealthkartResponse.STATUS_OK%>'){
               _updateTotals(responseData);
               _updateLineItem(responseData, lineItemRow);
               //document.getElementById("freebieBanner").src = responseData.message;
               $(".freebieBanner").attr("src", responseData.message);
+              }else{
+                elm.val(responseData.data);
+              }
             }
-            );
+         );
       });
 
       $('.comboQty').blur(function() {
