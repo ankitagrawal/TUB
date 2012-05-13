@@ -22,6 +22,7 @@ import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.builder.CartLineItemBuilder;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.catalog.product.combo.ComboInstance;
 import com.hk.domain.catalog.product.combo.ComboInstanceHasProductVariant;
@@ -502,28 +503,36 @@ public class OrderManager {
         return orderPaymentReceieved(payment);
     }
 
-    public Order trimEmptyLineItems(Order order) {
-        if (order != null && order.getCartLineItems() != null && !(order.getCartLineItems()).isEmpty()) {
-            for (Iterator<CartLineItem> iterator = order.getCartLineItems().iterator(); iterator.hasNext();) {
-                CartLineItem lineItem = iterator.next();
-                if (lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Product.getId()) && lineItem.getQty() <= 0) {
-                    iterator.remove();
-                    getCartLineItemDao().delete(lineItem);
-                } else {
-                  //Max Qty Check for Last Possible Order based on available unbooked inventory
-                  ProductVariant productVariant = lineItem.getProductVariant();
-                  Long unbookedInventory = inventoryService.getAvailableUnbookedInventory(skuService.getSKUsForProductVariant(productVariant));
-                  if (unbookedInventory != null && unbookedInventory < lineItem.getQty()) {
-                    lineItem.setQty(unbookedInventory);
-                    cartLineItemService.save(lineItem);
-                    logger.debug("Set LineItem Qty equals to available unbooked Inventory: " + unbookedInventory + " for Variant:" + productVariant.getId());
-                  }
-                }
+  public Order trimEmptyLineItems(Order order) {
+    if (order != null && order.getCartLineItems() != null && !(order.getCartLineItems()).isEmpty()) {
+      for (Iterator<CartLineItem> iterator = order.getCartLineItems().iterator(); iterator.hasNext();) {
+        CartLineItem lineItem = iterator.next();
+        if (lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Product.getId())) {
+          if (lineItem.getQty() <= 0) {
+            iterator.remove();
+             getCartLineItemDao().delete(lineItem);
+          } else {
+            ProductVariant productVariant = lineItem.getProductVariant();
+            Product product = productVariant.getProduct();
+            boolean isService = false;
+            if (product.isService() != null && product.isService()) isService = true;
+            boolean isJit = false;
+            if (product.isJit() != null && product.isJit()) isJit = true;
+            if (!isJit && !isService) {
+              Long unbookedInventory = inventoryService.getAvailableUnbookedInventory(skuService.getSKUsForProductVariant(productVariant));
+              if (unbookedInventory != null && unbookedInventory < lineItem.getQty()) {
+                lineItem.setQty(unbookedInventory);
+                cartLineItemService.save(lineItem);
+                logger.debug("Set LineItem Qty equals to available unbooked Inventory: " + unbookedInventory + " for Variant:" + productVariant.getId());
+              }
             }
-            order = getOrderService().save(order);
+          }
         }
-        return order;
+      }
+      order = getOrderService().save(order);
     }
+    return order;
+  }
 
     /**
      * This method is responsible for updating the order status to shipped and sending order shipped emails. Email could
