@@ -84,13 +84,16 @@ public class ShippingOrderDaoImpl extends BaseDaoImpl implements ShippingOrderDa
      */
 
     public Long getBookedQtyOfSkuInQueue(List<Sku> skuList) {
+      Long qtyInQueue = 0L;
+      if(skuList != null && !skuList.isEmpty()){
         String query = "select sum(li.qty) from LineItem li " + "where li.sku in (:skuList) " + "and li.shippingOrder.shippingOrderStatus.id in (:orderStatusIdList) ";
-        Long qtyInQueue = (Long) getSession().createQuery(query).setParameterList("skuList", skuList).setParameterList("orderStatusIdList",
+        qtyInQueue = (Long) getSession().createQuery(query).setParameterList("skuList", skuList).setParameterList("orderStatusIdList",
                 EnumShippingOrderStatus.getShippingOrderStatusIDs(EnumShippingOrderStatus.getStatusForBookedInventory())).uniqueResult();
         if (qtyInQueue == null) {
             qtyInQueue = 0L;
         }
-        return qtyInQueue;
+      }
+      return qtyInQueue;
     }
 
     /**
