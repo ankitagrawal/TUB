@@ -1,4 +1,4 @@
-package rest.resource.product;
+package com.hk.rest.resource;
 
 
 import java.util.List;
@@ -9,6 +9,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.stereotype.Component;
 
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.sku.Sku;
@@ -23,6 +24,7 @@ import com.hk.util.json.JSONResponseBuilder;
  */
 
 @Path("/product/variant")
+@Component
 public class ProductVariantResource {
 
 
@@ -30,7 +32,8 @@ public class ProductVariantResource {
   private InventoryService inventoryService;
   private SkuService skuService;
 
-
+  
+  
   @GET
   @Path("/{variantId}/price")
   @Produces("application/json")

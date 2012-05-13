@@ -22,8 +22,6 @@
 		<fileset file="${lib.root.dir}/stripes/stripes-1.5.3-patched.jar" />
 		<fileset file="${lib.root.dir}/solr/apache-solr-solrj-3.3.0.jar" />
 		<fileset file="${lib.root.dir}/hibernate/hibernate-annotations-3.4.0.GA.jar" />
-    <fileset file="${lib.root.dir}/rest/jackson-core-lgpl-1.4.2.jar" />
-    <fileset file="${lib.root.dir}/rest/jaxrs-api-2.3.0.GA.jar" />
 		<fileset file="${lib.root.dir}/hibernate/hibernate-core-3.3.1.GA.jar" />
 		<fileset file="${project.common.dir}/dependencies/javaee.jar" />
 		<fileset file="${project.common.dir}/dependencies/testng-5.8-jdk15.jar" />

@@ -13,7 +13,7 @@
         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 
 	<context:annotation-config />
-	<context:component-scan base-package="com.hk, web.action" />
+	<context:component-scan base-package="com.hk" />
 
 	<bean id="serviceLocatorFactory"
 		class="com.hk.service.ServiceLocatorFactory" />

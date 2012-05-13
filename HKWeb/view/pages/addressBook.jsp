@@ -174,7 +174,7 @@
           <s:errors/>
         </div>
         <div class="newAddress-errors alert messages"><s:messages key="generalMessages"/></div>
-        <s:form beanclass="mhc.web.action.NewAddressAction" id="newAddressForm">
+        <s:form beanclass="com.hk.web.action.core.user.NewAddressAction" id="newAddressForm">
           <s:hidden name="address.id"/>
           <span class="aster special">(Fields marked * are required.)</span>
 

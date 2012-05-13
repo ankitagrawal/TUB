@@ -59,66 +59,66 @@ import com.hk.util.OrderUtil;
 @Component
 public class OrderManager {
 
-    private static Logger          logger = LoggerFactory.getLogger(OrderManager.class);
+    private static Logger                     logger = LoggerFactory.getLogger(OrderManager.class);
 
     @Autowired
-    private CartLineItemService    cartLineItemService;
+    private CartLineItemService               cartLineItemService;
     @Autowired
-    private OrderService           orderService;
+    private OrderService                      orderService;
     @Autowired
-    private PaymentService         paymentService;
+    private PaymentService                    paymentService;
     @Autowired
-    private UserService            userService;
+    private UserService                       userService;
     @Autowired
-    private AffilateService        affilateService;
+    private AffilateService                   affilateService;
     @Autowired
-    private RewardPointService     rewardPointService;
+    private RewardPointService                rewardPointService;
     @Autowired
-    private ShippingOrderService   shippingOrderService;
+    private ShippingOrderService              shippingOrderService;
     @Autowired
-    private EmailManager           emailManager;
+    private EmailManager                      emailManager;
     @Autowired
-    private OrderDao               orderDao;
+    private OrderDao                          orderDao;
     @Autowired
-    private PricingEngine          pricingEngine;
+    private PricingEngine                     pricingEngine;
     @Autowired
-    private LineItemDao            lineItemDao;
+    private LineItemDao                       lineItemDao;
     @Autowired
-    private CartLineItemDao        cartLineItemDao;
+    private CartLineItemDao                   cartLineItemDao;
     @Autowired
-    private LinkManager            linkManager;
+    private LinkManager                       linkManager;
     @Autowired
-    private ReferrerProgramManager referrerProgramManager;
+    private ReferrerProgramManager            referrerProgramManager;
     @Autowired
-    private SkuService             skuService;
+    private SkuService                        skuService;
     @Autowired
-    private InventoryService       inventoryService;
+    private InventoryService                  inventoryService;
     @Autowired
-    private OrderStatusService     orderStatusService;
+    private OrderStatusService                orderStatusService;
     @Autowired
-    private BaseDao                baseDao;
-    
+    private BaseDao                           baseDao;
+
     private ComboInstanceHasProductVariantDao comboInstanceHasProductVariantDao;
 
     // @Named(Keys.Env.codCharges)
     @Value("#{hkEnvProps['codCharges']}")
-    private Double                 codCharges;
+    private Double                            codCharges;
 
     // @Named(Keys.Env.codFreeAfter)
     @Value("#{hkEnvProps['codFreeAfter']}")
-    private Double                 codFreeAfter;
+    private Double                            codFreeAfter;
 
     // @Named(Keys.Env.adminDownloads)
     @Value("#{hkEnvProps['adminDownloads']}")
-    String                         adminDownloadsPath;
+    String                                    adminDownloadsPath;
 
-    Affiliate                      affiliate;
+    Affiliate                                 affiliate;
 
     // @Named(Keys.Env.cashBackPercentage)
-    private Double                 cashBackPercentage;
+    private Double                            cashBackPercentage;
 
     // @Named(Keys.Env.cashBackLimit)
-    private Double                 cashBackLimit;
+    private Double                            cashBackLimit;
 
     @Transactional
     public Order getOrCreateOrder(User user) {
@@ -147,19 +147,16 @@ public class OrderManager {
         boolean isCartLineItemCreated = false;
         Double totalActualHkPriceofComboVariants = 0D;
         if (combo != null && combo.getId() != null) {
-            
+
             for (ComboInstanceHasProductVariant variant : comboInstanceHasProductVariantDao.findByComboInstance(comboInstance)) {
                 totalActualHkPriceofComboVariants += variant.getProductVariant().getHkPrice(null) * variant.getQty();
-              }
-            
-            /*for (ComboProduct comboProduct : combo.getComboProducts()) {
-                for (ProductVariant variant : comboProduct.getAllowedProductVariants()) {
-                    if (variant.getProduct().equals(comboProduct.getProduct())) {
-                        totalActualHkPriceofComboVariants += variant.getHkPrice(null) * comboProduct.getQty();
-                        break;
-                    }
-                }
-            }*/
+            }
+
+            /*
+             * for (ComboProduct comboProduct : combo.getComboProducts()) { for (ProductVariant variant :
+             * comboProduct.getAllowedProductVariants()) { if (variant.getProduct().equals(comboProduct.getProduct())) {
+             * totalActualHkPriceofComboVariants += variant.getHkPrice(null) * comboProduct.getQty(); break; } } }
+             */
         }
 
         for (ProductVariant productVariant : productVariants) {
@@ -191,7 +188,8 @@ public class OrderManager {
                         Double totalDiscount = totalActualHkPriceofComboVariants - combo.getHkPrice();
                         Double percentDiscount = totalDiscount / totalActualHkPriceofComboVariants;
                         cartLineItem.setHkPrice(productVariant.getHkPrice(null) * (1 - percentDiscount));
-                        //cartLineItem.setHkPrice(productVariant.getHkPrice(null) - (percentDiscount * productVariant.getHkPrice(null) * productVariant.getQty()));
+                        // cartLineItem.setHkPrice(productVariant.getHkPrice(null) - (percentDiscount *
+                        // productVariant.getHkPrice(null) * productVariant.getQty()));
                         cartLineItem.setComboInstance(comboInstance);
                     } else {
                         cartLineItem = getCartLineItemService().createCartLineItemWithBasicDetails(productVariant, order);
@@ -320,8 +318,8 @@ public class OrderManager {
         order.setRewardPointsUsed(pricingDto.getRedeemedRewardPoints());
 
         cartLineItems = addFreeVariantsToCart(cartLineItems); // function made to handle deals and offers which are
-                                                                // associated with a variant, this will help in
-                                                                // minimizing brutal use of free checkout
+        // associated with a variant, this will help in
+        // minimizing brutal use of free checkout
         order.setCartLineItems(cartLineItems);
 
         // award reward points, if using a reward point offer coupon
@@ -385,13 +383,13 @@ public class OrderManager {
          * orderLifecycleActivityDaoProvider.get().find(EnumOrderLifecycleActivity.AutoEscalatedToProcessingQueue.getId()),
          * null); }
          */
-      
-        //Check if HK order then only send emails
-        if(order.getStore() != null && order.getStore().getId().equals(1L)){
-          // Send mail to Customer
-          getPaymentService().sendPaymentEmailForOrder(order);
-          // Send referral program intro email
-          sendReferralProgramEmail(order.getUser());
+
+        // Check if HK order then only send emails
+        if (order.getStore() != null && order.getStore().getId().equals(1L)) {
+            // Send mail to Customer
+            getPaymentService().sendPaymentEmailForOrder(order);
+            // Send referral program intro email
+            sendReferralProgramEmail(order.getUser());
         }
         // Send mail to Admin
         getEmailManager().sendOrderConfirmEmailToAdmin(order);
@@ -510,14 +508,17 @@ public class OrderManager {
                     iterator.remove();
                     getCartLineItemDao().delete(lineItem);
                 } else {
-                  //Max Qty Check for Last Possible Order based on available unbooked inventory
-                  ProductVariant productVariant = lineItem.getProductVariant();
-                  Long unbookedInventory = inventoryService.getAvailableUnbookedInventory(skuService.getSKUsForProductVariant(productVariant));
-                  if (unbookedInventory != null && unbookedInventory < lineItem.getQty()) {
-                    lineItem.setQty(unbookedInventory);
-                    cartLineItemService.save(lineItem);
-                    logger.debug("Set LineItem Qty equals to available unbooked Inventory: " + unbookedInventory + " for Variant:" + productVariant.getId());
-                  }
+                    // Max Qty Check for Last Possible Order based on available unbooked inventory
+                    ProductVariant productVariant = lineItem.getProductVariant();
+                    List<Sku> skuList = skuService.getSKUsForProductVariant(productVariant);
+                    if (skuList != null && !skuList.isEmpty()) {
+                        Long unbookedInventory = inventoryService.getAvailableUnbookedInventory(skuList);
+                        if (unbookedInventory != null && unbookedInventory < lineItem.getQty()) {
+                            lineItem.setQty(unbookedInventory);
+                            cartLineItemService.save(lineItem);
+                            logger.debug("Set LineItem Qty equals to available unbooked Inventory: " + unbookedInventory + " for Variant:" + productVariant.getId());
+                        }
+                    }
                 }
             }
             order = getOrderService().save(order);

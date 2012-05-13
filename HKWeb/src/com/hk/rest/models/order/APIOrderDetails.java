@@ -1,6 +1,7 @@
-package com.hk.api.rest.models.order;
+package com.hk.rest.models.order;
 
-import com.hk.api.rest.models.order.APIProductDetail;
+import com.hk.rest.models.order.APIProductDetail;
+
 import org.codehaus.jackson.annotate.JsonProperty;
 
 public class APIOrderDetails {

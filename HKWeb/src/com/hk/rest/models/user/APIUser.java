@@ -1,4 +1,4 @@
-package com.hk.api.rest.models.user;
+package com.hk.rest.models.user;
 
 /**
  * Created by IntelliJ IDEA.

@@ -1,10 +1,10 @@
-package com.hk.api.rest.impl.service;
+package com.hk.rest.impl.service;
 
 
-import com.hk.api.rest.models.order.*;
-import com.hk.api.rest.pact.service.APIOrderService;
-import com.hk.api.rest.pact.service.APIUserService;
-import com.hk.api.rest.utils.JSONResponseBuilder;
+import java.util.HashSet;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.order.CartLineItem;
@@ -19,9 +19,14 @@ import com.hk.pact.dao.payment.PaymentModeDao;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.order.CartLineItemService;
 import com.hk.pact.service.order.OrderService;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.HashSet;
+import com.hk.rest.models.order.APIAddress;
+import com.hk.rest.models.order.APIOrder;
+import com.hk.rest.models.order.APIOrderDetails;
+import com.hk.rest.models.order.APIPayment;
+import com.hk.rest.models.order.APIProductDetail;
+import com.hk.rest.pact.service.APIOrderService;
+import com.hk.rest.pact.service.APIUserService;
+import com.hk.util.json.JSONResponseBuilder;
 
 /**
  * Created by IntelliJ IDEA.

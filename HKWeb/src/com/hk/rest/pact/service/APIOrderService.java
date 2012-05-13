@@ -1,6 +1,6 @@
-package com.hk.api.rest.pact.service;
+package com.hk.rest.pact.service;
 
-import com.hk.api.rest.models.order.APIOrder;
+import com.hk.rest.models.order.APIOrder;
 
 
 /**

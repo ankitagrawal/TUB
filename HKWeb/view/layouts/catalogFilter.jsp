@@ -10,7 +10,7 @@
 <s:layout-definition>
 
   <%
-    MenuHelper menuHelper = ServiceLocatorFactory.getService(MenuHelper.class);
+    MenuHelper menuHelper =(MenuHelper) ServiceLocatorFactory.getService("MenuHelper");
     CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
 
     String urlFragment = (String) pageContext.getAttribute("filterUrlFragment");

@@ -1,4 +1,4 @@
-package com.hk.api.rest.models.order;
+package com.hk.rest.models.order;
 
 /**
  * Created by IntelliJ IDEA.

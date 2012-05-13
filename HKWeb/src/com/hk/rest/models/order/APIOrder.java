@@ -1,6 +1,7 @@
-package com.hk.api.rest.models.order;
+package com.hk.rest.models.order;
 
-import com.hk.api.rest.models.user.APIUser;
+import com.hk.rest.models.user.APIUser;
+
 import org.codehaus.jackson.annotate.JsonProperty;
 
 /**

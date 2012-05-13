@@ -1,10 +1,16 @@
-package com.hk.api.rest.resource.order;
+package com.hk.rest.resource.order;
 
-import com.hk.api.rest.models.order.APIOrder;
-import com.hk.api.rest.pact.service.APIOrderService;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.ws.rs.*;
+import com.hk.rest.models.order.APIOrder;
+import com.hk.rest.pact.service.APIOrderService;
 
 /**
  * Created by IntelliJ IDEA.

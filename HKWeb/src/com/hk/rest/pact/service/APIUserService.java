@@ -1,7 +1,7 @@
-package com.hk.api.rest.pact.service;
+package com.hk.rest.pact.service;
 
-import com.hk.api.rest.models.user.APIUser;
 import com.hk.domain.user.User;
+import com.hk.rest.models.user.APIUser;
 
 /**
  * Created by IntelliJ IDEA.

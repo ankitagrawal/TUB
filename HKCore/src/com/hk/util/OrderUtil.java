@@ -8,9 +8,6 @@ public class OrderUtil {
 
 
 
-
-  
-
   public static void roundOffPricesOnCartLineItem(CartLineItem cartLineItem) {
     Double roundedOffHkPrice = NumberUtil.roundOff(cartLineItem.getHkPrice());
     cartLineItem.setHkPrice(roundedOffHkPrice);
