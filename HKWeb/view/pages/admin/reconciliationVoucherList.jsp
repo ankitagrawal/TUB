@@ -1,4 +1,4 @@
-<%@ page import="com.hk.pact.dao.warehouse.WarehouseDao" %>
+<%@ page import="com.hk.impl.dao.warehouse.WarehouseDaoImpl" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
