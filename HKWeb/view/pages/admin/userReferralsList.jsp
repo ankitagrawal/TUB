@@ -2,7 +2,7 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Welcome">
     <s:layout-component name="content">
-        <s:useActionBean beanclass="com.hk.web.action.admin.UserReferrralsAddressesAction" var="referralBean"/>
+        <s:useActionBean beanclass="com.hk.web.action.admin.user.UserReferrralsAddressesAction" var="referralBean"/>
         <h2>User Referral Details</h2>
         <c:forEach items="${referralBean.referredUsers}" var="refUser" varStatus="userCount">
             <table>
