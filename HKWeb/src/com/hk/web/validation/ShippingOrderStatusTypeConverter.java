@@ -24,7 +24,6 @@ public class ShippingOrderStatusTypeConverter implements TypeConverter<ShippingO
     @Autowired
     private BaseDao            baseDao;
 
-    ShippingOrderStatusService shippingOrderStatusService;
 
     public ShippingOrderStatus convert(String id, Class<? extends ShippingOrderStatus> aClass, Collection<ValidationError> validationErrors) {
         Long idLong = null;
@@ -35,7 +34,7 @@ public class ShippingOrderStatusTypeConverter implements TypeConverter<ShippingO
         if (idLong == null) {
             return null;
         } else {
-            return shippingOrderStatusService.find(idLong);
+            return getBaseDao().get(ShippingOrderStatus.class, idLong);
         }
 
     }

@@ -399,7 +399,7 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
         if (hasDistinctRootEntity) {
             criteria.setResultTransformer(Criteria.ROOT_ENTITY);
         }
-        List resultList = findByCriteria(criteria, pageNo, perPage);
+        List resultList = findByCriteria(criteria, pageNo-1, perPage);
         return new Page(resultList, perPage, pageNo, totalResults);
     }
 
