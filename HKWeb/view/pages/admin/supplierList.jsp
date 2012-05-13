@@ -44,7 +44,7 @@
             <s:link beanclass="com.hk.web.action.admin.catalog.SupplierManagementAction" event="createOrEdit">Edit
               <s:param name="supplier" value="${supplier.id}"/></s:link>
             &nbsp;
-            <s:link beanclass="com.hk.web.action.admin.CreatePurchaseOrderAction">Create PO
+            <s:link beanclass="com.hk.web.action.admin.inventory.CreatePurchaseOrderAction">Create PO
               <s:param name="supplier" value="${supplier.id}"/></s:link>
             &nbsp;
             <s:link beanclass="com.hk.web.action.admin.inventory.DebitNoteAction" event="view">

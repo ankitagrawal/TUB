@@ -88,7 +88,7 @@
       <c:choose>
         <c:when test="${checkPaymentBean.order.address == null}">
           No address associated with this order.
-          <s:link beanclass="com.hk.web.action.admin.SelectAddressAction" event="pre">
+          <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" event="pre">
             Please select atleast 1 address to continue.
             <s:param name="order" value="${checkPaymentBean.order.id}"/>
           </s:link>
@@ -126,7 +126,7 @@
             <th colspan="10">
               Payment List
               (
-              <s:link beanclass="com.hk.web.action.admin.NewPaymentAction">
+              <s:link beanclass="com.hk.web.action.admin.payment.NewPaymentAction">
                 <s:param name="order" value="${checkPaymentBean.order}"/>
                 <s:param name="amount" value="${checkPaymentBean.pricingDto.grandTotalPayable}"/>
                 <s:param name="paymentMode" value="<%=EnumPaymentMode.TECHPROCESS_TEST.getId()%>"/>
@@ -156,7 +156,7 @@
               <td><s:radio value="${payment.id}" name="payment" disabled="${radioDisabled}" /></td>
               <td>
                 ${payment.gatewayOrderId}
-                (<s:link beanclass="com.hk.web.action.admin.EditPaymentAction">
+                (<s:link beanclass="com.hk.web.action.admin.payment.EditPaymentAction">
                   <s:param name="paymentId" value="${payment.id}"/>
                   Edit Payment
                 </s:link>)

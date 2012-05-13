@@ -2,7 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="com.hk.web.action.admin.ViewAndEditTicketAction" var="ticketBean" event="pre"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.ticket.ViewAndEditTicketAction" var="ticketBean" event="pre"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Welcome">
   <s:layout-component name="heading">${ticketBean.currentBreadcrumb.name}
@@ -50,7 +50,7 @@
         </c:if>
         <c:if test="${ticketBean.ticket.associatedTrackingId != null}">
           <span class="sml gry">Associated Tracking Id:</span>
-          <s:link beanclass="com.hk.web.action.TrackCourierAction" event="pre" target="_blank">
+          <s:link beanclass="com.hk.web.action.core.order.TrackCourierAction" event="pre" target="_blank">
             ${ticketBean.ticket.associatedTrackingId}
             <s:param name="trackingId" value="${ticketBean.ticket.associatedTrackingId}"/>
             <s:param name="courierId" value="${ticketBean.ticket.associatedCourier.id}"/>
@@ -122,7 +122,7 @@
       </c:choose>
     </div>
 
-    <s:form beanclass="com.hk.web.action.admin.ViewAndEditTicketAction" method="post">
+    <s:form beanclass="com.hk.web.action.admin.ticket.ViewAndEditTicketAction" method="post">
       <hr/>
       <div>
         <h2>Update</h2>

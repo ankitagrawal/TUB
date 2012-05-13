@@ -70,7 +70,7 @@
 
     <shiro:hasPermission name="<%=PermissionConstants.UPDATE_SEO_METADATA%>">
       <div align="center">
-        <s:link beanclass="com.hk.web.action.SeoAction" event="pre" target="_blank" class="popup">Edit MetaData
+        <s:link beanclass="com.hk.web.action.core.content.seo.SeoAction" event="pre" target="_blank" class="popup">Edit MetaData
           <s:param name="seoData" value="${categoryBean.seoData.id}"/>
         </s:link>
       </div>
@@ -156,11 +156,11 @@
   <div class="container_24">
     <shiro:hasPermission name="<%=PermissionConstants.UPLOAD_PRODUCT_CATALOG%>">
       <div class="grid_24 alpha omega">
-        <s:link beanclass="com.hk.web.action.UploadCategoryImageAction" event="pre" target="_blank" class="popup"> Upload
+        <s:link beanclass="com.hk.web.action.core.catalog.image.UploadCategoryImageAction" event="pre" target="_blank" class="popup"> Upload
           <s:param name="category" value="${categoryBean.category.name}"/>
         </s:link>
         &nbsp;|&nbsp;
-        <s:link beanclass="com.hk.web.action.UploadCategoryImageAction" event="manageCategoryImages" target="_blank"
+        <s:link beanclass="com.hk.web.action.core.catalog.image.UploadCategoryImageAction" event="manageCategoryImages" target="_blank"
                 class="popup">
           <s:param name="category" value="${categoryBean.category.name}"/>
           Manage Images

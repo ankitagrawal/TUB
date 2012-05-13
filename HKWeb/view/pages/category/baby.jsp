@@ -60,11 +60,11 @@
     <div class="products">
       <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_CATALOG%>">
         <br/>
-        <div><s:link beanclass="com.hk.web.action.UploadCategoryImageAction" event="pre" target="_blank" class="popup"> Upload
+        <div><s:link beanclass="com.hk.web.action.core.catalog.image.UploadCategoryImageAction" event="pre" target="_blank" class="popup"> Upload
           <s:param name="category" value="baby"/>
         </s:link>
           &nbsp;|&nbsp;
-          <s:link beanclass="com.hk.web.action.UploadCategoryImageAction" event="manageCategoryImages" target="_blank" class="popup">
+          <s:link beanclass="com.hk.web.action.core.catalog.image.UploadCategoryImageAction" event="manageCategoryImages" target="_blank" class="popup">
             <s:param name="category" value="baby"/>
             Manage Images
           </s:link>

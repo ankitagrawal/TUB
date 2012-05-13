@@ -3,7 +3,7 @@
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.admin.ListBatchesAndCheckinInventory" var="ica"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.inventory.ListBatchesAndCheckinInventory" var="ica"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Available Batch List and Inventory Checkin">
   <s:layout-component name="htmlHead">
     <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
@@ -66,7 +66,7 @@
                 <td>${fn:length(skuGroup.skuItems)}</td>
                 <td>${fn:length(hk:getInStockSkuItems(skuGroup))}</td>
                 <%--<shiro:hasRole name="<%=RoleConstants.GOD%>">
-                  <s:form beanclass="com.hk.web.action.admin.ListBatchesAndCheckinInventory">
+                  <s:form beanclass="com.hk.web.action.admin.inventory.ListBatchesAndCheckinInventory">
                     <td>
                       <s:hidden name="batch" value="${skuGroup.batchNumber}"/>
                       <s:hidden name="upc" value="${skuGroup.productVariant.id}"/>

@@ -91,7 +91,7 @@
               Name: ${rewardPoint.referredUser.name} <br/>
               Email: ${rewardPoint.referredUser.email}
               <br/>
-              <s:link beanclass="com.hk.web.action.admin.UserReferrralsAddressesAction" event="pre" target="_blank">
+              <s:link beanclass="com.hk.web.action.admin.user.UserReferrralsAddressesAction" event="pre" target="_blank">
                 <s:param name="user" value="${rewardPoint.user}"/>
                 Previous Referral Addresses
               </s:link>

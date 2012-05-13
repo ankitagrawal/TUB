@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.SeoAction" var="sa"/>
+<s:useActionBean beanclass="com.hk.web.action.core.content.seo.SeoAction" var="sa"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp">
 
   <s:layout-component name="htmlHead">
@@ -10,7 +10,7 @@
   </s:layout-component>
 
   <s:layout-component name="content">
-    <s:form beanclass="com.hk.web.action.SeoAction">
+    <s:form beanclass="com.hk.web.action.core.content.seo.SeoAction">
       <s:hidden name="seoData" value="${sa.seoData.id}"/>
       <fieldset class="top_label">
         <ul>

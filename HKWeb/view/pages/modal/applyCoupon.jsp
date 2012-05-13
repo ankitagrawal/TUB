@@ -1,7 +1,7 @@
-<%@ page import="com.hk.web.action.core.discount.ApplyCouponAction" %>
-<%@ page import="com.hk.constants.OfferConstants" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
+<%@ page import="com.hk.constants.discount.OfferConstants" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
+<%@ page import="com.hk.web.action.core.discount.ApplyCouponAction" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -68,7 +68,7 @@
               <br/>
 
               <p><strong>If you haven't received the mail,
-                <s:link beanclass="com.hk.web.action.ResendAccountActivationLinkAction" event="pre" class="resendActivationEmailLink" style="text-decoration: underline;" >click here to resend it.</s:link>
+                <s:link beanclass="com.hk.web.action.core.user.ResendAccountActivationLinkAction" event="pre" class="resendActivationEmailLink" style="text-decoration: underline;" >click here to resend it.</s:link>
               </strong> <br/>
                 <span class="emailSendMessage alert" style="display:none;"></span>
                 <br/>

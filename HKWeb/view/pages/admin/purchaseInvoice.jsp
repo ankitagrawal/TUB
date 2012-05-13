@@ -1,12 +1,11 @@
-<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
 <%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
- <%@ page import="mhc.domain.Surcharge" %>
-<%@ page import="com.hk.domain.core.Tax" %>
+<%@ page import="com.hk.domain.core.Surcharge" %>
+ <%@ page import="com.hk.domain.core.Tax" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
-<%@ page import="mhc.service.dao.SurchargeDao" %>
 <%@ page import="com.hk.pact.dao.TaxDao" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>

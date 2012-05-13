@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.admin.RewardPointStatementAction" event="pre" var="rpBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.user.RewardPointStatementAction" event="pre" var="rpBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Reward Point Statement">
   <s:layout-component name="heading">${rpBean.currentBreadcrumb.name}</s:layout-component>

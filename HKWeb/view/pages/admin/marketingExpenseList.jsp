@@ -1,7 +1,4 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
-<%@ page import="com.hk.constants.CategoryConstants" %>
-<%@ page import="mhc.service.dao.AdNetworksDao" %>
-<%@ page import="mhc.domain.AdNetworks" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>

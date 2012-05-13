@@ -43,7 +43,7 @@
   </s:layout-component>
   <s:layout-component name="content">
     <div style="display: none;">
-      <s:link beanclass="com.hk.web.action.admin.CreatePurchaseOrderAction" id="pvInfoLink" event="getPVDetails"></s:link>
+      <s:link beanclass="com.hk.web.action.admin.inventory.CreatePurchaseOrderAction" id="pvInfoLink" event="getPVDetails"></s:link>
     </div>
     <div style="word-wrap:break-word; font-size:.8em">
     <b>Existing Variant IDs:</b> <c:forEach items="${csp.product.productVariants}" var="variant">${variant.id},&nbsp;</c:forEach>

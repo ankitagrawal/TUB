@@ -52,7 +52,7 @@
       <br/>
 
       <p><strong>If you haven't received the mail,
-        <s:link beanclass="com.hk.web.action.ResendAccountActivationLinkAction" event="pre" class="resendActivationEmailLink">click here to resend it.</s:link>
+        <s:link beanclass="com.hk.web.action.core.user.ResendAccountActivationLinkAction" event="pre" class="resendActivationEmailLink">click here to resend it.</s:link>
       </strong> <br/>
         <span class="emailSendMessage alert" style="display: none;"></span>
         <br/>

@@ -8,7 +8,7 @@
 <head>
   <title>TAX INVOICE</title>
 
-  <s:useActionBean beanclass="com.hk.web.action.AccountingInvoiceAction" event="b2bInvoice" var="orderSummary"/>
+  <s:useActionBean beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="b2bInvoice" var="orderSummary"/>
 
   <c:set var="paymentModeCod" value="<%=EnumPaymentMode.COD.getId()%>"/>
   <c:set var="partialRatio" value="${(orderSummary.partialPricingDto.productsHkSubTotal/orderSummary.pricingDto.productsHkSubTotal)}"/>

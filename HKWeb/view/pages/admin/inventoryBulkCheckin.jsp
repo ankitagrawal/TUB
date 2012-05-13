@@ -14,7 +14,7 @@
     <div style="display:inline;float:left;">
       <h2>Bulk Checkin using Excel</h2>
       <br/>
-      <s:form beanclass="com.hk.web.action.admin.InventoryBulkCheckinAction">
+      <s:form beanclass="com.hk.web.action.admin.inventory.InventoryBulkCheckinAction">
         <%--<s:messages key="generalMessages"/>--%>
         <h2>File to Upload
             <%--<s:text name="category"/>--%>

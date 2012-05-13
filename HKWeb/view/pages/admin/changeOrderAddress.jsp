@@ -24,7 +24,7 @@
             Ph: ${orderBean.order.address.phone}<br/>
           </td>
           <td width="75">
-            <s:link beanclass="com.hk.web.action.admin.AddressListAction">
+            <s:link beanclass="com.hk.web.action.admin.address.AdminAddressListAction">
               Get from address book
               <s:param name="order" value="${orderBean.order.id}"/>
             </s:link>
