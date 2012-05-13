@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.admin.CustomerLifeCycleAction" var="customerLifeCycleBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.user.CustomerLifeCycleAction" var="customerLifeCycleBean"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Order Lifecycle">
   <s:layout-component name="heading">Order Lifecycle : Order#${customerLifeCycleBean.user.login}</s:layout-component>
   <s:layout-component name="content">

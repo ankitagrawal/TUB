@@ -4,7 +4,7 @@
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Welcome">
 
   <s:layout-component name="content">
-    <s:useActionBean beanclass="com.hk.web.action.admin.AddressListAction" var="addressBean"/>
+    <s:useActionBean beanclass="com.hk.web.action.admin.address.AdminAddressListAction" var="addressBean"/>
     <s:form beanclass="com.hk.web.action.admin.address.ChangeOrderAddressAction" method="post">
       <h2>Select Address: </h2>
       <table>

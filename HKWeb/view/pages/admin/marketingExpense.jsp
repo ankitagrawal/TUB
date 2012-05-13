@@ -1,8 +1,7 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
-<%@ page import="mhc.service.dao.AdNetworksDao" %>
-<%@ page import="mhc.domain.AdNetworks" %>
-<%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.admin.pact.dao.marketing.AdNetworksDao" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Add/Edit Marketing Expense">
