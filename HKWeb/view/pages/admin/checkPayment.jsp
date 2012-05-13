@@ -94,7 +94,7 @@
           </s:link>
         </c:when>
         <c:otherwise>
-          <s:link beanclass="com.hk.web.action.admin.ChangeOrderAddressAction" event="pre">
+          <s:link beanclass="com.hk.web.action.admin.address.ChangeOrderAddressAction" event="pre">
             Change Address
             <s:param name="order" value="${checkPaymentBean.order.id}"/>
           </s:link>
