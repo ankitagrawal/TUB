@@ -510,7 +510,7 @@ public class OrderManager {
                         iterator.remove();
                         getCartLineItemDao().delete(lineItem);
                     } else {
-                        ProductVariant productVariant = lineItem.getProductVariant();
+                        /*ProductVariant productVariant = lineItem.getProductVariant();
                         Product product = productVariant.getProduct();
                         boolean isService = false;
                         if (product.isService() != null && product.isService())
@@ -528,7 +528,8 @@ public class OrderManager {
                                     logger.debug("Set LineItem Qty equals to available unbooked Inventory: " + unbookedInventory + " for Variant:" + productVariant.getId());
                                 }
                             }
-                        }
+                        }*/
+                        cartLineItemService.save(lineItem);
                     }
                 }
             }

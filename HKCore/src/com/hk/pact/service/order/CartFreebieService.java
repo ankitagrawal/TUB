@@ -6,4 +6,5 @@ public interface CartFreebieService {
 
     
     public String getFreebieBanner(Order order) ;
+    public String getFreebieItem(Order order) ;
 }

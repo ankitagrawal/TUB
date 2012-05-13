@@ -58,6 +58,39 @@ public class CartFreeBieServiceImpl implements CartFreebieService {
         return imageURL;
     }
 
+  public String getFreebieItem(Order order) {
+    String freebieItem = null;
+    List<String> productList = new ArrayList<String>();
+    productList.add("NUT410");//Revital Daily Health Supplement
+    productList.add("NUT411");//Revital For Women
+    productList.add("NUT412");//Revital Form Seniors
+    productList.add("NUT598");//Ranbaxy Revitalite Powder
+    Double cartValue = getCartValueForProducts(productList, order);
+
+    Double rvWValue = getCartValueForVariants(Arrays.asList("NUT411-01"), order); //Revital For Women
+
+    List<String> productVariantList = new ArrayList<String>();
+    productVariantList.add("NUT410-01");//Revital Daily Health Supplement 30cps
+    productVariantList.add("NUT411-01");//Revital For Women 30cps
+    productVariantList.add("NUT412-01");//Revital Form Seniors 30cps
+
+    Double rv30CpsValue = getCartValueForVariants(productVariantList, order);
+
+    if (cartValue > 2520.0) {
+      freebieItem = "Sunglass";
+    } else if (cartValue > 1260) {
+      freebieItem = "Reebok Watch";
+    } else if (cartValue > 630) {
+      freebieItem = "T-shirt";
+    } else if (rvWValue >= 210) {
+      freebieItem = "Yoga DVD";
+    } else if (rv30CpsValue >= 240) {
+      freebieItem = "Dabangg & Bodygurad 2in1 DVD";
+    }
+
+    return freebieItem;
+  }
+
     private Double getCartValueForProducts(List<String> productList, Order order) {
         Double value = getCartFreeBieDao().getCartValueForProducts(productList, order);
         return value != null ? value : 0.0;

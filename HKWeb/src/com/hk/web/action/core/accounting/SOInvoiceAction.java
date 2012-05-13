@@ -55,9 +55,9 @@ public class SOInvoiceAction extends BaseAction {
     private String                 routingCode;
     private InvoiceDto             invoiceDto;
     private B2bUserDetails         b2bUserDetails;
-    private String                 freebieBanner;
+    private String freebieItem;
 
-    @DefaultHandler
+  @DefaultHandler
     public Resolution pre() {
         if (shippingOrder != null) {
             String invoiceType = InvoiceNumHelper.getInvoiceType(shippingOrder.isServiceOrder(), shippingOrder.getBaseOrder().getB2bOrder());
@@ -81,7 +81,7 @@ public class SOInvoiceAction extends BaseAction {
             if (courierServiceInfo != null) {
                 routingCode = courierServiceInfo.getRoutingCode();
             }
-            freebieBanner = cartFreebieService.getFreebieBanner(shippingOrder.getBaseOrder());
+            freebieItem = cartFreebieService.getFreebieItem(shippingOrder.getBaseOrder());
             return new ForwardResolution("/pages/shippingOrderInvoice.jsp");
         } else {
             addRedirectAlertMessage(new SimpleMessage("Given shipping order doesnot exist"));

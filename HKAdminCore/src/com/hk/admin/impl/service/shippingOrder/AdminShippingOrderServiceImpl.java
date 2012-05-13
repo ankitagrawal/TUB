@@ -46,6 +46,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 
     @Autowired
     private InventoryService           inventoryService;
+    @Autowired
     private OrderService               orderService;
 
     @Autowired
