@@ -125,21 +125,21 @@
   
   <h3><s:link beanclass="com.hk.web.action.admin.courier.MasterPincodeAction">Update Master Pincode List</s:link></h3>
 
-  <h3><s:link beanclass="mhc.web.action.admin.courier.CourierServiceInfoAction">Update Courier Service Info</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.admin.courier.CourierServiceInfoAction">Update Courier Service Info</s:link></h3>
 
-  <h3><s:link beanclass="mhc.web.action.admin.StateCourierServiceAction">State Courier Service Info</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.admin.courier.StateCourierServiceAction">State Courier Service Info</s:link></h3>
 
-  <h3><s:link beanclass="mhc.web.action.admin.courier.CourierAWBAction">Update Courier AWB numbers</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.admin.courier.CourierAWBAction">Update Courier AWB numbers</s:link></h3>
 
-  <h3><s:link beanclass="mhc.web.action.admin.courier.ChangeDefaultCourierAction">Change Default Courier</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.admin.courier.ChangeDefaultCourierAction">Change Default Courier</s:link></h3>
 
     <h3><s:link beanclass="com.hk.web.action.admin.shipment.UpdateAFLChhotuDeliveryStatusAction">Update Delivery Status of AFL/CHHOTU</s:link></h3>
 
-  <h3><s:link beanclass="mhc.web.action.admin.ParseDTDCDeliveryStatusExcelAction">Upload Delivery Status Excel of DTDC</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.admin.shipment.ParseDTDCDeliveryStatusExcelAction">Upload Delivery Status Excel of DTDC</s:link></h3>
 
-  <h3><s:link beanclass="mhc.web.action.admin.ParseCourierCollectionChargeExcelAction">Upload Courier Collection Charge Excel</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.admin.shipment.ParseCourierCollectionChargeExcelAction">Upload Courier Collection Charge Excel</s:link></h3>
 
-	<h3><s:link beanclass="mhc.web.action.admin.ParseEstimatedCourierExpensesExcelAction">Upload Estimated Courier Collection Charges</s:link> </h3>
+	<h3><s:link beanclass="com.hk.web.action.admin.shipment.ParseEstimatedCourierExpensesExcelAction">Upload Estimated Courier Collection Charges</s:link> </h3>
 
   <h3><s:link beanclass="com.hk.web.action.admin.shipment.ChangeShipmentDetailsAction">Change shipment details</s:link></h3>
 
@@ -151,7 +151,7 @@
 <div class="left roundBox">
   <h2>Inventory Management</h2>
   <h3>
-    <s:link beanclass="mhc.web.action.admin.SupplierManagementAction">Supplier List<br/> <span
+    <s:link beanclass="com.hk.web.action.admin.catalog.SupplierManagementAction">Supplier List<br/> <span
         class="sml gry">(Create PO or Raise a Debit Note)</span></s:link>
   </h3>
   <h3>
@@ -179,7 +179,7 @@
   </h3>
 
   <h3>
-    <s:link beanclass="mhc.web.action.admin.SearchSkuBatchesAction">Search Available Batches </s:link></h3>
+    <s:link beanclass="com.hk.web.action.admin.sku.SearchSkuBatchesAction">Search Available Batches </s:link></h3>
 
   <h3>
     <s:link beanclass="com.hk.web.action.admin.inventory.InventoryHealthStatusAction">Low Inventory List</s:link></h3>
@@ -199,7 +199,7 @@
     <s:link beanclass="com.hk.web.action.admin.sku.SkuAction">Add/Edit SKUs</s:link></h3>
 
 <h3>
-    <s:link beanclass="mhc.web.action.admin.SkuParseExcelAction">Upload SKU Excel</s:link></h3>
+    <s:link beanclass="com.hk.web.action.admin.sku.SkuParseExcelAction">Upload SKU Excel</s:link></h3>
 
 
 </div>
@@ -209,13 +209,13 @@
 <div class="left roundBox">
   <h2>Site Admin</h2>
 
-  <h3><s:link beanclass="mhc.web.action.admin.SMSHomeAction">Send SMS</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.admin.email.SMSHomeAction">Send SMS</s:link></h3>
 
-  <h3><s:link beanclass="mhc.web.action.admin.ReportAction">Report Manager</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.report.ReportAction">Report Manager</s:link></h3>
 
-  <h3><s:link beanclass="mhc.web.action.admin.GoogleBannedWordAction">Google Banned Words Report</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.admin.marketing.GoogleBannedWordAction">Google Banned Words Report</s:link></h3>
 
-  <h3><s:link beanclass="mhc.web.action.admin.PendingRewardPointQueueAction">Pending Reward Points</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.admin.user.PendingRewardPointQueueAction">Pending Reward Points</s:link></h3>
 
   <h3><s:link beanclass="com.hk.web.action.admin.catalog.product.PendingProductReviewAction">Pending Product Reviews</s:link></h3>
 
@@ -226,11 +226,11 @@
 <div class="left roundBox">
   <h2>Affiliate</h2>
 
-  <h3><s:link beanclass="mhc.web.action.VerifyAffiliateAction">Verify Affiliates</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.core.affiliate.VerifyAffiliateAction">Verify Affiliates</s:link></h3>
 
-  <h3><s:link beanclass="mhc.web.action.affiliate.AffiliatePaymentAction">Affiliate Account</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.core.affiliate.AffiliatePaymentAction">Affiliate Account</s:link></h3>
 
-  <h3><s:link beanclass="mhc.web.action.CategoryLevelDiscountAction">Category Level Discount</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.core.discount.CategoryLevelDiscountAction">Category Level Discount</s:link></h3>
 </div>
 
 <div class="cl"></div>
@@ -238,14 +238,14 @@
 <div class="left roundBox">
   <h2>Services</h2>
 
-  <h3><s:link beanclass="mhc.web.action.admin.ServiceQueueAction">Service Queue</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.admin.queue.ServiceQueueAction">Service Queue</s:link></h3>
 
   <h3>
     <s:link beanclass="com.hk.web.action.admin.catalog.ManufacturerAction">View/Edit Merchant Details</s:link></h3>
 
   <h3>
     <s:link
-        beanclass="mhc.web.action.admin.BulkUploadMerchantAddressAction">Bulk Upload Merchant Address</s:link></h3>
+        beanclass="com.hk.web.action.admin.address.BulkUploadMerchantAddressAction">Bulk Upload Merchant Address</s:link></h3>
 </div>
 
 <div class="cl"></div>
@@ -253,17 +253,17 @@
 <div class="left roundBox">
   <h2>Marketing</h2>
 
-  <h3><s:link beanclass="mhc.web.action.admin.offer.OfferAdminAction">Offer Admin</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.admin.offer.OfferAdminAction">Offer Admin</s:link></h3>
 
-  <h3><s:link beanclass="mhc.web.action.facebook.app.coupon.FanCouponAdminAction">Fan Coupon Admin</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.facebook.app.coupon.FanCouponAdminAction">Fan Coupon Admin</s:link></h3>
 
-  <h3><s:link beanclass="mhc.web.action.admin.EmailListByCategoryAction">Mailing List By Category</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.admin.email.EmailListByCategoryAction">Mailing List By Category</s:link></h3>
 
-  <h3><s:link beanclass="mhc.web.action.admin.newsletter.EmailNewsletterAdmin">Email Newsletter Admin</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.admin.newsletter.EmailNewsletterAdmin">Email Newsletter Admin</s:link></h3>
 
-  <h3><s:link beanclass="mhc.web.action.admin.AdsProductMetaDataAction">Ads product meta data</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.admin.marketing.AdsProductMetaDataAction">Ads product meta data</s:link></h3>
 
-  <h3><s:link beanclass="mhc.web.action.admin.MarketingExpenseAction"> Marketing Expense List</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.admin.marketing.MarketingExpenseAction"> Marketing Expense List</s:link></h3>
 
 </div>
 
@@ -273,7 +273,7 @@
   <h2>Site Content Management</h2>
 
   <h3>
-    <s:link beanclass="mhc.web.action.BulkSeoAction"
+    <s:link beanclass="com.hk.web.action.core.content.seo.BulkSeoAction"
             title="Change MetaData by Category">Change MetaData</s:link></h3>
 
 </div>
