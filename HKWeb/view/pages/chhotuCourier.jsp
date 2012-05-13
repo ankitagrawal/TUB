@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.TrackCourierAction" var="tca"/>
+<s:useActionBean beanclass="com.hk.web.action.core.order.TrackCourierAction" var="tca"/>
 <s:layout-render name="/layouts/default.jsp" pageTitle="Chhotu Courier Services">
 	<s:layout-component name="heading">Order Shipped through Chhotu Courier Services</s:layout-component>
 	<s:layout-component name="rhsContent">

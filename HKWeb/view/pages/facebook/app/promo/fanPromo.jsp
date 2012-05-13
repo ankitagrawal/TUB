@@ -6,7 +6,7 @@
 <%@ page import="com.google.gson.Gson" %>
 <%@ page import="org.apache.commons.codec.binary.Base64" %>
 <%@ page import="com.hk.constants.FbConstants" %>
-<%@ page import="mhc.util.FacebookRequest" %>
+<%@ page import="com.hk.util.FacebookRequest" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 

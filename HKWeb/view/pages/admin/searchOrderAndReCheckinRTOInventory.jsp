@@ -60,10 +60,10 @@
           <tr>
             <td>
               <strong>${order.gatewayOrderId}</strong>
-              (<s:link beanclass="com.hk.web.action.SOInvoiceAction" target="_blank">
+              (<s:link beanclass="com.hk.web.action.core.accounting.SOInvoiceAction" target="_blank">
               <s:param name="shippingOrder" value="${orderAdmin.shippingOrder}"/>
               Invoice
-            </s:link>)<br>(<s:link beanclass="com.hk.web.action.SOInvoiceAction" target="_blank">
+            </s:link>)<br>(<s:link beanclass="com.hk.web.action.core.accounting.SOInvoiceAction" target="_blank">
               <s:param name="shippingOrder" value="${orderAdmin.shippingOrder}"/>
               <s:param name="printable" value="true"/>
               Personal Care

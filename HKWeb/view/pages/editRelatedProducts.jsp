@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.admin.EditProductAttributesAction" var="pa"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction" var="pa"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp">
 
   <s:layout-component name="htmlHead">
@@ -32,7 +32,7 @@
 
   <s:layout-component name="content">
     <h2>${pa.product.name}</h2>
-    <s:form beanclass="com.hk.web.action.admin.EditProductAttributesAction">
+    <s:form beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction">
        <table border="1" id="featureTable">
         <c:forEach var="relatedProduct" items="${pa.product.relatedProducts}" varStatus="ctr">
           <tr count="${ctr.index}" class="${ctr.last ? 'lastRow':''}">

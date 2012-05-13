@@ -1,7 +1,7 @@
+<%@ page import="com.hk.domain.inventory.LowInventory" %>
+<%@ page import="com.hk.domain.sku.Sku" %>
+<%@ page import="com.hk.pact.service.inventory.SkuService" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
-<%@ page import="mhc.domain.LowInventory" %>
-<%@ page import="mhc.domain.sku.Sku" %>
-<%@ page import="mhc.service.inventory.SkuService" %>
 <%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>

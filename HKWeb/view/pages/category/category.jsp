@@ -70,7 +70,7 @@
 
     <shiro:hasPermission name="<%=PermissionConstants.UPDATE_SEO_METADATA%>">
       <div align="center">
-        <s:link beanclass="com.hk.web.action.SeoAction" event="pre" target="_blank" class="popup">Edit MetaData
+        <s:link beanclass="com.hk.web.action.core.content.seo.SeoAction" event="pre" target="_blank" class="popup">Edit MetaData
           <s:param name="seoData" value="${categoryBean.seoData.id}"/>
         </s:link>
       </div>

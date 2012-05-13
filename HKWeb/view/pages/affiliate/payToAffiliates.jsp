@@ -56,7 +56,7 @@
             </s:link>
           </td>
           <td>
-          <s:link beanclass="com.hk.web.action.admin.AssumedLoginAction">
+          <s:link beanclass="com.hk.web.action.admin.user.AssumedLoginAction">
             <s:param name="user" value="${affiliateDetails.affiliate.user.id}"/>
             [Super login]
           </s:link>

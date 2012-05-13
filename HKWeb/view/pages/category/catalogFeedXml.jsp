@@ -1,5 +1,5 @@
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
-<%@ page import="mhc.util.ImageManager" %>
+<%@ page import="com.hk.util.ImageManager" %>
 <?xml version="1.0" encoding="UTF-8"?>
 <% response.setContentType("text/xml"); %>
 <%@include file="/includes/_taglibInclude.jsp" %>

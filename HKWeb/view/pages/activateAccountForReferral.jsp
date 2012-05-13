@@ -22,7 +22,7 @@
       <p class="lrg">Please click on the activation link sent to you via e-mail when signing up.</p>
 
       <p><strong>If you haven't received the mail,
-        <s:link beanclass="com.hk.web.action.ResendAccountActivationLinkAction" event="pre" class="resendActivationEmailLink">click here to resend it.</s:link>
+        <s:link beanclass="com.hk.web.action.core.user.ResendAccountActivationLinkAction" event="pre" class="resendActivationEmailLink">click here to resend it.</s:link>
       </strong>
         <span class="emailSendMessage alert" style="display: none;"></span>
         

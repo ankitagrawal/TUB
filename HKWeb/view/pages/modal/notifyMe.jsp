@@ -39,7 +39,7 @@
         <div id class="msg red" style="text-align: center; padding: 2px 0 2px 0; font-size: 1em;"></div>
 
         <div class="notifyForm">
-            <s:form beanclass="web.action.NotifyMeAction" id="notifyMeForm">
+            <s:form beanclass="com.hk.web.action.core.user.NotifyMeAction" id="notifyMeForm">
                 <div style="text-align: right; padding: 5px 0 5px 0; font-size: 1em;">
                     Enter your name:<span class='aster' title="this field is required">*</span>
                     <s:text class="userName" id="notifyMeName" name="notifyMe.name"/><br/><br/>

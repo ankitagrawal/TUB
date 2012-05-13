@@ -313,7 +313,7 @@
 <%--</li>--%>
 <%--<li>--%>
 <%--<s:submit name="generateReconciliationReport" value="Generate"/>--%>
-<%--<s:link beanclass="com.hk.web.action.admin.ReconciliationAction"--%>
+<%--<s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationAction"--%>
 <%--target="_blank">Update Reconciliation Status</s:link>--%>
 <%--</li>--%>
 <%--</ul>--%>
