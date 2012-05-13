@@ -4,7 +4,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="com.hk.web.action.ReferralSignupAction" var="referralBean"/>
+<s:useActionBean beanclass="com.hk.web.action.core.referral.ReferralSignupAction" var="referralBean"/>
 
 <s:layout-render name="/layouts/default.jsp" pageTitle="Check out HealthKart.com (and get a Rs. 100 discount)">
   <s:layout-component name="htmlHead">

@@ -3,7 +3,7 @@
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
 <%@ page import="com.hk.util.ImageManager" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.VizuryCatalogAction" var="vizuryBean"/>
+<s:useActionBean beanclass="com.hk.web.action.core.catalog.VizuryCatalogAction" var="vizuryBean"/>
 <products>
   <c:forEach items="${vizuryBean.products}" var="product">
   <c:if test="${fn:length(product.productVariants) > 0 && product.minimumMRPProducVariant.hkPrice != null && product.maximumMRPProducVariant.hkPrice != null}">

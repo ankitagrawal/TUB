@@ -1,10 +1,9 @@
 <%@ page import="com.hk.web.action.core.user.VerifyUserAction" %>
-<%@ page import="com.hk.constants.OfferConstants" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="com.hk.web.action.VerifyUserAction" var="verifyUserBean"/>
+<s:useActionBean beanclass="com.hk.web.action.core.user.VerifyUserAction" var="verifyUserBean"/>
 
 <c:set var="outcome_alreadyVerified" value="<%=VerifyUserAction.outcome_alreadyVerified%>"/>
 <c:set var="outcome_invalidLink" value="<%=VerifyUserAction.outcome_invalidLink%>"/>
@@ -37,7 +36,7 @@
       <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_NEEDS_ACTIVATION%>">
         <p>
           You can request a fresh activation link by going to the
-          <s:link beanclass="com.hk.web.action.WelcomeAction"><strong>Activation page</strong></s:link>.
+          <s:link beanclass="com.hk.web.action.core.user.WelcomeAction"><strong>Activation page</strong></s:link>.
           If you are unable to receive the activation email then please check your spam/junk folder. For further help please write to us at info@healthkart.com
         </p>
       </shiro:hasAnyRoles>

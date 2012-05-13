@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.WishlistAction" var="wa"/>
+<s:useActionBean beanclass="com.hk.web.action.core.user.WishlistAction" var="wa"/>
 <s:layout-render name="/layouts/default.jsp">
   <s:layout-component name="lhsContent">
     <jsp:include page="myaccount-nav.jsp"/>
