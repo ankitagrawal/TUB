@@ -17,7 +17,7 @@ public class SkuDaoImpl extends BaseDaoImpl implements SkuDao {
 
     public Sku getSku(ProductVariant productVariant, Warehouse warehouse) {
         String queryString = "from Sku sku where sku.warehouse = ? and sku.productVariant = ? ";
-        return (Sku) find(queryString, new Object[] { warehouse, productVariant });
+        return (Sku) findUnique(queryString, new Object[] { warehouse, productVariant });
     }
 
     @SuppressWarnings("unchecked")

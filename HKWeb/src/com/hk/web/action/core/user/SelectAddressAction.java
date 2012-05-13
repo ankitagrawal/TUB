@@ -42,15 +42,16 @@ public class SelectAddressAction extends BaseAction {
 
     private List<Address> addresses = new ArrayList<Address>(1);
 
-    @Validate(required = true, on = "remove")
+    //@Validate(required = true, on = "remove")
     Address               deleteAddress;
 
-    @Validate(converter = EmailTypeConverter.class)
+    //@Validate(converter = EmailTypeConverter.class)
     private String        email;
 
-	  @Validate(required = true)
+	 // @Validate(required = true)
     private Order order;
-    @ValidationMethod(on = "checkout")
+   
+	  //@ValidationMethod(on = "checkout")
     public void validate() {
         Role tempUserRole = getRoleService().getRoleByName(RoleConstants.TEMP_USER);
         User user = getUserService().getUserById(getPrincipal().getId());
@@ -80,7 +81,7 @@ public class SelectAddressAction extends BaseAction {
         return new ForwardResolution("/pages/addressBook.jsp");
     }
 
-    @ValidationMethod(on = "remove")
+    //@ValidationMethod(on = "remove")
     public void validateDelete() {
         User user = getUserService().getUserById(getPrincipal().getId());
         if (!user.getAddresses().contains(deleteAddress)) {
@@ -103,7 +104,7 @@ public class SelectAddressAction extends BaseAction {
         return new RedirectResolution(SelectAddressAction.class);
     }
 
-    @Validate(on = "checkout", required = true)
+//    @Validate(on = "checkout", required = true)
     Address selectedAddress;
 
     public Resolution checkout() {
