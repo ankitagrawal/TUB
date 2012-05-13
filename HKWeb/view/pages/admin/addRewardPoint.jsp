@@ -2,7 +2,7 @@
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.admin.AddRewardPointAction" event="pre" var="rpBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.reward.AddRewardPointAction" event="pre" var="rpBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Add Reward Point">
 
@@ -15,7 +15,7 @@
 
   <s:layout-component name="heading">Add Reward Point for user ${rpBean.user.login}</s:layout-component>
   <s:layout-component name="content">
-    <s:form beanclass="com.hk.web.action.admin.AddRewardPointAction" method="post">
+    <s:form beanclass="com.hk.web.action.admin.reward.AddRewardPointAction" method="post">
       <fieldset class="left_label">
         <ul>
           <s:hidden name="user" value="${rpBean.user.id}"/>
