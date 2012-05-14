@@ -23,7 +23,6 @@ public class CourierGroupSeedData {
 		CourierGroup courierGroup = new CourierGroup();
 		courierGroup.setName(name);
 		courierGroup.setId(id);
-		courierGroup.setCourier(courier);
 		getBaseDao().save(courierGroup);
 	}
 

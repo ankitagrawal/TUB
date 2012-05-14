@@ -47,7 +47,7 @@ import com.hk.domain.warehouse.Warehouse;
  * Author: Kani Date: Aug 29, 2008
  */
 @Entity
-@Table(name = "user")
+@Table(name = "user", uniqueConstraints = @UniqueConstraint (columnNames = {"login", "store_id"}))
 @NamedQueries( {
         @NamedQuery(name = "user.findByEmail", query = "from User u where u.email = :email"),
         @NamedQuery(name = "user.findByLogin", query = "from User u where u.login = :login"),
@@ -61,7 +61,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long                  id;
 
-    @Column(name = "login", nullable = false, length = 80, unique = true)
+    @Column(name = "login", nullable = false, length = 80)
     private String                login;
 
     @Column(name = "email", nullable = true, length = 80)

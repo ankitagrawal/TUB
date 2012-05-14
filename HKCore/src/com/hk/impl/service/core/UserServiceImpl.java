@@ -116,6 +116,11 @@ public class UserServiceImpl implements UserService {
     public Page findByRole(Role role, int pageNo, int perPage) {
         return getUserDao().findByRole(role, pageNo, perPage);
     }
+
+    @Override
+    public User findByLoginAndStoreId(String login, Long storeId){
+       return getUserDao().findByLoginAndStoreId(login, storeId);
+    }
     
     //TODO: move such methods and methods getOrdersForUserSortedByDate to a user profile service
     /*private Set<ProductVariant> getRecentlyOrderedProductVariantsForUser(User user) {

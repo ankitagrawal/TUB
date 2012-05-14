@@ -8,6 +8,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.hk.rest.models.order.APIOrder;
 import com.hk.rest.pact.service.APIOrderService;
@@ -20,6 +21,7 @@ import com.hk.rest.pact.service.APIOrderService;
  * To change this template use File | Settings | File Templates.
  */
 @Path ("/order")
+@Component
 public class OrderResource {
 
   @Autowired

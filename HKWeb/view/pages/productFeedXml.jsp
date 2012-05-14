@@ -2,6 +2,7 @@
 <% response.setContentType("text/xml"); %>
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
 <%@ page import="com.hk.util.ImageManager" %>
+<%@ page import="com.hk.util.HKImageUtils" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.core.catalog.product.ProductAction" var="productBean"/>
 <product id="${productBean.product.id}">
@@ -16,9 +17,9 @@
         <c:set var="imageId" value="${productBean.product.mainImageId}"/>
         <%Long imageId = (Long) pageContext.getAttribute("imageId");%>
         <image
-            srcSmall="<%=ImageManager.getS3ImageUrl(EnumImageSize.SmallSize, imageId)%>"
-            srcMedium="<%=ImageManager.getS3ImageUrl(EnumImageSize.MediumSize, imageId)%>"
-            srcLarge="<%=ImageManager.getS3ImageUrl(EnumImageSize.LargeSize, imageId)%>"
+            srcSmall="<%=HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, imageId)%>"
+            srcMedium="<%=HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, imageId)%>"
+            srcLarge="<%=HKImageUtils.getS3ImageUrl(EnumImageSize.LargeSize, imageId)%>"
             />
       </c:when>
       <c:otherwise>
