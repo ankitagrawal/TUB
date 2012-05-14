@@ -100,7 +100,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 
   @DontValidate
   @DefaultHandler
-  @Secure(hasAnyPermissions = {PermissionConstants.VIEW_ACTION_QUEUE}, authActionBean = AdminPermissionAction.class)
+ // @Secure(hasAnyPermissions = {PermissionConstants.VIEW_ACTION_QUEUE}, authActionBean = AdminPermissionAction.class)
   public Resolution pre() {
     Long startTime = (new Date()).getTime();
 
@@ -216,7 +216,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
   }
 
 
-  @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_ACTION_QUEUE}, authActionBean = AdminPermissionAction.class)
+  //@Secure(hasAnyPermissions = {PermissionConstants.UPDATE_ACTION_QUEUE}, authActionBean = AdminPermissionAction.class)
   public Resolution escalate() {
 
     if (!shippingOrderList.isEmpty()) {

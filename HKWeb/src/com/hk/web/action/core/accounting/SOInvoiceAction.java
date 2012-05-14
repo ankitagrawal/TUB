@@ -47,7 +47,9 @@ public class SOInvoiceAction extends BaseAction {
     private CourierService         courierService;
     @Autowired
     private CartFreebieService     cartFreebieService;
+    @Autowired
     private B2bUserDetailsDao      b2bUserDetailsDao;
+    @Autowired
     private CourierServiceInfoDao  courierServiceInfoDao;
 
     private String                 barcodePath;
