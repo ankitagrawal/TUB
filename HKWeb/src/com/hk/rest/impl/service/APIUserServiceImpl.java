@@ -6,6 +6,7 @@ import com.hk.rest.models.user.APIUser;
 import com.hk.rest.pact.service.APIUserService;
 import com.hk.domain.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 
 /**
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * Time: 1:25:38 PM
  * To change this template use File | Settings | File Templates.
  */
+@Service
 public class APIUserServiceImpl implements APIUserService {
 
   @Autowired
@@ -33,17 +35,17 @@ public class APIUserServiceImpl implements APIUserService {
 
   private User createNewHKUser(APIUser apiUser) {
     User user = new User();
+    user.setName(apiUser.getName());
     user.setEmail(apiUser.getEmail());
     user.setPasswordChecksum(apiUser.getPassword());
-    user.setLogin(apiUser.getEmail());
-    user.setUserHash(apiUser.getEmail());
+    user.setLogin(apiUser.getEmail()+"||"+apiUser.getStoreId());
     user.setStore(storeService.getStoreById(apiUser.getStoreId()));
     return userService.save(user);
   }
 
   private boolean userExists(APIUser apiUser) {
     if (apiUser != null) {
-      if (userService.findByLogin(apiUser.getEmail()) != null) {
+      if (userService.findByLoginAndStoreId(apiUser.getEmail(), apiUser.getStoreId()) != null) {
         return true;
       } else {
         return false;
@@ -54,6 +56,6 @@ public class APIUserServiceImpl implements APIUserService {
   }
 
   private User getUser(APIUser apiUser) {
-    return userService.findByLogin(apiUser.getEmail());
+    return userService.findByLoginAndStoreId(apiUser.getEmail(), apiUser.getStoreId());
   }
 }
