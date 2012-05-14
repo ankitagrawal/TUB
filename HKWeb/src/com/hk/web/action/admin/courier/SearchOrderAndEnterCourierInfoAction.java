@@ -66,9 +66,11 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
     String                             adminDownloads;
     File                               xlsFile;
 
-    ReportManager                      reportGenerator;
-
+    @Autowired
+    private ReportManager                      reportGenerator;
+    @Autowired
     private CourierService             courierService;
+    @Autowired
     private ShippingOrderStatusService shippingOrderStatusService;
 
     @DontValidate

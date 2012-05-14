@@ -8,6 +8,7 @@ import javax.servlet.ServletContextListener;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.PropertyConfigurator;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.akube.framework.util.BaseUtils;
@@ -15,16 +16,17 @@ import com.hk.web.AppConstants;
 
 public class HKStartupListener implements ServletContextListener {
 
-    public static File   hibernateCfgFile;
-    public static File   hibernateReadCfgFile;
-    public static File   ehcacheCfgFile;
-    public static File   freeMarkerDir;
-    public static File   environmentPropertiesFile;
-    public static File   antiSamyPolicyFile;
-    public static String contextPath;
-    public static String appBasePath;
-    public static String environmentDir;
-    
+    private static Logger logger = LoggerFactory.getLogger(HKStartupListener.class);
+
+    public static File    hibernateCfgFile;
+    public static File    hibernateReadCfgFile;
+    public static File    ehcacheCfgFile;
+    public static File    freeMarkerDir;
+    public static File    environmentPropertiesFile;
+    public static File    antiSamyPolicyFile;
+    public static String  contextPath;
+    public static String  appBasePath;
+    public static String  environmentDir;
 
     // private BatchProcessManager batchProcessManager;
 
@@ -33,73 +35,42 @@ public class HKStartupListener implements ServletContextListener {
     }
 
     public void contextInitialized(ServletContextEvent event) {
-        
+
         AppConstants.contextPath = event.getServletContext().getContextPath();
         AppConstants.appBasePath = event.getServletContext().getRealPath("/");
-        
+
+        PropertyConfigurator.configure( AppConstants.appBasePath + "WEB-INF/log4j.properties");
+        logger.info("logger configured");
+
         /*
          * This method is called when the servlet context is initialized(when the Web application is deployed). You can
          * initialize servlet context related data here.
          */
 
-        /*TimeZone.setDefault(TimeZone.getTimeZone("IST"));
-        Locale.setDefault(Locale.ENGLISH);
-
-        contextPath = event.getServletContext().getContextPath();
-
-        // get usepath
-        appBasePath = event.getServletContext().getRealPath("/");
-
-        environmentDir = getEnvironmentDir(appBasePath);
-
-        setupLogger(environmentDir);
-
-        // Environment specific properties
-        environmentPropertiesFile = new File(environmentDir + "/environment.properties");
-        if (!environmentPropertiesFile.exists()) {
-            String errorMsg = "environment.properties file not found in " + environmentDir;
-            System.err.println(errorMsg);
-            throw new RuntimeException(errorMsg);
-        }
-
-        // setup hibernate
-        hibernateCfgFile = new File(environmentDir + "/hibernate.cfg.xml");
-        if (!hibernateCfgFile.exists()) {
-            String errorMsg = "hibernate.cfg.xml file not found in " + environmentDir;
-            System.err.println(errorMsg);
-            throw new RuntimeException(errorMsg);
-        }
-
-        // setup hibernate read slave config
-        hibernateReadCfgFile = new File(environmentDir + "/hibernateRead.cfg.xml");
-        if (!hibernateReadCfgFile.exists()) {
-            String errorMsg = "hibernateRead.cfg.xml file not found in " + environmentDir;
-            System.err.println(errorMsg);
-            throw new RuntimeException(errorMsg);
-        }
-
-        // setup ehcache
-        ehcacheCfgFile = new File(appBasePath + "/ehcache.xml");
-        if (!ehcacheCfgFile.exists()) {
-            String errorMsg = "ehcache.xml file not found in " + appBasePath + "/WEB-INF/properties";
-            System.err.println(errorMsg);
-            throw new RuntimeException(errorMsg);
-        } else {
-            System.out.println("ehcache.xml file found");
-        }
-
-        // setup freemarker templates directory
-        String freemarkerDirPath = appBasePath + "/freemarker";
-        freeMarkerDir = new File(freemarkerDirPath);
-
-        // setup antisamy
-        antiSamyPolicyFile = new File(environmentDir + "/antisamy-hk-1.3.xml");*/
+        /*
+         * TimeZone.setDefault(TimeZone.getTimeZone("IST")); Locale.setDefault(Locale.ENGLISH); contextPath =
+         * event.getServletContext().getContextPath(); // get usepath appBasePath =
+         * event.getServletContext().getRealPath("/"); environmentDir = getEnvironmentDir(appBasePath);
+         * setupLogger(environmentDir); // Environment specific properties environmentPropertiesFile = new
+         * File(environmentDir + "/environment.properties"); if (!environmentPropertiesFile.exists()) { String errorMsg =
+         * "environment.properties file not found in " + environmentDir; System.err.println(errorMsg); throw new
+         * RuntimeException(errorMsg); } // setup hibernate hibernateCfgFile = new File(environmentDir +
+         * "/hibernate.cfg.xml"); if (!hibernateCfgFile.exists()) { String errorMsg = "hibernate.cfg.xml file not found
+         * in " + environmentDir; System.err.println(errorMsg); throw new RuntimeException(errorMsg); } // setup
+         * hibernate read slave config hibernateReadCfgFile = new File(environmentDir + "/hibernateRead.cfg.xml"); if
+         * (!hibernateReadCfgFile.exists()) { String errorMsg = "hibernateRead.cfg.xml file not found in " +
+         * environmentDir; System.err.println(errorMsg); throw new RuntimeException(errorMsg); } // setup ehcache
+         * ehcacheCfgFile = new File(appBasePath + "/ehcache.xml"); if (!ehcacheCfgFile.exists()) { String errorMsg =
+         * "ehcache.xml file not found in " + appBasePath + "/WEB-INF/properties"; System.err.println(errorMsg); throw
+         * new RuntimeException(errorMsg); } else { System.out.println("ehcache.xml file found"); } // setup freemarker
+         * templates directory String freemarkerDirPath = appBasePath + "/freemarker"; freeMarkerDir = new
+         * File(freemarkerDirPath); // setup antisamy antiSamyPolicyFile = new File(environmentDir +
+         * "/antisamy-hk-1.3.xml");
+         */
 
         // InjectorFactory.getInjector();
-
         // Boolean startBackgroundTaskManager = ServiceLocatorFactory.getService(Key.get(Boolean.class,
         // Names.named(Keys.Env.startBackgroundTaskManager)));
-
         // if (startBackgroundTaskManager) {
         if (true) {
             System.out.println("------------- Starting Batch Process Manager ---------------------");
