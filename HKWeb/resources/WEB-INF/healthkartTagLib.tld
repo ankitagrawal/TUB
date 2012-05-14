@@ -402,7 +402,7 @@
       returns if a Variant is a free variant or not
     </description>
     <name>isFreeVariant</name>
-    <function-class>com.akube.framework.taglibs.Functions</function-class>
+    <function-class>com.hk.taglibs.Functions</function-class>
     <function-signature>java.lang.Boolean isFreeVariant(java.lang.Object)</function-signature>
     <example>
       ${hk:getInStockSkuItems(${object})}
@@ -413,7 +413,7 @@
       return cart line item extra options as a string seperated with the specified separator.
     </description>
     <name>getExtraOptionsAsString</name>
-    <function-class>com.akube.framework.taglibs.Functions</function-class>
+    <function-class>com.hk.taglibs.Functions</function-class>
     <function-signature>java.lang.String getExtraOptionsAsString(java.lang.Object,java.lang.String)</function-signature>
     <example>
       ${hk:getExtraOptionsAsString(${o1}, ${str})}
