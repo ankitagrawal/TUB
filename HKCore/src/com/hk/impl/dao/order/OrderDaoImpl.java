@@ -49,15 +49,7 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao {
         return orders == null || orders.isEmpty() ? null : orders.get(0);
     }
     
-    public List<Order> getOrdersForUserSortedByDate(List<OrderStatus> orderStatusList, User user) {
-        DetachedCriteria orderCriteria = DetachedCriteria.forClass(Order.class);
-        DetachedCriteria userCriteria = orderCriteria.createCriteria("user");
-        userCriteria.add(Restrictions.eq("id", user.getId()));
-
-        orderCriteria.add(Restrictions.in("orderStatus", orderStatusList));
-        orderCriteria.addOrder(org.hibernate.criterion.Order.desc("createDate"));
-        return findByCriteria(orderCriteria);
-    }
+    
 
     public Page listOrdersForUser(List<OrderStatus> orderStatusList, User user, int page, int perPage) {
         DetachedCriteria criteria = DetachedCriteria.forClass(Order.class);

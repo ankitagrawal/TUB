@@ -170,7 +170,9 @@ public class MasterDataDaoImpl implements MasterDataDao {
     }
 
     public List<User> getApproverList() {
-        return getBaseDao().getAll(User.class);
+       // return getBaseDao().getAll(User.class);
+        
+        return getUserService().findByRole(getRoleService().getRoleByName(EnumRole.PO_APPROVER));
         // return userDaoProvider.get().findByRole(roleDaoProvider.get().find(EnumRole.PO_APPROVER.getRoleName()));
     }
 
