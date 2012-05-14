@@ -10,6 +10,7 @@ import com.hk.domain.offer.Offer;
 import com.hk.domain.user.User;
 import com.hk.manager.OfferManager;
 import com.hk.pact.dao.RoleDao;
+import com.hk.pact.service.RoleService;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.discount.CouponService;
 
@@ -27,10 +28,12 @@ public class EmployeeManager {
 
     @Autowired
     UserService   userService;
+    @Autowired
+    private RoleService roleService;
 
     public Coupon createEmpCoupon(User user, String code) {
         Coupon empCoupon = null;
-        if (user.getRoles().contains(roleDao.find(RoleConstants.HK_EMPLOYEE)) && code != null && code.equals(OfferConstants.HK_EMPLOYEE_CODE)) {
+        if (user.getRoles().contains(getRoleService().getRoleByName(RoleConstants.HK_EMPLOYEE)) && code != null && code.equals(OfferConstants.HK_EMPLOYEE_CODE)) {
             Offer offer = getOfferManager().getOfferForEmployee();
             empCoupon = getCouponService().createCoupon(code, null, null, null, offer, null, true);
         }
@@ -69,4 +72,13 @@ public class EmployeeManager {
         this.couponService = couponService;
     }
 
+    public RoleService getRoleService() {
+        return roleService;
+    }
+
+    public void setRoleService(RoleService roleService) {
+        this.roleService = roleService;
+    }
+
+    
 }

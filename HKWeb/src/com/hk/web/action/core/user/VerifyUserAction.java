@@ -89,7 +89,7 @@ public class VerifyUserAction extends BaseAction {
             tempTokenDao.expire(tempToken);
             // } else if (user.getRoles().contains(unverifiedAffiliateRole)) {
             // user.getRoles().remove(unverifiedAffiliateRole);
-            // user.getRoles().add(roleDao.find(RoleConstants.HK_AFFILIATE));
+            // user.getRoles().add(getRoleService().getRoleByName(RoleConstants.HK_AFFILIATE));
             // user=userDao.save(user);
             // outcome=outcome_success;
             // tempTokenDao.expire(tempToken);

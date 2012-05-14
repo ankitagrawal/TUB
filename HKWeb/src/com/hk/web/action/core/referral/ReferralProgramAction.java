@@ -78,7 +78,7 @@ public class ReferralProgramAction extends BaseAction {
         User user = getUserService().getUserById(getPrincipal().getId());
         senderName = user.getFirstName();
         senderEmail = user.getEmail();
-        // Role hkUnverifiedUser = roleDao.find(RoleConstants.HK_UNVERIFIED);
+        // Role hkUnverifiedUser = getRoleService().getRoleByName(RoleConstants.HK_UNVERIFIED);
         // if (user.getRoles().contains(hkUnverifiedUser)) {
         // return new ForwardResolution(ActivateAccountForReferralAction.class);
         // }

@@ -1148,7 +1148,7 @@ public class OrderManager {
      * (lineItem.getProductVariant().getProduct().isService()) { servicesLineItems.add(lineItem); } else { List<InvoiceLineItem>
      * ilis = invoiceLineItemDaoProvider.get().getInvoiceLineItem(lineItem); if (ilis == null || ilis.isEmpty()) {
      * productLineItems.add(lineItem); } } } if (productLineItems != null && !productLineItems.isEmpty()) { if
-     * (order.getUser().getRoles().contains(roleDao.find(EnumRole.B2B_USER.getRoleName()))) {
+     * (order.getUser().getRoles().contains(getRoleService().getRoleByName(EnumRole.B2B_USER.getRoleName()))) {
      * generateB2BInvoiceForLineItems(order, productLineItems); } else { generateRetailInvoiceForLineItems(order,
      * productLineItems); } } } private void generateRetailInvoiceForLineItems(Order order, List<CartLineItem>
      * lineItems) { AccountingInvoice accountingInvoice = new AccountingInvoice();

@@ -84,12 +84,12 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
     }
 
     @SuppressWarnings("unchecked")
-    public List find(String queryString) {
+    public List findByQuery(String queryString) {
         return getHibernateTemplate().find(queryString);
     }
 
     @SuppressWarnings("unchecked")
-    public List find(String queryString, Object... bindings) {
+    public List findByQuery(String queryString, Object... bindings) {
         return getHibernateTemplate().find(queryString, bindings);
     }
 
@@ -263,7 +263,7 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
     }
 
     public <T> T getByQuery(String query, Object... parameters) {
-        List<T> results = find(query, parameters);
+        List<T> results = findByQuery(query, parameters);
         return getFirst(results);
     }
 
@@ -286,7 +286,7 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
             }
         }
 
-        return (List<T>) find(sb.toString(), values);
+        return (List<T>) findByQuery(sb.toString(), values);
     }
 
     public int executeNativeSql(final String sql, final Object... params) {
@@ -359,7 +359,7 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
     @SuppressWarnings("unchecked")
     @Override
     public long count(String sql, Object... params) {
-        List result = find(sql, params);
+        List result = findByQuery(sql, params);
         return ((Number) result.get(0)).longValue();
     }
 

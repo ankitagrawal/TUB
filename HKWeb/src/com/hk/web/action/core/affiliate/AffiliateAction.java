@@ -111,7 +111,7 @@ public class AffiliateAction extends BaseAction {
             addValidationError("e1", new LocalizableError("/Login.action.user.notFound"));
             return getContext().getSourcePageResolution();
         }
-        if (affiliate.getUser().getRoles().contains(roleDao.find(RoleConstants.HK_AFFILIATE_UNVERIFIED))) {
+        if (affiliate.getUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.HK_AFFILIATE_UNVERIFIED))) {
             return new ForwardResolution(UserManageAddressAction.class, "manageAddresses");
         } else {
             return new ForwardResolution(AffiliateAccountAction.class, "affiliateAccount");

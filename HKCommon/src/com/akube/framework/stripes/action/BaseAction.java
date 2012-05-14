@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 import com.akube.framework.stripes.controller.BreadcrumbInterceptor;
 import com.hk.domain.user.User;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.service.RoleService;
 import com.hk.pact.service.UserService;
 import com.shiro.PrincipalImpl;
 
@@ -36,6 +37,9 @@ public class BaseAction implements ActionBean {
 
     @Autowired
     private UserService       userService;
+
+    @Autowired
+    private RoleService       roleService;
 
     @Autowired
     private BaseDao           baseDao;
@@ -122,6 +126,14 @@ public class BaseAction implements ActionBean {
 
     public void setBaseDao(BaseDao baseDao) {
         this.baseDao = baseDao;
+    }
+
+    public RoleService getRoleService() {
+        return roleService;
+    }
+
+    public void setRoleService(RoleService roleService) {
+        this.roleService = roleService;
     }
 
     

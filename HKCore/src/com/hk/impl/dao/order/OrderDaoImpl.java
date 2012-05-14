@@ -238,14 +238,14 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao {
      * (:categoryList) and li.lineItemType = :lineItemType " + "and r in (:roleList)"; return
      * getSession().createQuery(query) .setParameterList("categoryList", Arrays.asList(category))
      * .setEntity("lineItemType", lineItemTypeDaoProvider.get().find(EnumLineItemType.Product.getId()))
-     * .setParameterList("roleList", Arrays.asList(roleDao.find(EnumRole.HK_USER.getRoleName()),
+     * .setParameterList("roleList", Arrays.asList(getRoleService().getRoleByName(EnumRole.HK_USER.getRoleName()),
      * roleDaoProvider.get().find(EnumRole.HK_UNVERIFIED.getRoleName()))) .list(); } public List<User>
      * getAllMailingList() { String query = "select distinct u from User u left join u.roles r " + "where r in
      * (:roleList)"; return getSession().createQuery(query) .setParameterList("roleList",
-     * Arrays.asList(roleDao.find(EnumRole.HK_USER.getRoleName()))) .list(); } public List<User>
+     * Arrays.asList(getRoleService().getRoleByName(EnumRole.HK_USER.getRoleName()))) .list(); } public List<User>
      * getAllUnverifiedMailingList() { String query = "select distinct u from User u left join u.roles r " + "where r in
      * (:roleList)"; return getSession().createQuery(query) .setParameterList("roleList",
-     * Arrays.asList(roleDao.find(EnumRole.HK_UNVERIFIED.getRoleName()))) .list(); }
+     * Arrays.asList(getRoleService().getRoleByName(EnumRole.HK_UNVERIFIED.getRoleName()))) .list(); }
      */
 
     /*

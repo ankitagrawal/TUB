@@ -54,7 +54,7 @@ public class InvoiceService {
       }
     }
     if (productLineItems != null && !productLineItems.isEmpty()) {
-      if (order.getUser().getRoles().contains(roleDao.find(EnumRole.B2B_USER.getRoleName()))) {
+      if (order.getUser().getRoles().contains(getRoleService().getRoleByName(EnumRole.B2B_USER.getRoleName()))) {
         generateB2BInvoiceForLineItems(order, productLineItems);
       } else {
         generateRetailInvoiceForLineItems(order, productLineItems);

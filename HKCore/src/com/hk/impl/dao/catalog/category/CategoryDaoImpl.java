@@ -47,7 +47,7 @@ public class CategoryDaoImpl extends BaseDaoImpl implements CategoryDao{
     }
 
     public List<Category> getPrimaryCategories() {
-        return find("select distinct p.primaryCategory from Product p");
+        return findByQuery("select distinct p.primaryCategory from Product p");
     }
 
 }

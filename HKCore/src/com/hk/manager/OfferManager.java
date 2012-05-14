@@ -21,9 +21,9 @@ import com.hk.domain.offer.OfferAction;
 import com.hk.domain.offer.OfferTrigger;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
-import com.hk.pact.dao.RoleDao;
 import com.hk.pact.dao.offer.OfferDao;
 import com.hk.pact.dao.offer.OfferInstanceDao;
+import com.hk.pact.service.RoleService;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.discount.CouponService;
 
@@ -31,19 +31,19 @@ import com.hk.pact.service.discount.CouponService;
 public class OfferManager {
 
     @Autowired
-    OfferDao         offerDao;
+    OfferDao              offerDao;
 
     @Autowired
-    ProductService   productService;
-    
-    
-    OfferInstanceDao offerInstanceDaoProvider;
-    
+    ProductService        productService;
+
+    OfferInstanceDao      offerInstanceDaoProvider;
+
+
     @Autowired
-    RoleDao          roleDao;
-    
+    private CouponService couponService;
+
     @Autowired
-    CouponService    couponService;
+    private RoleService   roleService;
 
     public boolean isOfferValidForUser(Offer offer, User user) {
         if (offer.getRoles().size() == 0) {
@@ -76,7 +76,7 @@ public class OfferManager {
                     offerAction).build();
 
             Set<Role> roles = new HashSet<Role>(1);
-            roles.add(getRoleDao().getRoleByName(RoleConstants.HK_USER));
+            roles.add(getRoleService().getRoleByName(RoleConstants.HK_USER));
             offer.setRoles(roles);
 
             offer = (Offer) getOfferDao().save(offer);
@@ -104,7 +104,7 @@ public class OfferManager {
                     offerAction).build();
 
             Set<Role> roles = new HashSet<Role>(1);
-            roles.add((Role) getRoleDao().find(RoleConstants.HK_USER));
+            roles.add((Role) getRoleService().getRoleByName(RoleConstants.HK_USER));
             offer.setRoles(roles);
 
             offer = (Offer) getOfferDao().save(offer);
@@ -132,7 +132,7 @@ public class OfferManager {
                     offerAction).build();
 
             Set<Role> roles = new HashSet<Role>(1);
-            roles.add((Role) getRoleDao().find(RoleConstants.HK_USER));
+            roles.add((Role) getRoleService().getRoleByName(RoleConstants.HK_USER));
             offer.setRoles(roles);
 
             offer = (Offer) getOfferDao().save(offer);
@@ -159,7 +159,7 @@ public class OfferManager {
                     false).excludeTriggerProducts(false).offerIdentifier(OfferConstants.diwaliOffer).offerTrigger(offerTrigger).offerAction(offerAction).build();
 
             Set<Role> roles = new HashSet<Role>(1);
-            roles.add((Role) getRoleDao().find(RoleConstants.HK_USER));
+            roles.add((Role) getRoleService().getRoleByName(RoleConstants.HK_USER));
             offer.setRoles(roles);
 
             offer = (Offer) getOfferDao().save(offer);
@@ -186,7 +186,7 @@ public class OfferManager {
                     false).excludeTriggerProducts(false).offerIdentifier(OfferConstants.IHO_HK_Offer).offerTrigger(offerTrigger).offerAction(offerAction).build();
 
             Set<Role> roles = new HashSet<Role>(1);
-            roles.add((Role) getRoleDao().find(RoleConstants.HK_IHO_USER));
+            roles.add((Role) getRoleService().getRoleByName(RoleConstants.HK_IHO_USER));
             offer.setRoles(roles);
 
             offer = (Offer) getOfferDao().save(offer);
@@ -212,7 +212,7 @@ public class OfferManager {
                     offerAction).build();
 
             Set<Role> roles = new HashSet<Role>(1);
-            roles.add((Role) getRoleDao().find(RoleConstants.HK_EMPLOYEE));
+            roles.add((Role) getRoleService().getRoleByName(RoleConstants.HK_EMPLOYEE));
             offer.setRoles(roles);
 
             offer = (Offer) offerDao.save(offer);
@@ -237,14 +237,6 @@ public class OfferManager {
         this.productService = productService;
     }
 
-    public RoleDao getRoleDao() {
-        return roleDao;
-    }
-
-    public void setRoleDao(RoleDao roleDao) {
-        this.roleDao = roleDao;
-    }
-
     public CouponService getCouponService() {
         return couponService;
     }
@@ -252,7 +244,13 @@ public class OfferManager {
     public void setCouponService(CouponService couponService) {
         this.couponService = couponService;
     }
-    
-    
+
+    public RoleService getRoleService() {
+        return roleService;
+    }
+
+    public void setRoleService(RoleService roleService) {
+        this.roleService = roleService;
+    }
 
 }
