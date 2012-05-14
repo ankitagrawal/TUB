@@ -397,7 +397,7 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
         int totalResults = count(criteria, hasDistinctRootEntity);
         criteria.setProjection(null);
         if (hasDistinctRootEntity) {
-            criteria.setResultTransformer(Criteria.ROOT_ENTITY);
+            criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         }
         List resultList = findByCriteria(criteria, pageNo-1, perPage);
         return new Page(resultList, perPage, pageNo, totalResults);
