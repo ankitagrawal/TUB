@@ -1,4 +1,5 @@
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
+<%@ page import="com.hk.util.HKImageUtils" %>
 <%@ page import="com.hk.util.ImageManager" %>
 <?xml version="1.0" encoding="UTF-8"?>
 <% response.setContentType("text/xml"); %>
@@ -24,9 +25,9 @@
             <c:set var="imageId" value="${product.mainImageId}"/>
             <%Long imageId = (Long) pageContext.getAttribute("imageId");%>
             <image
-                srcSmall="<%=ImageManager.getS3ImageUrl(EnumImageSize.SmallSize, imageId)%>"
-                srcMedium="<%=ImageManager.getS3ImageUrl(EnumImageSize.MediumSize, imageId)%>"
-                srcLarge="<%=ImageManager.getS3ImageUrl(EnumImageSize.LargeSize, imageId)%>"
+                srcSmall="<%=HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, imageId)%>"
+                srcMedium="<%=HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, imageId)%>"
+                srcLarge="<%=HKImageUtils.getS3ImageUrl(EnumImageSize.LargeSize, imageId)%>"
                 />
           </c:when>
           <c:otherwise>
