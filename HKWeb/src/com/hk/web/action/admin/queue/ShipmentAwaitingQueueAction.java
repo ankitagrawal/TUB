@@ -195,7 +195,7 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
         } catch (Exception ex) {
             logger.error("Exception occurred while generating pdf.", ex);
         }
-        addRedirectAlertMessage(new SimpleMessage("Sorry! No shipping orders exist for courier:" + courier.getName().toUpperCase()));
+        addRedirectAlertMessage(new SimpleMessage("Sorry! No shipping orders exist for courier:" + courier !=null ? courier.getName().toUpperCase() : "All"));
         return new RedirectResolution(ShipmentAwaitingQueueAction.class);
     }
 
