@@ -47,6 +47,7 @@ import com.hk.pact.dao.location.LocalityMapDao;
 import com.hk.pact.dao.location.MapIndiaDao;
 import com.hk.util.SeoManager;
 import com.hk.web.ConvertEncryptedToNormalDouble;
+import com.hk.web.AppConstants;
 import com.hk.web.filter.WebContext;
 
 @UrlBinding("/{rootCategorySlug}/{childCategorySlug}/{secondaryChildCategorySlug}/{tertiaryChildCategorySlug}")
@@ -124,7 +125,7 @@ public class CatalogAction extends BasePaginatedAction {
     category = categoryDao.getCategoryByName(rootCategorySlug);
     String jspRelativePath = "/pages/category/category.jsp";
 
-    File jspFile = new File(appBasePath + jspRelativePath);
+    File jspFile = new File(AppConstants.appBasePath + jspRelativePath);
     if(category !=null){
       if (jspFile.exists() && StringUtils.isBlank(childCategorySlug) && StringUtils.isBlank(secondaryChildCategorySlug)) {
         return new ForwardResolution(CategoryAction.class, "pre").addParameter("category", category.getName());
