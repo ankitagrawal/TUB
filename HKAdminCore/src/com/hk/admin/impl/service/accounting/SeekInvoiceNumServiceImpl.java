@@ -1,10 +1,10 @@
 package com.hk.admin.impl.service.accounting;
 
-import org.springframework.stereotype.Service;
-
 import com.hk.admin.pact.dao.accounting.SeekInvoiceNumDao;
 import com.hk.admin.pact.service.accounting.SeekInvoiceNumService;
 import com.hk.domain.warehouse.Warehouse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * User: Rahul Agarwal
@@ -12,6 +12,7 @@ import com.hk.domain.warehouse.Warehouse;
 @Service
 public class SeekInvoiceNumServiceImpl implements SeekInvoiceNumService {
 
+		@Autowired
     private SeekInvoiceNumDao seekInvoiceNumDao;
 
     /**

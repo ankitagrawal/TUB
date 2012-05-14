@@ -35,7 +35,7 @@ public class PurchaseOrderDaoImpl extends BaseDaoImpl implements PurchaseOrderDa
             String tinNumber, String supplierName, Warehouse warehouse, int pageNo, int perPage) {
 
         DetachedCriteria purchaseOrderCriteria = DetachedCriteria.forClass(PurchaseOrder.class);
-        DetachedCriteria supplierCriteria = purchaseOrderCriteria.createCriteria("supplier");
+        DetachedCriteria supplierCriteria =null;
         if (purchaseOrder != null) {
             purchaseOrderCriteria.add(Restrictions.eq("id", purchaseOrder.getId()));
         }
@@ -55,9 +55,15 @@ public class PurchaseOrderDaoImpl extends BaseDaoImpl implements PurchaseOrderDa
             purchaseOrderCriteria.add(Restrictions.eq("warehouse", warehouse));
         }
         if (StringUtils.isNotBlank(tinNumber)) {
+	                if(supplierCriteria == null){
+		        supplierCriteria = purchaseOrderCriteria.createCriteria("supplier");
+	        }
             supplierCriteria.add(Restrictions.eq("tinNumber", tinNumber));
         }
         if (StringUtils.isNotBlank(supplierName)) {
+	        if(supplierCriteria == null){
+		        supplierCriteria = purchaseOrderCriteria.createCriteria("supplier");
+	        }
             supplierCriteria.add(Restrictions.like("name", "%" + supplierName + "%"));
         }
 
