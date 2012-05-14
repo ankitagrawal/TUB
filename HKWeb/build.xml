@@ -1,6 +1,7 @@
 <project name="HK Web" basedir="." default="build">
 
 	<property file="build.properties" />
+	<property file="${project.base.dir}/environmentLocator.properties" />
 
 	<path id="compile.classpath">
 		<fileset file="${lib.root.dir}/commons/commons-lang-2.1.jar" />
@@ -145,7 +146,7 @@
 			<fileset dir="${package.target.dir}" excludes="test/**/**" />
 		</copy>
 		<copy todir="${project.dist.dir}/WEB-INF/">
-			<fileset dir="${project.resources.dir}/WEB-INF" excludes="test/**/**" />
+			<fileset dir="${project.resources.dir}/${project.env}/WEB-INF" excludes="test/**/**" />
 		</copy>
 		<!--<copy todir="${project.dist.dir}/WEB-INF/classes/spring">
 			<fileset dir="${project.resources.dir}/spring" excludes="test/**/**" />

@@ -136,6 +136,7 @@ public class BulkEditProductAction extends BasePaginatedAction {
         return new ForwardResolution("/pages/bulkProductDetails.jsp");
     }
 
+    @SuppressWarnings("unchecked")
     public Resolution bulkEdit() {
         if (products.isEmpty()) {
             productPage = productDao.getAllProductsByCategoryAndBrand(category, brand, getPageNo(), getPerPage());
