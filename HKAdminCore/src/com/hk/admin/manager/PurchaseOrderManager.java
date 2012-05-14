@@ -1,22 +1,5 @@
 package com.hk.admin.manager;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.springframework.stereotype.Component;
-
 import com.hk.admin.dto.inventory.PoLineItemDto;
 import com.hk.admin.dto.inventory.PurchaseOrderDto;
 import com.hk.admin.pact.dao.inventory.PurchaseOrderDao;
@@ -30,6 +13,17 @@ import com.hk.domain.warehouse.Warehouse;
 import com.hk.dto.TaxComponent;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA. User: USER Date: Nov 20, 2011 Time: 10:54:30 PM To change this template use File | Settings |
@@ -38,10 +32,13 @@ import com.hk.pact.service.inventory.SkuService;
 @Component
 public class PurchaseOrderManager {
 
-    PurchaseOrderDao            purchaseOrderDaoProvider;
+		@Autowired
+    PurchaseOrderDao            purchaseOrderDao;
 
+		@Autowired
     InventoryService            inventoryService;
 
+		@Autowired
     SkuService                  skuService;
 
     private List<PurchaseOrder> purchaseOrderList              = new ArrayList<PurchaseOrder>();
@@ -66,7 +63,7 @@ public class PurchaseOrderManager {
 
     SimpleDateFormat            dateFormat                     = new SimpleDateFormat("dd/MM/yyyy");
 
-    public File generatePurchaseOrderXls(String xslFilePath, PurchaseOrder purchaseOrder) throws Exception {
+	public File generatePurchaseOrderXls(String xslFilePath, PurchaseOrder purchaseOrder) throws Exception {
         File file = new File(xslFilePath);
         FileOutputStream out = new FileOutputStream(file);
         Workbook wb = new HSSFWorkbook();
