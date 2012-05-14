@@ -53,31 +53,34 @@ public class SeoManager {
     }
 
     private SeoData checkAndSetAllSeoTagsNotFilledForProducts(SeoData seoData, Product product) {
+	      String productName = "";
+	      if(product !=  null){
+		      productName = product.getName();
+	      }
         if (seoData.getTitle() == null) {
-            String productName = product.getName();
             StringBuffer title = new StringBuffer(productName);
             title.append("| Buy Online ").append(productName).append(" in India");
             // seoData.setTitle("${product.name} | Buy Online ${product.name} in India");
             seoData.setTitle(title.toString());
         }
         if (seoData.getMetaKeyword() == null) {
-            seoData.setMetaKeyword("buy ${product.name}, ${product.name} india, buy ${product.name} india, buy ${product.name} online, but ${product.name} online india");
+            seoData.setMetaKeyword("buy " + productName + " , " + productName + " india, buy " + productName + " india, buy " + productName + " online, buy " + productName + " online india");
         }
         if (seoData.getMetaDescription() == null) {
-            seoData.setMetaDescription("Buy ${product.name} Online in India at HealthKart.com. Free home delivery across India on orders above Rs. 250");
+            seoData.setMetaDescription("Buy " + productName + " Online in India at HealthKart.com. Free home delivery across India on orders above Rs. 250");
         }
         return seoData;
     }
 
     private SeoData checkAndSetAllSeoTagsNotFilledForCategory(SeoData seoData, String name) {
         if (seoData.getTitle() == null) {
-            seoData.setTitle("${name} | Buy Online ${name} in India");
+            seoData.setTitle(name + " | Buy Online " + name + " in India");
         }
         if (seoData.getMetaKeyword() == null) {
-            seoData.setMetaKeyword("buy ${name}, ${name} india, buy ${name} india, buy ${name} online, buy ${name} online india");
+            seoData.setMetaKeyword("buy " + name + ", " + name + " india, buy " + name + " india, buy " + name + " online, buy " + name + " online india");
         }
         if (seoData.getMetaDescription() == null) {
-            seoData.setMetaDescription("Buy ${name} Online in India at HealthKart.com. Free home delivery across India on orders above Rs. 250");
+            seoData.setMetaDescription("Buy " + name + " Online in India at HealthKart.com. Free home delivery across India on orders above Rs. 250");
         }
         return seoData;
     }
@@ -86,12 +89,16 @@ public class SeoManager {
 
         SeoData seoData = new SeoData();
         Product product = getProductService().getProductById(id);
+	      String productName = "";
+	      if(product != null){
+		      productName = product.getName();
+	      }
         seoData.setId(id);
         seoData.setH1(product.getName());
-        seoData.setTitle( "${product.name} | Buy Online ${product.name} in India");
-        seoData.setMetaKeyword("buy ${product.name}, ${product.name} india, buy ${product.name} india, buy ${product.name} online, but ${product.name} online india");
-        seoData.setMetaDescription("Buy ${product.name} Online in India at HealthKart.com. Free home delivery across India on orders above Rs. 250");
-        seoData.setDescriptionTitle("About ${product.name}");
+        seoData.setTitle( productName + " | Buy Online " + productName + " in India");
+        seoData.setMetaKeyword("buy " + productName + ", " + productName + " india, buy " + productName + " india, buy " + productName + " online, but " + productName + " online india");
+        seoData.setMetaDescription("Buy " + productName + " Online in India at HealthKart.com. Free home delivery across India on orders above Rs. 250");
+        seoData.setDescriptionTitle("About " + productName);
 
         // seoData.metaDescription=product.overview;
         return seoData;
@@ -106,10 +113,10 @@ public class SeoManager {
         String name = node.getName();
         seoData.setId(id);
         seoData.setH1(name);
-        seoData.setTitle("${name} | Buy Online ${name} in India");
-        seoData.setMetaKeyword("buy ${name}, ${name} india, buy ${name} india, buy ${name} online, buy ${name} online india");
-        seoData.setMetaDescription("Buy ${name} Online in India at HealthKart.com. Free home delivery across India on orders above Rs. 250");
-        seoData.setDescriptionTitle("About ${name}");
+        seoData.setTitle(name + " | Buy Online " + name + " in India");
+        seoData.setMetaKeyword("buy " + name + ", " + name + " india, buy " + name + " india, buy " + name + " online, buy " + name + " online india");
+        seoData.setMetaDescription("Buy " + name + " Online in India at HealthKart.com. Free home delivery across India on orders above Rs. 250");
+        seoData.setDescriptionTitle("About " + name + "");
 
         return seoData;
     }
@@ -119,9 +126,9 @@ public class SeoManager {
         seoData.setId(brandName);
         seoData.setH1(brandName);
         seoData.setTitle(brandName);
-        seoData.setMetaKeyword("buy ${brandName} products, ${brandName} products shop online ");
-        seoData.setMetaDescription("Buy ${brandName} products online from India's most reliable e-health store. ");
-        seoData.setDescriptionTitle("About ${brandName}");
+        seoData.setMetaKeyword("buy " + brandName + " products, " + brandName + " products shop online ");
+        seoData.setMetaDescription("Buy " + brandName + " products online from India's most reliable e-health store. ");
+        seoData.setDescriptionTitle("About " + brandName);
 
         return seoData;
     }
@@ -148,7 +155,7 @@ public class SeoManager {
         brandInCategorySeoData.setTitle(brandName);
         brandInCategorySeoData.setMetaKeyword(brandSeoData.getMetaKeyword());
         brandInCategorySeoData.setMetaDescription(brandSeoData.getMetaDescription());
-        brandInCategorySeoData.setDescriptionTitle("About ${brandName} ");
+        brandInCategorySeoData.setDescriptionTitle("About " + brandName);
 
         if (brandSeoData.getDescription() != null && categorySeoData.getDescription() != null) {
             brandInCategorySeoData.setDescription(brandSeoData.getDescription().concat(categorySeoData.getDescription()));
