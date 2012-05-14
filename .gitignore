@@ -13,3 +13,4 @@ dist/*
 .metadata/*
 /*/dist/*
 .svn/*
+environmentLocator.properties
