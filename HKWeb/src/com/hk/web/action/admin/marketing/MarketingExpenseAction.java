@@ -1,30 +1,20 @@
 package com.hk.web.action.admin.marketing;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.pact.dao.marketing.MarketingExpenseDao;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.marketing.MarketingExpense;
-import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
+import com.hk.pact.dao.catalog.category.CategoryDao;
 import com.hk.web.action.error.AdminPermissionAction;
+import net.sourceforge.stripes.action.*;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -41,7 +31,7 @@ public class MarketingExpenseAction extends BasePaginatedAction {
 	@Autowired
 	MarketingExpenseDao marketingExpenseDao;
 	@Autowired
-	CategoryDaoImpl categoryDao;
+	CategoryDao categoryDao;
 	
 	
 	private Date startDate;

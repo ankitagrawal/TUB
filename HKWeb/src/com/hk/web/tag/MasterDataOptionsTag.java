@@ -1,21 +1,19 @@
 package com.hk.web.tag;
 
-import java.util.Collection;
-
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.Tag;
-
+import com.hk.service.ServiceLocatorFactory;
 import net.sourceforge.stripes.tag.InputOptionsCollectionTag;
 import net.sourceforge.stripes.util.bean.BeanUtil;
 import net.sourceforge.stripes.util.bean.EvaluationException;
 import net.sourceforge.stripes.util.bean.ParseException;
 
-import com.hk.service.ServiceLocatorFactory;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.Tag;
+import java.util.Collection;
 
 
 @SuppressWarnings("unchecked")
 public class MasterDataOptionsTag extends InputOptionsCollectionTag implements Tag {
-    
+
     private Class service;
     private String serviceProperty;
 
@@ -52,6 +50,7 @@ public class MasterDataOptionsTag extends InputOptionsCollectionTag implements T
       Collection someCollection = null;
       Object serviceObject = null;
       try {
+	      
         serviceObject = ServiceLocatorFactory.getService(service);
       } catch (Exception e) {
         throw new IllegalArgumentException("Could not inject object of class "+service.getName());
