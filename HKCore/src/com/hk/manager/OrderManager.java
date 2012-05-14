@@ -46,6 +46,7 @@ import com.hk.pact.dao.order.cartLineItem.CartLineItemDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.store.StoreService;
 import com.hk.pact.service.core.AffilateService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
@@ -386,7 +387,7 @@ public class OrderManager {
          */
 
         // Check if HK order then only send emails
-        if (order.getStore() != null && order.getStore().getId().equals(1L)) {
+        if (order.getStore() != null && order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID)) {
             // Send mail to Customer
             getPaymentService().sendPaymentEmailForOrder(order);
             // Send referral program intro email
