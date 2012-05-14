@@ -21,7 +21,6 @@ public interface OrderDao extends BaseDao {
 
     public Page listOrdersForUser(List<OrderStatus> orderStatusList, User user, int page, int perPage);
     
-    public List<Order> getOrdersForUserSortedByDate(List<OrderStatus> orderStatusList, User user);
 
     public Page searchOrders(OrderSearchCriteria orderSearchCriteria, int pageNo, int perPage);
 

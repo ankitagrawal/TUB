@@ -1,6 +1,6 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
-<%@ page import="com.hk.pact.service.UserService" %>
+<%@ page import="com.hk.pact.service.user.UserProfileService" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -21,10 +21,10 @@
 <s:layout-component name="lhsContent">
   <jsp:include page="myaccount-nav.jsp"/>
   <%
-    UserService userService = ServiceLocatorFactory.getService(UserService.class);
+  UserProfileService userProfileService = ServiceLocatorFactory.getService(UserProfileService.class);
   %>
-  <c:set var="productVariants" value="<%=userService.getRecentlyOrderedProductVariantsForUser(maa.getUser())%>"/>
-  <c:set var="recentOrders" value="<%=userService.getOrdersForUserSortedByDate(maa.getUser())%>"/>
+  <c:set var="productVariants" value="<%=userProfileService.getRecentlyOrderedProductVariantsForUser(maa.getUser())%>"/>
+  <c:set var="recentOrders" value="<%=userProfileService.getOrdersForUserSortedByDate(maa.getUser())%>"/>
   <c:set var="addresses" value="${maa.user.addresses}"/>
 
   <fieldset>

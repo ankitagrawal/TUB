@@ -23,7 +23,7 @@ public class SkuDaoImpl extends BaseDaoImpl implements SkuDao {
     @SuppressWarnings("unchecked")
     public Sku getMaxVATSku(ProductVariant productVariant) {
         String queryString = "from Sku sku where sku.productVariant = ? order by sku.tax.value desc";
-        List<Sku> skuList = find(queryString, new Object[] { productVariant });
+        List<Sku> skuList = findByQuery(queryString, new Object[] { productVariant });
         if (skuList != null && skuList.size() > 0) {
             return skuList.get(0);
         }
@@ -33,7 +33,7 @@ public class SkuDaoImpl extends BaseDaoImpl implements SkuDao {
     @SuppressWarnings("unchecked")
     public List<Sku> getSkus(ProductVariant productVariant) {
         String queryString = " from Sku sku where sku.productVariant = ? ";
-        return (List<Sku>) find(queryString, new Object[] { productVariant });
+        return (List<Sku>) findByQuery(queryString, new Object[] { productVariant });
 
     }
 

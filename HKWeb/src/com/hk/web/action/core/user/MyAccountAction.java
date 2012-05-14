@@ -27,6 +27,7 @@ import com.hk.pact.dao.affiliate.AffiliateDao;
 import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.dao.user.B2bUserDetailsDao;
 import com.hk.pact.dao.user.UserDao;
+import com.hk.pact.service.RoleService;
 
 @Secure(hasAnyRoles = {RoleConstants.HK_USER, RoleConstants.HK_UNVERIFIED}, disallowRememberMe = true)
 public class MyAccountAction extends BaseAction {
@@ -53,6 +54,9 @@ public class MyAccountAction extends BaseAction {
   UserManager userManager;
   @Autowired
   RoleDao roleDao;
+  
+  @Autowired
+  private RoleService roleService;
 
   @DefaultHandler
   public Resolution pre() {
@@ -117,7 +121,7 @@ public class MyAccountAction extends BaseAction {
       return new ForwardResolution("/pages/editBasicInformation.jsp");
     }
     user = userDao.save(user);
-    if (user.getRoles().contains(roleDao.find(EnumRole.B2B_USER.getRoleName()))) {
+    if (user.getRoles().contains(roleService.getRoleByName(EnumRole.B2B_USER))) {
       b2bUserDetailsDao.save(b2bUserDetails);
     }
 

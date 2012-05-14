@@ -85,7 +85,7 @@ public class SMSHomeAction extends BaseAction {
             List<Address> addresses = addressDao.getAllAddressesByCategories(categories);
             logger.info("addresses: " + addresses.size());
             for (Address address : addresses) {
-                if (!address.getUser().getRoles().contains(roleDao.find(RoleConstants.UNSUBSCRIBED_USER))) {
+                if (!address.getUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.UNSUBSCRIBED_USER))) {
                     if (!mobileNumbers.contains(address.getPhone())) {
                         smsManager.sendSMS(message, address.getPhone());
                         mobileNumbers.add(address.getPhone());
@@ -96,7 +96,7 @@ public class SMSHomeAction extends BaseAction {
             List<Address> addresses = addressDao.getAllAddresses();
             logger.info("addresses: " + addresses.size());
             for (Address address : addresses) {
-                if (!address.getUser().getRoles().contains(roleDao.find(RoleConstants.UNSUBSCRIBED_USER))) {
+                if (!address.getUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.UNSUBSCRIBED_USER))) {
                     if (!mobileNumbers.contains(address.getPhone())) {
                         smsManager.sendSMS(message, address.getPhone());
                         mobileNumbers.add(address.getPhone());

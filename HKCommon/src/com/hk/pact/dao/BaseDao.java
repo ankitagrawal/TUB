@@ -80,7 +80,7 @@ public interface BaseDao {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public List find(String query);
+    public List findByQuery(String query);
 
     /**
      * @param query
@@ -88,7 +88,7 @@ public interface BaseDao {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public List find(String query, Object[] bindings);
+    public List findByQuery(String query, Object[] bindings);
     
     
     /**

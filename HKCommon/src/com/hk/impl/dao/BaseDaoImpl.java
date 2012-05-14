@@ -21,14 +21,12 @@ import org.hibernate.engine.PersistenceContext;
 import org.hibernate.engine.SessionImplementor;
 import org.hibernate.persister.entity.EntityPersister;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.dao.DataAccessException;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.akube.framework.dao.Page;
 import com.hk.pact.dao.BaseDao;
@@ -86,12 +84,12 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
     }
 
     @SuppressWarnings("unchecked")
-    public List find(String queryString) {
+    public List findByQuery(String queryString) {
         return getHibernateTemplate().find(queryString);
     }
 
     @SuppressWarnings("unchecked")
-    public List find(String queryString, Object... bindings) {
+    public List findByQuery(String queryString, Object... bindings) {
         return getHibernateTemplate().find(queryString, bindings);
     }
 
@@ -265,7 +263,7 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
     }
 
     public <T> T getByQuery(String query, Object... parameters) {
-        List<T> results = find(query, parameters);
+        List<T> results = findByQuery(query, parameters);
         return getFirst(results);
     }
 
@@ -288,7 +286,7 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
             }
         }
 
-        return (List<T>) find(sb.toString(), values);
+        return (List<T>) findByQuery(sb.toString(), values);
     }
 
     public int executeNativeSql(final String sql, final Object... params) {
@@ -361,7 +359,7 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
     @SuppressWarnings("unchecked")
     @Override
     public long count(String sql, Object... params) {
-        List result = find(sql, params);
+        List result = findByQuery(sql, params);
         return ((Number) result.get(0)).longValue();
     }
 
@@ -397,9 +395,11 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
         int totalResults = count(criteria, hasDistinctRootEntity);
         criteria.setProjection(null);
         if (hasDistinctRootEntity) {
+            criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        } else {
             criteria.setResultTransformer(Criteria.ROOT_ENTITY);
         }
-        List resultList = findByCriteria(criteria, pageNo-1, perPage);
+        List resultList = findByCriteria(criteria, pageNo - 1, perPage);
         return new Page(resultList, perPage, pageNo, totalResults);
     }
 

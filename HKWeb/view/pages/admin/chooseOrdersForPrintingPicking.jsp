@@ -147,7 +147,7 @@
           var shippingOrderDetailCheckbox = $(this);
           var isChecked = shippingOrderDetailCheckbox.attr('checked');
           if (isChecked) {
-            $('#hiddenShippingIds').append('<input type="hidden" name="shipping'OrdersList[]" value="' + $(this).attr('dataId') + '"/>');
+            $('#hiddenShippingIds').append('<input type="hidden" name="shippingOrdersList[]" value="' + $(this).attr('dataId') + '"/>');
           }
         });
         return true;

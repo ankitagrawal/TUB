@@ -63,7 +63,7 @@ public class LoginAction extends BaseAction {
 
     // // check if this account is blocked, and show an account blocked page
     // if
-    // (userLoginDto.getLoggedUser().getRoles().contains(roleDao.find(RoleConstants.ITV_BLOCKED)))
+    // (userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.ITV_BLOCKED)))
     // {
     // // this is a blocked user.
     // return new RedirectResolution(BlockedAccountAction.class);
@@ -86,13 +86,13 @@ public class LoginAction extends BaseAction {
     }
 
     if (
-        userLoginDto.getLoggedUser().getRoles().contains(roleDao.find(RoleConstants.ADMIN)) ||
-        userLoginDto.getLoggedUser().getRoles().contains(roleDao.find(RoleConstants.GOD)) ||
-        userLoginDto.getLoggedUser().getRoles().contains(roleDao.find(RoleConstants.CATEGORY_MANAGER)) ||
-        userLoginDto.getLoggedUser().getRoles().contains(roleDao.find(RoleConstants.OPS_MANAGER)) ||
-        userLoginDto.getLoggedUser().getRoles().contains(roleDao.find(RoleConstants.WH_MANAGER)) ||
-        userLoginDto.getLoggedUser().getRoles().contains(roleDao.find(RoleConstants.TICKETADMIN)) ||
-        userLoginDto.getLoggedUser().getRoles().contains(roleDao.find(RoleConstants.CUSTOMER_SUPPORT))
+        userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.ADMIN)) ||
+        userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.GOD)) ||
+        userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.CATEGORY_MANAGER)) ||
+        userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.OPS_MANAGER)) ||
+        userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.WH_MANAGER)) ||
+        userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.TICKETADMIN)) ||
+        userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.CUSTOMER_SUPPORT))
         )
       return new RedirectResolution(AdminHomeAction.class);
     else

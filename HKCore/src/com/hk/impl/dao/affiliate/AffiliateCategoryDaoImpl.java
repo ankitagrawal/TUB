@@ -44,7 +44,7 @@ public class AffiliateCategoryDaoImpl extends BaseDaoImpl implements AffiliateCa
     @SuppressWarnings("unchecked")
     public void deleteCategoryCommissionForExistingAffiliates(AffiliateCategory affiliateCategory) {
         String queryString = "from AffiliateCategoryCommission acc where acc.affiliateCategory = ?";
-        List<AffiliateCategoryCommission> toBeRemoved = find(queryString, new Object[] { affiliateCategory });
+        List<AffiliateCategoryCommission> toBeRemoved = findByQuery(queryString, new Object[] { affiliateCategory });
 
         deleteAll(toBeRemoved);
         /*
