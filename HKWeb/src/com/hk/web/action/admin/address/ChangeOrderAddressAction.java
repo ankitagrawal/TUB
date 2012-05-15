@@ -54,7 +54,8 @@ public class ChangeOrderAddressAction extends BaseAction {
 
     private boolean             copyToUserAddressBook;
 
-    OrderDao                    orderDao;
+    @Autowired
+    private OrderDao                    orderDao;
 
     @DefaultHandler
     public Resolution pre() {
