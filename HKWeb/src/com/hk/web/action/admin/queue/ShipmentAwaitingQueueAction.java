@@ -83,7 +83,7 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
     @Value("#{hkEnvProps['adminDownloads']}")
     String                             adminDownloads;
     File                               xlsFile;
-
+    @Autowired
     ReportManager                      reportGenerator;
 
     private Integer                    defaultPerPage    = 30;
@@ -224,7 +224,7 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
             }
             addRedirectAlertMessage(new SimpleMessage("Courier report successfully generated."));
         } catch (Exception e) {
-            e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.
+            logger.error("Error while generating report", e);
             addRedirectAlertMessage(new SimpleMessage("Courier report generation failed"));
         }
 

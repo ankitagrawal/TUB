@@ -63,7 +63,7 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
 
   @DontValidate
   @DefaultHandler
- // @Secure(hasAnyPermissions = {PermissionConstants.VIEW_PACKING_QUEUE}, authActionBean = AdminPermissionAction.class)
+  @Secure(hasAnyPermissions = {PermissionConstants.VIEW_PACKING_QUEUE}, authActionBean = AdminPermissionAction.class)
   public Resolution pre() {
     Long startTime = (new Date()).getTime();
     if (shippingOrderStatus == null) {
@@ -102,7 +102,7 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
     return new ForwardResolution("/pages/admin/packingAwaitingQueue.jsp");
   }
 
-  //@Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PACKING_QUEUE}, authActionBean = AdminPermissionAction.class)
+  @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PACKING_QUEUE}, authActionBean = AdminPermissionAction.class)
   public Resolution moveToActionAwaiting() {
 
     if (!shippingOrderList.isEmpty()) {
@@ -118,7 +118,7 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
     return new RedirectResolution(PackingAwaitingQueueAction.class);
   }
 
-  //@Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PACKING_QUEUE}, authActionBean = AdminPermissionAction.class)
+  @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PACKING_QUEUE}, authActionBean = AdminPermissionAction.class)
   public Resolution reAssignToPackingQueue() {
 
     if (!shippingOrderList.isEmpty()) {
