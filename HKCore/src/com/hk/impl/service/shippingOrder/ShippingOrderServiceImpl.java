@@ -234,7 +234,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 
     @Override
     public Page searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, int pageNo, int perPage) {
-        return getShippingOrderDao().searchShippingOrders(shippingOrderSearchCriteria, pageNo, perPage);
+        return searchShippingOrders(shippingOrderSearchCriteria, true, pageNo, perPage);
     }
 
     public UserService getUserService() {
