@@ -107,7 +107,6 @@
 		<property name="initialSize">
 			<value>50</value>
 		</property>
-		<property name="defaultTransactionIsolation" value="1" />
 		<property name="poolPreparedStatements" value="true" />
 		<property name="maxOpenPreparedStatements" value="30" />
 		<property name="timeBetweenEvictionRunsMillis" value="-1" />
