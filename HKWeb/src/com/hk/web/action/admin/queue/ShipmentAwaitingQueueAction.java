@@ -90,7 +90,7 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
 
     @DontValidate
     @DefaultHandler
-    @Secure(hasAnyPermissions = { PermissionConstants.VIEW_SHIPMENT_QUEUE }, authActionBean = AdminPermissionAction.class)
+   // @Secure(hasAnyPermissions = { PermissionConstants.VIEW_SHIPMENT_QUEUE }, authActionBean = AdminPermissionAction.class)
     public Resolution pre() {
         return searchOrders();
     }

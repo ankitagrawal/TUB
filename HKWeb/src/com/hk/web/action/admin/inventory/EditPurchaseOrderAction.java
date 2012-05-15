@@ -87,6 +87,7 @@ public class EditPurchaseOrderAction extends BaseAction {
         return new ForwardResolution("/pages/admin/editPurchaseOrder.jsp");
     }
 
+    @SuppressWarnings("unchecked")
     public Resolution getPVDetails() {
         Map dataMap = new HashMap();
         if (StringUtils.isNotBlank(productVariantId)) {

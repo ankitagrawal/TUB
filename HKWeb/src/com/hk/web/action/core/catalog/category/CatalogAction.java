@@ -46,6 +46,7 @@ import com.hk.pact.dao.catalog.product.ProductDao;
 import com.hk.pact.dao.location.LocalityMapDao;
 import com.hk.pact.dao.location.MapIndiaDao;
 import com.hk.util.SeoManager;
+import com.hk.web.AppConstants;
 import com.hk.web.ConvertEncryptedToNormalDouble;
 import com.hk.web.AppConstants;
 import com.hk.web.filter.WebContext;

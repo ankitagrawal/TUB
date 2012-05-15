@@ -28,7 +28,7 @@
     <h1>the one stop shop for health, fitness and beauty</h1>
 
     <%--<a href="http://www.healthkart.com/services/health-checkups"><img class="banner01" src="<hk:vhostImage/>/images/banners/home/health_checkup_sbanner.jpg" border="0" alt="Health Checkups"/></a>--%>
-    <a href="http://www.healthkart.com/product/onetouch-ultra-2-meter-w-free-omron-hem-7111-b.p.-monitor/CMB-DIA013"><img class="banner01" src="<hk:vhostImage/>/images/banners/home/accuchek_sbanner.jpg" border="0" alt="Accu-check offer"/></a>
+    <a href="${pageContext.request.contextPath}/product/equinox-irresistible-offer/CMB-HD005"><img class="banner01" src="<hk:vhostImage/>/images/banners/home/equinox.jpg" border="0" alt="Free Body Fat Monitor with Equinox BP Monitor"/></a>
 
 
     <a href="http://www.healthkart.com/sports/apparel?brand=STAG"><img class="banner01" src="<hk:vhostImage/>/images/banners/home/stag_sbanner.jpg" border="0" alt="Stag brand"/></a>

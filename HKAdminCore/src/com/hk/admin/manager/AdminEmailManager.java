@@ -1,27 +1,5 @@
 package com.hk.admin.manager;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.PostConstruct;
-
-import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
 import com.akube.framework.util.BaseUtils;
 import com.akube.framework.util.DateUtils;
 import com.hk.admin.dto.DisplayTicketHistoryDto;
@@ -58,6 +36,18 @@ import com.hk.util.HKImageUtils;
 import com.hk.util.SendGridUtil;
 import com.hk.util.io.ExcelSheetParser;
 import com.hk.util.io.HKRow;
+import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @SuppressWarnings("unchecked")
 @Component
@@ -393,24 +383,29 @@ public class AdminEmailManager {
         }
 
         if (excelMap.containsKey(EmailMapKeyConstants.productId)) {
-            Product product = productService.getProductById(excelMap.get(EmailMapKeyConstants.productId).toString());
+            Product product = getProductService().getProductById(excelMap.get(EmailMapKeyConstants.productId).toString());
             if (product != null) {
                 Long productMainImageId = product.getMainImageId();
                 excelMap.put(EmailMapKeyConstants.product, product);
-                excelMap.put(EmailMapKeyConstants.productUrl, productService.getProductUrl(product));
+                //excelMap.put(EmailMapKeyConstants.productUrl, productService.getProductUrl(product));
+	              excelMap.put(EmailMapKeyConstants.productUrl, convertToWww(getProductService().getProductUrl(product)));
+	            
 
                 if (productMainImageId != null) {
                     excelMap.put(EmailMapKeyConstants.productImageUrlMedium, HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, productMainImageId));
                     excelMap.put(EmailMapKeyConstants.productImageUrlTiny, HKImageUtils.getS3ImageUrl(EnumImageSize.TinySize, productMainImageId));
+	                  excelMap.put(EmailMapKeyConstants.productImageUrlSmall, HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, productMainImageId));
                 } else {
                     excelMap.put(EmailMapKeyConstants.productImageUrlMedium, "");
                     excelMap.put(EmailMapKeyConstants.productImageUrlTiny, "");
+	                  excelMap.put(EmailMapKeyConstants.productImageUrlSmall, "");
                 }
             } else {
                 excelMap.put(EmailMapKeyConstants.product, null);
                 excelMap.put(EmailMapKeyConstants.productUrl, "");
                 excelMap.put(EmailMapKeyConstants.productImageUrlMedium, "");
                 excelMap.put(EmailMapKeyConstants.productImageUrlTiny, "");
+	              excelMap.put(EmailMapKeyConstants.productImageUrlSmall, "");
             }
         }
 
@@ -424,14 +419,17 @@ public class AdminEmailManager {
                     Long productMainImageId = product.getMainImageId();
 
                     excelMap.put(EmailMapKeyConstants.product, product);
-                    excelMap.put(EmailMapKeyConstants.productUrl, productService.getProductUrl(product));
+                    //excelMap.put(EmailMapKeyConstants.productUrl, productService.getProductUrl(product));
+	                  excelMap.put(EmailMapKeyConstants.productUrl, convertToWww(getProductService().getProductUrl(product)));
 
                     if (productMainImageId != null) {
                         excelMap.put(EmailMapKeyConstants.productImageUrlMedium, HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, productMainImageId));
                         excelMap.put(EmailMapKeyConstants.productImageUrlTiny, HKImageUtils.getS3ImageUrl(EnumImageSize.TinySize, productMainImageId));
+	                      excelMap.put(EmailMapKeyConstants.productImageUrlSmall, HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, productMainImageId));
                     } else {
                         excelMap.put(EmailMapKeyConstants.productImageUrlMedium, "");
                         excelMap.put(EmailMapKeyConstants.productImageUrlTiny, "");
+	                      excelMap.put(EmailMapKeyConstants.productImageUrlSmall, "");
                     }
                 }
             } else {
@@ -441,6 +439,7 @@ public class AdminEmailManager {
                     excelMap.put(EmailMapKeyConstants.productUrl, "");
                     excelMap.put(EmailMapKeyConstants.productImageUrlMedium, "");
                     excelMap.put(EmailMapKeyConstants.productImageUrlTiny, "");
+	                  excelMap.put(EmailMapKeyConstants.productImageUrlSmall, "");
                 }
             }
         }
@@ -629,6 +628,13 @@ public class AdminEmailManager {
         return success;
     }
 
+
+			//todo : isko thik kar do - for now hardcoding logic to convert admin.healthkart.com to www.healthkart.com
+		private static String convertToWww(String productUrl) {
+			return productUrl.replaceAll("admin\\.healthkart\\.com", "www.healthkart.com");
+		}
+
+
     public EmailService getEmailService() {
         return emailService;
     }
@@ -685,4 +691,11 @@ public class AdminEmailManager {
         this.linkManager = linkManager;
     }
 
+	public ProductService getProductService() {
+		return productService;
+	}
+
+	public void setProductService(ProductService productService) {
+		this.productService = productService;
+	}
 }

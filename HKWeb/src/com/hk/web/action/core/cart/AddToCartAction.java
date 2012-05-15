@@ -59,7 +59,8 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
   @Autowired
   SignupAction signupAction;
 
-  @DefaultHandler
+  @SuppressWarnings("unchecked")
+@DefaultHandler
   @JsonHandler
   public Resolution addToCart() {
     // I need to pass product info

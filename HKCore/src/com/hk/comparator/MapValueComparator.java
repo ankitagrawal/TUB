@@ -4,6 +4,7 @@ import java.util.Comparator;
 import java.util.Map;
 
 
+@SuppressWarnings("unchecked")
 public class MapValueComparator implements Comparator {
 
   Map base;
