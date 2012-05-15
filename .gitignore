@@ -13,3 +13,6 @@ dist/*
 .metadata/*
 /*/dist/*
 .svn/*
+exploded/*
+rebel.xml
+bin/*
