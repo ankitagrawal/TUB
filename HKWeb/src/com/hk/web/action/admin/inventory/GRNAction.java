@@ -148,7 +148,7 @@ public class GRNAction extends BasePaginatedAction {
 
             for (GrnLineItem grnLineItem : grnLineItems) {
                 if (grnLineItem.getQty() != null && grnLineItem.getQty() == 0 && grnLineItem.getId() != null) {
-                    grnLineItemDao.delete(grnLineItem.getId());
+                    grnLineItemDao.delete(grnLineItem);
                 } else if (grnLineItem.getQty() > 0) {
                     if (grnLineItem.getId() != null) {
                         GrnLineItem grnLineItemInDB = grnLineItemDao.get(GrnLineItem.class, grnLineItem.getId());
