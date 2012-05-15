@@ -10,6 +10,7 @@ import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.validation.ValidationMethod;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 import org.stripesstuff.plugin.session.Session;
@@ -20,13 +21,15 @@ import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.user.User;
 import com.hk.dto.user.UserFilterDto;
-import com.hk.impl.dao.user.UserDaoImpl;
+import com.hk.pact.dao.user.UserDao;
 import com.hk.web.action.error.AdminPermissionAction;
 
 @Secure(hasAnyPermissions = {PermissionConstants.SEARCH_USERS}, authActionBean = AdminPermissionAction.class)
 @Component
 public class SearchUserAction extends BasePaginatedAction {
-   UserDaoImpl userDao;
+   
+    @Autowired
+    private UserDao userDao;
 
   @Session(key = HealthkartConstants.Session.userSearchFilterKey)
   private UserFilterDto userFilterDto;
