@@ -68,11 +68,14 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao {
     }
 
     public User findByLoginAndStoreId(String login, Long storeId) {
-      return (User) getSession().createQuery("from User u where u.login = :login and u.store.id = :storeId")
-          .setParameter("login", login)
-          .setParameter("storeId", storeId)
-          .uniqueResult();
+    if(storeId != null && !storeId.equals(1L)){
+      login += "||" + storeId;
     }
+    return (User) getSession().createQuery("from User u where u.login = :login and u.store.id = :storeId")
+        .setParameter("login", login)          
+        .setParameter("storeId", storeId)
+        .uniqueResult();
+  }
 
     public User findByEmailAndPassword(String email, String password) {
         return (User) getSession().getNamedQuery("user.findByEmailAndPassword").setString("email", email).setString("passwordEncrypted", BaseUtils.passwordEncrypt(password)).uniqueResult();
