@@ -18,7 +18,7 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
-import com.hk.admin.pact.dao.inventory.PVDamageInventoryDao;
+import com.hk.admin.pact.dao.inventory.ProductVariantDamageInventoryDao;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.inventory.EnumInvTxnType;
@@ -51,7 +51,7 @@ public class SearchOrderAndReCheckinRTOInventoryAction extends BaseAction {
     @Autowired
     private AdminProductVariantInventoryDao adminProductVariantInventoryDao;
     @Autowired
-    private PVDamageInventoryDao            productVariantDamageInventoryDao;
+    private ProductVariantDamageInventoryDao productVariantDamageInventoryDao;
 
     Map<LineItem, Long>                     lineItemRecheckinQtyMap = new HashMap<LineItem, Long>();
 
@@ -201,11 +201,11 @@ public class SearchOrderAndReCheckinRTOInventoryAction extends BaseAction {
         this.adminProductVariantInventoryDao = adminProductVariantInventoryDao;
     }
 
-    public PVDamageInventoryDao getProductVariantDamageInventoryDao() {
+    public ProductVariantDamageInventoryDao getProductVariantDamageInventoryDao() {
         return productVariantDamageInventoryDao;
     }
 
-    public void setProductVariantDamageInventoryDao(PVDamageInventoryDao productVariantDamageInventoryDao) {
+    public void setProductVariantDamageInventoryDao(ProductVariantDamageInventoryDao productVariantDamageInventoryDao) {
         this.productVariantDamageInventoryDao = productVariantDamageInventoryDao;
     }
     
