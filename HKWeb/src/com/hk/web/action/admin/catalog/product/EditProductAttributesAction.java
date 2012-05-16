@@ -135,14 +135,6 @@ public class EditProductAttributesAction extends BaseAction {
     public Resolution saveProductDetails() throws Exception {
         logger.debug("saving product attributes for product " + product.getId());
         String productId = product.getId();
-        
-        Combo combo = getBaseDao().get(Combo.class, productId);
-        Supplier supplier = supplierDao.findByTIN(tin);
-        if (combo == null && supplier == null) {
-            addRedirectAlertMessage(new SimpleMessage("Supplier corresponding to given tin does not exist"));
-            return new ForwardResolution("/pages/editProductDetails.jsp");
-        }
-        
         List<Category> categoriesList = xslParser.getCategroyListFromCategoryString(categories);
         product.setCategories(categoriesList);
         if (primaryCategory == null) {
@@ -178,7 +170,12 @@ public class EditProductAttributesAction extends BaseAction {
             addRedirectAlertMessage(new SimpleMessage("Brand cannot be null"));
             return new ForwardResolution("/pages/editProductDetails.jsp");
         }
-        
+        Combo combo = getBaseDao().get(Combo.class, productId);
+        Supplier supplier = supplierDao.findByTIN(tin);
+        if (combo == null && supplier == null) {
+            addRedirectAlertMessage(new SimpleMessage("Supplier corresponding to given tin does not exist"));
+            return new ForwardResolution("/pages/editProductDetails.jsp");
+        }
         product.setSupplier(supplier);
         product.setBrand(brand);
         product.setManufacturer(manufacturer);
