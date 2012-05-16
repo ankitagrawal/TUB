@@ -27,9 +27,9 @@ public class ReportOrderServiceImpl implements ReportOrderService {
 
     @Autowired
     ReportOrderDao     reportOrderDao;
-     @Autowired
+    @Autowired
     OrderStatusService orderStatusService;
-     @Autowired
+    @Autowired
     OrderService       orderService;
     
     public List<DaySaleDto> findSaleForTimeFrame(List<OrderStatus> applicableOrderStatus, Date startDate, Date endDate){

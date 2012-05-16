@@ -42,6 +42,7 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
     @Validate(required = true)
     EmailCampaign              emailCampaign;
 
+    @Autowired
     EmailCampaignDao           emailCampaignDao;
 
     @Validate(required = true, on = { "testCampaign" })
