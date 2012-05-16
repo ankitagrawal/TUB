@@ -302,7 +302,7 @@
 ---/home-devices/miscellaneous/massager/back-massager
 ---/home-devices/miscellaneous/massager/infrared-massager
 ---/home-devices/miscellaneous/massager/handheld
----/home-devices/miscellaneous/massager/waist-massager
+---/home-devices/miscellaneous/massager/abdominal-massager
 ---/home-devices/miscellaneous/massager/foot-massage
 ---/home-devices/miscellaneous/massager/footbath
 --/home-devices/miscellaneous/pain-management
@@ -355,6 +355,7 @@
 --/eye/what-s-new/just-in :Just In
 --/eye/what-s-new/top-deals:Top Deals
 --/eye/what-s-new/gift-kits:  Gift Kits
+--/eye/what-s-new/eye-care-services:Eye Care Services
 
 /personal-care
 -/personal-care/elderly-care:Elderly Care
@@ -379,6 +380,7 @@
 --/personal-care/elderly-care/respiratory-care: Respiratory Care
 --/personal-care/elderly-care/hearing-aids: Hearing Aids
 --/personal-care/elderly-care/mobiles
+--/personal-care/elderly-care/elderly-care-services: Elderly Care Services
 -/personal-care/women
 --/personal-care/women/sanitary-napkins
 --/personal-care/women/tampons
@@ -527,7 +529,7 @@
 ---/beauty/make-up/tools/other
 --/beauty/make-up/wipes-tissues : Wipes & Tissues
 --/beauty/make-up/sindoor
---/beauty/make-up/coloured lenses
+--/beauty/make-up/coloured-lenses
 -/beauty/hair-care
 --/beauty/hair-care/shampoo
 --/beauty/hair-care/conditioner
