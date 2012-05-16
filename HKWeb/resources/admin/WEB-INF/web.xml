@@ -59,9 +59,7 @@
 		</init-param>
 		<init-param>
 			<param-name>Extension.Packages</param-name>
-			<param-value>
-				com.hk.web.validation
-			</param-value>
+			<param-value>com.hk.web.validation</param-value>
 		</init-param>
 		<init-param>
 			<param-name>ActionBeanPropertyBinder.Class</param-name>
@@ -101,7 +99,26 @@
 				com.hk.web.action.core.auth.LoggedOffModalAction
 			</param-value>
 		</init-param>
-
+		<init-param>
+			<param-name>SSL.Enabled</param-name>
+			<param-value>false</param-value>
+		</init-param>
+		<init-param>
+			<param-name>SSL.SecureHost</param-name>
+			<param-value>localhost:8443</param-value>
+		</init-param>
+		<init-param>
+			<param-name>SSL.UnsecureHost</param-name>
+			<param-value>localhost:80</param-value>
+		</init-param>
+		<init-param>
+			<param-name>SSL.SessionMode</param-name>
+			<param-value>never</param-value>
+		</init-param>
+		<init-param>
+			<param-name>FileUpload.MaximumPostSize</param-name>
+			<param-value>50mb</param-value>
+		</init-param>
 	</filter>
 
 	<servlet>

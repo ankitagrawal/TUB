@@ -101,6 +101,26 @@
 				com.hk.web.action.core.auth.LoggedOffModalAction
 			</param-value>
 		</init-param>
+		<init-param>
+			<param-name>SSL.Enabled</param-name>
+			<param-value>false</param-value>
+		</init-param>
+		<init-param>
+			<param-name>SSL.SecureHost</param-name>
+			<param-value>localhost:8443</param-value>
+		</init-param>
+		<init-param>
+			<param-name>SSL.UnsecureHost</param-name>
+			<param-value>localhost:8080</param-value>
+		</init-param>
+		<init-param>
+			<param-name>SSL.SessionMode</param-name>
+			<param-value>never</param-value>
+		</init-param>
+		<init-param>
+			<param-name>FileUpload.MaximumPostSize</param-name>
+			<param-value>50mb</param-value>
+		</init-param>
 
 	</filter>
 
