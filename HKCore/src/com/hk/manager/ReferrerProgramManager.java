@@ -2,14 +2,6 @@ package com.hk.manager;
 
 import static ch.lambdaj.Lambda.on;
 import static ch.lambdaj.Lambda.sum;
-
-import java.util.Date;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.akube.framework.util.BaseUtils;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
@@ -28,6 +20,12 @@ import com.hk.pact.dao.reward.RewardPointDao;
 import com.hk.pact.dao.reward.RewardPointTxnDao;
 import com.hk.pact.dao.user.UserAccountInfoDao;
 import com.hk.pact.service.discount.CouponService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * User: rahul Time: 22 Apr, 2010 3:46:20 PM <p/> A User can earn Reward Points in 2 ways 1.) Adding reward points

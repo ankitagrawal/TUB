@@ -1,4 +1,5 @@
 build/*
+dev/*
 *.class
 *.bak
 *.log
@@ -14,3 +15,5 @@ dist/*
 /*/dist/*
 .svn/*
 environmentLocator.properties
+HKCommon/resources/dev/
+HKWeb/resources/dev/

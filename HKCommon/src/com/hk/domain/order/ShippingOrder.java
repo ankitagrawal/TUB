@@ -28,6 +28,7 @@ import com.hk.domain.courier.Shipment;
 import com.hk.domain.inventory.rv.ReconciliationStatus;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.constants.payment.EnumPaymentMode;
 
 
 @SuppressWarnings("serial")
@@ -247,9 +248,7 @@ public class ShippingOrder implements java.io.Serializable {
 
   @Transient
   public boolean isCOD() {
-  //  return EnumPaymentMode.COD.getId().equals(getBaseOrder().getPayment().getPaymentMode().getId());
-      //TODO:rewrite
-      return true;
+    return EnumPaymentMode.COD.getId().equals(getBaseOrder().getPayment().getPaymentMode().getId());
   }
 
   @Transient

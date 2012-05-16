@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
 import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
-import com.hk.admin.pact.dao.inventory.PVDamageInventoryDao;
+import com.hk.admin.pact.dao.inventory.ProductVariantDamageInventoryDao;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.util.BarcodeUtil;
 import com.hk.constants.inventory.EnumInvTxnType;
@@ -49,7 +49,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
     @Autowired
     private AdminProductVariantInventoryDao adminPVIDao;
     @Autowired
-    private PVDamageInventoryDao            pVDamageInventoryDao;
+    private ProductVariantDamageInventoryDao pVDamageInventoryDao;
     @Autowired
     private UserService                     userService;
     @Autowired
@@ -282,11 +282,11 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
         this.adminPVIDao = adminPVIDao;
     }
 
-    public PVDamageInventoryDao getPVDamageInventoryDao() {
+    public ProductVariantDamageInventoryDao getPVDamageInventoryDao() {
         return pVDamageInventoryDao;
     }
 
-    public void setPVDamageInventoryDao(PVDamageInventoryDao damageInventoryDao) {
+    public void setPVDamageInventoryDao(ProductVariantDamageInventoryDao damageInventoryDao) {
         pVDamageInventoryDao = damageInventoryDao;
     }
 

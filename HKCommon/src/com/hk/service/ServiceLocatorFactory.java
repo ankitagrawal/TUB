@@ -19,6 +19,7 @@ import org.springframework.web.context.ServletContextAware;
  */
 public class ServiceLocatorFactory implements ApplicationContextAware, ServletContextAware {
 
+   
     private static ApplicationContext applicationContext;
     @SuppressWarnings("unused")
     private static ServletContext     servletContext;
@@ -31,6 +32,8 @@ public class ServiceLocatorFactory implements ApplicationContextAware, ServletCo
      */
     private static final Map          nameMap = new ConcurrentHashMap();
 
+    private static final String IMPLEMENTATION_SUFFIX = "Impl";
+    
     /**
      * @return Returns the applicationContext.
      */
@@ -73,7 +76,7 @@ public class ServiceLocatorFactory implements ApplicationContextAware, ServletCo
             int servicePackageLength = interfaceClass.getPackage().getName().length() + 1;
             StringBuffer serviceName = new StringBuffer(interfaceClass.getName().substring(servicePackageLength));
             serviceName.setCharAt(0, Character.toLowerCase(serviceName.charAt(0)));
-            serviceName.append("Impl");
+            serviceName.append(IMPLEMENTATION_SUFFIX);
             cachedServiceName = serviceName.toString();
             nameMap.put(interfaceClass, cachedServiceName);
         }

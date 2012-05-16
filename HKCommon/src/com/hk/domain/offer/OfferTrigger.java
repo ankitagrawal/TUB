@@ -93,7 +93,6 @@ public class OfferTrigger implements java.io.Serializable {
     
   }
   
-  //TODO:rewrite
 
   @Override
   public String toString() {

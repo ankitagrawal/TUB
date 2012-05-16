@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.hk.domain.TicketStatus;
 import com.hk.domain.TicketType;
+import com.hk.domain.order.ShippingOrderStatus;
 import com.hk.domain.accounting.DebitNoteStatus;
 import com.hk.domain.affiliate.AffiliateCategory;
 import com.hk.domain.catalog.Manufacturer;
@@ -89,5 +90,7 @@ public interface MasterDataDao {
     public List<Surcharge> getSurchargeList();
 
     public List<ReconciliationType> getReconciliationTypeList();
+
+    public List<ShippingOrderStatus> getSOStatusForShipmentDetailsList();
 
 }

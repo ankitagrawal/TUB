@@ -1,6 +1,7 @@
 package com.hk.domain.builder;
 
 import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.constants.order.PricingConstants;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.CartLineItem;
 
@@ -60,9 +61,7 @@ public class CartLineItemBuilder {
       //tax = productVariant.getTax();
     } else if (enumCartLineItemType == EnumCartLineItemType.Shipping) {
       //assert this.tax != null;
-      //qty = PricingEngine.shippingDefaultQty;
-        //TODO:rewrite
-        qty = 1L;
+      qty = PricingConstants.SHIPPING_DEFAULT_QTY;
       //tax = this.tax;
     } else if (enumCartLineItemType == EnumCartLineItemType.OrderLevelDiscount) {
       assert productVariant != null;
@@ -71,10 +70,7 @@ public class CartLineItemBuilder {
     } else if (enumCartLineItemType == EnumCartLineItemType.CodCharges) {
       //assert this.tax != null;
       //tax = this.tax;
-//      qty = PricingEngine.shippingDefaultQty;
-        //TODO:rewrite
-        qty = 1L;
-
+      qty = PricingConstants.SHIPPING_DEFAULT_QTY;
     } else if (enumCartLineItemType == EnumCartLineItemType.RewardPoint) {
       assert discountOnHkPrice != null;
       hkPrice = 0D;
