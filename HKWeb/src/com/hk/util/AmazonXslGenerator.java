@@ -14,6 +14,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hk.admin.pact.dao.marketing.AmazonFeedDao;
 import com.hk.constants.catalog.image.EnumImageSize;
