@@ -69,7 +69,14 @@
 </div>
 <div class="grid_4">
   <div style="float: right;">
-    <img src="${pageContext.request.contextPath}/images/logo.png" alt=""/>
+   <c:choose>
+      <c:when test="${orderSummary.shippingOrder.baseOrder.user.login == 'support@madeinhealth.com' || orderSummary.shippingOrder.baseOrder.store.id == 2}">
+        <img src="${pageContext.request.contextPath}/images/mih-logo.jpg" alt="MadeInHealth Logo"/>
+      </c:when>
+      <c:otherwise>
+        <img src="${pageContext.request.contextPath}/images/logo.png" alt="HealthKart Logo"/>
+      </c:otherwise>
+    </c:choose>
   </div>
 </div>
 

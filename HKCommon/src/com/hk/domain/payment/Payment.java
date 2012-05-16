@@ -17,6 +17,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.order.Order;
@@ -280,9 +281,7 @@ public class Payment implements java.io.Serializable {
 
   @Transient
   public boolean isCODPayment(){
-   // return getPaymentMode().getId().equals(EnumPaymentMode.COD.getId());
-      //TODO:rewrite
-      return true;
+    return getPaymentMode().getId().equals(EnumPaymentMode.COD.getId());
   }
 
   
