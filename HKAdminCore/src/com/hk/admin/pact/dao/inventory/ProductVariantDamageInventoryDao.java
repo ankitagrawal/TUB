@@ -5,7 +5,7 @@ import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.SkuItem;
 import com.hk.pact.dao.BaseDao;
 
-public interface PVDamageInventoryDao extends BaseDao {
+public interface ProductVariantDamageInventoryDao extends BaseDao {
 
     public ProductVariantDamageInventory getCheckedInPVDI(SkuItem skuItem);
 
