@@ -99,7 +99,7 @@
             </s:link>
           </td>
           <td>
-            <s:link beanclass="com.hk.web.action.core.discount.RewardPointTxnStatementAction" event="pre">
+            <s:link beanclass="com.hk.web.action.admin.discount.RewardPointTxnStatementAction" event="pre">
               Reward Points Txn History                     
               <s:param name="user" value="${user.id}"/>
             </s:link>
