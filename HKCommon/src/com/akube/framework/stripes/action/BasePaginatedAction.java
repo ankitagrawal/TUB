@@ -1,6 +1,9 @@
 package com.akube.framework.stripes.action;
 import java.util.Set;
 
+import net.sourceforge.stripes.action.After;
+import net.sourceforge.stripes.controller.LifecycleStage;
+
 import org.springframework.stereotype.Component;
 
 /**
@@ -54,9 +57,8 @@ extends BaseAction
    /**
    * Setting the event name to a param so that pagination can render the even correctly
    */
-  /*@After(stages = LifecycleStage.EventHandling)
+  @After(stages = LifecycleStage.EventHandling)
   public void rememberEvent() {
     eventParam = getContext().getEventName();
   }
-*/
 }
