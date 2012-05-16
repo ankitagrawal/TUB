@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 import com.akube.framework.util.FormatUtils;
 import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
 import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
-import com.hk.admin.pact.dao.inventory.PVDamageInventoryDao;
+import com.hk.admin.pact.dao.inventory.ProductVariantDamageInventoryDao;
 import com.hk.admin.pact.dao.inventory.PoLineItemDao;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
@@ -382,7 +382,7 @@ public class Functions {
     }
 
     public static Long getDamageUnitsCount(Object o1) {
-        PVDamageInventoryDao productVariantDamageInventoryDao = ServiceLocatorFactory.getService(PVDamageInventoryDao.class);
+        ProductVariantDamageInventoryDao productVariantDamageInventoryDao = ServiceLocatorFactory.getService(ProductVariantDamageInventoryDao.class);
         LineItem lineItem = (LineItem) o1;
         return productVariantDamageInventoryDao.getCheckedInPVDIAgainstRTO(lineItem);
     }

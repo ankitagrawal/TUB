@@ -90,11 +90,11 @@ import com.hk.service.ServiceLocatorFactory;
 public class XslParser {
 
     @Autowired
-    private BaseDao               baseDao;
+    private BaseDao                  baseDao;
 
-    private static Logger         logger                          = LoggerFactory.getLogger(XslParser.class);
+    private static Logger            logger         = LoggerFactory.getLogger(XslParser.class);
 
-    public static Pattern         p                               = Pattern.compile("([0-9]*\\.?[0-9]*) ?%");
+    public static Pattern            p              = Pattern.compile("([0-9]*\\.?[0-9]*) ?%");
 
     // public static void main(String[] args) {
     // Matcher matcher = p.matcher("VAT - 3.125 %");
@@ -103,52 +103,51 @@ public class XslParser {
     // }
     // }
 
-    private Set<Product>          colProductList                  = null;
-
-
-    @Autowired
-    private PurchaseOrderDao      purchaseOrderDao;
-    @Autowired
-    private LowInventoryDao       lowInventoryDao;
-    @Autowired
-    private SupplierDao           supplierDao;
-    @Autowired
-    private GrnLineItemDao        grnLineItemDao;
-    @Autowired
-    private PoLineItemDao         poLineItemDao;
-    @Autowired
-    private RetailLineItemDao     retailLineItemDao;
-    @Autowired
-    private AffiliateCategoryDaoImpl  affiliateCategoryDao;
+    private Set<Product>             colProductList = null;
 
     @Autowired
-    private ProductService        productService;
+    private PurchaseOrderDao         purchaseOrderDao;
     @Autowired
-    private ProductVariantService productVariantService;
+    private LowInventoryDao          lowInventoryDao;
     @Autowired
-    private CourierService        courierService;
+    private SupplierDao              supplierDao;
     @Autowired
-    private PincodeService        pincodeService;
+    private GrnLineItemDao           grnLineItemDao;
     @Autowired
-    private SkuService            skuService;
+    private PoLineItemDao            poLineItemDao;
     @Autowired
-    private ShipmentService       shipmentService;
+    private RetailLineItemDao        retailLineItemDao;
     @Autowired
-    private TaxService            taxService;
+    private AffiliateCategoryDaoImpl affiliateCategoryDao;
+
     @Autowired
-    private RoleService           roleService;
+    private ProductService           productService;
     @Autowired
-    private CategoryService       categoryService;
+    private ProductVariantService    productVariantService;
     @Autowired
-    private WarehouseService      warehouseService;
+    private CourierService           courierService;
     @Autowired
-    private ShippingOrderService  shippingOrderService;
+    private PincodeService           pincodeService;
     @Autowired
-    private PaymentService        paymentService;
+    private SkuService               skuService;
     @Autowired
-    private AdminInventoryService adminInventoryService;
+    private ShipmentService          shipmentService;
     @Autowired
-    private InventoryService      inventoryService;
+    private TaxService               taxService;
+    @Autowired
+    private RoleService              roleService;
+    @Autowired
+    private CategoryService          categoryService;
+    @Autowired
+    private WarehouseService         warehouseService;
+    @Autowired
+    private ShippingOrderService     shippingOrderService;
+    @Autowired
+    private PaymentService           paymentService;
+    @Autowired
+    private AdminInventoryService    adminInventoryService;
+    @Autowired
+    private InventoryService         inventoryService;
 
     public Set<Product> readProductList(File objInFile, User loggedOnUser) throws Exception {
 
@@ -269,7 +268,8 @@ public class XslParser {
                     product.setRelatedProducts(getRelatedProductsFromExcel(getCellValue(XslConstants.RELATED_PRODUCTS, rowMap, headerMap)));
                     productDeleted = true;
                     product.setDeleted(productDeleted);
-                    product.setSupplier(getSupplierDetails(getCellValue(XslConstants.SUPPLIER_TIN, rowMap, headerMap), getCellValue(XslConstants.SUPPLIER_STATE, rowMap, headerMap), rowCount));
+                    product.setSupplier(getSupplierDetails(getCellValue(XslConstants.SUPPLIER_TIN, rowMap, headerMap),
+                            getCellValue(XslConstants.SUPPLIER_STATE, rowMap, headerMap), rowCount));
 
                     product.setMaxDays(getLong(getCellValue(XslConstants.MAX_DAYS_TO_PROCESS, rowMap, headerMap)));
                     product.setMinDays(getLong(getCellValue(XslConstants.MIN_DAYS_TO_PROCESS, rowMap, headerMap)));
@@ -292,10 +292,14 @@ public class XslParser {
                 }
                 productVariant.setId(variantId);
                 productVariant.setColorHex(getCellValue(XslConstants.COLOR_HEX, rowMap, headerMap));
-                productVariant.setLength(getDouble(getCellValue(XslConstants.LENGTH, rowMap, headerMap)) == null ? 0.0 : Double.parseDouble(getCellValue(XslConstants.LENGTH, rowMap, headerMap)));
-                productVariant.setBreadth(getDouble(getCellValue(XslConstants.BREADTH, rowMap, headerMap)) == null ? 0.0 : Double.parseDouble(getCellValue(XslConstants.BREADTH, rowMap, headerMap)));
-                productVariant.setHeight(getDouble(getCellValue(XslConstants.HEIGHT, rowMap, headerMap)) == null ? 0.0 : Double.parseDouble(getCellValue(XslConstants.HEIGHT, rowMap, headerMap)));
-                productVariant.setWeight(getDouble(getCellValue(XslConstants.WEIGHT, rowMap, headerMap)) == null ? 0.0 : Double.parseDouble(getCellValue(XslConstants.WEIGHT, rowMap, headerMap)));
+                productVariant.setLength(getDouble(getCellValue(XslConstants.LENGTH, rowMap, headerMap)) == null ? 0.0 : Double.parseDouble(getCellValue(XslConstants.LENGTH,
+                        rowMap, headerMap)));
+                productVariant.setBreadth(getDouble(getCellValue(XslConstants.BREADTH, rowMap, headerMap)) == null ? 0.0 : Double.parseDouble(getCellValue(XslConstants.BREADTH,
+                        rowMap, headerMap)));
+                productVariant.setHeight(getDouble(getCellValue(XslConstants.HEIGHT, rowMap, headerMap)) == null ? 0.0 : Double.parseDouble(getCellValue(XslConstants.HEIGHT,
+                        rowMap, headerMap)));
+                productVariant.setWeight(getDouble(getCellValue(XslConstants.WEIGHT, rowMap, headerMap)) == null ? 0.0 : Double.parseDouble(getCellValue(XslConstants.WEIGHT,
+                        rowMap, headerMap)));
                 if (refIsService != null && refIsService) {
                     String serviceTypeString = getCellValue(XslConstants.SERVICE_TYPE, rowMap, headerMap);
                     if (serviceTypeString != null) {
@@ -325,8 +329,8 @@ public class XslParser {
                     throw new Exception("MRP is zero Exception @ Row:" + rowCount + " ");
                 }
                 productVariant.setMarkedPrice(mrp);
-                Double postpaidAmount = getDouble(getCellValue(XslConstants.POSTPAID_AMOUNT, rowMap, headerMap)) == null ? 0.0 : Double.parseDouble(getCellValue(XslConstants.POSTPAID_AMOUNT, rowMap,
-                        headerMap));
+                Double postpaidAmount = getDouble(getCellValue(XslConstants.POSTPAID_AMOUNT, rowMap, headerMap)) == null ? 0.0 : Double.parseDouble(getCellValue(
+                        XslConstants.POSTPAID_AMOUNT, rowMap, headerMap));
                 productVariant.setPostpaidAmount(postpaidAmount);
                 Double hkprice = Double.parseDouble(getCellValue(XslConstants.HK_PRICE, rowMap, headerMap));
                 productVariant.setHkPrice(hkprice);
@@ -656,13 +660,19 @@ public class XslParser {
                         logger.debug("checkinQty of variant - " + productVariant.getId() + " is - " + checkinQty);
                         if (checkinQty != null && checkinQty > 0) {
                             String batch = getCellValue(XslConstants.BATCH_NUMBER, rowMap, headerMap);
-                            SkuGroup skuGroup = adminInventoryService.createSkuGroup(batch, getDate(getCellValue(XslConstants.MFG_DATE, rowMap, headerMap)), getDate(getCellValue(XslConstants.EXP_DATE, rowMap, headerMap)), goodsReceivedNote, null, null, null);
-                            adminInventoryService.createSkuItemsAndCheckinInventory(skuGroup, checkinQty, null, grnLineItem, null, null, getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKIN), null);
-                            
-                            /*SkuGroup skuGroup = getAdminInventoryService().createSkuGroup(batch, getDate(getCellValue(XlsConstants.MFG_DATE, rowMap, headerMap)),
-                                    getDate(getCellValue(XlsConstants.EXP_DATE, rowMap, headerMap)), goodsReceivedNote, null, null);
-                            getAdminInventoryService().createSkuItemsAndCheckinInventory(skuGroup, checkinQty, null, grnLineItem, null,
-                                    getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKIN), null);*/
+                            SkuGroup skuGroup = adminInventoryService.createSkuGroup(batch, getDate(getCellValue(XslConstants.MFG_DATE, rowMap, headerMap)), getDate(getCellValue(
+                                    XslConstants.EXP_DATE, rowMap, headerMap)), goodsReceivedNote, null, null, null);
+                            adminInventoryService.createSkuItemsAndCheckinInventory(skuGroup, checkinQty, null, grnLineItem, null, null, getInventoryService().getInventoryTxnType(
+                                    EnumInvTxnType.INV_CHECKIN), null);
+
+                            /*
+                             * SkuGroup skuGroup = getAdminInventoryService().createSkuGroup(batch,
+                             * getDate(getCellValue(XlsConstants.MFG_DATE, rowMap, headerMap)),
+                             * getDate(getCellValue(XlsConstants.EXP_DATE, rowMap, headerMap)), goodsReceivedNote, null,
+                             * null); getAdminInventoryService().createSkuItemsAndCheckinInventory(skuGroup, checkinQty,
+                             * null, grnLineItem, null,
+                             * getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKIN), null);
+                             */
                             getInventoryService().checkInventoryHealth(productVariant);
                         }
 
@@ -793,8 +803,8 @@ public class XslParser {
                 rowCount++;
             }
 
-            reconciliationMap.put(getBaseDao().get(ReconciliationStatus.class,EnumReconciliationStatus.DONE.getId()), reconciledOrders);
-            reconciliationMap.put(getBaseDao().get(ReconciliationStatus.class,EnumReconciliationStatus.PENDING.getId()), reconcilationPendingOrders);
+            reconciliationMap.put(getBaseDao().get(ReconciliationStatus.class, EnumReconciliationStatus.DONE.getId()), reconciledOrders);
+            reconciliationMap.put(getBaseDao().get(ReconciliationStatus.class, EnumReconciliationStatus.PENDING.getId()), reconcilationPendingOrders);
 
         } catch (Exception e) {
             logger.error("Exception @ Row:" + rowCount + 1 + e.getMessage());
@@ -1242,31 +1252,34 @@ public class XslParser {
      */
     public List<Category> getCategroyListFromCategoryString(String categoryString) {
         logger.debug("Category -> " + categoryString);
-        String[] catFamilies = StringUtils.split(categoryString, "|");
         List<Category> catFamilyList = new ArrayList<Category>();
 
-        for (int i = 0; i < catFamilies.length; i++) {
-            String catFamily = catFamilies[i].trim();
-            if (catFamily.charAt(catFamily.length() - 1) != '>') {
-                catFamily = catFamily + ">";
-            }
+        if (StringUtils.isNotBlank(categoryString)) {
+            String[] catFamilies = StringUtils.split(categoryString, "|");
 
-            Category parentCategory = null;
-            String categoryTree = "";
+            for (int i = 0; i < catFamilies.length; i++) {
+                String catFamily = catFamilies[i].trim();
+                if (catFamily.charAt(catFamily.length() - 1) != '>') {
+                    catFamily = catFamily + ">";
+                }
 
-            while (catFamily.indexOf('>') != -1) {
-                String displayName = catFamily.substring(0, catFamily.indexOf('>'));
-                String fullName = categoryTree + displayName;
-                categoryTree = categoryTree + displayName + ">";
+                Category parentCategory = null;
+                String categoryTree = "";
 
-                Category category = new Category();
-                category.setName(Category.getNameFromDisplayName(displayName));
-                category.setDisplayName(displayName);
-                catFamilyList.add(category);
+                while (catFamily.indexOf('>') != -1) {
+                    String displayName = catFamily.substring(0, catFamily.indexOf('>'));
+                    String fullName = categoryTree + displayName;
+                    categoryTree = categoryTree + displayName + ">";
 
-                parentCategory = category;
+                    Category category = new Category();
+                    category.setName(Category.getNameFromDisplayName(displayName));
+                    category.setDisplayName(displayName);
+                    catFamilyList.add(category);
 
-                catFamily = catFamily.substring(catFamily.indexOf('>') + 1, catFamily.length());
+                    parentCategory = category;
+
+                    catFamily = catFamily.substring(catFamily.indexOf('>') + 1, catFamily.length());
+                }
             }
         }
         logger.debug("catFamilyList: " + catFamilyList.size());

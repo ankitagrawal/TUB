@@ -70,7 +70,7 @@
 <div class="grid_4">
   <div style="float: right;">
    <c:choose>
-      <c:when test="${orderSummary.shippingOrder.baseOrder.user.login == 'support@madeinhealth.com' || orderSummary.shippingOrder.baseOrder.store.id == 2}">
+      <c:when test="${orderSummary.order.user.login == 'support@madeinhealth.com' || orderSummary.order.store.id == 2}">
         <img src="${pageContext.request.contextPath}/images/mih-logo.jpg" alt="MadeInHealth Logo"/>
       </c:when>
       <c:otherwise>
