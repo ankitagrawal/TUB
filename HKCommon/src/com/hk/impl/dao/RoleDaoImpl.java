@@ -59,7 +59,7 @@ public class RoleDaoImpl extends BaseDaoImpl implements RoleDao {
         basicRoleNames.add(EnumRole.HK_IHO_USER.getRoleName());
 
         DetachedCriteria criteria = DetachedCriteria.forClass(Role.class);
-        criteria.add(Restrictions.in("name", Arrays.asList(basicRoleNames)));
+        criteria.add(Restrictions.in("name", basicRoleNames));
 
         return findByCriteria(criteria);
     }

@@ -12,6 +12,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.jsoup.Jsoup;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.hk.admin.pact.dao.marketing.AmazonFeedDao;
@@ -27,11 +28,11 @@ public class AmazonXslGenerator {
 
   public static final String ID = "ID";
 
-  
+  @Autowired
   AmazonFeedDao amazonFeedDao;
-  
+  @Autowired
   DoomDayDaoImpl doomDayDao;
-  
+  @Autowired
   ProductVariantDao productVariantDao;
 
   public static final String SKU = "SKU";
