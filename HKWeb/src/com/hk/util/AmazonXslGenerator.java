@@ -30,9 +30,9 @@ public class AmazonXslGenerator {
 
   @Autowired
   AmazonFeedDao amazonFeedDao;
-  
+  @Autowired
   DoomDayDaoImpl doomDayDao;
-  
+  @Autowired
   ProductVariantDao productVariantDao;
 
   public static final String SKU = "SKU";

@@ -28,7 +28,7 @@ import com.hk.domain.shippingOrder.LineItem;
 public class OrderDetailsAction extends BaseAction {
 
   @SuppressWarnings("unused")
-private static Logger logger = LoggerFactory.getLogger(OrderDetailsAction.class);
+  private static Logger logger = LoggerFactory.getLogger(OrderDetailsAction.class);
   @Validate(encrypted = true)
   Order order;
 
@@ -37,9 +37,9 @@ private static Logger logger = LoggerFactory.getLogger(OrderDetailsAction.class)
   List<LineItem> lineItems = new ArrayList<LineItem>();
 
   public Resolution pre() {
-      Set<ShippingOrder> shippingOrders = order.getShippingOrders();
+    Set<ShippingOrder> shippingOrders = order.getShippingOrders();
 
-    if (shippingOrders != null) {
+    if (shippingOrders != null && shippingOrders.size() > 0) {
       for (ShippingOrder shippingOrder : shippingOrders) {
         lineItems.addAll(shippingOrder.getLineItems());
       }
