@@ -6,6 +6,22 @@
 <s:layout-render name="/layouts/defaultAdmin.jsp">
   <s:layout-component name="heading">Send Email Newsletter Campaign</s:layout-component>
   <s:layout-component name="content">
+    <fieldset>
+      <legend>Select an Email Type</legend>
+      <s:form beanclass="com.hk.web.action.admin.newsletter.SendEmailNewsletterCampaign">
+        Email Type:
+        <s:select name="emailType">
+          <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="emailTypeList"
+                                     value="id" label="name"/>
+        </s:select>
+        <s:submit name="pre" value="Filter"/>
+      </s:form>
+    </fieldset>
+
+    <div class="clear"></div>
+    <div style="margin-top:15px;"></div>
+
+    <fieldset>
     <h2>Step 1: Select a campaign</h2>
     <p>
       <s:form beanclass="com.hk.web.action.admin.newsletter.SendEmailNewsletterCampaign">
