@@ -3,6 +3,7 @@ package com.hk.rest.impl.service;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -131,6 +132,8 @@ public class APIOrderServiceImpl implements APIOrderService {
       paymentStatus = getPaymentStatusDao().getPaymentStatusById(EnumPaymentStatus.SUCCESS.getId());
     }
     payment.setPaymentStatus(paymentStatus);
+    payment.setCreateDate(new Date());
+    payment.setPaymentDate(new Date());
     return getPaymentService().save(payment);
   }
 
