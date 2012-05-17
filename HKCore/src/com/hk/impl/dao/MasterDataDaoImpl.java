@@ -27,6 +27,7 @@ import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.MasterDataDao;
 import com.hk.pact.service.RoleService;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.marketing.MarketingService;
 import com.hk.pact.service.catalog.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -45,6 +46,8 @@ public class MasterDataDaoImpl implements MasterDataDao {
   private CategoryService categoryService;
   @Autowired
   private RoleService roleService;
+  @Autowired
+  private MarketingService marketService;
 
   public List<PaymentStatus> getPaymentStatusList() {
     return getBaseDao().getAll(PaymentStatus.class);
@@ -118,7 +121,7 @@ public class MasterDataDaoImpl implements MasterDataDao {
   }
 
   public List<Category> getMarketExpenseCategoriesList() {
-    return CategoryConstants.marketExpenseCategoriesList;
+    return getMarketService().marketExpenseCategoriesList();
   }
 
   public List<AffiliateCategory> getallAffiliateCategories() {
@@ -225,6 +228,14 @@ public class MasterDataDaoImpl implements MasterDataDao {
 
   public void setRoleService(RoleService roleService) {
     this.roleService = roleService;
+  }
+
+  public MarketingService getMarketService() {
+    return marketService;
+  }
+
+  public void setMarketService(MarketingService marketService) {
+    this.marketService = marketService;
   }
 
   public List<ShippingOrderStatus> getSOStatusForShipmentDetailsList() {
