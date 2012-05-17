@@ -311,7 +311,7 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
         String excelFilePath = adminUploadsPath + "/emailList/" + System.currentTimeMillis() + ".xls";
         File excelFile = new File(excelFilePath);
         excelFile.getParentFile().mkdirs();
-        fileBean.save(excelFile);
+        fileBeanForCustomExcel.save(excelFile);
 
         getAdminEmailManager().sendMailMergeCampaign(emailCampaign, excelFilePath, sheetName);
         return new ForwardResolution(SendEmailNewsletterCampaign.class, "selectCampaign");

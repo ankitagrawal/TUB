@@ -119,7 +119,9 @@ public class AdminEmailManager {
     private ProductService        productService;
     @Autowired
     private ProductVariantService productVariantService;
+    @Autowired
     private UserService           userService;
+    @Autowired
     private CouponService         couponService;
 
     @PostConstruct
