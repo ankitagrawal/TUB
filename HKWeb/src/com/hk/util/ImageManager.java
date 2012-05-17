@@ -434,7 +434,7 @@ public class ImageManager {
                 repositoryFilePath = HKImageUtils.getRepositoryImagePath(enumImageSize, id);
                 ImageUtils.createThumbnail(filePath, repositoryFilePath, enumImageSize.getDimension(), QUALITY, false, false, .5F);
                 imageUrl = HKImageUtils.getS3ImageKey(enumImageSize, id);
-                s3Utils.uploadImage(awsAccessKey, awsSecretKey, repositoryFilePath, imageUrl, awsBucket);
+                S3Utils.uploadImage(awsAccessKey, awsSecretKey, repositoryFilePath, imageUrl, awsBucket);
             }
         }
 
@@ -448,7 +448,7 @@ public class ImageManager {
 
         // saving original image
         String imageUrl = HKImageUtils.getS3CategoryImageKey(EnumImageSize.Original, id);
-        s3Utils.uploadImage(awsAccessKey, awsSecretKey, filePath, imageUrl, awsBucket);
+        S3Utils.uploadImage(awsAccessKey, awsSecretKey, filePath, imageUrl, awsBucket);
 
         // saving thumbnails for all sizes
         for (EnumImageSize enumImageSize : EnumImageSize.values()) {
@@ -456,7 +456,7 @@ public class ImageManager {
                 repositoryFilePath = HKImageUtils.getRepositoryImagePath(enumImageSize, id);
                 ImageUtils.createThumbnail(filePath, repositoryFilePath, enumImageSize.getDimension(), QUALITY, false, false, .5F);
                 imageUrl = HKImageUtils.getS3CategoryImageKey(enumImageSize, id);
-                s3Utils.uploadImage(awsAccessKey, awsSecretKey, repositoryFilePath, imageUrl, awsBucket);
+                S3Utils.uploadImage(awsAccessKey, awsSecretKey, repositoryFilePath, imageUrl, awsBucket);
             }
         }
 
