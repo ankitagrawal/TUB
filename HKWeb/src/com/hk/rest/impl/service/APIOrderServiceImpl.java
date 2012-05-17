@@ -157,6 +157,7 @@ public class APIOrderServiceImpl implements APIOrderService {
     if (productVariant != null) {
       productVariant.setQty(1L);
       CartLineItem cartLineItem = getCartLineItemService().createCartLineItemWithBasicDetails(productVariant, order);
+      cartLineItem.setDiscountOnHkPrice(cartLineItem.getHkPrice());
       cartLineItem = getCartLineItemService().save(cartLineItem);
       cartLineItems.add(cartLineItem);
     }
