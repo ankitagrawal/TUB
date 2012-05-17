@@ -214,16 +214,8 @@ public class APIOrderServiceImpl implements APIOrderService {
             }
         }
 
-        APIOrderTrackingItem trackitem=new APIOrderTrackingItem();
-        trackitem.setItemName("test");
-        trackitem.setQty(2L);
-        trackitem.setStatus("testing status");
-        trackingItemList.add(trackitem);
-
-        Map orderStatusDetails=new HashMap<String,APIOrderTrackingItem[]>();
-        orderStatusDetails.put("orderStatus",trackingItemList);
-        return new JSONResponseBuilder().addField("orderStatus", trackingItemList).addField("shipped","true").build();
-        // return  new JSONResponseBuilder().addField("orderStatus", status).addField("shipped","false").build();
+       
+        return  new JSONResponseBuilder().addField("orderStatus", status).addField("shipped","false").build();
 
     }
 
