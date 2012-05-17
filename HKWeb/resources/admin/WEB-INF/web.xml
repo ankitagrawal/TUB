@@ -50,6 +50,8 @@
 		<init-param>
 			<param-name>Interceptor.Classes</param-name>
 			<param-value>
+				org.stripesstuff.plugin.session.SessionStoreInterceptor,
+				com.akube.framework.stripes.controller.BreadcrumbInterceptor,
 				com.hk.web.interceptor.StripesSpringInterceptor
 			</param-value>
 		</init-param>

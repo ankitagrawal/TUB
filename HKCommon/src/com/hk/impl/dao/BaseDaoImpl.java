@@ -28,6 +28,7 @@ import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.akube.framework.dao.Page;
 import com.hk.pact.dao.BaseDao;
@@ -231,7 +232,7 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
     }
 
     private void prepareHibernateForWrite() {
-        getHibernateTemplate().getSessionFactory().getCurrentSession().setFlushMode(FlushMode.ALWAYS);
+        getHibernateTemplate().getSessionFactory().getCurrentSession().setFlushMode(FlushMode.AUTO);
         getHibernateTemplate().setCheckWriteOperations(false);
     }
     
