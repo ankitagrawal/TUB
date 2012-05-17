@@ -197,7 +197,7 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
         String excelFilePath = adminUploadsPath + "/emailList/" + System.currentTimeMillis() + ".txt";
         File excelFile = new File(excelFilePath);
         excelFile.getParentFile().mkdirs();
-        fileBeanForCustomExcel.save(excelFile);
+        fileBean.save(excelFile);
         List<String> users = new ArrayList<String>();
         users.addAll(ParseCsvFile.getStringListFromCsv(excelFilePath));
 
