@@ -22,6 +22,7 @@ import org.stripesstuff.plugin.security.Secure;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.util.XslParser;
+import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
@@ -43,16 +44,14 @@ public class ChangeDefaultCourierAction extends BaseAction {
     @Autowired
     CourierServiceInfoDao               courierServiceInfoDao;
     @Autowired
-    WarehouseDaoImpl                        warehouseDao;
+    WarehouseDaoImpl                    warehouseDao;
     @Autowired
     XslGenerator                        xslGenerator;
 
-    // @Named(Keys.Env.adminDownloads)
-    @Value("#{hkEnvProps['adminDownloads']}")
+    @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String                              adminDownloadsPath;
 
-    // @Named(Keys.Env.adminUploads)
-    @Value("#{hkEnvProps['adminUploads']}")
+    @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String                              adminUploadsPath;
 
     XslParser                           xslParser;

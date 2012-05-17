@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hk.constants.core.EnumRole;
+import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
@@ -21,8 +22,8 @@ import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.builder.CartLineItemBuilder;
 import com.hk.domain.catalog.Supplier;
-import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.catalog.product.combo.ComboInstance;
 import com.hk.domain.catalog.product.combo.ComboInstanceHasProductVariant;
@@ -46,7 +47,6 @@ import com.hk.pact.dao.order.cartLineItem.CartLineItemDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.UserService;
-import com.hk.pact.service.store.StoreService;
 import com.hk.pact.service.core.AffilateService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
@@ -55,6 +55,7 @@ import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.payment.PaymentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.pact.service.store.StoreService;
 import com.hk.pricing.PricingEngine;
 import com.hk.util.OrderUtil;
 
@@ -102,25 +103,22 @@ public class OrderManager {
 
     private ComboInstanceHasProductVariantDao comboInstanceHasProductVariantDao;
 
-    // @Named(Keys.Env.codCharges)
-    @Value("#{hkEnvProps['codCharges']}")
+    @Value("#{hkEnvProps['" + Keys.Env.codCharges + "']}")
     private Double                            codCharges;
 
-    // @Named(Keys.Env.codFreeAfter)
-    @Value("#{hkEnvProps['codFreeAfter']}")
+    @Value("#{hkEnvProps['" + Keys.Env.codFreeAfter + "']}")
     private Double                            codFreeAfter;
 
-    // @Named(Keys.Env.adminDownloads)
-    @Value("#{hkEnvProps['adminDownloads']}")
+    @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
     String                                    adminDownloadsPath;
 
     Affiliate                                 affiliate;
 
-    // @Named(Keys.Env.cashBackPercentage)
+   /* // @Named(Keys.Env.cashBackPercentage)
     private Double                            cashBackPercentage;
 
     // @Named(Keys.Env.cashBackLimit)
-    private Double                            cashBackLimit;
+    private Double                            cashBackLimit;*/
 
     @Transactional
     public Order getOrCreateOrder(User user) {
@@ -511,25 +509,18 @@ public class OrderManager {
                         iterator.remove();
                         getCartLineItemDao().delete(lineItem);
                     } else {
-                        /*ProductVariant productVariant = lineItem.getProductVariant();
-                        Product product = productVariant.getProduct();
-                        boolean isService = false;
-                        if (product.isService() != null && product.isService())
-                            isService = true;
-                        boolean isJit = false;
-                        if (product.isJit() != null && product.isJit())
-                            isJit = true;
-                        if (!isJit && !isService) {
-                            List<Sku> skuList = skuService.getSKUsForProductVariant(productVariant);
-                            if (skuList != null && !skuList.isEmpty()) {
-                                Long unbookedInventory = inventoryService.getAvailableUnbookedInventory(skuList);
-                                if (unbookedInventory != null && unbookedInventory < lineItem.getQty()) {
-                                    lineItem.setQty(unbookedInventory);
-                                    cartLineItemService.save(lineItem);
-                                    logger.debug("Set LineItem Qty equals to available unbooked Inventory: " + unbookedInventory + " for Variant:" + productVariant.getId());
-                                }
-                            }
-                        }*/
+                        /*
+                         * ProductVariant productVariant = lineItem.getProductVariant(); Product product =
+                         * productVariant.getProduct(); boolean isService = false; if (product.isService() != null &&
+                         * product.isService()) isService = true; boolean isJit = false; if (product.isJit() != null &&
+                         * product.isJit()) isJit = true; if (!isJit && !isService) { List<Sku> skuList =
+                         * skuService.getSKUsForProductVariant(productVariant); if (skuList != null &&
+                         * !skuList.isEmpty()) { Long unbookedInventory =
+                         * inventoryService.getAvailableUnbookedInventory(skuList); if (unbookedInventory != null &&
+                         * unbookedInventory < lineItem.getQty()) { lineItem.setQty(unbookedInventory);
+                         * cartLineItemService.save(lineItem); logger.debug("Set LineItem Qty equals to available
+                         * unbooked Inventory: " + unbookedInventory + " for Variant:" + productVariant.getId()); } } }
+                         */
                         cartLineItemService.save(lineItem);
                     }
                 }
@@ -539,21 +530,23 @@ public class OrderManager {
         return order;
     }
 
-  public boolean isStepUpAllowed(CartLineItem cartLineItem) {
-    ProductVariant productVariant = cartLineItem.getProductVariant();
-    Product product = productVariant.getProduct();
-    boolean isService = false;
-    if (product.isService() != null && product.isService()) isService = true;
-    boolean isJit = false;
-    if (product.isJit() != null && product.isJit()) isJit = true;
-    if (!isJit && !isService) {
-      Long unbookedInventory = inventoryService.getAvailableUnbookedInventory(skuService.getSKUsForProductVariant(productVariant));
-      if (unbookedInventory != null && unbookedInventory > 0 && unbookedInventory < cartLineItem.getQty()) {
-        return false;
-      }
+    public boolean isStepUpAllowed(CartLineItem cartLineItem) {
+        ProductVariant productVariant = cartLineItem.getProductVariant();
+        Product product = productVariant.getProduct();
+        boolean isService = false;
+        if (product.isService() != null && product.isService())
+            isService = true;
+        boolean isJit = false;
+        if (product.isJit() != null && product.isJit())
+            isJit = true;
+        if (!isJit && !isService) {
+            Long unbookedInventory = inventoryService.getAvailableUnbookedInventory(skuService.getSKUsForProductVariant(productVariant));
+            if (unbookedInventory != null && unbookedInventory > 0 && unbookedInventory < cartLineItem.getQty()) {
+                return false;
+            }
+        }
+        return true;
     }
-    return true;
-  }
 
     /**
      * This method is responsible for updating the order status to shipped and sending order shipped emails. Email could

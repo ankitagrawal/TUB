@@ -14,50 +14,49 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.hk.constants.core.Keys;
+
 @Component
 public class BarcodeGenerator {
 
-  
-  //@Named(Keys.Env.barcodeDir)
-    @Value("#{hkEnvProps['barcodeDir']}")
-  String barcodeDir;
+    @Value("#{hkEnvProps['" + Keys.Env.barcodeDir + "']}")
+    String               barcodeDir;
 
-  public static Logger logger = LoggerFactory.getLogger(BarcodeGenerator.class);
+    public static Logger logger = LoggerFactory.getLogger(BarcodeGenerator.class);
 
-  public String getBarcodePath(String gatewayOrderId) {
-    String barcodeFilePath = barcodeDir + "/" + gatewayOrderId + ".png";
-    try {
-      Code128Bean bean = new Code128Bean();
-      final int dpi = 150;
+    public String getBarcodePath(String gatewayOrderId) {
+        String barcodeFilePath = barcodeDir + "/" + gatewayOrderId + ".png";
+        try {
+            Code128Bean bean = new Code128Bean();
+            final int dpi = 150;
 
-      //Configure the barcode generator
-      bean.setModuleWidth(UnitConv.in2mm(1.0f / dpi)); //makes the narrow bar
-      //width exactly one pixel
-      //bean.setWideFactor(3);
-      bean.setHeight(7.5);
-      bean.doQuietZone(false);
+            // Configure the barcode generator
+            bean.setModuleWidth(UnitConv.in2mm(1.0f / dpi)); // makes the narrow bar
+            // width exactly one pixel
+            // bean.setWideFactor(3);
+            bean.setHeight(7.5);
+            bean.doQuietZone(false);
 
-      //Open output file
-      File outputFile = new File(barcodeFilePath);
-      OutputStream out = new FileOutputStream(outputFile);
-      try {
-        //Set up the canvas provider for monochrome PNG output
-        BitmapCanvasProvider canvas = new BitmapCanvasProvider(
-            out, "image/x-png", dpi, BufferedImage.TYPE_BYTE_BINARY, false, 0);
+            // Open output file
+            File outputFile = new File(barcodeFilePath);
+            OutputStream out = new FileOutputStream(outputFile);
+            try {
+                // Set up the canvas provider for monochrome PNG output
+                BitmapCanvasProvider canvas = new BitmapCanvasProvider(out, "image/x-png", dpi, BufferedImage.TYPE_BYTE_BINARY, false, 0);
 
-        //Generate the barcode
-        bean.generateBarcode(canvas, gatewayOrderId);
+                // Generate the barcode
+                bean.generateBarcode(canvas, gatewayOrderId);
 
-        //Signal end of generation
-        canvas.finish();
-      } finally {
-        out.close();
-      }
-    } catch (IOException e) {
-      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                // Signal end of generation
+                canvas.finish();
+            } finally {
+                out.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.
+        }
+
+        return barcodeFilePath;
     }
-
-    return barcodeFilePath;
-  }
 
 }

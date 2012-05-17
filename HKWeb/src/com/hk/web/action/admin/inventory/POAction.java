@@ -36,6 +36,7 @@ import com.hk.admin.manager.PurchaseOrderManager;
 import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
 import com.hk.admin.pact.dao.inventory.GrnLineItemDao;
 import com.hk.admin.pact.dao.inventory.PurchaseOrderDao;
+import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.inventory.EnumGrnStatus;
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
@@ -74,12 +75,11 @@ public class POAction extends BasePaginatedAction {
     @Autowired
     private PurchaseOrderManager purchaseOrderManager;
 
-    // @Named(Keys.Env.adminDownloads)
-    @Value("#{hkEnvProps['adminDownloads']}")
+    @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
     String                       adminDownloads;
 
     private File                 xlsFile;
-    Page          purchaseOrderPage;
+    Page                         purchaseOrderPage;
     private List<PurchaseOrder>  purchaseOrderList = new ArrayList<PurchaseOrder>();
     private PurchaseOrder        purchaseOrder;
     private PurchaseOrderDto     purchaseOrderDto;
@@ -141,7 +141,7 @@ public class POAction extends BasePaginatedAction {
         grn.setInvoiceDate(new Date());
         grn.setInvoiceNumber("Please Enter Invoice");
         grn.setReceivedBy(loggedOnUser);
-        grn.setGrnStatus(getGoodsReceivedNoteDao().get(GrnStatus.class,EnumGrnStatus.GoodsReceived.getId()));
+        grn.setGrnStatus(getGoodsReceivedNoteDao().get(GrnStatus.class, EnumGrnStatus.GoodsReceived.getId()));
         grn.setWarehouse(warehouse);
         grn = (GoodsReceivedNote) getGoodsReceivedNoteDao().save(grn);
         for (PoLineItem poLineItem : purchaseOrder.getPoLineItems()) {
@@ -153,7 +153,7 @@ public class POAction extends BasePaginatedAction {
             grnLineItem.setProductVariant(productVariant);
             grnLineItem.setSku(poLineItem.getSku());
             grnLineItem.setQty(-1L); // Negative so that while entring GRN they know what they have filled and what
-                                        // they have not.
+            // they have not.
             if (poLineItem.getCostPrice() != null) {
                 grnLineItem.setCostPrice(poLineItem.getCostPrice());
             } else if (productVariant.getCostPrice() != null) {
@@ -180,7 +180,7 @@ public class POAction extends BasePaginatedAction {
 
     public Resolution delete() {
         logger.debug("purchaseOrder: " + purchaseOrder);
-        purchaseOrder.setPurchaseOrderStatus(getPurchaseOrderDao().get(PurchaseOrderStatus.class,EnumPurchaseOrderStatus.Deleted.getId()));
+        purchaseOrder.setPurchaseOrderStatus(getPurchaseOrderDao().get(PurchaseOrderStatus.class, EnumPurchaseOrderStatus.Deleted.getId()));
         purchaseOrder.setUpdateDate(new Date());
         getPurchaseOrderDao().save(purchaseOrder);
         addRedirectAlertMessage(new SimpleMessage("PO Deleted successfully."));

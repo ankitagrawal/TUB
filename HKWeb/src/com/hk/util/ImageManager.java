@@ -1,9 +1,18 @@
 package com.hk.util;
 
+import java.io.File;
+import java.util.Set;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import com.akube.framework.imaging.ImageUtils;
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.EnumS3UploadStatus;
 import com.hk.constants.catalog.image.EnumImageSize;
+import com.hk.constants.core.Keys;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.category.CategoryImage;
 import com.hk.domain.catalog.product.Product;
@@ -15,25 +24,16 @@ import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.catalog.combo.ComboDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
-import java.io.File;
-import java.util.Set;
 
 @Component
 public class ImageManager {
 
     private static Logger         logger        = Logger.getLogger(ImageManager.class);
 
-    // @Named(Keys.Env.accessKey)
-    @Value("#{hkEnvProps['awsAccessKey']}")
+    @Value("#{hkEnvProps['" + Keys.Env.accessKey + "']}")
     String                        awsAccessKey;
 
-    // @Named(Keys.Env.secretKey)
-    @Value("#{hkEnvProps['awsSecretKey']}")
+    @Value("#{hkEnvProps['" + Keys.Env.secretKey + "']}")
     String                        awsSecretKey;
 
     ImageTagReader                imageTagReader;
@@ -51,10 +51,8 @@ public class ImageManager {
      * ComboImageDao comboImageDao;
      */
 
-    //S3Utils                       s3Utils;
-
-    //ImageUtils                    imageUtils;
-
+    // S3Utils s3Utils;
+    // ImageUtils imageUtils;
     CategoryImageDaoImpl          categoryImageDao;
     private static final float    QUALITY       = 0.95F;
 

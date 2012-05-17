@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.akube.framework.dao.Page;
 import com.hk.comparator.BasketCategory;
+import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
@@ -90,10 +91,9 @@ public class OrderServiceImpl implements OrderService {
     private RewardPointService     rewardPointService;
     @Autowired
     private CategoryService        categoryService;
-    
-    //@Named (Keys.Env.codMinAmount)
-    @Value("#{hkEnvProps['codMinAmount']}")
-    private Double codMinAmount;
+
+    @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
+    private Double                 codMinAmount;
 
     @Transactional
     public Order save(Order order) {
@@ -321,7 +321,6 @@ public class OrderServiceImpl implements OrderService {
         return getOrderDao().getLatestOrderForUser(user);
     }
 
-   
     public Page listOrdersForUser(User user, int page, int perPage) {
         List<OrderStatus> orderStatusList = orderStatusService.getOrderStatuses(EnumOrderStatus.getStatusForCustomers());
         return getOrderDao().listOrdersForUser(orderStatusList, user, page, perPage);

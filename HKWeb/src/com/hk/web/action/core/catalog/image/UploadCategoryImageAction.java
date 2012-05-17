@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.EnumS3UploadStatus;
+import com.hk.constants.core.Keys;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.category.CategoryImage;
 import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
@@ -44,7 +45,7 @@ public class UploadCategoryImageAction extends BaseAction {
 
 	
 	//@Named(Keys.Env.adminUploads)
-	@Value("#{hkEnvProps['adminUploads']}")
+	@Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
 	String adminUploadsPath;
 
 	

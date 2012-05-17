@@ -22,6 +22,7 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.dao.inventory.PoLineItemDao;
 import com.hk.admin.pact.dao.inventory.PurchaseOrderDao;
 import com.hk.admin.util.XslParser;
+import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
@@ -51,7 +52,7 @@ public class InventoryBulkCheckinAction extends BaseAction {
     XslParser             xslParser;
 
     // @Named(Keys.Env.adminUploads)
-    @Value("#{hkEnvProps['adminUploads']}")
+    @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String                adminUploadsPath;
 
     @Validate(required = true)
