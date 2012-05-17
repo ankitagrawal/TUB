@@ -64,6 +64,7 @@ public class BulkEditProductAction extends BasePaginatedAction {
 
 	@Autowired
     private ComboDao              comboDao;
+	@Autowired
     private SupplierDao           supplierDao;
 
     @ValidationMethod(on = "bulkEdit")
