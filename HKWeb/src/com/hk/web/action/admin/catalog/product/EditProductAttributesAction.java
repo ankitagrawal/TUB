@@ -170,7 +170,9 @@ public class EditProductAttributesAction extends BaseAction {
             addRedirectAlertMessage(new SimpleMessage("Brand cannot be null"));
             return new ForwardResolution("/pages/editProductDetails.jsp");
         }
+        logger.debug( "loading combo ");
         Combo combo = getBaseDao().get(Combo.class, productId);
+        logger.debug( "got combo ");
         Supplier supplier = supplierDao.findByTIN(tin);
         if (combo == null && supplier == null) {
             addRedirectAlertMessage(new SimpleMessage("Supplier corresponding to given tin does not exist"));
@@ -179,8 +181,9 @@ public class EditProductAttributesAction extends BaseAction {
         product.setSupplier(supplier);
         product.setBrand(brand);
         product.setManufacturer(manufacturer);
-
+        logger.debug( "actual save call start ");
         getProductService().save(product);
+        logger.debug( "actual save call  ");
         return new ForwardResolution("/pages/close.jsp");
     }
 
