@@ -1,13 +1,5 @@
 package com.hk.util;
 
-import java.io.File;
-import java.util.Set;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
 import com.akube.framework.imaging.ImageUtils;
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.EnumS3UploadStatus;
@@ -23,6 +15,13 @@ import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.catalog.combo.ComboDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import java.io.File;
+import java.util.Set;
 
 @Component
 public class ImageManager {
@@ -54,7 +53,7 @@ public class ImageManager {
 
     S3Utils                       s3Utils;
 
-    ImageUtils                    imageUtils;
+    //ImageUtils                    imageUtils;
 
     CategoryImageDaoImpl          categoryImageDao;
     private static final float    QUALITY       = 0.95F;
@@ -433,7 +432,7 @@ public class ImageManager {
         for (EnumImageSize enumImageSize : EnumImageSize.values()) {
             if (enumImageSize != EnumImageSize.Original) {
                 repositoryFilePath = HKImageUtils.getRepositoryImagePath(enumImageSize, id);
-                imageUtils.createThumbnail(filePath, repositoryFilePath, enumImageSize.getDimension(), QUALITY, false, false, .5F);
+                ImageUtils.createThumbnail(filePath, repositoryFilePath, enumImageSize.getDimension(), QUALITY, false, false, .5F);
                 imageUrl = HKImageUtils.getS3ImageKey(enumImageSize, id);
                 s3Utils.uploadImage(awsAccessKey, awsSecretKey, repositoryFilePath, imageUrl, awsBucket);
             }
@@ -455,7 +454,7 @@ public class ImageManager {
         for (EnumImageSize enumImageSize : EnumImageSize.values()) {
             if (enumImageSize != EnumImageSize.Original) {
                 repositoryFilePath = HKImageUtils.getRepositoryImagePath(enumImageSize, id);
-                imageUtils.createThumbnail(filePath, repositoryFilePath, enumImageSize.getDimension(), QUALITY, false, false, .5F);
+                ImageUtils.createThumbnail(filePath, repositoryFilePath, enumImageSize.getDimension(), QUALITY, false, false, .5F);
                 imageUrl = HKImageUtils.getS3CategoryImageKey(enumImageSize, id);
                 s3Utils.uploadImage(awsAccessKey, awsSecretKey, repositoryFilePath, imageUrl, awsBucket);
             }
