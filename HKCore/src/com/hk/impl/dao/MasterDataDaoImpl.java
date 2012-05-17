@@ -47,7 +47,7 @@ public class MasterDataDaoImpl implements MasterDataDao {
   @Autowired
   private RoleService roleService;
   @Autowired
-  private MarketingService marketService;
+  private MarketingService marketingService;
 
   public List<PaymentStatus> getPaymentStatusList() {
     return getBaseDao().getAll(PaymentStatus.class);
@@ -121,7 +121,7 @@ public class MasterDataDaoImpl implements MasterDataDao {
   }
 
   public List<Category> getMarketExpenseCategoriesList() {
-    return getMarketService().marketExpenseCategoriesList();
+    return getMarketingService().marketExpenseCategoriesList();
   }
 
   public List<AffiliateCategory> getallAffiliateCategories() {
@@ -230,12 +230,12 @@ public class MasterDataDaoImpl implements MasterDataDao {
     this.roleService = roleService;
   }
 
-  public MarketingService getMarketService() {
-    return marketService;
+  public MarketingService getMarketingService() {
+    return marketingService;
   }
 
-  public void setMarketService(MarketingService marketService) {
-    this.marketService = marketService;
+  public void setMarketingService(MarketingService marketingService) {
+    this.marketingService = marketingService;
   }
 
   public List<ShippingOrderStatus> getSOStatusForShipmentDetailsList() {
