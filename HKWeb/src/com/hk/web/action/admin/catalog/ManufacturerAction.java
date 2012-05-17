@@ -32,7 +32,7 @@ public class ManufacturerAction extends BasePaginatedAction {
   private Manufacturer manufacturerDb;
   String name;
   String mainAddressId;
-  private Integer defaultPerPage = 21;
+  private Integer defaultPerPage = 20;
   List<Manufacturer> manufacturerList = new ArrayList<Manufacturer>();
   Page manufacturerPage;
 

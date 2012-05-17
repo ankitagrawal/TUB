@@ -12,6 +12,7 @@ import org.testng.Assert;
 
 import com.hk.constants.discount.OfferConstants;
 import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.constants.order.PricingConstants;
 import com.hk.domain.builder.CartLineItemBuilder;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductGroup;
@@ -32,8 +33,7 @@ import com.hk.util.OfferTriggerMatcher;
 public class PricingEngine {
 
 
-  public static final Double defaultDiscount = 0.0;
-  public static final Long shippingDefaultQty = 1L;
+ 
 
   
   //ServiceTaxProvider serviceTaxProvider;
@@ -584,7 +584,7 @@ public class PricingEngine {
         .ofType(EnumCartLineItemType.Shipping)
         //.tax(serviceTaxProvider.get())
         .hkPrice(shippingAmount)
-        .discountOnHkPrice(defaultDiscount)
+        .discountOnHkPrice(PricingConstants.DEFAULT_DISCOUNT)
         .build();
 
     return new CartLineItemWrapper(lineItem, address);

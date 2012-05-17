@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.domain.email.EmailCampaign;
 import com.hk.pact.dao.marketing.EmailCampaignDao;
+import com.hk.web.AppConstants;
 
 @Component
 public class CreateEmailNewsletterCampaign extends BaseAction {
@@ -28,7 +29,6 @@ public class CreateEmailNewsletterCampaign extends BaseAction {
     @Autowired
     EmailCampaignDao emailCampaignDao;
 
-    @Value("#{hkEnvProps['appBasePath']}")
     String           appBasePath;
 
     @DontValidate
@@ -38,7 +38,7 @@ public class CreateEmailNewsletterCampaign extends BaseAction {
     }
 
     public Resolution create() {
-        File ftlFile = new File(appBasePath + "/freemarker" + emailCampaign.getTemplate());
+        File ftlFile = new File(AppConstants.appBasePath + "/freemarker" + emailCampaign.getTemplate());
         if (ftlFile.exists()) {
             emailCampaign = emailCampaignDao.save(emailCampaign);
         } else {

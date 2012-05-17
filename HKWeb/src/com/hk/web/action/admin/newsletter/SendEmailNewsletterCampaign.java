@@ -42,6 +42,7 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
     @Validate(required = true)
     EmailCampaign              emailCampaign;
 
+    @Autowired
     EmailCampaignDao           emailCampaignDao;
 
     @Validate(required = true, on = { "testCampaign" })
@@ -193,25 +194,25 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
     }
 
     public Resolution sendCampaignViaCsvUserEmails() throws IOException {
-        String excelFilePath = adminUploadsPath + "/emailList/" + System.currentTimeMillis() + ".txt";
-        File excelFile = new File(excelFilePath);
-        excelFile.getParentFile().mkdirs();
-        fileBeanForCustomExcel.save(excelFile);
-        List<String> users = new ArrayList<String>();
-        users.addAll(ParseCsvFile.getStringListFromCsv(excelFilePath));
+	    String excelFilePath = adminUploadsPath + "/emailList/" + System.currentTimeMillis() + ".txt";
+	    File excelFile = new File(excelFilePath);
+	    excelFile.getParentFile().mkdirs();
+	    fileBean.save(excelFile);
+	    List<String> users = new ArrayList<String>();
+	    users.addAll(ParseCsvFile.getStringListFromCsv(excelFilePath));
 
-        List<String> finalCategories = new ArrayList<String>();
-        finalCategories.add("User Ids Excel");
+	    List<String> finalCategories = new ArrayList<String>();
+	    finalCategories.add("User Ids Excel");
 
-        // construct the headers to send
+	    // construct the headers to send
         String xsmtpapi = SendGridUtil.getSendGridEmailNewsLetterHeaderJson(finalCategories, emailCampaign);
 
-        // send campaign to user emails
-        getAdminEmailManager().sendCampaignMailsToListOfEmailIds(users, emailCampaign, xsmtpapi);
+	    // send campaign to user emails
+	    getAdminEmailManager().sendCampaignMailsToListOfEmailIds(users, emailCampaign, xsmtpapi);
 
-        addRedirectAlertMessage(new SimpleMessage("Sending campaign in progress : " + emailCampaign.getName()));
-        return new RedirectResolution(EmailNewsletterAdmin.class);
-    }
+	    addRedirectAlertMessage(new SimpleMessage("Sending campaign in progress : " + emailCampaign.getName()));
+	    return new RedirectResolution(EmailNewsletterAdmin.class);
+	  }
 
     public Resolution sendCampaign() {
         String[] categoryArray = StringUtils.split(categories);
