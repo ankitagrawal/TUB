@@ -1,7 +1,5 @@
 package com.hk.util;
 
-import java.io.File;
-
 import org.apache.log4j.Logger;
 import org.jets3t.service.S3Service;
 import org.jets3t.service.acl.AccessControlList;
@@ -11,6 +9,8 @@ import org.jets3t.service.impl.rest.httpclient.RestS3Service;
 import org.jets3t.service.model.S3Bucket;
 import org.jets3t.service.model.S3Object;
 import org.jets3t.service.security.AWSCredentials;
+
+import java.io.File;
 
 
 public class S3Utils {
@@ -28,7 +28,7 @@ public class S3Utils {
    * @throws Exception
    */
 
-  public void uploadImage(String awsAccess, String awsSecret, String filePath, String key, String bucketName) throws Exception {
+  public static void uploadImage(String awsAccess, String awsSecret, String filePath, String key, String bucketName) throws Exception {
 
     logger.debug("awsAccess : "+ awsAccess);
     logger.debug("awsSecret : "+ awsSecret);
