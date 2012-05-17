@@ -51,7 +51,7 @@ public class ImageManager {
      * ComboImageDao comboImageDao;
      */
 
-    S3Utils                       s3Utils;
+    //S3Utils                       s3Utils;
 
     //ImageUtils                    imageUtils;
 
@@ -426,7 +426,7 @@ public class ImageManager {
 
         // saving original image
         String imageUrl = HKImageUtils.getS3ImageKey(EnumImageSize.Original, id);
-        s3Utils.uploadImage(awsAccessKey, awsSecretKey, filePath, imageUrl, awsBucket);
+        S3Utils.uploadImage(awsAccessKey, awsSecretKey, filePath, imageUrl, awsBucket);
 
         // saving thumbnails for all sizes
         for (EnumImageSize enumImageSize : EnumImageSize.values()) {
