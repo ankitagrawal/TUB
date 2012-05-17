@@ -3,6 +3,7 @@ package com.hk.rest.impl.service;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -79,7 +80,7 @@ public class APIOrderServiceImpl implements APIOrderService {
     //add items in the cart
     cartLineItems = addCartLineItems(apiOrder.getApiOrderDetails(), order);
     //add promotional freebie - for MIH = SPT397-01
-    //cartLineItems = addFreeCartLineItems("SPT397-01", order);
+    cartLineItems = addFreeCartLineItems("SPT397-01", order);
 
     order.setCartLineItems(cartLineItems);
     order = getOrderService().save(order);
@@ -131,6 +132,8 @@ public class APIOrderServiceImpl implements APIOrderService {
       paymentStatus = getPaymentStatusDao().getPaymentStatusById(EnumPaymentStatus.SUCCESS.getId());
     }
     payment.setPaymentStatus(paymentStatus);
+    payment.setCreateDate(new Date());
+    payment.setPaymentDate(new Date());
     return getPaymentService().save(payment);
   }
 
@@ -154,6 +157,7 @@ public class APIOrderServiceImpl implements APIOrderService {
     if (productVariant != null) {
       productVariant.setQty(1L);
       CartLineItem cartLineItem = getCartLineItemService().createCartLineItemWithBasicDetails(productVariant, order);
+      cartLineItem.setDiscountOnHkPrice(cartLineItem.getHkPrice());
       cartLineItem = getCartLineItemService().save(cartLineItem);
       cartLineItems.add(cartLineItem);
     }

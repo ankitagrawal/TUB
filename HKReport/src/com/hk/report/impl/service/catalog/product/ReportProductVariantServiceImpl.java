@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hk.report.dto.inventory.InventorySoldDto;
 import com.hk.report.pact.dao.catalog.product.ReportProductVariantDao;
@@ -11,7 +12,7 @@ import com.hk.report.pact.service.catalog.product.ReportProductVariantService;
 
 @Service
 public class ReportProductVariantServiceImpl implements ReportProductVariantService {
-
+     @Autowired
     private ReportProductVariantDao reportProductVariantDao;
 
     @Override
