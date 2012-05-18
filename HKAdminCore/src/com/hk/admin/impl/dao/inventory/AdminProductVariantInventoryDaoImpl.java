@@ -36,14 +36,14 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
     return (Long) getSession().createQuery(query).setParameter("grnLineItem", grnLineItem).setLong("checkedInQty", 1L).uniqueResult();
   }
 
-  public void resetInventoryByBrand(String brand) {
+  /*public void resetInventoryByBrand(String brand) {
 
     List<Long> toBeRemovedIds = (List<Long>) getSession().createQuery("select id from ProductVariantInventory pvi where pvi.sku.productVariant.product.brand = :brand").setParameter(
         "brand", brand).list();
     if (toBeRemovedIds != null && !toBeRemovedIds.isEmpty()) {
       getSession().createQuery("delete from ProductVariantInventory pvi where pvi.id in (:toBeRemovedIds)").setParameterList("toBeRemovedIds", toBeRemovedIds).executeUpdate();
     }
-  }
+  }*/
 
   public List<ProductVariantInventory> getPVIForStockTransfer(Sku sku, StockTransferLineItem stockTransferLineItem) {
     return (List<ProductVariantInventory>) getSession().createQuery(

@@ -24,13 +24,13 @@ public class SkuGroupDaoImpl extends BaseDaoImpl implements SkuGroupDao {
         return (List<SkuGroup>) getSession().createQuery("from SkuGroup sg where sg.sku = :sku").setParameter("sku", sku).list();
     }
 
-    public void resetInventoryByBrand(String brand) {
+   /* public void resetInventoryByBrand(String brand) {
         List<Long> toBeRemovedIds = (List<Long>) getSession().createQuery("select id from SkuGroup sg where sg.sku.productVariant.product.brand = :brand").setParameter("brand",
                 brand).list();
         if (toBeRemovedIds != null && !toBeRemovedIds.isEmpty()) {
             getSession().createQuery("delete from SkuGroup sg where sg.id in (:toBeRemovedIds)").setParameterList("toBeRemovedIds", toBeRemovedIds).executeUpdate();
         }
-    }
+    }*/
     
     public SkuGroup getSkuGroup(String barcode) {
         List<SkuGroup> skuGroups = getSession().
@@ -40,13 +40,13 @@ public class SkuGroupDaoImpl extends BaseDaoImpl implements SkuGroupDao {
        return skuGroups != null && !skuGroups.isEmpty() ? skuGroups.get(0) : null;
      }
 
-    public void resetInventory(ProductVariant productVariant) {
+   /* public void resetInventory(ProductVariant productVariant) {
         List<Long> toBeRemovedIds = (List<Long>) getSession().createQuery("select id from SkuGroup sg where sg.sku.productVariant = :productVariant").setParameter(
                 "productVariant", productVariant).list();
         if (toBeRemovedIds != null && !toBeRemovedIds.isEmpty()) {
             getSession().createQuery("delete from SkuGroup sg where sg.id in (:toBeRemovedIds)").setParameterList("toBeRemovedIds", toBeRemovedIds).executeUpdate();
         }
-    }
+    }*/
 
   public List<SkuGroup> getCurrentCheckedInBatchGrn(GoodsReceivedNote grn , Sku sku) {
            return (List<SkuGroup>) getSession().

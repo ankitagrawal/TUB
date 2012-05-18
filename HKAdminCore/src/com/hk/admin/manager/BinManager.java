@@ -185,7 +185,7 @@ public class BinManager {
      if(skuItem!= null){
        try{
        skuItem.setBins(null);
-       skuItemDao.resetInventoryBySkuItem(skuItem);
+       skuItemDao.save(skuItem);
      }catch(Exception skuException){
         logger.error("error in deleting sku items " + skuException);
        }
