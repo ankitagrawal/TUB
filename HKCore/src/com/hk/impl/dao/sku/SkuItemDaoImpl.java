@@ -25,7 +25,7 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
          .list();
      if (skuItemIdList != null && skuItemIdList.size() > 0) {
        String query = "select distinct si.skuGroup from SkuItem si where si.id in (:skuItemIdList) " +
-                    "and si.skuGroup.sku = :sku order by si.skuGroup.expiryDate asc, si.skuGroup.mfgDate asc, si.skuGroup.createDate asc ";
+                    "and si.skuGroup.sku = :sku order by si.skuGroup.expiryDate asc ";
 
        skuGroupList = (List<SkuGroup>) getSession().createQuery(query)
            .setParameterList("skuItemIdList", skuItemIdList)
