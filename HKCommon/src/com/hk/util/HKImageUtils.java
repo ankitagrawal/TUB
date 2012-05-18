@@ -3,35 +3,33 @@ package com.hk.util;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.hk.constants.catalog.image.EnumImageSize;
+import com.hk.constants.core.Keys;
 
 public class HKImageUtils {
 
-    
- // @Named(Keys.Env.accessKey)
-    @Value("#{hkEnvProps['awsAccessKey']}")
-    String                        awsAccessKey;
+    @Value("#{hkEnvProps['" + Keys.Env.accessKey + "']}")
+    String        awsAccessKey;
 
-    // @Named(Keys.Env.secretKey)
-    @Value("#{hkEnvProps['awsSecretKey']}")
-    String                        awsSecretKey;
-    
-    static String                 imageUploadsPath             = "/usr/local/projects/production/HealthKartWork/imageUploads";
-    static int                    noOfImagesInRepositorySubDir = 100;
-    static String                 awsBucket                    = "healthkart-prod";
-    static String                 awsReadBucket                = "healthkart-prod";
+    @Value("#{hkEnvProps['" + Keys.Env.secretKey + "']}")
+    String        awsSecretKey;
+
+    static String imageUploadsPath             = "/usr/local/projects/production/HealthKartWork/imageUploads";
+    static int    noOfImagesInRepositorySubDir = 100;
+    static String awsBucket                    = "healthkart-prod";
+    static String awsReadBucket                = "healthkart-prod";
 
     static {
 
-        /*imageUploadsPath = (String) ServiceLocatorFactory.getProperty(Keys.Env.imageUploads);
-        noOfImagesInRepositorySubDir = Integer.parseInt((String) ServiceLocatorFactory.getProperty(Keys.Env.noOfImagesInRepositorySubDir));
-        awsBucket = (String) ServiceLocatorFactory.getProperty(Keys.Env.bucket);
-        awsReadBucket = (String) ServiceLocatorFactory.getProperty(Keys.Env.readBucket);
-*/
+        /*
+         * imageUploadsPath = (String) ServiceLocatorFactory.getProperty(Keys.Env.imageUploads);
+         * noOfImagesInRepositorySubDir = Integer.parseInt((String)
+         * ServiceLocatorFactory.getProperty(Keys.Env.noOfImagesInRepositorySubDir)); awsBucket = (String)
+         * ServiceLocatorFactory.getProperty(Keys.Env.bucket); awsReadBucket = (String)
+         * ServiceLocatorFactory.getProperty(Keys.Env.readBucket);
+         */
         // TODO: rewrite
     }
 
-
-    
     public static String getS3CategoryImageKey(EnumImageSize imageSize, Long imageId) {
         return (imageId / noOfImagesInRepositorySubDir + 1) + "/" + "c_" + imageId + "_" + imageSize.getSuffix() + ".jpg";
     }

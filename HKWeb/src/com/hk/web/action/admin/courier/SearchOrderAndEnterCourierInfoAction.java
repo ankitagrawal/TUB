@@ -21,6 +21,7 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
@@ -61,13 +62,12 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
     String                             trackingId;
     Shipment                           shipment;
 
-    // @Named(Keys.Env.adminDownloads)
-    @Value("#{hkEnvProps['adminDownloads']}")
+    @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
     String                             adminDownloads;
     File                               xlsFile;
 
     @Autowired
-    private ReportManager                      reportGenerator;
+    private ReportManager              reportGenerator;
     @Autowired
     private CourierService             courierService;
     @Autowired

@@ -14,6 +14,7 @@ import org.stripesstuff.plugin.security.Secure;
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
 import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.order.Order;
@@ -41,12 +42,10 @@ public class CodPaymentReceiveAction extends BaseAction {
     @Autowired
     private PaymentManager paymentManager;
 
-    // @Named(Keys.Env.codMinAmount)
-    @Value("#{hkEnvProps['codMinAmount']}")
+    @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
     private Double         codMinAmount;
 
-    // @Named(Keys.Env.codMaxAmount)
-    @Value("#{hkEnvProps['codMaxAmount']}")
+    @Value("#{hkEnvProps['" + Keys.Env.codMaxAmount + "']}")
     private Double         codMaxAmount;
 
     @Validate(required = true)
@@ -81,7 +80,8 @@ public class CodPaymentReceiveAction extends BaseAction {
             // recalculate the pricing before creating a payment.
             order = orderManager.recalAndUpdateAmount(order);
             // first create a payment row, this will also cotain the payment checksum
-            Payment payment = getPaymentManager().createNewPayment(order, getPaymentService().findPaymentMode(EnumPaymentMode.COD), BaseUtils.getRemoteIpAddrForUser(getContext()), null);
+            Payment payment = getPaymentManager().createNewPayment(order, getPaymentService().findPaymentMode(EnumPaymentMode.COD), BaseUtils.getRemoteIpAddrForUser(getContext()),
+                    null);
 
             String gatewayOrderId = payment.getGatewayOrderId();
 
@@ -156,7 +156,7 @@ public class CodPaymentReceiveAction extends BaseAction {
     public void setOrderManager(OrderManager orderManager) {
         this.orderManager = orderManager;
     }
-    
+
     public PaymentService getPaymentService() {
         return paymentService;
     }
@@ -173,5 +173,4 @@ public class CodPaymentReceiveAction extends BaseAction {
         this.paymentManager = paymentManager;
     }
 
-    
 }

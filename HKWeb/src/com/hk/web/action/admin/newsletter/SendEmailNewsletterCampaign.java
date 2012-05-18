@@ -1,9 +1,34 @@
 package com.hk.web.action.admin.newsletter;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.DontValidate;
+import net.sourceforge.stripes.action.FileBean;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.validation.Validate;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.manager.MailingListManager;
+import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.core.EmailType;
@@ -16,22 +41,6 @@ import com.hk.pact.service.catalog.CategoryService;
 import com.hk.util.ParseCsvFile;
 import com.hk.util.SendGridUtil;
 import com.hk.web.action.error.AdminPermissionAction;
-import net.sourceforge.stripes.action.*;
-import net.sourceforge.stripes.validation.Validate;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @Secure(hasAnyPermissions = { PermissionConstants.SEND_MARKETING_MAILS }, authActionBean = AdminPermissionAction.class)
 @Component
@@ -53,7 +62,7 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
 
     int                        userCount;
     // @Named(Keys.Env.adminUploads)
-    @Value("#{hkEnvProps['adminUploads']}")
+    @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String                     adminUploadsPath;
 
     FileBean                   fileBean;

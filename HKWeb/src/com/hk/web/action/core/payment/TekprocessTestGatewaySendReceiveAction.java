@@ -17,6 +17,7 @@ import com.CheckSumRequestBean;
 import com.TPSLUtil;
 import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.akube.framework.stripes.action.BasePaymentGatewaySendReceiveAction;
+import com.hk.constants.core.Keys;
 import com.hk.domain.payment.Payment;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.manager.payment.PaymentManager;
@@ -32,8 +33,7 @@ public class TekprocessTestGatewaySendReceiveAction extends BasePaymentGatewaySe
     PaymentDao            paymentDao;
     @Autowired
     PaymentManager        paymentManager;
-    // @Named(Keys.App.environmentDir)
-    @Value("#{hkEnvProps['environmentDir']}")
+    @Value("#{hkEnvProps['" + Keys.App.environmentDir + "']}")
     String                environmemtDir;
 
     protected TekprocessTestPaymentGatewayWrapper getPaymentGatewayWrapperFromTransactionData(BasePaymentGatewayWrapper.TransactionData data) {

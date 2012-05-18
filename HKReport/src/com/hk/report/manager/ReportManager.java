@@ -946,7 +946,7 @@ public class ReportManager {
         List<Category> applicableCategories = new ArrayList<Category>();
 
         if (applicableCategories.size() == 0) {
-            applicableCategories = CategoryConstants.allCategoriesList;
+            applicableCategories = getCategoryService().getPrimaryCategories();
         }
 
         Date currentDate;
@@ -1006,7 +1006,7 @@ public class ReportManager {
         List<Category> applicableCategories = new ArrayList<Category>();
 
         if (applicableCategories.size() == 0) {
-            applicableCategories = CategoryConstants.allCategoriesList;
+            applicableCategories = getCategoryService().getPrimaryCategories();
         }
 
         Calendar currentDateCal = Calendar.getInstance();

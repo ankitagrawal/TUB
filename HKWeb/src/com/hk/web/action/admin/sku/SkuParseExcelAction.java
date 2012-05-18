@@ -34,6 +34,7 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
+import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -95,12 +96,10 @@ public class SkuParseExcelAction extends BaseAction {
     @Autowired
     private AdminInventoryService adminInventoryService;
 
-    // @Named(Keys.Env.adminUploads)
-    @Value("#{hkEnvProps['adminUploads']}")
+    @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String                        adminUploadsPath;
 
-    // @Named(Keys.Env.adminDownloads)
-    @Value("#{hkEnvProps['adminDownloads']}")
+    @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
     String                        adminDownloadsPath;
 
     FileBean                      fileBean;

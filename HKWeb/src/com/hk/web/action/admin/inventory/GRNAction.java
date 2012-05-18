@@ -38,6 +38,7 @@ import com.hk.admin.pact.dao.inventory.GrnLineItemDao;
 import com.hk.admin.pact.dao.inventory.PurchaseInvoiceDao;
 import com.hk.admin.util.TaxUtil;
 import com.hk.constants.core.EnumSurcharge;
+import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.StateList;
 import com.hk.constants.inventory.EnumPurchaseInvoiceStatus;
@@ -82,8 +83,7 @@ public class GRNAction extends BasePaginatedAction {
     @Autowired
     private SkuService              skuService;
 
-    // @Named(Keys.Env.adminDownloads)
-    @Value("#{hkEnvProps['adminDownloads']}")
+    @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
     String                          adminDownloads;
 
     private File                    xlsFile;

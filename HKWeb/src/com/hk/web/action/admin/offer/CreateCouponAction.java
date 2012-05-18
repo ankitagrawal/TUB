@@ -36,6 +36,7 @@ import org.stripesstuff.plugin.security.Secure;
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
 import com.hk.admin.manager.FanCouponManager;
+import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.offer.Offer;
@@ -56,8 +57,7 @@ public class CreateCouponAction extends BaseAction {
     @Autowired
     private FanCouponManager fanCouponManager;
 
-    // @Named(Keys.Env.adminDownloads)
-    @Value("#{hkEnvProps['adminDownloads']}")
+    @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
     private String           adminDownloads;
 
     @Validate(required = true)
@@ -79,7 +79,7 @@ public class CreateCouponAction extends BaseAction {
 
     private String           endPart;
     // @Named(Keys.Env.adminUploads)
-    @Value("#{hkEnvProps['adminUploads']}")
+    @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String                   adminUploadsPath;
     FileBean                 fileBean;
 
@@ -339,5 +339,4 @@ public class CreateCouponAction extends BaseAction {
         this.fanCouponManager = fanCouponManager;
     }
 
-    
 }

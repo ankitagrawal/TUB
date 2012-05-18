@@ -17,6 +17,7 @@
 
 	<bean id="serviceLocatorFactory"
 		class="com.hk.service.ServiceLocatorFactory" />
+	
 	<bean id="transactionProxyFactoryBean"
 		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
 		abstract="true">

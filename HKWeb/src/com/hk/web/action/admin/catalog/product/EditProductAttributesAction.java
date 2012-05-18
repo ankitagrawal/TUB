@@ -40,7 +40,6 @@ import com.hk.pact.dao.location.MapIndiaDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.util.HKImageUtils;
-import com.hk.util.ImageManager;
 import com.hk.util.XslGenerator;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.core.catalog.product.ProductAction;
@@ -170,7 +169,9 @@ public class EditProductAttributesAction extends BaseAction {
             addRedirectAlertMessage(new SimpleMessage("Brand cannot be null"));
             return new ForwardResolution("/pages/editProductDetails.jsp");
         }
+        logger.info( "loading combo ");
         Combo combo = getBaseDao().get(Combo.class, productId);
+        logger.info( "got combo ");
         Supplier supplier = supplierDao.findByTIN(tin);
         if (combo == null && supplier == null) {
             addRedirectAlertMessage(new SimpleMessage("Supplier corresponding to given tin does not exist"));
@@ -179,8 +180,9 @@ public class EditProductAttributesAction extends BaseAction {
         product.setSupplier(supplier);
         product.setBrand(brand);
         product.setManufacturer(manufacturer);
-
+        logger.info( "actual save call start ");
         getProductService().save(product);
+        logger.info( "actual save call  ");
         return new ForwardResolution("/pages/close.jsp");
     }
 

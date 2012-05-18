@@ -24,6 +24,7 @@ import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierServiceInfo;
@@ -52,8 +53,7 @@ public class GenerateReconcilationReportAction extends BaseAction {
     @Autowired
     WarehouseDaoImpl               warehouseDao;
 
-    // @Named (Keys.Env.adminDownloads)
-    @Value("#{hkEnvProps['adminUploads']}")
+    @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String                     adminDownloadsPath;
 
     private Date               startDate;

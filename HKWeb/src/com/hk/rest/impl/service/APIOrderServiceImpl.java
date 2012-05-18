@@ -79,8 +79,6 @@ public class APIOrderServiceImpl implements APIOrderService {
     order = getOrderService().save(order);
     //add items in the cart
     cartLineItems = addCartLineItems(apiOrder.getApiOrderDetails(), order);
-    //add promotional freebie - for MIH = SPT397-01
-    cartLineItems = addFreeCartLineItems("SPT397-01", order);
 
     order.setCartLineItems(cartLineItems);
     order = getOrderService().save(order);
@@ -100,6 +98,11 @@ public class APIOrderServiceImpl implements APIOrderService {
 
     //update order payment status and order status in general
     getOrderManager().orderPaymentReceieved(payment);
+
+    //add promotional freebie - for MIH = SPT397-01
+    cartLineItems = addFreeCartLineItems("SPT397-01", order);
+    order.setCartLineItems(cartLineItems);
+    order = getOrderService().save(order);
 
     return new JSONResponseBuilder().addField("hkOrderId", order.getId()).build();
   }

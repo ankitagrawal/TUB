@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.dao.Page;
+import com.hk.constants.core.Keys;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.user.User;
 import com.hk.pact.service.UserService;
@@ -24,8 +25,7 @@ public class MailingListManager {
     private UserService userService;
     private CategoryService categoryService;
     
-    // @Named(Keys.Env.mailingListDir)
-    @Value("#{hkEnvProps['mailingListDir']}")
+    @Value("#{hkEnvProps['" + Keys.Env.mailingListDir + "']}")
     String         mailingListDirPath;
 
     public List<User> getUserList(Category category, int pageNo, int perPage) {
