@@ -68,6 +68,7 @@ public class DeliveryStatusUpdateManager {
     // private static int acceptableDeliveryPeriod = 50;
 
     private static final String authenticationIdForDelhivery = "9aaa943a0c74e29b340074d859b2690e07c7fb25";
+    List<Long> courierIdList= new ArrayList<Long>();
 
     LineItemDao                 lineItemDaoProvider;
 
@@ -243,8 +244,8 @@ public class DeliveryStatusUpdateManager {
     }
 
     public int updateDeliveryStatusAFL(Date startDate, Date endDate, User loggedOnUser) {
-
-        List<Long> shippingOrderList = getAdminShippingOrderService().getShippingOrderListByCourier(startDate, endDate, EnumCourier.AFLWiz.getId());
+        courierIdList.add( EnumCourier.AFLWiz.getId());
+        List<Long> shippingOrderList = getAdminShippingOrderService().getShippingOrderListByCouriers(startDate, endDate,courierIdList);
         courierName = " AFLwiz";
 
         ordersDelivered = 0;
@@ -321,8 +322,8 @@ public class DeliveryStatusUpdateManager {
     }
 
     public int updateDeliveryStatusChhotu(Date startDate, Date endDate, User loggedOnUser) {
-
-        List<Long> shippingOrderList = getAdminShippingOrderService().getShippingOrderListByCourier(startDate, endDate, EnumCourier.Chhotu.getId());
+        courierIdList.add( EnumCourier.Chhotu.getId());
+        List<Long> shippingOrderList = getAdminShippingOrderService().getShippingOrderListByCouriers(startDate, endDate,courierIdList);
         courierName += " Chhotu";
 
         ordersDelivered = 0;
@@ -435,8 +436,8 @@ public class DeliveryStatusUpdateManager {
     }
 
     public int updateDeliveryStatusDelhivery(Date startDate, Date endDate, User loggedOnUser) {
-
-        List<Long> shippingOrderList = adminShippingOrderService.getShippingOrderListByCourier(startDate, endDate, EnumCourier.Delhivery.getId());
+        courierIdList.add( EnumCourier.Delhivery.getId());
+        List<Long> shippingOrderList = adminShippingOrderService.getShippingOrderListByCouriers(startDate, endDate,courierIdList);
         // courierName += " Delhivery";
 
         ordersDelivered = 0;
@@ -504,8 +505,9 @@ public class DeliveryStatusUpdateManager {
     }
 
   public int updateDeliveryStatusBlueDart(Date startDate, Date endDate, User loggedOnUser) {
-
-    List<Long> shippingOrderList = adminShippingOrderService.getShippingOrderListByCourier(startDate, endDate, EnumCourier.BlueDart.getId());
+    courierIdList.add( EnumCourier.BlueDart.getId());
+    courierIdList.add( EnumCourier.BlueDart_COD.getId());
+    List<Long> shippingOrderList = adminShippingOrderService.getShippingOrderListByCouriers(startDate, endDate,courierIdList);
     courierName = " BlueDart";
     ordersDelivered = 0;
     orderDeliveryCount = 0;

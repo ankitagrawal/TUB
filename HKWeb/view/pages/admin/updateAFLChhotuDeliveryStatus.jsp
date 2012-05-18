@@ -77,6 +77,8 @@
                         </s:form>
                     </div>
                 </td>
+          </tr>
+              <tr>
                 <td>
                     <div class="reportBox">
                         <s:form beanclass="com.hk.web.action.admin.shipment.UpdateAFLChhotuDeliveryStatusAction">

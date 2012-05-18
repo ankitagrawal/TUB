@@ -3,6 +3,7 @@ package com.hk.web.action.core.order;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -14,6 +15,10 @@ import net.sourceforge.stripes.validation.Validate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.xpath.XPath;
+import org.jdom.input.SAXBuilder;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.google.gson.Gson;
@@ -135,9 +140,46 @@ public class TrackCourierAction extends BaseAction {
 			}
 			resolution = new ForwardResolution("/pages/chhotuCourier.jsp");
 		} else if (courierId.equals(EnumCourier.BlueDart.getId()) || courierId.equals(EnumCourier.BlueDart_COD.getId())) {
-			resolution = new RedirectResolution("http://www.bluedart.com/servlet/RoutingServlet", false).addParameter("action", "awbquery")
-					.addParameter("awb", "awb").addParameter("handler", "tnt").addParameter("numbers", trackingId);
-		} else if (courierId.equals(EnumCourier.FirstFLight.getId())|| courierId.equals(EnumCourier.FirstFLight_COD.getId())) {
+      try {
+        URL url = new URL("http://www.bluedart.com/servlet/RoutingServlet?handler=tnt&action=custawbquery&loginid=GGN37392&awb=awb&numbers=" + trackingId + "&format=xml&lickey=3c6867277b7a2c8cd78c8c4cb320f401&verno=1.3&scan=1");
+        BufferedReader in = new BufferedReader(
+            new InputStreamReader(
+                url.openStream()));
+        String inputLine;
+        String response = "";
+
+        while ((inputLine = in.readLine()) != null) {
+          if (inputLine != null) {
+            response += inputLine;
+          }
+        }
+        in.close();
+        Document doc = new SAXBuilder().build(new StringReader(response));
+        XPath xPath = XPath.newInstance("/*/Shipment");
+        Element ele = (Element) xPath.selectSingleNode(doc);
+        String responseStatus = ele.getChildText("Status");
+        if (!responseStatus.equals("Incorrect Waybill number or No Information")) {
+          status = ele.getChildText("Status");
+        }
+      }
+      catch (MalformedURLException mue) {
+        logger.error("malformed url for gateway id " + trackingId);
+        mue.printStackTrace();
+      }
+      catch (IOException ioe) {
+        logger.error("ioexception encounter for gateway id " + trackingId);
+        ioe.printStackTrace();
+      }
+      catch (NullPointerException npe) {
+        logger.error("Null pointer Exception for gateway id " + trackingId);
+        npe.printStackTrace();
+      }
+      catch (Exception e) {
+        logger.error("Null pointer Exception for gateway id " + trackingId);
+        e.printStackTrace();
+      }
+      resolution = new ForwardResolution("/pages/blueDartCourier.jsp");
+    } else if (courierId.equals(EnumCourier.FirstFLight.getId())|| courierId.equals(EnumCourier.FirstFLight_COD.getId())) {
 			resolution = new RedirectResolution("http://www.firstflight.net/n_contrac_new.asp", false).addParameter("tracking1", trackingId);
 		} else {
 			resolution = new RedirectResolution("/pages/error/invalidCourier.jsp");
@@ -166,4 +208,35 @@ public class TrackCourierAction extends BaseAction {
 		return chhotuCourierDelivery;
 	}
 
+  public String getStatus() {
+    return status;
+  }
+
+  public void setStatus(String status) {
+    this.status = status;
+  }
+
+  public String getAwb() {
+    return awb;
+  }
+
+  public void setAwb(String awb) {
+    this.awb = awb;
+  }
+
+  public ShippingOrder getShippingOrder() {
+    return shippingOrder;
+  }
+
+  public void setShippingOrder(ShippingOrder shippingOrder) {
+    this.shippingOrder = shippingOrder;
+  }
+
+  public String getPaymentType() {
+    return paymentType;
+  }
+
+  public void setPaymentType(String paymentType) {
+    this.paymentType = paymentType;
+  }
 }

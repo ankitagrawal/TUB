@@ -1,21 +1,23 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.core.order.TrackCourierAction" var="tca"/>
-<s:layout-render name="/layouts/default.jsp" pageTitle="Delhivery Courier Services">
-  <s:layout-component name="heading">Order Shipped through Delhivery Courier Services</s:layout-component>
+<s:layout-render name="/layouts/default.jsp" pageTitle="BlueDart Courier Services">
+  <s:layout-component name="heading">Order Shipped through BlueDart Courier Services</s:layout-component>
   <s:layout-component name="rhsContent">
     <c:choose>
-      <c:when test="${tca.status== null || tca.awb== null }">
+      <c:when test="${tca.status== null}">
         <div class="clear"></div>
         <br/>
         <br/>
 
         <div>
-          Sorry, there is no return of Information from Delhivery Courier Services
+          Sorry, there is no return of Information from BlueDart Courier Services
           <br/>
           please
-          <a href="http://www.delhivery.com/" target="_blank">Visit Delhivery Courier</a>
-          and use order number=${tca.shippingOrder.gatewayOrderId}
+          <a href="http://www.bluedart.com/" target="_blank">Visit BlueDart Courier</a><br/><br/>
+          Use Reference number=${tca.shippingOrder.gatewayOrderId}
+          <br/>
+          Waybill number=${tca.trackingId}
         </div>
 
       </c:when>
@@ -27,13 +29,18 @@
           </div>
           <div class="clear"></div>
           <div class="row">
-            <s:label name="Tracking Id:" class="valueLabel"/>
-            <s:label name="${tca.awb}" class="nameLabel"/>
+            <s:label name="Order Id:" class="valueLabel"/>
+            <s:label name="${tca.shippingOrder.baseOrder.id}" class="nameLabel"/>
           </div>
           <div class="clear"></div>
           <div class="row">
-            <s:label name="Payment Mode:" class="valueLabel"/>
-            <s:label name=" ${tca.paymentType}" class="nameLabel"/>
+            <s:label name="Ship date:" class="valueLabel"/>
+            <s:label name="${tca.shippingOrder.shipment.shipDate}" class="nameLabel"/>
+          </div>
+          <div class="clear"></div>
+          <div class="row">
+            <s:label name="Tracking Id:" class="valueLabel"/>
+            <s:label name="${tca.trackingId}" class="nameLabel"/>
           </div>
           <div class="clear"></div>
           <div class="row">
