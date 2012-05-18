@@ -86,17 +86,7 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
   }
 
 
-  //added
 
-  public void resetInventoryBySkuItem(SkuItem skuitem) {
-
-    if (skuitem != null ) {
-      getSession().
-          createQuery("delete from SkuItem si where si.id = :toBeRemovedId").
-          setParameter("toBeRemovedId", skuitem.getId()).
-          executeUpdate();
-    }
-  }
 
 
   //added

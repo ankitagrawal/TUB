@@ -22,8 +22,6 @@ public interface SkuItemDao extends BaseDao {
 
   public void resetInventory(ProductVariant productVariant);
 
-  public void resetInventoryBySkuItem(SkuItem skuitem);
-
   public List<SkuGroup> getInStockSkuGroupsByCreateDate(Sku sku);
 
   public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup);

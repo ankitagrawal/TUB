@@ -58,12 +58,33 @@ public class SkuGroupDaoImpl extends BaseDaoImpl implements SkuGroupDao {
 
 
   public List<SkuGroup> getCurrentCheckedInBatchNotInGrn(GoodsReceivedNote grn, Sku sku) {
+  List<SkuGroup>   skuGroupList =   getInStockSkuGroups(sku);
     return (List<SkuGroup>) getSession().
-        createQuery("from SkuGroup sg where sg.goodsReceivedNote != :grn and sg.sku = :sku").
+        createQuery("from SkuGroup sg where sg.goodsReceivedNote != :grn and sg.id in (:skuList)").
         setParameter("grn", grn).
-        setParameter("sku", sku).
+        setParameterList("skuList", skuGroupList).
         list();
   }
+
+   public List<SkuGroup> getInStockSkuGroups(Sku sku) {
+    List<SkuGroup> skuGroupList = new ArrayList<SkuGroup>();
+    String skuItemListQuery = "select pvi.skuItem.id from ProductVariantInventory pvi where pvi.skuItem is not null " +
+        "and pvi.sku = :sku group by pvi.skuItem.id having sum(pvi.qty) > 0";
+    List<Long> skuItemIdList = (List<Long>) getSession().createQuery(skuItemListQuery)
+        .setParameter("sku", sku)
+        .list();
+    if (skuItemIdList != null && skuItemIdList.size() > 0) {
+      String query = "select distinct si.skuGroup from SkuItem si where si.id in (:skuItemIdList) " +
+                   "and si.skuGroup.sku = :sku order by si.skuGroup.expiryDate asc, si.skuGroup.mfgDate asc, si.skuGroup.createDate asc ";
+
+      skuGroupList = (List<SkuGroup>) getSession().createQuery(query)
+          .setParameterList("skuItemIdList", skuItemIdList)
+          .setParameter("sku", sku)
+          .list();
+    }
+    return skuGroupList;
+  }
+
 
   public List<SkuGroup> getInStockSkuGroupByQty(Sku sku) {
     List<SkuGroup> inStockSkuItems = new ArrayList<SkuGroup>();
