@@ -5049,6 +5049,34 @@ td.top {
   line-height: 18px;
 }
 
+.paymentBox {
+    margin: 2em 0;
+    border-bottom: 1px dotted #eee;
+    padding: 0 5px;
+    padding-bottom: 1em;
+}
+
+.paymentBox h4 {
+    margin-bottom: 1em;
+}
+
+.paymentBox .col {
+    width: 200px;
+    float: left;
+    margin-left: 10px;
+
+}
+
+.paymentBox.bl {
+    display: block;
+    color: #444;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    font-size: 12px;
+    line-height: 18px;
+}
+
 .bl:hover {
   color: #f27506;
 }
