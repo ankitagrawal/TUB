@@ -1,5 +1,5 @@
-.serif{
-    font-family: Georgia, Cambria, serif;
+.serif {
+  font-family: Georgia, Cambria, serif;
 }
 
 @charset
@@ -920,8 +920,7 @@ span.error {
 /* line 138, ../sass/main.scss */
 .menuBar ul.lvl1 li.lvl1 {
   float: left;
-  vertical-align: middle;
-  /*font-size: 18px;*/
+  vertical-align: middle; /*font-size: 18px;*/
   padding: 5px 10px;
   border-right: #888;
   border: 2px solid transparent;
@@ -935,6 +934,7 @@ span.error {
   -o-box-shadow: 1px 0 0 rgba(255, 255, 255, 0.1), -1px 0 0 rgba(255, 255, 255, 0.1);
   box-shadow: 1px 0 0 rgba(255, 255, 255, 0.1), -1px 0 0 rgba(255, 255, 255, 0.1);
 }
+
 .menuBar ul.lvl1 li.new {
   background-image: url('../images/1327732146_new_2.png');
   background-repeat: no-repeat;
@@ -944,13 +944,13 @@ span.error {
 }
 
 .menuBar ul.lvl1 li.lvl1 div.lvl2 .categories .head2 {
-    font-size: 12px;
-    font-weight: bold;
-    color: #df6900;
-    line-height: 20px;
-    text-shadow: 0 1px 0 white;
-    margin-top: 5px;
-    padding: 5px 0;
+  font-size: 12px;
+  font-weight: bold;
+  color: #df6900;
+  line-height: 20px;
+  text-shadow: 0 1px 0 white;
+  margin-top: 5px;
+  padding: 5px 0;
 }
 
 /* line 151, ../sass/main.scss */
@@ -1765,7 +1765,7 @@ h3 a.prod_link {
 
 /* line 613, ../sass/main.scss */
 .footer {
-border: 1px solid #ddd;
+  border: 1px solid #ddd;
   box-shadow: 0 1px 3px #eee;
   width: 960px;
   margin-left: auto;
@@ -1786,27 +1786,28 @@ border: 1px solid #ddd;
   height: 250px;
   margin-top: -250px;
   position: absolute;
-    left: 0px; right: 0px;
+  left: 0px;
+  right: 0px;
   bottom: 0px;
 }
 
 .footer-bottom {
-      width: 960px;
-    margin: 0 auto;
-    background: #FAFCFE;
-    background: rgba(255, 255, 255, 0.2);
-    padding: 0;
-    vertical-align: middle;
-    text-align: right;
-    /*width: 100%;
-  background: #e67817;
-  margin: 0px;
-  height: 66px;
+  width: 960px;
+  margin: 0 auto;
+  background: #FAFCFE;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0;
+  vertical-align: middle;
+  text-align: right;
+  /*width: 100%;
+ background: #e67817;
+ margin: 0px;
+ height: 66px;
 
 
-  clear: both;
-  bottom: 0px;
-  position: relative;*/
+ clear: both;
+ bottom: 0px;
+ position: relative;*/
 }
 
 .footer-bottom .fb-contents {
@@ -5100,52 +5101,52 @@ td.top {
 
 /* autocomplete */
 .ac_results {
-	padding: 0px;
-	border: 1px solid black;
-	background-color: white;
-	overflow: hidden;
-	z-index: 99999;
+  padding: 0px;
+  border: 1px solid black;
+  background-color: white;
+  overflow: hidden;
+  z-index: 99999;
 }
 
 .ac_results ul {
-	width: 100%;
-	list-style-position: outside;
-	list-style: none;
-	padding: 0;
-	margin: 0;
+  width: 100%;
+  list-style-position: outside;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .ac_results li {
-	margin: 0px;
-	padding: 2px 5px;
-	cursor: default;
-	display: block;
-	/*
-	if width will be 100% horizontal scrollbar will apear
-	when scroll mode will be used
-	*/
-	/*width: 100%;*/
-	font: menu;
-	font-size: 12px;
-	/*
-	it is very important, if line-height not setted or setted
-	in relative units scroll will be broken in firefox
-	*/
-	line-height: 16px;
-	overflow: hidden;
+  margin: 0px;
+  padding: 2px 5px;
+  cursor: default;
+  display: block;
+  /*
+   if width will be 100% horizontal scrollbar will apear
+   when scroll mode will be used
+   */
+/*width: 100%;*/
+  font: menu;
+  font-size: 12px;
+  /*
+   it is very important, if line-height not setted or setted
+   in relative units scroll will be broken in firefox
+   */
+  line-height: 16px;
+  overflow: hidden;
 }
 
 .ac_loading {
-	background: white url('indicator.gif') right center no-repeat;
+  background: white url('indicator.gif') right center no-repeat;
 }
 
 .ac_odd {
-	background-color: #eee;
+  background-color: #eee;
 }
 
 .ac_over {
-	background-color: #0A246A;
-	color: white;
+  background-color: #0A246A;
+  color: white;
 }
 
 .acSelect {
@@ -5157,7 +5158,54 @@ td.top {
   text-decoration: line-through;
 }
 
+.clear {
+  clear: both;
+  height: 1px;
+  overflow: hidden;
+  margin-top: -1px;
+}
 
-.clear {clear: both; height: 1px; overflow: hidden; margin-top: -1px;}
-.floatleft {float: left;}
-.floatright {float: right;}
+.floatleft {
+  float: left;
+}
+
+.floatright {
+  float: right;
+}
+
+.acResults ul {
+  width: 100%;
+  list-style-position: outside;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  z-index: 1;
+}
+
+.acResults li {
+  margin: 0px;
+  padding: 2px 5px;
+  cursor: default;
+  display: block; /**/
+/*if width will be 100% horizontal scrollbar will appear*/
+/*when scroll mode will be used*/
+
+/*width: 100%;*/
+  font: menu;
+  font-size: 12px;
+  /*
+   it is very important, if line-height not setted or setted
+   in relative units scroll will be broken in firefox
+   */
+  line-height: 16px;
+  overflow: hidden;
+}
+
+.acLoading {
+  background: white url('indicator.gif') right center no-repeat;
+}
+
+.acSelect {
+  background-color: Highlight;
+  color: HighlightText;
+}
