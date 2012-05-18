@@ -17,17 +17,24 @@ import java.util.List;
 public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
 
   public List<SkuGroup> getInStockSkuGroups(Sku sku) {
-    List<SkuGroup> skuGroupList = new ArrayList<SkuGroup>();
-    String skuItemListQuery = "select pvi.skuItem.id from ProductVariantInventory pvi where pvi.skuItem is not null "
-        + "and pvi.sku = :sku group by pvi.skuItem.id having sum(pvi.qty) > 0";
-    List<Long> skuItemIdList = (List<Long>) getSession().createQuery(skuItemListQuery).setParameter("sku", sku).list();
-    if (skuItemIdList != null && skuItemIdList.size() > 0) {
-      String query = "select distinct si.skuGroup from SkuItem si where si.id in (:skuItemIdList) " + "and si.skuGroup.sku = :sku order by si.skuGroup.expiryDate asc";
-      skuGroupList = (List<SkuGroup>) getSession().createQuery(query).setParameterList("skuItemIdList", skuItemIdList).setParameter("sku", sku).list();
-    }
-    return skuGroupList;
-  }
+     List<SkuGroup> skuGroupList = new ArrayList<SkuGroup>();
+     String skuItemListQuery = "select pvi.skuItem.id from ProductVariantInventory pvi where pvi.skuItem is not null " +
+         "and pvi.sku = :sku group by pvi.skuItem.id having sum(pvi.qty) > 0";
+     List<Long> skuItemIdList = (List<Long>) getSession().createQuery(skuItemListQuery)
+         .setParameter("sku", sku)
+         .list();
+     if (skuItemIdList != null && skuItemIdList.size() > 0) {
+       String query = "select distinct si.skuGroup from SkuItem si where si.id in (:skuItemIdList) " +
+                    "and si.skuGroup.sku = :sku order by si.skuGroup.expiryDate asc, si.skuGroup.mfgDate asc, si.skuGroup.createDate asc ";
 
+       skuGroupList = (List<SkuGroup>) getSession().createQuery(query)
+           .setParameterList("skuItemIdList", skuItemIdList)
+           .setParameter("sku", sku)
+           .list();
+     }
+     return skuGroupList;
+   }
+ 
 
   public SkuItem getSkuItemToValidateDayZeroInventory(ProductVariant productVariant, String batchNumber) {
     String query = "select si from SkuItem si where si.skuGroup.sku.productVariant = :productVariant and si.skuGroup.batchNumber = :batchNumber";
