@@ -16,6 +16,7 @@ import javax.xml.xpath.XPathFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
@@ -39,10 +40,15 @@ import com.hk.pact.dao.location.MapIndiaDao;
 public class LatLongGenerator {
   private static Logger logger = LoggerFactory.getLogger(LatLongGenerator.class);
 
-   MapIndiaDao mapIndiaDao;
-   LocalityMapDao localityMapDao;
-   AddressDao addressDao;
-   ManufacturerDao manufacturerDao;
+
+  @Autowired
+  MapIndiaDao mapIndiaDao;
+  @Autowired
+  LocalityMapDao localityMapDao;
+  @Autowired
+  AddressDao addressDao;
+  @Autowired
+  ManufacturerDao manufacturerDao;
   String line2;
   String city;
   String state;
