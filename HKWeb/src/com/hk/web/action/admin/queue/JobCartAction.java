@@ -8,7 +8,6 @@ import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
 import com.hk.admin.pact.dao.inventory.GrnLineItemDao;
 import com.hk.admin.pact.dao.warehouse.BinDao;
 import com.hk.admin.util.BarcodeGenerator;
-import com.hk.admin.util.XslParser;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.catalog.category.Category;
@@ -106,8 +105,7 @@ public class JobCartAction extends BaseAction {
   private String upc;
   @Validate(required = true, minvalue = 1.0, on = "save")
   private Long qty;
-  @Validate(required = true, on = "save")
-  XslParser xslParser;
+
   private String batch;
   private Date mfgDate;
   private Date expiryDate;

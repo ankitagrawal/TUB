@@ -1,24 +1,8 @@
 package com.hk.web.action.admin.inventory;
 
-import java.util.List;
-import java.util.Set;
-
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.JsonResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
+import com.hk.admin.manager.BinManager;
 import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
 import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
@@ -44,363 +28,379 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.error.AdminPermissionAction;
+import net.sourceforge.stripes.action.*;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
 
-@Secure(hasAnyPermissions = { PermissionConstants.INVENTORY_CHECKOUT }, authActionBean = AdminPermissionAction.class)
+import java.util.List;
+import java.util.Set;
+
+@Secure(hasAnyPermissions = {PermissionConstants.INVENTORY_CHECKOUT}, authActionBean = AdminPermissionAction.class)
 @Component
 public class InventoryCheckoutAction extends BaseAction {
 
-    private static Logger              logger = LoggerFactory.getLogger(InventoryCheckoutAction.class);
+  private static Logger logger = LoggerFactory.getLogger(InventoryCheckoutAction.class);
 
-     
-    // UserDao userDao;
-    // ProductVariantDao productVariantDao;
-    
-    // OrderLifecycleActivityDao orderLifecycleActivityDao;
-    // InvTxnTypeDao invTxnTypeDao;
-    // OrderStatusDao orderStatusDao;
-    // ShippingOrderDao shippingOrderDao;
-    @Autowired
-    private AdminSkuItemDao skuItemDao;
-    @Autowired
-    private LineItemDao lineItemDao;
-    @Autowired
-    private  AdminProductVariantInventoryDao adminProductVariantInventoryDao;
-    @Autowired
-    private ShippingOrderService       shippingOrderService;
-    @Autowired
-    private UserService                userService;
-    @Autowired
-    private ShippingOrderStatusService shippingOrderStatusService;
-    @Autowired
-    private OrderStatusService         orderStatusService;
-    @Autowired
-    private OrderService               orderService;
-    @Autowired
-    private AdminInventoryService      adminInventoryService;
-    @Autowired
-    private InventoryService           inventoryService;
-    @Autowired
-    private SkuService                 skuService;
-    @Autowired
-    private ProductVariantService      productVariantService;
-    @Autowired
-    private OrderManager               orderManager;
-    private ShippingOrder              shippingOrder;
-    
-    private LineItem                   lineItem;
-    private String                     upc;
-    private ProductVariant             productVariant;
-    private Long                       qty;
-    private SkuGroup                   skuGroup;
-    private String                     invoiceNumber;
-    private String                     gatewayOrderId;
-    List<SkuGroup>                     skuGroups;
 
-    @DefaultHandler
-    public Resolution pre() {
-        return new ForwardResolution("/pages/admin/searchOrderAndCheckoutInventory.jsp");
-    }
+  // UserDao userDao;
+  // ProductVariantDao productVariantDao;
 
-    public Resolution checkout() {
-        shippingOrder = getShippingOrderService().findByGatewayOrderId(gatewayOrderId);
-        if (shippingOrder == null) {
-            addRedirectAlertMessage(new SimpleMessage("No Such Order"));
-        } else if (!EnumShippingOrderStatus.SO_Picking.getId().equals(shippingOrder.getOrderStatus().getId())) {
-            addRedirectAlertMessage(new SimpleMessage("Order is not in picking cannot proceed to checkout"));
-        } else {
-            logger.debug("gatewayId: " + shippingOrder.getGatewayOrderId());
-            Set<LineItem> pickingLIs = shippingOrder.getLineItems();
-            if (pickingLIs != null && !shippingOrder.getLineItems().isEmpty()) {
-                Boolean checkedOut = getAdminInventoryService().areAllUnitsOfOrderCheckedOut(shippingOrder);
-                if (checkedOut) {
-                    shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_CheckedOut));
-                    getShippingOrderService().save(shippingOrder);
-                }
-                return new ForwardResolution("/pages/admin/inventoryCheckout.jsp");
-            }
-        }
-        addRedirectAlertMessage(new SimpleMessage("No Such Order OR Invalid line item status OR All items are checkedout"));
-        return new RedirectResolution(InventoryCheckoutAction.class);
-    }
+  // OrderLifecycleActivityDao orderLifecycleActivityDao;
+  // InvTxnTypeDao invTxnTypeDao;
+  // OrderStatusDao orderStatusDao;
+  // ShippingOrderDao shippingOrderDao;
+  @Autowired
+  private AdminSkuItemDao skuItemDao;
+  @Autowired
+  private LineItemDao lineItemDao;
+  @Autowired
+  private AdminProductVariantInventoryDao adminProductVariantInventoryDao;
+  @Autowired
+  private ShippingOrderService shippingOrderService;
+  @Autowired
+  private UserService userService;
+  @Autowired
+  private ShippingOrderStatusService shippingOrderStatusService;
+  @Autowired
+  private OrderStatusService orderStatusService;
+  @Autowired
+  private OrderService orderService;
+  @Autowired
+  private AdminInventoryService adminInventoryService;
+  @Autowired
+  private InventoryService inventoryService;
+  @Autowired
+  private SkuService skuService;
+  @Autowired
+  private ProductVariantService productVariantService;
+  @Autowired
+  private OrderManager orderManager;
+  @Autowired
+  BinManager binManager;
 
-    public Resolution findSkuGroups() {
-        logger.debug("gatewayId: " + shippingOrder.getGatewayOrderId());
-        logger.debug("upc: " + upc);
-        if (StringUtils.isNotBlank(upc)) {
-            List<ProductVariant> pvList = getProductVariantService().findVariantListFromUPC(upc);
-            if (pvList != null && !pvList.isEmpty()) {
-                productVariant = pvList.get(0);
-            } else {
-                productVariant = getProductVariantService().getVariantById(upc);// UPC not available must have entered Variant Id
-            }
-            logger.debug("productVariant: " + productVariant);
-            if (productVariant != null) {
-                skuGroups = getAdminInventoryService().getInStockSkuGroups(upc);
-                logger.debug("skuGroups: " + skuGroups.size());
-            } else {
-                addRedirectAlertMessage(new SimpleMessage("Invalid UPC or VariantID"));
-                upc = null;
-            }
-        } else {
-            addRedirectAlertMessage(new SimpleMessage("Invalid UPC or VariantID"));
-            upc = null;
+  private ShippingOrder shippingOrder;
+
+  private LineItem lineItem;
+  private String upc;
+  private ProductVariant productVariant;
+  private Long qty;
+  private SkuGroup skuGroup;
+  private String invoiceNumber;
+  private String gatewayOrderId;
+  List<SkuGroup> skuGroups;
+
+  @DefaultHandler
+  public Resolution pre() {
+    return new ForwardResolution("/pages/admin/searchOrderAndCheckoutInventory.jsp");
+  }
+
+  public Resolution checkout() {
+    shippingOrder = getShippingOrderService().findByGatewayOrderId(gatewayOrderId);
+    if (shippingOrder == null) {
+      addRedirectAlertMessage(new SimpleMessage("No Such Order"));
+    } else if (!EnumShippingOrderStatus.SO_Picking.getId().equals(shippingOrder.getOrderStatus().getId())) {
+      addRedirectAlertMessage(new SimpleMessage("Order is not in picking cannot proceed to checkout"));
+    } else {
+      logger.debug("gatewayId: " + shippingOrder.getGatewayOrderId());
+      Set<LineItem> pickingLIs = shippingOrder.getLineItems();
+      if (pickingLIs != null && !shippingOrder.getLineItems().isEmpty()) {
+        Boolean checkedOut = getAdminInventoryService().areAllUnitsOfOrderCheckedOut(shippingOrder);
+        if (checkedOut) {
+          shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_CheckedOut));
+          getShippingOrderService().save(shippingOrder);
         }
         return new ForwardResolution("/pages/admin/inventoryCheckout.jsp");
+      }
     }
+    addRedirectAlertMessage(new SimpleMessage("No Such Order OR Invalid line item status OR All items are checkedout"));
+    return new RedirectResolution(InventoryCheckoutAction.class);
+  }
 
-    public Resolution selectItemFromSkuGroup() {
-        /*
-         * User loggedOnUser = null; if (getPrincipal() != null) { loggedOnUser = userDao.getUserById(getPrincipal().getId()); }
-         */
-        User loggedOnUser = userService.getLoggedInUser();
-        logger.debug("lineItem: " + lineItem);
-        logger.debug("shippingOrder: " + shippingOrder);
-        logger.debug("skuGroup: " + skuGroup);
-        if (shippingOrder != null) {
-            if (skuGroup != null) {
-                if (lineItem == null) {
-                    lineItem = lineItemDao.getLineItem(skuGroup.getSku(), shippingOrder);
-                }
-                if (lineItem != null) {
-                    Long checkedOutItemCount = adminProductVariantInventoryDao.getCheckedoutItemCount(lineItem);
-                    if (checkedOutItemCount == null) {
-                        checkedOutItemCount = 0L;
-                    }
-                    ProductVariant variant = skuGroup.getSku().getProductVariant();
-                    if (Math.abs(checkedOutItemCount) < lineItem.getQty() && shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Picking.getId())) {
+  public Resolution findSkuGroups() {
+    logger.debug("gatewayId: " + shippingOrder.getGatewayOrderId());
+    logger.debug("upc: " + upc);
+    if (StringUtils.isNotBlank(upc)) {
+      List<ProductVariant> pvList = getProductVariantService().findVariantListFromUPC(upc);
+      if (pvList != null && !pvList.isEmpty()) {
+        productVariant = pvList.get(0);
+      } else {
+        productVariant = getProductVariantService().getVariantById(upc);// UPC not available must have entered Variant Id
+      }
+      logger.debug("productVariant: " + productVariant);
+      if (productVariant != null) {
+        skuGroups = getAdminInventoryService().getInStockSkuGroups(upc);
+        logger.debug("skuGroups: " + skuGroups.size());
+      } else {
+        addRedirectAlertMessage(new SimpleMessage("Invalid UPC or VariantID"));
+        upc = null;
+      }
+    } else {
+      addRedirectAlertMessage(new SimpleMessage("Invalid UPC or VariantID"));
+      upc = null;
+    }
+    return new ForwardResolution("/pages/admin/inventoryCheckout.jsp");
+  }
 
-                        List<SkuItem> inStockSkuItems = skuItemDao.getInStockSkuItems(skuGroup);
-                        if (inStockSkuItems != null && inStockSkuItems.size() > 0) {
-                            getAdminInventoryService().inventoryCheckinCheckout(skuGroup.getSku(), inStockSkuItems.get(0), lineItem, shippingOrder, null, null,null,
-                                    getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKOUT), -1L, loggedOnUser);
-                            addRedirectAlertMessage(new SimpleMessage("SkuItem from selected Batch is checked out."));
-
-                            String comments = "Checked-out One Unit of Item: " + variant.getProduct().getName() + "<br/>" + variant.getOptionsCommaSeparated();
-                            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_CheckedOut, comments);
-                        } else {
-                            addRedirectAlertMessage(new SimpleMessage("Some error to get skuitem for skugroup"));
-                        }
-
-                    } else if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Shipped.getId())) { // For
-                        // Resending
-                        // of
-                        // damage/broken
-                        // inventory
-
-                        List<SkuItem> inStockSkuItems = skuItemDao.getInStockSkuItems(skuGroup);
-                        if (inStockSkuItems != null && inStockSkuItems.size() > 0) {
-                            getAdminInventoryService().inventoryCheckinCheckout(skuGroup.getSku(), inStockSkuItems.get(0), lineItem, shippingOrder, null, null,null,
-                                    getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_REPEAT_CHECKOUT), -1L, loggedOnUser);
-                            addRedirectAlertMessage(new SimpleMessage("SkuItem from selected Batch is checked out."));
-
-                            String comments = "Checked-out One Unit of Item: " + variant.getProduct().getName() + "<br/>" + variant.getOptionsCommaSeparated();
-                            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ReCheckedout, comments);
-                        } else {
-                            addRedirectAlertMessage(new SimpleMessage("Some error to get skuitem for skugroup"));
-                        }
-                    } else {
-                        addRedirectAlertMessage(new SimpleMessage("Oops!! All SkuItem Units for the In-process LineItem are already checked out."));
-                    }
-                } else {
-                    addRedirectAlertMessage(new SimpleMessage("Oops!! You are trying to checkout wrong variant. Plz check."));
-                }
-            }
-        } else {
-            addRedirectAlertMessage(new SimpleMessage("Oops!! Item can only be checkout against a gatewayId."));
-            return new RedirectResolution(InventoryCheckoutAction.class).addParameter("findSkuGroups").addParameter("shippingOrder", shippingOrder.getId()).addParameter("upc",
-                    skuGroup.getSku().getProductVariant().getUpc());
+  public Resolution selectItemFromSkuGroup() {
+    /*
+    * User loggedOnUser = null; if (getPrincipal() != null) { loggedOnUser = userDao.getUserById(getPrincipal().getId()); }
+    */
+    User loggedOnUser = userService.getLoggedInUser();
+    logger.debug("lineItem: " + lineItem);
+    logger.debug("shippingOrder: " + shippingOrder);
+    logger.debug("skuGroup: " + skuGroup);
+    if (shippingOrder != null) {
+      if (skuGroup != null) {
+        if (lineItem == null) {
+          lineItem = lineItemDao.getLineItem(skuGroup.getSku(), shippingOrder);
         }
-        return new RedirectResolution(InventoryCheckoutAction.class).addParameter("checkout").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
-    }
+        if (lineItem != null) {
+          Long checkedOutItemCount = adminProductVariantInventoryDao.getCheckedoutItemCount(lineItem);
+          if (checkedOutItemCount == null) {
+            checkedOutItemCount = 0L;
+          }
+          ProductVariant variant = skuGroup.getSku().getProductVariant();
+          if (Math.abs(checkedOutItemCount) < lineItem.getQty() && shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Picking.getId())) {
 
-    public Resolution inventoryCheckoutOfItemThatIsNotInOrderLineItem() { // Written for Combo may be used to adjust
-        // invs too.
-        /*
-         * User user = null; if (getPrincipal() != null) { user = userDao.getUserById(getPrincipal().getId()); }
-         */
-        User user = userService.getLoggedInUser();
-        logger.debug("Free Checkout of involved or replacing items for order: " + shippingOrder);
-        logger.debug("skuGroup: " + skuGroup);
-        if (shippingOrder != null) {
-            if (skuGroup != null) {
-                productVariant = skuGroup.getSku().getProductVariant();
-                logger.debug("productVariant: " + productVariant);
-                List<SkuItem> inStockSkuItems = skuItemDao.getInStockSkuItems(skuGroup);
-                if (inStockSkuItems != null && inStockSkuItems.size() > 0) {
-                    getAdminInventoryService().inventoryCheckinCheckout(skuGroup.getSku(), inStockSkuItems.get(0), null, shippingOrder, null, null,null,
-                            getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKOUT), -1L, user);
-                    addRedirectAlertMessage(new SimpleMessage("SkuItem from selected Batch is checked out."));
+            List<SkuItem> inStockSkuItems = skuItemDao.getInStockSkuItems(skuGroup);
+            if (inStockSkuItems != null && inStockSkuItems.size() > 0) {
+              getAdminInventoryService().inventoryCheckinCheckout(skuGroup.getSku(), inStockSkuItems.get(0), lineItem, shippingOrder, null, null, null,
+                  getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKOUT), -1L, loggedOnUser);
+              //added
+              binManager.removeBinAllocated(inStockSkuItems.get(0));
+              addRedirectAlertMessage(new SimpleMessage("SkuItem from selected Batch is checked out."));
 
-                    String comments = "Free Checked-out One Unit of Item: " + productVariant.getProduct().getName() + "<br/>" + productVariant.getOptionsCommaSeparated();
-                    shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_CheckedOut, comments);
-                } else {
-                    addRedirectAlertMessage(new SimpleMessage("Some error to get skuitem for skugroup"));
-                }
+              String comments = "Checked-out One Unit of Item: " + variant.getProduct().getName() + "<br/>" + variant.getOptionsCommaSeparated();
+              shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_CheckedOut, comments);
             } else {
-                addRedirectAlertMessage(new SimpleMessage("Oops!! You are trying to checkout wrong variant. Plz check."));
+              addRedirectAlertMessage(new SimpleMessage("Some error to get skuitem for skugroup"));
             }
+
+          } else if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Shipped.getId())) { // For
+            // Resending
+            // of
+            // damage/broken
+            // inventory
+
+            List<SkuItem> inStockSkuItems = skuItemDao.getInStockSkuItems(skuGroup);
+            if (inStockSkuItems != null && inStockSkuItems.size() > 0) {
+              getAdminInventoryService().inventoryCheckinCheckout(skuGroup.getSku(), inStockSkuItems.get(0), lineItem, shippingOrder, null, null, null,
+                  getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_REPEAT_CHECKOUT), -1L, loggedOnUser);
+              addRedirectAlertMessage(new SimpleMessage("SkuItem from selected Batch is checked out."));
+              //added
+              binManager.removeBinAllocated(inStockSkuItems.get(0));
+              String comments = "Checked-out One Unit of Item: " + variant.getProduct().getName() + "<br/>" + variant.getOptionsCommaSeparated();
+              shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ReCheckedout, comments);
+            } else {
+              addRedirectAlertMessage(new SimpleMessage("Some error to get skuitem for skugroup"));
+            }
+          } else {
+            addRedirectAlertMessage(new SimpleMessage("Oops!! All SkuItem Units for the In-process LineItem are already checked out."));
+          }
+        } else {
+          addRedirectAlertMessage(new SimpleMessage("Oops!! You are trying to checkout wrong variant. Plz check."));
         }
-        return new RedirectResolution(InventoryCheckoutAction.class).addParameter("checkout").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
+      }
+    } else {
+      addRedirectAlertMessage(new SimpleMessage("Oops!! Item can only be checkout against a gatewayId."));
+      return new RedirectResolution(InventoryCheckoutAction.class).addParameter("findSkuGroups").addParameter("shippingOrder", shippingOrder.getId()).addParameter("upc",
+          skuGroup.getSku().getProductVariant().getUpc());
     }
+    return new RedirectResolution(InventoryCheckoutAction.class).addParameter("checkout").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
+  }
 
-    @JsonHandler
-    public Resolution updateUPC() {
-        logger.debug("productVariant: " + productVariant.getId());
-        logger.debug("upc: " + upc);
-        productVariant.setUpc(upc);
-        getProductVariantService().save(productVariant);
+  public Resolution inventoryCheckoutOfItemThatIsNotInOrderLineItem() { // Written for Combo may be used to adjust
+    // invs too.
+    /*
+    * User user = null; if (getPrincipal() != null) { user = userDao.getUserById(getPrincipal().getId()); }
+    */
+    User user = userService.getLoggedInUser();
+    logger.debug("Free Checkout of involved or replacing items for order: " + shippingOrder);
+    logger.debug("skuGroup: " + skuGroup);
+    if (shippingOrder != null) {
+      if (skuGroup != null) {
+        productVariant = skuGroup.getSku().getProductVariant();
+        logger.debug("productVariant: " + productVariant);
+        List<SkuItem> inStockSkuItems = skuItemDao.getInStockSkuItems(skuGroup);
+        if (inStockSkuItems != null && inStockSkuItems.size() > 0) {
+          getAdminInventoryService().inventoryCheckinCheckout(skuGroup.getSku(), inStockSkuItems.get(0), null, shippingOrder, null, null, null,
+              getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKOUT), -1L, user);
+          addRedirectAlertMessage(new SimpleMessage("SkuItem from selected Batch is checked out."));
 
-        HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "success");
-
-        return new JsonResolution(healthkartResponse);
+          String comments = "Free Checked-out One Unit of Item: " + productVariant.getProduct().getName() + "<br/>" + productVariant.getOptionsCommaSeparated();
+          shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_CheckedOut, comments);
+        } else {
+          addRedirectAlertMessage(new SimpleMessage("Some error to get skuitem for skugroup"));
+        }
+      } else {
+        addRedirectAlertMessage(new SimpleMessage("Oops!! You are trying to checkout wrong variant. Plz check."));
+      }
     }
+    return new RedirectResolution(InventoryCheckoutAction.class).addParameter("checkout").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
+  }
 
-    public ShippingOrder getShippingOrder() {
-        return shippingOrder;
-    }
+  @JsonHandler
+  public Resolution updateUPC() {
+    logger.debug("productVariant: " + productVariant.getId());
+    logger.debug("upc: " + upc);
+    productVariant.setUpc(upc);
+    getProductVariantService().save(productVariant);
 
-    public void setShippingOrder(ShippingOrder shippingOrder) {
-        this.shippingOrder = shippingOrder;
-    }
+    HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "success");
 
-    public LineItem getLineItem() {
-        return lineItem;
-    }
+    return new JsonResolution(healthkartResponse);
+  }
 
-    public void setLineItem(LineItem lineItem) {
-        this.lineItem = lineItem;
-    }
+  public ShippingOrder getShippingOrder() {
+    return shippingOrder;
+  }
 
-    public String getUpc() {
-        return upc;
-    }
+  public void setShippingOrder(ShippingOrder shippingOrder) {
+    this.shippingOrder = shippingOrder;
+  }
 
-    public void setUpc(String upc) {
-        this.upc = upc;
-    }
+  public LineItem getLineItem() {
+    return lineItem;
+  }
 
-    public ProductVariant getProductVariant() {
-        return productVariant;
-    }
+  public void setLineItem(LineItem lineItem) {
+    this.lineItem = lineItem;
+  }
 
-    public void setProductVariant(ProductVariant productVariant) {
-        this.productVariant = productVariant;
-    }
+  public String getUpc() {
+    return upc;
+  }
 
-    public Long getQty() {
-        return qty;
-    }
+  public void setUpc(String upc) {
+    this.upc = upc;
+  }
 
-    public void setQty(Long qty) {
-        this.qty = qty;
-    }
+  public ProductVariant getProductVariant() {
+    return productVariant;
+  }
 
-    public SkuGroup getSkuGroup() {
-        return skuGroup;
-    }
+  public void setProductVariant(ProductVariant productVariant) {
+    this.productVariant = productVariant;
+  }
 
-    public void setSkuGroup(SkuGroup skuGroup) {
-        this.skuGroup = skuGroup;
-    }
+  public Long getQty() {
+    return qty;
+  }
 
-    public String getInvoiceNumber() {
-        return invoiceNumber;
-    }
+  public void setQty(Long qty) {
+    this.qty = qty;
+  }
 
-    public void setInvoiceNumber(String invoiceNumber) {
-        this.invoiceNumber = invoiceNumber;
-    }
+  public SkuGroup getSkuGroup() {
+    return skuGroup;
+  }
 
-    public List<SkuGroup> getSkuGroups() {
-        return skuGroups;
-    }
+  public void setSkuGroup(SkuGroup skuGroup) {
+    this.skuGroup = skuGroup;
+  }
 
-    public void setSkuGroups(List<SkuGroup> skuGroups) {
-        this.skuGroups = skuGroups;
-    }
+  public String getInvoiceNumber() {
+    return invoiceNumber;
+  }
 
-    public void setGatewayOrderId(String gatewayOrderId) {
-        this.gatewayOrderId = gatewayOrderId;
-    }
+  public void setInvoiceNumber(String invoiceNumber) {
+    this.invoiceNumber = invoiceNumber;
+  }
 
-    public void setShippingOrderService(ShippingOrderService shippingOrderService) {
-        this.shippingOrderService = shippingOrderService;
-    }
+  public List<SkuGroup> getSkuGroups() {
+    return skuGroups;
+  }
 
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
+  public void setSkuGroups(List<SkuGroup> skuGroups) {
+    this.skuGroups = skuGroups;
+  }
 
-    public void setShippingOrderStatusService(ShippingOrderStatusService shippingOrderStatusService) {
-        this.shippingOrderStatusService = shippingOrderStatusService;
-    }
+  public void setGatewayOrderId(String gatewayOrderId) {
+    this.gatewayOrderId = gatewayOrderId;
+  }
 
-    public InventoryService getInventoryService() {
-        return inventoryService;
-    }
+  public void setShippingOrderService(ShippingOrderService shippingOrderService) {
+    this.shippingOrderService = shippingOrderService;
+  }
 
-    public void setInventoryService(InventoryService inventoryService) {
-        this.inventoryService = inventoryService;
-    }
+  public void setUserService(UserService userService) {
+    this.userService = userService;
+  }
 
-    public OrderStatusService getOrderStatusService() {
-        return orderStatusService;
-    }
+  public void setShippingOrderStatusService(ShippingOrderStatusService shippingOrderStatusService) {
+    this.shippingOrderStatusService = shippingOrderStatusService;
+  }
 
-    public void setOrderStatusService(OrderStatusService orderStatusService) {
-        this.orderStatusService = orderStatusService;
-    }
+  public InventoryService getInventoryService() {
+    return inventoryService;
+  }
 
-    public OrderService getOrderService() {
-        return orderService;
-    }
+  public void setInventoryService(InventoryService inventoryService) {
+    this.inventoryService = inventoryService;
+  }
 
-    public void setOrderService(OrderService orderService) {
-        this.orderService = orderService;
-    }
+  public OrderStatusService getOrderStatusService() {
+    return orderStatusService;
+  }
 
-    public AdminInventoryService getAdminInventoryService() {
-        return adminInventoryService;
-    }
+  public void setOrderStatusService(OrderStatusService orderStatusService) {
+    this.orderStatusService = orderStatusService;
+  }
 
-    public void setAdminInventoryService(AdminInventoryService adminInventoryService) {
-        this.adminInventoryService = adminInventoryService;
-    }
+  public OrderService getOrderService() {
+    return orderService;
+  }
 
-    public SkuService getSkuService() {
-        return skuService;
-    }
+  public void setOrderService(OrderService orderService) {
+    this.orderService = orderService;
+  }
 
-    public void setSkuService(SkuService skuService) {
-        this.skuService = skuService;
-    }
+  public AdminInventoryService getAdminInventoryService() {
+    return adminInventoryService;
+  }
 
-    public OrderManager getOrderManager() {
-        return orderManager;
-    }
+  public void setAdminInventoryService(AdminInventoryService adminInventoryService) {
+    this.adminInventoryService = adminInventoryService;
+  }
 
-    public void setOrderManager(OrderManager orderManager) {
-        this.orderManager = orderManager;
-    }
+  public SkuService getSkuService() {
+    return skuService;
+  }
 
-    public ShippingOrderService getShippingOrderService() {
-        return shippingOrderService;
-    }
+  public void setSkuService(SkuService skuService) {
+    this.skuService = skuService;
+  }
 
-    public UserService getUserService() {
-        return userService;
-    }
+  public OrderManager getOrderManager() {
+    return orderManager;
+  }
 
-    public ShippingOrderStatusService getShippingOrderStatusService() {
-        return shippingOrderStatusService;
-    }
+  public void setOrderManager(OrderManager orderManager) {
+    this.orderManager = orderManager;
+  }
 
-    public ProductVariantService getProductVariantService() {
-        return productVariantService;
-    }
+  public ShippingOrderService getShippingOrderService() {
+    return shippingOrderService;
+  }
 
-    public void setProductVariantService(ProductVariantService productVariantService) {
-        this.productVariantService = productVariantService;
-    }
+  public UserService getUserService() {
+    return userService;
+  }
+
+  public ShippingOrderStatusService getShippingOrderStatusService() {
+    return shippingOrderStatusService;
+  }
+
+  public ProductVariantService getProductVariantService() {
+    return productVariantService;
+  }
+
+  public void setProductVariantService(ProductVariantService productVariantService) {
+    this.productVariantService = productVariantService;
+  }
 
 }
