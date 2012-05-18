@@ -3,6 +3,7 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 
 <s:useActionBean beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction" var="pa" event="pre"/>
+<c:set var="product" value="${pa.product}"/>
 <s:layout-render name="/layouts/genericG.jsp" pageTitle="${pa.seoData.title}">
 
   <s:layout-component name="htmlHead">

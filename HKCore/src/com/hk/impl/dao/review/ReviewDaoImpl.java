@@ -27,7 +27,7 @@ public class ReviewDaoImpl extends BaseDaoImpl implements ReviewDao {
         return list(criteria, page, perPage);
     }
 
-    public Double getStarRating(Product product) {
+    public Double getAverageRating(Product product) {
         Double starRating = (Double) getSession().createQuery(
                 "select (sum(o.starRating)/count(o.id)) from UserReview o where o.product = :product and o.reviewStatus.id = :reviewStatusId ").setParameter("product", product).setParameter(
                 "reviewStatusId", EnumReviewStatus.Published.getId()).uniqueResult();

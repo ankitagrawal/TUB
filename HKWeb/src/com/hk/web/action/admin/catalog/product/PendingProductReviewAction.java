@@ -89,7 +89,7 @@ public class PendingProductReviewAction extends BasePaginatedAction {
         return new RedirectResolution(PendingProductReviewAction.class).addParameter("searchReviews");
       } else {
         review = reviewDao.get(UserReview.class, reviewId);
-        return new ForwardResolution("/pages/editProductReview.jsp");
+        return new ForwardResolution("/pages/admin/editProductReview.jsp");
       }
     }
 

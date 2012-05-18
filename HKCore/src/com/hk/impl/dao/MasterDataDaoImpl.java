@@ -8,6 +8,7 @@ import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.TicketStatus;
 import com.hk.domain.TicketType;
+import com.hk.domain.review.ReviewStatus;
 import com.hk.domain.order.ShippingOrderStatus;
 import com.hk.domain.accounting.DebitNoteStatus;
 import com.hk.domain.affiliate.AffiliateCategory;
@@ -240,5 +241,9 @@ public class MasterDataDaoImpl implements MasterDataDao {
 
   public List<ShippingOrderStatus> getSOStatusForShipmentDetailsList() {
     return EnumShippingOrderStatus.getStatusForChangingShipmentDetails();
+  }
+
+  public List<ReviewStatus> getReviewStatusList() {
+    return getBaseDao().getAll(ReviewStatus.class);
   }
 }

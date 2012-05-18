@@ -580,8 +580,7 @@
           </tr>
           <tr style="border-style:none">
             <td colspan="2" style="border-style:none">
-              <hr style="color:#F0F0F0;border-style:dotted"
-              "/>
+              <hr style="color:#F0F0F0;border-style:dotted"/>
             </td>
           </tr>
         </table>

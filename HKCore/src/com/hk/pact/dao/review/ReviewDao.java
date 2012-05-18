@@ -13,5 +13,5 @@ public interface ReviewDao extends BaseDao{
 
     public Page getProductReviews(Product product, List<ReviewStatus> reviewStatusList, int page, int perPage);
 
-    public Double getStarRating(Product product);
+    public Double getAverageRating(Product product);
 }
