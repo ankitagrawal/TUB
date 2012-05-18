@@ -27,8 +27,8 @@ public class InventoryBinAllocationAction extends BaseAction {
    private static Logger logger = Logger.getLogger(InventoryCheckinAction.class);
   @Autowired
   SkuGroupDao skuGroupDao;
-   @Autowired
-  private Bin bin;
+
+
    @Autowired
   BinManager binManager;
   @Autowired
@@ -37,7 +37,7 @@ public class InventoryBinAllocationAction extends BaseAction {
   UserService userService;
  @Autowired
   SkuItemDao skuItemDao;
-
+    private Bin bin;
 
   @Validate(required = true, on = "saveBin")
   private String barcode;
@@ -52,7 +52,7 @@ public class InventoryBinAllocationAction extends BaseAction {
     return new ForwardResolution("/pages/admin/inventoryBinAllocation.jsp");
   }
 
-
+                                             
 
   public Resolution save() {
     if (StringUtils.isBlank(barcode)) {

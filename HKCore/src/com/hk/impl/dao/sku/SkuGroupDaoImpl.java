@@ -66,20 +66,21 @@ public class SkuGroupDaoImpl extends BaseDaoImpl implements SkuGroupDao {
            list();
    }
 
-  public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup) {
-    List<SkuItem> inStockSkuItems = new ArrayList<SkuItem>();
-    String inStockSkuItemIdQuery = "select pvi.skuItem.id from ProductVariantInventory pvi where pvi.skuItem.skuGroup =:skuGroup group by pvi.skuItem.id having sum(pvi.qty) > 0";
-    List<Long> inStockSkuItemIds = (List<Long>) getSessionProvider().get().createQuery(inStockSkuItemIdQuery)
-        .setParameter("skuGroup", skuGroup)
+           public List<SkuGroup> getInStockSkuGroupByQty(Sku sku) {
+         List<SkuGroup> inStockSkuItems = new ArrayList<SkuGroup>();
+    String inStockSkuItemIdQuery = "select pvi.skuItem.id from ProductVariantInventory pvi where pvi.sku =:sku " +
+        "group by pvi.skuItem.id having sum(pvi.qty) > 0";
+    List<Long> inStockSkuItemIds = (List<Long>) getSession().createQuery(inStockSkuItemIdQuery)
+        .setParameter("sku", sku)
         .list();
     if (inStockSkuItemIds != null && inStockSkuItemIds.size() > 0) {
-      String query = "select si from SkuItem si where si.skuGroup = :skuGroup and si.id in (:inStockSkuItemIds)";
-      inStockSkuItems = (List<SkuItem>) getSessionProvider().get().createQuery(query)
-          .setParameter("skuGroup", skuGroup)
+       String query = "select si.skuGroup from SkuItem si where si.id in (:inStockSkuItemIds) order by si.skuGroup.id";
+      inStockSkuItems = (List<SkuGroup>) getSession().createQuery(query)
           .setParameterList("inStockSkuItemIds", inStockSkuItemIds)
           .list();
     }
     return inStockSkuItems;
+
   }
 
 }

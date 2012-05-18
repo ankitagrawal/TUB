@@ -1,25 +1,29 @@
 package com.hk.pact.dao.sku;
 
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
-import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.pact.dao.BaseDao;
 
 import java.util.List;
 
 public interface SkuGroupDao extends BaseDao {
 
-    public List<SkuGroup> getAllCheckedInBatches(ProductVariant productVariant);
+  public List<SkuGroup> getAllCheckedInBatches(ProductVariant productVariant);
 
-    public List<SkuGroup> getAllCheckedInBatches(Sku sku);
+  public List<SkuGroup> getAllCheckedInBatches(Sku sku);
 
-    public void resetInventoryByBrand(String brand);
+  public void resetInventoryByBrand(String brand);
 
-    public void resetInventory(ProductVariant productVariant);
+  public void resetInventory(ProductVariant productVariant);
 
-    public SkuGroup getSkuGroup(String barcode);
-   public List<SkuGroup> getCurrentCheckedInBatchGrn(GoodsReceivedNote grn , Sku sku);
-    public List<SkuGroup> getCurrentCheckedInBatchNotInGrn(GoodsReceivedNote grn , Sku sku);
+  public SkuGroup getSkuGroup(String barcode);
+
+  public List<SkuGroup> getCurrentCheckedInBatchGrn(GoodsReceivedNote grn, Sku sku);
+
+  public List<SkuGroup> getCurrentCheckedInBatchNotInGrn(GoodsReceivedNote grn, Sku sku);
+
+  public List<SkuGroup> getInStockSkuGroupByQty(Sku sku);
 
 }

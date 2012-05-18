@@ -110,7 +110,21 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
      }
      return skuGroupList;
    }
-
-  
+      //added
+    public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup) {
+    List<SkuItem> inStockSkuItems = new ArrayList<SkuItem>();
+    String inStockSkuItemIdQuery = "select pvi.skuItem.id from ProductVariantInventory pvi where pvi.skuItem.skuGroup =:skuGroup group by pvi.skuItem.id having sum(pvi.qty) > 0";
+    List<Long> inStockSkuItemIds = (List<Long>) getSession().createQuery(inStockSkuItemIdQuery)
+        .setParameter("skuGroup", skuGroup)
+        .list();
+    if (inStockSkuItemIds != null && inStockSkuItemIds.size() > 0) {
+      String query = "select si from SkuItem si where si.skuGroup = :skuGroup and si.id in (:inStockSkuItemIds)";
+      inStockSkuItems = (List<SkuItem>) getSession().createQuery(query)
+          .setParameter("skuGroup", skuGroup)
+          .setParameterList("inStockSkuItemIds", inStockSkuItemIds)
+          .list();
+    }
+    return inStockSkuItems;
+  }
 
       }
