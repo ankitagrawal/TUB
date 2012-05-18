@@ -28,6 +28,7 @@ import org.stripesstuff.plugin.security.Secure;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.util.XslParser;
+import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierServiceInfo;
@@ -46,8 +47,7 @@ public class CourierAWBAction extends BaseAction {
     @Autowired
     CourierServiceInfoDao courierServiceInfoDao;
 
-    // @Named(Keys.Env.adminDownloads)
-    @Value("#{hkEnvProps['adminDownloads']}")
+    @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
     String                adminDownloadsPath;
 
     Courier               courier;

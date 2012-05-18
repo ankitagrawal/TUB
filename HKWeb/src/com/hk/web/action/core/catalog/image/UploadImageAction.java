@@ -17,95 +17,95 @@ import org.springframework.stereotype.Component;
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.EnumS3UploadStatus;
+import com.hk.constants.core.Keys;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.util.ImageManager;
 
-
 @Component
 public class UploadImageAction extends BaseAction {
-  @Validate(required = true)
-  FileBean fileBean;
-  Product product;
-  ProductVariant productVariant;
+    @Validate(required = true)
+    FileBean       fileBean;
+    Product        product;
+    ProductVariant productVariant;
 
-   //@Named(Keys.Env.adminUploads) 
-  @Value("#{hkEnvProps['adminUploads']}")
-   String adminUploadsPath;
-  @Autowired
-   ImageManager imageManager;
+    @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
+    String         adminUploadsPath;
+    @Autowired
+    ImageManager   imageManager;
 
-
-  @DefaultHandler
-  @DontValidate
-  public Resolution pre() {
-    return new ForwardResolution("/pages/uploadImage.jsp");
-  }
-
-  @DontValidate
-  public Resolution uploadVariantImage() throws Exception {
-    return new ForwardResolution("/pages/uploadVariantImage.jsp");
-  }
-
-  /**
-   * This method uploads the image on S3 in all sizes.
-   * If the productId passed from uploadImage.jsp is null, then reads the tag of the image, and find productId from there.
-   *
-   * @return
-   * @throws Exception
-   */
-
-  public Resolution uploadProductImage() throws Exception {
-    String imageFilePath = adminUploadsPath + "/imageFiles/temp/" + System.currentTimeMillis() + "_" + BaseUtils.getRandomString(4) + ".jpg";
-    File imageFile = new File(imageFilePath);
-    EnumS3UploadStatus status;
-    try {
-      imageFile.getParentFile().mkdirs();
-      fileBean.save(imageFile);
-      status = imageManager.uploadProductFile(imageFile, product, false);
-    } finally {
-      if (imageFile.exists()) imageFile.delete();
+    @DefaultHandler
+    @DontValidate
+    public Resolution pre() {
+        return new ForwardResolution("/pages/uploadImage.jsp");
     }
-    addRedirectAlertMessage(new SimpleMessage(status.getMessage()));
-    return new ForwardResolution("/pages/uploadImage.jsp");
-  }
 
-  public Resolution uploadProductVariantImage() throws Exception {
-    String imageFilePath = adminUploadsPath + "/imageFiles/temp/" + System.currentTimeMillis() + "_" + BaseUtils.getRandomString(4) + ".jpg";
-    File imageFile = new File(imageFilePath);
-    EnumS3UploadStatus status;
-    try {
-      imageFile.getParentFile().mkdirs();
-      fileBean.save(imageFile);
-      status = imageManager.uploadProductVariantFile(imageFile, productVariant);
-    } finally {
-      if (imageFile.exists()) imageFile.delete();
+    @DontValidate
+    public Resolution uploadVariantImage() throws Exception {
+        return new ForwardResolution("/pages/uploadVariantImage.jsp");
     }
-    addRedirectAlertMessage(new SimpleMessage(status.getMessage()));
-    return new ForwardResolution("/pages/uploadVariantImage.jsp");
-  }
 
-  public FileBean getFileBean() {
-    return fileBean;
-  }
+    /**
+     * This method uploads the image on S3 in all sizes. If the productId passed from uploadImage.jsp is null, then
+     * reads the tag of the image, and find productId from there.
+     * 
+     * @return
+     * @throws Exception
+     */
 
-  public void setFileBean(FileBean fileBean) {
-    this.fileBean = fileBean;
-  }
+    public Resolution uploadProductImage() throws Exception {
+        String imageFilePath = adminUploadsPath + "/imageFiles/temp/" + System.currentTimeMillis() + "_" + BaseUtils.getRandomString(4) + ".jpg";
+        File imageFile = new File(imageFilePath);
+        EnumS3UploadStatus status;
+        try {
+            imageFile.getParentFile().mkdirs();
+            fileBean.save(imageFile);
+            status = imageManager.uploadProductFile(imageFile, product, false);
+        } finally {
+            if (imageFile.exists())
+                imageFile.delete();
+        }
+        addRedirectAlertMessage(new SimpleMessage(status.getMessage()));
+        return new ForwardResolution("/pages/uploadImage.jsp");
+    }
 
-  public Product getProduct() {
-    return product;
-  }
+    public Resolution uploadProductVariantImage() throws Exception {
+        String imageFilePath = adminUploadsPath + "/imageFiles/temp/" + System.currentTimeMillis() + "_" + BaseUtils.getRandomString(4) + ".jpg";
+        File imageFile = new File(imageFilePath);
+        EnumS3UploadStatus status;
+        try {
+            imageFile.getParentFile().mkdirs();
+            fileBean.save(imageFile);
+            status = imageManager.uploadProductVariantFile(imageFile, productVariant);
+        } finally {
+            if (imageFile.exists())
+                imageFile.delete();
+        }
+        addRedirectAlertMessage(new SimpleMessage(status.getMessage()));
+        return new ForwardResolution("/pages/uploadVariantImage.jsp");
+    }
 
-  public void setProduct(Product product) {
-    this.product = product;
-  }
+    public FileBean getFileBean() {
+        return fileBean;
+    }
 
-  public ProductVariant getProductVariant() {
-    return productVariant;
-  }
+    public void setFileBean(FileBean fileBean) {
+        this.fileBean = fileBean;
+    }
 
-  public void setProductVariant(ProductVariant productVariant) {
-    this.productVariant = productVariant;
-  }
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public ProductVariant getProductVariant() {
+        return productVariant;
+    }
+
+    public void setProductVariant(ProductVariant productVariant) {
+        this.productVariant = productVariant;
+    }
 }

@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.constants.core.Keys;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.category.CategoryImage;
 import com.hk.domain.content.PrimaryCategoryHeading;
@@ -39,17 +40,17 @@ public class HomeAction extends BaseAction {
     private CategoryService      categoryService;
     @Autowired
     UserManager                  userManager;
-    
-    @Autowired
-    MenuHelper menuHelper;
 
     @Autowired
-    CategoryImageDaoImpl             categoryImageDao;
+    MenuHelper                   menuHelper;
+
+    @Autowired
+    CategoryImageDaoImpl         categoryImageDao;
     @Autowired
     PrimaryCategoryHeadingDao    primaryCategoryHeadingDao;
-    
-    @Value("#{hkEnvProps['hkNoReplyEmail']}")
-    private String testProperty;
+
+    @Value("#{hkEnvProps['" + Keys.Env.hkNoReplyEmail + "']}")
+    private String               testProperty;
 
     public Resolution pre() {
         menuHelper.postConstruction();

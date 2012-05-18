@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.hk.constants.core.Keys;
 import com.hk.pact.service.EmailService;
 import com.hk.service.impl.FreeMarkerService;
 
@@ -21,33 +22,27 @@ import com.hk.service.impl.FreeMarkerService;
 @Service
 public class EmailServiceImpl implements EmailService {
 
-    private static Logger   logger = LoggerFactory.getLogger(EmailService.class);
+    private static Logger logger = LoggerFactory.getLogger(EmailService.class);
 
     @Autowired
-    FreeMarkerService freeMarkerService ;
-    @Value("#{hkEnvProps['hkNoReplyEmail']}")
-    private String            noReplyEmail;
-    @Value("#{hkEnvProps['hkNoReplyName']}")
-    private String            noReplyName;
-    @Value("#{hkEnvProps['hkContactEmail']}")
-    private String            contactEmail;
-    @Value("#{hkEnvProps['hkContactName']}")
-    private String            contactName;
+    FreeMarkerService     freeMarkerService;
+    @Value("#{hkEnvProps['" + Keys.Env.hkNoReplyEmail + "']}")
+    private String        noReplyEmail;
+    @Value("#{hkEnvProps['" + Keys.Env.hkNoReplyName + "']}")
+    private String        noReplyName;
+    @Value("#{hkEnvProps['" + Keys.Env.hkContactEmail + "']}")
+    private String        contactEmail;
+    @Value("#{hkEnvProps['" + Keys.Env.hkContactName + "']}")
+    private String        contactName;
 
-    
-    //TODO: rewrite
-    /*@Autowired
-    public EmailServiceImpl(FreeMarkerService freeMarkerService,// @Named(Keys.Env.hkNoReplyEmail)
-            String noReplyEmail, //@Named(Keys.Env.hkNoReplyName)
-            String noReplyName, //@Named(Keys.Env.hkContactEmail)
-            String contactEmail, //@Named(Keys.Env.hkContactName)
-            String contactName) {
-        this.freeMarkerService = freeMarkerService;
-        this.noReplyEmail = noReplyEmail;
-        this.noReplyName = noReplyName;
-        this.contactEmail = contactEmail;
-        this.contactName = contactName;
-    }*/
+    // TODO: rewrite
+    /*
+     * @Autowired public EmailServiceImpl(FreeMarkerService freeMarkerService,// @Named(Keys.Env.hkNoReplyEmail) String
+     * noReplyEmail, //@Named(Keys.Env.hkNoReplyName) String noReplyName, //@Named(Keys.Env.hkContactEmail) String
+     * contactEmail, //@Named(Keys.Env.hkContactName) String contactName) { this.freeMarkerService = freeMarkerService;
+     * this.noReplyEmail = noReplyEmail; this.noReplyName = noReplyName; this.contactEmail = contactEmail;
+     * this.contactName = contactName; }
+     */
 
     public boolean sendHtmlEmailNoReply(String templatePath, Object templateValues, String toEmail, String toName) {
         return sendHtmlEmail(templatePath, templateValues, noReplyEmail, noReplyName, toEmail, toName, null, null, null);

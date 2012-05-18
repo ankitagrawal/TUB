@@ -16,6 +16,7 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.manager.MailingListManager;
+import com.hk.constants.core.Keys;
 import com.hk.constants.core.RoleConstants;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.user.User;
@@ -37,9 +38,7 @@ public class EmailListByCategoryAction extends BaseAction {
     @Autowired
     MailingListManager mailingListManager;
 
-    
-    // @Named(Keys.Env.mailingListDir)
-    @Value("#{hkEnvProps['mailingListDir']}")
+    @Value("#{hkEnvProps['" + Keys.Env.mailingListDir + "']}")
     String             mailingListDirPath;
 
     @DefaultHandler

@@ -34,6 +34,7 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.DateUtils;
 import com.hk.admin.manager.ProductManager;
 import com.hk.constants.catalog.category.CategoryConstants;
+import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.domain.catalog.category.Category;
@@ -89,8 +90,7 @@ public class ReportAction extends BaseAction {
     // private InventorySoldDto inventorySold;
     private OrderStatus                            orderStatus;
 
-    // @Named(Keys.Env.adminDownloads)
-    @Value("#{hkEnvProps['adminDownloads']}")
+    @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
     String                                         adminDownloads;
     File                                           xlsFile;
     @Autowired
@@ -586,6 +586,15 @@ public class ReportAction extends BaseAction {
         try {
             if (courier == null) {
                 addRedirectAlertMessage(new SimpleMessage("Please select a courier first."));
+                return new RedirectResolution(ReportAction.class);
+            }
+            if (startDate == null) {
+                addRedirectAlertMessage(new SimpleMessage("Please select start date first."));
+                return new RedirectResolution(ReportAction.class);
+            }
+
+            if (endDate == null) {
+                addRedirectAlertMessage(new SimpleMessage("Please select end date first."));
                 return new RedirectResolution(ReportAction.class);
             }
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");

@@ -19,6 +19,7 @@ import org.stripesstuff.plugin.session.Session;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.constants.core.HealthkartConstants;
+import com.hk.constants.core.Keys;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.order.Order;
@@ -71,16 +72,13 @@ public class OrderSummaryAction extends BaseAction {
     @Autowired
     PaymentModeDao         paymentModeDao;
 
-    // @Named(Keys.Env.codCharges)
-    @Value("#{hkEnvProps['codCharges']}")
+    @Value("#{hkEnvProps['" + Keys.Env.codCharges + "']}")
     private Double         codCharges;
 
-    // @Named(Keys.Env.codFreeAfter)
-    @Value("#{hkEnvProps['codFreeAfter']}")
+    @Value("#{hkEnvProps['" + Keys.Env.codFreeAfter + "']}")
     private Double         codFreeAfter;
 
-    // @Named(Keys.Env.codMinAmount)
-    @Value("#{hkEnvProps['codMinAmount']}")
+    @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
     private Double         codMinAmount;
 
     // @Named(Keys.Env.codMaxAmount)

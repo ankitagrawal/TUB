@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.constants.core.Keys;
 import com.hk.pact.dao.core.ManufacturerDao;
 import com.hk.util.LatLongGenerator;
 import com.hk.web.BatchProcessWorkManager;
@@ -40,8 +41,7 @@ public class BulkUploadMerchantAddressAction extends BaseAction {
   @Autowired 
   ManufacturerDao manufacturerDao;
 
-   //@Named(Keys.Env.adminUploads) 
-   @Value("#{hkEnvProps['adminUploads']}")
+   @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
    String adminUploadsPath;
 
   @Validate(required = true)

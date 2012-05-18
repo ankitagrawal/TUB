@@ -10,9 +10,13 @@ import net.sourceforge.stripes.controller.LifecycleStage;
 import net.sourceforge.stripes.controller.StripesFilter;
 
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.FlushMode;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+
+import com.hk.service.ServiceLocatorFactory;
 
 /**
  * 
@@ -33,6 +37,10 @@ public class StripesSpringInterceptor implements Interceptor
         AutowireCapableBeanFactory beanFactory = applicationContext.getAutowireCapableBeanFactory();
         beanFactory.autowireBeanProperties(context.getActionBean(), AutowireCapableBeanFactory.AUTOWIRE_NO, false);
         beanFactory.initializeBean(context.getActionBean(), StringUtils.uncapitalize(context.getActionBean().getClass().getSimpleName()));
+        
+        ((SessionFactory) ServiceLocatorFactory.getService("SessionFactory")).getCurrentSession().setFlushMode(FlushMode.MANUAL);
+        
+        
         System.out.println("completed Spring dependency injection for instance of " + context.getActionBean().getClass().getSimpleName());
         return resolution;
     }

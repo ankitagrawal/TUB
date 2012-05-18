@@ -36,6 +36,7 @@ import com.hk.admin.pact.dao.inventory.StockTransferDao;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.util.BarcodeUtil;
 import com.hk.admin.util.XslParser;
+import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.StateList;
 import com.hk.constants.inventory.EnumGrnStatus;
@@ -104,20 +105,16 @@ public class InventoryCheckinAction extends BaseAction {
     int                           strLength = 20;
     File                          printBarcode;
 
-    // @Named (Keys.Env.adminUploads)
-    @Value("#{hkEnvProps['adminUploads']}")
+    @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String                        adminUploadsPath;
 
-    // @Named (Keys.Env.adminDownloads)
-    @Value("#{hkEnvProps['adminDownloads']}")
+    @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
     String                        adminDownloadsPath;
 
-    // @Named (Keys.Env.barcodeGurgaon)
-    @Value("#{hkEnvProps['barcodeGurgaon']}")
+    @Value("#{hkEnvProps['" + Keys.Env.barcodeGurgaon + "']}")
     String                        barcodeGurgaon;
 
-    // @Named (Keys.Env.barcodeMumbai)
-    @Value("#{hkEnvProps['barcodeMumbai']}")
+    @Value("#{hkEnvProps['" + Keys.Env.barcodeMumbai + "']}")
     String                        barcodeMumbai;
 
     @Validate(required = true, on = "parse")

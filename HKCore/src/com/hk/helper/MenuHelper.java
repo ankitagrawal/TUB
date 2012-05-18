@@ -16,7 +16,6 @@ import com.hk.util.MenuParser;
 @Component
 public class MenuHelper implements ServletContextAware{
 
-  //@Value("#{hkEnvProps['appBasePath']}")
   private String appBasePath;
   File menuFile;
 
