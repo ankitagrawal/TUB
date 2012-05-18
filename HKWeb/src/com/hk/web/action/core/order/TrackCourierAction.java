@@ -17,8 +17,11 @@ import org.slf4j.LoggerFactory;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.google.gson.Gson;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonObject;
 import com.hk.admin.util.ChhotuCourierDelivery;
 import com.hk.constants.shipment.EnumCourier;
+import com.hk.domain.order.ShippingOrder;
 
 /**
  * User: rahul
@@ -33,6 +36,13 @@ public class TrackCourierAction extends BaseAction {
 
 	@Validate(required = true)
 	private Long courierId;
+
+  String status;
+  String awb;
+  String paymentType;
+  private static final String authenticationIdForDelhivery = "9aaa943a0c74e29b340074d859b2690e07c7fb25";
+  @Validate(encrypted = true)
+  ShippingOrder shippingOrder;
 
 	@DefaultHandler
 	public Resolution pre() {
@@ -53,8 +63,46 @@ public class TrackCourierAction extends BaseAction {
 		} else if (courierId.equals(EnumCourier.Speedpost.getId())) {
 			resolution = new RedirectResolution("/pages/indiaPostCourier.jsp");
 		} else if (courierId.equals(EnumCourier.Delhivery.getId())) {
-			resolution = new RedirectResolution("/pages/delhiveryCourier.jsp");
-		} else if (courierId.equals(EnumCourier.Chhotu.getId())) {
+      String gatewayOrderId = shippingOrder.getGatewayOrderId();
+      try {
+        URL url = new URL("http://track.delhivery.com/api/packages/json/?token=" + authenticationIdForDelhivery + "&ref_nos=" + gatewayOrderId);
+        BufferedReader in = new BufferedReader(
+            new InputStreamReader(
+                url.openStream()));
+        String inputLine;
+        String jsonFormattedResponse = "";
+
+        while ((inputLine = in.readLine()) != null) {
+          if (inputLine != null) {
+            jsonFormattedResponse += inputLine;
+          }
+        }
+        in.close();
+        JsonParser jsonParser = new JsonParser();
+        JsonObject jsonObject = jsonParser.parse(jsonFormattedResponse).getAsJsonObject();
+        if (!jsonObject.has("Error")) {
+          JsonObject shipmentObj = jsonObject.getAsJsonArray("ShipmentData").get(0)
+              .getAsJsonObject().getAsJsonObject("Shipment");
+
+          status = shipmentObj.getAsJsonObject("Status").get("Status").getAsString();
+          awb = shipmentObj.get("AWB").getAsString();
+          paymentType= shipmentObj.get("OrderType").getAsString();
+        }
+      }
+      catch (MalformedURLException mue) {
+        logger.error("malformed url for gateway id " + gatewayOrderId);
+        mue.printStackTrace();
+      }
+      catch (IOException ioe) {
+        logger.error("ioexception encounter for gateway id " + gatewayOrderId);
+        ioe.printStackTrace();
+      }
+      catch (NullPointerException npe) {
+        logger.error("Null pointer Exception for gateway id " + gatewayOrderId);
+        npe.printStackTrace();
+      }
+      resolution = new ForwardResolution("/pages/delhiveryCourier.jsp");
+    } else if (courierId.equals(EnumCourier.Chhotu.getId())) {
 			try {
 				URL url = new URL("http://api.chhotu.in/shipmenttracking?tracking_number=" + trackingId);
 				BufferedReader in = new BufferedReader(
