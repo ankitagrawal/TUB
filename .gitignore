@@ -6,6 +6,7 @@ dev/*
 *.ipr
 *.iws
 *.iml
+*.ids
 .classpath
 .project
 bin-groovy/*
