@@ -69,6 +69,9 @@ public class DeliveryStatusUpdateManager {
 
     private static final String authenticationIdForDelhivery = "9aaa943a0c74e29b340074d859b2690e07c7fb25";
     List<Long> courierIdList= new ArrayList<Long>();
+    private static final String loginIdForBlueDart ="GGN37392";
+    private static final String licenceKeyForBlueDart="3c6867277b7a2c8cd78c8c4cb320f401";
+
 
     LineItemDao                 lineItemDaoProvider;
 
@@ -525,7 +528,7 @@ public class DeliveryStatusUpdateManager {
         BufferedReader in = null;
 
         try {
-          URL url = new URL("http://www.bluedart.com/servlet/RoutingServlet?handler=tnt&action=custawbquery&loginid=GGN37392&awb=awb&numbers=" + trackingId + "&format=xml&lickey=3c6867277b7a2c8cd78c8c4cb320f401&verno=1.3&scan=1");
+          URL url = new URL("http://www.bluedart.com/servlet/RoutingServlet?handler=tnt&action=custawbquery&loginid="+loginIdForBlueDart+"&awb=awb&numbers=" + trackingId + "&format=xml&lickey="+licenceKeyForBlueDart+"&verno=1.3&scan=1");
           in = new BufferedReader(new InputStreamReader(url.openStream()));
           String inputLine;
           String response = "";
