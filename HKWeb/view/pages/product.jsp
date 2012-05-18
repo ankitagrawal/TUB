@@ -55,6 +55,16 @@
       text-decoration: none;
       float: left;
     }
+
+    .rating_bar {
+      width: 73px;
+      background: url('${pageContext.request.contextPath}/images/faintStar.png') 0 0 repeat-x;
+    }
+
+    .rating_bar div {
+      height: 16px;
+      background: url('${pageContext.request.contextPath}/images/blueStar.jpg') 0 0 repeat-x;
+    }
   </style>
   <link href="${pageContext.request.contextPath}/css/jquery.jqzoom.css" rel="stylesheet" type="text/css"/>
   <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.jqzoom-core.js"></script>
@@ -273,6 +283,25 @@
       </c:choose>
     </span>
 
+    <c:if test="${!empty pa.userReviews}">
+      <div class='top_links'>
+        <table>
+          <tr>
+            <td><span>
+      <a class='top_link' href='#user_reviews'>
+        User Reviews &darr;</strong>
+      </a>
+         </span></td>
+            <td>&nbsp;&nbsp;</td>
+            <td align="right">
+              <div class="rating_bar">
+                <div id="blueStarTop" class="blueStarTop"></div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </c:if>
   </div>
 
   <div class='top_links'>
@@ -487,51 +516,109 @@
   </h5>
 </s:layout-component>--%>
 
-<%--<s:layout-component name="user_reviews">
+<s:layout-component name="user_reviews">
   <div class='products content' id="user_reviews">
-  <hr/>
-  <h3>Reviews of ${pa.product.name}</h3>
+  <hr style="color:#F0F0F0;border-style:hidden"/>
+
   <c:choose>
     <c:when test="${!empty pa.userReviews}">
+      <table width="950" class="reviewLinksTable">
+        <tr height="40">
+          <td colspan="2" style="font-size:14px;font-weight:bold;border-style:none">Reviews of ${pa.product.name}</td>
+          <td style="border-style:none">
+            <s:link beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction" event="writeNewReview">
+            <s:param name="product" value="${pa.product.id}"/>
+            <strong>Write a Review<strong>
+              </s:link>
+          </td>
+        </tr>
 
+        <tr height="50">
+          <td width="200" style="border-style:none">Average Rating : <strong><fmt:formatNumber
+              value="${pa.averageRating}"
+              maxFractionDigits="1"/>/5</strong>
+          </td>
+          <td align="left" width="400" style="border-style:none">
+            <div class="rating_bar">
+              <div id="blueStar" class="blueStar"></div>
+            </div>
+          </td>
 
-      Average Rating : ${pa.starRating}/5
+          <td style="border-style:none">
+            <s:link beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction">
+              <s:param name="product" value="${pa.product.id}"/>
+              <strong>All Reviews</strong>
+            </s:link>
+          </td>
+        </tr>
+      </table>
+      <hr style="color:#F0F0F0;border-style:dotted"/>
+      <c:forEach items="${pa.userReviews}" var="review" varStatus="ctr">
 
-      <s:link beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction" event="writeNewReview">
-        <s:param name="product" value="${pa.product.id}"/>
-        Write a Review
-      </s:link>
-
-      <s:link beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction">
-        <s:param name="product" value="${pa.product.id}"/>
-        All Review
-      </s:link>
-      <hr/>
-
-      <c:forEach items="${pa.userReviews}" var="review">
-        <div class="grid_4">${review.postedBy.name}</div>
-
-        <div class="grid_12">
-          <pre>${review.review}</pre>
-        </div>
-        <hr/>
+        <table width="950" class="reviewContentTable" style="border-style:none">
+          <tr style="border-style:none">
+            <td width="150" style="border-style:none"><strong>${review.postedBy.name}</strong></td>
+            <td style="border-style:none"><h4>${review.title}</h4></td>
+          </tr>
+          <tr style="border-style:none">
+            <td style="border-style:none">
+              <div class="rating_bar">
+                <div class="blueStarRating${ctr.index}"></div>
+                <script type="text/javascript">
+                  var index = ${ctr.index};
+                  var rating =${review.starRating};
+                  rating = (rating * 20) + "%";
+                  $('.blueStarRating' + index).width(rating);
+                </script>
+              </div>
+            </td>
+            <td style="border-style:none">
+              <div style="width:800px;overflow:auto">
+                <pre width="450" style="word-wrap:break-word">${review.review}</pre>
+              </div>
+            </td>
+          </tr>
+          <tr style="border-style:none">
+            <td colspan="2" style="border-style:none">
+              <hr style="color:#F0F0F0;border-style:dotted"
+              "/>
+            </td>
+          </tr>
+        </table>
+        <br/>
       </c:forEach>
+      <a class='go_to_top' href='#top'>go to top &uarr;</a>
       </div>
     </c:when>
     <c:otherwise>
-      <h3>No Reviews!!</h3>
-      Be the first one to <s:link beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction" event="writeNewReview">
-        <s:param name="product" value="${pa.product.id}"/>
-        <strong>Write</strong>
-      </s:link> the product review
+      <table width="950" style="border:none">
+        <tr height="40">
+          <td colspan="2" style="font-size:14px;font-weight:bold;">No Reviews!!</td>
+        </tr>
+        <tr>
+          <td>
+            Be the first one to <s:link beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction" event="writeNewReview">
+            <s:param name="product" value="${pa.product.id}"/>
+            <strong>Write a Review</strong>
+          </s:link>
+          </td>
+        </tr>
+        <tr>
+          <td><a class='go_to_top' href='#top'>go to top &uarr;</a></td>
+        </tr>
+      </table>
     </c:otherwise>
   </c:choose>
-
-</s:layout-component>--%>
+</s:layout-component>
 
 <s:layout-component name="endScripts">
   <script type="text/javascript">
     $(document).ready(function() {
+
+      var rating =${pa.averageRating};
+      rating = (rating * 20) + "%";
+      $('.blueStarTop').width(rating);
+      $('.blueStar').width(rating);
 
       function _addToCart(res) {
         if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
