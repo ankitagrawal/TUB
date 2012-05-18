@@ -28,7 +28,6 @@ import com.hk.domain.user.B2bUserDetails;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.helper.InvoiceNumHelper;
-import com.hk.taglibs.Functions;
 
 /**
  * Created by IntelliJ IDEA.
@@ -310,7 +309,7 @@ public class AccountingInvoicePdfGenerator {
         }
 
         StringBuffer itemDetail = new StringBuffer();
-        if (Functions.collectionContains(invoiceLineItemDto.getProductCategories(), sexualCareCategory)) {
+        if (invoiceLineItemDto.getProductCategories().contains(sexualCareCategory)) {
           itemDetail.append("Personal Care Product");
         } else {
           itemDetail.append(invoiceLineItemDto.getProductName().toString());

@@ -3,8 +3,8 @@ package com.hk.helper;
 public class InvoiceNumHelper {
 
     public static final String PREFIX_FOR_SERVICE_ORDER = "S";
-    public static final String PREFIX_FOR_RETAIL_ORDER = "T";
-    public static final String PREFIX_FOR_B2B_ORDER = "R";
+    public static final String PREFIX_FOR_RETAIL_ORDER = "R";
+    public static final String PREFIX_FOR_B2B_ORDER = "T";
 
     /**
      * @param isServiceOrder

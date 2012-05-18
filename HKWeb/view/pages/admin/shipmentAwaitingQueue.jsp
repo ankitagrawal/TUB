@@ -55,7 +55,7 @@
           </s:form>
         </div>
         <div>
-           <s:form beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction">
+           <s:form beanclass="com.hk.web.action.core.accounting.AccountingInvoicePdfAction">
                <s:submit name="pre" value="Download Accounting Invoice PDFs"/>
              </s:form>
         </div>
