@@ -1,9 +1,7 @@
 package com.hk.rest.impl.service;
 
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Date;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,9 +11,12 @@ import com.hk.domain.core.PaymentMode;
 import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
+import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
+import com.hk.domain.shippingOrder.LineItem;
+import com.hk.domain.courier.Shipment;
 import com.hk.manager.OrderManager;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.core.AddressDao;
@@ -25,16 +26,15 @@ import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.order.CartLineItemService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.payment.PaymentService;
-import com.hk.rest.models.order.APIAddress;
-import com.hk.rest.models.order.APIOrder;
-import com.hk.rest.models.order.APIOrderDetails;
-import com.hk.rest.models.order.APIPayment;
-import com.hk.rest.models.order.APIProductDetail;
+import com.hk.rest.models.order.*;
 import com.hk.rest.pact.service.APIOrderService;
 import com.hk.rest.pact.service.APIUserService;
 import com.hk.util.json.JSONResponseBuilder;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.payment.EnumPaymentMode;
+import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.core.fliter.CartLineItemFilter;
 
 /**
  * Created by IntelliJ IDEA.
@@ -169,8 +169,62 @@ public class APIOrderServiceImpl implements APIOrderService {
 
   @Override
   public String trackOrder(String orderId) {
-    return null;  //To change body of implemented methods use File | Settings | File Templates.
-  }
+        Order order=getOrderService().find(new Long(orderId));
+
+        Set<CartLineItem> cartLineItems = new HashSet<CartLineItem>();
+        List<LineItem> lineItems = new ArrayList<LineItem>();
+        List<ShippingOrder> shippingOrders = new ArrayList<ShippingOrder>(order.getShippingOrders());
+
+        if (shippingOrders != null && shippingOrders.size() > 0) {
+            for (ShippingOrder shippingOrder : shippingOrders) {
+                lineItems.addAll(shippingOrder.getLineItems());
+            }
+        } else {
+            cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
+        }
+
+        String status="";
+        ArrayList<APIOrderTrackingItem> trackingItemList=new ArrayList<APIOrderTrackingItem>();
+
+        if(!lineItems.isEmpty()){
+            for(LineItem lineItem :lineItems) {
+                APIOrderTrackingItem trackingItem=new APIOrderTrackingItem();
+                trackingItem.setItemName(lineItem.getCartLineItem().getProductVariant().getProduct().getName());
+                trackingItem.setQty(lineItem.getCartLineItem().getQty());
+
+                ShippingOrder shippingOrder=lineItem.getShippingOrder();
+                Shipment shipment=shippingOrder.getShipment();
+
+
+                if(shippingOrder.getOrderStatus().getId()!= EnumShippingOrderStatus.SO_Shipped.getId() && shippingOrder.getOrderStatus().getId()!= EnumShippingOrderStatus.SO_Delivered.getId()
+                        && shippingOrder.getOrderStatus().getId() != EnumShippingOrderStatus.SO_Returned.getId() && shippingOrder.getOrderStatus().getId()!= EnumShippingOrderStatus.SO_Lost.getId()
+                        && shippingOrder.getOrderStatus().getId() != EnumShippingOrderStatus.SO_Cancelled.getId()){
+
+                    trackingItem.setStatus(shippingOrder.getBaseOrder().getOrderStatus().getName());
+
+                }else if(shippingOrder.getOrderStatus().getId() == EnumShippingOrderStatus.SO_Shipped.getId() && shipment != null){
+
+                    trackingItem.setStatus("Shipped by"+shipment.getCourier().getName()+" - "+ shipment.getTrackingId() +" on "+ shipment.getShipDate());
+                } else{
+                    trackingItem.setStatus(shippingOrder.getOrderStatus().getName());
+                }
+                trackingItemList.add(trackingItem);
+            }
+            Map<String, Object> orderStatusDetails=new HashMap<String,Object>();
+            orderStatusDetails.put("orderStatus",trackingItemList);
+            return new JSONResponseBuilder().addMap(orderStatusDetails).addField("shipped","true").build();
+        }else{
+            if(!cartLineItems.isEmpty()){
+                for(CartLineItem cartLineItem :cartLineItems){
+                    status=cartLineItem.getOrder().getOrderStatus().getName();
+                }
+            }
+        }
+
+
+        return  new JSONResponseBuilder().addField("orderStatus", status).addField("shipped","false").build();
+
+    }
 
   public ProductVariantService getProductVariantService() {
     return productVariantService;

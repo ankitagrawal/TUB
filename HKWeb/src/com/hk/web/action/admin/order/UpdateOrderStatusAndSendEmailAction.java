@@ -16,10 +16,12 @@ import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.order.Order;
 import com.hk.manager.EmailManager;
 import com.hk.manager.LinkManager;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.pact.service.store.StoreService;
 import com.hk.web.action.admin.AdminHomeAction;
 import com.hk.web.action.error.AdminPermissionAction;
 
@@ -42,7 +44,13 @@ public class UpdateOrderStatusAndSendEmailAction extends BaseAction {
 
         for (ShippingOrder shippingOrder : shippingOrderList) {
             Shipment shipment = shippingOrder.getShipment();
-            boolean isEmailSent = emailManager.sendOrderShippedEmail(shippingOrder, linkManager.getShippingOrderInvoiceLink(shippingOrder));
+            Order order = shippingOrder.getBaseOrder();
+            boolean isEmailSent = false;
+            if (order.getStore() != null && order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID)) {
+              isEmailSent = emailManager.sendOrderShippedEmail(shippingOrder, linkManager.getShippingOrderInvoiceLink(shippingOrder));
+            } else {
+              isEmailSent = true; //Incase on non HK order
+            }
             if (isEmailSent && shipment != null) {
                 shipment.setEmailSent(true);
                 shipmentService.save(shipment);
