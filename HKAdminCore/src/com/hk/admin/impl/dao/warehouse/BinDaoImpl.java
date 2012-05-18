@@ -53,4 +53,67 @@ public class BinDaoImpl extends BaseDaoImpl implements BinDao {
         bin = (Bin) super.save(bin);
         return bin;
     }
+
+
+// added
+@Transactional
+public Bin createBin(Bin bin, Warehouse warehouse) {
+  String shelf = "";
+  String shelfBin = "";
+  String aisle = "";
+  String rack = "";
+
+  if (bin.getShelf() != null) {
+    shelf = bin.getShelf();
+  }
+  if (bin.getBin() != null) {
+    shelfBin = bin.getBin();
+  }
+  if (bin.getBin() != null) {
+    aisle = bin.getAisle();
+  }
+  if (bin.getBin() != null) {
+    rack = bin.getRack();
+  }
+  String barcode = aisle + rack + shelf + shelfBin;
+   if (!barcode.equals("")) {
+   Bin binDb = findByBarCodeAndWarehouse(barcode, warehouse);
+  if (binDb != null) {
+        return binDb;
+  }
+    else{
+
+    return this.saveBin(bin, warehouse);
+    }
+
+  }
+  return null;
+}
+
+
+//added
+@Transactional
+public Bin getBin(Bin bin, Warehouse warehouse) {
+  String shelf = "";
+  String shelfBin = "";
+  String aisle = "";
+  String rack = "";
+  if (bin != null) {
+    if (bin.getShelf() != null) {
+      shelf = bin.getShelf();
+    }
+    if (bin.getBin() != null) {
+      shelfBin = bin.getBin();
+    }
+    String barcode = bin.getAisle() + bin.getRack() + shelf + shelfBin;
+     if (!barcode.equals("")) {
+    Bin binDb = findByBarCodeAndWarehouse(barcode, warehouse);
+    if (binDb != null) {
+      return binDb;
+    }
+  }
+  }
+  return null;
+}
+    
 }

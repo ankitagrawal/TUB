@@ -1,11 +1,12 @@
 package com.hk.pact.dao.sku;
 
-import java.util.List;
-
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
+import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.pact.dao.BaseDao;
+
+import java.util.List;
 
 public interface SkuGroupDao extends BaseDao {
 
@@ -18,5 +19,7 @@ public interface SkuGroupDao extends BaseDao {
     public void resetInventory(ProductVariant productVariant);
 
     public SkuGroup getSkuGroup(String barcode);
+   public List<SkuGroup> getCurrentCheckedInBatchGrn(GoodsReceivedNote grn , Sku sku);
+    public List<SkuGroup> getCurrentCheckedInBatchNotInGrn(GoodsReceivedNote grn , Sku sku);
 
 }

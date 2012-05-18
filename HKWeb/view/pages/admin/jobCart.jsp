@@ -1,4 +1,4 @@
-<%@ page import="java.text.DateFormat" %>
+    <%@ page import="java.text.DateFormat" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -49,7 +49,7 @@
   </style>
 </head>
 <body>
-
+ <s:errors/>
 <s:useActionBean beanclass="com.hk.web.action.admin.queue.JobCartAction" var="orderSummary"/>
 <table class="header">
   <tr>
@@ -74,36 +74,47 @@
       <th width="525px">Item</th>
       <th width="50px">Quantity</th>
     </tr>
-    <c:forEach items="${orderSummary.binHasPVs}" var="binHasPV">
+    <c:forEach items="${orderSummary.binHasPVs}" var="mapentry">
       <tr>
+          <c:set var="key" value="${mapentry.key}"/>
+          <c:set var="map" value="${orderSummary.idBinMap}"/>
         <td width="75px">
-            ${binHasPV.key.barcode}
+           ${map[key].barcode}
           <br/>
-            ${binHasPV.key.aisle}<br/>
-            ${binHasPV.key.rack}<br/>
-            ${binHasPV.key.shelf}<br/>
+           ${map[key].aisle}<br/>
+            ${map[key].rack}<br/>
+            ${map[key].shelf}<br/>
         </td>
-        <td colspan="2">
+
+        <td>
           <table width="550px">
-            <c:forEach items="${binHasPV.value}" var="pvQty">
+            <c:forEach items="${mapentry.value}" var="productVariant">
               <tr>
                 <td width="525px">
-                    ${pvQty.key.product.name}
+                    ${productVariant.product.name}
                   |
-                    ${pvQty.key.variantName}
+                    ${productVariant.variantName}
                   |
-                    ${pvQty.key.upc}
+                    ${productVariant.upc}
                   |
-                  <em><c:forEach items="${pvQty.key.productOptions}" var="productOption">
+                  <em><c:forEach items="${productVariant.productOptions}" var="productOption">
                     ${productOption.name} ${productOption.value}
                   </c:forEach></em>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                         <c:set var="hkCodeMap" value="${orderSummary.skuGroupMapProductVariant}"/>
+
+                    ${hkCodeMap[productVariant.id].barcode}
                 </td>
-                <td width="50px">
-                    ${pvQty.value}
-                </td>
+
               </tr>
-            </c:forEach>
+
           </table>
+
+             <td width="50px">
+                 <c:set var="Qtymap" value="${orderSummary.productVariantQty}"/>
+                    ${Qtymap[productVariant.id]}
+                </td>
+           </c:forEach>
         </td>
       </tr>
     </c:forEach>
