@@ -49,7 +49,8 @@
 		<fileset file="${project.core.dir}/dist/hk-core.jar" />
 		<fileset file="${project.admin.core.dir}/dist/hk-admin-core.jar" />
 		<fileset file="${project.report.dir}/dist/hk-report.jar" />
-	</path>
+    <fileset file="${lib.root.dir}/thirdParty/jdom-1.0.jar" />
+  </path>
 
 
 	<!-- Copy any resource or configuration files -->

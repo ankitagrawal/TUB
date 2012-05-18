@@ -84,6 +84,7 @@
                       <s:link beanclass="com.hk.web.action.core.order.TrackCourierAction" target="_blank">
                         <s:param name="courierId" value="${shipment.courier.id}"/>
                         <s:param name="trackingId" value="${shipment.trackingId}"/>
+                        <s:param name="shippingOrder"  value="${shippingOrder.id}"/>
                         (Track this)
                       </s:link>
                     </c:when>

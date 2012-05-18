@@ -62,12 +62,17 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     @Autowired
     private AdminShippingOrderDao      adminShippingOrderDao;
 
-    public List<Long> getShippingOrderListByCourier(Date startDate, Date endDate, Long courierId) {
-        List<Long> shippingOrderList = getAdminShippingOrderDao().getShippingOrderListByCourier(startDate, endDate, courierId);
+//    public List<Long> getShippingOrderListByCourier(Date startDate, Date endDate, Long courierId) {
+//        List<Long> shippingOrderList = getAdminShippingOrderDao().getShippingOrderListByCourier(startDate, endDate, courierId);
+//        return shippingOrderList;
+//    }
+
+    public List<Long> getShippingOrderListByCouriers(Date startDate, Date endDate, List<Long> courierId) {
+        List<Long> shippingOrderList = getAdminShippingOrderDao().getShippingOrderListByCouriers(startDate, endDate, courierId);
         return shippingOrderList;
     }
 
-    public void cancelShippingOrder(ShippingOrder shippingOrder) {
+  public void cancelShippingOrder(ShippingOrder shippingOrder) {
         // Check if Order is in Action Queue before cancelling it.
         if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
             shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Cancelled));

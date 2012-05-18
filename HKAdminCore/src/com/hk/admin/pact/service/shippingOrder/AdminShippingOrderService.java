@@ -10,7 +10,7 @@ import com.hk.domain.warehouse.Warehouse;
 
 public interface AdminShippingOrderService {
 
-    public List<Long> getShippingOrderListByCourier(Date startDate, Date endDate, Long courierId);
+  //  public List<Long> getShippingOrderListByCourier(Date startDate, Date endDate, Long courierId);
     
     public void cancelShippingOrder(ShippingOrder shippingOrder);
 
@@ -37,4 +37,6 @@ public interface AdminShippingOrderService {
     public ShippingOrder moveShippingOrderBackToPackingQueue(ShippingOrder shippingOrder);
 
     ShippingOrder markShippingOrderAsRTO(ShippingOrder shippingOrder);
+
+    public List<Long> getShippingOrderListByCouriers(Date startDate, Date endDate, List<Long> courierId);
 }
