@@ -21,6 +21,7 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.manager.DeliveryStatusUpdateManager;
 import com.hk.admin.manager.ProductManager;
 import com.hk.admin.util.XslParser;
+import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.user.User;
 import com.hk.pact.service.UserService;
@@ -58,7 +59,7 @@ public class ParseDTDCDeliveryStatusExcelAction extends BaseAction {
     private UserService                 userService;
 
     //@Named(Keys.Env.adminUploads)
-    @Value("#{hkEnvProps['adminUploads']}")
+    @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String                              adminUploadsPath;
 
     String                              messagePostUpdation;

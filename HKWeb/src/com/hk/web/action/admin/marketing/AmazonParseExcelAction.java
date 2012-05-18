@@ -23,6 +23,7 @@ import org.stripesstuff.plugin.security.Secure;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.manager.AmazonManager;
 import com.hk.admin.util.AmazonXslParser;
+import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.amazon.AmazonFeed;
 import com.hk.web.action.error.AdminPermissionAction;
@@ -38,7 +39,7 @@ public class AmazonParseExcelAction extends BaseAction {
     AmazonXslParser       amazonXslParser;
 
     // @Named(Keys.Env.adminUploads)
-    @Value("#{hkEnvProps['adminUploads']}")
+    @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String                adminUploadsPath;
 
     @Validate(required = true)

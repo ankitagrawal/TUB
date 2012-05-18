@@ -23,6 +23,7 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.util.XslParser;
+import com.hk.constants.core.Keys;
 import com.hk.constants.core.RoleConstants;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.user.User;
@@ -36,8 +37,7 @@ public class RelatedProductAction extends BaseAction {
     @Autowired
     XslParser             xslParser;
 
-    // @Named (Keys.Env.adminUploads)
-    @Value("#{hkEnvProps['adminUploads']}")
+    @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String                adminUploadsPath;
 
     @Validate(required = true)

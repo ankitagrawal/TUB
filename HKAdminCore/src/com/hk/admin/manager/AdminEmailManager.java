@@ -7,6 +7,7 @@ import com.hk.admin.dto.marketing.GoogleBannedWordDto;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.core.EnumEmailType;
+import com.hk.constants.core.Keys;
 import com.hk.constants.email.EmailMapKeyConstants;
 import com.hk.constants.email.EmailTemplateConstants;
 import com.hk.domain.Ticket;
@@ -72,33 +73,33 @@ public class AdminEmailManager {
     private Set<String>           marketingAdminEmails          = null;
     private Set<String>           categoryHealthkartList        = null;
 
-    @Value("#{hkEnvProps['hkAdminEmails']}")
+    @Value("#{hkEnvProps['" + Keys.Env.hkAdminEmails + "']}")
     private String                hkAdminEmailsString;
-    @Value("#{hkEnvProps['hkReportAdminEmails']}")
+    @Value("#{hkEnvProps['" + Keys.Env.hkReportAdminEmails + "']}")
     private String                hkReportAdminEmailsString     = null;
-    @Value("#{hkEnvProps['babyAdminEmails']}")
+    @Value("#{hkEnvProps['" + Keys.Env.babyAdminEmails + "']}")
     private String                babyAdminEmailsString         = null;
-    @Value("#{hkEnvProps['beautyAdminEmails']}")
+    @Value("#{hkEnvProps['" + Keys.Env.beautyAdminEmails + "']}")
     private String                beautyAdminEmailsString       = null;
-    @Value("#{hkEnvProps['diabetesAdminEmails']}")
+    @Value("#{hkEnvProps['" + Keys.Env.diabetesAdminEmails + "']}")
     private String                diabetesAdminEmailsString     = null;
-    @Value("#{hkEnvProps['eyeAdminEmails']}")
+    @Value("#{hkEnvProps['" + Keys.Env.eyeAdminEmails + "']}")
     private String                eyeAdminEmailsString          = null;
-    @Value("#{hkEnvProps['homeDevicesAdminEmails']}")
+    @Value("#{hkEnvProps['" + Keys.Env.homeDevicesAdminEmails + "']}")
     private String                homeDevicesAdminEmailsString  = null;
-    @Value("#{hkEnvProps['nutritionAdminEmails']}")
+    @Value("#{hkEnvProps['" + Keys.Env.nutritionAdminEmails + "']}")
     private String                nutritionAdminEmailsString    = null;
-    @Value("#{hkEnvProps['personalCareAdminEmails']}")
+    @Value("#{hkEnvProps['" + Keys.Env.personalCareAdminEmails + "']}")
     private String                personalCareAdminEmailsString = null;
-    @Value("#{hkEnvProps['logisticsAdminEmails']}")
+    @Value("#{hkEnvProps['" + Keys.Env.logisticsAdminEmails + "']}")
     private String                logisticsAdminEmailsString    = null;
-    @Value("#{hkEnvProps['sportsAdminEmails']}")
+    @Value("#{hkEnvProps['" + Keys.Env.sportsAdminEmails + "']}")
     private String                sportsAdminEmailsString       = null;
-    @Value("#{hkEnvProps['servicesAdminEmails']}")
+    @Value("#{hkEnvProps['" + Keys.Env.servicesAdminEmails + "']}")
     private String                servicesAdminEmailsString     = null;
-    @Value("#{hkEnvProps['marketingAdminEmails']}")
+    @Value("#{hkEnvProps['" + Keys.Env.marketingAdminEmails + "']}")
     private String                marketingAdminEmailsString    = null;
-    @Value("#{hkEnvProps['categoryHealthkart']}")
+    @Value("#{hkEnvProps['" + Keys.Env.categoryHealthkart + "']}")
     private String                categoryHealthkartListString  = null;
 
     @Autowired
@@ -119,7 +120,9 @@ public class AdminEmailManager {
     private ProductService        productService;
     @Autowired
     private ProductVariantService productVariantService;
+    @Autowired
     private UserService           userService;
+    @Autowired
     private CouponService         couponService;
 
     @PostConstruct
@@ -215,33 +218,35 @@ public class AdminEmailManager {
 
     // here mail will go once again even if for same campaign has been sent before, generally a reminder email
     public boolean sendCampaignMailsToListOfEmailIds(List<String> emailersList, EmailCampaign emailCampaign, String xsmtpapi) {
-        Map<String, String> headerMap = new HashMap<String, String>();
-        headerMap.put("X-SMTPAPI", xsmtpapi);
+      Map<String, String> headerMap = new HashMap<String, String>();
+      headerMap.put("X-SMTPAPI", xsmtpapi);
 
-        for (String email : emailersList) {
-            // find existing recipients or create recipients through the emails ids passed
-            EmailRecepient emailRecepient = getEmailRecepientDao().getOrCreateEmailRecepient(email);
-            // values that may be used in FTL
-            HashMap valuesMap = new HashMap();
-            valuesMap.put("unsubscribeLink", getLinkManager().getEmailUnsubscribeLink(emailRecepient));
-            valuesMap.put("user", email);
-            // subscribed user + same campaign mail not yet sent
-            if (emailRecepient.isSubscribed() && getEmailerHistoryDao().findEmailRecipientByCampaign(emailRecepient, emailCampaign) == null) {
-                // last mail date null or last mail date > campaign min date
-                if (emailRecepient.getLastEmailDate() == null
-                        || new DateTime().minusDays(emailCampaign.getMinDayGap().intValue()).isAfter(emailRecepient.getLastEmailDate().getTime())) {
-                    emailService.sendHtmlEmail("/newsletters/" + emailCampaign.getTemplate(), valuesMap, emailRecepient.getEmail(), email, "info@healthkart.com", headerMap);
-                    // keep a record in history
-                    emailRecepient.setEmailCount(emailRecepient.getEmailCount() + 1);
-                    emailRecepient.setLastEmailDate(new Date());
-                    getEmailRecepientDao().save(emailRecepient);
-                    getEmailerHistoryDao().createEmailerHistory("no-reply@healthkart.com", "HealthKart", getBaseDao().get(EmailType.class, EnumEmailType.CampaignEmail.getId()),
-                            emailRecepient, emailCampaign, "");
-                }
+      for (String email : emailersList) {
+        //find existing recipients or create recipients through the emails ids passed
+        EmailRecepient emailRecepient = getEmailRecepientDao().getOrCreateEmailRecepient(email);
+        //values that may be used in FTL
+        HashMap valuesMap = new HashMap();
+        valuesMap.put("unsubscribeLink", getLinkManager().getEmailUnsubscribeLink(emailRecepient));
+        valuesMap.put("user", email);
+        // subscribed user + same campaign mail not yet sent
+        List<EmailerHistory> emailerHistoryList = getEmailerHistoryDao().findEmailRecipientByCampaign(emailRecepient, emailCampaign);
+        if (emailRecepient.isSubscribed()) {
+          if (emailerHistoryList != null && emailerHistoryList.isEmpty()) {
+            // last mail date null or  last mail date > campaign min date
+            if (emailRecepient.getLastEmailDate() == null || new DateTime().minusDays(emailCampaign.getMinDayGap().intValue()).isAfter(emailRecepient.getLastEmailDate().getTime())) {
+              emailService.sendHtmlEmail(emailCampaign.getTemplate(), valuesMap, emailRecepient.getEmail(), email, "info@healthkart.com", headerMap);
+              //keep a record in history
+              emailRecepient.setEmailCount(emailRecepient.getEmailCount() + 1);
+              emailRecepient.setLastEmailDate(new Date());
+              getEmailRecepientDao().save(emailRecepient);
+              getEmailerHistoryDao().createEmailerHistory("no-reply@healthkart.com", "HealthKart", getBaseDao().get(EmailType.class, EnumEmailType.CampaignEmail.getId()), emailRecepient, emailCampaign, "");
             }
+          }
         }
-        return true;
+      }
+      return true;
     }
+
 
     public boolean sendGRNEmail(GoodsReceivedNote grn) {
         HashMap valuesMap = new HashMap();

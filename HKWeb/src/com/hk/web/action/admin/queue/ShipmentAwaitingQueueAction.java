@@ -35,6 +35,7 @@ import com.hk.admin.pact.service.accounting.SeekInvoiceNumService;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.admin.util.InvoicePDFGenerator;
+import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.shipment.EnumCourier;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
@@ -79,8 +80,7 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
     private Courier                    courier;
     private SimpleDateFormat           sdf               = new SimpleDateFormat("yyyyMMdd");
 
-    // @Named(Keys.Env.adminDownloads)
-    @Value("#{hkEnvProps['adminDownloads']}")
+    @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
     String                             adminDownloads;
     File                               xlsFile;
     @Autowired
@@ -90,7 +90,8 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
 
     @DontValidate
     @DefaultHandler
-   // @Secure(hasAnyPermissions = { PermissionConstants.VIEW_SHIPMENT_QUEUE }, authActionBean = AdminPermissionAction.class)
+    // @Secure(hasAnyPermissions = { PermissionConstants.VIEW_SHIPMENT_QUEUE }, authActionBean =
+    // AdminPermissionAction.class)
     public Resolution pre() {
         return searchOrders();
     }
@@ -195,7 +196,7 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
         } catch (Exception ex) {
             logger.error("Exception occurred while generating pdf.", ex);
         }
-        addRedirectAlertMessage(new SimpleMessage("Sorry! No shipping orders exist for courier:" + courier !=null ? courier.getName().toUpperCase() : "All"));
+        addRedirectAlertMessage(new SimpleMessage("Sorry! No shipping orders exist for courier:" + courier != null ? courier.getName().toUpperCase() : "All"));
         return new RedirectResolution(ShipmentAwaitingQueueAction.class);
     }
 

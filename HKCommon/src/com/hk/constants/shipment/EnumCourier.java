@@ -1,10 +1,10 @@
 package com.hk.constants.shipment;
 
+import com.hk.domain.courier.Courier;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import com.hk.domain.courier.Courier;
 
 
 
@@ -28,8 +28,8 @@ public enum EnumCourier {
   Other(100L, "Other"),
 
   IndiaEarthMovers(110L, " India Earth Movers"),
-  Safexpress_Chhotu(120L, " Safexpress / Chhotu"),
-  Safexpress_Delhivery(130L, " Safexpress / Delhivery"),
+  Safexpress_Chhotu(120L, " Safexpress - Chhotu"),
+  Safexpress_Delhivery(130L, " Safexpress - Delhivery"),
 
   Delhivery_Ahmedabad(140L, "Delhivery - Ahmedabad"),
   Delhivery_Bangalore(150L, "Delhivery - Bangalore"),
