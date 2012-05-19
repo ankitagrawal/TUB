@@ -156,7 +156,7 @@
       Escapes characters that could be interpreted as XML markup.
     </description>
     <name>convertNewLineToBr</name>
-    <function-class>com.hk.taglibs.Functions</function-class>
+    <function-class>com.hk.util.HtmlUtil</function-class>
     <function-signature>java.lang.String convertNewLineToBr(java.lang.String)</function-signature>
     <example>
       ${hk:convertNewLineToBr(param:info)}
