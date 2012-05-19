@@ -1,49 +1,26 @@
 package com.akube.framework.imaging;
 
-import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.image.BufferedImage;
-import java.awt.image.renderable.ParameterBlock;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Iterator;
-import java.util.zip.CRC32;
-
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-import javax.imageio.stream.ImageInputStream;
-import javax.media.jai.BorderExtenderConstant;
-import javax.media.jai.InterpolationBilinear;
-import javax.media.jai.JAI;
-import javax.media.jai.OpImage;
-import javax.media.jai.RenderedOp;
-import javax.media.jai.operator.AWTImageDescriptor;
-import javax.media.jai.operator.CropDescriptor;
-import javax.media.jai.operator.RotateDescriptor;
-import javax.media.jai.operator.ScaleDescriptor;
-import javax.media.jai.operator.SubsampleAverageDescriptor;
-import javax.media.jai.operator.UnsharpMaskDescriptor;
-
+import com.hk.exception.ImagingException;
+import com.sun.media.jai.codec.JPEGEncodeParam;
+import com.sun.media.jai.codec.SeekableStream;
 import mediautil.image.jpeg.LLJTran;
 import mediautil.image.jpeg.LLJTranException;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.hk.exception.ImagingException;
-import com.sun.media.jai.codec.JPEGEncodeParam;
-import com.sun.media.jai.codec.SeekableStream;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
+import javax.media.jai.*;
+import javax.media.jai.operator.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.renderable.ParameterBlock;
+import java.io.*;
+import java.util.Iterator;
+import java.util.zip.CRC32;
 
 /**
  * User: rahul
@@ -75,7 +52,7 @@ public class ImageUtils {
    * @param srcFile
    * @return
    */
-  public ImageDimensionDTO getImageDimensions(File srcFile) {
+  public static ImageDimensionDTO getImageDimensions(File srcFile) {
 
     ImageDimensionDTO imageDimensionDTO = new ImageDimensionDTO();
     long fileSize = srcFile.length();
@@ -121,7 +98,7 @@ public class ImageUtils {
    * @param unsharpQty   gainFactor for the unsharp mask - In general gain factors should be restricted to a range of [-1, 2]. Lesser than 0 means smoothing.
    * @return
    */
-  public ImageDimensionDTO createThumbnail(String filePath, String dest, int thumbMaxSize, float quality, boolean returnInfo, boolean unsharp, float unsharpQty) {
+  public static ImageDimensionDTO createThumbnail(String filePath, String dest, int thumbMaxSize, float quality, boolean returnInfo, boolean unsharp, float unsharpQty) {
 
     ImageDimensionDTO imageDimensionDTO = new ImageDimensionDTO();
 
@@ -156,7 +133,7 @@ public class ImageUtils {
     return imageDimensionDTO;
   }
 
-  public void rotateImage(String srcImagePath, String destImagePath, double rotationAngle) {
+  public static void rotateImage(String srcImagePath, String destImagePath, double rotationAngle) {
     if (srcImagePath.equals(destImagePath)) rotateImage(srcImagePath, rotationAngle);
     else {
       RenderedOp image = loadImage(srcImagePath);
@@ -170,7 +147,7 @@ public class ImageUtils {
    * @param filePath
    * @param rotationAngle
    */
-  public void rotateImage(String filePath, double rotationAngle) {
+  public static void rotateImage(String filePath, double rotationAngle) {
 
     String format = getImageType(filePath);
     File srcFile = new File(filePath);
@@ -217,7 +194,7 @@ public class ImageUtils {
    * @param filePath
    * @param rotationAngle
    */
-  public void rotateImageLossless(String filePath, int rotationAngle) {
+  public static void rotateImageLossless(String filePath, int rotationAngle) {
     File srcFile = new File(filePath);
     LLJTran llj = null;
     boolean losslessSupported = false;
@@ -289,7 +266,7 @@ public class ImageUtils {
    *
    * @param filePath
    */
-  public void autoRotate(String filePath) {
+  public static void autoRotate(String filePath) {
 
     ExifData exifData = new ExifData(new File(filePath));
 //    System.out.println("orientation:" + exifData.getOrientation());
@@ -319,7 +296,7 @@ public class ImageUtils {
 
   }
 
-  public int getRotateAngleFromExifOrientation(String exifOrientation) {
+  public static int getRotateAngleFromExifOrientation(String exifOrientation) {
     if (exifOrientation == null) return 0;
 
     switch (exifOrientation.charAt(0)) {
@@ -341,7 +318,7 @@ public class ImageUtils {
   }
 
 
-  public void cropImageAndResizeMax(String srcImagePath, String destImagePath, Double aspectRatio, Double x1, Double y1, Double width, int maxPixel) {
+  public static void cropImageAndResizeMax(String srcImagePath, String destImagePath, Double aspectRatio, Double x1, Double y1, Double width, int maxPixel) {
 
     RenderedOp image = loadImage(srcImagePath);
     float croppedImageX = (float) (x1 * image.getWidth());
@@ -392,7 +369,7 @@ public class ImageUtils {
 
   }
 
-  public void cropImage(String srcImagePath, String destImagePath, int x, int y, int width, int height) {
+  public static void cropImage(String srcImagePath, String destImagePath, int x, int y, int width, int height) {
 
     RenderedOp image = cropImageAndReturnImage(srcImagePath, x, y, width, height);
 
@@ -401,7 +378,7 @@ public class ImageUtils {
   }
 
 
-  public void cropImageAndResizeMax(String srcImagePath, String destImagePath, int x, int y, int width, int height, float maxPixel) {
+  public static void cropImageAndResizeMax(String srcImagePath, String destImagePath, int x, int y, int width, int height, float maxPixel) {
 
     RenderedOp image = cropImageAndReturnImage(srcImagePath, x, y, width, height);
 
@@ -418,14 +395,14 @@ public class ImageUtils {
    * @param colorG
    * @param colorB
    */
-  public void addBorder(String srcImagePath, String destImagePath, int topBottomBorder, int leftRightBorder, int colorR, int colorG, int colorB) {
+  public static void addBorder(String srcImagePath, String destImagePath, int topBottomBorder, int leftRightBorder, int colorR, int colorG, int colorB) {
 
     RenderedOp borderedImage = addBorderAndReturnImage(loadImage(srcImagePath), topBottomBorder, leftRightBorder, colorR, colorG, colorB);
 
     saveImage(borderedImage, destImagePath, getImageType(srcImagePath));
   }
 
-  public void addBorderAndResizeMax(String srcImagePath, String destImagePath, double aspectRatio, int maxPixel) {
+  public static void addBorderAndResizeMax(String srcImagePath, String destImagePath, double aspectRatio, int maxPixel) {
 
     RenderedOp image = loadImage(srcImagePath);
 
@@ -466,7 +443,7 @@ public class ImageUtils {
    * @param colorB
    * @param maxPixel        The maximum dimension of the image. Aspect ratio is retained. -1 for no scaling
    */
-  public void addBorderAndResizeMax(String srcImagePath, String destImagePath, int topBottomBorder, int leftRightBorder, int colorR, int colorG, int colorB, int maxPixel) {
+  public static void addBorderAndResizeMax(String srcImagePath, String destImagePath, int topBottomBorder, int leftRightBorder, int colorR, int colorG, int colorB, int maxPixel) {
 
     RenderedOp image = loadImage(srcImagePath);
     RenderedOp borderedImage = addBorderAndReturnImage(image, topBottomBorder, leftRightBorder, colorR, colorG, colorB);
@@ -481,7 +458,7 @@ public class ImageUtils {
    * @param maxPixel      The maximum dimension of the image. Aspect ratio is retained. -1 for no scaling
    * @param rotationAngle
    */
-  public void imageResizeMaxAndRotate(String srcImagePath, String destImagePath, int maxPixel, double rotationAngle) {
+  public static void imageResizeMaxAndRotate(String srcImagePath, String destImagePath, int maxPixel, double rotationAngle) {
 
     RenderedOp image = loadImage(srcImagePath);
     RenderedOp scaledImage = scaleDownImage(image, maxPixel);
@@ -489,7 +466,7 @@ public class ImageUtils {
 
   }
 
-  public void addCaption(String srcImage, String caption, String fontFilePath) {
+  public static void addCaption(String srcImage, String caption, String fontFilePath) {
 
     RenderedOp image1 = loadImage(srcImage);
 
@@ -534,7 +511,7 @@ public class ImageUtils {
 
   //helper methods start here -----
 
-  private File saveImage(RenderedOp image, String destImagePath, String format) {
+  private static File saveImage(RenderedOp image, String destImagePath, String format) {
     return saveImage(image, destImagePath, format, DefaultJpegQuality);
   }
 
@@ -545,7 +522,7 @@ public class ImageUtils {
    * @param jpegQuality   Scale of 0 to 1, 1 being the highest
    * @return
    */
-  private File saveImage(RenderedOp image, String destImagePath, String format, float jpegQuality) {
+  private static File saveImage(RenderedOp image, String destImagePath, String format, float jpegQuality) {
     File destFile = new File(destImagePath);
     destFile.getParentFile().mkdirs();
     if (format.equalsIgnoreCase("jpeg")) {
@@ -573,7 +550,7 @@ public class ImageUtils {
     return destFile;
   }
 
-  private File saveBufferedImage(BufferedImage bufferedImage, String destImagePath, String format) {
+  private static File saveBufferedImage(BufferedImage bufferedImage, String destImagePath, String format) {
 
     File destFile = new File(destImagePath);
     destFile.getParentFile().mkdirs();
@@ -596,12 +573,12 @@ public class ImageUtils {
     return destFile;
   }
 
-  private RenderedOp loadImage(String srcImagePath) {
+  private static RenderedOp loadImage(String srcImagePath) {
     File srcFile = new File(srcImagePath);
     return loadImage(srcFile);
   }
 
-  private RenderedOp loadImage(File srcFile) {
+  private static RenderedOp loadImage(File srcFile) {
     SeekableStream seekableStream = null;
     try {
       seekableStream = SeekableStream.wrapInputStream(new FileInputStream(srcFile), true);
@@ -615,7 +592,7 @@ public class ImageUtils {
     return image;
   }
 
-  private RenderedOp scaleDownImage(RenderedOp image, int maxPixel) {
+  private static RenderedOp scaleDownImage(RenderedOp image, int maxPixel) {
     if (maxPixel == 0 || maxPixel == -1) {
       return image;
     }
@@ -629,7 +606,7 @@ public class ImageUtils {
 
   }
 
-  private RenderedOp scaleImage(RenderedOp image, int width, int height) {
+  private static RenderedOp scaleImage(RenderedOp image, int width, int height) {
     double widthScaleFactor = (double) width / (double) image.getWidth();
     double heightScaleFactor = (double) height / (double) image.getHeight();
 
@@ -645,7 +622,7 @@ public class ImageUtils {
    * @param heightScaleFactor
    * @return
    */
-  private RenderedOp performScaling(RenderedOp image, double widthScaleFactor, double heightScaleFactor) {
+  private static RenderedOp performScaling(RenderedOp image, double widthScaleFactor, double heightScaleFactor) {
     if (widthScaleFactor < 0) {
       logger.warn("Negative ScaleX value {} passed. Resetting it to 1.0", widthScaleFactor);
       widthScaleFactor = 1.0;
@@ -668,7 +645,7 @@ public class ImageUtils {
       return SubsampleAverageDescriptor.create(image, widthScaleFactor, heightScaleFactor, renderingHints);
   }
 
-  private RenderedOp cropImageAndReturnImage(String srcImagePath, int x, int y, int width, int height) {
+  private static RenderedOp cropImageAndReturnImage(String srcImagePath, int x, int y, int width, int height) {
 
     File srcFile = new File(srcImagePath);
     RenderedOp image = loadImage(srcFile);
@@ -683,7 +660,7 @@ public class ImageUtils {
    * @param rotationAngle
    * @return
    */
-  private RenderedOp rotateAndReturnImage(RenderedOp image, double rotationAngle) {
+  private static RenderedOp rotateAndReturnImage(RenderedOp image, double rotationAngle) {
     if (rotationAngle == 0) {
       return image;
     }
@@ -702,7 +679,7 @@ public class ImageUtils {
    * @param colorB
    * @return
    */
-  private RenderedOp addBorderAndReturnImage(RenderedOp image, int topBottomBorder, int leftRightBorder, int colorR, int colorG, int colorB) {
+  private static RenderedOp addBorderAndReturnImage(RenderedOp image, int topBottomBorder, int leftRightBorder, int colorR, int colorG, int colorB) {
 
     ParameterBlock params = new ParameterBlock();
     params.addSource(image);
@@ -728,7 +705,7 @@ public class ImageUtils {
     return JAI.create("border", params);
   }
 
-  private String getImageType(String srcImage) {
+  private static String getImageType(String srcImage) {
     String formatName = null;
 
     try {

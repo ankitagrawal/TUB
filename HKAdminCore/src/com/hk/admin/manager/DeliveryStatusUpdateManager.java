@@ -1,10 +1,6 @@
 package com.hk.admin.manager;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
@@ -48,6 +44,11 @@ import com.hk.domain.user.User;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.input.SAXBuilder;
+import org.jdom.xpath.XPath;
+
 @SuppressWarnings("unchecked")
 @Component
 public class DeliveryStatusUpdateManager {
@@ -67,6 +68,10 @@ public class DeliveryStatusUpdateManager {
     // private static int acceptableDeliveryPeriod = 50;
 
     private static final String authenticationIdForDelhivery = "9aaa943a0c74e29b340074d859b2690e07c7fb25";
+    List<Long> courierIdList= new ArrayList<Long>();
+    private static final String loginIdForBlueDart ="GGN37392";
+    private static final String licenceKeyForBlueDart="3c6867277b7a2c8cd78c8c4cb320f401";
+
 
     LineItemDao                 lineItemDaoProvider;
 
@@ -242,8 +247,8 @@ public class DeliveryStatusUpdateManager {
     }
 
     public int updateDeliveryStatusAFL(Date startDate, Date endDate, User loggedOnUser) {
-
-        List<Long> shippingOrderList = getAdminShippingOrderService().getShippingOrderListByCourier(startDate, endDate, EnumCourier.AFLWiz.getId());
+        courierIdList.add( EnumCourier.AFLWiz.getId());
+        List<Long> shippingOrderList = getAdminShippingOrderService().getShippingOrderListByCouriers(startDate, endDate,courierIdList);
         courierName = " AFLwiz";
 
         ordersDelivered = 0;
@@ -320,8 +325,8 @@ public class DeliveryStatusUpdateManager {
     }
 
     public int updateDeliveryStatusChhotu(Date startDate, Date endDate, User loggedOnUser) {
-
-        List<Long> shippingOrderList = getAdminShippingOrderService().getShippingOrderListByCourier(startDate, endDate, EnumCourier.Chhotu.getId());
+        courierIdList.add( EnumCourier.Chhotu.getId());
+        List<Long> shippingOrderList = getAdminShippingOrderService().getShippingOrderListByCouriers(startDate, endDate,courierIdList);
         courierName += " Chhotu";
 
         ordersDelivered = 0;
@@ -434,8 +439,8 @@ public class DeliveryStatusUpdateManager {
     }
 
     public int updateDeliveryStatusDelhivery(Date startDate, Date endDate, User loggedOnUser) {
-
-        List<Long> shippingOrderList = adminShippingOrderService.getShippingOrderListByCourier(startDate, endDate, EnumCourier.Delhivery.getId());
+        courierIdList.add( EnumCourier.Delhivery.getId());
+        List<Long> shippingOrderList = adminShippingOrderService.getShippingOrderListByCouriers(startDate, endDate,courierIdList);
         // courierName += " Delhivery";
 
         ordersDelivered = 0;
@@ -502,7 +507,81 @@ public class DeliveryStatusUpdateManager {
 
     }
 
-    public Date getFormattedDeliveryDate(String deliveryDate) {
+  public int updateDeliveryStatusBlueDart(Date startDate, Date endDate, User loggedOnUser) {
+    courierIdList.add( EnumCourier.BlueDart.getId());
+    courierIdList.add( EnumCourier.BlueDart_COD.getId());
+    List<Long> shippingOrderList = adminShippingOrderService.getShippingOrderListByCouriers(startDate, endDate,courierIdList);
+    courierName = " BlueDart";
+    ordersDelivered = 0;
+    orderDeliveryCount = 0;
+    SimpleDateFormat sdf_date = new SimpleDateFormat("dd MMMMM yyyy");
+    if (shippingOrderList != null || shippingOrderList.size() != 0) {
+
+      for (Long shippingOrderId : shippingOrderList) {
+
+        ShippingOrder shippingOrderInList = getShippingOrderService().find(shippingOrderId);
+        Shipment shipment = shippingOrderInList.getShipment();
+        String trackingId = shipment.getTrackingId();
+        addedItems = "";
+        itemsDeliveredCount = 0;
+        allItemsDeliveredCount = 0;
+        BufferedReader in = null;
+
+        try {
+          URL url = new URL("http://www.bluedart.com/servlet/RoutingServlet?handler=tnt&action=custawbquery&loginid="+loginIdForBlueDart+"&awb=awb&numbers=" + trackingId + "&format=xml&lickey="+licenceKeyForBlueDart+"&verno=1.3&scan=1");
+          in = new BufferedReader(new InputStreamReader(url.openStream()));
+          String inputLine;
+          String response = "";
+
+          while ((inputLine = in.readLine()) != null) {
+            if (inputLine != null) {
+              response += inputLine;
+            }
+          }
+          Document doc = new SAXBuilder().build(new StringReader(response));
+          XPath xPath = XPath.newInstance("/*/Shipment");
+          Element ele = (Element) xPath.selectSingleNode(doc);
+          String status = ele.getChildText("Status");
+          String statusDate = ele.getChildText("StatusDate");
+          if (status.equals("Shipment delivered") && statusDate != null) {
+            Date delivery_date = sdf_date.parse(statusDate);
+            ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shipment, trackingId, delivery_date);
+          }
+        } catch (MalformedURLException mue) {
+          logger.error("malformed url for shipping order id " + shippingOrderId);
+          mue.printStackTrace();
+          continue;
+        } catch (IOException ioe) {
+          logger.error("ioexception encounter for shipping order id " + shippingOrderId);
+          ioe.printStackTrace();
+          continue;
+        } catch (ParseException pe) {
+          logger.error("parse exception in shipping order id " + shippingOrderId);
+          pe.printStackTrace();
+          continue;
+        } catch (NullPointerException npe) {
+          logger.error("null pointer expection encountered for shipping order " + shippingOrderId);
+          npe.printStackTrace();
+          continue;
+        } catch (Exception e) {
+          logger.error("Exception encountered for shipping order id " + shippingOrderId);
+          e.printStackTrace();
+          continue;
+        } finally {
+          try {
+            in.close();
+          } catch (IOException e) {
+            logger.error("ioexception encounter for shipping order id " + shippingOrderId);
+            e.printStackTrace();
+            continue;
+          }
+        }
+      }
+    }
+    return ordersDelivered;
+  }
+
+  public Date getFormattedDeliveryDate(String deliveryDate) {
         Date formattedDate = null;
         if (deliveryDate != null) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

@@ -30,6 +30,7 @@ import org.stripesstuff.plugin.security.Secure;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.util.XslParser;
+import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
@@ -39,173 +40,169 @@ import com.hk.util.XslGenerator;
 import com.hk.web.BatchProcessWorkManager;
 import com.hk.web.action.error.AdminPermissionAction;
 
-@Secure(hasAnyPermissions = {PermissionConstants.SEARCH_ORDERS})
+@Secure(hasAnyPermissions = { PermissionConstants.SEARCH_ORDERS })
 @Component
 public class CourierServiceInfoAction extends BaseAction {
 
-  private static Logger logger = LoggerFactory.getLogger(CourierServiceInfoAction.class);
+    private static Logger            logger             = LoggerFactory.getLogger(CourierServiceInfoAction.class);
 
-  @Autowired
-  XslGenerator xslGenerator;
-  @Autowired
-  BatchProcessWorkManager workManager;
-  @Autowired
-  CourierServiceInfoDao courierServiceInfoDao;
-  @Autowired
-  PincodeDao pincodeDao;
+    @Autowired
+    XslGenerator                     xslGenerator;
+    @Autowired
+    BatchProcessWorkManager          workManager;
+    @Autowired
+    CourierServiceInfoDao            courierServiceInfoDao;
+    @Autowired
+    PincodeDao                       pincodeDao;
 
-  
-  //@Named(Keys.Env.adminDownloads)
-  @Value("#{hkEnvProps['adminDownloads']}")
-  String adminDownloadsPath;
+    @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
+    String                           adminDownloadsPath;
 
-  Courier courier;
-  CourierServiceInfo courierServiceInfo;
-  String pincode;
-  private List<CourierServiceInfo> courierServiceList = new ArrayList<CourierServiceInfo>();
+    Courier                          courier;
+    CourierServiceInfo               courierServiceInfo;
+    String                           pincode;
+    private List<CourierServiceInfo> courierServiceList = new ArrayList<CourierServiceInfo>();
 
+    // @Named(Keys.Env.adminUploads)
+    String                           adminUploadsPath;
 
-  
-  //@Named(Keys.Env.adminUploads)
-  String adminUploadsPath;
+    XslParser                        xslParser;
 
-  
-  XslParser xslParser;
+    FileBean                         fileBean;
 
-  FileBean fileBean;
-
-  public void setFileBean(FileBean fileBean) {
-    this.fileBean = fileBean;
-  }
-
-  @DefaultHandler
-  @DontValidate
-  @Secure(hasAnyPermissions = {PermissionConstants.VIEW_COURIER_INFO}, authActionBean = AdminPermissionAction.class)
-  public Resolution pre() {
-    return new ForwardResolution("/pages/admin/updateCourierServiceInfo.jsp");
-  }
-
-  @Secure(hasAnyPermissions = {PermissionConstants.VIEW_COURIER_INFO}, authActionBean = AdminPermissionAction.class)
-  public Resolution generateCourierServiceInfoExcel() throws Exception {
-    String courierName = "All";
-    List<CourierServiceInfo> courierServiceInfoList = new ArrayList<CourierServiceInfo>();
-    if (courier != null) {
-      courierServiceInfoList = courierServiceInfoDao.getCourierServiceInfo(courier.getId());
-      courierName = courier.getName();
-    } else {
-      courierServiceInfoList = courierServiceInfoDao.getAll(CourierServiceInfo.class);
+    public void setFileBean(FileBean fileBean) {
+        this.fileBean = fileBean;
     }
-    String excelFilePath = adminDownloadsPath + "/courierExcelFiles/Courier_" + courierName + ".xls";
-    final File excelFile = new File(excelFilePath);
 
-    xslGenerator.generateCouerierServiceInfoXsl(courierServiceInfoList, excelFilePath);
-    addRedirectAlertMessage(new SimpleMessage("Downlaod complete"));
+    @DefaultHandler
+    @DontValidate
+    @Secure(hasAnyPermissions = { PermissionConstants.VIEW_COURIER_INFO }, authActionBean = AdminPermissionAction.class)
+    public Resolution pre() {
+        return new ForwardResolution("/pages/admin/updateCourierServiceInfo.jsp");
+    }
 
-    return new Resolution() {
-
-      public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
-        OutputStream out = null;
-        InputStream in = new BufferedInputStream(new FileInputStream(excelFile));
-        res.setContentLength((int) excelFile.length());
-        res.setHeader("Content-Disposition", "attachment; filename=\"" + excelFile.getName() + "\";");
-        out = res.getOutputStream();
-
-        // Copy the contents of the file to the output stream
-        byte[] buf = new byte[4096];
-        int count = 0;
-        while ((count = in.read(buf)) >= 0) {
-          out.write(buf, 0, count);
+    @Secure(hasAnyPermissions = { PermissionConstants.VIEW_COURIER_INFO }, authActionBean = AdminPermissionAction.class)
+    public Resolution generateCourierServiceInfoExcel() throws Exception {
+        String courierName = "All";
+        List<CourierServiceInfo> courierServiceInfoList = new ArrayList<CourierServiceInfo>();
+        if (courier != null) {
+            courierServiceInfoList = courierServiceInfoDao.getCourierServiceInfo(courier.getId());
+            courierName = courier.getName();
+        } else {
+            courierServiceInfoList = courierServiceInfoDao.getAll(CourierServiceInfo.class);
         }
-      }
-    };
-  }
+        String excelFilePath = adminDownloadsPath + "/courierExcelFiles/Courier_" + courierName + ".xls";
+        final File excelFile = new File(excelFilePath);
 
-  @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_COURIER_INFO}, authActionBean = AdminPermissionAction.class)
-  public Resolution uploadCourierServiceInfoExcel() throws Exception {
+        xslGenerator.generateCouerierServiceInfoXsl(courierServiceInfoList, excelFilePath);
+        addRedirectAlertMessage(new SimpleMessage("Downlaod complete"));
 
-    String excelFilePath = adminUploadsPath + "/courierFiles/" + System.currentTimeMillis() + ".xls";
-    File excelFile = new File(excelFilePath);
-    excelFile.getParentFile().mkdirs();
-    fileBean.save(excelFile);
-    CourierServiceInfo tmpObj = null;
-    try {
-      Set<CourierServiceInfo> courierServiceInfoSet = xslParser.readCourierServiceInfoList(excelFile);
-      for (CourierServiceInfo courierServiceInfo : courierServiceInfoSet) {
-        tmpObj = courierServiceInfo;
-        CourierServiceInfo tmpObj2 = courierServiceInfoDao.getCourierServiceByPincodeAndCourier(courierServiceInfo.getCourier().getId(), courierServiceInfo.getPincode().getPincode().toString(), courierServiceInfo.isCodAvailable());
-        if (tmpObj2 != null) {
-          if (courierServiceInfo.isDeleted()) {
-            courierServiceInfoDao.delete(tmpObj2);
-          } else {
-            tmpObj2.setCodAvailable(courierServiceInfo.isCodAvailable());
-            courierServiceInfoDao.save(tmpObj2);
-          }
-        } else if (courierServiceInfo != null) {
-          courierServiceInfoDao.save(courierServiceInfo);
+        return new Resolution() {
+
+            public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
+                OutputStream out = null;
+                InputStream in = new BufferedInputStream(new FileInputStream(excelFile));
+                res.setContentLength((int) excelFile.length());
+                res.setHeader("Content-Disposition", "attachment; filename=\"" + excelFile.getName() + "\";");
+                out = res.getOutputStream();
+
+                // Copy the contents of the file to the output stream
+                byte[] buf = new byte[4096];
+                int count = 0;
+                while ((count = in.read(buf)) >= 0) {
+                    out.write(buf, 0, count);
+                }
+            }
+        };
+    }
+
+    @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_COURIER_INFO }, authActionBean = AdminPermissionAction.class)
+    public Resolution uploadCourierServiceInfoExcel() throws Exception {
+
+        String excelFilePath = adminUploadsPath + "/courierFiles/" + System.currentTimeMillis() + ".xls";
+        File excelFile = new File(excelFilePath);
+        excelFile.getParentFile().mkdirs();
+        fileBean.save(excelFile);
+        CourierServiceInfo tmpObj = null;
+        try {
+            Set<CourierServiceInfo> courierServiceInfoSet = xslParser.readCourierServiceInfoList(excelFile);
+            for (CourierServiceInfo courierServiceInfo : courierServiceInfoSet) {
+                tmpObj = courierServiceInfo;
+                CourierServiceInfo tmpObj2 = courierServiceInfoDao.getCourierServiceByPincodeAndCourier(courierServiceInfo.getCourier().getId(),
+                        courierServiceInfo.getPincode().getPincode().toString(), courierServiceInfo.isCodAvailable());
+                if (tmpObj2 != null) {
+                    if (courierServiceInfo.isDeleted()) {
+                        courierServiceInfoDao.delete(tmpObj2);
+                    } else {
+                        tmpObj2.setCodAvailable(courierServiceInfo.isCodAvailable());
+                        courierServiceInfoDao.save(tmpObj2);
+                    }
+                } else if (courierServiceInfo != null) {
+                    courierServiceInfoDao.save(courierServiceInfo);
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Exception while reading excel sheet.", e);
+            addRedirectAlertMessage(new SimpleMessage("Upload failed for -  " + tmpObj.getPincode() + "; courier - " + tmpObj.getCourier().getId()));
+            return new ForwardResolution("/pages/admin/updateCourierServiceInfo.jsp");
         }
-      }
-    } catch (Exception e) {
-      logger.error("Exception while reading excel sheet.", e);
-      addRedirectAlertMessage(new SimpleMessage("Upload failed for -  " + tmpObj.getPincode() + "; courier - " + tmpObj.getCourier().getId()));
-      return new ForwardResolution("/pages/admin/updateCourierServiceInfo.jsp");
+
+        excelFile.delete();
+        addRedirectAlertMessage(new SimpleMessage("Database Updated"));
+        return new ForwardResolution("/pages/admin/updateCourierServiceInfo.jsp");
     }
 
-    excelFile.delete();
-    addRedirectAlertMessage(new SimpleMessage("Database Updated"));
-    return new ForwardResolution("/pages/admin/updateCourierServiceInfo.jsp");
-  }
+    public Resolution save() {
 
-  public Resolution save() {
+        Pincode pincodeObj = pincodeDao.getByPincode(pincode);
 
-    Pincode pincodeObj = pincodeDao.getByPincode(pincode);
+        System.out.print(pincode);
 
-    System.out.print(pincode);
+        if (pincodeObj == null) {
+            addRedirectAlertMessage(new SimpleMessage("This pincode is not in the master list, add it there first."));
+        } else {
 
-    if (pincodeObj == null) {
-      addRedirectAlertMessage(new SimpleMessage("This pincode is not in the master list, add it there first."));
-    } else {
-
-      CourierServiceInfo courierServiceInfoLocal = courierServiceInfoDao.getCourierServiceByPincodeAndCourier(courierServiceInfo.getCourier().getId(), pincode, false);
-      if (courierServiceInfoLocal != null) {
-        courierServiceInfoLocal.setCodAvailable(courierServiceInfo.isCodAvailable());
-        courierServiceInfoDao.save(courierServiceInfoLocal);
-      } else {
-        courierServiceInfo.setPincode(pincodeObj);
-        courierServiceInfo.setPreferred(false);
-        courierServiceInfo.setPreferredCod(false);
-        courierServiceInfo.setDeleted(false);
-        courierServiceInfoDao.save(courierServiceInfo);
-      }
+            CourierServiceInfo courierServiceInfoLocal = courierServiceInfoDao.getCourierServiceByPincodeAndCourier(courierServiceInfo.getCourier().getId(), pincode, false);
+            if (courierServiceInfoLocal != null) {
+                courierServiceInfoLocal.setCodAvailable(courierServiceInfo.isCodAvailable());
+                courierServiceInfoDao.save(courierServiceInfoLocal);
+            } else {
+                courierServiceInfo.setPincode(pincodeObj);
+                courierServiceInfo.setPreferred(false);
+                courierServiceInfo.setPreferredCod(false);
+                courierServiceInfo.setDeleted(false);
+                courierServiceInfoDao.save(courierServiceInfo);
+            }
+        }
+        addRedirectAlertMessage(new SimpleMessage("Changes saved in system."));
+        return new RedirectResolution(CourierServiceInfoAction.class);
     }
-    addRedirectAlertMessage(new SimpleMessage("Changes saved in system."));
-    return new RedirectResolution(CourierServiceInfoAction.class);
-  }
 
-  public Courier getCourier() {
-    return courier;
-  }
+    public Courier getCourier() {
+        return courier;
+    }
 
-  public void setCourier(Courier courier) {
-    this.courier = courier;
-  }
+    public void setCourier(Courier courier) {
+        this.courier = courier;
+    }
 
-  public CourierServiceInfo getCourierServiceInfo() {
-    return courierServiceInfo;
-  }
+    public CourierServiceInfo getCourierServiceInfo() {
+        return courierServiceInfo;
+    }
 
-  public void setCourierServiceInfo(CourierServiceInfo courierServiceInfo) {
-    this.courierServiceInfo = courierServiceInfo;
-  }
+    public void setCourierServiceInfo(CourierServiceInfo courierServiceInfo) {
+        this.courierServiceInfo = courierServiceInfo;
+    }
 
-  public void setPincode(String pincode) {
-    this.pincode = pincode;
-  }
+    public void setPincode(String pincode) {
+        this.pincode = pincode;
+    }
 
-  public CourierServiceInfoDao getCourierServiceInfoDao() {
-    return courierServiceInfoDao;
-  }
+    public CourierServiceInfoDao getCourierServiceInfoDao() {
+        return courierServiceInfoDao;
+    }
 
-  public void setCourierServiceInfoDao(CourierServiceInfoDao courierServiceInfoDao) {
-    this.courierServiceInfoDao = courierServiceInfoDao;
-  }
+    public void setCourierServiceInfoDao(CourierServiceInfoDao courierServiceInfoDao) {
+        this.courierServiceInfoDao = courierServiceInfoDao;
+    }
 }

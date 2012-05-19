@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.core.HealthkartConstants;
+import com.hk.constants.core.Keys;
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.constants.order.EnumCartLineItemType;
@@ -59,14 +60,11 @@ public class PaymentManager {
     @Autowired
     private PaymentService         paymentService;
 
-    // @Named(Keys.Env.cashBackPercentage)
-    @Value("#{hkEnvProps['cashBackPercentage']}")
+    @Value("#{hkEnvProps['" + Keys.Env.cashBackPercentage + "']}")
     private Double                 cashBackPercentage;
-    // @Named(Keys.Env.cashBackLimit)
-    @Value("#{hkEnvProps['cashBackLimit']}")
+    @Value("#{hkEnvProps['" + Keys.Env.cashBackLimit + "']}")
     private Double                 cashBackLimit;
-    // @Named(Keys.Env.defaultGateway)
-    @Value("#{hkEnvProps['defaultGateway']}")
+    @Value("#{hkEnvProps['" + Keys.Env.defaultGateway + "']}")
     private Long                   defaultGateway;
 
     @Autowired

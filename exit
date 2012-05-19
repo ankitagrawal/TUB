@@ -1,0 +1,233 @@
+[1mdiff --git a/HKCommon/src/com/hk/constants/catalog/category/CategoryConstants.java b/HKCommon/src/com/hk/constants/catalog/category/CategoryConstants.java[m
+[1mindex cd404e5..88853cc 100644[m
+[1m--- a/HKCommon/src/com/hk/constants/catalog/category/CategoryConstants.java[m
+[1m+++ b/HKCommon/src/com/hk/constants/catalog/category/CategoryConstants.java[m
+[36m@@ -88,39 +88,4 @@[m [mpublic class CategoryConstants {[m
+     }[m
+   };[m
+ [m
+[31m-  public static final List<Category> allCategoriesList = new ArrayList<Category>() {[m
+[31m-    {[m
+[31m-/*      CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);[m
+[31m-      add(categoryDao.getCategoryByName(CategoryConstants.BABY));[m
+[31m-      add(categoryDao.getCategoryByName(CategoryConstants.BEAUTY));[m
+[31m-      add(categoryDao.getCategoryByName(CategoryConstants.DIABETES));[m
+[31m-      add(categoryDao.getCategoryByName(CategoryConstants.EYE));[m
+[31m-      add(categoryDao.getCategoryByName(CategoryConstants.HOME_DEVICES));[m
+[31m-      add(categoryDao.getCategoryByName(CategoryConstants.NUTRITION));[m
+[31m-      add(categoryDao.getCategoryByName(CategoryConstants.PERSONAL_CARE));[m
+[31m-      add(categoryDao.getCategoryByName(CategoryConstants.SERVICES));[m
+[31m-      add(categoryDao.getCategoryByName(CategoryConstants.SPORTS));[m
+[31m-*/    }[m
+[31m-    [m
+[31m-//TODO: rewrite[m
+[31m-  };[m
+[31m-[m
+[31m-public static final List<Category> marketExpenseCategoriesList = new ArrayList<Category>() {[m
+[31m-    {[m
+[31m-     /* CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);[m
+[31m-	    add(categoryDao.getCategoryByName(CategoryConstants.HK_BRAND));[m
+[31m-      add(categoryDao.getCategoryByName(CategoryConstants.BEAUTY));[m
+[31m-      add(categoryDao.getCategoryByName(CategoryConstants.DIABETES));[m
+[31m-      add(categoryDao.getCategoryByName(CategoryConstants.EYE));[m
+[31m-      add(categoryDao.getCategoryByName(CategoryConstants.HOME_DEVICES));[m
+[31m-      add(categoryDao.getCategoryByName(CategoryConstants.NUTRITION));[m
+[31m-      add(categoryDao.getCategoryByName(CategoryConstants.BABY));[m
+[31m-      add(categoryDao.getCategoryByName(CategoryConstants.PERSONAL_CARE));[m
+[31m-      add(categoryDao.getCategoryByName(CategoryConstants.SERVICES));[m
+[31m-      add(categoryDao.getCategoryByName(CategoryConstants.SPORTS));*/[m
+[31m-        [m
+[31m-        //TODO: rewrite   [m
+[31m-    }[m
+[31m-  };[m
+[31m-  [m
+ }[m
+[1mdiff --git a/HKCore/src/com/hk/impl/dao/MasterDataDaoImpl.java b/HKCore/src/com/hk/impl/dao/MasterDataDaoImpl.java[m
+[1mindex 91e3d34..da33b82 100644[m
+[1m--- a/HKCore/src/com/hk/impl/dao/MasterDataDaoImpl.java[m
+[1m+++ b/HKCore/src/com/hk/impl/dao/MasterDataDaoImpl.java[m
+[36m@@ -27,6 +27,7 @@[m [mimport com.hk.pact.dao.BaseDao;[m
+ import com.hk.pact.dao.MasterDataDao;[m
+ import com.hk.pact.service.RoleService;[m
+ import com.hk.pact.service.UserService;[m
+[32m+[m[32mimport com.hk.pact.service.marketing.MarketingService;[m
+ import com.hk.pact.service.catalog.CategoryService;[m
+ import org.springframework.beans.factory.annotation.Autowired;[m
+ import org.springframework.stereotype.Repository;[m
+[36m@@ -45,6 +46,8 @@[m [mpublic class MasterDataDaoImpl implements MasterDataDao {[m
+   private CategoryService categoryService;[m
+   @Autowired[m
+   private RoleService roleService;[m
+[32m+[m[32m  @Autowired[m
+[32m+[m[32m  private MarketingService marketService;[m
+ [m
+   public List<PaymentStatus> getPaymentStatusList() {[m
+     return getBaseDao().getAll(PaymentStatus.class);[m
+[36m@@ -118,7 +121,7 @@[m [mpublic class MasterDataDaoImpl implements MasterDataDao {[m
+   }[m
+ [m
+   public List<Category> getMarketExpenseCategoriesList() {[m
+[31m-    return CategoryConstants.marketExpenseCategoriesList;[m
+[32m+[m[32m    return getMarketService().marketExpenseCategoriesList();[m
+   }[m
+ [m
+   public List<AffiliateCategory> getallAffiliateCategories() {[m
+[36m@@ -227,6 +230,14 @@[m [mpublic class MasterDataDaoImpl implements MasterDataDao {[m
+     this.roleService = roleService;[m
+   }[m
+ [m
+[32m+[m[32m  public MarketingService getMarketService() {[m
+[32m+[m[32m    return marketService;[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  public void setMarketService(MarketingService marketService) {[m
+[32m+[m[32m    this.marketService = marketService;[m
+[32m+[m[32m  }[m
+[32m+[m
+   public List<ShippingOrderStatus> getSOStatusForShipmentDetailsList() {[m
+     return EnumShippingOrderStatus.getStatusForChangingShipmentDetails();[m
+   }[m
+[1mdiff --git a/HKCore/src/com/hk/impl/service/marketing/MarketingServiceImpl.java b/HKCore/src/com/hk/impl/service/marketing/MarketingServiceImpl.java[m
+[1mindex fcbf97f..7e7f1de 100644[m
+[1m--- a/HKCore/src/com/hk/impl/service/marketing/MarketingServiceImpl.java[m
+[1m+++ b/HKCore/src/com/hk/impl/service/marketing/MarketingServiceImpl.java[m
+[36m@@ -1,11 +1,40 @@[m
+ package com.hk.impl.service.marketing;[m
+ [m
+[31m-/**[m
+[31m- * Created by IntelliJ IDEA.[m
+[31m- * User: Rajni[m
+[31m- * Date: May 17, 2012[m
+[31m- * Time: 3:37:50 PM[m
+[31m- * To change this template use File | Settings | File Templates.[m
+[31m- */[m
+[31m-public class MarketingServiceImpl {[m
+[32m+[m[32mimport org.springframework.stereotype.Service;[m
+[32m+[m[32mimport org.springframework.beans.factory.annotation.Autowired;[m
+[32m+[m[32mimport com.hk.pact.service.marketing.MarketingService;[m
+[32m+[m[32mimport com.hk.pact.dao.catalog.category.CategoryDao;[m
+[32m+[m[32mimport com.hk.domain.catalog.category.Category;[m
+[32m+[m[32mimport com.hk.constants.catalog.category.CategoryConstants;[m
+[32m+[m
+[32m+[m[32mimport java.util.List;[m
+[32m+[m[32mimport java.util.ArrayList;[m
+[32m+[m[32mimport java.util.Set;[m
+[32m+[m
+[32m+[m[32m@Service[m
+[32m+[m[32mpublic class MarketingServiceImpl implements MarketingService {[m
+[32m+[m
+[32m+[m[32m  @Autowired[m
+[32m+[m[32m  private CategoryDao categoryDao;[m
+[32m+[m
+[32m+[m[32m  public List<Category> marketExpenseCategoriesList() {[m
+[32m+[m[32m    List<Category> marketExpenseList = new ArrayList<Category>();[m
+[32m+[m[32m    String categoryNames = CategoryConstants.HK_BRAND + "," + CategoryConstants.DIABETES + "," +[m
+[32m+[m[32m        CategoryConstants.BEAUTY + "," + CategoryConstants.EYE + "," + CategoryConstants.HOME_DEVICES + "," +[m
+[32m+[m[32m        CategoryConstants.NUTRITION + "," + CategoryConstants.BABY + "," + CategoryConstants.PERSONAL_CARE + "," +[m
+[32m+[m[32m        CategoryConstants.SERVICES + "," + CategoryConstants.SPORTS;[m
+[32m+[m[32m    Set<Category> categorySet = categoryDao.getCategoriesFromCategoryNames(categoryNames);[m
+[32m+[m[32m    for (Category category : categorySet) {[m
+[32m+[m[32m      marketExpenseList.add(category);[m
+[32m+[m[32m    }[m
+[32m+[m[32m    return marketExpenseList;[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  public CategoryDao getCategoryDao() {[m
+[32m+[m[32m    return categoryDao;[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  public void setCategoryDao(CategoryDao categoryDao) {[m
+[32m+[m[32m    this.categoryDao = categoryDao;[m
+[32m+[m[32m  }[m
+ }[m
+[1mdiff --git a/HKCore/src/com/hk/pact/service/Marketing/MarketingService.java b/HKCore/src/com/hk/pact/service/Marketing/MarketingService.java[m
+[1mindex 2cf9732..65b7f41 100644[m
+[1m--- a/HKCore/src/com/hk/pact/service/Marketing/MarketingService.java[m
+[1m+++ b/HKCore/src/com/hk/pact/service/Marketing/MarketingService.java[m
+[36m@@ -1,11 +1,10 @@[m
+[31m-package com.hk.pact.service.Marketing;[m
+[31m-[m
+[31m-/**[m
+[31m- * Created by IntelliJ IDEA.[m
+[31m- * User: Rajni[m
+[31m- * Date: May 17, 2012[m
+[31m- * Time: 3:34:32 PM[m
+[31m- * To change this template use File | Settings | File Templates.[m
+[31m- */[m
+[32m+[m[32mpackage com.hk.pact.service.marketing;[m
+[32m+[m
+[32m+[m[32mimport com.hk.domain.catalog.category.Category;[m
+[32m+[m
+[32m+[m[32mimport java.util.List;[m
+[32m+[m
+ public interface MarketingService {[m
+[32m+[m
+[32m+[m[32m  public List<Category> marketExpenseCategoriesList();[m
+ }[m
+[1mdiff --git a/HKReport/src/com/hk/report/impl/service/order/ReportOrderServiceImpl.java b/HKReport/src/com/hk/report/impl/service/order/ReportOrderServiceImpl.java[m
+[1mindex d2a3baf..141a5e1 100644[m
+[1m--- a/HKReport/src/com/hk/report/impl/service/order/ReportOrderServiceImpl.java[m
+[1m+++ b/HKReport/src/com/hk/report/impl/service/order/ReportOrderServiceImpl.java[m
+[36m@@ -16,6 +16,7 @@[m [mimport com.hk.domain.catalog.category.Category;[m
+ import com.hk.domain.core.OrderStatus;[m
+ import com.hk.domain.order.Order;[m
+ import com.hk.pact.service.OrderStatusService;[m
+[32m+[m[32mimport com.hk.pact.service.catalog.CategoryService;[m
+ import com.hk.pact.service.order.OrderService;[m
+ import com.hk.report.dto.payment.CODConfirmationDto;[m
+ import com.hk.report.dto.sales.DaySaleDto;[m
+[36m@@ -31,6 +32,8 @@[m [mpublic class ReportOrderServiceImpl implements ReportOrderService {[m
+     OrderStatusService orderStatusService;[m
+     @Autowired[m
+     OrderService       orderService;[m
+[32m+[m[32m  @Autowired[m
+[32m+[m[32m  private CategoryService categoryService;[m
+     [m
+     public List<DaySaleDto> findSaleForTimeFrame(List<OrderStatus> applicableOrderStatus, Date startDate, Date endDate){[m
+         return getReportOrderDao().findSaleForTimeFrame(applicableOrderStatus, startDate, endDate);[m
+[36m@@ -63,7 +66,7 @@[m [mpublic class ReportOrderServiceImpl implements ReportOrderService {[m
+         if (topLevelCategory != null) {[m
+             applicableCategories.add(topLevelCategory);[m
+         } else {[m
+[31m-            applicableCategories = CategoryConstants.allCategoriesList;[m
+[32m+[m[32m      applicableCategories = getCategoryService().getPrimaryCategories();[m
+         }[m
+         orderSearchCriteria.setOrderStatusList(applicableOrderStatus);[m
+         orderSearchCriteria.setCategories(new HashSet<Category>(applicableCategories));[m
+[36m@@ -97,6 +100,14 @@[m [mpublic class ReportOrderServiceImpl implements ReportOrderService {[m
+         this.reportOrderDao = reportOrderDao;[m
+     }[m
+ [m
+[32m+[m[32m  public CategoryService getCategoryService() {[m
+[32m+[m[32m    return categoryService;[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  public void setCategoryService(CategoryService categoryService) {[m
+[32m+[m[32m    this.categoryService = categoryService;[m
+[32m+[m[32m  }[m
+[32m+[m
+     @Override[m
+     public List<CODConfirmationDto> findCODUnConfirmedOrderReport(Date startDate, Date endDate) {[m
+         getReportOrderDao().findCODUnConfirmedOrderReport(startDate, endDate);[m
+[1mdiff --git a/HKReport/src/com/hk/report/manager/ReportManager.java b/HKReport/src/com/hk/report/manager/ReportManager.java[m
+[1mindex 401c63b..0c9a603 100644[m
+[1m--- a/HKReport/src/com/hk/report/manager/ReportManager.java[m
+[1m+++ b/HKReport/src/com/hk/report/manager/ReportManager.java[m
+[36m@@ -946,7 +946,7 @@[m [mpublic class ReportManager {[m
+         List<Category> applicableCategories = new ArrayList<Category>();[m
+ [m
+         if (applicableCategories.size() == 0) {[m
+[31m-            applicableCategories = CategoryConstants.allCategoriesList;[m
+[32m+[m[32m            applicableCategories = getCategoryService().getPrimaryCategories();[m
+         }[m
+ [m
+         Date currentDate;[m
+[36m@@ -1006,7 +1006,7 @@[m [mpublic class ReportManager {[m
+         List<Category> applicableCategories = new ArrayList<Category>();[m
+ [m
+         if (applicableCategories.size() == 0) {[m
+[31m-            applicableCategories = CategoryConstants.allCategoriesList;[m
+[32m+[m[32m            applicableCategories = getCategoryService().getPrimaryCategories();[m
+         }[m
+ [m
+         Calendar currentDateCal = Calendar.getInstance();[m

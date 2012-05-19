@@ -14,7 +14,22 @@ import com.hk.impl.dao.BaseDaoImpl;
 public class AdminShippingOrderDaoImpl extends BaseDaoImpl implements AdminShippingOrderDao {
     
     @SuppressWarnings("unchecked")
-    public List<Long> getShippingOrderListByCourier(Date startDate, Date endDate, Long courierId) {
+//    public List<Long> getShippingOrderListByCourier(Date startDate, Date endDate, Long courierId) {
+//
+//        if (startDate == null) {
+//            Calendar calendar = Calendar.getInstance();
+//            calendar.add(Calendar.MONTH, -1);
+//            startDate = calendar.getTime();
+//        }
+//        if (endDate == null) {
+//            endDate = new Date();
+//        }
+//        String query = "select distinct so.id  " + " from Shipment shipment, ShippingOrder so where " + " so.shipment = shipment" + " and shipment.courier.id = :courierId "
+//                + " and shipment.shipDate between :startDate and :endDate " + " and shipment.deliveryDate is null ";
+//        return getSession().createQuery(query).setParameter("courierId", courierId).setParameter("startDate", startDate).setParameter("endDate", endDate).list();
+//    }
+
+    public List<Long> getShippingOrderListByCouriers(Date startDate, Date endDate, List<Long> courierIdList) {
 
         if (startDate == null) {
             Calendar calendar = Calendar.getInstance();
@@ -24,9 +39,9 @@ public class AdminShippingOrderDaoImpl extends BaseDaoImpl implements AdminShipp
         if (endDate == null) {
             endDate = new Date();
         }
-        String query = "select distinct so.id  " + " from Shipment shipment, ShippingOrder so where " + " so.shipment = shipment" + " and shipment.courier.id = :courierId "
+        String query = "select distinct so.id  " + " from Shipment shipment, ShippingOrder so where " + " so.shipment = shipment" + " and shipment.courier.id in (:courierIdList) "
                 + " and shipment.shipDate between :startDate and :endDate " + " and shipment.deliveryDate is null ";
-        return getSession().createQuery(query).setParameter("courierId", courierId).setParameter("startDate", startDate).setParameter("endDate", endDate).list();
-    }
+        return getSession().createQuery(query).setParameterList("courierIdList", courierIdList).setParameter("startDate", startDate).setParameter("endDate", endDate).list();
+     }
 
 }

@@ -14,6 +14,7 @@ public abstract class AbstractOrderSearchCriteria {
 
     private static final int   DEFAULT_MAX_RESULTS = 100;
     private Long               orderId;
+    private Long               storeId;
     private String             gatewayOrderId;
     private boolean            orderAsc            = false;
     private boolean            sortByUpdateDate    = true;
@@ -23,7 +24,12 @@ public abstract class AbstractOrderSearchCriteria {
 
     private int                maxResults          = -1;
 
-    public AbstractOrderSearchCriteria setOrderId(Long orderId) {
+  public AbstractOrderSearchCriteria setStoreId(Long storeId) {
+    this.storeId = storeId;
+    return this;
+  }
+
+  public AbstractOrderSearchCriteria setOrderId(Long orderId) {
         this.orderId = orderId;
         return this;
     }
@@ -68,6 +74,10 @@ public abstract class AbstractOrderSearchCriteria {
 
         if (StringUtils.isNotBlank(gatewayOrderId)) {
             baseCriteria.add(Restrictions.eq("gatewayOrderId", gatewayOrderId));
+        }
+
+        if (storeId != null) {
+            baseCriteria.add(Restrictions.eq("store.id", storeId));
         }
 
         if (sortByUpdateDate) {

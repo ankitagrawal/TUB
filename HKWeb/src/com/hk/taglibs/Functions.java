@@ -23,8 +23,8 @@ import org.slf4j.LoggerFactory;
 import com.akube.framework.util.FormatUtils;
 import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
 import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
-import com.hk.admin.pact.dao.inventory.ProductVariantDamageInventoryDao;
 import com.hk.admin.pact.dao.inventory.PoLineItemDao;
+import com.hk.admin.pact.dao.inventory.ProductVariantDamageInventoryDao;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.constants.catalog.image.EnumImageSize;
@@ -53,10 +53,10 @@ import com.hk.domain.sku.SkuItem;
 import com.hk.domain.user.User;
 import com.hk.dto.menu.MenuNode;
 import com.hk.helper.MenuHelper;
-import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
 import com.hk.manager.OrderManager;
 import com.hk.manager.UserManager;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.catalog.category.CategoryDao;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
 import com.hk.pact.dao.reward.RewardPointDao;
 import com.hk.pact.dao.shippingOrder.ShippingOrderLifecycleDao;
@@ -234,7 +234,7 @@ public class Functions {
     }
 
     public static List<String> brandsInCategory(Object o) {
-        CategoryDaoImpl categoryDao = ServiceLocatorFactory.getService(CategoryDaoImpl.class);
+        CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
         return categoryDao.getBrandsByCategory(Arrays.asList(((Category) o).getName()));
     }
 

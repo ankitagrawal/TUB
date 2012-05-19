@@ -32,6 +32,7 @@ import com.hk.admin.manager.PurchaseOrderManager;
 import com.hk.admin.pact.dao.inventory.PoLineItemDao;
 import com.hk.admin.pact.dao.inventory.PurchaseOrderDao;
 import com.hk.admin.util.XslParser;
+import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
 import com.hk.domain.accounting.PoLineItem;
@@ -67,7 +68,7 @@ public class EditPurchaseOrderAction extends BaseAction {
     SkuService               skuService;
 
     // @Named(Keys.Env.adminUploads)
-    @Value("#{hkEnvProps['adminUploads']}")
+    @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String                   adminUploadsPath;
 
     @Validate(required = true, on = "parse")

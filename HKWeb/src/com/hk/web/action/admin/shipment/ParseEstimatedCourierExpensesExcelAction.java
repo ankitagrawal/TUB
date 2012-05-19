@@ -20,6 +20,7 @@ import org.stripesstuff.plugin.security.Secure;
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.DateUtils;
 import com.hk.admin.util.XslParser;
+import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.user.User;
 import com.hk.manager.EmailManager;
@@ -39,7 +40,7 @@ public class ParseEstimatedCourierExpensesExcelAction extends BaseAction {
     XslParser             xslParser;
 
     // @Named(Keys.Env.adminUploads)
-    @Value("#{hkEnvProps['adminUploads']}")
+    @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String                adminUploadsPath;
     @Autowired
     EmailManager          emailManager;

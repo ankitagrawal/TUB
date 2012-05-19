@@ -433,10 +433,10 @@ public class ReportManager {
                 setCellValue(row, 12, contains);
                 setCellValue(row, 13, "");
                 Long qty = 0L;
-                Double declaredValue = 0.0;
+                Double declaredValue = order.getAmount();
                 for (LineItem lineItem : lineItems) {
                     qty += lineItem.getQty();
-                    declaredValue += lineItem.getQty() * lineItem.getMarkedPrice();
+                    //declaredValue += lineItem.getQty() * lineItem.getMarkedPrice();
                 }
                 setCellValue(row, 14, qty.toString());
                 setCellValue(row, 15, declaredValue);
@@ -556,10 +556,10 @@ public class ReportManager {
             if (shipment.getBoxWeight() != null) {
                 setCellValue(row, 12, shipment.getBoxWeight());
             }
-            Double declaredValue = 0.0;
-            for (LineItem lineItem : lineItems) {
-                declaredValue += lineItem.getQty() * lineItem.getMarkedPrice();
-            }
+            Double declaredValue = order.getAmount();
+//            for (LineItem lineItem : lineItems) {
+//                declaredValue += lineItem.getQty() * lineItem.getMarkedPrice();
+//            }
             setCellValue(row, 13, declaredValue);
             if (order.getBaseOrder().getPayment().getPaymentMode().getId().equals(EnumPaymentMode.COD.getId())) {
                 setCellValue(row, 14, order.getAmount());
@@ -946,7 +946,7 @@ public class ReportManager {
         List<Category> applicableCategories = new ArrayList<Category>();
 
         if (applicableCategories.size() == 0) {
-            applicableCategories = CategoryConstants.allCategoriesList;
+            applicableCategories = getCategoryService().getPrimaryCategories();
         }
 
         Date currentDate;
@@ -1006,7 +1006,7 @@ public class ReportManager {
         List<Category> applicableCategories = new ArrayList<Category>();
 
         if (applicableCategories.size() == 0) {
-            applicableCategories = CategoryConstants.allCategoriesList;
+            applicableCategories = getCategoryService().getPrimaryCategories();
         }
 
         Calendar currentDateCal = Calendar.getInstance();

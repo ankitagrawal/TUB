@@ -35,6 +35,7 @@ import org.stripesstuff.plugin.security.Secure;
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.manager.AdminEmailManager;
+import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.email.EmailTemplateConstants;
 import com.hk.domain.catalog.category.Category;
@@ -69,13 +70,12 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
 
     File                      xlsFile;
 
-    // @Named(Keys.Env.adminDownloads)
-    @Value("#{hkEnvProps['adminDownloads']}")
+    @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
     String                    adminDownloads;
 
     private Date              startDate;
     private Date              endDate;
-    Page            notifyMePage;
+    Page                      notifyMePage;
     private Integer           defaultPerPage                       = 30;
     private List<NotifyMe>    notifyMeList                         = new ArrayList<NotifyMe>();
     private List<NotifyMe>    notifyMeListForProductVariantInStock = new ArrayList<NotifyMe>();
