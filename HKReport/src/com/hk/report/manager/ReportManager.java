@@ -434,10 +434,10 @@ public class ReportManager {
                 setCellValue(row, 13, "");
                 Long qty = 0L;
                 Double declaredValue = order.getAmount();
-//                for (LineItem lineItem : lineItems) {
-//                    qty += lineItem.getQty();
-//                    declaredValue += lineItem.getQty() * lineItem.getMarkedPrice();
-//                }
+                for (LineItem lineItem : lineItems) {
+                    qty += lineItem.getQty();
+                    //declaredValue += lineItem.getQty() * lineItem.getMarkedPrice();
+                }
                 setCellValue(row, 14, qty.toString());
                 setCellValue(row, 15, declaredValue);
                 setCellValue(row, 16, "");
