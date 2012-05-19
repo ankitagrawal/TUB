@@ -324,13 +324,12 @@ public class OrderManager {
 
         //add promotional freebie - for MIH = SPT397-01
         if (order.getStore() != null && order.getStore().getId().equals(StoreService.MIH_STORE_ID)) {
-          cartLineItems = addFreeCartLineItems("NUT410-01", order);
+          cartLineItems = addFreeCartLineItems("SPT397-01", order);
         }
-
-        //add promotional freebie - for MIH = SPT397-01
-    cartLineItems = addFreeCartLineItems("SPT397-01", order);
-    order.setCartLineItems(cartLineItems);
-    order = getOrderService().save(order);
+      
+        order.setCartLineItems(cartLineItems);
+        order = getOrderService().save(order);
+      
         // associated with a variant, this will help in
         // minimizing brutal use of free checkout
         order.setCartLineItems(cartLineItems);
