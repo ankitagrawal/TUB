@@ -1,3 +1,4 @@
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
 <%@ page import="com.hk.constants.catalog.product.EnumProductVariantPaymentType" %>
@@ -490,7 +491,8 @@
 </c:if>
 </div>
 
-<div class='right_container coupon'>
+<shiro:lacksRole name="<%=RoleConstants.COUPON_BLOCKED%>">
+    <div class='right_container coupon'>
   <shiro:hasAnyRoles name="<%=RoleConstants.HK_USER%>">
     <h6>Got a discount coupon?</h6>
     <br/>
@@ -520,6 +522,7 @@
     <br/>
   </shiro:hasAnyRoles>
 </div>
+</shiro:lacksRole>
 <div class='right_container total'>
 <h5>Checkout</h5>
 <br/>
