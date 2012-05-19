@@ -38,22 +38,22 @@
 
     <%--<a href="http://www.healthkart.com/product/pediasure/BAB152"><img class="banner01" style="margin-right:0" src="<hk:vhostImage/>/images/banners/home/pediasure_banner.jpg" border="0" alt="Pediasure"/></a>--%>
       <div class="banner01" style="margin-right: 0">
-       <%-- <ul id="slides">
-          <li>--%>
+       <ul id="slides">
+         <li>
+           <a href="http://www.healthkart.com/nutrition/sports-nutrition?brand=Ultimate+Nutrition">
+             <img src="<hk:vhostImage/>/images/banners/home/ultimate_sbanner.jpg" border="0" alt="Ultimate Nutrition - free shaker"/>
+           </a>
+         </li>
+          <li>
             <a href="http://www.healthkart.com/nutrition/sports-nutrition?brand=Dymatize">
               <img src="<hk:vhostImage/>/images/banners/home/dymatize_sbanner.jpg" border="0" alt="Dymatize - free shaker"/>
             </a>
-         <%-- </li>--%>
-          <%--<li>
-            <a href="http://www.healthkart.com/product/pediasure/BAB152">
-              <img src="<hk:vhostImage/>/images/banners/home/pediasure_banner.jpg" border="0" alt="Pediasure"/>
-            </a>
-          </li>--%>
-     <%-- </ul>--%>
+          </li>
+      </ul>
       </div>
       <script>
         $(function () {
-          //$("#slides").responsiveSlides();
+          $("#slides").responsiveSlides();
         });
       </script>
 
