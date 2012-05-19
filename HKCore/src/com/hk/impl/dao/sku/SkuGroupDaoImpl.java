@@ -51,22 +51,26 @@ public class SkuGroupDaoImpl extends BaseDaoImpl implements SkuGroupDao {
   public List<SkuGroup> getCurrentCheckedInBatchGrn(GoodsReceivedNote grn , Sku sku) {
            return (List<SkuGroup>) getSession().
          createQuery("from SkuGroup sg where sg.goodsReceivedNote = :grn and sg.sku = :sku").
-           setParameter("grn" , grn).
-         setParameter("sku",sku ).
-           list();
+           setParameter("grn" , grn). setParameter("sku",sku ). list();
    }
 
 
   public List<SkuGroup> getCurrentCheckedInBatchNotInGrn(GoodsReceivedNote grn, Sku sku) {
-  List<SkuGroup>   skuGroupList =   getInStockSkuGroups(sku);
-    return (List<SkuGroup>) getSession().
-        createQuery("from SkuGroup sg where sg.goodsReceivedNote != :grn and sg.id in (:skuList)").
-        setParameter("grn", grn).
-        setParameterList("skuList", skuGroupList).
-        list();
+     List<SkuGroup> stockSkuGroupsListExcludeGrn = null;
+   List<SkuGroup> stockSkuGroupsList= getAllInStockSkuGroups(sku);
+   if(stockSkuGroupsList != null && stockSkuGroupsList.size() >0 ) {
+      String query = "select  si from SkuGroup si where si in (:stockSkuGroupsList) " +
+                   "and si.goodsReceivedNote != :grn ";
+ stockSkuGroupsListExcludeGrn =(List<SkuGroup>) getSession().createQuery(query)
+          .setParameterList("stockSkuGroupsList", stockSkuGroupsList)
+          .setParameter("grn", grn)
+          .list();
+
+   }
+         return stockSkuGroupsListExcludeGrn;
   }
 
-   public List<SkuGroup> getInStockSkuGroups(Sku sku) {
+   public List<SkuGroup> getAllInStockSkuGroups(Sku sku) {
     List<SkuGroup> skuGroupList = new ArrayList<SkuGroup>();
     String skuItemListQuery = "select pvi.skuItem.id from ProductVariantInventory pvi where pvi.skuItem is not null " +
         "and pvi.sku = :sku group by pvi.skuItem.id having sum(pvi.qty) > 0";
@@ -75,7 +79,7 @@ public class SkuGroupDaoImpl extends BaseDaoImpl implements SkuGroupDao {
         .list();
     if (skuItemIdList != null && skuItemIdList.size() > 0) {
       String query = "select distinct si.skuGroup from SkuItem si where si.id in (:skuItemIdList) " +
-                   "and si.skuGroup.sku = :sku order by si.skuGroup.expiryDate asc, si.skuGroup.mfgDate asc, si.skuGroup.createDate asc ";
+                   "and si.skuGroup.sku = :sku ";
 
       skuGroupList = (List<SkuGroup>) getSession().createQuery(query)
           .setParameterList("skuItemIdList", skuItemIdList)

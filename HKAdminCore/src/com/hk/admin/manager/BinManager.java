@@ -198,7 +198,7 @@ public class BinManager {
       Warehouse warehouse = userService.getWarehouseForLoggedInUser();
       Bin bin = binDao.findByBarCodeAndWarehouse(location, warehouse);
      if(bin != null){
-      List<SkuItem> inStockSkuItems = skuItemDao.getInStockSkuItems(skuGroup);
+      List<SkuItem> inStockSkuItems = adminSkuItemDao.getInStockSkuItems(skuGroup);
       Set <SkuItem> inStockSkuItemsSet= new HashSet<SkuItem>(inStockSkuItems);
        status = this.assignBinToSkuItems(inStockSkuItemsSet, bin);
      }
