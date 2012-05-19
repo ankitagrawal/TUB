@@ -322,9 +322,9 @@ public class OrderManager {
 
         cartLineItems = addFreeVariantsToCart(cartLineItems); // function made to handle deals and offers which are
 
-        //add promotional freebie - for MIH = SPT397-01
+        //add promotional freebie - for MIH = SPT391-01    VX Weight Lifting Straps
         if (order.getStore() != null && order.getStore().getId().equals(StoreService.MIH_STORE_ID)) {
-          cartLineItems = addFreeCartLineItems("SPT397-01", order);
+          cartLineItems = addFreeCartLineItems("SPT391-01", order);
         }
       
         order.setCartLineItems(cartLineItems);
