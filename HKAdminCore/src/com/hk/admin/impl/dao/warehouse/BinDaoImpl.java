@@ -69,14 +69,15 @@ public Bin createBin(Bin bin, Warehouse warehouse) {
   if (bin.getBin() != null) {
     shelfBin = bin.getBin();
   }
-  if (bin.getBin() != null) {
+  if (bin.getAisle() != null) {
     aisle = bin.getAisle();
   }
-  if (bin.getBin() != null) {
+  if (bin.getRack() != null) {
     rack = bin.getRack();
   }
   String barcode = aisle + rack + shelf + shelfBin;
    if (!barcode.equals("")) {
+     barcode=barcode.trim();
    Bin binDb = findByBarCodeAndWarehouse(barcode, warehouse);
   if (binDb != null) {
         return binDb;

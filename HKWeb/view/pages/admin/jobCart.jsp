@@ -70,15 +70,17 @@
 
   <table style="font-size: .8em; width:650px; padding:0">
     <tr>
-      <th width="75px">Bin</th>
-      <th width="525px">Item</th>
-      <th width="50px">Quantity</th>
+      <th width="30%">Bin</th>
+      <th width="40%">Item </th>
+      <th width="20%">Quantity</th>
     </tr>
     <c:forEach items="${orderSummary.binHasPVs}" var="mapentry">
-      <tr>
+      <tr width="100%">
           <c:set var="key" value="${mapentry.key}"/>
           <c:set var="map" value="${orderSummary.idBinMap}"/>
-        <td width="75px">
+          <c:set var="prodlist" value="${mapentry.value}"/>
+        <c:set var="length" value="${fn:length(prodlist)}"/>
+        <td width="30%" rowspan="${length}">
            ${map[key].barcode}
           <br/>
            ${map[key].aisle}<br/>
@@ -86,11 +88,11 @@
             ${map[key].shelf}<br/>
         </td>
 
-        <td>
-          <table width="550px">
+        <td width="70%" >
+          <table width="100%">
             <c:forEach items="${mapentry.value}" var="productVariant">
-              <tr>
-                <td width="525px">
+              <tr width="100%">
+                <td width="70%">
                     ${productVariant.product.name}
                   |
                     ${productVariant.variantName}
@@ -106,15 +108,14 @@
                     ${hkCodeMap[productVariant.id].barcode}
                 </td>
 
-              </tr>
 
-          </table>
-
-             <td width="50px">
+             <td width="30%">
                  <c:set var="Qtymap" value="${orderSummary.productVariantQty}"/>
                     ${Qtymap[productVariant.id]}
                 </td>
+                   </tr>
            </c:forEach>
+           </table>
         </td>
       </tr>
     </c:forEach>
