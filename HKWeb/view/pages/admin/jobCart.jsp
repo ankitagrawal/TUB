@@ -71,8 +71,14 @@
   <table style="font-size: .8em; width:650px; padding:0">
     <tr>
       <th width="30%">Bin</th>
-      <th width="40%">Item </th>
-      <th width="20%">Quantity</th>
+      <th width="70%">Item 
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         &nbsp;&nbsp; Quantity
+      </th>
+
     </tr>
     <c:forEach items="${orderSummary.binHasPVs}" var="mapentry">
       <tr width="100%">
