@@ -54,6 +54,7 @@ public class ChangeDefaultCourierAction extends BaseAction {
     @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String                              adminUploadsPath;
 
+    @Autowired
     XslParser                           xslParser;
 
     FileBean                            fileBean;

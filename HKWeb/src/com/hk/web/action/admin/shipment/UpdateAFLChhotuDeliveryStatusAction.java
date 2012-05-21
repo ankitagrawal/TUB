@@ -127,6 +127,24 @@ public class UpdateAFLChhotuDeliveryStatusAction extends BaseAction{
      return new ForwardResolution("/pages/admin/updateAFLChhotuDeliveryStatus.jsp");
    }
 
+    public Resolution updateBlueDartStatus() throws MalformedURLException, IOException,Exception{
+     User loggedOnUser = null;
+     if (getPrincipal() != null) {
+       loggedOnUser = getUserService().getUserById(getPrincipal().getId());
+     }
+     int numberOfOrdersUpdated=0;
+     try {
+       numberOfOrdersUpdated = deliveryStatusUpdateManager.updateDeliveryStatusBlueDart(startDate,endDate,loggedOnUser);
+     } catch (Exception e) {
+       //logger.error("Exception while reading excel sheet.", e);
+       addRedirectAlertMessage(new SimpleMessage("Upload failed - " + e.getMessage()));
+       return new ForwardResolution("/pages/admin/updateAFLChhotuDeliveryStatus.jsp");
+     }
+
+     addRedirectAlertMessage(new SimpleMessage("Database Updated - " + numberOfOrdersUpdated +  " orders Updated."));
+     return new ForwardResolution("/pages/admin/updateAFLChhotuDeliveryStatus.jsp");
+   }
+
   public Date getStartDate() {
     return startDate;
   }

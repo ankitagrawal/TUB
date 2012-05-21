@@ -22,8 +22,8 @@ import com.hk.constants.EnumS3UploadStatus;
 import com.hk.constants.core.Keys;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.category.CategoryImage;
-import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
-import com.hk.impl.dao.catalog.category.CategoryImageDaoImpl;
+import com.hk.pact.dao.catalog.category.CategoryDao;
+import com.hk.pact.dao.catalog.category.CategoryImageDao;
 import com.hk.util.ImageManager;
 import com.hk.web.filter.WebContext;
 
@@ -38,7 +38,8 @@ public class UploadCategoryImageAction extends BaseAction {
 	String errorMessage = null;
 
 	@Autowired
-	public CategoryImageDaoImpl categoryImageDao;
+	public CategoryImageDao categoryImageDao;
+	
 	private static Logger logger = Logger.getLogger(UploadCategoryImageAction.class);
 	List<CategoryImage> categoryImages;
 
@@ -48,10 +49,11 @@ public class UploadCategoryImageAction extends BaseAction {
 	@Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
 	String adminUploadsPath;
 
-	
+	@Autowired
 	ImageManager imageManager;
 	
-	CategoryDaoImpl categoryDao;
+	@Autowired
+	CategoryDao categoryDao;
 
 
 	@DefaultHandler

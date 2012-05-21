@@ -15,48 +15,48 @@
             <fieldset>
               <legend>PRODUCT ATTRIBUTES</legend>
               <div style="float:left; width: 50%">
-                <s:checkbox name="toBeEditedOptions['productName']"/>NAME
+                <s:checkbox name="toBeEditedOptions" value="productName"/>NAME
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions['productCategories']"/>CATEGORIES
+                <s:checkbox name="toBeEditedOptions" value="productCategories"/>CATEGORIES
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions['productBrand']"/>BRAND
+                <s:checkbox name="toBeEditedOptions" value="productBrand"/>BRAND
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions['productSecondaryCategory']"/>SECONDARY CATEGORY
+                <s:checkbox name="toBeEditedOptions" value="productSecondaryCategory"/>SECONDARY CATEGORY
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions['productSupplierTin']"/>SUPPLIER TIN
+                <s:checkbox name="toBeEditedOptions" value="productSupplierTin"/>SUPPLIER TIN
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions['productAmazonProduct']"/>IS AMAZON PRODUCT
+                <s:checkbox name="toBeEditedOptions" value="productAmazonProduct"/>IS AMAZON PRODUCT
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions['productColorOptions']"/>HAS COLOUR OPTIONS
+                <s:checkbox name="toBeEditedOptions" value="productColorOptions"/>HAS COLOUR OPTIONS
                 <div style="margin-top: 10px"></div>
               </div>
 
               <div style="float:right; width: 50%">
-                <s:checkbox name="toBeEditedOptions['productJit']"/>IS JIT
+                <s:checkbox name="toBeEditedOptions" value="productJit"/>IS JIT
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions['productGoogleAd']"/>IS GOOGLE AD DISALLOWED
+                <s:checkbox name="toBeEditedOptions" value="productGoogleAd"/>IS GOOGLE AD DISALLOWED
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions['productOrderRanking']"/>SORTING
+                <s:checkbox name="toBeEditedOptions" value="productOrderRanking"/>SORTING
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions['productService']"/>SERVICE
+                <s:checkbox name="toBeEditedOptions" value="productService"/>SERVICE
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions['productDeleted']"/>IS DELETED
+                <s:checkbox name="toBeEditedOptions" value="productDeleted"/>IS DELETED
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions['productMinDays']"/>MIN DAYS
+                <s:checkbox name="toBeEditedOptions" value="productMinDays"/>MIN DAYS
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions['productMaxDays']"/>MAX DAYS
+                <s:checkbox name="toBeEditedOptions" value="productMaxDays"/>MAX DAYS
               </div>
             </fieldset>
           </div>
@@ -67,7 +67,7 @@
             <div style="text-align: center;">
               Category : <s:text name="category" id="category"/>
               &nbsp; &nbsp;Brand : <s:text name="brand" id="brand"/>
-              <s:submit name="bulkEdit" value="Bulk Edit" class="submitButton" style="font-size: 0.9em"/>
+              <s:submit name="defineOptionsMap" value="Bulk Edit" class="submitButton" style="font-size: 0.9em"/>
             </div>
           </fieldset>
         </div>
@@ -77,77 +77,77 @@
             <fieldset>
               <legend>PRODUCT VARIANT ATTRIBUTES</legend>
               <div style="float:left; width: 50%">
-                <s:checkbox name="toBeEditedOptions['productVariantUpc']"/>UPC
+                <s:checkbox name="toBeEditedOptions" value="productVariantUpc"/>UPC
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions['productVariantMRP']"/>MRP
+                <s:checkbox name="toBeEditedOptions" value="productVariantMRP"/>MRP
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions['productVariantHKPrice']" id="hkPrice"/>HK PRICE(DISCOUNT
+                <s:checkbox name="toBeEditedOptions" value="productVariantHKPrice" id="hkPrice"/>HK PRICE(DISCOUNT
                 UNEDITABLE)
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions['productVariantDiscount']" id="discount"/>DISCOUNT(HK PRICE
+                <s:checkbox name="toBeEditedOptions" value="productVariantDiscount" id="discount"/>DISCOUNT(HK PRICE
                 UNEDITABLE)
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions['productVariantCostPrice']"/>COST PRICE
+                <s:checkbox name="toBeEditedOptions" value="productVariantCostPrice"/>COST PRICE
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions['productVariantB2BPrice']"/>B2B PRICE
+                <s:checkbox name="toBeEditedOptions" value="productVariantB2BPrice"/>B2B PRICE
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions['productVariantPostpaidAmount']"/>POSTPAID AMOUNT
+                <s:checkbox name="toBeEditedOptions" value="productVariantPostpaidAmount"/>POSTPAID AMOUNT
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions['productVariantAffiliateCategory']"/>AFFILIATE CATEGORY
+                <s:checkbox name="toBeEditedOptions" value="productVariantAffiliateCategory"/>AFFILIATE CATEGORY
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions['productVariantOutOfStock']"/>IS OUT OF STOCK
+                <s:checkbox name="toBeEditedOptions" value="productVariantOutOfStock"/>IS OUT OF STOCK
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions['productVariantDeleted']"/>IS DELETED
+                <s:checkbox name="toBeEditedOptions" value="productVariantDeleted"/>IS DELETED
                 <div style="margin-top: 10px"></div>
               </div>
 
               <div style="float: right; width: 50%;">
-                  <s:checkbox name="toBeEditedOptions['productVariantInventory']"/>INVENTORY
+                  <s:checkbox name="toBeEditedOptions" value="productVariantInventory"/>INVENTORY
                 <div style="margin-top: 10px"></div>
 
-                  <%--<s:checkbox name="toBeEditedOptions['productVariantCutOffInventory']"/>CUT-OFF INVENTORY--%>
+                  <%--<s:checkbox name="toBeEditedOptions" value="productVariantCutOffInventory"/>CUT-OFF INVENTORY--%>
                   <%--<div style="margin-top: 10px"></div>--%>
 
-                  <s:checkbox name="toBeEditedOptions['productVariantWeight']"/>WEIGHT
+                  <s:checkbox name="toBeEditedOptions" value="productVariantWeight"/>WEIGHT
                 <div style="margin-top: 10px"></div>
 
-                  <s:checkbox name="toBeEditedOptions['productVariantClearanceSale']"/>CLEARANCE SALE
+                  <s:checkbox name="toBeEditedOptions" value="productVariantClearanceSale"/>CLEARANCE SALE
                 <div style="margin-top: 10px"></div>
 
-                  <%--<s:checkbox name="toBeEditedOptions['productVariantLength']"/>LENGTH--%>
+                  <%--<s:checkbox name="toBeEditedOptions" value="productVariantLength"/>LENGTH--%>
                   <%--<div style="margin-top: 10px"></div>--%>
 
-                  <%--<s:checkbox name="toBeEditedOptions['productVariantBreadth']"/>BREADTH--%>
+                  <%--<s:checkbox name="toBeEditedOptions" value="productVariantBreadth"/>BREADTH--%>
                   <%--<div style="margin-top: 10px"></div>--%>
 
-                  <%--<s:checkbox name="toBeEditedOptions['productVariantHeigth']"/>HEIGHT--%>
+                  <%--<s:checkbox name="toBeEditedOptions" value="productVariantHeigth"/>HEIGHT--%>
                   <%--<div style="margin-top: 10px"></div>--%>
 
-                  <s:checkbox name="toBeEditedOptions['productVariantConsumptionTime']"/>CONSUMPTION TIME
+                  <s:checkbox name="toBeEditedOptions" value="productVariantConsumptionTime"/>CONSUMPTION TIME
                 <div style="margin-top: 10px"></div>
 
-                  <s:checkbox name="toBeEditedOptions['productVariantLeadTime']"/>LEAD TIME
+                  <s:checkbox name="toBeEditedOptions" value="productVariantLeadTime"/>LEAD TIME
                 <div style="margin-top: 10px"></div>
 
-                  <s:checkbox name="toBeEditedOptions['productVariantLeadTimeFactor']"/>LEAD TIME FACTOR
+                  <s:checkbox name="toBeEditedOptions" value="productVariantLeadTimeFactor"/>LEAD TIME FACTOR
                 <div style="margin-top: 10px"></div>
 
-                  <s:checkbox name="toBeEditedOptions['productVariantBufferTime']"/>BUFFER TIME
+                  <s:checkbox name="toBeEditedOptions" value="productVariantBufferTime"/>BUFFER TIME
                 <div style="margin-top: 10px"></div>
 
-                  <s:checkbox name="toBeEditedOptions['productVariantNextAvailDate']"/>NEXT AVAILABLE DATE
+                  <s:checkbox name="toBeEditedOptions" value="productVariantNextAvailDate"/>NEXT AVAILABLE DATE
                 <div style="margin-top: 10px"></div>
 
-                  <s:checkbox name="toBeEditedOptions['productVariantFollAvailDate']"/>FOLLWING AVAILABLE DATE
+                  <s:checkbox name="toBeEditedOptions" value="productVariantFollAvailDate"/>FOLLWING AVAILABLE DATE
                 <div style="margin-top: 10px"></div>
             </fieldset>
           </div>
@@ -163,7 +163,6 @@
       <%--<s:submit name="bulkEdit" value="Bulk Edit" class="submitButton" style="font-size: 0.9em"/>--%>
       <%--</div>--%>
       <%--</fieldset>--%>
-      </div>
     </s:form>
   </s:layout-component>
 </s:layout-render>

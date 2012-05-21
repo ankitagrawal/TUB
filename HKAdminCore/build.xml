@@ -25,6 +25,7 @@
 		<fileset file="${project.common.dir}/dependencies/groovy-all-1.5.6.jar" />
 		<fileset file="${project.common.dir}/dist/hk-common.jar" />
 		<fileset file="${project.core.dir}/dist/hk-core.jar" />
+		<fileset file="${lib.root.dir}/thirdParty/jdom-1.0.jar" />
 	</path>
 
 
