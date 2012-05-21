@@ -376,7 +376,7 @@ public class JobCartAction extends BaseAction {
          for (SkuGroup skugroup : skuGroupListsuggested) {                
            Sku skuv = skugroup.getSku();
            List<SkuItem> skuItemListPerSkuGroup = adminSkuItemDao.getInStockSkuItems(skugroup);
-           skuGroupQtyMapping.put(skuv.getId(), skuItemListPerSkuGroup.size());
+//           skuGroupQtyMapping.put(skuv.getId(), skuItemListPerSkuGroup.size());
            List<Long> BinLocationPerSkuGroup = binManager.getListOfBinForSkuItemList(new HashSet<SkuItem>(skuItemListPerSkuGroup));
            Bin binWithMaxId=null;
            if (null != BinLocationPerSkuGroup && BinLocationPerSkuGroup.size() > 0) {

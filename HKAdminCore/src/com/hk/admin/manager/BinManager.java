@@ -167,7 +167,7 @@ public class BinManager {
 
   }
 
-  //added
+
   public boolean assignBinToSkuItems(Set<SkuItem> skuItemSet, Bin bin) {
     if (skuItemSet != null && skuItemSet.size() > 0) {
       for (SkuItem skuItem : skuItemSet) {

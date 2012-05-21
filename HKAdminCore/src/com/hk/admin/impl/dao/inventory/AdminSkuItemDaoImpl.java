@@ -135,7 +135,7 @@ public class AdminSkuItemDaoImpl extends BaseDaoImpl implements AdminSkuItemDao{
     }
   }
 
-    //added
+
   public List<SkuGroup> getInStockSkuGroupsByCreateDate(Sku sku) {
      List<SkuGroup> skuGroupList = new ArrayList<SkuGroup>();
      String skuItemListQuery = "select pvi.skuItem.id from ProductVariantInventory pvi where pvi.skuItem is not null " +
