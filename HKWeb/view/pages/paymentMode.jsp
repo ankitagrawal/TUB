@@ -161,7 +161,7 @@
 					<s:hidden name="paymentMode" value="<%=defaultGateway%>" />
 
 					<div style="float: left; margin-left: 20px; line-height: 21px;">
-					<div class="brandBox">
+					<div class="paymentBox">
 					<table width="100%">
 						<c:forEach items="${paymentModeBean.bankList}" var="bank"
 							varStatus="idx">

@@ -503,6 +503,7 @@
             <c:if test="${shippingOrder.shipment !=null}">
               Track Link: <s:link beanclass="com.hk.web.action.core.order.TrackCourierAction" target="_blank">
               <s:param name="courierId" value="${shippingOrder.shipment.courier.id}"/>
+               <s:param name="shippingOrder" value="${shippingOrder.id}"/>
               <s:param name="trackingId" value="${shippingOrder.shipment.trackingId}"/>
               ${shippingOrder.shipment.trackingId}
             </s:link>

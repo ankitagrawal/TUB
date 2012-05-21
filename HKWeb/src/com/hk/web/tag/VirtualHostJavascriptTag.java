@@ -1,57 +1,48 @@
 package com.hk.web.tag;
 
-import com.hk.constants.core.Keys;
-import org.springframework.beans.factory.annotation.Value;
+import java.io.IOException;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
-import java.io.IOException;
+
+import org.springframework.beans.factory.annotation.Value;
+
+import com.hk.constants.core.Keys;
+import com.hk.service.ServiceLocatorFactory;
 
 public class VirtualHostJavascriptTag extends TagSupport {
 
-	static boolean useVirtualHosts;
-	static boolean useSslVirtualHosts;
 
+    @Override
+    public int doEndTag() throws JspException {
 
-	@Value("#{hkEnvProps['" + Keys.Env.virtualHostImage + "']}")
-	private static String host;
-	@Value("#{hkEnvProps['" + Keys.Env.virtualHostImageSsl + "']}")
-	private static String sslHost;
+        String host = (String) ServiceLocatorFactory.getProperty(Keys.Env.virtualHostImage);
+        String sslHost = (String) ServiceLocatorFactory.getProperty(Keys.Env.virtualHostImageSsl);
 
-	@Value("#{hkEnvProps['" + Keys.Env.useVirtualHosts + "']}")
-	private static String useVirtualHostsString;
-	@Value("#{hkEnvProps['" + Keys.Env.useSslVirtualHosts + "']}")
-	private static String useSslVirtualHostsString;
+        String useVirtualHostsString = (String) ServiceLocatorFactory.getProperty(Keys.Env.useVirtualHosts);
+        String useSslVirtualHostsString = (String) ServiceLocatorFactory.getProperty(Keys.Env.useSslVirtualHosts);
 
+        boolean useVirtualHosts = Boolean.parseBoolean(useVirtualHostsString);
+        boolean useSslVirtualHosts = Boolean.parseBoolean(useSslVirtualHostsString);
 
-	@PostConstruct
-	public void postConstruction() {
-	  useVirtualHosts = Boolean.parseBoolean(useSslVirtualHostsString);
-	  useSslVirtualHosts = Boolean.parseBoolean(useSslVirtualHostsString);
-	}
-
-
-  @Override
-  public int doEndTag() throws JspException {
-    JspWriter out = pageContext.getOut();
-    try {
-      if (useVirtualHosts) {
-        if (useSslVirtualHosts && pageContext.getRequest().isSecure()) {
-          out.write(sslHost);
-        } else {
-          out.write(host);
+        JspWriter out = pageContext.getOut();
+        try {
+            if (useVirtualHosts) {
+                if (useSslVirtualHosts && pageContext.getRequest().isSecure()) {
+                    out.write(sslHost);
+                } else {
+                    out.write(host);
+                }
+            } else {
+                out.write(((HttpServletRequest) pageContext.getRequest()).getContextPath());
+            }
+        } catch (IOException e) {
+            // should not happen
         }
-      } else {
-        out.write(((HttpServletRequest)pageContext.getRequest()).getContextPath());
-      }
-    } catch (IOException e) {
-      // should not happen
+        return EVAL_PAGE;
     }
-    return EVAL_PAGE;
-  }
-
 
 }

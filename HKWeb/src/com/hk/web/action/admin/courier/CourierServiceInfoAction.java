@@ -63,9 +63,10 @@ public class CourierServiceInfoAction extends BaseAction {
     String                           pincode;
     private List<CourierServiceInfo> courierServiceList = new ArrayList<CourierServiceInfo>();
 
-    // @Named(Keys.Env.adminUploads)
+    @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String                           adminUploadsPath;
 
+    @Autowired
     XslParser                        xslParser;
 
     FileBean                         fileBean;

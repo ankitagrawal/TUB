@@ -17,6 +17,7 @@ import net.sourceforge.stripes.validation.ValidateNestedProperties;
 import net.sourceforge.stripes.validation.ValidationMethod;
 
 import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
@@ -58,14 +59,14 @@ public class ManufacturerAddressAction extends BasePaginatedAction {
       @Validate(field = "phone", required = true, on = "addAddress")
   })
 
-  
+  @Autowired
   ManufacturerDao manufacturerDao;
-  
+  @Autowired
   AddressDao addressDao;
-  
-  LatLongGenerator latLongGenerator;
-  
+  @Autowired
   LocalityMapDao localityMapDao;
+  @Autowired
+  LatLongGenerator latLongGenerator;
 
   @ValidationMethod(on="addAddress")
    public void validateAddress()

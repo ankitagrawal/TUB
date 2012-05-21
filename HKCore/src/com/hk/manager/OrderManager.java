@@ -47,6 +47,7 @@ import com.hk.pact.dao.order.cartLineItem.CartLineItemDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.core.AffilateService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
@@ -64,6 +65,8 @@ public class OrderManager {
 
     private static Logger                     logger = LoggerFactory.getLogger(OrderManager.class);
 
+    @Autowired
+    ProductVariantService productVariantService;
     @Autowired
     private CartLineItemService               cartLineItemService;
     @Autowired
@@ -318,6 +321,15 @@ public class OrderManager {
         order.setRewardPointsUsed(pricingDto.getRedeemedRewardPoints());
 
         cartLineItems = addFreeVariantsToCart(cartLineItems); // function made to handle deals and offers which are
+
+        //add promotional freebie - for MIH = SPT391-01    VX Weight Lifting Straps
+        if (order.getStore() != null && order.getStore().getId().equals(StoreService.MIH_STORE_ID)) {
+          cartLineItems = addFreeCartLineItems("SPT391-01", order);
+        }
+      
+        order.setCartLineItems(cartLineItems);
+        order = getOrderService().save(order);
+      
         // associated with a variant, this will help in
         // minimizing brutal use of free checkout
         order.setCartLineItems(cartLineItems);
@@ -402,6 +414,19 @@ public class OrderManager {
         if (lastOrder == null) {
             getEmailManager().sendReferralProgramIntro(user, getLinkManager().getReferralProgramUrl());
         }
+    }
+
+    public Set<CartLineItem> addFreeCartLineItems(String variantId, Order order) {
+      Set<CartLineItem> cartLineItems = order.getCartLineItems();
+      ProductVariant productVariant = getProductVariantService().getVariantById(variantId);
+      if (productVariant != null) {
+        productVariant.setQty(1L);
+        CartLineItem cartLineItem = getCartLineItemService().createCartLineItemWithBasicDetails(productVariant, order);
+        cartLineItem.setDiscountOnHkPrice(cartLineItem.getHkPrice());
+        cartLineItem = getCartLineItemService().save(cartLineItem);
+        cartLineItems.add(cartLineItem);
+      }
+      return cartLineItems;
     }
 
     private Set<CartLineItem> addFreeVariantsToCart(Set<CartLineItem> cartLineItems) {
@@ -858,34 +883,42 @@ public class OrderManager {
         this.baseDao = baseDao;
     }
 
-    /*
-     * @Transactional public void escalateFromActionQueue(CartLineItem lineItem, Courier suggestedCourier) { if
-     * (lineItem.getLineItemType().getId().equals(EnumLineItemType.Product.getId())) {
-     * lineItem.setLineItemStatus(EnumLineItemStatus.READY_FOR_PROCESS.asLineItemStatus());
-     * lineItem.setCourier(suggestedCourier); lineItemDaoProvider.get().save(lineItem); } } @Transactional public void
-     * escalateFromActionQueue(CartLineItem lineItem) { if
-     * (lineItem.getLineItemType().getId().equals(EnumLineItemType.Product.getId())) {
-     * lineItem.setLineItemStatus(EnumLineItemStatus.READY_FOR_PROCESS.asLineItemStatus());
-     * lineItemDaoProvider.get().save(lineItem); } } /* @Transactional public Order putOrderOnHold(Order order, User
-     * loggedOnUser) { order.setOrderStatus(orderStatusDao.find(EnumOrderStatus.OnHold.getId())); order =
-     * getOrderService().save(order); List<Long> applicableLineItemStatusId = new ArrayList<Long>();
-     * applicableLineItemStatusId.add(EnumLineItemStatus.READY_FOR_PROCESS.getId());
-     * applicableLineItemStatusId.add(EnumLineItemStatus.GONE_FOR_PRINTING.getId());
-     * applicableLineItemStatusId.add(EnumLineItemStatus.PICKING.getId());
-     * applicableLineItemStatusId.add(EnumLineItemStatus.CHECKEDOUT.getId());
-     * applicableLineItemStatusId.add(EnumLineItemStatus.PACKED.getId()); for (CartLineItem lineItem :
-     * order.getLineItems()) { if (lineItem.getLineItemType().getId().equals(EnumLineItemType.Product.getId()) &&
-     * applicableLineItemStatusId.contains(lineItem.getLineItemStatus().getId())) {
-     * lineItem.setLineItemStatus(EnumLineItemStatus.ACTION_AWAITING.asLineItemStatus());
-     * lineItemDaoProvider.get().save(lineItem); //Recheckin Inventory against checked out qty if
-     * (lineItem.getLineItemStatus().getId().equals(EnumLineItemStatus.CHECKEDOUT.getId())) { List<ProductVariantInventory>
-     * checkedOutInventories =
-     * productVariantInventoryDaoProvider.get().getCheckedOutSkuItems(lineItem.getShippingOrder(),
-     * lineItem.getProductVariant()); for (ProductVariantInventory checkedOutInventory : checkedOutInventories) {
-     * inventoryService.inventoryCheckinCheckout(checkedOutInventory.getProductVariant(),
-     * checkedOutInventory.getSkuItem(), lineItem, lineItem.getShippingOrder(), null, null,
-     * invTxnTypeDaoProvider.get().find(EnumInvTxnType.CANCEL_CHECKIN.getId()), 1L, loggedOnUser); } } } }
-     *//*
+    public ProductVariantService getProductVariantService() {
+      return productVariantService;
+    }
+
+    public void setProductVariantService(ProductVariantService productVariantService) {
+      this.productVariantService = productVariantService;
+    }
+
+  /*
+  * @Transactional public void escalateFromActionQueue(CartLineItem lineItem, Courier suggestedCourier) { if
+  * (lineItem.getLineItemType().getId().equals(EnumLineItemType.Product.getId())) {
+  * lineItem.setLineItemStatus(EnumLineItemStatus.READY_FOR_PROCESS.asLineItemStatus());
+  * lineItem.setCourier(suggestedCourier); lineItemDaoProvider.get().save(lineItem); } } @Transactional public void
+  * escalateFromActionQueue(CartLineItem lineItem) { if
+  * (lineItem.getLineItemType().getId().equals(EnumLineItemType.Product.getId())) {
+  * lineItem.setLineItemStatus(EnumLineItemStatus.READY_FOR_PROCESS.asLineItemStatus());
+  * lineItemDaoProvider.get().save(lineItem); } } /* @Transactional public Order putOrderOnHold(Order order, User
+  * loggedOnUser) { order.setOrderStatus(orderStatusDao.find(EnumOrderStatus.OnHold.getId())); order =
+  * getOrderService().save(order); List<Long> applicableLineItemStatusId = new ArrayList<Long>();
+  * applicableLineItemStatusId.add(EnumLineItemStatus.READY_FOR_PROCESS.getId());
+  * applicableLineItemStatusId.add(EnumLineItemStatus.GONE_FOR_PRINTING.getId());
+  * applicableLineItemStatusId.add(EnumLineItemStatus.PICKING.getId());
+  * applicableLineItemStatusId.add(EnumLineItemStatus.CHECKEDOUT.getId());
+  * applicableLineItemStatusId.add(EnumLineItemStatus.PACKED.getId()); for (CartLineItem lineItem :
+  * order.getLineItems()) { if (lineItem.getLineItemType().getId().equals(EnumLineItemType.Product.getId()) &&
+  * applicableLineItemStatusId.contains(lineItem.getLineItemStatus().getId())) {
+  * lineItem.setLineItemStatus(EnumLineItemStatus.ACTION_AWAITING.asLineItemStatus());
+  * lineItemDaoProvider.get().save(lineItem); //Recheckin Inventory against checked out qty if
+  * (lineItem.getLineItemStatus().getId().equals(EnumLineItemStatus.CHECKEDOUT.getId())) { List<ProductVariantInventory>
+  * checkedOutInventories =
+  * productVariantInventoryDaoProvider.get().getCheckedOutSkuItems(lineItem.getShippingOrder(),
+  * lineItem.getProductVariant()); for (ProductVariantInventory checkedOutInventory : checkedOutInventories) {
+  * inventoryService.inventoryCheckinCheckout(checkedOutInventory.getProductVariant(),
+  * checkedOutInventory.getSkuItem(), lineItem, lineItem.getShippingOrder(), null, null,
+  * invTxnTypeDaoProvider.get().find(EnumInvTxnType.CANCEL_CHECKIN.getId()), 1L, loggedOnUser); } } } }
+  *//*
          * LineItemStatus statusActionAwaiting =
          * lineItemStatusDaoProvider.get().find(EnumLineItemStatus.ACTION_AWAITING.getId()); for (LineItem line :
          * order.getCartLineItems(EnumLineItemType.Product)) { line.setLineItemStatus(statusActionAwaiting);

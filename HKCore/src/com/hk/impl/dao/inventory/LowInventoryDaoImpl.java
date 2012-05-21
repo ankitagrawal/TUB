@@ -9,6 +9,7 @@ import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.LowInventory;
+import com.hk.domain.inventory.ProductVariantInventory;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.inventory.LowInventoryDao;
 
@@ -71,7 +72,13 @@ public class LowInventoryDaoImpl extends BaseDaoImpl implements LowInventoryDao 
     //
 
     public void deleteFromLowInventoryList(ProductVariant productVariant) {
-        getSession().createQuery("delete from LowInventory li where li.productVariant = :productVariant").setParameter("productVariant", productVariant).executeUpdate();
+        ProductVariantInventory pvi = (ProductVariantInventory) findUniqueByNamedParams("from LowInventory li where li.productVariant = :productVariant ",
+                new String[] { "productVariant" }, new Object[] { productVariant });
+
+        if (pvi != null) {
+            delete(pvi);
+        }
+        //getSession().createQuery("delete ").setParameter("productVariant", productVariant).executeUpdate();
     }
 
 }
