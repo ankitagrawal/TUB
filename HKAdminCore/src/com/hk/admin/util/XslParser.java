@@ -513,6 +513,7 @@ public class XslParser {
                 pincode.setCity(getCellValue(XslConstants.CITY, rowMap, headerMap));
                 pincode.setState(getCellValue(XslConstants.STATE, rowMap, headerMap));
                 pincode.setLocality(getCellValue(XslConstants.LOCALITY, rowMap, headerMap));
+                pincode.setRegion(getCellValue(XslConstants.REGION, rowMap, headerMap));
                 String courierId = getCellValue(XslConstants.DEFAULT_COURIER_ID, rowMap, headerMap);
                 if (StringUtils.isNotEmpty(courierId)) {
                     Courier courier = getCourierService().getCourierById(getLong(getCellValue(XslConstants.DEFAULT_COURIER_ID, rowMap, headerMap)));

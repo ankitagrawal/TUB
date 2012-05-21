@@ -10,7 +10,7 @@
 	<s:layout-component name="content">
 		<h2>Total Pincodes in System = ${mpaBean.pincodesInSystem}</h2>
 
-    
+
 
       <fieldset class="right_label">
         <legend>Search Pincode</legend>
@@ -40,7 +40,7 @@
 
 							<s:submit name="uploadPincodeExcel" value="Upload"/>
             <br/>
-             (Worksheet Name: PincodeInfo &nbsp&nbsp&nbsp 5 Fields: PINCODE &nbspCITY &nbspSTATE &nbspLOCALITY &nbspDEFAULT_COURIER_ID)</li>
+             (Worksheet Name: PincodeInfo &nbsp&nbsp&nbsp 5 Fields: PINCODE &nbspCITY &nbspSTATE &nbspREGION &nbspLOCALITY &nbspDEFAULT_COURIER_ID)</li>
 					</s:form>
 			</ul>
           </fieldset>
@@ -52,6 +52,10 @@
 					<tr>
 						<td>Pincode:</td>
 						<td><s:text name="pincode.pincode" value="${mpaBean.pincode.pincode}"/></td>
+					</tr>
+                    <tr>
+						<td>Region:</td>
+						<td><s:text name="pincode.region" value="${mpaBean.pincode.region}"/></td>
 					</tr>
 					<tr>
 						<td>Locality:</td>
