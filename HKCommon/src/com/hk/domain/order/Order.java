@@ -124,8 +124,6 @@ public class Order implements java.io.Serializable {
     @Column(name = "is_b2b_order")
     private Boolean              b2bOrder;
 
-    @Column(name = "is_priority_order")
-    private Boolean              priorityOrder;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "order")
     private List<OrderLifecycle> orderLifecycles = new ArrayList<OrderLifecycle>();
@@ -390,13 +388,6 @@ public class Order implements java.io.Serializable {
         this.b2bOrder = b2bOrder;
     }
 
-    public Boolean getPriorityOrder() {
-        return priorityOrder;
-    }
-
-    public void setPriorityOrder(Boolean priorityOrder) {
-        this.priorityOrder = priorityOrder;
-    }
 
     public Set<ShippingOrder> getShippingOrders() {
         return shippingOrders;

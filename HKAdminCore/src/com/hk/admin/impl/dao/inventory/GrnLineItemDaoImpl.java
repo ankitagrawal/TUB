@@ -21,4 +21,18 @@ public class GrnLineItemDaoImpl extends BaseDaoImpl implements GrnLineItemDao{
         return grnLineItems != null && !grnLineItems.isEmpty() ? grnLineItems.get(0) : null;
     }
 
+  //added by seema
+   public List<GrnLineItem> getAllGrnLineItemByGrn(GoodsReceivedNote goodsReceivedNote) {
+
+     List<GrnLineItem> grnLineItems = getSession().createQuery("from GrnLineItem li where li.goodsReceivedNote = :goodsReceivedNote")
+         .setParameter("goodsReceivedNote", goodsReceivedNote)
+         .list();
+     if(grnLineItems!=null && grnLineItems.size()!=0)
+       return grnLineItems;
+     else
+     return null;
+   }
+
+
+
 }
