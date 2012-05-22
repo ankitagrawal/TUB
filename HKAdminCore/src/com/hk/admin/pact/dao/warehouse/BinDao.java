@@ -15,4 +15,9 @@ public interface BinDao extends BaseDao {
 
     public Bin saveBin(Bin bin, Warehouse warehouse);
 
+  public Bin createBin(Bin bin, Warehouse warehouse);
+
+  public Bin getBin(Bin bin, Warehouse warehouse);
+
+
 }

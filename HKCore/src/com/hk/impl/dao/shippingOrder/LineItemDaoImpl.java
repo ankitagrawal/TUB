@@ -30,8 +30,12 @@ public class LineItemDaoImpl extends BaseDaoImpl implements LineItemDao {
 
     public void flipProductVariants(Sku srcSKu, Sku dstSku, ShippingOrder shippingOrder) {
 
-        getSession().createQuery("update LineItem li  set li.sku = :dstSku where li.shippingOrder = :shippingOrder and li.sku = :srcSKu").setParameter("dstSku", dstSku).setParameter(
-                "shippingOrder", shippingOrder).setParameter("srcSKu", srcSKu).executeUpdate();
+        LineItem li = (LineItem) findUniqueByNamedParams(" from LineItem li where where li.shippingOrder = :shippingOrder and li.sku = :srcSKu ", new String[]{"shippingOrder","srcSKu"}, new Object[]{shippingOrder,srcSKu});
+        li.setSku(dstSku);
+        update(li);
+        
+        /*getSession().createQuery("update LineItem li  set li.sku = :dstSku where li.shippingOrder = :shippingOrder and li.sku = :srcSKu").setParameter("dstSku", dstSku).setParameter(
+                "shippingOrder", shippingOrder).setParameter("srcSKu", srcSKu).executeUpdate();*/
     }
 
     public List<String> getLineItemListShippedByCourier(Date startDate, Date endDate, Long courier_id) {

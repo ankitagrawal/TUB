@@ -66,6 +66,7 @@ public class XslConstants {
     public static final String    LOCALITY                        = "LOCALITY";
     public static final String    CITY                            = "CITY";
     public static final String    STATE                           = "STATE";
+    public static final String    REGION                          = "REGION";
     public static final String    IS_PREFERRED                    = "IS_PREFERRED";
     public static final String    IS_PREFERRED_COD                = "IS_PREFERRED_COD";
     public static final String    ROUTING_CODE                    = "ROUTING_CODE";

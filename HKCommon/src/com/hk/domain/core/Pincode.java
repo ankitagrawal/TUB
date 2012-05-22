@@ -48,6 +48,9 @@ public class Pincode implements java.io.Serializable {
   @Column(name = "state", nullable = false, length = 25)
   private String state;
 
+  @Column(name = "region", nullable = true, length = 25)
+  private String region;
+
 
   @Column(name = "locality", length = 25)
   private String locality;
@@ -115,7 +118,14 @@ public class Pincode implements java.io.Serializable {
 	public void setDefaultCourier(Courier defaultCourier) {
 		this.defaultCourier = defaultCourier;
 	}
-	
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
+    }
 }
 
 
