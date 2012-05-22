@@ -139,10 +139,16 @@ public class JobCartAction extends BaseAction {
   @DefaultHandler
   public Resolution jobCart() {
      User user = null;
+    Warehouse userWarehouse;
     if (getPrincipal() != null) {
       user = userDao.get(User.class,getPrincipal().getId());
     }
-
+    if (userService.getWarehouseForLoggedInUser() != null) {
+        userWarehouse = userService.getWarehouseForLoggedInUser();
+      } else {
+        addRedirectAlertMessage(new SimpleMessage("There is no warehouse attached with the logged in user. Please check with the admin."));
+        return new RedirectResolution(InventoryCheckinAction.class);
+      }
     binHasPVs = new HashMap<Long, List<ProductVariant>>();
     Map<String, Bin> pvhasBin = new HashMap<String, Bin>();
 
@@ -167,17 +173,28 @@ public class JobCartAction extends BaseAction {
 //        productVariantQty.put(productLineItem.getSku().getProductVariant().getId(), productLineItem.getQty());
         SkuGroup suggestedSkuGroup;
         List<SkuGroup> skuGroupListPerSku = adminSkuItemDao.getInStockSkuGroups(sku);
+           Bin defaultBin=new Bin();
+             defaultBin.setAisle("D");
+             defaultBin.setRack("D");
+             defaultBin.setShelf("D");
+             defaultBin.setBin("D");
+
+        Bin defaultBinAllocated = binDao.createBin(defaultBin,userWarehouse);
+        Bin alreadyallocated=null;
         if (skuGroupListPerSku != null && skuGroupListPerSku.size() > 0) {
           suggestedSkuGroup = skuGroupListPerSku.get(0);
           if (suggestedSkuGroup != null) {
              skuGroupMapProductVariant.put(productLineItem.getSku().getProductVariant().getId(),suggestedSkuGroup);
             List<Long> binIds = binManager.getListOfBinForSkuItemList(suggestedSkuGroup.getSkuItems());
-
+              if(binIds == null && binIds.size() == 0){
+                alreadyallocated= defaultBinAllocated;
+              }
             if (binIds != null && binIds.size() > 0) {
-              Bin bin = binDao.get(Bin.class,binIds.get(0));
-              idBinMap.put(binIds.get(0), bin);
-              pvhasBin.put(sku.getProductVariant().getId(), bin);
+             alreadyallocated  = binDao.get(Bin.class,binIds.get(0));
             }
+              idBinMap.put(binIds.get(0), alreadyallocated);
+              pvhasBin.put(sku.getProductVariant().getId(), alreadyallocated);
+
           }
         }
       }
