@@ -536,5 +536,26 @@
   </s:form>
 </div>
 
+<div class="reportBox">
+  <s:form beanclass="com.hk.web.action.report.ReportAction" target="_blank">
+    <fieldset class="right_label">
+      <legend>RTO Report</legend>
+      <ul>
+        <li>
+          <label>Start
+            date</label><s:text class="date_input startDate" style="width:150px"
+                                formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startDate"/>
+        </li>
+        <li>
+          <label>End
+            date</label><s:text class="date_input endDate" style="width:150px"
+                                formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endDate"/>
+        </li>
+      </ul>
+      <s:submit name="generateRTOReport" value="Generate Report"/>
+    </fieldset>
+  </s:form>
+</div>
+
 </s:layout-component>
 </s:layout-render>

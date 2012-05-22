@@ -28,6 +28,7 @@ import com.hk.report.dto.catalog.CategoryPerformanceDto;
 import com.hk.report.dto.inventory.InventorySoldDto;
 import com.hk.report.dto.inventory.ExpiryAlertReportDto;
 import com.hk.report.dto.inventory.StockReportDto;
+import com.hk.report.dto.inventory.RTOReportDto;
 import com.hk.report.dto.order.CategoriesOrderReportDto;
 import com.hk.report.dto.order.OrderLifecycleStateTransitionDto;
 import com.hk.report.dto.order.ShipmentDto;
@@ -699,6 +700,39 @@ public class ReportAction extends BaseAction {
     return new ForwardResolution("/pages/admin/inventorySoldReport.jsp");
   }
 
+  public Resolution generateRTOReport() {
+    List<RTOReportDto> rtoReportList = reportProductVariantService.getRTOProductsDetail(startDate, endDate);
+    xlsFile = new File(adminDownloads + "/reports/RTOReport.xls");
+    HkXlsWriter xlsWriter = new HkXlsWriter();
+
+    if(rtoReportList != null && rtoReportList.size() > 0) {
+      int xlsRow = 1;
+      xlsWriter.addHeader("RTO DATE", "RTO DATE");
+      xlsWriter.addHeader("SHIPMENT ORDER NO.", "SHIPMENT ORDER NO.");
+      xlsWriter.addHeader("PRODUCT VARIANT", "PRODUCT VARIANT");
+      xlsWriter.addHeader("PRODUCT NAME", "PRODUCT NAME");
+      xlsWriter.addHeader("PRODUCT OPTIONS", "PRODUCT OPTIONS");
+      xlsWriter.addHeader("RTO CHECKIN QTY", "RTO CHECKIN QTY");
+      xlsWriter.addHeader("RTO CHECKIN DAMAGE QTY", "RTO CHECKIN DAMAGE QTY");
+
+      for(RTOReportDto rtoReportDto : rtoReportList) {
+        xlsWriter.addCell(xlsRow, rtoReportDto.getRtoDate());
+        xlsWriter.addCell(xlsRow, rtoReportDto.getShippingOrderNumber());
+        xlsWriter.addCell(xlsRow, rtoReportDto.getProductVariantId());
+        xlsWriter.addCell(xlsRow, rtoReportDto.getProductName());
+        xlsWriter.addCell(xlsRow, rtoReportDto.getProductOptions());
+        xlsWriter.addCell(xlsRow, rtoReportDto.getRtoCheckinQty());
+        xlsWriter.addCell(xlsRow, rtoReportDto.getRtoDamageCheckinQty());
+        xlsWriter.writeData(xlsFile, "RTO_Report");
+        xlsRow++;
+      }
+      addRedirectAlertMessage(new SimpleMessage("Download complete"));
+
+      return new HTTPResponseResolution();
+    }else
+      return new ForwardResolution("/pages/admin/report.jsp");
+  }
+  
   public Resolution generateExpiryAlertReport() {
     List<ExpiryAlertReportDto> expiryAlertReportDtoList = reportProductVariantService.getToBeExpiredProductDetails(startDate, endDate, warehouse);
     xlsFile = new File(adminDownloads + "/reports/ExpiryAlertReport.xls");

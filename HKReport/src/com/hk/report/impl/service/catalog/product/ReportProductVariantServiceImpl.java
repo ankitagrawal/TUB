@@ -3,20 +3,21 @@ package com.hk.report.impl.service.catalog.product;
 import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.hibernate.transform.Transformers;
 
-import com.hk.report.dto.inventory.InventorySoldDto;
-import com.hk.report.dto.inventory.ExpiryAlertReportDto;
-import com.hk.report.dto.inventory.StockReportDto;
+import com.hk.report.dto.inventory.*;
 import com.hk.report.pact.dao.catalog.product.ReportProductVariantDao;
 import com.hk.report.pact.service.catalog.product.ReportProductVariantService;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.order.ShippingOrder;
 import com.hk.constants.inventory.EnumInvTxnType;
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
 
 @Service
@@ -85,6 +86,50 @@ public class ReportProductVariantServiceImpl implements ReportProductVariantServ
     return stockReportDto;
   }
 
+  public List<RTOReportDto> getRTOProductsDetail(Date startDate, Date endDate) {
+    List<ShippingOrder> shippingOrderList = reportProductVariantDao.getShippingOrdersByReturnDate(startDate, endDate, EnumShippingOrderStatus.SO_Returned);
+    Iterator<ShippingOrder> iteratorShippingOrder = shippingOrderList.iterator();
+    List<RTOReportDto> rtoReportDtoList = new ArrayList<RTOReportDto>();
+    RTOReportDto rtoReportDto;
+
+    while(iteratorShippingOrder.hasNext()) {
+      ShippingOrder shippingOrder = iteratorShippingOrder.next();
+      List<RTOFineReportDto> rtoFineReportDtoList = reportProductVariantDao.getRTOFineProductVariantDetails(shippingOrder);
+      List<RTODamageReportDto> rtoDamageReportDtoList = reportProductVariantDao.getRTODamageProductVariantDetails(shippingOrder);
+
+      for(RTOFineReportDto rtoFineReportDto : rtoFineReportDtoList) {
+        rtoReportDto = new RTOReportDto();
+        Long rtoCheckInQty = rtoFineReportDto.getRtoCheckinCount();
+        ProductVariant productVariant = rtoFineReportDto.getProductVariant();
+        rtoReportDto.setProductName(productVariant.getProduct().getName());
+        rtoReportDto.setProductOptions(productVariant.getOptionsSlashSeparated());
+        rtoReportDto.setProductVariantId(productVariant.getId());
+        rtoReportDto.setRtoCheckinQty(rtoCheckInQty);
+        rtoReportDto.setRtoDamageCheckinQty(0L);
+        rtoReportDto.setRtoDate(shippingOrder.getShipment().getReturnDate());
+        rtoReportDto.setShippingOrderNumber(shippingOrder.getId());
+
+        rtoReportDtoList.add(rtoReportDto);
+      }
+
+      for(RTODamageReportDto rtoFineReportDto : rtoDamageReportDtoList) {
+        rtoReportDto = new RTOReportDto();
+        Long rtoDamageCheckInQty = rtoFineReportDto.getRtoDamageCheckinCount();
+        ProductVariant productVariant = rtoFineReportDto.getProductVariant();
+        rtoReportDto.setProductName(productVariant.getProduct().getName());
+        rtoReportDto.setProductOptions(productVariant.getOptionsSlashSeparated());
+        rtoReportDto.setProductVariantId(productVariant.getId());
+        rtoReportDto.setRtoCheckinQty(0L);
+        rtoReportDto.setRtoDamageCheckinQty(rtoDamageCheckInQty);
+        rtoReportDto.setRtoDate(shippingOrder.getShipment().getReturnDate());
+        rtoReportDto.setShippingOrderNumber(shippingOrder.getId());
+
+        rtoReportDtoList.add(rtoReportDto);
+      }
+    }
+    return rtoReportDtoList;
+  }
+  
   public ReportProductVariantDao getReportProductVariantDao() {
     return reportProductVariantDao;
   }

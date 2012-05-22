@@ -10,8 +10,12 @@ import org.springframework.stereotype.Repository;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.report.dto.inventory.InventorySoldDto;
 import com.hk.report.dto.inventory.ExpiryAlertReportDto;
+import com.hk.report.dto.inventory.RTOFineReportDto;
+import com.hk.report.dto.inventory.RTODamageReportDto;
 import com.hk.report.pact.dao.catalog.product.ReportProductVariantDao;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.domain.order.ShippingOrder;
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 
 @Repository
 public class ReportProductVariantDaoImpl extends BaseDaoImpl implements ReportProductVariantDao {
@@ -83,4 +87,25 @@ public class ReportProductVariantDaoImpl extends BaseDaoImpl implements ReportPr
     return (Long) getSession().createQuery(query).setParameter("productVariant", productVariant).setParameter("qty", 1L)
         .setParameter("startDate", startDate).setParameter("endDate", endDate).setParameter("warehouse", warehouse.getId()).uniqueResult();
   }
+
+  public List<RTOFineReportDto> getRTOFineProductVariantDetails(ShippingOrder shippingOrder) {
+    String query = "select pvi.sku.productVariant as productVariant, count(pvi.id) as rtoCheckinCount from ProductVariantInventory pvi  " +
+        "where pvi.shippingOrder = :shippingOrder and pvi.qty = :qty group by pvi.lineItem ";
+    return (List<RTOFineReportDto>) getSession().createQuery(query).setParameter("shippingOrder", shippingOrder).setParameter("qty", 1L)
+        .setResultTransformer(Transformers.aliasToBean(RTOFineReportDto.class)).list();
+  }
+
+  public List<RTODamageReportDto> getRTODamageProductVariantDetails(ShippingOrder shippingOrder) {
+    String query = "select pvdi.sku.productVariant as productVariant ,count(pvdi.id) as rtoDamageCheckinCount from ProductVariantDamageInventory pvdi " +
+        "where pvdi.shippingOrder = :shippingOrder and pvdi.qty = :qty group by pvdi.lineItem ";
+    return (List<RTODamageReportDto>) getSession().createQuery(query).setParameter("shippingOrder", shippingOrder).setParameter("qty", 1L)
+            .setResultTransformer(Transformers.aliasToBean(RTODamageReportDto.class)).list();
+  }
+
+  public List<ShippingOrder> getShippingOrdersByReturnDate(Date startDate, Date endDate, EnumShippingOrderStatus shippingOrderStatus) {
+    String query = " from ShippingOrder so where so.shipment.returnDate between :startDate and :endDate and so.shippingOrderStatus.id = :shippingOrderStatus ";
+    return  (List<ShippingOrder>)getSession().createQuery(query).setParameter("startDate", startDate)
+        .setParameter("endDate", endDate).setParameter("shippingOrderStatus", shippingOrderStatus.getId()).list();
+  }
+
 }
