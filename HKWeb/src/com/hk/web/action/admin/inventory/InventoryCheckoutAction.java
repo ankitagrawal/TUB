@@ -461,4 +461,33 @@ public class InventoryCheckoutAction extends BaseAction {
   public void setEarlierCreationDate(String earlierCreationDate) {
     this.earlierCreationDate = earlierCreationDate;
   }
+
+  public String getEarlierCreationDate() {
+    return earlierCreationDate;
+  }
+
+  public boolean isWronglyPickedBox() {
+    return wronglyPickedBox;
+  }
+
+  public void setWronglyPickedBox(boolean wronglyPickedBox) {
+    this.wronglyPickedBox = wronglyPickedBox;
+  }
+
+  public String getEarlierExpiryDate() {
+    return earlierExpiryDate;
+  }
+
+  public void setEarlierExpiryDate(String earlierExpiryDate) {
+    this.earlierExpiryDate = earlierExpiryDate;
+  }
+
+  public String getEarlierMfgDate() {
+    return earlierMfgDate;
+  }
+
+  public void setEarlierMfgDate(String earlierMfgDate) {
+    this.earlierMfgDate = earlierMfgDate;
+  }
+   
 }
