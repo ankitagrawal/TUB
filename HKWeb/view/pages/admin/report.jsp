@@ -465,6 +465,47 @@
 <div class="reportBox">
   <s:form beanclass="com.hk.web.action.report.ReportAction" target="_blank">
     <fieldset class="right_label">
+      <legend>Stock Report By Product</legend>
+      <ul>
+        <li>
+          <label>Start
+            date</label><s:text class="date_input startDate" style="width:150px"
+                                formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startDate"/>
+        </li>
+        <li>
+          <label>End
+            date</label><s:text class="date_input endDate" style="width:150px"
+                                formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endDate"/>
+        </li>
+        <li>
+          <label>
+            Product Ids
+          </label><s:text name="productIdListCommaSeparated" style="width:200px"/>
+        </li>
+        <li>
+          (Enter Ids separated by comma)
+        </li>
+        <li>
+          <label>
+            Warehouse
+          </label>
+
+            <s:select name="warehouse" style="height:30px;font-size:1.2em;padding:1px;">
+              <c:forEach items="${whList}" var="wh">
+                <s:option value="${wh.id}">${wh.city}</s:option>
+              </c:forEach>
+            </s:select>
+
+        </li>
+      </ul>
+      <s:submit name="generateStockReport" value="Generate Report"/>
+    </fieldset>
+  </s:form>
+</div>
+
+<div class="reportBox">
+  <s:form beanclass="com.hk.web.action.report.ReportAction" target="_blank">
+    <fieldset class="right_label">
       <legend>Expiry Alert Report</legend>
       <ul>
         <li>
