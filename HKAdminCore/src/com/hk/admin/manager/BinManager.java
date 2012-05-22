@@ -167,7 +167,7 @@ public class BinManager {
 
   }
 
-  //added
+
   public boolean assignBinToSkuItems(Set<SkuItem> skuItemSet, Bin bin) {
     if (skuItemSet != null && skuItemSet.size() > 0) {
       for (SkuItem skuItem : skuItemSet) {
@@ -185,7 +185,7 @@ public class BinManager {
      if(skuItem!= null){
        try{
        skuItem.setBins(null);
-       skuItemDao.resetInventoryBySkuItem(skuItem);
+       skuItemDao.save(skuItem);
      }catch(Exception skuException){
         logger.error("error in deleting sku items " + skuException);
        }
@@ -198,7 +198,7 @@ public class BinManager {
       Warehouse warehouse = userService.getWarehouseForLoggedInUser();
       Bin bin = binDao.findByBarCodeAndWarehouse(location, warehouse);
      if(bin != null){
-      List<SkuItem> inStockSkuItems = skuItemDao.getInStockSkuItems(skuGroup);
+      List<SkuItem> inStockSkuItems = adminSkuItemDao.getInStockSkuItems(skuGroup);
       Set <SkuItem> inStockSkuItemsSet= new HashSet<SkuItem>(inStockSkuItems);
        status = this.assignBinToSkuItems(inStockSkuItemsSet, bin);
      }

@@ -21,6 +21,19 @@ public interface AdminSkuItemDao extends BaseDao {
 
     public List<SkuItem> getInStockSkuItemsByQty(Sku sku, Integer qty);
 
-    public List<SkuGroup> getInStockSkuGroups(Sku sku); 
+    public List<SkuGroup> getInStockSkuGroups(Sku sku);
+
+
+
+  public SkuItem getSkuItemToValidateDayZeroInventory(ProductVariant productVariant, String batchNumber);
+
+  public List<Warehouse> getWarehousesForSkuAndQty(List<Sku> skuList, Long qty);
+
+  public void resetInventoryByBrand(String brand);
+
+  public void resetInventory(ProductVariant productVariant);
+
+  public List<SkuGroup> getInStockSkuGroupsByCreateDate(Sku sku);
+
 
 }

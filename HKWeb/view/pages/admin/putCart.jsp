@@ -84,7 +84,7 @@
                 <th width="280px">Product Variant</th>
                 <th width="280px">Item</th>
                 <th width="280px">Suggesetd Location/Bin</th>
-                <th width="70px">Bin has Items</th>
+                <%--<th width="70px">Bin has Items</th>--%>
                 <th width="140px">Batch</th>
                 <th width="70px">Barcode</th>
                 <th width="70px">Check In Quantity Of Grn</th>
@@ -130,10 +130,10 @@
                         </s:link>)
                         </s:form>
                     </td>
-                    <td width="70px">
-                        <c:set var="entry" value="${ica.skuGroupQtyMapping}"/>
-                            ${entry[VarSkuGroup.sku.id]}
-                    </td>
+                    <%--<td width="70px">--%>
+                        <%--<c:set var="entry" value="${ica.skuGroupQtyMapping}"/>--%>
+                            <%--${entry[VarSkuGroup.sku.id]}--%>
+                    <%--</td>--%>
 
                     <td width="140px">
                             ${VarSkuGroup.batchNumber}

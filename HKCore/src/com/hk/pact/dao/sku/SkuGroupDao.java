@@ -13,10 +13,10 @@ public interface SkuGroupDao extends BaseDao {
   public List<SkuGroup> getAllCheckedInBatches(ProductVariant productVariant);
 
   public List<SkuGroup> getAllCheckedInBatches(Sku sku);
-
-  public void resetInventoryByBrand(String brand);
-
-  public void resetInventory(ProductVariant productVariant);
+//
+//  public void resetInventoryByBrand(String brand);
+//
+//  public void resetInventory(ProductVariant productVariant);
 
   public SkuGroup getSkuGroup(String barcode);
 

@@ -166,7 +166,7 @@ public class JobCartAction extends BaseAction {
         Sku sku = productLineItem.getSku();
 //        productVariantQty.put(productLineItem.getSku().getProductVariant().getId(), productLineItem.getQty());
         SkuGroup suggestedSkuGroup;
-        List<SkuGroup> skuGroupListPerSku = skuItemDao.getInStockSkuGroups(sku);
+        List<SkuGroup> skuGroupListPerSku = adminSkuItemDao.getInStockSkuGroups(sku);
         if (skuGroupListPerSku != null && skuGroupListPerSku.size() > 0) {
           suggestedSkuGroup = skuGroupListPerSku.get(0);
           if (suggestedSkuGroup != null) {
@@ -353,7 +353,7 @@ public class JobCartAction extends BaseAction {
          }
          logger.debug("Number of Sku List : " + skuList.size());
          logger.debug("Number of Sku Groups : " + skuGroupListPerSku.size());
-         for (Sku sku : skuList) {
+         for (Sku sku : skuList) {                                        
            skuGroupListPerSku = skuGroupDao.getCurrentCheckedInBatchNotInGrn(grn, sku);
            if (skuGroupListPerSku != null && skuGroupListPerSku.size() > 0) {
              SkuGroup skuGroup = getSkuGroupWithMaxId(skuGroupListPerSku);
@@ -367,28 +367,33 @@ public class JobCartAction extends BaseAction {
          }
          for (List<SkuGroup> skugrouplist : listOfSkuGroupListPerGrn) {
            for (SkuGroup skuGroup : skugrouplist) {
-             List<SkuItem> skuItemListPerSkuGroup = skuItemDao.getInStockSkuItems(skuGroup); //NO. of sku item per sku group
+             List<SkuItem> skuItemListPerSkuGroup = adminSkuItemDao.getInStockSkuItems(skuGroup); //NO. of sku item per sku group
              skuGroupQtyMappingPerGrn.put(skuGroup.getId(), skuItemListPerSkuGroup.size());
            }
          }
 
-
-         for (SkuGroup skugroup : skuGroupListsuggested) {
+        if(skuGroupListsuggested.size() > 0) {
+         for (SkuGroup skugroup : skuGroupListsuggested) {                
            Sku skuv = skugroup.getSku();
-           List<SkuItem> skuItemListPerSkuGroup = skuItemDao.getInStockSkuItems(skugroup);
-           skuGroupQtyMapping.put(skuv.getId(), skuItemListPerSkuGroup.size());
+           List<SkuItem> skuItemListPerSkuGroup = adminSkuItemDao.getInStockSkuItems(skugroup);
+//           skuGroupQtyMapping.put(skuv.getId(), skuItemListPerSkuGroup.size());
            List<Long> BinLocationPerSkuGroup = binManager.getListOfBinForSkuItemList(new HashSet<SkuItem>(skuItemListPerSkuGroup));
            Bin binWithMaxId=null;
            if (null != BinLocationPerSkuGroup && BinLocationPerSkuGroup.size() > 0) {
             binWithMaxId = binDao.get(Bin.class,BinLocationPerSkuGroup.get(0));
            skuBinMapping.put(skuv.getId(), binWithMaxId);
             }
-           logger.debug("Sku Group Id : " + skugroup.getId() + "completeBarCodeBySkuGroup : " + binWithMaxId.getBarcode());
-         }
+           logger.debug("Sku Group Id : " + skugroup.getId());
 
+         }
+       }
 
        } catch (Exception E) {
+
+         System.out.print("Exception occur while generating Put List" + E.getMessage());
          logger.error("Exception occur while generating Put List" + E.getMessage());
+         addRedirectAlertMessage(new SimpleMessage("Exception occur while generating Put List " + grn.getId()));
+         return new ForwardResolution("/pages/admin/putCart.jsp");
        }
      }
 
