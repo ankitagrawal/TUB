@@ -1,6 +1,6 @@
 package com.akube.framework.filter;
 
-import com.hk.impl.dao.marketing.CampaignTrackingDaoImpl;
+//import com.hk.impl.dao.marketing.CampaignTrackingDaoImpl;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.pact.service.UserService;
 import com.hk.util.OrderSourceFinder;
@@ -31,18 +31,22 @@ import org.slf4j.LoggerFactory;
  * To change this template use File | Settings | File Templates.
  */
 public class CampaignTrackingFilter implements Filter {
-  CampaignTrackingDaoImpl campaignTrackingDaoImpl = ServiceLocatorFactory.getService(CampaignTrackingDaoImpl.class);  
+/*
+  //TO be uncommented when filter are made live
+  
+  CampaignTrackingDaoImpl campaignTrackingDaoImpl = ServiceLocatorFactory.getService(CampaignTrackingDaoImpl.class);
   OrderSourceFinder orderSourceFinder = ServiceLocatorFactory.getService(OrderSourceFinder.class);
   UserService userService = ServiceLocatorFactory.getService(UserService.class);
 
   private static org.slf4j.Logger logger = LoggerFactory.getLogger(CampaignTrackingFilter.class);
 
+*/
 //  @Session(key = HealthkartConstants.Session.newSession)
 //  private Boolean newSession;
 
 
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-
+ /*
     if (!(request instanceof HttpServletRequest)) {
       chain.doFilter(request, response);
       return;
@@ -68,8 +72,10 @@ public class CampaignTrackingFilter implements Filter {
        httpRequest.getSession().setAttribute(HttpRequestAndSessionConstants.SECONDARY_REFERRER_ID, ReferrerIds.get(HttpRequestAndSessionConstants.SECONDARY_REFERRER_ID));
     }
     chain.doFilter(request, response);
+ */   
   }
 
+  /*
   public PrincipalImpl getPrincipal() {
     return (PrincipalImpl) SecurityUtils.getSubject().getPrincipal();
   }
@@ -78,7 +84,7 @@ public class CampaignTrackingFilter implements Filter {
     if (getPrincipal() == null) return null;
     return userService.getUserById(getPrincipal().getId());
   }
-
+  */
   public void init(FilterConfig config) throws ServletException {}
 
   public void destroy() {}
