@@ -82,7 +82,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
     private List<GoodsReceivedNote>       grnListForPurchaseInvoice = new ArrayList<GoodsReceivedNote>();
     private String                        productVariantId;
     private Boolean                       isReconciled;
-
+    private Warehouse                     warehouse;
     @DefaultHandler
     public Resolution pre() {
 
@@ -90,7 +90,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
             purchaseInvoiceList = purchaseInvoiceDao.listPurchaseInvoiceWithProductVariant(productVariant);
         } else {
             purchaseInvoicePage = purchaseInvoiceDao.searchPurchaseInvoice(purchaseInvoice, purchaseInvoiceStatus, createdBy, invoiceNumber, tinNumber, supplierName, getPageNo(),
-                    getPerPage(), isReconciled);
+                    getPerPage(), isReconciled , warehouse);
             purchaseInvoiceList = purchaseInvoicePage.getList();
         }
         // purchaseInvoiceList = purchaseInvoiceDao.listAll();
@@ -203,6 +203,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
         params.add("purchaseInvoiceStatus");
         params.add("createdBy");
         params.add("purchaseInvoice");
+        params.add("warehouse");
         return params;
     }
 
@@ -301,4 +302,12 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
     public void setReconciled(Boolean reconciled) {
         isReconciled = reconciled;
     }
+
+    public Warehouse getWarehouse() {
+        return warehouse;
+   }
+
+   public void setWarehouse(Warehouse warehouse) {
+       this.warehouse = warehouse;
+   }
 }

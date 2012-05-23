@@ -59,7 +59,9 @@
                 ${paymentHistoryBean.purchaseInvoice.createdBy.name}</td>
           </tr>
         </table>
-    </fieldset>    
+    </fieldset>
+
+ <%-- search is not required   
       <fieldset class="right_label" style="display:none;">
 			<s:form beanclass="com.hk.web.action.admin.payment.PaymentHistoryAction">
 				<label>Search by Purchase Order ID</label>
@@ -72,11 +74,10 @@
 				<s:text name="purchaseInvoiceId" id="purchaseInvoiceId" style="width:200px;"/>
 				<br/>
 				<br/>
-				<s:submit name="search" value="Search"/>
-        <%--<s:submit name="generatePincodeExcel"    value="Download Pincode Xls"/>--%>
+				<s:submit name="search" value="Search"/>    
 			</s:form>
         </fieldset>
-
+--%>
        <fieldset>
          <c:if test="${paymentHistoryBean.purchaseOrderId != null}">
            <label>

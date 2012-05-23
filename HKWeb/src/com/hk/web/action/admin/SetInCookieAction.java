@@ -15,17 +15,24 @@ import com.hk.constants.core.HealthkartConstants;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.filter.WebContext;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Cookie;
+
 @Secure
-public class SetInSessionAction extends BaseAction {
+public class SetInCookieAction extends BaseAction {
 
   private String wantedCOD = "false";
 
   @DefaultHandler
   @JsonHandler
   public Resolution pre() {
-    WebContext.getRequest().getSession().setAttribute(HealthkartConstants.Session.wantedCOD, wantedCOD);
+    HttpServletResponse httpResponse = WebContext.getResponse();
+    Cookie wantedCODCookie = new Cookie(HealthkartConstants.Session.wantedCOD, wantedCOD);
+    wantedCODCookie.setPath("/");
+    wantedCODCookie.setMaxAge(3600);
+    httpResponse.addCookie(wantedCODCookie);
     Map<String, Object> data = new HashMap<String, Object>(1);
-    HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Value set in session", data);
+    HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Value set in Cookie", data);
     return new JsonResolution(healthkartResponse);
   }
 

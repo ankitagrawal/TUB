@@ -13,6 +13,7 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.po.PurchaseInvoice;
 import com.hk.domain.inventory.po.PurchaseInvoiceStatus;
 import com.hk.domain.user.User;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
 
 @SuppressWarnings("unchecked")
@@ -20,7 +21,7 @@ import com.hk.impl.dao.BaseDaoImpl;
 public class PurchaseInvoiceDaoImpl extends BaseDaoImpl implements PurchaseInvoiceDao {
 
     public Page searchPurchaseInvoice(PurchaseInvoice purchaseInvoice, PurchaseInvoiceStatus purchaseInvoiceStatus, User createdBy, String invoiceNumber, String tinNumber,
-            String supplierName, int pageNo, int perPage, Boolean isReconciled) {
+            String supplierName, int pageNo, int perPage, Boolean isReconciled , Warehouse warehouse) {
 
         DetachedCriteria purchaseInvoiceCriteria = DetachedCriteria.forClass(PurchaseInvoice.class);
 
@@ -52,6 +53,9 @@ public class PurchaseInvoiceDaoImpl extends BaseDaoImpl implements PurchaseInvoi
             } else {
                 purchaseInvoiceCriteria.add(Restrictions.eq("reconciled", isReconciled));
             }
+        }
+        if(warehouse!= null){
+          purchaseInvoiceCriteria.add(Restrictions.eq("warehouse",warehouse));
         }
 
         purchaseInvoiceCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));
