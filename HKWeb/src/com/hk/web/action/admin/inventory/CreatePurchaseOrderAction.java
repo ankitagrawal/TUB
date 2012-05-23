@@ -23,6 +23,7 @@ import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.user.User;
 import com.hk.impl.dao.user.UserDaoImpl;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.user.UserDao;
 import com.hk.web.action.error.AdminPermissionAction;
 
 @Secure(hasAnyPermissions = { PermissionConstants.PO_MANAGEMENT }, authActionBean = AdminPermissionAction.class)
@@ -36,7 +37,7 @@ public class CreatePurchaseOrderAction extends BaseAction {
     @Autowired
     BaseDao               baseDao;
     @Autowired
-    UserDaoImpl               userDao;
+    UserDao               userDao;
 
     private Supplier      supplier;
     private PurchaseOrder purchaseOrder;
@@ -95,13 +96,13 @@ public class CreatePurchaseOrderAction extends BaseAction {
         this.baseDao = baseDao;
     }
 
-    public UserDaoImpl getUserDao() {
+    public UserDao getUserDao() {
         return userDao;
     }
 
-    public void setUserDao(UserDaoImpl userDao) {
+    public void setUserDao(UserDao userDao) {
         this.userDao = userDao;
     }
-    
+
     
 }
