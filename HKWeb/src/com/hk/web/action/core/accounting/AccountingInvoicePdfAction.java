@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.ForwardResolution;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -52,11 +53,16 @@ public class AccountingInvoicePdfAction extends BaseAction {
   ShippingOrderService                       shippingOrderService;
 
   private SimpleDateFormat                   sdf                           = new SimpleDateFormat("dd-MM-yyyy");
-  private List<B2bUserDetails>               allB2bUserDetailsList;
   private List<ShippingOrder>                shippingOrderList;
+  private Date                               startDate;
+  private Date                               endDate;
 
 
   public Resolution pre() {
+    return new ForwardResolution("/pages/admin/finance.jsp");
+  }
+
+  public Resolution downloadAccountingInvoicePDF() {
     logger.info("Inside pre method of AccountingInvoicePdfAction.");
 
     String pdfFilePath = null;
@@ -110,4 +116,27 @@ public class AccountingInvoicePdfAction extends BaseAction {
     return new RedirectResolution(ShipmentAwaitingQueueAction.class);
   }
 
+  public List<ShippingOrder> getShippingOrderList() {
+    return shippingOrderList;
+  }
+
+  public void setShippingOrderList(List<ShippingOrder> shippingOrderList) {
+    this.shippingOrderList = shippingOrderList;
+  }
+
+  public Date getStartDate() {
+    return startDate;
+  }
+
+  public void setStartDate(Date startDate) {
+    this.startDate = startDate;
+  }
+
+  public Date getEndDate() {
+    return endDate;
+  }
+
+  public void setEndDate(Date endDate) {
+    this.endDate = endDate;
+  }
 }

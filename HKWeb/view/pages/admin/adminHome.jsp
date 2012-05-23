@@ -278,6 +278,17 @@
 
 </div>
 
+<div class="cl"></div>
+
+<div class="left roundBox">
+  <h2>Finance</h2>
+
+  <h3>
+    <s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoicePdfAction"
+            title="Download AccountingInvoice PDFs" event="pre">Download AccountingInvoice PDFs</s:link></h3>
+
+</div>
+
 <script type="text/javascript">
   $(document).ready(function() {
     var max_ht = 0;
