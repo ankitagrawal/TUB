@@ -18,6 +18,8 @@ import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumPaymentStatus;
+import com.hk.constants.HttpRequestAndSessionConstants;
+import com.hk.constants.referrer.EnumPrimaryReferrerForOrder;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.builder.CartLineItemBuilder;
@@ -29,12 +31,7 @@ import com.hk.domain.catalog.product.combo.ComboInstance;
 import com.hk.domain.catalog.product.combo.ComboInstanceHasProductVariant;
 import com.hk.domain.matcher.CartLineItemMatcher;
 import com.hk.domain.offer.OfferInstance;
-import com.hk.domain.order.CartLineItem;
-import com.hk.domain.order.CartLineItemConfig;
-import com.hk.domain.order.CartLineItemExtraOption;
-import com.hk.domain.order.Order;
-import com.hk.domain.order.OrderCategory;
-import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.order.*;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.user.User;
@@ -59,6 +56,7 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.store.StoreService;
 import com.hk.pricing.PricingEngine;
 import com.hk.util.OrderUtil;
+import com.hk.web.filter.WebContext;
 
 @Component
 public class OrderManager {
@@ -141,6 +139,22 @@ public class OrderManager {
         if (existingOrderNow != null) {
             return existingOrderNow;
         }
+
+      if(WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.PRIMARY_REFERRER_ID) != null){
+        Long primaryReferrerForOrderId = (Long)WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.PRIMARY_REFERRER_ID);
+        order.setPrimaryReferrerForOrder(getBaseDao().get(PrimaryReferrerForOrder.class, primaryReferrerForOrderId));
+      }
+      if(WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.SECONDARY_REFERRER_ID) != null){
+        Long secondaryReferrerForOrderId = (Long)WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.SECONDARY_REFERRER_ID);
+        order.setSecondaryReferrerForOrder(getBaseDao().get(SecondaryReferrerForOrder.class, secondaryReferrerForOrderId));
+      }
+      if(user.getOrders().size() == 0 && user.getReferredBy() != null){
+        order.setPrimaryReferrerForOrder(getBaseDao().get(PrimaryReferrerForOrder.class, EnumPrimaryReferrerForOrder.RFERRAL.getId()));
+      }
+      if(WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.UTM_CAMPAIGN) != null){
+        order.setUtmCampaign((String)WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.UTM_CAMPAIGN));
+      }
+
 
         order = getOrderService().save(order);
         return order;
