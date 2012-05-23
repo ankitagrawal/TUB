@@ -162,7 +162,7 @@
       </div>
     </div>
   </div>
-  <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.itvCommonPlugins.js"></script>
+  <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.itvCommonPlugins.js"></script>
   <script type="text/javascript">
     $(document).ready(function() {
        $("#searchbox").autocomplete({url:'${pageContext.request.contextPath}/autocomplete-search/'});
