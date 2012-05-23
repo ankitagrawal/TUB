@@ -113,7 +113,7 @@ public class ReportAction extends BaseAction {
     private CategoryService                        categoryService;
     @Autowired
     OrderManager                                   orderManager;
-    @Autowired
+   // @Autowired
     EmailManager                                   emailManager;
     @Autowired
     ProductVariantDao                              productVariantDao;

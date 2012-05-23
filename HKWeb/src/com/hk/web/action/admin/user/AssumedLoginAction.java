@@ -34,7 +34,7 @@ public class AssumedLoginAction extends BaseAction {
     private UserService   userService;
     @Autowired
     private RoleService   roleService;
-    @Autowired
+    //@Autowired
     private EmailManager  emailManager;
 
     public Resolution login() {

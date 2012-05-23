@@ -38,7 +38,7 @@ public class NotifyMeAction extends BaseAction {
     TempTokenDao            tempTokenDao;
     @Autowired
     LinkManager             linkManager;
-    @Autowired
+    //@Autowired
     EmailManager            emailManager;
     @Autowired
     NotifyMeDao             notifyMeDao;

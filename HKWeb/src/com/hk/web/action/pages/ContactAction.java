@@ -27,74 +27,75 @@ import com.hk.manager.EmailManager;
 @Component
 public class ContactAction extends BaseAction {
 
-  @Validate(required = true, maxlength = 60)
-  private String name;
+    @Validate(required = true, maxlength = 60)
+    private String name;
 
-  @Validate(required = true, maxlength = 60, converter = EmailTypeConverter.class)
-  private String email;
+    @Validate(required = true, maxlength = 60, converter = EmailTypeConverter.class)
+    private String email;
 
-  @Validate(maxlength = 20)
-  private String phone;
+    @Validate(maxlength = 20)
+    private String phone;
 
-  @Validate(required = true)
-  private String msgSubject;
+    @Validate(required = true)
+    private String msgSubject;
 
-  @Validate(required = true)
-  private String msgText;
-  @Autowired
-   EmailManager emailManager;
+    @Validate(required = true)
+    private String msgText;
+    // @Autowired
+    EmailManager   emailManager;
 
-  @DontValidate
-  @DefaultHandler
-  public Resolution pre() {
-    return new ForwardResolution("/pages/static/contactUs.jsp");
-  }
-
-  @ValidationMethod
-  public void captchaValidation() {
-    String challengeField = getContext().getRequest().getParameter("recaptcha_challenge_field");
-    String responseField = getContext().getRequest().getParameter("recaptcha_response_field");
-    if (StringUtils.isBlank(responseField)) responseField = "null";
-
-    ReCaptcha captcha = ReCaptchaFactory.newReCaptcha(HealthkartConstants.recaptchaPublicKey, HealthkartConstants.recaptchaPrivateKey, false);
-    ReCaptchaResponse response = captcha.checkAnswer(getContext().getRequest().getRemoteAddr(), challengeField, responseField);
-    if (!response.isValid()) {
-      getContext().getValidationErrors().add("Captcha", new LocalizableError("/Signup.action.captcha.invalid"));
+    @DontValidate
+    @DefaultHandler
+    public Resolution pre() {
+        return new ForwardResolution("/pages/static/contactUs.jsp");
     }
-  }
 
-  public Resolution sendMessage() {
-    emailManager.sendContactUsMail(name, email, phone, msgSubject, msgText);
+    @ValidationMethod
+    public void captchaValidation() {
+        String challengeField = getContext().getRequest().getParameter("recaptcha_challenge_field");
+        String responseField = getContext().getRequest().getParameter("recaptcha_response_field");
+        if (StringUtils.isBlank(responseField))
+            responseField = "null";
 
-    addRedirectAlertMessage(new SimpleMessage("Your message has been sent. We'll get back to you within one business day."));
-    return new RedirectResolution(ContactAction.class);
-  }
+        ReCaptcha captcha = ReCaptchaFactory.newReCaptcha(HealthkartConstants.recaptchaPublicKey, HealthkartConstants.recaptchaPrivateKey, false);
+        ReCaptchaResponse response = captcha.checkAnswer(getContext().getRequest().getRemoteAddr(), challengeField, responseField);
+        if (!response.isValid()) {
+            getContext().getValidationErrors().add("Captcha", new LocalizableError("/Signup.action.captcha.invalid"));
+        }
+    }
 
-  public void setName(String name) {
-    this.name = name;
-  }
+    public Resolution sendMessage() {
+        emailManager.sendContactUsMail(name, email, phone, msgSubject, msgText);
 
-  public void setEmail(String email) {
-    this.email = email;
-  }
+        addRedirectAlertMessage(new SimpleMessage("Your message has been sent. We'll get back to you within one business day."));
+        return new RedirectResolution(ContactAction.class);
+    }
 
-  public void setPhone(String phone) {
-    this.phone = phone;
-  }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-  public String getMsgSubject() {
-    return msgSubject;
-  }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-  public void setMsgSubject(String msgSubject) {
-    this.msgSubject = msgSubject;
-  }
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
-  public String getMsgText() {
-    return msgText;
-  }
+    public String getMsgSubject() {
+        return msgSubject;
+    }
 
-  public void setMsgText(String msgText) {
-    this.msgText = msgText;
-  }
+    public void setMsgSubject(String msgSubject) {
+        this.msgSubject = msgSubject;
+    }
+
+    public String getMsgText() {
+        return msgText;
+    }
+
+    public void setMsgText(String msgText) {
+        this.msgText = msgText;
+    }
 }

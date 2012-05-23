@@ -46,7 +46,7 @@ public class SendDiscountCouponAction extends BaseAction implements ValidationEr
     private Category             topLevelCategory;
     @Autowired
     SMSManager                   smsManager;
-    @Autowired
+   // @Autowired
     EmailManager                 emailManager;
     @Autowired
     DiscountCouponMailingListDao discountCouponMailingListDao;
