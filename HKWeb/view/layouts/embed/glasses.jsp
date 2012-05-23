@@ -396,7 +396,7 @@
 <!-- End Tabs-->
 </div>
 
-
+<script type="text/javascript" src="<hk:vhostJs/>/js/jquery-ui.min.js"></script>
 <link href="<hk:vhostCss/>/css/jquery-ui.css" rel="stylesheet" type="text/css"/>
 
 <style type="text/css">
