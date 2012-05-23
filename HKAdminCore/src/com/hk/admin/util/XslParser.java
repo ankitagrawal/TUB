@@ -547,7 +547,7 @@ public class XslParser {
         HSSFWorkbook workbook = new HSSFWorkbook(objInFileSys);
 
         // Assuming there is only one sheet, the first one only will be picked
-        HSSFSheet defaultPincodeSheet = workbook.getSheet("default_courier");
+        HSSFSheet defaultPincodeSheet = workbook.getSheet(XslConstants.DEFAULT_COURIER_SHEET);
         Iterator<Row> objRowIt = defaultPincodeSheet.rowIterator();
         Iterator objCellIterator = null;
 

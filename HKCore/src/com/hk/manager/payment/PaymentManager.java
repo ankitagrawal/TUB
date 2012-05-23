@@ -37,6 +37,10 @@ import com.hk.pact.service.payment.PaymentService;
 import com.hk.util.TokenUtils;
 import com.hk.web.filter.WebContext;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Cookie;
+
 /**
  * Author: Kani Date: Jan 3, 2009
  */
@@ -255,20 +259,28 @@ public class PaymentManager {
             order = getOrderManager().orderPaymentReceieved(payment);
 
             // Adding online payment cashback reward points for Orders above 1000.
-            String wantedCOD = "false";
-            if (WebContext.getRequest().getSession().getAttribute(HealthkartConstants.Session.wantedCOD) != null) {
-                wantedCOD = (String) WebContext.getRequest().getSession().getAttribute(HealthkartConstants.Session.wantedCOD);
-                if (wantedCOD.equals("true") && EnumPaymentMode.getPrePaidPaymentModes().contains(payment.getPaymentMode().getId()) && order.getPayment().getAmount() < 1000.0) {
+            HttpServletRequest httpRequest = WebContext.getRequest();
+            HttpServletResponse httpResponse = WebContext.getResponse();
+            if (httpRequest.getCookies() != null) {
+              for (Cookie cookie : httpRequest.getCookies()) {
+                if (cookie.getName() != null && cookie.getName().equals(HealthkartConstants.Session.wantedCOD)) {
+                  if (cookie.getValue().equals("true")) {
                     DecimalFormat df = new DecimalFormat("#.##");
                     Double cashBack = Double.valueOf(df.format(order.getPayment().getAmount() * cashBackPercentage));
-                    RewardPoint rewardPoint = getRewardPointService().addRewardPoints(order.getUser(), null, order, cashBack, "Online payment cashback",
+                     RewardPoint rewardPoint = getRewardPointService().addRewardPoints(order.getUser(), null, order, cashBack, "COD->Online Payment Cashback",
                             EnumRewardPointStatus.APPROVED, getRewardPointService().getRewardPointMode(EnumRewardPointMode.HK_CASHBACK));
                     getReferrerProgramManager().approveRewardPoints(Arrays.asList(rewardPoint), null);
-                    WebContext.getRequest().getSession().setAttribute(HealthkartConstants.Session.wantedCOD, "false");
-                    logger.debug("Awarded rewardpoints for COD->Prepaid conversion.");
+                    logger.info("Awarded reward points for COD->Prepaid conversion. OrderId=" + order.getId());
+                    break;
+                  }
                 }
+              }
             }
-
+            //Resetting value and expiring cookie
+            Cookie wantedCODCookie = new Cookie(HealthkartConstants.Session.wantedCOD, "false");
+            wantedCODCookie.setPath("/");
+            wantedCODCookie.setMaxAge(0);
+            httpResponse.addCookie(wantedCODCookie);
         }
         return order;
     }

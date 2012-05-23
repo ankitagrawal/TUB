@@ -99,8 +99,8 @@
 					src="<hk:vhostImage/>/images/banners/pay_online_banner.jpg">
 				</div>
 				<div style="display: none;"><s:link
-					beanclass="com.hk.web.action.admin.SetInSessionAction"
-					id="setInSessionLink" /></div>
+					beanclass="com.hk.web.action.admin.SetInCookieAction"
+					id="setInCookieLink" /></div>
 				<div class='outer'>
 				<div class='left_controls tabs'>
 				<ul>
@@ -358,7 +358,7 @@
       if(this.id == "tab4" && ${orderSummary.codAllowed} && ${orderSummary.pricingDto.grandTotalPayable < 1000.0}){
         $('.offer-banner').css("visibility", "visible");
         $.getJSON(
-            $('#setInSessionLink').attr('href'), {wantedCOD: "true"},
+            $('#setInCookieLink').attr('href'), {wantedCOD: "true"},
             function(res) {
               if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
               } else {                                                              
@@ -382,7 +382,7 @@
       if(sTab == "tab4" && ${orderSummary.codAllowed} && ${orderSummary.pricingDto.grandTotalPayable < 1000.0}){
          $('.offer-banner').css("visibility", "visible");
         $.getJSON(
-            $('#setInSessionLink').attr('href'), {wantedCOD: "true"},
+            $('#setInCookieLink').attr('href'), {wantedCOD: "true"},
             function(res) {
               if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
               } else {

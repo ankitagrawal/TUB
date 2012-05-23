@@ -79,6 +79,7 @@ public class XslConstants {
     public static final String    TECH_PROCESS_COURIER_ID         = "TECH_PROCESS_COURIER_ID";
     public static final String    ESTIMATED_SHIPPING_COST_COD     = "ESTIMATED_SHIPPING_COST_COD";
     public static final String    ESTIMATED_SHIPPING_COST_NON_COD = "ESTIMATED_SHIPPING_COST_TECH";
+    public static final String    DEFAULT_COURIER_SHEET           = "DEFAULT_COURIER";
 
     public static final String    SUPPLIER_TIN                    = "SUPPLIER_TIN";
     public static final String    SUPPLIER_STATE                  = "SUPPLIER_STATE";

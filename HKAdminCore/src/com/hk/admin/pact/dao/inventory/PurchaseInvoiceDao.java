@@ -7,12 +7,13 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.po.PurchaseInvoice;
 import com.hk.domain.inventory.po.PurchaseInvoiceStatus;
 import com.hk.domain.user.User;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.BaseDao;
 
 public interface PurchaseInvoiceDao extends BaseDao {
 
     public Page searchPurchaseInvoice(PurchaseInvoice purchaseInvoice, PurchaseInvoiceStatus purchaseInvoiceStatus, User createdBy, String invoiceNumber, String tinNumber,
-            String supplierName, int pageNo, int perPage,Boolean isReconciled);
+            String supplierName, int pageNo, int perPage,Boolean isReconciled, Warehouse warehouse);
 
     public List<PurchaseInvoice> listPurchaseInvoiceWithProductVariant(ProductVariant productVariant);
 
