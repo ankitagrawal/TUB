@@ -16,6 +16,7 @@ import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.user.UserDaoImpl;
 import com.hk.pact.dao.user.UserCartDao;
+import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.store.StoreService;
 import com.hk.util.TokenUtils;
@@ -25,7 +26,7 @@ import com.shiro.PrincipalImpl;
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    private UserDaoImpl     userDao;
+    private UserDao     userDao;
     @Autowired
     private UserCartDao     userCartDao;
     @Autowired
@@ -154,7 +155,7 @@ public class UserServiceImpl implements UserService {
     
     
 
-    public UserDaoImpl getUserDao() {
+    public UserDao getUserDao() {
         return userDao;
     }
 

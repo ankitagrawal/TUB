@@ -53,7 +53,7 @@ import com.hk.pact.service.order.OrderService;
 import com.hk.util.HtmlUtil;
 
 @SuppressWarnings("unchecked")
-@Component
+//@Component
 public class EmailManager {
 
     private static Logger     logger                        = LoggerFactory.getLogger(EmailManager.class);

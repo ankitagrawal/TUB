@@ -24,6 +24,7 @@ import com.hk.helper.MenuHelper;
 import com.hk.impl.dao.catalog.category.CategoryImageDaoImpl;
 import com.hk.manager.UserManager;
 import com.hk.pact.dao.content.PrimaryCategoryHeadingDao;
+import com.hk.pact.service.TestTxnService;
 import com.hk.pact.service.catalog.CategoryService;
 
 // @HttpCache(expires=20000)
@@ -52,8 +53,13 @@ public class HomeAction extends BaseAction {
     @Value("#{hkEnvProps['" + Keys.Env.hkNoReplyEmail + "']}")
     private String               testProperty;
 
+    @Autowired
+    TestTxnService testService;
+    
     public Resolution pre() {
         menuHelper.postConstruction();
+        
+        testService.addTestBadge();
         // IN CASE OF REVERT COMMENT EVERYTHING EXCEPT THE FORWARD RESOLUTION TO HOME.JSP AND ALSO REPLACE THE DYNAMIC
         // HOME.JSP WITH THE HARD CODED ONE
         System.out.println("1");
