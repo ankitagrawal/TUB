@@ -1,6 +1,15 @@
 package com.akube.framework.filter;
 
+import com.hk.impl.dao.marketing.CampaignTrackingDaoImpl;
+import com.hk.service.ServiceLocatorFactory;
+import com.hk.pact.service.UserService;
+import com.hk.util.OrderSourceFinder;
+import com.hk.constants.HttpRequestAndSessionConstants;
+import com.hk.domain.user.User;
+import com.shiro.PrincipalImpl;
+
 import java.io.IOException;
+import java.util.Map;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -8,6 +17,11 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.shiro.SecurityUtils;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * Created by IntelliJ IDEA.
@@ -17,10 +31,11 @@ import javax.servlet.ServletResponse;
  * To change this template use File | Settings | File Templates.
  */
 public class CampaignTrackingFilter implements Filter {
- /* CampaignTrackingDao campaignTrackingDao = ServiceLocatorFactory.getService(CampaignTrackingDao.class);
-  UserDao userDaoProvider = ServiceLocatorFactory.getService(UserDao.class);
+  CampaignTrackingDaoImpl campaignTrackingDaoImpl = ServiceLocatorFactory.getService(CampaignTrackingDaoImpl.class);  
+  OrderSourceFinder orderSourceFinder = ServiceLocatorFactory.getService(OrderSourceFinder.class);
+  UserService userService = ServiceLocatorFactory.getService(UserService.class);
 
-  private static org.slf4j.Logger logger = LoggerFactory.getLogger(CampaignTrackingFilter.class);*/
+  private static org.slf4j.Logger logger = LoggerFactory.getLogger(CampaignTrackingFilter.class);
 
 //  @Session(key = HealthkartConstants.Session.newSession)
 //  private Boolean newSession;
@@ -28,36 +43,41 @@ public class CampaignTrackingFilter implements Filter {
 
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
-   /* if (!(request instanceof HttpServletRequest)) {
+    if (!(request instanceof HttpServletRequest)) {
       chain.doFilter(request, response);
       return;
     }
 
     HttpServletRequest httpRequest = (HttpServletRequest) request;
 
-    String utm_source = httpRequest.getParameter("utm_source");
-    String utm_campaign = httpRequest.getParameter("utm_campaign");
-    String utm_medium = httpRequest.getParameter("utm_medium");
+    String utm_source = httpRequest.getParameter(HttpRequestAndSessionConstants.UTM_SOURCE);
+    String utm_campaign = httpRequest.getParameter(HttpRequestAndSessionConstants.UTM_CAMPAIGN);
+    String utm_medium = httpRequest.getParameter(HttpRequestAndSessionConstants.UTM_MEDIUM);
+
+    Map ReferrerIds = orderSourceFinder.getOrderReferrer(httpRequest);
 
     //if its a new session
-    Object newSession = httpRequest.getSession().getAttribute("newSession");
+    Object newSession = httpRequest.getSession().getAttribute(HttpRequestAndSessionConstants.NEW_SESSION);
     if(newSession == null || !newSession.equals(true)) {
-      String referrer = httpRequest.getHeader("referer");
-       campaignTrackingDao.saveRequest(referrer != null ? referrer : null, httpRequest.getRequestURL().toString(), utm_source, utm_medium, utm_campaign, getPrincipalUser());
-       httpRequest.getSession().setAttribute("newSession", true);
-       httpRequest.getSession().setAttribute("referrer", referrer);
+      String referrer = httpRequest.getHeader(HttpRequestAndSessionConstants.REFERER);
+       campaignTrackingDaoImpl.saveRequest(referrer != null ? referrer : null, httpRequest.getRequestURL().toString(), utm_source, utm_medium, utm_campaign, getPrincipalUser());
+       httpRequest.getSession().setAttribute(HttpRequestAndSessionConstants.NEW_SESSION, true);
+       httpRequest.getSession().setAttribute(HttpRequestAndSessionConstants.REFERER, referrer);
+       httpRequest.getSession().setAttribute(HttpRequestAndSessionConstants.UTM_CAMPAIGN, utm_campaign);
+       httpRequest.getSession().setAttribute(HttpRequestAndSessionConstants.PRIMARY_REFERRER_ID, ReferrerIds.get(HttpRequestAndSessionConstants.PRIMARY_REFERRER_ID));
+       httpRequest.getSession().setAttribute(HttpRequestAndSessionConstants.SECONDARY_REFERRER_ID, ReferrerIds.get(HttpRequestAndSessionConstants.SECONDARY_REFERRER_ID));
     }
-    chain.doFilter(request, response);*/
+    chain.doFilter(request, response);
   }
 
- /* public PrincipalImpl getPrincipal() {
+  public PrincipalImpl getPrincipal() {
     return (PrincipalImpl) SecurityUtils.getSubject().getPrincipal();
   }
 
   public User getPrincipalUser() {
     if (getPrincipal() == null) return null;
-    return userDaoProvider.find(getPrincipal().getId());
-  }*/
+    return userService.getUserById(getPrincipal().getId());
+  }
 
   public void init(FilterConfig config) throws ServletException {}
 
