@@ -146,7 +146,7 @@
                           </tr>
                        </c:forEach>
                      <tr>
-                       <td><label>Total Payable: ${paymentHistoryBean.purchaseInvoice.payableAmount}</label></td>
+                       <td><label>Total Payable: ${paymentHistoryBean.purchaseInvoice.finalPayableAmount}</label></td>
                        <td><label>Oustanding Amount: ${paymentHistoryBean.outstandingAmount}</label></td>
                        <td><s:submit name="save" value="Save"/></td>
                      </tr>
