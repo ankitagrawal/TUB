@@ -29,7 +29,7 @@ import com.hk.web.action.error.AdminPermissionAction;
 public class GoogleBannedWordAction extends BaseAction {
     @Autowired
     ReportManager                     reportManager;
-    @Autowired
+   // @Autowired
     EmailManager                      emailManager;
 
     private List<GoogleBannedWordDto> googleBannedWordDtoList = new ArrayList<GoogleBannedWordDto>();

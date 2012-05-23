@@ -36,7 +36,7 @@ public class InventoryServiceImpl implements InventoryService {
     private ProductVariantService      productVariantService;
     @Autowired
     private UserManager                userManager;
-    @Autowired
+   // @Autowired
     private EmailManager               emailManager;
     @Autowired
     private SkuItemDao                 skuItemDao;

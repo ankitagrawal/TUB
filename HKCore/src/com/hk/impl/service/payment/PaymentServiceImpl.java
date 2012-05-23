@@ -23,7 +23,7 @@ import com.hk.pact.service.payment.PaymentService;
 @Service
 public class PaymentServiceImpl implements PaymentService {
 
-    @Autowired
+   // @Autowired
     private EmailManager     emailManager;
     @Autowired
     private PaymentStatusDao paymentStatusDao;

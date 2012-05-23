@@ -28,7 +28,7 @@ import com.hk.web.action.error.AdminPermissionAction;
 @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_SHIPMENT_QUEUE }, authActionBean = AdminPermissionAction.class)
 @Component
 public class UpdateOrderStatusAndSendEmailAction extends BaseAction {
-    @Autowired
+   // @Autowired
     private EmailManager               emailManager;
     @Autowired
     private ShippingOrderService       shippingOrderService;

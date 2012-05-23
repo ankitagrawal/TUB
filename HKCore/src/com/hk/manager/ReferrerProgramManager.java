@@ -88,7 +88,7 @@ public class ReferrerProgramManager {
     RewardPointTxnDao  rewardPointTxnDao;
     @Autowired
     UserAccountInfoDao userAccountInfoDao;
-    @Autowired
+    //@Autowired
     EmailManager       emailManager;
 
     public Coupon getOrCreateRefferrerCoupon(User user) {

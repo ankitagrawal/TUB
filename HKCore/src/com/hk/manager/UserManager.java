@@ -51,7 +51,7 @@ public class UserManager {
     private RoleService      roleService;
     @Autowired
     private SecurityManager  securityManager;
-    @Autowired
+   // @Autowired
     private EmailManager     emailManager;
     @Autowired
     private LinkManager      linkManager;

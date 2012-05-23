@@ -53,7 +53,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     private AffilateService           affilateService;
     @Autowired
     private ReferrerProgramManager    referrerProgramManager;
-    @Autowired
+   // @Autowired
     private EmailManager              emailManager;
 
     @Autowired

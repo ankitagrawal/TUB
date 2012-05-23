@@ -73,27 +73,27 @@ public class EmailManager {
     private Set<String>       marketingAdminEmails          = null;
     private Set<String>       categoryHealthkartList        = null;
 
-    @Autowired
+    //@Autowired
     private BaseDao           baseDao;
-    @Autowired
+    //@Autowired
     private EmailService      emailService;
-    @Autowired
+    //@Autowired
     private OrderManager      orderManager;
-    @Autowired
+    //@Autowired
     private EmailRecepientDao emailRecepientDao;
-    @Autowired
+    //@Autowired
     private EmailerHistoryDao emailerHistoryDao;
-    @Autowired
+    //@Autowired
     private EmailCampaignDao  emailCampaignDao;
-    @Autowired
+    //@Autowired
     private LinkManager       linkManager;
-    @Autowired
+    //@Autowired
     private NotifyMeDao       notifyMeDao;
-    @Autowired
+    //@Autowired
     private CategoryService   categoryService;
-    @Autowired
+    //@Autowired
     private OrderService      orderService;
-    @Autowired
+    //@Autowired
     private UserService       userService;
 
     @Value("#{hkEnvProps['" + Keys.Env.hkAdminEmails + "']}")

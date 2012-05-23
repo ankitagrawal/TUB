@@ -81,7 +81,7 @@ public class OrderManager {
     private RewardPointService                rewardPointService;
     @Autowired
     private ShippingOrderService              shippingOrderService;
-    @Autowired
+   // @Autowired
     private EmailManager                      emailManager;
     @Autowired
     private OrderDao                          orderDao;

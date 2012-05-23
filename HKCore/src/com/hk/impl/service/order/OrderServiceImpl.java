@@ -73,7 +73,7 @@ public class OrderServiceImpl implements OrderService {
     private UserService            userService;
     @Autowired
     private OrderDao               orderDao;
-    @Autowired
+    //@Autowired
     private EmailManager           emailManager;
     @Autowired
     private WarehouseService       warehouseService;

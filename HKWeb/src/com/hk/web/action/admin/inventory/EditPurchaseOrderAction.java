@@ -62,7 +62,7 @@ public class EditPurchaseOrderAction extends BaseAction {
     private ProductVariantService    productVariantService;
     @Autowired
     XslParser                xslParser;
-    @Autowired
+   // @Autowired
     EmailManager             emailManager;
     @Autowired
     SkuService               skuService;
