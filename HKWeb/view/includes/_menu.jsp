@@ -164,5 +164,5 @@ of<%@ page import="com.hk.taglibs.Functions" %>
       });
     });
   </script>
-  <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.hkCommonPlugins.js"></script>
+  <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.hkCommonPlugins.js"></script>
 </s:layout-definition>
