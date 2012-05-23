@@ -80,5 +80,15 @@ public class LowInventoryDaoImpl extends BaseDaoImpl implements LowInventoryDao 
         }
         //getSession().createQuery("delete ").setParameter("productVariant", productVariant).executeUpdate();
     }
+/*	    public void deleteFromLowInventoryList(ProductVariant productVariant) {
+        LowInventory li = (LowInventory) findUniqueByNamedParams("select li from LowInventory li where li.productVariant = :productVariant ",
+                new String[] { "productVariant" }, new Object[] { productVariant });
+
+        if (li != null) {
+            delete(li);
+        }
+        //getSession().createQuery("delete ").setParameter("productVariant", productVariant).executeUpdate();
+    }*/
+
 
 }
