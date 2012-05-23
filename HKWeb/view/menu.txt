@@ -701,6 +701,9 @@
 --/services/health-checkups/liver-function-test :Liver Function Test
 --/services/health-checkups/kidney-function-test :Kidney Function Test
 --/services/health-checkups/hiv-test :HIV Test
+--/services/health-checkups/tuberculosis
+--/services/health-checkups/hepatitis
+--/services/health-checkups/arthritis
 --/services/health-checkups/mri-scan :MRI Scan
 --/services/health-checkups/ecg :ECG
 --/services/health-checkups/pathology

@@ -1,3 +1,4 @@
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
 <%@ page import="com.hk.constants.catalog.product.EnumProductVariantPaymentType" %>
@@ -490,7 +491,8 @@
 </c:if>
 </div>
 
-<div class='right_container coupon'>
+<shiro:lacksRole name="<%=RoleConstants.COUPON_BLOCKED%>">
+    <div class='right_container coupon'>
   <shiro:hasAnyRoles name="<%=RoleConstants.HK_USER%>">
     <h6>Got a discount coupon?</h6>
     <br/>
@@ -520,6 +522,7 @@
     <br/>
   </shiro:hasAnyRoles>
 </div>
+</shiro:lacksRole>
 <div class='right_container total'>
 <h5>Checkout</h5>
 <br/>
@@ -625,6 +628,9 @@
   });
 </script>
 </div>
+
+<s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="qbr7CMDf6QIQuLjI5QM" id="1018305592"/>
+
 <iframe src="" id="vizuryTargeting" scrolling="no" width="1" height="1" marginheight="0" marginwidth="0" frameborder="0"></iframe>
 <script type="text/javascript">
   var vizuryLink = "http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e400";

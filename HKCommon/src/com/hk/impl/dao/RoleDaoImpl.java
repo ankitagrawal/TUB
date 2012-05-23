@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -45,22 +46,9 @@ public class RoleDaoImpl extends BaseDaoImpl implements RoleDao {
 
     @SuppressWarnings("unchecked")
     public List<Role> listAllBasicRoles() {
-
-        List<String> basicRoleNames = new ArrayList<String>();
-
-        basicRoleNames.add(EnumRole.COD_BLOCKED.getRoleName());
-        basicRoleNames.add(EnumRole.HK_BLOCKED.getRoleName());
-        basicRoleNames.add(EnumRole.HK_DEACTIVATED.getRoleName());
-        basicRoleNames.add(EnumRole.HK_DELETED.getRoleName());
-        basicRoleNames.add(EnumRole.HK_UNVERIFIED.getRoleName());
-        basicRoleNames.add(EnumRole.TEMP_USER.getRoleName());
-        basicRoleNames.add(EnumRole.UNSUBSCRIBED_USER.getRoleName());
-        basicRoleNames.add(EnumRole.HK_USER.getRoleName());
-        basicRoleNames.add(EnumRole.HK_IHO_USER.getRoleName());
-
+        List<String> basicRoles = EnumRole.listBasicRoles();
         DetachedCriteria criteria = DetachedCriteria.forClass(Role.class);
-        criteria.add(Restrictions.in("name", basicRoleNames));
-
+        criteria.add(Restrictions.in("name",basicRoles));
         return findByCriteria(criteria);
     }
 

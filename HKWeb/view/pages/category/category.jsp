@@ -147,7 +147,7 @@
       <img src="<hk:vhostImage/>/images/banners/refer_earn.jpg" alt="refer a friend and earn"
            class="small_banner"/>
     </s:link>
-    <img src="<hk:vhostImage/>/images/banners/freeshipping_cod.jpg" alt="cash on delivery"
+    <img src="<hk:vhostImage/>/images/banners/freeshipping_cod_250.jpg" alt="cash on delivery"
          class="small_banner"/>
   </div>
 

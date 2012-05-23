@@ -34,7 +34,7 @@ public class StockTransferTypeConverter implements TypeConverter<StockTransfer> 
         if (idLong == null) {
             return null;
         } else {
-            return getBaseDao().get(StockTransfer.class, id);
+            return getBaseDao().get(StockTransfer.class, idLong);
         }
 
     }

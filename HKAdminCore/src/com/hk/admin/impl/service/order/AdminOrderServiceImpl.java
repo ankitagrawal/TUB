@@ -27,6 +27,7 @@ import com.hk.manager.ReferrerProgramManager;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.store.StoreService;
 import com.hk.pact.service.core.AffilateService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.RewardPointService;
@@ -107,15 +108,16 @@ public class AdminOrderServiceImpl implements AdminOrderService {
           if (order.getRewardPointsUsed() != null && order.getRewardPointsUsed() > 0) {
             referrerProgramManager.refundRedeemedPoints(order);
           }
-
           List<RewardPoint> rewardPointList = getRewardPointService().findByReferredOrder(order);
           if (rewardPointList != null && rewardPointList.size() > 0) {
             for (RewardPoint rewardPoint : rewardPointList) {
               referrerProgramManager.cancelReferredOrderRewardPoint(rewardPoint);
             }
           }
-
-          emailManager.sendOrderCancelEmailToUser(order);
+          //Send Email Comm. for HK Users Only
+          if (order.getStore() != null && order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID)) {
+            emailManager.sendOrderCancelEmailToUser(order);
+          }
           emailManager.sendOrderCancelEmailToAdmin(order);
 
           this.logOrderActivity(order, loggedOnUser, getOrderService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCancelled), null);

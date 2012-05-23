@@ -169,6 +169,10 @@
             <s:link beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction" event="pre">
               Inventory Checkin
               <s:param name="grn" value="${grn.id}"/></s:link>
+
+               <s:link beanclass="com.hk.web.action.admin.queue.JobCartAction" event="putList">
+              Put List
+              <s:param name="grn" value="${grn.id}"/></s:link>
            <%-- &nbsp;
             <s:link beanclass="com.hk.web.action.admin.inventory.DebitNoteAction" event="view">
               Raise Debit Note

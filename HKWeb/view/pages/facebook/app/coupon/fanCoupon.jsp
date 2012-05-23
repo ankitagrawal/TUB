@@ -1,15 +1,14 @@
-<%@ page import="com.hk.constants.FbConstants" %>
 <%@ page import="java.security.InvalidKeyException" %>
 <%@ page import="java.security.NoSuchAlgorithmException" %>
 <%@ page import="java.util.Arrays" %>
 <%@ page import="javax.crypto.Mac" %>
 <%@ page import="javax.crypto.spec.SecretKeySpec" %>
-<%@ page import="com.hk.util.FacebookRequest" %>
 <%@ page import="com.google.gson.Gson" %>
 <%@ page import="org.apache.commons.codec.binary.Base64" %>
-<%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="org.joda.time.DateTime" %>
 <%@ page import="java.util.Date" %>
+<%@ page import="com.hk.constants.FbConstants" %>
+<%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -46,10 +45,10 @@ C) Update endOfOfferFanCouponDate to the date the campaign is ending on. ideally
   /* parse the JSON payload and do the signature check */
 //	FacebookRequest fbRequest = new Gson().fromJson(payload, FacebookRequest.class);
 
-  String campaignCode = "sports-launch";
+  String campaignCode = "lwdi-launch";
 
   DateTime dateTimeFanCoupon = new DateTime();
-  Date endOfOfferFanCouponDate = new Date(new DateTime(2012, 2, 5, 23, 59, 59, 59).getMillis());
+  Date endOfOfferFanCouponDate = new Date(new DateTime(2012, 6, 15, 23, 59, 59, 59).getMillis());
 %>
 <s:layout-render name="/layouts/fbDefault510.jsp">
 
@@ -143,11 +142,11 @@ C) Update endOfOfferFanCouponDate to the date the campaign is ending on. ideally
         {
           method: 'feed',
           display: 'page',
-          name: 'Are you a sports junkie? Awesome new place to shop for sports!',
-          link: 'http://www.facebook.com/healthkart?sk=app_130363280399851',
-          picture: 'http://img.healthkart.com/images/facebook/fancoupon/offers/Tennis-Ball-icon.png',
+          name: 'Are you a diabetic? Then join India\'s largest community for diabetes management.',
+          link: 'http://www.facebook.com/livingwithdiabetesinindia',
+          picture: 'http://img.healthkart.com/images/facebook/fancoupon/offers/lwdi_logo_90x90.png',
           caption: 'Valid till <fmt:formatDate value="<%=endOfOfferFanCouponDate%>"/>',
-          description: 'HealthKart.com launches full range of sports and fitness accessories. Inaugral disocunt of 10% cash back over already discounted prices.'
+          description: 'Join India\'s largest diabetes community and avail special prices on diabetic care products from top brands like AccuChek, Onetouch, Omron, Abbott, Dr. Morepen, Splenda and many more'
         },
         function(response) {
           if (response && response.post_id) {
@@ -191,7 +190,7 @@ C) Update endOfOfferFanCouponDate to the date the campaign is ending on. ideally
       <img src="<hk:vhostImage/>/images/facebook/fancoupon/fanCouponMasthead2.png"/>
 
       <h2>Current Deal :</h2>
-      <img src="<hk:vhostImage/>/images/facebook/fancoupon/offers/sports-launch.jpg"/>
+      <img src="<hk:vhostImage/>/images/facebook/fancoupon/offers/lwdi_banner.jpg"/>
 
       <div style="text-align: center; padding: 10px;">
         <img src="<hk:vhostImage/>/images/facebook/fancoupon/joinNowButton.png"/>
@@ -207,7 +206,7 @@ C) Update endOfOfferFanCouponDate to the date the campaign is ending on. ideally
       <img src="<hk:vhostImage/>/images/facebook/fancoupon/fanCouponMasthead2.png"/>
 
       <h2>Current Deal :</h2>
-      <img src="<hk:vhostImage/>/images/facebook/fancoupon/offers/sports-launch.jpg"/>
+      <img src="<hk:vhostImage/>/images/facebook/fancoupon/offers/lwdi_banner.jpg"/>
 
       <div style="text-align: center; padding: 10px; cursor: pointer;" onclick="login();">
         <img src="<hk:vhostImage/>/images/facebook/fancoupon/joinNowButton.png"/>
@@ -240,7 +239,7 @@ C) Update endOfOfferFanCouponDate to the date the campaign is ending on. ideally
         <div id="couponCodeContainer" style="font-size: 20px; font-weight: bold;">
         </div>
         <p style="font-size: 1.5em; margin: 0;">
-          <a href="http://www.healthkart.com/sports?utm_source=facebook&utm_medium=app&utm_campaign=2012-01-27-sports-launch" target="_blank">Click to redeem coupon code &gt;&gt;</a>
+          <a href="http://www.healthkart.com/diabetes?utm_source=facebook&utm_medium=app&utm_campaign=2012-05-lwdi" target="_blank">Click to redeem coupon code &gt;&gt;</a>
         </p>
       </div>
       <%-- if user has NOT shared.. he/she will be prompted to share the discount with friends --%>
@@ -252,13 +251,11 @@ C) Update endOfOfferFanCouponDate to the date the campaign is ending on. ideally
       </div>
       <p class="sml">
         offer valid till <fmt:formatDate value="<%=endOfOfferFanCouponDate%>"/> or till stocks last. <br/>
-        this is a cashback offer, you will get reward points credited into your account after your purchase, which can be used on future purchases on HealthKart.com<br/>
-        maximum discount of Rs. 500 only<br/>
-        discount applicable on already best prices :)<br/>
+        discount applicable on already best prices from HealthKart.com :)<br/>
       </p>
 
       <h2>Current Deal:</h2>
-      <img src="<hk:vhostImage/>/images/facebook/fancoupon/offers/sports-launch.jpg"/>
+      <img src="<hk:vhostImage/>/images/facebook/fancoupon/offers/lwdi_banner.jpg"/>
     </div>
 
   </s:layout-component>

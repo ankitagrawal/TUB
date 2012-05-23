@@ -51,8 +51,15 @@ public class CartLineItemDaoImpl extends BaseDaoImpl implements CartLineItemDao 
 
     @Transactional
     public void flipProductVariants(ProductVariant srcPV, ProductVariant dstPV, Order order) {
-        getSession().createQuery("update CartLineItem cli  set cli.productVariant = :dstPV where cli.order = :order and cli.productVariant = :srcPV").setParameter("dstPV", dstPV).setParameter(
-                "order", order).setParameter("srcPV", srcPV).executeUpdate();
+        
+        CartLineItem cli = (CartLineItem) findUniqueByNamedParams(" from CartLineItem cli where cli.order = :order and cli.productVariant = :srcPV ", new String[]{"order","srcPV"}, new Object[]{order,srcPV});
+        cli.setProductVariant(dstPV);
+        update(cli);
+        /*
+         * getSession().createQuery("update CartLineItem cli set cli.productVariant = :dstPV where cli.order = :order
+         * and cli.productVariant = :srcPV").setParameter("dstPV", dstPV).setParameter( "order",
+         * order).setParameter("srcPV", srcPV).executeUpdate();
+         */
     }
 
     public CartLineItem getLineItem(ProductVariant productVariant, Order order) {
