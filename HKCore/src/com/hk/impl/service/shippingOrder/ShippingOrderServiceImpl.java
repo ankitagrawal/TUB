@@ -46,7 +46,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     @Autowired
     private InventoryService           inventoryService;
 
-    @Autowired
+    //@Autowired
     private OrderService               orderService;
 
     @Autowired

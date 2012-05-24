@@ -14,7 +14,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hk.admin.pact.dao.marketing.AmazonFeedDao;
 import com.hk.constants.catalog.image.EnumImageSize;
@@ -22,7 +21,7 @@ import com.hk.domain.amazon.AmazonFeed;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductOption;
 import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.impl.dao.DoomDayDaoImpl;
+import com.hk.pact.dao.DoomDayDao;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
 @Component
 public class AmazonXslGenerator {
@@ -32,7 +31,7 @@ public class AmazonXslGenerator {
   @Autowired
   AmazonFeedDao amazonFeedDao;
   @Autowired
-  DoomDayDaoImpl doomDayDao;
+  DoomDayDao doomDayDao;
   @Autowired
   ProductVariantDao productVariantDao;
 

@@ -34,7 +34,7 @@ public class TekprocessGatewaySendReceiveAction extends BasePaymentGatewaySendRe
     PaymentDao            paymentDao;
     @Autowired
     PaymentManager        paymentManager;
-    @Autowired
+    //@Autowired
     EmailManager          emailManager;
     @Value("#{hkEnvProps['" + Keys.App.environmentDir + "']}")
     String                environmemtDir;

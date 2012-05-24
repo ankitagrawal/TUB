@@ -29,7 +29,7 @@ public class WOMMEmailManager {
     private EmailerHistoryDao emailerHistoryDao;
     @Autowired
     private LinkManager       linkManager;
-    @Autowired
+   // @Autowired
     private EmailManager      emailManager;
     @Autowired
     private BaseDao           baseDao;

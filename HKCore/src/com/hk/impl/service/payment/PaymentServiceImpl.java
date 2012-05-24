@@ -3,6 +3,7 @@ package com.hk.impl.service.payment;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import com.hk.constants.catalog.product.EnumProductVariantPaymentType;
@@ -23,13 +24,13 @@ import com.hk.pact.service.payment.PaymentService;
 @Service
 public class PaymentServiceImpl implements PaymentService {
 
-    @Autowired
+   // @Autowired
     private EmailManager     emailManager;
     @Autowired
     private PaymentStatusDao paymentStatusDao;
     @Autowired
     private PaymentModeDao   paymentModeDao;
-    @Autowired
+    //@Autowired
     private OrderService     orderService;
     @Autowired
     private PaymentDao       paymentDao;

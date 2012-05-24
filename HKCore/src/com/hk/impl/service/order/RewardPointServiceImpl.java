@@ -45,7 +45,7 @@ public class RewardPointServiceImpl implements RewardPointService {
     private ReferrerProgramManager referrerProgramManager;
     @Autowired
     private OfferInstanceDao       offerInstanceDao;
-    @Autowired
+    //@Autowired
     private OrderService           orderService;
 
     public RewardPointMode getRewardPointMode(EnumRewardPointMode enumRewardPointMode) {

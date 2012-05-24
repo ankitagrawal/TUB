@@ -23,90 +23,92 @@ import com.hk.domain.payment.Payment;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.dto.pricing.PricingDto;
-import com.hk.impl.dao.user.UserDaoImpl;
 import com.hk.manager.OrderManager;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.RoleDao;
 import com.hk.pact.dao.payment.PaymentModeDao;
+import com.hk.pact.dao.user.UserDao;
 import com.hk.pricing.PricingEngine;
 import com.hk.web.action.core.cart.CartAction;
 import com.hk.web.action.core.order.OrderSummaryAction;
 
 /**
- * User: kani
- * Time: 14 Apr, 2010 4:56:25 PM
+ * User: kani Time: 14 Apr, 2010 4:56:25 PM
  */
 @Secure
 @Component
 public class FreeCheckoutConfirmAction extends BaseAction {
 
-  private static Logger logger = LoggerFactory.getLogger(FreeCheckoutConfirmAction.class);
-  @Autowired
-   PaymentManager paymentManager;
-  @Autowired
-   OrderManager orderManager;
-  @Autowired
-   UserDaoImpl userDao;
-  @Autowired
-   RoleDao roleDao;
-  @Autowired
-  PaymentModeDao paymentModeDao;
-  @Autowired 
-  PricingEngine pricingEngine;
+    private static Logger logger = LoggerFactory.getLogger(FreeCheckoutConfirmAction.class);
+    @Autowired
+    PaymentManager        paymentManager;
+    @Autowired
+    OrderManager          orderManager;
+    @Autowired
+    UserDao               userDao;
+    @Autowired
+    RoleDao               roleDao;
+    @Autowired
+    PaymentModeDao        paymentModeDao;
+    @Autowired
+    PricingEngine         pricingEngine;
 
-  private String email;
+    private String        email;
 
-  private User user;
+    private User          user;
 
-  @ValidationMethod
-  public void validate() {
-    Role tempUserRole = roleDao.getRoleByName(RoleConstants.TEMP_USER);
-    user = getUserService().getUserById(getPrincipal().getId());
-    if (user != null && user.getRoles().contains(tempUserRole)) {
-      if (StringUtils.isBlank(email)) {
-        addValidationError("email", new LocalizableError("/CodPaymentReceive.action.email.required"));
-      }
-    } else {
-      // if somebody tries to enter the email field though its not required then set it to null
-      // so that we should not change it.
-      email = null;
-    }
-  }
-
-  public Resolution confirm() {
-    Order order = orderManager.getOrCreateOrder(user);
-    PricingDto pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), order.getRewardPointsUsed()), order.getAddress());
-    logger.debug("pricingDto.getGrandTotalPayable(): " + pricingDto.getGrandTotalPayable());
-    if (pricingDto.getGrandTotalPayable() != 0) {
-      addRedirectAlertMessage(new LocalizableMessage("/FreeCheckoutConfirm.action.method.mode.not.allowed"));
-      return new RedirectResolution(OrderSummaryAction.class);
-    }
-    if (pricingDto.getProductLineCount() == 0) {
-      addRedirectAlertMessage(new LocalizableMessage("/CheckoutAction.action.checkout.not.allowed.on.empty.cart"));
-      return new RedirectResolution(CartAction.class);
+    @ValidationMethod
+    public void validate() {
+        Role tempUserRole = roleDao.getRoleByName(RoleConstants.TEMP_USER);
+        user = getUserService().getUserById(getPrincipal().getId());
+        if (user != null && user.getRoles().contains(tempUserRole)) {
+            if (StringUtils.isBlank(email)) {
+                addValidationError("email", new LocalizableError("/CodPaymentReceive.action.email.required"));
+            }
+        } else {
+            // if somebody tries to enter the email field though its not required then set it to null
+            // so that we should not change it.
+            email = null;
+        }
     }
 
-    if (email != null) {
-      user.setEmail(email);
-      user = getUserService().save(user);
+    public Resolution confirm() {
+        Order order = orderManager.getOrCreateOrder(user);
+        PricingDto pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), order.getRewardPointsUsed()),
+                order.getAddress());
+        logger.debug("pricingDto.getGrandTotalPayable(): " + pricingDto.getGrandTotalPayable());
+        if (pricingDto.getGrandTotalPayable() != 0) {
+            addRedirectAlertMessage(new LocalizableMessage("/FreeCheckoutConfirm.action.method.mode.not.allowed"));
+            return new RedirectResolution(OrderSummaryAction.class);
+        }
+        if (pricingDto.getProductLineCount() == 0) {
+            addRedirectAlertMessage(new LocalizableMessage("/CheckoutAction.action.checkout.not.allowed.on.empty.cart"));
+            return new RedirectResolution(CartAction.class);
+        }
+
+        if (email != null) {
+            user.setEmail(email);
+            user = getUserService().save(user);
+        }
+
+        // recalculate the pricing before creating a payment.
+        order = orderManager.recalAndUpdateAmount(order);
+
+        // first create a payment row, this will also cotain the payment checksum
+        Payment payment = paymentManager.createNewPayment(order, getBaseDao().get(PaymentMode.class, EnumPaymentMode.FREE_CHECKOUT.getId()),
+                BaseUtils.getRemoteIpAddrForUser(getContext()), null);
+
+        paymentManager.success(payment.getGatewayOrderId());
+        // return new RedirectResolution(FreeCheckoutSuccessAction.class).addParameter("gatewayOrderId",
+        // payment.getGatewayOrderId());
+        return new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", payment.getGatewayOrderId());
     }
 
-    // recalculate the pricing before creating a payment.
-    order = orderManager.recalAndUpdateAmount(order);
+    public String getEmail() {
+        return email;
+    }
 
-    // first create a payment row, this will also cotain the payment checksum
-    Payment payment = paymentManager.createNewPayment(order, getBaseDao().get(PaymentMode.class,EnumPaymentMode.FREE_CHECKOUT.getId()), BaseUtils.getRemoteIpAddrForUser(getContext()),null);
-
-    paymentManager.success(payment.getGatewayOrderId());
-    //return new RedirectResolution(FreeCheckoutSuccessAction.class).addParameter("gatewayOrderId", payment.getGatewayOrderId());
-    return new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", payment.getGatewayOrderId());
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public void setEmail(String email) {
-    this.email = email;
-  }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }

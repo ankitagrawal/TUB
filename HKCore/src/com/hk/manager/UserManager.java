@@ -45,13 +45,13 @@ public class UserManager {
 
     @Autowired
     private UserService      userService;
-    @Autowired
+    //@Autowired
     private OrderManager     orderManager;
     @Autowired
     private RoleService      roleService;
     @Autowired
     private SecurityManager  securityManager;
-    @Autowired
+   // @Autowired
     private EmailManager     emailManager;
     @Autowired
     private LinkManager      linkManager;

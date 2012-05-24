@@ -36,7 +36,7 @@ public class PricingEngine {
     @Value("#{hkEnvProps['" + Keys.Env.shippingFreeAfter + "']}")
     private Double shippingFreeAfter;
 
-    @Autowired
+    //@Autowired
     OrderManager   orderManager;
 
     @Autowired

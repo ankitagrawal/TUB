@@ -28,7 +28,7 @@ public class ResendAccountActivationLinkAction extends BaseAction {
 
     @Autowired
     private UserManager  userManager;
-    @Autowired    
+    //@Autowired    
     private EmailManager emailManager;
     @Autowired
     private UserService  userService;

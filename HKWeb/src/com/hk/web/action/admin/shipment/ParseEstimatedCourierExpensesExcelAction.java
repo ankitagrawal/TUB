@@ -42,7 +42,7 @@ public class ParseEstimatedCourierExpensesExcelAction extends BaseAction {
     // @Named(Keys.Env.adminUploads)
     @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String                adminUploadsPath;
-    @Autowired
+    //@Autowired
     EmailManager          emailManager;
 
     String                numberOfOrdersUpdated = "";

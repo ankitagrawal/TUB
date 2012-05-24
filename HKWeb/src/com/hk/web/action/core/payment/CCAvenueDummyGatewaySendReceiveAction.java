@@ -26,7 +26,7 @@ public class CCAvenueDummyGatewaySendReceiveAction extends BasePaymentGatewaySen
     PaymentDao     paymentDao;
     @Autowired
     PaymentManager paymentManager;
-    @Autowired
+   // @Autowired
     EmailManager   emailManager;
 
     protected CCAvenueDummyPaymentGatewayWrapper getPaymentGatewayWrapperFromTransactionData(BasePaymentGatewayWrapper.TransactionData data) {

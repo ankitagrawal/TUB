@@ -8,17 +8,11 @@ import org.springframework.stereotype.Component;
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.EnumAffiliateTxnType;
 import com.hk.constants.core.RoleConstants;
-import com.hk.constants.order.EnumCartLineItemType;
-import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.CheckDetails;
 import com.hk.domain.affiliate.Affiliate;
-import com.hk.domain.affiliate.AffiliateCategory;
-import com.hk.domain.affiliate.AffiliateCategoryCommission;
 import com.hk.domain.affiliate.AffiliateTxn;
 import com.hk.domain.affiliate.AffiliateTxnType;
 import com.hk.domain.offer.Offer;
-import com.hk.domain.order.CartLineItem;
-import com.hk.domain.order.Order;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.exception.HealthkartLoginException;
@@ -26,6 +20,9 @@ import com.hk.exception.HealthkartSignupException;
 import com.hk.impl.dao.CheckDetailsDaoImpl;
 import com.hk.impl.dao.affiliate.AffiliateCategoryDaoImpl;
 import com.hk.impl.dao.affiliate.AffiliateTxnDaoImpl;
+import com.hk.pact.dao.CheckDetailsDao;
+import com.hk.pact.dao.affiliate.AffiliateCategoryDao;
+import com.hk.pact.dao.affiliate.AffiliateTxnDao;
 import com.hk.pact.service.RoleService;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.core.AffilateService;
@@ -34,29 +31,28 @@ import com.hk.pact.service.discount.CouponService;
 @Component
 public class AffiliateManager {
 
+    @Autowired
+    private UserService          userService;
+    @Autowired
+    private RoleService          roleService;
+    @Autowired
+    private CouponService        couponService;
+    @Autowired
+    private AffilateService      affilateService;
+
+    //@Autowired
+    private EmailManager         emailManager;
+    @Autowired
+    private UserManager          userManager;
+    @Autowired
+    private OfferManager         offerManager;
 
     @Autowired
-    private UserService                    userService;
+    private AffiliateTxnDao      affiliateTxnDao;
     @Autowired
-    private RoleService                    roleService;
+    private CheckDetailsDao      checkDetailsDao;
     @Autowired
-    private CouponService                  couponService;
-    @Autowired
-    private AffilateService                affilateService;
-
-    @Autowired
-    private EmailManager                   emailManager;
-    @Autowired
-    private UserManager                    userManager;
-    @Autowired
-    private OfferManager                   offerManager;
-
-    @Autowired
-    private AffiliateTxnDaoImpl                affiliateTxnDao;
-    @Autowired
-    private CheckDetailsDaoImpl                checkDetailsDao;
-    @Autowired
-    private AffiliateCategoryDaoImpl affiliateCategoryCommissionDao;
+    private AffiliateCategoryDao affiliateCategoryCommissionDao;
 
     private String createCode(User user) {
         String code = user.getName().replace(" ", "");
@@ -146,39 +142,7 @@ public class AffiliateManager {
         return affiliateAccountAmount;
     }
 
-    public void addAmountInAccountforFirstTransaction(User affiliateUser, Order order) {
-        Affiliate affiliate = getAffilateService().getAffilateByUser(affiliateUser);
-        Double affiliateSumTotal = 0D;
-        Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
-        for (CartLineItem cartLineItem : productCartLineItems) {
-            AffiliateCategory affiliateCategory = cartLineItem.getProductVariant().getAffiliateCategory();
-            if (affiliateCategory != null) {
-                AffiliateCategoryCommission affiliateCategoryCommission = getAffiliateCategoryCommissionDao().getCommissionAffiliateWise(affiliate, affiliateCategory);
-                if (affiliateCategoryCommission != null) {
-                    affiliateSumTotal += cartLineItem.getProductVariant().getHkPrice(null) * cartLineItem.getQty() * affiliateCategoryCommission.getCommissionFirstTime() * 0.01;
-                }
-            }
-        }
-        AffiliateTxnType affiliateTxnType = getAffilateService().getAffiliateTxnType(EnumAffiliateTxnType.ADD.getId());
-        getAffiliateTxnDao().saveTxn(affiliate, affiliateSumTotal, affiliateTxnType, order);
-    }
 
-    public void addAmountInAccountforLatterTransaction(User affiliateUser, Order order) {
-        Affiliate affiliate = getAffilateService().getAffilateByUser(affiliateUser);
-        Double affiliateSumTotal = 0D;
-        Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
-        for (CartLineItem cartLineItem : productCartLineItems) {
-            AffiliateCategory affiliateCategory = cartLineItem.getProductVariant().getAffiliateCategory();
-            if (affiliateCategory != null) {
-                AffiliateCategoryCommission affiliateCategoryCommission = getAffiliateCategoryCommissionDao().getCommissionAffiliateWise(affiliate, affiliateCategory);
-                if (affiliateCategoryCommission != null) {
-                    affiliateSumTotal += cartLineItem.getProductVariant().getHkPrice() * cartLineItem.getQty() * affiliateCategoryCommission.getCommissionLatterTime() * 0.01;
-                }
-            }
-        }
-        AffiliateTxnType affiliateTxnType = getAffilateService().getAffiliateTxnType(EnumAffiliateTxnType.ADD.getId());
-        getAffiliateTxnDao().saveTxn(affiliate, affiliateSumTotal, affiliateTxnType, order);
-    }
 
     public void paidToAffiiliate(Affiliate affiliate, Double amountPaid, CheckDetails checkDetails) {
         AffiliateTxn affiliateTxn = new AffiliateTxn();
@@ -239,7 +203,7 @@ public class AffiliateManager {
         this.userManager = userManager;
     }
 
-    public AffiliateTxnDaoImpl getAffiliateTxnDao() {
+    public AffiliateTxnDao getAffiliateTxnDao() {
         return affiliateTxnDao;
     }
 
@@ -263,7 +227,7 @@ public class AffiliateManager {
         this.offerManager = offerManager;
     }
 
-    public CheckDetailsDaoImpl getCheckDetailsDao() {
+    public CheckDetailsDao getCheckDetailsDao() {
         return checkDetailsDao;
     }
 
@@ -279,7 +243,7 @@ public class AffiliateManager {
         this.affilateService = affilateService;
     }
 
-    public AffiliateCategoryDaoImpl getAffiliateCategoryCommissionDao() {
+    public AffiliateCategoryDao getAffiliateCategoryCommissionDao() {
         return affiliateCategoryCommissionDao;
     }
 
