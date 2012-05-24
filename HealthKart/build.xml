@@ -39,6 +39,9 @@
 		<copy todir="${project.dist.dir}/WEB-INF">
 			<fileset dir="${project.common.dir}/resources/${project.env}/logging" />
 		</copy>
+		<copy todir="${project.dist.dir}/WEB-INF">
+			<fileset dir="${project.common.dir}/resources/${project.env}/payment" />
+		</copy>
 		<copy todir="${project.dist.dir}/WEB-INF/lib">
 			<fileset dir="${lib.barcode.root}">
 				<include name="*.jar" />
