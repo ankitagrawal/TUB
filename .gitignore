@@ -2,6 +2,7 @@ build/
 dev/
 bin/
 dist/
+out/
 bin-groovy/
 .svn/
 .metadata/
@@ -15,4 +16,8 @@ bin-groovy/
 *.ids
 *.classpath
 *.project
+*.war
+Thumbs.db
+.idea
+.project
 environmentLocator.properties
