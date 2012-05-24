@@ -1,9 +1,5 @@
 package com.hk.impl.service.order;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,8 +9,6 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.CartLineItemType;
 import com.hk.domain.matcher.CartLineItemMatcher;
 import com.hk.domain.order.CartLineItem;
-import com.hk.domain.order.CartLineItemConfigValues;
-import com.hk.domain.order.CartLineItemExtraOption;
 import com.hk.domain.order.Order;
 import com.hk.pact.dao.order.cartLineItem.CartLineItemDao;
 import com.hk.pact.service.order.CartLineItemService;

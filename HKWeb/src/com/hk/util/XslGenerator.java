@@ -15,8 +15,6 @@ import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -36,13 +34,12 @@ import com.hk.domain.courier.PincodeDefaultCourier;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.GrnLineItem;
 import com.hk.pact.service.inventory.InventoryService;
-import com.hk.pact.service.inventory.SkuService;
 import com.hk.service.ServiceLocatorFactory;
 
 @Component
 public class XslGenerator {
 
-    private static Logger         logger             = LoggerFactory.getLogger(XslGenerator.class);
+    //private static Logger         logger             = LoggerFactory.getLogger(XslGenerator.class);
 
     public static final String    ID                 = "ID";
     public static final String    PINCODE            = "PINCODE";

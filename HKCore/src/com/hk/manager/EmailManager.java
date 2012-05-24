@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.core.EnumEmailType;
@@ -52,7 +53,7 @@ import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.util.HtmlUtil;
 
 @SuppressWarnings("unchecked")
-// @Component
+@Component
 public class EmailManager {
 
     private static Logger       logger                        = LoggerFactory.getLogger(EmailManager.class);

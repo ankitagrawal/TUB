@@ -162,7 +162,7 @@ public class XslParser {
         HSSFSheet productSheet = workbook.getSheet("Product");
         HSSFSheet manufacturerSheet = workbook.getSheet("Manufacturer");
         Iterator<Row> objRowIt = productSheet.rowIterator();
-        Iterator objCellIterator = null;
+        //Iterator objCellIterator = null;
 
         // Declaring data elements
         Product product = null;
@@ -411,7 +411,7 @@ public class XslParser {
         // Assuming there is only one sheet, the first one only will be picked
         HSSFSheet courierServiceInfoSheet = workbook.getSheet("CourierServiceInfo");
         Iterator<Row> objRowIt = courierServiceInfoSheet.rowIterator();
-        Iterator objCellIterator = null;
+       // Iterator objCellIterator = null;
 
         // Declaring data elements
         Map<Integer, String> headerMap;
