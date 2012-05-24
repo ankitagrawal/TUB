@@ -1,12 +1,14 @@
 package com.hk.pact;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hk.domain.core.Pincode;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.service.TestTxnService;
 
+@Service
 public class TestTxnServiceImpl implements TestTxnService {
 
     @Autowired

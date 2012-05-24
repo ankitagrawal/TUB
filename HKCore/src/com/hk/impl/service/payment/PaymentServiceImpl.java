@@ -19,6 +19,7 @@ import com.hk.pact.dao.payment.PaymentModeDao;
 import com.hk.pact.dao.payment.PaymentStatusDao;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.payment.PaymentService;
+import com.hk.service.ServiceLocatorFactory;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
@@ -29,7 +30,7 @@ public class PaymentServiceImpl implements PaymentService {
     private PaymentStatusDao paymentStatusDao;
     @Autowired
     private PaymentModeDao   paymentModeDao;
-    @Autowired
+    // @Autowired
     private OrderService     orderService;
     @Autowired
     private PaymentDao       paymentDao;
@@ -131,6 +132,9 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     public OrderService getOrderService() {
+        if (orderService == null) {
+            this.orderService = ServiceLocatorFactory.getService(OrderService.class);
+        }
         return orderService;
     }
 

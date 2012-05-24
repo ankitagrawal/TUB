@@ -31,6 +31,7 @@ import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.store.StoreService;
+import com.hk.service.ServiceLocatorFactory;
 
 @Service
 public class AdminOrderServiceImpl implements AdminOrderService {
@@ -45,7 +46,6 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     private RewardPointService        rewardPointService;
     @Autowired
     private OrderService              orderService;
-    @Autowired
     private AdminShippingOrderService adminShippingOrderService;
     @Autowired
     private AffilateService           affilateService;
@@ -252,7 +252,6 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         this.userService = userService;
     }
 
-
     public OrderStatusService getOrderStatusService() {
         return orderStatusService;
     }
@@ -270,6 +269,9 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     }
 
     public AdminShippingOrderService getAdminShippingOrderService() {
+        if(adminShippingOrderService ==null){
+            adminShippingOrderService = ServiceLocatorFactory.getService(AdminShippingOrderService.class);
+        }
         return adminShippingOrderService;
     }
 
