@@ -26,7 +26,6 @@ import com.hk.domain.coupon.DiscountCouponMailingList;
 import com.hk.domain.user.User;
 import com.hk.manager.EmailManager;
 import com.hk.pact.dao.coupon.DiscountCouponMailingListDao;
-import com.hk.pact.service.UserService;
 import com.hk.web.HealthkartResponse;
 
 @Component
@@ -46,12 +45,11 @@ public class SendDiscountCouponAction extends BaseAction implements ValidationEr
     private Category             topLevelCategory;
     @Autowired
     SMSManager                   smsManager;
-   // @Autowired
+    @Autowired
     EmailManager                 emailManager;
     @Autowired
     DiscountCouponMailingListDao discountCouponMailingListDao;
 
-    private UserService          userService;
 
     private static String        couponCode_beauty    = "BEAUTYTEN";
     private static String        couponCode_nutrition = "NATNUTWK";
@@ -83,6 +81,7 @@ public class SendDiscountCouponAction extends BaseAction implements ValidationEr
                 getContext().getValidationErrors().add("e1", new SimpleError("Invalid mobile number."));
             } else {
                 try {
+                    @SuppressWarnings("unused")
                     Long mobInt = Long.valueOf(mobile);
                 } catch (NumberFormatException e) {
                     getContext().getValidationErrors().add("e1", new SimpleError("Please enter mobile number without any special characters or space."));

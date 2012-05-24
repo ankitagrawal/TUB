@@ -38,7 +38,7 @@ public class NotifyMeAction extends BaseAction {
     TempTokenDao            tempTokenDao;
     @Autowired
     LinkManager             linkManager;
-    //@Autowired
+    @Autowired
     EmailManager            emailManager;
     @Autowired
     NotifyMeDao             notifyMeDao;
@@ -70,6 +70,7 @@ public class NotifyMeAction extends BaseAction {
         return new ForwardResolution("/pages/modal/notifyMe.jsp");
     }
 
+    @SuppressWarnings("unchecked")
     @JsonHandler
     public Resolution notifyMe() {
         logger.debug("notifyMe: " + notifyMe);

@@ -25,7 +25,6 @@ import com.hk.domain.order.CartLineItemConfig;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.user.Address;
 import com.hk.dto.pricing.PricingDto;
-import com.hk.manager.OrderManager;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.util.CartLineItemWrapper;
 import com.hk.util.OfferTriggerMatcher;
@@ -35,9 +34,6 @@ public class PricingEngine {
 
     @Value("#{hkEnvProps['" + Keys.Env.shippingFreeAfter + "']}")
     private Double shippingFreeAfter;
-
-    //@Autowired
-    OrderManager   orderManager;
 
     @Autowired
     SkuService     skuService;

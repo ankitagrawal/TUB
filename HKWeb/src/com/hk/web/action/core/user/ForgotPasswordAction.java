@@ -38,7 +38,7 @@ public class ForgotPasswordAction extends BaseAction implements ValidationErrorH
     TempTokenDao            tempTokenDao;
     @Autowired
     LinkManager             linkManager;
-    //@Autowired
+    @Autowired
     EmailManager            emailManager;
     public static final int EXPIRY_DAYS = 10;
 
@@ -73,6 +73,7 @@ public class ForgotPasswordAction extends BaseAction implements ValidationErrorH
      * LocalizableMessage("/ForgotPassword.action.email.sent", email)); return getContext().getSourcePageResolution(); }
      */
 
+    @SuppressWarnings("unchecked")
     @JsonHandler
     public Resolution forgotPassword() {
 

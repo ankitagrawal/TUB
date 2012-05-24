@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.akube.framework.stripes.action.BasePaymentGatewaySendReceiveAction;
-import com.hk.domain.payment.Payment;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.manager.EmailManager;
 import com.hk.manager.payment.CCAvenueDummyPaymentGatewayWrapper;
@@ -26,12 +25,12 @@ public class CCAvenueDummyGatewaySendReceiveAction extends BasePaymentGatewaySen
     PaymentDao     paymentDao;
     @Autowired
     PaymentManager paymentManager;
-   // @Autowired
+    @Autowired
     EmailManager   emailManager;
 
     protected CCAvenueDummyPaymentGatewayWrapper getPaymentGatewayWrapperFromTransactionData(BasePaymentGatewayWrapper.TransactionData data) {
         CCAvenueDummyPaymentGatewayWrapper dummyPaymentGateway = new CCAvenueDummyPaymentGatewayWrapper();
-        Payment payment = paymentDao.findByGatewayOrderId(data.getGatewayOrderId());
+       // Payment payment = paymentDao.findByGatewayOrderId(data.getGatewayOrderId());
         String amountStr = BasePaymentGatewayWrapper.TransactionData.decimalFormat.format(data.getAmount());
 
         dummyPaymentGateway.addParameter(CCAvenueDummyPaymentGatewayWrapper.param_MerchantId, CCAvenueDummyPaymentGatewayWrapper.merchantId);
@@ -65,7 +64,7 @@ public class CCAvenueDummyGatewaySendReceiveAction extends BasePaymentGatewaySen
         String authDesc = getContext().getRequest().getParameter(CCAvenueDummyPaymentGatewayWrapper.param_AuthDesc);
         String gatewayChecksum = getContext().getRequest().getParameter(CCAvenueDummyPaymentGatewayWrapper.param_Checksum);
         String merchantParam = getContext().getRequest().getParameter(CCAvenueDummyPaymentGatewayWrapper.param_MerchantParam);
-        String customerNotes = getContext().getRequest().getParameter(CCAvenueDummyPaymentGatewayWrapper.param_Notes);
+        //String customerNotes = getContext().getRequest().getParameter(CCAvenueDummyPaymentGatewayWrapper.param_Notes);
 
         Resolution resolution = null;
         try {

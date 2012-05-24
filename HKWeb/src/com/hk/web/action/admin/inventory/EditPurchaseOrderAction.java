@@ -49,7 +49,7 @@ import com.hk.web.action.error.AdminPermissionAction;
 @Secure(hasAnyPermissions = { PermissionConstants.PO_MANAGEMENT }, authActionBean = AdminPermissionAction.class)
 @Component
 public class EditPurchaseOrderAction extends BaseAction {
-    // EditPurchaseOrderAction
+
     private static Logger    logger      = LoggerFactory.getLogger(EditPurchaseOrderAction.class);
     @Autowired
     PurchaseOrderDao         purchaseOrderDao;
@@ -62,7 +62,7 @@ public class EditPurchaseOrderAction extends BaseAction {
     private ProductVariantService    productVariantService;
     @Autowired
     XslParser                xslParser;
-   // @Autowired
+    @Autowired
     EmailManager             emailManager;
     @Autowired
     SkuService               skuService;
@@ -76,7 +76,6 @@ public class EditPurchaseOrderAction extends BaseAction {
 
     private PurchaseOrder    purchaseOrder;
     private List<PoLineItem> poLineItems = new ArrayList<PoLineItem>();
-    private static Double    CST         = 0.02;
     public PurchaseOrderDto  purchaseOrderDto;
     public String            productVariantId;
     public Warehouse         warehouse;

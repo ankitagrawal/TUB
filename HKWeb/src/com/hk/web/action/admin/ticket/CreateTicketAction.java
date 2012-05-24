@@ -48,7 +48,7 @@ public class CreateTicketAction extends BaseAction {
     TicketManager       ticketManager;
     @Autowired
     LinkManager         linkManager;
-    //@Autowired
+    @Autowired
     EmailManager        emailManager;
     @Autowired
     OrderDao            orderDao;

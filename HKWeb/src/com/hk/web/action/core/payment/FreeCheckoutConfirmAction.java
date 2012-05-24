@@ -27,7 +27,6 @@ import com.hk.manager.OrderManager;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.RoleDao;
 import com.hk.pact.dao.payment.PaymentModeDao;
-import com.hk.pact.dao.user.UserDao;
 import com.hk.pricing.PricingEngine;
 import com.hk.web.action.core.cart.CartAction;
 import com.hk.web.action.core.order.OrderSummaryAction;
@@ -44,8 +43,6 @@ public class FreeCheckoutConfirmAction extends BaseAction {
     PaymentManager        paymentManager;
     @Autowired
     OrderManager          orderManager;
-    @Autowired
-    UserDao               userDao;
     @Autowired
     RoleDao               roleDao;
     @Autowired

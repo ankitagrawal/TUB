@@ -28,21 +28,22 @@ import com.hk.manager.EmailManager;
 public class ContactAction extends BaseAction {
 
     @Validate(required = true, maxlength = 60)
-    private String name;
+    private String       name;
 
     @Validate(required = true, maxlength = 60, converter = EmailTypeConverter.class)
-    private String email;
+    private String       email;
 
     @Validate(maxlength = 20)
-    private String phone;
+    private String       phone;
 
     @Validate(required = true)
-    private String msgSubject;
+    private String       msgSubject;
 
     @Validate(required = true)
-    private String msgText;
-    // @Autowired
-    EmailManager   emailManager;
+    private String       msgText;
+
+    @Autowired
+    private EmailManager emailManager;
 
     @DontValidate
     @DefaultHandler
