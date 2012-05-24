@@ -23,7 +23,6 @@ public class TestTxnServiceImpl implements TestTxnService {
     }
     
     @Override
-    @Transactional
     public void addTestBadge() {
         
         TestTxnService testService = ServiceLocatorFactory.getService(TestTxnService.class);
@@ -36,12 +35,13 @@ public class TestTxnServiceImpl implements TestTxnService {
         
         getBaseDao().save(pincode);
         
-         pincode = new Pincode();
+        
+         /*pincode = new Pincode();
         pincode.setCity("test2");
         pincode.setPincode(code);
         pincode.setState("testState2");
         
-        getBaseDao().save(pincode);
+        getBaseDao().save(pincode);*/
     }
 
     @Override

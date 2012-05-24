@@ -58,8 +58,6 @@ public class HomeAction extends BaseAction {
     
     public Resolution pre() {
         menuHelper.postConstruction();
-        
-        testService.addTestBadge();
         // IN CASE OF REVERT COMMENT EVERYTHING EXCEPT THE FORWARD RESOLUTION TO HOME.JSP AND ALSO REPLACE THE DYNAMIC
         // HOME.JSP WITH THE HARD CODED ONE
         System.out.println("1");
