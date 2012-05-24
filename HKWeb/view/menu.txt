@@ -109,6 +109,11 @@
 ---/sports/fitness-accessories/support-gear/ankle
 --/sports/fitness-accessories/combos
 --/sports/fitness-accessories/miscellaneous-accessories
+-/sports/fitness-equipment
+--/sports/fitness-equipment/treadmills
+--/sports/fitness-equipment/crosstrainers
+--/sports/fitness-equipment/exercise-bike
+--/sports/fitness-equipment/rowers
 -/sports/sports-equipment
 --/sports/sports-equipment/football
 ---/sports/sports-equipment/football/balls
