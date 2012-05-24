@@ -332,6 +332,14 @@ public enum EnumRoleHasPermission {
           EnumPermission.DELETE_LINEITEM,
           EnumPermission.EDIT_LINEITEM
       )
+  ),
+  
+CATEGORY_MANAGER_L1(
+      EnumRole.CATEGORY_MANAGER_L1,
+      Arrays.asList(
+          EnumPermission.VIEW_DELIVERY_QUEUE,
+          EnumPermission.UPDATE_DELIVERY_QUEUE
+      )
   ),;
 
   EnumRole enumRole;
