@@ -11,8 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class OrderSourceFinder { 
 
+public class OrderSourceFinder {
   public Map getOrderReferrer(HttpServletRequest httpRequest) {
     Long primaryReferrerId = null;
     Long secondaryReferrerId = null;
@@ -62,24 +62,24 @@ public class OrderSourceFinder {
     else if(httpRequest.getParameter("affid") != null || utm_source.toLowerCase().equals(UtmSourceConstants.AFFILIATES.toLowerCase())){
       primaryReferrerId = EnumPrimaryReferrerForOrder.AFFILIATE.getId();
       if(httpRequest.getParameter("affid") != null){
-        secondaryReferrerId = EnumSecondaryReferrerForOrder.AFFILIATE_EXTERNAL.getId();
+        secondaryReferrerId = EnumSecondaryReferrerForOrder.AFFILIATE_PAID.getId();
       }
       else{
-        secondaryReferrerId = EnumSecondaryReferrerForOrder.AFFILIATE_INTERNAL.getId();
+        secondaryReferrerId = EnumSecondaryReferrerForOrder.AFFILIATE_UNPAID.getId();
       }
     }
 
     else if(!utm_source.equals("")
         && (utm_source.toLowerCase().contains("VZR".toLowerCase())
-        || utm_source == UtmSourceConstants.VIZURY)
+        || utm_source.toLowerCase().equals(UtmSourceConstants.VIZURY.toLowerCase()))
         ){
       primaryReferrerId = EnumPrimaryReferrerForOrder.VIZURY.getId();
     }
 
     else if(!utm_medium.equals("")
-        && (utm_medium == UtmMediumConstants.HOMEBANNER
-        || utm_medium == UtmMediumConstants.SITE
-        || referrer == EnumPrimaryReferrerForOrder.HEALTHKART.getName())
+        && (utm_medium.toLowerCase().equals(UtmMediumConstants.HOMEBANNER.toLowerCase())
+        || utm_medium.toLowerCase().equals(UtmMediumConstants.SITE.toLowerCase())
+        || referrer.toLowerCase().contains(EnumPrimaryReferrerForOrder.HEALTHKART.getName().toLowerCase()))
         ){
       primaryReferrerId = EnumPrimaryReferrerForOrder.HEALTHKART.getId();
     }
@@ -89,11 +89,25 @@ public class OrderSourceFinder {
         || utm_source.toLowerCase().equals(UtmSourceConstants.NOTIFYME.toLowerCase())
         || utm_source.toLowerCase().equals(UtmSourceConstants.ENEWSLETTER.toLowerCase())){
       primaryReferrerId = EnumPrimaryReferrerForOrder.EMAIL.getId();
+      if(utm_source.toLowerCase().equals(UtmSourceConstants.NOTIFYME.toLowerCase())){
+        secondaryReferrerId = EnumSecondaryReferrerForOrder.NOTIFYME.getId();
+      }
+      else if(utm_source.toLowerCase().equals(UtmSourceConstants.ENEWSLETTER.toLowerCase())){
+        secondaryReferrerId = EnumSecondaryReferrerForOrder.ENEWSLETTER.getId();
+      }
     }
 
-    else if(utm_source.toLowerCase().equals(UtmSourceConstants.KOMLI.toLowerCase())
-        || utm_source.toLowerCase().equals(UtmSourceConstants.OHANA.toLowerCase())){
+    else if(!referrer.equals("")){
       primaryReferrerId = EnumPrimaryReferrerForOrder.OTHERS.getId();
+      if(utm_source.toLowerCase().equals(UtmSourceConstants.KOMLI.toLowerCase())){
+        secondaryReferrerId = EnumSecondaryReferrerForOrder.KOMLI.getId();
+      }
+      else if(utm_source.toLowerCase().equals(UtmSourceConstants.OHANA.toLowerCase())){
+        secondaryReferrerId = EnumSecondaryReferrerForOrder.OHANA.getId();
+      }
+      else {
+        secondaryReferrerId = EnumSecondaryReferrerForOrder.OTHERS.getId();
+      }
     }
 
     orderReferres.put(HttpRequestAndSessionConstants.PRIMARY_REFERRER_ID, primaryReferrerId);
