@@ -180,9 +180,7 @@ public enum EnumRoleHasPermission {
           EnumPermission.UPDATE_DELIVERY_QUEUE,
           EnumPermission.VIEW_OFFER,
           EnumPermission.VIEW_COUPON,
-          EnumPermission.EDIT_LINEITEM,
-          EnumPermission.VIEW_SHIPMENT_QUEUE,
-          EnumPermission.UPDATE_SHIPMENT_QUEUE
+          EnumPermission.EDIT_LINEITEM
       )
   ),
 
@@ -340,9 +338,7 @@ CATEGORY_MANAGER_L1(
       EnumRole.CATEGORY_MANAGER_L1,
       Arrays.asList(
           EnumPermission.VIEW_DELIVERY_QUEUE,
-          EnumPermission.UPDATE_DELIVERY_QUEUE,
-          EnumPermission.VIEW_SHIPMENT_QUEUE,
-          EnumPermission.UPDATE_SHIPMENT_QUEUE
+          EnumPermission.UPDATE_DELIVERY_QUEUE
       )
   ),;
 
