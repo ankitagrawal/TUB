@@ -43,9 +43,6 @@ public class AffilateServiceImpl implements AffilateService {
     private UserService          userService;
     @Autowired
     private AffiliateDao         affiliateDao;
-    /*
-     * @Autowired private AffiliateManager affiliateManager;
-     */
     @Autowired
     private OfferInstanceDao     offerInstanceDao;
     @Autowired

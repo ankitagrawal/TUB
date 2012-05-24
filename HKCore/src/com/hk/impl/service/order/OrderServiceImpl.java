@@ -72,7 +72,7 @@ public class OrderServiceImpl implements OrderService {
     private UserService            userService;
     @Autowired
     private OrderDao               orderDao;
-    // @Autowired
+    @Autowired
     private EmailManager           emailManager;
     @Autowired
     private WarehouseService       warehouseService;
@@ -269,18 +269,14 @@ public class OrderServiceImpl implements OrderService {
         return order;
     }
 
-    /*@Transactional
-    public Order moveOrderBackToActionQueue(Order order, String shippingOrderGatewayId) {
-        
-         * order.setOrderStatus(orderStatusDao.find(EnumOrderStatus.ActionAwaiting.getId())); order =
-         * getOrderDao().save(order);
-         
-
-        OrderLifecycleActivity orderLifecycleActivity = getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.EscalatedBackToAwaitingQueue);
-        getOrderLoggingService().logOrderActivity(order, userService.getLoggedInUser(), orderLifecycleActivity, shippingOrderGatewayId + "escalated back to  action queue");
-
-        return order;
-    }*/
+    /*
+     * @Transactional public Order moveOrderBackToActionQueue(Order order, String shippingOrderGatewayId) {
+     * order.setOrderStatus(orderStatusDao.find(EnumOrderStatus.ActionAwaiting.getId())); order =
+     * getOrderDao().save(order); OrderLifecycleActivity orderLifecycleActivity =
+     * getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.EscalatedBackToAwaitingQueue);
+     * getOrderLoggingService().logOrderActivity(order, userService.getLoggedInUser(), orderLifecycleActivity,
+     * shippingOrderGatewayId + "escalated back to action queue"); return order; }
+     */
 
     @Transactional
     public Order markOrderAsShipped(Order order) {

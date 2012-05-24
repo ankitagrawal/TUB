@@ -24,13 +24,14 @@ import com.hk.domain.order.ShippingOrderLifecycle;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.impl.dao.ReconciliationStatusDaoImpl;
+import com.hk.pact.dao.ReconciliationStatusDao;
 import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.service.ServiceLocatorFactory;
 
 /**
  * @author vaibhav.adlakha
@@ -42,22 +43,17 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 
     @Autowired
     private UserService                userService;
-
     @Autowired
     private InventoryService           inventoryService;
-
-    //@Autowired
-    private OrderService               orderService;
-
     @Autowired
     private ShippingOrderDao           shippingOrderDao;
-
     @Autowired
     private ShippingOrderStatusService shippingOrderStatusService;
-
     @Autowired
-    private ReconciliationStatusDaoImpl    reconciliationStatusDao;
-
+    private ReconciliationStatusDao    reconciliationStatusDao;
+    
+    private OrderService               orderService;
+    
     public ShippingOrder findByGatewayOrderId(String gatewayOrderId) {
         return getShippingOrderDao().findByGatewayOrderId(gatewayOrderId);
     }
@@ -168,7 +164,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
             logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_EscalatedToProcessingQueue);
         }
 
-        orderService.escalateOrderFromActionQueue(shippingOrder.getBaseOrder(), shippingOrder.getGatewayOrderId());
+        getOrderService().escalateOrderFromActionQueue(shippingOrder.getBaseOrder(), shippingOrder.getGatewayOrderId());
         return shippingOrder;
     }
 
@@ -254,12 +250,12 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     }
 
     public OrderService getOrderService() {
+        if(orderService == null){
+            orderService = ServiceLocatorFactory.getService(OrderService.class);
+        }
         return orderService;
     }
-
-    public void setOrderService(OrderService orderService) {
-        this.orderService = orderService;
-    }
+    
 
     public ShippingOrderDao getShippingOrderDao() {
         return shippingOrderDao;
@@ -269,11 +265,12 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         this.shippingOrderDao = shippingOrderDao;
     }
 
-    public ReconciliationStatusDaoImpl getReconciliationStatusDao() {
+
+    public ReconciliationStatusDao getReconciliationStatusDao() {
         return reconciliationStatusDao;
     }
 
-    public void setReconciliationStatusDao(ReconciliationStatusDaoImpl reconciliationStatusDao) {
+    public void setReconciliationStatusDao(ReconciliationStatusDao reconciliationStatusDao) {
         this.reconciliationStatusDao = reconciliationStatusDao;
     }
 

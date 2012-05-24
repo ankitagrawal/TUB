@@ -26,7 +26,7 @@ import com.shiro.PrincipalImpl;
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    private UserDao     userDao;
+    private UserDao         userDao;
     @Autowired
     private UserCartDao     userCartDao;
     @Autowired
@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
     private StoreService    storeService;
 
     public User getUserById(Long userId) {
-        return userDao.getUserById(userId);
+        return getUserDao().getUserById(userId);
     }
 
     public User findByUserHash(String userHash) {
@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public User findByLogin(String email) {
-        return userDao.findByLogin(email);
+        return getUserDao().findByLogin(email);
     }
 
     public User getAdminUser() {
@@ -119,41 +119,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByLoginAndStoreId(String login, Long storeId){
-       return getUserDao().findByLoginAndStoreId(login, storeId);
+    public User findByLoginAndStoreId(String login, Long storeId) {
+        return getUserDao().findByLoginAndStoreId(login, storeId);
     }
-    
-    //TODO: move such methods and methods getOrdersForUserSortedByDate to a user profile service
-    /*private Set<ProductVariant> getRecentlyOrderedProductVariantsForUser(User user) {
-        Map<String, ProductVariant> recentlyOrderedProductVariantsMap = new HashMap<String, ProductVariant>();
-        List<Order> ordersByRecentDate = new ArrayList<Order>(getOrdersForUserSortedByDate(user));
-        Product product;
-        ProductVariant productVariant;
-        if (!ordersByRecentDate.isEmpty()) {
-          for (Order order : ordersByRecentDate) {
-            CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(new HashSet<CartLineItem>(order.getCartLineItems()));
-            Set<CartLineItem> productCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).filter();
-            for (CartLineItem cartLineItem : productCartLineItems) {
-              productVariant = cartLineItem.getProductVariant();
-              product = cartLineItem.getProductVariant().getProduct();
-              if (!recentlyOrderedProductVariantsMap.containsKey(product.getId())) {
-                if ((productVariant != null) && (productVariant.getOutOfStock() == Boolean.FALSE) && (productVariant.getDeleted() == Boolean.FALSE)) {
-                  recentlyOrderedProductVariantsMap.put(product.getId(), productVariant);
-                  if (recentlyOrderedProductVariantsMap.size() == 3) {
-                    break;
-                  }
-                }
-              }
-            }
-            if (recentlyOrderedProductVariantsMap.size() == 3) {
-              break;
-            }
-          }
-        }
-        return new HashSet<ProductVariant>(recentlyOrderedProductVariantsMap.values());
-      }*/
-    
-    
+
+    // TODO: move such methods and methods getOrdersForUserSortedByDate to a user profile service
+    /*
+     * private Set<ProductVariant> getRecentlyOrderedProductVariantsForUser(User user) { Map<String, ProductVariant>
+     * recentlyOrderedProductVariantsMap = new HashMap<String, ProductVariant>(); List<Order> ordersByRecentDate = new
+     * ArrayList<Order>(getOrdersForUserSortedByDate(user)); Product product; ProductVariant productVariant; if
+     * (!ordersByRecentDate.isEmpty()) { for (Order order : ordersByRecentDate) { CartLineItemFilter cartLineItemFilter =
+     * new CartLineItemFilter(new HashSet<CartLineItem>(order.getCartLineItems())); Set<CartLineItem>
+     * productCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).filter(); for
+     * (CartLineItem cartLineItem : productCartLineItems) { productVariant = cartLineItem.getProductVariant(); product =
+     * cartLineItem.getProductVariant().getProduct(); if
+     * (!recentlyOrderedProductVariantsMap.containsKey(product.getId())) { if ((productVariant != null) &&
+     * (productVariant.getOutOfStock() == Boolean.FALSE) && (productVariant.getDeleted() == Boolean.FALSE)) {
+     * recentlyOrderedProductVariantsMap.put(product.getId(), productVariant); if
+     * (recentlyOrderedProductVariantsMap.size() == 3) { break; } } } } if (recentlyOrderedProductVariantsMap.size() ==
+     * 3) { break; } } } return new HashSet<ProductVariant>(recentlyOrderedProductVariantsMap.values()); }
+     */
 
     public UserDao getUserDao() {
         return userDao;

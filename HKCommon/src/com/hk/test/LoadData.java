@@ -8,6 +8,7 @@ import com.hk.service.ServiceLocatorFactory;
 
 public class LoadData {
 
+    @SuppressWarnings("unused")
     private ClassPathXmlApplicationContext appContext;
 
     private BaseDao                        baseDao;
