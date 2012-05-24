@@ -322,29 +322,30 @@ public class EditProductAttributesAction extends BaseAction {
         return new ForwardResolution("/pages/close.jsp");
     }
 
-    public Resolution saveFeatures() {
-        logger.debug("product id " + product);
-        if (productFeatures != null) {
-            for (ProductFeature productFeature : productFeatures) {
-                if (productFeature != null) {
-                    if (StringUtils.isNotBlank(productFeature.getName())) {
-                        logger.debug("productFeature id " + productFeature.getId());
-                        productFeature.setProduct(product);
-                        getBaseDao().save(productFeature);
-                    } else {
-                        if (productFeature.getId() != null) {
-                            logger.debug("Empty :  " + productFeature.getId());
-                            getBaseDao().delete(productFeature);
-                        }
-                    }
-                }
+  public Resolution saveFeatures() {
+    logger.debug("product id " + product);
+    if (productFeatures != null) {
+      for (ProductFeature productFeature : productFeatures) {
+        if (productFeature != null) {
+          if (StringUtils.isNotBlank(productFeature.getName())) {
+            logger.debug("productFeature id " + productFeature.getId());
+            productFeature.setProduct(product);
+            getBaseDao().save(productFeature);
+          } else {
+            if (productFeature.getId() != null) {
+              logger.debug("Empty :  " + productFeature.getId());
+              ProductFeature featureToDelete = getBaseDao().get(ProductFeature.class, productFeature.getId());
+              getBaseDao().delete(featureToDelete);
             }
+          }
         }
-        getProductService().save(product);
-        return new ForwardResolution("/pages/close.jsp");
+      }
     }
+    getProductService().save(product);
+    return new ForwardResolution("/pages/close.jsp");
+  }
 
-    public Resolution saveRelatedProducts() {
+  public Resolution saveRelatedProducts() {
         logger.info("product id " + product);
         List<Product> relatedProductsList = new ArrayList<Product>();
         if (relatedProducts != null) {

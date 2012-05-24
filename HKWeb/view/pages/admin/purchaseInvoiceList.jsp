@@ -1,8 +1,14 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
+<%@ page import="com.hk.pact.service.core.WarehouseService" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Purchase Invoice List">
+<%
+    WarehouseService warehouseService = ServiceLocatorFactory.getService(WarehouseService.class);
+    pageContext.setAttribute("warehouseList", warehouseService.getAllWarehouses());
+  %>
   <s:useActionBean beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction" var="pia"/>
   <s:layout-component name="htmlHead">
     <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
@@ -42,6 +48,13 @@
             <s:option value="true">True</s:option>
             <s:option value="false">False</s:option>
           </s:select>
+         <label>Warehouse:</label>
+         <s:select name="warehouse">
+           <s:option value="">-All-</s:option> 
+           <c:forEach items="${warehouseList}" var="warehouse">
+            <s:option value="${warehouse.id}">${warehouse.city}</s:option>
+           </c:forEach>
+         </s:select>
         <s:submit name="pre" value="Search Purchase Invoice"/>
       </s:form>
     </fieldset>
@@ -57,6 +70,7 @@
         <th>Created By</th>
         <th>Supplier</th>
         <th>Supplier TIN</th>
+        <th>Warehouse</th>
         <th>Status</th>
         <th>Last Update Date</th>
           <%--<th>Reconciled</th>--%>
@@ -75,6 +89,7 @@
           <td>${purchaseInvoice.createdBy.name}</td>
           <td>${purchaseInvoice.supplier.name}</td>
           <td>${purchaseInvoice.supplier.tinNumber}</td>
+          <td>${purchaseInvoice.warehouse.city}</td>
           <td>${purchaseInvoice.purchaseInvoiceStatus.name}</td>
           <td><fmt:formatDate value="${purchaseInvoice.createDate}" type="both" timeStyle="short"/></td>
           <td>

@@ -16,8 +16,6 @@ public class PaymentHistoryDaoImpl extends BaseDaoImpl implements PaymentHistory
     public List<PaymentHistory> getByPurchaseOrder(PurchaseOrder purchaseOrder) {
         String hqlQuery = " from PaymentHistory paymentHistory where paymentHistory.purchaseOrder = :purchaseOrder" + " order by paymentHistory.id desc";
         List<PaymentHistory> paymentHistories = getSession().createQuery(hqlQuery).setParameter("purchaseOrder", purchaseOrder).list();
-        
-        
         return paymentHistories;
     }
 

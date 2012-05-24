@@ -1,6 +1,6 @@
 package com.hk.web.action.admin.courier;
 
-import java.io.File;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -33,6 +33,9 @@ import com.hk.impl.dao.warehouse.WarehouseDaoImpl;
 import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.pact.service.core.PincodeService;
 import com.hk.util.XslGenerator;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @Secure(hasAnyPermissions = { PermissionConstants.SEARCH_ORDERS })
 @Component
@@ -131,18 +134,34 @@ public class ChangeDefaultCourierAction extends BaseAction {
         return new ForwardResolution("/pages/admin/changeDefaultCourier.jsp");
     }
 
-    /*
-     * public Resolution generatePincodeExcel() throws Exception { List<Pincode> pincodeList = new ArrayList<Pincode>();
-     * pincodeList = pincodeDao.listAll(); String excelFilePath = adminDownloadsPath + "/pincodeExcelFiles/pincodes" +
-     * System.currentTimeMillis() + ".xls"; final File excelFile = new File(excelFilePath);
-     * xslGenerator.generatePincodeXsl(pincodeList, excelFilePath); addRedirectAlertMessage(new SimpleMessage("Downlaod
-     * complete")); return new Resolution() { public void execute(HttpServletRequest req, HttpServletResponse res)
-     * throws Exception { OutputStream out = null; InputStream in = new BufferedInputStream(new
-     * FileInputStream(excelFile)); res.setContentLength((int) excelFile.length()); res.setHeader("Content-Disposition",
-     * "attachment; filename=\"" + excelFile.getName() + "\";"); out = res.getOutputStream(); // Copy the contents of
-     * the file to the output stream byte[] buf = new byte[4096]; int count = 0; while ((count = in.read(buf)) >= 0) {
-     * out.write(buf, 0, count); } } }; }
-     */
+  public Resolution generatePincodeExcel() throws Exception {
+    List<PincodeDefaultCourier> pincodeDefaultCourierList = new ArrayList<PincodeDefaultCourier>();
+
+    pincodeDefaultCourierList = pincodeDao.getAll(PincodeDefaultCourier.class);
+
+    String excelFilePath = adminDownloadsPath + "/pincodeExcelFiles/pincodesDefaultCouriers_" + System.currentTimeMillis() + ".xls";
+    final File excelFile = new File(excelFilePath);
+
+    xslGenerator.generatePincodeDefaultCourierXsl(pincodeDefaultCourierList, excelFilePath);
+    addRedirectAlertMessage(new SimpleMessage("Downlaod complete"));
+    return new Resolution() {
+
+      public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
+        OutputStream out = null;
+        InputStream in = new BufferedInputStream(new FileInputStream(excelFile));
+        res.setContentLength((int) excelFile.length());
+        res.setHeader("Content-Disposition", "attachment; filename=\"" + excelFile.getName() + "\";");
+        out = res.getOutputStream();
+
+        // Copy the contents of the file to the output stream
+        byte[] buf = new byte[4096];
+        int count = 0;
+        while ((count = in.read(buf)) >= 0) {
+          out.write(buf, 0, count);
+        }
+      }
+    };
+  }
 
     public Resolution uploadPincodeExcel() throws Exception {
         if (fileBean == null) {
