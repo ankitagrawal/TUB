@@ -24,14 +24,13 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.User;
 import com.hk.manager.EmailManager;
 import com.hk.manager.ReferrerProgramManager;
-import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.UserService;
-import com.hk.pact.service.store.StoreService;
 import com.hk.pact.service.core.AffilateService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.RewardPointService;
+import com.hk.pact.service.store.StoreService;
 
 @Service
 public class AdminOrderServiceImpl implements AdminOrderService {
@@ -67,7 +66,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             getAdminShippingOrderService().putShippingOrderOnHold(shippingOrder);
         }
         order.setOrderStatus(getOrderService().getOrderStatus(EnumOrderStatus.OnHold));
-        order = getOrderDao().save(order);
+        order = getOrderService().save(order);
 
         /**
          * Order lifecycle activity logging - Order Put OnHold
@@ -143,7 +142,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             order.setOrderStatus(getOrderService().getOrderStatus(EnumOrderStatus.Placed));
         }
 
-        order = getOrderDao().save(order);
+        order = getOrderService().save(order);
 
         /**
          * Order lifecycle activity logging - Order Put OnHold
@@ -188,7 +187,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
         if (shouldUpdate) {
             order.setOrderStatus(getOrderStatusService().find(boStatusOnSuccess));
-            order = getOrderDao().save(order);
+            order = getOrderService().save(order);
         }
         /*
          * else { order.setOrderStatus(orderStatusDao.find(boStatusOnFailure.getId())); order =

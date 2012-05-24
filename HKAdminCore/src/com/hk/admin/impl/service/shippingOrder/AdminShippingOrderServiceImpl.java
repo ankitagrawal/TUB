@@ -55,7 +55,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     private SkuService                 skuService;
     @Autowired
     private WarehouseService           warehouseService;
-    //@Autowired
+    @Autowired
     private AdminOrderService          adminOrderService;
     @Autowired
     private ShipmentService            shipmentService;
@@ -347,7 +347,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     }
 
     public void setInventoryService(InventoryService inventoryService) {
-        inventoryService = inventoryService;
+        this.inventoryService = inventoryService;
     }
 
     public AdminShippingOrderDao getAdminShippingOrderDao() {

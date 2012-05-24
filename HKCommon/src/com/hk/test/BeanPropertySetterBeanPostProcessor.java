@@ -1,4 +1,4 @@
-package com.hk.core;
+package com.hk.test;
 
 import java.beans.BeanInfo;
 import java.beans.Introspector;
@@ -7,14 +7,15 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-import javax.management.IntrospectionException;
-
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
-import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 
+/**
+ * test class only not to be used as of now.
+ * @author vaibhav.adlakha
+ *
+ */
 public class BeanPropertySetterBeanPostProcessor 
 //implements BeanFactoryPostProcessor, BeanPostProcessor
 {

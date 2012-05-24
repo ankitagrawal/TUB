@@ -31,6 +31,7 @@ import com.hk.domain.warehouse.Warehouse;
 import com.hk.exception.NoSkuException;
 import com.hk.exception.OrderSplitException;
 import com.hk.pact.service.OrderStatusService;
+import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.web.action.admin.queue.ActionAwaitingQueueAction;
 import com.hk.web.action.error.AdminPermissionAction;
@@ -38,17 +39,19 @@ import com.hk.web.action.error.AdminPermissionAction;
 @Component
 public class SplitBaseOrderAction extends BaseAction {
 
-    private static Logger              logger                   = LoggerFactory.getLogger(SplitBaseOrderAction.class);
+    private static Logger             logger                   = LoggerFactory.getLogger(SplitBaseOrderAction.class);
 
-    private Order                      baseOrder;
+    private Order                     baseOrder;
     @Autowired
-    private AdminShippingOrderService  adminShippingOrderService;
+    private AdminShippingOrderService adminShippingOrderService;
     @Autowired
-    private OrderService               orderService;
+    private OrderLoggingService       orderLoggingService;
     @Autowired
-    private OrderStatusService         orderStatusService;
+    private OrderStatusService        orderStatusService;
+    @Autowired
+    private OrderService              orderService;
 
-    Map<CartLineItem, Warehouse>       cartLineItemWarehouseMap = new HashMap<CartLineItem, Warehouse>();
+    Map<CartLineItem, Warehouse>      cartLineItemWarehouseMap = new HashMap<CartLineItem, Warehouse>();
 
     @DontValidate
     @DefaultHandler
@@ -105,7 +108,7 @@ public class SplitBaseOrderAction extends BaseAction {
 
             baseOrder.setOrderStatus(orderStatusService.find(EnumOrderStatus.InProcess));
             baseOrder = orderService.save(baseOrder);
-            orderService.logOrderActivity(baseOrder, EnumOrderLifecycleActivity.OrderSplit);
+            getOrderLoggingService().logOrderActivity(baseOrder, EnumOrderLifecycleActivity.OrderSplit);
 
             addRedirectAlertMessage(new SimpleMessage("Order : " + baseOrder.getGatewayOrderId() + " was split manually."));
             return new RedirectResolution(ActionAwaitingQueueAction.class);
@@ -131,13 +134,25 @@ public class SplitBaseOrderAction extends BaseAction {
         this.cartLineItemWarehouseMap = cartLineItemWarehouseMap;
     }
 
+    public void setOrderStatusService(OrderStatusService orderStatusService) {
+        this.orderStatusService = orderStatusService;
+    }
+
+    public OrderLoggingService getOrderLoggingService() {
+        return orderLoggingService;
+    }
+
+    public void setOrderLoggingService(OrderLoggingService orderLoggingService) {
+        this.orderLoggingService = orderLoggingService;
+    }
+
+    public OrderService getOrderService() {
+        return orderService;
+    }
 
     public void setOrderService(OrderService orderService) {
         this.orderService = orderService;
     }
 
-    public void setOrderStatusService(OrderStatusService orderStatusService) {
-        this.orderStatusService = orderStatusService;
-    }
-
+    
 }

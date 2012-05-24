@@ -12,13 +12,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.hk.constants.HttpRequestAndSessionConstants;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumPaymentStatus;
-import com.hk.constants.HttpRequestAndSessionConstants;
 import com.hk.constants.referrer.EnumPrimaryReferrerForOrder;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.affiliate.Affiliate;
@@ -31,7 +31,14 @@ import com.hk.domain.catalog.product.combo.ComboInstance;
 import com.hk.domain.catalog.product.combo.ComboInstanceHasProductVariant;
 import com.hk.domain.matcher.CartLineItemMatcher;
 import com.hk.domain.offer.OfferInstance;
-import com.hk.domain.order.*;
+import com.hk.domain.order.CartLineItem;
+import com.hk.domain.order.CartLineItemConfig;
+import com.hk.domain.order.CartLineItemExtraOption;
+import com.hk.domain.order.Order;
+import com.hk.domain.order.OrderCategory;
+import com.hk.domain.order.PrimaryReferrerForOrder;
+import com.hk.domain.order.SecondaryReferrerForOrder;
+import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.user.User;
@@ -328,7 +335,7 @@ public class OrderManager {
          * Order lifecycle activity logging - Payement Marked Successful
          */
         if (payment.getPaymentStatus().getId().equals(EnumPaymentStatus.SUCCESS.getId())) {
-            getOrderService().logOrderActivity(order, order.getUser(), getOrderService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful), null);
+            getOrderLoggingService().logOrderActivity(order, order.getUser(), getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful), null);
         }
 
         // order.setAmount(pricingDto.getGrandTotalPayable());
@@ -362,7 +369,7 @@ public class OrderManager {
         /**
          * Order lifecycle activity logging - Order Placed
          */
-        orderService.logOrderActivity(order, order.getUser(), getOrderService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderPlaced), null);
+        getOrderLoggingService().logOrderActivity(order, order.getUser(), getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderPlaced), null);
 
         getUserService().updateIsProductBought(order);
 
@@ -383,7 +390,7 @@ public class OrderManager {
             /**
              * Order lifecycle activity logging - Order split to shipping orders
              */
-            getOrderService().logOrderActivity(order, getUserService().getAdminUser(), getOrderService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), null);
+            getOrderLoggingService().logOrderActivity(order, getUserService().getAdminUser(), getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), null);
 
             // auto escalate shipping orders if possible
             if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
@@ -735,7 +742,7 @@ public class OrderManager {
                             Double surcharge = 0.05;
                             taxPaid = costPrice * sku.getTax().getValue() * (1 + surcharge);
                         } else {
-                            Double surcharge = 0.0; // CST Surcharge
+                            //Double surcharge = 0.0; // CST Surcharge
                             Double cst = 0.02; // CST
                             taxPaid = costPrice * cst;
                         }
