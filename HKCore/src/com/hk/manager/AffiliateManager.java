@@ -40,7 +40,7 @@ public class AffiliateManager {
     @Autowired
     private AffilateService      affilateService;
 
-    //@Autowired
+    @Autowired
     private EmailManager         emailManager;
     @Autowired
     private UserManager          userManager;

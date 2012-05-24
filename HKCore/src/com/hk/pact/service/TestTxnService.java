@@ -7,6 +7,5 @@ public interface TestTxnService {
     
     public void addTestBadge();
     
-    
     public void deleteTestBadge();
 }
