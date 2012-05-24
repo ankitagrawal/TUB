@@ -442,7 +442,7 @@ public class ReportManager {
                 setCellValue(row, 15, declaredValue);
                 setCellValue(row, 16, "");
                 String paymentMode = "Pre-paid";
-                if (order.getBaseOrder().getPayment().getPaymentMode().getId().equals(EnumPaymentMode.COD.getId())) {
+                if (order.getBaseOrder().getPayment().getPaymentMode().getId().equals(EnumPaymentMode.COD.getId()) && order.getAmount() > 10.0) {
                     setCellValue(row, 17, order.getAmount());
                     paymentMode = ReportConstants.COD;
                 }
@@ -561,7 +561,7 @@ public class ReportManager {
 //                declaredValue += lineItem.getQty() * lineItem.getMarkedPrice();
 //            }
             setCellValue(row, 13, declaredValue);
-            if (order.getBaseOrder().getPayment().getPaymentMode().getId().equals(EnumPaymentMode.COD.getId())) {
+            if (order.getBaseOrder().getPayment().getPaymentMode().getId().equals(EnumPaymentMode.COD.getId()) && order.getAmount() > 10.0) {
                 setCellValue(row, 14, order.getAmount());
                 setCellValue(row, 15, "COD");
             } else {
