@@ -16,8 +16,8 @@ public class InvoiceNumHelper {
         if (isServiceOrder) {
             return PREFIX_FOR_SERVICE_ORDER;
         } else if (Boolean.TRUE.equals(isB2bOrder)) {
-            return PREFIX_FOR_RETAIL_ORDER;
+            return PREFIX_FOR_B2B_ORDER;
         }
-        return PREFIX_FOR_B2B_ORDER;
+        return PREFIX_FOR_RETAIL_ORDER;
     }
 }

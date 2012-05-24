@@ -20,6 +20,7 @@ import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.validation.Validate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +49,7 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.report.manager.ReportManager;
 import com.hk.web.action.error.AdminPermissionAction;
+import com.hk.util.CustomDateTypeConvertor;
 
 @Component
 public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
@@ -87,6 +89,13 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
     ReportManager                      reportGenerator;
 
     private Integer                    defaultPerPage    = 30;
+
+    private Boolean                    courierDownloadFunctionality;
+
+    private Date                       startDate;
+
+    private Date                       endDate;
+
 
     @DontValidate
     @DefaultHandler
@@ -196,7 +205,7 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
         } catch (Exception ex) {
             logger.error("Exception occurred while generating pdf.", ex);
         }
-        addRedirectAlertMessage(new SimpleMessage("Sorry! No shipping orders exist for courier:" + courier != null ? courier.getName().toUpperCase() : "All"));
+        addRedirectAlertMessage(new SimpleMessage("Sorry! No shipping orders exist for courier:" + (courier != null ? courier.getName().toUpperCase() : "All")));
         return new RedirectResolution(ShipmentAwaitingQueueAction.class);
     }
 
@@ -204,7 +213,7 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
     @Secure(hasAnyPermissions = { PermissionConstants.DOWNLOAD_COURIER_EXCEL }, authActionBean = AdminPermissionAction.class)
     public Resolution generateCourierReport() {
         // TODO: #warehouse fix this
-
+        if(courierDownloadFunctionality){
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
             xlsFile = new File(adminDownloads + "/reports/courier-report-" + sdf.format(new Date()) + ".xls");
@@ -216,12 +225,12 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
             }
             if (courier != null) {
                 if (courier.equals(courierDao.getCourierById(EnumCourier.BlueDart.getId())) || courier.equals(courierDao.getCourierById(EnumCourier.BlueDart_COD.getId()))) {
-                    xlsFile = reportGenerator.generateCourierReportXslForBlueDart(xlsFile.getPath(), EnumShippingOrderStatus.SO_Packed, courierList);
+                    xlsFile = reportGenerator.generateCourierReportXslForBlueDart(xlsFile.getPath(), EnumShippingOrderStatus.SO_Packed, courierList,startDate,endDate);
                 } else {
-                    xlsFile = reportGenerator.generateCourierReportXsl(xlsFile.getPath(), EnumShippingOrderStatus.SO_Packed, courierList);
+                    xlsFile = reportGenerator.generateCourierReportXsl(xlsFile.getPath(), EnumShippingOrderStatus.SO_Packed, courierList,startDate,endDate);
                 }
             } else {
-                xlsFile = reportGenerator.generateCourierReportXsl(xlsFile.getPath(), EnumShippingOrderStatus.SO_Packed, courierList);
+                xlsFile = reportGenerator.generateCourierReportXsl(xlsFile.getPath(), EnumShippingOrderStatus.SO_Packed, courierList,startDate,endDate);
             }
             addRedirectAlertMessage(new SimpleMessage("Courier report successfully generated."));
         } catch (Exception e) {
@@ -230,6 +239,10 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
         }
 
         return new HTTPResponseResolution();
+        } else {
+            return new ForwardResolution("/pages/admin/downloadCourierExcel.jsp");
+        }
+
     }
 
     /**
@@ -327,5 +340,31 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
 
     public void setSeekInvoiceNumService(SeekInvoiceNumService seekInvoiceNumService) {
         this.seekInvoiceNumService = seekInvoiceNumService;
+    }
+
+    public Boolean isCourierDownloadFunctionality() {
+        return courierDownloadFunctionality;
+    }
+
+    public void setCourierDownloadFunctionality(Boolean courierDownloadFunctionality) {
+        this.courierDownloadFunctionality = courierDownloadFunctionality;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    @Validate(converter = CustomDateTypeConvertor.class)
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    @Validate(converter = CustomDateTypeConvertor.class)
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 }

@@ -1,10 +1,11 @@
 <%@ taglib prefix="s" uri="http://stripes.sourceforge.net/stripes-dynattr.tld" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.core.accounting.AccountingInvoicePdfAction" var="accInvoicePDFbean"/>
-<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Finance">
+<s:useActionBean beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction" var="shipmentQueueBean"/>
+<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Download Courier Excel">
 
 <s:layout-component name="htmlHead">
 
@@ -16,12 +17,19 @@
 </s:layout-component>
 
 <s:layout-component name="content">
-<div class="accountingInvoicePDFBox">
-  <s:form beanclass="com.hk.web.action.core.accounting.AccountingInvoicePdfAction">
+<div class="downloadCourierExcel">
+  <s:form beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction">
     <fieldset class="right_label">
-      <legend>Download Accounting Invoice PDFs</legend>
+      <legend>Download Courier Excel</legend>
       <ul>
-
+        <li>
+            <label>Select Courier</label>
+            <s:select name="courier" class="courierService">
+              <s:option value="">All Couriers</s:option>
+              <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList" value="id"
+                                         label="name"/>
+            </s:select>
+        </li>
         <li>
           <label>Start
             date</label><s:text class="date_input startDate" style="width:150px"
@@ -34,14 +42,17 @@
         </li>
 
         <li>
-          <s:submit name="downloadAccountingInvoicePDF" value="Download Accounting Invoice PDF" class="dateFieldValidator"/>
+            <s:submit name="generateCourierReport" value="Download Courier Excel" class="dateFieldValidator" style="width:400px">
+              Download Courier Excel
+            <s:param name="courierDownloadFunctionality" value="true"/>
+            </s:submit>
 
         </li>
       </ul>
     </fieldset>
   </s:form>
 </div>
-  
+
 </s:layout-component>
 </s:layout-render>
 <script type="text/javascript">

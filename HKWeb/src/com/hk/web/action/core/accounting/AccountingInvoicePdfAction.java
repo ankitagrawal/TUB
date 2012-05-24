@@ -11,6 +11,7 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction;
 import com.hk.admin.util.AccountingInvoicePdfGenerator;
+import com.hk.util.CustomDateTypeConvertor;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -21,10 +22,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Autowired;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.validation.Validate;
+import net.sourceforge.stripes.validation.ValidationMethod;
+import net.sourceforge.stripes.validation.SimpleError;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -58,21 +59,27 @@ public class AccountingInvoicePdfAction extends BaseAction {
   private Date                               endDate;
 
 
+   @ValidationMethod(on = {"downloadAccountingInvoicePDF"})
+   public void validateDateGap(){
+        long dayConverter = 24 * 3600 * 1000;
+        long dayDifference = (endDate.getTime() - startDate.getTime()) / dayConverter;
+        if (dayDifference > 2l) {
+            getContext().getValidationErrors().add("1", new SimpleError("Please enter the dates with a gap of MAX 2 days."));
+        }
+    }
+
+  @DefaultHandler
   public Resolution pre() {
     return new ForwardResolution("/pages/admin/finance.jsp");
   }
 
   public Resolution downloadAccountingInvoicePDF() {
     logger.info("Inside pre method of AccountingInvoicePdfAction.");
-
     String pdfFilePath = null;
     pdfFilePath = adminDownloads + "/accountingInvoicePDFs/" + sdf.format(new Date()) + "/All_Accounting_Invoices" + ".pdf";
     final File pdfFile = new File(pdfFilePath);
     pdfFile.getParentFile().mkdirs();
-
-    ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
-    shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForShipmentAwaiting()));
-    shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, true);
+    shippingOrderList=shippingOrderService.getShippingOrderList(startDate,endDate);
 
     if (shippingOrderList != null & shippingOrderList.size() > 0) {
 
@@ -112,8 +119,8 @@ public class AccountingInvoicePdfAction extends BaseAction {
         }
       };
     }
-    addRedirectAlertMessage(new SimpleMessage("Sorry! There are no orders in shipment queue"));
-    return new RedirectResolution(ShipmentAwaitingQueueAction.class);
+    addRedirectAlertMessage(new SimpleMessage("Sorry! There are no shipped orders."));
+    return new RedirectResolution(AccountingInvoicePdfAction.class);
   }
 
   public List<ShippingOrder> getShippingOrderList() {
@@ -128,6 +135,7 @@ public class AccountingInvoicePdfAction extends BaseAction {
     return startDate;
   }
 
+  @Validate(converter = CustomDateTypeConvertor.class)
   public void setStartDate(Date startDate) {
     this.startDate = startDate;
   }
@@ -136,6 +144,7 @@ public class AccountingInvoicePdfAction extends BaseAction {
     return endDate;
   }
 
+  @Validate(converter = CustomDateTypeConvertor.class)
   public void setEndDate(Date endDate) {
     this.endDate = endDate;
   }

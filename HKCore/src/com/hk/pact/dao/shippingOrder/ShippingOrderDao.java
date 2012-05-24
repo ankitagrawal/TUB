@@ -9,6 +9,7 @@ import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderLifeCycleActivity;
 import com.hk.domain.sku.Sku;
+import com.hk.domain.courier.Courier;
 import com.hk.pact.dao.BaseDao;
 
 public interface ShippingOrderDao extends BaseDao {
@@ -36,5 +37,10 @@ public interface ShippingOrderDao extends BaseDao {
     public Long getBookedQtyOfSkuInQueue(Sku sku);
 
     public List<Long> getShippingOrderListByCourier(Date startDate, Date endDate, Long courierId);
+
+    public List<ShippingOrder> getShippingOrderList(Date startDate,Date endDate);
+
+    public List<ShippingOrder> getShippingOrderListForCouriers(Date startDate,Date endDate,List<Courier> courierList);
+
 
 }

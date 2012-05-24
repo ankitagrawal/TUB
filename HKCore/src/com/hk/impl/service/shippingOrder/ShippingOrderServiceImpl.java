@@ -24,6 +24,7 @@ import com.hk.domain.order.ShippingOrderLifecycle;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.domain.courier.Courier;
 import com.hk.impl.dao.ReconciliationStatusDaoImpl;
 import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
 import com.hk.pact.service.UserService;
@@ -237,6 +238,15 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         return searchShippingOrders(shippingOrderSearchCriteria, true, pageNo, perPage);
     }
 
+    public List<ShippingOrder> getShippingOrderList(Date startDate, Date endDate) {
+      return getShippingOrderDao().getShippingOrderList(startDate,endDate);
+    }
+
+    public List<ShippingOrder> getShippingOrderListForCouriers(Date startDate,Date endDate,List<Courier> courierList){
+        return getShippingOrderDao().getShippingOrderListForCouriers(startDate,endDate,courierList);
+    }
+
+
     public UserService getUserService() {
         return userService;
     }
@@ -289,5 +299,4 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     public ShippingOrder findByTrackingId(String trackingId) {
         return getShippingOrderDao().findByTrackingId(trackingId);
     }
-
 }

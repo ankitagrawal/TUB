@@ -1,6 +1,7 @@
 package com.hk.pact.service.shippingOrder;
 
 import java.util.List;
+import java.util.Date;
 
 import com.akube.framework.dao.Page;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
@@ -10,6 +11,7 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderLifeCycleActivity;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.domain.courier.Courier;
 
 /**
  * @author vaibhav.adlakha
@@ -65,8 +67,10 @@ public interface ShippingOrderService {
     public void logShippingOrderActivity(ShippingOrder shippingOrder, EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity, String comments);
 
     public void logShippingOrderActivity(ShippingOrder shippingOrder, User user, ShippingOrderLifeCycleActivity shippingOrderLifeCycleActivity, String comments);
-    
-    
+
+    public List<ShippingOrder> getShippingOrderList(Date startDate,Date endDate);
+
+    public List<ShippingOrder> getShippingOrderListForCouriers(Date startDate,Date endDate,List<Courier> courierList);
 
 
 }
