@@ -28,9 +28,11 @@ public class LineItemDaoImpl extends BaseDaoImpl implements LineItemDao {
         return (LineItem) getSession().createQuery(query).setEntity("sku", sku).setEntity("shippingOrder", shippingOrder).uniqueResult();
     }
 
-    public void flipProductVariants(Sku srcSKu, Sku dstSku, ShippingOrder shippingOrder) {
+    public void flipProductVariants(Sku srcSku, Sku dstSku, ShippingOrder shippingOrder) {
 
-        LineItem li = (LineItem) findUniqueByNamedParams(" from LineItem li where where li.shippingOrder = :shippingOrder and li.sku = :srcSKu ", new String[]{"shippingOrder","srcSKu"}, new Object[]{shippingOrder,srcSKu});
+        LineItem li = (LineItem) findUniqueByNamedParams(" from LineItem li where li.shippingOrder = :shippingOrder and li.sku = :srcSku ",
+            new String[]{"shippingOrder","srcSku"},
+            new Object[]{shippingOrder, srcSku});
         li.setSku(dstSku);
         update(li);
         
