@@ -63,11 +63,11 @@ import com.hk.pact.dao.shippingOrder.ShippingOrderLifecycleDao;
 import com.hk.pact.dao.sku.SkuDao;
 import com.hk.pact.service.accounting.InvoiceService;
 import com.hk.pact.service.catalog.CategoryService;
+import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.CartLineItemUtil;
 import com.hk.util.HKImageUtils;
-import com.hk.util.ImageManager;
 
 public class Functions {
 
@@ -238,8 +238,8 @@ public class Functions {
         return categoryDao.getBrandsByCategory(Arrays.asList(((Category) o).getName()));
     }
 
+    @SuppressWarnings("deprecation")
     public static Double netDiscountOnLineItem(Object o) {
-        // TODO: # warehouse fix this.
         CartLineItem lineItem = (CartLineItem) o;
         OrderManager orderManager = ServiceLocatorFactory.getService(OrderManager.class);
         return orderManager.getNetDiscountOnLineItem(lineItem);
@@ -248,9 +248,9 @@ public class Functions {
     public static List<String> orderComments(Object o) {
         Order order = (Order) o;
         List<String> comments = new ArrayList<String>();
-        OrderService orderService = ServiceLocatorFactory.getService(OrderService.class);
+        OrderLoggingService orderLoggingService = ServiceLocatorFactory.getService(OrderLoggingService.class);
         for (OrderLifecycle orderLifecycle : order.getOrderLifecycles()) {
-            if (orderLifecycle.getOrderLifecycleActivity().equals(orderService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.LoggedComment))) {
+            if (orderLifecycle.getOrderLifecycleActivity().equals(orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.LoggedComment))) {
                 comments.add(orderLifecycle.getComments());
             }
         }
@@ -328,7 +328,6 @@ public class Functions {
     }
 
     public static String getS3ImageUrl(Object o1, Object o2) {
-        ImageManager imageManager = ServiceLocatorFactory.getService(ImageManager.class);
         EnumImageSize imageSize = (EnumImageSize) o1;
         Long imageId = (Long) o2;
         if (imageId == null) {

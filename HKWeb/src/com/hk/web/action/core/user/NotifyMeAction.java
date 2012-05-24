@@ -70,6 +70,7 @@ public class NotifyMeAction extends BaseAction {
         return new ForwardResolution("/pages/modal/notifyMe.jsp");
     }
 
+    @SuppressWarnings("unchecked")
     @JsonHandler
     public Resolution notifyMe() {
         logger.debug("notifyMe: " + notifyMe);

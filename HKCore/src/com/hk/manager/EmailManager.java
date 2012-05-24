@@ -49,85 +49,83 @@ import com.hk.pact.dao.marketing.EmailCampaignDao;
 import com.hk.pact.service.EmailService;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.CategoryService;
-import com.hk.pact.service.order.OrderService;
+import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.util.HtmlUtil;
 
 @SuppressWarnings("unchecked")
 @Component
 public class EmailManager {
 
-    private static Logger     logger                        = LoggerFactory.getLogger(EmailManager.class);
+    private static Logger       logger                        = LoggerFactory.getLogger(EmailManager.class);
 
-    private Set<String>       hkAdminEmails                 = null;
-    private Set<String>       hkReportAdminEmails           = null;
-    private Set<String>       babyAdminEmails               = null;
-    private Set<String>       beautyAdminEmails             = null;
-    private Set<String>       diabetesAdminEmails           = null;
-    private Set<String>       eyeAdminEmails                = null;
-    private Set<String>       homeDevicesAdminEmails        = null;
-    private Set<String>       nutritionAdminEmails          = null;
-    private Set<String>       personalCareAdminEmails       = null;
-    private Set<String>       logisticsAdminEmails          = null;
-    private Set<String>       sportsAdminEmails             = null;
-    private Set<String>       servicesAdminEmails           = null;
-    private Set<String>       marketingAdminEmails          = null;
-    private Set<String>       categoryHealthkartList        = null;
+    private Set<String>         hkAdminEmails                 = null;
+    private Set<String>         babyAdminEmails               = null;
+    private Set<String>         beautyAdminEmails             = null;
+    private Set<String>         diabetesAdminEmails           = null;
+    private Set<String>         eyeAdminEmails                = null;
+    private Set<String>         homeDevicesAdminEmails        = null;
+    private Set<String>         nutritionAdminEmails          = null;
+    private Set<String>         personalCareAdminEmails       = null;
+    private Set<String>         sportsAdminEmails             = null;
+    private Set<String>         servicesAdminEmails           = null;
 
     @Autowired
-    private BaseDao           baseDao;
+    private BaseDao             baseDao;
     @Autowired
-    private EmailService      emailService;
+    private EmailService        emailService;
     @Autowired
-    private OrderManager      orderManager;
+    private EmailRecepientDao   emailRecepientDao;
     @Autowired
-    private EmailRecepientDao emailRecepientDao;
+    private EmailerHistoryDao   emailerHistoryDao;
     @Autowired
-    private EmailerHistoryDao emailerHistoryDao;
+    private EmailCampaignDao    emailCampaignDao;
     @Autowired
-    private EmailCampaignDao  emailCampaignDao;
+    private LinkManager         linkManager;
     @Autowired
-    private LinkManager       linkManager;
+    private NotifyMeDao         notifyMeDao;
     @Autowired
-    private NotifyMeDao       notifyMeDao;
+    private CategoryService     categoryService;
     @Autowired
-    private CategoryService   categoryService;
+    private UserService         userService;
     @Autowired
-    private OrderService      orderService;
-    @Autowired
-    private UserService       userService;
+    private OrderLoggingService orderLoggingService;
 
     @Value("#{hkEnvProps['" + Keys.Env.hkAdminEmails + "']}")
-    private String            hkAdminEmailsString;
-    @Value("#{hkEnvProps['" + Keys.Env.hkReportAdminEmails + "']}")
-    private String            hkReportAdminEmailsString     = null;
+    private String              hkAdminEmailsString;
+    /*
+     * @Value("#{hkEnvProps['" + Keys.Env.hkReportAdminEmails + "']}") private String hkReportAdminEmailsString = null;
+     */
     @Value("#{hkEnvProps['" + Keys.Env.babyAdminEmails + "']}")
-    private String            babyAdminEmailsString         = null;
+    private String              babyAdminEmailsString         = null;
     @Value("#{hkEnvProps['" + Keys.Env.beautyAdminEmails + "']}")
-    private String            beautyAdminEmailsString       = null;
+    private String              beautyAdminEmailsString       = null;
     @Value("#{hkEnvProps['" + Keys.Env.diabetesAdminEmails + "']}")
-    private String            diabetesAdminEmailsString     = null;
+    private String              diabetesAdminEmailsString     = null;
     @Value("#{hkEnvProps['" + Keys.Env.eyeAdminEmails + "']}")
-    private String            eyeAdminEmailsString          = null;
+    private String              eyeAdminEmailsString          = null;
     @Value("#{hkEnvProps['" + Keys.Env.homeDevicesAdminEmails + "']}")
-    private String            homeDevicesAdminEmailsString  = null;
+    private String              homeDevicesAdminEmailsString  = null;
     @Value("#{hkEnvProps['" + Keys.Env.nutritionAdminEmails + "']}")
-    private String            nutritionAdminEmailsString    = null;
+    private String              nutritionAdminEmailsString    = null;
     @Value("#{hkEnvProps['" + Keys.Env.personalCareAdminEmails + "']}")
-    private String            personalCareAdminEmailsString = null;
-    @Value("#{hkEnvProps['" + Keys.Env.logisticsAdminEmails + "']}")
-    private String            logisticsAdminEmailsString    = null;
+    private String              personalCareAdminEmailsString = null;
+    /*
+     * @Value("#{hkEnvProps['" + Keys.Env.logisticsAdminEmails + "']}") private String logisticsAdminEmailsString =
+     * null;
+     */
     @Value("#{hkEnvProps['" + Keys.Env.sportsAdminEmails + "']}")
-    private String            sportsAdminEmailsString       = null;
+    private String              sportsAdminEmailsString       = null;
     @Value("#{hkEnvProps['" + Keys.Env.servicesAdminEmails + "']}")
-    private String            servicesAdminEmailsString     = null;
-    @Value("#{hkEnvProps['" + Keys.Env.marketingAdminEmails + "']}")
-    private String            marketingAdminEmailsString    = null;
-    @Value("#{hkEnvProps['" + Keys.Env.categoryHealthkart + "']}")
-    private String            categoryHealthkartListString  = null;
+    private String              servicesAdminEmailsString     = null;
 
+    @Value("#{hkEnvProps['" + Keys.Env.marketingAdminEmails + "']}")
+    /*
+     * private String marketingAdminEmailsString = null; @Value("#{hkEnvProps['" + Keys.Env.categoryHealthkart + "']}")
+     * private String categoryHealthkartListString = null;
+     */
     @PostConstruct
     public void postConstruction() {
-        this.hkReportAdminEmails = BaseUtils.split(hkReportAdminEmailsString, ",");
+        // this.hkReportAdminEmails = BaseUtils.split(hkReportAdminEmailsString, ",");
         this.hkAdminEmails = BaseUtils.split(hkAdminEmailsString, ",");
         this.babyAdminEmails = BaseUtils.split(babyAdminEmailsString, ",");
         this.beautyAdminEmails = BaseUtils.split(beautyAdminEmailsString, ",");
@@ -136,11 +134,11 @@ public class EmailManager {
         this.homeDevicesAdminEmails = BaseUtils.split(homeDevicesAdminEmailsString, ",");
         this.nutritionAdminEmails = BaseUtils.split(nutritionAdminEmailsString, ",");
         this.personalCareAdminEmails = BaseUtils.split(personalCareAdminEmailsString, ",");
-        this.logisticsAdminEmails = BaseUtils.split(logisticsAdminEmailsString, ",");
+        // this.logisticsAdminEmails = BaseUtils.split(logisticsAdminEmailsString, ",");
         this.sportsAdminEmails = BaseUtils.split(sportsAdminEmailsString, ",");
         this.servicesAdminEmails = BaseUtils.split(servicesAdminEmailsString, ",");
-        this.marketingAdminEmails = BaseUtils.split(marketingAdminEmailsString, ",");
-        this.categoryHealthkartList = BaseUtils.split(categoryHealthkartListString, ",");
+        // this.marketingAdminEmails = BaseUtils.split(marketingAdminEmailsString, ",");
+        // this.categoryHealthkartList = BaseUtils.split(categoryHealthkartListString, ",");
     }
 
     /*
@@ -262,7 +260,7 @@ public class EmailManager {
                     success = false;
             }
         }
-        return false;
+        return success;
     }
 
     public Set<String> categoryAdmins(Category category) {
@@ -561,7 +559,7 @@ public class EmailManager {
 
         Manufacturer manufacturer = lineItem.getProductVariant().getProduct().getManufacturer();
         String comments = "Email Sent to " + manufacturer.getName() + " at " + manufacturer.getEmail();
-        getOrderService().logOrderActivity(order, adminUser, getOrderService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.EmailSentToServiceProvider), comments);
+        getOrderLoggingService().logOrderActivity(order, adminUser, getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.EmailSentToServiceProvider), comments);
         return emailService.sendHtmlEmail(EmailTemplateConstants.serviceVoucherMailServiceProvider, valuesMap, manufacturer.getEmail(), manufacturer.getName());
     }
 
@@ -627,14 +625,6 @@ public class EmailManager {
         this.emailService = emailService;
     }
 
-    public OrderManager getOrderManager() {
-        return orderManager;
-    }
-
-    public void setOrderManager(OrderManager orderManager) {
-        this.orderManager = orderManager;
-    }
-
     public EmailRecepientDao getEmailRecepientDao() {
         return emailRecepientDao;
     }
@@ -675,14 +665,6 @@ public class EmailManager {
         this.notifyMeDao = notifyMeDao;
     }
 
-    public OrderService getOrderService() {
-        return orderService;
-    }
-
-    public void setOrderService(OrderService orderService) {
-        this.orderService = orderService;
-    }
-
     public UserService getUserService() {
         return userService;
     }
@@ -705,6 +687,14 @@ public class EmailManager {
 
     public void setBaseDao(BaseDao baseDao) {
         this.baseDao = baseDao;
+    }
+
+    public OrderLoggingService getOrderLoggingService() {
+        return orderLoggingService;
+    }
+
+    public void setOrderLoggingService(OrderLoggingService orderLoggingService) {
+        this.orderLoggingService = orderLoggingService;
     }
 
 }

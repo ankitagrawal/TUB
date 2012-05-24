@@ -35,6 +35,7 @@ import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.service.ServiceLocatorFactory;
 
 @Service
 public class AdminShippingOrderServiceImpl implements AdminShippingOrderService {
@@ -48,31 +49,30 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     private InventoryService           inventoryService;
     @Autowired
     private OrderService               orderService;
-
     @Autowired
     private ShippingOrderStatusService shippingOrderStatusService;
     @Autowired
     private SkuService                 skuService;
     @Autowired
     private WarehouseService           warehouseService;
-    @Autowired
     private AdminOrderService          adminOrderService;
     @Autowired
     private ShipmentService            shipmentService;
     @Autowired
     private AdminShippingOrderDao      adminShippingOrderDao;
 
-//    public List<Long> getShippingOrderListByCourier(Date startDate, Date endDate, Long courierId) {
-//        List<Long> shippingOrderList = getAdminShippingOrderDao().getShippingOrderListByCourier(startDate, endDate, courierId);
-//        return shippingOrderList;
-//    }
+    // public List<Long> getShippingOrderListByCourier(Date startDate, Date endDate, Long courierId) {
+    // List<Long> shippingOrderList = getAdminShippingOrderDao().getShippingOrderListByCourier(startDate, endDate,
+    // courierId);
+    // return shippingOrderList;
+    // }
 
     public List<Long> getShippingOrderListByCouriers(Date startDate, Date endDate, List<Long> courierId) {
         List<Long> shippingOrderList = getAdminShippingOrderDao().getShippingOrderListByCouriers(startDate, endDate, courierId);
         return shippingOrderList;
     }
 
-  public void cancelShippingOrder(ShippingOrder shippingOrder) {
+    public void cancelShippingOrder(ShippingOrder shippingOrder) {
         // Check if Order is in Action Queue before cancelling it.
         if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
             shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Cancelled));
@@ -319,6 +319,9 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     }
 
     public AdminOrderService getAdminOrderService() {
+        if (adminOrderService == null) {
+            adminOrderService = ServiceLocatorFactory.getService(AdminOrderService.class);
+        }
         return adminOrderService;
     }
 
@@ -347,7 +350,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     }
 
     public void setInventoryService(InventoryService inventoryService) {
-        inventoryService = inventoryService;
+        this.inventoryService = inventoryService;
     }
 
     public AdminShippingOrderDao getAdminShippingOrderDao() {

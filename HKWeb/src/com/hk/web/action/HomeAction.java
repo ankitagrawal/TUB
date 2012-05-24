@@ -9,14 +9,10 @@ import javax.servlet.http.HttpServletResponse;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.constants.core.Keys;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.category.CategoryImage;
 import com.hk.domain.content.PrimaryCategoryHeading;
@@ -24,13 +20,14 @@ import com.hk.helper.MenuHelper;
 import com.hk.impl.dao.catalog.category.CategoryImageDaoImpl;
 import com.hk.manager.UserManager;
 import com.hk.pact.dao.content.PrimaryCategoryHeadingDao;
+import com.hk.pact.service.TestTxnService;
 import com.hk.pact.service.catalog.CategoryService;
 
 // @HttpCache(expires=20000)
 @Component
 public class HomeAction extends BaseAction {
 
-    private static Logger        logger = LoggerFactory.getLogger(HomeAction.class);
+//    private static Logger        logger = LoggerFactory.getLogger(HomeAction.class);
 
     Category                     category;
     List<CategoryImage>          categoryImages;
@@ -49,11 +46,15 @@ public class HomeAction extends BaseAction {
     @Autowired
     PrimaryCategoryHeadingDao    primaryCategoryHeadingDao;
 
-    @Value("#{hkEnvProps['" + Keys.Env.hkNoReplyEmail + "']}")
-    private String               testProperty;
+    /*@Value("#{hkEnvProps['" + Keys.Env.hkNoReplyEmail + "']}")
+    private String               testProperty;*/
 
+    @Autowired
+    TestTxnService testService;
+    
     public Resolution pre() {
         menuHelper.postConstruction();
+        //testService.runTest();
         // IN CASE OF REVERT COMMENT EVERYTHING EXCEPT THE FORWARD RESOLUTION TO HOME.JSP AND ALSO REPLACE THE DYNAMIC
         // HOME.JSP WITH THE HARD CODED ONE
         System.out.println("1");
@@ -72,7 +73,7 @@ public class HomeAction extends BaseAction {
         public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
             RequestDispatcher dispatcher = getContext().getServletContext().getRequestDispatcher("/pages/home.jsp");
-            HttpServletResponse httpResponse = (HttpServletResponse) response;
+            //HttpServletResponse httpResponse = (HttpServletResponse) response;
             response.setDateHeader("Expires", System.currentTimeMillis() + 900L);
             dispatcher.include(request, response);
 

@@ -14,7 +14,8 @@ import java.util.Map;
 
 public class SendGridUtil {
 
-	public static String getSendGridEmailNewsLetterHeaderJson(List<String> finalCategories, EmailCampaign emailCampaign) {
+	@SuppressWarnings("unchecked")
+    public static String getSendGridEmailNewsLetterHeaderJson(List<String> finalCategories, EmailCampaign emailCampaign) {
 	  List<String> categories = new ArrayList<String>();
 	  if (emailCampaign.getEmailType().getId().equals(EnumEmailType.CustomEmail.getId())) {
 	    categories.add("mailmerge_" + emailCampaign.getName());

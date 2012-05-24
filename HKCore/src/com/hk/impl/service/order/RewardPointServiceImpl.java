@@ -29,7 +29,7 @@ import com.hk.exception.InvalidRewardPointsException;
 import com.hk.manager.ReferrerProgramManager;
 import com.hk.pact.dao.offer.OfferInstanceDao;
 import com.hk.pact.dao.reward.RewardPointDao;
-import com.hk.pact.service.order.OrderService;
+import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.payment.PaymentService;
 import com.hk.util.OfferTriggerMatcher;
@@ -46,7 +46,7 @@ public class RewardPointServiceImpl implements RewardPointService {
     @Autowired
     private OfferInstanceDao       offerInstanceDao;
     @Autowired
-    private OrderService           orderService;
+    private OrderLoggingService    orderLoggingService;
 
     public RewardPointMode getRewardPointMode(EnumRewardPointMode enumRewardPointMode) {
         return getRewardPointDao().get(RewardPointMode.class, enumRewardPointMode.getId());
@@ -106,8 +106,8 @@ public class RewardPointServiceImpl implements RewardPointService {
             }
         }
     }
-    
-    public RewardPoint findByReferredOrderAndRewardMode(Order order, RewardPointMode rewardPointMode){
+
+    public RewardPoint findByReferredOrderAndRewardMode(Order order, RewardPointMode rewardPointMode) {
         return getRewardPointDao().findByReferredOrderAndRewardMode(order, rewardPointMode);
     }
 
@@ -119,7 +119,7 @@ public class RewardPointServiceImpl implements RewardPointService {
                 if (rewardPoint.getRewardPointStatus().equals(rewardPointPendingStatus)) {
                     rewardPoint.setRewardPointStatus(getRewardPointStatus(EnumRewardPointStatus.APPROVED));
                     referrerProgramManager.approveRewardPoints(Arrays.asList(rewardPoint), new DateTime().plusMonths(1).toDate());
-                    getOrderService().logOrderActivity(order, EnumOrderLifecycleActivity.RewardPointsApproved);
+                    getOrderLoggingService().logOrderActivity(order, EnumOrderLifecycleActivity.RewardPointsApproved);
                 }
             }
         }
@@ -161,12 +161,12 @@ public class RewardPointServiceImpl implements RewardPointService {
         this.offerInstanceDao = offerInstanceDao;
     }
 
-    public OrderService getOrderService() {
-        return orderService;
+    public OrderLoggingService getOrderLoggingService() {
+        return orderLoggingService;
     }
 
-    public void setOrderService(OrderService orderService) {
-        this.orderService = orderService;
+    public void setOrderLoggingService(OrderLoggingService orderLoggingService) {
+        this.orderLoggingService = orderLoggingService;
     }
 
 }

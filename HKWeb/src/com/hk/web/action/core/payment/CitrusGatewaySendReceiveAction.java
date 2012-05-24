@@ -45,7 +45,7 @@ public class CitrusGatewaySendReceiveAction extends BasePaymentGatewaySendReceiv
 
     @Value("#{hkEnvProps['" + Keys.App.environmentDir + "']}")
     String                environmemtDir;
-    @Autowired
+    //@Autowired
     EmailManager          emailManager;
 
     protected CitrusTestPaymentGatewayWrapper getPaymentGatewayWrapperFromTransactionData(BasePaymentGatewayWrapper.TransactionData data) {

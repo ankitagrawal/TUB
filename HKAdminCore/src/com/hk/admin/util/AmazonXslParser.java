@@ -2,9 +2,7 @@ package com.hk.admin.util;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -27,7 +25,6 @@ import org.springframework.stereotype.Component;
 
 import com.hk.admin.pact.dao.marketing.AmazonFeedDao;
 import com.hk.domain.amazon.AmazonFeed;
-import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.exception.HealthKartCatalogUploadException;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
@@ -58,6 +55,7 @@ public class AmazonXslParser {
     
     private AmazonFeed amazonProduct;
 
+    @SuppressWarnings("unchecked")
     public Set<AmazonFeed> readAmazonCatalog(File objInFile) throws Exception {
 
       logger.info("parsing products from amazon catalog : " + objInFile.getAbsolutePath());
@@ -73,7 +71,7 @@ public class AmazonXslParser {
     Iterator objCellIterator = null;
 
       // Declaring data elements
-      Product product = null;
+     // Product product = null;
       ProductVariant productVariant = null;
       List<ProductVariant> productVariants = null;
       Map<Integer, String> headerMap;
@@ -166,7 +164,7 @@ public class AmazonXslParser {
       return columnIndex;
     }
 
-    private Date getDate(String value) {
+    /*private Date getDate(String value) {
       Date date = null;
       try {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM");
@@ -196,8 +194,9 @@ public class AmazonXslParser {
 
       }
       return valueInLong;
-    }
+    }*/
 
+    @SuppressWarnings("unchecked")
     private Map<Integer, String> getRowMap(Iterator<Row> objRowIt) {
       // Header are read and related columns are taken care of
       // accordignly.

@@ -79,17 +79,17 @@ import java.util.List;
 public class ReferrerProgramManager {
 
     @Autowired
-    OfferManager       offerManager;
+    private OfferManager       offerManager;
     @Autowired
-    CouponService      couponService;
+    private CouponService      couponService;
     @Autowired
-    RewardPointDao     rewardPointDao;
+    private RewardPointDao     rewardPointDao;
     @Autowired
-    RewardPointTxnDao  rewardPointTxnDao;
+    private RewardPointTxnDao  rewardPointTxnDao;
     @Autowired
-    UserAccountInfoDao userAccountInfoDao;
+    private UserAccountInfoDao userAccountInfoDao;
     @Autowired
-    EmailManager       emailManager;
+    private EmailManager       emailManager;
 
     public Coupon getOrCreateRefferrerCoupon(User user) {
         Coupon referrerCoupon = user.getReferrerCoupon();
