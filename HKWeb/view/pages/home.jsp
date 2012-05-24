@@ -30,8 +30,8 @@
       <a href="${pageContext.request.contextPath}/home-devices/blood-pressure/heart-rate-monitor">
         <img class="banner01" src="<hk:vhostImage/>/images/banners/home/heartrate_monitor_sbanner.jpg" border="0" alt="Launching Heart Rate Monitors - upto 28% off"/>
       </a>
-      <a href="${pageContext.request.contextPath}/pages/lp/eye_glasses/choosing-eye-glasses.html">
-        <img class="banner01" src="<hk:vhostImage/>/images/banners/home/home_banner_frames.jpg" border="0" alt="Choose an eyeframe?"/>
+      <a href="${pageContext.request.contextPath}/product/super-religare-lab%3A-health-check-up/SER007">
+        <img class="banner01" src="<hk:vhostImage/>/images/banners/home/home_banner_religare.jpg" border="0" alt="Religare complete health checkup"/>
       </a>
       <a href="http://www.healthkart.com/nutrition/sports-nutrition?brand=Ultimate+Nutrition">
         <img src="<hk:vhostImage/>/images/banners/home/ultimate_sbanner.jpg" border="0" alt="Ultimate Nutrition - free shaker"/>
