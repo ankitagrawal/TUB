@@ -340,7 +340,16 @@ CATEGORY_MANAGER_L1(
           EnumPermission.VIEW_DELIVERY_QUEUE,
           EnumPermission.UPDATE_DELIVERY_QUEUE
       )
-  ),;
+  ),
+
+  HK_AFFILIATE_MANAGER(
+      EnumRole.HK_AFFILIATE_MANAGER,
+      Arrays.asList(
+          EnumPermission.VERIFY_AFFILIATES,
+          EnumPermission.MANAGE_AFFILIATES
+      )
+  )
+  ;
 
   EnumRole enumRole;
   List<EnumPermission> enumPermissions;
