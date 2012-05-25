@@ -10,18 +10,18 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 import org.apache.shiro.web.DefaultWebSecurityManager;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.hk.service.ServiceLocatorFactory;
 import com.shiro.PrincipalImpl;
 
+@Component
 public class RememberMeFilter implements Filter {
 
-    @Autowired
     private DefaultWebSecurityManager securityManager;
 
     public void init(FilterConfig filterConfig) throws ServletException {
-        securityManager = (DefaultWebSecurityManager) ServiceLocatorFactory.getService(org.apache.shiro.mgt.SecurityManager.class);
+        securityManager = (DefaultWebSecurityManager) ServiceLocatorFactory.getService("SecurityManager");
     }
 
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {

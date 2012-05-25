@@ -58,9 +58,9 @@ public class AdminEmailManager {
 
     public static final String    GOOGLE_BANNED_WORD_LIST       = "googleBannedWordList";
 
-    private Set<String>           hkAdminEmails                 = null;
+    //private Set<String>           hkAdminEmails                 = null;
     private Set<String>           hkReportAdminEmails           = null;
-    private Set<String>           babyAdminEmails               = null;
+    /*private Set<String>           babyAdminEmails               = null;
     private Set<String>           beautyAdminEmails             = null;
     private Set<String>           diabetesAdminEmails           = null;
     private Set<String>           eyeAdminEmails                = null;
@@ -68,15 +68,16 @@ public class AdminEmailManager {
     private Set<String>           nutritionAdminEmails          = null;
     private Set<String>           personalCareAdminEmails       = null;
     private Set<String>           logisticsAdminEmails          = null;
-    private Set<String>           sportsAdminEmails             = null;
-    private Set<String>           servicesAdminEmails           = null;
+    private Set<String>           sportsAdminEmails             = null;*/
+    //private Set<String>           servicesAdminEmails           = null;
     private Set<String>           marketingAdminEmails          = null;
-    private Set<String>           categoryHealthkartList        = null;
+    //private Set<String>           categoryHealthkartList        = null;
 
-    @Value("#{hkEnvProps['" + Keys.Env.hkAdminEmails + "']}")
-    private String                hkAdminEmailsString;
+   /* @Value("#{hkEnvProps['" + Keys.Env.hkAdminEmails + "']}")
+    private String                hkAdminEmailsString;*/
     @Value("#{hkEnvProps['" + Keys.Env.hkReportAdminEmails + "']}")
     private String                hkReportAdminEmailsString     = null;
+    /*;
     @Value("#{hkEnvProps['" + Keys.Env.babyAdminEmails + "']}")
     private String                babyAdminEmailsString         = null;
     @Value("#{hkEnvProps['" + Keys.Env.beautyAdminEmails + "']}")
@@ -96,11 +97,11 @@ public class AdminEmailManager {
     @Value("#{hkEnvProps['" + Keys.Env.sportsAdminEmails + "']}")
     private String                sportsAdminEmailsString       = null;
     @Value("#{hkEnvProps['" + Keys.Env.servicesAdminEmails + "']}")
-    private String                servicesAdminEmailsString     = null;
+    private String                servicesAdminEmailsString     = null;*/
     @Value("#{hkEnvProps['" + Keys.Env.marketingAdminEmails + "']}")
     private String                marketingAdminEmailsString    = null;
-    @Value("#{hkEnvProps['" + Keys.Env.categoryHealthkart + "']}")
-    private String                categoryHealthkartListString  = null;
+   /* @Value("#{hkEnvProps['" + Keys.Env.categoryHealthkart + "']}")
+    private String                categoryHealthkartListString  = null;*/
 
     @Autowired
     private EmailService          emailService;
@@ -128,7 +129,7 @@ public class AdminEmailManager {
     @PostConstruct
     public void postConstruction() {
         this.hkReportAdminEmails = BaseUtils.split(hkReportAdminEmailsString, ",");
-        this.hkAdminEmails = BaseUtils.split(hkAdminEmailsString, ",");
+       /* this.hkAdminEmails = BaseUtils.split(hkAdminEmailsString, ",");
         this.babyAdminEmails = BaseUtils.split(babyAdminEmailsString, ",");
         this.beautyAdminEmails = BaseUtils.split(beautyAdminEmailsString, ",");
         this.diabetesAdminEmails = BaseUtils.split(diabetesAdminEmailsString, ",");
@@ -138,9 +139,9 @@ public class AdminEmailManager {
         this.personalCareAdminEmails = BaseUtils.split(personalCareAdminEmailsString, ",");
         this.logisticsAdminEmails = BaseUtils.split(logisticsAdminEmailsString, ",");
         this.sportsAdminEmails = BaseUtils.split(sportsAdminEmailsString, ",");
-        this.servicesAdminEmails = BaseUtils.split(servicesAdminEmailsString, ",");
+        this.servicesAdminEmails = BaseUtils.split(servicesAdminEmailsString, ",");*/
         this.marketingAdminEmails = BaseUtils.split(marketingAdminEmailsString, ",");
-        this.categoryHealthkartList = BaseUtils.split(categoryHealthkartListString, ",");
+        /*this.categoryHealthkartList = BaseUtils.split(categoryHealthkartListString, ",");*/
     }
 
     /*
@@ -460,7 +461,7 @@ public class AdminEmailManager {
                     : notifyMeObject.getProductVariant() != null ? notifyMeObject.getProductVariant().getProduct().getId() : "";
             emailCampaignName += "_" + sdf.format(new Date());
             EmailCampaign emailCampaign = getEmailCampaignDao().getOrCreateEmailCampaign(emailCampaignName, 0l, EmailTemplateConstants.notifyUserEmail);
-            String xsmtpapi = SendGridUtil.getNotifyMeSendGridHeaderJson(notifyMeObject.getProductVariant().getProduct(), notifyMeObject.getProductVariant(), emailCampaign);
+            //String xsmtpapi = SendGridUtil.getNotifyMeSendGridHeaderJson(notifyMeObject.getProductVariant().getProduct(), notifyMeObject.getProductVariant(), emailCampaign);
             HashMap valuesMap = new HashMap();
             EmailRecepient emailRecepient = getEmailRecepientDao().getOrCreateEmailRecepient(notifyMeObject.getEmail());
             valuesMap.put("unsubscribeLink", getLinkManager().getEmailUnsubscribeLink(emailRecepient));

@@ -21,7 +21,7 @@ import com.hk.domain.order.Order;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.user.User;
 import com.hk.manager.payment.PaymentManager;
-import com.hk.pact.service.UserService;
+import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.error.AdminPermissionAction;
@@ -33,27 +33,25 @@ import com.hk.web.action.error.AdminPermissionAction;
 @Component
 public class VerifyCodAction extends BaseAction {
     @Autowired
-    private PaymentManager       paymentManager;
+    private PaymentManager      paymentManager;
     @Autowired
-    private UserService          userService;
+    private OrderService        orderService;
     @Autowired
-    private OrderService         orderService;
-
+    private OrderLoggingService orderLoggingService;
 
     @Validate(required = true)
-    private Order                order;
+    private Order               order;
 
     @JsonHandler
     public Resolution pre() {
-        User loggedOnUser = userService.getLoggedInUser();
+        User loggedOnUser = getUserService().getLoggedInUser();
         Map<String, Object> data = new HashMap<String, Object>(2);
         if (EnumPaymentStatus.AUTHORIZATION_PENDING.getId().equals(order.getPayment().getPaymentStatus().getId())) {
             Payment payment = paymentManager.verifyCodPayment(order.getPayment());
 
-            getOrderService().logOrderActivity(order, loggedOnUser, getOrderService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.ConfirmedAuthorization),null);
-
             getOrderService().processOrderForAutoEsclationAfterPaymentConfirmed(order);
-
+            getOrderLoggingService().logOrderActivity(order, loggedOnUser, getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.ConfirmedAuthorization), null);
+            
             data.put("paymentStatus", JsonUtils.hydrateHibernateObject(payment.getPaymentStatus()));
             data.put("orderStatus", JsonUtils.hydrateHibernateObject(order.getOrderStatus()));
             HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "success", data);
@@ -79,13 +77,6 @@ public class VerifyCodAction extends BaseAction {
         this.paymentManager = paymentManager;
     }
 
-    public UserService getUserService() {
-        return userService;
-    }
-
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
 
     public OrderService getOrderService() {
         return orderService;
@@ -95,7 +86,13 @@ public class VerifyCodAction extends BaseAction {
         this.orderService = orderService;
     }
 
-    
-    
+    public OrderLoggingService getOrderLoggingService() {
+        return orderLoggingService;
+    }
+
+    public void setOrderLoggingService(OrderLoggingService orderLoggingService) {
+        this.orderLoggingService = orderLoggingService;
+    }
+
     
 }

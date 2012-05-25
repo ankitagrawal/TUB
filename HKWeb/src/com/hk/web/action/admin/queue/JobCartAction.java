@@ -1,5 +1,24 @@
 package com.hk.web.action.admin.queue;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.validation.Validate;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.manager.BinManager;
@@ -22,29 +41,22 @@ import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
-import com.hk.impl.dao.user.UserDaoImpl;
 import com.hk.manager.OrderManager;
 import com.hk.manager.ReferrerProgramManager;
+import com.hk.pact.dao.catalog.category.CategoryDao;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
 import com.hk.pact.dao.payment.PaymentModeDao;
 import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
 import com.hk.pact.dao.sku.SkuDao;
 import com.hk.pact.dao.sku.SkuGroupDao;
 import com.hk.pact.dao.sku.SkuItemDao;
+import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.web.action.admin.inventory.GRNAction;
 import com.hk.web.action.admin.inventory.InventoryCheckinAction;
-import net.sourceforge.stripes.action.*;
-import net.sourceforge.stripes.validation.Validate;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -58,11 +70,11 @@ public class JobCartAction extends BaseAction {
 
 
   @Autowired
-  CategoryDaoImpl categoryDao;
+  CategoryDao categoryDao;
   @Autowired
   ReferrerProgramManager referrerProgramManager;
   @Autowired
-  UserDaoImpl userDao;
+  UserDao userDao;
   @Autowired
   BarcodeGenerator barcodeGenerator;
   @Autowired
@@ -159,6 +171,12 @@ public class JobCartAction extends BaseAction {
     pickingQueueOrdersPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, 1, 10);
     //printingPickingQueueOrdersPage = shippingOrderService.getPickingQueueOrders(1, 10);
     pickingQueueOrders = pickingQueueOrdersPage.getList();
+      Bin defaultBin=new Bin();
+             defaultBin.setAisle("D");
+             defaultBin.setRack("D");
+             defaultBin.setShelf("D");
+    Bin defaultBinAllocated = binDao.createBin(defaultBin,userWarehouse);
+     binDao.refresh(defaultBinAllocated);
     for (ShippingOrder shippingOrder : pickingQueueOrders) {
       Set<LineItem> lineItems = shippingOrder.getLineItems();
       for (LineItem productLineItem : lineItems) {
@@ -173,26 +191,21 @@ public class JobCartAction extends BaseAction {
 //        productVariantQty.put(productLineItem.getSku().getProductVariant().getId(), productLineItem.getQty());
         SkuGroup suggestedSkuGroup;
         List<SkuGroup> skuGroupListPerSku = adminSkuItemDao.getInStockSkuGroups(sku);
-           Bin defaultBin=new Bin();
-             defaultBin.setAisle("D");
-             defaultBin.setRack("D");
-             defaultBin.setShelf("D");
-             defaultBin.setBin("D");
-
-        Bin defaultBinAllocated = binDao.createBin(defaultBin,userWarehouse);
-        Bin alreadyallocated=null;
+          Bin alreadyallocated=null;
         if (skuGroupListPerSku != null && skuGroupListPerSku.size() > 0) {
           suggestedSkuGroup = skuGroupListPerSku.get(0);
           if (suggestedSkuGroup != null) {
              skuGroupMapProductVariant.put(productLineItem.getSku().getProductVariant().getId(),suggestedSkuGroup);
             List<Long> binIds = binManager.getListOfBinForSkuItemList(suggestedSkuGroup.getSkuItems());
-              if(binIds == null && binIds.size() == 0){
+              if(binIds == null || binIds.size() == 0){
                 alreadyallocated= defaultBinAllocated;
+                idBinMap.put(alreadyallocated.getId(), alreadyallocated);
               }
             if (binIds != null && binIds.size() > 0) {
              alreadyallocated  = binDao.get(Bin.class,binIds.get(0));
-            }
               idBinMap.put(binIds.get(0), alreadyallocated);
+            }
+
               pvhasBin.put(sku.getProductVariant().getId(), alreadyallocated);
 
           }

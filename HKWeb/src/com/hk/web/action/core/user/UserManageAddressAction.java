@@ -12,7 +12,6 @@ import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.Validate;
 import net.sourceforge.stripes.validation.ValidateNestedProperties;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -29,14 +28,14 @@ import com.hk.pact.service.UserService;
 
 @Secure(hasAnyRoles = { RoleConstants.HK_USER, RoleConstants.HK_UNVERIFIED, RoleConstants.ADMIN })
 public class UserManageAddressAction extends BaseAction {
-    private static Logger logger = Logger.getLogger(UserManageAddressAction.class);
-    
-    Address               address;
-    List<Address>         addresses;
-    String                mainAddressId;
-    Boolean               selected;
-    Affiliate             affiliate;
-    User                  user;
+    // private static Logger logger = Logger.getLogger(UserManageAddressAction.class);
+
+    Address          address;
+    List<Address>    addresses;
+    String           mainAddressId;
+    Boolean          selected;
+    Affiliate        affiliate;
+    User             user;
 
     @ValidateNestedProperties( {
             @Validate(field = "name", required = true, on = "saveAddress"),
@@ -46,15 +45,15 @@ public class UserManageAddressAction extends BaseAction {
             @Validate(field = "pin", required = true, on = "saveAddress"),
             @Validate(field = "phone", required = true, on = "saveAddress") })
     @Autowired
-    AffiliateDao          affiliateDao;
+    AffiliateDao     affiliateDao;
     @Autowired
-    AffiliateManager      affiliateManager;
+    AffiliateManager affiliateManager;
     @Autowired
-    UserDao               userDao;
+    UserDao          userDao;
     @Autowired
-    AddressDao            addressDao;
+    AddressDao       addressDao;
     @Autowired
-    UserService           userService;
+    UserService      userService;
 
     @DefaultHandler
     @DontValidate
@@ -86,9 +85,10 @@ public class UserManageAddressAction extends BaseAction {
      * userDao.getUserById(getPrincipal().getId()); user = userDao.getUserById(getPrincipal().getId()); affiliate =
      * affiliateDao.getAffilateByUser(user); } // return new ForwardResolution("/pages/addUserAddress.jsp"); return new
      * ForwardResolution("/pages/editUserAddresses.jsp"); } public Resolution editUserAddress() { if (getPrincipal() !=
-     * null) { // User user = userDao.getUserById(getPrincipal().getId()); user = userDao.getUserById(getPrincipal().getId());
-     * logger.debug("Editing address " + address.getId() + " for " + user.getName()); } return new
-     * RedirectResolution("/pages/editUserAddresses.jsp").addParameter("address", address.getId()); }
+     * null) { // User user = userDao.getUserById(getPrincipal().getId()); user =
+     * userDao.getUserById(getPrincipal().getId()); logger.debug("Editing address " + address.getId() + " for " +
+     * user.getName()); } return new RedirectResolution("/pages/editUserAddresses.jsp").addParameter("address",
+     * address.getId()); }
      */
 
     public Resolution saveAddress() {
@@ -112,11 +112,12 @@ public class UserManageAddressAction extends BaseAction {
      * address = addressDao.save(address); } addRedirectAlertMessage(new SimpleMessage("changes saved.")); return new
      * ForwardResolution(UserManageAddressAction.class, "showAddressBook"); } public Resolution saveNewAddress() { if
      * (getPrincipal() != null) { // User user = userDao.getUserById(getPrincipal().getId()); user =
-     * userDao.getUserById(getPrincipal().getId()); address.setUser(user); address.setPhone("0".concat(address.getPhone()));
-     * address = addressDao.save(address); affiliate = affiliateDao.getAffilateByUser(user); if (affiliate != null) {
-     * mainAddressId = affiliate.getMainAddressId() != null ? affiliate.getMainAddressId().toString() : ""; }
-     * addRedirectAlertMessage(new SimpleMessage("New Address successfully added.")); } // return new
-     * ForwardResolution(UserManageAddressAction.class, "showAddressBook"); return showAddressBook(); }
+     * userDao.getUserById(getPrincipal().getId()); address.setUser(user);
+     * address.setPhone("0".concat(address.getPhone())); address = addressDao.save(address); affiliate =
+     * affiliateDao.getAffilateByUser(user); if (affiliate != null) { mainAddressId = affiliate.getMainAddressId() !=
+     * null ? affiliate.getMainAddressId().toString() : ""; } addRedirectAlertMessage(new SimpleMessage("New Address
+     * successfully added.")); } // return new ForwardResolution(UserManageAddressAction.class, "showAddressBook");
+     * return showAddressBook(); }
      */
 
     public Resolution manageAddresses() {

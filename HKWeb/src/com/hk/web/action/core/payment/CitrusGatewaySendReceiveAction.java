@@ -30,6 +30,7 @@ import com.hk.manager.LinkManager;
 import com.hk.manager.payment.CitrusTestPaymentGatewayWrapper;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.payment.PaymentDao;
+import com.hk.web.AppConstants;
 
 @Component
 public class CitrusGatewaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<CitrusTestPaymentGatewayWrapper> {
@@ -43,17 +44,17 @@ public class CitrusGatewaySendReceiveAction extends BasePaymentGatewaySendReceiv
     @Autowired
     LinkManager           linkManager;
 
-    @Value("#{hkEnvProps['" + Keys.App.environmentDir + "']}")
-    String                environmemtDir;
+    /*@Value("#{hkEnvProps['" + Keys.App.environmentDir + "']}")
+    String                environmemtDir;*/
     @Autowired
     EmailManager          emailManager;
 
     protected CitrusTestPaymentGatewayWrapper getPaymentGatewayWrapperFromTransactionData(BasePaymentGatewayWrapper.TransactionData data) {
-        CitrusTestPaymentGatewayWrapper citrusTestPaymentGatewayWrapper = new CitrusTestPaymentGatewayWrapper(environmemtDir);
+        CitrusTestPaymentGatewayWrapper citrusTestPaymentGatewayWrapper = new CitrusTestPaymentGatewayWrapper(AppConstants.appBasePath);
         Payment payment = paymentDao.findByGatewayOrderId(data.getGatewayOrderId());
         String amountStr = BasePaymentGatewayWrapper.TransactionData.decimalFormat.format(data.getAmount());
 
-        String propertyLocatorFileLocation = environmemtDir + "/citrus.live.properties";
+        String propertyLocatorFileLocation = AppConstants.getAppClasspathRootPath() + "/citrus.live.properties";
         Properties properties = BaseUtils.getPropertyFile(propertyLocatorFileLocation);
 
         Merchant oMerchant = new Merchant();
@@ -108,7 +109,7 @@ public class CitrusGatewaySendReceiveAction extends BasePaymentGatewaySendReceiv
 
         String data = getContext().getRequest().getParameter(CitrusTestPaymentGatewayWrapper.param_data);
         String responseMethod = getContext().getRequest().getMethod();
-        String propertyFilePath = environmemtDir + "/citrus.live.properties";
+        String propertyFilePath = AppConstants.getAppClasspathRootPath() + "/citrus.live.properties";
         String validatedData = "";
 
         if (data != null) {

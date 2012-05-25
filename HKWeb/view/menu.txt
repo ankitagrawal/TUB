@@ -1,6 +1,10 @@
 /nutrition
 -/nutrition/sports-nutrition
 --/nutrition/sports-nutrition/proteins
+---/nutrition/sports-nutrition/proteins/blended
+---/nutrition/sports-nutrition/proteins/isolated
+---/nutrition/sports-nutrition/proteins/hydrolyzed
+---/nutrition/sports-nutrition/proteins/soy-casein  :Soy & Casein
 --/nutrition/sports-nutrition/creatine
 --/nutrition/sports-nutrition/pre-workout : Pre Workout
 --/nutrition/sports-nutrition/intra-workout  :Intra Workout
@@ -38,6 +42,8 @@
 --/nutrition/condition-specific-supplements/energy-endurance     :Energy & Endurance
 -/nutrition/weight-management
 --/nutrition/weight-management/fat-burner
+--/nutrition/weight-management/appetite-control :Appetite Control
+--/nutrition/weight-management/weight-maintenance  :weight Maintenance 
 --/nutrition/weight-management/meal-replacement :Meal Replacement
 --/nutrition/weight-management/low-calorie-food
 --/nutrition/weight-management/sweetener
@@ -109,6 +115,11 @@
 ---/sports/fitness-accessories/support-gear/ankle
 --/sports/fitness-accessories/combos
 --/sports/fitness-accessories/miscellaneous-accessories
+-/sports/fitness-equipment
+--/sports/fitness-equipment/treadmills
+--/sports/fitness-equipment/crosstrainers
+--/sports/fitness-equipment/exercise-bike
+--/sports/fitness-equipment/rowers
 -/sports/sports-equipment
 --/sports/sports-equipment/football
 ---/sports/sports-equipment/football/balls

@@ -74,7 +74,7 @@ public class HibernateSecurityRealm extends AuthorizingRealm {
         this.userSecurityManager = userSecurityManager;
     }
 
-    private static final Log log                      = LogFactory.getLog(HibernateSecurityRealm.class);
+    //private static final Log log                      = LogFactory.getLog(HibernateSecurityRealm.class);
 
     /*--------------------------------------------
     |    I N S T A N C E   V A R I A B L E S    |
