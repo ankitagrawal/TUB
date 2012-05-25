@@ -279,6 +279,9 @@
 		<url-pattern>/sitemap.xml</url-pattern>
 		<url-pattern>/sitemap.txt</url-pattern>
 		<url-pattern>/ror.xml</url-pattern>
+
+    <!--- URL Patterns for Promotional Activities-->
+    <url-pattern>/revital</url-pattern>
 	</servlet-mapping>
 
 </web-app>
