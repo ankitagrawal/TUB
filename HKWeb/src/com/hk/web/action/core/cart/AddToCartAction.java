@@ -1,6 +1,20 @@
 package com.hk.web.action.core.cart;
 
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.JsonResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.validation.SimpleError;
+import net.sourceforge.stripes.validation.ValidationErrorHandler;
+import net.sourceforge.stripes.validation.ValidationErrors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -20,23 +34,10 @@ import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.dao.user.UserProductHistoryDao;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.core.user.SignupAction;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.JsonResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.validation.SimpleError;
-import net.sourceforge.stripes.validation.ValidationErrorHandler;
-import net.sourceforge.stripes.validation.ValidationErrors;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class AddToCartAction extends BaseAction implements ValidationErrorHandler {
 
-  private static Logger logger = Logger.getLogger(AddToCartAction.class);
+  //private static Logger logger = Logger.getLogger(AddToCartAction.class);
 
   List<ProductVariant> productVariantList;
   Combo combo;
@@ -59,7 +60,7 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
   @Autowired
   SignupAction signupAction;
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({ "unchecked", "deprecation" })
 @DefaultHandler
   @JsonHandler
   public Resolution addToCart() {

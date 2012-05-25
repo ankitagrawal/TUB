@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class OrderSourceFinder { 
 
-  public Map getOrderReferrer(HttpServletRequest httpRequest) {
+  public static Map<String, Long> getOrderReferrer(HttpServletRequest httpRequest) {
     Long primaryReferrerId = null;
     Long secondaryReferrerId = null;
 

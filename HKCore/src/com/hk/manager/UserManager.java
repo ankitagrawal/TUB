@@ -34,6 +34,7 @@ import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.dao.order.cartLineItem.CartLineItemDao;
 import com.hk.pact.service.RoleService;
 import com.hk.pact.service.UserService;
+import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.TokenUtils;
 import com.shiro.PrincipalImpl;
 
@@ -307,6 +308,9 @@ public class UserManager {
     }
 
     public OrderManager getOrderManager() {
+        if (orderManager == null) {
+            orderManager = ServiceLocatorFactory.getService(OrderManager.class);
+        }
         return orderManager;
     }
 

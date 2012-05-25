@@ -73,6 +73,7 @@ public class ForgotPasswordAction extends BaseAction implements ValidationErrorH
      * LocalizableMessage("/ForgotPassword.action.email.sent", email)); return getContext().getSourcePageResolution(); }
      */
 
+    @SuppressWarnings("unchecked")
     @JsonHandler
     public Resolution forgotPassword() {
 

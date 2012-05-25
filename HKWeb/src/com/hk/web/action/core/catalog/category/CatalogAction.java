@@ -38,17 +38,16 @@ import com.hk.dto.menu.MenuNode;
 import com.hk.helper.MenuHelper;
 import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
 import com.hk.impl.dao.catalog.category.CategoryImageDaoImpl;
-import com.hk.impl.dao.user.UserDaoImpl;
 import com.hk.manager.SolrManager;
 import com.hk.manager.UserManager;
 import com.hk.pact.dao.catalog.combo.ComboDao;
 import com.hk.pact.dao.catalog.product.ProductDao;
 import com.hk.pact.dao.location.LocalityMapDao;
 import com.hk.pact.dao.location.MapIndiaDao;
+import com.hk.pact.dao.user.UserDao;
 import com.hk.util.SeoManager;
 import com.hk.web.AppConstants;
 import com.hk.web.ConvertEncryptedToNormalDouble;
-import com.hk.web.AppConstants;
 import com.hk.web.filter.WebContext;
 
 @UrlBinding("/{rootCategorySlug}/{childCategorySlug}/{secondaryChildCategorySlug}/{tertiaryChildCategorySlug}")
@@ -109,7 +108,7 @@ public class CatalogAction extends BasePaginatedAction {
   @Autowired
   SolrManager solrManager;
   @Autowired
-  UserDaoImpl userDao;
+  UserDao userDao;
   @Autowired
   UserManager userManager;
 

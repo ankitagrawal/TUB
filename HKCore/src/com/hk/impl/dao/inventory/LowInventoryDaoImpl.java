@@ -9,7 +9,6 @@ import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.LowInventory;
-import com.hk.domain.inventory.ProductVariantInventory;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.inventory.LowInventoryDao;
 

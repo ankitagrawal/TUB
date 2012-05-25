@@ -12,13 +12,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.hk.constants.HttpRequestAndSessionConstants;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumPaymentStatus;
-import com.hk.constants.HttpRequestAndSessionConstants;
 import com.hk.constants.referrer.EnumPrimaryReferrerForOrder;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.affiliate.Affiliate;
@@ -31,7 +31,14 @@ import com.hk.domain.catalog.product.combo.ComboInstance;
 import com.hk.domain.catalog.product.combo.ComboInstanceHasProductVariant;
 import com.hk.domain.matcher.CartLineItemMatcher;
 import com.hk.domain.offer.OfferInstance;
-import com.hk.domain.order.*;
+import com.hk.domain.order.CartLineItem;
+import com.hk.domain.order.CartLineItemConfig;
+import com.hk.domain.order.CartLineItemExtraOption;
+import com.hk.domain.order.Order;
+import com.hk.domain.order.OrderCategory;
+import com.hk.domain.order.PrimaryReferrerForOrder;
+import com.hk.domain.order.SecondaryReferrerForOrder;
+import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.user.User;
@@ -49,6 +56,7 @@ import com.hk.pact.service.core.AffilateService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.order.CartLineItemService;
+import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.payment.PaymentService;
@@ -64,7 +72,7 @@ public class OrderManager {
     private static Logger                     logger = LoggerFactory.getLogger(OrderManager.class);
 
     @Autowired
-    ProductVariantService productVariantService;
+    ProductVariantService                     productVariantService;
     @Autowired
     private CartLineItemService               cartLineItemService;
     @Autowired
@@ -101,7 +109,10 @@ public class OrderManager {
     private OrderStatusService                orderStatusService;
     @Autowired
     private BaseDao                           baseDao;
+    @Autowired
+    private OrderLoggingService               orderLoggingService;
 
+    @Autowired
     private ComboInstanceHasProductVariantDao comboInstanceHasProductVariantDao;
 
     @Value("#{hkEnvProps['" + Keys.Env.codCharges + "']}")
@@ -115,11 +126,10 @@ public class OrderManager {
 
     Affiliate                                 affiliate;
 
-   /* // @Named(Keys.Env.cashBackPercentage)
-    private Double                            cashBackPercentage;
-
-    // @Named(Keys.Env.cashBackLimit)
-    private Double                            cashBackLimit;*/
+    /*
+     * // @Named(Keys.Env.cashBackPercentage) private Double cashBackPercentage; // @Named(Keys.Env.cashBackLimit)
+     * private Double cashBackLimit;
+     */
 
     @Transactional
     public Order getOrCreateOrder(User user) {
@@ -140,21 +150,20 @@ public class OrderManager {
             return existingOrderNow;
         }
 
-      if(WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.PRIMARY_REFERRER_ID) != null){
-        Long primaryReferrerForOrderId = (Long)WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.PRIMARY_REFERRER_ID);
-        order.setPrimaryReferrerForOrder(getBaseDao().get(PrimaryReferrerForOrder.class, primaryReferrerForOrderId));
-      }
-      if(WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.SECONDARY_REFERRER_ID) != null){
-        Long secondaryReferrerForOrderId = (Long)WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.SECONDARY_REFERRER_ID);
-        order.setSecondaryReferrerForOrder(getBaseDao().get(SecondaryReferrerForOrder.class, secondaryReferrerForOrderId));
-      }
-      if(user.getOrders().size() == 0 && user.getReferredBy() != null){
-        order.setPrimaryReferrerForOrder(getBaseDao().get(PrimaryReferrerForOrder.class, EnumPrimaryReferrerForOrder.RFERRAL.getId()));
-      }
-      if(WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.UTM_CAMPAIGN) != null){
-        order.setUtmCampaign((String)WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.UTM_CAMPAIGN));
-      }
-
+        if (WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.PRIMARY_REFERRER_ID) != null) {
+            Long primaryReferrerForOrderId = (Long) WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.PRIMARY_REFERRER_ID);
+            order.setPrimaryReferrerForOrder(getBaseDao().get(PrimaryReferrerForOrder.class, primaryReferrerForOrderId));
+        }
+        if (WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.SECONDARY_REFERRER_ID) != null) {
+            Long secondaryReferrerForOrderId = (Long) WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.SECONDARY_REFERRER_ID);
+            order.setSecondaryReferrerForOrder(getBaseDao().get(SecondaryReferrerForOrder.class, secondaryReferrerForOrderId));
+        }
+        if (user.getOrders().size() == 0 && user.getReferredBy() != null) {
+            order.setPrimaryReferrerForOrder(getBaseDao().get(PrimaryReferrerForOrder.class, EnumPrimaryReferrerForOrder.RFERRAL.getId()));
+        }
+        if (WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.UTM_CAMPAIGN) != null) {
+            order.setUtmCampaign((String) WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.UTM_CAMPAIGN));
+        }
 
         order = getOrderService().save(order);
         return order;
@@ -327,7 +336,7 @@ public class OrderManager {
          * Order lifecycle activity logging - Payement Marked Successful
          */
         if (payment.getPaymentStatus().getId().equals(EnumPaymentStatus.SUCCESS.getId())) {
-            getOrderService().logOrderActivity(order, order.getUser(), getOrderService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful), null);
+            getOrderLoggingService().logOrderActivity(order, order.getUser(), getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful), null);
         }
 
         // order.setAmount(pricingDto.getGrandTotalPayable());
@@ -336,14 +345,14 @@ public class OrderManager {
 
         cartLineItems = addFreeVariantsToCart(cartLineItems); // function made to handle deals and offers which are
 
-        //add promotional freebie - for MIH = SPT391-01    VX Weight Lifting Straps
+        // add promotional freebie - for MIH = SPT391-01 VX Weight Lifting Straps
         if (order.getStore() != null && order.getStore().getId().equals(StoreService.MIH_STORE_ID)) {
-          cartLineItems = addFreeCartLineItems("SPT391-01", order);
+            cartLineItems = addFreeCartLineItems("SPT391-01", order);
         }
-      
+
         order.setCartLineItems(cartLineItems);
         order = getOrderService().save(order);
-      
+
         // associated with a variant, this will help in
         // minimizing brutal use of free checkout
         order.setCartLineItems(cartLineItems);
@@ -361,7 +370,7 @@ public class OrderManager {
         /**
          * Order lifecycle activity logging - Order Placed
          */
-        orderService.logOrderActivity(order, order.getUser(), getOrderService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderPlaced), null);
+        getOrderLoggingService().logOrderActivity(order, order.getUser(), getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderPlaced), null);
 
         getUserService().updateIsProductBought(order);
 
@@ -382,7 +391,7 @@ public class OrderManager {
             /**
              * Order lifecycle activity logging - Order split to shipping orders
              */
-            getOrderService().logOrderActivity(order, getUserService().getAdminUser(), getOrderService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), null);
+            getOrderLoggingService().logOrderActivity(order, getUserService().getAdminUser(), getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), null);
 
             // auto escalate shipping orders if possible
             if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
@@ -431,16 +440,16 @@ public class OrderManager {
     }
 
     public Set<CartLineItem> addFreeCartLineItems(String variantId, Order order) {
-      Set<CartLineItem> cartLineItems = order.getCartLineItems();
-      ProductVariant productVariant = getProductVariantService().getVariantById(variantId);
-      if (productVariant != null) {
-        productVariant.setQty(1L);
-        CartLineItem cartLineItem = getCartLineItemService().createCartLineItemWithBasicDetails(productVariant, order);
-        cartLineItem.setDiscountOnHkPrice(cartLineItem.getHkPrice());
-        cartLineItem = getCartLineItemService().save(cartLineItem);
-        cartLineItems.add(cartLineItem);
-      }
-      return cartLineItems;
+        Set<CartLineItem> cartLineItems = order.getCartLineItems();
+        ProductVariant productVariant = getProductVariantService().getVariantById(variantId);
+        if (productVariant != null) {
+            productVariant.setQty(1L);
+            CartLineItem cartLineItem = getCartLineItemService().createCartLineItemWithBasicDetails(productVariant, order);
+            cartLineItem.setDiscountOnHkPrice(cartLineItem.getHkPrice());
+            cartLineItem = getCartLineItemService().save(cartLineItem);
+            cartLineItems.add(cartLineItem);
+        }
+        return cartLineItems;
     }
 
     private Set<CartLineItem> addFreeVariantsToCart(Set<CartLineItem> cartLineItems) {
@@ -734,7 +743,7 @@ public class OrderManager {
                             Double surcharge = 0.05;
                             taxPaid = costPrice * sku.getTax().getValue() * (1 + surcharge);
                         } else {
-                            Double surcharge = 0.0; // CST Surcharge
+                            //Double surcharge = 0.0; // CST Surcharge
                             Double cst = 0.02; // CST
                             taxPaid = costPrice * cst;
                         }
@@ -898,41 +907,49 @@ public class OrderManager {
     }
 
     public ProductVariantService getProductVariantService() {
-      return productVariantService;
+        return productVariantService;
     }
 
     public void setProductVariantService(ProductVariantService productVariantService) {
-      this.productVariantService = productVariantService;
+        this.productVariantService = productVariantService;
     }
 
-  /*
-  * @Transactional public void escalateFromActionQueue(CartLineItem lineItem, Courier suggestedCourier) { if
-  * (lineItem.getLineItemType().getId().equals(EnumLineItemType.Product.getId())) {
-  * lineItem.setLineItemStatus(EnumLineItemStatus.READY_FOR_PROCESS.asLineItemStatus());
-  * lineItem.setCourier(suggestedCourier); lineItemDaoProvider.get().save(lineItem); } } @Transactional public void
-  * escalateFromActionQueue(CartLineItem lineItem) { if
-  * (lineItem.getLineItemType().getId().equals(EnumLineItemType.Product.getId())) {
-  * lineItem.setLineItemStatus(EnumLineItemStatus.READY_FOR_PROCESS.asLineItemStatus());
-  * lineItemDaoProvider.get().save(lineItem); } } /* @Transactional public Order putOrderOnHold(Order order, User
-  * loggedOnUser) { order.setOrderStatus(orderStatusDao.find(EnumOrderStatus.OnHold.getId())); order =
-  * getOrderService().save(order); List<Long> applicableLineItemStatusId = new ArrayList<Long>();
-  * applicableLineItemStatusId.add(EnumLineItemStatus.READY_FOR_PROCESS.getId());
-  * applicableLineItemStatusId.add(EnumLineItemStatus.GONE_FOR_PRINTING.getId());
-  * applicableLineItemStatusId.add(EnumLineItemStatus.PICKING.getId());
-  * applicableLineItemStatusId.add(EnumLineItemStatus.CHECKEDOUT.getId());
-  * applicableLineItemStatusId.add(EnumLineItemStatus.PACKED.getId()); for (CartLineItem lineItem :
-  * order.getLineItems()) { if (lineItem.getLineItemType().getId().equals(EnumLineItemType.Product.getId()) &&
-  * applicableLineItemStatusId.contains(lineItem.getLineItemStatus().getId())) {
-  * lineItem.setLineItemStatus(EnumLineItemStatus.ACTION_AWAITING.asLineItemStatus());
-  * lineItemDaoProvider.get().save(lineItem); //Recheckin Inventory against checked out qty if
-  * (lineItem.getLineItemStatus().getId().equals(EnumLineItemStatus.CHECKEDOUT.getId())) { List<ProductVariantInventory>
-  * checkedOutInventories =
-  * productVariantInventoryDaoProvider.get().getCheckedOutSkuItems(lineItem.getShippingOrder(),
-  * lineItem.getProductVariant()); for (ProductVariantInventory checkedOutInventory : checkedOutInventories) {
-  * inventoryService.inventoryCheckinCheckout(checkedOutInventory.getProductVariant(),
-  * checkedOutInventory.getSkuItem(), lineItem, lineItem.getShippingOrder(), null, null,
-  * invTxnTypeDaoProvider.get().find(EnumInvTxnType.CANCEL_CHECKIN.getId()), 1L, loggedOnUser); } } } }
-  *//*
+    public OrderLoggingService getOrderLoggingService() {
+        return orderLoggingService;
+    }
+
+    public void setOrderLoggingService(OrderLoggingService orderLoggingService) {
+        this.orderLoggingService = orderLoggingService;
+    }
+
+    /*
+     * @Transactional public void escalateFromActionQueue(CartLineItem lineItem, Courier suggestedCourier) { if
+     * (lineItem.getLineItemType().getId().equals(EnumLineItemType.Product.getId())) {
+     * lineItem.setLineItemStatus(EnumLineItemStatus.READY_FOR_PROCESS.asLineItemStatus());
+     * lineItem.setCourier(suggestedCourier); lineItemDaoProvider.get().save(lineItem); } } @Transactional public void
+     * escalateFromActionQueue(CartLineItem lineItem) { if
+     * (lineItem.getLineItemType().getId().equals(EnumLineItemType.Product.getId())) {
+     * lineItem.setLineItemStatus(EnumLineItemStatus.READY_FOR_PROCESS.asLineItemStatus());
+     * lineItemDaoProvider.get().save(lineItem); } } /* @Transactional public Order putOrderOnHold(Order order, User
+     * loggedOnUser) { order.setOrderStatus(orderStatusDao.find(EnumOrderStatus.OnHold.getId())); order =
+     * getOrderService().save(order); List<Long> applicableLineItemStatusId = new ArrayList<Long>();
+     * applicableLineItemStatusId.add(EnumLineItemStatus.READY_FOR_PROCESS.getId());
+     * applicableLineItemStatusId.add(EnumLineItemStatus.GONE_FOR_PRINTING.getId());
+     * applicableLineItemStatusId.add(EnumLineItemStatus.PICKING.getId());
+     * applicableLineItemStatusId.add(EnumLineItemStatus.CHECKEDOUT.getId());
+     * applicableLineItemStatusId.add(EnumLineItemStatus.PACKED.getId()); for (CartLineItem lineItem :
+     * order.getLineItems()) { if (lineItem.getLineItemType().getId().equals(EnumLineItemType.Product.getId()) &&
+     * applicableLineItemStatusId.contains(lineItem.getLineItemStatus().getId())) {
+     * lineItem.setLineItemStatus(EnumLineItemStatus.ACTION_AWAITING.asLineItemStatus());
+     * lineItemDaoProvider.get().save(lineItem); //Recheckin Inventory against checked out qty if
+     * (lineItem.getLineItemStatus().getId().equals(EnumLineItemStatus.CHECKEDOUT.getId())) { List<ProductVariantInventory>
+     * checkedOutInventories =
+     * productVariantInventoryDaoProvider.get().getCheckedOutSkuItems(lineItem.getShippingOrder(),
+     * lineItem.getProductVariant()); for (ProductVariantInventory checkedOutInventory : checkedOutInventories) {
+     * inventoryService.inventoryCheckinCheckout(checkedOutInventory.getProductVariant(),
+     * checkedOutInventory.getSkuItem(), lineItem, lineItem.getShippingOrder(), null, null,
+     * invTxnTypeDaoProvider.get().find(EnumInvTxnType.CANCEL_CHECKIN.getId()), 1L, loggedOnUser); } } } }
+     *//*
          * LineItemStatus statusActionAwaiting =
          * lineItemStatusDaoProvider.get().find(EnumLineItemStatus.ACTION_AWAITING.getId()); for (LineItem line :
          * order.getCartLineItems(EnumLineItemType.Product)) { line.setLineItemStatus(statusActionAwaiting);

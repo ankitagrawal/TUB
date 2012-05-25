@@ -79,7 +79,7 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
     private AdminEmailManager  adminEmailManager;
     @Autowired
     private MailingListManager mailingListManager;
-    @Autowired
+    //@Autowired
     private EmailManager       emailManager;
     EmailType                  emailType;
     String                     sheetName;
