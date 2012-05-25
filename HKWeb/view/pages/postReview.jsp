@@ -151,7 +151,6 @@
     </table>
   </s:layout-component>
 </s:layout-render>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.raty.min.js"></script>
 
 <script type="text/javascript">
