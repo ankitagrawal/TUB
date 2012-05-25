@@ -15,7 +15,9 @@ import com.hk.domain.catalog.product.ProductExtraOption;
 import com.hk.domain.catalog.product.ProductGroup;
 import com.hk.domain.catalog.product.ProductImage;
 import com.hk.domain.catalog.product.ProductOption;
+import com.hk.domain.review.ReviewStatus;
 import com.hk.pact.dao.catalog.product.ProductDao;
+import com.hk.pact.dao.review.ReviewDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.web.filter.WebContext;
 
@@ -24,6 +26,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductDao productDAO;
+
+    @Autowired
+    private ReviewDao reviewDAO;
 
     public Product getProductById(String productId) {
         return getProductDAO().getProductById(productId);
@@ -130,6 +135,14 @@ public class ProductServiceImpl implements ProductService {
 
     public Product save(Product product) {
         return getProductDAO().save(product);
+    }
+
+    public Page getProductReviews(Product product, List<Long> reviewStatusList, int page, int perPage){
+       return reviewDAO.getProductReviews(product,reviewDAO.getReviewStatusList(reviewStatusList),page,perPage);
+    }
+
+    public Double getAverageRating(Product product){
+       return reviewDAO.getAverageRating(product);
     }
 
     public ProductDao getProductDAO() {
