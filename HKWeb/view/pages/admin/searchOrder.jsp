@@ -161,6 +161,7 @@
 <c:set var="orderStatusCancelled" value="<%=EnumOrderStatus.Cancelled.getId()%>"/>
 <c:set var="orderStatusPending" value="<%=EnumOrderStatus.InProcess.getId()%>"/>
 <c:set var="orderStatusHold" value="<%=EnumOrderStatus.OnHold.getId()%>"/>
+<c:set var="orderStatusPlaced" value="<%=EnumOrderStatus.Placed.getId()%>"/>
 <c:set var="paymentStatusPending" value="<%=EnumPaymentStatus.AUTHORIZATION_PENDING.getId()%>"/>
 
 <s:errors/>
@@ -437,7 +438,7 @@
       </td>
     </tr>
 
-    <c:if test="${order.orderStatus.id == orderStatusPending || order.orderStatus.id == orderStatusHold}">
+    <c:if test="${order.orderStatus.id == orderStatusPending || order.orderStatus.id == orderStatusHold || order.orderStatus.id == orderStatusPlaced }">
       <tr>
         <td><s:link beanclass="com.hk.web.action.admin.address.ChangeOrderAddressAction" event="pre">
           <img src="<hk:vhostImage/>/images/admin/icon_edit_add.png" alt="Change Address"
