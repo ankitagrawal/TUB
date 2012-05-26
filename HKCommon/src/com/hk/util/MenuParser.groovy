@@ -14,6 +14,7 @@ public class MenuParser {
     menuFile.eachLine {
       line ->
 
+      
       if (StringUtils.isNotBlank(line)) {
         def m = line =~ /^[-]*/
         int identation = m[0] ? m[0].size() : 0

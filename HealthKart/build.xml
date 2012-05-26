@@ -113,6 +113,11 @@
 			</fileset>
 		</copy>
 		<copy todir="${project.dist.dir}/WEB-INF/lib">
+			<fileset dir="${lib.citrus.root}">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
+		<copy todir="${project.dist.dir}/WEB-INF/lib">
 			<fileset dir="${lib.thirdParty.root}">
 				<include name="*.jar" />
 			</fileset>
@@ -176,7 +181,7 @@
 		<ant dir="${project.web.dir}" target="prepare" inheritall="false" />
 		<tstamp />
 	</target>
-	
+
 	<!--<target name="db-master" depends="build">
 		<java  classname="com.hk.core.LoadData" fork="yes">
 			<classpath>
