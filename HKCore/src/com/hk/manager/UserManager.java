@@ -46,8 +46,7 @@ public class UserManager {
 
     @Autowired
     private UserService      userService;
-    // @Autowired
-    private OrderManager     orderManager;
+
     @Autowired
     private RoleService      roleService;
     @Autowired
@@ -68,6 +67,9 @@ public class UserManager {
     @Autowired
     private AddressDao       addressDao;
 
+    //Please do not add @Autowired has been taken care of in getter .
+    private OrderManager     orderManager;
+    
     public UserLoginDto login(String email, String password, boolean rememberMe) throws HealthkartLoginException {
         /**
          * Check whether any user is logged in or not. if yes then if the user is TEMP_USER then save a reference to

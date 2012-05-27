@@ -112,6 +112,7 @@ public class OrderManager {
     @Autowired
     private OrderLoggingService               orderLoggingService;
 
+    @Autowired
     private ComboInstanceHasProductVariantDao comboInstanceHasProductVariantDao;
 
     @Value("#{hkEnvProps['" + Keys.Env.codCharges + "']}")
