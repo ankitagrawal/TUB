@@ -64,10 +64,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private ShippingOrderService   shippingOrderService;
-
     @Autowired
     private BaseDao                baseDao;
-
     @Autowired
     private UserService            userService;
     @Autowired
@@ -104,6 +102,10 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order find(Long orderId) {
         return getOrderDao().get(Order.class, orderId);
+    }
+
+    public Order findByGatewayOrderId(String gatewayOrderId) {
+        return orderDao.findByGatewayOrderId(gatewayOrderId);
     }
 
     public Order findByUserAndOrderStatus(User user, EnumOrderStatus orderStatus) {

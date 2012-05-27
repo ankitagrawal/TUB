@@ -41,6 +41,10 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao {
     @Autowired
     private StoreService      storeService;
 
+    public Order findByGatewayOrderId(String gatewayOrderId) {
+        return (Order) getSession().createQuery("from Order o where o.gatewayOrderId = :gatewayOrderId").setString("gatewayOrderId", gatewayOrderId).uniqueResult();
+    }
+
     public Order getLatestOrderForUser(User user) {
         @SuppressWarnings( { "unchecked" })
         List<Order> orders = getSession().createQuery("from Order o where o.user = :user and " + "o.orderStatus.id <> :incartOrderStatusId " +

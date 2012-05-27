@@ -27,6 +27,8 @@ public interface WarehouseService {
      */
     public Warehouse getWarehoueForFlipping(Warehouse currentWarehouseForSO);
 
+    public List<Warehouse> getServiceableWarehouses();
+
     public Warehouse getCorporateOffice();
 
     /**

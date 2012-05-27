@@ -4,6 +4,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hk.admin.engine.ShipmentPricingEngine;
+import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.constants.shipment.EnumBoxSize;
+import com.hk.constants.shipment.EnumCourier;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -11,6 +15,9 @@ import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 
+import net.sourceforge.stripes.validation.SimpleError;
+import net.sourceforge.stripes.validation.Validate;
+import net.sourceforge.stripes.validation.ValidationMethod;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,41 +48,63 @@ import com.hk.web.action.error.AdminPermissionAction;
 @Component
 public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 
-    private static Logger              logger            = LoggerFactory.getLogger(SearchOrderAndEnterCourierInfoAction.class);
+    private static Logger logger = LoggerFactory.getLogger(SearchOrderAndEnterCourierInfoAction.class);
 
-    List<ShippingOrder>                shippingOrderList = new ArrayList<ShippingOrder>(0);
-    ShippingOrder                      shippingOrder;
+    List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>(0);
+    ShippingOrder shippingOrder;
     @Autowired
-    ShippingOrderDao                   shippingOrderDao;
+    ShippingOrderDao shippingOrderDao;
     @Autowired
-    ShippingOrderService               shippingOrderService;
+    ShipmentService shipmentService;
     @Autowired
-    UserService                        userService;
+    ShippingOrderService shippingOrderService;
     @Autowired
-    PincodeDao                         pincodeDao;
+    UserService userService;
+    @Autowired
+    PincodeDao pincodeDao;
+    @Autowired
+    private ShipmentPricingEngine shipmentPricingEngine;
 
-    private String                     gatewayOrderId;
-    Courier                            suggestedCourier;
-    List<Courier>                      availableCouriers;
-    BoxSize                            boxSize;
-    Double                             boxWeight;
-    String                             trackingId;
-    Shipment                           shipment;
+    private String gatewayOrderId;
+    Courier suggestedCourier;
+    List<Courier> availableCouriers;
 
-    @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
-    String                             adminDownloads;
-    File                               xlsFile;
+    @Validate(required = true)
+    BoxSize boxSize;
+    @Validate(required = true)
+    Double boxWeight;
+    @Validate(required = true)
+    String trackingId;
+    Shipment shipment;
 
     @Autowired
-    private ReportManager              reportGenerator;
-    @Autowired
-    private CourierService             courierService;
+    private CourierService courierService;
     @Autowired
     private ShippingOrderStatusService shippingOrderStatusService;
 
+    @ValidationMethod(on = "saveShipmentDetails")
+    public void verifyShipmentDetails() {
+        if (StringUtils.isBlank(shipment.getTrackingId()) || shipment.getBoxWeight() == null || shipment.getBoxSize() == null || shipment.getCourier() == null) {
+            getContext().getValidationErrors().add("1", new SimpleError("Tracking Id, Box weight, Box Size, Courier all are mandatory"));
+        }
+        if (boxSize.getId().equals(EnumBoxSize.MIGRATE.getId()) || shipment.getCourier().getId().equals(EnumCourier.MIGRATE.getId())) {
+            getContext().getValidationErrors().add("2", new SimpleError("None of the values can be migrate"));
+        }
+        Pincode pinCode = pincodeDao.getByPincode(shippingOrder.getBaseOrder().getAddress().getPin());
+        if (pinCode == null) {
+            getContext().getValidationErrors().add("3", new SimpleError("Pincode is invalid, It cannot be packed"));
+        } else{
+            boolean isCod = shippingOrder.isCOD();
+            availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod);
+            if(availableCouriers == null || availableCouriers.isEmpty()){
+                getContext().getValidationErrors().add("4", new SimpleError("No Couriers are applicable on this pincode, Please contact logistics, Order cannot be packed"));
+            }
+        }
+    }
+
     @DontValidate
     @DefaultHandler
-    @Secure(hasAnyPermissions = { PermissionConstants.VIEW_PACKING_QUEUE }, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = {PermissionConstants.VIEW_PACKING_QUEUE}, authActionBean = AdminPermissionAction.class)
     public Resolution pre() {
         return new ForwardResolution("/pages/admin/searchOrderAndEnterCouierInfo.jsp");
     }
@@ -119,6 +148,8 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
                 // if (suggestedCourier == null) {
                 // suggestedCourier = courierService.getSuggestedCourierService(pinCode.getPincode(), isCod);
                 // }
+            }else{
+                addRedirectAlertMessage(new SimpleMessage("Pincode is INVALID, Please contact Customer Care. It cannot be packed."));
             }
         } catch (Exception e) {
             logger.error("Error while getting suggested courier for shippingOrder#" + shippingOrder.getId(), e);
@@ -126,17 +157,16 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
         return new ForwardResolution("/pages/admin/searchOrderAndEnterCouierInfo.jsp");
     }
 
-    @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_PACKING_QUEUE }, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PACKING_QUEUE}, authActionBean = AdminPermissionAction.class)
     public Resolution saveShipmentDetails() {
         // TODO: Verify if the logic is working fine
-        if (StringUtils.isBlank(shipment.getTrackingId()) || shipment.getBoxWeight() == null) {
-            addRedirectAlertMessage(new SimpleMessage("Tracking Id, Box weight are also mandatory"));
-            return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class).addParameter("searchOrders").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
-        }
         shipment.setEmailSent(false);
         shippingOrder.setShipment(shipment);
         shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Packed));
         shippingOrderDao.save(shippingOrder);
+        shipment.setShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
+        shipment.setShipmentCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
+        shipmentService.save(shipment);
         String comment = "";
         if (shipment != null) {
             comment = "Shipment Details: " + shipment.getCourier().getName() + "/" + shipment.getTrackingId();
