@@ -267,7 +267,7 @@ public class OrderServiceImpl implements OrderService {
         User user;
         if(order.getStore().getId()== 1L){
             user  = getUserService().getLoggedInUser();
-        }
+        }                                                                   
         else{
             user=order.getUser();
         }
