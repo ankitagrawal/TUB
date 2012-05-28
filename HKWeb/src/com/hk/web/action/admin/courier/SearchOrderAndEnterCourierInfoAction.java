@@ -7,6 +7,7 @@ import com.hk.admin.engine.ShipmentPricingEngine;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.shipment.EnumBoxSize;
 import com.hk.constants.courier.EnumCourier;
+import com.hk.domain.shippingOrder.LineItem;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -64,13 +65,8 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
     private String gatewayOrderId;
     Courier suggestedCourier;
     List<Courier> availableCouriers;
+    Double approxWeight;
 
-    @Validate(required = true)
-    BoxSize boxSize;
-    @Validate(required = true)
-    Double boxWeight;
-    @Validate(required = true)
-    String trackingId;
     Shipment shipment;
 
     @Autowired
@@ -83,7 +79,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
         if (StringUtils.isBlank(shipment.getTrackingId()) || shipment.getBoxWeight() == null || shipment.getBoxSize() == null || shipment.getCourier() == null) {
             getContext().getValidationErrors().add("1", new SimpleError("Tracking Id, Box weight, Box Size, Courier all are mandatory"));
         }
-        if (boxSize.getId().equals(EnumBoxSize.MIGRATE.getId()) || shipment.getCourier().getId().equals(EnumCourier.MIGRATE.getId())) {
+        if (shipment.getBoxSize().getId().equals(EnumBoxSize.MIGRATE.getId()) || shipment.getCourier().getId().equals(EnumCourier.MIGRATE.getId())) {
             getContext().getValidationErrors().add("2", new SimpleError("None of the values can be migrate"));
         }
         Pincode pinCode = pincodeDao.getByPincode(shippingOrder.getBaseOrder().getAddress().getPin());
@@ -130,6 +126,9 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
                     || EnumShippingOrderStatus.SO_Shipped.getId().equals(shippingOrder.getOrderStatus().getId())) {
                 shipment = shippingOrder.getShipment();
                 shippingOrderList.add(shippingOrder);
+                for (LineItem lineItem : shippingOrder.getLineItems()) {
+                    approxWeight += lineItem.getSku().getProductVariant().getWeight();
+                }
             } else {
                 addRedirectAlertMessage(new SimpleMessage("Shipping Order is not checked out. It cannot be packed. "));
                 return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
@@ -200,30 +199,6 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
         this.suggestedCourier = suggestedCourier;
     }
 
-    public BoxSize getBoxSize() {
-        return boxSize;
-    }
-
-    public void setBoxSize(BoxSize boxSize) {
-        this.boxSize = boxSize;
-    }
-
-    public Double getBoxWeight() {
-        return boxWeight;
-    }
-
-    public void setBoxWeight(Double boxWeight) {
-        this.boxWeight = boxWeight;
-    }
-
-    public String getTrackingId() {
-        return trackingId;
-    }
-
-    public void setTrackingId(String trackingId) {
-        this.trackingId = trackingId;
-    }
-
     public Shipment getShipment() {
         return shipment;
     }
@@ -242,5 +217,13 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 
     public void setCourierService(CourierService courierService) {
         this.courierService = courierService;
+    }
+
+    public Double getApproxWeight() {
+        return approxWeight;
+    }
+
+    public void setApproxWeight(Double approxWeight) {
+        this.approxWeight = approxWeight;
     }
 }

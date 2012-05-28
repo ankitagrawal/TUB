@@ -1,9 +1,7 @@
 package com.hk.admin.util.helper;
 
-import com.hk.pojo.DummyOrder;
-import com.hk.pojo.DummySO;
-import com.hk.admin.engine.CourierCostCalculator;
 import com.hk.admin.engine.ShipmentPricingEngine;
+import com.hk.admin.pact.service.courier.CourierCostCalculator;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierPricingEngine;
@@ -13,6 +11,8 @@ import com.hk.domain.warehouse.Warehouse;
 import com.hk.exception.NoSkuException;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.SkuService;
+import com.hk.pojo.DummyOrder;
+import com.hk.pojo.DummySO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,7 @@
 package com.hk.web.action.admin.shipment;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.admin.engine.CourierCostCalculator;
+import com.hk.admin.engine.CourierCostCalculatorImpl;
 import com.hk.admin.engine.ShipmentPricingEngine;
 import com.hk.admin.pact.dao.courier.CourierPricingEngineDao;
 import com.hk.admin.pact.dao.courier.PincodeRegionZoneDao;
@@ -79,7 +79,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
     ShippingOrderDao shippingOrderDao;
 
     @Autowired
-    CourierCostCalculator courierCostCalculator;
+    CourierCostCalculatorImpl courierCostCalculator;
 
     @Autowired
     ShipmentService shipmentService;

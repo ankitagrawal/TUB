@@ -25,6 +25,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.Comment;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.comparator.OrderLifecycleComparator;
@@ -487,9 +488,7 @@ public class Order implements java.io.Serializable {
 
     @Transient
     public boolean isCOD() {
-        // return EnumPaymentMode.COD.getId().equals(getPayment().getPaymentMode().getId());
-        // TODO:rewrite
-        return true;
+        return EnumPaymentMode.COD.getId().equals(getPayment().getPaymentMode().getId());
     }
 
     /*

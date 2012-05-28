@@ -7,6 +7,7 @@ import com.hk.admin.pact.dao.courier.PincodeRegionZoneDao;
 import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.util.helper.OrderSplitterHelper;
 import com.hk.comparator.MapValueComparator;
+import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.payment.EnumPaymentMode;
@@ -33,6 +34,7 @@ import com.hk.pojo.DummyOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -85,7 +87,8 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
     @Autowired
     private OrderLoggingService orderLoggingService;
 
-
+    @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
+    private Double codMinAmount;
 
     public List<DummyOrder> listBestDummyOrdersPractically(Order order) {
         TreeMap<List<DummyOrder>, Long> sortedCourierCostingTreeMap = splitBOPractically(order);
@@ -115,6 +118,16 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
 
         // get static things
         Pincode pincode = pincodeDao.getByPincode(order.getAddress().getPin());
+        if (pincode == null) {
+            String comments = "Pincode does not exist in our system, Please get in touch with OPS or customer care";
+            orderLoggingService.logOrderActivityByAdmin(order, EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit, comments);
+            throw new OrderSplitException(comments + ". Aborting splitting of order.", order);
+        }
+        if(order.getPayment() == null){
+            String comments = "No Payment Associated with order";
+            orderLoggingService.logOrderActivityByAdmin(order, EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit, comments);
+            throw new OrderSplitException(comments + ". Aborting splitting of order.", order);
+        }
         boolean isCod = order.isCOD();
         Payment payment = order.getPayment();
 
@@ -176,7 +189,18 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
 
             DummyOrder dummyGgnOrder = new DummyOrder(ggnCartLineItems, ggnWarehouse, isCod, pincode, payment);
             DummyOrder dummyMumOrder = new DummyOrder(mumCartLineItems, mumWarehouse, isCod, pincode, payment);
-            dummyOrderCostingMap.put(Arrays.asList(dummyGgnOrder, dummyMumOrder), orderSplitterHelper.calculateShippingPlusTax(Arrays.asList(dummyGgnOrder, dummyMumOrder)));
+
+            List<DummyOrder> splitDummyOrders = Arrays.asList(dummyGgnOrder,dummyMumOrder);
+            boolean validCase = true;
+            if (isCod) {
+                for (DummyOrder splitDummyOrder : splitDummyOrders) {
+                  if(splitDummyOrder.getAmount() <= codMinAmount){
+                      validCase = false;
+                  }
+                }
+            }
+            if(!validCase) continue;
+            dummyOrderCostingMap.put(splitDummyOrders, orderSplitterHelper.calculateShippingPlusTax(splitDummyOrders));
         }
 
         MapValueComparator mapValueComparator = new MapValueComparator(dummyOrderCostingMap);
@@ -287,7 +311,7 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
         // phase 2 complete
 
         // COD Amount Check
-        if (order.getPayment().getPaymentMode().getId() == EnumPaymentMode.COD.getId()) {
+        if (order.getPayment().getPaymentMode().getId().equals(EnumPaymentMode.COD.getId())) {
             for (Map.Entry<Warehouse, Set<CartLineItem>> warehouseSetEntry : warehouseLineItemSetMap.entrySet()) {
                 ShippingOrder shippingOrder = shippingOrderService.createSOWithBasicDetails(order, warehouseSetEntry.getKey());
                 for (CartLineItem cartLineItem : warehouseSetEntry.getValue()) {
@@ -295,12 +319,12 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
                     LineItem shippingOrderLineItem = LineItemHelper.createLineItemWithBasicDetails(sku, shippingOrder, cartLineItem);
                     shippingOrder.getLineItems().add(shippingOrderLineItem);
                 }
-                ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, order);        //TODO inject codAmount
-//                if (ShippingOrderHelper.getAmountForSO(shippingOrder) <= codMinAmount) {
-//                    String comments = "One of the SO amount was computed below " + codMinAmount;
-//                    orderLoggingService.logOrderActivityByAdmin(order, EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit, comments);
-//                    throw new OrderSplitException(comments + ". Aborting splitting of order.", order);
-//                }
+                ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, order);
+                if (ShippingOrderHelper.getAmountForSO(shippingOrder) <= codMinAmount) {
+                    String comments = "One of the SO amount was computed below " + codMinAmount;
+                    orderLoggingService.logOrderActivityByAdmin(order, EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit, comments);
+                    throw new OrderSplitException(comments + ". Aborting splitting of order.", order);
+                }
             }
         }
        return warehouseLineItemSetMap;

@@ -1,30 +1,11 @@
 package com.hk.impl.service.order;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import com.hk.pact.service.order.OrderSplitterService;
-import com.hk.pojo.DummyOrder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.akube.framework.dao.Page;
 import com.hk.comparator.BasketCategory;
 import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
-import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.core.search.OrderSearchCriteria;
@@ -56,47 +37,57 @@ import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
+import com.hk.pact.service.order.OrderSplitterService;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.pojo.DummyOrder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
 
 @Service
 public class OrderServiceImpl implements OrderService {
 
-    private static Logger          logger = LoggerFactory.getLogger(OrderService.class);
+    private static Logger logger = LoggerFactory.getLogger(OrderService.class);
 
     @Autowired
-    private ShippingOrderService   shippingOrderService;
+    private ShippingOrderService shippingOrderService;
     @Autowired
-    private BaseDao                baseDao;
+    private BaseDao baseDao;
     @Autowired
-    private UserService            userService;
+    private UserService userService;
     @Autowired
-    private OrderDao               orderDao;
+    private OrderDao orderDao;
     @Autowired
-    private EmailManager           emailManager;
+    private EmailManager emailManager;
     @Autowired
-    private WarehouseService       warehouseService;
+    private WarehouseService warehouseService;
     @Autowired
-    private SkuService             skuService;
+    private SkuService skuService;
     @Autowired
-    private InventoryService       inventoryService;
+    private InventoryService inventoryService;
     @Autowired
-    private AffilateService        affilateService;
+    private AffilateService affilateService;
     @Autowired
     private ReferrerProgramManager referrerProgramManager;
     @Autowired
-    private OrderStatusService     orderStatusService;
+    private OrderStatusService orderStatusService;
     @Autowired
-    private RewardPointService     rewardPointService;
+    private RewardPointService rewardPointService;
     @Autowired
-    private CategoryService        categoryService;
+    private CategoryService categoryService;
     @Autowired
-    private OrderLoggingService    orderLoggingService;
+    private OrderLoggingService orderLoggingService;
     @Autowired
     private OrderSplitterService orderSplitterService;
 
     @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
-    private Double                 codMinAmount;
+    private Double codMinAmount;
 
     @Transactional
     public Order save(Order order) {

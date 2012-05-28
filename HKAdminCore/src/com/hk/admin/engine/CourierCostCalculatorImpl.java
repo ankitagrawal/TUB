@@ -3,6 +3,7 @@ package com.hk.admin.engine;
 import com.hk.admin.pact.dao.courier.CourierPricingEngineDao;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.dao.courier.PincodeRegionZoneDao;
+import com.hk.admin.pact.service.courier.CourierCostCalculator;
 import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.comparator.MapValueComparator;
 import com.hk.domain.core.Pincode;
@@ -25,9 +26,9 @@ import java.util.*;
  * To change this template use File | Settings | File Templates.
  */
 @Component
-public class CourierCostCalculator {
+public class CourierCostCalculatorImpl implements CourierCostCalculator {
 
-    private static Logger logger = LoggerFactory.getLogger(CourierCostCalculator.class);
+    private static Logger logger = LoggerFactory.getLogger(CourierCostCalculatorImpl.class);
 
     @Autowired
     PincodeDao pincodeDao;

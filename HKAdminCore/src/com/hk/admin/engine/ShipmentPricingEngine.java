@@ -54,7 +54,7 @@ public class ShipmentPricingEngine {
     CourierGroupService courierGroupService;
 
     @Autowired
-    CourierCostCalculator courierCostCalculator;
+    CourierCostCalculatorImpl courierCostCalculator;
 
     public Double calculateShipmentCost(ShippingOrder shippingOrder){
         Shipment shipment = shippingOrder.getShipment();

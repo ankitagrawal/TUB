@@ -5,7 +5,6 @@ import com.hk.admin.pact.dao.courier.PincodeRegionZoneDao;
 import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.comparator.MapValueComparator;
-import com.hk.constants.core.EnumTax;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.Pincode;
@@ -19,9 +18,7 @@ import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.exception.NoSkuException;
 import com.hk.pact.dao.courier.PincodeDao;
-import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.service.core.WarehouseService;
-import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import org.slf4j.Logger;
@@ -71,7 +68,7 @@ public class PreferredWarehouseDecider {
     ShipmentPricingEngine shipmentPricingEngine;
 
     @Autowired
-    CourierCostCalculator courierCostCalculator;
+    CourierCostCalculatorImpl courierCostCalculator;
 
     private static Logger logger = LoggerFactory.getLogger(PreferredWarehouseDecider.class);
 
