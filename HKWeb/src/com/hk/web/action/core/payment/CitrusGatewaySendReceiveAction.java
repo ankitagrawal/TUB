@@ -122,6 +122,10 @@ public class CitrusGatewaySendReceiveAction extends BasePaymentGatewaySendReceiv
          */
 
         Map<String, String> paramMap = CitrusTestPaymentGatewayWrapper.parseResponse(validatedData, responseMethod);
+	      logger.error("validated date -> " + validatedData);
+	      logger.error("data -> " + data);
+	      logger.error("responseMethod -> " + responseMethod);
+	      logger.error("propertyFilePath -> " + propertyFilePath);
 	      logger.error("param map->" + paramMap);
         String amountStr = paramMap.get(CitrusTestPaymentGatewayWrapper.Amount);
         Double amount = NumberUtils.toDouble(amountStr);
