@@ -106,11 +106,11 @@
 		</init-param>
 		<init-param>
 			<param-name>SSL.SecureHost</param-name>
-			<param-value>www.healthkart.com</param-value>
+			<param-value>healthkart.com</param-value>
 		</init-param>
 		<init-param>
 			<param-name>SSL.UnsecureHost</param-name>
-			<param-value>www.healthkart.com</param-value>
+			<param-value>healthkart.com</param-value>
 		</init-param>
 		<init-param>
 			<param-name>SSL.SessionMode</param-name>
@@ -265,7 +265,7 @@
 		<filter-name>OpenViewInSession</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-	
+
 	<filter>
 		<filter-name>ShiroFilter</filter-name>
 		<filter-class>
@@ -276,6 +276,58 @@
 		<filter-name>ShiroFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+
+
+	<filter>
+		<filter-name>adminFilter</filter-name>
+		<filter-class>
+			com.akube.framework.filter.AdminFilter
+		</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>adminFilter</filter-name>
+		<url-pattern>/admin/*</url-pattern>
+	</filter-mapping>
+
+	<filter>
+		<filter-name>AffiliateFilter</filter-name>
+		<filter-class>
+			com.hk.web.filter.AffiliateTrackingFilter
+		</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>AffiliateFilter</filter-name>
+		<servlet-name>StripesDispatcher</servlet-name>
+		<url-pattern>*.jsp</url-pattern>
+		<url-pattern>/</url-pattern>
+	</filter-mapping>
+
+	<filter>
+		<filter-name>CampaignTrackingFilter</filter-name>
+		<filter-class>
+			com.hk.web.filter.CampaignTrackingFilter
+		</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>CampaignTrackingFilter</filter-name>
+		<servlet-name>StripesDispatcher</servlet-name>
+		<url-pattern>*.jsp</url-pattern>
+		<url-pattern>/</url-pattern>
+	</filter-mapping>
+
+	<filter>
+		<filter-name>ServiceCityFilter</filter-name>
+		<filter-class>com.hk.web.filter.ServiceCityFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>ServiceCityFilter</filter-name>
+		<servlet-name>StripesDispatcher</servlet-name>
+		<url-pattern>*.jsp</url-pattern>
+		<url-pattern>/services</url-pattern>
+	</filter-mapping>
+
+
+
 
 	<filter>
 		<filter-name>RememberMeFilter</filter-name>
@@ -299,19 +351,6 @@
 	</filter>
 	<filter-mapping>
 		<filter-name>whitespaceFilter</filter-name>
-		<servlet-name>StripesDispatcher</servlet-name>
-		<url-pattern>*.jsp</url-pattern>
-		<url-pattern>/</url-pattern>
-	</filter-mapping>
-
-	<filter>
-		<filter-name>CampaignTrackingFilter</filter-name>
-		<filter-class>
-			com.hk.web.filter.CampaignTrackingFilter
-		</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>CampaignTrackingFilter</filter-name>
 		<servlet-name>StripesDispatcher</servlet-name>
 		<url-pattern>*.jsp</url-pattern>
 		<url-pattern>/</url-pattern>

@@ -36,7 +36,6 @@
 
 	<!--  Listeners End -->
 
-	<!--  Stripes Start -->
 
 	<filter>
 		<filter-name>StripesFilter</filter-name>
@@ -121,6 +120,7 @@
 			<param-name>FileUpload.MaximumPostSize</param-name>
 			<param-value>50mb</param-value>
 		</init-param>
+
 	</filter>
 
 	<servlet>
@@ -182,44 +182,6 @@
 		<url-pattern>/rest/api/*</url-pattern>
 	</servlet-mapping>
 
-
-	<!--  Servlet End -->
-	<filter>
-		<filter-name>OpenViewInSession</filter-name>
-		<filter-class>
-			org.springframework.orm.hibernate3.support.OpenSessionInViewFilter
-		</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>OpenViewInSession</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
-
-
-	<filter>
-		<filter-name>WebContextFilter</filter-name>
-		<filter-class>com.hk.web.filter.WebContextFilter</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>WebContextFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
-
-	<filter>
-		<filter-name>ShiroFilter</filter-name>
-		<filter-class>
-			org.apache.shiro.spring.SpringShiroFilter
-		</filter-class>
-	</filter>
-
-	<filter-mapping>
-		<filter-name>ShiroFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
-
-
-
-
 	<servlet>
 		<servlet-name>StripesDispatcher</servlet-name>
 		<servlet-class>
@@ -227,7 +189,6 @@
 		</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
-
 	<servlet-mapping>
 		<servlet-name>StripesDispatcher</servlet-name>
 		<url-pattern>*.action</url-pattern>
@@ -276,9 +237,123 @@
 		<url-pattern>/sitemap.xml</url-pattern>
 		<url-pattern>/sitemap.txt</url-pattern>
 		<url-pattern>/ror.xml</url-pattern>
-
-    <!--- URL Patterns for Promotional Activities-->
-    <url-pattern>/revital</url-pattern>
 	</servlet-mapping>
+
+
+	<!--  Servlet End -->
+
+	<!--  Filter Start -->
+
+	<filter>
+		<filter-name>DisableUrlSessionFilter</filter-name>
+		<filter-class>
+			com.akube.framework.filter.DisableUrlSessionFilter
+		</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>DisableUrlSessionFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<filter>
+		<filter-name>OpenViewInSession</filter-name>
+		<filter-class>
+			org.springframework.orm.hibernate3.support.OpenSessionInViewFilter
+		</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>OpenViewInSession</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<filter>
+		<filter-name>ShiroFilter</filter-name>
+		<filter-class>
+			org.apache.shiro.spring.SpringShiroFilter
+		</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>ShiroFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+
+	<filter>
+		<filter-name>AffiliateFilter</filter-name>
+		<filter-class>
+			com.hk.web.filter.AffiliateTrackingFilter
+		</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>AffiliateFilter</filter-name>
+		<servlet-name>StripesDispatcher</servlet-name>
+		<url-pattern>*.jsp</url-pattern>
+		<url-pattern>/</url-pattern>
+	</filter-mapping>
+
+	<filter>
+		<filter-name>CampaignTrackingFilter</filter-name>
+		<filter-class>
+			com.hk.web.filter.CampaignTrackingFilter
+		</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>CampaignTrackingFilter</filter-name>
+		<servlet-name>StripesDispatcher</servlet-name>
+		<url-pattern>*.jsp</url-pattern>
+		<url-pattern>/</url-pattern>
+	</filter-mapping>
+
+	<filter>
+		<filter-name>ServiceCityFilter</filter-name>
+		<filter-class>com.hk.web.filter.ServiceCityFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>ServiceCityFilter</filter-name>
+		<servlet-name>StripesDispatcher</servlet-name>
+		<url-pattern>*.jsp</url-pattern>
+		<url-pattern>/services</url-pattern>
+	</filter-mapping>
+
+
+
+
+	<filter>
+		<filter-name>RememberMeFilter</filter-name>
+		<filter-class>com.hk.web.filter.RememberMeFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>RememberMeFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<filter>
+		<description>
+			This filter class removes any whitespace from the response.
+			It actually trims all leading and trailing spaces or tabs
+			and newlines before writing to the response stream. This
+			will greatly save the network bandwith, but this will make
+			the source of the response more hard to read.
+		</description>
+		<filter-name>whitespaceFilter</filter-name>
+		<filter-class>com.hk.web.filter.WhitespaceFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>whitespaceFilter</filter-name>
+		<servlet-name>StripesDispatcher</servlet-name>
+		<url-pattern>*.jsp</url-pattern>
+		<url-pattern>/</url-pattern>
+	</filter-mapping>
+
+
+	<filter>
+		<filter-name>WebContextFilter</filter-name>
+		<filter-class>com.hk.web.filter.WebContextFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>WebContextFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
 
 </web-app>
