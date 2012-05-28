@@ -263,8 +263,17 @@ public class OrderServiceImpl implements OrderService {
     public Order escalateOrderFromActionQueue(Order order, String shippingOrderGatewayId) {
         // order = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Ready_For_Process,
         // EnumOrderStatus.ESCALTED, EnumOrderStatus.PARTIAL_ESCALTION);
+
+        User user;
+        if(order.getStore().getId()== 1L){
+            user  = getUserService().getLoggedInUser();
+        }
+        else{
+            user=order.getUser();
+        }
+
         OrderLifecycleActivity orderLifecycleActivity = getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.EscalatedToProcessingQueue);
-        getOrderLoggingService().logOrderActivity(order, userService.getLoggedInUser(), orderLifecycleActivity, shippingOrderGatewayId + "escalated from action queue");
+        getOrderLoggingService().logOrderActivity(order, user, orderLifecycleActivity, shippingOrderGatewayId + "escalated from action queue");
 
         return order;
     }
