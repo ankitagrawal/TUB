@@ -25,7 +25,7 @@ import com.hk.dto.pricing.PricingDto;
 import com.hk.manager.OrderManager;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.service.OrderStatusService;
-import com.hk.pact.service.UserService;
+import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.payment.PaymentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
@@ -45,10 +45,11 @@ public class CheckPaymentAction extends BaseAction {
     private Payment              payment;
 
     private PricingDto           pricingDto;
+
     @Autowired
     private PaymentService       paymentService;
     @Autowired
-    private UserService          userService;
+    private OrderLoggingService  orderLoggingService;
     @Autowired
     private OrderService         orderService;
     @Autowired
@@ -93,7 +94,8 @@ public class CheckPaymentAction extends BaseAction {
             loggedOnUser = getUserService().getUserById(getPrincipal().getId());
         }
         getPaymentManager().pendingApproval(payment.getGatewayOrderId());
-        orderService.logOrderActivity(payment.getOrder(), loggedOnUser, getOrderService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedAuthPending), null);
+        getOrderLoggingService().logOrderActivity(payment.getOrder(), loggedOnUser,
+                getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedAuthPending), null);
         addRedirectAlertMessage(new LocalizableMessage("/admin/CheckPayment.action.payment.auth"));
         return new RedirectResolution(CheckPaymentAction.class).addParameter("order", order.getId());
     }
@@ -105,8 +107,8 @@ public class CheckPaymentAction extends BaseAction {
         }
         getPaymentManager().success(payment.getGatewayOrderId());
         orderService.sendEmailToServiceProvidersForOrder(order);
-        orderService.logOrderActivity(payment.getOrder(), loggedOnUser, getOrderService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful),
-                null);
+        getOrderLoggingService().logOrderActivity(payment.getOrder(), loggedOnUser,
+                getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful), null);
         addRedirectAlertMessage(new LocalizableMessage("/admin/CheckPayment.action.payment.received"));
         return new RedirectResolution(CheckPaymentAction.class).addParameter("order", order.getId());
     }
@@ -117,8 +119,8 @@ public class CheckPaymentAction extends BaseAction {
         if (getPrincipal() != null) {
             loggedOnUser = getUserService().getUserById(getPrincipal().getId());
         }
-        orderService.logOrderActivity(payment.getOrder(), loggedOnUser, getOrderService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentAssociatedToOrder),
-                null);
+        getOrderLoggingService().logOrderActivity(payment.getOrder(), loggedOnUser,
+                getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentAssociatedToOrder), null);
 
         /*
          * //Auto escalation of order if unbooked inventory is positive if (order.getShippingOrders() != null &&
@@ -141,7 +143,8 @@ public class CheckPaymentAction extends BaseAction {
         if (getPrincipal() != null) {
             loggedOnUser = getUserService().getUserById(getPrincipal().getId());
         }
-        orderService.logOrderActivity(payment.getOrder(), loggedOnUser, getOrderService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentUpdatedAsSuccessful), null);
+        getOrderLoggingService().logOrderActivity(payment.getOrder(), loggedOnUser,
+                getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentUpdatedAsSuccessful), null);
 
         orderService.sendEmailToServiceProvidersForOrder(order);
         orderService.processOrderForAutoEsclationAfterPaymentConfirmed(order);
@@ -194,20 +197,13 @@ public class CheckPaymentAction extends BaseAction {
         this.paymentService = paymentService;
     }
 
-    public UserService getUserService() {
-        return userService;
+
+    public OrderLoggingService getOrderLoggingService() {
+        return orderLoggingService;
     }
 
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
-    public OrderService getOrderService() {
-        return orderService;
-    }
-
-    public void setOrderService(OrderService orderService) {
-        this.orderService = orderService;
+    public void setOrderLoggingService(OrderLoggingService orderLoggingService) {
+        this.orderLoggingService = orderLoggingService;
     }
 
     public OrderStatusService getOrderStatusService() {

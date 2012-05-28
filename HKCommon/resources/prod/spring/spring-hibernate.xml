@@ -81,13 +81,13 @@
 			<value>com.mysql.jdbc.Driver</value>
 		</property>
 		<property name="url">
-			<value>jdbc:mysql://localhost:3306/healthkart_dev</value>
+			<value>jdbc:mysql://172.16.3.50:3306/healthkart_prod</value>
 		</property>
 		<property name="username">
-			<value>root</value>
+			<value>hkadmin</value>
 		</property>
 		<property name="password">
-			<value></value>
+			<value>admin2K11!</value>
 		</property>
 		<property name="maxActive">
 			<value>50</value>
@@ -107,7 +107,6 @@
 		<property name="initialSize">
 			<value>50</value>
 		</property>
-		<property name="defaultTransactionIsolation" value="1" />
 		<property name="poolPreparedStatements" value="true" />
 		<property name="maxOpenPreparedStatements" value="30" />
 		<property name="timeBetweenEvictionRunsMillis" value="-1" />

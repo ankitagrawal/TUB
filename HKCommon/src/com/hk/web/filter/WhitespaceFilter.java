@@ -18,12 +18,11 @@ import javax.servlet.http.HttpServletResponseWrapper;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * This filter class removes any whitespace [EDIT: I have appended a newlineTrimmer - Kani ] from the response.
- * It actually trims all leading and
- * trailing spaces or tabs and newlines before writing to the response stream. This will greatly
- * save the network bandwith, but this will make the source of the response more hard to read.
- * <p/>
- * This filter should be configured in the web.xml as follows:
+ * This filter class removes any whitespace [EDIT: I have appended a newlineTrimmer - Kani ] from the response. It
+ * actually trims all leading and trailing spaces or tabs and newlines before writing to the response stream. This will
+ * greatly save the network bandwith, but this will make the source of the response more hard to read. <p/> This filter
+ * should be configured in the web.xml as follows:
+ * 
  * <pre>
  * &lt;filter&gt;
  *     &lt;description&gt;
@@ -40,209 +39,207 @@ import org.apache.commons.lang.StringUtils;
  *     &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
  * &lt;/filter-mapping&gt;
  * </pre>
- *
+ * 
  * @author BalusC
  * @link http://balusc.blogspot.com/2007/12/whitespacefilter.html
  */
 public class WhitespaceFilter implements Filter {
 
-  // Constants ----------------------------------------------------------------------------------
+    // Constants ----------------------------------------------------------------------------------
 
-  // Specify here where you'd like to start/stop the trimming.
-  // You may want to replace this by init-param and initialize in init() instead.
-  static final String[] START_TRIM_AFTER = {"<html", "</textarea", "</pre"};
-  static final String[] STOP_TRIM_AFTER = {"</html", "<textarea", "<pre"};
+    // Specify here where you'd like to start/stop the trimming.
+    // You may want to replace this by init-param and initialize in init() instead.
+    static final String[] START_TRIM_AFTER = { "<html", "</textarea", "</pre" };
+    static final String[] STOP_TRIM_AFTER  = { "</html", "<textarea", "<pre" };
 
-  // Actions ------------------------------------------------------------------------------------
+    // Actions ------------------------------------------------------------------------------------
 
-  /**
-   * @see Filter#init(FilterConfig)
-   */
-  public void init(FilterConfig config) throws ServletException {
-    //
-  }
-
-  /**
-   * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
-   */
-  public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-      throws IOException, ServletException {
-    if (response instanceof HttpServletResponse) {
-      HttpServletResponse httpres = (HttpServletResponse) response;
-//      chain.doFilter(request, wrapResponse(httpres, createTrimWriter(httpres)));
-      chain.doFilter(request, wrapResponse(httpres, createNewLineTrimWriter(httpres)));
-    } else {
-      chain.doFilter(request, response);
+    /**
+     * @see Filter#init(FilterConfig)
+     */
+    public void init(FilterConfig config) throws ServletException {
+        //
     }
-  }
 
-  /**
-   * @see Filter#destroy()
-   */
-  public void destroy() {
-    //
-  }
+    /**
+     * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
+     */
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        if (response instanceof HttpServletResponse) {
+            HttpServletResponse httpres = (HttpServletResponse) response;
+            // chain.doFilter(request, wrapResponse(httpres, createTrimWriter(httpres)));
+            chain.doFilter(request, wrapResponse(httpres, createNewLineTrimWriter(httpres)));
+        } else {
+            chain.doFilter(request, response);
+        }
+    }
 
-  // Utility (may be refactored to public utility class) ----------------------------------------
+    /**
+     * @see Filter#destroy()
+     */
+    public void destroy() {
+        //
+    }
 
-  /**
-   * Create a new PrintWriter for the given HttpServletResponse which trims all whitespace.
-   *
-   * @param response The involved HttpServletResponse.
-   * @return A PrintWriter which trims all whitespace.
-   * @throws IOException If something fails at I/O level.
-   */
-  private static PrintWriter createTrimWriter(final HttpServletResponse response)
-      throws IOException {
-    return new PrintWriter(new OutputStreamWriter(response.getOutputStream(), "UTF-8"), true) {
-      private StringBuilder builder = new StringBuilder();
-      private boolean trim = false;
+    // Utility (may be refactored to public utility class) ----------------------------------------
 
-      public void write(int c) {
-        builder.append((char) c); // It is actually a char, not an int.
-      }
+    /**
+     * Create a new PrintWriter for the given HttpServletResponse which trims all whitespace.
+     * 
+     * @param response The involved HttpServletResponse.
+     * @return A PrintWriter which trims all whitespace.
+     * @throws IOException If something fails at I/O level.
+     */
+    @SuppressWarnings("unused")
+    private static PrintWriter createTrimWriter(final HttpServletResponse response) throws IOException {
+        return new PrintWriter(new OutputStreamWriter(response.getOutputStream(), "UTF-8"), true) {
+            private StringBuilder builder = new StringBuilder();
+            private boolean       trim    = false;
 
-      public void write(char[] chars, int offset, int length) {
-        builder.append(chars, offset, length);
-        this.flush(); // Preflush it.
-      }
-
-      public void write(String string, int offset, int length) {
-        builder.append(string, offset, length);
-        this.flush(); // Preflush it.
-      }
-
-      // Finally override the flush method so that it trims whitespace.
-      public void flush() {
-        synchronized (builder) {
-          BufferedReader reader = new BufferedReader(new StringReader(builder.toString()));
-          String line = null;
-
-          try {
-
-            while ((line = reader.readLine()) != null) {
-              if (startTrim(line)) {
-                trim = true;
-                out.write(line);
-              } else if (trim) {
-                out.write(line.trim());
-                if (stopTrim(line)) {
-                  trim = false;
-                  println();
-                }
-              } else {
-                out.write(line);
-                println();
-              }
+            public void write(int c) {
+                builder.append((char) c); // It is actually a char, not an int.
             }
 
-          } catch (IOException e) {
-            setError();
-            // Log e or do e.printStackTrace() if necessary.
-          }
-
-          // Reset the local StringBuilder and issue real flush.
-          builder = new StringBuilder();
-          super.flush();
-        }
-      }
-
-      private boolean startTrim(String line) {
-        for (String match : START_TRIM_AFTER) {
-          if (line.contains(match)) {
-            return true;
-          }
-        }
-        return false;
-      }
-
-      private boolean stopTrim(String line) {
-        for (String match : STOP_TRIM_AFTER) {
-          if (line.contains(match)) {
-            return true;
-          }
-        }
-        return false;
-      }
-    };
-  }
-
-  /**
-   * Create a new PrintWriter for the given HttpServletResponse which trims all blank lines.
-   *
-   * @param response The involved HttpServletResponse.
-   * @return A PrintWriter which trims all whitespace.
-   * @throws IOException If something fails at I/O level.
-   */
-  private static PrintWriter createNewLineTrimWriter(final HttpServletResponse response)
-      throws IOException {
-    return new PrintWriter(new OutputStreamWriter(response.getOutputStream(), "UTF-8"), true) {
-      private StringBuilder builder = new StringBuilder();
-      private boolean trim = false;
-
-      public void write(int c) {
-        builder.append((char) c); // It is actually a char, not an int.
-      }
-
-      public void write(char[] chars, int offset, int length) {
-        builder.append(chars, offset, length);
-        this.flush(); // Preflush it.
-      }
-
-      public void write(String string, int offset, int length) {
-        builder.append(string, offset, length);
-        this.flush(); // Preflush it.
-      }
-
-      // Finally override the flush method so that it trims whitespace.
-      public void flush() {
-        synchronized (builder) {
-          BufferedReader reader = new BufferedReader(new StringReader(builder.toString()));
-          String line = null;
-
-          try {
-
-            line = reader.readLine();
-            while (line != null) {
-              String nextLine = reader.readLine();
-              if (StringUtils.isBlank(line)) {
-              } else {
-                out.write(line);
-                if (nextLine != null) {
-                  // a new line is to be added only if this not the end of the buffered Stream
-                  println();
-                }
-              }
-              line = nextLine;
+            public void write(char[] chars, int offset, int length) {
+                builder.append(chars, offset, length);
+                this.flush(); // Preflush it.
             }
 
-          } catch (IOException e) {
-            setError();
-            // Log e or do e.printStackTrace() if necessary.
-          }
+            public void write(String string, int offset, int length) {
+                builder.append(string, offset, length);
+                this.flush(); // Preflush it.
+            }
 
-          // Reset the local StringBuilder and issue real flush.
-          builder = new StringBuilder();
-          super.flush();
-        }
-      }
-    };
-  }
+            // Finally override the flush method so that it trims whitespace.
+            public void flush() {
+                synchronized (builder) {
+                    BufferedReader reader = new BufferedReader(new StringReader(builder.toString()));
+                    String line = null;
 
-  /**
-   * Wrap the given HttpServletResponse with the given PrintWriter.
-   *
-   * @param response The HttpServletResponse of which the given PrintWriter have to be wrapped in.
-   * @param writer   The PrintWriter to be wrapped in the given HttpServletResponse.
-   * @return The HttpServletResponse with the PrintWriter wrapped in.
-   */
-  private static HttpServletResponse wrapResponse(
-      final HttpServletResponse response, final PrintWriter writer) {
-    return new HttpServletResponseWrapper(response) {
-      public PrintWriter getWriter() throws IOException {
-        return writer;
-      }
-    };
-  }
+                    try {
+
+                        while ((line = reader.readLine()) != null) {
+                            if (startTrim(line)) {
+                                trim = true;
+                                out.write(line);
+                            } else if (trim) {
+                                out.write(line.trim());
+                                if (stopTrim(line)) {
+                                    trim = false;
+                                    println();
+                                }
+                            } else {
+                                out.write(line);
+                                println();
+                            }
+                        }
+
+                    } catch (IOException e) {
+                        setError();
+                        // Log e or do e.printStackTrace() if necessary.
+                    }
+
+                    // Reset the local StringBuilder and issue real flush.
+                    builder = new StringBuilder();
+                    super.flush();
+                }
+            }
+
+            private boolean startTrim(String line) {
+                for (String match : START_TRIM_AFTER) {
+                    if (line.contains(match)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            private boolean stopTrim(String line) {
+                for (String match : STOP_TRIM_AFTER) {
+                    if (line.contains(match)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        };
+    }
+
+    /**
+     * Create a new PrintWriter for the given HttpServletResponse which trims all blank lines.
+     * 
+     * @param response The involved HttpServletResponse.
+     * @return A PrintWriter which trims all whitespace.
+     * @throws IOException If something fails at I/O level.
+     */
+    private static PrintWriter createNewLineTrimWriter(final HttpServletResponse response) throws IOException {
+        return new PrintWriter(new OutputStreamWriter(response.getOutputStream(), "UTF-8"), true) {
+            private StringBuilder builder = new StringBuilder();
+            @SuppressWarnings("unused")
+            private boolean       trim    = false;
+
+            public void write(int c) {
+                builder.append((char) c); // It is actually a char, not an int.
+            }
+
+            public void write(char[] chars, int offset, int length) {
+                builder.append(chars, offset, length);
+                this.flush(); // Preflush it.
+            }
+
+            public void write(String string, int offset, int length) {
+                builder.append(string, offset, length);
+                this.flush(); // Preflush it.
+            }
+
+            // Finally override the flush method so that it trims whitespace.
+            public void flush() {
+                synchronized (builder) {
+                    BufferedReader reader = new BufferedReader(new StringReader(builder.toString()));
+                    String line = null;
+
+                    try {
+
+                        line = reader.readLine();
+                        while (line != null) {
+                            String nextLine = reader.readLine();
+                            if (StringUtils.isBlank(line)) {
+                            } else {
+                                out.write(line);
+                                if (nextLine != null) {
+                                    // a new line is to be added only if this not the end of the buffered Stream
+                                    println();
+                                }
+                            }
+                            line = nextLine;
+                        }
+
+                    } catch (IOException e) {
+                        setError();
+                        // Log e or do e.printStackTrace() if necessary.
+                    }
+
+                    // Reset the local StringBuilder and issue real flush.
+                    builder = new StringBuilder();
+                    super.flush();
+                }
+            }
+        };
+    }
+
+    /**
+     * Wrap the given HttpServletResponse with the given PrintWriter.
+     * 
+     * @param response The HttpServletResponse of which the given PrintWriter have to be wrapped in.
+     * @param writer The PrintWriter to be wrapped in the given HttpServletResponse.
+     * @return The HttpServletResponse with the PrintWriter wrapped in.
+     */
+    private static HttpServletResponse wrapResponse(final HttpServletResponse response, final PrintWriter writer) {
+        return new HttpServletResponseWrapper(response) {
+            public PrintWriter getWriter() throws IOException {
+                return writer;
+            }
+        };
+    }
 
 }

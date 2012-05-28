@@ -117,7 +117,7 @@ public class MyAccountAction extends BaseAction {
     }
     if (!BaseUtils.isValidEmail(user.getEmail())) {
       logger.info("email id  " + user.getEmail() + " invalid!");
-      addRedirectAlertMessage(new SimpleMessage("PLEASE A VALID EMAIL ID!"));
+      addRedirectAlertMessage(new SimpleMessage("PLEASE ENTER A VALID EMAIL ID!"));
       return new ForwardResolution("/pages/editBasicInformation.jsp");
     }
     user = userDao.save(user);

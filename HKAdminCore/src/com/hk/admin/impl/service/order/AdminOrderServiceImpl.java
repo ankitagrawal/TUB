@@ -24,20 +24,20 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.User;
 import com.hk.manager.EmailManager;
 import com.hk.manager.ReferrerProgramManager;
-import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.core.AffilateService;
+import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.RewardPointService;
+import com.hk.pact.service.store.StoreService;
+import com.hk.service.ServiceLocatorFactory;
 
 @Service
 public class AdminOrderServiceImpl implements AdminOrderService {
 
-    
-    private static Logger logger = LoggerFactory.getLogger(AdminOrderService.class);
-    
-    
+    private static Logger             logger = LoggerFactory.getLogger(AdminOrderService.class);
+
     @Autowired
     private UserService               userService;
     @Autowired
@@ -46,7 +46,6 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     private RewardPointService        rewardPointService;
     @Autowired
     private OrderService              orderService;
-    @Autowired
     private AdminShippingOrderService adminShippingOrderService;
     @Autowired
     private AffilateService           affilateService;
@@ -54,9 +53,8 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     private ReferrerProgramManager    referrerProgramManager;
     @Autowired
     private EmailManager              emailManager;
-
     @Autowired
-    private OrderDao                  orderDao;
+    private OrderLoggingService       orderLoggingService;
 
     @Transactional
     public Order putOrderOnHold(Order order) {
@@ -68,7 +66,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             getAdminShippingOrderService().putShippingOrderOnHold(shippingOrder);
         }
         order.setOrderStatus(getOrderService().getOrderStatus(EnumOrderStatus.OnHold));
-        order = getOrderDao().save(order);
+        order = getOrderService().save(order);
 
         /**
          * Order lifecycle activity logging - Order Put OnHold
@@ -83,46 +81,47 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         boolean shouldCancel = true;
 
         for (ShippingOrder shippingOrder : order.getShippingOrders()) {
-          if (!EnumShippingOrderStatus.SO_ActionAwaiting.getId().equals(shippingOrder.getOrderStatus().getId())) {
-            shouldCancel = false;
-            break;
-          }
+            if (!EnumShippingOrderStatus.SO_ActionAwaiting.getId().equals(shippingOrder.getOrderStatus().getId())) {
+                shouldCancel = false;
+                break;
+            }
         }
 
         if (shouldCancel) {
-          order.setOrderStatus((getOrderStatusService().find(EnumOrderStatus.Cancelled)));
-          order.setCancellationType(cancellationType);
-          order.setCancellationRemark(cancellationRemark);
-          order = getOrderService().save(order);
+            order.setOrderStatus((getOrderStatusService().find(EnumOrderStatus.Cancelled)));
+            order.setCancellationType(cancellationType);
+            order.setCancellationRemark(cancellationRemark);
+            order = getOrderService().save(order);
 
-          Set<ShippingOrder> shippingOrders = order.getShippingOrders();
-          if (shippingOrders != null) {
-            for (ShippingOrder shippingOrder : order.getShippingOrders()) {
-              getAdminShippingOrderService().cancelShippingOrder(shippingOrder);
+            Set<ShippingOrder> shippingOrders = order.getShippingOrders();
+            if (shippingOrders != null) {
+                for (ShippingOrder shippingOrder : order.getShippingOrders()) {
+                    getAdminShippingOrderService().cancelShippingOrder(shippingOrder);
+                }
             }
-          }
 
-          affilateService.cancelTxn(order);
+            affilateService.cancelTxn(order);
 
-          if (order.getRewardPointsUsed() != null && order.getRewardPointsUsed() > 0) {
-            referrerProgramManager.refundRedeemedPoints(order);
-          }
-
-          List<RewardPoint> rewardPointList = getRewardPointService().findByReferredOrder(order);
-          if (rewardPointList != null && rewardPointList.size() > 0) {
-            for (RewardPoint rewardPoint : rewardPointList) {
-              referrerProgramManager.cancelReferredOrderRewardPoint(rewardPoint);
+            if (order.getRewardPointsUsed() != null && order.getRewardPointsUsed() > 0) {
+                referrerProgramManager.refundRedeemedPoints(order);
             }
-          }
+            List<RewardPoint> rewardPointList = getRewardPointService().findByReferredOrder(order);
+            if (rewardPointList != null && rewardPointList.size() > 0) {
+                for (RewardPoint rewardPoint : rewardPointList) {
+                    referrerProgramManager.cancelReferredOrderRewardPoint(rewardPoint);
+                }
+            }
+            // Send Email Comm. for HK Users Only
+            if (order.getStore() != null && order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID)) {
+                emailManager.sendOrderCancelEmailToUser(order);
+            }
+            emailManager.sendOrderCancelEmailToAdmin(order);
 
-          emailManager.sendOrderCancelEmailToUser(order);
-          emailManager.sendOrderCancelEmailToAdmin(order);
-
-          this.logOrderActivity(order, loggedOnUser, getOrderService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCancelled), null);
+            this.logOrderActivity(order, loggedOnUser, getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCancelled), null);
         } else {
-          String comment = "All SOs of BO#" + order.getGatewayOrderId() + " are not in Action Awaiting Status - Aborting Cancellation.";
-          logger.info(comment);
-          this.logOrderActivityByAdmin(order, EnumOrderLifecycleActivity.LoggedComment, comment);
+            String comment = "All SOs of BO#" + order.getGatewayOrderId() + " are not in Action Awaiting Status - Aborting Cancellation.";
+            logger.info(comment);
+            this.logOrderActivityByAdmin(order, EnumOrderLifecycleActivity.LoggedComment, comment);
         }
     }
 
@@ -143,7 +142,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             order.setOrderStatus(getOrderService().getOrderStatus(EnumOrderStatus.Placed));
         }
 
-        order = getOrderDao().save(order);
+        order = getOrderService().save(order);
 
         /**
          * Order lifecycle activity logging - Order Put OnHold
@@ -155,19 +154,19 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
     public void logOrderActivity(Order order, EnumOrderLifecycleActivity enumOrderLifecycleActivity) {
         User user = userService.getLoggedInUser();
-        OrderLifecycleActivity orderLifecycleActivity = getOrderService().getOrderLifecycleActivity(enumOrderLifecycleActivity);
+        OrderLifecycleActivity orderLifecycleActivity = getOrderLoggingService().getOrderLifecycleActivity(enumOrderLifecycleActivity);
         logOrderActivity(order, user, orderLifecycleActivity, null);
     }
 
     public void logOrderActivityByAdmin(Order order, EnumOrderLifecycleActivity enumOrderLifecycleActivity, String comments) {
         User user = userService.getAdminUser();
-        OrderLifecycleActivity orderLifecycleActivity = getOrderService().getOrderLifecycleActivity(enumOrderLifecycleActivity);
+        OrderLifecycleActivity orderLifecycleActivity = getOrderLoggingService().getOrderLifecycleActivity(enumOrderLifecycleActivity);
         logOrderActivity(order, user, orderLifecycleActivity, comments);
     }
 
     @Override
     public void logOrderActivity(Order order, User user, OrderLifecycleActivity orderLifecycleActivity, String comments) {
-        getOrderDao().logOrderActivity(order, user, orderLifecycleActivity, comments);
+        getOrderLoggingService().logOrderActivity(order, user, orderLifecycleActivity, comments);
     }
 
     /**
@@ -188,7 +187,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
         if (shouldUpdate) {
             order.setOrderStatus(getOrderStatusService().find(boStatusOnSuccess));
-            order = getOrderDao().save(order);
+            order = getOrderService().save(order);
         }
         /*
          * else { order.setOrderStatus(orderStatusDao.find(boStatusOnFailure.getId())); order =
@@ -232,13 +231,14 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     }
 
     @Override
+    @Transactional
     public Order moveOrderBackToActionQueue(Order order, String shippingOrderGatewayId) {
         /*
          * order.setOrderStatus(orderStatusDao.find(EnumOrderStatus.ActionAwaiting.getId())); order =
          * orderDaoProvider.get().save(order);
          */
 
-        OrderLifecycleActivity orderLifecycleActivity = getOrderService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.EscalatedBackToAwaitingQueue);
+        OrderLifecycleActivity orderLifecycleActivity = getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.EscalatedBackToAwaitingQueue);
         logOrderActivity(order, userService.getLoggedInUser(), orderLifecycleActivity, shippingOrderGatewayId + "escalated back to  action queue");
 
         return order;
@@ -252,28 +252,12 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         this.userService = userService;
     }
 
-    public OrderDao getOrderDao() {
-        return orderDao;
-    }
-
-    public void setOrderDao(OrderDao orderDao) {
-        this.orderDao = orderDao;
-    }
-
     public OrderStatusService getOrderStatusService() {
         return orderStatusService;
     }
 
     public void setOrderStatusService(OrderStatusService orderStatusService) {
         this.orderStatusService = orderStatusService;
-    }
-
-    public OrderService getOrderService() {
-        return orderService;
-    }
-
-    public void setOrderService(OrderService orderService) {
-        this.orderService = orderService;
     }
 
     public RewardPointService getRewardPointService() {
@@ -285,6 +269,9 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     }
 
     public AdminShippingOrderService getAdminShippingOrderService() {
+        if(adminShippingOrderService ==null){
+            adminShippingOrderService = ServiceLocatorFactory.getService(AdminShippingOrderService.class);
+        }
         return adminShippingOrderService;
     }
 
@@ -314,6 +301,22 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
     public void setEmailManager(EmailManager emailManager) {
         this.emailManager = emailManager;
+    }
+
+    public OrderService getOrderService() {
+        return orderService;
+    }
+
+    public void setOrderService(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
+    public OrderLoggingService getOrderLoggingService() {
+        return orderLoggingService;
+    }
+
+    public void setOrderLoggingService(OrderLoggingService orderLoggingService) {
+        this.orderLoggingService = orderLoggingService;
     }
 
 }

@@ -19,8 +19,8 @@ import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductImage;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.combo.Combo;
-import com.hk.impl.dao.catalog.category.CategoryImageDaoImpl;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.catalog.category.CategoryImageDao;
 import com.hk.pact.dao.catalog.combo.ComboDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
@@ -38,6 +38,7 @@ public class ImageManager {
 
     ImageTagReader                imageTagReader;
 
+    @Autowired
     ComboDao                      comboDao;
 
     @Autowired
@@ -53,7 +54,8 @@ public class ImageManager {
 
     // S3Utils s3Utils;
     // ImageUtils imageUtils;
-    CategoryImageDaoImpl          categoryImageDao;
+    @Autowired
+    CategoryImageDao              categoryImageDao;
     private static final float    QUALITY       = 0.95F;
 
     static String                 awsReadBucket = "healthkart-prod";

@@ -28,6 +28,7 @@ public class AutoCompleteAction extends BaseAction {
     @Value("#{hkEnvProps['" + Keys.Env.solrUrl + "']}")
     String                solrUrl;
 
+    @SuppressWarnings("unused")
     private static Logger logger = LoggerFactory.getLogger(SearchAction.class);
     String                q      = "";
     String                limit  = "10";

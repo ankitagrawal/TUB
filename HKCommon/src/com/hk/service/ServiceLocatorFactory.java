@@ -30,6 +30,7 @@ public class ServiceLocatorFactory implements ApplicationContextAware, ServletCo
      * in here is the service name, indexed on the class, rather than the service object itself. This is so that
      * non-singelton services work, rather than returning the same object each time. AH
      */
+    @SuppressWarnings("unchecked")
     private static final Map          nameMap = new ConcurrentHashMap();
 
     private static final String IMPLEMENTATION_SUFFIX = "Impl";
@@ -49,8 +50,8 @@ public class ServiceLocatorFactory implements ApplicationContextAware, ServletCo
     }
 
     @Override
-    public void setServletContext(ServletContext servletContext) {
-        this.servletContext = servletContext;
+    public synchronized void setServletContext(ServletContext servContext) {
+        servletContext = servContext;
     }
 
     /**

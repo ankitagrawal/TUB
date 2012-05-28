@@ -433,16 +433,16 @@ public class ReportManager {
                 setCellValue(row, 12, contains);
                 setCellValue(row, 13, "");
                 Long qty = 0L;
-                Double declaredValue = 0.0;
+                Double declaredValue = order.getAmount();
                 for (LineItem lineItem : lineItems) {
                     qty += lineItem.getQty();
-                    declaredValue += lineItem.getQty() * lineItem.getMarkedPrice();
+                    //declaredValue += lineItem.getQty() * lineItem.getMarkedPrice();
                 }
                 setCellValue(row, 14, qty.toString());
                 setCellValue(row, 15, declaredValue);
                 setCellValue(row, 16, "");
                 String paymentMode = "Pre-paid";
-                if (order.getBaseOrder().getPayment().getPaymentMode().getId().equals(EnumPaymentMode.COD.getId())) {
+                if (order.getBaseOrder().getPayment().getPaymentMode().getId().equals(EnumPaymentMode.COD.getId()) && order.getAmount() > 10.0) {
                     setCellValue(row, 17, order.getAmount());
                     paymentMode = ReportConstants.COD;
                 }
@@ -556,12 +556,12 @@ public class ReportManager {
             if (shipment.getBoxWeight() != null) {
                 setCellValue(row, 12, shipment.getBoxWeight());
             }
-            Double declaredValue = 0.0;
-            for (LineItem lineItem : lineItems) {
-                declaredValue += lineItem.getQty() * lineItem.getMarkedPrice();
-            }
+            Double declaredValue = order.getAmount();
+//            for (LineItem lineItem : lineItems) {
+//                declaredValue += lineItem.getQty() * lineItem.getMarkedPrice();
+//            }
             setCellValue(row, 13, declaredValue);
-            if (order.getBaseOrder().getPayment().getPaymentMode().getId().equals(EnumPaymentMode.COD.getId())) {
+            if (order.getBaseOrder().getPayment().getPaymentMode().getId().equals(EnumPaymentMode.COD.getId()) && order.getAmount() > 10.0) {
                 setCellValue(row, 14, order.getAmount());
                 setCellValue(row, 15, "COD");
             } else {

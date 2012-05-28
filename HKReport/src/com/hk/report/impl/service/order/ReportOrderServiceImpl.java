@@ -9,7 +9,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.core.search.OrderSearchCriteria;
 import com.hk.domain.catalog.category.Category;

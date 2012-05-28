@@ -17,8 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.admin.pact.dao.inventory.PurchaseInvoiceDao;
-import com.hk.admin.pact.dao.inventory.PurchaseOrderDao;
 import com.hk.admin.pact.dao.payment.PaymentHistoryDao;
 import com.hk.admin.util.StockProcurementHelper;
 import com.hk.constants.core.PermissionConstants;
@@ -72,6 +70,7 @@ public class PaymentHistoryAction extends BaseAction {
                     paymentHistoryNewPi.setModeOfPayment(paymentHistoryPO.getModeOfPayment());
                     paymentHistoryNewPi.setRemarks(paymentHistoryPO.getRemarks());
                     paymentHistoryNewPi.setScheduledPaymentDate(paymentHistoryPO.getScheduledPaymentDate());
+                    paymentHistoryNewPi.setPaymentReference(paymentHistoryPO.getPaymentReference());
                     paymentHistoryDao.save(paymentHistoryNewPi);
                 }
             }
@@ -82,7 +81,7 @@ public class PaymentHistoryAction extends BaseAction {
                 for (PaymentHistory paymentHistoryTemp : paymentHistories) {
                     paidAmount += paymentHistoryTemp.getAmount();
                 }
-                outstandingAmount = purchaseInvoice.getPayableAmount() - paidAmount;
+                outstandingAmount = purchaseInvoice.getFinalPayableAmount() - paidAmount;
             }
         }
 
@@ -116,6 +115,7 @@ public class PaymentHistoryAction extends BaseAction {
                         paymentHistoryNewPi.setModeOfPayment(paymentHistoryPO.getModeOfPayment());
                         paymentHistoryNewPi.setRemarks(paymentHistoryPO.getRemarks());
                         paymentHistoryNewPi.setScheduledPaymentDate(paymentHistoryPO.getScheduledPaymentDate());
+                        paymentHistoryNewPi.setPaymentReference(paymentHistoryPO.getPaymentReference());
                         paymentHistoryDao.save(paymentHistoryNewPi);
                     }
                 }
@@ -129,7 +129,7 @@ public class PaymentHistoryAction extends BaseAction {
                     for (PaymentHistory paymentHistoryTemp : paymentHistories) {
                         paidAmount += paymentHistoryTemp.getAmount();
                     }
-                    outstandingAmount = purchaseInvoice.getPayableAmount() - paidAmount;
+                    outstandingAmount = purchaseInvoice.getFinalPayableAmount() - paidAmount;
                 }
                 return new RedirectResolution(PaymentHistoryAction.class).addParameter("purchaseInvoiceId", purchaseInvoiceId);
             }
@@ -204,6 +204,9 @@ public class PaymentHistoryAction extends BaseAction {
             }
             if (paymentHistory.getRemarks() != null) {
                 paymentHistoryNew.setRemarks(paymentHistory.getRemarks());
+            }
+            if (paymentHistory.getPaymentReference() != null) {
+                paymentHistoryNew.setPaymentReference(paymentHistory.getPaymentReference());
             }
             paymentHistoryDao.save(paymentHistoryNew);
         } catch (Exception e) {

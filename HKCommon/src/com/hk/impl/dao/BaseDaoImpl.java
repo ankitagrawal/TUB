@@ -25,10 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.dao.DataAccessException;
 import org.springframework.orm.hibernate3.HibernateCallback;
-import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.akube.framework.dao.Page;
 import com.hk.pact.dao.BaseDao;
@@ -38,6 +36,7 @@ import com.hk.pact.dao.BaseDao;
  */
 @Repository
 @Primary
+@SuppressWarnings("unchecked")
 public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
 
     @Autowired
@@ -226,7 +225,7 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
 
     public Object save(Object entity) {
         prepareHibernateForWrite();
-        Object updatedEntity =  getHibernateTemplate().merge(entity);
+        Object updatedEntity = getHibernateTemplate().merge(entity);
         resetHibernateAfterWrite();
         return updatedEntity;
     }
@@ -235,7 +234,7 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
         getHibernateTemplate().getSessionFactory().getCurrentSession().setFlushMode(FlushMode.AUTO);
         getHibernateTemplate().setCheckWriteOperations(false);
     }
-    
+
     private void resetHibernateAfterWrite() {
         getHibernateTemplate().flush();
         getHibernateTemplate().getSessionFactory().getCurrentSession().setFlushMode(FlushMode.MANUAL);
@@ -413,7 +412,7 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
         } else {
             criteria.setResultTransformer(Criteria.ROOT_ENTITY);
         }
-        int firstResult = (pageNo-1) * perPage;
+        int firstResult = (pageNo - 1) * perPage;
         List resultList = findByCriteria(criteria, firstResult, perPage);
         return new Page(resultList, perPage, pageNo, totalResults);
     }

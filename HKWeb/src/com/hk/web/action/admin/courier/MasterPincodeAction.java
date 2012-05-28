@@ -54,6 +54,7 @@ public class MasterPincodeAction extends BaseAction {
     @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String                           adminUploadsPath;
 
+    @Autowired
     XslParser                        xslParser;
 
     FileBean                         fileBean;
@@ -101,6 +102,7 @@ public class MasterPincodeAction extends BaseAction {
             pincodeByCode.setLocality(pincode.getLocality());
             pincodeByCode.setCity(pincode.getCity());
             pincodeByCode.setState(pincode.getState());
+            pincodeByCode.setRegion(pincode.getRegion());
             pincodeByCode.setDefaultCourier(pincode.getDefaultCourier());
             pincodeDao.save(pincodeByCode);
         } else {

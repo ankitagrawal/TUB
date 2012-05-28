@@ -1,5 +1,7 @@
 package com.hk.impl.service.core;
 
+import java.util.Set;
+
 import javax.servlet.http.Cookie;
 
 import net.sourceforge.stripes.util.CryptoUtil;
@@ -12,16 +14,21 @@ import com.akube.framework.util.BaseUtils;
 import com.hk.constants.EnumAffiliateTxnType;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.discount.OfferConstants;
+import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.affiliate.Affiliate;
+import com.hk.domain.affiliate.AffiliateCategory;
+import com.hk.domain.affiliate.AffiliateCategoryCommission;
 import com.hk.domain.affiliate.AffiliateTxn;
 import com.hk.domain.affiliate.AffiliateTxnType;
 import com.hk.domain.offer.OfferInstance;
+import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
 import com.hk.dto.pricing.PricingDto;
-import com.hk.impl.dao.affiliate.AffiliateTxnDaoImpl;
-import com.hk.manager.AffiliateManager;
+import com.hk.pact.dao.affiliate.AffiliateCategoryDao;
 import com.hk.pact.dao.affiliate.AffiliateDao;
+import com.hk.pact.dao.affiliate.AffiliateTxnDao;
 import com.hk.pact.dao.offer.OfferInstanceDao;
 import com.hk.pact.dao.reward.RewardPointDao;
 import com.hk.pact.service.UserService;
@@ -30,21 +37,20 @@ import com.hk.web.filter.WebContext;
 
 @Service
 public class AffilateServiceImpl implements AffilateService {
-    private static final String TEXT_HTML = "text/html";
+    private static final String  TEXT_HTML = "text/html";
 
-    
     @Autowired
-    private UserService         userService;
+    private UserService          userService;
     @Autowired
-    private AffiliateDao        affiliateDao;
+    private AffiliateDao         affiliateDao;
     @Autowired
-    private AffiliateManager    affiliateManager;
+    private OfferInstanceDao     offerInstanceDao;
     @Autowired
-    private OfferInstanceDao    offerInstanceDao;
+    private RewardPointDao       rewardPointDao;
     @Autowired
-    private RewardPointDao      rewardPointDao;
+    private AffiliateTxnDao      affiliateTxnDao;
     @Autowired
-    private AffiliateTxnDaoImpl     affiliateTxnDao;
+    private AffiliateCategoryDao affiliateCategoryCommissionDao;
 
     @Transactional
     public void saveOfferInstanceAndSaveAffiliateCommission(Order order, PricingDto pricingDto) {
@@ -69,16 +75,50 @@ public class AffilateServiceImpl implements AffilateService {
                 // transacting commission
                 else if (offerInstance.getOffer().getOfferIdentifier().equals(OfferConstants.affiliateCommissionOffer) && user.getAffiliateTo() != null
                         && affiliateDao.getAffilateByUser(user.getAffiliateTo()) != null) {
-                    affiliateManager.addAmountInAccountforFirstTransaction(user.getAffiliateTo(), order);
+                    addAmountInAccountforFirstTransaction(user.getAffiliateTo(), order);
                     order.setReferredOrder(true);
                 }
             }
         }
         // else check if user is already affiliated, then pay him latter commission
         else if (user.getAffiliateTo() != null && affiliateDao.getAffilateByUser(user.getAffiliateTo()) != null && !hasGotAffiliateCommission) {
-            affiliateManager.addAmountInAccountforLatterTransaction(user.getAffiliateTo(), order);
+            addAmountInAccountforLatterTransaction(user.getAffiliateTo(), order);
             order.setReferredOrder(true);
         }
+    }
+
+    private void addAmountInAccountforFirstTransaction(User affiliateUser, Order order) {
+        Affiliate affiliate = getAffilateByUser(affiliateUser);
+        Double affiliateSumTotal = 0D;
+        Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
+        for (CartLineItem cartLineItem : productCartLineItems) {
+            AffiliateCategory affiliateCategory = cartLineItem.getProductVariant().getAffiliateCategory();
+            if (affiliateCategory != null) {
+                AffiliateCategoryCommission affiliateCategoryCommission = getAffiliateCategoryCommissionDao().getCommissionAffiliateWise(affiliate, affiliateCategory);
+                if (affiliateCategoryCommission != null) {
+                    affiliateSumTotal += cartLineItem.getProductVariant().getHkPrice(null) * cartLineItem.getQty() * affiliateCategoryCommission.getCommissionFirstTime() * 0.01;
+                }
+            }
+        }
+        AffiliateTxnType affiliateTxnType = getAffiliateTxnType(EnumAffiliateTxnType.ADD.getId());
+        getAffiliateTxnDao().saveTxn(affiliate, affiliateSumTotal, affiliateTxnType, order);
+    }
+
+    private void addAmountInAccountforLatterTransaction(User affiliateUser, Order order) {
+        Affiliate affiliate = getAffilateByUser(affiliateUser);
+        Double affiliateSumTotal = 0D;
+        Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
+        for (CartLineItem cartLineItem : productCartLineItems) {
+            AffiliateCategory affiliateCategory = cartLineItem.getProductVariant().getAffiliateCategory();
+            if (affiliateCategory != null) {
+                AffiliateCategoryCommission affiliateCategoryCommission = getAffiliateCategoryCommissionDao().getCommissionAffiliateWise(affiliate, affiliateCategory);
+                if (affiliateCategoryCommission != null) {
+                    affiliateSumTotal += cartLineItem.getProductVariant().getHkPrice() * cartLineItem.getQty() * affiliateCategoryCommission.getCommissionLatterTime() * 0.01;
+                }
+            }
+        }
+        AffiliateTxnType affiliateTxnType = getAffiliateTxnType(EnumAffiliateTxnType.ADD.getId());
+        getAffiliateTxnDao().saveTxn(affiliate, affiliateSumTotal, affiliateTxnType, order);
     }
 
     @Transactional
@@ -99,11 +139,11 @@ public class AffilateServiceImpl implements AffilateService {
                 if (user.getAffiliateTo() == null) {
                     user.setAffiliateTo(affiliate.getUser());
                     getUserService().save(user);
-                    getAffiliateManager().addAmountInAccountforFirstTransaction(affiliate.getUser(), order);
+                    addAmountInAccountforFirstTransaction(affiliate.getUser(), order);
                 } else if (user.getAffiliateTo().equals(affiliate.getUser())) {
-                    getAffiliateManager().addAmountInAccountforLatterTransaction(affiliate.getUser(), order);
+                    addAmountInAccountforLatterTransaction(affiliate.getUser(), order);
                 } else {
-                    getAffiliateManager().addAmountInAccountforFirstTransaction(affiliate.getUser(), order);
+                    addAmountInAccountforFirstTransaction(affiliate.getUser(), order);
                 }
                 order.setReferredOrder(true);
                 hasGotAffiliateCommission = true;
@@ -117,7 +157,7 @@ public class AffilateServiceImpl implements AffilateService {
 
         return hasGotAffiliateCommission;
     }
-    
+
     @Override
     public AffiliateTxnType getAffiliateTxnType(Long txnId) {
         return getAffiliateDao().get(AffiliateTxnType.class, txnId);
@@ -130,7 +170,7 @@ public class AffilateServiceImpl implements AffilateService {
             getAffiliateTxnDao().save(affiliateTxn);
         }
     }
-    
+
     @Override
     public Affiliate getAffilateByUser(User affiliateUser) {
         return getAffiliateDao().getAffilateByUser(affiliateUser);
@@ -162,14 +202,6 @@ public class AffilateServiceImpl implements AffilateService {
         this.affiliateDao = affiliateDao;
     }
 
-    public AffiliateManager getAffiliateManager() {
-        return affiliateManager;
-    }
-
-    public void setAffiliateManager(AffiliateManager affiliateManager) {
-        this.affiliateManager = affiliateManager;
-    }
-
     public OfferInstanceDao getOfferInstanceDao() {
         return offerInstanceDao;
     }
@@ -186,14 +218,20 @@ public class AffilateServiceImpl implements AffilateService {
         this.rewardPointDao = rewardPointDao;
     }
 
-    public AffiliateTxnDaoImpl getAffiliateTxnDao() {
+    public AffiliateTxnDao getAffiliateTxnDao() {
         return affiliateTxnDao;
     }
 
-    public void setAffiliateTxnDao(AffiliateTxnDaoImpl affiliateTxnDao) {
+    public void setAffiliateTxnDao(AffiliateTxnDao affiliateTxnDao) {
         this.affiliateTxnDao = affiliateTxnDao;
     }
 
-    
+    public AffiliateCategoryDao getAffiliateCategoryCommissionDao() {
+        return affiliateCategoryCommissionDao;
+    }
+
+    public void setAffiliateCategoryCommissionDao(AffiliateCategoryDao affiliateCategoryCommissionDao) {
+        this.affiliateCategoryCommissionDao = affiliateCategoryCommissionDao;
+    }
 
 }

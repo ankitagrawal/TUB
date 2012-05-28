@@ -2,6 +2,9 @@ package com.hk.constants.core;
 
 import com.hk.domain.user.Role;
 
+import java.util.Arrays;
+import java.util.List;
+
 public enum EnumRole {
 
   GOD                 (RoleConstants.GOD),
@@ -9,6 +12,7 @@ public enum EnumRole {
   ROCKSTAR            (RoleConstants.ROCKSTAR),
   ADMIN               (RoleConstants.ADMIN),
   HK_USER             (RoleConstants.HK_USER),
+  COUPON_BLOCKED      (RoleConstants.COUPON_BLOCKED),
   B2B_USER            (RoleConstants.B2B_USER),
   HK_IHO_USER         (RoleConstants.HK_IHO_USER),
   TEMP_USER           (RoleConstants.TEMP_USER),
@@ -53,7 +57,21 @@ public enum EnumRole {
     return roleName;
   }
 
-  public Role toRole() {
+    public static List<String> listBasicRoles() {
+        return Arrays.asList(
+                EnumRole.COD_BLOCKED.getRoleName(),
+                EnumRole.COUPON_BLOCKED.getRoleName(),
+                EnumRole.HK_BLOCKED.getRoleName(),
+                EnumRole.HK_DEACTIVATED.getRoleName(),
+                EnumRole.HK_DELETED.getRoleName(),
+                EnumRole.HK_UNVERIFIED.getRoleName(),
+                EnumRole.TEMP_USER.getRoleName(),
+                EnumRole.UNSUBSCRIBED_USER.getRoleName(),
+                EnumRole.HK_USER.getRoleName(),
+                EnumRole.HK_IHO_USER.getRoleName());
+    }
+
+    public Role toRole() {
     Role role = new Role();
     role.setName(this.getRoleName());
     return role;

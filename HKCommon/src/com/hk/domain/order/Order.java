@@ -113,6 +113,8 @@ public class Order implements java.io.Serializable {
     @Column(name = "cancellation_remark")
     private String               cancellationRemark;
 
+    @Column(name = "utm_campaign")
+    private String utmCampaign;
     /**
      * TODO: #warehouse should be used from shipping order;
      */
@@ -124,8 +126,6 @@ public class Order implements java.io.Serializable {
     @Column(name = "is_b2b_order")
     private Boolean              b2bOrder;
 
-    @Column(name = "is_priority_order")
-    private Boolean              priorityOrder;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "order")
     private List<OrderLifecycle> orderLifecycles = new ArrayList<OrderLifecycle>();
@@ -144,6 +144,14 @@ public class Order implements java.io.Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id")
     private Store                store;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "primary_referrer_for_order_id")
+    private PrimaryReferrerForOrder primaryReferrerForOrder;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "secondary_referrer_for_order_id")
+    private SecondaryReferrerForOrder secondaryReferrerForOrder;
 
     public Order() {
     }
@@ -356,6 +364,33 @@ public class Order implements java.io.Serializable {
         this.cancellationRemark = cancellationRemark;
     }
 
+    public String getUtmCampaign() {
+      return utmCampaign;
+    }
+
+    public void setUtmCampaign(String utmCampaign) {
+      this.utmCampaign = utmCampaign;
+    }
+
+    public PrimaryReferrerForOrder getPrimaryReferrerForOrder() {
+      return primaryReferrerForOrder;
+    }
+
+    public void setPrimaryReferrerForOrder(PrimaryReferrerForOrder primaryReferrerForOrder) {
+      this.primaryReferrerForOrder = primaryReferrerForOrder;
+    }
+
+    public SecondaryReferrerForOrder getSecondaryReferrerForOrder() {
+      return secondaryReferrerForOrder;
+    }
+
+    public void setSecondaryReferrerForOrder(SecondaryReferrerForOrder secondaryReferrerForOrder) {
+      this.secondaryReferrerForOrder = secondaryReferrerForOrder;
+    }
+
+
+
+
     /*
      * @Deprecated public AccountingInvoiceNumber getAccountingInvoiceNumber() { return accountingInvoiceNumber; }
      * @Deprecated public void setAccountingInvoiceNumber(AccountingInvoiceNumber accountingInvoiceNumber) {
@@ -390,13 +425,6 @@ public class Order implements java.io.Serializable {
         this.b2bOrder = b2bOrder;
     }
 
-    public Boolean getPriorityOrder() {
-        return priorityOrder;
-    }
-
-    public void setPriorityOrder(Boolean priorityOrder) {
-        this.priorityOrder = priorityOrder;
-    }
 
     public Set<ShippingOrder> getShippingOrders() {
         return shippingOrders;

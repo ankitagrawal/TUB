@@ -19,8 +19,6 @@ import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.manager.EmailManager;
 import com.hk.manager.UserManager;
-import com.hk.pact.service.RoleService;
-import com.hk.pact.service.UserService;
 import com.hk.web.HealthkartResponse;
 
 @Component
@@ -28,12 +26,8 @@ public class ResendAccountActivationLinkAction extends BaseAction {
 
     @Autowired
     private UserManager  userManager;
-    @Autowired    
+    @Autowired
     private EmailManager emailManager;
-    @Autowired
-    private UserService  userService;
-    @Autowired
-    private RoleService  roleService;
 
     @Validate(required = true, on = "activateNonLoggedInUser", converter = EmailTypeConverter.class)
     private String       email;
@@ -114,12 +108,5 @@ public class ResendAccountActivationLinkAction extends BaseAction {
         this.userManager = userManager;
     }
 
-    public RoleService getRoleService() {
-        return roleService;
-    }
-
-    public void setRoleService(RoleService roleService) {
-        this.roleService = roleService;
-    }
 
 }

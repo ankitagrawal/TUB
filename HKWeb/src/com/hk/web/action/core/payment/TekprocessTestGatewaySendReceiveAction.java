@@ -10,19 +10,18 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.CheckSumRequestBean;
 import com.TPSLUtil;
 import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.akube.framework.stripes.action.BasePaymentGatewaySendReceiveAction;
-import com.hk.constants.core.Keys;
 import com.hk.domain.payment.Payment;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.manager.payment.TekprocessTestPaymentGatewayWrapper;
 import com.hk.pact.dao.payment.PaymentDao;
+import com.hk.web.AppConstants;
 
 @Component
 public class TekprocessTestGatewaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<TekprocessTestPaymentGatewayWrapper> {
@@ -33,8 +32,8 @@ public class TekprocessTestGatewaySendReceiveAction extends BasePaymentGatewaySe
     PaymentDao            paymentDao;
     @Autowired
     PaymentManager        paymentManager;
-    @Value("#{hkEnvProps['" + Keys.App.environmentDir + "']}")
-    String                environmemtDir;
+    /*@Value("#{hkEnvProps['" + Keys.App.environmentDir + "']}")
+    String                environmemtDir;*/
 
     protected TekprocessTestPaymentGatewayWrapper getPaymentGatewayWrapperFromTransactionData(BasePaymentGatewayWrapper.TransactionData data) {
         TekprocessTestPaymentGatewayWrapper tekprocessTestPaymentGatewayWrapper = new TekprocessTestPaymentGatewayWrapper();
@@ -48,7 +47,7 @@ public class TekprocessTestGatewaySendReceiveAction extends BasePaymentGatewaySe
         checkSumRequestBean.setStrAmt(amountStr);
         checkSumRequestBean.setStrBankCode("470");
         // checkSumRequestBean.setStrBankCode(data.getPaymentMethod());
-        checkSumRequestBean.setStrPropertyPath(environmemtDir + "/tekprocess.properties");
+        checkSumRequestBean.setStrPropertyPath(AppConstants.getAppClasspathRootPath() + "/tekprocess.properties");
 
         TPSLUtil tpslUtil = new TPSLUtil();
         String msg = tpslUtil.transactionRequestMessage(checkSumRequestBean);
@@ -74,7 +73,7 @@ public class TekprocessTestGatewaySendReceiveAction extends BasePaymentGatewaySe
 
         logger.info("returning from payment gateway TekProcessTest with the parameter string msg : " + msg);
 
-        String propertyFilePath = environmemtDir + "/tekprocess.properties";
+        String propertyFilePath = AppConstants.getAppClasspathRootPath() + "/tekprocess.properties";
 
         Map<String, String> paramMap = TekprocessTestPaymentGatewayWrapper.parseResponse(msg);
 

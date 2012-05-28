@@ -92,6 +92,7 @@
 <div class="left roundBox">
   <h2>Warehouse</h2>
   <c:if test="${whAction.setWarehouse != null}">
+      <h3><s:link beanclass="com.hk.web.action.admin.inventory.checkin.InventoryBinAllocationAction">Bin Allocation</s:link></h3>
   <h3><s:link beanclass="com.hk.web.action.admin.warehouse.AssignBinAction">Assign Bin</s:link></h3>
 
   <h3><s:link beanclass="com.hk.web.action.admin.queue.PackingAwaitingQueueAction">Packing Awaiting Queue</s:link></h3>
@@ -133,7 +134,7 @@
 
   <h3><s:link beanclass="com.hk.web.action.admin.courier.ChangeDefaultCourierAction">Change Default Courier</s:link></h3>
 
-    <h3><s:link beanclass="com.hk.web.action.admin.shipment.UpdateAFLChhotuDeliveryStatusAction">Update Delivery Status of AFL/CHHOTU</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.admin.shipment.UpdateAFLChhotuDeliveryStatusAction">Update Delivery Status of AFL,Chhotu,Delhivery,BlueDart</s:link></h3>
 
   <h3><s:link beanclass="com.hk.web.action.admin.shipment.ParseDTDCDeliveryStatusExcelAction">Upload Delivery Status Excel of DTDC</s:link></h3>
 

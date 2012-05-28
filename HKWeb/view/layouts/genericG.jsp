@@ -22,7 +22,8 @@
     <link href="<hk:vhostCss/>/css/new.dev.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="<hk:vhostJs/>/js/jquery-1.6.2.min.js"></script>
     <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.hkCommonPlugins.js"></script>
-    <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.bxSlider.min.js"></script>    
+    <%--<script type="text/javascript" src="<hk:vhostJs/>/js/jquery.bxSlider.min.js"></script>    --%>
+    <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.responsiveslides.min.js"></script>
 
     <s:layout-render name="/includes/_dynaMenu.jsp" topCategory="${topCategory}" allCategories="${topCategory}"/>
   </head>

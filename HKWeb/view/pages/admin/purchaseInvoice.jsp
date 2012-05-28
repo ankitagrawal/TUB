@@ -241,7 +241,10 @@
 	<s:form beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction">
 		<s:hidden name="purchaseInvoice" value="${pia.purchaseInvoice}"/>
 		<table>
-			<tr>
+			<tr><td>Warehouse :</td>
+      <td><strong>${pia.purchaseInvoice.warehouse.city}</strong></td>
+      </tr>
+      <tr>
 				<td>Supplier Name</td>
 				<td>${pia.purchaseInvoice.supplier.name}</td>
 

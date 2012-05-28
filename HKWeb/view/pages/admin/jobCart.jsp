@@ -1,4 +1,4 @@
-<%@ page import="java.text.DateFormat" %>
+    <%@ page import="java.text.DateFormat" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -49,7 +49,7 @@
   </style>
 </head>
 <body>
-
+ <s:errors/>
 <s:useActionBean beanclass="com.hk.web.action.admin.queue.JobCartAction" var="orderSummary"/>
 <table class="header">
   <tr>
@@ -70,40 +70,58 @@
 
   <table style="font-size: .8em; width:650px; padding:0">
     <tr>
-      <th width="75px">Bin</th>
-      <th width="525px">Item</th>
-      <th width="50px">Quantity</th>
+      <th width="30%">Bin</th>
+      <th width="70%">Item 
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         &nbsp;&nbsp; Quantity
+      </th>
+
     </tr>
-    <c:forEach items="${orderSummary.binHasPVs}" var="binHasPV">
-      <tr>
-        <td width="75px">
-            ${binHasPV.key.barcode}
+    <c:forEach items="${orderSummary.binHasPVs}" var="mapentry">
+      <tr width="100%">
+          <c:set var="key" value="${mapentry.key}"/>
+          <c:set var="map" value="${orderSummary.idBinMap}"/>
+          <c:set var="prodlist" value="${mapentry.value}"/>
+        <c:set var="length" value="${fn:length(prodlist)}"/>
+        <td width="30%" rowspan="${length}">
+           ${map[key].barcode}
           <br/>
-            ${binHasPV.key.aisle}<br/>
-            ${binHasPV.key.rack}<br/>
-            ${binHasPV.key.shelf}<br/>
+           ${map[key].aisle}<br/>
+            ${map[key].rack}<br/>
+            ${map[key].shelf}<br/>
         </td>
-        <td colspan="2">
-          <table width="550px">
-            <c:forEach items="${binHasPV.value}" var="pvQty">
-              <tr>
-                <td width="525px">
-                    ${pvQty.key.product.name}
+
+        <td width="70%" >
+          <table width="100%">
+            <c:forEach items="${mapentry.value}" var="productVariant">
+              <tr width="100%">
+                <td width="70%">
+                    ${productVariant.product.name}
                   |
-                    ${pvQty.key.variantName}
+                    ${productVariant.variantName}
                   |
-                    ${pvQty.key.upc}
+                    ${productVariant.upc}
                   |
-                  <em><c:forEach items="${pvQty.key.productOptions}" var="productOption">
+                  <em><c:forEach items="${productVariant.productOptions}" var="productOption">
                     ${productOption.name} ${productOption.value}
                   </c:forEach></em>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                         <c:set var="hkCodeMap" value="${orderSummary.skuGroupMapProductVariant}"/>
+
+                    ${hkCodeMap[productVariant.id].barcode}
                 </td>
-                <td width="50px">
-                    ${pvQty.value}
+
+
+             <td width="30%">
+                 <c:set var="Qtymap" value="${orderSummary.productVariantQty}"/>
+                    ${Qtymap[productVariant.id]}
                 </td>
-              </tr>
-            </c:forEach>
-          </table>
+                   </tr>
+           </c:forEach>
+           </table>
         </td>
       </tr>
     </c:forEach>

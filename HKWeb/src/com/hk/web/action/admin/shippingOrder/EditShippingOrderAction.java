@@ -31,6 +31,7 @@ import com.hk.web.action.error.AdminPermissionAction;
 @Component
 public class EditShippingOrderAction extends BaseAction {
 
+    @Autowired
     ShippingOrderService  shippingOrderService;
 
     @Validate(required = true)
