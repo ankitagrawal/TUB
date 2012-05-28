@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:layout-render name="/layouts/default100.jsp" pageTitle="Deals">
+<s:layout-render name="/layouts/default100.jsp" pageTitle="GSK PeopleShop">
 
   <s:layout-component name="content">
 
