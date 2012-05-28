@@ -41,7 +41,7 @@
     <s:layout-component name="content">
         <div>
             <div style="float: left; width:60%">
-                <s:form beanclass="mhc.web.action.admin.order.OrderSplitterAction">
+                <s:form beanclass="com.hk.web.action.admin.order.split.PseudoOrderSplitAction">
                     <fieldset class="top_label">
                         <legend> Enter Details</legend>
                         <s:label name="gatewayOrderId" class="label">Gateway Order Id</s:label>
