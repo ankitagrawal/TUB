@@ -1,17 +1,5 @@
 package com.hk.manager;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.mgt.SecurityManager;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.order.EnumOrderStatus;
@@ -37,6 +25,17 @@ import com.hk.pact.service.UserService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.TokenUtils;
 import com.shiro.PrincipalImpl;
+import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.mgt.SecurityManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 @Component
 public class UserManager {
@@ -311,7 +310,7 @@ public class UserManager {
 
     public OrderManager getOrderManager() {
         if (orderManager == null) {
-            orderManager = ServiceLocatorFactory.getService(OrderManager.class);
+            orderManager = (OrderManager) ServiceLocatorFactory.getService("OrderManager");
         }
         return orderManager;
     }
