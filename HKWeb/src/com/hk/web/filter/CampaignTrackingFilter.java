@@ -12,12 +12,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.shiro.SecurityUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.session.Session;
 
 import com.hk.constants.HttpRequestAndSessionConstants;
-import com.hk.constants.core.HealthkartConstants;
 import com.hk.domain.user.User;
 import com.hk.pact.dao.marketing.CampaignTrackingDao;
 import com.hk.pact.service.UserService;

@@ -1,4 +1,4 @@
-package com.akube.framework.filter;
+package com.hk.web.filter;
 
 import java.io.IOException;
 
@@ -8,6 +8,16 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import net.sourceforge.stripes.util.CryptoUtil;
+
+import com.hk.constants.core.HealthkartConstants;
+import com.hk.pact.dao.affiliate.AffiliateDao;
+import com.hk.pact.dao.affiliate.AffiliateTrafficDetailsDao;
+import com.hk.service.ServiceLocatorFactory;
 
 /**
  * Dont Delete!!
@@ -18,13 +28,13 @@ import javax.servlet.ServletResponse;
  */
 public class AffiliateTrackingFilter implements Filter {
 
-  /*AffiliateDao affiliateDao = ServiceLocatorFactory.getService(AffiliateDao.class);
+  AffiliateDao affiliateDao = ServiceLocatorFactory.getService(AffiliateDao.class);
   AffiliateTrafficDetailsDao affiliateTrafficDetailsDao = ServiceLocatorFactory.getService(AffiliateTrafficDetailsDao.class);
-  private static org.slf4j.Logger logger = LoggerFactory.getLogger(AffiliateTrackingFilter.class);*/
+  //private static org.slf4j.Logger logger = LoggerFactory.getLogger(AffiliateTrackingFilter.class);
 
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
-    /*if (!(request instanceof HttpServletRequest)) {
+    if (!(request instanceof HttpServletRequest)) {
       chain.doFilter(request, response);
       return;
     }
@@ -83,7 +93,7 @@ public class AffiliateTrackingFilter implements Filter {
         httpResponse.addCookie(affiliateCookie);
       }
     }
-    chain.doFilter(request, response);*/
+    chain.doFilter(request, response);
   }
 
   public void init(FilterConfig config) throws ServletException {}
