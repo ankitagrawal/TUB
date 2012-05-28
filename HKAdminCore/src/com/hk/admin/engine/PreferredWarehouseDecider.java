@@ -6,6 +6,7 @@ import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.comparator.MapValueComparator;
 import com.hk.constants.core.EnumTax;
+import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
@@ -26,6 +27,8 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
 
 import java.util.*;
 
@@ -36,6 +39,8 @@ import java.util.*;
  * Time: 1:53 AM
  * To change this template use File | Settings | File Templates.
  */
+@Component
+@Secure(hasAnyPermissions = {PermissionConstants.SEARCH_ORDERS})
 public class PreferredWarehouseDecider {
 
     @Autowired

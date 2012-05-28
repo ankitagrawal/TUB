@@ -4,6 +4,7 @@ import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierGroup;
 import com.hk.impl.dao.BaseDaoImpl;
+import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.Set;
  * Time: 2:45 PM
  * To change this template use File | Settings | File Templates.
  */
+@Service
 public class CourierGroupServiceImpl extends BaseDaoImpl implements CourierGroupService {
 
     public CourierGroup getByName(String name){
