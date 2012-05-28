@@ -10,12 +10,13 @@ import javax.annotation.PostConstruct;
 public class AnalyticsConstants {
 
 	@Value("#{hkEnvProps['" + Keys.Env.analytics + "']}")
-	private String analytics_string;
-  private boolean analytics;
+	public static String analytics_string;
 
 	@Value("#{hkEnvProps['" + Keys.Env.gaCode + "']}")
-  private String gaCode ="abc";
+  public static String gaCode ="abc";
 
+  public static boolean analytics;
+  
 	@PostConstruct
 	public void postConstruction() {
 	    this.analytics = Boolean.parseBoolean(analytics_string);

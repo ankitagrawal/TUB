@@ -19,6 +19,9 @@ Order Confirmation for Order ID ${order.gatewayOrderId} placed at HealthKart
 
         <tr>
         <td>${lineItem.productVariant.product.name}<br/>
+          <#if lineItem.productVariant.variantName??>
+          ${lineItem.productVariant.variantName}: <br/>
+          </#if>
           <em style="font-size:0.9em; color:#666"><#list lineItem.productVariant.productOptions as productOption>
             ${productOption.name} ${productOption.value}
               </#list></em>

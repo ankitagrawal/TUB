@@ -12,7 +12,6 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.service.BasePaymentGatewayWrapper;
@@ -21,7 +20,6 @@ import com.akube.framework.util.BaseUtils;
 import com.ecs.epg.sfa.java.Merchant;
 import com.ecs.epg.sfa.java.PGResponse;
 import com.ecs.epg.sfa.java.PostLib;
-import com.hk.constants.core.Keys;
 import com.hk.constants.payment.EnumCitrusResponseCodes;
 import com.hk.domain.payment.Payment;
 import com.hk.exception.HealthkartPaymentGatewayException;

@@ -109,6 +109,13 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao {
             if (order.getStore() == null) {
                 order.setStore(storeService.getDefaultStore());
             }
+
+            if (order.getShippingOrders() != null && !order.getShippingOrders().isEmpty()) {
+              if (order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())) {
+                logger.error("Hibernate trying to save stale Order object whereas the order is already split - " + order.getId());
+                return order;
+              }
+            }
         }
         return (Order) super.save(order);
     }
