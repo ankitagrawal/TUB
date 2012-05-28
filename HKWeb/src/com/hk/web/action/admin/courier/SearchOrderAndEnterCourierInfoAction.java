@@ -105,6 +105,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
         return new ForwardResolution("/pages/admin/searchOrderAndEnterCouierInfo.jsp");
     }
 
+    @DontValidate
     public Resolution searchOrders() {
 
         shippingOrder = shippingOrderDao.findByGatewayOrderId(gatewayOrderId);
@@ -155,7 +156,6 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 
     @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PACKING_QUEUE}, authActionBean = AdminPermissionAction.class)
     public Resolution saveShipmentDetails() {
-        // TODO: Verify if the logic is working fine
         shipment.setEmailSent(false);
         shippingOrder.setShipment(shipment);
         shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Packed));

@@ -1,5 +1,6 @@
 package com.hk.pact.service.order;
 
+import com.hk.domain.order.CartLineItem;
 import com.hk.pojo.DummyOrder;
 import com.hk.domain.order.Order;
 import com.hk.domain.warehouse.Warehouse;
@@ -26,5 +27,7 @@ public interface OrderSplitterService {
     public TreeMap<List<DummyOrder>, Long> splitBOPractically(Order order);
 
     public TreeMap<List<DummyOrder>, Long> splitBOIdeally(Order order, Warehouse ggnWarehouse, Warehouse mumWarehouse);
+
+    public Map<Warehouse,Set<CartLineItem>> splitBOExcludingShippingTaxConsideration(Order order);
 
 }

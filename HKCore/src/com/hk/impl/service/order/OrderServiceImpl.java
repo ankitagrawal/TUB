@@ -208,8 +208,6 @@ public class OrderServiceImpl implements OrderService {
     public Set<ShippingOrder> createShippingOrders(Order order) {
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
         try {
-            // TODO looks redundant, since services don't have inventory and are JIT it will never split by the logic
-            // defined below, then Y a special check??
             if (order.getContainsServices()) {
                 String comments = "Order has services,abort system split and do a manual split";
                 getOrderLoggingService().logOrderActivityByAdmin(order, EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit, comments);
