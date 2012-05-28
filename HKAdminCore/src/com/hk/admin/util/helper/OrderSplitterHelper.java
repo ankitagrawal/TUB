@@ -16,6 +16,7 @@ import com.hk.pact.service.inventory.SkuService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,7 @@ import java.util.Map;
  * Time: 6:12 PM
  * To change this template use File | Settings | File Templates.
  */
+@Component
 public class OrderSplitterHelper {
 
     private static Logger logger = LoggerFactory.getLogger(OrderSplitterHelper.class);
