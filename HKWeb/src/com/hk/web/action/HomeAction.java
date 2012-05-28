@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.constants.marketing.AnalyticsConstants;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.category.CategoryImage;
 import com.hk.domain.content.PrimaryCategoryHeading;
@@ -22,7 +23,6 @@ import com.hk.manager.UserManager;
 import com.hk.pact.dao.content.PrimaryCategoryHeadingDao;
 import com.hk.pact.service.TestTxnService;
 import com.hk.pact.service.catalog.CategoryService;
-import com.hk.web.AppConstants;
 
 // @HttpCache(expires=20000)
 @Component
@@ -55,7 +55,7 @@ public class HomeAction extends BaseAction {
     
     public Resolution pre() {
         menuHelper.postConstruction();
-        //testService.runTest();
+        
         // IN CASE OF REVERT COMMENT EVERYTHING EXCEPT THE FORWARD RESOLUTION TO HOME.JSP AND ALSO REPLACE THE DYNAMIC
         // HOME.JSP WITH THE HARD CODED ONE
         
