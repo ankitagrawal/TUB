@@ -1,7 +1,7 @@
 package com.hk.web.action.admin.order.split;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.admin.dto.order.DummyOrder;
+import com.hk.pojo.DummyOrder;
 import com.hk.admin.impl.service.order.OrderSplitterServiceImpl;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.order.Order;

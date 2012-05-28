@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.hk.pact.service.order.OrderSplitterService;
+import com.hk.pojo.DummyOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,6 +92,8 @@ public class OrderServiceImpl implements OrderService {
     private CategoryService        categoryService;
     @Autowired
     private OrderLoggingService    orderLoggingService;
+    @Autowired
+    private OrderSplitterService orderSplitterService;
 
     @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
     private Double                 codMinAmount;
@@ -330,88 +334,19 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     public Set<ShippingOrder> splitOrder(Order order) throws OrderSplitException {
+
+        List<DummyOrder> dummyOrders = orderSplitterService.listBestDummyOrdersPractically(order);
+
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
         if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
             long startTime = (new Date()).getTime();
 
-            Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
-            Map<CartLineItem, Set<Warehouse>> cartLineItemWarehouseListMap = new HashMap<CartLineItem, Set<Warehouse>>();
-
-            for (CartLineItem lineItem : productCartLineItems) {
-                List<Sku> skuList = new ArrayList<Sku>();
-                skuList = skuService.getSKUsForProductVariant(lineItem.getProductVariant());
-
-                Set<Warehouse> applicableWarehousesForLineItem = null;
-                if (!skuList.isEmpty()) {
-                    applicableWarehousesForLineItem = new HashSet<Warehouse>();
-                    for (Sku sku : skuList) {
-                        if (inventoryService.getAvailableUnbookedInventory(sku) > 0) {
-                            applicableWarehousesForLineItem.add(sku.getWarehouse());
-                        }
-                    }
-                    /*
-                     * Can be uncommented if daddy doesn't agree if (applicableWarehousesForLineItem.isEmpty()) { String
-                     * comments = "Did not get the required qty in any of the warehouse as none had the right amount of
-                     * net inventory to serve the order, one of the sku being " +
-                     * lineItem.getProductVariant().getProduct().getName(); logOrderActivityByAdmin(order,
-                     * EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit, comments); throw new
-                     * OrderSplitException("Didn't get inventory for sku. Aborting splitting of order.", order); }
-                     */
-                } else {
-                    String comments = "No Sku has been created for " + lineItem.getProductVariant().getProduct().getName();
-                    getOrderLoggingService().logOrderActivityByAdmin(order, EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit, comments);
-                    throw new OrderSplitException("Didn't get sku for few variants. Aborting splitting of order.", order);
-                }
-                cartLineItemWarehouseListMap.put(lineItem, applicableWarehousesForLineItem);
-            }
-
-            // phase 1 complete
-
-            Map<Warehouse, Set<CartLineItem>> warehouseLineItemSetMap = new HashMap<Warehouse, Set<CartLineItem>>();
-
-            for (CartLineItem cartLineItem : cartLineItemWarehouseListMap.keySet()) {
-                Warehouse warehouse = warehouseService.getWarehouseToBeAssignedByDefinedLogicForSplitting(cartLineItemWarehouseListMap.get(cartLineItem));
-
-                if (warehouseLineItemSetMap.containsKey(warehouse)) {
-                    Set<CartLineItem> cartLineItems = warehouseLineItemSetMap.get(warehouse);
-                    if (cartLineItems != null) {
-                        cartLineItems.add(cartLineItem);
-                    }
-                    warehouseLineItemSetMap.put(warehouse, cartLineItems);
-                } else {
-                    Set<CartLineItem> cartLineItems = new HashSet<CartLineItem>();
-                    cartLineItems.add(cartLineItem);
-                    warehouseLineItemSetMap.put(warehouse, cartLineItems);
-                }
-            }
-
-            // phase 2 complete
-
-            // COD Amount Check
-            if (order.getPayment().getPaymentMode().getId() == EnumPaymentMode.COD.getId()) {
-                for (Map.Entry<Warehouse, Set<CartLineItem>> warehouseSetEntry : warehouseLineItemSetMap.entrySet()) {
-                    ShippingOrder shippingOrder = shippingOrderService.createSOWithBasicDetails(order, warehouseSetEntry.getKey());
-                    for (CartLineItem cartLineItem : warehouseSetEntry.getValue()) {
-                        Sku sku = skuService.getSKU(cartLineItem.getProductVariant(), warehouseSetEntry.getKey());
-                        LineItem shippingOrderLineItem = LineItemHelper.createLineItemWithBasicDetails(sku, shippingOrder, cartLineItem);
-                        shippingOrder.getLineItems().add(shippingOrderLineItem);
-                    }
-                    ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, order);
-                    if (ShippingOrderHelper.getAmountForSO(shippingOrder) <= codMinAmount) {
-                        String comments = "One of the SO amount was computed below " + codMinAmount;
-                        getOrderLoggingService().logOrderActivityByAdmin(order, EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit, comments);
-                        throw new OrderSplitException(comments + ". Aborting splitting of order.", order);
-                    }
-                }
-            }
-
             // Create Shipping orders and Save it in DB
-
-            for (Map.Entry<Warehouse, Set<CartLineItem>> warehouseSetEntry : warehouseLineItemSetMap.entrySet()) {
-
-                ShippingOrder shippingOrder = shippingOrderService.createSOWithBasicDetails(order, warehouseSetEntry.getKey());
-                for (CartLineItem cartLineItem : warehouseSetEntry.getValue()) {
-                    Sku sku = skuService.getSKU(cartLineItem.getProductVariant(), warehouseSetEntry.getKey());
+            for (DummyOrder dummyOrder : dummyOrders) {
+                Warehouse warehouse = dummyOrder.getWarehouse();
+                ShippingOrder shippingOrder = shippingOrderService.createSOWithBasicDetails(order, warehouse);
+                for (CartLineItem cartLineItem : dummyOrder.getCartLineItemList()) {
+                    Sku sku = skuService.getSKU(cartLineItem.getProductVariant(), warehouse);
                     LineItem shippingOrderLineItem = LineItemHelper.createLineItemWithBasicDetails(sku, shippingOrder, cartLineItem);
                     shippingOrder.getLineItems().add(shippingOrderLineItem);
                 }
@@ -433,6 +368,13 @@ public class OrderServiceImpl implements OrderService {
         } else {
             logger.debug("order with gatewayId:" + order.getGatewayOrderId() + " is not in placed status. abort system split and do a manual split");
         }
+
+/*
+            for (Map.Entry<Warehouse, Set<CartLineItem>> warehouseSetEntry : warehouseLineItemSetMap.entrySet()) {
+                ShippingOrder shippingOrder = shippingOrderService.createSOWithBasicDetails(order, warehouseSetEntry.getKey());
+                for (CartLineItem cartLineItem : warehouseSetEntry.getValue()) {
+                    Sku sku = skuService.getSKU(cartLineItem.getProductVariant(), warehouseSetEntry.getKey());
+*/
 
         return shippingOrders;
     }

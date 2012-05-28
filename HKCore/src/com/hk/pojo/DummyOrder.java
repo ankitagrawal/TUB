@@ -1,4 +1,4 @@
-package com.hk.admin.dto.order;
+package com.hk.pojo;
 
 import com.hk.domain.core.Pincode;
 import com.hk.domain.order.CartLineItem;

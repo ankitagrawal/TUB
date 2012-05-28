@@ -1,9 +1,7 @@
-package com.hk.admin.dto.order;
+package com.hk.pojo;
 
 import com.hk.domain.courier.Courier;
-
-
-import java.util.List;
+import com.hk.pojo.DummyOrder;
 
 /**
  * Created with IntelliJ IDEA.

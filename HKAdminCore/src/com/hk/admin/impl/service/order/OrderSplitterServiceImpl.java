@@ -1,26 +1,35 @@
 package com.hk.admin.impl.service.order;
 
-import com.hk.admin.dto.order.DummyOrder;
 import com.hk.admin.engine.ShipmentPricingEngine;
 import com.hk.admin.pact.dao.courier.CourierPricingEngineDao;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.dao.courier.PincodeRegionZoneDao;
 import com.hk.admin.pact.service.courier.CourierGroupService;
-import com.hk.admin.pact.service.order.OrderSplitterService;
 import com.hk.admin.util.helper.OrderSplitterHelper;
 import com.hk.comparator.MapValueComparator;
 import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.constants.order.EnumOrderLifecycleActivity;
+import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
+import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.payment.Payment;
+import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.exception.OrderSplitException;
+import com.hk.helper.LineItemHelper;
+import com.hk.helper.ShippingOrderHelper;
 import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
+import com.hk.pact.service.order.OrderLoggingService;
+import com.hk.pact.service.order.OrderSplitterService;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.pojo.DummyOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +51,9 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
 
     @Autowired
     CourierPricingEngineDao courierPricingEngineDao;
+
+    @Autowired
+    private ShippingOrderService shippingOrderService;
 
     @Autowired
     PincodeRegionZoneDao pincodeRegionZoneDao;
@@ -69,6 +81,11 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
 
     @Autowired
     OrderSplitterHelper orderSplitterHelper;
+
+    @Autowired
+    private OrderLoggingService orderLoggingService;
+
+
 
     public List<DummyOrder> listBestDummyOrdersPractically(Order order) {
         TreeMap<List<DummyOrder>, Long> sortedCourierCostingTreeMap = splitBOPractically(order);
@@ -213,6 +230,80 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
         sortedCourierCostingTreeMap.putAll(dummyOrderCostingMap);
 
         return sortedCourierCostingTreeMap;
+    }
+
+    public Map<Warehouse,Set<CartLineItem>> splitBOExcludingShippingTaxConsideration(Order order){
+        Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
+        Map<CartLineItem, Set<Warehouse>> cartLineItemWarehouseListMap = new HashMap<CartLineItem, Set<Warehouse>>();
+
+        for (CartLineItem lineItem : productCartLineItems) {
+            List<Sku> skuList = new ArrayList<Sku>();
+            skuList = skuService.getSKUsForProductVariant(lineItem.getProductVariant());
+
+            Set<Warehouse> applicableWarehousesForLineItem = null;
+            if (!skuList.isEmpty()) {
+                applicableWarehousesForLineItem = new HashSet<Warehouse>();
+                for (Sku sku : skuList) {
+                    if (inventoryService.getAvailableUnbookedInventory(sku) > 0) {
+                        applicableWarehousesForLineItem.add(sku.getWarehouse());
+                    }
+                }
+                /*
+                * Can be uncommented if daddy doesn't agree if (applicableWarehousesForLineItem.isEmpty()) { String
+                * comments = "Did not get the required qty in any of the warehouse as none had the right amount of
+                * net inventory to serve the order, one of the sku being " +
+                * lineItem.getProductVariant().getProduct().getName(); logOrderActivityByAdmin(order,
+                * EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit, comments); throw new
+                * OrderSplitException("Didn't get inventory for sku. Aborting splitting of order.", order); }
+                */
+            } else {
+                String comments = "No Sku has been created for " + lineItem.getProductVariant().getProduct().getName();
+                orderLoggingService.logOrderActivityByAdmin(order, EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit, comments);
+                throw new OrderSplitException("Didn't get sku for few variants. Aborting splitting of order.", order);
+            }
+            cartLineItemWarehouseListMap.put(lineItem, applicableWarehousesForLineItem);
+        }
+
+        // phase 1 complete
+
+        Map<Warehouse, Set<CartLineItem>> warehouseLineItemSetMap = new HashMap<Warehouse, Set<CartLineItem>>();
+
+        for (CartLineItem cartLineItem : cartLineItemWarehouseListMap.keySet()) {
+            Warehouse warehouse = warehouseService.getWarehouseToBeAssignedByDefinedLogicForSplitting(cartLineItemWarehouseListMap.get(cartLineItem));
+
+            if (warehouseLineItemSetMap.containsKey(warehouse)) {
+                Set<CartLineItem> cartLineItems = warehouseLineItemSetMap.get(warehouse);
+                if (cartLineItems != null) {
+                    cartLineItems.add(cartLineItem);
+                }
+                warehouseLineItemSetMap.put(warehouse, cartLineItems);
+            } else {
+                Set<CartLineItem> cartLineItems = new HashSet<CartLineItem>();
+                cartLineItems.add(cartLineItem);
+                warehouseLineItemSetMap.put(warehouse, cartLineItems);
+            }
+        }
+
+        // phase 2 complete
+
+        // COD Amount Check
+        if (order.getPayment().getPaymentMode().getId() == EnumPaymentMode.COD.getId()) {
+            for (Map.Entry<Warehouse, Set<CartLineItem>> warehouseSetEntry : warehouseLineItemSetMap.entrySet()) {
+                ShippingOrder shippingOrder = shippingOrderService.createSOWithBasicDetails(order, warehouseSetEntry.getKey());
+                for (CartLineItem cartLineItem : warehouseSetEntry.getValue()) {
+                    Sku sku = skuService.getSKU(cartLineItem.getProductVariant(), warehouseSetEntry.getKey());
+                    LineItem shippingOrderLineItem = LineItemHelper.createLineItemWithBasicDetails(sku, shippingOrder, cartLineItem);
+                    shippingOrder.getLineItems().add(shippingOrderLineItem);
+                }
+                ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, order);        //TODO inject codAmount
+//                if (ShippingOrderHelper.getAmountForSO(shippingOrder) <= codMinAmount) {
+//                    String comments = "One of the SO amount was computed below " + codMinAmount;
+//                    orderLoggingService.logOrderActivityByAdmin(order, EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit, comments);
+//                    throw new OrderSplitException(comments + ". Aborting splitting of order.", order);
+//                }
+            }
+        }
+       return warehouseLineItemSetMap;
     }
 
 }

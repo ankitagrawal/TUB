@@ -1,7 +1,7 @@
 package com.hk.admin.util.helper;
 
-import com.hk.admin.dto.order.DummyOrder;
-import com.hk.admin.dto.order.DummySO;
+import com.hk.pojo.DummyOrder;
+import com.hk.pojo.DummySO;
 import com.hk.admin.engine.CourierCostCalculator;
 import com.hk.admin.engine.ShipmentPricingEngine;
 import com.hk.domain.catalog.product.ProductVariant;
