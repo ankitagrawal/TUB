@@ -2,6 +2,21 @@
 
 	<property file="build.properties" />
 	<property file="environmentLocator.properties" />
+	<property file="${project.common.dir}/resources/${project.env}/setup/setup.properties" />
+
+	<path id="compile.classpath">
+		<fileset dir="${lib.root.dir}">
+			<include name="**/*.jar" />
+		</fileset>
+		<fileset dir="${lib.dependencies.dir}">
+			<include name="**/*.jar" />
+		</fileset>
+		<pathelement path="${classpath}" />
+	</path>
+
+	<taskdef resource="liquibasetasks.properties">
+		<classpath refid="compile.classpath" />
+	</taskdef>
 
 	<!-- Remove classes directory for clean build -->
 	<target name="clean" description="Prepare for clean build">
@@ -176,7 +191,7 @@
 		<ant dir="${project.web.dir}" target="prepare" inheritall="false" />
 		<tstamp />
 	</target>
-	
+
 	<!--<target name="db-master" depends="build">
 		<java  classname="com.hk.core.LoadData" fork="yes">
 			<classpath>
@@ -194,18 +209,14 @@
 			  </classpath>
 		</java>
 	</target> -->
-	
-	<target name="db">
-			<updateDatabase changelogfile="db/changelog.xml" driver="${database.driver}" url="${database.url.dev}" username="${database.username}" 
-				password="${database.password}" classpathref="compile.classpath" />
-		</target>
 
-		<target name="db-diff" description="Does a diff of the current db with the workbench db. adds to changelog.xml any changes to db">
-			<diffDatabaseToChangeLog driver="${database.driver}" url="${database.url.dev}" username="${database.username}" 
-				password="${database.password}" changelogfile="db/changelog.xml" referencedriver="${database.driver}"
-				referenceurl="${database.url.workbench}" referenceusername="${database.username}" referencepassword="${database.password}"
-				 classpathref="compile.classpath">
-			</diffDatabaseToChangeLog>
-		</target>
+	<target name="db">
+		<updateDatabase changelogfile="db/changelog.xml" driver="${database.driver}" url="${database.url.dev}" username="${database.username}" password="${database.password}" classpathref="compile.classpath" />
+	</target>
+
+	<target name="db-diff" description="Does a diff of the current db with the workbench db. adds to changelog.xml any changes to db">
+		<diffDatabaseToChangeLog driver="${database.driver}" url="${database.url.dev}" username="${database.username}" password="${database.password}" changelogfile="db/changelog.xml" referencedriver="${database.driver}" referenceurl="${database.url.workbench}" referenceusername="${database.username}" referencepassword="${database.password}" classpathref="compile.classpath">
+		</diffDatabaseToChangeLog>
+	</target>
 
 </project>

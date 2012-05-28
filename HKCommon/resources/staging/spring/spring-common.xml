@@ -14,6 +14,7 @@
 
 	<context:annotation-config />
 	<context:component-scan base-package="com.hk" />
+	<tx:annotation-driven transaction-manager="transactionManager" />
 
 	<bean id="serviceLocatorFactory"
 		class="com.hk.service.ServiceLocatorFactory" />
@@ -38,67 +39,73 @@
 		</property>
 		<property name="nestedTransactionAllowed" value="true" />
 	</bean>
-	
 
 
 
-    <!-- =========================================================
-         Shiro Core Components - Not Spring Specific
-         ========================================================= -->
-    <!-- Shiro's main business-tier object for web-enabled applications
-         (use DefaultSecurityManager instead when there is no web environment)-->
-    
-    
-    
-    <!-- Used by the SecurityManager to access security data (users, roles, etc).
-         Many other realm implementations can be used too (PropertiesRealm,
-         LdapRealm, etc. -->
-   <!-- <bean id="jdbcRealm" class="org.apache.shiro.realm.jdbc.JdbcRealm">
-        <property name="dataSource" ref="dataSource"/>
-    </bean>-->
-    
-     <bean id="jdbcRealm" class="com.akube.framework.shiro.realm.HibernateSecurityRealm">
-    </bean>
 
-    <bean id="securityManager" class="com.akube.framework.shiro.manager.ShiroSecurityManager">
-    <!--<bean id="securityManager" class="com.springbook.shiro.SecurityManager">-->
-        
-        <!-- Single realm app.  If you have multiple realms, use the 'realms' property instead. -->
-        <property name="realm" ref="jdbcRealm" />
-        <property name="sessionMode" value="http" />
-        
-        <!--property name="sessionMode" value="http"/-->
-        
-    </bean>
+	<!-- =========================================================
+		Shiro Core Components - Not Spring Specific
+		========================================================= -->
+	<!-- Shiro's main business-tier object for web-enabled applications
+		(use DefaultSecurityManager instead when there is no web environment)-->
 
-    
 
-    <!-- =========================================================
-         Shiro Spring-specific integration
-         ========================================================= -->
-    <!-- Post processor that automatically invokes init() and destroy() methods
-         for Spring-configured Shiro objects so you don't have to
-         1) specify an init-method and destroy-method attributes for every bean
-            definition and
-         2) even know which Shiro objects require these methods to be
-            called. -->
-    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
 
-    <!-- Enable Shiro Annotations for Spring-configured beans.  Only run after
-         the lifecycleBeanProcessor has run: -->
-    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
-          depends-on="lifecycleBeanPostProcessor"/>
-    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
-        <property name="securityManager" ref="securityManager"/>
-    </bean>
-    
-    
-<!--  <bean id="propertyConfigurer" 
-  class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-    <property name="location" value="/WEB-INF/environment.properties" />
-</bean> -->
+	<!-- Used by the SecurityManager to access security data (users, roles, etc).
+		Many other realm implementations can be used too (PropertiesRealm,
+		LdapRealm, etc. -->
+	<!-- <bean id="jdbcRealm" class="org.apache.shiro.realm.jdbc.JdbcRealm">
+		<property name="dataSource" ref="dataSource"/>
+		</bean>-->
 
-<util:properties id="hkEnvProps" location="/WEB-INF/environment.properties" />
+	<bean id="jdbcRealm"
+		class="com.akube.framework.shiro.realm.HibernateSecurityRealm">
+	</bean>
 
-    
+	<bean id="securityManager"
+		class="com.akube.framework.shiro.manager.ShiroSecurityManager">
+		<!--<bean id="securityManager" class="com.springbook.shiro.SecurityManager">-->
+
+		<!-- Single realm app.  If you have multiple realms, use the 'realms' property instead. -->
+		<property name="realm" ref="jdbcRealm" />
+		<property name="sessionMode" value="http" />
+
+		<!--property name="sessionMode" value="http"/-->
+
+	</bean>
+
+
+
+	<!-- =========================================================
+		Shiro Spring-specific integration
+		========================================================= -->
+	<!-- Post processor that automatically invokes init() and destroy() methods
+		for Spring-configured Shiro objects so you don't have to
+		1) specify an init-method and destroy-method attributes for every bean
+		definition and
+		2) even know which Shiro objects require these methods to be
+		called. -->
+	<bean id="lifecycleBeanPostProcessor"
+		class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+
+	<!-- Enable Shiro Annotations for Spring-configured beans.  Only run after
+		the lifecycleBeanProcessor has run: -->
+	<bean
+		class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+		depends-on="lifecycleBeanPostProcessor" />
+	<bean
+		class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+		<property name="securityManager" ref="securityManager" />
+	</bean>
+
+
+	<!--  <bean id="propertyConfigurer" 
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="/WEB-INF/environment.properties" />
+		</bean> -->
+
+	<util:properties id="hkEnvProps"
+		location="/WEB-INF/environment.properties" />
+
+
 </beans>
