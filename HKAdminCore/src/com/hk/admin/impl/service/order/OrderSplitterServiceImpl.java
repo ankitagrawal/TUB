@@ -1,27 +1,22 @@
 package com.hk.admin.impl.service.order;
 
 import com.hk.admin.dto.order.DummyOrder;
-import com.hk.admin.dto.order.DummySO;
 import com.hk.admin.engine.ShipmentPricingEngine;
 import com.hk.admin.pact.dao.courier.CourierPricingEngineDao;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.dao.courier.PincodeRegionZoneDao;
 import com.hk.admin.pact.service.courier.CourierGroupService;
+import com.hk.admin.pact.service.order.OrderSplitterService;
 import com.hk.admin.util.helper.OrderSplitterHelper;
 import com.hk.comparator.MapValueComparator;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.core.fliter.CartLineItemFilter;
-import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.Pincode;
-import com.hk.domain.courier.Courier;
-import com.hk.domain.courier.CourierPricingEngine;
-import com.hk.domain.courier.PincodeRegionZone;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.exception.NoSkuException;
 import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.InventoryService;
@@ -29,6 +24,7 @@ import com.hk.pact.service.inventory.SkuService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 
@@ -39,9 +35,10 @@ import java.util.*;
  * Time: 5:48 PM
  * To change this template use File | Settings | File Templates.
  */
-public class OrderSplitterService{
+@Service
+public class OrderSplitterServiceImpl implements OrderSplitterService {
 
-    private static Logger logger = LoggerFactory.getLogger(OrderSplitterService.class);
+    private static Logger logger = LoggerFactory.getLogger(OrderSplitterServiceImpl.class);
 
     @Autowired
     CourierPricingEngineDao courierPricingEngineDao;

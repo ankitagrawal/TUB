@@ -2,7 +2,7 @@ package com.hk.web.action.admin.order.split;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.dto.order.DummyOrder;
-import com.hk.admin.impl.service.order.OrderSplitterService;
+import com.hk.admin.impl.service.order.OrderSplitterServiceImpl;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.order.Order;
 import com.hk.domain.warehouse.Warehouse;
@@ -31,7 +31,7 @@ import java.util.Map;
 @Component
 public class PseudoOrderSplitAction extends BaseAction {
     @Autowired
-    OrderSplitterService orderSplitterService;
+    OrderSplitterServiceImpl orderSplitterServiceImpl;
 
     @Autowired
     WarehouseService warehouseService;
@@ -55,7 +55,7 @@ public class PseudoOrderSplitAction extends BaseAction {
     public Resolution splitOrderPractically() {
         order = orderService.findByGatewayOrderId(gatewayOrderId);
         if (order != null) {
-            sortedDummyOrderMaps = orderSplitterService.splitBOPractically(order);
+            sortedDummyOrderMaps = orderSplitterServiceImpl.splitBOPractically(order);
         } else {
             addRedirectAlertMessage(new SimpleMessage("No Order found for corresponding gateway Order ID"));
         }
@@ -68,7 +68,7 @@ public class PseudoOrderSplitAction extends BaseAction {
 
         order = orderService.findByGatewayOrderId(gatewayOrderId);
         if (order != null) {
-            sortedDummyOrderMaps = orderSplitterService.splitBOIdeally(order, ggnWarehouse, mumWarehouse);
+            sortedDummyOrderMaps = orderSplitterServiceImpl.splitBOIdeally(order, ggnWarehouse, mumWarehouse);
         } else {
             addRedirectAlertMessage(new SimpleMessage("No Order found for corresponding gateway Order ID"));
         }
