@@ -15,5 +15,9 @@ public class AppConstants {
     }
 
     
+    public static String getAppClasspathRootPath(){
+        return AppConstants.appBasePath + "WEB-INF" ;
+    }
+    
 
 }
