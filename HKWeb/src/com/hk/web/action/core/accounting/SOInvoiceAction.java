@@ -163,4 +163,11 @@ public class SOInvoiceAction extends BaseAction {
         this.courierService = courierService;
     }
 
+  public String getFreebieItem() {
+    return freebieItem;
+  }
+
+  public void setFreebieItem(String freebieItem) {
+    this.freebieItem = freebieItem;
+  }
 }
