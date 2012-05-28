@@ -53,4 +53,6 @@ public class RoleConstants {
     public static final String MASTER_BUG_RESOLVER           = "MASTER_BUG_RESOLVER";
     public static final String HK_EMPLOYEE                   = "HK_EMPLOYEE";
     public static final String ROLE_GROUP_ACCOUNTING_INVOICE = GOD + ", " + ADMIN + ", " + FINANCE + ", " + ROLE_GROUP_LOGISTICS_ADMIN;
+
+    public static final String  HK_AFFILIATE_MANAGER         = " HK_AFFILIATE_MANAGER";
 }
