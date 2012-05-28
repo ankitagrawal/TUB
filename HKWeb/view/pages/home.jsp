@@ -34,7 +34,7 @@
         <img class="banner01" src="<hk:vhostImage/>/images/banners/home/home_banner_religare.jpg" border="0" alt="Religare complete health checkup"/>
       </a>
       <a href="http://www.healthkart.com/nutrition/sports-nutrition?brand=Ultimate+Nutrition">
-        <img src="<hk:vhostImage/>/images/banners/home/ultimate_sbanner.jpg" border="0" alt="Ultimate Nutrition - free shaker"/>
+        <img src="<hk:vhostImage/>/images/banners/home/ultimate-nutrition_sbanner.jpg" border="0" alt="Ultimate Nutrition - free shaker"/>
       </a>
 
     <%--<div class="banner01">--%>
