@@ -1,19 +1,15 @@
 package com.hk.admin.engine;
 
-import com.hk.admin.dto.order.DummyOrder;
-import com.hk.admin.dto.order.DummySO;
 import com.hk.admin.pact.dao.courier.CourierPricingEngineDao;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.dao.courier.PincodeRegionZoneDao;
 import com.hk.admin.pact.service.courier.CourierGroupService;
-import com.hk.comparator.MapValueComparator;
 import com.hk.constants.core.EnumTax;
 import com.hk.constants.payment.EnumPaymentMode;
-import com.hk.constants.shipment.EnumCourier;
+import com.hk.constants.courier.EnumCourier;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierPricingEngine;
-import com.hk.domain.courier.PincodeRegionZone;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
@@ -24,8 +20,6 @@ import com.hk.pact.service.core.WarehouseService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.

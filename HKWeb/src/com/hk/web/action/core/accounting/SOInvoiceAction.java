@@ -14,7 +14,7 @@ import com.hk.admin.dto.accounting.InvoiceDto;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.util.BarcodeGenerator;
-import com.hk.constants.shipment.EnumCourier;
+import com.hk.constants.courier.EnumCourier;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.courier.CourierServiceInfo;
