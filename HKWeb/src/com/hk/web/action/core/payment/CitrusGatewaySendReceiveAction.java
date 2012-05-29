@@ -1,19 +1,5 @@
 package com.hk.web.action.core.payment;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-
-import org.apache.commons.lang.math.NumberUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.akube.framework.stripes.action.BasePaymentGatewaySendReceiveAction;
 import com.akube.framework.util.BaseUtils;
@@ -29,6 +15,18 @@ import com.hk.manager.payment.CitrusTestPaymentGatewayWrapper;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.payment.PaymentDao;
 import com.hk.web.AppConstants;
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
+import org.apache.commons.lang.math.NumberUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 @Component
 public class CitrusGatewaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<CitrusTestPaymentGatewayWrapper> {
@@ -74,8 +72,8 @@ public class CitrusGatewaySendReceiveAction extends BasePaymentGatewaySendReceiv
         oMerchant.setMerchantDetails(properties.getProperty("MerchantId"), properties.getProperty("MerchantId"), properties.getProperty("MerchantId"), "127.0.0.1",
                 payment.getGatewayOrderId(),
                 payment.getGatewayOrderId()
-                 , "http://www.healthkart.com/core/payment/CitrusGatewaySendReceiveAction.action",
-                //, linkManager.getCitrusPaymentGatewayUrl(), 
+                 //, "http://www.healthkart.com/core/payment/CitrusGatewaySendReceiveAction.action",
+                , linkManager.getCitrusPaymentGatewayUrl(), 
                 properties.getProperty("ResponseMethod"), properties.getProperty("CurrCode"), payment.getGatewayOrderId(), "P",
                 amountStr, "GMT+05:30", "Ext1", "true", "Ext3", "Ext4", "Ext5a");
 
