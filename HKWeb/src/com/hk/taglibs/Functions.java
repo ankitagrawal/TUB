@@ -1,25 +1,5 @@
 package com.hk.taglibs;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-
-import net.sourceforge.stripes.util.CryptoUtil;
-
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
-import org.joda.time.Period;
-import org.joda.time.format.PeriodFormatter;
-import org.joda.time.format.PeriodFormatterBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.akube.framework.util.FormatUtils;
 import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
 import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
@@ -68,6 +48,19 @@ import com.hk.pact.service.order.OrderService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.CartLineItemUtil;
 import com.hk.util.HKImageUtils;
+import net.sourceforge.stripes.util.CryptoUtil;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
+import org.joda.time.Period;
+import org.joda.time.format.PeriodFormatter;
+import org.joda.time.format.PeriodFormatterBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.*;
 
 public class Functions {
 
@@ -241,7 +234,7 @@ public class Functions {
     @SuppressWarnings("deprecation")
     public static Double netDiscountOnLineItem(Object o) {
         CartLineItem lineItem = (CartLineItem) o;
-        OrderManager orderManager = ServiceLocatorFactory.getService(OrderManager.class);
+        OrderManager orderManager = (OrderManager) ServiceLocatorFactory.getService("OrderManager");
         return orderManager.getNetDiscountOnLineItem(lineItem);
     }
 
