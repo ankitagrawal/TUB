@@ -51,7 +51,7 @@ public class CitrusGatewaySendReceiveAction extends BasePaymentGatewaySendReceiv
         CitrusTestPaymentGatewayWrapper citrusTestPaymentGatewayWrapper = new CitrusTestPaymentGatewayWrapper(AppConstants.appBasePath);
         Payment payment = paymentDao.findByGatewayOrderId(data.getGatewayOrderId());
         String amountStr = BasePaymentGatewayWrapper.TransactionData.decimalFormat.format(data.getAmount());
-
+        
         String propertyLocatorFileLocation = AppConstants.getAppClasspathRootPath() + "/citrus.live.properties";
         Properties properties = BaseUtils.getPropertyFile(propertyLocatorFileLocation);
 
@@ -105,7 +105,9 @@ public class CitrusGatewaySendReceiveAction extends BasePaymentGatewaySendReceiv
          * to the required page (success, fail, authPending, double payment, etc)
          */
 
+        System.out.println("in citrus callback");
         logger.error("in callback -> " + getContext().getRequest().getParameterMap());
+        System.out.println("in callback -> " + getContext().getRequest().getParameterMap());
         String data = getContext().getRequest().getParameter(CitrusTestPaymentGatewayWrapper.param_data);
         String responseMethod = getContext().getRequest().getMethod();
         String propertyFilePath = AppConstants.getAppClasspathRootPath() + "/citrus.live.properties";

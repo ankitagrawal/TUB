@@ -117,6 +117,8 @@ public class SecurityInterceptor implements Interceptor, ConfigurableComponent {
      */
     public Resolution intercept(ExecutionContext executionContext) throws Exception {
         Resolution resolution;
+        
+        System.out.println("intercepting ");
 
         if (securityManager != null) {
             switch (executionContext.getLifecycleStage()) {
@@ -142,6 +144,7 @@ public class SecurityInterceptor implements Interceptor, ConfigurableComponent {
             resolution = executionContext.proceed();
         }
 
+        System.out.println("intercepting khatam ");
         return resolution;
     }
 
