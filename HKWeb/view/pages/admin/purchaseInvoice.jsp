@@ -288,8 +288,16 @@
 					<s:text class="date_input" formatPattern="yyyy-MM-dd" name="purchaseInvoice.paymentDate"/></td>
 				<td>Payment Details<br/><span class="sml gry">(eg. Cheque no.)</span></td>
 				<td><s:textarea name="purchaseInvoice.paymentDetails" style="height:50px;"/></td>
-				<td></td>
-				<td></td>
+				<td>Reconcilation Date</td>
+                <c:choose>
+                    <c:when test="${hk:isNotBlank(pia.purchaseInvoice.reconcilationDate)}">
+                        <td>${pia.purchaseInvoice.reconcilationDate}"</td>
+                    </c:when>
+                    <c:otherwise>
+                        <td></td>
+                    </c:otherwise>
+                </c:choose>
+
 			</tr>
 			<tr>
 				<td>Reconciled</td>
@@ -452,9 +460,11 @@
 		</table>
 		<div class="variantDetails info"></div>
 		<br/>
+        <c:if test="${pia.saveEnabled} == true">
 		<a href="purchaseInvoice.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>
 
 		<s:submit name="save" value="Save" class="requiredFieldValidator"/>
+        </c:if>
     <shiro:hasRole name="<%=RoleConstants.GOD%>">
     <s:submit name="delete" value="Delete"/>
     </shiro:hasRole>

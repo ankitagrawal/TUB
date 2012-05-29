@@ -123,6 +123,9 @@ public class PurchaseInvoice implements java.io.Serializable {
 	@Column(name = "route_permit_number")
 	private String routePermitNumber;
 
+    @Column(name = "reconcilation_date")
+    private Date reconcilationDate;
+
 
 	public Long getId() {
 		return this.id;
@@ -307,6 +310,14 @@ public class PurchaseInvoice implements java.io.Serializable {
 	public void setWarehouse(Warehouse warehouse) {
 		this.warehouse = warehouse;
 	}
+
+    public Date getReconcilationDate() {
+        return reconcilationDate;
+    }
+
+    public void setReconcilationDate(Date reconcilationDate) {
+        this.reconcilationDate = reconcilationDate;
+    }
 }
 
 
