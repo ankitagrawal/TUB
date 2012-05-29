@@ -74,8 +74,9 @@ public class CitrusGatewaySendReceiveAction extends BasePaymentGatewaySendReceiv
         oMerchant.setMerchantDetails(properties.getProperty("MerchantId"), properties.getProperty("MerchantId"), properties.getProperty("MerchantId"), "127.0.0.1",
                 payment.getGatewayOrderId(),
                 payment.getGatewayOrderId()
-                // , "http://www.healthkart.com/CitrusGatewaySendReceiveAction.action"
-                , linkManager.getCitrusPaymentGatewayUrl(), properties.getProperty("ResponseMethod"), properties.getProperty("CurrCode"), payment.getGatewayOrderId(), "P",
+                 , "http://www.healthkart.com/core/payment/CitrusGatewaySendReceiveAction.action",
+                //, linkManager.getCitrusPaymentGatewayUrl(), 
+                properties.getProperty("ResponseMethod"), properties.getProperty("CurrCode"), payment.getGatewayOrderId(), "P",
                 amountStr, "GMT+05:30", "Ext1", "true", "Ext3", "Ext4", "Ext5a");
 
         /* added for NetBanking Transaction */
