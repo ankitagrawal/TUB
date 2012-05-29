@@ -26,6 +26,8 @@
 		<fileset file="${project.common.dir}/dist/hk-common.jar" />
 		<fileset file="${project.core.dir}/dist/hk-core.jar" />
 		<fileset file="${lib.root.dir}/thirdParty/jdom-1.0.jar" />
+    <fileset file="${lib.root.dir}/freemarker/freemarker.jar" />
+
 	</path>
 
 

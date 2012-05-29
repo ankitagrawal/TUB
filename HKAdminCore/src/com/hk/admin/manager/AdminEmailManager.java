@@ -37,6 +37,7 @@ import com.hk.util.HKImageUtils;
 import com.hk.util.SendGridUtil;
 import com.hk.util.io.ExcelSheetParser;
 import com.hk.util.io.HKRow;
+import com.hk.service.impl.FreeMarkerService;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -49,6 +50,8 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import freemarker.template.Template;
 
 @SuppressWarnings("unchecked")
 @Component
@@ -125,6 +128,8 @@ public class AdminEmailManager {
     private UserService           userService;
     @Autowired
     private CouponService         couponService;
+    @Autowired
+    private FreeMarkerService     freeMarkerService;
 
     @PostConstruct
     public void postConstruction() {
@@ -172,6 +177,7 @@ public class AdminEmailManager {
         // logger.info("Reached Level 3");
         Map<String, String> headerMap = new HashMap<String, String>();
         headerMap.put("X-SMTPAPI", xsmtpapi);
+        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(emailCampaign.getTemplate());
 
         for (User user : emailersList) {
             try {

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.hk.constants.core.Keys;
 import com.hk.pact.service.EmailService;
 import com.hk.service.impl.FreeMarkerService;
+import freemarker.template.Template;
 
 /**
  * Author: Kani Date: Dec 17, 2008
@@ -44,15 +45,15 @@ public class EmailServiceImpl implements EmailService {
      * this.contactName = contactName; }
      */
 
-    public boolean sendHtmlEmailNoReply(String templatePath, Object templateValues, String toEmail, String toName) {
+    public boolean sendHtmlEmailNoReply( String templatePath, Object templateValues, String toEmail, String toName) {
         return sendHtmlEmail(templatePath, templateValues, noReplyEmail, noReplyName, toEmail, toName, null, null, null);
     }
 
-    public boolean sendHtmlEmail(String templatePath, Object templateValues, String toEmail, String toName) {
+    public boolean sendHtmlEmail( String templatePath, Object templateValues, String toEmail, String toName) {
         return sendHtmlEmail(templatePath, templateValues, noReplyEmail, noReplyName, toEmail, toName, contactEmail, contactName, null);
     }
 
-    public boolean sendHtmlEmail(String templatePath, Object templateValues, String toEmail, String toName, String replyToEmail) {
+    public boolean sendHtmlEmail( String templatePath, Object templateValues, String toEmail, String toName, String replyToEmail) {
         return sendHtmlEmail(templatePath, templateValues, noReplyEmail, noReplyName, toEmail, toName, replyToEmail, null, null);
     }
 
@@ -60,6 +61,13 @@ public class EmailServiceImpl implements EmailService {
         return sendHtmlEmail(templatePath, templateValues, noReplyEmail, noReplyName, toEmail, toName, replyToEmail, null, headerMap);
     }
 
+   private boolean sendHtmlEmail( String templatePath, Object templateValues, String fromEmail, String fromName, String toEmail, String toName, String replyToEmail,
+            String replyToName, Map<String, String> headerMap) {
+
+     Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(templatePath);
+
+     return sendHtmlEmail(templatePath, templateValues,fromEmail,fromName,toEmail, toName, replyToEmail,replyToName,headerMap, freemarkerTemplate);
+   }
     /**
      * This method builds the html email using the template and object values passed. It then calls
      * {@link #sendEmail(org.apache.commons.mail.Email)} to actually send the email
@@ -70,10 +78,12 @@ public class EmailServiceImpl implements EmailService {
      * @param toName
      * @return false means email sending failed
      */
-    private boolean sendHtmlEmail(String templatePath, Object templateValues, String fromEmail, String fromName, String toEmail, String toName, String replyToEmail,
-            String replyToName, Map<String, String> headerMap) {
+    public boolean sendHtmlEmail(String templatePath, Object templateValues, String fromEmail, String fromName, String toEmail, String toName, String replyToEmail,
+            String replyToName, Map<String, String> headerMap, Template template) {
         try {
-            FreeMarkerService.RenderOutput renderOutput = freeMarkerService.getRenderOutputForTemplate(templatePath, templateValues);
+
+            FreeMarkerService.RenderOutput renderOutput = freeMarkerService.processCampaignTemplate(template, templatePath, templateValues);
+
             if (renderOutput == null) {
                 logger.error("Error while rendering freemarker template : " + templatePath + " in sendHtmlEmail");
                 return false;
