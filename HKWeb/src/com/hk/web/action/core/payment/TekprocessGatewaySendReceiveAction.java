@@ -24,7 +24,7 @@ import com.hk.manager.payment.TekprocessPaymentGatewayWrapper;
 import com.hk.pact.dao.payment.PaymentDao;
 import com.hk.web.AppConstants;
 
-@UrlBinding("/payment/TekprocessGatewaySendReceive.action")
+//@UrlBinding("/payment/TekprocessGatewaySendReceive.action")
 @Component
 public class TekprocessGatewaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<TekprocessPaymentGatewayWrapper> {
 
