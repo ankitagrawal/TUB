@@ -74,15 +74,8 @@ Email: <a href="mailto:myrevital@ranbaxy.com">myrevital@ranbaxy.com</a></p>
 
   <a href="www.twitter.com/#!/my_revital">www.twitter.com/#!/my_revital
   </a></p>
-
-
-
-
 </div>
-
-
-
-
 </div>
+<jsp:include page="/includes/_analytics.jsp"/>
 </body>
 </html>
