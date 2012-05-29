@@ -34,7 +34,7 @@
                         value="${variant.id}"/>
               <td>
                 <label><s:checkbox
-                    name="productLineItemWithExtraOptionsDtos[0].selected" class="extraOptionCheckBox"/>Left</label>
+                    name="productLineItemWithExtraOptionsDtos[0].selected" class="checkbox"/>Left</label>
               </td>
               <s:hidden
                   name="productLineItemWithExtraOptionsDtos[1].productVariant.qty" value="1"/>
@@ -60,7 +60,7 @@
                         value="${variant.id}"/>
               <td>
                 <label><s:checkbox
-                    name="productLineItemWithExtraOptionsDtos[1].selected" class="extraOptionCheckBox"/>Right</label>
+                    name="productLineItemWithExtraOptionsDtos[1].selected" class="checkbox"/>Right</label>
               </td>
 
               <s:hidden
@@ -112,33 +112,12 @@
                 $('.progressLoader').hide();
               }
 
-              $('.addToCartForm2').ajaxForm({dataType: 'json', success: _addToCart2});
-              //              $('.addToCartButton').click(function() {
-              //                $(this).parents('td').find('.progressLoader').show();
-              //                $('#cartWindow').jqm();
-              //              });
-
-              $('.addToCartButton').click(function() {
-                var selected = 0;
-                $('.extraOptionCheckBox').each(function() {
-                  if ($(this).attr("checked") == "checked") {
-                    selected = 1;
-                  }
-                });
-                if (!selected) {
-                  alert("Kindly select your prescription details");
-                  return false;
-                } else {
-                  $(this).parents('td').find('.progressLoader').show();
-                  $('#cartWindow').jqm();
-                }
-              });
+              $('.addToCartForm2').ajaxForm({dataType: 'json', success: _addToCart2});            
             });
-
+            validateCheckbox = 1;
           </script>
         </table>
       </s:layout-component>
     </s:layout-render>
   </div>
-
 </s:layout-definition>

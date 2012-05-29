@@ -2,10 +2,7 @@ package com.hk.web.action.admin.newsletter;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
@@ -324,9 +321,12 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
     return new ForwardResolution(SendEmailNewsletterCampaign.class, "selectCampaign");
   }
 
-  public Resolution getSentCountForEmailCampaign(){
+  public Resolution getSentCountForEmailCampaign() {
+    Map datamap = new HashMap();
     Long sentCount = emailCampaignService.getEmailCampaignSentCount(emailCampaign);
-    HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK,"Sent Count Generated for Email Campaign",sentCount);
+    datamap.put("sentCountValue", sentCount);
+    datamap.put("emailCampaignId", emailCampaign.getId().toString());
+    HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Sent Count Generated for Email Campaign", datamap);
     return new JsonResolution(healthkartResponse);
   }
 

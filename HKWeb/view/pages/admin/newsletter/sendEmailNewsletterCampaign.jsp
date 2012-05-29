@@ -35,6 +35,7 @@
           <table>
             <thead>
             <tr>
+              <th></th>
               <th>Id</th>
               <th>name</th>
               <th>template</th>
@@ -43,17 +44,19 @@
             </tr>
             </thead>
             <c:forEach items="${emailBean.emailCampaigns}" var="emailCampaign">
-              <tr>
-                <td>
-                  <s:radio value="${emailCampaign}" name="emailCampaign"/>${emailCampaign.id}
-                </td>
+              <tr class="emailCampaignRow">
+                <td><s:radio value="${emailCampaign}" name="emailCampaign"/></td>
+                <td class="emailCampaignId">${emailCampaign.id}</td>
                 <td>${emailCampaign.name}</td>
                 <td>${emailCampaign.template}</td>
                 <td>${emailCampaign.createDate}</td>
                 <td>
-                  <s:submit name="getSentCountForEmailCampaign" value="Check Sent Count" id="sentCountButton"/>
-                  <s:hidden name="emailCampaign" value="${emailCampaign.id}"/>
-                  <div id="sentCount"></div>
+                  <s:link beanclass="com.hk.web.action.admin.newsletter.SendEmailNewsletterCampaign"
+                          event="getSentCountForEmailCampaign" class="sentCountButton" style="font-size:0.9em;">
+                    <s:param name="emailCampaign" value="${emailCampaign.id}"/>
+                    Check Sent Count
+                  </s:link>
+                  <div style="margin-top:5px;" class="sentCount"></div>
                 </td>
               </tr>
             </c:forEach>
@@ -61,29 +64,34 @@
           <s:submit name="selectCampaign"/>
 
           <div class="clear"></div>
-          <div style="margin-top:15px;"></div>
+          <div style="margin-top:15px; color: #fff;"></div>
 
           <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${emailBean}"/>
           <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${emailBean}"/>
         </c:if>
       </s:form>
     </fieldset>
+
     <script type="text/javascript">
       $(document).ready(function() {
-        $('#sentCountForm').ajaxForm({
-          dataType: 'json',
-          success: _checkSentCount
+        $('.sentCountButton').click(function() {
+          $.getJSON($(this).attr('href'), _checkSentCount);
+          return false;
         });
 
         function _checkSentCount(res) {
+          var emailCampaignId;
           if (res.code == "<%=HealthkartResponse.STATUS_OK%>") {
-            $('#sentCount').html(res.data);
-            $('#sentCountButton').hide();
+            emailCampaignId = res.data.emailCampaignId;
+            $('.emailCampaignId').each(function() {
+              if ($(this).text() === emailCampaignId) {
+                $(this).parents('.emailCampaignRow').find('.sentCount').html(res.data.sentCountValue);
+              }
+            });
           }
         }
       });
     </script>
-
   </s:layout-component>
 </s:layout-render>
 

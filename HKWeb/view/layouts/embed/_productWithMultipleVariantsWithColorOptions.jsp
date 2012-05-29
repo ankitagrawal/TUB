@@ -103,10 +103,11 @@
         <c:when test="${product.outOfStock}">
           <span class="outOfStock">Sold Out</span>
 
-              <div align="center"><s:link beanclass="com.hk.web.action.core.user.NotifyMeAction" class="notifyMe button_orange"><b>Notify
-                                                                                                                      Me!!</b>
-                <s:param name="productVariant" value="${product.productVariants[0]}"/> </s:link></div>
-         </c:when>
+          <div align="center"><s:link beanclass="com.hk.web.action.core.user.NotifyMeAction"
+                                      class="notifyMe button_orange"><b>Notify
+            Me!!</b>
+            <s:param name="productVariant" value="${product.productVariants[0]}"/> </s:link></div>
+        </c:when>
         <c:otherwise>
           <s:submit name="addToCart" value="Place Order"
                     class="addToCartButton cta button_green"
@@ -119,21 +120,21 @@
     </div>
     <div class='floatfix'></div>
   </s:form>
-  <script type="text/javascript">
-    $('.addToCartButton').click(function() {
-      $(this).parents().find('.progressLoader').show();
-    });
+  <script type="text/javascript">   
+    validateCheckbox =1;
   </script>
 
   <shiro:hasPermission name="<%=PermissionConstants.MANAGE_IMAGE%>">
     <div>
-      <s:link beanclass="com.hk.web.action.core.catalog.image.UploadImageAction" event="uploadVariantImage" target="_blank"
+      <s:link beanclass="com.hk.web.action.core.catalog.image.UploadImageAction" event="uploadVariantImage"
+              target="_blank"
               class="popup"> Upload
         <s:param name="productVariant" value="${product.productVariants[0]}"/>
       </s:link>
       &nbsp;|&nbsp;
-      <s:link beanclass="com.hk.web.action.core.catalog.product.ProductVariantAction" event="renderManageImages" target="_blank" class="popup">Manage
-                                                                                                                       Images
+      <s:link beanclass="com.hk.web.action.core.catalog.product.ProductVariantAction" event="renderManageImages"
+              target="_blank" class="popup">Manage
+        Images
         <s:param name="productVariant" value="${product.productVariants[0]}"/>
       </s:link>
     </div>
