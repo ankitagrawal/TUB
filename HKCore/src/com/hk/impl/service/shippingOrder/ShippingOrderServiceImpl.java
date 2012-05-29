@@ -189,13 +189,27 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     }
 
     public void logShippingOrderActivity(ShippingOrder shippingOrder, EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity) {
-        User user = getUserService().getLoggedInUser();
+        Order baseOrder=shippingOrder.getBaseOrder();
+        User user;
+        if(baseOrder.getStore().getId()== 1L){
+            user  = getUserService().getLoggedInUser();
+        }
+        else{
+            user=baseOrder.getUser();
+        }
         ShippingOrderLifeCycleActivity orderLifecycleActivity = getShippingOrderLifeCycleActivity(enumShippingOrderLifecycleActivity);
         logShippingOrderActivity(shippingOrder, user, orderLifecycleActivity, null);
     }
 
     public void logShippingOrderActivity(ShippingOrder shippingOrder, EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity, String comments) {
-        User user = getUserService().getLoggedInUser();
+        Order baseOrder=shippingOrder.getBaseOrder();
+        User user;
+        if(baseOrder.getStore().getId()== 1L){
+            user  = getUserService().getLoggedInUser();
+        }
+        else{
+            user=baseOrder.getUser();
+        }
         ShippingOrderLifeCycleActivity orderLifecycleActivity = getShippingOrderLifeCycleActivity(enumShippingOrderLifecycleActivity);
         logShippingOrderActivity(shippingOrder, user, orderLifecycleActivity, comments);
     }

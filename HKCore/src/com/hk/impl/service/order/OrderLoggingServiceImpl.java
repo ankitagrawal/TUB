@@ -29,7 +29,13 @@ public class OrderLoggingServiceImpl implements OrderLoggingService {
     }
 
     public void logOrderActivity(Order order, EnumOrderLifecycleActivity enumOrderLifecycleActivity) {
-        User user = getUserService().getLoggedInUser();
+        User user;
+        if(order.getStore().getId()== 1L){
+            user  = getUserService().getLoggedInUser();
+        }
+        else{
+            user=order.getUser();
+        }
         OrderLifecycleActivity orderLifecycleActivity = getOrderLifecycleActivity(enumOrderLifecycleActivity);
         logOrderActivity(order, user, orderLifecycleActivity, null);
     }

@@ -74,7 +74,7 @@ public class ServiceQueueAction extends BasePaginatedAction {
         return new ForwardResolution("/pages/admin/serviceQueue.jsp");
     }
 
-    @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_SHIPMENT_QUEUE }, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_DELIVERY_QUEUE }, authActionBean = AdminPermissionAction.class)
     public Resolution moveToActionAwaiting() {
         for (ShippingOrder shippingOrder : shippingOrderList) {
             getAdminShippingOrderService().moveShippingOrderBackToActionQueue(shippingOrder);
@@ -83,7 +83,7 @@ public class ServiceQueueAction extends BasePaginatedAction {
         return new RedirectResolution(ServiceQueueAction.class);
     }
 
-    @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_SHIPMENT_QUEUE }, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_DELIVERY_QUEUE }, authActionBean = AdminPermissionAction.class)
     public Resolution markShippingOrdersAsDelivered() {
         if (shippingOrderList != null && !shippingOrderList.isEmpty()) {
             for (ShippingOrder shippingOrder : shippingOrderList) {

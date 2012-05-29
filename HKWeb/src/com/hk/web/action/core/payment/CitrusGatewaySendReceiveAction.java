@@ -12,7 +12,6 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.service.BasePaymentGatewayWrapper;
@@ -21,7 +20,6 @@ import com.akube.framework.util.BaseUtils;
 import com.ecs.epg.sfa.java.Merchant;
 import com.ecs.epg.sfa.java.PGResponse;
 import com.ecs.epg.sfa.java.PostLib;
-import com.hk.constants.core.Keys;
 import com.hk.constants.payment.EnumCitrusResponseCodes;
 import com.hk.domain.payment.Payment;
 import com.hk.exception.HealthkartPaymentGatewayException;
@@ -107,6 +105,7 @@ public class CitrusGatewaySendReceiveAction extends BasePaymentGatewaySendReceiv
          * to the required page (success, fail, authPending, double payment, etc)
          */
 
+        logger.error("in callback -> " + getContext().getRequest().getParameterMap());
         String data = getContext().getRequest().getParameter(CitrusTestPaymentGatewayWrapper.param_data);
         String responseMethod = getContext().getRequest().getMethod();
         String propertyFilePath = AppConstants.getAppClasspathRootPath() + "/citrus.live.properties";
@@ -126,7 +125,11 @@ public class CitrusGatewaySendReceiveAction extends BasePaymentGatewaySendReceiv
          */
 
         Map<String, String> paramMap = CitrusTestPaymentGatewayWrapper.parseResponse(validatedData, responseMethod);
-
+	      logger.error("validated date -> " + validatedData);
+	      logger.error("data -> " + data);
+	      logger.error("responseMethod -> " + responseMethod);
+	      logger.error("propertyFilePath -> " + propertyFilePath);
+	      logger.error("param map->" + paramMap);
         String amountStr = paramMap.get(CitrusTestPaymentGatewayWrapper.Amount);
         Double amount = NumberUtils.toDouble(amountStr);
         String authStatus = paramMap.get(CitrusTestPaymentGatewayWrapper.RespCode);
