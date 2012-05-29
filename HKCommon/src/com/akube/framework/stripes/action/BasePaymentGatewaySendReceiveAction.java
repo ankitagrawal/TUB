@@ -72,7 +72,7 @@ public abstract class BasePaymentGatewaySendReceiveAction<T extends PaymentGatew
 
     BasePaymentGatewaySendReceiveAction sendReceiveAction) {
 
-        String tredirectUrl = StripesFilter.getConfiguration().getActionResolver().getUrlBinding(sendReceiveAction.getClass());
+        String redirectUrl = StripesFilter.getConfiguration().getActionResolver().getUrlBinding(sendReceiveAction.getClass());
         return SslUtil.encodeUrlFullForced(getContext().getRequest(), getContext().getResponse(), redirectUrl, null);
     }
 
