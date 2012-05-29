@@ -651,22 +651,25 @@
 --/parenting/infant/pacifiers-teethers : Pacifiers & Teethers
 --/parenting/infant/toys
 --/parenting/infant/grooming
+---/parenting/infant/grooming/comb-hair-brushes:   Comb & Hair Brushes
+---/parenting/infant/grooming/nail-clippers-scissors:   Nail Clippers & Scissors
 --/parenting/infant/room-accessories
 --/parenting/infant/walkers
 --/parenting/infant/bedtime
 --/parenting/infant/bathtime
----/parenting/infant/bathtime/soaps-and-bath-foams: soaps & bath foams
+---/parenting/infant/bathtime/soaps-and-bath-foams: Soaps & Bath Foams
 ---/parenting/infant/bathtime/oil
 ---/parenting/infant/bathtime/powder
 ---/parenting/infant/bathtime/shampoo
 ---/parenting/infant/bathtime/lotions
 ---/parenting/infant/bathtime/creams
+---/parenting/infant/bathtime/bath-towels :  Bath Towels
 -/parenting/toddler
 --/parenting/toddler/diapering
 ---/parenting/toddler/diapering/diapers
 ---/parenting/toddler/diapering/wipes
 --/parenting/toddler/formula-baby-food : Formula & Baby Food
---/parenting/toddler/sippers-and-mugs:Sippers & Mugs
+--/parenting/toddler/sippers-and-mugs: Sippers & Mugs
 --/parenting/toddler/nursing-feeding
 ---/parenting/toddler/nursing-feeding/feeding-bottles
 ---/parenting/toddler/nursing-feeding/feeding-accessories
@@ -674,15 +677,16 @@
 ---/parenting/toddler/nursing-feeding/bottle-cleaning
 --/parenting/toddler/bedtime
 --/parenting/toddler/bathtime
----/parenting/toddler/bathtime/soaps-and-bath-foams: soaps & bath foams
+---/parenting/toddler/bathtime/soaps-and-bath-foams: Soaps & Bath Foams
 ---/parenting/toddler/bathtime/oil
 ---/parenting/toddler/bathtime/powder
 ---/parenting/toddler/bathtime/shampoo
 ---/parenting/toddler/bathtime/lotions
 ---/parenting/toddler/bathtime/creams
+---/parenting/toddler/bathtime/bath-towels :  Bath Towels
 --/parenting/toddler/oral-care
 ---/parenting/toddler/oral-care/toothbrushes
----/parenting/toddler/oral-care/toothpaste-and-tooth-gel:toothpaste & tooth gel
+---/parenting/toddler/oral-care/toothpaste-and-tooth-gel:Toothpaste & Tooth gel
 --/parenting/toddler/furniture
 --/parenting/toddler/travel-safety : Travel & Safety
 ---/parenting/toddler/travel-safety/baby-prams-and-strollers
@@ -691,7 +695,9 @@
 --/parenting/toddler/toys
 --/parenting/toddler/funtime:DVDs,Comics & Drawing Books
 -/parenting/pre-school
---/parenting/pre-school/apparels
+--/parenting/pre-school/apparels: Apparels
+---/parenting/pre-school/apparels/t-shirts  :   Tees
+---/parenting/pre-school/apparels/shoes-booties  :  Shoes & Booties
 --/parenting/pre-school/oral-care
 ---/parenting/pre-school/oral-care/toothbrushes
 ---/parenting/pre-school/oral-care/toothpaste-and-tooth-gel:toothpaste & tooth gel
@@ -700,6 +706,7 @@
 --/parenting/pre-school/water-bottles
 --/parenting/pre-school/sippers
 --/parenting/pre-school/toys
+--/parenting/pre-school/accessories  : Accessories
 
 /services
 -/services/health-checkups
