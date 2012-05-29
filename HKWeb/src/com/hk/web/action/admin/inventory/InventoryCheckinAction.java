@@ -133,7 +133,7 @@ public class InventoryCheckinAction extends BaseAction {
                 if (grnLineItem != null && sku != null) {
                     askedQty = grnLineItem.getQty();
                     Long alreadyCheckedInQty = getAdminInventoryService().countOfCheckedInUnitsForGrnLineItem(grnLineItem);
-                    logger.info("Inventory Checkin ->ProductVariant="+productVariant.getId()+";askedQty="+askedQty+";alreadyCheckedInQty="+alreadyCheckedInQty+";qty="+qty);
+                    //logger.info("Inventory Checkin ->ProductVariant="+productVariant.getId()+";askedQty="+askedQty+";alreadyCheckedInQty="+alreadyCheckedInQty+";qty="+qty);
                     if (qty > (askedQty - alreadyCheckedInQty)) {
                         addRedirectAlertMessage(new SimpleMessage("Qty mentioned - " + qty + " is exceeding required checked in qty. Plz check."));
                         return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
@@ -184,7 +184,7 @@ public class InventoryCheckinAction extends BaseAction {
                         ;
                     }
                 }else{
-                  addRedirectAlertMessage(new SimpleMessage("Error with GrnLineItem or Sku"));
+                  addRedirectAlertMessage(new SimpleMessage("Error with either GrnLineItem->"+grnLineItem+" or Sku ->"+sku));
                   return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
                 }
             } else {
