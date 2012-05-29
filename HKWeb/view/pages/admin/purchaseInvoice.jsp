@@ -288,20 +288,33 @@
 					<s:text class="date_input" formatPattern="yyyy-MM-dd" name="purchaseInvoice.paymentDate"/></td>
 				<td>Payment Details<br/><span class="sml gry">(eg. Cheque no.)</span></td>
 				<td><s:textarea name="purchaseInvoice.paymentDetails" style="height:50px;"/></td>
-				<td>Reconcilation Date</td>
-                <c:choose>
-                    <c:when test="${hk:isNotBlank(pia.purchaseInvoice.reconcilationDate)}">
-                        <td>${pia.purchaseInvoice.reconcilationDate}"</td>
-                    </c:when>
-                    <c:otherwise>
-                        <td></td>
-                    </c:otherwise>
-                </c:choose>
+				<td>Form Type</td>
+                <td>
+                    <s:select name="purchaseInvoiceLineItems[${ctr.index}].tax"
+                              value="${purchaseInvoiceLineItem.tax.id}" class="valueChange">
+                        <hk:master-data-collection service="<%=TaxDao.class%>" serviceProperty="taxList" value="id"
+                                                   label="name"/>
+                    </s:select>
+                </td>
 
 			</tr>
 			<tr>
 				<td>Reconciled</td>
 				<td><s:checkbox name="purchaseInvoice.reconciled"/></td>
+				<td>Reconcilation Date</td>
+                <c:choose>
+                    <c:when test="${hk:isNotBlank(pia.purchaseInvoice.reconcilationDate)}">
+                        <td>${pia.purchaseInvoice.reconcilationDate}</td>
+                    </c:when>
+                    <c:otherwise>
+                        <td></td>
+                    </c:otherwise>
+                </c:choose>
+				<td>GRN Date</td>
+				<td>${pia.grnDate}</td>
+			</tr>
+
+            <tr>
 				<td>Status</td>
 				<td><s:select name="purchaseInvoice.purchaseInvoiceStatus" value="${pia.purchaseInvoice.purchaseInvoiceStatus.id}">
 					<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="purchaseInvoiceStatusList"
@@ -309,6 +322,8 @@
 				</s:select></td>
 				<td>Route Permit Number</td>
 				<td><s:text name="purchaseInvoice.routePermitNumber"/></td>
+                <td></td>
+				<td></td>
 			</tr>
 		</table>
 
@@ -460,7 +475,7 @@
 		</table>
 		<div class="variantDetails info"></div>
 		<br/>
-        <c:if test="${pia.saveEnabled} == true">
+        <c:if test="${pia.saveEnabled}">
 		<a href="purchaseInvoice.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>
 
 		<s:submit name="save" value="Save" class="requiredFieldValidator"/>
