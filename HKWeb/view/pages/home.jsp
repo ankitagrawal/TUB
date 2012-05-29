@@ -33,8 +33,8 @@
       <a href="${pageContext.request.contextPath}/product/super-religare-lab%3A-health-check-up/SER007">
         <img class="banner01" src="<hk:vhostImage/>/images/banners/home/home_banner_religare.jpg" border="0" alt="Religare complete health checkup"/>
       </a>
-      <a href="http://www.healthkart.com/nutrition/sports-nutrition?brand=Ultimate+Nutrition">
-        <img src="<hk:vhostImage/>/images/banners/home/ultimate-nutrition_sbanner.jpg" border="0" alt="Ultimate Nutrition - free shaker"/>
+      <a href="http://www.healthkart.com/revital">
+        <img src="<hk:vhostImage/>/images/banners/home/revital_sbanner.jpg" border="0" alt="Revital - Great health, Great deals"/>
       </a>
 
     <%--<div class="banner01">--%>
