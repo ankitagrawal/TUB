@@ -1,6 +1,11 @@
 package com.hk.impl.dao;
 
-import com.hk.constants.catalog.category.CategoryConstants;
+import java.util.Arrays;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
 import com.hk.constants.catalog.product.EnumProductVariantPaymentType;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.inventory.EnumReconciliationStatus;
@@ -8,12 +13,21 @@ import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.TicketStatus;
 import com.hk.domain.TicketType;
-import com.hk.domain.order.ShippingOrderStatus;
 import com.hk.domain.accounting.DebitNoteStatus;
 import com.hk.domain.affiliate.AffiliateCategory;
 import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.core.*;
+import com.hk.domain.core.CancellationType;
+import com.hk.domain.core.CartLineItemType;
+import com.hk.domain.core.EmailType;
+import com.hk.domain.core.OrderStatus;
+import com.hk.domain.core.PaymentMode;
+import com.hk.domain.core.PaymentStatus;
+import com.hk.domain.core.ProductVariantPaymentType;
+import com.hk.domain.core.ProductVariantServiceType;
+import com.hk.domain.core.PurchaseOrderStatus;
+import com.hk.domain.core.Surcharge;
+import com.hk.domain.core.Tax;
 import com.hk.domain.courier.BoxSize;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.inventory.GrnStatus;
@@ -22,17 +36,14 @@ import com.hk.domain.inventory.rv.ReconciliationStatus;
 import com.hk.domain.inventory.rv.ReconciliationType;
 import com.hk.domain.offer.rewardPoint.RewardPointMode;
 import com.hk.domain.offer.rewardPoint.RewardPointStatus;
+import com.hk.domain.order.ShippingOrderStatus;
 import com.hk.domain.user.User;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.MasterDataDao;
 import com.hk.pact.service.RoleService;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.CategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
-import java.util.Arrays;
-import java.util.List;
+import com.hk.pact.service.marketing.MarketingService;
 
 @Repository
 public class MasterDataDaoImpl implements MasterDataDao {
@@ -45,6 +56,8 @@ public class MasterDataDaoImpl implements MasterDataDao {
   private CategoryService categoryService;
   @Autowired
   private RoleService roleService;
+  @Autowired
+  private MarketingService marketingService;
 
   public List<PaymentStatus> getPaymentStatusList() {
     return getBaseDao().getAll(PaymentStatus.class);
@@ -118,7 +131,7 @@ public class MasterDataDaoImpl implements MasterDataDao {
   }
 
   public List<Category> getMarketExpenseCategoriesList() {
-    return CategoryConstants.marketExpenseCategoriesList;
+    return getMarketingService().marketExpenseCategoriesList();
   }
 
   public List<AffiliateCategory> getallAffiliateCategories() {
@@ -225,6 +238,14 @@ public class MasterDataDaoImpl implements MasterDataDao {
 
   public void setRoleService(RoleService roleService) {
     this.roleService = roleService;
+  }
+
+  public MarketingService getMarketingService() {
+    return marketingService;
+  }
+
+  public void setMarketingService(MarketingService marketingService) {
+    this.marketingService = marketingService;
   }
 
   public List<ShippingOrderStatus> getSOStatusForShipmentDetailsList() {

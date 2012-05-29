@@ -1,10 +1,6 @@
 package com.hk.constants.catalog.category;
 
-import com.hk.domain.catalog.category.Category;
-
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -85,41 +81,6 @@ public class CategoryConstants {
       put(CategoryConstants.PERSONAL_CARE, CategoryConstants.PERSONAL_CARE_TARGET_ORDER_COUNT);
       put(CategoryConstants.SERVICES, CategoryConstants.SERVICES_TARGET_ORDER_COUNT);
       put(CategoryConstants.SPORTS, CategoryConstants.SPORTS_TARGET_ORDER_COUNT);
-    }
-  };
-
-  public static final List<Category> allCategoriesList = new ArrayList<Category>() {
-    {
-/*      CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
-      add(categoryDao.getCategoryByName(CategoryConstants.BABY));
-      add(categoryDao.getCategoryByName(CategoryConstants.BEAUTY));
-      add(categoryDao.getCategoryByName(CategoryConstants.DIABETES));
-      add(categoryDao.getCategoryByName(CategoryConstants.EYE));
-      add(categoryDao.getCategoryByName(CategoryConstants.HOME_DEVICES));
-      add(categoryDao.getCategoryByName(CategoryConstants.NUTRITION));
-      add(categoryDao.getCategoryByName(CategoryConstants.PERSONAL_CARE));
-      add(categoryDao.getCategoryByName(CategoryConstants.SERVICES));
-      add(categoryDao.getCategoryByName(CategoryConstants.SPORTS));
-*/    }
-    
-//TODO: rewrite
-  };
-
-public static final List<Category> marketExpenseCategoriesList = new ArrayList<Category>() {
-    {
-     /* CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
-	    add(categoryDao.getCategoryByName(CategoryConstants.HK_BRAND));
-      add(categoryDao.getCategoryByName(CategoryConstants.BEAUTY));
-      add(categoryDao.getCategoryByName(CategoryConstants.DIABETES));
-      add(categoryDao.getCategoryByName(CategoryConstants.EYE));
-      add(categoryDao.getCategoryByName(CategoryConstants.HOME_DEVICES));
-      add(categoryDao.getCategoryByName(CategoryConstants.NUTRITION));
-      add(categoryDao.getCategoryByName(CategoryConstants.BABY));
-      add(categoryDao.getCategoryByName(CategoryConstants.PERSONAL_CARE));
-      add(categoryDao.getCategoryByName(CategoryConstants.SERVICES));
-      add(categoryDao.getCategoryByName(CategoryConstants.SPORTS));*/
-        
-        //TODO: rewrite   
     }
   };
   

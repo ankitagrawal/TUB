@@ -27,35 +27,59 @@
     <div id="home_header02">
     <h1>the one stop shop for health, fitness and beauty</h1>
 
-    <%--<a href="http://www.healthkart.com/services/health-checkups"><img class="banner01" src="<hk:vhostImage/>/images/banners/home/health_checkup_sbanner.jpg" border="0" alt="Health Checkups"/></a>--%>
-    <a href="${pageContext.request.contextPath}/product/equinox-irresistible-offer/CMB-HD005"><img class="banner01" src="<hk:vhostImage/>/images/banners/home/equinox.jpg" border="0" alt="Free Body Fat Monitor with Equinox BP Monitor"/></a>
+      <a href="${pageContext.request.contextPath}/home-devices/blood-pressure/heart-rate-monitor">
+        <img class="banner01" src="<hk:vhostImage/>/images/banners/home/heartrate_monitor_sbanner.jpg" border="0" alt="Launching Heart Rate Monitors - upto 28% off"/>
+      </a>
+      <a href="${pageContext.request.contextPath}/product/super-religare-lab%3A-health-check-up/SER007">
+        <img class="banner01" src="<hk:vhostImage/>/images/banners/home/home_banner_religare.jpg" border="0" alt="Religare complete health checkup"/>
+      </a>
+      <a href="http://www.healthkart.com/nutrition/sports-nutrition?brand=Ultimate+Nutrition">
+        <img src="<hk:vhostImage/>/images/banners/home/ultimate-nutrition_sbanner.jpg" border="0" alt="Ultimate Nutrition - free shaker"/>
+      </a>
 
+    <%--<div class="banner01">--%>
+      <%--<ul class="slides">--%>
+        <%--<li><a href="${pageContext.request.contextPath}/home-devices/blood-pressure/heart-rate-monitor">--%>
+          <%--<img class="banner01" src="<hk:vhostImage/>/images/banners/home/heartrate_monitor_sbanner.jpg" border="0" alt="Launching Heart Rate Monitors - upto 28% off"/>--%>
+        <%--</a></li>--%>
+        <%--<li><a href="${pageContext.request.contextPath}/product/equinox-irresistible-offer/CMB-HD005">--%>
+          <%--<img class="banner01" src="<hk:vhostImage/>/images/banners/home/equinox.jpg" border="0" alt="Free Body Fat Monitor with Equinox BP Monitor"/>--%>
+        <%--</a></li>--%>
+      <%--</ul>--%>
+    <%--</div>--%>
 
-    <a href="http://www.healthkart.com/sports/apparel?brand=STAG"><img class="banner01" src="<hk:vhostImage/>/images/banners/home/stag_sbanner.jpg" border="0" alt="Stag brand"/></a>
+    <%--<div class="banner01">--%>
+      <%--<ul class="slides">--%>
+        <%--<li>--%>
+          <%--<a href="${pageContext.request.contextPath}/pages/lp/eye_glasses/choosing-eye-glasses.html">--%>
+            <%--<img class="banner01" src="<hk:vhostImage/>/images/banners/home/home_banner_frames.jpg" border="0" alt="Choose an eyeframe?"/>--%>
+          <%--</a>--%>
+        <%--</li>--%>
+        <%--<li>--%>
+          <%--<a href="${pageContext.request.contextPath}/sports/apparel?brand=STAG"><img class="banner01" src="<hk:vhostImage/>/images/banners/home/stag_sbanner.jpg" border="0" alt="Stag brand"/></a>--%>
+        <%--</li>--%>
+      <%--</ul>--%>
+    <%--</div>--%>
 
-
-    <%--<a href="http://www.healthkart.com/sports/fitness-accessories/support-gear/hand-wrist"><img class="banner01" src="<hk:vhostImage/>/images/banners/home/gloves_sbanner.jpg" border="0" alt="Training Gloves : Harbinger, Adidas"/></a>--%>
-
-    <%--<a href="http://www.healthkart.com/product/pediasure/BAB152"><img class="banner01" style="margin-right:0" src="<hk:vhostImage/>/images/banners/home/pediasure_banner.jpg" border="0" alt="Pediasure"/></a>--%>
-      <div class="banner01" style="margin-right: 0">
-       <%-- <ul id="slides">
-          <li>--%>
-            <a href="http://www.healthkart.com/nutrition/sports-nutrition?brand=Dymatize">
-              <img src="<hk:vhostImage/>/images/banners/home/dymatize_sbanner.jpg" border="0" alt="Dymatize - free shaker"/>
-            </a>
-         <%-- </li>--%>
-          <%--<li>
-            <a href="http://www.healthkart.com/product/pediasure/BAB152">
-              <img src="<hk:vhostImage/>/images/banners/home/pediasure_banner.jpg" border="0" alt="Pediasure"/>
-            </a>
-          </li>--%>
-     <%-- </ul>--%>
-      </div>
-      <script>
-        $(function () {
-          //$("#slides").responsiveSlides();
-        });
-      </script>
+      <%--<div class="banner01" style="margin-right: 0">--%>
+       <%--<ul class="slides">--%>
+         <%--<li>--%>
+           <%--<a href="http://www.healthkart.com/nutrition/sports-nutrition?brand=Ultimate+Nutrition">--%>
+             <%--<img src="<hk:vhostImage/>/images/banners/home/ultimate_sbanner.jpg" border="0" alt="Ultimate Nutrition - free shaker"/>--%>
+           <%--</a>--%>
+         <%--</li>--%>
+          <%--<li>--%>
+            <%--<a href="http://www.healthkart.com/nutrition/sports-nutrition?brand=Dymatize">--%>
+              <%--<img src="<hk:vhostImage/>/images/banners/home/dymatize_sbanner.jpg" border="0" alt="Dymatize - free shaker"/>--%>
+            <%--</a>--%>
+          <%--</li>--%>
+      <%--</ul>--%>
+      <%--</div>--%>
+      <%--<script>--%>
+        <%--$(function () {--%>
+          <%--$(".slides").responsiveSlides({speed: 6000});--%>
+        <%--});--%>
+      <%--</script>--%>
 
     <img class="strip_banner01" src="<hk:vhostImage/>/images/banners/home/main_strip01.png" border="0" />
     <jsp:include page="/includes/_testimonials.jsp"/>

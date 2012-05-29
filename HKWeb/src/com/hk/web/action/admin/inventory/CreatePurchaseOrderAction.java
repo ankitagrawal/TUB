@@ -8,7 +8,6 @@ import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
@@ -21,7 +20,6 @@ import com.hk.domain.catalog.Supplier;
 import com.hk.domain.core.PurchaseOrderStatus;
 import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.user.User;
-import com.hk.impl.dao.user.UserDaoImpl;
 import com.hk.pact.dao.BaseDao;
 import com.hk.web.action.error.AdminPermissionAction;
 
@@ -29,14 +27,12 @@ import com.hk.web.action.error.AdminPermissionAction;
 @Component
 public class CreatePurchaseOrderAction extends BaseAction {
 
-    private static Logger logger = Logger.getLogger(CreatePurchaseOrderAction.class);
+    //private static Logger logger = Logger.getLogger(CreatePurchaseOrderAction.class);
 
     @Autowired
     PurchaseOrderDao      purchaseOrderDao;
     @Autowired
     BaseDao               baseDao;
-    @Autowired
-    UserDaoImpl               userDao;
 
     private Supplier      supplier;
     private PurchaseOrder purchaseOrder;
@@ -50,7 +46,7 @@ public class CreatePurchaseOrderAction extends BaseAction {
 
         User user = null;
         if (getPrincipal() != null) {
-            user = getUserDao().getUserById(getPrincipal().getId());
+            user = getUserService().getUserById(getPrincipal().getId());
         }
         purchaseOrder.setCreateDate(new Date());
         purchaseOrder.setCreatedBy(user);
@@ -95,13 +91,5 @@ public class CreatePurchaseOrderAction extends BaseAction {
         this.baseDao = baseDao;
     }
 
-    public UserDaoImpl getUserDao() {
-        return userDao;
-    }
-
-    public void setUserDao(UserDaoImpl userDao) {
-        this.userDao = userDao;
-    }
-    
     
 }

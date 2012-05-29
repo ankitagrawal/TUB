@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.akube.framework.dao.Page;
 import com.hk.comparator.BasketCategory;
+import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
@@ -33,7 +33,6 @@ import com.hk.domain.core.OrderStatus;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.OrderCategory;
-import com.hk.domain.order.OrderLifecycle;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
@@ -53,6 +52,7 @@ import com.hk.pact.service.core.AffilateService;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
+import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
@@ -90,10 +90,11 @@ public class OrderServiceImpl implements OrderService {
     private RewardPointService     rewardPointService;
     @Autowired
     private CategoryService        categoryService;
-    
-    //@Named (Keys.Env.codMinAmount)
-    @Value("#{hkEnvProps['codMinAmount']}")
-    private Double codMinAmount;
+    @Autowired
+    private OrderLoggingService    orderLoggingService;
+
+    @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
+    private Double                 codMinAmount;
 
     @Transactional
     public Order save(Order order) {
@@ -117,10 +118,6 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Order> searchOrders(OrderSearchCriteria orderSearchCriteria) {
         return getOrderDao().searchOrders(orderSearchCriteria);
-    }
-
-    public OrderLifecycleActivity getOrderLifecycleActivity(EnumOrderLifecycleActivity enumOrderLifecycleActivity) {
-        return getOrderDao().get(OrderLifecycleActivity.class, enumOrderLifecycleActivity.getId());
     }
 
     public OrderStatus getOrderStatus(EnumOrderStatus enumOrderStatus) {
@@ -209,7 +206,7 @@ public class OrderServiceImpl implements OrderService {
             // defined below, then Y a special check??
             if (order.getContainsServices()) {
                 String comments = "Order has services,abort system split and do a manual split";
-                logOrderActivityByAdmin(order, EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit, comments);
+                getOrderLoggingService().logOrderActivityByAdmin(order, EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit, comments);
                 logger.debug("order with gatewayId:" + order.getGatewayOrderId() + " has services. abort system split and do a manual split");
             } else if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
                 shippingOrders = splitOrder(order);
@@ -266,29 +263,35 @@ public class OrderServiceImpl implements OrderService {
     public Order escalateOrderFromActionQueue(Order order, String shippingOrderGatewayId) {
         // order = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Ready_For_Process,
         // EnumOrderStatus.ESCALTED, EnumOrderStatus.PARTIAL_ESCALTION);
-        OrderLifecycleActivity orderLifecycleActivity = getOrderLifecycleActivity(EnumOrderLifecycleActivity.EscalatedToProcessingQueue);
-        logOrderActivity(order, userService.getLoggedInUser(), orderLifecycleActivity, shippingOrderGatewayId + "escalated from action queue");
+
+        User user;
+        if(order.getStore().getId()== 1L){
+            user  = getUserService().getLoggedInUser();
+        }                                                                   
+        else{
+            user=order.getUser();
+        }
+
+        OrderLifecycleActivity orderLifecycleActivity = getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.EscalatedToProcessingQueue);
+        getOrderLoggingService().logOrderActivity(order, user, orderLifecycleActivity, shippingOrderGatewayId + "escalated from action queue");
 
         return order;
     }
 
-    public Order moveOrderBackToActionQueue(Order order, String shippingOrderGatewayId) {
-        /*
-         * order.setOrderStatus(orderStatusDao.find(EnumOrderStatus.ActionAwaiting.getId())); order =
-         * getOrderDao().save(order);
-         */
-
-        OrderLifecycleActivity orderLifecycleActivity = getOrderLifecycleActivity(EnumOrderLifecycleActivity.EscalatedBackToAwaitingQueue);
-        logOrderActivity(order, userService.getLoggedInUser(), orderLifecycleActivity, shippingOrderGatewayId + "escalated back to  action queue");
-
-        return order;
-    }
+    /*
+     * @Transactional public Order moveOrderBackToActionQueue(Order order, String shippingOrderGatewayId) {
+     * order.setOrderStatus(orderStatusDao.find(EnumOrderStatus.ActionAwaiting.getId())); order =
+     * getOrderDao().save(order); OrderLifecycleActivity orderLifecycleActivity =
+     * getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.EscalatedBackToAwaitingQueue);
+     * getOrderLoggingService().logOrderActivity(order, userService.getLoggedInUser(), orderLifecycleActivity,
+     * shippingOrderGatewayId + "escalated back to action queue"); return order; }
+     */
 
     @Transactional
     public Order markOrderAsShipped(Order order) {
         boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Shipped, EnumOrderStatus.Shipped);
         if (isUpdated) {
-            logOrderActivity(order, EnumOrderLifecycleActivity.OrderShipped);
+            getOrderLoggingService().logOrderActivity(order, EnumOrderLifecycleActivity.OrderShipped);
         }
         return order;
     }
@@ -297,7 +300,7 @@ public class OrderServiceImpl implements OrderService {
     public Order markOrderAsDelivered(Order order) {
         boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Delivered, EnumOrderStatus.Delivered);
         if (isUpdated) {
-            logOrderActivity(order, EnumOrderLifecycleActivity.OrderDelivered);
+            getOrderLoggingService().logOrderActivity(order, EnumOrderLifecycleActivity.OrderDelivered);
             approvePendingRewardPointsForOrder(order);
             // Currently commented as we aren't doing COD for services as of yet, When we start, We may have to put a
             // check if payment mode was COD and email hasn't been sent yet
@@ -310,9 +313,9 @@ public class OrderServiceImpl implements OrderService {
     public Order markOrderAsRTO(Order order) {
         boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Returned, EnumOrderStatus.RTO);
         if (isUpdated) {
-            logOrderActivity(order, EnumOrderLifecycleActivity.OrderReturned);
+            getOrderLoggingService().logOrderActivity(order, EnumOrderLifecycleActivity.OrderReturned);
         } else {
-            logOrderActivity(order, EnumOrderLifecycleActivity.OrderPartiallyReturned);
+            getOrderLoggingService().logOrderActivity(order, EnumOrderLifecycleActivity.OrderPartiallyReturned);
         }
         return order;
     }
@@ -321,7 +324,6 @@ public class OrderServiceImpl implements OrderService {
         return getOrderDao().getLatestOrderForUser(user);
     }
 
-   
     public Page listOrdersForUser(User user, int page, int perPage) {
         List<OrderStatus> orderStatusList = orderStatusService.getOrderStatuses(EnumOrderStatus.getStatusForCustomers());
         return getOrderDao().listOrdersForUser(orderStatusList, user, page, perPage);
@@ -333,6 +335,7 @@ public class OrderServiceImpl implements OrderService {
      * @throws OrderSplitException
      */
 
+    @Transactional
     public Set<ShippingOrder> splitOrder(Order order) throws OrderSplitException {
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
         if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
@@ -363,7 +366,7 @@ public class OrderServiceImpl implements OrderService {
                      */
                 } else {
                     String comments = "No Sku has been created for " + lineItem.getProductVariant().getProduct().getName();
-                    logOrderActivityByAdmin(order, EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit, comments);
+                    getOrderLoggingService().logOrderActivityByAdmin(order, EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit, comments);
                     throw new OrderSplitException("Didn't get sku for few variants. Aborting splitting of order.", order);
                 }
                 cartLineItemWarehouseListMap.put(lineItem, applicableWarehousesForLineItem);
@@ -403,7 +406,7 @@ public class OrderServiceImpl implements OrderService {
                     ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, order);
                     if (ShippingOrderHelper.getAmountForSO(shippingOrder) <= codMinAmount) {
                         String comments = "One of the SO amount was computed below " + codMinAmount;
-                        logOrderActivityByAdmin(order, EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit, comments);
+                        getOrderLoggingService().logOrderActivityByAdmin(order, EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit, comments);
                         throw new OrderSplitException(comments + ". Aborting splitting of order.", order);
                     }
                 }
@@ -501,30 +504,6 @@ public class OrderServiceImpl implements OrderService {
             // emailManager.sendServiceVoucherMailToCustomer(lineItem);
             emailManager.sendServiceVoucherMailToServiceProvider(order, lineItem);
         }
-    }
-
-    public void logOrderActivity(Order order, EnumOrderLifecycleActivity enumOrderLifecycleActivity) {
-        User user = userService.getLoggedInUser();
-        OrderLifecycleActivity orderLifecycleActivity = getOrderLifecycleActivity(enumOrderLifecycleActivity);
-        logOrderActivity(order, user, orderLifecycleActivity, null);
-    }
-
-    public void logOrderActivityByAdmin(Order order, EnumOrderLifecycleActivity enumOrderLifecycleActivity, String comments) {
-        User user = userService.getAdminUser();
-        OrderLifecycleActivity orderLifecycleActivity = getOrderLifecycleActivity(enumOrderLifecycleActivity);
-        logOrderActivity(order, user, orderLifecycleActivity, comments);
-    }
-
-    public void logOrderActivity(Order order, User user, OrderLifecycleActivity orderLifecycleActivity, String comments) {
-        OrderLifecycle orderLifecycle = new OrderLifecycle();
-        orderLifecycle.setOrder(order);
-        orderLifecycle.setOrderLifecycleActivity(orderLifecycleActivity);
-        orderLifecycle.setUser(user);
-        if (StringUtils.isNotBlank(comments)) {
-            orderLifecycle.setComments(comments);
-        }
-        orderLifecycle.setActivityDate(new Date());
-        getOrderDao().save(orderLifecycle);
     }
 
     public OrderDao getOrderDao() {
@@ -629,6 +608,14 @@ public class OrderServiceImpl implements OrderService {
 
     public void setBaseDao(BaseDao baseDao) {
         this.baseDao = baseDao;
+    }
+
+    public OrderLoggingService getOrderLoggingService() {
+        return orderLoggingService;
+    }
+
+    public void setOrderLoggingService(OrderLoggingService orderLoggingService) {
+        this.orderLoggingService = orderLoggingService;
     }
 
 }

@@ -15,8 +15,6 @@ import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -32,16 +30,16 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierServiceInfo;
+import com.hk.domain.courier.PincodeDefaultCourier;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.GrnLineItem;
 import com.hk.pact.service.inventory.InventoryService;
-import com.hk.pact.service.inventory.SkuService;
 import com.hk.service.ServiceLocatorFactory;
 
 @Component
 public class XslGenerator {
 
-    private static Logger         logger             = LoggerFactory.getLogger(XslGenerator.class);
+    //private static Logger         logger             = LoggerFactory.getLogger(XslGenerator.class);
 
     public static final String    ID                 = "ID";
     public static final String    PINCODE            = "PINCODE";
@@ -55,6 +53,12 @@ public class XslGenerator {
     public static final String    STATE              = "STATE";
     public static final String    LOCALITY           = "LOCALITY";
     public static final String    DEFAULT_COURIER_ID = "DEFAULT_COURIER_ID";
+
+    public static final String WAREHOUSE             = "WAREHOUSE";
+    public static final String COD_COURIER_ID        = "COD_COURIER_ID";
+    public static final String TECH_PROCESS_COURIER_ID = "TECH_PROCESS_COURIER_ID";
+    public static final String ESTIMATED_SHIPPING_COST_COD = "ESTIMATED_SHIPPING_COST_COD";
+    public static final String ESTIMATED_SHIPPING_COST_TECH = "ESTIMATED_SHIPPING_COST_TECH";
 
     @Autowired
     private CourierDao            courierDao;
@@ -463,6 +467,60 @@ public class XslGenerator {
         out.close();
         return file;
     }
+
+  public File generatePincodeDefaultCourierXsl(List<PincodeDefaultCourier> pincodeDefaultCourierList, String xslFilePath) throws Exception {
+
+     File file = new File(xslFilePath);
+     file.getParentFile().mkdirs();
+     FileOutputStream out = new FileOutputStream(file);
+     Workbook wb = new HSSFWorkbook();
+
+     CellStyle style = wb.createCellStyle();
+     Font font = wb.createFont();
+     font.setFontHeightInPoints((short) 12);
+     font.setColor(Font.COLOR_NORMAL);
+     font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+     style.setFont(font);
+     Sheet sheet1 = wb.createSheet(XslConstants.DEFAULT_COURIER_SHEET);
+     Row row = sheet1.createRow(0);
+     row.setHeightInPoints((short) 25);
+
+     int totalColumnNo = 8;
+
+     Cell cell;
+     for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
+       cell = row.createCell(columnNo);
+       cell.setCellStyle(style);
+     }
+     setCellValue(row, 0, PINCODE);
+     setCellValue(row, 1, WAREHOUSE);
+     setCellValue(row, 2, COD_COURIER_ID);
+     setCellValue(row, 3, TECH_PROCESS_COURIER_ID);
+     setCellValue(row, 4, ESTIMATED_SHIPPING_COST_COD);
+     setCellValue(row, 5, ESTIMATED_SHIPPING_COST_TECH);
+
+     int initialRowNo = 1;
+     for (PincodeDefaultCourier pincodeDefaultCourier : pincodeDefaultCourierList) {
+
+       row = sheet1.createRow(initialRowNo);
+       for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
+         row.createCell(columnNo);
+       }
+
+       setCellValue(row, 0, pincodeDefaultCourier.getPincode().getPincode());
+       setCellValue(row, 1, pincodeDefaultCourier.getWarehouse().getId());
+       setCellValue(row, 2, pincodeDefaultCourier.getCodCourier().getId());
+       setCellValue(row, 3, pincodeDefaultCourier.getNonCodCourier().getId());
+       setCellValue(row, 4, pincodeDefaultCourier.getEstimatedShippingCostCod());
+       setCellValue(row, 5, pincodeDefaultCourier.getEstimatedShippingCostNonCod());
+
+       initialRowNo++;
+     }
+
+     wb.write(out);
+     out.close();
+     return file;
+   }
 
     private void setCellValue(Row row, int column, Double cellValue) {
         if (cellValue != null) {

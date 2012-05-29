@@ -17,22 +17,12 @@ public class RewardPointTxnStatementAction extends BaseAction {
 
     @Autowired
     ReferrerProgramManager referrerProgramManager;
-
-    @Autowired
-    private UserService    userService;
-
-		@Validate(required = true)
-    private User           user;
-
-    private Double         redeemablePoint;
+    private User user;
+    private Double redeemablePoint;
 
     public Resolution pre() {
-        if (getPrincipal() != null) {
-            user = getUserService().getUserById(getPrincipal().getId());
-        }
-        System.out.println("test11111");
+        user = getPrincipalUser();
         redeemablePoint = referrerProgramManager.getTotalRedeemablePoints(user);
-        System.out.println("test");
         return new ForwardResolution("/pages/rewardPointTxnStatement.jsp");
     }
 
@@ -44,16 +34,8 @@ public class RewardPointTxnStatementAction extends BaseAction {
         return user;
     }
 
-		public void setUser(User user) {
-			this.user = user;
-		}
-
-	public UserService getUserService() {
-        return userService;
-    }
-
-    public void setUserService(UserService userService) {
-        this.userService = userService;
+    public void setUser(User user) {
+        this.user = user;
     }
 
 }

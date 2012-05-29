@@ -24,6 +24,7 @@ import org.springframework.stereotype.Component;
 
 import com.akube.framework.dao.Page;
 import com.hk.constants.catalog.SolrSchemaConstants;
+import com.hk.constants.core.Keys;
 import com.hk.domain.LocalityMap;
 import com.hk.domain.MapIndia;
 import com.hk.domain.catalog.Manufacturer;
@@ -39,8 +40,7 @@ import com.hk.pact.service.catalog.ProductService;
 public class SolrManager {
     private static Logger logger = LoggerFactory.getLogger(SolrManager.class);
 
-    // @Named(Keys.Env.solrUrl)
-    @Value("#{hkEnvProps['solrUrl']}")
+    @Value("#{hkEnvProps['" + Keys.Env.solrUrl + "']}")
     String                solrUrl;
 
     @Autowired
@@ -77,8 +77,8 @@ public class SolrManager {
         }
     }
 
-    public Page getCatalogResults(String rootCategorySlug, String smallestCategory, String secondSmallestCategory, String thirdSmallestCategory, String brand,
-            String sortBy, String sortOrder, Double startRange, Double endRange, int page, int perPage, String preferredZone) throws IOException, SolrServerException {
+    public Page getCatalogResults(String rootCategorySlug, String smallestCategory, String secondSmallestCategory, String thirdSmallestCategory, String brand, String sortBy,
+            String sortOrder, Double startRange, Double endRange, int page, int perPage, String preferredZone) throws IOException, SolrServerException {
 
         SolrServer solr = new CommonsHttpSolrServer(solrUrl);
         SolrQuery solrQuery = new SolrQuery();
@@ -295,7 +295,5 @@ public class SolrManager {
     public void setMapIndiaDao(MapIndiaDao mapIndiaDao) {
         this.mapIndiaDao = mapIndiaDao;
     }
-    
-    
 
 }

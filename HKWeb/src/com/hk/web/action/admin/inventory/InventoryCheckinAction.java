@@ -1,34 +1,5 @@
 package com.hk.web.action.admin.inventory;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.DontValidate;
-import net.sourceforge.stripes.action.FileBean;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-import net.sourceforge.stripes.validation.Validate;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
 import com.hk.admin.pact.dao.inventory.GrnLineItemDao;
@@ -36,16 +7,13 @@ import com.hk.admin.pact.dao.inventory.StockTransferDao;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.util.BarcodeUtil;
 import com.hk.admin.util.XslParser;
+import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.StateList;
 import com.hk.constants.inventory.EnumGrnStatus;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.inventory.GoodsReceivedNote;
-import com.hk.domain.inventory.GrnLineItem;
-import com.hk.domain.inventory.GrnStatus;
-import com.hk.domain.inventory.StockTransfer;
-import com.hk.domain.inventory.StockTransferLineItem;
+import com.hk.domain.inventory.*;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.user.User;
@@ -57,6 +25,21 @@ import com.hk.pact.service.inventory.SkuService;
 import com.hk.util.XslGenerator;
 import com.hk.web.action.admin.AdminHomeAction;
 import com.hk.web.action.error.AdminPermissionAction;
+import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.validation.Validate;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Set;
 
 @Secure(hasAnyPermissions = { PermissionConstants.INVENTORY_CHECKIN }, authActionBean = AdminPermissionAction.class)
 @Component
@@ -104,20 +87,16 @@ public class InventoryCheckinAction extends BaseAction {
     int                           strLength = 20;
     File                          printBarcode;
 
-    // @Named (Keys.Env.adminUploads)
-    @Value("#{hkEnvProps['adminUploads']}")
+    @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String                        adminUploadsPath;
 
-    // @Named (Keys.Env.adminDownloads)
-    @Value("#{hkEnvProps['adminDownloads']}")
+    @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
     String                        adminDownloadsPath;
 
-    // @Named (Keys.Env.barcodeGurgaon)
-    @Value("#{hkEnvProps['barcodeGurgaon']}")
+    @Value("#{hkEnvProps['" + Keys.Env.barcodeGurgaon + "']}")
     String                        barcodeGurgaon;
 
-    // @Named (Keys.Env.barcodeMumbai)
-    @Value("#{hkEnvProps['barcodeMumbai']}")
+    @Value("#{hkEnvProps['" + Keys.Env.barcodeMumbai + "']}")
     String                        barcodeMumbai;
 
     @Validate(required = true, on = "parse")
@@ -235,6 +214,11 @@ public class InventoryCheckinAction extends BaseAction {
             }
             if (productVariant != null) {
                 Sku sku = skuService.findSKU(productVariant, stockTransfer.getToWarehouse());
+              if(sku == null){
+                 addRedirectAlertMessage(new SimpleMessage("Sku doesn't exist for product  - " + productVariant.getId() + "Plz contact category manager."));
+                        return new RedirectResolution(StockTransferAction.class).addParameter("stockTransfer", stockTransfer.getId()).addParameter(
+                                "checkinInventoryAgainstStockTransfer", stockTransfer.getId());
+              }
                 Long askedQty = 0L;
                 StockTransferLineItem stockTransferLineItem = stockTransferDao.getStockTransferLineItem(stockTransfer, productVariant);
                 if (stockTransferLineItem != null && sku != null) {

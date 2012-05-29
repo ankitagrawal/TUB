@@ -7,37 +7,38 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import com.hk.constants.core.Keys;
+import com.hk.service.ServiceLocatorFactory;
+
 public class VirtualHostCssTag extends TagSupport {
 
-  /*static final boolean useVirtualHosts;
-  static final String host;
-  static final String sslHost;
-  static final boolean useSslVirtualHosts;
+    @Override
+    public int doEndTag() throws JspException {
 
-  static {
-    useVirtualHosts = ServiceLocatorFactory.getService(Key.get(Boolean.class, Names.named(Keys.Env.useVirtualHosts)));
-    host = ServiceLocatorFactory.getService(Key.get(String.class, Names.named(Keys.Env.virtualHostCss)));
-    sslHost = ServiceLocatorFactory.getService(Key.get(String.class, Names.named(Keys.Env.virtualHostCssSsl)));
-    useSslVirtualHosts = ServiceLocatorFactory.getService(Key.get(Boolean.class, Names.named(Keys.Env.useSslVirtualHosts)));
-  }*/
+        String host = (String) ServiceLocatorFactory.getProperty(Keys.Env.virtualHostImage);
+        String sslHost = (String) ServiceLocatorFactory.getProperty(Keys.Env.virtualHostImageSsl);
 
-  @Override
-  public int doEndTag() throws JspException {
-    JspWriter out = pageContext.getOut();
-    try {
-    /*  if (useVirtualHosts) {
-        if (useSslVirtualHosts && pageContext.getRequest().isSecure()) {
-          out.write(sslHost);
-        } else {
-          out.write(host);
+        String useVirtualHostsString = (String) ServiceLocatorFactory.getProperty(Keys.Env.useVirtualHosts);
+        String useSslVirtualHostsString = (String) ServiceLocatorFactory.getProperty(Keys.Env.useSslVirtualHosts);
+
+        boolean useVirtualHosts = Boolean.parseBoolean(useVirtualHostsString);
+        boolean useSslVirtualHosts = Boolean.parseBoolean(useSslVirtualHostsString);
+
+        JspWriter out = pageContext.getOut();
+        try {
+            if (useVirtualHosts) {
+                if (useSslVirtualHosts && pageContext.getRequest().isSecure()) {
+                    out.write(sslHost);
+                } else {
+                    out.write(host);
+                }
+            } else {
+                out.write(((HttpServletRequest) pageContext.getRequest()).getContextPath());
+            }
+        } catch (IOException e) {
+            // should not happen
         }
-      } else {*/
-        out.write(((HttpServletRequest)pageContext.getRequest()).getContextPath());
-     //}
-    } catch (IOException e) {
-      // should not happen
+        return EVAL_PAGE;
     }
-    return EVAL_PAGE;
-  }
 
 }

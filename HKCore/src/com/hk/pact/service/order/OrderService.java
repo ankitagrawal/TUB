@@ -4,13 +4,11 @@ import java.util.List;
 import java.util.Set;
 
 import com.akube.framework.dao.Page;
-import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.OrderSearchCriteria;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.core.OrderLifecycleActivity;
 import com.hk.domain.core.OrderStatus;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.OrderCategory;
@@ -48,7 +46,6 @@ public interface OrderService {
 
     public Page listOrdersForUser(User user, int page, int perPage);
 
-    
 
     /**
      * @param order
@@ -63,14 +60,6 @@ public interface OrderService {
     public void approvePendingRewardPointsForOrder(Order order);
 
     public void sendEmailToServiceProvidersForOrder(Order order);
-
-    public void logOrderActivity(Order order, EnumOrderLifecycleActivity enumOrderLifecycleActivity);
-
-    public void logOrderActivityByAdmin(Order order, EnumOrderLifecycleActivity enumOrderLifecycleActivity, String comments);
-
-    public void logOrderActivity(Order order, User user, OrderLifecycleActivity orderLifecycleActivity, String comments);
-
-    public OrderLifecycleActivity getOrderLifecycleActivity(EnumOrderLifecycleActivity enumOrderLifecycleActivity);
 
     public ProductVariant getTopDealVariant(Order order);
 

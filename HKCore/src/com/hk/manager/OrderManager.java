@@ -12,17 +12,20 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.hk.constants.HttpRequestAndSessionConstants;
 import com.hk.constants.core.EnumRole;
+import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumPaymentStatus;
+import com.hk.constants.referrer.EnumPrimaryReferrerForOrder;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.builder.CartLineItemBuilder;
 import com.hk.domain.catalog.Supplier;
-import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.catalog.product.combo.ComboInstance;
 import com.hk.domain.catalog.product.combo.ComboInstanceHasProductVariant;
@@ -33,6 +36,8 @@ import com.hk.domain.order.CartLineItemConfig;
 import com.hk.domain.order.CartLineItemExtraOption;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.OrderCategory;
+import com.hk.domain.order.PrimaryReferrerForOrder;
+import com.hk.domain.order.SecondaryReferrerForOrder;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.sku.Sku;
@@ -46,23 +51,28 @@ import com.hk.pact.dao.order.cartLineItem.CartLineItemDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.UserService;
-import com.hk.pact.service.store.StoreService;
+import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.core.AffilateService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.order.CartLineItemService;
+import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.payment.PaymentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.pact.service.store.StoreService;
 import com.hk.pricing.PricingEngine;
 import com.hk.util.OrderUtil;
+import com.hk.web.filter.WebContext;
 
 @Component
 public class OrderManager {
 
     private static Logger                     logger = LoggerFactory.getLogger(OrderManager.class);
 
+    @Autowired
+    ProductVariantService                     productVariantService;
     @Autowired
     private CartLineItemService               cartLineItemService;
     @Autowired
@@ -99,28 +109,27 @@ public class OrderManager {
     private OrderStatusService                orderStatusService;
     @Autowired
     private BaseDao                           baseDao;
+    @Autowired
+    private OrderLoggingService               orderLoggingService;
 
+    @Autowired
     private ComboInstanceHasProductVariantDao comboInstanceHasProductVariantDao;
 
-    // @Named(Keys.Env.codCharges)
-    @Value("#{hkEnvProps['codCharges']}")
+    @Value("#{hkEnvProps['" + Keys.Env.codCharges + "']}")
     private Double                            codCharges;
 
-    // @Named(Keys.Env.codFreeAfter)
-    @Value("#{hkEnvProps['codFreeAfter']}")
+    @Value("#{hkEnvProps['" + Keys.Env.codFreeAfter + "']}")
     private Double                            codFreeAfter;
 
-    // @Named(Keys.Env.adminDownloads)
-    @Value("#{hkEnvProps['adminDownloads']}")
+    @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
     String                                    adminDownloadsPath;
 
     Affiliate                                 affiliate;
 
-    // @Named(Keys.Env.cashBackPercentage)
-    private Double                            cashBackPercentage;
-
-    // @Named(Keys.Env.cashBackLimit)
-    private Double                            cashBackLimit;
+    /*
+     * // @Named(Keys.Env.cashBackPercentage) private Double cashBackPercentage; // @Named(Keys.Env.cashBackLimit)
+     * private Double cashBackLimit;
+     */
 
     @Transactional
     public Order getOrCreateOrder(User user) {
@@ -139,6 +148,21 @@ public class OrderManager {
         Order existingOrderNow = getOrderService().findByUserAndOrderStatus(user, EnumOrderStatus.InCart);
         if (existingOrderNow != null) {
             return existingOrderNow;
+        }
+
+        if (WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.PRIMARY_REFERRER_ID) != null) {
+            Long primaryReferrerForOrderId = (Long) WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.PRIMARY_REFERRER_ID);
+            order.setPrimaryReferrerForOrder(getBaseDao().get(PrimaryReferrerForOrder.class, primaryReferrerForOrderId));
+        }
+        if (WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.SECONDARY_REFERRER_ID) != null) {
+            Long secondaryReferrerForOrderId = (Long) WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.SECONDARY_REFERRER_ID);
+            order.setSecondaryReferrerForOrder(getBaseDao().get(SecondaryReferrerForOrder.class, secondaryReferrerForOrderId));
+        }
+        if (user.getOrders().size() == 0 && user.getReferredBy() != null) {
+            order.setPrimaryReferrerForOrder(getBaseDao().get(PrimaryReferrerForOrder.class, EnumPrimaryReferrerForOrder.RFERRAL.getId()));
+        }
+        if (WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.UTM_CAMPAIGN) != null) {
+            order.setUtmCampaign((String) WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.UTM_CAMPAIGN));
         }
 
         order = getOrderService().save(order);
@@ -312,7 +336,7 @@ public class OrderManager {
          * Order lifecycle activity logging - Payement Marked Successful
          */
         if (payment.getPaymentStatus().getId().equals(EnumPaymentStatus.SUCCESS.getId())) {
-            getOrderService().logOrderActivity(order, order.getUser(), getOrderService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful), null);
+            getOrderLoggingService().logOrderActivity(order, order.getUser(), getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful), null);
         }
 
         // order.setAmount(pricingDto.getGrandTotalPayable());
@@ -320,6 +344,15 @@ public class OrderManager {
         order.setRewardPointsUsed(pricingDto.getRedeemedRewardPoints());
 
         cartLineItems = addFreeVariantsToCart(cartLineItems); // function made to handle deals and offers which are
+
+        // add promotional freebie - for MIH = SPT391-01 VX Weight Lifting Straps
+        if (order.getStore() != null && order.getStore().getId().equals(StoreService.MIH_STORE_ID)) {
+            cartLineItems = addFreeCartLineItems("SPT391-01", order);
+        }
+
+        order.setCartLineItems(cartLineItems);
+        order = getOrderService().save(order);
+
         // associated with a variant, this will help in
         // minimizing brutal use of free checkout
         order.setCartLineItems(cartLineItems);
@@ -337,7 +370,7 @@ public class OrderManager {
         /**
          * Order lifecycle activity logging - Order Placed
          */
-        orderService.logOrderActivity(order, order.getUser(), getOrderService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderPlaced), null);
+        getOrderLoggingService().logOrderActivity(order, order.getUser(), getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderPlaced), null);
 
         getUserService().updateIsProductBought(order);
 
@@ -358,7 +391,7 @@ public class OrderManager {
             /**
              * Order lifecycle activity logging - Order split to shipping orders
              */
-            getOrderService().logOrderActivity(order, getUserService().getAdminUser(), getOrderService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), null);
+            getOrderLoggingService().logOrderActivity(order, getUserService().getAdminUser(), getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), null);
 
             // auto escalate shipping orders if possible
             if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
@@ -404,6 +437,19 @@ public class OrderManager {
         if (lastOrder == null) {
             getEmailManager().sendReferralProgramIntro(user, getLinkManager().getReferralProgramUrl());
         }
+    }
+
+    public Set<CartLineItem> addFreeCartLineItems(String variantId, Order order) {
+        Set<CartLineItem> cartLineItems = order.getCartLineItems();
+        ProductVariant productVariant = getProductVariantService().getVariantById(variantId);
+        if (productVariant != null) {
+            productVariant.setQty(1L);
+            CartLineItem cartLineItem = getCartLineItemService().createCartLineItemWithBasicDetails(productVariant, order);
+            cartLineItem.setDiscountOnHkPrice(cartLineItem.getHkPrice());
+            cartLineItem = getCartLineItemService().save(cartLineItem);
+            cartLineItems.add(cartLineItem);
+        }
+        return cartLineItems;
     }
 
     private Set<CartLineItem> addFreeVariantsToCart(Set<CartLineItem> cartLineItems) {
@@ -511,25 +557,18 @@ public class OrderManager {
                         iterator.remove();
                         getCartLineItemDao().delete(lineItem);
                     } else {
-                        /*ProductVariant productVariant = lineItem.getProductVariant();
-                        Product product = productVariant.getProduct();
-                        boolean isService = false;
-                        if (product.isService() != null && product.isService())
-                            isService = true;
-                        boolean isJit = false;
-                        if (product.isJit() != null && product.isJit())
-                            isJit = true;
-                        if (!isJit && !isService) {
-                            List<Sku> skuList = skuService.getSKUsForProductVariant(productVariant);
-                            if (skuList != null && !skuList.isEmpty()) {
-                                Long unbookedInventory = inventoryService.getAvailableUnbookedInventory(skuList);
-                                if (unbookedInventory != null && unbookedInventory < lineItem.getQty()) {
-                                    lineItem.setQty(unbookedInventory);
-                                    cartLineItemService.save(lineItem);
-                                    logger.debug("Set LineItem Qty equals to available unbooked Inventory: " + unbookedInventory + " for Variant:" + productVariant.getId());
-                                }
-                            }
-                        }*/
+                        /*
+                         * ProductVariant productVariant = lineItem.getProductVariant(); Product product =
+                         * productVariant.getProduct(); boolean isService = false; if (product.isService() != null &&
+                         * product.isService()) isService = true; boolean isJit = false; if (product.isJit() != null &&
+                         * product.isJit()) isJit = true; if (!isJit && !isService) { List<Sku> skuList =
+                         * skuService.getSKUsForProductVariant(productVariant); if (skuList != null &&
+                         * !skuList.isEmpty()) { Long unbookedInventory =
+                         * inventoryService.getAvailableUnbookedInventory(skuList); if (unbookedInventory != null &&
+                         * unbookedInventory < lineItem.getQty()) { lineItem.setQty(unbookedInventory);
+                         * cartLineItemService.save(lineItem); logger.debug("Set LineItem Qty equals to available
+                         * unbooked Inventory: " + unbookedInventory + " for Variant:" + productVariant.getId()); } } }
+                         */
                         cartLineItemService.save(lineItem);
                     }
                 }
@@ -539,21 +578,23 @@ public class OrderManager {
         return order;
     }
 
-  public boolean isStepUpAllowed(CartLineItem cartLineItem) {
-    ProductVariant productVariant = cartLineItem.getProductVariant();
-    Product product = productVariant.getProduct();
-    boolean isService = false;
-    if (product.isService() != null && product.isService()) isService = true;
-    boolean isJit = false;
-    if (product.isJit() != null && product.isJit()) isJit = true;
-    if (!isJit && !isService) {
-      Long unbookedInventory = inventoryService.getAvailableUnbookedInventory(skuService.getSKUsForProductVariant(productVariant));
-      if (unbookedInventory != null && unbookedInventory > 0 && unbookedInventory < cartLineItem.getQty()) {
-        return false;
-      }
+    public boolean isStepUpAllowed(CartLineItem cartLineItem) {
+        ProductVariant productVariant = cartLineItem.getProductVariant();
+        Product product = productVariant.getProduct();
+        boolean isService = false;
+        if (product.isService() != null && product.isService())
+            isService = true;
+        boolean isJit = false;
+        if (product.isJit() != null && product.isJit())
+            isJit = true;
+        if (!isJit && !isService) {
+            Long unbookedInventory = inventoryService.getAvailableUnbookedInventory(skuService.getSKUsForProductVariant(productVariant));
+            if (unbookedInventory != null && unbookedInventory > 0 && unbookedInventory < cartLineItem.getQty()) {
+                return false;
+            }
+        }
+        return true;
     }
-    return true;
-  }
 
     /**
      * This method is responsible for updating the order status to shipped and sending order shipped emails. Email could
@@ -702,7 +743,7 @@ public class OrderManager {
                             Double surcharge = 0.05;
                             taxPaid = costPrice * sku.getTax().getValue() * (1 + surcharge);
                         } else {
-                            Double surcharge = 0.0; // CST Surcharge
+                            //Double surcharge = 0.0; // CST Surcharge
                             Double cst = 0.02; // CST
                             taxPaid = costPrice * cst;
                         }
@@ -863,6 +904,22 @@ public class OrderManager {
 
     public void setBaseDao(BaseDao baseDao) {
         this.baseDao = baseDao;
+    }
+
+    public ProductVariantService getProductVariantService() {
+        return productVariantService;
+    }
+
+    public void setProductVariantService(ProductVariantService productVariantService) {
+        this.productVariantService = productVariantService;
+    }
+
+    public OrderLoggingService getOrderLoggingService() {
+        return orderLoggingService;
+    }
+
+    public void setOrderLoggingService(OrderLoggingService orderLoggingService) {
+        this.orderLoggingService = orderLoggingService;
     }
 
     /*

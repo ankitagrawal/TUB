@@ -32,6 +32,7 @@ import com.hk.admin.manager.PurchaseOrderManager;
 import com.hk.admin.pact.dao.inventory.PoLineItemDao;
 import com.hk.admin.pact.dao.inventory.PurchaseOrderDao;
 import com.hk.admin.util.XslParser;
+import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
 import com.hk.domain.accounting.PoLineItem;
@@ -48,7 +49,7 @@ import com.hk.web.action.error.AdminPermissionAction;
 @Secure(hasAnyPermissions = { PermissionConstants.PO_MANAGEMENT }, authActionBean = AdminPermissionAction.class)
 @Component
 public class EditPurchaseOrderAction extends BaseAction {
-    // EditPurchaseOrderAction
+
     private static Logger    logger      = LoggerFactory.getLogger(EditPurchaseOrderAction.class);
     @Autowired
     PurchaseOrderDao         purchaseOrderDao;
@@ -67,7 +68,7 @@ public class EditPurchaseOrderAction extends BaseAction {
     SkuService               skuService;
 
     // @Named(Keys.Env.adminUploads)
-    @Value("#{hkEnvProps['adminUploads']}")
+    @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String                   adminUploadsPath;
 
     @Validate(required = true, on = "parse")
@@ -75,7 +76,6 @@ public class EditPurchaseOrderAction extends BaseAction {
 
     private PurchaseOrder    purchaseOrder;
     private List<PoLineItem> poLineItems = new ArrayList<PoLineItem>();
-    private static Double    CST         = 0.02;
     public PurchaseOrderDto  purchaseOrderDto;
     public String            productVariantId;
     public Warehouse         warehouse;

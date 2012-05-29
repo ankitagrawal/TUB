@@ -84,6 +84,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
   ShippingOrderStatusService shippingOrderStatusService;
 
   private Long orderId;
+  private Long storeId;
   private String gatewayOrderId;
   private Date startDate;
   private Date endDate;
@@ -131,7 +132,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 
   private OrderSearchCriteria getOrderSearchCriteria() {
     OrderSearchCriteria orderSearchCriteria = new OrderSearchCriteria();
-    orderSearchCriteria.setOrderId(orderId).setGatewayOrderId(gatewayOrderId).setSortByUpdateDate(false);
+    orderSearchCriteria.setOrderId(orderId).setGatewayOrderId(gatewayOrderId).setStoreId(storeId).setSortByUpdateDate(false);
 
     List<OrderStatus> orderStatusList = new ArrayList<OrderStatus>();
     for (OrderStatus orderStatus : orderStatuses) {
@@ -401,6 +402,7 @@ for (LineItem lineItem : order.getProductLineItems()) {
     HashSet<String> params = new HashSet<String>();
     params.add("startDate");
     params.add("endDate");
+    params.add("storeId");
     // params.add("orderLifecycleActivity");
     //params.add("shippingOrderStatus");
 
@@ -468,6 +470,14 @@ for (LineItem lineItem : order.getProductLineItems()) {
 
   public void setUnsplitOrderCount(Long unsplitOrderCount) {
     this.unsplitOrderCount = unsplitOrderCount;
+  }
+
+  public Long getStoreId() {
+    return storeId;
+  }
+
+  public void setStoreId(Long storeId) {
+    this.storeId = storeId;
   }
 }
 

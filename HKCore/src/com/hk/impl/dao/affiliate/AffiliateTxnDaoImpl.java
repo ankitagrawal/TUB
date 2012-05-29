@@ -92,7 +92,7 @@ public class AffiliateTxnDaoImpl extends BaseDaoImpl implements AffiliateTxnDao 
         List<AffiliateTxnType> applicableTxns = findByCriteria(applicableTxnCriteria);
 
         String queryString = "select sum(at.amount) from AffiliateTxn at where at.affiliate =:affiliate and at.affiliateTxnType in (:applicableTxns)";
-        Double ammountInAccount = (Double) findUniqueByNamedQueryAndNamedParam(queryString, new String[] { "affiliate", "applicableTxns" }, new Object[] {
+        Double ammountInAccount = (Double) findUniqueByNamedParams(queryString, new String[] { "affiliate", "applicableTxns" }, new Object[] {
                 affiliate,
                 applicableTxns });
 

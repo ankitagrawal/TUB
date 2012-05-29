@@ -31,6 +31,7 @@ import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.manager.ProductManager;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
+import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
@@ -87,8 +88,7 @@ public class InventoryHealthStatusAction extends BasePaginatedAction {
     @Autowired
     private ProductService        productService;
 
-    // @Named(Keys.Env.adminDownloads)
-    @Value("#{hkEnvProps['adminDownloads']}")
+    @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
     String                        adminDownloadsPath;
 
     private SimpleDateFormat      sdf            = new SimpleDateFormat("yyyy-MM-dd");

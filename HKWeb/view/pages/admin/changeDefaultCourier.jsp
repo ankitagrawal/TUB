@@ -27,7 +27,7 @@
 				<br/>
 				<br/>
 				<s:submit name="search" value="Search"/>
-        <%--<s:submit name="generatePincodeExcel"    value="Download Pincode Xls"/>--%>
+        <s:submit name="generatePincodeExcel"    value="Download Pincode Xls"/>
 			</s:form>
         </fieldset>
        <fieldset class="right_label">

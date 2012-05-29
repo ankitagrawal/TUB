@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 
 import com.hk.domain.order.ShippingOrderStatus;
 import com.hk.pact.dao.BaseDao;
-import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 
 
 @Component

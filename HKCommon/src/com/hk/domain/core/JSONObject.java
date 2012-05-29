@@ -87,8 +87,11 @@ public abstract class JSONObject implements Serializable, Cloneable {
             strBuilder.append(((JSONObject) value).toJSON());
         } else if (numberClasses.contains(value.getClass())) {
             strBuilder.append(value.toString());
-        } else {
-            strBuilder.append(net.sf.json.JSONObject.fromObject(value).toString());
+        } else {           
+          //strBuilder.append(net.sf.json.JSONObject.fromObject(value).toString());
+          org.json.JSONObject jsonObject=new org.json.JSONObject(value);
+          jsonObject.remove("class");
+          strBuilder.append(jsonObject.toString());
         }
     }
 

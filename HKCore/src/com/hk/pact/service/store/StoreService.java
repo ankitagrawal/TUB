@@ -7,6 +7,7 @@ import com.hk.domain.store.Store;
 public interface StoreService {
 
     public static final Long DEFAULT_STORE_ID = 1L;
+    public static final Long MIH_STORE_ID = 2L;
 
 
     public List<Store> getAllStores() ;

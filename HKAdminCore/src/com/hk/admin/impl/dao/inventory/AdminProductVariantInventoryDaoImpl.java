@@ -52,7 +52,14 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
     }
 
     public void removeInventory(SkuItem skuItem) {
-        getSession().createQuery("delete from ProductVariantInventory pvi where pvi.skuItem = :skuItem").setParameter("skuItem", skuItem).executeUpdate();
+
+        ProductVariantInventory pvi = (ProductVariantInventory) findUniqueByNamedParams("from ProductVariantInventory pvi where pvi.skuItem = :skuItem",
+                new String[] { "skuItem" }, new Object[] { skuItem });
+
+        if (pvi != null) {
+            delete(pvi);
+        }
+        // getSession().createQuery("delete ").setParameter("skuItem", skuItem).executeUpdate();
     }
 
     public Long getCheckedInPVIAgainstRTO(LineItem lineItem) {
@@ -108,11 +115,15 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
     }
 
     public List<CreateInventoryFileDto> getDetailsForUncheckedItems(String brand, Warehouse warehouse) {
-        Query query = getSession().createQuery(
-                "select sg.barcode as barcode, p.name as name, sg.expiryDate as expiryDate, sum(pvi.qty) as sumQty, pv.markedPrice as markedPrice, pv as productVariant "
-                        + "from ProductVariantInventory pvi join pvi.skuItem si join si.skuGroup sg join sg.sku s join s.productVariant pv join pv.product p  "
-                        + " where p.brand = :brand and s.warehouse = :warehouse group by si.skuGroup having sum(pvi.qty) > 0").setParameter("brand", brand);
+        String sql = "select sg.barcode as barcode, p.name as name, sg.expiryDate as expiryDate, sum(pvi.qty) as sumQty, grnli.mrp as markedPrice, pv as productVariant "
+                + "from ProductVariantInventory pvi join pvi.skuItem si join si.skuGroup sg join sg.goodsReceivedNote grn join grn.grnLineItems grnli "
+                + "join sg.sku s join s.productVariant pv join pv.product p where p.brand = :brand and grnli.sku.id = s.id ";
+        if (warehouse != null) {
+            sql = sql + " and s.warehouse = :warehouse ";
+        }
+        sql = sql + " group by si.skuGroup having sum(pvi.qty) > 0";
 
+        Query query = getSession().createQuery(sql).setParameter("brand", brand);
         if (warehouse != null) {
             query.setParameter("warehouse", warehouse);
         }

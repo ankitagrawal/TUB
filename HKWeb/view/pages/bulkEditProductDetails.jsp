@@ -62,11 +62,9 @@
     Secondary Category
   </th>
 
-  <c:if test="${bep.toBeEditedOptions['productSupplierTin']}">
-    <th>
-      Supplier Tin
-    </th>
-  </c:if>
+  <th>
+    Supplier Tin
+  </th>
 
   <c:if test="${bep.toBeEditedOptions['productOrderRanking']}">
     <th>

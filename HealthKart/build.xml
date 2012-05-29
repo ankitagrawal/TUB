@@ -2,6 +2,21 @@
 
 	<property file="build.properties" />
 	<property file="environmentLocator.properties" />
+	<property file="${project.common.dir}/resources/${project.env}/setup/setup.properties" />
+
+	<path id="compile.classpath">
+		<fileset dir="${lib.root.dir}">
+			<include name="**/*.jar" />
+		</fileset>
+		<fileset dir="${lib.dependencies.dir}">
+			<include name="**/*.jar" />
+		</fileset>
+		<pathelement path="${classpath}" />
+	</path>
+
+	<taskdef resource="liquibasetasks.properties">
+		<classpath refid="compile.classpath" />
+	</taskdef>
 
 	<!-- Remove classes directory for clean build -->
 	<target name="clean" description="Prepare for clean build">
@@ -38,6 +53,9 @@
 		</copy> -->
 		<copy todir="${project.dist.dir}/WEB-INF">
 			<fileset dir="${project.common.dir}/resources/${project.env}/logging" />
+		</copy>
+		<copy todir="${project.dist.dir}/WEB-INF">
+			<fileset dir="${project.common.dir}/resources/${project.env}/payment" />
 		</copy>
 		<copy todir="${project.dist.dir}/WEB-INF/lib">
 			<fileset dir="${lib.barcode.root}">
@@ -110,6 +128,11 @@
 			</fileset>
 		</copy>
 		<copy todir="${project.dist.dir}/WEB-INF/lib">
+			<fileset dir="${lib.citrus.root}">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
+		<copy todir="${project.dist.dir}/WEB-INF/lib">
 			<fileset dir="${lib.thirdParty.root}">
 				<include name="*.jar" />
 			</fileset>
@@ -174,11 +197,31 @@
 		<tstamp />
 	</target>
 
-	<target name="deploy.view">
+	<!--<target name="db-master" depends="build">
+		<java  classname="com.hk.core.LoadData" fork="yes">
+			<classpath>
+				<pathelement path="${project.dist.dir}/WEB-INF/lib/hk-common.jar"/>
+			    <pathelement path="${project.dist.dir}/WEB-INF/lib/org.springframework.context-3.0.2.RELEASE.jar"/>
+				<pathelement path="${project.dist.dir}/WEB-INF/lib/org.springframework.beans-3.0.2.RELEASE.jar"/>
+				<pathelement path="${project.dist.dir}/WEB-INF/lib/org.springframework.core-3.0.2.RELEASE.jar"/>
+				<pathelement path="${project.dist.dir}/WEB-INF/lib/org.springframework.asm-3.0.2.RELEASE.jar"/>
+				<pathelement path="${lib.root.dir}/thirdParty/jcl-over-slf4j-1.5.10.jar"/>
+				<pathelement path="${lib.root.dir}/thirdParty/lambdaj-2.0-with-dependencies.jar"/>
+				<pathelement path="${lib.root.dir}/logger/slf4j-api-1.5.10.jar"/>
+				<pathelement path="${lib.root.dir}/logger/slf4j-log4j12-1.5.10.jar"/>
+				<pathelement path="${lib.root.dir}/logger/log4j-1.2.13.jar"/>
+				<pathelement path="${project.dist.dir}/WEB-INF/classes"/>
+			  </classpath>
+		</java>
+	</target> -->
 
+	<target name="db">
+		<updateDatabase changelogfile="db/changelog.xml" driver="${database.driver}" url="${database.url.dev}" username="${database.username}" password="${database.password}" classpathref="compile.classpath" />
 	</target>
-	<target name="deploy.admin.view">
 
+	<target name="db-diff" description="Does a diff of the current db with the workbench db. adds to changelog.xml any changes to db">
+		<diffDatabaseToChangeLog driver="${database.driver}" url="${database.url.dev}" username="${database.username}" password="${database.password}" changelogfile="db/changelog.xml" referencedriver="${database.driver}" referenceurl="${database.url.workbench}" referenceusername="${database.username}" referencepassword="${database.password}" classpathref="compile.classpath">
+		</diffDatabaseToChangeLog>
 	</target>
 
 </project>

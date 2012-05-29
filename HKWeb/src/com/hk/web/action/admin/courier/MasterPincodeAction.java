@@ -30,6 +30,7 @@ import org.stripesstuff.plugin.security.Secure;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.util.XslParser;
+import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.CourierServiceInfo;
@@ -46,14 +47,14 @@ public class MasterPincodeAction extends BaseAction {
     @Autowired
     XslGenerator                     xslGenerator;
 
-    // @Named(Keys.Env.adminDownloads)
-    @Value("#{hkEnvProps['adminDownloads']}")
+    @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String                           adminDownloadsPath;
 
     // @Named(Keys.Env.adminUploads)
-    @Value("#{hkEnvProps['adminUploads']}")
+    @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String                           adminUploadsPath;
 
+    @Autowired
     XslParser                        xslParser;
 
     FileBean                         fileBean;
@@ -101,6 +102,7 @@ public class MasterPincodeAction extends BaseAction {
             pincodeByCode.setLocality(pincode.getLocality());
             pincodeByCode.setCity(pincode.getCity());
             pincodeByCode.setState(pincode.getState());
+            pincodeByCode.setRegion(pincode.getRegion());
             pincodeByCode.setDefaultCourier(pincode.getDefaultCourier());
             pincodeDao.save(pincodeByCode);
         } else {

@@ -13,6 +13,7 @@ import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
@@ -36,13 +37,21 @@ public class StockTransferAction extends BasePaginatedAction {
 
     private static Logger               logger                 = Logger.getLogger(StockTransferAction.class);
 
+    @Autowired
     StockTransferDao                    stockTransferDao;
+    @Autowired
     UserDao                             userDao;
+    @Autowired
     AdminSkuItemDao                     adminSkuItemDao;
+    @Autowired
     AdminProductVariantInventoryDao     adminProductVariantInventoryDao;
+    @Autowired
     SkuService                          skuService;
+    @Autowired
     UserService                         userService;
+    @Autowired
     AdminInventoryService               adminInventoryService;
+    @Autowired
     InventoryService                    inventoryService;
 
     private StockTransfer               stockTransfer;

@@ -1,30 +1,10 @@
 package com.hk.taglibs;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-
-import net.sourceforge.stripes.util.CryptoUtil;
-
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
-import org.joda.time.Period;
-import org.joda.time.format.PeriodFormatter;
-import org.joda.time.format.PeriodFormatterBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.akube.framework.util.FormatUtils;
 import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
 import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
-import com.hk.admin.pact.dao.inventory.ProductVariantDamageInventoryDao;
 import com.hk.admin.pact.dao.inventory.PoLineItemDao;
+import com.hk.admin.pact.dao.inventory.ProductVariantDamageInventoryDao;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.constants.catalog.image.EnumImageSize;
@@ -53,21 +33,34 @@ import com.hk.domain.sku.SkuItem;
 import com.hk.domain.user.User;
 import com.hk.dto.menu.MenuNode;
 import com.hk.helper.MenuHelper;
-import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
 import com.hk.manager.OrderManager;
 import com.hk.manager.UserManager;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.catalog.category.CategoryDao;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
 import com.hk.pact.dao.reward.RewardPointDao;
 import com.hk.pact.dao.shippingOrder.ShippingOrderLifecycleDao;
 import com.hk.pact.dao.sku.SkuDao;
 import com.hk.pact.service.accounting.InvoiceService;
 import com.hk.pact.service.catalog.CategoryService;
+import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.CartLineItemUtil;
 import com.hk.util.HKImageUtils;
-import com.hk.util.ImageManager;
+import net.sourceforge.stripes.util.CryptoUtil;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
+import org.joda.time.Period;
+import org.joda.time.format.PeriodFormatter;
+import org.joda.time.format.PeriodFormatterBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.*;
 
 public class Functions {
 
@@ -234,23 +227,23 @@ public class Functions {
     }
 
     public static List<String> brandsInCategory(Object o) {
-        CategoryDaoImpl categoryDao = ServiceLocatorFactory.getService(CategoryDaoImpl.class);
+        CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
         return categoryDao.getBrandsByCategory(Arrays.asList(((Category) o).getName()));
     }
 
+    @SuppressWarnings("deprecation")
     public static Double netDiscountOnLineItem(Object o) {
-        // TODO: # warehouse fix this.
         CartLineItem lineItem = (CartLineItem) o;
-        OrderManager orderManager = ServiceLocatorFactory.getService(OrderManager.class);
+        OrderManager orderManager = (OrderManager) ServiceLocatorFactory.getService("OrderManager");
         return orderManager.getNetDiscountOnLineItem(lineItem);
     }
 
     public static List<String> orderComments(Object o) {
         Order order = (Order) o;
         List<String> comments = new ArrayList<String>();
-        OrderService orderService = ServiceLocatorFactory.getService(OrderService.class);
+        OrderLoggingService orderLoggingService = ServiceLocatorFactory.getService(OrderLoggingService.class);
         for (OrderLifecycle orderLifecycle : order.getOrderLifecycles()) {
-            if (orderLifecycle.getOrderLifecycleActivity().equals(orderService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.LoggedComment))) {
+            if (orderLifecycle.getOrderLifecycleActivity().equals(orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.LoggedComment))) {
                 comments.add(orderLifecycle.getComments());
             }
         }
@@ -328,7 +321,6 @@ public class Functions {
     }
 
     public static String getS3ImageUrl(Object o1, Object o2) {
-        ImageManager imageManager = ServiceLocatorFactory.getService(ImageManager.class);
         EnumImageSize imageSize = (EnumImageSize) o1;
         Long imageId = (Long) o2;
         if (imageId == null) {

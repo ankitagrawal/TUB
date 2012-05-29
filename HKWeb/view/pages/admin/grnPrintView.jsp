@@ -115,22 +115,24 @@
   </thead>
   <tbody id="poTable">
   <c:forEach var="grnLineItemDto" items="${orderSummary.grnDto.grnLineItemDtoList}" varStatus="ctr">
+    <c:set var="sku" value="${grnLineItemDto.grnLineItem.sku}"/>
+    <c:set var="productVariant" value="${sku.productVariant}"/>
     <tr>
       <td>${ctr.index+1}.</td>
       <td>
-          ${grnLineItemDto.grnLineItem.productVariant.id}
+          ${productVariant.id}
       </td>
-      <td>${grnLineItemDto.grnLineItem.productVariant.upc}</td>
-      <td>${grnLineItemDto.grnLineItem.productVariant.product.name}<br/>${grnLineItemDto.grnLineItem.productVariant.optionsCommaSeparated}
+      <td>${productVariant.upc}</td>
+      <td>${productVariant.product.name}<br/>${productVariant.optionsCommaSeparated}
       </td>
       <%--<td>
         <div class='img48' style="vertical-align:top;">
           <c:choose>
-            <c:when test="${grnLineItemDto.grnLineItem.productVariant.product.mainImageId != null}">
-              <hk:productImage imageId="${grnLineItemDto.grnLineItem.productVariant.product.mainImageId}" size="<%=EnumImageSize.TinySize%>"/>
+            <c:when test="${productVariant.product.mainImageId != null}">
+              <hk:productImage imageId="${productVariant.product.mainImageId}" size="<%=EnumImageSize.TinySize%>"/>
             </c:when>
             <c:otherwise>
-              <img class="prod48" src="${pageContext.request.contextPath}/images/ProductImages/ProductImagesThumb/${grnLineItemDto.grnLineItem.productVariant.product.id}.jpg" alt="${productLineItem.productVariant.product.name}"/>
+              <img class="prod48" src="${pageContext.request.contextPath}/images/ProductImages/ProductImagesThumb/${productVariant.product.id}.jpg" alt="${productLineItem.productVariant.product.name}"/>
             </c:otherwise>
           </c:choose>
         </div>
@@ -142,7 +144,7 @@
       <td>${grnLineItemDto.grnLineItem.mrp}
       </td>
       <td>
-        <fmt:formatNumber value="${grnLineItemDto.grnLineItem.productVariant.tax.value * 100}" maxFractionDigits="2"/>%
+        <fmt:formatNumber value="${sku.tax.value * 100}" maxFractionDigits="2"/>%
       </td>
       <td>
         <fmt:formatNumber value="${grnLineItemDto.taxable}" maxFractionDigits="2"/>
