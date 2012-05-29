@@ -39,7 +39,7 @@ public class HKStartupListener implements ServletContextListener {
         AppConstants.contextPath = event.getServletContext().getContextPath();
         AppConstants.appBasePath = event.getServletContext().getRealPath("/");
 
-//        PropertyConfigurator.configure( AppConstants.appBasePath + "WEB-INF/log4j.properties");
+        PropertyConfigurator.configure( AppConstants.appBasePath + "WEB-INF/log4j.properties");
         logger.info("logger configured");
 
         /*
