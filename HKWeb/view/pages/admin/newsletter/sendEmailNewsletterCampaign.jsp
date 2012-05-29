@@ -1,4 +1,5 @@
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
+<%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -24,7 +25,7 @@
 
     <fieldset>
       <legend>Step 1: Select a campaign</legend>
-      <s:form beanclass="com.hk.web.action.admin.newsletter.SendEmailNewsletterCampaign">
+      <s:form beanclass="com.hk.web.action.admin.newsletter.SendEmailNewsletterCampaign" id="sentCountForm">
         <div style="margin-top:15px;"></div>
 
         <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${emailBean}"/>
@@ -50,9 +51,10 @@
                 <td>${emailCampaign.template}</td>
                 <td>${emailCampaign.createDate}</td>
                 <td>
-                  <div id="sentCount">check sent count</div>
+                  <s:submit name="getSentCountForEmailCampaign" value="Check Sent Count" id="sentCountButton"/>
+                  <s:hidden name="emailCampaign" value="${emailCampaign.id}"/>
+                  <div id="sentCount"></div>
                 </td>
-                <%--<td>${emailCampaign.sentCount}</td>--%>
               </tr>
             </c:forEach>
           </table>
@@ -66,12 +68,22 @@
         </c:if>
       </s:form>
     </fieldset>
-  </s:layout-component>
-  <script type="text/javascript">
-    $(document).ready(function(){
-      $('#sentCount').click(function(){
-        $('#sentCount').load();
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $('#sentCountForm').ajaxForm({
+          dataType: 'json',
+          success: _checkSentCount
+        });
+
+        function _checkSentCount(res) {
+          if (res.code == "<%=HealthkartResponse.STATUS_OK%>") {
+            $('#sentCount').html(res.data);
+            $('#sentCountButton').hide();
+          }
+        }
       });
-    });
-  </script>
+    </script>
+
+  </s:layout-component>
 </s:layout-render>
+
