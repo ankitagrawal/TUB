@@ -64,15 +64,15 @@ STD: 0124 - 4185828,  SMS: REVITAL to 53030<br />
 
 Email: <a href="mailto:myrevital@ranbaxy.com">myrevital@ranbaxy.com</a></p>
 
-<p><a href="www.myrevital.com">www.myrevital.com</a><br />
+<p><a href="http://www.myrevital.com">www.myrevital.com</a><br />
 
-  <a href="www.revitalwoman.com">www.revitalwoman.com</a></p>
+  <a href="http://www.revitalwoman.com">www.revitalwoman.com</a></p>
 
-<p><a href="www.facebook.com/#!/MyRevital">www.facebook.com/#!/MyRevital</a><br />
+<p><a href="http://www.facebook.com/#!/MyRevital">www.facebook.com/#!/MyRevital</a><br />
   <a href="https://www.facebook.com/#!/RevitalWoman">https://www.facebook.com/#!/RevitalWoman</a><br />
 
 
-  <a href="www.twitter.com/#!/my_revital">www.twitter.com/#!/my_revital
+  <a href="http://www.twitter.com/#!/my_revital">www.twitter.com/#!/my_revital
   </a></p>
 </div>
 </div>
