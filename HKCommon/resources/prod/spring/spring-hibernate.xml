@@ -90,10 +90,10 @@
 			<value>admin2K11!</value>
 		</property>
 		<property name="maxActive">
-			<value>500</value>
+			<value>50</value>
 		</property>
 		<property name="maxWait">
-			<value>10000</value>
+			<value>15000</value>
 		</property>
 		<property name="removeAbandoned">
 			<value>true</value>
@@ -102,22 +102,11 @@
 			<value>30</value>
 		</property>
 		<property name="maxIdle">
-			<value>1000</value>
-		</property>
-		<property name="minEvictableIdleTimeMillis">
-			<value>3000000</value>
-		</property>
-    		<property name="timeBetweenEvictionRunsMillis">
-			<value>3000000</value>
-		</property>
-    		<property name="numTestsPerEvictionRun">
-			<value>-1</value>
+			<value>20</value>
 		</property>
 		<property name="initialSize">
 			<value>50</value>
 		</property>
-		<!--<property name="poolPreparedStatements" value="true" />
-		<property name="maxOpenPreparedStatements" value="30" />-->
 	</bean>
 
 
