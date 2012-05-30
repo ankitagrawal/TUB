@@ -1,4 +1,4 @@
-package com.hk.web.action.admin.order;
+package com.hk.web.action.admin.order.split;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -39,23 +39,23 @@ import com.hk.web.action.error.AdminPermissionAction;
 @Component
 public class SplitBaseOrderAction extends BaseAction {
 
-    private static Logger             logger                   = LoggerFactory.getLogger(SplitBaseOrderAction.class);
+    private static Logger logger = LoggerFactory.getLogger(SplitBaseOrderAction.class);
 
-    private Order                     baseOrder;
+    private Order baseOrder;
     @Autowired
     private AdminShippingOrderService adminShippingOrderService;
     @Autowired
-    private OrderLoggingService       orderLoggingService;
+    private OrderLoggingService orderLoggingService;
     @Autowired
-    private OrderStatusService        orderStatusService;
+    private OrderStatusService orderStatusService;
     @Autowired
-    private OrderService              orderService;
+    private OrderService orderService;
 
-    Map<CartLineItem, Warehouse>      cartLineItemWarehouseMap = new HashMap<CartLineItem, Warehouse>();
+    Map<CartLineItem, Warehouse> cartLineItemWarehouseMap = new HashMap<CartLineItem, Warehouse>();
 
     @DontValidate
     @DefaultHandler
-    @Secure(hasAnyRoles = { RoleConstants.ADMIN, RoleConstants.GOD, RoleConstants.CATEGORY_MANAGER }, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyRoles = {RoleConstants.ADMIN, RoleConstants.GOD, RoleConstants.CATEGORY_MANAGER}, authActionBean = AdminPermissionAction.class)
     public Resolution pre() {
         return new ForwardResolution("/pages/admin/order/splitBaseOrder.jsp");
     }
@@ -154,5 +154,5 @@ public class SplitBaseOrderAction extends BaseAction {
         this.orderService = orderService;
     }
 
-    
+
 }

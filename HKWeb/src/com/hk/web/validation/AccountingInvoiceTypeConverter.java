@@ -9,7 +9,7 @@ import net.sourceforge.stripes.validation.ValidationError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.hk.admin.impl.dao.accounting.AccountingInvoiceDaoImpl;
+import com.hk.admin.pact.dao.accounting.AccountingInvoiceDao;
 import com.hk.domain.accounting.AccountingInvoice;
 
 /**
@@ -23,7 +23,7 @@ public class AccountingInvoiceTypeConverter implements TypeConverter<AccountingI
   }
   
   @Autowired
-  AccountingInvoiceDaoImpl accountingInvoiceDao;
+  AccountingInvoiceDao accountingInvoiceDao;
 
   public AccountingInvoice convert(String s, Class<? extends AccountingInvoice> aClass, Collection<ValidationError> validationErrors) {
     Long idLong = null;

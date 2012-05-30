@@ -7,7 +7,7 @@
 
 <s:layout-definition>
   <%
-    ProductDao productDao = (ProductDao)ServiceLocatorFactory.getService(ProductDao.class);
+    ProductDao productDao = (ProductDao) ServiceLocatorFactory.getService(ProductDao.class);
     String productId = (String) pageContext.getAttribute("productId");
     Product product = productDao.getProductById(productId);
     pageContext.setAttribute("product", product);
@@ -18,6 +18,7 @@
 
       <div class="cart_error" id="cart_error2"></div>
       <s:layout-component name="content">
+        <div class="checkboxError" style="margin-bottom:20px; font-size:1.2em; color:salmon;"></div>
         <table width="100%">
           <tr>
             <th></th>
@@ -34,8 +35,7 @@
                         value="${variant.id}"/>
               <td>
                 <label><s:checkbox
-                    name="productLineItemWithExtraOptionsDtos[0].selected"
-                    checked="checked"/>Left</label>
+                    name="productLineItemWithExtraOptionsDtos[0].selected" class="checkbox"/>Left</label>
               </td>
               <s:hidden
                   name="productLineItemWithExtraOptionsDtos[1].productVariant.qty" value="1"/>
@@ -61,8 +61,7 @@
                         value="${variant.id}"/>
               <td>
                 <label><s:checkbox
-                    name="productLineItemWithExtraOptionsDtos[1].selected"
-                    checked="checked"/>Right</label>
+                    name="productLineItemWithExtraOptionsDtos[1].selected" class="checkbox"/>Right</label>
               </td>
 
               <s:hidden
@@ -115,18 +114,11 @@
               }
 
               $('.addToCartForm2').ajaxForm({dataType: 'json', success: _addToCart2});
-              $('.addToCartButton').click(function() {
-                $(this).parents('td').find('.progressLoader').show();
-                $('#cartWindow').jqm();
-              });
-
-
             });
-
+            validateCheckbox = 1;
           </script>
         </table>
       </s:layout-component>
     </s:layout-render>
   </div>
-
 </s:layout-definition>

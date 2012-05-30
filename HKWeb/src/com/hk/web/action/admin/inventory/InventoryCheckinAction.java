@@ -133,8 +133,7 @@ public class InventoryCheckinAction extends BaseAction {
                 if (grnLineItem != null && sku != null) {
                     askedQty = grnLineItem.getQty();
                     Long alreadyCheckedInQty = getAdminInventoryService().countOfCheckedInUnitsForGrnLineItem(grnLineItem);
-                    // logger.info("Inventory Checkin ->
-                    // ProductVariant="+productVariant.getId()+";askedQty="+askedQty+";alreadyCheckedInQty="+alreadyCheckedInQty+";qty="+qty);
+                    //logger.info("Inventory Checkin ->ProductVariant="+productVariant.getId()+";askedQty="+askedQty+";alreadyCheckedInQty="+alreadyCheckedInQty+";qty="+qty);
                     if (qty > (askedQty - alreadyCheckedInQty)) {
                         addRedirectAlertMessage(new SimpleMessage("Qty mentioned - " + qty + " is exceeding required checked in qty. Plz check."));
                         return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
@@ -184,6 +183,9 @@ public class InventoryCheckinAction extends BaseAction {
                         logger.error("Exception while appending on barcode file", e);
                         ;
                     }
+                }else{
+                  addRedirectAlertMessage(new SimpleMessage("Error with either GrnLineItem->"+grnLineItem+" or Sku ->"+sku));
+                  return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
                 }
             } else {
                 addRedirectAlertMessage(new SimpleMessage("No such UPC or Variant Id"));

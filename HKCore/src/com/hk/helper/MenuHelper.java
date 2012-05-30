@@ -25,7 +25,6 @@ public class MenuHelper implements ServletContextAware{
 
   
   public void postConstruction() {
-      System.out.println("abxxxxxxxxxxxxxxx");
      /* this.appBasePath = AppConstants.appBasePath;
       menuFile = new File(appBasePath + "menu.txt");
       initMenuNodes();*/

@@ -1,4 +1,4 @@
-package com.hk.constants.shipment;
+package com.hk.constants.courier;
 
 import com.hk.domain.courier.Courier;
 

@@ -20,7 +20,6 @@ public interface OrderDao extends BaseDao {
     public Order getLatestOrderForUser(User user);
 
     public Page listOrdersForUser(List<OrderStatus> orderStatusList, User user, int page, int perPage);
-    
 
     public Page searchOrders(OrderSearchCriteria orderSearchCriteria, int pageNo, int perPage);
 
@@ -47,4 +46,5 @@ public interface OrderDao extends BaseDao {
     public Page searchDeliveryAwaitingOrders(Date startDate, Date endDate, Long orderId, OrderStatus orderStatus, String gatewayOrderId, String trackingId, int pageNo,
             int perPage, Long courierId);
 
+    public Order findByGatewayOrderId(String gatewayOrderId);
 }

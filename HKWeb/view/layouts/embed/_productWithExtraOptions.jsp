@@ -121,14 +121,7 @@
 
             <div class='floatfix'></div>
           </div>
-        </s:form>
-
-        <script type="text/javascript">
-          $('.addToCartButton').click(function() {
-            $(this).parents().find('.progressLoader').show();
-          });
-        </script>
-
+        </s:form>      
       </div>
     </div>
   </div>

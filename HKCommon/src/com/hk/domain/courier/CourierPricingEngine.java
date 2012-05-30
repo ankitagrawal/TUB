@@ -12,40 +12,69 @@ import javax.persistence.Table;
 
 import com.hk.domain.warehouse.Warehouse;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 @Entity
 @Table(name = "courier_pricing_engine")
 public class CourierPricingEngine implements java.io.Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
-    private Long      id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "courier_id", nullable = false)
-    private Courier   courier;
+    private Courier courier;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "warehouse_id", nullable = false)
     private Warehouse warehouse;
 
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "region_type_id", nullable = false)
+    private RegionType regionType;
+
+
     @Column(name = "first_base_wt", nullable = false, precision = 6)
-    private Double    firstBaseWt;
+    private Double firstBaseWt;
+
 
     @Column(name = "first_base_cost", nullable = false, precision = 6)
-    private Double    firstBaseCost;
+    private Double firstBaseCost;
+
 
     @Column(name = "second_base_wt", precision = 6)
-    private Double    secondBaseWt;
+    private Double secondBaseWt;
+
 
     @Column(name = "second_base_cost", precision = 6)
-    private Double    secondBaseCost;
+    private Double secondBaseCost;
+
 
     @Column(name = "additional_wt", nullable = false, precision = 6)
-    private Double    additionalWt;
+    private Double additionalWt;
+
 
     @Column(name = "additional_cost", nullable = false, precision = 6)
-    private Double    additionalCost;
+    private Double additionalCost;
+
+
+    @Column(name = "fuel_surcharge", precision = 5, scale = 4)
+    private Double fuelSurcharge;
+
+
+    @Column(name = "min_cod_charges", precision = 6)
+    private Double minCodCharges;
+
+
+    @Column(name = "cod_cutoff_amount", precision = 5)
+    private Double codCutoffAmount;
+
+
+    @Column(name = "variable_cod_charges", precision = 5, scale = 4)
+    private Double variableCodCharges;
 
     public Long getId() {
         return this.id;
@@ -56,7 +85,7 @@ public class CourierPricingEngine implements java.io.Serializable {
     }
 
     public Courier getCourier() {
-        return this.courier;
+        return courier;
     }
 
     public void setCourier(Courier courier) {
@@ -64,11 +93,19 @@ public class CourierPricingEngine implements java.io.Serializable {
     }
 
     public Warehouse getWarehouse() {
-        return this.warehouse;
+        return warehouse;
     }
 
     public void setWarehouse(Warehouse warehouse) {
         this.warehouse = warehouse;
+    }
+
+    public RegionType getRegionType() {
+        return regionType;
+    }
+
+    public void setRegionType(RegionType regionType) {
+        this.regionType = regionType;
     }
 
     public Double getFirstBaseWt() {
@@ -117,6 +154,38 @@ public class CourierPricingEngine implements java.io.Serializable {
 
     public void setAdditionalCost(Double additionalCost) {
         this.additionalCost = additionalCost;
+    }
+
+    public Double getFuelSurcharge() {
+        return this.fuelSurcharge;
+    }
+
+    public void setFuelSurcharge(Double fuelSurcharge) {
+        this.fuelSurcharge = fuelSurcharge;
+    }
+
+    public Double getMinCodCharges() {
+        return this.minCodCharges;
+    }
+
+    public void setMinCodCharges(Double minCodCharges) {
+        this.minCodCharges = minCodCharges;
+    }
+
+    public Double getCodCutoffAmount() {
+        return this.codCutoffAmount;
+    }
+
+    public void setCodCutoffAmount(Double codCutoffAmount) {
+        this.codCutoffAmount = codCutoffAmount;
+    }
+
+    public Double getVariableCodCharges() {
+        return this.variableCodCharges;
+    }
+
+    public void setVariableCodCharges(Double variableCodCharges) {
+        this.variableCodCharges = variableCodCharges;
     }
 
 }
