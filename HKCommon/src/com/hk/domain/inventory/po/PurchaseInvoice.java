@@ -25,6 +25,7 @@ import javax.persistence.TemporalType;
 import com.akube.framework.gson.JsonSkip;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.core.Surcharge;
+import com.hk.domain.core.PurchaseFormType;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
@@ -52,8 +53,8 @@ public class PurchaseInvoice implements java.io.Serializable {
 	private Date createDate;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "warehouse_id")
-  private Warehouse warehouse;
+    @JoinColumn(name = "warehouse_id")
+    private Warehouse warehouse;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "supplier_id")
@@ -123,6 +124,12 @@ public class PurchaseInvoice implements java.io.Serializable {
 	@Column(name = "route_permit_number")
 	private String routePermitNumber;
 
+    @Column(name = "reconcilation_date")
+    private Date reconcilationDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "purchase_form_type_id")
+    private PurchaseFormType purchaseFormType;
 
 	public Long getId() {
 		return this.id;
@@ -308,11 +315,28 @@ public class PurchaseInvoice implements java.io.Serializable {
 		this.warehouse = warehouse;
 	}
 
+  public Date getReconcilationDate() {
+      return reconcilationDate;
+  }
+
+  public void setReconcilationDate(Date reconcilationDate) {
+      this.reconcilationDate = reconcilationDate;
+  }
+
+  public PurchaseFormType getPurchaseFormType() {
+      return purchaseFormType;
+  }
+
+  public void setPurchaseFormType(PurchaseFormType purchaseFormType) {
+      this.purchaseFormType = purchaseFormType;
+  }
+
   @Override
   public String toString() {
       return id == null ? "" : id.toString();
   }
-  
+
+
 }
 
 

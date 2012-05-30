@@ -8,6 +8,7 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="java.util.List" %>
+<%@ page import="com.hk.domain.core.PurchaseFormType" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction" var="pia"/>
@@ -19,8 +20,8 @@
   pageContext.setAttribute("taxList", taxList);
 
 	MasterDataDao masterDataDao = (MasterDataDao)ServiceLocatorFactory.getService(MasterDataDao.class);
-  List<Surcharge> surchargeList  = masterDataDao.getSurchargeList();
-  pageContext.setAttribute("surchargeList", surchargeList);
+  List<PurchaseFormType> purchaseFormTypes  = masterDataDao.getPurchaseInvoiceFormTypes();
+  pageContext.setAttribute("purchaseFormTypes", purchaseFormTypes);
 %>
 
 
@@ -288,12 +289,34 @@
 					<s:text class="date_input" formatPattern="yyyy-MM-dd" name="purchaseInvoice.paymentDate"/></td>
 				<td>Payment Details<br/><span class="sml gry">(eg. Cheque no.)</span></td>
 				<td><s:textarea name="purchaseInvoice.paymentDetails" style="height:50px;"/></td>
-				<td></td>
-				<td></td>
+				<td>Form Type</td>
+                <td>
+                    <s:select name="purchaseInvoice.purchaseFormType" class="purchaseFormType">
+                        <s:option value="">-Select-</s:option>
+							<c:forEach items="${purchaseFormTypes}" var="purchaseFormTyp">
+								<s:option value="${purchaseFormTyp.id}">${purchaseFormTyp.name}</s:option>
+							</c:forEach>
+                    </s:select>
+                </td>
+
 			</tr>
 			<tr>
 				<td>Reconciled</td>
 				<td><s:checkbox name="purchaseInvoice.reconciled"/></td>
+				<td>Reconcilation Date</td>
+                <c:choose>
+                    <c:when test="${hk:isNotBlank(pia.purchaseInvoice.reconcilationDate)}">
+                        <td>${pia.purchaseInvoice.reconcilationDate}</td>
+                    </c:when>
+                    <c:otherwise>
+                        <td></td>
+                    </c:otherwise>
+                </c:choose>
+				<td>GRN Date</td>
+				<td>${pia.grnDate}</td>
+			</tr>
+
+            <tr>
 				<td>Status</td>
 				<td><s:select name="purchaseInvoice.purchaseInvoiceStatus" value="${pia.purchaseInvoice.purchaseInvoiceStatus.id}">
 					<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="purchaseInvoiceStatusList"
@@ -301,6 +324,8 @@
 				</s:select></td>
 				<td>Route Permit Number</td>
 				<td><s:text name="purchaseInvoice.routePermitNumber"/></td>
+                <td></td>
+				<td></td>
 			</tr>
 		</table>
 
@@ -421,6 +446,7 @@
 						<s:text readonly="readonly" class="surchargeAmount" name="purchaseInvoiceLineItems[${ctr.index}].surchargeAmount" value="${purchaseInvoiceLineItem.surchargeAmount}"/>
 					</td>
 						<td>
+              
 						<s:text readonly="readonly" class="payableAmount" name="purchaseInvoiceLineItems[${ctr.index}].payableAmount" value="${purchaseInvoiceLineItem.payableAmount}"/>
 					</td>
 				</tr>
@@ -452,9 +478,11 @@
 		</table>
 		<div class="variantDetails info"></div>
 		<br/>
+        <c:if test="${pia.saveEnabled}">
 		<a href="purchaseInvoice.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>
 
 		<s:submit name="save" value="Save" class="requiredFieldValidator"/>
+        </c:if>
     <shiro:hasRole name="<%=RoleConstants.GOD%>">
     <s:submit name="delete" value="Delete"/>
     </shiro:hasRole>
