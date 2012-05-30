@@ -103,16 +103,17 @@
               Payment History against purchase Invoice Id ${paymentHistoryBean.purchaseInvoiceId}
            </label>
          </c:if>
-                     <table>
-<%--                       <th>Purchase Order</th>
-                       <th>Purchase Invoice</th>
-                       <th>Details</th>         --%>
-                       <th>Amount</th>
-                       <th>Mode of Payment</th>
-                       <th>Scheduled Payment Date  <br /> (yyyy-mm-dd)</th>
-                       <th>Actual Payment Date  <br/> (yyyy-mm-dd)</th>
-                       <th>Remarks</th>
-                       <th>Payment Reference</th>
+                     <table border="1">
+                       <thead>
+                          <tr>
+                           <th>Amount</th>
+                           <th>Mode of Payment</th>
+                           <th>Scheduled Payment Date  <br /> (yyyy-mm-dd)</th>
+                           <th>Actual Payment Date  <br/> (yyyy-mm-dd)</th>
+                           <th>Remarks</th>
+                           <th>Payment Reference</th>
+                          </tr>
+                        </thead>
                     <s:form beanclass="com.hk.web.action.admin.payment.PaymentHistoryAction">
                     <c:forEach items="${paymentHistoryBean.paymentHistories}" var="paymentHistory" varStatus="paymentHistoryCount">
                           <tr>
@@ -184,14 +185,16 @@
               <s:hidden name="purchaseOrderId" value="${paymentHistoryBean.purchaseOrderId}" />
                <s:hidden name="purchaseInvoiceId" value="${paymentHistoryBeanpurchaseInvoiceId}" />
                 <table>
-<%--                       <th>Purchase Order</th>
-                       <th>Purchase Invoice</th>--%>
+                  <thead>
+                    <tr>
                        <th>Amount</th>
                        <th>Mode of Payment</th>
                        <th>Scheduled Payment Date <br /> (yyyy-mm-dd)</th>
                        <th>Actual Payment Date <br /> (yyyy-mm-dd)</th>
                        <th>Remarks</th>
                        <th>Payment Reference</th>
+                    </tr>
+                  </thead>
                     <tr>
                         <td><s:text name="paymentHistory.amount" /></td>
                         <td><s:select name="paymentHistory.modeOfPayment" >
