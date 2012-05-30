@@ -210,6 +210,8 @@ public class OrderServiceImpl implements OrderService {
             }
         } catch (OrderSplitException e) {
             logger.error(e.getMessage());
+        } catch (Exception e) {
+            logger.error("Order could not be split due to some exception ", e);
         }
 
         return shippingOrders;
@@ -367,44 +369,8 @@ public class OrderServiceImpl implements OrderService {
             logger.debug("order with gatewayId:" + order.getGatewayOrderId() + " is not in placed status. abort system split and do a manual split");
         }
 
-/*
-            for (Map.Entry<Warehouse, Set<CartLineItem>> warehouseSetEntry : warehouseLineItemSetMap.entrySet()) {
-                ShippingOrder shippingOrder = shippingOrderService.createSOWithBasicDetails(order, warehouseSetEntry.getKey());
-                for (CartLineItem cartLineItem : warehouseSetEntry.getValue()) {
-                    Sku sku = skuService.getSKU(cartLineItem.getProductVariant(), warehouseSetEntry.getKey());
-*/
-
         return shippingOrders;
     }
-
-    /*
-     * Warehouse prevWH = null; Map<Warehouse, Set<CartLineItem>> warehouseLineItemSetMap = new HashMap<Warehouse,
-     * Set<CartLineItem>>(); for (CartLineItem lineItem : productCartLineItems) { List<Sku> skuList =
-     * skuService.getSKUsForProductVariant(lineItem.getProductVariant()); if (skuList == null || skuList.isEmpty()) {
-     * String comments = "No Sku has been created for " + lineItem.getProductVariant().getProduct().getName();
-     * logOrderActivity(order,userService.getAdminUser(),orderLifecycleActivityDaoProvider.get().find(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit.getId()),comments);
-     * throw new OrderSplitException("Didn't get sku for few variants. Aborting splitting of order.", order); } List<Warehouse>
-     * warehouses = inventoryService.getWarehousesForSkuAndQty(skuList, lineItem.getQty()); //List<Warehouse>
-     * warehouses = Arrays.asList(warehouseService.getDefaultWarehouse()); if (warehouses == null ||
-     * warehouses.isEmpty()) { String comments = "Did not get the required qty in any of the warehouse as none had the
-     * right amount of net inventory to serve the order, one of the sku being " +
-     * lineItem.getProductVariant().getProduct().getName();
-     * logOrderActivity(order,userService.getAdminUser(),orderLifecycleActivityDaoProvider.get().find(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit.getId()),comments);
-     * throw new OrderSplitException("Didn't get inventory for sku. Aborting splitting of order.", order); } for
-     * (Warehouse warehouse : warehouses) { if (prevWH == null) { // First lineItem Set<CartLineItem> whLi = new
-     * HashSet<CartLineItem>(); whLi.add(lineItem); warehouseLineItemSetMap.put(warehouse, whLi); prevWH = warehouse; }
-     * else if (warehouse.equals(prevWH)) { Set<CartLineItem> prevWHLi = warehouseLineItemSetMap.get(prevWH);
-     * prevWHLi.add(lineItem); warehouseLineItemSetMap.put(warehouse, prevWHLi); } else { Set<CartLineItem> whLi = new
-     * HashSet<CartLineItem>(); whLi.add(lineItem); warehouseLineItemSetMap.put(warehouse, whLi); } break; } } //Sanity
-     * check of CartLI->Li; few CartLIs get lost while splitting Long liCounter = 0L; for (Map.Entry<Warehouse, Set<CartLineItem>>
-     * warehouseSetEntry : warehouseLineItemSetMap.entrySet()) { Set<CartLineItem> whCartLineItems =
-     * warehouseSetEntry.getValue(); liCounter += whCartLineItems.size(); } if (liCounter !=
-     * productCartLineItems.size()) { String comments = "LineItems count doesn't match with CartLineItems. Aborting
-     * splitting of order";
-     * logOrderActivity(order,userService.getAdminUser(),orderLifecycleActivityDaoProvider.get().find(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit.getId()),comments);
-     * throw new OrderSplitException("LineItems count doesn't match with CartLineItems. Aborting splitting of order.",
-     * order); }
-     */
 
     public ProductVariant getTopDealVariant(Order order) {
         Category personalCareCategory = getCategoryService().getCategoryByName("personal-care");

@@ -194,7 +194,7 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
             boolean validCase = true;
             if (isCod) {
                 for (DummyOrder splitDummyOrder : splitDummyOrders) {
-                  if(splitDummyOrder.getAmount() <= codMinAmount){
+                  if(splitDummyOrder.getAmount() < codMinAmount){
                       validCase = false;
                   }
                 }
