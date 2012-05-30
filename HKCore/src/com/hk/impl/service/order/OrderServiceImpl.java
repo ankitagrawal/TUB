@@ -343,24 +343,26 @@ public class OrderServiceImpl implements OrderService {
 
             // Create Shipping orders and Save it in DB
             for (DummyOrder dummyOrder : dummyOrders) {
-                Warehouse warehouse = dummyOrder.getWarehouse();
-                ShippingOrder shippingOrder = shippingOrderService.createSOWithBasicDetails(order, warehouse);
-                for (CartLineItem cartLineItem : dummyOrder.getCartLineItemList()) {
-                    Sku sku = skuService.getSKU(cartLineItem.getProductVariant(), warehouse);
-                    LineItem shippingOrderLineItem = LineItemHelper.createLineItemWithBasicDetails(sku, shippingOrder, cartLineItem);
-                    shippingOrder.getLineItems().add(shippingOrderLineItem);
+                if (dummyOrder.getCartLineItemList().size() > 0) {
+                    Warehouse warehouse = dummyOrder.getWarehouse();
+                    ShippingOrder shippingOrder = shippingOrderService.createSOWithBasicDetails(order, warehouse);
+                    for (CartLineItem cartLineItem : dummyOrder.getCartLineItemList()) {
+                        Sku sku = skuService.getSKU(cartLineItem.getProductVariant(), warehouse);
+                        LineItem shippingOrderLineItem = LineItemHelper.createLineItemWithBasicDetails(sku, shippingOrder, cartLineItem);
+                        shippingOrder.getLineItems().add(shippingOrderLineItem);
+                    }
+                    shippingOrder.setBasketCategory(getBasketCategory(shippingOrder).getName());
+                    ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, order);
+                    shippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(shippingOrder));
+                    shippingOrder = shippingOrderService.save(shippingOrder);
+                    /**
+                     * this additional call to save is done so that we have shipping order id to generate shipping order
+                     * gateway id
+                     */
+                    shippingOrder = ShippingOrderHelper.setGatewayIdOnShippingOrder(shippingOrder);
+                    shippingOrder = shippingOrderService.save(shippingOrder);
+                    shippingOrders.add(shippingOrder);
                 }
-                shippingOrder.setBasketCategory(getBasketCategory(shippingOrder).getName());
-                ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, order);
-                shippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(shippingOrder));
-                shippingOrder = shippingOrderService.save(shippingOrder);
-                /**
-                 * this additional call to save is done so that we have shipping order id to generate shipping order
-                 * gateway id
-                 */
-                shippingOrder = ShippingOrderHelper.setGatewayIdOnShippingOrder(shippingOrder);
-                shippingOrder = shippingOrderService.save(shippingOrder);
-                shippingOrders.add(shippingOrder);
             }
 
             long endTime = (new Date()).getTime();
