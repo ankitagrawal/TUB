@@ -117,6 +117,7 @@ public class SecurityInterceptor implements Interceptor, ConfigurableComponent {
      */
     public Resolution intercept(ExecutionContext executionContext) throws Exception {
         Resolution resolution;
+        
 
         if (securityManager != null) {
             switch (executionContext.getLifecycleStage()) {

@@ -120,22 +120,24 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
     }
 
     public Page getProductByCategoryAndBrand(List<String> categoryNames, String brand, int page, int perPage) {
-        List<String> productIds = getSession().createQuery(
-                "select p.id from Product p inner join p.categories c where c.name in (:categories) group by p.id having count(*) = :tagCount").setParameterList("categories",
-                categoryNames).setInteger("tagCount", categoryNames.size()).list();
+        if (categoryNames != null && categoryNames.size() > 0) {
+            List<String> productIds = getSession().createQuery(
+                    "select p.id from Product p inner join p.categories c where c.name in (:categories) group by p.id having count(*) = :tagCount").setParameterList("categories",
+                    categoryNames).setInteger("tagCount", categoryNames.size()).list();
 
-        if (productIds != null && productIds.size() > 0) {
+            if (productIds != null && productIds.size() > 0) {
 
-            DetachedCriteria criteria = DetachedCriteria.forClass(Product.class);
-            if (StringUtils.isNotBlank(brand)) {
-                criteria.add(Restrictions.eq("brand", brand));
+                DetachedCriteria criteria = DetachedCriteria.forClass(Product.class);
+                if (StringUtils.isNotBlank(brand)) {
+                    criteria.add(Restrictions.eq("brand", brand));
+                }
+                criteria.add(Restrictions.in("id", productIds));
+                criteria.add(Restrictions.eq("deleted", false));
+                // criteria.add(Restrictions.eq("isGoogleAdDisallowed", false));
+                criteria.addOrder(Order.asc("orderRanking"));
+
+                return list(criteria, page, perPage);
             }
-            criteria.add(Restrictions.in("id", productIds));
-            criteria.add(Restrictions.eq("deleted", false));
-            // criteria.add(Restrictions.eq("isGoogleAdDisallowed", false));
-            criteria.addOrder(Order.asc("orderRanking"));
-
-            return list(criteria, page, perPage);
         }
         return null;
     }

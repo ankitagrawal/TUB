@@ -48,6 +48,7 @@ import com.hk.pact.dao.user.UserDao;
 import com.hk.util.SeoManager;
 import com.hk.web.AppConstants;
 import com.hk.web.ConvertEncryptedToNormalDouble;
+import com.hk.web.action.HomeAction;
 import com.hk.web.filter.WebContext;
 
 @UrlBinding("/{rootCategorySlug}/{childCategorySlug}/{secondaryChildCategorySlug}/{tertiaryChildCategorySlug}")
@@ -182,6 +183,10 @@ public class CatalogAction extends BasePaginatedAction {
         if (tertiaryCategory != null) {
           categoryNames.add(tertiaryCategory.getName());
         }
+      }
+      
+      if(categoryNames.size() ==0){
+          return new RedirectResolution(HomeAction.class);
       }
 
       if (StringUtils.isBlank(brand)) {
