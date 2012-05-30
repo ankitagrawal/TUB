@@ -152,13 +152,19 @@
 		<copy todir="${project.dist.dir}/WEB-INF/lib" file="${project.report.dir}/dist/hk-report.jar" />
 	</target>
 
-	<target name="collect-web">
+	<!--<target name="collect-web">
 		<copy todir="${project.dist.dir}">
 			<fileset dir="${project.web.dir}/dist" />
 		</copy>
+	</target>-->
+
+  <target name="web">
+		<copy todir="${project.dist.dir}">
+			<fileset dir="${project.web.dir}/${project.view.dir}" />
+		</copy>
 	</target>
 
-	<target name="build" depends="build-dependencies,collect-web,collect-jar,collect-resources">
+	<target name="build" depends="build-dependencies,collect-jar,collect-resources">
 		<!--<war destfile="${dist.root}/${app.name}.war" webxml="${dist.war.root}/WEB-INF/web.xml">
 			<fileset dir="${dist.war.root}" />
 		</war>-->

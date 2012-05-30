@@ -131,10 +131,10 @@
 	</target>-->
 
 	<target name="build" depends="compile,compile.groovy" description="build production WAR">
-		<mkdir dir="${project.dist.dir}/WEB-INF" />
-		<mkdir dir="${project.dist.dir}/WEB-INF/classes" />
-		<mkdir dir="${project.dist.dir}/WEB-INF/classes/spring" />
-		<copy todir="${project.dist.dir}">
+		<mkdir dir="${project.base.dir}/${project.dist.dir}/WEB-INF" />
+		<mkdir dir="${project.base.dir}/${project.dist.dir}/WEB-INF/classes" />
+		<mkdir dir="${project.base.dir}/${project.dist.dir}/WEB-INF/classes/spring" />
+		<copy todir="${project.base.dir}/${project.dist.dir}">
 			<fileset dir="${project.view.dir}">
 				<include name="**/**" />
 			</fileset>
@@ -143,10 +143,10 @@
 		<!-- <copy todir="${project.dist.dir}/exploded/${package.war.name}/WEB-INF/lib">
 		</copy> -->
 
-		<copy todir="${project.dist.dir}/WEB-INF/classes">
+		<copy todir="${project.base.dir}/${project.dist.dir}/WEB-INF/classes">
 			<fileset dir="${package.target.dir}" excludes="test/**/**" />
 		</copy>
-		<copy todir="${project.dist.dir}/WEB-INF/">
+		<copy todir="${project.base.dir}/${project.dist.dir}/WEB-INF/">
 			<fileset dir="${project.resources.dir}/${project.env}/WEB-INF" excludes="test/**/**" />
 		</copy>
 		<!--<copy todir="${project.dist.dir}/WEB-INF/classes/spring">
@@ -159,13 +159,12 @@
 	<target name="clean" description="Prepare for clean build">
 		<delete dir="${package.target.dir}" />
 		<delete dir="${project.dist.dir}" />
-		<delete dir="${package.reports.dir}" />
 	</target>
 
 	<!-- Check timestamp on files -->
 	<target name="prepare">
-		<mkdir dir="${project.dist.dir}" />
 		<mkdir dir="${package.target.dir}" />
+    <mkdir  dir="${project.base.dir}/${project.dist.dir}" />
 		<tstamp />
 	</target>
 
