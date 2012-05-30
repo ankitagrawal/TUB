@@ -39,10 +39,7 @@ public class SearchOrderAction extends BasePaginatedAction {
 
     private OrderStatus   orderStatus;
     private Long          orderId;
-    // private Long shippingOrderId;
 
-    // TODO: # warehouse to be used only in case of shipping order search
-    // private String trackingId;
     private String        gatewayOrderId;
     private PaymentMode   paymentMode;
 

@@ -50,48 +50,48 @@ import java.util.*;
 @Component
 public class GRNAction extends BasePaginatedAction {
 
-    private static Logger           logger                    = Logger.getLogger(GRNAction.class);
+    private static Logger logger = Logger.getLogger(GRNAction.class);
     @Autowired
-    private GRNManager              grnManager;
+    private GRNManager grnManager;
     @Autowired
-    private GoodsReceivedNoteDao    goodsReceivedNoteDao;
+    private GoodsReceivedNoteDao goodsReceivedNoteDao;
     @Autowired
-    private GrnLineItemDao          grnLineItemDao;
+    private GrnLineItemDao grnLineItemDao;
     @Autowired
-    private ProductVariantService   productVariantService;
+    private ProductVariantService productVariantService;
     @Autowired
-    private UserService             userService;
+    private UserService userService;
     @Autowired
-    private PurchaseInvoiceDao      purchaseInvoiceDao;
+    private PurchaseInvoiceDao purchaseInvoiceDao;
     @Autowired
-    private SupplierDao             supplierDao;
+    private SupplierDao supplierDao;
     @Autowired
-    private SkuService              skuService;
+    private SkuService skuService;
 
     @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
-    String                          adminDownloads;
+    String adminDownloads;
 
-    private File                    xlsFile;
-    Page                            grnPage;
-    Long                            grnStatusValue;
-    private List<GoodsReceivedNote> grnList                   = new ArrayList<GoodsReceivedNote>();
+    private File xlsFile;
+    Page grnPage;
+    Long grnStatusValue;
+    private List<GoodsReceivedNote> grnList = new ArrayList<GoodsReceivedNote>();
     private List<GoodsReceivedNote> grnListForPurchaseInvoice = new ArrayList<GoodsReceivedNote>();
-    private GoodsReceivedNote       grn;
-    private List<GrnLineItem>       grnLineItems              = new ArrayList<GrnLineItem>();
-    private Date                    startDate;
-    private Date                    endDate;
-    private String                  tinNumber;
-    private String                  invoiceNumber;
-    private String                  supplierName;
-    private Boolean                 isReconciled;
-    private Warehouse               warehouse;
-    public GRNDto                   grnDto;
-    private ProductVariant          productVariant;
-    private Sku                     sku;
-    public GrnStatus                grnStatus;
-    public Double                   surcharge;
+    private GoodsReceivedNote grn;
+    private List<GrnLineItem> grnLineItems = new ArrayList<GrnLineItem>();
+    private Date startDate;
+    private Date endDate;
+    private String tinNumber;
+    private String invoiceNumber;
+    private String supplierName;
+    private Boolean isReconciled;
+    private Warehouse warehouse;
+    public GRNDto grnDto;
+    private ProductVariant productVariant;
+    private Sku sku;
+    public GrnStatus grnStatus;
+    public Double surcharge;
 
-    private Integer                 defaultPerPage            = 20;
+    private Integer defaultPerPage = 20;
 
     @DefaultHandler
     public Resolution pre() {

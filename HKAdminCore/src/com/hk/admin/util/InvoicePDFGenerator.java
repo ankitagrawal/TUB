@@ -20,7 +20,7 @@ import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.core.Keys;
 import com.hk.constants.payment.EnumPaymentMode;
-import com.hk.constants.shipment.EnumCourier;
+import com.hk.constants.courier.EnumCourier;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.courier.CourierServiceInfo;

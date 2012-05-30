@@ -25,7 +25,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonObject;
 import com.hk.admin.util.ChhotuCourierDelivery;
-import com.hk.constants.shipment.EnumCourier;
+import com.hk.constants.courier.EnumCourier;
 import com.hk.domain.order.ShippingOrder;
 
 /**

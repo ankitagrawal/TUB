@@ -1,5 +1,6 @@
 package com.hk.impl.service.core;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -36,6 +37,10 @@ public class WarehouseServiceImpl implements WarehouseService {
      */
     public Warehouse getWarehoueForFlipping(Warehouse currentWarehouseForSO) {
         return getWarehouseDao().getWarehoueForFlipping(currentWarehouseForSO);
+    }
+
+    public List<Warehouse> getServiceableWarehouses() {
+        return getWarehouseDao().findByIds(Arrays.asList(DEFAULT_WAREHOUSE_ID, MUMBAI_WAREHOUSE_ID));
     }
 
     public Warehouse getCorporateOffice() {
