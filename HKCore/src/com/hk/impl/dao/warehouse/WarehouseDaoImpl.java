@@ -21,6 +21,10 @@ public class WarehouseDaoImpl extends BaseDaoImpl implements WarehouseDao {
         return get(Warehouse.class, warehouseId);
     }
 
+    public List<Warehouse> findByIds(List<Long> warehouseIds) {
+        return getSession().createQuery("from Warehouse w where w.id in ( :warehouseIds)").setParameterList("warehouseIds", warehouseIds).list();
+    }
+
     /**
      * Currently since we only have two warehouses, so can assume it as a flip. This will change when we have more than
      * two warehouseses.

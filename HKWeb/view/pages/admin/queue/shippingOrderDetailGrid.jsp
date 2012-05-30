@@ -156,6 +156,11 @@
         <s:param name="shippingOrder" value="${shippingOrder}"/>
         Split Shipping Order
       </s:link>)
+          &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.order.split.PseudoOrderSplitAction"
+                               class="pseudoSplitBaseOrder" event="splitOrderPractically">
+          <s:param name="s" value="${shippingOrder.baseOrder.gatewayOrderId}"/>
+          Base Order Split Analytics
+      </s:link>)
       </shiro:hasAnyRoles>
        &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction" event="cancelShippingOrder"
                              class="cancelSO">
