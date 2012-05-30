@@ -484,7 +484,7 @@
   </div>
 </c:forEach>
 
-<%--<s:layout-render name="/layouts/embed/_cartFreebies.jsp" freebieBanner="${cartAction.freebieBanner}"/>--%>
+<s:layout-render name="/layouts/embed/_cartFreebies.jsp" freebieBanner="${cartAction.freebieBanner}"/>
 
 <c:if test="${cartAction.pricingDto.productLineCount > 0}">
   <s:link beanclass="com.hk.web.action.HomeAction" class="back"> &larr; go back to add more products</s:link>

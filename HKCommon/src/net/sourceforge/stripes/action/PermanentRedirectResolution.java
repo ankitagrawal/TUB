@@ -27,6 +27,7 @@ public class PermanentRedirectResolution extends RedirectResolution {
   @Override
   public void execute(HttpServletRequest req, HttpServletResponse res)
       throws ServletException, IOException {
+      System.out.println("in  PERMA RESOULTION");
     res.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
 
     HttpServletResponseWrapper resWrap = new
@@ -38,6 +39,7 @@ public class PermanentRedirectResolution extends RedirectResolution {
 
           @Override
           public void sendRedirect(String location) throws IOException {
+              System.out.println("EXCEUTING  PERMA RESOULTION");
             setHeader("Location", location);
           }
         };
