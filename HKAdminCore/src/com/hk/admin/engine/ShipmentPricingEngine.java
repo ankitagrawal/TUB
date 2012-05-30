@@ -7,6 +7,7 @@ import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.constants.core.EnumTax;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.courier.EnumCourier;
+import com.hk.constants.shipment.EnumBoxSize;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierPricingEngine;
@@ -60,6 +61,12 @@ public class ShipmentPricingEngine {
         Shipment shipment = shippingOrder.getShipment();
         Courier courier = shipment.getCourier();
         Double weight = shipment.getBoxWeight() * 1000;
+        EnumBoxSize enumBoxSize = EnumBoxSize.getBoxSize(shipment.getBoxSize());
+        if (enumBoxSize != null) {
+            if (enumBoxSize.getWeight() > weight) {
+                weight = enumBoxSize.getWeight();
+            }
+        }
         Order order = shippingOrder.getBaseOrder();
         String pincode = order.getAddress().getPin();
         Pincode pincodeObj = pincodeDao.getByPincode(pincode);

@@ -1,5 +1,6 @@
 <%@ page import="com.hk.pact.service.core.WarehouseService" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Edit shipment details">
     <s:useActionBean beanclass="mhc.web.action.admin.courier.ShipmentCostCalculatorAction" var="calculator"/>
@@ -83,8 +84,11 @@
 
                         <div style="margin-top:15px;"></div>
                         <s:submit name="calculateCourierCostingForShippingOrder" value="Get Shipping Cost for an SO"/>
-                        <s:submit name="calculateCourierCostingForShippingOrderByAntTaskMethod" value="Get Shipping Cost for an SO (Ant task)"/>
-                        <s:submit name="saveActualShippingCostForShippingOrder" value="Save Actual Shipping Cost for SO's"/>
+                        <%--<s:submit name="calculateCourierCostingForShippingOrderByAntTaskMethod" value="Get Shipping Cost for an SO (Ant task)"/>--%>
+                        <shiro:hasAnyRoles name="<%=RoleConstants.ADMIN%>">
+                            <s:submit name="saveActualShippingCostForShippingOrder"
+                                      value="Save Actual Shipping Cost for SO's"/>
+                        </shiro:hasAnyRoles>
                     </fieldset>
                 </s:form>
             </div>

@@ -84,8 +84,9 @@
             <c:if test="${shipmentQueueBean.suggestedCourier != null}">
               <label style="margin-top:5px;margin-bottom:5px;color:green;">Suggested Courier:  <b>${shipmentQueueBean.suggestedCourier.name}</b></label>
             </c:if>
+              <label>Approx Weight (By System)</label> ${shipmentQueueBean.approxWeight}
 
-            <div class="buttons" style="margin-left: 90%;"><s:submit name="saveShipmentDetails" value="Save"/></div>
+              <div class="buttons" style="margin-left: 90%;"><s:submit name="saveShipmentDetails" value="Save"/></div>
           </s:form>
         </fieldset>
       </c:otherwise>

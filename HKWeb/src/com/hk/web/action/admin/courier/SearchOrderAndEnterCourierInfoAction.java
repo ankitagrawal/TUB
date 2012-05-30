@@ -65,7 +65,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
     private String gatewayOrderId;
     Courier suggestedCourier;
     List<Courier> availableCouriers;
-    Double approxWeight;
+    Double approxWeight = 0D;
 
     Shipment shipment;
 

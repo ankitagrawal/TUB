@@ -15,6 +15,7 @@ import net.sourceforge.stripes.action.Resolution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 
@@ -25,6 +26,7 @@ import java.util.*;
  * Time: 1:51 AM
  * To change this template use File | Settings | File Templates.
  */
+@Component
 public class VariantPreferredWarehouseAction extends BaseAction {
 
     ProductVariant productVariant;

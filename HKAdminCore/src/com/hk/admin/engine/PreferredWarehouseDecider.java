@@ -148,7 +148,9 @@ public class PreferredWarehouseDecider {
 
             Map<Courier, Long> courierCostingMap = courierCostCalculator.getCourierCostingMap(pincode, isCod, warehouse, amount, weight);
 
-            //TODO add taxIncurred in all values of map
+            for (Map.Entry<Courier, Long> courierCostEntry : courierCostingMap.entrySet()) {
+                courierCostEntry.setValue(courierCostEntry.getValue() + taxIncurred.longValue());
+            }
 
             warehouseCheapestCourierCostingMap.put(warehouse, courierCostingMap);
         }
