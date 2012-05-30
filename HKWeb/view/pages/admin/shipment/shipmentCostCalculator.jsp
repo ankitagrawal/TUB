@@ -2,11 +2,11 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Edit shipment details">
+<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Calculate Shipment Cost">
     <s:useActionBean beanclass="mhc.web.action.admin.courier.ShipmentCostCalculatorAction" var="calculator"/>
     <%
         WarehouseService warehouseService = ServiceLocatorFactory.getService(WarehouseService.class);
-        pageContext.setAttribute("whList", warehouseService.getAllWarehouses());
+        pageContext.setAttribute("whList", warehouseService.getServiceableWarehouses());
     %>
 
     <s:layout-component name="heading">

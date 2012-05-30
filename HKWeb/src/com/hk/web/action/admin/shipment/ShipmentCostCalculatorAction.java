@@ -90,7 +90,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
 
     @DefaultHandler
     public Resolution pre() {
-        return new ForwardResolution("/pages/admin/courier/shipmentCostCalculator.jsp");
+        return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
     }
 
     public Resolution saveActualShippingCostForShippingOrder(){
@@ -99,19 +99,19 @@ public class ShipmentCostCalculatorAction extends BaseAction {
         shipmentPricingEngine.calculateShipmentCost(shippingOrder);
         shipmentPricingEngine.calculateReconciliationCost(shippingOrder);
         shipmentService.save(shipment);
-        return new ForwardResolution("/pages/admin/courier/shipmentCostCalculator.jsp");
+        return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
     }
 
     public Resolution calculateViaPincode() {
         courierCostingMap = courierCostCalculator.getCourierCostingMap(pincode, cod, srcWarehouse, amount, weight);
-        return new ForwardResolution("/pages/admin/courier/shipmentCostCalculator.jsp");
+        return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
     }
 
     public Resolution calculateCourierCostingForShippingOrder(){
         ShippingOrder shippingOrder = shippingOrderDao.findByGatewayOrderId(shippingOrderId);
         Order order = shippingOrder.getBaseOrder();
         courierCostingMap = courierCostCalculator.getCourierCostingMap(order.getAddress().getPin(), shippingOrder.getCOD(), shippingOrder.getWarehouse(), shippingOrder.getAmount(), shippingOrder.getShipment().getBoxWeight());
-        return new ForwardResolution("/pages/admin/courier/shipmentCostCalculator.jsp");
+        return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
     }
 
 /*    public Resolution calculateCourierCostingForShippingOrderByAntTaskMethod(){

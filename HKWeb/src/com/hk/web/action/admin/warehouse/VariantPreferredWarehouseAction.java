@@ -54,12 +54,12 @@ public class VariantPreferredWarehouseAction extends BaseAction {
 
     @DefaultHandler
     public Resolution pre(){
-        return new ForwardResolution("/pages/admin/variantWarehouseDecider.jsp");
+        return new ForwardResolution("/pages/admin/shipment/variantWarehouseDecider.jsp");
     }
 
     public Resolution decideWareHouse(){
         wareHouseCourierCostingMap = preferredWarehouseDecider.getPreferredWareHouse(Arrays.asList(productVariant), cod, pincode);
-        return new ForwardResolution("/pages/admin/variantWarehouseDecider.jsp");
+        return new ForwardResolution("/pages/admin/shipment/variantWarehouseDecider.jsp");
     }
 
     public Resolution decideWareHouseForSO(){
@@ -69,7 +69,7 @@ public class VariantPreferredWarehouseAction extends BaseAction {
             productVariantList.add(lineItem.getSku().getProductVariant());
         }
         wareHouseCourierCostingMap = preferredWarehouseDecider.getPreferredWareHouse(productVariantList, shippingOrder.isCOD(), shippingOrder.getBaseOrder().getAddress().getPin());
-        return new ForwardResolution("/pages/admin/variantWarehouseDecider.jsp");
+        return new ForwardResolution("/pages/admin/shipment/variantWarehouseDecider.jsp");
     }
 
     public ProductVariant getProductVariant() {
