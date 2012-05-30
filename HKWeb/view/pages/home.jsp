@@ -27,11 +27,11 @@
     <div id="home_header02">
     <h1>the one stop shop for health, fitness and beauty</h1>
 
-      <a href="${pageContext.request.contextPath}/home-devices/blood-pressure/heart-rate-monitor">
-        <img class="banner01" src="<hk:vhostImage/>/images/banners/home/heartrate_monitor_sbanner.jpg" border="0" alt="Launching Heart Rate Monitors - upto 28% off"/>
+      <a href="${pageContext.request.contextPath}/product/equinox-irresistible-offer/CMB-HD005">
+        <img class="banner01" src="<hk:vhostImage/>/images/banners/home/equinox.jpg" border="0" alt="Equinox - free body fat monitor"/>
       </a>
-      <a href="http://www.healthkart.com/nutrition/sports-nutrition?brand=Ultimate+Nutrition">
-        <img class="banner01" src="<hk:vhostImage/>/images/banners/home/ultimate-nutrition_sbanner.jpg" border="0" alt="Ultimate Nutrition - free shaker"/>
+      <a href="http://www.healthkart.com/nutrition/sports-nutrition?brand=Dymatize">
+        <img class="banner01" src="<hk:vhostImage/>/images/banners/home/dymatize_sbanner.jpg" border="0" alt="Dymatize - free shaker"/>
       </a>
       <a href="http://www.healthkart.com/revital">
         <img src="<hk:vhostImage/>/images/banners/home/revital_sbanner.jpg" border="0" alt="Revital - Great health, Great deals"/>
