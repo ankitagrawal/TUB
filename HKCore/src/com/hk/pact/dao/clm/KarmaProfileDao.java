@@ -1,4 +1,4 @@
-package com.hk.admin.pact.dao.clm;
+package com.hk.pact.dao.clm;
 
 import com.hk.pact.dao.BaseDao;
 import com.hk.domain.clm.KarmaProfile;
@@ -16,5 +16,5 @@ public interface KarmaProfileDao extends BaseDao {
   public KarmaProfile save(KarmaProfile karmaProfile);
 
    public KarmaProfile findByUser(User user);
-    
+
 }

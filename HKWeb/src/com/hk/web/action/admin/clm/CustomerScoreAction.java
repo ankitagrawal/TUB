@@ -6,7 +6,7 @@ import com.hk.util.io.ExcelSheetParser;
 import com.hk.util.io.HKRow;
 import com.hk.constants.core.Keys;
 import com.hk.pact.service.UserService;
-import com.hk.admin.pact.service.clm.KarmaProfileService;
+import com.hk.pact.service.clm.KarmaProfileService;
 import net.sourceforge.stripes.action.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

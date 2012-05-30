@@ -1,6 +1,6 @@
-package com.hk.admin.impl.dao.clm;
+package com.hk.impl.dao.clm;
 
-import com.hk.admin.pact.dao.clm.KarmaProfileDao;
+import com.hk.pact.dao.clm.KarmaProfileDao;
 import com.hk.domain.clm.KarmaProfile;
 import com.hk.domain.user.User;
 import com.hk.impl.dao.BaseDaoImpl;

@@ -1,7 +1,7 @@
-package com.hk.admin.impl.service.clm;
+package com.hk.impl.service.clm;
 
-import com.hk.admin.pact.service.clm.KarmaProfileService;
-import com.hk.admin.pact.dao.clm.KarmaProfileDao;
+import com.hk.pact.service.clm.KarmaProfileService;
+import com.hk.pact.dao.clm.KarmaProfileDao;
 import com.hk.domain.clm.KarmaProfile;
 import com.hk.domain.user.User;
 import com.hk.domain.order.Order;
@@ -22,6 +22,8 @@ public class KarmaProfileServiceImpl implements KarmaProfileService{
 
     @Autowired
     private KarmaProfileDao karmaProfileDao;
+    @Autowired
+    private OrderService orderService;
 
     @Transactional
      public KarmaProfile save(KarmaProfile karmaProfile) {
@@ -42,8 +44,16 @@ public class KarmaProfileServiceImpl implements KarmaProfileService{
              karmaProfile.setKarmaPoints(100);
          }
          this.save(karmaProfile);
+         setKarmaInOrder(order);
          return karmaProfile;
      }
+
+     public void setKarmaInOrder(Order order){
+        User user=order.getUser();
+        KarmaProfile karmaProfile=this.findByUser(user);
+        order.setScore(new Long(karmaProfile.getKarmaPoints()));
+        getOrderService().save(order);
+    }
 
     public KarmaProfileDao getKarmaProfileDao() {
         return karmaProfileDao;
@@ -51,5 +61,13 @@ public class KarmaProfileServiceImpl implements KarmaProfileService{
 
     public void setKarmaProfileDao(KarmaProfileDao karmaProfileDao) {
         this.karmaProfileDao = karmaProfileDao;
+    }
+
+    public OrderService getOrderService() {
+        return orderService;
+    }
+
+    public void setOrderService(OrderService orderService) {
+        this.orderService = orderService;
     }
 }
