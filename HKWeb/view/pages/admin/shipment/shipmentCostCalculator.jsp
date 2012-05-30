@@ -3,7 +3,7 @@
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Calculate Shipment Cost">
-    <s:useActionBean beanclass="mhc.web.action.admin.courier.ShipmentCostCalculatorAction" var="calculator"/>
+    <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.VariantPreferredWarehouseAction" var="calculator"/>
     <%
         WarehouseService warehouseService = ServiceLocatorFactory.getService(WarehouseService.class);
         pageContext.setAttribute("whList", warehouseService.getServiceableWarehouses());
