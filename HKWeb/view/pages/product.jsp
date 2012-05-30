@@ -580,7 +580,15 @@
             }
           });
           if (!selected) {
-            alert("Kindly select the appropriate option(s)!");
+          <c:choose>
+          <c:when test="${pa.product.primaryCategory == 'eye'}">
+            $(this).parents().find('.checkboxError').html("Please select atleast one lens!");
+          </c:when>
+          <c:when test="${pa.product.primaryCategory == 'beauty'}">
+            $(this).parents().find('.checkboxError').html("Please select a shade!");
+          </c:when>
+          </c:choose>
+            $('.checkboxError').fadeIn();
             return false;
           } else {
             $(this).parents().find('.progressLoader').show();
@@ -622,8 +630,13 @@
       });
 
       $('#productBannerTextArea').val($('#productBannerTextArea').val().replace(/\s+/g, " "));
-    })
-        ;
+
+      $(document).click(function() {
+        $('.checkboxError').fadeOut();
+      });
+
+      $('.checkboxError').hide();
+    });
   </script>
   <iframe
       src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e300&pid=${pa.product.id}&catid=${pa.product.primaryCategory.name}&subcat1id=&subcat2id=&section=1&level=1"

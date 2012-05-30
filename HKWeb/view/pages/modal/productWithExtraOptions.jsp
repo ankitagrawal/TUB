@@ -18,6 +18,7 @@
 
       <div class="cart_error" id="cart_error2"></div>
       <s:layout-component name="content">
+        <div class="checkboxError" style="margin-bottom:20px; font-size:1.2em; color:salmon;"></div>
         <table width="100%">
           <tr>
             <th></th>
@@ -112,7 +113,7 @@
                 $('.progressLoader').hide();
               }
 
-              $('.addToCartForm2').ajaxForm({dataType: 'json', success: _addToCart2});            
+              $('.addToCartForm2').ajaxForm({dataType: 'json', success: _addToCart2});
             });
             validateCheckbox = 1;
           </script>
