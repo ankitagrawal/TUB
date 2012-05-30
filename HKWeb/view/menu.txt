@@ -43,7 +43,7 @@
 -/nutrition/weight-management
 --/nutrition/weight-management/fat-burner
 --/nutrition/weight-management/appetite-control :Appetite Control
---/nutrition/weight-management/weight-maintenance  :weight Maintenance 
+--/nutrition/weight-management/weight-maintenance  :weight Maintenance
 --/nutrition/weight-management/meal-replacement :Meal Replacement
 --/nutrition/weight-management/low-calorie-food
 --/nutrition/weight-management/sweetener
@@ -420,6 +420,9 @@
 -/personal-care/oral-hygiene
 --/personal-care/oral-hygiene/special-toothbrushes : Special Toothbrushes
 --/personal-care/oral-hygiene/electronic-toothbrushes : Electronic Toothbrushes
+---/personal-care/oral-hygiene/electronic-toothbrushes/juniors
+---/personal-care/oral-hygiene/electronic-toothbrushes/Adults
+---/personal-care/oral-hygiene/electronic-toothbrushes/refills
 --/personal-care/oral-hygiene/interdental-brush : Interdental Brush
 --/personal-care/oral-hygiene/mini-flosser : Mini Flosser
 --/personal-care/oral-hygiene/tongue-cleaner : Tongue Cleaner
@@ -669,7 +672,7 @@
 ---/parenting/toddler/diapering/diapers
 ---/parenting/toddler/diapering/wipes
 --/parenting/toddler/formula-baby-food : Formula & Baby Food
---/parenting/toddler/sippers-and-mugs: Sippers & Mugs
+--/parenting/toddler/sippers-and-mugs:       Sippers & Mugs
 --/parenting/toddler/nursing-feeding
 ---/parenting/toddler/nursing-feeding/feeding-bottles
 ---/parenting/toddler/nursing-feeding/feeding-accessories
@@ -689,13 +692,17 @@
 ---/parenting/toddler/oral-care/toothpaste-and-tooth-gel:Toothpaste & Tooth gel
 --/parenting/toddler/furniture
 --/parenting/toddler/travel-safety : Travel & Safety
----/parenting/toddler/travel-safety/baby-prams-and-strollers
+---/parenting/toddler/travel-safety/baby-prams-and-strollers    : Baby Prams & Strollers
 ---/parenting/toddler/travel-safety/baby-nursing-bags
 ---/parenting/toddler/travel-safety/baby-carriers
 --/parenting/toddler/toys
---/parenting/toddler/funtime:DVDs,Comics & Drawing Books
+--/parenting/toddler/funtime     :        Funtime
+---/parenting/toddler/funtime/cds-dvds   :   CD's & DVD's
+---/parenting/toddler/funtime/comics   :   Comics
+---/parenting/toddler/funtime/activity-books   :    Activity Books
+---/parenting/toddler/funtime/accessories   :    Accessories
 -/parenting/pre-school
---/parenting/pre-school/apparels: Apparels
+--/parenting/pre-school/apparels  : Apparels
 ---/parenting/pre-school/apparels/t-shirts  :   Tees
 ---/parenting/pre-school/apparels/shoes-booties  :  Shoes & Booties
 --/parenting/pre-school/oral-care
