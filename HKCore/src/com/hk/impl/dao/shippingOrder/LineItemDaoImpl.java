@@ -3,6 +3,7 @@ package com.hk.impl.dao.shippingOrder;
 import java.util.Date;
 import java.util.List;
 
+import com.hk.domain.order.CartLineItem;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,11 @@ public class LineItemDaoImpl extends BaseDaoImpl implements LineItemDao {
     public LineItem getLineItem(Sku sku, ShippingOrder shippingOrder) {
         String query = "select li from LineItem li where li.sku = :sku  and li.shippingOrder = :shippingOrder";
         return (LineItem) getSession().createQuery(query).setEntity("sku", sku).setEntity("shippingOrder", shippingOrder).uniqueResult();
+    }
+
+    public LineItem getLineItem(CartLineItem cartLineItem) {
+        String query = "select li from LineItem li where li.cartLineItem = :cartLineItem";
+        return (LineItem) getSession().createQuery(query).setParameter("cartLineItem", cartLineItem).uniqueResult();
     }
 
     public void flipProductVariants(Sku srcSku, Sku dstSku, ShippingOrder shippingOrder) {

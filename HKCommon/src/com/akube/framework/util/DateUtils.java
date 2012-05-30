@@ -49,7 +49,12 @@ public class DateUtils {
     return new Timestamp(dateTime.minusDays(1).toDateMidnight().toDateTime().getMillis());
   }
 
-   public static Date getEndOfPreviousDay(Date date){
+    public static Date getDateMinusDays(int days){
+        DateTime dateTime=new DateTime();
+        return new Timestamp(dateTime.minusDays(days).toDateTime().getMillis());
+    }
+
+    public static Date getEndOfPreviousDay(Date date){
      if(date == null){
        return null;
      }

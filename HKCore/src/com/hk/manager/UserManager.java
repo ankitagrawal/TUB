@@ -2,6 +2,7 @@ package com.hk.manager;
 
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.core.RoleConstants;
+import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.domain.TempToken;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -24,6 +25,7 @@ import com.hk.pact.service.RoleService;
 import com.hk.pact.service.UserService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.TokenUtils;
+import com.hk.web.filter.WebContext;
 import com.shiro.PrincipalImpl;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -32,7 +34,11 @@ import org.apache.shiro.mgt.SecurityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -42,6 +48,8 @@ public class UserManager {
 
     // private static final int MAX_UNVERIFIED_DAYS = 15;
     private static final int ACTIVATION_LINK_EXPIRY_DAYS = 100;
+
+    private static Logger logger = LoggerFactory.getLogger(UserManager.class);
 
     @Autowired
     private UserService      userService;
@@ -226,15 +234,23 @@ public class UserManager {
     }
 
     public User createGuestUser(String email, String name) {
-        User user = new User();
-        user.setName(StringUtils.isBlank(name) ? "Guest" : name);
-        String randomLogin = TokenUtils.generateGuestLogin();
-        user.setLogin(randomLogin);
-        user.setEmail(email);
-        user.setPasswordChecksum(BaseUtils.passwordEncrypt(randomLogin));
-        user.getRoles().add(getRoleService().getRoleByName(RoleConstants.TEMP_USER));
-        user = getUserService().save(user);
-        return user;
+      User user = new User();
+      user.setName(StringUtils.isBlank(name) ? "Guest" : name);
+      String randomLogin = TokenUtils.generateGuestLogin();
+      user.setLogin(randomLogin);
+      user.setEmail(email);
+      user.setPasswordChecksum(BaseUtils.passwordEncrypt(randomLogin));
+      user.getRoles().add(getRoleService().getRoleByName(RoleConstants.TEMP_USER));
+      user = getUserService().save(user);
+
+      //ADD In Cookie
+      Cookie cookie = new Cookie(HealthkartConstants.Cookie.tempHealthKartUser, user.getUserHash());
+      cookie.setPath("/");
+      cookie.setMaxAge(30 * 24 * 60 * 60);
+      HttpServletResponse httpResponse = WebContext.getResponse();
+      httpResponse.addCookie(cookie);
+      logger.debug("Added Cookie for New Temp User="+user.getUserHash());
+      return user;
     }
 
     @Transactional

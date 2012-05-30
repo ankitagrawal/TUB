@@ -11,7 +11,7 @@ import com.hk.admin.pact.dao.courier.CourierDao;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.constants.payment.EnumPaymentMode;
-import com.hk.constants.shipment.EnumCourier;
+import com.hk.constants.courier.EnumCourier;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierServiceInfo;
