@@ -2,6 +2,8 @@ package com.akube.framework.stripes.action;
 
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.controller.StripesFilter;
+import net.sourceforge.stripes.util.ssl.SslUtil;
 
 import org.springframework.stereotype.Component;
 
@@ -66,16 +68,10 @@ public abstract class BasePaymentGatewaySendReceiveAction<T extends PaymentGatew
      * @return
      */
     @SuppressWarnings("unchecked")
-    public String getRedirectUrl(
+    public String getRedirectUrl(BasePaymentGatewaySendReceiveAction sendReceiveAction) {
 
-    BasePaymentGatewaySendReceiveAction sendReceiveAction) {
-        /**
-         * String tredirectUrl = StripesFilter.getConfiguration() .getActionResolver()
-         * .getUrlBinding(sendReceiveAction.getClass()); return SslUtil.encodeUrlFullForced(getContext().getRequest(),
-         * getContext().getResponse(), redirectUrl, null);
-         */
-        // TODO: rewrite
-        return null;
+        String redirectUrl = StripesFilter.getConfiguration().getActionResolver().getUrlBinding(sendReceiveAction.getClass());
+        return SslUtil.encodeUrlFullForced(getContext().getRequest(), getContext().getResponse(), redirectUrl, null);
     }
 
 }
