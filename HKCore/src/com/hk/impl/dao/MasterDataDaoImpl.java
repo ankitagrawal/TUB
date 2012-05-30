@@ -246,4 +246,9 @@ public class MasterDataDaoImpl implements MasterDataDao {
   public List<ShippingOrderStatus> getSOStatusForShipmentDetailsList() {
     return EnumShippingOrderStatus.getStatusForChangingShipmentDetails();
   }
+
+   public List<PurchaseFormType> getPurchaseInvoiceFormTypes() {
+    return getBaseDao().getAll(PurchaseFormType.class);
+  }
 }
+

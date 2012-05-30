@@ -9,13 +9,7 @@ import com.hk.db.seed.BaseSeedData;
 import java.util.List;
 import java.util.ArrayList;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Rajni
- * Date: May 29, 2012
- * Time: 12:15:29 PM
- * To change this template use File | Settings | File Templates.
- */
+
 public class PurchaseFormTypeSeedData extends BaseSeedData {
 
     public void insert(java.lang.String name, java.lang.String description) {
@@ -26,8 +20,6 @@ public class PurchaseFormTypeSeedData extends BaseSeedData {
       }
 
       public void invokeInsert(){
-        List<String> pkList = new ArrayList<String>();
-
         for (EnumPurchaseFormType enumPurchaseFormType : EnumPurchaseFormType.values()) {
 
             PurchaseFormType purchaseFormType = getBaseDao().get(PurchaseFormType.class, enumPurchaseFormType.getName());

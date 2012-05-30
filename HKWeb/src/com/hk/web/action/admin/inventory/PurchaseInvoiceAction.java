@@ -77,7 +77,6 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
     private PurchaseInvoiceStatus         purchaseInvoiceStatus;
     private User                          approvedBy;
     private User                          createdBy;
-    private List<GoodsReceivedNote>       grnListForPurchaseInvoice = new ArrayList<GoodsReceivedNote>();
     private String                        productVariantId;
     private Boolean                       isReconciled;
     private Warehouse                     warehouse;
@@ -111,8 +110,10 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
         boolean isLoggedInUserGod=Functions.collectionContains(userService.getLoggedInUser().getRoleStrings(), RoleConstants.GOD);
         if(isLoggedInUserGod){
             saveEnabled=true;
-        } else if(purchaseInvoice.getReconciled())
+        } else if(purchaseInvoice.getReconciled()== null)
         {
+            saveEnabled=true;
+        } else if(purchaseInvoice.getReconciled()){
             saveEnabled=false;
         }
         for(GoodsReceivedNote grn:grnList){
@@ -151,11 +152,13 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
                 productVariant = purchaseInvoiceLineItem.getSku().getProductVariant();
                 productVariant = productVariantDao.save(productVariant);
             }
+            if(purchaseInvoice.getReconciled() != null){
             if(purchaseInvoice.getReconciled()&& purchaseInvoice.getReconcilationDate()== null)
             {
                 purchaseInvoice.setReconcilationDate(new Date());
             }
-
+            }
+                                                                                   
             purchaseInvoiceDao.save(purchaseInvoice);
         }
         addRedirectAlertMessage(new SimpleMessage("Changes saved."));

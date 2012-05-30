@@ -1,12 +1,5 @@
 package com.hk.constants.inventory;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Rajni
- * Date: May 29, 2012
- * Time: 12:04:39 PM
- * To change this template use File | Settings | File Templates.
- */
 public enum EnumPurchaseFormType {
 
     PurchaseFormType_C("C","Central Purchase against 2%"),

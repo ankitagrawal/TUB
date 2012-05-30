@@ -50,8 +50,8 @@ public class PurchaseFormType implements java.io.Serializable{
     }
 
     @Override
-  public String toString() {
-    return id == null ? "" : id.toString();
-  }
+    public String toString() {
+        return id == null ? "" : id.toString();
+    }
 
 }

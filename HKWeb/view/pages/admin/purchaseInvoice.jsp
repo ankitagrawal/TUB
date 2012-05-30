@@ -8,6 +8,7 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="java.util.List" %>
+<%@ page import="com.hk.domain.core.PurchaseFormType" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction" var="pia"/>
@@ -19,8 +20,8 @@
   pageContext.setAttribute("taxList", taxList);
 
 	MasterDataDao masterDataDao = (MasterDataDao)ServiceLocatorFactory.getService(MasterDataDao.class);
-  List<Surcharge> surchargeList  = masterDataDao.getSurchargeList();
-  pageContext.setAttribute("surchargeList", surchargeList);
+  List<PurchaseFormType> purchaseFormTypes  = masterDataDao.getPurchaseInvoiceFormTypes();
+  pageContext.setAttribute("purchaseFormTypes", purchaseFormTypes);
 %>
 
 
@@ -290,10 +291,11 @@
 				<td><s:textarea name="purchaseInvoice.paymentDetails" style="height:50px;"/></td>
 				<td>Form Type</td>
                 <td>
-                    <s:select name="purchaseInvoiceLineItems[${ctr.index}].tax"
-                              value="${purchaseInvoiceLineItem.tax.id}" class="valueChange">
-                        <hk:master-data-collection service="<%=TaxDao.class%>" serviceProperty="taxList" value="id"
-                                                   label="name"/>
+                    <s:select name="purchaseInvoice.purchaseFormType" class="purchaseFormType">
+                        <s:option value="">-Select-</s:option>
+							<c:forEach items="${purchaseFormTypes}" var="purchaseFormTyp">
+								<s:option value="${purchaseFormTyp.id}">${purchaseFormTyp.name}</s:option>
+							</c:forEach>
                     </s:select>
                 </td>
 
