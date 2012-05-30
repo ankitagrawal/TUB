@@ -43,7 +43,7 @@
 				<prop key="hibernate.dialect">
 					org.hibernate.dialect.MySQL5InnoDBDialect
 				</prop>
-				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.show_sql">false</prop>
 				<prop key="hibernate.connection.release_mode">
 					on_close
 				</prop>
@@ -90,7 +90,7 @@
 			<value>admin2K11!</value>
 		</property>
 		<property name="maxActive">
-			<value>50</value>
+			<value>150</value>
 		</property>
 		<property name="maxWait">
 			<value>15000</value>
@@ -107,9 +107,6 @@
 		<property name="initialSize">
 			<value>50</value>
 		</property>
-		<property name="poolPreparedStatements" value="true" />
-		<property name="maxOpenPreparedStatements" value="30" />
-		<property name="timeBetweenEvictionRunsMillis" value="-1" />
 	</bean>
 
 
