@@ -23,7 +23,6 @@ public class CartLineItemTypeConverter implements TypeConverter<CartLineItem> {
   }
 
   
-  //CartLineItemDao lineItemDao;
   @Autowired
   private BaseDao baseDao;
 
@@ -39,7 +38,6 @@ public class CartLineItemTypeConverter implements TypeConverter<CartLineItem> {
       return null;
     } else {
         return getBaseDao().get(CartLineItem.class, idLong);
-      //return lineItemDao.find(idLong);
     }
   }
   
