@@ -307,6 +307,12 @@ public class PurchaseInvoice implements java.io.Serializable {
 	public void setWarehouse(Warehouse warehouse) {
 		this.warehouse = warehouse;
 	}
+
+  @Override
+  public String toString() {
+      return id == null ? "" : id.toString();
+  }
+  
 }
 
 
