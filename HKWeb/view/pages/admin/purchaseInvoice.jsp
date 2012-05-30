@@ -11,6 +11,7 @@
 <%@ page import="com.hk.domain.core.PurchaseFormType" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
+<%@ page import="com.hk.admin.util.TaxUtil" %> 
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction" var="pia"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Purchase Invoice">
 
@@ -167,11 +168,12 @@
 				taxable-=discountedAmount;
 				var surchargeCategory = 0.0;
 				var stateIdentifier = $('.state').html();
-				if (stateIdentifier == 'CST') {
+        surchargeCategory = ${hk:getSurchargeValue(pia.purchaseInvoice.supplier.state, pia.purchaseInvoice.warehouse.state)};
+				/*if (stateIdentifier == 'CST') {
 					surchargeCategory = 0.0;
 				} else {
 					surchargeCategory = 0.05;
-				}
+				}*/
 				var tax = taxable * taxCategory;
 				var surcharge = tax * surchargeCategory;
 				var payable = surcharge + taxable + tax;
@@ -250,7 +252,7 @@
 				<td>${pia.purchaseInvoice.supplier.name}</td>
 
 				<td>Supplier State</td>
-				<td>${pia.purchaseInvoice.supplier.state}</td>
+				<td id="supplierState">${pia.purchaseInvoice.supplier.state}</td>
 
 				<td>Tax</td>
 				<td>
