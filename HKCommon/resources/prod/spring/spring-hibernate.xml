@@ -89,12 +89,12 @@
 		<property name="password">
 			<value>admin2K11!</value>
 		</property>
-		<property name="maxActive">
+		<!--  <property name="maxActive">
 			<value>150</value>
 		</property>
 		<property name="maxWait">
 			<value>15000</value>
-		</property>
+		</property> -->
 		<property name="removeAbandoned">
 			<value>true</value>
 		</property>
