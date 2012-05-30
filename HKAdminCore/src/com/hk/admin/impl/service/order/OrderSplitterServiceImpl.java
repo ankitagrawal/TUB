@@ -95,6 +95,11 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
         return sortedCourierCostingTreeMap.lastKey();
     }
 
+    public NavigableMap<List<DummyOrder>, Long> listSortedDummyOrderMapPractically(Order order) {
+        TreeMap<List<DummyOrder>, Long> sortedCourierCostingTreeMap = splitBOPractically(order);
+        return sortedCourierCostingTreeMap.descendingMap();
+    }
+
     public Map.Entry<List<DummyOrder>, Long> listFirstMapEntryPractically(Order order) {
         TreeMap<List<DummyOrder>, Long> sortedCourierCostingTreeMap = splitBOPractically(order);
         return sortedCourierCostingTreeMap.firstEntry();
