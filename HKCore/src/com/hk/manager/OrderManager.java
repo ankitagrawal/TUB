@@ -332,6 +332,10 @@ public class OrderManager {
             getPaymentService().save(payment);
         }
 
+        /*
+         * update user karma profile for those whose score is not yet set
+         */
+           //getKarmaProfileService().up
         /**
          * Order lifecycle activity logging - Payement Marked Successful
          */

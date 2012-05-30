@@ -4,6 +4,8 @@ import com.hk.admin.pact.service.clm.KarmaProfileService;
 import com.hk.admin.pact.dao.clm.KarmaProfileDao;
 import com.hk.domain.clm.KarmaProfile;
 import com.hk.domain.user.User;
+import com.hk.domain.order.Order;
+import com.hk.pact.service.order.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,18 @@ public class KarmaProfileServiceImpl implements KarmaProfileService{
 
      public KarmaProfile findByUser(User user){
        return getKarmaProfileDao().findByUser(user);
+     }
+
+     public KarmaProfile updateKarmaAfterOrder(Order order){
+         User user= order.getUser();
+         KarmaProfile karmaProfile=findByUser(user);
+         if(karmaProfile ==null){
+             karmaProfile = new KarmaProfile();
+             karmaProfile.setUser(user);
+             karmaProfile.setKarmaPoints(100);
+         }
+         this.save(karmaProfile);
+         return karmaProfile;
      }
 
     public KarmaProfileDao getKarmaProfileDao() {

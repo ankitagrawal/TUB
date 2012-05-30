@@ -2,6 +2,7 @@ package com.hk.admin.pact.service.clm;
 
 import com.hk.domain.clm.KarmaProfile;
 import com.hk.domain.user.User;
+import com.hk.domain.order.Order;
 
 /**
  * Created by IntelliJ IDEA.
@@ -15,5 +16,7 @@ public interface KarmaProfileService {
      public KarmaProfile save(KarmaProfile karmaProfile);
 
      public KarmaProfile findByUser(User user);
+
+     public KarmaProfile updateKarmaAfterOrder(Order order);
     
 }
