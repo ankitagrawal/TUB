@@ -76,11 +76,12 @@ public class AccountingInvoicePdfAction extends BaseAction {
   public Resolution downloadAccountingInvoicePDF() {
     logger.info("Inside pre method of AccountingInvoicePdfAction.");
     String pdfFilePath = null;
+    ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
     pdfFilePath = adminDownloads + "/accountingInvoicePDFs/" + sdf.format(new Date()) + "/All_Accounting_Invoices" + ".pdf";
     final File pdfFile = new File(pdfFilePath);
     pdfFile.getParentFile().mkdirs();
-    shippingOrderList=shippingOrderService.getShippingOrderList(startDate,endDate);
-
+    shippingOrderSearchCriteria.setShipmentStartDate(startDate).setShipmentEndDate(endDate);
+    shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria);
     if (shippingOrderList != null & shippingOrderList.size() > 0) {
 
       try {

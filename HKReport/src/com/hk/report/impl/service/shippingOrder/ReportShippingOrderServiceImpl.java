@@ -623,6 +623,10 @@ public class ReportShippingOrderServiceImpl implements ReportShippingOrderServic
         return stateTransitionDtos;
     }
 
+    public List<ShippingOrder> getShippingOrderListForCouriers(Date startDate,Date endDate,List<Courier> courierList){
+        return getReportShippingOrderDao().getShippingOrderListForCouriers(startDate,endDate,courierList);
+    }
+
     public ReportShippingOrderDao getReportShippingOrderDao() {
         return reportShippingOrderDao;
     }

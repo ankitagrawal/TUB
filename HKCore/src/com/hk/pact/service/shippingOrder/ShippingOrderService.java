@@ -68,9 +68,4 @@ public interface ShippingOrderService {
 
     public void logShippingOrderActivity(ShippingOrder shippingOrder, User user, ShippingOrderLifeCycleActivity shippingOrderLifeCycleActivity, String comments);
 
-    public List<ShippingOrder> getShippingOrderList(Date startDate,Date endDate);
-
-    public List<ShippingOrder> getShippingOrderListForCouriers(Date startDate,Date endDate,List<Courier> courierList);
-
-
 }

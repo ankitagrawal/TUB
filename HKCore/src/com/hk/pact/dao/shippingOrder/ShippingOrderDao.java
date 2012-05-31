@@ -38,9 +38,4 @@ public interface ShippingOrderDao extends BaseDao {
 
     public List<Long> getShippingOrderListByCourier(Date startDate, Date endDate, Long courierId);
 
-    public List<ShippingOrder> getShippingOrderList(Date startDate,Date endDate);
-
-    public List<ShippingOrder> getShippingOrderListForCouriers(Date startDate,Date endDate,List<Courier> courierList);
-
-
 }

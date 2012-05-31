@@ -226,36 +226,9 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         getShippingOrderDao().save(shippingOrderLifecycle);
     }
 
-    public List<Long> getShippingOrderListByCourier(Date startDate, Date endDate, Long courierId) {
-
-        List<Long> shippingOrderList = new ArrayList<Long>();
-
-        if (startDate == null) {
-            Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.MONTH, -1);
-            startDate = calendar.getTime();
-        }
-        if (endDate == null) {
-            endDate = new Date();
-        }
-
-        shippingOrderList = getShippingOrderDao().getShippingOrderListByCourier(startDate, endDate, courierId);
-        return shippingOrderList;
-    }
-
-    @Override
     public Page searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, int pageNo, int perPage) {
         return searchShippingOrders(shippingOrderSearchCriteria, true, pageNo, perPage);
     }
-
-    public List<ShippingOrder> getShippingOrderList(Date startDate, Date endDate) {
-      return getShippingOrderDao().getShippingOrderList(startDate,endDate);
-    }
-
-    public List<ShippingOrder> getShippingOrderListForCouriers(Date startDate,Date endDate,List<Courier> courierList){
-        return getShippingOrderDao().getShippingOrderListForCouriers(startDate,endDate,courierList);
-    }
-
 
     public UserService getUserService() {
         return userService;

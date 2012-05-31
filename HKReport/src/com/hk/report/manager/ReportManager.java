@@ -338,6 +338,7 @@ public class ReportManager {
      */
     public File generateCourierReportXsl(String xslFilePath, EnumShippingOrderStatus shippingOrderStatus, List<Courier> courierList,Date startDate,Date endDate) throws Exception {
 
+        List<ShippingOrder> shippingOrderList = null;
         File file = new File(xslFilePath);
         FileOutputStream out = new FileOutputStream(file);
         Workbook wb = new HSSFWorkbook();
@@ -384,16 +385,17 @@ public class ReportManager {
         setCellValue(row, 22, ReportConstants.BOX_WEIGHT);
 
         int rowCounter = 1;
-       /* ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
-        shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForShipmentAwaiting()));
-        shippingOrderSearchCriteria.setCourierList(courierList);
-        Page shippingOrderPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, 1, 1000);
-        List<ShippingOrder> shippingOrderList = null;
-        if (shippingOrderPage != null) {
-            shippingOrderList = shippingOrderPage.getList();
-        }*/
-        List<ShippingOrder> shippingOrderList = null;
-        shippingOrderList = shippingOrderService.getShippingOrderListForCouriers(startDate, endDate, courierList);
+        if (startDate == null && endDate == null) {
+            ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
+            shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForShipmentAwaiting()));
+            shippingOrderSearchCriteria.setCourierList(courierList);
+            Page shippingOrderPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, 1, 1000);
+            if (shippingOrderPage != null) {
+                shippingOrderList = shippingOrderPage.getList();
+            }
+        } else {
+            shippingOrderList = reportShippingOrderService.getShippingOrderListForCouriers(startDate, endDate, courierList);
+        }
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         if (shippingOrderList != null) {
             for (ShippingOrder order : shippingOrderList) {
@@ -465,7 +467,7 @@ public class ReportManager {
     }
 
     public File generateCourierReportXslForBlueDart(String xslFilePath, EnumShippingOrderStatus orderStatus, List<Courier> courierList,Date startDate,Date endDate) throws Exception {
-
+        List<ShippingOrder> shippingOrderList=null;
         File file = new File(xslFilePath);
         FileOutputStream out = new FileOutputStream(file);
         Workbook wb = new HSSFWorkbook();
@@ -507,16 +509,18 @@ public class ReportManager {
         int rowCounter = 1;
         Page orderPage = null;
 
-        /*ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
-        shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForShipmentAwaiting()));
-        shippingOrderSearchCriteria.setCourierList(courierList);
-        Page shippingOrderPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, 1, 1000);
+        if (startDate == null && endDate == null) {
+            ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
+            shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForShipmentAwaiting()));
+            shippingOrderSearchCriteria.setCourierList(courierList);
+            Page shippingOrderPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, 1, 1000);
 
-        if (shippingOrderPage != null) {
-            shippingOrderList = shippingOrderPage.getList();
-        }*/
-        List<ShippingOrder> shippingOrderList = null;
-        shippingOrderList=shippingOrderService.getShippingOrderListForCouriers(startDate,endDate,courierList);
+            if (shippingOrderPage != null) {
+                shippingOrderList = shippingOrderPage.getList();
+            }
+        } else {
+            shippingOrderList = reportShippingOrderService.getShippingOrderListForCouriers(startDate, endDate, courierList);
+        }
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         for (ShippingOrder order : shippingOrderList) {
             Set<LineItem> lineItems = order.getLineItems();
