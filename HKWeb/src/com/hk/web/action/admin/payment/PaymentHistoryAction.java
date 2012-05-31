@@ -85,6 +85,11 @@ public class PaymentHistoryAction extends BaseAction {
                     paidAmount += paymentHistoryTemp.getAmount();
                 }
                 outstandingAmount = purchaseInvoice.getFinalPayableAmount() - paidAmount;
+                int outstandingAmountFormatted = (int)(outstandingAmount*100);
+                outstandingAmount = (double)(outstandingAmountFormatted)/100;
+            }
+            else{
+              outstandingAmount = purchaseInvoice.getFinalPayableAmount();
             }
         }
 
