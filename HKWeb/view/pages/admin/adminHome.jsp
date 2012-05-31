@@ -74,7 +74,21 @@
   <h3>
     <s:link beanclass="com.hk.web.action.admin.catalog.product.BulkEditProductAction">Bulk Edit Product And Variant Attributes</s:link></h3>
 
-  <h3>
+    <h3>
+        <s:link beanclass="com.hk.web.action.admin.order.split.PseudoOrderSplitAction"
+                class="pseudoSplitBaseOrder">
+            Base Order Split Analytics
+        </s:link>
+    </h3>
+
+    <h3>
+        <s:link beanclass="com.hk.web.action.admin.warehouse.VariantPreferredWarehouseAction"
+                class="warehouseDecider">
+            Variant/SO Preferred Warehouse Decider
+        </s:link>
+    </h3>
+
+    <h3>
     <s:link
         beanclass="com.hk.web.action.admin.catalog.product.CreateOrSelectProductAction">Create new product and product variant</s:link></h3>
 
@@ -123,8 +137,15 @@
 
 <div class="left roundBox">
   <h2>Courier and Services</h2>
-  
-  <h3><s:link beanclass="com.hk.web.action.admin.courier.MasterPincodeAction">Update Master Pincode List</s:link></h3>
+
+    <h3>
+        <s:link beanclass="com.hk.web.action.admin.shipment.ShipmentCostCalculatorAction"
+                class="calculator">
+            Shipment Cost Calculator Action
+        </s:link>
+    </h3>
+
+   <h3><s:link beanclass="com.hk.web.action.admin.courier.MasterPincodeAction">Update Master Pincode List</s:link></h3>
 
   <h3><s:link beanclass="com.hk.web.action.admin.courier.CourierServiceInfoAction">Update Courier Service Info</s:link></h3>
 

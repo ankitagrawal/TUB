@@ -341,7 +341,7 @@
 					<td class="payableAmount">
 						<fmt:formatNumber value="${grnLineItemDto.payable}" maxFractionDigits="2"/>
 					</td>
-          <td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.weight" value="${grnLineItemDto.grnLineItem.sku.productVariant.weight}"/></td>
+          <td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.weight" class="weight" value="${grnLineItemDto.grnLineItem.sku.productVariant.weight}"/></td>
           <td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.length" value="${grnLineItemDto.grnLineItem.sku.productVariant.length}"/></td>
           <td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.breadth" value="${grnLineItemDto.grnLineItem.sku.productVariant.breadth}"/></td>
           <td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.height" value="${grnLineItemDto.grnLineItem.sku.productVariant.height}"/></td>

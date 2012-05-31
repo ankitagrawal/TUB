@@ -3,7 +3,7 @@ package com.hk.db.seed.courier;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hk.constants.shipment.EnumCourier;
+import com.hk.constants.courier.EnumCourier;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.courier.Courier;
 

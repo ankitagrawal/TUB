@@ -36,7 +36,7 @@ import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.admin.util.AFLResponseParser;
 import com.hk.admin.util.ChhotuCourierDelivery;
 import com.hk.constants.report.ReportConstants;
-import com.hk.constants.shipment.EnumCourier;
+import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.ShippingOrder;

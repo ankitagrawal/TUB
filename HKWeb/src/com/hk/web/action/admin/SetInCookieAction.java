@@ -27,7 +27,7 @@ public class SetInCookieAction extends BaseAction {
   @JsonHandler
   public Resolution pre() {
     HttpServletResponse httpResponse = WebContext.getResponse();
-    Cookie wantedCODCookie = new Cookie(HealthkartConstants.Session.wantedCOD, wantedCOD);
+    Cookie wantedCODCookie = new Cookie(HealthkartConstants.Cookie.wantedCOD, wantedCOD);
     wantedCODCookie.setPath("/");
     wantedCODCookie.setMaxAge(3600);
     httpResponse.addCookie(wantedCODCookie);

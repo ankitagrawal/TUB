@@ -18,7 +18,6 @@ import com.hk.constants.core.Keys;
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.constants.order.EnumCartLineItemType;
-import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.offer.rewardPoint.RewardPoint;
@@ -263,7 +262,7 @@ public class PaymentManager {
             HttpServletResponse httpResponse = WebContext.getResponse();
             if (httpRequest.getCookies() != null) {
               for (Cookie cookie : httpRequest.getCookies()) {
-                if (cookie.getName() != null && cookie.getName().equals(HealthkartConstants.Session.wantedCOD)) {
+                if (cookie.getName() != null && cookie.getName().equals(HealthkartConstants.Cookie.wantedCOD)) {
                   if (cookie.getValue().equals("true")) {
                     DecimalFormat df = new DecimalFormat("#.##");
                     Double cashBack = Double.valueOf(df.format(order.getPayment().getAmount() * cashBackPercentage));
@@ -277,7 +276,7 @@ public class PaymentManager {
               }
             }
             //Resetting value and expiring cookie
-            Cookie wantedCODCookie = new Cookie(HealthkartConstants.Session.wantedCOD, "false");
+            Cookie wantedCODCookie = new Cookie(HealthkartConstants.Cookie.wantedCOD, "false");
             wantedCODCookie.setPath("/");
             wantedCODCookie.setMaxAge(0);
             httpResponse.addCookie(wantedCODCookie);

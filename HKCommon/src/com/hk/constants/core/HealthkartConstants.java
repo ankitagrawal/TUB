@@ -11,13 +11,14 @@ public class HealthkartConstants {
     public static final String perPageCatalog = "perPageCatalog";
     public static final String affId = "affId";
     public static final String newSession = "newSession";
-    public static final String wantedCOD = "wantedCOD";
   }
 
   public static class Cookie {        
+    public static final String tempHealthKartUser = "tempHealthKartUser";
     public static final String referred_by = "referred_by";
     public static final String affiliate_id = "affiliate_id";
     public static final String preferredZone = "preferredZone";
+    public static final String wantedCOD = "wantedCOD";
   }
 
   public static class BreadcrumbContext {
