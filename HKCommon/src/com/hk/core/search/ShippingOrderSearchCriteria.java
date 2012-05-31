@@ -137,7 +137,7 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
             if (shipmentCriteria == null) {
                 shipmentCriteria = criteria.createCriteria("shipment");
             }
-            shipmentCriteria.add(Restrictions.between("ship_date", shipmentStartDate, shipmentEndDate));
+            shipmentCriteria.add(Restrictions.between("shipDate", shipmentStartDate, shipmentEndDate));
         }
 
         if (StringUtils.isNotBlank(basketCategory)) {
