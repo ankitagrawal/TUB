@@ -66,6 +66,12 @@ public class CourierGroup implements java.io.Serializable {
   public int hashCode() {
     return name.hashCode();
   }
+
+    @Override
+    public String toString() {
+        return id != null ? id.toString() : "";
+    }
+
 }
 
 

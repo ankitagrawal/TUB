@@ -5,6 +5,7 @@ import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.dao.courier.PincodeRegionZoneDao;
 import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.constants.core.EnumTax;
+import com.hk.constants.courier.EnumCourierGroup;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.shipment.EnumBoxSize;
@@ -61,10 +62,12 @@ public class ShipmentPricingEngine {
         Shipment shipment = shippingOrder.getShipment();
         Courier courier = shipment.getCourier();
         Double weight = shipment.getBoxWeight() * 1000;
-        EnumBoxSize enumBoxSize = EnumBoxSize.getBoxSize(shipment.getBoxSize());
-        if (enumBoxSize != null) {
-            if (enumBoxSize.getWeight() > weight) {
-                weight = enumBoxSize.getWeight();
+        if (EnumCourierGroup.COMMON.getId().equals(courierGroupService.getCourierGroup(courier).getId())) {
+            EnumBoxSize enumBoxSize = EnumBoxSize.getBoxSize(shipment.getBoxSize());
+            if (enumBoxSize != null) {
+                if (enumBoxSize.getWeight() > weight) {
+                    weight = enumBoxSize.getWeight();
+                }
             }
         }
         Order order = shippingOrder.getBaseOrder();
