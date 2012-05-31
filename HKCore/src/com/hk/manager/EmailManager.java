@@ -429,7 +429,7 @@ public class EmailManager {
 
     public boolean sendOrderShippedEmail(ShippingOrder shippingOrder, String invoiceLink) {
         Shipment shipment = shippingOrder.getShipment();
-        shipment.setTrackLink(getLinkManager().getOrderTrackLink(shipment.getTrackingId(), shipment.getCourier().getId()));
+        shipment.setTrackLink(getLinkManager().getOrderTrackLink(shipment.getTrackingId(), shipment.getCourier().getId(),shippingOrder));
         HashMap valuesMap = new HashMap();
         valuesMap.put("order", shippingOrder);
         valuesMap.put("invoiceLink", invoiceLink);
