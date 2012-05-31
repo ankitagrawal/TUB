@@ -7,9 +7,7 @@ import com.hk.constants.core.Keys;
 @Component
 public class FbConstants {
 
-    
-    //TODO: rewrite
-    
+
 	@Value("#{hkEnvProps['" + Keys.Env.fbFanAppId + "']}")
   public static String fbFanAppId;
 
@@ -50,33 +48,6 @@ public class FbConstants {
   public static  String promo2AppId="";
 	@Value("#{hkEnvProps['" + Keys.Env.fbPromo2AppUrl + "']}")
   public static  String promo2AppUrl ="";
-
-  static {
-  /*  fbFanAppId = ServiceLocatorFactory.getService(Key.get(String.class, Names.named(Keys.Env.fbFanAppId)));
-    fbFanPageId = ServiceLocatorFactory.getService(Key.get(String.class, Names.named(Keys.Env.fbFanPageId)));
-
-    apiKey = ServiceLocatorFactory.getService(Key.get(String.class, Names.named(Keys.Env.fbApiKey)));
-    apiSecret = ServiceLocatorFactory.getService(Key.get(String.class, Names.named(Keys.Env.fbApiSecret)));
-    appId = ServiceLocatorFactory.getService(Key.get(String.class, Names.named(Keys.Env.fbAppId)));
-    appUrl = ServiceLocatorFactory.getService(Key.get(String.class, Names.named(Keys.Env.fbAppUrl)));
-
-    contestApiKey = ServiceLocatorFactory.getService(Key.get(String.class, Names.named(Keys.Env.fbContestApiKey)));
-    contestApiSecret = ServiceLocatorFactory.getService(Key.get(String.class, Names.named(Keys.Env.fbContestApiSecret)));
-    contestAppId = ServiceLocatorFactory.getService(Key.get(String.class, Names.named(Keys.Env.fbContestAppId)));
-    contestAppUrl = ServiceLocatorFactory.getService(Key.get(String.class, Names.named(Keys.Env.fbContestAppUrl)));
-
-    promoApiKey = ServiceLocatorFactory.getService(Key.get(String.class, Names.named   (Keys.Env.fbPromoApiKey)));
-    promoApiSecret = ServiceLocatorFactory.getService(Key.get(String.class, Names.named(Keys.Env.fbPromoApiSecret)));
-    promoAppId = ServiceLocatorFactory.getService(Key.get(String.class, Names.named    (Keys.Env.fbPromoAppId)));
-    promoAppUrl = ServiceLocatorFactory.getService(Key.get(String.class, Names.named   (Keys.Env.fbPromoAppUrl)));
-
-    promo2ApiKey = ServiceLocatorFactory.getService(Key.get(String.class, Names.named   (Keys.Env.fbPromo2ApiKey)));
-    promo2ApiSecret = ServiceLocatorFactory.getService(Key.get(String.class, Names.named(Keys.Env.fbPromo2ApiSecret)));
-    promo2AppId = ServiceLocatorFactory.getService(Key.get(String.class, Names.named    (Keys.Env.fbPromo2AppId)));
-    promo2AppUrl = ServiceLocatorFactory.getService(Key.get(String.class, Names.named   (Keys.Env.fbPromo2AppUrl)));
-*/  
-      //TODO: rewrite
-      }
 
   public static class Session {
     public static  String fbUserClient = "fbUserClient";
