@@ -461,8 +461,8 @@
     <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_CATMAN_ADMIN%>">
         &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.order.split.PseudoOrderSplitAction"
                              class="pseudoSplitBaseOrder" event="splitOrderPractically">
-        <s:param name="s" value="${order.gatewayOrderId}"/>
-        Base Order Split Analytics
+        <s:param name="gatewayOrderId" value="${order.gatewayOrderId}"/>
+        BO Split Analytics
     </s:link>)
     </shiro:hasAnyRoles>
 
