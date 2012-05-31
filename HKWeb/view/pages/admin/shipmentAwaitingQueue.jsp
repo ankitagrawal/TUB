@@ -50,7 +50,6 @@
               <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList" value="id"
                                          label="name"/>
             </s:select>
-            <s:submit name="generateCourierReport" value="Download Courier Excel"/>
             <s:submit name="generatePDFs" value="Download Invoice PDF"/>
           </s:form>
         </div>

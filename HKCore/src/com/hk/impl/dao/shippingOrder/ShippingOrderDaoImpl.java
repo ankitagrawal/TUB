@@ -3,6 +3,7 @@ package com.hk.impl.dao.shippingOrder;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.ArrayList;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
@@ -16,6 +17,7 @@ import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderLifeCycleActivity;
 import com.hk.domain.sku.Sku;
+import com.hk.domain.courier.Courier;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
 
@@ -112,4 +114,22 @@ public class ShippingOrderDaoImpl extends BaseDaoImpl implements ShippingOrderDa
         return getSession().createQuery(query).setParameter("courierId", courierId).setParameter("startDate", startDate).setParameter("endDate", endDate).list();
     }
 
+    public List<ShippingOrder> getShippingOrderList(Date startDate, Date endDate) {
+       List<ShippingOrder> shippingOrderList=new ArrayList<ShippingOrder>();
+       String query =  "from ShippingOrder so where " + " so.shipment.shipDate between :startDate and :endDate";
+      return getSession().createQuery(query).setParameter("startDate", startDate).setParameter("endDate", endDate).list();       
+    }
+
+    public List<ShippingOrder> getShippingOrderListForCouriers(Date startDate,Date endDate,List<Courier> courierList){
+        List<Long> courierIdList=new ArrayList<Long>();
+        List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>();
+        for(Courier courier:courierList){
+              courierIdList.add(courier.getId());
+        }
+        for(Long courierId:courierIdList) {
+        String query = "from ShippingOrder so where " + " so.shipment.shipDate between :startDate and :endDate and so.shipment.courier.id =:courierId";
+        shippingOrderList.addAll(getSession().createQuery(query).setParameter("startDate", startDate).setParameter("endDate", endDate).setParameter("courierId", courierId).list());
+        }
+        return shippingOrderList;
+    }
 }
