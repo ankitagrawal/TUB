@@ -3,6 +3,7 @@ package com.hk.impl.dao.shippingOrder;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.ArrayList;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
@@ -16,6 +17,7 @@ import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderLifeCycleActivity;
 import com.hk.domain.sku.Sku;
+import com.hk.domain.courier.Courier;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
 
@@ -111,5 +113,6 @@ public class ShippingOrderDaoImpl extends BaseDaoImpl implements ShippingOrderDa
                 + " and shipment.shipDate between :startDate and :endDate " + " and shipment.deliveryDate is null ";
         return getSession().createQuery(query).setParameter("courierId", courierId).setParameter("startDate", startDate).setParameter("endDate", endDate).list();
     }
+
 
 }

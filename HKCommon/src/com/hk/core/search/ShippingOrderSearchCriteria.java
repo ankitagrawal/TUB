@@ -26,6 +26,8 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
     private String                                   basketCategory;
     private Long                                     baseOrderId;
     private String                                   baseGatewayOrderId;
+    private Date                                     shipmentStartDate;
+    private Date                                     shipmentEndDate;
 
     private List<EnumShippingOrderLifecycleActivity> shippingOrderLifeCycleActivities;
     private List<ShippingOrderStatus>                shippingOrderStatusList;
@@ -90,6 +92,24 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
         return criteria;
     }
 
+    public Date getShipmentStartDate() {
+        return shipmentStartDate;
+    }
+
+    public ShippingOrderSearchCriteria setShipmentStartDate(Date shipmentStartDate) {
+        this.shipmentStartDate = shipmentStartDate;
+        return this;
+    }
+
+    public Date getShipmentEndDate() {
+        return shipmentEndDate;
+    }
+
+    public ShippingOrderSearchCriteria setShipmentEndDate(Date shipmentEndDate) {
+        this.shipmentEndDate = shipmentEndDate;
+        return this;
+    }
+
     protected DetachedCriteria buildSearchCriteriaFromBaseCriteria() {
         DetachedCriteria criteria = super.buildSearchCriteriaFromBaseCriteria();
 
@@ -111,6 +131,13 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
                 shipmentCriteria = criteria.createCriteria("shipment");
             }
             shipmentCriteria.add(Restrictions.in("courier", courierList));
+        }
+
+        if (shipmentStartDate != null && shipmentEndDate != null) {
+            if (shipmentCriteria == null) {
+                shipmentCriteria = criteria.createCriteria("shipment");
+            }
+            shipmentCriteria.add(Restrictions.between("ship_date", shipmentStartDate, shipmentEndDate));
         }
 
         if (StringUtils.isNotBlank(basketCategory)) {
