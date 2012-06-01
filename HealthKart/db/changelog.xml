@@ -7412,4 +7412,11 @@
     <changeSet author="Rahul (generated)" id="1337865338106-4">
         <addForeignKeyConstraint baseColumnNames="base_order_id" baseTableName="demand_history" constraintName="fk_demand_history_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order" referencesUniqueColumn="false"/>
     </changeSet>
+    <changeSet author="Seema (generated)" id="1338550284592-1">
+        <addColumn tableName="awb">
+            <column name="cod" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
