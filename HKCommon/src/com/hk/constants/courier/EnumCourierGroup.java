@@ -1,7 +1,5 @@
 package com.hk.constants.courier;
 
-import com.hk.constants.shipment.EnumCourier;
-
 public enum EnumCourierGroup {
     COMMON(10L, "COMMON", EnumCourier.DTDC_COD.getId()), Bluedart(20L, "Bluedart", EnumCourier.BlueDart.getId()), Local(30L, "Local", EnumCourier.Chhotu.getId()), EarthMovers(40L,
             "EarthMovers", EnumCourier.IndiaEarthMovers.getId()), ;

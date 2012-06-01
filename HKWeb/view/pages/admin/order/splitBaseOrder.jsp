@@ -3,7 +3,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="com.hk.web.action.admin.order.SplitBaseOrderAction" var="splitBaseOrderAction"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.order.split.SplitBaseOrderAction" var="splitBaseOrderAction"/>
 <%
   WarehouseService warehouseService = ServiceLocatorFactory.getService(WarehouseService.class);
   pageContext.setAttribute("warehouses", warehouseService.getAllWarehouses());
@@ -20,7 +20,7 @@
   </s:layout-component>
   <s:layout-component name="heading">Split Base Order Manually</s:layout-component>
   <s:layout-component name="content">
-    <s:form beanclass="com.hk.web.action.admin.order.SplitBaseOrderAction">
+    <s:form beanclass="com.hk.web.action.admin.order.split.SplitBaseOrderAction">
       <table width="80%" class="align_top">
         <thead>
         <tr>

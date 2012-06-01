@@ -387,33 +387,6 @@ public class OrderManager {
          * auto escalated
          */
 
-        Set<ShippingOrder> shippingOrders = getOrderService().createShippingOrders(order);
-
-        if (shippingOrders != null && shippingOrders.size() > 0) {
-            // save order with placed status since amount has been applied
-            order.setOrderStatus(getOrderStatusService().find(EnumOrderStatus.InProcess));
-            order.setShippingOrders(shippingOrders);
-            order = getOrderService().save(order);
-
-            /**
-             * Order lifecycle activity logging - Order split to shipping orders
-             */
-            getOrderLoggingService().logOrderActivity(order, getUserService().getAdminUser(), getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), null);
-
-            // auto escalate shipping orders if possible
-            if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
-                for (ShippingOrder shippingOrder : shippingOrders) {
-                    getShippingOrderService().autoEscalateShippingOrder(shippingOrder);
-                }
-            }
-
-        } else {
-            /*
-             * order.setOrderStatus(orderStatusDao.find(EnumOrderStatus.P.getId())); order =
-             * getOrderService().save(order);
-             */
-        }
-
         // if reward points redeemed then add reward point txns
         if (pricingDto.getRedeemedRewardPoints() > 0) {
             getReferrerProgramManager().redeemRewardPoints(order, pricingDto.getRedeemedRewardPoints());
