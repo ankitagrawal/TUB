@@ -703,6 +703,15 @@
       ${hk:getMatchingSku(${object})}
     </example>
   </function>
-
-
+  <function>
+    <description>
+      product list for a primary heading in a sorted order.
+    </description>
+    <name>getCategoryHeadingProductsSortedByOrder</name>
+    <function-class>com.hk.taglibs.Functions</function-class>
+    <function-signature>java.util.List getCategoryHeadingProductsSortedByOrder(java.lang.Long,java.lang.String)</function-signature>
+    <example>
+      ${hk:getCategoryHeadingProductsSortedByOrder(${id}, ${str})}
+    </example>
+  </function>
 </taglib>

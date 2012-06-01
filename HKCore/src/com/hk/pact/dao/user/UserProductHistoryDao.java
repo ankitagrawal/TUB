@@ -17,4 +17,6 @@ public interface UserProductHistoryDao extends BaseDao {
     public UserProductHistory findByProductAndUser(Product product, User user);
 
     public void updateIsAddedToCart(Product product, User user, Order order);
+
+    public List<UserProductHistory> findByUser(User user);
 }

@@ -1,11 +1,11 @@
 package com.hk.util;
 
-import mhc.common.constants.EnumProductReferrer;
-import mhc.common.constants.CategoryConstants;
-import mhc.common.constants.ProductReferrerConstants;
-
 import java.util.Map;
 import java.util.HashMap;
+
+import com.hk.constants.catalog.category.CategoryConstants;
+import com.hk.constants.marketing.EnumProductReferrer;
+import com.hk.constants.marketing.ProductReferrerConstants;
 
 /**
  * Created by IntelliJ IDEA.
