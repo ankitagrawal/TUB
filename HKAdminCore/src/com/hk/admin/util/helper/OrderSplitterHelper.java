@@ -98,12 +98,12 @@ public class OrderSplitterHelper {
     }
 
     public Map.Entry<Courier, Long> calculateCheapestShipmentPlusReconciliationCost(DummySO dummySO) {
-        return getAllShipmentPlusReconciliationCost(dummySO).entrySet().iterator().next();
+        return getAllShipmentPlusReconciliationCost(dummySO);
     }
 
-    public Map<Courier, Long> getAllShipmentPlusReconciliationCost(DummySO dummySO) {
+    public Map.Entry<Courier, Long> getAllShipmentPlusReconciliationCost(DummySO dummySO) {
         DummyOrder dummyOrder = dummySO.getDummyOrder();
-        return courierCostCalculator.getCourierCostingMap(dummyOrder.getPincode().getPincode(),dummyOrder.isCod(),dummyOrder.getWarehouse(),dummyOrder.getAmount(),dummyOrder.getWeight());
+        return courierCostCalculator.getCheapestCourierEntry(dummyOrder.getPincode().getPincode(),dummyOrder.isCod(),dummyOrder.getWarehouse(),dummyOrder.getAmount(),dummyOrder.getWeight());
     }
 
 

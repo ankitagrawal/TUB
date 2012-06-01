@@ -1,22 +1,27 @@
 package com.hk.web.action.admin.courier;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.engine.ShipmentPricingEngine;
+import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
-import com.hk.constants.shipment.EnumBoxSize;
+import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.EnumCourier;
+import com.hk.constants.shipment.EnumBoxSize;
+import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.domain.core.Pincode;
+import com.hk.domain.courier.Courier;
+import com.hk.domain.courier.Shipment;
+import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.DontValidate;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-
+import com.hk.pact.dao.courier.PincodeDao;
+import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
+import com.hk.pact.service.UserService;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.web.action.error.AdminPermissionAction;
+import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.SimpleError;
-import net.sourceforge.stripes.validation.Validate;
 import net.sourceforge.stripes.validation.ValidationMethod;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -25,22 +30,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-import com.akube.framework.stripes.action.BaseAction;
-import com.hk.admin.pact.service.courier.CourierService;
-import com.hk.constants.core.PermissionConstants;
-import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
-import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
-import com.hk.domain.core.Pincode;
-import com.hk.domain.courier.BoxSize;
-import com.hk.domain.courier.Courier;
-import com.hk.domain.courier.Shipment;
-import com.hk.domain.order.ShippingOrder;
-import com.hk.pact.dao.courier.PincodeDao;
-import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
-import com.hk.pact.service.UserService;
-import com.hk.pact.service.shippingOrder.ShippingOrderService;
-import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
-import com.hk.web.action.error.AdminPermissionAction;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
@@ -127,7 +118,9 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
                 shipment = shippingOrder.getShipment();
                 shippingOrderList.add(shippingOrder);
                 for (LineItem lineItem : shippingOrder.getLineItems()) {
-                    approxWeight += lineItem.getSku().getProductVariant().getWeight();
+	                  if (lineItem.getSku().getProductVariant().getWeight() != null){
+                      approxWeight += lineItem.getSku().getProductVariant().getWeight();
+	                  }
                 }
             } else {
                 addRedirectAlertMessage(new SimpleMessage("Shipping Order is not checked out. It cannot be packed. "));
