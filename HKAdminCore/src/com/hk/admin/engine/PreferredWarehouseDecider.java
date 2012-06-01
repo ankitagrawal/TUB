@@ -2,6 +2,7 @@ package com.hk.admin.engine;
 
 import com.hk.admin.pact.dao.courier.CourierPricingEngineDao;
 import com.hk.admin.pact.dao.courier.PincodeRegionZoneDao;
+import com.hk.admin.pact.service.courier.CourierCostCalculator;
 import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.comparator.MapValueComparator;
@@ -68,7 +69,7 @@ public class PreferredWarehouseDecider {
     ShipmentPricingEngine shipmentPricingEngine;
 
     @Autowired
-    CourierCostCalculatorImpl courierCostCalculator;
+    CourierCostCalculator courierCostCalculator;
 
     private static Logger logger = LoggerFactory.getLogger(PreferredWarehouseDecider.class);
 

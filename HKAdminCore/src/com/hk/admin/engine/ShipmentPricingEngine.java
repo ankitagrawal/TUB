@@ -3,11 +3,12 @@ package com.hk.admin.engine;
 import com.hk.admin.pact.dao.courier.CourierPricingEngineDao;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.dao.courier.PincodeRegionZoneDao;
+import com.hk.admin.pact.service.courier.CourierCostCalculator;
 import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.constants.core.EnumTax;
+import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.courier.EnumCourierGroup;
 import com.hk.constants.payment.EnumPaymentMode;
-import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.shipment.EnumBoxSize;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
@@ -56,7 +57,7 @@ public class ShipmentPricingEngine {
     CourierGroupService courierGroupService;
 
     @Autowired
-    CourierCostCalculatorImpl courierCostCalculator;
+    CourierCostCalculator courierCostCalculator;
 
     public Double calculateShipmentCost(ShippingOrder shippingOrder){
         Shipment shipment = shippingOrder.getShipment();
