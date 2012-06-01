@@ -2,6 +2,8 @@ package com.hk.impl.service.catalog;
 
 import java.util.List;
 import java.util.Set;
+import java.util.Collections;
+import java.util.Comparator;
 
 import net.sourceforge.stripes.controller.StripesFilter;
 
@@ -15,15 +17,23 @@ import com.hk.domain.catalog.product.ProductExtraOption;
 import com.hk.domain.catalog.product.ProductGroup;
 import com.hk.domain.catalog.product.ProductImage;
 import com.hk.domain.catalog.product.ProductOption;
+import com.hk.domain.content.PrimaryCategoryHeading;
 import com.hk.pact.dao.catalog.product.ProductDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.web.filter.WebContext;
+import com.hk.impl.dao.content.PrimaryCategoryHeadingDaoImpl;
+import com.hk.util.ProductReferrerMapper;
+import com.hk.manager.LinkManager;
 
 @Service
 public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductDao productDAO;
+    @Autowired
+    private PrimaryCategoryHeadingDaoImpl primaryCategoryHeadingDaoImpl;
+    @Autowired
+    private LinkManager linkManager;
 
     public Product getProductById(String productId) {
         return getProductDAO().getProductById(productId);
@@ -138,5 +148,23 @@ public class ProductServiceImpl implements ProductService {
 
     public void setProductDAO(ProductDao productDAO) {
         this.productDAO = productDAO;
+    }
+
+    public List<Product> ProductsSortedByOrder(Long primaryCategoryHeadingId, String productReferrer){
+      PrimaryCategoryHeading primaryCategoryHeading = primaryCategoryHeadingDaoImpl.get(PrimaryCategoryHeading.class, primaryCategoryHeadingId);
+      Collections.sort(primaryCategoryHeading.getProducts(), new ProductComparator());
+      for(Product product : primaryCategoryHeading.getProducts()){
+        product.setProductURL(linkManager.getProductURL(product, ProductReferrerMapper.getProductReferrerid(productReferrer)));
+      }
+      return primaryCategoryHeading.getProducts();
+    }
+
+    public class ProductComparator implements Comparator<Product> {
+      public int compare(Product o1, Product o2) {
+        if (o1.getOrderRanking() != null && o2.getOrderRanking() != null) {
+          return o1.getOrderRanking().compareTo(o2.getOrderRanking());
+        }
+        return -1;
+      }
     }
 }

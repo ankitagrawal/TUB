@@ -21,7 +21,7 @@
       </c:when>
       <c:otherwise>
         <h2>
-          <s:link beanclass="com.hk.web.action.core.catalog.product.ProductAction" title="${product.name}" class="prod_top_link">
+          <s:link href="${product.productURL}" title="${product.name}" class="prod_top_link">
             <s:param name="productId" value="${product.id}"/>
             <s:param name="productSlug" value="${product.slug}"/>
             ${product.name}
@@ -114,7 +114,7 @@
           </c:choose>
             ${product.overview}
           <div class='more'>
-            <s:link beanclass="com.hk.web.action.core.catalog.product.ProductAction" title="${product.name}">
+            <s:link href="${product.productURL}" title="${product.name}">
               <s:param name="productId" value="${product.id}"/>
               <s:param name="productSlug" value="${product.slug}"/>
               read more and place order &rarr;

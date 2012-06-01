@@ -24,6 +24,7 @@ import org.stripesstuff.plugin.session.Session;
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.constants.core.HealthkartConstants;
+import com.hk.constants.marketing.ProductReferrerConstants;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.content.SeoData;
@@ -32,9 +33,11 @@ import com.hk.helper.MenuHelper;
 import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
 import com.hk.manager.SolrManager;
 import com.hk.manager.UserManager;
+import com.hk.manager.LinkManager;
 import com.hk.pact.dao.catalog.product.ProductDao;
 import com.hk.pact.dao.user.UserDao;
 import com.hk.util.SeoManager;
+import com.hk.util.ProductReferrerMapper;
 
 @UrlBinding("/brand/{topLevelCategory}/{brand}")
 @Component
@@ -43,6 +46,8 @@ public class BrandCatalogAction extends BasePaginatedAction {
   private static Logger logger = LoggerFactory.getLogger(BrandCatalogAction.class);
   @Autowired
    ProductDao productDao;
+  @Autowired
+  LinkManager linkManager;
 
   String urlFragment;
   private String brand;
@@ -95,6 +100,7 @@ public class BrandCatalogAction extends BasePaginatedAction {
     }
 
     for (Product product : productList) {
+  	  product.setProductURL(linkManager.getProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.BRAND_PAGE)));
       menuNode = menuHelper.getMenoNodeFromProduct(product);
       menuNodes.add(menuNode);
     }

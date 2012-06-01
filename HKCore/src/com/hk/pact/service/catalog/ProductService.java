@@ -77,4 +77,6 @@ public interface ProductService {
 
     public ProductOption findProductOptionByNameAndValue(String name, String value);
 
+    public List<Product> ProductsSortedByOrder(Long primaryCategoryHeadingId, String productReferrer);
+
 }

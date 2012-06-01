@@ -40,12 +40,14 @@ import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
 import com.hk.impl.dao.catalog.category.CategoryImageDaoImpl;
 import com.hk.manager.SolrManager;
 import com.hk.manager.UserManager;
+import com.hk.manager.LinkManager;
 import com.hk.pact.dao.catalog.combo.ComboDao;
 import com.hk.pact.dao.catalog.product.ProductDao;
 import com.hk.pact.dao.location.LocalityMapDao;
 import com.hk.pact.dao.location.MapIndiaDao;
 import com.hk.pact.dao.user.UserDao;
 import com.hk.util.SeoManager;
+import com.hk.util.ProductReferrerMapper;
 import com.hk.web.AppConstants;
 import com.hk.web.ConvertEncryptedToNormalDouble;
 import com.hk.web.action.HomeAction;
@@ -112,6 +114,8 @@ public class CatalogAction extends BasePaginatedAction {
   UserDao userDao;
   @Autowired
   UserManager userManager;
+  @Autowired
+  LinkManager linkManager;
 
   @Session(key = HealthkartConstants.Cookie.preferredZone)
   private String preferredZone;
@@ -206,6 +210,9 @@ public class CatalogAction extends BasePaginatedAction {
         trimListByCategory(productList, secondaryCategory);
         if (rootCategorySlug.equals("services")) {
           productList = trimListByDistance(productList, preferredZone);
+        }
+		    for(Product product : productList){
+          product.setProductURL(linkManager.getProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
         }
       }
     }

@@ -43,7 +43,7 @@
           </s:link>
         </div>
         <div class="grid_13">
-          <s:link beanclass="com.hk.web.action.core.catalog.product.ProductAction" title="${product.name}" class="prod_top_link">
+          <s:link href="${product.productURL}" title="${product.name}" class="prod_top_link">
             <s:param name="productId" value="${product.id}"/>
             <s:param name="productSlug" value="${product.slug}"/>
             <h3>
@@ -173,7 +173,7 @@
           <div class='prod_desc'>
               ${product.overview}
             <div class='more'>
-              <s:link beanclass="com.hk.web.action.core.catalog.product.ProductAction" title="${product.name}">
+              <s:link href="${product.productURL}" title="${product.name}">
                 <s:param name="productId" value="${product.id}"/>
                 <s:param name="productSlug" value="${product.slug}"/>
                 read more and place order &rarr;

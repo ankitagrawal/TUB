@@ -2,6 +2,7 @@ package com.hk.manager;
 
 import com.hk.domain.TempToken;
 import com.hk.domain.Ticket;
+import com.hk.domain.catalog.product.Product;
 import com.hk.domain.accounting.AccountingInvoice;
 import com.hk.domain.email.EmailRecepient;
 import com.hk.domain.order.Order;
@@ -112,5 +113,20 @@ public class LinkManager {
     public String getCitrusPaymentGatewayUrl() {
         RedirectResolution redirectResolution = new RedirectResolution("/core/payment/CitrusGatewaySendReceive.action");
         return getUrlFromResolution(redirectResolution);
+    }
+
+    public String getProductURL(Product product, Long productReferrerId){
+      String productURL = null;
+      String productSlug = product.getSlug();
+      String productId = product.getId();
+      productURL = "/product/"+productSlug+"/"+productId+"?productReferrerId="+productReferrerId;
+  /*
+      RedirectResolution redirectResolution = new RedirectResolution(ProductAction.class).
+          addParameter("referrer", referrerId).
+          addParameter("productId", productId).addParameter("productSlug", productSlug);
+      return getUrlFromResolution(redirectResolution);
+  */
+
+      return productURL;
     }
 }

@@ -19,7 +19,9 @@ import org.stripesstuff.plugin.session.Session;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.HealthkartConstants;
+import com.hk.constants.marketing.EnumProductReferrer;
 import com.hk.domain.MapIndia;
+import com.hk.domain.marketing.ProductReferrer;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.product.Product;
@@ -38,11 +40,14 @@ import com.hk.pact.dao.catalog.product.ProductCountDao;
 import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.dao.location.LocalityMapDao;
 import com.hk.pact.dao.location.MapIndiaDao;
-import com.hk.pact.dao.user.UserProductHistoryDao;
+import com.hk.pact.dao.BaseDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.util.SeoManager;
+import com.hk.util.ProductReferrerMapper;
 import com.hk.web.action.core.search.SearchAction;
 import com.hk.web.filter.WebContext;
+import com.hk.impl.dao.user.UserProductHistoryDaoImpl;
+import com.hk.manager.LinkManager;
 
 @UrlBinding("/product/{productSlug}/{productId}")
 // @HttpCache(expires=1200)
@@ -66,6 +71,7 @@ public class ProductAction extends BaseAction {
     String                           affid;
     Double                           starRating;
     List<UserReview>                 userReviews = new ArrayList<UserReview>();
+    Long                             productReferrerId;
 
     @Session(key = HealthkartConstants.Cookie.preferredZone)
     private String                   preferredZone;
@@ -89,11 +95,13 @@ public class ProductAction extends BaseAction {
     @Autowired
     private ProductCountDao          productCountDao;
     @Autowired
-    private UserProductHistoryDao    userProductHistoryDao;
+    private UserProductHistoryDaoImpl userProductHistoryDaoImpl;
     @Autowired
     private AddressDao               addressDao;
     @Autowired
     private ProductService           productService;
+    @Autowired
+    private LinkManager              linkManager;
 
     @DefaultHandler
     @DontValidate
@@ -117,8 +125,9 @@ public class ProductAction extends BaseAction {
         if (getPrincipal() != null) {
             user = getUserService().getUserById(getPrincipal().getId());
             if (user != null) {
+                ProductReferrer productReferrer = getBaseDao().get(ProductReferrer.class, productReferrerId);
                 productCountDao.getOrCreateProductCount(product, user);
-                userProductHistoryDao.addToUserProductHistory(product, user);
+                userProductHistoryDaoImpl.addToUserProductHistory(product, user, productReferrer);
                 affiliate = affiliateDao.getAffilateByUser(user);
             }
         }
@@ -126,8 +135,16 @@ public class ProductAction extends BaseAction {
         List<Product> relatedProducts = product.getRelatedProducts();
         if (relatedProducts == null || relatedProducts.size() == 0) {
             relatedProducts = getProductService().getRelatedProducts(product);
+			for(Product product : relatedProducts){
+				product.setProductURL(linkManager.getProductURL(product, ProductReferrerMapper.getProductReferrerid(EnumProductReferrer.relatedProductsPage.getName())));
+			}
             product.setRelatedProducts(relatedProducts);
         }
+		else{
+		  for(Product product : relatedProducts){
+			product.setProductURL(linkManager.getProductURL(product, ProductReferrerMapper.getProductReferrerid(EnumProductReferrer.relatedProductsPage.getName())));
+		  }
+		}
         if (product.isProductHaveColorOptions()) {
             Integer outOfStockOrDeletedCtr = 0;
             for (ProductVariant productVariant : product.getProductVariants()) {
@@ -321,4 +338,11 @@ public class ProductAction extends BaseAction {
         this.urlFragment = urlFragment;
     }
 
+    public Long getProductReferrerId() {
+      return productReferrerId;
+    }
+
+    public void setProductReferrerId(Long productReferrerId) {
+      this.productReferrerId = productReferrerId;
+    }
 }
