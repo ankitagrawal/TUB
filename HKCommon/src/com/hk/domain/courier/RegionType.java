@@ -28,6 +28,11 @@ public class RegionType implements java.io.Serializable {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "regionType")
     private Set<PincodeRegionZone> pincodeRegionZones = new HashSet<PincodeRegionZone>(0);
 
+    @Override
+    public String toString() {
+        return id != null ? id.toString() : "";
+    }
+
     public Long getId() {
         return this.id;
     }
