@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.constants.FbConstants;
 import com.hk.constants.marketing.AnalyticsConstants;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.category.CategoryImage;
@@ -55,7 +56,6 @@ public class HomeAction extends BaseAction {
     
     public Resolution pre() {
         menuHelper.postConstruction();
-        
         // IN CASE OF REVERT COMMENT EVERYTHING EXCEPT THE FORWARD RESOLUTION TO HOME.JSP AND ALSO REPLACE THE DYNAMIC
         // HOME.JSP WITH THE HARD CODED ONE
         
