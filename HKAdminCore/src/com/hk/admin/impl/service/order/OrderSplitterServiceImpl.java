@@ -95,6 +95,11 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
         return sortedCourierCostingTreeMap.lastKey();
     }
 
+    public NavigableMap<List<DummyOrder>, Long> listSortedDummyOrderMapPractically(Order order) {
+        TreeMap<List<DummyOrder>, Long> sortedCourierCostingTreeMap = splitBOPractically(order);
+        return sortedCourierCostingTreeMap.descendingMap();
+    }
+
     public Map.Entry<List<DummyOrder>, Long> listFirstMapEntryPractically(Order order) {
         TreeMap<List<DummyOrder>, Long> sortedCourierCostingTreeMap = splitBOPractically(order);
         return sortedCourierCostingTreeMap.firstEntry();
@@ -123,7 +128,7 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
             orderLoggingService.logOrderActivityByAdmin(order, EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit, comments);
             throw new OrderSplitException(comments + ". Aborting splitting of order.", order);
         }
-        if(order.getPayment() == null){
+        if (order.getPayment() == null) {
             String comments = "No Payment Associated with order";
             orderLoggingService.logOrderActivityByAdmin(order, EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit, comments);
             throw new OrderSplitException(comments + ". Aborting splitting of order.", order);
@@ -190,17 +195,35 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
             DummyOrder dummyGgnOrder = new DummyOrder(ggnCartLineItems, ggnWarehouse, isCod, pincode, payment);
             DummyOrder dummyMumOrder = new DummyOrder(mumCartLineItems, mumWarehouse, isCod, pincode, payment);
 
-            List<DummyOrder> splitDummyOrders = Arrays.asList(dummyGgnOrder,dummyMumOrder);
-            boolean validCase = true;
+            List<DummyOrder> splitDummyOrders = Arrays.asList(dummyGgnOrder, dummyMumOrder);
+
             if (isCod) {
-                for (DummyOrder splitDummyOrder : splitDummyOrders) {
-                  if(splitDummyOrder.getAmount() < codMinAmount){
-                      validCase = false;
-                  }
-                }
+                if (!validCase(splitDummyOrders)) continue;
             }
-            if(!validCase) continue;
+
             dummyOrderCostingMap.put(splitDummyOrders, orderSplitterHelper.calculateShippingPlusTax(splitDummyOrders));
+
+            List<CartLineItem> ggnCartLineItems2 = new ArrayList<CartLineItem>();
+            ggnCartLineItems2.addAll(ggnKiCartLineItems);
+            ggnCartLineItems2.addAll(awaraCartLineItems.subList(i, awaraLineItemsSize));
+
+            List<CartLineItem> mumCartLineItems2 = new ArrayList<CartLineItem>();
+            mumCartLineItems2.addAll(mumKiCartLineItems);
+            mumCartLineItems2.addAll(awaraCartLineItems.subList(0, i));
+            DummyOrder dummyGgnOrder2 = new DummyOrder(ggnCartLineItems2, ggnWarehouse, isCod, pincode, payment);
+            DummyOrder dummyMumOrder2 = new DummyOrder(mumCartLineItems2, mumWarehouse, isCod, pincode, payment);
+
+            List<DummyOrder> splitDummyOrders2 = Arrays.asList(dummyGgnOrder2, dummyMumOrder2);
+            if (isCod) {
+                if (!validCase(splitDummyOrders2)) continue;
+            }
+            dummyOrderCostingMap.put(splitDummyOrders2, orderSplitterHelper.calculateShippingPlusTax(splitDummyOrders2));
+        }
+
+        if (dummyOrderCostingMap.size() == 0) {
+            String comments = "System could not split the order, Please report to tech ";
+            orderLoggingService.logOrderActivityByAdmin(order, EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit, comments);
+            throw new OrderSplitException(comments + ". Aborting splitting of order.", order);
         }
 
         MapValueComparator mapValueComparator = new MapValueComparator(dummyOrderCostingMap);
@@ -208,6 +231,34 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
         sortedCourierCostingTreeMap.putAll(dummyOrderCostingMap);
 
         return sortedCourierCostingTreeMap;
+    }
+
+/*
+    private List<DummyOrder> createDummyOrders(Order order, Pincode pincode, List<CartLineItem> ggnKiCartLineItems, List<CartLineItem> mumKiCartLineItems, List<CartLineItem> awaraCartLineItems) {
+        List<CartLineItem> ggnCartLineItems = new ArrayList<CartLineItem>();
+        ggnCartLineItems.addAll(ggnKiCartLineItems);
+        ggnCartLineItems.addAll(awaraCartLineItems.subList(0, i));
+
+        List<CartLineItem> mumCartLineItems = new ArrayList<CartLineItem>();
+        mumCartLineItems.addAll(mumKiCartLineItems);
+        mumCartLineItems.addAll(awaraCartLineItems.subList(i, awaraLineItemsSize));
+
+        DummyOrder dummyGgnOrder = new DummyOrder(ggnCartLineItems, ggnWarehouse, order.isCOD(), pincode, order.getPayment());
+        DummyOrder dummyMumOrder = new DummyOrder(mumCartLineItems, mumWarehouse, isCod, pincode, payment);
+
+        List<DummyOrder> splitDummyOrders = Arrays.asList(dummyGgnOrder,dummyMumOrder);
+    }
+*/
+
+    private boolean validCase(List<DummyOrder> splitDummyOrders) {
+        boolean validCase = true;
+        for (DummyOrder splitDummyOrder : splitDummyOrders) {
+            double amount = splitDummyOrder.getAmount();
+            if (splitDummyOrder.getCartLineItemList().size() > 0 && amount > 0D && amount < codMinAmount) {
+                validCase = false;
+            }
+        }
+        return validCase;
     }
 
 
@@ -256,7 +307,7 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
         return sortedCourierCostingTreeMap;
     }
 
-    public Map<Warehouse,Set<CartLineItem>> splitBOExcludingShippingTaxConsideration(Order order){
+    public Map<Warehouse, Set<CartLineItem>> splitBOExcludingShippingTaxConsideration(Order order) {
         Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
         Map<CartLineItem, Set<Warehouse>> cartLineItemWarehouseListMap = new HashMap<CartLineItem, Set<Warehouse>>();
 
@@ -327,7 +378,7 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
                 }
             }
         }
-       return warehouseLineItemSetMap;
+        return warehouseLineItemSetMap;
     }
 
 }

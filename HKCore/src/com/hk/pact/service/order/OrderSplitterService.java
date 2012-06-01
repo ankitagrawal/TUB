@@ -18,6 +18,8 @@ public interface OrderSplitterService {
 
     public List<DummyOrder> listBestDummyOrdersPractically(Order order);
 
+    public NavigableMap<List<DummyOrder>, Long> listSortedDummyOrderMapPractically(Order order);
+
     public Map.Entry<List<DummyOrder>, Long> listFirstMapEntryPractically(Order order);
 
     public Map<List<DummyOrder>, Long> listAllDummyOrdersMap(Order order);

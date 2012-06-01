@@ -13,6 +13,7 @@ import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
@@ -110,7 +111,16 @@ public class ShipmentCostCalculatorAction extends BaseAction {
     public Resolution calculateCourierCostingForShippingOrder(){
         ShippingOrder shippingOrder = shippingOrderDao.findByGatewayOrderId(shippingOrderId);
         Order order = shippingOrder.getBaseOrder();
-        courierCostingMap = courierCostCalculator.getCourierCostingMap(order.getAddress().getPin(), shippingOrder.getCOD(), shippingOrder.getWarehouse(), shippingOrder.getAmount(), shippingOrder.getShipment().getBoxWeight());
+        Shipment shipment = shippingOrder.getShipment();
+        Double weight = 0D;
+        if (shippingOrder.getShipment() != null) {
+            weight = shipment.getBoxWeight();
+        } else {
+            for (LineItem lineItem : shippingOrder.getLineItems()) {
+                weight = lineItem.getSku().getProductVariant().getWeight();
+            }
+        }
+        courierCostingMap = courierCostCalculator.getCourierCostingMap(order.getAddress().getPin(), shippingOrder.getCOD(), shippingOrder.getWarehouse(), shippingOrder.getAmount(), weight);
         return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
     }
 

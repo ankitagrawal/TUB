@@ -55,7 +55,7 @@ public class PseudoOrderSplitAction extends BaseAction {
     public Resolution splitOrderPractically() {
         order = orderService.findByGatewayOrderId(gatewayOrderId);
         if (order != null) {
-            sortedDummyOrderMaps = orderSplitterServiceImpl.splitBOPractically(order);
+            sortedDummyOrderMaps = orderSplitterServiceImpl.listSortedDummyOrderMapPractically(order);
         } else {
             addRedirectAlertMessage(new SimpleMessage("No Order found for corresponding gateway Order ID"));
         }
