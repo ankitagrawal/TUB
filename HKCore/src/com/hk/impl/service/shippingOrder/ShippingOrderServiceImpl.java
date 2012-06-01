@@ -25,6 +25,7 @@ import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.ReconciliationStatusDao;
+import com.hk.domain.courier.Courier;
 import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.inventory.InventoryService;
@@ -225,24 +226,6 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         getShippingOrderDao().save(shippingOrderLifecycle);
     }
 
-    public List<Long> getShippingOrderListByCourier(Date startDate, Date endDate, Long courierId) {
-
-        List<Long> shippingOrderList = new ArrayList<Long>();
-
-        if (startDate == null) {
-            Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.MONTH, -1);
-            startDate = calendar.getTime();
-        }
-        if (endDate == null) {
-            endDate = new Date();
-        }
-
-        shippingOrderList = getShippingOrderDao().getShippingOrderListByCourier(startDate, endDate, courierId);
-        return shippingOrderList;
-    }
-
-    @Override
     public Page searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, int pageNo, int perPage) {
         return searchShippingOrders(shippingOrderSearchCriteria, true, pageNo, perPage);
     }
@@ -300,5 +283,4 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     public ShippingOrder findByTrackingId(String trackingId) {
         return getShippingOrderDao().findByTrackingId(trackingId);
     }
-
 }

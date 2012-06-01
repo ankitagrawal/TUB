@@ -20,6 +20,7 @@ public interface ReportShippingOrderDao {
     public List<Long> getActivityPerformedSOCount(List<Long> orderIds, Date activityDate, List<Long> shippingOrderActivity, Integer cutOffDay1, Integer cutOffTimeHH1,
             Integer cutOffTimeMM1, Integer cutOffDay2, Integer cutOffTimeHH2, Integer cutOffTimeMM2);
     
+    public List<ShippingOrder> getShippingOrderListForCouriers(Date startDate,Date endDate,List<Courier> courierList);
 
 
 }
