@@ -29,7 +29,8 @@ public class TaxUtil {
 				 * Surchage calculated only for Haryana
 				 */
 				if (warehouseState.equalsIgnoreCase(StateList.HARYANA)) {
-					surcharge = tax * TaxConstants.SURCHARGE;
+          Double surchargeValue = getSurchargeValue(warehouseState, supplier.getState());
+					surcharge = tax * surchargeValue;
 				}
 			} else {
 				if (skuTax.getValue() != 0.0) {
@@ -42,4 +43,13 @@ public class TaxUtil {
 		return new TaxComponent(surcharge, tax, payable);
 	}
 
+    public static Double getSurchargeValue(String warehouseState, String supplierState){
+      Double surchargeValue = 0.00;
+      if(warehouseState.equalsIgnoreCase(supplierState)){
+        if(warehouseState.equals(StateList.HARYANA)){
+          surchargeValue = TaxConstants.SURCHARGE;
+        }
+      }
+      return surchargeValue;
+    }
 }
