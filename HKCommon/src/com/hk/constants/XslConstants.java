@@ -94,6 +94,8 @@ public class XslConstants {
     public static final String    PAYMENT_TYPE                    = "PAYMENT_TYPE";
     public static final String    SERVICE_TYPE                    = "SERVICE_TYPE";
     public static final String    POSTPAID_AMOUNT                 = "POSTPAID_AMOUNT";
+   public static final String    AWB_NUMBER                 = "AWB_NUMBER";
+   public static final String    COD                 = "COD";
 
 
 }

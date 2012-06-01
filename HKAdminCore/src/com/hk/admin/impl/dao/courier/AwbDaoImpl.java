@@ -26,5 +26,12 @@ public class AwbDaoImpl extends BaseDaoImpl implements AwbDao{
         return (Awb) getSession().createQuery(hqlQuery)
                 .setEntity("courier", courier).setString("awbNumber", awbNumber).uniqueResult();
     }
+
+    public List<Awb> getAvailableAwbForCourierByCod(Courier courier, Warehouse warehouse,boolean cod) {
+        String hqlQuery = " from Awb awb where awb.used = 0 and awb.courier = :courier and awb.warehouse = :warehouse and awb.cod = :cod order by id asc";
+        return getSession().createQuery(hqlQuery)
+                .setEntity("courier", courier).setEntity("warehouse", warehouse).setMaxResults(5).list();
+    }
+
 }
 
