@@ -8,6 +8,7 @@ import com.hk.domain.order.Order;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.domain.email.EmailCampaign;
 
 public interface UserService {
 
@@ -43,4 +44,5 @@ public interface UserService {
 
     public User findByLoginAndStoreId(String login, Long storeId);
 
+    public List<User> getAllMailingList(EmailCampaign emailCampaign);
 }

@@ -9,9 +9,11 @@ import com.hk.domain.catalog.category.Category;
 import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
+import com.hk.domain.email.EmailCampaign;
 import com.hk.dto.user.UserFilterDto;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.RoleDao;
+import com.hk.impl.dto.mail.UserEmailDto;
 
 public interface UserDao extends BaseDao {
 
@@ -56,4 +58,5 @@ public interface UserDao extends BaseDao {
 
     public void setRoleDao(RoleDao roleDao);
 
+    public List<User> getAllMailingList(EmailCampaign emailCampaign);
 }

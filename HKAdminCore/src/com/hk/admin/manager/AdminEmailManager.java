@@ -39,6 +39,7 @@ import com.hk.util.io.ExcelSheetParser;
 import com.hk.util.io.HKRow;
 import com.hk.service.impl.FreeMarkerService;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.mail.HtmlEmail;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -178,7 +179,7 @@ public class AdminEmailManager {
         Map<String, String> headerMap = new HashMap<String, String>();
         headerMap.put("X-SMTPAPI", xsmtpapi);
         Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(emailCampaign.getTemplate());
-
+        List<Map<String, HtmlEmail>> emailList = new ArrayList<Map<String, HtmlEmail>>();
         for (User user : emailersList) {
             try {
                 // find exisitng receipients or create receipients thru the emails ids passed
@@ -188,26 +189,29 @@ public class AdminEmailManager {
                 valuesMap.put("unsubscribeLink", getLinkManager().getEmailUnsubscribeLink(emailRecepient));
                 valuesMap.put("user", user);
                 // subscribed user + same camapaign mail not yet sent
-                List<EmailerHistory> emailerHistoryList = getEmailerHistoryDao().findEmailRecipientByCampaign(emailRecepient, emailCampaign);
+                /*List<EmailerHistory> emailerHistoryList = getEmailerHistoryDao().findEmailRecipientByCampaign(emailRecepient, emailCampaign);
                 if (emailRecepient.isSubscribed()) {
                     if (emailerHistoryList != null && emailerHistoryList.isEmpty()) {
                         // last mail date null or last mail date > campaign min date
                         if (emailRecepient.getLastEmailDate() == null
                                 || new DateTime().minusDays(emailCampaign.getMinDayGap().intValue()).isAfter(emailRecepient.getLastEmailDate().getTime())) {
-                            emailService.sendHtmlEmail(emailCampaign.getTemplate(), valuesMap, emailRecepient.getEmail(), user.getName(), "info@healthkart.com", headerMap);
+*/
+                            Map<String, HtmlEmail> email = emailService.createHtmlEmail(emailCampaign.getTemplate(), valuesMap, emailRecepient.getEmail(), user.getName(), "info@healthkart.com", headerMap, freemarkerTemplate);
+                            emailList.add(email);
                             // keep a record in history
                             emailRecepient.setEmailCount(emailRecepient.getEmailCount() + 1);
                             emailRecepient.setLastEmailDate(new Date());
                             getEmailRecepientDao().save(emailRecepient);
                             getEmailerHistoryDao().createEmailerHistory("no-reply@healthkart.com", "HealthKart",
                                     getBaseDao().get(EmailType.class, EnumEmailType.CampaignEmail.getId()), emailRecepient, emailCampaign, "");
-                        }
-                    }
-                }
+                        //}
+                    //}
+                //}
             } catch (Exception e) {
                 logger.info("Some exception occured while sending email to one of the uses, user id being" + user.getId(), e);
             }
         }
+      emailService.sendBulkHtmlEmail(emailList);
         // logger.info("Reached Level 3.5");
         return true;
     }

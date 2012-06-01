@@ -14,6 +14,7 @@ import com.hk.domain.order.Order;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.domain.email.EmailCampaign;
 import com.hk.impl.dao.user.UserDaoImpl;
 import com.hk.pact.dao.user.UserCartDao;
 import com.hk.pact.dao.user.UserDao;
@@ -82,6 +83,10 @@ public class UserServiceImpl implements UserService {
 
     public Page getAllMailingList(int pageNo, int perPage) {
         return getUserDao().getAllMailingList(pageNo, perPage);
+    }
+
+  public List<User> getAllMailingList(EmailCampaign emailCampaign) {
+        return getUserDao().getAllMailingList(emailCampaign);
     }
 
     public Page getAllUnverifiedMailingList(int pageNo, int perPage) {
