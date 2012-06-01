@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -98,12 +99,12 @@ public class OrderSplitterHelper {
     }
 
     public Map.Entry<Courier, Long> calculateCheapestShipmentPlusReconciliationCost(DummySO dummySO) {
-        return getAllShipmentPlusReconciliationCost(dummySO);
+        return getAllShipmentPlusReconciliationCost(dummySO).lastEntry();
     }
 
-    public Map.Entry<Courier, Long> getAllShipmentPlusReconciliationCost(DummySO dummySO) {
+    public TreeMap<Courier, Long> getAllShipmentPlusReconciliationCost(DummySO dummySO) {
         DummyOrder dummyOrder = dummySO.getDummyOrder();
-        return courierCostCalculator.getCheapestCourierEntry(dummyOrder.getPincode().getPincode(),dummyOrder.isCod(),dummyOrder.getWarehouse(),dummyOrder.getAmount(),dummyOrder.getWeight());
+        return courierCostCalculator.getCourierCostingMap(dummyOrder.getPincode().getPincode(), dummyOrder.isCod(), dummyOrder.getWarehouse(), dummyOrder.getAmount(), dummyOrder.getWeight());
     }
 
 

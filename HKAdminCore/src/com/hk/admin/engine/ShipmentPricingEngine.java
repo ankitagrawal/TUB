@@ -128,6 +128,12 @@ public class ShipmentPricingEngine {
         return calculateReconciliationCost(courierPricingInfo, shippingOrder);
     }
 
+    public Double calculatePackagingCost(ShippingOrder shippingOrder) {
+        Shipment shipment = shippingOrder.getShipment();
+        EnumBoxSize enumBoxSize = EnumBoxSize.getBoxSize(shipment.getBoxSize());
+        return enumBoxSize.getPackagingCost();
+    }
+
     public Double calculateReconciliationCost(CourierPricingEngine courierPricingEngine, ShippingOrder shippingOrder) {
         return calculateReconciliationCost(courierPricingEngine, shippingOrder.getBaseOrder().getPayment(), shippingOrder.getAmount());
     }

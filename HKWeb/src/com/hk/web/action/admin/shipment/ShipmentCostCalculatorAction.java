@@ -2,11 +2,7 @@ package com.hk.web.action.admin.shipment;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.engine.ShipmentPricingEngine;
-import com.hk.admin.pact.dao.courier.CourierPricingEngineDao;
-import com.hk.admin.pact.dao.courier.PincodeRegionZoneDao;
 import com.hk.admin.pact.service.courier.CourierCostCalculator;
-import com.hk.admin.pact.service.courier.CourierGroupService;
-import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.courier.Courier;
@@ -21,6 +17,7 @@ import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +37,6 @@ import java.util.TreeMap;
 @Secure(hasAnyPermissions = {PermissionConstants.SEARCH_ORDERS}, authActionBean = AdminPermissionAction.class)
 @Component
 public class ShipmentCostCalculatorAction extends BaseAction {
-
 
     private Double weight;
 
@@ -62,19 +58,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
     PincodeDao pincodeDao;
 
     @Autowired
-    CourierService courierService;
-
-    @Autowired
-    PincodeRegionZoneDao pincodeRegionZoneDao;
-
-    @Autowired
-    CourierPricingEngineDao courierPricingEngineDao;
-
-    @Autowired
     ShipmentPricingEngine shipmentPricingEngine;
-
-    @Autowired
-    CourierGroupService courierGroupService;
 
     @Autowired
     ShippingOrderDao shippingOrderDao;
@@ -94,12 +78,21 @@ public class ShipmentCostCalculatorAction extends BaseAction {
         return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
     }
 
-    public Resolution saveActualShippingCostForShippingOrder(){
+    public Resolution saveActualShippingCostForShippingOrder() {
         ShippingOrder shippingOrder = shippingOrderDao.findByGatewayOrderId(shippingOrderId);
-        Shipment shipment = shippingOrder.getShipment();
-        shipmentPricingEngine.calculateShipmentCost(shippingOrder);
-        shipmentPricingEngine.calculateReconciliationCost(shippingOrder);
-        shipmentService.save(shipment);
+        if (shippingOrder != null) {
+            Shipment shipment = shippingOrder.getShipment();
+            if (shipment != null) {
+                shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
+                shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
+                shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
+                shipmentService.save(shipment);
+            } else {
+                addRedirectAlertMessage(new SimpleMessage("No Shipment currently exists to be updated"));
+            }
+        } else {
+            addRedirectAlertMessage(new SimpleMessage("No SO found for the corresponding gateway order id"));
+        }
         return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
     }
 
@@ -108,19 +101,23 @@ public class ShipmentCostCalculatorAction extends BaseAction {
         return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
     }
 
-    public Resolution calculateCourierCostingForShippingOrder(){
+    public Resolution calculateCourierCostingForShippingOrder() {
         ShippingOrder shippingOrder = shippingOrderDao.findByGatewayOrderId(shippingOrderId);
-        Order order = shippingOrder.getBaseOrder();
-        Shipment shipment = shippingOrder.getShipment();
-        Double weight = 0D;
-        if (shippingOrder.getShipment() != null) {
-            weight = shipment.getBoxWeight();
-        } else {
-            for (LineItem lineItem : shippingOrder.getLineItems()) {
-                weight = lineItem.getSku().getProductVariant().getWeight();
+        if (shippingOrder != null) {
+            Order order = shippingOrder.getBaseOrder();
+            Shipment shipment = shippingOrder.getShipment();
+            Double weight = 0D;
+            if (shippingOrder.getShipment() != null) {
+                weight = shipment.getBoxWeight();
+            } else {
+                for (LineItem lineItem : shippingOrder.getLineItems()) {
+                    weight = lineItem.getSku().getProductVariant().getWeight();
+                }
             }
+            courierCostingMap = courierCostCalculator.getCourierCostingMap(order.getAddress().getPin(), shippingOrder.getCOD(), shippingOrder.getWarehouse(), shippingOrder.getAmount(), weight);
+        } else {
+            addRedirectAlertMessage(new SimpleMessage("No SO found for the corresponding gateway order id"));
         }
-        courierCostingMap = courierCostCalculator.getCourierCostingMap(order.getAddress().getPin(), shippingOrder.getCOD(), shippingOrder.getWarehouse(), shippingOrder.getAmount(), weight);
         return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
     }
 
