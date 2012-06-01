@@ -27,7 +27,7 @@
       </c:when>
       <c:otherwise>
         <div class="grid_4">
-          <s:link class="img128" beanclass="com.hk.web.action.core.catalog.product.ProductAction" title="${product.name}">
+          <s:link class="img128"  href="${product.productURL}" title="${product.name}">
             <s:param name="productId" value="${product.id}"/>
             <s:param name="productSlug" value="${product.slug}"/>
             <c:choose>

@@ -28,6 +28,7 @@ import com.hk.manager.LinkManager;
 import com.hk.manager.OrderManager;
 import com.hk.manager.UserManager;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.user.UserProductHistoryDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.report.dto.order.LineItemConfigValuesDTO;
@@ -62,6 +63,9 @@ public class AddToCartWithLineItemConfigAction extends BaseAction {
 
     @Autowired
     private BaseDao                       baseDao;
+
+    @Autowired
+    UserProductHistoryDao                 userProductHistoryDao;
 
     @SuppressWarnings("unchecked")
     @JsonHandler
@@ -102,6 +106,7 @@ public class AddToCartWithLineItemConfigAction extends BaseAction {
             }
             productVariant.setQty(new Long(1));
             isLineItemCreated = orderManager.createLineItems(productVariant, lineItemConfig, order);
+            userProductHistoryDao.updateIsAddedToCart(productVariant.getProduct(), user, order);
 
         } catch (OutOfStockException e) {
             getContext().getValidationErrors().add("e2", new SimpleError(e.getMessage()));

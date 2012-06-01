@@ -197,6 +197,9 @@ public class CatalogAction extends BasePaginatedAction {
         productPage = productDao.getProductByCategoryAndBrand(categoryNames, null, getPageNo(), getPerPage());
         if (productPage != null) {
           productList = productPage.getList();
+          for(Product product : productList){
+          product.setProductURL(linkManager.getProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
+        }
         }
         trimListByCategory(productList, secondaryCategory);
         if (rootCategorySlug.equals("services")) {
@@ -206,13 +209,13 @@ public class CatalogAction extends BasePaginatedAction {
         productPage = productDao.getProductByCategoryAndBrand(categoryNames, brand, getPageNo(), getPerPage());
         if (productPage != null) {
           productList = productPage.getList();
+          for(Product product : productList){
+          product.setProductURL(linkManager.getProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
+        }
         }
         trimListByCategory(productList, secondaryCategory);
         if (rootCategorySlug.equals("services")) {
           productList = trimListByDistance(productList, preferredZone);
-        }
-		    for(Product product : productList){
-          product.setProductURL(linkManager.getProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
         }
       }
     }

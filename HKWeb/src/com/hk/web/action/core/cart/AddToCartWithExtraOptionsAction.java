@@ -26,6 +26,7 @@ import com.hk.manager.LinkManager;
 import com.hk.manager.OrderManager;
 import com.hk.manager.UserManager;
 import com.hk.pact.service.UserService;
+import com.hk.pact.dao.user.UserProductHistoryDao;
 import com.hk.report.dto.order.ProductLineItemWithExtraOptionsDto;
 import com.hk.web.HealthkartResponse;
 
@@ -45,6 +46,8 @@ public class AddToCartWithExtraOptionsAction extends BaseAction implements Valid
     private OrderManager                     orderManager;
     @Autowired
     private LinkManager                      linkManager;
+    @Autowired
+    UserProductHistoryDao                    userProductHistoryDao;
 
     @SuppressWarnings("unchecked")
     @DefaultHandler
@@ -68,6 +71,7 @@ public class AddToCartWithExtraOptionsAction extends BaseAction implements Valid
                 List<CartLineItemExtraOption> extraOptions = dto.getExtraOptions();
                 if (selected) {
                     getOrderManager().createLineItems(productVariant, extraOptions, order);
+                    userProductHistoryDao.updateIsAddedToCart(productVariant.getProduct(), user, order);
                 }
             }
         } catch (OutOfStockException e) {

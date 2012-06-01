@@ -41,12 +41,12 @@ import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.dao.location.LocalityMapDao;
 import com.hk.pact.dao.location.MapIndiaDao;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.user.UserProductHistoryDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.util.SeoManager;
 import com.hk.util.ProductReferrerMapper;
 import com.hk.web.action.core.search.SearchAction;
 import com.hk.web.filter.WebContext;
-import com.hk.impl.dao.user.UserProductHistoryDaoImpl;
 import com.hk.manager.LinkManager;
 
 @UrlBinding("/product/{productSlug}/{productId}")
@@ -95,7 +95,7 @@ public class ProductAction extends BaseAction {
     @Autowired
     private ProductCountDao          productCountDao;
     @Autowired
-    private UserProductHistoryDaoImpl userProductHistoryDaoImpl;
+    private UserProductHistoryDao userProductHistoryDao;
     @Autowired
     private AddressDao               addressDao;
     @Autowired
@@ -127,7 +127,7 @@ public class ProductAction extends BaseAction {
             if (user != null) {
                 ProductReferrer productReferrer = getBaseDao().get(ProductReferrer.class, productReferrerId);
                 productCountDao.getOrCreateProductCount(product, user);
-                userProductHistoryDaoImpl.addToUserProductHistory(product, user, productReferrer);
+                userProductHistoryDao.addToUserProductHistory(product, user, productReferrer);
                 affiliate = affiliateDao.getAffilateByUser(user);
             }
         }
