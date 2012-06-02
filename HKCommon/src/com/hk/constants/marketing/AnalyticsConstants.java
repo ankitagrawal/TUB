@@ -13,7 +13,7 @@ public class AnalyticsConstants {
 
     public static String  gaCode;
 
-    public static boolean analytics;
+    public static boolean analytics = true;
 
     @Value("#{hkEnvProps['" + Keys.Env.analytics + "']}")
     private String        analyticsString;
