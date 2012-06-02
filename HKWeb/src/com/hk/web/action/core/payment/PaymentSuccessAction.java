@@ -63,7 +63,9 @@ public class PaymentSuccessAction extends BaseAction {
         payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
         if (payment != null) {
 
-            logger.debug("payment success page payment status " + payment.getPaymentStatus().getId());
+            Long paymentStatusId = payment.getPaymentStatus() != null ? payment.getPaymentStatus().getId() : null;
+
+            logger.debug("payment success page payment status " + paymentStatusId);
 
             Order order = payment.getOrder();
             pricingDto = new PricingDto(order.getCartLineItems(), payment.getOrder().getAddress());
