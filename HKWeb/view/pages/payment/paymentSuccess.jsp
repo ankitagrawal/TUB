@@ -201,7 +201,48 @@
     var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
     document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
   </script>
-  
+  <script type="text/javascript">
+    var pageTracker = _gat._getTracker("<%=AnalyticsConstants.gaCode%>");
+    pageTracker._trackPageview();
+
+    pageTracker._addTrans(
+        "${actionBean.payment.gatewayOrderId}", <%-- order ID - required --%>
+        "HealthKart.com", <%-- affiliation or store name --%>
+        "${hk:decimal2(actionBean.pricingDto.grandTotal)}", <%-- total - required --%>
+        "0.0", <%-- tax --%>
+        "${hk:decimal2(actionBean.pricingDto.shippingSubTotal - actionBean.pricingDto.shippingDiscount)}", <%-- shipping --%>
+        "${hk:convertToLettersNumbersUnderscore(actionBean.pricingDto.city)}", <%-- city--%>
+        "${hk:convertToLettersNumbersUnderscore(actionBean.pricingDto.state)}", <%-- state or province --%>
+        "India"                                                                                             <%-- country--%>
+        );
+
+    <%--Item data--%>
+    <c:forEach items="${actionBean.pricingDto.aggregateProductLineItems}" var="productLineItem">
+    pageTracker._addItem(
+        "${actionBean.payment.gatewayOrderId}", <%-- order ID - required --%>
+        "${productLineItem.productVariant.id}", <%-- SKU/code --%>
+        "${productLineItem.productVariant.product.name}", <%-- product name --%>
+        "<c:forEach items="${productLineItem.productVariant.product.categories}" var="category" varStatus="optionCtr">${category.name}${!optionCtr.last?',':''}</c:forEach>", <%-- category or variation --%>
+        "${hk:decimal2(productLineItem.hkPrice)}", <%-- unit price - required --%>
+        "${productLineItem.qty}"                   <%-- quantity - required --%>
+        );
+    </c:forEach>
+
+    <%--COD--%>
+    <c:if test="${actionBean.pricingDto.codSubTotal > 0}">
+    pageTracker._addItem(
+        "${actionBean.payment.gatewayOrderId}", <%-- order ID - required --%>
+        "COD", <%-- SKU/code --%>
+        "COD", <%-- product name --%>
+        "", <%-- category or variation --%>
+        "${actionBean.pricingDto.codSubTotal - actionBean.pricingDto.codDiscount}", <%-- unit price - required --%>
+        "1"                                                                         <%-- quantity - required --%>
+        );
+    </c:if>
+
+    pageTracker._trackTrans();
+
+  </script>
 
   <%--Ohana conversion tracking script--%>
   <%--<script SRC='http://bsrv.adohana.com/ohana/conversion.js?id=102&r=${hk:decimal2(actionBean.pricingDto.grandTotal)}' type="text/javascript"></script>--%>
