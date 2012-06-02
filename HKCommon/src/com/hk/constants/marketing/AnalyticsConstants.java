@@ -15,6 +15,14 @@ public class AnalyticsConstants {
 
     public static boolean analytics = true;
 
+
+    static {
+        analytics = true;
+        gaCode = "UA-21820217-1";
+    }
+
+    //TODO MERE PALLE NAHI PADA
+/*
     @Value("#{hkEnvProps['" + Keys.Env.analytics + "']}")
     private String        analyticsString;
 
@@ -31,4 +39,5 @@ public class AnalyticsConstants {
         gaCode = analyticsCode;
 
     }
+*/
 }
