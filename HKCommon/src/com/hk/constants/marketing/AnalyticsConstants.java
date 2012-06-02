@@ -25,7 +25,8 @@ public class AnalyticsConstants {
     public void postConstruction() {
         // String anaylticsString = (String) ServiceLocatorFactory.getProperty(Keys.Env.analytics);
 
-        analytics = StringUtils.isNotBlank(analyticsString) && Boolean.parseBoolean(analyticsString);
+//        analytics = StringUtils.isNotBlank(analyticsString) && Boolean.parseBoolean(analyticsString);
+        analytics = true;
 
         gaCode = analyticsCode;
 
