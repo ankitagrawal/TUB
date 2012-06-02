@@ -193,7 +193,7 @@
     document.getElementById("vizuryTargeting").src = vizuryLink;
   </script>
 
-  <%--<c:if test="${actionBean.payment != null}">
+  <c:if test="${actionBean.payment != null}">
   <%
     if (AnalyticsConstants.analytics) {
   %>
@@ -206,37 +206,37 @@
     pageTracker._trackPageview();
 
     pageTracker._addTrans(
-        "${actionBean.payment.gatewayOrderId}", --%><%-- order ID - required --%><%--
-        "HealthKart.com", --%><%-- affiliation or store name --%><%--
-        "${hk:decimal2(actionBean.pricingDto.grandTotal)}", --%><%-- total - required --%><%--
-        "0.0", --%><%-- tax --%><%--
-        "${hk:decimal2(actionBean.pricingDto.shippingSubTotal - actionBean.pricingDto.shippingDiscount)}", --%><%-- shipping --%><%--
-        "${hk:convertToLettersNumbersUnderscore(actionBean.pricingDto.city)}", --%><%-- city--%><%--
-        "${hk:convertToLettersNumbersUnderscore(actionBean.pricingDto.state)}", --%><%-- state or province --%><%--
-        "India"                                                                                             --%><%-- country--%><%--
+        "${actionBean.payment.gatewayOrderId}", <%-- order ID - required --%>
+        "HealthKart.com", <%-- affiliation or store name --%>
+        "${hk:decimal2(actionBean.pricingDto.grandTotal)}", <%-- total - required --%>
+        "0.0", <%-- tax --%>
+        "${hk:decimal2(actionBean.pricingDto.shippingSubTotal - actionBean.pricingDto.shippingDiscount)}", <%-- shipping --%>
+        "${hk:convertToLettersNumbersUnderscore(actionBean.pricingDto.city)}", <%-- city--%>
+        "${hk:convertToLettersNumbersUnderscore(actionBean.pricingDto.state)}", <%-- state or province --%>
+        "India"                                                                                             <%-- country--%>
         );
 
-    --%><%--Item data--%><%--
+    <%--Item data--%>
     <c:forEach items="${actionBean.pricingDto.aggregateProductLineItems}" var="productLineItem">
     pageTracker._addItem(
-        "${actionBean.payment.gatewayOrderId}", --%><%-- order ID - required --%><%--
-        "${productLineItem.productVariant.id}", --%><%-- SKU/code --%><%--
-        "${productLineItem.productVariant.product.name}", --%><%-- product name --%><%--
-        "<c:forEach items="${productLineItem.productVariant.product.categories}" var="category" varStatus="optionCtr">${category.name}${!optionCtr.last?',':''}</c:forEach>", --%><%-- category or variation --%><%--
-        "${hk:decimal2(productLineItem.hkPrice)}", --%><%-- unit price - required --%><%--
-        "${productLineItem.qty}"                   --%><%-- quantity - required --%><%--
+        "${actionBean.payment.gatewayOrderId}", <%-- order ID - required --%>
+        "${productLineItem.productVariant.id}", <%-- SKU/code --%>
+        "${productLineItem.productVariant.product.name}", <%-- product name --%>
+        "<c:forEach items="${productLineItem.productVariant.product.categories}" var="category" varStatus="optionCtr">${category.name}${!optionCtr.last?',':''}</c:forEach>", <%-- category or variation --%>
+        "${hk:decimal2(productLineItem.hkPrice)}", <%-- unit price - required --%>
+        "${productLineItem.qty}"                   <%-- quantity - required --%>
         );
     </c:forEach>
 
-    --%><%--COD--%><%--
+    <%--COD--%>
     <c:if test="${actionBean.pricingDto.codSubTotal > 0}">
     pageTracker._addItem(
-        "${actionBean.payment.gatewayOrderId}", --%><%-- order ID - required --%><%--
-        "COD", --%><%-- SKU/code --%><%--
-        "COD", --%><%-- product name --%><%--
-        "", --%><%-- category or variation --%><%--
-        "${actionBean.pricingDto.codSubTotal - actionBean.pricingDto.codDiscount}", --%><%-- unit price - required --%><%--
-        "1"                                                                         --%><%-- quantity - required --%><%--
+        "${actionBean.payment.gatewayOrderId}", <%-- order ID - required --%>
+        "COD", <%-- SKU/code --%>
+        "COD", <%-- product name --%>
+        "", <%-- category or variation --%>
+        "${actionBean.pricingDto.codSubTotal - actionBean.pricingDto.codDiscount}", <%-- unit price - required --%>
+        "1"                                                                         <%-- quantity - required --%>
         );
     </c:if>
 
@@ -244,7 +244,7 @@
 
   </script>
 
-  --%><%--Ohana conversion tracking script--%><%--
+  <%--Ohana conversion tracking script--%>
   <script SRC='http://bsrv.adohana.com/ohana/conversion.js?id=102&r=${hk:decimal2(actionBean.pricingDto.grandTotal)}' type="text/javascript"></script>
 
   <%
@@ -255,7 +255,7 @@
   <!-- Google Code for Payment Success Conversion Page -->
   <s:layout-render name="/layouts/embed/_adwordsConversionCode.jsp" conversion_value="${hk:decimal2(actionBean.pricingDto.grandTotal)}" order_id="${actionBean.payment.gatewayOrderId}"/>
 
-</c:if>--%>
+</c:if>
 
 </s:layout-component>
 
