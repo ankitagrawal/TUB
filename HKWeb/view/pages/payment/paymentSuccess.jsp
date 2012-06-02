@@ -245,7 +245,7 @@
   </script>
 
   <%--Ohana conversion tracking script--%>
-  <%--<script SRC='http://bsrv.adohana.com/ohana/conversion.js?id=102&r=${hk:decimal2(actionBean.pricingDto.grandTotal)}' type="text/javascript"></script>--%>
+  <script SRC='http://bsrv.adohana.com/ohana/conversion.js?id=102&r=${hk:decimal2(actionBean.pricingDto.grandTotal)}' type="text/javascript"></script>
 
   <%
     }
