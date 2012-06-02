@@ -51,9 +51,9 @@
 
 
 <c:if test="${actionBean.payment != null}">
-  <%
-    if (AnalyticsConstants.analytics) {
-  %>
+  <%--<%--%>
+    <%--if (AnalyticsConstants.analytics) {--%>
+  <%--%>--%>
   <script type="text/javascript">
     var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
     document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
@@ -104,9 +104,9 @@
   <%--Ohana conversion tracking script--%>
   <script SRC='http://bsrv.adohana.com/ohana/conversion.js?id=102&r=${hk:decimal2(actionBean.pricingDto.grandTotal)}' type="text/javascript"></script>
 
-  <%
-    }
-  %>
+  <%--<%--%>
+    <%--}--%>
+  <%--%>--%>
 
 
   <!-- Google Code for Payment Success Conversion Page -->
