@@ -111,6 +111,8 @@
 
   <!-- Google Code for Payment Success Conversion Page -->
   <s:layout-render name="/layouts/embed/_adwordsConversionCode.jsp" conversion_value="${hk:decimal2(actionBean.pricingDto.grandTotal)}" order_id="${actionBean.payment.gatewayOrderId}"/>
+  <!-- Remarketing code for users who have made a transcation -->
+  <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="Bm6cCLDY7AIQuLjI5QM" id="1018305592"/>
 
 </c:if>
 
