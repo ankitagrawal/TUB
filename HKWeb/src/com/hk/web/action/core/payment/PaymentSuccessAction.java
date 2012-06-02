@@ -39,6 +39,7 @@ public class PaymentSuccessAction extends BaseAction {
     private String gatewayOrderId;
 
     private Payment payment;
+    private Order order;
     private PricingDto pricingDto;
 
     @Autowired
@@ -67,7 +68,7 @@ public class PaymentSuccessAction extends BaseAction {
 
             logger.debug("payment success page payment status " + paymentStatusId);
 
-            Order order = payment.getOrder();
+            order = payment.getOrder();
             pricingDto = new PricingDto(order.getCartLineItems(), payment.getOrder().getAddress());
 
             Set<CartLineItem> productCartLineItems = new CartLineItemFilter(payment.getOrder().getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
@@ -167,5 +168,13 @@ public class PaymentSuccessAction extends BaseAction {
 
     public void setOrderStatusService(OrderStatusService orderStatusService) {
         this.orderStatusService = orderStatusService;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
     }
 }
