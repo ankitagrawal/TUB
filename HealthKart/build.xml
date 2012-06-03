@@ -142,6 +142,12 @@
 				<include name="*.jar" />
 			</fileset>
 		</copy>
+    <copy
+        file="${project.web.dir}/resources/${project.env}/WEB-INF/robots.txt"
+        tofile="${project.dist.dir}/robots.txt"
+        failonerror="false"
+        overwrite="true"
+        />
 	</target>
 
 	<target name="collect-jar">
