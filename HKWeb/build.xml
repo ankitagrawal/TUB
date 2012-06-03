@@ -71,7 +71,7 @@
 	<target name="build.dependencies" depends="dependencies.check,build.common,build.core,build.admin.core,build.report" />
 	<target name="dependencies.check">
 		<condition property="build.common.available">
-			<available file="${project.hkcommon}/dist/hk-common.jar" />
+			<available file="${project.common.dir}/dist/hk-common.jar" />
 		</condition>
 	</target>
 
@@ -164,7 +164,7 @@
 	<!-- Check timestamp on files -->
 	<target name="prepare">
 		<mkdir dir="${package.target.dir}" />
-    <mkdir  dir="${project.base.dir}/${project.dist.dir}" />
+    <!--<mkdir  dir="${project.base.dir}/${project.dist.dir}" />-->
 		<tstamp />
 	</target>
 

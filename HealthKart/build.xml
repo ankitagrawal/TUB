@@ -182,18 +182,18 @@
 		<ant dir="${project.core.dir}" target="build" inheritall="false">
 			<property name="build.env" value="${build.env}" />
 		</ant>
-		<ant dir="${project.web.dir}" target="build" inheritall="false">
+		<!--<ant dir="${project.web.dir}" target="build" inheritall="false">
 			<property name="build.env" value="${build.env}" />
-		</ant>
+		</ant>-->
 		<ant dir="${project.admin.core.dir}" target="build" inheritall="false">
 			<property name="build.env" value="${build.env}" />
 		</ant>
 		<!-- <ant dir="${project.admin.web.dir}" target="build" inheritall="false">
 			<property name="build.env" value="${build.env}" />
-		</ant>
+		</ant> -->
 		<ant dir="${project.report.dir}" target="build" inheritall="false">
 			<property name="build.env" value="${build.env}" />
-		</ant> -->
+		</ant>
 	</target>
 
 
@@ -205,7 +205,7 @@
 		<ant dir="${project.core.dir}" target="prepare" inheritall="false" />
 		<ant dir="${project.admin.core.dir}" target="prepare" inheritall="false" />
 		<ant dir="${project.report.dir}" target="prepare" inheritall="false" />
-		<ant dir="${project.web.dir}" target="prepare" inheritall="false" />
+		<!--<ant dir="${project.web.dir}" target="prepare" inheritall="false" />-->
 		<tstamp />
 	</target>
 
