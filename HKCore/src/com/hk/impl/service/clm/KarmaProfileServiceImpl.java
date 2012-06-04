@@ -41,7 +41,7 @@ public class KarmaProfileServiceImpl implements KarmaProfileService{
          if(karmaProfile ==null){
              karmaProfile = new KarmaProfile();
              karmaProfile.setUser(user);
-             karmaProfile.setKarmaPoints(100);
+             karmaProfile.setKarmaPoints(getProfit(order));
          }
          this.save(karmaProfile);
          setKarmaInOrder(order);
@@ -53,6 +53,10 @@ public class KarmaProfileServiceImpl implements KarmaProfileService{
         KarmaProfile karmaProfile=this.findByUser(user);
         order.setScore(new Long(karmaProfile.getKarmaPoints()));
         getOrderService().save(order);
+    }
+
+    public int getProfit(Order order){
+         return 100;
     }
 
     public KarmaProfileDao getKarmaProfileDao() {
