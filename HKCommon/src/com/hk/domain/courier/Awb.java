@@ -111,18 +111,7 @@ public class Awb implements java.io.Serializable {
 
   }
 
-public int compareTo(Object o) {
-    if (!(o instanceof Awb))
-      return -9;
-    Awb awb = (Awb) o;
-    if (this.courier.getId() < awb.courier.getId())
-      return -1;
 
-    if (this.courier.getId() > awb.courier.getId())
-      return 1;
-    else
-      return 0;
-  }
   
 
 }

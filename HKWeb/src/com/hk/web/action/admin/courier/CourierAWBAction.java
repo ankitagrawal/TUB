@@ -140,8 +140,8 @@ public class CourierAWBAction extends BaseAction {
       fileBean.save(excelFile);
        awbSetFromExcel = xslParser.readAwbExcel(excelFile);
      if(null != awbSetFromExcel && awbSetFromExcel.size() > 0)   {
-      List<Awb> awbDatabase = awbDao.getAvailableAwbForCourier(courier, warehouse);
-//     Collections.sort(awbDatabase);
+      List<Awb> awbDatabase = awbDao.getAvailableAwbForCourier(courier);
+
     List<String> commonCourierIdsList = BaseUtils.getIntersection(awbDatabase,new ArrayList(awbSetFromExcel));
 
       if(commonCourierIdsList.size() > 0){

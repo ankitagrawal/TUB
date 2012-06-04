@@ -14,4 +14,6 @@ public interface AwbDao extends BaseDao {
     public Awb getByAWBNumber(Courier courier, String awbNumber);
 
    public List<Awb> getAvailableAwbForCourierByCod(Courier courier, Warehouse warehouse,boolean cod);
+
+   public List<Awb> getAvailableAwbForCourier(Courier courier);
 }
