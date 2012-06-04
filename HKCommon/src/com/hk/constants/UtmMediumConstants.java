@@ -25,4 +25,5 @@ public class UtmMediumConstants {
   public static final String HOLZBAULINTER = "http://www.holzbaulintner.com/_old/referenzen/yek/cot/";
   public static final String SPONSORED_STORY = "sponsored_story";
   public static final String SITE = "site";
+  public static final String AFFILIATES = "microsite"; 
 }
