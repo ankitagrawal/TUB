@@ -408,7 +408,7 @@ public class Functions {
     }
 
     public static MenuNode getMenuNodeForProduct(Product product) {
-        MenuHelper menuHelper = ServiceLocatorFactory.getService(MenuHelper.class);
+        MenuHelper menuHelper = (MenuHelper) ServiceLocatorFactory.getService("MenuHelper");
         return menuHelper.getMenoNodeFromProduct(product);
     }
 
