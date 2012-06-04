@@ -19,7 +19,7 @@ public interface CourierCostCalculator {
 
     public Courier getCheapestCourier(String pincode, boolean cod, Warehouse srcWarehouse, Double amount, Double weight);
 
-    public Long getCheapestCourierKiCost(String pincode, boolean cod, Warehouse srcWarehouse, Double amount, Double weight);
+    public Long getCheapestCourierCost(String pincode, boolean cod, Warehouse srcWarehouse, Double amount, Double weight);
 
     public Map.Entry<Courier, Long> getCheapestCourierEntry(String pincode, boolean cod, Warehouse srcWarehouse, Double amount, Double weight);
 

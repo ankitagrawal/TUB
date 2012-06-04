@@ -115,7 +115,20 @@ public class ReportShippingOrderDaoImpl extends BaseDaoImpl implements ReportShi
         }
         return orderList;
     }
-    
+
+    public List<ShippingOrder> getShippingOrderListForCouriers(Date startDate,Date endDate,List<Courier> courierList){
+        List<Long> courierIdList=new ArrayList<Long>();
+        List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>();
+        for(Courier courier:courierList){
+              courierIdList.add(courier.getId());
+        }
+        for(Long courierId:courierIdList) {
+        String query = "from ShippingOrder so where " + " so.shipment.shipDate between :startDate and :endDate and so.shipment.courier.id =:courierId";
+        shippingOrderList.addAll(getSession().createQuery(query).setParameter("startDate", startDate).setParameter("endDate", endDate).setParameter("courierId", courierId).list());
+        }
+        return shippingOrderList;
+    }
+
     
 
 }

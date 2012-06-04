@@ -2,15 +2,18 @@ package com.hk.web.action.admin.courier;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.engine.ShipmentPricingEngine;
+import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.EnumCourier;
+import com.hk.constants.courier.EnumCourierGroup;
 import com.hk.constants.shipment.EnumBoxSize;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
+import com.hk.domain.courier.CourierGroup;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
@@ -50,6 +53,8 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
     UserService userService;
     @Autowired
     PincodeDao pincodeDao;
+    @Autowired
+    CourierGroupService courierGroupService;
     @Autowired
     private ShipmentPricingEngine shipmentPricingEngine;
 
@@ -134,9 +139,6 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
                 boolean isCod = shippingOrder.isCOD();
                 availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod);
                 suggestedCourier = courierService.getDefaultCourierByPincodeAndWarehouse(pinCode, isCod);
-                // if (suggestedCourier == null) {
-                // suggestedCourier = courierService.getSuggestedCourierService(pinCode.getPincode(), isCod);
-                // }
             }else{
                 addRedirectAlertMessage(new SimpleMessage("Pincode is INVALID, Please contact Customer Care. It cannot be packed."));
             }
@@ -152,9 +154,12 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
         shippingOrder.setShipment(shipment);
         shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Packed));
         shippingOrderDao.save(shippingOrder);
-        shipment.setShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
-        shipment.setShipmentCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
-        shipmentService.save(shipment);
+        if (courierGroupService.getCourierGroup(shipment.getCourier()) != null) {
+            shipment.setShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
+            shipment.setShipmentCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
+            shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
+            shipmentService.save(shipment);
+        }
         String comment = "";
         if (shipment != null) {
             comment = "Shipment Details: " + shipment.getCourier().getName() + "/" + shipment.getTrackingId();
