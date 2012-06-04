@@ -20,6 +20,7 @@ import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
 import com.hk.admin.pact.dao.inventory.PurchaseInvoiceDao;
+import com.hk.admin.pact.dao.payment.PaymentHistoryDao;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.core.RoleConstants;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -30,6 +31,7 @@ import com.hk.domain.inventory.po.PurchaseInvoiceStatus;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.domain.payment.PaymentHistory;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
@@ -53,6 +55,8 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
     ProductVariantDao                     productVariantDao;
     @Autowired
     GoodsReceivedNoteDao                  goodsReceivedNoteDao;
+    @Autowired
+    PaymentHistoryDao                     paymentHistoryDao;
     @Autowired
     SkuService                            skuService;
     @Autowired
@@ -168,12 +172,16 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
     public Resolution delete() {
         if (purchaseInvoice != null && purchaseInvoice.getId() != null) {
             List<GoodsReceivedNote> grns = purchaseInvoice.getGoodsReceivedNotes();
+            List<PaymentHistory> paymentHistories = paymentHistoryDao.getByPurchaseInvoice(purchaseInvoice);
             for (GoodsReceivedNote grn : grns) {
                 grn.setReconciled(false);
                 goodsReceivedNoteDao.save(grn);
             }
             for (PurchaseInvoiceLineItem purchaseInvoiceLineItem : purchaseInvoiceLineItems) {
                 purchaseInvoiceDao.delete(purchaseInvoiceLineItem);
+            }
+            for(PaymentHistory paymentHistory : paymentHistories){
+                paymentHistoryDao.delete(paymentHistory);
             }
             purchaseInvoiceDao.delete(purchaseInvoice);
         }
