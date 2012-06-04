@@ -97,7 +97,7 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
 
     public NavigableMap<List<DummyOrder>, Long> listSortedDummyOrderMapPractically(Order order) {
         TreeMap<List<DummyOrder>, Long> sortedCourierCostingTreeMap = splitBOPractically(order);
-        return sortedCourierCostingTreeMap.descendingMap();
+        return sortedCourierCostingTreeMap != null ? sortedCourierCostingTreeMap.descendingMap() : null;
     }
 
     public Map.Entry<List<DummyOrder>, Long> listFirstMapEntryPractically(Order order) {
@@ -232,23 +232,6 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
 
         return sortedCourierCostingTreeMap;
     }
-
-/*
-    private List<DummyOrder> createDummyOrders(Order order, Pincode pincode, List<CartLineItem> ggnKiCartLineItems, List<CartLineItem> mumKiCartLineItems, List<CartLineItem> awaraCartLineItems) {
-        List<CartLineItem> ggnCartLineItems = new ArrayList<CartLineItem>();
-        ggnCartLineItems.addAll(ggnKiCartLineItems);
-        ggnCartLineItems.addAll(awaraCartLineItems.subList(0, i));
-
-        List<CartLineItem> mumCartLineItems = new ArrayList<CartLineItem>();
-        mumCartLineItems.addAll(mumKiCartLineItems);
-        mumCartLineItems.addAll(awaraCartLineItems.subList(i, awaraLineItemsSize));
-
-        DummyOrder dummyGgnOrder = new DummyOrder(ggnCartLineItems, ggnWarehouse, order.isCOD(), pincode, order.getPayment());
-        DummyOrder dummyMumOrder = new DummyOrder(mumCartLineItems, mumWarehouse, isCod, pincode, payment);
-
-        List<DummyOrder> splitDummyOrders = Arrays.asList(dummyGgnOrder,dummyMumOrder);
-    }
-*/
 
     private boolean validCase(List<DummyOrder> splitDummyOrders) {
         boolean validCase = true;

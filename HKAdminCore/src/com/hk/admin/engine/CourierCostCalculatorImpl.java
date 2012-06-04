@@ -60,7 +60,7 @@ public class CourierCostCalculatorImpl implements CourierCostCalculator {
         return courierCostingMapEntry.getKey();
     }
 
-    public Long getCheapestCourierKiCost(String pincode, boolean cod, Warehouse srcWarehouse, Double amount, Double weight) {
+    public Long getCheapestCourierCost(String pincode, boolean cod, Warehouse srcWarehouse, Double amount, Double weight) {
         Map.Entry<Courier, Long> courierCostingMapEntry = getCheapestCourierEntry(pincode, cod, srcWarehouse, amount, weight);
         return courierCostingMapEntry.getValue();
     }

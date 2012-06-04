@@ -16,4 +16,7 @@ public interface ReportShippingOrderService {
 
     public List<OrderLifecycleStateTransitionDto> getOrderLifecycleStateTransitionDtoList(Date startDate, Date endDate);
 
+    public List<ShippingOrder> getShippingOrderListForCouriers(Date startDate,Date endDate,List<Courier> courierList);
+
+
 }

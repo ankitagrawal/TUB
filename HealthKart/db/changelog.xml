@@ -7412,4 +7412,34 @@
     <changeSet author="Rahul (generated)" id="1337865338106-4">
         <addForeignKeyConstraint baseColumnNames="base_order_id" baseTableName="demand_history" constraintName="fk_demand_history_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order" referencesUniqueColumn="false"/>
     </changeSet>
+    <changeSet author="Rajni (generated)" id="1338269352780-1">
+        <addColumn tableName="purchase_invoice">
+            <column name="reconcilation_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rajni (generated)" id="1338270017943-1">
+        <createTable tableName="purchase_form_type">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Rajni (generated)" id="1338279032126-1">
+        <addColumn tableName="purchase_form_type">
+            <column name="description" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rajni (generated)" id="1338295577580-1">
+        <addColumn tableName="purchase_invoice">
+            <column name="purchase_form_type_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+        <changeSet author="Rajni (generated)" id="1338295577580-4">
+        <addForeignKeyConstraint baseColumnNames="purchase_form_type_id" baseTableName="purchase_invoice" constraintName="fk_purchase_invoice_purchase_form_type1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="purchase_form_type" referencesUniqueColumn="false"/>
+    </changeSet>
 </databaseChangeLog>
