@@ -11,10 +11,9 @@ public enum EnumPrimaryReferrerForOrder {
   EMAIL(3L, "email"),
   VIZURY(4L, "vizury"),
   HEALTHKART(5L, "healthkart"),
-  OTHERS(6L, "other adds"),
+  OTHERS(6L, "other"),
   RFERRAL(7L, "referred"),
-  AFFILIATE(8L, "affiliate")
-  ;
+  AFFILIATE(8L, "affiliate")  ;
 
   private java.lang.String name;
   private java.lang.Long id;
