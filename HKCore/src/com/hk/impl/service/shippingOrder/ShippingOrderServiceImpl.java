@@ -189,29 +189,22 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     }
 
     public void logShippingOrderActivity(ShippingOrder shippingOrder, EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity) {
-        Order baseOrder=shippingOrder.getBaseOrder();
-        User user;
-        if(baseOrder.getStore().getId()== 1L){
-            user  = getUserService().getLoggedInUser();
+        User loggedOnUser = getUserService().getLoggedInUser();
+        if(loggedOnUser == null){
+            loggedOnUser = shippingOrder.getBaseOrder().getUser();
         }
-        else{
-            user=baseOrder.getUser();
-        }
+
         ShippingOrderLifeCycleActivity orderLifecycleActivity = getShippingOrderLifeCycleActivity(enumShippingOrderLifecycleActivity);
-        logShippingOrderActivity(shippingOrder, user, orderLifecycleActivity, null);
+        logShippingOrderActivity(shippingOrder, loggedOnUser, orderLifecycleActivity, null);
     }
 
     public void logShippingOrderActivity(ShippingOrder shippingOrder, EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity, String comments) {
-        Order baseOrder=shippingOrder.getBaseOrder();
-        User user;
-        if(baseOrder.getStore().getId()== 1L){
-            user  = getUserService().getLoggedInUser();
-        }
-        else{
-            user=baseOrder.getUser();
+        User loggedOnUser = getUserService().getLoggedInUser();
+        if(loggedOnUser == null){
+            loggedOnUser = shippingOrder.getBaseOrder().getUser();
         }
         ShippingOrderLifeCycleActivity orderLifecycleActivity = getShippingOrderLifeCycleActivity(enumShippingOrderLifecycleActivity);
-        logShippingOrderActivity(shippingOrder, user, orderLifecycleActivity, comments);
+        logShippingOrderActivity(shippingOrder, loggedOnUser, orderLifecycleActivity, comments);
     }
 
     public void logShippingOrderActivity(ShippingOrder shippingOrder, User user, ShippingOrderLifeCycleActivity shippingOrderLifeCycleActivity, String comments) {
