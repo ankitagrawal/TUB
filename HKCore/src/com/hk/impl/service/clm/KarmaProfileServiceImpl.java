@@ -37,24 +37,24 @@ public class KarmaProfileServiceImpl implements KarmaProfileService{
     private SkuService skuService;
 
     //the following contain avg first purchase margins
-    final static Double beautyAvgMargin=0.0;
-    final static Double beautyAvgScore=0.0;
-    final static Double nutritionAvgMargin=0.0;
-    final static Double nutritionAvgScore=0.0;
-    final static Double eyeAvgMargin=0.0;
-    final static Double eyeAvgScore=0.0;
-    final static Double pcAvgMargin=0.0;
-    final static Double pcAvgScore=0.0;
-    final static Double sportsAvgMargin=0.0;
-    final static Double sportsAvgScore=0.0;
-    final static Double hmAvgMargin=0.0;
-    final static Double hmAvgScore=0.0;
-    final static Double parentingAvgMargin=0.0;
-    final static Double parentingAvgScore=0.0;
-    final static Double servicesAvgMargin=0.0;
-    final static Double servicesAvgScore=0.0;
-    final static Double diabetesAvgMargin=0.0;
-    final static Double diabetesAvgScore=0.0;
+    final static Double beautyAvgMargin=-59.8;
+    final static Double beautyAvgScore=-119.0;
+    final static Double nutritionAvgMargin=34.11;
+    final static Double nutritionAvgScore=74.0;
+    final static Double eyeAvgMargin=-13.94;
+    final static Double eyeAvgScore=-14.0;
+    final static Double pcAvgMargin=-25.3;
+    final static Double pcAvgScore=-85.0;
+    final static Double sportsAvgMargin=40.78;
+    final static Double sportsAvgScore=38.0;
+    final static Double hmAvgMargin=69.2;
+    final static Double hmAvgScore=78.0;
+    final static Double parentingAvgMargin=-94.8;
+    final static Double parentingAvgScore=-189.0;
+    final static Double servicesAvgMargin=155.0;
+    final static Double servicesAvgScore=167.0;
+    final static Double diabetesAvgMargin=51.5;                                         
+    final static Double diabetesAvgScore=379.0;
 
 
     @Transactional
