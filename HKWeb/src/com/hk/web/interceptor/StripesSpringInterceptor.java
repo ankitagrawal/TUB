@@ -31,7 +31,7 @@ public class StripesSpringInterceptor implements Interceptor
     public Resolution intercept(ExecutionContext context) throws Exception
     {
         Resolution resolution = context.proceed();
-        System.out.println("Running Spring dependency injection for instance of " + context.getActionBean().getClass().getSimpleName());
+        //System.out.println("Running Spring dependency injection for instance of " + context.getActionBean().getClass().getSimpleName());
         ServletContext servletContext = StripesFilter.getConfiguration().getServletContext();
         ApplicationContext applicationContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
         AutowireCapableBeanFactory beanFactory = applicationContext.getAutowireCapableBeanFactory();
@@ -41,7 +41,7 @@ public class StripesSpringInterceptor implements Interceptor
         ((SessionFactory) ServiceLocatorFactory.getService("SessionFactory")).getCurrentSession().setFlushMode(FlushMode.MANUAL);
         
         
-        System.out.println("completed Spring dependency injection for instance of " + context.getActionBean().getClass().getSimpleName());
+        //System.out.println("completed Spring dependency injection for instance of " + context.getActionBean().getClass().getSimpleName());
         return resolution;
     }
 }

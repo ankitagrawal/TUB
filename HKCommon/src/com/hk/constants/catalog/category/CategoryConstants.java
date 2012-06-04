@@ -1,10 +1,6 @@
 package com.hk.constants.catalog.category;
 
-import com.hk.domain.catalog.category.Category;
-
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 

@@ -4,8 +4,9 @@ import java.util.Date;
 import java.util.List;
 
 import com.hk.domain.accounting.AccountingInvoice;
+import com.hk.pact.dao.BaseDao;
 
-public interface AccountingInvoiceDao {
+public interface AccountingInvoiceDao extends BaseDao {
 
     public Long getLastRetailInvoiceId();
 

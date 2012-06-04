@@ -5,26 +5,26 @@ import java.util.Map;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.UrlBinding;
 
 import org.apache.commons.lang.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.CheckSumRequestBean;
 import com.TPSLUtil;
 import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.akube.framework.stripes.action.BasePaymentGatewaySendReceiveAction;
-import com.hk.constants.core.Keys;
-import com.hk.domain.payment.Payment;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.manager.EmailManager;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.manager.payment.TekprocessPaymentGatewayWrapper;
 import com.hk.pact.dao.payment.PaymentDao;
+import com.hk.web.AppConstants;
 
+//@UrlBinding("/payment/TekprocessGatewaySendReceive.action")
 @Component
 public class TekprocessGatewaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<TekprocessPaymentGatewayWrapper> {
 
@@ -36,12 +36,12 @@ public class TekprocessGatewaySendReceiveAction extends BasePaymentGatewaySendRe
     PaymentManager        paymentManager;
     @Autowired
     EmailManager          emailManager;
-    @Value("#{hkEnvProps['" + Keys.App.environmentDir + "']}")
-    String                environmemtDir;
+    /*@Value("#{hkEnvProps['" + Keys.App.environmentDir + "']}")
+    String                environmemtDir;*/
 
     protected TekprocessPaymentGatewayWrapper getPaymentGatewayWrapperFromTransactionData(BasePaymentGatewayWrapper.TransactionData data) {
         TekprocessPaymentGatewayWrapper tekprocessPaymentGatewayWrapper = new TekprocessPaymentGatewayWrapper();
-        Payment payment = paymentDao.findByGatewayOrderId(data.getGatewayOrderId());
+        //Payment payment = paymentDao.findByGatewayOrderId(data.getGatewayOrderId());
         String amountStr = BasePaymentGatewayWrapper.TransactionData.decimalFormat.format(data.getAmount());
 
         CheckSumRequestBean checkSumRequestBean = new CheckSumRequestBean();
@@ -50,7 +50,7 @@ public class TekprocessGatewaySendReceiveAction extends BasePaymentGatewaySendRe
         checkSumRequestBean.setStrAccountNo("1");
         checkSumRequestBean.setStrAmt(amountStr);
         checkSumRequestBean.setStrBankCode(data.getPaymentMethod());
-        checkSumRequestBean.setStrPropertyPath(environmemtDir + "/tekprocess.live.properties");
+        checkSumRequestBean.setStrPropertyPath(AppConstants.getAppClasspathRootPath() + "/tekprocess.live.properties");
 
         TPSLUtil tpslUtil = new TPSLUtil();
         String msg = tpslUtil.transactionRequestMessage(checkSumRequestBean);
@@ -76,7 +76,7 @@ public class TekprocessGatewaySendReceiveAction extends BasePaymentGatewaySendRe
 
         logger.info("returning from payment gateway TekProcess with the parameter string msg : " + msg);
 
-        String propertyFilePath = environmemtDir + "/tekprocess.live.properties";
+        String propertyFilePath = AppConstants.getAppClasspathRootPath() + "/tekprocess.live.properties";
 
         Map<String, String> paramMap = TekprocessPaymentGatewayWrapper.parseResponse(msg);
 

@@ -1,32 +1,56 @@
 package com.hk.constants.shipment;
 
+import com.hk.domain.courier.BoxSize;
+
 public enum EnumBoxSize {
 
-  XS(10L, "XS"),
-  S(20L, "S"),
-  M(30L, "M"),
-  M2(35L, "M2"),
-  L(40L, "L"),
-  L2(45L, "L2"),
-  XL(50L, "XL"),
-  XXL(60L, "XXL"),
-  XXXL(70L, "XXXL"),
-  MIGRATE(-1L, "MIGRATE");
+    XS(10L, "XS", 100D, 8.25D),
+    S(20L, "S", 400D, 12D),
+    M(30L, "M", 1000D, 15.5D),
+    M2(35L, "M2", 1520D, 17.6D),
+    L(40L, "L", 2300D, 17.7D),
+    L2(45L, "L2", 3600D, 22.5D),
+    XL(50L, "XL", 4300D, 31.9D),
+    XXL(60L, "XXL", 8500D, 37D),
+    XXXL(70L, "XXXL", 1050D, 57.2D),
+    MIGRATE(-1L, "MIGRATE", 0D, 0D);
 
-  private String name;
-  private Long id;
+    private String name;
+    private Long id;
+    private Double weight;
+    private Double packagingCost;
 
-  EnumBoxSize(Long id, String name) {
-    this.name = name;
-    this.id = id;
-  }
+    public static EnumBoxSize getBoxSize(BoxSize boxSize) {
+        if (boxSize != null) {
+            for (EnumBoxSize enumBoxSize : values()) {
+                if (enumBoxSize.getId().equals(boxSize.getId())) {
+                    return enumBoxSize;
+                }
+            }
+        }
+        return null;
+    }
 
-  public String getName() {
-    return name;
-  }
+    EnumBoxSize(Long id, String name, Double weight, Double packagingCost) {
+        this.name = name;
+        this.id = id;
+        this.weight = weight;
+        this.packagingCost = packagingCost;
+    }
 
-  public Long getId() {
-    return id;
-  }
+    public Double getWeight() {
+        return weight;
+    }
 
+    public String getName() {
+        return name;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Double getPackagingCost() {
+        return packagingCost;
+    }
 }

@@ -21,22 +21,22 @@ import com.hk.domain.order.Order;
 import com.hk.domain.order.OrderLifecycle;
 import com.hk.domain.user.User;
 import com.hk.pact.service.UserService;
-import com.hk.pact.service.order.OrderService;
+import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.web.action.error.AdminPermissionAction;
 
 @Secure(hasAnyPermissions = { PermissionConstants.SEARCH_ORDERS }, authActionBean = AdminPermissionAction.class)
 @Component
 public class OrderCommentAction extends BaseAction {
 
-    private Order        order;
+    private Order               order;
 
     @Validate(required = true)
-    private String       comment;
+    private String              comment;
 
     @Autowired
-    private UserService  userService;
+    private UserService         userService;
     @Autowired
-    private OrderService orderService;
+    private OrderLoggingService orderLoggingService;
 
     @DefaultHandler
     @DontValidate
@@ -52,7 +52,7 @@ public class OrderCommentAction extends BaseAction {
 
         OrderLifecycle orderLifecycle = new OrderLifecycle();
         orderLifecycle.setOrder(order);
-        orderLifecycle.setOrderLifecycleActivity(getOrderService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.LoggedComment));
+        orderLifecycle.setOrderLifecycleActivity(getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.LoggedComment));
         orderLifecycle.setUser(loggedOnUser);
         orderLifecycle.setComments(comment);
         orderLifecycle.setActivityDate(new Date());
@@ -86,13 +86,12 @@ public class OrderCommentAction extends BaseAction {
         this.userService = userService;
     }
 
-    public OrderService getOrderService() {
-        return orderService;
+    public OrderLoggingService getOrderLoggingService() {
+        return orderLoggingService;
     }
 
-    public void setOrderService(OrderService orderService) {
-        this.orderService = orderService;
+    public void setOrderLoggingService(OrderLoggingService orderLoggingService) {
+        this.orderLoggingService = orderLoggingService;
     }
-
 
 }

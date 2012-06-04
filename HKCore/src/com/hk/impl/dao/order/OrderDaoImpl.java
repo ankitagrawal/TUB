@@ -41,6 +41,10 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao {
     @Autowired
     private StoreService      storeService;
 
+    public Order findByGatewayOrderId(String gatewayOrderId) {
+        return (Order) getSession().createQuery("from Order o where o.gatewayOrderId = :gatewayOrderId").setString("gatewayOrderId", gatewayOrderId).uniqueResult();
+    }
+
     public Order getLatestOrderForUser(User user) {
         @SuppressWarnings( { "unchecked" })
         List<Order> orders = getSession().createQuery("from Order o where o.user = :user and " + "o.orderStatus.id <> :incartOrderStatusId " +
@@ -104,6 +108,13 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao {
             order.setUpdateDate(BaseUtils.getCurrentTimestamp());
             if (order.getStore() == null) {
                 order.setStore(storeService.getDefaultStore());
+            }
+
+            if (order.getShippingOrders() != null && !order.getShippingOrders().isEmpty()) {
+              if (order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())) {
+                logger.error("Hibernate trying to save stale Order object whereas the order is already split - " + order.getId());
+                return order;
+              }
             }
         }
         return (Order) super.save(order);

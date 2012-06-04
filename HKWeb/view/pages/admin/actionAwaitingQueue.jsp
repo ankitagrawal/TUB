@@ -479,7 +479,7 @@
             <td width="60%" style="border:1px solid red; padding:3px;">
               Need to split order manually could not be split automatically
               <br/><br/><strong>
-              (<s:link beanclass="com.hk.web.action.admin.order.SplitBaseOrderAction"><s:param
+              (<s:link beanclass="com.hk.web.action.admin.order.split.SplitBaseOrderAction"><s:param
                 name="baseOrder" value="${order}"/>Split order</s:link>)
               </strong>
             </td>

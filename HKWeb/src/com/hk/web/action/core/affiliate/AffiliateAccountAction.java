@@ -25,7 +25,7 @@ import com.hk.manager.AffiliateManager;
 import com.hk.pact.dao.affiliate.AffiliateDao;
 import com.hk.web.action.core.auth.LogoutAction;
 
-@Secure(hasAnyRoles = { RoleConstants.HK_AFFILIATE, RoleConstants.ADMIN })
+@Secure(hasAnyRoles = { RoleConstants.HK_AFFILIATE, RoleConstants.ADMIN, RoleConstants.HK_AFFILIATE_MANAGER })
 @Component
 public class AffiliateAccountAction extends BaseAction {
 

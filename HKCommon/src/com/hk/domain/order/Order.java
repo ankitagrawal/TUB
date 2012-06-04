@@ -25,6 +25,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.Comment;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.comparator.OrderLifecycleComparator;
@@ -45,76 +46,76 @@ public class Order implements java.io.Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", unique = true, nullable = false)
-    private Long                 id;
+    private Long                      id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User                 user;
+    private User                      user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payment_id")
-    private Payment              payment;
+    private Payment                   payment;
 
     @Column(name = "reward_points_used", nullable = true)
-    private Double               rewardPointsUsed;
+    private Double                    rewardPointsUsed;
 
     @Column(name = "referred_order", nullable = false)
-    private boolean              referredOrder;
+    private boolean                   referredOrder;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_status_id", nullable = false)
-    private OrderStatus          orderStatus;
+    private OrderStatus               orderStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id")
-    private Address              address;
+    private Address                   address;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "offer_instance_id")
-    private OfferInstance        offerInstance;
+    private OfferInstance             offerInstance;
 
     @Column(name = "amount", precision = 11)
-    private Double               amount;
+    private Double                    amount;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_date", nullable = false, length = 19)
-    private Date                 createDate;
+    private Date                      createDate;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "update_date", nullable = false, length = 19)
-    private Date                 updateDate;
+    private Date                      updateDate;
 
     @Column(name = "gateway_order_id", length = 30)
-    private String               gatewayOrderId;
+    private String                    gatewayOrderId;
 
     @Column(name = "user_comments")
-    private String               userComments;
+    private String                    userComments;
 
     /*
      * @Column(name = "basket_category", length = 45) private String basketCategory;
      */
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "order")
-    private Set<OrderCategory>   categories      = new HashSet<OrderCategory>();
+    private Set<OrderCategory>        categories      = new HashSet<OrderCategory>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "order")
-    private Set<CartLineItem>    cartLineItems   = new HashSet<CartLineItem>();
+    private Set<CartLineItem>         cartLineItems   = new HashSet<CartLineItem>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "order")
-    private Set<Payment>         payments        = new HashSet<Payment>(0);
+    private Set<Payment>              payments        = new HashSet<Payment>(0);
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "order")
-    private List<Comment>        comments        = new ArrayList<Comment>();
+    private List<Comment>             comments        = new ArrayList<Comment>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cancellation_type_id")
-    private CancellationType     cancellationType;
+    private CancellationType          cancellationType;
 
     @Column(name = "cancellation_remark")
-    private String               cancellationRemark;
+    private String                    cancellationRemark;
 
     @Column(name = "utm_campaign")
-    private String utmCampaign;
+    private String                    utmCampaign;
     /**
      * TODO: #warehouse should be used from shipping order;
      */
@@ -124,11 +125,10 @@ public class Order implements java.io.Serializable {
      */
 
     @Column(name = "is_b2b_order")
-    private Boolean              b2bOrder;
-
+    private Boolean                   b2bOrder;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "order")
-    private List<OrderLifecycle> orderLifecycles = new ArrayList<OrderLifecycle>();
+    private List<OrderLifecycle>      orderLifecycles = new ArrayList<OrderLifecycle>();
 
     /*
      * @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "order") private List<AccountingInvoice>
@@ -136,18 +136,18 @@ public class Order implements java.io.Serializable {
      */
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "baseOrder")
-    private Set<ShippingOrder>   shippingOrders  = new HashSet<ShippingOrder>(0);
+    private Set<ShippingOrder>        shippingOrders  = new HashSet<ShippingOrder>(0);
 
     @Column(name = "version", nullable = false)
-    private Long                 version         = new Long(1);
+    private Long                      version         = new Long(1);
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id")
-    private Store                store;
+    private Store                     store;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "primary_referrer_for_order_id")
-    private PrimaryReferrerForOrder primaryReferrerForOrder;
+    private PrimaryReferrerForOrder   primaryReferrerForOrder;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "secondary_referrer_for_order_id")
@@ -365,31 +365,28 @@ public class Order implements java.io.Serializable {
     }
 
     public String getUtmCampaign() {
-      return utmCampaign;
+        return utmCampaign;
     }
 
     public void setUtmCampaign(String utmCampaign) {
-      this.utmCampaign = utmCampaign;
+        this.utmCampaign = utmCampaign;
     }
 
     public PrimaryReferrerForOrder getPrimaryReferrerForOrder() {
-      return primaryReferrerForOrder;
+        return primaryReferrerForOrder;
     }
 
     public void setPrimaryReferrerForOrder(PrimaryReferrerForOrder primaryReferrerForOrder) {
-      this.primaryReferrerForOrder = primaryReferrerForOrder;
+        this.primaryReferrerForOrder = primaryReferrerForOrder;
     }
 
     public SecondaryReferrerForOrder getSecondaryReferrerForOrder() {
-      return secondaryReferrerForOrder;
+        return secondaryReferrerForOrder;
     }
 
     public void setSecondaryReferrerForOrder(SecondaryReferrerForOrder secondaryReferrerForOrder) {
-      this.secondaryReferrerForOrder = secondaryReferrerForOrder;
+        this.secondaryReferrerForOrder = secondaryReferrerForOrder;
     }
-
-
-
 
     /*
      * @Deprecated public AccountingInvoiceNumber getAccountingInvoiceNumber() { return accountingInvoiceNumber; }
@@ -424,7 +421,6 @@ public class Order implements java.io.Serializable {
     public void setB2bOrder(Boolean b2bOrder) {
         this.b2bOrder = b2bOrder;
     }
-
 
     public Set<ShippingOrder> getShippingOrders() {
         return shippingOrders;
@@ -487,9 +483,7 @@ public class Order implements java.io.Serializable {
 
     @Transient
     public boolean isCOD() {
-        // return EnumPaymentMode.COD.getId().equals(getPayment().getPaymentMode().getId());
-        // TODO:rewrite
-        return true;
+        return EnumPaymentMode.COD.getId().equals(getPayment().getPaymentMode().getId());
     }
 
     /*

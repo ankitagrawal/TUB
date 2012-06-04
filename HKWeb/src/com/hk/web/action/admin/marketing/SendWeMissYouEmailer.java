@@ -51,7 +51,7 @@ public class SendWeMissYouEmailer extends BaseAction {
     @Autowired
     EmailCampaignDao    emailCampaignDao;
     @Autowired
-    UserDao            userDao;
+    UserDao             userDao;
     @Autowired
     CouponDao           couponDao;
     @Autowired

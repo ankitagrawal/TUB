@@ -1,5 +1,35 @@
 package com.hk.web.action.report;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.DontValidate;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.validation.Validate;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.DateUtils;
 import com.hk.admin.manager.ProductManager;
@@ -27,8 +57,8 @@ import com.hk.pact.service.order.OrderService;
 import com.hk.report.dto.catalog.CategoryPerformanceDto;
 import com.hk.report.dto.inventory.InventorySoldDto;
 import com.hk.report.dto.inventory.ExpiryAlertReportDto;
-import com.hk.report.dto.inventory.StockReportDto;
 import com.hk.report.dto.inventory.RTOReportDto;
+import com.hk.report.dto.inventory.StockReportDto;
 import com.hk.report.dto.order.CategoriesOrderReportDto;
 import com.hk.report.dto.order.OrderLifecycleStateTransitionDto;
 import com.hk.report.dto.order.ShipmentDto;
@@ -43,123 +73,112 @@ import com.hk.report.pact.service.shippingOrder.ReportShippingOrderService;
 import com.hk.util.CustomDateTypeConvertor;
 import com.hk.util.io.HkXlsWriter;
 import com.hk.web.action.error.AdminPermissionAction;
-import net.sourceforge.stripes.action.*;
-import net.sourceforge.stripes.validation.Validate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
-@Secure(hasAnyPermissions = { PermissionConstants.REPORT_ADMIN }, authActionBean = AdminPermissionAction.class)
+@Secure (hasAnyPermissions = {PermissionConstants.REPORT_ADMIN}, authActionBean = AdminPermissionAction.class)
 @Component
 public class ReportAction extends BaseAction {
 
-  private Date                                   startDate;
-  private Date                                   endDate;
-  private Date                                   activityDate;
-  private PaymentMode                            paymentMode;
-  private Courier                                codMode;
-  private ReconciliationStatus                   reconciliationStatus;
-  float                                          avgDeliveryTime                      = 0F;
-  float                                          avgShipmentTime                      = 0F;
-  private int                                    daysBtwMonthStartDateCurrentDate;
-  private List<Tax>                              taxes                                = new ArrayList<Tax>();
-  private List<OrderStatus>                      orderStatuses                        = new ArrayList<OrderStatus>();
-  private String                                 inRegion;
-  private String[]                               productIdArray;
-  private String                                 productIdListCommaSeparated;
+  private Date startDate;
+  private Date endDate;
+  private Date activityDate;
+  private PaymentMode paymentMode;
+  private Courier codMode;
+  private ReconciliationStatus reconciliationStatus;
+  float avgDeliveryTime = 0F;
+  float avgShipmentTime = 0F;
+  private int daysBtwMonthStartDateCurrentDate;
+  private List<Tax> taxes = new ArrayList<Tax>();
+  private List<OrderStatus> orderStatuses = new ArrayList<OrderStatus>();
+  private String inRegion;
+  private String[] productIdArray;
+  private String productIdListCommaSeparated;
   // private InventorySoldDto inventorySold;
-  private OrderStatus                            orderStatus;
-  private Warehouse                              warehouse;
+  private OrderStatus orderStatus;
 
-  @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
-  String                                         adminDownloads;
-  File                                           xlsFile;
-  @Autowired
-  ReportShippingOrderService                     shippingOrderReportingService;
-  @Autowired
-  ReportOrderService                             reportOrderService;
-  @Autowired
-  private ReportProductVariantService            reportProductVariantService;
-  @Autowired
-  ReportManager                                  reportGenerator;
-  @Autowired
-  OrderDao                                       orderDao;
-  @Autowired
-  PaymentModeDao                                 paymentModeDao;
-  @Autowired
-  ProductManager                                 productManager;
-  @Autowired
-  ReconciliationStatusDaoImpl                    reconciliationStatusDao;
-  @Autowired
-  private CategoryService                        categoryService;
-  @Autowired
-  OrderManager                                   orderManager;
-  @Autowired
-  EmailManager                                   emailManager;
-  @Autowired
-  ProductVariantDao                              productVariantDao;
-  @Autowired
-  OrderService                                   orderService;
-  @Autowired
-  OrderStatusService                             orderStatusService;
+  private Warehouse warehouse;
 
-  private List<CategorySalesDto>                 categorySalesDtoList                 = new ArrayList<CategorySalesDto>();
+  @Value ("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
+  String adminDownloads;
+  File xlsFile;
+  @Autowired
+  ReportShippingOrderService shippingOrderReportingService;
+  @Autowired
+  ReportOrderService reportOrderService;
+  @Autowired
+  private ReportProductVariantService reportProductVariantService;
+  @Autowired
+  ReportManager reportGenerator;
+  @Autowired
+  OrderDao orderDao;
+  @Autowired
+  PaymentModeDao paymentModeDao;
+  @Autowired
+  ProductManager productManager;
+  @Autowired
+  ReconciliationStatusDaoImpl reconciliationStatusDao;
+  @Autowired
+  private CategoryService categoryService;
+  @Autowired
+  OrderManager orderManager;
+  // @Autowired
+  EmailManager emailManager;
+  @Autowired
+  ProductVariantDao productVariantDao;
+  @Autowired
+  OrderService orderService;
+  @Autowired
+  OrderStatusService orderStatusService;
 
-  private List<DaySaleDto>                       daySaleList                          = new ArrayList<DaySaleDto>();
-  private List<DaySaleShipDateWiseDto>           daySaleShipDateWiseDtoList           = new ArrayList<DaySaleShipDateWiseDto>();
+  private List<CategorySalesDto> categorySalesDtoList = new ArrayList<CategorySalesDto>();
 
-  private List<ShipmentDto>                      shipmentDtoList                      = new ArrayList<ShipmentDto>();
+  private List<DaySaleDto> daySaleList = new ArrayList<DaySaleDto>();
+  private List<DaySaleShipDateWiseDto> daySaleShipDateWiseDtoList = new ArrayList<DaySaleShipDateWiseDto>();
+
+  private List<ShipmentDto> shipmentDtoList = new ArrayList<ShipmentDto>();
 
   private List<OrderLifecycleStateTransitionDto> orderLifecycleStateTransitionDtoList = new ArrayList<OrderLifecycleStateTransitionDto>();
 
-  private List<Order>                            orderList                            = new ArrayList<Order>();
+  private List<Order> orderList = new ArrayList<Order>();
 
-  private List<CategoryPerformanceDto>           categoryPerformanceList              = new ArrayList<CategoryPerformanceDto>();
+  private List<CategoryPerformanceDto> categoryPerformanceList = new ArrayList<CategoryPerformanceDto>();
 
-  private List<String>                           categoryList                         = new ArrayList<String>();
+  private List<String> categoryList = new ArrayList<String>();
 
-  private List<CODConfirmationDto>               CODUnConfirmedOrderList              = new ArrayList<CODConfirmationDto>();
+  private List<CODConfirmationDto> CODUnConfirmedOrderList = new ArrayList<CODConfirmationDto>();
 
-  private List<CODConfirmationDto>               CODConfirmedOrderList                = new ArrayList<CODConfirmationDto>();
+  private List<CODConfirmationDto> CODConfirmedOrderList = new ArrayList<CODConfirmationDto>();
 
-  private List<InventorySoldDto>                 inventorySoldList                    = new ArrayList<InventorySoldDto>();
+  private List<InventorySoldDto> inventorySoldList = new ArrayList<InventorySoldDto>();
 
-  private Category                               topLevelCategory;
+  private Category topLevelCategory;
 
-  private Courier                                courier;
+  private Courier courier;
 
-  private Double                                 avgTxn                               = 0.0;
-  private Double                                 avgTnxCOD                            = 0.0;
-  private Double                                 avgTxnOfferOrder                     = 0.0;
-  private Double                                 avgSku                               = 0.0;
-  private Double                                 avgMrp                               = 0.0;
-  private Double                                 avgHkp                               = 0.0;
-  private Double                                 avgHkpPostDiscount                   = 0.0;
+  private Double avgTxn = 0.0;
+  private Double avgTnxCOD = 0.0;
+  private Double avgTxnOfferOrder = 0.0;
+  private Double avgSku = 0.0;
+  private Double avgMrp = 0.0;
+  private Double avgHkp = 0.0;
+  private Double avgHkpPostDiscount = 0.0;
 
-  private Double                                 avgSameDayShipping                   = 0.0;
-  private Double                                 avgNextDayShipping                   = 0.0;
-  private Double                                 avgShippingOnDayTwo                  = 0.0;
+  private Double avgSameDayShipping = 0.0;
+  private Double avgNextDayShipping = 0.0;
+  private Double avgShippingOnDayTwo = 0.0;
 
-  private Double                                 totalAmount                          = 0.0;
-  private Integer                                totalOrders                          = 0;
-  private Integer                                totalDistinctOrders                  = 0;
-  private Integer                                sumOfMrp                             = 0;
-  private Integer                                sumOfHkPrice                         = 0;
-  private Long                                   total                                = 0L;
+  private Double totalAmount = 0.0;
+  private Integer totalOrders = 0;
+  private Integer totalDistinctOrders = 0;
+  private Integer sumOfMrp = 0;
+  private Integer sumOfHkPrice = 0;
+  private Long total = 0L;
 
-  private Map<String, CategoriesOrderReportDto>  categoriesOrderReportDtosMap         = new HashMap<String, CategoriesOrderReportDto>();
-  private Map<String, CategoriesOrderReportDto>  sixHourlyCategoriesOrderReportMap    = new HashMap<String, CategoriesOrderReportDto>();
+  private Map<String, CategoriesOrderReportDto> categoriesOrderReportDtosMap = new HashMap<String, CategoriesOrderReportDto>();
+  private Map<String, CategoriesOrderReportDto> sixHourlyCategoriesOrderReportMap = new HashMap<String, CategoriesOrderReportDto>();
 
-  private Map<String, Long>                      targetMrpSalesMap;
-  private Map<String, Long>                      targetOrderCountMap;
-  private Map<String, Long>                      targetDailyMrpSalesMap               = new HashMap<String, Long>();
+  private Map<String, Long> targetMrpSalesMap;
+  private Map<String, Long> targetOrderCountMap;
+  private Map<String, Long> targetDailyMrpSalesMap = new HashMap<String, Long>();
 
   @DefaultHandler
   @DontValidate
@@ -174,7 +193,7 @@ public class ReportAction extends BaseAction {
     return new ForwardResolution("/pages/admin/report.jsp");
   }
 
-  @Secure(hasAnyPermissions = { PermissionConstants.SKU_SALES_REPORT }, authActionBean = AdminPermissionAction.class)
+  @Secure (hasAnyPermissions = {PermissionConstants.SKU_SALES_REPORT}, authActionBean = AdminPermissionAction.class)
   public Resolution generateOrderReportExcel() {
     try {
       SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -188,7 +207,7 @@ public class ReportAction extends BaseAction {
     return new HTTPResponseResolution();
   }
 
-  @Secure(hasAnyPermissions = { PermissionConstants.SKU_SALES_REPORT }, authActionBean = AdminPermissionAction.class)
+  @Secure (hasAnyPermissions = {PermissionConstants.SKU_SALES_REPORT}, authActionBean = AdminPermissionAction.class)
   public Resolution generateSKUSalesExcel() {
     try {
       SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -202,7 +221,7 @@ public class ReportAction extends BaseAction {
     return new HTTPResponseResolution();
   }
 
-  @Secure(hasAnyPermissions = { PermissionConstants.ACCOUNTING_SALES_REPORT }, authActionBean = AdminPermissionAction.class)
+  @Secure (hasAnyPermissions = {PermissionConstants.ACCOUNTING_SALES_REPORT}, authActionBean = AdminPermissionAction.class)
   public Resolution generateAccountingSalesExcel() {
     /*
     * try { SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd"); xlsFile = new File(adminDownloads +
@@ -215,7 +234,7 @@ public class ReportAction extends BaseAction {
     return new HTTPResponseResolution();
   }
 
-  @Secure(hasAnyPermissions = { PermissionConstants.ACCOUNTING_SALES_REPORT }, authActionBean = AdminPermissionAction.class)
+  @Secure (hasAnyPermissions = {PermissionConstants.ACCOUNTING_SALES_REPORT}, authActionBean = AdminPermissionAction.class)
   public Resolution generateAccountingSalesExcelForBusy() {
     /*
     * try { SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd"); xlsFile = new File(adminDownloads +
@@ -228,7 +247,7 @@ public class ReportAction extends BaseAction {
     return new HTTPResponseResolution();
   }
 
-  @Secure(hasAnyPermissions = { PermissionConstants.SALES_REPORT }, authActionBean = AdminPermissionAction.class)
+  @Secure (hasAnyPermissions = {PermissionConstants.SALES_REPORT}, authActionBean = AdminPermissionAction.class)
   public Resolution generateSalesByDateReport() {
     List<OrderStatus> orderStatusList = orderStatusService.getOrderStatuses(EnumOrderStatus.getStatusForCustomers());
     daySaleList = reportOrderService.findSaleForTimeFrame(orderStatusList, startDate, endDate);
@@ -271,7 +290,7 @@ public class ReportAction extends BaseAction {
     return new ForwardResolution("/pages/admin/salesByDateReport.jsp");
   }
 
-  @Secure(hasAnyPermissions = { PermissionConstants.SALES_REPORT }, authActionBean = AdminPermissionAction.class)
+  @Secure (hasAnyPermissions = {PermissionConstants.SALES_REPORT}, authActionBean = AdminPermissionAction.class)
   public Resolution generateDetailedSalesDailyReport() {
     // TODO: #warehouse refactor this
 
@@ -289,7 +308,7 @@ public class ReportAction extends BaseAction {
     return new ForwardResolution("/pages/admin/detailedSalesDailyReport.jsp");
   }
 
-  @Secure(hasAnyPermissions = { PermissionConstants.SALES_REPORT }, authActionBean = AdminPermissionAction.class)
+  @Secure (hasAnyPermissions = {PermissionConstants.SALES_REPORT}, authActionBean = AdminPermissionAction.class)
   public Resolution generateSalesByDateReportForShippedProducts() {
 
     daySaleShipDateWiseDtoList = reportGenerator.generateSalesByDateReportForShippedProducts(startDate, endDate);
@@ -297,7 +316,7 @@ public class ReportAction extends BaseAction {
     return new ForwardResolution("/pages/admin/salesByDateReportForShippedItems.jsp");
   }
 
-  @Secure(hasAnyPermissions = { PermissionConstants.SALES_REPORT }, authActionBean = AdminPermissionAction.class)
+  @Secure (hasAnyPermissions = {PermissionConstants.SALES_REPORT}, authActionBean = AdminPermissionAction.class)
   public Resolution generateSalesByDateExcel() {
     try {
       SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -311,7 +330,7 @@ public class ReportAction extends BaseAction {
     return new HTTPResponseResolution();
   }
 
-  @Secure(hasAnyPermissions = { PermissionConstants.SALES_REPORT }, authActionBean = AdminPermissionAction.class)
+  @Secure (hasAnyPermissions = {PermissionConstants.SALES_REPORT}, authActionBean = AdminPermissionAction.class)
   public Resolution generateSalesByDateForShippedProductsExcel() {
     try {
       SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -325,14 +344,14 @@ public class ReportAction extends BaseAction {
     return new HTTPResponseResolution();
   }
 
-  @Secure(hasAnyPermissions = { PermissionConstants.MASTER_PERFORMANCE_REPORTS }, authActionBean = AdminPermissionAction.class)
+  @Secure (hasAnyPermissions = {PermissionConstants.MASTER_PERFORMANCE_REPORTS}, authActionBean = AdminPermissionAction.class)
   public Resolution generateMasterPerformanceReport() {
     // TODO: #warehouse refactor this
     orderLifecycleStateTransitionDtoList = shippingOrderReportingService.getOrderLifecycleStateTransitionDtoList(startDate, endDate);
     return new ForwardResolution("/pages/admin/masterPerformanceReport.jsp");
   }
 
-  @Secure(hasAnyPermissions = { PermissionConstants.COD_PERFORMANCE_REPORTS }, authActionBean = AdminPermissionAction.class)
+  @Secure (hasAnyPermissions = {PermissionConstants.COD_PERFORMANCE_REPORTS}, authActionBean = AdminPermissionAction.class)
   public Resolution getUnescalatedOrders() {
 
     // TODO: #warehouse refactor this
@@ -367,14 +386,14 @@ public class ReportAction extends BaseAction {
     return new ForwardResolution("/pages/admin/unescalatedOrders.jsp");
   }
 
-  @Secure(hasAnyPermissions = { PermissionConstants.COD_PERFORMANCE_REPORTS }, authActionBean = AdminPermissionAction.class)
+  @Secure (hasAnyPermissions = {PermissionConstants.COD_PERFORMANCE_REPORTS}, authActionBean = AdminPermissionAction.class)
   public Resolution generateCODConfirmationReport() {
     CODUnConfirmedOrderList = reportGenerator.generateUnConfirmedOrderList(startDate, endDate);
     CODConfirmedOrderList = reportGenerator.generateConfirmedOrderList(startDate, endDate);
     return new ForwardResolution("/pages/admin/codConfirmationPerformaceReport.jsp");
   }
 
-  @Secure(hasAnyPermissions = { PermissionConstants.SALES_REPORT }, authActionBean = AdminPermissionAction.class)
+  @Secure (hasAnyPermissions = {PermissionConstants.SALES_REPORT}, authActionBean = AdminPermissionAction.class)
   public Resolution generateSalesReport() {
     try {
       SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -388,7 +407,7 @@ public class ReportAction extends BaseAction {
     return new HTTPResponseResolution();
   }
 
-  @Secure(hasAnyPermissions = { PermissionConstants.CRM_REPORTS }, authActionBean = AdminPermissionAction.class)
+  @Secure (hasAnyPermissions = {PermissionConstants.CRM_REPORTS}, authActionBean = AdminPermissionAction.class)
   public Resolution generateCRMReport() {
     try {
       SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -416,7 +435,7 @@ public class ReportAction extends BaseAction {
     return new HTTPResponseResolution();
   }
 
-  @Secure(hasAnyPermissions = { PermissionConstants.CATEGORY_PERFORMANCE_REPORTS }, authActionBean = AdminPermissionAction.class)
+  @Secure (hasAnyPermissions = {PermissionConstants.CATEGORY_PERFORMANCE_REPORTS}, authActionBean = AdminPermissionAction.class)
   public Resolution generateCategoryPerformanceReportUI() {
 
     // TODO: # warehouse fix this
@@ -451,7 +470,7 @@ public class ReportAction extends BaseAction {
     return new ForwardResolution("/pages/admin/categoryPerformanceReport.jsp");
   }
 
-  @Secure(hasAnyPermissions = { PermissionConstants.CATEGORY_PERFORMANCE_REPORTS }, authActionBean = AdminPermissionAction.class)
+  @Secure (hasAnyPermissions = {PermissionConstants.CATEGORY_PERFORMANCE_REPORTS}, authActionBean = AdminPermissionAction.class)
   public Resolution generateDailyCategoryPerformaceReportUI() {
 
     targetMrpSalesMap = CategoryConstants.targetMrpSalesMap;
@@ -483,14 +502,14 @@ public class ReportAction extends BaseAction {
     return new ForwardResolution("/pages/admin/categoryPerformanceDailyReport.jsp");
   }
 
-  @Secure(hasAnyPermissions = { PermissionConstants.CATEGORY_PERFORMANCE_REPORTS }, authActionBean = AdminPermissionAction.class)
+  @Secure (hasAnyPermissions = {PermissionConstants.CATEGORY_PERFORMANCE_REPORTS}, authActionBean = AdminPermissionAction.class)
   public Resolution generateSixHourlyCategoryPerformaceReportUI() {
 
     sixHourlyCategoriesOrderReportMap = reportGenerator.generateSixHourlyCategoryPerformaceReportUI();
     return new ForwardResolution("/pages/admin/categoryPerformanceSixHourlyReport.jsp");
   }
 
-  @Secure(hasAnyPermissions = { PermissionConstants.VIEW_RECONCILIATION_REPORTS }, authActionBean = AdminPermissionAction.class)
+  @Secure (hasAnyPermissions = {PermissionConstants.VIEW_RECONCILIATION_REPORTS}, authActionBean = AdminPermissionAction.class)
   public Resolution generateReconciliationReportUI() {
     // TODO: # warehouse fix this
     /*
@@ -510,7 +529,7 @@ public class ReportAction extends BaseAction {
     return new ForwardResolution("/pages/admin/reconciliationReport.jsp");
   }
 
-  @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_RECONCILIATION_REPORTS }, authActionBean = AdminPermissionAction.class)
+  @Secure (hasAnyPermissions = {PermissionConstants.UPDATE_RECONCILIATION_REPORTS}, authActionBean = AdminPermissionAction.class)
   public Resolution reconcile() {
     for (Order order : orderList) {
       orderDao.save(order);
@@ -519,7 +538,7 @@ public class ReportAction extends BaseAction {
     return new ForwardResolution("/pages/admin/reconciliationReport.jsp");
   }
 
-  @Secure(hasAnyPermissions = { PermissionConstants.VIEW_RECONCILIATION_REPORTS }, authActionBean = AdminPermissionAction.class)
+  @Secure (hasAnyPermissions = {PermissionConstants.VIEW_RECONCILIATION_REPORTS}, authActionBean = AdminPermissionAction.class)
   public Resolution generateReconciliationReport() {
     try {
       SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -533,7 +552,7 @@ public class ReportAction extends BaseAction {
     return new HTTPResponseResolution();
   }
 
-  @Secure(hasAnyPermissions = { PermissionConstants.COD_PERFORMANCE_REPORTS }, authActionBean = AdminPermissionAction.class)
+  @Secure (hasAnyPermissions = {PermissionConstants.COD_PERFORMANCE_REPORTS}, authActionBean = AdminPermissionAction.class)
   public Resolution generateCODConfirmationReportXls() {
     try {
       SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -569,7 +588,7 @@ public class ReportAction extends BaseAction {
 
   }
 
-  @Secure(hasAnyPermissions = { PermissionConstants.COURIER_DELIVERY_REPORTS }, authActionBean = AdminPermissionAction.class)
+  @Secure (hasAnyPermissions = {PermissionConstants.COURIER_DELIVERY_REPORTS}, authActionBean = AdminPermissionAction.class)
   public Resolution generateCourierReport() {
     try {
       if (courier == null) {
@@ -596,7 +615,7 @@ public class ReportAction extends BaseAction {
     return new HTTPResponseResolution();
   }
 
-  @Secure(hasAnyPermissions = { PermissionConstants.SALES_REPORT }, authActionBean = AdminPermissionAction.class)
+  @Secure (hasAnyPermissions = {PermissionConstants.SALES_REPORT}, authActionBean = AdminPermissionAction.class)
   public Resolution generateSaleForProductsByTaxAndStatusInRegion() {
 
     // daySaleShipDateWiseDtoList = reportGenerator.generateSalesByDateReportForShippedProducts(startDate, endDate);
@@ -651,13 +670,12 @@ public class ReportAction extends BaseAction {
     }
   }
 
-  public Resolution generateStockReport()
-  {
+  public Resolution generateStockReport() {
     StockReportDto stockReportDto = null;
     xlsFile = new File(adminDownloads + "/reports/StockReport.xls");
     HkXlsWriter xlsWriter = new HkXlsWriter();
 
-    if(productIdListCommaSeparated != null) {
+    if (productIdListCommaSeparated != null) {
       int xlsRow = 1;
       xlsWriter.addHeader("PRODUCT VARIANT ID", "PRODUCT VARIANT ID");
       xlsWriter.addHeader("PRODUCT NAME", "PRODUCT NAME");
@@ -673,9 +691,9 @@ public class ReportAction extends BaseAction {
       xlsWriter.addHeader("DAMAGED STOCK", "DAMAGED STOCK");
 
       productIdArray = productIdListCommaSeparated.split(",");
-      for(String productId: productIdArray) {
+      for (String productId : productIdArray) {
         stockReportDto = reportProductVariantService.getStockDetailsByProductVariant(productId, warehouse, startDate, endDate);
-        if( stockReportDto != null ) {
+        if (stockReportDto != null) {
           xlsWriter.addCell(xlsRow, stockReportDto.getProductVariant());
           xlsWriter.addCell(xlsRow, stockReportDto.getProductName());
           xlsWriter.addCell(xlsRow, stockReportDto.getProductOption());
@@ -705,7 +723,7 @@ public class ReportAction extends BaseAction {
     xlsFile = new File(adminDownloads + "/reports/RTOReport.xls");
     HkXlsWriter xlsWriter = new HkXlsWriter();
 
-    if(rtoReportList != null && rtoReportList.size() > 0) {
+    if (rtoReportList != null && rtoReportList.size() > 0) {
       int xlsRow = 1;
       xlsWriter.addHeader("RTO DATE", "RTO DATE");
       xlsWriter.addHeader("SHIPMENT ORDER NO.", "SHIPMENT ORDER NO.");
@@ -715,7 +733,7 @@ public class ReportAction extends BaseAction {
       xlsWriter.addHeader("RTO CHECKIN QTY", "RTO CHECKIN QTY");
       xlsWriter.addHeader("RTO CHECKIN DAMAGE QTY", "RTO CHECKIN DAMAGE QTY");
 
-      for(RTOReportDto rtoReportDto : rtoReportList) {
+      for (RTOReportDto rtoReportDto : rtoReportList) {
         xlsWriter.addCell(xlsRow, rtoReportDto.getRtoDate());
         xlsWriter.addCell(xlsRow, rtoReportDto.getShippingOrderNumber());
         xlsWriter.addCell(xlsRow, rtoReportDto.getProductVariantId());
@@ -729,10 +747,9 @@ public class ReportAction extends BaseAction {
       addRedirectAlertMessage(new SimpleMessage("Download complete"));
 
       return new HTTPResponseResolution();
-    }else
-      return new ForwardResolution("/pages/admin/report.jsp");
+    } else return new ForwardResolution("/pages/admin/report.jsp");
   }
-  
+
   public Resolution generateExpiryAlertReport() {
     List<ExpiryAlertReportDto> expiryAlertReportDtoList = reportProductVariantService.getToBeExpiredProductDetails(startDate, endDate, warehouse);
     xlsFile = new File(adminDownloads + "/reports/ExpiryAlertReport.xls");
@@ -745,7 +762,7 @@ public class ReportAction extends BaseAction {
     xlsWriter.addHeader("STOCK LEFT", "STOCK LEFT");
     xlsWriter.writeData(xlsFile, "ExpiryAlert_Report");
 
-    for(ExpiryAlertReportDto expiryAlertReportDto : expiryAlertReportDtoList) {
+    for (ExpiryAlertReportDto expiryAlertReportDto : expiryAlertReportDtoList) {
       xlsWriter.addCell(xlsRow, expiryAlertReportDto.getBatchNumber());
       xlsWriter.addCell(xlsRow, expiryAlertReportDto.getProductVariantId());
       xlsWriter.addCell(xlsRow, expiryAlertReportDto.getProductName());
@@ -764,7 +781,7 @@ public class ReportAction extends BaseAction {
     return startDate;
   }
 
-  @Validate(converter = CustomDateTypeConvertor.class)
+  @Validate (converter = CustomDateTypeConvertor.class)
   public void setStartDate(Date startDate) {
     this.startDate = startDate;
   }
@@ -773,7 +790,7 @@ public class ReportAction extends BaseAction {
     return endDate;
   }
 
-  @Validate(converter = CustomDateTypeConvertor.class)
+  @Validate (converter = CustomDateTypeConvertor.class)
   public void setEndDate(Date endDate) {
     this.endDate = endDate;
   }

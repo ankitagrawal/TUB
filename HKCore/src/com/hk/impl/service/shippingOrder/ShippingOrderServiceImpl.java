@@ -24,13 +24,15 @@ import com.hk.domain.order.ShippingOrderLifecycle;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.impl.dao.ReconciliationStatusDaoImpl;
+import com.hk.pact.dao.ReconciliationStatusDao;
+import com.hk.domain.courier.Courier;
 import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.service.ServiceLocatorFactory;
 
 /**
  * @author vaibhav.adlakha
@@ -42,22 +44,17 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 
     @Autowired
     private UserService                userService;
-
     @Autowired
     private InventoryService           inventoryService;
-
-    @Autowired
-    private OrderService               orderService;
-
     @Autowired
     private ShippingOrderDao           shippingOrderDao;
-
     @Autowired
     private ShippingOrderStatusService shippingOrderStatusService;
-
     @Autowired
-    private ReconciliationStatusDaoImpl    reconciliationStatusDao;
-
+    private ReconciliationStatusDao    reconciliationStatusDao;
+    
+    private OrderService               orderService;
+    
     public ShippingOrder findByGatewayOrderId(String gatewayOrderId) {
         return getShippingOrderDao().findByGatewayOrderId(gatewayOrderId);
     }
@@ -168,7 +165,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
             logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_EscalatedToProcessingQueue);
         }
 
-        orderService.escalateOrderFromActionQueue(shippingOrder.getBaseOrder(), shippingOrder.getGatewayOrderId());
+        getOrderService().escalateOrderFromActionQueue(shippingOrder.getBaseOrder(), shippingOrder.getGatewayOrderId());
         return shippingOrder;
     }
 
@@ -193,13 +190,27 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     }
 
     public void logShippingOrderActivity(ShippingOrder shippingOrder, EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity) {
-        User user = getUserService().getLoggedInUser();
+        Order baseOrder=shippingOrder.getBaseOrder();
+        User user;
+        if(baseOrder.getStore().getId()== 1L){
+            user  = getUserService().getLoggedInUser();
+        }
+        else{
+            user=baseOrder.getUser();
+        }
         ShippingOrderLifeCycleActivity orderLifecycleActivity = getShippingOrderLifeCycleActivity(enumShippingOrderLifecycleActivity);
         logShippingOrderActivity(shippingOrder, user, orderLifecycleActivity, null);
     }
 
     public void logShippingOrderActivity(ShippingOrder shippingOrder, EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity, String comments) {
-        User user = getUserService().getLoggedInUser();
+        Order baseOrder=shippingOrder.getBaseOrder();
+        User user;
+        if(baseOrder.getStore().getId()== 1L){
+            user  = getUserService().getLoggedInUser();
+        }
+        else{
+            user=baseOrder.getUser();
+        }
         ShippingOrderLifeCycleActivity orderLifecycleActivity = getShippingOrderLifeCycleActivity(enumShippingOrderLifecycleActivity);
         logShippingOrderActivity(shippingOrder, user, orderLifecycleActivity, comments);
     }
@@ -215,24 +226,6 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         getShippingOrderDao().save(shippingOrderLifecycle);
     }
 
-    public List<Long> getShippingOrderListByCourier(Date startDate, Date endDate, Long courierId) {
-
-        List<Long> shippingOrderList = new ArrayList<Long>();
-
-        if (startDate == null) {
-            Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.MONTH, -1);
-            startDate = calendar.getTime();
-        }
-        if (endDate == null) {
-            endDate = new Date();
-        }
-
-        shippingOrderList = getShippingOrderDao().getShippingOrderListByCourier(startDate, endDate, courierId);
-        return shippingOrderList;
-    }
-
-    @Override
     public Page searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, int pageNo, int perPage) {
         return searchShippingOrders(shippingOrderSearchCriteria, true, pageNo, perPage);
     }
@@ -254,12 +247,12 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     }
 
     public OrderService getOrderService() {
+        if(orderService == null){
+            orderService = ServiceLocatorFactory.getService(OrderService.class);
+        }
         return orderService;
     }
-
-    public void setOrderService(OrderService orderService) {
-        this.orderService = orderService;
-    }
+    
 
     public ShippingOrderDao getShippingOrderDao() {
         return shippingOrderDao;
@@ -269,11 +262,12 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         this.shippingOrderDao = shippingOrderDao;
     }
 
-    public ReconciliationStatusDaoImpl getReconciliationStatusDao() {
+
+    public ReconciliationStatusDao getReconciliationStatusDao() {
         return reconciliationStatusDao;
     }
 
-    public void setReconciliationStatusDao(ReconciliationStatusDaoImpl reconciliationStatusDao) {
+    public void setReconciliationStatusDao(ReconciliationStatusDao reconciliationStatusDao) {
         this.reconciliationStatusDao = reconciliationStatusDao;
     }
 
@@ -289,5 +283,4 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     public ShippingOrder findByTrackingId(String trackingId) {
         return getShippingOrderDao().findByTrackingId(trackingId);
     }
-
 }

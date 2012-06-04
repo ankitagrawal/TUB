@@ -6,6 +6,7 @@
 <%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -161,6 +162,7 @@
 <c:set var="orderStatusCancelled" value="<%=EnumOrderStatus.Cancelled.getId()%>"/>
 <c:set var="orderStatusPending" value="<%=EnumOrderStatus.InProcess.getId()%>"/>
 <c:set var="orderStatusHold" value="<%=EnumOrderStatus.OnHold.getId()%>"/>
+<c:set var="orderStatusPlaced" value="<%=EnumOrderStatus.Placed.getId()%>"/>
 <c:set var="paymentStatusPending" value="<%=EnumPaymentStatus.AUTHORIZATION_PENDING.getId()%>"/>
 
 <s:errors/>
@@ -322,28 +324,6 @@
     Invoice <s:param name="order" value="${order.id}"/>
   </s:link>) <br/>
   </c:if>
-    <%--<br/>(<s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="oldAccountingInvoice" target="_blank">--%>
-    <%--Prime Accounting Invoice <s:param name="order" value="${order.id}"/></s:link>) <br>--%>
-    <%--<br/><b>Retail Invoice:</b> <br/>--%>
-    <%--<c:forEach items="${order.retailInvoices}" var="accountingInvoice">--%>
-    <%--<s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="retailInvoice" target="_blank">--%>
-    <%--<s:param name="accountingInvoice" value="${accountingInvoice.id}"/>--%>
-    <%--R-${accountingInvoice.retailInvoiceId} on <fmt:formatDate value="${accountingInvoice.invoiceDate}" type="both"/>--%>
-    <%--</s:link><br/></c:forEach>--%>
-    <%--<br/><b>B2B Invoice:</b> <br/>--%>
-    <%--<c:forEach items="${order.b2BInvoices}" var="accountingInvoice">--%>
-    <%--<s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="b2bInvoice" target="_blank">--%>
-    <%--<s:param name="accountingInvoice" value="${accountingInvoice.id}"/>--%>
-    <%--T-${accountingInvoice.retailInvoiceId} on--%>
-    <%--<fmt:formatDate value="${accountingInvoice.invoiceDate}" type="both"/>--%>
-    <%--</s:link><br/></c:forEach><br/><br/><b>Service Invoice:</b> <br/>--%>
-    <%--<c:forEach items="${order.seviceInvoices}" var="accountingInvoice">--%>
-    <%--<s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="serviceInvoice" target="_blank">--%>
-    <%--<s:param name="accountingInvoice" value="${accountingInvoice.id}"/>--%>
-    <%--S-${accountingInvoice.serviceInvoiceId} on--%>
-    <%--<fmt:formatDate value="${accountingInvoice.invoiceDate}" type="both"/>--%>
-    <%--</s:link><br/></c:forEach>--%>
-    <%--</c:if>--%>
   <span class="upc lgry sml">GID</span> <strong><span class="or"> ${order.gatewayOrderId}</span></strong><br/>
 
   <c:choose>
@@ -437,7 +417,7 @@
       </td>
     </tr>
 
-    <c:if test="${order.orderStatus.id == orderStatusPending || order.orderStatus.id == orderStatusHold}">
+    <c:if test="${order.orderStatus.id == orderStatusPending || order.orderStatus.id == orderStatusHold || order.orderStatus.id == orderStatusPlaced }">
       <tr>
         <td><s:link beanclass="com.hk.web.action.admin.address.ChangeOrderAddressAction" event="pre">
           <img src="<hk:vhostImage/>/images/admin/icon_edit_add.png" alt="Change Address"
@@ -478,8 +458,15 @@
     Order Lifecycle
     <s:param name="order" value="${order}"/>
   </s:link>
+    <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_CATMAN_ADMIN%>">
+        &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.order.split.PseudoOrderSplitAction"
+                             class="pseudoSplitBaseOrder" event="splitOrderPractically">
+        <s:param name="gatewayOrderId" value="${order.gatewayOrderId}"/>
+        BO Split Analytics
+    </s:link>)
+    </shiro:hasAnyRoles>
 
-  <s:link beanclass="com.hk.web.action.admin.order.OrderCommentAction" event="pre" target="_blank">
+    <s:link beanclass="com.hk.web.action.admin.order.OrderCommentAction" event="pre" target="_blank">
     <c:if test="${!empty order.comments}">
       <text style="color:red; font-weight:bold">Comments</text>
     </c:if>

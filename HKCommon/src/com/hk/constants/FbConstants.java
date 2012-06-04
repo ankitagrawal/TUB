@@ -1,79 +1,117 @@
 package com.hk.constants;
 
+import javax.annotation.PostConstruct;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import com.hk.constants.core.Keys;
+
+@Component
 public class FbConstants {
 
-    
-    //TODO: rewrite
-    
-  public static final String fbFanAppId="";
-  
-  public static final String fbFanPageId="";
+    public static String fbFanAppId;
 
-  public static final String apiKey="";
-  public static final String apiSecret="";
-  public static final String appId="";
-  public static final String appUrl="";
+    public static String fbFanPageId;
+    public static String apiKey;
+    public static String apiSecret;
+    public static String appId;
+    public static String appUrl;
 
-  public static final String contestApiKey="";
-  public static final String contestApiSecret="";
-  public static final String contestAppId="";
-  public static final String contestAppUrl="";
+    public static String contestApiKey;
+    public static String contestApiSecret;
+    public static String contestAppId;
+    public static String contestAppUrl;
 
-  public static final String promoApiKey="";
-  public static final String promoApiSecret="";
-  public static final String promoAppId="";
-  public static final String promoAppUrl="";
+    public static String promoApiKey;
+    public static String promoApiSecret;
+    public static String promoAppId;
+    public static String promoAppUrl;
 
-  public static final String promo2ApiKey="";
-  public static final String promo2ApiSecret="";
-  public static final String promo2AppId="";
-  public static final String promo2AppUrl ="";
+    public static String promo2ApiKey;
+    public static String promo2ApiSecret;
+    public static String promo2AppId;
+    public static String promo2AppUrl;
 
-  static {
-  /*  fbFanAppId = ServiceLocatorFactory.getService(Key.get(String.class, Names.named(Keys.Env.fbFanAppId)));
-    fbFanPageId = ServiceLocatorFactory.getService(Key.get(String.class, Names.named(Keys.Env.fbFanPageId)));
+    @Value("#{hkEnvProps['" + Keys.Env.fbFanAppId + "']}")
+    public String        fbFanAppIdString;
+    @Value("#{hkEnvProps['" + Keys.Env.fbFanPageId + "']}")
+    public String        fbFanPageIdString;
+    @Value("#{hkEnvProps['" + Keys.Env.fbApiKey + "']}")
+    public String        apiKeyString;
+    @Value("#{hkEnvProps['" + Keys.Env.fbApiSecret + "']}")
+    public String        apiSecretString;
+    @Value("#{hkEnvProps['" + Keys.Env.fbAppId + "']}")
+    public String        appIdString;
+    @Value("#{hkEnvProps['" + Keys.Env.fbAppUrl + "']}")
+    public String        appUrlString;
+    @Value("#{hkEnvProps['" + Keys.Env.fbContestApiKey + "']}")
+    public String        contestApiKeyString;
+    @Value("#{hkEnvProps['" + Keys.Env.fbContestApiSecret + "']}")
+    public String        contestApiSecretString;
+    @Value("#{hkEnvProps['" + Keys.Env.fbContestAppId + "']}")
+    public String        contestAppIdString;
+    @Value("#{hkEnvProps['" + Keys.Env.fbContestAppUrl + "']}")
+    public String        contestAppUrlString;
+    @Value("#{hkEnvProps['" + Keys.Env.fbPromoApiKey + "']}")
+    public String        promoApiKeyString;
+    @Value("#{hkEnvProps['" + Keys.Env.fbPromoApiSecret + "']}")
+    public String        promoApiSecretString;
+    @Value("#{hkEnvProps['" + Keys.Env.fbFanAppId + "']}")
+    public String        promoAppIdString;
+    @Value("#{hkEnvProps['" + Keys.Env.fbPromoAppUrl + "']}")
+    public String        promoAppUrlString;
+    @Value("#{hkEnvProps['" + Keys.Env.fbPromo2ApiKey + "']}")
+    public String        promo2ApiKeyString;
+    @Value("#{hkEnvProps['" + Keys.Env.fbPromo2ApiSecret + "']}")
+    public String        promo2ApiSecretString;
+    @Value("#{hkEnvProps['" + Keys.Env.fbPromo2AppId + "']}")
+    public String        promo2AppIdString;
+    @Value("#{hkEnvProps['" + Keys.Env.fbPromo2AppUrl + "']}")
+    public String        promo2AppUrlString;
 
-    apiKey = ServiceLocatorFactory.getService(Key.get(String.class, Names.named(Keys.Env.fbApiKey)));
-    apiSecret = ServiceLocatorFactory.getService(Key.get(String.class, Names.named(Keys.Env.fbApiSecret)));
-    appId = ServiceLocatorFactory.getService(Key.get(String.class, Names.named(Keys.Env.fbAppId)));
-    appUrl = ServiceLocatorFactory.getService(Key.get(String.class, Names.named(Keys.Env.fbAppUrl)));
+    @PostConstruct
+    public void postConstruction() {
+        fbFanAppId = this.fbFanAppIdString;
+        fbFanPageId = this.fbFanPageIdString;
+        apiKey = this.apiKeyString;
+        apiSecret = this.apiSecretString;
+        appId = this.appIdString;
+        appUrl = this.appUrlString;
 
-    contestApiKey = ServiceLocatorFactory.getService(Key.get(String.class, Names.named(Keys.Env.fbContestApiKey)));
-    contestApiSecret = ServiceLocatorFactory.getService(Key.get(String.class, Names.named(Keys.Env.fbContestApiSecret)));
-    contestAppId = ServiceLocatorFactory.getService(Key.get(String.class, Names.named(Keys.Env.fbContestAppId)));
-    contestAppUrl = ServiceLocatorFactory.getService(Key.get(String.class, Names.named(Keys.Env.fbContestAppUrl)));
+        contestApiKey = this.contestApiKeyString;
+        contestApiSecret = this.contestApiSecretString;
+        contestAppId = this.contestAppIdString;
+        contestAppUrl = this.contestAppUrlString;
 
-    promoApiKey = ServiceLocatorFactory.getService(Key.get(String.class, Names.named   (Keys.Env.fbPromoApiKey)));
-    promoApiSecret = ServiceLocatorFactory.getService(Key.get(String.class, Names.named(Keys.Env.fbPromoApiSecret)));
-    promoAppId = ServiceLocatorFactory.getService(Key.get(String.class, Names.named    (Keys.Env.fbPromoAppId)));
-    promoAppUrl = ServiceLocatorFactory.getService(Key.get(String.class, Names.named   (Keys.Env.fbPromoAppUrl)));
+        promoApiKey = this.promoApiKeyString;
+        promoApiSecret = this.promoApiSecretString;
+        promoAppId = this.promoAppIdString;
+        promoAppUrl = this.promoAppUrlString;
 
-    promo2ApiKey = ServiceLocatorFactory.getService(Key.get(String.class, Names.named   (Keys.Env.fbPromo2ApiKey)));
-    promo2ApiSecret = ServiceLocatorFactory.getService(Key.get(String.class, Names.named(Keys.Env.fbPromo2ApiSecret)));
-    promo2AppId = ServiceLocatorFactory.getService(Key.get(String.class, Names.named    (Keys.Env.fbPromo2AppId)));
-    promo2AppUrl = ServiceLocatorFactory.getService(Key.get(String.class, Names.named   (Keys.Env.fbPromo2AppUrl)));
-*/  
-      //TODO: rewrite
-      }
+        promo2ApiKey = this.promo2ApiKeyString;
+        promo2ApiSecret = this.promo2ApiSecretString;
+        promo2AppId = this.promo2AppIdString;
+        promo2AppUrl = this.promo2AppUrlString;
+    }
 
-  public static class Session {
-    public static final String fbUserClient = "fbUserClient";
-    public static final String fbQueryString = "fbQueryString";
-  }
+    public static class Session {
+        public static String fbUserClient  = "fbUserClient";
+        public static String fbQueryString = "fbQueryString";
+    }
 
-  public static class Param {
-    public static final String fb_sig = "fb_sig";
-    public static final String signed_request = "signed_request";
+    public static class Param {
+        public static String fb_sig         = "fb_sig";
+        public static String signed_request = "signed_request";
 
-    // for params in the session cookie
-    public static final String access_token = "access_token";
-    public static final String expires = "expires";
-    public static final String secret = "secret";
-    public static final String session_key = "session_key";
-    public static final String sig = "sig";
-    public static final String uid = "uid";
+        // for params in the session cookie
+        public static String access_token   = "access_token";
+        public static String expires        = "expires";
+        public static String secret         = "secret";
+        public static String session_key    = "session_key";
+        public static String sig            = "sig";
+        public static String uid            = "uid";
 
-  }
+    }
 
 }

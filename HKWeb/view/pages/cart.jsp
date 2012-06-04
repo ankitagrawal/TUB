@@ -90,7 +90,11 @@
           $('#numProdTitle').html(count - 1);
           $('.cartButton').glow('#f99', 500, 10);
           _updateTotals(responseData);
-          $(".freebieBanner").attr("src", responseData.message);
+          if(responseData.message){
+             $(".freebieBanner").attr("src", responseData.message);
+          }else{
+             $(".freebieBanner").attr("src", "");
+          }
         });
         return false;
       });

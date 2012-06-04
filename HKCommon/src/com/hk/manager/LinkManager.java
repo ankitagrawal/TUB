@@ -1,12 +1,5 @@
 package com.hk.manager;
 
-import java.util.Locale;
-
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.util.ssl.SslUtil;
-
-import org.springframework.stereotype.Component;
-
 import com.hk.domain.TempToken;
 import com.hk.domain.Ticket;
 import com.hk.domain.accounting.AccountingInvoice;
@@ -16,6 +9,11 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.User;
 import com.hk.web.AppConstants;
 import com.hk.web.filter.WebContext;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.util.ssl.SslUtil;
+import org.springframework.stereotype.Component;
+
+import java.util.Locale;
 
 @Component
 public class LinkManager {
@@ -55,9 +53,9 @@ public class LinkManager {
         return getUrlFromResolution(redirectResolution);
     }
 
-    public String getOrderTrackLink(String trackingId, Long courierId) {
+    public String getOrderTrackLink(String trackingId, Long courierId, ShippingOrder shippingOrder) {
         RedirectResolution redirectResolution = new RedirectResolution("/core/order/TrackCourier.action").addParameter("trackingId", trackingId).addParameter("courierId",
-                courierId);
+                courierId).addParameter("shippingOrder",shippingOrder);
         return getUrlFromResolution(redirectResolution);
     }
 

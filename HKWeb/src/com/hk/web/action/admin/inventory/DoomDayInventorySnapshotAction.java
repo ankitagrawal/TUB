@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.impl.dao.DoomDayDaoImpl;
+import com.hk.pact.dao.DoomDayDao;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
 import com.hk.pact.service.inventory.InventoryService;
 
@@ -26,7 +26,7 @@ public class DoomDayInventorySnapshotAction extends BaseAction {
     @Autowired
     InventoryService             inventoryService;
     @Autowired
-    DoomDayDaoImpl                   doomDayDao;
+    DoomDayDao                   doomDayDao;
 
     private String               barcode;
     private String               qty;

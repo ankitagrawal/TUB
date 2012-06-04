@@ -156,7 +156,7 @@
       Escapes characters that could be interpreted as XML markup.
     </description>
     <name>convertNewLineToBr</name>
-    <function-class>com.hk.taglibs.Functions</function-class>
+    <function-class>com.hk.util.HtmlUtil</function-class>
     <function-signature>java.lang.String convertNewLineToBr(java.lang.String)</function-signature>
     <example>
       ${hk:convertNewLineToBr(param:info)}
@@ -703,6 +703,16 @@
       ${hk:getMatchingSku(${object})}
     </example>
   </function>
-
+  <function>
+    <description>
+      returns surcharge based on supplier and warehouse state
+    </description>
+    <name>getSurchargeValue</name>
+    <function-class>com.hk.admin.util.TaxUtil</function-class>
+    <function-signature>java.lang.Double getSurchargeValue(java.lang.String,java.lang.String)</function-signature>
+    <example>
+      ${hk:getSurchargeValue(${str1}, ${str2})}
+    </example>
+  </function>
 
 </taglib>

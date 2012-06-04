@@ -1,6 +1,10 @@
 /nutrition
 -/nutrition/sports-nutrition
 --/nutrition/sports-nutrition/proteins
+---/nutrition/sports-nutrition/proteins/blended
+---/nutrition/sports-nutrition/proteins/isolated
+---/nutrition/sports-nutrition/proteins/hydrolyzed
+---/nutrition/sports-nutrition/proteins/soy-casein  :Soy & Casein
 --/nutrition/sports-nutrition/creatine
 --/nutrition/sports-nutrition/pre-workout : Pre Workout
 --/nutrition/sports-nutrition/intra-workout  :Intra Workout
@@ -38,6 +42,8 @@
 --/nutrition/condition-specific-supplements/energy-endurance     :Energy & Endurance
 -/nutrition/weight-management
 --/nutrition/weight-management/fat-burner
+--/nutrition/weight-management/appetite-control :Appetite Control
+--/nutrition/weight-management/weight-maintenance  :weight Maintenance
 --/nutrition/weight-management/meal-replacement :Meal Replacement
 --/nutrition/weight-management/low-calorie-food
 --/nutrition/weight-management/sweetener
@@ -109,6 +115,11 @@
 ---/sports/fitness-accessories/support-gear/ankle
 --/sports/fitness-accessories/combos
 --/sports/fitness-accessories/miscellaneous-accessories
+-/sports/fitness-equipment
+--/sports/fitness-equipment/treadmills
+--/sports/fitness-equipment/crosstrainers
+--/sports/fitness-equipment/exercise-bike
+--/sports/fitness-equipment/rowers
 -/sports/sports-equipment
 --/sports/sports-equipment/football
 ---/sports/sports-equipment/football/balls
@@ -302,7 +313,7 @@
 ---/home-devices/miscellaneous/massager/back-massager
 ---/home-devices/miscellaneous/massager/infrared-massager
 ---/home-devices/miscellaneous/massager/handheld
----/home-devices/miscellaneous/massager/waist-massager
+---/home-devices/miscellaneous/massager/abdominal-massager
 ---/home-devices/miscellaneous/massager/foot-massage
 ---/home-devices/miscellaneous/massager/footbath
 --/home-devices/miscellaneous/pain-management
@@ -355,6 +366,7 @@
 --/eye/what-s-new/just-in :Just In
 --/eye/what-s-new/top-deals:Top Deals
 --/eye/what-s-new/gift-kits:  Gift Kits
+--/eye/what-s-new/eye-care-services:Eye Care Services
 
 /personal-care
 -/personal-care/elderly-care:Elderly Care
@@ -379,6 +391,7 @@
 --/personal-care/elderly-care/respiratory-care: Respiratory Care
 --/personal-care/elderly-care/hearing-aids: Hearing Aids
 --/personal-care/elderly-care/mobiles
+--/personal-care/elderly-care/elderly-care-services: Elderly Care Services
 -/personal-care/women
 --/personal-care/women/sanitary-napkins
 --/personal-care/women/tampons
@@ -407,6 +420,9 @@
 -/personal-care/oral-hygiene
 --/personal-care/oral-hygiene/special-toothbrushes : Special Toothbrushes
 --/personal-care/oral-hygiene/electronic-toothbrushes : Electronic Toothbrushes
+---/personal-care/oral-hygiene/electronic-toothbrushes/juniors
+---/personal-care/oral-hygiene/electronic-toothbrushes/Adults
+---/personal-care/oral-hygiene/electronic-toothbrushes/refills
 --/personal-care/oral-hygiene/interdental-brush : Interdental Brush
 --/personal-care/oral-hygiene/mini-flosser : Mini Flosser
 --/personal-care/oral-hygiene/tongue-cleaner : Tongue Cleaner
@@ -527,7 +543,7 @@
 ---/beauty/make-up/tools/other
 --/beauty/make-up/wipes-tissues : Wipes & Tissues
 --/beauty/make-up/sindoor
---/beauty/make-up/coloured lenses
+--/beauty/make-up/coloured-lenses
 -/beauty/hair-care
 --/beauty/hair-care/shampoo
 --/beauty/hair-care/conditioner
@@ -638,22 +654,25 @@
 --/parenting/infant/pacifiers-teethers : Pacifiers & Teethers
 --/parenting/infant/toys
 --/parenting/infant/grooming
+---/parenting/infant/grooming/comb-hair-brushes:   Comb & Hair Brushes
+---/parenting/infant/grooming/nail-clippers-scissors:   Nail Clippers & Scissors
 --/parenting/infant/room-accessories
 --/parenting/infant/walkers
 --/parenting/infant/bedtime
 --/parenting/infant/bathtime
----/parenting/infant/bathtime/soaps-and-bath-foams: soaps & bath foams
+---/parenting/infant/bathtime/soaps-and-bath-foams: Soaps & Bath Foams
 ---/parenting/infant/bathtime/oil
 ---/parenting/infant/bathtime/powder
 ---/parenting/infant/bathtime/shampoo
 ---/parenting/infant/bathtime/lotions
 ---/parenting/infant/bathtime/creams
+---/parenting/infant/bathtime/bath-towels :  Bath Towels
 -/parenting/toddler
 --/parenting/toddler/diapering
 ---/parenting/toddler/diapering/diapers
 ---/parenting/toddler/diapering/wipes
 --/parenting/toddler/formula-baby-food : Formula & Baby Food
---/parenting/toddler/sippers-and-mugs:Sippers & Mugs
+--/parenting/toddler/sippers-and-mugs:       Sippers & Mugs
 --/parenting/toddler/nursing-feeding
 ---/parenting/toddler/nursing-feeding/feeding-bottles
 ---/parenting/toddler/nursing-feeding/feeding-accessories
@@ -661,24 +680,31 @@
 ---/parenting/toddler/nursing-feeding/bottle-cleaning
 --/parenting/toddler/bedtime
 --/parenting/toddler/bathtime
----/parenting/toddler/bathtime/soaps-and-bath-foams: soaps & bath foams
+---/parenting/toddler/bathtime/soaps-and-bath-foams: Soaps & Bath Foams
 ---/parenting/toddler/bathtime/oil
 ---/parenting/toddler/bathtime/powder
 ---/parenting/toddler/bathtime/shampoo
 ---/parenting/toddler/bathtime/lotions
 ---/parenting/toddler/bathtime/creams
+---/parenting/toddler/bathtime/bath-towels :  Bath Towels
 --/parenting/toddler/oral-care
 ---/parenting/toddler/oral-care/toothbrushes
----/parenting/toddler/oral-care/toothpaste-and-tooth-gel:toothpaste & tooth gel
+---/parenting/toddler/oral-care/toothpaste-and-tooth-gel:Toothpaste & Tooth gel
 --/parenting/toddler/furniture
 --/parenting/toddler/travel-safety : Travel & Safety
----/parenting/toddler/travel-safety/baby-prams-and-strollers
+---/parenting/toddler/travel-safety/baby-prams-and-strollers    : Baby Prams & Strollers
 ---/parenting/toddler/travel-safety/baby-nursing-bags
 ---/parenting/toddler/travel-safety/baby-carriers
 --/parenting/toddler/toys
---/parenting/toddler/funtime:DVDs,Comics & Drawing Books
+--/parenting/toddler/funtime     :        Funtime
+---/parenting/toddler/funtime/cds-dvds   :   CD's & DVD's
+---/parenting/toddler/funtime/comics   :   Comics
+---/parenting/toddler/funtime/activity-books   :    Activity Books
+---/parenting/toddler/funtime/accessories   :    Accessories
 -/parenting/pre-school
---/parenting/pre-school/apparels
+--/parenting/pre-school/apparels  : Apparels
+---/parenting/pre-school/apparels/t-shirts  :   Tees
+---/parenting/pre-school/apparels/shoes-booties  :  Shoes & Booties
 --/parenting/pre-school/oral-care
 ---/parenting/pre-school/oral-care/toothbrushes
 ---/parenting/pre-school/oral-care/toothpaste-and-tooth-gel:toothpaste & tooth gel
@@ -687,6 +713,7 @@
 --/parenting/pre-school/water-bottles
 --/parenting/pre-school/sippers
 --/parenting/pre-school/toys
+--/parenting/pre-school/accessories  : Accessories
 
 /services
 -/services/health-checkups

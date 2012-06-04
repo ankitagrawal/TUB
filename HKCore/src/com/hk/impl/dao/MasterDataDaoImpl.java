@@ -1,6 +1,11 @@
 package com.hk.impl.dao;
 
-import com.hk.constants.catalog.category.CategoryConstants;
+import java.util.Arrays;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
 import com.hk.constants.catalog.product.EnumProductVariantPaymentType;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.inventory.EnumReconciliationStatus;
@@ -8,7 +13,6 @@ import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.TicketStatus;
 import com.hk.domain.TicketType;
-import com.hk.domain.order.ShippingOrderStatus;
 import com.hk.domain.accounting.DebitNoteStatus;
 import com.hk.domain.affiliate.AffiliateCategory;
 import com.hk.domain.catalog.Manufacturer;
@@ -22,18 +26,14 @@ import com.hk.domain.inventory.rv.ReconciliationStatus;
 import com.hk.domain.inventory.rv.ReconciliationType;
 import com.hk.domain.offer.rewardPoint.RewardPointMode;
 import com.hk.domain.offer.rewardPoint.RewardPointStatus;
+import com.hk.domain.order.ShippingOrderStatus;
 import com.hk.domain.user.User;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.MasterDataDao;
 import com.hk.pact.service.RoleService;
 import com.hk.pact.service.UserService;
-import com.hk.pact.service.marketing.MarketingService;
 import com.hk.pact.service.catalog.CategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
-import java.util.Arrays;
-import java.util.List;
+import com.hk.pact.service.marketing.MarketingService;
 
 @Repository
 public class MasterDataDaoImpl implements MasterDataDao {
@@ -238,7 +238,17 @@ public class MasterDataDaoImpl implements MasterDataDao {
     this.marketingService = marketingService;
   }
 
+    public List<PurchaseFormType> getPurchaseFormTypeList() {
+    return getBaseDao().getAll(PurchaseFormType.class);
+    // return taxDaoProvider.get().listAll();
+  }
+
   public List<ShippingOrderStatus> getSOStatusForShipmentDetailsList() {
     return EnumShippingOrderStatus.getStatusForChangingShipmentDetails();
   }
+
+   public List<PurchaseFormType> getPurchaseInvoiceFormTypes() {
+    return getBaseDao().getAll(PurchaseFormType.class);
+  }
 }
+

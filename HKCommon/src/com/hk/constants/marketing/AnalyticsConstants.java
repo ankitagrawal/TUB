@@ -1,16 +1,33 @@
 package com.hk.constants.marketing;
 
+import javax.annotation.PostConstruct;
 
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import com.hk.constants.core.Keys;
+
+@Component
 public class AnalyticsConstants {
 
-  public static final boolean analytics = true;
-  public static final String gaCode ="abc";
+    public static String  gaCode;
 
-  static {
-    /*analytics = ServiceLocatorFactory.getService(Key.get(Boolean.class, Names.named(Keys.Env.analytics)));
-    gaCode = ServiceLocatorFactory.getService(Key.get(String.class, Names.named(Keys.Env.gaCode)));*/
-      
-      //TODO: rewrite
-  }
+    public static boolean analytics;
 
+    @Value("#{hkEnvProps['" + Keys.Env.analytics + "']}")
+    private String        analyticsString;
+
+    @Value("#{hkEnvProps['" + Keys.Env.gaCode + "']}")
+    private String        analyticsCode;
+
+    @PostConstruct
+    public void postConstruction() {
+        // String anaylticsString = (String) ServiceLocatorFactory.getProperty(Keys.Env.analytics);
+
+        analytics = StringUtils.isNotBlank(analyticsString) && Boolean.parseBoolean(analyticsString);
+
+        gaCode = analyticsCode;
+
+    }
 }
