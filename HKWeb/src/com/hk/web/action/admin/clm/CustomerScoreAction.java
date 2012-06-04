@@ -49,8 +49,8 @@ public class CustomerScoreAction extends BaseAction {
   }
 
   public Resolution uploadScoreExcel() throws Exception {
-   // String excelFilePath = adminUploadsPath + "/clmExcelFiles/customerScore" + System.currentTimeMillis() + ".xls";
-    String excelFilePath ="E:\\test\\customerscore" + System.currentTimeMillis() + ".xls";
+   String excelFilePath = adminUploadsPath + "/clmExcelFiles/customerScore" + System.currentTimeMillis() + ".xls";
+  //  String excelFilePath ="E:\\test\\customerscore" + System.currentTimeMillis() + ".xls";
     File excelFile = new File(excelFilePath);
     excelFile.getParentFile().mkdirs();
     fileBean.save(excelFile);
