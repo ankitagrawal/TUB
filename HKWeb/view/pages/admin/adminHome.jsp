@@ -165,6 +165,10 @@
 
   <h3><s:link beanclass="com.hk.web.action.admin.shipment.ChangeShipmentDetailsAction">Change shipment details</s:link></h3>
 
+  <h3><s:link beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction" event="generateCourierReport">Download Courier Excel
+      <s:param name="courierDownloadFunctionality" value="false"/>
+  </s:link></h3>
+
 </div>
 
 <div class="cl"></div>
@@ -297,6 +301,17 @@
   <h3>
     <s:link beanclass="com.hk.web.action.core.content.seo.BulkSeoAction"
             title="Change MetaData by Category">Change MetaData</s:link></h3>
+
+</div>
+
+<div class="cl"></div>
+
+<div class="left roundBox">
+  <h2>Finance</h2>
+
+  <h3>
+    <s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoicePdfAction"
+            title="Download AccountingInvoice PDFs">Download AccountingInvoice PDFs</s:link></h3>
 
 </div>
 

@@ -1,12 +1,6 @@
 package com.hk.web.action.admin.inventory;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -14,6 +8,7 @@ import net.sourceforge.stripes.action.JsonResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.validation.Validate;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -26,6 +21,7 @@ import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
 import com.hk.admin.pact.dao.inventory.PurchaseInvoiceDao;
 import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.core.RoleConstants;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.po.PurchaseInvoice;
@@ -40,6 +36,8 @@ import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.error.AdminPermissionAction;
+import com.hk.taglibs.Functions;
+import com.hk.util.CustomDateTypeConvertor;
 
 /**
  * Created by IntelliJ IDEA. User: Rahul Date: Feb 15, 2012 Time: 8:26:07 AM To change this template use File | Settings |
@@ -79,10 +77,12 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
     private PurchaseInvoiceStatus         purchaseInvoiceStatus;
     private User                          approvedBy;
     private User                          createdBy;
-    private List<GoodsReceivedNote>       grnListForPurchaseInvoice = new ArrayList<GoodsReceivedNote>();
     private String                        productVariantId;
     private Boolean                       isReconciled;
     private Warehouse                     warehouse;
+    private Boolean                       saveEnabled                = true;
+    private Date                          grnDate;
+
     @DefaultHandler
     public Resolution pre() {
 
@@ -105,6 +105,21 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
     }
 
     public Resolution view() {
+        List<GoodsReceivedNote> grnList=purchaseInvoice.getGoodsReceivedNotes();
+        List<Date> grnDateList=new ArrayList<Date>();
+        boolean isLoggedInUserGod=Functions.collectionContains(userService.getLoggedInUser().getRoleStrings(), RoleConstants.GOD);
+        if(isLoggedInUserGod){
+            saveEnabled=true;
+        } else if(purchaseInvoice.getReconciled()== null)
+        {
+            saveEnabled=true;
+        } else if(purchaseInvoice.getReconciled()){
+            saveEnabled=false;
+        }
+        for(GoodsReceivedNote grn:grnList){
+            grnDateList.add(grn.getGrnDate());
+        }
+        grnDate= Collections.min(grnDateList);
         if (purchaseInvoice != null) {
             // logger.debug("purchaseInvoice@view: " + purchaseInvoice.getId());
             // grnDto = grnManager.generateGRNDto(grn);
@@ -137,6 +152,13 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
                 productVariant = purchaseInvoiceLineItem.getSku().getProductVariant();
                 productVariant = productVariantDao.save(productVariant);
             }
+            if(purchaseInvoice.getReconciled() != null){
+            if(purchaseInvoice.getReconciled()&& purchaseInvoice.getReconcilationDate()== null)
+            {
+                purchaseInvoice.setReconcilationDate(new Date());
+            }
+            }
+                                                                                   
             purchaseInvoiceDao.save(purchaseInvoice);
         }
         addRedirectAlertMessage(new SimpleMessage("Changes saved."));
@@ -310,4 +332,25 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
    public void setWarehouse(Warehouse warehouse) {
        this.warehouse = warehouse;
    }
+
+    public Boolean isSaveEnabled() {
+        return saveEnabled;
+    }
+
+    public Boolean getSaveEnabled() {
+        return saveEnabled;
+   }
+
+    public void setSaveEnabled(Boolean saveEnabled) {
+        this.saveEnabled = saveEnabled;
+    }
+
+    public Date getGrnDate() {
+        return grnDate;
+    }
+
+    @Validate(converter = CustomDateTypeConvertor.class)
+    public void setGrnDate(Date grnDate) {
+        this.grnDate = grnDate;
+    }
 }

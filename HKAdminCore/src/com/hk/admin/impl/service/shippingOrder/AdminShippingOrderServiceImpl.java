@@ -67,10 +67,6 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     // return shippingOrderList;
     // }
 
-    public List<Long> getShippingOrderListByCouriers(Date startDate, Date endDate, List<Long> courierId) {
-        List<Long> shippingOrderList = getAdminShippingOrderDao().getShippingOrderListByCouriers(startDate, endDate, courierId);
-        return shippingOrderList;
-    }
 
     public void cancelShippingOrder(ShippingOrder shippingOrder) {
         // Check if Order is in Action Queue before cancelling it.
@@ -213,7 +209,6 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         return shippingOrder;
     }
 
-    @Override
     @Transactional
     public ShippingOrder markShippingOrderAsRTO(ShippingOrder shippingOrder) {
         shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_Returned));
@@ -224,6 +219,11 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         getAdminOrderService().markOrderAsRTO(order);
         return shippingOrder;
     }
+
+    public List<Long> getShippingOrderListByCouriers(Date startDate, Date endDate, List<Long> courierId){
+        return getAdminShippingOrderDao().getShippingOrderListByCouriers(startDate,endDate,courierId);
+    }
+
 
     @Transactional
     public ShippingOrder markShippingOrderAsShipped(ShippingOrder shippingOrder) {

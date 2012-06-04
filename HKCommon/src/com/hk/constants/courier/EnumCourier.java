@@ -7,79 +7,90 @@ import java.util.Arrays;
 import java.util.List;
 
 
-
 public enum EnumCourier {
 
-  DTDC_Plus(10L, "DTDC Plus"),
-  DTDC_Lite(11L, "DTDC Lite"),
-  DTDC_COD(12L, "DTDC COD"),
-  DTDC_Surface(13L, "DTDC Surface"),
-  Aramex(20L, "Aramex"),
-  Speedpost(30L, "Speed Post"),
-  Delhivery(40L, "Delhivery-Delhi-NCR"),
-  Chhotu(45L, "Chhotu-Delhi-NCR"),
-  OfficePickup(50L, "Office Pickup"),
-  AFLWiz(60L, "AFL Wiz"),
-  BlueDart(70L, "Blue Dart"),
-  BlueDart_COD(71L, "Blue Dart COD"),
-  FirstFLight(80L, "First Flight"),
-  FirstFLight_COD(85L, "First Flight COD"),
+    DTDC_Plus(10L, "DTDC Plus"),
+    DTDC_Lite(11L, "DTDC Lite"),
+    DTDC_COD(12L, "DTDC COD"),
+    DTDC_Surface(13L, "DTDC Surface"),
+    Aramex(20L, "Aramex"),
+    Speedpost(30L, "Speed Post"),
+    Delhivery(40L, "Delhivery-Delhi-NCR"),
+    Chhotu(45L, "Chhotu-Delhi-NCR"),
+    OfficePickup(50L, "Office Pickup"),
+    AFLWiz(60L, "AFL Wiz"),
+    BlueDart(70L, "Blue Dart"),
+    BlueDart_COD(71L, "Blue Dart COD"),
+    FirstFLight(80L, "First Flight"),
+    FirstFLight_COD(85L, "First Flight COD"),
 
-  Other(100L, "Other"),
+    Other(100L, "Other"),
 
-  IndiaEarthMovers(110L, " India Earth Movers"),
-  Safexpress_Chhotu(120L, " Safexpress - Chhotu"),
-  Safexpress_Delhivery(130L, " Safexpress - Delhivery"),
+    IndiaEarthMovers(110L, " India Earth Movers"),
+    Safexpress_Chhotu(120L, " Safexpress - Chhotu"),
+    Safexpress_Delhivery(130L, " Safexpress - Delhivery"),
 
-  Delhivery_Ahmedabad(140L, "Delhivery - Ahmedabad"),
-  Delhivery_Bangalore(150L, "Delhivery - Bangalore"),
-  Delhivery_Chennai(160L, "Delhivery - Chennai"),
+    Delhivery_Ahmedabad(140L, "Delhivery - Ahmedabad"),
+    Delhivery_Bangalore(150L, "Delhivery - Bangalore"),
+    Delhivery_Chennai(160L, "Delhivery - Chennai"),
 
+    EarthMoversPune(200L, "Earth Movers Pune"),
 
+    MIGRATE(-1L, "MIGRATE");
 
-  MIGRATE(-1L, "MIGRATE");
+    private java.lang.String name;
+    private java.lang.Long id;
 
-  private java.lang.String name;
-  private java.lang.Long id;
-
-  EnumCourier(java.lang.Long id, java.lang.String name) {
-    this.name = name;
-    this.id = id;
-  }
-
-  public java.lang.String getName() {
-    return name;
-  }
-
-  public java.lang.Long getId() {
-    return id;
-  }
-
-
-  public Courier asCourier() {
-    Courier courier = new Courier();
-    courier.setId(this.id);
-    courier.setName(this.name);
-    return courier;
-  }
-
-  public static List<Long> getCourierIDs(List<EnumCourier> enumCourierList) {
-    List<Long> courierIds = new ArrayList<Long>();
-    for (EnumCourier enumCourier : enumCourierList) {
-         courierIds.add(enumCourier.getId());
+    EnumCourier(java.lang.Long id, java.lang.String name) {
+        this.name = name;
+        this.id = id;
     }
-    return courierIds;
-  }
+
+    public java.lang.String getName() {
+        return name;
+    }
+
+    public java.lang.Long getId() {
+        return id;
+    }
 
 
-  public static List<EnumCourier> getRestOfIndiaAvailableCouriers() {
-    return Arrays.asList(
-        EnumCourier.DTDC_Plus,
-        EnumCourier.DTDC_Lite,
-        EnumCourier.BlueDart,
-        EnumCourier.BlueDart_COD,
-        EnumCourier.Speedpost,
-        EnumCourier.DTDC_COD);
-  }
+    public Courier asCourier() {
+        Courier courier = new Courier();
+        courier.setId(this.id);
+        courier.setName(this.name);
+        return courier;
+    }
+
+    public static List<Long> getCourierIDs(List<EnumCourier> enumCourierList) {
+        List<Long> courierIds = new ArrayList<Long>();
+        for (EnumCourier enumCourier : enumCourierList) {
+            courierIds.add(enumCourier.getId());
+        }
+        return courierIds;
+    }
+
+
+    public static List<EnumCourier> getRestOfIndiaAvailableCouriers() {
+        return Arrays.asList(
+                EnumCourier.DTDC_Plus,
+                EnumCourier.DTDC_Lite,
+                EnumCourier.BlueDart,
+                EnumCourier.BlueDart_COD,
+                EnumCourier.Speedpost,
+                EnumCourier.DTDC_Surface,
+                EnumCourier.Speedpost,
+                EnumCourier.Delhivery,
+                EnumCourier.Chhotu,
+                EnumCourier.OfficePickup,
+                EnumCourier.AFLWiz,
+                EnumCourier.BlueDart,
+                EnumCourier.BlueDart_COD,
+                EnumCourier.FirstFLight,
+                EnumCourier.FirstFLight_COD,
+                EnumCourier.IndiaEarthMovers,
+                EnumCourier.EarthMoversPune,
+                EnumCourier.DTDC_COD);
+    }
 }
 
