@@ -628,7 +628,7 @@
     </description>
     <name>getMenuNodeForProduct</name>
     <function-class>com.hk.taglibs.Functions</function-class>
-    <function-signature>mhc.common.dto.MenuNode getMenuNodeForProduct(mhc.domain.Product)</function-signature>
+    <function-signature>com.hk.dto.menu.MenuNode getMenuNodeForProduct(com.hk.domain.catalog.product.Product)</function-signature>
     <example>
       ${hk:getMenuNodeForProduct(${product)}
     </example>

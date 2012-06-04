@@ -117,7 +117,6 @@ public class ProductAction extends BaseAction {
         if (getPrincipal() != null) {
             user = getUserService().getUserById(getPrincipal().getId());
             if (user != null) {
-                productCountDao.getOrCreateProductCount(product, user);
                 userProductHistoryDao.addToUserProductHistory(product, user);
                 affiliate = affiliateDao.getAffilateByUser(user);
             }
