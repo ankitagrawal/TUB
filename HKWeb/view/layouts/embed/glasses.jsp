@@ -100,6 +100,9 @@
 <c:set var="THBF" value="THBF"/>
 <c:set var="CO" value="CO"/>
 <c:set var="COBF" value="COBF"/>
+<c:set var="BRANDCO" value="BRANDCO"/>
+<c:set var="BRANDTH" value="BRANDTH"/>
+<c:set var="BRANDTHBF" value="BRANDTHBF"/>
 
 <!-- Start Prescription Tab-->
 <div id="prescription-tab" style="overflow:hidden;">
@@ -215,7 +218,7 @@
 
                 <input type="radio" id="thickenss-${configValue.id}" optionId="${configOption.id}" class="thickness"
                        name="thickness" price="${configValue.additonalPrice}" valueId="${configValue.id}"
-                    value="${configValue.value}" ${(configValue.additonalPrice eq 0)?'checked="checked" default="thickness"':''}
+                    value="${configValue.value}" ${(configValueCtr.index eq 0)?'checked="checked"  default="thickness"':''}
                 /> ${configValue.value}
               </div>
               <div class="floatright hkLabel">
@@ -231,6 +234,37 @@
       </c:forEach>
     </div>
 
+              <%--added--%>
+
+    <div id="brandthickness" style="display:none">
+        <c:forEach items="${product.productVariants[0].variantConfig.variantConfigOptions}" var="configOption"
+                   varStatus="configOptionCtr">
+
+            <c:if test="${configOption.additionalParam eq BRANDTH}">
+                <c:forEach items="${configOption.variantConfigValues}" var="configValue" varStatus="configValueCtr">
+                    <div class="row">
+                        <div class="floatleft hkLabel">
+
+
+                            <input type="radio" id="thickenss-${configValue.id}" optionId="${configOption.id}"
+                                   class="thickness"
+                                   name="thickness" price="${configValue.additonalPrice}" valueId="${configValue.id}"
+                                   value="${configValue.value}" ${(configValueCtr.index eq 0)?'  default="brandthickness"':''}
+                                    /> ${configValue.value}
+                        </div>
+                        <div class="floatright hkLabel">
+                            <c:set var="priceString" value="+Rs. ${configValue.additonalPrice}/Eye"/>
+                            <label style="float:right;"> ${(configValue.additonalPrice eq 0)?'included':priceString} </label>
+                        </div>
+                    </div>
+
+                    <div class="clear"></div>
+                </c:forEach>
+
+            </c:if>
+        </c:forEach>
+    </div>
+      
     <div id="biFocalThickness">
       <c:forEach items="${product.productVariants[0].variantConfig.variantConfigOptions}" var="configOption"
                  varStatus="configOptionCtr">
@@ -256,6 +290,34 @@
       </c:forEach>
     </div>
 
+          <%--added   --%>
+             <div id="brandbiFocalThickness" style="display:none">
+                 <c:forEach items="${product.productVariants[0].variantConfig.variantConfigOptions}" var="configOption"
+                            varStatus="configOptionCtr">
+
+                     <c:if test="${configOption.additionalParam eq BRANDTHBF}">
+                         <c:forEach items="${configOption.variantConfigValues}" var="configValue" varStatus="configValueCtr">
+                             <div class="row">
+                                 <div class="floatleft hkLabel">
+                                     <input type="radio" id="bfThickenss-${configValue.id}" optionId="${configOption.id}"
+                                            name="thickness"
+                                            price="${configValue.additonalPrice}" value="${configValue.value}"
+                                            valueId="${configValue.id}"
+                                         ${(configValueCtr.index eq 0)?' default="brandbifocalthickness"':''}
+                                            class="thickness"/> ${configValue.value}
+                                 </div>
+                                 <div class="floatright hkLabel">
+                                     <label style="float:right;"> +Rs. ${configValue.additonalPrice}/Eye</label>
+                                 </div>
+                             </div>
+
+                             <div class="clear"></div>
+                         </c:forEach>
+
+                     </c:if>
+                 </c:forEach>
+             </div>
+      
 
   </div>
   <div class="clear"></div>
@@ -274,7 +336,7 @@
           <c:forEach items="${configOption.variantConfigValues}" var="configValue">
             <div class="row">
               <div class="floatleft hkLabel">
-                <input type="radio" id="coating-${configValue.id}" optionId="${configOption.id}" name="coating"
+                <input type="radio" id="normalcoating" optionId="${configOption.id}" name="coating"
                        price="${configValue.additonalPrice}" valueId="${configValue.id}"
                     value="${configValue.value}" ${(configValue.additonalPrice eq 0)?'checked="checked" default="coating"':''}
                 class="coating"/> ${configValue.value}
@@ -317,6 +379,32 @@
       </c:forEach>
     </div>
 
+              <%--added--%>
+    <div id="branded-coating">
+        <c:forEach items="${product.productVariants[0].variantConfig.variantConfigOptions}" var="configOption"
+                   varStatus="configOptionCtr">
+
+            <c:if test="${configOption.additionalParam eq BRANDCO}">
+                <c:forEach items="${configOption.variantConfigValues}" var="configValue">
+                    <div class="row">
+                        <div class="floatleft hkLabel">
+                            <input type="radio" id="brandedcoating" optionId="${configOption.id}" name="coating"
+                                   price="${configValue.additonalPrice}" valueId="${configValue.id}"
+                                   value="${configValue.value}" ${(configValueCtr.index eq 0)?' default="brandedcoating"':''}
+                                   class="coating"/> ${configValue.value}
+                        </div>
+                        <div class="floatright hkLabel">
+                            <c:set var="priceString" value="+Rs. ${configValue.additonalPrice}/Eye"/>
+                            <label style="float:right;"> ${(configValue.additonalPrice eq 0)?'included':priceString} </label>
+                        </div>
+                    </div>
+
+                    <div class="clear"></div>
+                </c:forEach>
+
+            </c:if>
+        </c:forEach>
+    </div>
 
   </div>
   <div class="clear"></div>
@@ -511,9 +599,99 @@ $(document).ready(function() {
   }
 
 
-  $(".coating").click(function(event) {
-    renderCoatingPriceRow();
-  });
+   $(".coating").click(function(event) {
+
+        var selectedCoating = $('.coating:checked');
+        var coating = $.trim(selectedCoating.attr('id'));
+        var brandtThickness = $('input[default=brandthickness]');
+        var brandbiFocalThickness = $('input[default=brandbifocalthickness]');
+        var biFocalThickness = $('input[default=bfThickness]');
+        var normalThickness = $('input[default=thickness]');
+        var brandedCoating = $('input[default=brandedcoating]');
+        var normalCoating = $('input[default=coating]');
+
+
+        if (coating == 'brandedcoating') {
+
+
+            brandedCoating.attr("checked", true);
+            normalCoating.attr("checked", false);
+
+            if ($('input[name=biFocalPowers]:checked').attr('id') == 'biFocalYes') {
+
+                $("#brandbiFocalThickness").show();
+                $("#brandthickness").hide();
+                //                $("#biFocalPowers").hide();
+                $("#thickness").hide();
+                $("#biFocalThickness").hide();
+                biFocalThickness.attr("checked", false);
+                brandtThickness.attr("checked", false);
+                normalThickness.attr("checked", false);
+                brandbiFocalThickness.attr("checked", true);
+
+
+            } else {
+
+                $("#brandbiFocalThickness").hide();
+                //                $("#biFocalPowers").hide();
+                $("#thickness").hide();
+                $("#biFocalThickness").hide();
+                $("#brandthickness").show();
+
+
+                normalThickness.attr("checked", false);
+                brandbiFocalThickness.attr("checked", false);
+                biFocalThickness.attr("checked", false);
+                brandtThickness.attr("checked", true);
+
+
+                //$("#coating-div").show();
+            }
+
+        }
+        else {
+
+            brandedCoating.attr("checked", false);
+            normalCoating.attr("checked", true);
+            if ($('input[name=biFocalPowers]:checked').attr('id') == 'biFocalYes') {
+
+                $("#biFocalPowers").show();
+                $("#thickness").hide();
+                $("#biFocalThickness").show();
+                $("#brandbiFocalThickness").hide();
+                $("#brandthickness").hide();
+
+                normalThickness.attr("checked", false);
+                brandedCoating.attr("checked", false);
+                brandbiFocalThickness.attr("checked", false);
+                biFocalThickness.attr("checked", true);
+                normalCoating.attr("checked", true);
+                brandtThickness.attr("checked", false);
+
+
+                //$("#coating-div").hide();
+            } else {
+
+                $("#biFocalPowers").hide();
+                $("#thickness").show();
+                $("#biFocalThickness").hide();
+                $("#brandbiFocalThickness").hide();
+                $("#brandthickness").hide();
+
+                biFocalThickness.attr("checked", false);
+                normalThickness.attr("checked", true);
+                brandbiFocalThickness.attr("checked", false);
+                brandtThickness.attr("checked", false);
+                brandedCoating.attr("checked", false);
+                normalCoating.attr("checked", true);
+
+                //$("#coating-div").show();
+            }
+        }
+
+        initPriceRows();
+        //        renderCoatingPriceRow();
+    });
 
   function renderCoatingPriceRow() {
     var selectedCoating = $('.coating:checked');
@@ -541,52 +719,52 @@ $(document).ready(function() {
   //
   //  });
 
-  $("#addPowers").click(function() {
-    tabs.tabs('select', 2);
-  });
+$("#addPowers").click(function() {
+
+        var brandedCoating = $('input[default=brandedcoating]');
+        var normalCoating = $('input[default=coating]');
+        brandedCoating.attr("checked", false);
+        normalCoating.attr("checked", true);
+        if ($('input[name=biFocalPowers]:checked').attr('id') == 'biFocalNo') {
+            $("#biFocalNo").click();
+
+        }
+        tabs.tabs('select', 2);
+        initPriceRows();
+    });
 
   $("#biFocalYes").click(function() {
-    $("#biFocalPowers").show();
-    $("#thickness").hide();
-    $("#biFocalThickness").show();
-   // $("#coating-div").hide();
 
-    var defaultThickness = $('input[default=thickness]');
-    var defaultBfThickness = $('input[default=bfThickness]');
-   // var defaultCoating = $('input[default=coating]');
-   // var defaultBfCoating = $('input[default=bfCoating]');
+        $("#biFocalPowers").show();
+        $("#thickness").hide();
+        $("#biFocalThickness").show();
+        $("#brandbiFocalThickness").hide();
+        $("#brandthickness").hide();
 
-    defaultBfThickness.attr("checked", true);
-   // defaultBfCoating.attr("checked", true);
-
-    defaultThickness.attr("checked", false);
-    //defaultCoating.attr("checked", false);
-
-    defaultBfThickness.click();
-    //defaultBfCoating.click();
-
+        var biFocalThickness = $('input[default=bfThickness]');
+        var brandedCoating = $('input[default=brandedcoating]');
+        var normalCoating = $('input[default=coating]');
+        brandedCoating.attr("checked", false);
+        biFocalThickness.attr("checked", true);
+        normalCoating.attr("checked", true);
+        biFocalThickness.click();
 
   });
 
   $("#biFocalNo").click(function() {
-    $("#biFocalPowers").hide();
-    $("#thickness").show();
-    $("#biFocalThickness").hide();
-    //$("#coating-div").show();
+     $("#biFocalPowers").hide();
+        $("#thickness").show();
+        $("#biFocalThickness").hide();
+        $("#brandbiFocalThickness").hide();
+        $("#brandthickness").hide();
+        var normalThickness = $('input[default=thickness]');
+        var brandedCoating = $('input[default=brandedcoating]');
+        var normalCoating = $('input[default=coating]');
 
-    var defaultThickness = $('input[default=thickness]');
-    var defaultBfThickness = $('input[default=bfThickness]');
-   // var defaultCoating = $('input[default=coating]');
-   // var defaultBfCoating = $('input[default=bfCoating]');
-
-    defaultBfThickness.attr("checked", false);
-   // defaultBfCoating.attr("checked", false);
-
-    defaultThickness.attr("checked", true);
-  //  defaultCoating.attr("checked", true);
-
-    defaultThickness.click();
-   // defaultCoating.click();
+        normalThickness.attr("checked", true);
+        brandedCoating.attr("checked", false);
+        normalCoating.attr("checked", true);
+        normalCoating.click();
   });
   function _addGlassToCart(res) {
     if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
