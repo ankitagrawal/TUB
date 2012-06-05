@@ -21,4 +21,6 @@ public interface KarmaProfileService {
 
      public boolean isPriorityUser(User user);
 
+     public boolean isPriorityOrder(Order order);
+
 }

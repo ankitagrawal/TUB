@@ -71,6 +71,18 @@ public class KarmaProfileServiceImpl implements KarmaProfileService {
         }
     }
 
+    public boolean isPriorityOrder(Order order){
+        int score = order.getScore().intValue();
+
+        if(order.getScore() >= CLMConstants.thresholdScore){
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
+
     private void setKarmaInOrderForUser(Order order, User user) {
         KarmaProfile karmaProfile = this.findByUser(user);
         if (karmaProfile != null) {
@@ -92,9 +104,9 @@ public class KarmaProfileServiceImpl implements KarmaProfileService {
                 }
 
                 String basketCategoryName = lineItem.getProductVariant().getProduct().getPrimaryCategory().getName();
-                
+
                 EnumCLMMargin marginFactor = EnumCLMMargin.getMarginFromCategory(basketCategoryName);
-                
+
                 points += ((lineItem.getHkPrice() - costPrice) * lineItem.getQty())*marginFactor.getMargin();
             }
         } catch (Exception e) {

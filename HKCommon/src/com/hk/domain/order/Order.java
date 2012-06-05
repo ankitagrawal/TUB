@@ -156,6 +156,16 @@ public class Order implements java.io.Serializable {
     @JoinColumn(name = "secondary_referrer_for_order_id")
     private SecondaryReferrerForOrder secondaryReferrerForOrder;
 
+    @Transient
+        private boolean priorityOrder;
+
+        public boolean getPriorityOrder() {
+            return priorityOrder;
+        }
+
+        public void setPriorityOrder(boolean priorityOrder) {
+            this.priorityOrder = priorityOrder;
+        }
 
 
     public Order() {
