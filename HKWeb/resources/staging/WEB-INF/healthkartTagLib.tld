@@ -4,152 +4,153 @@
         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
         http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
         version="2.0">
-  <description>
-    This tag library contains functionality specific to the healthkart app
-    and also contains generic functionality which integrates with our existing framework.
-  </description>
-  <tlib-version>1.0</tlib-version>
-  <short-name>tb</short-name>
-  <uri>http://healthkart.com/taglibs/hkTagLib</uri>
-
-  <tag>
     <description>
-      extends the stripes options-collection tag. this one does not take the collection
-      as an attribute, but instead takes a service and a getter of the service to be called
-      to obtain the collection
+        This tag library contains functionality specific to the healthkart app
+        and also contains generic functionality which integrates with our existing framework.
     </description>
-    <display-name>master-data-collection</display-name>
-    <name>master-data-collection</name>
-    <tag-class>com.hk.web.tag.MasterDataOptionsTag</tag-class>
-    <body-content>empty</body-content>
-    <attribute>
-      <description>
-        The name of the property (of the beans in the collection) that should be used to
-        generate the value of each option (i.e. the value that is sent to the server).
-      </description>
-      <name>value</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-    </attribute>
-    <attribute>
-      <description>
-        The name of the property (of the beans in the collection) that should be used to
-        generate the label of each option (i.e. the text displayed to the user).
-      </description>
-      <name>label</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-    </attribute>
-    <attribute>
-      <description>
-        A comma separated list of bean properties by which the collection
-        should be sorted before rendering the options. Special values of
-        'label' and 'value' indicate that the options should be sorted by the
-        label and value respectively - even when using localized or derived values.
-      </description>
-      <name>sort</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-    </attribute>
-    <attribute>
-      <description>
-        The service class from which the getter will be called to obtain a collection
-      </description>
-      <name>service</name>
-      <required>true</required>
-      <rtexprvalue>true</rtexprvalue>
-      <type>java.lang.Class</type>
-    </attribute>
-    <attribute>
-      <description>
-        The property in the service class to obtain a collection
-      </description>
-      <name>serviceProperty</name>
-      <required>true</required>
-      <rtexprvalue>true</rtexprvalue>
-    </attribute>
-    <attribute>
-      <description><![CDATA[
+    <tlib-version>1.0</tlib-version>
+    <short-name>tb</short-name>
+    <uri>http://healthkart.com/taglibs/hkTagLib</uri>
+
+    <tag>
+        <description>
+            extends the stripes options-collection tag. this one does not take the collection
+            as an attribute, but instead takes a service and a getter of the service to be called
+            to obtain the collection
+        </description>
+        <display-name>master-data-collection</display-name>
+        <name>master-data-collection</name>
+        <tag-class>com.hk.web.tag.MasterDataOptionsTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <description>
+                The name of the property (of the beans in the collection) that should be used to
+                generate the value of each option (i.e. the value that is sent to the server).
+            </description>
+            <name>value</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description>
+                The name of the property (of the beans in the collection) that should be used to
+                generate the label of each option (i.e. the text displayed to the user).
+            </description>
+            <name>label</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description>
+                A comma separated list of bean properties by which the collection
+                should be sorted before rendering the options. Special values of
+                'label' and 'value' indicate that the options should be sorted by the
+                label and value respectively - even when using localized or derived values.
+            </description>
+            <name>sort</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description>
+                The service class from which the getter will be called to obtain a collection
+            </description>
+            <name>service</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Class</type>
+        </attribute>
+        <attribute>
+            <description>
+                The property in the service class to obtain a collection
+            </description>
+            <name>serviceProperty</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description><![CDATA[
                 The name of the property which will be used to generate &lt;optgroup&gt; tags.
                 Each time a new value is encountered an optgroup will be written for it.
             ]]></description>
-      <name>group</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-    </attribute>
+            <name>group</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
 
-    <!-- End: Standard HTML attributes -->
-    <dynamic-attributes>true</dynamic-attributes>
-  </tag>
-
-
-  <tag>
-    <description>
-      Renders the virtualHost Url for images.
-    </description>
-    <display-name>vhostImage</display-name>
-    <name>vhostImage</name>
-    <tag-class>com.hk.web.tag.VirtualHostImageTag</tag-class>
-    <body-content>empty</body-content>
-  </tag>
-
-  <tag>
-    <description>
-      Renders the virtualHost Url for javascript.
-    </description>
-    <display-name>vhostJs</display-name>
-    <name>vhostJs</name>
-    <tag-class>com.hk.web.tag.VirtualHostJavascriptTag</tag-class>
-    <body-content>empty</body-content>
-  </tag>
-
-  <tag>
-    <description>
-      Renders the virtualHost Url for css.
-    </description>
-    <display-name>vhostCss</display-name>
-    <name>vhostCss</name>
-    <tag-class>com.hk.web.tag.VirtualHostCssTag</tag-class>
-    <body-content>empty</body-content>
-  </tag>
-
-  <tag>
-    <description>Renders product image thumbs</description>
-    <display-name>productImage</display-name>
-    <name>productImage</name>
-    <tag-class>com.hk.web.tag.ProductImageTag</tag-class>
-    <body-content>empty</body-content>
-    <attribute>
-      <name>imageId</name>
-      <required>true</required>
-      <rtexprvalue>true</rtexprvalue>
-    </attribute>
-    <attribute>
-      <name>size</name>
-      <required>true</required>
-      <rtexprvalue>true</rtexprvalue>
-    </attribute>
-    <dynamic-attributes>true</dynamic-attributes>
-  </tag>
-
-   <tag>
-     <description>Renders category home page banners</description>
-     <display-name>categoryImage</display-name>
-     <name>categoryImage</name>
-     <tag-class>com.hk.web.tag.CategoryImageTag</tag-class>
-     <body-content>empty</body-content>
-     <attribute>
-       <name>imageId</name>
-       <required>true</required>
-       <rtexprvalue>true</rtexprvalue>
-     </attribute>
-     <attribute>
-       <name>size</name>
-       <required>true</required>
-       <rtexprvalue>true</rtexprvalue>
-     </attribute>
-     <dynamic-attributes>true</dynamic-attributes>
+        <!-- End: Standard HTML attributes -->
+        <dynamic-attributes>true</dynamic-attributes>
     </tag>
+
+
+    <tag>
+        <description>
+            Renders the virtualHost Url for images.
+        </description>
+        <display-name>vhostImage</display-name>
+        <name>vhostImage</name>
+        <tag-class>com.hk.web.tag.VirtualHostImageTag</tag-class>
+        <body-content>empty</body-content>
+    </tag>
+
+    <tag>
+        <description>
+            Renders the virtualHost Url for javascript.
+        </description>
+        <display-name>vhostJs</display-name>
+        <name>vhostJs</name>
+        <tag-class>com.hk.web.tag.VirtualHostJavascriptTag</tag-class>
+        <body-content>empty</body-content>
+    </tag>
+
+    <tag>
+        <description>
+            Renders the virtualHost Url for css.
+        </description>
+        <display-name>vhostCss</display-name>
+        <name>vhostCss</name>
+        <tag-class>com.hk.web.tag.VirtualHostCssTag</tag-class>
+        <body-content>empty</body-content>
+    </tag>
+
+    <tag>
+        <description>Renders product image thumbs</description>
+        <display-name>productImage</display-name>
+        <name>productImage</name>
+        <tag-class>com.hk.web.tag.ProductImageTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>imageId</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>size</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <dynamic-attributes>true</dynamic-attributes>
+    </tag>
+
+    <tag>
+        <description>Renders category home page banners</description>
+        <display-name>categoryImage</display-name>
+        <name>categoryImage</name>
+        <tag-class>com.hk.web.tag.CategoryImageTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>imageId</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>size</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <dynamic-attributes>true</dynamic-attributes>
+    </tag>
+
 
   <function>
     <description>
@@ -442,101 +443,102 @@
     </example>
   </function>
 
-  <function>
-    <description>
-      returns count of checked in units of a variant of a purchase order
-    </description>
-    <name>checkedInUnitsCount</name>
-    <function-class>com.hk.taglibs.Functions</function-class>
-    <function-signature>java.lang.Long checkedinUnitsCount(java.lang.Object,java.lang.Object)</function-signature>
-    <example>
-      ${hk:checkedInUnitsCount(${object1}, ${object2})}
-    </example>
-  </function>
+    <function>
+        <description>
+            returns count of checked in units of a variant of a purchase order
+        </description>
+        <name>checkedInUnitsCount</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.Long checkedinUnitsCount(java.lang.Object,java.lang.Object)</function-signature>
+        <example>
+            ${hk:checkedInUnitsCount(${object1}, ${object2})}
+        </example>
+    </function>
 
-  <function>
-    <description>
-      returns list of available skuitems of a skugroup
-    </description>
-    <name>getInStockSkuItems</name>
-    <function-class>com.hk.taglibs.Functions</function-class>
-    <function-signature>java.util.List getInStockSkuItems(java.lang.Object)</function-signature>
-    <example>
-      ${hk:getInStockSkuItems(${object})}
-    </example>
-  </function>
+    <function>
+        <description>
+            returns list of available skuitems of a skugroup
+        </description>
+        <name>getInStockSkuItems</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.util.List getInStockSkuItems(java.lang.Object)</function-signature>
+        <example>
+            ${hk:getInStockSkuItems(${object})}
+        </example>
+    </function>
 
-  <function>
-    <description>
-      returns first combo line item, selected in cart
-    </description>
-    <name>getComboCount</name>
-    <function-class>com.hk.taglibs.Functions</function-class>
-    <function-signature>java.lang.Long getComboCount(java.lang.Object)</function-signature>
-    <example>
-      ${hk:getComboLineItems(${object})}
-    </example>
-  </function>
+    <function>
+        <description>
+            returns first combo line item, selected in cart
+        </description>
+        <name>getComboCount</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.Long getComboCount(java.lang.Object)</function-signature>
+        <example>
+            ${hk:getComboLineItems(${object})}
+        </example>
+    </function>
 
-  <function>
-    <description>
-      if not null, returns the postpaid value associated with it
-    </description>
-    <name>getPostpaidAmount</name>
-    <function-class>com.hk.taglibs.Functions</function-class>
-    <function-signature>java.lang.Double getPostpaidAmount(java.lang.Object)</function-signature>
-    <example>
-      ${hk:getPostpaidAmount(${object})}
-    </example>
-  </function>
+    <function>
+        <description>
+            if not null, returns the postpaid value associated with it
+        </description>
+        <name>getPostpaidAmount</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.Double getPostpaidAmount(java.lang.Object)</function-signature>
+        <example>
+            ${hk:getPostpaidAmount(${object})}
+        </example>
+    </function>
 
-  <function>
-    <description>
-      returns true/false if a duplicate accounting invoice is generated on the same day
-    </description>
-    <name>invoiceAlreadyGenerated</name>
-    <function-class>com.hk.taglibs.Functions</function-class>
-    <function-signature>java.lang.Boolean invoiceAlreadyGenerated(java.lang.Object)</function-signature>
-    <example>
-      ${hk:invoiceAlreadyGenerated(${object})}
-    </example>
-  </function>
+    <function>
+        <description>
+            returns true/false if a duplicate accounting invoice is generated on the same day
+        </description>
+        <name>invoiceAlreadyGenerated</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.Boolean invoiceAlreadyGenerated(java.lang.Object)</function-signature>
+        <example>
+            ${hk:invoiceAlreadyGenerated(${object})}
+        </example>
+    </function>
 
-  <function>
-    <description>
-      returns valid order counts for a user
-    </description>
-    <name>getProcessedOrdersCount</name>
-    <function-class>com.hk.taglibs.Functions</function-class>
-    <function-signature>java.lang.Long getProcessedOrdersCount(java.lang.Object)</function-signature>
-    <example>
-      ${hk:getProcessedOrdersCount(${object})}
-    </example>
-  </function>
+    <function>
+        <description>
+            returns valid order counts for a user
+        </description>
+        <name>getProcessedOrdersCount</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.Long getProcessedOrdersCount(java.lang.Object)</function-signature>
+        <example>
+            ${hk:getProcessedOrdersCount(${object})}
+        </example>
+    </function>
 
-  <function>
-    <description>
-      returns s3 image url link
-    </description>
-    <name>getS3ImageUrl</name>
-    <function-class>com.hk.taglibs.Functions</function-class>
-    <function-signature>java.lang.String getS3ImageUrl(java.lang.Object, java.lang.Object)</function-signature>
-    <example>
-      ${hk:getS3ImageUrl(${object}, ${object})}
-    </example>
-  </function>
+    <function>
+        <description>
+            returns s3 image url link
+        </description>
+        <name>getS3ImageUrl</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.String getS3ImageUrl(java.lang.Object, java.lang.Object)</function-signature>
+        <example>
+            ${hk:getS3ImageUrl(${object}, ${object})}
+        </example>
+    </function>
 
-  <function>
-    <description>
-      returns boolean for already awarded FB points
-    </description>
-    <name>alreadyPublishedDeal</name>
-    <function-class>com.hk.taglibs.Functions</function-class>
-    <function-signature>java.lang.Boolean alreadyPublishedDeal(java.lang.Object)</function-signature>
-    <example>
-      ${hk:alreadyPublishedDeal(${object})}
-    </example>
-  </function>
+    <function>
+        <description>
+            returns boolean for already awarded FB points
+        </description>
+        <name>alreadyPublishedDeal</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.Boolean alreadyPublishedDeal(java.lang.Object)</function-signature>
+        <example>
+            ${hk:alreadyPublishedDeal(${object})}
+        </example>
+    </function>
+
 
   <function>
     <description>
@@ -550,77 +552,79 @@
     </example>
   </function>
 
-  <function>
-    <description>
-      returns count of checked in units of a variant - RTO
-    </description>
-    <name>getReCheckedinUnitsCount</name>
-    <function-class>com.hk.taglibs.Functions</function-class>
-    <function-signature>java.lang.Long getReCheckedinUnitsCount(java.lang.Object)</function-signature>
-    <example>
-      ${hk:getReCheckedinUnitsCount(${object1})}
-    </example>
-  </function>
 
-  <function>
-    <description>
-      returns count of checked in damage units of a variant - RTO
-    </description>
-    <name>getDamageUnitsCount</name>
-    <function-class>com.hk.taglibs.Functions</function-class>
-    <function-signature>java.lang.Long getDamageUnitsCount(java.lang.Object)</function-signature>
-    <example>
-      ${hk:getDamageUnitsCount(${object1})}
-    </example>
-  </function>
+    <function>
+        <description>
+            returns count of checked in units of a variant - RTO
+        </description>
+        <name>getReCheckedinUnitsCount</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.Long getReCheckedinUnitsCount(java.lang.Object)</function-signature>
+        <example>
+            ${hk:getReCheckedinUnitsCount(${object1})}
+        </example>
+    </function>
 
-  <function>
-    <description>
-      returns count of asked units of a variant of a purchase order
-    </description>
-    <name>askedPOQty</name>
-    <function-class>com.hk.taglibs.Functions</function-class>
-    <function-signature>java.lang.Long askedPOQty(java.lang.Object,java.lang.Object)</function-signature>
-    <example>
-      ${hk:askedPOQty(${object1}, ${object2})}
-    </example>
-  </function>
+    <function>
+        <description>
+            returns count of checked in damage units of a variant - RTO
+        </description>
+        <name>getDamageUnitsCount</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.Long getDamageUnitsCount(java.lang.Object)</function-signature>
+        <example>
+            ${hk:getDamageUnitsCount(${object1})}
+        </example>
+    </function>
 
-  <function>
-    <description>
-      escape special chars for valid HTML or XML
-    </description>
-    <name>escapeHtml</name>
-    <function-class>com.hk.taglibs.Functions</function-class>
-    <function-signature>java.lang.String escapeHtml(java.lang.String)</function-signature>
-    <example>
-      ${hk:escapeHtml(${str)}
-    </example>
-  </function>
+    <function>
+        <description>
+            returns count of asked units of a variant of a purchase order
+        </description>
+        <name>askedPOQty</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.Long askedPOQty(java.lang.Object,java.lang.Object)</function-signature>
+        <example>
+            ${hk:askedPOQty(${object1}, ${object2})}
+        </example>
+    </function>
 
-  <function>
-    <description>
-      returns applicable offer price based on logged on user ie. General User, B2B User, Preferred User etc.
-    </description>
-    <name>getApplicableOfferPrice</name>
-    <function-class>com.hk.taglibs.Functions</function-class>
-    <function-signature>java.lang.Double getApplicableOfferPrice(java.lang.Object)</function-signature>
-    <example>
-      ${hk:getApplicableOfferPrice(${object})}
-    </example>
-  </function>
+    <function>
+        <description>
+            escape special chars for valid HTML or XML
+        </description>
+        <name>escapeHtml</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.String escapeHtml(java.lang.String)</function-signature>
+        <example>
+            ${hk:escapeHtml(${str)}
+        </example>
+    </function>
 
-  <function>
-    <description>
-      returns applicable offer price based on order user ie. General User, B2B User, Preferred User etc.
-    </description>
-    <name>getOrderBasedApplicableOfferPrice</name>
-    <function-class>com.hk.taglibs.Functions</function-class>
-    <function-signature>java.lang.Double getApplicableOfferPrice(java.lang.Object, java.lang.Object)</function-signature>
-    <example>
-      ${hk:getApplicableOfferPrice(${object}, ${object})}
-    </example>
-  </function>
+    <function>
+        <description>
+            returns applicable offer price based on logged on user ie. General User, B2B User, Preferred User etc.
+        </description>
+        <name>getApplicableOfferPrice</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.Double getApplicableOfferPrice(java.lang.Object)</function-signature>
+        <example>
+            ${hk:getApplicableOfferPrice(${object})}
+        </example>
+    </function>
+
+    <function>
+        <description>
+            returns applicable offer price based on order user ie. General User, B2B User, Preferred User etc.
+        </description>
+        <name>getOrderBasedApplicableOfferPrice</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.Double getApplicableOfferPrice(java.lang.Object, java.lang.Object)</function-signature>
+        <example>
+            ${hk:getApplicableOfferPrice(${object}, ${object})}
+        </example>
+    </function>
+
 
   <function>
     <description>
@@ -634,41 +638,43 @@
     </example>
   </function>
 
-  <function>
-    <description>
-      returns list of available couriers for an order
-    </description>
-    <name>getAvailableCouriers</name>
-    <function-class>com.hk.taglibs.Functions</function-class>
-    <function-signature>java.util.List getAvailableCouriers(java.lang.Object)</function-signature>
-    <example>
-      ${hk:getAvailableCouriers(${object})}
-    </example>
-  </function>
 
-  <function>
-    <description>
-      Equals ignore case
-    </description>
-    <name>equalsIgnoreCase</name>
-    <function-class>com.hk.taglibs.Functions</function-class>
-    <function-signature>boolean equalsIgnoreCase(java.lang.String, java.lang.String)</function-signature>
-    <example>
-      ${hk:equalsIgnoreCase(${str1}, ${str2})}
-    </example>
-  </function>
+    <function>
+        <description>
+            returns list of available couriers for an order
+        </description>
+        <name>getAvailableCouriers</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.util.List getAvailableCouriers(java.lang.Object)</function-signature>
+        <example>
+            ${hk:getAvailableCouriers(${object})}
+        </example>
+    </function>
 
-  <function>
-    <description>
-      Contains ignore case : checks if first string contains second string or not
-    </description>
-    <name>containsIgnoreCase</name>
-    <function-class>com.hk.taglibs.Functions</function-class>
-    <function-signature>boolean containsIgnoreCase(java.lang.String, java.lang.String)</function-signature>
-    <example>
-      ${hk:equalsIgnoreCase(${str1}, ${str2})}
-    </example>
-  </function>
+    <function>
+        <description>
+            Equals ignore case
+        </description>
+        <name>equalsIgnoreCase</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>boolean equalsIgnoreCase(java.lang.String, java.lang.String)</function-signature>
+        <example>
+            ${hk:equalsIgnoreCase(${str1}, ${str2})}
+        </example>
+    </function>
+
+    <function>
+        <description>
+            Contains ignore case : checks if first string contains second string or not
+        </description>
+        <name>containsIgnoreCase</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>boolean containsIgnoreCase(java.lang.String, java.lang.String)</function-signature>
+        <example>
+            ${hk:equalsIgnoreCase(${str1}, ${str2})}
+        </example>
+    </function>
+
 
   <function>
     <description>
@@ -714,5 +720,6 @@
       ${hk:getSurchargeValue(${str1}, ${str2})}
     </example>
   </function>
+
 
 </taglib>
