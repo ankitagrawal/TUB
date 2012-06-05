@@ -12,6 +12,7 @@ import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.clm.EnumCLMMargin;
+import com.hk.constants.clm.CLMConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
@@ -55,6 +56,19 @@ public class KarmaProfileServiceImpl implements KarmaProfileService {
         this.save(karmaProfile);
         setKarmaInOrderForUser(order, user);
         return karmaProfile;
+    }
+
+    public boolean isPriorityUser(User user){
+        KarmaProfile karmaProfile=this.findByUser(user);
+        if(karmaProfile!=null){
+            if(karmaProfile.getKarmaPoints() >= CLMConstants.thresholdScore){
+                return true;
+            }else{
+                return false;
+            }
+        }else{
+            return false;
+        }
     }
 
     private void setKarmaInOrderForUser(Order order, User user) {

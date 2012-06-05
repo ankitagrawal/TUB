@@ -146,6 +146,17 @@ public class User {
     @JoinColumn(name = "store_id", nullable = true)
     private Store                 store;
 
+    @Transient
+    private boolean priorityUser;
+
+    public boolean getPriorityUser() {
+        return priorityUser;
+    }
+
+    public void setPriorityUser(boolean priorityUser) {
+        this.priorityUser = priorityUser;
+    }
+
     public List<Address> getAddresses() {
         return addresses;
     }

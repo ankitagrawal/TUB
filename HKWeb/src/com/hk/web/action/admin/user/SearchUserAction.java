@@ -20,8 +20,10 @@ import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.user.User;
+import com.hk.domain.clm.KarmaProfile;
 import com.hk.dto.user.UserFilterDto;
 import com.hk.pact.dao.user.UserDao;
+import com.hk.pact.service.clm.KarmaProfileService;
 import com.hk.web.action.error.AdminPermissionAction;
 
 @Secure(hasAnyPermissions = {PermissionConstants.SEARCH_USERS}, authActionBean = AdminPermissionAction.class)
@@ -30,6 +32,9 @@ public class SearchUserAction extends BasePaginatedAction {
    
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private KarmaProfileService karmaProfileService;
 
   @Session(key = HealthkartConstants.Session.userSearchFilterKey)
   private UserFilterDto userFilterDto;
@@ -52,7 +57,14 @@ public class SearchUserAction extends BasePaginatedAction {
   public Resolution search() {
     userPage = userDao.search(userFilterDto, getPageNo(), getPerPage());
     userList = userPage.getList();
+    for(User user:userList){
+        user.setPriorityUser(karmaProfileService.isPriorityUser(user));
+    }
     return new ForwardResolution("/pages/admin/searchUser.jsp");
+  }
+
+  public boolean isPriorityUser(User user){
+     return getKarmaProfileService().isPriorityUser(user);
   }
 
   public UserFilterDto getUserFilterDto() {
@@ -88,4 +100,11 @@ public class SearchUserAction extends BasePaginatedAction {
     return userList;
   }
 
+    public KarmaProfileService getKarmaProfileService() {
+        return karmaProfileService;
+    }
+
+    public void setKarmaProfileService(KarmaProfileService karmaProfileService) {
+        this.karmaProfileService = karmaProfileService;
+    }
 }
