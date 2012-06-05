@@ -11,25 +11,66 @@
     <s:form beanclass="com.hk.web.action.admin.courier.StateCourierServiceAction" method="post">
       <table>
         <tr>
-          <th>S.No.</th>
+          <%--<th>S.No.</th>--%>
           <th>State</th>
-          <th>Default Courier</th>
+              <br/>
+            <th>Selected State</th>
+
         </tr>
-        <c:forEach items="${scsaBean.stateCourierServiceList}" var="stateCourierService" varStatus="ctr">
-          <s:hidden name="stateCourierServiceList[${ctr.index}].id" value="${stateCourierService.id}"/>
+        <%--<c:forEach items="${scsaBean.stateCourierServiceList}" var="stateCourierService" varStatus="ctr">--%>
+          <%--<s:hidden name="stateCourierServiceList[${ctr.index}].id" value="${stateCourierService.id}"/>--%>
           <tr>
-            <td>${ctr.index+1}.</td>
-            <td>${stateCourierService.state}
-              <s:hidden name="stateCourierServiceList[${ctr.index}].state" value="${stateCourierService.state}"/>
-            </td>
-            <td>
-              <s:select name="stateCourierServiceList[${ctr.index}].courier.id" value="${stateCourierService.courier.id}">
-                <s:option value="">None</s:option>
-                <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList" value="id"
-                                           label="name"/>
-              </s:select>
-            </td></tr>
-        </c:forEach>
+          <td>
+           <s:select name="state">
+              <s:option value="">None</s:option>
+               <s:options-collection collection="${scsaBean.stateList}"  value="${scsaBean.state}"  label="Choose State">
+               </s:options-collection>
+           </s:select>
+             </td>
+
+           <td>
+           ${scsaBean.state}
+           </td>
+          </tr>
+
+
+
+            <%--<td>${ctr.index+1}.</td>--%>
+
+            <%--<td>${stateCourierService.state}--%>
+              <%--<s:hidden name="stateCourierServiceList[${ctr.index}].state" value="${stateCourierService.state}"/>--%>
+            <%--</td>--%>
+            <%--<td>--%>
+              <%--<s:select name="stateCourierServiceList[${ctr.index}].courier.id" value="${stateCourierService.courier.id}">--%>
+                <%--<s:option value="">None</s:option>--%>
+                <%--<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList" value="${scsaBean.state}"--%>
+                                           <%--label="name"/>--%>
+              <%--</s:select>--%>
+            <%--</td>--%>
+
+           <table>
+              <tr>
+                  <th>S.No.</th>
+                  <th>Courier Name</th>
+                  <th>Preference</th>
+              </tr>
+
+
+          <tr>
+            <c:forEach items="${scsaBean.stateCourierServiceList}" var="stateCourierService" varStatus="count">
+
+               <td> ${count.index+1}</td>
+               <td>${stateCourierService.courier.name}</td>
+                <td>${stateCourierService.preference}</td>
+
+
+
+            </c:forEach>
+
+          </tr>
+
+        <%--</c:forEach>--%>
+        </table>
       </table>
       <s:submit name="save" value="Save"/>
     </s:form>
