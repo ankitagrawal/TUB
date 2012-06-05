@@ -703,6 +703,18 @@
       ${hk:getMatchingSku(${object})}
     </example>
   </function>
+  <function>
+    <description>
+      returns stock check of combo
+    </description>
+    <name>isComboInStock</name>
+    <function-class>com.hk.taglibs.Functions</function-class>
+    <function-signature>boolean isComboInStock(java.lang.Object)</function-signature>
+    <example>
+      ${hk:isComboInStock(${object})}
+    </example>
+  </function>
+
 
 
 </taglib>

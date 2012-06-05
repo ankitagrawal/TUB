@@ -78,9 +78,11 @@
                         <s:label name="shippingOrderId" class="label">SO Gateway Order ID</s:label>
                         <s:text name="shippingOrderId" style="width:200px" class="text"/>
 
+<%--
                         <div class="clear"></div>
                         <s:label name="days" class="label">No. Of Days</s:label>
                         <s:text name="days" style="width:200px" class="text"/>
+--%>
 
                         <div style="margin-top:15px;"></div>
                         <s:submit name="calculateCourierCostingForShippingOrder" value="Get Shipping Cost for an SO"/>

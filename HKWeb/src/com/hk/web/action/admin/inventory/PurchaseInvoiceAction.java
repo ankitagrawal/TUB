@@ -1,12 +1,6 @@
 package com.hk.web.action.admin.inventory;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -14,6 +8,7 @@ import net.sourceforge.stripes.action.JsonResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.validation.Validate;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -25,7 +20,9 @@ import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
 import com.hk.admin.pact.dao.inventory.PurchaseInvoiceDao;
+import com.hk.admin.pact.service.accounting.ProcurementService;
 import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.core.EnumPermission;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.po.PurchaseInvoice;
@@ -40,6 +37,7 @@ import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.error.AdminPermissionAction;
+import com.hk.util.CustomDateTypeConvertor;
 
 /**
  * Created by IntelliJ IDEA. User: Rahul Date: Feb 15, 2012 Time: 8:26:07 AM To change this template use File | Settings |
@@ -61,7 +59,9 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
     UserService                           userService;
     @Autowired
     private ProductVariantService         productVariantService;
-
+    @Autowired
+    private ProcurementService            procurementService;
+  
     private static Logger                 logger                    = Logger.getLogger(PurchaseInvoiceAction.class);
 
     private Integer                       defaultPerPage            = 20;
@@ -79,18 +79,20 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
     private PurchaseInvoiceStatus         purchaseInvoiceStatus;
     private User                          approvedBy;
     private User                          createdBy;
-    private List<GoodsReceivedNote>       grnListForPurchaseInvoice = new ArrayList<GoodsReceivedNote>();
     private String                        productVariantId;
-    private Boolean                       isReconciled;
+    private Boolean                       reconciled;
     private Warehouse                     warehouse;
-    @DefaultHandler
+    private Boolean                       saveEnabled                = true;
+    private Date                          grnDate;
+
+  @DefaultHandler
     public Resolution pre() {
 
         if (productVariant != null) {
             purchaseInvoiceList = purchaseInvoiceDao.listPurchaseInvoiceWithProductVariant(productVariant);
         } else {
             purchaseInvoicePage = purchaseInvoiceDao.searchPurchaseInvoice(purchaseInvoice, purchaseInvoiceStatus, createdBy, invoiceNumber, tinNumber, supplierName, getPageNo(),
-                    getPerPage(), isReconciled , warehouse);
+                    getPerPage(), reconciled, warehouse);
             purchaseInvoiceList = purchaseInvoicePage.getList();
         }
         // purchaseInvoiceList = purchaseInvoiceDao.listAll();
@@ -105,6 +107,22 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
     }
 
     public Resolution view() {
+        List<GoodsReceivedNote> grnList=purchaseInvoice.getGoodsReceivedNotes();
+        List<Date> grnDateList=new ArrayList<Date>();
+        boolean isLoggedInUserHasFinancePermission=userService.getLoggedInUser().hasPermission(EnumPermission.FINANCE_MANAGEMENT);
+
+        if(isLoggedInUserHasFinancePermission){
+            saveEnabled=true;
+        } else if(purchaseInvoice.getReconciled()== null)
+        {
+            saveEnabled=true;
+        } else if(purchaseInvoice.getReconciled()){
+            saveEnabled=false;
+        }
+        for(GoodsReceivedNote grn:grnList){
+            grnDateList.add(grn.getGrnDate());
+        }
+        grnDate= Collections.min(grnDateList);
         if (purchaseInvoice != null) {
             // logger.debug("purchaseInvoice@view: " + purchaseInvoice.getId());
             // grnDto = grnManager.generateGRNDto(grn);
@@ -137,6 +155,13 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
                 productVariant = purchaseInvoiceLineItem.getSku().getProductVariant();
                 productVariant = productVariantDao.save(productVariant);
             }
+            if(purchaseInvoice.getReconciled() != null){
+            if(purchaseInvoice.getReconciled()&& purchaseInvoice.getReconcilationDate()== null)
+            {
+                purchaseInvoice.setReconcilationDate(new Date());
+            }
+            }
+                                                                                   
             purchaseInvoiceDao.save(purchaseInvoice);
         }
         addRedirectAlertMessage(new SimpleMessage("Changes saved."));
@@ -144,19 +169,16 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
     }
 
     public Resolution delete() {
-        if (purchaseInvoice != null && purchaseInvoice.getId() != null) {
-            List<GoodsReceivedNote> grns = purchaseInvoice.getGoodsReceivedNotes();
-            for (GoodsReceivedNote grn : grns) {
-                grn.setReconciled(false);
-                goodsReceivedNoteDao.save(grn);
-            }
-            for (PurchaseInvoiceLineItem purchaseInvoiceLineItem : purchaseInvoiceLineItems) {
-                purchaseInvoiceDao.delete(purchaseInvoiceLineItem);
-            }
-            purchaseInvoiceDao.delete(purchaseInvoice);
-        }
+      Boolean deleteStatus = false;
+      if (purchaseInvoice != null && purchaseInvoice.getId() != null) {
+        deleteStatus = procurementService.deletePurchaseInvoice(purchaseInvoice);
+      }
+      if(deleteStatus == false){
+        addRedirectAlertMessage(new SimpleMessage("Unable to delete purchase invoice, please contact admin."));
+      }else{
         addRedirectAlertMessage(new SimpleMessage("Purchase Invoice Deleted."));
-        return new RedirectResolution(PurchaseInvoiceAction.class);
+      }
+      return new RedirectResolution(PurchaseInvoiceAction.class);
     }
 
     @SuppressWarnings("unchecked")
@@ -204,6 +226,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
         params.add("createdBy");
         params.add("purchaseInvoice");
         params.add("warehouse");
+        params.add("reconciled");
         return params;
     }
 
@@ -295,19 +318,40 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
         this.productVariantId = productVariantId;
     }
 
-    public Boolean isReconciled() {
-        return isReconciled;
+    public Boolean getReconciled() {
+      return this.reconciled;
     }
 
     public void setReconciled(Boolean reconciled) {
-        isReconciled = reconciled;
+      this.reconciled = reconciled;
     }
 
-    public Warehouse getWarehouse() {
+  public Warehouse getWarehouse() {
         return warehouse;
    }
 
    public void setWarehouse(Warehouse warehouse) {
        this.warehouse = warehouse;
    }
+
+    public Boolean isSaveEnabled() {
+        return saveEnabled;
+    }
+
+    public Boolean getSaveEnabled() {
+        return saveEnabled;
+   }
+
+    public void setSaveEnabled(Boolean saveEnabled) {
+        this.saveEnabled = saveEnabled;
+    }
+
+    public Date getGrnDate() {
+        return grnDate;
+    }
+
+    @Validate(converter = CustomDateTypeConvertor.class)
+    public void setGrnDate(Date grnDate) {
+        this.grnDate = grnDate;
+    }
 }

@@ -77,13 +77,14 @@ public enum EnumRoleHasPermission {
           EnumPermission.MANAGE_AFFILIATES,
           EnumPermission.HK_EMPLOYEE,
           EnumPermission.GRN_CREATION,
-	        EnumPermission.PURCHASE_INVOICE_MANAGEMENT,
-	        EnumPermission.RECON_VOUCHER_MANAGEMENT,
+	      EnumPermission.PURCHASE_INVOICE_MANAGEMENT,
+	      EnumPermission.RECON_VOUCHER_MANAGEMENT,
           EnumPermission.SEND_MARKETING_MAILS,
           EnumPermission.ASSIGN_BIN,
           EnumPermission.MARKETING_EXPENSE_MANAGEMENT,
           EnumPermission.CREATE_EDIT_SKU,
-          EnumPermission.MANAGE_PAYMENT_HISTORY
+          EnumPermission.MANAGE_PAYMENT_HISTORY ,
+          EnumPermission.FINANCE_MANAGEMENT
       )
   ),
 
@@ -347,6 +348,18 @@ CATEGORY_MANAGER_L1(
       Arrays.asList(
           EnumPermission.VERIFY_AFFILIATES,
           EnumPermission.MANAGE_AFFILIATES
+      )
+  ) ,
+    FINANCE_MANAGEMENT(
+      EnumRole.FINANCE_ADMIN,
+      Arrays.asList(
+          EnumPermission.REPORT_ADMIN,
+          EnumPermission.ACCOUNTING_SALES_REPORT,
+          EnumPermission.UPDATE_RECONCILIATION_REPORTS,
+          EnumPermission.VIEW_RECONCILIATION_REPORTS,
+          EnumPermission.PURCHASE_INVOICE_MANAGEMENT,
+          EnumPermission.MANAGE_PAYMENT_HISTORY,
+          EnumPermission.FINANCE_MANAGEMENT
       )
   )
   ;
