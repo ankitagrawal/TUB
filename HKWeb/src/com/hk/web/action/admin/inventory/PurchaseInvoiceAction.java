@@ -22,7 +22,6 @@ import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
 import com.hk.admin.pact.dao.inventory.PurchaseInvoiceDao;
 import com.hk.admin.pact.service.accounting.ProcurementService;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.constants.core.RoleConstants;
 import com.hk.constants.core.EnumPermission;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
@@ -38,7 +37,6 @@ import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.error.AdminPermissionAction;
-import com.hk.taglibs.Functions;
 import com.hk.util.CustomDateTypeConvertor;
 
 /**
@@ -82,19 +80,19 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
     private User                          approvedBy;
     private User                          createdBy;
     private String                        productVariantId;
-    private Boolean                       isReconciled;
+    private Boolean                       reconciled;
     private Warehouse                     warehouse;
     private Boolean                       saveEnabled                = true;
     private Date                          grnDate;
 
-    @DefaultHandler
+  @DefaultHandler
     public Resolution pre() {
 
         if (productVariant != null) {
             purchaseInvoiceList = purchaseInvoiceDao.listPurchaseInvoiceWithProductVariant(productVariant);
         } else {
             purchaseInvoicePage = purchaseInvoiceDao.searchPurchaseInvoice(purchaseInvoice, purchaseInvoiceStatus, createdBy, invoiceNumber, tinNumber, supplierName, getPageNo(),
-                    getPerPage(), isReconciled , warehouse);
+                    getPerPage(), reconciled, warehouse);
             purchaseInvoiceList = purchaseInvoicePage.getList();
         }
         // purchaseInvoiceList = purchaseInvoiceDao.listAll();
@@ -228,6 +226,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
         params.add("createdBy");
         params.add("purchaseInvoice");
         params.add("warehouse");
+        params.add("reconciled");
         return params;
     }
 
@@ -319,15 +318,15 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
         this.productVariantId = productVariantId;
     }
 
-    public Boolean isReconciled() {
-        return isReconciled;
+    public Boolean getReconciled() {
+      return this.reconciled;
     }
 
     public void setReconciled(Boolean reconciled) {
-        isReconciled = reconciled;
+      this.reconciled = reconciled;
     }
 
-    public Warehouse getWarehouse() {
+  public Warehouse getWarehouse() {
         return warehouse;
    }
 
