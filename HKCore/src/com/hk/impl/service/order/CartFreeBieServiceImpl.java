@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hk.domain.order.Order;
+import com.hk.domain.order.ShippingOrder;
 import com.hk.pact.dao.order.CartFreeBieDao;
 import com.hk.pact.service.order.CartFreebieService;
 import com.hk.web.filter.WebContext;
@@ -58,23 +59,23 @@ public class CartFreeBieServiceImpl implements CartFreebieService {
         return imageURL;
     }
 
-  public String getFreebieItem(Order order) {
+  public String getFreebieItem(ShippingOrder order) {
     String freebieItem = null;
     List<String> productList = new ArrayList<String>();
     productList.add("NUT410");//Revital Daily Health Supplement
     productList.add("NUT411");//Revital For Women
     productList.add("NUT412");//Revital Form Seniors
     productList.add("NUT598");//Ranbaxy Revitalite Powder
-    Double cartValue = getCartValueForProducts(productList, order);
+    Double cartValue = getCartValueForSOProducts(productList, order);
 
-    Double rvWValue = getCartValueForVariants(Arrays.asList("NUT411-01"), order); //Revital For Women
+    Double rvWValue = getCartValueForSOVariants(Arrays.asList("NUT411-01"), order); //Revital For Women
 
     List<String> productVariantList = new ArrayList<String>();
     productVariantList.add("NUT410-01");//Revital Daily Health Supplement 30cps
     productVariantList.add("NUT411-01");//Revital For Women 30cps
     productVariantList.add("NUT412-01");//Revital Form Seniors 30cps
 
-    Double rv30CpsValue = getCartValueForVariants(productVariantList, order);
+    Double rv30CpsValue = getCartValueForSOVariants(productVariantList, order);
 
     if (cartValue > 2520.0) {
       freebieItem = "Sunglass";
@@ -97,6 +98,16 @@ public class CartFreeBieServiceImpl implements CartFreebieService {
     }
 
     private Double getCartValueForVariants(List<String> productVariantList, Order order) {
+        Double value = getCartFreeBieDao().getCartValueForVariants(productVariantList, order);
+        return value != null ? value : 0.0;
+    }
+
+   private Double getCartValueForSOProducts(List<String> productList, ShippingOrder order) {
+        Double value = getCartFreeBieDao().getCartValueForProducts(productList, order);
+        return value != null ? value : 0.0;
+    }
+
+    private Double getCartValueForSOVariants(List<String> productVariantList, ShippingOrder order) {
         Double value = getCartFreeBieDao().getCartValueForVariants(productVariantList, order);
         return value != null ? value : 0.0;
     }

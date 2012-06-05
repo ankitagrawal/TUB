@@ -51,6 +51,7 @@ import com.hk.pact.dao.order.cartLineItem.CartLineItemDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.clm.KarmaProfileService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.core.AffilateService;
 import com.hk.pact.service.inventory.InventoryService;
@@ -111,6 +112,8 @@ public class OrderManager {
     private BaseDao                           baseDao;
     @Autowired
     private OrderLoggingService               orderLoggingService;
+    @Autowired
+    private KarmaProfileService               karmaProfileService;
 
     @Autowired
     private ComboInstanceHasProductVariantDao comboInstanceHasProductVariantDao;
@@ -332,6 +335,10 @@ public class OrderManager {
             getPaymentService().save(payment);
         }
 
+        /*
+         * update user karma profile for those whose score is not yet set
+         */
+           getKarmaProfileService().updateKarmaAfterOrder(order);
         /**
          * Order lifecycle activity logging - Payement Marked Successful
          */
@@ -765,6 +772,14 @@ public class OrderManager {
 
     public void setUserService(UserService userService) {
         this.userService = userService;
+    }
+
+    public KarmaProfileService getKarmaProfileService() {
+        return karmaProfileService;
+    }
+
+    public void setKarmaProfileService(KarmaProfileService karmaProfileService) {
+        this.karmaProfileService = karmaProfileService;
     }
 
     public AffilateService getAffilateService() {
