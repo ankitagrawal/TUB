@@ -20,8 +20,10 @@ import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
 import com.hk.admin.pact.dao.inventory.PurchaseInvoiceDao;
+import com.hk.admin.pact.service.accounting.ProcurementService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.core.RoleConstants;
+import com.hk.constants.core.EnumPermission;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.po.PurchaseInvoice;
@@ -59,7 +61,9 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
     UserService                           userService;
     @Autowired
     private ProductVariantService         productVariantService;
-
+    @Autowired
+    private ProcurementService            procurementService;
+  
     private static Logger                 logger                    = Logger.getLogger(PurchaseInvoiceAction.class);
 
     private Integer                       defaultPerPage            = 20;
@@ -107,8 +111,9 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
     public Resolution view() {
         List<GoodsReceivedNote> grnList=purchaseInvoice.getGoodsReceivedNotes();
         List<Date> grnDateList=new ArrayList<Date>();
-        boolean isLoggedInUserGod=Functions.collectionContains(userService.getLoggedInUser().getRoleStrings(), RoleConstants.GOD);
-        if(isLoggedInUserGod){
+        boolean isLoggedInUserHasFinancePermission=userService.getLoggedInUser().hasPermission(EnumPermission.FINANCE_MANAGEMENT);
+
+        if(isLoggedInUserHasFinancePermission){
             saveEnabled=true;
         } else if(purchaseInvoice.getReconciled()== null)
         {
@@ -166,19 +171,16 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
     }
 
     public Resolution delete() {
-        if (purchaseInvoice != null && purchaseInvoice.getId() != null) {
-            List<GoodsReceivedNote> grns = purchaseInvoice.getGoodsReceivedNotes();
-            for (GoodsReceivedNote grn : grns) {
-                grn.setReconciled(false);
-                goodsReceivedNoteDao.save(grn);
-            }
-            for (PurchaseInvoiceLineItem purchaseInvoiceLineItem : purchaseInvoiceLineItems) {
-                purchaseInvoiceDao.delete(purchaseInvoiceLineItem);
-            }
-            purchaseInvoiceDao.delete(purchaseInvoice);
-        }
+      Boolean deleteStatus = false;
+      if (purchaseInvoice != null && purchaseInvoice.getId() != null) {
+        deleteStatus = procurementService.deletePurchaseInvoice(purchaseInvoice);
+      }
+      if(deleteStatus == false){
+        addRedirectAlertMessage(new SimpleMessage("Unable to delete purchase invoice, please contact admin."));
+      }else{
         addRedirectAlertMessage(new SimpleMessage("Purchase Invoice Deleted."));
-        return new RedirectResolution(PurchaseInvoiceAction.class);
+      }
+      return new RedirectResolution(PurchaseInvoiceAction.class);
     }
 
     @SuppressWarnings("unchecked")
