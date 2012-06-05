@@ -228,6 +228,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
         params.add("createdBy");
         params.add("purchaseInvoice");
         params.add("warehouse");
+        params.add("isReconciled");
         return params;
     }
 
