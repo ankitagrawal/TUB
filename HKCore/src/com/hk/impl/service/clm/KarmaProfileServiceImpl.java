@@ -11,6 +11,7 @@ import com.hk.pact.service.inventory.SkuService;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.constants.clm.EnumCLMMargin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
@@ -98,31 +99,9 @@ public class KarmaProfileServiceImpl implements KarmaProfileService {
 
                 String basketCategoryName = lineItem.getProductVariant().getProduct().getPrimaryCategory().getName();
                 
-                /*EnumMargin margin = EnumMarginConstants.get(CategoryConstants.DIABETES);
+                EnumCLMMargin margin = EnumCLMMargin.getMarginFromCategory(basketCategoryName);
                 
-                points += margin.getAvg() * margin.getAvgScore();*/
-                if (CategoryConstants.DIABETES.equals(basketCategoryName)) {
-                    points += (((lineItem.getHkPrice() - costPrice) * lineItem.getQty()) / diabetesAvgMargin) * diabetesAvgScore;
-                } else if (basketCategoryName.equals("eye")) {
-                    points += (((lineItem.getHkPrice() - costPrice) * lineItem.getQty()) / eyeAvgMargin) * eyeAvgScore;
-                } else if (basketCategoryName.equals("personal-care")) {
-                    points += (((lineItem.getHkPrice() - costPrice) * lineItem.getQty()) / pcAvgMargin) * pcAvgScore;
-                } else if (basketCategoryName.equals("home-devices")) {
-                    points += (((lineItem.getHkPrice() - costPrice) * lineItem.getQty()) / hmAvgMargin) * hmAvgScore;
-                } else if (basketCategoryName.equals("beauty")) {
-                    points += (((lineItem.getHkPrice() - costPrice) * lineItem.getQty()) / beautyAvgMargin) * beautyAvgScore;
-                } else if (basketCategoryName.equals("nutrition")) {
-                    points += (((lineItem.getHkPrice() - costPrice) * lineItem.getQty()) / nutritionAvgMargin) * nutritionAvgScore;
-                } else if (basketCategoryName.equals("services")) {
-                    points += (((lineItem.getHkPrice() - costPrice) * lineItem.getQty()) / servicesAvgMargin) * servicesAvgScore;
-                } else if (basketCategoryName.equals("parenting")) {
-                    points += (((lineItem.getHkPrice() - costPrice) * lineItem.getQty()) / parentingAvgMargin) * parentingAvgScore;
-                } else if (basketCategoryName.equals("sports")) {
-                    points += (((lineItem.getHkPrice() - costPrice) * lineItem.getQty()) / sportsAvgMargin) * sportsAvgScore;
-                } else {
-                    // donothing - impossible
-                }
-
+                points += ((lineItem.getHkPrice() - costPrice) * lineItem.getQty())*margin.getMargin();
             }
         } catch (Exception e) {
             logger.error("Error while calculating points for order in karma profile - " + order.getId(), e);
