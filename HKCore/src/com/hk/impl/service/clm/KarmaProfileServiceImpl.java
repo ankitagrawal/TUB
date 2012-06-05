@@ -107,7 +107,9 @@ public class KarmaProfileServiceImpl implements KarmaProfileService {
 
                 EnumCLMMargin marginFactor = EnumCLMMargin.getMarginFromCategory(basketCategoryName);
 
-                points += ((lineItem.getHkPrice() - costPrice) * lineItem.getQty())*marginFactor.getMargin();
+                if(marginFactor!=null){
+                    points += ((lineItem.getHkPrice() - costPrice) * lineItem.getQty())*marginFactor.getMargin();
+                }
             }
         } catch (Exception e) {
             logger.error("Error while calculating points for order in karma profile - " + order.getId(), e);
