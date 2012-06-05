@@ -64,7 +64,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
   
     private static Logger                 logger                    = Logger.getLogger(PurchaseInvoiceAction.class);
 
-    private Integer                       defaultPerPage            = 1;
+    private Integer                       defaultPerPage            = 20;
     Page                                  purchaseInvoicePage;
 
     private List<PurchaseInvoice>         purchaseInvoiceList       = new ArrayList<PurchaseInvoice>();
