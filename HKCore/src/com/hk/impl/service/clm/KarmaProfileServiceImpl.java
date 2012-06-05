@@ -35,26 +35,6 @@ public class KarmaProfileServiceImpl implements KarmaProfileService {
     @Autowired
     private SkuService      skuService;
 
-    // the following contain avg first purchase margins
-    final static Double     beautyAvgMargin    = -59.8;
-    final static Double     beautyAvgScore     = -119.0;
-    final static Double     nutritionAvgMargin = 34.11;
-    final static Double     nutritionAvgScore  = 74.0;
-    final static Double     eyeAvgMargin       = -13.94;
-    final static Double     eyeAvgScore        = -14.0;
-    final static Double     pcAvgMargin        = -25.3;
-    final static Double     pcAvgScore         = -85.0;
-    final static Double     sportsAvgMargin    = 40.78;
-    final static Double     sportsAvgScore     = 38.0;
-    final static Double     hmAvgMargin        = 69.2;
-    final static Double     hmAvgScore         = 78.0;
-    final static Double     parentingAvgMargin = -94.8;
-    final static Double     parentingAvgScore  = -189.0;
-    final static Double     servicesAvgMargin  = 155.0;
-    final static Double     servicesAvgScore   = 167.0;
-    final static Double     diabetesAvgMargin  = 51.5;
-    final static Double     diabetesAvgScore   = 379.0;
-
     @Transactional
     public KarmaProfile save(KarmaProfile karmaProfile) {
         return getKarmaProfileDao().save(karmaProfile);
@@ -99,9 +79,9 @@ public class KarmaProfileServiceImpl implements KarmaProfileService {
 
                 String basketCategoryName = lineItem.getProductVariant().getProduct().getPrimaryCategory().getName();
                 
-                EnumCLMMargin margin = EnumCLMMargin.getMarginFromCategory(basketCategoryName);
+                EnumCLMMargin marginFactor = EnumCLMMargin.getMarginFromCategory(basketCategoryName);
                 
-                points += ((lineItem.getHkPrice() - costPrice) * lineItem.getQty())*margin.getMargin();
+                points += ((lineItem.getHkPrice() - costPrice) * lineItem.getQty())*marginFactor.getMargin();
             }
         } catch (Exception e) {
             logger.error("Error while calculating points for order in karma profile - " + order.getId(), e);
