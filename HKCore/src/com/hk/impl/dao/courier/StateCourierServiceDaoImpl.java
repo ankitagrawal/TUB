@@ -5,6 +5,7 @@ import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.courier.StateCourierServiceDao;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ import java.util.List;
  * Time: 11:59:27 AM
  * To change this template use File | Settings | File Templates.
  */
+@Repository
 public class StateCourierServiceDaoImpl extends BaseDaoImpl implements StateCourierServiceDao {
 
    public List<StateCourierService> getAllStateCourierServiceByState(String stateName){

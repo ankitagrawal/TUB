@@ -22,7 +22,7 @@ public class StateCourierServiceAction extends BaseAction {
 
 
   private List<StateCourierService> stateCourierServiceList = new ArrayList<StateCourierService>();
-     private String state;
+  private String state;
 
   private List<String> stateList=new ArrayList<String>();
 //

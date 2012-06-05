@@ -1,4 +1,4 @@
-<%@ page import="com.hk.pact.dao.MasterDataDao" %>
+<%@ page import="com.hk.constants.courier.StateList" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.courier.StateCourierServiceAction" var="scsaBean" event="pre"/>
@@ -11,8 +11,7 @@
     <s:form beanclass="com.hk.web.action.admin.courier.StateCourierServiceAction" method="post">
       <table>
         <tr>
-          <%--<th>S.No.</th>--%>
-          <th>State</th>
+            <th>State</th>
               <br/>
             <th>Selected State</th>
 
@@ -21,9 +20,9 @@
           <%--<s:hidden name="stateCourierServiceList[${ctr.index}].id" value="${stateCourierService.id}"/>--%>
           <tr>
           <td>
-           <s:select name="state">
+           <s:select name= "scsaBean.state" value="${scsaBean.state}">
               <s:option value="">None</s:option>
-               <s:options-collection collection="${scsaBean.stateList}"  value="${scsaBean.state}"  label="Choose State">
+               <s:options-collection  collection="<%=StateList.stateList%>">
                </s:options-collection>
            </s:select>
              </td>

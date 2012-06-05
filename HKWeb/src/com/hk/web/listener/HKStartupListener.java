@@ -1,18 +1,16 @@
 package com.hk.web.listener;
 
-import java.io.File;
-import java.util.Properties;
-
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-
+import com.akube.framework.util.BaseUtils;
+import com.hk.web.AppConstants;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.akube.framework.util.BaseUtils;
-import com.hk.web.AppConstants;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+import java.io.File;
+import java.util.Properties;
 
 public class HKStartupListener implements ServletContextListener {
 
