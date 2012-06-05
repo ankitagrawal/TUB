@@ -28,7 +28,7 @@ public class EmailerHistoryDaoImpl extends BaseDaoImpl implements EmailerHistory
                 emailerHistory.setSendDate(BaseUtils.getCurrentTimestamp());
             }
         }
-        return (EmailerHistory) super.save(emailerHistory);
+        return emailerHistory; //super.save(emailerHistory);
     }
 
     public EmailerHistory createEmailerHistory(String senderEmail, String senderName, EmailType emailType, EmailRecepient emailRecepient, EmailCampaign emailCampaign,

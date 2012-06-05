@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.List;
 
 import org.apache.commons.mail.HtmlEmail;
+import com.hk.domain.email.EmailCampaign;
 
 public interface EmailService {
 
@@ -23,6 +24,6 @@ String replyToName, Map<String, String> headerMap, Template template);*/
   public Map<String,HtmlEmail> createHtmlEmail(String templatePath, Object templateValues, String fromEmail, String fromName, String toEmail,
                                    Map<String, String> headerMap, Template template);
 
-  public void sendBulkHtmlEmail(List<Map<String, HtmlEmail>> htmlEmails);
+  public void sendBulkHtmlEmail(List<Map<String, HtmlEmail>> htmlEmails, EmailCampaign emailCampaign);
 
 }

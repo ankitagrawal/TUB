@@ -3,7 +3,10 @@ package com.hk.impl.service;
 import java.util.Map;
 import java.util.List;
 import java.util.HashMap;
-import java.lang.reflect.Field;
+import java.util.Date;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.mail.Email;
@@ -16,8 +19,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.hk.constants.core.Keys;
+//import com.hk.constants.core.EnumEmailType;
 import com.hk.pact.service.EmailService;
+/*
+import com.hk.pact.dao.email.EmailerHistoryDao;
+import com.hk.pact.dao.email.EmailRecepientDao;
+import com.hk.pact.dao.BaseDao;
+*/
 import com.hk.service.impl.FreeMarkerService;
+import com.hk.domain.core.EmailType;
+import com.hk.domain.email.EmailCampaign;
+import com.hk.domain.email.EmailRecepient;
 import freemarker.template.Template;
 
 /**
@@ -25,7 +37,7 @@ import freemarker.template.Template;
  */
 @Service
 public class EmailServiceImpl implements EmailService {
-  private static int toBeDeletedCounter = 1; 
+  private static int toBeDeletedCounter = 1;
   private static Logger logger = LoggerFactory.getLogger(EmailService.class);
 
   @Autowired
@@ -39,6 +51,14 @@ public class EmailServiceImpl implements EmailService {
   @Value("#{hkEnvProps['" + Keys.Env.hkContactName + "']}")
   private String        contactName;
 
+  private ExecutorService execThreadPool = Executors.newFixedThreadPool(5);
+  /*@Autowired
+  private EmailerHistoryDao emailerHistoryDao;
+  @Autowired
+  private BaseDao baseDao;
+  @Autowired
+  private EmailRecepientDao emailRecepientDao;
+*/
   // TODO: rewrite
   /*
   * @Autowired public EmailServiceImpl(FreeMarkerService freeMarkerService,// @Named(Keys.Env.hkNoReplyEmail) String
@@ -62,11 +82,11 @@ public class EmailServiceImpl implements EmailService {
   }
 
   public Map<String,HtmlEmail> createHtmlEmail( String templatePath, Object templateValues, String toEmail, String toName, String replyToEmail,Map<String, String> headerMap, Template template){
-            return  createHtmlEmail(templatePath, templateValues, noReplyEmail, noReplyName, toEmail, toName, null, null,headerMap, template);
+    return  createHtmlEmail(templatePath, templateValues, noReplyEmail, noReplyName, toEmail, toName, null, null,headerMap, template);
   }
-  
+
   public Map<String,HtmlEmail> createHtmlEmail(String templatePath, Object templateValues, String fromEmail, String fromName, String toEmail, String toName, String replyToEmail,
-                                 String replyToName, Map<String, String> headerMap, Template template){
+                                               String replyToName, Map<String, String> headerMap, Template template){
     Map<String, HtmlEmail> returnMap = new HashMap<String, HtmlEmail>();
     FreeMarkerService.RenderOutput renderOutput = freeMarkerService.processCampaignTemplate(template, templatePath, templateValues);
     HtmlEmail htmlEmail = null;
@@ -83,13 +103,14 @@ public class EmailServiceImpl implements EmailService {
         htmlEmail.addReplyTo(replyToEmail, replyToName);
       htmlEmail.setHtmlMsg(renderOutput.getMessage());
       returnMap.put(toEmail, htmlEmail);
-      
+
       logger.debug("Trying to send email with Subject: ");
       logger.debug(renderOutput.getSubject());
       logger.debug("Body:");
       logger.debug(renderOutput.getMessage());
     }catch(EmailException ex){
       logger.error("EmailException in sendHtmlEmail for template " + templatePath, ex);
+      return null;
     }
     return returnMap;
   }
@@ -103,24 +124,29 @@ public class EmailServiceImpl implements EmailService {
    * @param toName
    * @return false means email sending failed
    */
-   private boolean sendHtmlEmail(String templatePath, Object templateValues, String fromEmail, String fromName, String toEmail, String toName, String replyToEmail, String replyToName, Map<String, String> headerMap)
+  private boolean sendHtmlEmail(String templatePath, Object templateValues, String fromEmail, String fromName, String toEmail, String toName, String replyToEmail, String replyToName, Map<String, String> headerMap)
   {
-     /* Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(templatePath);
+    Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(templatePath);
 
-      HtmlEmail htmlEmail = createHtmlEmail(templatePath, templateValues, fromEmail, fromName, toEmail, toName, replyToEmail,replyToName,headerMap,freemarkerTemplate);
-      if (htmlEmail == null){
-        return false;
-      }
+    Map<String, HtmlEmail> htmlEmailMap = createHtmlEmail(templatePath, templateValues, fromEmail, fromName, toEmail, toName, replyToEmail,replyToName,headerMap,freemarkerTemplate);
+    if (htmlEmailMap == null){
+      return false;
+    }
+
+    for(Map.Entry<String, HtmlEmail> mapEntry : htmlEmailMap.entrySet()) {
+      HtmlEmail htmlEmail = mapEntry.getValue();
       // send this email asynchrounously, we do not want to wait for this process
-      sendEmail(htmlEmail);*/
-      return true;
+      sendEmail(htmlEmail);
+    }
+    return true;
   }
 
-  public void sendBulkHtmlEmail(List<Map<String, HtmlEmail>> htmlEmails) {
-      // send this email asynchrounously, we do not want to wait for this process
-      SendBulkEmailAsyncThread emailAsyncThread = new SendBulkEmailAsyncThread(htmlEmails);
-    
-      emailAsyncThread.start();
+  public void sendBulkHtmlEmail(List<Map<String, HtmlEmail>> htmlEmails, EmailCampaign emailCampaign) {
+    // send this email asynchrounously, we do not want to wait for this process
+    execThreadPool.execute(new SendBulkEmailAsyncThread(htmlEmails, emailCampaign));
+    //SendBulkEmailAsyncThread emailAsyncThread = new SendBulkEmailAsyncThread(htmlEmails, emailCampaign);
+
+    //emailAsyncThread.start();
   }
 
   /**
@@ -152,23 +178,31 @@ public class EmailServiceImpl implements EmailService {
     }
   }
 
-   private class SendBulkEmailAsyncThread extends Thread {
+  private class SendBulkEmailAsyncThread implements Runnable {
     private final List<Map<String, HtmlEmail>> emails;
-
-    SendBulkEmailAsyncThread(List<Map<String, HtmlEmail>> email) {
+    private final EmailCampaign emailCampaign;
+    SendBulkEmailAsyncThread(List<Map<String, HtmlEmail>> email, EmailCampaign emailCampaign) {
       this.emails = email;
+      this.emailCampaign = emailCampaign;
     }
 
     public void run() {
       //try {
-        for (Map<String, HtmlEmail> emailMap : emails){
-          for(Map.Entry<String, HtmlEmail> mapEntry : emailMap.entrySet()) {
-            Email email = mapEntry.getValue();
-            Field field = email.getClass().getDeclaredField("addTo") ;
-            //email.send();
-            logger.debug("sending mail : " + mapEntry.getKey());  
-          }
+
+      for (Map<String, HtmlEmail> emailMap : emails){
+        for(Map.Entry<String, HtmlEmail> mapEntry : emailMap.entrySet()) {
+          Email email = mapEntry.getValue();
+         // EmailRecepient emailRecepient = emailRecepientDao.findByRecepient(mapEntry.getKey());
+          //email.send();
+          logger.debug("sending mail : " + mapEntry.getKey());
+          /*emailRecepient.setEmailCount(emailRecepient.getEmailCount() + 1);
+          emailRecepient.setLastEmailDate(new Date());
+          emailRecepientDao.save(emailRecepient);
+          emailerHistoryDao.createEmailerHistory("no-reply@healthkart.com", "HealthKart",
+              baseDao.get(EmailType.class, EnumEmailType.CampaignEmail.getId()), emailRecepient, emailCampaign, "");
+*/
         }
+      }
       /*} catch (EmailException e) {
         logger.error("EmailException in SendEmailAsyncThread.run", e);
       }*/

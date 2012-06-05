@@ -38,6 +38,12 @@ public class MailingListManager {
     return allMailingList;
   }
 
+  public List<User> getUserListByCategory(EmailCampaign emailCampaign, Category category) {
+    List<User> allMailingList = getUserService().getMailingListByCategory(emailCampaign, category);
+
+    return allMailingList;
+  }
+
   public List<User> getAllUserList(int pageNo, int perPage) {
     Page allMailingListPage = getUserService().getAllMailingList(pageNo, perPage);
     List<User> allMailingList = new ArrayList<User>();
@@ -60,6 +66,12 @@ public class MailingListManager {
       allMailingList = allMailingListPage.getList();
     }
     return allMailingList;
+  }
+
+  public List<User> getAllUnverifiedUserList(EmailCampaign emailCampaign) {
+    List<User> allMailingListPage = getUserService().getAllUnverifiedMailingList(emailCampaign);
+
+    return allMailingListPage;
   }
 
   public void writeIntoCSV(List<User> mailingList, String category) {

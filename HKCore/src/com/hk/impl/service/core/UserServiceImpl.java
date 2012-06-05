@@ -81,6 +81,10 @@ public class UserServiceImpl implements UserService {
         return getUserDao().getMailingList(category, pageNo, perPage);
     }
 
+  public List<User> getMailingListByCategory(EmailCampaign emailCampaign, Category category) {
+        return getUserDao().getMailingListByCategory(emailCampaign, category);
+    }
+
     public Page getAllMailingList(int pageNo, int perPage) {
         return getUserDao().getAllMailingList(pageNo, perPage);
     }
@@ -91,6 +95,10 @@ public class UserServiceImpl implements UserService {
 
     public Page getAllUnverifiedMailingList(int pageNo, int perPage) {
         return getUserDao().getAllUnverifiedMailingList(pageNo, perPage);
+    }
+  
+  public List<User> getAllUnverifiedMailingList(EmailCampaign emailCampaign) {
+        return getUserDao().getAllUnverifiedMailingList(emailCampaign);
     }
 
     public void updateIsProductBought(Order order) {
