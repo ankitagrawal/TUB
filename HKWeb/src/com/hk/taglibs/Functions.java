@@ -66,7 +66,6 @@ public class Functions {
 
     @SuppressWarnings("unused")
     private static final PeriodFormatter formatter;
-    private static final MenuHelper      menuHelper = null;
     // TODO: rewrite
     static {
         formatter = new PeriodFormatterBuilder().appendYears().appendSuffix(" year, ", " years, ").appendMonths().appendSuffix(" month, ", " months, ").appendWeeks().appendSuffix(
@@ -409,6 +408,7 @@ public class Functions {
     }
 
     public static MenuNode getMenuNodeForProduct(Product product) {
+        MenuHelper menuHelper = (MenuHelper) ServiceLocatorFactory.getService("MenuHelper");
         return menuHelper.getMenoNodeFromProduct(product);
     }
 
