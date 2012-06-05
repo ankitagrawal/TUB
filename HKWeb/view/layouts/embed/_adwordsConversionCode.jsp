@@ -195,26 +195,6 @@
   </div>
 </noscript>
 
-<!-- begin Marin Software Tracking Script -->
-<script type='text/javascript'>
-    var _mTrack = _mTrack || [];
-    _mTrack.push(['addTrans', {
-        currency: 'USD',
-        total: '${conversion_value/50.00}',
-        orderId: '${order_id}'
-    }]);
-    _mTrack.push(['processOrders']);
-
-    (function() {
-        var mClientId = '3035ucg15805';
-        var mProto = ('https:' == document.location.protocol ? 'https://' : 'http://');
-        var mHost = 'pro.marinsm.com';
-        var mt = document.createElement('script'); mt.type = 'text/javascript'; mt.async = true;
-        mt.src = mProto + mHost + '/tracker/async/' + mClientId + '.js';
-        var fscr = document.getElementsByTagName('script')[0]; fscr.parentNode.insertBefore(mt, fscr);
-    })();
-</script>
-<!-- end Copyright Marin Software -->
 <%
   }
 %>
