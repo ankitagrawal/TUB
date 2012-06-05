@@ -51,9 +51,9 @@
 
 
 <c:if test="${actionBean.payment != null}">
-  <%
-    if (AnalyticsConstants.analytics) {
-  %>
+  <%--<%--%>
+    <%--if (AnalyticsConstants.analytics) {--%>
+  <%--%>--%>
   <script type="text/javascript">
     var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
     document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
@@ -104,13 +104,15 @@
   <%--Ohana conversion tracking script--%>
   <script SRC='http://bsrv.adohana.com/ohana/conversion.js?id=102&r=${hk:decimal2(actionBean.pricingDto.grandTotal)}' type="text/javascript"></script>
 
-  <%
-    }
-  %>
+  <%--<%--%>
+    <%--}--%>
+  <%--%>--%>
 
 
   <!-- Google Code for Payment Success Conversion Page -->
   <s:layout-render name="/layouts/embed/_adwordsConversionCode.jsp" conversion_value="${hk:decimal2(actionBean.pricingDto.grandTotal)}" order_id="${actionBean.payment.gatewayOrderId}"/>
+  <!-- Remarketing code for users who have made a transcation -->
+  <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="Bm6cCLDY7AIQuLjI5QM" id="1018305592"/>
 
 </c:if>
 
