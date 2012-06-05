@@ -123,6 +123,9 @@ public class GRNAction extends BasePaginatedAction {
     }
 
     public Resolution save() {
+      if (warehouse == null && getPrincipalUser() != null && getPrincipalUser().getSelectedWarehouse() != null) {
+        warehouse = getPrincipalUser().getSelectedWarehouse();
+      }
         if (grn != null && grn.getId() != null) {
             logger.debug("grnLineItems@Save: " + grnLineItems.size());
 
@@ -132,6 +135,10 @@ public class GRNAction extends BasePaginatedAction {
             }
 
             for (GrnLineItem grnLineItem : grnLineItems) {
+                //setting sku when adding new grn line item
+                if(grnLineItem.getSku() == null && grnLineItem.getProductVariant() != null){
+                  grnLineItem.setSku(skuService.getSKU(grnLineItem.getProductVariant(), warehouse));
+                }
                 if (grnLineItem.getQty() != null && grnLineItem.getQty() == 0 && grnLineItem.getId() != null) {
                     grnLineItemDao.delete(grnLineItem);
                 } else if (grnLineItem.getQty() > 0) {
