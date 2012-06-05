@@ -211,7 +211,7 @@
                  varStatus="configOptionCtr">
 
         <c:if test="${configOption.additionalParam eq TH}">
-          <c:forEach items="${configOption.variantConfigValues}" var="configValue">
+          <c:forEach items="${configOption.variantConfigValues}" var="configValue" varStatus="configValueCtr">
             <div class="row">
               <div class="floatleft hkLabel">
 
