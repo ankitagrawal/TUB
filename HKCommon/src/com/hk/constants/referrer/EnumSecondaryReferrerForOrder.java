@@ -14,8 +14,11 @@ public enum EnumSecondaryReferrerForOrder {
   AFFILIATE_UNPAID(7L, "affiliate_unpaid"),
   HEALTHKART_HOMEBANNER(8L, "healthkart_homebanner"),
   EMAIL_NOTIFYME(9L, "email_notifyme"),
-  AFFILIATE_EXTERNAL(10L, "affiliate_external"),
-  AFFILIATE_INTERNAL(11L, "affiliate_internal"),
+  KOMLI(10L, "komli"),
+  OHANA(11L, "ohana"),
+  OTHERS(12L, "others"),
+  NOTIFYME(13L, "notify me"),
+  ENEWSLETTER(14L, "e newsletter"),
   ;
 
 

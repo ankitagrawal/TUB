@@ -22,10 +22,16 @@ import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.dao.payment.PaymentModeDao;
 import com.hk.pact.dao.payment.PaymentStatusDao;
+import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.order.CartLineItemService;
 import com.hk.pact.service.order.OrderService;
+import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.payment.PaymentService;
+import com.hk.pact.service.OrderStatusService;
+import com.hk.pact.service.UserService;
+import com.hk.pact.service.inventory.InventoryService;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.rest.models.order.*;
 import com.hk.rest.pact.service.APIOrderService;
 import com.hk.rest.pact.service.APIUserService;
@@ -33,9 +39,10 @@ import com.hk.util.json.JSONResponseBuilder;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.constants.order.EnumOrderStatus;
+import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.fliter.CartLineItemFilter;
-
 /**
  * Created by IntelliJ IDEA.
  * User: Pradeep
@@ -64,9 +71,21 @@ public class APIOrderServiceImpl implements APIOrderService {
   PaymentModeDao paymentModeDao;
   @Autowired
   PaymentStatusDao paymentStatusDao;
-  @Autowired
-  PaymentService paymentService;
+    @Autowired
 
+  PaymentService paymentService;
+  @Autowired
+    LineItemDao lineItemDao;
+  @Autowired
+  OrderStatusService orderStatusService;
+  @Autowired
+    OrderLoggingService orderLoggingService;
+   @Autowired
+   ShippingOrderService shippingOrderService;
+   @Autowired
+    InventoryService inventoryService;
+   @Autowired
+    UserService userService;
 
   public String createOrderInHK(APIOrder apiOrder) {
     Set<CartLineItem> cartLineItems =  new HashSet<CartLineItem>();
@@ -99,7 +118,54 @@ public class APIOrderServiceImpl implements APIOrderService {
     //update order payment status and order status in general
     getOrderManager().orderPaymentReceieved(payment);
 
+    //finalize order -- create shipping order and update inventory
+     finalizeOrder(order);
     return new JSONResponseBuilder().addField("hkOrderId", order.getId()).build();
+  }
+
+  public void finalizeOrder(Order order){
+
+            Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
+
+            boolean shippingOrderExists = false;
+
+            //Check Inventory health of order lineitems
+            for (CartLineItem cartLineItem : productCartLineItems) {
+                if (lineItemDao.getLineItem(cartLineItem) != null) {
+                    shippingOrderExists = true;
+                }
+            }
+
+            Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
+
+            if (!shippingOrderExists) {
+                shippingOrders = getOrderService().createShippingOrders(order);
+            }
+
+            if (shippingOrders != null && shippingOrders.size() > 0) {
+                // save order with InProcess status since shipping orders have been created
+                order.setOrderStatus(getOrderStatusService().find(EnumOrderStatus.InProcess));
+                order.setShippingOrders(shippingOrders);
+                order = getOrderService().save(order);
+
+                /**
+                 * Order lifecycle activity logging - Order split to shipping orders
+                 */
+                getOrderLoggingService().logOrderActivity(order, getUserService().getAdminUser(), getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), null);
+
+                // auto escalate shipping orders if possible
+                if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
+                    for (ShippingOrder shippingOrder : shippingOrders) {
+                        getShippingOrderService().autoEscalateShippingOrder(shippingOrder);
+                    }
+                }
+
+            }
+
+            //Check Inventory health of order lineitems
+            for (CartLineItem cartLineItem : productCartLineItems) {
+                inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
+            }
   }
 
   public Address createAddress(APIAddress apiAddress, User hkUser) {
@@ -288,4 +354,52 @@ public class APIOrderServiceImpl implements APIOrderService {
   public void setPaymentService(PaymentService paymentService) {
     this.paymentService = paymentService;
   }
+
+    public LineItemDao getLineItemDao() {
+        return lineItemDao;
+    }
+
+    public void setLineItemDao(LineItemDao lineItemDao) {
+        this.lineItemDao = lineItemDao;
+    }
+
+    public OrderStatusService getOrderStatusService() {
+        return orderStatusService;
+    }
+
+    public void setOrderStatusService(OrderStatusService orderStatusService) {
+        this.orderStatusService = orderStatusService;
+    }
+
+    public OrderLoggingService getOrderLoggingService() {
+        return orderLoggingService;
+    }
+
+    public void setOrderLoggingService(OrderLoggingService orderLoggingService) {
+        this.orderLoggingService = orderLoggingService;
+    }
+
+    public ShippingOrderService getShippingOrderService() {
+        return shippingOrderService;
+    }
+
+    public void setShippingOrderService(ShippingOrderService shippingOrderService) {
+        this.shippingOrderService = shippingOrderService;
+    }
+
+    public InventoryService getInventoryService() {
+        return inventoryService;
+    }
+
+    public void setInventoryService(InventoryService inventoryService) {
+        this.inventoryService = inventoryService;
+    }
+
+    public UserService getUserService() {
+        return userService;
+    }
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
 }
