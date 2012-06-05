@@ -88,4 +88,6 @@ public class PermissionConstants {
     public static final String ASSIGN_BIN                    = "ASSIGN_BIN";
     public static final String CREATE_EDIT_SKU               = "CREATE_EDIT_SKU";
     public static final String MANAGE_PAYMENT_HISTORY        = "MANAGE_PAYMENT_HISTORY";
+    public static final String FINANCE_MANAGEMENT            = "FINANCE_MANAGEMENT";
+
 }

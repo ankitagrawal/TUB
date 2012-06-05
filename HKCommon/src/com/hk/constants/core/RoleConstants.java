@@ -55,4 +55,5 @@ public class RoleConstants {
     public static final String ROLE_GROUP_ACCOUNTING_INVOICE = GOD + ", " + ADMIN + ", " + FINANCE + ", " + ROLE_GROUP_LOGISTICS_ADMIN;
 
     public static final String  HK_AFFILIATE_MANAGER         = " HK_AFFILIATE_MANAGER";
+    public static final String FINANCE_ADMIN                 ="FINANCE_ADMIN";
 }

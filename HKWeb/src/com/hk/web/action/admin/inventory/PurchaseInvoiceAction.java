@@ -23,6 +23,7 @@ import com.hk.admin.pact.dao.inventory.PurchaseInvoiceDao;
 import com.hk.admin.pact.service.accounting.ProcurementService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.core.RoleConstants;
+import com.hk.constants.core.EnumPermission;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.po.PurchaseInvoice;
@@ -110,8 +111,9 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
     public Resolution view() {
         List<GoodsReceivedNote> grnList=purchaseInvoice.getGoodsReceivedNotes();
         List<Date> grnDateList=new ArrayList<Date>();
-        boolean isLoggedInUserGod=Functions.collectionContains(userService.getLoggedInUser().getRoleStrings(), RoleConstants.GOD);
-        if(isLoggedInUserGod){
+        boolean isLoggedInUserHasFinancePermission=userService.getLoggedInUser().hasPermission(EnumPermission.FINANCE_MANAGEMENT);
+
+        if(isLoggedInUserHasFinancePermission){
             saveEnabled=true;
         } else if(purchaseInvoice.getReconciled()== null)
         {
