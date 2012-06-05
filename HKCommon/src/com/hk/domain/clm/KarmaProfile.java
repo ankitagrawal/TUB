@@ -13,7 +13,6 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name="user_karma_profile")
-
 public class KarmaProfile{
 
   @Id
