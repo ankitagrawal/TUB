@@ -141,6 +141,9 @@ public class Order implements java.io.Serializable {
     @Column(name = "version", nullable = false)
     private Long                      version         = new Long(1);
 
+    @Column(name = "score", nullable=true)
+    private Long                    score;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id")
     private Store                     store;
@@ -152,6 +155,8 @@ public class Order implements java.io.Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "secondary_referrer_for_order_id")
     private SecondaryReferrerForOrder secondaryReferrerForOrder;
+
+
 
     public Order() {
     }
@@ -194,6 +199,14 @@ public class Order implements java.io.Serializable {
 
     public void setReferredOrder(boolean referredOrder) {
         this.referredOrder = referredOrder;
+    }
+
+    public Long getScore() {
+        return score;
+    }
+
+    public void setScore(Long score) {
+        this.score = score;
     }
 
     public OrderStatus getOrderStatus() {
