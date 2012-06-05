@@ -14,8 +14,4 @@ import java.util.List;
  */
 public interface StateCourierServiceDao  extends BaseDao {
  public List<StateCourierService> getAllStateCourierServiceByState(String stateName);
-
-
-
-
 }

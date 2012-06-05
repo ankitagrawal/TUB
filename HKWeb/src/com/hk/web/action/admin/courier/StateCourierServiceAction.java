@@ -25,9 +25,10 @@ public class StateCourierServiceAction extends BaseAction {
   private String state;
 
   private List<String> stateList=new ArrayList<String>();
-//
-//
-//  private  List<Courier> courierList=new ArrayList<Courier>();
+
+
+
+  private boolean showCourier;
 
 
   
@@ -35,23 +36,19 @@ public class StateCourierServiceAction extends BaseAction {
   @DefaultHandler
   @DontValidate
   public Resolution pre() {
-    stateCourierServiceList = getBaseDao().getAll(StateCourierService.class);
-    stateList=StateList.stateList;
-    return new ForwardResolution("/pages/admin/stateCourierService.jsp");
+      setStateList(StateList.stateList);
+      return new ForwardResolution("/pages/admin/stateCourierService.jsp");
   }
 
-  public Resolution save() {
-    for (StateCourierService stateCourierService : stateCourierServiceList) {
-      getBaseDao().save(stateCourierService);
-    }
-    addRedirectAlertMessage(new SimpleMessage("Changes saved"));
-    return new RedirectResolution(StateCourierServiceAction.class);
-  }
 
   public Resolution search() {
-   List<StateCourierService> StateCourierServiceList  =stateCourierServiceDao.getAllStateCourierServiceByState(state);
+   List<StateCourierService> StateCourierServiceList  = stateCourierServiceDao.getAllStateCourierServiceByState(state);
+    if(StateCourierServiceList.size()>0)  {
     setStateCourierServiceList(StateCourierServiceList);
-   return new ForwardResolution(StateCourierServiceAction.class);
+     setShowCourier(true); 
+    }
+    setShowCourier(false);
+   return new RedirectResolution(StateCourierServiceAction.class);
   }
 
 
@@ -71,12 +68,22 @@ public class StateCourierServiceAction extends BaseAction {
     this.state = state;
   }
 
+  public void  setStateList(List<String> stateList) {
+       this.stateList=stateList;
+    }
+
+     public boolean isShowCourier() {
+    return showCourier;
+  }
+
+  public void setShowCourier(boolean showCourier) {
+    this.showCourier = showCourier;
+  }
+
+
+
   public List<String> getStateList() {
     return stateList;
   }
 
-//   public List<Courier> getCourierList() {
-//    return courierList;
-//  }
-  
 }

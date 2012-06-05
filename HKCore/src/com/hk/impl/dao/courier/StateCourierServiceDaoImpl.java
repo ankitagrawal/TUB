@@ -24,10 +24,6 @@ public class StateCourierServiceDaoImpl extends BaseDaoImpl implements StateCour
      Criteria stateCriteria=getSession().createCriteria(StateCourierServiceDao.class);
      List<StateCourierService> StateCourierServiceList= stateCriteria.add(Restrictions.like("state",stateName)).list();
      return StateCourierServiceList;
-
-
-
-
    }
 
 
