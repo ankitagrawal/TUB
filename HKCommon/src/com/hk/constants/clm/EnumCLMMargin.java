@@ -22,7 +22,8 @@ public enum EnumCLMMargin {
     ;
     private java.lang.String category;
     private java.lang.Double margin;
-    EnumCLMMargin(String category,Double margin){
+    
+    private EnumCLMMargin(String category,Double margin){
         this.category=category;
         this.margin=margin;
     }
@@ -33,6 +34,7 @@ public enum EnumCLMMargin {
         }
         return null;
     }
+    
     public String getCategory() {
         return category;
     }

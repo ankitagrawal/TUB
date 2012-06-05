@@ -35,7 +35,7 @@
       <td id="comboProduct[${ctr.index}].qty" align="center" style="font-size:1.1em;color:black;">${comboProduct.qty}</td>
     </tr>
     <c:choose>
-      <c:when test="${! empty comboProduct.allowedInStockVariants}">
+      <c:when test="${!empty comboProduct.allowedProductVariants}">
         <c:choose>
           <c:when test="${fn:length(comboProduct.allowedInStockVariants) == 1}">
             <tr class="${ctr.index % 2 == 0 ? 'alt':''}">
@@ -104,7 +104,6 @@
             </c:forEach>
           </c:otherwise>
         </c:choose>
-
       </c:when>
       <c:otherwise>
         <c:choose>

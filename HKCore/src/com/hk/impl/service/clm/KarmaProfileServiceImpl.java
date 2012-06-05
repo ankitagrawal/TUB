@@ -1,25 +1,25 @@
 package com.hk.impl.service.clm;
 
-import com.hk.pact.service.clm.KarmaProfileService;
-import com.hk.pact.dao.clm.KarmaProfileDao;
-import com.hk.domain.clm.KarmaProfile;
-import com.hk.domain.user.User;
-import com.hk.domain.order.Order;
-import com.hk.domain.order.CartLineItem;
-import com.hk.pact.service.order.OrderService;
-import com.hk.pact.service.inventory.SkuService;
-import com.hk.core.fliter.CartLineItemFilter;
-import com.hk.constants.catalog.category.CategoryConstants;
-import com.hk.constants.order.EnumCartLineItemType;
-import com.hk.constants.clm.EnumCLMMargin;
-import com.hk.constants.clm.CLMConstants;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.stereotype.Service;
+import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Set;
+import com.hk.constants.clm.EnumCLMMargin;
+import com.hk.constants.clm.CLMConstants;
+import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.core.fliter.CartLineItemFilter;
+import com.hk.domain.clm.KarmaProfile;
+import com.hk.domain.order.CartLineItem;
+import com.hk.domain.order.Order;
+import com.hk.domain.user.User;
+import com.hk.pact.dao.clm.KarmaProfileDao;
+import com.hk.pact.service.clm.KarmaProfileService;
+import com.hk.pact.service.inventory.SkuService;
+import com.hk.pact.service.order.OrderService;
 
 /**
  * Created by IntelliJ IDEA. User: Pradeep Date: May 29, 2012 Time: 3:57:32 PM To change this template use File |
@@ -28,7 +28,7 @@ import java.util.Set;
 @Service
 public class KarmaProfileServiceImpl implements KarmaProfileService {
 
-    private static Logger   logger             = LoggerFactory.getLogger(KarmaProfileService.class);
+    private static Logger   logger = LoggerFactory.getLogger(KarmaProfileService.class);
     @Autowired
     private KarmaProfileDao karmaProfileDao;
     @Autowired
@@ -107,8 +107,9 @@ public class KarmaProfileServiceImpl implements KarmaProfileService {
 
                 EnumCLMMargin marginFactor = EnumCLMMargin.getMarginFromCategory(basketCategoryName);
 
-                if(marginFactor!=null){
-                    points += ((lineItem.getHkPrice() - costPrice) * lineItem.getQty())*marginFactor.getMargin();
+
+                if (marginFactor != null) {
+                    points += ((lineItem.getHkPrice() - costPrice) * lineItem.getQty()) * marginFactor.getMargin();
                 }
             }
         } catch (Exception e) {
