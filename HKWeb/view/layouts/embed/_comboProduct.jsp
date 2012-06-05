@@ -35,7 +35,7 @@
       <td id="comboProduct[${ctr.index}].qty" align="center" style="font-size:1.1em;color:black;">${comboProduct.qty}</td>
     </tr>
     <c:choose>
-      <c:when test="${! empty comboProduct.allowedInStockVariants}">
+      <c:when test="${!empty comboProduct.allowedProductVariants}">
         <c:choose>
           <c:when test="${fn:length(comboProduct.allowedInStockVariants) == 1}">
             <tr class="${ctr.index % 2 == 0 ? 'alt':''}">
@@ -104,7 +104,6 @@
             </c:forEach>
           </c:otherwise>
         </c:choose>
-
       </c:when>
       <c:otherwise>
         <c:choose>
@@ -187,7 +186,15 @@
     </div>
   </div>
   <div class="right_col">
-    <s:submit name="addToCart" value="Buy Now" class="addToCartButton cta"/>
+    <c:choose>
+      <c:when test="${hk:isComboInStock(combo)}">
+        <s:submit name="addToCart" value="Buy Now" class="addToCartButton cta"/>
+      </c:when>
+      <c:otherwise>
+        <div align="center"><a class="button_orange"><b>Sold Out</b></a></div>
+      </c:otherwise>
+    </c:choose>
+
     <s:layout-render name="/layouts/embed/_hkAssistanceMessageForSingleVariant.jsp"/>
   </div>
 </div>
