@@ -1,22 +1,5 @@
 package com.hk.manager;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.PostConstruct;
-
-import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.core.EnumEmailType;
 import com.hk.constants.core.Keys;
@@ -51,6 +34,15 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.util.HtmlUtil;
+import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import java.util.*;
 
 @SuppressWarnings("unchecked")
 @Component
@@ -429,7 +421,7 @@ public class EmailManager {
 
     public boolean sendOrderShippedEmail(ShippingOrder shippingOrder, String invoiceLink) {
         Shipment shipment = shippingOrder.getShipment();
-        shipment.setTrackLink(getLinkManager().getOrderTrackLink(shipment.getTrackingId(), shipment.getCourier().getId(),shippingOrder));
+        shipment.setTrackLink(getLinkManager().getOrderTrackLink(shipment.getTrackingId(), shipment.getCourier().getId(), shippingOrder));
         HashMap valuesMap = new HashMap();
         valuesMap.put("order", shippingOrder);
         valuesMap.put("invoiceLink", invoiceLink);
@@ -567,8 +559,9 @@ public class EmailManager {
         HashMap valuesMap = new HashMap();
         valuesMap.put("user", user);
         valuesMap.put("gatewayOrderId", gatewayOrderId);
-        emailService.sendHtmlEmail(EmailTemplateConstants.paymentFailEmail, valuesMap, "info@healthkart.com", "Customer Support");
-        emailService.sendHtmlEmail(EmailTemplateConstants.paymentFailEmail, valuesMap, "pratham@healthkart.com", "Pratham");
+        emailService.sendHtmlEmail(EmailTemplateConstants.paymentFailEmail, valuesMap, "jatin.nayyar@healthkart.com", "Outbound Calling Team");
+        //emailService.sendHtmlEmail(EmailTemplateConstants.paymentFailEmail, valuesMap, "info@healthkart.com", "Customer Support");
+        //emailService.sendHtmlEmail(EmailTemplateConstants.paymentFailEmail, valuesMap, "pratham@healthkart.com", "Pratham");
         emailService.sendHtmlEmail(EmailTemplateConstants.paymentFailEmail, valuesMap, user.getEmail(), user.getName(), "info@healthkart.com");
     }
 
