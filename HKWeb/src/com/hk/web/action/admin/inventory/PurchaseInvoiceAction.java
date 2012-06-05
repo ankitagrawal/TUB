@@ -20,7 +20,7 @@ import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
 import com.hk.admin.pact.dao.inventory.PurchaseInvoiceDao;
-import com.hk.admin.pact.dao.payment.PaymentHistoryDao;
+import com.hk.admin.pact.service.accounting.ProcurementService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.core.RoleConstants;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -31,7 +31,6 @@ import com.hk.domain.inventory.po.PurchaseInvoiceStatus;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.domain.payment.PaymentHistory;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
@@ -56,14 +55,14 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
     @Autowired
     GoodsReceivedNoteDao                  goodsReceivedNoteDao;
     @Autowired
-    PaymentHistoryDao                     paymentHistoryDao;
-    @Autowired
     SkuService                            skuService;
     @Autowired
     UserService                           userService;
     @Autowired
     private ProductVariantService         productVariantService;
-
+    @Autowired
+    private ProcurementService            procurementService;
+  
     private static Logger                 logger                    = Logger.getLogger(PurchaseInvoiceAction.class);
 
     private Integer                       defaultPerPage            = 20;
@@ -170,23 +169,16 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
     }
 
     public Resolution delete() {
-        if (purchaseInvoice != null && purchaseInvoice.getId() != null) {
-            List<GoodsReceivedNote> grns = purchaseInvoice.getGoodsReceivedNotes();
-            List<PaymentHistory> paymentHistories = paymentHistoryDao.getByPurchaseInvoice(purchaseInvoice);
-            for (GoodsReceivedNote grn : grns) {
-                grn.setReconciled(false);
-                goodsReceivedNoteDao.save(grn);
-            }
-            for (PurchaseInvoiceLineItem purchaseInvoiceLineItem : purchaseInvoiceLineItems) {
-                purchaseInvoiceDao.delete(purchaseInvoiceLineItem);
-            }
-            for(PaymentHistory paymentHistory : paymentHistories){
-                paymentHistoryDao.delete(paymentHistory);
-            }
-            purchaseInvoiceDao.delete(purchaseInvoice);
-        }
+      Boolean deleteStatus = false;
+      if (purchaseInvoice != null && purchaseInvoice.getId() != null) {
+        deleteStatus = procurementService.deletePurchaseInvoice(purchaseInvoice);
+      }
+      if(deleteStatus == false){
+        addRedirectAlertMessage(new SimpleMessage("Unable to delete purchase invoice, please contact admin."));
+      }else{
         addRedirectAlertMessage(new SimpleMessage("Purchase Invoice Deleted."));
-        return new RedirectResolution(PurchaseInvoiceAction.class);
+      }
+      return new RedirectResolution(PurchaseInvoiceAction.class);
     }
 
     @SuppressWarnings("unchecked")

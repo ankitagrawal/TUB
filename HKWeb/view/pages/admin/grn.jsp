@@ -297,6 +297,8 @@
 							${productVariant.id}
 						<s:hidden class="variant" name="grnLineItems[${ctr.index}].productVariant"
 						          value="${grnLineItemDto.grnLineItem.productVariant.id}"/>
+            <%--<s:hidden class="sku" name="grnLineItems[${ctr.index}].sku"
+                      value="${sku}"></s:hidden>--%>
 					</td>
 					<td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.upc" value="${grnLineItemDto.grnLineItem.sku.productVariant.upc}"/></td>
 					<td>${product.name}<br/>${productVariant.optionsCommaSeparated}
