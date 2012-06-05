@@ -13,16 +13,8 @@ public class AnalyticsConstants {
 
     public static String  gaCode;
 
-    public static boolean analytics = true;
+    public static boolean analytics;
 
-
-    static {
-        analytics = true;
-        gaCode = "UA-21820217-1";
-    }
-
-    //TODO MERE PALLE NAHI PADA
-/*
     @Value("#{hkEnvProps['" + Keys.Env.analytics + "']}")
     private String        analyticsString;
 
@@ -33,11 +25,9 @@ public class AnalyticsConstants {
     public void postConstruction() {
         // String anaylticsString = (String) ServiceLocatorFactory.getProperty(Keys.Env.analytics);
 
-//        analytics = StringUtils.isNotBlank(analyticsString) && Boolean.parseBoolean(analyticsString);
-        analytics = true;
+        analytics = StringUtils.isNotBlank(analyticsString) && Boolean.parseBoolean(analyticsString);
 
         gaCode = analyticsCode;
 
     }
-*/
 }
