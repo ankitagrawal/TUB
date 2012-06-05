@@ -62,11 +62,11 @@ public class PaymentSuccessAction extends BaseAction {
 
     public Resolution pre() {
         payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
-        if (payment != null) {
+        if (payment != null && EnumPaymentStatus.getPaymentSuccessPageStatusIds().contains(payment.getPaymentStatus().getId())) {
 
             Long paymentStatusId = payment.getPaymentStatus() != null ? payment.getPaymentStatus().getId() : null;
 
-            logger.debug("payment success page payment status " + paymentStatusId);
+            logger.info("payment success page payment status " + paymentStatusId);
 
             order = payment.getOrder();
             pricingDto = new PricingDto(order.getCartLineItems(), payment.getOrder().getAddress());
