@@ -156,7 +156,7 @@
       Escapes characters that could be interpreted as XML markup.
     </description>
     <name>convertNewLineToBr</name>
-    <function-class>com.hk.taglibs.Functions</function-class>
+    <function-class>com.hk.util.HtmlUtil</function-class>
     <function-signature>java.lang.String convertNewLineToBr(java.lang.String)</function-signature>
     <example>
       ${hk:convertNewLineToBr(param:info)}
@@ -544,7 +544,7 @@
     </description>
     <name>getTopDealVariant</name>
     <function-class>com.hk.taglibs.Functions</function-class>
-    <function-signature>mhc.domain.ProductVariant getTopDealVariant(java.lang.Object)</function-signature>
+    <function-signature>com.hk.domain.catalog.product.ProductVariant getTopDealVariant(java.lang.Object)</function-signature>
     <example>
       ${hk:getTopDealVariant(${object})}
     </example>
@@ -628,7 +628,7 @@
     </description>
     <name>getMenuNodeForProduct</name>
     <function-class>com.hk.taglibs.Functions</function-class>
-    <function-signature>mhc.common.dto.MenuNode getMenuNodeForProduct(mhc.domain.Product)</function-signature>
+    <function-signature>com.hk.dto.menu.MenuNode getMenuNodeForProduct(com.hk.domain.catalog.product.Product)</function-signature>
     <example>
       ${hk:getMenuNodeForProduct(${product)}
     </example>
@@ -676,7 +676,7 @@
     </description>
     <name>getCombo</name>
     <function-class>com.hk.taglibs.Functions</function-class>
-    <function-signature>mhc.domain.Combo getCombo(java.lang.Object)</function-signature>
+    <function-signature>com.hk.domain.catalog.product.combo.Combo getCombo(java.lang.Object))</function-signature>
     <example>
       ${hk:getCombo(${object})}
     </example>
