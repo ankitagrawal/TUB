@@ -14,6 +14,7 @@ import com.hk.domain.order.Order;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.domain.email.EmailCampaign;
 import com.hk.impl.dao.user.UserDaoImpl;
 import com.hk.pact.dao.user.UserCartDao;
 import com.hk.pact.dao.user.UserDao;
@@ -80,14 +81,30 @@ public class UserServiceImpl implements UserService {
         return getUserDao().getMailingList(category, pageNo, perPage);
     }
 
+  public List<User> getMailingListByCategory(EmailCampaign emailCampaign, Category category) {
+        return getUserDao().getMailingListByCategory(emailCampaign, category);
+    }
+
+  public Long getMailingListCountByCategory(EmailCampaign emailCampaign, Category category) {
+        return getUserDao().getMailingListCountByCategory(emailCampaign, category);
+    }
+
     public Page getAllMailingList(int pageNo, int perPage) {
         return getUserDao().getAllMailingList(pageNo, perPage);
+    }
+
+  public List<User> getAllMailingList(EmailCampaign emailCampaign, List roleList) {
+        return getUserDao().getAllMailingList(emailCampaign, roleList);
+    }
+
+  public Long getAllMailingListCount(EmailCampaign emailCampaign, List roleList) {
+        return getUserDao().getAllMailingListCount(emailCampaign, roleList);
     }
 
     public Page getAllUnverifiedMailingList(int pageNo, int perPage) {
         return getUserDao().getAllUnverifiedMailingList(pageNo, perPage);
     }
-
+  
     public void updateIsProductBought(Order order) {
         getUserCartDao().updateIsProductBought(order);
     }

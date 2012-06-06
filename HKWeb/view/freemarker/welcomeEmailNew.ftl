@@ -60,9 +60,7 @@ Hi ${user.name}, welcome to HealthKart.com
           <td height="15"></td>
         </tr>
         <tr>
-          <td align="left" width="579" valign="top"><a href="${activationLink}"><img
-                  src="http://img.healthkart.com/email/welcome_emailer_new/images/activate_btn.jpg"
-                  alt="Activate Account" title="Activate Account" width="139" height="26" border="0"/></td>
+          
         </tr>
         <tr>
           <td height="15"></td>
@@ -71,7 +69,7 @@ Hi ${user.name}, welcome to HealthKart.com
           <td align="left" valign="top">If clicking on the link does not work, cut and paste the following URL in your
             browser:<br/>
 
-            <a href="#">${activationLink}</a></td>
+</td>
         </tr>
         <tr>
           <td align="left" valign="top">&nbsp;</td>
@@ -86,11 +84,11 @@ Hi ${user.name}, welcome to HealthKart.com
         <tr>
           <td align="left" height="30px" valign="middle" bgcolor="#ececec"
               style="border-bottom:solid 1px #FFFFFF; padding-left:10px">Username: <span
-                  style="color:#FF0000; font-weight:bold; ">${user.email}</span></td>
+                  style="color:#FF0000; font-weight:bold; "></span></td>
         </tr>
         <tr>
           <td align="left" height="30px" valign="middle" bgcolor="#ececec" style="padding-left:10px">Password: <span
-                  style="color:#FF0000; font-weight:bold; "> ${user.password}</span></td>
+                  style="color:#FF0000; font-weight:bold; "> </span></td>
         </tr>
         <tr>
           <td align="left" valign="top">&nbsp;</td>

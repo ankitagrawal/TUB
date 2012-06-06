@@ -14,6 +14,7 @@ import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.transform.Transformers;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -237,6 +238,7 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
 
     private void resetHibernateAfterWrite() {
         getHibernateTemplate().flush();
+        getHibernateTemplate().clear();
         getHibernateTemplate().getSessionFactory().getCurrentSession().setFlushMode(FlushMode.MANUAL);
         getHibernateTemplate().setCheckWriteOperations(true);
     }
@@ -338,12 +340,28 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
                     sqlQuery.setMaxResults(rows);
                 }
                 sqlQuery.setFirstResult(start);
-
                 return sqlQuery.list();
             }
 
         });
     }
+
+  public <T> List<T> findByNativeSql(final String nativeSql, final Class<T> c, final Object... params) {
+          return (List<T>) getHibernateTemplate().execute(new HibernateCallback() {
+
+              @Override
+              public Object doInHibernate(Session session) throws HibernateException, SQLException {
+                  SQLQuery sqlQuery = session.createSQLQuery("select * from (" + nativeSql + ") t");
+
+                  int i = 0;
+                  for (Object param : params) {
+                      sqlQuery.setParameter(i, param);
+                      i++;
+                  }
+                  return (List<T>)sqlQuery.setResultTransformer(Transformers.aliasToBean(c)).list();
+              }
+          });
+      }
 
     public List findByNativeSqlNoType(final String sql, final int start, final int rows, final Object... params) {
         return findByNativeSql(sql, start, rows, params);

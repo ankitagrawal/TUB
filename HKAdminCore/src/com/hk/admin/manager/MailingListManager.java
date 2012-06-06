@@ -13,101 +13,126 @@ import com.akube.framework.dao.Page;
 import com.hk.constants.core.Keys;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.user.User;
+import com.hk.domain.email.EmailCampaign;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.CategoryService;
 
 @Component
 public class MailingListManager {
 
-    private String mailingListFilePath;
+  private String mailingListFilePath;
 
-    @Autowired
-    private UserService userService;
-    private CategoryService categoryService;
-    
-    @Value("#{hkEnvProps['" + Keys.Env.mailingListDir + "']}")
-    String         mailingListDirPath;
+  @Autowired
+  private UserService userService;
+  private CategoryService categoryService;
 
-    public List<User> getUserList(Category category, int pageNo, int perPage) {
-        Page allMailingListPage = getUserService().getMailingList(category, pageNo, perPage);
-        List<User> allMailingList = new ArrayList<User>();
-        if (allMailingListPage != null) {
-            allMailingList = allMailingListPage.getList();
-        }
-        return allMailingList;
+  @Value("#{hkEnvProps['" + Keys.Env.mailingListDir + "']}")
+  String         mailingListDirPath;
+
+  public List<User> getUserList(Category category, int pageNo, int perPage) {
+    Page allMailingListPage = getUserService().getMailingList(category, pageNo, perPage);
+    List<User> allMailingList = new ArrayList<User>();
+    if (allMailingListPage != null) {
+      allMailingList = allMailingListPage.getList();
     }
+    return allMailingList;
+  }
 
-    public List<User> getAllUserList(int pageNo, int perPage) {
-        Page allMailingListPage = getUserService().getAllMailingList(pageNo, perPage);
-        List<User> allMailingList = new ArrayList<User>();
-        if (allMailingListPage != null) {
-            allMailingList = allMailingListPage.getList();
-        }
-        return allMailingList;
-    }
+  public List<User> getUserListByCategory(EmailCampaign emailCampaign, Category category) {
+    List<User> allMailingList = getUserService().getMailingListByCategory(emailCampaign, category);
 
-    public List<User> getAllUnverifiedUserList(int pageNo, int perPage) {
-        Page allMailingListPage = getUserService().getAllUnverifiedMailingList(pageNo, perPage);
-        List<User> allMailingList = new ArrayList<User>();
-        if (allMailingListPage != null) {
-            allMailingList = allMailingListPage.getList();
-        }
-        return allMailingList;
-    }
+    return allMailingList;
+  }
 
-    public void writeIntoCSV(List<User> mailingList, String category) {
-        this.setMailingListFilePath(mailingListDirPath + "/" + category + "MailingList.csv");
-        try {
-            FileWriter writer = new FileWriter(this.getMailingListFilePath());
-            writer.append("user,email,firstname,userHash\n");
-            for (User user : mailingList) {
-                writer.append("\"" + user.getName() + "\"");
-                writer.append(",");
-                writer.append("\"" + user.getEmail() + "\"");
-                writer.append(",");
-                writer.append("\"" + user.getFirstName() + "\"");
-                writer.append(",");
-                writer.append("\"" + user.getUserHash() + "\"");
-                writer.append("\n");
-            }
-            writer.flush();
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            // System.out.println(e);
-        }
-    }
+  public Long getUserListCountByCategory(EmailCampaign emailCampaign, Category category) {
+    Long allMailingList = getUserService().getMailingListCountByCategory(emailCampaign, category);
 
-    public static void main(String[] args) {
-        //CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
-        //Category cat = getCategoryService().getCategoryByName("nutrition");
-        //(new MailingListManager()).getUserList(cat, 1, 10000);
-    }
+    return allMailingList;
+  }
 
-    public String getMailingListFilePath() {
-        return mailingListFilePath;
+  public List<User> getAllUserList(int pageNo, int perPage) {
+    Page allMailingListPage = getUserService().getAllMailingList(pageNo, perPage);
+    List<User> allMailingList = new ArrayList<User>();
+    if (allMailingListPage != null) {
+      allMailingList = allMailingListPage.getList();
     }
+    return allMailingList;
+  }
 
-    public void setMailingListFilePath(String mailingListFilePath) {
-        this.mailingListFilePath = mailingListFilePath;
-    }
+  public List<User> getAllUserList(EmailCampaign emailCampaign, List roleList) {
+    List<User> allMailingList = getUserService().getAllMailingList(emailCampaign, roleList);
 
-    public UserService getUserService() {
-        return userService;
-    }
+    return allMailingList;
+  }
 
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
+  public Long getAllUserListCount(EmailCampaign emailCampaign, List roleList) {
+    Long allMailingListCount = getUserService().getAllMailingListCount(emailCampaign, roleList);
 
-    public CategoryService getCategoryService() {
-        return categoryService;
-    }
+    return allMailingListCount;
+  }
 
-    public void setCategoryService(CategoryService categoryService) {
-        this.categoryService = categoryService;
+  public List<User> getAllUnverifiedUserList(int pageNo, int perPage) {
+    Page allMailingListPage = getUserService().getAllUnverifiedMailingList(pageNo, perPage);
+    List<User> allMailingList = new ArrayList<User>();
+    if (allMailingListPage != null) {
+      allMailingList = allMailingListPage.getList();
     }
-    
-    
-    
+    return allMailingList;
+  }
+
+  public void writeIntoCSV(List<User> mailingList, String category) {
+    this.setMailingListFilePath(mailingListDirPath + "/" + category + "MailingList.csv");
+    try {
+      FileWriter writer = new FileWriter(this.getMailingListFilePath());
+      writer.append("user,email,firstname,userHash\n");
+      for (User user : mailingList) {
+        writer.append("\"" + user.getName() + "\"");
+        writer.append(",");
+        writer.append("\"" + user.getEmail() + "\"");
+        writer.append(",");
+        writer.append("\"" + user.getFirstName() + "\"");
+        writer.append(",");
+        writer.append("\"" + user.getUserHash() + "\"");
+        writer.append("\n");
+      }
+      writer.flush();
+      writer.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+      // System.out.println(e);
+    }
+  }
+
+  public static void main(String[] args) {
+    //CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
+    //Category cat = getCategoryService().getCategoryByName("nutrition");
+    //(new MailingListManager()).getUserList(cat, 1, 10000);
+  }
+
+  public String getMailingListFilePath() {
+    return mailingListFilePath;
+  }
+
+  public void setMailingListFilePath(String mailingListFilePath) {
+    this.mailingListFilePath = mailingListFilePath;
+  }
+
+  public UserService getUserService() {
+    return userService;
+  }
+
+  public void setUserService(UserService userService) {
+    this.userService = userService;
+  }
+
+  public CategoryService getCategoryService() {
+    return categoryService;
+  }
+
+  public void setCategoryService(CategoryService categoryService) {
+    this.categoryService = categoryService;
+  }
+
+
+
 }
