@@ -116,8 +116,8 @@ public class CourierServiceInfoAction extends BaseAction {
             Set<CourierServiceInfo> courierServiceInfoSet = xslParser.readCourierServiceInfoList(excelFile);
             for (CourierServiceInfo courierServiceInfo : courierServiceInfoSet) {
                 tmpObj = courierServiceInfo;
-                CourierServiceInfo tmpObj2 = courierServiceInfoDao.getCourierServiceByPincodeAndCourier(courierServiceInfo.getCourier().getId(),
-                        courierServiceInfo.getPincode().getPincode().toString(), courierServiceInfo.isCodAvailable());
+                CourierServiceInfo tmpObj2 = courierServiceInfoDao.getCourierServiceByPincodeAndCourierWithoutCOD(courierServiceInfo.getCourier().getId(),
+                        courierServiceInfo.getPincode().getPincode().toString());
                 if (tmpObj2 != null) {
                     if (courierServiceInfo.isDeleted()) {
                         courierServiceInfoDao.delete(tmpObj2);
