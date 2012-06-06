@@ -238,6 +238,7 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
 
     private void resetHibernateAfterWrite() {
         getHibernateTemplate().flush();
+        getHibernateTemplate().clear();
         getHibernateTemplate().getSessionFactory().getCurrentSession().setFlushMode(FlushMode.MANUAL);
         getHibernateTemplate().setCheckWriteOperations(true);
     }

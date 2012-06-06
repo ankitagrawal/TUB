@@ -44,6 +44,12 @@ public class MailingListManager {
     return allMailingList;
   }
 
+  public Long getUserListCountByCategory(EmailCampaign emailCampaign, Category category) {
+    Long allMailingList = getUserService().getMailingListCountByCategory(emailCampaign, category);
+
+    return allMailingList;
+  }
+
   public List<User> getAllUserList(int pageNo, int perPage) {
     Page allMailingListPage = getUserService().getAllMailingList(pageNo, perPage);
     List<User> allMailingList = new ArrayList<User>();
@@ -53,10 +59,16 @@ public class MailingListManager {
     return allMailingList;
   }
 
-  public List<User> getAllUserList(EmailCampaign emailCampaign) {
-    List<User> allMailingList = getUserService().getAllMailingList(emailCampaign);
+  public List<User> getAllUserList(EmailCampaign emailCampaign, List roleList) {
+    List<User> allMailingList = getUserService().getAllMailingList(emailCampaign, roleList);
 
     return allMailingList;
+  }
+
+  public Long getAllUserListCount(EmailCampaign emailCampaign, List roleList) {
+    Long allMailingListCount = getUserService().getAllMailingListCount(emailCampaign, roleList);
+
+    return allMailingListCount;
   }
 
   public List<User> getAllUnverifiedUserList(int pageNo, int perPage) {
@@ -66,12 +78,6 @@ public class MailingListManager {
       allMailingList = allMailingListPage.getList();
     }
     return allMailingList;
-  }
-
-  public List<User> getAllUnverifiedUserList(EmailCampaign emailCampaign) {
-    List<User> allMailingListPage = getUserService().getAllUnverifiedMailingList(emailCampaign);
-
-    return allMailingListPage;
   }
 
   public void writeIntoCSV(List<User> mailingList, String category) {

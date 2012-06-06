@@ -85,22 +85,26 @@ public class UserServiceImpl implements UserService {
         return getUserDao().getMailingListByCategory(emailCampaign, category);
     }
 
+  public Long getMailingListCountByCategory(EmailCampaign emailCampaign, Category category) {
+        return getUserDao().getMailingListCountByCategory(emailCampaign, category);
+    }
+
     public Page getAllMailingList(int pageNo, int perPage) {
         return getUserDao().getAllMailingList(pageNo, perPage);
     }
 
-  public List<User> getAllMailingList(EmailCampaign emailCampaign) {
-        return getUserDao().getAllMailingList(emailCampaign);
+  public List<User> getAllMailingList(EmailCampaign emailCampaign, List roleList) {
+        return getUserDao().getAllMailingList(emailCampaign, roleList);
+    }
+
+  public Long getAllMailingListCount(EmailCampaign emailCampaign, List roleList) {
+        return getUserDao().getAllMailingListCount(emailCampaign, roleList);
     }
 
     public Page getAllUnverifiedMailingList(int pageNo, int perPage) {
         return getUserDao().getAllUnverifiedMailingList(pageNo, perPage);
     }
   
-  public List<User> getAllUnverifiedMailingList(EmailCampaign emailCampaign) {
-        return getUserDao().getAllUnverifiedMailingList(emailCampaign);
-    }
-
     public void updateIsProductBought(Order order) {
         getUserCartDao().updateIsProductBought(order);
     }

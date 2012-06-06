@@ -58,9 +58,11 @@ public interface UserDao extends BaseDao {
 
   public void setRoleDao(RoleDao roleDao);
 
-  public List<User> getAllMailingList(EmailCampaign emailCampaign);
+  public List<User> getAllMailingList(EmailCampaign emailCampaign, List roleList);
 
-  public List<User> getAllUnverifiedMailingList(EmailCampaign emailCampaign);
+  public Long getAllMailingListCount(EmailCampaign emailCampaign, List roleList);
 
   public List<User> getMailingListByCategory(EmailCampaign emailCampaign, Category category);
+
+  public Long getMailingListCountByCategory(EmailCampaign emailCampaign, Category category);
 }

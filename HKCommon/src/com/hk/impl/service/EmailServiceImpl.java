@@ -3,9 +3,7 @@ package com.hk.impl.service;
 import java.util.Map;
 import java.util.List;
 import java.util.HashMap;
-import java.util.Date;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import org.apache.commons.lang.StringUtils;
@@ -27,9 +25,7 @@ import com.hk.pact.dao.email.EmailRecepientDao;
 import com.hk.pact.dao.BaseDao;
 */
 import com.hk.service.impl.FreeMarkerService;
-import com.hk.domain.core.EmailType;
 import com.hk.domain.email.EmailCampaign;
-import com.hk.domain.email.EmailRecepient;
 import freemarker.template.Template;
 
 /**
@@ -37,9 +33,8 @@ import freemarker.template.Template;
  */
 @Service
 public class EmailServiceImpl implements EmailService {
-  private static int toBeDeletedCounter = 1;
-  private static Logger logger = LoggerFactory.getLogger(EmailService.class);
-
+  private static Logger logger = LoggerFactory.getLogger(EmailServiceImpl.class);
+  private final int EMAIL_THREAD_POOL_COUNT = 3;
   @Autowired
   FreeMarkerService     freeMarkerService;
   @Value("#{hkEnvProps['" + Keys.Env.hkNoReplyEmail + "']}")
@@ -51,7 +46,7 @@ public class EmailServiceImpl implements EmailService {
   @Value("#{hkEnvProps['" + Keys.Env.hkContactName + "']}")
   private String        contactName;
 
-  private ExecutorService execThreadPool = Executors.newFixedThreadPool(5);
+  private ExecutorService emailExecutorService = Executors.newFixedThreadPool(EMAIL_THREAD_POOL_COUNT );
   /*@Autowired
   private EmailerHistoryDao emailerHistoryDao;
   @Autowired
@@ -143,10 +138,7 @@ public class EmailServiceImpl implements EmailService {
 
   public void sendBulkHtmlEmail(List<Map<String, HtmlEmail>> htmlEmails, EmailCampaign emailCampaign) {
     // send this email asynchrounously, we do not want to wait for this process
-    execThreadPool.execute(new SendBulkEmailAsyncThread(htmlEmails, emailCampaign));
-    //SendBulkEmailAsyncThread emailAsyncThread = new SendBulkEmailAsyncThread(htmlEmails, emailCampaign);
-
-    //emailAsyncThread.start();
+    emailExecutorService.execute(new SendBulkEmailAsyncThread(htmlEmails, emailCampaign));
   }
 
   /**
@@ -186,26 +178,19 @@ public class EmailServiceImpl implements EmailService {
       this.emailCampaign = emailCampaign;
     }
 
-    public void run() {
-      //try {
+    public void run() {    
+      try {
+        for (Map<String, HtmlEmail> emailMap : emails){
 
-      for (Map<String, HtmlEmail> emailMap : emails){
-        for(Map.Entry<String, HtmlEmail> mapEntry : emailMap.entrySet()) {
-          Email email = mapEntry.getValue();
-         // EmailRecepient emailRecepient = emailRecepientDao.findByRecepient(mapEntry.getKey());
-          //email.send();
-          logger.debug("sending mail : " + mapEntry.getKey());
-          /*emailRecepient.setEmailCount(emailRecepient.getEmailCount() + 1);
-          emailRecepient.setLastEmailDate(new Date());
-          emailRecepientDao.save(emailRecepient);
-          emailerHistoryDao.createEmailerHistory("no-reply@healthkart.com", "HealthKart",
-              baseDao.get(EmailType.class, EnumEmailType.CampaignEmail.getId()), emailRecepient, emailCampaign, "");
-*/
+          for(String emailId : emailMap.keySet()) {
+            Email email = emailMap.get(emailId);
+            logger.debug("sending mail : " + emailId);
+            email.send();
+          }
         }
-      }
-      /*} catch (EmailException e) {
+      } catch (EmailException e) {
         logger.error("EmailException in SendEmailAsyncThread.run", e);
-      }*/
+      }
     }
   }
 

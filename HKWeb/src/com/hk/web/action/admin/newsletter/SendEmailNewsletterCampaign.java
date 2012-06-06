@@ -2,10 +2,7 @@ package com.hk.web.action.admin.newsletter;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
@@ -30,12 +27,14 @@ import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.manager.MailingListManager;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.core.EnumRole;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.core.EmailType;
 import com.hk.domain.email.EmailCampaign;
 import com.hk.domain.user.User;
 import com.hk.manager.EmailManager;
 import com.hk.pact.dao.marketing.EmailCampaignDao;
+import com.hk.pact.dao.RoleDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.util.ParseCsvFile;
@@ -60,7 +59,7 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
   @Validate(required = true, on = { "confirmCampaign", "sendCampaign" })
   String                     categories;
 
-  int                        userCount;
+  Long                        userCount = 0L;
   // @Named(Keys.Env.adminUploads)
   @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
   String                     adminUploadsPath;
@@ -85,6 +84,8 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
   String                     sheetName;
   Page                       emailCampaignPage;
   private Integer            defaultPerPage = 20;
+  @Autowired
+  private RoleDao            roleDao;
 
   @DefaultHandler
   @DontValidate
@@ -102,63 +103,24 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
   }
 
   public Resolution confirmCampaign() {
-    
+
     String[] categoryArray = StringUtils.split(categories);
-    List<String> finalCategories = new ArrayList<String>();
-    
+
     if (categories.equalsIgnoreCase("all")) {
-      finalCategories.add("all_categories");
+      userCount = mailingListManager.getAllUserListCount(emailCampaign, Arrays.asList(getRoleDao().getRoleByName(EnumRole.HK_USER)));
     } else if (categories.equalsIgnoreCase("all-unverified")) {
-      finalCategories.add("all_categories");
-      finalCategories.add("unverified");
-    } else {
+      userCount = mailingListManager.getAllUserListCount(emailCampaign, Arrays.asList(getRoleDao().getRoleByName(EnumRole.HK_UNVERIFIED)));
+    }else {
       for (String categoryName : categoryArray) {
         Category category = getCategoryService().getCategoryByName(StringUtils.trim(categoryName));
         if (category != null) {
-          finalCategories.add(category.getName());
+          userCount += mailingListManager.getUserListCountByCategory(emailCampaign, category);
         }
       }
     }
 
-    List<User> users = new ArrayList<User>();
-    do {
-
-      users = new ArrayList<User>();
-      if (categories.equalsIgnoreCase("all")) {
-        users = (mailingListManager.getAllUserList(emailCampaign));
-      } else if (categories.equalsIgnoreCase("all-unverified")) {
-        users = (mailingListManager.getAllUnverifiedUserList(emailCampaign));
-      }
-
-      if (users.size() > 0) {
-        logger.info(" user list size " + users.size());
-        String xsmtpapi = SendGridUtil.getSendGridEmailNewsLetterHeaderJson(finalCategories, emailCampaign);
-        getAdminEmailManager().sendCampaignMails(users, emailCampaign, xsmtpapi);
-      }
-
-    } while(users.size() > 0);
-
-    if (!categories.equalsIgnoreCase("all") && !categories.equalsIgnoreCase("all-unverified")) {
-      for (String categoryName : categoryArray) {
-        Category category = getCategoryService().getCategoryByName(StringUtils.trim(categoryName));
-        if (category != null) {
-          do {
-            users.clear();
-            users.addAll(mailingListManager.getUserListByCategory(emailCampaign, category));
-            if (users.size() > 0) {
-              logger.info(" user list size " + users.size());
-            }
-            String xsmtpapi = SendGridUtil.getSendGridEmailNewsLetterHeaderJson(finalCategories, emailCampaign);
-            getAdminEmailManager().sendCampaignMails(users, emailCampaign, xsmtpapi);
-
-          } while(users.size() > 0);
-        }
-      }
-    }
-    
-    addRedirectAlertMessage(new SimpleMessage("Sending campaign in progress : " + emailCampaign.getName()));
-    return new RedirectResolution(EmailNewsletterAdmin.class);
-    //return new ForwardResolution("/pages/admin/newsletter/confirmSendCampaign.jsp");
+    logger.info(" user list size " + userCount);
+    return new ForwardResolution("/pages/admin/newsletter/confirmSendCampaign.jsp");
   }
 
   public Resolution testCampaign() {
@@ -227,14 +189,10 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
   }
 
   public Resolution sendCampaign() {
+    addRedirectAlertMessage(new SimpleMessage("Sending campaign in progress : " + emailCampaign.getName()));
     String[] categoryArray = StringUtils.split(categories);
-    List<User> users = new ArrayList<User>();
-    List<User> tempUsers = new ArrayList<User>();
-
-    int perPage = 499;
-    int pageNo = 1;
-
     List<String> finalCategories = new ArrayList<String>();
+
     if (categories.equalsIgnoreCase("all")) {
       finalCategories.add("all_categories");
     } else if (categories.equalsIgnoreCase("all-unverified")) {
@@ -249,66 +207,41 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
       }
     }
 
-    String xsmtpapi = SendGridUtil.getSendGridEmailNewsLetterHeaderJson(finalCategories, emailCampaign);
-    boolean firstTime = true;
-
-    while (tempUsers.size() > 0 || firstTime) {
-      users.clear();
+    List<User> users;
+    do {
+      users = new ArrayList<User>();
       if (categories.equalsIgnoreCase("all")) {
-        users.addAll(mailingListManager.getAllUserList(pageNo, perPage));
+        users = mailingListManager.getAllUserList(emailCampaign, Arrays.asList(getRoleDao().getRoleByName(EnumRole.HK_USER)));
       } else if (categories.equalsIgnoreCase("all-unverified")) {
-        users.addAll(mailingListManager.getAllUnverifiedUserList(pageNo, perPage));
+        users = mailingListManager.getAllUserList(emailCampaign, Arrays.asList(getRoleDao().getRoleByName(EnumRole.HK_UNVERIFIED)));
       }
 
       if (users.size() > 0) {
-        logger.info("page no " + pageNo + " user list size " + users.size() + users.iterator().next().getEmail());
+        logger.info(" user list size " + users.size());
+        String xsmtpapi = SendGridUtil.getSendGridEmailNewsLetterHeaderJson(finalCategories, emailCampaign);
+        getAdminEmailManager().sendCampaignMails(users, emailCampaign, xsmtpapi);
       }
 
-      getAdminEmailManager().sendCampaignMails(users, emailCampaign, xsmtpapi);
-      if (users.size() == 0 || users.size() < perPage) {
-        break;
-      }
-      tempUsers = users;
-      firstTime = false;
-      ++pageNo;
-    }
-
-    firstTime = true;
-
-    pageNo = 1;
+    } while(users.size() > 0);
 
     if (!categories.equalsIgnoreCase("all") && !categories.equalsIgnoreCase("all-unverified")) {
-      logger.info("Reached Level 7");
       for (String categoryName : categoryArray) {
-        logger.info("Reached Level 8");
         Category category = getCategoryService().getCategoryByName(StringUtils.trim(categoryName));
         if (category != null) {
-          logger.info("Reached Level 9");
-          while (tempUsers.size() > 0 || firstTime) {
-            logger.info("Reached Level 10");
+          do {
             users.clear();
-            users.addAll(mailingListManager.getUserList(category, pageNo, perPage));
-            logger.info("page no " + pageNo + " user list size " + users.size());
-
-            getAdminEmailManager().sendCampaignMails(users, emailCampaign, xsmtpapi);
-            if (users.size() == 0 || users.size() < perPage) {
-              logger.info("Reached Level 11");
-              break;
+            users = mailingListManager.getUserListByCategory(emailCampaign, category);
+            if (users.size() > 0) {
+              logger.info(" user list size " + users.size());
+              String xsmtpapi = SendGridUtil.getSendGridEmailNewsLetterHeaderJson(finalCategories, emailCampaign);
+              getAdminEmailManager().sendCampaignMails(users, emailCampaign, xsmtpapi);
             }
-            tempUsers = new ArrayList<User>(users);
-            logger.info("level 12, page no " + pageNo + " user list size " + tempUsers.size());
-            firstTime = false;
-            ++pageNo;
-            users.clear();
-          }
-          logger.info("Reached Level 13");
-        }
-        logger.info("Reached Level 14");
-      }
-      logger.info("Reached Level 15");
-    }
 
-    addRedirectAlertMessage(new SimpleMessage("Sending campaign in progress : " + emailCampaign.getName()));
+          } while(users.size() > 0);
+        }
+      }
+    }
+    
     return new RedirectResolution(EmailNewsletterAdmin.class);
   }
 
@@ -352,7 +285,7 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
     this.categories = categories;
   }
 
-  public int getUserCount() {
+  public Long getUserCount() {
     return userCount;
   }
 
@@ -460,5 +393,13 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
 
   public void setFileBeanForCustomExcel(FileBean fileBeanForCustomExcel) {
     this.fileBeanForCustomExcel = fileBeanForCustomExcel;
+  }
+
+  public RoleDao getRoleDao() {
+    return roleDao;
+  }
+
+  public void setRoleDao(RoleDao roleDao) {
+    this.roleDao = roleDao;
   }
 }
