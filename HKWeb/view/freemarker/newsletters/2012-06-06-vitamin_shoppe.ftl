@@ -346,7 +346,7 @@ Introducing The Vitamin Shoppe - America's Largest Range of Vitamins
             <td width="20px"></td>
             <td width="190px" align="center" valign="top" bgcolor="#FFFFFF" style="border:2px solid #079fe0;"><table width="100%" border="0" cellspacing="0" cellpadding="0">
               <tr>
-                <td colspan="3" align="center" valign="top"><a href="http://www.healthkart.com/product/vitamin-shoppe-ultimate-men-s-50%2B-multivitamin/NUT1101?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe"><img src="http://www.healthkart.com/email/vitamin_shoppe/images/img03_c.jpg" width="186" height="140" border="0" /></a></td>
+                <td colspan="3" align="center" valign="top"><a href="http://www.healthkart.com/product/vitamin-shoppe-lecithin-granules/NUT1094?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe"><img src="http://www.healthkart.com/email/vitamin_shoppe/images/img03_c.jpg" width="186" height="140" border="0" /></a></td>
                 </tr>
               <tr>
                 <td rowspan="5" width="10">&nbsp;</td>
@@ -354,13 +354,14 @@ Introducing The Vitamin Shoppe - America's Largest Range of Vitamins
                 <td rowspan="5" width="10">&nbsp;</td>
               </tr>
               <tr>
-                <td style="font-size:14px; font-weight:bold; color:#4579a7;"><a href="http://www.healthkart.com/product/vitamin-shoppe-ultimate-men-s-50%2B-multivitamin/NUT1101?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe" style="color:#4579a7; text-decoration:none;">VS Ultimate Men's 50+ Multivitamin</a></td>
+                <td style="font-size:14px; font-weight:bold; color:#4579a7;"><a href="http://www.healthkart.com/product/vitamin-shoppe-lecithin-granules/NUT1094?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe" style="color:#4579a7; text-decoration:none;">VS Vitamin D3<br />
+1000 IU</a></td>
                 </tr>
               <tr>
                 <td height="10px"></td>
                 </tr>
               <tr>
-                <td style="color:#363636; font-size:12px; line-height:1.5em;">Have the same health, metabolism &amp; immunity even after you have crossed 50</td>
+                <td style="color:#363636; font-size:12px; line-height:1.5em;">Provides higher potency to stop bone decay &amp; increase absorption of calcium</td>
                 </tr>
               <tr>
                 <td height="10px"></td>
@@ -368,7 +369,7 @@ Introducing The Vitamin Shoppe - America's Largest Range of Vitamins
               <tr>
                 <td colspan="3" align="center" valign="middle"><table width="90" height="24" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td align="center" valign="middle" bgcolor="#079fe0" style="font-size:12px; font-weight:bold; color:#FFFFFF; border:solid 1px #4579a7"><a href="http://www.healthkart.com/product/vitamin-shoppe-ultimate-men-s-50%2B-multivitamin/NUT1101?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe" style="color:#FFFFFF; text-decoration:none">BUY NOW</a></td>
+            <td align="center" valign="middle" bgcolor="#079fe0" style="font-size:12px; font-weight:bold; color:#FFFFFF; border:solid 1px #4579a7"><a href="http://www.healthkart.com/product/vitamin-shoppe-lecithin-granules/NUT1094?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe" style="color:#FFFFFF; text-decoration:none">BUY NOW</a></td>
           </tr>
         </table></td>
                 </tr>
@@ -460,7 +461,7 @@ Introducing The Vitamin Shoppe - America's Largest Range of Vitamins
             <td width="20px"></td>
             <td width="190px" align="center" valign="top" bgcolor="#FFFFFF" style="border:2px solid #079fe0;"><table width="100%" border="0" cellspacing="0" cellpadding="0">
               <tr>
-                <td colspan="3" align="center" valign="top"><a href="http://www.healthkart.com/product/vitamin-shoppe-boswellia-serrata-std./NUT1082?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe"><img src="http://www.healthkart.com/email/vitamin_shoppe/images/img04_c.jpg" width="186" height="140" border="0" /></a></td>
+                <td colspan="3" align="center" valign="top"><a href="http://www.healthkart.com/product/vitamin-shoppe-vitamine-400-plus-selenium/NUT1086?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe"><img src="http://www.healthkart.com/email/vitamin_shoppe/images/img04_c.jpg" width="186" height="140" border="0" /></a></td>
                 </tr>
               <tr>
                 <td rowspan="5" width="10">&nbsp;</td>
@@ -468,13 +469,13 @@ Introducing The Vitamin Shoppe - America's Largest Range of Vitamins
                 <td rowspan="5" width="10">&nbsp;</td>
               </tr>
               <tr>
-                <td style="font-size:14px; font-weight:bold; color:#4579a7;"><a href="http://www.healthkart.com/product/vitamin-shoppe-boswellia-serrata-std./NUT1082?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe" style="color:#4579a7; text-decoration:none;">VS Boswellia Serrata (Std.) 250 mg</a></td>
+                <td style="font-size:14px; font-weight:bold; color:#4579a7;"><a href="http://www.healthkart.com/product/vitamin-shoppe-vitamine-400-plus-selenium/NUT1086?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe" style="color:#4579a7; text-decoration:none;">VS Calcium Citrate plus Magnesium &amp; Vitamin D</a></td>
                 </tr>
               <tr>
                 <td height="10px"></td>
                 </tr>
               <tr>
-                <td style="color:#363636; font-size:12px; line-height:1.5em;">Now get  rid of back and shoulder pains. Enhances joints' mobility</td>
+                <td style="color:#363636; font-size:12px; line-height:1.5em;">Well-absorbed calcium &amp; utilized by the body. Maintains healthy bones and teeth</td>
                 </tr>
               <tr>
                 <td height="10px"></td>
@@ -482,7 +483,7 @@ Introducing The Vitamin Shoppe - America's Largest Range of Vitamins
               <tr>
                 <td colspan="3" align="center" valign="middle"><table width="90" height="24" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td align="center" valign="middle" bgcolor="#079fe0" style="font-size:12px; font-weight:bold; color:#FFFFFF; border:solid 1px #4579a7"><a href="http://www.healthkart.com/product/vitamin-shoppe-boswellia-serrata-std./NUT1082?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe" style="color:#FFFFFF; text-decoration:none">BUY NOW</a></td>
+            <td align="center" valign="middle" bgcolor="#079fe0" style="font-size:12px; font-weight:bold; color:#FFFFFF; border:solid 1px #4579a7"><a href="http://www.healthkart.com/product/vitamin-shoppe-vitamine-400-plus-selenium/NUT1086?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe" style="color:#FFFFFF; text-decoration:none">BUY NOW</a></td>
           </tr>
         </table></td>
                 </tr>
