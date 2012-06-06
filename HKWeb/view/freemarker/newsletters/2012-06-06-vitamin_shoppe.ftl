@@ -6,16 +6,16 @@ Introducing The Vitamin Shoppe - America's Largest Range of Vitamins
 <title>The Vitamin Shoppe</title>
 </head>
 
-<body style="margin:0; padding:0; font-family:Arial, Helvetica, sans-serif; background-color:#e0eef7; background-image:url(http://img.healthkart.com/email/vitamin_shoppe/images/bg.jpg)">
+<body style="margin:0; padding:0; font-family:Arial, Helvetica, sans-serif; background-color:#e0eef7; background-image:url(http://www.healthkart.com/email/vitamin_shoppe/images/bg.jpg)">
 <table width="100%" border="0" cellspacing="0" cellpadding="0" >
 
   <tr>
-    <td style="font-size:11px; text-align:center; color:#929292; padding:15px">Can't view this email? <a href="http://img.healthkart.com/email/vitamin_shoppe/emailer.html">Click here</a> to view a web version.</td>
+    <td style="font-size:11px; text-align:center; color:#929292; padding:15px">Can't view this email? <a href="http://www.healthkart.com/email/vitamin_shoppe/emailer.html">Click here</a> to view a web version.</td>
   </tr>
   <tr>
     <td align="center"><table width="650" border="0" cellpadding="0" cellspacing="0" bgcolor="#acdeff">
       <tr>
-        <td colspan="3"><a href="http://www.healthkart.com?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe"><img src="http://img.healthkart.com/email/vitamin_shoppe/images/header.jpg" alt="HealthKart.com, the one stop shop for health, fitness and beauty!" width="650" height="121" border="0" /></a></td>
+        <td colspan="3"><a href="http://www.healthkart.com?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe"><img src="http://www.healthkart.com/email/vitamin_shoppe/images/header.jpg" alt="HealthKart.com, the one stop shop for health, fitness and beauty!" width="650" height="121" border="0" /></a></td>
         </tr>
       <tr>
         <td rowspan="23" width="20"></td>
@@ -23,7 +23,7 @@ Introducing The Vitamin Shoppe - America's Largest Range of Vitamins
         <td rowspan="23" width="20"></td>
       </tr>
       <tr>
-        <td align="center" valign="middle"><a href="http://www.healthkart.com/brand/nutrition/vitamin+shoppe?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe"><img src="http://img.healthkart.com/email/vitamin_shoppe/images/vs_logo.jpg" alt="The Vitamin Shoppe" width="236" height="104" border="0" /></a></td>
+        <td align="center" valign="middle"><a href="http://www.healthkart.com/brand/nutrition/vitamin+shoppe?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe"><img src="http://www.healthkart.com/email/vitamin_shoppe/images/vs_logo.jpg" alt="The Vitamin Shoppe" width="236" height="104" border="0" /></a></td>
       </tr>
       <tr>
         <td height="10px"></td>
@@ -35,7 +35,7 @@ Introducing The Vitamin Shoppe - America's Largest Range of Vitamins
         <td height="20px"></td>
         </tr>
       <tr>
-        <td><a href="http://www.healthkart.com/brand/nutrition/vitamin+shoppe?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe"><img src="http://img.healthkart.com/email/vitamin_shoppe/images/main_banner.jpg" alt="Answer for every body" width="610" height="331" border="0" /></a></td>
+        <td><a href="http://www.healthkart.com/brand/nutrition/vitamin+shoppe?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe"><img src="http://www.healthkart.com/email/vitamin_shoppe/images/main_banner.jpg" alt="Answer for every body" width="610" height="331" border="0" /></a></td>
       </tr>
       <tr>
         <td>&nbsp;</td>
@@ -51,7 +51,7 @@ Introducing The Vitamin Shoppe - America's Largest Range of Vitamins
           <tr>
             <td align="center" valign="top" width="190px" bgcolor="#FFFFFF" style="border:2px solid #079fe0;"><table width="100%" border="0" cellspacing="0" cellpadding="0">
               <tr>
-                <td colspan="3" align="center" valign="top"><a href="http://www.healthkart.com/product/vitamin-shoppe-grape-seed-extract-60mg/NUT1026?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe"><img src="http://img.healthkart.com/email/vitamin_shoppe/images/img01_a.jpg" width="186" height="140" border="0" /></a></td>
+                <td colspan="3" align="center" valign="top"><a href="http://www.healthkart.com/product/vitamin-shoppe-grape-seed-extract-60mg/NUT1026?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe"><img src="http://www.healthkart.com/email/vitamin_shoppe/images/img01_a.jpg" width="186" height="140" border="0" /></a></td>
                 </tr>
               <tr>
                 <td rowspan="5" width="10">&nbsp;</td>
@@ -84,7 +84,7 @@ Introducing The Vitamin Shoppe - America's Largest Range of Vitamins
             <td width="20px"></td>
             <td width="190px" align="center" valign="top" bgcolor="#FFFFFF" style="border:2px solid #079fe0;"><table width="100%" border="0" cellspacing="0" cellpadding="0">
               <tr>
-                <td colspan="3" align="center" valign="top"><a href="http://www.healthkart.com/product/vitamin-shoppe-pycnogenol-50mg/NUT1027?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe"><img src="http://img.healthkart.com/email/vitamin_shoppe/images/img01_b.jpg" width="186" height="140" border="0" /></a></td>
+                <td colspan="3" align="center" valign="top"><a href="http://www.healthkart.com/product/vitamin-shoppe-pycnogenol-50mg/NUT1027?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe"><img src="http://www.healthkart.com/email/vitamin_shoppe/images/img01_b.jpg" width="186" height="140" border="0" /></a></td>
                 </tr>
               <tr>
                 <td rowspan="5" width="10">&nbsp;</td>
@@ -118,7 +118,7 @@ Introducing The Vitamin Shoppe - America's Largest Range of Vitamins
             <td width="20px"></td>
             <td width="190px" align="center" valign="top" bgcolor="#FFFFFF" style="border:2px solid #079fe0;"><table width="100%" border="0" cellspacing="0" cellpadding="0">
               <tr>
-                <td colspan="3" align="center" valign="top"><a href="http://www.healthkart.com/product/vitamin-shoppe-coenzyme-q-10-200mg/NUT999?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe"><img src="http://img.healthkart.com/email/vitamin_shoppe/images/img01_c.jpg" width="186" height="140" border="0" /></a></td>
+                <td colspan="3" align="center" valign="top"><a href="http://www.healthkart.com/product/vitamin-shoppe-coenzyme-q-10-200mg/NUT999?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe"><img src="http://www.healthkart.com/email/vitamin_shoppe/images/img01_c.jpg" width="186" height="140" border="0" /></a></td>
                 </tr>
               <tr>
                 <td rowspan="5" width="10">&nbsp;</td>
@@ -165,7 +165,7 @@ Introducing The Vitamin Shoppe - America's Largest Range of Vitamins
           <tr>
             <td align="center" valign="top" width="190px" bgcolor="#FFFFFF" style="border:2px solid #079fe0;"><table width="100%" border="0" cellspacing="0" cellpadding="0">
               <tr>
-                <td colspan="3" align="center" valign="top"><a href="http://www.healthkart.com/product/vitamin-shoppe-lecithin-granules/NUT1001?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe"><img src="http://img.healthkart.com/email/vitamin_shoppe/images/img02_a.jpg" width="186" height="140" border="0" /></a></td>
+                <td colspan="3" align="center" valign="top"><a href="http://www.healthkart.com/product/vitamin-shoppe-lecithin-granules/NUT1001?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe"><img src="http://www.healthkart.com/email/vitamin_shoppe/images/img02_a.jpg" width="186" height="140" border="0" /></a></td>
                 </tr>
               <tr>
                 <td rowspan="5" width="10">&nbsp;</td>
@@ -198,7 +198,7 @@ Introducing The Vitamin Shoppe - America's Largest Range of Vitamins
             <td width="20px"></td>
             <td width="190px" align="center" valign="top" bgcolor="#FFFFFF" style="border:2px solid #079fe0;"><table width="100%" border="0" cellspacing="0" cellpadding="0">
               <tr>
-                <td colspan="3" align="center" valign="top"><a href="http://www.healthkart.com/product/vitamin-shoppe-carnipure-l-cartinine-250mg/NUT1047?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe"><img src="http://img.healthkart.com/email/vitamin_shoppe/images/img02_b.jpg" width="186" height="140" border="0" /></a></td>
+                <td colspan="3" align="center" valign="top"><a href="http://www.healthkart.com/product/vitamin-shoppe-carnipure-l-cartinine-250mg/NUT1047?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe"><img src="http://www.healthkart.com/email/vitamin_shoppe/images/img02_b.jpg" width="186" height="140" border="0" /></a></td>
                 </tr>
               <tr>
                 <td rowspan="5" width="10">&nbsp;</td>
@@ -232,7 +232,7 @@ Introducing The Vitamin Shoppe - America's Largest Range of Vitamins
             <td width="20px"></td>
             <td width="190px" align="center" valign="top" bgcolor="#FFFFFF" style="border:2px solid #079fe0;"><table width="100%" border="0" cellspacing="0" cellpadding="0">
               <tr>
-                <td colspan="3" align="center" valign="top"><a href="http://www.healthkart.com/product/vitamin-shoppe-alpha-lipolic/NUT1084?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe"><img src="http://img.healthkart.com/email/vitamin_shoppe/images/img02_c.jpg" width="186" height="140" border="0" /></a></td>
+                <td colspan="3" align="center" valign="top"><a href="http://www.healthkart.com/product/vitamin-shoppe-alpha-lipolic/NUT1084?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe"><img src="http://www.healthkart.com/email/vitamin_shoppe/images/img02_c.jpg" width="186" height="140" border="0" /></a></td>
                 </tr>
               <tr>
                 <td rowspan="5" width="10">&nbsp;</td>
@@ -280,7 +280,7 @@ Introducing The Vitamin Shoppe - America's Largest Range of Vitamins
           <tr>
             <td align="center" valign="top" width="190px" bgcolor="#FFFFFF" style="border:2px solid #079fe0;"><table width="100%" border="0" cellspacing="0" cellpadding="0">
               <tr>
-                <td colspan="3" align="center" valign="top"><a href="http://www.healthkart.com/product/vitamin-shoppe-ultimate-man-gold-multivitamin/NUT1098?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe"><img src="http://img.healthkart.com/email/vitamin_shoppe/images/img03_a.jpg" width="186" height="140" border="0" /></a></td>
+                <td colspan="3" align="center" valign="top"><a href="http://www.healthkart.com/product/vitamin-shoppe-ultimate-man-gold-multivitamin/NUT1098?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe"><img src="http://www.healthkart.com/email/vitamin_shoppe/images/img03_a.jpg" width="186" height="140" border="0" /></a></td>
                 </tr>
               <tr>
                 <td rowspan="5" width="10">&nbsp;</td>
@@ -313,7 +313,7 @@ Introducing The Vitamin Shoppe - America's Largest Range of Vitamins
             <td width="20px"></td>
             <td width="190px" align="center" valign="top" bgcolor="#FFFFFF" style="border:2px solid #079fe0;"><table width="100%" border="0" cellspacing="0" cellpadding="0">
               <tr>
-                <td colspan="3" align="center" valign="top"><a href="http://www.healthkart.com/product/vitamin-shoppe-ultimate-woman-gold-multivitamin/NUT1099?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe"><img src="http://img.healthkart.com/email/vitamin_shoppe/images/img03_b.jpg" width="186" height="140" border="0" /></a></td>
+                <td colspan="3" align="center" valign="top"><a href="http://www.healthkart.com/product/vitamin-shoppe-ultimate-woman-gold-multivitamin/NUT1099?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe"><img src="http://www.healthkart.com/email/vitamin_shoppe/images/img03_b.jpg" width="186" height="140" border="0" /></a></td>
                 </tr>
               <tr>
                 <td rowspan="5" width="10">&nbsp;</td>
@@ -346,7 +346,7 @@ Introducing The Vitamin Shoppe - America's Largest Range of Vitamins
             <td width="20px"></td>
             <td width="190px" align="center" valign="top" bgcolor="#FFFFFF" style="border:2px solid #079fe0;"><table width="100%" border="0" cellspacing="0" cellpadding="0">
               <tr>
-                <td colspan="3" align="center" valign="top"><a href="http://www.healthkart.com/product/vitamin-shoppe-ultimate-men-s-50%2B-multivitamin/NUT1101?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe"><img src="http://img.healthkart.com/email/vitamin_shoppe/images/img03_c.jpg" width="186" height="140" border="0" /></a></td>
+                <td colspan="3" align="center" valign="top"><a href="http://www.healthkart.com/product/vitamin-shoppe-ultimate-men-s-50%2B-multivitamin/NUT1101?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe"><img src="http://www.healthkart.com/email/vitamin_shoppe/images/img03_c.jpg" width="186" height="140" border="0" /></a></td>
                 </tr>
               <tr>
                 <td rowspan="5" width="10">&nbsp;</td>
@@ -393,7 +393,7 @@ Introducing The Vitamin Shoppe - America's Largest Range of Vitamins
           <tr>
             <td align="center" valign="top" width="190px" bgcolor="#FFFFFF" style="border:2px solid #079fe0;"><table width="100%" border="0" cellspacing="0" cellpadding="0">
               <tr>
-                <td colspan="3" align="center" valign="top"><a href="http://www.healthkart.com/product/vitamin-shoppe-shark-cartilage/NUT1057?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe"><img src="http://img.healthkart.com/email/vitamin_shoppe/images/img04_a.jpg" width="186" height="140" border="0" /></a></td>
+                <td colspan="3" align="center" valign="top"><a href="http://www.healthkart.com/product/vitamin-shoppe-shark-cartilage/NUT1057?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe"><img src="http://www.healthkart.com/email/vitamin_shoppe/images/img04_a.jpg" width="186" height="140" border="0" /></a></td>
                 </tr>
               <tr>
                 <td rowspan="5" width="10">&nbsp;</td>
@@ -427,7 +427,7 @@ Introducing The Vitamin Shoppe - America's Largest Range of Vitamins
             <td width="20px"></td>
             <td width="190px" align="center" valign="top" bgcolor="#FFFFFF" style="border:2px solid #079fe0;"><table width="100%" border="0" cellspacing="0" cellpadding="0">
               <tr>
-                <td colspan="3" align="center" valign="top"><a href="http://www.healthkart.com/product/vitamin-shoppe-glucosamine-chondroitin-with-msm/NUT1081?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe"><img src="http://img.healthkart.com/email/vitamin_shoppe/images/img04_b.jpg" width="186" height="140" border="0" /></a></td>
+                <td colspan="3" align="center" valign="top"><a href="http://www.healthkart.com/product/vitamin-shoppe-glucosamine-chondroitin-with-msm/NUT1081?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe"><img src="http://www.healthkart.com/email/vitamin_shoppe/images/img04_b.jpg" width="186" height="140" border="0" /></a></td>
                 </tr>
               <tr>
                 <td rowspan="5" width="10">&nbsp;</td>
@@ -460,7 +460,7 @@ Introducing The Vitamin Shoppe - America's Largest Range of Vitamins
             <td width="20px"></td>
             <td width="190px" align="center" valign="top" bgcolor="#FFFFFF" style="border:2px solid #079fe0;"><table width="100%" border="0" cellspacing="0" cellpadding="0">
               <tr>
-                <td colspan="3" align="center" valign="top"><a href="http://www.healthkart.com/product/vitamin-shoppe-boswellia-serrata-std./NUT1082?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe"><img src="http://img.healthkart.com/email/vitamin_shoppe/images/img04_c.jpg" width="186" height="140" border="0" /></a></td>
+                <td colspan="3" align="center" valign="top"><a href="http://www.healthkart.com/product/vitamin-shoppe-boswellia-serrata-std./NUT1082?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe"><img src="http://www.healthkart.com/email/vitamin_shoppe/images/img04_c.jpg" width="186" height="140" border="0" /></a></td>
                 </tr>
               <tr>
                 <td rowspan="5" width="10">&nbsp;</td>
@@ -502,13 +502,13 @@ Introducing The Vitamin Shoppe - America's Largest Range of Vitamins
   <tr>
     <td align="center" bgcolor="#f2f7fa" style="border-top:solid 4px #079fe0"><table width="650" border="0" align="center" cellpadding="0" cellspacing="0">
       <tr>
-        <td height="70" colspan="3" align="left" valign="middle"><a href="http://www.healthkart.com?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe"><img src="http://img.healthkart.com/email/vitamin_shoppe/images/hk_logo_bw.jpg" alt="HealthKart.com logo" width="178" height="28" border="0" /></a></td>
+        <td height="70" colspan="3" align="left" valign="middle"><a href="http://www.healthkart.com?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe"><img src="http://www.healthkart.com/email/vitamin_shoppe/images/hk_logo_bw.jpg" alt="HealthKart.com logo" width="178" height="28" border="0" /></a></td>
         <td width="478" align="right" valign="middle" style="color:#606060; font-weight:bold; font-size:13px;"><a href="http://www.healthkart.com?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-06-06-vitamin_shoppe" style="color:#606060; text-decoration:none;">www.healthkart.com</a></td>
       </tr>
       <tr>
         <td width="107" height="60" style="border-top: solid #929292 1px; color:#606060; font-size:13px;">Spread the word:</td>
-        <td width="41" align="left" valign="middle" style="border-top: solid #929292 1px"><a href="http://www.facebook.com/healthkart"><img src="http://img.healthkart.com/email/vitamin_shoppe/images/facebook.png" alt="facebook" width="32" height="32" border="0" /></a></td>
-        <td width="74" align="left" valign="middle" style="border-top: solid #929292 1px"><a href="http://twitter.com/healthkart"><img src="http://img.healthkart.com/email/vitamin_shoppe/images/twitter.png" alt="twitter" width="32" height="32" border="0" /></a></td>
+        <td width="41" align="left" valign="middle" style="border-top: solid #929292 1px"><a href="http://www.facebook.com/healthkart"><img src="http://www.healthkart.com/email/vitamin_shoppe/images/facebook.png" alt="facebook" width="32" height="32" border="0" /></a></td>
+        <td width="74" align="left" valign="middle" style="border-top: solid #929292 1px"><a href="http://twitter.com/healthkart"><img src="http://www.healthkart.com/email/vitamin_shoppe/images/twitter.png" alt="twitter" width="32" height="32" border="0" /></a></td>
         <td align="right" valign="middle" style="border-top: solid #929292 1px; color:#606060; font-size:13px;">e: <a href="mailto:info@healthkart.com" style="color:#606060">info@healthkart.com</a> &nbsp;| &nbsp;t: +91 124 4551616</td>
       </tr>
     </table></td>
