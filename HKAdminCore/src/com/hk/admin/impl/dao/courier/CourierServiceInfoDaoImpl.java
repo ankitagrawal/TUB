@@ -1,13 +1,5 @@
 package com.hk.admin.impl.dao.courier;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.stereotype.Repository;
-
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
@@ -15,6 +7,13 @@ import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.domain.courier.PincodeDefaultCourier;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
+import org.apache.commons.lang.StringUtils;
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("unchecked")
 @Repository
@@ -34,7 +33,7 @@ public class CourierServiceInfoDaoImpl extends BaseDaoImpl implements CourierSer
             return courierServiceInfoList.get(0);
         } else {
             return null;
-        }
+        }                                                                                                 
     }
 
     public List<CourierServiceInfo> getCourierServiceInfo(Long courierId, String pincode, Boolean isCOD) {
