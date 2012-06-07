@@ -3,6 +3,7 @@ package com.hk.web.action.admin.courier;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.engine.ShipmentPricingEngine;
 import com.hk.admin.pact.dao.courier.AwbDao;
+import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.core.PermissionConstants;
@@ -52,6 +53,8 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
     UserService userService;
     @Autowired
     PincodeDao pincodeDao;
+    @Autowired
+    CourierGroupService courierGroupService;
     @Autowired
     private ShipmentPricingEngine shipmentPricingEngine;
      @Autowired
@@ -148,6 +151,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
                 // if (suggestedCourier == null) {
                 // suggestedCourier = courierService.getSuggestedCourierService(pinCode.getPincode(), isCod);
                 // }
+
             }else{
                 addRedirectAlertMessage(new SimpleMessage("Pincode is INVALID, Please contact Customer Care. It cannot be packed."));
             }
@@ -163,9 +167,12 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
         shippingOrder.setShipment(shipment);
         shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Packed));
         shippingOrderDao.save(shippingOrder);
-        shipment.setShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
-        shipment.setShipmentCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
-        shipmentService.save(shipment);
+        if (courierGroupService.getCourierGroup(shipment.getCourier()) != null) {
+            shipment.setShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
+            shipment.setShipmentCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
+            shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
+            shipmentService.save(shipment);
+        }
         String comment = "";
         if (shipment != null) {
             comment = "Shipment Details: " + shipment.getCourier().getName() + "/" + shipment.getTrackingId();

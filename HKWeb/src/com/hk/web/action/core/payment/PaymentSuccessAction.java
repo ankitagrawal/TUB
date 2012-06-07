@@ -22,6 +22,8 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.validation.Validate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -31,11 +33,13 @@ import java.util.Set;
 @Component
 public class PaymentSuccessAction extends BaseAction {
 
+    private static Logger logger = LoggerFactory.getLogger(PaymentSuccessAction.class);
 
     @Validate(required = true, encrypted = true)
     private String gatewayOrderId;
 
     private Payment payment;
+    private Order order;
     private PricingDto pricingDto;
 
     @Autowired
@@ -59,7 +63,12 @@ public class PaymentSuccessAction extends BaseAction {
     public Resolution pre() {
         payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
         if (payment != null && EnumPaymentStatus.getPaymentSuccessPageStatusIds().contains(payment.getPaymentStatus().getId())) {
-            Order order = payment.getOrder();
+
+            Long paymentStatusId = payment.getPaymentStatus() != null ? payment.getPaymentStatus().getId() : null;
+
+            logger.info("payment success page payment status " + paymentStatusId);
+
+            order = payment.getOrder();
             pricingDto = new PricingDto(order.getCartLineItems(), payment.getOrder().getAddress());
 
             Set<CartLineItem> productCartLineItems = new CartLineItemFilter(payment.getOrder().getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
@@ -159,5 +168,13 @@ public class PaymentSuccessAction extends BaseAction {
 
     public void setOrderStatusService(OrderStatusService orderStatusService) {
         this.orderStatusService = orderStatusService;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
     }
 }

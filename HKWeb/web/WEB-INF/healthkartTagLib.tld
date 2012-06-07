@@ -703,6 +703,29 @@
       ${hk:getMatchingSku(${object})}
     </example>
   </function>
+  <function>
+    <description>
+      returns surcharge based on supplier and warehouse state
+    </description>
+    <name>getSurchargeValue</name>
+    <function-class>com.hk.admin.util.TaxUtil</function-class>
+    <function-signature>java.lang.Double getSurchargeValue(java.lang.String,java.lang.String)</function-signature>
+    <example>
+      ${hk:getSurchargeValue(${str1}, ${str2})}
+    </example>
+  </function>
+  <function>
+    <description>
+      returns stock check of combo
+    </description>
+    <name>isComboInStock</name>
+    <function-class>com.hk.taglibs.Functions</function-class>
+    <function-signature>boolean isComboInStock(java.lang.Object)</function-signature>
+    <example>
+      ${hk:isComboInStock(${object})}
+    </example>
+  </function>
+
 
 
 </taglib>

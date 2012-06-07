@@ -105,8 +105,6 @@
                     <div class="clear"></div>
 
                     <div class="row" style="margin-left:20px; width: 100%;">
-                        <%--<label name="Shipping Plus Tax Cost:" class="valueLabel">Shipping Plus Tax Cost:</label>--%>
-                        <%--<label name="${dummyOrderEntry.value}" class="nameLabel bolderValue"><${dummyOrderEntry.value}/label>--%>
                         <label class="valueLabel bolderValue">Shipping Plus Tax Cost:</label>
                         <label class="nameLabel bolderValue">${dummyOrderEntry.value}</label>
                     </div>

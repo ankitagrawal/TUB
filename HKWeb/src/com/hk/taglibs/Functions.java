@@ -43,6 +43,7 @@ import com.hk.pact.dao.shippingOrder.ShippingOrderLifecycleDao;
 import com.hk.pact.dao.sku.SkuDao;
 import com.hk.pact.service.accounting.InvoiceService;
 import com.hk.pact.service.catalog.CategoryService;
+import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.service.ServiceLocatorFactory;
@@ -66,7 +67,6 @@ public class Functions {
 
     @SuppressWarnings("unused")
     private static final PeriodFormatter formatter;
-    private static final MenuHelper      menuHelper = null;
     // TODO: rewrite
     static {
         formatter = new PeriodFormatterBuilder().appendYears().appendSuffix(" year, ", " years, ").appendMonths().appendSuffix(" month, ", " months, ").appendWeeks().appendSuffix(
@@ -409,6 +409,7 @@ public class Functions {
     }
 
     public static MenuNode getMenuNodeForProduct(Product product) {
+        MenuHelper menuHelper = (MenuHelper) ServiceLocatorFactory.getService("MenuHelper");
         return menuHelper.getMenoNodeFromProduct(product);
     }
 
@@ -446,6 +447,12 @@ public class Functions {
         SkuDao skuDao = ServiceLocatorFactory.getService(SkuDao.class);
         Sku sku = (Sku) o;
         return skuDao.filterProductVariantsByWarehouse(sku.getProductVariant().getProduct().getProductVariants(), sku.getWarehouse());
+    }
+
+  public static boolean isComboInStock(Object o) {
+        ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
+        Combo combo = (Combo) o;
+        return productService.isComboInStock(combo);
     }
 
 }

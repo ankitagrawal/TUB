@@ -18,6 +18,7 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.dao.payment.PaymentHistoryDao;
+import com.hk.admin.pact.dao.inventory.PurchaseInvoiceDao;
 import com.hk.admin.util.StockProcurementHelper;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.catalog.Supplier;
@@ -32,6 +33,8 @@ public class PaymentHistoryAction extends BaseAction {
     
     @Autowired
     private PaymentHistoryDao    paymentHistoryDao;
+    @Autowired
+    private PurchaseInvoiceDao   purchaseInvoiceDao;
 
     private PaymentHistory       paymentHistory;
     private Long                 purchaseOrderId;
@@ -82,13 +85,19 @@ public class PaymentHistoryAction extends BaseAction {
                     paidAmount += paymentHistoryTemp.getAmount();
                 }
                 outstandingAmount = purchaseInvoice.getFinalPayableAmount() - paidAmount;
+                int outstandingAmountFormatted = (int)(outstandingAmount*100);
+                outstandingAmount = (double)(outstandingAmountFormatted)/100;
+            }
+            else{
+              outstandingAmount = purchaseInvoice.getFinalPayableAmount();
             }
         }
 
         return new ForwardResolution("/pages/admin/paymentHistory.jsp");
     }
 
-    public Resolution search() {
+/*
+  public Resolution search() {
         try {
             if (purchaseOrderId == null && purchaseInvoiceId == null) {
                 addRedirectAlertMessage(new SimpleMessage("Please add either purchase invoice id or purchase order id."));
@@ -138,6 +147,25 @@ public class PaymentHistoryAction extends BaseAction {
         }
         addRedirectAlertMessage(new SimpleMessage("No Payment History found"));
         return new RedirectResolution(PaymentHistoryAction.class);
+    }
+  */
+
+    public Resolution editPurchaseInvoice(){
+/*      PurchaseInvoice purchaseInvoiceTemp = getBaseDao().get(PurchaseInvoice.class, purchaseInvoiceId);
+      purchaseInvoiceTemp.setPaymentDetails(purchaseInvoice.getPaymentDetails());
+      purchaseInvoiceTemp.setPaymentDate(purchaseInvoice.getPaymentDate());*/
+      if(purchaseInvoice != null){
+        try{
+          purchaseInvoiceDao.save(purchaseInvoice);
+          addRedirectAlertMessage(new SimpleMessage("Changes saved in system."));
+          if (purchaseInvoiceId != null) {
+              return new RedirectResolution(PaymentHistoryAction.class).addParameter("purchaseInvoiceId", purchaseInvoiceId);
+          }
+        }catch (Exception e){
+          logger.error("Unable to save purchase invoice", e);
+        }
+      }
+      return new ForwardResolution("/pages/admin/paymentHistory.jsp");
     }
 
     @DontValidate
