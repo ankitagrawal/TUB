@@ -234,7 +234,7 @@ private String                categoryHealthkartListString  = null;*/
     for (User user : emailersList) {
       try {
         // find exisitng receipients or create recepients thru the emails ids passed
-        EmailRecepient emailRecepient = getEmailRecepientDao().getOrCreateEmailRecepient(user.getEmail());
+        EmailRecepient emailRecepient = getEmailRecepientDao().findByRecepient(user.getEmail());//.getOrCreateEmailRecepient(user.getEmail());
         // values that may be used in FTL
         HashMap valuesMap = new HashMap();
         valuesMap.put("unsubscribeLink", getLinkManager().getEmailUnsubscribeLink(emailRecepient));
