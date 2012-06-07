@@ -166,6 +166,8 @@ public class APIOrderServiceImpl implements APIOrderService {
             for (CartLineItem cartLineItem : productCartLineItems) {
                 inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
             }
+
+            
   }
 
   public Address createAddress(APIAddress apiAddress, User hkUser) {
