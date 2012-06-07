@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.hk.domain.TicketStatus;
 import com.hk.domain.TicketType;
+import com.hk.domain.review.ReviewStatus;
 import com.hk.domain.order.ShippingOrderStatus;
 import com.hk.domain.accounting.DebitNoteStatus;
 import com.hk.domain.affiliate.AffiliateCategory;
@@ -84,6 +85,8 @@ public interface MasterDataDao {
 
     public List<ShippingOrderStatus> getSOStatusForShipmentDetailsList();
 
-     public List<PurchaseFormType> getPurchaseInvoiceFormTypes();
+    public List<PurchaseFormType> getPurchaseInvoiceFormTypes();
+
+    public List<ReviewStatus> getReviewStatusList();
 
 }
