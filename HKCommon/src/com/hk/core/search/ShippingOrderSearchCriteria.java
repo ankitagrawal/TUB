@@ -180,6 +180,8 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
             }
             shippingOrderLifecycleCriteria.add(Restrictions.between("activityDate", activityStartDate, activityEndDate));
         }
+        
+        criteria.addOrder(org.hibernate.criterion.Order.desc("score"));
 
         // TODO: fix later after rewrite
         // criteria.setMaxResults(100);
