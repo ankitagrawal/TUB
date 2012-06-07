@@ -485,7 +485,7 @@
 
 		<s:submit name="save" value="Save" class="requiredFieldValidator"/>
         </c:if>
-    <shiro:hasRole name="<%=RoleConstants.GOD%>">
+    <shiro:hasRole name="<%=RoleConstants.FINANCE_ADMIN%>">
     <s:submit name="delete" value="Delete"/>
     </shiro:hasRole>
 	</s:form>
