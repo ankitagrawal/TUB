@@ -76,6 +76,10 @@ public class FreeMarkerService {
     return renderOutput;
   }
 
+  public RenderOutput getRenderOutputForTemplate(String templatePath, Object templateValues){
+       return processCampaignTemplate(getCampaignTemplate(templatePath), templatePath, templateValues);
+  }
+
   public class RenderOutput {
     private String subject;
     private String message;
