@@ -15,12 +15,8 @@ import com.hk.domain.catalog.product.ProductExtraOption;
 import com.hk.domain.catalog.product.ProductGroup;
 import com.hk.domain.catalog.product.ProductImage;
 import com.hk.domain.catalog.product.ProductOption;
-<<<<<<< HEAD
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.catalog.product.combo.ComboProduct;
-=======
-import com.hk.domain.review.ReviewStatus;
->>>>>>> rajni-master-mergedHKreview
 import com.hk.pact.dao.catalog.product.ProductDao;
 import com.hk.pact.dao.review.ReviewDao;
 import com.hk.pact.service.catalog.ProductService;
