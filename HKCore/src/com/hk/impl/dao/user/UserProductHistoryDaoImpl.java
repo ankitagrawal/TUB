@@ -21,9 +21,9 @@ import com.hk.pact.dao.user.UserProductHistoryDao;
 @Repository
 public class UserProductHistoryDaoImpl extends BaseDaoImpl implements UserProductHistoryDao {
   @Transactional
-  public void addToUserProductHistory(Product product, User user, ProductReferrer productReferrer) {
+  public void addToUserProductHistory(Product product, User user) {
     if (!user.getRoles().contains(get(Role.class, RoleConstants.HK_EMPLOYEE))){
-      if (!incrementProductCounterIfAlreadyExists(product, user, productReferrer)) {
+      if (!incrementProductCounterIfAlreadyExists(product, user)) {
         UserProductHistory userProductHistory = new UserProductHistory();
         userProductHistory.setCreateDate(new Date());
         userProductHistory.setLastDate(new Date());
@@ -31,20 +31,18 @@ public class UserProductHistoryDaoImpl extends BaseDaoImpl implements UserProduc
         userProductHistory.setUser(user);
         userProductHistory.setBought(false);
         userProductHistory.setCounter(1L);
-        userProductHistory.setProductReferrer(productReferrer);
         save(userProductHistory);
       }
     }
   }  
 
   @Transactional
-  private boolean incrementProductCounterIfAlreadyExists(Product product, User user, ProductReferrer productReferrer) {
+  private boolean incrementProductCounterIfAlreadyExists(Product product, User user) {
     UserProductHistory userProductHistory = findByProductAndUser(product, user);
     if (userProductHistory != null && userProductHistory.getOrder() == null) {
       userProductHistory.setLastDate(new Date());
       userProductHistory.setBought(false);
       userProductHistory.setCounter(userProductHistory.getCounter() + 1);
-      userProductHistory.setProductReferrer(productReferrer);
       save(userProductHistory);
       return true;
     }

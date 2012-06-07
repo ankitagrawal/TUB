@@ -6,6 +6,7 @@ import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.combo.ComboInstance;
 import com.hk.domain.core.CartLineItemType;
+import com.hk.domain.marketing.ProductReferrer;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
@@ -78,6 +79,11 @@ public class CartLineItem implements java.io.Serializable, Comparable<CartLineIt
 
   @Column(name = "version", nullable = false)
   private Long version = new Long(1);
+
+  @JsonSkip
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "product_referrer_id", nullable = true)
+  private ProductReferrer productReferrer;
 
   public CartLineItem() {
 
@@ -231,6 +237,14 @@ public class CartLineItem implements java.io.Serializable, Comparable<CartLineIt
 
   public boolean isType(EnumCartLineItemType enumCartLineItemType) {
     return enumCartLineItemType.getId().equals(this.getLineItemType().getId());
+  }
+
+  public ProductReferrer getProductReferrer() {
+    return productReferrer;
+  }
+
+  public void setProductReferrer(ProductReferrer productReferrer) {
+    this.productReferrer = productReferrer;
   }
 
   public int compareTo(CartLineItem cartLineItem) {

@@ -127,7 +127,7 @@ public class ProductAction extends BaseAction {
             if (user != null) {
                 ProductReferrer productReferrer = getBaseDao().get(ProductReferrer.class, productReferrerId);
                 productCountDao.getOrCreateProductCount(product, user);
-                userProductHistoryDao.addToUserProductHistory(product, user, productReferrer);
+                userProductHistoryDao.addToUserProductHistory(product, user);
                 affiliate = affiliateDao.getAffilateByUser(user);
             }
         }

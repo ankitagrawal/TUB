@@ -12,7 +12,7 @@ import com.hk.pact.dao.BaseDao;
 
 public interface UserProductHistoryDao extends BaseDao {
 
-    public void addToUserProductHistory(Product product, User user, ProductReferrer productReferrer);
+    public void addToUserProductHistory(Product product, User user);
 
     public UserProductHistory findByProductAndUser(Product product, User user);
 

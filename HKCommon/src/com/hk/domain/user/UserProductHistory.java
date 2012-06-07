@@ -18,7 +18,6 @@ import javax.persistence.TemporalType;
 
 import com.akube.framework.gson.JsonSkip;
 import com.hk.domain.catalog.product.Product;
-import com.hk.domain.marketing.ProductReferrer;
 import com.hk.domain.order.Order;
 
 /**
@@ -57,11 +56,6 @@ public class UserProductHistory implements java.io.Serializable {
 
   @Column(name = "is_bought")
   private Boolean isBought;
-
-  @JsonSkip
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "product_referrer_id", nullable = true)
-  private ProductReferrer productReferrer;
 
   @JsonSkip
   @ManyToOne(fetch = FetchType.LAZY)
@@ -125,14 +119,6 @@ public class UserProductHistory implements java.io.Serializable {
 
   public Boolean getBought() {
     return isBought;
-  }
-
-  public ProductReferrer getProductReferrer() {
-    return productReferrer;
-  }
-
-  public void setProductReferrer(ProductReferrer productReferrer) {
-    this.productReferrer = productReferrer;
   }
 
   public Order getOrder() {
