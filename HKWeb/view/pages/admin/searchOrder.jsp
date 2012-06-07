@@ -319,7 +319,7 @@
 
           <c:choose>
           <c:when test="${order.priorityOrder}">
-               <td style="background:greenyellow;" >
+               <td style="background:yellow;" >
           </c:when>
           <c:otherwise>
                <td >
