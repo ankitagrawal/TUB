@@ -186,7 +186,15 @@
     </div>
   </div>
   <div class="right_col">
-    <s:submit name="addToCart" value="Buy Now" class="addToCartButton cta"/>
+    <c:choose>
+      <c:when test="${hk:isComboInStock(combo)}">
+        <s:submit name="addToCart" value="Buy Now" class="addToCartButton cta"/>
+      </c:when>
+      <c:otherwise>
+        <div align="center"><a class="button_orange"><b>Sold Out</b></a></div>
+      </c:otherwise>
+    </c:choose>
+
     <s:layout-render name="/layouts/embed/_hkAssistanceMessageForSingleVariant.jsp"/>
   </div>
 </div>
