@@ -25,7 +25,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public Double getProductStarRating(Product product) {
-        return userReviewDao.getStarRating(product);
+        return userReviewDao.getAverageRating(product);
     }
 
     @Override
