@@ -199,6 +199,7 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
             orderCategoryCriteria.add(Restrictions.in("category", categories));
         }
 
+        criteria.addOrder(org.hibernate.criterion.Order.desc("score"));
         // criteria.addOrder(org.hibernate.criterion.Order.desc("updateDate"));
 
         return criteria;

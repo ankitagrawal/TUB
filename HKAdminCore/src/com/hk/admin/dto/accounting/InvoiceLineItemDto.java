@@ -2,6 +2,7 @@ package com.hk.admin.dto.accounting;
 
 import java.util.List;
 import java.util.Set;
+import java.text.DecimalFormat;
 
 import com.hk.constants.core.TaxConstants;
 import com.hk.constants.courier.StateList;
@@ -62,7 +63,7 @@ public class InvoiceLineItemDto {
 
         totalDiscountOnLineItem = orderLevelDiscount + rewardPointDiscount + itemLevelDiscount;
         rate = hkPrice - totalDiscountOnLineItem / qty;
-        taxRate = (taxValue * 100) + "%";
+        taxRate = Double.parseDouble(new DecimalFormat("#.##").format(taxValue * 100)) + "%";
 
         if (productLineItem.getSku().getWarehouse().getState().equalsIgnoreCase(StateList.HARYANA)) {
             taxable = (lineItemTotal - totalDiscountOnLineItem) / (1 + taxValue + (taxValue * TaxConstants.SURCHARGE));

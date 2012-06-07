@@ -67,7 +67,6 @@ public class Functions {
 
     @SuppressWarnings("unused")
     private static final PeriodFormatter formatter;
-    private static final MenuHelper      menuHelper = null;
     // TODO: rewrite
     static {
         formatter = new PeriodFormatterBuilder().appendYears().appendSuffix(" year, ", " years, ").appendMonths().appendSuffix(" month, ", " months, ").appendWeeks().appendSuffix(
@@ -410,6 +409,7 @@ public class Functions {
     }
 
     public static MenuNode getMenuNodeForProduct(Product product) {
+        MenuHelper menuHelper = (MenuHelper) ServiceLocatorFactory.getService("MenuHelper");
         return menuHelper.getMenoNodeFromProduct(product);
     }
 
@@ -452,6 +452,12 @@ public class Functions {
     public static List<Product> getCategoryHeadingProductsSortedByOrder(Long primaryCategoryHeadingId, String productReferrer){
       ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
       return productService.ProductsSortedByOrder(primaryCategoryHeadingId, productReferrer);
+    }
+
+    public static boolean isComboInStock(Object o) {
+      ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
+      Combo combo = (Combo) o;
+      return productService.isComboInStock(combo);
     }
 
 }

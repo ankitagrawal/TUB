@@ -18,6 +18,8 @@ import com.hk.domain.catalog.product.ProductGroup;
 import com.hk.domain.catalog.product.ProductImage;
 import com.hk.domain.catalog.product.ProductOption;
 import com.hk.domain.content.PrimaryCategoryHeading;
+import com.hk.domain.catalog.product.combo.Combo;
+import com.hk.domain.catalog.product.combo.ComboProduct;
 import com.hk.pact.dao.catalog.product.ProductDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.web.filter.WebContext;
@@ -38,7 +40,7 @@ public class ProductServiceImpl implements ProductService {
     public Product getProductById(String productId) {
         return getProductDAO().getProductById(productId);
     }
-    
+
     public List<Product> getAllProducts(){
         return getProductDAO().getAll(Product.class);
     }
@@ -58,7 +60,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductOption findProductOptionByNameAndValue(String name, String value) {
         return getProductDAO().findProductOptionByNameAndValue(name, value);
     }
-    
+
     public String getProductUrl(Product product) {
         String host = "http://".concat(StripesFilter.getConfiguration().getSslConfiguration().getUnsecureHost());
         String contextPath = WebContext.getRequest().getContextPath();
@@ -150,6 +152,7 @@ public class ProductServiceImpl implements ProductService {
         this.productDAO = productDAO;
     }
 
+
     public List<Product> ProductsSortedByOrder(Long primaryCategoryHeadingId, String productReferrer){
       PrimaryCategoryHeading primaryCategoryHeading = primaryCategoryHeadingDaoImpl.get(PrimaryCategoryHeading.class, primaryCategoryHeadingId);
       Collections.sort(primaryCategoryHeading.getProducts(), new ProductComparator());
@@ -166,5 +169,16 @@ public class ProductServiceImpl implements ProductService {
         }
         return -1;
       }
+    }
+
+    public boolean isComboInStock(Combo combo) {
+      for (ComboProduct comboProduct : combo.getComboProducts()) {
+        if (!comboProduct.getAllowedProductVariants().isEmpty() && comboProduct.getAllowedInStockVariants().isEmpty()) {
+          return false;
+        } else if (comboProduct.getProduct().getInStockVariants().isEmpty()) {
+          return false;
+        }
+      }
+      return true;
     }
 }

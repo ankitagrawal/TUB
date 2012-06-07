@@ -11,6 +11,7 @@ import net.sourceforge.stripes.validation.ValidationErrorHandler;
 import net.sourceforge.stripes.validation.ValidationErrors;
 
 import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
@@ -42,8 +43,13 @@ public class FanCouponClaimAction extends BaseAction implements ValidationErrorH
 
   private FbcouponUserCampaign fbcouponUserCampaign;
 
+  @Autowired
    FanCouponManager fanCouponManager;
+
+  @Autowired
    FbcouponUserCampaignDao fbcouponUserCampaignDao;
+
+  @Autowired
    FbcouponUserDao fbcouponUserDao;
 
   public Resolution handleValidationErrors(ValidationErrors validationErrors) throws Exception {

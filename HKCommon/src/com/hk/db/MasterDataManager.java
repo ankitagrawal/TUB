@@ -16,13 +16,7 @@ import com.hk.db.seed.courier.BoxSizeSeedData;
 import com.hk.db.seed.courier.CourierGroupSeedData;
 import com.hk.db.seed.courier.CourierSeedData;
 import com.hk.db.seed.email.EmailTypeSeedData;
-import com.hk.db.seed.inventory.DebitNoteStatusSeedData;
-import com.hk.db.seed.inventory.GrnStatusSeedData;
-import com.hk.db.seed.inventory.InvTxnTypeSeedData;
-import com.hk.db.seed.inventory.PurchaseInvoiceStatusSeedData;
-import com.hk.db.seed.inventory.PurchaseOrderStatusSeedData;
-import com.hk.db.seed.inventory.ReconciliationStatusSeedData;
-import com.hk.db.seed.inventory.ReconciliationTypeSeedData;
+import com.hk.db.seed.inventory.*;
 import com.hk.db.seed.marketing.AdNetworksSeedData;
 import com.hk.db.seed.marketing.GoogleBannedWordSeedData;
 import com.hk.db.seed.marketing.ProductReferrerSeedData;
@@ -82,6 +76,7 @@ public class MasterDataManager {
     CourierGroupSeedData                   courierGroupSeedData;
     PrimaryReferrerForOrderSeedData        primaryReferrerForOrderSeedData;
     SecondaryReferrerForOrderSeedData      secondaryReferrerForOrderSeedData;
+    PurchaseFormTypeSeedData               purchaseFormTypeSeedData;
 
     public void insert() {
 
@@ -199,6 +194,9 @@ public class MasterDataManager {
 
         logger.debug("inserting primary source for order");
         primaryReferrerForOrderSeedData.invokeInsert();
+
+        logger.debug("inserting purchase form-type  seed data");
+        purchaseFormTypeSeedData.invokeInsert();
 
         logger.debug("inserting secondary source for order");
         secondaryReferrerForOrderSeedData.invokeInsert();

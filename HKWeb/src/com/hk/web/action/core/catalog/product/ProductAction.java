@@ -50,7 +50,6 @@ import com.hk.web.filter.WebContext;
 import com.hk.manager.LinkManager;
 
 @UrlBinding("/product/{productSlug}/{productId}")
-// @HttpCache(expires=1200)
 @Component
 public class ProductAction extends BaseAction {
 
@@ -106,6 +105,7 @@ public class ProductAction extends BaseAction {
     @DefaultHandler
     @DontValidate
     public Resolution pre() {
+        getContext().getResponse().setDateHeader("Expires", System.currentTimeMillis() + (300*1000)); // 5 min in future.
         User user = null;
         if (productId == null || StringUtils.isBlank(productId)) {
             WebContext.getResponse().setStatus(310); // redirection
@@ -181,6 +181,8 @@ public class ProductAction extends BaseAction {
                 return new ForwardResolution("/pages/productFeedXml.jsp");
             }
         }
+        
+        
         return new ForwardResolution("/pages/product.jsp");
     }
 

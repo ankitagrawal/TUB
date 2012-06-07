@@ -3,6 +3,8 @@ package com.hk.impl.dao.user;
 import java.util.Date;
 import java.util.List;
 
+import com.hk.constants.core.RoleConstants;
+import com.hk.domain.user.Role;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -18,22 +20,22 @@ import com.hk.pact.dao.user.UserProductHistoryDao;
 
 @Repository
 public class UserProductHistoryDaoImpl extends BaseDaoImpl implements UserProductHistoryDao {
-
   @Transactional
   public void addToUserProductHistory(Product product, User user, ProductReferrer productReferrer) {
-
-    if (!incrementProductCounterIfAlreadyExists(product, user, productReferrer)) {
-      UserProductHistory userProductHistory = new UserProductHistory();
-      userProductHistory.setCreateDate(new Date());
-      userProductHistory.setLastDate(new Date());
-      userProductHistory.setProduct(product);
-      userProductHistory.setUser(user);
-      userProductHistory.setBought(false);
-      userProductHistory.setCounter(1L);
-      userProductHistory.setProductReferrer(productReferrer);
-      save(userProductHistory);
+    if (!user.getRoles().contains(get(Role.class, RoleConstants.HK_EMPLOYEE))){
+      if (!incrementProductCounterIfAlreadyExists(product, user, productReferrer)) {
+        UserProductHistory userProductHistory = new UserProductHistory();
+        userProductHistory.setCreateDate(new Date());
+        userProductHistory.setLastDate(new Date());
+        userProductHistory.setProduct(product);
+        userProductHistory.setUser(user);
+        userProductHistory.setBought(false);
+        userProductHistory.setCounter(1L);
+        userProductHistory.setProductReferrer(productReferrer);
+        save(userProductHistory);
+      }
     }
-  }
+  }  
 
   @Transactional
   private boolean incrementProductCounterIfAlreadyExists(Product product, User user, ProductReferrer productReferrer) {

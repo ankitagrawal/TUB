@@ -10,6 +10,7 @@ import com.hk.domain.catalog.product.ProductExtraOption;
 import com.hk.domain.catalog.product.ProductGroup;
 import com.hk.domain.catalog.product.ProductImage;
 import com.hk.domain.catalog.product.ProductOption;
+import com.hk.domain.catalog.product.combo.Combo;
 
 public interface ProductService {
 
@@ -78,5 +79,7 @@ public interface ProductService {
     public ProductOption findProductOptionByNameAndValue(String name, String value);
 
     public List<Product> ProductsSortedByOrder(Long primaryCategoryHeadingId, String productReferrer);
+
+    public boolean isComboInStock(Combo combo);
 
 }
