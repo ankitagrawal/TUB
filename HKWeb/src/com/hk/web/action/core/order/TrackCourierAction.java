@@ -43,7 +43,9 @@ public class TrackCourierAction extends BaseAction {
     private Long courierId;
 
     @Autowired
-    ShippingOrderDao shippingOrderDao;
+    private ShippingOrderDao shippingOrderDao;
+
+	private ShippingOrder shippingOrder;
 
     String status;
     String awb;
@@ -71,7 +73,11 @@ public class TrackCourierAction extends BaseAction {
         } else if (courierId.equals(EnumCourier.Speedpost.getId())) {
             resolution = new RedirectResolution("/pages/indiaPostCourier.jsp");
         } else if (courierId.equals(EnumCourier.Delhivery.getId())) {
-            ShippingOrder shippingOrder = shippingOrderDao.findByTrackingId(trackingId);
+	        /**
+	         * Commenting the below line as this was giving an errror in Delhivery courier tracking page. Shipping order made a class member.
+ 	         */
+            //ShippingOrder shippingOrder = shippingOrderDao.findByTrackingId(trackingId);
+	        shippingOrder = shippingOrderDao.findByTrackingId(trackingId);
             String gatewayOrderId = "";
             if (shippingOrder != null) {
                 gatewayOrderId = shippingOrder.getGatewayOrderId();
@@ -228,4 +234,12 @@ public class TrackCourierAction extends BaseAction {
     public void setPaymentType(String paymentType) {
         this.paymentType = paymentType;
     }
+
+	public ShippingOrder getShippingOrder() {
+		return shippingOrder;
+	}
+
+	public void setShippingOrder(ShippingOrder shippingOrder) {
+		this.shippingOrder = shippingOrder;
+	}
 }
