@@ -7456,4 +7456,7 @@
             </column>
         </addColumn>
         </changeSet>
+    <changeSet author="Seema (generated)" id="1339056902031-4">
+        <modifyDataType columnName="value" newDataType="VARCHAR(70)" tableName="variant_config_values"/>
+    </changeSet>
    </databaseChangeLog>
