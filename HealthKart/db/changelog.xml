@@ -7456,4 +7456,4 @@
             </column>
         </addColumn>
         </changeSet>
-</databaseChangeLog>
+   </databaseChangeLog>
