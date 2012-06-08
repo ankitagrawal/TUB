@@ -188,37 +188,6 @@ private String                categoryHealthkartListString  = null;*/
     return true;
   }
 
-  // here mail will go once again even if for same campaign has been sent before, generally a reminder email
-  public boolean sendCampaignMailsToListOfEmailIds(List<String> emailersList, EmailCampaign emailCampaign, String xsmtpapi) {
-    Map<String, String> headerMap = new HashMap<String, String>();
-    headerMap.put("X-SMTPAPI", xsmtpapi);
-
-    for (String email : emailersList) {
-      //find existing recipients or create recipients through the emails ids passed
-      EmailRecepient emailRecepient = getEmailRecepientDao().getOrCreateEmailRecepient(email);
-      //values that may be used in FTL
-      HashMap valuesMap = new HashMap();
-      valuesMap.put("unsubscribeLink", getLinkManager().getEmailUnsubscribeLink(emailRecepient));
-      valuesMap.put("user", email);
-      // subscribed user + same campaign mail not yet sent
-      List<EmailerHistory> emailerHistoryList = getEmailerHistoryDao().findEmailRecipientByCampaign(emailRecepient, emailCampaign);
-      if (emailRecepient.isSubscribed()) {
-        if (emailerHistoryList != null && emailerHistoryList.isEmpty()) {
-          // last mail date null or  last mail date > campaign min date
-          if (emailRecepient.getLastEmailDate() == null || new DateTime().minusDays(emailCampaign.getMinDayGap().intValue()).isAfter(emailRecepient.getLastEmailDate().getTime())) {
-            emailService.sendHtmlEmail(emailCampaign.getTemplate(), valuesMap, emailRecepient.getEmail(), email, "info@healthkart.com", headerMap);
-            //keep a record in history
-            emailRecepient.setEmailCount(emailRecepient.getEmailCount() + 1);
-            emailRecepient.setLastEmailDate(new Date());
-            getEmailRecepientDao().save(emailRecepient);
-            getEmailerHistoryDao().createEmailerHistory("no-reply@healthkart.com", "HealthKart", getBaseDao().get(EmailType.class, EnumEmailType.CampaignEmail.getId()), emailRecepient, emailCampaign, "");
-          }
-        }
-      }
-    }
-    return true;
-  }
-
   @SuppressWarnings("unchecked")
   @Transactional
   public boolean sendCampaignMails(List<User> emailersList, EmailCampaign emailCampaign, String xsmtpapi) {
@@ -234,35 +203,33 @@ private String                categoryHealthkartListString  = null;*/
     for (User user : emailersList) {
       try {
         // find exisitng receipients or create recepients thru the emails ids passed
-        EmailRecepient emailRecepient = getEmailRecepientDao().findByRecepient(user.getEmail());//.getOrCreateEmailRecepient(user.getEmail());
-        if(emailRecepient != null) {
-          // values that may be used in FTL
-          HashMap valuesMap = new HashMap();
-          valuesMap.put("unsubscribeLink", getLinkManager().getEmailUnsubscribeLink(emailRecepient));
-          valuesMap.put("user", user);
+        EmailRecepient emailRecepient = getEmailRecepientDao().getOrCreateEmailRecepient(user.getEmail());
 
-          Map<String, HtmlEmail> email = emailService.createHtmlEmail(emailCampaign.getTemplate(), valuesMap, emailRecepient.getEmail(), user.getName(), "info@healthkart.com", headerMap, freemarkerTemplate);
-          emailList.add(email);
-          // keep a record in history
-          emailRecepient.setEmailCount(emailRecepient.getEmailCount() + 1);
-          emailRecepient.setLastEmailDate(new Date());
-          emailRecepientRecs.add(emailRecepient);
+        // values that may be used in FTL
+        HashMap valuesMap = new HashMap();
+        valuesMap.put("unsubscribeLink", getLinkManager().getEmailUnsubscribeLink(emailRecepient));
+        valuesMap.put("user", user);
 
-          EmailerHistory emailerHistory = getEmailerHistoryDao().createEmailerHistory("no-reply@healthkart.com", "HealthKart",
-              getBaseDao().get(EmailType.class, EnumEmailType.CampaignEmail.getId()), emailRecepient, emailCampaign, "");
-          emailHistoryRecs.add(emailerHistory);
+        Map<String, HtmlEmail> email = emailService.createHtmlEmail(emailCampaign.getTemplate(), valuesMap, emailRecepient.getEmail(), user.getName(), "info@healthkart.com", headerMap, freemarkerTemplate);
+        emailList.add(email);
+        // keep a record in history
+        emailRecepient.setEmailCount(emailRecepient.getEmailCount() + 1);
+        emailRecepient.setLastEmailDate(new Date());
+        emailRecepientRecs.add(emailRecepient);
 
-          commitCount++;
-          if( commitCount == breakFromLoop ) {
-            getEmailRecepientDao().saveOrUpdate(emailRecepient);
-            getEmailerHistoryDao().saveOrUpdate(emailHistoryRecs);
+        EmailerHistory emailerHistory = getEmailerHistoryDao().createEmailerHistory("no-reply@healthkart.com", "HealthKart",
+            getBaseDao().get(EmailType.class, EnumEmailType.CampaignEmail.getId()), emailRecepient, emailCampaign, "");
+        emailHistoryRecs.add(emailerHistory);
 
-            commitCount = 0;
-            emailHistoryRecs = new ArrayList<EmailerHistory>(100);
-            emailRecepientRecs = new ArrayList<EmailRecepient>(100);
-          }
+        commitCount++;
+        if( commitCount == breakFromLoop ) {
+          getEmailRecepientDao().saveOrUpdate(emailRecepient);
+          getEmailerHistoryDao().saveOrUpdate(emailHistoryRecs);
+
+          commitCount = 0;
+          emailHistoryRecs = new ArrayList<EmailerHistory>(100);
+          emailRecepientRecs = new ArrayList<EmailRecepient>(100);
         }
-
 
       } catch (Exception e) {
         logger.info("Some exception occured while sending email to one of the uses, user id being" + user.getId(), e);

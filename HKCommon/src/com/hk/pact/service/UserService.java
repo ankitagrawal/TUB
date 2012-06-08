@@ -1,6 +1,7 @@
 package com.hk.pact.service;
 
 import java.util.List;
+import java.math.BigInteger;
 
 import com.akube.framework.dao.Page;
 import com.hk.domain.catalog.category.Category;
@@ -44,9 +45,9 @@ public interface UserService {
 
   public User findByLoginAndStoreId(String login, Long storeId);
 
-  public List<User> getAllMailingList(EmailCampaign emailCampaign, List roleList);
+  public List<User> getAllMailingList(EmailCampaign emailCampaign, String[] roles, boolean filterByUserId, boolean filterByEmail, String[] userIds, String[] userEmailIds);
 
-  public Long getAllMailingListCount(EmailCampaign emailCampaign, List roleList);
+  public BigInteger getAllMailingListCount(EmailCampaign emailCampaign, String [] roles);
 
   public List<User> getMailingListByCategory(EmailCampaign emailCampaign, Category category);
 

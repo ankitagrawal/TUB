@@ -4,6 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.math.BigInteger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -59,14 +60,14 @@ public class MailingListManager {
     return allMailingList;
   }
 
-  public List<User> getAllUserList(EmailCampaign emailCampaign, List roleList) {
-    List<User> allMailingList = getUserService().getAllMailingList(emailCampaign, roleList);
+  public List<User> getFilteredUserList(EmailCampaign emailCampaign, String[] roles, boolean filterByUserId, boolean filterByEmail, String[] userIds, String[] userEmailIds) {
+    List<User> allMailingList = getUserService().getAllMailingList(emailCampaign, roles, filterByUserId, filterByEmail, userIds, userEmailIds);
 
     return allMailingList;
   }
 
-  public Long getAllUserListCount(EmailCampaign emailCampaign, List roleList) {
-    Long allMailingListCount = getUserService().getAllMailingListCount(emailCampaign, roleList);
+  public BigInteger getAllUserListCount(EmailCampaign emailCampaign, String [] roles) {
+    BigInteger allMailingListCount = getUserService().getAllMailingListCount(emailCampaign, roles);
 
     return allMailingListCount;
   }
@@ -132,7 +133,6 @@ public class MailingListManager {
   public void setCategoryService(CategoryService categoryService) {
     this.categoryService = categoryService;
   }
-
 
 
 }
