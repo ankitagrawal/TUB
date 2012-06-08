@@ -24,6 +24,11 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    public Long getAllReviews(Product product, List<Long> reviewStatusList) {
+      return userReviewDao.getAllReviews(product, reviewStatusList);
+    }
+
+    @Override
     public Double getProductStarRating(Product product) {
         return userReviewDao.getAverageRating(product);
     }

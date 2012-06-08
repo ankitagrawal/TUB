@@ -142,6 +142,10 @@ public class ProductServiceImpl implements ProductService {
        return reviewDAO.getProductReviews(product,reviewDAO.getReviewStatusList(reviewStatusList),page,perPage);
     }
 
+  public Long getAllReviews(Product product, List<Long> reviewStatusList){
+       return reviewDAO.getAllReviews(product, reviewStatusList);
+    }
+
     public Double getAverageRating(Product product){
        return reviewDAO.getAverageRating(product);
     }

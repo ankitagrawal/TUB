@@ -289,24 +289,19 @@
     </span>
 
     <c:if test="${!empty pa.userReviews}">
-      <div class='top_links'>
-        <table>
-          <tr>
-            <td><span>
+
+      <span style="float:right;">
       <a class='top_link' href='#user_reviews'>
-        User Reviews &darr;</strong>
+        User Reviews &darr;
       </a>
-         </span></td>
-            <td>&nbsp;&nbsp;</td>
-            <td align="right">
-              <div class="rating_bar">
-                <div id="blueStarTop" class="blueStarTop"></div>
-              </div>
-            </td>
-          </tr>
-        </table>
+
+      <div class="rating_bar" style="float:right;">
+        <div id="blueStarTop" class="blueStarTop"></div>
       </div>
+
+         </span>
     </c:if>
+
   </div>
 
   <div class='top_links'>
@@ -533,7 +528,7 @@
     <c:when test="${!empty pa.userReviews}">
       <table width="950" class="reviewLinksTable">
         <tr height="40">
-          <td colspan="2" style="font-size:14px;font-weight:bold;border-style:none">Reviews of ${pa.product.name}</td>
+          <td style="font-size:14px;font-weight:bold;border-style:none">Reviews of ${pa.product.name}</td>
           <td style="border-style:none">
             <s:link beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction" event="writeNewReview">
             <s:param name="product" value="${pa.product.id}"/>
@@ -543,24 +538,22 @@
         </tr>
 
         <tr height="50">
-          <td width="200" style="border-style:none">Average Rating : <strong><fmt:formatNumber
+          <td colspan="2" style="border-style:none">Average Rating : <strong><fmt:formatNumber
               value="${pa.averageRating}"
-              maxFractionDigits="1"/>/5</strong>
-          </td>
-          <td align="left" width="400" style="border-style:none">
+              maxFractionDigits="1"/>/5</strong> <br/>
+            (based on ${pa.totalReviews} reviews) <br/>
             <div class="rating_bar">
               <div id="blueStar" class="blueStar"></div>
             </div>
-          </td>
-
-          <td style="border-style:none">
+            <br/>
             <s:link beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction">
               <s:param name="product" value="${pa.product.id}"/>
-              <strong>All Reviews</strong>
+              <strong>All ${pa.totalReviews} Reviews</strong>
             </s:link>
           </td>
         </tr>
       </table>
+     
       <hr style="color:#F0F0F0;border-style:dotted"/>
       <c:forEach items="${pa.userReviews}" var="review" varStatus="ctr">
 

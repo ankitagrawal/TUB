@@ -64,6 +64,7 @@ public class ProductAction extends BaseAction {
     String                           affid;
     Double                           averageRating;
     List<UserReview>                 userReviews = new ArrayList<UserReview>();
+    Long                             totalReviews = 0L;
 
     @Session(key = HealthkartConstants.Cookie.preferredZone)
     private String                   preferredZone;
@@ -164,10 +165,13 @@ public class ProductAction extends BaseAction {
         }
 
       //User Reviews
-      averageRating = productService.getAverageRating(product);
-      Page userReviewPage = productService.getProductReviews(product, Arrays.asList(EnumReviewStatus.Published.getId()), 1, 5);
-      if (userReviewPage != null) {
-        userReviews = userReviewPage.getList();
+      totalReviews = productService.getAllReviews(product, Arrays.asList(EnumReviewStatus.Published.getId()));
+      if (totalReviews != null && totalReviews > 0) {
+        averageRating = productService.getAverageRating(product);
+        Page userReviewPage = productService.getProductReviews(product, Arrays.asList(EnumReviewStatus.Published.getId()), 1, 5);
+        if (userReviewPage != null) {
+          userReviews = userReviewPage.getList();
+        }
       }
         return new ForwardResolution("/pages/product.jsp");
     }
@@ -323,4 +327,7 @@ public class ProductAction extends BaseAction {
         this.urlFragment = urlFragment;
     }
 
+    public Long getTotalReviews() {
+      return totalReviews;
+    }
 }
