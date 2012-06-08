@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import com.hk.domain.user.User;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
@@ -25,15 +26,6 @@ public class NotifyMeDaoImpl extends BaseDaoImpl implements NotifyMeDao {
 
     @Transactional
     public NotifyMe save(NotifyMe notifyMe) {
-        String query = "select nm from NotifyMe nm  where nm.notifiedDate is null";
-        List<NotifyMe> notifyMeList = getSession().createQuery(query).list();
-        if (notifyMeList != null) {
-            for (NotifyMe notifyMeObject : notifyMeList) {
-                if (notifyMe.getProductVariant().equals(notifyMeObject.getProductVariant()) && notifyMe.getEmail().equals(notifyMeObject.getEmail())) {
-
-                }
-            }
-        }
         if (notifyMe.getCreatedDate() == null) {
             notifyMe.setCreatedDate(BaseUtils.getCurrentTimestamp());
         }
@@ -131,9 +123,9 @@ public class NotifyMeDaoImpl extends BaseDaoImpl implements NotifyMeDao {
                 "outOfStock", true).list();
     }
 
-    public List<NotifyMe> getPendingNotifyMeList() {
-        String query = "select nm from NotifyMe nm  where nm.notifiedDate is null";
-        return getSession().createQuery(query).list();
+    public List<NotifyMe> getPendingNotifyMeList(String notifyMeEmail, ProductVariant productVariant) {
+        String query = "select nm from NotifyMe nm  where nm.notifiedDate is null and nm.productVariant = :productVariant and nm.email =:notifyMeEmail";
+        return getSession().createQuery(query).setParameter("productVariant", productVariant).setParameter("notifyMeEmail", notifyMeEmail).list();
     }
 
 }

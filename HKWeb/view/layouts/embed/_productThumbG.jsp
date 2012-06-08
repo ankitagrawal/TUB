@@ -1,13 +1,9 @@
-<%@ page import="com.hk.domain.catalog.product.Product" %>
-<%@ page import="com.hk.service.ServiceLocatorFactory" %>
-<%@ page import="com.hk.pact.dao.catalog.product.ProductDao" %>
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
-<%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
-<%@ page import="com.hk.domain.catalog.category.Category" %>
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.ArrayList" %>
-<%@ page import="com.hk.pact.dao.catalog.combo.ComboDao" %>
+<%@ page import="com.hk.domain.catalog.product.Product" %>
 <%@ page import="com.hk.domain.catalog.product.combo.Combo" %>
+<%@ page import="com.hk.pact.dao.catalog.combo.ComboDao" %>
+<%@ page import="com.hk.pact.dao.catalog.product.ProductDao" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
