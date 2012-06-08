@@ -102,7 +102,7 @@
         <c:forEach items="${sbbaBean.productList}" var="product">
           <c:if test="${!product.googleAdDisallowed}">
             <div class="product_box">
-              <s:layout-render name="/layouts/embed/_productThumb.jsp" productId="${product.id}"></s:layout-render>
+              <s:layout-render name="/layouts/embed/_productThumb.jsp" product="${product}"></s:layout-render>
             </div>
           </c:if>
         </c:forEach>
