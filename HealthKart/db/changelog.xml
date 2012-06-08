@@ -7463,7 +7463,7 @@
         </addColumn>
     </changeSet>
     <changeSet author="Tarun (generated)" id="1339071974252-6">
-        <dropForeignKeyConstraint baseTableName="user_product_history" baseTableSchemaName="healthkart_dev" constraintName="fk_user_product_history_product_thumb_tag1"/>
+        <dropForeignKeyConstraint baseTableName="user_product_history" constraintName="fk_user_product_history_product_thumb_tag1"/>
     </changeSet>
     <changeSet author="Tarun (generated)" id="1339071974252-7">
         <addForeignKeyConstraint baseColumnNames="product_referrer_id" baseTableName="cart_line_item" constraintName="fk_cart_line_item_product_referrer1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_referrer" referencesUniqueColumn="false"/>
