@@ -8,14 +8,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.hk.pact.dao.catalog.category.CategoryDao;
 import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.HttpCache;
 import net.sourceforge.stripes.action.Resolution;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.constants.FbConstants;
-import com.hk.constants.marketing.AnalyticsConstants;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.category.CategoryImage;
 import com.hk.domain.content.PrimaryCategoryHeading;
@@ -26,7 +25,7 @@ import com.hk.pact.dao.content.PrimaryCategoryHeadingDao;
 import com.hk.pact.service.TestTxnService;
 import com.hk.pact.service.catalog.CategoryService;
 
-// @HttpCache(expires=20000)
+//@HttpCache(expires=20000)
 @Component
 public class HomeAction extends BaseAction {
 
@@ -42,7 +41,7 @@ public class HomeAction extends BaseAction {
     public Resolution pre() {
         category = categoryDao.getCategoryByName("home");
         headings = primaryCategoryHeadingDao.getHeadingsByCategory(category);
-        getContext().getResponse().setDateHeader("Expires", System.currentTimeMillis() + 900L); // 15 min in future.
+        getContext().getResponse().setDateHeader("Expires", System.currentTimeMillis() + (900*1000)); // 15 min in future.
 
         return new ForwardResolution("/pages/home.jsp");
     }
