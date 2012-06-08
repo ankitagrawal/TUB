@@ -5,6 +5,9 @@ import com.hk.admin.engine.ShipmentPricingEngine;
 import com.hk.admin.pact.service.courier.CourierCostCalculator;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.courier.EnumCourier;
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.Order;
@@ -13,6 +16,8 @@ import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -24,6 +29,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -52,6 +59,10 @@ public class ShipmentCostCalculatorAction extends BaseAction {
 
     int days;
 
+    Date shippedStartDate;
+    Date shippedEndDate;
+    boolean overrideHistoricalShipmentCost;
+
     private static Logger logger = LoggerFactory.getLogger(ShipmentCostCalculatorAction.class);
 
     @Autowired
@@ -68,6 +79,12 @@ public class ShipmentCostCalculatorAction extends BaseAction {
 
     @Autowired
     ShipmentService shipmentService;
+
+    @Autowired
+    ShippingOrderStatusService shippingOrderStatusService;
+
+    @Autowired
+    ShippingOrderService shippingOrderService;
 
     List<Courier> applicableCourierList;
 
@@ -121,12 +138,30 @@ public class ShipmentCostCalculatorAction extends BaseAction {
         return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
     }
 
-/*    public Resolution calculateCourierCostingForShippingOrderByAntTaskMethod(){
-        ShippingOrder shippingOrder = shippingOrderDao.findByGatewayOrderId(shippingOrderId);
-        shipmentCostFeeder.feedEstimatedCost(null,shippingOrder);
-        return new ForwardResolution("/pages/admin/courier/shipmentCostCalculator.jsp");
-    }*/
 
+    public Resolution saveHistoricalShipmentCost() {
+        ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
+        shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusSearchingInDeliveryQueue()));
+        shippingOrderSearchCriteria.setShipmentStartDate(shippedStartDate).setActivityEndDate(shippedEndDate);
+        List<ShippingOrder> shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria);
+
+        if (shippingOrderList != null) {
+            for (ShippingOrder shippingOrder : shippingOrderList) {
+                Shipment shipment = shippingOrder.getShipment();
+                if (shipment != null) {
+                    if (overrideHistoricalShipmentCost || shipment.getEstmShipmentCharge() == null) {
+                        shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
+                        shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
+                        shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
+                        shipmentService.save(shipment);
+                    }
+                } else {
+                    addRedirectAlertMessage(new SimpleMessage("No Shipment currently exists to be updated"));
+                }
+            }
+        }
+        return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
+    }
 
     public Double getWeight() {
         return weight;
@@ -202,5 +237,29 @@ public class ShipmentCostCalculatorAction extends BaseAction {
 
     public void setDays(int days) {
         this.days = days;
+    }
+
+    public Date getShippedStartDate() {
+        return shippedStartDate;
+    }
+
+    public void setShippedStartDate(Date shippedStartDate) {
+        this.shippedStartDate = shippedStartDate;
+    }
+
+    public Date getShippedEndDate() {
+        return shippedEndDate;
+    }
+
+    public void setShippedEndDate(Date shippedEndDate) {
+        this.shippedEndDate = shippedEndDate;
+    }
+
+    public boolean isOverrideHistoricalShipmentCost() {
+        return overrideHistoricalShipmentCost;
+    }
+
+    public void setOverrideHistoricalShipmentCost(boolean overrideHistoricalShipmentCost) {
+        this.overrideHistoricalShipmentCost = overrideHistoricalShipmentCost;
     }
 }

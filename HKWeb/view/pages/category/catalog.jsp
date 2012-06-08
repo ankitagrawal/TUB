@@ -315,7 +315,7 @@
     <c:forEach items="${ca.productList}" var="product">
       <c:if test="${!product.googleAdDisallowed}">
         <div class="product_box grid_4">
-          <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId="${product.id}"/>
+          <s:layout-render name="/layouts/embed/_productThumbG.jsp" product="${product}"/>
           <div class="clear"></div>
 
           <div class="compareDiv">
