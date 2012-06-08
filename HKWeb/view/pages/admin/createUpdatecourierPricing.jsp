@@ -42,8 +42,8 @@
                     <fieldset style="float:left;">
                         <s:form beanclass="com.hk.web.action.admin.courier.CreateUpdateCourierPricingAction">
                             <s:hidden name="courierPricingEngine.id"/>
-                            <s:hidden name="courierPricingEngine.courier" value="${cpea.courier}"/>
-                            <s:hidden name="courierPricingEngine.regionType" value="${cpea.regionType}"/>
+                            <s:hidden name="courierPricingEngine.courier"/> value="${cpea.courier}"/>
+                            <s:hidden name="courierPricingEngine.regionType"/> value="${cpea.regionType}"/>
                             <s:hidden name="courierPricingEngine.warehouse"/>
                             <tr>
                                 <td>First Base Weight:</td>

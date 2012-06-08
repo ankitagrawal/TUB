@@ -31,18 +31,18 @@ public class CreateUpdateCourierPricingAction extends BaseAction {
 
   @DefaultHandler
   public Resolution pre() {
-    return new ForwardResolution("/pages/admin/courierPricingEngine.jsp");
+    return new ForwardResolution("/pages/admin/createUpdatecourierPricing.jsp");
   }
 
   public Resolution getCourierPricing(){
    courierPricingEngine = courierPricingEngineDao.getCourierPricingInfo(courier,regionType,null);
-   return new ForwardResolution("/pages/admin/courierPricingEngine.jsp"); 
+   return new ForwardResolution("/pages/admin/createUpdatecourierPricing.jsp");
   }
 
   public Resolution save() {
     courierPricingEngineDao.save(courierPricingEngine);
     addRedirectAlertMessage(new SimpleMessage("courier info saved"));
-    return new ForwardResolution("/pages/admin/courierPricingEngine.jsp");
+    return new ForwardResolution("/pages/admin/createUpdatecourierPricing.jsp");
   }
 
 
