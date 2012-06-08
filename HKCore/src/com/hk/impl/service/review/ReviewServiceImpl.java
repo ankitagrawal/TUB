@@ -15,27 +15,27 @@ import com.hk.pact.service.review.ReviewService;
 public class ReviewServiceImpl implements ReviewService {
 
     @Autowired
-    private ReviewDao userReviewDao;
-    
-    
-    @Override
+    private ReviewDao reviewDao;
+
+
+  @Override
     public Page getProductReviews(Product product, List<Long> reviewStatusList, int page, int perPage) {
-        return userReviewDao.getProductReviews(product, userReviewDao.getReviewStatusList(reviewStatusList), page, perPage);
+        return reviewDao.getProductReviews(product, reviewStatusList, page, perPage);
     }
 
     @Override
     public Long getAllReviews(Product product, List<Long> reviewStatusList) {
-      return userReviewDao.getAllReviews(product, reviewStatusList);
+      return reviewDao.getAllReviews(product, reviewStatusList);
     }
 
     @Override
     public Double getProductStarRating(Product product) {
-        return userReviewDao.getAverageRating(product);
+        return reviewDao.getAverageRating(product);
     }
 
     @Override
     public ReviewStatus getReviewStatus(Long reviewStatusId) {
-        return userReviewDao.get(ReviewStatus.class, reviewStatusId);
+        return reviewDao.get(ReviewStatus.class, reviewStatusId);
     }
 
 }

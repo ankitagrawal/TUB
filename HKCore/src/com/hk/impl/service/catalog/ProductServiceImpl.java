@@ -20,6 +20,7 @@ import com.hk.domain.catalog.product.combo.ComboProduct;
 import com.hk.pact.dao.catalog.product.ProductDao;
 import com.hk.pact.dao.review.ReviewDao;
 import com.hk.pact.service.catalog.ProductService;
+import com.hk.pact.service.review.ReviewService;
 import com.hk.web.filter.WebContext;
 
 @Service
@@ -29,7 +30,7 @@ public class ProductServiceImpl implements ProductService {
     private ProductDao productDAO;
 
     @Autowired
-    private ReviewDao reviewDAO;
+    private ReviewService reviewService;
 
     public Product getProductById(String productId) {
         return getProductDAO().getProductById(productId);
@@ -139,15 +140,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public Page getProductReviews(Product product, List<Long> reviewStatusList, int page, int perPage){
-       return reviewDAO.getProductReviews(product,reviewDAO.getReviewStatusList(reviewStatusList),page,perPage);
+       return getReviewService().getProductReviews(product,reviewStatusList,page,perPage);
     }
 
   public Long getAllReviews(Product product, List<Long> reviewStatusList){
-       return reviewDAO.getAllReviews(product, reviewStatusList);
+       return getReviewService().getAllReviews(product, reviewStatusList);
     }
 
     public Double getAverageRating(Product product){
-       return reviewDAO.getAverageRating(product);
+       return getReviewService().getProductStarRating(product);
     }
 
     public ProductDao getProductDAO() {
@@ -157,6 +158,14 @@ public class ProductServiceImpl implements ProductService {
     public void setProductDAO(ProductDao productDAO) {
         this.productDAO = productDAO;
     }
+
+  public ReviewService getReviewService() {
+    return reviewService;
+  }
+
+  public void setReviewService(ReviewService reviewService) {
+    this.reviewService = reviewService;
+  }
 
   public boolean isComboInStock(Combo combo) {
     for (ComboProduct comboProduct : combo.getComboProducts()) {
