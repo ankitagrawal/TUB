@@ -151,12 +151,12 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
     @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PACKING_QUEUE}, authActionBean = AdminPermissionAction.class)
     public Resolution saveShipmentDetails() {
         shipment.setEmailSent(false);
+        shippingOrder.setShipment(shipment);
         if (courierGroupService.getCourierGroup(shipment.getCourier()) != null) {
             shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
             shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
             shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
         }
-        shippingOrder.setShipment(shipment);
         shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Packed));
         shippingOrderDao.save(shippingOrder);
         String comment = "";
