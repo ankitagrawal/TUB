@@ -57,7 +57,7 @@
     }
 
     .rating_bar {
-      width: 73px;
+      width: 75px;
       background: url('${pageContext.request.contextPath}/images/faintStar.png') 0 0 repeat-x;
     }
 
