@@ -1,6 +1,7 @@
 package com.hk.impl.service.core;
 
 import java.util.List;
+import java.math.BigInteger;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.mgt.SecurityManager;
@@ -93,12 +94,12 @@ public class UserServiceImpl implements UserService {
         return getUserDao().getAllMailingList(pageNo, perPage);
     }
 
-  public List<User> getAllMailingList(EmailCampaign emailCampaign, List roleList) {
-        return getUserDao().getAllMailingList(emailCampaign, roleList);
+  public List<User> getAllMailingList(EmailCampaign emailCampaign, String[]roles, boolean filterByUserId, boolean filterByEmail, String[] userIds, String[] userEmailIds) {
+        return getUserDao().getUserMailingList(emailCampaign, roles, filterByUserId, filterByEmail, userIds, userEmailIds);
     }
 
-  public Long getAllMailingListCount(EmailCampaign emailCampaign, List roleList) {
-        return getUserDao().getAllMailingListCount(emailCampaign, roleList);
+  public BigInteger getAllMailingListCount(EmailCampaign emailCampaign, String [] roles) {
+        return getUserDao().getAllMailingListCount(emailCampaign, roles);
     }
 
     public Page getAllUnverifiedMailingList(int pageNo, int perPage) {

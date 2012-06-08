@@ -1,6 +1,7 @@
 package com.hk.pact.dao.user;
 
 import java.util.List;
+import java.math.BigInteger;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,11 +59,12 @@ public interface UserDao extends BaseDao {
 
   public void setRoleDao(RoleDao roleDao);
 
-  public List<User> getAllMailingList(EmailCampaign emailCampaign, List roleList);
+  public List<User> getUserMailingList(EmailCampaign emailCampaign, String[] roles, boolean filterByUserId, boolean filterByEmail, String[] userIds, String[] userEmailIds);
 
-  public Long getAllMailingListCount(EmailCampaign emailCampaign, List roleList);
+  public BigInteger getAllMailingListCount(EmailCampaign emailCampaign, String [] roles);
 
   public List<User> getMailingListByCategory(EmailCampaign emailCampaign, Category category);
 
   public Long getMailingListCountByCategory(EmailCampaign emailCampaign, Category category);
+
 }

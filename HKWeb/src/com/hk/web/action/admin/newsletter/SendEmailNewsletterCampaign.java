@@ -3,6 +3,7 @@ package com.hk.web.action.admin.newsletter;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.math.BigInteger;
 
 import net.sourceforge.stripes.action.*;
 
@@ -30,6 +31,7 @@ import com.hk.domain.user.User;
 import com.hk.manager.EmailManager;
 import com.hk.pact.dao.marketing.EmailCampaignDao;
 import com.hk.pact.dao.RoleDao;
+import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.marketing.EmailCampaignService;
 import com.hk.pact.service.catalog.CategoryService;
@@ -37,6 +39,7 @@ import com.hk.util.ParseCsvFile;
 import com.hk.util.SendGridUtil;
 import com.hk.web.action.error.AdminPermissionAction;
 import com.hk.web.HealthkartResponse;
+import com.hk.impl.dao.user.UserDaoImpl;
 
 @Secure(hasAnyPermissions = {PermissionConstants.SEND_MARKETING_MAILS}, authActionBean = AdminPermissionAction.class)
 @Component
@@ -56,7 +59,8 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
   @Validate(required = true, on = { "confirmCampaign", "sendCampaign" })
   String                     categories;
 
-  Long                        userCount = 0L;
+  BigInteger userCount = BigInteger.ZERO;
+
   // @Named(Keys.Env.adminUploads)
   @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
   String                     adminUploadsPath;
@@ -104,14 +108,15 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
     String[] categoryArray = StringUtils.split(categories);
 
     if (categories.equalsIgnoreCase("all")) {
-      userCount = mailingListManager.getAllUserListCount(emailCampaign, Arrays.asList(getRoleDao().getRoleByName(EnumRole.HK_USER)));
+      userCount = mailingListManager.getAllUserListCount(emailCampaign, new String[]{EnumRole.HK_USER.getRoleName()});
     } else if (categories.equalsIgnoreCase("all-unverified")) {
-      userCount = mailingListManager.getAllUserListCount(emailCampaign, Arrays.asList(getRoleDao().getRoleByName(EnumRole.HK_UNVERIFIED)));
+      userCount = mailingListManager.getAllUserListCount(emailCampaign, new String[]{EnumRole.HK_UNVERIFIED.getRoleName()});
     }else {
       for (String categoryName : categoryArray) {
         Category category = getCategoryService().getCategoryByName(StringUtils.trim(categoryName));
         if (category != null) {
-          userCount += mailingListManager.getUserListCountByCategory(emailCampaign, category);
+          //userCount.add(mailingListManager.getUserListCountByCategory(emailCampaign, category));
+
         }
       }
     }
@@ -138,56 +143,104 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
     return selectCampaign();
   }
 
-  public Resolution sendCampaignViaCsvUserIDs() throws IOException {
+  /*public Resolution sendCampaignViaCsvUserIDs() throws IOException {
     String excelFilePath = adminUploadsPath + "/emailList/" + System.currentTimeMillis() + ".txt";
     File excelFile = new File(excelFilePath);
     excelFile.getParentFile().mkdirs();
     fileBeanForUserList.save(excelFile);
-    List<User> users = new ArrayList<User>();
 
-    for (String userId : ParseCsvFile.getStringListFromCsv(excelFilePath)) {
-      User user = getUserService().getUserById(Long.valueOf(userId));
-      if (user != null) {
-        users.add(user);
-      }
+    List<String> userIdList = ParseCsvFile.getStringListFromCsv(excelFilePath);
+    String userIds[] = new String[userIdList.size()];
+    int i = 0;
+    for(String userId : userIdList) {
+      userIds[i] = userId;
+      i++;
     }
+
     List<String> finalCategories = new ArrayList<String>();
     finalCategories.add("User Ids Excel");
-
-    // construct the headers to send
     String xsmtpapi = SendGridUtil.getSendGridEmailNewsLetterHeaderJson(finalCategories, emailCampaign);
 
-    // send campaign to user emails
-    getAdminEmailManager().sendCampaignMails(users, emailCampaign, xsmtpapi);
+    List<User> filteredUsers = new ArrayList<User>();
+
+    do {
+      filteredUsers.clear();
+      filteredUsers = mailingListManager.getFilteredUserList(emailCampaign, new String[]{EnumRole.HK_USER.getRoleName(), EnumRole.HK_UNVERIFIED.getRoleName()}, true, false, userIds, null);
+
+      if (filteredUsers.size() > 0) {
+        logger.info(" user list size " + filteredUsers.size());
+
+        getAdminEmailManager().sendCampaignMails(filteredUsers, emailCampaign, xsmtpapi);
+      }
+
+    } while(filteredUsers.size() > 0);
+
+    addRedirectAlertMessage(new SimpleMessage("Sending campaign in progress : " + emailCampaign.getName()));
+    return new RedirectResolution(EmailNewsletterAdmin.class);
+  }
+*/
+  private String[] getStringArrayFromCsvFile() throws IOException {
+    String excelFilePath = adminUploadsPath + "/emailList/" + System.currentTimeMillis() + ".txt";
+    File excelFile = new File(excelFilePath);
+    excelFile.getParentFile().mkdirs();
+    fileBeanForUserList.save(excelFile);
+
+    List<String> csvToStringList = ParseCsvFile.getStringListFromCsv(excelFilePath);
+    String csvToStringArray[] = new String[csvToStringList.size()];
+    int i = 0;
+    for(String userId : csvToStringList) {
+      csvToStringArray[i] = userId;
+      i++;
+    }
+    return csvToStringArray;
+  }
+
+  public Resolution sendCampaignViaCsvUserIDs() throws IOException {
+    String[] userIds = getStringArrayFromCsvFile();
+
+    sendCampaignByUploadingFile(true, false, userIds, null);
 
     addRedirectAlertMessage(new SimpleMessage("Sending campaign in progress : " + emailCampaign.getName()));
     return new RedirectResolution(EmailNewsletterAdmin.class);
   }
 
   public Resolution sendCampaignViaCsvUserEmails() throws IOException {
-    String excelFilePath = adminUploadsPath + "/emailList/" + System.currentTimeMillis() + ".txt";
-    File excelFile = new File(excelFilePath);
-    excelFile.getParentFile().mkdirs();
-    fileBean.save(excelFile);
-    List<String> users = new ArrayList<String>();
-    users.addAll(ParseCsvFile.getStringListFromCsv(excelFilePath));
+    String[] userEmails = getStringArrayFromCsvFile();
 
-    List<String> finalCategories = new ArrayList<String>();
-    finalCategories.add("User Ids Excel");
-
-    // construct the headers to send
-    String xsmtpapi = SendGridUtil.getSendGridEmailNewsLetterHeaderJson(finalCategories, emailCampaign);
-
-    // send campaign to user emails
-    getAdminEmailManager().sendCampaignMailsToListOfEmailIds(users, emailCampaign, xsmtpapi);
+    sendCampaignByUploadingFile(false, true, null, userEmails);
 
     addRedirectAlertMessage(new SimpleMessage("Sending campaign in progress : " + emailCampaign.getName()));
     return new RedirectResolution(EmailNewsletterAdmin.class);
   }
 
-  public Resolution sendCampaign() {
+  private void sendCampaignByUploadingFile(boolean filterByUserId, boolean filterByEmail, String[]userIds, String[] userEmails) {
+    List<String> finalCategories = new ArrayList<String>();
+    finalCategories.add("User Ids Excel");
+    String xsmtpapi = SendGridUtil.getSendGridEmailNewsLetterHeaderJson(finalCategories, emailCampaign);
 
-    addRedirectAlertMessage(new SimpleMessage("Sending campaign in progress : " + emailCampaign.getName()));
+    List<User> filteredUsers = new ArrayList<User>();
+
+    do {
+      filteredUsers.clear();
+      if(filterByUserId){
+        filteredUsers = mailingListManager.getFilteredUserList(emailCampaign, new String[]{EnumRole.HK_USER.getRoleName(), EnumRole.HK_UNVERIFIED.getRoleName()}, true, false, userIds, null);
+      }
+
+      if(filterByEmail){
+        filteredUsers = mailingListManager.getFilteredUserList(emailCampaign, new String[]{EnumRole.HK_USER.getRoleName(), EnumRole.HK_UNVERIFIED.getRoleName()}, false, true, null, userEmails);
+      }
+
+      if (filteredUsers.size() > 0) {
+        logger.info(" user list size " + filteredUsers.size());
+
+        getAdminEmailManager().sendCampaignMails(filteredUsers, emailCampaign, xsmtpapi);
+      }
+
+    } while(filteredUsers.size() > 0);
+  }
+
+
+  public Resolution sendCampaign() {
     String[] categoryArray = StringUtils.split(categories);
     List<String> finalCategories = new ArrayList<String>();
 
@@ -209,9 +262,9 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
     do {
       users = new ArrayList<User>();
       if (categories.equalsIgnoreCase("all")) {
-        users = mailingListManager.getAllUserList(emailCampaign, Arrays.asList(getRoleDao().getRoleByName(EnumRole.HK_USER)));
+        users = mailingListManager.getFilteredUserList(emailCampaign, new String[]{EnumRole.HK_USER.getRoleName()}, false, false, null, null);
       } else if (categories.equalsIgnoreCase("all-unverified")) {
-        users = mailingListManager.getAllUserList(emailCampaign, Arrays.asList(getRoleDao().getRoleByName(EnumRole.HK_UNVERIFIED)));
+        users = mailingListManager.getFilteredUserList(emailCampaign, new String[]{EnumRole.HK_UNVERIFIED.getRoleName()}, false, false, null, null);
       }
 
       if (users.size() > 0) {
@@ -239,7 +292,7 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
         }
       }
     }
-    
+    addRedirectAlertMessage(new SimpleMessage("Sending campaign in progress : " + emailCampaign.getName()));
     return new RedirectResolution(EmailNewsletterAdmin.class);
   }
 
@@ -282,7 +335,7 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
     this.categories = categories;
   }
 
-  public Long getUserCount() {
+  public BigInteger getUserCount() {
     return userCount;
   }
 
