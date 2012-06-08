@@ -9,15 +9,19 @@
 
 
   <%
-    ProductDao productDao = (ProductDao)ServiceLocatorFactory.getService(ProductDao.class);
-    String product_productThumbId = (String) pageContext.getAttribute("productId");
-    Product product_productThumb = productDao.getProductById(product_productThumbId);
+    Product product_productThumb = (Product) pageContext.getAttribute("product");
+    if (product_productThumb == null) {
+      ProductDao productDao = ServiceLocatorFactory.getService(ProductDao.class);
+      String product_productThumbId = (String) pageContext.getAttribute("productId");
+      product_productThumb = productDao.getProductById(product_productThumbId);
+    }
+
     pageContext.setAttribute("product", product_productThumb);
   %>
 
   <div class='product'>
     <c:choose>
-      <c:when test="${product.googleAdDisallowed}">
+      <c:when test="${product.googleAdDisallowed || product.deleted || product.outOfStock}">
       </c:when>
       <c:otherwise>
         <h3>
