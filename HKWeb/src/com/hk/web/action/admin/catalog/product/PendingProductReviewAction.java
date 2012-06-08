@@ -44,7 +44,6 @@ public class PendingProductReviewAction extends BasePaginatedAction {
     @Autowired
     private UserService userService;
 
-    @SuppressWarnings("unchecked")
     @DefaultHandler
     public Resolution pre() {
       Product productObj = null;
