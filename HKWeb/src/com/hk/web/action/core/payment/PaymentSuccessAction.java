@@ -5,6 +5,7 @@ import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumPaymentStatus;
+import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
@@ -29,6 +30,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Date;
 
 @Component
 public class PaymentSuccessAction extends BaseAction {
@@ -41,6 +43,8 @@ public class PaymentSuccessAction extends BaseAction {
     private Payment payment;
     private Order order;
     private PricingDto pricingDto;
+    private EnumPaymentMode paymentMode;
+    private String purchaseDate;
 
     @Autowired
     private PaymentDao paymentDao;
@@ -70,6 +74,10 @@ public class PaymentSuccessAction extends BaseAction {
 
             order = payment.getOrder();
             pricingDto = new PricingDto(order.getCartLineItems(), payment.getOrder().getAddress());
+
+            //for google analytics
+            paymentMode= EnumPaymentMode.getPaymentModeFromId(payment.getPaymentMode().getId());
+            purchaseDate = formatPurchaseDate(order.getCreateDate());
 
             Set<CartLineItem> productCartLineItems = new CartLineItemFilter(payment.getOrder().getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
 
@@ -115,6 +123,16 @@ public class PaymentSuccessAction extends BaseAction {
 
         }
         return new ForwardResolution("/pages/payment/paymentSuccess.jsp");
+    }
+
+    private String formatPurchaseDate(Date date){
+          StringBuilder sb=new StringBuilder("");
+          sb.append("Y"+date.getYear());
+          sb.append("M"+date.getMonth());
+          int week=((date.getDay()-1)/7)+1;
+          sb.append("W"+week);
+          sb.append("D"+date.getDay());
+          return sb.toString();
     }
 
     public String getGatewayOrderId() {
@@ -176,5 +194,21 @@ public class PaymentSuccessAction extends BaseAction {
 
     public void setOrder(Order order) {
         this.order = order;
+    }
+
+    public EnumPaymentMode getPaymentMode() {
+        return paymentMode;
+    }
+
+    public void setPaymentMode(EnumPaymentMode paymentMode) {
+        this.paymentMode = paymentMode;
+    }
+
+    public String getPurchaseDate() {
+        return purchaseDate;
+    }
+
+    public void setPurchaseDate(String purchaseDate) {
+        this.purchaseDate = purchaseDate;
     }
 }
