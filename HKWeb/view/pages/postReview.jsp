@@ -39,18 +39,20 @@
 
     <div class="grid_8">
       <div class="productDescDiv">
-        <div class="img320">
-          <c:choose>
-            <c:when test="${product.mainImageId != null}">
+        <c:choose>
+          <c:when test="${product.mainImageId != null}">
+            <div class="img128">
               <hk:productImage imageId="${product.mainImageId}" size="<%=EnumImageSize.SmallSize%>"
                                alt="${product.name}"/>
-            </c:when>
-            <c:otherwise>
+            </div>
+          </c:when>
+          <c:otherwise>
+            <div class="img320">
               <img src='<hk:vhostImage/>/images/ProductImages/ProductImagesOriginal/${product.id}.jpg'
                    alt="${product.name}"/>
-            </c:otherwise>
-          </c:choose>
-        </div>
+            </div>
+          </c:otherwise>
+        </c:choose>
       </div>
       <div>
 
