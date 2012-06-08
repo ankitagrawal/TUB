@@ -23,6 +23,10 @@ public class PrimaryCategoryHeadingDaoImpl extends BaseDaoImpl implements Primar
         return headings;
     }
 
+    public List<PrimaryCategoryHeading> getHeadingsByCategoryName(String categoryName) {
+        return getSession().createQuery("select h from PrimaryCategoryHeading h where h.category.name = (:categoryName)").setParameter("categoryName", categoryName).list();
+    }
+
     public List<PrimaryCategoryHeading> getHeadingsWithRankingByCategory(Category category) {
         List<PrimaryCategoryHeading> headings;
         if (category != null) {

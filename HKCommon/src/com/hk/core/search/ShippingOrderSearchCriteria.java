@@ -144,16 +144,14 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
             criteria.add(Restrictions.eq("basketCategory", basketCategory));
         }
 
-        DetachedCriteria baseOrderCriteria = null;
+        DetachedCriteria baseOrderCriteria = criteria.createCriteria("baseOrder");
+        baseOrderCriteria.addOrder(org.hibernate.criterion.Order.desc("score"));
+        
         if (baseOrderId != null) {
-            baseOrderCriteria = criteria.createCriteria("baseOrder");
             baseOrderCriteria.add(Restrictions.eq("id", baseOrderId));
         }
 
         if (baseGatewayOrderId != null) {
-            if (baseOrderCriteria == null) {
-                baseOrderCriteria = criteria.createCriteria("baseOrder");
-            }
             baseOrderCriteria.add(Restrictions.eq("gatewayOrderId", baseGatewayOrderId));
         }
 

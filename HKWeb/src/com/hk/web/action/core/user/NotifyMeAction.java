@@ -1,22 +1,5 @@
 package com.hk.web.action.core.user;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.DontValidate;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.JsonResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -24,9 +7,18 @@ import com.hk.domain.marketing.NotifyMe;
 import com.hk.domain.user.User;
 import com.hk.manager.EmailManager;
 import com.hk.manager.LinkManager;
-import com.hk.pact.dao.core.TempTokenDao;
 import com.hk.pact.dao.email.NotifyMeDao;
 import com.hk.web.HealthkartResponse;
+import net.sourceforge.stripes.action.*;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
 public class NotifyMeAction extends BaseAction {
@@ -34,8 +26,6 @@ public class NotifyMeAction extends BaseAction {
     private static Logger   logger      = LoggerFactory.getLogger(NotifyMeAction.class);
 
     private ProductVariant  productVariant;
-    @Autowired
-    TempTokenDao            tempTokenDao;
     @Autowired
     LinkManager             linkManager;
     @Autowired
@@ -81,22 +71,17 @@ public class NotifyMeAction extends BaseAction {
             noCache();
             return new JsonResolution(healthkartResponse);
         }
-        List<NotifyMe> notifyMeList = notifyMeDao.getPendingNotifyMeList();
-        if (notifyMeList != null) {
-            for (NotifyMe notifyMeObject : notifyMeList) {
-                if (notifyMe.getProductVariant().equals(notifyMeObject.getProductVariant()) && notifyMe.getEmail().equals(notifyMeObject.getEmail())) {
-                    addRedirectAlertMessage(new SimpleMessage("We have already received your request for this product. We will get back to you very soon. Thanks for your visit."));
-                    healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK,
-                            "Your request for this product has already been received. We will get back to you very soon. Thanks for your visit.", dataMap);
-                    return new JsonResolution(healthkartResponse);
-                }
-            }
+        List<NotifyMe> notifyMeList = notifyMeDao.getPendingNotifyMeList(notifyMe.getEmail(), notifyMe.getProductVariant());
+        if (notifyMeList != null && notifyMeList.size() > 0) {
+            addRedirectAlertMessage(new SimpleMessage("We have already received your request for this product. We will get back to you very soon. Thanks for your visit."));
+            healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK,
+                    "Your request for this product has already been received. We will get back to you very soon. Thanks for your visit.", dataMap);
+            return new JsonResolution(healthkartResponse);
         }
         notifyMeDao.save(notifyMe);
         healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Your request for Notification has been registered.", dataMap);
         noCache();
         return new JsonResolution(healthkartResponse);
-        // return new RedirectResolution(HomeAction.class);
     }
 
     public ProductVariant getProductVariant() {

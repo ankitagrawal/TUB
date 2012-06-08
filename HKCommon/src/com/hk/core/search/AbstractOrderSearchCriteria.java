@@ -87,6 +87,8 @@ public abstract class AbstractOrderSearchCriteria {
                 baseCriteria.addOrder(org.hibernate.criterion.Order.asc("updateDate"));
             }
         }
+        
+        
 
         // TODO: fix later after rewrite
         // baseCriteria.setMaxResults(2);
