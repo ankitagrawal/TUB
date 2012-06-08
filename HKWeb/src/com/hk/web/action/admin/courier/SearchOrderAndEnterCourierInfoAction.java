@@ -141,9 +141,10 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
                 boolean isCod = shippingOrder.isCOD();
                 availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod);
                 suggestedCourier = courierService.getDefaultCourierByPincodeAndWarehouse(pinCode, isCod);
-               List<Awb> suggestedTrackingId= awbDao.getAvailableAwbForCourierByCod(suggestedCourier,userService.getWarehouseForLoggedInUser(),isCod);
-              if(suggestedTrackingId != null && suggestedTrackingId.size() >0){
-              shipment.setTrackingId(suggestedTrackingId.get(0).getAwbNumber());
+               List<Awb> suggestedAwbList= awbDao.getAvailableAwbForCourierByCod(suggestedCourier,userService.getWarehouseForLoggedInUser(),isCod);
+              if(suggestedAwbList != null && suggestedAwbList.size() >0){
+              shipment.setTrackingId(suggestedAwbList.get(0).getAwbNumber());
+                suggestedAwbList.get(0).setUsed(true);
               }
               else{
                  addRedirectAlertMessage(new SimpleMessage("AWB numbers are not available for courier  , please contact respective courier service  "+ suggestedCourier));

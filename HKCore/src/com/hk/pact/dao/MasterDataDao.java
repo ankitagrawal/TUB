@@ -1,10 +1,7 @@
 package com.hk.pact.dao;
 
-import java.util.List;
-
 import com.hk.domain.TicketStatus;
 import com.hk.domain.TicketType;
-import com.hk.domain.order.ShippingOrderStatus;
 import com.hk.domain.accounting.DebitNoteStatus;
 import com.hk.domain.affiliate.AffiliateCategory;
 import com.hk.domain.catalog.Manufacturer;
@@ -12,13 +9,17 @@ import com.hk.domain.catalog.category.Category;
 import com.hk.domain.core.*;
 import com.hk.domain.courier.BoxSize;
 import com.hk.domain.courier.Courier;
+import com.hk.domain.courier.RegionType;
 import com.hk.domain.inventory.GrnStatus;
 import com.hk.domain.inventory.po.PurchaseInvoiceStatus;
 import com.hk.domain.inventory.rv.ReconciliationStatus;
 import com.hk.domain.inventory.rv.ReconciliationType;
 import com.hk.domain.offer.rewardPoint.RewardPointMode;
 import com.hk.domain.offer.rewardPoint.RewardPointStatus;
+import com.hk.domain.order.ShippingOrderStatus;
 import com.hk.domain.user.User;
+
+import java.util.List;
 
 public interface MasterDataDao {
 
@@ -82,8 +83,9 @@ public interface MasterDataDao {
 
     public List<ReconciliationType> getReconciliationTypeList();
 
-    public List<ShippingOrderStatus> getSOStatusForShipmentDetailsList();
+  public List<ShippingOrderStatus> getSOStatusForShipmentDetailsList();
 
-     public List<PurchaseFormType> getPurchaseInvoiceFormTypes();
+  public List<PurchaseFormType> getPurchaseInvoiceFormTypes();
 
+  public List<RegionType> getRegionTypeList();
 }
