@@ -24,6 +24,7 @@ import com.hk.domain.catalog.product.combo.ComboInstanceHasProductVariant;
 import com.hk.domain.catalog.product.combo.ComboProduct;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
+import com.hk.domain.marketing.ProductReferrer;
 import com.hk.exception.OutOfStockException;
 import com.hk.manager.OrderManager;
 import com.hk.manager.UserManager;
@@ -57,6 +58,7 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
     @Autowired
     UserProductHistoryDao userProductHistoryDao;
 
+    private Long  productReferrerId;
     @Autowired
     SignupAction signupAction;
 
@@ -66,6 +68,7 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
     public Resolution addToCart() {
         // I need to pass product info
         User user = null;
+        ProductReferrer productReferrer = null;
         if (getPrincipal() != null) {
             user = userDao.getUserById(getPrincipal().getId());
             if (user == null) {
@@ -136,7 +139,10 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
                     }
                 }
             }
-            orderManager.createLineItems(selectedProductVariants, order, combo, comboInstance);
+            if(productReferrerId != null){
+              productReferrer = userCartDao.get(ProductReferrer.class, productReferrerId); 
+            }
+            orderManager.createLineItems(selectedProductVariants, order, combo, comboInstance, productReferrer);
         } catch (OutOfStockException e) {
             getContext().getValidationErrors().add("e2", new SimpleError(e.getMessage()));
             return new JsonResolution(getContext().getValidationErrors(), getContext().getLocale());
@@ -191,4 +197,11 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
         this.combo = combo;
     }
 
+    public Long getProductReferrerId() {
+      return productReferrerId;
+    }
+
+    public void setProductReferrerId(Long productReferrerId) {
+      this.productReferrerId = productReferrerId;
+    }
 }

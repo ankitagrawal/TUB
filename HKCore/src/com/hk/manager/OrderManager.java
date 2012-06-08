@@ -42,6 +42,7 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.user.User;
+import com.hk.domain.marketing.ProductReferrer;
 import com.hk.dto.pricing.PricingDto;
 import com.hk.exception.OutOfStockException;
 import com.hk.pact.dao.BaseDao;
@@ -172,9 +173,9 @@ public class OrderManager {
         return order;
     }
 
-    public boolean createLineItems(List<ProductVariant> productVariants, Order order, Combo combo, ComboInstance comboInstance) throws OutOfStockException {
+    public boolean createLineItems(List<ProductVariant> productVariants, Order order, Combo combo, ComboInstance comboInstance, ProductReferrer productReferrer) throws OutOfStockException {
         boolean isCartLineItemCreated = false;
-        Double totalActualHkPriceofComboVariants = 0D;
+        Double totalActualHkPriceofComboVariants = 0D;        
         if (combo != null && combo.getId() != null) {
 
             for (ComboInstanceHasProductVariant variant : comboInstanceHasProductVariantDao.findByComboInstance(comboInstance)) {
@@ -223,6 +224,9 @@ public class OrderManager {
                     } else {
                         cartLineItem = getCartLineItemService().createCartLineItemWithBasicDetails(productVariant, order);
                     }
+                  if(productReferrer != null){
+                    cartLineItem.setProductReferrer(productReferrer);
+                  }
                     cartLineItem = getCartLineItemService().save(cartLineItem);
                     isCartLineItemCreated = true;
                 }
@@ -231,7 +235,7 @@ public class OrderManager {
         return isCartLineItemCreated;
     }
 
-    public boolean createLineItems(ProductVariant productVariant, CartLineItemConfig cartLineItemConfig, Order order) throws OutOfStockException {
+    public boolean createLineItems(ProductVariant productVariant, CartLineItemConfig cartLineItemConfig, Order order, ProductReferrer productReferrer) throws OutOfStockException {
         boolean isCartLineItemCreated = false;
 
         if (canAddVariantToCart(productVariant)) {
@@ -248,6 +252,9 @@ public class OrderManager {
                 double configPrice = cartLineItemConfig.getPrice();
                 cartLineItem.setMarkedPrice(productVariant.getMarkedPrice() + configPrice);
                 cartLineItem.setHkPrice(productVariant.getHkPrice() + configPrice);
+                if(productReferrer != null){
+                  cartLineItem.setProductReferrer(productReferrer);
+                }
                 // cartLineItem.setCostPrice(productVariant.getCostPrice() + configPrice);
                 cartLineItem = getCartLineItemService().save(cartLineItem);
                 isCartLineItemCreated = true;
@@ -257,7 +264,7 @@ public class OrderManager {
         return isCartLineItemCreated;
     }
 
-    public boolean createLineItems(ProductVariant productVariant, List<CartLineItemExtraOption> extraOptions, Order order) throws OutOfStockException {
+    public boolean createLineItems(ProductVariant productVariant, List<CartLineItemExtraOption> extraOptions, Order order, ProductReferrer productReferrer) throws OutOfStockException {
         boolean isCartLineItemCreated = false;
         if (canAddVariantToCart(productVariant)) {
             CartLineItemMatcher cartLineItemMatcher = new CartLineItemMatcher().addProductVariant(productVariant).addExtraOptions(extraOptions);
@@ -269,6 +276,9 @@ public class OrderManager {
                 updateCartLineItemWithQty(cartLineItem, productVariant.getQty());
             } else {
                 cartLineItem = getCartLineItemService().createCartLineItemWithBasicDetails(productVariant, order);
+                if(productReferrer != null){
+                  cartLineItem.setProductReferrer(productReferrer);
+                }
                 cartLineItem = getCartLineItemService().save(cartLineItem);
                 for (CartLineItemExtraOption extraOption : extraOptions) {
                     extraOption.setCartLineItem(cartLineItem);

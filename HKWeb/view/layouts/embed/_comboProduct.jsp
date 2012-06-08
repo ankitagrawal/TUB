@@ -11,7 +11,9 @@
   ComboDao comboDao = (ComboDao)ServiceLocatorFactory.getService(ComboDao.class);
   String productId = (String) pageContext.getAttribute("productId");
   Combo combo = comboDao.get(Combo.class, productId);
+  Long productReferrerId = (Long)pageContext.getAttribute("productReferrerId");
   pageContext.setAttribute("combo", combo);
+  pageContext.setAttribute("productReferrerId", productReferrerId);
 %>
 <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_CATALOG%>">
   <s:link beanclass="com.hk.web.action.admin.catalog.product.CreateEditComboAction" event="pre" target="_blank" class="popup">Edit Combo
@@ -188,6 +190,7 @@
   <div class="right_col">
     <c:choose>
       <c:when test="${hk:isComboInStock(combo)}">
+        <s:hidden name="productReferrerId" value="${productReferrerId}"/>
         <s:submit name="addToCart" value="Buy Now" class="addToCartButton cta"/>
       </c:when>
       <c:otherwise>

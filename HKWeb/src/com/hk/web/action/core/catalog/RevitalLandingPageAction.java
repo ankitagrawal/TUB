@@ -4,9 +4,11 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
+import com.hk.domain.marketing.ProductReferrer;
 import com.hk.manager.OrderManager;
 import com.hk.manager.UserManager;
 import com.hk.pact.service.catalog.ProductVariantService;
+import com.hk.pact.dao.BaseDao;
 import com.hk.web.action.core.cart.CartAction;
 import net.sourceforge.stripes.action.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,10 @@ public class RevitalLandingPageAction extends BaseAction {
   private UserManager userManager;
   @Autowired
   private ProductVariantService productVariantService;
+  @Autowired
+  private BaseDao baseDao;
+
+  Long productReferrerId;
 
   @DefaultHandler
   public Resolution revital() {
@@ -30,6 +36,7 @@ public class RevitalLandingPageAction extends BaseAction {
   }
 
   public Resolution addRevitalProductsAndGoToCart() {
+    ProductReferrer productReferrer = null;
     User user = null;
     if (getPrincipal() != null) {
       user = getUserService().getUserById(getPrincipal().getId());
@@ -47,8 +54,11 @@ public class RevitalLandingPageAction extends BaseAction {
 
     Order order = orderManager.getOrCreateOrder(user);
     try {
+      if(productReferrerId != null){
+        productReferrer = baseDao.get(ProductReferrer.class, productReferrerId);
+      }
       if (productVariantList != null && productVariantList.size() > 0) {
-        orderManager.createLineItems(productVariantList, order, null, null);
+        orderManager.createLineItems(productVariantList, order, null, null,productReferrer);
       }
     } catch (Exception e) {
       //
@@ -80,4 +90,19 @@ public class RevitalLandingPageAction extends BaseAction {
     this.productVariantService = productVariantService;
   }
 
+  public Long getProductReferrerId() {
+    return productReferrerId;
+  }
+
+  public void setProductReferrerId(Long productReferrerId) {
+    this.productReferrerId = productReferrerId;
+  }
+
+  public BaseDao getBaseDao() {
+    return baseDao;
+  }
+
+  public void setBaseDao(BaseDao baseDao) {
+    this.baseDao = baseDao;
+  }
 }

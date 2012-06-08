@@ -8,7 +8,9 @@
   <%
     ProductDao productDao = (ProductDao)ServiceLocatorFactory.getService(ProductDao.class);
     String productId = (String) pageContext.getAttribute("productId");
+    Long productReferrerId = (Long)pageContext.getAttribute("productReferrerId");
     Product product = productDao.getProductById(productId);
+    pageContext.setAttribute("productReferrerId", productReferrerId);
     pageContext.setAttribute("product", product);
   %>
   <div class='variants'>
@@ -118,7 +120,7 @@
             <s:hidden name="productVariantList[0]" value="${variant.id}"/>
             <s:hidden name="productVariantList[0].qty" value="1" class="lineItemQty"/>
             <s:hidden name="productVariantList[0].selected" value="true"/>
-
+            <s:hidden name="productReferrerId" value="${productReferrerId}"/>
             <div class='floatfix'></div>
           </div>
         </s:form>      

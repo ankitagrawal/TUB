@@ -337,12 +337,12 @@
           <c:choose>
             <c:when test="${!pa.product.productHaveColorOptions}">
               <s:layout-render name="/layouts/embed/_productWithMultipleVariantsWithNoColorOptions.jsp"
-                               productId="${pa.product.id}"/>
+                               productId="${pa.product.id}" productReferrerId="${pa.productReferrerId}"/>
               <s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>
             </c:when>
             <c:otherwise>
               <s:layout-render name="/layouts/embed/_productWithMultipleVariantsWithColorOptions.jsp"
-                               productId="${pa.product.id}"/>
+                               productId="${pa.product.id}" productReferrerId="${pa.productReferrerId}"/>
               <s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>
             </c:otherwise>
           </c:choose>
@@ -350,20 +350,20 @@
         <c:otherwise>
           <c:choose>
             <c:when test="${pa.combo != null}">
-              <s:layout-render name="/layouts/embed/_comboProduct.jsp" productId="${pa.product.id}"/>
+              <s:layout-render name="/layouts/embed/_comboProduct.jsp" productId="${pa.product.id}" productReferrerId="${pa.productReferrerId}"/>
             </c:when>
             <c:when test="${hk:collectionContains(pa.product.categories, eyeGlass)}">
-              <s:layout-render name="/layouts/embed/glasses.jsp" productId="${pa.product.id}"/>
+              <s:layout-render name="/layouts/embed/glasses.jsp" productId="${pa.product.id}" productReferrerId="${pa.productReferrerId}"/>
             </c:when>
             <c:otherwise>
-              <s:layout-render name="/layouts/embed/_productWithSingleVariant.jsp" productId="${pa.product.id}"/>
+              <s:layout-render name="/layouts/embed/_productWithSingleVariant.jsp" productId="${pa.product.id}" productReferrerId="${pa.productReferrerId}"/>
             </c:otherwise>
           </c:choose>
         </c:otherwise>
       </c:choose>
     </c:when>
     <c:otherwise>
-      <s:layout-render name="/layouts/embed/_productWithExtraOptions.jsp" productId="${pa.product.id}"/>
+      <s:layout-render name="/layouts/embed/_productWithExtraOptions.jsp" productId="${pa.product.id}" productReferrerId="${pa.productReferrerId}"/>
       <s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>
     </c:otherwise>
   </c:choose>

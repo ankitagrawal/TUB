@@ -9,7 +9,9 @@
 <%
   ProductDao productDao = (ProductDao)ServiceLocatorFactory.getService(ProductDao.class);
   String productId = (String) pageContext.getAttribute("productId");
+  Long productReferrerId = (Long)pageContext.getAttribute("productReferrerId");
   Product product = productDao.getProductById(productId);
+  pageContext.setAttribute("productReferrerId", productReferrerId);
   pageContext.setAttribute("product", product);
 %>
 
@@ -383,6 +385,7 @@
 
     <div class="floatright" style="height:80px;border-left:solid #CCCCCC;padding:20px;">
       <s:form beanclass="com.hk.web.action.core.cart.AddToCartWithLineItemConfigAction" onsubmit="return false;">
+        <s:hidden name="productReferrerId" value="${productReferrerId}"/>
         <s:submit name="buyNow" id="buyNow" value="Buy Now" class=""
             />
       </s:form>

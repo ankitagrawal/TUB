@@ -23,6 +23,7 @@ import com.hk.domain.order.CartLineItemConfig;
 import com.hk.domain.order.CartLineItemConfigValues;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
+import com.hk.domain.marketing.ProductReferrer;
 import com.hk.exception.OutOfStockException;
 import com.hk.manager.LinkManager;
 import com.hk.manager.OrderManager;
@@ -48,6 +49,8 @@ public class AddToCartWithLineItemConfigAction extends BaseAction {
 
     private List<LineItemConfigValuesDTO> configValues = new ArrayList<LineItemConfigValuesDTO>();
 
+    private Long                          productReferrerId;
+
     @Autowired
     private ProductVariantService         productVariantService;
 
@@ -72,6 +75,7 @@ public class AddToCartWithLineItemConfigAction extends BaseAction {
     public Resolution buyNow() {
         ProductVariant productVariant = getProductVariantService().getVariantById(variantId);
         User user = null;
+        ProductReferrer productReferrer = null;
 
         if (getPrincipal() != null) {
             user = getUserService().getUserById(getPrincipal().getId());
@@ -105,7 +109,10 @@ public class AddToCartWithLineItemConfigAction extends BaseAction {
                 lineItemConfig.getCartLineItemConfigValues().add(configValue);
             }
             productVariant.setQty(new Long(1));
-            isLineItemCreated = orderManager.createLineItems(productVariant, lineItemConfig, order);
+            if(productReferrerId != null){
+              productReferrer = baseDao.get(ProductReferrer.class, productReferrerId);
+            }
+            isLineItemCreated = orderManager.createLineItems(productVariant, lineItemConfig, order, productReferrer);
             userProductHistoryDao.updateIsAddedToCart(productVariant.getProduct(), user, order);
 
         } catch (OutOfStockException e) {
@@ -166,4 +173,11 @@ public class AddToCartWithLineItemConfigAction extends BaseAction {
         this.baseDao = baseDao;
     }
 
+    public Long getProductReferrerId() {
+      return productReferrerId;
+    }
+
+    public void setProductReferrerId(Long productReferrerId) {
+      this.productReferrerId = productReferrerId;
+    }
 }

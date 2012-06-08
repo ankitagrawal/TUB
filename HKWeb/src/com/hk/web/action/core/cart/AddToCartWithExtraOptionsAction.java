@@ -21,12 +21,14 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.CartLineItemExtraOption;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
+import com.hk.domain.marketing.ProductReferrer;
 import com.hk.exception.OutOfStockException;
 import com.hk.manager.LinkManager;
 import com.hk.manager.OrderManager;
 import com.hk.manager.UserManager;
 import com.hk.pact.service.UserService;
 import com.hk.pact.dao.user.UserProductHistoryDao;
+import com.hk.pact.dao.BaseDao;
 import com.hk.report.dto.order.ProductLineItemWithExtraOptionsDto;
 import com.hk.web.HealthkartResponse;
 
@@ -37,6 +39,7 @@ public class AddToCartWithExtraOptionsAction extends BaseAction implements Valid
     private static Logger                    logger = Logger.getLogger(AddToCartWithExtraOptionsAction.class);
 
     List<ProductLineItemWithExtraOptionsDto> productLineItemWithExtraOptionsDtos;
+    private Long productReferrerId;
 
     @Autowired
     private UserService                      userService;
@@ -48,6 +51,8 @@ public class AddToCartWithExtraOptionsAction extends BaseAction implements Valid
     private LinkManager                      linkManager;
     @Autowired
     UserProductHistoryDao                    userProductHistoryDao;
+    @Autowired
+    BaseDao                                  baseDao;
 
     @SuppressWarnings("unchecked")
     @DefaultHandler
@@ -55,6 +60,7 @@ public class AddToCartWithExtraOptionsAction extends BaseAction implements Valid
     public Resolution addToCart() {
         // I need to pass product info
         User user = null;
+        ProductReferrer productReferrer = null; 
         if (getPrincipal() != null) {
             user = getUserService().getUserById(getPrincipal().getId());
             if (user == null) {
@@ -70,7 +76,10 @@ public class AddToCartWithExtraOptionsAction extends BaseAction implements Valid
                 ProductVariant productVariant = dto.getProductVariant();
                 List<CartLineItemExtraOption> extraOptions = dto.getExtraOptions();
                 if (selected) {
-                    getOrderManager().createLineItems(productVariant, extraOptions, order);
+                    if(productReferrerId != null){
+                      productReferrer = baseDao.get(ProductReferrer.class, productReferrerId);
+                    }
+                    getOrderManager().createLineItems(productVariant, extraOptions, order, productReferrer);
                     userProductHistoryDao.updateIsAddedToCart(productVariant.getProduct(), user, order);
                 }
             }
@@ -132,4 +141,19 @@ public class AddToCartWithExtraOptionsAction extends BaseAction implements Valid
         this.linkManager = linkManager;
     }
 
+    public Long getProductReferrerId() {
+      return productReferrerId;
+    }
+
+    public void setProductReferrerId(Long productReferrerId) {
+      this.productReferrerId = productReferrerId;
+    }
+
+    public BaseDao getBaseDao() {
+      return baseDao;
+    }
+
+    public void setBaseDao(BaseDao baseDao) {
+      this.baseDao = baseDao;
+    }
 }

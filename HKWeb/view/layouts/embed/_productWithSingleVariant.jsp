@@ -10,8 +10,10 @@
   <%
     ProductDao productDao = (ProductDao)ServiceLocatorFactory.getService(ProductDao.class);
     String productId = (String) pageContext.getAttribute("productId");
+    Long productReferrerId = (Long)pageContext.getAttribute("productReferrerId");
     Product product = productDao.getProductById(productId);
     pageContext.setAttribute("product", product);
+    pageContext.setAttribute("productReferrerId", productReferrerId);
 
     CategoryDao categoryDao = (CategoryDao)ServiceLocatorFactory.getService(CategoryDao.class);
     Category eyeGlass = categoryDao.getCategoryByName("eyeglasses");
@@ -62,6 +64,7 @@
     </div>
     <div class="right_col">
       <s:form beanclass="com.hk.web.action.core.cart.AddToCartAction" class="addToCartForm">
+        <s:hidden name="productReferrerId" value="${productReferrerId}"/>
         <c:choose>
           <c:when test="${product.productVariants[0].outOfStock}">
             <%--<c:choose>--%>
