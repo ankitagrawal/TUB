@@ -44,6 +44,8 @@ public class PendingProductReviewAction extends BasePaginatedAction {
     @Autowired
     private UserService userService;
 
+    private int i;
+
     @DefaultHandler
     public Resolution pre() {
       Product productObj = null;
