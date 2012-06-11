@@ -102,7 +102,7 @@
         <div id="prod_grid">
           <c:forEach items="${searchAction.productList}" var="product">
             <div class="product_box">
-              <s:layout-render name="/layouts/embed/_productThumbSearchResults.jsp" productId="${product.id}"></s:layout-render>
+              <s:layout-render name="/layouts/embed/_productThumbSearchResults.jsp" product="${product}"></s:layout-render>
             </div>
           </c:forEach>
         </div>
