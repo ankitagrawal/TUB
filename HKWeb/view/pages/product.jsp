@@ -112,7 +112,7 @@
 <s:layout-component name="modal">
 
   <c:if test="${!empty pa.product.productVariants[0].productExtraOptions}">
-    <s:layout-render name="/pages/modal/productWithExtraOptions.jsp" productId="${pa.product.id}"/>
+    <s:layout-render name="/pages/modal/productWithExtraOptions.jsp" product="${pa.product}"/>
   </c:if>
   <%--<c:if test="${hk:collectionContains(pa.product.categories, eyeGlass)}">--%>
   <%--<s:layout-render name="/pages/modal/eyeGlasses.jsp" product="${pa.product}"/>--%>
