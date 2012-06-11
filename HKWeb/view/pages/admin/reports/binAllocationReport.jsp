@@ -1,7 +1,7 @@
 <%@ taglib prefix="s" uri="http://stripes.sourceforge.net/stripes-dynattr.tld" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Loaction Report">
+<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Location Report">
     <s:layout-component name="content">
         <div class="reportBox" style="height: 113px;">
             <div class="clear"> </div>
