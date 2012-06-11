@@ -11,6 +11,7 @@ import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.domain.email.EmailCampaign;
+import com.hk.domain.email.EmailRecepient;
 import com.hk.dto.user.UserFilterDto;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.RoleDao;
@@ -59,12 +60,16 @@ public interface UserDao extends BaseDao {
 
   public void setRoleDao(RoleDao roleDao);
 
-  public List<User> getUserMailingList(EmailCampaign emailCampaign, String[] roles, boolean filterByUserId, boolean filterByEmail, String[] userIds, String[] userEmailIds);
+  public List<EmailRecepient> getUserMailingList(EmailCampaign emailCampaign, String[] roles, String[] userIds, int maxResult);
 
   public BigInteger getAllMailingListCount(EmailCampaign emailCampaign, String [] roles);
 
-  public List<User> getMailingListByCategory(EmailCampaign emailCampaign, Category category);
+  public List<EmailRecepient> getMailingListByCategory(EmailCampaign emailCampaign, Category category, int maxResult);
 
   public Long getMailingListCountByCategory(EmailCampaign emailCampaign, Category category);
+
+  public List<User> findAllUsersNotInEmailRecepient();
+
+  public List<EmailRecepient> getMailingListByEmailIds(EmailCampaign emailCampaign, List<String> emailList, int maxResult);
 
 }

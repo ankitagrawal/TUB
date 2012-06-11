@@ -136,6 +136,7 @@ private String                categoryHealthkartListString  = null;*/
   @Autowired
   private FreeMarkerService     freeMarkerService;
   private final int             COMMIT_COUNT = 100;
+  private final int             INITIAL_LIST_SIZE = 100;
   @PostConstruct
   public void postConstruction() {
     this.hkReportAdminEmails = BaseUtils.split(hkReportAdminEmailsString, ",");
@@ -190,27 +191,27 @@ private String                categoryHealthkartListString  = null;*/
 
   @SuppressWarnings("unchecked")
   @Transactional
-  public boolean sendCampaignMails(List<User> emailersList, EmailCampaign emailCampaign, String xsmtpapi) {
+  public boolean sendCampaignMails(List<EmailRecepient> emailersList, EmailCampaign emailCampaign, String xsmtpapi) {
     Map<String, String> headerMap = new HashMap<String, String>();
     headerMap.put("X-SMTPAPI", xsmtpapi);
     Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(emailCampaign.getTemplate());
     List<Map<String, HtmlEmail>> emailList = new ArrayList<Map<String, HtmlEmail>>();
-    List<EmailerHistory> emailHistoryRecs = new ArrayList<EmailerHistory>(100);
-    List<EmailRecepient> emailRecepientRecs = new ArrayList<EmailRecepient>(100);
+    List<EmailerHistory> emailHistoryRecs = new ArrayList<EmailerHistory>(INITIAL_LIST_SIZE);
+    List<EmailRecepient> emailRecepientRecs = new ArrayList<EmailRecepient>(INITIAL_LIST_SIZE);
     int commitCount = 0;
     int breakFromLoop = emailersList.size() < COMMIT_COUNT ? emailersList.size() : COMMIT_COUNT;
 
-    for (User user : emailersList) {
+    for (EmailRecepient emailRecepient : emailersList) {
       try {
         // find exisitng receipients or create recepients thru the emails ids passed
-        EmailRecepient emailRecepient = getEmailRecepientDao().getOrCreateEmailRecepient(user.getEmail());
+        //EmailRecepient emailRecepient = getEmailRecepientDao().getOrCreateEmailRecepient(user.getEmail());
 
         // values that may be used in FTL
         HashMap valuesMap = new HashMap();
         valuesMap.put("unsubscribeLink", getLinkManager().getEmailUnsubscribeLink(emailRecepient));
-        valuesMap.put("user", user);
+        valuesMap.put("user", emailRecepient.getName());
 
-        Map<String, HtmlEmail> email = emailService.createHtmlEmail(emailCampaign.getTemplate(), valuesMap, emailRecepient.getEmail(), user.getName(), "info@healthkart.com", headerMap, freemarkerTemplate);
+        Map<String, HtmlEmail> email = emailService.createHtmlEmail(emailCampaign.getTemplate(), valuesMap, emailRecepient.getEmail(), emailRecepient.getName(), "info@healthkart.com", headerMap, freemarkerTemplate);
         emailList.add(email);
         // keep a record in history
         emailRecepient.setEmailCount(emailRecepient.getEmailCount() + 1);
@@ -218,21 +219,22 @@ private String                categoryHealthkartListString  = null;*/
         emailRecepientRecs.add(emailRecepient);
 
         EmailerHistory emailerHistory = getEmailerHistoryDao().createEmailerHistory("no-reply@healthkart.com", "HealthKart",
-            getBaseDao().get(EmailType.class, EnumEmailType.CampaignEmail.getId()), emailRecepient, emailCampaign, "");
+            getBaseDao().get(EmailType.class, emailCampaign.getId()), emailRecepient, emailCampaign, "");
         emailHistoryRecs.add(emailerHistory);
 
         commitCount++;
         if( commitCount == breakFromLoop ) {
-          getEmailRecepientDao().saveOrUpdate(emailRecepient);
+          getEmailRecepientDao().saveOrUpdate(emailRecepientRecs);
+          getEmailRecepientDao().clearSession();
           getEmailerHistoryDao().saveOrUpdate(emailHistoryRecs);
-
+          getEmailRecepientDao().clearSession();
           commitCount = 0;
-          emailHistoryRecs = new ArrayList<EmailerHistory>(100);
-          emailRecepientRecs = new ArrayList<EmailRecepient>(100);
+          emailHistoryRecs.clear();
+          emailRecepientRecs.clear();
         }
 
       } catch (Exception e) {
-        logger.info("Some exception occured while sending email to one of the uses, user id being" + user.getId(), e);
+        logger.info("Some exception occured while sending email to one of the user with email id" + emailRecepient.getEmail(), e);
       }
     }
 

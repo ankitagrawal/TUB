@@ -16,6 +16,7 @@ import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.email.EmailCampaign;
+import com.hk.domain.email.EmailRecepient;
 import com.hk.impl.dao.user.UserDaoImpl;
 import com.hk.pact.dao.user.UserCartDao;
 import com.hk.pact.dao.user.UserDao;
@@ -82,8 +83,8 @@ public class UserServiceImpl implements UserService {
         return getUserDao().getMailingList(category, pageNo, perPage);
     }
 
-  public List<User> getMailingListByCategory(EmailCampaign emailCampaign, Category category) {
-        return getUserDao().getMailingListByCategory(emailCampaign, category);
+  public List<EmailRecepient> getMailingListByCategory(EmailCampaign emailCampaign, Category category, int maxResult) {
+        return getUserDao().getMailingListByCategory(emailCampaign, category, maxResult);
     }
 
   public Long getMailingListCountByCategory(EmailCampaign emailCampaign, Category category) {
@@ -94,13 +95,17 @@ public class UserServiceImpl implements UserService {
         return getUserDao().getAllMailingList(pageNo, perPage);
     }
 
-  public List<User> getAllMailingList(EmailCampaign emailCampaign, String[]roles, boolean filterByUserId, boolean filterByEmail, String[] userIds, String[] userEmailIds) {
-        return getUserDao().getUserMailingList(emailCampaign, roles, filterByUserId, filterByEmail, userIds, userEmailIds);
+  public List<EmailRecepient> getAllMailingList(EmailCampaign emailCampaign, String[]roles, String[] userIds, int maxResult) {
+        return getUserDao().getUserMailingList(emailCampaign, roles, userIds, maxResult);
     }
 
   public BigInteger getAllMailingListCount(EmailCampaign emailCampaign, String [] roles) {
         return getUserDao().getAllMailingListCount(emailCampaign, roles);
     }
+
+  public List<EmailRecepient> getMailingListByEmailIds(EmailCampaign emailCampaign, List<String> emailList, int maxResult) {
+    return getUserDao().getMailingListByEmailIds(emailCampaign,  emailList, maxResult);
+  }
 
     public Page getAllUnverifiedMailingList(int pageNo, int perPage) {
         return getUserDao().getAllUnverifiedMailingList(pageNo, perPage);
@@ -109,6 +114,9 @@ public class UserServiceImpl implements UserService {
     public void updateIsProductBought(Order order) {
         getUserCartDao().updateIsProductBought(order);
     }
+  public List<User> findAllUsersNotInEmailRecepient() {
+    return getUserDao().findAllUsersNotInEmailRecepient();
+  }
 
     public User save(User user) {
         if (user != null) {

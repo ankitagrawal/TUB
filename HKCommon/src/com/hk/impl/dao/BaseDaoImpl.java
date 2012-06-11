@@ -238,14 +238,21 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
 
     private void resetHibernateAfterWrite() {
         getHibernateTemplate().flush();
-        getHibernateTemplate().clear();
         getHibernateTemplate().getSessionFactory().getCurrentSession().setFlushMode(FlushMode.MANUAL);
         getHibernateTemplate().setCheckWriteOperations(true);
+    }
+
+  /**
+   * WARNING: Make sure that you should not access any lazy initialization in this session after calling this method
+   */
+    public void clearSession(){
+        getHibernateTemplate().clear();
     }
 
     public void saveOrUpdate(Object entity) {
         prepareHibernateForWrite();
         getHibernateTemplate().saveOrUpdate(entity);
+        getSession().update(entity);
         resetHibernateAfterWrite();
     }
 

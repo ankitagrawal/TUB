@@ -15,6 +15,7 @@ import com.hk.constants.core.Keys;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.user.User;
 import com.hk.domain.email.EmailCampaign;
+import com.hk.domain.email.EmailRecepient;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.CategoryService;
 
@@ -39,16 +40,14 @@ public class MailingListManager {
     return allMailingList;
   }
 
-  public List<User> getUserListByCategory(EmailCampaign emailCampaign, Category category) {
-    List<User> allMailingList = getUserService().getMailingListByCategory(emailCampaign, category);
+  public List<EmailRecepient> getUserListByCategory(EmailCampaign emailCampaign, Category category, int maxResult) {
+    List<EmailRecepient> allMailingList = getUserService().getMailingListByCategory(emailCampaign, category, maxResult);
 
     return allMailingList;
   }
 
   public Long getUserListCountByCategory(EmailCampaign emailCampaign, Category category) {
-    Long allMailingList = getUserService().getMailingListCountByCategory(emailCampaign, category);
-
-    return allMailingList;
+    return getUserService().getMailingListCountByCategory(emailCampaign, category);
   }
 
   public List<User> getAllUserList(int pageNo, int perPage) {
@@ -60,10 +59,14 @@ public class MailingListManager {
     return allMailingList;
   }
 
-  public List<User> getFilteredUserList(EmailCampaign emailCampaign, String[] roles, boolean filterByUserId, boolean filterByEmail, String[] userIds, String[] userEmailIds) {
-    List<User> allMailingList = getUserService().getAllMailingList(emailCampaign, roles, filterByUserId, filterByEmail, userIds, userEmailIds);
+  public List<EmailRecepient> getFilteredUserList(EmailCampaign emailCampaign, String[] roles, String[] userIds, int maxResult) {
+    List<EmailRecepient> allMailingList = getUserService().getAllMailingList(emailCampaign, roles, userIds, maxResult);
 
     return allMailingList;
+  }
+
+  public List<EmailRecepient> getMailingListByEmailIds(EmailCampaign emailCampaign, List<String> emailList, int maxResult) {
+    return getUserService().getMailingListByEmailIds(emailCampaign, emailList, maxResult);
   }
 
   public BigInteger getAllUserListCount(EmailCampaign emailCampaign, String [] roles) {

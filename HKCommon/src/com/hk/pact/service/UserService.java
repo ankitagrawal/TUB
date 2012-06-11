@@ -10,6 +10,7 @@ import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.email.EmailCampaign;
+import com.hk.domain.email.EmailRecepient;
 
 public interface UserService {
 
@@ -45,11 +46,15 @@ public interface UserService {
 
   public User findByLoginAndStoreId(String login, Long storeId);
 
-  public List<User> getAllMailingList(EmailCampaign emailCampaign, String[] roles, boolean filterByUserId, boolean filterByEmail, String[] userIds, String[] userEmailIds);
+  public List<EmailRecepient> getAllMailingList(EmailCampaign emailCampaign, String[] roles, String[] userIds, int maxResult);
 
   public BigInteger getAllMailingListCount(EmailCampaign emailCampaign, String [] roles);
 
-  public List<User> getMailingListByCategory(EmailCampaign emailCampaign, Category category);
+  public List<EmailRecepient> getMailingListByCategory(EmailCampaign emailCampaign, Category category, int maxResult);
 
   public Long getMailingListCountByCategory(EmailCampaign emailCampaign, Category category);
+
+  public List<EmailRecepient> getMailingListByEmailIds(EmailCampaign emailCampaign, List<String> emailList, int maxResult);
+
+  public List<User> findAllUsersNotInEmailRecepient();
 }
