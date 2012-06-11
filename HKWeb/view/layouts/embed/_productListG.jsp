@@ -11,13 +11,17 @@
 
 
   <%
-    ProductDao productDao = ServiceLocatorFactory.getService(ProductDao.class);
-    String product_productThumbId = (String) pageContext.getAttribute("productId");
-    Product product_productThumb = productDao.getProductById(product_productThumbId);
+    Product product_productThumb = (Product) pageContext.getAttribute("product");
+    if (product_productThumb == null) {
+      ProductDao productDao = ServiceLocatorFactory.getService(ProductDao.class);
+      String product_productThumbId = (String) pageContext.getAttribute("productId");
+      product_productThumb = productDao.getProductById(product_productThumbId);
+    }
+
     pageContext.setAttribute("product", product_productThumb);
 
     ComboDao comboDao = ServiceLocatorFactory.getService(ComboDao.class);
-    Combo combo = comboDao.getComboById(product_productThumbId);
+    Combo combo = comboDao.getComboById(product_productThumb.getId());
     pageContext.setAttribute("combo", combo);
   %>
 

@@ -102,18 +102,18 @@
 <s:layout-component name="modal">
 
   <c:if test="${!empty pa.product.productVariants[0].productExtraOptions}">
-    <s:layout-render name="/pages/modal/productWithExtraOptions.jsp" productId="${pa.product.id}"/>
+    <s:layout-render name="/pages/modal/productWithExtraOptions.jsp" product="${pa.product}"/>
   </c:if>
   <%--<c:if test="${hk:collectionContains(pa.product.categories, eyeGlass)}">--%>
-  <%--<s:layout-render name="/pages/modal/eyeGlasses.jsp" productId="${pa.product.id}"/>--%>
+  <%--<s:layout-render name="/pages/modal/eyeGlasses.jsp" product="${pa.product}"/>--%>
   <%--</c:if>--%>
 
   <c:if test="${pa.combo == null}">
     <shiro:hasPermission name="<%=PermissionConstants.GET_PRODUCT_LINK%>">
-      <s:layout-render name="/pages/modal/productLink.jsp" productId="${pa.product.id}"
+      <s:layout-render name="/pages/modal/productLink.jsp" product="${pa.product}"
                        affiliateId="${pa.affiliate.id}"/>
 
-      <s:layout-render name="/pages/modal/productBannerLink.jsp" productId="${pa.product.id}"
+      <s:layout-render name="/pages/modal/productBannerLink.jsp" product="${pa.product}"
                        affiliateId="${pa.affiliate.id}"/>
     </shiro:hasPermission>
   </c:if>
@@ -337,12 +337,12 @@
           <c:choose>
             <c:when test="${!pa.product.productHaveColorOptions}">
               <s:layout-render name="/layouts/embed/_productWithMultipleVariantsWithNoColorOptions.jsp"
-                               productId="${pa.product.id}"/>
+                               product="${pa.product}"/>
               <s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>
             </c:when>
             <c:otherwise>
               <s:layout-render name="/layouts/embed/_productWithMultipleVariantsWithColorOptions.jsp"
-                               productId="${pa.product.id}"/>
+                               product="${pa.product}"/>
               <s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>
             </c:otherwise>
           </c:choose>
@@ -353,17 +353,17 @@
               <s:layout-render name="/layouts/embed/_comboProduct.jsp" productId="${pa.product.id}"/>
             </c:when>
             <c:when test="${hk:collectionContains(pa.product.categories, eyeGlass)}">
-              <s:layout-render name="/layouts/embed/glasses.jsp" productId="${pa.product.id}"/>
+              <s:layout-render name="/layouts/embed/glasses.jsp" product="${pa.product}"/>
             </c:when>
             <c:otherwise>
-              <s:layout-render name="/layouts/embed/_productWithSingleVariant.jsp" productId="${pa.product.id}"/>
+              <s:layout-render name="/layouts/embed/_productWithSingleVariant.jsp" product="${pa.product}"/>
             </c:otherwise>
           </c:choose>
         </c:otherwise>
       </c:choose>
     </c:when>
     <c:otherwise>
-      <s:layout-render name="/layouts/embed/_productWithExtraOptions.jsp" productId="${pa.product.id}"/>
+      <s:layout-render name="/layouts/embed/_productWithExtraOptions.jsp" product="${pa.product}"/>
       <s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>
     </c:otherwise>
   </c:choose>
