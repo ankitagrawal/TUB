@@ -99,7 +99,7 @@
 			<value>true</value>
 		</property>
 		<property name="removeAbandonedTimeout">
-			<value>30</value>
+			<value>300</value>
 		</property>
 		<property name="maxIdle">
 			<value>20</value>
