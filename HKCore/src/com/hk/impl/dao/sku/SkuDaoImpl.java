@@ -1,16 +1,15 @@
 package com.hk.impl.dao.sku;
 
-import java.util.List;
-
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.stereotype.Repository;
-
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.sku.SkuDao;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public class SkuDaoImpl extends BaseDaoImpl implements SkuDao {
@@ -45,4 +44,11 @@ public class SkuDaoImpl extends BaseDaoImpl implements SkuDao {
         return (List<Sku>) findByCriteria(criteria);
     }
 
+   @SuppressWarnings("unchecked")
+   public List<Sku> getAllSkuByWarehouse(Warehouse warehouse){
+           DetachedCriteria criteria = DetachedCriteria.forClass(Sku.class);
+         criteria.add(Restrictions.eq("warehouse", warehouse));
+        return (List<Sku>) findByCriteria(criteria);
+     
+   }
 }

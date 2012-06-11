@@ -1,12 +1,19 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: Seema
-  Date: Jun 11, 2012
-  Time: 11:54:13 AM
-  To change this template use File | Settings | File Templates.
---%>
+<%@ taglib prefix="s" uri="http://stripes.sourceforge.net/stripes-dynattr.tld" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-  <head><title>Simple jsp page</title></head>
-  <body>Place your content here</body>
-</html>
+<%@include file="/includes/_taglibInclude.jsp" %>
+<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Loaction Report">
+    <s:layout-component name="content">
+        <div class="reportBox" style="height: 113px;">
+            <div class="clear"> </div>
+            <s:form beanclass="com.hk.web.action.report.BinAllocationReport">
+                <s:errors/>
+                <fieldset >
+                    <legend style="font-size:10;">All Product Allocation Reports</legend>
+                    <div style="height:10px;"></div>
+                    <s:submit name="generateBinAllocationExcel" value="Download Report"/>
+                </fieldset>
+            </s:form>
+
+        </div>
+    </s:layout-component>
+</s:layout-render>
