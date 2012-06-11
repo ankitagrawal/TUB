@@ -11,6 +11,8 @@ import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.payment.Payment;
+import com.hk.domain.offer.OfferInstance;
+import com.hk.domain.coupon.Coupon;
 import com.hk.dto.pricing.PricingDto;
 import com.hk.pact.dao.payment.PaymentDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
@@ -20,6 +22,7 @@ import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.util.ga.GAUtil;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.validation.Validate;
@@ -31,6 +34,7 @@ import org.springframework.stereotype.Component;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Date;
+import java.text.SimpleDateFormat;
 
 @Component
 public class PaymentSuccessAction extends BaseAction {
@@ -45,6 +49,8 @@ public class PaymentSuccessAction extends BaseAction {
     private PricingDto pricingDto;
     private EnumPaymentMode paymentMode;
     private String purchaseDate;
+    private String couponCode;
+    private int couponAmount=0;
 
     @Autowired
     private PaymentDao paymentDao;
@@ -74,10 +80,11 @@ public class PaymentSuccessAction extends BaseAction {
 
             order = payment.getOrder();
             pricingDto = new PricingDto(order.getCartLineItems(), payment.getOrder().getAddress());
-
+           
             //for google analytics
             paymentMode= EnumPaymentMode.getPaymentModeFromId(payment.getPaymentMode().getId());
-            purchaseDate = formatPurchaseDate(order.getCreateDate());
+            purchaseDate = GAUtil.formatDate(order.getCreateDate());
+            setCouponCodeForGA(order);
 
             Set<CartLineItem> productCartLineItems = new CartLineItemFilter(payment.getOrder().getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
 
@@ -125,15 +132,16 @@ public class PaymentSuccessAction extends BaseAction {
         return new ForwardResolution("/pages/payment/paymentSuccess.jsp");
     }
 
-    private String formatPurchaseDate(Date date){
-          StringBuilder sb=new StringBuilder("");
-          sb.append("Y"+date.getYear());
-          sb.append("M"+date.getMonth());
-          int week=((date.getDay()-1)/7)+1;
-          sb.append("W"+week);
-          sb.append("D"+date.getDay());
-          return sb.toString();
+    private void setCouponCodeForGA(Order order){
+        OfferInstance offerInstance=order.getOfferInstance();
+        if(offerInstance!=null){
+            Coupon coupon = offerInstance.getCoupon();
+            couponCode=coupon.getCode()+"@"+offerInstance.getId();
+            couponAmount=pricingDto.getTotalPromoDiscount().intValue();
+        }
     }
+
+
 
     public String getGatewayOrderId() {
         return gatewayOrderId;
@@ -210,5 +218,13 @@ public class PaymentSuccessAction extends BaseAction {
 
     public void setPurchaseDate(String purchaseDate) {
         this.purchaseDate = purchaseDate;
+    }
+
+    public String getCouponCode() {
+        return couponCode;
+    }
+
+    public int getCouponAmount() {
+        return couponAmount;
     }
 }

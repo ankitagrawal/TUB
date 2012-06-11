@@ -4,6 +4,7 @@
 <%@ page import="org.apache.shiro.SecurityUtils" %>
 <%@ page import="com.shiro.PrincipalImpl" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
+<%@ page import="com.hk.constants.marketing.AnalyticsConstants" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.core.cart.CartAction" var="cartAction" event="getCartItems"/>
 <s:useActionBean beanclass="com.hk.web.action.core.discount.RewardPointTxnStatementAction" event="pre" var="rpBean"/>
@@ -16,6 +17,7 @@
     originalUrlHeader = request.getRequestURI();
   }
 %>
+ 
 <s:layout-definition>
   <c:set var="attachRedirectParam" value="${attachRedirectParam}"/>
   <%
@@ -23,6 +25,54 @@
 //    System.out.println("aattachRedirectParam="+attachRedirectParamStr);
     boolean attachRedirectParam = attachRedirectParamStr == null ? true : Boolean.getBoolean(attachRedirectParamStr);
   %>
+
+    <%
+    if (AnalyticsConstants.analytics) {
+        if(session.getAttribute("signUpDate")!=null && session.getAttribute("signUpDate")!=""){
+            String signUpDate=session.getAttribute("signUpDate").toString();
+            session.removeAttribute("signUpDate");
+%>
+    <script type="text/javascript">
+    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+  </script>
+  <script type="text/javascript">
+    var pageTracker = _gat._getTracker("<%=AnalyticsConstants.gaCode%>");
+       pageTracker._setCustomVar(
+      3,                   // This custom var is set to slot #2.  first_order_date
+      "signUpDate",     // The name acts as a kind of category for the user activity.  Required parameter.
+      "<%=signUpDate%>",               // This value of the custom variable.  Required parameter.
+      1                   // Sets the scope to visitor-level. Optional parameter.
+    );
+    //track signup date in event
+    pageTracker._trackEvent('SignUp','signupDate','<%=signUpDate%>');
+   </script>
+
+<%
+        }
+    if(session.getAttribute("userId")!=null && session.getAttribute("userId")!="" ){
+          String userId=session.getAttribute("userId").toString();
+          session.removeAttribute("userId");
+ %>
+ <script type="text/javascript">
+    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+  </script>
+  <script type="text/javascript">
+    var pageTracker = _gat._getTracker("<%=AnalyticsConstants.gaCode%>");
+       pageTracker._setCustomVar(
+      4,                   // This custom var is set to slot #2.  first_order_date
+      "userId",     // The name acts as a kind of category for the user activity.  Required parameter.
+      "<%=userId%>",               // This value of the custom variable.  Required parameter.
+      1                   // Sets the scope to visitor-level. Optional parameter.
+    );
+    pageTracker._trackEvent('Login','userId','<%=userId%>');
+   </script>
+
+<%
+        }
+    }
+%>
   <div class='topBar'>
     <div class='topBarContent'>
       <div class='logoBox'>

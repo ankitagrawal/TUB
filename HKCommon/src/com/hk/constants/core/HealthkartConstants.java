@@ -11,6 +11,8 @@ public class HealthkartConstants {
     public static final String perPageCatalog = "perPageCatalog";
     public static final String affId = "affId";
     public static final String newSession = "newSession";
+    public static final String userId = "userId";
+    public static final String signUpDate = "signUpDate";
   }
 
   public static class Cookie {        

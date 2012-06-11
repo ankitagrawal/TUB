@@ -15,6 +15,7 @@ import net.sourceforge.stripes.validation.ValidationMethod;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.session.Session;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
@@ -26,6 +27,10 @@ import com.hk.manager.UserManager;
 import com.hk.pact.service.UserService;
 import com.hk.web.action.HomeAction;
 import com.hk.web.action.core.auth.LoginAction;
+import com.hk.util.ga.GAUtil;
+
+import java.util.Date;
+import java.util.Calendar;
 
 @Component
 public class SignupAction extends BaseAction {
@@ -45,6 +50,9 @@ public class SignupAction extends BaseAction {
     private boolean     agreeToTerms;
     private String      redirectUrl;
     private String      source;
+
+    @Session(key = HealthkartConstants.Session.signUpDate)
+    private String signUpDate;
 
     @Autowired
     private UserManager userManager;
@@ -93,6 +101,8 @@ public class SignupAction extends BaseAction {
             return new ForwardResolution(getContext().getSourcePage());
         }
 
+        setSignUpDateForGA();
+
         if (!StringUtils.isBlank(redirectUrl)) {
             return new RedirectResolution(redirectUrl, false);
         }
@@ -103,6 +113,11 @@ public class SignupAction extends BaseAction {
 
         // return new RedirectResolution(WelcomeAction.class);
         return new RedirectResolution(HomeAction.class);
+    }
+
+    public void setSignUpDateForGA(){
+       Date currentDate= Calendar.getInstance().getTime();
+       signUpDate= GAUtil.formatDate(currentDate);
     }
 
     public void setEmail(String email) {

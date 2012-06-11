@@ -97,12 +97,12 @@
         );
     </c:if>                                                                         
 
-    pageTracker._trackTrans();
+   // pageTracker._trackTrans();
 
     //track order count
     pageTracker._setCustomVar(
       5,                   // This custom var is set to slot #5.  order_count.
-      "Order Count",     // The name acts as a kind of category for the user activity.  Required parameter.
+      "OrderCount",     // The name acts as a kind of category for the user activity.  Required parameter.
       "${fn:length(actionBean.order.user.orders)}",               // This value of the custom variable.  Required parameter.
       1                   // Sets the scope to session-level. Optional parameter.
    );
@@ -110,18 +110,26 @@
    <c:if test="${fn:length(actionBean.order.user.orders) eq 1}">
       pageTracker._setCustomVar(
       2,                   // This custom var is set to slot #2.  first_order_date
-      "First Purchase Date",     // The name acts as a kind of category for the user activity.  Required parameter.
+      "FirstPurchaseDate",     // The name acts as a kind of category for the user activity.  Required parameter.
       "${actionBean.purchaseDate}",               // This value of the custom variable.  Required parameter.
       1                   // Sets the scope to visitor-level. Optional parameter.
     );
    </c:if>
 
-    //track purchase date
-    pageTracker._trackEvent('purchase','purchase date','${actionBean.purchaseDate}');
-    //payment mode tracking
-    pageTracker._trackEvent('purchase','payment type','${actionBean.paymentMode.name}');
-     
+     <c:if test="${actionBean.couponAmount > 0}">
+      //track couponcode
+    pageTracker._trackEvent('purchase','coupon','${actionBean.couponCode}','${actionBean.couponAmount}');
+   </c:if>
 
+
+    //track purchase date
+    pageTracker._trackEvent('purchase','purchaseDate','${actionBean.purchaseDate}');
+    //payment mode tracking
+    var amount=${actionBean.payment.amount};
+    amount=Math.round(amount);            //event value takes only integer input in ga
+    pageTracker._trackEvent('purchase','paymentType','${actionBean.paymentMode.name}',amount);   
+     
+                                                                              `
   </script>
 
 
