@@ -465,7 +465,7 @@
 <div class="reportBox">
   <s:form beanclass="com.hk.web.action.report.ReportAction" target="_blank">
     <fieldset class="right_label">
-      <legend>Stock Report By Product</legend>
+      <legend>Stock Ledger Report By Variant</legend>
       <ul>
         <li>
           <label>Start
@@ -479,7 +479,7 @@
         </li>
         <li>
           <label>
-            Product Ids
+            Variant Ids
           </label><s:text name="productIdListCommaSeparated" style="width:200px"/>
         </li>
         <li>
