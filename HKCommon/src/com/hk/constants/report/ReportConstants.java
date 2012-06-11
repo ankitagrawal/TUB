@@ -164,7 +164,7 @@ public class ReportConstants {
     public static final String PRODUCT_OPTIONS = "PRODUCT OPTIONS";
     public static final String SHIPPING_COLLECTION = "SHIPPING+COLLECTION PER ITEM";
     public static final String NET_CONT_MARGIN = "NET CONT MARGIN";
-    public static final String PRODUCT_VARIANT_ID = "PRODUCT_VARIANT_ID";
+    public static final String PRODUCT_VARIANT_ID = "PRODUCT VARIANT ID";
    public static final String LOCATION = "LOCATION";
 
 
