@@ -21,7 +21,6 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.marketing.EnumProductReferrer;
 import com.hk.domain.MapIndia;
-import com.hk.domain.marketing.ProductReferrer;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.product.Product;
@@ -124,8 +123,7 @@ public class ProductAction extends BaseAction {
 
         if (getPrincipal() != null) {
             user = getUserService().getUserById(getPrincipal().getId());
-            if (user != null) {
-                ProductReferrer productReferrer = getBaseDao().get(ProductReferrer.class, productReferrerId);
+            if (user != null) {              
                 productCountDao.getOrCreateProductCount(product, user);
                 userProductHistoryDao.addToUserProductHistory(product, user);
                 affiliate = affiliateDao.getAffilateByUser(user);
