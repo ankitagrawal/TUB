@@ -7,12 +7,10 @@
 
 <s:layout-definition>
   <%
-    ProductDao productDao = (ProductDao) ServiceLocatorFactory.getService(ProductDao.class);
-    String productId = (String) pageContext.getAttribute("productId");
+    Product product = (Product) pageContext.getAttribute("product");
     Long productReferrerId = (Long)pageContext.getAttribute("productReferrerId");
-    Product product = productDao.getProductById(productId);
-    pageContext.setAttribute("product", product);
     pageContext.setAttribute("productReferrerId", productReferrerId);
+    pageContext.setAttribute("product", product);
   %>
   <div class="jqmWindow" id="cartWindow2">
     <s:layout-render name="/layouts/modal.jsp">

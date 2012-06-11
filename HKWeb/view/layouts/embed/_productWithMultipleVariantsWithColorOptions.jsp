@@ -7,11 +7,9 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 
 <s:layout-definition>
-  <%
-    ProductDao productDao = ServiceLocatorFactory.getService(ProductDao.class);
-    String productId = (String) pageContext.getAttribute("productId");
+  <%    
     Long productReferrerId = (Long)pageContext.getAttribute("productReferrerId");
-    Product product = productDao.getProductById(productId);
+    Product product = (Product) pageContext.getAttribute("product");
     pageContext.setAttribute("product", product);
     pageContext.setAttribute("productReferrerId", productReferrerId);
   %>

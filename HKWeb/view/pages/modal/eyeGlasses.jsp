@@ -5,11 +5,9 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-definition>
  <%
-    ProductDao productDao = (ProductDao)ServiceLocatorFactory.getService(ProductDao.class);
-    String productId = (String) pageContext.getAttribute("productId");
-    Product product = productDao.getProductById(productId);
-    pageContext.setAttribute("product", product);
-  %>
+     Product product = (Product) pageContext.getAttribute("product");
+     pageContext.setAttribute("product", product);
+ %>
 
 <div class="jqmWindow" id="eyeGlassWindow">
     <s:layout-render name="/layouts/modal.jsp">

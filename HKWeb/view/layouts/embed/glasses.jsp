@@ -1,18 +1,14 @@
-<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.domain.catalog.product.Product" %>
-<%@ page import="com.hk.pact.dao.catalog.product.ProductDao" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
 <s:layout-definition>
 <%
-  ProductDao productDao = (ProductDao)ServiceLocatorFactory.getService(ProductDao.class);
-  String productId = (String) pageContext.getAttribute("productId");
-  Long productReferrerId = (Long)pageContext.getAttribute("productReferrerId");
-  Product product = productDao.getProductById(productId);
-  pageContext.setAttribute("productReferrerId", productReferrerId);
-  pageContext.setAttribute("product", product);
+    Long productReferrerId = (Long)pageContext.getAttribute("productReferrerId");
+    Product product = (Product) pageContext.getAttribute("product");
+    pageContext.setAttribute("product", product);
+    pageContext.setAttribute("productReferrerId", productReferrerId);    
 %>
 
 <c:set value="${product.productVariants[0]}" var="variant"/>

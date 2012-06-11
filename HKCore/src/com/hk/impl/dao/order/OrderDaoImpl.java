@@ -18,6 +18,7 @@ import com.akube.framework.dao.Page;
 import com.akube.framework.util.BaseUtils;
 import com.akube.framework.util.FormatUtils;
 import com.hk.constants.order.EnumOrderStatus;
+import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.core.search.OrderSearchCriteria;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.OrderLifecycleActivity;
@@ -25,6 +26,7 @@ import com.hk.domain.core.OrderStatus;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.OrderLifecycle;
 import com.hk.domain.user.User;
+import com.hk.domain.payment.Payment;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.dao.order.OrderLifecycleDao;
@@ -116,6 +118,20 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao {
                 return order;
               }
             }
+
+          if (order.getPayment() != null) {
+            if (order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())) {
+              logger.error("Hibernate trying to save stale Order object whereas the order is placed - " + order.getId());
+              return order;
+            }
+          }else if(!order.getPayments().isEmpty()){
+            for (Payment payment : order.getPayments()) {
+              if(payment.getPaymentStatus().getId().equals(EnumPaymentStatus.SUCCESS.getId())){
+                logger.error("Hibernate trying to save stale Order object whereas the order is placed and payment is successful - " + order.getId());
+                return order;
+              }
+            }
+          }
         }
         return (Order) super.save(order);
     }
