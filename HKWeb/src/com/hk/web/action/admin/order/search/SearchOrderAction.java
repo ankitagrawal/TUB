@@ -54,7 +54,6 @@ public class SearchOrderAction extends BasePaginatedAction {
     private Date          startDate;
     private Date          endDate;
 
-    private List<Order>   orderList = new ArrayList<Order>();
     private Page          orderPage;
     private Order         order;
     private ShippingOrder shippingOrder;
@@ -82,10 +81,6 @@ public class SearchOrderAction extends BasePaginatedAction {
 
         // orderPage = orderDao.searchOrders(startDate, endDate, orderId, email, name, phone, orderStatus,paymentMode,
         // gatewayOrderId, trackingId, getPageNo(), getPerPage());
-        orderList = orderPage.getList();
-        for(Order order:orderList){
-            order.setPriorityOrder(getKarmaProfileService().isPriorityOrder(order));
-        }
         return new ForwardResolution("/pages/admin/searchOrder.jsp");
     }
 
@@ -115,14 +110,6 @@ public class SearchOrderAction extends BasePaginatedAction {
         params.add("startDate");
         params.add("endDate");
         return params;
-    }
-
-    public List<Order> getOrderList() {
-        return orderList;
-    }
-
-    public void setOrderList(List<Order> orderList) {
-        this.orderList = orderList;
     }
 
     public void setOrderStatus(OrderStatus orderStatus) {
