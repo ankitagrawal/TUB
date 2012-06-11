@@ -554,18 +554,13 @@
       </table>
      
       <hr style="color:#F0F0F0;border-style:dotted"/>
-      <c:choose>
-        <c:when test="${pa.totalReviews > 5}">
+      <c:if test="${pa.totalReviews > 5}">
           <strong>&nbsp;Showing 5 of ${pa.totalReviews} reviews</strong>
           <s:link beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction">
             <s:param name="product" value="${product.id}"/>
             <strong>(Read All Reviews)</strong>
           </s:link>
-        </c:when>
-        <c:otherwise>
-          <strong>&nbsp;Showing ${fn:length(pa.userReviews)} reviews</strong>
-        </c:otherwise>
-      </c:choose>
+      </c:if>
 
       <c:forEach items="${pa.userReviews}" var="review" varStatus="ctr">
 
