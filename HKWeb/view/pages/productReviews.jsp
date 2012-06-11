@@ -16,14 +16,16 @@
       }
 
       .rating_bar {
-        width: 73px;
-        background: url('${pageContext.request.contextPath}/images/faintStar.png') 0 0 repeat-x;
-      }
+      width: 75px;
+      <%--background: url('${pageContext.request.contextPath}/images/faintStar.png') 0 0 repeat-x;--%>
+      background: url('${pageContext.request.contextPath}/images/img/star-off.png') 0 0 repeat-x;
+    }
 
-      .rating_bar div {
-        height: 16px;
-        background: url('${pageContext.request.contextPath}/images/blueStar.jpg') 0 0 repeat-x;
-      }
+    .rating_bar div {
+      height: 16px;
+      <%--background: url('${pageContext.request.contextPath}/images/blueStar.jpg') 0 0 repeat-x;--%>
+      background: url('${pageContext.request.contextPath}/images/img/star-on.png') 0 0 repeat-x;
+    }
     </style>
 
 
@@ -64,32 +66,25 @@
         <td><strong>Reviews</strong></td>
       </tr>
       <c:forEach items="${pa.productReviews}" var="review" varStatus="ctr">
-        <tr>
-          <td style="word-wrap:break-word">
-            <strong>${review.postedBy.name}</strong>
-          </td>
-          <td style="border-style:none;border-color:#F0F0F0;">
-            <h4>${review.title}</h4>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <div class="rating_bar">
-              <div class="blueStarRating${ctr.index}"></div>
-              <script type="text/javascript">
-                var index = ${ctr.index};
-                var rating =${review.starRating};
-                rating = (rating * 20) + "%";
-                $('.blueStarRating' + index).width(rating);
-              </script>
-            </div>
-          </td>
-          <td>
-            <div style="width:780px;overflow:auto">
-              <pre width="400" style="word-wrap:break-word">${review.review}</pre>
-            </div>
-          </td>
-        </tr>
+        <tr style="border-style:none">
+            <td width="150" style="border-style:none"><strong>${review.postedBy.name}</strong>
+            <%--<td style="border-style:none"><h4>${review.title}</h4></td>--%>
+              <div class="rating_bar">
+                <div class="blueStarRating${ctr.index}"></div>
+                <script type="text/javascript">
+                  var index = ${ctr.index};
+                  var rating =${review.starRating};
+                  rating = (rating * 20) + "%";
+                  $('.blueStarRating' + index).width(rating);
+                </script>
+              </div>
+            </td>
+            <td style="border-style:none">
+              <div style="word-wrap:break-word">
+                ${review.review}
+              </div>
+            </td>
+          </tr>
         <tr style="border-style:none">
           <td colspan="2" style="border-style:none">
             <hr style="color:#F0F0F0;border-style:dotted">
