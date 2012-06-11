@@ -114,8 +114,8 @@ public class UserServiceImpl implements UserService {
     public void updateIsProductBought(Order order) {
         getUserCartDao().updateIsProductBought(order);
     }
-  public List<User> findAllUsersNotInEmailRecepient() {
-    return getUserDao().findAllUsersNotInEmailRecepient();
+  public List<User> findAllUsersNotInEmailRecepient(int maxResult) {
+    return getUserDao().findAllUsersNotInEmailRecepient(maxResult);
   }
 
     public User save(User user) {

@@ -307,9 +307,9 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao {
     return userIdsByCategoryCount;
   }
 
-  public List<User> findAllUsersNotInEmailRecepient() {
+  public List<User> findAllUsersNotInEmailRecepient(int maxResult) {
     String query = "select u.* from user u left join email_recepient er on (u.email = er.email) where er.email is null " ;
-    return getSession().createSQLQuery(query).addEntity(User.class).list();
+    return getSession().createSQLQuery(query).addEntity(User.class).setMaxResults(maxResult).list();
   }
 
 

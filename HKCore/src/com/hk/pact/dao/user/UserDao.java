@@ -68,7 +68,7 @@ public interface UserDao extends BaseDao {
 
   public Long getMailingListCountByCategory(EmailCampaign emailCampaign, Category category);
 
-  public List<User> findAllUsersNotInEmailRecepient();
+  public List<User> findAllUsersNotInEmailRecepient(int maxResult);
 
   public List<EmailRecepient> getMailingListByEmailIds(EmailCampaign emailCampaign, List<String> emailList, int maxResult);
 

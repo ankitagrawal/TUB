@@ -230,25 +230,29 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
   }
 
   private void populateEmailRecepient() {
-    List<User> usersNotInEmailRecepient = getUserService().findAllUsersNotInEmailRecepient();
+    List<User> usersNotInEmailRecepient = new ArrayList<User>();
+    do{
+      usersNotInEmailRecepient.clear();
+      usersNotInEmailRecepient = getUserService().findAllUsersNotInEmailRecepient(maxResultCount);
 
-    List<EmailRecepient> emailRecepientRecs = new ArrayList<EmailRecepient>(INITIAL_LIST_SIZE);
-    int counter = 0;
-    for(User user : usersNotInEmailRecepient) {
-      EmailRecepient emailRecepient = getEmailRecepientDao().createEmailRecepient(user.getEmail());
-      emailRecepientRecs.add(emailRecepient);
-      if(counter == COMMIT_COUNT) {
+      List<EmailRecepient> emailRecepientRecs = new ArrayList<EmailRecepient>(INITIAL_LIST_SIZE);
+      int counter = 0;
+      for(User user : usersNotInEmailRecepient) {
+        EmailRecepient emailRecepient = getEmailRecepientDao().createEmailRecepient(user.getEmail());
+        emailRecepientRecs.add(emailRecepient);
+        if(counter == COMMIT_COUNT) {
+          getEmailRecepientDao().saveOrUpdate(emailRecepientRecs);
+          getEmailRecepientDao().clearSession();
+          counter = 0;
+          emailRecepientRecs.clear();
+        }
+        counter++;
+      }
+      if(counter > 0) {
         getEmailRecepientDao().saveOrUpdate(emailRecepientRecs);
         getEmailRecepientDao().clearSession();
-        counter = 0;
-        emailRecepientRecs.clear();
       }
-      counter++;
-    }
-    if(counter > 0) {
-      getEmailRecepientDao().saveOrUpdate(emailRecepientRecs);
-      getEmailRecepientDao().clearSession();
-    }
+    }while(usersNotInEmailRecepient.size() > 0);
 
   }
   public Resolution sendCampaign() {

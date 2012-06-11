@@ -56,5 +56,5 @@ public interface UserService {
 
   public List<EmailRecepient> getMailingListByEmailIds(EmailCampaign emailCampaign, List<String> emailList, int maxResult);
 
-  public List<User> findAllUsersNotInEmailRecepient();
+  public List<User> findAllUsersNotInEmailRecepient(int maxResult);
 }
