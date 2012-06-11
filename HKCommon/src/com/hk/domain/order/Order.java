@@ -158,9 +158,13 @@ public class Order implements java.io.Serializable {
     private SecondaryReferrerForOrder secondaryReferrerForOrder;
 
 
-        public boolean isPriorityOrder() {
+    public boolean isPriorityOrder() {
+        if(this.score!=null){
             return (this.score>= CLMConstants.thresholdScore);
+        }else{
+            return false;
         }
+    }
 
 
 

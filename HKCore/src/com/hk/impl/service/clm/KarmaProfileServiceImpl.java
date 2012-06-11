@@ -73,8 +73,8 @@ public class KarmaProfileServiceImpl implements KarmaProfileService {
 
     public boolean isPriorityOrder(Order order){
         int score = order.getScore().intValue();
-
-        if(order.getScore() >= CLMConstants.thresholdScore){
+        
+        if(score >= CLMConstants.thresholdScore){
             return true;
         }else{
             return false;
