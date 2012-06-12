@@ -13,6 +13,8 @@ import net.sourceforge.stripes.validation.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.manager.DeliveryStatusUpdateManager;
@@ -24,18 +26,20 @@ import com.hk.web.action.error.AdminPermissionAction;
 
 @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_DELIVERY_QUEUE}, authActionBean = AdminPermissionAction.class)
 @Component
-public class UpdateAFLChhotuDeliveryStatusAction extends BaseAction{
+public class UpdateDeliveryStatusAction extends BaseAction{
 
-  private Date startDate;
-  private Date endDate;
+
+  private static     Logger                           logger = LoggerFactory.getLogger(UpdateDeliveryStatusAction.class);
+  private            Date                             startDate;
+  private            Date                             endDate;
 
   @Autowired
-  DeliveryStatusUpdateManager deliveryStatusUpdateManager;
+  private            DeliveryStatusUpdateManager      deliveryStatusUpdateManager;
   
   @DefaultHandler
   public Resolution pre(){
 
-    return new ForwardResolution("/pages/admin/updateAFLChhotuDeliveryStatus.jsp");
+    return new ForwardResolution("/pages/admin/updateCourierDeliveryStatus.jsp");
   }
 
   public Resolution updateAFLStatus() throws MalformedURLException, IOException,Exception{
@@ -50,14 +54,14 @@ public class UpdateAFLChhotuDeliveryStatusAction extends BaseAction{
 
       numberOfOrdersUpdated = deliveryStatusUpdateManager.updateDeliveryStatusAFL(startDate,endDate,loggedOnUser);
     } catch (Exception e) {
-      //logger.error("Exception while reading excel sheet.", e);
+      logger.error("Exception while reading excel sheet.", e);
       addRedirectAlertMessage(new SimpleMessage("Upload failed - " + e.getMessage()));
-      return new ForwardResolution("/pages/admin/updateAFLChhotuDeliveryStatus.jsp");
+      return new ForwardResolution("/pages/admin/updateCourierDeliveryStatus.jsp");
     }
 
     addRedirectAlertMessage(new SimpleMessage("Database Updated - " + numberOfOrdersUpdated +  " orders Updated."));
 
-    return new ForwardResolution("/pages/admin/updateAFLChhotuDeliveryStatus.jsp");
+    return new ForwardResolution("/pages/admin/updateCourierDeliveryStatus.jsp");
 
 
     /*String awbForTest = "84121272408167223";
@@ -82,7 +86,7 @@ public class UpdateAFLChhotuDeliveryStatusAction extends BaseAction{
 
     addRedirectAlertMessage(new SimpleMessage("Database Updated - " + startDate + " " + endDate + " orders Updated."+test));
 
-    return new ForwardResolution("/pages/admin/updateAFLChhotuDeliveryStatus.jsp");*/
+    return new ForwardResolution("/pages/admin/updateCourierDeliveryStatus.jsp");*/
   }
   public Resolution updateChhotuStatus() throws MalformedURLException, IOException,Exception{
 
@@ -96,14 +100,14 @@ public class UpdateAFLChhotuDeliveryStatusAction extends BaseAction{
 
       numberOfOrdersUpdated = deliveryStatusUpdateManager.updateDeliveryStatusChhotu(startDate,endDate,loggedOnUser);
     } catch (Exception e) {
-      //logger.error("Exception while reading excel sheet.", e);
+      logger.error("Exception occurred in updateChhotuStatus of UpdateDeliveryStatusAction.", e);
       addRedirectAlertMessage(new SimpleMessage("Upload failed - " + e.getMessage()));
-      return new ForwardResolution("/pages/admin/updateAFLChhotuDeliveryStatus.jsp");
+      return new ForwardResolution("/pages/admin/updateCourierDeliveryStatus.jsp");
     }
 
     addRedirectAlertMessage(new SimpleMessage("Database Updated - " + numberOfOrdersUpdated +  " orders Updated."));
 
-    return new ForwardResolution("/pages/admin/updateAFLChhotuDeliveryStatus.jsp");
+    return new ForwardResolution("/pages/admin/updateCourierDeliveryStatus.jsp");
   }
   
   public Resolution updateDelhiveryStatus() throws Exception{
@@ -117,14 +121,14 @@ public class UpdateAFLChhotuDeliveryStatusAction extends BaseAction{
 
        numberOfOrdersUpdated = deliveryStatusUpdateManager.updateDeliveryStatusDelhivery(startDate,endDate,loggedOnUser);
      } catch (Exception e) {
-       //logger.error("Exception while reading excel sheet.", e);
+       logger.error("Exception occurred in updateDelhiveryStatus of UpdateDeliveryStatusAction", e);
        addRedirectAlertMessage(new SimpleMessage("Upload failed - " + e.getMessage()));
-       return new ForwardResolution("/pages/admin/updateAFLChhotuDeliveryStatus.jsp");
+       return new ForwardResolution("/pages/admin/updateCourierDeliveryStatus.jsp");
      }
 
      addRedirectAlertMessage(new SimpleMessage("Database Updated - " + numberOfOrdersUpdated +  " orders Updated."));
 
-     return new ForwardResolution("/pages/admin/updateAFLChhotuDeliveryStatus.jsp");
+     return new ForwardResolution("/pages/admin/updateCourierDeliveryStatus.jsp");
    }
 
     public Resolution updateBlueDartStatus() throws MalformedURLException, IOException,Exception{
@@ -136,16 +140,44 @@ public class UpdateAFLChhotuDeliveryStatusAction extends BaseAction{
      try {
        numberOfOrdersUpdated = deliveryStatusUpdateManager.updateDeliveryStatusBlueDart(startDate,endDate,loggedOnUser);
      } catch (Exception e) {
-       //logger.error("Exception while reading excel sheet.", e);
+       logger.error("Exception occurred in updateBlueDartStatus of UpdateDeliveryStatus.", e);
        addRedirectAlertMessage(new SimpleMessage("Upload failed - " + e.getMessage()));
-       return new ForwardResolution("/pages/admin/updateAFLChhotuDeliveryStatus.jsp");
+       return new ForwardResolution("/pages/admin/updateCourierDeliveryStatus.jsp");
      }
 
      addRedirectAlertMessage(new SimpleMessage("Database Updated - " + numberOfOrdersUpdated +  " orders Updated."));
-     return new ForwardResolution("/pages/admin/updateAFLChhotuDeliveryStatus.jsp");
+     return new ForwardResolution("/pages/admin/updateCourierDeliveryStatus.jsp");
    }
 
-  public Date getStartDate() {
+    public Resolution updateDtdcStatus() throws Exception {
+
+
+        User loggedOnUser = null;
+        if (getPrincipal() != null) {
+            loggedOnUser = getUserService().getUserById(getPrincipal().getId());
+        }
+        int numberOfOrdersUpdated = 0;
+        try {
+
+            numberOfOrdersUpdated = deliveryStatusUpdateManager.updateDeliveryStatusDTDC(startDate,endDate);
+        } catch (Exception e) {
+            logger.error("Exception occurred in updateDtdcStatus of UpdateDeliveryStatus .", e);
+            addRedirectAlertMessage(new SimpleMessage("Database Updation failed,some e " + e.getMessage()));
+            return new ForwardResolution("/pages/admin/updateCourierDeliveryStatus.jsp");
+        }
+
+        if(numberOfOrdersUpdated == 0){
+            addRedirectAlertMessage(new SimpleMessage("Sorry! no orders found."));
+
+        }   else {
+        addRedirectAlertMessage(new SimpleMessage("Database Successfully Updated -: " + numberOfOrdersUpdated + " orders Updated."));
+        }
+
+        return new ForwardResolution("/pages/admin/updateCourierDeliveryStatus.jsp");
+    }
+
+
+    public Date getStartDate() {
     return startDate;
   }
 

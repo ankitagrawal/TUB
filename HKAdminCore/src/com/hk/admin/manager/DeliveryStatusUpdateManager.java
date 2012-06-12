@@ -37,6 +37,7 @@ import com.hk.admin.util.AFLResponseParser;
 import com.hk.admin.util.ChhotuCourierDelivery;
 import com.hk.constants.report.ReportConstants;
 import com.hk.constants.courier.EnumCourier;
+import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.ShippingOrder;
@@ -53,24 +54,24 @@ import org.jdom.xpath.XPath;
 @Component
 public class DeliveryStatusUpdateManager {
 
-    private static Logger       logger                       = LoggerFactory.getLogger(DeliveryStatusUpdateManager.class);
+    private static Logger       logger                        = LoggerFactory.getLogger(DeliveryStatusUpdateManager.class);
 
-    List                        sheetData                    = new ArrayList();
+    List                        sheetData                     = new ArrayList();
     ShippingOrder               shippingOrder;
     String                      addedItems;
     int                         itemsDeliveredCount;
     int                         allItemsDeliveredCount;
-    int                         ordersDelivered              = 0;
-    int                         orderDeliveryCount           = 0;
-    String                      courierName                  = "Delivered by ";
-    String                      prefixComments               = "Delivered Items :<br/>";
-    public static final int     digitsInGatewayId            = 5;
+    int                         ordersDelivered               = 0;
+    int                         orderDeliveryCount            = 0;
+    String                      courierName                   = "Delivered by ";
+    String                      prefixComments                = "Delivered Items :<br/>";
+    public static final int     digitsInGatewayId             = 5;
     // private static int acceptableDeliveryPeriod = 50;
 
-    private static final String authenticationIdForDelhivery = "9aaa943a0c74e29b340074d859b2690e07c7fb25";
-    List<Long> courierIdList= new ArrayList<Long>();
-    private static final String loginIdForBlueDart ="GGN37392";
-    private static final String licenceKeyForBlueDart="3c6867277b7a2c8cd78c8c4cb320f401";
+    private static final String authenticationIdForDelhivery  = "9aaa943a0c74e29b340074d859b2690e07c7fb25";
+    List<Long>                  courierIdList                 = new ArrayList<Long>();
+    private static final String loginIdForBlueDart            = "GGN37392";
+    private static final String licenceKeyForBlueDart         = "3c6867277b7a2c8cd78c8c4cb320f401";
 
 
     LineItemDao                 lineItemDaoProvider;
@@ -281,39 +282,37 @@ public class DeliveryStatusUpdateManager {
                         }
                     }
                     responseAFL = AFLResponseParser.parseResponse(response, trackingId);
-                    if (responseAFL.get("delivery_date") != null && responseAFL.get("order_gateway_id") != null && responseAFL.get("awb") != null
-                            && responseAFL.get("current_status") != null) {
+                    if (responseAFL.get(CourierConstants.AFL_DELIVERY_DATE) != null && responseAFL.get(CourierConstants.AFL_ORDER_GATEWAY_ID) != null && responseAFL.get(CourierConstants.AFL_AWB) != null
+                            && responseAFL.get(CourierConstants.AFL_CURRENT_STATUS) != null) {
 
-                        // shippingOrder =
-                        // getShippingOrderService().findByGatewayOrderId(responseAFL.get("order_gateway_id"));
                         Date delivery_date = sdf_date.parse(responseAFL.get("delivery_date"));
                         ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shipment, trackingId, delivery_date);
                     }
                 } catch (MalformedURLException mue) {
-                    logger.error("malformed url for shipping order id " + shippingOrderId);
+                    logger.error(CourierConstants.MALFORMED_URL_EXCEPTION + shippingOrderId);
                     mue.printStackTrace();
                     continue;
                 } catch (IOException ioe) {
-                    logger.error("ioexception encounter for shipping order id " + shippingOrderId);
+                    logger.error(CourierConstants.IO_EXCEPTION + shippingOrderId);
                     ioe.printStackTrace();
                     continue;
                 } catch (ParseException pe) {
-                    logger.error("parse exception in shipping order id " + shippingOrderId);
+                    logger.error(CourierConstants.PARSE_EXCEPTION + shippingOrderId);
                     pe.printStackTrace();
                     continue;
                 } catch (NullPointerException npe) {
-                    logger.error("null pointer expection encountered for shipping order " + shippingOrderId);
+                    logger.error(CourierConstants.NULL_POINTER_EXCEPTION + shippingOrderId);
                     npe.printStackTrace();
                     continue;
                 } catch (Exception e) {
-                    logger.error("Exception encountered for shipping order id " + shippingOrderId);
+                    logger.error(CourierConstants.EXCEPTION + shippingOrderId);
                     e.printStackTrace();
                     continue;
                 } finally {
                     try {
                         in.close();
                     } catch (IOException e) {
-                        logger.error("ioexception encounter for shipping order id " + shippingOrderId);
+                        logger.error(CourierConstants.IO_EXCEPTION + shippingOrderId);
                         e.printStackTrace();
                         continue;
                     }
@@ -360,26 +359,26 @@ public class DeliveryStatusUpdateManager {
                     ChhotuCourierDelivery chhotuCourierDelivery = new Gson().fromJson(jsonFormattedResponse, ChhotuCourierDelivery.class);
                     Date delivery_date = chhotuCourierDelivery.getFormattedDeliveryDate();
 
-                    if (delivery_date != null && chhotuCourierDelivery.getShipmentStatus().equalsIgnoreCase("DELIVERED") && chhotuCourierDelivery.getTrackingId() != null) {
+                    if (delivery_date != null && chhotuCourierDelivery.getShipmentStatus().equalsIgnoreCase(CourierConstants.DELIVERED) && chhotuCourierDelivery.getTrackingId() != null) {
                         ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shipment, trackingId, delivery_date);
                     } else {
-                        logger.error("Deleivery date not avaialable or status is not delieved for : " + shipment.getTrackingId());
+                        logger.error("Delivery date not available or status is not delieved for : " + shipment.getTrackingId());
                     }
 
                 } catch (MalformedURLException mue) {
-                    logger.error("malformed url for shipping order id " + shippingOrderId);
+                    logger.error(CourierConstants.MALFORMED_URL_EXCEPTION+ shippingOrderId);
                     mue.printStackTrace();
                     continue;
                 } catch (IOException ioe) {
-                    logger.error("ioexception encounter for shipping order id " + shippingOrderId);
+                    logger.error(CourierConstants.IO_EXCEPTION+ shippingOrderId);
                     ioe.printStackTrace();
                     continue;
                 } catch (NullPointerException npe) {
-                    logger.error("null pointer exception encountered for shipping order id " + shippingOrderId);
+                    logger.error(CourierConstants.NULL_POINTER_EXCEPTION + shippingOrderId);
                     npe.printStackTrace();
                     continue;
                 } catch (Exception e) {
-                    logger.error("Exception encountered for shipping order id " + shippingOrderId);
+                    logger.error(CourierConstants.EXCEPTION + shippingOrderId);
                     e.printStackTrace();
                     continue;
                 }
@@ -469,35 +468,34 @@ public class DeliveryStatusUpdateManager {
                     in.close();
 
                     JsonParser jsonParser = new JsonParser();
-                    JsonObject shipmentObj = jsonParser.parse(jsonFormattedResponse).getAsJsonObject().getAsJsonArray("ShipmentData").get(0).getAsJsonObject().getAsJsonObject(
-                            "Shipment");
+                    JsonObject shipmentObj = jsonParser.parse(jsonFormattedResponse).getAsJsonObject().getAsJsonArray(CourierConstants.DELHIVERY_SHIPMENT_DATA).get(0).getAsJsonObject().getAsJsonObject(CourierConstants.DELHIVERY_SHIPMENT);
 
-                    String status = shipmentObj.getAsJsonObject("Status").get("Status").getAsString();
-                    String awb = shipmentObj.get("AWB").getAsString();
-                    String deliveryDate = shipmentObj.getAsJsonObject("Status").get("StatusDateTime").getAsString();
+                    String status = shipmentObj.getAsJsonObject(CourierConstants.DELHIVERY_STATUS).get(CourierConstants.DELHIVERY_STATUS).getAsString();
+                    String awb = shipmentObj.get(CourierConstants.DELHIVERY_AWB).getAsString();
+                    String deliveryDate = shipmentObj.getAsJsonObject(CourierConstants.DELHIVERY_STATUS).get(CourierConstants.DELHIVERY_STATUS_DATETIME).getAsString();
 
                     Date delivery_date = getFormattedDeliveryDate(deliveryDate);
 
-                    if (delivery_date != null && status.equalsIgnoreCase("DELIVERED")) {
+                    if (delivery_date != null && status.equalsIgnoreCase(CourierConstants.DELIVERED)) {
                         ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shipment, trackingId, delivery_date);
                     } else {
-                        logger.error("Delivery date not avaialable or status is not delieved for : " + shipment.getTrackingId());
+                        logger.error("Delivery date not avaialable or status is not delivered for : " + shipment.getTrackingId());
                     }
 
                 } catch (MalformedURLException mue) {
-                    logger.error("malformed url for shipping order id " + shippingOrderId);
+                    logger.error(CourierConstants.MALFORMED_URL_EXCEPTION+ shippingOrderId);
                     mue.printStackTrace();
                     continue;
                 } catch (IOException ioe) {
-                    logger.error("ioexception encounter for shipping order id " + shippingOrderId);
+                    logger.error(CourierConstants.IO_EXCEPTION + shippingOrderId);
                     ioe.printStackTrace();
                     continue;
                 } catch (NullPointerException npe) {
-                    logger.error("null pointer exception encountered for shipping order id " + shippingOrderId);
+                    logger.error(CourierConstants.NULL_POINTER_EXCEPTION + shippingOrderId);
                     npe.printStackTrace();
                     continue;
                 } catch (Exception e) {
-                    logger.error("Exception encountered for shipping order id " + shippingOrderId);
+                    logger.error(CourierConstants.EXCEPTION + shippingOrderId);
                     e.printStackTrace();
                     continue;
                 }
@@ -541,37 +539,37 @@ public class DeliveryStatusUpdateManager {
           Document doc = new SAXBuilder().build(new StringReader(response));
           XPath xPath = XPath.newInstance("/*/Shipment");
           Element ele = (Element) xPath.selectSingleNode(doc);
-          String status = ele.getChildText("Status");
-          String statusDate = ele.getChildText("StatusDate");
-          if (status.equals("Shipment delivered") && statusDate != null) {
+          String status = ele.getChildText(CourierConstants.BLUEDART_STATUS);
+          String statusDate = ele.getChildText(CourierConstants.BLUEDART_STATUS_DATE);
+          if (status.equals(CourierConstants.BLUEDART_SHIPMENT_DELIVERED) && statusDate != null) {
             Date delivery_date = sdf_date.parse(statusDate);
             ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shipment, trackingId, delivery_date);
           }
         } catch (MalformedURLException mue) {
-          logger.error("malformed url for shipping order id " + shippingOrderId);
+          logger.error(CourierConstants.MALFORMED_URL_EXCEPTION+ shippingOrderId);
           mue.printStackTrace();
           continue;
         } catch (IOException ioe) {
-          logger.error("ioexception encounter for shipping order id " + shippingOrderId);
+          logger.error(CourierConstants.IO_EXCEPTION + shippingOrderId);
           ioe.printStackTrace();
           continue;
         } catch (ParseException pe) {
-          logger.error("parse exception in shipping order id " + shippingOrderId);
+          logger.error(CourierConstants.PARSE_EXCEPTION + shippingOrderId);
           pe.printStackTrace();
           continue;
         } catch (NullPointerException npe) {
-          logger.error("null pointer expection encountered for shipping order " + shippingOrderId);
+          logger.error(CourierConstants.NULL_POINTER_EXCEPTION + shippingOrderId);
           npe.printStackTrace();
           continue;
         } catch (Exception e) {
-          logger.error("Exception encountered for shipping order id " + shippingOrderId);
+          logger.error(CourierConstants.EXCEPTION + shippingOrderId);
           e.printStackTrace();
           continue;
         } finally {
           try {
             in.close();
           } catch (IOException e) {
-            logger.error("ioexception encounter for shipping order id " + shippingOrderId);
+            logger.error(CourierConstants.IO_EXCEPTION + shippingOrderId);
             e.printStackTrace();
             continue;
           }
@@ -581,14 +579,180 @@ public class DeliveryStatusUpdateManager {
     return ordersDelivered;
   }
 
-  public Date getFormattedDeliveryDate(String deliveryDate) {
+    public int updateDeliveryStatusDTDC(Date startDate, Date endDate) {
+        courierIdList.add(EnumCourier.DTDC_COD.getId());
+        courierIdList.add(EnumCourier.DTDC_Lite.getId());
+        courierIdList.add(EnumCourier.DTDC_Plus.getId());
+        courierIdList.add(EnumCourier.DTDC_Surface.getId());
+
+        //Fetching shipping order list based on courier ids
+        List<Long> shippingOrderList = adminShippingOrderService.getShippingOrderListByCouriers(startDate, endDate, courierIdList);
+        ordersDelivered = 0;
+        orderDeliveryCount = 0;
+        if (shippingOrderList != null || shippingOrderList.size() != 0) {
+            for (Long shippingOrderId : shippingOrderList) {
+
+                ShippingOrder shippingOrderInList = getShippingOrderService().find(shippingOrderId);
+                Shipment shipment = shippingOrderInList.getShipment();
+                String trackingId = shipment.getTrackingId();
+                BufferedReader bufferedReader = null;
+
+                try {
+                    //http://cust.dtdc.co.in/DPTrack/XMLCnTrk.asp?strcnno=B65303941&TrkType=cnno&addtnlDtl=Y&strCustType=DP&strCustDtl=BL8068
+                    URL url = new URL("http://cust.dtdc.co.in/DPTrack/XMLCnTrk.asp?strcnno=" + trackingId + "&TrkType=" + trackingId + "&addtnlDtl=Y&strCustType=DP&strCustDtl=DP");
+                    bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
+                    String inputLine;
+                    String response = "";
+                    //added for debugging
+            response="<DTDCREPLY>" +
+                    "<CONSIGNMENT>" +
+                    "<CNHEADER>" +
+                    "<CNTRACK>TRUE</CNTRACK>" +
+                    "<FIELD NAME=\"strShipmentNo\" VALUE=\"A15082271\" />" +
+                    "<FIELD NAME=\"strRefNo\" VALUE=\"N/A\" />" +
+                    "<FIELD NAME=\"strMode\" VALUE=\"AIR\" />\n" +
+                    "<FIELD NAME=\"strOrigin\" VALUE=\"LEAK-PROOF ENGINEERING PVT.LTD, AHMEDABAD\" />" +
+                    "<FIELD NAME=\"strOriginRemarks\" VALUE=\"Received from\" />" +
+                    "<FIELD NAME=\"strBookedOn\" VALUE=\"08072009\" />" +
+                    "<FIELD NAME=\"strPieces\" VALUE=\"1\" />" +
+                    "<FIELD NAME=\"strWeightUnit\" VALUE=\"Kg\" />" +
+                    "<FIELD NAME=\"strWeight\" VALUE=\"0.020\" />" +
+                    "<FIELD NAME=\"strDestination\" VALUE=\"PUNE\" />" +
+                    "<FIELD NAME=\"strStatus\" VALUE=\"DELIVERED\" />" +
+                    "<FIELD NAME=\"strStatusTransOn\" VALUE=\"12062012\" />" +
+                    "<FIELD NAME=\"strStatusTransTime\" VALUE=\"1210\" />" +
+                    "<FIELD NAME=\"strRemarks\" VALUE=\"CO SEAL\" />" +
+                    "<FIELD NAME=\"strNoOfAttempts\" VALUE=\"\" />" +
+                    "</CNHEADER>" +
+                    "<CNBODY>" +
+                    "<CNACTIONTRACK>TRUE</CNACTIONTRACK>" +
+                    "<CNACTION>" +
+                    "<FIELD NAME=\"strAction\" VALUE=\"DISPATCHED\" />" +
+                    "<FIELD NAME=\"strManifestNo\" VALUE=\"A1534068\" />" +
+                    "<FIELD NAME=\"strOrigin\" VALUE=\"AHMEDABAD APEX, AHMEDABAD\" />" +
+                    "<FIELD NAME=\"strDestination\" VALUE=\"PUNE APEX, PUNE\" />" +
+                    "<FIELD NAME=\"strActionDate\" VALUE=\"08072009\" />" +
+                    "<FIELD NAME=\"strRemarks\" VALUE=\"\" />" +
+                    "</CNACTION>" +
+                    "<CNACTION>" +
+                    "<FIELD NAME=\"strAction\" VALUE=\"RECEIVED\" />" +
+                    "<FIELD NAME=\"strManifestNo\" VALUE=\"A1534068\" />" +
+                    "<FIELD NAME=\"strOrigin\" VALUE=\"AHMEDABAD, AHMEDABAD\" />" +
+                    "<FIELD NAME=\"strDestination\" VALUE=\"PUNE APEX, PUNE\" />" +
+                    "<FIELD NAME=\"strActionDate\" VALUE=\"09072009\" />" +
+                    "<FIELD NAME=\"strRemarks\" VALUE=\"\" />" +
+                    "</CNACTION>" +
+                    "<CNACTION>" +
+                    "<FIELD NAME=\"strAction\" VALUE=\"DISPATCHED\" />" +
+                    "<FIELD NAME=\"strManifestNo\" VALUE=\"90033365\" />" +
+                    "<FIELD NAME=\"strOrigin\" VALUE=\"PUNE, PUNE\" />" +
+                    "<FIELD NAME=\"strDestination\" VALUE=\"PUNE SHIVAJI NAGAR BRANCH, PUNE\" />" +
+                    "<FIELD NAME=\"strActionDate\" VALUE=\"09072009\" />" +
+                    "<FIELD NAME=\"strRemarks\" VALUE=\"\" />" +
+                    "</CNACTION>" +
+                    "<CNACTION>" +
+                    "<FIELD NAME=\"strAction\" VALUE=\"RECEIVED\" />" +
+                    "<FIELD NAME=\"strManifestNo\" VALUE=\"90033365\" />" +
+                    "<FIELD NAME=\"strOrigin\" VALUE=\"PUNE, PUNE\" />" +
+                    "<FIELD NAME=\"strDestination\" VALUE=\"PUNE SHIVAJI NAGAR BRANCH, PUNE\" />" +
+                    "<FIELD NAME=\"strActionDate\" VALUE=\"09072009\" />" +
+                    "<FIELD NAME=\"strRemarks\" VALUE=\"\" />" +
+                    "</CNACTION>" +
+                    "<CNACTION>" +
+                    "<FIELD NAME=\"strAction\" VALUE=\"OUT FOR DELIVERY\" />" +
+                    "<FIELD NAME=\"strManifestNo\" VALUE=\"91108846\" />" +
+                    "<FIELD NAME=\"strOrigin\" VALUE=\"PUNE SHIVAJI NAGAR BRANCH, PUNE\" />" +
+                    "<FIELD NAME=\"strDestination\" VALUE=\"KOTHRUD (MAIN ROAD), PUNE\" />" +
+                    "<FIELD NAME=\"strActionDate\" VALUE=\"09072009\" />" +
+                    "<FIELD NAME=\"strRemarks\" VALUE=\"\" />" +
+                    "</CNACTION>" +
+                    "</CNBODY>" +
+                    "</CONSIGNMENT>" +
+                    "</DTDCREPLY>";
+         /*while ((inputLine = bufferedReader.readLine()) != null) {
+            if (inputLine != null) {
+              response += inputLine;
+            }
+          }*/
+                    Document doc = new SAXBuilder().build(new StringReader(response));
+
+                    //XPath xPath = XPath.newInstance("/*/Shipment");
+                    //Element ele = (Element) xPath.selectSingleNode(doc);
+                    Element element = doc.getRootElement();
+                    Element consig = element.getChild(CourierConstants.DTDC_INPUT_CONSIGNMENT);
+                    Element header = consig.getChild(CourierConstants.DTDC_INPUT_CNHEADER);
+                    Element cnTrack = header.getChild(CourierConstants.DTDC_INPUT_CNTRACK);
+                    String trackStatus = cnTrack.getChildText(CourierConstants.DTDC_INPUT_CNTRACK);
+                    List fields = header.getChildren();
+                    String courierDeliveryStatus = null;
+                    String deliveryDateString = null;
+                    Map<String, String> map = new HashMap<String, String>();
+                    for (int i = 0; i < fields.size(); i++) {
+                        Element elementObj = (Element) fields.get(i);
+                        if (elementObj != cnTrack) {
+                            if (elementObj.getAttribute(CourierConstants.DTDC_ATTRIBUTE_NAME).getValue().equals(CourierConstants.DTDC_INPUT_STR_STATUS) ||
+                                    elementObj.getAttribute(CourierConstants.DTDC_ATTRIBUTE_NAME).getValue().equals(CourierConstants.DTDC_INPUT_STR_STATUSTRANSON)) {
+                                map.put(elementObj.getAttribute(CourierConstants.DTDC_ATTRIBUTE_NAME).getValue(), elementObj.getAttribute(CourierConstants.DTDC_ATTRIBUTE_VALUE).getValue());
+                            }
+                        }
+                    }
+
+                    for (Map.Entry entryObj : map.entrySet()) {
+                        if (entryObj.getKey().equals(CourierConstants.DTDC_INPUT_STR_STATUS)) {
+                            courierDeliveryStatus = entryObj.getValue().toString();
+                        }
+                        if (entryObj.getKey().equals(CourierConstants.DTDC_INPUT_STR_STATUSTRANSON)) {
+                            deliveryDateString = entryObj.getValue().toString();
+                        }
+                    }
+                    String subStringDeliveryDate = deliveryDateString.substring(4, 8) + "-" + deliveryDateString.substring(2, 4) + "-" + deliveryDateString.substring(0, 2);
+                    if (courierDeliveryStatus != null && deliveryDateString != null) {
+                        if (courierDeliveryStatus.equals(CourierConstants.DTDC_INPUT_DELIVERED)) {
+                            Date delivery_date = getFormattedDeliveryDate(subStringDeliveryDate);
+                            ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shipment, trackingId, delivery_date);
+                        }
+                    }
+                    logger.info(trackStatus, fields.size());
+
+                } catch (MalformedURLException mue) {
+                    logger.error(CourierConstants.MALFORMED_URL_EXCEPTION + shippingOrderId);
+                    mue.printStackTrace();
+                    continue;
+                } catch (IOException ioe) {
+                    logger.error(CourierConstants.IO_EXCEPTION + shippingOrderId);
+                    ioe.printStackTrace();
+                    continue;
+                } catch (NullPointerException npe) {
+                    logger.error(CourierConstants.NULL_POINTER_EXCEPTION + shippingOrderId);
+                    npe.printStackTrace();
+                    continue;
+                } catch (Exception e) {
+                    logger.error(CourierConstants.EXCEPTION + shippingOrderId);
+                    e.printStackTrace();
+                    continue;
+                } finally {
+                    try {
+                        bufferedReader.close();
+                    } catch (IOException e) {
+                        logger.error(CourierConstants.IO_EXCEPTION + shippingOrderId);
+                        e.printStackTrace();
+                        continue;
+                    }
+                }
+            }
+        }
+        return ordersDelivered;
+    }
+
+
+    public Date getFormattedDeliveryDate(String deliveryDate) {
         Date formattedDate = null;
         if (deliveryDate != null) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             try {
                 formattedDate = sdf.parse(deliveryDate);
             } catch (Exception e) {
-                logger.error(" exception in parsing chhotu courier deliver format : date was :" + deliveryDate);
+                logger.error("Exception occurred in parsing DeliveryDate format,Date was :" + deliveryDate);
             }
         }
 
