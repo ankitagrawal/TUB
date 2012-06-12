@@ -425,7 +425,7 @@
                     <div class="clear"></div>
                     <c:choose>
                         <c:when test="${order.priorityOrder}">
-                            <div id="userDetails-${order.id}" class="detailDiv" style="background:#FA96FA;">
+                            <div id="userDetails-${order.id}" class="detailDiv" style="background:#F6CECE;">
                         </c:when>
                         <c:otherwise>
                             <div id="userDetails-${order.id}" class="detailDiv">

@@ -67,7 +67,7 @@
       <c:forEach items="${userBean.userList}" var="user" varStatus="userCount">
           <c:choose>
           <c:when test="${user.priorityUser}">
-               <tr style="background:#FA96FA;" >
+               <tr style="background:#F6CECE;" >
           </c:when>
           <c:otherwise>
                <tr >

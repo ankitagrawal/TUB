@@ -210,7 +210,7 @@
     <td>
         <c:choose>
             <c:when test="${baseOrder.priorityOrder}">
-                <div id="userContactDetails" style="background:#FA96FA;">
+                <div id="userContactDetails" style="background:#F6CECE;">
             </c:when>
             <c:otherwise>
                 <div id="userContactDetails" >
