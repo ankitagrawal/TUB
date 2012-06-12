@@ -338,12 +338,13 @@ public class OrderManager {
         /*
          * update user karma profile for those whose score is not yet set
          */
-           getKarmaProfileService().updateKarmaAfterOrder(order);
+        getKarmaProfileService().updateKarmaAfterOrder(order);
         /**
          * Order lifecycle activity logging - Payement Marked Successful
          */
         if (payment.getPaymentStatus().getId().equals(EnumPaymentStatus.SUCCESS.getId())) {
-            getOrderLoggingService().logOrderActivity(order, order.getUser(), getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful), null);
+            getOrderLoggingService().logOrderActivity(order, order.getUser(),
+                    getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful), null);
         }
 
         // order.setAmount(pricingDto.getGrandTotalPayable());
@@ -537,18 +538,25 @@ public class OrderManager {
                         iterator.remove();
                         getCartLineItemDao().delete(lineItem);
                     } else {
-                        /*
-                         * ProductVariant productVariant = lineItem.getProductVariant(); Product product =
-                         * productVariant.getProduct(); boolean isService = false; if (product.isService() != null &&
-                         * product.isService()) isService = true; boolean isJit = false; if (product.isJit() != null &&
-                         * product.isJit()) isJit = true; if (!isJit && !isService) { List<Sku> skuList =
-                         * skuService.getSKUsForProductVariant(productVariant); if (skuList != null &&
-                         * !skuList.isEmpty()) { Long unbookedInventory =
-                         * inventoryService.getAvailableUnbookedInventory(skuList); if (unbookedInventory != null &&
-                         * unbookedInventory < lineItem.getQty()) { lineItem.setQty(unbookedInventory);
-                         * cartLineItemService.save(lineItem); logger.debug("Set LineItem Qty equals to available
-                         * unbooked Inventory: " + unbookedInventory + " for Variant:" + productVariant.getId()); } } }
-                         */
+                        ProductVariant productVariant = lineItem.getProductVariant();
+                        Product product = productVariant.getProduct();
+                        boolean isService = false;
+                        if (product.isService() != null && product.isService())
+                            isService = true;
+                        boolean isJit = false;
+                        if (product.isJit() != null && product.isJit())
+                            isJit = true;
+                        if (!isJit && !isService) {
+                            List<Sku> skuList = skuService.getSKUsForProductVariant(productVariant);
+                            if (skuList != null && !skuList.isEmpty()) {
+                                Long unbookedInventory = inventoryService.getAvailableUnbookedInventory(skuList);
+                                if (unbookedInventory != null && unbookedInventory < lineItem.getQty()) {
+                                    lineItem.setQty(unbookedInventory);
+                                    cartLineItemService.save(lineItem);
+                                    logger.debug("Set LineItem Qty equals to available unbooked Inventory: " + unbookedInventory + " for Variant:" + productVariant.getId());
+                                }
+                            }
+                        }
                         cartLineItemService.save(lineItem);
                     }
                 }
@@ -723,7 +731,7 @@ public class OrderManager {
                             Double surcharge = 0.05;
                             taxPaid = costPrice * sku.getTax().getValue() * (1 + surcharge);
                         } else {
-                            //Double surcharge = 0.0; // CST Surcharge
+                            // Double surcharge = 0.0; // CST Surcharge
                             Double cst = 0.02; // CST
                             taxPaid = costPrice * cst;
                         }
