@@ -59,11 +59,7 @@ public class SearchUserAction extends BasePaginatedAction {
     userList = userPage.getList();
     return new ForwardResolution("/pages/admin/searchUser.jsp");
   }
-
-  public boolean isPriorityUser(User user){
-     return getKarmaProfileService().isPriorityUser(user);
-  }
-
+    
   public UserFilterDto getUserFilterDto() {
     return userFilterDto;
   }
