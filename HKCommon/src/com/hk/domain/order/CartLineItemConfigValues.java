@@ -34,6 +34,9 @@ public class CartLineItemConfigValues implements java.io.Serializable, Comparabl
 	@Column(name = "additional_price", nullable = false, precision = 10)
 	private Double additionalPrice;
 
+   @Column(name = "cost_price", nullable = false, precision = 10)
+	private Double costPrice;
+
 	public Long getId() {
 		return this.id;
 	}
@@ -73,6 +76,13 @@ public class CartLineItemConfigValues implements java.io.Serializable, Comparabl
 	public void setAdditionalPrice(Double additionalPrice) {
 		this.additionalPrice = additionalPrice;
 	}
+   public Double getCostPrice() {
+    return costPrice;
+  }
+
+  public void setCostPrice(Double costPrice) {
+    this.costPrice = costPrice;
+  }
 
 	@Override
 	public boolean equals(Object o) {
