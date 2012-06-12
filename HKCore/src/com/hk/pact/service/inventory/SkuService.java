@@ -46,6 +46,6 @@ public interface SkuService {
      * @return
      */
 
-  public List<Sku> getAllSkuByWarehouse(Warehouse warehouse);
+
 
 }

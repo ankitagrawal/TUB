@@ -20,6 +20,8 @@ import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,7 +38,7 @@ import java.util.*;
  */
 public class BinAllocationReport extends BaseAction {
 
-
+  private static Logger logger = LoggerFactory.getLogger(BinAllocationReport.class);
   @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
   String adminDownloads;
   private File xlsFile;
@@ -69,7 +71,8 @@ public class BinAllocationReport extends BaseAction {
       }
       addRedirectAlertMessage(new SimpleMessage("Bin Report  successfully generated."));
     } catch (Exception e) {
-      e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.
+      logger.debug("Exception :" + e.getStackTrace());
+//      e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.
       addRedirectAlertMessage(new SimpleMessage("Bin Report generation failed"));
     }
     return new HTTPResponseResolution();
@@ -80,8 +83,8 @@ public class BinAllocationReport extends BaseAction {
     public void execute(HttpServletRequest req, HttpServletResponse res) throws IOException {
       OutputStream out = null;
       InputStream in = null;
-       try {
-       in =  new BufferedInputStream(new FileInputStream(xlsFile));
+      try {
+        in = new BufferedInputStream(new FileInputStream(xlsFile));
         res.setContentLength((int) xlsFile.length());
         res.setHeader("Content-Disposition", "attachment; filename=\"" + xlsFile.getName() + "\";");
         out = res.getOutputStream();
@@ -107,36 +110,34 @@ public class BinAllocationReport extends BaseAction {
   public File generateBinAllocationXsl(String xslFilePath) throws Exception {
 
     HkXlsWriter xlsWriter = new HkXlsWriter();
-
     xlsWriter.addHeader(ReportConstants.PRODUCT_VARIANT_ID, ReportConstants.PRODUCT_VARIANT_ID);
     xlsWriter.addHeader(ReportConstants.PRODUCT_NAME, ReportConstants.PRODUCT_NAME);
     xlsWriter.addHeader(ReportConstants.HK_Barcode, ReportConstants.HK_Barcode);
     xlsWriter.addHeader(ReportConstants.MRP, ReportConstants.MRP);
     xlsWriter.addHeader(ReportConstants.LOCATION, ReportConstants.LOCATION);
-
     int rowCounter = 0;
-    Warehouse warehouse = userService.getWarehouseForLoggedInUser();
+    Warehouse warehouse = getUserService().getWarehouseForLoggedInUser();
     if (warehouse == null) {
       return null;
     }
 
-   List<Bin> allBin = binManager.getAllBinByWarehouse(warehouse);
+    List<Bin> allBin = binManager.getAllBinByWarehouse(warehouse);
     List<SkuGroup> skuGroupList = new ArrayList<SkuGroup>();
     Map<SkuGroup, Bin> skuGroupBinMap = new HashMap<SkuGroup, Bin>();
-     for(Bin bin: allBin){
-      List<SkuItem> skuItemList= bin.getSkuItems();
-       if(skuItemList != null && skuItemList.size() >0){
-         for(SkuItem skuitem:skuItemList){
-            SkuGroup skugroup=skuitem.getSkuGroup();
-           if(!(skuGroupList.contains(skugroup))){
-              skuGroupList.add(skugroup);
-             skuGroupBinMap.put(skugroup,bin);
-           }
-         }
+    for (Bin bin : allBin) {
+      List<SkuItem> skuItemList = bin.getSkuItems();
+      if (skuItemList != null && skuItemList.size() > 0) {
+        for (SkuItem skuitem : skuItemList) {
+          SkuGroup skugroup = skuitem.getSkuGroup();
+          if (!(skuGroupList.contains(skugroup))) {
+            skuGroupList.add(skugroup);
+            skuGroupBinMap.put(skugroup, bin);
+          }
+        }
 
-       }
+      }
 
-     }
+    }
 
     Set<Map.Entry<SkuGroup, Bin>> skuGroupSet = skuGroupBinMap.entrySet();
     for (Map.Entry<SkuGroup, Bin> entry : skuGroupSet) {
@@ -149,7 +150,7 @@ public class BinAllocationReport extends BaseAction {
       rowCounter++;
       xlsWriter.addCell(rowCounter, productVariantId);
       xlsWriter.addCell(rowCounter, productVariantName);
-      xlsWriter.addCell(rowCounter,entry.getKey().getBarcode() );
+      xlsWriter.addCell(rowCounter, entry.getKey().getBarcode());
       xlsWriter.addCell(rowCounter, mrp);
       xlsWriter.addCell(rowCounter, Location);
     }

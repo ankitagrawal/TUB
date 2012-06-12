@@ -44,11 +44,4 @@ public class SkuDaoImpl extends BaseDaoImpl implements SkuDao {
         return (List<Sku>) findByCriteria(criteria);
     }
 
-   @SuppressWarnings("unchecked")
-   public List<Sku> getAllSkuByWarehouse(Warehouse warehouse){
-           DetachedCriteria criteria = DetachedCriteria.forClass(Sku.class);
-         criteria.add(Restrictions.eq("warehouse", warehouse));
-        return (List<Sku>) findByCriteria(criteria);
-     
-   }
 }

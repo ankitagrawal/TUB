@@ -142,9 +142,6 @@ public class SkuServiceImpl implements SkuService {
         }
     }
 
-  public List<Sku> getAllSkuByWarehouse(Warehouse warehouse){    
-    return skuDao.getAllSkuByWarehouse(warehouse);
-  }
 
 
     public SkuDao getSkuDao() {
