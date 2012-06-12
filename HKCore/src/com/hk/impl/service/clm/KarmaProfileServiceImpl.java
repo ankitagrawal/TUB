@@ -54,17 +54,16 @@ public class KarmaProfileServiceImpl implements KarmaProfileService {
             karmaProfile.setKarmaPoints(getKarmaPoints(order));
         }
         this.save(karmaProfile);
-        setKarmaInOrderForUser(order, user);
         return karmaProfile;
     }
 
-    private void setKarmaInOrderForUser(Order order, User user) {
+   /* private void setKarmaInOrderForUser(Order order, User user) {
         KarmaProfile karmaProfile = this.findByUser(user);
         if (karmaProfile != null) {
             order.setScore(new Long(karmaProfile.getKarmaPoints()));
             getOrderService().save(order);
         }
-    }
+    }*/
 
     private int getKarmaPoints(Order order) {
         Double points = 0.0;

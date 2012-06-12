@@ -376,7 +376,7 @@ public class OrderManager {
         /*
            * update user karma profile for those whose score is not yet set
            */
-        KarmaProfile karmaProfile = getKarmaProfileService().findByUser(order.getUser());
+        KarmaProfile karmaProfile = getKarmaProfileService().updateKarmaAfterOrder(order);
         order.setScore(new Long(karmaProfile.getKarmaPoints()));
       
         order = getOrderService().save(order);
