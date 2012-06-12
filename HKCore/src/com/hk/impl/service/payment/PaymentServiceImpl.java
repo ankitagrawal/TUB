@@ -95,7 +95,11 @@ public class PaymentServiceImpl implements PaymentService {
                 }
                 break;
             case COD:
-                paymentEmailSent = getEmailManager().sendOrderPlacedCodEmailToUser(order);
+                if (payment.getPaymentStatus().getId().equals(EnumPaymentStatus.ON_DELIVERY.getId())) {
+                  paymentEmailSent = getEmailManager().sendOrderPlacedAuthorizedCodEmailToUser(order);
+                } else {
+                  paymentEmailSent = getEmailManager().sendOrderPlacedCodEmailToUser(order);
+                }
                 break;
 
             case NEFT:

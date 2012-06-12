@@ -36,6 +36,8 @@ public enum EnumCourier {
 
     EarthMoversPune(200L, "Earth Movers Pune"),
 
+    HK_Delivery(500L, "HealthKart Delivery"),
+
     MIGRATE(-1L, "MIGRATE");
 
     private java.lang.String name;

@@ -465,7 +465,7 @@
 <div class="reportBox">
   <s:form beanclass="com.hk.web.action.report.ReportAction" target="_blank">
     <fieldset class="right_label">
-      <legend>Stock Ledger Report By Variant</legend>
+      <legend>Stock Ledger By Variant</legend>
       <ul>
         <li>
           <label>Start
