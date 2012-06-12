@@ -290,21 +290,6 @@
         </c:otherwise>
       </c:choose>
     </span>
-
-    <c:if test="${!empty pa.userReviews}">
-
-      <span style="float:right;">
-      <a class='top_link' href='#user_reviews'>
-         ${pa.totalReviews} Reviews &darr;
-      </a>
-
-      <div class="rating_bar" style="float:right;">
-        <div id="blueStarTop" class="blueStarTop"></div>
-      </div>
-
-         </span>
-    </c:if>
-
   </div>
 
   <div class='top_links'>
@@ -317,6 +302,18 @@
       <a class='top_link' href='#features'>
         Technical Specs &darr;
       </a>
+    </c:if>
+    <c:if test="${!empty pa.userReviews}">
+      <span style="float:right;">
+      <a class='top_link' href='#user_reviews'>
+          ${pa.totalReviews} Reviews &darr;
+      </a>
+
+      <div class="rating_bar" style="float:right;">
+        <div id="blueStarTop" class="blueStarTop"></div>
+      </div>
+
+         </span>
     </c:if>
       <%--<a class='top_link' href='#link3'>
             FAQs
