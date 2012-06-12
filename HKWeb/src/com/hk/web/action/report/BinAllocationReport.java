@@ -7,8 +7,8 @@ import com.hk.constants.core.Keys;
 import com.hk.constants.report.ReportConstants;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.Bin;
-import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
+import com.hk.domain.sku.SkuItem;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.service.UserService;
@@ -110,6 +110,7 @@ public class BinAllocationReport extends BaseAction {
 
     xlsWriter.addHeader(ReportConstants.PRODUCT_VARIANT_ID, ReportConstants.PRODUCT_VARIANT_ID);
     xlsWriter.addHeader(ReportConstants.PRODUCT_NAME, ReportConstants.PRODUCT_NAME);
+    xlsWriter.addHeader(ReportConstants.HK_Barcode, ReportConstants.HK_Barcode);
     xlsWriter.addHeader(ReportConstants.MRP, ReportConstants.MRP);
     xlsWriter.addHeader(ReportConstants.LOCATION, ReportConstants.LOCATION);
 
@@ -118,31 +119,37 @@ public class BinAllocationReport extends BaseAction {
     if (warehouse == null) {
       return null;
     }
-    List<Sku> skuList = skuService.getAllSkuByWarehouse(warehouse);
+
+   List<Bin> allBin = binManager.getAllBinByWarehouse(warehouse);
     List<SkuGroup> skuGroupList = new ArrayList<SkuGroup>();
-    for (Sku sku : skuList) {
-      skuGroupList.addAll(skuItemDao.getInStockSkuGroups(sku));
-    }
     Map<SkuGroup, Bin> skuGroupBinMap = new HashMap<SkuGroup, Bin>();
-    for (SkuGroup skuGroup : skuGroupList) {
-      List<Long> binList = binManager.getListOfBinForSkuItemList(skuGroup.getSkuItems());
-      if (binList != null) {
-        Bin bin = binDao.get(Bin.class, binList.get(0));
-        skuGroupBinMap.put(skuGroup, bin);
-      }
-    }
+     for(Bin bin: allBin){
+      List<SkuItem> skuItemList= bin.getSkuItems();
+       if(skuItemList != null && skuItemList.size() >0){
+         for(SkuItem skuitem:skuItemList){
+            SkuGroup skugroup=skuitem.getSkuGroup();
+           if(!(skuGroupList.contains(skugroup))){
+              skuGroupList.add(skugroup);
+             skuGroupBinMap.put(skugroup,bin);
+           }
+         }
+
+       }
+
+     }
 
     Set<Map.Entry<SkuGroup, Bin>> skuGroupSet = skuGroupBinMap.entrySet();
     for (Map.Entry<SkuGroup, Bin> entry : skuGroupSet) {
       ProductVariant productVariant = entry.getKey().getSku().getProductVariant();
-      String productVariantName = productVariant.getId();
-      String productVarinatName = productVariant.getProduct().getName();
+      String productVariantId = productVariant.getId();
+      String productVariantName = productVariant.getProduct().getName();
       String mrp = Double.toString(productVariant.getMarkedPrice());
       String Location = entry.getValue().getBarcode();
 
       rowCounter++;
+      xlsWriter.addCell(rowCounter, productVariantId);
       xlsWriter.addCell(rowCounter, productVariantName);
-      xlsWriter.addCell(rowCounter, productVarinatName);
+      xlsWriter.addCell(rowCounter,entry.getKey().getBarcode() );
       xlsWriter.addCell(rowCounter, mrp);
       xlsWriter.addCell(rowCounter, Location);
     }

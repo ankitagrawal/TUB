@@ -16,10 +16,10 @@ import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.inventory.SkuService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 
@@ -192,7 +192,10 @@ public class BinManager {
      }
 
    }
+   public List<Bin> getAllBinByWarehouse(Warehouse warehouse){
+        return binDao.getAllBinByWarehouse(warehouse);
 
+   }
    public boolean assignBinToVariant(String location, SkuGroup skuGroup  ) {
      boolean status=false;
       Warehouse warehouse = userService.getWarehouseForLoggedInUser();
