@@ -57,9 +57,6 @@ public class SearchUserAction extends BasePaginatedAction {
   public Resolution search() {
     userPage = userDao.search(userFilterDto, getPageNo(), getPerPage());
     userList = userPage.getList();
-    for(User user:userList){
-        user.setPriorityUser(karmaProfileService.isPriorityUser(user));
-    }
     return new ForwardResolution("/pages/admin/searchUser.jsp");
   }
 

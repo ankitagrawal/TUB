@@ -19,8 +19,4 @@ public interface KarmaProfileService {
 
      public KarmaProfile updateKarmaAfterOrder(Order order);
 
-     public boolean isPriorityUser(User user);
-
-     public boolean isPriorityOrder(Order order);
-
 }

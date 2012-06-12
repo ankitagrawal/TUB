@@ -58,31 +58,6 @@ public class KarmaProfileServiceImpl implements KarmaProfileService {
         return karmaProfile;
     }
 
-    public boolean isPriorityUser(User user){
-        KarmaProfile karmaProfile=this.findByUser(user);
-        if(karmaProfile!=null){
-            if(karmaProfile.getKarmaPoints() >= CLMConstants.thresholdScore){
-                return true;
-            }else{
-                return false;
-            }
-        }else{
-            return false;
-        }
-    }
-
-    public boolean isPriorityOrder(Order order){
-        int score = order.getScore().intValue();
-        
-        if(score >= CLMConstants.thresholdScore){
-            return true;
-        }else{
-            return false;
-        }
-
-    }
-
-
     private void setKarmaInOrderForUser(Order order, User user) {
         KarmaProfile karmaProfile = this.findByUser(user);
         if (karmaProfile != null) {
