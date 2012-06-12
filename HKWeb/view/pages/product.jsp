@@ -248,7 +248,7 @@
       ${product.name}
   </h2>
 
-  <div class='infos'>
+  <div class='infos' style="border-bottom:0px;">
     <c:if test="${hk:isNotBlank(product.brand)}">
           <span class='title'>
             Brand:
@@ -290,7 +290,20 @@
         </c:otherwise>
       </c:choose>
     </span>
-  </div>
+
+  <c:if test="${!empty pa.userReviews}">
+    
+    <div style="float:right;margin-right:5px;margin-bottom:3px;">
+      <a href='#user_reviews' style="border-bottom:0px;">
+              ${pa.totalReviews} Reviews &darr;
+      </a>
+      <div class="rating_bar">
+        <div class="blueStarTop" id="blueStarTop">
+        </div>
+      </div>
+    </div>
+  </c:if>
+ </div>
 
   <div class='top_links'>
     <c:if test="${!empty product.description}">
@@ -302,18 +315,6 @@
       <a class='top_link' href='#features'>
         Technical Specs &darr;
       </a>
-    </c:if>
-    <c:if test="${!empty pa.userReviews}">
-      <span style="float:right;">
-      <a class='top_link' href='#user_reviews'>
-          ${pa.totalReviews} Reviews &darr;
-      </a>
-
-      <div class="rating_bar" style="float:right;">
-        <div id="blueStarTop" class="blueStarTop"></div>
-      </div>
-
-         </span>
     </c:if>
       <%--<a class='top_link' href='#link3'>
             FAQs
@@ -543,7 +544,7 @@
               maxFractionDigits="1"/>/5</strong> <br/>
             (based on ${pa.totalReviews} reviews) <br/>
             <div class="rating_bar">
-              <div id="blueStar" class="blueStar"></div>
+              <div id="blueStar" class="blueStarTop"></div>
             </div>
             
           </td>
