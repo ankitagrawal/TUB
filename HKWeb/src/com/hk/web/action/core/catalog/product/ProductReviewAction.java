@@ -70,7 +70,8 @@ public class ProductReviewAction extends BasePaginatedAction {
         review.setReviewDate(new Date());
         review.setReviewStatus(reviewService.getReviewStatus(EnumReviewStatus.Pending.getId()));
         userReviewDao.save(review);
-        return new RedirectResolution(ProductReviewAction.class).addParameter("product", review.getProduct().getId());
+        //return new RedirectResolution(ProductReviewAction.class).addParameter("product", review.getProduct().getId());
+        return new RedirectResolution(ProductAction.class).addParameter("productId", review.getProduct());
     }
 
     public Product getProduct() {

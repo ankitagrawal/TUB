@@ -36,7 +36,7 @@ public class CartLineItemDaoImpl extends BaseDaoImpl implements CartLineItemDao 
             cartLineItem.setDiscountOnHkPrice(0D);
         }
         if (cartLineItem.getHkPrice() == 0) {
-            logger.error("Update cart Line Item hk price in dao:" + cartLineItem.getHkPrice() + "id : " + cartLineItem.getId() + " qty :" + cartLineItem.getQty() + " type :"
+            logger.error("Update cart Line Item hk price in dao:" + cartLineItem.getHkPrice() + ", id : " + cartLineItem.getId() + ", qty :" + cartLineItem.getQty() + ", type :"
                     + cartLineItem.getLineItemType());
             if (cartLineItem.getProductVariant() != null) {
                 logger.error("HK price null for variant" + cartLineItem.getProductVariant().getId());

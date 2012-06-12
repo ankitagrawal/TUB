@@ -315,6 +315,14 @@ public class EmailManager {
         return emailService.sendHtmlEmail(EmailTemplateConstants.orderPlacedCodEmail, valuesMap, order.getUser().getEmail(), order.getUser().getName());
     }
 
+  public boolean sendOrderPlacedAuthorizedCodEmailToUser(Order order) {
+        HashMap valuesMap = new HashMap();
+        valuesMap.put("order", order);
+        valuesMap.put("pricingDto", new PricingDto(order.getCartLineItems(), order.getAddress()));
+
+        return emailService.sendHtmlEmail(EmailTemplateConstants.orderPlacedAuthorizedCodEmail, valuesMap, order.getUser().getEmail(), order.getUser().getName());
+    }
+
     public boolean sendOrderPlacedOtherPaymentModeEmailToUser(Order order) {
         HashMap valuesMap = new HashMap();
         valuesMap.put("order", order);
