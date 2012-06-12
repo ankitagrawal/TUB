@@ -6,6 +6,7 @@ import java.math.BigInteger;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.transform.Transformers;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
@@ -307,9 +308,17 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao {
     return userIdsByCategoryCount;
   }
 
-  public List<User> findAllUsersNotInEmailRecepient(int maxResult) {
-    String query = "select u.* from user u left join email_recepient er on (u.email = er.email) where er.email is null " ;
-    return getSession().createSQLQuery(query).addEntity(User.class).setMaxResults(maxResult).list();
+  public List<User> findAllUsersNotInEmailRecepient(int maxResult, List<String> userIdList) {
+    String query = "select u.* from user u left join email_recepient er on (u.email = er.email) where er.email is null and u.email is not null ";
+    if(userIdList != null){
+      query += "and u.id in (:userIdList)" ;
+    }
+
+    Query sqlQuery = getSession().createSQLQuery(query).addEntity(User.class);
+    if(userIdList != null) {
+      sqlQuery = sqlQuery.setParameterList("userIdList", userIdList);
+    }
+    return sqlQuery.setMaxResults(maxResult).list();
   }
 
 

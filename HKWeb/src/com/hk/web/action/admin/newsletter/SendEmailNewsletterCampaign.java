@@ -149,7 +149,7 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
     return selectCampaign();
   }
 
-  private List<String> getListOfStringFromCsvFile() throws IOException {
+  private List<String> getListOfStringFromCsvFile(FileBean fileBean) throws IOException {
     String excelFilePath = adminUploadsPath + "/emailList/" + System.currentTimeMillis() + ".txt";
     File excelFile = new File(excelFilePath);
     excelFile.getParentFile().mkdirs();
@@ -160,14 +160,14 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
   }
 
   public Resolution sendCampaignViaCsvUserIDs() throws IOException {
-    List<String> userIdList = getListOfStringFromCsvFile();
+    List<String> userIdList = getListOfStringFromCsvFile(fileBeanForUserList);
     String userIds[] = new String[userIdList.size()];
     int i = 0;
     for(String userId : userIdList) {
       userIds[i] = userId;
       i++;
     }
-    populateEmailRecepient();
+    populateEmailRecepient(userIdList);
     sendCampaignByUploadingFile(userIds, null);
 
     addRedirectAlertMessage(new SimpleMessage("Sending campaign in progress : " + emailCampaign.getName()));
@@ -175,7 +175,7 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
   }
 
   public Resolution sendCampaignViaCsvUserEmails() throws IOException {
-    List<String> userEmails = getListOfStringFromCsvFile();
+    List<String> userEmails = getListOfStringFromCsvFile(fileBean);
     List<String> emailIdsInEmailRecepient = getEmailRecepientDao().findEmailIdsPresentInEmailRecepient(userEmails);
 
     userEmails.removeAll(emailIdsInEmailRecepient);
@@ -229,11 +229,11 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
     } while(filteredUsers.size() > 0);
   }
 
-  private void populateEmailRecepient() {
+  private void populateEmailRecepient(List<String> userIdList) {
     List<User> usersNotInEmailRecepient = new ArrayList<User>();
     do{
       usersNotInEmailRecepient.clear();
-      usersNotInEmailRecepient = getUserService().findAllUsersNotInEmailRecepient(maxResultCount);
+      usersNotInEmailRecepient = getUserService().findAllUsersNotInEmailRecepient(maxResultCount, userIdList);
 
       List<EmailRecepient> emailRecepientRecs = new ArrayList<EmailRecepient>(INITIAL_LIST_SIZE);
       int counter = 0;
@@ -257,7 +257,7 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
   }
   public Resolution sendCampaign() {
 
-    populateEmailRecepient();
+    populateEmailRecepient(null);
 
     String[] categoryArray = StringUtils.split(categories);
     List<String> finalCategories = new ArrayList<String>();
