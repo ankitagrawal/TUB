@@ -13,6 +13,8 @@ import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.TicketStatus;
 import com.hk.domain.TicketType;
+import com.hk.domain.review.ReviewStatus;
+import com.hk.domain.order.ShippingOrderStatus;
 import com.hk.domain.accounting.DebitNoteStatus;
 import com.hk.domain.affiliate.AffiliateCategory;
 import com.hk.domain.catalog.Manufacturer;
@@ -26,7 +28,6 @@ import com.hk.domain.inventory.rv.ReconciliationStatus;
 import com.hk.domain.inventory.rv.ReconciliationType;
 import com.hk.domain.offer.rewardPoint.RewardPointMode;
 import com.hk.domain.offer.rewardPoint.RewardPointStatus;
-import com.hk.domain.order.ShippingOrderStatus;
 import com.hk.domain.user.User;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.MasterDataDao;
@@ -249,6 +250,10 @@ public class MasterDataDaoImpl implements MasterDataDao {
 
    public List<PurchaseFormType> getPurchaseInvoiceFormTypes() {
     return getBaseDao().getAll(PurchaseFormType.class);
+   }
+
+  public List<ReviewStatus> getReviewStatusList() {
+    return getBaseDao().getAll(ReviewStatus.class);
   }
 }
 
