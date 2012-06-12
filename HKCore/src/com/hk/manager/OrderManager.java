@@ -42,6 +42,7 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.user.User;
+import com.hk.domain.clm.KarmaProfile;
 import com.hk.dto.pricing.PricingDto;
 import com.hk.exception.OutOfStockException;
 import com.hk.pact.dao.BaseDao;
@@ -333,18 +334,16 @@ public class OrderManager {
             cartLineItems.add(codLine);
             payment.setAmount(order.getAmount());
             getPaymentService().save(payment);
-        }
-
-        /*
-         * update user karma profile for those whose score is not yet set
-         */
-        getKarmaProfileService().updateKarmaAfterOrder(order);
+        }        
         /**
          * Order lifecycle activity logging - Payement Marked Successful
          */
         if (payment.getPaymentStatus().getId().equals(EnumPaymentStatus.SUCCESS.getId())) {
             getOrderLoggingService().logOrderActivity(order, order.getUser(),
                     getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful), null);
+        }else if (payment.getPaymentStatus().getId().equals(EnumPaymentStatus.ON_DELIVERY.getId())) {
+            getOrderLoggingService().logOrderActivity(order, getUserService().getAdminUser(),
+                    getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.ConfirmedAuthorization), "Auto confirmation as valid user based on history.");
         }
 
         // order.setAmount(pricingDto.getGrandTotalPayable());
@@ -358,8 +357,8 @@ public class OrderManager {
             cartLineItems = addFreeCartLineItems("SPT391-01", order);
         }
 
-        order.setCartLineItems(cartLineItems);
-        order = getOrderService().save(order);
+        //order.setCartLineItems(cartLineItems);
+        //order = getOrderService().save(order);
 
         // associated with a variant, this will help in
         // minimizing brutal use of free checkout
@@ -373,6 +372,13 @@ public class OrderManager {
 
         Set<OrderCategory> categories = getOrderService().getCategoriesForBaseOrder(order);
         order.setCategories(categories);
+
+        /*
+           * update user karma profile for those whose score is not yet set
+           */
+        KarmaProfile karmaProfile = getKarmaProfileService().findByUser(order.getUser());
+        order.setScore(new Long(karmaProfile.getKarmaPoints()));
+      
         order = getOrderService().save(order);
 
         /**
