@@ -153,7 +153,7 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
     String excelFilePath = adminUploadsPath + "/emailList/" + System.currentTimeMillis() + ".txt";
     File excelFile = new File(excelFilePath);
     excelFile.getParentFile().mkdirs();
-    fileBeanForUserList.save(excelFile);
+    fileBean.save(excelFile);
 
     List<String> csvToStringList = ParseCsvFile.getStringListFromCsv(excelFilePath);
     return csvToStringList;

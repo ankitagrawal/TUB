@@ -219,13 +219,12 @@ private String                categoryHealthkartListString  = null;*/
         emailRecepientRecs.add(emailRecepient);
 
         EmailerHistory emailerHistory = getEmailerHistoryDao().createEmailerHistory("no-reply@healthkart.com", "HealthKart",
-            getBaseDao().get(EmailType.class, emailCampaign.getId()), emailRecepient, emailCampaign, "");
+            getBaseDao().get(EmailType.class, EnumEmailType.CampaignEmail.getId()), emailRecepient, emailCampaign, "");
         emailHistoryRecs.add(emailerHistory);
 
         commitCount++;
         if( commitCount == breakFromLoop ) {
           getEmailRecepientDao().saveOrUpdate(emailRecepientRecs);
-          getEmailRecepientDao().clearSession();
           getEmailerHistoryDao().saveOrUpdate(emailHistoryRecs);
           getEmailRecepientDao().clearSession();
           commitCount = 0;

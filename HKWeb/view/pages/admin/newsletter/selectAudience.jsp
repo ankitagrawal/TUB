@@ -24,7 +24,7 @@
       <br/><br/><br/>
 
       <h2>File to Upload
-        <s:file name="fileBeanForUserList" size="30"/></h2>
+        <s:file name="fileBean" size="30"/></h2>
       <s:submit name="sendCampaignViaCsvUserIDs" value="Send email to user id list"/>
 
       <br/><br/><br/>
