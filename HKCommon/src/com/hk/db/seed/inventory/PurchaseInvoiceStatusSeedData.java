@@ -8,8 +8,10 @@ import java.util.List;
 import com.hk.constants.inventory.EnumPurchaseInvoiceStatus;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.inventory.po.PurchaseInvoiceStatus;
+import org.springframework.stereotype.Component;
 
 
+@Component
 public class PurchaseInvoiceStatusSeedData extends BaseSeedData {
 
 

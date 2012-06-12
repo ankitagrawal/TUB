@@ -1,7 +1,9 @@
-package com.hk.db;
+package com.hk.impl.service.task;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.hk.db.seed.catalog.ProductVariantPaymentTypeSeedData;
 import com.hk.db.seed.catalog.ProductVariantServiceTypeSeedData;
@@ -36,46 +38,81 @@ import com.hk.db.seed.ticket.TicketTypeSeedData;
 /**
  * Author: Kani Date: Jul 23, 2009
  */
-public class MasterDataManager {
-    private static Logger                  logger = LoggerFactory.getLogger(MasterDataManager.class);
-
+@Component
+public class MasterDataService {
+    private static Logger                  logger = LoggerFactory.getLogger(MasterDataService.class);
+    @Autowired
     RoleSeedData                           roleSeedData;
+    @Autowired
     PermissionSeedData                     permissionSeedData;
+    @Autowired
     RoleHasPermissionSeedData              roleHasPermissionSeedData;
+    @Autowired
     CourierSeedData                        courierSeedData;
     /* CartLineItemTypeSeedData lineItemStatusSeedData; */
-
+    @Autowired
     CartLineItemTypeSeedData               cartLineItemTypeSeedData;
+    @Autowired
     OrderStatusSeedData                    orderStatusSeedData;
+    @Autowired
     ShippingOrderStatusSeedData            shippingOrderStatusSeedData;
+    @Autowired
     PaymentModeSeedData                    paymentModeSeedData;
+    @Autowired
     PaymentStatusSeedData                  paymentStatusSeedData;
+    @Autowired
     TaxSeedData                            taxSeedData;
+    @Autowired
     RewardPointStatusSeedData              rewardPointStatusSeedData;
+    @Autowired
     RewardPointTxnTypeSeedData             rewardPointTxnTypeSeedData;
+    @Autowired
     EmailTypeSeedData                      emailTypeSeedData;
+    @Autowired
     TicketTypeSeedData                     ticketTypeSeedData;
+    @Autowired
     TicketStatusSeedData                   ticketStatusSeedData;
+    @Autowired
     ReconciliationStatusSeedData           reconciliationStatusSeedData;
+    @Autowired
     CancellationTypeSeedData               cancellationTypeSeedData;
+    @Autowired
     AffiliateTxnTypeSeedData               affiliateTxnTypeSeedData;
+    @Autowired
     OrderLifecycleActivitySeedData         orderLifecycleActivitySeedData;
+    @Autowired
     ShippingOrderLifecycleActivitySeedData shippingOrderLifecycleActivitySeedData;
+    @Autowired
     BoxSizeSeedData                        boxSizeSeedData;
+    @Autowired
     PurchaseOrderStatusSeedData            poStatusSeedData;
+    @Autowired
     RewardPointModeSeedData                rewardPointModeSeedData;
+    @Autowired
     ProductVariantServiceTypeSeedData      productVariantServiceTypeSeedData;
+    @Autowired
     ProductVariantPaymentTypeSeedData      productVariantPaymentTypeSeedData;
+    @Autowired
     GrnStatusSeedData                      grnStatusSeedData;
+    @Autowired
     InvTxnTypeSeedData                     invTxnTypeSeedData;
+    @Autowired
     GoogleBannedWordSeedData               googleBannedWordSeedData;
+    @Autowired
     DebitNoteStatusSeedData                debitNoteStatusSeedData;
+    @Autowired
     PurchaseInvoiceStatusSeedData          purchaseInvoiceStatusSeedData;
+    @Autowired
     SurchargeSeedData                      surchargeSeedData;
+    @Autowired
     AdNetworksSeedData                     adNetworksSeedData;
+    @Autowired
     ReconciliationTypeSeedData             reconciliationTypeSeedData;
+    @Autowired
     ReviewStatusSeedData                   reviewStatusSeedData;
+    @Autowired
     CourierGroupSeedData                   courierGroupSeedData;
+    @Autowired
     PurchaseFormTypeSeedData               purchaseFormTypeSeedData;
 
     public void insert() {
