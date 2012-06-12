@@ -38,6 +38,9 @@ public class VariantConfigValues implements java.io.Serializable,Comparable<Vari
   @Column(name = "display_order", nullable = false)
   private long displayOrder;
 
+  @Column(name = "cost_price", nullable = false, precision = 10)
+  private Double costPrice;
+
   public long getDisplayOrder() {
     return displayOrder;
   }
@@ -88,6 +91,14 @@ public class VariantConfigValues implements java.io.Serializable,Comparable<Vari
 
    public int compareTo(VariantConfigValues o) {
     return ((Long)o.getDisplayOrder()).compareTo(this.displayOrder);
+  }
+
+  public Double getCostPrice() {
+    return costPrice;
+  }
+
+  public void setCostPrice(Double costPrice) {
+    this.costPrice = costPrice;
   }
 }
 
