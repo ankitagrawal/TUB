@@ -246,7 +246,7 @@
 
   <h3><s:link beanclass="com.hk.web.action.admin.catalog.product.PendingProductReviewAction">Pending Product Reviews</s:link></h3>
 
-   <h3><s:link beanclass="com.hk.web.action.report.BinAllocationReport">GenerateBin Allocation Report</s:link></h3>
+   <h3><s:link beanclass="com.hk.web.action.report.BinAllocationReport">Generate  Bin Allocation Report</s:link></h3>
 
 </div>
 
