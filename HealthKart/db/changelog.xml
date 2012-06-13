@@ -7459,4 +7459,15 @@
     <changeSet author="Seema (generated)" id="1339056902031-4">
         <modifyDataType columnName="value" newDataType="VARCHAR(70)" tableName="variant_config_values"/>
     </changeSet>
-   </databaseChangeLog>
+       <changeSet author="vaibhav (generated)" id="1339582614718-1">
+        <addNotNullConstraint columnDataType="VARCHAR(100)" columnName="name" tableName="secondary_referrer_for_order"/>
+    </changeSet>
+    <changeSet author="vaibhav (generated)" id="1339582614718-2">
+        <addNotNullConstraint columnDataType="VARCHAR(70)" columnName="value" tableName="variant_config_values"/>
+    </changeSet>
+    <changeSet author="vaibhav (generated)" id="1339582614718-3">
+      <createIndex indexName="user_id_UNIQUE" tableName="user_karma_profile" unique="true">
+          <column name="user_id"/>
+      </createIndex>
+  </changeSet>
+</databaseChangeLog>
