@@ -568,12 +568,13 @@
             <%--<td style="border-style:none"><h4>${review.title}</h4></td>--%>
               <div class="rating_bar">
                 <div class="blueStarRating${ctr.index}"></div>
-                <script type="text/javascript">
+                <%--  <script type="text/javascript">
                   var index = ${ctr.index};
                   var rating =${review.starRating};
                   rating = (rating * 20) + "%";
                   $('.blueStarRating' + index).width(rating);
                 </script>
+                --%>
               </div>
             </td>
             <td style="border-style:none">
@@ -619,10 +620,11 @@
     var validateCheckbox;
     $(document).ready(function() {
         
-      var rating =${pa.averageRating};
+      <%--var rating =${pa.averageRating};
       rating = (rating * 20) + "%";
       $('.blueStarTop').width(rating);
       $('.blueStar').width(rating);
+      --%>
 
       function _addToCart(res) {
         if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
