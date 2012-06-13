@@ -4,6 +4,7 @@ import com.akube.framework.util.BaseUtils;
 import com.akube.framework.util.DateUtils;
 import com.hk.admin.dto.DisplayTicketHistoryDto;
 import com.hk.admin.dto.marketing.GoogleBannedWordDto;
+import com.hk.admin.pact.dao.email.AdminEmailDao;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.core.EnumEmailType;
@@ -135,6 +136,8 @@ private String                categoryHealthkartListString  = null;*/
   private CouponService         couponService;
   @Autowired
   private FreeMarkerService     freeMarkerService;
+  @Autowired
+  private AdminEmailDao         adminEmailDao;
   private final int             COMMIT_COUNT = 100;
   private final int             INITIAL_LIST_SIZE = 100;
   @PostConstruct
@@ -190,7 +193,6 @@ private String                categoryHealthkartListString  = null;*/
   }
 
   @SuppressWarnings("unchecked")
-  @Transactional
   public boolean sendCampaignMails(List<EmailRecepient> emailersList, EmailCampaign emailCampaign, String xsmtpapi) {
     Map<String, String> headerMap = new HashMap<String, String>();
     headerMap.put("X-SMTPAPI", xsmtpapi);
@@ -224,9 +226,11 @@ private String                categoryHealthkartListString  = null;*/
 
         commitCount++;
         if( commitCount == breakFromLoop ) {
-          getEmailRecepientDao().saveOrUpdate(emailRecepientRecs);
-          getEmailerHistoryDao().saveOrUpdate(emailHistoryRecs);
-          getEmailRecepientDao().clearSession();
+          //getEmailRecepientDao().saveOrUpdate(emailRecepientRecs);
+          //getEmailerHistoryDao().saveOrUpdate(emailHistoryRecs);
+          adminEmailDao.saveOrUpdate(emailRecepientRecs);
+          adminEmailDao.saveOrUpdate(emailHistoryRecs);
+          //getEmailRecepientDao().clearSession();
           commitCount = 0;
           emailHistoryRecs.clear();
           emailRecepientRecs.clear();

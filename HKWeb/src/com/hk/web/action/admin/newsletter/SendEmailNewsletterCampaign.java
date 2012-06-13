@@ -190,7 +190,7 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
       emailRecepientRecs.add(emailRecepient);
       if(counter == COMMIT_COUNT) {
         getEmailRecepientDao().saveOrUpdate(emailRecepientRecs);
-        getEmailRecepientDao().clearSession();
+        //getEmailRecepientDao().clearSession();
         counter = 0;
         emailRecepientRecs.clear();
       }
@@ -198,7 +198,7 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
     }
     if(counter > 0) {
       getEmailRecepientDao().saveOrUpdate(emailRecepientRecs);
-      getEmailRecepientDao().clearSession();
+      //getEmailRecepientDao().clearSession();
     }
 
     userEmails.addAll(emailIdsInEmailRecepient);
@@ -244,7 +244,7 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
         emailRecepientRecs.add(emailRecepient);
         if(counter == COMMIT_COUNT) {
           getEmailRecepientDao().saveOrUpdate(emailRecepientRecs);
-          getEmailRecepientDao().clearSession();
+          //getEmailRecepientDao().clearSession();
           counter = 0;
           emailRecepientRecs.clear();
         }
@@ -252,7 +252,7 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
       }
       if(counter > 0) {
         getEmailRecepientDao().saveOrUpdate(emailRecepientRecs);
-        getEmailRecepientDao().clearSession();
+        //getEmailRecepientDao().clearSession();
       }
     }while(usersNotInEmailRecepient.size() > 0);
 

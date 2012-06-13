@@ -12,11 +12,16 @@ import com.akube.framework.util.BaseUtils;
 
 import java.util.List;
 import java.util.Arrays;
+import java.util.Collection;
 import java.math.BigInteger;
 
 import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.FlushMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.dao.DataAccessException;
 
 /**
  * Created by IntelliJ IDEA.
@@ -45,7 +50,12 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
         "     and (er.last_email_date is null or (datediff(date(sysdate()), er.last_email_date) >= ec.min_day_gap)) Order By u.id  ";
     query = String.format(query, emailCampaign.getId(), BaseUtils.getCommaSeparatedString(roles), emailCampaign.getId());
 
+    //Session session = getSession(true);
     List<EmailRecepient> emailList = getSession().createSQLQuery(query).addEntity(EmailRecepient.class).setMaxResults(maxResult).list();
+    //session.flush();
+    //session.clear();
+    //session.close();
+
     return emailList;
   }
 
@@ -59,8 +69,13 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
         "     and u.id in ( '%s' ) " +
         "     Order By u.id ";
     query = String.format(query, emailCampaign.getId(), emailCampaign.getId(), BaseUtils.getCommaSeparatedString(userIds));
+
+    Session session = getSession(true);
     
-    List<EmailRecepient> userList = getSession().createSQLQuery(query).addEntity(EmailRecepient.class).setMaxResults(maxResult).list();
+    List<EmailRecepient> userList = session.createSQLQuery(query).addEntity(EmailRecepient.class).setMaxResults(maxResult).list();
+    session.flush();
+    session.clear();
+    session.close();
     return userList;
   }
 
@@ -142,6 +157,19 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
     }
     return sqlQuery.setMaxResults(maxResult).list();
   }
+
+@SuppressWarnings("unchecked")
+  public void saveOrUpdate(Collection entities) throws DataAccessException {
+    Session session = getSession(true);
+		//Begining a transaction as a lock over the database is required
+		Transaction transaction = session.beginTransaction();
+    session.saveOrUpdate(entities);//.saveOrUpdateAll(entities);
+    session.flush();
+  session.clear();
+  transaction.commit();
+  session.close();
+  }
+
 
   public RoleDao getRoleDao() {
     return roleDao;
