@@ -17,75 +17,78 @@ import com.hk.domain.inventory.rv.ReconciliationType;
 import com.hk.domain.offer.rewardPoint.RewardPointMode;
 import com.hk.domain.offer.rewardPoint.RewardPointStatus;
 import com.hk.domain.order.ShippingOrderStatus;
+import com.hk.domain.review.ReviewStatus;
 import com.hk.domain.user.User;
 
 import java.util.List;
 
 public interface MasterDataDao {
 
-    public List<PaymentStatus> getPaymentStatusList();
+  public List<PaymentStatus> getPaymentStatusList();
 
-    public List<PaymentMode> getPaymentModeList();
+  public List<PaymentMode> getPaymentModeList();
 
-    public List<OrderStatus> getOrderStatusList();
+  public List<OrderStatus> getOrderStatusList();
 
-    public List<Courier> getCourierList();
+  public List<Courier> getCourierList();
 
-    public List<PaymentMode> getpaymentModesForReconciliationReport();
+  public List<PaymentMode> getpaymentModesForReconciliationReport();
 
-    public List<ReconciliationStatus> getReconciliationStatus();
+  public List<ReconciliationStatus> getReconciliationStatus();
 
-    public List<CartLineItemType> getLineItemTypeList();
+  public List<CartLineItemType> getLineItemTypeList();
 
-    public List<CancellationType> getCancellationTypeList();
+  public List<CancellationType> getCancellationTypeList();
 
-    public List<RewardPointStatus> getRewardPointStatusList();
+  public List<RewardPointStatus> getRewardPointStatusList();
 
-    public List<Tax> getTaxList();
+  public List<Tax> getTaxList();
 
-    public List<Manufacturer> getManufacturerList();
+  public List<Manufacturer> getManufacturerList();
 
-    public List<TicketType> getTicketTypeList();
+  public List<TicketType> getTicketTypeList();
 
-    public List<TicketStatus> getTicketStatusList();
+  public List<TicketStatus> getTicketStatusList();
 
-    public List<User> getTicketAdminList();
+  public List<User> getTicketAdminList();
 
-    public List<Category> getTopLevelCategoryList();
+  public List<Category> getTopLevelCategoryList();
 
-    public List<Category> getMarketExpenseCategoriesList();
+  public List<Category> getMarketExpenseCategoriesList();
 
-    public List<AffiliateCategory> getallAffiliateCategories();
+  public List<AffiliateCategory> getallAffiliateCategories();
 
-    public List<PaymentMode> getPaymentModes();
+  public List<PaymentMode> getPaymentModes();
 
-    public List<BoxSize> getBoxSizes();
+  public List<BoxSize> getBoxSizes();
 
-    public List<RewardPointMode> getRewardPointModes();
+  public List<RewardPointMode> getRewardPointModes();
 
-    public List<ProductVariantPaymentType> getPaymentTypes();
+  public List<ProductVariantPaymentType> getPaymentTypes();
 
-    public List<ProductVariantServiceType> getServiceTypes();
+  public List<ProductVariantServiceType> getServiceTypes();
 
-    public List<PurchaseOrderStatus> getPurchaseOrderStatusList();
+  public List<PurchaseOrderStatus> getPurchaseOrderStatusList();
 
-    public List<GrnStatus> getGrnStatusList();
+  public List<GrnStatus> getGrnStatusList();
 
-    public List<User> getApproverList();
+  public List<User> getApproverList();
 
-    public List<User> getCreatorList();
+  public List<User> getCreatorList();
 
-    public List<DebitNoteStatus> getDebitNoteStatusList();
+  public List<DebitNoteStatus> getDebitNoteStatusList();
 
-    public List<PurchaseInvoiceStatus> getPurchaseInvoiceStatusList();
+  public List<PurchaseInvoiceStatus> getPurchaseInvoiceStatusList();
 
-    public List<Surcharge> getSurchargeList();
+  public List<Surcharge> getSurchargeList();
 
-    public List<ReconciliationType> getReconciliationTypeList();
+  public List<ReconciliationType> getReconciliationTypeList();
 
   public List<ShippingOrderStatus> getSOStatusForShipmentDetailsList();
 
   public List<PurchaseFormType> getPurchaseInvoiceFormTypes();
+
+  public List<ReviewStatus> getReviewStatusList();
 
   public List<RegionType> getRegionTypeList();
 }

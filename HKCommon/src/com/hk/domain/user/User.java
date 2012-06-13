@@ -7,34 +7,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Where;
 
 import com.hk.constants.core.EnumPermission;
+import com.hk.constants.clm.CLMConstants;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.offer.rewardPoint.RewardPoint;
@@ -42,6 +22,7 @@ import com.hk.domain.offer.rewardPoint.RewardPointTxn;
 import com.hk.domain.order.Order;
 import com.hk.domain.store.Store;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.domain.clm.KarmaProfile;
 
 /**
  * Author: Kani Date: Aug 29, 2008
@@ -145,6 +126,26 @@ public class User {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id", nullable = true)
     private Store                 store;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
+    private KarmaProfile karmaProfile;
+
+    public KarmaProfile getKarmaProfile() {
+        return karmaProfile;
+    }
+
+    public void setKarmaProfile(KarmaProfile karmaProfile) {
+        this.karmaProfile = karmaProfile;
+    }
+
+    public boolean isPriorityUser() {
+        KarmaProfile karmaProfile=getKarmaProfile();
+         if(karmaProfile!=null){
+            return (karmaProfile.getKarmaPoints()>= CLMConstants.thresholdScore);
+        }else{
+            return false;
+        }
+    }
 
     public List<Address> getAddresses() {
         return addresses;

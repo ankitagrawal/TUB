@@ -4,6 +4,7 @@ package com.hk.domain.order;
 
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.payment.EnumPaymentMode;
+import com.hk.constants.clm.CLMConstants;
 import com.hk.domain.Comment;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.comparator.OrderLifecycleComparator;
@@ -136,6 +137,15 @@ public class Order implements java.io.Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "secondary_referrer_for_order_id")
     private SecondaryReferrerForOrder secondaryReferrerForOrder;
+
+
+    public boolean isPriorityOrder() {
+        if(this.score!=null){
+            return (this.score>= CLMConstants.thresholdScore);
+        }else{
+            return false;
+        }
+    }
 
 
 
