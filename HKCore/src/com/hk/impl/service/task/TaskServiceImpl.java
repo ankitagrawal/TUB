@@ -21,6 +21,8 @@ public class TaskServiceImpl implements TaskService{
   @Autowired
   BatchProcessWorkManager batchProcessWorkManager;
 
+  @Autowired
+  ProductManager productManager;
 
   @Override
   public boolean runDbMaster(String masterData) {
@@ -46,7 +48,7 @@ public class TaskServiceImpl implements TaskService{
         batchProcessWorkManager.endWork();
         isSuccessful = true;
       }
-/*
+
 
       if ("catalog".equals(masterData) || "both".equals(masterData)) {
 
