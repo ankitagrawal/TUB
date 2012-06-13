@@ -7519,4 +7519,4 @@
      <changeSet author="Seema (generated)" id="1338816774783-12">
          <addForeignKeyConstraint baseColumnNames="state" baseTableName="state_courier_service" baseTableSchemaName="healthkart_workbench" constraintName="fk_state_pincode" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="state" referencedTableName="pincode" referencedTableSchemaName="healthkart_workbench" referencesUniqueColumn="false"/>
      </changeSet>
-</databaseChangeLog>
+ </databaseChangeLog>
