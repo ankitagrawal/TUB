@@ -162,15 +162,6 @@ public class ProductServiceImpl implements ProductService {
       return primaryCategoryHeading.getProducts();
     }
 
-    public class ProductComparator implements Comparator<Product> {
-      public int compare(Product o1, Product o2) {
-        if (o1.getOrderRanking() != null && o2.getOrderRanking() != null) {
-          return o1.getOrderRanking().compareTo(o2.getOrderRanking());
-        }
-        return -1;
-      }
-    }
-
     public boolean isComboInStock(Combo combo) {
       for (ComboProduct comboProduct : combo.getComboProducts()) {
         if (!comboProduct.getAllowedProductVariants().isEmpty() && comboProduct.getAllowedInStockVariants().isEmpty()) {
@@ -181,4 +172,13 @@ public class ProductServiceImpl implements ProductService {
       }
       return true;
     }
+}
+
+class ProductComparator implements Comparator<Product> {
+  public int compare(Product o1, Product o2) {
+    if (o1.getOrderRanking() != null && o2.getOrderRanking() != null) {
+      return o1.getOrderRanking().compareTo(o2.getOrderRanking());
+    }
+    return -1;
+  }
 }
