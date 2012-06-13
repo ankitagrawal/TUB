@@ -84,6 +84,8 @@ public interface MasterDataDao {
 
     public List<ShippingOrderStatus> getSOStatusForShipmentDetailsList();
 
-     public List<PurchaseFormType> getPurchaseInvoiceFormTypes();
+    public List<PurchaseFormType> getPurchaseInvoiceFormTypes();
+
+    public List<String> getCourierListForDBUpdation();
 
 }

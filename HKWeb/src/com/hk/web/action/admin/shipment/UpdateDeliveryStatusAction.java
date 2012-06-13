@@ -3,12 +3,16 @@ package com.hk.web.action.admin.shipment;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.Validate;
+import net.sourceforge.stripes.validation.ValidationMethod;
+import net.sourceforge.stripes.validation.SimpleError;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.manager.DeliveryStatusUpdateManager;
 import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.courier.CourierConstants;
 import com.hk.domain.user.User;
 import com.hk.util.CustomDateTypeConvertor;
 import com.hk.web.action.error.AdminPermissionAction;
@@ -32,167 +37,88 @@ public class UpdateDeliveryStatusAction extends BaseAction{
   private static     Logger                           logger = LoggerFactory.getLogger(UpdateDeliveryStatusAction.class);
   private            Date                             startDate;
   private            Date                             endDate;
+  private            String                           courierName;
 
   @Autowired
   private            DeliveryStatusUpdateManager      deliveryStatusUpdateManager;
-  
-  @DefaultHandler
-  public Resolution pre(){
 
-    return new ForwardResolution("/pages/admin/updateCourierDeliveryStatus.jsp");
-  }
 
-  public Resolution updateAFLStatus() throws MalformedURLException, IOException,Exception{
-
-    User loggedOnUser = null;
-    if (getPrincipal() != null) {
-      loggedOnUser = getUserService().getUserById(getPrincipal().getId());
-    }
-    int numberOfOrdersUpdated=0;
-    String testIt;
-    try {
-
-      numberOfOrdersUpdated = deliveryStatusUpdateManager.updateDeliveryStatusAFL(startDate,endDate,loggedOnUser);
-    } catch (Exception e) {
-      logger.error("Exception while reading excel sheet.", e);
-      addRedirectAlertMessage(new SimpleMessage("Upload failed - " + e.getMessage()));
-      return new ForwardResolution("/pages/admin/updateCourierDeliveryStatus.jsp");
+    @DefaultHandler
+    public Resolution pre() {
+        return new ForwardResolution("/pages/admin/updateCourierDeliveryStatus.jsp");
     }
 
-    addRedirectAlertMessage(new SimpleMessage("Database Updated - " + numberOfOrdersUpdated +  " orders Updated."));
 
-    return new ForwardResolution("/pages/admin/updateCourierDeliveryStatus.jsp");
-
-
-    /*String awbForTest = "84121272408167223";
-    URL url = new URL("http://trackntrace.aflwiz.com/aflwiztrack?shpntnum="+awbForTest);
-    
-    BufferedReader in = new BufferedReader(
-          new InputStreamReader(
-          url.openStream()));
-    String inputLine;
-    String test="";
-
-    while ((inputLine = in.readLine()) != null){
-        if(inputLine != null){
-          test += inputLine;
-        }
-        System.out.println(inputLine);
-    }
-    in.close();
-    Node xmlNode = new XmlParser().parseText(test);
-    System.out.println("test this " + ((Node)(((Node)(xmlNode.children().get(1))).children().get(8))).text()  );
-
-
-    addRedirectAlertMessage(new SimpleMessage("Database Updated - " + startDate + " " + endDate + " orders Updated."+test));
-
-    return new ForwardResolution("/pages/admin/updateCourierDeliveryStatus.jsp");*/
-  }
-  public Resolution updateChhotuStatus() throws MalformedURLException, IOException,Exception{
-
-     User loggedOnUser = null;
-    if (getPrincipal() != null) {
-      loggedOnUser =  getUserService().getUserById(getPrincipal().getId());
-    }
-    int numberOfOrdersUpdated=0;
-    String testIt;
-    try {
-
-      numberOfOrdersUpdated = deliveryStatusUpdateManager.updateDeliveryStatusChhotu(startDate,endDate,loggedOnUser);
-    } catch (Exception e) {
-      logger.error("Exception occurred in updateChhotuStatus of UpdateDeliveryStatusAction.", e);
-      addRedirectAlertMessage(new SimpleMessage("Upload failed - " + e.getMessage()));
-      return new ForwardResolution("/pages/admin/updateCourierDeliveryStatus.jsp");
-    }
-
-    addRedirectAlertMessage(new SimpleMessage("Database Updated - " + numberOfOrdersUpdated +  " orders Updated."));
-
-    return new ForwardResolution("/pages/admin/updateCourierDeliveryStatus.jsp");
-  }
-  
-  public Resolution updateDelhiveryStatus() throws Exception{
-
-      User loggedOnUser = null;
-     if (getPrincipal() != null) {
-       loggedOnUser = getUserService().getUserById(getPrincipal().getId());
-     }
-     int numberOfOrdersUpdated=0;
-     try {
-
-       numberOfOrdersUpdated = deliveryStatusUpdateManager.updateDeliveryStatusDelhivery(startDate,endDate,loggedOnUser);
-     } catch (Exception e) {
-       logger.error("Exception occurred in updateDelhiveryStatus of UpdateDeliveryStatusAction", e);
-       addRedirectAlertMessage(new SimpleMessage("Upload failed - " + e.getMessage()));
-       return new ForwardResolution("/pages/admin/updateCourierDeliveryStatus.jsp");
-     }
-
-     addRedirectAlertMessage(new SimpleMessage("Database Updated - " + numberOfOrdersUpdated +  " orders Updated."));
-
-     return new ForwardResolution("/pages/admin/updateCourierDeliveryStatus.jsp");
-   }
-
-    public Resolution updateBlueDartStatus() throws MalformedURLException, IOException,Exception{
-     User loggedOnUser = null;
-     if (getPrincipal() != null) {
-       loggedOnUser = getUserService().getUserById(getPrincipal().getId());
-     }
-     int numberOfOrdersUpdated=0;
-     try {
-       numberOfOrdersUpdated = deliveryStatusUpdateManager.updateDeliveryStatusBlueDart(startDate,endDate,loggedOnUser);
-     } catch (Exception e) {
-       logger.error("Exception occurred in updateBlueDartStatus of UpdateDeliveryStatus.", e);
-       addRedirectAlertMessage(new SimpleMessage("Upload failed - " + e.getMessage()));
-       return new ForwardResolution("/pages/admin/updateCourierDeliveryStatus.jsp");
-     }
-
-     addRedirectAlertMessage(new SimpleMessage("Database Updated - " + numberOfOrdersUpdated +  " orders Updated."));
-     return new ForwardResolution("/pages/admin/updateCourierDeliveryStatus.jsp");
-   }
-
-    public Resolution updateDtdcStatus() throws Exception {
-
-
+    public Resolution updateCourierStatus() {
         User loggedOnUser = null;
         if (getPrincipal() != null) {
             loggedOnUser = getUserService().getUserById(getPrincipal().getId());
         }
         int numberOfOrdersUpdated = 0;
-        try {
+        if (courierName != null) {
+            try {
+                if (courierName.equalsIgnoreCase(CourierConstants.AFL)) {
+                    numberOfOrdersUpdated = deliveryStatusUpdateManager.updateDeliveryStatusAFL(startDate, endDate, loggedOnUser);
 
-            numberOfOrdersUpdated = deliveryStatusUpdateManager.updateDeliveryStatusDTDC(startDate,endDate);
-        } catch (Exception e) {
-            logger.error("Exception occurred in updateDtdcStatus of UpdateDeliveryStatus .", e);
-            addRedirectAlertMessage(new SimpleMessage("Database Updation failed,some e " + e.getMessage()));
-            return new ForwardResolution("/pages/admin/updateCourierDeliveryStatus.jsp");
-        }
 
-        if(numberOfOrdersUpdated == 0){
-            addRedirectAlertMessage(new SimpleMessage("Sorry! no orders found."));
+                } else if (courierName.equalsIgnoreCase(CourierConstants.CHHOTU)) {
+                    numberOfOrdersUpdated = deliveryStatusUpdateManager.updateDeliveryStatusChhotu(startDate, endDate, loggedOnUser);
 
-        }   else {
-        addRedirectAlertMessage(new SimpleMessage("Database Successfully Updated -: " + numberOfOrdersUpdated + " orders Updated."));
+                } else if (courierName.equalsIgnoreCase(CourierConstants.DTDC)) {
+                    numberOfOrdersUpdated = deliveryStatusUpdateManager.updateDeliveryStatusDTDC(startDate, endDate);
+
+                } else if (courierName.equalsIgnoreCase(CourierConstants.DELHIVERY)) {
+                    numberOfOrdersUpdated = deliveryStatusUpdateManager.updateDeliveryStatusDelhivery(startDate, endDate, loggedOnUser);
+
+                } else if (courierName.equalsIgnoreCase(CourierConstants.BLUEDART)) {
+                    numberOfOrdersUpdated = deliveryStatusUpdateManager.updateDeliveryStatusBlueDart(startDate, endDate, loggedOnUser);
+
+
+                }
+            } catch (Exception e) {
+                logger.error("Exception occurred in updateCourierStatus of UpdateDeliveryStatusAction .", e);
+                addRedirectAlertMessage(new SimpleMessage("Database Updation failed."));
+                return new ForwardResolution("/pages/admin/updateCourierDeliveryStatus.jsp");
+            }
+
+            if (numberOfOrdersUpdated == 0) {
+                addRedirectAlertMessage(new SimpleMessage("Sorry! no orders found for updation."));
+
+            } else {
+                addRedirectAlertMessage(new SimpleMessage("Database Successfully Updated -: " + numberOfOrdersUpdated + " orders Updated."));
+            }
+        } else {
+            addRedirectAlertMessage(new SimpleMessage("Please select a courier."));
+
         }
 
         return new ForwardResolution("/pages/admin/updateCourierDeliveryStatus.jsp");
+
     }
 
-
     public Date getStartDate() {
-    return startDate;
-  }
+        return startDate;
+    }
 
-  @Validate(converter = CustomDateTypeConvertor.class)
-  public void setStartDate(Date startDate) {
-    this.startDate = startDate;
-  }
+    @Validate(converter = CustomDateTypeConvertor.class)
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
 
-  public Date getEndDate() {
-    return endDate;
-  }
+    public Date getEndDate() {
+        return endDate;
+    }
 
-  @Validate(converter = CustomDateTypeConvertor.class)
-  public void setEndDate(Date endDate) {
-    this.endDate = endDate;
-  }
+    @Validate(converter = CustomDateTypeConvertor.class)
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
 
+    public String getCourierName() {
+        return courierName;
+    }
+
+    public void setCourierName(String courierName) {
+        this.courierName = courierName;
+    }
 }

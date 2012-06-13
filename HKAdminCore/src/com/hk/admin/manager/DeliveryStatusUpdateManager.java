@@ -712,7 +712,6 @@ public class DeliveryStatusUpdateManager {
                             ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shipment, trackingId, delivery_date);
                         }
                     }
-                    logger.info(trackStatus, fields.size());
 
                 } catch (MalformedURLException mue) {
                     logger.error(CourierConstants.MALFORMED_URL_EXCEPTION + shippingOrderId);

@@ -2,6 +2,7 @@ package com.hk.impl.dao;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -11,6 +12,7 @@ import com.hk.constants.core.EnumRole;
 import com.hk.constants.inventory.EnumReconciliationStatus;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.constants.courier.CourierConstants;
 import com.hk.domain.TicketStatus;
 import com.hk.domain.TicketType;
 import com.hk.domain.accounting.DebitNoteStatus;
@@ -196,6 +198,16 @@ public class MasterDataDaoImpl implements MasterDataDao {
 
   public List<EmailType> getEmailTypeList() {
     return getBaseDao().getAll(EmailType.class);
+  }
+
+  public List<String> getCourierListForDBUpdation(){
+      List<String> courierListForDBUpdation=new ArrayList<String>();
+      courierListForDBUpdation.add(CourierConstants.AFL);
+      courierListForDBUpdation.add(CourierConstants.BLUEDART);
+      courierListForDBUpdation.add(CourierConstants.CHHOTU);
+      courierListForDBUpdation.add(CourierConstants.DELHIVERY);
+      courierListForDBUpdation.add(CourierConstants.DTDC);
+      return courierListForDBUpdation;
   }
 
   public BaseDao getBaseDao() {

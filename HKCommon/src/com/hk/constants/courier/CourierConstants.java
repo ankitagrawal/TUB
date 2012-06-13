@@ -18,6 +18,11 @@ public class CourierConstants {
 
     //Common constants
     public static final String DELIVERED="DELIVERED";
+    public static final String AFL = "AFL";
+    public static final String BLUEDART = "BLUEDART";
+    public static final String CHHOTU = "CHHOTU";
+    public static final String DTDC = "DTDC";
+    public static final String DELHIVERY = "DELHIVERY";
 
 
     //Constants for DTDC
