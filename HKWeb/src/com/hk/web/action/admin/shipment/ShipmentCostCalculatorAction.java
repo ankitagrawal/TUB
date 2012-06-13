@@ -162,7 +162,8 @@ public class ShipmentCostCalculatorAction extends BaseAction {
                         shipmentService.save(shipment);
                     }
                 } else {
-                    addRedirectAlertMessage(new SimpleMessage("No Shipment currently exists to be updated"));
+                    logger.debug("No Shipment exists or courier group exists for SO " + shippingOrder.getGatewayOrderId());
+//                    addRedirectAlertMessage(new SimpleMessage("No Shipment currently exists to be updated"));
                 }
             }
         }
