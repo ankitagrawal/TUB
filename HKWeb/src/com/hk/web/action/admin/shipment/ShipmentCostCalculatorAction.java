@@ -154,7 +154,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
         if (shippingOrderList != null) {
             for (ShippingOrder shippingOrder : shippingOrderList) {
                 Shipment shipment = shippingOrder.getShipment();
-                if (shipment != null && ) {
+                if (shipment != null && courierGroupService.getCourierGroup(shipment.getCourier()) != null) {
                     if (overrideHistoricalShipmentCost || shipment.getEstmShipmentCharge() == null) {
                         shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
                         shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
