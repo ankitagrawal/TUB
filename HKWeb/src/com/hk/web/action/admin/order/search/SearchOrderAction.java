@@ -26,6 +26,7 @@ import com.hk.domain.core.PaymentMode;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.pact.service.order.OrderService;
+import com.hk.pact.service.clm.KarmaProfileService;
 import com.hk.web.action.error.AdminPermissionAction;
 
 @Secure(hasAnyPermissions = { PermissionConstants.SEARCH_ORDERS }, authActionBean = AdminPermissionAction.class)
@@ -36,6 +37,8 @@ public class SearchOrderAction extends BasePaginatedAction {
 
     @Autowired
     OrderService          orderService;
+    @Autowired
+    KarmaProfileService karmaProfileService;
 
     private OrderStatus   orderStatus;
     private Long          orderId;
@@ -218,5 +221,13 @@ public class SearchOrderAction extends BasePaginatedAction {
 
     public void setLogin(String login) {
         this.login = login;
+    }
+
+    public KarmaProfileService getKarmaProfileService() {
+        return karmaProfileService;
+    }
+
+    public void setKarmaProfileService(KarmaProfileService karmaProfileService) {
+        this.karmaProfileService = karmaProfileService;
     }
 }

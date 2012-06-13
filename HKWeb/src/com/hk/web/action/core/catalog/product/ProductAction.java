@@ -1,9 +1,6 @@
 package com.hk.web.action.core.catalog.product;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
@@ -19,15 +16,17 @@ import org.stripesstuff.plugin.session.Session;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.HealthkartConstants;
+import com.hk.constants.review.EnumReviewStatus;
 import com.hk.domain.MapIndia;
+import com.hk.domain.review.UserReview;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.catalog.Manufacturer;
+import com.akube.framework.dao.Page;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductImage;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.content.SeoData;
-import com.hk.domain.review.UserReview;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.dto.AddressDistanceDto;
@@ -63,8 +62,9 @@ public class ProductAction extends BaseAction {
     Combo                            combo;
     String                           feed;
     String                           affid;
-    Double                           starRating;
+    Double                           averageRating;
     List<UserReview>                 userReviews = new ArrayList<UserReview>();
+    Long                             totalReviews = 0L;
 
     @Session(key = HealthkartConstants.Cookie.preferredZone)
     private String                   preferredZone;
@@ -163,17 +163,18 @@ public class ProductAction extends BaseAction {
                 return new ForwardResolution("/pages/productFeedXml.jsp");
             }
         }
-        
-        
+
+      //User Reviews
+      totalReviews = productService.getAllReviews(product, Arrays.asList(EnumReviewStatus.Published.getId()));
+      if (totalReviews != null && totalReviews > 0) {
+        averageRating = productService.getAverageRating(product);
+        Page userReviewPage = productService.getProductReviews(product, Arrays.asList(EnumReviewStatus.Published.getId()), 1, 5);
+        if (userReviewPage != null) {
+          userReviews = userReviewPage.getList();
+        }
+      }
         return new ForwardResolution("/pages/product.jsp");
     }
-
-    // User Reviews
-    /*
-     * starRating = productService.getStarRating(product); Page<UserReview> userReviewPage =
-     * productService.getProductReviews(product, Arrays.asList(EnumReviewStatus.Published.getId()), 1, 5); if
-     * (userReviewPage != null) { userReviews = userReviewPage.getList(); }
-     */
 
     public Resolution productBanner() {
         affiliate = affiliateDao.getAffiliateByCode(affid);
@@ -298,11 +299,15 @@ public class ProductAction extends BaseAction {
         this.affid = affid;
     }
 
-    public Double getStarRating() {
-        return starRating;
-    }
+   public Double getAverageRating() {
+    return averageRating;
+   }
 
-    public List<UserReview> getUserReviews() {
+   public void setAverageRating(Double averageRating) {
+    this.averageRating = averageRating;
+   }
+
+  public List<UserReview> getUserReviews() {
         return userReviews;
     }
 
@@ -322,4 +327,7 @@ public class ProductAction extends BaseAction {
         this.urlFragment = urlFragment;
     }
 
+    public Long getTotalReviews() {
+      return totalReviews;
+    }
 }
