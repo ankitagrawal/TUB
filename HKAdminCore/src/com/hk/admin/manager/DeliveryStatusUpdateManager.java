@@ -686,6 +686,7 @@ public class DeliveryStatusUpdateManager {
                     List fields = header.getChildren();
                     String courierDeliveryStatus = null;
                     String deliveryDateString = null;
+                    if(trackStatus.equalsIgnoreCase("TRUE")){
                     Map<String, String> map = new HashMap<String, String>();
                     for (int i = 0; i < fields.size(); i++) {
                         Element elementObj = (Element) fields.get(i);
@@ -711,6 +712,7 @@ public class DeliveryStatusUpdateManager {
                             Date delivery_date = getFormattedDeliveryDate(subStringDeliveryDate);
                             ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shipment, trackingId, delivery_date);
                         }
+                    }
                     }
 
                 } catch (MalformedURLException mue) {
