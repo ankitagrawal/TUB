@@ -40,16 +40,6 @@ public class MailingListManager {
     return allMailingList;
   }
 
-  public List<EmailRecepient> getUserListByCategory(EmailCampaign emailCampaign, Category category, int maxResult) {
-    List<EmailRecepient> allMailingList = getUserService().getMailingListByCategory(emailCampaign, category, maxResult);
-
-    return allMailingList;
-  }
-
-  public Long getUserListCountByCategory(EmailCampaign emailCampaign, Category category) {
-    return getUserService().getMailingListCountByCategory(emailCampaign, category);
-  }
-
   public List<User> getAllUserList(int pageNo, int perPage) {
     Page allMailingListPage = getUserService().getAllMailingList(pageNo, perPage);
     List<User> allMailingList = new ArrayList<User>();
@@ -57,28 +47,6 @@ public class MailingListManager {
       allMailingList = allMailingListPage.getList();
     }
     return allMailingList;
-  }
-
-  public List<EmailRecepient> getFilteredUserList(EmailCampaign emailCampaign, String[] userIds, int maxResult) {
-    List<EmailRecepient> allMailingList = getUserService().getUserMailingList(emailCampaign, userIds, maxResult);
-
-    return allMailingList;
-  }
-
-  public List<EmailRecepient> getAllMailingList(EmailCampaign emailCampaign, String[] roles, int maxResult) {
-    List<EmailRecepient> allMailingList = getUserService().getAllMailingList(emailCampaign, roles, maxResult);
-
-    return allMailingList;
-  }
-
-  public List<EmailRecepient> getMailingListByEmailIds(EmailCampaign emailCampaign, List<String> emailList, int maxResult) {
-    return getUserService().getMailingListByEmailIds(emailCampaign, emailList, maxResult);
-  }
-
-  public BigInteger getAllUserListCount(EmailCampaign emailCampaign, String [] roles) {
-    BigInteger allMailingListCount = getUserService().getAllMailingListCount(emailCampaign, roles);
-
-    return allMailingListCount;
   }
 
   public List<User> getAllUnverifiedUserList(int pageNo, int perPage) {

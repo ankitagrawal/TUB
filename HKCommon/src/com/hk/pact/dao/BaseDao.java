@@ -253,9 +253,6 @@ public interface BaseDao {
     public Page list(DetachedCriteria criteria,  int pageNo, int perPage);
 
     public void refresh(Object entity);
-  
-    public <T> List<T> findByNativeSql(final String nativeSql,Class<T> c, final Object... params);
-
   /**
    * WARNING: Make sure that you should not access any lazy initialization in this session after calling this method
    */

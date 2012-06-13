@@ -168,75 +168,6 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao {
     return (User) criteria.uniqueResult();
   }
 
-  public List<EmailRecepient> getAllMailingList(EmailCampaign emailCampaign, String [] roles, int maxResult) {
-    String query = "select  er.*" +
-        "     from user u left join email_recepient er on (u.email = er.email and er.subscribed > 0) " +
-        "     left join emailer_history eh on (er.id = eh.email_recepient_id " +
-        "     and eh.email_campaign_id = %s ),  " +
-        "     user_has_role ur, email_campaign ec   " +
-        "     where u.id = ur.user_id  " +
-        "     and ur.role_name IN ('%s')  " +
-        "     and ec.id = %s  " +
-        "     and (er.last_email_date is null or (datediff(date(sysdate()), er.last_email_date) > ec.min_day_gap)) Order By u.id  ";
-    query = String.format(query, emailCampaign.getId(), getCommaSeparatedString(roles), emailCampaign.getId());
-    
-    List<EmailRecepient> emailList = getSession().createSQLQuery(query).addEntity(EmailRecepient.class).setMaxResults(maxResult).list();
-    return emailList;
-  }
-
-  public List<EmailRecepient> getUserMailingList(EmailCampaign emailCampaign, String[] userIds, int maxResult) {
-    String query = "select  er.*" +
-        "     from user u left join email_recepient er on (u.email = er.email and er.subscribed > 0) " +
-        "     left join emailer_history eh on (er.id = eh.email_recepient_id and eh.email_campaign_id = %s )," +
-        "     email_campaign ec   " +
-        "     where ec.id = %s  " +
-        "     and (er.last_email_date is null or (datediff(date(sysdate()), er.last_email_date) > ec.min_day_gap))  " +
-        "     and u.id in ( '%s' ) " +
-        "     Order By u.id ";
-    query = String.format(query, emailCampaign.getId(), emailCampaign.getId(), getCommaSeparatedString(userIds));
-
-    List<EmailRecepient> userList = getSession().createSQLQuery(query).addEntity(EmailRecepient.class).setMaxResults(maxResult).list();
-    return userList;
-  }
-
-  public List<EmailRecepient> getMailingListByEmailIds(EmailCampaign emailCampaign, List<String> emailList, int maxResult) {
-    List<EmailRecepient> emailRecepients = getSession().createQuery("select er from EmailRecepient er " +
-        " where er.subscribed = true and coalesce((date(current_date()) - date(er.lastEmailDate)), 0) > (select ec.minDayGap from EmailCampaign ec where ec = :emailCampaign)" +
-        " and er not in (select eh.emailRecepient from EmailerHistory eh where eh.emailCampaign = :emailCampaign ) " +
-        " and er.email in (:emailList)")
-        .setParameterList("emailList", emailList)
-        .setParameter("emailCampaign", emailCampaign)
-        .setParameter("emailCampaign", emailCampaign)
-        .setMaxResults(maxResult).list();
-
-    return emailRecepients;
-  }
-
-
-  private String getCommaSeparatedString(String[] list) {
-    String commaSeparatedString = "";
-    for(String s : list) {
-      commaSeparatedString += s + "','";
-    }
-    return commaSeparatedString.substring(0, commaSeparatedString.lastIndexOf(",")-1);
-  }
-
-  public BigInteger getAllMailingListCount(EmailCampaign emailCampaign, String [] roles) {
-    String query = "select  count(u.id)" +
-        "     from user u left join email_recepient er on (u.email = er.email and er.subscribed > 0) " +
-        "     left join emailer_history eh on (er.id = eh.email_recepient_id " +
-        "     and eh.email_campaign_id = %s ),  " +
-        "     user_has_role ur, email_campaign ec   " +
-        "     where u.id = ur.user_id  " +
-        "     and ur.role_name IN ('%s')  " +
-        "     and ec.id = %s  " +
-        "     and (er.last_email_date is null or (date(sysdate()) - er.last_email_date > ec.min_day_gap))  ";
-    query = String.format(query, emailCampaign.getId(), getCommaSeparatedString(roles), emailCampaign.getId());
-
-    BigInteger userListCount = (BigInteger) getSession().createSQLQuery(query).uniqueResult();
-    return userListCount;
-  }
-
   public Page getAllMailingList(int pageNo, int perPage) {
     DetachedCriteria criteria1 = DetachedCriteria.forClass(User.class);
     DetachedCriteria rolesCriteria = criteria1.createCriteria("roles");
@@ -286,52 +217,6 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao {
     criteria.add(Restrictions.in("id", userIds));
     return list(criteria, pageNo, perPage);
   }
-
-  public List<EmailRecepient> getMailingListByCategory(EmailCampaign emailCampaign, Category category, int maxResult) {
-
-    String query = "select distinct er from LineItem li left join li.sku.productVariant.product.categories c"
-        + " left join li.shippingOrder.baseOrder.user u left join u.roles r, EmailRecepient er " + "where er.email = u.email and c in (:categoryList) " + "and r in (:roleList)"
-        + " and er.subscribed = true and coalesce((date(current_date()) - date(er.lastEmailDate)), 0) > (select ec.minDayGap from EmailCampaign ec where ec = :emailCampaign)"
-        + " and er not in (select eh.emailRecepient from EmailerHistory eh where eh.emailCampaign = :emailCampaign )";
-
-    List<EmailRecepient> userIdsByCategory = getSession().createQuery(query)
-        .setParameterList("categoryList", Arrays.asList(category))
-        .setParameterList("roleList",Arrays.asList(getRoleDao().getRoleByName(EnumRole.HK_USER), getRoleDao().getRoleByName(EnumRole.HK_UNVERIFIED)))
-        .setParameter("emailCampaign", emailCampaign)
-        .setParameter("emailCampaign", emailCampaign).setMaxResults(maxResult).list();
-    return userIdsByCategory;
-  }
-
-  public Long getMailingListCountByCategory(EmailCampaign emailCampaign, Category category) {
-
-    String query = "select count(distinct u.id) from LineItem li left join li.sku.productVariant.product.categories c"
-        + " left join li.shippingOrder.baseOrder.user u left join u.roles r, EmailRecepient er " + "where er.email = u.email and c in (:categoryList) " + "and r in (:roleList)"
-        + " and er.subscribed = true and coalesce((date(current_date()) - date(er.lastEmailDate)), 0) > (select ec.minDayGap from EmailCampaign ec where ec = :emailCampaign)"
-        + " and er not in (select eh.emailRecepient from EmailerHistory eh where eh.emailCampaign = :emailCampaign )";
-
-    Long userIdsByCategoryCount = (Long)getSession().createQuery(query)
-        .setParameterList("categoryList", Arrays.asList(category))
-        .setParameterList("roleList",Arrays.asList(getRoleDao().getRoleByName(EnumRole.HK_USER), getRoleDao().getRoleByName(EnumRole.HK_UNVERIFIED)))
-        .setParameter("emailCampaign", emailCampaign)
-        .setParameter("emailCampaign", emailCampaign).uniqueResult();
-
-    return userIdsByCategoryCount;
-  }
-
-  public List<User> findAllUsersNotInEmailRecepient(int maxResult, List<String> userIdList) {
-    String query = "select u.* from user u left join email_recepient er on (u.email = er.email) where er.email is null and u.email is not null ";
-    if(userIdList != null){
-      query += "and u.id in (:userIdList)" ;
-    }
-
-    Query sqlQuery = getSession().createSQLQuery(query).addEntity(User.class);
-    if(userIdList != null) {
-      sqlQuery = sqlQuery.setParameterList("userIdList", userIdList);
-    }
-    return sqlQuery.setMaxResults(maxResult).list();
-  }
-
-
 
   public RoleDao getRoleDao() {
     return roleDao;

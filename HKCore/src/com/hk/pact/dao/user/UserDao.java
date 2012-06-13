@@ -59,18 +59,4 @@ public interface UserDao extends BaseDao {
   public RoleDao getRoleDao();
 
   public void setRoleDao(RoleDao roleDao);
-
-  public List<EmailRecepient> getUserMailingList(EmailCampaign emailCampaign, String[] userIds, int maxResult);
-
-  public BigInteger getAllMailingListCount(EmailCampaign emailCampaign, String [] roles);
-
-  public List<EmailRecepient> getMailingListByCategory(EmailCampaign emailCampaign, Category category, int maxResult);
-
-  public Long getMailingListCountByCategory(EmailCampaign emailCampaign, Category category);
-
-  public List<User> findAllUsersNotInEmailRecepient(int maxResult, List<String> userIdList);
-
-  public List<EmailRecepient> getMailingListByEmailIds(EmailCampaign emailCampaign, List<String> emailList, int maxResult);
-
-  public List<EmailRecepient> getAllMailingList(EmailCampaign emailCampaign, String [] roles, int maxResult);
 }

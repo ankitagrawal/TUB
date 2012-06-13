@@ -22,6 +22,7 @@ import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.manager.MailingListManager;
+import com.hk.admin.pact.service.email.AdminEmailService;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.core.EnumRole;
@@ -59,7 +60,7 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
   @Validate(required = true, on = { "confirmCampaign", "sendCampaign" })
   String                     categories;
 
-  Long userCount = 0L;
+  private Long               userCount = 0L;
 
   // @Named(Keys.Env.adminUploads)
   @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
@@ -79,6 +80,9 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
   private AdminEmailManager  adminEmailManager;
   @Autowired
   private MailingListManager mailingListManager;
+  @Autowired
+  private AdminEmailService adminEmailService;
+
   //@Autowired
   private EmailManager       emailManager;
   EmailType                  emailType;
@@ -93,8 +97,6 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
   private final int          maxResultCount = 5000;
   @Autowired
   private EmailRecepientDao emailRecepientDao;
-  @Autowired
-  private UserDao           userDao;
 
   @DefaultHandler
   @DontValidate
@@ -116,14 +118,14 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
     String[] categoryArray = StringUtils.split(categories);
 
     if (categories.equalsIgnoreCase("all")) {
-      userCount = mailingListManager.getAllUserListCount(emailCampaign, new String[]{EnumRole.HK_USER.getRoleName()}).longValue();
+      userCount = getAdminEmailService().getAllMailingListCount(emailCampaign, new String[]{EnumRole.HK_USER.getRoleName()}).longValue();
     } else if (categories.equalsIgnoreCase("all-unverified")) {
-      userCount = mailingListManager.getAllUserListCount(emailCampaign, new String[]{EnumRole.HK_UNVERIFIED.getRoleName()}).longValue();
+      userCount = getAdminEmailService().getAllMailingListCount(emailCampaign, new String[]{EnumRole.HK_UNVERIFIED.getRoleName()}).longValue();
     }else {
       for (String categoryName : categoryArray) {
         Category category = getCategoryService().getCategoryByName(StringUtils.trim(categoryName));
         if (category != null) {
-          userCount += mailingListManager.getUserListCountByCategory(emailCampaign, category);
+          userCount += getAdminEmailService().getMailingListCountByCategory(emailCampaign, category);
         }
       }
     }
@@ -215,11 +217,11 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
     do {
       filteredUsers.clear();
       if(userIds != null){
-        filteredUsers = mailingListManager.getFilteredUserList(emailCampaign, userIds, maxResultCount);
+        filteredUsers = getAdminEmailService().getUserMailingList(emailCampaign, userIds, maxResultCount);
       }
 
       if(emailIds != null){
-        filteredUsers = mailingListManager.getMailingListByEmailIds(emailCampaign, emailIds, maxResultCount);
+        filteredUsers = getAdminEmailService().getMailingListByEmailIds(emailCampaign, emailIds, maxResultCount);
       }
 
       if (filteredUsers.size() > 0) {
@@ -233,7 +235,7 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
     List<User> usersNotInEmailRecepient = new ArrayList<User>();
     do{
       usersNotInEmailRecepient.clear();
-      usersNotInEmailRecepient = getUserService().findAllUsersNotInEmailRecepient(maxResultCount, userIdList);
+      usersNotInEmailRecepient = getAdminEmailService().findAllUsersNotInEmailRecepient(maxResultCount, userIdList);
 
       List<EmailRecepient> emailRecepientRecs = new ArrayList<EmailRecepient>(INITIAL_LIST_SIZE);
       int counter = 0;
@@ -278,9 +280,9 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
     List<EmailRecepient> emailRecepients = new ArrayList<EmailRecepient>();
     do {
       if (categories.equalsIgnoreCase("all")) {
-        emailRecepients = mailingListManager.getAllMailingList(emailCampaign, new String[]{EnumRole.HK_USER.getRoleName()}, maxResultCount);
+        emailRecepients = getAdminEmailService().getAllMailingList(emailCampaign, new String[]{EnumRole.HK_USER.getRoleName()}, maxResultCount);
       } else if (categories.equalsIgnoreCase("all-unverified")) {
-        emailRecepients = mailingListManager.getAllMailingList(emailCampaign, new String[]{EnumRole.HK_UNVERIFIED.getRoleName()}, maxResultCount);
+        emailRecepients = getAdminEmailService().getAllMailingList(emailCampaign, new String[]{EnumRole.HK_UNVERIFIED.getRoleName()}, maxResultCount);
       }
 
       if (emailRecepients.size() > 0) {
@@ -297,7 +299,7 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
         if (category != null) {
           do {
             emailRecepients.clear();
-            emailRecepients = mailingListManager.getUserListByCategory(emailCampaign, category, maxResultCount);
+            emailRecepients = getAdminEmailService().getMailingListByCategory(emailCampaign, category, maxResultCount);
             if (emailRecepients.size() > 0) {
               logger.info(" user list size " + emailRecepients.size());
               String xsmtpapi = SendGridUtil.getSendGridEmailNewsLetterHeaderJson(finalCategories, emailCampaign);
@@ -474,5 +476,13 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
 
   public void setEmailRecepientDao(EmailRecepientDao emailRecepientDao) {
     this.emailRecepientDao = emailRecepientDao;
+  }
+
+  public AdminEmailService getAdminEmailService() {
+    return adminEmailService;
+  }
+
+  public void setAdminEmailService(AdminEmailService adminEmailService) {
+    this.adminEmailService = adminEmailService;
   }
 }

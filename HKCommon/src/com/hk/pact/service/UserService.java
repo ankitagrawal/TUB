@@ -45,18 +45,4 @@ public interface UserService {
   public Page findByRole(Role role, int pageNo, int perPage);
 
   public User findByLoginAndStoreId(String login, Long storeId);
-
-  public List<EmailRecepient> getAllMailingList(EmailCampaign emailCampaign, String[]roles, int maxResult);
-
-  public BigInteger getAllMailingListCount(EmailCampaign emailCampaign, String [] roles);
-
-  public List<EmailRecepient> getMailingListByCategory(EmailCampaign emailCampaign, Category category, int maxResult);
-
-  public Long getMailingListCountByCategory(EmailCampaign emailCampaign, Category category);
-
-  public List<EmailRecepient> getMailingListByEmailIds(EmailCampaign emailCampaign, List<String> emailList, int maxResult);
-
-  public List<User> findAllUsersNotInEmailRecepient(int maxResult, List<String> userIdList);
-
-  public List<EmailRecepient> getUserMailingList(EmailCampaign emailCampaign, String[] userIds, int maxResult);
 }
