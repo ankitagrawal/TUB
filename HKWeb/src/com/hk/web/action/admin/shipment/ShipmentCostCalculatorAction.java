@@ -18,11 +18,13 @@ import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.util.CustomDateTypeConvertor;
 import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.validation.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -142,7 +144,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
     public Resolution saveHistoricalShipmentCost() {
         ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
         shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusSearchingInDeliveryQueue()));
-        shippingOrderSearchCriteria.setShipmentStartDate(shippedStartDate).setActivityEndDate(shippedEndDate);
+        shippingOrderSearchCriteria.setShipmentStartDate(shippedStartDate).setShipmentEndDate(shippedEndDate);
         List<ShippingOrder> shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria);
 
         if (shippingOrderList != null) {
@@ -243,6 +245,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
         return shippedStartDate;
     }
 
+    @Validate(converter = CustomDateTypeConvertor.class)
     public void setShippedStartDate(Date shippedStartDate) {
         this.shippedStartDate = shippedStartDate;
     }
@@ -251,6 +254,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
         return shippedEndDate;
     }
 
+    @Validate (converter = CustomDateTypeConvertor.class)
     public void setShippedEndDate(Date shippedEndDate) {
         this.shippedEndDate = shippedEndDate;
     }
