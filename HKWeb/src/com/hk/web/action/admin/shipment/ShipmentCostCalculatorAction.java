@@ -3,6 +3,7 @@ package com.hk.web.action.admin.shipment;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.engine.ShipmentPricingEngine;
 import com.hk.admin.pact.service.courier.CourierCostCalculator;
+import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.EnumCourier;
@@ -88,6 +89,9 @@ public class ShipmentCostCalculatorAction extends BaseAction {
     @Autowired
     ShippingOrderService shippingOrderService;
 
+    @Autowired
+    CourierGroupService courierGroupService;
+
     List<Courier> applicableCourierList;
 
     TreeMap<Courier, Long> courierCostingMap = new TreeMap<Courier, java.lang.Long>();
@@ -101,7 +105,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
         ShippingOrder shippingOrder = shippingOrderDao.findByGatewayOrderId(shippingOrderId);
         if (shippingOrder != null) {
             Shipment shipment = shippingOrder.getShipment();
-            if (shipment != null) {
+            if (shipment != null && courierGroupService.getCourierGroup(shipment.getCourier()) != null) {
                 shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
                 shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
                 shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
@@ -150,7 +154,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
         if (shippingOrderList != null) {
             for (ShippingOrder shippingOrder : shippingOrderList) {
                 Shipment shipment = shippingOrder.getShipment();
-                if (shipment != null) {
+                if (shipment != null && ) {
                     if (overrideHistoricalShipmentCost || shipment.getEstmShipmentCharge() == null) {
                         shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
                         shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
