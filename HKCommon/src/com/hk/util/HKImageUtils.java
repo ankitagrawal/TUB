@@ -13,13 +13,10 @@ public class HKImageUtils {
     @Value("#{hkEnvProps['" + Keys.Env.secretKey + "']}")
     String        awsSecretKey;
 
-    @Value("#{hkEnvProps['" + Keys.Env.imageUploads + "']}")
-    static String imageUploadsPath;
+    static String imageUploadsPath             = "/usr/local/projects/production/HealthKartWork/imageUploads";
     static int    noOfImagesInRepositorySubDir = 100;
-    @Value("#{hkEnvProps['" + Keys.Env.bucket + "']}")
-    static String awsBucket;
-    @Value("#{hkEnvProps['" + Keys.Env.readBucket + "']}")
-    static String awsReadBucket;
+    static String awsBucket                    = "healthkart-prod";
+    static String awsReadBucket                = "healthkart-prod";
 
     static {
 
