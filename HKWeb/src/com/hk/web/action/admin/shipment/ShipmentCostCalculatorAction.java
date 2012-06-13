@@ -149,7 +149,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
         ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
         shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusSearchingInDeliveryQueue()));
         shippingOrderSearchCriteria.setShipmentStartDate(shippedStartDate).setShipmentEndDate(shippedEndDate);
-        List<ShippingOrder> shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria);
+        List<ShippingOrder> shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, false);
 
         if (shippingOrderList != null) {
             for (ShippingOrder shippingOrder : shippingOrderList) {
