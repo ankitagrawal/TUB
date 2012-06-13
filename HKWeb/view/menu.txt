@@ -467,6 +467,7 @@
 --/beauty/what-s-new/natural-products
 --/beauty/what-s-new/home-spa-products
 --/beauty/what-s-new/spas-salons : Spas & Salons
+--/beauty/what-s-new/women-nutrition
 -/beauty/face-care
 --/beauty/face-care/cleanser
 ---/beauty/face-care/cleanser/normal
