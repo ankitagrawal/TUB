@@ -295,6 +295,12 @@
 
         <div class="rating_bar">
           <div class="blueStarTop" id="blueStarTop">
+            <script type="text/javascript">
+              var averageRating = ${pa.averageRating};
+              averageRating = (averageRating * 20) + "%";
+              $('.blueStarTop').width(averageRating);
+              $('.blueStar').width(averageRating);
+            </script>
           </div>
         </div>
       </div>
@@ -565,13 +571,12 @@
                 <%--<td style="border-style:none"><h4>${review.title}</h4></td>--%>
               <div class="rating_bar">
                 <div class="blueStarRating${ctr.index}"></div>
-                <%--  <script type="text/javascript">
+                  <script type="text/javascript">
                   var index = ${ctr.index};
-                  var rating =${review.starRating};
+                  var rating = ${review.starRating};
                   rating = (rating * 20) + "%";
                   $('.blueStarRating' + index).width(rating);
                 </script>
-                --%>
               </div>
             </td>
             <td style="border-style:none">
@@ -616,14 +621,7 @@
 <s:layout-component name="endScripts">
   <script type="text/javascript">
     var validateCheckbox;
-    $(document).ready(function() {
-
-      <%--var rating =${pa.averageRating};
-      rating = (rating * 20) + "%";
-      $('.blueStarTop').width(rating);
-      $('.blueStar').width(rating);
-      --%>
-
+    $(document).ready(function() {      
       function _addToCart(res) {
         if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
           $('.message .line1').html("<strong>" + res.data.name + "</strong> has been added to your shopping cart");
