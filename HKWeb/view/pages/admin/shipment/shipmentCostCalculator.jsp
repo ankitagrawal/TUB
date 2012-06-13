@@ -79,20 +79,26 @@
                         <s:label name="shippingOrderId" class="label">SO Gateway Order ID</s:label>
                         <s:text name="shippingOrderId" style="width:200px" class="text"/>
 
-                        <s:label name="shippedStartDate" class="label">Start Date</s:label>
-                        <s:text class="date_input startDate" style="width:150px"
-                                formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="shippedStartDate"/>
-                        <s:label name="shippedStartDate" class="label">Start Date</s:label>
-                        <s:text class="shippedEndDate endDate" style="width:150px"
-                                formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="shippedEndDate"/>
+                        <li>
+                            <label>Start
+                                date</label><s:text class="date_input startDate" style="width:150px"
+                                                    formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="shippedStartDate"/>
+                        </li>
+                        <li>
+                            <label>End
+                                date</label><s:text class="date_input endDate" style="width:150px"
+                                                    formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="shippedEndDate"/>
+                        </li>
+                        <div class="clear"></div>
                         <s:label name="overrideHistoricalShipmentCost"
                                  class="label">Override Historical Shipment Cost ?</s:label>
                         <s:checkbox name="overrideHistoricalShipmentCost"/>
+                        <div class="clear"></div>
 
                         <div style="margin-top:15px;"></div>
                         <s:submit name="calculateCourierCostingForShippingOrder" value="Get Shipping Cost for an SO"/>
-                        <s:submit name="saveHistoricalShipmentCost" value="Save Historical Shipping Cost"/>
                         <shiro:hasAnyRoles name="<%=RoleConstants.ADMIN%>">
+                            <s:submit name="saveHistoricalShipmentCost" value="Save Historical Shipping Cost"/>
                             <s:submit name="saveActualShippingCostForShippingOrder"
                                       value="Save Actual Shipping Cost for SO's"/>
                         </shiro:hasAnyRoles>
