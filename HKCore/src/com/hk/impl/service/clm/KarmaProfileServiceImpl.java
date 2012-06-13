@@ -53,7 +53,7 @@ public class KarmaProfileServiceImpl implements KarmaProfileService {
             karmaProfile.setUser(user);
             karmaProfile.setKarmaPoints(getKarmaPoints(order));
         }
-        this.save(karmaProfile);
+        karmaProfile = this.save(karmaProfile);
         return karmaProfile;
     }
 
