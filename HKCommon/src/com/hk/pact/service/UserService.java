@@ -46,7 +46,7 @@ public interface UserService {
 
   public User findByLoginAndStoreId(String login, Long storeId);
 
-  public List<EmailRecepient> getAllMailingList(EmailCampaign emailCampaign, String[] roles, String[] userIds, int maxResult);
+  public List<EmailRecepient> getAllMailingList(EmailCampaign emailCampaign, String[]roles, int maxResult);
 
   public BigInteger getAllMailingListCount(EmailCampaign emailCampaign, String [] roles);
 
@@ -57,4 +57,6 @@ public interface UserService {
   public List<EmailRecepient> getMailingListByEmailIds(EmailCampaign emailCampaign, List<String> emailList, int maxResult);
 
   public List<User> findAllUsersNotInEmailRecepient(int maxResult, List<String> userIdList);
+
+  public List<EmailRecepient> getUserMailingList(EmailCampaign emailCampaign, String[] userIds, int maxResult);
 }

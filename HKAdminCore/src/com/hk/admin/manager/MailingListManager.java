@@ -59,8 +59,14 @@ public class MailingListManager {
     return allMailingList;
   }
 
-  public List<EmailRecepient> getFilteredUserList(EmailCampaign emailCampaign, String[] roles, String[] userIds, int maxResult) {
-    List<EmailRecepient> allMailingList = getUserService().getAllMailingList(emailCampaign, roles, userIds, maxResult);
+  public List<EmailRecepient> getFilteredUserList(EmailCampaign emailCampaign, String[] userIds, int maxResult) {
+    List<EmailRecepient> allMailingList = getUserService().getUserMailingList(emailCampaign, userIds, maxResult);
+
+    return allMailingList;
+  }
+
+  public List<EmailRecepient> getAllMailingList(EmailCampaign emailCampaign, String[] roles, int maxResult) {
+    List<EmailRecepient> allMailingList = getUserService().getAllMailingList(emailCampaign, roles, maxResult);
 
     return allMailingList;
   }

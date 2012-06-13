@@ -168,7 +168,7 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao {
     return (User) criteria.uniqueResult();
   }
 
-  public List<EmailRecepient> getUserMailingList(EmailCampaign emailCampaign, String [] roles, String[] userIds, int maxResult) {
+  public List<EmailRecepient> getAllMailingList(EmailCampaign emailCampaign, String [] roles, int maxResult) {
     String query = "select  er.*" +
         "     from user u left join email_recepient er on (u.email = er.email and er.subscribed > 0) " +
         "     left join emailer_history eh on (er.id = eh.email_recepient_id " +
@@ -177,13 +177,23 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao {
         "     where u.id = ur.user_id  " +
         "     and ur.role_name IN ('%s')  " +
         "     and ec.id = %s  " +
-        "     and (er.last_email_date is null or (date(sysdate()) - er.last_email_date > ec.min_day_gap))  ";
+        "     and (er.last_email_date is null or (date(sysdate()) - er.last_email_date > ec.min_day_gap)) Order By u.id  ";
     query = String.format(query, emailCampaign.getId(), getCommaSeparatedString(roles), emailCampaign.getId());
-    if(userIds != null) {
-      query = String.format(query +  " and u.id in ( '%s' )", getCommaSeparatedString(userIds));
-    }
+    
+    List<EmailRecepient> emailList = getSession().createSQLQuery(query).addEntity(EmailRecepient.class).setMaxResults(maxResult).list();
+    return emailList;
+  }
 
-    query += " Order By u.id ";
+  public List<EmailRecepient> getUserMailingList(EmailCampaign emailCampaign, String[] userIds, int maxResult) {
+    String query = "select  er.*" +
+        "     from user u left join email_recepient er on (u.email = er.email and er.subscribed > 0) " +
+        "     left join emailer_history eh on (er.id = eh.email_recepient_id and eh.email_campaign_id = %s )," +
+        "     email_campaign ec   " +
+        "     where ec.id = %s  " +
+        "     and (er.last_email_date is null or (date(sysdate()) - er.last_email_date > ec.min_day_gap))  " +
+        "     and u.id in ( '%s' ) " +
+        "     Order By u.id ";
+    query = String.format(query, emailCampaign.getId(), emailCampaign.getId(), getCommaSeparatedString(userIds));
 
     List<EmailRecepient> userList = getSession().createSQLQuery(query).addEntity(EmailRecepient.class).setMaxResults(maxResult).list();
     return userList;

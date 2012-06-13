@@ -95,8 +95,12 @@ public class UserServiceImpl implements UserService {
         return getUserDao().getAllMailingList(pageNo, perPage);
     }
 
-  public List<EmailRecepient> getAllMailingList(EmailCampaign emailCampaign, String[]roles, String[] userIds, int maxResult) {
-        return getUserDao().getUserMailingList(emailCampaign, roles, userIds, maxResult);
+  public List<EmailRecepient> getAllMailingList(EmailCampaign emailCampaign, String[]roles, int maxResult) {
+        return getUserDao().getAllMailingList(emailCampaign, roles, maxResult);
+    }
+
+  public List<EmailRecepient> getUserMailingList(EmailCampaign emailCampaign, String[] userIds, int maxResult) {
+        return getUserDao().getUserMailingList(emailCampaign, userIds, maxResult);
     }
 
   public BigInteger getAllMailingListCount(EmailCampaign emailCampaign, String [] roles) {

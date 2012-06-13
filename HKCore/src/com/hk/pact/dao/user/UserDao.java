@@ -60,7 +60,7 @@ public interface UserDao extends BaseDao {
 
   public void setRoleDao(RoleDao roleDao);
 
-  public List<EmailRecepient> getUserMailingList(EmailCampaign emailCampaign, String[] roles, String[] userIds, int maxResult);
+  public List<EmailRecepient> getUserMailingList(EmailCampaign emailCampaign, String[] userIds, int maxResult);
 
   public BigInteger getAllMailingListCount(EmailCampaign emailCampaign, String [] roles);
 
@@ -72,4 +72,5 @@ public interface UserDao extends BaseDao {
 
   public List<EmailRecepient> getMailingListByEmailIds(EmailCampaign emailCampaign, List<String> emailList, int maxResult);
 
+  public List<EmailRecepient> getAllMailingList(EmailCampaign emailCampaign, String [] roles, int maxResult);
 }

@@ -215,7 +215,7 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
     do {
       filteredUsers.clear();
       if(userIds != null){
-        filteredUsers = mailingListManager.getFilteredUserList(emailCampaign, new String[]{EnumRole.HK_USER.getRoleName(), EnumRole.HK_UNVERIFIED.getRoleName()}, userIds, maxResultCount);
+        filteredUsers = mailingListManager.getFilteredUserList(emailCampaign, userIds, maxResultCount);
       }
 
       if(emailIds != null){
@@ -278,9 +278,9 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
     List<EmailRecepient> emailRecepients = new ArrayList<EmailRecepient>();
     do {
       if (categories.equalsIgnoreCase("all")) {
-        emailRecepients = mailingListManager.getFilteredUserList(emailCampaign, new String[]{EnumRole.HK_USER.getRoleName()}, null, maxResultCount);
+        emailRecepients = mailingListManager.getAllMailingList(emailCampaign, new String[]{EnumRole.HK_USER.getRoleName()}, maxResultCount);
       } else if (categories.equalsIgnoreCase("all-unverified")) {
-        emailRecepients = mailingListManager.getFilteredUserList(emailCampaign, new String[]{EnumRole.HK_UNVERIFIED.getRoleName()}, null, maxResultCount);
+        emailRecepients = mailingListManager.getAllMailingList(emailCampaign, new String[]{EnumRole.HK_UNVERIFIED.getRoleName()}, maxResultCount);
       }
 
       if (emailRecepients.size() > 0) {
