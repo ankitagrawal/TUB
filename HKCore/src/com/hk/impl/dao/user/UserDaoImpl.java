@@ -177,7 +177,7 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao {
         "     where u.id = ur.user_id  " +
         "     and ur.role_name IN ('%s')  " +
         "     and ec.id = %s  " +
-        "     and (er.last_email_date is null or (date(sysdate()) - er.last_email_date > ec.min_day_gap)) Order By u.id  ";
+        "     and (er.last_email_date is null or (datediff(date(sysdate()), er.last_email_date) > ec.min_day_gap)) Order By u.id  ";
     query = String.format(query, emailCampaign.getId(), getCommaSeparatedString(roles), emailCampaign.getId());
     
     List<EmailRecepient> emailList = getSession().createSQLQuery(query).addEntity(EmailRecepient.class).setMaxResults(maxResult).list();
@@ -190,7 +190,7 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao {
         "     left join emailer_history eh on (er.id = eh.email_recepient_id and eh.email_campaign_id = %s )," +
         "     email_campaign ec   " +
         "     where ec.id = %s  " +
-        "     and (er.last_email_date is null or (date(sysdate()) - er.last_email_date > ec.min_day_gap))  " +
+        "     and (er.last_email_date is null or (datediff(date(sysdate()), er.last_email_date) > ec.min_day_gap))  " +
         "     and u.id in ( '%s' ) " +
         "     Order By u.id ";
     query = String.format(query, emailCampaign.getId(), emailCampaign.getId(), getCommaSeparatedString(userIds));
