@@ -682,7 +682,7 @@ public class DeliveryStatusUpdateManager {
                     Element consig = element.getChild(CourierConstants.DTDC_INPUT_CONSIGNMENT);
                     Element header = consig.getChild(CourierConstants.DTDC_INPUT_CNHEADER);
                     Element cnTrack = header.getChild(CourierConstants.DTDC_INPUT_CNTRACK);
-                    String trackStatus = cnTrack.getChildText(CourierConstants.DTDC_INPUT_CNTRACK);
+                    String trackStatus = header.getChildText(CourierConstants.DTDC_INPUT_CNTRACK);
                     List fields = header.getChildren();
                     String courierDeliveryStatus = null;
                     String deliveryDateString = null;

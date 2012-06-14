@@ -68,18 +68,18 @@ public class TrackCourierAction extends BaseAction {
         if (courierId.equals(EnumCourier.Aramex.getId())) {
             resolution = new RedirectResolution("http://www.aramex.com/track_results_multiple.aspx", false).addParameter("ShipmentNumber", trackingId);
 
-        } else if (courierId.equals(EnumCourier.DTDC_Plus.getId()) || courierId.equals(EnumCourier.DTDC_Lite.getId()) || courierId.equals(EnumCourier.DTDC_COD.getId())) {
+        } /*else if (courierId.equals(EnumCourier.DTDC_Plus.getId()) || courierId.equals(EnumCourier.DTDC_Lite.getId()) || courierId.equals(EnumCourier.DTDC_COD.getId())) {
             resolution = new RedirectResolution("http://www.dtdc.in/dtdcTrack/Tracking/consignInfo.asp", false)
                     .addParameter("action", "track")
                     .addParameter("sec", "tr")
                     .addParameter("strCnno", trackingId)
                     .addParameter("TType", "cnno");
 
-        } else if (courierId.equals(EnumCourier.AFLWiz.getId())) {
+        } */else if (courierId.equals(EnumCourier.AFLWiz.getId())) {
             resolution = new RedirectResolution("http://trackntrace.aflwiz.com/aflwizhtmltrack", false).addParameter("shpntnum", trackingId);
 
         } else if (courierId.equals(EnumCourier.Speedpost.getId())) {
-            resolution = new RedirectResolution("/pages/courierDetails.jsp");
+            resolution = new RedirectResolution("/pages/indiaPostCourier.jsp");
 
         } else if (courierId.equals(EnumCourier.FirstFLight.getId()) || courierId.equals(EnumCourier.FirstFLight_COD.getId())) {
             resolution = new RedirectResolution("http://www.firstflight.net/n_contrac_new.asp", false).addParameter("tracking1", trackingId);
@@ -156,7 +156,7 @@ public class TrackCourierAction extends BaseAction {
                 logger.error("Null pointer Exception for tracking id " + trackingId);
                 npe.printStackTrace();
             }
-            resolution = new ForwardResolution("/pages/courierDetails.jsp");
+            resolution = new ForwardResolution("/pages/chhotuCourier.jsp");
 
         } else if (courierId.equals(EnumCourier.BlueDart.getId()) || courierId.equals(EnumCourier.BlueDart_COD.getId())) {
             courierName = "BlueDart";
@@ -286,15 +286,14 @@ public class TrackCourierAction extends BaseAction {
                 Element consig = element.getChild(CourierConstants.DTDC_INPUT_CONSIGNMENT);
                 Element header = consig.getChild(CourierConstants.DTDC_INPUT_CNHEADER);
                 Element cnTrack = header.getChild(CourierConstants.DTDC_INPUT_CNTRACK);
-                String trackStatus = cnTrack.getChildText(CourierConstants.DTDC_INPUT_CNTRACK);
+                String trackStatus = header.getChildText(CourierConstants.DTDC_INPUT_CNTRACK);
                 List fields = header.getChildren();
                 if (trackStatus.equalsIgnoreCase("TRUE")) {
                     Map<String, String> map = new HashMap<String, String>();
                     for (int i = 0; i < fields.size(); i++) {
                         Element elementObj = (Element) fields.get(i);
                         if (elementObj != cnTrack) {
-                            if (elementObj.getAttribute(CourierConstants.DTDC_ATTRIBUTE_NAME).getValue().equals(CourierConstants.DTDC_INPUT_STR_STATUS) ||
-                                    elementObj.getAttribute(CourierConstants.DTDC_ATTRIBUTE_NAME).getValue().equals(CourierConstants.DTDC_INPUT_STR_STATUSTRANSON)) {
+                            if (elementObj.getAttribute(CourierConstants.DTDC_ATTRIBUTE_NAME).getValue().equals(CourierConstants.DTDC_INPUT_STR_STATUS)) {
                                 map.put(elementObj.getAttribute(CourierConstants.DTDC_ATTRIBUTE_NAME).getValue(), elementObj.getAttribute(CourierConstants.DTDC_ATTRIBUTE_VALUE).getValue());
                             }
                         }
@@ -307,19 +306,19 @@ public class TrackCourierAction extends BaseAction {
                     }
                 }
             } catch (MalformedURLException mue) {
-                logger.error(CourierConstants.MALFORMED_URL_EXCEPTION + trackingId);
+                logger.error("Malformed URL for tracking id: "+ trackingId);
                 mue.printStackTrace();
 
             } catch (IOException ioe) {
-                logger.error(CourierConstants.IO_EXCEPTION + trackingId);
+                logger.error("IOException for tracking id:" + trackingId);
                 ioe.printStackTrace();
 
             } catch (NullPointerException npe) {
-                logger.error(CourierConstants.NULL_POINTER_EXCEPTION + trackingId);
+                logger.error("NullPointerException for tracking id:"+ trackingId);
                 npe.printStackTrace();
 
             } catch (Exception e) {
-                logger.error(CourierConstants.EXCEPTION + trackingId);
+                logger.error("Exception occurred for tracking id:" + trackingId);
                 e.printStackTrace();
 
             } finally {
