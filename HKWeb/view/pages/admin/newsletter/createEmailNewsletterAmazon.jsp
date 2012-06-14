@@ -8,7 +8,7 @@
 
     <s:form beanclass="com.hk.web.action.admin.newsletter.CreateEmailNewsletterCampaign">
       Name: <s:text name="emailCampaign.name"/><br/>
-      Template: <s:text name="emailCampaign.template"/><br/>
+      Content: <s:file name="contentBean"/><br/>
       Email Type:
       <s:select name="emailCampaign.emailType">
         <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="emailTypeList"
