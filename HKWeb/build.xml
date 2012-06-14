@@ -132,6 +132,7 @@
 	</target>-->
 
 	<target name="build" depends="compile,compile.groovy" description="build production WAR">
+<!--
 		<mkdir dir="${project.base.dir}/${project.dist.dir}/WEB-INF" />
 		<mkdir dir="${project.base.dir}/${project.dist.dir}/WEB-INF/classes" />
 		<mkdir dir="${project.base.dir}/${project.dist.dir}/WEB-INF/classes/spring" />
@@ -141,8 +142,10 @@
 			</fileset>
 		</copy>
 
-		<!-- <copy todir="${project.dist.dir}/exploded/${package.war.name}/WEB-INF/lib">
+		-->
+<!-- <copy todir="${project.dist.dir}/exploded/${package.war.name}/WEB-INF/lib">
 		</copy> -->
+<!--
 
 		<copy todir="${project.base.dir}/${project.dist.dir}/WEB-INF/classes">
 			<fileset dir="${package.target.dir}" excludes="test/**/**" />
@@ -150,9 +153,12 @@
 		<copy todir="${project.base.dir}/${project.dist.dir}/WEB-INF/">
 			<fileset dir="${project.resources.dir}/${project.env}/WEB-INF" excludes="test/**/**" />
 		</copy>
-		<!--<copy todir="${project.dist.dir}/WEB-INF/classes/spring">
+		-->
+<!--<copy todir="${project.dist.dir}/WEB-INF/classes/spring">
 			<fileset dir="${project.resources.dir}/spring" excludes="test/**/**" />
 		</copy>-->
+<!--
+-->
 	</target>
 
 

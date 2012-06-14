@@ -25,8 +25,9 @@
 		<ant dir="${project.web.dir}" target="clean" inheritall="false" />
 		<ant dir="${project.admin.core.dir}" target="clean" inheritall="false" />
 		<ant dir="${project.report.dir}" target="clean" inheritall="false" />
-		<ant dir="${project.common.dir}" target="clean" inheritall="false" />
 		<ant dir="${project.core.dir}" target="clean" inheritall="false" />
+    <ant dir="${project.common.dir}" target="clean" inheritall="false" />
+
 		<!--
 		
 		<ant dir="${project.admin.web.dir}" target="clean" inheritall="false" />
