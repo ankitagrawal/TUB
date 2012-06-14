@@ -79,31 +79,40 @@ public class XslAwbParser {
 
            } else {
              logger.error("courier id cannot be null/empty");
-             throw new ExcelBlankFieldException("courier ID  cannot be null" + "    ", rowCount);
+             throw new ExcelBlankFieldException("courier ID  cannot be empty" + "    ", rowCount);
            }
 
          }
+
          Courier courier = courierDao.getCourierById(XslUtil.getLong(courierId));
-         awb.setCourier(courier);                 //check for valid courier/warehouse
+         if(courier == null ){
+          logger.error("courierId is not valid  "+courierId ,rowCount);
+           throw new ExcelBlankFieldException("courierId is not valid  " + "    ", rowCount); 
+         }
+         awb.setCourier(courier);
          if (StringUtils.isEmpty(awbNumber)) {
            logger.error("awbNumber cannot be null/empty");
-           throw new ExcelBlankFieldException("awbNumber cannot be null " + "    ", rowCount);
+           throw new ExcelBlankFieldException("awbNumber cannot be empty " + "    ", rowCount);
          }
          awb.setAwbNumber(awbNumber);
          awb.setAwbBarCode(awbNumber);
          awb.setUsed(false);
         if (StringUtils.isEmpty(warehouse)) {
            logger.error("warehouse cannot be call");
-           throw new ExcelBlankFieldException("warehouse cannot be null " + "    ", rowCount);
+           throw new ExcelBlankFieldException("warehouse cannot be empty " + "    ", rowCount);
          }
          Warehouse warehoused=warehouseDao.get(Warehouse.class,XslUtil.getLong(warehouse));
-         awb.setWarehouse(warehoused);
-         if (cod.isEmpty()) {
-           throw new ExcelBlankFieldException("COD cannot be null " + "    ", rowCount);
+           if(warehoused == null ){
+          logger.error("warehouseId is not valid  "+warehouse ,rowCount);
+           throw new ExcelBlankFieldException("warehouseID is not valid  " + "    ", rowCount);
          }
-         if (XslUtil.getLong(cod).equals(0l)) {
+         awb.setWarehouse(warehoused);
+         if ((StringUtils.isEmpty(cod))) {
+           throw new ExcelBlankFieldException("COD cannot be empty " + "    ", rowCount);
+         }
+         if (XslUtil.getLong(cod).equals(1l)) {
            awb.setCod(true);
-         } else if (XslUtil.getLong(cod).equals(1l)) {
+         } else if (XslUtil.getLong(cod).equals(0l)) {
            awb.setCod(false);
          }
          awbSet.add(awb);
