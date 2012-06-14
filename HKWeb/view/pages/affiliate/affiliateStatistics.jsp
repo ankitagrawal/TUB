@@ -23,97 +23,100 @@
 
       <div style="margin-top:15px;"></div>
 
-      <fieldset class="traffic">
-        <legend>GENERATE TRAFFIC REPORT</legend>
+      <div>
+        <fieldset class="traffic">
+          <legend>GENERATE TRAFFIC REPORT</legend>
 
-        <s:form beanclass="com.hk.web.action.core.affiliate.AffiliateStatisticsAction">
-          <s:errors/>
-          <div style="margin-top:15px;"></div>
+          <s:form beanclass="com.hk.web.action.core.affiliate.AffiliateStatisticsAction">
+            <s:errors/>
+            <div style="margin-top:15px;"></div>
 
-          <div class="row">
-            <s:label class="rowLabel" name="Start Date"/>
-            <div class="rowText">
-              <s:text class="date_input" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startDate"/>
+            <div class="row">
+              <s:label class="rowLabel" name="Start Date"/>
+              <div class="rowText">
+                <s:text class="date_input" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startDate"/>
+              </div>
             </div>
-          </div>
 
-          <div class="clear"></div>
-          <div style="margin-top:15px;"></div>
+            <div class="clear"></div>
+            <div style="margin-top:15px;"></div>
 
-          <div class="row">
-            <s:label class="rowLabel" name="End Date"/>
-            <div class="rowText">
-              <s:text class="date_input" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endDate"/>
+            <div class="row">
+              <s:label class="rowLabel" name="End Date"/>
+              <div class="rowText">
+                <s:text class="date_input" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endDate"/>
+              </div>
             </div>
-          </div>
 
-          <div class="clear"></div>
-          <div style="margin-top:15px;"></div>
+            <div class="clear"></div>
+            <div style="margin-top:15px;"></div>
 
-          <div class="row">
-            <s:submit name="getTrafficCount" value="Generate Traffic Report" style="font-size:0.9em;"/>
-          </div>
+            <div class="row">
+              <s:submit name="getTrafficCount" value="Generate Traffic Report" style="font-size:0.9em;"/>
+            </div>
 
-          <div class="clear"></div>
-          <div style="margin-top:15px;"></div>
+            <div class="clear"></div>
+            <div style="margin-top:15px;"></div>
 
-          <s:hidden name="affiliate" value="${affiliateBean.affiliate}"/>
-        </s:form>
-      </fieldset>
-
+            <s:hidden name="affiliate" value="${affiliateBean.affiliate}"/>
+          </s:form>
+        </fieldset>
+      </div>
 
       <div class="clear"></div>
       <div style="margin-top:15px;"></div>
 
-      <fieldset class="traffic">
-        <legend>TRAFFIC DETAILS</legend>
+      <div>
+        <fieldset class="traffic">
+          <legend>TRAFFIC DETAILS</legend>
 
-        <div style="margin-top:15px;"></div>
+          <div style="margin-top:15px;"></div>
 
-        <div class="row">
-          <c:choose>
-            <c:when test="${!empty affiliateBean.affiliateTrafficDetails}">
-              <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${affiliateBean}"/>
-              <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${affiliateBean}"/>
+          <div class="row">
+            <c:choose>
+              <c:when test="${!empty affiliateBean.affiliateTrafficDetails}">
+                <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${affiliateBean}"/>
+                <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${affiliateBean}"/>
 
-              <div style="margin-top:10px;"></div>
+                <div style="margin-top:10px;"></div>
 
-              <table class="cont footer_color" style="font-size: 14px;">
-                <tr>
-                  <th>Time Stamp</th>
-                  <th>Target Url</th>
-                  <th>Referral Url</th>
-                </tr>
-                <c:forEach items="${affiliateBean.affiliateTrafficDetails}" var="trafficDetails">
+                <table class="cont footer_color" style="font-size: 14px;">
                   <tr>
-                    <td>
-                      <fmt:formatDate value="${trafficDetails.userTimestamp}" type="both"/>
-                    </td>
-                    <td style=" padding: 10px;">
-                        ${trafficDetails.targetUrl}
-                    </td>
-                    <td>
-                        ${trafficDetails.referralUrl}
-                    </td>
+                    <th>Time Stamp</th>
+                    <th>Target Url</th>
+                    <th>Referral Url</th>
                   </tr>
-                </c:forEach>
-              </table>
+                  <c:forEach items="${affiliateBean.affiliateTrafficDetails}" var="trafficDetails">
+                    <tr>
+                      <td>
+                        <fmt:formatDate value="${trafficDetails.userTimestamp}" type="both"/>
+                      </td>
+                      <td style=" padding: 10px;">
+                          ${trafficDetails.targetUrl}
+                      </td>
+                      <td>
+                          ${trafficDetails.referralUrl}
+                      </td>
+                    </tr>
+                  </c:forEach>
+                </table>
 
-              <div style="margin-top:10px;"></div>
+                <div style="margin-top:10px;"></div>
 
-              <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${affiliateBean}"/>
-              <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${affiliateBean}"/>
-            </c:when>
-            <c:otherwise>
-              <s:label name="No traffic Recorded Yet"/>
-            </c:otherwise>
-          </c:choose>
-        </div>
+                <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${affiliateBean}"/>
+                <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${affiliateBean}"/>
+              </c:when>
+              <c:otherwise>
+                <s:label name="No traffic Recorded Yet"/>
+              </c:otherwise>
+            </c:choose>
+          </div>
 
-        <div class="clear"></div>
-        <div style="margin-top:15px;"></div>
+          <div class="clear"></div>
+          <div style="margin-top:15px;"></div>
 
-      </fieldset>
+        </fieldset>
+      </div>
     </div>
   </s:layout-component>
 </s:layout-render>
@@ -125,11 +128,14 @@
 </script>
 <style type="text/css">
   table {
-    width: 100%;
+    width: 600px;
     margin-bottom: 10px;
     margin-top: 5px;
     border: 1px solid;
     border-collapse: separate;
+    table-layout:fixed;
+    word-wrap:break-word;
+    overflow:hidden;
   }
 
   table th {
@@ -148,8 +154,7 @@
     margin-top: 0;
     float: left;
     margin-left: 0;
-    padding-top: 2px;
-    padding-left: 26px;
+    padding: 2px 26px 0 26px;
   }
 
   .rowLabel {
@@ -175,9 +180,11 @@
     border-radius: 5px;
     border: 1px solid rgba(0, 0, 0, 0.1);
     margin: 1em;
+    max-width:inherit;
   }
 
   fieldset.traffic legend {
+    max-width:inherit;
     display: block;
     color: #f87500;
     background: white;
