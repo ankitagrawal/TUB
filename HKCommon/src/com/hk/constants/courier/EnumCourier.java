@@ -94,5 +94,21 @@ public enum EnumCourier {
                 EnumCourier.EarthMoversPune,
                 EnumCourier.DTDC_COD);
     }
+
+    public static List<Long> getDTDCCouriers() {
+        List<Long> dtdcCourierIds = new ArrayList<Long>();
+        dtdcCourierIds.add(EnumCourier.DTDC_COD.getId());
+        dtdcCourierIds.add(EnumCourier.DTDC_Lite.getId());
+        dtdcCourierIds.add(EnumCourier.DTDC_Plus.getId());
+        dtdcCourierIds.add(EnumCourier.DTDC_Surface.getId());
+        return dtdcCourierIds;
+    }
+
+    public static List<Long> getBlueDartCouriers() {
+        List<Long> blueDartCourierIds = new ArrayList<Long>();
+        blueDartCourierIds.add(EnumCourier.BlueDart.getId());
+        blueDartCourierIds.add(EnumCourier.BlueDart_COD.getId());
+        return blueDartCourierIds;
+    }
 }
 
