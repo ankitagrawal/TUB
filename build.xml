@@ -1,0 +1,23 @@
+<project name="HK Rejuvenate" basedir="." default="build">
+
+  <property file="build.properties"/>
+
+	<!-- Specify exact path to included jar files -->
+
+  <target name="clean">
+    <ant dir="${project.healthkart.dir}" target="clean" inheritall="false" />
+  </target>
+  <target name="web">
+    <ant dir="${project.healthkart.dir}" target="web" inheritall="false" />
+  </target>
+  <target name="build">
+    <ant dir="${project.healthkart.dir}" target="build" inheritall="false" />
+  </target>
+  <target name="db">
+    <ant dir="${project.healthkart.dir}" target="db" inheritall="false"/>
+  </target>
+  <target name="db-diff">
+    <ant dir="${project.healthkart.dir}" target="db-diff" inheritall="false"/>
+  </target>
+
+</project>
