@@ -17,9 +17,37 @@ public class StockReportDto {
   private Long grnCheckin;
   private Long reconcileCheckin;
   private Long rtoCheckin;
-  private Long moveBackToActionQueueCheckin;
   private Long damageCheckin;
   private Long stockLeft;
+  private Long inventoryQty;
+  private Long inventoryTxnType;
+  private Long cancelCheckin;
+  private Long inventoryRepeatCheckout;
+  private Long rvExpired;
+  private Long rvLostPilferage;
+  private Long stockTransferCheckin;
+  private Long stockTransferCheckout;
+  private Long transitLost;
+
+  public StockReportDto() {
+   openingStock = 0L;
+   lineItemCheckout = 0L;
+   reconcileCheckout = 0L;
+   grnCheckin = 0L;
+   reconcileCheckin = 0L;
+   rtoCheckin = 0L;
+   damageCheckin = 0L;
+   stockLeft = 0L;
+   inventoryQty = 0L;
+   inventoryTxnType = 0L;
+   cancelCheckin = 0L;
+   inventoryRepeatCheckout = 0L;
+   rvExpired = 0L;
+   rvLostPilferage = 0L;
+   stockTransferCheckin = 0L;
+   stockTransferCheckout = 0L;
+   transitLost = 0L;
+  }
 
   public String getProductVariant() {
     return productVariant;
@@ -93,14 +121,6 @@ public class StockReportDto {
     this.rtoCheckin = rtoCheckin;
   }
 
-  public Long getMoveBackToActionQueueCheckin() {
-    return moveBackToActionQueueCheckin;
-  }
-
-  public void setMoveBackToActionQueueCheckin(Long moveBackCheckin) {
-    this.moveBackToActionQueueCheckin = moveBackCheckin;
-  }
-
   public Long getDamageCheckin() {
     return damageCheckin;
   }
@@ -115,5 +135,77 @@ public class StockReportDto {
 
   public void setStockLeft(Long stockLeft) {
     this.stockLeft = stockLeft;
+  }
+
+  public Long getInventoryQty() {
+    return inventoryQty;
+  }
+
+  public void setInventoryQty(Long inventoryQty) {
+    this.inventoryQty = inventoryQty;
+  }
+
+  public Long getInventoryTxnType() {
+    return inventoryTxnType;
+  }
+
+  public void setInventoryTxnType(Long inventoryTxnType) {
+    this.inventoryTxnType = inventoryTxnType;
+  }
+
+  public Long getCancelCheckin() {
+    return cancelCheckin;
+  }
+
+  public void setCancelCheckin(Long cancelCheckin) {
+    this.cancelCheckin = cancelCheckin;
+  }
+
+  public Long getInventoryRepeatCheckout() {
+    return inventoryRepeatCheckout;
+  }
+
+  public void setInventoryRepeatCheckout(Long inventoryRepeatCheckout) {
+    this.inventoryRepeatCheckout = inventoryRepeatCheckout;
+  }
+
+  public Long getRvExpired() {
+    return rvExpired;
+  }
+
+  public void setRvExpired(Long rvExpired) {
+    this.rvExpired = rvExpired;
+  }
+
+  public Long getRvLostPilferage() {
+    return rvLostPilferage;
+  }
+
+  public void setRvLostPilferage(Long rvLostPilferage) {
+    this.rvLostPilferage = rvLostPilferage;
+  }
+
+  public Long getStockTransferCheckin() {
+    return stockTransferCheckin;
+  }
+
+  public void setStockTransferCheckin(Long stockTransferCheckin) {
+    this.stockTransferCheckin = stockTransferCheckin;
+  }
+
+  public Long getStockTransferCheckout() {
+    return stockTransferCheckout;
+  }
+
+  public void setStockTransferCheckout(Long stockTransferCheckout) {
+    this.stockTransferCheckout = stockTransferCheckout;
+  }
+
+  public Long getTransitLost() {
+    return transitLost;
+  }
+
+  public void setTransitLost(Long transitLost) {
+    this.transitLost = transitLost;
   }
 }
