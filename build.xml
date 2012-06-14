@@ -1,7 +1,21 @@
 <project name="HK Rejuvenate" basedir="." default="build">
 
   <property file="build.properties"/>
+  <property file="${project.healthkart.dir}/environmentLocator.properties" />
+  <property file="${project.common.dir}/resources/${project.env}/setup/setup.properties" />
 
+  <path id="compile.classpath">
+    <fileset dir="${project.common.dir}/${lib.dir}">
+      <include name="**/*.jar" />
+    </fileset>
+    <fileset dir="${project.common.dir}/${dependencies.dir}">
+      <include name="**/*.jar" />
+    </fileset>
+  </path>
+
+  <taskdef resource="liquibasetasks.properties">
+		<classpath refid="compile.classpath" />
+	</taskdef>
 	<!-- Specify exact path to included jar files -->
 
   <target name="clean">
@@ -13,11 +27,13 @@
   <target name="build">
     <ant dir="${project.healthkart.dir}" target="build" inheritall="false" />
   </target>
-  <target name="db">
-    <ant dir="${project.healthkart.dir}" target="db" inheritall="false"/>
-  </target>
-  <target name="db-diff">
-    <ant dir="${project.healthkart.dir}" target="db-diff" inheritall="false"/>
-  </target>
+	<target name="db">
+		<updateDatabase changelogfile="${project.healthkart.dir}/db/changelog.xml" driver="${database.driver}" url="${database.url.dev}" username="${database.username}" password="${database.password}" classpathref="compile.classpath" />
+	</target>
+
+	<target name="db-diff" description="Does a diff of the current db with the workbench db. adds to changelog.xml any changes to db">
+		<diffDatabaseToChangeLog driver="${database.driver}" url="${database.url.dev}" username="${database.username}" password="${database.password}" changelogfile="${project.healthkart.dir}/db/changelog.xml" referencedriver="${database.driver}" referenceurl="${database.url.workbench}" referenceusername="${database.username}" referencepassword="${database.password}" classpathref="compile.classpath">
+		</diffDatabaseToChangeLog>
+	</target>
 
 </project>
