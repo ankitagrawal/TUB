@@ -8,11 +8,13 @@ import com.hk.domain.catalog.category.Category;
 import com.hk.domain.user.User;
 
 import java.util.List;
+import java.util.Collection;
 import java.math.BigInteger;
 
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.dao.DataAccessException;
 import org.hibernate.Session;
 
 /**
@@ -53,6 +55,10 @@ public class AdminEmailServiceImpl implements AdminEmailService{
 
   public List<User> findAllUsersNotInEmailRecepient(int maxResult, List<String> userIdList) {
     return getAdminEmailDao().findAllUsersNotInEmailRecepient(maxResult, userIdList);
+  }
+
+  public void saveOrUpdate(Collection entities) throws DataAccessException {
+    getAdminEmailDao().saveOrUpdate(entities);
   }
 
   public AdminEmailDao getAdminEmailDao() {

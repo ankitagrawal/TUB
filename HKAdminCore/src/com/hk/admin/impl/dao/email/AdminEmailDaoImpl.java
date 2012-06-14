@@ -71,7 +71,7 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
     query = String.format(query, emailCampaign.getId(), emailCampaign.getId(), BaseUtils.getCommaSeparatedString(userIds));
 
     Session session = getSession(true);
-    
+
     List<EmailRecepient> userList = session.createSQLQuery(query).addEntity(EmailRecepient.class).setMaxResults(maxResult).list();
     session.flush();
     session.clear();
@@ -85,7 +85,7 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
         " and er not in (select eh.emailRecepient from EmailerHistory eh where eh.emailCampaign = :emailCampaignInner ) " +
         " and er.email in ( :emailList )";
     List<EmailRecepient> emailRecepients = findByNamedParams(query, new String[]{"emailCampaign","emailCampaignInner","emailList"} , new Object[]{ emailCampaign, emailCampaign, emailList});*/
-    
+
     List<EmailRecepient> emailRecepients = getSession().createQuery("select er from EmailRecepient er " +
         " where er.subscribed = true and coalesce((date(current_date()) - date(er.lastEmailDate)), 0) >= (select ec.minDayGap from EmailCampaign ec where ec = :emailCampaign)" +
         " and er not in (select eh.emailRecepient from EmailerHistory eh where eh.emailCampaign = :emailCampaign ) " +
@@ -158,16 +158,25 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
     return sqlQuery.setMaxResults(maxResult).list();
   }
 
-@SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked")
   public void saveOrUpdate(Collection entities) throws DataAccessException {
     Session session = getSession(true);
-		//Begining a transaction as a lock over the database is required
-		Transaction transaction = session.beginTransaction();
-    session.saveOrUpdate(entities);//.saveOrUpdateAll(entities);
-    session.flush();
-  session.clear();
-  transaction.commit();
-  session.close();
+    //Begining a transaction as a lock over the database is required
+    Transaction transaction = session.beginTransaction();
+    try {
+      for (Object object : entities) {
+        session.saveOrUpdate(object);
+      }
+      session.flush();
+      session.clear();
+      transaction.commit();
+      session.close();
+    }catch(Exception ex){
+      transaction.rollback();
+    }finally{
+
+
+    }
   }
 
 

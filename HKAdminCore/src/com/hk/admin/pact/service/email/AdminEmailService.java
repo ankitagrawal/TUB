@@ -6,7 +6,10 @@ import com.hk.domain.catalog.category.Category;
 import com.hk.domain.user.User;
 
 import java.util.List;
+import java.util.Collection;
 import java.math.BigInteger;
+
+import org.springframework.dao.DataAccessException;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,4 +32,6 @@ public interface AdminEmailService {
   public List<User> findAllUsersNotInEmailRecepient(int maxResult, List<String> userIdList);
 
   public List<EmailRecepient> getUserMailingList(EmailCampaign emailCampaign, String[] userIds, int maxResult);
+
+  public void saveOrUpdate(Collection entities) throws DataAccessException;
 }
