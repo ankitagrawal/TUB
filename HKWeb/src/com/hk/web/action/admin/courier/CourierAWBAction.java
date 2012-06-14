@@ -1,10 +1,9 @@
 package com.hk.web.action.admin.courier;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.akube.framework.util.BaseUtils;
 import com.hk.admin.pact.dao.courier.AwbDao;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
-import com.hk.admin.util.XslParser;
+import com.hk.admin.util.helper.XslAwbParser;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.courier.Awb;
@@ -54,7 +53,7 @@ public class CourierAWBAction extends BaseAction {
     @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String                adminUploadsPath;
     @Autowired
-    XslParser             xslParser;
+    XslAwbParser   xslAwbParser;
 
     FileBean              fileBean;
 
@@ -138,11 +137,11 @@ public class CourierAWBAction extends BaseAction {
     Set<Awb> awbSetFromExcel=null;
      try {
       fileBean.save(excelFile);
-       awbSetFromExcel = xslParser.readAwbExcel(excelFile);
+       awbSetFromExcel = xslAwbParser.readAwbExcel(excelFile);
      if(null != awbSetFromExcel && awbSetFromExcel.size() > 0)   {
-      List<Awb> awbDatabase = awbDao.getAvailableAwbForCourier(courier);
+      List<Awb> awbDatabase = awbDao.getAvailableAwbForCourierByWarehouseAndCod(courier,null,null);
 
-    List<String> commonCourierIdsList = BaseUtils.getIntersection(awbDatabase,new ArrayList(awbSetFromExcel));
+    List<String> commonCourierIdsList = XslAwbParser.getIntersection(awbDatabase,new ArrayList(awbSetFromExcel));
 
       if(commonCourierIdsList.size() > 0){
         addRedirectAlertMessage(new SimpleMessage("Upload Failed   Courier Ids"+"     "+ commonCourierIdsList+"   " +

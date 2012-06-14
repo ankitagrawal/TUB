@@ -21,37 +21,27 @@ public class StateCourierServiceAction extends BaseAction {
   StateCourierServiceDao stateCourierServiceDao;
 
 
-  private List<StateCourierService> stateCourierServiceList = new ArrayList<StateCourierService>();
+  private List<StateCourierService> stateCourierServiceList = null;
   private String state;
 
-  private List<String> stateList=new ArrayList<String>();
+  private List<String> stateList = new ArrayList<String>();
 
-
-
-  private boolean showCourier;
-
-
-  
 
   @DefaultHandler
   @DontValidate
   public Resolution pre() {
-      setStateList(StateList.stateList);
-      return new ForwardResolution("/pages/admin/stateCourierService.jsp");
+    setStateList(StateList.stateList);
+    return new ForwardResolution("/pages/admin/stateCourierService.jsp");
   }
 
 
   public Resolution search() {
-   List<StateCourierService> StateCourierServiceList  = stateCourierServiceDao.getAllStateCourierServiceByState(state);
-    if(StateCourierServiceList.size()>0)  {
-    setStateCourierServiceList(StateCourierServiceList);
-     setShowCourier(true); 
+ stateCourierServiceList = stateCourierServiceDao.getAllStateCourierServiceByState(state);
+    if (stateCourierServiceList != null && stateCourierServiceList.size() > 0) {
+      setStateCourierServiceList(stateCourierServiceList);
     }
-    setShowCourier(false);
-   return new RedirectResolution(StateCourierServiceAction.class);
+    return new RedirectResolution(StateCourierServiceAction.class);
   }
-
-
 
   public List<StateCourierService> getStateCourierServiceList() {
     return stateCourierServiceList;
@@ -60,6 +50,7 @@ public class StateCourierServiceAction extends BaseAction {
   public void setStateCourierServiceList(List<StateCourierService> stateCourierServiceList) {
     this.stateCourierServiceList = stateCourierServiceList;
   }
+
   public String getState() {
     return state;
   }
@@ -68,19 +59,9 @@ public class StateCourierServiceAction extends BaseAction {
     this.state = state;
   }
 
-  public void  setStateList(List<String> stateList) {
-       this.stateList=stateList;
-    }
-
-     public boolean isShowCourier() {
-    return showCourier;
+  public void setStateList(List<String> stateList) {
+    this.stateList = stateList;
   }
-
-  public void setShowCourier(boolean showCourier) {
-    this.showCourier = showCourier;
-  }
-
-
 
   public List<String> getStateList() {
     return stateList;

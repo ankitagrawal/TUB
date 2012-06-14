@@ -1,7 +1,6 @@
 package com.akube.framework.util;
 
 import com.akube.framework.shiro.realm.HibernateSecurityRealm;
-import com.hk.domain.courier.Awb;
 import com.hk.exception.FileDownloadException;
 import com.hk.util.md5.MD5;
 import net.sourceforge.stripes.action.ActionBeanContext;
@@ -490,16 +489,6 @@ public class BaseUtils {
     else
       return false;
   }
-    public static List<String> getIntersection(List<Awb> awbDatabase, List<Awb> awbSetFromExcel) {
-    List<String> commonCourierIds = new ArrayList<String>();
-       for(int i=0; i < awbSetFromExcel.size() ;i++) {
-      if (awbDatabase.contains(awbSetFromExcel.get(i))) {
-        commonCourierIds.add(awbSetFromExcel.get(i).getAwbNumber());
-       }
-
-    }
-    return commonCourierIds;
-  }
-
+ 
 
 }

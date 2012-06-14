@@ -1,6 +1,5 @@
 package com.hk.admin.util;
 
-import com.hk.admin.pact.dao.courier.CourierDao;
 import com.hk.admin.pact.dao.inventory.GrnLineItemDao;
 import com.hk.admin.pact.dao.inventory.PoLineItemDao;
 import com.hk.admin.pact.dao.inventory.PurchaseOrderDao;
@@ -23,7 +22,10 @@ import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.*;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.core.Tax;
-import com.hk.domain.courier.*;
+import com.hk.domain.courier.Courier;
+import com.hk.domain.courier.CourierServiceInfo;
+import com.hk.domain.courier.PincodeDefaultCourier;
+import com.hk.domain.courier.Shipment;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.inventory.po.PurchaseOrder;
@@ -41,7 +43,6 @@ import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.core.SupplierDao;
 import com.hk.pact.dao.inventory.LowInventoryDao;
 import com.hk.pact.service.RoleService;
-import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
@@ -136,10 +137,7 @@ public class XslParser {
   private AdminInventoryService adminInventoryService;
   @Autowired
   private InventoryService inventoryService;
-  @Autowired
-  private CourierDao courierDao;
-  @Autowired
-  private UserService userService;
+ 
 
   public Set<Product> readProductList(File objInFile, User loggedOnUser) throws Exception {
 
@@ -1447,196 +1445,87 @@ public class XslParser {
   }
 
 
-  public Set<Awb> readAwbExcel(File file) throws Exception {
-    logger.debug("parsing Awb info : " + file.getAbsolutePath());
-    Set<Awb> awbSet = new HashSet<Awb>();
-    InputStream awbInputStream = new FileInputStream(file);
-    POIFSFileSystem awbInFileSys = new POIFSFileSystem(awbInputStream);
-
-    HSSFWorkbook workbook = new HSSFWorkbook(awbInFileSys);
-
-    // Assuming there is only one sheet, the first one only will be picked
-    HSSFSheet awbSheet = workbook.getSheet("AWB");
-    Iterator<Row> objRowIt = awbSheet.rowIterator();
-    Map<Integer, String> headerMap;
-    Map<Integer, String> rowMap;
-    int rowCount = 1;
-    headerMap = getRowMap(objRowIt);
-    try {
-      while (objRowIt.hasNext()) {
-        rowCount++;
-        rowMap = getRowMap(objRowIt);
-        String courierId = getCellValue(XslConstants.COURIER_ID, rowMap, headerMap);
-        String awbNumber = getCellValue(XslConstants.AWB_NUMBER, rowMap, headerMap);
-        String cod = getCellValue(XslConstants.COD, rowMap, headerMap);
-
-        Awb awb = new Awb();
-        if (StringUtils.isEmpty(courierId)) {
-
-          if (StringUtils.isEmpty(awbNumber) && cod.isEmpty()) {
-            if (awbSet.size() > 0) {
-              return awbSet;
-            }
-            return null;
-
-          } else {
-            logger.error("courier id cannot be call");
-            throw new ExcelBlankFieldException("courier ID  cannot be null" + "    ", rowCount);
-          }
-
-        }
-        Courier courier = courierDao.getCourierById(getLong(courierId));
-        awb.setCourier(courier);
-        if (StringUtils.isEmpty(awbNumber)) {
-          logger.error("awbNumber cannot be call");
-          throw new ExcelBlankFieldException("awbNumber cannot be null " + "    ", rowCount);
-
-        }
-        awb.setAwbNumber(awbNumber);
-        awb.setAwbBarCode(awbNumber);
-        awb.setUsed(false);
-        if (userService.getWarehouseForLoggedInUser() == null) {
-          throw new ExcelBlankFieldException("Please login in warehouse");
-        }
-        awb.setWarehouse(userService.getWarehouseForLoggedInUser());
-        if (cod.isEmpty()) {
-          throw new ExcelBlankFieldException("Please enter mode of payment");
-        }
-        if (getLong(cod).equals(0l)) {
-          awb.setCod(true);
-        } else if (getLong(cod).equals(1l)) {
-          awb.setCod(false);
-        }
-        awbSet.add(awb);
-      }
-    } catch (ExcelBlankFieldException e) {
-      throw new ExcelBlankFieldException(e.getMessage());
-
-    }
-
-    finally {
-    }
-    if (awbInputStream != null) {
-      IOUtils.closeQuietly(awbInputStream);
-    }
-
-    if (awbSet.size() > 0) {
-      return awbSet;
-    }
-
-    return null;
-
-  }
-
-
-//  public Set<CourierPricingEngine> readCourierPricingEngineExcel(File file) throws Exception {
+//  public Set<Awb> readAwbExcel(File file) throws Exception {
 //    logger.debug("parsing Awb info : " + file.getAbsolutePath());
-//    Set<CourierPricingEngine> courierPricingSet = new HashSet<CourierPricingEngine>();
-//    InputStream courierPricingInputStream = new FileInputStream(file);
-//    POIFSFileSystem courierPricingInFileSys = new POIFSFileSystem(courierPricingInputStream);
+//    Set<Awb> awbSet = new HashSet<Awb>();
+//    InputStream awbInputStream = new FileInputStream(file);
+//    POIFSFileSystem awbInFileSys = new POIFSFileSystem(awbInputStream);
 //
-//    HSSFWorkbook workbook = new HSSFWorkbook(courierPricingInFileSys);
+//    HSSFWorkbook workbook = new HSSFWorkbook(awbInFileSys);
 //
 //    // Assuming there is only one sheet, the first one only will be picked
-//    HSSFSheet awbSheet = workbook.getSheet("sheet1");
+//    HSSFSheet awbSheet = workbook.getSheet("AWB");
 //    Iterator<Row> objRowIt = awbSheet.rowIterator();
 //    Map<Integer, String> headerMap;
 //    Map<Integer, String> rowMap;
 //    int rowCount = 1;
 //    headerMap = getRowMap(objRowIt);
-//    while (objRowIt.hasNext()) {
-//      rowCount++;
-//      rowMap = getRowMap(objRowIt);
-//      String courierId = getCellValue(XslConstants.COURIER_ID, rowMap, headerMap);
-//      String warehouse = getCellValue(XslConstants.WAREHOUSE, rowMap, headerMap);
-//      String regionTypeId = getCellValue(XslConstants.REGION, rowMap, headerMap);
-//      String firstBaseWeight = getCellValue(XslConstants.FIRST_BASE_WT, rowMap, headerMap);
-//      String firstBaseCost = getCellValue(XslConstants.FIRST_BASE_COST, rowMap, headerMap);
-//      String secondBaseWeight = getCellValue(XslConstants.SECOND_BASE_WT, rowMap, headerMap);
-//      String secondBaseCost = getCellValue(XslConstants.SECOND_BASE_COST, rowMap, headerMap);
-//      String additionalWeight = getCellValue(XslConstants.ADDITIONAL_WT, rowMap, headerMap);
-//      String additionalCost = getCellValue(XslConstants.ADDITIONAL_COST, rowMap, headerMap);
-//      String FuelSurcharge = getCellValue(XslConstants.FUEL_CHARGES, rowMap, headerMap);
-//      String minCodCharge = getCellValue(XslConstants.MIN_COD_CHARGES, rowMap, headerMap);
-//      String codCutoffAmonut = getCellValue(XslConstants.COD_CUTOFF_AMOUNT, rowMap, headerMap);
-//      String variableCodCharges = getCellValue(XslConstants.VARIABLE_COD_CHARGES, rowMap, headerMap);
-//      CourierPricingEngine courierPricingEngine = new CourierPricingEngine();
+//    try {
+//      while (objRowIt.hasNext()) {
+//        rowCount++;
+//        rowMap = getRowMap(objRowIt);
+//        String courierId = getCellValue(XslConstants.COURIER_ID, rowMap, headerMap);
+//        String awbNumber = getCellValue(XslConstants.AWB_NUMBER, rowMap, headerMap);
+//        String cod = getCellValue(XslConstants.COD, rowMap, headerMap);
 //
-//      if (StringUtils.isEmpty(courierId)) {
-//        if (StringUtils.isEmpty(warehouse) && regionTypeId.isEmpty() && firstBaseWeight.isEmpty() && firstBaseCost.isEmpty()
-//            && secondBaseCost.isEmpty() && additionalCost.isEmpty()) {
-//          if (courierPricingSet.size() > 0) {
-//            return courierPricingSet;
+//        Awb awb = new Awb();
+//        if (StringUtils.isEmpty(courierId)) {
+//
+//          if (StringUtils.isEmpty(awbNumber) && cod.isEmpty()) {
+//            if (awbSet.size() > 0) {
+//              return awbSet;
+//            }
+//            return null;
+//
+//          } else {
+//            logger.error("courier id cannot be call");
+//            throw new ExcelBlankFieldException("courier ID  cannot be null" + "    ", rowCount);
 //          }
-//          return null;
 //
-//        } else {
-//          logger.error("courier id cannot be call");
-//          throw new ExcelBlankFieldException("courier ID  cannot be null" + "    ", rowCount);
 //        }
-//
-//      }
-//      try {
 //        Courier courier = courierDao.getCourierById(getLong(courierId));
-//        courierPricingEngine.setCourier(courier);
-//        if (checkIfNotEmpty(warehouse, rowCount)) {
-//          courierPricingEngine.setWarehouse(warehouseService.getWarehouseById(Long.getLong(warehouse)));
-//        }
+//        awb.setCourier(courier);
+//        if (StringUtils.isEmpty(awbNumber)) {
+//          logger.error("awbNumber cannot be call");
+//          throw new ExcelBlankFieldException("awbNumber cannot be null " + "    ", rowCount);
 //
-//        if (checkIfNotEmpty(regionTypeId, rowCount)) {
-//          courierPricingEngine.setRegionType(baseDao.get(RegionType.class, regionTypeId));
 //        }
-//
-//        if (checkIfNotEmpty(firstBaseWeight, rowCount)) {
-//          courierPricingEngine.setFirstBaseWt(getDouble(firstBaseWeight));
+//        awb.setAwbNumber(awbNumber);
+//        awb.setAwbBarCode(awbNumber);
+//        awb.setUsed(false);
+//        if (userService.getWarehouseForLoggedInUser() == null) {
+//          throw new ExcelBlankFieldException("Please login in warehouse");
 //        }
-//        if (checkIfNotEmpty(firstBaseCost, rowCount)) {
-//          courierPricingEngine.setFirstBaseCost(getDouble(firstBaseCost));
+//        awb.setWarehouse(userService.getWarehouseForLoggedInUser());
+//        if (cod.isEmpty()) {
+//          throw new ExcelBlankFieldException("Please enter mode of payment");
 //        }
-//        if (checkIfNotEmpty(secondBaseWeight, rowCount)) {
-//          courierPricingEngine.setSecondBaseWt(getDouble(secondBaseWeight));
+//        if (getLong(cod).equals(0l)) {
+//          awb.setCod(true);
+//        } else if (getLong(cod).equals(1l)) {
+//          awb.setCod(false);
 //        }
-//        if (checkIfNotEmpty(secondBaseCost, rowCount)) {
-//          courierPricingEngine.setSecondBaseCost(getDouble(secondBaseCost));
-//        }
-//        if (checkIfNotEmpty(additionalWeight, rowCount)) {
-//          courierPricingEngine.setAdditionalWt(getDouble(additionalWeight));
-//        }
-//
-//        if (checkIfNotEmpty(additionalCost, rowCount)) {
-//          courierPricingEngine.setAdditionalCost(getDouble(additionalCost));
-//        }
-//        if (checkIfNotEmpty(FuelSurcharge, rowCount)) {
-//          courierPricingEngine.setFuelSurcharge(getDouble(FuelSurcharge));
-//        }
-//
-//        if (checkIfNotEmpty(minCodCharge, rowCount)) {
-//          courierPricingEngine.setMinCodCharges(getDouble(minCodCharge));
-//        }
-//
-//        if (checkIfNotEmpty(codCutoffAmonut, rowCount)) {
-//          courierPricingEngine.setCodCutoffAmount(getDouble(codCutoffAmonut));
-//        }
-//
-//        if (checkIfNotEmpty(variableCodCharges, rowCount)) {
-//          courierPricingEngine.setVariableCodCharges(getDouble(variableCodCharges));
-//        }
-//        courierPricingSet.add(courierPricingEngine);
-//      } catch (ExcelBlankFieldException ebfe) {
-//        logger.error(ebfe.getMessage());
-//        throw new ExcelBlankFieldException(ebfe.getMessage());
+//        awbSet.add(awb);
 //      }
-//      finally {
-//        if (courierPricingInputStream != null) {
-//          IOUtils.closeQuietly(courierPricingInputStream);
-//        }
-//      }
+//    } catch (ExcelBlankFieldException e) {
+//      throw new ExcelBlankFieldException(e.getMessage());
+//
 //    }
-//    if (courierPricingSet.size() > 0) {
-//      return courierPricingSet;
+//
+//    finally {
 //    }
+//    if (awbInputStream != null) {
+//      IOUtils.closeQuietly(awbInputStream);
+//    }
+//
+//    if (awbSet.size() > 0) {
+//      return awbSet;
+//    }
+//
 //    return null;
+//
 //  }
+
 
 
   public boolean checkIfNotEmpty(String excelField, int rowCount) {

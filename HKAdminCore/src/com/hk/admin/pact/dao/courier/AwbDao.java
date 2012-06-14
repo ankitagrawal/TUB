@@ -9,11 +9,10 @@ import java.util.List;
 
 public interface AwbDao extends BaseDao {
 
-    public List<Awb> getAvailableAwbForCourier(Courier courier, Warehouse warehouse);
+//    public List<Awb> getAvailableAwbForCourier(Courier courier, Warehouse warehouse);
 
     public Awb getByAWBNumber(Courier courier, String awbNumber);
 
-   public List<Awb> getAvailableAwbForCourierByCod(Courier courier, Warehouse warehouse,boolean cod);
+   public List<Awb> getAvailableAwbForCourierByWarehouseAndCod(Courier courier, Warehouse warehouse,Boolean cod);
 
-   public List<Awb> getAvailableAwbForCourier(Courier courier);
 }

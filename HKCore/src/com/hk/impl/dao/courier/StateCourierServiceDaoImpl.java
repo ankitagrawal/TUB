@@ -3,7 +3,7 @@ package com.hk.impl.dao.courier;
 import com.hk.domain.courier.StateCourierService;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.courier.StateCourierServiceDao;
-import org.hibernate.Criteria;
+import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -18,16 +18,11 @@ import java.util.List;
  */
 @Repository
 public class StateCourierServiceDaoImpl extends BaseDaoImpl implements StateCourierServiceDao {
-
    public List<StateCourierService> getAllStateCourierServiceByState(String stateName){
-     stateName=stateName.toUpperCase();
-     Criteria stateCriteria=getSession().createCriteria(StateCourierServiceDao.class);
-     List<StateCourierService> StateCourierServiceList= stateCriteria.add(Restrictions.like("state",stateName)).list();
-     return StateCourierServiceList;
+    DetachedCriteria stateCriteria= DetachedCriteria.forClass(StateCourierServiceDao.class);
+     stateCriteria.add(Restrictions.like("state",stateName));
+      List<StateCourierService> stateCourierServiceList=  findByCriteria(stateCriteria);
+     return stateCourierServiceList;
    }
-
-
-
-
 
 }

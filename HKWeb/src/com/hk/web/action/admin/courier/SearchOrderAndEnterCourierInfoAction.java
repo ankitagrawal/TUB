@@ -12,7 +12,6 @@ import com.hk.constants.shipment.EnumBoxSize;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.core.Pincode;
-import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.ShippingOrder;
@@ -141,14 +140,14 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
                 boolean isCod = shippingOrder.isCOD();
                 availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod);
                 suggestedCourier = courierService.getDefaultCourierByPincodeAndWarehouse(pinCode, isCod);
-               List<Awb> suggestedAwbList= awbDao.getAvailableAwbForCourierByCod(suggestedCourier,userService.getWarehouseForLoggedInUser(),isCod);
-              if(suggestedAwbList != null && suggestedAwbList.size() >0){
-              shipment.setTrackingId(suggestedAwbList.get(0).getAwbNumber());
-                suggestedAwbList.get(0).setUsed(true);
-              }
-              else{
-                 addRedirectAlertMessage(new SimpleMessage("AWB numbers are not available for courier  , please contact respective courier service  "+ suggestedCourier));
-              }
+//               List<Awb> suggestedAwbList= awbDao.getAvailableAwbForCourierByWarehouseAndCod(suggestedCourier,userService.getWarehouseForLoggedInUser(),isCod);
+//              if(suggestedAwbList != null && suggestedAwbList.size() >0){
+//              shipment.setTrackingId(suggestedAwbList.get(0).getAwbNumber());
+//                suggestedAwbList.get(0).setUsed(true);
+//              }
+//              else{
+//                 addRedirectAlertMessage(new SimpleMessage("AWB numbers are not available for courier  , please contact respective courier service  "+ suggestedCourier));
+//              }suggestedCourier
                 // if (suggestedCourier == null) {
                 // suggestedCourier = courierService.getSuggestedCourierService(pinCode.getPincode(), isCod);
                 // }
