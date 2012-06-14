@@ -94,6 +94,20 @@ public class XslConstants {
     public static final String    PAYMENT_TYPE                    = "PAYMENT_TYPE";
     public static final String    SERVICE_TYPE                    = "SERVICE_TYPE";
     public static final String    POSTPAID_AMOUNT                 = "POSTPAID_AMOUNT";
+   public static final String    AWB_NUMBER                 = "AWB_NUMBER";
+   public static final String    COD                 = "COD";
+  public static final String    FIRST_BASE_WT                = "FIRST_BASE_WT";
+   public static final String    FIRST_BASE_COST                = "FIRST_BASE_COST";
+  public static final String    SECOND_BASE_WT                = "SECOND_BASE_WT";
+    public static final String    SECOND_BASE_COST                = "SECOND_BASE_COST";
+  public static final String    ADDITIONAL_WT                = "ADDITIONAL_WT";
+  public static final String    ADDITIONAL_COST                = "ADDITIONAL_COST";
+  public static final String    MIN_COD_CHARGES                = "MIN_COD_CHARGES";
+  public static final String    COD_CUTOFF_AMOUNT                = "COD_CUTOFF_AMOUNT";
+  public static final String    VARIABLE_COD_CHARGES                = "VARIABLE_COD_CHARGES";
+   public static final String    FUEL_CHARGES                = "FUEL_CHARGES";
+
+
 
 
 }
