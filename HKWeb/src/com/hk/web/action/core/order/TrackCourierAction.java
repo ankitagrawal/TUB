@@ -73,9 +73,7 @@ public class TrackCourierAction extends BaseAction {
             resolution = new RedirectResolution("http://trackntrace.aflwiz.com/aflwizhtmltrack", false).addParameter("shpntnum", trackingId);
         } else if (courierId.equals(EnumCourier.Speedpost.getId())) {
             resolution = new RedirectResolution("/pages/indiaPostCourier.jsp");
-        }
-
-        else if ((EnumCourier.getCourierIDs(EnumCourier.getDelhiveryCouriers())).contains(courierId)){           
+        } else if ((EnumCourier.getCourierIDs(EnumCourier.getDelhiveryCouriers())).contains(courierId)){
 	        /**
 	         * Commenting the below line as this was giving an errror in Delhivery courier tracking page. Shipping order made a class member.
  	         */

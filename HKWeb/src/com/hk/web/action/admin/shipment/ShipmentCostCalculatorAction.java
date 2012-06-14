@@ -149,7 +149,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
         ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
         shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusSearchingInDeliveryQueue()));
         shippingOrderSearchCriteria.setShipmentStartDate(shippedStartDate).setShipmentEndDate(shippedEndDate);
-        List<ShippingOrder> shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria);
+        List<ShippingOrder> shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, false);
 
         if (shippingOrderList != null) {
             for (ShippingOrder shippingOrder : shippingOrderList) {
@@ -162,7 +162,8 @@ public class ShipmentCostCalculatorAction extends BaseAction {
                         shipmentService.save(shipment);
                     }
                 } else {
-                    addRedirectAlertMessage(new SimpleMessage("No Shipment currently exists to be updated"));
+                    logger.debug("No Shipment exists or courier group exists for SO " + shippingOrder.getGatewayOrderId());
+//                    addRedirectAlertMessage(new SimpleMessage("No Shipment currently exists to be updated"));
                 }
             }
         }

@@ -1,5 +1,11 @@
 package com.hk.impl.dao;
 
+import java.util.Arrays;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
 import com.hk.constants.catalog.product.EnumProductVariantPaymentType;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.inventory.EnumReconciliationStatus;
@@ -30,11 +36,6 @@ import com.hk.pact.service.RoleService;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.marketing.MarketingService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
-import java.util.Arrays;
-import java.util.List;
 
 @Repository
 public class MasterDataDaoImpl implements MasterDataDao {
@@ -248,7 +249,7 @@ public class MasterDataDaoImpl implements MasterDataDao {
     return EnumShippingOrderStatus.getStatusForChangingShipmentDetails();
   }
 
-  public List<PurchaseFormType> getPurchaseInvoiceFormTypes() {
+   public List<PurchaseFormType> getPurchaseInvoiceFormTypes() {
     return getBaseDao().getAll(PurchaseFormType.class);
    }
 

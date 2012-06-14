@@ -102,18 +102,6 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
     public Resolution searchOrders() {
 
         shippingOrder = shippingOrderDao.findByGatewayOrderId(gatewayOrderId);
-        /*
-         * if (shippingOrder == null) { addRedirectAlertMessage(new SimpleMessage("Shipping Order not found for the
-         * corresponding gateway order id")); return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class); }
-         * else if (shippingOrder.getOrderStatus() != null) { Long id = shippingOrder.getOrderStatus().getId(); if (id <
-         * EnumShippingOrderStatus.SO_CheckedOut.getId()) { addRedirectAlertMessage(new SimpleMessage("Shipping Order is
-         * not checkout out yet .It cannot be packed. ")); return new
-         * RedirectResolution(SearchOrderAndEnterCourierInfoAction.class); } else if (id >=
-         * EnumShippingOrderStatus.SO_Delivered.getId()) { addRedirectAlertMessage(new SimpleMessage("Shipping Order was
-         * either delieverd/canceled .Courier details cannot be changed. ")); return new
-         * RedirectResolution(SearchOrderAndEnterCourierInfoAction.class); } else { shipment =
-         * shippingOrder.getShipment(); shippingOrderList.add(shippingOrder); } }
-         */
         if (shippingOrder == null) {
             addRedirectAlertMessage(new SimpleMessage("Shipping Order not found for the corresponding gateway order id"));
             return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
@@ -140,19 +128,17 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
                 boolean isCod = shippingOrder.isCOD();
                 availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod);
                 suggestedCourier = courierService.getDefaultCourierByPincodeAndWarehouse(pinCode, isCod);
-//               List<Awb> suggestedAwbList= awbDao.getAvailableAwbForCourierByWarehouseAndCod(suggestedCourier,userService.getWarehouseForLoggedInUser(),isCod);
-//              if(suggestedAwbList != null && suggestedAwbList.size() >0){
-//              shipment.setTrackingId(suggestedAwbList.get(0).getAwbNumber());
-//                suggestedAwbList.get(0).setUsed(true);
-//              }
-//              else{
-//                 addRedirectAlertMessage(new SimpleMessage("AWB numbers are not available for courier  , please contact respective courier service  "+ suggestedCourier));
-//              }suggestedCourier
-                // if (suggestedCourier == null) {
-                // suggestedCourier = courierService.getSuggestedCourierService(pinCode.getPincode(), isCod);
-                // }
-
-            }else{
+/*
+              List<Awb> suggestedAwbList= awbDao.getAvailableAwbForCourierByWarehouseAndCod(suggestedCourier,userService.getWarehouseForLoggedInUser(),isCod);
+              if(suggestedAwbList != null && suggestedAwbList.size() >0){
+              shipment.setTrackingId(suggestedAwbList.get(0).getAwbNumber());
+                suggestedAwbList.get(0).setUsed(true);
+              }
+              else{
+                 addRedirectAlertMessage(new SimpleMessage("AWB numbers are not available for courier  , please contact respective courier service  "+ suggestedCourier));
+              }
+*/
+            } else {
                 addRedirectAlertMessage(new SimpleMessage("Pincode is INVALID, Please contact Customer Care. It cannot be packed."));
             }
         } catch (Exception e) {

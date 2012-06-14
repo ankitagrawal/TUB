@@ -16,6 +16,5 @@ import com.hk.pact.dao.BaseDao;
 public interface CourierPricingEngineDao extends BaseDao {
 
     public CourierPricingEngine getCourierPricingInfo(Courier courier, RegionType regionType, Warehouse warehouse);
-  
 
 }
