@@ -7442,4 +7442,32 @@
         <changeSet author="Rajni (generated)" id="1338295577580-4">
         <addForeignKeyConstraint baseColumnNames="purchase_form_type_id" baseTableName="purchase_invoice" constraintName="fk_purchase_invoice_purchase_form_type1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="purchase_form_type" referencesUniqueColumn="false"/>
     </changeSet>
+     <changeSet author="Seema (generated)" id="1338892921767-1">
+        <addColumn tableName="cart_line_item_config_values">
+            <column name="cost_price" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1338892921767-2">
+        <addColumn tableName="variant_config_values">
+            <column name="cost_price" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        </changeSet>
+    <changeSet author="Seema (generated)" id="1339056902031-4">
+        <modifyDataType columnName="value" newDataType="VARCHAR(70)" tableName="variant_config_values"/>
+    </changeSet>
+       <changeSet author="vaibhav (generated)" id="1339582614718-1">
+        <addNotNullConstraint columnDataType="VARCHAR(100)" columnName="name" tableName="secondary_referrer_for_order"/>
+    </changeSet>
+    <changeSet author="vaibhav (generated)" id="1339582614718-2">
+        <addNotNullConstraint columnDataType="VARCHAR(70)" columnName="value" tableName="variant_config_values"/>
+    </changeSet>
+    <changeSet author="vaibhav (generated)" id="1339582614718-3">
+      <createIndex indexName="user_id_UNIQUE" tableName="user_karma_profile" unique="true">
+          <column name="user_id"/>
+      </createIndex>
+  </changeSet>
 </databaseChangeLog>

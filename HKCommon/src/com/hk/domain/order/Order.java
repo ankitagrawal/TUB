@@ -26,6 +26,7 @@ import javax.persistence.Transient;
 
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.payment.EnumPaymentMode;
+import com.hk.constants.clm.CLMConstants;
 import com.hk.domain.Comment;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.comparator.OrderLifecycleComparator;
@@ -141,6 +142,9 @@ public class Order implements java.io.Serializable {
     @Column(name = "version", nullable = false)
     private Long                      version         = new Long(1);
 
+    @Column(name = "score", nullable=true)
+    private Long                    score;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id")
     private Store                     store;
@@ -152,6 +156,17 @@ public class Order implements java.io.Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "secondary_referrer_for_order_id")
     private SecondaryReferrerForOrder secondaryReferrerForOrder;
+
+
+    public boolean isPriorityOrder() {
+        if(this.score!=null){
+            return (this.score>= CLMConstants.thresholdScore);
+        }else{
+            return false;
+        }
+    }
+
+
 
     public Order() {
     }
@@ -194,6 +209,14 @@ public class Order implements java.io.Serializable {
 
     public void setReferredOrder(boolean referredOrder) {
         this.referredOrder = referredOrder;
+    }
+
+    public Long getScore() {
+        return score;
+    }
+
+    public void setScore(Long score) {
+        this.score = score;
     }
 
     public OrderStatus getOrderStatus() {

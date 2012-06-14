@@ -195,26 +195,10 @@
   </div>
 </noscript>
 
-<!-- begin Marin Software Tracking Script -->
-<script type='text/javascript'>
-    var _mTrack = _mTrack || [];
-    _mTrack.push(['addTrans', {
-        currency: 'USD',
-        total: '${conversion_value/50.00}',
-        orderId: '${order_id}'
-    }]);
-    _mTrack.push(['processOrders']);
+    
+<!-- Microsoft AdCenter Code for Payment Success Conversion Page-->
+<script type="text/javascript"> if (!window.mstag) mstag = {loadTag : function(){},time : (new Date()).getTime()};</script> <script id="mstag_tops" type="text/javascript" src="//flex.atdmt.com/mstag/site/3f37f06d-63ac-4273-aac8-7e70f967fdc5/mstag.js"></script> <script type="text/javascript"> mstag.loadTag("analytics", {dedup:"1",domainId:"1704150",type:"1",actionid:"62231"})</script> <noscript> <iframe src="//flex.atdmt.com/mstag/tag/3f37f06d-63ac-4273-aac8-7e70f967fdc5/analytics.html?dedup=1&domainId=1704150&type=1&actionid=62231" frameborder="0" scrolling="no" width="1" height="1" style="visibility:hidden;display:none"> </iframe> </noscript>
 
-    (function() {
-        var mClientId = '3035ucg15805';
-        var mProto = ('https:' == document.location.protocol ? 'https://' : 'http://');
-        var mHost = 'pro.marinsm.com';
-        var mt = document.createElement('script'); mt.type = 'text/javascript'; mt.async = true;
-        mt.src = mProto + mHost + '/tracker/async/' + mClientId + '.js';
-        var fscr = document.getElementsByTagName('script')[0]; fscr.parentNode.insertBefore(mt, fscr);
-    })();
-</script>
-<!-- end Copyright Marin Software -->
 <%
   }
 %>

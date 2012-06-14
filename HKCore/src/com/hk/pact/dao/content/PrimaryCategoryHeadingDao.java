@@ -10,6 +10,8 @@ public interface PrimaryCategoryHeadingDao extends BaseDao {
 
     public List<PrimaryCategoryHeading> getHeadingsByCategory(Category category);
 
+    public List<PrimaryCategoryHeading> getHeadingsByCategoryName(String categoryName);
+
     public List<PrimaryCategoryHeading> getHeadingsWithRankingByCategory(Category category);
 
     public List<PrimaryCategoryHeading> getHeadingsOrderedByRankingByCategory(Category category);

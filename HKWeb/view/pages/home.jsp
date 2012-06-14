@@ -33,8 +33,8 @@
             <a href="http://www.healthkart.com/nutrition/sports-nutrition?brand=Dymatize">
                 <img class="banner01" src="<hk:vhostImage/>/images/banners/home/dymatize_sbanner.jpg" border="0" alt="Dymatize - free shaker"/>
             </a>
-            <a href="http://www.healthkart.com/revital">
-                <img src="<hk:vhostImage/>/images/banners/home/revital_sbanner.jpg" border="0" alt="Revital - Great health, Great deals"/>
+            <a href="${pageContext.request.contextPath}/brand/nutrition/vitamin+shoppe">
+                <img src="<hk:vhostImage/>/images/banners/home/vs_sbanner.jpg" border="0" alt="Introducing Vitamin Shoppe"/>
             </a>
 
                 <%--<div class="banner01">--%>
@@ -158,7 +158,7 @@
                     <div class="grid_24" style="width: 950px;">
                         <c:forEach var="product" items='${heading.productSortedByOrderRanking}'>
                             <div class="grid_4 alpha omega">
-                                <s:layout-render name="/layouts/embed/_productThumbG.jsp" productId='${product.id}'/>
+                                <s:layout-render name="/layouts/embed/_productThumbG.jsp" product='${product}'/>
                             </div>
                         </c:forEach>
                     </div>

@@ -1,18 +1,5 @@
 package com.hk.web.action.core.cart;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import net.sourceforge.stripes.action.JsonResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.validation.SimpleError;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -32,6 +19,17 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.report.dto.order.LineItemConfigValuesDTO;
 import com.hk.web.HealthkartResponse;
+import net.sourceforge.stripes.action.JsonResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.validation.SimpleError;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA. User: AdminUser Date: Feb 14, 2012 Time: 11:35:48 AM To change this template use File |
@@ -96,6 +94,12 @@ public class AddToCartWithLineItemConfigAction extends BaseAction {
                 } else {
                     configValue.setAdditionalPrice(selectedConfigValue.getAdditonalPrice() * 2);
                 }
+
+        if (VariantConfigOptionParam.shouldPriceBeDoubledForParam(configOption.getAdditionalParam())) {
+          configValue.setCostPrice(selectedConfigValue.getCostPrice() * 2);
+        } else {
+          configValue.setCostPrice(selectedConfigValue.getCostPrice() * 2);
+        }
                 configValue.setVariantConfigOption(configOption);
 
                 lineItemConfig.getCartLineItemConfigValues().add(configValue);

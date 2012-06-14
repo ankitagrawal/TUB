@@ -8,6 +8,7 @@ import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.marketing.NotifyMe;
+import com.hk.domain.user.User;
 import com.hk.pact.dao.BaseDao;
 
 public interface NotifyMeDao extends BaseDao {
@@ -26,6 +27,6 @@ public interface NotifyMeDao extends BaseDao {
 
     public List<NotifyMe> getAllNotifyMeForSameUser(String notifyMeEmail);
 
-    public List<NotifyMe> getPendingNotifyMeList();
+    public List<NotifyMe> getPendingNotifyMeList(String notifyMeEmail, ProductVariant productVariant);
 
 }

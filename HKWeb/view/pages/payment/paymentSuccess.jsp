@@ -9,8 +9,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <%
-  Double cashBackPercentage = Double.parseDouble((String)ServiceLocatorFactory.getProperty(Keys.Env.cashBackPercentage));
-  Long defaultGateway = Long.parseLong((String)ServiceLocatorFactory.getProperty(Keys.Env.defaultGateway));
+    Double cashBackPercentage = Double.parseDouble((String)ServiceLocatorFactory.getProperty(Keys.Env.cashBackPercentage));
+    Long defaultGateway = Long.parseLong((String)ServiceLocatorFactory.getProperty(Keys.Env.defaultGateway));
 %>
 <c:set var="paymentModeId_DefaultGateway" value="<%=defaultGateway%>"/>
 <c:set var="cashBackPercentage" value="<%=cashBackPercentage%>"/>
@@ -40,160 +40,17 @@
 
 <s:layout-component name="menu"> </s:layout-component>
 <s:layout-component name="heading">
-  <div style="margin-top: 50px;">
-    <h1 class="green">
-      Payment Successful
-    </h1>
-  </div>
+    <div style="margin-top: 50px;">
+        <h1 class="green">
+            Payment Successful
+        </h1>
+    </div>
 </s:layout-component>
 
 <s:layout-component name="left_col">
 
 
-<c:choose>
-  <c:when test="${actionBean.payment != null}">
-    <div class="right" style="float: right;">
-      <s:link beanclass="com.hk.web.action.core.referral.ReferralProgramAction">
-        <img src="<hk:vhostImage/>/images/banners/refer_earn.jpg">
-      </s:link>
-    </div>
-
-
-    <h2 class="green">Your payment was successful.</h2>
-
-    <p>
-      Your order ID is <strong>${actionBean.payment.order.gatewayOrderId}</strong>.</p>
-
-    <shiro:hasRole name="<%=RoleConstants.HK_UNVERIFIED%>">
-      <div class='promos'>
-        <div class='prom yellow help' style="width: 95%; padding:5px;">
-          <p class="lrg"><strong>You have not activated your HealthKart account.</strong><br/>
-            To activate your account, please click on the activation link sent in your email. By activating your
-            account,
-            we get to know that you have a valid email id and we can send special offers on your email.</p>
-
-          <p><strong>If you haven't received the mail,
-            <s:link beanclass="com.hk.web.action.core.user.ResendAccountActivationLinkAction" event="pre" class="resendActivationEmailLink">click here to resend it.</s:link>
-          </strong>
-            <br/><br/>
-            <span class="emailSendMessage alert" style="display: none; font-weight:bold;"></span>
-          </p>
-
-          <p style="display:none;" class="emailNotReceived">
-            If you do not receive this email, please check your spam/bulk folder. Write to us at info@healthkart.com if
-            you face problems.
-          </p>
-        </div>
-      </div>
-      <script type="text/javascript">
-
-        <%-- Re-Send Activation Link --%>
-        $('.resendActivationEmailLink').click(function() {
-
-          var clickedLink = $(this);
-          var clickedP = clickedLink.parents('p');
-          clickedP.find('.emailSendMessage').html($('#ajaxLoader').html()).show();
-          $.getJSON(clickedLink.attr('href'), function(res) {
-            if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
-              clickedP.find('.emailSendMessage').html(res.data.message).show();
-              $('.emailNotReceived').show();
-            }
-          });
-          return false;
-        });
-
-      </script>
-    </shiro:hasRole>
-
-
-    <%--<c:if test="${actionBean.payment.paymentMode.id == paymentModeId_DefaultGateway}">
-      <p> With this order you have earned reward points worth
-        <span class="orange">
-           <strong>
-             <fmt:formatNumber value="${actionBean.payment.amount * cashBackPercentage}" type="currency" currencySymbol="Rs. "/>
-           </strong>
-          </span>
-      </p>
-    </c:if>--%>
-    <br/>
-
-    <h2>Shipping & Delivery</h2>
-
-    <p>Your order will be dispatched within 1-3 business days. Additional time will be taken by the courier company.</p>
-
-    <h2>Customer Support</h2>
-
-    <p><s:link beanclass="com.hk.web.action.pages.ContactAction">Write to us</s:link> with your Order ID if you have any questions or call us on 0124-4551616</p>
-
-    <c:if test="${actionBean.payment.order.offerInstance != null && actionBean.payment.order.offerInstance.coupon != null && hk:isNotBlank(actionBean.payment.order.offerInstance.coupon.complimentaryCoupon)}">
-      <div style="background-color: lightgoldenrodyellow;">
-        <h2>You have won a Complementary Coupon!</h2>
-        <p>
-          ${actionBean.payment.order.offerInstance.offer.complimentaryCouponDescription}<br/>
-          Your Complementary Coupon Code : <strong>${actionBean.payment.order.offerInstance.coupon.complimentaryCoupon}</strong>
-        </p>
-        <p class="gry sml">
-          You can also find this coupon code in your invoice for later use.
-        </p>
-      </div>
-    </c:if>
-
-    <c:if test="${actionBean.pricingDto.totalCashback > 0.0}">
-      <div style="padding: 10px; border: 1px solid gray; background-color: lightgoldenrodyellow;">
-        <h2>Cashback Pending <strong>(Rs. <fmt:formatNumber pattern="<%=FormatUtils.currencyFormatPattern%>" value="${actionBean.pricingDto.totalCashback}"/>)</strong></h2>
-        <p>
-          Your cashback will be automatically credited into your HealthKart account depending on the payment mode :<br/>
-          - in case of online payment through credit card, debit card or internet banking, the cashback is credited to your account already.<br/>
-          - in case of cash on delivery (COD) payment mode, the cashback is credited upon delivery of the order.<br/>
-        </p>
-      </div>
-    </c:if>
-
-    <div class="step2 success_order_summary" style="padding: 5px; float: left; margin-right: 5px;">
-      <h2 style="margin: 10px;">Order Summary</h2>
-
-      <s:layout-render name="/layouts/embed/orderSummaryTableDetailed.jsp" pricingDto="${actionBean.pricingDto}"
-                       orderDate="${actionBean.payment.paymentDate}"/>
-      <div class="floatfix"></div>
-    </div>
-
-    <div style="margin-top: 10px; float: right; margin-right: 5px;">
-      <h2>Shipping address${actionBean.pricingDto.shippingLineCount > 1 ? 'es' : ''}</h2>
-
-      <p>
-        <c:set var="address" value="${actionBean.payment.order.address}"/>
-        <strong>${address.name}</strong> <br/>
-          ${address.line1},
-        <c:if test="${not empty address.line2}">
-          ${address.line2},
-        </c:if>
-          ${address.city} - ${address.pin}<br/>
-          ${address.state}, <span class="upc">INDIA</span><br/>
-        <span class="sml lgry upc">Phone </span> ${address.phone}<br/>
-      </p>
-    </div>
-
-
-  </c:when>
-  <c:otherwise>
-    Invalid request!
-  </c:otherwise>
-</c:choose>
-
-</s:layout-component>
-
-<s:layout-component name="analytics">
-  <iframe src="" id="vizuryTargeting" scrolling="no" width="1" height="1" marginheight="0" marginwidth="0" frameborder="0"></iframe>
-  <script type="text/javascript">
-    var vizuryLink = "https://ssl.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e500&orderid=${actionBean.gatewayOrderId}&orderprice=${actionBean.payment.amount}";
-    <c:forEach items="${actionBean.payment.order.cartLineItems}" var="lineItem" varStatus="liCtr">
-    vizuryLink += "&pid${liCtr.count}=${lineItem.productVariant.product.id}&catid${liCtr.count}=${lineItem.productVariant.product.primaryCategory.name}&quantity${liCtr.count}=${lineItem.qty}";
-    </c:forEach>
-    vizuryLink += "&currency=INR&section=1&level=1";
-    document.getElementById("vizuryTargeting").src = vizuryLink;
-  </script>
-
-  <c:if test="${actionBean.payment != null}">
+<c:if test="${actionBean.payment != null}">
   <%
     if (AnalyticsConstants.analytics) {
   %>
@@ -244,19 +101,158 @@
 
   </script>
 
-  <%--Ohana conversion tracking script--%>
-  <script SRC='http://bsrv.adohana.com/ohana/conversion.js?id=102&r=${hk:decimal2(actionBean.pricingDto.grandTotal)}' type="text/javascript"></script>
 
   <%
     }
   %>
-
-
   <!-- Google Code for Payment Success Conversion Page -->
   <s:layout-render name="/layouts/embed/_adwordsConversionCode.jsp" conversion_value="${hk:decimal2(actionBean.pricingDto.grandTotal)}" order_id="${actionBean.payment.gatewayOrderId}"/>
 
 </c:if>
 
+
+    <c:choose>
+        <c:when test="${actionBean.payment != null}">
+            <div class="right" style="float: right;">
+                <s:link beanclass="com.hk.web.action.core.referral.ReferralProgramAction">
+                    <img src="<hk:vhostImage/>/images/banners/refer_earn.jpg">
+                </s:link>
+            </div>
+
+
+            <h2 class="green">Your payment was successful.</h2>
+
+            <p>
+                Your order ID is <strong>${actionBean.payment.order.gatewayOrderId}</strong>.</p>
+
+            <shiro:hasRole name="<%=RoleConstants.HK_UNVERIFIED%>">
+                <div class='promos'>
+                    <div class='prom yellow help' style="width: 95%; padding:5px;">
+                        <p class="lrg"><strong>You have not activated your HealthKart account.</strong><br/>
+                            To activate your account, please click on the activation link sent in your email. By activating your
+                            account,
+                            we get to know that you have a valid email id and we can send special offers on your email.</p>
+
+                        <p><strong>If you haven't received the mail,
+                            <s:link beanclass="com.hk.web.action.core.user.ResendAccountActivationLinkAction" event="pre" class="resendActivationEmailLink">click here to resend it.</s:link>
+                        </strong>
+                            <br/><br/>
+                            <span class="emailSendMessage alert" style="display: none; font-weight:bold;"></span>
+                        </p>
+
+                        <p style="display:none;" class="emailNotReceived">
+                            If you do not receive this email, please check your spam/bulk folder. Write to us at info@healthkart.com if
+                            you face problems.
+                        </p>
+                    </div>
+                </div>
+                <script type="text/javascript">
+
+                    <%-- Re-Send Activation Link --%>
+                    $('.resendActivationEmailLink').click(function() {
+
+                        var clickedLink = $(this);
+                        var clickedP = clickedLink.parents('p');
+                        clickedP.find('.emailSendMessage').html($('#ajaxLoader').html()).show();
+                        $.getJSON(clickedLink.attr('href'), function(res) {
+                            if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+                                clickedP.find('.emailSendMessage').html(res.data.message).show();
+                                $('.emailNotReceived').show();
+                            }
+                        });
+                        return false;
+                    });
+
+                </script>
+            </shiro:hasRole>
+
+
+            <%--<c:if test="${actionBean.payment.paymentMode.id == paymentModeId_DefaultGateway}">
+              <p> With this order you have earned reward points worth
+                <span class="orange">
+                   <strong>
+                     <fmt:formatNumber value="${actionBean.payment.amount * cashBackPercentage}" type="currency" currencySymbol="Rs. "/>
+                   </strong>
+                  </span>
+              </p>
+            </c:if>--%>
+            <br/>
+
+            <h2>Shipping & Delivery</h2>
+
+            <p>Your order will be dispatched within 1-3 business days. Additional time will be taken by the courier company.</p>
+
+            <h2>Customer Support</h2>
+
+            <p><s:link beanclass="com.hk.web.action.pages.ContactAction">Write to us</s:link> with your Order ID if you have any questions or call us on 0124-4551616</p>
+
+            <c:if test="${actionBean.payment.order.offerInstance != null && actionBean.payment.order.offerInstance.coupon != null && hk:isNotBlank(actionBean.payment.order.offerInstance.coupon.complimentaryCoupon)}">
+                <div style="background-color: lightgoldenrodyellow;">
+                    <h2>You have won a Complementary Coupon!</h2>
+                    <p>
+                            ${actionBean.payment.order.offerInstance.offer.complimentaryCouponDescription}<br/>
+                        Your Complementary Coupon Code : <strong>${actionBean.payment.order.offerInstance.coupon.complimentaryCoupon}</strong>
+                    </p>
+                    <p class="gry sml">
+                        You can also find this coupon code in your invoice for later use.
+                    </p>
+                </div>
+            </c:if>
+
+            <c:if test="${actionBean.pricingDto.totalCashback > 0.0}">
+                <div style="padding: 10px; border: 1px solid gray; background-color: lightgoldenrodyellow;">
+                    <h2>Cashback Pending <strong>(Rs. <fmt:formatNumber pattern="<%=FormatUtils.currencyFormatPattern%>" value="${actionBean.pricingDto.totalCashback}"/>)</strong></h2>
+                    <p>
+                        Your cashback will be automatically credited into your HealthKart account depending on the payment mode :<br/>
+                        - in case of online payment through credit card, debit card or internet banking, the cashback is credited to your account already.<br/>
+                        - in case of cash on delivery (COD) payment mode, the cashback is credited upon delivery of the order.<br/>
+                    </p>
+                </div>
+            </c:if>
+
+            <div class="step2 success_order_summary" style="padding: 5px; float: left; margin-right: 5px;">
+                <h2 style="margin: 10px;">Order Summary</h2>
+
+                <s:layout-render name="/layouts/embed/orderSummaryTableDetailed.jsp" pricingDto="${actionBean.pricingDto}"
+                                 orderDate="${actionBean.payment.paymentDate}"/>
+                <div class="floatfix"></div>
+            </div>
+
+            <div style="margin-top: 10px; float: right; margin-right: 5px;">
+                <h2>Shipping address${actionBean.pricingDto.shippingLineCount > 1 ? 'es' : ''}</h2>
+
+                <p>
+                    <c:set var="address" value="${actionBean.payment.order.address}"/>
+                    <strong>${address.name}</strong> <br/>
+                        ${address.line1},
+                    <c:if test="${not empty address.line2}">
+                        ${address.line2},
+                    </c:if>
+                        ${address.city} - ${address.pin}<br/>
+                        ${address.state}, <span class="upc">INDIA</span><br/>
+                    <span class="sml lgry upc">Phone </span> ${address.phone}<br/>
+                </p>
+            </div>
+
+
+        </c:when>
+        <c:otherwise>
+            Invalid request!
+        </c:otherwise>
+    </c:choose>
+
+</s:layout-component>
+
+<s:layout-component name="analytics">
+    <iframe src="" id="vizuryTargeting" scrolling="no" width="1" height="1" marginheight="0" marginwidth="0" frameborder="0"></iframe>
+    <script type="text/javascript">
+        var vizuryLink = "https://ssl.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e500&orderid=${actionBean.gatewayOrderId}&orderprice=${actionBean.payment.amount}";
+        <c:forEach items="${actionBean.payment.order.cartLineItems}" var="lineItem" varStatus="liCtr">
+        vizuryLink += "&pid${liCtr.count}=${lineItem.productVariant.product.id}&catid${liCtr.count}=${lineItem.productVariant.product.primaryCategory.name}&quantity${liCtr.count}=${lineItem.qty}";
+        </c:forEach>
+        vizuryLink += "&currency=INR&section=1&level=1";
+        document.getElementById("vizuryTargeting").src = vizuryLink;
+    </script>
 </s:layout-component>
 
 </s:layout-render>

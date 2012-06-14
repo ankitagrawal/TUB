@@ -544,7 +544,7 @@
     </description>
     <name>getTopDealVariant</name>
     <function-class>com.hk.taglibs.Functions</function-class>
-    <function-signature>mhc.domain.ProductVariant getTopDealVariant(java.lang.Object)</function-signature>
+    <function-signature>com.hk.domain.catalog.product.ProductVariant getTopDealVariant(java.lang.Object)</function-signature>
     <example>
       ${hk:getTopDealVariant(${object})}
     </example>
@@ -676,7 +676,7 @@
     </description>
     <name>getCombo</name>
     <function-class>com.hk.taglibs.Functions</function-class>
-    <function-signature>mhc.domain.Combo getCombo(java.lang.Object)</function-signature>
+    <function-signature>com.hk.domain.catalog.product.combo.Combo getCombo(java.lang.Object))</function-signature>
     <example>
       ${hk:getCombo(${object})}
     </example>
@@ -714,5 +714,18 @@
       ${hk:getSurchargeValue(${str1}, ${str2})}
     </example>
   </function>
+  <function>
+    <description>
+      returns stock check of combo
+    </description>
+    <name>isComboInStock</name>
+    <function-class>com.hk.taglibs.Functions</function-class>
+    <function-signature>boolean isComboInStock(java.lang.Object)</function-signature>
+    <example>
+      ${hk:isComboInStock(${object})}
+    </example>
+  </function>
+
+
 
 </taglib>

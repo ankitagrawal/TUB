@@ -47,6 +47,7 @@
 		</copy>
 		<copy todir="${project.dist.dir}/WEB-INF/classes">
 			<fileset file="${project.web.dir}/resources/${project.env}/WEB-INF/StripesResources.properties" />
+			<fileset file="${project.web.dir}/resources/${project.env}/WEB-INF/healthkartTagLib.tld" />
 		</copy>
 		<!-- <copy todir="${project.dist.dir}/WEB-INF/classes/spring">
 			<fileset dir="${project.web.dir}/resources/spring" />
