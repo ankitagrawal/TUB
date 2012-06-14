@@ -17,7 +17,7 @@
     originalUrlHeader = request.getRequestURI();
   }
 %>
- 
+
 <s:layout-definition>
   <c:set var="attachRedirectParam" value="${attachRedirectParam}"/>
   <%
@@ -25,54 +25,6 @@
 //    System.out.println("aattachRedirectParam="+attachRedirectParamStr);
     boolean attachRedirectParam = attachRedirectParamStr == null ? true : Boolean.getBoolean(attachRedirectParamStr);
   %>
-
-    <%
-    if (AnalyticsConstants.analytics) {
-        if(session.getAttribute("signUpDate")!=null && session.getAttribute("signUpDate")!=""){
-            String signUpDate=session.getAttribute("signUpDate").toString();
-            session.removeAttribute("signUpDate");
-%>
-    <script type="text/javascript">
-    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-  </script>
-  <script type="text/javascript">
-    var pageTracker = _gat._getTracker("<%=AnalyticsConstants.gaCode%>");
-       pageTracker._setCustomVar(
-      3,                   // This custom var is set to slot #2.  first_order_date
-      "signUpDate",     // The name acts as a kind of category for the user activity.  Required parameter.
-      "<%=signUpDate%>",               // This value of the custom variable.  Required parameter.
-      1                   // Sets the scope to visitor-level. Optional parameter.
-    );
-    //track signup date in event
-    pageTracker._trackEvent('SignUp','signupDate','<%=signUpDate%>');
-   </script>
-
-<%
-        }
-    if(session.getAttribute("userId")!=null && session.getAttribute("userId")!="" ){
-          String userId=session.getAttribute("userId").toString();
-          session.removeAttribute("userId");
- %>
- <script type="text/javascript">
-    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-  </script>
-  <script type="text/javascript">
-    var pageTracker = _gat._getTracker("<%=AnalyticsConstants.gaCode%>");
-       pageTracker._setCustomVar(
-      4,                   // This custom var is set to slot #2.  first_order_date
-      "userId",     // The name acts as a kind of category for the user activity.  Required parameter.
-      "<%=userId%>",               // This value of the custom variable.  Required parameter.
-      1                   // Sets the scope to visitor-level. Optional parameter.
-    );
-    pageTracker._trackEvent('Login','userId','<%=userId%>');
-   </script>
-
-<%
-        }
-    }
-%>
   <div class='topBar'>
     <div class='topBarContent'>
       <div class='logoBox'>
@@ -83,6 +35,7 @@
       <div style='float: left; margin-left: 180px;'
            title='Call us on our customer care number for help regarding anything'>
         <span style="font-size: .8em;">Customer Care: 0124-4551616 <span style="color: gray;">(10am - 9pm, 7 days a week)</span></span>
+
         <div style="cursor:default; margin-top: 2px; width: 313px;">
           <s:form beanclass="com.hk.web.action.core.search.SearchAction" method="get" renderFieldsPresent="false"
                   renderSourcePage="false" autocomplete="off" style="position: relative;">
@@ -92,9 +45,9 @@
             <s:image name="search" src="/images/icons/search2.png" style="position: absolute; right: 3px; top: 1px;"/>
           </s:form>
         </div>
-        <%--<div class='small'>--%>
-        <%--(Monday to Saturday 10am - 8pm)--%>
-        <%--</div>--%>
+          <%--<div class='small'>--%>
+          <%--(Monday to Saturday 10am - 8pm)--%>
+          <%--</div>--%>
       </div>
       <div class="message">
         <div class="arrow"></div>
@@ -169,7 +122,8 @@
                 <%
                   }
                 %>
-                <s:link beanclass="com.hk.web.action.core.auth.LogoutAction" class="toplinksSecondary" rel="noFollow">Logout</s:link>
+                <s:link beanclass="com.hk.web.action.core.auth.LogoutAction" class="toplinksSecondary"
+                        rel="noFollow">Logout</s:link>
               </shiro:lacksRole>
             </shiro:user>
           </div>
@@ -182,7 +136,7 @@
                 <c:when test="${cartAction.itemsInCart > 1}">
                   <img class='icon' src='${pageContext.request.contextPath}/images/icons/cart.png'/>
                                     <span class='num' id="productsInCart">
-                                      ${cartAction.itemsInCart}
+                                        ${cartAction.itemsInCart}
                                     </span>
                   items in
                   <br/>
@@ -215,7 +169,7 @@
   <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.itvCommonPlugins.js"></script>
   <script type="text/javascript">
     $(document).ready(function() {
-       $("#searchbox").autocomplete({url:'${pageContext.request.contextPath}/autocomplete-search/'});
+      $("#searchbox").autocomplete({url:'${pageContext.request.contextPath}/autocomplete-search/'});
     });
   </script>
 </s:layout-definition>

@@ -129,7 +129,7 @@
     amount=Math.round(amount);            //event value takes only integer input in ga
     pageTracker._trackEvent('purchase','paymentType','${actionBean.paymentMode.name}',amount);   
      
-                                                                              `
+
   </script>
 
 

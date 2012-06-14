@@ -35,51 +35,51 @@ import java.util.Calendar;
 @Component
 public class SignupAction extends BaseAction {
 
-    @Validate(required = true)
-    private String      email;
+  @Validate(required = true)
+  private String      email;
 
-    @Validate(required = true)
-    private String      name;
+  @Validate(required = true)
+  private String      name;
 
-    @Validate(required = true)
-    private String      password;
+  @Validate(required = true)
+  private String      password;
 
-    @Validate(required = true)
-    private String      passwordConfirm;
+  @Validate(required = true)
+  private String      passwordConfirm;
 
-    private boolean     agreeToTerms;
-    private String      redirectUrl;
-    private String      source;
+  private boolean     agreeToTerms;
+  private String      redirectUrl;
+  private String      source;
 
-    @Session(key = HealthkartConstants.Session.signUpDate)
-    private String signUpDate;
+  @Session(key = HealthkartConstants.Session.signupDate)
+  private String signupDate;
 
-    @Autowired
-    private UserManager userManager;
-    @Autowired
-    private LinkManager linkManager;
-    @Autowired
-    private UserService userService;
+  @Autowired
+  private UserManager userManager;
+  @Autowired
+  private LinkManager linkManager;
+  @Autowired
+  private UserService userService;
 
-    @DefaultHandler
-    @DontValidate
-    public Resolution pre() {
-        return new ForwardResolution("/pages/signup.jsp");
+  @DefaultHandler
+  @DontValidate
+  public Resolution pre() {
+    return new ForwardResolution("/pages/signup.jsp");
+  }
+
+  @ValidationMethod()
+  public void isValidEmail() {
+    if (!BaseUtils.isValidEmail(email)) {
+      getContext().getValidationErrors().add("invalidEmail", new LocalizableError("/Signup.action.InvalidEmail"));
     }
+  }
 
-    @ValidationMethod()
-    public void isValidEmail() {
-        if (!BaseUtils.isValidEmail(email)) {
-            getContext().getValidationErrors().add("invalidEmail", new LocalizableError("/Signup.action.InvalidEmail"));
-        }
+  @ValidationMethod
+  public void conformPassword() {
+    if (!password.equals(passwordConfirm)) {
+      getContext().getValidationErrors().add("passwordConfirm", new LocalizableError("/Signup.action.PasswordDontMatch"));
     }
-
-    @ValidationMethod
-    public void conformPassword() {
-        if (!password.equals(passwordConfirm)) {
-            getContext().getValidationErrors().add("passwordConfirm", new LocalizableError("/Signup.action.PasswordDontMatch"));
-        }
-    }
+  }
 
 /*    @ValidationMethod
     public void signupValidation() {
@@ -88,100 +88,96 @@ public class SignupAction extends BaseAction {
         }
     }*/
 
-    public Resolution signup() {
-        User referredBy = null;
-        Cookie referredByCookie = BaseUtils.getCookie(getContext().getRequest(), HealthkartConstants.Cookie.referred_by);
-        if (referredByCookie != null) {
-            referredBy = getUserService().findByUserHash(CryptoUtil.decrypt(referredByCookie.getValue()));
-        }
-        try {
-            userManager.signup(email, name, password, referredBy);
-        } catch (HealthkartSignupException e) {
-            addValidationError("e1", new LocalizableError("/Signup.action.email.id.already.exists"));
-            return new ForwardResolution(getContext().getSourcePage());
-        }
-
-        setSignUpDateForGA();
-
-        if (!StringUtils.isBlank(redirectUrl)) {
-            return new RedirectResolution(redirectUrl, false);
-        }
-
-        if (!StringUtils.isBlank(source) && source.equals(LoginAction.SOURCE_CHECKOUT)) {
-            return new RedirectResolution(SelectAddressAction.class);
-        }
-
-        // return new RedirectResolution(WelcomeAction.class);
-        return new RedirectResolution(HomeAction.class);
+  public Resolution signup() {
+    User referredBy = null;
+    Cookie referredByCookie = BaseUtils.getCookie(getContext().getRequest(), HealthkartConstants.Cookie.referred_by);
+    if (referredByCookie != null) {
+      referredBy = getUserService().findByUserHash(CryptoUtil.decrypt(referredByCookie.getValue()));
+    }
+    try {
+      userManager.signup(email, name, password, referredBy);
+    } catch (HealthkartSignupException e) {
+      addValidationError("e1", new LocalizableError("/Signup.action.email.id.already.exists"));
+      return new ForwardResolution(getContext().getSourcePage());
     }
 
-    public void setSignUpDateForGA(){
-       Date currentDate= Calendar.getInstance().getTime();
-       signUpDate= GAUtil.formatDate(currentDate);
+    Date currentDate= Calendar.getInstance().getTime();
+    signupDate= GAUtil.formatDate(currentDate);
+
+    if (!StringUtils.isBlank(redirectUrl)) {
+      return new RedirectResolution(redirectUrl, false);
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    if (!StringUtils.isBlank(source) && source.equals(LoginAction.SOURCE_CHECKOUT)) {
+      return new RedirectResolution(SelectAddressAction.class);
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    // return new RedirectResolution(WelcomeAction.class);
+    return new RedirectResolution(HomeAction.class);
+  }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-    public void setPasswordConfirm(String passwordConfirm) {
-        this.passwordConfirm = passwordConfirm;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public String getPassword() {
-        return password;
-    }
+  public void setPassword(String password) {
+    this.password = password;
+  }
 
-    public void setAgreeToTerms(boolean agreeToTerms) {
-        this.agreeToTerms = agreeToTerms;
-    }
+  public void setPasswordConfirm(String passwordConfirm) {
+    this.passwordConfirm = passwordConfirm;
+  }
 
-    public String getRedirectUrl() {
-        return redirectUrl;
-    }
+  public String getPassword() {
+    return password;
+  }
 
-    public void setRedirectUrl(String redirectUrl) {
-        this.redirectUrl = redirectUrl;
-    }
+  public void setAgreeToTerms(boolean agreeToTerms) {
+    this.agreeToTerms = agreeToTerms;
+  }
 
-    public String getSource() {
-        return source;
-    }
+  public String getRedirectUrl() {
+    return redirectUrl;
+  }
 
-    public void setSource(String source) {
-        this.source = source;
-    }
+  public void setRedirectUrl(String redirectUrl) {
+    this.redirectUrl = redirectUrl;
+  }
 
-    public UserManager getUserManager() {
-        return userManager;
-    }
+  public String getSource() {
+    return source;
+  }
 
-    public void setUserManager(UserManager userManager) {
-        this.userManager = userManager;
-    }
+  public void setSource(String source) {
+    this.source = source;
+  }
 
-    public LinkManager getLinkManager() {
-        return linkManager;
-    }
+  public UserManager getUserManager() {
+    return userManager;
+  }
 
-    public void setLinkManager(LinkManager linkManager) {
-        this.linkManager = linkManager;
-    }
+  public void setUserManager(UserManager userManager) {
+    this.userManager = userManager;
+  }
 
-    public UserService getUserService() {
-        return userService;
-    }
+  public LinkManager getLinkManager() {
+    return linkManager;
+  }
 
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
+  public void setLinkManager(LinkManager linkManager) {
+    this.linkManager = linkManager;
+  }
+
+  public UserService getUserService() {
+    return userService;
+  }
+
+  public void setUserService(UserService userService) {
+    this.userService = userService;
+  }
 
 }

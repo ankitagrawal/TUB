@@ -84,7 +84,13 @@ public class PaymentSuccessAction extends BaseAction {
             //for google analytics
             paymentMode= EnumPaymentMode.getPaymentModeFromId(payment.getPaymentMode().getId());
             purchaseDate = GAUtil.formatDate(order.getCreateDate());
-            setCouponCodeForGA(order);
+
+            OfferInstance offerInstance=order.getOfferInstance();
+            if(offerInstance!=null){
+                Coupon coupon = offerInstance.getCoupon();
+                couponCode=coupon.getCode()+"@"+offerInstance.getId();
+                couponAmount=pricingDto.getTotalPromoDiscount().intValue();
+            }
 
             Set<CartLineItem> productCartLineItems = new CartLineItemFilter(payment.getOrder().getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
 
@@ -131,16 +137,6 @@ public class PaymentSuccessAction extends BaseAction {
         }
         return new ForwardResolution("/pages/payment/paymentSuccess.jsp");
     }
-
-    private void setCouponCodeForGA(Order order){
-        OfferInstance offerInstance=order.getOfferInstance();
-        if(offerInstance!=null){
-            Coupon coupon = offerInstance.getCoupon();
-            couponCode=coupon.getCode()+"@"+offerInstance.getId();
-            couponAmount=pricingDto.getTotalPromoDiscount().intValue();
-        }
-    }
-
 
 
     public String getGatewayOrderId() {
