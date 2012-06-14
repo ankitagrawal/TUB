@@ -160,19 +160,27 @@
 		<copy todir="${project.dist.dir}/WEB-INF/lib" file="${project.report.dir}/dist/hk-report.jar" />
 	</target>
 
-	<!--<target name="collect-web">
-		<copy todir="${project.dist.dir}">
-			<fileset dir="${project.web.dir}/dist" />
-		</copy>
-	</target>-->
-
+  <target name="collect-web">
+    <copy todir="${project.dist.dir}">
+      <fileset dir="${project.web.dir}/${project.view.dir}">
+        <include name="**/**"/>
+      </fileset>
+    </copy>
+    <copy todir="${project.dist.dir}/WEB-INF/classes">
+      <fileset dir="${project.web.dir}/${package.target.dir}" excludes="test/**/**"/>
+    </copy>
+    <copy todir="${project.dist.dir}/WEB-INF/">
+      <fileset dir="${project.web.dir}/${project.resources.dir}/${project.env}/WEB-INF" excludes="test/**/**"/>
+    </copy>
+  </target>
+                                       
   <target name="web">
 		<copy todir="${project.dist.dir}">
 			<fileset dir="${project.web.dir}/${project.view.dir}" />
 		</copy>
 	</target>
 
-	<target name="build" depends="build-dependencies,collect-jar,collect-resources">
+	<target name="build" depends="build-dependencies,collect-web,collect-jar,collect-resources">
 		<!--<war destfile="${dist.root}/${app.name}.war" webxml="${dist.war.root}/WEB-INF/web.xml">
 			<fileset dir="${dist.war.root}" />
 		</war>-->
@@ -196,6 +204,10 @@
 		<ant dir="${project.report.dir}" target="build" inheritall="false">
 			<property name="build.env" value="${build.env}" />
 		</ant>
+
+    <ant dir="${project.web.dir}" target="build" inheritall="false">
+			<property name="build.env" value="${build.env}" />
+		</ant>
 	</target>
 
 
@@ -203,6 +215,9 @@
 	<target name="prepare">
 		<mkdir dir="${package.target.dir}" />
 		<mkdir dir="${project.dist.dir}" />
+    <mkdir dir="${project.dist.dir}/WEB-INF"/>
+    <mkdir dir="${project.dist.dir}/WEB-INF/classes"/>
+    <mkdir dir="${project.dist.dir}/WEB-INF/classes/spring"/>
 		<ant dir="${project.common.dir}" target="prepare" inheritall="false" />
 		<ant dir="${project.core.dir}" target="prepare" inheritall="false" />
 		<ant dir="${project.admin.core.dir}" target="prepare" inheritall="false" />
