@@ -25,7 +25,7 @@
                     </td>
                 </s:form>
             </tr>
-            <c:if test="${scsaBean.StateCourierServiceList != null}">
+            <c:if test="${scsaBean.stateCourierServiceList != null}">
                 <table>
                     <tr> <th>Selected State</th> </tr>
                       <tr>  ${scsaBean.state}   </tr>

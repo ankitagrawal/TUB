@@ -21,7 +21,7 @@ public class StateCourierServiceAction extends BaseAction {
   StateCourierServiceDao stateCourierServiceDao;
 
 
-  private List<StateCourierService> stateCourierServiceList = new ArrayList<StateCourierService>();
+  private List<StateCourierService> stateCourierServiceList = null;
   private String state;
 
   private List<String> stateList = new ArrayList<String>();
@@ -36,9 +36,9 @@ public class StateCourierServiceAction extends BaseAction {
 
 
   public Resolution search() {
-    List<StateCourierService> StateCourierServiceList = stateCourierServiceDao.getAllStateCourierServiceByState(state);
-    if (StateCourierServiceList.size() > 0) {
-      setStateCourierServiceList(StateCourierServiceList);
+ stateCourierServiceList = stateCourierServiceDao.getAllStateCourierServiceByState(state);
+    if (stateCourierServiceList != null && stateCourierServiceList.size() > 0) {
+      setStateCourierServiceList(stateCourierServiceList);
     }
     return new RedirectResolution(StateCourierServiceAction.class);
   }

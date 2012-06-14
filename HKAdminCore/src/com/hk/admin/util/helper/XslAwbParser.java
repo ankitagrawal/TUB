@@ -53,7 +53,7 @@ public class XslAwbParser {
      HSSFWorkbook workbook = new HSSFWorkbook(awbInFileSys);
 
      // Assuming there is only one sheet, the first one only will be picked
-     HSSFSheet awbSheet = workbook.getSheet("AWB");
+     HSSFSheet awbSheet = workbook.getSheet("Sheet1");
      Iterator<Row> objRowIt = awbSheet.rowIterator();
      Map<Integer, String> headerMap;
      Map<Integer, String> rowMap;
@@ -100,7 +100,7 @@ public class XslAwbParser {
          Warehouse warehoused=warehouseDao.get(Warehouse.class,XslUtil.getLong(warehouse));
          awb.setWarehouse(warehoused);
          if (cod.isEmpty()) {
-           throw new ExcelBlankFieldException("Please enter mode of payment");
+           throw new ExcelBlankFieldException("COD cannot be null " + "    ", rowCount);
          }
          if (XslUtil.getLong(cod).equals(0l)) {
            awb.setCod(true);
