@@ -7511,12 +7511,12 @@
          </createIndex>
      </changeSet>
      <changeSet author="Seema (generated)" id="1338816774783-10">
-         <addForeignKeyConstraint baseColumnNames="city" baseTableName="city_courier_tat" baseTableSchemaName="healthkart_workbench" constraintName="city_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="city" referencedTableName="pincode" referencedTableSchemaName="healthkart_workbench" referencesUniqueColumn="false"/>
+         <addForeignKeyConstraint baseColumnNames="city" baseTableName="city_courier_tat"  constraintName="city_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="city" referencedTableName="pincode"  referencesUniqueColumn="false"/>
      </changeSet>
      <changeSet author="Seema (generated)" id="1338816774783-11">
-         <addForeignKeyConstraint baseColumnNames="courier_id" baseTableName="city_courier_tat" baseTableSchemaName="healthkart_workbench" constraintName="fk_city_courier_tat_courier1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="courier" referencedTableSchemaName="healthkart_workbench" referencesUniqueColumn="false"/>
+         <addForeignKeyConstraint baseColumnNames="courier_id" baseTableName="city_courier_tat"  constraintName="fk_city_courier_tat_courier1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="courier"  referencesUniqueColumn="false"/>
      </changeSet>
      <changeSet author="Seema (generated)" id="1338816774783-12">
-         <addForeignKeyConstraint baseColumnNames="state" baseTableName="state_courier_service" baseTableSchemaName="healthkart_workbench" constraintName="fk_state_pincode" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="state" referencedTableName="pincode" referencedTableSchemaName="healthkart_workbench" referencesUniqueColumn="false"/>
+         <addForeignKeyConstraint baseColumnNames="state" baseTableName="state_courier_service" constraintName="fk_state_pincode" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="state" referencedTableName="pincode"  referencesUniqueColumn="false"/>
      </changeSet>
  </databaseChangeLog>

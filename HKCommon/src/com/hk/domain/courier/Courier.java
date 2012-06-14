@@ -25,20 +25,6 @@ public class Courier implements java.io.Serializable {
   private Set<CourierServiceInfo> courierServiceInfos = new HashSet<CourierServiceInfo>(0);
 
 
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "courier")
-  private Set<StateCourierService> stateCourierService = new HashSet<StateCourierService>(0);
-
-
-
-  public Set<StateCourierService> getStateCourierService() {
-    return stateCourierService;
-  }
-
-  public void setStateCourierService(Set<StateCourierService> stateCourierService) {
-    this.stateCourierService = stateCourierService;
-  }
-  
-
   public Long getId() {
     return this.id;
   }
