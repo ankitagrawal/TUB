@@ -55,7 +55,7 @@ public class RevitalLandingPageAction extends BaseAction {
     Order order = orderManager.getOrCreateOrder(user);
     try {
       if(productReferrerId != null){
-        productReferrer = baseDao.get(ProductReferrer.class, productReferrerId);
+        productReferrer = getBaseDao().get(ProductReferrer.class, productReferrerId);
       }
       if (productVariantList != null && productVariantList.size() > 0) {
         orderManager.createLineItems(productVariantList, order, null, null,productReferrer);
@@ -63,7 +63,7 @@ public class RevitalLandingPageAction extends BaseAction {
     } catch (Exception e) {
       //
     }
-    return new RedirectResolution(CartAction.class);
+    return new RedirectResolution(  CartAction.class);
   }
 
   public OrderManager getOrderManager() {

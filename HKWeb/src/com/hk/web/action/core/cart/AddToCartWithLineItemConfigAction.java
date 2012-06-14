@@ -110,7 +110,7 @@ public class AddToCartWithLineItemConfigAction extends BaseAction {
             }
             productVariant.setQty(new Long(1));
             if(productReferrerId != null){
-              productReferrer = baseDao.get(ProductReferrer.class, productReferrerId);
+              productReferrer = getBaseDao().get(ProductReferrer.class, productReferrerId);
             }
             isLineItemCreated = orderManager.createLineItems(productVariant, lineItemConfig, order, productReferrer);
             userProductHistoryDao.updateIsAddedToCart(productVariant.getProduct(), user, order);

@@ -77,7 +77,7 @@ public class AddToCartWithExtraOptionsAction extends BaseAction implements Valid
                 List<CartLineItemExtraOption> extraOptions = dto.getExtraOptions();
                 if (selected) {
                     if(productReferrerId != null){
-                      productReferrer = baseDao.get(ProductReferrer.class, productReferrerId);
+                      productReferrer = getBaseDao().get(ProductReferrer.class, productReferrerId);
                     }
                     getOrderManager().createLineItems(productVariant, extraOptions, order, productReferrer);
                     userProductHistoryDao.updateIsAddedToCart(productVariant.getProduct(), user, order);
