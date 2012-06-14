@@ -37,6 +37,7 @@ import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.order.EnumOrderStatus;
+import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.core.OrderStatus;
 import com.hk.domain.core.PaymentMode;
@@ -681,15 +682,21 @@ public class ReportAction extends BaseAction {
       xlsWriter.addHeader("PRODUCT NAME", "PRODUCT NAME");
       xlsWriter.addHeader("PRODUCT OPTIONS", "PRODUCT OPTIONS");
       xlsWriter.addHeader("OPENING STOCK", "OPENING STOCK");
+      xlsWriter.addHeader("STOCK LEFT", "STOCK LEFT");
       xlsWriter.addHeader("LINE ITEM CHECKOUT", "LINE ITEM CHECKOUT");
       xlsWriter.addHeader("RECONCILE CHECKOUT", "RECONCILE CHECKOUT");
       xlsWriter.addHeader("GRN CHECKIN", "GRN CHECKIN");
       xlsWriter.addHeader("RECONCILE CHECKIN", "RECONCILE CHECKIN");
       xlsWriter.addHeader("RTO CHECKIN", "RTO CHECKIN");
       xlsWriter.addHeader("MOVE BACK CHECKIN", "MOVE BACK CHECKIN");
-      xlsWriter.addHeader("STOCK LEFT", "STOCK LEFT");
       xlsWriter.addHeader("DAMAGED STOCK", "DAMAGED STOCK");
-
+      xlsWriter.addHeader("INVENTORY CHECKOUT RESHIPPING", "INVENTORY CHECKOUT RESHIPPING");
+      xlsWriter.addHeader("RV EXPIRED", "RV EXPIRED");
+      xlsWriter.addHeader("RV LOST/PILFERAGE", "RV LOST/PILFERAGE");
+      xlsWriter.addHeader("STOCK TRANSFER CHECKOUT", "STOCK TRANSFER CHECKOUT");
+      xlsWriter.addHeader("STOCK TRANSFER CHECKIN", "STOCK TRANSFER CHECKIN");
+      xlsWriter.addHeader("LOST DURING TRANSIT", "LOST DURING TRANSIT");
+//      EnumInvTxnType.TRANSIT_LOST
       productIdArray = productIdListCommaSeparated.split(",");
       for (String productId : productIdArray) {
         stockReportDto = reportProductVariantService.getStockDetailsByProductVariant(productId, warehouse, startDate, endDate);
@@ -698,14 +705,21 @@ public class ReportAction extends BaseAction {
           xlsWriter.addCell(xlsRow, stockReportDto.getProductName());
           xlsWriter.addCell(xlsRow, stockReportDto.getProductOption());
           xlsWriter.addCell(xlsRow, stockReportDto.getOpeningStock());
+          xlsWriter.addCell(xlsRow, stockReportDto.getStockLeft());
           xlsWriter.addCell(xlsRow, stockReportDto.getLineItemCheckout());
           xlsWriter.addCell(xlsRow, stockReportDto.getReconcileCheckout());
           xlsWriter.addCell(xlsRow, stockReportDto.getGrnCheckin());
           xlsWriter.addCell(xlsRow, stockReportDto.getReconcileCheckin());
           xlsWriter.addCell(xlsRow, stockReportDto.getRtoCheckin());
-          xlsWriter.addCell(xlsRow, stockReportDto.getMoveBackToActionQueueCheckin());
-          xlsWriter.addCell(xlsRow, stockReportDto.getStockLeft());
+          xlsWriter.addCell(xlsRow, stockReportDto.getCancelCheckin());
           xlsWriter.addCell(xlsRow, stockReportDto.getDamageCheckin());
+          xlsWriter.addCell(xlsRow, stockReportDto.getInventoryRepeatCheckout());
+          xlsWriter.addCell(xlsRow, stockReportDto.getRvExpired());
+          xlsWriter.addCell(xlsRow, stockReportDto.getRvLostPilferage());
+          xlsWriter.addCell(xlsRow, stockReportDto.getStockTransferCheckout());
+          xlsWriter.addCell(xlsRow, stockReportDto.getStockTransferCheckin());
+          xlsWriter.addCell(xlsRow, stockReportDto.getTransitLost());
+
           xlsWriter.writeData(xlsFile, "Stock_Report");
         }
         xlsRow++;
