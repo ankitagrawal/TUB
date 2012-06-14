@@ -27,6 +27,7 @@ import com.hk.domain.payment.Payment;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.manager.OrderManager;
 import com.hk.manager.ReferrerProgramManager;
+import com.hk.manager.UserManager;
 import com.hk.pact.dao.payment.PaymentDao;
 import com.hk.pact.dao.payment.PaymentStatusDao;
 import com.hk.pact.service.inventory.InventoryService;
@@ -52,6 +53,8 @@ public class PaymentManager {
 
     @Autowired
     private OrderManager           orderManager;
+    @Autowired
+    private UserManager userManager;
     @Autowired
     private OrderService           orderService;
     @Autowired
@@ -296,7 +299,12 @@ public class PaymentManager {
             // call (depends on whether COD is applicable)
             payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
             payment.setGatewayReferenceId(null);
-            payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING));
+            Long orderCount = getUserManager().getProcessedOrdersCount(payment.getOrder().getUser());
+            if (orderCount != null && orderCount >= 3) {
+              payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.ON_DELIVERY));
+            } else {
+              payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING));
+            }
             paymentDao.save(payment);
             order = getOrderManager().orderPaymentReceieved(payment);
 
@@ -455,4 +463,11 @@ public class PaymentManager {
         this.referrerProgramManager = referrerProgramManager;
     }
 
+  public UserManager getUserManager() {
+    return userManager;
+  }
+
+  public void setUserManager(UserManager userManager) {
+    this.userManager = userManager;
+  }
 }

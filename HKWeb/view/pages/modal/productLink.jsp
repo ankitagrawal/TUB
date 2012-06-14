@@ -8,18 +8,16 @@
 
 <s:layout-definition>
   <%
-    ProductDao productDao = (ProductDao)ServiceLocatorFactory.getService(ProductDao.class);
-    String productId = (String) pageContext.getAttribute("productId");
-    Product product = productDao.getProductById(productId);
-    pageContext.setAttribute("product", product);
+      Product product = (Product) pageContext.getAttribute("product");
+      pageContext.setAttribute("product", product);
 
-    AffiliateDao affiliateDao = (AffiliateDao)ServiceLocatorFactory.getService(AffiliateDao.class);
-    Affiliate affiliate = null;
-    Long affiliateId = (Long) pageContext.getAttribute("affiliateId");
-    if (affiliateId != null) {
-      affiliate = affiliateDao.getAffiliateById(affiliateId);
-    }
-    pageContext.setAttribute("affiliate", affiliate);
+      AffiliateDao affiliateDao = (AffiliateDao) ServiceLocatorFactory.getService(AffiliateDao.class);
+      Affiliate affiliate = null;
+      Long affiliateId = (Long) pageContext.getAttribute("affiliateId");
+      if (affiliateId != null) {
+          affiliate = affiliateDao.getAffiliateById(affiliateId);
+      }
+      pageContext.setAttribute("affiliate", affiliate);
   %>
 
   <div class="jqmWindow" style="width:700px" id="getProductLinkWindow">

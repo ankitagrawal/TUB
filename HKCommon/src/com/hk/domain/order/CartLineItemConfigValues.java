@@ -2,20 +2,11 @@ package com.hk.domain.order;
 // Generated Feb 7, 2012 4:39:32 PM by Hibernate Tools 3.2.4.CR1
 
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
+import com.hk.domain.catalog.product.VariantConfigOption;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
-import com.hk.domain.catalog.product.VariantConfigOption;
+import javax.persistence.*;
 
 
 @SuppressWarnings("serial")
@@ -42,6 +33,9 @@ public class CartLineItemConfigValues implements java.io.Serializable, Comparabl
 
 	@Column(name = "additional_price", nullable = false, precision = 10)
 	private Double additionalPrice;
+
+   @Column(name = "cost_price", nullable = false, precision = 10)
+	private Double costPrice;
 
 	public Long getId() {
 		return this.id;
@@ -82,6 +76,13 @@ public class CartLineItemConfigValues implements java.io.Serializable, Comparabl
 	public void setAdditionalPrice(Double additionalPrice) {
 		this.additionalPrice = additionalPrice;
 	}
+   public Double getCostPrice() {
+    return costPrice;
+  }
+
+  public void setCostPrice(Double costPrice) {
+    this.costPrice = costPrice;
+  }
 
 	@Override
 	public boolean equals(Object o) {

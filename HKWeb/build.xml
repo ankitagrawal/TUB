@@ -61,6 +61,7 @@
 					<include name="**/*.conf" />
 					<include name="**/*.properties" />
 					<include name="**/*.xml" />
+					<include name="**/?*.tld"/>
 					<exclude name="**/*.java" />
 				</patternset>
 			</fileset>
@@ -145,9 +146,6 @@
 
 		<copy todir="${project.dist.dir}/WEB-INF/classes">
 			<fileset dir="${package.target.dir}" excludes="test/**/**" />
-		</copy>
-    <copy todir="${project.dist.dir}/WEB-INF/">
-			<fileset dir="${project.web.dir}/WEB-INF" excludes="test/**/**" />
 		</copy>
 		<copy todir="${project.dist.dir}/WEB-INF/">
 			<fileset dir="${project.resources.dir}/${project.env}/WEB-INF" excludes="test/**/**" />

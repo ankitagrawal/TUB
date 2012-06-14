@@ -1,6 +1,7 @@
 <%@ page import="com.hk.pact.service.core.WarehouseService" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
+<%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Calculate Shipment Cost">
     <s:useActionBean beanclass="com.hk.web.action.admin.shipment.ShipmentCostCalculatorAction" var="calculator"/>
@@ -78,16 +79,26 @@
                         <s:label name="shippingOrderId" class="label">SO Gateway Order ID</s:label>
                         <s:text name="shippingOrderId" style="width:200px" class="text"/>
 
-<%--
+                        <li>
+                            <label>Start
+                                date</label><s:text class="date_input startDate" style="width:150px"
+                                                    formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="shippedStartDate"/>
+                        </li>
+                        <li>
+                            <label>End
+                                date</label><s:text class="date_input endDate" style="width:150px"
+                                                    formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="shippedEndDate"/>
+                        </li>
                         <div class="clear"></div>
-                        <s:label name="days" class="label">No. Of Days</s:label>
-                        <s:text name="days" style="width:200px" class="text"/>
---%>
+                        <s:label name="overrideHistoricalShipmentCost"
+                                 class="label">Override Historical Shipment Cost ?</s:label>
+                        <s:checkbox name="overrideHistoricalShipmentCost"/>
+                        <div class="clear"></div>
 
                         <div style="margin-top:15px;"></div>
                         <s:submit name="calculateCourierCostingForShippingOrder" value="Get Shipping Cost for an SO"/>
-                        <%--<s:submit name="calculateCourierCostingForShippingOrderByAntTaskMethod" value="Get Shipping Cost for an SO (Ant task)"/>--%>
                         <shiro:hasAnyRoles name="<%=RoleConstants.ADMIN%>">
+                            <s:submit name="saveHistoricalShipmentCost" value="Save Historical Shipping Cost"/>
                             <s:submit name="saveActualShippingCostForShippingOrder"
                                       value="Save Actual Shipping Cost for SO's"/>
                         </shiro:hasAnyRoles>
