@@ -10,6 +10,8 @@ public interface ReviewService {
 
     public Page getProductReviews(Product product, List<Long> reviewStatusList, int page, int perPage);
 
+    public Long getAllReviews(Product product, List<Long> reviewStatusList);
+
     public Double getProductStarRating(Product product);
     
     public ReviewStatus getReviewStatus(Long reviewStatusId);
