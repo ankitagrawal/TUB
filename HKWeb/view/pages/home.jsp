@@ -35,7 +35,7 @@
         <%--<a href="http://www.healthkart.com/nutrition/sports-nutrition?brand=Dymatize">--%>
         <%--<img class="banner01" src="<hk:vhostImage/>/images/banners/home/dymatize_sbanner.jpg" border="0" alt="Dymatize - free shaker"/>--%>
         <%--</a>--%>
-      <a href="http://www.healthkart.com/eye/eyeglasses">
+      <a href="${pageContext.request.contextPath}/eye/eyeglasses">
         <img class="banner01" src="<hk:vhostImage/>/images/banners/home/homepage-banner-crizal.jpg" border="0"
              alt="Prescription glasses with Crizal/Ziess lenses"/>
       </a>
