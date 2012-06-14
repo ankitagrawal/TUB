@@ -201,6 +201,11 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
         this.gatewayOrderId = gatewayOrderId;
     }
 
+    
+    public String getGatewayOrderId() {
+        return gatewayOrderId;
+    }
+
     public Courier getSuggestedCourier() {
         return suggestedCourier;
     }
