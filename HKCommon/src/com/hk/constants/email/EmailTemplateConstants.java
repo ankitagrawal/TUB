@@ -24,6 +24,7 @@ public class EmailTemplateConstants {
     public static final String createTicketEmail                   = "/createTicketEmail.ftl";
     public static final String editTicketEmail                     = "/editTicketEmail.ftl";
     public static final String orderPlacedCodEmail                 = "/orderPlacedCodEmail.ftl";
+    public static final String orderPlacedAuthorizedCodEmail       = "/orderPlacedAuthorizedCodEmail.ftl";
     public static final String orderPlacedOtherModeEmail           = "/orderPlacedOtherModeEmail.ftl";
     public static final String orderCancelEmailUser                = "/orderCancelEmailUserNew.ftl";
     public static final String orderCancelEmailUserOld             = "/orderCancelEmailUser.ftl";

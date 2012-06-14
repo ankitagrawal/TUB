@@ -21,7 +21,9 @@ import com.hk.domain.content.PrimaryCategoryHeading;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.catalog.product.combo.ComboProduct;
 import com.hk.pact.dao.catalog.product.ProductDao;
+import com.hk.pact.dao.review.ReviewDao;
 import com.hk.pact.service.catalog.ProductService;
+import com.hk.pact.service.review.ReviewService;
 import com.hk.web.filter.WebContext;
 import com.hk.impl.dao.content.PrimaryCategoryHeadingDaoImpl;
 import com.hk.util.ProductReferrerMapper;
@@ -36,6 +38,9 @@ public class ProductServiceImpl implements ProductService {
     private PrimaryCategoryHeadingDaoImpl primaryCategoryHeadingDaoImpl;
     @Autowired
     private LinkManager linkManager;
+
+    @Autowired
+    private ReviewService reviewService;
 
     public Product getProductById(String productId) {
         return getProductDAO().getProductById(productId);
@@ -144,6 +149,18 @@ public class ProductServiceImpl implements ProductService {
         return getProductDAO().save(product);
     }
 
+    public Page getProductReviews(Product product, List<Long> reviewStatusList, int page, int perPage){
+       return getReviewService().getProductReviews(product,reviewStatusList,page,perPage);
+    }
+
+  public Long getAllReviews(Product product, List<Long> reviewStatusList){
+       return getReviewService().getAllReviews(product, reviewStatusList);
+    }
+
+    public Double getAverageRating(Product product){
+       return getReviewService().getProductStarRating(product);
+    }
+
     public ProductDao getProductDAO() {
         return productDAO;
     }
@@ -151,7 +168,6 @@ public class ProductServiceImpl implements ProductService {
     public void setProductDAO(ProductDao productDAO) {
         this.productDAO = productDAO;
     }
-
 
     public List<Product> ProductsSortedByOrder(Long primaryCategoryHeadingId, String productReferrer){
       PrimaryCategoryHeading primaryCategoryHeading = primaryCategoryHeadingDaoImpl.get(PrimaryCategoryHeading.class, primaryCategoryHeadingId);
@@ -161,6 +177,14 @@ public class ProductServiceImpl implements ProductService {
       }
       return primaryCategoryHeading.getProducts();
     }
+
+  public ReviewService getReviewService() {
+    return reviewService;
+  }
+
+  public void setReviewService(ReviewService reviewService) {
+    this.reviewService = reviewService;
+  }
 
     public boolean isComboInStock(Combo combo) {
       for (ComboProduct comboProduct : combo.getComboProducts()) {

@@ -21,7 +21,7 @@ public class KarmaProfile{
   private Long id;
 
   @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id")
+  @JoinColumn(name = "user_id", unique = true, nullable = false)
   private User user;
 
   @Column(name = "karma_points", nullable = false)

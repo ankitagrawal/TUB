@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hk.constants.clm.EnumCLMMargin;
+import com.hk.constants.clm.CLMConstants;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.clm.KarmaProfile;
@@ -52,18 +53,17 @@ public class KarmaProfileServiceImpl implements KarmaProfileService {
             karmaProfile.setUser(user);
             karmaProfile.setKarmaPoints(getKarmaPoints(order));
         }
-        this.save(karmaProfile);
-        setKarmaInOrderForUser(order, user);
+        karmaProfile = this.save(karmaProfile);
         return karmaProfile;
     }
 
-    private void setKarmaInOrderForUser(Order order, User user) {
+   /* private void setKarmaInOrderForUser(Order order, User user) {
         KarmaProfile karmaProfile = this.findByUser(user);
         if (karmaProfile != null) {
             order.setScore(new Long(karmaProfile.getKarmaPoints()));
             getOrderService().save(order);
         }
-    }
+    }*/
 
     private int getKarmaPoints(Order order) {
         Double points = 0.0;
@@ -80,6 +80,7 @@ public class KarmaProfileServiceImpl implements KarmaProfileService {
                 String basketCategoryName = lineItem.getProductVariant().getProduct().getPrimaryCategory().getName();
 
                 EnumCLMMargin marginFactor = EnumCLMMargin.getMarginFromCategory(basketCategoryName);
+
 
                 if (marginFactor != null) {
                     points += ((lineItem.getHkPrice() - costPrice) * lineItem.getQty()) * marginFactor.getMargin();

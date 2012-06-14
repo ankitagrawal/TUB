@@ -1,9 +1,7 @@
 package com.hk.web.action.core.catalog.product;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
@@ -19,34 +17,39 @@ import org.stripesstuff.plugin.session.Session;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.HealthkartConstants;
+import com.hk.constants.review.EnumReviewStatus;
 import com.hk.constants.marketing.EnumProductReferrer;
 import com.hk.domain.MapIndia;
+import com.hk.domain.review.UserReview;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.catalog.Manufacturer;
+import com.akube.framework.dao.Page;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductImage;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.content.SeoData;
-import com.hk.domain.review.UserReview;
+
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.dto.AddressDistanceDto;
 import com.hk.dto.menu.MenuNode;
 import com.hk.helper.MenuHelper;
 import com.hk.pact.dao.affiliate.AffiliateDao;
-//import com.hk.pact.dao.catalog.product.ProductCountDao;
+import com.hk.pact.dao.catalog.product.ProductCountDao;
 import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.dao.location.LocalityMapDao;
 import com.hk.pact.dao.location.MapIndiaDao;
-import com.hk.pact.dao.BaseDao;
+
 import com.hk.pact.dao.user.UserProductHistoryDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.util.SeoManager;
 import com.hk.util.ProductReferrerMapper;
+
 import com.hk.web.action.core.search.SearchAction;
 import com.hk.web.filter.WebContext;
 import com.hk.manager.LinkManager;
+
 
 @UrlBinding("/product/{productSlug}/{productId}")
 @Component
@@ -67,9 +70,10 @@ public class ProductAction extends BaseAction {
   Combo combo;
   String feed;
   String affid;
-  Double starRating;
+  Double averageRating;
   List<UserReview> userReviews = new ArrayList<UserReview>();
   Long productReferrerId;
+  Long totalReviews = 0L;
 
   @Session(key = HealthkartConstants.Cookie.preferredZone)
   private String preferredZone;
@@ -90,10 +94,10 @@ public class ProductAction extends BaseAction {
   private MapIndiaDao mapIndiaDao;
   @Autowired
   private LocalityMapDao localityMapDao;
-  /*
-      @Autowired
-      private ProductCountDao          productCountDao;
-  */
+/*
+  @Autowired
+  private ProductCountDao productCountDao;
+*/
   @Autowired
   private UserProductHistoryDao userProductHistoryDao;
   @Autowired
@@ -102,6 +106,7 @@ public class ProductAction extends BaseAction {
   private ProductService productService;
   @Autowired
   private LinkManager linkManager;
+
 
   @DefaultHandler
   @DontValidate
@@ -126,7 +131,7 @@ public class ProductAction extends BaseAction {
     if (getPrincipal() != null) {
       user = getUserService().getUserById(getPrincipal().getId());
       if (user != null) {
-//                productCountDao.getOrCreateProductCount(product, user);
+
         userProductHistoryDao.addToUserProductHistory(product, user);
         affiliate = affiliateDao.getAffilateByUser(user);
       }
@@ -138,8 +143,10 @@ public class ProductAction extends BaseAction {
       product.setRelatedProducts(relatedProducts);
     }
     for (Product product : relatedProducts) {
-      product.setProductURL(linkManager.getProductURL(product, ProductReferrerMapper.getProductReferrerid(EnumProductReferrer.relatedProductsPage.getName())));    
+      product.setProductURL(linkManager.getProductURL(product, ProductReferrerMapper.getProductReferrerid(EnumProductReferrer.relatedProductsPage.getName())));
     }
+
+
     if (product.isProductHaveColorOptions()) {
       Integer outOfStockOrDeletedCtr = 0;
       for (ProductVariant productVariant : product.getProductVariants()) {
@@ -178,15 +185,18 @@ public class ProductAction extends BaseAction {
     }
 
 
+    //User Reviews
+    totalReviews = productService.getAllReviews(product, Arrays.asList(EnumReviewStatus.Published.getId()));
+    if (totalReviews != null && totalReviews > 0) {
+      averageRating = productService.getAverageRating(product);
+      Page userReviewPage = productService.getProductReviews(product, Arrays.asList(EnumReviewStatus.Published.getId()), 1, 5);
+      if (userReviewPage != null) {
+        userReviews = userReviewPage.getList();
+      }
+    }
     return new ForwardResolution("/pages/product.jsp");
   }
 
-  // User Reviews
-  /*
-  * starRating = productService.getStarRating(product); Page<UserReview> userReviewPage =
-  * productService.getProductReviews(product, Arrays.asList(EnumReviewStatus.Published.getId()), 1, 5); if
-  * (userReviewPage != null) { userReviews = userReviewPage.getList(); }
-  */
 
   public Resolution productBanner() {
     affiliate = affiliateDao.getAffiliateByCode(affid);
@@ -311,8 +321,13 @@ public class ProductAction extends BaseAction {
     this.affid = affid;
   }
 
-  public Double getStarRating() {
-    return starRating;
+  public Double getAverageRating() {
+
+    return averageRating;
+  }
+
+  public void setAverageRating(Double averageRating) {
+    this.averageRating = averageRating;
   }
 
   public List<UserReview> getUserReviews() {
@@ -342,4 +357,9 @@ public class ProductAction extends BaseAction {
   public void setProductReferrerId(Long productReferrerId) {
     this.productReferrerId = productReferrerId;
   }
+
+  public Long getTotalReviews() {
+    return totalReviews;
+  }
 }
+
