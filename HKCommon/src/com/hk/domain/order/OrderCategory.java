@@ -1,10 +1,19 @@
 package com.hk.domain.order;
 
-import com.hk.domain.catalog.category.Category;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
-import javax.persistence.*;
+import com.hk.domain.catalog.category.Category;
 
 @Entity
 @Table(name = "base_order_category")

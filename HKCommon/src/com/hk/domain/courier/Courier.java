@@ -24,7 +24,6 @@ public class Courier implements java.io.Serializable {
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "courier")
   private Set<CourierServiceInfo> courierServiceInfos = new HashSet<CourierServiceInfo>(0);
 
-
   public Long getId() {
     return this.id;
   }

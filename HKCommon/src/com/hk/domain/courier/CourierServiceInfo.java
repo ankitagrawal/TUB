@@ -15,7 +15,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Table(name = "courier_service_info")
 public class CourierServiceInfo implements java.io.Serializable {
 
-                        
+
   @Id
   @GeneratedValue(strategy = IDENTITY)
 

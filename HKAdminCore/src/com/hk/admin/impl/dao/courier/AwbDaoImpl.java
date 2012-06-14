@@ -16,20 +16,6 @@ import java.util.List;
 @Repository
 public class AwbDaoImpl extends BaseDaoImpl implements AwbDao {
 
-
-  public Awb getByAWBNumber(Courier courier, String awbNumber) {
-    String hqlQuery = " from Awb awb where awb.courier = :courier and awb.awbNumber = :awbNumber";
-    return (Awb) getSession().createQuery(hqlQuery)
-        .setEntity("courier", courier).setString("awbNumber", awbNumber).uniqueResult();
-  }
-//
-//    public List<Awb> getAvailableAwbForCourierByWarehouseAndCod(Courier courier, Warehouse warehouse,boolean cod) {
-//        String hqlQuery = " from Awb awb where awb.used = 0 and awb.courier = :courier and awb.warehouse = :warehouse and awb.cod = :cod order by id asc";
-//        return getSession().createQuery(hqlQuery)
-//                .setEntity("courier", courier).setEntity("warehouse", warehouse).setEntity("cod",cod).list();
-
-  //    }
-
   public List<Awb> getAvailableAwbForCourierByWarehouseAndCod(Courier courier, Warehouse warehouse, Boolean isCod) {
     DetachedCriteria detachedCriteria = DetachedCriteria.forClass(Awb.class);
     if (courier != null) {

@@ -78,17 +78,16 @@ public class XslAwbParser {
              return null;
 
            } else {
-             logger.error("courier id cannot be call");
+             logger.error("courier id cannot be null/empty");
              throw new ExcelBlankFieldException("courier ID  cannot be null" + "    ", rowCount);
            }
 
          }
          Courier courier = courierDao.getCourierById(XslUtil.getLong(courierId));
-         awb.setCourier(courier);
+         awb.setCourier(courier);                 //check for valid courier/warehouse
          if (StringUtils.isEmpty(awbNumber)) {
-           logger.error("awbNumber cannot be call");
+           logger.error("awbNumber cannot be null/empty");
            throw new ExcelBlankFieldException("awbNumber cannot be null " + "    ", rowCount);
-
          }
          awb.setAwbNumber(awbNumber);
          awb.setAwbBarCode(awbNumber);
@@ -116,9 +115,6 @@ public class XslAwbParser {
      } catch (ExcelBlankFieldException e) {
        throw new ExcelBlankFieldException(e.getMessage());
 
-     }
-
-     finally {
      }
      if (awbInputStream != null) {
        IOUtils.closeQuietly(awbInputStream);
