@@ -39,6 +39,7 @@ import com.hk.pact.dao.affiliate.AffiliateDao;
 import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.dao.location.LocalityMapDao;
 import com.hk.pact.dao.location.MapIndiaDao;
+import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.user.UserProductHistoryDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.util.SeoManager;
@@ -137,7 +138,7 @@ public class ProductAction extends BaseAction {
       product.setRelatedProducts(relatedProducts);
     }
     for (Product product : relatedProducts) {
-      product.setProductURL(linkManager.getProductURL(product, ProductReferrerMapper.getProductReferrerid(EnumProductReferrer.relatedProductsPage.getName())));
+      product.setProductURL(linkManager.getProductURL(product, ProductReferrerMapper.getProductReferrerid(EnumProductReferrer.relatedProductsPage.getName())));    
     }
     if (product.isProductHaveColorOptions()) {
       Integer outOfStockOrDeletedCtr = 0;
