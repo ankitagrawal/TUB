@@ -30,9 +30,9 @@
             <a href="${pageContext.request.contextPath}/product/equinox-irresistible-offer/CMB-HD005">
                 <img class="banner01" src="<hk:vhostImage/>/images/banners/home/equinox.jpg" border="0" alt="Equinox - free body fat monitor"/>
             </a>
-            <a href="http://www.healthkart.com/nutrition/sports-nutrition?brand=Dymatize">
-                <img class="banner01" src="<hk:vhostImage/>/images/banners/home/dymatize_sbanner.jpg" border="0" alt="Dymatize - free shaker"/>
-            </a>
+          <a href="${pageContext.request.contextPath}/nutrition/fitness-accessories/support-gear/hand-wrist">
+              <img class="banner01" src="<hk:vhostImage/>/images/banners/home/gloves_sbanner.jpg" border="0" alt="Training Gloves"/>
+          </a>
             <a href="${pageContext.request.contextPath}/brand/nutrition/vitamin+shoppe">
                 <img src="<hk:vhostImage/>/images/banners/home/vs_sbanner.jpg" border="0" alt="Introducing Vitamin Shoppe"/>
             </a>
