@@ -88,5 +88,7 @@ public interface MasterDataDao {
     public List<PurchaseFormType> getPurchaseInvoiceFormTypes();
 
     public List<ReviewStatus> getReviewStatusList();
+    
+    public List<String> getCourierListForDBUpdation();
 
 }
