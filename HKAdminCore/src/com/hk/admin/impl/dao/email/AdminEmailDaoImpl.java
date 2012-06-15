@@ -38,40 +38,26 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
   private RoleDao roleDao;
 
   public List<EmailRecepient> getAllMailingList(EmailCampaign emailCampaign, List<Role> roleList, int maxResult) {
-    /*String query = "select  er.*" +
-        "     from user u left join email_recepient er on (u.email = er.email and er.subscribed > 0) " +
-        "     left join emailer_history eh on (er.id = eh.email_recepient_id " +
-        "     and eh.email_campaign_id = %s ),  " +
-        "     user_has_role ur, email_campaign ec   " +
-        "     where u.id = ur.user_id  " +
-        "     and ur.role_name IN ('%s')  " +
-        "     and ec.id = %s  " +
-        "     and (er.last_email_date is null or (datediff(date(sysdate()), er.last_email_date) >= ec.min_day_gap)) Order By u.id  ";
-    query = String.format(query, emailCampaign.getId(), BaseUtils.getCommaSeparatedString(roles), emailCampaign.getId());
-
-    //Session session = getSession(true);
-    List<EmailRecepient> emailList = getSession().createSQLQuery(query).addEntity(EmailRecepient.class).setMaxResults(maxResult).list();*/
-    //session.flush();
-    //session.clear();
-    //session.close();
 
    String query = "select er from EmailRecepient er, User u join u.roles r " +
-        " where er.subscribed = true and er.email = u.email and coalesce((date(current_date()) - date(er.lastEmailDate)), 0) >= (select ec.minDayGap from EmailCampaign ec where ec = :emailCampaign)" +
+        " where er.subscribed = true and er.email = u.email " +
+       " and (er.lastEmailDate is null or (er.lastEmailDate is not null and (date(current_date()) - date(er.lastEmailDate) >= (select ec.minDayGap from EmailCampaign ec where ec = :emailCampaign))) )" +
         " and er not in (select eh.emailRecepient from EmailerHistory eh where eh.emailCampaign = :emailCampaign ) " +
         " and r in (:roleList)" ;
-    //Session session =  getSessionFactory().openSession();
+
     List<EmailRecepient> emailRecepients = ( List<EmailRecepient> )getSession().createQuery(query)
         .setParameter("emailCampaign", emailCampaign)
         .setParameter("emailCampaign", emailCampaign)
         .setParameterList("roleList", roleList)
         .setMaxResults(maxResult).list();
-   // session.close();
+   
     return emailRecepients;
   }
 
   public List<EmailRecepient> getUserMailingList(EmailCampaign emailCampaign, List<Long> userList, int maxResult) {
     String query = "select er from EmailRecepient er, User u " +
-        " where er.subscribed = true and er.email = u.email and coalesce((date(current_date()) - date(er.lastEmailDate)), 0) >= (select ec.minDayGap from EmailCampaign ec where ec = :emailCampaign)" +
+        " where er.subscribed = true and er.email = u.email " +
+        " and (er.lastEmailDate is null or (er.lastEmailDate is not null and (date(current_date()) - date(er.lastEmailDate) >= (select ec.minDayGap from EmailCampaign ec where ec = :emailCampaign))) )" +
         " and er not in (select eh.emailRecepient from EmailerHistory eh where eh.emailCampaign = :emailCampaign ) " +
         " and u.id in (:userList)" ;
 
@@ -82,29 +68,13 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
         .setMaxResults(maxResult).list();
 
     return emailRecepients;
-    /*String query = "select  er.*" +
-        "     from user u left join email_recepient er on (u.email = er.email and er.subscribed > 0) " +
-        "     left join emailer_history eh on (er.id = eh.email_recepient_id and eh.email_campaign_id = %s )," +
-        "     email_campaign ec   " +
-        "     where ec.id = %s  " +
-        "     and (er.last_email_date is null or (datediff(date(sysdate()), er.last_email_date) >= ec.min_day_gap))  " +
-        "     and u.id in ( '%s' ) " +
-        "     Order By u.id ";
-    query = String.format(query, emailCampaign.getId(), emailCampaign.getId(), BaseUtils.getCommaSeparatedString(userIds));
-
-    Session session = getSession(true);
-
-    List<EmailRecepient> userList = session.createSQLQuery(query).addEntity(EmailRecepient.class).setMaxResults(maxResult).list();
-    session.flush();
-    session.clear();
-    session.close();
-    return userList;*/
   }
 
   public List<EmailRecepient> getMailingListByEmailIds(EmailCampaign emailCampaign, List<String> emailList, int maxResult) {
 
     List<EmailRecepient> emailRecepients = getSession().createQuery("select er from EmailRecepient er " +
-        " where er.subscribed = true and coalesce((date(current_date()) - date(er.lastEmailDate)), 0) >= (select ec.minDayGap from EmailCampaign ec where ec = :emailCampaign)" +
+        " where er.subscribed = true " +
+        " and (er.lastEmailDate is null or (er.lastEmailDate is not null and (date(current_date()) - date(er.lastEmailDate) >= (select ec.minDayGap from EmailCampaign ec where ec = :emailCampaign))) )" +
         " and er not in (select eh.emailRecepient from EmailerHistory eh where eh.emailCampaign = :emailCampaign ) " +
         " and er.email in (:emailList)")
         .setParameterList("emailList", emailList)
@@ -135,7 +105,8 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
 
     String query = "select distinct er from LineItem li left join li.sku.productVariant.product.categories c"
         + " left join li.shippingOrder.baseOrder.user u left join u.roles r, EmailRecepient er " + "where er.email = u.email and c in (:categoryList) " + "and r in (:roleList)"
-        + " and er.subscribed = true and coalesce((date(current_date()) - date(er.lastEmailDate)), 0) >= (select ec.minDayGap from EmailCampaign ec where ec = :emailCampaign)"
+        + " and er.subscribed = true "
+        + " and (er.lastEmailDate is null or (er.lastEmailDate is not null and (date(current_date()) - date(er.lastEmailDate) >= (select ec.minDayGap from EmailCampaign ec where ec = :emailCampaign))) )"
         + " and er not in (select eh.emailRecepient from EmailerHistory eh where eh.emailCampaign = :emailCampaign )";
 
     List<EmailRecepient> userIdsByCategory = getSession().createQuery(query)
@@ -151,7 +122,8 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
 
     String query = "select count(distinct u.id) from LineItem li left join li.sku.productVariant.product.categories c"
         + " left join li.shippingOrder.baseOrder.user u left join u.roles r, EmailRecepient er " + "where er.email = u.email and c in (:categoryList) " + "and r in (:roleList)"
-        + " and er.subscribed = true and coalesce((date(current_date()) - date(er.lastEmailDate)), 0) >= (select ec.minDayGap from EmailCampaign ec where ec = :emailCampaign)"
+        + " and er.subscribed = true "
+        + " and (er.lastEmailDate is null or (er.lastEmailDate is not null and (date(current_date()) - date(er.lastEmailDate) >= (select ec.minDayGap from EmailCampaign ec where ec = :emailCampaign))) )"
         + " and er not in (select eh.emailRecepient from EmailerHistory eh where eh.emailCampaign = :emailCampaign )";
 
     Long userIdsByCategoryCount = (Long)getSession().createQuery(query)
@@ -190,9 +162,6 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
       transaction.commit();
     }catch(Exception ex){
       transaction.rollback();
-    }finally{
-
-
     }
   }
 
