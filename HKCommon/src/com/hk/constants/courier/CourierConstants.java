@@ -10,11 +10,11 @@ package com.hk.constants.courier;
 public class CourierConstants {
 
     //Constants for exception
-    public static final String MALFORMED_URL_EXCEPTION = "Malformed URL for Shipping Order Id :";
-    public static final String IO_EXCEPTION = "IOException encountered for Shipping Order Id :";
-    public static final String NULL_POINTER_EXCEPTION = "NullPointerExpection encountered for Shipping Order Id :";
-    public static final String EXCEPTION = "Exception encountered for Shipping Order Id :";
-    public static final String PARSE_EXCEPTION = "ParseException occurred for Shipping Order Id :";
+    public static final String MALFORMED_URL_EXCEPTION = "Malformed URL for Tracking Id :";
+    public static final String IO_EXCEPTION = "IOException encountered for Tracking Id :";
+    public static final String NULL_POINTER_EXCEPTION = "NullPointerExpection encountered for Tracking :";
+    public static final String EXCEPTION = "Exception encountered for Tracking Id :";
+    public static final String PARSE_EXCEPTION = "ParseException occurred for Tracking Id :";
 
     //Common constants
     public static final String DELIVERED="DELIVERED";

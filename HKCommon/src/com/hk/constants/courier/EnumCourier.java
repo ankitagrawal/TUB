@@ -110,5 +110,14 @@ public enum EnumCourier {
         blueDartCourierIds.add(EnumCourier.BlueDart_COD.getId());
         return blueDartCourierIds;
     }
+
+    public static List<Long> getDelhiveryCouriers() {
+        List<Long> delhiveryCourierIds = new ArrayList<Long>();
+        delhiveryCourierIds.add(EnumCourier.Delhivery.getId());
+        delhiveryCourierIds.add(EnumCourier.Delhivery_Ahmedabad.getId());
+        delhiveryCourierIds.add(EnumCourier.Delhivery_Bangalore.getId());
+        delhiveryCourierIds.add(EnumCourier.Delhivery_Chennai.getId());
+        return delhiveryCourierIds;
+    }
 }
 

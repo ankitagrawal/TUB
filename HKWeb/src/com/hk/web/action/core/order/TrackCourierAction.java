@@ -67,9 +67,11 @@ public class TrackCourierAction extends BaseAction {
         } else if (courierId.equals(EnumCourier.FirstFLight.getId()) || courierId.equals(EnumCourier.FirstFLight_COD.getId())) {
             resolution = new RedirectResolution("http://www.firstflight.net/n_contrac_new.asp", false).addParameter("tracking1", trackingId);
 
-        } else if (courierId.equals(EnumCourier.Delhivery.getId())) {
+        } else if (EnumCourier.getDelhiveryCouriers().contains(courierId)) {
+            courierName = CourierConstants.DELHIVERY;
             JsonObject jsonObject = courierStatusUpdateHelper.updateDeliveryStatusDelhivery(trackingId);
             if (!jsonObject.has("Error")) {
+
                 JsonObject shipmentObj = jsonObject.getAsJsonArray("ShipmentData").get(0)
                         .getAsJsonObject().getAsJsonObject("Shipment");
 
@@ -78,12 +80,12 @@ public class TrackCourierAction extends BaseAction {
                 paymentType = shipmentObj.get("OrderType").getAsString();
             }
             resolution = new ForwardResolution("/pages/courierDetails.jsp");
-
         } else if (courierId.equals(EnumCourier.Chhotu.getId())) {
             chhotuCourierDelivery = courierStatusUpdateHelper.updateDeliveryStatusChhotu(trackingId);
             resolution = new ForwardResolution("/pages/chhotuCourier.jsp");
 
-        } else if (courierId.equals(EnumCourier.BlueDart.getId()) || courierId.equals(EnumCourier.BlueDart_COD.getId())) {
+        } else if (EnumCourier.getBlueDartCouriers().contains(courierId)) {
+            courierName=CourierConstants.BLUEDART;
             Element ele = courierStatusUpdateHelper.updateDeliveryStatusBlueDart(trackingId);
             String responseStatus = ele.getChildText("Status");
             if (!responseStatus.equals("Incorrect Waybill number or No Information")) {
@@ -91,8 +93,8 @@ public class TrackCourierAction extends BaseAction {
             }
             resolution = new ForwardResolution("/pages/courierDetails.jsp");
 
-        } else if (courierId.equals(EnumCourier.DTDC_COD.getId()) || courierId.equals(EnumCourier.DTDC_Lite.getId()) ||
-                courierId.equals(EnumCourier.DTDC_Plus.getId()) || courierId.equals(EnumCourier.DTDC_Surface.getId())) {
+        } else if (EnumCourier.getDTDCCouriers().contains(courierId)) {
+            courierName=CourierConstants.DTDC;
             Map<String, String> responseMap = courierStatusUpdateHelper.updateDeliveryStatusDTDC(trackingId);
             for (Map.Entry entryObj : responseMap.entrySet()) {
                 if (entryObj.getKey().equals(CourierConstants.DTDC_INPUT_STR_STATUS)) {

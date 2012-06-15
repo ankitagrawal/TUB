@@ -69,11 +69,7 @@ public class DeliveryStatusUpdateManager {
     String                      prefixComments                = "Delivered Items :<br/>";
     public static final int     digitsInGatewayId             = 5;
     List<ShippingOrder>         shippingOrderList             = new ArrayList<ShippingOrder>();
-    private static final String authenticationIdForDelhivery  = "9aaa943a0c74e29b340074d859b2690e07c7fb25";
-    List<Long>                  courierIdList                 = new ArrayList<Long>();
-    private static final String loginIdForBlueDart            = "GGN37392";
-    private static final String licenceKeyForBlueDart         = "3c6867277b7a2c8cd78c8c4cb320f401";
-
+    List<Long>                  courierIdList                 = null;
 
     LineItemDao                 lineItemDaoProvider;
 
@@ -157,6 +153,7 @@ public class DeliveryStatusUpdateManager {
         orderDeliveryCount = 0;
 
         if (courierName.equalsIgnoreCase(CourierConstants.AFL)) {
+            courierIdList=new ArrayList<Long>();
             courierIdList.add(EnumCourier.AFLWiz.getId());
             shippingOrderList = getAdminShippingOrderService().getShippingOrderListByCouriers(startDate, endDate, courierIdList);
             if (shippingOrderList != null && shippingOrderList.size() > 0) {
@@ -172,14 +169,18 @@ public class DeliveryStatusUpdateManager {
                     }
 
                 }
-            } else if (courierName.equalsIgnoreCase(CourierConstants.CHHOTU)) {
+            } }else if (courierName.equalsIgnoreCase(CourierConstants.CHHOTU)) {
+                courierIdList=new ArrayList<Long>();
                 courierIdList.add(EnumCourier.Chhotu.getId());
                 shippingOrderList = getAdminShippingOrderService().getShippingOrderListByCouriers(startDate, endDate, courierIdList);
                 if (shippingOrderList != null && shippingOrderList.size() > 0) {
                     for (ShippingOrder shippingOrderInList : shippingOrderList) {
                         trackingId = shippingOrderInList.getShipment().getTrackingId();
                         ChhotuCourierDelivery chhotuCourierDelivery = courierStatusUpdateHelper.updateDeliveryStatusChhotu(trackingId);
-                        Date delivery_date = chhotuCourierDelivery.getFormattedDeliveryDate();
+                        Date delivery_date=null;
+                        if (chhotuCourierDelivery != null) {
+                            delivery_date = chhotuCourierDelivery.getFormattedDeliveryDate();
+                        }
 
                         if (delivery_date != null && chhotuCourierDelivery.getShipmentStatus().equalsIgnoreCase(CourierConstants.DELIVERED) && chhotuCourierDelivery.getTrackingId() != null) {
                             ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shippingOrderInList.getShipment(), shippingOrderInList.getShipment().getTrackingId(), delivery_date);
@@ -189,7 +190,8 @@ public class DeliveryStatusUpdateManager {
                     }
                 }
             } else if (courierName.equalsIgnoreCase(CourierConstants.DELHIVERY)) {
-                courierIdList.add(EnumCourier.Delhivery.getId());
+                courierIdList=new ArrayList<Long>();
+                courierIdList=EnumCourier.getDelhiveryCouriers();
                 shippingOrderList = getAdminShippingOrderService().getShippingOrderListByCouriers(startDate, endDate, courierIdList);
                 JsonObject shipmentJsonObj = null;
                 if (shippingOrderList != null && shippingOrderList.size() > 0) {
@@ -214,6 +216,7 @@ public class DeliveryStatusUpdateManager {
 
             } else if (courierName.equalsIgnoreCase(CourierConstants.BLUEDART)) {
                 SimpleDateFormat sdf_date = new SimpleDateFormat("dd MMMMM yyyy");
+                courierIdList=new ArrayList<Long>();
                 courierIdList = EnumCourier.getBlueDartCouriers();
                 shippingOrderList = getAdminShippingOrderService().getShippingOrderListByCouriers(startDate, endDate, courierIdList);
                 if (shippingOrderList != null && shippingOrderList.size() > 0) {
@@ -234,6 +237,7 @@ public class DeliveryStatusUpdateManager {
                 }
 
             } else if (courierName.equalsIgnoreCase(CourierConstants.DTDC)) {
+                courierIdList=new ArrayList<Long>();
                 courierIdList = EnumCourier.getDTDCCouriers();
                 shippingOrderList = getAdminShippingOrderService().getShippingOrderListByCouriers(startDate, endDate, courierIdList);
                 Map<String, String> responseMap = new HashMap<String, String>();
@@ -251,7 +255,10 @@ public class DeliveryStatusUpdateManager {
                                 deliveryDateString = entryObj.getValue().toString();
                             }
                         }
-                        String subStringDeliveryDate = deliveryDateString.substring(4, 8) + "-" + deliveryDateString.substring(2, 4) + "-" + deliveryDateString.substring(0, 2);
+                        String subStringDeliveryDate = null;
+                        if (deliveryDateString != null) {
+                            subStringDeliveryDate = deliveryDateString.substring(4, 8) + "-" + deliveryDateString.substring(2, 4) + "-" + deliveryDateString.substring(0, 2);
+                        }
                         if (courierDeliveryStatus != null && deliveryDateString != null) {
                             if (courierDeliveryStatus.equals(CourierConstants.DTDC_INPUT_DELIVERED)) {
                                 Date delivery_date = getFormattedDeliveryDate(subStringDeliveryDate);
@@ -262,10 +269,8 @@ public class DeliveryStatusUpdateManager {
 
                 }
             }
-
+           return ordersDelivered;
         }
-        return ordersDelivered;
-    }
 
     public int updateCourierDeliveryStatus(ShippingOrder shippingOrder, Shipment shipment, String trackingId, Date deliveryDate) {
 
