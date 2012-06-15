@@ -169,4 +169,8 @@ public class SignupAction extends BaseAction {
         this.userService = userService;
     }
 
+    public boolean isAgreeToTerms() {
+        return agreeToTerms;
+    }
+
 }

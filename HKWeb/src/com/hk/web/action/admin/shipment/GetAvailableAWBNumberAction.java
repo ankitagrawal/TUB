@@ -1,21 +1,5 @@
 package com.hk.web.action.admin.shipment;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import net.sourceforge.stripes.action.JsonResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.validation.Validate;
-import net.sourceforge.stripes.validation.ValidationErrorHandler;
-import net.sourceforge.stripes.validation.ValidationErrors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.admin.pact.dao.courier.AwbDao;
@@ -27,6 +11,16 @@ import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.user.UserDao;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.error.AdminPermissionAction;
+import net.sourceforge.stripes.action.JsonResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.validation.Validate;
+import net.sourceforge.stripes.validation.ValidationErrorHandler;
+import net.sourceforge.stripes.validation.ValidationErrors;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+
+import java.util.*;
 
 
 @Secure(hasAnyPermissions = {PermissionConstants.SEARCH_ORDERS}, authActionBean = AdminPermissionAction.class)
@@ -55,7 +49,7 @@ public class GetAvailableAWBNumberAction extends BaseAction implements Validatio
         }
 
         Map<String, Object> data = new HashMap<String, Object>(1);
-        List<Awb> awbs = awbDao.getAvailableAwbForCourier(courier, warehouses.iterator().next());
+        List<Awb> awbs = awbDao.getAvailableAwbForCourierByWarehouseAndCod(courier, warehouses.iterator().next(),null);
         List<String> awbNumbers = new ArrayList<String>();
         for (Awb awb : awbs) {
             awbNumbers.add(awb.getAwbNumber());

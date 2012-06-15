@@ -439,8 +439,9 @@ public class DeliveryStatusUpdateManager {
     }
 
     public int updateDeliveryStatusDelhivery(Date startDate, Date endDate, User loggedOnUser) {
-        courierIdList.add( EnumCourier.Delhivery.getId());
-        List<Long> shippingOrderList = adminShippingOrderService.getShippingOrderListByCouriers(startDate, endDate,courierIdList);
+       courierIdList.addAll(EnumCourier.getCourierIDs(EnumCourier.getDelhiveryCouriers()));
+          List<Long> shippingOrderList = adminShippingOrderService.getShippingOrderListByCouriers(startDate, endDate,courierIdList);
+
         // courierName += " Delhivery";
 
         ordersDelivered = 0;
