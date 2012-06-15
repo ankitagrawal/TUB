@@ -5,6 +5,7 @@ import com.hk.domain.email.EmailRecepient;
 import com.hk.domain.email.EmailCampaign;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.user.User;
+import com.hk.domain.user.Role;
 import com.hk.constants.core.EnumRole;
 import com.hk.admin.pact.dao.email.AdminEmailDao;
 import com.hk.pact.dao.RoleDao;
@@ -13,12 +14,10 @@ import com.akube.framework.util.BaseUtils;
 import java.util.List;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.ArrayList;
 import java.math.BigInteger;
 
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.hibernate.FlushMode;
+import org.hibernate.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.dao.DataAccessException;
@@ -38,8 +37,8 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
   @Autowired
   private RoleDao roleDao;
 
-  public List<EmailRecepient> getAllMailingList(EmailCampaign emailCampaign, String [] roles, int maxResult) {
-    String query = "select  er.*" +
+  public List<EmailRecepient> getAllMailingList(EmailCampaign emailCampaign, List<Role> roleList, int maxResult) {
+    /*String query = "select  er.*" +
         "     from user u left join email_recepient er on (u.email = er.email and er.subscribed > 0) " +
         "     left join emailer_history eh on (er.id = eh.email_recepient_id " +
         "     and eh.email_campaign_id = %s ),  " +
@@ -51,16 +50,39 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
     query = String.format(query, emailCampaign.getId(), BaseUtils.getCommaSeparatedString(roles), emailCampaign.getId());
 
     //Session session = getSession(true);
-    List<EmailRecepient> emailList = getSession().createSQLQuery(query).addEntity(EmailRecepient.class).setMaxResults(maxResult).list();
+    List<EmailRecepient> emailList = getSession().createSQLQuery(query).addEntity(EmailRecepient.class).setMaxResults(maxResult).list();*/
     //session.flush();
     //session.clear();
     //session.close();
 
-    return emailList;
+   String query = "select er from EmailRecepient er, User u join u.roles r " +
+        " where er.subscribed = true and er.email = u.email and coalesce((date(current_date()) - date(er.lastEmailDate)), 0) >= (select ec.minDayGap from EmailCampaign ec where ec = :emailCampaign)" +
+        " and er not in (select eh.emailRecepient from EmailerHistory eh where eh.emailCampaign = :emailCampaign ) " +
+        " and r in (:roleList)" ;
+    //Session session =  getSessionFactory().openSession();
+    List<EmailRecepient> emailRecepients = ( List<EmailRecepient> )getSession().createQuery(query)
+        .setParameter("emailCampaign", emailCampaign)
+        .setParameter("emailCampaign", emailCampaign)
+        .setParameterList("roleList", roleList)
+        .setMaxResults(maxResult).list();
+   // session.close();
+    return emailRecepients;
   }
 
-  public List<EmailRecepient> getUserMailingList(EmailCampaign emailCampaign, String[] userIds, int maxResult) {
-    String query = "select  er.*" +
+  public List<EmailRecepient> getUserMailingList(EmailCampaign emailCampaign, List<Long> userList, int maxResult) {
+    String query = "select er from EmailRecepient er, User u " +
+        " where er.subscribed = true and er.email = u.email and coalesce((date(current_date()) - date(er.lastEmailDate)), 0) >= (select ec.minDayGap from EmailCampaign ec where ec = :emailCampaign)" +
+        " and er not in (select eh.emailRecepient from EmailerHistory eh where eh.emailCampaign = :emailCampaign ) " +
+        " and u.id in (:userList)" ;
+
+    List<EmailRecepient> emailRecepients = ( List<EmailRecepient> )getSession().createQuery(query)
+        .setParameter("emailCampaign", emailCampaign)
+        .setParameter("emailCampaign", emailCampaign)
+        .setParameterList("userList", userList)
+        .setMaxResults(maxResult).list();
+
+    return emailRecepients;
+    /*String query = "select  er.*" +
         "     from user u left join email_recepient er on (u.email = er.email and er.subscribed > 0) " +
         "     left join emailer_history eh on (er.id = eh.email_recepient_id and eh.email_campaign_id = %s )," +
         "     email_campaign ec   " +
@@ -76,15 +98,10 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
     session.flush();
     session.clear();
     session.close();
-    return userList;
+    return userList;*/
   }
 
   public List<EmailRecepient> getMailingListByEmailIds(EmailCampaign emailCampaign, List<String> emailList, int maxResult) {
-    /*String query = "select er from EmailRecepient er " +
-        " where er.subscribed = true and coalesce((date(current_date()) - date(er.lastEmailDate)), 0) >= (select ec.minDayGap from EmailCampaign ec where ec = :emailCampaign )" +
-        " and er not in (select eh.emailRecepient from EmailerHistory eh where eh.emailCampaign = :emailCampaignInner ) " +
-        " and er.email in ( :emailList )";
-    List<EmailRecepient> emailRecepients = findByNamedParams(query, new String[]{"emailCampaign","emailCampaignInner","emailList"} , new Object[]{ emailCampaign, emailCampaign, emailList});*/
 
     List<EmailRecepient> emailRecepients = getSession().createQuery("select er from EmailRecepient er " +
         " where er.subscribed = true and coalesce((date(current_date()) - date(er.lastEmailDate)), 0) >= (select ec.minDayGap from EmailCampaign ec where ec = :emailCampaign)" +
@@ -94,11 +111,11 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
         .setParameter("emailCampaign", emailCampaign)
         .setParameter("emailCampaign", emailCampaign)
         .setMaxResults(maxResult).list();
-
+    
     return emailRecepients;
   }
 
-  public BigInteger getAllMailingListCount(EmailCampaign emailCampaign, String [] roles) {
+  public BigInteger getAllMailingListCount(EmailCampaign emailCampaign, String [] roles) {       
     String query = "select  count(u.id)" +
         "     from user u left join email_recepient er on (u.email = er.email and er.subscribed > 0) " +
         "     left join emailer_history eh on (er.id = eh.email_recepient_id " +
@@ -126,6 +143,7 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
         .setParameterList("roleList",Arrays.asList(getRoleDao().getRoleByName(EnumRole.HK_USER), getRoleDao().getRoleByName(EnumRole.HK_UNVERIFIED)))
         .setParameter("emailCampaign", emailCampaign)
         .setParameter("emailCampaign", emailCampaign).setMaxResults(maxResult).list();
+
     return userIdsByCategory;
   }
 
@@ -147,21 +165,21 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
 
   public List<User> findAllUsersNotInEmailRecepient(int maxResult, List<String> userIdList) {
     String query = "select u.* from user u left join email_recepient er on (u.email = er.email) where er.email is null and u.email is not null ";
+
     if(userIdList != null){
       query += "and u.id in (:userIdList)" ;
     }
-
     Query sqlQuery = getSession().createSQLQuery(query).addEntity(User.class);
     if(userIdList != null) {
       sqlQuery = sqlQuery.setParameterList("userIdList", userIdList);
     }
+    
     return sqlQuery.setMaxResults(maxResult).list();
   }
 
   @SuppressWarnings("unchecked")
-  public void saveOrUpdate(Collection entities) throws DataAccessException {
-    Session session = getSession(true);
-    //Begining a transaction as a lock over the database is required
+  public void saveOrUpdate(Session session, Collection entities) throws DataAccessException {
+
     Transaction transaction = session.beginTransaction();
     try {
       for (Object object : entities) {
@@ -170,7 +188,6 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
       session.flush();
       session.clear();
       transaction.commit();
-      session.close();
     }catch(Exception ex){
       transaction.rollback();
     }finally{

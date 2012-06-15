@@ -89,14 +89,14 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
   String                     sheetName;
   Page                       emailCampaignPage;
   private Integer            defaultPerPage = 20;
-  private final int             COMMIT_COUNT = 100;
-  private final int             INITIAL_LIST_SIZE = 100;
+  private final int          COMMIT_COUNT = 100;
+  private final int          INITIAL_LIST_SIZE = 100;
 
   @Autowired
   private RoleDao            roleDao;
   private final int          maxResultCount = 5000;
   @Autowired
-  private EmailRecepientDao emailRecepientDao;
+  private EmailRecepientDao  emailRecepientDao;
 
   @DefaultHandler
   @DontValidate
@@ -163,14 +163,19 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
 
   public Resolution sendCampaignViaCsvUserIDs() throws IOException {
     List<String> userIdList = getListOfStringFromCsvFile(fileBeanForUserList);
-    String userIds[] = new String[userIdList.size()];
-    int i = 0;
-    for(String userId : userIdList) {
-      userIds[i] = userId;
-      i++;
-    }
+    List<Long> longUserIdList = new ArrayList<Long>();
+
     populateEmailRecepient(userIdList);
-    sendCampaignByUploadingFile(userIds, null);
+    for(String userId : userIdList) {
+      longUserIdList.add(Long.parseLong(userId));
+      if(longUserIdList.size() == maxResultCount) {
+        sendCampaignByUploadingFile(longUserIdList, null);
+        longUserIdList.clear();
+      }
+    }
+    if(longUserIdList.size() > 0) {
+      sendCampaignByUploadingFile(longUserIdList, null);
+    }
 
     addRedirectAlertMessage(new SimpleMessage("Sending campaign in progress : " + emailCampaign.getName()));
     return new RedirectResolution(EmailNewsletterAdmin.class);
@@ -190,7 +195,6 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
       emailRecepientRecs.add(emailRecepient);
       if(counter == COMMIT_COUNT) {
         getEmailRecepientDao().saveOrUpdate(emailRecepientRecs);
-        //getEmailRecepientDao().clearSession();
         counter = 0;
         emailRecepientRecs.clear();
       }
@@ -198,18 +202,27 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
     }
     if(counter > 0) {
       getEmailRecepientDao().saveOrUpdate(emailRecepientRecs);
-      //getEmailRecepientDao().clearSession();
     }
 
     userEmails.addAll(emailIdsInEmailRecepient);
+    List<String> userEmailsList = new ArrayList<String>();
+    for(String emailId : userEmails) {
+      userEmailsList.add(emailId);
+      if(userEmailsList.size() == maxResultCount) {
+        sendCampaignByUploadingFile(null, userEmailsList);
+        userEmailsList.clear();
+      }
+    }
 
-    sendCampaignByUploadingFile(null, userEmails);
+    if(userEmailsList.size() > 0) {
+      sendCampaignByUploadingFile(null, userEmailsList);
+    }
 
     addRedirectAlertMessage(new SimpleMessage("Sending campaign in progress : " + emailCampaign.getName()));
     return new RedirectResolution(EmailNewsletterAdmin.class);
   }
 
-  private void sendCampaignByUploadingFile(String[] userIds, List<String> emailIds) {
+  private void sendCampaignByUploadingFile(List<Long> userIds, List<String> emailIds) {
     List<String> finalCategories = new ArrayList<String>();
     finalCategories.add("User Ids Excel");
     String xsmtpapi = SendGridUtil.getSendGridEmailNewsLetterHeaderJson(finalCategories, emailCampaign);
@@ -244,7 +257,6 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
         emailRecepientRecs.add(emailRecepient);
         if(counter == COMMIT_COUNT) {
           getEmailRecepientDao().saveOrUpdate(emailRecepientRecs);
-          //getEmailRecepientDao().clearSession();
           counter = 0;
           emailRecepientRecs.clear();
         }
@@ -252,7 +264,6 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
       }
       if(counter > 0) {
         getEmailRecepientDao().saveOrUpdate(emailRecepientRecs);
-        //getEmailRecepientDao().clearSession();
       }
     }while(usersNotInEmailRecepient.size() > 0);
 
@@ -280,9 +291,9 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
     List<EmailRecepient> emailRecepients = new ArrayList<EmailRecepient>();
     do {
       if (categories.equalsIgnoreCase("all")) {
-        emailRecepients = getAdminEmailService().getAllMailingList(emailCampaign, new String[]{EnumRole.HK_USER.getRoleName()}, maxResultCount);
+        emailRecepients = getAdminEmailService().getAllMailingList(emailCampaign, Arrays.asList(getRoleDao().getRoleByName(EnumRole.HK_USER)), maxResultCount);
       } else if (categories.equalsIgnoreCase("all-unverified")) {
-        emailRecepients = getAdminEmailService().getAllMailingList(emailCampaign, new String[]{EnumRole.HK_UNVERIFIED.getRoleName()}, maxResultCount);
+        emailRecepients = getAdminEmailService().getAllMailingList(emailCampaign, Arrays.asList(getRoleDao().getRoleByName(EnumRole.HK_UNVERIFIED)), maxResultCount);
       }
 
       if (emailRecepients.size() > 0) {

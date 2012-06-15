@@ -253,8 +253,4 @@ public interface BaseDao {
     public Page list(DetachedCriteria criteria,  int pageNo, int perPage);
 
     public void refresh(Object entity);
-  /**
-   * WARNING: Make sure that you should not access any lazy initialization in this session after calling this method
-   */
-    void clearSession();
 }

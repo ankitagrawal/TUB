@@ -252,7 +252,6 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
   public void saveOrUpdate(Object entity) {
     prepareHibernateForWrite();
     getHibernateTemplate().saveOrUpdate(entity);
-    getSession().update(entity);
     resetHibernateAfterWrite();
   }
 

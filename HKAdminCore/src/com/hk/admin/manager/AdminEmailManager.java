@@ -5,6 +5,7 @@ import com.akube.framework.util.DateUtils;
 import com.hk.admin.dto.DisplayTicketHistoryDto;
 import com.hk.admin.dto.marketing.GoogleBannedWordDto;
 import com.hk.admin.pact.dao.email.AdminEmailDao;
+import com.hk.admin.pact.service.email.AdminEmailService;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.core.EnumEmailType;
@@ -137,7 +138,8 @@ private String                categoryHealthkartListString  = null;*/
   @Autowired
   private FreeMarkerService     freeMarkerService;
   @Autowired
-  private AdminEmailDao         adminEmailDao;
+  private AdminEmailService     adminEmailService;
+  
   private final int             COMMIT_COUNT = 100;
   private final int             INITIAL_LIST_SIZE = 100;
   @PostConstruct
@@ -203,6 +205,7 @@ private String                categoryHealthkartListString  = null;*/
     int commitCount = 0;
     int breakFromLoop = emailersList.size() < COMMIT_COUNT ? emailersList.size() : COMMIT_COUNT;
 
+    Session session =  baseDao.getHibernateTemplate().getSessionFactory().openSession();
     for (EmailRecepient emailRecepient : emailersList) {
       try {
         // find exisitng receipients or create recepients thru the emails ids passed
@@ -211,7 +214,7 @@ private String                categoryHealthkartListString  = null;*/
         // values that may be used in FTL
         HashMap valuesMap = new HashMap();
         valuesMap.put("unsubscribeLink", getLinkManager().getEmailUnsubscribeLink(emailRecepient));
-        valuesMap.put("user", emailRecepient.getName());
+        valuesMap.put("EmailRecepient", emailRecepient.getName());
 
         Map<String, HtmlEmail> email = emailService.createHtmlEmail(emailCampaign.getTemplate(), valuesMap, emailRecepient.getEmail(), emailRecepient.getName(), "info@healthkart.com", headerMap, freemarkerTemplate);
         emailList.add(email);
@@ -228,8 +231,8 @@ private String                categoryHealthkartListString  = null;*/
         if( commitCount == breakFromLoop ) {
           //getEmailRecepientDao().saveOrUpdate(emailRecepientRecs);
           //getEmailerHistoryDao().saveOrUpdate(emailHistoryRecs);
-          adminEmailDao.saveOrUpdate(emailRecepientRecs);
-          adminEmailDao.saveOrUpdate(emailHistoryRecs);
+          getAdminEmailService().saveOrUpdate(session, emailRecepientRecs);
+          getAdminEmailService().saveOrUpdate(session, emailHistoryRecs);
           //getEmailRecepientDao().clearSession();
           commitCount = 0;
           emailHistoryRecs.clear();
@@ -242,6 +245,7 @@ private String                categoryHealthkartListString  = null;*/
     }
 
     emailService.sendBulkHtmlEmail(emailList, emailCampaign);
+    session.close();
     return true;
   }
 
@@ -700,5 +704,13 @@ private String                categoryHealthkartListString  = null;*/
 
   public void setProductService(ProductService productService) {
     this.productService = productService;
+  }
+
+  public AdminEmailService getAdminEmailService() {
+    return adminEmailService;
+  }
+
+  public void setAdminEmailService(AdminEmailService adminEmailService) {
+    this.adminEmailService = adminEmailService;
   }
 }

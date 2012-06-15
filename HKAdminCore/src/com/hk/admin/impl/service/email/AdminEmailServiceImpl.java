@@ -6,6 +6,7 @@ import com.hk.domain.email.EmailRecepient;
 import com.hk.domain.email.EmailCampaign;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.user.User;
+import com.hk.domain.user.Role;
 
 import java.util.List;
 import java.util.Collection;
@@ -37,12 +38,13 @@ public class AdminEmailServiceImpl implements AdminEmailService{
   public Long getMailingListCountByCategory(EmailCampaign emailCampaign, Category category) {
     return getAdminEmailDao().getMailingListCountByCategory(emailCampaign, category);
   }
-  public List<EmailRecepient> getAllMailingList(EmailCampaign emailCampaign, String[]roles, int maxResult) {
-    return getAdminEmailDao().getAllMailingList(emailCampaign, roles, maxResult);
+  
+  public List<EmailRecepient> getAllMailingList(EmailCampaign emailCampaign, List<Role> roleList, int maxResult) {
+    return getAdminEmailDao().getAllMailingList(emailCampaign, roleList, maxResult);
   }
 
-  public List<EmailRecepient> getUserMailingList(EmailCampaign emailCampaign, String[] userIds, int maxResult) {
-    return getAdminEmailDao().getUserMailingList(emailCampaign, userIds, maxResult);
+  public List<EmailRecepient> getUserMailingList(EmailCampaign emailCampaign, List<Long> userList, int maxResult) {
+    return getAdminEmailDao().getUserMailingList(emailCampaign, userList, maxResult);
   }
 
   public BigInteger getAllMailingListCount(EmailCampaign emailCampaign, String [] roles) {
@@ -57,8 +59,8 @@ public class AdminEmailServiceImpl implements AdminEmailService{
     return getAdminEmailDao().findAllUsersNotInEmailRecepient(maxResult, userIdList);
   }
 
-  public void saveOrUpdate(Collection entities) throws DataAccessException {
-    getAdminEmailDao().saveOrUpdate(entities);
+  public void saveOrUpdate(Session session, Collection entities) throws DataAccessException {
+    getAdminEmailDao().saveOrUpdate(session, entities);
   }
 
   public AdminEmailDao getAdminEmailDao() {

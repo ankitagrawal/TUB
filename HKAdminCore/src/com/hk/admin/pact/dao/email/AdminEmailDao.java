@@ -4,12 +4,14 @@ import com.hk.domain.email.EmailRecepient;
 import com.hk.domain.email.EmailCampaign;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.user.User;
+import com.hk.domain.user.Role;
 
 import java.util.List;
 import java.util.Collection;
 import java.math.BigInteger;
 
 import org.springframework.dao.DataAccessException;
+import org.hibernate.Session;
 
 /**
  * Created by IntelliJ IDEA.
@@ -19,7 +21,7 @@ import org.springframework.dao.DataAccessException;
  * To change this template use File | Settings | File Templates.
  */
 public interface AdminEmailDao {
-  public List<EmailRecepient> getUserMailingList(EmailCampaign emailCampaign, String[] userIds, int maxResult);
+  public List<EmailRecepient> getUserMailingList(EmailCampaign emailCampaign, List<Long> userList, int maxResult);
 
   public BigInteger getAllMailingListCount(EmailCampaign emailCampaign, String [] roles);
 
@@ -31,7 +33,7 @@ public interface AdminEmailDao {
 
   public List<EmailRecepient> getMailingListByEmailIds(EmailCampaign emailCampaign, List<String> emailList, int maxResult);
 
-  public List<EmailRecepient> getAllMailingList(EmailCampaign emailCampaign, String [] roles, int maxResult);
+  public List<EmailRecepient> getAllMailingList(EmailCampaign emailCampaign, List<Role> roleList, int maxResult);
 
-  public void saveOrUpdate(Collection entities) throws DataAccessException;
+  public void saveOrUpdate(Session session, Collection entities) throws DataAccessException;
 }
