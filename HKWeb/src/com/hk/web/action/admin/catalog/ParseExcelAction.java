@@ -98,6 +98,10 @@ public class ParseExcelAction extends BaseAction {
         return new ForwardResolution("/pages/admin/catalogDump.jsp");
     }
 
+    public String getCategory() {
+        return category;
+    }
+
     public ProductManager getProductManager() {
         return productManager;
     }

@@ -96,7 +96,6 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
 
     private Date                       endDate;
 
-
     @DontValidate
     @DefaultHandler
     // @Secure(hasAnyPermissions = { PermissionConstants.VIEW_SHIPMENT_QUEUE }, authActionBean =
@@ -213,32 +212,32 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
     @Secure(hasAnyPermissions = { PermissionConstants.DOWNLOAD_COURIER_EXCEL }, authActionBean = AdminPermissionAction.class)
     public Resolution generateCourierReport() {
         // TODO: #warehouse fix this
-        if(courierDownloadFunctionality){
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-            xlsFile = new File(adminDownloads + "/reports/courier-report-" + sdf.format(new Date()) + ".xls");
-            List<Courier> courierList = new ArrayList<Courier>();
-            if (courier == null) {
-                courierList = courierService.getAllCouriers();
-            } else {
-                courierList.add(courier);
-            }
-            if (courier != null) {
-                if (courier.equals(courierDao.getCourierById(EnumCourier.BlueDart.getId())) || courier.equals(courierDao.getCourierById(EnumCourier.BlueDart_COD.getId()))) {
-                    xlsFile = reportGenerator.generateCourierReportXslForBlueDart(xlsFile.getPath(), EnumShippingOrderStatus.SO_Packed, courierList,startDate,endDate);
+        if (courierDownloadFunctionality) {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+                xlsFile = new File(adminDownloads + "/reports/courier-report-" + sdf.format(new Date()) + ".xls");
+                List<Courier> courierList = new ArrayList<Courier>();
+                if (courier == null) {
+                    courierList = courierService.getAllCouriers();
                 } else {
-                    xlsFile = reportGenerator.generateCourierReportXsl(xlsFile.getPath(), EnumShippingOrderStatus.SO_Packed, courierList,startDate,endDate);
+                    courierList.add(courier);
                 }
-            } else {
-                xlsFile = reportGenerator.generateCourierReportXsl(xlsFile.getPath(), EnumShippingOrderStatus.SO_Packed, courierList,startDate,endDate);
+                if (courier != null) {
+                    if (courier.equals(courierDao.getCourierById(EnumCourier.BlueDart.getId())) || courier.equals(courierDao.getCourierById(EnumCourier.BlueDart_COD.getId()))) {
+                        xlsFile = reportGenerator.generateCourierReportXslForBlueDart(xlsFile.getPath(), EnumShippingOrderStatus.SO_Packed, courierList, startDate, endDate);
+                    } else {
+                        xlsFile = reportGenerator.generateCourierReportXsl(xlsFile.getPath(), EnumShippingOrderStatus.SO_Packed, courierList, startDate, endDate);
+                    }
+                } else {
+                    xlsFile = reportGenerator.generateCourierReportXsl(xlsFile.getPath(), EnumShippingOrderStatus.SO_Packed, courierList, startDate, endDate);
+                }
+                addRedirectAlertMessage(new SimpleMessage("Courier report successfully generated."));
+            } catch (Exception e) {
+                logger.error("Error while generating report", e);
+                addRedirectAlertMessage(new SimpleMessage("Courier report generation failed"));
             }
-            addRedirectAlertMessage(new SimpleMessage("Courier report successfully generated."));
-        } catch (Exception e) {
-            logger.error("Error while generating report", e);
-            addRedirectAlertMessage(new SimpleMessage("Courier report generation failed"));
-        }
 
-        return new HTTPResponseResolution();
+            return new HTTPResponseResolution();
         } else {
             return new ForwardResolution("/pages/admin/downloadCourierExcel.jsp");
         }
@@ -352,6 +351,10 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
 
     public Date getStartDate() {
         return startDate;
+    }
+
+    public Long getOrderId() {
+        return orderId;
     }
 
     @Validate(converter = CustomDateTypeConvertor.class)
