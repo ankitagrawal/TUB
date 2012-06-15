@@ -25,12 +25,12 @@
                     </td>
                 </s:form>
             </tr>
-            <c:if test="${scsaBean.stateCourierServiceList != null}">
+            <c:if test="${scsaBean.state != null}">
                 <table>
                     <tr> <th>Selected State</th> </tr>
                       <tr>  ${scsaBean.state}   </tr>
-
-                    <tr>
+                     <tr>   </tr>   <tr>   </tr>
+                     <tr>
                         <th>S.No.</th>
                         <th>Courier Name</th>
                         <th>Preference</th>
@@ -39,8 +39,18 @@
                         <c:forEach items="${scsaBean.stateCourierServiceList}" var="stateCourierService"
                                    varStatus="count">
                             <td> ${count.index+1}</td>
-                            <td>${stateCourierService.courier.name}</td>
-                            <td>${stateCourierService.preference}</td>
+                            <td>
+                             <td>:</td>
+                                <td><s:text name="stateCourierService.courier.name"/></td>
+
+                            <%--${stateCourierService.courier.name}--%>
+                            </td>
+                            <td>
+                              <td>First Base Weight:</td>
+                                <td><s:text name="stateCourierService.preference"/></td>
+                            <%--${stateCourierService.preference}--%>
+
+                            </td>
                         </c:forEach>
                     </tr>
 
