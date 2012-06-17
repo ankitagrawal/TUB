@@ -339,10 +339,8 @@
         </p>
       </c:if>--%>
   </div>
-  <c:if test="${hk:isNotBlank(product.overview)}">
-    <p class="overview">
-        ${product.overview}
-    </p>
+  <c:if test="${!empty pa.subscriptionProduct}">
+     Subscribe and save <fmt:formatNumber value="${pa.subscriptionProduct.subscriptionDiscount180Days}" maxFractionDigits="2"/>  to   <fmt:formatNumber value="${pa.subscriptionProduct.subscriptionDiscount360Days}" maxFractionDigits="2"/>
   </c:if>
   <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_DESCRIPTIONS%>">
     <div>
@@ -353,6 +351,11 @@
       </s:link>
     </div>
   </shiro:hasPermission>
+  <c:if test="${hk:isNotBlank(product.overview)}">
+    <p class="overview">
+        ${product.overview}
+    </p>
+  </c:if>
 
 </s:layout-component>
 

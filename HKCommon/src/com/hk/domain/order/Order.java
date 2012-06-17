@@ -128,6 +128,10 @@ public class Order implements java.io.Serializable {
     @Column(name = "is_b2b_order")
     private Boolean                   b2bOrder;
 
+  @Column(name = "is_subscription_order")
+  private Boolean                   subscriptionOrder;
+
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "order")
     private List<OrderLifecycle>      orderLifecycles = new ArrayList<OrderLifecycle>();
 
@@ -445,7 +449,19 @@ public class Order implements java.io.Serializable {
         this.b2bOrder = b2bOrder;
     }
 
-    public Set<ShippingOrder> getShippingOrders() {
+  public Boolean isSubscriptionOrder() {
+    return subscriptionOrder;
+  }
+
+  public void setSubscriptionOrder(Boolean subscriptionOrder) {
+    this.subscriptionOrder = subscriptionOrder;
+  }
+
+  public Boolean getSubscriptionOrder(Boolean subscriptionOrder) {
+    return subscriptionOrder;
+  }
+
+  public Set<ShippingOrder> getShippingOrders() {
         return shippingOrders;
     }
 

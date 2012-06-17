@@ -7,7 +7,7 @@
     <changeSet author="kani (generated)" id="1304412710257-1">
         <createTable tableName="address">
             <column autoIncrement="true" name="id" type="INT">
-                <constraints nullable="false" primaryKey="true"/>
+                <constraCaints nullable="false" primaryKey="true"/>
             </column>
             <column name="name" type="VARCHAR(150)">
                 <constraints nullable="false"/>
@@ -7521,4 +7521,200 @@
      <changeSet author="Seema (generated)" id="1338816774783-12">
          <addForeignKeyConstraint baseColumnNames="state" baseTableName="state_courier_service" constraintName="fk_state_pincode" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="state" referencedTableName="pincode"  referencesUniqueColumn="false"/>
      </changeSet>
- </databaseChangeLog>
+     <changeSet author="Pradeep (generated)" id="1339936701276-1">
+        <createTable tableName="subscription">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="base_order_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="subscription_status_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_variant_id" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="qty" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="qty_per_delivery" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="frequency_days" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="subscription_price" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="subscription_discount_percent" type="DECIMAL(7,4)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="hk_discount_at_subscription" type="DECIMAL(7,4)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="hk_price_at_subscription" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cost_price_at_subscription" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="marked_price_at_subscription" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="update_date" type="DATETIME"/>
+            <column name="start_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="next_shipment_date" type="DATETIME"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1339936701276-2">
+        <createTable tableName="subscription_lifecycle">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="subscription_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="subscription_lifecycle_activity_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="comments" type="TEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1339936701276-3">
+        <createTable tableName="subscription_lifecycle_activity">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1339936701276-4">
+        <createTable tableName="subscription_order">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="subscription_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="base_order_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="subscription_order_status_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="hk_price_now" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="hk_discount_now" type="DECIMAL(7,4)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="marked_price_now" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cost_price_now" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_date" type="DATETIME"/>
+            <column name="update_date" type="DATETIME"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1339936701276-5">
+        <createTable tableName="subscription_order_status">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(100)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1339936701276-6">
+        <createTable tableName="subscription_product">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="product_id" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="min_frequency_days" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="max_frequency_days" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="subscription_discount_180days" type="DECIMAL(7,4)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="subscription_discount_360days" type="DECIMAL(7,4)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1339936701276-7">
+        <createTable tableName="subscription_status">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(100)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1339936701276-8">
+        <addColumn tableName="base_order">
+            <column name="is_subscription_order" type="TINYINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1339936701276-9">
+        <addForeignKeyConstraint baseColumnNames="address_id" baseTableName="subscription" baseTableSchemaName="healthkart_workbench" constraintName="fk_subscription_address1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="address" referencedTableSchemaName="healthkart_workbench" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1339936701276-10">
+        <addForeignKeyConstraint baseColumnNames="base_order_id" baseTableName="subscription" baseTableSchemaName="healthkart_workbench" constraintName="fk_subscription_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order" referencedTableSchemaName="healthkart_workbench" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1339936701276-11">
+        <addForeignKeyConstraint baseColumnNames="product_variant_id" baseTableName="subscription" baseTableSchemaName="healthkart_workbench" constraintName="fk_subscription_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant" referencedTableSchemaName="healthkart_workbench" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1339936701276-12">
+        <addForeignKeyConstraint baseColumnNames="subscription_status_id" baseTableName="subscription" baseTableSchemaName="healthkart_workbench" constraintName="fk_subscription_subscription_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="subscription_status" referencedTableSchemaName="healthkart_workbench" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1339936701276-13">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="subscription" baseTableSchemaName="healthkart_workbench" constraintName="fk_subscription_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencedTableSchemaName="healthkart_workbench" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1339936701276-14">
+        <addForeignKeyConstraint baseColumnNames="subscription_id" baseTableName="subscription_lifecycle" baseTableSchemaName="healthkart_workbench" constraintName="fk_subscription_lifecycle_subscription1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="subscription" referencedTableSchemaName="healthkart_workbench" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1339936701276-15">
+        <addForeignKeyConstraint baseColumnNames="subscription_lifecycle_activity_id" baseTableName="subscription_lifecycle" baseTableSchemaName="healthkart_workbench" constraintName="fk_subscription_lifecycle_subscription_lifecycle_activity1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="subscription_lifecycle_activity" referencedTableSchemaName="healthkart_workbench" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1339936701276-16">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="subscription_lifecycle" baseTableSchemaName="healthkart_workbench" constraintName="fk_subscription_lifecycle_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencedTableSchemaName="healthkart_workbench" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1339936701276-17">
+        <addForeignKeyConstraint baseColumnNames="base_order_id" baseTableName="subscription_order" baseTableSchemaName="healthkart_workbench" constraintName="fk_subscription_order_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order" referencedTableSchemaName="healthkart_workbench" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1339936701276-18">
+        <addForeignKeyConstraint baseColumnNames="subscription_id" baseTableName="subscription_order" baseTableSchemaName="healthkart_workbench" constraintName="fk_subscription_order_subscription1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="subscription" referencedTableSchemaName="healthkart_workbench" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1339936701276-19">
+        <addForeignKeyConstraint baseColumnNames="subscription_order_status_id" baseTableName="subscription_order" baseTableSchemaName="healthkart_workbench" constraintName="fk_subscription_order_subscription_order_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="subscription_order_status" referencedTableSchemaName="healthkart_workbench" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1339936701276-20">
+        <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="subscription_product" baseTableSchemaName="healthkart_workbench" constraintName="fk_subscription_product_product1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product" referencedTableSchemaName="healthkart_workbench" referencesUniqueColumn="false"/>
+    </changeSet>
+</databaseChangeLog>

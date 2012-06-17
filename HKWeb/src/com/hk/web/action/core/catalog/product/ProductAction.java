@@ -18,6 +18,7 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.review.EnumReviewStatus;
 import com.hk.domain.MapIndia;
+import com.hk.domain.subscription.SubscriptionProduct;
 import com.hk.domain.review.UserReview;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.catalog.Manufacturer;
@@ -39,6 +40,7 @@ import com.hk.pact.dao.location.LocalityMapDao;
 import com.hk.pact.dao.location.MapIndiaDao;
 import com.hk.pact.dao.user.UserProductHistoryDao;
 import com.hk.pact.service.catalog.ProductService;
+import com.hk.pact.service.subscription.SubscriptionProductService;
 import com.hk.util.SeoManager;
 import com.hk.web.action.core.search.SearchAction;
 import com.hk.web.filter.WebContext;
@@ -65,6 +67,7 @@ public class ProductAction extends BaseAction {
     Double                           averageRating;
     List<UserReview>                 userReviews = new ArrayList<UserReview>();
     Long                             totalReviews = 0L;
+    SubscriptionProduct              subscriptionProduct;
 
     @Session(key = HealthkartConstants.Cookie.preferredZone)
     private String                   preferredZone;
@@ -93,6 +96,9 @@ public class ProductAction extends BaseAction {
     private AddressDao               addressDao;
     @Autowired
     private ProductService           productService;
+
+    @Autowired
+    private SubscriptionProductService subscriptionProductService;
 
     @DefaultHandler
     @DontValidate
@@ -163,6 +169,8 @@ public class ProductAction extends BaseAction {
                 return new ForwardResolution("/pages/productFeedXml.jsp");
             }
         }
+      //Subscription
+        subscriptionProduct= subscriptionProductService.findByProduct(product);
 
       //User Reviews
       totalReviews = productService.getAllReviews(product, Arrays.asList(EnumReviewStatus.Published.getId()));
@@ -330,4 +338,20 @@ public class ProductAction extends BaseAction {
     public Long getTotalReviews() {
       return totalReviews;
     }
+
+  public SubscriptionProductService getSubscriptionProductService() {
+    return subscriptionProductService;
+  }
+
+  public void setSubscriptionProductService(SubscriptionProductService subscriptionProductService) {
+    this.subscriptionProductService = subscriptionProductService;
+  }
+
+  public SubscriptionProduct getSubscriptionProduct() {
+    return subscriptionProduct;
+  }
+
+  public void setSubscriptionProduct(SubscriptionProduct subscriptionProduct) {
+    this.subscriptionProduct = subscriptionProduct;
+  }
 }
