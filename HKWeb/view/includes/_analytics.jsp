@@ -17,7 +17,7 @@
 <script type="text/javascript">
   var pageTracker = _gat._getTracker("<%=AnalyticsConstants.gaCode%>");
   pageTracker._setCustomVar(
-      3, // This custom var is set to slot #3.  first_order_date
+      3, // This custom var is set to slot #3.  sign_up_date
       "signupDate", // The name acts as a kind of category for the user activity.  Required parameter.
       "<%=signupDate%>", // This value of the custom variable.  Required parameter.
       1                   // Sets the scope to visitor-level. Optional parameter.
