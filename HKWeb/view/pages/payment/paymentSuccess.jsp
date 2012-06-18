@@ -101,18 +101,18 @@
 
     //track order count
     pageTracker._setCustomVar(
-      5,                   // This custom var is set to slot #5.  order_count.
+      <%=AnalyticsConstants.CustomVarSlot.orderCount%>,                   // This custom var is set to slot #5.  order_count.
       "OrderCount",     // The name acts as a kind of category for the user activity.  Required parameter.
       "${fn:length(actionBean.order.user.orders)}",               // This value of the custom variable.  Required parameter.
-      1                   // Sets the scope to session-level. Optional parameter.
+      <%=AnalyticsConstants.CustomVarScope.visitorLevel%>                    // Sets the scope to session-level. Optional parameter.
    );
 
    <c:if test="${fn:length(actionBean.order.user.orders) eq 1}">
       pageTracker._setCustomVar(
-      2,                   // This custom var is set to slot #2.  first_order_date
+      <%=AnalyticsConstants.CustomVarSlot.firstPurchaseDate%>,                   // This custom var is set to slot #2.  first_order_date
       "FirstPurchaseDate",     // The name acts as a kind of category for the user activity.  Required parameter.
       "${actionBean.purchaseDate}",               // This value of the custom variable.  Required parameter.
-      1                   // Sets the scope to visitor-level. Optional parameter.
+      <%=AnalyticsConstants.CustomVarScope.visitorLevel%>                    // Sets the scope to visitor-level. Optional parameter.
     );
    </c:if>
 

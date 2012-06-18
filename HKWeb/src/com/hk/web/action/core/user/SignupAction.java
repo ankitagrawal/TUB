@@ -180,4 +180,7 @@ public class SignupAction extends BaseAction {
     this.userService = userService;
   }
 
+  public String getSignupDate() {
+    return signupDate;
+  }
 }
