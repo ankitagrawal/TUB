@@ -1,0 +1,106 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@include file="/includes/_taglibInclude.jsp" %>
+<s:useActionBean beanclass="com.hk.web.action.core.order.TrackCourierAction" var="tca"/>
+<s:layout-render name="/layouts/default.jsp" pageTitle="Courier Details">
+    <s:layout-component name="heading">Order Shipped through ${tca.courierName} Courier Services</s:layout-component>
+    <s:layout-component name="rhsContent">
+        <c:choose>
+            <c:when test="${tca.status == null}">
+                <div class="clear"></div>
+                <br/>
+                <br/>
+                <%--Checking courier name and forwarding to the relevant site--%>
+                <div>
+                    Sorry, there is no return of Information from ${tca.courierName} Courier Services
+                    <br/>
+                    Please
+                    <c:if test="${tca.courierName =='DTDC'}">
+                        <a href="http://www.dtdc.in/" target="_blank">Visit ${tca.courierName} Courier</a><br/><br/>
+                        Use Reference number=${tca.trackingId}
+                    </c:if>
+
+                    <c:if test="${tca.courierName =='Delhivery'}">
+                        <a href="http://www.delhivery.com/" target="_blank">Visit Delhivery Courier</a>
+                        and use order number=${tca.shippingOrder.gatewayOrderId}
+                    </c:if>
+
+                    <c:if test="${tca.courierName =='Chhotu'}">
+                        <a href="http://www.chhotu.in/" target="_blank">Visit Chhotu Courier</a>
+                        and use shipment number=${tca.trackingId}
+                    </c:if>
+
+                    <c:if test="${tca.courierName =='BlueDart'}">
+                        <a href="http://www.bluedart.com/" target="_blank">Visit BlueDart Courier</a><br/><br/>
+                        Use Reference number=${tca.shippingOrder.gatewayOrderId}
+                        <br/>
+                        Waybill number=${tca.trackingId}
+                    </c:if>
+                </div>
+
+            </c:when>
+            <c:otherwise>
+                <div>
+                    <div class="row">
+                        <s:label name="Customer Name:" class="valueLabel"/>
+                        <s:label name="${tca.shippingOrder.baseOrder.user.name}" class="nameLabel"/>
+                    </div>
+                    <div class="clear"></div>
+                    <div class="row">
+                        <s:label name="Order Id:" class="valueLabel"/>
+                        <s:label name="${tca.shippingOrder.baseOrder.id}" class="nameLabel"/>
+                    </div>
+                    <div class="clear"></div>
+                    <div class="row">
+                        <s:label name="Ship date:" class="valueLabel"/>
+                        <s:label name="${tca.shippingOrder.shipment.shipDate}" class="nameLabel"/>
+                    </div>
+                    <div class="clear"></div>
+                    <div class="row">
+                        <s:label name="Tracking Id:" class="valueLabel"/>
+                        <c:choose>
+                            <c:when test="${tca.courierName =='Delhivery'}">
+                                <s:label name="${tca.awb}" class="nameLabel"/>
+                            </c:when>
+                            <c:otherwise>
+                                <s:label name="${tca.trackingId}" class="nameLabel"/>
+                            </c:otherwise>
+                        </c:choose>
+
+                    </div>
+                    <div class="clear"></div>
+                    <c:if test="${tca.courierName =='Delhivery'}">
+                        <div class="row">
+                            <s:label name="Payment Mode:" class="valueLabel"/>
+                            <s:label name=" ${tca.paymentType}" class="nameLabel"/>
+                        </div>
+                        <div class="clear"></div>
+
+                    </c:if>
+                    <div class="row">
+                        <s:label name="Shipment Status:" class="valueLabel"/>
+                        <s:label name="${tca.status}" class="nameLabel"/>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </c:otherwise>
+        </c:choose>
+
+    </s:layout-component>
+</s:layout-render>
+<style type="text/css">
+    .nameLabel {
+        margin-top: 20px;
+    }
+
+    .valueLabel {
+        float: left;
+        margin-left: 10px;
+        width: 150px;
+    }
+
+    .row {
+        margin-top: 20px;
+    }
+
+</style>
+

@@ -95,13 +95,37 @@ public enum EnumCourier {
                 EnumCourier.DTDC_COD);
     }
 
-  public static List<EnumCourier> getDelhiveryCouriers(){
-    return Arrays.asList(
-   EnumCourier.Delhivery,
-   EnumCourier.Delhivery_Ahmedabad,
-     EnumCourier.Delhivery_Bangalore,
-     EnumCourier.Delhivery_Chennai);
-  }
+    public static List<EnumCourier> getDelhiveryCouriers() {
+        return Arrays.asList(
+                EnumCourier.Delhivery,
+                EnumCourier.Delhivery_Ahmedabad,
+                EnumCourier.Delhivery_Bangalore,
+                EnumCourier.Delhivery_Chennai);
+    }
 
+    public static List<Long> getDTDCCouriers() {
+        List<Long> dtdcCourierIds = new ArrayList<Long>();
+        dtdcCourierIds.add(EnumCourier.DTDC_COD.getId());
+        dtdcCourierIds.add(EnumCourier.DTDC_Lite.getId());
+        dtdcCourierIds.add(EnumCourier.DTDC_Plus.getId());
+        dtdcCourierIds.add(EnumCourier.DTDC_Surface.getId());
+        return dtdcCourierIds;
+    }
+
+    public static List<Long> getBlueDartCouriers() {
+        List<Long> blueDartCourierIds = new ArrayList<Long>();
+        blueDartCourierIds.add(EnumCourier.BlueDart.getId());
+        blueDartCourierIds.add(EnumCourier.BlueDart_COD.getId());
+        return blueDartCourierIds;
+    }
+
+    public static List<Long> getDelhiveryCourierIds() {
+        List<Long> delhiveryCourierIds = new ArrayList<Long>();
+        delhiveryCourierIds.add(EnumCourier.Delhivery.getId());
+        delhiveryCourierIds.add(EnumCourier.Delhivery_Ahmedabad.getId());
+        delhiveryCourierIds.add(EnumCourier.Delhivery_Bangalore.getId());
+        delhiveryCourierIds.add(EnumCourier.Delhivery_Chennai.getId());
+        return delhiveryCourierIds;
+    }
 }
 
