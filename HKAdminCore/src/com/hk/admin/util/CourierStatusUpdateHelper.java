@@ -34,8 +34,6 @@ import com.google.gson.JsonObject;
 public class CourierStatusUpdateHelper {
 
     private static        Logger           logger                        = LoggerFactory.getLogger(CourierStatusUpdateHelper.class);
-    private               String           inputLine                     = null;
-    private               String           response                      = null;
     private               BufferedReader   bufferedReader                = null;
     private               URL              url                           = null;
     private               SimpleDateFormat sdf_date                      = new SimpleDateFormat("yyyy-MM-dd");
@@ -48,8 +46,13 @@ public class CourierStatusUpdateHelper {
 
 
     public Date updateDeliveryStatusAFL(String trackingId) {
+        String inputLine = "";
+        String response = "";
+
         Map<String, String> responseAFL;
         Date delivery_date = null;
+
+        trackingId = "861042704819986";
         try {
             url = new URL("http://trackntrace.aflwiz.com/aflwiztrack?shpntnum=" + trackingId);
             bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
@@ -59,67 +62,7 @@ public class CourierStatusUpdateHelper {
                     response += inputLine;
                 }
             }
-            response="<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                    "<SHIPMENTTRACK>" +
-                    "<SEARCHON>" +
-                    "2012-06-15 13:35:21</SEARCHON>" +
-                    "<SHIPMENTREPORT>" +
-                    "<AWB>AF0001</AWB>" +
-                    "<SHIPMENTREFERENCENUMBER>1134776-94859</SHIPMENTREFERENCENUMBER>" +
-                    "<TOTALWEIGHT>0.5</TOTALWEIGHT>" +
-                    "<PICKUPDATE>2012-06-01</PICKUPDATE>" +
-                    "<CONSIGNORNAME><![CDATA[AQUAMARINE HEALTHCARE PVT LTD]]></CONSIGNORNAME>" +
-                    "<ORIGIN>BHIWANDI</ORIGIN>" +
-                    "<CONSIGNEENAME><![CDATA[VINOD JALAGAM]]></CONSIGNEENAME>" +
-                    "<DESTINATION>HYDERABAD</DESTINATION>" +
-                    "<CURRENTSTATUS>DELIVERED</CURRENTSTATUS>" +
-                    "<RETURNAWB>No Return AWB</RETURNAWB>" +
-                    "<CHECKPOINTDETAILS>" +
-                    "<CHECKPOINTS>" +
-                    "<CHECKPOINT>PU</CHECKPOINT>" +
-                    "<CHECKPOINTDESCRIPTION>Shipment Pick Up</CHECKPOINTDESCRIPTION>" +
-                    "<LOCATIONNAME>BHIWANDI EXPRESS CENTRE</LOCATIONNAME>" +
-                    "<CHECKDATE>2012-06-01</CHECKDATE>" +
-                    "<CHECKTIME>20:34:25</CHECKTIME>" +
-                    "</CHECKPOINTS>" +
-                    "<CHECKPOINTS>" +
-                    "<CHECKPOINT>DF</CHECKPOINT>" +
-                    "<CHECKPOINTDESCRIPTION>Depart Facility</CHECKPOINTDESCRIPTION>" +
-                    "<LOCATIONNAME>MUMBAI</LOCATIONNAME>" +
-                    "<CHECKDATE>2012-06-02</CHECKDATE>" +
-                    "<CHECKTIME>04:40:49</CHECKTIME>" +
-                    "</CHECKPOINTS>" +
-                    "<CHECKPOINTS>" +
-                    "<CHECKPOINT>AF</CHECKPOINT>" +
-                    "<CHECKPOINTDESCRIPTION>Arrived Facility</CHECKPOINTDESCRIPTION>" +
-                    "<LOCATIONNAME>Hyderabad</LOCATIONNAME>" +
-                    "<CHECKDATE>2012-06-02</CHECKDATE>" +
-                    "<CHECKTIME>13:27:37</CHECKTIME>" +
-                    "</CHECKPOINTS>" +
-                    "<CHECKPOINTS>" +
-                    "<CHECKPOINT>AR</CHECKPOINT>" +
-                    "<CHECKPOINTDESCRIPTION>Arrival at Delivery Facility</CHECKPOINTDESCRIPTION>" +
-                    "<LOCATIONNAME>ECIL EXPRESS CENTRE</LOCATIONNAME>" +
-                    "<CHECKDATE>2012-06-02</CHECKDATE>" +
-                    "<CHECKTIME>14:55:00</CHECKTIME>" +
-                    "</CHECKPOINTS>" +
-                    "<CHECKPOINTS>" +
-                    "<CHECKPOINT>WC</CHECKPOINT>" +
-                    "<CHECKPOINTDESCRIPTION>With Delivering Courier</CHECKPOINTDESCRIPTION>" +
-                    "<LOCATIONNAME>ECIL EXPRESS CENTRE</LOCATIONNAME>" +
-                    "<CHECKDATE>2012-06-04</CHECKDATE>" +
-                    "<CHECKTIME>10:35:55</CHECKTIME>" +
-                    "</CHECKPOINTS>" +
-                    "<CHECKPOINTS>" +
-                    "<CHECKPOINT>OK</CHECKPOINT>" +
-                    "<CHECKPOINTDESCRIPTION>Delivery</CHECKPOINTDESCRIPTION>" +
-                    "<LOCATIONNAME>ECIL EXPRESS CENTRE</LOCATIONNAME>" +
-                    "<CHECKDATE>2012-06-04</CHECKDATE>" +
-                    "<CHECKTIME>14:20:00</CHECKTIME>" +
-                    "</CHECKPOINTS>" +
-                    "</CHECKPOINTDETAILS>" +
-                    "</SHIPMENTREPORT>" +
-                    "</SHIPMENTTRACK>";
+
             responseAFL = AFLResponseParser.parseResponse(response, trackingId);
             if (responseAFL != null) {
                 if (responseAFL.get(CourierConstants.AFL_DELIVERY_DATE) != null && responseAFL.get(CourierConstants.AFL_ORDER_GATEWAY_ID) != null && responseAFL.get(CourierConstants.AFL_AWB) != null
@@ -151,34 +94,41 @@ public class CourierStatusUpdateHelper {
 
     public ChhotuCourierDelivery updateDeliveryStatusChhotu(String trackingId) {
         ChhotuCourierDelivery chhotuCourierDelivery = null;
+        String inputLine = "";
+        String response = "";
         String jsonFormattedResponse = "";
+        trackingId = "10000124755";
         try {
 
-          /*  url = new URL("http://api.chhotu.in/shipmenttracking?tracking_number=" + trackingId);
-            bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));*/
+          url = new URL("http://api.chhotu.in/shipmenttracking?tracking_number=" + trackingId);
+            bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
 
-           /* while ((inputLine = bufferedReader.readLine()) != null) {
+            while ((inputLine = bufferedReader.readLine()) != null) {
                 if (inputLine != null) {
                     response += inputLine;
                 }
-            }*/
-           // bufferedReader.close();
-            response="jsonpcallback({\"delivery_type\":\"Cash On Delivery\",\"cod_amount\":\"410\",\"customer_name\":\"Veneet\",\"pin_code\":\"110049\",\"delivery_date\":\"2012-06-02\",\"tracking_number\":\"10000124755\",\"STATUS\":\"SUCCESS\",\"shipment_status\":\"Delivered\"})";
+            }
             jsonFormattedResponse = response.substring(14, (response.length() - 1));
             chhotuCourierDelivery = new Gson().fromJson(jsonFormattedResponse, ChhotuCourierDelivery.class);
 
 
-        } /*catch (MalformedURLException mue) {
+        } catch (MalformedURLException mue) {
             logger.debug(CourierConstants.MALFORMED_URL_EXCEPTION + trackingId);
 
         } catch (IOException ioe) {
             logger.debug(CourierConstants.IO_EXCEPTION + trackingId);
-        } */catch (NullPointerException npe) {
+        } catch (NullPointerException npe) {
             logger.debug(CourierConstants.NULL_POINTER_EXCEPTION + trackingId);
 
         } catch (Exception e) {
             logger.debug(CourierConstants.EXCEPTION + trackingId);
 
+        } finally {
+            try{
+            bufferedReader.close();
+            }catch (IOException ioe){
+                logger.debug(CourierConstants.IO_EXCEPTION + trackingId);
+            }
         }
         return chhotuCourierDelivery;
     }
@@ -197,101 +147,23 @@ public class CourierStatusUpdateHelper {
             if (shippingOrder != null) {
                 gatewayOrderId = shippingOrder.getGatewayOrderId();
             }
-
-           /* url = new URL("http://track.delhivery.com/api/packages/json/?token=" + authenticationIdForDelhivery + "&ref_nos=" + gatewayOrderId);
+             //added for debugging
+            gatewayOrderId="1135321-82847";
+           url = new URL("http://track.delhivery.com/api/packages/json/?token=" + authenticationIdForDelhivery + "&ref_nos=" + gatewayOrderId);
             bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
 
             while ((inputLine = bufferedReader.readLine()) != null) {
                 jsonFormattedResponse += inputLine;
             }
-            bufferedReader.close();
-*/
-            //for testing
-            jsonFormattedResponse="{" +
-                    "    \"ShipmentData\": [" +
-                    "        {" +
-                    "            \"Shipment\": {" +
-                    "                \"Status\": {" +
-                    "                    \"Status\": \"Delivered\"," +
-                    "                    \"StatusLocation\": \"Gurgaon (Haryana)\"," +
-                    "                    \"StatusDateTime\": \"2012-06-05T20:34:31.756000\"," +
-                    "                    \"RecievedBy\": \"\"," +
-                    "                    \"StatusType\": \"DL\"," +
-                    "                    \"Instructions\": \"\"" +
-                    "                }," +
-                    "                \"Origin\": \"Gurgaon (Haryana)\"," +
-                    "                \"PickUpDate\": \"2012-05-30T19:34:47\"," +
-                    "                \"ToAttention\": \"Rishabh Sayal\"," +
-                    "                \"CustomerName\": \"HealthKart\"," +
-                    "                \"Weight\": 3200," +
-                    "                \"OrderType\": \"COD\"," +
-                    "                \"Destination\": \"Gurgaon\"," +
-                    "                \"Consignee\": {" +
-                    "                    \"City\": \"Gurgaon\"," +
-                    "                    \"Name\": \"Rishabh Sayal\"," +
-                    "                    \"Country\": \"India\"," +
-                    "                    \"Address2\": []," +
-                    "                    \"Address3\": \"\"," +
-                    "                    \"PinCode\": 122001," +
-                    "                    \"State\": \"\"," +
-                    "                    \"Telephone2\": \"9990606006, 9990606006, 9990606006, 9990606006, 9990606006, 9990606006, 9990606006, 9990606006, 9990606006, 9990606006, 9990606006, 9990606006, 9990606006, 9990606006, 9990606006\"," +
-                    "                    \"Telephone1\": [" +
-                    "                        \"9990606006\"" +
-                    "                    ]," +
-                    "                    \"Address1\": [" +
-                    "                        \"House no. 1163 Sector 10/A\"" +
-                    "                    ]" +
-                    "                }," +
-                    "                \"ReferenceNo\": \"1134173-47619\"," +
-                    "                \"InvoiceAmount\": 359900," +
-                    "                \"CODAmount\": 359900," +
-                    "                \"SenderName\": \"HealthKart\"," +
-                    "                \"AWB\": \"10410113466\"," +
-                    "                \"Scans\": [" +
-                    "                    {" +
-                    "                        \"ScanDetail\": {" +
-                    "                            \"ScanDateTime\": \"2012-05-30T22:09:37.083000\"," +
-                    "                            \"ScanType\": \"UD\"," +
-                    "                            \"Scan\": \"Pending\"," +
-                    "                            \"StatusDateTime\": \"2012-05-30T22:09:37.083000\"," +
-                    "                            \"ScannedLocation\": \"Gurgaon (Haryana)\"," +
-                    "                            \"Instructions\": \"Shipment received\"" +
-                    "                        }" +
-                    "                    }," +
-                    "                    {" +
-                    "                        \"ScanDetail\": {" +
-                    "                            \"ScanDateTime\": \"2012-06-05T14:45:49\"," +
-                    "                            \"ScanType\": \"UD\"," +
-                    "                            \"Scan\": \"Dispatched\"," +
-                    "                            \"StatusDateTime\": \"2012-06-05T14:45:49\"," +
-                    "                            \"ScannedLocation\": \"Gurgaon (Haryana)\"," +
-                    "                            \"Instructions\": \"Dispatched for Delivery\"" +
-                    "                        }" +
-                    "                    }," +
-                    "                    {" +
-                    "                        \"ScanDetail\": {" +
-                    "                            \"ScanDateTime\": \"2012-06-05T20:34:31.756000\"," +
-                    "                            \"ScanType\": \"DL\"," +
-                    "                            \"Scan\": \"Delivered\"," +
-                    "                            \"StatusDateTime\": \"2012-06-05T20:34:31.756000\"," +
-                    "                            \"ScannedLocation\": \"Gurgaon (Haryana)\"," +
-                    "                            \"Instructions\": \"\"" +
-                    "                        }" +
-                    "                    }" +
-                    "                ]" +
-                    "            }" +
-                    "        }" +
-                    "    ]" +
-                    "}";
 
             shipmentJsonObj = jsonParser.parse(jsonFormattedResponse).getAsJsonObject().getAsJsonArray(CourierConstants.DELHIVERY_SHIPMENT_DATA).get(0).getAsJsonObject().getAsJsonObject(CourierConstants.DELHIVERY_SHIPMENT);
-        } /*catch (MalformedURLException mue) {
+        } catch (MalformedURLException mue) {
             logger.debug(CourierConstants.MALFORMED_URL_EXCEPTION + trackingId);
 
         } catch (IOException ioe) {
             logger.debug(CourierConstants.IO_EXCEPTION + trackingId);
 
-        }*/ catch (NullPointerException npe) {
+        } catch (NullPointerException npe) {
             logger.debug(CourierConstants.NULL_POINTER_EXCEPTION + trackingId);
 
         } catch (Exception e) {
@@ -299,14 +171,22 @@ public class CourierStatusUpdateHelper {
             e.printStackTrace();
 
         }
+        finally {
+            try {
+                bufferedReader.close();
+            } catch (IOException e) {
+                logger.debug(CourierConstants.IO_EXCEPTION + trackingId);
+            }
+        }
         return shipmentJsonObj;
     }
 
 
     public Element updateDeliveryStatusBlueDart(String trackingId) {
         Element    xmlElement   = null;
-        String     inputLine;
-        String     response     = "";
+        String inputLine = "";
+        String response = "";
+        trackingId              = "43872110553";
 
         try {
             url = new URL("http://www.bluedart.com/servlet/RoutingServlet?handler=tnt&action=custawbquery&loginid=" + loginIdForBlueDart + "&awb=awb&numbers=" + trackingId + "&format=xml&lickey=" + licenceKeyForBlueDart + "&verno=1.3&scan=1");
@@ -318,96 +198,6 @@ public class CourierStatusUpdateHelper {
                 }
             }
 
-            response="<ShipmentData>" +
-                    "<Shipment WaybillNo=\"44330038841\" RefNo=\"1131275-77758\">" +
-                    "<Service>Domestic Priority</Service>" +
-                    "<PickUpDate>01 June 2012</PickUpDate>" +
-                    "<Origin>NAVIMUMBAI</Origin>" +
-                    "<Destination>SRINAGAR</Destination>" +
-                    "<ProductType>Non Documents</ProductType>" +
-                    "<CustomerName>AQUAMARINE HEALTHCARE -PREPAID</CustomerName>" +
-                    "<SenderName>AQUAMARINE HEALTHCAR</SenderName>" +
-                    "<ToAttention>RUQSANA FAROOQ</ToAttention>" +
-                    "<Consignee>RUQSANA FAROOQ</Consignee>" +
-                    "<ConsigneeAddress1>SHAKTI COLONY ,YAKHRAJPURA</ConsigneeAddress1>" +
-                    "<ConsigneeAddress2>NEAR FIRDOUS GENERAL STORE</ConsigneeAddress2>" +
-                    "<ConsigneeAddress3>SRINAGAR/Jammu and Kash</ConsigneeAddress3>" +
-                    "<ConsigneePincode>190008</ConsigneePincode>" +
-                    "<ConsigneeTelNo>9086873133</ConsigneeTelNo>" +
-                    "<Weight>1.5</Weight>" +
-                    "<Status>Shipment delivered</Status>" +
-                    "<StatusType>DL</StatusType>" +
-                    "<StatusDate>07 June 2012</StatusDate>" +
-                    "<StatusTime>13:05</StatusTime>" +
-                    "<ReceivedBy>SIGN</ReceivedBy>" +
-                    "<Instructions>General Goods</Instructions>" +
-                    "<Scans>" +
-                    "<ScanDetail>" +
-                    "<Scan>Shipment delivered</Scan>" +
-                    "<ScanType>DL</ScanType>" +
-                    "<ScanDate>07-Jun-2012</ScanDate>" +
-                    "<ScanTime>13:05</ScanTime>" +
-                    "<ScannedLocation>SRINAGAR</ScannedLocation>" +
-                    "</ScanDetail>" +
-                    "<ScanDetail>" +
-                    "<Scan>Shipment Outscan</Scan>" +
-                    "<ScanType>UD</ScanType>" +
-                    "<ScanDate>07-Jun-2012</ScanDate>" +
-                    "<ScanTime>11:38</ScanTime>" +
-                    "<ScannedLocation>SRINAGAR</ScannedLocation>" +
-                    "</ScanDetail>" +
-                    "<ScanDetail>" +
-                    "<Scan>Shipment Inscan</Scan>" +
-                    "<ScanType>UD</ScanType>" +
-                    "<ScanDate>05-Jun-2012</ScanDate>" +
-                    "<ScanTime>17:09</ScanTime>" +
-                    "<ScannedLocation>SRINAGAR</ScannedLocation>" +
-                    "</ScanDetail>" +
-                    "<ScanDetail>" +
-                    "<Scan>SHIPMENT OUTSCANNED TO NETWORK</Scan>" +
-                    "<ScanType>UD</ScanType>" +
-                    "<ScanDate>03-Jun-2012</ScanDate>" +
-                    "<ScanTime>07:00</ScanTime>" +
-                    "<ScannedLocation>DELHI HUB</ScannedLocation>" +
-                    "</ScanDetail>" +
-                    "<ScanDetail>" +
-                    "<Scan>PLASTIC BAG - AUTO TALLY</Scan>" +
-                    "<ScanType>UD</ScanType>" +
-                    "<ScanDate>02-Jun-2012</ScanDate>" +
-                    "<ScanTime>06:52</ScanTime>" +
-                    "<ScannedLocation>DELHI HUB</ScannedLocation>" +
-                    "</ScanDetail>" +
-                    "<ScanDetail>" +
-                    "<Scan>SHIPMENT OUTSCANNED TO NETWORK</Scan>" +
-                    "<ScanType>UD</ScanType>" +
-                    "<ScanDate>02-Jun-2012</ScanDate>" +
-                    "<ScanTime>05:12</ScanTime>" +
-                    "<ScannedLocation>MUMBAI HUB</ScannedLocation>" +
-                    "</ScanDetail>" +
-                    "<ScanDetail>" +
-                    "<Scan>Canvas Bag Consolidated Scan</Scan>" +
-                    "<ScanType>UD</ScanType>" +
-                    "<ScanDate>02-Jun-2012</ScanDate>" +
-                    "<ScanTime>02:38</ScanTime>" +
-                    "<ScannedLocation>MUMBAI HUB</ScannedLocation>" +
-                    "</ScanDetail>" +
-                    "<ScanDetail>" +
-                    "<Scan>SHIPMENT OUTSCANNED TO NETWORK</Scan>" +
-                    "<ScanType>UD</ScanType>" +
-                    "<ScanDate>02-Jun-2012</ScanDate>" +
-                    "<ScanTime>00:00</ScanTime>" +
-                    "<ScannedLocation>OVALI WAREHOUSE</ScannedLocation>" +
-                    "</ScanDetail>" +
-                    "<ScanDetail>" +
-                    "<Scan>Shipment Inscan</Scan>" +
-                    "<ScanType>UD</ScanType>" +
-                    "<ScanDate>01-Jun-2012</ScanDate>" +
-                    "<ScanTime>21:23</ScanTime>" +
-                    "<ScannedLocation>OVALI WAREHOUSE</ScannedLocation>" +
-                    "</ScanDetail>" +
-                    "</Scans>" +
-                    "</Shipment>" +
-                    "</ShipmentData>";
             Document doc = new SAXBuilder().build(new StringReader(response));
             XPath xPath = XPath.newInstance("/*/Shipment");
             xmlElement = (Element) xPath.selectSingleNode(doc);

@@ -77,14 +77,14 @@ public class TrackCourierAction extends BaseAction {
                 }
                 resolution = new ForwardResolution("/pages/courierDetails.jsp");
             } else {
-                resolution = new RedirectResolution("/pages/error/invalidCourier.jsp");
+                resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
             }
         } else if (courierId.equals(EnumCourier.Chhotu.getId())) {
             chhotuCourierDelivery = courierStatusUpdateHelper.updateDeliveryStatusChhotu(trackingId);
             if (chhotuCourierDelivery != null) {
                 resolution = new ForwardResolution("/pages/chhotuCourier.jsp");
             } else {
-                resolution = new RedirectResolution("/pages/error/invalidCourier.jsp");
+                resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
             }
 
         } else if (EnumCourier.getBlueDartCouriers().contains(courierId)) {
@@ -97,7 +97,7 @@ public class TrackCourierAction extends BaseAction {
                 }
                 resolution = new ForwardResolution("/pages/courierDetails.jsp");
             } else {
-                resolution = new RedirectResolution("/pages/error/invalidCourier.jsp");
+                resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
             }
 
         } else if (EnumCourier.getDTDCCouriers().contains(courierId)) {
@@ -111,10 +111,10 @@ public class TrackCourierAction extends BaseAction {
                 }
                 resolution = new ForwardResolution("/pages/courierDetails.jsp");
             } else {
-                resolution = new RedirectResolution("/pages/error/invalidCourier.jsp");
+                resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
             }
         } else {
-            resolution = new RedirectResolution("/pages/error/invalidCourier.jsp");
+            resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
         }
         return resolution;
     }
