@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.session.Session;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.admin.manager.ProductManager;
+import com.hk.admin.impl.task.dbmaster.ProductCatalogService;
 import com.hk.admin.util.XslParser;
 import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.core.HealthkartConstants;
@@ -84,7 +84,7 @@ public class EditProductAttributesAction extends BaseAction {
     @Autowired
     MenuHelper                    menuHelper;
     @Autowired
-    ProductManager                productManager;
+    ProductCatalogService productCatalogService;
     @Autowired
     AffiliateDao                  affiliateDao;
     @Autowired
@@ -104,7 +104,7 @@ public class EditProductAttributesAction extends BaseAction {
     private String                preferredZone;
     private String                productImageId;
 
-    public Resolution editDescription() {
+  public Resolution editDescription() {
         product = getProductService().getProductById(productId);
         return new ForwardResolution("/pages/editDescription.jsp");
     }

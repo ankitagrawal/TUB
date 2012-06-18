@@ -8,10 +8,13 @@ import net.sourceforge.stripes.action.SimpleMessage;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.pact.service.task.TaskService;
+import com.hk.admin.pact.task.TaskService;
+import com.hk.constants.core.PermissionConstants;
 
+/*@Secure(hasAnyPermissions = { PermissionConstants.RUN_ANT_BUILDS })*/
 @Component
 public class TaskManagerAction extends BaseAction {
 
@@ -19,8 +22,10 @@ public class TaskManagerAction extends BaseAction {
   TaskService             taskService;
 /*
   @Autowired
-  ProductManager productManager;
+  ProductCatalogService productManager;
 */
+
+  private String db_master_service;
   private static Logger logger = Logger.getLogger(TaskManagerAction.class);
 
 
@@ -29,7 +34,7 @@ public class TaskManagerAction extends BaseAction {
      return new ForwardResolution("/pages/admin/taskManager.jsp");
   }
   public Resolution db_master() {
-        boolean status = taskService.runDbMaster("static");
+        boolean status = taskService.execute(db_master_service);
         if(status){
           addRedirectAlertMessage(new SimpleMessage("DB Master ran successfully"));
         }
@@ -37,5 +42,13 @@ public class TaskManagerAction extends BaseAction {
           addRedirectAlertMessage(new SimpleMessage("DB Master failed"));
         }
         return new ForwardResolution("/pages/admin/taskManager.jsp");
+  }
+
+  public String getDb_master_service() {
+    return db_master_service;
+  }
+
+  public void setDb_master_service(String db_master_service) {
+    this.db_master_service = db_master_service;
   }
 }

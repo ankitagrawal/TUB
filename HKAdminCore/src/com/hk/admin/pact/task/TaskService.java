@@ -1,6 +1,5 @@
-package com.hk.pact.service.task;
+package com.hk.admin.pact.task;
 
-import java.util.List;
 import java.io.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,5 +14,5 @@ public interface TaskService {
   static File catalog_nutrition         = new File("./data/catalog/ProductCatalog-Nutrition.xls");
   static File catalog_personalCare      = new File("./data/catalog/ProductCatalog-PersonalCare.xls");
 
-    public boolean runDbMaster(String masterData) ;
+    public boolean execute(String data) ;
 }

@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.admin.manager.ProductManager;
+import com.hk.admin.impl.task.dbmaster.ProductCatalogService;
 import com.hk.admin.util.XslParser;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
@@ -41,7 +41,7 @@ public class ParseExcelAction extends BaseAction {
     private static Logger           logger = LoggerFactory.getLogger(ParseExcelAction.class);
 
     @Autowired
-    private ProductManager          productManager;
+    private ProductCatalogService productCatalogService;
 
     @Autowired
     private BatchProcessWorkManager batchProcessWorkManager;
@@ -61,7 +61,7 @@ public class ParseExcelAction extends BaseAction {
     @Validate(required = true)
     String                          category;
 
-    public void setCategory(String category) {
+  public void setCategory(String category) {
         this.category = category;
     }
 
@@ -102,12 +102,12 @@ public class ParseExcelAction extends BaseAction {
         return category;
     }
 
-    public ProductManager getProductManager() {
-        return productManager;
+    public ProductCatalogService getProductManager() {
+        return productCatalogService;
     }
 
-    public void setProductManager(ProductManager productManager) {
-        this.productManager = productManager;
+    public void setProductManager(ProductCatalogService productCatalogService) {
+        this.productCatalogService = productCatalogService;
     }
 
     public XslParser getXslParser() {

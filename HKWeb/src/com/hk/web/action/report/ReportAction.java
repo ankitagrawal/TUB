@@ -32,12 +32,11 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.DateUtils;
-import com.hk.admin.manager.ProductManager;
+import com.hk.admin.impl.task.dbmaster.ProductCatalogService;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.order.EnumOrderStatus;
-import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.core.OrderStatus;
 import com.hk.domain.core.PaymentMode;
@@ -114,7 +113,7 @@ public class ReportAction extends BaseAction {
   @Autowired
   PaymentModeDao paymentModeDao;
   @Autowired
-  ProductManager productManager;
+  ProductCatalogService productCatalogService;
   @Autowired
   ReconciliationStatusDaoImpl reconciliationStatusDao;
   @Autowired
@@ -371,7 +370,7 @@ public class ReportAction extends BaseAction {
     * productLineItems = order.getProductLineItems(); try { if (productLineItems.size() > 0 &&
     * productLineItems.get(0).getLineItemStatus().getId().equals(EnumLineItemStatus.ACTION_AWAITING.getId())) {
     * Category basketCategory =
-    * productManager.getTopLevelCategory(productLineItems.get(0).getProductVariant().getProduct());
+    * productCatalogService.getTopLevelCategory(productLineItems.get(0).getProductVariant().getProduct());
     * order.setBasketCategory(basketCategory.getDisplayName()); orderList.add(order); } } catch (Exception e) {
     * //TODO } } } }
     */
@@ -380,7 +379,7 @@ public class ReportAction extends BaseAction {
     /*
     * Set<Order> tmpOrderList = orderDao.getOrderLyingIdleInActionQueue(orderIds, activityDate, 17); for (Order
     * order : tmpOrderList) { try { Category basketCategory =
-    * productManager.getTopLevelCategory(order.getProductLineItems().get(0).getProductVariantId().getProduct());
+    * productCatalogService.getTopLevelCategory(order.getProductLineItems().get(0).getProductVariantId().getProduct());
     * order.setBasketCategory(basketCategory.getDisplayName()); orderList.add(order); } catch (Exception e) {
     * //TODO } }
     */
@@ -454,7 +453,7 @@ public class ReportAction extends BaseAction {
     * !distinctOrderBucket.contains(order)) { distinctOrders++; totalDistinctOrders++;
     * distinctOrderBucket.add(order); } else if (order.getProductLineItems().size() > 1) { Category oldCategory =
     * null; boolean isMixOrder = false; for (LineItem lineItem : order.getProductLineItems()) { Category category =
-    * productManager.getTopLevelCategory(lineItem.getProductVariant().getProduct()); // on 25th oct data, there is
+    * productCatalogService.getTopLevelCategory(lineItem.getProductVariant().getProduct()); // on 25th oct data, there is
     * a particular product lineitem whose cat is null, have to check how, hence putting null check if (category !=
     * null && oldCategory != null && !category.equals(oldCategory)) { mixedOrders++; isMixOrder = true; break; }
     * oldCategory = category; } if (!isMixOrder && !distinctOrderBucket.contains(order)) { distinctOrders++;

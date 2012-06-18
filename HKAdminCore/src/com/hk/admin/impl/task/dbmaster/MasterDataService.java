@@ -1,4 +1,4 @@
-package com.hk.impl.service.task;
+package com.hk.admin.impl.task.dbmaster;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,11 +21,7 @@ import com.hk.db.seed.email.EmailTypeSeedData;
 import com.hk.db.seed.inventory.*;
 import com.hk.db.seed.marketing.AdNetworksSeedData;
 import com.hk.db.seed.marketing.GoogleBannedWordSeedData;
-import com.hk.db.seed.order.CartLineItemTypeSeedData;
-import com.hk.db.seed.order.OrderLifecycleActivitySeedData;
-import com.hk.db.seed.order.OrderStatusSeedData;
-import com.hk.db.seed.order.ShippingOrderLifecycleActivitySeedData;
-import com.hk.db.seed.order.ShippingOrderStatusSeedData;
+import com.hk.db.seed.order.*;
 import com.hk.db.seed.payment.PaymentModeSeedData;
 import com.hk.db.seed.payment.PaymentStatusSeedData;
 import com.hk.db.seed.reward.ReviewStatusSeedData;
@@ -114,6 +110,10 @@ public class MasterDataService {
     CourierGroupSeedData                   courierGroupSeedData;
     @Autowired
     PurchaseFormTypeSeedData               purchaseFormTypeSeedData;
+    @Autowired
+    PrimaryReferrerForOrderSeedData        primaryReferrerForOrderSeedData;
+    @Autowired
+    SecondaryReferrerForOrderSeedData      secondaryReferrerForOrderSeedData;
 
     public void insert() {
 
@@ -229,6 +229,11 @@ public class MasterDataService {
         logger.debug("inserting purchase form-type  seed data");
         purchaseFormTypeSeedData.invokeInsert();
 
+        logger.debug("inserting primary referrer for order  seed data");
+        primaryReferrerForOrderSeedData.invokeInsert();
+
+        logger.debug("inserting secondary referrer for order  seed data");
+        secondaryReferrerForOrderSeedData.invokeInsert();
     }
 
 }

@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.admin.manager.ProductManager;
+import com.hk.admin.impl.task.dbmaster.ProductCatalogService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.affiliate.AffiliateCategory;
@@ -35,7 +35,7 @@ import com.hk.web.action.error.AdminPermissionAction;
 @Component
 public class CategoryLevelDiscountAction extends BaseAction {
     @Autowired
-    private ProductManager                  productManager;
+    private ProductCatalogService productCatalogService;
     @Autowired
     private ProductService                  productService;
     @Autowired
@@ -69,7 +69,7 @@ public class CategoryLevelDiscountAction extends BaseAction {
 
     private List<DefaultCategoryCommission> defaultAffiliateCategoryCommissionList;
 
-    @DefaultHandler
+  @DefaultHandler
     @DontValidate
     public Resolution pre() {
         return new ForwardResolution("/pages/admin/categoryLevelDiscount.jsp");
@@ -170,12 +170,12 @@ public class CategoryLevelDiscountAction extends BaseAction {
         this.overview = overview;
     }
 
-    public ProductManager getProductManager() {
-        return productManager;
+    public ProductCatalogService getProductManager() {
+        return productCatalogService;
     }
 
-    public void setProductManager(ProductManager productManager) {
-        this.productManager = productManager;
+    public void setProductManager(ProductCatalogService productCatalogService) {
+        this.productCatalogService = productCatalogService;
     }
 
     public ProductService getProductService() {

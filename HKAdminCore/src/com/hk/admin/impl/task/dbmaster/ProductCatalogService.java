@@ -1,4 +1,4 @@
-package com.hk.admin.manager;
+package com.hk.admin.impl.task.dbmaster;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -30,9 +30,9 @@ import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.core.TaxService;
 
 @Component
-public class ProductManager {
+public class ProductCatalogService {
 
-	private static Logger logger = LoggerFactory.getLogger(ProductManager.class);
+	private static Logger logger = LoggerFactory.getLogger(ProductCatalogService.class);
 	private static Gson gson = JsonUtils.getGsonDefault();
 
 	@Autowired

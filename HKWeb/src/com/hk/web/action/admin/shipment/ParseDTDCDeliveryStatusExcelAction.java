@@ -19,7 +19,7 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.manager.DeliveryStatusUpdateManager;
-import com.hk.admin.manager.ProductManager;
+import com.hk.admin.impl.task.dbmaster.ProductCatalogService;
 import com.hk.admin.util.XslParser;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
@@ -44,7 +44,7 @@ public class ParseDTDCDeliveryStatusExcelAction extends BaseAction {
     private static Logger               logger = LoggerFactory.getLogger(ParseDTDCDeliveryStatusExcelAction.class);
 
     @Autowired
-    private ProductManager              productManager;
+    private ProductCatalogService productCatalogService;
 
     @Autowired
     private BatchProcessWorkManager     batchProcessWorkManager;
@@ -67,7 +67,7 @@ public class ParseDTDCDeliveryStatusExcelAction extends BaseAction {
     @Validate(required = true)
     FileBean                            fileBean;
 
-    public void setFileBean(FileBean fileBean) {
+  public void setFileBean(FileBean fileBean) {
         this.fileBean = fileBean;
     }
 
@@ -118,12 +118,12 @@ public class ParseDTDCDeliveryStatusExcelAction extends BaseAction {
         return new ForwardResolution("/pages/admin/parseDTDCDeliveryStatusExcel.jsp");
     }
 
-    public ProductManager getProductManager() {
-        return productManager;
+    public ProductCatalogService getProductManager() {
+        return productCatalogService;
     }
 
-    public void setProductManager(ProductManager productManager) {
-        this.productManager = productManager;
+    public void setProductManager(ProductCatalogService productCatalogService) {
+        this.productCatalogService = productCatalogService;
     }
 
     public BatchProcessWorkManager getBatchProcessWorkManager() {

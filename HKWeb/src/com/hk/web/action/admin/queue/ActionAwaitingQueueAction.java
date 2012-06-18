@@ -22,7 +22,7 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
-import com.hk.admin.manager.ProductManager;
+import com.hk.admin.impl.task.dbmaster.ProductCatalogService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
@@ -61,7 +61,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
   @Autowired
   OrderManager orderManager;
   @Autowired
-  ProductManager productManager;
+  ProductCatalogService productCatalogService;
   @Autowired
   OrderStatusDao orderStatusDao;
   @Autowired
