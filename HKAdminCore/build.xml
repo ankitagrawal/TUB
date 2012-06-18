@@ -26,6 +26,7 @@
 		<fileset file="${project.common.dir}/dist/hk-common.jar" />
 		<fileset file="${project.core.dir}/dist/hk-core.jar" />
 		<fileset file="${lib.root.dir}/thirdParty/jdom-1.0.jar" />
+    <fileset file="${lib.root.dir}/thirdParty/jets3t-0.8.1.jar" />
 	</path>
 
 

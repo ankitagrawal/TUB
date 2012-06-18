@@ -1,0 +1,134 @@
+package com.hk.admin.util;
+
+import org.jets3t.service.S3Service;
+import org.jets3t.service.ServiceException;
+import org.jets3t.service.S3ServiceException;
+import org.jets3t.service.multi.SimpleThreadedStorageService;
+import org.jets3t.service.utils.Mimetypes;
+import org.jets3t.service.acl.AccessControlList;
+import org.jets3t.service.acl.GroupGrantee;
+import org.jets3t.service.acl.Permission;
+import org.jets3t.service.impl.rest.httpclient.RestS3Service;
+import org.jets3t.service.model.S3Bucket;
+import org.jets3t.service.model.S3Object;
+import org.jets3t.service.security.AWSCredentials;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.util.*;
+
+
+public class S3Utils {
+  private static Logger logger = LoggerFactory.getLogger(S3Utils.class);
+
+  private static S3Service initializeConnectionParams(String awsAccess, String awsSecret, String bucketName) {
+    try {
+      AWSCredentials awsCredentials = new AWSCredentials(awsAccess, awsSecret);
+      S3Service s3Service = new RestS3Service(awsCredentials);
+//    S3Bucket s3Bucket=s3Service.getOrCreateBucket(bucketName);
+      S3Bucket s3Bucket = s3Service.getBucket(bucketName);
+      //this way is used instead of directly using getOrCreateBucket method ,so that if the bucket already exists, we won't set its access control everytime.
+      if (s3Bucket == null) {
+        s3Bucket = s3Service.createBucket(bucketName);
+        AccessControlList bucketAcl = s3Service.getBucketAcl(s3Bucket);
+        bucketAcl.grantPermission(GroupGrantee.ALL_USERS, Permission.PERMISSION_READ);
+        s3Bucket.setAcl(bucketAcl);
+        s3Service.putBucketAcl(s3Bucket);
+      }
+      return s3Service;
+    } catch (ServiceException se) {
+      logger.error("error in uplaoding data on s3: " + se);
+      return null;
+    }
+  }
+
+  /**
+   * The method uploads the data to S3 and gives it public read access
+   *
+   * @param awsAccess: aws access key
+   * @param awsSecret: aws secret key
+   * @param filePath:  path for the file to be uploaded
+   * @param key: key for file at Amazon S3
+   * @param bucketName: bucket need not exist already. If it doesn't exist, it will be created.
+   * @throws ServiceException ,IOException ioe ,NoSuchAlgorithmException
+   */
+  public static void uploadData(String awsAccess, String awsSecret, String filePath, String key, String bucketName) {
+    S3Service s3Service = initializeConnectionParams(awsAccess, awsSecret, bucketName);
+    try {
+      S3Bucket s3Bucket = s3Service.getBucket(bucketName);
+      logger.info("Uploading file: " + filePath + " in bucket: " + bucketName + " at Amazon S3");
+
+      File file = new File(filePath);
+
+      S3Object s3Object = new S3Object(file);
+      s3Object.setKey(key);
+      s3Object.setAcl(s3Service.getBucketAcl(s3Bucket));
+      s3Object.setContentType("image/jpeg");
+
+      s3Service.putObject(s3Bucket, s3Object);
+    } catch (ServiceException se) {
+      logger.error("error in uplaoding data on s3: " + se);
+    } catch (IOException ioe) {
+      logger.error("error in uplaoding data on s3: " + ioe);
+    } catch (NoSuchAlgorithmException nsae) {
+      logger.error("error in uplaoding data on s3: " + nsae);
+    }
+  }
+
+  public static void uploadMultipleData(String awsAccess, String awsSecret, File folder, String bucketName) throws ServiceException {
+    S3Service s3Service = initializeConnectionParams(awsAccess, awsSecret, bucketName);
+    S3Bucket s3Bucket = s3Service.getBucket(bucketName);
+    logger.info("Uploading folder: " + folder.getName() + " in bucket: " + bucketName + " at Amazon S3");
+
+    List<S3Object> folderContents;
+    folderContents = readFolderContents(folder, s3Service, s3Bucket);
+    if (folderContents != null && folderContents.size() > 0) {
+      uploadFolderContents(folder, s3Service, s3Bucket, folderContents);
+    }
+  }
+
+  private static List<S3Object> readFolderContents(File folder, S3Service s3Service, S3Bucket s3Bucket) {
+    List<S3Object> folderContents = new ArrayList<S3Object>();
+    Iterator<File> filesInFolder = FileUtils.iterateFiles(folder, null, true);
+
+    while (filesInFolder.hasNext()) {
+      try {
+        File file = filesInFolder.next();
+        String key = generateFileKey(file.getAbsolutePath());
+
+        S3Object s3Object = new S3Object(s3Bucket, file);
+        s3Object.setKey(key);
+        s3Object.setAcl(s3Service.getBucketAcl(s3Bucket));
+        s3Object.setContentType(Mimetypes.getInstance().getMimetype(s3Object.getKey()));
+
+        folderContents.add(s3Object);
+      } catch (NoSuchAlgorithmException nsae) {
+        logger.error("error uplaoding data on s3: " + nsae);
+      } catch (S3ServiceException sse) {
+        logger.error("error uplaoding data on s3: " + sse);
+      } catch (IOException ioe) {
+        logger.error("error uplaoding data on s3: " + ioe);
+      }
+    }
+    return folderContents;
+  }
+
+  private static void uploadFolderContents(File folder, S3Service s3Service, S3Bucket s3Bucket, List<S3Object> folderContents) {
+    int numberOfObjectsToBeUploaded = folderContents.size();
+    SimpleThreadedStorageService storageService = new SimpleThreadedStorageService(s3Service);
+    logger.debug("Uploading files in folder: " + folder.getAbsolutePath());
+    try {
+      storageService.putObjects(s3Bucket.getName(), folderContents.toArray(new S3Object[numberOfObjectsToBeUploaded]));
+    } catch (ServiceException se) {
+      logger.error("Error encountered while uploading email content to amazon s3.", se);
+    }
+  }
+
+  private static String generateFileKey(String contentPath) {
+    return contentPath.replaceAll("(.*\\\\emailContentFiles\\\\)", "").replaceAll("\\\\", "/");
+  }
+}
