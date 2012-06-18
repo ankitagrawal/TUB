@@ -19,6 +19,7 @@
 %>
 <c:set var="product" value="${pa.product}"/>
 <c:set var="seoData" value="${pa.seoData}"/>
+<c:set var="subscriptionProduct" value="${pa.subscriptionProduct}" />
 <s:layout-render name="/layouts/productLayout.jsp" pageTitle="${seoData.title}">
 <%--<s:layout-render name="/layouts/default.jsp" pageTitle="${seoData.title}">--%>
 
@@ -339,8 +340,16 @@
         </p>
       </c:if>--%>
   </div>
-  <c:if test="${!empty pa.subscriptionProduct}">
-     Subscribe and save <fmt:formatNumber value="${pa.subscriptionProduct.subscriptionDiscount180Days}" maxFractionDigits="2"/>  to   <fmt:formatNumber value="${pa.subscriptionProduct.subscriptionDiscount360Days}" maxFractionDigits="2"/>
+  <c:if test="${!empty subscriptionProduct}">
+     <div id="subscriptionConfig" style="display:none;">
+       <form action="">
+         min frequency: ${subscriptionProduct.minFrequencyDays} days - max frequency: ${subscriptionProduct.maxFrequencyDays} days
+         <br/>
+         Start Date:
+         <input name="subscriptionProduct" value="${subscriptionProduct.id}" type="hidden" />
+       </form>
+     </div>
+     <span class="subscription" style="float:right;">Subscribe and save <fmt:formatNumber value="${subscriptionProduct.subscriptionDiscount180Days}" maxFractionDigits="2"/>  to   <fmt:formatNumber value="${subscriptionProduct.subscriptionDiscount360Days}" maxFractionDigits="2"/> &#37;   </span>
   </c:if>
   <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_DESCRIPTIONS%>">
     <div>
@@ -367,7 +376,7 @@
           <c:choose>
             <c:when test="${!product.productHaveColorOptions}">
               <s:layout-render name="/layouts/embed/_productWithMultipleVariantsWithNoColorOptions.jsp"
-                               product="${product}"/>
+                               product="${product}" subscriptionProduct="${subscriptionProduct}"/>
               <s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>
             </c:when>
             <c:otherwise>

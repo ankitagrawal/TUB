@@ -1,4 +1,5 @@
 <%@ page import="com.hk.domain.catalog.product.Product" %>
+<%@ page import="com.hk.domain.subscription.SubscriptionProduct" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -6,6 +7,8 @@
   <%
     Product product = (Product) pageContext.getAttribute("product");
     pageContext.setAttribute("product", product);
+    SubscriptionProduct subscriptionProduct = (SubscriptionProduct) pageContext.getAttribute("product");
+    pageContext.setAttribute("subscriptionProduct", subscriptionProduct);
   %>
 <div class='variants'>
     <span style="font-style: italic; font-size: 16px;;"> ${hk:getNonDeletedVariants(product)}</span>
@@ -117,6 +120,11 @@
 
                     </c:when>
                     <c:otherwise>
+                      <c:if test="${!empty subscriptionProduct}">
+                        <s:submit name="addToCart" value="Subscribe"
+                                class="addToCartButton cta button_green"
+                                style="float:right;"/>
+                       </c:if>                      
                       <s:submit name="addToCart" value="Place Order"
                                 class="addToCartButton cta button_green"
                                 style="float:right;"/>
