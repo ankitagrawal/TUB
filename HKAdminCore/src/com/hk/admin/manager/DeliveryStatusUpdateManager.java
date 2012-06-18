@@ -1,8 +1,6 @@
 package com.hk.admin.manager;
 
 import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -157,7 +155,7 @@ public class DeliveryStatusUpdateManager {
                         ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shippingOrderInList.getShipment(),
                                 shippingOrderInList.getShipment().getTrackingId(), deliveryDate);
                     } else {
-                        logger.debug("Delivery date not available or status is not delivered for : " + shippingOrderInList.getShipment().getTrackingId());
+                        logger.info("Delivery date not available or status is not delivered for Tracking Id: " + shippingOrderInList.getShipment().getTrackingId());
 
                     }
 
@@ -178,7 +176,7 @@ public class DeliveryStatusUpdateManager {
                         if (delivery_date != null && chhotuCourierDelivery.getShipmentStatus().equalsIgnoreCase(CourierConstants.DELIVERED) && chhotuCourierDelivery.getTrackingId() != null) {
                             ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shippingOrderInList.getShipment(), shippingOrderInList.getShipment().getTrackingId(), delivery_date);
                         } else {
-                            logger.debug("Delivery date not available or status is not delivered for : " + shippingOrderInList.getShipment().getTrackingId());
+                            logger.info("Delivery date not available or status is not delivered for Tracking Id: " + shippingOrderInList.getShipment().getTrackingId());
                         }
                     }
                 }
@@ -193,7 +191,7 @@ public class DeliveryStatusUpdateManager {
                         trackingId = shippingOrderInList.getShipment().getTrackingId();
                         shipmentJsonObj = courierStatusUpdateHelper.updateDeliveryStatusDelhivery(trackingId);
                         String status = shipmentJsonObj.getAsJsonObject(CourierConstants.DELHIVERY_STATUS).get(CourierConstants.DELHIVERY_STATUS).getAsString();
-                        String awb = shipmentJsonObj.get(CourierConstants.DELHIVERY_AWB).getAsString();
+                       // String awb = shipmentJsonObj.get(CourierConstants.DELHIVERY_AWB).getAsString();
                         String deliveryDate = shipmentJsonObj.getAsJsonObject(CourierConstants.DELHIVERY_STATUS).get(CourierConstants.DELHIVERY_STATUS_DATETIME).getAsString();
 
                         Date delivery_date = getFormattedDeliveryDate(deliveryDate);
@@ -201,7 +199,7 @@ public class DeliveryStatusUpdateManager {
                         if (delivery_date != null && status.equalsIgnoreCase(CourierConstants.DELIVERED)) {
                             ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shippingOrderInList.getShipment(), trackingId, delivery_date);
                         } else {
-                            logger.error("Delivery date not avaialable or status is not delivered for : " + trackingId);
+                            logger.info("Delivery date not avaialable or status is not delivered for Tracking Id: " + trackingId);
                         }
                     }
                 }
@@ -224,7 +222,7 @@ public class DeliveryStatusUpdateManager {
                                 ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shippingOrderInList.getShipment(), trackingId, delivery_date);
                             }
                         } catch (ParseException pe) {
-                            logger.debug(CourierConstants.PARSE_EXCEPTION);
+                            logger.debug(CourierConstants.PARSE_EXCEPTION +pe.getMessage());
                         }
                     }
                 }

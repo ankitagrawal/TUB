@@ -66,37 +66,53 @@ public class TrackCourierAction extends BaseAction {
         } else if (courierId.equals(EnumCourier.FirstFLight.getId()) || courierId.equals(EnumCourier.FirstFLight_COD.getId())) {
             resolution = new RedirectResolution("http://www.firstflight.net/n_contrac_new.asp", false).addParameter("tracking1", trackingId);
 
-        } else if (EnumCourier.getDelhiveryCouriers().contains(courierId)) {
+        } else if (EnumCourier.getDelhiveryCourierIds().contains(courierId)) {
             courierName = CourierConstants.DELHIVERY;
             JsonObject jsonObject = courierStatusUpdateHelper.updateDeliveryStatusDelhivery(trackingId);
-            if (!jsonObject.has("Error")) {
-                status = jsonObject.getAsJsonObject("Status").get("Status").getAsString();
-                awb = jsonObject.get("AWB").getAsString();
-                paymentType = jsonObject.get("OrderType").getAsString();
+            if (jsonObject != null) {
+                if (!jsonObject.has("Error")) {
+                    status = jsonObject.getAsJsonObject("Status").get("Status").getAsString();
+                    awb = jsonObject.get("AWB").getAsString();
+                    paymentType = jsonObject.get("OrderType").getAsString();
+                }
+                resolution = new ForwardResolution("/pages/courierDetails.jsp");
+            } else {
+                resolution = new RedirectResolution("/pages/error/invalidCourier.jsp");
             }
-            resolution = new ForwardResolution("/pages/courierDetails.jsp");
         } else if (courierId.equals(EnumCourier.Chhotu.getId())) {
             chhotuCourierDelivery = courierStatusUpdateHelper.updateDeliveryStatusChhotu(trackingId);
-            resolution = new ForwardResolution("/pages/chhotuCourier.jsp");
+            if (chhotuCourierDelivery != null) {
+                resolution = new ForwardResolution("/pages/chhotuCourier.jsp");
+            } else {
+                resolution = new RedirectResolution("/pages/error/invalidCourier.jsp");
+            }
 
         } else if (EnumCourier.getBlueDartCouriers().contains(courierId)) {
-            courierName=CourierConstants.BLUEDART;
+            courierName = CourierConstants.BLUEDART;
             Element ele = courierStatusUpdateHelper.updateDeliveryStatusBlueDart(trackingId);
-            String responseStatus = ele.getChildText("Status");
-            if (!responseStatus.equals("Incorrect Waybill number or No Information")) {
-                status = ele.getChildText("Status");
+            if (ele != null) {
+                String responseStatus = ele.getChildText("Status");
+                if (!responseStatus.equals("Incorrect Waybill number or No Information")) {
+                    status = ele.getChildText("Status");
+                }
+                resolution = new ForwardResolution("/pages/courierDetails.jsp");
+            } else {
+                resolution = new RedirectResolution("/pages/error/invalidCourier.jsp");
             }
-            resolution = new ForwardResolution("/pages/courierDetails.jsp");
 
         } else if (EnumCourier.getDTDCCouriers().contains(courierId)) {
-            courierName=CourierConstants.DTDC;
+            courierName = CourierConstants.DTDC;
             Map<String, String> responseMap = courierStatusUpdateHelper.updateDeliveryStatusDTDC(trackingId);
-            for (Map.Entry entryObj : responseMap.entrySet()) {
-                if (entryObj.getKey().equals(CourierConstants.DTDC_INPUT_STR_STATUS)) {
-                    status = entryObj.getValue().toString();
+            if (responseMap != null) {
+                for (Map.Entry entryObj : responseMap.entrySet()) {
+                    if (entryObj.getKey().equals(CourierConstants.DTDC_INPUT_STR_STATUS)) {
+                        status = entryObj.getValue().toString();
+                    }
                 }
+                resolution = new ForwardResolution("/pages/courierDetails.jsp");
+            } else {
+                resolution = new RedirectResolution("/pages/error/invalidCourier.jsp");
             }
-            resolution = new ForwardResolution("/pages/courierDetails.jsp");
         } else {
             resolution = new RedirectResolution("/pages/error/invalidCourier.jsp");
         }
