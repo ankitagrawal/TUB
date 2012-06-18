@@ -150,6 +150,7 @@ public class DeliveryStatusUpdateManager {
     }
 
     public int updateCourierStatus(Date startDate, Date endDate, String courierName) {
+        ordersDelivered = 0;
         orderDeliveryCount = 0;
 
         if (courierName.equalsIgnoreCase(CourierConstants.AFL)) {

@@ -198,14 +198,14 @@ public class CourierStatusUpdateHelper {
                 gatewayOrderId = shippingOrder.getGatewayOrderId();
             }
 
-            url = new URL("http://track.delhivery.com/api/packages/json/?token=" + authenticationIdForDelhivery + "&ref_nos=" + gatewayOrderId);
+           /* url = new URL("http://track.delhivery.com/api/packages/json/?token=" + authenticationIdForDelhivery + "&ref_nos=" + gatewayOrderId);
             bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
 
             while ((inputLine = bufferedReader.readLine()) != null) {
                 jsonFormattedResponse += inputLine;
             }
             bufferedReader.close();
-
+*/
             //for testing
             jsonFormattedResponse="{" +
                     "    \"ShipmentData\": [" +
@@ -285,13 +285,13 @@ public class CourierStatusUpdateHelper {
                     "}";
 
             shipmentJsonObj = jsonParser.parse(jsonFormattedResponse).getAsJsonObject().getAsJsonArray(CourierConstants.DELHIVERY_SHIPMENT_DATA).get(0).getAsJsonObject().getAsJsonObject(CourierConstants.DELHIVERY_SHIPMENT);
-        } catch (MalformedURLException mue) {
+        } /*catch (MalformedURLException mue) {
             logger.debug(CourierConstants.MALFORMED_URL_EXCEPTION + trackingId);
 
         } catch (IOException ioe) {
             logger.debug(CourierConstants.IO_EXCEPTION + trackingId);
 
-        } catch (NullPointerException npe) {
+        }*/ catch (NullPointerException npe) {
             logger.debug(CourierConstants.NULL_POINTER_EXCEPTION + trackingId);
 
         } catch (Exception e) {

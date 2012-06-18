@@ -71,13 +71,9 @@ public class TrackCourierAction extends BaseAction {
             courierName = CourierConstants.DELHIVERY;
             JsonObject jsonObject = courierStatusUpdateHelper.updateDeliveryStatusDelhivery(trackingId);
             if (!jsonObject.has("Error")) {
-
-                JsonObject shipmentObj = jsonObject.getAsJsonArray("ShipmentData").get(0)
-                        .getAsJsonObject().getAsJsonObject("Shipment");
-
-                status = shipmentObj.getAsJsonObject("Status").get("Status").getAsString();
-                awb = shipmentObj.get("AWB").getAsString();
-                paymentType = shipmentObj.get("OrderType").getAsString();
+                status = jsonObject.getAsJsonObject("Status").get("Status").getAsString();
+                awb = jsonObject.get("AWB").getAsString();
+                paymentType = jsonObject.get("OrderType").getAsString();
             }
             resolution = new ForwardResolution("/pages/courierDetails.jsp");
         } else if (courierId.equals(EnumCourier.Chhotu.getId())) {
