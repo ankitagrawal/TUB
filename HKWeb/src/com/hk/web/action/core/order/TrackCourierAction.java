@@ -7,10 +7,8 @@ import com.hk.admin.util.CourierStatusUpdateHelper;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.domain.order.ShippingOrder;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
+import com.hk.exception.HealthkartCheckedException;
+import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
 import org.jdom.Element;
 import org.slf4j.Logger;
@@ -41,20 +39,117 @@ public class TrackCourierAction extends BaseAction {
 
     @DefaultHandler
     public Resolution pre() {
-
         Resolution resolution = null;
 
-        if (courierId.equals(EnumCourier.Aramex.getId())) {
-            resolution = new RedirectResolution("http://www.aramex.com/track_results_multiple.aspx", false).addParameter("ShipmentNumber", trackingId);
+        EnumCourier enumCourier = EnumCourier.getEnumCourierFromCourierId(courierId);
+        switch (enumCourier) {
+            case Aramex:
+                resolution = new RedirectResolution("http://www.aramex.com/track_results_multiple.aspx", false).addParameter("ShipmentNumber", trackingId);
+                break;
+            case AFLWiz:
+                resolution = new RedirectResolution("http://trackntrace.aflwiz.com/aflwizhtmltrack", false).addParameter("shpntnum", trackingId);
+                break;
+            case Speedpost:
+                resolution = new RedirectResolution("/pages/indiaPostCourier.jsp");
+                break;
+            case FirstFLight:
+                resolution = new RedirectResolution("http://www.firstflight.net/n_contrac_new.asp", false).addParameter("tracking1", trackingId);
+                break;
+            case Chhotu:
+                try {
+                    chhotuCourierDelivery = courierStatusUpdateHelper.updateDeliveryStatusChhotu(trackingId);
+                } catch (HealthkartCheckedException hce) {
+                    addRedirectAlertMessage(new SimpleMessage(hce.getMessage()));
+                }
+                if (chhotuCourierDelivery != null) {
+                    resolution = new ForwardResolution("/pages/chhotuCourier.jsp");
+                } else {
+                    resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
+                }
+                break;
 
-        } /*else if (courierId.equals(EnumCourier.DTDC_Plus.getId()) || courierId.equals(EnumCourier.DTDC_Lite.getId()) || courierId.equals(EnumCourier.DTDC_COD.getId())) {
+            case Delhivery:
+            case Delhivery_Ahmedabad:
+            case Delhivery_Bangalore:
+            case Delhivery_Chennai:
+                courierName = CourierConstants.DELHIVERY;
+                JsonObject jsonObject = null;
+                try {
+                    jsonObject = courierStatusUpdateHelper.updateDeliveryStatusDelhivery(trackingId);
+                } catch (HealthkartCheckedException hce) {
+                    addRedirectAlertMessage(new SimpleMessage(hce.getMessage()));
+                }
+                if (jsonObject != null) {
+                    if (!jsonObject.has("Error")) {
+                        status = jsonObject.getAsJsonObject(CourierConstants.DELHIVERY_STATUS).get(CourierConstants.DELHIVERY_STATUS).getAsString();
+                        awb = jsonObject.get(CourierConstants.DELHIVERY_AWB).getAsString();
+                        paymentType = jsonObject.get(CourierConstants.DELHIVERY_ORDER_TYPE).getAsString();
+                    }
+                    resolution = new ForwardResolution("/pages/courierDetails.jsp");
+                } else {
+                    resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
+                }
+                break;
+            case BlueDart:
+            case BlueDart_COD:
+                courierName = CourierConstants.BLUEDART;
+                Element ele = null;
+                try {
+                    ele = courierStatusUpdateHelper.updateDeliveryStatusBlueDart(trackingId);
+                } catch (HealthkartCheckedException hce) {
+                    addRedirectAlertMessage(new SimpleMessage(hce.getMessage()));
+                }
+                if (ele != null) {
+                    String responseStatus = ele.getChildText(CourierConstants.DELHIVERY_STATUS);
+                    if (!responseStatus.equals(CourierConstants.DELHIVERY_ERROR_MSG)) {
+                        status = ele.getChildText(CourierConstants.DELHIVERY_STATUS);
+                    }
+                    resolution = new ForwardResolution("/pages/courierDetails.jsp");
+                } else {
+                    resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
+                }
+                break;
+            case DTDC_COD:
+            case DTDC_Lite:
+            case DTDC_Plus:
+            case DTDC_Surface:
+                courierName = CourierConstants.DTDC;
+                Map<String, String> responseMap = null;
+                try {
+                    responseMap = courierStatusUpdateHelper.updateDeliveryStatusDTDC(trackingId);
+                } catch (HealthkartCheckedException hce) {
+                    addRedirectAlertMessage(new SimpleMessage(hce.getMessage()));
+                }
+                if (responseMap != null) {
+                    for (Map.Entry entryObj : responseMap.entrySet()) {
+                        if (entryObj.getKey().equals(CourierConstants.DTDC_INPUT_STR_STATUS)) {
+                            status = entryObj.getValue().toString();
+                        }
+                    }
+                    resolution = new ForwardResolution("/pages/courierDetails.jsp");
+                } else {
+                    resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
+                }
+                break;
+            default:
+                resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
+
+        }
+        return resolution;
+    }
+
+
+    /*if (courierId.equals(EnumCourier.Aramex.getId())) {
+       resolution = new RedirectResolution("http://www.aramex.com/track_results_multiple.aspx", false).addParameter("ShipmentNumber", trackingId);
+
+   } *//*else if (courierId.equals(EnumCourier.DTDC_Plus.getId()) || courierId.equals(EnumCourier.DTDC_Lite.getId()) || courierId.equals(EnumCourier.DTDC_COD.getId())) {
             resolution = new RedirectResolution("http://www.dtdc.in/dtdcTrack/Tracking/consignInfo.asp", false)
                     .addParameter("action", "track")
                     .addParameter("sec", "tr")
                     .addParameter("strCnno", trackingId)
                     .addParameter("TType", "cnno");
 
-        } */
+        } *//*
         else if (courierId.equals(EnumCourier.AFLWiz.getId())) {
             resolution = new RedirectResolution("http://trackntrace.aflwiz.com/aflwizhtmltrack", false).addParameter("shpntnum", trackingId);
 
@@ -116,7 +211,7 @@ public class TrackCourierAction extends BaseAction {
         }
         return resolution;
     }
-
+*/
 
     public String getTrackingId() {
         return trackingId;

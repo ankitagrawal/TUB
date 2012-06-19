@@ -15,6 +15,7 @@ public class CourierConstants {
     public static final String NULL_POINTER_EXCEPTION = "NullPointerExpection encountered for Tracking :";
     public static final String EXCEPTION = "Exception encountered for Tracking Id :";
     public static final String PARSE_EXCEPTION = "ParseException occurred for Tracking Id :";
+    public static final String HEALTHKART_CHECKED_EXCEPTION="Sorry,some problem occurred.Please contact the administrator.";
 
     //Common constants
     public static final String DELIVERED="DELIVERED";
@@ -47,6 +48,11 @@ public class CourierConstants {
     public static final String DELHIVERY_AWB = "AWB";
     public static final String DELHIVERY_STATUS = "Status";
     public static final String DELHIVERY_STATUS_DATETIME = "StatusDateTime";
+    public static final String DELHIVERY_ORDER_TYPE = "OrderType";
+    public static final String DELHIVERY_ERROR_MSG= "Incorrect Waybill number or No Information";
+
+
+
 
     //Constants for BLUEDART
     public static final String BLUEDART_STATUS_DATE = "StatusDate";

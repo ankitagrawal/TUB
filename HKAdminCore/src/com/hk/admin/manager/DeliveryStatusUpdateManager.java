@@ -39,6 +39,7 @@ import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.exception.HealthkartCheckedException;
 import org.jdom.Element;
 
 @SuppressWarnings("unchecked")
@@ -134,7 +135,7 @@ public class DeliveryStatusUpdateManager {
         return messagePostUpdation;
     }
 
-    public int updateCourierStatus(Date startDate, Date endDate, String courierName) {
+    public int updateCourierStatus(Date startDate, Date endDate, String courierName) throws HealthkartCheckedException{
         ordersDelivered = 0;
         orderDeliveryCount = 0;
 

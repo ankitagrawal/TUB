@@ -64,6 +64,14 @@ public enum EnumCourier {
         return courier;
     }
 
+    public static EnumCourier getEnumCourierFromCourierId(Long id) {
+        for (EnumCourier enumCourier : values()) {
+            if (enumCourier.getId().equals(id))
+                return enumCourier;
+        }
+        return null;
+    }
+
     public static List<Long> getCourierIDs(List<EnumCourier> enumCourierList) {
         List<Long> courierIds = new ArrayList<Long>();
         for (EnumCourier enumCourier : enumCourierList) {

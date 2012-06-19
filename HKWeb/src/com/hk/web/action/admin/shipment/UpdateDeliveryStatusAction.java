@@ -19,6 +19,7 @@ import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.user.User;
 import com.hk.util.CustomDateTypeConvertor;
 import com.hk.web.action.error.AdminPermissionAction;
+import com.hk.exception.HealthkartCheckedException;
 
 
 @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_DELIVERY_QUEUE}, authActionBean = AdminPermissionAction.class)
@@ -48,7 +49,11 @@ public class UpdateDeliveryStatusAction extends BaseAction{
         }
         int numberOfOrdersUpdated = 0;
         if (courierName != null) {
+            try{
             numberOfOrdersUpdated = deliveryStatusUpdateManager.updateCourierStatus(startDate, endDate, courierName);
+            }catch (HealthkartCheckedException hce){
+                addRedirectAlertMessage(new SimpleMessage(hce.getMessage()));
+            }
             if (numberOfOrdersUpdated == 0) {
                 addRedirectAlertMessage(new SimpleMessage("Sorry! no orders found for updation."));
 
