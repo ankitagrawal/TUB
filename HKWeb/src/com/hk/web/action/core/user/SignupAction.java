@@ -183,4 +183,8 @@ public class SignupAction extends BaseAction {
   public String getSignupDate() {
     return signupDate;
   }
+
+  public boolean isAgreeToTerms() {
+    return agreeToTerms;
+  }
 }
