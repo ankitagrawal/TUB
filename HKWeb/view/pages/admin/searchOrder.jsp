@@ -316,7 +316,15 @@
   </c:if>
 
 </td>
-<td>
+
+          <c:choose>
+          <c:when test="${order.priorityOrder}">
+               <td style="background:#F6CECE;" >
+          </c:when>
+          <c:otherwise>
+               <td >
+          </c:otherwise>
+        </c:choose>
   <span class="upc lgry sml">ID
   <strong><span class="or"> ${order.id}</span></strong>
   <c:if test="${order.orderStatus.id != orderStatusCart}">

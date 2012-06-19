@@ -1,43 +1,45 @@
 package com.hk.web.action.admin.courier;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.DontValidate;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-
+import com.akube.framework.stripes.action.BaseAction;
+import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.courier.StateList;
+import com.hk.domain.courier.StateCourierService;
+import com.hk.pact.dao.courier.StateCourierServiceDao;
+import com.hk.web.action.error.AdminPermissionAction;
+import net.sourceforge.stripes.action.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-import com.akube.framework.stripes.action.BaseAction;
-import com.hk.constants.core.PermissionConstants;
-import com.hk.domain.courier.StateCourierService;
-import com.hk.web.action.error.AdminPermissionAction;
+import java.util.ArrayList;
+import java.util.List;
 
 @Secure(hasAnyPermissions = {PermissionConstants.VIEW_COURIER_INFO}, authActionBean = AdminPermissionAction.class)
 @Component
 public class StateCourierServiceAction extends BaseAction {
+  @Autowired
+  StateCourierServiceDao stateCourierServiceDao;
 
-  private List<StateCourierService> stateCourierServiceList = new ArrayList<StateCourierService>();
 
-  
+  private List<StateCourierService> stateCourierServiceList = null;
+  private String state;
+
+  private List<String> stateList = new ArrayList<String>();
+
 
   @DefaultHandler
   @DontValidate
   public Resolution pre() {
-    stateCourierServiceList = getBaseDao().getAll(StateCourierService.class);
+    setStateList(StateList.stateList);
     return new ForwardResolution("/pages/admin/stateCourierService.jsp");
   }
 
-  public Resolution save() {
-    for (StateCourierService stateCourierService : stateCourierServiceList) {
-      getBaseDao().save(stateCourierService);
+
+  public Resolution search() {
+ stateCourierServiceList = stateCourierServiceDao.getAllStateCourierServiceByState(state);
+    if (stateCourierServiceList != null && stateCourierServiceList.size() > 0) {
+      setStateCourierServiceList(stateCourierServiceList);
     }
-    addRedirectAlertMessage(new SimpleMessage("Changes saved"));
     return new RedirectResolution(StateCourierServiceAction.class);
   }
 
@@ -48,4 +50,21 @@ public class StateCourierServiceAction extends BaseAction {
   public void setStateCourierServiceList(List<StateCourierService> stateCourierServiceList) {
     this.stateCourierServiceList = stateCourierServiceList;
   }
+
+  public String getState() {
+    return state;
+  }
+
+  public void setState(String state) {
+    this.state = state;
+  }
+
+  public void setStateList(List<String> stateList) {
+    this.stateList = stateList;
+  }
+
+  public List<String> getStateList() {
+    return stateList;
+  }
+
 }

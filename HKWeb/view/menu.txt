@@ -224,6 +224,9 @@
 --/home-devices/respiratory-care/nebulizer
 --/home-devices/respiratory-care/oxygen-concentrator : Oxygen Concentrators
 --/home-devices/respiratory-care/pulse-oximeters : Pulse Oximeters
+---/home-devices/respiratory-care/pulse-oximeters/fingertip-oximeter
+---/home-devices/respiratory-care/pulse-oximeters/Wrist-oximeter
+---/home-devices/respiratory-care/pulse-oximeters/handheld-oximeter
 --/home-devices/respiratory-care/nasal-face-masks : Nasal Face Masks
 --/home-devices/respiratory-care/cpap-machines
 --/home-devices/respiratory-care/vpap-devices : Bilevel/VPAP/BiPAP Machines
@@ -248,6 +251,14 @@
 ---/home-devices/supports/walking-aids/walkers
 -/home-devices/rehabilitation-aids
 --/home-devices/rehabilitation-aids/physiotherapy-aids
+--/home-devices/rehabilitation-aids/prosthetic-aids
+---/home-devices/rehabilitation-aids/prosthetic-aids/knee
+---/home-devices/rehabilitation-aids/prosthetic-aids/foot-drop-splints
+--/home-devices/rehabilitation-aids/cosmetic-restoration
+---/home-devices/rehabilitation-aids/cosmetic-restoration/face
+---/home-devices/rehabilitation-aids/cosmetic-restoration/breast
+---/home-devices/rehabilitation-aids/cosmetic-restoration/hand
+---/home-devices/rehabilitation-aids/cosmetic-restoration/foot
 --/home-devices/rehabilitation-aids/traction-kits
 --/home-devices/rehabilitation-aids/bandages
 ---/home-devices/rehabilitation-aids/bandages/crepe-bandages
@@ -328,6 +339,7 @@
 --/home-devices/miscellaneous/morning-walker
 --/home-devices/miscellaneous/personal-hygiene
 --/home-devices/miscellaneous/steamer : Steamer/Vaporiser
+--/home-devices/miscellaneous/air-humidifiers
 
 /eye
 -/eye/lenses
@@ -401,11 +413,15 @@
 --/personal-care/women/pregnancy-kits
 --/personal-care/women/chlamydia-test
 --/personal-care/women/condoms
+--/personal-care/women/intimate-care:Intimate Care
 --/personal-care/women/combo-offers
 -/personal-care/sexual-care
 --/personal-care/sexual-care/accessories
 --/personal-care/sexual-care/condoms
 --/personal-care/sexual-care/female-condoms: Female Condoms
+--/personal-care/sexual-care/fertility
+---/personal-care/sexual-care/fertility/men
+---/personal-care/sexual-care/fertility/women
 --/personal-care/sexual-care/combo-offers
 -/personal-care/foot-care-pedicure : Foot Care/Pedicure
 --/personal-care/foot-care-pedicure/fresh-feet
@@ -455,6 +471,7 @@
 --/beauty/what-s-new/natural-products
 --/beauty/what-s-new/home-spa-products
 --/beauty/what-s-new/spas-salons : Spas & Salons
+--/beauty/what-s-new/women-nutrition
 -/beauty/face-care
 --/beauty/face-care/cleanser
 ---/beauty/face-care/cleanser/normal

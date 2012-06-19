@@ -87,6 +87,12 @@
               <label>Approx Weight (By System)</label> ${shipmentQueueBean.approxWeight}
 
               <div class="buttons" style="margin-left: 90%;"><s:submit name="saveShipmentDetails" value="Save"/></div>
+              
+               <div style="margin:5px;color:red;font-size:18px;">
+              <c:if test="${shipmentQueueBean.shippingOrder.baseOrder.userComments != null}">
+              	User Instructions: ${shipmentQueueBean.shippingOrder.baseOrder.userComments}
+              </c:if>
+              </div>
           </s:form>
         </fieldset>
       </c:otherwise>

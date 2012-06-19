@@ -36,6 +36,8 @@ public enum EnumCourier {
 
     EarthMoversPune(200L, "Earth Movers Pune"),
 
+    HK_Delivery(500L, "HealthKart Delivery"),
+
     MIGRATE(-1L, "MIGRATE");
 
     private java.lang.String name;
@@ -92,5 +94,14 @@ public enum EnumCourier {
                 EnumCourier.EarthMoversPune,
                 EnumCourier.DTDC_COD);
     }
+
+  public static List<EnumCourier> getDelhiveryCouriers(){
+    return Arrays.asList(
+   EnumCourier.Delhivery,
+   EnumCourier.Delhivery_Ahmedabad,
+     EnumCourier.Delhivery_Bangalore,
+     EnumCourier.Delhivery_Chennai);
+  }
+
 }
 

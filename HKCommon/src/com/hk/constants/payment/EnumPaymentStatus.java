@@ -53,7 +53,7 @@ public enum EnumPaymentStatus {
   }
 
   public static List<Long> getEscalablePaymentStatusIds() {
-    return getEnumIDs(Arrays.asList(EnumPaymentStatus.SUCCESS));
+    return getEnumIDs(Arrays.asList(EnumPaymentStatus.SUCCESS, EnumPaymentStatus.ON_DELIVERY));
   }
 
   public static List<Long> getPaymentSuccessPageStatusIds() {

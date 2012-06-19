@@ -167,6 +167,20 @@ ORDER BY bday_orders.hr;
 mysql -h 172.16.3.50 -u hkadmin -p -e 'select u.email from healthkart_prod.user u left join healthkart_prod.user_has_role r on u.id = r.user_id where r.role_name = "HKUNVERIFIED" or r.role_name = "HK_USER"' > beautyMailerList.txt
 
 
+/* new users */
+SELECT count(distinct bo.user_id )
+FROM base_order bo, payment p
+WHERE
+	bo.order_status_id IN ( 20, 30, 40 )
+	AND p.id = bo.payment_id
+	AND p.payment_date >= '2012-06-01'
+	AND p.payment_date < '2012-06-11'
+	AND bo.user_id NOT IN (
+		SELECT distinct bo.user_id FROM base_order bo, payment p WHERE bo.order_status_id IN ( 20, 30, 40 )
+		AND p.id = bo.payment_id AND p.payment_date < '2012-06-01'
+	)
+
+
 /*
  * groovy program to subtract two email lists
 

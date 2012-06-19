@@ -17,21 +17,28 @@ import com.hk.pact.dao.review.ReviewDao;
 @Repository
 public class ReviewDaoImpl extends BaseDaoImpl implements ReviewDao {
 
-    public Page getProductReviews(Product product, List<ReviewStatus> reviewStatusList, int page, int perPage) {
+    public Page getProductReviews(Product product, List<Long> reviewStatusList, int page, int perPage) {
         DetachedCriteria criteria = DetachedCriteria.forClass(UserReview.class);
         if (product != null) {
             criteria.add(Restrictions.eq("product", product));
         }
-        criteria.add(Restrictions.in("reviewStatus", reviewStatusList));
+        criteria.add(Restrictions.in("reviewStatus.id", reviewStatusList));
         criteria.addOrder(org.hibernate.criterion.Order.desc("reviewDate"));
         return list(criteria, page, perPage);
     }
 
-    public Double getStarRating(Product product) {
+   public Long getAllReviews(Product product, List<Long> reviewStatusList) {
+    Long starRating = (Long) getSession().createQuery("select count(o.id) from UserReview o where o.product = :product and o.reviewStatus.id in (:reviewStatusList) ").
+        setParameter("product", product).
+        setParameterList("reviewStatusList", reviewStatusList).uniqueResult();
+    return starRating;
+  }
+
+    public Double getAverageRating(Product product) {
         Double starRating = (Double) getSession().createQuery(
                 "select (sum(o.starRating)/count(o.id)) from UserReview o where o.product = :product and o.reviewStatus.id = :reviewStatusId ").setParameter("product", product).setParameter(
                 "reviewStatusId", EnumReviewStatus.Published.getId()).uniqueResult();
-        return starRating != null && starRating >= 2.5 ? starRating : 2.5;
+        return starRating;
     }
 
     @SuppressWarnings("unchecked")
