@@ -185,6 +185,6 @@ public class SignupAction extends BaseAction {
   }
 
   public boolean isAgreeToTerms() {
-    return agreeToTerms;
-  }
+      return agreeToTerms;
+  }  
 }
