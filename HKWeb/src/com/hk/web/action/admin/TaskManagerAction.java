@@ -8,11 +8,9 @@ import net.sourceforge.stripes.action.SimpleMessage;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.task.TaskService;
-import com.hk.constants.core.PermissionConstants;
 
 /*@Secure(hasAnyPermissions = { PermissionConstants.RUN_ANT_BUILDS })*/
 @Component
@@ -22,7 +20,7 @@ public class TaskManagerAction extends BaseAction {
   TaskService             taskService;
 /*
   @Autowired
-  ProductCatalogService productManager;
+  ProductCatalogServiceImpl productManager;
 */
 
   private String db_master_service;

@@ -30,9 +30,9 @@ import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.core.TaxService;
 
 @Component
-public class ProductCatalogService {
+public class ProductCatalogServiceImpl {
 
-	private static Logger logger = LoggerFactory.getLogger(ProductCatalogService.class);
+	private static Logger logger = LoggerFactory.getLogger(ProductCatalogServiceImpl.class);
 	private static Gson gson = JsonUtils.getGsonDefault();
 
 	@Autowired

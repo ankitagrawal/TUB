@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.session.Session;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.admin.impl.task.dbmaster.ProductCatalogService;
 import com.hk.admin.util.XslParser;
 import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.core.HealthkartConstants;
@@ -83,8 +82,6 @@ public class EditProductAttributesAction extends BaseAction {
     private BaseDao               baseDao;
     @Autowired
     MenuHelper                    menuHelper;
-    @Autowired
-    ProductCatalogService productCatalogService;
     @Autowired
     AffiliateDao                  affiliateDao;
     @Autowired

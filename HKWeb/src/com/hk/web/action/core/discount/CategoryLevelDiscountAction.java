@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.admin.impl.task.dbmaster.ProductCatalogService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.affiliate.AffiliateCategory;
@@ -34,8 +33,6 @@ import com.hk.web.action.error.AdminPermissionAction;
 @Secure(hasAnyPermissions = { PermissionConstants.MANAGE_AFFILIATES }, authActionBean = AdminPermissionAction.class)
 @Component
 public class CategoryLevelDiscountAction extends BaseAction {
-    @Autowired
-    private ProductCatalogService productCatalogService;
     @Autowired
     private ProductService                  productService;
     @Autowired
@@ -168,14 +165,6 @@ public class CategoryLevelDiscountAction extends BaseAction {
 
     public void setOverview(String overview) {
         this.overview = overview;
-    }
-
-    public ProductCatalogService getProductManager() {
-        return productCatalogService;
-    }
-
-    public void setProductManager(ProductCatalogService productCatalogService) {
-        this.productCatalogService = productCatalogService;
     }
 
     public ProductService getProductService() {

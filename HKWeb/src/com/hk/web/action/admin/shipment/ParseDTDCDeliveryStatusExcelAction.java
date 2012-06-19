@@ -19,7 +19,6 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.manager.DeliveryStatusUpdateManager;
-import com.hk.admin.impl.task.dbmaster.ProductCatalogService;
 import com.hk.admin.util.XslParser;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
@@ -42,10 +41,7 @@ public class ParseDTDCDeliveryStatusExcelAction extends BaseAction {
     // TestDatabaseConnectionHelper connectionHelper;
 
     private static Logger               logger = LoggerFactory.getLogger(ParseDTDCDeliveryStatusExcelAction.class);
-
-    @Autowired
-    private ProductCatalogService productCatalogService;
-
+  
     @Autowired
     private BatchProcessWorkManager     batchProcessWorkManager;
 
@@ -118,13 +114,6 @@ public class ParseDTDCDeliveryStatusExcelAction extends BaseAction {
         return new ForwardResolution("/pages/admin/parseDTDCDeliveryStatusExcel.jsp");
     }
 
-    public ProductCatalogService getProductManager() {
-        return productCatalogService;
-    }
-
-    public void setProductManager(ProductCatalogService productCatalogService) {
-        this.productCatalogService = productCatalogService;
-    }
 
     public BatchProcessWorkManager getBatchProcessWorkManager() {
         return batchProcessWorkManager;

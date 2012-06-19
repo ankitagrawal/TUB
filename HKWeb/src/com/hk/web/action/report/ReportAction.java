@@ -32,7 +32,6 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.DateUtils;
-import com.hk.admin.impl.task.dbmaster.ProductCatalogService;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
@@ -111,9 +110,7 @@ public class ReportAction extends BaseAction {
   @Autowired
   OrderDao orderDao;
   @Autowired
-  PaymentModeDao paymentModeDao;
-  @Autowired
-  ProductCatalogService productCatalogService;
+  PaymentModeDao paymentModeDao;  
   @Autowired
   ReconciliationStatusDaoImpl reconciliationStatusDao;
   @Autowired

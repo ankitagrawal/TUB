@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * To change this template use File | Settings | File Templates.
  */
 @Service
-public class DBMasterService implements TaskService{
+public class DBMasterServiceImpl implements TaskService{
   @Autowired
   MasterDataService masterDataService;
 
