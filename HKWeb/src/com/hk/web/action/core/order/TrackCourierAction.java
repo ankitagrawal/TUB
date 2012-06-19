@@ -24,8 +24,6 @@ import java.util.Map;
  */
 public class TrackCourierAction extends BaseAction {
 
-    private static            Logger                      logger                         = LoggerFactory.getLogger(TrackCourierAction.class);
-
     private                   String                      trackingId;
     private                   ChhotuCourierDelivery       chhotuCourierDelivery;
 

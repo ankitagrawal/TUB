@@ -33,7 +33,7 @@ public class CourierConstants {
     public static final String DTDC_ATTRIBUTE_VALUE="VALUE";
     public static final String DTDC_INPUT_STR_STATUS="strStatus";
     public static final String DTDC_INPUT_STR_STATUSTRANSON="strStatusTransOn";
-    public static final String DTDC_INPUT_DELIVERED="DELIVERED";
+    public static final String DTDC_INPUT_DELIVERED="DELIVERY";
 
     //Constants for AFL
     public static final String AFL_DELIVERY_DATE = "delivery_date";

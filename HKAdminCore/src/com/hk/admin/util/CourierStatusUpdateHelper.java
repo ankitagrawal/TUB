@@ -52,7 +52,7 @@ public class CourierStatusUpdateHelper {
         Map<String, String> responseAFL;
         Date delivery_date = null;
 
-        trackingId = "861042704819986";
+        //trackingId = "861042704819986";
         try {
             url = new URL("http://trackntrace.aflwiz.com/aflwiztrack?shpntnum=" + trackingId);
             bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
@@ -97,7 +97,7 @@ public class CourierStatusUpdateHelper {
         String inputLine = "";
         String response = "";
         String jsonFormattedResponse = "";
-        trackingId = "10000124755";
+        //trackingId = "10000124755";
         try {
 
           url = new URL("http://api.chhotu.in/shipmenttracking?tracking_number=" + trackingId);
@@ -148,7 +148,7 @@ public class CourierStatusUpdateHelper {
                 gatewayOrderId = shippingOrder.getGatewayOrderId();
             }
              //added for debugging
-            gatewayOrderId="1135321-82847";
+            //gatewayOrderId="1135321-82847";
            url = new URL("http://track.delhivery.com/api/packages/json/?token=" + authenticationIdForDelhivery + "&ref_nos=" + gatewayOrderId);
             bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
 
@@ -186,7 +186,7 @@ public class CourierStatusUpdateHelper {
         Element    xmlElement   = null;
         String inputLine = "";
         String response = "";
-        trackingId              = "43872110553";
+        //trackingId              = "43872110553";
 
         try {
             url = new URL("http://www.bluedart.com/servlet/RoutingServlet?handler=tnt&action=custawbquery&loginid=" + loginIdForBlueDart + "&awb=awb&numbers=" + trackingId + "&format=xml&lickey=" + licenceKeyForBlueDart + "&verno=1.3&scan=1");
@@ -232,7 +232,7 @@ public class CourierStatusUpdateHelper {
         String                 response      = "";
         Map<String, String>    responseMap   = null;
         //added for debugging
-        trackingId="x00473680";
+        //trackingId="x00473680";
 
         try {
 
