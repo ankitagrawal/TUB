@@ -19,7 +19,7 @@ import java.util.List;
 public class StateCourierServiceAction extends BaseAction {
   @Autowired
   StateCourierServiceDao stateCourierServiceDao;
-
+ private StateCourierService stateCourierService;
 
   private List<StateCourierService> stateCourierServiceList = null;
   private String state;
@@ -40,7 +40,14 @@ public class StateCourierServiceAction extends BaseAction {
     if (stateCourierServiceList != null && stateCourierServiceList.size() > 0) {
       setStateCourierServiceList(stateCourierServiceList);
     }
-    return new RedirectResolution(StateCourierServiceAction.class);
+    setState(state);
+    return new ForwardResolution("/pages/admin/stateCourierService.jsp");
+  }
+
+    public Resolution save() {
+     stateCourierServiceDao.save(stateCourierService);
+    addRedirectAlertMessage(new SimpleMessage("state info saved"));
+    return new ForwardResolution("/pages/admin/stateCourierService.jsp");
   }
 
   public List<StateCourierService> getStateCourierServiceList() {
@@ -67,4 +74,11 @@ public class StateCourierServiceAction extends BaseAction {
     return stateList;
   }
 
+  public StateCourierService getStateCourierService() {
+    return stateCourierService;
+  }
+
+  public void setStateCourierService(StateCourierService stateCourierService) {
+    this.stateCourierService = stateCourierService;
+  }
 }

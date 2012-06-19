@@ -5,7 +5,9 @@ import com.hk.admin.pact.dao.courier.CourierPricingEngineDao;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierPricingEngine;
 import com.hk.domain.courier.RegionType;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.service.UserService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -29,6 +31,9 @@ public class CreateUpdateCourierPricingAction extends BaseAction {
   Courier courier;
   RegionType regionType;
 
+  @Autowired
+  UserService userService;
+
   @DefaultHandler
   public Resolution pre() {
     return new ForwardResolution("/pages/admin/createUpdatecourierPricing.jsp");
@@ -40,6 +45,14 @@ public class CreateUpdateCourierPricingAction extends BaseAction {
   }
 
   public Resolution save() {
+   Warehouse warehouse = getUserService().getWarehouseForLoggedInUser();
+    if (warehouse == null ){
+      addRedirectAlertMessage(new SimpleMessage("select into warehouse")); 
+      return new ForwardResolution("/pages/admin/createUpdatecourierPricing.jsp");
+    }
+    if(courierPricingEngine.getId() == null){
+    courierPricingEngine.setWarehouse(warehouse);  
+    }
     courierPricingEngineDao.save(courierPricingEngine);
     addRedirectAlertMessage(new SimpleMessage("courier info saved"));
     return new ForwardResolution("/pages/admin/createUpdatecourierPricing.jsp");
