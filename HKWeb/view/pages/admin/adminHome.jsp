@@ -98,7 +98,7 @@
   <h3><s:link beanclass="com.hk.web.action.admin.catalog.product.RecentlyAddedProductsAction">Recently Added Products</s:link></h3>
   <h3><s:link beanclass="com.hk.web.action.admin.catalog.product.RelatedProductAction">Update Related Products</s:link></h3>
   <h3><s:link beanclass="com.hk.web.action.report.GenerateReconcilationReportAction">Generate Reconcilation Report</s:link></h3>
-
+  <h3><s:link beanclass="com.hk.web.action.admin.mih.MIHPricingAction">MIH pricing</s:link></h3>
 </div>
 
 <div class="cl"></div>
