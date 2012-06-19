@@ -238,30 +238,33 @@ public class DeliveryStatusUpdateManager {
                     for (ShippingOrder shippingOrderInList : shippingOrderList) {
                         trackingId = shippingOrderInList.getShipment().getTrackingId();
                         responseMap = courierStatusUpdateHelper.updateDeliveryStatusDTDC(trackingId);
-                        for (Map.Entry entryObj : responseMap.entrySet()) {
-                            if (entryObj.getKey().equals(CourierConstants.DTDC_INPUT_STR_STATUS)) {
-                                courierDeliveryStatus = entryObj.getValue().toString();
+                        if (responseMap != null) {
+                            for (Map.Entry entryObj : responseMap.entrySet()) {
+                                if (entryObj.getKey().equals(CourierConstants.DTDC_INPUT_STR_STATUS)) {
+                                    courierDeliveryStatus = entryObj.getValue().toString();
+                                }
+                                if (entryObj.getKey().equals(CourierConstants.DTDC_INPUT_STR_STATUSTRANSON)) {
+                                    deliveryDateString = entryObj.getValue().toString();
+                                }
                             }
-                            if (entryObj.getKey().equals(CourierConstants.DTDC_INPUT_STR_STATUSTRANSON)) {
-                                deliveryDateString = entryObj.getValue().toString();
+                            String subStringDeliveryDate = null;
+                            if (deliveryDateString != null) {
+                                subStringDeliveryDate = deliveryDateString.substring(4, 8) + "-" + deliveryDateString.substring(2, 4) + "-" + deliveryDateString.substring(0, 2);
                             }
-                        }
-                        String subStringDeliveryDate = null;
-                        if (deliveryDateString != null) {
-                            subStringDeliveryDate = deliveryDateString.substring(4, 8) + "-" + deliveryDateString.substring(2, 4) + "-" + deliveryDateString.substring(0, 2);
-                        }
-                        if (courierDeliveryStatus != null && deliveryDateString != null) {
-                            if (courierDeliveryStatus.equals(CourierConstants.DTDC_INPUT_DELIVERED)) {
-                                Date delivery_date = getFormattedDeliveryDate(subStringDeliveryDate);
-                                ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shippingOrderInList.getShipment(), trackingId, delivery_date);
+                            if (courierDeliveryStatus != null && deliveryDateString != null) {
+                                if (courierDeliveryStatus.equals(CourierConstants.DTDC_INPUT_DELIVERED)) {
+                                    Date delivery_date = getFormattedDeliveryDate(subStringDeliveryDate);
+                                    ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shippingOrderInList.getShipment(), trackingId, delivery_date);
+                                }
                             }
+
                         }
                     }
 
                 }
-            }
-           return ordersDelivered;
         }
+        return ordersDelivered;
+    }
 
     public int updateCourierDeliveryStatus(ShippingOrder shippingOrder, Shipment shipment, String trackingId, Date deliveryDate) {
 

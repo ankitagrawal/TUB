@@ -228,89 +228,23 @@ public class CourierStatusUpdateHelper {
 
     public Map updateDeliveryStatusDTDC(String trackingId) {
 
-        String                 inputLine;
+        String                 inputLine="";
         String                 response      = "";
         Map<String, String>    responseMap   = null;
+        //added for debugging
+        trackingId="x00473680";
 
         try {
 
-            url = new URL("http://cust.dtdc.co.in/DPTrack/XMLCnTrk.asp?strcnno=" + trackingId + "&TrkType=" + trackingId + "&addtnlDtl=Y&strCustType=DP&strCustDtl=DP");
+            url = new URL("http://cust.dtdc.co.in/DPTrack/XMLCnTrk.asp?strcnno=" + trackingId + "&TrkType=cnno&addtnlDtl=Y&strCustType=DP&strCustDtl=LL070");
             bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
-            //added for debugging
-            response = "<DTDCREPLY>" +
-                    "<CONSIGNMENT>" +
-                    "<CNHEADER>" +
-                    "<CNTRACK>TRUE</CNTRACK>" +
-                    "<FIELD NAME=\"strShipmentNo\" VALUE=\"A15082271\" />" +
-                    "<FIELD NAME=\"strRefNo\" VALUE=\"N/A\" />" +
-                    "<FIELD NAME=\"strMode\" VALUE=\"AIR\" />" +
-                    "<FIELD NAME=\"strOrigin\" VALUE=\"LEAK-PROOF ENGINEERING PVT.LTD, AHMEDABAD\" />" +
-                    "<FIELD NAME=\"strOriginRemarks\" VALUE=\"Received from\" />" +
-                    "<FIELD NAME=\"strBookedOn\" VALUE=\"08072009\" />" +
-                    "<FIELD NAME=\"strPieces\" VALUE=\"1\" />" +
-                    "<FIELD NAME=\"strWeightUnit\" VALUE=\"Kg\" />" +
-                    "<FIELD NAME=\"strWeight\" VALUE=\"0.020\" />" +
-                    "<FIELD NAME=\"strDestination\" VALUE=\"PUNE\" />" +
-                    "<FIELD NAME=\"strStatus\" VALUE=\"DELIVERED\" />" +
-                    "<FIELD NAME=\"strStatusTransOn\" VALUE=\"12062012\" />" +
-                    "<FIELD NAME=\"strStatusTransTime\" VALUE=\"1210\" />" +
-                    "<FIELD NAME=\"strRemarks\" VALUE=\"CO SEAL\" />" +
-                    "<FIELD NAME=\"strNoOfAttempts\" VALUE=\"\" />" +
-                    "</CNHEADER>" +
-                    "<CNBODY>" +
-                    "<CNACTIONTRACK>TRUE</CNACTIONTRACK>" +
-                    "<CNACTION>" +
-                    "<FIELD NAME=\"strAction\" VALUE=\"DISPATCHED\" />" +
-                    "<FIELD NAME=\"strManifestNo\" VALUE=\"A1534068\" />" +
-                    "<FIELD NAME=\"strOrigin\" VALUE=\"AHMEDABAD APEX, AHMEDABAD\" />" +
-                    "<FIELD NAME=\"strDestination\" VALUE=\"PUNE APEX, PUNE\" />" +
-                    "<FIELD NAME=\"strActionDate\" VALUE=\"08072009\" />" +
-                    "<FIELD NAME=\"strRemarks\" VALUE=\"\" />" +
-                    "</CNACTION>" +
-                    "<CNACTION>" +
-                    "<FIELD NAME=\"strAction\" VALUE=\"RECEIVED\" />" +
-                    "<FIELD NAME=\"strManifestNo\" VALUE=\"A1534068\" />" +
-                    "<FIELD NAME=\"strOrigin\" VALUE=\"AHMEDABAD, AHMEDABAD\" />" +
-                    "<FIELD NAME=\"strDestination\" VALUE=\"PUNE APEX, PUNE\" />" +
-                    "<FIELD NAME=\"strActionDate\" VALUE=\"09072009\" />" +
-                    "<FIELD NAME=\"strRemarks\" VALUE=\"\" />" +
-                    "</CNACTION>" +
-                    "<CNACTION>" +
-                    "<FIELD NAME=\"strAction\" VALUE=\"DISPATCHED\" />" +
-                    "<FIELD NAME=\"strManifestNo\" VALUE=\"90033365\" />" +
-                    "<FIELD NAME=\"strOrigin\" VALUE=\"PUNE, PUNE\" />" +
-                    "<FIELD NAME=\"strDestination\" VALUE=\"PUNE SHIVAJI NAGAR BRANCH, PUNE\" />" +
-                    "<FIELD NAME=\"strActionDate\" VALUE=\"09072009\" />" +
-                    "<FIELD NAME=\"strRemarks\" VALUE=\"\" />" +
-                    "</CNACTION>" +
-                    "<CNACTION>" +
-                    "<FIELD NAME=\"strAction\" VALUE=\"RECEIVED\" />" +
-                    "<FIELD NAME=\"strManifestNo\" VALUE=\"90033365\" />" +
-                    "<FIELD NAME=\"strOrigin\" VALUE=\"PUNE, PUNE\" />" +
-                    "<FIELD NAME=\"strDestination\" VALUE=\"PUNE SHIVAJI NAGAR BRANCH, PUNE\" />" +
-                    "<FIELD NAME=\"strActionDate\" VALUE=\"09072009\" />" +
-                    "<FIELD NAME=\"strRemarks\" VALUE=\"\" />" +
-                    "</CNACTION>" +
-                    "<CNACTION>" +
-                    "<FIELD NAME=\"strAction\" VALUE=\"OUT FOR DELIVERY\" />" +
-                    "<FIELD NAME=\"strManifestNo\" VALUE=\"91108846\" />" +
-                    "<FIELD NAME=\"strOrigin\" VALUE=\"PUNE SHIVAJI NAGAR BRANCH, PUNE\" />" +
-                    "<FIELD NAME=\"strDestination\" VALUE=\"KOTHRUD (MAIN ROAD), PUNE\" />" +
-                    "<FIELD NAME=\"strActionDate\" VALUE=\"09072009\" />" +
-                    "<FIELD NAME=\"strRemarks\" VALUE=\"\" />" +
-                    "</CNACTION>" +
-                    "</CNBODY>" +
-                    "</CONSIGNMENT>" +
-                    "</DTDCREPLY>";
-            /*while ((inputLine = bufferedReader.readLine()) != null) {
-              if (inputLine != null) {
-                response += inputLine;
-              }
-            }*/
+            while ((inputLine = bufferedReader.readLine()) != null) {
+                if (inputLine != null) {
+                    response += inputLine;
+                }
+            }
             Document doc = new SAXBuilder().build(new StringReader(response));
 
-            //XPath xPath = XPath.newInstance("/*/Shipment");
-            //Element ele = (Element) xPath.selectSingleNode(doc);
             Element element = doc.getRootElement();
             Element consig = element.getChild(CourierConstants.DTDC_INPUT_CONSIGNMENT);
             Element header = consig.getChild(CourierConstants.DTDC_INPUT_CNHEADER);
