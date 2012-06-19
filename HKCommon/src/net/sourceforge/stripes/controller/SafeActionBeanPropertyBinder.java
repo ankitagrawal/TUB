@@ -140,7 +140,7 @@ public class SafeActionBeanPropertyBinder extends DefaultActionBeanPropertyBinde
                  * then add a validation error
                  */
 
-               if (retval == null && validationInfo.required() && validationInfo.on().contains(bean.getContext().getEventName())) {
+               if (retval == null && validationInfo !=null && validationInfo.required() && validationInfo.on().contains(bean.getContext().getEventName())) {
                  ValidationError error = new ScopedLocalizableError("validation.required",
                          "valueNotPresent");
                  error.setFieldValue(null);
