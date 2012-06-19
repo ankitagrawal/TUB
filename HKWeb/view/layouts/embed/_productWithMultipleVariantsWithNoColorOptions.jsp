@@ -7,7 +7,7 @@
   <%
     Product product = (Product) pageContext.getAttribute("product");
     pageContext.setAttribute("product", product);
-    SubscriptionProduct subscriptionProduct = (SubscriptionProduct) pageContext.getAttribute("product");
+    SubscriptionProduct subscriptionProduct = (SubscriptionProduct) pageContext.getAttribute("subscriptionProduct");
     pageContext.setAttribute("subscriptionProduct", subscriptionProduct);
   %>
 <div class='variants'>
