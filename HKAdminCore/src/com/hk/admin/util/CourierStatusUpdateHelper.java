@@ -15,9 +15,6 @@ import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.net.URL;
 import java.net.MalformedURLException;
-
-import com.hk.domain.order.ShippingOrder;
-import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.exception.HealthkartCheckedException;
 import com.google.gson.Gson;
@@ -42,10 +39,7 @@ public class CourierStatusUpdateHelper {
     private static final  String           loginIdForBlueDart            = "GGN37392";
     private static final  String           licenceKeyForBlueDart         = "3c6867277b7a2c8cd78c8c4cb320f401";
 
-    @Autowired
-    private               ShippingOrderDao shippingOrderDao;
-
-
+   
     public Date updateDeliveryStatusAFL(String trackingId) throws HealthkartCheckedException{
         String inputLine = "";
         String response = "";
@@ -104,7 +98,7 @@ public class CourierStatusUpdateHelper {
         String inputLine = "";
         String response = "";
         String jsonFormattedResponse = "";
-        //trackingId = "10000124755";
+       // trackingId = "10000124755";
         try {
 
           url = new URL("http://api.chhotu.in/shipmenttracking?tracking_number=" + trackingId);
@@ -148,17 +142,11 @@ public class CourierStatusUpdateHelper {
         String          inputLine;
         String          jsonFormattedResponse    = "";
         JsonParser      jsonParser               = new JsonParser();
-        ShippingOrder   shippingOrder            = shippingOrderDao.findByTrackingId(trackingId);
 
         try {
-
-            String gatewayOrderId = "";
-            if (shippingOrder != null) {
-                gatewayOrderId = shippingOrder.getGatewayOrderId();
-            }
              //added for debugging
-            //gatewayOrderId="1135321-82847";
-           url = new URL("http://track.delhivery.com/api/packages/json/?token=" + authenticationIdForDelhivery + "&ref_nos=" + gatewayOrderId);
+           // trackingId ="10410166832";
+           url = new URL("http://track.delhivery.com/api/packages/json/?token=" + authenticationIdForDelhivery + "&waybill=" + trackingId);
             bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
 
             while ((inputLine = bufferedReader.readLine()) != null) {

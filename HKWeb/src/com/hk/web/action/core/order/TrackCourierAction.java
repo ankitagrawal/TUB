@@ -22,6 +22,8 @@ import java.util.Map;
  */
 public class TrackCourierAction extends BaseAction {
 
+    private static            Logger                      logger                 = LoggerFactory.getLogger(TrackCourierAction.class);
+
     private                   String                      trackingId;
     private                   ChhotuCourierDelivery       chhotuCourierDelivery;
 
@@ -59,7 +61,7 @@ public class TrackCourierAction extends BaseAction {
                 try {
                     chhotuCourierDelivery = courierStatusUpdateHelper.updateDeliveryStatusChhotu(trackingId);
                 } catch (HealthkartCheckedException hce) {
-                    addRedirectAlertMessage(new SimpleMessage(hce.getMessage()));
+                    logger.debug("Exception occurred in TrackCourierAction");
                 }
                 if (chhotuCourierDelivery != null) {
                     resolution = new ForwardResolution("/pages/chhotuCourier.jsp");
@@ -77,7 +79,7 @@ public class TrackCourierAction extends BaseAction {
                 try {
                     jsonObject = courierStatusUpdateHelper.updateDeliveryStatusDelhivery(trackingId);
                 } catch (HealthkartCheckedException hce) {
-                    addRedirectAlertMessage(new SimpleMessage(hce.getMessage()));
+                    logger.debug("Exception occurred in TrackCourierAction");
                 }
                 if (jsonObject != null) {
                     if (!jsonObject.has("Error")) {
@@ -97,7 +99,7 @@ public class TrackCourierAction extends BaseAction {
                 try {
                     ele = courierStatusUpdateHelper.updateDeliveryStatusBlueDart(trackingId);
                 } catch (HealthkartCheckedException hce) {
-                    addRedirectAlertMessage(new SimpleMessage(hce.getMessage()));
+                    logger.debug("Exception occurred in TrackCourierAction");
                 }
                 if (ele != null) {
                     String responseStatus = ele.getChildText(CourierConstants.DELHIVERY_STATUS);
@@ -118,7 +120,7 @@ public class TrackCourierAction extends BaseAction {
                 try {
                     responseMap = courierStatusUpdateHelper.updateDeliveryStatusDTDC(trackingId);
                 } catch (HealthkartCheckedException hce) {
-                    addRedirectAlertMessage(new SimpleMessage(hce.getMessage()));
+                    logger.debug("Exception occurred in TrackCourierAction");
                 }
                 if (responseMap != null) {
                     for (Map.Entry entryObj : responseMap.entrySet()) {
