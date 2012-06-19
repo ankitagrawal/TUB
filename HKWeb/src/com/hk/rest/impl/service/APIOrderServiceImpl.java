@@ -209,6 +209,7 @@ public class APIOrderServiceImpl implements APIOrderService {
       ProductVariant productVariant = getProductVariantService().getVariantById(detail.getProductId().trim());
       if (productVariant != null) {
         productVariant.setQty(new Long(detail.getQty()));
+        productVariant.setHkPrice(detail.getMihPrice());
         CartLineItem cartLineItem = getCartLineItemService().createCartLineItemWithBasicDetails(productVariant, order);
         cartLineItem = getCartLineItemService().save(cartLineItem);
         cartLineItems.add(cartLineItem);
@@ -217,7 +218,6 @@ public class APIOrderServiceImpl implements APIOrderService {
     return cartLineItems;
   }
 
-  @Override
   public String trackOrder(String orderId) {
         Order order=getOrderService().find(new Long(orderId));
 
