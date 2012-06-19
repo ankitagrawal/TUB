@@ -86,7 +86,8 @@ public enum EnumPermission {
   SEND_MARKETING_MAILS                           (PermissionConstants.SEND_MARKETING_MAILS),
   CREATE_EDIT_SKU                                (PermissionConstants.CREATE_EDIT_SKU),
   MANAGE_PAYMENT_HISTORY                         (PermissionConstants.MANAGE_PAYMENT_HISTORY),
-  FINANCE_MANAGEMENT                             (PermissionConstants.FINANCE_MANAGEMENT);
+  FINANCE_MANAGEMENT                             (PermissionConstants.FINANCE_MANAGEMENT),
+  RUN_ANT_BUILDS                                 (PermissionConstants.RUN_ANT_BUILDS);
 
   String permissionName;
 
