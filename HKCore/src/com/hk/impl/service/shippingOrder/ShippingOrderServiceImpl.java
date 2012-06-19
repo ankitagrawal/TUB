@@ -117,11 +117,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 
         for (LineItem lineItem : shippingOrder.getLineItems()) {
             Long availableUnbookedInv = getInventoryService().getAvailableUnbookedInventory(lineItem.getSku()); // This
-            // is
-            // after
-            // including
-            // placed
-            // order qty
+            // is after including placed order qty
             logger.debug("availableUnbookedInv of[" + lineItem.getSku().getId() + "] = " + availableUnbookedInv);
             ProductVariant productVariant = lineItem.getSku().getProductVariant();
             logger.debug("jit: " + productVariant.getProduct().isJit());
