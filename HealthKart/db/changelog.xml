@@ -3742,6 +3742,8 @@
     <changeSet author="Ajeet (generated)" id="1325756023057-1">
         <modifyDataType columnName="pincode" newDataType="VARCHAR(8)" tableName="pincode"/>
     </changeSet>
+  <!--
+  commenting this changeset as it is confilicting with changeset 1338816774783-12 when creating db from scratch
   <changeSet author="Ajeet (generated)" id="1325756023057-2">
     <sql>
       insert into state_courier_service(state) values('ANDAMAN AND NICOBAR ISLAND');
@@ -3780,7 +3782,7 @@
       insert into state_courier_service(state) values('UTTARAKHAND');
       insert into state_courier_service(state) values('WEST BENGAL');
     </sql>
-  </changeSet>
+  </changeSet>-->
 
   <changeSet author="Ajeet (generated)" id="1326471094500-1">
       <createIndex indexName="po_pv_key" tableName="po_line_item" unique="true">
@@ -6480,7 +6482,7 @@
     </changeSet>
     <changeSet author="Rahul (generated)" id="1333359844542-7">
         <dropIndex indexName="fk_base_order_accounting_invoice_number10" tableName="shipping_order"/>
-    </changeSet>  
+    </changeSet>
 
     <changeSet author="vaibhav" id="1333359844542-8">
       <sql>
@@ -6629,7 +6631,7 @@
     <changeSet author="Ajeet (generated)" id="1333781139071-5">
         <dropNotNullConstraint columnDataType="INT" columnName="goods_received_note_id" tableName="debit_note"/>
     </changeSet>
-  
+
     <changeSet author="Ajeet (generated)" id="1333781139071-6">
         <addColumn tableName="debit_note">
             <column defaultValue="1" name="warehouse_id" type="INT">
@@ -6640,7 +6642,7 @@
     <changeSet author="Ajeet (generated)" id="1333781139071-7">
         <addForeignKeyConstraint baseColumnNames="warehouse_id" baseTableName="debit_note" constraintName="fk_debit_note_warehouse1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="warehouse" referencesUniqueColumn="false"/>
     </changeSet>
-  
+
     <changeSet author="Ajeet (generated)" id="1333781139071-8">
         <addColumn tableName="debit_note">
             <column name="supplier_id" type="INT">
@@ -6650,7 +6652,7 @@
     </changeSet>
     <changeSet author="Ajeet (generated)" id="1333781139071-9">
         <addForeignKeyConstraint baseColumnNames="supplier_id" baseTableName="debit_note" constraintName="fk_debit_note_supplier1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="supplier" referencesUniqueColumn="false"/>
-    </changeSet> 
+    </changeSet>
     <changeSet author="Rahul (generated)" id="1333873396169-1">
         <addNotNullConstraint columnDataType="DECIMAL(8,2)" columnName="cost_price" tableName="product_variant"/>
     </changeSet>
@@ -7224,7 +7226,7 @@
   <changeSet author="Rimal (generated)" id="1336570361449-80">
     <dropColumn columnName="courier_id" tableName="pincode_region_zone"/>
   </changeSet>
-  
+
     <changeSet author="Ajeet (generated)" id="1336994156706-1">
         <createTable tableName="courier_group_has_courier">
             <column name="courier_group_id" type="INT">
@@ -7259,7 +7261,7 @@
     <changeSet author="Ajeet (generated)" id="1336994156706-8">
         <dropColumn columnName="courier_id" tableName="courier_group"/>
     </changeSet>
-    
+
     <changeSet author="Ajeet (generated)" id="1337252542825-1">
         <createTable tableName="demand_history">
             <column autoIncrement="true" name="id" type="INT">
@@ -7377,7 +7379,7 @@
         </addColumn>
     </changeSet>
     <changeSet author="vaibhav (generated)" id="1337667700199-6">
-        <addColumn tableName="pincode">                                       
+        <addColumn tableName="pincode">
             <column name="region" type="VARCHAR(45)"/>
         </addColumn>
     </changeSet>
@@ -7470,4 +7472,53 @@
           <column name="user_id"/>
       </createIndex>
   </changeSet>
-</databaseChangeLog>
+  <changeSet author="Seema (generated)" id="1338816774783-1">
+         <createTable tableName="city_courier_tat">
+             <column autoIncrement="true" name="id" type="INT">
+                 <constraints nullable="false" primaryKey="true"/>
+             </column>
+             <column name="city" type="VARCHAR(45)">
+                 <constraints nullable="false"/>
+             </column>
+           <column name="courier_id" type="INT">
+                 <constraints nullable="false"/>
+             </column>
+             <column name="turnaround_time" type="DECIMAL(10,2)">
+                 <constraints nullable="false"/>
+             </column>
+         </createTable>
+     </changeSet>
+     <changeSet author="Seema (generated)" id="1338816774783-2">
+         <addColumn tableName="awb">
+             <column name="cod" type="TINYINT">
+ <constraints nullable="false"/>
+             </column>
+         </addColumn>
+     </changeSet>
+     <changeSet author="Seema (generated)" id="1338816774783-3">
+         <addColumn tableName="state_courier_service">
+             <column name="preference" type="INT">
+                 <constraints nullable="false"/>
+             </column>
+         </addColumn>
+     </changeSet>
+     <changeSet author="Seema (generated)" id="1338816774783-8">
+         <createIndex indexName="fk_pincode_city" tableName="pincode" unique="false">
+             <column name="city"/>
+         </createIndex>
+     </changeSet>
+     <changeSet author="Seema (generated)" id="1338816774783-9">
+         <createIndex indexName="fk_pincode_state" tableName="pincode" unique="false">
+             <column name="state"/>
+         </createIndex>
+     </changeSet>
+     <changeSet author="Seema (generated)" id="1338816774783-10">
+         <addForeignKeyConstraint baseColumnNames="city" baseTableName="city_courier_tat"  constraintName="city_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="city" referencedTableName="pincode"  referencesUniqueColumn="false"/>
+     </changeSet>
+     <changeSet author="Seema (generated)" id="1338816774783-11">
+         <addForeignKeyConstraint baseColumnNames="courier_id" baseTableName="city_courier_tat"  constraintName="fk_city_courier_tat_courier1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="courier"  referencesUniqueColumn="false"/>
+     </changeSet>
+     <changeSet author="Seema (generated)" id="1338816774783-12">
+         <addForeignKeyConstraint baseColumnNames="state" baseTableName="state_courier_service" constraintName="fk_state_pincode" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="state" referencedTableName="pincode"  referencesUniqueColumn="false"/>
+     </changeSet>
+ </databaseChangeLog>

@@ -2,18 +2,17 @@ package com.hk.web.action.admin.courier;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.engine.ShipmentPricingEngine;
+import com.hk.admin.pact.dao.courier.AwbDao;
 import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.EnumCourier;
-import com.hk.constants.courier.EnumCourierGroup;
 import com.hk.constants.shipment.EnumBoxSize;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
-import com.hk.domain.courier.CourierGroup;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
@@ -57,6 +56,8 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
     CourierGroupService courierGroupService;
     @Autowired
     private ShipmentPricingEngine shipmentPricingEngine;
+     @Autowired
+     AwbDao awbDao;
 
     private String gatewayOrderId;
     Courier suggestedCourier;
@@ -101,18 +102,6 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
     public Resolution searchOrders() {
 
         shippingOrder = shippingOrderDao.findByGatewayOrderId(gatewayOrderId);
-        /*
-         * if (shippingOrder == null) { addRedirectAlertMessage(new SimpleMessage("Shipping Order not found for the
-         * corresponding gateway order id")); return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class); }
-         * else if (shippingOrder.getOrderStatus() != null) { Long id = shippingOrder.getOrderStatus().getId(); if (id <
-         * EnumShippingOrderStatus.SO_CheckedOut.getId()) { addRedirectAlertMessage(new SimpleMessage("Shipping Order is
-         * not checkout out yet .It cannot be packed. ")); return new
-         * RedirectResolution(SearchOrderAndEnterCourierInfoAction.class); } else if (id >=
-         * EnumShippingOrderStatus.SO_Delivered.getId()) { addRedirectAlertMessage(new SimpleMessage("Shipping Order was
-         * either delieverd/canceled .Courier details cannot be changed. ")); return new
-         * RedirectResolution(SearchOrderAndEnterCourierInfoAction.class); } else { shipment =
-         * shippingOrder.getShipment(); shippingOrderList.add(shippingOrder); } }
-         */
         if (shippingOrder == null) {
             addRedirectAlertMessage(new SimpleMessage("Shipping Order not found for the corresponding gateway order id"));
             return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
@@ -139,7 +128,17 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
                 boolean isCod = shippingOrder.isCOD();
                 availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod);
                 suggestedCourier = courierService.getDefaultCourierByPincodeAndWarehouse(pinCode, isCod);
-            }else{
+/*
+              List<Awb> suggestedAwbList= awbDao.getAvailableAwbForCourierByWarehouseAndCod(suggestedCourier,userService.getWarehouseForLoggedInUser(),isCod);
+              if(suggestedAwbList != null && suggestedAwbList.size() >0){
+              shipment.setTrackingId(suggestedAwbList.get(0).getAwbNumber());
+                suggestedAwbList.get(0).setUsed(true);
+              }
+              else{
+                 addRedirectAlertMessage(new SimpleMessage("AWB numbers are not available for courier  , please contact respective courier service  "+ suggestedCourier));
+              }
+*/
+            } else {
                 addRedirectAlertMessage(new SimpleMessage("Pincode is INVALID, Please contact Customer Care. It cannot be packed."));
             }
         } catch (Exception e) {
@@ -186,6 +185,11 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 
     public void setGatewayOrderId(String gatewayOrderId) {
         this.gatewayOrderId = gatewayOrderId;
+    }
+
+    
+    public String getGatewayOrderId() {
+        return gatewayOrderId;
     }
 
     public Courier getSuggestedCourier() {
