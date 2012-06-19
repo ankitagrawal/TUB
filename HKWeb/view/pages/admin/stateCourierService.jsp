@@ -1,44 +1,9 @@
-<%@ page import="com.hk.constants.courier.StateList" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.courier.StateCourierServiceAction" var="scsaBean" event="pre"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="State Courier Service">
-    <s:layout-component name="htmlHead">
-        <script type="text/javascript">
-            var nextIndex = 0;
-            $(document).ready(function() {
-                $('.addRowButton').click(function() {
-                    var lastIndex = $('.lastRow').attr('count');
-                    if (!lastIndex) {
-                        lastIndex = -1;
-                    }
-                    var limitIndex = eval(lastIndex + "+1");
-
-                    $('.lastRow').removeClass('lastRow');
-                    var innerRowHtml = '<tr count = "' + limitIndex + 'class="lastRow">' +
-                                       '<td>' +
-                                       limitIndex +
-                                       '</td>' +
-                                       '<td>' +
-                                       '<input text="text" name ="'+${scsaBean.stateCourierService.courier.name}+'" />' +
-                                       '<td>' +
-                                       '<td>' +
-                                       '<input text="text" name ="'+${scsaBean.stateCourierService.preference}+'" />' +
-                                       '</td>'
-                            ;
-                    $('#featureTable').append(innerRowHtml);
-                    nextIndex = eval(nextIndex + "+1");
-
-                });
-
-
-            });
-
-        </script>
-    </s:layout-component>
-
-
     <s:layout-component name="heading">State Courier Service</s:layout-component>
     <s:layout-component name="content">
         <div style="height:100px;">
@@ -50,7 +15,7 @@
                 </tr>
                 <tr>
                     <s:form beanclass="com.hk.web.action.admin.courier.StateCourierServiceAction">
-                        <td>
+                                              <td>
                             <s:select name="state">
                                 <s:options-collection collection="${scsaBean.stateList}"/>
                             </s:select>
@@ -63,16 +28,17 @@
             </table>
         </div>
 
-        <div class="clear" style="height:10px;"></div>
+        <div class="clear" style="height:100px;"></div>
 
-        <s:form beanclass="com.hk.web.action.admin.courier.StateCourierServiceAction">
-            <s:hidden name="state"  value="${scsaBean.state}"/>
-            <table id="featureTable">
+        <div>
+          <s:form beanclass="com.hk.web.action.admin.courier.StateCourierServiceAction">
+             <s:hidden name="state"  value="${scsaBean.state}"/>
+            <table >
                 <%--<c:if test="${scsaBean.state != null}">--%>
                 <tr>
-                    <th>Selected State</th>
+                    <td style="font-weight:bold;">Selected State</td> <td> ${scsaBean.state}</td>
                 </tr>
-                <tr> ${scsaBean.state} </tr>
+
 
                 <tr>
                     <th>S.No.</th>
@@ -82,8 +48,7 @@
                 </tr>
                 <div>
                     <c:forEach items="${scsaBean.stateCourierServiceList}" var="stateCourierService" varStatus="count">
-                        <s:hidden name="stateCourierService.id"/>
-                       <tr count="${count.index}" class="${count.last ? 'lastRow':''}">
+                       <tr >
                         <td> ${count.index+1}</td>
                         <td>
                                 ${stateCourierService.courier.name}
@@ -95,19 +60,47 @@
                     </tr>
 
                     </c:forEach>
+                         </div>
 
-                    <%--</c:if>--%>
             </table>
-            <s:submit name="save" value="SAVE"/>
+           </div>
+
+
+
+    <c:if test="${scsaBean.displayAddNewRow}">
+        <table>
+         <s:form beanclass="com.hk.web.action.admin.courier.StateCourierServiceAction">
+             <s:hidden name="stateCourierService.state"  value="${scsaBean.state}"/>
+         <tr>
+                    <td>
+                      Select Courier :
+                    <s:select name="stateCourierService.courier">
+                        <s:option value="">-Select-</s:option>
+                        <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList"
+                                                   value="id" label="name"/>
+                    </s:select></td>
+                <td>
+                  <s:text name="stateCourierService.preference"></s:text>
+                </td>
+             <td>
+            <s:submit name="save" value="Save Row"></s:submit>
+             </td>
+               </tr>
+           </s:form>
+          </table>
+</c:if>
+
+        <div class="clear">
+                    </div>
+
+       <div>
+            <div>
+           <s:submit name="addNewRow" value="Add Row" />
             </div>
+               </s:form>
+        </div>
 
-            <div class="clear" style="height:50px;"></div>
 
-            <div style="font-weight:bold; font-size:150%;">
-                <a href="#" class="addRowButton">Add New Row</a>
-            </div>
-
-        </s:form>
 
     </s:layout-component>
 </s:layout-render>

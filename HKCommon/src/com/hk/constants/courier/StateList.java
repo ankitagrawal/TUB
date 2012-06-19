@@ -50,7 +50,7 @@ public class StateList {
   public static final String KERALA = "KERALA";
   public static final String TAMIL_NADU = "TAMIL NADU";
   public static final String PUDUCHERRY = "PUDUCHERRY";
-  public static final String ANDAMAN_AND_NICOBAR_ISLAND = "ANDAMAN AND NICOBAR ISLAND";
+  public static final String ANDAMAN_AND_NICOBAR_ISLAND = "ANDAMAN & NICOBAR ISLANDS";
 
   public static final List<String> stateList = new ArrayList<String>() {
     {

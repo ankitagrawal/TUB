@@ -19,8 +19,9 @@ import java.util.List;
 @Repository
 public class StateCourierServiceDaoImpl extends BaseDaoImpl implements StateCourierServiceDao {
    public List<StateCourierService> getAllStateCourierServiceByState(String stateName){
+     stateName=stateName.trim();
     DetachedCriteria stateCriteria= DetachedCriteria.forClass(StateCourierServiceDao.class);
-     stateCriteria.add(Restrictions.like("state",stateName));
+     stateCriteria.add(Restrictions.eq("state",stateName));
       List<StateCourierService> stateCourierServiceList=  findByCriteria(stateCriteria);
      return stateCourierServiceList;
    }

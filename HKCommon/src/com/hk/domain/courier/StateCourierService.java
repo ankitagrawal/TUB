@@ -2,8 +2,6 @@ package com.hk.domain.courier;
 // Generated 5 Jan, 2012 2:39:47 PM by Hibernate Tools 3.2.4.CR1
 
 
-import com.hk.domain.core.Pincode;
-
 import javax.persistence.*;
 
 /**
@@ -26,19 +24,16 @@ public class StateCourierService implements java.io.Serializable {
    @Column(name = "preference")
   private Long preference ;
 
-  @ManyToOne(fetch = FetchType.LAZY )
-  @JoinColumn(name = "state" , referencedColumnName="state")
-  private Pincode pincode;
+  @Column(name = "state")
+  private String state ;
 
-    public Pincode getPincode() {
-    return pincode;
+  public String getState() {
+    return state;
   }
 
-  public void setPincode(Pincode pincode) {
-    this.pincode = pincode;
+  public void setState(String state) {
+    this.state = state;
   }
-
-
 
   public Long getPreference() {
     return preference;

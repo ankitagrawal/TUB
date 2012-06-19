@@ -4,6 +4,7 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.StateList;
 import com.hk.domain.courier.StateCourierService;
+import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.pact.dao.courier.StateCourierServiceDao;
 import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
@@ -19,17 +20,22 @@ import java.util.List;
 public class StateCourierServiceAction extends BaseAction {
   @Autowired
   StateCourierServiceDao stateCourierServiceDao;
+  @Autowired
+  PincodeDao pincodeDao;
  private StateCourierService stateCourierService;
 
   private List<StateCourierService> stateCourierServiceList = null;
   private String state;
 
   private List<String> stateList = new ArrayList<String>();
+   private boolean displayAddNewRow;
+
 
 
   @DefaultHandler
   @DontValidate
   public Resolution pre() {
+    displayAddNewRow=false;
     setStateList(StateList.stateList);
     return new ForwardResolution("/pages/admin/stateCourierService.jsp");
   }
@@ -40,14 +46,25 @@ public class StateCourierServiceAction extends BaseAction {
     if (stateCourierServiceList != null && stateCourierServiceList.size() > 0) {
       setStateCourierServiceList(stateCourierServiceList);
     }
-    setState(state);
+    setStateList(StateList.stateList);
     return new ForwardResolution("/pages/admin/stateCourierService.jsp");
   }
 
     public Resolution save() {
-     stateCourierServiceDao.save(stateCourierService);
+         stateCourierServiceDao.save(stateCourierService);
+      setStateList(StateList.stateList);
     addRedirectAlertMessage(new SimpleMessage("state info saved"));
     return new ForwardResolution("/pages/admin/stateCourierService.jsp");
+  }
+
+  public Resolution  addNewRow(){
+    setStateList(StateList.stateList);
+    if(state == null){
+     addRedirectAlertMessage(new SimpleMessage("Select State"));
+    return new ForwardResolution("/pages/admin/stateCourierService.jsp");
+    }
+   setDisplayAddNewRow(true);    
+ return new ForwardResolution("/pages/admin/stateCourierService.jsp");
   }
 
   public List<StateCourierService> getStateCourierServiceList() {
@@ -80,5 +97,13 @@ public class StateCourierServiceAction extends BaseAction {
 
   public void setStateCourierService(StateCourierService stateCourierService) {
     this.stateCourierService = stateCourierService;
+  }
+
+  public boolean isDisplayAddNewRow() {
+    return displayAddNewRow;
+  }
+
+  public void setDisplayAddNewRow(boolean displayAddNewRow) {
+    this.displayAddNewRow = displayAddNewRow;
   }
 }
