@@ -18,9 +18,6 @@ public class DBMasterService implements TaskService{
   @Autowired
   MasterDataService masterDataService;
 
-  @Autowired
-  BatchProcessWorkManager batchProcessWorkManager;
-
   @Override
   public boolean execute(String masterData) {
     boolean isSuccessful = false;
@@ -41,9 +38,7 @@ public class DBMasterService implements TaskService{
 
     try{
       if ("static".equals(masterData) || "both".equals(masterData)) {
-        batchProcessWorkManager.beginWork();
         masterDataService.insert();
-        batchProcessWorkManager.endWork();
         isSuccessful = true;
       }
 
