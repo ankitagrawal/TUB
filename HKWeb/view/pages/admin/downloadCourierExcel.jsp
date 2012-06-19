@@ -2,9 +2,15 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
+<%@ page import="com.hk.pact.service.core.WarehouseService" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction" var="shipmentQueueBean"/>
+<%
+    WarehouseService warehouseService = ServiceLocatorFactory.getService(WarehouseService.class);
+    pageContext.setAttribute("whList", warehouseService.getAllWarehouses());
+%>
+
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Download Courier Excel">
 
 <s:layout-component name="htmlHead">
@@ -40,7 +46,16 @@
             date</label><s:text class="date_input endDate" style="width:150px"
                                 formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endDate"/>
         </li>
-
+        <li>
+          <label>
+            Warehouse
+          </label>
+            <s:select name="warehouse" style="height:30px;font-size:1.2em;padding:1px;">
+              <c:forEach items="${whList}" var="wh">
+                <s:option value="${wh.id}">${wh.city}</s:option>
+              </c:forEach>
+            </s:select>
+        </li>
         <li>
             <s:submit name="generateCourierReport" value="Download Courier Excel" class="dateFieldValidator" style="width:400px">
               Download Courier Excel
