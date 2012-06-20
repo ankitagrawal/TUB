@@ -3,8 +3,8 @@ package com.hk.web.action.admin.courier;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.StateList;
+import com.hk.domain.core.State;
 import com.hk.domain.courier.StateCourierService;
-import com.hk.domain.core.Pincode;
 import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.pact.dao.courier.StateCourierServiceDao;
 import com.hk.web.action.error.AdminPermissionAction;
@@ -26,7 +26,7 @@ public class StateCourierServiceAction extends BaseAction {
  private StateCourierService stateCourierService;
 
   private List<StateCourierService> stateCourierServiceList = null;
-  private String state;
+  private State state;
 
   private List<String> stateList = new ArrayList<String>();
    private boolean displayAddNewRow;
@@ -37,7 +37,6 @@ public class StateCourierServiceAction extends BaseAction {
   @DontValidate
   public Resolution pre() {
     displayAddNewRow=false;
-    setStateList(StateList.stateList);
     return new ForwardResolution("/pages/admin/stateCourierService.jsp");
   }
 
@@ -47,17 +46,11 @@ public class StateCourierServiceAction extends BaseAction {
     if (stateCourierServiceList != null && stateCourierServiceList.size() > 0) {
       setStateCourierServiceList(stateCourierServiceList);
     }
-    else{
-     addRedirectAlertMessage(new SimpleMessage("state is not present in Database"));
-    }
-    setStateList(StateList.stateList);
-
-    return new ForwardResolution("/pages/admin/stateCourierService.jsp");
+     return new ForwardResolution("/pages/admin/stateCourierService.jsp");
   }
 
     public Resolution save() {
-    List<Pincode> pincodeList= pincodeDao.getPincodeByState(state);
-        stateCourierService.setState(pincodeList.get(0));
+//        stateCourierService.setState(state);
          stateCourierServiceDao.save(stateCourierService);
        addRedirectAlertMessage(new SimpleMessage("state info saved"));
              return search();
@@ -82,11 +75,11 @@ public class StateCourierServiceAction extends BaseAction {
     this.stateCourierServiceList = stateCourierServiceList;
   }
 
-  public String getState() {
+  public State getState() {
     return state;
   }
 
-  public void setState(String state) {
+  public void setState(State state) {
     this.state = state;
   }
 

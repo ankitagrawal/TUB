@@ -1,0 +1,162 @@
+Buildfile: build.xml
+
+build:
+
+prepare:
+
+prepare:
+
+prepare:
+
+prepare:
+
+prepare:
+
+build.common.jar:
+
+prepare:
+
+compile:
+
+compile.groovy:
+
+build:
+
+build-dependencies:
+
+prepare:
+
+dependencies.check:
+
+build.common:
+
+prepare:
+
+compile:
+
+compile.groovy:
+
+build:
+
+build.dependencies:
+
+compile:
+    [javac] Compiling 144 source files to c:\DevProjects\rewrite\HKRejuvenate\HKCore\build
+    [javac] c:\DevProjects\rewrite\HKRejuvenate\HKCore\src\com\hk\impl\dao\courier\StateCourierServiceDaoImpl.java:28: cannot find symbol
+    [javac] symbol  : method getPincodeByState(java.lang.String)
+    [javac] location: interface com.hk.pact.dao.courier.PincodeDao
+    [javac]    List< Pincode> pincodeList= pincodeDao.getPincodeByState(stateName);
+    [javac]                                          ^
+    [javac] c:\DevProjects\rewrite\HKRejuvenate\HKCore\src\com\hk\impl\dao\courier\StateCourierServiceDaoImpl.java:32: warning: [unchecked] unchecked cast
+    [javac] found   : java.util.List
+    [javac] required: java.util.List<com.hk.domain.courier.StateCourierService>
+    [javac]       List<StateCourierService> stateCourierServiceList=(List<StateCourierService> ) findByCriteria(stateCriteria);
+    [javac]                                                                                                    ^
+    [javac] c:\DevProjects\rewrite\HKRejuvenate\HKCore\src\com\hk\impl\dao\user\UserProductHistoryDaoImpl.java:56: warning: [unchecked] unchecked conversion
+    [javac] found   : java.util.List
+    [javac] required: java.util.List<com.hk.domain.user.UserProductHistory>
+    [javac]         List<UserProductHistory> userProductHistoryList = criteria.list();
+    [javac]                                                                        ^
+    [javac] c:\DevProjects\rewrite\HKRejuvenate\HKCore\src\com\hk\impl\dao\user\UserProductHistoryDaoImpl.java:63: warning: [unchecked] unchecked conversion
+    [javac] found   : java.util.List
+    [javac] required: java.util.List<com.hk.domain.user.UserProductHistory>
+    [javac]         return criteria.list();
+    [javac]                             ^
+    [javac] c:\DevProjects\rewrite\HKRejuvenate\HKCore\src\com\hk\impl\dao\user\UserProductHistoryDaoImpl.java:71: warning: [unchecked] unchecked conversion
+    [javac] found   : java.util.List
+    [javac] required: java.util.List<com.hk.domain.user.UserProductHistory>
+    [javac]         List<UserProductHistory> userProductHistoryList = criteria.list();
+    [javac]                                                                        ^
+    [javac] c:\DevProjects\rewrite\HKRejuvenate\HKCore\src\com\hk\impl\dao\user\UserProfileDaoImpl.java:26: warning: [unchecked] unchecked conversion
+    [javac] found   : java.util.List
+    [javac] required: java.util.List<com.hk.domain.order.Order>
+    [javac]         return findByCriteria(orderCriteria);
+    [javac]                              ^
+    [javac] c:\DevProjects\rewrite\HKRejuvenate\HKCore\src\com\hk\impl\dao\warehouse\WarehouseDaoImpl.java:25: warning: [unchecked] unchecked conversion
+    [javac] found   : java.util.List
+    [javac] required: java.util.List<com.hk.domain.warehouse.Warehouse>
+    [javac]         return getSession().createQuery("from Warehouse w where w.id in ( :warehouseIds)").setParameterList("warehouseIds", warehouseIds).list();
+    [javac]                                                                                                                                               ^
+    [javac] 1 error
+    [javac] 6 warnings
+Buildfile: build.xml
+
+build:
+
+prepare:
+
+prepare:
+
+prepare:
+
+prepare:
+
+prepare:
+
+build.common.jar:
+
+prepare:
+
+compile:
+
+compile.groovy:
+
+build:
+
+build-dependencies:
+
+prepare:
+
+dependencies.check:
+
+build.common:
+
+prepare:
+
+compile:
+
+compile.groovy:
+
+build:
+
+build.dependencies:
+
+compile:
+    [javac] Compiling 144 source files to c:\DevProjects\rewrite\HKRejuvenate\HKCore\build
+    [javac] c:\DevProjects\rewrite\HKRejuvenate\HKCore\src\com\hk\impl\dao\courier\StateCourierServiceDaoImpl.java:28: cannot find symbol
+    [javac] symbol  : method getPincodeByState(java.lang.String)
+    [javac] location: interface com.hk.pact.dao.courier.PincodeDao
+    [javac]    List< Pincode> pincodeList= pincodeDao.getPincodeByState(stateName);
+    [javac]                                          ^
+    [javac] c:\DevProjects\rewrite\HKRejuvenate\HKCore\src\com\hk\impl\dao\courier\StateCourierServiceDaoImpl.java:32: warning: [unchecked] unchecked cast
+    [javac] found   : java.util.List
+    [javac] required: java.util.List<com.hk.domain.courier.StateCourierService>
+    [javac]       List<StateCourierService> stateCourierServiceList=(List<StateCourierService> ) findByCriteria(stateCriteria);
+    [javac]                                                                                                    ^
+    [javac] c:\DevProjects\rewrite\HKRejuvenate\HKCore\src\com\hk\impl\dao\user\UserProductHistoryDaoImpl.java:56: warning: [unchecked] unchecked conversion
+    [javac] found   : java.util.List
+    [javac] required: java.util.List<com.hk.domain.user.UserProductHistory>
+    [javac]         List<UserProductHistory> userProductHistoryList = criteria.list();
+    [javac]                                                                        ^
+    [javac] c:\DevProjects\rewrite\HKRejuvenate\HKCore\src\com\hk\impl\dao\user\UserProductHistoryDaoImpl.java:63: warning: [unchecked] unchecked conversion
+    [javac] found   : java.util.List
+    [javac] required: java.util.List<com.hk.domain.user.UserProductHistory>
+    [javac]         return criteria.list();
+    [javac]                             ^
+    [javac] c:\DevProjects\rewrite\HKRejuvenate\HKCore\src\com\hk\impl\dao\user\UserProductHistoryDaoImpl.java:71: warning: [unchecked] unchecked conversion
+    [javac] found   : java.util.List
+    [javac] required: java.util.List<com.hk.domain.user.UserProductHistory>
+    [javac]         List<UserProductHistory> userProductHistoryList = criteria.list();
+    [javac]                                                                        ^
+    [javac] c:\DevProjects\rewrite\HKRejuvenate\HKCore\src\com\hk\impl\dao\user\UserProfileDaoImpl.java:26: warning: [unchecked] unchecked conversion
+    [javac] found   : java.util.List
+    [javac] required: java.util.List<com.hk.domain.order.Order>
+    [javac]         return findByCriteria(orderCriteria);
+    [javac]                              ^
+    [javac] c:\DevProjects\rewrite\HKRejuvenate\HKCore\src\com\hk\impl\dao\warehouse\WarehouseDaoImpl.java:25: warning: [unchecked] unchecked conversion
+    [javac] found   : java.util.List
+    [javac] required: java.util.List<com.hk.domain.warehouse.Warehouse>
+    [javac]         return getSession().createQuery("from Warehouse w where w.id in ( :warehouseIds)").setParameterList("warehouseIds", warehouseIds).list();
+    [javac]                                                                                                                                               ^
+    [javac] 1 error
+    [javac] 6 warnings

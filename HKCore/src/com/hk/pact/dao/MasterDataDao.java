@@ -1,11 +1,7 @@
 package com.hk.pact.dao;
 
-import java.util.List;
-
 import com.hk.domain.TicketStatus;
 import com.hk.domain.TicketType;
-import com.hk.domain.review.ReviewStatus;
-import com.hk.domain.order.ShippingOrderStatus;
 import com.hk.domain.accounting.DebitNoteStatus;
 import com.hk.domain.affiliate.AffiliateCategory;
 import com.hk.domain.catalog.Manufacturer;
@@ -20,7 +16,11 @@ import com.hk.domain.inventory.rv.ReconciliationStatus;
 import com.hk.domain.inventory.rv.ReconciliationType;
 import com.hk.domain.offer.rewardPoint.RewardPointMode;
 import com.hk.domain.offer.rewardPoint.RewardPointStatus;
+import com.hk.domain.order.ShippingOrderStatus;
+import com.hk.domain.review.ReviewStatus;
 import com.hk.domain.user.User;
+
+import java.util.List;
 
 public interface MasterDataDao {
 
@@ -91,4 +91,6 @@ public interface MasterDataDao {
   public List<ReviewStatus> getReviewStatusList();
 
   public List<RegionType> getRegionTypeList();
+
+   public List<State> getStateList();
 }

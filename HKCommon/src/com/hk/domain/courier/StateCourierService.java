@@ -2,7 +2,7 @@ package com.hk.domain.courier;
 // Generated 5 Jan, 2012 2:39:47 PM by Hibernate Tools 3.2.4.CR1
 
 
-import com.hk.domain.core.Pincode;
+import com.hk.domain.core.State;
 
 import javax.persistence.*;
 
@@ -28,14 +28,14 @@ public class StateCourierService implements java.io.Serializable {
   private Long preference ;
 
   @ManyToOne
-	@JoinColumn(name = "state", referencedColumnName = "state")
-  private Pincode state ;
+	@JoinColumn(name = "state_id")
+  private State state ;
 
-  public Pincode getState() {
+  public State getState() {
     return state;
   }
 
-  public void setState(Pincode state) {
+  public void setState(State state) {
     this.state = state;
   }
 

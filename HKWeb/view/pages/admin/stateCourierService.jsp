@@ -16,9 +16,11 @@
                 <tr>
                     <s:form beanclass="com.hk.web.action.admin.courier.StateCourierServiceAction">
                                               <td>
-                            <s:select name="state">
-                                <s:options-collection collection="${scsaBean.stateList}"/>
-                            </s:select>
+                         <s:select name="state">
+                        <s:option value="">-Select-</s:option>
+                        <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="stateList"
+                                                   value="id" label="name"/>
+                    </s:select>
                         </td>
                         <td>
                             <s:submit name="search" value="Save"/>
@@ -36,7 +38,7 @@
             <table >
                 <%--<c:if test="${scsaBean.state != null}">--%>
                 <tr>
-                    <td style="font-weight:bold;">Selected State</td> <td> ${scsaBean.state}</td>
+                    <td style="font-weight:bold;">Selected State</td> <td> ${scsaBean.state.name}</td>
                 </tr>
 
 
@@ -70,7 +72,7 @@
     <c:if test="${scsaBean.displayAddNewRow}">
         <table>
          <s:form beanclass="com.hk.web.action.admin.courier.StateCourierServiceAction">
-             <s:hidden name="stateCourierService.state"  value="${scsaBean.state}"/>
+             <s:hidden name="stateCourierService.state"  value="${scsaBean.state.id}"/>
          <tr>
                     <td>
                       Select Courier :

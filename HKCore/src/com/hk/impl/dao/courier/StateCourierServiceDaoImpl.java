@@ -1,15 +1,12 @@
 package com.hk.impl.dao.courier;
 
-import com.hk.domain.core.Pincode;
+import com.hk.domain.core.State;
 import com.hk.domain.courier.StateCourierService;
 import com.hk.impl.dao.BaseDaoImpl;
-import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.pact.dao.courier.StateCourierServiceDao;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 
 /**
@@ -21,14 +18,9 @@ import java.util.List;
  */
 @Repository
 public class StateCourierServiceDaoImpl extends BaseDaoImpl implements StateCourierServiceDao {
-  @Autowired
-   PincodeDao pincodeDao;
-
-   public List<StateCourierService> getAllStateCourierServiceByState(String stateName){
-   List< Pincode> pincodeList= pincodeDao.getPincodeByState(stateName);
- Pincode pincode=pincodeList.get(0);
+   public List<StateCourierService> getAllStateCourierServiceByState(State state){
         DetachedCriteria stateCriteria= DetachedCriteria.forClass(StateCourierService.class);
-     stateCriteria.add(Restrictions.eq("state",pincode));
+      stateCriteria.add(Restrictions.eq("state",state));
       List<StateCourierService> stateCourierServiceList=(List<StateCourierService> ) findByCriteria(stateCriteria);
      return stateCourierServiceList;
    }
