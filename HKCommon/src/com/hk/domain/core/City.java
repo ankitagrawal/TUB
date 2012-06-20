@@ -1,7 +1,5 @@
 package com.hk.domain.core;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import javax.persistence.Id;
 import javax.persistence.Column;
 
@@ -9,12 +7,10 @@ import javax.persistence.Column;
  * Created by IntelliJ IDEA.
  * User:User
  * Date: Jun 20, 2012
- * Time: 4:59:05 PM
+ * Time: 7:15:12 PM
  * To change this template use File | Settings | File Templates.
  */
-@Entity
-@Table(name = "city")
-public class State implements java.io.Serializable {
+public class City implements java.io.Serializable{
 
   @Id
   @Column(name = "id", unique = true, nullable = false)
@@ -33,7 +29,7 @@ public class State implements java.io.Serializable {
     this.id = id;
   }
 
-  public String getName() {                                                 
+  public String getName() {
     return name;
   }
 

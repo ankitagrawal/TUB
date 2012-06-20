@@ -1,6 +1,6 @@
 package com.hk.web.validation;
 
-import com.hk.domain.core.State;
+import com.hk.domain.core.City;
 import com.hk.pact.dao.BaseDao;
 import net.sourceforge.stripes.validation.TypeConverter;
 import net.sourceforge.stripes.validation.ValidationError;
@@ -13,10 +13,10 @@ import java.util.Locale;
  * Created by IntelliJ IDEA.
  * User:User
  * Date: Jun 20, 2012
- * Time: 6:01:45 PM
+ * Time: 7:16:19 PM
  * To change this template use File | Settings | File Templates.
  */
-public class StateTypeConverter  implements TypeConverter<State> {
+public class CityTypeConverter  implements TypeConverter<City> {
 
   @Autowired
   private BaseDao baseDao;
@@ -26,8 +26,7 @@ public class StateTypeConverter  implements TypeConverter<State> {
      // nothing
    }
 
-
-   public State convert(String id, Class<? extends State> aClass, Collection<ValidationError> validationErrors) {
+   public City convert(String id, Class<? extends City> aClass, Collection<ValidationError> validationErrors) {
      Long idLong = null;
      try {
        idLong = Long.parseLong(id);
@@ -36,8 +35,8 @@ public class StateTypeConverter  implements TypeConverter<State> {
      if (idLong == null) {
        return null;
      } else {
-         return getBaseDao().get(State.class, idLong);
-
+         return getBaseDao().get(City.class, idLong);
+      
      }
 
    }

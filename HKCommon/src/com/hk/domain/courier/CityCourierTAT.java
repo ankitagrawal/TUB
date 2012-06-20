@@ -1,6 +1,6 @@
 package com.hk.domain.courier;
 
-import com.hk.domain.core.Pincode;
+import com.hk.domain.core.City;
 
 import javax.persistence.*;
 
@@ -21,8 +21,8 @@ public class CityCourierTAT {
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "city", referencedColumnName = "city")
-  private Pincode pincode;
+  @JoinColumn(name = "city")
+  private City city;
 
 
   @ManyToOne(fetch = FetchType.LAZY)
@@ -32,13 +32,12 @@ public class CityCourierTAT {
   @Column(name = "turnaround_time")
   private Long turnaroundTime;
 
-
-  public Pincode getPincode() {
-    return pincode;
+  public City getCity() {
+    return city;
   }
 
-  public void setPincode(Pincode pincode) {
-    this.pincode = pincode;
+  public void setCity(City city) {
+    this.city = city;
   }
 
   public Courier getCourier() {
