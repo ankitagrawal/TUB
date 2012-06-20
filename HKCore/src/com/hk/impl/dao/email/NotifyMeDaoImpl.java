@@ -26,8 +26,9 @@ public class NotifyMeDaoImpl extends BaseDaoImpl implements NotifyMeDao {
 
     @Transactional
     public NotifyMe save(NotifyMe notifyMe) {
+      Date currentDate = new Date();
         if (notifyMe.getCreatedDate() == null) {
-            notifyMe.setCreatedDate(BaseUtils.getCurrentTimestamp());
+            notifyMe.setCreatedDate(currentDate);
         }
         return (NotifyMe) super.save(notifyMe);
     }

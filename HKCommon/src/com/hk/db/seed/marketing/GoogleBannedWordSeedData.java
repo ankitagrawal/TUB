@@ -6,8 +6,10 @@ import java.util.List;
 import com.hk.constants.marketing.EnumGoogleBannedWord;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.marketing.GoogleBannedWord;
+import org.springframework.stereotype.Component;
 
 
+@Component
 public class GoogleBannedWordSeedData extends BaseSeedData {
 
     public void insert(java.lang.String bannedWords, java.lang.Long id) {

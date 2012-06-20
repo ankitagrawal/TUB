@@ -6,10 +6,12 @@ import java.util.List;
 import com.hk.constants.shipment.EnumBoxSize;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.courier.BoxSize;
+import org.springframework.stereotype.Component;
 
 /**
  * Generated
  */
+@Component
 public class BoxSizeSeedData extends BaseSeedData {
 
     public void insert(String name, Long id) {

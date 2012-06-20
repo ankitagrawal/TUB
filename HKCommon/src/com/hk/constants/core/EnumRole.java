@@ -47,7 +47,8 @@ public enum EnumRole {
   MASTER_BUG_RESOLVER(RoleConstants.MASTER_BUG_RESOLVER),
   HK_EMPLOYEE(RoleConstants.HK_EMPLOYEE),
   HK_AFFILIATE_MANAGER(RoleConstants.HK_AFFILIATE_MANAGER),
-  FINANCE_ADMIN(RoleConstants.FINANCE_ADMIN);
+  FINANCE_ADMIN(RoleConstants.FINANCE_ADMIN),
+  DEVELOPER(RoleConstants.DEVELOPER);
 
   String roleName;
 
