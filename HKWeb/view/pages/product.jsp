@@ -4,6 +4,7 @@
 <%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
+<%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -30,6 +31,10 @@
   <meta name="description" content="${seoData.metaDescription}"/>
   <style type="text/css">
     .progressLoader {
+      display: none;
+    }
+
+    .hidden {
       display: none;
     }
 
@@ -102,6 +107,13 @@
       $('#notifyMeWindow').jqm({trigger: '.notifyMe', ajax: '@href'});
 
     });
+
+    $('input[value=Subscribe]').click(function() {
+
+      $('#subscription-config').show();
+       return false;
+      });
+
 
 
   </script>
@@ -341,13 +353,18 @@
       </c:if>--%>
   </div>
   <c:if test="${!empty subscriptionProduct}">
-     <div id="subscriptionConfig" style="display:none;">
-       <form action="">
+     <div id="subscription-config">
+       <s:form beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction">
+         <fieldset>
          min frequency: ${subscriptionProduct.minFrequencyDays} days - max frequency: ${subscriptionProduct.maxFrequencyDays} days
          <br/>
-         Start Date:
+
+         Start Date: <s:text class="date_input startDate" style="width:150px"
+                                formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startDate"/>
          <input name="subscriptionProduct" value="${subscriptionProduct.id}" type="hidden" />
-       </form>
+         <input name="test" type="submit" value="submit" />
+           </fieldset>
+       </s:form>
      </div>
      <span class="subscription" style="float:right;">Subscribe and save <fmt:formatNumber value="${subscriptionProduct.subscriptionDiscount180Days}" maxFractionDigits="2"/>  to   <fmt:formatNumber value="${subscriptionProduct.subscriptionDiscount360Days}" maxFractionDigits="2"/> &#37;   </span>
   </c:if>

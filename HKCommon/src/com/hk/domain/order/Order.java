@@ -28,6 +28,7 @@ import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.clm.CLMConstants;
 import com.hk.domain.Comment;
+import com.hk.domain.subscription.Subscription;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.comparator.OrderLifecycleComparator;
 import com.hk.domain.core.CancellationType;
@@ -107,6 +108,9 @@ public class Order implements java.io.Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "order")
     private List<Comment>             comments        = new ArrayList<Comment>();
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "order")
+    private Set<Subscription>             subscriptions        = new HashSet<Subscription>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cancellation_type_id")
@@ -581,7 +585,15 @@ public class Order implements java.io.Serializable {
         return "NA";
     }
 
-    /*
-     * public void setBasketCategory(String basketCategory) { this.basketCategory = basketCategory; }
-     */
+  public Set<Subscription> getSubscriptions() {
+    return subscriptions;
+  }
+
+  public void setSubscriptions(Set<Subscription> subscriptions) {
+    this.subscriptions = subscriptions;
+  }
+
+  /*
+  * public void setBasketCategory(String basketCategory) { this.basketCategory = basketCategory; }
+  */
 }

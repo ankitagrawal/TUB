@@ -122,7 +122,7 @@
                     <c:otherwise>
                       <c:if test="${!empty subscriptionProduct}">
                         <s:submit name="addToCart" value="Subscribe"
-                                class="addToCartButton cta button_green"
+                                class="subscription cta button_green"
                                 style="float:right;"/>
                        </c:if>                      
                       <s:submit name="addToCart" value="Place Order"
