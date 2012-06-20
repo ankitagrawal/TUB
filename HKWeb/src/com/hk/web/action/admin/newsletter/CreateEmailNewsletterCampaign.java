@@ -3,9 +3,6 @@ package com.hk.web.action.admin.newsletter;
 import java.io.*;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipEntry;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.security.NoSuchAlgorithmException;
 
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
@@ -14,10 +11,8 @@ import net.sourceforge.stripes.validation.ValidateNestedProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.jets3t.service.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.solr.common.util.FileUtils;
 
 import com.akube.framework.stripes.action.BaseAction;
@@ -29,9 +24,9 @@ import com.hk.constants.core.Keys;
 @Component
 public class CreateEmailNewsletterCampaign extends BaseAction {
 
-  //  @ValidateNestedProperties({@Validate(field = "name", required = true), @Validate(field = "template", required = true), @Validate(field = "minDayGap", required = true)})
   @ValidateNestedProperties({
       @Validate(field = "name", required = true),
+      @Validate(field = "subject", required = true),
       @Validate(field = "minDayGap", required = true)
   })
 
@@ -58,7 +53,6 @@ public class CreateEmailNewsletterCampaign extends BaseAction {
   }
 
   public Resolution create() throws Exception {
-//    String contentZipPath = adminUploadsPath + "/emailContentFiles/" + emailCampaign.getName() + ".zip";
     String contentZipPath = adminUploadsPath + "/emailContentFiles/" + contentBean.getFileName();
     File contentZipFolder = new File(contentZipPath);
     contentZipFolder.getParentFile().mkdirs();
@@ -66,7 +60,6 @@ public class CreateEmailNewsletterCampaign extends BaseAction {
 
     int buffer = 90000;
     byte data[] = new byte[buffer];
-//    String contentPath = adminUploadsPath + "/emailContentFiles/" + emailCampaign.getName();
     String contentPath = contentZipPath.replaceAll("\\.zip", "");
     File contentFolder = new File(contentPath);
     if (!contentFolder.exists()) {
@@ -108,11 +101,16 @@ public class CreateEmailNewsletterCampaign extends BaseAction {
       }
     };
     File[] htmlFile = new File(contentPath).listFiles(filter);
-    if (htmlFile != null && htmlFile.length > 0) {
-      logger.debug(htmlFile[0].getAbsolutePath());
-    } else {
-      addRedirectAlertMessage(new SimpleMessage("The zip folder does not contain any .html file for the email campaign. Kindly check into the same"));
-      return new ForwardResolution(CreateEmailNewsletterCampaign.class);
+    if (htmlFile != null) {
+      if (htmlFile.length == 1) {
+        logger.debug(htmlFile[0].getAbsolutePath());
+      } else if (htmlFile.length > 1) {
+        addRedirectAlertMessage(new SimpleMessage("The zip folder contains multiple .html files for the email campaign. Kindly check into the same"));
+        return new ForwardResolution(CreateEmailNewsletterCampaign.class);
+      } else {
+        addRedirectAlertMessage(new SimpleMessage("The zip folder does not contain any .html file for the email campaign. Kindly check into the same"));
+        return new ForwardResolution(CreateEmailNewsletterCampaign.class);
+      }
     }
 
     String line;
@@ -122,19 +120,15 @@ public class CreateEmailNewsletterCampaign extends BaseAction {
     PrintWriter out = new PrintWriter(new FileWriter(ftlFile));
     while ((line = br.readLine()) != null) {
       //replacing relative paths with absolute paths
-//      line = line.replaceAll("(<img src=\")(.*\")", "$1http://" + awsBucket + ".s3.amazonaws.com/" + contentFolder.getName() + "/$2");
-//      line = line.replaceAll("(<img .*)(src=\")(.*\")", "$1$2http://" + awsBucket + ".s3.amazonaws.com/" + contentFolder.getName() + "/$3");
-      line = line.replaceAll("(<img .*)(src=\"(?!http))(.*\")", "$1$2http://" + awsBucket + ".s3.amazonaws.com/" + contentFolder.getName() + "/$3");
-      line = line.replaceAll("(background-image:url\\((?!http))(.*)\"", "$1http://" + awsBucket + ".s3.amazonaws.com/" + contentFolder.getName() + "/$2\"");
+      line = line.replaceAll("(<img .*)(src=\"(?!http))(.*\")", "$1$2" + getBasicAmazonS3Path(contentFolder.getName()) + "$3");
+      line = line.replaceAll("(background-image:url\\((?!http))(.*)\"", "$1" + getBasicAmazonS3Path(contentFolder.getName()) + "$2\"");
 
       //adding "can't view this email and unsubsribe link" div to the ftl
       if (line.matches("<body .*>")) {
         out.write(line + lineSeperator);
-        out.write("<div style=\"font-size:11px; text-align:center; color:#000000; padding:15px\">Can't view this email? <a href=\"emailer.html\">Click here</a> to view a web version.</div>" + lineSeperator);
+        out.write(getCantViewEmailDiv(contentFolder.getName()) + lineSeperator);
       } else if (line.matches("</body>")) {
-        out.write("<div align=\"center\" valign=\"middle\" style=\"border-top: solid #97b8ca 1px; font-size:11px; text-align:center; color:#666666; padding:10px\"> If you prefer not to receive HealthKart.com email, <a href=\"${unsubscribeLink}\">click here to Unsubscribe</a><br />\n" +
-            "      Parsvanath Arcadia, 1 MG Road, Sector 14, Gurgaon, Haryana, INDIA<br />\n" +
-            "    © 2011 HealthKart.com. All Rights Reserved. </div>" + lineSeperator);
+        out.write(getUnsubscribeEmailDiv() + lineSeperator);
         out.write(line + lineSeperator);
       } else {
         out.write(line + lineSeperator);
@@ -149,7 +143,15 @@ public class CreateEmailNewsletterCampaign extends BaseAction {
 
     emailCampaignService.uploadEmailContent(contentFolder, emailCampaign);
     logger.info("uploaded email content to s3.");
-    return null;
+
+    emailCampaign.setHtmlPath(getBasicAmazonS3Path(contentFolder.getName()));
+    String ftlContents = fileToString(ftlFile);
+    emailCampaign.setTemplateFtl(ftlContents);
+
+    emailCampaign = emailCampaignDao.save(emailCampaign);
+
+    addRedirectAlertMessage(new SimpleMessage("Email campaign has been saved"));
+    return new ForwardResolution(CreateEmailNewsletterCampaign.class, "pre");
   }
 
   public EmailCampaign getEmailCampaign() {
@@ -162,5 +164,46 @@ public class CreateEmailNewsletterCampaign extends BaseAction {
 
   public void setContentBean(FileBean contentBean) {
     this.contentBean = contentBean;
+  }
+
+  private static String fileToString(File file) {
+    byte[] fileBytes = new byte[0];
+    try {
+      byte[] buffer = new byte[4096];
+      ByteArrayOutputStream outs = new ByteArrayOutputStream();
+      InputStream ins = new FileInputStream(file);
+
+      int read = 0;
+      while ((read = ins.read(buffer)) != -1) {
+        outs.write(buffer, 0, read);
+      }
+
+      ins.close();
+      outs.close();
+      fileBytes = outs.toByteArray();
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return new String(fileBytes);
+  }
+
+  private static String getBasicAmazonS3Path(String contentFolder) {
+    return "http://" + awsBucket + ".s3.amazonaws.com/" + contentFolder + "/";
+  }
+
+  private static String getCantViewEmailDiv(String contentFolder) {
+    return "<div style=\"font-size:11px; text-align:center; color:#000000; padding:15px\">" +
+        "Can't view this email? " +
+        "<a href=\"http://" + awsBucket + ".s3.amazonaws.com/" + contentFolder + "/emailer.html\">Click here</a> " +
+        "to view a web version." +
+        "</div>";
+  }
+
+  private static String getUnsubscribeEmailDiv() {
+    return "<div align=\"center\" valign=\"middle\" style=\"border-top: solid #97b8ca 1px; font-size:11px; text-align:center; color:#666666; padding:10px\">" +
+        " If you prefer not to receive HealthKart.com email, <a href=\"${unsubscribeLink}\">click here to Unsubscribe</a>" +
+        "<br />  Parsvanath Arcadia, 1 MG Road, Sector 14, Gurgaon, Haryana, INDIA<br />\n" +
+        "    © 2011 HealthKart.com. All Rights Reserved. </div>";
   }
 }
