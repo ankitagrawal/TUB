@@ -29,14 +29,14 @@ public class StateSeedData extends BaseSeedData {
   public void invokeInsert() {
     List<Long> stateList = new ArrayList<Long>();
 
-    for (EnumState enumCourier : EnumState.values()) {
+    for (EnumState enumState : EnumState.values()) {
 
-      if (stateList.contains(enumCourier.getId()))
-        throw new RuntimeException("Duplicate key " + enumCourier.getId());
+      if (stateList.contains(enumState.getId()))
+        throw new RuntimeException("Duplicate key " + enumState.getId());
       else
-        stateList.add(enumCourier.getId());
+        stateList.add(enumState.getId());
 
-      insert(enumCourier.getName(), enumCourier.getId());
+      insert(enumState.getName(), enumState.getId());
     }
   }
 }

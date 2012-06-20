@@ -13,7 +13,7 @@ import javax.persistence.Column;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name = "surcharge")
+@Table(name = "state")
 public class State implements java.io.Serializable {
 
   @Id
