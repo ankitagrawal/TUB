@@ -248,12 +248,13 @@ public class DeliveryStatusUpdateManager {
                                     deliveryDateString = entryObj.getValue().toString();
                                 }
                             }
-                            String subStringDeliveryDate = null;
-                            if (deliveryDateString != null) {
-                                subStringDeliveryDate = deliveryDateString.substring(4, 8) + "-" + deliveryDateString.substring(2, 4) + "-" + deliveryDateString.substring(0, 2);
-                            }
+
                             if (courierDeliveryStatus != null && deliveryDateString != null) {
                                 if (courierDeliveryStatus.equals(CourierConstants.DTDC_INPUT_DELIVERED)) {
+                                    String subStringDeliveryDate = null;
+                                    if (deliveryDateString != null) {
+                                        subStringDeliveryDate = deliveryDateString.substring(4, 8) + "-" + deliveryDateString.substring(2, 4) + "-" + deliveryDateString.substring(0, 2);
+                                    }
                                     Date delivery_date = getFormattedDeliveryDate(subStringDeliveryDate);
                                     ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shippingOrderInList.getShipment(), trackingId, delivery_date);
                                 }
