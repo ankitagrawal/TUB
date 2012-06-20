@@ -6,12 +6,13 @@ import java.util.List;
 import com.hk.constants.inventory.EnumReconciliationStatus;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.inventory.rv.ReconciliationStatus;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by IntelliJ IDEA. User: Pratham Date: Jul 5, 2011 Time: 2:00:18 PM To change this template use File |
  * Settings | File Templates.
  */
-
+@Component
 public class ReconciliationStatusSeedData extends BaseSeedData {
 
 

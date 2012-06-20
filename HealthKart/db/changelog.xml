@@ -3742,6 +3742,8 @@
     <changeSet author="Ajeet (generated)" id="1325756023057-1">
         <modifyDataType columnName="pincode" newDataType="VARCHAR(8)" tableName="pincode"/>
     </changeSet>
+  <!--
+  commenting this changeset as it is confilicting with changeset 1338816774783-12 when creating db from scratch
   <changeSet author="Ajeet (generated)" id="1325756023057-2">
     <sql>
       insert into state_courier_service(state) values('ANDAMAN AND NICOBAR ISLAND');
@@ -3780,7 +3782,7 @@
       insert into state_courier_service(state) values('UTTARAKHAND');
       insert into state_courier_service(state) values('WEST BENGAL');
     </sql>
-  </changeSet>
+  </changeSet>-->
 
   <changeSet author="Ajeet (generated)" id="1326471094500-1">
       <createIndex indexName="po_pv_key" tableName="po_line_item" unique="true">
@@ -7519,4 +7521,20 @@
      <changeSet author="Seema (generated)" id="1338816774783-12">
          <addForeignKeyConstraint baseColumnNames="state" baseTableName="state_courier_service" constraintName="fk_state_pincode" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="state" referencedTableName="pincode"  referencesUniqueColumn="false"/>
      </changeSet>
- </databaseChangeLog>
+    <changeSet author="Tarun (generated)" id="1340010134657-3">
+        <modifyDataType columnName="created_date" newDataType="DATE" tableName="notify_me"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1340010134657-4">
+        <modifyDataType columnName="name" newDataType="VARCHAR(40)" tableName="permission"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1340010134657-5">
+        <modifyDataType columnName="permission_name" newDataType="VARCHAR(40)" tableName="role_has_permission"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1340010134657-8">
+        <createIndex indexName="notify_me_unique_request" tableName="notify_me" unique="true">
+            <column name="email"/>
+            <column name="created_date"/>
+            <column name="product_variant_id"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

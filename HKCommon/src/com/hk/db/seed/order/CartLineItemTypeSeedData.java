@@ -6,8 +6,9 @@ import java.util.List;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.core.CartLineItemType;
+import org.springframework.stereotype.Component;
 
-
+@Component
 public class CartLineItemTypeSeedData extends BaseSeedData {
 
     public void insert(java.lang.String name, java.lang.Long id) {

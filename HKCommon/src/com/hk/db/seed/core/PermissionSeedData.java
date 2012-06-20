@@ -6,7 +6,9 @@ import java.util.List;
 import com.hk.constants.core.EnumPermission;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.user.Permission;
+import org.springframework.stereotype.Component;
 
+@Component
 public class PermissionSeedData extends BaseSeedData {
 
     public void insert(java.lang.String name) {
