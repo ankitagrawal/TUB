@@ -33,7 +33,8 @@
           <div class="row">
             <s:label class="rowLabel" name="Start Date"/>
             <div class="rowText">
-              <s:text class="date_input" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startDate"/>
+              <s:text class="date_input" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startDate"
+                      style="width:150px;"/>
             </div>
           </div>
 
@@ -43,7 +44,8 @@
           <div class="row">
             <s:label class="rowLabel" name="End Date"/>
             <div class="rowText">
-              <s:text class="date_input" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endDate"/>
+              <s:text class="date_input" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endDate"
+                      style="width:150px;"/>
             </div>
           </div>
 
@@ -148,25 +150,67 @@
   };
 </script>
 <style type="text/css">
-  table {
-    width: 100%;
-    margin-bottom: 10px;
-    margin-top: 5px;
-    border: 1px solid;
-    border-collapse: separate;
+  table.cont {
+    width: 600px;
+    border: 1px solid #B0B0B0;
+    border-collapse:separate;
+    table-layout: fixed;
+    word-wrap: break-word;
+    overflow: hidden;
   }
 
-  table th {
-    background: #f0f0f0;
-    padding: 5px;
-    text-align: left;
+  table.cont tbody {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    background: transparent;
   }
 
-  table td {
-    padding: 5px;
-    text-align: left;
-    font-size: 0.9em;
+  table.cont th {
+    /*background: #f0f0f0;*/
+    /*border: 1px solid #B0B0B0;*/
+    color: #444;
+    font-size: 16px;
+    padding: 3px 10px;
+    text-align: center;
+    background-color:lavender;
   }
+
+  table.cont td {
+    padding: 3px 10px;
+    text-align:center;
+    font-size:0.9em;
+  }
+
+  table tr:nth-child(odd){
+  background: #F2F2F2;
+  }
+
+  /*table.cont {*/
+    /*width: 600px;*/
+    /*margin-bottom: 10px;*/
+    /*margin-top: 5px;*/
+    /*border: 1px solid;*/
+    /*border-collapse: separate;*/
+    /*table-layout: fixed;*/
+    /*word-wrap: break-word;*/
+    /*overflow: hidden;*/
+  /*}*/
+
+  /*table.cont th {*/
+    /*background: #f0f0f0;*/
+    /*padding: 5px;*/
+    /*text-align: center;*/
+  /*}*/
+
+  /*table.cont td {*/
+    /*padding: 5px;*/
+    /*text-align: center;*/
+    /*font-size: 0.9em;*/
+  /*}*/
 
   .row {
     margin-top: 0;

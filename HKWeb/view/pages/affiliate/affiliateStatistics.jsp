@@ -34,7 +34,8 @@
             <div class="row">
               <s:label class="rowLabel" name="Start Date"/>
               <div class="rowText">
-                <s:text class="date_input" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startDate"/>
+                <s:text class="date_input" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startDate"
+                        style="width:150px;"/>
               </div>
             </div>
 
@@ -44,7 +45,8 @@
             <div class="row">
               <s:label class="rowLabel" name="End Date"/>
               <div class="rowText">
-                <s:text class="date_input" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endDate"/>
+                <s:text class="date_input" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endDate"
+                        style="width:150px;"/>
               </div>
             </div>
 
@@ -82,9 +84,9 @@
 
                 <table class="cont footer_color" style="font-size: 14px;">
                   <tr>
-                    <th>Time Stamp</th>
-                    <th>Target Url</th>
-                    <th>Referral Url</th>
+                    <th style="width:20%;">Time Stamp</th>
+                    <th style="width:40%;">Target Url</th>
+                    <th style="width:40%;">Referral Url</th>
                   </tr>
                   <c:forEach items="${affiliateBean.affiliateTrafficDetails}" var="trafficDetails">
                     <tr>
@@ -127,28 +129,67 @@
   };
 </script>
 <style type="text/css">
-  table {
+  table.cont {
     width: 600px;
-    margin-bottom: 10px;
-    margin-top: 5px;
-    border: 1px solid;
-    border-collapse: separate;
-    table-layout:fixed;
-    word-wrap:break-word;
-    overflow:hidden;
+    border: 1px solid #B0B0B0;
+    border-collapse:separate;
+    table-layout: fixed;
+    word-wrap: break-word;
+    overflow: hidden;
   }
 
-  table th {
-    background: #f0f0f0;
-    padding: 5px;
-    text-align: left;
+  table.cont tbody {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    background: transparent;
   }
 
-  table td {
-    padding: 5px;
-    text-align: left;
-    font-size: 0.9em;
+  table.cont th {
+    /*background: #f0f0f0;*/
+    /*border: 1px solid #B0B0B0;*/
+    color: #444;
+    font-size: 16px;
+    padding: 3px 10px;
+    text-align: center;
+    background-color:lavender;
   }
+
+  table.cont td {
+    padding: 3px 10px;
+    text-align:center;
+    font-size:0.9em;
+  }
+
+  table tr:nth-child(odd){
+  background: #F2F2F2;
+  }
+
+  /*table.cont {*/
+  /*width: 600px;*/
+  /*margin-bottom: 10px;*/
+  /*margin-top: 5px;*/
+  /*border: 1px solid;*/
+  /*border-collapse: separate;*/
+  /*table-layout: fixed;*/
+  /*word-wrap: break-word;*/
+  /*overflow: hidden;*/
+  /*}*/
+
+  /*table.cont th {*/
+  /*background: #f0f0f0;*/
+  /*padding: 5px;*/
+  /*text-align: center;*/
+  /*}*/
+
+  /*table.cont td {*/
+  /*padding: 5px;*/
+  /*text-align: center;*/
+  /*font-size: 0.9em;*/
+  /*}*/
 
   .row {
     margin-top: 0;
@@ -180,11 +221,11 @@
     border-radius: 5px;
     border: 1px solid rgba(0, 0, 0, 0.1);
     margin: 1em;
-    max-width:inherit;
+    max-width: inherit;
   }
 
   fieldset.traffic legend {
-    max-width:inherit;
+    max-width: inherit;
     display: block;
     color: #f87500;
     background: white;
