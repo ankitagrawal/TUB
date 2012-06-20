@@ -166,7 +166,7 @@ public class PricingDto {
       cartLineItem.setDiscountOnHkPrice(roundedOffDiscount);
 
       if (cartLineItem.isType(EnumCartLineItemType.Product)) {
-        if (cartLineItem.getComboInstance() == null) {
+        //if (cartLineItem.getComboInstance() == null) {
           if (cartLineItem.getProductVariant().getPaymentType() != null && cartLineItem.getProductVariant().getPaymentType().equals(baseDao.get(ProductVariantPaymentType.class, EnumProductVariantPaymentType.Prepaid.getId()))) {
             prepaidServiceMrpSubTotal += cartLineItem.getMarkedPrice() * cartLineItem.getQty();
             prepaidServiceHkSubTotal += cartLineItem.getHkPrice() * cartLineItem.getQty();
@@ -192,7 +192,7 @@ public class PricingDto {
             }
           }
           productLineCount++;
-        } else {
+        /*} else {
           ComboInstance comboInstance = cartLineItem.getComboInstance();
           if (!comboInstanceSet.contains(comboInstance)) {
             Long comboQty = cartLineItem.getQty() / cartLineItem.getComboInstance().getComboInstanceProductVariant(cartLineItem.getProductVariant()).getQty();
@@ -202,7 +202,7 @@ public class PricingDto {
             productLineCount++;
             comboInstanceSet.add(comboInstance);
           }
-        }
+        }*/
         productLineItems.add(cartLineItem);
         if (cartLineItem.getProductVariant() != null && cartLineItem.getProductVariant().isOutOfStock()) {
           outOfStockLineItems.add(cartLineItem);
