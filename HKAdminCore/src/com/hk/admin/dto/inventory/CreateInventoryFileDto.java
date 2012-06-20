@@ -1,11 +1,11 @@
 package com.hk.admin.dto.inventory;
 
-import java.util.Date;
-
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.ProductVariantInventory;
 import com.hk.domain.sku.SkuGroup;
+
+import java.util.Date;
 
 public class CreateInventoryFileDto {
     String barcode;
@@ -13,6 +13,7 @@ public class CreateInventoryFileDto {
     Date expiryDate;
     Long sumQty;
     Double markedPrice;
+	String batchNumber;
   //  String productVariantId;
     SkuGroup skuGroup;
     Product product;
@@ -90,4 +91,12 @@ public class CreateInventoryFileDto {
     public void setProductVariant(ProductVariant productVariant) {
       this.productVariant = productVariant;
     }
+
+	public String getBatchNumber() {
+		return batchNumber;
+	}
+
+	public void setBatchNumber(String batchNumber) {
+		this.batchNumber = batchNumber;
+	}
 }
