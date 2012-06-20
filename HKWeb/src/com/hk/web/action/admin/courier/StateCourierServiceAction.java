@@ -4,6 +4,7 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.StateList;
 import com.hk.domain.courier.StateCourierService;
+import com.hk.domain.core.Pincode;
 import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.pact.dao.courier.StateCourierServiceDao;
 import com.hk.web.action.error.AdminPermissionAction;
@@ -46,15 +47,21 @@ public class StateCourierServiceAction extends BaseAction {
     if (stateCourierServiceList != null && stateCourierServiceList.size() > 0) {
       setStateCourierServiceList(stateCourierServiceList);
     }
+    else{
+     addRedirectAlertMessage(new SimpleMessage("state is not present in Database"));
+    }
     setStateList(StateList.stateList);
+
     return new ForwardResolution("/pages/admin/stateCourierService.jsp");
   }
 
     public Resolution save() {
+    List<Pincode> pincodeList= pincodeDao.getPincodeByState(state);
+        stateCourierService.setState(pincodeList.get(0));
          stateCourierServiceDao.save(stateCourierService);
-      setStateList(StateList.stateList);
-    addRedirectAlertMessage(new SimpleMessage("state info saved"));
-    return new ForwardResolution("/pages/admin/stateCourierService.jsp");
+       addRedirectAlertMessage(new SimpleMessage("state info saved"));
+             return search();
+
   }
 
   public Resolution  addNewRow(){
@@ -63,8 +70,8 @@ public class StateCourierServiceAction extends BaseAction {
      addRedirectAlertMessage(new SimpleMessage("Select State"));
     return new ForwardResolution("/pages/admin/stateCourierService.jsp");
     }
-   setDisplayAddNewRow(true);    
- return new ForwardResolution("/pages/admin/stateCourierService.jsp");
+   setDisplayAddNewRow(true);
+     return search(); 
   }
 
   public List<StateCourierService> getStateCourierServiceList() {
