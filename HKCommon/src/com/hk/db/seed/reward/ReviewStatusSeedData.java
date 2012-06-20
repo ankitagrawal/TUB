@@ -7,8 +7,10 @@ import java.util.List;
 import com.hk.constants.review.EnumReviewStatus;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.review.ReviewStatus;
+import org.springframework.stereotype.Component;
 
 
+@Component
 public class ReviewStatusSeedData  extends BaseSeedData {
 
 

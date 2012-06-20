@@ -6,7 +6,9 @@ import java.util.List;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.order.ShippingOrderLifeCycleActivity;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ShippingOrderLifecycleActivitySeedData extends BaseSeedData {
 
     public void insert(String name, Long id) {

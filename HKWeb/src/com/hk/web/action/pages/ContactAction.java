@@ -99,4 +99,18 @@ public class ContactAction extends BaseAction {
     public void setMsgText(String msgText) {
         this.msgText = msgText;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+    
+    
 }

@@ -9,10 +9,12 @@ import com.hk.constants.core.EnumRoleHasPermission;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.user.Permission;
 import com.hk.domain.user.Role;
+import org.springframework.stereotype.Component;
 
 /**
  * User: rahul Time: 5 Jan, 2010 3:09:49 PM
  */
+@Component
 public class RoleHasPermissionSeedData extends BaseSeedData {
 
     public void insert(java.lang.String name, List<EnumPermission> enumPermissions) {
@@ -27,7 +29,7 @@ public class RoleHasPermissionSeedData extends BaseSeedData {
             }
             role.getPermissions().add(permission);
         }
-        getBaseDao().save(role);
+        save(role);
     }
 
     public void invokeInsert() {

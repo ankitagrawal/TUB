@@ -6,8 +6,9 @@ import java.util.List;
 import com.hk.constants.core.EnumEmailType;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.core.EmailType;
+import org.springframework.stereotype.Component;
 
-
+@Component
 public class EmailTypeSeedData extends BaseSeedData {
 
     public void insert(java.lang.String name, java.lang.Long id) {

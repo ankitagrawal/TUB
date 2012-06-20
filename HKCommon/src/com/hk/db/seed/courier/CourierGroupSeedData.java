@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.hk.constants.courier.EnumCourierGroup;
 import com.hk.domain.courier.Courier;
@@ -14,6 +15,7 @@ import com.hk.pact.dao.BaseDao;
 /**
  * Generated
  */
+@Component
 public class CourierGroupSeedData {
 
 	@Autowired

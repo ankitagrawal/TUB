@@ -189,9 +189,9 @@
         <img src="${hk:getS3ImageUrl(imageMediumSize, product.mainImageId)}" alt="${product.name}"
              title="${product.name}">
       </a>
-      <c:if test="${fn:length(productImages) > 1}">
+      <c:if test="${fn:length(pa.productImages) > 1}">
         <ul id="thumblist">
-          <c:forEach items="${productImages}" var="productImage">
+          <c:forEach items="${pa.productImages}" var="productImage">
             <li><a href='javascript:void(0);'
                    rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, productImage.id)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, productImage.id)}'}"><img
                 src='${hk:getS3ImageUrl(imageSmallSize, productImage.id)}'></a></li>

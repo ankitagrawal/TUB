@@ -118,4 +118,8 @@ public class ReferralProgramAction extends BaseAction {
         this.customText = customText;
     }
 
+    public String getRecipientEmails() {
+        return recipientEmails;
+    }
+
 }

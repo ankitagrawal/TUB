@@ -90,4 +90,5 @@ public class PermissionConstants {
     public static final String MANAGE_PAYMENT_HISTORY        = "MANAGE_PAYMENT_HISTORY";
     public static final String FINANCE_MANAGEMENT            = "FINANCE_MANAGEMENT";
 
+    public static final String RUN_ANT_BUILDS                = "RUN_ANT_BUILDS";
 }
