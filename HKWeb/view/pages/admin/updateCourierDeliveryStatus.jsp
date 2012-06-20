@@ -21,7 +21,7 @@
                 <td>
                     <div class="updateCourierStatus" style="width:70%;height:300px">
                         <s:form beanclass="com.hk.web.action.admin.shipment.UpdateDeliveryStatusAction">
-                            <s:errors/>
+                            <s:errors/>   
                             <fieldset class="right_label">
                                 <legend>Orders</legend>
                                 <ul>
@@ -52,6 +52,11 @@
                                     </li>
                                 </ul>
                             </fieldset>
+                            <c:if test="${AFLDelivery.unmodifiedTrackingIdsAsString != null}">
+                               <p> Could'nt  get  response for following Tracking Ids:</p>
+                                <p>${AFLDelivery.unmodifiedTrackingIdsAsString}</p>
+
+                            </c:if>
                         </s:form>
                     </div>
                 </td>

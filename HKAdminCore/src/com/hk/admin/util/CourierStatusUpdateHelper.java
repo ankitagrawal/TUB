@@ -59,7 +59,7 @@ public class CourierStatusUpdateHelper {
             }
 
             responseAFL = AFLResponseParser.parseResponse(response, trackingId);
-            if (responseAFL != null) {
+            if (responseAFL != null && responseAFL.size()!=0) {
                 if (responseAFL.get(CourierConstants.AFL_DELIVERY_DATE) != null && responseAFL.get(CourierConstants.AFL_ORDER_GATEWAY_ID) != null && responseAFL.get(CourierConstants.AFL_AWB) != null
                         && responseAFL.get(CourierConstants.AFL_CURRENT_STATUS) != null) {
 

@@ -1,6 +1,8 @@
 package com.hk.web.action.admin.shipment;
 
 import java.util.Date;
+import java.util.List;
+
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -31,6 +33,8 @@ public class UpdateDeliveryStatusAction extends BaseAction{
   private            Date                             startDate;
   private            Date                             endDate;
   private            String                           courierName;
+  private            List<String>                     unmodifiedTrackingIds;
+  private            String                           unmodifiedTrackingIdsAsString =null;
 
   @Autowired
   private            DeliveryStatusUpdateManager      deliveryStatusUpdateManager;
@@ -51,6 +55,7 @@ public class UpdateDeliveryStatusAction extends BaseAction{
         if (courierName != null) {
             try{
             numberOfOrdersUpdated = deliveryStatusUpdateManager.updateCourierStatus(startDate, endDate, courierName);
+            unmodifiedTrackingIds = deliveryStatusUpdateManager.getUnmodifiedTrackingIds();
             }catch (HealthkartCheckedException hce){
                 addRedirectAlertMessage(new SimpleMessage(hce.getMessage()));
             }
@@ -63,7 +68,19 @@ public class UpdateDeliveryStatusAction extends BaseAction{
         } else {
             addRedirectAlertMessage(new SimpleMessage("Please select a courier."));
         }
+        if (unmodifiedTrackingIds != null && unmodifiedTrackingIds.size() > 0) {
+            unmodifiedTrackingIdsAsString = getUnmodifiedTrackingIdsAsString(unmodifiedTrackingIds);
+        }
         return new ForwardResolution("/pages/admin/updateCourierDeliveryStatus.jsp");
+    }
+
+    public String getUnmodifiedTrackingIdsAsString(List<String> unmodifiedTrackingIds){
+        StringBuffer strBuffr=new StringBuffer();
+        for(String unmodifiedTrackingId:unmodifiedTrackingIds){
+            strBuffr.append(unmodifiedTrackingId);
+            strBuffr.append(",");
+        }
+        return strBuffr.toString();
     }
 
     public Date getStartDate() {
@@ -90,5 +107,13 @@ public class UpdateDeliveryStatusAction extends BaseAction{
 
     public void setCourierName(String courierName) {
         this.courierName = courierName;
+    }
+
+    public String getUnmodifiedTrackingIdsAsString() {
+        return unmodifiedTrackingIdsAsString;
+    }
+
+    public void setUnmodifiedTrackingIdsAsString(String unmodifiedTrackingIdsAsString) {
+        this.unmodifiedTrackingIdsAsString = unmodifiedTrackingIdsAsString;
     }
 }
