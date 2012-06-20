@@ -192,6 +192,7 @@ public class CreateInventoryFileAction extends BaseAction {
                 Double markedPrice = dto.getMarkedPrice();
                 ProductVariant productVariant = dto.getProductVariant();
                 String productOptionStringBuffer = productVariant.getOptionsSlashSeparated();
+                String batchNo = dto.getSkuGroup().getBatchNumber();
 
                 if (expiryDate == null) {
                     date = "NA";
@@ -200,11 +201,8 @@ public class CreateInventoryFileAction extends BaseAction {
                     date = sdf.format(expiryDate);
                 }
 
-                // String data = barcode + "\t" + getSubString(name, strLength) + "\t" +
-                // getSubString(productOptionStringBuffer, strLength) + "\t" + date + "\t" + sumQty + "\t" +
-                // markedPrice;
-                data.append(productVariant.getId()).append("\t").append(barcode).append("\t").append(name).append("\t").append(productOptionStringBuffer).append("\t").append(date).append(
-                        "\t").append(sumQty).append("\t").append(markedPrice).append("\r\n");
+                data.append(productVariant.getId()).append("\t").append(barcode).append("\t").append(batchNo).append("\t").append(name).append("\t")
+                    .append(productOptionStringBuffer).append("\t").append(date).append("\t").append(sumQty).append("\t").append(markedPrice).append("\r\n");
 
             }
 

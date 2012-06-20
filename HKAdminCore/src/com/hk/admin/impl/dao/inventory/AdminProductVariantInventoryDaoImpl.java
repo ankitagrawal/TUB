@@ -115,7 +115,7 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
     }
 
     public List<CreateInventoryFileDto> getDetailsForUncheckedItems(String brand, Warehouse warehouse) {
-        String sql = "select sg.barcode as barcode, p.name as name, sg.expiryDate as expiryDate, sum(pvi.qty) as sumQty, grnli.mrp as markedPrice, pv as productVariant "
+        String sql = "select sg as skuGroup, sg.barcode as barcode, p.name as name, sg.expiryDate as expiryDate, sum(pvi.qty) as sumQty, grnli.mrp as markedPrice, pv as productVariant "
                 + "from ProductVariantInventory pvi join pvi.skuItem si join si.skuGroup sg join sg.goodsReceivedNote grn join grn.grnLineItems grnli "
                 + "join sg.sku s join s.productVariant pv join pv.product p where p.brand = :brand and grnli.sku.id = s.id ";
         if (warehouse != null) {
