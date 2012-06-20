@@ -188,7 +188,7 @@ C) Update endOfOfferFanCouponDate to the date the campaign is ending on. ideally
       <img src="<hk:vhostImage/>/images/facebook/fancoupon/fanCouponMasthead2.png"/>
 
       <h2>Current Deal :</h2>
-      <img src="<hk:vhostImage/>/images/facebook/fancoupon/offers/lwdi_banner.jpg"/>
+      <img src="<hk:vhostImage/>/images/facebook/fancoupon/offers/lwd_banner-2.jpg"/>
 
       <div style="text-align: center; padding: 10px;">
         <img src="<hk:vhostImage/>/images/facebook/fancoupon/joinNowButton.png"/>
@@ -204,7 +204,7 @@ C) Update endOfOfferFanCouponDate to the date the campaign is ending on. ideally
       <img src="<hk:vhostImage/>/images/facebook/fancoupon/fanCouponMasthead2.png"/>
 
       <h2>Current Deal :</h2>
-      <img src="<hk:vhostImage/>/images/facebook/fancoupon/offers/lwdi_banner.jpg"/>
+      <img src="<hk:vhostImage/>/images/facebook/fancoupon/offers/lwd_banner-2.jpg"/>
 
       <div style="text-align: center; padding: 10px; cursor: pointer;" onclick="login();">
         <img src="<hk:vhostImage/>/images/facebook/fancoupon/joinNowButton.png"/>
@@ -237,7 +237,7 @@ C) Update endOfOfferFanCouponDate to the date the campaign is ending on. ideally
         <div id="couponCodeContainer" style="font-size: 20px; font-weight: bold;">
         </div>
         <p style="font-size: 1.5em; margin: 0;">
-          <a href="http://www.healthkart.com/diabetes?utm_source=facebook&utm_medium=app&utm_campaign=2012-05-lwdi" target="_blank">Click to redeem coupon code &gt;&gt;</a>
+          <a href="http://www.healthkart.com/diabetes?utm_source=facebook&utm_medium=app&utm_campaign=2012-05-lwdi&affid=PrafulAkalPBU8J" target="_blank">Click to redeem coupon code &gt;&gt;</a>
         </p>
       </div>
       <%-- if user has NOT shared.. he/she will be prompted to share the discount with friends --%>
@@ -253,7 +253,7 @@ C) Update endOfOfferFanCouponDate to the date the campaign is ending on. ideally
       </p>
 
       <h2>Current Deal:</h2>
-      <img src="<hk:vhostImage/>/images/facebook/fancoupon/offers/lwdi_banner.jpg"/>
+      <img src="<hk:vhostImage/>/images/facebook/fancoupon/offers/lwd_banner-2.jpg"/>
     </div>
 
   </s:layout-component>
