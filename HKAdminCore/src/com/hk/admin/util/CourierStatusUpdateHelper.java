@@ -68,25 +68,25 @@ public class CourierStatusUpdateHelper {
             }
         } catch (MalformedURLException mue) {
             logger.debug(CourierConstants.MALFORMED_URL_EXCEPTION + trackingId);
-            throw new HealthkartCheckedException(CourierConstants.HEALTHKART_CHECKED_EXCEPTION);
+            throw new HealthkartCheckedException(CourierConstants.MALFORMED_URL_EXCEPTION + trackingId);
         } catch (IOException ioe) {
             logger.debug(CourierConstants.IO_EXCEPTION + trackingId);
-            throw new HealthkartCheckedException(CourierConstants.HEALTHKART_CHECKED_EXCEPTION);
+            throw new HealthkartCheckedException(CourierConstants.IO_EXCEPTION + trackingId);
         } catch (ParseException pe) {
             logger.debug(CourierConstants.PARSE_EXCEPTION + trackingId);
-            throw new HealthkartCheckedException(CourierConstants.HEALTHKART_CHECKED_EXCEPTION);
+            throw new HealthkartCheckedException(CourierConstants.PARSE_EXCEPTION + trackingId);
         } catch (NullPointerException npe) {
             logger.debug(CourierConstants.NULL_POINTER_EXCEPTION + trackingId);
-            throw new HealthkartCheckedException(CourierConstants.HEALTHKART_CHECKED_EXCEPTION);
+            throw new HealthkartCheckedException(CourierConstants.NULL_POINTER_EXCEPTION + trackingId);
         } catch (Exception e) {
             logger.debug(CourierConstants.EXCEPTION + trackingId);
-            throw new HealthkartCheckedException(CourierConstants.HEALTHKART_CHECKED_EXCEPTION);
+            throw new HealthkartCheckedException(CourierConstants.EXCEPTION + trackingId);
         } finally {
             try {
                 bufferedReader.close();
             } catch (IOException e) {
                 logger.debug(CourierConstants.IO_EXCEPTION + trackingId);
-                throw new HealthkartCheckedException(CourierConstants.HEALTHKART_CHECKED_EXCEPTION);
+                throw new HealthkartCheckedException(CourierConstants.IO_EXCEPTION + trackingId);
             }
         }
         return delivery_date;
@@ -115,22 +115,22 @@ public class CourierStatusUpdateHelper {
 
         } catch (MalformedURLException mue) {
             logger.debug(CourierConstants.MALFORMED_URL_EXCEPTION + trackingId);
-            throw new HealthkartCheckedException(CourierConstants.HEALTHKART_CHECKED_EXCEPTION);
+            throw new HealthkartCheckedException(CourierConstants.MALFORMED_URL_EXCEPTION + trackingId);
         } catch (IOException ioe) {
             logger.debug(CourierConstants.IO_EXCEPTION + trackingId);
-            throw new HealthkartCheckedException(CourierConstants.HEALTHKART_CHECKED_EXCEPTION);
+            throw new HealthkartCheckedException(CourierConstants.IO_EXCEPTION + trackingId);
         } catch (NullPointerException npe) {
             logger.debug(CourierConstants.NULL_POINTER_EXCEPTION + trackingId);
-            throw new HealthkartCheckedException(CourierConstants.HEALTHKART_CHECKED_EXCEPTION);
+            throw new HealthkartCheckedException(CourierConstants.NULL_POINTER_EXCEPTION + trackingId);
         } catch (Exception e) {
             logger.debug(CourierConstants.EXCEPTION + trackingId);
-            throw new HealthkartCheckedException(CourierConstants.HEALTHKART_CHECKED_EXCEPTION);
+            throw new HealthkartCheckedException(CourierConstants.EXCEPTION + trackingId);
         } finally {
             try{
             bufferedReader.close();
             }catch (IOException ioe){
                 logger.debug(CourierConstants.IO_EXCEPTION + trackingId);
-                throw new HealthkartCheckedException(CourierConstants.HEALTHKART_CHECKED_EXCEPTION);
+                throw new HealthkartCheckedException(CourierConstants.IO_EXCEPTION + trackingId);
             }
         }
         return chhotuCourierDelivery;
@@ -156,26 +156,26 @@ public class CourierStatusUpdateHelper {
             shipmentJsonObj = jsonParser.parse(jsonFormattedResponse).getAsJsonObject().getAsJsonArray(CourierConstants.DELHIVERY_SHIPMENT_DATA).get(0).getAsJsonObject().getAsJsonObject(CourierConstants.DELHIVERY_SHIPMENT);
         } catch (MalformedURLException mue) {
             logger.debug(CourierConstants.MALFORMED_URL_EXCEPTION + trackingId);
-            throw new HealthkartCheckedException(CourierConstants.HEALTHKART_CHECKED_EXCEPTION);
+            throw new HealthkartCheckedException(CourierConstants.MALFORMED_URL_EXCEPTION + trackingId);
 
         } catch (IOException ioe) {
             logger.debug(CourierConstants.IO_EXCEPTION + trackingId);
-            throw new HealthkartCheckedException(CourierConstants.HEALTHKART_CHECKED_EXCEPTION);
+            throw new HealthkartCheckedException(CourierConstants.IO_EXCEPTION + trackingId);
 
         } catch (NullPointerException npe) {
             logger.debug(CourierConstants.NULL_POINTER_EXCEPTION + trackingId);
-            throw new HealthkartCheckedException(CourierConstants.HEALTHKART_CHECKED_EXCEPTION);
+            throw new HealthkartCheckedException(CourierConstants.NULL_POINTER_EXCEPTION + trackingId);
 
         } catch (Exception e) {
             logger.debug(CourierConstants.EXCEPTION + trackingId);
-            throw new HealthkartCheckedException(CourierConstants.HEALTHKART_CHECKED_EXCEPTION);
+            throw new HealthkartCheckedException(CourierConstants.EXCEPTION + trackingId);
         }
         finally {
             try {
                 bufferedReader.close();
             } catch (IOException e) {
                 logger.debug(CourierConstants.IO_EXCEPTION + trackingId);
-                throw new HealthkartCheckedException(CourierConstants.HEALTHKART_CHECKED_EXCEPTION);
+                throw new HealthkartCheckedException(CourierConstants.IO_EXCEPTION + trackingId);
             }
         }
         return shipmentJsonObj;
@@ -204,26 +204,26 @@ public class CourierStatusUpdateHelper {
 
         } catch (MalformedURLException mue) {
             logger.debug(CourierConstants.MALFORMED_URL_EXCEPTION + trackingId);
-            throw new HealthkartCheckedException(CourierConstants.HEALTHKART_CHECKED_EXCEPTION);
+            throw new HealthkartCheckedException(CourierConstants.MALFORMED_URL_EXCEPTION + trackingId);
 
         } catch (IOException ioe) {
             logger.debug(CourierConstants.IO_EXCEPTION + trackingId);
-            throw new HealthkartCheckedException(CourierConstants.HEALTHKART_CHECKED_EXCEPTION);
+            throw new HealthkartCheckedException(CourierConstants.IO_EXCEPTION + trackingId);
 
         } catch (NullPointerException npe) {
             logger.debug(CourierConstants.NULL_POINTER_EXCEPTION + trackingId);
-            throw new HealthkartCheckedException(CourierConstants.HEALTHKART_CHECKED_EXCEPTION);
+            throw new HealthkartCheckedException(CourierConstants.NULL_POINTER_EXCEPTION + trackingId);
 
         } catch (Exception e) {
             logger.debug(CourierConstants.EXCEPTION + trackingId);
-            throw new HealthkartCheckedException(CourierConstants.HEALTHKART_CHECKED_EXCEPTION);
+            throw new HealthkartCheckedException(CourierConstants.EXCEPTION + trackingId);
 
         } finally {
             try {
                 bufferedReader.close();
             } catch (IOException e) {
                 logger.debug(CourierConstants.IO_EXCEPTION + trackingId);
-                throw new HealthkartCheckedException(CourierConstants.HEALTHKART_CHECKED_EXCEPTION);
+                throw new HealthkartCheckedException(CourierConstants.IO_EXCEPTION + trackingId);
 
             }
         }
@@ -271,26 +271,26 @@ public class CourierStatusUpdateHelper {
 
         } catch (MalformedURLException mue) {
             logger.debug(CourierConstants.MALFORMED_URL_EXCEPTION + trackingId);
-            throw new HealthkartCheckedException(CourierConstants.HEALTHKART_CHECKED_EXCEPTION);
+            throw new HealthkartCheckedException(CourierConstants.MALFORMED_URL_EXCEPTION+trackingId);
 
         } catch (IOException ioe) {
             logger.debug(CourierConstants.IO_EXCEPTION + trackingId);
-            throw new HealthkartCheckedException(CourierConstants.HEALTHKART_CHECKED_EXCEPTION);
+            throw new HealthkartCheckedException(CourierConstants.IO_EXCEPTION + trackingId);
 
         } catch (NullPointerException npe) {
             logger.debug(CourierConstants.NULL_POINTER_EXCEPTION + trackingId);
-            throw new HealthkartCheckedException(CourierConstants.HEALTHKART_CHECKED_EXCEPTION);
+            throw new HealthkartCheckedException(CourierConstants.NULL_POINTER_EXCEPTION + trackingId);
 
         } catch (Exception e) {
             logger.debug(CourierConstants.EXCEPTION + trackingId);
-            throw new HealthkartCheckedException(CourierConstants.HEALTHKART_CHECKED_EXCEPTION);
+            throw new HealthkartCheckedException(CourierConstants.EXCEPTION + trackingId);
 
         } finally {
             try {
                 bufferedReader.close();
             } catch (IOException e) {
                 logger.debug(CourierConstants.IO_EXCEPTION + trackingId);
-                throw new HealthkartCheckedException(CourierConstants.HEALTHKART_CHECKED_EXCEPTION);
+                throw new HealthkartCheckedException(CourierConstants.IO_EXCEPTION + trackingId);
 
             }
         }

@@ -10,11 +10,11 @@ package com.hk.constants.courier;
 public class CourierConstants {
 
     //Constants for exception
-    public static final String MALFORMED_URL_EXCEPTION = "Malformed URL for Tracking Id :";
-    public static final String IO_EXCEPTION = "IOException encountered for Tracking Id :";
-    public static final String NULL_POINTER_EXCEPTION = "NullPointerExpection encountered for Tracking :";
-    public static final String EXCEPTION = "Exception encountered for Tracking Id :";
-    public static final String PARSE_EXCEPTION = "ParseException occurred for Tracking Id :";
+    public static final String MALFORMED_URL_EXCEPTION = "Sorry.Database updation failed.Malformed URL for Tracking Id :";
+    public static final String IO_EXCEPTION = "Sorry.Database updation failed.IOException encountered for Tracking Id :";
+    public static final String NULL_POINTER_EXCEPTION = "Sorry.Database updation failed.NullPointerExpection encountered for Tracking :";
+    public static final String EXCEPTION = "Sorry.Database updation failed.Exception encountered for Tracking Id :";
+    public static final String PARSE_EXCEPTION = "Sorry.Database updation failed.ParseException occurred for Tracking Id :";
     public static final String HEALTHKART_CHECKED_EXCEPTION="Sorry,some problem occurred.Please contact the administrator.";
 
     //Common constants
