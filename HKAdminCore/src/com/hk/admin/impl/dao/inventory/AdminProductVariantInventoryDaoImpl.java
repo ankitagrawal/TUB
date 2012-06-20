@@ -114,23 +114,68 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
         return getDetailsForUncheckedItems(brand, null);
     }
 
-    public List<CreateInventoryFileDto> getDetailsForUncheckedItems(String brand, Warehouse warehouse) {
-        String sql = "select sg.barcode as barcode, p.name as name, sg.expiryDate as expiryDate, sum(pvi.qty) as sumQty, grnli.mrp as markedPrice, pv as productVariant "
-                + "from ProductVariantInventory pvi join pvi.skuItem si join si.skuGroup sg join sg.goodsReceivedNote grn join grn.grnLineItems grnli "
-                + "join sg.sku s join s.productVariant pv join pv.product p where p.brand = :brand and grnli.sku.id = s.id ";
-        if (warehouse != null) {
-            sql = sql + " and s.warehouse = :warehouse ";
-        }
-        sql = sql + " group by si.skuGroup having sum(pvi.qty) > 0";
+	public List<CreateInventoryFileDto> getDetailsForUncheckedItems(String brand, Warehouse warehouse) {
+		List<CreateInventoryFileDto> createInventoryFileDtoList = new ArrayList<CreateInventoryFileDto>();
 
-        Query query = getSession().createQuery(sql).setParameter("brand", brand);
-        if (warehouse != null) {
-            query.setParameter("warehouse", warehouse);
-        }
-        query.setResultTransformer(Transformers.aliasToBean(CreateInventoryFileDto.class)).list();
+		//GRN
+		String sql = "select sg.barcode as barcode, p.name as name, sg.expiryDate as expiryDate, sg.batchNumber as batchNumber," +
+		  " sum(pvi.qty) as sumQty, grnli.mrp as markedPrice, pv as productVariant "
+		  + "from ProductVariantInventory pvi join pvi.skuItem si join si.skuGroup sg join sg.goodsReceivedNote grn join grn.grnLineItems grnli "
+		  + "join sg.sku s join s.productVariant pv join pv.product p where p.brand = :brand and grnli.sku.id = s.id ";
+		if (warehouse != null) {
+			sql = sql + " and s.warehouse = :warehouse ";
+		}
+		sql = sql + " group by si.skuGroup having sum(pvi.qty) > 0";
 
-        return query.list();
-    }
+		Query query = getSession().createQuery(sql).setParameter("brand", brand);
+		if (warehouse != null) {
+			query.setParameter("warehouse", warehouse);
+		}
+		List<CreateInventoryFileDto> createInventoryFileDtoListForGRN = query.setResultTransformer(Transformers.aliasToBean(CreateInventoryFileDto.class)).list();
+		if (createInventoryFileDtoListForGRN != null && !createInventoryFileDtoListForGRN.isEmpty()) {
+			createInventoryFileDtoList.addAll(createInventoryFileDtoListForGRN);
+		}
+
+		//RV
+		String sql2 = "select sg.barcode as barcode, p.name as name, sg.expiryDate as expiryDate, sg.batchNumber as batchNumber," +
+		  " sum(pvi.qty) as sumQty, rvli.mrp as markedPrice, pv as productVariant "
+		  + "from ProductVariantInventory pvi join pvi.skuItem si join si.skuGroup sg join sg.reconciliationVoucher rv join rv.rvLineItems rvli "
+		  + "join sg.sku s join s.productVariant pv join pv.product p where p.brand = :brand and rvli.sku.id = s.id ";
+		if (warehouse != null) {
+			sql2 = sql2 + " and s.warehouse = :warehouse ";
+		}
+		sql2 = sql2 + " group by si.skuGroup having sum(pvi.qty) > 0";
+
+		Query query2 = getSession().createQuery(sql2).setParameter("brand", brand);
+		if (warehouse != null) {
+			query2.setParameter("warehouse", warehouse);
+		}
+		List<CreateInventoryFileDto> createInventoryFileDtoListForRV = query2.setResultTransformer(Transformers.aliasToBean(CreateInventoryFileDto.class)).list();
+		if (createInventoryFileDtoListForRV != null && !createInventoryFileDtoListForRV.isEmpty()) {
+			createInventoryFileDtoList.addAll(createInventoryFileDtoListForRV);
+		}
+
+		//ST
+		String sql3 = "select sg.barcode as barcode, p.name as name, sg.expiryDate as expiryDate, sg.batchNumber as batchNumber," +
+		  " sum(pvi.qty) as sumQty, stli.mrp as markedPrice, pv as productVariant "
+		  + "from ProductVariantInventory pvi join pvi.skuItem si join si.skuGroup sg join sg.stockTransfer st join st.stockTransferLineItems stli "
+		  + "join sg.sku s join s.productVariant pv join pv.product p where p.brand = :brand and stli.sku.id = s.id ";
+		if (warehouse != null) {
+			sql3 = sql3 + " and s.warehouse = :warehouse ";
+		}
+		sql3 = sql3 + " group by si.skuGroup having sum(pvi.qty) > 0";
+
+		Query query3 = getSession().createQuery(sql3).setParameter("brand", brand);
+		if (warehouse != null) {
+			query3.setParameter("warehouse", warehouse);
+		}
+		List<CreateInventoryFileDto> createInventoryFileDtoListForST = query3.setResultTransformer(Transformers.aliasToBean(CreateInventoryFileDto.class)).list();
+		if (createInventoryFileDtoListForST != null && !createInventoryFileDtoListForST.isEmpty()) {
+			createInventoryFileDtoList.addAll(createInventoryFileDtoListForST);
+		}
+
+		return createInventoryFileDtoList;
+	}
 
     public Long getCheckedinItemCountForStockTransferLineItem(StockTransferLineItem stockTransferLineItem) {
         String query = "select count(pvi.id) from ProductVariantInventory pvi where pvi.stockTransferLineItem = :stockTransferLineItem and pvi.qty = :checkedInQty";

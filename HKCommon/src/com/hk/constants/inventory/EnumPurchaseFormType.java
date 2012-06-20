@@ -2,18 +2,20 @@ package com.hk.constants.inventory;
 
 public enum EnumPurchaseFormType {
 
-    PurchaseFormType_C("C","Central Purchase against 2%"),
-    PurchaseFormType_E1("E1","Subsequent Sale E1"),
-    PurchaseFormType_E2("E2","Subsequent Sale E2"),
-    PurchaseFormType_H("H","Export"),
-    PurchaseFormType_I("I","Sale to units in SEZ"),
-    PurchaseFormType_F("F","Stock Transfer"),
+    PurchaseFormType_C(1L, "C","Central Purchase against 2%"),
+    PurchaseFormType_E1(2L, "E1","Subsequent Sale E1"),
+    PurchaseFormType_E2(3L, "E2","Subsequent Sale E2"),
+    PurchaseFormType_H(4L, "H","Export"),
+    PurchaseFormType_I(5L, "I","Sale to units in SEZ"),
+    PurchaseFormType_F(6L, "F","Stock Transfer"),
     ;
 
     private String name;
     private String description;
+    private Long id;
 
-    EnumPurchaseFormType(String name, String description) {
+    EnumPurchaseFormType(Long id, String name, String description) {
+        this.id = id;
         this.name = name;
         this.description = description;
     }
@@ -24,5 +26,9 @@ public enum EnumPurchaseFormType {
 
     public String getDescription() {
         return description;
+    }
+
+    public Long getId(){
+      return id;
     }
 }

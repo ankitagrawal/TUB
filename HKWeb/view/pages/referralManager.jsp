@@ -12,7 +12,7 @@
         $('#referralTerms').jqm({trigger: '.referralTerms', ajax: '@href'});
       });
     </script>
-    <link href="${pageContext.request.contextPath}/css/admin.css" rel="stylesheet" type="text/css"/>
+    <%--<link href="${pageContext.request.contextPath}/css/admin.css" rel="stylesheet" type="text/css"/>--%>
   </s:layout-component>
 
   <s:layout-component name="heading">My Referrals and Reward Points</s:layout-component>

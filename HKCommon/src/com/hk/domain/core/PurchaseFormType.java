@@ -15,7 +15,7 @@ import javax.persistence.*;
 public class PurchaseFormType implements java.io.Serializable{
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+//  @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(name = "id", unique = true, nullable = false)
   private Long id;
 

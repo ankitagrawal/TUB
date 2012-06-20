@@ -22,6 +22,7 @@ import com.hk.domain.catalog.category.Category;
 import com.hk.domain.core.*;
 import com.hk.domain.courier.BoxSize;
 import com.hk.domain.courier.Courier;
+import com.hk.domain.courier.RegionType;
 import com.hk.domain.inventory.GrnStatus;
 import com.hk.domain.inventory.po.PurchaseInvoiceStatus;
 import com.hk.domain.inventory.rv.ReconciliationStatus;
@@ -254,6 +255,10 @@ public class MasterDataDaoImpl implements MasterDataDao {
 
   public List<ReviewStatus> getReviewStatusList() {
     return getBaseDao().getAll(ReviewStatus.class);
+  }
+
+  public List<RegionType> getRegionTypeList() {
+    return getBaseDao().getAll(RegionType.class);
   }
 }
 

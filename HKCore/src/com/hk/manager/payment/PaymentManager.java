@@ -305,7 +305,7 @@ public class PaymentManager {
             } else {
               payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING));
             }
-            paymentDao.save(payment);
+            payment = paymentDao.save(payment);
             order = getOrderManager().orderPaymentReceieved(payment);
 
         }
