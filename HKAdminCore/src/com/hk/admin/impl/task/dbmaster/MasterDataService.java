@@ -1,19 +1,8 @@
 package com.hk.admin.impl.task.dbmaster;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.hk.db.seed.catalog.ProductVariantPaymentTypeSeedData;
 import com.hk.db.seed.catalog.ProductVariantServiceTypeSeedData;
-import com.hk.db.seed.core.AffiliateTxnTypeSeedData;
-import com.hk.db.seed.core.CancellationTypeSeedData;
-import com.hk.db.seed.core.PermissionSeedData;
-import com.hk.db.seed.core.RoleHasPermissionSeedData;
-import com.hk.db.seed.core.RoleSeedData;
-import com.hk.db.seed.core.SurchargeSeedData;
-import com.hk.db.seed.core.TaxSeedData;
+import com.hk.db.seed.core.*;
 import com.hk.db.seed.courier.BoxSizeSeedData;
 import com.hk.db.seed.courier.CourierGroupSeedData;
 import com.hk.db.seed.courier.CourierSeedData;
@@ -30,6 +19,10 @@ import com.hk.db.seed.reward.RewardPointStatusSeedData;
 import com.hk.db.seed.reward.RewardPointTxnTypeSeedData;
 import com.hk.db.seed.ticket.TicketStatusSeedData;
 import com.hk.db.seed.ticket.TicketTypeSeedData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Author: Kani Date: Jul 23, 2009
@@ -114,6 +107,8 @@ public class MasterDataService {
     PrimaryReferrerForOrderSeedData        primaryReferrerForOrderSeedData;
     @Autowired
     SecondaryReferrerForOrderSeedData      secondaryReferrerForOrderSeedData;
+   @Autowired
+   StateSeedData stateSeedData;
 
     public void insert() {
 
@@ -234,6 +229,9 @@ public class MasterDataService {
 
         logger.debug("inserting secondary referrer for order  seed data");
         secondaryReferrerForOrderSeedData.invokeInsert();
+
+       logger.debug("inserting state names");
+        stateSeedData.invokeInsert();
     }
 
 }

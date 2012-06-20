@@ -7537,4 +7537,30 @@
             <column name="product_variant_id"/>
         </createIndex>
     </changeSet>
+    <changeSet author="Seema (generated)" id="1340188264437-1">
+        <createTable tableName="state">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+      <changeSet author="Seema (generated)" id="1340188264437-4">
+        <addColumn tableName="state_courier_service">
+            <column name="state_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340188264437-24">
+        <dropForeignKeyConstraint baseTableName="state_courier_service"  constraintName="fk_state_pincode"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340188264437-29">
+        <addForeignKeyConstraint baseColumnNames="state_id" baseTableName="state_courier_service"  constraintName="fk_state_courier_service_state1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="state"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340188264437-41">
+        <dropColumn columnName="state" tableName="state_courier_service"/>
+    </changeSet>
 </databaseChangeLog>
