@@ -6,7 +6,9 @@ import java.util.List;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.core.InvTxnType;
+import org.springframework.stereotype.Component;
 
+@Component
 public class InvTxnTypeSeedData extends BaseSeedData {
 
     public void insert(java.lang.String name, java.lang.Long id) {

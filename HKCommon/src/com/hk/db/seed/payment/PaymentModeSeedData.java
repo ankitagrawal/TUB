@@ -6,7 +6,9 @@ import java.util.List;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.core.PaymentMode;
+import org.springframework.stereotype.Component;
 
+@Component
 public class PaymentModeSeedData extends BaseSeedData {
 
     public void insert(java.lang.String name, java.lang.Long id) {

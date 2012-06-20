@@ -42,7 +42,7 @@ public class NotifyMe implements java.io.Serializable {
   @Column(name = "phone", nullable = false, length = 45)
   private String phone;
 
-  @Temporal(TemporalType.TIMESTAMP)
+  @Temporal(TemporalType.DATE)
   @Column(name = "created_date", nullable = false, length = 19)
   private Date createdDate;
 

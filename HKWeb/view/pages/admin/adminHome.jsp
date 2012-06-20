@@ -54,6 +54,9 @@
   <h3><s:link beanclass="com.hk.web.action.admin.queue.ActionAwaitingQueueAction">Action Awaiting Queue</s:link></h3>
   </c:if>
   <h3><s:link beanclass="com.hk.web.action.admin.marketing.NotifyMeListAction"> Notify Me List </s:link></h3>
+  <shiro:hasRole name="<%=RoleConstants.ADMIN%>">
+    <h3><s:link beanclass="com.hk.web.action.admin.TaskManagerAction"> Ant Builds </s:link></h3>
+  </shiro:hasRole>
   <%--<h3><s:link beanclass="com.hk.web.action.admin.payment.PaymentHistoryAction"> Check Payment History </s:link></h3>--%>
 </div>
 
@@ -164,6 +167,8 @@
 	<h3><s:link beanclass="com.hk.web.action.admin.shipment.ParseEstimatedCourierExpensesExcelAction">Upload Estimated Courier Collection Charges</s:link> </h3>
 
   <h3><s:link beanclass="com.hk.web.action.admin.shipment.ChangeShipmentDetailsAction">Change shipment details</s:link></h3>
+
+   <h3><s:link beanclass="com.hk.web.action.admin.courier.CreateUpdateCourierPricingAction">Change Courier Pricing  details</s:link></h3>
 
   <h3><s:link beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction" event="generateCourierReport">Download Courier Excel
       <s:param name="courierDownloadFunctionality" value="false"/>

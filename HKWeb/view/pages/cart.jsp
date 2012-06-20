@@ -387,7 +387,7 @@
                     <span class='num '>
                       Rs  <span class="lineItemSubTotalHkDiscount"><fmt:formatNumber
 
-                        value="${(cartLineItem.markedPrice - cartLineItem.hkPrice + cartLineItem.productVariant.postpaidAmount) * cartLineItem.qty}"
+                        value="${(cartLineItem.markedPrice - cartLineItem.hkPrice - cartLineItem.productVariant.postpaidAmount) * cartLineItem.qty}"
                         pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>)
                     </span>
           </div>
