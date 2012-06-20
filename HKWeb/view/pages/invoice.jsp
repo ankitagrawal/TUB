@@ -192,10 +192,9 @@
       <th>Quantity</th>
       <th>Unit price</th>
       <th>Total(Rs.)</th>
-    </tr>
+    </tr> 
 
     <c:forEach items="${orderSummary.pricingDto.productLineItems}" var="productLineItem">
-      <c:if test="${productLineItem.comboInstance == null}">
         <tr>
           <td>
             <p>${productLineItem.productVariant.product.name}</p>
@@ -256,37 +255,36 @@
           <td><fmt:formatNumber value="${productLineItem.hkPrice * productLineItem.qty}" type="currency"
                                 currencySymbol="Rs. "/></td>
         </tr>
-      </c:if>
     </c:forEach>
     <c:set var="firstComboLineItem" value=""/>
     <c:forEach items="${orderSummary.pricingDto.productLineItems}" var="productLineItem">
-      <c:if test="${productLineItem.comboInstance != null}">
-        <c:if test="${firstComboLineItem != productLineItem.comboInstance.combo}">
-          <c:set var="firstComboLineItem" value="${productLineItem.comboInstance.combo}"/>
-          <tr>
-            <td>
-              <p>${productLineItem.comboInstance.combo.name}</p>
-              <c:forEach items="${productLineItem.comboInstance.comboInstanceProductVariants}" var="comboVariant">
-                <p>${comboVariant.qty}x${comboVariant.productVariant.product.name}</p>
+      <%--<c:if test="${productLineItem.comboInstance != null}">--%>
+        <%--<c:if test="${firstComboLineItem != productLineItem.comboInstance.combo}">--%>
+          <%--<c:set var="firstComboLineItem" value="${productLineItem.comboInstance.combo}"/>--%>
+          <%--<tr>--%>
+            <%--<td>--%>
+              <%--<p>${productLineItem.comboInstance.combo.name}</p>--%>
+              <%--<c:forEach items="${productLineItem.comboInstance.comboInstanceProductVariants}" var="comboVariant">--%>
+                <%--<p>${comboVariant.qty}x${comboVariant.productVariant.product.name}</p>--%>
 
-                <p>${productLineItem.productVariant.variantName}</p>
-                <em>
-                  <c:forEach items="${comboVariant.productVariant.productOptions}" var="productOption">
-                    ${productOption.name} ${productOption.value}&nbsp;
-                  </c:forEach>
-                </em>
-              </c:forEach>
-            </td>
-            <td>
-              <fmt:formatNumber value="${hk:getComboCount(productLineItem)}" maxFractionDigits="0"/></td>
-            <td> ${productLineItem.comboInstance.combo.hkPrice} </td>
-            <td>
-              <fmt:formatNumber
-                  value="${productLineItem.comboInstance.combo.hkPrice * hk:getComboCount(productLineItem)}"
-                  type="currency" currencySymbol="Rs. "/></td>
-          </tr>
-        </c:if>
-      </c:if>
+                <%--<p>${productLineItem.productVariant.variantName}</p>--%>
+                <%--<em>--%>
+                  <%--<c:forEach items="${comboVariant.productVariant.productOptions}" var="productOption">--%>
+                    <%--${productOption.name} ${productOption.value}&nbsp;--%>
+                  <%--</c:forEach>--%>
+                <%--</em>--%>
+              <%--</c:forEach>--%>
+            <%--</td>--%>
+            <%--<td>--%>
+              <%--<fmt:formatNumber value="${hk:getComboCount(productLineItem)}" maxFractionDigits="0"/></td>--%>
+            <%--<td> ${productLineItem.comboInstance.combo.hkPrice} </td>--%>
+            <%--<td>--%>
+              <%--<fmt:formatNumber--%>
+                  <%--value="${productLineItem.comboInstance.combo.hkPrice * hk:getComboCount(productLineItem)}"--%>
+                  <%--type="currency" currencySymbol="Rs. "/></td>--%>
+          <%--</tr>--%>
+        <%--</c:if>--%>
+      <%--</c:if>--%>
     </c:forEach>
 
   </table>
