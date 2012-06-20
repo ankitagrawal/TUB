@@ -6,7 +6,9 @@ import java.util.List;
 import com.hk.constants.catalog.product.EnumProductVariantPaymentType;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.core.ProductVariantPaymentType;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ProductVariantPaymentTypeSeedData extends BaseSeedData {
 
     public void insert(java.lang.String name, java.lang.Long id) {

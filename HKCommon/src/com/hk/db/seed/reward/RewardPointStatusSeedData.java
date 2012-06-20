@@ -6,7 +6,9 @@ import java.util.List;
 import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.offer.rewardPoint.RewardPointStatus;
+import org.springframework.stereotype.Component;
 
+@Component
 public class RewardPointStatusSeedData extends BaseSeedData {
 
     public void insert(java.lang.String name, java.lang.Long id) {

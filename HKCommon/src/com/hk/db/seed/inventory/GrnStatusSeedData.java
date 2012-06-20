@@ -6,7 +6,9 @@ import java.util.List;
 import com.hk.constants.inventory.EnumGrnStatus;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.inventory.GrnStatus;
+import org.springframework.stereotype.Component;
 
+@Component
 public class GrnStatusSeedData extends BaseSeedData {
 
     public void insert(java.lang.String name, java.lang.Long id) {

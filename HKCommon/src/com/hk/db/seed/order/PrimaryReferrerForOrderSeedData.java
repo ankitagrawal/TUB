@@ -7,10 +7,13 @@ import com.hk.db.seed.BaseSeedData;
 import java.util.List;
 import java.util.ArrayList;
 
+import org.springframework.stereotype.Component;
+
 /**
  * Generated
  */
 
+@Component
 public class PrimaryReferrerForOrderSeedData extends BaseSeedData {  
   public void insert(java.lang.String name, java.lang.Long id) {
     PrimaryReferrerForOrder primaryReferrerForOrder = new PrimaryReferrerForOrder();

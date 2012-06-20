@@ -7,10 +7,12 @@ import com.hk.db.seed.BaseSeedData;
 import java.util.List;
 import java.util.ArrayList;
 
+import org.springframework.stereotype.Component;
+
 /**
  * Generated
  */
-@SuppressWarnings({"InjectOfNonPublicMember"})
+@Component
 public class SecondaryReferrerForOrderSeedData extends BaseSeedData {
   public void insert(java.lang.String name, java.lang.Long id) {
     SecondaryReferrerForOrder secondaryReferrerForOrder = new SecondaryReferrerForOrder();
