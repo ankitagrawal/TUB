@@ -35,9 +35,8 @@ public class EmailCampaignServiceImpl implements EmailCampaignService {
     return getEmailCampaignDao().getEmailCampaignSentCount(emailCampaign);
   }
 
-  public EnumS3UploadStatus uploadEmailContent(File emailContent, EmailCampaign emailCampaign) throws NoSuchAlgorithmException, IOException, ServiceException {
+  public void uploadEmailContent(File emailContent, EmailCampaign emailCampaign) throws NoSuchAlgorithmException, IOException, ServiceException {
     s3Utils.uploadMultipleData(awsAccessKey,awsSecretKey,emailContent,awsBucket);
-    return EnumS3UploadStatus.Uploaded;
   }
 
   public EmailCampaignDao getEmailCampaignDao() {

@@ -4,7 +4,6 @@ import org.jets3t.service.S3Service;
 import org.jets3t.service.ServiceException;
 import org.jets3t.service.S3ServiceException;
 import org.jets3t.service.multi.SimpleThreadedStorageService;
-import org.jets3t.service.utils.Mimetypes;
 import org.jets3t.service.acl.AccessControlList;
 import org.jets3t.service.acl.GroupGrantee;
 import org.jets3t.service.acl.Permission;
@@ -20,6 +19,8 @@ import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
+import java.net.FileNameMap;
+import java.net.URLConnection;
 
 
 public class S3Utils {
@@ -49,10 +50,10 @@ public class S3Utils {
   /**
    * The method uploads the data to S3 and gives it public read access
    *
-   * @param awsAccess: aws access key
-   * @param awsSecret: aws secret key
-   * @param filePath:  path for the file to be uploaded
-   * @param key: key for file at Amazon S3
+   * @param awsAccess:  aws access key
+   * @param awsSecret:  aws secret key
+   * @param filePath:   path for the file to be uploaded
+   * @param key:        key for file at Amazon S3
    * @param bucketName: bucket need not exist already. If it doesn't exist, it will be created.
    * @throws ServiceException ,IOException ioe ,NoSuchAlgorithmException
    */
@@ -63,11 +64,12 @@ public class S3Utils {
       logger.info("Uploading file: " + filePath + " in bucket: " + bucketName + " at Amazon S3");
 
       File file = new File(filePath);
+      String contentType = getContentType(file.getAbsolutePath());
 
       S3Object s3Object = new S3Object(file);
       s3Object.setKey(key);
       s3Object.setAcl(s3Service.getBucketAcl(s3Bucket));
-      s3Object.setContentType("image/jpeg");
+      s3Object.setContentType(contentType);
 
       s3Service.putObject(s3Bucket, s3Object);
     } catch (ServiceException se) {
@@ -99,11 +101,12 @@ public class S3Utils {
       try {
         File file = filesInFolder.next();
         String key = generateFileKey(file.getAbsolutePath());
+        String contentType = getContentType(file.getAbsolutePath());
 
         S3Object s3Object = new S3Object(s3Bucket, file);
         s3Object.setKey(key);
         s3Object.setAcl(s3Service.getBucketAcl(s3Bucket));
-        s3Object.setContentType(Mimetypes.getInstance().getMimetype(s3Object.getKey()));
+        s3Object.setContentType(contentType);
 
         folderContents.add(s3Object);
       } catch (NoSuchAlgorithmException nsae) {
@@ -130,5 +133,11 @@ public class S3Utils {
 
   private static String generateFileKey(String contentPath) {
     return contentPath.replaceAll("(.*\\\\emailContentFiles\\\\)", "").replaceAll("\\\\", "/");
+  }
+
+  private static String getContentType(String fileUrl) {
+    //        s3Object.setContentType(new MimetypesFileTypeMap().getContentType(file));
+    FileNameMap fileNameMap = URLConnection.getFileNameMap();
+    return fileNameMap.getContentTypeFor(fileUrl);
   }
 }

@@ -13,5 +13,5 @@ public interface EmailCampaignService {
 
   public Long getEmailCampaignSentCount(EmailCampaign emailCampaign);
 
-  public EnumS3UploadStatus uploadEmailContent(File emailContent, EmailCampaign emailCampaign) throws Exception;
+  public void uploadEmailContent(File emailContent, EmailCampaign emailCampaign) throws Exception;
 }
