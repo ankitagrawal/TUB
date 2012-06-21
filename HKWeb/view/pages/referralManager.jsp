@@ -37,8 +37,7 @@
         <div class="no_data">No Referrals Yet</div>
       </c:when>
       <c:otherwise>
-        <table class="cont">
-          <thead>
+        <table class="cont footer_color" style="font-size: 14px;" id="detail">
           <tr>
             <th>S.No.</th>
             <th>Name</th>
@@ -47,7 +46,6 @@
             <th>Status</th>
             <th>Comments</th>
           </tr>
-          </thead>
           <c:forEach items="${couponBean.user.rewardPointList}" var="rewardPoint" varStatus="ctr">
             <c:if test="${rewardPoint.referredUser != null}">
               <tr>
@@ -73,3 +71,24 @@
     document.getElementById('rpLink').style.fontWeight = "bold";
   };
 </script>
+<style type="text/css">
+  table#detail {
+    width: 100%;
+    margin-bottom: 10px;
+    margin-top: 5px;
+    border: 1px solid;
+    border-collapse: separate;
+  }
+
+  table th {
+    background: #f0f0f0;
+    padding: 5px;
+    text-align: left;
+  }
+
+  table td {
+    padding: 5px;
+    text-align: left;
+    font-size: 0.9em;
+  }
+</style>
