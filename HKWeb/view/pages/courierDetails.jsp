@@ -42,27 +42,27 @@
                 <div>
                     <div class="row">
                         <s:label name="Customer Name:" class="valueLabel"/>
-                        <s:label name="${tca.shippingOrder.baseOrder.user.name}" class="nameLabel"/>
+                        <s:label name="${tca.shippingOrder.baseOrder.user.name} " class="nameLabel"/>
                     </div>
                     <div class="clear"></div>
                     <div class="row">
                         <s:label name="Order Id:" class="valueLabel"/>
-                        <s:label name="${tca.shippingOrder.baseOrder.id}" class="nameLabel"/>
+                        <s:label name="${tca.shippingOrder.baseOrder.id} " class="nameLabel"/>
                     </div>
                     <div class="clear"></div>
                     <div class="row">
                         <s:label name="Ship date:" class="valueLabel"/>
-                        <s:label name="${tca.shippingOrder.shipment.shipDate}" class="nameLabel"/>
+                        <s:label name="${tca.shippingOrder.shipment.shipDate} " class="nameLabel"/>
                     </div>
                     <div class="clear"></div>
                     <div class="row">
                         <s:label name="Tracking Id:" class="valueLabel"/>
                         <c:choose>
                             <c:when test="${tca.courierName =='Delhivery'}">
-                                <s:label name="${tca.awb}" class="nameLabel"/>
+                                <s:label name="${tca.awb} " class="nameLabel"/>
                             </c:when>
                             <c:otherwise>
-                                <s:label name="${tca.trackingId}" class="nameLabel"/>
+                                <s:label name="${tca.trackingId} " class="nameLabel"/>
                             </c:otherwise>
                         </c:choose>
 
@@ -71,14 +71,14 @@
                     <c:if test="${tca.courierName =='Delhivery'}">
                         <div class="row">
                             <s:label name="Payment Mode:" class="valueLabel"/>
-                            <s:label name=" ${tca.paymentType}" class="nameLabel"/>
+                            <s:label name=" ${tca.paymentType} " class="nameLabel"/>
                         </div>
                         <div class="clear"></div>
 
                     </c:if>
                     <div class="row">
                         <s:label name="Shipment Status:" class="valueLabel"/>
-                        <s:label name="${tca.status}" class="nameLabel"/>
+                        <s:label name="${tca.status} " class="nameLabel"/>
                     </div>
                     <div class="clear"></div>
                 </div>
