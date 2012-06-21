@@ -1,7 +1,7 @@
 package com.hk.admin.util.helper;
 
 import com.hk.admin.pact.dao.courier.CityCourierTATDao;
-import com.hk.admin.pact.dao.courier.CourierDao;
+import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.courier.CourierStateCityService;
 import com.hk.admin.util.XslUtil;
 import com.hk.constants.XslConstants;
@@ -40,7 +40,7 @@ public class XslCityCourierTATParser {
   @Autowired
   CourierStateCityService courierStateCityService;
   @Autowired
-  CourierDao courierDao;
+  CourierService courierService;
   @Autowired
     CityCourierTATDao cityCourierTATDao;
 
@@ -92,7 +92,7 @@ public class XslCityCourierTATParser {
           logger.error("courier id cannot be null/empty");
           throw new ExcelBlankFieldException("courier ID  cannot be empty" + "    ", rowCount);
         }
-        Courier courier = courierDao.getCourierById(XslUtil.getLong(courierId));
+        Courier courier = courierService.getCourierById(XslUtil.getLong(courierId));
         if (courier == null) {
           logger.error("courierId is not valid  " + courierId, rowCount);
           throw new ExcelBlankFieldException("courierId is not valid  " + "    ", rowCount);

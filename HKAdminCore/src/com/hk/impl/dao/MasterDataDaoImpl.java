@@ -1,7 +1,10 @@
 package com.hk.impl.dao;
 
+import com.hk.admin.pact.dao.courier.CourierDao;
 import com.hk.constants.catalog.product.EnumProductVariantPaymentType;
 import com.hk.constants.core.EnumRole;
+import com.hk.constants.courier.CourierConstants;
+import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.inventory.EnumReconciliationStatus;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
@@ -33,6 +36,7 @@ import com.hk.pact.service.marketing.MarketingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -49,25 +53,20 @@ public class MasterDataDaoImpl implements MasterDataDao {
   private RoleService roleService;
   @Autowired
   private MarketingService marketingService;
+  @Autowired
+  private CourierDao courierDao;
+
 
   public List<PaymentStatus> getPaymentStatusList() {
     return getBaseDao().getAll(PaymentStatus.class);
-    // return paymentStatusDaoProvider.get().listAll();
   }
 
   public List<PaymentMode> getPaymentModeList() {
     return getBaseDao().getAll(PaymentMode.class);
-    // return paymentModeDaoProvider.get().listAll();
   }
 
   public List<OrderStatus> getOrderStatusList() {
     return getBaseDao().getAll(OrderStatus.class);
-    // return orderStatusDaoProvider.get().listAll();
-  }
-
-  public List<Courier> getCourierList() {
-    return getBaseDao().getAll(Courier.class);
-    // return courierDaoProvider.get().listAll();
   }
 
   public List<PaymentMode> getpaymentModesForReconciliationReport() {
@@ -80,37 +79,30 @@ public class MasterDataDaoImpl implements MasterDataDao {
 
   public List<CartLineItemType> getLineItemTypeList() {
     return getBaseDao().getAll(CartLineItemType.class);
-    // return cartLineItemTypeDaoProvider.get().listAll();
   }
 
   public List<CancellationType> getCancellationTypeList() {
     return getBaseDao().getAll(CancellationType.class);
-    // return cancellationTypeDaoProvider.get().listAll();
   }
 
   public List<RewardPointStatus> getRewardPointStatusList() {
     return getBaseDao().getAll(RewardPointStatus.class);
-    // return rewardPointStatusDaoProvider.get().listAll();
   }
 
   public List<Tax> getTaxList() {
     return getBaseDao().getAll(Tax.class);
-    // return taxDaoProvider.get().listAll();
   }
 
   public List<Manufacturer> getManufacturerList() {
     return getBaseDao().getAll(Manufacturer.class);
-    // return manufacturerDaoProvider.get().listAll();
   }
 
   public List<TicketType> getTicketTypeList() {
     return getBaseDao().getAll(TicketType.class);
-    // return ticketTypeDaoProvider.get().listAll();
   }
 
   public List<TicketStatus> getTicketStatusList() {
     return getBaseDao().getAll(TicketStatus.class);
-    // return ticketStatusDaoProvider.get().listAll();
   }
 
   public List<User> getTicketAdminList() {
@@ -131,44 +123,35 @@ public class MasterDataDaoImpl implements MasterDataDao {
 
   public List<PaymentMode> getPaymentModes() {
     return getBaseDao().getAll(PaymentMode.class);
-    // return paymentModeDaoProvider.get().listAll();
   }
 
   public List<BoxSize> getBoxSizes() {
     return getBaseDao().getAll(BoxSize.class);
-    // return boxSizeDaoProvider.get().listAll();
   }
 
   public List<RewardPointMode> getRewardPointModes() {
     return getBaseDao().getAll(RewardPointMode.class);
-    // return rewardPointModeDaoProvider.get().listAll();
   }
 
   public List<ProductVariantPaymentType> getPaymentTypes() {
     return Arrays.asList(EnumProductVariantPaymentType.Default.asProductVariantPaymentType(), EnumProductVariantPaymentType.Prepaid.asProductVariantPaymentType(),
-        EnumProductVariantPaymentType.Postpaid.asProductVariantPaymentType());
+            EnumProductVariantPaymentType.Postpaid.asProductVariantPaymentType());
   }
 
   public List<ProductVariantServiceType> getServiceTypes() {
     return getBaseDao().getAll(ProductVariantServiceType.class);
-    // return serviceTypeDaoProvider.get().listAll();
   }
 
   public List<PurchaseOrderStatus> getPurchaseOrderStatusList() {
     return getBaseDao().getAll(PurchaseOrderStatus.class);
-    // return purchaseOrderStatusDaoProvider.get().listAll();
   }
 
   public List<GrnStatus> getGrnStatusList() {
     return getBaseDao().getAll(GrnStatus.class);
-    // return grnStatusDaoProvider.get().listAll();
   }
 
   public List<User> getApproverList() {
-    // return getBaseDao().getAll(User.class);
-
     return getUserService().findByRole(getRoleService().getRoleByName(EnumRole.PO_APPROVER));
-    // return userDaoProvider.get().findByRole(roleDaoProvider.get().find(EnumRole.PO_APPROVER.getRoleName()));
   }
 
   public List<User> getCreatorList() {
@@ -177,26 +160,32 @@ public class MasterDataDaoImpl implements MasterDataDao {
 
   public List<DebitNoteStatus> getDebitNoteStatusList() {
     return getBaseDao().getAll(DebitNoteStatus.class);
-    // return debitNoteStatusDaoProvider.get().listAll();
   }
 
   public List<PurchaseInvoiceStatus> getPurchaseInvoiceStatusList() {
     return getBaseDao().getAll(PurchaseInvoiceStatus.class);
-    // return purchaseInvoiceStatusDaoProvider.get().listAll();
   }
 
   public List<Surcharge> getSurchargeList() {
     return getBaseDao().getAll(Surcharge.class);
-    // return surchargeDaoProvider.get().listAll();
   }
 
   public List<ReconciliationType> getReconciliationTypeList() {
     return getBaseDao().getAll(ReconciliationType.class);
-    // return reconciliationTypeDaoProvider.get().listAll();
   }
 
   public List<EmailType> getEmailTypeList() {
     return getBaseDao().getAll(EmailType.class);
+  }
+
+  public List<String> getCourierListForDBUpdation(){
+      List<String> courierListForDBUpdation=new ArrayList<String>();
+      courierListForDBUpdation.add(CourierConstants.AFL);
+      courierListForDBUpdation.add(CourierConstants.BLUEDART);
+      courierListForDBUpdation.add(CourierConstants.CHHOTU);
+      courierListForDBUpdation.add(CourierConstants.DELHIVERY);
+      courierListForDBUpdation.add(CourierConstants.DTDC);
+      return courierListForDBUpdation;
   }
 
   public BaseDao getBaseDao() {
@@ -239,9 +228,16 @@ public class MasterDataDaoImpl implements MasterDataDao {
     this.marketingService = marketingService;
   }
 
+    public CourierDao getCourierDao() {
+        return courierDao;
+    }
+
+    public void setCourierDao(CourierDao courierDao) {
+        this.courierDao = courierDao;
+    }
+
     public List<PurchaseFormType> getPurchaseFormTypeList() {
     return getBaseDao().getAll(PurchaseFormType.class);
-    // return taxDaoProvider.get().listAll();
   }
 
   public List<ShippingOrderStatus> getSOStatusForShipmentDetailsList() {
@@ -267,5 +263,8 @@ public class MasterDataDaoImpl implements MasterDataDao {
     return getBaseDao().getAll(City.class);
     }
  
+   public List<Courier> getCourierList() {
+       return courierDao.getCourierByIds(EnumCourier.getCourierIDs(EnumCourier.getCurrentlyApplicableCouriers()));
+   }
 }
 

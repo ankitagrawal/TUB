@@ -88,6 +88,7 @@
                 <th width="140px">Batch</th>
                 <th width="70px">Barcode</th>
                 <th width="70px">Check In Quantity Of Grn</th>
+                 <th width="70px"> Quantity Already at Shelf </th>
 
             </tr>
             <c:forEach items="${ica.listOfSkuGroupListPerGrn}" var="VarSkuList" varStatus="sno">
@@ -145,6 +146,11 @@
                     <td width="70px">
                         <c:set var="entry" value="${ica.skuGroupQtyMappingPerGrn}"/>
                             ${entry[VarSkuGroup.id]}
+                    </td>
+
+                    <td width="70px">
+                        <c:set var="entry1" value="${ica.skuGroupRemainedQtyMapping}"/>
+                            ${entry1[VarSkuGroup]}
                     </td>
 
                     </tr>

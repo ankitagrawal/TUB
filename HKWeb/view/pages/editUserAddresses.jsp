@@ -1,3 +1,4 @@
+<%@ page import="com.hk.constants.courier.StateList" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.core.user.UserManageAddressAction" var="umaa"/>
@@ -65,7 +66,13 @@
 
       <div class="row">
         <s:label class="rowLabel" name="State*"/>
-        <s:text name="address.state" class="rowText"/>
+        <s:select name="address.state"
+                  style="width:310px;float: left;padding-top: 0;padding-bottom: 0;margin-left: 30px;font: inherit;">
+          <c:forEach items="<%=StateList.stateList%>" var="state">
+            <s:option value="${state}">${state}</s:option>
+          </c:forEach>
+        </s:select>
+          <%--<s:text name="address.state" class="rowText"/>--%>
       </div>
 
       <div class="clear"></div>
@@ -161,13 +168,13 @@
 
     function _validateMobile() {
       var phone = $('#phone').val();
-//      var validRegEx = /^\d{9,12}$/;
+      //      var validRegEx = /^\d{9,12}$/;
       var validRegEx = /^[0-9,+\-]{9,}$/;
       //  if (phone.length < 9 || phone.length > 12) {
       //  $('.error').append("<br/> Kindly enter a valid phone number!<br/>");
       // err = 1;
       //}
-//      var validRegEx = /^0^0$/;
+      //      var validRegEx = /^0^0$/;
       if (!validRegEx.test(phone)) {
         $('.error').append("<br/> Kindly enter a valid phone number!<br/>");
         err = 1;

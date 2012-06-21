@@ -19,6 +19,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -36,11 +37,12 @@ public class CourierServiceImpl implements CourierService {
     @Autowired
     private CourierServiceInfoDao courierServiceInfoDao;
     @Autowired
-    private BaseDao baseDao;
+    BaseDao baseDao;
 
     @Override
     public Courier getCourierById(Long courierId) {
-        return getCourierDao().getCourierById(courierId);
+        List<Courier> courierList = getCourierDao().getCourierByIds(Arrays.asList(courierId));
+        return  courierList != null && courierList.size() > 0 ? courierList.get(0) : null;
     }
 
     @Override
@@ -82,6 +84,7 @@ public class CourierServiceImpl implements CourierService {
 
     public Courier getSuggestedCourierService(String pincode, boolean isCOD) {
 
+/*
         Pincode pincodeObj = getPincodeService().getByPincode(pincode);
         if (pincodeObj != null) {
             Courier courier;
@@ -113,6 +116,7 @@ public class CourierServiceImpl implements CourierService {
                 }
             }
         }
+*/
         return null;
     }
 
@@ -194,10 +198,8 @@ public class CourierServiceImpl implements CourierService {
     public void setPincodeService(PincodeService pincodeService) {
         this.pincodeService = pincodeService;
     }
-    
    public void saveCityCourierTAT(CityCourierTAT cityCourierTAT){
     baseDao.save(cityCourierTAT);
    }
-    
 
 }

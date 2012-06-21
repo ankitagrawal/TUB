@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
 public enum EnumCourier {
 
     DTDC_Plus(10L, "DTDC Plus"),
@@ -15,7 +14,7 @@ public enum EnumCourier {
     DTDC_Surface(13L, "DTDC Surface"),
     Aramex(20L, "Aramex"),
     Speedpost(30L, "Speed Post"),
-    Delhivery(40L, "Delhivery-Delhi-NCR"),
+    Delhivery(40L, "Delhivery"),
     Chhotu(45L, "Chhotu-Delhi-NCR"),
     OfficePickup(50L, "Office Pickup"),
     AFLWiz(60L, "AFL Wiz"),
@@ -23,19 +22,12 @@ public enum EnumCourier {
     BlueDart_COD(71L, "Blue Dart COD"),
     FirstFLight(80L, "First Flight"),
     FirstFLight_COD(85L, "First Flight COD"),
-
     Other(100L, "Other"),
-
     IndiaEarthMovers(110L, " India Earth Movers"),
     Safexpress_Chhotu(120L, " Safexpress - Chhotu"),
     Safexpress_Delhivery(130L, " Safexpress - Delhivery"),
-
-    Delhivery_Ahmedabad(140L, "Delhivery - Ahmedabad"),
-    Delhivery_Bangalore(150L, "Delhivery - Bangalore"),
-    Delhivery_Chennai(160L, "Delhivery - Chennai"),
-
+    Safexpress(170L, " Safexpress"),
     EarthMoversPune(200L, "Earth Movers Pune"),
-
     HK_Delivery(500L, "HealthKart Delivery"),
 
     MIGRATE(-1L, "MIGRATE");
@@ -64,6 +56,14 @@ public enum EnumCourier {
         return courier;
     }
 
+    public static EnumCourier getEnumCourierFromCourierId(Long id) {
+        for (EnumCourier enumCourier : values()) {
+            if (enumCourier.getId().equals(id))
+                return enumCourier;
+        }
+        return null;
+    }
+
     public static List<Long> getCourierIDs(List<EnumCourier> enumCourierList) {
         List<Long> courierIds = new ArrayList<Long>();
         for (EnumCourier enumCourier : enumCourierList) {
@@ -73,18 +73,15 @@ public enum EnumCourier {
     }
 
 
-    public static List<EnumCourier> getRestOfIndiaAvailableCouriers() {
+    public static List<EnumCourier> getCurrentlyApplicableCouriers() {
         return Arrays.asList(
                 EnumCourier.DTDC_Plus,
                 EnumCourier.DTDC_Lite,
-                EnumCourier.BlueDart,
-                EnumCourier.BlueDart_COD,
-                EnumCourier.Speedpost,
                 EnumCourier.DTDC_Surface,
+                EnumCourier.DTDC_COD,
                 EnumCourier.Speedpost,
                 EnumCourier.Delhivery,
                 EnumCourier.Chhotu,
-                EnumCourier.OfficePickup,
                 EnumCourier.AFLWiz,
                 EnumCourier.BlueDart,
                 EnumCourier.BlueDart_COD,
@@ -92,16 +89,30 @@ public enum EnumCourier {
                 EnumCourier.FirstFLight_COD,
                 EnumCourier.IndiaEarthMovers,
                 EnumCourier.EarthMoversPune,
-                EnumCourier.DTDC_COD);
+                EnumCourier.HK_Delivery
+        );
     }
 
-  public static List<EnumCourier> getDelhiveryCouriers(){
-    return Arrays.asList(
-   EnumCourier.Delhivery,
-   EnumCourier.Delhivery_Ahmedabad,
-     EnumCourier.Delhivery_Bangalore,
-     EnumCourier.Delhivery_Chennai);
-  }
+    public static List<Long> getDTDCCouriers() {
+        List<Long> dtdcCourierIds = new ArrayList<Long>();
+        dtdcCourierIds.add(EnumCourier.DTDC_COD.getId());
+        dtdcCourierIds.add(EnumCourier.DTDC_Lite.getId());
+        dtdcCourierIds.add(EnumCourier.DTDC_Plus.getId());
+        dtdcCourierIds.add(EnumCourier.DTDC_Surface.getId());
+        return dtdcCourierIds;
+    }
 
+    public static List<Long> getBlueDartCouriers() {
+        List<Long> blueDartCourierIds = new ArrayList<Long>();
+        blueDartCourierIds.add(EnumCourier.BlueDart.getId());
+        blueDartCourierIds.add(EnumCourier.BlueDart_COD.getId());
+        return blueDartCourierIds;
+    }
+
+    public static List<Long> getDelhiveryCourierIds() {
+        List<Long> delhiveryCourierIds = new ArrayList<Long>();
+        delhiveryCourierIds.add(EnumCourier.Delhivery.getId());
+        return delhiveryCourierIds;
+    }
 }
 
