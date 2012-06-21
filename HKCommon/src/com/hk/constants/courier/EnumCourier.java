@@ -26,6 +26,7 @@ public enum EnumCourier {
     IndiaEarthMovers(110L, " India Earth Movers"),
     Safexpress_Chhotu(120L, " Safexpress - Chhotu"),
     Safexpress_Delhivery(130L, " Safexpress - Delhivery"),
+    Safexpress(170L, " Safexpress"),
     EarthMoversPune(200L, "Earth Movers Pune"),
     HK_Delivery(500L, "HealthKart Delivery"),
 
