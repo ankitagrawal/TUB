@@ -5,6 +5,7 @@ import com.hk.pact.dao.BaseDao;
 import net.sourceforge.stripes.validation.TypeConverter;
 import net.sourceforge.stripes.validation.ValidationError;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.Locale;
@@ -16,6 +17,7 @@ import java.util.Locale;
  * Time: 6:01:45 PM
  * To change this template use File | Settings | File Templates.
  */
+@Component
 public class StateTypeConverter  implements TypeConverter<State> {
 
   @Autowired

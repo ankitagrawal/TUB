@@ -11,21 +11,21 @@
          <fieldset class="right_label">
         <ul>
          <s:form beanclass="com.hk.web.action.admin.courier.CityCourierTatAction">
-             <li>
-             <label>Select City To Upload File</label>
-              <s:select name="City">
-              <s:option>-All-</s:option>
-                  <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="cityList" label="name"
-                           value="id"></hk:master-data-collection>
-              </s:select>
-             </li>
+             <%--<li>--%>
+             <%--<label>Select City To Upload File</label>--%>
+              <%--<s:select name="City">--%>
+              <%--<s:option>-All-</s:option>--%>
+                  <%--<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="cityList" label="name"--%>
+                           <%--value="id"></hk:master-data-collection>--%>
+              <%--</s:select>--%>
+             <%--</li>--%>
              <div class="grid_4">
               <li><label>File to Upload</label>
                    <s:file name="fileBean" size="30"/>
                  </li>
                 <li>
             <div class="buttons">
-              <s:submit name="" value="Upload"/>
+              <s:submit name="uploadCityExcel" value="Upload"/>
             </div>
           </li>
              </div>

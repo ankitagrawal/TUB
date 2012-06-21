@@ -1,11 +1,11 @@
 package com.hk.web.action.admin.courier;
 
+import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.util.helper.XslCityCourierTATParser;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.courier.CityCourierTAT;
-import com.akube.framework.stripes.action.BaseAction;
 import net.sourceforge.stripes.action.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,9 +29,11 @@ public class CityCourierTatAction extends BaseAction {
   XslCityCourierTATParser xslCityCourierTATParser;
   @Autowired
   CourierService courierService;
+
   @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
   String adminUploadsPath;
-  FileBean fileBean;
+  private FileBean fileBean;
+
 
   @DefaultHandler
   public Resolution pre() {
@@ -72,6 +74,9 @@ public class CityCourierTatAction extends BaseAction {
     finally {
       excelFile.delete();
     }
+  }
+  public void setFileBean(FileBean fileBean) {
+    this.fileBean = fileBean;
   }
 
 }

@@ -35,8 +35,8 @@ public class CourierServiceImpl implements CourierService {
     private CourierDao            courierDao;
     @Autowired
     private CourierServiceInfoDao courierServiceInfoDao;
-  @Autowired
-  private BaseDao baseDao;
+    @Autowired
+    private BaseDao baseDao;
 
     @Override
     public Courier getCourierById(Long courierId) {

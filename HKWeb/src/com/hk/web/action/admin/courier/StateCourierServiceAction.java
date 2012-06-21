@@ -23,6 +23,7 @@ public class StateCourierServiceAction extends BaseAction {
   StateCourierServiceDao stateCourierServiceDao;
   @Autowired
   PincodeDao pincodeDao;
+
  private StateCourierService stateCourierService;
 
   private List<StateCourierService> stateCourierServiceList = null;
