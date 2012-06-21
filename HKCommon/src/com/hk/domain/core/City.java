@@ -1,7 +1,6 @@
 package com.hk.domain.core;
 
-import javax.persistence.Id;
-import javax.persistence.Column;
+import javax.persistence.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -10,10 +9,13 @@ import javax.persistence.Column;
  * Time: 7:15:12 PM
  * To change this template use File | Settings | File Templates.
  */
+@Entity
+@Table(name = "city")
 public class City implements java.io.Serializable{
 
   @Id
   @Column(name = "id", unique = true, nullable = false)
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
 

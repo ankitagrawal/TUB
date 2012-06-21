@@ -101,6 +101,7 @@ public class XslCityCourierTATParser {
           throw new ExcelBlankFieldException("cityTAT cannot be empty " + "    ", rowCount);
         }
         cityObj.setTurnaroundTime(XslUtil.getLong(cityTAT));
+        citySet.add(cityObj);
       }
     } catch (ExcelBlankFieldException e) {
       throw new ExcelBlankFieldException(e.getMessage());

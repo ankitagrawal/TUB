@@ -54,11 +54,11 @@ public class CityCourierTatAction extends BaseAction {
           courierService.saveCityCourierTAT(CityCourierTAT);
         }
         addRedirectAlertMessage(new SimpleMessage("database updated"));
-        return new RedirectResolution("/pages/admin/updateCourierAWB.jsp");
+        return new RedirectResolution("/pages/admin/uploadCityCourierTAT.jsp");
       } else {
 
         addRedirectAlertMessage(new SimpleMessage("Empty Excel Sheet"));
-        return new RedirectResolution("/pages/admin/updateCourierAWB.jsp");
+        return new RedirectResolution("/pages/admin/uploadCityCourierTAT.jsp");
 
       }
 
@@ -68,7 +68,7 @@ public class CityCourierTatAction extends BaseAction {
       }
 
       addRedirectAlertMessage(new SimpleMessage("Error in uploading file"));
-      return new RedirectResolution("/pages/admin/updateCourierAWB.jsp");
+      return new RedirectResolution("/pages/admin/uploadCityCourierTAT.jsp");
     }
 
     finally {

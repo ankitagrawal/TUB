@@ -7,6 +7,7 @@ import com.hk.pact.dao.BaseDao;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -17,6 +18,7 @@ import java.util.List;
  * Time: 11:12:04 AM
  * To change this template use File | Settings | File Templates.
  */
+@Service
 public class CourierStateCityServiceImpl extends BaseDaoImpl implements CourierStateCityService {
      @Autowired
      BaseDao baseDao;
@@ -29,7 +31,7 @@ public class CourierStateCityServiceImpl extends BaseDaoImpl implements CourierS
       return cityList.get(0);
      }
      else
-       return null;
+       return null;                                                
    } 
    public boolean isValidCity(String name){
      name=name.trim();

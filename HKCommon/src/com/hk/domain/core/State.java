@@ -1,9 +1,6 @@
 package com.hk.domain.core;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Id;
-import javax.persistence.Column;
+import javax.persistence.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -13,7 +10,7 @@ import javax.persistence.Column;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name = "city")
+@Table(name = "state")
 public class State implements java.io.Serializable {
 
   @Id

@@ -21,7 +21,7 @@ public class CityCourierTAT {
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "city")
+  @JoinColumn(name = "city_id")
   private City city;
 
 
