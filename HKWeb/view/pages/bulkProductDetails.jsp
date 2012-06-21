@@ -150,7 +150,7 @@
                   <s:checkbox name="toBeEditedOptions" value="productVariantFollAvailDate"/>FOLLWING AVAILABLE DATE
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions" value="productVariantHasFreeProductVariant"/>FREE PRODUCT VARIANT
+                  <s:checkbox name="toBeEditedOptions" value="productVariantHasFreeProductVariant"/>FREE PRODUCT VARIANT
                 <div style="margin-top: 10px"></div>
             </fieldset>
           </div>
@@ -169,6 +169,14 @@
     </s:form>
   </s:layout-component>
 </s:layout-render>
+<style type="text/css">
+  .clear {
+    clear: both;
+    height: 1px;
+    overflow: hidden;
+    margin-top: -1px;
+  }
+</style>
 <script type="text/javascript">
   $(document).ready(function() {
     $('#hkPrice').click(function() {
