@@ -97,7 +97,7 @@
         );
     </c:if>                                                                         
 
-   // pageTracker._trackTrans();
+    pageTracker._trackTrans();
 
     //track order count
     pageTracker._setCustomVar(
