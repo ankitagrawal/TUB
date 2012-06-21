@@ -71,9 +71,6 @@ public class TrackCourierAction extends BaseAction {
                 break;
 
             case Delhivery:
-            case Delhivery_Ahmedabad:
-            case Delhivery_Bangalore:
-            case Delhivery_Chennai:
                 courierName = CourierConstants.DELHIVERY;
                 JsonObject jsonObject = null;
                 try {
@@ -139,81 +136,6 @@ public class TrackCourierAction extends BaseAction {
         }
         return resolution;
     }
-
-
-    /*if (courierId.equals(EnumCourier.Aramex.getId())) {
-       resolution = new RedirectResolution("http://www.aramex.com/track_results_multiple.aspx", false).addParameter("ShipmentNumber", trackingId);
-
-   } *//*else if (courierId.equals(EnumCourier.DTDC_Plus.getId()) || courierId.equals(EnumCourier.DTDC_Lite.getId()) || courierId.equals(EnumCourier.DTDC_COD.getId())) {
-            resolution = new RedirectResolution("http://www.dtdc.in/dtdcTrack/Tracking/consignInfo.asp", false)
-                    .addParameter("action", "track")
-                    .addParameter("sec", "tr")
-                    .addParameter("strCnno", trackingId)
-                    .addParameter("TType", "cnno");
-
-        } *//*
-        else if (courierId.equals(EnumCourier.AFLWiz.getId())) {
-            resolution = new RedirectResolution("http://trackntrace.aflwiz.com/aflwizhtmltrack", false).addParameter("shpntnum", trackingId);
-
-        } else if (courierId.equals(EnumCourier.Speedpost.getId())) {
-            resolution = new RedirectResolution("/pages/indiaPostCourier.jsp");
-
-        } else if (courierId.equals(EnumCourier.FirstFLight.getId()) || courierId.equals(EnumCourier.FirstFLight_COD.getId())) {
-            resolution = new RedirectResolution("http://www.firstflight.net/n_contrac_new.asp", false).addParameter("tracking1", trackingId);
-
-        } else if (EnumCourier.getDelhiveryCourierIds().contains(courierId)) {
-            courierName = CourierConstants.DELHIVERY;
-            JsonObject jsonObject = courierStatusUpdateHelper.updateDeliveryStatusDelhivery(trackingId);
-            if (jsonObject != null) {
-                if (!jsonObject.has("Error")) {
-                    status = jsonObject.getAsJsonObject("Status").get("Status").getAsString();
-                    awb = jsonObject.get("AWB").getAsString();
-                    paymentType = jsonObject.get("OrderType").getAsString();
-                }
-                resolution = new ForwardResolution("/pages/courierDetails.jsp");
-            } else {
-                resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
-            }
-        } else if (courierId.equals(EnumCourier.Chhotu.getId())) {
-            chhotuCourierDelivery = courierStatusUpdateHelper.updateDeliveryStatusChhotu(trackingId);
-            if (chhotuCourierDelivery != null) {
-                resolution = new ForwardResolution("/pages/chhotuCourier.jsp");
-            } else {
-                resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
-            }
-
-        } else if (EnumCourier.getBlueDartCouriers().contains(courierId)) {
-            courierName = CourierConstants.BLUEDART;
-            Element ele = courierStatusUpdateHelper.updateDeliveryStatusBlueDart(trackingId);
-            if (ele != null) {
-                String responseStatus = ele.getChildText("Status");
-                if (!responseStatus.equals("Incorrect Waybill number or No Information")) {
-                    status = ele.getChildText("Status");
-                }
-                resolution = new ForwardResolution("/pages/courierDetails.jsp");
-            } else {
-                resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
-            }
-
-        } else if (EnumCourier.getDTDCCouriers().contains(courierId)) {
-            courierName = CourierConstants.DTDC;
-            Map<String, String> responseMap = courierStatusUpdateHelper.updateDeliveryStatusDTDC(trackingId);
-            if (responseMap != null) {
-                for (Map.Entry entryObj : responseMap.entrySet()) {
-                    if (entryObj.getKey().equals(CourierConstants.DTDC_INPUT_STR_STATUS)) {
-                        status = entryObj.getValue().toString();
-                    }
-                }
-                resolution = new ForwardResolution("/pages/courierDetails.jsp");
-            } else {
-                resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
-            }
-        } else {
-            resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
-        }
-        return resolution;
-    }
-*/
 
     public String getTrackingId() {
         return trackingId;

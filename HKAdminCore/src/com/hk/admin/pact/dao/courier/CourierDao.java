@@ -9,11 +9,9 @@ public interface CourierDao extends BaseDao {
 
     public Courier getCourierByName(String name);
 
-    public Courier getCourierById(Long courierId);
+    public List<Courier> getCourierByIds(List<Long> courierId);
 
     public List<Courier> getAllCouriers();
-
-    public List<Courier> listRestOfIndiaAvailableCouriers();
 
     public Courier getPreferredCourierForState(String state);
 
