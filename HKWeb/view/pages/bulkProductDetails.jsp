@@ -149,6 +149,9 @@
 
                   <s:checkbox name="toBeEditedOptions" value="productVariantFollAvailDate"/>FOLLWING AVAILABLE DATE
                 <div style="margin-top: 10px"></div>
+
+                <s:checkbox name="toBeEditedOptions" value="productVariantHasFreeProductVariant"/>FREE PRODUCT VARIANT
+                <div style="margin-top: 10px"></div>
             </fieldset>
           </div>
         </div>
