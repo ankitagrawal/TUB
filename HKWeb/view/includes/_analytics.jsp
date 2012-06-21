@@ -11,7 +11,7 @@
 </script>
 <script type="text/javascript">
   var pageTracker = _gat._getTracker("<%=AnalyticsConstants.gaCode%>");
-y</script>
+</script>
 <%
 
   String signupDate = (String) session.getAttribute(HealthkartConstants.Session.signupDate);
