@@ -1,11 +1,11 @@
 package com.hk.admin.util.helper;
 
+import com.hk.admin.pact.dao.courier.CityCourierTATDao;
 import com.hk.admin.pact.dao.courier.CourierDao;
 import com.hk.admin.pact.service.courier.CourierStateCityService;
 import com.hk.admin.util.XslUtil;
 import com.hk.constants.XslConstants;
 import com.hk.domain.core.City;
-import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.CityCourierTAT;
 import com.hk.domain.courier.Courier;
 import com.hk.exception.ExcelBlankFieldException;
@@ -41,6 +41,8 @@ public class XslCityCourierTATParser {
   CourierStateCityService courierStateCityService;
   @Autowired
   CourierDao courierDao;
+  @Autowired
+    CityCourierTATDao cityCourierTATDao;
 
 
   public Set<CityCourierTAT> readCityCourierTATExcel(File file) throws Exception {
@@ -84,8 +86,8 @@ public class XslCityCourierTATParser {
         if (city == null) {
           logger.error("Invalid City , Check  for spelling  " + city, rowCount);
           throw new ExcelBlankFieldException("Invalid City , Check  for spelling   " + "    ", rowCount);
-        }
-        cityObj.setCity(city);
+        }     
+
         if (StringUtils.isEmpty(courierId)) {
           logger.error("courier id cannot be null/empty");
           throw new ExcelBlankFieldException("courier ID  cannot be empty" + "    ", rowCount);
@@ -95,13 +97,25 @@ public class XslCityCourierTATParser {
           logger.error("courierId is not valid  " + courierId, rowCount);
           throw new ExcelBlankFieldException("courierId is not valid  " + "    ", rowCount);
         }
-        cityObj.setCourier(courier);
+
         if (StringUtils.isEmpty(cityTAT)) {
           logger.error(" cityTAT cannot be null/empty");
           throw new ExcelBlankFieldException("cityTAT cannot be empty " + "    ", rowCount);
         }
+        CityCourierTAT cityCourierTAT=  cityCourierTATDao.getCityTatByCity(city); 
+        if(cityCourierTAT != null){
+         cityCourierTAT.setCity(city);
+         cityCourierTAT.setCourier(courier);
+        cityCourierTAT.setTurnaroundTime(XslUtil.getLong(cityTAT));
+        citySet.add(cityCourierTAT);
+
+        }
+        else{
+        cityObj.setCity(city);
+         cityObj.setCourier(courier);
         cityObj.setTurnaroundTime(XslUtil.getLong(cityTAT));
         citySet.add(cityObj);
+        }
       }
     } catch (ExcelBlankFieldException e) {
       throw new ExcelBlankFieldException(e.getMessage());
@@ -165,17 +179,6 @@ public class XslCityCourierTATParser {
         columnIndex = key;
     }
     return columnIndex;
-  }
-
-  public static List<String> getIntersection(List<Awb> awbDatabase, List<Awb> awbSetFromExcel) {
-    List<String> commonCourierIds = new ArrayList<String>();
-    for (int i = 0; i < awbSetFromExcel.size(); i++) {
-      if (awbDatabase.contains(awbSetFromExcel.get(i))) {
-        commonCourierIds.add(awbSetFromExcel.get(i).getAwbNumber());
-      }
-
-    }
-    return commonCourierIds;
   }
 
 }

@@ -51,9 +51,8 @@ public class StateCourierServiceAction extends BaseAction {
   }
 
     public Resolution save() {
-//        stateCourierService.setState(state);
          stateCourierServiceDao.save(stateCourierService);
-       addRedirectAlertMessage(new SimpleMessage("state info saved"));
+       addRedirectAlertMessage(new SimpleMessage("state courier info saved"));
              return search();
 
   }
