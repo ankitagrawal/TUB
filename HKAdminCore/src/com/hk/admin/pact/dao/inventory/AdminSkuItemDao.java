@@ -34,6 +34,7 @@ public interface AdminSkuItemDao extends BaseDao {
   public void resetInventory(ProductVariant productVariant);
 
   public List<SkuGroup> getInStockSkuGroupsByCreateDate(Sku sku);
+  public List<SkuItem> getCheckedInSkuItems(SkuGroup skuGroup);
 
 
 }
