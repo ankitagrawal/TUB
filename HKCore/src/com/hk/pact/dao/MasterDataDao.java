@@ -93,4 +93,6 @@ public interface MasterDataDao {
   public List<RegionType> getRegionTypeList();
 
    public List<State> getStateList();
+
+   public List<City> getCityList();
 }

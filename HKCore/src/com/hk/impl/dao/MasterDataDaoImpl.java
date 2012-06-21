@@ -263,6 +263,9 @@ public class MasterDataDaoImpl implements MasterDataDao {
       return getBaseDao().getAll(State.class);
     }
 
+    public List<City> getCityList(){
+    return getBaseDao().getAll(City.class);
+    }
  
 }
 

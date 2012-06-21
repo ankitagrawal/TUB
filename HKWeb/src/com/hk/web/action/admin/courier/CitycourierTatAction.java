@@ -1,0 +1,77 @@
+package com.hk.web.action.admin.courier;
+
+import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.admin.util.helper.XslCityCourierTATParser;
+import com.hk.constants.core.Keys;
+import com.hk.constants.core.PermissionConstants;
+import com.hk.domain.courier.CityCourierTAT;
+import com.akube.framework.stripes.action.BaseAction;
+import net.sourceforge.stripes.action.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+
+import java.io.File;
+import java.util.Set;
+
+/**
+ * Created by IntelliJ IDEA.
+ * User:User
+ * Date: Jun 21, 2012
+ * Time: 12:06:34 PM
+ * To change this template use File | Settings | File Templates.
+ */
+@Secure(hasAnyPermissions = {PermissionConstants.COURIER_DELIVERY_REPORTS})
+@Component
+public class CityCourierTatAction extends BaseAction {
+  @Autowired
+  XslCityCourierTATParser xslCityCourierTATParser;
+  @Autowired
+  CourierService courierService;
+  @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
+  String adminUploadsPath;
+  FileBean fileBean;
+
+  @DefaultHandler
+  public Resolution pre() {
+    return new ForwardResolution("/pages/admin/uploadCityCourierTAT.jsp");
+  }
+
+  public Resolution uploadCityExcel() {
+    String excelFilePath = adminUploadsPath + "/courierFiles/city/" + System.currentTimeMillis() + ".xls";
+    File excelFile = new File(excelFilePath);
+    excelFile.getParentFile().mkdirs();
+    Set<CityCourierTAT> citySetFromExcel = null;
+
+    try {
+      fileBean.save(excelFile);
+      citySetFromExcel = xslCityCourierTATParser.readCityCourierTATExcel(excelFile);
+      if (null != citySetFromExcel && citySetFromExcel.size() > 0) {
+        for (CityCourierTAT CityCourierTAT : citySetFromExcel) {
+          courierService.saveCityCourierTAT(CityCourierTAT);
+        }
+        addRedirectAlertMessage(new SimpleMessage("database updated"));
+        return new RedirectResolution("/pages/admin/updateCourierAWB.jsp");
+      } else {
+
+        addRedirectAlertMessage(new SimpleMessage("Empty Excel Sheet"));
+        return new RedirectResolution("/pages/admin/updateCourierAWB.jsp");
+
+      }
+
+    } catch (Exception ex) {
+      if (citySetFromExcel == null) {
+        addRedirectAlertMessage(new SimpleMessage(ex.getMessage()));
+      }
+
+      addRedirectAlertMessage(new SimpleMessage("Error in uploading file"));
+      return new RedirectResolution("/pages/admin/updateCourierAWB.jsp");
+    }
+
+    finally {
+      excelFile.delete();
+    }
+  }
+
+}
