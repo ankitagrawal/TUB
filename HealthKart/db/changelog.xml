@@ -7560,7 +7560,23 @@
     <changeSet author="Seema (generated)" id="1340188264437-29">
         <addForeignKeyConstraint baseColumnNames="state_id" baseTableName="state_courier_service"  constraintName="fk_state_courier_service_state1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="state"  referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Seema (generated)" id="1340188264437-41">
-        <dropColumn columnName="state" tableName="state_courier_service"/>
+       <changeSet author="Seema (generated)" id="1340252626424-1">
+        <createTable tableName="city">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
     </changeSet>
+    <changeSet author="Seema (generated)" id="1340252626424-14">
+        <dropForeignKeyConstraint baseTableName="city_courier_tat" constraintName="city_fk"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340252626424-19">
+        <addForeignKeyConstraint baseColumnNames="city_id" baseTableName="city_courier_tat"  constraintName="fk_city_courier_tat_city1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="city"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340252626424-27">
+        <dropColumn columnName="city" tableName="city_courier_tat"/>
+    </changeSet>  
 </databaseChangeLog>
