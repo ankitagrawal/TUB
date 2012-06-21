@@ -1,35 +1,5 @@
 package com.hk.web.action.admin.inventory;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-import net.sourceforge.stripes.validation.SimpleError;
-import net.sourceforge.stripes.validation.ValidationMethod;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.dto.inventory.CreateInventoryFileDto;
 import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
@@ -39,6 +9,22 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.UserService;
+import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.validation.SimpleError;
+import net.sourceforge.stripes.validation.ValidationMethod;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 @Component
 public class CreateInventoryFileAction extends BaseAction {
@@ -190,6 +176,7 @@ public class CreateInventoryFileAction extends BaseAction {
                 Date expiryDate = dto.getExpiryDate();
                 Long sumQty = dto.getSumQty();
                 Double markedPrice = dto.getMarkedPrice();
+	            String batchNumber = dto.getBatchNumber();
                 ProductVariant productVariant = dto.getProductVariant();
                 String productOptionStringBuffer = productVariant.getOptionsSlashSeparated();
 
@@ -204,7 +191,7 @@ public class CreateInventoryFileAction extends BaseAction {
                 // getSubString(productOptionStringBuffer, strLength) + "\t" + date + "\t" + sumQty + "\t" +
                 // markedPrice;
                 data.append(productVariant.getId()).append("\t").append(barcode).append("\t").append(name).append("\t").append(productOptionStringBuffer).append("\t").append(date).append(
-                        "\t").append(sumQty).append("\t").append(markedPrice).append("\r\n");
+                        "\t").append(sumQty).append("\t").append(markedPrice).append("\t").append(batchNumber).append("\r\n");
 
             }
 
