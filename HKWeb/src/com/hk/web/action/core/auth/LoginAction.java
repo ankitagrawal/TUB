@@ -13,9 +13,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.session.Session;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.RoleConstants;
+import com.hk.constants.core.HealthkartConstants;
 import com.hk.dto.user.UserLoginDto;
 import com.hk.exception.HealthkartLoginException;
 import com.hk.manager.UserManager;
@@ -37,6 +39,9 @@ public class LoginAction extends BaseAction {
   private String redirectUrl;
   private boolean rememberMe;
   private String source;
+
+  @Session(key = HealthkartConstants.Session.userId)
+  private String userId;
 
   public static final String SOURCE_CHECKOUT = "checkout";
 
@@ -80,6 +85,7 @@ public class LoginAction extends BaseAction {
     // if(userLoginDto.getLoggedUser().getPrinter() != null) {
     // return new RedirectResolution(PrinterQueueAction.class);
     // }
+    userId=userLoginDto.getLoggedUser().getId().toString();
 
     if (!StringUtils.isBlank(redirectUrl)) {
       return new RedirectResolution(redirectUrl, false);

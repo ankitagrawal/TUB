@@ -6,7 +6,9 @@ import java.util.List;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.courier.Courier;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CourierSeedData extends BaseSeedData {
 
     public void insert(java.lang.String name, java.lang.Long id) {
