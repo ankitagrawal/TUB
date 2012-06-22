@@ -40,8 +40,8 @@ public class StateList {
   public static final String CHHATISGARH = "CHHATISGARH";
   public static final String MADHYA_PRADESH = "MADHYA PRADESH";
   public static final String GUJARAT = "GUJARAT";
-  public static final String DAMAN_AND_DIU = "DAMAN AND DIU";
-  public static final String DADRA_AND_NAGAR_HAVELI = "DADRA AND NAGAR HAVELI";
+  public static final String DAMAN_AND_DIU = "DAMAN & DIU";
+  public static final String DADRA_AND_NAGAR_HAVELI = "DADRA & NAGAR HAVELI";
   public static final String MAHARASHTRA = "MAHARASHTRA";
   public static final String ANDHRA_PRADESH = "ANDHRA PRADESH";
   public static final String KARNATAKA = "KARNATAKA";
@@ -50,7 +50,7 @@ public class StateList {
   public static final String KERALA = "KERALA";
   public static final String TAMIL_NADU = "TAMIL NADU";
   public static final String PUDUCHERRY = "PUDUCHERRY";
-  public static final String ANDAMAN_AND_NICOBAR_ISLAND = "ANDAMAN AND NICOBAR ISLAND";
+  public static final String ANDAMAN_AND_NICOBAR_ISLAND = "ANDAMAN & NICOBAR ISLANDS";
 
   public static final List<String> stateList = new ArrayList<String>() {
     {
