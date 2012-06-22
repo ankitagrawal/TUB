@@ -7567,14 +7567,14 @@
     <changeSet author="Seema (generated)" id="1340352635898-4">
         <addColumn tableName="pincode">
             <column name="city_id" type="INT">
-                <constraints nullable="true"/>
+                <constraints nullable="false"/>
             </column>
         </addColumn>
     </changeSet>
     <changeSet author="Seema (generated)" id="1340352635898-5">
         <addColumn tableName="pincode">
             <column name="state_id" type="INT">
-                <constraints nullable="true"/>
+                <constraints nullable="false"/>
             </column>
         </addColumn>
     </changeSet>
@@ -7621,12 +7621,12 @@
     <changeSet author="Seema (generated)" id="1340352635898-20">
         <dropColumn columnName="city" tableName="city_courier_tat"/>
     </changeSet>
-    <!--<changeSet author="Seema (generated)" id="1340352635898-21">-->
-        <!--<dropColumn columnName="city" tableName="pincode"/>-->
-    <!--</changeSet>-->
-    <!--<changeSet author="Seema (generated)" id="1340352635898-22">-->
-        <!--<dropColumn columnName="state" tableName="pincode"/>-->
-    <!--</changeSet>-->
+    <changeSet author="Seema (generated)" id="1340352635898-21">
+        <dropColumn columnName="city" tableName="pincode"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340352635898-22">
+        <dropColumn columnName="state" tableName="pincode"/>
+    </changeSet>
     <changeSet author="Seema (generated)" id="1340352635898-23">
         <dropColumn columnName="state" tableName="state_courier_service"/>
     </changeSet>
