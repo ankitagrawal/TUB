@@ -7567,14 +7567,14 @@
     <changeSet author="Seema (generated)" id="1340352635898-4">
         <addColumn tableName="pincode">
             <column name="city_id" type="INT">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
         </addColumn>
     </changeSet>
     <changeSet author="Seema (generated)" id="1340352635898-5">
         <addColumn tableName="pincode">
             <column name="state_id" type="INT">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
         </addColumn>
     </changeSet>
