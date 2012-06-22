@@ -145,6 +145,11 @@ public class ReportProductVariantServiceImpl implements ReportProductVariantServ
     return rtoReportDtoList;
   }
 
+  public List getReconciliationVoucherDetail(String productVariantId, Warehouse warehouse, Date startDate, Date endDate) {
+    List<RVReportDto> rvReportDtoList = reportProductVariantDao.getReconciliationVoucherDetail(productVariantId, warehouse, startDate, endDate);
+    return rvReportDtoList;
+  }
+
   public ReportProductVariantDao getReportProductVariantDao() {
     return reportProductVariantDao;
   }

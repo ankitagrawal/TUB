@@ -54,10 +54,7 @@ import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.report.dto.catalog.CategoryPerformanceDto;
-import com.hk.report.dto.inventory.InventorySoldDto;
-import com.hk.report.dto.inventory.ExpiryAlertReportDto;
-import com.hk.report.dto.inventory.RTOReportDto;
-import com.hk.report.dto.inventory.StockReportDto;
+import com.hk.report.dto.inventory.*;
 import com.hk.report.dto.order.CategoriesOrderReportDto;
 import com.hk.report.dto.order.OrderLifecycleStateTransitionDto;
 import com.hk.report.dto.order.ShipmentDto;
@@ -110,7 +107,7 @@ public class ReportAction extends BaseAction {
   @Autowired
   OrderDao orderDao;
   @Autowired
-  PaymentModeDao paymentModeDao;  
+  PaymentModeDao paymentModeDao;
   @Autowired
   ReconciliationStatusDaoImpl reconciliationStatusDao;
   @Autowired
@@ -787,6 +784,40 @@ public class ReportAction extends BaseAction {
     return new HTTPResponseResolution();
   }
 
+  public Resolution generateReconciliationVoucherReport() {
+    if (productIdListCommaSeparated != null) {
+      productIdArray = productIdListCommaSeparated.split(",");
+      for (String productId : productIdArray) {
+
+        List<RVReportDto> rvReportDtoList = getReportProductVariantService().getReconciliationVoucherDetail(productId, warehouse, startDate, endDate);
+        xlsFile = new File(adminDownloads + "/reports/ExpiryAlertReport.xls");
+        HkXlsWriter xlsWriter = new HkXlsWriter();
+        int xlsRow = 1;
+        xlsWriter.addHeader("SKU BATCH", "SKU BATCH");
+        xlsWriter.addHeader("PRODUCT VARIANT ID", "PRODUCT VARIANT ID");
+        xlsWriter.addHeader("PRODUCT NAME", "PRODUCT NAME");
+        xlsWriter.addHeader("PRODUCT OPTIONS", "PRODUCT OPTIONS");
+        xlsWriter.addHeader("STOCK LEFT", "STOCK LEFT");
+        xlsWriter.writeData(xlsFile, "ExpiryAlert_Report");
+
+        /*for (RVReportDto expiryAlertReportDto : rvReportDtoList) {
+          xlsWriter.addCell(xlsRow, expiryAlertReportDto.getBatchNumber());
+          xlsWriter.addCell(xlsRow, expiryAlertReportDto.getProductVariantId());
+          xlsWriter.addCell(xlsRow, expiryAlertReportDto.getProductName());
+          xlsWriter.addCell(xlsRow, expiryAlertReportDto.getProductOption());
+          xlsWriter.addCell(xlsRow, expiryAlertReportDto.getBatchQty());
+          xlsWriter.writeData(xlsFile, "ExpiryAlert_Report");
+
+          xlsRow++;
+        }*/
+        addRedirectAlertMessage(new SimpleMessage("Download complete"));
+
+        return new HTTPResponseResolution();
+      }
+    }
+    return null;
+  }
+
   public Date getStartDate() {
     return startDate;
   }
@@ -1180,5 +1211,13 @@ public class ReportAction extends BaseAction {
 
   public void setWarehouse(Warehouse warehouse) {
     this.warehouse = warehouse;
+  }
+
+  public ReportProductVariantService getReportProductVariantService() {
+    return reportProductVariantService;
+  }
+
+  public void setReportProductVariantService(ReportProductVariantService reportProductVariantService) {
+    this.reportProductVariantService = reportProductVariantService;
   }
 }

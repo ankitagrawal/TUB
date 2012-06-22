@@ -92,4 +92,13 @@ public class ReportProductVariantDaoImpl extends BaseDaoImpl implements ReportPr
         .setParameter("endDate", endDate).setParameter("shippingOrderStatus", shippingOrderStatus.getId()).list();
   }
 
+  public List<RVReportDto> getReconciliationVoucherDetail(String productVariantId, Warehouse warehouse, Date startDate, Date endDate) {
+    String query = "select coalesce(sum(pvi.qty), 0) as qtyRV, rv as reconciliationVoucher, pvi as productVariantInventory " +
+        " from ProductVariantInventory pvi join pvi.rvLineItem rvli join rvli.reconciliationVoucher rv " +
+        " where pvi.sku.productVariant.id = :productVariant and pvi.txnDate between :startDate and :endDate " +
+        " and pvi.sku.warehouse = :warehouse group by rv ";
+    return (List<RVReportDto>) findByNamedParams(query, new String[]{"productVariant", "warehouse", "startDate", "endDate"},
+        new Object[]{productVariantId, warehouse, startDate, endDate});
+  }
+
 }

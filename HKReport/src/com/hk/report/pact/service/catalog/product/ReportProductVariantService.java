@@ -19,4 +19,7 @@ public interface ReportProductVariantService {
   public StockReportDto getStockDetailsByProductVariant(String productVariantId, Warehouse warehouse, Date startDate, Date endDate);
 
   public List<RTOReportDto> getRTOProductsDetail(Date startDate, Date endDate);
+
+  public List getReconciliationVoucherDetail(String productVariantId, Warehouse warehouse, Date startDate, Date endDate);
+
 }
