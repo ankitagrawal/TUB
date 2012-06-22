@@ -255,10 +255,16 @@ public class MasterDataDaoImpl implements MasterDataDao {
   public List<RegionType> getRegionTypeList() {
     return getBaseDao().getAll(RegionType.class);
   }
+  public List<State> getStateList() {
+      return getBaseDao().getAll(State.class);
+    }
 
+    public List<City> getCityList(){
+    return getBaseDao().getAll(City.class);
+    }
+ 
    public List<Courier> getCourierList() {
        return courierDao.getCourierByIds(EnumCourier.getCourierIDs(EnumCourier.getCurrentlyApplicableCouriers()));
    }
-
 }
 

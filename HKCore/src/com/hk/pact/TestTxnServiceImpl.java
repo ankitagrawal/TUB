@@ -1,12 +1,13 @@
 package com.hk.pact;
 
+import com.hk.domain.core.City;
+import com.hk.domain.core.Pincode;
+import com.hk.domain.core.State;
+import com.hk.pact.dao.BaseDao;
+import com.hk.pact.service.TestTxnService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.hk.domain.core.Pincode;
-import com.hk.pact.dao.BaseDao;
-import com.hk.pact.service.TestTxnService;
 
 @Service
 public class TestTxnServiceImpl implements TestTxnService {
@@ -26,10 +27,16 @@ public class TestTxnServiceImpl implements TestTxnService {
         // TestTxnService testService = ServiceLocatorFactory.getService(TestTxnService.class);
 
         Pincode pincode = new Pincode();
-        pincode.setCity("test2");
+      City city= new City();
+      city.setId(9999L);
+      city.setName("test2");
+        pincode.setCity(city);
         String code = Double.valueOf(Math.random()).toString().substring(0, 4);
         pincode.setPincode(code);
-        pincode.setState("testState2");
+          State state= new State();
+      state.setId(9999L);
+      state.setName("testState2");
+        pincode.setState(state);
 
         getBaseDao().save(pincode);
 

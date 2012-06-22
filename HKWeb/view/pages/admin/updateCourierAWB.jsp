@@ -42,6 +42,10 @@
               <s:submit name="uploadCourierAWBExcel" value="Upload"/>
             </div>
           </li>
+            <li>
+            Excel in Format COURIER_ID (int) ,AWB_NUMBER (alphanumeric) ,COD (1 if COD , 0 if tech process) , WAREHOUSE (1 for Gurgaon 2, Mumbai)
+               
+            </li>
         </div>
         </s:form>
       </ul>
