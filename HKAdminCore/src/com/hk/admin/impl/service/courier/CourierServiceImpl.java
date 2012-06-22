@@ -27,13 +27,13 @@ import java.util.Random;
 public class CourierServiceImpl implements CourierService {
 
     @Autowired
-    private PaymentService        paymentService;
+    private PaymentService paymentService;
     @Autowired
-    private UserService           userService;
+    private UserService userService;
     @Autowired
-    private PincodeService        pincodeService;
+    private PincodeService pincodeService;
     @Autowired
-    private CourierDao            courierDao;
+    private CourierDao courierDao;
     @Autowired
     private CourierServiceInfoDao courierServiceInfoDao;
     @Autowired
@@ -42,7 +42,7 @@ public class CourierServiceImpl implements CourierService {
     @Override
     public Courier getCourierById(Long courierId) {
         List<Courier> courierList = getCourierDao().getCourierByIds(Arrays.asList(courierId));
-        return  courierList != null && courierList.size() > 0 ? courierList.get(0) : null;
+        return courierList != null && courierList.size() > 0 ? courierList.get(0) : null;
     }
 
     @Override
@@ -53,8 +53,8 @@ public class CourierServiceImpl implements CourierService {
     public List<Courier> getAllCouriers() {
         return getCourierDao().getAllCouriers();
     }
-    
-    public CourierServiceInfo getCourierServiceByPincodeAndCourier(Long courierId, String pincode, Boolean isCod){
+
+    public CourierServiceInfo getCourierServiceByPincodeAndCourier(Long courierId, String pincode, Boolean isCod) {
         return getCourierServiceInfoDao().getCourierServiceByPincodeAndCourier(courierId, pincode, isCod);
     }
 
@@ -198,8 +198,9 @@ public class CourierServiceImpl implements CourierService {
     public void setPincodeService(PincodeService pincodeService) {
         this.pincodeService = pincodeService;
     }
-   public void saveCityCourierTAT(CityCourierTAT cityCourierTAT){
-    baseDao.save(cityCourierTAT);
-   }
+
+    public void saveCityCourierTAT(CityCourierTAT cityCourierTAT) {
+        baseDao.save(cityCourierTAT);
+    }
 
 }

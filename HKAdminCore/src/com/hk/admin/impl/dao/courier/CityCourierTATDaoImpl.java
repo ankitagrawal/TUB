@@ -20,15 +20,15 @@ import java.util.List;
 @Repository
 public class CityCourierTATDaoImpl extends BaseDaoImpl implements CityCourierTATDao {
 
-   public CityCourierTAT getCityTatByCity(City city){
-        DetachedCriteria  cityCourierTATCriteria= DetachedCriteria.forClass(CityCourierTAT.class);
-      cityCourierTATCriteria.add(Restrictions.eq("city",city));
-      List<CityCourierTAT> cityCourierTAList=(List<CityCourierTAT>) findByCriteria(cityCourierTATCriteria);
-     if(cityCourierTAList != null  && cityCourierTAList.size() >0){
-       return cityCourierTAList.get(0);
-     }
-     return null;
-   }
+    public CityCourierTAT getCityTatByCity(City city) {
+        DetachedCriteria cityCourierTATCriteria = DetachedCriteria.forClass(CityCourierTAT.class);
+        cityCourierTATCriteria.add(Restrictions.eq("city", city));
+        List<CityCourierTAT> cityCourierTAList = (List<CityCourierTAT>) findByCriteria(cityCourierTATCriteria);
+        if (cityCourierTAList != null && cityCourierTAList.size() > 0) {
+            return cityCourierTAList.get(0);
+        }
+        return null;
+    }
 
 
 }
