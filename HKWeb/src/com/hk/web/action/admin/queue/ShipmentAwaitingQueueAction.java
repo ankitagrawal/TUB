@@ -85,7 +85,6 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
   private Date                       endDate;
   @Autowired
   private UserService                userService;
-  @Autowired
   private Warehouse                  warehouse;
 
   @DontValidate
