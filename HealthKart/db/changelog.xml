@@ -7630,4 +7630,10 @@
     <changeSet author="Seema (generated)" id="1340352635898-23">
         <dropColumn columnName="state" tableName="state_courier_service"/>
     </changeSet>
+    <changeSet author="Seema (generated)" id="1340372396933-2">
+        <addNotNullConstraint columnDataType="INT" columnName="city_id" tableName="pincode"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340372396933-3">
+        <addNotNullConstraint columnDataType="INT" columnName="state_id" tableName="pincode"/>
+    </changeSet>
 </databaseChangeLog>
