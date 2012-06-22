@@ -49,7 +49,7 @@ public class EmailCampaign implements java.io.Serializable {
     @Column(name = "min_day_gap", nullable = false)
     private Long      minDayGap;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "email_type_id")
     private EmailType emailType;
 
