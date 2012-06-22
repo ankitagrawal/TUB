@@ -13,7 +13,7 @@
     <jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
 
   </s:layout-component>
-  <s:layout-component name="heading">Split Shipping Order Manually</s:layout-component>
+  <s:layout-component name="heading">Split Shipping Order (for Partial Esc.)</s:layout-component>
   <s:layout-component name="content">
     <s:form beanclass="com.hk.web.action.admin.shippingOrder.SplitShippingOrderAction">
       <table width="80%" class="align_top">
@@ -21,7 +21,7 @@
         <tr>
           <th>Product Variant</th>
           <th>Quantity</th>
-          <th>Warehouse</th>
+          <th>Select Items For New SO</th>
         </tr>
         </thead>
 

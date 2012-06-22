@@ -43,7 +43,7 @@
 -/nutrition/weight-management
 --/nutrition/weight-management/fat-burner
 --/nutrition/weight-management/appetite-control :Appetite Control
---/nutrition/weight-management/weight-maintenance  :weight Maintenance
+--/nutrition/weight-management/weight-maintenance :Weight Maintenance
 --/nutrition/weight-management/meal-replacement :Meal Replacement
 --/nutrition/weight-management/low-calorie-food
 --/nutrition/weight-management/sweetener

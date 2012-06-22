@@ -1,5 +1,9 @@
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
+<%@ page import="com.hk.domain.email.EmailCampaign" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.Collection" %>
+<%@ page import="java.util.Collections" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -32,6 +36,10 @@
         <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${emailBean}"/>
 
         <c:if test="${!empty emailBean.emailCampaigns}">
+          <%
+            List<EmailCampaign> emailCampaigns = emailBean.getEmailCampaigns();
+            Collections.reverse(emailCampaigns);
+          %>
           <table>
             <thead>
             <tr>
@@ -43,7 +51,7 @@
               <th>sent count</th>
             </tr>
             </thead>
-            <c:forEach items="${emailBean.emailCampaigns}" var="emailCampaign">
+            <c:forEach items="<%=emailCampaigns%>" var="emailCampaign">
               <tr class="emailCampaignRow">
                 <td><s:radio value="${emailCampaign}" name="emailCampaign"/></td>
                 <td class="emailCampaignId">${emailCampaign.id}</td>

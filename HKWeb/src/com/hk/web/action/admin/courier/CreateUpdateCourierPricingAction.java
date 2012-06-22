@@ -26,8 +26,8 @@ public class CreateUpdateCourierPricingAction extends BaseAction {
   BaseDao baseDao;
   private CourierPricingEngine courierPricingEngine;
 
-  Courier courier;
-  RegionType regionType;
+  private Courier courier;
+  private RegionType regionType;
 
   @DefaultHandler
   public Resolution pre() {

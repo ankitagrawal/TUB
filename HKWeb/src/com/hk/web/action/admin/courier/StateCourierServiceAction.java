@@ -3,7 +3,9 @@ package com.hk.web.action.admin.courier;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.StateList;
+import com.hk.domain.core.State;
 import com.hk.domain.courier.StateCourierService;
+import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.pact.dao.courier.StateCourierServiceDao;
 import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
@@ -19,18 +21,23 @@ import java.util.List;
 public class StateCourierServiceAction extends BaseAction {
   @Autowired
   StateCourierServiceDao stateCourierServiceDao;
+  @Autowired
+  PincodeDao pincodeDao;
 
+ private StateCourierService stateCourierService;
 
   private List<StateCourierService> stateCourierServiceList = null;
-  private String state;
+  private State state;
 
   private List<String> stateList = new ArrayList<String>();
+   private boolean displayAddNewRow;
+
 
 
   @DefaultHandler
   @DontValidate
   public Resolution pre() {
-    setStateList(StateList.stateList);
+    displayAddNewRow=false;
     return new ForwardResolution("/pages/admin/stateCourierService.jsp");
   }
 
@@ -40,7 +47,24 @@ public class StateCourierServiceAction extends BaseAction {
     if (stateCourierServiceList != null && stateCourierServiceList.size() > 0) {
       setStateCourierServiceList(stateCourierServiceList);
     }
-    return new RedirectResolution(StateCourierServiceAction.class);
+     return new ForwardResolution("/pages/admin/stateCourierService.jsp");
+  }
+
+    public Resolution save() {
+         stateCourierServiceDao.save(stateCourierService);
+       addRedirectAlertMessage(new SimpleMessage("state courier info saved"));
+             return search();
+
+  }
+
+  public Resolution  addNewRow(){
+    setStateList(StateList.stateList);
+    if(state == null){
+     addRedirectAlertMessage(new SimpleMessage("Select State"));
+    return new ForwardResolution("/pages/admin/stateCourierService.jsp");
+    }
+   setDisplayAddNewRow(true);
+     return search(); 
   }
 
   public List<StateCourierService> getStateCourierServiceList() {
@@ -51,11 +75,11 @@ public class StateCourierServiceAction extends BaseAction {
     this.stateCourierServiceList = stateCourierServiceList;
   }
 
-  public String getState() {
+  public State getState() {
     return state;
   }
 
-  public void setState(String state) {
+  public void setState(State state) {
     this.state = state;
   }
 
@@ -67,4 +91,19 @@ public class StateCourierServiceAction extends BaseAction {
     return stateList;
   }
 
+  public StateCourierService getStateCourierService() {
+    return stateCourierService;
+  }
+
+  public void setStateCourierService(StateCourierService stateCourierService) {
+    this.stateCourierService = stateCourierService;
+  }
+
+  public boolean isDisplayAddNewRow() {
+    return displayAddNewRow;
+  }
+
+  public void setDisplayAddNewRow(boolean displayAddNewRow) {
+    this.displayAddNewRow = displayAddNewRow;
+  }
 }
