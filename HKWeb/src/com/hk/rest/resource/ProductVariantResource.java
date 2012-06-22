@@ -8,6 +8,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
+import com.hk.domain.store.StoreProduct;
+import com.hk.pact.service.store.StoreService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,14 +35,13 @@ import com.hk.constants.core.Keys;
 @Component
 public class ProductVariantResource {
 
-  private static final String SHEET_NAME_MIH_PRICING = "MIHPricing";
-
   @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
   String                      adminUploadsPath;
 
   private ProductVariantService productVariantService;
   private InventoryService inventoryService;
   private SkuService skuService;
+  private StoreService storeService;
 
   private static Logger logger                    = LoggerFactory.getLogger(ProductVariantResource.class);
 
@@ -71,9 +72,13 @@ public class ProductVariantResource {
       isVisible = true;
     }
     int visibleNumber = isVisible ? 1: 0;
-    Map<String, Double> pricingMap=getMIHPricingMap();
-    if(pricingMap.containsKey(variantId)){
-      return new JSONResponseBuilder().addField("hkPrice", (Double)pricingMap.get(variantId)).addField("mrp", productVariant.getMarkedPrice()).addField("isVisible",visibleNumber).build();
+
+    //below line needs to be changed as it is hardcoded for the MIH Store
+    StoreProduct storeProduct=getStoreService().getStoreProductByHKVariantAndStore(getProductVariantService().getVariantById(StringUtils.trim(variantId)), getStoreService().getStoreById(getStoreService().MIH_STORE_ID));
+
+    if(storeProduct !=null && !storeProduct.isHidden()){
+        //don't get confused hkPrice field is actually the store price
+      return new JSONResponseBuilder().addField("hkPrice", storeProduct.getStorePrice()).addField("mrp", productVariant.getMarkedPrice()).addField("isVisible",visibleNumber).build();
     }else{
       return new JSONResponseBuilder().addField("hkPrice", productVariant.getHkPrice()).addField("mrp", productVariant.getMarkedPrice()).addField("isVisible",visibleNumber).build();
     }
@@ -93,6 +98,13 @@ public class ProductVariantResource {
     return inventoryService;
   }
 
+    public StoreService getStoreService() {
+        if (storeService == null) {
+            storeService = ServiceLocatorFactory.getService(StoreService.class);
+        }
+        return storeService;
+    }
+
   public SkuService getSkuService() {
     if (skuService == null) {
       skuService = ServiceLocatorFactory.getService(SkuService.class);
@@ -100,26 +112,4 @@ public class ProductVariantResource {
     return skuService;
   }
 
-  private Map<String,Double> getMIHPricingMap() {
-    Map<String, Double> pricingMap=new HashMap<String,Double>();
-    try {
-        String excelFilePath = adminUploadsPath + "/mihFiles/mihPricing.xls";
-      //String excelFilePath ="E:\\test\\mihpricing.xls";
-      ExcelSheetParser parser = new ExcelSheetParser(excelFilePath, SHEET_NAME_MIH_PRICING);
-      Iterator<HKRow> rowIterator = parser.parse();
-
-      while (null != rowIterator && rowIterator.hasNext()) {
-        HKRow curHkRow = rowIterator.next();
-
-        int i = 0;
-        while (null != curHkRow && curHkRow.columnValues != null && i < curHkRow.columnValues.length) {
-          pricingMap.put(StringUtils.trim(curHkRow.getColumnValue(i)), new Double(curHkRow.getColumnValue(i+1)));
-          i+=2;
-        }
-      }
-    } catch (Exception e) {
-      logger.error("Exception while reading excel sheet.", e);
-    }
-     return pricingMap;
-  }
 }

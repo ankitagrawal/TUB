@@ -3,6 +3,8 @@ package com.hk.impl.dao;
 import java.util.Arrays;
 import java.util.List;
 
+import com.hk.domain.store.Store;
+import com.hk.pact.service.store.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -50,6 +52,8 @@ public class MasterDataDaoImpl implements MasterDataDao {
   private RoleService roleService;
   @Autowired
   private MarketingService marketingService;
+  @Autowired
+  private StoreService storeService;
 
   public List<PaymentStatus> getPaymentStatusList() {
     return getBaseDao().getAll(PaymentStatus.class);
@@ -208,7 +212,15 @@ public class MasterDataDaoImpl implements MasterDataDao {
     this.baseDao = baseDao;
   }
 
-  public UserService getUserService() {
+    public StoreService getStoreService() {
+        return storeService;
+    }
+
+    public void setStoreService(StoreService storeService) {
+        this.storeService = storeService;
+    }
+
+    public UserService getUserService() {
     return userService;
   }
 
@@ -259,6 +271,12 @@ public class MasterDataDaoImpl implements MasterDataDao {
 
   public List<RegionType> getRegionTypeList() {
     return getBaseDao().getAll(RegionType.class);
+  }
+
+  public List<Store> getStoreList(){
+     List<Store> storeList=getStoreService().getAllStores();
+     storeList.remove(getStoreService().getDefaultStore());
+     return storeList;
   }
 }
 
