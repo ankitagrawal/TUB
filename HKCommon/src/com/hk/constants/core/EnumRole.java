@@ -74,6 +74,30 @@ public enum EnumRole {
                 EnumRole.HK_IHO_USER.getRoleName());
     }
 
+    public static List<String> listCustomerSupportRoles() {
+        return Arrays.asList(
+                EnumRole.COD_BLOCKED.getRoleName(),
+                EnumRole.CUSTOMER_SUPPORT.getRoleName(),
+                EnumRole.CUSTOMER_SUPPORT_L2.getRoleName(),
+                EnumRole.COUPON_BLOCKED.getRoleName(),
+                EnumRole.HK_BLOCKED.getRoleName(),
+                EnumRole.HK_DEACTIVATED.getRoleName(),
+                EnumRole.HK_DELETED.getRoleName(),
+                EnumRole.HK_UNVERIFIED.getRoleName(),
+                EnumRole.TEMP_USER.getRoleName(),
+                EnumRole.UNSUBSCRIBED_USER.getRoleName(),
+                EnumRole.HK_USER.getRoleName(),
+                EnumRole.HK_IHO_USER.getRoleName());
+    }
+
+    public static List<String> listOpsRoles() {
+        return Arrays.asList(
+                EnumRole.HK_USER.getRoleName(),
+                EnumRole.OPS_MANAGER.getRoleName(),
+                EnumRole.WH_EMPLOYEE.getRoleName(),
+                EnumRole.WH_MANAGER.getRoleName());
+    }
+
     public Role toRole() {
     Role role = new Role();
     role.setName(this.getRoleName());
