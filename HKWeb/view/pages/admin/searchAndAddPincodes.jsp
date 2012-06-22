@@ -63,13 +63,18 @@
 					</tr>
 					<tr>
 						<td>City:</td>
-						<td><s:text name="pincode.city" value="${mpaBean.pincode.city}"/></td>
+						<%--<td><s:text name="pincode.city.id" value="${mpaBean.pincode.city.id}"/></td>--%>
+                        <td><s:select name="pincode.city.id" value="${mpaBean.pincode.city.id}">
+							<s:option value="">-Select-</s:option>
+						 <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="cityList" value="id" label="name"/>
+						</s:select></td>
+
 					</tr>
 					<tr>
 						<td>State:</td>
-						<td><s:select name="pincode.state" value="${mpaBean.pincode.state}">
+						<td><s:select name="pincode.state.id" value="${mpaBean.pincode.state.id}">
 							<s:option value="">-Select-</s:option>
-							<s:options-collection collection="<%=StateList.stateList%>"/>
+						 <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="stateList" value="id" label="name"/>
 						</s:select></td>
 					</tr>
           <tr>

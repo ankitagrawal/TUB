@@ -2,6 +2,7 @@ package com.hk.admin.impl.service.courier;
 
 import com.hk.admin.pact.service.courier.CourierStateCityService;
 import com.hk.domain.core.City;
+import com.hk.domain.core.State;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.BaseDao;
 import org.hibernate.criterion.DetachedCriteria;
@@ -42,6 +43,16 @@ public class CourierStateCityServiceImpl extends BaseDaoImpl implements CourierS
     else
        return false;
    }
-  
+   public State getStateByName(String name){
+     name=name.trim();
+     DetachedCriteria stateCriteria= DetachedCriteria.forClass(State.class);
+     stateCriteria.add(Restrictions.like("name",name));
+      List<State> stateList=  findByCriteria(stateCriteria);
+     if(stateList != null && stateList.size() >0){
+      return stateList.get(0);
+     }
+     else
+       return null;
+   }
 
 }

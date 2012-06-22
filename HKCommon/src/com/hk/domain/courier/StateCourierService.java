@@ -24,12 +24,12 @@ public class StateCourierService implements java.io.Serializable {
   private Courier courier;
 
 
-   @Column(name = "preference")
-  private Long preference ;
+  @Column(name = "preference")
+  private Long preference;
 
   @ManyToOne
-	@JoinColumn(name = "state_id")
-  private State state ;
+  @JoinColumn(name = "state_id")
+  private State state;
 
   public State getState() {
     return state;
@@ -46,7 +46,6 @@ public class StateCourierService implements java.io.Serializable {
   public void setPreference(Long preference) {
     this.preference = preference;
   }
-
 
 
   public Long getId() {
