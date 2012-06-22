@@ -24,7 +24,7 @@ public class EmailCampaignServiceImpl implements EmailCampaignService {
   @Value("#{hkEnvProps['" + Keys.Env.secretKey + "']}")
   String awsSecretKey;
 
-  public static String awsBucket = "healthkart-rimal";
+  public static String awsBucket = "healthkart-pratham";
 
   S3Utils s3Utils;
 
@@ -35,7 +35,7 @@ public class EmailCampaignServiceImpl implements EmailCampaignService {
     return getEmailCampaignDao().getEmailCampaignSentCount(emailCampaign);
   }
 
-  public void uploadEmailContent(File emailContent, EmailCampaign emailCampaign) throws NoSuchAlgorithmException, IOException, ServiceException {
+  public void uploadEmailContent(File emailContent) throws NoSuchAlgorithmException, IOException, ServiceException {
     s3Utils.uploadMultipleData(awsAccessKey,awsSecretKey,emailContent,awsBucket);
   }
 

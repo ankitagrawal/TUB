@@ -321,7 +321,7 @@ private String                categoryHealthkartListString  = null;*/
     List<String> tags = new ArrayList<String>();
     ExcelSheetParser parser = new ExcelSheetParser(excelFilePath, sheetName);
     Iterator<HKRow> rowIterator = parser.parse();
-    String template = emailCampaign.getTemplateFtl();
+    String template = emailCampaign.getTemplate();
     int i;
 
     while (rowIterator != null && rowIterator.hasNext()) {

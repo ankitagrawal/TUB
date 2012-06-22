@@ -33,7 +33,7 @@ public class CreateEmailNewsletterCampaign extends BaseAction {
   private static Logger logger = LoggerFactory.getLogger(CreateEmailNewsletterCampaign.class);
   EmailCampaign emailCampaign;
 
-  public static String awsBucket = "healthkart-rimal";
+  public static String awsBucket = "healthkart-pratham";
 
   @Autowired
   EmailCampaignDao emailCampaignDao;
@@ -45,6 +45,10 @@ public class CreateEmailNewsletterCampaign extends BaseAction {
   String adminUploadsPath;
   String appBasePath;
   FileBean contentBean;
+  String ftlContents;
+  String name;
+  String contentFolderName;
+  Boolean ftlGenerated = Boolean.FALSE;
 
   @DontValidate
   @DefaultHandler
@@ -53,6 +57,15 @@ public class CreateEmailNewsletterCampaign extends BaseAction {
   }
 
   public Resolution create() throws Exception {
+    emailCampaign.setHtmlPath(getBasicAmazonS3Path(contentFolderName));
+    emailCampaign.setTemplateFtl(ftlContents);
+
+    emailCampaign = emailCampaignDao.save(emailCampaign);
+    addRedirectAlertMessage(new SimpleMessage("Email campaign has been saved"));
+    return new ForwardResolution(CreateEmailNewsletterCampaign.class,"pre");
+  }
+
+  public Resolution generateFtlAndUploadData() throws Exception {
     String contentZipPath = adminUploadsPath + "/emailContentFiles/" + contentBean.getFileName();
     File contentZipFolder = new File(contentZipPath);
     contentZipFolder.getParentFile().mkdirs();
@@ -65,6 +78,8 @@ public class CreateEmailNewsletterCampaign extends BaseAction {
     if (!contentFolder.exists()) {
       contentFolder.mkdir();
     }
+
+    contentFolderName = contentFolder.getName();
 
     //get zip file content
     ZipInputStream zis = new ZipInputStream(new FileInputStream(contentZipPath));
@@ -115,7 +130,7 @@ public class CreateEmailNewsletterCampaign extends BaseAction {
 
     String line;
     String lineSeperator = System.getProperty("line.separator");
-    File ftlFile = new File(contentPath + "/" + emailCampaign.getName() + ".ftl");
+    File ftlFile = new File(contentPath + "/" + name + ".ftl");
     BufferedReader br = new BufferedReader(new FileReader(htmlFile[0]));
     PrintWriter out = new PrintWriter(new FileWriter(ftlFile));
     while ((line = br.readLine()) != null) {
@@ -140,17 +155,13 @@ public class CreateEmailNewsletterCampaign extends BaseAction {
 
     //making changes in the .html file also
     FileUtils.copyFile(ftlFile, htmlFile[0]);
+    ftlContents = fileToString(ftlFile);
+    ftlGenerated = Boolean.TRUE;
+    logger.info("ftl generated");
 
-    emailCampaignService.uploadEmailContent(contentFolder, emailCampaign);
+    emailCampaignService.uploadEmailContent(contentFolder);
     logger.info("uploaded email content to s3.");
 
-    emailCampaign.setHtmlPath(getBasicAmazonS3Path(contentFolder.getName()));
-    String ftlContents = fileToString(ftlFile);
-    emailCampaign.setTemplateFtl(ftlContents);
-
-    emailCampaign = emailCampaignDao.save(emailCampaign);
-
-    addRedirectAlertMessage(new SimpleMessage("Email campaign has been saved"));
     return new ForwardResolution(CreateEmailNewsletterCampaign.class, "pre");
   }
 
@@ -164,6 +175,38 @@ public class CreateEmailNewsletterCampaign extends BaseAction {
 
   public void setContentBean(FileBean contentBean) {
     this.contentBean = contentBean;
+  }
+
+  public String getFtlContents() {
+    return ftlContents;
+  }
+
+  public void setFtlContents(String ftlContents) {
+    this.ftlContents = ftlContents;
+  }
+
+  public Boolean isFtlGenerated() {
+    return ftlGenerated;
+  }
+
+  public Boolean getFtlGenerated() {
+    return ftlGenerated;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getContentFolderName() {
+    return contentFolderName;
+  }
+
+  public void setContentFolderName(String contentFolderName) {
+    this.contentFolderName = contentFolderName;
   }
 
   private static String fileToString(File file) {

@@ -44,20 +44,20 @@ public class EmailServiceImpl implements EmailService {
      * this.contactName = contactName; }
      */
 
-    public boolean sendHtmlEmailNoReply(String templatePath, Object templateValues, String toEmail, String toName) {
-        return sendHtmlEmail(templatePath, templateValues, noReplyEmail, noReplyName, toEmail, toName, null, null, null);
+    public boolean sendHtmlEmailNoReply(String templatePath,Boolean isTemplateAvailable, Object templateValues, String toEmail, String toName) {
+        return sendHtmlEmail(templatePath,isTemplateAvailable, templateValues, noReplyEmail, noReplyName, toEmail, toName, null, null, null);
     }
 
-    public boolean sendHtmlEmail(String templatePath, Object templateValues, String toEmail, String toName) {
-        return sendHtmlEmail(templatePath, templateValues, noReplyEmail, noReplyName, toEmail, toName, contactEmail, contactName, null);
+    public boolean sendHtmlEmail(String templatePath,Boolean isTemplateAvailable, Object templateValues, String toEmail, String toName) {
+        return sendHtmlEmail(templatePath,isTemplateAvailable, templateValues, noReplyEmail, noReplyName, toEmail, toName, contactEmail, contactName, null);
     }
 
-    public boolean sendHtmlEmail(String templatePath, Object templateValues, String toEmail, String toName, String replyToEmail) {
-        return sendHtmlEmail(templatePath, templateValues, noReplyEmail, noReplyName, toEmail, toName, replyToEmail, null, null);
+    public boolean sendHtmlEmail(String templatePath,Boolean isTemplateAvailable, Object templateValues, String toEmail, String toName, String replyToEmail) {
+        return sendHtmlEmail(templatePath,isTemplateAvailable, templateValues, noReplyEmail, noReplyName, toEmail, toName, replyToEmail, null, null);
     }
 
-    public boolean sendHtmlEmail(String templatePath, Object templateValues, String toEmail, String toName, String replyToEmail, Map<String, String> headerMap) {
-        return sendHtmlEmail(templatePath, templateValues, noReplyEmail, noReplyName, toEmail, toName, replyToEmail, null, headerMap);
+    public boolean sendHtmlEmail(String templatePath,Boolean isTemplateAvailable, Object templateValues, String toEmail, String toName, String replyToEmail, Map<String, String> headerMap) {
+        return sendHtmlEmail(templatePath,isTemplateAvailable, templateValues, noReplyEmail, noReplyName, toEmail, toName, replyToEmail, null, headerMap);
     }
 
     /**
@@ -70,7 +70,7 @@ public class EmailServiceImpl implements EmailService {
      * @param toName
      * @return false means email sending failed
      */
-    private boolean sendHtmlEmail(String templatePath, Object templateValues, String fromEmail, String fromName, String toEmail, String toName, String replyToEmail,
+    private boolean sendHtmlEmail(String templatePath,Boolean isTemplateAvailable, Object templateValues, String fromEmail, String fromName, String toEmail, String toName, String replyToEmail,
             String replyToName, Map<String, String> headerMap) {
         try {
             FreeMarkerService.RenderOutput renderOutput = freeMarkerService.getRenderOutputForTemplate(templatePath, templateValues);
