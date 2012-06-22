@@ -38,7 +38,7 @@ public interface AdminShippingOrderService {
 
     ShippingOrder markShippingOrderAsRTO(ShippingOrder shippingOrder);
 
-    public List<Long> getShippingOrderListByCouriers(Date startDate, Date endDate, List<Long> courierId);
+    public List<ShippingOrder> getShippingOrderListByCouriers(Date startDate, Date endDate, List<Long> courierId);
 
 
 }

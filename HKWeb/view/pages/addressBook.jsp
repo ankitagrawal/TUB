@@ -1,5 +1,6 @@
 <%@ page import="com.akube.framework.gson.JsonUtils" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
+<%@ page import="com.hk.constants.courier.StateList" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 
@@ -187,7 +188,12 @@
           <div class='label'>City<span class="aster">*</span></div>
           <s:text name="address.city"/>
           <div class='label'>State<span class="aster">*</span></div>
-          <s:text name="address.state"/>
+          <s:select name="address.state" style="width:310px;">
+            <c:forEach items="<%=StateList.stateList%>" var="state">
+              <s:option value="${state}">${state}</s:option>
+            </c:forEach>
+          </s:select>
+          <%--<s:text name="address.state"/>--%>
           <div class='label'>PIN Code<span class="aster">*</span></div>
           <s:text name="address.pin" class="pincode" maxlength="6"/>
           <div class='label'>Phone / Mobile<span class="aster">*</span></div>

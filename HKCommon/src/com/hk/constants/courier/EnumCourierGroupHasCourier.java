@@ -31,10 +31,7 @@ public enum EnumCourierGroupHasCourier {
       EnumCourierGroup.Local,
       Arrays.asList(
           EnumCourier.Chhotu,
-          EnumCourier.Delhivery,
-          EnumCourier.Delhivery_Bangalore,
-          EnumCourier.Delhivery_Chennai,
-          EnumCourier.Delhivery_Ahmedabad
+          EnumCourier.Delhivery
       )
   ),;
 

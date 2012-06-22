@@ -1,5 +1,6 @@
 package com.hk.admin.impl.service.courier;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -37,7 +38,8 @@ public class CourierServiceImpl implements CourierService {
 
     @Override
     public Courier getCourierById(Long courierId) {
-        return getCourierDao().getCourierById(courierId);
+        List<Courier> courierList = getCourierDao().getCourierByIds(Arrays.asList(courierId));
+        return  courierList != null && courierList.size() > 0 ? courierList.get(0) : null;
     }
 
     @Override
@@ -79,6 +81,7 @@ public class CourierServiceImpl implements CourierService {
 
     public Courier getSuggestedCourierService(String pincode, boolean isCOD) {
 
+/*
         Pincode pincodeObj = getPincodeService().getByPincode(pincode);
         if (pincodeObj != null) {
             Courier courier;
@@ -110,6 +113,7 @@ public class CourierServiceImpl implements CourierService {
                 }
             }
         }
+*/
         return null;
     }
 

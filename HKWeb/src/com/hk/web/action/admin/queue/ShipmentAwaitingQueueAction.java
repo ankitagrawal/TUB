@@ -59,8 +59,6 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
     @Autowired
     private CourierService             courierService;
     @Autowired
-    private CourierDao                 courierDao;
-    @Autowired
     InvoicePDFGenerator                invoicePDFgenerator;
 
     List<ShippingOrder>                shippingOrderList = new ArrayList<ShippingOrder>();
@@ -211,7 +209,7 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
                     courierList.add(courier);
                 }
                 if (courier != null) {
-                    if (courier.equals(courierDao.getCourierById(EnumCourier.BlueDart.getId())) || courier.equals(courierDao.getCourierById(EnumCourier.BlueDart_COD.getId()))) {
+                    if (courier.equals(courierService.getCourierById(EnumCourier.BlueDart.getId())) || courier.equals(courierService.getCourierById(EnumCourier.BlueDart_COD.getId()))) {
                         xlsFile = reportGenerator.generateCourierReportXslForBlueDart(xlsFile.getPath(), EnumShippingOrderStatus.SO_Packed, courierList, startDate, endDate);
                     } else {
                         xlsFile = reportGenerator.generateCourierReportXsl(xlsFile.getPath(), EnumShippingOrderStatus.SO_Packed, courierList, startDate, endDate);
@@ -323,10 +321,6 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
 
     public void setCourierService(CourierService courierService) {
         this.courierService = courierService;
-    }
-
-    public void setCourierDao(CourierDao courierDao) {
-        this.courierDao = courierDao;
     }
 
     public void setSeekInvoiceNumService(SeekInvoiceNumService seekInvoiceNumService) {

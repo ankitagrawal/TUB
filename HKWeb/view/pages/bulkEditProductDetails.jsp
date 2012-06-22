@@ -1,4 +1,5 @@
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
+<%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.catalog.product.BulkEditProductAction" var="bep"/>
@@ -126,7 +127,7 @@
 <tr class="productRow">
 <s:hidden name="products[${ctr.index}]"/>
 <td valign="top">
-  <s:text class="productId" name="products[${ctr.index}].id" value="${product.id}" style="width:60px; border: 0"
+  <s:text class="productId" name="products[${ctr.index}].id" value="${product.id}" style="width:80px; border: 0"
           readonly="readonly"/>
 </td>
 <td valign="top">
@@ -377,6 +378,11 @@
   <c:if test="${bep.toBeEditedOptions['productVariantFollAvailDate']}">
     <th style="text-align:center;">Following Available Date</th>
   </c:if>
+
+  <c:if test="${bep.toBeEditedOptions['productVariantHasFreeProductVariant']}">
+    <th style="text-align:center;">Free Product Variant</th>
+    <th></th>
+  </c:if>
 </tr>
 <tr class="variantRow">
 <s:hidden name="products[${ctr.index}].productVariants[${ctrVariant.index}]"/>
@@ -623,6 +629,15 @@
   </td>
 </c:if>
 
+<c:if test="${bep.toBeEditedOptions['productVariantHasFreeProductVariant']}">
+  <td>
+    <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].freeProductVariant" class="freeVariant"/>
+  </td>
+  <td>
+    <s:label name=" " id="variantDetails"/>
+  </td>
+</c:if>
+
 </tr>
 </c:forEach>
 </table>
@@ -636,7 +651,8 @@
   <s:submit name="save" value="Save" class="submitButton"/>
   <s:submit name="pre" value="Back"/>
 </div>
-
+<s:link id="variantInfoLink" beanclass="com.hk.web.action.admin.catalog.product.BulkEditProductAction"
+        event="getPVDetails" style="display:none;"> </s:link>
 <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${bep}"/>
 <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${bep}"/>
 </s:form>
@@ -679,20 +695,51 @@
           $('.errors').append("<br/> Please enter supplier's tin number for: " + productId);
         }
       });
+
       if (ctr) {
         alert("Errors encoountered! Kindly go to the top of the page to view.");
         $('.errors').show();
       }
       return !ctr;
     });
-  });
-  function _updateHkPrice(e) {
-    var variantRow = $(e.target).parents('.variantRow');
-    variantRow.find('.hkPrice').val((variantRow.find('.markedPrice').val() * (1 - variantRow.find('.discountPercent').val())) - variantRow.find('.postpaidAmount').val());
-  }
 
-  function _updateDiscountonMrp(e) {
-    var variantRow = $(e.target).parents('.variantRow');
-    variantRow.find('.discountPercent').val(1 - (Math.round(variantRow.find('.hkPrice').val()) + Math.round(variantRow.find('.postpaidAmount').val())) / Math.round((variantRow.find('.markedPrice').val())));
-  }
+     if ($('.freeVariant')) {
+      $('.freeVariant').change(_validateProductVariant);
+       $('.freeVariant').focusout(_validateProductVariant);
+//      $('.freeVariant').mouseup(_validateProductVariant);
+    }
+  });
+
+function _updateHkPrice(e) {
+      var variantRow = $(e.target).parents('.variantRow');
+      variantRow.find('.hkPrice').val((variantRow.find('.markedPrice').val() * (1 - variantRow.find('.discountPercent').val())) - variantRow.find('.postpaidAmount').val());
+    }
+
+    function _updateDiscountonMrp(e) {
+      var variantRow = $(e.target).parents('.variantRow');
+      variantRow.find('.discountPercent').val(1 - (Math.round(variantRow.find('.hkPrice').val()) + Math.round(variantRow.find('.postpaidAmount').val())) / Math.round((variantRow.find('.markedPrice').val())));
+    }
+
+    function _validateProductVariant(e) {
+      var variantRow = $(e.target).parents('.variantRow');
+      var variantIdText = variantRow.find('.freeVariant');
+      var variantId = variantIdText.val().trim();
+      var variantDetailsLabel = variantRow.find('#variantDetails');
+      if (variantId != "") {
+        $.getJSON(
+            $('#variantInfoLink').attr('href'), {productVariantId: variantId},
+            function(res) {
+              if (res.code == "<%=HealthkartResponse.STATUS_OK%>") {
+                variantDetailsLabel.html(
+                    res.data.product + '<br/>' +
+                    res.data.options
+                    );
+              } else {
+                variantDetailsLabel.html(res.message).css({color:'red'});
+                variantIdText.val('');
+              }
+            });
+      }
+    }
+  
 </script>

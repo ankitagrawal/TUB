@@ -1,7 +1,8 @@
 package com.hk.admin.util;
 
 import java.util.HashMap;
-import org.springframework.stereotype.Component
+import org.springframework.stereotype.Component
+
 
 public class AFLResponseParser{
 
@@ -10,6 +11,7 @@ public class AFLResponseParser{
     def SHIPMENTTRACK,awb,delivery_date,num_check_points,delivery_checkpoint;
     def digitsInGatewayId = 5;
     String current_status,order_gateway_id;
+
     SHIPMENTTRACK = new XmlParser().parseText(response);
     Map<String,String> responseAFL = new HashMap();
     awb = SHIPMENTTRACK.SHIPMENTREPORT.AWB.text();

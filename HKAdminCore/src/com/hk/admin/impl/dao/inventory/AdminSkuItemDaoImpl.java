@@ -60,6 +60,19 @@ public class AdminSkuItemDaoImpl extends BaseDaoImpl implements AdminSkuItemDao{
     return inStockSkuItems;
   }
 
+
+   public List<SkuItem> getCheckedInSkuItems(SkuGroup skuGroup) {
+    List<SkuItem> inStockSkuItems = new ArrayList<SkuItem>();
+    String inStockSkuItemIdQuery = "select pvi.skuItem.id from ProductVariantInventory pvi where pvi.skuItem.skuGroup =:skuGroup and pvi.qty = 1";
+    List<Long> inStockSkuItemIds = (List<Long>) getSession().createQuery(inStockSkuItemIdQuery).setParameter("skuGroup", skuGroup).list();
+    if (inStockSkuItemIds != null && inStockSkuItemIds.size() > 0) {
+      String query = "select si from SkuItem si where si.skuGroup = :skuGroup and si.id in (:inStockSkuItemIds)";
+      inStockSkuItems = (List<SkuItem>) getSession().createQuery(query).setParameter("skuGroup", skuGroup).setParameterList("inStockSkuItemIds", inStockSkuItemIds).list();
+    }
+    return inStockSkuItems;
+  }
+
+
   public List<SkuItem> getInStockSkuItemsBySku(Sku sku) {
     return getInStockSkuItemsBySku(Arrays.asList(sku));
   }
