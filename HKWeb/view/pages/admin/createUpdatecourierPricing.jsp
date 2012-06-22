@@ -44,7 +44,7 @@
                             <s:hidden name="courierPricingEngine.id"/>
                             <s:hidden name="courierPricingEngine.courier" value="${cpea.courier}"/>
                             <s:hidden name="courierPricingEngine.regionType" value="${cpea.regionType}"/>
-                            <s:hidden name="courierPricingEngine.warehouse"/>
+                            <s:hidden name="courierPricingEngine.warehouse" value="2"/>
                             <tr>
                                 <td>First Base Weight:</td>
                                 <td><s:text name="courierPricingEngine.firstBaseWt"/></td>
