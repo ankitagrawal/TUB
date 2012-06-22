@@ -109,5 +109,7 @@ public class XslConstants {
     public static final String VARIABLE_COD_CHARGES = "VARIABLE_COD_CHARGES";
     public static final String FUEL_CHARGES = "FUEL_CHARGES";
 
+  //Excel Constants needed while uploading CityCourierTaT for couriers
+    public static final String CITY_TAT = "CITY_TAT";
 
 }

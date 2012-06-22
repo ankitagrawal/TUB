@@ -36,7 +36,7 @@
         </div>
 
 
-            <c:if test="${cpea.courierPricingEngine != null}">
+          
 
                 <table>
                     <fieldset style="float:left;">
@@ -101,7 +101,7 @@
                     </fieldset>
                 </table>
 
-            </c:if>
+
       
 
     </s:layout-component>

@@ -7537,4 +7537,97 @@
             <column name="product_variant_id"/>
         </createIndex>
     </changeSet>
+          <changeSet author="Seema (generated)" id="1340352635898-1">
+        <createTable tableName="city">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(150)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340352635898-2">
+        <createTable tableName="state">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340352635898-3">
+        <addColumn tableName="city_courier_tat">
+            <column name="city_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340352635898-4">
+        <addColumn tableName="pincode">
+            <column name="city_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340352635898-5">
+        <addColumn tableName="pincode">
+            <column name="state_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340352635898-6">
+        <addColumn tableName="state_courier_service">
+            <column name="state_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340352635898-7">
+        <dropNotNullConstraint columnDataType="DECIMAL(10,2)" columnName="turnaround_time" tableName="city_courier_tat"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340352635898-10">
+        <addNotNullConstraint columnDataType="INT" columnName="courier_id" tableName="state_courier_service"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340352635898-11">
+        <dropNotNullConstraint columnDataType="INT" columnName="preference" tableName="state_courier_service"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340352635898-12">
+        <dropForeignKeyConstraint baseTableName="city_courier_tat" constraintName="city_fk"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340352635898-13">
+        <dropForeignKeyConstraint baseTableName="state_courier_service" constraintName="fk_state_pincode"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340352635898-14">
+        <addForeignKeyConstraint baseColumnNames="city_id" baseTableName="city_courier_tat" constraintName="fk_city_courier_tat_city1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="city" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340352635898-15">
+        <addForeignKeyConstraint baseColumnNames="city_id" baseTableName="pincode" constraintName="fk_pincode_city1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="city" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340352635898-16">
+        <addForeignKeyConstraint baseColumnNames="state_id" baseTableName="pincode" constraintName="fk_pincode_state1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="state" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340352635898-17">
+        <addForeignKeyConstraint baseColumnNames="state_id" baseTableName="state_courier_service" constraintName="fk_state_courier_service_state1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="state" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340352635898-18">
+        <dropIndex indexName="fk_pincode_city" tableName="pincode"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340352635898-19">
+        <dropIndex indexName="fk_pincode_state" tableName="pincode"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340352635898-20">
+        <dropColumn columnName="city" tableName="city_courier_tat"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340352635898-21">
+        <dropColumn columnName="city" tableName="pincode"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340352635898-22">
+        <dropColumn columnName="state" tableName="pincode"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340352635898-23">
+        <dropColumn columnName="state" tableName="state_courier_service"/>
+    </changeSet>
 </databaseChangeLog>
