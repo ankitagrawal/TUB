@@ -18,6 +18,6 @@
       Minimum Day gap : <s:text name="emailCampaign.minDayGap" value="5"/><br/>
       <s:submit name="create"/>
     </s:form>
-    
+
   </s:layout-component>
 </s:layout-render>

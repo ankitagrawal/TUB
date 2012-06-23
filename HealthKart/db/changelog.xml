@@ -7636,4 +7636,22 @@
     <changeSet author="Seema (generated)" id="1340372396933-3">
         <addNotNullConstraint columnDataType="INT" columnName="state_id" tableName="pincode"/>
     </changeSet>
+  <changeSet author="Rimal (generated)" id="1340180519838-1">
+    <addColumn tableName="email_campaign">
+      <column name="html_path" type="VARCHAR(400)"/>
+    </addColumn>
+  </changeSet>
+  <changeSet author="Rimal (generated)" id="1340180519838-2">
+    <addColumn tableName="email_campaign">
+      <column name="subject" type="VARCHAR(250)"/>
+    </addColumn>
+  </changeSet>
+  <changeSet author="Rimal (generated)" id="1340180519838-3">
+    <addColumn tableName="email_campaign">
+      <column name="template_ftl" type="TEXT"/>
+    </addColumn>
+  </changeSet>
+  <changeSet author="Rimal (generated)" id="1340180519838-4">
+    <dropNotNullConstraint columnDataType="VARCHAR(80)" columnName="template" tableName="email_campaign"/>
+  </changeSet>
 </databaseChangeLog>
