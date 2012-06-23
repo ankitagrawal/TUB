@@ -16,12 +16,9 @@ import com.hk.domain.inventory.rv.ReconciliationStatus;
 import com.hk.domain.inventory.rv.ReconciliationType;
 import com.hk.domain.offer.rewardPoint.RewardPointMode;
 import com.hk.domain.offer.rewardPoint.RewardPointStatus;
-<<<<<<< HEAD
 import com.hk.domain.store.Store;
-=======
 import com.hk.domain.order.ShippingOrderStatus;
 import com.hk.domain.review.ReviewStatus;
->>>>>>> master
 import com.hk.domain.user.User;
 
 import java.util.List;

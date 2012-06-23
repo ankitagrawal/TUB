@@ -7653,7 +7653,7 @@
             <column defaultValueNumeric="0" name="hidden" type="TINYINT">
                 <constraints nullable="false"/>
             </column>
-        </createTable>
+        </createTable>                                                                                                                                                    N
     </changeSet>
 
     <changeSet author="Pradeep (generated)" id="1340279900902-3">

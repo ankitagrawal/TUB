@@ -122,7 +122,7 @@ public class StorePricingAction extends BaseAction {
 
     public Resolution downloadStorePricingExcel() throws Exception {
         String excelFilePath = adminDownloads + "/storeFiles/"+store.getPrefix()+"Pricing"+System.currentTimeMillis()+".xls";
-        //String excelFilePath ="E:\\mih\\mihpricingTEST.xls";
+        //String excelFilePath ="E:\\mih\\mihpricingTEST1.xls";
         xlsFile = new File(excelFilePath);
 
         List<StoreProduct> storeProductList= storeService.getProductListForStore(store);
