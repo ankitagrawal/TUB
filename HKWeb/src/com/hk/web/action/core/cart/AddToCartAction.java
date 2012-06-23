@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.hk.mooga.impl.RecommendationEngineImpl;
+import com.hk.mooga.pact.RecommendationEngine;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.JsonResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -59,11 +61,15 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
 
     @Autowired
     SignupAction signupAction;
+    
+
+    RecommendationEngineImpl recomendationEngine;
 
     @SuppressWarnings({"unchecked", "deprecation"})
     @DefaultHandler
     @JsonHandler
     public Resolution addToCart() {
+        recomendationEngine = new RecommendationEngineImpl();
         // I need to pass product info
         User user = null;
         if (getPrincipal() != null) {
@@ -164,6 +170,13 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
             dataMap.put("itemsInCart", Long.valueOf(order.getExclusivelyProductCartLineItems().size() + order.getExclusivelyComboCartLineItems().size()) + 1L);
             HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Product has been added to cart", dataMap);
             noCache();
+            try{
+            recomendationEngine.dummy();
+            recomendationEngine.pushAddToCart(user.getId(),order.getExclusivelyProductCartLineItems().get(0).getId());
+            }catch(Exception ex){
+                int a;
+                String s = ex.getMessage();
+            }
             return new JsonResolution(healthkartResponse);
         }
         HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Product has not been added to cart", dataMap);

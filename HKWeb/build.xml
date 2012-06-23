@@ -49,6 +49,13 @@
 		<fileset file="${project.core.dir}/dist/hk-core.jar" />
 		<fileset file="${project.admin.core.dir}/dist/hk-admin-core.jar" />
 		<fileset file="${project.report.dir}/dist/hk-report.jar" />
+        <fileset file="${lib.root.dir}/mooga/axis.jar" />
+        <fileset file="${lib.root.dir}/mooga/axiscommons-discovery-0.2.jar" />
+        <fileset file="${lib.root.dir}/mooga/commons-logging-1.0.4.jar" />
+        <fileset file="${lib.root.dir}/mooga/jaxrpc.jar" />
+        <fileset file="${lib.root.dir}/mooga/log4j-1.2.8.jar" />
+        <fileset file="${lib.root.dir}/mooga/saaj.jar" />
+        <fileset file="${lib.root.dir}/mooga/wsdl4j-1.5.1.jar" />
     <fileset file="${lib.root.dir}/thirdParty/jdom-1.0.jar" />
   </path>
 
