@@ -89,12 +89,13 @@ public enum EnumRoleHasPermission {
       )
   ),
 
-  WH_MANAGER(
-      EnumRole.WH_MANAGER,
-      Arrays.asList(
-          EnumPermission.GRN_CREATION,
-	        EnumPermission.RECON_VOUCHER_MANAGEMENT
-      )),
+	WH_MANAGER(
+	  EnumRole.WH_MANAGER,
+	  Arrays.asList(
+		EnumPermission.GRN_CREATION,
+		EnumPermission.RECON_VOUCHER_MANAGEMENT,
+		EnumPermission.SUPPLIER_MANAGEMENT
+	  )),
 
   WH_MANAGER_L1(
       EnumRole.WH_MANAGER_L1,
