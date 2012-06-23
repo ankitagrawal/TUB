@@ -54,6 +54,7 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
     return emailRecepients;
   }
 
+  //todo whats the diff in above 2 functions
   public List<EmailRecepient> getUserMailingList(EmailCampaign emailCampaign, List<Long> userList, int maxResult) {
     String query = "select er from EmailRecepient er, User u " +
         " where er.subscribed = true and er.email = u.email " +
@@ -84,7 +85,7 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
     
     return emailRecepients;
   }
-
+  //todo rohit should be there 2 functions to perform almost the same operations
   public BigInteger getAllMailingListCount(EmailCampaign emailCampaign, String [] roles) {       
     String query = "select  count(u.id)" +
         "     from user u left join email_recepient er on (u.email = er.email and er.subscribed > 0) " +
@@ -118,6 +119,7 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
     return userIdsByCategory;
   }
 
+    //TODO Rohit There is a table order has categories, please write that query using that, easier and less computive
   public Long getMailingListCountByCategory(EmailCampaign emailCampaign, Category category) {
 
     String query = "select count(distinct u.id) from LineItem li left join li.sku.productVariant.product.categories c"
@@ -135,6 +137,7 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
     return userIdsByCategoryCount;
   }
 
+  //todo rohir please make practise to write hql, this could have been easely written, criteria is even a better practice
   public List<User> findAllUsersNotInEmailRecepient(int maxResult, List<String> userIdList) {
     String query = "select u.* from user u left join email_recepient er on (u.email = er.email) where er.email is null and u.email is not null ";
 

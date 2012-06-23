@@ -1,104 +1,98 @@
 package com.hk.web.action.admin.newsletter;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-import java.math.BigInteger;
-
-import net.sourceforge.stripes.action.*;
-
-import net.sourceforge.stripes.validation.Validate;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-import org.stripesstuff.plugin.security.Secure;
-
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.manager.MailingListManager;
 import com.hk.admin.pact.service.email.AdminEmailService;
+import com.hk.constants.core.EnumRole;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.constants.core.EnumRole;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.core.EmailType;
 import com.hk.domain.email.EmailCampaign;
 import com.hk.domain.email.EmailRecepient;
 import com.hk.domain.user.User;
 import com.hk.manager.EmailManager;
-import com.hk.pact.dao.marketing.EmailCampaignDao;
 import com.hk.pact.dao.RoleDao;
 import com.hk.pact.dao.email.EmailRecepientDao;
-import com.hk.pact.dao.user.UserDao;
+import com.hk.pact.dao.marketing.EmailCampaignDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.util.ParseCsvFile;
 import com.hk.util.SendGridUtil;
 import com.hk.web.action.error.AdminPermissionAction;
+import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.validation.Validate;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 @Secure(hasAnyPermissions = {PermissionConstants.SEND_MARKETING_MAILS}, authActionBean = AdminPermissionAction.class)
 @Component
 public class SendEmailNewsletterCampaign extends BasePaginatedAction {
 
-  List<EmailCampaign>        emailCampaigns;
+    List<EmailCampaign> emailCampaigns;
 
-  @Validate(required = true)
-  EmailCampaign              emailCampaign;
+    @Validate(required = true)
+    EmailCampaign emailCampaign;
 
-  @Autowired
-  EmailCampaignDao           emailCampaignDao;
+    @Autowired
+    EmailCampaignDao emailCampaignDao;
 
-  @Validate(required = true, on = { "testCampaign" })
-  String                     testEmails;
+    @Validate(required = true, on = {"testCampaign"})
+    String testEmails;
 
-  @Validate(required = true, on = { "confirmCampaign", "sendCampaign" })
-  String                     categories;
+    @Validate(required = true, on = {"confirmCampaign", "sendCampaign"})
+    String categories;
 
-  private Long               userCount = 0L;
+    private Long userCount = 0L;
 
-  // @Named(Keys.Env.adminUploads)
-  @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
-  String                     adminUploadsPath;
+    // @Named(Keys.Env.adminUploads)
+    @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
+    String adminUploadsPath;
 
-  FileBean                   fileBean;
-  FileBean                   fileBeanForCustomExcel;
-  FileBean                   fileBeanForUserList;
+    FileBean fileBean;
+    FileBean fileBeanForCustomExcel;
+    FileBean fileBeanForUserList;
 
-  private Logger             logger         = LoggerFactory.getLogger(SendEmailNewsletterCampaign.class);
+    private Logger logger = LoggerFactory.getLogger(SendEmailNewsletterCampaign.class);
 
-  @Autowired
-  private UserService        userService;
-  @Autowired
-  private CategoryService    categoryService;
-  @Autowired
-  private AdminEmailManager  adminEmailManager;
-  @Autowired
-  private MailingListManager mailingListManager;
-  @Autowired
-  private AdminEmailService adminEmailService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private CategoryService categoryService;
+    @Autowired
+    private AdminEmailManager adminEmailManager;
+    @Autowired
+    private MailingListManager mailingListManager;
+    @Autowired
+    private AdminEmailService adminEmailService;
 
-  //@Autowired
-  private EmailManager       emailManager;
-  EmailType                  emailType;
-  String                     sheetName;
-  Page                       emailCampaignPage;
-  private Integer            defaultPerPage = 20;
-  private final int          COMMIT_COUNT = 100;
-  private final int          INITIAL_LIST_SIZE = 100;
+    //@Autowired
+    private EmailManager emailManager;
+    EmailType emailType;
+    String sheetName;
+    Page emailCampaignPage;
+    private Integer defaultPerPage = 20;
+    private final int COMMIT_COUNT = 100;
+    private final int INITIAL_LIST_SIZE = 100;
 
-  @Autowired
-  private RoleDao            roleDao;
-  private final int          maxResultCount = 5000;
-  @Autowired
-  private EmailRecepientDao  emailRecepientDao;
+    @Autowired
+    private RoleDao roleDao;
+    private final int maxResultCount = 5000;
+    @Autowired
+    private EmailRecepientDao emailRecepientDao;
 
-  @DefaultHandler
+    @DefaultHandler
   @DontValidate
   public Resolution pre() {
     emailCampaignPage = emailCampaignDao.getEmailCampaignByEmailType(emailType, getPageNo(), getPerPage());
@@ -222,6 +216,7 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
     return new RedirectResolution(EmailNewsletterAdmin.class);
   }
 
+    //todo rohit why not write in admin email manager
   private void sendCampaignByUploadingFile(List<Long> userIds, List<String> emailIds) {
     List<String> finalCategories = new ArrayList<String>();
     finalCategories.add("User Ids Excel");
@@ -244,6 +239,7 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
     } while(filteredUsers.size() > 0);
   }
 
+    //todo rohit can these method be written at some generic place wherre they can be reused
   private void populateEmailRecepient(List<String> userIdList) {
     List<User> usersNotInEmailRecepient = new ArrayList<User>();
     do{

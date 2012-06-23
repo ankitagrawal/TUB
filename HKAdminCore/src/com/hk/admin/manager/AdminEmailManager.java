@@ -4,7 +4,6 @@ import com.akube.framework.util.BaseUtils;
 import com.akube.framework.util.DateUtils;
 import com.hk.admin.dto.DisplayTicketHistoryDto;
 import com.hk.admin.dto.marketing.GoogleBannedWordDto;
-import com.hk.admin.pact.dao.email.AdminEmailDao;
 import com.hk.admin.pact.service.email.AdminEmailService;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.catalog.image.EnumImageSize;
@@ -35,155 +34,81 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.discount.CouponService;
+import com.hk.service.impl.FreeMarkerService;
 import com.hk.util.HKImageUtils;
 import com.hk.util.SendGridUtil;
 import com.hk.util.io.ExcelSheetParser;
 import com.hk.util.io.HKRow;
-import com.hk.service.impl.FreeMarkerService;
+import freemarker.template.Template;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.mail.HtmlEmail;
+import org.hibernate.Session;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import freemarker.template.Template;
-
 @SuppressWarnings("unchecked")
 @Component
 public class AdminEmailManager {
 
-  private static Logger         logger                        = LoggerFactory.getLogger(EmailManager.class);
+    private static Logger logger = LoggerFactory.getLogger(EmailManager.class);
 
-  public static final String    GOOGLE_BANNED_WORD_LIST       = "googleBannedWordList";
+    public static final String GOOGLE_BANNED_WORD_LIST = "googleBannedWordList";
 
-  //private Set<String>           hkAdminEmails                 = null;
-  private Set<String>           hkReportAdminEmails           = null;
-  /*private Set<String>           babyAdminEmails               = null;
-private Set<String>           beautyAdminEmails             = null;
-private Set<String>           diabetesAdminEmails           = null;
-private Set<String>           eyeAdminEmails                = null;
-private Set<String>           homeDevicesAdminEmails        = null;
-private Set<String>           nutritionAdminEmails          = null;
-private Set<String>           personalCareAdminEmails       = null;
-private Set<String>           logisticsAdminEmails          = null;
-private Set<String>           sportsAdminEmails             = null;*/
-  //private Set<String>           servicesAdminEmails           = null;
-  private Set<String>           marketingAdminEmails          = null;
-  //private Set<String>           categoryHealthkartList        = null;
+    private Set<String> hkReportAdminEmails = null;
+    private Set<String> marketingAdminEmails = null;
 
-  /* @Value("#{hkEnvProps['" + Keys.Env.hkAdminEmails + "']}")
-private String                hkAdminEmailsString;*/
-  @Value("#{hkEnvProps['" + Keys.Env.hkReportAdminEmails + "']}")
-  private String                hkReportAdminEmailsString     = null;
-  /*;
-@Value("#{hkEnvProps['" + Keys.Env.babyAdminEmails + "']}")
-private String                babyAdminEmailsString         = null;
-@Value("#{hkEnvProps['" + Keys.Env.beautyAdminEmails + "']}")
-private String                beautyAdminEmailsString       = null;
-@Value("#{hkEnvProps['" + Keys.Env.diabetesAdminEmails + "']}")
-private String                diabetesAdminEmailsString     = null;
-@Value("#{hkEnvProps['" + Keys.Env.eyeAdminEmails + "']}")
-private String                eyeAdminEmailsString          = null;
-@Value("#{hkEnvProps['" + Keys.Env.homeDevicesAdminEmails + "']}")
-private String                homeDevicesAdminEmailsString  = null;
-@Value("#{hkEnvProps['" + Keys.Env.nutritionAdminEmails + "']}")
-private String                nutritionAdminEmailsString    = null;
-@Value("#{hkEnvProps['" + Keys.Env.personalCareAdminEmails + "']}")
-private String                personalCareAdminEmailsString = null;
-@Value("#{hkEnvProps['" + Keys.Env.logisticsAdminEmails + "']}")
-private String                logisticsAdminEmailsString    = null;
-@Value("#{hkEnvProps['" + Keys.Env.sportsAdminEmails + "']}")
-private String                sportsAdminEmailsString       = null;
-@Value("#{hkEnvProps['" + Keys.Env.servicesAdminEmails + "']}")
-private String                servicesAdminEmailsString     = null;*/
-  @Value("#{hkEnvProps['" + Keys.Env.marketingAdminEmails + "']}")
-  private String                marketingAdminEmailsString    = null;
-  /* @Value("#{hkEnvProps['" + Keys.Env.categoryHealthkart + "']}")
-private String                categoryHealthkartListString  = null;*/
+    @Value("#{hkEnvProps['" + Keys.Env.hkReportAdminEmails + "']}")
+    private String hkReportAdminEmailsString = null;
+    @Value("#{hkEnvProps['" + Keys.Env.marketingAdminEmails + "']}")
+    private String marketingAdminEmailsString = null;
 
-  @Autowired
-  private EmailService          emailService;
-  @Autowired
-  private BaseDao               baseDao;
-  @Autowired
-  private EmailerHistoryDao     emailerHistoryDao;
-  @Autowired
-  private EmailRecepientDao     emailRecepientDao;
-  @Autowired
-  private EmailCampaignDao      emailCampaignDao;
-  @Autowired
-  private NotifyMeDao           notifyMeDao;
-  @Autowired
-  private LinkManager           linkManager;
-  @Autowired
-  private ProductService        productService;
-  @Autowired
-  private ProductVariantService productVariantService;
-  @Autowired
-  private UserService           userService;
-  @Autowired
-  private CouponService         couponService;
-  @Autowired
-  private FreeMarkerService     freeMarkerService;
-  @Autowired
-  private AdminEmailService     adminEmailService;
-  
-  private final int             COMMIT_COUNT = 100;
-  private final int             INITIAL_LIST_SIZE = 100;
-  @PostConstruct
-  public void postConstruction() {
-    this.hkReportAdminEmails = BaseUtils.split(hkReportAdminEmailsString, ",");
-    /* this.hkAdminEmails = BaseUtils.split(hkAdminEmailsString, ",");
- this.babyAdminEmails = BaseUtils.split(babyAdminEmailsString, ",");
- this.beautyAdminEmails = BaseUtils.split(beautyAdminEmailsString, ",");
- this.diabetesAdminEmails = BaseUtils.split(diabetesAdminEmailsString, ",");
- this.eyeAdminEmails = BaseUtils.split(eyeAdminEmailsString, ",");
- this.homeDevicesAdminEmails = BaseUtils.split(homeDevicesAdminEmailsString, ",");
- this.nutritionAdminEmails = BaseUtils.split(nutritionAdminEmailsString, ",");
- this.personalCareAdminEmails = BaseUtils.split(personalCareAdminEmailsString, ",");
- this.logisticsAdminEmails = BaseUtils.split(logisticsAdminEmailsString, ",");
- this.sportsAdminEmails = BaseUtils.split(sportsAdminEmailsString, ",");
- this.servicesAdminEmails = BaseUtils.split(servicesAdminEmailsString, ",");*/
-    this.marketingAdminEmails = BaseUtils.split(marketingAdminEmailsString, ",");
-    /*this.categoryHealthkartList = BaseUtils.split(categoryHealthkartListString, ",");*/
-  }
+    @Autowired
+    private EmailService emailService;
+    @Autowired
+    private BaseDao baseDao;
+    @Autowired
+    private EmailerHistoryDao emailerHistoryDao;
+    @Autowired
+    private EmailRecepientDao emailRecepientDao;
+    @Autowired
+    private EmailCampaignDao emailCampaignDao;
+    @Autowired
+    private NotifyMeDao notifyMeDao;
+    @Autowired
+    private LinkManager linkManager;
+    @Autowired
+    private ProductService productService;
+    @Autowired
+    private ProductVariantService productVariantService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private CouponService couponService;
+    @Autowired
+    private FreeMarkerService freeMarkerService;
+    @Autowired
+    private AdminEmailService adminEmailService;
 
-  /*
-  * private AdminEmailManager(EmailService emailService, // @Named(Keys.Env.hkAdminEmails) String hkAdminEmails, //
-  * @Named(Keys.Env.hkReportAdminEmails) String hkReportAdminEmails, // @Named(Keys.Env.babyAdminEmails) String
-  * babyAdminEmails, // @Named(Keys.Env.beautyAdminEmails) String beautyAdminEmails, //
-  * @Named(Keys.Env.diabetesAdminEmails) String diabetesAdminEmails, // @Named(Keys.Env.eyeAdminEmails) String
-  * eyeAdminEmails, // @Named(Keys.Env.homeDevicesAdminEmails) String homeDevicesAdminEmails, //
-  * @Named(Keys.Env.nutritionAdminEmails) String nutritionAdminEmails, // @Named(Keys.Env.personalCareAdminEmails)
-  * String personalCareAdminEmails, // @Named(Keys.Env.sportsAdminEmails) String sportsAdminEmails, //
-  * @Named(Keys.Env.servicesAdminEmails) String servicesAdminEmails, // @Named(Keys.Env.logisticsAdminEmails) String
-  * logisticsAdminEmails, // @Named(Keys.Env.marketingAdminEmails) String marketingAdminEmails, //
-  * @Named(Keys.Env.categoryHealthkart) String categoryHealthkartList) { this.emailService = emailService;
-  * this.hkReportAdminEmails = BaseUtils.split(hkReportAdminEmails, ","); this.hkAdminEmails =
-  * BaseUtils.split(hkAdminEmails, ","); this.babyAdminEmails = BaseUtils.split(babyAdminEmails, ",");
-  * this.beautyAdminEmails = BaseUtils.split(beautyAdminEmails, ","); this.diabetesAdminEmails =
-  * BaseUtils.split(diabetesAdminEmails, ","); this.eyeAdminEmails = BaseUtils.split(eyeAdminEmails, ",");
-  * this.homeDevicesAdminEmails = BaseUtils.split(homeDevicesAdminEmails, ","); this.nutritionAdminEmails =
-  * BaseUtils.split(nutritionAdminEmails, ","); this.personalCareAdminEmails =
-  * BaseUtils.split(personalCareAdminEmails, ","); this.logisticsAdminEmails = BaseUtils.split(logisticsAdminEmails,
-  * ","); this.sportsAdminEmails = BaseUtils.split(sportsAdminEmails, ","); this.servicesAdminEmails =
-  * BaseUtils.split(servicesAdminEmails, ","); this.marketingAdminEmails = BaseUtils.split(marketingAdminEmails,
-  * ","); this.categoryHealthkartList = BaseUtils.split(categoryHealthkartList, ","); }
-  */
+    private final int COMMIT_COUNT = 100;
+    private final int INITIAL_LIST_SIZE = 100;
 
-  public boolean sendTestCampaignMails(Set<User> emailersList, EmailCampaign emailCampaign) {
+    @PostConstruct
+    public void postConstruction() {
+        this.hkReportAdminEmails = BaseUtils.split(hkReportAdminEmailsString, ",");
+        this.marketingAdminEmails = BaseUtils.split(marketingAdminEmailsString, ",");
+    }
+
+
+    public boolean sendTestCampaignMails(Set<User> emailersList, EmailCampaign emailCampaign) {
     for (User user : emailersList) {
       EmailRecepient emailRecepient = getEmailRecepientDao().getOrCreateEmailRecepient(user.getEmail());
       HashMap valuesMap = new HashMap();
@@ -208,8 +133,6 @@ private String                categoryHealthkartListString  = null;*/
     Session session =  baseDao.getHibernateTemplate().getSessionFactory().openSession();
     for (EmailRecepient emailRecepient : emailersList) {
       try {
-        // find exisitng receipients or create recepients thru the emails ids passed
-        //EmailRecepient emailRecepient = getEmailRecepientDao().getOrCreateEmailRecepient(user.getEmail());
 
         // values that may be used in FTL
         HashMap valuesMap = new HashMap();
@@ -223,22 +146,20 @@ private String                categoryHealthkartListString  = null;*/
         emailRecepient.setLastEmailDate(new Date());
         emailRecepientRecs.add(emailRecepient);
 
+         //todo rohit i told ya earlier to save email type from email campaign and not to hardcode
+          //todo rohit again a save call for every entry??
         EmailerHistory emailerHistory = getEmailerHistoryDao().createEmailerHistory("no-reply@healthkart.com", "HealthKart",
             getBaseDao().get(EmailType.class, EnumEmailType.CampaignEmail.getId()), emailRecepient, emailCampaign, "");
         emailHistoryRecs.add(emailerHistory);
 
         commitCount++;
         if( commitCount == breakFromLoop ) {
-          //getEmailRecepientDao().saveOrUpdate(emailRecepientRecs);
-          //getEmailerHistoryDao().saveOrUpdate(emailHistoryRecs);
           getAdminEmailService().saveOrUpdate(session, emailRecepientRecs);
           getAdminEmailService().saveOrUpdate(session, emailHistoryRecs);
-          //getEmailRecepientDao().clearSession();
           commitCount = 0;
           emailHistoryRecs.clear();
           emailRecepientRecs.clear();
         }
-
       } catch (Exception e) {
         logger.info("Some exception occured while sending email to one of the user with email id" + emailRecepient.getEmail(), e);
       }
@@ -503,25 +424,6 @@ private String                categoryHealthkartListString  = null;*/
 
     }
     return true;
-  }
-
-  public boolean sendEditTicketEmail(Ticket ticket, DisplayTicketHistoryDto displayTicketHistoryDto) {
-    HashMap valuesMap = new HashMap();
-    valuesMap.put("ticket", ticket);
-    valuesMap.put("displayTicketHistoryDto", displayTicketHistoryDto);
-    User reporter = ticket.getReporter();
-    User owner = ticket.getOwner();
-    User changedBy = displayTicketHistoryDto.getChangedBy();
-    boolean reporterEmail = emailService.sendHtmlEmail(EmailTemplateConstants.editTicketEmail, valuesMap, reporter.getEmail(), reporter.getName(), reporter.getEmail());
-    boolean ownerEmail = true;
-    boolean changedByEmail = true;
-    if (!reporter.equals(owner)) {
-      ownerEmail = emailService.sendHtmlEmail(EmailTemplateConstants.editTicketEmail, valuesMap, owner.getEmail(), owner.getName(), reporter.getEmail());
-    }
-    if (!reporter.equals(changedBy) && !owner.equals(changedBy)) {
-      changedByEmail = emailService.sendHtmlEmail(EmailTemplateConstants.editTicketEmail, valuesMap, changedBy.getEmail(), changedBy.getName(), changedBy.getEmail());
-    }
-    return (reporterEmail && ownerEmail && changedByEmail);
   }
 
   public boolean sendDailyCategorySalesReportToCategoryManager(Map categoriesOrderReportDtosMap) {
