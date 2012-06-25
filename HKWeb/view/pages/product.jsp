@@ -4,6 +4,7 @@
 <%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
+<%@ page import="com.hk.pact.service.catalog.ProductService" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -13,6 +14,8 @@
 <c:set var="imageSmallSize" value="<%=EnumImageSize.TinySize%>"/>
 <%
   CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
+  ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
+  pageContext.setAttribute("productService", productService);
   Category eyeGlass = categoryDao.getCategoryByName("eyeglasses");
   pageContext.setAttribute("eyeGlass", eyeGlass);
 

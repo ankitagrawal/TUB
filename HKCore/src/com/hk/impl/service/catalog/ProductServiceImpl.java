@@ -1,8 +1,11 @@
 package com.hk.impl.service.catalog;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.pact.service.mooga.RecommendationEngine;
+import com.hk.pact.dao.catalog.product.ProductVariantDao;
 import net.sourceforge.stripes.controller.StripesFilter;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +21,6 @@ import com.hk.domain.catalog.product.ProductOption;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.catalog.product.combo.ComboProduct;
 import com.hk.pact.dao.catalog.product.ProductDao;
-import com.hk.pact.dao.review.ReviewDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.review.ReviewService;
 import com.hk.web.filter.WebContext;
@@ -31,6 +33,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ReviewService reviewService;
+
+    @Autowired
+    private ProductVariantDao productVariantDao;
+
+    @Autowired
+    private RecommendationEngine recommendationService;
 
     public Product getProductById(String productId) {
         return getProductDAO().getProductById(productId);
@@ -177,4 +185,17 @@ public class ProductServiceImpl implements ProductService {
     }
     return true;
   }
+
+   public List<Product> getRecommendedProducts(String pvID){
+       List<String> pvIdList = recommendationService.getRecommendedProducts(pvID);
+
+       List<Product> products = new ArrayList<Product>();
+       for (String pvId : pvIdList){
+           Product product = productVariantDao.getProductForProudctVariant(pvID);
+           if (product != null){
+               products.add(product);
+           }
+       }
+       return products;
+   }
 }
