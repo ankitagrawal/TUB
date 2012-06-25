@@ -84,7 +84,7 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
 
         return emailRecepients;
     }
-    //todo rohit should be there 2 functions to perform almost the same operations
+
     public Long getAllMailingListCount(EmailCampaign emailCampaign, List<Role> roleList) {
         String query = "select count(*) from EmailRecepient er, User u join u.roles r " +
           " where er.subscribed = true and er.email = u.email " +
@@ -98,13 +98,6 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
     }
 
     public List<EmailRecepient> getMailingListByCategory(EmailCampaign emailCampaign, Category category, int maxResult) {
-
-        /*String query = "select distinct er from LineItem li left join li.sku.productVariant.product.categories c"
-          + " left join li.shippingOrder.baseOrder.user u left join u.roles r, EmailRecepient er " + "where er.email = u.email and c in (:categoryList) " + "and r in (:roleList)"
-          + " and er.subscribed = true "
-          + " and (er.lastEmailDate is null or (er.lastEmailDate is not null and (date(current_date()) - date(er.lastEmailDate) >= (select ec.minDayGap from EmailCampaign ec where ec = :emailCampaign))) )"
-          + " and er not in (select eh.emailRecepient from EmailerHistory eh where eh.emailCampaign = :emailCampaign )";
-*/
         String query = "select distinct er from OrderCategory oc join oc.order.user u join u.roles r, "
           + " EmailRecepient er " + "where er.email = u.email and oc.category in (:categoryList) " + "and r in (:roleList)"
           + " and er.subscribed = true "
@@ -137,7 +130,6 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
         return userIdsByCategoryCount;
     }
 
-    //todo rohir please make practise to write hql, this could have been easely written, criteria is even a better practice
     public List<User> findAllUsersNotInEmailRecepient(int maxResult, List<String> userIdList) {
         String query = "select u.* from user u left join email_recepient er on (u.email = er.email) where er.email is null and u.email is not null ";
 
