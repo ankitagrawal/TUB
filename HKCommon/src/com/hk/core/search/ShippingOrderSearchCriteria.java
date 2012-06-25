@@ -183,8 +183,9 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
         // criteria.setMaxResults(100);
         
         DetachedCriteria paymentCriteria = baseOrderCriteria.createCriteria("payment", CriteriaSpecification.LEFT_JOIN);
-        baseOrderCriteria.addOrder(org.hibernate.criterion.Order.desc("score"));
         paymentCriteria.addOrder(OrderBySqlFormula.sqlFormula("date(payment_date) desc"));
+        baseOrderCriteria.addOrder(org.hibernate.criterion.Order.desc("score"));
+        
         return criteria;
     }
 
