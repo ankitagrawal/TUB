@@ -19,6 +19,7 @@ public class FreeMarkerResolution implements Resolution {
 
 
   public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
     FreeMarkerService.RenderOutput renderOutput = freeMarkerService.getRenderOutputForTemplate(templatePath, valueObject);
     response.setContentType("text/html");
     response.getWriter().write(renderOutput.getMessage());
