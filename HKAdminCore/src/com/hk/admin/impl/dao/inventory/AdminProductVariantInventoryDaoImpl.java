@@ -110,9 +110,9 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
      * :shippingOrder").setParameter( "qty", -1L).setParameter("shippingOrder", shippingOrder).list(); }
      */
 
-    public List<CreateInventoryFileDto> getDetailsForUncheckedItems(String brand) {
+    /*public List<CreateInventoryFileDto> getDetailsForUncheckedItems(String brand) {
         return getDetailsForUncheckedItems(brand, null);
-    }
+    }*/
 
 	public List<CreateInventoryFileDto> getDetailsForUncheckedItems(String brand, Warehouse warehouse) {
 		List<CreateInventoryFileDto> createInventoryFileDtoList = new ArrayList<CreateInventoryFileDto>();
