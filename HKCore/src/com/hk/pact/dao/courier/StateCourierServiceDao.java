@@ -1,5 +1,6 @@
 package com.hk.pact.dao.courier;
 
+import com.hk.domain.core.State;
 import com.hk.domain.courier.StateCourierService;
 import com.hk.pact.dao.BaseDao;
 
@@ -13,5 +14,5 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public interface StateCourierServiceDao  extends BaseDao {
- public List<StateCourierService> getAllStateCourierServiceByState(String stateName);
+ public List<StateCourierService> getAllStateCourierServiceByState(State state);
 }
