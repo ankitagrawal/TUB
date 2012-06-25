@@ -52,4 +52,17 @@ public class RoleDaoImpl extends BaseDaoImpl implements RoleDao {
         return findByCriteria(criteria);
     }
 
+    public List<Role> listAllCustomerSupportRoles() {
+        List<String> customerSupportRoles = EnumRole.listCustomerSupportRoles();
+        DetachedCriteria criteria = DetachedCriteria.forClass(Role.class);
+        criteria.add(Restrictions.in("name",customerSupportRoles));
+        return findByCriteria(criteria);
+    }
+    public List<Role> listAllOperationsRoles() {
+        List<String> opsRoles = EnumRole.listOpsRoles();
+        DetachedCriteria criteria = DetachedCriteria.forClass(Role.class);
+        criteria.add(Restrictions.in("name",opsRoles));
+        return findByCriteria(criteria);
+    }
+
 }
