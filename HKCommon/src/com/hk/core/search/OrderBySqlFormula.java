@@ -11,6 +11,7 @@ import org.hibernate.HibernateException;
  * @author vaibhav.adlakha
  *
  */
+@SuppressWarnings("serial")
 public class OrderBySqlFormula extends Order {
     private String sqlFormula;
  
