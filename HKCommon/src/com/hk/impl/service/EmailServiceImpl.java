@@ -76,18 +76,18 @@ public class EmailServiceImpl implements EmailService {
     return sendHtmlEmail(templatePath, templateValues, noReplyEmail, noReplyName, toEmail, toName, replyToEmail, null, headerMap);
   }
 
-  public Map<String,HtmlEmail> createHtmlEmail( String templatePath, Object templateValues, String toEmail, String toName, String replyToEmail,Map<String, String> headerMap, Template template){
-    return  createHtmlEmail(templatePath, templateValues, noReplyEmail, noReplyName, toEmail, toName, null, null,headerMap, template);
+  public Map<String,HtmlEmail> createHtmlEmail(Object templateValues, String toEmail, String toName, String replyToEmail,Map<String, String> headerMap, Template template){
+    return  createHtmlEmail(templateValues, noReplyEmail, noReplyName, toEmail, toName, null, null,headerMap, template);
   }
 
-  public Map<String,HtmlEmail> createHtmlEmail(String templatePath, Object templateValues, String fromEmail, String fromName, String toEmail, String toName, String replyToEmail,
+  public Map<String,HtmlEmail> createHtmlEmail(Object templateValues, String fromEmail, String fromName, String toEmail, String toName, String replyToEmail,
                                                String replyToName, Map<String, String> headerMap, Template template){
     Map<String, HtmlEmail> returnMap = new HashMap<String, HtmlEmail>();
-    FreeMarkerService.RenderOutput renderOutput = freeMarkerService.processCampaignTemplate(template, templatePath, templateValues);
+    FreeMarkerService.RenderOutput renderOutput = freeMarkerService.processCampaignTemplate(template, templateValues);
     HtmlEmail htmlEmail = null;
     try{
       if (renderOutput == null) {
-        logger.error("Error while rendering freemarker template : " + templatePath + " in sendHtmlEmail");
+        logger.error("Error while rendering freemarker template : " + " in sendHtmlEmail");
         return null;
       }
       htmlEmail = new HtmlEmail();
@@ -104,7 +104,7 @@ public class EmailServiceImpl implements EmailService {
       logger.debug("Body:");
       logger.debug(renderOutput.getMessage());
     }catch(EmailException ex){
-      logger.error("EmailException in sendHtmlEmail for template " + templatePath, ex);
+      logger.error("EmailException in sendHtmlEmail for template ", ex);
       return null;
     }
     return returnMap;

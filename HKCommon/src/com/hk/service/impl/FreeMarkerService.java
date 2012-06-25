@@ -37,7 +37,6 @@ public class FreeMarkerService {
    * as the subject and the next line onwards is the message body The method eats any render errors and returns a null
    *
    * @param templatePath
-   * @param templateValues
    * @return
    */
   public Template getCampaignTemplate(String templatePath) {
@@ -56,7 +55,7 @@ public class FreeMarkerService {
     return template;
   }
 
-  public RenderOutput processCampaignTemplate(Template template, String templatePath, Object templateValues){
+  public RenderOutput processCampaignTemplate(Template template, Object templateValues){
     RenderOutput renderOutput = null;
     try {
       StringWriter stringWriter = new StringWriter();
@@ -69,15 +68,15 @@ public class FreeMarkerService {
 
       renderOutput = new RenderOutput(subject, body);
     } catch (IOException e) {
-      logger.error("IOException in getRenderOutputForTemplate for template " + templatePath, e);
+      logger.error("IOException in getRenderOutputForTemplate for template ", e);
     }  catch (TemplateException e) {
-      logger.error("TemplateException in getRenderOutputForTemplate for template " + templatePath, e);
+      logger.error("TemplateException in getRenderOutputForTemplate for template ", e);
     }
     return renderOutput;
   }
 
   public RenderOutput getRenderOutputForTemplate(String templatePath, Object templateValues){
-       return processCampaignTemplate(getCampaignTemplate(templatePath), templatePath, templateValues);
+       return processCampaignTemplate(getCampaignTemplate(templatePath), templateValues);
   }
 
   public class RenderOutput {
