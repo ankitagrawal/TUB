@@ -5,7 +5,6 @@ import java.util.Map;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.UrlBinding;
 
 import org.apache.commons.lang.math.NumberUtils;
 import org.slf4j.Logger;

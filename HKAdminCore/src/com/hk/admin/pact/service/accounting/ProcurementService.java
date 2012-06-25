@@ -1,6 +1,5 @@
 package com.hk.admin.pact.service.accounting;
 
-import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.inventory.po.PurchaseInvoice;
 
 /**

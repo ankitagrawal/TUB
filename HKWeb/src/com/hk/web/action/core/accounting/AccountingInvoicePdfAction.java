@@ -1,34 +1,40 @@
 package com.hk.web.action.core.accounting;
 
-import com.akube.framework.stripes.action.BaseAction;
-import com.hk.constants.core.Keys;
-import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
-import com.hk.pact.dao.user.B2bUserDetailsDao;
-import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
-import com.hk.pact.service.shippingOrder.ShippingOrderService;
-import com.hk.domain.user.B2bUserDetails;
-import com.hk.domain.order.ShippingOrder;
-import com.hk.core.search.ShippingOrderSearchCriteria;
-import com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction;
-import com.hk.admin.util.AccountingInvoicePdfGenerator;
-import com.hk.util.CustomDateTypeConvertor;
-
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.Date;
-import java.io.*;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.annotation.Autowired;
-import net.sourceforge.stripes.action.*;
-import net.sourceforge.stripes.validation.Validate;
-import net.sourceforge.stripes.validation.ValidationMethod;
-import net.sourceforge.stripes.validation.SimpleError;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.validation.SimpleError;
+import net.sourceforge.stripes.validation.Validate;
+import net.sourceforge.stripes.validation.ValidationMethod;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+
+import com.akube.framework.stripes.action.BaseAction;
+import com.hk.admin.util.AccountingInvoicePdfGenerator;
+import com.hk.constants.core.Keys;
+import com.hk.core.search.ShippingOrderSearchCriteria;
+import com.hk.domain.order.ShippingOrder;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.util.CustomDateTypeConvertor;
+import com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction;
 
 /**
  * Created by IntelliJ IDEA.
