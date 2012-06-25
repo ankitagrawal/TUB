@@ -19,4 +19,6 @@ public interface KarmaProfileService {
 
      public KarmaProfile updateKarmaAfterOrder(Order order);
 
+     public KarmaProfile updateKarmaAfterOrderCancellation(Order order);
+
 }

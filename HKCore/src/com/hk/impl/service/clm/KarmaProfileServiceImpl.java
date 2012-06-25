@@ -1,7 +1,9 @@
 package com.hk.impl.service.clm;
 
+import java.util.List;
 import java.util.Set;
 
+import com.hk.constants.order.EnumOrderStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +56,33 @@ public class KarmaProfileServiceImpl implements KarmaProfileService {
             karmaProfile.setKarmaPoints(getKarmaPoints(order));
         }
         karmaProfile = this.save(karmaProfile);
+        return karmaProfile;
+    }
+
+    public KarmaProfile updateKarmaAfterOrderCancellation(Order order){
+        User user = order.getUser();
+        KarmaProfile karmaProfile = findByUser(user);
+        //the below code is written for orders which might be pending before the karmaprofile feature is implemented
+        //and must be removed in the future
+        if (karmaProfile == null) {
+            karmaProfile = new KarmaProfile();
+            karmaProfile.setUser(user);
+        }
+        //0 karma points is a safe hardcoding unless the customer buys again the same month
+        List<Order> orderList=user.getOrders();
+        if(orderList.size()>0)  {
+            for(Order ord : orderList){
+                if(ord.getOrderStatus().getId() != EnumOrderStatus.Cancelled.getId()) {
+                    if(ord.getId() == order.getId()){
+                        karmaProfile.setKarmaPoints(0);
+                        karmaProfile = this.save(karmaProfile);
+                        break;
+                    }
+                   break;
+                }
+            }
+
+        }
         return karmaProfile;
     }
 
