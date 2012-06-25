@@ -18,10 +18,12 @@ import com.hk.pact.dao.RoleDao;
 import com.hk.pact.dao.email.EmailRecepientDao;
 import com.hk.pact.dao.marketing.EmailCampaignDao;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.marketing.EmailCampaignService;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.util.ParseCsvFile;
 import com.hk.util.SendGridUtil;
 import com.hk.web.action.error.AdminPermissionAction;
+import com.hk.web.HealthkartResponse;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
 import org.apache.commons.lang.StringUtils;
@@ -91,7 +93,8 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
     private final int maxResultCount = 5000;
     @Autowired
     private EmailRecepientDao emailRecepientDao;
-
+    @Autowired
+    private EmailCampaignService emailCampaignService;
     @DefaultHandler
     @DontValidate
     public Resolution pre() {
@@ -283,6 +286,15 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
         return new ForwardResolution(SendEmailNewsletterCampaign.class, "selectCampaign");
     }
 
+    public Resolution getSentCountForEmailCampaign() {
+        Map datamap = new HashMap();
+        Long sentCount = emailCampaignService.getEmailCampaignSentCount(emailCampaign);
+        datamap.put("sentCountValue", sentCount);
+        datamap.put("emailCampaignId", emailCampaign.getId().toString());
+        HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Sent Count Generated for Email Campaign", datamap);
+        return new JsonResolution(healthkartResponse);
+      }
+
     public List<EmailCampaign> getEmailCampaigns() {
         return emailCampaigns;
     }
@@ -443,5 +455,13 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
 
     public void setAdminEmailService(AdminEmailService adminEmailService) {
         this.adminEmailService = adminEmailService;
+    }
+
+    public EmailCampaignService getEmailCampaignService() {
+        return emailCampaignService;
+    }
+
+    public void setEmailCampaignService(EmailCampaignService emailCampaignService) {
+        this.emailCampaignService = emailCampaignService;
     }
 }
