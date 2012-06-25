@@ -36,8 +36,7 @@ public class CourierServiceImpl implements CourierService {
     private CourierDao courierDao;
     @Autowired
     private CourierServiceInfoDao courierServiceInfoDao;
-    @Autowired
-    CityCourierTATDao cityCourierTATDao;
+
 
     @Override
     public Courier getCourierById(Long courierId) {
@@ -198,7 +197,4 @@ public class CourierServiceImpl implements CourierService {
     public void setPincodeService(PincodeService pincodeService) {
         this.pincodeService = pincodeService;
     }
-
-
-
 }
