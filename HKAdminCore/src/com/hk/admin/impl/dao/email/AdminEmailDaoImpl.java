@@ -34,146 +34,146 @@ import org.springframework.dao.DataAccessException;
 @Repository
 public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
 
-  @Autowired
-  private RoleDao roleDao;
+    @Autowired
+    private RoleDao roleDao;
 
-  public List<EmailRecepient> getAllMailingList(EmailCampaign emailCampaign, List<Role> roleList, int maxResult) {
+    public List<EmailRecepient> getAllMailingList(EmailCampaign emailCampaign, List<Role> roleList, int maxResult) {
 
-   String query = "select er from EmailRecepient er, User u join u.roles r " +
-        " where er.subscribed = true and er.email = u.email " +
-       " and (er.lastEmailDate is null or (er.lastEmailDate is not null and (date(current_date()) - date(er.lastEmailDate) >= (select ec.minDayGap from EmailCampaign ec where ec = :emailCampaign))) )" +
-        " and er not in (select eh.emailRecepient from EmailerHistory eh where eh.emailCampaign = :emailCampaign ) " +
-        " and r in (:roleList)" ;
+        String query = "select er from EmailRecepient er, User u join u.roles r " +
+          " where er.subscribed = true and er.email = u.email " +
+          " and (er.lastEmailDate is null or (er.lastEmailDate is not null and (date(current_date()) - date(er.lastEmailDate) >= (select ec.minDayGap from EmailCampaign ec where ec = :emailCampaign))) )" +
+          " and er not in (select eh.emailRecepient from EmailerHistory eh where eh.emailCampaign = :emailCampaign ) " +
+          " and r in (:roleList)" ;
 
-    List<EmailRecepient> emailRecepients = ( List<EmailRecepient> )getSession().createQuery(query)
-        .setParameter("emailCampaign", emailCampaign)
-        .setParameter("emailCampaign", emailCampaign)
-        .setParameterList("roleList", roleList)
-        .setMaxResults(maxResult).list();
-   
-    return emailRecepients;
-  }
+        List<EmailRecepient> emailRecepients = ( List<EmailRecepient> )getSession().createQuery(query)
+          .setParameter("emailCampaign", emailCampaign)
+          .setParameter("emailCampaign", emailCampaign)
+          .setParameterList("roleList", roleList)
+          .setMaxResults(maxResult).list();
 
-  //todo whats the diff in above 2 functions
-  public List<EmailRecepient> getUserMailingList(EmailCampaign emailCampaign, List<Long> userList, int maxResult) {
-    String query = "select er from EmailRecepient er, User u " +
-        " where er.subscribed = true and er.email = u.email " +
-        " and (er.lastEmailDate is null or (er.lastEmailDate is not null and (date(current_date()) - date(er.lastEmailDate) >= (select ec.minDayGap from EmailCampaign ec where ec = :emailCampaign))) )" +
-        " and er not in (select eh.emailRecepient from EmailerHistory eh where eh.emailCampaign = :emailCampaign ) " +
-        " and u.id in (:userList)" ;
-
-    List<EmailRecepient> emailRecepients = ( List<EmailRecepient> )getSession().createQuery(query)
-        .setParameter("emailCampaign", emailCampaign)
-        .setParameter("emailCampaign", emailCampaign)
-        .setParameterList("userList", userList)
-        .setMaxResults(maxResult).list();
-
-    return emailRecepients;
-  }
-
-  public List<EmailRecepient> getMailingListByEmailIds(EmailCampaign emailCampaign, List<String> emailList, int maxResult) {
-
-    List<EmailRecepient> emailRecepients = getSession().createQuery("select er from EmailRecepient er " +
-        " where er.subscribed = true " +
-        " and (er.lastEmailDate is null or (er.lastEmailDate is not null and (date(current_date()) - date(er.lastEmailDate) >= (select ec.minDayGap from EmailCampaign ec where ec = :emailCampaign))) )" +
-        " and er not in (select eh.emailRecepient from EmailerHistory eh where eh.emailCampaign = :emailCampaign ) " +
-        " and er.email in (:emailList)")
-        .setParameterList("emailList", emailList)
-        .setParameter("emailCampaign", emailCampaign)
-        .setParameter("emailCampaign", emailCampaign)
-        .setMaxResults(maxResult).list();
-    
-    return emailRecepients;
-  }
-  //todo rohit should be there 2 functions to perform almost the same operations
-  public BigInteger getAllMailingListCount(EmailCampaign emailCampaign, String [] roles) {       
-    String query = "select  count(u.id)" +
-        "     from user u left join email_recepient er on (u.email = er.email and er.subscribed > 0) " +
-        "     left join emailer_history eh on (er.id = eh.email_recepient_id " +
-        "     and eh.email_campaign_id = %s ),  " +
-        "     user_has_role ur, email_campaign ec   " +
-        "     where u.id = ur.user_id  " +
-        "     and ur.role_name IN ('%s')  " +
-        "     and ec.id = %s  " +
-        "     and (er.last_email_date is null or (date(sysdate()) - er.last_email_date >= ec.min_day_gap))  ";
-    query = String.format(query, emailCampaign.getId(), BaseUtils.getCommaSeparatedString(roles), emailCampaign.getId());
-
-    BigInteger userListCount = (BigInteger) getSession().createSQLQuery(query).uniqueResult();
-    return userListCount;
-  }
-
-  public List<EmailRecepient> getMailingListByCategory(EmailCampaign emailCampaign, Category category, int maxResult) {
-
-    String query = "select distinct er from LineItem li left join li.sku.productVariant.product.categories c"
-        + " left join li.shippingOrder.baseOrder.user u left join u.roles r, EmailRecepient er " + "where er.email = u.email and c in (:categoryList) " + "and r in (:roleList)"
-        + " and er.subscribed = true "
-        + " and (er.lastEmailDate is null or (er.lastEmailDate is not null and (date(current_date()) - date(er.lastEmailDate) >= (select ec.minDayGap from EmailCampaign ec where ec = :emailCampaign))) )"
-        + " and er not in (select eh.emailRecepient from EmailerHistory eh where eh.emailCampaign = :emailCampaign )";
-
-    List<EmailRecepient> userIdsByCategory = getSession().createQuery(query)
-        .setParameterList("categoryList", Arrays.asList(category))
-        .setParameterList("roleList",Arrays.asList(getRoleDao().getRoleByName(EnumRole.HK_USER), getRoleDao().getRoleByName(EnumRole.HK_UNVERIFIED)))
-        .setParameter("emailCampaign", emailCampaign)
-        .setParameter("emailCampaign", emailCampaign).setMaxResults(maxResult).list();
-
-    return userIdsByCategory;
-  }
-
-    //TODO Rohit There is a table order has categories, please write that query using that, easier and less computive
-  public Long getMailingListCountByCategory(EmailCampaign emailCampaign, Category category) {
-
-    String query = "select count(distinct u.id) from LineItem li left join li.sku.productVariant.product.categories c"
-        + " left join li.shippingOrder.baseOrder.user u left join u.roles r, EmailRecepient er " + "where er.email = u.email and c in (:categoryList) " + "and r in (:roleList)"
-        + " and er.subscribed = true "
-        + " and (er.lastEmailDate is null or (er.lastEmailDate is not null and (date(current_date()) - date(er.lastEmailDate) >= (select ec.minDayGap from EmailCampaign ec where ec = :emailCampaign))) )"
-        + " and er not in (select eh.emailRecepient from EmailerHistory eh where eh.emailCampaign = :emailCampaign )";
-
-    Long userIdsByCategoryCount = (Long)getSession().createQuery(query)
-        .setParameterList("categoryList", Arrays.asList(category))
-        .setParameterList("roleList",Arrays.asList(getRoleDao().getRoleByName(EnumRole.HK_USER), getRoleDao().getRoleByName(EnumRole.HK_UNVERIFIED)))
-        .setParameter("emailCampaign", emailCampaign)
-        .setParameter("emailCampaign", emailCampaign).uniqueResult();
-
-    return userIdsByCategoryCount;
-  }
-
-  //todo rohir please make practise to write hql, this could have been easely written, criteria is even a better practice
-  public List<User> findAllUsersNotInEmailRecepient(int maxResult, List<String> userIdList) {
-    String query = "select u.* from user u left join email_recepient er on (u.email = er.email) where er.email is null and u.email is not null ";
-
-    if(userIdList != null){
-      query += "and u.id in (:userIdList)" ;
+        return emailRecepients;
     }
-    Query sqlQuery = getSession().createSQLQuery(query).addEntity(User.class);
-    if(userIdList != null) {
-      sqlQuery = sqlQuery.setParameterList("userIdList", userIdList);
+
+    public List<EmailRecepient> getUserMailingList(EmailCampaign emailCampaign, List<Long> userList, int maxResult) {
+        String query = "select er from EmailRecepient er, User u " +
+          " where er.subscribed = true and er.email = u.email " +
+          " and (er.lastEmailDate is null or (er.lastEmailDate is not null and (date(current_date()) - date(er.lastEmailDate) >= (select ec.minDayGap from EmailCampaign ec where ec = :emailCampaign))) )" +
+          " and er not in (select eh.emailRecepient from EmailerHistory eh where eh.emailCampaign = :emailCampaign ) " +
+          " and u.id in (:userList)" ;
+
+        List<EmailRecepient> emailRecepients = ( List<EmailRecepient> )getSession().createQuery(query)
+          .setParameter("emailCampaign", emailCampaign)
+          .setParameter("emailCampaign", emailCampaign)
+          .setParameterList("userList", userList)
+          .setMaxResults(maxResult).list();
+
+        return emailRecepients;
     }
-    
-    return sqlQuery.setMaxResults(maxResult).list();
-  }
 
-  @SuppressWarnings("unchecked")
-  public void saveOrUpdate(Session session, Collection entities) throws DataAccessException {
+    public List<EmailRecepient> getMailingListByEmailIds(EmailCampaign emailCampaign, List<String> emailList, int maxResult) {
 
-    Transaction transaction = session.beginTransaction();
-    try {
-      for (Object object : entities) {
-        session.saveOrUpdate(object);
-      }
-      session.flush();
-      session.clear();
-      transaction.commit();
-    }catch(Exception ex){
-      transaction.rollback();
+        List<EmailRecepient> emailRecepients = getSession().createQuery("select er from EmailRecepient er " +
+          " where er.subscribed = true " +
+          " and (er.lastEmailDate is null or (er.lastEmailDate is not null and (date(current_date()) - date(er.lastEmailDate) >= (select ec.minDayGap from EmailCampaign ec where ec = :emailCampaign))) )" +
+          " and er not in (select eh.emailRecepient from EmailerHistory eh where eh.emailCampaign = :emailCampaign ) " +
+          " and er.email in (:emailList)")
+          .setParameterList("emailList", emailList)
+          .setParameter("emailCampaign", emailCampaign)
+          .setParameter("emailCampaign", emailCampaign)
+          .setMaxResults(maxResult).list();
+
+        return emailRecepients;
     }
-  }
+    //todo rohit should be there 2 functions to perform almost the same operations
+    public Long getAllMailingListCount(EmailCampaign emailCampaign, List<Role> roleList) {
+        String query = "select count(*) from EmailRecepient er, User u join u.roles r " +
+          " where er.subscribed = true and er.email = u.email " +
+          " and (er.lastEmailDate is null or (er.lastEmailDate is not null and (date(current_date()) - date(er.lastEmailDate) >= (select ec.minDayGap from EmailCampaign ec where ec = :emailCampaign))) )" +
+          " and er not in (select eh.emailRecepient from EmailerHistory eh where eh.emailCampaign = :emailCampaignInner ) " +
+          " and r in (:roleList)" ;
+
+        Long userListCount = (Long) findUniqueByNamedParams(query, new String[]{"emailCampaign", "emailCampaignInner", "roleList"}, new Object[]{emailCampaign, emailCampaign, roleList});
+
+        return userListCount;
+    }
+
+    public List<EmailRecepient> getMailingListByCategory(EmailCampaign emailCampaign, Category category, int maxResult) {
+
+        /*String query = "select distinct er from LineItem li left join li.sku.productVariant.product.categories c"
+          + " left join li.shippingOrder.baseOrder.user u left join u.roles r, EmailRecepient er " + "where er.email = u.email and c in (:categoryList) " + "and r in (:roleList)"
+          + " and er.subscribed = true "
+          + " and (er.lastEmailDate is null or (er.lastEmailDate is not null and (date(current_date()) - date(er.lastEmailDate) >= (select ec.minDayGap from EmailCampaign ec where ec = :emailCampaign))) )"
+          + " and er not in (select eh.emailRecepient from EmailerHistory eh where eh.emailCampaign = :emailCampaign )";
+*/
+        String query = "select distinct er from OrderCategory oc join oc.order.user u join u.roles r, "
+          + " EmailRecepient er " + "where er.email = u.email and oc.category in (:categoryList) " + "and r in (:roleList)"
+          + " and er.subscribed = true "
+          + " and (er.lastEmailDate is null or (er.lastEmailDate is not null and (date(current_date()) - date(er.lastEmailDate) >= (select ec.minDayGap from EmailCampaign ec where ec = :emailCampaign))) )"
+          + " and er not in (select eh.emailRecepient from EmailerHistory eh where eh.emailCampaign = :emailCampaign )";
+
+        List<EmailRecepient> userIdsByCategory = getSession().createQuery(query)
+          .setParameterList("categoryList", Arrays.asList(category))
+          .setParameterList("roleList",Arrays.asList(getRoleDao().getRoleByName(EnumRole.HK_USER), getRoleDao().getRoleByName(EnumRole.HK_UNVERIFIED)))
+          .setParameter("emailCampaign", emailCampaign)
+          .setParameter("emailCampaign", emailCampaign).setMaxResults(maxResult).list();
+
+        return userIdsByCategory;
+    }
+
+    public Long getMailingListCountByCategory(EmailCampaign emailCampaign, Category category) {
+
+        String query = "select count(distinct u.id) from OrderCategory oc join oc.order.user u join u.roles r, "
+                  + " EmailRecepient er " + "where er.email = u.email and oc.category in (:categoryList) " + "and r in (:roleList)"
+                  + " and er.subscribed = true "
+                  + " and (er.lastEmailDate is null or (er.lastEmailDate is not null and (date(current_date()) - date(er.lastEmailDate) >= (select ec.minDayGap from EmailCampaign ec where ec = :emailCampaign))) )"
+                  + " and er not in (select eh.emailRecepient from EmailerHistory eh where eh.emailCampaign = :emailCampaign )";
+
+        Long userIdsByCategoryCount = (Long)getSession().createQuery(query)
+          .setParameterList("categoryList", Arrays.asList(category))
+          .setParameterList("roleList",Arrays.asList(getRoleDao().getRoleByName(EnumRole.HK_USER), getRoleDao().getRoleByName(EnumRole.HK_UNVERIFIED)))
+          .setParameter("emailCampaign", emailCampaign)
+          .setParameter("emailCampaign", emailCampaign).uniqueResult();
+                
+        return userIdsByCategoryCount;
+    }
+
+    //todo rohir please make practise to write hql, this could have been easely written, criteria is even a better practice
+    public List<User> findAllUsersNotInEmailRecepient(int maxResult, List<String> userIdList) {
+        String query = "select u.* from user u left join email_recepient er on (u.email = er.email) where er.email is null and u.email is not null ";
+
+        if(userIdList != null){
+            query += "and u.id in (:userIdList)" ;
+        }
+        Query sqlQuery = getSession().createSQLQuery(query).addEntity(User.class);
+        if(userIdList != null) {
+            sqlQuery = sqlQuery.setParameterList("userIdList", userIdList);
+        }
+
+        return sqlQuery.setMaxResults(maxResult).list();
+    }
+
+    @SuppressWarnings("unchecked")
+    public void saveOrUpdate(Session session, Collection entities) throws DataAccessException {
+
+        Transaction transaction = session.beginTransaction();
+        try {
+            for (Object object : entities) {
+                session.saveOrUpdate(object);
+            }
+            session.flush();
+            session.clear();
+            transaction.commit();
+        }catch(Exception ex){
+            transaction.rollback();
+        }
+    }
 
 
-  public RoleDao getRoleDao() {
-    return roleDao;
-  }
+    public RoleDao getRoleDao() {
+        return roleDao;
+    }
 
-  public void setRoleDao(RoleDao roleDao) {
-    this.roleDao = roleDao;
-  }
+    public void setRoleDao(RoleDao roleDao) {
+        this.roleDao = roleDao;
+    }
 }

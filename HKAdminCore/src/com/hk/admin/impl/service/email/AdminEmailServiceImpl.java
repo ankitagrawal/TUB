@@ -47,7 +47,7 @@ public class AdminEmailServiceImpl implements AdminEmailService{
     return getAdminEmailDao().getUserMailingList(emailCampaign, userList, maxResult);
   }
 
-  public BigInteger getAllMailingListCount(EmailCampaign emailCampaign, String [] roles) {
+  public Long getAllMailingListCount(EmailCampaign emailCampaign, List<Role> roles) {
     return getAdminEmailDao().getAllMailingListCount(emailCampaign, roles);
   }
 
