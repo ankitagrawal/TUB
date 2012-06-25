@@ -1,7 +1,7 @@
 package com.hk.web.action.admin.courier;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.admin.pact.service.courier.CityCourierTATService;
 import com.hk.admin.util.helper.XslCityCourierTATParser;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
@@ -28,7 +28,7 @@ public class CityCourierTatAction extends BaseAction {
   @Autowired
   XslCityCourierTATParser xslCityCourierTATParser;
   @Autowired
-  CourierService courierService;
+  CityCourierTATService cityCourierTATService;
 
   @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
   String adminUploadsPath;
@@ -51,7 +51,7 @@ public class CityCourierTatAction extends BaseAction {
       citySetFromExcel = xslCityCourierTATParser.readCityCourierTATExcel(excelFile);
       if (null != citySetFromExcel && citySetFromExcel.size() > 0) {
         for (CityCourierTAT CityCourierTAT : citySetFromExcel) {
-          courierService.saveCityCourierTAT(CityCourierTAT);
+          cityCourierTATService.saveCityCourierTAT(CityCourierTAT);
         }
         addRedirectAlertMessage(new SimpleMessage("database updated"));
         return new RedirectResolution("/pages/admin/uploadCityCourierTAT.jsp");

@@ -1,5 +1,6 @@
 package com.hk.admin.impl.service.courier;
 
+import com.hk.admin.pact.dao.courier.CityCourierTATDao;
 import com.hk.admin.pact.dao.courier.CourierDao;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.service.courier.CourierService;
@@ -11,7 +12,6 @@ import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.domain.order.Order;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.pact.dao.BaseDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.core.PincodeService;
 import com.hk.pact.service.payment.PaymentService;
@@ -37,7 +37,7 @@ public class CourierServiceImpl implements CourierService {
     @Autowired
     private CourierServiceInfoDao courierServiceInfoDao;
     @Autowired
-    BaseDao baseDao;
+    CityCourierTATDao cityCourierTATDao;
 
     @Override
     public Courier getCourierById(Long courierId) {
@@ -199,8 +199,6 @@ public class CourierServiceImpl implements CourierService {
         this.pincodeService = pincodeService;
     }
 
-    public void saveCityCourierTAT(CityCourierTAT cityCourierTAT) {
-        baseDao.save(cityCourierTAT);
-    }
+
 
 }

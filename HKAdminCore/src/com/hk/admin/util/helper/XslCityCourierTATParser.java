@@ -2,13 +2,13 @@ package com.hk.admin.util.helper;
 
 import com.hk.admin.pact.dao.courier.CityCourierTATDao;
 import com.hk.admin.pact.service.courier.CourierService;
-import com.hk.admin.pact.service.courier.CourierStateCityService;
 import com.hk.admin.util.XslUtil;
 import com.hk.constants.XslConstants;
 import com.hk.domain.core.City;
 import com.hk.domain.courier.CityCourierTAT;
 import com.hk.domain.courier.Courier;
 import com.hk.exception.ExcelBlankFieldException;
+import com.hk.pact.service.core.CityService;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -38,7 +38,7 @@ import java.util.*;
 public class XslCityCourierTATParser {
   private static Logger logger = LoggerFactory.getLogger(XslCityCourierTATParser.class);
   @Autowired
-  CourierStateCityService courierStateCityService;
+  CityService cityService;
   @Autowired
   CourierService courierService;
   @Autowired
@@ -82,7 +82,7 @@ public class XslCityCourierTATParser {
           }
 
         }
-        City city = courierStateCityService.getCityByName(cityName);
+        City city = cityService.getCityByName(cityName);
         if (city == null) {
           logger.error("Invalid City , Check  for spelling  " + city, rowCount);
           throw new ExcelBlankFieldException("Invalid City , Check  for spelling   " + "    ", rowCount);

@@ -41,6 +41,6 @@ public class City implements java.io.Serializable{
 
   @Override
   public String toString() {
-    return name != null ? name.toString() : "";
+    return id == null ? "" : id.toString();
   }
 }
