@@ -23,7 +23,7 @@ import org.hibernate.Session;
 public interface AdminEmailDao {
   public List<EmailRecepient> getUserMailingList(EmailCampaign emailCampaign, List<Long> userList, int maxResult);
 
-  public BigInteger getAllMailingListCount(EmailCampaign emailCampaign, String [] roles);
+  public Long getAllMailingListCount(EmailCampaign emailCampaign, List<Role> roles);
 
   public List<EmailRecepient> getMailingListByCategory(EmailCampaign emailCampaign, Category category, int maxResult);
 
