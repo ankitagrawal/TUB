@@ -1,12 +1,8 @@
 package com.hk.core.search;
 
 import org.apache.commons.lang.StringUtils;
-import org.hibernate.Hibernate;
 import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.type.Type;
 
 import com.akube.framework.dao.SearchDao;
 import com.hk.service.ServiceLocatorFactory;
@@ -28,12 +24,12 @@ public abstract class AbstractOrderSearchCriteria {
 
     private int                maxResults          = -1;
 
-    public AbstractOrderSearchCriteria setStoreId(Long storeId) {
-        this.storeId = storeId;
-        return this;
-    }
+  public AbstractOrderSearchCriteria setStoreId(Long storeId) {
+    this.storeId = storeId;
+    return this;
+  }
 
-    public AbstractOrderSearchCriteria setOrderId(Long orderId) {
+  public AbstractOrderSearchCriteria setOrderId(Long orderId) {
         this.orderId = orderId;
         return this;
     }
@@ -83,18 +79,16 @@ public abstract class AbstractOrderSearchCriteria {
         if (storeId != null) {
             baseCriteria.add(Restrictions.eq("store.id", storeId));
         }
-        
-        baseCriteria.setProjection(Projections.projectionList().add(
-                Projections.sqlProjection("date(createDate) as createDate", new String[] { "createDate" }, new Type[] { Hibernate.DATE })));
 
-        //DetachedCriteria paymentCriteria = baseCriteria.createCriteria("payment");
         if (sortByUpdateDate) {
             if (!orderAsc) {
-                baseCriteria.addOrder(org.hibernate.criterion.Order.desc("createDate"));
+                baseCriteria.addOrder(org.hibernate.criterion.Order.desc("updateDate"));
             } else {
-                baseCriteria.addOrder(org.hibernate.criterion.Order.asc("createDate"));
+                baseCriteria.addOrder(org.hibernate.criterion.Order.asc("updateDate"));
             }
         }
+        
+        
 
         // TODO: fix later after rewrite
         // baseCriteria.setMaxResults(2);
