@@ -23,7 +23,6 @@ import com.hk.manager.payment.TekprocessPaymentGatewayWrapper;
 import com.hk.pact.dao.payment.PaymentDao;
 import com.hk.web.AppConstants;
 
-//@UrlBinding("/payment/TekprocessGatewaySendReceive.action")
 @Component
 public class TekprocessGatewaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<TekprocessPaymentGatewayWrapper> {
 
@@ -35,8 +34,6 @@ public class TekprocessGatewaySendReceiveAction extends BasePaymentGatewaySendRe
     PaymentManager        paymentManager;
     @Autowired
     EmailManager          emailManager;
-    /*@Value("#{hkEnvProps['" + Keys.App.environmentDir + "']}")
-    String                environmemtDir;*/
 
     protected TekprocessPaymentGatewayWrapper getPaymentGatewayWrapperFromTransactionData(BasePaymentGatewayWrapper.TransactionData data) {
         TekprocessPaymentGatewayWrapper tekprocessPaymentGatewayWrapper = new TekprocessPaymentGatewayWrapper();
@@ -106,7 +103,6 @@ public class TekprocessGatewaySendReceiveAction extends BasePaymentGatewaySendRe
                 emailManager.sendPaymentFailMail(getPrincipalUser(), gatewayOrderId);
                 resolution = new RedirectResolution(PaymentFailAction.class).addParameter("gatewayOrderId", gatewayOrderId);
             } else {
-                emailManager.sendPaymentFailMail(getPrincipalUser(), gatewayOrderId);
                 throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.INVALID_RESPONSE);
             }
         } catch (HealthkartPaymentGatewayException e) {
