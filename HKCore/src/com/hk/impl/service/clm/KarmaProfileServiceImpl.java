@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Set;
 
 import com.hk.constants.order.EnumOrderStatus;
+import com.hk.domain.catalog.category.Category;
+import com.hk.domain.clm.CategoryKarmaProfile;
+import com.hk.pact.dao.clm.CategoryKarmaProfileDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +37,8 @@ public class KarmaProfileServiceImpl implements KarmaProfileService {
     @Autowired
     private KarmaProfileDao karmaProfileDao;
     @Autowired
+    private CategoryKarmaProfileDao categoryKarmaProfileDao;
+    @Autowired
     private OrderService    orderService;
     @Autowired
     private SkuService      skuService;
@@ -43,9 +48,18 @@ public class KarmaProfileServiceImpl implements KarmaProfileService {
         return getKarmaProfileDao().save(karmaProfile);
     }
 
+    public CategoryKarmaProfile save(CategoryKarmaProfile categoryKarmaProfile){
+        return getCategoryKarmaProfileDao().save(categoryKarmaProfile);
+    }
+
     public KarmaProfile findByUser(User user) {
         return getKarmaProfileDao().findByUser(user);
     }
+
+    public CategoryKarmaProfile findByUserAndCategory(User user, Category category){
+         return getCategoryKarmaProfileDao().findByUserAndCategory(user,category);
+    }
+
 
     public KarmaProfile updateKarmaAfterOrder(Order order) {
         User user = order.getUser();
@@ -59,6 +73,7 @@ public class KarmaProfileServiceImpl implements KarmaProfileService {
         return karmaProfile;
     }
 
+    //not using this method anywhere
     public KarmaProfile updateKarmaAfterOrderCancellation(Order order){
         User user = order.getUser();
         KarmaProfile karmaProfile = findByUser(user);
@@ -128,6 +143,14 @@ public class KarmaProfileServiceImpl implements KarmaProfileService {
 
     public void setKarmaProfileDao(KarmaProfileDao karmaProfileDao) {
         this.karmaProfileDao = karmaProfileDao;
+    }
+
+    public CategoryKarmaProfileDao getCategoryKarmaProfileDao() {
+        return categoryKarmaProfileDao;
+    }
+
+    public void setCategoryKarmaProfileDao(CategoryKarmaProfileDao categoryKarmaProfileDao) {
+        this.categoryKarmaProfileDao = categoryKarmaProfileDao;
     }
 
     public OrderService getOrderService() {

@@ -7636,4 +7636,29 @@
     <changeSet author="Seema (generated)" id="1340372396933-3">
         <addNotNullConstraint columnDataType="INT" columnName="state_id" tableName="pincode"/>
     </changeSet>
+
+    <changeSet author="Pradeep (generated)" id="1340643537129-4">
+        <createTable tableName="user_cat_karma_profile">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category_name" type="VARCHAR(80)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cat_karma_points" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Pradeep (generated)" id="1340643537129-19">
+        <addForeignKeyConstraint baseColumnNames="category_name" baseTableName="user_cat_karma_profile"  constraintName="fk_user_cat_karma_profile_category1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="name" referencedTableName="category" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1340643537129-20">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_cat_karma_profile"  constraintName="fk_user_cat_karma_profile_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+
 </databaseChangeLog>

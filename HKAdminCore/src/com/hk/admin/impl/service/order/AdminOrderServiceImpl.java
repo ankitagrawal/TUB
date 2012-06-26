@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-import com.hk.pact.service.clm.KarmaProfileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,8 +55,6 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     private EmailManager              emailManager;
     @Autowired
     private OrderLoggingService       orderLoggingService;
-    @Autowired
-    private KarmaProfileService       karmaProfileService;
 
     @Transactional
     public Order putOrderOnHold(Order order) {
@@ -119,9 +116,6 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                 emailManager.sendOrderCancelEmailToUser(order);
             }
             emailManager.sendOrderCancelEmailToAdmin(order);
-
-            //update karma profile if this is the customers first order
-            getKarmaProfileService().updateKarmaAfterOrderCancellation(order);
 
             this.logOrderActivity(order, loggedOnUser, getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCancelled), null);
         } else {
@@ -325,11 +319,4 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         this.orderLoggingService = orderLoggingService;
     }
 
-    public KarmaProfileService getKarmaProfileService() {
-        return karmaProfileService;
-    }
-
-    public void setKarmaProfileService(KarmaProfileService karmaProfileService) {
-        this.karmaProfileService = karmaProfileService;
-    }
 }
