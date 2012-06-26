@@ -43,12 +43,13 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
           " where er.subscribed = true and er.email = u.email " +
           " and (er.lastEmailDate is null or (er.lastEmailDate is not null and (date(current_date()) - date(er.lastEmailDate) >= (select ec.minDayGap from EmailCampaign ec where ec = :emailCampaign))) )" +
           " and er not in (select eh.emailRecepient from EmailerHistory eh where eh.emailCampaign = :emailCampaign ) " +
-          " and r in (:roleList)" ;
+          " and r in (:roleList) and u.store.id in (:storeIdList)" ;
 
         List<EmailRecepient> emailRecepients = ( List<EmailRecepient> )getSession().createQuery(query)
           .setParameter("emailCampaign", emailCampaign)
           .setParameter("emailCampaign", emailCampaign)
           .setParameterList("roleList", roleList)
+          .setParameterList("storeIdList", Arrays.asList(1L, null))
           .setMaxResults(maxResult).list();
 
         return emailRecepients;

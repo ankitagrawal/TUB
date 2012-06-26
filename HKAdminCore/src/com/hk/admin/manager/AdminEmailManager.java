@@ -199,7 +199,7 @@ public class AdminEmailManager {
             List<EmailRecepient> emailRecepientRecs = new ArrayList<EmailRecepient>(INITIAL_LIST_SIZE);
             int counter = 0;
             for(User user : usersNotInEmailRecepient) {
-                EmailRecepient emailRecepient = getEmailRecepientDao().createEmailRecepient(user.getEmail());
+                EmailRecepient emailRecepient = getEmailRecepientDao().createEmailRecepientObject(user.getEmail());
                 emailRecepientRecs.add(emailRecepient);
                 if(counter == COMMIT_COUNT) {
                     getEmailRecepientDao().saveOrUpdate(emailRecepientRecs);
