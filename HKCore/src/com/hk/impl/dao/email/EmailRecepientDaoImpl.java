@@ -23,7 +23,7 @@ public class EmailRecepientDaoImpl extends BaseDaoImpl implements EmailRecepient
     public EmailRecepient getOrCreateEmailRecepient(String recepientEmail) {
         EmailRecepient emailRecepient = findByRecepient(recepientEmail);
         if (emailRecepient == null) {
-            createEmailRecepient(recepientEmail);
+            return createEmailRecepient(recepientEmail);
         }
         return emailRecepient;
     }
