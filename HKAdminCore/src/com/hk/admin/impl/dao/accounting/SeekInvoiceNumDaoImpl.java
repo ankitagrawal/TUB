@@ -6,8 +6,6 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.stereotype.Repository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.hk.admin.pact.dao.accounting.SeekInvoiceNumDao;
 import com.hk.domain.accounting.SeekInvoiceNum;
@@ -17,16 +15,11 @@ import com.hk.impl.dao.BaseDaoImpl;
 @Repository
 public class SeekInvoiceNumDaoImpl extends BaseDaoImpl implements SeekInvoiceNumDao{
 
-  private static Logger logger = LoggerFactory.getLogger(SeekInvoiceNumDaoImpl.class);
-
     
 	public Long getInvoiceNum( String invoiceType, Warehouse warehouse) {
 
 		String query = "from SeekInvoiceNum sin where sin.warehouse = :warehouse and sin.prefix = :invoiceType ";
-		Session session = null;
-    Long invoiceNum = null;
-    try{
-        session = getSession(true);
+		Session session = getSession(true);
 		//Begining a transaction as a lock over the database is required
 		Transaction transaction = session.beginTransaction();
 		Query seekInvoiceQuery = session.createQuery(query).setEntity("warehouse", warehouse).setString("invoiceType", invoiceType);
@@ -34,7 +27,7 @@ public class SeekInvoiceNumDaoImpl extends BaseDaoImpl implements SeekInvoiceNum
 		seekInvoiceQuery.setLockMode("sin", LockMode.UPGRADE);
 
 		SeekInvoiceNum seekInvoiceNum = (SeekInvoiceNum) seekInvoiceQuery.uniqueResult();
-		invoiceNum = seekInvoiceNum.getInvoiceNum();
+		Long invoiceNum = seekInvoiceNum.getInvoiceNum();
 		Long incrInvoiceNum = seekInvoiceNum.getInvoiceNum() + 1;
 		//System.out.println("before increment:"+seekInvoiceNum.getInvoiceNum());
 
@@ -43,14 +36,6 @@ public class SeekInvoiceNumDaoImpl extends BaseDaoImpl implements SeekInvoiceNum
 		session.setFlushMode(FlushMode.AUTO);
 		session.merge(seekInvoiceNum);
 		transaction.commit();
-    }catch(Exception e){
-      logger.error("Exception while seeking invoice num", e);
-    }
-    finally{
-      if(session !=null){
-        session.close();
-      }
-    }
 		//System.out.println("now:"+ invoiceNum);
 		return invoiceNum;
 	}
