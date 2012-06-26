@@ -1,18 +1,30 @@
 package com.hk.web.action.core.payment;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.validation.Validate;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
-import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.payment.EnumPaymentMode;
+import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.core.fliter.CartLineItemFilter;
+import com.hk.domain.coupon.Coupon;
+import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.payment.Payment;
-import com.hk.domain.offer.OfferInstance;
-import com.hk.domain.coupon.Coupon;
 import com.hk.dto.pricing.PricingDto;
 import com.hk.pact.dao.payment.PaymentDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
@@ -23,18 +35,6 @@ import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.util.ga.GAUtil;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.validation.Validate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Date;
-import java.text.SimpleDateFormat;
 
 @Component
 public class PaymentSuccessAction extends BaseAction {

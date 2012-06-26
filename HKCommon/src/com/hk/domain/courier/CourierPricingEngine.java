@@ -1,10 +1,11 @@
 package com.hk.domain.courier;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -12,8 +13,7 @@ import javax.persistence.Table;
 
 import com.hk.domain.warehouse.Warehouse;
 
-import static javax.persistence.GenerationType.IDENTITY;
-
+@SuppressWarnings("serial")
 @Entity
 @Table(name = "courier_pricing_engine")
 public class CourierPricingEngine implements java.io.Serializable {
