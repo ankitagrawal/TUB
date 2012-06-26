@@ -205,8 +205,8 @@ public class CreateInventoryFileAction extends BaseAction {
 
         }
 
-        data.append(productVariant.getId()).append("\t").append(barcode).append("\t").append(batchNo).append("\t").append(name).append("\t")
-            .append(productOptionStringBuffer).append("\t").append(date).append("\t").append(sumQty).append("\t").append(markedPrice).append("\r\n");
+        data.append(productVariant.getId()).append("\t").append(barcode).append("\t").append(name).append("\t").append(productOptionStringBuffer)
+          .append("\t").append(date).append("\t").append(sumQty).append("\t").append(markedPrice).append("\t").append(batchNo).append("\r\n");
 
       }
 

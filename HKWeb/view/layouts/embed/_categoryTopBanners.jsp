@@ -51,7 +51,7 @@
   </c:if>
 
   <c:if test="${hk:collectionContains(categoryNameList, 'eyeglasses')}">
-    <jsp:include page="/categoryBanners/eyeDiscount.jsp"/>
+    <jsp:include page="/categoryBanners/eyeCallback.jsp"/>
   </c:if>
 
   <c:if test="${hk:collectionContains(topCategoryNameList, 'nutrition')}">

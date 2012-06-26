@@ -1,14 +1,5 @@
 package com.hk.admin.impl.dao.inventory;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.hibernate.Criteria;
-import org.hibernate.Query;
-import org.hibernate.criterion.Restrictions;
-import org.hibernate.transform.Transformers;
-import org.springframework.stereotype.Repository;
-
 import com.hk.admin.dto.inventory.CreateInventoryFileDto;
 import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
 import com.hk.domain.inventory.GrnLineItem;
@@ -21,6 +12,14 @@ import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
+import org.hibernate.Criteria;
+import org.hibernate.Query;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.Transformers;
+import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("unchecked")
 @Repository
@@ -110,9 +109,6 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
   * :shippingOrder").setParameter( "qty", -1L).setParameter("shippingOrder", shippingOrder).list(); }
   */
 
-  public List<CreateInventoryFileDto> getDetailsForUncheckedItems(String brand) {
-    return getDetailsForUncheckedItems(brand, null);
-  }
 
   public List<CreateInventoryFileDto> getDetailsForUncheckedItems(String brand, Warehouse warehouse) {
     String sql = "select pvi as productVariantInventory, sg as skuGroup, sg.barcode as barcode, p.name as name, sg.expiryDate as expiryDate, sum(pvi.qty) as sumQty, pv as productVariant "
@@ -121,7 +117,7 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
     if (warehouse != null) {
       sql = sql + " and s.warehouse = :warehouse ";
     }
-    sql = sql + " group by si.skuGroup having sum(pvi.qty) > 0";
+    sql = sql + " group by sg.id having sum(pvi.qty) > 0";
 
     Query query = getSession().createQuery(sql).setParameter("brand", brand);
     if (warehouse != null) {
@@ -132,6 +128,23 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
     return query.list();
   }
 
+    /*
+     * public List<ProductVariantInventory> getCheckedOutSkuItems(ShippingOrder shippingOrder, LineItem lineItem) {
+     * return (List<ProductVariantInventory>) getSession().createQuery( "from ProductVariantInventory pvi where pvi.sku =
+     * :sku and pvi.qty = :qty and pvi.shippingOrder = :shippingOrder order by pvi.id desc").setParameter("sku",
+     * lineItem.getSku()).setParameter("qty", -1L).setParameter("shippingOrder",
+     * shippingOrder).setMaxResults(lineItem.getQty().intValue()).list(); }
+     */
+
+    /*
+     * public List<ProductVariantInventory> getCheckedOutSkuItems(ShippingOrder shippingOrder) { return (List<ProductVariantInventory>)
+     * getSession().createQuery("from ProductVariantInventory pvi where pvi.qty = :qty and pvi.shippingOrder =
+     * :shippingOrder").setParameter( "qty", -1L).setParameter("shippingOrder", shippingOrder).list(); }
+     */
+
+    /*public List<CreateInventoryFileDto> getDetailsForUncheckedItems(String brand) {
+        return getDetailsForUncheckedItems(brand, null);
+    }*/
 
 	/*public List<CreateInventoryFileDto> getDetailsForUncheckedItems(String brand, Warehouse warehouse) {
 		List<CreateInventoryFileDto> createInventoryFileDtoList = new ArrayList<CreateInventoryFileDto>();
