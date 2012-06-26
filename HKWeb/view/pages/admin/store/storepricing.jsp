@@ -35,7 +35,7 @@
 						<s:file name="fileBean" size="30"/>
                           &nbsp;  <s:submit name="uploadStorePricingExcel" value="Upload"/>
                        </li>
-					<li>
+					<li></ul>
 
 
 
@@ -48,12 +48,12 @@
 
           <br/>
 				<div >
-					<li><s:submit name="downloadStorePricingExcel">
+					<s:submit name="downloadStorePricingExcel">
                 Download Pricing Excel
               </s:submit>
-					</li>
+
             <br/>
-                    </ul>
+
                 </div>
             </fieldset>
         </s:form>

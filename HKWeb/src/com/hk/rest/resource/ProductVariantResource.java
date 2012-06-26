@@ -48,9 +48,9 @@ public class ProductVariantResource {
 
 
   @GET
-  @Path("/{variantId}/price")
+  @Path("/{variantId}/price/{storeId}")
   @Produces("application/json")
-  public String variantPrice(@PathParam("variantId") String variantId) {
+  public String variantPrice(@PathParam("variantId") String variantId, @PathParam("storeId") Long storeId) {
     if (StringUtils.isBlank(variantId)) {
       return new JSONResponseBuilder().addField("exception", true).addField("message", "Variant Id is required").build();
     }
@@ -72,16 +72,19 @@ public class ProductVariantResource {
       isVisible = true;
     }
     int visibleNumber = isVisible ? 1: 0;
-
-    //below line needs to be changed as it is hardcoded for the MIH Store
-    StoreProduct storeProduct=getStoreService().getStoreProductByHKVariantAndStore(getProductVariantService().getVariantById(StringUtils.trim(variantId)), getStoreService().getStoreById(getStoreService().MIH_STORE_ID));
-
+      StoreProduct storeProduct;
+    if(storeId !=null ){
+        storeProduct=getStoreService().getStoreProductByHKVariantAndStore(getProductVariantService().getVariantById(StringUtils.trim(variantId)), getStoreService().getStoreById(storeId));
+    }else{
+        storeProduct=getStoreService().getStoreProductByHKVariantAndStore(getProductVariantService().getVariantById(StringUtils.trim(variantId)), getStoreService().getDefaultStore());
+    }
     if(storeProduct !=null && !storeProduct.isHidden()){
         //don't get confused hkPrice field is actually the store price
       return new JSONResponseBuilder().addField("hkPrice", storeProduct.getStorePrice()).addField("mrp", productVariant.getMarkedPrice()).addField("isVisible",visibleNumber).build();
     }else{
       return new JSONResponseBuilder().addField("hkPrice", productVariant.getHkPrice()).addField("mrp", productVariant.getMarkedPrice()).addField("isVisible",visibleNumber).build();
     }
+
   }
 
   public ProductVariantService getProductVariantService() {
