@@ -7530,13 +7530,13 @@
     <changeSet author="Tarun (generated)" id="1340010134657-5">
         <modifyDataType columnName="permission_name" newDataType="VARCHAR(40)" tableName="role_has_permission"/>
     </changeSet>
-    <!--<changeSet author="Tarun (generated)" id="1340010134657-8">-->
-        <!--<createIndex indexName="notify_me_unique_request" tableName="notify_me" unique="true">-->
-            <!--<column name="email"/>-->
-            <!--<column name="created_date"/>-->
-            <!--<column name="product_variant_id"/>-->
-        <!--</createIndex>-->
-    <!--</changeSet>-->
+    <changeSet author="Tarun (generated)" id="1340010134657-8">
+        <createIndex indexName="notify_me_unique_request" tableName="notify_me" unique="true">
+            <column name="email"/>
+            <column name="created_date"/>
+            <column name="product_variant_id"/>
+        </createIndex>
+    </changeSet>
           <changeSet author="Seema (generated)" id="1340352635898-1">
         <createTable tableName="city">
             <column autoIncrement="true" name="id" type="INT">
