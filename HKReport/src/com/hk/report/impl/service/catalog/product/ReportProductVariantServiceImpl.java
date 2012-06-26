@@ -15,12 +15,7 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
-import com.hk.report.dto.inventory.ExpiryAlertReportDto;
-import com.hk.report.dto.inventory.InventorySoldDto;
-import com.hk.report.dto.inventory.RTODamageReportDto;
-import com.hk.report.dto.inventory.RTOFineReportDto;
-import com.hk.report.dto.inventory.RTOReportDto;
-import com.hk.report.dto.inventory.StockReportDto;
+import com.hk.report.dto.inventory.*;
 import com.hk.report.pact.dao.catalog.product.ReportProductVariantDao;
 import com.hk.report.pact.service.catalog.product.ReportProductVariantService;
 
