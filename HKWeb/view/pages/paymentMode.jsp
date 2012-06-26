@@ -95,9 +95,9 @@
 			</c:when>
 			<c:otherwise>
 
-				<div style="visibility: hidden;" class="offer-banner"><img
+				<%--<div style="visibility: hidden;" class="offer-banner"><img
 					src="<hk:vhostImage/>/images/banners/pay_online_banner.jpg">
-				</div>
+				</div>--%>
 				<div style="display: none;"><s:link
 					beanclass="com.hk.web.action.admin.SetInCookieAction"
 					id="setInCookieLink" /></div>
@@ -355,7 +355,7 @@
     $('.tabs ul li').click(function() {
       $('.tabs ul li').removeClass('selected');
       $(this).addClass('selected');
-      if(this.id == "tab4" && ${orderSummary.codAllowed} && ${orderSummary.pricingDto.grandTotalPayable < 1000.0}){
+      /*if(this.id == "tab4" && ${orderSummary.codAllowed} && ${orderSummary.pricingDto.grandTotalPayable < 1000.0}){
         $('.offer-banner').css("visibility", "visible");
         $.getJSON(
             $('#setInCookieLink').attr('href'), {wantedCOD: "true"},
@@ -367,7 +367,7 @@
 		     );
       }else{
         $('.offer-banner').css("visibility", "hidden");
-      }
+      }*/
       var selected = $(this).attr('id').replace('tab', 'tabs_content');
       $.session("selected-tab", $(this).attr('id'));
       $('.tab_content').hide();
@@ -379,7 +379,7 @@
       var sTab = $.session("selected-tab");
       $('.tabs ul li').removeClass('selected');
       $('#' + sTab).addClass('selected');
-      if(sTab == "tab4" && ${orderSummary.codAllowed} && ${orderSummary.pricingDto.grandTotalPayable < 1000.0}){
+      /*if(sTab == "tab4" && ${orderSummary.codAllowed} && ${orderSummary.pricingDto.grandTotalPayable < 1000.0}){
          $('.offer-banner').css("visibility", "visible");
         $.getJSON(
             $('#setInCookieLink').attr('href'), {wantedCOD: "true"},
@@ -391,7 +391,7 @@
 		     );
       }else{
         $('.offer-banner').css("visibility", "hidden");
-      }
+      }*/
       var selected = $('#' + sTab).attr('id').replace('tab', 'tabs_content');
       $('.tab_content').hide();
       $('#' + selected).fadeIn(200);

@@ -19,8 +19,8 @@ from
   left join offer_instance of on o.offer_instance_id = of.id
   left join coupon c on c.id = of.coupon_id
 where
-  o.order_status_id in (30,40) and
-  o.user_id in (select distinct o.user_id from offer_instance o where o.offer_id = 1128)
+  o.order_status_id in (10, 15, 20, 30,40) and
+  o.user_id in (select distinct o.user_id from offer_instance o where o.offer_id = 1138)
 ;
 
 /* referral order count */
