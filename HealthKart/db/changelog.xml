@@ -7530,13 +7530,13 @@
     <changeSet author="Tarun (generated)" id="1340010134657-5">
         <modifyDataType columnName="permission_name" newDataType="VARCHAR(40)" tableName="role_has_permission"/>
     </changeSet>
-    <!--<changeSet author="Tarun (generated)" id="1340010134657-8">-->
-        <!--<createIndex indexName="notify_me_unique_request" tableName="notify_me" unique="true">-->
-            <!--<column name="email"/>-->
-            <!--<column name="created_date"/>-->
-            <!--<column name="product_variant_id"/>-->
-        <!--</createIndex>-->
-    <!--</changeSet>-->
+    <changeSet author="Tarun (generated)" id="1340010134657-8">
+        <createIndex indexName="notify_me_unique_request" tableName="notify_me" unique="true">
+            <column name="email"/>
+            <column name="created_date"/>
+            <column name="product_variant_id"/>
+        </createIndex>
+    </changeSet>
           <changeSet author="Seema (generated)" id="1340352635898-1">
         <createTable tableName="city">
             <column autoIncrement="true" name="id" type="INT">
@@ -7636,4 +7636,31 @@
     <changeSet author="Seema (generated)" id="1340372396933-3">
         <addNotNullConstraint columnDataType="INT" columnName="state_id" tableName="pincode"/>
     </changeSet>
+    <changeSet author="Pradeep (generated)" id="1340279900902-1">
+        <createTable tableName="store_product">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="product_variant_id" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="store_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="store_price" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="hidden" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Pradeep (generated)" id="1340279900902-3">
+        <addForeignKeyConstraint baseColumnNames="product_variant_id" baseTableName="store_product"  constraintName="fk_store_product_price_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1340279900902-4">
+        <addForeignKeyConstraint baseColumnNames="store_id" baseTableName="store_product"  constraintName="fk_store_product_price_store1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="store"  referencesUniqueColumn="false"/>
+    </changeSet>
+
 </databaseChangeLog>
