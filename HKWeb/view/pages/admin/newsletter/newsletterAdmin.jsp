@@ -4,7 +4,7 @@
 <s:layout-render name="/layouts/defaultAdmin.jsp">
   <s:layout-component name="heading">Newsletter Home</s:layout-component>
   <s:layout-component name="content">
-    <s:link beanclass="com.hk.web.action.admin.newsletter.CreateEmailNewsletterCampaign">Create New Email Campaign</s:link><br/>
+    <s:link beanclass="com.hk.web.action.admin.newsletter.EmailNewsletterCampaignAction">Create New Email Campaign</s:link><br/>
     <s:link beanclass="com.hk.web.action.admin.newsletter.SendEmailNewsletterCampaign">Send Email Campaign</s:link><br/>
     <s:link beanclass="com.hk.web.action.admin.marketing.SendWeMissYouEmailer">Send We Miss You Emailer</s:link>
   </s:layout-component>

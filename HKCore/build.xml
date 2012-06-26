@@ -26,6 +26,7 @@
 		<fileset file="${project.common.dir}/dependencies/javaee.jar" />
 		<fileset file="${project.common.dir}/dependencies/testng-5.8-jdk15.jar" />
 		<fileset file="${project.common.dir}/dist/hk-common.jar" />
+    <fileset file="${lib.root.dir}/freemarker/freemarker.jar"/>
 
 	</path>
 

@@ -6,7 +6,7 @@
   <s:layout-component name="heading">Create Email Newsletter</s:layout-component>
   <s:layout-component name="content">
 
-    <s:form beanclass="com.hk.web.action.admin.newsletter.CreateEmailNewsletterCampaign">
+    <s:form beanclass="com.hk.web.action.admin.newsletter.EmailNewsletterCampaignAction">
       Name: <s:text name="emailCampaign.name"/><br/>
       Template: <s:text name="emailCampaign.template"/><br/>
       Email Type:

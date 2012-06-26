@@ -3,6 +3,7 @@ package com.hk.service.impl;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.io.StringReader;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,7 @@ public class FreeMarkerService {
 
   private static Logger logger = LoggerFactory.getLogger(FreeMarkerService.class);
 
-  private  Configuration   cfg = null;
+  private Configuration cfg = null;
 
   //TODO: rewrite
   /*@Autowired
@@ -30,18 +31,15 @@ public class FreeMarkerService {
   }*/
 
 
-
-
   /**
-   * This method takes a template and template values and tries to return a rendered message The first line is taken
-   * as the subject and the next line onwards is the message body The method eats any render errors and returns a null
+   * This method takes a template's path, searches the corresponding template in the freemarker directory,
+   * and then returns a freemarker template object for the template file found.
    *
    * @param templatePath
    * @return
    */
   public Template getCampaignTemplate(String templatePath) {
     Template template = null;
-    RenderOutput renderOutput = null;
     try {
       File freemarkerDir = new File(AppConstants.appBasePath + "/freemarker");
       Configuration cfg = new Configuration();
@@ -50,12 +48,37 @@ public class FreeMarkerService {
       // load a freemarker template from a pre-configured directory
       template = cfg.getTemplate(templatePath);
     } catch (IOException e) {
-      logger.error("IOException in getRenderOutputForTemplate for template " + templatePath, e);
+      logger.error("IOException in getCampaignTemplate for template " + templatePath, e);
     }
     return template;
   }
 
-  public RenderOutput processCampaignTemplate(Template template, Object templateValues){
+  /**
+   * This method takes the template content as a string and returns a freemarker template object corresponding to the same.
+   *
+   * @param templateContent
+   * @return
+   */
+  public Template getCampaignTemplateFromString(String templateContent) {
+    Template template = null;
+    try {
+      template = new Template("template", new StringReader(templateContent), new Configuration());
+    } catch (IOException ioe) {
+      logger.error("IOException in getCampaignTemplateFromString for template ", ioe);
+    }
+    return template;
+  }
+
+  /**
+   * This method takes a freemarker template and template values and tries to process it and return a rendered message.
+   * The first line is taken as the subject and the next line onwards is the message body.
+   * The method eats any render errors and returns a null
+   *
+   * @param template
+   * @param templateValues
+   * @return
+   */
+  public RenderOutput processCampaignTemplate(Template template, Object templateValues) {
     RenderOutput renderOutput = null;
     try {
       StringWriter stringWriter = new StringWriter();
@@ -69,14 +92,21 @@ public class FreeMarkerService {
       renderOutput = new RenderOutput(subject, body);
     } catch (IOException e) {
       logger.error("IOException in getRenderOutputForTemplate for template ", e);
-    }  catch (TemplateException e) {
+    } catch (TemplateException e) {
       logger.error("TemplateException in getRenderOutputForTemplate for template ", e);
     }
     return renderOutput;
   }
 
-  public RenderOutput getRenderOutputForTemplate(String templatePath, Object templateValues){
-       return processCampaignTemplate(getCampaignTemplate(templatePath), templateValues);
+  /**
+   * This method takes a template's path and template values and tries to return a rendered message.
+   *
+   * @param template
+   * @param templateValues
+   * @return
+   */
+  public RenderOutput getRenderOutputForTemplate(Template template, Object templateValues) {
+    return processCampaignTemplate(template, templateValues);
   }
 
   public class RenderOutput {

@@ -1,14 +1,14 @@
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.admin.newsletter.CreateEmailNewsletterCampaign" var="createBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.newsletter.EmailNewsletterCampaignAction" var="createBean"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp">
   <s:layout-component name="heading">Create Email Newsletter</s:layout-component>
   <s:layout-component name="content">
     <c:choose>
       <c:when test="${createBean.ftlGenerated == false}">
-        <s:form beanclass="com.hk.web.action.admin.newsletter.CreateEmailNewsletterCampaign">
+        <s:form beanclass="com.hk.web.action.admin.newsletter.EmailNewsletterCampaignAction">
           <fieldset style="width:50%;">
             <legend>GENERATE FTL</legend>
             <div>
@@ -24,7 +24,7 @@
         </s:form>
       </c:when>
       <c:otherwise>
-        <s:form beanclass="com.hk.web.action.admin.newsletter.CreateEmailNewsletterCampaign">
+        <s:form beanclass="com.hk.web.action.admin.newsletter.EmailNewsletterCampaignAction">
           <fieldset style="width:50%">
             Name: <s:text name="emailCampaign.name" value="${createBean.name}"/><br/>
             Subject: <s:text name="emailCampaign.subject" style=" margin-top: 15px;"/><br/>
@@ -49,7 +49,7 @@
       </c:otherwise>
     </c:choose>
 
-    <%--<s:form beanclass="com.hk.web.action.admin.newsletter.CreateEmailNewsletterCampaign">--%>
+    <%--<s:form beanclass="com.hk.web.action.admin.newsletter.EmailNewsletterCampaignAction">--%>
     <%--Name: <s:text name="emailCampaign.name"/><br/>--%>
     <%--Subject: <s:text name="emailCampaign.subject"/><br/>--%>
     <%--Content: <s:file name="contentBean"/><br/>--%>
@@ -65,7 +65,7 @@
     <%--</s:form>--%>
 
     <%--<c:if test="${createBean.emailCampaign != null}">--%>
-    <%--<s:form beanclass="com.hk.web.action.admin.newsletter.CreateEmailNewsletterCampaign">--%>
+    <%--<s:form beanclass="com.hk.web.action.admin.newsletter.EmailNewsletterCampaignAction">--%>
     <%--<div>--%>
     <%--<h2>DETAILS FOR CAMPAIGN : ${createBean.emailCampaign.name}</h2>--%>
 

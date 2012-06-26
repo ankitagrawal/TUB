@@ -42,426 +42,432 @@ import java.util.*;
 @Component
 public class SendEmailNewsletterCampaign extends BasePaginatedAction {
 
-    List<EmailCampaign> emailCampaigns;
+  List<EmailCampaign> emailCampaigns;
 
-    @Validate(required = true)
-    EmailCampaign emailCampaign;
+  @Validate(required = true)
+  EmailCampaign emailCampaign;
 
-    @Autowired
-    EmailCampaignDao emailCampaignDao;
+  @Autowired
+  EmailCampaignDao emailCampaignDao;
 
-    @Validate(required = true, on = {"testCampaign"})
-    String testEmails;
+  @Validate(required = true, on = {"testCampaign"})
+  String testEmails;
 
-    @Validate(required = true, on = {"confirmCampaign", "sendCampaign"})
-    String categories;
+  @Validate(required = true, on = {"confirmCampaign", "sendCampaign"})
+  String categories;
 
-    private Long userCount = 0L;
+  private Long userCount = 0L;
 
-    // @Named(Keys.Env.adminUploads)
-    @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
-    String adminUploadsPath;
+  // @Named(Keys.Env.adminUploads)
+  @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
+  String adminUploadsPath;
 
-    FileBean fileBean;
-    FileBean fileBeanForCustomExcel;
-    FileBean fileBeanForUserList;
+  FileBean fileBean;
+  FileBean fileBeanForCustomExcel;
+  FileBean fileBeanForUserList;
 
-    private Logger logger = LoggerFactory.getLogger(SendEmailNewsletterCampaign.class);
+  private Logger logger = LoggerFactory.getLogger(SendEmailNewsletterCampaign.class);
 
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private CategoryService categoryService;
-    @Autowired
-    private AdminEmailManager adminEmailManager;
-    @Autowired
-    private MailingListManager mailingListManager;
-    @Autowired
-    private AdminEmailService adminEmailService;
+  @Autowired
+  private UserService userService;
+  @Autowired
+  private CategoryService categoryService;
+  @Autowired
+  private AdminEmailManager adminEmailManager;
+  @Autowired
+  private MailingListManager mailingListManager;
+  @Autowired
+  private AdminEmailService adminEmailService;
 
-    //@Autowired
-    private EmailManager emailManager;
-    EmailType emailType;
-    String sheetName;
-    Page emailCampaignPage;
-    private Integer defaultPerPage = 20;
-    private final int COMMIT_COUNT = 100;
-    private final int INITIAL_LIST_SIZE = 100;
+  //@Autowired
+  private EmailManager emailManager;
+  EmailType emailType;
+  String sheetName;
+  Page emailCampaignPage;
+  private Integer defaultPerPage = 20;
+  private final int COMMIT_COUNT = 100;
+  private final int INITIAL_LIST_SIZE = 100;
 
-    @Autowired
-    private RoleDao roleDao;
-    private final int maxResultCount = 5000;
-    @Autowired
-    private EmailRecepientDao emailRecepientDao;
-    @Autowired
-    private EmailCampaignService emailCampaignService;
-    @DefaultHandler
-    @DontValidate
-    public Resolution pre() {
-        emailCampaignPage = emailCampaignDao.getEmailCampaignByEmailType(emailType, getPageNo(), getPerPage());
-        if (emailCampaignPage != null) {
-            emailCampaigns = emailCampaignPage.getList();
+  @Autowired
+  private RoleDao roleDao;
+  private final int maxResultCount = 5000;
+  @Autowired
+  private EmailRecepientDao emailRecepientDao;
+  @Autowired
+  private EmailCampaignService emailCampaignService;
+
+  @DefaultHandler
+  @DontValidate
+  public Resolution pre() {
+    emailCampaignPage = emailCampaignDao.getEmailCampaignByEmailType(emailType, getPageNo(), getPerPage());
+    if (emailCampaignPage != null) {
+      emailCampaigns = emailCampaignPage.getList();
+    }
+    // emailCampaigns = getEmailCampaignDao().listAllExceptNotifyMe();
+    return new ForwardResolution("/pages/admin/newsletter/sendEmailNewsletterCampaign.jsp");
+  }
+
+  public Resolution selectCampaign() {
+    return new ForwardResolution("/pages/admin/newsletter/selectAudience.jsp");
+  }
+
+  public Resolution confirmCampaign() {
+
+    String[] categoryArray = StringUtils.split(categories);
+
+    if (categories.equalsIgnoreCase("all")) {
+      userCount = getAdminEmailService().getAllMailingListCount(emailCampaign, Arrays.asList(getRoleDao().getRoleByName(EnumRole.HK_USER)));
+    } else if (categories.equalsIgnoreCase("all-unverified")) {
+      userCount = getAdminEmailService().getAllMailingListCount(emailCampaign, Arrays.asList(getRoleDao().getRoleByName(EnumRole.HK_UNVERIFIED)));
+    } else {
+      for (String categoryName : categoryArray) {
+        Category category = getCategoryService().getCategoryByName(StringUtils.trim(categoryName));
+        if (category != null) {
+          userCount += getAdminEmailService().getMailingListCountByCategory(emailCampaign, category);
         }
-        // emailCampaigns = getEmailCampaignDao().listAllExceptNotifyMe();
-        return new ForwardResolution("/pages/admin/newsletter/sendEmailNewsletterCampaign.jsp");
+      }
+    }
+    logger.info(" user list size " + userCount);
+    return new ForwardResolution("/pages/admin/newsletter/confirmSendCampaign.jsp");
+  }
+
+  public Resolution testCampaign() {
+    String[] emails = StringUtils.split(testEmails, ',');
+    Set<User> users = new HashSet<User>();
+
+    for (String email : emails) {
+      List<User> usersByEmail = getUserService().findByEmail(StringUtils.trim(email));
+      if (usersByEmail != null && usersByEmail.size() > 0) {
+        users.add(usersByEmail.get(0));
+      }
     }
 
-    public Resolution selectCampaign() {
-        return new ForwardResolution("/pages/admin/newsletter/selectAudience.jsp");
+    // send test emails to campaign
+    getAdminEmailManager().sendTestCampaignMails(users, emailCampaign);
+
+    addRedirectAlertMessage(new SimpleMessage("Test emails sent : " + emailCampaign.getName()));
+    return selectCampaign();
+  }
+
+  private List<String> getListOfStringFromCsvFile(FileBean fileBean) throws IOException {
+    String excelFilePath = adminUploadsPath + "/emailList/" + System.currentTimeMillis() + ".txt";
+    File excelFile = new File(excelFilePath);
+    excelFile.getParentFile().mkdirs();
+    fileBean.save(excelFile);
+
+    List<String> csvToStringList = ParseCsvFile.getStringListFromCsv(excelFilePath);
+    return csvToStringList;
+  }
+
+  public Resolution sendCampaignViaCsvUserIDs() throws IOException {
+    List<String> userIdList = getListOfStringFromCsvFile(fileBeanForUserList);
+    List<Long> longUserIdList = new ArrayList<Long>();
+
+    getAdminEmailManager().populateEmailRecepient(userIdList, maxResultCount);
+    for (String userId : userIdList) {
+      longUserIdList.add(Long.parseLong(userId));
+      if (longUserIdList.size() == maxResultCount) {
+        getAdminEmailManager().sendCampaignByUploadingFile(longUserIdList, null, emailCampaign, maxResultCount);
+        longUserIdList.clear();
+      }
+    }
+    if (longUserIdList.size() > 0) {
+      getAdminEmailManager().sendCampaignByUploadingFile(longUserIdList, null, emailCampaign, maxResultCount);
     }
 
-    public Resolution confirmCampaign() {
+    addRedirectAlertMessage(new SimpleMessage("Sending campaign in progress : " + emailCampaign.getName()));
+    return new RedirectResolution(EmailNewsletterAdmin.class);
+  }
 
-        String[] categoryArray = StringUtils.split(categories);
+  public Resolution sendCampaignViaCsvUserEmails() throws IOException {
+    List<String> userEmails = getListOfStringFromCsvFile(fileBean);
+    List<String> emailIdsInEmailRecepient = getEmailRecepientDao().findEmailIdsPresentInEmailRecepient(userEmails);
 
-        if (categories.equalsIgnoreCase("all")) {
-            userCount = getAdminEmailService().getAllMailingListCount(emailCampaign, Arrays.asList(getRoleDao().getRoleByName(EnumRole.HK_USER)));
-        } else if (categories.equalsIgnoreCase("all-unverified")) {
-            userCount = getAdminEmailService().getAllMailingListCount(emailCampaign, Arrays.asList(getRoleDao().getRoleByName(EnumRole.HK_UNVERIFIED)));
-        }else {
-            for (String categoryName : categoryArray) {
-                Category category = getCategoryService().getCategoryByName(StringUtils.trim(categoryName));
-                if (category != null) {
-                    userCount += getAdminEmailService().getMailingListCountByCategory(emailCampaign, category);
-                }
-            }
-        }
-        logger.info(" user list size " + userCount);
-        return new ForwardResolution("/pages/admin/newsletter/confirmSendCampaign.jsp");
+    userEmails.removeAll(emailIdsInEmailRecepient);
+
+    List<EmailRecepient> emailRecepientRecs = new ArrayList<EmailRecepient>();
+
+    int counter = 0;
+    for (String emailId : userEmails) {
+      EmailRecepient emailRecepient = getEmailRecepientDao().createEmailRecepient(emailId);
+      emailRecepientRecs.add(emailRecepient);
+      if (counter == COMMIT_COUNT) {
+        getEmailRecepientDao().saveOrUpdate(emailRecepientRecs);
+        counter = 0;
+        emailRecepientRecs.clear();
+      }
+      counter++;
+    }
+    if (counter > 0) {
+      getEmailRecepientDao().saveOrUpdate(emailRecepientRecs);
     }
 
-    public Resolution testCampaign() {
-        String[] emails = StringUtils.split(testEmails, ',');
-        Set<User> users = new HashSet<User>();
-
-        for (String email : emails) {
-            List<User> usersByEmail = getUserService().findByEmail(StringUtils.trim(email));
-            if (usersByEmail != null && usersByEmail.size() > 0) {
-                users.add(usersByEmail.get(0));
-            }
-        }
-
-        // send test emails to campaign
-        getAdminEmailManager().sendTestCampaignMails(users, emailCampaign);
-
-        addRedirectAlertMessage(new SimpleMessage("Test emails sent : " + emailCampaign.getName()));
-        return selectCampaign();
+    userEmails.addAll(emailIdsInEmailRecepient);
+    List<String> userEmailsList = new ArrayList<String>();
+    for (String emailId : userEmails) {
+      userEmailsList.add(emailId);
+      if (userEmailsList.size() == maxResultCount) {
+        getAdminEmailManager().sendCampaignByUploadingFile(null, userEmailsList, emailCampaign, maxResultCount);
+        userEmailsList.clear();
+      }
     }
 
-    private List<String> getListOfStringFromCsvFile(FileBean fileBean) throws IOException {
-        String excelFilePath = adminUploadsPath + "/emailList/" + System.currentTimeMillis() + ".txt";
-        File excelFile = new File(excelFilePath);
-        excelFile.getParentFile().mkdirs();
-        fileBean.save(excelFile);
-
-        List<String> csvToStringList = ParseCsvFile.getStringListFromCsv(excelFilePath);
-        return csvToStringList;
+    if (userEmailsList.size() > 0) {
+      getAdminEmailManager().sendCampaignByUploadingFile(null, userEmailsList, emailCampaign, maxResultCount);
     }
 
-    public Resolution sendCampaignViaCsvUserIDs() throws IOException {
-        List<String> userIdList = getListOfStringFromCsvFile(fileBeanForUserList);
-        List<Long> longUserIdList = new ArrayList<Long>();
+    addRedirectAlertMessage(new SimpleMessage("Sending campaign in progress : " + emailCampaign.getName()));
+    return new RedirectResolution(EmailNewsletterAdmin.class);
+  }
 
-        getAdminEmailManager().populateEmailRecepient(userIdList, maxResultCount);
-        for(String userId : userIdList) {
-            longUserIdList.add(Long.parseLong(userId));
-            if(longUserIdList.size() == maxResultCount) {
-                getAdminEmailManager().sendCampaignByUploadingFile(longUserIdList, null, emailCampaign, maxResultCount);
-                longUserIdList.clear();
-            }
-        }
-        if(longUserIdList.size() > 0) {
-            getAdminEmailManager().sendCampaignByUploadingFile(longUserIdList, null, emailCampaign, maxResultCount);
-        }
+  public Resolution sendCampaign() {
 
-        addRedirectAlertMessage(new SimpleMessage("Sending campaign in progress : " + emailCampaign.getName()));
-        return new RedirectResolution(EmailNewsletterAdmin.class);
+    getAdminEmailManager().populateEmailRecepient(null, maxResultCount);
+
+    String[] categoryArray = StringUtils.split(categories);
+    List<String> finalCategories = new ArrayList<String>();
+
+    if (categories.equalsIgnoreCase("all")) {
+      finalCategories.add("all_categories");
+    } else if (categories.equalsIgnoreCase("all-unverified")) {
+      finalCategories.add("all_categories");
+      finalCategories.add("unverified");
+    } else {
+      for (String categoryName : categoryArray) {
+        Category category = getCategoryService().getCategoryByName(StringUtils.trim(categoryName));
+        if (category != null) {
+          finalCategories.add(category.getName());
+        }
+      }
     }
-
-    public Resolution sendCampaignViaCsvUserEmails() throws IOException {
-        List<String> userEmails = getListOfStringFromCsvFile(fileBean);
-        List<String> emailIdsInEmailRecepient = getEmailRecepientDao().findEmailIdsPresentInEmailRecepient(userEmails);
-
-        userEmails.removeAll(emailIdsInEmailRecepient);
-
-        List<EmailRecepient> emailRecepientRecs = new ArrayList<EmailRecepient>();
-
-        int counter = 0;
-        for(String emailId : userEmails) {
-            EmailRecepient emailRecepient = getEmailRecepientDao().createEmailRecepient(emailId);
-            emailRecepientRecs.add(emailRecepient);
-            if(counter == COMMIT_COUNT) {
-                getEmailRecepientDao().saveOrUpdate(emailRecepientRecs);
-                counter = 0;
-                emailRecepientRecs.clear();
-            }
-            counter++;
-        }
-        if(counter > 0) {
-            getEmailRecepientDao().saveOrUpdate(emailRecepientRecs);
-        }
-
-        userEmails.addAll(emailIdsInEmailRecepient);
-        List<String> userEmailsList = new ArrayList<String>();
-        for(String emailId : userEmails) {
-            userEmailsList.add(emailId);
-            if(userEmailsList.size() == maxResultCount) {
-                getAdminEmailManager().sendCampaignByUploadingFile(null, userEmailsList, emailCampaign, maxResultCount);
-                userEmailsList.clear();
-            }
-        }
-
-        if(userEmailsList.size() > 0) {
-            getAdminEmailManager().sendCampaignByUploadingFile(null, userEmailsList, emailCampaign, maxResultCount);
-        }
-
-        addRedirectAlertMessage(new SimpleMessage("Sending campaign in progress : " + emailCampaign.getName()));
-        return new RedirectResolution(EmailNewsletterAdmin.class);
-    }
-    
-    public Resolution sendCampaign() {
-
-        getAdminEmailManager().populateEmailRecepient(null, maxResultCount);
-
-        String[] categoryArray = StringUtils.split(categories);
-        List<String> finalCategories = new ArrayList<String>();
-
-        if (categories.equalsIgnoreCase("all")) {
-            finalCategories.add("all_categories");
-        } else if (categories.equalsIgnoreCase("all-unverified")) {
-            finalCategories.add("all_categories");
-            finalCategories.add("unverified");
-        } else {
-            for (String categoryName : categoryArray) {
-                Category category = getCategoryService().getCategoryByName(StringUtils.trim(categoryName));
-                if (category != null) {
-                    finalCategories.add(category.getName());
-                }
-            }
-        }
-        List<EmailRecepient> emailRecepients = new ArrayList<EmailRecepient>();
-        do {
-            if (categories.equalsIgnoreCase("all")) {
-                emailRecepients = getAdminEmailService().getAllMailingList(emailCampaign, Arrays.asList(getRoleDao().getRoleByName(EnumRole.HK_USER)), maxResultCount);
-            } else if (categories.equalsIgnoreCase("all-unverified")) {
-                emailRecepients = getAdminEmailService().getAllMailingList(emailCampaign, Arrays.asList(getRoleDao().getRoleByName(EnumRole.HK_UNVERIFIED)), maxResultCount);
-            }
-
-            if (emailRecepients.size() > 0) {
-                logger.info(" user list size " + emailRecepients.size());
-                String xsmtpapi = SendGridUtil.getSendGridEmailNewsLetterHeaderJson(finalCategories, emailCampaign);
-                getAdminEmailManager().sendCampaignMails(emailRecepients, emailCampaign, xsmtpapi);
-            }
-
-        } while(emailRecepients.size() > 0);
-
-        if (!categories.equalsIgnoreCase("all") && !categories.equalsIgnoreCase("all-unverified")) {
-            for (String categoryName : categoryArray) {
-                Category category = getCategoryService().getCategoryByName(StringUtils.trim(categoryName));
-                if (category != null) {
-                    do {
-                        emailRecepients.clear();
-                        emailRecepients = getAdminEmailService().getMailingListByCategory(emailCampaign, category, maxResultCount);
-                        if (emailRecepients.size() > 0) {
-                            logger.info(" user list size " + emailRecepients.size());
-                            String xsmtpapi = SendGridUtil.getSendGridEmailNewsLetterHeaderJson(finalCategories, emailCampaign);
-                            getAdminEmailManager().sendCampaignMails(emailRecepients, emailCampaign, xsmtpapi);
-                        }
-
-                    } while(emailRecepients.size() > 0);
-                }
-            }
-        }
-        addRedirectAlertMessage(new SimpleMessage("Sending campaign in progress : " + emailCampaign.getName()));
-        return new RedirectResolution(EmailNewsletterAdmin.class);
-    }
-
-    public Resolution sendEmailViaExcel() throws IOException {
-        String excelFilePath = adminUploadsPath + "/emailList/" + System.currentTimeMillis() + ".xls";
-        File excelFile = new File(excelFilePath);
-        excelFile.getParentFile().mkdirs();
-        fileBeanForCustomExcel.save(excelFile);
-
-        getAdminEmailManager().sendMailMergeCampaign(emailCampaign, excelFilePath, sheetName);
-        return new ForwardResolution(SendEmailNewsletterCampaign.class, "selectCampaign");
-    }
-
-    public Resolution getSentCountForEmailCampaign() {
-        Map datamap = new HashMap();
-        Long sentCount = emailCampaignService.getEmailCampaignSentCount(emailCampaign);
-        datamap.put("sentCountValue", sentCount);
-        datamap.put("emailCampaignId", emailCampaign.getId().toString());
-        HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Sent Count Generated for Email Campaign", datamap);
-        return new JsonResolution(healthkartResponse);
+    List<EmailRecepient> emailRecepients = new ArrayList<EmailRecepient>();
+    do {
+      if (categories.equalsIgnoreCase("all")) {
+        emailRecepients = getAdminEmailService().getAllMailingList(emailCampaign, Arrays.asList(getRoleDao().getRoleByName(EnumRole.HK_USER)), maxResultCount);
+      } else if (categories.equalsIgnoreCase("all-unverified")) {
+        emailRecepients = getAdminEmailService().getAllMailingList(emailCampaign, Arrays.asList(getRoleDao().getRoleByName(EnumRole.HK_UNVERIFIED)), maxResultCount);
       }
 
-    public List<EmailCampaign> getEmailCampaigns() {
-        return emailCampaigns;
-    }
+      if (emailRecepients.size() > 0) {
+        logger.info(" user list size " + emailRecepients.size());
+        String xsmtpapi = SendGridUtil.getSendGridEmailNewsLetterHeaderJson(finalCategories, emailCampaign);
+        getAdminEmailManager().sendCampaignMails(emailRecepients, emailCampaign, xsmtpapi);
+      }
 
-    public EmailCampaign getEmailCampaign() {
-        return emailCampaign;
-    }
+    } while (emailRecepients.size() > 0);
 
-    public void setEmailCampaign(EmailCampaign emailCampaign) {
-        this.emailCampaign = emailCampaign;
-    }
+    if (!categories.equalsIgnoreCase("all") && !categories.equalsIgnoreCase("all-unverified")) {
+      for (String categoryName : categoryArray) {
+        Category category = getCategoryService().getCategoryByName(StringUtils.trim(categoryName));
+        if (category != null) {
+          do {
+            emailRecepients.clear();
+            emailRecepients = getAdminEmailService().getMailingListByCategory(emailCampaign, category, maxResultCount);
+            if (emailRecepients.size() > 0) {
+              logger.info(" user list size " + emailRecepients.size());
+              String xsmtpapi = SendGridUtil.getSendGridEmailNewsLetterHeaderJson(finalCategories, emailCampaign);
+              getAdminEmailManager().sendCampaignMails(emailRecepients, emailCampaign, xsmtpapi);
+            }
 
-    public String getTestEmails() {
-        return testEmails;
+          } while (emailRecepients.size() > 0);
+        }
+      }
     }
+    addRedirectAlertMessage(new SimpleMessage("Sending campaign in progress : " + emailCampaign.getName()));
+    return new RedirectResolution(EmailNewsletterAdmin.class);
+  }
 
-    public void setTestEmails(String testEmails) {
-        this.testEmails = testEmails;
-    }
+  public Resolution sendEmailViaExcel() throws IOException {
+    String excelFilePath = adminUploadsPath + "/emailList/" + System.currentTimeMillis() + ".xls";
+    File excelFile = new File(excelFilePath);
+    excelFile.getParentFile().mkdirs();
+    fileBeanForCustomExcel.save(excelFile);
 
-    public String getCategories() {
-        return categories;
+    Boolean success = getAdminEmailManager().sendMailMergeCampaign(emailCampaign, excelFilePath, sheetName);
+    if (success) {
+      addRedirectAlertMessage(new SimpleMessage("Email sending in progress...."));
+    } else {
+      addRedirectAlertMessage(new SimpleMessage("Email sending failed!"));
     }
+    return new ForwardResolution(SendEmailNewsletterCampaign.class, "selectCampaign");
+  }
 
-    public void setCategories(String categories) {
-        this.categories = categories;
-    }
+  public Resolution getSentCountForEmailCampaign() {
+    Map datamap = new HashMap();
+    Long sentCount = emailCampaignService.getEmailCampaignSentCount(emailCampaign);
+    datamap.put("sentCountValue", sentCount);
+    datamap.put("emailCampaignId", emailCampaign.getId().toString());
+    HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Sent Count Generated for Email Campaign", datamap);
+    return new JsonResolution(healthkartResponse);
+  }
 
-    public Long getUserCount() {
-        return userCount;
-    }
+  public List<EmailCampaign> getEmailCampaigns() {
+    return emailCampaigns;
+  }
 
-    public FileBean getFileBean() {
-        return fileBean;
-    }
+  public EmailCampaign getEmailCampaign() {
+    return emailCampaign;
+  }
 
-    public void setFileBean(FileBean fileBean) {
-        this.fileBean = fileBean;
-    }
+  public void setEmailCampaign(EmailCampaign emailCampaign) {
+    this.emailCampaign = emailCampaign;
+  }
 
-    public FileBean getFileBeanForUserList() {
-        return fileBeanForUserList;
-    }
+  public String getTestEmails() {
+    return testEmails;
+  }
 
-    public void setFileBeanForUserList(FileBean fileBeanForUserList) {
-        this.fileBeanForUserList = fileBeanForUserList;
-    }
+  public void setTestEmails(String testEmails) {
+    this.testEmails = testEmails;
+  }
 
-    public UserService getUserService() {
-        return userService;
-    }
+  public String getCategories() {
+    return categories;
+  }
 
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
+  public void setCategories(String categories) {
+    this.categories = categories;
+  }
 
-    public EmailCampaignDao getEmailCampaignDao() {
-        return emailCampaignDao;
-    }
+  public Long getUserCount() {
+    return userCount;
+  }
 
-    public void setEmailCampaignDao(EmailCampaignDao emailCampaignDao) {
-        this.emailCampaignDao = emailCampaignDao;
-    }
+  public FileBean getFileBean() {
+    return fileBean;
+  }
 
-    public CategoryService getCategoryService() {
-        return categoryService;
-    }
+  public void setFileBean(FileBean fileBean) {
+    this.fileBean = fileBean;
+  }
 
-    public void setCategoryService(CategoryService categoryService) {
-        this.categoryService = categoryService;
-    }
+  public FileBean getFileBeanForUserList() {
+    return fileBeanForUserList;
+  }
 
-    public AdminEmailManager getAdminEmailManager() {
-        return adminEmailManager;
-    }
+  public void setFileBeanForUserList(FileBean fileBeanForUserList) {
+    this.fileBeanForUserList = fileBeanForUserList;
+  }
 
-    public void setAdminEmailManager(AdminEmailManager adminEmailManager) {
-        this.adminEmailManager = adminEmailManager;
-    }
+  public UserService getUserService() {
+    return userService;
+  }
 
-    public MailingListManager getMailingListManager() {
-        return mailingListManager;
-    }
+  public void setUserService(UserService userService) {
+    this.userService = userService;
+  }
 
-    public void setMailingListManager(MailingListManager mailingListManager) {
-        this.mailingListManager = mailingListManager;
-    }
+  public EmailCampaignDao getEmailCampaignDao() {
+    return emailCampaignDao;
+  }
 
-    public EmailManager getEmailManager() {
-        return emailManager;
-    }
+  public void setEmailCampaignDao(EmailCampaignDao emailCampaignDao) {
+    this.emailCampaignDao = emailCampaignDao;
+  }
 
-    public void setEmailManager(EmailManager emailManager) {
-        this.emailManager = emailManager;
-    }
+  public CategoryService getCategoryService() {
+    return categoryService;
+  }
 
-    public EmailType getEmailType() {
-        return emailType;
-    }
+  public void setCategoryService(CategoryService categoryService) {
+    this.categoryService = categoryService;
+  }
 
-    public String getSheetName() {
-        return sheetName;
-    }
+  public AdminEmailManager getAdminEmailManager() {
+    return adminEmailManager;
+  }
 
-    public void setSheetName(String sheetName) {
-        this.sheetName = sheetName;
-    }
+  public void setAdminEmailManager(AdminEmailManager adminEmailManager) {
+    this.adminEmailManager = adminEmailManager;
+  }
 
-    public void setEmailType(EmailType emailType) {
-        this.emailType = emailType;
-    }
+  public MailingListManager getMailingListManager() {
+    return mailingListManager;
+  }
 
-    public int getPerPageDefault() {
-        return defaultPerPage;
-    }
+  public void setMailingListManager(MailingListManager mailingListManager) {
+    this.mailingListManager = mailingListManager;
+  }
 
-    public int getPageCount() {
-        return emailCampaignPage == null ? 0 : emailCampaignPage.getTotalPages();
-    }
+  public EmailManager getEmailManager() {
+    return emailManager;
+  }
 
-    public int getResultCount() {
-        return emailCampaignPage == null ? 0 : emailCampaignPage.getTotalResults();
-    }
+  public void setEmailManager(EmailManager emailManager) {
+    this.emailManager = emailManager;
+  }
 
-    public Set<String> getParamSet() {
-        HashSet<String> params = new HashSet<String>();
-        params.add("emailType");
-        return params;
-    }
+  public EmailType getEmailType() {
+    return emailType;
+  }
 
-    public FileBean getFileBeanForCustomExcel() {
-        return fileBeanForCustomExcel;
-    }
+  public String getSheetName() {
+    return sheetName;
+  }
 
-    public void setFileBeanForCustomExcel(FileBean fileBeanForCustomExcel) {
-        this.fileBeanForCustomExcel = fileBeanForCustomExcel;
-    }
+  public void setSheetName(String sheetName) {
+    this.sheetName = sheetName;
+  }
 
-    public RoleDao getRoleDao() {
-        return roleDao;
-    }
+  public void setEmailType(EmailType emailType) {
+    this.emailType = emailType;
+  }
 
-    public void setRoleDao(RoleDao roleDao) {
-        this.roleDao = roleDao;
-    }
+  public int getPerPageDefault() {
+    return defaultPerPage;
+  }
 
-    public EmailRecepientDao getEmailRecepientDao() {
-        return emailRecepientDao;
-    }
+  public int getPageCount() {
+    return emailCampaignPage == null ? 0 : emailCampaignPage.getTotalPages();
+  }
 
-    public void setEmailRecepientDao(EmailRecepientDao emailRecepientDao) {
-        this.emailRecepientDao = emailRecepientDao;
-    }
+  public int getResultCount() {
+    return emailCampaignPage == null ? 0 : emailCampaignPage.getTotalResults();
+  }
 
-    public AdminEmailService getAdminEmailService() {
-        return adminEmailService;
-    }
+  public Set<String> getParamSet() {
+    HashSet<String> params = new HashSet<String>();
+    params.add("emailType");
+    return params;
+  }
 
-    public void setAdminEmailService(AdminEmailService adminEmailService) {
-        this.adminEmailService = adminEmailService;
-    }
+  public FileBean getFileBeanForCustomExcel() {
+    return fileBeanForCustomExcel;
+  }
 
-    public EmailCampaignService getEmailCampaignService() {
-        return emailCampaignService;
-    }
+  public void setFileBeanForCustomExcel(FileBean fileBeanForCustomExcel) {
+    this.fileBeanForCustomExcel = fileBeanForCustomExcel;
+  }
 
-    public void setEmailCampaignService(EmailCampaignService emailCampaignService) {
-        this.emailCampaignService = emailCampaignService;
-    }
+  public RoleDao getRoleDao() {
+    return roleDao;
+  }
+
+  public void setRoleDao(RoleDao roleDao) {
+    this.roleDao = roleDao;
+  }
+
+  public EmailRecepientDao getEmailRecepientDao() {
+    return emailRecepientDao;
+  }
+
+  public void setEmailRecepientDao(EmailRecepientDao emailRecepientDao) {
+    this.emailRecepientDao = emailRecepientDao;
+  }
+
+  public AdminEmailService getAdminEmailService() {
+    return adminEmailService;
+  }
+
+  public void setAdminEmailService(AdminEmailService adminEmailService) {
+    this.adminEmailService = adminEmailService;
+  }
+
+  public EmailCampaignService getEmailCampaignService() {
+    return emailCampaignService;
+  }
+
+  public void setEmailCampaignService(EmailCampaignService emailCampaignService) {
+    this.emailCampaignService = emailCampaignService;
+  }
 }
