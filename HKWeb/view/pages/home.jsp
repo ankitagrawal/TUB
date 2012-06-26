@@ -28,16 +28,16 @@
     <div id="home_header02">
       <h1>the one stop shop for health, fitness and beauty</h1>
 
-      <a href="${pageContext.request.contextPath}/product/equinox-irresistible-offer/CMB-HD005">
-        <img class="banner01" src="<hk:vhostImage/>/images/banners/home/equinox.jpg" border="0"
-             alt="Equinox - free body fat monitor"/>
+      <a href="${pageContext.request.contextPath}/product/rossmax-digital-bp-monitor-upper-arm-aw150/ROSMAX001">
+        <img class="banner01" src="<hk:vhostImage/>/images/banners/home/home_banner_rossmax.jpg" border="0"
+             alt="The most pocket friendly BP Monitor"/>
       </a>
         <%--<a href="http://www.healthkart.com/nutrition/sports-nutrition?brand=Dymatize">--%>
         <%--<img class="banner01" src="<hk:vhostImage/>/images/banners/home/dymatize_sbanner.jpg" border="0" alt="Dymatize - free shaker"/>--%>
         <%--</a>--%>
-      <a href="${pageContext.request.contextPath}/eye/eyeglasses">
-        <img class="banner01" src="<hk:vhostImage/>/images/banners/home/homepage-banner-crizal.jpg" border="0"
-             alt="Prescription glasses with Crizal/Ziess lenses"/>
+      <a href="${pageContext.request.contextPath}/sports/fitness-accessories/support-gear/hand-wrist">
+        <img class="banner01" src="<hk:vhostImage/>/images/banners/home/gloves_sbanner.jpg" border="0"
+             alt="Training Gloves"/>
       </a>
       <a href="${pageContext.request.contextPath}/brand/nutrition/vitamin+shoppe">
         <img src="<hk:vhostImage/>/images/banners/home/vs_sbanner.jpg" border="0" alt="Introducing Vitamin Shoppe"/>
