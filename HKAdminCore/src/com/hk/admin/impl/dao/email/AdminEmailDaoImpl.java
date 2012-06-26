@@ -131,17 +131,19 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
     }
 
     public List<User> findAllUsersNotInEmailRecepient(int maxResult, List<String> userIdList) {
-        String query = "select u.* from user u left join email_recepient er on (u.email = er.email) where er.email is null and u.email is not null ";
+//        String query = "select u.* from user u left join email_recepient er on (u.email = er.email) where er.email is null and u.email is not null ";
+        String query = "select distinct(u) from User u where u.email not in (select er.email from EmailRecepient er) group by u.email";
+        return getSession().createQuery(query).setMaxResults(maxResult).list();
 
-        if(userIdList != null){
-            query += "and u.id in (:userIdList)" ;
-        }
-        Query sqlQuery = getSession().createSQLQuery(query).addEntity(User.class);
-        if(userIdList != null) {
-            sqlQuery = sqlQuery.setParameterList("userIdList", userIdList);
-        }
-
-        return sqlQuery.setMaxResults(maxResult).list();
+//        if(userIdList != null){
+//            query += "and u.id in (:userIdList)" ;
+//        }
+//        Query sqlQuery = getSession().createSQLQuery(query).addEntity(User.class);
+//        Query sqlQuery = getSession().createSQLQuery(query).addEntity(User.class);
+//        if(userIdList != null) {
+//            sqlQuery = sqlQuery.setParameterList("userIdList", userIdList);
+//        }
+//        return sqlQuery.setMaxResults(maxResult).list();
     }
 
     @SuppressWarnings("unchecked")
