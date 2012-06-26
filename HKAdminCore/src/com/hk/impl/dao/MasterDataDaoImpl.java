@@ -71,7 +71,6 @@ public class MasterDataDaoImpl implements MasterDataDao {
     private MarketingService marketingService;
     @Autowired
     private StoreService     storeService;
-
     @Autowired
     private CourierDao       courierDao;
 
