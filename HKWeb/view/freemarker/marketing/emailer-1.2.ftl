@@ -23,7 +23,7 @@ ${product_name}. Hurry, stock running out
     <tr>
     <td><table width="500" border="0" cellpadding="0" cellspacing="0">
       <tr>
-        <td width="222"><a href="http://www.healthkart.com"><img src="images/logo.png" alt="HealthKart.com Logo" width="207" height="30" border="0" /></a></td>
+        <td width="222"><a href="http://www.healthkart.com"><img src="http://img.healthkart.com/email/logos/logo.png" alt="HealthKart.com Logo" width="207" height="30" border="0" /></a></td>
         <td width="15" style="border-left: solid 1px #999999"></td>
         <td width="245" align="left" style="font-size:13px; font-weight:bold; color:#666666"><a href="http://www.healthkart.com?utm_source=abandonedCartReminder&utm_medium=email&utm_campaign=abandonedCart_nutrition_s2_${product_id}" style="color:#666666; text-decoration:none">India's premier e-health store!</a></td>
         <td width="18">&nbsp;</td>
@@ -32,7 +32,7 @@ ${product_name}. Hurry, stock running out
         <td colspan="5" height="10"></td>
       </tr>
       <tr>
-        <td colspan="5"><a href="http://www.healthkart.com?utm_source=abandonedCartReminder&utm_medium=email&utm_campaign=abandonedCart_nutrition_s2_${product_id}"><img src="images/main_banner.jpg" width="500" height="148" alt="You were almost there! Still waiting for you..." border="0" /></a></td>
+        <td colspan="5"><a href="http://www.healthkart.com?utm_source=abandonedCartReminder&utm_medium=email&utm_campaign=abandonedCart_nutrition_s2_${product_id}"><img src="almost_there.jpg" width="500" height="148" alt="You were almost there! Still waiting for you..." border="0" /></a></td>
       </tr>
  
       
@@ -68,7 +68,7 @@ ${product_name}. Hurry, stock running out
             <td width="15">&nbsp;</td>
             <td width="470"><table width="470" border="0" cellspacing="0" cellpadding="0">
               <tr>
-                <td width="147"><img src="${product_image_url_medium}" width="147" height="94" /></td>
+                <td width="147"><img src="${product_image_url_small}" width="147" height="94" /></td>
                 <td width="17" style="border-left:1px solid #CCCCCC">&nbsp;</td>
                 <td width="306" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
                   <tr>
@@ -120,13 +120,13 @@ Team HealthKart</td>
   <tr>
     <td  bgcolor="#b8b8b8" style="border-top: solid #606060 2px"><table width="500" border="0" align="center" cellpadding="0" cellspacing="0">
       <tr>
-        <td height="70" colspan="3" align="left" valign="middle"><a href="http://www.healthkart.com?utm_source=abandonedCartReminder&utm_medium=email&utm_campaign=abandonedCart_nutrition_s2_${product_id}"><img src="images/hk_logo_bw.jpg" alt="HealthKart.com logo" width="178" height="28" border="0" /></a></td>
+        <td height="70" colspan="3" align="left" valign="middle"><a href="http://www.healthkart.com?utm_source=abandonedCartReminder&utm_medium=email&utm_campaign=abandonedCart_nutrition_s2_${product_id}"><img src="http://img.healthkart.com/email/logos/logo.png" alt="HealthKart.com logo" width="178" height="28" border="0" /></a></td>
         <td width="312" align="right" valign="middle" style="color:#606060; font-weight:bold; font-size:13px;"><a href="http://www.healthkart.com?utm_source=abandonedCartReminder&utm_medium=email&utm_campaign=abandonedCart_nutrition_s2_${product_id}" style="color:#606060; text-decoration:none;">www.healthkart.com</a></td>
       </tr>
       <tr>
         <td width="106" height="60" style="border-top: solid #929292 1px; color:#606060; font-size:13px;">Spread the word:</td>
-        <td width="39" align="left" valign="middle" style="border-top: solid #929292 1px"><a href="http://www.facebook.com/healthkart"><img src="images/facebook.png" alt="facebook" width="32" height="32" border="0" /></a></td>
-        <td width="43" align="left" valign="middle" style="border-top: solid #929292 1px"><a href="http://twitter.com/healthkart"><img src="images/twitter.png" alt="twitter" width="32" height="32" border="0" /></a></td>
+        <td width="39" align="left" valign="middle" style="border-top: solid #929292 1px"><a href="http://www.facebook.com/healthkart"><img src="http://img.healthkart.com/email/logos/facebook.png" alt="facebook" width="32" height="32" border="0" /></a></td>
+        <td width="43" align="left" valign="middle" style="border-top: solid #929292 1px"><a href="http://twitter.com/healthkart"><img src="http://img.healthkart.com/email/logos/twitter.png" alt="twitter" width="32" height="32" border="0" /></a></td>
         <td align="right" valign="middle" style="border-top: solid #929292 1px; color:#606060; font-size:13px;">e: <a href="mailto:info@healthkart.com" style="color:#606060">info@healthkart.com</a> &nbsp;| &nbsp;t: +91 124 4551616</td>
       </tr>
     </table></td>
