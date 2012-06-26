@@ -38,6 +38,7 @@ import com.hk.util.SendGridUtil;
 import com.hk.util.io.ExcelSheetParser;
 import com.hk.util.io.HKRow;
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.Session;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -170,6 +171,7 @@ public class AdminEmailManager {
     @SuppressWarnings("unchecked")
     public boolean sendCampaignMails(Set<User> emailersList, EmailCampaign emailCampaign, String xsmtpapi) {
         // logger.info("Reached Level 3");
+        Session session =  baseDao.getHibernateTemplate().getSessionFactory().openSession();
         Map<String, String> headerMap = new HashMap<String, String>();
         headerMap.put("X-SMTPAPI", xsmtpapi);
 
@@ -202,6 +204,7 @@ public class AdminEmailManager {
                 logger.info("Some exception occured while sending email to one of the uses, user id being" + user.getId(), e);
             }
         }
+        session.close();
         // logger.info("Reached Level 3.5");
         return true;
     }
