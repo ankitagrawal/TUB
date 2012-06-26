@@ -79,7 +79,7 @@
 <%--<div id="shippingOrder-${shippingOrder.id}" class="detailDiv">--%>
 <td id="shippingOrderDetail-${shippingOrder.id}">
     <div class="floatleft">
-        Store ID: <strong>${shippingOrder.baseOrder.store.prefix}</strong>, Score: ${shippingOrder.baseOrder.score} 
+        Store ID: <strong>${shippingOrder.baseOrder.store.prefix}</strong>, Score: ${shippingOrder.baseOrder.score}, Date: <fmt:formatDate value="${shippingOrder.baseOrder.payment.paymentDate}" type="date"/> 
     </div>
     <div class="clear" style=""></div>
     <div class="floatleft">
