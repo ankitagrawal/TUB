@@ -43,12 +43,13 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
           " where er.subscribed = true and er.email = u.email " +
           " and (er.lastEmailDate is null or (er.lastEmailDate is not null and (date(current_date()) - date(er.lastEmailDate) >= (select ec.minDayGap from EmailCampaign ec where ec = :emailCampaign))) )" +
           " and er not in (select eh.emailRecepient from EmailerHistory eh where eh.emailCampaign = :emailCampaign ) " +
-          " and r in (:roleList)" ;
+          " and r in (:roleList) and u.store.id in (:storeIdList)" ;
 
         List<EmailRecepient> emailRecepients = ( List<EmailRecepient> )getSession().createQuery(query)
           .setParameter("emailCampaign", emailCampaign)
           .setParameter("emailCampaign", emailCampaign)
           .setParameterList("roleList", roleList)
+          .setParameterList("storeIdList", Arrays.asList(1L, null))
           .setMaxResults(maxResult).list();
 
         return emailRecepients;
@@ -131,17 +132,19 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
     }
 
     public List<User> findAllUsersNotInEmailRecepient(int maxResult, List<String> userIdList) {
-        String query = "select u.* from user u left join email_recepient er on (u.email = er.email) where er.email is null and u.email is not null ";
+//        String query = "select u.* from user u left join email_recepient er on (u.email = er.email) where er.email is null and u.email is not null ";
+        String query = "select distinct(u) from User u where u.email not in (select er.email from EmailRecepient er) group by u.email";
+        return getSession().createQuery(query).setMaxResults(maxResult).list();
 
-        if(userIdList != null){
-            query += "and u.id in (:userIdList)" ;
-        }
-        Query sqlQuery = getSession().createSQLQuery(query).addEntity(User.class);
-        if(userIdList != null) {
-            sqlQuery = sqlQuery.setParameterList("userIdList", userIdList);
-        }
-
-        return sqlQuery.setMaxResults(maxResult).list();
+//        if(userIdList != null){
+//            query += "and u.id in (:userIdList)" ;
+//        }
+//        Query sqlQuery = getSession().createSQLQuery(query).addEntity(User.class);
+//        Query sqlQuery = getSession().createSQLQuery(query).addEntity(User.class);
+//        if(userIdList != null) {
+//            sqlQuery = sqlQuery.setParameterList("userIdList", userIdList);
+//        }
+//        return sqlQuery.setMaxResults(maxResult).list();
     }
 
     @SuppressWarnings("unchecked")

@@ -188,7 +188,7 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
 
         int counter = 0;
         for(String emailId : userEmails) {
-            EmailRecepient emailRecepient = getEmailRecepientDao().createEmailRecepient(emailId);
+            EmailRecepient emailRecepient = getEmailRecepientDao().createEmailRecepientObject(emailId);
             emailRecepientRecs.add(emailRecepient);
             if(counter == COMMIT_COUNT) {
                 getEmailRecepientDao().saveOrUpdate(emailRecepientRecs);
