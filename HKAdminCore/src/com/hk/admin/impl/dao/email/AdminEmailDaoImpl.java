@@ -60,12 +60,13 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
           " where er.subscribed = true and er.email = u.email " +
           " and (er.lastEmailDate is null or (er.lastEmailDate is not null and (date(current_date()) - date(er.lastEmailDate) >= (select ec.minDayGap from EmailCampaign ec where ec = :emailCampaign))) )" +
           " and er not in (select eh.emailRecepient from EmailerHistory eh where eh.emailCampaign = :emailCampaign ) " +
-          " and u.id in (:userList)" ;
+          " and u.id in (:userList) and u.store.id in (:storeIdList) " ;
 
         List<EmailRecepient> emailRecepients = ( List<EmailRecepient> )getSession().createQuery(query)
           .setParameter("emailCampaign", emailCampaign)
           .setParameter("emailCampaign", emailCampaign)
           .setParameterList("userList", userList)
+          .setParameterList("storeIdList", Arrays.asList(1L, null))
           .setMaxResults(maxResult).list();
 
         return emailRecepients;
@@ -91,9 +92,10 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
           " where er.subscribed = true and er.email = u.email " +
           " and (er.lastEmailDate is null or (er.lastEmailDate is not null and (date(current_date()) - date(er.lastEmailDate) >= (select ec.minDayGap from EmailCampaign ec where ec = :emailCampaign))) )" +
           " and er not in (select eh.emailRecepient from EmailerHistory eh where eh.emailCampaign = :emailCampaignInner ) " +
-          " and r in (:roleList)" ;
+          " and r in (:roleList) and u.store.id in (:storeIdList)" ;
 
-        Long userListCount = (Long) findUniqueByNamedParams(query, new String[]{"emailCampaign", "emailCampaignInner", "roleList"}, new Object[]{emailCampaign, emailCampaign, roleList});
+        Long userListCount = (Long) findUniqueByNamedParams(query, new String[]{"emailCampaign", "emailCampaignInner", "roleList", "storeIdList"},
+          new Object[]{emailCampaign, emailCampaign, roleList, Arrays.asList(1L, null)});
 
         return userListCount;
     }
@@ -103,13 +105,15 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
           + " EmailRecepient er " + "where er.email = u.email and oc.category in (:categoryList) " + "and r in (:roleList)"
           + " and er.subscribed = true "
           + " and (er.lastEmailDate is null or (er.lastEmailDate is not null and (date(current_date()) - date(er.lastEmailDate) >= (select ec.minDayGap from EmailCampaign ec where ec = :emailCampaign))) )"
-          + " and er not in (select eh.emailRecepient from EmailerHistory eh where eh.emailCampaign = :emailCampaign )";
+          + " and er not in (select eh.emailRecepient from EmailerHistory eh where eh.emailCampaign = :emailCampaign ) and u.store.id in (:storeIdList) ";
 
         List<EmailRecepient> userIdsByCategory = getSession().createQuery(query)
           .setParameterList("categoryList", Arrays.asList(category))
           .setParameterList("roleList",Arrays.asList(getRoleDao().getRoleByName(EnumRole.HK_USER), getRoleDao().getRoleByName(EnumRole.HK_UNVERIFIED)))
           .setParameter("emailCampaign", emailCampaign)
-          .setParameter("emailCampaign", emailCampaign).setMaxResults(maxResult).list();
+          .setParameter("emailCampaign", emailCampaign)
+          .setParameterList("storeIdList", Arrays.asList(1L, null))
+          .setMaxResults(maxResult).list();
 
         return userIdsByCategory;
     }
@@ -120,31 +124,22 @@ public class AdminEmailDaoImpl extends BaseDaoImpl implements AdminEmailDao {
                   + " EmailRecepient er " + "where er.email = u.email and oc.category in (:categoryList) " + "and r in (:roleList)"
                   + " and er.subscribed = true "
                   + " and (er.lastEmailDate is null or (er.lastEmailDate is not null and (date(current_date()) - date(er.lastEmailDate) >= (select ec.minDayGap from EmailCampaign ec where ec = :emailCampaign))) )"
-                  + " and er not in (select eh.emailRecepient from EmailerHistory eh where eh.emailCampaign = :emailCampaign )";
+                  + " and er not in (select eh.emailRecepient from EmailerHistory eh where eh.emailCampaign = :emailCampaign ) and u.store.id in (:storeIdList) ";
 
         Long userIdsByCategoryCount = (Long)getSession().createQuery(query)
           .setParameterList("categoryList", Arrays.asList(category))
           .setParameterList("roleList",Arrays.asList(getRoleDao().getRoleByName(EnumRole.HK_USER), getRoleDao().getRoleByName(EnumRole.HK_UNVERIFIED)))
           .setParameter("emailCampaign", emailCampaign)
-          .setParameter("emailCampaign", emailCampaign).uniqueResult();
+          .setParameter("emailCampaign", emailCampaign)
+          .setParameterList("storeIdList", Arrays.asList(1L, null))
+          .uniqueResult();
                 
         return userIdsByCategoryCount;
     }
 
     public List<User> findAllUsersNotInEmailRecepient(int maxResult, List<String> userIdList) {
-//        String query = "select u.* from user u left join email_recepient er on (u.email = er.email) where er.email is null and u.email is not null ";
         String query = "select distinct(u) from User u where u.email not in (select er.email from EmailRecepient er) group by u.email";
         return getSession().createQuery(query).setMaxResults(maxResult).list();
-
-//        if(userIdList != null){
-//            query += "and u.id in (:userIdList)" ;
-//        }
-//        Query sqlQuery = getSession().createSQLQuery(query).addEntity(User.class);
-//        Query sqlQuery = getSession().createSQLQuery(query).addEntity(User.class);
-//        if(userIdList != null) {
-//            sqlQuery = sqlQuery.setParameterList("userIdList", userIdList);
-//        }
-//        return sqlQuery.setMaxResults(maxResult).list();
     }
 
     @SuppressWarnings("unchecked")
