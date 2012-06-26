@@ -79,7 +79,7 @@
 <%--<div id="shippingOrder-${shippingOrder.id}" class="detailDiv">--%>
 <td id="shippingOrderDetail-${shippingOrder.id}">
     <div class="floatleft">
-        Store ID: <strong>${shippingOrder.baseOrder.store.prefix}</strong>
+        Store ID: <strong>${shippingOrder.baseOrder.store.prefix}</strong>, Score: ${shippingOrder.baseOrder.score} 
     </div>
     <div class="clear" style=""></div>
     <div class="floatleft">
