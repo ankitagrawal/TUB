@@ -101,6 +101,12 @@
 		<property name="removeAbandonedTimeout">
 			<value>300</value>
 		</property>
+		<property name="validationQuery">
+			<value>SELECT 1</value>
+		</property>
+		<property name="testOnBorrow">
+			<value>true</value>
+		</property>
 		<property name="maxIdle">
 			<value>20</value>
 		</property>

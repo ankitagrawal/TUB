@@ -547,7 +547,13 @@
                                                     (based on ${pa.totalReviews} reviews) <br/>
 
             <div class="rating_bar">
-              <div id="blueStar" class="blueStarTop"></div>
+              <div id="blueStar" class="blueStar"></div>
+              <script type="text/javascript">
+                var averageRating = ${pa.averageRating};
+                averageRating = (averageRating * 20) + "%";
+                $('.blueStarTop').width(averageRating);
+                $('.blueStar').width(averageRating);
+              </script>
             </div>
 
           </td>

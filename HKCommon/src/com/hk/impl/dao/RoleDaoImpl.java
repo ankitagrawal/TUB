@@ -1,11 +1,8 @@
 package com.hk.impl.dao;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -49,6 +46,19 @@ public class RoleDaoImpl extends BaseDaoImpl implements RoleDao {
         List<String> basicRoles = EnumRole.listBasicRoles();
         DetachedCriteria criteria = DetachedCriteria.forClass(Role.class);
         criteria.add(Restrictions.in("name",basicRoles));
+        return findByCriteria(criteria);
+    }
+
+    public List<Role> listAllCustomerSupportRoles() {
+        List<String> customerSupportRoles = EnumRole.listCustomerSupportRoles();
+        DetachedCriteria criteria = DetachedCriteria.forClass(Role.class);
+        criteria.add(Restrictions.in("name",customerSupportRoles));
+        return findByCriteria(criteria);
+    }
+    public List<Role> listAllOperationsRoles() {
+        List<String> opsRoles = EnumRole.listOpsRoles();
+        DetachedCriteria criteria = DetachedCriteria.forClass(Role.class);
+        criteria.add(Restrictions.in("name",opsRoles));
         return findByCriteria(criteria);
     }
 

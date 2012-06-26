@@ -1,25 +1,28 @@
 package com.hk.report.impl.service.catalog.product;
 
-import java.util.Date;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
-import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.hibernate.transform.Transformers;
+import org.springframework.stereotype.Service;
 
-import com.hk.report.dto.inventory.*;
-import com.hk.report.pact.dao.catalog.product.ReportProductVariantDao;
-import com.hk.report.pact.service.catalog.product.ReportProductVariantService;
-import com.hk.domain.warehouse.Warehouse;
-import com.hk.domain.sku.SkuGroup;
-import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.order.ShippingOrder;
-import com.hk.domain.core.InvTxnType;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.sku.SkuGroup;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
+import com.hk.report.dto.inventory.ExpiryAlertReportDto;
+import com.hk.report.dto.inventory.InventorySoldDto;
+import com.hk.report.dto.inventory.RTODamageReportDto;
+import com.hk.report.dto.inventory.RTOFineReportDto;
+import com.hk.report.dto.inventory.RTOReportDto;
+import com.hk.report.dto.inventory.StockReportDto;
+import com.hk.report.pact.dao.catalog.product.ReportProductVariantDao;
+import com.hk.report.pact.service.catalog.product.ReportProductVariantService;
 
 @Service
 public class ReportProductVariantServiceImpl implements ReportProductVariantService {
