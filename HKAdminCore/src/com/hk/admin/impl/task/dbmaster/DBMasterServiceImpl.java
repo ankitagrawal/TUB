@@ -1,9 +1,11 @@
 package com.hk.admin.impl.task.dbmaster;
 
-import com.hk.admin.pact.task.TaskService;
-import com.hk.web.BatchProcessWorkManager;
-import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.hk.admin.pact.task.TaskService;
 
 
 /**
@@ -15,6 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 @Service
 public class DBMasterServiceImpl implements TaskService{
+    
+    private static Logger Logger                  = LoggerFactory.getLogger(DBMasterServiceImpl.class);
+
   @Autowired
   MasterDataService masterDataService;
 

@@ -12,24 +12,25 @@ import com.hk.service.ServiceLocatorFactory;
  */
 public abstract class AbstractOrderSearchCriteria {
 
-    private static final int   DEFAULT_MAX_RESULTS = 100;
     private Long               orderId;
     private Long               storeId;
     private String             gatewayOrderId;
-    private boolean            orderAsc            = false;
-    private boolean            sortByUpdateDate    = true;
+    private boolean            orderAsc         = false;
+    private boolean            sortByUpdateDate = true;
 
     private SearchDao          searchDao;
     protected DetachedCriteria baseCriteria;
 
-    private int                maxResults          = -1;
+    /*
+     * private int maxResults = -1; private static final int DEFAULT_MAX_RESULTS = 100;
+     */
 
-  public AbstractOrderSearchCriteria setStoreId(Long storeId) {
-    this.storeId = storeId;
-    return this;
-  }
+    public AbstractOrderSearchCriteria setStoreId(Long storeId) {
+        this.storeId = storeId;
+        return this;
+    }
 
-  public AbstractOrderSearchCriteria setOrderId(Long orderId) {
+    public AbstractOrderSearchCriteria setOrderId(Long orderId) {
         this.orderId = orderId;
         return this;
     }
@@ -49,10 +50,9 @@ public abstract class AbstractOrderSearchCriteria {
         return this;
     }
 
-    public AbstractOrderSearchCriteria setMaxResults(int maxResults) {
-        this.maxResults = maxResults;
-        return this;
-    }
+    /*
+     * public AbstractOrderSearchCriteria setMaxResults(int maxResults) { this.maxResults = maxResults; return this; }
+     */
 
     protected abstract DetachedCriteria getBaseCriteria();
 
@@ -80,15 +80,15 @@ public abstract class AbstractOrderSearchCriteria {
             baseCriteria.add(Restrictions.eq("store.id", storeId));
         }
 
-        if (sortByUpdateDate) {
-            if (!orderAsc) {
-                baseCriteria.addOrder(org.hibernate.criterion.Order.desc("updateDate"));
-            } else {
-                baseCriteria.addOrder(org.hibernate.criterion.Order.asc("updateDate"));
-            }
+        /*
+         * if (sortByUpdateDate) { if (!orderAsc) {
+         * baseCriteria.addOrder(org.hibernate.criterion.Order.desc("updateDate")); } else {
+         * baseCriteria.addOrder(org.hibernate.criterion.Order.asc("updateDate")); } }
+         */
+
+        if (sortByUpdateDate && orderAsc) {
+            baseCriteria.addOrder(org.hibernate.criterion.Order.asc("updateDate"));
         }
-        
-        
 
         // TODO: fix later after rewrite
         // baseCriteria.setMaxResults(2);
