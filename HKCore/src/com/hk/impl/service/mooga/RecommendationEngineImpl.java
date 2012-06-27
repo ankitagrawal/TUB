@@ -63,6 +63,23 @@ public class RecommendationEngineImpl implements RecommendationEngine {
         MoogaWebServicesLocator servicesLocator = new MoogaWebServicesLocator();
         List<String> recommendedItems = new ArrayList<String>();
         try{
+            String itemResponse = moogaStub.item_GetRecommendedItemsToItem(HK_MOOGA_KEY, pvID, "0","0","PRODUCT");
+            String[] moogaResult = itemResponse.split("," , PRODUCT_MAX_LIMIT);
+            for (String result : moogaResult){
+                String[] splitResults = result.split("=");
+                if ((splitResults.length > 0) && StringUtils.isNotBlank(splitResults[0])){ //Just in case MOOGA misbehaves
+                    recommendedItems.add(splitResults[0].trim());
+                }
+            }
+        }catch(RemoteException ex){
+
+        }
+        return  recommendedItems;
+    }
+    public List<String> getRecommendedProductVariants(String pvID){
+        MoogaWebServicesLocator servicesLocator = new MoogaWebServicesLocator();
+        List<String> recommendedItems = new ArrayList<String>();
+        try{
             String itemResponse = moogaStub.item_GetRecommendedItemsToItem(HK_MOOGA_KEY, pvID, "","","");
             String[] moogaResult = itemResponse.split("," , PRODUCT_MAX_LIMIT);
             for (String result : moogaResult){
