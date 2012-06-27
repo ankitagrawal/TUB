@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.hk.impl.service.mooga.RecommendationEngineImpl;
+import com.hk.pact.service.mooga.RecommendationEngine;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.JsonResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -62,7 +62,7 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
     SignupAction signupAction;
     
     @Autowired
-    RecommendationEngineImpl recomendationEngine;
+    RecommendationEngine recomendationEngine;
 
     @SuppressWarnings({"unchecked", "deprecation"})
     @DefaultHandler

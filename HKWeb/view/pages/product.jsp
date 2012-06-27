@@ -491,7 +491,7 @@
       <h4>
         People who bought this also bought these products
       </h4>
-      <c:forEach items="${product.relatedProducts}" var="relatedProduct">
+      <c:forEach items="${productService.recommendedProducts}" var="relatedProduct">
         <c:if test="${!relatedProduct.deleted}">
           <s:layout-render name="/layouts/embed/_productThumb.jsp" productId="${relatedProduct.id}"/>
         </c:if>
