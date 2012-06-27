@@ -15,6 +15,9 @@ public interface EmailerHistoryDao extends BaseDao {
     public EmailerHistory createEmailerHistory(String senderEmail, String senderName, EmailType emailType, EmailRecepient emailRecepient, EmailCampaign emailCampaign,
             String customText);
 
+    public EmailerHistory createEmailerHistoryObject(String senderEmail, String senderName, EmailType emailType, EmailRecepient emailRecepient, EmailCampaign emailCampaign,
+            String customText);
+
     public List<EmailerHistory>  findEmailRecipientByCampaign(EmailRecepient emailRecepient, EmailCampaign emailCampaign);
 
     public EmailerHistory findEmailRecipientByCampaignAndEmailType(EmailRecepient emailRecepient, EmailCampaign emailCampaign, EmailType emailType);
