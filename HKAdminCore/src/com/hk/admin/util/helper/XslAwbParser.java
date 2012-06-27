@@ -1,7 +1,7 @@
 package com.hk.admin.util.helper;
 
 
-import com.hk.admin.pact.dao.courier.CourierDao;
+import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.util.XslUtil;
 import com.hk.constants.XslConstants;
 import com.hk.domain.courier.Awb;
@@ -39,7 +39,7 @@ public class XslAwbParser {
 
   private static Logger logger = LoggerFactory.getLogger(XslAwbParser.class);
    @Autowired
-  private CourierDao courierDao;
+  private CourierService courierService;
   @Autowired
   private WarehouseDao warehouseDao;
 
@@ -84,7 +84,7 @@ public class XslAwbParser {
 
          }
 
-         Courier courier = courierDao.getCourierById(XslUtil.getLong(courierId));
+         Courier courier = courierService.getCourierById(XslUtil.getLong(courierId));
          if(courier == null ){
           logger.error("courierId is not valid  "+courierId ,rowCount);
            throw new ExcelBlankFieldException("courierId is not valid  " + "    ", rowCount); 

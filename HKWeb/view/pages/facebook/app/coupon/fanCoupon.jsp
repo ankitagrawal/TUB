@@ -48,7 +48,7 @@ C) Update endOfOfferFanCouponDate to the date the campaign is ending on. ideally
   String campaignCode = "lwdi-launch";
 
   DateTime dateTimeFanCoupon = new DateTime();
-  Date endOfOfferFanCouponDate = new Date(new DateTime(2012, 6, 15, 23, 59, 59, 59).getMillis());
+  Date endOfOfferFanCouponDate = new Date(new DateTime(2012, 6, 30, 23, 59, 59, 59).getMillis());
 %>
 <s:layout-render name="/layouts/fbDefault510.jsp">
 
@@ -120,10 +120,8 @@ C) Update endOfOfferFanCouponDate to the date the campaign is ending on. ideally
             $('#couponCodeContainer').html(res.data.coupon);
             $('#preloader').hide();
             $('#offerContainer').show();
-            if (res.data.shared) {
-              $('#hiddenCode').hide();
-              $('#revealedCode').show();
-            }
+            $('#hiddenCode').show();
+            $('#revealedCode').show();
           } else if (res.code == '<%=HealthkartResponse.STATUS_ERROR%>') {
             $('#errorCode').html('ERROR: ' + res.message);
             $('#preloader').hide();
@@ -190,7 +188,7 @@ C) Update endOfOfferFanCouponDate to the date the campaign is ending on. ideally
       <img src="<hk:vhostImage/>/images/facebook/fancoupon/fanCouponMasthead2.png"/>
 
       <h2>Current Deal :</h2>
-      <img src="<hk:vhostImage/>/images/facebook/fancoupon/offers/lwdi_banner.jpg"/>
+      <img src="<hk:vhostImage/>/images/facebook/fancoupon/offers/lwd_banner-2.jpg"/>
 
       <div style="text-align: center; padding: 10px;">
         <img src="<hk:vhostImage/>/images/facebook/fancoupon/joinNowButton.png"/>
@@ -206,7 +204,7 @@ C) Update endOfOfferFanCouponDate to the date the campaign is ending on. ideally
       <img src="<hk:vhostImage/>/images/facebook/fancoupon/fanCouponMasthead2.png"/>
 
       <h2>Current Deal :</h2>
-      <img src="<hk:vhostImage/>/images/facebook/fancoupon/offers/lwdi_banner.jpg"/>
+      <img src="<hk:vhostImage/>/images/facebook/fancoupon/offers/lwd_banner-2.jpg"/>
 
       <div style="text-align: center; padding: 10px; cursor: pointer;" onclick="login();">
         <img src="<hk:vhostImage/>/images/facebook/fancoupon/joinNowButton.png"/>
@@ -239,12 +237,12 @@ C) Update endOfOfferFanCouponDate to the date the campaign is ending on. ideally
         <div id="couponCodeContainer" style="font-size: 20px; font-weight: bold;">
         </div>
         <p style="font-size: 1.5em; margin: 0;">
-          <a href="http://www.healthkart.com/diabetes?utm_source=facebook&utm_medium=app&utm_campaign=2012-05-lwdi" target="_blank">Click to redeem coupon code &gt;&gt;</a>
+          <a href="http://www.healthkart.com/diabetes?utm_source=facebook&utm_medium=app&utm_campaign=2012-05-lwdi&affid=PrafulAkalPBU8J" target="_blank">Click to redeem coupon code &gt;&gt;</a>
         </p>
       </div>
       <%-- if user has NOT shared.. he/she will be prompted to share the discount with friends --%>
       <div id="hiddenCode" style="text-align: center;">
-        <h3>Final step! <br/>Share this discount with your friends to reveal the coupon code</h3><br/>
+        <h3>Final step! <br/>Share this discount with your friends and help us spread awareness</h3><br/>
         <a class="shareLink" href="#"><img src="<hk:vhostImage/>/images/facebook/fancoupon/shareButtonLarge.png" height="40"/></a>
       </div>
       <div id="errorCode" style="background-color: yellow; padding: 10px; text-align: center; color: darkred; font-weight: bold; font-size: 1.1em;">
@@ -255,7 +253,7 @@ C) Update endOfOfferFanCouponDate to the date the campaign is ending on. ideally
       </p>
 
       <h2>Current Deal:</h2>
-      <img src="<hk:vhostImage/>/images/facebook/fancoupon/offers/lwdi_banner.jpg"/>
+      <img src="<hk:vhostImage/>/images/facebook/fancoupon/offers/lwd_banner-2.jpg"/>
     </div>
 
   </s:layout-component>

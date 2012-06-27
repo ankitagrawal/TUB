@@ -174,6 +174,27 @@
   </div>
 </noscript>
 
+<%--HealthKart_Parenting--%>
+<script type="text/javascript">
+  /* <![CDATA[ */
+  var google_conversion_language = "en";
+  var google_conversion_format = "3";
+  var google_conversion_color = "ffffff";
+  var google_conversion_id = 1001538852;
+  var google_conversion_label = "CbkyCIysjAMQpIrJ3QM";
+  var google_conversion_value = 0;
+  if (${conversion_value}) {
+    google_conversion_value = ${conversion_value};
+  }
+  /* ]]> */
+</script>
+<script type="text/javascript" src="http://www.googleadservices.com/pagead/conversion.js"></script>
+<noscript>
+  <div style="display:inline;">
+    <img height="1" width="1" style="border-style:none;" alt="" src="http://www.googleadservices.com/pagead/conversion/1001538852/?value=${conversion_value}&amp;label=CbkyCIysjAMQpIrJ3QM&amp;guid=ON&amp;script=0"/>
+  </div>
+</noscript>
+
 <%--HealthKart_Brand--%>
 <script type="text/javascript">
   /* <![CDATA[ */

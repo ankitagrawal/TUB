@@ -6,8 +6,9 @@ import java.util.List;
 import com.hk.constants.core.EnumCancellationType;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.core.CancellationType;
+import org.springframework.stereotype.Component;
 
-
+@Component
 public class CancellationTypeSeedData extends BaseSeedData {
 
     public void insert(java.lang.String name, java.lang.Long id) {

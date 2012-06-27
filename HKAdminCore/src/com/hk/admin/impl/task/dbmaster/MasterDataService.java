@@ -1,0 +1,237 @@
+package com.hk.admin.impl.task.dbmaster;
+
+import com.hk.db.seed.catalog.ProductVariantPaymentTypeSeedData;
+import com.hk.db.seed.catalog.ProductVariantServiceTypeSeedData;
+import com.hk.db.seed.core.*;
+import com.hk.db.seed.courier.BoxSizeSeedData;
+import com.hk.db.seed.courier.CourierGroupSeedData;
+import com.hk.db.seed.courier.CourierSeedData;
+import com.hk.db.seed.email.EmailTypeSeedData;
+import com.hk.db.seed.inventory.*;
+import com.hk.db.seed.marketing.AdNetworksSeedData;
+import com.hk.db.seed.marketing.GoogleBannedWordSeedData;
+import com.hk.db.seed.order.*;
+import com.hk.db.seed.payment.PaymentModeSeedData;
+import com.hk.db.seed.payment.PaymentStatusSeedData;
+import com.hk.db.seed.reward.ReviewStatusSeedData;
+import com.hk.db.seed.reward.RewardPointModeSeedData;
+import com.hk.db.seed.reward.RewardPointStatusSeedData;
+import com.hk.db.seed.reward.RewardPointTxnTypeSeedData;
+import com.hk.db.seed.ticket.TicketStatusSeedData;
+import com.hk.db.seed.ticket.TicketTypeSeedData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+/**
+ * Author: Kani Date: Jul 23, 2009
+ */
+@Component
+public class MasterDataService {
+    private static Logger                  logger = LoggerFactory.getLogger(MasterDataService.class);
+    @Autowired
+    RoleSeedData                           roleSeedData;
+    @Autowired
+    PermissionSeedData                     permissionSeedData;
+    @Autowired
+    RoleHasPermissionSeedData              roleHasPermissionSeedData;
+    @Autowired
+    CourierSeedData                        courierSeedData;
+    /* CartLineItemTypeSeedData lineItemStatusSeedData; */
+    @Autowired
+    CartLineItemTypeSeedData               cartLineItemTypeSeedData;
+    @Autowired
+    OrderStatusSeedData                    orderStatusSeedData;
+    @Autowired
+    ShippingOrderStatusSeedData            shippingOrderStatusSeedData;
+    @Autowired
+    PaymentModeSeedData                    paymentModeSeedData;
+    @Autowired
+    PaymentStatusSeedData                  paymentStatusSeedData;
+    @Autowired
+    TaxSeedData                            taxSeedData;
+    @Autowired
+    RewardPointStatusSeedData              rewardPointStatusSeedData;
+    @Autowired
+    RewardPointTxnTypeSeedData             rewardPointTxnTypeSeedData;
+    @Autowired
+    EmailTypeSeedData                      emailTypeSeedData;
+    @Autowired
+    TicketTypeSeedData                     ticketTypeSeedData;
+    @Autowired
+    TicketStatusSeedData                   ticketStatusSeedData;
+    @Autowired
+    ReconciliationStatusSeedData           reconciliationStatusSeedData;
+    @Autowired
+    CancellationTypeSeedData               cancellationTypeSeedData;
+    @Autowired
+    AffiliateTxnTypeSeedData               affiliateTxnTypeSeedData;
+    @Autowired
+    OrderLifecycleActivitySeedData         orderLifecycleActivitySeedData;
+    @Autowired
+    ShippingOrderLifecycleActivitySeedData shippingOrderLifecycleActivitySeedData;
+    @Autowired
+    BoxSizeSeedData                        boxSizeSeedData;
+    @Autowired
+    PurchaseOrderStatusSeedData            poStatusSeedData;
+    @Autowired
+    RewardPointModeSeedData                rewardPointModeSeedData;
+    @Autowired
+    ProductVariantServiceTypeSeedData      productVariantServiceTypeSeedData;
+    @Autowired
+    ProductVariantPaymentTypeSeedData      productVariantPaymentTypeSeedData;
+    @Autowired
+    GrnStatusSeedData                      grnStatusSeedData;
+    @Autowired
+    InvTxnTypeSeedData                     invTxnTypeSeedData;
+    @Autowired
+    GoogleBannedWordSeedData               googleBannedWordSeedData;
+    @Autowired
+    DebitNoteStatusSeedData                debitNoteStatusSeedData;
+    @Autowired
+    PurchaseInvoiceStatusSeedData          purchaseInvoiceStatusSeedData;
+    @Autowired
+    SurchargeSeedData                      surchargeSeedData;
+    @Autowired
+    AdNetworksSeedData                     adNetworksSeedData;
+    @Autowired
+    ReconciliationTypeSeedData             reconciliationTypeSeedData;
+    @Autowired
+    ReviewStatusSeedData                   reviewStatusSeedData;
+    @Autowired
+    CourierGroupSeedData                   courierGroupSeedData;
+    @Autowired
+    PurchaseFormTypeSeedData               purchaseFormTypeSeedData;
+    @Autowired
+    PrimaryReferrerForOrderSeedData        primaryReferrerForOrderSeedData;
+    @Autowired
+    SecondaryReferrerForOrderSeedData      secondaryReferrerForOrderSeedData;
+   @Autowired
+   StateSeedData stateSeedData;
+
+    public void insert() {
+
+        logger.debug("inserting roles");
+        roleSeedData.invokeInsert();
+
+        logger.debug("inserting permissions");
+        permissionSeedData.invokeInsert();
+
+        logger.debug("inserting role has permissions");
+        roleHasPermissionSeedData.invokeInsert();
+
+        logger.debug("inserting couriers");
+        courierSeedData.invokeInsert();
+
+        /*
+         * logger.debug("inserting lineItemStatus"); lineItemStatusSeedData.invokeInsert();
+         */
+
+        logger.debug("inserting lineItemTypes");
+        cartLineItemTypeSeedData.invokeInsert();
+
+        logger.debug("inserting orderStatus");
+        orderStatusSeedData.invokeInsert();
+
+        logger.debug("inserting shippingOrderStatus");
+        shippingOrderStatusSeedData.invokeInsert();
+
+        logger.debug("inserting paymentMode");
+        paymentModeSeedData.invokeInsert();
+
+        logger.debug("inserting paymentStatus");
+        paymentStatusSeedData.invokeInsert();
+
+        logger.debug("inserting tax");
+        taxSeedData.invokeInsert();
+
+        logger.debug("inserting rewardPointStatus");
+        rewardPointStatusSeedData.invokeInsert();
+
+        logger.debug("inserting rewardPointTxnType");
+        rewardPointTxnTypeSeedData.invokeInsert();
+
+        logger.debug("inserting emailType");
+        emailTypeSeedData.invokeInsert();
+
+        logger.debug("inserting/updating ticket type domain..");
+        ticketTypeSeedData.invokeInsert();
+
+        logger.debug("inserting/updating ticket status domain..");
+        ticketStatusSeedData.invokeInsert();
+
+        logger.debug("inserting/updating reconciliation status domain..");
+        reconciliationStatusSeedData.invokeInsert();
+
+        logger.debug("inserting/updating cancellation type domain..");
+        cancellationTypeSeedData.invokeInsert();
+
+        logger.debug("inserting affiliateTxnType");
+        affiliateTxnTypeSeedData.invokeInsert();
+
+        logger.debug("inserting orderLifecycleActivity");
+        orderLifecycleActivitySeedData.invokeInsert();
+
+        logger.debug("inserting shippingOrderLifecycleActivity");
+        shippingOrderLifecycleActivitySeedData.invokeInsert();
+
+        logger.debug("inserting boxSize");
+        boxSizeSeedData.invokeInsert();
+
+        logger.debug("inserting purchaseOrderStatus");
+        poStatusSeedData.invokeInsert();
+
+        logger.debug("inserting rewardPointMode");
+        rewardPointModeSeedData.invokeInsert();
+
+        logger.debug("inserting servicePaymentType");
+        productVariantPaymentTypeSeedData.invokeInsert();
+
+        logger.debug("inserting serviceType");
+        productVariantServiceTypeSeedData.invokeInsert();
+
+        logger.debug("inserting grn status");
+        grnStatusSeedData.invokeInsert();
+
+        logger.debug("inserting inv txn type");
+        invTxnTypeSeedData.invokeInsert();
+
+        logger.debug("inserting google banned words");
+        googleBannedWordSeedData.invokeInsert();
+
+        logger.debug("inserting debit note status");
+        debitNoteStatusSeedData.invokeInsert();
+
+        logger.debug("inserting purchase invoice status seed data");
+        purchaseInvoiceStatusSeedData.invokeInsert();
+
+        logger.debug("inserting surcharge seed data");
+        surchargeSeedData.invokeInsert();
+
+        logger.debug("inserting ad_networks seed data");
+        adNetworksSeedData.invokeInsert();
+
+        logger.debug("inserting reconcillation seed data");
+        reconciliationTypeSeedData.invokeInsert();
+
+        logger.debug("inserting review status seed data");
+        reviewStatusSeedData.invokeInsert();
+        
+        logger.debug("inserting courier group seed data");
+        courierGroupSeedData.invokeInsert();
+
+        logger.debug("inserting purchase form-type  seed data");
+        purchaseFormTypeSeedData.invokeInsert();
+
+        logger.debug("inserting primary referrer for order  seed data");
+        primaryReferrerForOrderSeedData.invokeInsert();
+
+        logger.debug("inserting secondary referrer for order  seed data");
+        secondaryReferrerForOrderSeedData.invokeInsert();
+
+       logger.debug("inserting state names");
+        stateSeedData.invokeInsert();
+    }
+
+}

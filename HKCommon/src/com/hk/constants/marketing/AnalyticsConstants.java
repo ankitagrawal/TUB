@@ -30,4 +30,20 @@ public class AnalyticsConstants {
         gaCode = analyticsCode;
 
     }
+
+  public static class CustomVarSlot {
+     public static final int slot1=1;
+     public static final int firstPurchaseDate=2;
+     public static final int signUpDate=3;
+     public static final int userId=4;
+     public static final int orderCount=5;
+     }
+
+  public static class CustomVarScope {
+     public static final int visitorLevel=1;
+     public static final int pageLevel=3;
+     public static final int sessionLevel=2;
+     }
+
+
 }

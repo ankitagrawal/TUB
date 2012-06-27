@@ -7608,6 +7608,43 @@
             </column>
         </createTable>
     </changeSet>
+
+    <changeSet author="Tarun (generated)" id="1340010134657-3">
+        <modifyDataType columnName="created_date" newDataType="DATE" tableName="notify_me"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1340010134657-4">
+        <modifyDataType columnName="name" newDataType="VARCHAR(40)" tableName="permission"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1340010134657-5">
+        <modifyDataType columnName="permission_name" newDataType="VARCHAR(40)" tableName="role_has_permission"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1340010134657-8">
+        <createIndex indexName="notify_me_unique_request" tableName="notify_me" unique="true">
+            <column name="email"/>
+            <column name="created_date"/>
+            <column name="product_variant_id"/>
+        </createIndex>
+    </changeSet>
+          <changeSet author="Seema (generated)" id="1340352635898-1">
+        <createTable tableName="city">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(150)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340352635898-2">
+        <createTable tableName="state">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
     <changeSet author="Pradeep (generated)" id="1340000829379-4">
         <createTable tableName="subscription_order">
             <column autoIncrement="true" name="id" type="INT">
@@ -7643,7 +7680,9 @@
             <column name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
-            <column name="name" type="VARCHAR(100)"/>
+            <column name="name" type="VARCHAR(100)">
+                     <constraints nullable="false"/>
+            </column>
         </createTable>
     </changeSet>
     <changeSet author="Pradeep (generated)" id="1340000829379-6">
@@ -7673,7 +7712,9 @@
             <column name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
-            <column name="name" type="VARCHAR(100)"/>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+             </column>
         </createTable>
     </changeSet>
     <changeSet author="Pradeep (generated)" id="1340000829379-8">
@@ -7716,5 +7757,110 @@
     </changeSet>
     <changeSet author="Pradeep (generated)" id="1340000829379-20">
         <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="subscription_product"  constraintName="fk_subscription_product_product1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340352635898-3">
+        <addColumn tableName="city_courier_tat">
+            <column name="city_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340352635898-4">
+        <addColumn tableName="pincode">
+            <column name="city_id" type="INT">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340352635898-5">
+        <addColumn tableName="pincode">
+            <column name="state_id" type="INT">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340352635898-6">
+        <addColumn tableName="state_courier_service">
+            <column name="state_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340352635898-7">
+        <dropNotNullConstraint columnDataType="DECIMAL(10,2)" columnName="turnaround_time" tableName="city_courier_tat"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340352635898-10">
+        <addNotNullConstraint columnDataType="INT" columnName="courier_id" tableName="state_courier_service"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340352635898-11">
+        <dropNotNullConstraint columnDataType="INT" columnName="preference" tableName="state_courier_service"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340352635898-12">
+        <dropForeignKeyConstraint baseTableName="city_courier_tat" constraintName="city_fk"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340352635898-13">
+        <dropForeignKeyConstraint baseTableName="state_courier_service" constraintName="fk_state_pincode"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340352635898-14">
+        <addForeignKeyConstraint baseColumnNames="city_id" baseTableName="city_courier_tat" constraintName="fk_city_courier_tat_city1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="city" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340352635898-15">
+        <addForeignKeyConstraint baseColumnNames="city_id" baseTableName="pincode" constraintName="fk_pincode_city1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="city" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340352635898-16">
+        <addForeignKeyConstraint baseColumnNames="state_id" baseTableName="pincode" constraintName="fk_pincode_state1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="state" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340352635898-17">
+        <addForeignKeyConstraint baseColumnNames="state_id" baseTableName="state_courier_service" constraintName="fk_state_courier_service_state1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="state" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340352635898-18">
+        <dropIndex indexName="fk_pincode_city" tableName="pincode"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340352635898-19">
+        <dropIndex indexName="fk_pincode_state" tableName="pincode"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340352635898-20">
+        <dropColumn columnName="city" tableName="city_courier_tat"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340352635898-21">
+        <dropColumn columnName="city" tableName="pincode"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340352635898-22">
+        <dropColumn columnName="state" tableName="pincode"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340352635898-23">
+        <dropColumn columnName="state" tableName="state_courier_service"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340372396933-2">
+        <addNotNullConstraint columnDataType="INT" columnName="city_id" tableName="pincode"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1340372396933-3">
+        <addNotNullConstraint columnDataType="INT" columnName="state_id" tableName="pincode"/>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1340279900902-1">
+        <createTable tableName="store_product">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="product_variant_id" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="store_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="store_price" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="hidden" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Pradeep (generated)" id="1340279900902-3">
+        <addForeignKeyConstraint baseColumnNames="product_variant_id" baseTableName="store_product"  constraintName="fk_store_product_price_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1340279900902-4">
+        <addForeignKeyConstraint baseColumnNames="store_id" baseTableName="store_product"  constraintName="fk_store_product_price_store1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="store"  referencesUniqueColumn="false"/>
     </changeSet>
 </databaseChangeLog>

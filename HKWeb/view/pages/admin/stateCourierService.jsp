@@ -1,51 +1,108 @@
-<%@ page import="com.hk.constants.courier.StateList" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.courier.StateCourierServiceAction" var="scsaBean" event="pre"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="State Courier Service">
-
     <s:layout-component name="heading">State Courier Service</s:layout-component>
     <s:layout-component name="content">
+        <div style="height:100px;">
+            <table>
+                <tr>
+                    <th>State</th>
+                    <br/>
+
+                </tr>
+                <tr>
+                    <s:form beanclass="com.hk.web.action.admin.courier.StateCourierServiceAction">
+                                              <td>
+                         <s:select name="state">
+                        <s:option value="">-Select-</s:option>
+                        <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="stateList"
+                                                   value="id" label="name"/>
+                    </s:select>
+                        </td>
+                        <td>
+                            <s:submit name="search" value="Save"/>
+                        </td>
+                    </s:form>
+                </tr>
+            </table>
+        </div>
+
+        <div class="clear" style="height:100px;"></div>
+
+        <div>
+          <s:form beanclass="com.hk.web.action.admin.courier.StateCourierServiceAction">
+             <s:hidden name="state"  value="${scsaBean.state}"/>
+            <table >
+                <%--<c:if test="${scsaBean.state != null}">--%>
+                <tr>
+                    <td style="font-weight:bold;">Selected State</td> <td> ${scsaBean.state.name}</td>
+                </tr>
+
+
+                <tr>
+                    <th>S.No.</th>
+                    <th>Courier Name</th>
+                    <th>Preference</th>
+
+                </tr>
+                <div>
+                    <c:forEach items="${scsaBean.stateCourierServiceList}" var="stateCourierService" varStatus="count">
+                       <tr >
+                        <td> ${count.index+1}</td>
+                        <td>
+                                ${stateCourierService.courier.name}
+                        </td>
+                        <td>
+                                ${stateCourierService.preference}
+                        </td>
+
+                    </tr>
+
+                    </c:forEach>
+                         </div>
+
+            </table>
+           </div>
+
+
+
+    <c:if test="${scsaBean.displayAddNewRow}">
         <table>
-            <tr>
-                <th>State</th>
-                <br/>
-
-            </tr>
-            <tr>
-                <s:form beanclass="com.hk.web.action.admin.courier.StateCourierServiceAction">
+         <s:form beanclass="com.hk.web.action.admin.courier.StateCourierServiceAction">
+             <s:hidden name="stateCourierService.state"  value="${scsaBean.state.id}"/>
+         <tr>
                     <td>
-                        <s:select name="state">
-                            <s:options-collection collection="${scsaBean.stateList}"/>
-                        </s:select>
-                    </td>
-                    <td>
-                        <s:submit name="search" value="Save"/>
-                    </td>
-                </s:form>
-            </tr>
-            <c:if test="${scsaBean.stateCourierServiceList != null}">
-                <table>
-                    <tr> <th>Selected State</th> </tr>
-                      <tr>  ${scsaBean.state}   </tr>
+                      Select Courier :
+                    <s:select name="stateCourierService.courier">
+                        <s:option value="">-Select-</s:option>
+                        <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList"
+                                                   value="id" label="name"/>
+                    </s:select></td>
+                <td>
+                  <s:text name="stateCourierService.preference"></s:text>
+                </td>
+             <td>
+            <s:submit name="save" value="Save Row"></s:submit>
+             </td>
+               </tr>
+           </s:form>
+          </table>
+</c:if>
 
-                    <tr>
-                        <th>S.No.</th>
-                        <th>Courier Name</th>
-                        <th>Preference</th>
-                    </tr>
-                    <tr>
-                        <c:forEach items="${scsaBean.stateCourierServiceList}" var="stateCourierService"
-                                   varStatus="count">
-                            <td> ${count.index+1}</td>
-                            <td>${stateCourierService.courier.name}</td>
-                            <td>${stateCourierService.preference}</td>
-                        </c:forEach>
-                    </tr>
+        <div class="clear">
+                    </div>
 
-                </table>
-            </c:if>
-        </table>
+       <div>
+            <div>
+           <s:submit name="addNewRow" value="Add Row" />
+            </div>
+               </s:form>
+        </div>
+
+
+
     </s:layout-component>
 </s:layout-render>

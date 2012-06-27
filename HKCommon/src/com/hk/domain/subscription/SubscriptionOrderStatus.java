@@ -20,7 +20,7 @@ public class SubscriptionOrderStatus  implements java.io.Serializable {
     private Long id;
 
 
-    @Column(name="name", length=100)
+    @Column(name="name", nullable = false,length=100)
     private String name;
 
     public Long getId() {

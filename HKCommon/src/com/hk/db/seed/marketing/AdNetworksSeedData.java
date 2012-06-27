@@ -6,7 +6,9 @@ import java.util.List;
 import com.hk.constants.marketing.EnumAdNetworks;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.marketing.AdNetworks;
+import org.springframework.stereotype.Component;
 
+@Component
 public class AdNetworksSeedData extends BaseSeedData {
 
     public void insert(java.lang.String name, java.lang.Long id) {

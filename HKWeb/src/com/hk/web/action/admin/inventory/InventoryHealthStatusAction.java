@@ -29,7 +29,6 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
-import com.hk.admin.manager.ProductManager;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
@@ -63,8 +62,6 @@ public class InventoryHealthStatusAction extends BasePaginatedAction {
     Category                      categoryName;
     ProductVariant                productVariant;
     Product                       product;
-    @Autowired
-    ProductManager                productManager;
     @Autowired
     ProductVariantInventoryDao    productVariantInventoryDao;
     @Autowired
@@ -101,7 +98,7 @@ public class InventoryHealthStatusAction extends BasePaginatedAction {
     public static final String    MUM_INVENTORY  = "MUM_INVENTORY";
     public static final String    NOT_APPLICABLE = "-NA-";
 
-    @ValidationMethod(on = { "generateWHInventoryExcel" })
+  @ValidationMethod(on = { "generateWHInventoryExcel" })
     public void validateCategoryAndBrand() {
         if (primaryCategory == null && subCategory == null && brand == null) {
             getContext().getValidationErrors().add("1", new SimpleError("Please enter Category/Brand or Both."));

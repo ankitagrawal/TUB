@@ -84,16 +84,18 @@ public enum EnumRoleHasPermission {
           EnumPermission.MARKETING_EXPENSE_MANAGEMENT,
           EnumPermission.CREATE_EDIT_SKU,
           EnumPermission.MANAGE_PAYMENT_HISTORY ,
-          EnumPermission.FINANCE_MANAGEMENT
+          EnumPermission.FINANCE_MANAGEMENT,
+          EnumPermission.RUN_ANT_BUILDS
       )
   ),
 
-  WH_MANAGER(
-      EnumRole.WH_MANAGER,
-      Arrays.asList(
-          EnumPermission.GRN_CREATION,
-	        EnumPermission.RECON_VOUCHER_MANAGEMENT
-      )),
+	WH_MANAGER(
+	  EnumRole.WH_MANAGER,
+	  Arrays.asList(
+		EnumPermission.GRN_CREATION,
+		EnumPermission.RECON_VOUCHER_MANAGEMENT,
+		EnumPermission.SUPPLIER_MANAGEMENT
+	  )),
 
   WH_MANAGER_L1(
       EnumRole.WH_MANAGER_L1,
@@ -361,7 +363,14 @@ CATEGORY_MANAGER_L1(
           EnumPermission.MANAGE_PAYMENT_HISTORY,
           EnumPermission.FINANCE_MANAGEMENT
       )
-  )
+  ),
+
+    DEVELOPER_TASKS(
+      EnumRole.DEVELOPER,
+      Arrays.asList(
+          EnumPermission.RUN_ANT_BUILDS
+      )
+    )
   ;
 
   EnumRole enumRole;
