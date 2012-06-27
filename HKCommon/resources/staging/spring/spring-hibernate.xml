@@ -116,9 +116,6 @@
 		<property name="poolPreparedStatements" value="true" />
 		<property name="maxOpenPreparedStatements" value="30" />
 		<property name="timeBetweenEvictionRunsMillis" value="-1" />
-        <property name="validationQuery">
-            <value>select 1</value>
-        </property>
 	</bean>
 
 
