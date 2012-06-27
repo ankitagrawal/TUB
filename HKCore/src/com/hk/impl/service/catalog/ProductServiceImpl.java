@@ -188,10 +188,9 @@ public class ProductServiceImpl implements ProductService {
 
    public List<Product> getRecommendedProducts(String pvID){
        List<String> pvIdList = recommendationService.getRecommendedProducts(pvID);
-
        List<Product> products = new ArrayList<Product>();
        for (String pvId : pvIdList){
-           Product product = productVariantDao.getProductForProudctVariant(pvID);
+           Product product = productDAO.getProductById(pvID);
            if (product != null){
                products.add(product);
            }
