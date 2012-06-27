@@ -4,10 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.report.dto.inventory.ExpiryAlertReportDto;
-import com.hk.report.dto.inventory.InventorySoldDto;
-import com.hk.report.dto.inventory.RTOReportDto;
-import com.hk.report.dto.inventory.StockReportDto;
+import com.hk.report.dto.inventory.*;
 
 public interface ReportProductVariantService {
   public List<InventorySoldDto> findInventorySoldByDate(Date startDate, Date endDate);
@@ -20,6 +17,6 @@ public interface ReportProductVariantService {
 
   public List<RTOReportDto> getRTOProductsDetail(Date startDate, Date endDate);
 
-  public List getReconciliationVoucherDetail(String productVariantId, Warehouse warehouse, Date startDate, Date endDate);
+  public List<RVReportDto> getReconciliationVoucherDetail(String productVariantId, Warehouse warehouse, Date startDate, Date endDate);
 
 }

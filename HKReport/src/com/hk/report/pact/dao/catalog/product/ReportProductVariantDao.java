@@ -30,6 +30,6 @@ public interface ReportProductVariantDao{
 
   public Long getStockLeftQty(String productVariant, Warehouse warehouse);
 
-  public List getReconciliationVoucherDetail(String productVariantId, Warehouse warehouse, Date startDate, Date endDate);
+  public List<RVReportDto> getReconciliationVoucherDetail(String productVariantId, Warehouse warehouse, Date startDate, Date endDate);
 
 }
