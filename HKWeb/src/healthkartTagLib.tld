@@ -725,7 +725,16 @@
       ${hk:isComboInStock(${object})}
     </example>
   </function>
-
-
+    <function>
+        <description>
+            returns stock check of combo
+        </description>
+        <name>getRecommendedProducts</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.util.List getRecommendedProducts(java.lang.String)</function-signature>
+        <example>
+            ${hk:getRecommendedProducts(${productVariantId})}
+        </example>
+    </function>
 
 </taglib>

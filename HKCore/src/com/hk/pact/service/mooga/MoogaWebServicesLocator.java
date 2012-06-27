@@ -22,7 +22,7 @@ public class MoogaWebServicesLocator extends org.apache.axis.client.Service impl
     }
 
     // Use to get a proxy class for MoogaWebServicesSoap12
-    private java.lang.String MoogaWebServicesSoap12_address = "http://110.234.176.23/HealthKart_Mooga/moogawebservices.asmx";
+    private java.lang.String MoogaWebServicesSoap12_address = "http://110.234.176.23/MoogaIntegration/MoogaWebservices.asmx";
 
     public java.lang.String getMoogaWebServicesSoap12Address() {
         return MoogaWebServicesSoap12_address;

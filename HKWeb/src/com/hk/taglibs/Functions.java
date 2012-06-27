@@ -449,10 +449,14 @@ public class Functions {
         return skuDao.filterProductVariantsByWarehouse(sku.getProductVariant().getProduct().getProductVariants(), sku.getWarehouse());
     }
 
-  public static boolean isComboInStock(Object o) {
+    public static boolean isComboInStock(Object o) {
         ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
         Combo combo = (Combo) o;
         return productService.isComboInStock(combo);
     }
 
+    public static List<Product> getRecommendedProducts(String productId) {
+        ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
+        return productService.getRecommendedProducts(productId);
+    }
 }

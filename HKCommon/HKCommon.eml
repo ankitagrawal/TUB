@@ -380,4 +380,7 @@
 	<lib name="freemarker.jar" scope="COMPILE">
 		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/freemarker/freemarker.jar!/"/>
 	</lib>
+	<lib name="spring-data-redis-1.0.0.RELEASE.jar" scope="COMPILE">
+		<srcroot url="jar://C:/redis-2.4.5-win32-win64/64bit/spring-data-redis-1.0.0.RELEASE-sources.jar!/"/>
+	</lib>
 </component>

@@ -3,6 +3,7 @@ package com.hk.pact.service.mooga;
 import com.hk.domain.catalog.product.ProductVariant;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA.
@@ -12,9 +13,20 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public interface RecommendationEngine  {
-     void pushAddToCart(long userId, String productVariantId);
+    void pushAddToCart(long userId, String productVariantId);
 
     void pushAddToCart(long userId, List<ProductVariant> productVariants);
+    /**
+     * returns the recommended products for given product Id
+     * @param pId
+     * @return
+     */
+    List<String> getRecommendedProducts(String pId);
 
-    List<String> getRecommendedProducts(String pvID);
+    /**
+     * returns the recommended product variants for given product variant id
+     * @param pvId
+     * @return
+     */
+    List<String> getRecommendedProductVariants(String pvId);
 }

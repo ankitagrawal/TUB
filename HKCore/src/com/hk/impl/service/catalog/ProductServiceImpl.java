@@ -1,6 +1,7 @@
 package com.hk.impl.service.catalog;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -27,6 +28,8 @@ import com.hk.web.filter.WebContext;
 
 @Service
 public class ProductServiceImpl implements ProductService {
+
+    private final int MAX_PRODUCT_LIMIT = 6;    //Max number of recommended products to be displayed on UI
 
     @Autowired
     private ProductDao productDAO;
@@ -189,10 +192,13 @@ public class ProductServiceImpl implements ProductService {
    public List<Product> getRecommendedProducts(String pvID){
        List<String> pvIdList = recommendationService.getRecommendedProducts(pvID);
        List<Product> products = new ArrayList<Product>();
-       for (String pvId : pvIdList){
-           Product product = productDAO.getProductById(pvID);
-           if (product != null){
+       Iterator it = pvIdList.iterator();
+       int productCount = 0;
+       while (it.hasNext() && (productCount < MAX_PRODUCT_LIMIT)) {
+           Product product = productDAO.getProductById((String)it.next());
+           if ((product != null) && !product.isDeleted()){
                products.add(product);
+               ++productCount;
            }
        }
        return products;
