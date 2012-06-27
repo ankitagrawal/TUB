@@ -32,7 +32,7 @@ Here's 5 % discount coupon for ${product_name} ?
         <td colspan="5" height="10"></td>
       </tr>
       <tr>
-        <td colspan="5"><a href="http://www.healthkart.com?utm_source=abandonedCartReminder&utm_medium=email&utm_campaign=abandonedCart_nutrition_s5_${product_id}"><img src="almost_there.jpg" width="500" height="148" alt="You were almost there! Still waiting for you..." border="0" /></a></td>
+        <td colspan="5"><a href="http://www.healthkart.com?utm_source=abandonedCartReminder&utm_medium=email&utm_campaign=abandonedCart_nutrition_s5_${product_id}"><img src="http://img.healthkart.com/freemarker/marketing/almost_there.jpg" width="500" height="148" alt="You were almost there! Still waiting for you..." border="0" /></a></td>
       </tr>
  
       
