@@ -2,7 +2,6 @@ package com.hk.web.action.core.discount;
 
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.validation.Validate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Component;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.domain.user.User;
 import com.hk.manager.ReferrerProgramManager;
-import com.hk.pact.service.UserService;
 
 @Component
 public class RewardPointTxnStatementAction extends BaseAction {

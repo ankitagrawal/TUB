@@ -5,6 +5,7 @@
 	<path id="compile.classpath">
 		<fileset file="${lib.root.dir}/commons/commons-lang-2.1.jar" />
 		<fileset file="${lib.root.dir}/commons/commons-io-1.4.jar" />
+    <fileset file="${lib.root.dir}/commons/commons-email-1.1.jar" />
 		<fileset file="${lib.root.dir}/spring/org.springframework.transaction-3.0.2.RELEASE.jar" />
 		<fileset file="${lib.root.dir}/spring/org.springframework.core-3.0.2.RELEASE.jar" />
 		<fileset file="${lib.root.dir}/spring/org.springframework.beans-3.0.2.RELEASE.jar" />
@@ -26,6 +27,7 @@
 		<fileset file="${project.common.dir}/dist/hk-common.jar" />
 		<fileset file="${project.core.dir}/dist/hk-core.jar" />
 		<fileset file="${lib.root.dir}/thirdParty/jdom-1.0.jar" />
+    <fileset file="${lib.root.dir}/freemarker/freemarker.jar" />
 	</path>
 
 
