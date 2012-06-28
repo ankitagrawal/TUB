@@ -19,7 +19,7 @@ import org.apache.commons.io.FileUtils;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.domain.email.EmailCampaign;
 import com.hk.pact.dao.marketing.EmailCampaignDao;
-import com.hk.pact.service.marketing.EmailCampaignService;
+import com.hk.admin.pact.service.email.AdminEmailCampaignService;
 import com.hk.constants.core.Keys;
 import com.hk.util.HKFileUtils;
 import com.hk.util.FtlUtils;
@@ -41,7 +41,7 @@ public class EmailNewsletterCampaignAction extends BaseAction {
   @Autowired
   EmailCampaignDao emailCampaignDao;
   @Autowired
-  EmailCampaignService emailCampaignService;
+  AdminEmailCampaignService adminEmailCampaignService;
 
   @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
   String adminUploadsPath;
@@ -111,7 +111,7 @@ public class EmailNewsletterCampaignAction extends BaseAction {
           ftlGenerated = Boolean.TRUE;
           logger.info("ftl generated");
 
-          emailCampaignService.uploadEmailContent(contentFolder);
+          adminEmailCampaignService.uploadEmailContent(contentFolder);
           logger.info("uploaded email content to s3.");
           FileUtils.deleteDirectory(contentFolder);
           FileUtils.deleteQuietly(contentZipFolder);
@@ -154,7 +154,7 @@ public class EmailNewsletterCampaignAction extends BaseAction {
     try {
       FileUtils.writeStringToFile(htmlFile, htmlContents);
 
-      emailCampaignService.uploadHtml(htmlFile, htmlKey);
+      adminEmailCampaignService.uploadHtml(htmlFile, htmlKey);
       logger.info("uploaded changed html to s3 for email campaign: " + emailCampaign.getName());
 
       emailCampaign = emailCampaignDao.save(emailCampaign);
