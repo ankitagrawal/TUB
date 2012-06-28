@@ -174,7 +174,7 @@
         &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction" event="delieverDropShippingOrder"
                                  class="delieverSO">
             <s:param name="shippingOrder" value="${shippingOrder}"/>
-            Mark SO Delievered
+            Mark SO Delivered 
         </s:link>)
         </c:if>
         <c:if test="${isSearchShippingOrder}">
