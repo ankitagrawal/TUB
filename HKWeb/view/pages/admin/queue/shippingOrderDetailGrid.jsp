@@ -171,6 +171,11 @@
             <s:param name="shippingOrder" value="${shippingOrder}"/>
             Cancel SO
         </s:link>)
+        &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction" event="delieverDropShippingOrder"
+                                 class="delieverSO">
+            <s:param name="shippingOrder" value="${shippingOrder}"/>
+            Mark SO Delievered
+        </s:link>)
         </c:if>
         <c:if test="${isSearchShippingOrder}">
             <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_CATMAN_ADMIN%>">
