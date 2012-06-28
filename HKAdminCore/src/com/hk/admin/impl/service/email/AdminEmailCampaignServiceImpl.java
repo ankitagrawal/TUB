@@ -23,7 +23,8 @@ public class AdminEmailCampaignServiceImpl implements AdminEmailCampaignService 
   @Value("#{hkEnvProps['" + Keys.Env.secretKey + "']}")
   String awsSecretKey;
 
-  public static String awsBucket = "healthkart-pratham";
+   @Value("#{hkEnvProps['" + Keys.Env.bucket + "']}")
+   String awsBucket;
 
   @Autowired
   AdminEmailCampaignDao adminEmailCampaignDao;

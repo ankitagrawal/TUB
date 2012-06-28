@@ -1,16 +1,21 @@
 package com.hk.util;
 
+import com.hk.constants.core.Keys;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.*;
 
 public class FtlUtils {
   private static Logger logger = LoggerFactory.getLogger(FtlUtils.class);
-  public static String awsBucket = "healthkart-pratham";
 
-  public static File generateFtlFromHtml(File htmlFile, String destinationPath, String contentFolderName) {
+    @Value("#{hkEnvProps['" + Keys.Env.bucket + "']}")
+    static
+    String awsBucket;
+
+    public static File generateFtlFromHtml(File htmlFile, String destinationPath, String contentFolderName) {
     String basicAmazonS3Path = getBasicAmazonS3Path(contentFolderName);
     String line;
     File ftlFile = new File(destinationPath);
@@ -91,7 +96,7 @@ public class FtlUtils {
     return "<div align=\"center\" valign=\"middle\" style=\"border-top: solid #97b8ca 1px; font-size:11px; text-align:center; color:#666666; padding:10px\">" +
         " If you prefer not to receive HealthKart.com email, <a href=\"${unsubscribeLink}\">click here to Unsubscribe</a>" +
         "<br />  Parsvanath Arcadia, 1 MG Road, Sector 14, Gurgaon, Haryana, INDIA<br />\n" +
-        "    © 2011 HealthKart.com. All Rights Reserved. </div>";
+        "    ï¿½ 2011 HealthKart.com. All Rights Reserved. </div>";
   }
 
   public static String getBasicAmazonS3Path(String contentFolder) {

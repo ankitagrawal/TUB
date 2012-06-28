@@ -36,8 +36,6 @@ public class EmailNewsletterCampaignAction extends BaseAction {
   private static Logger logger = LoggerFactory.getLogger(EmailNewsletterCampaignAction.class);
   EmailCampaign emailCampaign;
 
-  public static String awsBucket = "healthkart-pratham";
-
   @Autowired
   EmailCampaignDao emailCampaignDao;
   @Autowired
