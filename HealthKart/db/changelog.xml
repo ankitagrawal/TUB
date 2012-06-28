@@ -7663,4 +7663,22 @@
         <addForeignKeyConstraint baseColumnNames="store_id" baseTableName="store_product"  constraintName="fk_store_product_price_store1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="store"  referencesUniqueColumn="false"/>
     </changeSet>
 
+  <changeSet author="Rimal (generated)" id="1340180519838-1">
+    <addColumn tableName="email_campaign">
+      <column name="html_path" type="VARCHAR(400)"/>
+    </addColumn>
+  </changeSet>
+  <changeSet author="Rimal (generated)" id="1340180519838-2">
+    <addColumn tableName="email_campaign">
+      <column name="subject" type="VARCHAR(250)"/>
+    </addColumn>
+  </changeSet>
+  <changeSet author="Rimal (generated)" id="1340180519838-3">
+    <addColumn tableName="email_campaign">
+      <column name="template_ftl" type="TEXT"/>
+    </addColumn>
+  </changeSet>
+  <changeSet author="Rimal (generated)" id="1340180519838-4">
+    <dropNotNullConstraint columnDataType="VARCHAR(80)" columnName="template" tableName="email_campaign"/>
+  </changeSet>
 </databaseChangeLog>
