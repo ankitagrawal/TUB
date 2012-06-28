@@ -1,17 +1,35 @@
 package com.hk.pact.service.marketing;
 
 import com.hk.domain.email.EmailCampaign;
+import com.hk.domain.core.EmailType;
 import com.hk.constants.EnumS3UploadStatus;
+import com.akube.framework.dao.Page;
 
 import java.io.File;
-//import java.io.IOException;
-//import java.security.NoSuchAlgorithmException;
-//
-//import org.jets3t.service.ServiceException;
+import java.util.List;
 
 public interface EmailCampaignService {
 
   public Long getEmailCampaignSentCount(EmailCampaign emailCampaign);
 
-  public void uploadEmailContent(File emailContent) throws Exception;
+  public void uploadEmailContent(File emailContent);
+
+  public void uploadHtml(File htmlFile, String key);
+
+  /**
+   * returns email campaigns belonging to a particular email type. the result is reverse sorted on basis of create date
+   *
+   * @param emailType
+   * @param page
+   * @param perPage
+   * @return
+   */
+  public Page getEmailCampaignByEmailType(EmailType emailType, int page, int perPage);
+
+  /**
+   * returns all the email campaigns which have their data uplaoded on Amazon S3
+   *
+   * @return
+   */
+  public List<EmailCampaign> getAmazonS3EmailCampaigns();
 }

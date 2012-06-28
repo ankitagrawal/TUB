@@ -52,7 +52,7 @@
                      alt="${product.name}"/>
               </c:otherwise>
             </c:choose>
-          </div>
+          </div>         
           <c:choose>
             <c:when test="${combo != null}">
               <div class='prices'>

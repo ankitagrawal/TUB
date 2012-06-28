@@ -16,7 +16,6 @@ import com.hk.domain.user.User;
 import com.hk.manager.EmailManager;
 import com.hk.pact.dao.RoleDao;
 import com.hk.pact.dao.email.EmailRecepientDao;
-import com.hk.pact.dao.marketing.EmailCampaignDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.marketing.EmailCampaignService;
 import com.hk.pact.service.catalog.CategoryService;
@@ -41,14 +40,8 @@ import java.util.*;
 @Secure(hasAnyPermissions = {PermissionConstants.SEND_MARKETING_MAILS}, authActionBean = AdminPermissionAction.class)
 @Component
 public class SendEmailNewsletterCampaign extends BasePaginatedAction {
-
-  List<EmailCampaign> emailCampaigns;
-
   @Validate(required = true)
   EmailCampaign emailCampaign;
-
-  @Autowired
-  EmailCampaignDao emailCampaignDao;
 
   @Validate(required = true, on = {"testCampaign"})
   String testEmails;
@@ -56,15 +49,22 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
   @Validate(required = true, on = {"confirmCampaign", "sendCampaign"})
   String categories;
 
-  private Long userCount = 0L;
-
-  // @Named(Keys.Env.adminUploads)
   @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
   String adminUploadsPath;
 
+  private Long userCount = 0L;
+  List<EmailCampaign> emailCampaigns;
   FileBean fileBean;
   FileBean fileBeanForCustomExcel;
   FileBean fileBeanForUserList;
+  private EmailManager emailManager;
+  EmailType emailType;
+  String sheetName;
+  Page emailCampaignPage;
+  private Integer defaultPerPage = 20;
+  private final int COMMIT_COUNT = 100;
+  private final int INITIAL_LIST_SIZE = 100;
+  private final int maxResultCount = 5000;
 
   private Logger logger = LoggerFactory.getLogger(SendEmailNewsletterCampaign.class);
 
@@ -78,19 +78,8 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
   private MailingListManager mailingListManager;
   @Autowired
   private AdminEmailService adminEmailService;
-
-  //@Autowired
-  private EmailManager emailManager;
-  EmailType emailType;
-  String sheetName;
-  Page emailCampaignPage;
-  private Integer defaultPerPage = 20;
-  private final int COMMIT_COUNT = 100;
-  private final int INITIAL_LIST_SIZE = 100;
-
   @Autowired
   private RoleDao roleDao;
-  private final int maxResultCount = 5000;
   @Autowired
   private EmailRecepientDao emailRecepientDao;
   @Autowired
@@ -99,11 +88,10 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
   @DefaultHandler
   @DontValidate
   public Resolution pre() {
-    emailCampaignPage = emailCampaignDao.getEmailCampaignByEmailType(emailType, getPageNo(), getPerPage());
+    emailCampaignPage = emailCampaignService.getEmailCampaignByEmailType(emailType, getPageNo(), getPerPage());
     if (emailCampaignPage != null) {
       emailCampaigns = emailCampaignPage.getList();
     }
-    // emailCampaigns = getEmailCampaignDao().listAllExceptNotifyMe();
     return new ForwardResolution("/pages/admin/newsletter/sendEmailNewsletterCampaign.jsp");
   }
 
@@ -355,14 +343,6 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
 
   public void setUserService(UserService userService) {
     this.userService = userService;
-  }
-
-  public EmailCampaignDao getEmailCampaignDao() {
-    return emailCampaignDao;
-  }
-
-  public void setEmailCampaignDao(EmailCampaignDao emailCampaignDao) {
-    this.emailCampaignDao = emailCampaignDao;
   }
 
   public CategoryService getCategoryService() {

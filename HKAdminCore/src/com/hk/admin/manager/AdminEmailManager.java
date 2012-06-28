@@ -109,14 +109,21 @@ public class AdminEmailManager {
 
 
   public boolean sendTestCampaignMails(Set<User> emailersList, EmailCampaign emailCampaign) {
+    //template path
     String emailCampaignTemplate = emailCampaign.getTemplate();
+
+    //template contents from db
     String emailCampaignTemplateContents = emailCampaign.getTemplateFtl();
 
     Template freemarkerTemplate = null;
+    //if template path is not null then find template from codebase else, directly process the string available
+    // as template contents
     if (emailCampaignTemplate != null && StringUtils.isNotBlank(emailCampaignTemplate)) {
       freemarkerTemplate = freeMarkerService.getCampaignTemplate(emailCampaignTemplate);
     } else if (emailCampaignTemplateContents != null && StringUtils.isNotBlank(emailCampaignTemplateContents)) {
-      freemarkerTemplate = freeMarkerService.getCampaignTemplateFromString(emailCampaignTemplateContents);
+      StringBuilder finalContents = new StringBuilder(emailCampaign.getSubject());
+      finalContents.append(BaseUtils.newline + emailCampaignTemplateContents);
+      freemarkerTemplate = freeMarkerService.getCampaignTemplateFromString(finalContents.toString());
     } else {
       return false;
     }
@@ -142,7 +149,9 @@ public class AdminEmailManager {
     if (emailCampaignTemplate != null && StringUtils.isNotBlank(emailCampaignTemplate)) {
       freemarkerTemplate = freeMarkerService.getCampaignTemplate(emailCampaignTemplate);
     } else if (emailCampaignTemplateContents != null && StringUtils.isNotBlank(emailCampaignTemplateContents)) {
-      freemarkerTemplate = freeMarkerService.getCampaignTemplateFromString(emailCampaignTemplateContents);
+      StringBuilder finalContents = new StringBuilder(emailCampaign.getSubject());
+      finalContents.append(emailCampaignTemplateContents);
+      freemarkerTemplate = freeMarkerService.getCampaignTemplateFromString(finalContents.toString());
     } else {
       return false;
     }
@@ -259,7 +268,9 @@ public class AdminEmailManager {
     if (emailCampaignTemplate != null && StringUtils.isNotBlank(emailCampaignTemplate)) {
       freemarkerTemplate = freeMarkerService.getCampaignTemplate("/newsletters/" + emailCampaignTemplate);
     } else if (emailCampaignTemplateContents != null && StringUtils.isNotBlank(emailCampaignTemplateContents)) {
-      freemarkerTemplate = freeMarkerService.getCampaignTemplateFromString(emailCampaignTemplateContents);
+      StringBuilder finalContents = new StringBuilder(emailCampaign.getSubject());
+      finalContents.append(emailCampaignTemplateContents);
+      freemarkerTemplate = freeMarkerService.getCampaignTemplateFromString(finalContents.toString());
     } else {
       return false;
     }
@@ -336,7 +347,9 @@ public class AdminEmailManager {
     if (emailCampaignTemplate != null && StringUtils.isNotBlank(emailCampaignTemplate)) {
       freemarkerTemplate = freeMarkerService.getCampaignTemplate(emailCampaignTemplate);
     } else if (emailCampaignTemplateContents != null && StringUtils.isNotBlank(emailCampaignTemplateContents)) {
-      freemarkerTemplate = freeMarkerService.getCampaignTemplateFromString(emailCampaignTemplateContents);
+      StringBuilder finalContents = new StringBuilder(emailCampaign.getSubject());
+      finalContents.append(emailCampaignTemplateContents);
+      freemarkerTemplate = freeMarkerService.getCampaignTemplateFromString(finalContents.toString());
     } else {
       return false;
     }
@@ -500,7 +513,9 @@ public class AdminEmailManager {
           if (emailCampaignTemplate != null && StringUtils.isNotBlank(emailCampaignTemplate)) {
             freemarkerTemplate = freeMarkerService.getCampaignTemplate("/newsletters/" + emailCampaignTemplate);
           } else if (emailCampaignTemplateContents != null && StringUtils.isNotBlank(emailCampaignTemplateContents)) {
-            freemarkerTemplate = freeMarkerService.getCampaignTemplateFromString(emailCampaignTemplateContents);
+            StringBuilder finalContents = new StringBuilder(emailCampaign.getSubject());
+            finalContents.append(emailCampaignTemplateContents);
+            freemarkerTemplate = freeMarkerService.getCampaignTemplateFromString(finalContents.toString());
           } else {
             return false;
           }

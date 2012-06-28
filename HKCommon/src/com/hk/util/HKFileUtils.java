@@ -1,68 +1,90 @@
 package com.hk.util;
 
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.*;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipEntry;
+import java.net.FileNameMap;
+import java.net.URLConnection;
 
 
 public class HKFileUtils {
-  public static File unzipFolder(String source, String destination) throws IOException {
-    int buffer = 90000;
+  private static Logger logger = LoggerFactory.getLogger(HKFileUtils.class);
+  private static final int buffer = 90000;
+
+  public static File unzipFolder(String source, String destination) {
     byte data[] = new byte[buffer];
     File contentFolder = new File(destination);
     if (!contentFolder.exists()) {
       contentFolder.mkdir();
     }
 
-    //get zip file content
-    ZipInputStream zis = new ZipInputStream(new FileInputStream(source));
-    //get zipped file list entry
-    ZipEntry ze = zis.getNextEntry();
+    ZipInputStream zis = null;
+    try {
+      zis = new ZipInputStream(new FileInputStream(source));
+      //get zipped file list entry
+      ZipEntry ze = zis.getNextEntry();
 
-    while (ze != null) {
-      String fileName = ze.getName();
-      File newFile = new File(destination + "/" + fileName);
+      while (ze != null) {
+        String fileName = ze.getName();
+        File newFile = new File(destination + "/" + fileName);
 
-      //checking is the zipped entry is a folder
-      if (ze.isDirectory()) {
-        (newFile).mkdir();
-      } else {
-        newFile.getParentFile().mkdirs();
-
-        FileOutputStream fos = new FileOutputStream(newFile);
-
-        int len;
-        while ((len = zis.read(data)) > 0) {
-          fos.write(data, 0, len);
+        //checking is the zipped entry is a folder
+        if (ze.isDirectory()) {
+          (newFile).mkdir();
+        } else {
+          newFile.getParentFile().mkdirs();
+          FileOutputStream fos = new FileOutputStream(newFile);
+          int len;
+          while ((len = zis.read(data)) > 0) {
+            fos.write(data, 0, len);
+          }
+          fos.close();
         }
-        fos.close();
+        ze = zis.getNextEntry();
       }
-      ze = zis.getNextEntry();
+      zis.closeEntry();
+      return contentFolder;
+    } catch (IOException ioe) {
+      logger.error("error unzipping folder: " + ioe);
+    } finally {
+      if (zis != null) {
+        IOUtils.closeQuietly(zis);
+      }
     }
-    zis.closeEntry();
-    zis.close();
-    return contentFolder;
+    return null;
   }
 
   public static String fileToString(File file) {
-    byte[] fileBytes = new byte[0];
+    byte[] fileBytes;
+
+    ByteArrayOutputStream outs = null;
+    InputStream ins = null;
     try {
-      byte[] buffer = new byte[4096];
-      ByteArrayOutputStream outs = new ByteArrayOutputStream();
-      InputStream ins = new FileInputStream(file);
+      byte[] data = new byte[buffer];
+      outs = new ByteArrayOutputStream();
+      ins = new FileInputStream(file);
 
-      int read = 0;
-      while ((read = ins.read(buffer)) != -1) {
-        outs.write(buffer, 0, read);
+      int read;
+      while ((read = ins.read(data)) != -1) {
+        outs.write(data, 0, read);
       }
-
-      ins.close();
-      outs.close();
       fileBytes = outs.toByteArray();
-
-    } catch (Exception e) {
-      e.printStackTrace();
+      return new String(fileBytes);
+    } catch (IOException ioe) {
+      logger.error("error converting file to string: " + file.getName() + ioe);
+    } finally {
+      IOUtils.closeQuietly(ins);
+      IOUtils.closeQuietly(outs);
     }
-    return new String(fileBytes);
+    return null;
+  }
+
+  public static String getContentType(String fileUrl) {
+    FileNameMap fileNameMap = URLConnection.getFileNameMap();
+    return fileNameMap.getContentTypeFor(fileUrl);
   }
 }

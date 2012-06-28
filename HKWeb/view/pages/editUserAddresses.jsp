@@ -104,7 +104,6 @@
   };
 
   $(document).ready(function() {
-    //    $('error').append("<strong>Please fix the following errors:</strong>");
     $('.error').hide();
     var err = 0;
     $('.button').click(function() {
@@ -130,12 +129,6 @@
         return true;
       }
     });
-    //					var regEx = /^[a-z0-9_\+-]+(\.[a-z0-9_\+-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*\.([a-z]{2,4})$/;
-    //					var emailId = $('.emailId').val();
-    //					if (!emailRegEx.test(emailId)) {
-    //						alert("Enter correct email address.");
-    //						return false;
-    //					}
 
     $('#pin').change(function() {
       _validatePincode();
@@ -168,13 +161,7 @@
 
     function _validateMobile() {
       var phone = $('#phone').val();
-      //      var validRegEx = /^\d{9,12}$/;
       var validRegEx = /^[0-9,+\-]{9,}$/;
-      //  if (phone.length < 9 || phone.length > 12) {
-      //  $('.error').append("<br/> Kindly enter a valid phone number!<br/>");
-      // err = 1;
-      //}
-      //      var validRegEx = /^0^0$/;
       if (!validRegEx.test(phone)) {
         $('.error').append("<br/> Kindly enter a valid phone number!<br/>");
         err = 1;

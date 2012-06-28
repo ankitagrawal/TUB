@@ -1,25 +1,47 @@
 package com.hk.util;
 
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.*;
 
 public class FtlUtils {
-
+  private static Logger logger = LoggerFactory.getLogger(FtlUtils.class);
   public static String awsBucket = "healthkart-pratham";
 
-  public static File generateFtlFromHtml(File htmlFile, String destinationPath, String basicAmazonS3Path) throws IOException {
+  public static File generateFtlFromHtml(File htmlFile, String destinationPath, String contentFolderName) {
+    String basicAmazonS3Path = getBasicAmazonS3Path(contentFolderName);
     String line;
     File ftlFile = new File(destinationPath);
-    BufferedReader br = new BufferedReader(new FileReader(htmlFile));
-    PrintWriter out = new PrintWriter(new FileWriter(ftlFile));
-    while ((line = br.readLine()) != null) {
-      line = addAbsolutePathsToFtl(line, basicAmazonS3Path);
-      out.write(line + lineSeperator);
-    }
-    br.close();
-    out.close();
 
-    ftlFile = addExtraDataToFtl(ftlFile, basicAmazonS3Path);
-    return ftlFile;
+    BufferedReader br = null;
+    PrintWriter out = null;
+    try {
+      br = new BufferedReader(new FileReader(htmlFile));
+      out = new PrintWriter(new FileWriter(ftlFile));
+      while ((line = br.readLine()) != null) {
+        line = addAbsolutePathsToFtl(line, basicAmazonS3Path);
+        //adding "can't view this email and unsubsribe link" div to the ftl
+        if (line.matches(bodyStartTagRegex)) {
+          out.write(line + lineSeperator);
+          out.write(FtlUtils.getCantViewEmailDiv(basicAmazonS3Path) + lineSeperator);
+        } else if (line.matches(bodyEndTagRegex)) {
+          out.write(FtlUtils.getUnsubscribeEmailDiv() + lineSeperator);
+          out.write(line + lineSeperator);
+        } else {
+          out.write(line + lineSeperator);
+        }
+      }
+//      ftlFile = addExtraDataToFtl(ftlFile, basicAmazonS3Path);
+      return ftlFile;
+    } catch (IOException ioe) {
+      logger.error("error generating ftl from html: " + ioe);
+    } finally {
+      IOUtils.closeQuietly(br);
+      IOUtils.closeQuietly(out);
+    }
+    return null;
   }
 
   private static String addAbsolutePathsToFtl(String line, String basicAmazonS3Path) {
@@ -28,25 +50,33 @@ public class FtlUtils {
     return line;
   }
 
-  private static File addExtraDataToFtl(File ftlFile, String basicAmazonS3Path) throws IOException {
+  private static File addExtraDataToFtl(File ftlFile, File htmlFile, String basicAmazonS3Path) {
     String line;
-    BufferedReader br = new BufferedReader(new FileReader(ftlFile));
-    PrintWriter out = new PrintWriter(new FileWriter(ftlFile));
-    while ((line = br.readLine()) != null) {
-      //adding "can't view this email and unsubsribe link" div to the ftl
-      if (line.matches(bodyStartTagRegex)) {
-        out.write(line + lineSeperator);
-        out.write(FtlUtils.getCantViewEmailDiv(basicAmazonS3Path) + lineSeperator);
-      } else if (line.matches(bodyEndTagRegex)) {
-        out.write(FtlUtils.getUnsubscribeEmailDiv() + lineSeperator);
-        out.write(line + lineSeperator);
-        break;
-      }
-    }
 
-    br.close();
-    out.close();
-    return ftlFile;
+    BufferedReader br = null;
+    PrintWriter out = null;
+    try {
+      br = new BufferedReader(new FileReader(ftlFile));
+      out = new PrintWriter(new FileWriter(ftlFile));
+      while ((line = br.readLine()) != null) {
+        //adding "can't view this email and unsubsribe link" div to the ftl
+        if (line.matches(bodyStartTagRegex)) {
+          out.write(line + lineSeperator);
+          out.write(FtlUtils.getCantViewEmailDiv(basicAmazonS3Path) + lineSeperator);
+        } else if (line.matches(bodyEndTagRegex)) {
+          out.write(FtlUtils.getUnsubscribeEmailDiv() + lineSeperator);
+          out.write(line + lineSeperator);
+          break;
+        }
+      }
+      return ftlFile;
+    } catch (IOException ioe) {
+      logger.error("error adding data to ftl: " + ioe);
+    } finally {
+      IOUtils.closeQuietly(br);
+      IOUtils.closeQuietly(out);
+    }
+    return null;
   }
 
   private static String getCantViewEmailDiv(String basicAmazonS3Path) {
@@ -62,6 +92,10 @@ public class FtlUtils {
         " If you prefer not to receive HealthKart.com email, <a href=\"${unsubscribeLink}\">click here to Unsubscribe</a>" +
         "<br />  Parsvanath Arcadia, 1 MG Road, Sector 14, Gurgaon, Haryana, INDIA<br />\n" +
         "    © 2011 HealthKart.com. All Rights Reserved. </div>";
+  }
+
+  public static String getBasicAmazonS3Path(String contentFolder) {
+    return "http://" + awsBucket + ".s3.amazonaws.com/" + contentFolder + "/";
   }
 
   private static final String lineSeperator = System.getProperty("line.separator");
