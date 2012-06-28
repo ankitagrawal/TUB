@@ -3,11 +3,7 @@ package com.hk.web.factory;
 
 import com.akube.framework.stripes.action.BasePaymentGatewaySendReceiveAction;
 import com.hk.constants.payment.EnumPaymentMode;
-import com.hk.web.action.core.payment.CCAvenueDummyGatewaySendReceiveAction;
-import com.hk.web.action.core.payment.CitrusGatewaySendReceiveAction;
-import com.hk.web.action.core.payment.CodGatewaySendReceiveAction;
-import com.hk.web.action.core.payment.TekprocessGatewaySendReceiveAction;
-import com.hk.web.action.core.payment.TekprocessTestGatewaySendReceiveAction;
+import com.hk.web.action.core.payment.*;
 
 public class PaymentModeActionFactory {
 
@@ -23,7 +19,8 @@ public class PaymentModeActionFactory {
         } else if (EnumPaymentMode.COD.getId().equals(enumPaymentMode.getId())) {
             return CodGatewaySendReceiveAction.class;
         } else if (EnumPaymentMode.CITRUS.getId().equals(enumPaymentMode.getId())) {
-            return CitrusGatewaySendReceiveAction.class;
+//            return CitrusGatewaySendReceiveAction.class;
+            return CitrusNetbankingSendReceiveAction.class;
         } else {
             return null;
         }
