@@ -1,15 +1,10 @@
 package com.hk.db.seed.inventory;
 
-import com.hk.domain.inventory.po.PurchaseInvoiceStatus;
-import com.hk.domain.core.PurchaseFormType;
-import com.hk.constants.inventory.EnumPurchaseInvoiceStatus;
+import org.springframework.stereotype.Component;
+
 import com.hk.constants.inventory.EnumPurchaseFormType;
 import com.hk.db.seed.BaseSeedData;
-
-import java.util.List;
-import java.util.ArrayList;
-
-import org.springframework.stereotype.Component;
+import com.hk.domain.core.PurchaseFormType;
 
 
 @Component

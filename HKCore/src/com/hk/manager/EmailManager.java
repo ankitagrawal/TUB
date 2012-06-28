@@ -33,8 +33,8 @@ import com.hk.pact.service.EmailService;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.order.OrderLoggingService;
-import com.hk.util.HtmlUtil;
 import com.hk.service.impl.FreeMarkerService;
+import com.hk.util.HtmlUtil;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +44,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
-
 import freemarker.template.Template;
 
 @SuppressWarnings("unchecked")
@@ -161,22 +160,21 @@ public class EmailManager {
   * ","); this.categoryHealthkartList = BaseUtils.split(categoryHealthkartList, ","); }
   */
 
-  // TODO:rewrite
+    // TODO:rewrite
+    public boolean sendInventoryRedZoneMail(ProductVariant productVariant) {
+        HashMap valuesMap = new HashMap();
+        valuesMap.put("productVariant", productVariant);
 
-  public boolean sendInventoryRedZoneMail(ProductVariant productVariant) {
-    HashMap valuesMap = new HashMap();
-    valuesMap.put("productVariant", productVariant);
+        Category basketCategory = null;
+        try {
+            basketCategory = getCategoryService().getTopLevelCategory(productVariant.getProduct());
+            String category = basketCategory.getDisplayName();
+            valuesMap.put("category", category);
+        } catch (Exception e) {
+            logger.error("Exception thrown while getting category", e);
+        }
 
-    Category basketCategory = null;
-    try {
-      basketCategory = getCategoryService().getTopLevelCategory(productVariant.getProduct());
-      String category = basketCategory.getDisplayName();
-      valuesMap.put("category", category);
-    } catch (Exception e) {
-      logger.error("Exception thrown while getting category", e);
-    }
-
-    boolean success = true;
+        boolean success = true;
 
     /*
     * for (String hkAdminEmail : hkAdminEmails) { boolean sent =
@@ -659,99 +657,99 @@ public class EmailManager {
     }
   }
 
-  public List<EmailRecepient> filterUnwantedUsers(List<User> users, EmailCampaign emailCampaign) {
-    List<EmailRecepient> emailRecepients = new ArrayList<EmailRecepient>();
-    for (User user : users) {
-      EmailRecepient emailRecepient = getEmailRecepientDao().getOrCreateEmailRecepient(user.getEmail());
-      if (emailRecepient.isSubscribed() && getEmailerHistoryDao().findEmailRecipientByCampaign(emailRecepient, emailCampaign) == null) {
-        // last mail date null or last mail date > campaign min date
-        if (emailRecepient.getLastEmailDate() == null
-            || new DateTime().minusDays(emailCampaign.getMinDayGap().intValue()).isAfter(emailRecepient.getLastEmailDate().getTime())) {
-          emailRecepients.add(emailRecepient);
+    public List<EmailRecepient> filterUnwantedUsers(List<User> users, EmailCampaign emailCampaign) {
+        List<EmailRecepient> emailRecepients = new ArrayList<EmailRecepient>();
+        for (User user : users) {
+            EmailRecepient emailRecepient = getEmailRecepientDao().getOrCreateEmailRecepient(user.getEmail());
+            if (emailRecepient.isEmailAllowed() && getEmailerHistoryDao().findEmailRecipientByCampaign(emailRecepient, emailCampaign) == null) {
+                // last mail date null or last mail date > campaign min date
+                if (emailRecepient.getLastEmailDate() == null
+                        || new DateTime().minusDays(emailCampaign.getMinDayGap().intValue()).isAfter(emailRecepient.getLastEmailDate().getTime())) {
+                    emailRecepients.add(emailRecepient);
+                }
+            }
         }
-      }
+        return emailRecepients;
     }
-    return emailRecepients;
-  }
 
-  public EmailService getEmailService() {
-    return emailService;
-  }
+    public EmailService getEmailService() {
+        return emailService;
+    }
 
-  public void setEmailService(EmailService emailService) {
-    this.emailService = emailService;
-  }
+    public void setEmailService(EmailService emailService) {
+        this.emailService = emailService;
+    }
 
-  public EmailRecepientDao getEmailRecepientDao() {
-    return emailRecepientDao;
-  }
+    public EmailRecepientDao getEmailRecepientDao() {
+        return emailRecepientDao;
+    }
 
-  public void setEmailRecepientDao(EmailRecepientDao emailRecepientDao) {
-    this.emailRecepientDao = emailRecepientDao;
-  }
+    public void setEmailRecepientDao(EmailRecepientDao emailRecepientDao) {
+        this.emailRecepientDao = emailRecepientDao;
+    }
 
-  public EmailerHistoryDao getEmailerHistoryDao() {
-    return emailerHistoryDao;
-  }
+    public EmailerHistoryDao getEmailerHistoryDao() {
+        return emailerHistoryDao;
+    }
 
-  public void setEmailerHistoryDao(EmailerHistoryDao emailerHistoryDao) {
-    this.emailerHistoryDao = emailerHistoryDao;
-  }
+    public void setEmailerHistoryDao(EmailerHistoryDao emailerHistoryDao) {
+        this.emailerHistoryDao = emailerHistoryDao;
+    }
 
-  public EmailCampaignDao getEmailCampaignDao() {
-    return emailCampaignDao;
-  }
+    public EmailCampaignDao getEmailCampaignDao() {
+        return emailCampaignDao;
+    }
 
-  public void setEmailCampaignDao(EmailCampaignDao emailCampaignDao) {
-    this.emailCampaignDao = emailCampaignDao;
-  }
+    public void setEmailCampaignDao(EmailCampaignDao emailCampaignDao) {
+        this.emailCampaignDao = emailCampaignDao;
+    }
 
-  public LinkManager getLinkManager() {
-    return linkManager;
-  }
+    public LinkManager getLinkManager() {
+        return linkManager;
+    }
 
-  public void setLinkManager(LinkManager linkManager) {
-    this.linkManager = linkManager;
-  }
+    public void setLinkManager(LinkManager linkManager) {
+        this.linkManager = linkManager;
+    }
 
-  public NotifyMeDao getNotifyMeDao() {
-    return notifyMeDao;
-  }
+    public NotifyMeDao getNotifyMeDao() {
+        return notifyMeDao;
+    }
 
-  public void setNotifyMeDao(NotifyMeDao notifyMeDao) {
-    this.notifyMeDao = notifyMeDao;
-  }
+    public void setNotifyMeDao(NotifyMeDao notifyMeDao) {
+        this.notifyMeDao = notifyMeDao;
+    }
 
-  public UserService getUserService() {
-    return userService;
-  }
+    public UserService getUserService() {
+        return userService;
+    }
 
-  public void setUserService(UserService userService) {
-    this.userService = userService;
-  }
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
 
-  public CategoryService getCategoryService() {
-    return categoryService;
-  }
+    public CategoryService getCategoryService() {
+        return categoryService;
+    }
 
-  public void setCategoryService(CategoryService categoryService) {
-    this.categoryService = categoryService;
-  }
+    public void setCategoryService(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
 
-  public BaseDao getBaseDao() {
-    return baseDao;
-  }
+    public BaseDao getBaseDao() {
+        return baseDao;
+    }
 
-  public void setBaseDao(BaseDao baseDao) {
-    this.baseDao = baseDao;
-  }
+    public void setBaseDao(BaseDao baseDao) {
+        this.baseDao = baseDao;
+    }
 
-  public OrderLoggingService getOrderLoggingService() {
-    return orderLoggingService;
-  }
+    public OrderLoggingService getOrderLoggingService() {
+        return orderLoggingService;
+    }
 
-  public void setOrderLoggingService(OrderLoggingService orderLoggingService) {
-    this.orderLoggingService = orderLoggingService;
-  }
+    public void setOrderLoggingService(OrderLoggingService orderLoggingService) {
+        this.orderLoggingService = orderLoggingService;
+    }
 
 }

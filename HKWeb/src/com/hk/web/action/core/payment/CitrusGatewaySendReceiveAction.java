@@ -11,7 +11,7 @@ import com.hk.domain.payment.Payment;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.manager.EmailManager;
 import com.hk.manager.LinkManager;
-import com.hk.manager.payment.CitrusTestPaymentGatewayWrapper;
+import com.hk.manager.payment.CitrusPaymentGatewayWrapper;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.payment.PaymentDao;
 import com.hk.web.AppConstants;
@@ -29,7 +29,7 @@ import java.util.Map;
 import java.util.Properties;
 
 @Component
-public class CitrusGatewaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<CitrusTestPaymentGatewayWrapper> {
+public class CitrusGatewaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<CitrusPaymentGatewayWrapper> {
 
     private static Logger logger = LoggerFactory.getLogger(CitrusGatewaySendReceiveAction.class);
 
@@ -45,11 +45,11 @@ public class CitrusGatewaySendReceiveAction extends BasePaymentGatewaySendReceiv
     @Autowired
     EmailManager          emailManager;
 
-    protected CitrusTestPaymentGatewayWrapper getPaymentGatewayWrapperFromTransactionData(BasePaymentGatewayWrapper.TransactionData data) {
-        CitrusTestPaymentGatewayWrapper citrusTestPaymentGatewayWrapper = new CitrusTestPaymentGatewayWrapper(AppConstants.appBasePath);
+    protected CitrusPaymentGatewayWrapper getPaymentGatewayWrapperFromTransactionData(BasePaymentGatewayWrapper.TransactionData data) {
+        CitrusPaymentGatewayWrapper citrusPaymentGatewayWrapper = new CitrusPaymentGatewayWrapper(AppConstants.appBasePath);
         Payment payment = paymentDao.findByGatewayOrderId(data.getGatewayOrderId());
         String amountStr = BasePaymentGatewayWrapper.TransactionData.decimalFormat.format(data.getAmount());
-        
+
         String propertyLocatorFileLocation = AppConstants.getAppClasspathRootPath() + "/citrus.live.properties";
         Properties properties = BaseUtils.getPropertyFile(propertyLocatorFileLocation);
 
@@ -72,7 +72,7 @@ public class CitrusGatewaySendReceiveAction extends BasePaymentGatewaySendReceiv
         oMerchant.setMerchantDetails(properties.getProperty("MerchantId"), properties.getProperty("MerchantId"), properties.getProperty("MerchantId"), "127.0.0.1",
                 payment.getGatewayOrderId(),
                 payment.getGatewayOrderId()
-                 //, "http://www.healthkart.com/core/payment/CitrusGatewaySendReceiveAction.action",
+                //, "http://www.healthkart.com/core/payment/CitrusGatewaySendReceiveAction.action",
                 , linkManager.getCitrusPaymentGatewayUrl(),
 //                , properties.getProperty("ResponseUrl"),
                 properties.getProperty("ResponseMethod"), properties.getProperty("CurrCode"), payment.getGatewayOrderId(), "P",
@@ -87,13 +87,13 @@ public class CitrusGatewaySendReceiveAction extends BasePaymentGatewaySendReceiv
 
         if (oPgResp.getRedirectionUrl() != null) {
             String strRedirectionURL = oPgResp.getRedirectionUrl();
-            citrusTestPaymentGatewayWrapper.setGatewayUrl(strRedirectionURL);
+            citrusPaymentGatewayWrapper.setGatewayUrl(strRedirectionURL);
         } else {
             logger.info("Error encountered. Error Code : " + oPgResp.getRespCode() + " . Message " + oPgResp.getRespMessage());
         }
         logger.info("sending to payment gateway Citrus");
 
-        return citrusTestPaymentGatewayWrapper;
+        return citrusPaymentGatewayWrapper;
     }
 
     @DefaultHandler
@@ -110,7 +110,7 @@ public class CitrusGatewaySendReceiveAction extends BasePaymentGatewaySendReceiv
         System.out.println("in citrus callback");
         logger.error("in callback -> " + getContext().getRequest().getParameterMap());
         System.out.println("in callback -> " + getContext().getRequest().getParameterMap());
-        String data = getContext().getRequest().getParameter(CitrusTestPaymentGatewayWrapper.param_data);
+        String data = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.param_data);
         String responseMethod = getContext().getRequest().getMethod();
         String propertyFilePath = AppConstants.getAppClasspathRootPath() + "/citrus.live.properties";
         String validatedData = "";
@@ -118,30 +118,23 @@ public class CitrusGatewaySendReceiveAction extends BasePaymentGatewaySendReceiv
         if (data != null) {
             logger.info("returning from payment gateway Citrus with the parameter string msg : " + data);
             // citrus specific validation
-            validatedData = CitrusTestPaymentGatewayWrapper.validateEncryptedData(data, propertyFilePath);
+            validatedData = CitrusPaymentGatewayWrapper.validateEncryptedData(data, propertyFilePath);
         }
-        /*
-         * String authStatus = getContext().getRequest().getParameter(CitrusTestPaymentGatewayWrapper.RespCode); String
-         * issuerRefNo = getContext().getRequest().getParameter(CitrusTestPaymentGatewayWrapper.RRN); String
-         * gatewayOrderId = getContext().getRequest().getParameter(CitrusTestPaymentGatewayWrapper.TxnID); String
-         * responseMsg = getContext().getRequest().getParameter(CitrusTestPaymentGatewayWrapper.Message); String
-         * txnRefNo = getContext().getRequest().getParameter(CitrusTestPaymentGatewayWrapper.ePGTxnID);
-         */
 
-        Map<String, String> paramMap = CitrusTestPaymentGatewayWrapper.parseResponse(validatedData, responseMethod);
+        Map<String, String> paramMap = CitrusPaymentGatewayWrapper.parseResponse(validatedData, responseMethod);
 	      logger.error("validated date -> " + validatedData);
 	      logger.error("data -> " + data);
 	      logger.error("responseMethod -> " + responseMethod);
 	      logger.error("propertyFilePath -> " + propertyFilePath);
 	      logger.error("param map->" + paramMap);
-        String amountStr = paramMap.get(CitrusTestPaymentGatewayWrapper.Amount);
+        String amountStr = paramMap.get(CitrusPaymentGatewayWrapper.Amount);
         Double amount = NumberUtils.toDouble(amountStr);
-        String authStatus = paramMap.get(CitrusTestPaymentGatewayWrapper.RespCode);
-        String responseMsg = ((String) paramMap.get(CitrusTestPaymentGatewayWrapper.Message)).replace('+', ' ');
-        String gatewayOrderId = paramMap.get(CitrusTestPaymentGatewayWrapper.TxnID);
-        String authIdCode = paramMap.get(CitrusTestPaymentGatewayWrapper.AuthIdCode);
-        String issuerRefNo = paramMap.get(CitrusTestPaymentGatewayWrapper.RRN);
-        String txnRefNo = paramMap.get(CitrusTestPaymentGatewayWrapper.ePGTxnID);
+        String authStatus = paramMap.get(CitrusPaymentGatewayWrapper.RespCode);
+        String responseMsg = ((String) paramMap.get(CitrusPaymentGatewayWrapper.Message)).replace('+', ' ');
+        String gatewayOrderId = paramMap.get(CitrusPaymentGatewayWrapper.TxnID);
+//        String authIdCode = paramMap.get(CitrusPaymentGatewayWrapper.AuthIdCode);
+//        String issuerRefNo = paramMap.get(CitrusPaymentGatewayWrapper.RRN);
+//        String txnRefNo = paramMap.get(CitrusPaymentGatewayWrapper.ePGTxnID);
 
         logger.info("response msg received from citrus is " + responseMsg + "for gateway order id " + gatewayOrderId);
 
@@ -159,17 +152,11 @@ public class CitrusGatewaySendReceiveAction extends BasePaymentGatewaySendReceiv
             if (authStatus.equals(EnumCitrusResponseCodes.Transaction_Successful.getId())) {
                 paymentManager.success(gatewayOrderId);
                 resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", gatewayOrderId);
-            } /*
-                 * else if (EnumCitrusResponseCodes.Rejected_By_Issuer.getId().equals(authStatus)) {
-                 * paymentManager.pendingApproval(gatewayOrderId); resolution = new
-                 * RedirectResolution(PaymentPendingApprovalAction.class).addParameter("gatewayOrderId",
-                 * gatewayOrderId); }
-                 */else if (EnumCitrusResponseCodes.Rejected_By_Issuer.getId().equals(authStatus)) {
+            } else if (EnumCitrusResponseCodes.Rejected_By_Issuer.getId().equals(authStatus)) {
                 paymentManager.fail(gatewayOrderId);
                 emailManager.sendPaymentFailMail(getPrincipalUser(), gatewayOrderId);
                 resolution = new RedirectResolution(PaymentFailAction.class).addParameter("gatewayOrderId", gatewayOrderId);
             } else {
-                emailManager.sendPaymentFailMail(getPrincipalUser(), gatewayOrderId);
                 throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.INVALID_RESPONSE);
             }
         } catch (HealthkartPaymentGatewayException e) {
