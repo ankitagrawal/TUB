@@ -30,7 +30,7 @@
                             style="resize:none;word-wrap:break-word"></s:textarea>
         </li>
         <li>
-          <s:submit name="downloadDeliveryWorkSheet" value="Download Delivery Worksheet"/>
+          <s:submit name="downloadDeliveryWorkSheet" value="Download Delivery Worksheet" class="verifyData"/>
 
         </li>
       </ul>
@@ -40,4 +40,21 @@
 
 </s:layout-component>
 </s:layout-render>
+<script type="text/javascript">
+      $(document).ready(function() {
+        var trackingId = "";
+          $('.verifyData').click(function() {
+          trackingId = $('.trackingIds').val();
+          return _checkDataValidity();
+        });
+          function _checkDataValidity() {
+              if (trackingId == "" || trackingId == null)
+              {
+                  alert("Please enter AWB numbers.")
+                  return false;
+              }
+          }
+      });
+    </script>
+
 

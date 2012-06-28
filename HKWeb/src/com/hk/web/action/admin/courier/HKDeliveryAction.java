@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.io.*;
 import java.text.SimpleDateFormat;
+import java.text.ParseException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,6 +31,7 @@ public class HKDeliveryAction extends BaseAction {
 
     private String                trackingId;
     private File                  xlsFile;
+    private SimpleDateFormat      sdf;
     private List<ShippingOrder>   shippingOrderList;
     @Autowired
     ShippingOrderService          shippingOrderService;
@@ -57,24 +59,28 @@ public class HKDeliveryAction extends BaseAction {
         }
 
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+            sdf = new SimpleDateFormat("yyyyMMdd");
             xlsFile = new File(adminDownloads + "/" + CourierConstants.HKDELIVERY_WORKSHEET_FOLDER + "/" + CourierConstants.HKDELIVERY_WORKSHEET + "_" + sdf.format(new Date()) + ".xls");
             xlsFile = generateWorkSheetXls(xlsFile.getPath(), shippingOrderList);
         } catch (IOException ioe) {
             addRedirectAlertMessage(new SimpleMessage(CourierConstants.HKDELIVERY_IOEXCEPTION));
+            return new ForwardResolution(HKDeliveryAction.class);
         } catch (NullPointerException npe) {
             addRedirectAlertMessage(new SimpleMessage(CourierConstants.HKDELIVERY_NULLEXCEPTION));
-        } catch (Exception ex) {
+            return new ForwardResolution(HKDeliveryAction.class);
+        }catch (Exception ex) {
             addRedirectAlertMessage(new SimpleMessage(CourierConstants.HKDELIVERY_EXCEPTION));
+            return new ForwardResolution(HKDeliveryAction.class);
         }
         return new HTTPResponseResolution();
     }
 
-    public File generateWorkSheetXls(String xslFilePath, List<ShippingOrder> shippingOrderList) throws NullPointerException, IOException {
+    public File generateWorkSheetXls(String xslFilePath, List<ShippingOrder> shippingOrderList) throws NullPointerException, IOException, ParseException {
         File file = new File(xslFilePath);
         FileOutputStream out = new FileOutputStream(file);
         Workbook wb = new HSSFWorkbook();
         Sheet sheet1 = wb.createSheet(CourierConstants.HEALTHKART_DELIVERY + new Date());
+        sdf=new SimpleDateFormat("dd-mm-yyyy");
         Row row = null;
         Cell cell = null;
         int rowCounter = 0;
@@ -156,11 +162,12 @@ public class HKDeliveryAction extends BaseAction {
             cell = row.createCell(i);
             cell.setCellStyle(style);
         }
+        Date currentDate=new Date();
         setCellValue(row, 0, CourierConstants.HKD_WORKSHEET_NAME);
         setCellValue(row, 1, "");
         setCellValue(row, 2, CourierConstants.HKD_WORKSHEET_MOBILE);
         setCellValue(row, 3, CourierConstants.HKD_WORKSHEET_DATE);
-        setCellValue(row, 4, "");
+        setCellValue(row, 4,  currentDate+"");
         setCellValue(row, 5, "");
         addEmptyLine(row, sheet1, ++rowCounter, cell);
         row = sheet1.createRow(++rowCounter);

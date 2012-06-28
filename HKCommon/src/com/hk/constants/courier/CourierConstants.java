@@ -15,10 +15,10 @@ public class CourierConstants {
     public static final String NULL_POINTER_EXCEPTION = "Sorry.Database updation failed.NullPointerExpection encountered for Tracking :";
     public static final String EXCEPTION = "Sorry.Database updation failed.Exception encountered for Tracking Id :";
     public static final String PARSE_EXCEPTION = "Sorry.Database updation failed.ParseException occurred for Tracking Id :";
-    public static final String HEALTHKART_CHECKED_EXCEPTION="Sorry,some problem occurred.Please contact the administrator.";
+    public static final String HEALTHKART_CHECKED_EXCEPTION = "Sorry,some problem occurred.Please contact the administrator.";
 
     //Common constants
-    public static final String DELIVERED="DELIVERED";
+    public static final String DELIVERED = "DELIVERED";
     public static final String AFL = "AFL";
     public static final String BLUEDART = "BLUEDART";
     public static final String CHHOTU = "CHHOTU";
@@ -27,14 +27,14 @@ public class CourierConstants {
 
 
     //Constants for DTDC
-    public static final String DTDC_INPUT_CONSIGNMENT="CONSIGNMENT";
-    public static final String DTDC_INPUT_CNHEADER="CNHEADER";
-    public static final String DTDC_INPUT_CNTRACK="CNTRACK";
-    public static final String DTDC_ATTRIBUTE_NAME="NAME";
-    public static final String DTDC_ATTRIBUTE_VALUE="VALUE";
-    public static final String DTDC_INPUT_STR_STATUS="strStatus";
-    public static final String DTDC_INPUT_STR_STATUSTRANSON="strStatusTransOn";
-    public static final String DTDC_INPUT_DELIVERED="DELIVERY";
+    public static final String DTDC_INPUT_CONSIGNMENT = "CONSIGNMENT";
+    public static final String DTDC_INPUT_CNHEADER = "CNHEADER";
+    public static final String DTDC_INPUT_CNTRACK = "CNTRACK";
+    public static final String DTDC_ATTRIBUTE_NAME = "NAME";
+    public static final String DTDC_ATTRIBUTE_VALUE = "VALUE";
+    public static final String DTDC_INPUT_STR_STATUS = "strStatus";
+    public static final String DTDC_INPUT_STR_STATUSTRANSON = "strStatusTransOn";
+    public static final String DTDC_INPUT_DELIVERED = "DELIVERY";
 
     //Constants for AFL
     public static final String AFL_DELIVERY_DATE = "delivery_date";
@@ -49,9 +49,7 @@ public class CourierConstants {
     public static final String DELHIVERY_STATUS = "Status";
     public static final String DELHIVERY_STATUS_DATETIME = "StatusDateTime";
     public static final String DELHIVERY_ORDER_TYPE = "OrderType";
-    public static final String DELHIVERY_ERROR_MSG= "Incorrect Waybill number or No Information";
-
-
+    public static final String DELHIVERY_ERROR_MSG = "Incorrect Waybill number or No Information";
 
 
     //Constants for BLUEDART
@@ -78,19 +76,18 @@ public class CourierConstants {
     public static final String HKD_WORKSHEET_TOTAL_COD_BOX = "TOTAL COD BOX:";
     public static final String HKD_WORKSHEET_TOTAL_COD_AMT = "TOTAL COD AMT:";
     public static final String HKD_WORKSHEET_COD = "COD :";
-       public static final String HKD_WORKSHEET_PREPAID = "Pre-Paid:";
+    public static final String HKD_WORKSHEET_PREPAID = "Pre-Paid:";
 
-       public static final String HKD_WORKSHEET_COD_CASH = "TOTAL COD CASH RCVD:";
-       public static final String HKD_WORKSHEET_PENDING_COD = "PENDING COD AMT:";
-       public static final String HKD_WORKSHEET_HOLD_PKTS = "HOLD PKTs:";
-       public static final String HKD_WORKSHEET_RTO_PKTS = "RTO PKTs:";
-       public static final String HKD_WORKSHEET_SNO = "S.NO.";
-       public static final String HKD_WORKSHEET_AWB_NO = "AWB NUMBER";
-       public static final String HKD_WORKSHEET_ADDRESS = "ADDRESS";
-       public static final String HKD_WORKSHEET_AMT = "COD/PRE-PAID AMT";
-       public static final String HK_WORKSHEET_INFO = "NAME,SIGN & MOB.NO.";
-       public static final String HKD_WORKSHEET_REMARKS = "CONSIGNEE'S  REMARKS";
-
+    public static final String HKD_WORKSHEET_COD_CASH = "TOTAL COD CASH RCVD:";
+    public static final String HKD_WORKSHEET_PENDING_COD = "PENDING COD AMT:";
+    public static final String HKD_WORKSHEET_HOLD_PKTS = "HOLD PKTs:";
+    public static final String HKD_WORKSHEET_RTO_PKTS = "RTO PKTs:";
+    public static final String HKD_WORKSHEET_SNO = "S.NO.";
+    public static final String HKD_WORKSHEET_AWB_NO = "AWB NUMBER";
+    public static final String HKD_WORKSHEET_ADDRESS = "ADDRESS";
+    public static final String HKD_WORKSHEET_AMT = "COD/PRE-PAID AMT";
+    public static final String HK_WORKSHEET_INFO = "NAME,SIGN & MOB.NO.";
+    public static final String HKD_WORKSHEET_REMARKS = "CONSIGNEE'S  REMARKS";
 
 
 }
