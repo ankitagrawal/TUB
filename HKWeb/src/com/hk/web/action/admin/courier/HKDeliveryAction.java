@@ -28,14 +28,15 @@ import javax.servlet.http.HttpServletResponse;
 
 public class HKDeliveryAction extends BaseAction {
 
-    private String trackingId;
-    private File xlsFile;
+    private String                trackingId;
+    private File                  xlsFile;
+    private List<ShippingOrder>   shippingOrderList;
     @Autowired
-    ShippingOrderService shippingOrderService;
+    ShippingOrderService          shippingOrderService;
 
 
     @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
-    String adminDownloads;
+    String                        adminDownloads;
 
 
     @DefaultHandler
@@ -46,7 +47,7 @@ public class HKDeliveryAction extends BaseAction {
     public Resolution downloadDeliveryWorkSheet() {
         String[] trackingIds = trackingId.split(",");
         ShippingOrder shippingOrder = null;
-        List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>();
+        shippingOrderList = new ArrayList<ShippingOrder>();
         for (String trackingNum : trackingIds) {
             shippingOrder = shippingOrderService.findByTrackingId(trackingNum);
             if (shippingOrder != null) {
