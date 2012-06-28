@@ -1,5 +1,9 @@
 package com.hk.domain.store;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -47,4 +51,28 @@ public class Store implements Serializable {
     public void setPrefix(String prefix) {
         this.prefix = prefix;
     }
+
+    @Override
+    public String toString() {
+        return id != null ? id.toString() : "";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o instanceof Store) {
+            Store store = (Store) o;
+
+            return new EqualsBuilder().append(this.name, store.getName()).isEquals();
+        }
+
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder().append(this.name).toHashCode();
+    }
+
 }

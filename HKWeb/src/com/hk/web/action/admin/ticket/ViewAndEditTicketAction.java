@@ -70,7 +70,7 @@ public class ViewAndEditTicketAction extends BaseAction {
             addRedirectAlertMessage(new LocalizableMessage("/ViewAndEditTicketaction.nothing.to.change"));
         } else {
             DisplayTicketHistoryDto displayTicketHistoryDto = ticketManager.getLatestChangeDispayHistoryDto(ticketHistory, ticketHistory.getTicket());
-            getAdminEmailManager().sendEditTicketEmail(ticketHistory.getTicket(), displayTicketHistoryDto);
+//            getAdminEmailManager().sendEditTicketEmail(ticketHistory.getTicket(), displayTicketHistoryDto);
             addRedirectAlertMessage(new LocalizableMessage("/ViewAndEditTicketaction.edited"));
         }
         return new RedirectResolution(ViewAndEditTicketAction.class).addParameter("ticket", ticketHistoryDto.getTicket().getId());
