@@ -91,6 +91,21 @@
                 return false;
             });
 
+            $('.delieverSO').click(function() {
+                var proceed = confirm('You should mark orders delieverd only if they have only drop ship products. Continue? ');
+                if (!proceed) return false;
+
+                var clickedLink = $(this);
+                $.getJSON(clickedLink.attr('href'), function(res) {
+                    if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+                        alert(res.message);
+                        window.location.reload();
+                    }
+                });
+
+                return false;
+            });
+            
             $('.cancelSO').click(function() {
                 var proceed = confirm('Are you sure you want to cancel shipping order?');
                 if (!proceed) return false;
