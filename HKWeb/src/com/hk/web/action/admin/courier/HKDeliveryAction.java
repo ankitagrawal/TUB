@@ -29,10 +29,15 @@ import javax.servlet.http.HttpServletResponse;
 
 public class HKDeliveryAction extends BaseAction {
 
-    private String                trackingId;
     private File                  xlsFile;
     private SimpleDateFormat      sdf;
     private List<ShippingOrder>   shippingOrderList;
+    private String                assignedTo;
+    private int                   totalPackets;
+    private int                   totalCODPackets = 0;
+    private int                   totalPrepaidPackets = 0;
+    private double                totalCODAmount = 0.0;
+    List<String>                  trackingIdList=new ArrayList<String>();
     @Autowired
     ShippingOrderService          shippingOrderService;
 
@@ -47,16 +52,22 @@ public class HKDeliveryAction extends BaseAction {
     }
 
     public Resolution downloadDeliveryWorkSheet() {
-        String[] trackingIds = trackingId.split(",");
         ShippingOrder shippingOrder = null;
         shippingOrderList = new ArrayList<ShippingOrder>();
-        for (String trackingNum : trackingIds) {
+        for (String trackingNum : trackingIdList) {
             shippingOrder = shippingOrderService.findByTrackingId(trackingNum);
             if (shippingOrder != null) {
+                if(shippingOrder.getBaseOrder().getPayment().getPaymentMode().equals("COD")){
+                        ++totalCODPackets;
+                    totalCODAmount=totalCODAmount+shippingOrder.getBaseOrder().getPayment().getAmount();
+                }  else{
+                    ++totalPrepaidPackets;
+                }
                 shippingOrderList.add(shippingOrder);
             }
             continue;
         }
+        totalPackets=shippingOrderList.size();
 
         try {
             sdf = new SimpleDateFormat("yyyyMMdd");
@@ -164,7 +175,7 @@ public class HKDeliveryAction extends BaseAction {
         }
         Date currentDate=new Date();
         setCellValue(row, 0, CourierConstants.HKD_WORKSHEET_NAME);
-        setCellValue(row, 1, "");
+        setCellValue(row, 1, assignedTo);
         setCellValue(row, 2, CourierConstants.HKD_WORKSHEET_MOBILE);
         setCellValue(row, 3, CourierConstants.HKD_WORKSHEET_DATE);
         setCellValue(row, 4,  currentDate+"");
@@ -177,11 +188,11 @@ public class HKDeliveryAction extends BaseAction {
             cell.setCellStyle(style);
         }
         setCellValue(row, 0, CourierConstants.HKD_WORKSHEET_TOTALPKTS);
-        setCellValue(row, 1, "");
-        setCellValue(row, 2, CourierConstants.HKD_WORKSHEET_TOTAL_PREPAID_BOX);
+        setCellValue(row, 1, totalPackets+"");
+        setCellValue(row, 2, CourierConstants.HKD_WORKSHEET_TOTAL_PREPAID_BOX+totalPrepaidPackets);
         setCellValue(row, 3, CourierConstants.HKD_WORKSHEET_TOTAL_COD_BOX);
-        setCellValue(row, 4, "");
-        setCellValue(row, 5, CourierConstants.HKD_WORKSHEET_TOTAL_COD_AMT);
+        setCellValue(row, 4, totalCODPackets+"");
+        setCellValue(row, 5, CourierConstants.HKD_WORKSHEET_TOTAL_COD_AMT+totalCODAmount);
         addEmptyLine(row, sheet1, ++rowCounter, cell);
 
         row = sheet1.createRow(++rowCounter);
@@ -222,6 +233,7 @@ public class HKDeliveryAction extends BaseAction {
             }
             awbNumber = shippingOrderList.get(index).getShipment().getTrackingId();
             name = shippingOrderList.get(index).getBaseOrder().getAddress().getName();
+            name=name.toUpperCase();
             line1 = shippingOrderList.get(index).getBaseOrder().getAddress().getLine1();
             line2 = shippingOrderList.get(index).getBaseOrder().getAddress().getLine2();
             city = shippingOrderList.get(index).getBaseOrder().getAddress().getCity();
@@ -238,7 +250,7 @@ public class HKDeliveryAction extends BaseAction {
             if (paymentMode.equals("COD")) {
                 setCellValue(row, 3, CourierConstants.HKD_WORKSHEET_COD + paymentAmt);
             } else {
-                setCellValue(row, 3, CourierConstants.HKD_WORKSHEET_PREPAID + paymentAmt);
+                setCellValue(row, 3, CourierConstants.HKD_WORKSHEET_PREPAID );
 
             }
             setCellValue(row, 4, receivedDetails);
@@ -300,12 +312,19 @@ public class HKDeliveryAction extends BaseAction {
 
     }
 
-
-    public String getTrackingId() {
-        return trackingId;
+    public String getAssignedTo() {
+        return assignedTo;
     }
 
-    public void setTrackingId(String trackingId) {
-        this.trackingId = trackingId;
+    public void setAssignedTo(String assignedTo) {
+        this.assignedTo = assignedTo;
+    }
+
+    public List<String> getTrackingIdList() {
+        return trackingIdList;
+    }
+
+    public void setTrackingIdList(List<String> trackingIdList) {
+        this.trackingIdList = trackingIdList;
     }
 }

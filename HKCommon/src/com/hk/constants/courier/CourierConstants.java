@@ -76,7 +76,7 @@ public class CourierConstants {
     public static final String HKD_WORKSHEET_TOTAL_COD_BOX = "TOTAL COD BOX:";
     public static final String HKD_WORKSHEET_TOTAL_COD_AMT = "TOTAL COD AMT:";
     public static final String HKD_WORKSHEET_COD = "COD :";
-    public static final String HKD_WORKSHEET_PREPAID = "Pre-Paid:";
+    public static final String HKD_WORKSHEET_PREPAID = "Pre-Paid";
 
     public static final String HKD_WORKSHEET_COD_CASH = "TOTAL COD CASH RCVD:";
     public static final String HKD_WORKSHEET_PENDING_COD = "PENDING COD AMT:";
