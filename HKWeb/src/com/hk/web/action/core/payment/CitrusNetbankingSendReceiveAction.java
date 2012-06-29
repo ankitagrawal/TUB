@@ -68,6 +68,14 @@ public class CitrusNetbankingSendReceiveAction extends BasePaymentGatewaySendRec
         cust.setLastName("HK");
         cust.setPhoneNumber(address.getPhone());
 
+        com.citruspay.pg.model.Address addressDummy = new com.citruspay.pg.model.Address();
+        addressDummy.setAddressCity("PUNE");
+        addressDummy.setAddressCountry("India");
+        addressDummy.setAddressState("MH");
+        addressDummy.setAddressStreet1("Test");
+        addressDummy.setAddressStreet2("Test");
+        addressDummy.setAddressZip("411045");
+
         params.put(CitrusPaymentGatewayWrapper.merchantAccessKey, properties.get(CitrusPaymentGatewayWrapper.merchantAccessKey));
         params.put("bankName", "SBI BANK");
         params.put(CitrusPaymentGatewayWrapper.transactionId, merchantTxnId);
@@ -75,6 +83,7 @@ public class CitrusNetbankingSendReceiveAction extends BasePaymentGatewaySendRec
         params.put(CitrusPaymentGatewayWrapper.returnUrl, linkManager.getCitrusPaymentGatewayUrl());
         params.put("card", card);
         params.put("customer", cust);
+        params.put("add", addressDummy);
 
         com.citruspay.pg.model.Transaction txn = null;
         try {
