@@ -2,6 +2,9 @@ package com.hk.web.action.report;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.manager.BinManager;
+import com.hk.admin.pact.dao.inventory.GrnLineItemDao;
+import com.hk.admin.pact.dao.inventory.ReconciliationVoucherDao;
+import com.hk.admin.pact.dao.inventory.StockTransferDao;
 import com.hk.admin.pact.dao.warehouse.BinDao;
 import com.hk.constants.core.Keys;
 import com.hk.constants.report.ReportConstants;
@@ -18,10 +21,10 @@ import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -52,6 +55,12 @@ public class BinAllocationReport extends BaseAction {
   BinManager binManager;
   @Autowired
   BinDao binDao;
+  @Autowired
+  GrnLineItemDao grnLineItemDao;
+  @Autowired
+  StockTransferDao stockTransferDao;
+  @Autowired
+  ReconciliationVoucherDao reconciliationVoucherDao;
 
 
   @DefaultHandler
@@ -112,7 +121,7 @@ public class BinAllocationReport extends BaseAction {
     HkXlsWriter xlsWriter = new HkXlsWriter();
     xlsWriter.addHeader(ReportConstants.PRODUCT_VARIANT_ID, ReportConstants.PRODUCT_VARIANT_ID);
     xlsWriter.addHeader(ReportConstants.PRODUCT_NAME, ReportConstants.PRODUCT_NAME);
-    xlsWriter.addHeader(ReportConstants.HK_Barcode, ReportConstants.HK_Barcode);
+    xlsWriter.addHeader(ReportConstants.HK_BARCODE, ReportConstants.HK_BARCODE);
     xlsWriter.addHeader(ReportConstants.MRP, ReportConstants.MRP);
     xlsWriter.addHeader(ReportConstants.LOCATION, ReportConstants.LOCATION);
     int rowCounter = 0;
@@ -141,17 +150,31 @@ public class BinAllocationReport extends BaseAction {
 
     Set<Map.Entry<SkuGroup, Bin>> skuGroupSet = skuGroupBinMap.entrySet();
     for (Map.Entry<SkuGroup, Bin> entry : skuGroupSet) {
+      SkuGroup skugroup = entry.getKey();
       ProductVariant productVariant = entry.getKey().getSku().getProductVariant();
       String productVariantId = productVariant.getId();
       String productVariantName = productVariant.getProduct().getName();
-      String mrp = Double.toString(productVariant.getMarkedPrice());
+      String markedPrice = null;
+      if (skugroup.getGoodsReceivedNote() != null) {
+        Double mrp = grnLineItemDao.getGrnLineItem(skugroup.getGoodsReceivedNote(), productVariant).getMrp();
+        markedPrice = Double.toString(mrp);
+      } else if (skugroup.getReconciliationVoucher() != null) {
+        Double mrp = reconciliationVoucherDao.getRvLineItem(skugroup.getReconciliationVoucher(), skugroup.getSku()).getMrp();
+        markedPrice = Double.toString(mrp);
+      } else if (skugroup.getStockTransfer() != null) {
+        Double mrp = stockTransferDao.getStockTransferLineItem(skugroup.getStockTransfer(), productVariant).getMrp();
+        markedPrice = Double.toString(mrp);
+      } else {
+        markedPrice = Double.toString(skugroup.getSku().getProductVariant().getMarkedPrice());
+      }
+
       String Location = entry.getValue().getBarcode();
 
       rowCounter++;
       xlsWriter.addCell(rowCounter, productVariantId);
       xlsWriter.addCell(rowCounter, productVariantName);
       xlsWriter.addCell(rowCounter, entry.getKey().getBarcode());
-      xlsWriter.addCell(rowCounter, mrp);
+      xlsWriter.addCell(rowCounter, markedPrice);
       xlsWriter.addCell(rowCounter, Location);
     }
     return xlsWriter.writeData(xslFilePath);
