@@ -6,124 +6,146 @@
 <s:useActionBean beanclass="com.hk.web.action.admin.courier.HKDeliveryAction" var="hkdBean"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Healthkart Delivery">
 
-<s:layout-component name="htmlHead">
-    <script type="text/javascript">
-      $(document).ready(function() {
-
-          /*function to add new row.*/
-        $('.addRowButton').click(function() {
-
-          var lastIndex = $('.lastRow').attr('count');
-          if (!lastIndex) {
-            lastIndex = -1;
-          }
-          $('.lastRow').removeClass('lastRow');
-
-          var nextIndex = eval(lastIndex + "+1");
-
-            var newRowHtml =
-              '<tr count="' + nextIndex + '" class="lastRow lineItemRow">' +
-              '  <td>' +
-              '    <input type="text"  name="trackingIdList[' + nextIndex + ']"/>' +
-              '  </td>' +
-              '</tr>';
-          $('#awbTable').append(newRowHtml);
-          $('#awbNumber').focus();
+    <s:layout-component name="htmlHead">
+        <script type="text/javascript">
+            $(document).ready(function() {
 
 
-          return false;
-        });
+                function stopRKey(evt) {
+                    var evt = (evt) ? evt : ((event) ? event : null);
+                    var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
 
-          /*function to delete last row.*/
-          $('.removeRowButton').click(function() {
-              $('#awbTable tr:last').remove();
+                    /*Checking if key pressed is enter then add another row in awbTable body.*/
+                    if ((evt.keyCode == 13) && (node.type == "text")) {
 
+                        /*function to add new row.*/
+                        /*getting last row index using its attribute count*/
+                        var lastIndex = $('.lastRow').attr('count');
+                        if (!lastIndex) {
+                            lastIndex = -1;
+                        }
+                        /* removing the 'class' attribute of <tr> .Earlier it was 'lastRow lineItemRow',now removing 'lastRow' from it,so that
+                         * its no more the last one.*/
+                        $('.lastRow').removeClass('lastRow');
+
+                        var nextIndex = eval(lastIndex + "+1");
+
+                        var newRowHtml =
+                                '<tr count="' + nextIndex + '" class="lastRow lineItemRow" id="awbTableTr' + nextIndex + '">' +
+                                '  <td>' +
+                                '    <input type="text" id="trackingIdList' + nextIndex + '" name="trackingIdList[' + nextIndex + ']"/>' +
+                                '  </td>' +
+                                '</tr>';
+
+                        /*appending the new row*/
+                        $('#awbTable').append(newRowHtml);
+                        var elmId = '#trackingIdList' + nextIndex;
+                        $(elmId).focus();
+                        return false;
+
+
+                    }
+                }
+
+                /*calling stopRKey on pressing any key.*/
+                document.onkeypress = stopRKey;
+
+
+                /*setting focus on first Awb Number text onbodyload*/
+                $('#trackingIdList0').focus();
+
+
+                /*function to delete last row.*/
+                $('.removeRowButton').click(function() {
+
+                    /*Fetching last row index.*/
+                    var lastIndex = $('.lastRow').attr('count');
+
+                    /*checking if index is 0 then don't delete the row,else delete it.*/
+                    if (lastIndex == 0) {
+                        return false;
+                    } else {
+                        $('#awbTable tr:last').remove();
+                        /*After deleting the row,changing the class attribute from 'lineItemRow' to 'lastRow lineItemRow' to make it the last row. */
+                        var previousIndex = eval(lastIndex + "-1");
+                        var previousRow = "#awbTableTr" + previousIndex;
+                        $(previousRow).removeClass("lineItemRow").addClass("lastRow lineItemRow");
+                    }
                     return false;
-                  });
+                });
 
+            });
 
-      });
+        </script>
 
+        <style type="text/css">
 
-      function stopRKey(evt) {
-          var evt = (evt) ? evt : ((event) ? event : null);
-          var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
-          if ((evt.keyCode == 13) && (node.type == "text")) {
-              //$('#qty').focus();
-              alert("hello");
-              return false;
-          }
-      }
+            fieldset input[type="text"], input[type="text"] {
+                font-size: 14px;
+                padding: 2px;
+                height: 18px;
+                width: 200px;
+                max-width: 300px;
+            }
 
-      $('#barcode').keydown(stopRKey);
-      $('#barcode').keydown(function() {
-          $('.error, .messages, #savedVariant').html("");
-      });
+        </style>
 
+    </s:layout-component>
 
-    </script>
+    <s:layout-component name="content">
+        <div class="hkDeliveryWorksheetBox">
+            <s:form beanclass="com.hk.web.action.admin.courier.HKDeliveryAction">
+                <fieldset class="right_label">
+                    <legend>Download Healthkart Delivery Worksheet</legend>
+                    <ul>
 
-    <style type="text/css">
+                        <li>
+                            <label style="font-size:medium;">Assigned to:</label><s:text name="assignedTo"/>
+                        </li>
+                        <br>
+                        <li>
+                            <table border="1">
+                                <thead>
+                                <tr>
+                                    <th style="width:200px;font-size:medium;">&nbsp;&nbsp;&nbsp;&nbsp;AWB Number</th>
+                                </tr>
+                                </thead>
 
-        fieldset input[type="text"], input[type="text"] {
-            font-size: 14px;
-            padding: 2px;
-            height: 18px;
-            width: 200px;
-            max-width: 300px;
-        }
+                                <tbody id="awbTable">
+                                <tr count="0" class="lastRow lineItemRow" id="awbTableTr0">
+                                    <td>
+                                        <input type="text" id="trackingIdList0" name="trackingIdList[0]"/>
+                                    </td>
+                                </tr>
+                                <c:forEach var="trackingIdList" items="${hkdBean.trackingIdList}" varStatus="ctr">
+                                    <tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
+                                        <td>
+                                                ${trackingIdList}
+                                        </td>
+                                    </tr>
 
-    </style>
+                                </c:forEach>
+                                </tbody>
+                            </table>
 
-</s:layout-component>
+                        </li>
+                        <li>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="hkDeliveryWorksheet.jsp#" class="removeRowButton"
+                               style="font-size:1.2em;color:blue;">Remove row</a>
 
-<s:layout-component name="content">
-<div class="hkDeliveryWorksheetBox">
-  <s:form beanclass="com.hk.web.action.admin.courier.HKDeliveryAction">
-    <fieldset class="right_label">
-      <legend>Download Healthkart Delivery Worksheet</legend>
-      <ul>
+                        </li>
+                        <li>
+                            <s:submit name="downloadDeliveryWorkSheet" value="Download Delivery Worksheet"
+                                      class="verifyData"/>
 
-          <li>
-              <label style="font-size:medium;">Assigned to:</label><s:text name="assignedTo"/>
-          </li>
-          <br>
-          <li>
-              <table border="1">
-                  <thead>
-                  <tr>
-                      <th style="width:200px;font-size:medium;">&nbsp;&nbsp;&nbsp;&nbsp;AWB Number</th>
-                  </tr>
-                  </thead>
+                        </li>
+                    </ul>
+                </fieldset>
+            </s:form>
+        </div>
 
-                  <tbody id="awbTable">
-                  <c:forEach var="trackingIdList" items="${hkdBean.trackingIdList}" varStatus="ctr">
-                      <tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
-                          <td>
-                                  ${trackingIdList}
-                          </td>
-                      </tr>
-                  </c:forEach>
-                  </tbody>
-              </table>
-
-          </li>
-          <li>
-              <a href="hkDeliveryWorksheet.jsp#" class="addRowButton" style="font-size:1.2em;color:blue;">Add new row</a>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <a href="hkDeliveryWorksheet.jsp#" class="removeRowButton" style="font-size:1.2em;color:blue;">Remove row</a>
-
-          </li>
-        <li>
-          <s:submit name="downloadDeliveryWorkSheet" value="Download Delivery Worksheet" class="verifyData"/>
-
-        </li>
-      </ul>
-    </fieldset>
-  </s:form>
-</div>
-
-</s:layout-component>
+    </s:layout-component>
 </s:layout-render>
 <%--
 <script type="text/javascript">
