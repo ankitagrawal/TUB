@@ -7671,7 +7671,7 @@
     </changeSet>
     <changeSet author="Tarun" id="1340949623064-3">
       <sql>
-        UPDATE `purchase_invoice` SET  `reconcilation_date='2012-06-29 11:00:00' WHERE `reconciled`=1 AND `reconcilation_date` IS NULL;
+        UPDATE `purchase_invoice` SET `reconcilation_date`='2012-06-29 11:00:00' WHERE `reconciled`=1 AND `reconcilation_date` IS NULL;
       </sql>
     </changeSet>
 </databaseChangeLog>
