@@ -32,8 +32,10 @@ public interface AdminProductVariantInventoryDao extends BaseDao {
 
     public List<ProductVariantInventory> getCheckedOutSkuItems(ShippingOrder shippingOrder, LineItem lineItem);
 
+/*
     public List<CreateInventoryFileDto> getDetailsForUncheckedItems(String brand);
-    
+*/
+
     public List<CreateInventoryFileDto> getDetailsForUncheckedItems(String brand, Warehouse warehouse);
     
     public Long getCheckedinItemCountForStockTransferLineItem(StockTransferLineItem stockTransferLineItem) ;

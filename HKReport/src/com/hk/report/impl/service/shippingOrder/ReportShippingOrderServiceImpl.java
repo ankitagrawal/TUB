@@ -17,6 +17,7 @@ import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.report.dto.order.OrderLifecycleStateTransitionDto;
 import com.hk.report.dto.order.reconcilation.ReconcilationReportDto;
 import com.hk.report.pact.dao.order.ReportOrderDao;
@@ -623,8 +624,8 @@ public class ReportShippingOrderServiceImpl implements ReportShippingOrderServic
         return stateTransitionDtos;
     }
 
-    public List<ShippingOrder> getShippingOrderListForCouriers(Date startDate,Date endDate,List<Courier> courierList){
-        return getReportShippingOrderDao().getShippingOrderListForCouriers(startDate,endDate,courierList);
+    public List<ShippingOrder> getShippingOrderListForCouriers(Date startDate,Date endDate,List<Courier> courierList, Warehouse warehouse){
+        return getReportShippingOrderDao().getShippingOrderListForCouriers(startDate,endDate,courierList,warehouse);
     }
 
     public ReportShippingOrderDao getReportShippingOrderDao() {

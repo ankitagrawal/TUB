@@ -20,7 +20,6 @@ import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.user.User;
-import com.hk.domain.clm.KarmaProfile;
 import com.hk.dto.user.UserFilterDto;
 import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.clm.KarmaProfileService;

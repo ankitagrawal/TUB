@@ -489,6 +489,13 @@ public class BaseUtils {
     else
       return false;
   }
- 
+
+  public static String getCommaSeparatedString(String[] list) {
+    String commaSeparatedString = "";
+    for(String s : list) {
+      commaSeparatedString += s + "','";
+    }
+    return commaSeparatedString.substring(0, commaSeparatedString.lastIndexOf(",")-1);
+  }
 
 }
