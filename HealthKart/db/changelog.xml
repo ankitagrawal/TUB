@@ -7741,4 +7741,5 @@
       <sql>
         UPDATE `purchase_invoice` SET `reconcilation_date`='2012-06-29 11:00:00' WHERE `reconciled`=1 AND `reconcilation_date` IS NULL;
       </sql>
+    </changeSet>
 </databaseChangeLog>
