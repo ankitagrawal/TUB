@@ -5,6 +5,7 @@ import com.hk.domain.catalog.category.Category;
 
 /**
  * @author vaibhav.adlakha
+
  */
 public class BasketCategory implements Comparable<BasketCategory> {
 
