@@ -147,30 +147,5 @@
 
     </s:layout-component>
 </s:layout-render>
-<%--
-<script type="text/javascript">
-
-    $(document).ready(function() {
-        var awbNumber = "";
-        $('.verifyData').click(function() {
-            var lastIndex = $('.lastRow').attr('count');
-                      if (!lastIndex) {
-                        lastIndex = -1;
-                      }
-                      $('.lastRow').removeClass('lastRow');
-
-            lastIndex=eval(lastIndex + "+1");
-            alert ("no of rows"+lastIndex);
-            $('#awbTable tr td').each(function() {
-                awbNumber = $(this).find(".awbNumber").html();
-                alert("awb" + awbNumber);
-            });
-
-
-        });
-    });
-    
-</script>
---%>
 
 
