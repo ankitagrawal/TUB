@@ -79,7 +79,7 @@
 <%--<div id="shippingOrder-${shippingOrder.id}" class="detailDiv">--%>
 <td id="shippingOrderDetail-${shippingOrder.id}">
     <div class="floatleft">
-        Store ID: <strong>${shippingOrder.baseOrder.store.prefix}</strong>
+        Store ID: <strong>${shippingOrder.baseOrder.store.prefix}</strong>, Score: ${shippingOrder.baseOrder.score} 
     </div>
     <div class="clear" style=""></div>
     <div class="floatleft">
@@ -107,6 +107,10 @@
         <div class="clear"></div>
         <div class="floatleft">
             Escalted On: <fmt:formatDate value="${(hk:getEscalationDate(shippingOrder))}" type="both" timeStyle="short"/>
+        </div>
+        <div class="clear"></div>
+         <div class="floatleft">
+            Placed On : <fmt:formatDate value="${shippingOrder.baseOrder.payment.paymentDate}" type="date"/>
         </div>
         <div class="clear"></div>
     </c:if>
@@ -166,6 +170,11 @@
                                  class="cancelSO">
             <s:param name="shippingOrder" value="${shippingOrder}"/>
             Cancel SO
+        </s:link>)
+        &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction" event="delieverDropShippingOrder"
+                                 class="delieverSO">
+            <s:param name="shippingOrder" value="${shippingOrder}"/>
+            Mark SO Delivered 
         </s:link>)
         </c:if>
         <c:if test="${isSearchShippingOrder}">

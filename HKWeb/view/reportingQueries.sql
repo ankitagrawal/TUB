@@ -9,7 +9,7 @@ from
   left join coupon c on c.id = of.coupon_id
 where
   o.order_status_id in (30,40) and
-  o.user_id in (select distinct o.user_id from offer_instance o left join coupon c on c.id = o.coupon_id where c.code like 'MOB%HK')
+  o.user_id in (select distinct o.user_id from offer_instance o left join coupon c on c.id = o.coupon_id where c.code like 'VSHK15')
 ;
 
 select
@@ -19,8 +19,8 @@ from
   left join offer_instance of on o.offer_instance_id = of.id
   left join coupon c on c.id = of.coupon_id
 where
-  o.order_status_id in (30,40) and
-  o.user_id in (select distinct o.user_id from offer_instance o where o.offer_id = 1128)
+  o.order_status_id in (10, 15, 20, 30,40) and
+  o.user_id in (select distinct o.user_id from offer_instance o where o.offer_id = 1238)
 ;
 
 /* referral order count */
@@ -53,14 +53,15 @@ where
 
 /* find no of orders placed using a certain offer */
 select
-  o.id, o.amount, c.code, c.complimentary_coupon, os.name
+  o.id, o.amount, c.code, c.complimentary_coupon, os.name, p.payment_date
 from
   base_order o
   left join offer_instance of on o.offer_instance_id = of.id
   left join coupon c on c.id = of.coupon_id
   left join order_status os on o.order_status_id = os.id
+  left join payment p on p.id = o.payment_id
 where
-  of.offer_id = 1128;
+  of.offer_id = 1238;
 
 /* query to find total value of orders places using a certain offer id */
 select
@@ -111,7 +112,7 @@ select
 
 
 /* find no of coupons used in fb viral coupon campaign */
-select count(*) from fbcoupon_coupon where coupon_use_count = 1 and fbcoupon_campaign_code = "sports-launch";
+select * from fbcoupon_coupon where coupon_use_count = 1 and fbcoupon_campaign_code = "lwdi-launch";
 /*find no of new fbusers since a particular date */
 select count(*) from fbcoupon_user where create_date > "2011-11-23 00:00:00";
 

@@ -261,7 +261,7 @@ public class PaymentManager {
             order = getOrderManager().orderPaymentReceieved(payment);
 
             // Adding online payment cashback reward points for Orders above 1000.
-            HttpServletRequest httpRequest = WebContext.getRequest();
+            /*HttpServletRequest httpRequest = WebContext.getRequest();
             HttpServletResponse httpResponse = WebContext.getResponse();
             if (httpRequest.getCookies() != null) {
               for (Cookie cookie : httpRequest.getCookies()) {
@@ -282,7 +282,7 @@ public class PaymentManager {
             Cookie wantedCODCookie = new Cookie(HealthkartConstants.Cookie.wantedCOD, "false");
             wantedCODCookie.setPath("/");
             wantedCODCookie.setMaxAge(0);
-            httpResponse.addCookie(wantedCODCookie);
+            httpResponse.addCookie(wantedCODCookie);*/
         }
         return order;
     }

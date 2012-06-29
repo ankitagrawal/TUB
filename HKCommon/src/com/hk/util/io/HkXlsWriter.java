@@ -164,7 +164,7 @@ public class HkXlsWriter implements HkWriter {
       }
     }
 
-    xlsWriter.writeData("D:" + "/" + "test.xls");
+    xlsWriter.writeData("E:" + "\\" + "test.xls");
 
   }
 
