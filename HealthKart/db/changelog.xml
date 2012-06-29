@@ -7686,4 +7686,48 @@
         <addForeignKeyConstraint baseColumnNames="store_id" baseTableName="store_product"  constraintName="fk_store_product_price_store1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="store"  referencesUniqueColumn="false"/>
     </changeSet>
 
+    <changeSet author="Rahul (generated)" id="1340900951137-1">
+        <createTable tableName="replacement_order">
+            <column name="so_ro_id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueNumeric="0" name="is_rto" type="TINYINT"/>
+            <column name="ref_shipping_order_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1340900951137-2">
+        <addColumn tableName="discount_coupon_mailing_list">
+            <column name="paid" type="TINYINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1340900951137-3">
+        <addColumn tableName="product">
+            <column defaultValue="0" name="adv_active" type="TINYINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1340900951137-4">
+        <addColumn tableName="product">
+            <column defaultValue="1" name="cod_allowed" type="TINYINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1340900951137-5">
+        <addColumn tableName="product_variant">
+            <column name="other_remark" type="VARCHAR(90)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1340900951137-6">
+        <addColumn tableName="product_variant">
+            <column name="standard_margin" type="DECIMAL(8,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1340900951137-7">
+        <addColumn tableName="product_variant">
+            <column name="supplier_code" type="VARCHAR(45)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1340900951137-10">
+        <addForeignKeyConstraint baseColumnNames="ref_shipping_order_id" baseTableName="replacement_order" constraintName="fk_replacement_order_shipping_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="shipping_order" referencesUniqueColumn="false"/>
+    </changeSet>
 </databaseChangeLog>
