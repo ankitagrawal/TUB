@@ -301,7 +301,7 @@ public class AdminEmailManager {
             }
 
             EmailRecepient emailRecepient = getEmailRecepientDao().getOrCreateEmailRecepient(excelMap.get(EmailMapKeyConstants.emailId).toString());
-            if (emailRecepient.isSubscribed()) {
+            if (emailRecepient.isEmailAllowed()) {
                 Boolean emailSentToRecepientRecently = Boolean.FALSE;
                 if (emailRecepient.getLastEmailDate() != null) {
                     Date lastDateCampaignMailSentToEmailRecepient = getEmailCampaignDao().getLastDateOfEmailCampaignMailSentToEmailRecepient(emailCampaign, emailRecepient);
