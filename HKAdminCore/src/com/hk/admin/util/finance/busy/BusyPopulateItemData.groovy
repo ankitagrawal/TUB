@@ -14,15 +14,28 @@ import org.slf4j.LoggerFactory
 
 public class BusyPopulateItemData {
 
-  private static org.slf4j.Logger logger = LoggerFactory.getLogger(BusyTableDataGenerator.class);
+  private String hostName;
+  private String dbName;
+  private String serverUser;
+  private String serverPassword;
+  Sql sql;
+  Sql busySql;
+  BusyPopulateItemData(String hostName, String dbName, String serverUser, String serverPassword){
+    this.hostName = hostName;
+    this.dbName = dbName;
+    this.serverUser = serverUser;
+    this.serverPassword = serverPassword;
 
-  static Sql sql = Sql.newInstance("jdbc:mysql://localhost:3306/healthkart_stag", "root",
-          "admin2K11!", "com.mysql.jdbc.Driver");
+    sql = Sql.newInstance("jdbc:mysql://"+hostName+":3306/"+dbName, serverUser,
+            serverPassword, "com.mysql.jdbc.Driver");
 
-  static Sql busySql = Sql.newInstance("jdbc:mysql://localhost:3306/healthkart_busy", "root",
-          "admin2K11!", "com.mysql.jdbc.Driver");
+    busySql = Sql.newInstance("jdbc:mysql://"+hostName+":3306/healthkart_busy", serverUser,
+            serverPassword, "com.mysql.jdbc.Driver");
+  }
+  private static org.slf4j.Logger logger = LoggerFactory.getLogger(BusyPopulateItemData.class);
 
-  public static void transactionHeaderForSalesGenerator() {
+
+  public void populateItemData() {
     String lastUpdateDate;
     busySql.eachRow("""
                     select max(create_date) as max_date
@@ -48,19 +61,21 @@ tax_rate_local,tax_rate_central ,item_description_1 , item_description_2 ,item_d
 
 SELECT  sk.id  ,
 	substring(concat(p.name,ifnull(pv.variant_name,'')),1,40) ,
- 	substring(concat(p.name,ifnull(pv.variant_name,'')),40,80) ,p.primary_category ,'Pcs',
+ 	substring(concat(p.name,ifnull(pv.variant_name,'')),41,40) ,p.primary_category ,'Pcs',
 	pv.hk_price ,
 	sk.cost_price ,
 	pv.marked_price ,
        t.value ,t.value ,
-	substring_index(in_view_pv_po_option.pv_options_concat,',',1) as item1,
- if (trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',1),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',2))= in_view_pv_po_option.pv_options_concat,NULL,
-trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',1),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',2)))as item2,
- if (trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',2),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',3))= in_view_pv_po_option.pv_options_concat,NULL,
-trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',2),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',3)))as item3,
-if (trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',3),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',4))= in_view_pv_po_option.pv_options_concat,NULL,
-trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',3),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',4))) as item4
-,0,p.create_date
+    left(if (trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',1),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',2))= in_view_pv_po_option.pv_options_concat,NULL,
+trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',1),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',2))),40)as item1,
+
+ left(if (trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',2),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',3))= in_view_pv_po_option.pv_options_concat,NULL,
+trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',2),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',3))),40)as item2,
+ left(if (trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',3),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',4))= in_view_pv_po_option.pv_options_concat,NULL,
+trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',3),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',4))),40)as item3,
+left(if (trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',4),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',5))= in_view_pv_po_option.pv_options_concat,NULL,
+trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',4),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',5))),40) as item4
+,0,sk.create_date
 
 
 FROM sku sk INNER JOIN product_variant pv ON sk.product_variant_id=pv.id
@@ -81,12 +96,7 @@ FROM sku sk INNER JOIN product_variant pv ON sk.product_variant_id=pv.id
      """);
     }
       catch (Exception e) {
-            logger.debug("Unable to insert in  item: ",e);
+            System.out.println("Unable to insert in  item: "+e.printStackTrace());
           }
-  }
-
-  
-  public static void main(String[] args){
-    transactionHeaderForSalesGenerator();
   }
 }

@@ -11,22 +11,37 @@ import groovy.sql.Sql
  */
 
 public class BusyTableTransactionGenerator {
+  private String dbName;
+  private String serverUser;
+  private String serverPassword;
+  private String hostName;
+  Sql sqlProd;
+  Sql sqlReport;
+
+  BusyTableTransactionGenerator(String hostName, String dbName, String serverUser, String serverPassword){
+    this.hostName = hostName;
+    this.dbName = dbName;
+    this.serverUser = serverUser;
+    this.serverPassword = serverPassword;
+
+    sqlProd = Sql.newInstance("jdbc:mysql://"+hostName+":3306/"+dbName, serverUser,
+            serverPassword, "com.mysql.jdbc.Driver");
+
+    sqlReport = Sql.newInstance("jdbc:mysql://"+hostName+":3306/healthkart_busy", serverUser,
+            serverPassword, "com.mysql.jdbc.Driver");
+  }
+
+//  private static org.slf4j.Logger Logger = LoggerFactory.getLogger(BusyTableTransactionGenerator.class);
 
 
-  static Sql sqlProd = Sql.newInstance("jdbc:mysql://182.18.148.240:3306/healthkart_stag", "root",
-          "admin2K11!", "com.mysql.jdbc.Driver");
-
-  static Sql sqlReport = Sql.newInstance("jdbc:mysql://182.18.148.240:3306/healthkart_busy", "root",
-          "admin2K11!", "com.mysql.jdbc.Driver");
-
-  public static void main(String[] args) {
+  public void populatePurchaseData() {
 
     // create_date is date on which record is created in DB.
 
     String lastUpdateDate;
 
 
-    sqlReport.eachRow("""  SELECT  max(create_date) as lastDate FROM  transaction_header where vch_type = 2  """) {
+    sqlReport.eachRow("""  SELECT  max(create_date) as lastDate FROM  transaction_header where vch_type = 2  """)   {
 
       updateRow ->
 
@@ -53,7 +68,7 @@ public class BusyTableTransactionGenerator {
 
                            INNER JOIN  warehouse w ON  w.id=pv.warehouse_id  WHERE
                            pv.reconcilation_date > ${lastUpdateDate}
-                           pv.reconciled = 1  
+                           and pv.reconciled = 1  
                            and pv.create_date > '2011-11-08 16:10:50'   """) {
 
         purchaseRow ->
@@ -162,7 +177,7 @@ public class BusyTableTransactionGenerator {
 
 
           } catch (Exception e1) {
-            logger.debug("insertion into transaction_body is failed",e1);
+//            Logger.debug("insertion into transaction_body is failed",e1);
           }
 
 

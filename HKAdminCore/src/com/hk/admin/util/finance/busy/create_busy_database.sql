@@ -107,56 +107,6 @@ ALTER TABLE `transaction_body`
   ADD CONSTRAINT `fk_transaction_body_transaction_header1` FOREIGN KEY (`vch_code`) REFERENCES `transaction_header` (`vch_code`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 
-
-
-
-
- USE healthkart_stag;
-
-INSERT INTO healthkart_busy.item_detail(item_code ,item_name ,print_name ,parent_group ,unit,sale_price ,purchase_price ,mrp ,
-tax_rate_local,tax_rate_central ,item_description_1 , item_description_2 ,item_description_3 ,item_description_4 ,
- imported,create_date)
-
-
-SELECT  sk.id  ,
-	substring(concat(p.name,ifnull(pv.variant_name,'')),1,40) ,
-	p.name ,p.primary_category ,'Pcs',
-	pv.hk_price ,
-	sk.cost_price ,
-	pv.marked_price ,
-       t.value ,t.value ,
-	substring_index(in_view_pv_po_option.pv_options_concat,',',1) as item1,
- if (trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',1),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',2))= in_view_pv_po_option.pv_options_concat,NULL,
-trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',1),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',2)))as item2,
- if (trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',2),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',3))= in_view_pv_po_option.pv_options_concat,NULL,
-trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',2),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',3)))as item3,
-if (trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',3),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',4))= in_view_pv_po_option.pv_options_concat,NULL,
-trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',3),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',4))) as item4
-,0,p.create_date
-
-
-FROM sku sk INNER JOIN product_variant pv ON sk.product_variant_id=pv.id
-            INNER JOIN product p ON pv.product_id=p.id
-            INNER JOIN tax t   ON sk.tax_id=t.id
-	    INNER JOIN
-	(select pv.id AS product_variant_id,
-      group_concat(concat( po.name ,':',po.value ) )as pv_options_concat
-      from ((product_variant pv LEFT JOIN
-            product_variant_has_product_option pvpo
-            on((pv.id = pvpo.product_variant_id))) LEFT JOIN
-               product_option po on((po.id = pvpo.product_option_id)))
-      group by pv.id)in_view_pv_po_option
-
-	   on in_view_pv_po_option.product_variant_id = pv.id
-;
-
-INSERT INTO `healthkart_busy`.`supplier` (`id`, `name`, `line1`, `line2`, `city`, `state`, `pincode`, `contact_person`, `contact_number`, `tin_number`, `create_date`)
-SELECT `id`, `name`, `line1`, `line2`, `city`, `state`, `pincode`, `contact_person`, `contact_number`, `tin_number`, `create_date` FROM supplier;
-
-USE `healthkart_busy`;
-
-
-
 CREATE USER 'busy'@'%' IDENTIFIED BY  PASSWORD '*705DCD757EB6D508C832EE2E7FC5D592D7A38680';
 
 GRANT USAGE ON * . * TO  'busy'@'%' WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0 ;

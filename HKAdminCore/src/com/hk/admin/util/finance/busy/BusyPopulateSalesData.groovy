@@ -13,16 +13,28 @@ import org.slf4j.LoggerFactory
 
 
 public class BusyPopulateSalesData {
+  private String hostName;
+  private String dbName;
+  private String serverUser;
+  private String serverPassword;
+  Sql sql;
+  Sql busySql;
 
-  private static org.slf4j.Logger logger = LoggerFactory.getLogger(BusyTableDataGenerator.class);
+  BusyPopulateSalesData(String hostName, String dbName, String serverUser, String serverPassword){
+    this.hostName = hostName;
+    this.dbName = dbName;
+    this.serverUser = serverUser;
+    this.serverPassword = serverPassword;
 
-  static Sql sql = Sql.newInstance("jdbc:mysql://localhost:3306/healthkart_stag", "root",
-          "admin2K11!", "com.mysql.jdbc.Driver");
+    sql = Sql.newInstance("jdbc:mysql://"+hostName+":3306/"+dbName, serverUser,
+            serverPassword, "com.mysql.jdbc.Driver");
 
-  static Sql busySql = Sql.newInstance("jdbc:mysql://localhost:3306/healthkart_busy", "root",
-          "admin2K11!", "com.mysql.jdbc.Driver");
+    busySql = Sql.newInstance("jdbc:mysql://"+hostName+":3306/healthkart_busy", serverUser,
+            serverPassword, "com.mysql.jdbc.Driver");
+  }
+  private static org.slf4j.Logger logger = LoggerFactory.getLogger(BusyPopulateSalesData.class);
 
-  public static void transactionHeaderForSalesGenerator() {
+  public void transactionHeaderForSalesGenerator() {
     String lastUpdateDate;
     busySql.eachRow("""
                     select max(create_date) as max_date
@@ -176,7 +188,7 @@ public class BusyPopulateSalesData {
     }
   }
 
-    public static void transactionBodyForSalesGenerator(Long vch_code, Long shipping_order_id) {
+    public void transactionBodyForSalesGenerator(Long vch_code, Long shipping_order_id) {
       int s_no = 0;
       sql.eachRow("""
                       select li.id, li.sku_id, li.qty, li.marked_price, li.hk_price, li.discount_on_hk_price, li.reward_point_discount,
@@ -219,7 +231,7 @@ public class BusyPopulateSalesData {
   }
 
 
-  public static void transactionFooterForSalesGenerator(Long vch_code, Long shipping_order_id) {
+  public void transactionFooterForSalesGenerator(Long vch_code, Long shipping_order_id) {
     sql.eachRow("""
                     select sum(shipping_charge) as shipping_charge, sum(cod_charge) as cod_charge
                     from line_item li
@@ -258,8 +270,4 @@ public class BusyPopulateSalesData {
           }
     }
 }
-  
-  public static void main(String[] args){
-    transactionHeaderForSalesGenerator();
-  }
 }
