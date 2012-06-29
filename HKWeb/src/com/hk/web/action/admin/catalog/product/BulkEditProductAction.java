@@ -11,6 +11,7 @@ import java.util.Set;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.JsonResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.SimpleError;
@@ -40,6 +41,7 @@ import com.hk.pact.dao.catalog.product.ProductDao;
 import com.hk.pact.dao.core.SupplierDao;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.catalog.ProductVariantService;
+import com.hk.web.HealthkartResponse;
 import com.hk.web.action.error.AdminPermissionAction;
 
 @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PRODUCT_CATALOG}, authActionBean = AdminPermissionAction.class)
@@ -53,6 +55,7 @@ public class BulkEditProductAction extends BasePaginatedAction {
   List<String> secondaryCategory;
   List<String> supplierTin;
   String brand;
+  String productVariantId = "";
   // List<String> options;
   // List<String> extraOptions;
   Map<String, Boolean> toBeEditedOptions = new HashMap<String, Boolean>();
@@ -195,6 +198,35 @@ public class BulkEditProductAction extends BasePaginatedAction {
     addRedirectAlertMessage(new SimpleMessage("Changes saved."));
     return new ForwardResolution(BulkEditProductAction.class, "bulkEdit");
 
+  }
+
+  @SuppressWarnings("unchecked")
+  public Resolution getPVDetails() {
+    Map dataMap = new HashMap();
+    if (StringUtils.isNotBlank(productVariantId)) {
+      ProductVariant pv = getProductVariantService().getVariantById(productVariantId);
+      if (pv != null) {
+        try {
+          dataMap.put("variant", pv);
+          dataMap.put("product", pv.getProduct().getName());
+          dataMap.put("options", pv.getOptionsCommaSeparated());
+          HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Valid Product Variant", dataMap);
+          noCache();
+          return new JsonResolution(healthkartResponse);
+        } catch (Exception e) {
+          HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, e.getMessage(), dataMap);
+          noCache();
+          return new JsonResolution(healthkartResponse);
+        }
+      }
+    } else {
+      HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Product VariantID field is empty", null);
+      noCache();
+      return new JsonResolution(healthkartResponse);
+    }
+    HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Invalid Product VariantID", null);
+    noCache();
+    return new JsonResolution(healthkartResponse);
   }
 
   // public List<ProductOption> getProductOptionList(int i) {
@@ -343,6 +375,14 @@ public class BulkEditProductAction extends BasePaginatedAction {
 
   public void setCategoryService(CategoryService categoryService) {
     this.categoryService = categoryService;
+  }
+
+  public String getProductVariantId() {
+    return productVariantId;
+  }
+
+  public void setProductVariantId(String productVariantId) {
+    this.productVariantId = productVariantId;
   }
 
   // public List<String> getOptions() {

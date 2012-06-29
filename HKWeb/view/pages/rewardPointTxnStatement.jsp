@@ -17,13 +17,12 @@
 
       .instr li {
         border-bottom: 1px solid #f1f1f1;
-
         margin-bottom: 10px;
       }
     </style>
 
-
-    <link href="${pageContext.request.contextPath}/css/admin.css" rel="stylesheet" type="text/css"/>
+    <link href="<hk:vhostCss/>/css/new.css" rel="stylesheet" type="text/css"/>
+    <%--<link href="${pageContext.request.contextPath}/css/admin.css" rel="stylesheet" type="text/css"/>--%>
 
   </s:layout-component>
   <s:layout-component name="heading">Reward Point Txn Statement</s:layout-component>
@@ -36,16 +35,49 @@
       <div class="jqmWindow" id="referralTerms"></div>
     </s:layout-component>
 
-    <div style="font-size: 12px; line-height: 18px;">
-      <strong>Redeemable Points:</strong><fmt:formatNumber value="${rpBean.redeemablePoint}" pattern="<%=FormatUtils.currencyFormatPattern%>"/><br/>
+    <table class="cont footer_color" style="font-size: 14px;" id="summary">
+      <tr>
+        <td>Redeemable Points:</td>
+        <td>
+          <fmt:formatNumber value="${rpBean.redeemablePoint}" pattern="<%=FormatUtils.currencyFormatPattern%>"/>
+        </td>
+      </tr>
+      <tr>
+        <td>Overused Reward Points:</td>
+        <td>
+          <fmt:formatNumber value="${rpBean.user.userAccountInfo.overusedRewardPoints}"
+                            pattern="<%=FormatUtils.currencyFormatPattern%>"/>
+        </td>
+      </tr>
+      <tr>
+        <td><span class="orange">Balance Reward Points:</span></td>
+        <td>
+          <span class="orange">
+          <fmt:formatNumber
+              value="${rpBean.redeemablePoint - rpBean.user.userAccountInfo.overusedRewardPoints}"
+              pattern="<%=FormatUtils.currencyFormatPattern%>"/>
+          </span>
+        </td>
+      </tr>
+    </table>
 
-      <strong>Overused Reward Points: </strong><fmt:formatNumber value="${rpBean.user.userAccountInfo.overusedRewardPoints}" pattern="<%=FormatUtils.currencyFormatPattern%>"/><br/>
+    <div class="clear"></div>
+    <div style="margin-top:15px;"></div>
 
-      <span class="orange"><strong>Balance Reward
-        Points: </strong><fmt:formatNumber value="${rpBean.redeemablePoint - rpBean.user.userAccountInfo.overusedRewardPoints}" pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
-    </div>
-    <table class="cont">
-      <thead>
+    <%--<div style="font-size: 12px; line-height: 18px;">--%>
+    <%--<strong>Redeemable Points:</strong><fmt:formatNumber value="${rpBean.redeemablePoint}"--%>
+    <%--pattern="<%=FormatUtils.currencyFormatPattern%>"/><br/>--%>
+
+    <%--<strong>Overused Reward Points: </strong><fmt:formatNumber--%>
+    <%--value="${rpBean.user.userAccountInfo.overusedRewardPoints}"--%>
+    <%--pattern="<%=FormatUtils.currencyFormatPattern%>"/><br/>--%>
+
+    <%--<span class="orange"><strong>Balance Reward--%>
+    <%--Points: </strong><fmt:formatNumber--%>
+    <%--value="${rpBean.redeemablePoint - rpBean.user.userAccountInfo.overusedRewardPoints}"--%>
+    <%--pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>--%>
+    <%--</div>--%>
+    <table class="cont footer_color" style="font-size: 14px;" id="detail">
       <tr>
         <th>S.No.</th>
         <th>Value</th>
@@ -54,7 +86,6 @@
         <th>Txn Type</th>
         <th>Expired</th>
       </tr>
-      </thead>
       <c:forEach items="${rpBean.user.rewardPointTxnList}" var="rewardPointTxn" varStatus="ctr">
         <tr>
           <td>${ctr.count}</td>
@@ -75,3 +106,24 @@
     document.getElementById('rpsLink').style.fontWeight = "bold";
   };
 </script>
+<style type="text/css">
+  table#detail {
+    width: 100%;
+    margin-bottom: 10px;
+    margin-top: 5px;
+    border: 1px solid;
+    border-collapse: separate;
+  }
+
+  table th {
+    background: #f0f0f0;
+    padding: 5px;
+    text-align: left;
+  }
+
+  table td {
+    padding: 5px;
+    text-align: left;
+    font-size: 0.9em;
+  }
+</style>

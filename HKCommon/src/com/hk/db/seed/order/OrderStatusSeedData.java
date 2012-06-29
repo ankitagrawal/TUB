@@ -6,7 +6,9 @@ import java.util.List;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.core.OrderStatus;
+import org.springframework.stereotype.Component;
 
+@Component
 public class OrderStatusSeedData extends BaseSeedData {
 
     public void insert(java.lang.String name, java.lang.Long id) {

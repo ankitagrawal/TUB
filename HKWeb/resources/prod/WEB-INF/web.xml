@@ -13,6 +13,23 @@
 	<welcome-file-list>
 		<welcome-file>/pages/home.jsp</welcome-file>
 	</welcome-file-list>
+	
+	<error-page>
+		<error-code>401</error-code>
+		<location>/pages/error/noPage.html</location>
+	</error-page>
+	<error-page>
+		<error-code>404</error-code>
+		<location>/pages/error/noPage.html</location>
+	</error-page>
+	<error-page>
+		<error-code>500</error-code>
+		<location>/pages/error/noPage.html</location>
+	</error-page>
+	<error-page>
+		<error-code>503</error-code>
+		<location>/pages/error/noPage.html</location>
+	</error-page>
 
 	<!--  Listeners Start -->
 	<listener>
@@ -303,7 +320,7 @@
 		<url-pattern>/</url-pattern>
 	</filter-mapping>
 
-<!-- Commenting this filter for performance issues  8th June 2012
+<!-- Commenting this filter for performance issues  8th June 2012 -->
 	<filter>
 		<filter-name>CampaignTrackingFilter</filter-name>
 		<filter-class>
@@ -316,7 +333,7 @@
 		<url-pattern>*.jsp</url-pattern>
 		<url-pattern>/</url-pattern>
 	</filter-mapping>
--->
+
 
 	<filter>
 		<filter-name>ServiceCityFilter</filter-name>

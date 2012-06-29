@@ -1,44 +1,70 @@
 package com.hk.web.action.admin.courier;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.DontValidate;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-
+import com.akube.framework.stripes.action.BaseAction;
+import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.courier.StateList;
+import com.hk.domain.core.State;
+import com.hk.domain.courier.StateCourierService;
+import com.hk.pact.dao.courier.PincodeDao;
+import com.hk.pact.dao.courier.StateCourierServiceDao;
+import com.hk.web.action.error.AdminPermissionAction;
+import net.sourceforge.stripes.action.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-import com.akube.framework.stripes.action.BaseAction;
-import com.hk.constants.core.PermissionConstants;
-import com.hk.domain.courier.StateCourierService;
-import com.hk.web.action.error.AdminPermissionAction;
+import java.util.ArrayList;
+import java.util.List;
 
 @Secure(hasAnyPermissions = {PermissionConstants.VIEW_COURIER_INFO}, authActionBean = AdminPermissionAction.class)
 @Component
 public class StateCourierServiceAction extends BaseAction {
+  @Autowired
+  StateCourierServiceDao stateCourierServiceDao;
+  @Autowired
+  PincodeDao pincodeDao;
 
-  private List<StateCourierService> stateCourierServiceList = new ArrayList<StateCourierService>();
+ private StateCourierService stateCourierService;
 
-  
+  private List<StateCourierService> stateCourierServiceList = null;
+  private State state;
+
+  private List<String> stateList = new ArrayList<String>();
+   private boolean displayAddNewRow;
+
+
 
   @DefaultHandler
   @DontValidate
   public Resolution pre() {
-    stateCourierServiceList = getBaseDao().getAll(StateCourierService.class);
+    displayAddNewRow=false;
     return new ForwardResolution("/pages/admin/stateCourierService.jsp");
   }
 
-  public Resolution save() {
-    for (StateCourierService stateCourierService : stateCourierServiceList) {
-      getBaseDao().save(stateCourierService);
+
+  public Resolution search() {
+ stateCourierServiceList = stateCourierServiceDao.getAllStateCourierServiceByState(state);
+    if (stateCourierServiceList != null && stateCourierServiceList.size() > 0) {
+      setStateCourierServiceList(stateCourierServiceList);
     }
-    addRedirectAlertMessage(new SimpleMessage("Changes saved"));
-    return new RedirectResolution(StateCourierServiceAction.class);
+     return new ForwardResolution("/pages/admin/stateCourierService.jsp");
+  }
+
+    public Resolution save() {
+         stateCourierServiceDao.save(stateCourierService);
+       addRedirectAlertMessage(new SimpleMessage("state courier info saved"));
+             return search();
+
+  }
+
+  public Resolution  addNewRow(){
+    setStateList(StateList.stateList);
+    if(state == null){
+     addRedirectAlertMessage(new SimpleMessage("Select State"));
+    return new ForwardResolution("/pages/admin/stateCourierService.jsp");
+    }
+   setDisplayAddNewRow(true);
+     return search(); 
   }
 
   public List<StateCourierService> getStateCourierServiceList() {
@@ -47,5 +73,37 @@ public class StateCourierServiceAction extends BaseAction {
 
   public void setStateCourierServiceList(List<StateCourierService> stateCourierServiceList) {
     this.stateCourierServiceList = stateCourierServiceList;
+  }
+
+  public State getState() {
+    return state;
+  }
+
+  public void setState(State state) {
+    this.state = state;
+  }
+
+  public void setStateList(List<String> stateList) {
+    this.stateList = stateList;
+  }
+
+  public List<String> getStateList() {
+    return stateList;
+  }
+
+  public StateCourierService getStateCourierService() {
+    return stateCourierService;
+  }
+
+  public void setStateCourierService(StateCourierService stateCourierService) {
+    this.stateCourierService = stateCourierService;
+  }
+
+  public boolean isDisplayAddNewRow() {
+    return displayAddNewRow;
+  }
+
+  public void setDisplayAddNewRow(boolean displayAddNewRow) {
+    this.displayAddNewRow = displayAddNewRow;
   }
 }

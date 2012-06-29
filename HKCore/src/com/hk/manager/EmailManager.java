@@ -607,7 +607,7 @@ public class EmailManager {
         List<EmailRecepient> emailRecepients = new ArrayList<EmailRecepient>();
         for (User user : users) {
             EmailRecepient emailRecepient = getEmailRecepientDao().getOrCreateEmailRecepient(user.getEmail());
-            if (emailRecepient.isSubscribed() && getEmailerHistoryDao().findEmailRecipientByCampaign(emailRecepient, emailCampaign) == null) {
+            if (emailRecepient.isEmailAllowed() && getEmailerHistoryDao().findEmailRecipientByCampaign(emailRecepient, emailCampaign) == null) {
                 // last mail date null or last mail date > campaign min date
                 if (emailRecepient.getLastEmailDate() == null
                         || new DateTime().minusDays(emailCampaign.getMinDayGap().intValue()).isAfter(emailRecepient.getLastEmailDate().getTime())) {

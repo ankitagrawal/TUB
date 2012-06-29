@@ -6,7 +6,9 @@ import java.util.List;
 import com.hk.constants.catalog.product.EnumProductVariantServiceType;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.core.ProductVariantServiceType;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ProductVariantServiceTypeSeedData extends BaseSeedData {
 
     public void insert(java.lang.String name, java.lang.Long id) {

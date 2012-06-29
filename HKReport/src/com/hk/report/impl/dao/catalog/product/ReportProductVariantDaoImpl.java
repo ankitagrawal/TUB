@@ -8,10 +8,7 @@ import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
 
 import com.hk.impl.dao.BaseDaoImpl;
-import com.hk.report.dto.inventory.InventorySoldDto;
-import com.hk.report.dto.inventory.ExpiryAlertReportDto;
-import com.hk.report.dto.inventory.RTOFineReportDto;
-import com.hk.report.dto.inventory.RTODamageReportDto;
+import com.hk.report.dto.inventory.*;
 import com.hk.report.pact.dao.catalog.product.ReportProductVariantDao;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.order.ShippingOrder;
@@ -42,50 +39,37 @@ public class ReportProductVariantDaoImpl extends BaseDaoImpl implements ReportPr
   public List<ExpiryAlertReportDto> getToBeExpiredProductDetails(Date startDate, Date endDate, Warehouse warehouse) {
     String query = "select sg as skuGroup, sum(pvi.qty) as batchQty from SkuGroup sg, ProductVariantInventory pvi where sg.expiryDate between :startDate and :endDate " +
         "and pvi.sku.warehouse = :warehouse and pvi.skuItem.skuGroup.id = sg.id group by sg having sum(pvi.qty) > 0";
-    
+
     return (List<ExpiryAlertReportDto>)getSession().createQuery(query).setParameter("startDate", startDate)
         .setParameter("endDate", endDate).setParameter("warehouse", warehouse).setResultTransformer(Transformers.aliasToBean(ExpiryAlertReportDto.class)).list();
   }
 
   public Long getOpeningStockOfProductVariantOnDate(String productVariant, Date txnDate, Warehouse warehouse) {
     String query = "select coalesce(sum(pvi.qty), 0) from ProductVariantInventory pvi where pvi.sku.productVariant.id = :productVariant and pvi.txnDate < :txnDate " +
-        "and pvi.sku.warehouse.id = :warehouse ";
-    Long result =  (Long) getSession().createQuery(query).setParameter("productVariant", productVariant)
-        .setParameter("txnDate", txnDate).setParameter("warehouse", warehouse.getId()).uniqueResult();
-    return result;
+        "and pvi.sku.warehouse = :warehouse ";
+    return (Long) findUniqueByNamedParams(query, new String[]{"productVariant", "txnDate", "warehouse"}, new Object[]{productVariant, txnDate, warehouse});
   }
 
-  public Long getCheckedOutQtyOfProductVariantBetweenDates(String productVariant, Date startDate, Date endDate, Warehouse warehouse) {
-    String query = "select count(pvi.id) from ProductVariantInventory pvi where pvi.sku.productVariant.id = :productVariant " +
-        "and pvi.lineItem is not null and pvi.qty = :qty and pvi.txnDate between :startDate and :endDate " +
-        "and pvi.sku.warehouse.id = :warehouse ";
-    return (Long) getSession().createQuery(query).setParameter("productVariant", productVariant).setParameter("qty", -1L)
-        .setParameter("startDate", startDate).setParameter("endDate", endDate).setParameter("warehouse", warehouse.getId()).uniqueResult();
+  public List<StockReportDto> getProductVariantStockBetweenDates(String productVariant, Date startDate, Date endDate, Warehouse warehouse) {
+    String query = "select coalesce(sum(pvi.qty), 0) as inventoryQty, pvi.invTxnType.id as inventoryTxnType from ProductVariantInventory pvi where pvi.sku.productVariant.id = :productVariant " +
+        "and pvi.txnDate between :startDate and :endDate " +
+        "and pvi.sku.warehouse = :warehouse group by pvi.invTxnType ";
+    return getSession().createQuery(query).setParameter("productVariant", productVariant)
+        .setParameter("startDate", startDate).setParameter("endDate", endDate)
+        .setParameter("warehouse", warehouse).setResultTransformer(Transformers.aliasToBean(StockReportDto.class)).list();
   }
 
-  public Long getReconcileCheckedOutQtyOfProductVariantBetweenDates(String productVariant, Date startDate, Date endDate, Warehouse warehouse) {
-    String query = "select count(pvi.id) from ProductVariantInventory pvi where pvi.sku.productVariant.id = :productVariant " +
-        "and pvi.rvLineItem is not null and pvi.qty = :qty and pvi.txnDate between :startDate and :endDate " +
-        "and pvi.sku.warehouse.id = :warehouse ";
-    return (Long) getSession().createQuery(query).setParameter("productVariant", productVariant).setParameter("qty", -1L)
-        .setParameter("startDate", startDate).setParameter("endDate", endDate).setParameter("warehouse", warehouse.getId()).uniqueResult();
-  }
-
-  public Long getCheckedInQtyByInventoryTxnType(String productVariant, Date startDate, Date endDate, Warehouse warehouse, Long inventoryTxnType) {
-    String query = "select count(pvi.id) from ProductVariantInventory pvi where pvi.sku.productVariant.id = :productVariant " +
-        "and pvi.invTxnType.id = :invTxnType and pvi.qty = :qty and pvi.txnDate between :startDate and :endDate " +
-        "and pvi.sku.warehouse.id = :warehouse ";
-    return (Long) getSession().createQuery(query).setParameter("productVariant", productVariant).setParameter("qty", 1L)
-        .setParameter("startDate", startDate).setParameter("endDate", endDate).setParameter("warehouse", warehouse.getId())
-        .setParameter("invTxnType", inventoryTxnType).uniqueResult();
+  public Long getStockLeftQty(String productVariant, Warehouse warehouse) {
+    String query = "select coalesce(sum(pvi.qty), 0) from ProductVariantInventory pvi " +
+        " where pvi.sku.productVariant.id = :productVariant and pvi.sku.warehouse = :warehouse ";
+    return (Long) findUniqueByNamedParams(query, new String[]{"productVariant", "warehouse"}, new Object[]{productVariant, warehouse});
   }
 
   public Long getDamageRtoCheckedInQty(String productVariant, Date startDate, Date endDate, Warehouse warehouse) {
-    String query = "select count(pvi.id) from ProductVariantDamageInventory pvi where pvi.sku.productVariant.id = :productVariant " +
-        "and pvi.qty = :qty and pvi.txnDate between :startDate and :endDate " +
-        "and pvi.sku.warehouse.id = :warehouse ";
-    return (Long) getSession().createQuery(query).setParameter("productVariant", productVariant).setParameter("qty", 1L)
-        .setParameter("startDate", startDate).setParameter("endDate", endDate).setParameter("warehouse", warehouse.getId()).uniqueResult();
+    String query = "select coalesce(sum(pvi.qty), 0) from ProductVariantDamageInventory pvi where pvi.sku.productVariant.id = :productVariant " +
+        " and pvi.txnDate between :startDate and :endDate " +
+        "and pvi.sku.warehouse = :warehouse ";
+    return (Long) findUniqueByNamedParams(query, new String[]{"productVariant", "startDate", "endDate", "warehouse"}, new Object[]{productVariant, startDate, endDate, warehouse});
   }
 
   public List<RTOFineReportDto> getRTOFineProductVariantDetails(ShippingOrder shippingOrder) {

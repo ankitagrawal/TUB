@@ -1,32 +1,20 @@
 package com.hk.web.action.core.order;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.hk.admin.util.ChhotuCourierDelivery;
+import com.hk.admin.util.CourierStatusUpdateHelper;
 import com.hk.constants.courier.EnumCourier;
+import com.hk.constants.courier.CourierConstants;
 import com.hk.domain.order.ShippingOrder;
-import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
+import com.hk.exception.HealthkartCheckedException;
+import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
-import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.input.SAXBuilder;
-import org.jdom.xpath.XPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.StringReader;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.util.Map;
 
 /**
  * User: rahul
@@ -34,162 +22,120 @@ import java.net.URL;
  */
 public class TrackCourierAction extends BaseAction {
 
-    private static Logger logger = LoggerFactory.getLogger(TrackCourierAction.class);
+    private static            Logger                      logger                 = LoggerFactory.getLogger(TrackCourierAction.class);
 
-    private String trackingId;
-    private ChhotuCourierDelivery chhotuCourierDelivery;
+    private                   String                      trackingId;
+    private                   ChhotuCourierDelivery       chhotuCourierDelivery;
 
     @Validate(required = true)
-    private Long courierId;
+    private                   Long                        courierId;
+    private                   ShippingOrder               shippingOrder;
+    private                   String                      status;
+    private                   String                      awb;
+    private                   String                      paymentType;
+    private                   String                      courierName;
 
     @Autowired
-    private ShippingOrderDao shippingOrderDao;
+    CourierStatusUpdateHelper courierStatusUpdateHelper;
 
-	private ShippingOrder shippingOrder;
-
-    String status;
-    String awb;
-    String paymentType;
-    private static final String authenticationIdForDelhivery = "9aaa943a0c74e29b340074d859b2690e07c7fb25";
-    private static final String loginIdForBlueDart = "GGN37392";
-    private static final String licenceKeyForBlueDart = "3c6867277b7a2c8cd78c8c4cb320f401";
 
     @DefaultHandler
     public Resolution pre() {
-
         Resolution resolution = null;
 
-        if (courierId.equals(EnumCourier.Aramex.getId())) {
-            resolution = new RedirectResolution("http://www.aramex.com/track_results_multiple.aspx", false).addParameter("ShipmentNumber", trackingId);
-        } else if (courierId.equals(EnumCourier.DTDC_Plus.getId()) || courierId.equals(EnumCourier.DTDC_Lite.getId()) || courierId.equals(EnumCourier.DTDC_COD.getId())) {
-            resolution = new RedirectResolution("http://www.dtdc.in/dtdcTrack/Tracking/consignInfo.asp", false)
-                    .addParameter("action", "track")
-                    .addParameter("sec", "tr")
-                    .addParameter("strCnno", trackingId)
-                    .addParameter("TType", "cnno");
-        } else if (courierId.equals(EnumCourier.AFLWiz.getId())) {
-            //resolution = new RedirectResolution("http://trackntrace.aflwiz.com/Wiz_Summary.jsp", false).addParameter("shpntnum", trackingId);
-            resolution = new RedirectResolution("http://trackntrace.aflwiz.com/aflwizhtmltrack", false).addParameter("shpntnum", trackingId);
-        } else if (courierId.equals(EnumCourier.Speedpost.getId())) {
-            resolution = new RedirectResolution("/pages/indiaPostCourier.jsp");
-        } else if (courierId.equals(EnumCourier.Delhivery.getId())) {
-	        /**
-	         * Commenting the below line as this was giving an errror in Delhivery courier tracking page. Shipping order made a class member.
- 	         */
-            //ShippingOrder shippingOrder = shippingOrderDao.findByTrackingId(trackingId);
-	        shippingOrder = shippingOrderDao.findByTrackingId(trackingId);
-            String gatewayOrderId = "";
-            if (shippingOrder != null) {
-                gatewayOrderId = shippingOrder.getGatewayOrderId();
-            }
-            try {
-                URL url = new URL("http://track.delhivery.com/api/packages/json/?token=" + authenticationIdForDelhivery + "&ref_nos=" + gatewayOrderId);
-                BufferedReader in = new BufferedReader(
-                        new InputStreamReader(
-                                url.openStream()));
-                String inputLine;
-                String jsonFormattedResponse = "";
+        EnumCourier enumCourier = EnumCourier.getEnumCourierFromCourierId(courierId);
+        switch (enumCourier) {
+            case Aramex:
+                resolution = new RedirectResolution("http://www.aramex.com/track_results_multiple.aspx", false).addParameter("ShipmentNumber", trackingId);
+                break;
+            case AFLWiz:
+                resolution = new RedirectResolution("http://trackntrace.aflwiz.com/aflwizhtmltrack", false).addParameter("shpntnum", trackingId);
+                break;
+            case Speedpost:
+                resolution = new RedirectResolution("/pages/indiaPostCourier.jsp");
+                break;
+            case FirstFLight:
+                resolution = new RedirectResolution("http://www.firstflight.net/n_contrac_new.asp", false).addParameter("tracking1", trackingId);
+                break;
+            case Chhotu:
+                try {
+                    chhotuCourierDelivery = courierStatusUpdateHelper.updateDeliveryStatusChhotu(trackingId);
+                } catch (HealthkartCheckedException hce) {
+                    logger.debug("Exception occurred in TrackCourierAction");
+                }
+                if (chhotuCourierDelivery != null) {
+                    resolution = new ForwardResolution("/pages/chhotuCourier.jsp");
+                } else {
+                    resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
+                }
+                break;
 
-                while ((inputLine = in.readLine()) != null) {
-                    if (inputLine != null) {
-                        jsonFormattedResponse += inputLine;
+            case Delhivery:
+                courierName = CourierConstants.DELHIVERY;
+                JsonObject jsonObject = null;
+                try {
+                    jsonObject = courierStatusUpdateHelper.updateDeliveryStatusDelhivery(trackingId);
+                } catch (HealthkartCheckedException hce) {
+                    logger.debug("Exception occurred in TrackCourierAction");
+                }
+                if (jsonObject != null) {
+                    if (!jsonObject.has("Error")) {
+                        status = jsonObject.getAsJsonObject(CourierConstants.DELHIVERY_STATUS).get(CourierConstants.DELHIVERY_STATUS).getAsString();
+                        awb = jsonObject.get(CourierConstants.DELHIVERY_AWB).getAsString();
+                        paymentType = jsonObject.get(CourierConstants.DELHIVERY_ORDER_TYPE).getAsString();
                     }
+                    resolution = new ForwardResolution("/pages/courierDetails.jsp");
+                } else {
+                    resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
                 }
-                in.close();
-                JsonParser jsonParser = new JsonParser();
-                JsonObject jsonObject = jsonParser.parse(jsonFormattedResponse).getAsJsonObject();
-                if (!jsonObject.has("Error")) {
-                    JsonObject shipmentObj = jsonObject.getAsJsonArray("ShipmentData").get(0)
-                            .getAsJsonObject().getAsJsonObject("Shipment");
-
-                    status = shipmentObj.getAsJsonObject("Status").get("Status").getAsString();
-                    awb = shipmentObj.get("AWB").getAsString();
-                    paymentType = shipmentObj.get("OrderType").getAsString();
+                break;
+            case BlueDart:
+            case BlueDart_COD:
+                courierName = CourierConstants.BLUEDART;
+                Element ele = null;
+                try {
+                    ele = courierStatusUpdateHelper.updateDeliveryStatusBlueDart(trackingId);
+                } catch (HealthkartCheckedException hce) {
+                    logger.debug("Exception occurred in TrackCourierAction");
                 }
-            } catch (MalformedURLException mue) {
-                logger.error("malformed url for gateway id " + gatewayOrderId);
-                mue.printStackTrace();
-            } catch (IOException ioe) {
-                logger.error("ioexception encounter for gateway id " + gatewayOrderId);
-                ioe.printStackTrace();
-            } catch (NullPointerException npe) {
-                logger.error("Null pointer Exception for gateway id " + gatewayOrderId);
-                npe.printStackTrace();
-            }
-            resolution = new ForwardResolution("/pages/delhiveryCourier.jsp");
-        } else if (courierId.equals(EnumCourier.Chhotu.getId())) {
-            try {
-                URL url = new URL("http://api.chhotu.in/shipmenttracking?tracking_number=" + trackingId);
-                BufferedReader in = new BufferedReader(
-                        new InputStreamReader(
-                                url.openStream()));
-                String inputLine;
-                String response = "";
-                String jsonFormattedResponse = "";
-
-                while ((inputLine = in.readLine()) != null) {
-                    if (inputLine != null) {
-                        response += inputLine;
+                if (ele != null) {
+                    String responseStatus = ele.getChildText(CourierConstants.DELHIVERY_STATUS);
+                    if (!responseStatus.equals(CourierConstants.DELHIVERY_ERROR_MSG)) {
+                        status = ele.getChildText(CourierConstants.DELHIVERY_STATUS);
                     }
+                    resolution = new ForwardResolution("/pages/courierDetails.jsp");
+                } else {
+                    resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
                 }
-                in.close();
-                jsonFormattedResponse = response.substring(14, (response.length() - 1));
-                chhotuCourierDelivery = new Gson().fromJson(jsonFormattedResponse, ChhotuCourierDelivery.class);
-            } catch (MalformedURLException mue) {
-                logger.error("malformed url for tracking id " + trackingId);
-                mue.printStackTrace();
-            } catch (IOException ioe) {
-                logger.error("ioexception encounter for tracking id " + trackingId);
-                ioe.printStackTrace();
-            } catch (NullPointerException npe) {
-                logger.error("Null pointer Exception for tracking id " + trackingId);
-                npe.printStackTrace();
-            }
-            resolution = new ForwardResolution("/pages/chhotuCourier.jsp");
-        } else if (courierId.equals(EnumCourier.BlueDart.getId()) || courierId.equals(EnumCourier.BlueDart_COD.getId())) {
-            try {
-                URL url = new URL("http://www.bluedart.com/servlet/RoutingServlet?handler=tnt&action=custawbquery&loginid=" + loginIdForBlueDart + "&awb=awb&numbers=" + trackingId + "&format=xml&lickey=" + licenceKeyForBlueDart + "&verno=1.3&scan=1");
-                BufferedReader in = new BufferedReader(
-                        new InputStreamReader(
-                                url.openStream()));
-                String inputLine;
-                String response = "";
-
-                while ((inputLine = in.readLine()) != null) {
-                    if (inputLine != null) {
-                        response += inputLine;
+                break;
+            case DTDC_COD:
+            case DTDC_Lite:
+            case DTDC_Plus:
+            case DTDC_Surface:
+                courierName = CourierConstants.DTDC;
+                Map<String, String> responseMap = null;
+                try {
+                    responseMap = courierStatusUpdateHelper.updateDeliveryStatusDTDC(trackingId);
+                } catch (HealthkartCheckedException hce) {
+                    logger.debug("Exception occurred in TrackCourierAction");
+                }
+                if (responseMap != null) {
+                    for (Map.Entry entryObj : responseMap.entrySet()) {
+                        if (entryObj.getKey().equals(CourierConstants.DTDC_INPUT_STR_STATUS)) {
+                            status = entryObj.getValue().toString();
+                        }
                     }
+                    resolution = new ForwardResolution("/pages/courierDetails.jsp");
+                } else {
+                    resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
                 }
-                in.close();
-                Document doc = new SAXBuilder().build(new StringReader(response));
-                XPath xPath = XPath.newInstance("/*/Shipment");
-                Element ele = (Element) xPath.selectSingleNode(doc);
-                String responseStatus = ele.getChildText("Status");
-                if (!responseStatus.equals("Incorrect Waybill number or No Information")) {
-                    status = ele.getChildText("Status");
-                }
-            } catch (MalformedURLException mue) {
-                logger.error("malformed url for gateway id " + trackingId);
-                mue.printStackTrace();
-            } catch (IOException ioe) {
-                logger.error("ioexception encounter for gateway id " + trackingId);
-                ioe.printStackTrace();
-            } catch (NullPointerException npe) {
-                logger.error("Null pointer Exception for gateway id " + trackingId);
-                npe.printStackTrace();
-            } catch (Exception e) {
-                logger.error("Null pointer Exception for gateway id " + trackingId);
-                e.printStackTrace();
-            }
-            resolution = new ForwardResolution("/pages/blueDartCourier.jsp");
-        } else if (courierId.equals(EnumCourier.FirstFLight.getId()) || courierId.equals(EnumCourier.FirstFLight_COD.getId())) {
-            resolution = new RedirectResolution("http://www.firstflight.net/n_contrac_new.asp", false).addParameter("tracking1", trackingId);
-        } else {
-            resolution = new RedirectResolution("/pages/error/invalidCourier.jsp");
+                break;
+            default:
+                resolution = new RedirectResolution("/pages/error/courierTrackError.jsp");
+
         }
         return resolution;
     }
-
 
     public String getTrackingId() {
         return trackingId;
@@ -235,11 +181,19 @@ public class TrackCourierAction extends BaseAction {
         this.paymentType = paymentType;
     }
 
-	public ShippingOrder getShippingOrder() {
-		return shippingOrder;
-	}
+    public ShippingOrder getShippingOrder() {
+        return shippingOrder;
+    }
 
-	public void setShippingOrder(ShippingOrder shippingOrder) {
-		this.shippingOrder = shippingOrder;
-	}
+    public void setShippingOrder(ShippingOrder shippingOrder) {
+        this.shippingOrder = shippingOrder;
+    }
+
+    public String getCourierName() {
+        return courierName;
+    }
+
+    public void setCourierName(String courierName) {
+        this.courierName = courierName;
+    }
 }

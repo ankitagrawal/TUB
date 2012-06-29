@@ -54,6 +54,9 @@
   <h3><s:link beanclass="com.hk.web.action.admin.queue.ActionAwaitingQueueAction">Action Awaiting Queue</s:link></h3>
   </c:if>
   <h3><s:link beanclass="com.hk.web.action.admin.marketing.NotifyMeListAction"> Notify Me List </s:link></h3>
+  <shiro:hasRole name="<%=RoleConstants.ADMIN%>">
+    <h3><s:link beanclass="com.hk.web.action.admin.TaskManagerAction"> Ant Builds </s:link></h3>
+  </shiro:hasRole>
   <%--<h3><s:link beanclass="com.hk.web.action.admin.payment.PaymentHistoryAction"> Check Payment History </s:link></h3>--%>
 </div>
 
@@ -98,7 +101,7 @@
   <h3><s:link beanclass="com.hk.web.action.admin.catalog.product.RecentlyAddedProductsAction">Recently Added Products</s:link></h3>
   <h3><s:link beanclass="com.hk.web.action.admin.catalog.product.RelatedProductAction">Update Related Products</s:link></h3>
   <h3><s:link beanclass="com.hk.web.action.report.GenerateReconcilationReportAction">Generate Reconcilation Report</s:link></h3>
-
+  <h3><s:link beanclass="com.hk.web.action.admin.store.StorePricingAction">Store pricing</s:link></h3>
 </div>
 
 <div class="cl"></div>
@@ -156,7 +159,7 @@
 
   <h3><s:link beanclass="com.hk.web.action.admin.courier.ChangeDefaultCourierAction">Change Default Courier</s:link></h3>
 
-  <h3><s:link beanclass="com.hk.web.action.admin.shipment.UpdateAFLChhotuDeliveryStatusAction">Update Delivery Status of AFL,Chhotu,Delhivery,BlueDart</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.admin.shipment.UpdateDeliveryStatusAction">Update Delivery Status of AFL,Chhotu,Delhivery,BlueDart,DTDC</s:link></h3>
 
   <h3><s:link beanclass="com.hk.web.action.admin.shipment.ParseDTDCDeliveryStatusExcelAction">Upload Delivery Status Excel of DTDC</s:link></h3>
 
@@ -165,6 +168,10 @@
 	<h3><s:link beanclass="com.hk.web.action.admin.shipment.ParseEstimatedCourierExpensesExcelAction">Upload Estimated Courier Collection Charges</s:link> </h3>
 
   <h3><s:link beanclass="com.hk.web.action.admin.shipment.ChangeShipmentDetailsAction">Change shipment details</s:link></h3>
+
+   <h3><s:link beanclass="com.hk.web.action.admin.courier.CreateUpdateCourierPricingAction">Change Courier Pricing  details</s:link></h3>
+
+     <h3><s:link beanclass="com.hk.web.action.admin.courier.CityCourierTatAction">Upload City Courier TAT</s:link></h3>
 
   <h3><s:link beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction" event="generateCourierReport">Download Courier Excel
       <s:param name="courierDownloadFunctionality" value="false"/>

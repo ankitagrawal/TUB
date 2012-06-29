@@ -7,15 +7,15 @@ import com.hk.constants.core.EnumRole;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.user.Role;
 import com.hk.pact.dao.RoleDao;
+import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
 
+@Component
 public class RoleSeedData extends BaseSeedData {
-
-    RoleDao roleDao;
-
     public void insert(java.lang.String name) {
         Role role = new Role();
         role.setName(name);
-        roleDao.save(role);
+        save(role);
     }
 
     public void invokeInsert() {

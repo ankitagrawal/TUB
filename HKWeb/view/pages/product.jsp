@@ -58,14 +58,12 @@
     }
 
     .rating_bar {
-      width: 75px;
-      <%--background: url('${pageContext.request.contextPath}/images/faintStar.png') 0 0 repeat-x;--%>
+      width: 80px;
       background: url('${pageContext.request.contextPath}/images/img/star-off.png') 0 0 repeat-x;
     }
 
     .rating_bar div {
       height: 16px;
-      <%--background: url('${pageContext.request.contextPath}/images/blueStar.jpg') 0 0 repeat-x;--%>
       background: url('${pageContext.request.contextPath}/images/img/star-on.png') 0 0 repeat-x;
     }
   </style>
@@ -87,13 +85,10 @@
         var variantMainImageId = $(this).find('.variantMainImageId').val();
         //var url = "http://healthkart-prod.s3.amazonaws.com/1/"+variantMainImageId+"_t.jpg";
         //$(".img320").html("<img class='icon' src='"+url+"'/>") ;
-        $.getJSON(
-            $('#updateProductVariantImageLink').attr('href'), {mainProductImageId: variantMainImageId},
-            function(resurl) {
-              //                alert(resurl.data);
-              $(".img320").html("<img class='icon' src='" + resurl.data + "'/>");
-            }
-            );
+        $.getJSON($('#updateProductVariantImageLink').attr('href'), {mainProductImageId: variantMainImageId}, function(resurl) {
+          //                alert(resurl.data);
+          $(".img320").html("<img class='icon' src='" + resurl.data + "'/>");
+        });
       });
 
       $('.jqzoom').jqzoom({
@@ -194,9 +189,9 @@
         <img src="${hk:getS3ImageUrl(imageMediumSize, product.mainImageId)}" alt="${product.name}"
              title="${product.name}">
       </a>
-      <c:if test="${fn:length(productImages) > 1}">
+      <c:if test="${fn:length(pa.productImages) > 1}">
         <ul id="thumblist">
-          <c:forEach items="${productImages}" var="productImage">
+          <c:forEach items="${pa.productImages}" var="productImage">
             <li><a href='javascript:void(0);'
                    rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, productImage.id)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, productImage.id)}'}"><img
                 src='${hk:getS3ImageUrl(imageSmallSize, productImage.id)}'></a></li>
@@ -209,10 +204,10 @@
       <shiro:hasPermission name="<%=PermissionConstants.GET_PRODUCT_LINK%>">
         <a name="showProductLink" class="linkbutton"
            onclick="$('#getProductLinkWindow').jqm(); $('#getProductLinkWindow').jqmShow();" style="cursor:pointer">Get
-          Links</a>
+                                                                                                                    Links</a>
         <a name="showProductLink" class="linkbutton"
            onclick="$('#getBannerLinkWindow').jqm(); $('#getBannerLinkWindow').jqmShow();" style="cursor:pointer">Get
-          Banners</a>
+                                                                                                                  Banners</a>
       </shiro:hasPermission>
     </div>
     <shiro:hasPermission name="<%=PermissionConstants.MANAGE_IMAGE%>">
@@ -225,7 +220,7 @@
         <s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction"
                 event="manageProductImages" target="_blank"
                 class="popup">Manage
-          Images
+                              Images
           <s:param name="productId" value="${product.id}"/>
         </s:link>
       </div>
@@ -248,7 +243,7 @@
       ${product.name}
   </h2>
 
-  <div class='infos'>
+  <div class='infos' style="border-bottom:0px;">
     <c:if test="${hk:isNotBlank(product.brand)}">
           <span class='title'>
             Brand:
@@ -290,6 +285,26 @@
         </c:otherwise>
       </c:choose>
     </span>
+
+    <c:if test="${!empty pa.userReviews}">
+
+      <div style="float:right;margin-right:5px;margin-bottom:3px;">
+        <a href='#user_reviews' style="border-bottom:0px;">
+            ${pa.totalReviews} Reviews &darr;
+        </a>
+
+        <div class="rating_bar">
+          <div class="blueStarTop" id="blueStarTop">
+            <script type="text/javascript">
+              var averageRating = ${pa.averageRating};
+              averageRating = (averageRating * 20) + "%";
+              $('.blueStarTop').width(averageRating);
+              $('.blueStar').width(averageRating);
+            </script>
+          </div>
+        </div>
+      </div>
+    </c:if>
   </div>
 
   <div class='top_links'>
@@ -302,18 +317,6 @@
       <a class='top_link' href='#features'>
         Technical Specs &darr;
       </a>
-    </c:if>
-    <c:if test="${!empty pa.userReviews}">
-      <span style="float:right;">
-      <a class='top_link' href='#user_reviews'>
-          ${pa.totalReviews} Reviews &darr;
-      </a>
-
-      <div class="rating_bar" style="float:right;">
-        <div id="blueStarTop" class="blueStarTop"></div>
-      </div>
-
-         </span>
     </c:if>
       <%--<a class='top_link' href='#link3'>
             FAQs
@@ -541,22 +544,29 @@
           <td colspan="2" style="border-style:none">Average Rating : <strong><fmt:formatNumber
               value="${pa.averageRating}"
               maxFractionDigits="1"/>/5</strong> <br/>
-            (based on ${pa.totalReviews} reviews) <br/>
+                                                    (based on ${pa.totalReviews} reviews) <br/>
+
             <div class="rating_bar">
               <div id="blueStar" class="blueStar"></div>
+              <script type="text/javascript">
+                var averageRating = ${pa.averageRating};
+                averageRating = (averageRating * 20) + "%";
+                $('.blueStarTop').width(averageRating);
+                $('.blueStar').width(averageRating);
+              </script>
             </div>
-            
+
           </td>
         </tr>
       </table>
-     
+
       <hr style="color:#F0F0F0;border-style:dotted"/>
       <c:if test="${pa.totalReviews > 5}">
-          <strong>&nbsp;Showing 5 of ${pa.totalReviews} reviews</strong>
-          <s:link beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction">
-            <s:param name="product" value="${product.id}"/>
-            <strong>(Read All Reviews)</strong>
-          </s:link>
+        <strong>&nbsp;Showing 5 of ${pa.totalReviews} reviews</strong>
+        <s:link beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction">
+          <s:param name="product" value="${product.id}"/>
+          <strong>(Read All Reviews)</strong>
+        </s:link>
       </c:if>
 
       <c:forEach items="${pa.userReviews}" var="review" varStatus="ctr">
@@ -564,12 +574,12 @@
         <table width="950" class="reviewContentTable" style="border-style:none">
           <tr style="border-style:none">
             <td width="150" style="border-style:none"><strong>${review.postedBy.name}</strong>
-            <%--<td style="border-style:none"><h4>${review.title}</h4></td>--%>
+                <%--<td style="border-style:none"><h4>${review.title}</h4></td>--%>
               <div class="rating_bar">
                 <div class="blueStarRating${ctr.index}"></div>
-                <script type="text/javascript">
+                  <script type="text/javascript">
                   var index = ${ctr.index};
-                  var rating =${review.starRating};
+                  var rating = ${review.starRating};
                   rating = (rating * 20) + "%";
                   $('.blueStarRating' + index).width(rating);
                 </script>
@@ -577,7 +587,7 @@
             </td>
             <td style="border-style:none">
               <div style="word-wrap:break-word">
-                ${review.review}
+                  ${review.review}
               </div>
             </td>
           </tr>
@@ -599,7 +609,8 @@
         </tr>
         <tr>
           <td>
-            Be the first one to <s:link beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction" event="writeNewReview">
+            Be the first one to <s:link beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction"
+                                        event="writeNewReview">
             <s:param name="product" value="${product.id}"/>
             <strong>Write a Review</strong>
           </s:link>
@@ -616,13 +627,7 @@
 <s:layout-component name="endScripts">
   <script type="text/javascript">
     var validateCheckbox;
-    $(document).ready(function() {
-        
-      var rating =${pa.averageRating};
-      rating = (rating * 20) + "%";
-      $('.blueStarTop').width(rating);
-      $('.blueStar').width(rating);
-
+    $(document).ready(function() {      
       function _addToCart(res) {
         if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
           $('.message .line1').html("<strong>" + res.data.name + "</strong> has been added to your shopping cart");
@@ -638,8 +643,7 @@
         if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
           $('.message .line1').html("<strong>" + res.data.name + "</strong> is added to your shopping cart");
         } else if (res.code == '<%=HealthkartResponse.STATUS_ERROR%>') {
-          $('#cart_error1').html(getErrorHtmlFromJsonResponse(res))
-              .slowFade(3000, 2000);
+          $('#cart_error1').html(getErrorHtmlFromJsonResponse(res)).slowFade(3000, 2000);
         } else if (res.code == '<%=HealthkartResponse.STATUS_REDIRECT%>') {
           window.location.replace(res.data.url);
         }

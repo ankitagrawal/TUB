@@ -1,8 +1,6 @@
 package com.hk.admin.manager;
 
 import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,49 +27,36 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
-import com.hk.admin.util.AFLResponseParser;
 import com.hk.admin.util.ChhotuCourierDelivery;
+import com.hk.admin.util.CourierStatusUpdateHelper;
 import com.hk.constants.report.ReportConstants;
 import com.hk.constants.courier.EnumCourier;
+import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.ShippingOrder;
-import com.hk.domain.user.User;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
-
-import org.jdom.Document;
+import com.hk.exception.HealthkartCheckedException;
 import org.jdom.Element;
-import org.jdom.input.SAXBuilder;
-import org.jdom.xpath.XPath;
 
 @SuppressWarnings("unchecked")
 @Component
 public class DeliveryStatusUpdateManager {
 
-    private static Logger       logger                       = LoggerFactory.getLogger(DeliveryStatusUpdateManager.class);
+    private static Logger       logger                        = LoggerFactory.getLogger(DeliveryStatusUpdateManager.class);
 
-    List                        sheetData                    = new ArrayList();
     ShippingOrder               shippingOrder;
-    String                      addedItems;
-    int                         itemsDeliveredCount;
-    int                         allItemsDeliveredCount;
-    int                         ordersDelivered              = 0;
-    int                         orderDeliveryCount           = 0;
-    String                      courierName                  = "Delivered by ";
-    String                      prefixComments               = "Delivered Items :<br/>";
-    public static final int     digitsInGatewayId            = 5;
-    // private static int acceptableDeliveryPeriod = 50;
-
-    private static final String authenticationIdForDelhivery = "9aaa943a0c74e29b340074d859b2690e07c7fb25";
-    List<Long> courierIdList= new ArrayList<Long>();
-    private static final String loginIdForBlueDart ="GGN37392";
-    private static final String licenceKeyForBlueDart="3c6867277b7a2c8cd78c8c4cb320f401";
-
+    int                         orderDeliveryCount            = 0;
+    int                         ordersDelivered               = 0;
+    String                      trackingId                    = "";
+    String                      courierName                   = "Delivered by ";
+    public static final int     digitsInGatewayId             = 5;
+    List<ShippingOrder>         shippingOrderList             = new ArrayList<ShippingOrder>();
+    List<String>                unmodifiedTrackingIds         = null;
+    List<Long>                  courierIdList                 = null;
 
     LineItemDao                 lineItemDaoProvider;
 
@@ -80,6 +65,9 @@ public class DeliveryStatusUpdateManager {
 
     @Autowired
     ShippingOrderService        shippingOrderService;
+
+    @Autowired
+    CourierStatusUpdateHelper   courierStatusUpdateHelper;
 
     public String updateDeliveryStatusDTDC(File excelFile) throws Exception {
         String messagePostUpdation = "";
@@ -148,245 +136,175 @@ public class DeliveryStatusUpdateManager {
         return messagePostUpdation;
     }
 
-    public String updateDeliveryStatusDTDC(ShippingOrder shippingOrder, String awb, String deliveryDate, String messagePostUpdation) throws Exception {
-
-        /*
-         * logger.info("parsing delivery status excel : " + objInFile.getAbsolutePath()); POIFSFileSystem objInFileSys =
-         * new POIFSFileSystem(new FileInputStream(objInFile)); HSSFWorkbook workbook = new HSSFWorkbook(objInFileSys); //
-         * Assuming there is only one sheet, the first one only will be picked HSSFSheet reportSheet =
-         * workbook.getSheetAt(0); Iterator rows = reportSheet.rowIterator(); while (rows.hasNext()) { HSSFRow row =
-         * (HSSFRow) rows.next(); Iterator cells = row.cellIterator(); List data = new ArrayList(); while
-         * (cells.hasNext()) { HSSFCell cell = (HSSFCell) cells.next(); data.add(cell); } sheetData.add(data); } return
-         * updateOrderStatusDTDC(sheetData, loggedOnUser);
-         */
-
-        return null;
-    }
-
-    private String updateOrderStatusDTDC(List sheetData, User loggedOnUser) throws Exception {
-        // TODO: #warehouse fix this
-
-        /*
-         * Date deliveryDateInXls = null; String remarks = null; Calendar cal = Calendar.getInstance(); Date dateToday =
-         * new Date(); Date shipDate = null; long daysTakenInDelivery = 0; String errorMessage = ""; String
-         * exceptionMessage = ""; String messageFormat=""; String tracking_Id=""; int formatExceptionFlag = 0;
-         * SimpleDateFormat sdf_date = new SimpleDateFormat("dd/MM/yyyy"); String orderStatusInXls = null; int
-         * ordersDelivered = 0; order = null; Long orderId; String courier_trackingId = null; String order_gateway_id =
-         * ""; for (int i = 0; i < sheetData.size(); i++) { order = null; remarks = null; courier_trackingId = null;
-         * allItemsDeliveredCount = 0; itemsDeliveredCount = 0; addedItems = ""; orderId = null; orderStatusInXls =
-         * null; deliveryDateInXls = null; List list = (List) sheetData.get(i); for (int j = 0; j < list.size(); j++) {
-         * HSSFCell cell = (HSSFCell) list.get(j); // excluding the top row //extract the tracking id/courier number //
-         * courier id or tracking id can either be a numeric or a string value if (i != 0 && j == 1 && cell != null) {
-         * if (cell.getCellType() == HSSFCell.CELL_TYPE_STRING) { courier_trackingId =
-         * cell.getRichStringCellValue().getString(); } else if (cell.getCellType() == HSSFCell.CELL_TYPE_NUMERIC) {
-         * courier_trackingId = Long.toString((long) cell.getNumericCellValue()); } else { break; } } // extract order
-         * by gateway_order_id // ideally gateway_order_id should be a string containing a - in between // in COD cases
-         * we get an excel which does not have a - in place hence we have to insert it manually if (i != 0 && j == 2 &&
-         * cell != null) { if (cell.getCellType() == HSSFCell.CELL_TYPE_STRING && null !=
-         * cell.getRichStringCellValue().getString()) { order_gateway_id = cell.getRichStringCellValue().getString(); }
-         * else if (cell.getCellType() == HSSFCell.CELL_TYPE_NUMERIC) { order_gateway_id = Long.toString((long)
-         * cell.getNumericCellValue()); //insert a - in between in case the reference number does not have one
-         * order_gateway_id = format_gateway_order_id(order_gateway_id, digitsInGatewayId); } order =
-         * orderDaoProvider.get().findByGatewayOrderId(order_gateway_id); if (order == null ||
-         * order.getOrderStatus().equals(orderDao.find(EnumOrderStatus.Delivered.getId()))) { break; } } // status //
-         * check which items are shipped and update their status as delivered if (i != 0 && j == 9 && null !=
-         * cell.getRichStringCellValue().getString() &&
-         * cell.getRichStringCellValue().getString().trim().equalsIgnoreCase("Delivered")) { orderStatusInXls =
-         * "Delivered"; } // delivery deliveryDateInXls if (i != 0 && j == 10 && orderStatusInXls != null &&
-         * orderStatusInXls.equals("Delivered") && cell != null) { if (cell.getCellType() == HSSFCell.CELL_TYPE_STRING) {
-         * deliveryDateInXls = sdf_date.parse(cell.getRichStringCellValue().getString()); } else if (cell.getCellType() ==
-         * HSSFCell.CELL_TYPE_NUMERIC) { // microsoft excel here starts reading date as it fits MM/dd/yyyy criteria and
-         * gives out a numeric value // convert a date from MM/dd/yyyy to dd/MM/yyyy deliveryDateInXls =
-         * cell.getDateCellValue(); cal.setTime(deliveryDateInXls); int dd = cal.get(Calendar.DATE); int mm =
-         * cal.get(Calendar.MONTH); cal.set(Calendar.DATE, mm + 1); cal.set(Calendar.MONTH, dd - 1); deliveryDateInXls =
-         * cal.getTime(); } else { deliveryDateInXls = new Date(); } cal.setTime(deliveryDateInXls); //Truncate time
-         * cal.set(Calendar.HOUR_OF_DAY, 0); cal.set(Calendar.MINUTE, 0); cal.set(Calendar.SECOND, 0);
-         * cal.set(Calendar.MILLISECOND, 0); deliveryDateInXls = cal.getTime(); } // check which items are shipped and
-         * update their status as delivered if (i != 0 && j == 11 && order != null && orderStatusInXls != null &&
-         * deliveryDateInXls != null) { if (cell.getCellType() == HSSFCell.CELL_TYPE_STRING) { remarks = "Remarks :
-         * <br/> " + cell.getRichStringCellValue().getString(); //cell.getDateCellValue() } for (LineItem lineItem :
-         * order.getProductLineItems()) { if (lineItem != null && Boolean.TRUE.equals(lineItem.isShippedEmailSent()) &&
-         * lineItem.getTrackingId() != null && lineItem.getTrackingId().equals(courier_trackingId) &&
-         * lineItem.getLineItemStatus().equals(lineItemStatusDao.find(EnumLineItemStatus.SHIPPED.getId()))) { shipDate =
-         * lineItem.getShipDate(); //Calculating no.of days taken in delivery daysTakenInDelivery =
-         * (deliveryDateInXls.getTime() - shipDate.getTime()) / (60 * 60 * 1000 * 24); if (shipDate!=null &&
-         * (deliveryDateInXls.after(dateToday) || daysTakenInDelivery > acceptableDeliveryPeriod )) { errorMessage =
-         * errorMessage.concat((i + 1) + ";" + courier_trackingId + ";"); formatExceptionFlag = 1; break; } //When ship
-         * date is more than delivery date -> this happens when ship date in our system sometimes is delayed but courier
-         * pics the shipment if( deliveryDateInXls.before(shipDate)){ Calendar
-         * deliveryDateAsShipDatePlusOne=Calendar.getInstance(); deliveryDateAsShipDatePlusOne.setTime(shipDate);
-         * deliveryDateAsShipDatePlusOne.add(Calendar.DAY_OF_MONTH,1);
-         * deliveryDateAsShipDatePlusOne.set(Calendar.HOUR_OF_DAY,0);
-         * deliveryDateAsShipDatePlusOne.set(Calendar.MINUTE,0); deliveryDateAsShipDatePlusOne.set(Calendar.SECOND,0);
-         * deliveryDateAsShipDatePlusOne.set(Calendar.MILLISECOND,0);
-         * deliveryDateInXls=deliveryDateAsShipDatePlusOne.getTime(); }
-         * lineItem.setLineItemStatus(lineItemStatusDao.find(EnumLineItemStatus.DELIVERED.getId()));
-         * lineItem.setDeliveryDate(deliveryDateInXls); lineItemDaoProvider.get().save(lineItem); addedItems +=
-         * lineItem.getProductVariant().getProduct().getName() + "<br/>"; itemsDeliveredCount++; } if (lineItem != null &&
-         * lineItem.getLineItemStatus().equals(lineItemStatusDao.find(EnumLineItemStatus.DELIVERED.getId()))) {
-         * allItemsDeliveredCount++; } } addedItems+=" by DTDC"; //add activity only when atleast a single product is
-         * delivered if (itemsDeliveredCount > 0) { orderManagerProvider.get().logOrderActivity(order, loggedOnUser,
-         * orderLifecycleActivityDaoProvider.get().find(EnumOrderLifecycleActivity.OrderDelivered.getId()),
-         * prefixComments + addedItems + remarks, deliveryDateInXls); orderManagerProvider.get().logOrderActivity(order,
-         * loggedOnUser,
-         * orderLifecycleActivityDaoProvider.get().find(EnumOrderLifecycleActivity.OrderDeliveredUpdated.getId()),
-         * "DeliveryStatusUpdated"); ordersDelivered++; } //mark order as delivered only when all the items are
-         * delivered if (order.getProductLineItems().size() == allItemsDeliveredCount &&
-         * order.getOrderStatus().equals(orderStatusDao.find(EnumOrderStatus.Shipped.getId()))) {
-         * order.setOrderStatus(orderStatusDao.find(EnumOrderStatus.Delivered.getId()));
-         * orderDaoProvider.get().save(order); } } } // for j loop close } // for i loop close if (formatExceptionFlag ==
-         * 1) { messageFormat="<br/><br/>The delivery date in the following order is not in the correct
-         * format(dd/MM/yyyy).Please verify <br/><br/>" ; StringTokenizer st = new StringTokenizer(errorMessage, ";");
-         * while (st.hasMoreTokens()) { String row_number = st.nextToken(); String order_id = st.nextToken();
-         * exceptionMessage = exceptionMessage + ("Row No.=" + row_number + " Tracking_Id=" + order_id + "<br/><br/>"); } }
-         * else { messageFormat=""; } return ("<br/>No.of rows updated=" + ordersDelivered + messageFormat +
-         * exceptionMessage);
-         */
-
-        return null;
-    }
-
-    public int updateDeliveryStatusAFL(Date startDate, Date endDate, User loggedOnUser) {
-        courierIdList.add( EnumCourier.AFLWiz.getId());
-        List<Long> shippingOrderList = getAdminShippingOrderService().getShippingOrderListByCouriers(startDate, endDate,courierIdList);
-        courierName = " AFLwiz";
-
+    public int updateCourierStatus(Date startDate, Date endDate, String courierName) throws HealthkartCheckedException {
         ordersDelivered = 0;
         orderDeliveryCount = 0;
+        unmodifiedTrackingIds = new ArrayList<String>();
 
-        SimpleDateFormat sdf_date = new SimpleDateFormat("yyyy-MM-dd");
-
-        Map<String, String> responseAFL;
-        if (shippingOrderList != null || shippingOrderList.size() != 0) {
-
-            for (Long shippingOrderId : shippingOrderList) {
-
-                ShippingOrder shippingOrderInList = getShippingOrderService().find(shippingOrderId);
-                Shipment shipment = shippingOrderInList.getShipment();
-                String trackingId = shipment.getTrackingId();
-                addedItems = "";
-                itemsDeliveredCount = 0;
-                allItemsDeliveredCount = 0;
-                BufferedReader in = null;
-
-                try {
-                    URL url = new URL("http://trackntrace.aflwiz.com/aflwiztrack?shpntnum=" + trackingId);
-                    in = new BufferedReader(new InputStreamReader(url.openStream()));
-                    String inputLine;
-                    String response = "";
-
-                    while ((inputLine = in.readLine()) != null) {
-                        if (inputLine != null) {
-                            response += inputLine;
-                        }
-                    }
-                    responseAFL = AFLResponseParser.parseResponse(response, trackingId);
-                    if (responseAFL.get("delivery_date") != null && responseAFL.get("order_gateway_id") != null && responseAFL.get("awb") != null
-                            && responseAFL.get("current_status") != null) {
-
-                        // shippingOrder =
-                        // getShippingOrderService().findByGatewayOrderId(responseAFL.get("order_gateway_id"));
-                        Date delivery_date = sdf_date.parse(responseAFL.get("delivery_date"));
-                        ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shipment, trackingId, delivery_date);
-                    }
-                } catch (MalformedURLException mue) {
-                    logger.error("malformed url for shipping order id " + shippingOrderId);
-                    mue.printStackTrace();
-                    continue;
-                } catch (IOException ioe) {
-                    logger.error("ioexception encounter for shipping order id " + shippingOrderId);
-                    ioe.printStackTrace();
-                    continue;
-                } catch (ParseException pe) {
-                    logger.error("parse exception in shipping order id " + shippingOrderId);
-                    pe.printStackTrace();
-                    continue;
-                } catch (NullPointerException npe) {
-                    logger.error("null pointer expection encountered for shipping order " + shippingOrderId);
-                    npe.printStackTrace();
-                    continue;
-                } catch (Exception e) {
-                    logger.error("Exception encountered for shipping order id " + shippingOrderId);
-                    e.printStackTrace();
-                    continue;
-                } finally {
+        if (courierName.equalsIgnoreCase(CourierConstants.AFL)) {
+            courierIdList = new ArrayList<Long>();
+            courierIdList.add(EnumCourier.AFLWiz.getId());
+            shippingOrderList = getAdminShippingOrderService().getShippingOrderListByCouriers(startDate, endDate, courierIdList);
+            if (shippingOrderList != null && shippingOrderList.size() > 0) {
+                for (ShippingOrder shippingOrderInList : shippingOrderList) {
+                    trackingId = shippingOrderInList.getShipment().getTrackingId();
                     try {
-                        in.close();
-                    } catch (IOException e) {
-                        logger.error("ioexception encounter for shipping order id " + shippingOrderId);
-                        e.printStackTrace();
+                        Date deliveryDate = courierStatusUpdateHelper.updateDeliveryStatusAFL(trackingId);
+                        if (deliveryDate != null) {
+                            ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shippingOrderInList.getShipment(),
+                                    shippingOrderInList.getShipment().getTrackingId(), deliveryDate);
+                        } else {
+                            logger.info("Delivery date not available or status is not delivered for Tracking Id: " + shippingOrderInList.getShipment().getTrackingId());
+                            unmodifiedTrackingIds.add(trackingId);
+
+                        }
+                    } catch (Exception e) {
+                        //unmodifiedTrackingIds.add(trackingId);
+                        logger.debug(CourierConstants.EXCEPTION + trackingId);
+                        continue;
+                    }
+
+                }
+            }
+        } else if (courierName.equalsIgnoreCase(CourierConstants.CHHOTU)) {
+            courierIdList = new ArrayList<Long>();
+            courierIdList.add(EnumCourier.Chhotu.getId());
+            shippingOrderList = getAdminShippingOrderService().getShippingOrderListByCouriers(startDate, endDate, courierIdList);
+            if (shippingOrderList != null && shippingOrderList.size() > 0) {
+                for (ShippingOrder shippingOrderInList : shippingOrderList) {
+                    trackingId = shippingOrderInList.getShipment().getTrackingId();
+                    try {
+                        ChhotuCourierDelivery chhotuCourierDelivery = courierStatusUpdateHelper.updateDeliveryStatusChhotu(trackingId);
+                        Date delivery_date = null;
+                        if (chhotuCourierDelivery != null) {
+                            delivery_date = chhotuCourierDelivery.getFormattedDeliveryDate();
+                        } else {
+                            unmodifiedTrackingIds.add(trackingId);
+                        }
+
+                        if (delivery_date != null && chhotuCourierDelivery.getShipmentStatus().equalsIgnoreCase(CourierConstants.DELIVERED) && chhotuCourierDelivery.getTrackingId() != null) {
+                            ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shippingOrderInList.getShipment(), shippingOrderInList.getShipment().getTrackingId(), delivery_date);
+                        } else {
+                            logger.info("Delivery date not available or status is not delivered for Tracking Id: " + shippingOrderInList.getShipment().getTrackingId());
+                        }
+                    } catch (Exception ex) {
+                        unmodifiedTrackingIds.add(trackingId);
                         continue;
                     }
                 }
             }
-        }
-        return ordersDelivered;
+        } else if (courierName.equalsIgnoreCase(CourierConstants.DELHIVERY)) {
+            courierIdList = new ArrayList<Long>();
+            courierIdList = EnumCourier.getDelhiveryCourierIds();
+            shippingOrderList = getAdminShippingOrderService().getShippingOrderListByCouriers(startDate, endDate, courierIdList);
+            JsonObject shipmentJsonObj = null;
+            if (shippingOrderList != null && shippingOrderList.size() > 0) {
+                for (ShippingOrder shippingOrderInList : shippingOrderList) {
 
-    }
+                    trackingId = shippingOrderInList.getShipment().getTrackingId();
+                    try {
+                        shipmentJsonObj = courierStatusUpdateHelper.updateDeliveryStatusDelhivery(trackingId);
+                        if (shipmentJsonObj != null) {
+                            String status = shipmentJsonObj.getAsJsonObject(CourierConstants.DELHIVERY_STATUS).get(CourierConstants.DELHIVERY_STATUS).getAsString();
+                            // String awb = shipmentJsonObj.get(CourierConstants.DELHIVERY_AWB).getAsString();
+                            String deliveryDate = shipmentJsonObj.getAsJsonObject(CourierConstants.DELHIVERY_STATUS).get(CourierConstants.DELHIVERY_STATUS_DATETIME).getAsString();
 
-    public int updateDeliveryStatusChhotu(Date startDate, Date endDate, User loggedOnUser) {
-        courierIdList.add( EnumCourier.Chhotu.getId());
-        List<Long> shippingOrderList = getAdminShippingOrderService().getShippingOrderListByCouriers(startDate, endDate,courierIdList);
-        courierName += " Chhotu";
+                            Date delivery_date = getFormattedDeliveryDate(deliveryDate);
 
-        ordersDelivered = 0;
-        orderDeliveryCount = 0;
 
-        if (shippingOrderList != null || shippingOrderList.size() != 0) {
-            for (Long shippingOrderId : shippingOrderList) {
-
-                ShippingOrder shippingOrderInList = getShippingOrderService().find(shippingOrderId);
-                Shipment shipment = shippingOrderInList.getShipment();
-                String trackingId = shipment.getTrackingId();
-                addedItems = "";
-                itemsDeliveredCount = 0;
-                allItemsDeliveredCount = 0;
-
-                try {
-
-                    URL url = new URL("http://api.chhotu.in/shipmenttracking?tracking_number=" + trackingId);
-                    BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-                    String inputLine;
-                    String response = "";
-                    String jsonFormattedResponse = "";
-
-                    while ((inputLine = in.readLine()) != null) {
-                        if (inputLine != null) {
-                            response += inputLine;
+                            if (delivery_date != null && status.equalsIgnoreCase(CourierConstants.DELIVERED)) {
+                                ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shippingOrderInList.getShipment(), trackingId, delivery_date);
+                            } else {
+                                logger.info("Delivery date not avaialable or status is not delivered for Tracking Id: " + trackingId);
+                            }
+                        } else {
+                            unmodifiedTrackingIds.add(trackingId);
                         }
+                    } catch (Exception ex) {
+                        unmodifiedTrackingIds.add(trackingId);
+                        continue;
                     }
-                    in.close();
-                    jsonFormattedResponse = response.substring(14, (response.length() - 1));
-                    ChhotuCourierDelivery chhotuCourierDelivery = new Gson().fromJson(jsonFormattedResponse, ChhotuCourierDelivery.class);
-                    Date delivery_date = chhotuCourierDelivery.getFormattedDeliveryDate();
-
-                    if (delivery_date != null && chhotuCourierDelivery.getShipmentStatus().equalsIgnoreCase("DELIVERED") && chhotuCourierDelivery.getTrackingId() != null) {
-                        ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shipment, trackingId, delivery_date);
-                    } else {
-                        logger.error("Deleivery date not avaialable or status is not delieved for : " + shipment.getTrackingId());
-                    }
-
-                } catch (MalformedURLException mue) {
-                    logger.error("malformed url for shipping order id " + shippingOrderId);
-                    mue.printStackTrace();
-                    continue;
-                } catch (IOException ioe) {
-                    logger.error("ioexception encounter for shipping order id " + shippingOrderId);
-                    ioe.printStackTrace();
-                    continue;
-                } catch (NullPointerException npe) {
-                    logger.error("null pointer exception encountered for shipping order id " + shippingOrderId);
-                    npe.printStackTrace();
-                    continue;
-                } catch (Exception e) {
-                    logger.error("Exception encountered for shipping order id " + shippingOrderId);
-                    e.printStackTrace();
-                    continue;
                 }
+            }
+
+
+        } else if (courierName.equalsIgnoreCase(CourierConstants.BLUEDART)) {
+            SimpleDateFormat sdf_date = new SimpleDateFormat("dd MMMMM yyyy");
+            courierIdList = new ArrayList<Long>();
+            courierIdList = EnumCourier.getBlueDartCouriers();
+            shippingOrderList = getAdminShippingOrderService().getShippingOrderListByCouriers(startDate, endDate, courierIdList);
+            if (shippingOrderList != null && shippingOrderList.size() > 0) {
+                for (ShippingOrder shippingOrderInList : shippingOrderList) {
+                    trackingId = shippingOrderInList.getShipment().getTrackingId();
+                    try {
+                        Element ele = courierStatusUpdateHelper.updateDeliveryStatusBlueDart(trackingId);
+                        if (ele != null) {
+                            String status = ele.getChildText(CourierConstants.BLUEDART_STATUS);
+                            String statusDate = ele.getChildText(CourierConstants.BLUEDART_STATUS_DATE);
+                            try {
+                                if (status.equals(CourierConstants.BLUEDART_SHIPMENT_DELIVERED) && statusDate != null) {
+                                    Date delivery_date = sdf_date.parse(statusDate);
+                                    ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shippingOrderInList.getShipment(), trackingId, delivery_date);
+                                }
+                            } catch (ParseException pe) {
+                                logger.debug(CourierConstants.PARSE_EXCEPTION + pe.getMessage());
+                            }
+                        } else {
+                            unmodifiedTrackingIds.add(trackingId);
+                        }
+                    } catch (Exception ex) {
+                        logger.debug(CourierConstants.EXCEPTION + trackingId);
+                        unmodifiedTrackingIds.add(trackingId);
+                        continue;
+                    }
+                }
+            }
+
+        } else if (courierName.equalsIgnoreCase(CourierConstants.DTDC)) {
+            courierIdList = new ArrayList<Long>();
+            courierIdList = EnumCourier.getDTDCCouriers();
+            shippingOrderList = getAdminShippingOrderService().getShippingOrderListByCouriers(startDate, endDate, courierIdList);
+            Map<String, String> responseMap = new HashMap<String, String>();
+            String courierDeliveryStatus = null;
+            String deliveryDateString = null;
+            if (shippingOrderList != null && shippingOrderList.size() > 0) {
+                for (ShippingOrder shippingOrderInList : shippingOrderList) {
+                    trackingId = shippingOrderInList.getShipment().getTrackingId();
+                    try {
+                        responseMap = courierStatusUpdateHelper.updateDeliveryStatusDTDC(trackingId);
+                        if (responseMap != null) {
+                            for (Map.Entry entryObj : responseMap.entrySet()) {
+                                if (entryObj.getKey().equals(CourierConstants.DTDC_INPUT_STR_STATUS)) {
+                                    courierDeliveryStatus = entryObj.getValue().toString();
+                                }
+                                if (entryObj.getKey().equals(CourierConstants.DTDC_INPUT_STR_STATUSTRANSON)) {
+                                    deliveryDateString = entryObj.getValue().toString();
+                                }
+                            }
+
+                            if (courierDeliveryStatus != null && deliveryDateString != null) {
+                                if (courierDeliveryStatus.equals(CourierConstants.DTDC_INPUT_DELIVERED)) {
+                                    String subStringDeliveryDate = null;
+                                    if (deliveryDateString != null) {
+                                        subStringDeliveryDate = deliveryDateString.substring(4, 8) + "-" + deliveryDateString.substring(2, 4) + "-" + deliveryDateString.substring(0, 2);
+                                    }
+                                    Date delivery_date = getFormattedDeliveryDate(subStringDeliveryDate);
+                                    ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shippingOrderInList.getShipment(), trackingId, delivery_date);
+                                }
+                            }
+
+                        } else {
+                            unmodifiedTrackingIds.add(trackingId);
+                        }
+                    } catch (Exception ex) {
+                        unmodifiedTrackingIds.add(trackingId);
+                        continue;
+                    }
+                }
+
             }
         }
         return ordersDelivered;
-
     }
 
     public int updateCourierDeliveryStatus(ShippingOrder shippingOrder, Shipment shipment, String trackingId, Date deliveryDate) {
@@ -404,30 +322,11 @@ public class DeliveryStatusUpdateManager {
                 orderDeliveryCount++;
             }
         }
-
-        /*
-         * for (LineItem lineItem : order.getProductLineItems()) { if (lineItem != null &&
-         * Boolean.TRUE.equals(lineItem.isShippedEmailSent()) && lineItem.getTrackingId() != null &&
-         * lineItem.getLineItemStatus().equals(lineItemStatusDao.find(EnumLineItemStatus.SHIPPED.getId())) &&
-         * lineItem.getTrackingId().equals(trackingId)) {
-         * lineItem.setLineItemStatus(lineItemStatusDao.find(EnumLineItemStatus.DELIVERED.getId()));
-         * lineItem.setDeliveryDate(delivery_date); lineItemDaoProvider.get().save(lineItem); addedItems +=
-         * lineItem.getProductVariant().getProduct().getName() + "<br/>"; itemsDeliveredCount++; } //counting delivered
-         * items separately as there may be a case of partially escalated orders if (lineItem != null &&
-         * lineItem.getLineItemStatus().equals(lineItemStatusDao.find(EnumLineItemStatus.DELIVERED.getId()))) {
-         * allItemsDeliveredCount++; } } //add activity only when atleast a single product is delivered
-         * addedItems+=courierName; if (itemsDeliveredCount > 0) { orderService.logOrderActivity(order, loggedOnUser,
-         * orderLifecycleActivityDaoProvider.get().find(EnumOrderLifecycleActivity.OrderDelivered.getId()),
-         * prefixComments + addedItems, delivery_date); orderService.logOrderActivity(order, loggedOnUser,
-         * orderLifecycleActivityDaoProvider.get().find(EnumOrderLifecycleActivity.OrderDeliveredUpdated.getId()),
-         * "DeliveryStatusUpdated"); orderDeliveryCount++; } //mark order as delivered only when all the items are
-         * delivered if (order.getProductLineItems().size() == allItemsDeliveredCount &&
-         * order.getOrderStatus().equals(orderStatusDao.find(EnumOrderStatus.Shipped.getId()))) {
-         * order.setOrderStatus(orderStatusDao.find(EnumOrderStatus.Delivered.getId()));
-         * orderDaoProvider.get().save(order); }
-         */
-
         return orderDeliveryCount;
+    }
+
+    public List<String> getUnmodifiedTrackingIds(){
+        return unmodifiedTrackingIds;
     }
 
     public String format_gateway_order_id(String order_gateway_id, int digitsInGatewayId) {
@@ -437,158 +336,15 @@ public class DeliveryStatusUpdateManager {
         }
         return order_gateway_id;
     }
-
-    public int updateDeliveryStatusDelhivery(Date startDate, Date endDate, User loggedOnUser) {
-        courierIdList.add( EnumCourier.Delhivery.getId());
-        List<Long> shippingOrderList = adminShippingOrderService.getShippingOrderListByCouriers(startDate, endDate,courierIdList);
-        // courierName += " Delhivery";
-
-        ordersDelivered = 0;
-        orderDeliveryCount = 0;
-
-        if (shippingOrderList != null || shippingOrderList.size() != 0) {
-            for (Long shippingOrderId : shippingOrderList) {
-
-                ShippingOrder shippingOrderInList = getShippingOrderService().find(shippingOrderId);
-                Shipment shipment = shippingOrderInList.getShipment();
-                String trackingId = shipment.getTrackingId();
-                String ref_no = shippingOrderInList.getGatewayOrderId();
-                addedItems = "";
-                itemsDeliveredCount = 0;
-                allItemsDeliveredCount = 0;
-                try {
-
-                    URL url = new URL("http://track.delhivery.com/api/packages/json/?token=" + authenticationIdForDelhivery + "&ref_nos=" + ref_no);
-                    BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-                    String inputLine;
-                    String jsonFormattedResponse = "";
-
-                    while ((inputLine = in.readLine()) != null) {
-                        jsonFormattedResponse += inputLine;
-                    }
-                    in.close();
-
-                    JsonParser jsonParser = new JsonParser();
-                    JsonObject shipmentObj = jsonParser.parse(jsonFormattedResponse).getAsJsonObject().getAsJsonArray("ShipmentData").get(0).getAsJsonObject().getAsJsonObject(
-                            "Shipment");
-
-                    String status = shipmentObj.getAsJsonObject("Status").get("Status").getAsString();
-                    String awb = shipmentObj.get("AWB").getAsString();
-                    String deliveryDate = shipmentObj.getAsJsonObject("Status").get("StatusDateTime").getAsString();
-
-                    Date delivery_date = getFormattedDeliveryDate(deliveryDate);
-
-                    if (delivery_date != null && status.equalsIgnoreCase("DELIVERED")) {
-                        ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shipment, trackingId, delivery_date);
-                    } else {
-                        logger.error("Delivery date not avaialable or status is not delieved for : " + shipment.getTrackingId());
-                    }
-
-                } catch (MalformedURLException mue) {
-                    logger.error("malformed url for shipping order id " + shippingOrderId);
-                    mue.printStackTrace();
-                    continue;
-                } catch (IOException ioe) {
-                    logger.error("ioexception encounter for shipping order id " + shippingOrderId);
-                    ioe.printStackTrace();
-                    continue;
-                } catch (NullPointerException npe) {
-                    logger.error("null pointer exception encountered for shipping order id " + shippingOrderId);
-                    npe.printStackTrace();
-                    continue;
-                } catch (Exception e) {
-                    logger.error("Exception encountered for shipping order id " + shippingOrderId);
-                    e.printStackTrace();
-                    continue;
-                }
-            }
-        }
-        return ordersDelivered;
-
-    }
-
-  public int updateDeliveryStatusBlueDart(Date startDate, Date endDate, User loggedOnUser) {
-    courierIdList.add( EnumCourier.BlueDart.getId());
-    courierIdList.add( EnumCourier.BlueDart_COD.getId());
-    List<Long> shippingOrderList = adminShippingOrderService.getShippingOrderListByCouriers(startDate, endDate,courierIdList);
-    courierName = " BlueDart";
-    ordersDelivered = 0;
-    orderDeliveryCount = 0;
-    SimpleDateFormat sdf_date = new SimpleDateFormat("dd MMMMM yyyy");
-    if (shippingOrderList != null || shippingOrderList.size() != 0) {
-
-      for (Long shippingOrderId : shippingOrderList) {
-
-        ShippingOrder shippingOrderInList = getShippingOrderService().find(shippingOrderId);
-        Shipment shipment = shippingOrderInList.getShipment();
-        String trackingId = shipment.getTrackingId();
-        addedItems = "";
-        itemsDeliveredCount = 0;
-        allItemsDeliveredCount = 0;
-        BufferedReader in = null;
-
-        try {
-          URL url = new URL("http://www.bluedart.com/servlet/RoutingServlet?handler=tnt&action=custawbquery&loginid="+loginIdForBlueDart+"&awb=awb&numbers=" + trackingId + "&format=xml&lickey="+licenceKeyForBlueDart+"&verno=1.3&scan=1");
-          in = new BufferedReader(new InputStreamReader(url.openStream()));
-          String inputLine;
-          String response = "";
-
-          while ((inputLine = in.readLine()) != null) {
-            if (inputLine != null) {
-              response += inputLine;
-            }
-          }
-          Document doc = new SAXBuilder().build(new StringReader(response));
-          XPath xPath = XPath.newInstance("/*/Shipment");
-          Element ele = (Element) xPath.selectSingleNode(doc);
-          String status = ele.getChildText("Status");
-          String statusDate = ele.getChildText("StatusDate");
-          if (status.equals("Shipment delivered") && statusDate != null) {
-            Date delivery_date = sdf_date.parse(statusDate);
-            ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shipment, trackingId, delivery_date);
-          }
-        } catch (MalformedURLException mue) {
-          logger.error("malformed url for shipping order id " + shippingOrderId);
-          mue.printStackTrace();
-          continue;
-        } catch (IOException ioe) {
-          logger.error("ioexception encounter for shipping order id " + shippingOrderId);
-          ioe.printStackTrace();
-          continue;
-        } catch (ParseException pe) {
-          logger.error("parse exception in shipping order id " + shippingOrderId);
-          pe.printStackTrace();
-          continue;
-        } catch (NullPointerException npe) {
-          logger.error("null pointer expection encountered for shipping order " + shippingOrderId);
-          npe.printStackTrace();
-          continue;
-        } catch (Exception e) {
-          logger.error("Exception encountered for shipping order id " + shippingOrderId);
-          e.printStackTrace();
-          continue;
-        } finally {
-          try {
-            in.close();
-          } catch (IOException e) {
-            logger.error("ioexception encounter for shipping order id " + shippingOrderId);
-            e.printStackTrace();
-            continue;
-          }
-        }
-      }
-    }
-    return ordersDelivered;
-  }
-
-  public Date getFormattedDeliveryDate(String deliveryDate) {
+    
+    public Date getFormattedDeliveryDate(String deliveryDate) {
         Date formattedDate = null;
         if (deliveryDate != null) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             try {
                 formattedDate = sdf.parse(deliveryDate);
             } catch (Exception e) {
-                logger.error(" exception in parsing chhotu courier deliver format : date was :" + deliveryDate);
+                logger.error("Exception occurred in parsing DeliveryDate format,Date was :" + deliveryDate);
             }
         }
 

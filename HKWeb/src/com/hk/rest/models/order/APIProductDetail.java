@@ -10,6 +10,7 @@ package com.hk.rest.models.order;
 public class APIProductDetail {
   private String productId;
   private String qty;
+  private Double storePrice;
 
   public String getProductId() {
     return productId;
@@ -25,6 +26,14 @@ public class APIProductDetail {
 
   public void setQty(String qty) {
     this.qty = qty;
+  }
+
+  public Double getStorePrice() {
+    return storePrice;
+  }
+
+  public void setStorePrice(Double storePrice) {
+    this.storePrice = storePrice;
   }
 }
 

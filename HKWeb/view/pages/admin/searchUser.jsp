@@ -61,10 +61,19 @@
         <th>Add Reward Point</th>
         <th>Reward Points Txn History</th>
         <th>User Referrals</th>
+        <th>Karma</th>
       </tr>
       </thead>
       <c:forEach items="${userBean.userList}" var="user" varStatus="userCount">
-        <tr>
+          <c:choose>
+          <c:when test="${user.priorityUser}">
+               <tr style="background:#F6CECE;" >
+          </c:when>
+          <c:otherwise>
+               <tr >
+          </c:otherwise>
+        </c:choose>
+
           <td>${userCount.count}</td>
           <td>
               ${user.login}<br/>
@@ -109,6 +118,9 @@
                 User Referrals
                 <s:param name="user" value="${user.id}"/>
               </s:link>
+          </td>
+          <td>
+              ${user.karmaProfile.karmaPoints}
           </td>
         </tr>
       </c:forEach>

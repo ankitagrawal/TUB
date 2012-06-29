@@ -43,7 +43,7 @@
 -/nutrition/weight-management
 --/nutrition/weight-management/fat-burner
 --/nutrition/weight-management/appetite-control :Appetite Control
---/nutrition/weight-management/weight-maintenance  :weight Maintenance
+--/nutrition/weight-management/weight-maintenance :Weight Maintenance
 --/nutrition/weight-management/meal-replacement :Meal Replacement
 --/nutrition/weight-management/low-calorie-food
 --/nutrition/weight-management/sweetener
@@ -413,11 +413,15 @@
 --/personal-care/women/pregnancy-kits
 --/personal-care/women/chlamydia-test
 --/personal-care/women/condoms
+--/personal-care/women/intimate-care:Intimate Care
 --/personal-care/women/combo-offers
 -/personal-care/sexual-care
 --/personal-care/sexual-care/accessories
 --/personal-care/sexual-care/condoms
 --/personal-care/sexual-care/female-condoms: Female Condoms
+--/personal-care/sexual-care/fertility
+---/personal-care/sexual-care/fertility/men
+---/personal-care/sexual-care/fertility/women
 --/personal-care/sexual-care/combo-offers
 -/personal-care/foot-care-pedicure : Foot Care/Pedicure
 --/personal-care/foot-care-pedicure/fresh-feet
@@ -467,6 +471,7 @@
 --/beauty/what-s-new/natural-products
 --/beauty/what-s-new/home-spa-products
 --/beauty/what-s-new/spas-salons : Spas & Salons
+--/beauty/what-s-new/women-nutrition
 -/beauty/face-care
 --/beauty/face-care/cleanser
 ---/beauty/face-care/cleanser/normal

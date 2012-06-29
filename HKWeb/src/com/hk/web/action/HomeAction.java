@@ -1,29 +1,16 @@
 package com.hk.web.action;
 
-import java.util.List;
-
-import javax.servlet.RequestDispatcher;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.akube.framework.stripes.action.BaseAction;
+import com.hk.domain.catalog.category.Category;
+import com.hk.domain.content.PrimaryCategoryHeading;
 import com.hk.pact.dao.catalog.category.CategoryDao;
+import com.hk.pact.dao.content.PrimaryCategoryHeadingDao;
 import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.HttpCache;
 import net.sourceforge.stripes.action.Resolution;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.akube.framework.stripes.action.BaseAction;
-import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.category.CategoryImage;
-import com.hk.domain.content.PrimaryCategoryHeading;
-import com.hk.helper.MenuHelper;
-import com.hk.impl.dao.catalog.category.CategoryImageDaoImpl;
-import com.hk.manager.UserManager;
-import com.hk.pact.dao.content.PrimaryCategoryHeadingDao;
-import com.hk.pact.service.TestTxnService;
-import com.hk.pact.service.catalog.CategoryService;
+import java.util.List;
 
 //@HttpCache(expires=20000)
 @Component
@@ -46,7 +33,7 @@ public class HomeAction extends BaseAction {
         return new ForwardResolution("/pages/home.jsp");
     }
 
-    public class HTTPResponseResolution implements Resolution {
+    /*public class HTTPResponseResolution implements Resolution {
         public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
             RequestDispatcher dispatcher = getContext().getServletContext().getRequestDispatcher("/pages/home.jsp");
@@ -55,7 +42,7 @@ public class HomeAction extends BaseAction {
 
         }
     }
-
+*/
     public Category getCategory() {
         return category;
     }

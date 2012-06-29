@@ -6,7 +6,9 @@ import java.util.List;
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.offer.rewardPoint.RewardPointMode;
+import org.springframework.stereotype.Component;
 
+@Component
 public class RewardPointModeSeedData extends BaseSeedData {
 
 

@@ -1,43 +1,48 @@
 package com.hk.admin.impl.service.courier;
 
-import java.util.List;
-import java.util.Random;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hk.admin.pact.dao.courier.CourierDao;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.service.courier.CourierService;
-import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.courier.EnumCourier;
+import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.core.Pincode;
+import com.hk.domain.courier.CityCourierTAT;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.domain.order.Order;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.pact.dao.BaseDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.core.PincodeService;
 import com.hk.pact.service.payment.PaymentService;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 @Service
 public class CourierServiceImpl implements CourierService {
 
     @Autowired
-    private PaymentService        paymentService;
+    private PaymentService paymentService;
     @Autowired
-    private UserService           userService;
+    private UserService userService;
     @Autowired
-    private PincodeService        pincodeService;
+    private PincodeService pincodeService;
     @Autowired
-    private CourierDao            courierDao;
+    private CourierDao courierDao;
     @Autowired
     private CourierServiceInfoDao courierServiceInfoDao;
+    @Autowired
+    BaseDao baseDao;
 
     @Override
     public Courier getCourierById(Long courierId) {
-        return getCourierDao().getCourierById(courierId);
+        List<Courier> courierList = getCourierDao().getCourierByIds(Arrays.asList(courierId));
+        return courierList != null && courierList.size() > 0 ? courierList.get(0) : null;
     }
 
     @Override
@@ -48,8 +53,8 @@ public class CourierServiceImpl implements CourierService {
     public List<Courier> getAllCouriers() {
         return getCourierDao().getAllCouriers();
     }
-    
-    public CourierServiceInfo getCourierServiceByPincodeAndCourier(Long courierId, String pincode, Boolean isCod){
+
+    public CourierServiceInfo getCourierServiceByPincodeAndCourier(Long courierId, String pincode, Boolean isCod) {
         return getCourierServiceInfoDao().getCourierServiceByPincodeAndCourier(courierId, pincode, isCod);
     }
 
@@ -79,6 +84,7 @@ public class CourierServiceImpl implements CourierService {
 
     public Courier getSuggestedCourierService(String pincode, boolean isCOD) {
 
+/*
         Pincode pincodeObj = getPincodeService().getByPincode(pincode);
         if (pincodeObj != null) {
             Courier courier;
@@ -110,6 +116,7 @@ public class CourierServiceImpl implements CourierService {
                 }
             }
         }
+*/
         return null;
     }
 
@@ -191,8 +198,9 @@ public class CourierServiceImpl implements CourierService {
     public void setPincodeService(PincodeService pincodeService) {
         this.pincodeService = pincodeService;
     }
-    
-    
-    
+
+    public void saveCityCourierTAT(CityCourierTAT cityCourierTAT) {
+        baseDao.save(cityCourierTAT);
+    }
 
 }

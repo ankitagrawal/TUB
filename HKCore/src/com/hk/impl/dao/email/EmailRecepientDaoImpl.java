@@ -23,18 +23,41 @@ public class EmailRecepientDaoImpl extends BaseDaoImpl implements EmailRecepient
     public EmailRecepient getOrCreateEmailRecepient(String recepientEmail) {
         EmailRecepient emailRecepient = findByRecepient(recepientEmail);
         if (emailRecepient == null) {
-            emailRecepient = new EmailRecepient();
-            emailRecepient.setEmail(recepientEmail != null ? recepientEmail : "test@healthkart.com");
-            emailRecepient.setSubscribed(true);
-            emailRecepient.setBounce(false);
-            emailRecepient.setInvalid(false);
-            List<User> users = getUserDao().findByEmail(recepientEmail);
-            emailRecepient.setUser(users != null && users.size() > 0 ? users.get(0) : null);
-            emailRecepient.setEmailCount(0L);
-            emailRecepient.setName(recepientEmail);
-            emailRecepient.setUnsubscribeToken(TokenUtils.getTokenToUnsubscribeWommEmail(recepientEmail));
-            emailRecepient = (EmailRecepient) save(emailRecepient);
+            return createEmailRecepient(recepientEmail);
         }
+        return emailRecepient;
+    }
+
+    public EmailRecepient createEmailRecepient(String recepientEmail) {
+
+        EmailRecepient emailRecepient = new EmailRecepient();
+        emailRecepient.setEmail(recepientEmail != null ? recepientEmail : "test@healthkart.com");
+        emailRecepient.setSubscribed(true);
+        emailRecepient.setBounce(false);
+        emailRecepient.setInvalid(false);
+        List<User> users = getUserDao().findByEmail(recepientEmail);
+        emailRecepient.setUser(users != null && users.size() > 0 ? users.get(0) : null);
+        emailRecepient.setEmailCount(0L);
+        emailRecepient.setName(users != null && users.size() > 0 ? users.get(0).getName() : recepientEmail);
+        emailRecepient.setUnsubscribeToken(TokenUtils.getTokenToUnsubscribeWommEmail(recepientEmail));
+        emailRecepient = (EmailRecepient) save(emailRecepient);
+
+        return emailRecepient;
+    }
+
+    public EmailRecepient createEmailRecepientObject(String recepientEmail) {
+
+        EmailRecepient emailRecepient = new EmailRecepient();
+        emailRecepient.setEmail(recepientEmail != null ? recepientEmail : "test@healthkart.com");
+        emailRecepient.setSubscribed(true);
+        emailRecepient.setBounce(false);
+        emailRecepient.setInvalid(false);
+        List<User> users = getUserDao().findByEmail(recepientEmail);
+        emailRecepient.setUser(users != null && users.size() > 0 ? users.get(0) : null);
+        emailRecepient.setEmailCount(0L);
+        emailRecepient.setName(users != null && users.size() > 0 ? users.get(0).getName() : recepientEmail);
+        emailRecepient.setUnsubscribeToken(TokenUtils.getTokenToUnsubscribeWommEmail(recepientEmail));
+
         return emailRecepient;
     }
 
@@ -42,6 +65,13 @@ public class EmailRecepientDaoImpl extends BaseDaoImpl implements EmailRecepient
         Criteria criteria = getSession().createCriteria(EmailRecepient.class);
         criteria.add(Restrictions.eq("email", recepientEmail));
         return (EmailRecepient) criteria.uniqueResult();
+    }
+
+    public List<String> findEmailIdsPresentInEmailRecepient(List<String> mailingList) {
+
+        String query = "select er.email from EmailRecepient er where er.email in (:mailingList)";
+        List<String> emailIdsPresentInEmailReccepient = getSession().createQuery(query).setParameterList("mailingList", mailingList).list();
+        return emailIdsPresentInEmailReccepient;
     }
 
     public EmailRecepient findByUnsubscribeToken(String unsubscribeToken) {

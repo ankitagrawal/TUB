@@ -3,6 +3,7 @@ package com.hk.admin.impl.dao.courier;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -15,26 +16,17 @@ import com.hk.impl.dao.BaseDaoImpl;
 public class CourierDaoImpl extends BaseDaoImpl implements CourierDao{
 
     public Courier getCourierByName(String name) {
-        return (Courier) getSession().createQuery("from Courier c where c.name = :name").setString("name", name).uniqueResult();
+        return (Courier) findUniqueByNamedParams("from Courier c where c.name = :name", new String[]{"name"}, new Object[]{name});
     }
 
-    public Courier getCourierById(Long courierId) {
-        return get(Courier.class, courierId);
+    public List<Courier> getCourierByIds(List<Long> courierIds) {
+        DetachedCriteria criteria1 = DetachedCriteria.forClass(Courier.class);
+        criteria1.add(Restrictions.in("id", courierIds));
+        return findByCriteria(criteria1);
     }
 
     public List<Courier> getAllCouriers() {
         return getAll(Courier.class);
-    }
-
-    @SuppressWarnings("unchecked")
-    public List<Courier> listRestOfIndiaAvailableCouriers() {
-        List<EnumCourier> restOfIndiaAvailableCouriers = EnumCourier.getRestOfIndiaAvailableCouriers();
-
-        List<Long> courierIds = EnumCourier.getCourierIDs(restOfIndiaAvailableCouriers);
-        Criteria criteria = getSession().createCriteria(Courier.class);
-        criteria.add(Restrictions.in("id", courierIds));
-
-        return criteria.list();
     }
 
     public Courier getPreferredCourierForState(String state) {

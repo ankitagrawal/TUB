@@ -55,6 +55,46 @@
     <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="8V4PCIXyzAIQ44T54AM" id="1008616035"/>
     <c:set var="codeSet" value="<%=true%>"/>
 </c:if>
+<c:if test="${hk:collectionContains(remarketingLabelList, 'gym-gloves') && !codeSet}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="ZhUfCP3D3wIQ44T54AM" id="1008616035"/>
+    <c:set var="codeSet" value="<%=true%>"/>
+</c:if>
+<c:if test="${hk:collectionContains(remarketingLabelList, 'gym-balls') && !codeSet}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="izB1CIXD3wIQ44T54AM" id="1008616035"/>
+    <c:set var="codeSet" value="<%=true%>"/>
+</c:if>
+<c:if test="${hk:collectionContains(remarketingLabelList, 'sports-bag') && !codeSet}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="IHe4CI3C3wIQ44T54AM" id="1008616035"/>
+    <c:set var="codeSet" value="<%=true%>"/>
+</c:if>
+<c:if test="${hk:collectionContains(remarketingLabelList, 'other-balls') && !codeSet}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="G8ZtCK2-3wIQ44T54AM" id="1008616035"/>
+    <c:set var="codeSet" value="<%=true%>"/>
+</c:if>
+<c:if test="${hk:collectionContains(remarketingLabelList, 'basketball-equipments') && !codeSet}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="JxV3CLW93wIQ44T54AM" id="1008616035"/>
+    <c:set var="codeSet" value="<%=true%>"/>
+</c:if>
+<c:if test="${hk:collectionContains(remarketingLabelList, 'swimming-equipments') && !codeSet}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="YGH0CL283wIQ44T54AM" id="1008616035"/>
+    <c:set var="codeSet" value="<%=true%>"/>
+</c:if>
+<c:if test="${hk:collectionContains(remarketingLabelList, 'boxing-equipments') && !codeSet}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="YgUqCMW73wIQ44T54AM" id="1008616035"/>
+    <c:set var="codeSet" value="<%=true%>"/>
+</c:if>
+<c:if test="${hk:collectionContains(remarketingLabelList, 'football-shoes') && !codeSet}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="vQybCNW53wIQ44T54AM" id="1008616035"/>
+    <c:set var="codeSet" value="<%=true%>"/>
+</c:if>
+<c:if test="${hk:collectionContains(remarketingLabelList, 'jogging-shoes') && !codeSet}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="AI_0CN243wIQ44T54AM" id="1008616035"/>
+    <c:set var="codeSet" value="<%=true%>"/>
+</c:if>
+<c:if test="${hk:collectionContains(remarketingLabelList, 'footwear-master') && !codeSet}">
+    <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="3gibCOW33wIQ44T54AM" id="1008616035"/>
+    <c:set var="codeSet" value="<%=true%>"/>
+</c:if>
 
 <%-- DIABETES --%>
 <c:if test="${hk:collectionContains(remarketingLabelList, 'testing-supplies') && !codeSet}">
