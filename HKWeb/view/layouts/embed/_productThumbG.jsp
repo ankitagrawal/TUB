@@ -37,10 +37,10 @@
             ${product.name}
           </s:link>
         </h3>
-        <s:link beanclass="com.hk.web.action.core.catalog.product.ProductAction" class="prod_link" title="${product.name}">
-          <s:param name="productId" value="${product.id}"/>
-          <s:param name="productSlug" value="${product.slug}"/>
           <div class='img128'>
+              <s:link beanclass="com.hk.web.action.core.catalog.product.ProductAction" class="prod_link" title="${product.name}">
+               <s:param name="productId" value="${product.id}"/>
+               <s:param name="productSlug" value="${product.slug}"/>
               <%--<img src="${pageContext.request.contextPath}/images/ProductImages/ProductImagesThumb/${product.id}.jpg" alt="${product.name}"/>--%>
             <c:choose>
               <c:when test="${product.mainImageId != null}">
@@ -52,6 +52,7 @@
                      alt="${product.name}"/>
               </c:otherwise>
             </c:choose>
+               </s:link>
           </div>
           <c:choose>
             <c:when test="${combo != null}">
@@ -154,7 +155,6 @@
               </c:if>
             </c:otherwise>
           </c:choose>
-        </s:link>
       </c:otherwise>
     </c:choose>
     <div class="floatfix"></div>
