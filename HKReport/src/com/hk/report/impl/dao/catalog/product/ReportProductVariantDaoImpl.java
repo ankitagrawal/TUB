@@ -96,8 +96,12 @@ public class ReportProductVariantDaoImpl extends BaseDaoImpl implements ReportPr
           " from ProductVariantInventory pvi join pvi.rvLineItem rvli join rvli.reconciliationVoucher rv " +
           " where pvi.sku.productVariant.id = :productVariant and pvi.txnDate between :startDate and :endDate " +
           " and pvi.sku.warehouse = :warehouse group by rv ";
-        return (List<RVReportDto>) findByNamedParams(query, new String[]{"productVariant", "warehouse", "startDate", "endDate"},
-          new Object[]{productVariantId, warehouse, startDate, endDate});
+        
+        return getSession().createQuery(query).setParameter("productVariant", productVariantId)
+          .setParameter("warehouse", warehouse).setParameter("startDate", startDate).setParameter("endDate", endDate)
+          .setResultTransformer(Transformers.aliasToBean(RVReportDto.class)).list();
+        /*return (List<RVReportDto>) findByNamedParams(query, new String[]{"productVariant", "warehouse", "startDate", "endDate"},
+          new Object[]{productVariantId, warehouse, startDate, endDate});*/
     }
 
 }
