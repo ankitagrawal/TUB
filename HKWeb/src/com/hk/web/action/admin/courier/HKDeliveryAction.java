@@ -57,11 +57,11 @@ public class HKDeliveryAction extends BaseAction {
         for (String trackingNum : trackingIdList) {
             shippingOrder = shippingOrderService.findByTrackingId(trackingNum);
             if (shippingOrder != null) {
-                if(shippingOrder.getBaseOrder().getPayment().getPaymentMode().equals("COD")){
-                        ++totalCODPackets;
+                if(shippingOrder.getBaseOrder().getPayment().getPaymentMode().getName().equals("COD")){
+                        totalCODPackets++;
                     totalCODAmount=totalCODAmount+shippingOrder.getBaseOrder().getPayment().getAmount();
                 }  else{
-                    ++totalPrepaidPackets;
+                    totalPrepaidPackets++;
                 }
                 shippingOrderList.add(shippingOrder);
             }
