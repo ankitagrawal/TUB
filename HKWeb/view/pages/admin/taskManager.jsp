@@ -27,6 +27,9 @@
         <tr>
           <td><s:submit name="db_master" value="DB Master"/></td>
         </tr>
+        <tr>
+          <td><s:submit name="populate_busy" value="Busy"/></td>
+        </tr>
         </s:form>
       </table>
     </fieldset>
