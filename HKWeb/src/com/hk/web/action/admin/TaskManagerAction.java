@@ -52,9 +52,9 @@ public class TaskManagerAction extends BaseAction {
 
   public Resolution populate_busy(){
     String hostName = "localhost";
-    String dbName = "healthkart_qa";
+    String dbName = "healthkart_stag";
     String serverUser = "root";
-    String serverPassword = "p@55word";
+    String serverPassword = "admin2K11!";
 //    Logger.info("Starting Busy Scripts at: " + new Date());
     try{
       BusyPopulateItemData busyPopulateItemData = new BusyPopulateItemData(hostName, dbName, serverUser, serverPassword);
