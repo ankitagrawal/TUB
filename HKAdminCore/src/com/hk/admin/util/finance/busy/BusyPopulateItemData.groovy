@@ -2,6 +2,7 @@ package com.hk.admin.util.finance.busy
 
 import groovy.sql.Sql
 import org.slf4j.LoggerFactory
+import org.slf4j.Logger
 
 /**
  * Created by IntelliJ IDEA.
@@ -96,7 +97,8 @@ FROM sku sk INNER JOIN product_variant pv ON sk.product_variant_id=pv.id
      """);
     }
       catch (Exception e) {
-            System.out.println("Unable to insert in  item: "+e.printStackTrace());
+
+        Logger.debug("Unable to insert in  item: ",e);
           }
   }
 }
