@@ -4,6 +4,7 @@ import com.hk.db.seed.catalog.ProductVariantPaymentTypeSeedData;
 import com.hk.db.seed.catalog.ProductVariantServiceTypeSeedData;
 import com.hk.db.seed.core.*;
 import com.hk.db.seed.courier.BoxSizeSeedData;
+import com.hk.db.seed.courier.CourierGroupHasCourierSeedData;
 import com.hk.db.seed.courier.CourierGroupSeedData;
 import com.hk.db.seed.courier.CourierSeedData;
 import com.hk.db.seed.email.EmailTypeSeedData;
@@ -101,6 +102,8 @@ public class MasterDataService {
     ReviewStatusSeedData                   reviewStatusSeedData;
     @Autowired
     CourierGroupSeedData                   courierGroupSeedData;
+    @Autowired
+    CourierGroupHasCourierSeedData        courierGroupHasCourierSeedData;
     @Autowired
     PurchaseFormTypeSeedData               purchaseFormTypeSeedData;
     @Autowired
@@ -220,6 +223,9 @@ public class MasterDataService {
         
         logger.debug("inserting courier group seed data");
         courierGroupSeedData.invokeInsert();
+
+        logger.debug("inserting courier group has courier seed data");
+        courierGroupHasCourierSeedData.invokeInsert();
 
         logger.debug("inserting purchase form-type  seed data");
         purchaseFormTypeSeedData.invokeInsert();
