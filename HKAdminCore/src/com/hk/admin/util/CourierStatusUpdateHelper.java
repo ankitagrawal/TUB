@@ -46,7 +46,7 @@ public class CourierStatusUpdateHelper {
 
         Map<String, String> responseAFL;
         Date delivery_date = null;
-
+         //added for debugging
         //trackingId = "861042704819986";
         try {
             url = new URL("http://trackntrace.aflwiz.com/aflwiztrack?shpntnum=" + trackingId);
@@ -98,6 +98,7 @@ public class CourierStatusUpdateHelper {
         String inputLine = "";
         String response = "";
         String jsonFormattedResponse = "";
+        //added for debugging
        // trackingId = "10000124755";
         try {
 
@@ -145,7 +146,7 @@ public class CourierStatusUpdateHelper {
 
         try {
              //added for debugging
-           // trackingId ="10410166832";
+           //trackingId ="10410239481";
            url = new URL("http://track.delhivery.com/api/packages/json/?token=" + authenticationIdForDelhivery + "&waybill=" + trackingId);
             bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
 
@@ -186,6 +187,7 @@ public class CourierStatusUpdateHelper {
         Element    xmlElement   = null;
         String inputLine = "";
         String response = "";
+        //added for debugging
         //trackingId              = "43872110553";
 
         try {
