@@ -47,6 +47,10 @@ public class CityCourierTatAction extends BaseAction {
     Set<CityCourierTAT> citySetFromExcel = null;
 
     try {
+      if(fileBean == null){
+      addRedirectAlertMessage(new SimpleMessage("choose Excel sheet path"));
+        return new RedirectResolution("/pages/admin/uploadCityCourierTAT.jsp");
+      }
       fileBean.save(excelFile);
       citySetFromExcel = xslCityCourierTATParser.readCityCourierTATExcel(excelFile);
       if (null != citySetFromExcel && citySetFromExcel.size() > 0) {
