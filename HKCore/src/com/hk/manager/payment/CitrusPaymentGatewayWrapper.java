@@ -37,7 +37,6 @@ public class CitrusPaymentGatewayWrapper extends BasePaymentGatewayWrapper<Citru
     public static String pgTxnNo = "pgTxnNo";
     public static String TxStatus = "TxStatus";
     public static String pgRespCode = "pgRespCode";
-    public static String amount = "amount";
     public static String TxMsg = "TxMsg";
     public static String mandatoryErrorMsg = "mandatoryErrorMsg";
     public static String paidTxnExists = "paidTxnExists";
