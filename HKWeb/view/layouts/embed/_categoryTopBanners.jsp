@@ -50,7 +50,7 @@
     <jsp:include page="/categoryBanners/stethescopeStripBanner.jsp"/>
   </c:if>
 
-  <c:if test="${hk:collectionContains(categoryNameList, 'eye')}">
+  <c:if test="${hk:collectionContains(topCategoryNameList, 'eye')}">
     <jsp:include page="/categoryBanners/eyeCallback.jsp"/>
   </c:if>
 
