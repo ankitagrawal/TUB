@@ -85,7 +85,9 @@ public enum EnumRoleHasPermission {
                     EnumPermission.CREATE_EDIT_SKU,
                     EnumPermission.MANAGE_PAYMENT_HISTORY,
                     EnumPermission.FINANCE_MANAGEMENT,
-                    EnumPermission.RUN_ANT_BUILDS
+                    EnumPermission.RUN_ANT_BUILDS,
+                    EnumPermission.HK_DELIVERY_WORKSHEET_DOWNLOAD,
+                    EnumPermission.UPDATE_COURIER_DELIVERY_STATUS
             )
     ),
 
@@ -369,6 +371,13 @@ public enum EnumRoleHasPermission {
             EnumRole.DEVELOPER,
             Arrays.asList(
                     EnumPermission.RUN_ANT_BUILDS
+            )
+    ),
+    HK_DELIVERY_GUY(
+            EnumRole.HK_DELIVERY_GUY,
+            Arrays.asList(
+                    EnumPermission.HK_DELIVERY_WORKSHEET_DOWNLOAD,
+                    EnumPermission.SEARCH_ORDERS
             )
     );
 

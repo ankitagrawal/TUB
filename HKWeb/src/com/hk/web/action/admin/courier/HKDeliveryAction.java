@@ -8,7 +8,9 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.constants.core.Keys;
+import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.CourierConstants;
+import com.hk.web.action.error.AdminPermissionAction;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -19,14 +21,17 @@ import java.text.ParseException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.stripesstuff.plugin.security.Secure;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
+@Secure(hasAnyPermissions = {PermissionConstants.HK_DELIVERY_WORKSHEET_DOWNLOAD}, authActionBean = AdminPermissionAction.class)
+@Component
 public class HKDeliveryAction extends BaseAction {
 
     private File                  xlsFile;
