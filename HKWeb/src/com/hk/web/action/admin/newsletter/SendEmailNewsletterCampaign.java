@@ -2,6 +2,7 @@ package com.hk.web.action.admin.newsletter;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
+import com.akube.framework.util.BaseUtils;
 import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.manager.MailingListManager;
 import com.hk.admin.pact.service.email.AdminEmailService;
@@ -180,14 +181,19 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
 
     public Resolution sendCampaignViaCsvUserEmails() throws IOException {
         List<String> userEmails = getListOfStringFromCsvFile(fileBean);
-        List<String> emailIdsInEmailRecepient = getEmailRecepientDao().findEmailIdsPresentInEmailRecepient(userEmails);
+        Set<String> emailTargetSet = BaseUtils.getLowerCaseStringSet(userEmails);
 
-        userEmails.removeAll(emailIdsInEmailRecepient);
+        List<String> emailIdsInEmailRecepient = getEmailRecepientDao().findEmailIdsPresentInEmailRecepient(userEmails);
+        Set<String> emailSetInEmailRecepient = BaseUtils.getLowerCaseStringSet(emailIdsInEmailRecepient);
+
+        Set<String> emailToBeAddedAsEmailRecepient = BaseUtils.getLowerCaseStringSet(userEmails);
+        emailToBeAddedAsEmailRecepient.removeAll(emailSetInEmailRecepient);
 
         List<EmailRecepient> emailRecepientRecs = new ArrayList<EmailRecepient>();
 
+        //Dumping in Email Recepient.
         int counter = 0;
-        for(String emailId : userEmails) {
+        for(String emailId : emailToBeAddedAsEmailRecepient) {
             EmailRecepient emailRecepient = getEmailRecepientDao().createEmailRecepientObject(emailId);
             emailRecepientRecs.add(emailRecepient);
             if(counter == COMMIT_COUNT) {
@@ -201,9 +207,8 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
             getEmailRecepientDao().saveOrUpdate(emailRecepientRecs);
         }
 
-        userEmails.addAll(emailIdsInEmailRecepient);
         List<String> userEmailsList = new ArrayList<String>();
-        for(String emailId : userEmails) {
+        for(String emailId : emailTargetSet) {
             userEmailsList.add(emailId);
             if(userEmailsList.size() == maxResultCount) {
                 getAdminEmailManager().sendCampaignByUploadingFile(null, userEmailsList, emailCampaign, maxResultCount);

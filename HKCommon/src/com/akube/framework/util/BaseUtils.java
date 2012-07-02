@@ -498,4 +498,12 @@ public class BaseUtils {
     return commaSeparatedString.substring(0, commaSeparatedString.lastIndexOf(",")-1);
   }
 
+    public static Set<String> getLowerCaseStringSet(List<String> list) {
+        Set<String> set = new HashSet<String>();
+        for (String s : list) {
+            set.add(s.toLowerCase());
+        }
+        return set;
+    }
+
 }
