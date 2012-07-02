@@ -116,6 +116,7 @@ public class S3Utils {
         s3Object.setKey(key);
         s3Object.setAcl(s3Service.getBucketAcl(s3Bucket));
         s3Object.setContentType(contentType);
+        logger.debug("path for file: " + file.getAbsolutePath());
         logger.debug("key for file: " + file.getName() + " is: " + key);
         folderContents.add(s3Object);
       }
@@ -144,6 +145,20 @@ public class S3Utils {
   }
 
   private static String generateFileKey(String contentPath) {
-    return contentPath.replaceAll("(.*\\\\emailContentFiles\\\\)", "").replaceAll("\\\\", "/");
+    String separator = File.separator;
+    if (separator.equals("\\")) {
+      return contentPath.replaceAll("(.*\\\\emailContentFiles\\\\)", "").replaceAll("\\\\", "/");
+    } else if (separator.equals("/")) {
+      return contentPath.replaceAll("(.*/emailContentFiles/)", "");
+    } else {
+      return null;
+    }
+  }
+
+  public static void main(String[] args) {
+    String unixPath = "/usr/local/projects/staging/HealthKartWork/adminUploads/emailContentFiles/beautyCampaign20120702/images/img01_c.jpg";
+    System.out.println("unix path key: " + generateFileKey(unixPath));
+    String windowsPath = "\\usr\\local\\projects\\staging\\HealthKartWork\\adminUploads\\emailContentFiles\\beautyCampaign20120702\\images\\img01_c.jpg";
+    System.out.println("windows path key: " + generateFileKey(windowsPath));
   }
 }
