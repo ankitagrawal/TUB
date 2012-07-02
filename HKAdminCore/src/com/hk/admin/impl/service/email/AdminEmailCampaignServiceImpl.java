@@ -53,15 +53,6 @@ public class AdminEmailCampaignServiceImpl implements AdminEmailCampaignService 
     return getAdminEmailCampaignDao().getEmailCampaignByEmailType(emailType, page, perPage);
   }
 
-  /**
-   * returns all the email campaigns which have their data uplaoded on Amazon S3
-   *
-   * @return
-   */
-  public List<EmailCampaign> getAmazonS3EmailCampaigns() {
-    return getAdminEmailCampaignDao().getAmazonS3EmailCampaigns();
-  }
-
   public AdminEmailCampaignDao getAdminEmailCampaignDao() {
     return adminEmailCampaignDao;
   }

@@ -278,7 +278,12 @@ public class SendEmailNewsletterCampaign extends BasePaginatedAction {
     excelFile.getParentFile().mkdirs();
     fileBeanForCustomExcel.save(excelFile);
 
-    getAdminEmailManager().sendMailMergeCampaign(emailCampaign, excelFilePath, sheetName);
+    Boolean success = getAdminEmailManager().sendMailMergeCampaign(emailCampaign, excelFilePath, sheetName);
+    if (success) {
+      addRedirectAlertMessage(new SimpleMessage("Email sending for campaign:" + emailCampaign.getName() + "in progress...."));
+    } else {
+      addRedirectAlertMessage(new SimpleMessage("Email sending for campaign:" + emailCampaign.getName() + "failed!"));
+    }
     return new ForwardResolution(SendEmailNewsletterCampaign.class, "selectCampaign");
   }
 

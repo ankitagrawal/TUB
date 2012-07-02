@@ -26,12 +26,4 @@ public interface AdminEmailCampaignDao extends BaseDao {
    * @return
    */
     public Long getEmailCampaignSentCount(EmailCampaign emailCampaign) ;
-  
-
-  /**
-   * returns all the email campaigns which have their data uplaoded on Amazon S3
-   *
-   * @return
-   */
-    public List<EmailCampaign> getAmazonS3EmailCampaigns();
 }

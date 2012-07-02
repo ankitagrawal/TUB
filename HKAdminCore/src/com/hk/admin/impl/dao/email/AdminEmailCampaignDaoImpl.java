@@ -26,11 +26,4 @@ public class AdminEmailCampaignDaoImpl extends BaseDaoImpl implements AdminEmail
         getSession().createQuery("select count(eh.id) from EmailerHistory eh where eh.emailCampaign =:emailCampaign").setParameter("emailCampaign",
         emailCampaign).uniqueResult();
   }
-
-  public List<EmailCampaign> getAmazonS3EmailCampaigns(){
-    Criteria criteria = getSession().createCriteria(EmailCampaign.class);
-    criteria.add(Restrictions.isNotNull("templateFtl"));
-    criteria.addOrder(org.hibernate.criterion.Order.desc("createDate"));
-    return criteria.list();
-  }
 }

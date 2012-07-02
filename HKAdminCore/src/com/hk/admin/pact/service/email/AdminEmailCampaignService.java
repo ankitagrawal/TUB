@@ -24,12 +24,5 @@ public interface AdminEmailCampaignService {
    * @param perPage
    * @return
    */
-  public Page getEmailCampaignByEmailType(EmailType emailType, int page, int perPage);
-
-  /**
-   * returns all the email campaigns which have their data uplaoded on Amazon S3
-   *
-   * @return
-   */
-  public List<EmailCampaign> getAmazonS3EmailCampaigns();
+  public Page getEmailCampaignByEmailType(EmailType emailType, int page, int perPage);  
 }

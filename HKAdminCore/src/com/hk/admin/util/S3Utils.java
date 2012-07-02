@@ -19,8 +19,6 @@ import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
-import java.net.FileNameMap;
-import java.net.URLConnection;
 
 import com.hk.util.HKFileUtils;
 
