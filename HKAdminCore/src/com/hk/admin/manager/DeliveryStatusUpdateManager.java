@@ -154,12 +154,11 @@ public class DeliveryStatusUpdateManager {
                             ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shippingOrderInList.getShipment(),
                                     shippingOrderInList.getShipment().getTrackingId(), deliveryDate);
                         } else {
-                            logger.debug("Delivery date not available or status is not delivered for Tracking Id: " + shippingOrderInList.getShipment().getTrackingId());
+                            logger.debug("Delivery date not available or status is not delivered for Tracking Id (AFL): " + shippingOrderInList.getShipment().getTrackingId());
                             unmodifiedTrackingIds.add(trackingId);
 
                         }
                     } catch (Exception e) {
-                        //unmodifiedTrackingIds.add(trackingId);
                         logger.debug(CourierConstants.EXCEPTION + trackingId);
                         continue;
                     }
@@ -185,7 +184,7 @@ public class DeliveryStatusUpdateManager {
                         if (delivery_date != null && chhotuCourierDelivery.getShipmentStatus().equalsIgnoreCase(CourierConstants.DELIVERED) && chhotuCourierDelivery.getTrackingId() != null) {
                             ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shippingOrderInList.getShipment(), shippingOrderInList.getShipment().getTrackingId(), delivery_date);
                         } else {
-                            logger.debug("Delivery date not available or status is not delivered for Tracking Id: " + shippingOrderInList.getShipment().getTrackingId());
+                            logger.debug("Delivery date not available or status is not delivered for Tracking Id (Chhotu): " + shippingOrderInList.getShipment().getTrackingId());
                         }
                     } catch (Exception ex) {
                         unmodifiedTrackingIds.add(trackingId);
@@ -215,7 +214,7 @@ public class DeliveryStatusUpdateManager {
                             if (delivery_date != null && status.equalsIgnoreCase(CourierConstants.DELIVERED)) {
                                 ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shippingOrderInList.getShipment(), trackingId, delivery_date);
                             } else {
-                                logger.debug("Delivery date not avaialable or status is not delivered for Tracking Id: " + trackingId);
+                                logger.debug("Delivery date not avaialable or status is not delivered for Tracking Id(Delhivery): " + trackingId);
                             }
                         } else {
                             unmodifiedTrackingIds.add(trackingId);
@@ -253,7 +252,7 @@ public class DeliveryStatusUpdateManager {
                             unmodifiedTrackingIds.add(trackingId);
                         }
                     } catch (Exception ex) {
-                        logger.debug(CourierConstants.EXCEPTION + trackingId);
+                        logger.debug(CourierConstants.EXCEPTION +"(Bluedart)"+ trackingId);
                         unmodifiedTrackingIds.add(trackingId);
                         continue;
                     }

@@ -149,15 +149,10 @@ public enum EnumRoleHasPermission {
             Arrays.asList(
                     EnumPermission.SKU_SALES_REPORT,
                     EnumPermission.UPDATE_PRODUCT_CATALOG,
-                    EnumPermission.DOWNLOAD_PRDOUCT_CATALOG
-            )
-    ), OPS_MANAGER_L2(
-            EnumRole.OPS_MANAGER_L2,
-            Arrays.asList(
+                    EnumPermission.DOWNLOAD_PRDOUCT_CATALOG,
                     EnumPermission.UPDATE_COURIER_DELIVERY_STATUS
             )
     ),
-
     CUSTOMER_SUPPORT(
             EnumRole.CUSTOMER_SUPPORT,
             Arrays.asList(
