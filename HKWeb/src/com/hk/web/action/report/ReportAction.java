@@ -792,13 +792,13 @@ public class ReportAction extends BaseAction {
                 ProductVariant productVariant = productVariantDao.getVariantById(productVariantId);
                 List<RVReportDto> rvReportDtoList = getReportProductVariantService().getReconciliationVoucherDetail(productVariantId, warehouse, startDate, endDate);
 
-                xlsFile = new File(adminDownloads + "/reports/ExpiryAlertReport.xls");
+                xlsFile = new File(adminDownloads + "/reports/ReconciliationVoucherReport.xls");
                 HkXlsWriter xlsWriter = new HkXlsWriter();
                 int xlsRow = 1;
                 xlsWriter.addHeader("PRODUCT VARIANT ID", "PRODUCT VARIANT ID");
                 xlsWriter.addHeader("PRODUCT NAME", "PRODUCT NAME");
                 xlsWriter.addHeader("PRODUCT OPTIONS", "PRODUCT OPTIONS");
-                xlsWriter.addHeader("RV ID", "RV ID");
+                xlsWriter.addHeader("RECONCILIATION VOUCHER ID", "RECONCILIATION VOUCHER ID");
                 xlsWriter.addHeader("INVENTORY TXN TYPE", "INVENTORY TXN TYPE");
                 xlsWriter.addHeader("TXN DATE", "TXN DATE");
                 xlsWriter.addHeader("QUANTITY", "QUANTITY");
@@ -811,7 +811,8 @@ public class ReportAction extends BaseAction {
                     xlsWriter.addCell(xlsRow, rvReportDto.getReconciliationVoucher().getId());
                     xlsWriter.addCell(xlsRow, rvReportDto.getProductVariantInventory().getInvTxnType().getName());
                     xlsWriter.addCell(xlsRow, rvReportDto.getProductVariantInventory().getTxnDate());
-                    xlsWriter.addCell(xlsRow, rvReportDto.getQtyRV());
+                    Long qty = rvReportDto.getQtyRV() < 0L ? rvReportDto.getQtyRV() * -1L : rvReportDto.getQtyRV();
+                    xlsWriter.addCell(xlsRow, qty);
                     xlsWriter.writeData(xlsFile, "ReconciliationVoucher_Report");
 
                     xlsRow++;

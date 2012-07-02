@@ -100,8 +100,6 @@ public class ReportProductVariantDaoImpl extends BaseDaoImpl implements ReportPr
         return getSession().createQuery(query).setParameter("productVariant", productVariantId)
           .setParameter("warehouse", warehouse).setParameter("startDate", startDate).setParameter("endDate", endDate)
           .setResultTransformer(Transformers.aliasToBean(RVReportDto.class)).list();
-        /*return (List<RVReportDto>) findByNamedParams(query, new String[]{"productVariant", "warehouse", "startDate", "endDate"},
-          new Object[]{productVariantId, warehouse, startDate, endDate});*/
     }
 
 }
