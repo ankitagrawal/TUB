@@ -7731,7 +7731,7 @@
         <addForeignKeyConstraint baseColumnNames="ref_shipping_order_id" baseTableName="replacement_order" constraintName="fk_replacement_order_shipping_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="shipping_order" referencesUniqueColumn="false"/>
     </changeSet>
 
-      <changeSet author="Tarun (generated)" id="1340949623064-1">
+    <changeSet author="Tarun (generated)" id="1340949623064-1">
         <addNotNullConstraint columnDataType="DATE" columnName="created_date" tableName="notify_me"/>
     </changeSet>
     <changeSet author="Tarun (generated)" id="1340949623064-2">
@@ -7739,7 +7739,7 @@
     </changeSet>
     <changeSet author="Tarun" id="1340949623064-3">
       <sql>
-        UPDATE `purchase_invoice` SET `reconcilation_date`='2012-06-27 11:00:00' WHERE `reconciled`=1 AND `reconcilation_date` IS NULL;
+        UPDATE `purchase_invoice` pi SET pi.`reconcilation_date`= DATE_ADD(pi.`create_date`, INTERVAL 3 DAY) WHERE `reconciled`=1 AND `reconcilation_date` IS NULL
       </sql>
     </changeSet>
 </databaseChangeLog>
