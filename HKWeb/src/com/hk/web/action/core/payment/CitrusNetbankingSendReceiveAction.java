@@ -79,7 +79,7 @@ public class CitrusNetbankingSendReceiveAction extends BasePaymentGatewaySendRec
         params.put(CitrusPaymentGatewayWrapper.merchantAccessKey, properties.get(CitrusPaymentGatewayWrapper.merchantAccessKey));
         params.put("bankName", "SBI BANK");
         params.put(CitrusPaymentGatewayWrapper.transactionId, merchantTxnId);
-        params.put(CitrusPaymentGatewayWrapper.orderAmount, amountStr);
+        params.put(CitrusPaymentGatewayWrapper.amount, amountStr);
         params.put(CitrusPaymentGatewayWrapper.returnUrl, linkManager.getCitrusPaymentGatewayUrl());
         params.put("card", card);
         params.put("customer", cust);
