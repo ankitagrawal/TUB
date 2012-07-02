@@ -124,6 +124,7 @@ public class StorePricingAction extends BaseAction {
         String excelFilePath = adminDownloads + "/storeFiles/"+store.getPrefix()+"Pricing"+System.currentTimeMillis()+".xls";
         //String excelFilePath ="E:\\mih\\mihpricingTEST1.xls";
         xlsFile = new File(excelFilePath);
+        xlsFile.getParentFile().mkdirs();
 
         List<StoreProduct> storeProductList= storeService.getProductListForStore(store);
         createPricingExcel(storeProductList);

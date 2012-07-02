@@ -54,6 +54,8 @@ public class CitrusPaymentGatewayWrapper extends BasePaymentGatewayWrapper<Citru
     public static String merchantURLPart = "merchantURLPart";
     public static String vanityURLPart = "healthkart";
     public static String secSignature = "secSignature";
+    public static String merchantAccessKey = "merchantAccessKey";
+    public static String transactionId = "transactionId";
 
 
     public CitrusPaymentGatewayWrapper(String environmemtDir) {

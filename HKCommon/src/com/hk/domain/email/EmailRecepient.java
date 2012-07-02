@@ -138,6 +138,10 @@ public class EmailRecepient implements java.io.Serializable {
   public void setUser(User user) {
     this.user = user;
   }
+
+  public boolean isEmailAllowed() {
+    return !isBounce() && !isInvalid() && isSubscribed();
+  }
 }
 
 

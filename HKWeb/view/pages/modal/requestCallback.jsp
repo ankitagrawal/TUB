@@ -3,7 +3,7 @@
 <s:useActionBean beanclass="com.hk.web.action.core.user.RequestCallbackAction" var="sdcActionBean" event="pre"/>
 <s:layout-render name="/layouts/modal.jsp">
   <s:layout-component name="heading">
-    Request Nutrition advice from experts
+    Request advice from experts
   </s:layout-component>
 
   <s:layout-component name="content">
