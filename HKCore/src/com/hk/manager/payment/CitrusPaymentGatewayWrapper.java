@@ -41,6 +41,7 @@ public class CitrusPaymentGatewayWrapper extends BasePaymentGatewayWrapper<Citru
     public static String mandatoryErrorMsg = "mandatoryErrorMsg";
     public static String paidTxnExists = "paidTxnExists";
 
+
     public static String email = "email";
     public static String merchantTxnId = "merchantTxnId";
     public static String orderAmount = "orderAmount";
