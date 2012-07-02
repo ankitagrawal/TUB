@@ -219,7 +219,7 @@
 --/home-devices/blood-pressure/bp : BP Apparatus
 --/home-devices/blood-pressure/ecg : ECG Machines
 --/home-devices/blood-pressure/accessories
---/home-devices/blood-pressure/combo
+--/home-devices/blood-pressure/combo : Doctor's Day Offer
 -/home-devices/respiratory-care
 --/home-devices/respiratory-care/nebulizer
 --/home-devices/respiratory-care/oxygen-concentrator : Oxygen Concentrators
