@@ -132,6 +132,7 @@ public class RecommendationEngineImpl implements RecommendationEngine {
     private List<String> getProducts(String itemResponse){
 
         List<String> recommendedItemsList = new ArrayList<String>();
+        try{
         //MOOGA sends duplicate products sometimes..OOPS
         Set<ProductResult> productResults = new TreeSet<ProductResult>();
         //Go Ahead only if there is no error from MOOGA
@@ -151,6 +152,9 @@ public class RecommendationEngineImpl implements RecommendationEngine {
 
         for (ProductResult pr : productResults){
             recommendedItemsList.add(pr.name);
+        }
+        }catch (Exception ex){  //WALL : Suppress any exception coming from MOOGA API just in case
+
         }
         return  recommendedItemsList;
     }
