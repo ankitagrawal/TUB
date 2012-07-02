@@ -58,4 +58,5 @@ public class RoleConstants {
     public static final String FINANCE_ADMIN                 ="FINANCE_ADMIN";
 
     public static final String DEVELOPER                     = "DEVELOPER";
+    public static final String HK_DELIVERY_GUY               = "HK_DELIVERY_GUY";
 }
