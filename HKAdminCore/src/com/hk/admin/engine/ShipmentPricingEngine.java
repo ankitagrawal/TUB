@@ -39,18 +39,6 @@ public class ShipmentPricingEngine {
     private static Logger logger = LoggerFactory.getLogger(ShipmentPricingEngine.class);
 
     @Autowired
-    CourierPricingEngineDao courierPricingEngineDao;
-
-    @Autowired
-    PincodeRegionZoneDao pincodeRegionZoneDao;
-
-    @Autowired
-    WarehouseService warehouseService;
-
-    @Autowired
-    CourierServiceInfoDao courierServiceInfoDao;
-
-    @Autowired
     PincodeDao pincodeDao;
 
     @Autowired
