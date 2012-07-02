@@ -376,8 +376,7 @@ public enum EnumRoleHasPermission {
     HK_DELIVERY_GUY(
             EnumRole.HK_DELIVERY_GUY,
             Arrays.asList(
-                    EnumPermission.HK_DELIVERY_WORKSHEET_DOWNLOAD,
-                    EnumPermission.SEARCH_ORDERS
+                    EnumPermission.HK_DELIVERY_WORKSHEET_DOWNLOAD
             )
     );
 
