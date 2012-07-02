@@ -330,7 +330,7 @@
       <td><strong>Grand Total</strong></td>
       <td>
         <strong><fmt:formatNumber value="${orderSummary.pricingDto.grandTotalPayable}" type="currency"
-                                  currencySymbol="Rs. " maxFractionDigits="0"/> </strong>
+                                  currencySymbol="Rs. "/> </strong>
       </td>
     </tr>
   </table>
