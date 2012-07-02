@@ -165,7 +165,6 @@
 --/sports/sports-equipment/other-balls
 --/sports/sports-equipment/combos
 -/sports/apparel
---/sports/apparel/ipl-merchandise: IPL Merchandise
 --/sports/apparel/men
 --/sports/apparel/women
 --/sports/apparel/kids
