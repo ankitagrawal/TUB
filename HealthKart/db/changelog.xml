@@ -7182,50 +7182,50 @@
       <column defaultValue="0" name="sent_count" type="INT"/>
     </addColumn>
   </changeSet>
-  <!--<changeSet author="Rimal (generated)" id="1336570361449-10">-->
-    <!--<createTable tableName="courier_group">-->
-      <!--<column name="id" type="INT">-->
-        <!--<constraints nullable="false" primaryKey="true"/>-->
-      <!--</column>-->
-      <!--<column name="name" type="VARCHAR(45)"/>-->
-      <!--<column name="courier_id" type="INT"/>-->
-    <!--</createTable>-->
-  <!--</changeSet>-->
-  <!--<changeSet author="Rimal (generated)" id="1336570361449-20">-->
-    <!--<addColumn tableName="pincode_region_zone">-->
-      <!--<column name="courier_group_id" type="INT">-->
-        <!--<constraints nullable="false"/>-->
-      <!--</column>-->
-    <!--</addColumn>-->
-  <!--</changeSet>-->
-  <!--<changeSet author="Rimal (generated)" id="1336570361449-30">-->
-    <!--<dropForeignKeyConstraint baseTableName="pincode_region_zone" constraintName="fk_pincode_region_zone_courier1"/>-->
-  <!--</changeSet>-->
-  <!--<changeSet author="Rimal (generated)" id="1336570361449-40">-->
-    <!--<createIndex indexName="pincode_region_index" tableName="pincode_region_zone" unique="false">-->
-      <!--<column name="pincode_id"/>-->
-      <!--<column name="warehouse_id"/>-->
-      <!--<column name="region_type_id"/>-->
-      <!--<column name="courier_group_id"/>-->
-    <!--</createIndex>-->
-  <!--</changeSet>-->
-  <!--<changeSet author="Rimal (generated)" id="1336570361449-50">-->
-    <!--<addForeignKeyConstraint baseColumnNames="courier_id" baseTableName="courier_group"-->
-                             <!--constraintName="fk_courier_group_courier1" deferrable="false" initiallyDeferred="false"-->
-                             <!--onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"-->
-                             <!--referencedTableName="courier"-->
-                             <!--referencesUniqueColumn="false"/>-->
-  <!--</changeSet>-->
-  <!--<changeSet author="Rimal (generated)" id="1336570361449-60">-->
-    <!--<addForeignKeyConstraint baseColumnNames="courier_group_id" baseTableName="pincode_region_zone"-->
-                             <!--constraintName="fk_pincode_region_zone_courier_group1" deferrable="false"-->
-                             <!--initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"-->
-                             <!--referencedColumnNames="id" referencedTableName="courier_group"-->
-                             <!--referencesUniqueColumn="false"/>-->
-  <!--</changeSet>-->
-  <!--<changeSet author="Rimal (generated)" id="1336570361449-80">-->
-    <!--<dropColumn columnName="courier_id" tableName="pincode_region_zone"/>-->
-  <!--</changeSet>-->
+  <changeSet author="Rimal (generated)" id="1336570361449-10">
+    <createTable tableName="courier_group">
+      <column name="id" type="INT">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="name" type="VARCHAR(45)"/>
+      <column name="courier_id" type="INT"/>
+    </createTable>
+  </changeSet>
+  <changeSet author="Rimal (generated)" id="1336570361449-20">
+    <addColumn tableName="pincode_region_zone">
+      <column name="courier_group_id" type="INT">
+        <constraints nullable="false"/>
+      </column>
+    </addColumn>
+  </changeSet>
+  <changeSet author="Rimal (generated)" id="1336570361449-30">
+    <dropForeignKeyConstraint baseTableName="pincode_region_zone" constraintName="fk_pincode_region_zone_courier1"/>
+  </changeSet>
+  <changeSet author="Rimal (generated)" id="1336570361449-40">
+    <createIndex indexName="pincode_region_index" tableName="pincode_region_zone" unique="false">
+      <column name="pincode_id"/>
+      <column name="warehouse_id"/>
+      <column name="region_type_id"/>
+      <column name="courier_group_id"/>
+    </createIndex>
+  </changeSet>
+  <changeSet author="Rimal (generated)" id="1336570361449-50">
+    <addForeignKeyConstraint baseColumnNames="courier_id" baseTableName="courier_group"
+                             constraintName="fk_courier_group_courier1" deferrable="false" initiallyDeferred="false"
+                             onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+                             referencedTableName="courier"
+                             referencesUniqueColumn="false"/>
+  </changeSet>
+  <changeSet author="Rimal (generated)" id="1336570361449-60">
+    <addForeignKeyConstraint baseColumnNames="courier_group_id" baseTableName="pincode_region_zone"
+                             constraintName="fk_pincode_region_zone_courier_group1" deferrable="false"
+                             initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                             referencedColumnNames="id" referencedTableName="courier_group"
+                             referencesUniqueColumn="false"/>
+  </changeSet>
+  <changeSet author="Rimal (generated)" id="1336570361449-80">
+    <dropColumn columnName="courier_id" tableName="pincode_region_zone"/>
+  </changeSet>
 
     <changeSet author="Ajeet (generated)" id="1336994156706-1">
         <createTable tableName="courier_group_has_courier">
