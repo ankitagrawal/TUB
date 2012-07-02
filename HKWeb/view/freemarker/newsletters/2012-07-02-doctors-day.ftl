@@ -23,7 +23,7 @@
         <td rowspan="22" width="20"></td>
       </tr>
       <tr>
-        <td align="center" valign="middle"><a href="http://www.healthkart.com/home-devices/blood-pressure/combo?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-07-02-doctors-day-july"><img src="http://img.healthkart.com/images/doctors-day-banner.jpg" alt="Exclusive Offers for Doctor's Week - July 1 to July 8, 2012" width="610" height="" border="0" /></a></td>
+        <td align="center" valign="middle"><a href="http://www.healthkart.com/home-devices/blood-pressure/combo?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-07-02-doctors-day-july"><img src="http://img.healthkart.com/email/doctors-day-july/images//doctors-day-banner.jpg" alt="Exclusive Offers for Doctor's Week - July 1 to July 8, 2012" width="610" height="" border="0" /></a></td>
       </tr>
       
       
@@ -33,7 +33,7 @@
       <tr>
         <td><table width="610" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td width="76" rowspan="2"><img src="http://img.healthkart.com/images/steth-icon.jpg" width="75" height="75" /></td>
+            <td width="76" rowspan="2"><img src="http://img.healthkart.com/email/doctors-day-july/images//steth-icon.jpg" width="75" height="75" /></td>
             <td width="13" height="23">&nbsp;</td>
             <td width="521" align="left" valign="top" style="color:#0062a4; font-size:16px; font-weight:bold; padding-bottom:5px;">Offers on Steths</td>
           </tr>
@@ -51,7 +51,7 @@
           <tr>
             <td align="center" valign="top" width="190px" bgcolor="#FFFFFF" style="border:2px solid #079fe0;"><table width="100%" border="0" cellspacing="0" cellpadding="0">
               <tr>
-                <td colspan="3" align="center" valign="top"><a href="http://www.healthkart.com/product/free-engraving-on-pulse-wave-prestige-cardiology-stethoscope/CMB-HD006?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-07-02-doctors-day-july"><img src="http://img.healthkart.com/images/15169_m.jpg" width="186" height="140" border="0" /></a></td>
+                <td colspan="3" align="center" valign="top"><a href="http://www.healthkart.com/product/free-engraving-on-pulse-wave-prestige-cardiology-stethoscope/CMB-HD006?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-07-02-doctors-day-july"><img src="http://img.healthkart.com/email/doctors-day-july/images//15169_m.jpg" width="186" height="140" border="0" /></a></td>
                 </tr>
               <tr>
                 <td rowspan="5" width="10">&nbsp;</td>
@@ -84,7 +84,7 @@
             <td width="20px"></td>
             <td width="190px" align="center" valign="top" bgcolor="#FFFFFF" style="border:2px solid #079fe0;"><table width="100%" border="0" cellspacing="0" cellpadding="0">
               <tr>
-                <td colspan="3" align="center" valign="top"><a href="http://www.healthkart.com/product/free-engraving-on-pulse-wave-cardiac-1-ss-stethoscope/CMB-HD007?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-07-02-doctors-day-july"><img src="http://img.healthkart.com/images/15176_m.jpg" width="186" height="140" border="0" /></a></td>
+                <td colspan="3" align="center" valign="top"><a href="http://www.healthkart.com/product/free-engraving-on-pulse-wave-cardiac-1-ss-stethoscope/CMB-HD007?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-07-02-doctors-day-july"><img src="http://img.healthkart.com/email/doctors-day-july/images//15176_m.jpg" width="186" height="140" border="0" /></a></td>
                 </tr>
               <tr>
                 <td rowspan="5" width="10">&nbsp;</td>
@@ -117,7 +117,7 @@
             <td width="20px"></td>
             <td width="190px" align="center" valign="top" bgcolor="#FFFFFF" style="border:2px solid #079fe0;"><table width="100%" border="0" cellspacing="0" cellpadding="0">
               <tr>
-                <td colspan="3" align="center" valign="top"><a href="http://www.healthkart.com/product/littmann-stethoscope-master-cardiology/LIT003?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-07-02-doctors-day-july"><img src="http://img.healthkart.com/images/3138_m.jpg" width="186" height="140" border="0" /></a></td>
+                <td colspan="3" align="center" valign="top"><a href="http://www.healthkart.com/product/littmann-stethoscope-master-cardiology/LIT003?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-07-02-doctors-day-july"><img src="http://img.healthkart.com/email/doctors-day-july/images//3138_m.jpg" width="186" height="140" border="0" /></a></td>
                 </tr>
               <tr>
                 <td rowspan="5" width="10">&nbsp;</td>
@@ -160,7 +160,7 @@
       <tr>
         <td><table width="610" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td width="76" rowspan="2"><img src="http://img.healthkart.com/images/equipment-icon.jpg" width="75" height="75" /></td>
+            <td width="76" rowspan="2"><img src="http://img.healthkart.com/email/doctors-day-july/images//equipment-icon.jpg" width="75" height="75" /></td>
             <td width="13" height="23">&nbsp;</td>
             <td width="521" align="left" valign="top" style="color:#0062a4; font-size:16px; font-weight:bold; padding-bottom:5px;">Offers on Equipment</td>
           </tr>
@@ -179,7 +179,7 @@
           <tr>
             <td align="center" valign="top" width="190px" bgcolor="#FFFFFF" style="border:2px solid #079fe0;"><table width="100%" border="0" cellspacing="0" cellpadding="0">
               <tr>
-                <td colspan="3" align="center" valign="top"><a href="http://www.healthkart.com/product/equinox-irresistible-offer/CMB-HD005?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-07-02-doctors-day-july"><img src="http://img.healthkart.com/images/13232_m.jpg" width="186" height="140" border="0" /></a></td>
+                <td colspan="3" align="center" valign="top"><a href="http://www.healthkart.com/product/equinox-irresistible-offer/CMB-HD005?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-07-02-doctors-day-july"><img src="http://img.healthkart.com/email/doctors-day-july/images//13232_m.jpg" width="186" height="140" border="0" /></a></td>
                 </tr>
               <tr>
                 <td rowspan="5" width="10">&nbsp;</td>
@@ -212,7 +212,7 @@
             <td width="20px"></td>
             <td width="190px" align="center" valign="top" bgcolor="#FFFFFF" style="border:2px solid #079fe0;"><table width="100%" border="0" cellspacing="0" cellpadding="0">
               <tr>
-                <td colspan="3" align="center" valign="top"><a href="http://www.healthkart.com/product/free-pulse-wave-monitor-stethoscope-with-niscomed-lcd-b.p.-apparatus-pw-216/CMB-HD004?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-07-02-doctors-day-july"><img src="http://img.healthkart.com/images/12674_m.jpg" width="186" height="140" border="0" /></a></td>
+                <td colspan="3" align="center" valign="top"><a href="http://www.healthkart.com/product/free-pulse-wave-monitor-stethoscope-with-niscomed-lcd-b.p.-apparatus-pw-216/CMB-HD004?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-07-02-doctors-day-july"><img src="http://img.healthkart.com/email/doctors-day-july/images//12674_m.jpg" width="186" height="140" border="0" /></a></td>
                 </tr>
               <tr>
                 <td rowspan="5" width="10">&nbsp;</td>
@@ -245,7 +245,7 @@
             <td width="20px"></td>
             <td width="190px" align="center" valign="top" bgcolor="#FFFFFF" style="border:2px solid #079fe0;"><table width="100%" border="0" cellspacing="0" cellpadding="0">
               <tr>
-                <td colspan="3" align="center" valign="top"><a href="http://www.healthkart.com/product/rossmax-rappaport-stethoscope-eb500/ROSMAX009?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-07-02-doctors-day-july"><img src="http://img.healthkart.com/images/15075_m.jpg" width="186" height="140" border="0" /></a></td>
+                <td colspan="3" align="center" valign="top"><a href="http://www.healthkart.com/product/rossmax-rappaport-stethoscope-eb500/ROSMAX009?utm_source=enewsletter&utm_medium=email&utm_campaign=2012-07-02-doctors-day-july"><img src="http://img.healthkart.com/email/doctors-day-july/images//15075_m.jpg" width="186" height="140" border="0" /></a></td>
                 </tr>
               <tr>
                 <td rowspan="5" width="10">&nbsp;</td>
