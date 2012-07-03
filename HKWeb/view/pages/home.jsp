@@ -39,8 +39,8 @@
         <img class="banner01" src="<hk:vhostImage/>/images/banners/home/yonex_sbanner.jpg" border="0"
              alt="Introducing Yonex"/>
       </a>
-      <a href="${pageContext.request.contextPath}/brand/nutrition/vitamin+shoppe">
-        <img src="<hk:vhostImage/>/images/banners/home/vs_sbanner.jpg" border="0" alt="Introducing Vitamin Shoppe"/>
+      <a href="${pageContext.request.contextPath}/brand/nutrition/eas">
+        <img src="<hk:vhostImage/>/images/banners/home/eas_sbanner.jpg" border="0" alt="EAS myoplex bar free"/>
       </a>
 
         <%--<div class="banner01">--%>
