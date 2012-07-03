@@ -2,6 +2,7 @@ package com.hk.web.action.admin.newsletter;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
+import com.akube.framework.util.BaseUtils;
 import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.manager.MailingListManager;
 import com.hk.admin.pact.service.email.AdminEmailService;
