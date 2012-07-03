@@ -9,12 +9,12 @@ import com.hk.exception.HealthkartPaymentGatewayException;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
-
 
 public class CitrusPaymentGatewayWrapper extends BasePaymentGatewayWrapper<CitrusPaymentGatewayWrapper> implements PaymentGatewayWrapper {
 

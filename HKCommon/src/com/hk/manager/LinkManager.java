@@ -55,7 +55,7 @@ public class LinkManager {
 
     public String getOrderTrackLink(String trackingId, Long courierId, ShippingOrder shippingOrder) {
         RedirectResolution redirectResolution = new RedirectResolution("/core/order/TrackCourier.action").addParameter("trackingId", trackingId).addParameter("courierId",
-                courierId).addParameter("shippingOrder",shippingOrder);
+                courierId).addParameter("shippingOrder", shippingOrder);
         return getUrlFromResolution(redirectResolution);
     }
 
@@ -112,6 +112,11 @@ public class LinkManager {
     public String getCitrusPaymentGatewayUrl() {
 //        RedirectResolution redirectResolution = new RedirectResolution("/core/payment/CitrusGatewaySendReceive.action");
         RedirectResolution redirectResolution = new RedirectResolution("/core/payment/CitrusNetbankingSendReceive.action");
+        return getUrlFromResolution(redirectResolution);
+    }
+
+    public String getEbsPaymentGatewayReturnUrl() {
+        RedirectResolution redirectResolution = new RedirectResolution("/core/payment/test/EbsSendReceive.action");
         return getUrlFromResolution(redirectResolution);
     }
 }
