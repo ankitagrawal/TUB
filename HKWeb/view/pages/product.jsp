@@ -486,7 +486,7 @@
       </s:link>
     </div>
   </shiro:hasPermission>
-  <c:if test="${!empty product.relatedProducts}">
+  <%--<c:if test="${!empty product.relatedProducts}">--%>
     <div class='products content' id="related_products">
       <h4>
         People who bought this also bought these products
@@ -501,7 +501,7 @@
       <a class='go_to_top' href='#top'>go to top &uarr;</a>
 
     </div>
-  </c:if>
+  <%--</c:if>--%>
 </s:layout-component>
 
 <%--<s:layout-component name="foot_price">

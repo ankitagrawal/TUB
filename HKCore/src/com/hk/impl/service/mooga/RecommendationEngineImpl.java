@@ -47,7 +47,7 @@ public class RecommendationEngineImpl implements RecommendationEngine {
 
         @Override
         public int compareTo(ProductResult other){
-           return Double.valueOf(this.rank).compareTo(other.rank);
+           return Double.valueOf(other.rank).compareTo(this.rank);
         }
 
         @Override
@@ -72,7 +72,6 @@ public class RecommendationEngineImpl implements RecommendationEngine {
 
         }
     }
-
 
     public void pushAddToCart(long userId, List<ProductVariant> productVariants){
         for (ProductVariant pv : productVariants){
@@ -137,7 +136,8 @@ public class RecommendationEngineImpl implements RecommendationEngine {
         List<String> recommendedItemsList = new ArrayList<String>();
         try{
         //MOOGA sends duplicate products sometimes..OOPS
-        Set<ProductResult> productResults = new TreeSet<ProductResult>();
+        Set<String> productResults = new HashSet<String>();
+        List<ProductResult> productResultsList = new ArrayList<ProductResult>();
         //Go Ahead only if there is no error from MOOGA
         if (!itemResponse.contains("ERR")){
             String[] moogaResult = itemResponse.split(",");
@@ -147,12 +147,15 @@ public class RecommendationEngineImpl implements RecommendationEngine {
                 String productId = splitResults[0].replace(LEFT_OPERATOR,"").replace(RIGHT_OPERATOR, "").trim();
                 Double rank =  Double.parseDouble(splitResults[1].replace(LEFT_OPERATOR, "").replace(RIGHT_OPERATOR, "").trim());
                 if ((splitResults.length > 0) && StringUtils.isNotBlank(productId)){ //Just in case MOOGA misbehaves
-                    productResults.add(new ProductResult(productId,rank));
+                    if (!productResults.contains(productId)){
+                        productResultsList.add(new ProductResult(productId,rank));
+                        productResults.add(productId);
+                    }
                 }
             }
         }
-
-        for (ProductResult pr : productResults){
+        Collections.sort(productResultsList);
+        for (ProductResult pr : productResultsList){
             recommendedItemsList.add(pr.name);
         }
         }catch (Exception ex){  //WALL : Suppress any exception coming from MOOGA API just in case
