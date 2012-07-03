@@ -109,15 +109,15 @@ public class LinkManager {
         return getUrlFromResolution(redirectResolution);
     }
     public String getCitrusPaymentNetBankingGatewayUrl() {
-        RedirectResolution redirectResolution = new RedirectResolution("/core/payment/CitrusNetbankingSendReceive.action");
+        RedirectResolution redirectResolution = new RedirectResolution("/core/payment/gateway/CitrusNetbankingSendReceive.action");
         return getUrlFromResolution(redirectResolution);
     }
     public String getCitrusPaymentGatewayUrl() {
-        RedirectResolution redirectResolution = new RedirectResolution("/core/payment/CitrusGatewaySendReceive.action");
+        RedirectResolution redirectResolution = new RedirectResolution("/core/payment/gateway/CitrusGatewaySendReceive.action");
         return getUrlFromResolution(redirectResolution);
     }
     public String getCitrusPaymentCreditDebitGatewayUrl() {
-        RedirectResolution redirectResolution = new RedirectResolution("/core/payment/CitrusCreditDebitSendReceive.action");
+        RedirectResolution redirectResolution = new RedirectResolution("/core/payment/gateway/CitrusCreditDebitSendReceive.action");
         return getUrlFromResolution(redirectResolution);
     }
 
