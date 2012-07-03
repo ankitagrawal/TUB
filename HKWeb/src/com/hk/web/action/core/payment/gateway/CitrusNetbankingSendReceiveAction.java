@@ -82,7 +82,7 @@ public class CitrusNetbankingSendReceiveAction extends BasePaymentGatewaySendRec
         params.put("bankName", "ICICI Bank");
         params.put(CitrusPaymentGatewayWrapper.transactionId, merchantTxnId);
         params.put(CitrusPaymentGatewayWrapper.amount, amountStr);
-        params.put(CitrusPaymentGatewayWrapper.returnUrl, linkManager.getCitrusPaymentGatewayUrl());
+        params.put(CitrusPaymentGatewayWrapper.returnUrl, linkManager.getCitrusPaymentNetBankingGatewayUrl());
         params.put("card", card);
         params.put("customer", cust);
         params.put("add", addressDummy);

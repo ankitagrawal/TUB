@@ -108,10 +108,16 @@ public class LinkManager {
         RedirectResolution redirectResolution = new RedirectResolution("/core/user/PasswordReset.action").addParameter("token", token.getToken());
         return getUrlFromResolution(redirectResolution);
     }
-
-    public String getCitrusPaymentGatewayUrl() {
-//        RedirectResolution redirectResolution = new RedirectResolution("/core/payment/CitrusGatewaySendReceive.action");
+    public String getCitrusPaymentNetBankingGatewayUrl() {
         RedirectResolution redirectResolution = new RedirectResolution("/core/payment/CitrusNetbankingSendReceive.action");
+        return getUrlFromResolution(redirectResolution);
+    }
+    public String getCitrusPaymentGatewayUrl() {
+        RedirectResolution redirectResolution = new RedirectResolution("/core/payment/CitrusGatewaySendReceive.action");
+        return getUrlFromResolution(redirectResolution);
+    }
+    public String getCitrusPaymentCreditDebitGatewayUrl() {
+        RedirectResolution redirectResolution = new RedirectResolution("/core/payment/CitrusCreditDebitSendReceive.action");
         return getUrlFromResolution(redirectResolution);
     }
 
