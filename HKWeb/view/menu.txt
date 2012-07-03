@@ -14,7 +14,6 @@
 --/nutrition/sports-nutrition/athletes      :  Athletes
 --/nutrition/sports-nutrition/shakers-accessories        :Shakers & Accessories
 --/nutrition/sports-nutrition/combos
---/nutrition/sports-nutrition/clearance-sale  :Clearance Sale
 -/nutrition/dietary-supplements : Dietary Supplements
 --/nutrition/dietary-supplements/multivitamins :  Multivitamins
 ---/nutrition/dietary-supplements/multivitamins/men-s-multivitamins  :Men's Multivitamins
@@ -71,8 +70,8 @@
 ---/nutrition/fitness-accessories/strength-training/upper-body
 ---/nutrition/fitness-accessories/strength-training/arm-leg-weights : Arm & Leg Weights
 ---/nutrition/fitness-accessories/strength-training/medicine-balls
----/sports/fitness-accessories/strength-training/dumbbells
----/sports/fitness-accessories/strength-training/kettlebells
+---/nutrition/fitness-accessories/strength-training/dumbbells
+---/nutrition/fitness-accessories/strength-training/kettlebells
 --/nutrition/fitness-accessories/aerobics-general-fitness : Aerobics & General Fitness
 ---/nutrition/fitness-accessories/aerobics-general-fitness/aerobic-steppers
 ---/nutrition/fitness-accessories/aerobics-general-fitness/hand-grips
