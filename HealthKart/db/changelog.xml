@@ -7759,5 +7759,5 @@
       <sql>
         UPDATE `purchase_invoice` pi SET pi.`reconcilation_date`= DATE_ADD(pi.`create_date`, INTERVAL 3 DAY) WHERE `reconciled`=1 AND `reconcilation_date` IS NULL
       </sql>
-    </changeSet>
+    </changeSet>    
 </databaseChangeLog>

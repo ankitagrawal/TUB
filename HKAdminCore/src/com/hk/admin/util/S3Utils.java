@@ -145,14 +145,7 @@ public class S3Utils {
   }
 
   private static String generateFileKey(String contentPath) {
-    String separator = File.separator;
-    if (separator.equals("\\")) {
-      return contentPath.replaceAll("(.*\\\\emailContentFiles\\\\)", "").replaceAll("\\\\", "/");
-    } else if (separator.equals("/")) {
-      return contentPath.replaceAll("(.*/emailContentFiles/)", "");
-    } else {
-      return null;
-    }
+    return HKFileUtils.getPathAfterSubstring(contentPath, "emailContentFiles");
   }
 
   public static void main(String[] args) {

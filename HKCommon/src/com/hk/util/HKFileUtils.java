@@ -87,4 +87,15 @@ public class HKFileUtils {
     FileNameMap fileNameMap = URLConnection.getFileNameMap();
     return fileNameMap.getContentTypeFor(fileUrl);
   }
+
+  public static String getPathAfterSubstring(String path, String substring) {
+    String separator = File.separator;
+    if (separator.equals("\\")) {
+      return path.replaceAll("(.*\\\\" + substring + "\\\\)", "").replaceAll("\\\\", "/");
+    } else if (separator.equals("/")) {
+      return path.replaceAll("(.*/" + substring + "/)", "");
+    } else {
+      return null;
+    }
+  }
 }
