@@ -1,7 +1,10 @@
-package com.hk.web.action.core.payment;
+package com.hk.web.action.core.payment.gateway;
 
 import java.util.Map;
 
+import com.hk.web.action.core.payment.PaymentFailAction;
+import com.hk.web.action.core.payment.PaymentPendingApprovalAction;
+import com.hk.web.action.core.payment.PaymentSuccessAction;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -16,52 +19,51 @@ import com.CheckSumRequestBean;
 import com.TPSLUtil;
 import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.akube.framework.stripes.action.BasePaymentGatewaySendReceiveAction;
-import com.hk.domain.payment.Payment;
 import com.hk.exception.HealthkartPaymentGatewayException;
+import com.hk.manager.EmailManager;
 import com.hk.manager.payment.PaymentManager;
-import com.hk.manager.payment.TekprocessTestPaymentGatewayWrapper;
+import com.hk.manager.payment.TekprocessPaymentGatewayWrapper;
 import com.hk.pact.dao.payment.PaymentDao;
 import com.hk.web.AppConstants;
 
 @Component
-public class TekprocessTestGatewaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<TekprocessTestPaymentGatewayWrapper> {
+public class TekprocessGatewaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<TekprocessPaymentGatewayWrapper> {
 
-    private static Logger logger = LoggerFactory.getLogger(TekprocessTestGatewaySendReceiveAction.class);
+    private static Logger logger = LoggerFactory.getLogger(TekprocessGatewaySendReceiveAction.class);
 
     @Autowired
     PaymentDao            paymentDao;
     @Autowired
     PaymentManager        paymentManager;
-    /*@Value("#{hkEnvProps['" + Keys.App.environmentDir + "']}")
-    String                environmemtDir;*/
+    @Autowired
+    EmailManager          emailManager;
 
-    protected TekprocessTestPaymentGatewayWrapper getPaymentGatewayWrapperFromTransactionData(BasePaymentGatewayWrapper.TransactionData data) {
-        TekprocessTestPaymentGatewayWrapper tekprocessTestPaymentGatewayWrapper = new TekprocessTestPaymentGatewayWrapper();
-        Payment payment = paymentDao.findByGatewayOrderId(data.getGatewayOrderId());
+    protected TekprocessPaymentGatewayWrapper getPaymentGatewayWrapperFromTransactionData(BasePaymentGatewayWrapper.TransactionData data) {
+        TekprocessPaymentGatewayWrapper tekprocessPaymentGatewayWrapper = new TekprocessPaymentGatewayWrapper();
+        //Payment payment = paymentDao.findByGatewayOrderId(data.getGatewayOrderId());
         String amountStr = BasePaymentGatewayWrapper.TransactionData.decimalFormat.format(data.getAmount());
 
         CheckSumRequestBean checkSumRequestBean = new CheckSumRequestBean();
         checkSumRequestBean.setStrMerchantTranId(data.getGatewayOrderId());
-        checkSumRequestBean.setStrMarketCode(TekprocessTestPaymentGatewayWrapper.merchantCode);
+        checkSumRequestBean.setStrMarketCode(TekprocessPaymentGatewayWrapper.merchantCode);
         checkSumRequestBean.setStrAccountNo("1");
         checkSumRequestBean.setStrAmt(amountStr);
-        checkSumRequestBean.setStrBankCode("470");
-        // checkSumRequestBean.setStrBankCode(data.getPaymentMethod());
-        checkSumRequestBean.setStrPropertyPath(AppConstants.getAppClasspathRootPath() + "/tekprocess.properties");
+        checkSumRequestBean.setStrBankCode(data.getPaymentMethod());
+        checkSumRequestBean.setStrPropertyPath(AppConstants.getAppClasspathRootPath() + "/tekprocess.live.properties");
 
         TPSLUtil tpslUtil = new TPSLUtil();
         String msg = tpslUtil.transactionRequestMessage(checkSumRequestBean);
 
-        logger.info("sending to payment gateway TekProcessTest with the parameter string msg : " + msg);
+        logger.info("sending to payment gateway TekProcess with the parameter string msg : " + msg);
 
-        tekprocessTestPaymentGatewayWrapper.addParameter(TekprocessTestPaymentGatewayWrapper.param_msg, msg);
+        tekprocessPaymentGatewayWrapper.addParameter(TekprocessPaymentGatewayWrapper.param_msg, msg);
 
-        return tekprocessTestPaymentGatewayWrapper;
+        return tekprocessPaymentGatewayWrapper;
     }
 
     @DefaultHandler
     public Resolution callback() {
-        String msg = getContext().getRequest().getParameter(TekprocessTestPaymentGatewayWrapper.param_msg);
+        String msg = getContext().getRequest().getParameter(TekprocessPaymentGatewayWrapper.param_msg);
         /*
          * now do all sorts of verifications before proceeding 1. do gateway specific validations first 2. check is this
          * payment status is already success/fail 3. get order id from this and generate a checksum, the compare
@@ -71,41 +73,44 @@ public class TekprocessTestGatewaySendReceiveAction extends BasePaymentGatewaySe
          * to the required page (success, fail, authPending, double payment, etc)
          */
 
-        logger.info("returning from payment gateway TekProcessTest with the parameter string msg : " + msg);
+        logger.info("returning from payment gateway TekProcess with the parameter string msg : " + msg);
 
-        String propertyFilePath = AppConstants.getAppClasspathRootPath() + "/tekprocess.properties";
+        String propertyFilePath = AppConstants.getAppClasspathRootPath() + "/tekprocess.live.properties";
 
-        Map<String, String> paramMap = TekprocessTestPaymentGatewayWrapper.parseResponse(msg);
+        Map<String, String> paramMap = TekprocessPaymentGatewayWrapper.parseResponse(msg);
 
-        String gatewayOrderId = paramMap.get(TekprocessTestPaymentGatewayWrapper.key_TxnReferenceNo);
-        String amountStr = paramMap.get(TekprocessTestPaymentGatewayWrapper.key_TxnAmount);
+        String gatewayOrderId = paramMap.get(TekprocessPaymentGatewayWrapper.key_TxnReferenceNo);
+        String amountStr = paramMap.get(TekprocessPaymentGatewayWrapper.key_TxnAmount);
         Double amount = NumberUtils.toDouble(amountStr);
-        String authStatus = paramMap.get(TekprocessTestPaymentGatewayWrapper.key_AuthStatus);
+        String authStatus = paramMap.get(TekprocessPaymentGatewayWrapper.key_AuthStatus);
         String merchantParam = null;
 
         Resolution resolution = null;
         try {
             // tekprocess specific validation
-            TekprocessTestPaymentGatewayWrapper.verifyChecksum(msg, propertyFilePath);
+            TekprocessPaymentGatewayWrapper.verifyChecksum(msg, propertyFilePath);
 
             // our own validations
             paymentManager.verifyPayment(gatewayOrderId, amount, merchantParam);
 
             // payment callback has been verified. now see if it is successful or failed from the gateway response
-            if (TekprocessTestPaymentGatewayWrapper.authStatus_Success.equals(authStatus)) {
+            if (TekprocessPaymentGatewayWrapper.authStatus_Success.equals(authStatus)) {
                 paymentManager.success(gatewayOrderId);
                 resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", gatewayOrderId);
-            } else if (TekprocessTestPaymentGatewayWrapper.authStatus_PendingApproval.equals(authStatus)) {
+            } else if (TekprocessPaymentGatewayWrapper.authStatus_PendingApproval.equals(authStatus)) {
                 paymentManager.pendingApproval(gatewayOrderId);
+                emailManager.sendPaymentFailMail(getPrincipalUser(), gatewayOrderId);
                 resolution = new RedirectResolution(PaymentPendingApprovalAction.class).addParameter("gatewayOrderId", gatewayOrderId);
-            } else if (TekprocessTestPaymentGatewayWrapper.authStatus_Fail.equals(authStatus)) {
+            } else if (TekprocessPaymentGatewayWrapper.authStatus_Fail.equals(authStatus)) {
                 paymentManager.fail(gatewayOrderId);
+                emailManager.sendPaymentFailMail(getPrincipalUser(), gatewayOrderId);
                 resolution = new RedirectResolution(PaymentFailAction.class).addParameter("gatewayOrderId", gatewayOrderId);
             } else {
                 throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.INVALID_RESPONSE);
             }
         } catch (HealthkartPaymentGatewayException e) {
             paymentManager.error(gatewayOrderId, e);
+            emailManager.sendPaymentFailMail(getPrincipalUser(), gatewayOrderId);
             resolution = e.getRedirectResolution().addParameter("gatewayOrderId", gatewayOrderId);
         }
         return resolution;
