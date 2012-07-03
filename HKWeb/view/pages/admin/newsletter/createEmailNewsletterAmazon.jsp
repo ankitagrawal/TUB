@@ -28,7 +28,7 @@
       <c:otherwise>
         <s:form beanclass="com.hk.web.action.admin.newsletter.EmailNewsletterCampaignAction">
           <fieldset style="width:50%">
-            Name: <s:text name="emailCampaign.name" value="${createBean.name}"/><br/>
+            Name: <s:text name="emailCampaign.name" value="${createBean.name}" readonly="readonly"/><br/>
             Subject: <s:text name="emailCampaign.subject" style=" margin-top: 15px;" id="subject"/><br/>
             Email Type:
             <s:select name="emailCampaign.emailType" style=" margin-top: 15px;">
