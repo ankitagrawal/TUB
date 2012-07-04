@@ -18,6 +18,7 @@ public class ReplacementOrder extends ShippingOrder implements Serializable{
   @Column(name = "is_rto")
   private Boolean isRto;
 
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "ref_shipping_order_id")
   private ShippingOrder refShippingOrder;
 

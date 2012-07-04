@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.RedirectResolution;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class ReplacementOrderAction extends BaseAction {
     ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
     shippingOrderSearchCriteria.setOrderId(shippingOrderId);
     shippingOrder = shippingOrderService.find(shippingOrderId);
-    return new ForwardResolution("/pages/admin/searchShippingOrder.jsp");
+    return new RedirectResolution(ReplacementOrderAction.class);
   }
 
   public Resolution createReplacementOrder(){

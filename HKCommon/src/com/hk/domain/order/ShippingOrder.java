@@ -104,6 +104,8 @@ public class ShippingOrder implements java.io.Serializable {
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "shippingOrder")
   private Set<ShippingOrderLifecycle> shippingOrderLifecycles = new HashSet<ShippingOrderLifecycle>(0);
 
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "refShippingOrder")
+  private Set<ReplacementOrder> replacementOrders = new HashSet<ReplacementOrder>();
 
   public Long getId() {
     return this.id;
