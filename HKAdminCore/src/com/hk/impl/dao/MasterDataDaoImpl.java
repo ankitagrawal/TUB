@@ -292,7 +292,7 @@ public class MasterDataDaoImpl implements MasterDataDao {
     }
 
     public List<ShippingOrderStatus> getSOStatusForReconcilation(){
-        return null;
+        return EnumShippingOrderStatus.getStatusForReconcilationReport();
     }
 
 }

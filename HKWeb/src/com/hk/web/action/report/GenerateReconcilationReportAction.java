@@ -41,29 +41,30 @@ import com.hk.web.action.error.AdminPermissionAction;
 @Component
 public class GenerateReconcilationReportAction extends BaseAction {
     @Autowired
-    UserService                userService;
+    UserService                   userService;
 
     @Autowired
-    OrderDao                   orderDao;
+    OrderDao                      orderDao;
 
     @Autowired
-    ShippingOrderDao           shippingOrderDao;
+    ShippingOrderDao              shippingOrderDao;
     @Autowired
-    ReportShippingOrderService shippingOrderReportingService;
+    ReportShippingOrderService    shippingOrderReportingService;
     @Autowired
-    WarehouseDaoImpl               warehouseDao;
+    WarehouseDaoImpl              warehouseDao;
 
-    @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
-    String                     adminDownloadsPath;
+    @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
+    String                        adminDownloadsPath;
 
-    private Date               startDate;
-    private Date               endDate;
-    private SimpleDateFormat   sdf = new SimpleDateFormat("yyyy-MM-dd");
-    private String             paymentProcess;
-    private CourierServiceInfo courierServiceInfo;
+    private Date                  startDate;
+    private Date                  endDate;
+    private SimpleDateFormat      sdf = new SimpleDateFormat("yyyy-MM-dd");
+    private String                paymentProcess;
+    private CourierServiceInfo    courierServiceInfo;
 
-    private Long               warehouseId;
-    private Courier            courier;
+    private Long                  warehouseId;
+    private Courier               courier;
+    private Long                  shippingOrderStatusId;
     
 
     @DefaultHandler
@@ -73,14 +74,15 @@ public class GenerateReconcilationReportAction extends BaseAction {
 
     public Resolution generateReconilationReport() {
         List<ReconcilationReportDto> reconcilationReportDtoList = new ArrayList<ReconcilationReportDto>();
-        reconcilationReportDtoList = shippingOrderReportingService.findReconcilationReportByDate(startDate, endDate, paymentProcess, courier, warehouseId);
+        reconcilationReportDtoList = shippingOrderReportingService.findReconcilationReportByDate(startDate, endDate, paymentProcess, courier, warehouseId,shippingOrderStatusId);
         if (reconcilationReportDtoList.isEmpty() == true) {
             addRedirectAlertMessage(new SimpleMessage("No order for given search criteria."));
             return new ForwardResolution("/pages/admin/generateReconcilationReport.jsp");
         }
 
         String excelFilePath = adminDownloadsPath + "/reports/ReconReport" + sdf.format(new Date()) + ".xls";
-        final File excelFile = new File(excelFilePath);
+        final File
+                excelFile = new File(excelFilePath);
 
         HkXlsWriter xlsWriter = new HkXlsWriter();
         xlsWriter.addHeader("SHIPPING ORDER ID", "SHIPPING ORDER ID");
@@ -124,7 +126,7 @@ public class GenerateReconcilationReportAction extends BaseAction {
             row++;
         }
         xlsWriter.writeData(excelFile, "Reconciliation_report");
-        addRedirectAlertMessage(new SimpleMessage("Downlaod complete"));
+        addRedirectAlertMessage(new SimpleMessage("Download complete"));
 
         return new Resolution() {
 
@@ -185,5 +187,13 @@ public class GenerateReconcilationReportAction extends BaseAction {
 
     public void setCourier(Courier courier) {
         this.courier = courier;
+    }
+
+    public Long getShippingOrderStatusId() {
+        return shippingOrderStatusId;
+    }
+
+    public void setShippingOrderStatusId(Long shippingOrderStatusId) {
+        this.shippingOrderStatusId = shippingOrderStatusId;
     }
 }
