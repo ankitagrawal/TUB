@@ -64,10 +64,11 @@ public class GenerateReconcilationReportAction extends BaseAction {
 
     private Long               warehouseId;
     private Courier            courier;
+    
 
     @DefaultHandler
     public Resolution pre() {
-        return new ForwardResolution("/pages/admin/generateReconciilationReport.jsp");
+        return new ForwardResolution("/pages/admin/generateReconcilationReport.jsp");
     }
 
     public Resolution generateReconilationReport() {
@@ -75,7 +76,7 @@ public class GenerateReconcilationReportAction extends BaseAction {
         reconcilationReportDtoList = shippingOrderReportingService.findReconcilationReportByDate(startDate, endDate, paymentProcess, courier, warehouseId);
         if (reconcilationReportDtoList.isEmpty() == true) {
             addRedirectAlertMessage(new SimpleMessage("No order for given search criteria."));
-            return new ForwardResolution("/pages/admin/generateReconciilationReport.jsp");
+            return new ForwardResolution("/pages/admin/generateReconcilationReport.jsp");
         }
 
         String excelFilePath = adminDownloadsPath + "/reports/ReconReport" + sdf.format(new Date()) + ".xls";
@@ -143,7 +144,7 @@ public class GenerateReconcilationReportAction extends BaseAction {
             }
         };
 
-        // return new ForwardResolution("/pages/admin/generateReconciilationReport.jsp");
+        // return new ForwardResolution("/pages/admin/generateReconcilationReport.jsp");
     }
 
     public Date getStartDate() {

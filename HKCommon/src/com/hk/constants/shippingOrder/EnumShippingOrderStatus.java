@@ -121,4 +121,5 @@ public enum EnumShippingOrderStatus {
 	                EnumShippingOrderStatus.SO_Lost.asShippingOrderStatus(),
 	        EnumShippingOrderStatus.SO_Replaced.asShippingOrderStatus());
 	  }
+    
 }

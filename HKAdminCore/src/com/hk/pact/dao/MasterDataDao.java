@@ -102,4 +102,6 @@ public interface MasterDataDao
 
     public List<City> getCityList();
 
+    public List<ShippingOrderStatus> getSOStatusForReconcilation();
+
 }
