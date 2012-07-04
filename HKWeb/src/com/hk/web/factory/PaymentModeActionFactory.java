@@ -7,7 +7,7 @@ import com.hk.web.action.core.payment.CodGatewaySendReceiveAction;
 import com.hk.web.action.core.payment.gateway.CitrusCreditDebitSendReceiveAction;
 import com.hk.web.action.core.payment.gateway.CitrusGatewaySendReceiveAction;
 import com.hk.web.action.core.payment.gateway.CitrusNetbankingSendReceiveAction;
-import com.hk.web.action.core.payment.gateway.TekprocessGatewaySendReceiveAction;
+import com.hk.web.action.core.payment.TekprocessGatewaySendReceiveAction;
 import com.hk.web.action.core.payment.gateway.test.CCAvenueDummyGatewaySendReceiveAction;
 import com.hk.web.action.core.payment.gateway.test.TekprocessTestGatewaySendReceiveAction;
 
