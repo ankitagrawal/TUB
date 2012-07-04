@@ -91,6 +91,8 @@ public class PricingDto {
   private Double codTotal = 0.0;
   private Long codLineCount = 0L;
 
+  private Long subscriptionLineCount = 0L;
+
   private Double totalHkProductsDiscount = 0.0;
   private Double totalHkPrepaidServiceDiscount = 0.0;
   private Double totalHkPostpaidServiceDiscount = 0.0;
@@ -167,31 +169,31 @@ public class PricingDto {
 
       if (cartLineItem.isType(EnumCartLineItemType.Product)) {
         //if (cartLineItem.getComboInstance() == null) {
-          if (cartLineItem.getProductVariant().getPaymentType() != null && cartLineItem.getProductVariant().getPaymentType().equals(baseDao.get(ProductVariantPaymentType.class, EnumProductVariantPaymentType.Prepaid.getId()))) {
-            prepaidServiceMrpSubTotal += cartLineItem.getMarkedPrice() * cartLineItem.getQty();
-            prepaidServiceHkSubTotal += cartLineItem.getHkPrice() * cartLineItem.getQty();
-            prepaidServiceDiscount += cartLineItem.getDiscountOnHkPrice();
-            prepaidServicesTotal += cartLineItem.getHkPrice() * cartLineItem.getQty() - cartLineItem.getDiscountOnHkPrice();
-            prepaidServicesLineCount++;
-          } else if (cartLineItem.getProductVariant().getPaymentType() != null && cartLineItem.getProductVariant().getPaymentType().equals(baseDao.get(ProductVariantPaymentType.class, EnumProductVariantPaymentType.Postpaid.getId()))) {
-            postpaidServiceMrpSubTotal += cartLineItem.getMarkedPrice() * cartLineItem.getQty();
-            postpaidServiceHkSubTotal += cartLineItem.getHkPrice() * cartLineItem.getQty();
-            postpaidServiceDiscount += cartLineItem.getDiscountOnHkPrice();
-            postpaidServicesTotal += cartLineItem.getHkPrice() * cartLineItem.getQty() - cartLineItem.getDiscountOnHkPrice();
-            postpaidServicesLineCount++;
-          } else {
-            productsMrpSubTotal += cartLineItem.getMarkedPrice() * cartLineItem.getQty();
-            productsHkSubTotal += cartLineItem.getHkPrice() * cartLineItem.getQty();
-            productsDiscount += cartLineItem.getDiscountOnHkPrice();
-            productsTotal += cartLineItem.getHkPrice() * cartLineItem.getQty() - cartLineItem.getDiscountOnHkPrice();
+        if (cartLineItem.getProductVariant().getPaymentType() != null && cartLineItem.getProductVariant().getPaymentType().equals(baseDao.get(ProductVariantPaymentType.class, EnumProductVariantPaymentType.Prepaid.getId()))) {
+          prepaidServiceMrpSubTotal += cartLineItem.getMarkedPrice() * cartLineItem.getQty();
+          prepaidServiceHkSubTotal += cartLineItem.getHkPrice() * cartLineItem.getQty();
+          prepaidServiceDiscount += cartLineItem.getDiscountOnHkPrice();
+          prepaidServicesTotal += cartLineItem.getHkPrice() * cartLineItem.getQty() - cartLineItem.getDiscountOnHkPrice();
+          prepaidServicesLineCount++;
+        } else if (cartLineItem.getProductVariant().getPaymentType() != null && cartLineItem.getProductVariant().getPaymentType().equals(baseDao.get(ProductVariantPaymentType.class, EnumProductVariantPaymentType.Postpaid.getId()))) {
+          postpaidServiceMrpSubTotal += cartLineItem.getMarkedPrice() * cartLineItem.getQty();
+          postpaidServiceHkSubTotal += cartLineItem.getHkPrice() * cartLineItem.getQty();
+          postpaidServiceDiscount += cartLineItem.getDiscountOnHkPrice();
+          postpaidServicesTotal += cartLineItem.getHkPrice() * cartLineItem.getQty() - cartLineItem.getDiscountOnHkPrice();
+          postpaidServicesLineCount++;
+        } else {
+          productsMrpSubTotal += cartLineItem.getMarkedPrice() * cartLineItem.getQty();
+          productsHkSubTotal += cartLineItem.getHkPrice() * cartLineItem.getQty();
+          productsDiscount += cartLineItem.getDiscountOnHkPrice();
+          productsTotal += cartLineItem.getHkPrice() * cartLineItem.getQty() - cartLineItem.getDiscountOnHkPrice();
+        }
+        totalPostpaidAmount += cartLineItem.getProductVariant().getPostpaidAmount() * cartLineItem.getQty();
+        if (offerTriggerActive) {
+          if (productGroup == null || productGroup.contains(cartLineItem.getProductVariant())) {
+            totalCashback += cartLineItem.getHkPrice() * cartLineItem.getQty();
           }
-          totalPostpaidAmount += cartLineItem.getProductVariant().getPostpaidAmount() * cartLineItem.getQty();
-          if (offerTriggerActive) {
-            if (productGroup == null || productGroup.contains(cartLineItem.getProductVariant())) {
-              totalCashback += cartLineItem.getHkPrice() * cartLineItem.getQty();
-            }
-          }
-          productLineCount++;
+        }
+        productLineCount++;
         /*} else {
           ComboInstance comboInstance = cartLineItem.getComboInstance();
           if (!comboInstanceSet.contains(comboInstance)) {
@@ -240,6 +242,13 @@ public class PricingDto {
         redeemedRewardPoints += cartLineItem.getDiscountOnHkPrice();
         rewardPointTotal += cartLineItem.getDiscountOnHkPrice();
         rewardPointLineItems.add(cartLineItem);
+      } else if(cartLineItem.isType(EnumCartLineItemType.Subscription)) {
+        productsMrpSubTotal += cartLineItem.getMarkedPrice()*cartLineItem.getQty();
+        productsHkSubTotal += cartLineItem.getHkPrice()*cartLineItem.getQty();
+        productsDiscount += cartLineItem.getDiscountOnHkPrice()*cartLineItem.getQty();
+        productsTotal += cartLineItem.getHkPrice()*cartLineItem.getQty() - cartLineItem.getDiscountOnHkPrice()*cartLineItem.getQty();
+        subscriptionLineCount++;
+        productLineCount++;//subscription is also counted as a productLine
       }
 
     }
@@ -263,7 +272,7 @@ public class PricingDto {
       // finally we have the unit price which is "after" the discount has been applied. GA has no provision for discounts, so the
       // unit price fed into GA will be the discounted unit price
       lineItem.setHkPrice((productLineItem.getHkPrice() * productLineItem.getQty() - productLineItem.getDiscountOnHkPrice()) / productLineItem.getQty());
-     
+
       aggregateProductLineItems.add(lineItem);
     }
 
@@ -325,6 +334,14 @@ public class PricingDto {
 
   public Long getProductLineCount() {
     return productLineCount;
+  }
+
+  public Long getSubscriptionLineCount() {
+    return subscriptionLineCount;
+  }
+
+  public void setSubscriptionLineCount(Long subscriptionLineCount) {
+    this.subscriptionLineCount = subscriptionLineCount;
   }
 
   public Double getOrderLevelDiscount() {

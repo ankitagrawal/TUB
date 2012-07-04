@@ -1,0 +1,73 @@
+package com.hk.web.action.core.subscription;
+
+import com.akube.framework.stripes.action.BaseAction;
+import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.subscription.Subscription;
+import com.hk.domain.subscription.SubscriptionProduct;
+import com.hk.pact.service.catalog.ProductVariantService;
+import com.hk.pact.service.subscription.SubscriptionProductService;
+import com.hk.pact.service.subscription.SubscriptionService;
+import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.validation.ValidationErrorHandler;
+import net.sourceforge.stripes.validation.ValidationErrors;
+import org.springframework.beans.factory.annotation.Autowired;
+
+/**
+ * Created with IntelliJ IDEA.
+ * User: Pradeep
+ * Date: 7/4/12
+ * Time: 12:01 PM
+ * To change this template use File | Settings | File Templates.
+ */
+
+public class SubscriptionAction extends BaseAction implements ValidationErrorHandler {
+  //private static Logger logger = Logger.getLogger(AddToCartAction.class);
+
+  SubscriptionProduct subscriptionProduct;
+  ProductVariant productVariant;
+  Product product;
+
+  @Autowired
+  SubscriptionProductService subscriptionProductService;
+  @Autowired
+  ProductVariantService productVariantService;
+
+  @DontValidate
+  @DefaultHandler
+  public Resolution pre() {
+    product=productVariant.getProduct();
+    subscriptionProduct = subscriptionProductService.findByProduct(productVariant.getProduct());
+    return new ForwardResolution("/pages/modal/subscription.jsp");
+  }
+
+  public SubscriptionProduct getSubscriptionProduct() {
+    return subscriptionProduct;
+  }
+
+  public void setSubscriptionProduct(SubscriptionProduct subscriptionProduct) {
+    this.subscriptionProduct = subscriptionProduct;
+  }
+
+  public ProductVariant getProductVariant() {
+    return productVariant;
+  }
+
+  public void setProductVariant(ProductVariant productVariant) {
+    this.productVariant = productVariant;
+  }
+
+  public Product getProduct() {
+    return product;
+  }
+
+  public void setProduct(Product product) {
+    this.product = product;
+  }
+
+  public Resolution handleValidationErrors(ValidationErrors validationErrors) throws Exception {
+    return new JsonResolution(validationErrors, getContext().getLocale());
+  }
+
+}
+

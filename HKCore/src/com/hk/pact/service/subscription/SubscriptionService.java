@@ -1,6 +1,11 @@
 package com.hk.pact.service.subscription;
 
+import com.hk.domain.order.Order;
 import com.hk.domain.subscription.Subscription;
+import com.hk.domain.subscription.SubscriptionStatus;
+
+import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -12,6 +17,12 @@ import com.hk.domain.subscription.Subscription;
  */
 public interface SubscriptionService {
 
-  public Subscription save(Subscription subscriptionProduct);
+  public Subscription save(Subscription subscription);
+
+  public List<Subscription> getSubscriptions(Order order, SubscriptionStatus subscriptionStatus);
+
+  public List<Subscription> placeSubscriptions(Order order);
+
+  public Subscription abandonSubscription(Subscription subscription);
   
 }

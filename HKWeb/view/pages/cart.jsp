@@ -244,9 +244,15 @@
     <a href="/" class="back"> &larr; go back to add products to your shopping cart</a>
   </c:if>
 </s:layout-component>
+
 <c:if test="${cartAction.pricingDto.productLineCount >= 1}">
 <s:layout-component name="cart_items">
 <div class='products_container' style="min-height: 500px;">
+<c:if test="${cartAction.pricingDto.subscriptionLineCount>=1}">
+  <s:layout-render name="/layouts/embed/_subscriptionCart.jsp"
+                   subscriptions="${cartAction.subscriptions}" />
+</c:if>
+<c:if test="${(cartAction.pricingDto.productLineCount-cartAction.pricingDto.subscriptionLineCount)>=1}">
 <div class='tabletitle'>
   <div class='name'>
     Product
@@ -259,7 +265,7 @@
   </div>
   <div class='floatfix'></div>
 </div>
-<s:form beanclass="com.hk.web.action.core.cart.CartAction" id="cartForm">
+
 <div style="display: none;">
   <s:link beanclass="com.hk.web.action.core.order.CartLineItemUpdateAction" id="lineItemUpdateLink"></s:link>
   <s:link beanclass="com.hk.web.action.core.discount.ApplyCouponAction" style="display:none;" id="couponBaseLink"></s:link>
@@ -493,8 +499,8 @@
   <s:link beanclass="com.hk.web.action.HomeAction"
           class="back"> &larr; go back to add products to your shopping cart</s:link>
 </c:if>
+</c:if>
 </div>
-
 <shiro:lacksRole name="<%=RoleConstants.COUPON_BLOCKED%>">
     <div class='right_container coupon'>
   <shiro:hasAnyRoles name="<%=RoleConstants.HK_USER%>">
@@ -621,7 +627,7 @@
     (inclusive of shipping, handling and taxes.)
   </div>
 </c:if>
-
+<s:form beanclass="com.hk.web.action.core.cart.CartAction" id="cartForm">
 <s:hidden name="order" value="${cartAction.order}"/>
 <s:submit name="checkout" value="Place order >" class="button" style="font-size: 1em"/>
 

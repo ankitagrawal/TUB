@@ -1,3 +1,4 @@
+
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
  <databaseChangeLog
      xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
@@ -7533,7 +7534,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="address_id" type="INT">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
             <column name="subscription_status_id" type="INT">
                 <constraints nullable="false"/>
@@ -7542,6 +7543,9 @@
                 <constraints nullable="false"/>
             </column>
             <column name="qty" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="subscription_period_days" type="INT">
                 <constraints nullable="false"/>
             </column>
             <column name="qty_per_delivery" type="INT">

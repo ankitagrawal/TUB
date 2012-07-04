@@ -5,6 +5,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.constants.subscription.EnumSubscriptionStatus;
+import com.hk.domain.subscription.Subscription;
+import com.hk.pact.service.subscription.SubscriptionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,6 +117,8 @@ public class OrderManager {
     private OrderLoggingService               orderLoggingService;
     @Autowired
     private KarmaProfileService               karmaProfileService;
+    @Autowired
+    private SubscriptionService               subscriptionService;
 
     @Autowired
     private ComboInstanceHasProductVariantDao comboInstanceHasProductVariantDao;
@@ -312,8 +317,16 @@ public class OrderManager {
          */
 
         // apply pricing and save cart line items
-        Set<CartLineItem> cartLIFromPricingEngine = getPricingEngine().calculateAndApplyPricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(),
-                order.getRewardPointsUsed());
+      List<Subscription> subscriptions = subscriptionService.getSubscriptions(order, EnumSubscriptionStatus.InCart.asSubscriptionStatus());
+      Set<CartLineItem> cartLIFromPricingEngine;
+      if(subscriptions !=null && subscriptions.size()>0){
+        cartLIFromPricingEngine =getPricingEngine().calculateAndApplyPricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), order.getRewardPointsUsed(),subscriptions);
+        subscriptionService.placeSubscriptions(order);
+      }else {
+        cartLIFromPricingEngine =getPricingEngine().calculateAndApplyPricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), order.getRewardPointsUsed());
+      }
+       // Set<CartLineItem> cartLIFromPricingEngine = getPricingEngine().calculateAndApplyPricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(),
+       //         order.getRewardPointsUsed());
         Set<CartLineItem> cartLineItems = getCartLineItemsFromPricingCartLi(order, cartLIFromPricingEngine);
 
         PricingDto pricingDto = new PricingDto(cartLineItems, order.getAddress());
@@ -403,7 +416,7 @@ public class OrderManager {
         /*
          * //Auto escalation of order if inventory is positive if (orderService.autoEscalateOrder(order)) {
          * orderService.logOrderActivity(order, getUserService.getAdminUser(),
-         * orderLifecycleActivityDaoProvider.get().find(EnumOrderLifecycleActivity.AutoEscalatedToProcessingQueue.getId()),
+         * orderLifecycleActivityDaoProvider.get().find(ExnumOrderLifecycleActivity.AutoEscalatedToProcessingQueue.getId()),
          * null); }
          */
 
@@ -519,8 +532,16 @@ public class OrderManager {
 
     public Order recalAndUpdateAmount(Order order) {
         OfferInstance offerInstance = order.getOfferInstance();
-        PricingDto pricingDto = new PricingDto(getPricingEngine().calculatePricing(order.getCartLineItems(), offerInstance, order.getAddress(), order.getRewardPointsUsed()),
-                order.getAddress());
+        PricingDto pricingDto;
+      List<Subscription> subscriptions = subscriptionService.getSubscriptions(order, EnumSubscriptionStatus.InCart.asSubscriptionStatus());
+      if(subscriptions !=null && subscriptions.size()>0){
+        pricingDto = new PricingDto(getPricingEngine().calculatePricing(order.getCartLineItems(), offerInstance, order.getAddress(), order.getRewardPointsUsed(),subscriptions),
+            order.getAddress());
+      }else {
+        pricingDto = new PricingDto(getPricingEngine().calculatePricing(order.getCartLineItems(), offerInstance, order.getAddress(), order.getRewardPointsUsed()),
+            order.getAddress());
+      }
+
         order.setAmount(pricingDto.getGrandTotalPayable());
 
         // set order as referred order if this order is using referral coupon and availing discount as well
@@ -873,4 +894,12 @@ public class OrderManager {
     public void setOrderLoggingService(OrderLoggingService orderLoggingService) {
         this.orderLoggingService = orderLoggingService;
     }
+
+  public SubscriptionService getSubscriptionService() {
+    return subscriptionService;
+  }
+
+  public void setSubscriptionService(SubscriptionService subscriptionService) {
+    this.subscriptionService = subscriptionService;
+  }
 }

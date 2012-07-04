@@ -73,7 +73,14 @@
       background: url('${pageContext.request.contextPath}/images/img/star-on.png') 0 0 repeat-x;
     }
   </style>
-  <link href="${pageContext.request.contextPath}/css/jquery.jqzoom.css" rel="stylesheet" type="text/css"/>
+
+  <!-- using jquery datepicker in subscription form  -->
+    <c:if test="${!empty subscriptionProduct}">
+        <link href="${pageContext.request.contextPath}/css/jquery-ui.css" rel="stylesheet" type="text/css"/>
+        <script type="text/javascript" src="<hk:vhostJs/>/js/jquery-ui.min.js"></script>
+    </c:if>
+
+
   <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.jqzoom-core.js"></script>
 
   <script type="text/javascript">
@@ -107,14 +114,6 @@
       $('#notifyMeWindow').jqm({trigger: '.notifyMe', ajax: '@href'});
 
     });
-
-    $('input[value=Subscribe]').click(function() {
-
-      $('#subscription-config').show();
-       return false;
-      });
-
-
 
   </script>
 
@@ -353,20 +352,15 @@
       </c:if>--%>
   </div>
   <c:if test="${!empty subscriptionProduct}">
-     <div id="subscription-config">
-       <s:form beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction">
-         <fieldset>
-         min frequency: ${subscriptionProduct.minFrequencyDays} days - max frequency: ${subscriptionProduct.maxFrequencyDays} days
-         <br/>
+    <%--  <s:layout-render name="/layouts/embed/_subscription.jsp" subscriptionProduct="${subscriptionProduct}"/> --%>
+    <div class="jqmWindow" style="display:none;" id="subscriptionWindow"></div>
 
-         Start Date: <s:text class="date_input startDate" style="width:150px"
-                                formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startDate"/>
-         <input name="subscriptionProduct" value="${subscriptionProduct.id}" type="hidden" />
-         <input name="test" type="submit" value="submit" />
-           </fieldset>
-       </s:form>
-     </div>
-     <span class="subscription" style="float:right;">Subscribe and save <fmt:formatNumber value="${subscriptionProduct.subscriptionDiscount180Days}" maxFractionDigits="2"/>  to   <fmt:formatNumber value="${subscriptionProduct.subscriptionDiscount360Days}" maxFractionDigits="2"/> &#37;   </span>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('#subscriptionWindow').jqm({trigger: '.addSubscriptionButton', ajax: '@href'});
+      });
+
+    </script>
   </c:if>
   <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_DESCRIPTIONS%>">
     <div>

@@ -1,5 +1,7 @@
 package com.hk.impl.dao.subscription;
 
+import com.hk.constants.subscription.EnumSubscriptionStatus;
+import com.hk.domain.subscription.SubscriptionStatus;
 import org.springframework.stereotype.Repository;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.subscription.SubscriptionProductDao;
@@ -9,6 +11,7 @@ import com.hk.domain.user.User;
 import com.hk.domain.order.Order;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,4 +27,8 @@ public class SubscriptionDaoImpl extends BaseDaoImpl implements SubscriptionDao 
   public Subscription save(Subscription subscription){
     return (Subscription) super.save(subscription);
   }
+
+    public List<Subscription> getSubscriptions(Order order, SubscriptionStatus subscriptionStatus){
+        return (List<Subscription>) findByNamedParams(" from Subscription sub where sub.order = :order and sub.subscriptionStatus =:subscriptionStatus ", new String[]{"order","subscriptionStatus"}, new Object[]{order, subscriptionStatus});
+    }
 }

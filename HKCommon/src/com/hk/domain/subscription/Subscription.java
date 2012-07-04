@@ -33,7 +33,7 @@ public class Subscription  implements java.io.Serializable {
     private Order order;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "address_id",  nullable = false)
+    @JoinColumn(name = "address_id",  nullable = true)
     private Address address;
 
 
@@ -49,6 +49,9 @@ public class Subscription  implements java.io.Serializable {
 
     @Column(name="qty", nullable=false)
     private Long qty;
+
+    @Column(name="subscription_period_days", nullable=false)
+    private Long subscriptionPeriodDays;
 
 
     @Column(name="qty_per_delivery", nullable=false)
@@ -238,5 +241,12 @@ public class Subscription  implements java.io.Serializable {
         this.nextShipmentDate = nextShipmentDate;
     }
 
+    public Long getSubscriptionPeriodDays() {
+        return subscriptionPeriodDays;
+    }
+
+    public void setSubscriptionPeriodDays(Long subscriptionPeriodDays) {
+        this.subscriptionPeriodDays = subscriptionPeriodDays;
+    }
 }
 

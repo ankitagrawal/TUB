@@ -75,6 +75,8 @@ public class CartLineItemBuilder {
       assert discountOnHkPrice != null;
       hkPrice = 0D;
       qty = 1L;
+    }  else if (enumCartLineItemType == EnumCartLineItemType.Subscription){
+       //do nothing
     }
     assert hkPrice != null;
     if (discountOnHkPrice == null) discountOnHkPrice = 0.0D;

@@ -121,9 +121,9 @@
                     </c:when>
                     <c:otherwise>
                       <c:if test="${!empty subscriptionProduct}">
-                        <s:submit name="addToCart" value="Subscribe"
-                                class="subscription cta button_green"
-                                style="float:right;"/>
+
+                        <s:link beanclass="com.hk.web.action.core.subscription.SubscriptionAction" class="addSubscriptionButton"><b>Subscribe</b>
+                          <s:param name="productVariant" value="${variant}"/> </s:link>
                        </c:if>                      
                       <s:submit name="addToCart" value="Place Order"
                                 class="addToCartButton cta button_green"
@@ -147,7 +147,6 @@
           $('.addToCartButton').click(function() {
             $(this).parent().parent().children('.progressLoader').show();
           });
-
         </script>
 
       </div>
