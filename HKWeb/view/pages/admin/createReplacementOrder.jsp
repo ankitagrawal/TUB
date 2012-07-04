@@ -69,7 +69,7 @@
           </table>
         </fieldset>
 
-        <fieldset style="float:left; display:none;" id="is-rto">
+        <fieldset style="float:left;" id="is-rto">
           <table border="1">
             <thead>
               <th>S No.</th>
@@ -87,7 +87,7 @@
             </c:forEach>
           </table>
         </fieldset>
-        <fieldset style="float:left; display:none;" id="is-rto">
+        <fieldset style="float:left;" id="is-rto">
           <c:forEach items="${replacementOrderBean.shippingOrder.lineItems}" var="lineItem" varStatus="lineItemCtr">
             <td>${lineItemCtr +1}</td>
             <td>${lineItem.cartLineItem.productVariant.product.name}</td>
