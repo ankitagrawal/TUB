@@ -35,12 +35,12 @@
         <%--<a href="http://www.healthkart.com/nutrition/sports-nutrition?brand=Dymatize">--%>
         <%--<img class="banner01" src="<hk:vhostImage/>/images/banners/home/dymatize_sbanner.jpg" border="0" alt="Dymatize - free shaker"/>--%>
         <%--</a>--%>
-      <a href="${pageContext.request.contextPath}/sports/fitness-accessories/support-gear/hand-wrist">
-        <img class="banner01" src="<hk:vhostImage/>/images/banners/home/gloves_sbanner.jpg" border="0"
-             alt="Training Gloves"/>
+      <a href="${pageContext.request.contextPath}/sports/sports-equipment?brand=Yonex">
+        <img class="banner01" src="<hk:vhostImage/>/images/banners/home/yonex_sbanner.jpg" border="0"
+             alt="Introducing Yonex"/>
       </a>
-      <a href="${pageContext.request.contextPath}/brand/nutrition/vitamin+shoppe">
-        <img src="<hk:vhostImage/>/images/banners/home/vs_sbanner.jpg" border="0" alt="Introducing Vitamin Shoppe"/>
+      <a href="${pageContext.request.contextPath}/brand/nutrition/dymatize">
+        <img src="<hk:vhostImage/>/images/banners/home/dymatize_sbanner.jpg" border="0" alt="Dymatize shaker free"/>
       </a>
 
         <%--<div class="banner01">--%>

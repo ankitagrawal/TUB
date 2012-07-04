@@ -19,7 +19,9 @@ public enum EnumPaymentMode {
   CashDeposit(30L, "Cash Deposit"),
   COD(40L, "COD"),
   COUNTER_CASH(50L, "Counter Cash"),
-  CITRUS(60L, "Citrus");
+  CITRUS(60L, "Citrus NetBanking"),
+  CITRUS_NetBanking_New(70L, "Citrus NetBanking"),
+  CITRUS_CreditDebit(80L, "Citrus Credit Debit");
 
   private java.lang.String name;
   private java.lang.Long id;
