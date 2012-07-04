@@ -24,7 +24,7 @@ import com.hk.web.action.error.AdminPermissionAction;
 import com.hk.exception.HealthkartCheckedException;
 
 
-@Secure(hasAnyPermissions = {PermissionConstants.UPDATE_DELIVERY_QUEUE}, authActionBean = AdminPermissionAction.class)
+@Secure(hasAnyPermissions = {PermissionConstants.UPDATE_COURIER_DELIVERY_STATUS}, authActionBean = AdminPermissionAction.class)
 @Component
 public class UpdateDeliveryStatusAction extends BaseAction{
 

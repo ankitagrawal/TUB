@@ -20,7 +20,8 @@ import com.hk.constants.core.RoleConstants;
         RoleConstants.CUSTOMER_SUPPORT,
         RoleConstants.CATEGORY_MANAGER,
         RoleConstants.FINANCE,
-        RoleConstants.REPORT_ADMIN
+        RoleConstants.REPORT_ADMIN,
+        RoleConstants.BASIC_ROLES
     }
 )
 @UrlBinding("/admin")

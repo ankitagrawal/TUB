@@ -1,9 +1,9 @@
-package com.hk.web.action.core.payment;
+package com.hk.web.action.core.payment.gateway;
 
 import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.akube.framework.stripes.action.BasePaymentGatewaySendReceiveAction;
 import com.akube.framework.util.BaseUtils;
-import com.citruspay.pg.net.RequestSignature;
+import com.citruspay.pg.exception.CitruspayException;
 import com.hk.constants.payment.EnumCitrusResponseCodes;
 import com.hk.domain.order.Order;
 import com.hk.domain.payment.Payment;
@@ -16,6 +16,8 @@ import com.hk.manager.payment.CitrusPaymentGatewayWrapper;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.payment.PaymentDao;
 import com.hk.web.AppConstants;
+import com.hk.web.action.core.payment.PaymentFailAction;
+import com.hk.web.action.core.payment.PaymentSuccessAction;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -25,13 +27,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
 import java.util.Properties;
 
 @Component
-public class CitrusCreditDebitSendReceiveAction extends BasePaymentGatewaySendReceiveAction<CitrusPaymentGatewayWrapper> {
+public class CitrusNetbankingSendReceiveAction extends BasePaymentGatewaySendReceiveAction<CitrusPaymentGatewayWrapper> {
 
-    private static Logger logger = LoggerFactory.getLogger(CitrusCreditDebitSendReceiveAction.class);
+    private static Logger logger = LoggerFactory.getLogger(CitrusNetbankingSendReceiveAction.class);
 
     @Autowired
     PaymentDao paymentDao;
@@ -55,25 +56,58 @@ public class CitrusCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
 
         String key = properties.getProperty(CitrusPaymentGatewayWrapper.key);
         String merchantTxnId = data.getGatewayOrderId();
-        String currency = properties.getProperty(CitrusPaymentGatewayWrapper.CurrCode);
-
-        citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.email, user.getEmail());
-        citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.merchantTxnId, merchantTxnId);
-        citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.orderAmount, amountStr);
-        citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.currency, currency);
-        citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.firstName, user.getName());
-//        citrusPaymentGatewayWrapper.addParameter("lastName", "HK");
-        citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.phoneNumber, address.getPhone());
-        citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.returnUrl, linkManager.getCitrusPaymentGatewayUrl());
-        citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.reqtime, new Date().getTime());
-
-        String vanityURLPart = CitrusPaymentGatewayWrapper.vanityURLPart;
-        String tdp = vanityURLPart + amountStr + merchantTxnId + currency;
-        citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.secSignature, RequestSignature.generateHMAC(tdp, key));
-
-        citrusPaymentGatewayWrapper.setGatewayUrl(properties.getProperty(CitrusPaymentGatewayWrapper.merchantURLPart));
 
         logger.info("sending to payment gateway Citrus for gateway order id " + merchantTxnId + "and amount " + amountStr);
+
+        com.citruspay.pg.util.CitruspayConstant.merchantKey = key;
+        java.util.Map<String, Object> params = new java.util.HashMap<String, Object>();
+        com.citruspay.pg.model.Card card = new com.citruspay.pg.model.Card();
+        card.setPaymentMode(com.citruspay.pg.util.PaymentMode.NET_BANKING
+                .toString());
+        com.citruspay.pg.model.Customer cust = new com.citruspay.pg.model.Customer();
+        cust.setEmail(user.getEmail());
+        cust.setFirstName(user.getName());
+        cust.setLastName("HK");
+        cust.setPhoneNumber(address.getPhone());
+
+        com.citruspay.pg.model.Address addressDummy = new com.citruspay.pg.model.Address();
+        addressDummy.setAddressCity("PUNE");
+        addressDummy.setAddressCountry("India");
+        addressDummy.setAddressState("MH");
+        addressDummy.setAddressStreet1("Test");
+        addressDummy.setAddressStreet2("Test");
+        addressDummy.setAddressZip("411045");
+
+        params.put(CitrusPaymentGatewayWrapper.merchantAccessKey, properties.get(CitrusPaymentGatewayWrapper.merchantAccessKey));
+        params.put("bankName", "ICICI Bank");
+        params.put(CitrusPaymentGatewayWrapper.transactionId, merchantTxnId);
+        params.put(CitrusPaymentGatewayWrapper.amount, amountStr);
+        params.put(CitrusPaymentGatewayWrapper.returnUrl, linkManager.getCitrusPaymentNetBankingGatewayUrl());
+        params.put("card", card);
+        params.put("customer", cust);
+        params.put("add", addressDummy);
+
+        com.citruspay.pg.model.Transaction txn = null;
+        try {
+            txn = com.citruspay.pg.model.Transaction
+                    .create(params);
+        } catch (CitruspayException e) {
+            logger.info("sth bad happened");
+        }
+
+        //resp code 200 OK
+        if (txn != null) {
+            if (txn.getRespCode().equalsIgnoreCase("200") && txn.getRedirectUrl() != null) {
+                String strRedirectionURL = txn.getRedirectUrl();
+                logger.debug("redirect url" + strRedirectionURL);
+                citrusPaymentGatewayWrapper.setGatewayUrl(strRedirectionURL);
+            } else if (txn.getRespCode().equalsIgnoreCase("400") || txn.getRespCode().equalsIgnoreCase("401")) { //resp code 400 BAD Request
+                logger.debug(txn.getRespMsg());
+                paymentManager.fail(merchantTxnId); //sth bad happened
+            }
+        } else {
+            paymentManager.fail(merchantTxnId); //sth bad happened
+        }
 
         return citrusPaymentGatewayWrapper;
     }
@@ -87,6 +121,8 @@ public class CitrusCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
         String TxStatus = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.TxStatus);
         String pgRespCode = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.pgRespCode);
         String amount = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.amount);
+        String mandatoryErrorMsg = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.mandatoryErrorMsg);
+        String paidTxnExists = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.paidTxnExists);
 
         logger.info("in citrus callback -> " + TxMsg + "for gateway order id " + gatewayOrderId + "TxStatus " + TxStatus + pgRespCode);
         String merchantParam = null;

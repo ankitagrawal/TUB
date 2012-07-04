@@ -11,7 +11,7 @@ public enum EnumCitrusResponseCodes {
 
   Transaction_Successful("0", "Transaction Successful"),
   Rejected_By_Issuer("1", "Rejected By Issuer"),
-  TxStatusSuccess("Success", "Transaction Successful"),
+  TxStatusSuccess("SUCCESS", "Transaction Successful"),
   TxStatusFAIL("FAIL", "Fail Transaction"),
   Internal_Processing_Error("PG001", "Internal Processing Error"),
   Required_parameter_missing("WS001", "Required parameter missing"),
