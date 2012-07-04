@@ -112,6 +112,27 @@
     <h2>Create/Edit Reconciliation Voucher</h2>
     <s:form beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction">
       <s:hidden name="reconciliationVoucher" value="${pa.reconciliationVoucher.id}"/>
+      <table>
+        <tr>
+          <td>Reconciliation Date</td>
+          <td>
+            <s:text class="date_input" formatPattern="yyyy-MM-dd" name="reconciliationVoucher.reconciliationDate"
+                    value="${pa.reconciliationVoucher.reconciliationDate != null ? pa.reconciliationVoucher.reconciliationDate : now}"/>
+          </td>
+        </tr>
+        <tr>
+          <td>Remarks<br/><span class="sml gry">(eg. XXX)</span></td>
+          <td><s:textarea name="reconciliationVoucher.remarks" style="height:50px;"
+                          value="${pa.reconciliationVoucher.remarks}"/></td>
+        </tr>
+        <tr>
+      <td>For Warehouse</td>
+      <td>
+        <s:hidden name="reconciliationVoucher.warehouse" value="${whAction.setWarehouse.id}"/>
+        ${whAction.setWarehouse.city}
+    </td></tr>
+    </table>
+
 
       <table border="1">
         <thead>
