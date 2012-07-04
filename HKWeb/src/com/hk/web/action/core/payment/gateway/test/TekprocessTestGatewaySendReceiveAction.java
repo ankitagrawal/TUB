@@ -1,7 +1,10 @@
-package com.hk.web.action.core.payment;
+package com.hk.web.action.core.payment.gateway.test;
 
 import java.util.Map;
 
+import com.hk.web.action.core.payment.PaymentFailAction;
+import com.hk.web.action.core.payment.PaymentPendingApprovalAction;
+import com.hk.web.action.core.payment.PaymentSuccessAction;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
