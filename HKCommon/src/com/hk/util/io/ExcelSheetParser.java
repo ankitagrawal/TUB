@@ -162,8 +162,12 @@ public class ExcelSheetParser implements FileParser {
                                     } else {
                                         try {
                                             Double doub = cell.getNumericCellValue();
-                                            //Long longValue = doub.longValue();
-                                            cellValue = doub.toString().trim();
+                                            if(doub == Math.floor(doub)){
+                                               Long longValue = doub.longValue();
+                                               cellValue = longValue.toString().trim();
+                                            }else{
+                                              cellValue = doub.toString().trim();
+                                            }
                                         } catch (IllegalStateException IS) {
                                             logger.debug("error trying to read column " + columnValues + " as String on Row " + sheet.getLastRowNum());
                                             logger.debug("Now trying to read as numeric");
