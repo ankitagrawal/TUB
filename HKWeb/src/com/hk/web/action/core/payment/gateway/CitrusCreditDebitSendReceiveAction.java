@@ -96,7 +96,6 @@ public class CitrusCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
         try {
             // our own validations
             paymentManager.verifyPayment(gatewayOrderId, NumberUtils.toDouble(amount), merchantParam);
-            logger.info("Status returned from Citrus Payment Gateway" + TxStatus);
             // payment callback has been verified. now see if it is successful or failed from the gateway response
             if (TxStatus.equals(EnumCitrusResponseCodes.TxStatusSuccess.getId()) && pgRespCode.equals(EnumCitrusResponseCodes.Transaction_Successful.getId())) {
                 paymentManager.success(gatewayOrderId);

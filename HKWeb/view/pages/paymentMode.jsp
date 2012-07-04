@@ -144,21 +144,20 @@
 				<s:form beanclass="com.hk.web.action.core.payment.PaymentAction"
 					method="post">
 					<s:hidden name="order" value="${orderSummary.order.id}" />
-					<s:hidden name="paymentMode" value="<%=defaultGateway%>" />
-					<p><label><s:radio name="bankId" value="70" />VISA
+					<%--<s:hidden name="paymentMode" value="<%=defaultGateway%>" />--%>
+					<p><label><s:radio name="paymentMode" value="<%=defaultGateway%>" />VISA
 					&nbsp;</label> <img src="<hk:vhostImage/>/images/visa.jpg" height="20px" />
 					</p>
 
-					<p><label><s:radio name="bankId" value="670" />
+					<p><label><s:radio name="paymentMode" value="<%=defaultGateway%>" />
 					VISA/MasterCard/Maestro &nbsp;</label> <img
 						src="<hk:vhostImage/>/images/mastercard.jpg" height="30px">
 					</p>
+                    <p>
                     <shiro:hasRole name="<%=RoleConstants.GOD%>">
-                        <s:hidden name="paymentMode" value="80"/>
-                        <p><label><s:radio name="bankId" value="999"/>Citrus Wallet
-                            &nbsp;</label> <img src="<hk:vhostImage/>/images/citrus.jpeg" height="20px"/>
-                        </p>
-                    </shiro:hasRole>
+                        <p><label><s:radio name="paymentMode" value="80"/>    Citrus Wallet
+                        &nbsp;</label> <img src="<hk:vhostImage/>/images/citrus.jpeg" height="20px"/>
+                    </shiro:hasRole></p>
                     <div style="float: right; width: 90%;"><s:submit
 						name="proceed" value="Make Payment >" class="button makePayment"
 						disabled="${fn:length(orderSummary.pricingDto.outOfStockLineItems) > 0 ? 'true':'false'}" />
