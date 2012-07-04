@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
@@ -145,7 +146,6 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
         }
 
         DetachedCriteria baseOrderCriteria = criteria.createCriteria("baseOrder");
-        baseOrderCriteria.addOrder(org.hibernate.criterion.Order.desc("score"));
         
         if (baseOrderId != null) {
             baseOrderCriteria.add(Restrictions.eq("id", baseOrderId));
@@ -181,7 +181,19 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
 
         // TODO: fix later after rewrite
         // criteria.setMaxResults(100);
+        
+        DetachedCriteria paymentCriteria = baseOrderCriteria.createCriteria("payment", CriteriaSpecification.LEFT_JOIN);
+        
+        if (sortByPaymentDate) {
+            paymentCriteria.addOrder(OrderBySqlFormula.sqlFormula("date(payment_date) asc"));
 
+        } if (sortByScore) {
+            baseOrderCriteria.addOrder(org.hibernate.criterion.Order.desc("score"));
+        }
+        
+        /*paymentCriteria.addOrder(OrderBySqlFormula.sqlFormula("date(payment_date) asc"));
+        baseOrderCriteria.addOrder(org.hibernate.criterion.Order.desc("score"));*/
+        
         return criteria;
     }
 

@@ -1,6 +1,8 @@
 package com.hk.impl.dao.email;
 
 import java.util.List;
+import java.util.Date;
+import java.util.Calendar;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -28,11 +30,12 @@ public class EmailerHistoryDaoImpl extends BaseDaoImpl implements EmailerHistory
                 emailerHistory.setSendDate(BaseUtils.getCurrentTimestamp());
             }
         }
-        return (EmailerHistory) super.save(emailerHistory);
+        return (EmailerHistory)super.save(emailerHistory);
     }
 
     public EmailerHistory createEmailerHistory(String senderEmail, String senderName, EmailType emailType, EmailRecepient emailRecepient, EmailCampaign emailCampaign,
             String customText) {
+        Calendar calendar = Calendar.getInstance();
         EmailerHistory emailerHistory = new EmailerHistory();
         emailerHistory.setEmailRecepient(emailRecepient);
         emailerHistory.setEmailCampaign(emailCampaign);
@@ -41,7 +44,23 @@ public class EmailerHistoryDaoImpl extends BaseDaoImpl implements EmailerHistory
         emailerHistory.setSenderName(senderName);
         emailerHistory.setEmailType(emailType);
         emailerHistory.setUser(getUserService().findByLogin(senderEmail));
+        emailerHistory.setSendDate(calendar.getTime());
         return save(emailerHistory);
+    }
+
+    public EmailerHistory createEmailerHistoryObject(String senderEmail, String senderName, EmailType emailType, EmailRecepient emailRecepient, EmailCampaign emailCampaign,
+            String customText) {
+        Calendar calendar = Calendar.getInstance();
+        EmailerHistory emailerHistory = new EmailerHistory();
+        emailerHistory.setEmailRecepient(emailRecepient);
+        emailerHistory.setEmailCampaign(emailCampaign);
+        emailerHistory.setCustomMessage(customText);
+        emailerHistory.setSenderEmail(senderEmail);
+        emailerHistory.setSenderName(senderName);
+        emailerHistory.setEmailType(emailType);
+        emailerHistory.setUser(getUserService().findByLogin(senderEmail));
+        emailerHistory.setSendDate(calendar.getTime());
+        return emailerHistory;
     }
 
     @SuppressWarnings("unchecked")

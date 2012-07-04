@@ -36,6 +36,16 @@ public class CourierServiceInfoDaoImpl extends BaseDaoImpl implements CourierSer
         }                                                                                                 
     }
 
+     public CourierServiceInfo getCourierServiceByPincodeAndCourierWithoutCOD(Long courierId, String pincode) {
+        List<CourierServiceInfo> courierServiceInfoList = getCourierServiceInfoByCourierAndPincode(courierId, pincode);
+        if (courierServiceInfoList != null && courierServiceInfoList.size() > 0) {
+            return courierServiceInfoList.get(0);
+        } else {
+            return null;
+        }
+    }
+
+
     public List<CourierServiceInfo> getCourierServiceInfo(Long courierId, String pincode, Boolean isCOD) {
         Criteria criteria = getSession().createCriteria(CourierServiceInfo.class);
         if (courierId != null) {
@@ -51,6 +61,23 @@ public class CourierServiceInfoDaoImpl extends BaseDaoImpl implements CourierSer
             criteria.add(Restrictions.eq("codAvailable", isCOD));
         }
 
+        return criteria.list();
+    }
+
+
+
+    public List<CourierServiceInfo> getCourierServiceInfoByCourierAndPincode(Long courierId, String pincode) {
+        Criteria criteria = getSession().createCriteria(CourierServiceInfo.class);
+        if (courierId != null) {
+            Criteria courierCriteria = criteria.createCriteria("courier");
+            courierCriteria.add(Restrictions.eq("id", courierId));
+        }
+        Criteria pinCodeCriteria = null;
+        if (pincode != null && StringUtils.isNotBlank(pincode)) {
+            pinCodeCriteria = criteria.createCriteria("pincode");
+            pinCodeCriteria.add(Restrictions.eq("pincode", pincode));
+        }
+     
         return criteria.list();
     }
 

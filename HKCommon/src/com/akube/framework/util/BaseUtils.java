@@ -489,6 +489,21 @@ public class BaseUtils {
     else
       return false;
   }
- 
+
+  public static String getCommaSeparatedString(String[] list) {
+    String commaSeparatedString = "";
+    for(String s : list) {
+      commaSeparatedString += s + "','";
+    }
+    return commaSeparatedString.substring(0, commaSeparatedString.lastIndexOf(",")-1);
+  }
+
+    public static Set<String> getLowerCaseStringSet(List<String> list) {
+        Set<String> set = new HashSet<String>();
+        for (String s : list) {
+            set.add(s.toLowerCase());
+        }
+        return set;
+    }
 
 }

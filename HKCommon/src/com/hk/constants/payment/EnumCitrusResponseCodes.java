@@ -11,6 +11,8 @@ public enum EnumCitrusResponseCodes {
 
   Transaction_Successful("0", "Transaction Successful"),
   Rejected_By_Issuer("1", "Rejected By Issuer"),
+  TxStatusSuccess("SUCCESS", "Transaction Successful"),
+  TxStatusFAIL("FAIL", "Fail Transaction"),
   Internal_Processing_Error("PG001", "Internal Processing Error"),
   Required_parameter_missing("WS001", "Required parameter missing"),
   Merchant_is_SSL_type_MOTO_txn_not_allowed("ON006", "Merchant is SSL type. MOTO txn not allowed"),

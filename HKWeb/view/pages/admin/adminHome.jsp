@@ -101,7 +101,7 @@
   <h3><s:link beanclass="com.hk.web.action.admin.catalog.product.RecentlyAddedProductsAction">Recently Added Products</s:link></h3>
   <h3><s:link beanclass="com.hk.web.action.admin.catalog.product.RelatedProductAction">Update Related Products</s:link></h3>
   <h3><s:link beanclass="com.hk.web.action.report.GenerateReconcilationReportAction">Generate Reconcilation Report</s:link></h3>
-
+  <h3><s:link beanclass="com.hk.web.action.admin.store.StorePricingAction">Store pricing</s:link></h3>
 </div>
 
 <div class="cl"></div>
@@ -169,6 +169,8 @@
   <h3><s:link beanclass="com.hk.web.action.admin.shipment.ChangeShipmentDetailsAction">Change shipment details</s:link></h3>
 
    <h3><s:link beanclass="com.hk.web.action.admin.courier.CreateUpdateCourierPricingAction">Change Courier Pricing  details</s:link></h3>
+
+     <h3><s:link beanclass="com.hk.web.action.admin.courier.CityCourierTatAction">Upload City Courier TAT</s:link></h3>
 
   <h3><s:link beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction" event="generateCourierReport">Download Courier Excel
       <s:param name="courierDownloadFunctionality" value="false"/>
@@ -319,6 +321,15 @@
   <h3>
     <s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoicePdfAction"
             title="Download AccountingInvoice PDFs">Download AccountingInvoice PDFs</s:link></h3>
+
+</div>
+
+<div class="left roundBox">
+  <h2>Healthkart Delivery</h2>
+
+  <h3>
+    <s:link beanclass="com.hk.web.action.admin.courier.HKDeliveryAction"
+            title="Download Healthkart Delivery Worksheet">Download Healthkart Delivery Worksheet</s:link></h3>
 
 </div>
 

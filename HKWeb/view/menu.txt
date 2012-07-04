@@ -14,7 +14,6 @@
 --/nutrition/sports-nutrition/athletes      :  Athletes
 --/nutrition/sports-nutrition/shakers-accessories        :Shakers & Accessories
 --/nutrition/sports-nutrition/combos
---/nutrition/sports-nutrition/clearance-sale  :Clearance Sale
 -/nutrition/dietary-supplements : Dietary Supplements
 --/nutrition/dietary-supplements/multivitamins :  Multivitamins
 ---/nutrition/dietary-supplements/multivitamins/men-s-multivitamins  :Men's Multivitamins
@@ -43,7 +42,7 @@
 -/nutrition/weight-management
 --/nutrition/weight-management/fat-burner
 --/nutrition/weight-management/appetite-control :Appetite Control
---/nutrition/weight-management/weight-maintenance  :weight Maintenance
+--/nutrition/weight-management/weight-maintenance :Weight Maintenance
 --/nutrition/weight-management/meal-replacement :Meal Replacement
 --/nutrition/weight-management/low-calorie-food
 --/nutrition/weight-management/sweetener
@@ -71,8 +70,8 @@
 ---/nutrition/fitness-accessories/strength-training/upper-body
 ---/nutrition/fitness-accessories/strength-training/arm-leg-weights : Arm & Leg Weights
 ---/nutrition/fitness-accessories/strength-training/medicine-balls
----/sports/fitness-accessories/strength-training/dumbbells
----/sports/fitness-accessories/strength-training/kettlebells
+---/nutrition/fitness-accessories/strength-training/dumbbells
+---/nutrition/fitness-accessories/strength-training/kettlebells
 --/nutrition/fitness-accessories/aerobics-general-fitness : Aerobics & General Fitness
 ---/nutrition/fitness-accessories/aerobics-general-fitness/aerobic-steppers
 ---/nutrition/fitness-accessories/aerobics-general-fitness/hand-grips
@@ -165,7 +164,6 @@
 --/sports/sports-equipment/other-balls
 --/sports/sports-equipment/combos
 -/sports/apparel
---/sports/apparel/ipl-merchandise: IPL Merchandise
 --/sports/apparel/men
 --/sports/apparel/women
 --/sports/apparel/kids
@@ -219,7 +217,7 @@
 --/home-devices/blood-pressure/bp : BP Apparatus
 --/home-devices/blood-pressure/ecg : ECG Machines
 --/home-devices/blood-pressure/accessories
---/home-devices/blood-pressure/combo
+--/home-devices/blood-pressure/combo : Doctor's Day Offer
 -/home-devices/respiratory-care
 --/home-devices/respiratory-care/nebulizer
 --/home-devices/respiratory-care/oxygen-concentrator : Oxygen Concentrators

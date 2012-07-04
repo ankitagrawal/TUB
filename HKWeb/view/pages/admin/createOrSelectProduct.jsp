@@ -78,7 +78,7 @@
           </li>
           <li>
             <label>Secondary Category</label>
-            <s:text name="product.secondaryCategory"/>
+            <s:text name="secondaryCategory"/>
           </li>
           <li>
             <h3>OverView</h3>

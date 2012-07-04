@@ -86,6 +86,7 @@ public enum EnumCourier {
                 EnumCourier.BlueDart,
                 EnumCourier.BlueDart_COD,
                 EnumCourier.FirstFLight,
+                EnumCourier.Safexpress,
                 EnumCourier.FirstFLight_COD,
                 EnumCourier.IndiaEarthMovers,
                 EnumCourier.EarthMoversPune,

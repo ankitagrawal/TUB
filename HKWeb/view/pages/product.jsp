@@ -302,7 +302,6 @@
               var averageRating = ${pa.averageRating};
               averageRating = (averageRating * 20) + "%";
               $('.blueStarTop').width(averageRating);
-              $('.blueStar').width(averageRating);
             </script>
           </div>
         </div>
@@ -549,10 +548,15 @@
               maxFractionDigits="1"/>/5</strong> <br/>
                                                     (based on ${pa.totalReviews} reviews) <br/>
 
-            <div class="rating_bar">
-              <div id="blueStar" class="blueStarTop"></div>
-            </div>
-
+              <div class="rating_bar">
+                  <div id="blueStar" class="blueStar">
+                      <script type="text/javascript">
+                          var averageRating = ${pa.averageRating};
+                          averageRating = (averageRating * 20) + "%";
+                          $('.blueStar').width(averageRating);
+                      </script>
+                  </div>
+              </div>
           </td>
         </tr>
       </table>

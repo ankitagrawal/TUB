@@ -13,6 +13,8 @@
 	<welcome-file-list>
 		<welcome-file>/pages/home.jsp</welcome-file>
 	</welcome-file-list>
+	
+	
 
 	<!--  Listeners Start -->
 	<listener>

@@ -5,6 +5,12 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.hk.constants.catalog.category.CategoryConstants;
+import com.hk.constants.clm.EnumCLMMargin;
+import com.hk.domain.catalog.category.Category;
+import com.hk.domain.clm.CategoryKarmaProfile;
+import com.hk.domain.user.User;
+import com.hk.pact.service.catalog.CategoryService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.FileBean;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -38,8 +44,11 @@ public class CustomerScoreAction extends BaseAction {
 
     @Autowired
     private KarmaProfileService karmaProfileService;
+    @Autowired
+    private CategoryService categoryService;
 
     FileBean                    fileBean;
+    FileBean                    categoryFileBean;
 
     private static Logger       logger                    = LoggerFactory.getLogger(CustomerScoreAction.class);
 
@@ -51,19 +60,90 @@ public class CustomerScoreAction extends BaseAction {
 
     public Resolution uploadScoreExcel() throws Exception {
         String excelFilePath = adminUploadsPath + "/clmExcelFiles/customerScore" + System.currentTimeMillis() + ".xls";
-        // String excelFilePath ="E:\\test\\customerscore" + System.currentTimeMillis() + ".xls";
+        //String excelFilePath ="E:\\test\\customerscore" + System.currentTimeMillis() + ".xls";
         File excelFile = new File(excelFilePath);
         excelFile.getParentFile().mkdirs();
         fileBean.save(excelFile);
 
-        uploadInDB(excelFilePath);
+        uploadTotalScoreInDB(excelFilePath);
 
         excelFile.delete();
         addRedirectAlertMessage(new SimpleMessage("Database Updated"));
         return new ForwardResolution("/pages/admin/clm/CustomerScoreUpload.jsp");
     }
 
-    public void uploadInDB(String excelFilePath) {
+    public Resolution uploadCategoryScoreExcel() throws Exception {
+        String excelFilePath = adminUploadsPath + "/clmExcelFiles/customerCategoryScore" + System.currentTimeMillis() + ".xls";
+        //String excelFilePath ="E:\\test\\customerscorecat" + System.currentTimeMillis() + ".xls";
+        File excelFile = new File(excelFilePath);
+        excelFile.getParentFile().mkdirs();
+        categoryFileBean.save(excelFile);
+
+        uploadCategoryScoreInDB(excelFilePath);
+
+        excelFile.delete();
+        addRedirectAlertMessage(new SimpleMessage("Database Updated"));
+        return new ForwardResolution("/pages/admin/clm/CustomerScoreUpload.jsp");
+    }
+
+    private void uploadCategoryScoreInDB(String excelFilePath){
+        try {
+            ExcelSheetParser parser = new ExcelSheetParser(excelFilePath, SHEET_NAME_CUSTOMER_SCORE);
+            Iterator<HKRow> rowIterator = parser.parse();
+            Set<CategoryKarmaProfile> categoryKarmaProfileSet = new HashSet<CategoryKarmaProfile>();
+
+            while (null != rowIterator && rowIterator.hasNext()) {
+                HKRow curHkRow = rowIterator.next();
+                CategoryKarmaProfile categoryKarmaProfile;
+                User user;
+                Category category;
+
+                int i = 0;
+
+                //iterating till the last column
+                while (null != curHkRow && curHkRow.columnValues != null && i < curHkRow.columnValues.length) {
+                    user = getUserService().getUserById(new Long(curHkRow.getColumnValue(i)));
+                    i++;
+                    //iteratiing for 9 categories
+                    while(i<10){
+                        switch (i){
+                            case 1: category=getCategoryService().getCategoryByName(CategoryConstants.BABY); break;
+                            case 2: category=getCategoryService().getCategoryByName(CategoryConstants.BEAUTY); break;
+                            case 3: category=getCategoryService().getCategoryByName(CategoryConstants.DIABETES); break;
+                            case 4: category=getCategoryService().getCategoryByName(CategoryConstants.EYE); break;
+                            case 5: category=getCategoryService().getCategoryByName(CategoryConstants.HOME_DEVICES); break;
+                            case 6: category=getCategoryService().getCategoryByName(CategoryConstants.NUTRITION); break;
+                            case 7: category=getCategoryService().getCategoryByName(CategoryConstants.PERSONAL_CARE); break;
+                            case 8: category=getCategoryService().getCategoryByName(CategoryConstants.SERVICES); break;
+                            case 9: category=getCategoryService().getCategoryByName(CategoryConstants.SPORTS); break;
+                            default: category=getCategoryService().getCategoryByName(CategoryConstants.BABY); break;
+                        }
+                        categoryKarmaProfile = getKarmaProfileService().findByUserAndCategory(user, category);
+                        if (categoryKarmaProfile == null) {
+                            categoryKarmaProfile = new CategoryKarmaProfile();
+                            categoryKarmaProfile.setUser(user);
+                            categoryKarmaProfile.setCategory(category);
+                        }
+                        categoryKarmaProfile.setKarmaPoints(Double.parseDouble(curHkRow.getColumnValue(i)));
+                        categoryKarmaProfileSet.add(categoryKarmaProfile);
+                        i++;
+                    }
+                }
+            }
+
+            for (CategoryKarmaProfile categoryKarmaProfile : categoryKarmaProfileSet) {
+                if (categoryKarmaProfile != null) {
+                    getKarmaProfileService().save(categoryKarmaProfile);
+                }
+                logger.info("inserting or updating into userid:" + categoryKarmaProfile.getUser().getId() + " score: " + categoryKarmaProfile.getKarmaPoints()+" for category: "+categoryKarmaProfile.getCategory().getDisplayName());
+            }
+        } catch (Exception e) {
+            logger.error("Exception while reading excel sheet.", e);
+            addRedirectAlertMessage(new SimpleMessage("Upload failed " + e.getMessage()));
+        }
+    }
+
+    private void uploadTotalScoreInDB(String excelFilePath) {
         try {
             ExcelSheetParser parser = new ExcelSheetParser(excelFilePath, SHEET_NAME_CUSTOMER_SCORE);
             Iterator<HKRow> rowIterator = parser.parse();
@@ -114,5 +194,21 @@ public class CustomerScoreAction extends BaseAction {
 
     public void setKarmaProfileService(KarmaProfileService karmaProfileService) {
         this.karmaProfileService = karmaProfileService;
+    }
+
+    public FileBean getCategoryFileBean() {
+        return categoryFileBean;
+    }
+
+    public void setCategoryFileBean(FileBean categoryFileBean) {
+        this.categoryFileBean = categoryFileBean;
+    }
+
+    public CategoryService getCategoryService() {
+        return categoryService;
+    }
+
+    public void setCategoryService(CategoryService categoryService) {
+        this.categoryService = categoryService;
     }
 }
