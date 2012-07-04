@@ -15,8 +15,12 @@ public abstract class AbstractOrderSearchCriteria {
     private Long               orderId;
     private Long               storeId;
     private String             gatewayOrderId;
-    private boolean            orderAsc         = false;
-    private boolean            sortByUpdateDate = true;
+
+    protected boolean          sortByPaymentDate = true;
+    protected boolean          sortByScore       = true;
+
+    private boolean            orderAsc          = false;
+    private boolean            sortByUpdateDate  = true;
 
     private SearchDao          searchDao;
     protected DetachedCriteria baseCriteria;
@@ -37,6 +41,16 @@ public abstract class AbstractOrderSearchCriteria {
 
     public AbstractOrderSearchCriteria setGatewayOrderId(String gatewayOrderId) {
         this.gatewayOrderId = gatewayOrderId;
+        return this;
+    }
+
+    public AbstractOrderSearchCriteria setSortByPaymentDate(boolean sortByPaymentDate) {
+        this.sortByPaymentDate = sortByPaymentDate;
+        return this;
+    }
+
+    public AbstractOrderSearchCriteria setSortByScore(boolean sortByScore) {
+        this.sortByScore = sortByScore;
         return this;
     }
 
