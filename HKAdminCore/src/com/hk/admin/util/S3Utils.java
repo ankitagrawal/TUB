@@ -145,7 +145,7 @@ public class S3Utils {
   }
 
   private static String generateFileKey(String contentPath) {
-    return HKFileUtils.getPathAfterSubstring(contentPath, "emailContentFiles");
+    return HKFileUtils.getPathAfterSubstring(contentPath, "adminUploads");
   }
 
   public static void main(String[] args) {

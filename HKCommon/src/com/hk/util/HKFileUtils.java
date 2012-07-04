@@ -98,4 +98,15 @@ public class HKFileUtils {
       return null;
     }
   }
+
+  public static String getInBetweenPath(String path, String substring1, String substring2) {
+    String separator = File.separator;
+    if (separator.equals("\\")) {
+      return path.replaceAll("(.*\\\\" + substring1 + "\\\\)", "").replaceAll(substring2 + ".*", "").replaceAll("\\\\", "/");
+    } else if (separator.equals("/")) {
+      return path.replaceAll("(.*/" + substring1 + "/)", "").replaceAll(substring2 + ".*", "");
+    } else {
+      return null;
+    }
+  }
 }

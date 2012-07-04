@@ -3,6 +3,8 @@ package com.hk.web.action.admin.newsletter;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
 import java.net.URL;
 
 import net.sourceforge.stripes.action.*;
@@ -48,8 +50,9 @@ public class EmailNewsletterCampaignAction extends BaseAction {
   FileBean contentBean;
   String ftlContents;
   String htmlContents;
+  String htmlPath;
   String name;
-  String contentFolderName;
+//  String contentFolderName;
   Boolean ftlGenerated = Boolean.FALSE;
 
   @DontValidate
@@ -59,7 +62,7 @@ public class EmailNewsletterCampaignAction extends BaseAction {
   }
 
   public Resolution create() {
-    emailCampaign.setHtmlPath(FtlUtils.getBasicAmazonS3Path(contentFolderName) + "emailer.html");
+    emailCampaign.setHtmlPath(FtlUtils.getBasicAmazonS3Path() + HKFileUtils.getPathAfterSubstring(htmlPath, "adminUploads"));
     emailCampaign.setTemplateFtl(ftlContents);
 
     emailCampaign = emailCampaignDao.save(emailCampaign);
@@ -72,7 +75,7 @@ public class EmailNewsletterCampaignAction extends BaseAction {
     File contentFolder;
     try {
       if (contentBean != null) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String contentZipPath = adminUploadsPath + "/emailContentFiles/" + name + sdf.format(new Date()) + ".zip";
         contentZipFolder = new File(contentZipPath);
         contentZipFolder.getParentFile().mkdirs();
@@ -81,18 +84,15 @@ public class EmailNewsletterCampaignAction extends BaseAction {
         String contentPath = contentZipPath.replaceAll("\\.zip", "");
         contentFolder = HKFileUtils.unzipFolder(contentZipPath, contentPath);
         if (contentFolder != null) {
-          contentFolderName = contentFolder.getName();
+//          contentFolderName = contentFolder.getName();
           logger.info("trying to generate a .ftl file from the .html file to be uploaded.");
-          FilenameFilter filter = new FilenameFilter() {
-            public boolean accept(File dir, String name) {
-              return name.endsWith(".html");
-            }
-          };
-          File[] htmlFile = new File(contentPath).listFiles(filter);
-          if (htmlFile != null) {
-            if (htmlFile.length == 1) {
-              logger.debug(htmlFile[0].getAbsolutePath());
-            } else if (htmlFile.length > 1) {
+          String[] extensions= {"html","htm"};
+          File[] htmlFiles = FileUtils.convertFileCollectionToFileArray(FileUtils.listFiles(contentFolder,extensions,true));
+          if (htmlFiles != null) {
+            if (htmlFiles.length == 1) {
+              htmlPath = htmlFiles[0].getAbsolutePath();
+              logger.debug(htmlFiles[0].getAbsolutePath());
+            } else if (htmlFiles.length > 1) {
               addRedirectAlertMessage(new SimpleMessage("The zip folder contains multiple .html files for the email campaign. Kindly check into the same"));
               return new ForwardResolution(EmailNewsletterCampaignAction.class);
             } else {
@@ -102,9 +102,9 @@ public class EmailNewsletterCampaignAction extends BaseAction {
           }
 
           String ftlPath = adminUploadsPath + "/emailContentFiles/" + name + ".ftl";
-          File ftlFile = FtlUtils.generateFtlFromHtml(htmlFile[0], ftlPath, contentFolder.getName());
+          File ftlFile = FtlUtils.generateFtlFromHtml(htmlFiles[0], ftlPath,contentZipFolder.getName());
           //making changes in the .html file also
-          FileUtils.copyFile(ftlFile, htmlFile[0]);
+          FileUtils.copyFile(ftlFile, htmlFiles[0]);
           ftlContents = HKFileUtils.fileToString(ftlFile);
           ftlGenerated = Boolean.TRUE;
           logger.info("ftl generated");
@@ -203,13 +203,13 @@ public class EmailNewsletterCampaignAction extends BaseAction {
     this.name = name;
   }
 
-  public String getContentFolderName() {
+  /*public String getContentFolderName() {
     return contentFolderName;
   }
 
   public void setContentFolderName(String contentFolderName) {
     this.contentFolderName = contentFolderName;
-  }
+  }    */
 
   public String getHtmlContents() {
     return htmlContents;
@@ -217,5 +217,13 @@ public class EmailNewsletterCampaignAction extends BaseAction {
 
   public void setHtmlContents(String htmlContents) {
     this.htmlContents = htmlContents;
+  }
+
+  public String getHtmlPath() {
+    return htmlPath;
+  }
+
+  public void setHtmlPath(String htmlPath) {
+    this.htmlPath = htmlPath;
   }
 }

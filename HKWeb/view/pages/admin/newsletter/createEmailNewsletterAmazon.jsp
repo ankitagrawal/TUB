@@ -40,10 +40,11 @@
           </fieldset>
           <fieldset style=" margin-top: 15px; text-align:center;">
             <legend>FTL GENERATED</legend>
-            <s:textarea name="ftlContents" style="width:95%; margin:10px; resize:none;"/>
+            <s:textarea name="ftlContents" style="width:95%; margin:10px;"/>
           </fieldset>
 
-          <s:hidden name="contentFolderName" value="${createBean.contentFolderName}"/>
+          <%--<s:hidden name="contentFolderName" value="${createBean.contentFolderName}"/>--%>
+          <s:hidden name="htmlPath" value="${createBean.htmlPath}"/>
           <s:submit name="create" value="CREATE CAMPAIGN" id="saveBtn"/>
         </s:form>
       </c:otherwise>

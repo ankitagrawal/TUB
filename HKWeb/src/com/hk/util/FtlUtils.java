@@ -2,11 +2,16 @@ package com.hk.util;
 
 import com.hk.constants.core.Keys;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.jsoup.Jsoup;
+import org.jsoup.select.Elements;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 import javax.annotation.PostConstruct;
 import java.io.*;
@@ -17,15 +22,16 @@ public class FtlUtils {
   static String awsBucket;
 
   @Value("#{hkEnvProps['" + Keys.Env.bucket + "']}")
-  private  String awsBucketStr;
-  
+  private String awsBucketStr;
+
   @PostConstruct
   public void postConstruction() {
     awsBucket = StringUtils.isNotBlank(awsBucketStr) ? awsBucketStr : "";
   }
 
-  public static File generateFtlFromHtml(File htmlFile, String destinationPath, String contentFolderName) {
-    String basicAmazonS3Path = getBasicAmazonS3Path(contentFolderName);
+  public static File generateFtlFromHtml(File htmlFile, String destinationPath, String emailCampaignName) {
+    String htmlPath = htmlFile.getAbsolutePath();
+    String basicAmazonS3Path = getBasicAmazonS3Path() + HKFileUtils.getInBetweenPath(htmlPath, "emailContentFiles", "emailer.html");
     String line;
     File ftlFile = new File(destinationPath);
 
@@ -47,7 +53,7 @@ public class FtlUtils {
           out.write(line + lineSeperator);
         }
       }
-//      ftlFile = addExtraDataToFtl(ftlFile, basicAmazonS3Path);
+      ftlFile = addUtmParams(ftlFile, emailCampaignName);
       return ftlFile;
     } catch (IOException ioe) {
       logger.error("error generating ftl from html: " + ioe);
@@ -93,23 +99,55 @@ public class FtlUtils {
     return null;
   }
 
+  private static File addUtmParams(File ftlFile, String emailCampaignName) {
+    Document document = null;
+    try {
+      document = Jsoup.parse(ftlFile, "UTF-8", "");
+      Elements aTags = document.select("a");
+
+      for (Element aTag : aTags) {
+        String href = aTag.attr("href");
+        if (href.contains("www.healthkart.com")) {
+          href = href + (href.contains("?") ? "&amp;" : "?");
+          href = href + "utm_source=enewsletter&utm_medium=email&utm_campaign=" + emailCampaignName;
+          aTag.attr("href", href);
+        }
+      }
+
+      FileUtils.writeStringToFile(ftlFile, document.html());
+      return ftlFile;
+    } catch (IOException e) {
+      logger.error("Error while parsing temporary ftl file: " + e);
+    }
+    return null;
+  }
+
   private static String getCantViewEmailDiv(String basicAmazonS3Path) {
-    return "<div style=\"font-size:11px; text-align:center; color:#000000; padding:15px\">" +
+    return "<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">" +
+        "<tr>" +
+        "<td style=\"font-size:11px; text-align:center; color:#000000; padding:15px\">" +
         "Can't view this email? " +
         "<a href=\"" + basicAmazonS3Path + "emailer.html\">Click here</a> " +
         "to view a web version." +
-        "</div>";
+        "</td>" +
+        "</tr>" +
+        "</table>";
   }
 
   private static String getUnsubscribeEmailDiv() {
-    return "<div align=\"center\" valign=\"middle\" style=\"border-top: solid #97b8ca 1px; font-size:11px; text-align:center; color:#666666; padding:10px\">" +
+    return "<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">" +
+        "<tr>" +
+        "<td align=\"center\" valign=\"middle\" style=\"border-top: solid #97b8ca 1px; font-size:11px; text-align:center; color:#666666; padding:10px\">" +
         " If you prefer not to receive HealthKart.com email, <a href=\"${unsubscribeLink}\">click here to Unsubscribe</a>" +
         "<br />  Parsvanath Arcadia, 1 MG Road, Sector 14, Gurgaon, Haryana, INDIA<br />\n" +
-        "    @ 2011 HealthKart.com. All Rights Reserved. </div>";
+        "    @ 2011 HealthKart.com. All Rights Reserved. " +
+        "</td>" +
+        "</tr>" +
+        "</table>";
   }
 
-  public static String getBasicAmazonS3Path(String contentFolder) {
-    return "http://" + awsBucket + ".s3.amazonaws.com/" + contentFolder + "/";
+  public static String getBasicAmazonS3Path() {
+    return "http://" + awsBucket + ".s3.amazonaws.com/emailContentFiles/";
   }
 
   private static final String lineSeperator = System.getProperty("line.separator");
