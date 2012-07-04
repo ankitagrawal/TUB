@@ -44,7 +44,8 @@ public class City implements java.io.Serializable,Comparable{
     return id == null ? "" : id.toString();
   }
 
-   public int compareTo(Object o) {
-    return this.getName().compareTo(((State)o).getName());
+  public int compareTo(Object o) {
+    return this.getName().compareTo(((State) o).getName());
+
   }
 }

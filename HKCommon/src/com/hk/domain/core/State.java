@@ -40,10 +40,11 @@ public class State implements java.io.Serializable,Comparable {
 
   @Override
   public String toString() {
-   return id == null ? "" : id.toString();
+    return id == null ? "" : id.toString();
   }
 
-   public int compareTo(Object o) {
-    return this.getName().compareTo(((State)o).getName());
+  public int compareTo(Object o) {
+    return this.getName().compareTo(((State) o).getName());
+
   }
 }

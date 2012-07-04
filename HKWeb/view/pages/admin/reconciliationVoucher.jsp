@@ -131,7 +131,8 @@
         <s:hidden name="reconciliationVoucher.warehouse" value="${whAction.setWarehouse.id}"/>
         ${whAction.setWarehouse.city}
     </td></tr>
-      </table>
+    </table>
+
 
       <table border="1">
         <thead>
