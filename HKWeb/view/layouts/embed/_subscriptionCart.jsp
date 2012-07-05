@@ -70,7 +70,7 @@
         <a class='edit editSubscriptionLink' href='#'>
           (edit)
         </a>
-        <s:link class='remove removeSubscriptionLink' beanclass="com.hk.web.action.core.subscription.SubscriptionUpdateAction" event="abandonSubscription">
+        <s:link class='remove removeSubscriptionLink' beanclass="com.hk.web.action.core.subscription.SubscriptionUpdateAction" >
           (remove)
         <s:param name="subscription" value="${subscription}"/> </s:link>
 
