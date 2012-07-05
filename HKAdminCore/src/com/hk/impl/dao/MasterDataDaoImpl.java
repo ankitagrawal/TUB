@@ -290,4 +290,9 @@ public class MasterDataDaoImpl implements MasterDataDao {
     public List<Courier> getCourierList() {
         return courierDao.getCourierByIds(EnumCourier.getCourierIDs(EnumCourier.getCurrentlyApplicableCouriers()));
     }
+
+    public List<ShippingOrderStatus> getSOStatusForReconcilation(){
+        return EnumShippingOrderStatus.getStatusForReconcilationReport();
+    }
+
 }

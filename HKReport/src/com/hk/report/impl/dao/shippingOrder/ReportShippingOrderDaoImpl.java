@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import com.hk.constants.payment.EnumPaymentMode;
-import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.warehouse.Warehouse;
@@ -26,7 +25,7 @@ public class ReportShippingOrderDaoImpl extends BaseDaoImpl implements ReportShi
   private static Logger logger = LoggerFactory.getLogger(ReportShippingOrderDaoImpl.class);
 
   @SuppressWarnings("unchecked")
-  public List<ReconcilationReportDto> findReconcilationReportByDate(Date startDate, Date endDate, String paymentProcess, Courier courier, Long warehouseId) {
+  public List<ReconcilationReportDto> findReconcilationReportByDate(Date startDate, Date endDate, String paymentProcess, Courier courier, Long warehouseId, Long shippingOrderStatusId) {
     String paymentWhereClause = "";
     String warehouseWhereClause = "";
     String courierWhereClause = "";
@@ -44,22 +43,22 @@ public class ReportShippingOrderDaoImpl extends BaseDaoImpl implements ReportShi
       paymentWhereClause = " and pm.id != " + EnumPaymentMode.COD.getId();
     }
 
-    List<Long> applicableOrderStatus = new ArrayList<Long>();
+    /*List<Long> applicableOrderStatus = new ArrayList<Long>();
 
     applicableOrderStatus.add(EnumShippingOrderStatus.SO_Delivered.getId());
     applicableOrderStatus.add(EnumShippingOrderStatus.SO_Returned.getId());
     applicableOrderStatus.add(EnumShippingOrderStatus.SO_Lost.getId());
     applicableOrderStatus.add(EnumShippingOrderStatus.SO_Shipped.getId());
-
+*/
     String hqlQuery = "select so.gatewayOrderId as invoiceId, p.paymentDate as orderDate, user.name as name, adr.city as city, "
         + " pm.name as payment, so.amount as total,  ship.courier as courier, ship.trackingId as awb, ship.shipDate as shipmentDate,"
         + " ship.deliveryDate as deliveryDate, rs.name as reconciled, os.name as orderStatus, ship.boxWeight as boxWeight,"
         + " bs.name as boxSize, so.warehouse as warehouse" + " from ShippingOrder so join so.baseOrder bo join bo.payment p join bo.user user join bo.address adr "
         + " join so.shipment ship join ship.boxSize bs join so.shippingOrderStatus os " + " join p.paymentMode pm join so.reconciliationStatus rs "
-        + " where p.paymentDate >= :startDate" + " and p.paymentDate <= :endDate" + " and os.id in (:applicableOrderStatus)" + " " + paymentWhereClause
+        + " where p.paymentDate >= :startDate" + " and p.paymentDate <= :endDate" + " and os.id =:shippingOrderStatusId" + " " + paymentWhereClause
         + courierWhereClause + warehouseWhereClause;
 
-    return getSession().createQuery(hqlQuery).setParameter("startDate", startDate).setParameterList("applicableOrderStatus", applicableOrderStatus).setParameter("endDate",
+    return getSession().createQuery(hqlQuery).setParameter("startDate", startDate).setParameter("shippingOrderStatusId", shippingOrderStatusId).setParameter("endDate",
         endDate).setResultTransformer(Transformers.aliasToBean(ReconcilationReportDto.class)).list();
   }
 
