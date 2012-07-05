@@ -118,7 +118,7 @@
 
      <c:if test="${actionBean.couponCode !=null}">
       //track couponcode
-    var couponAmount=${actionBean.payment.amount};
+    var couponAmount=${actionBean.couponAmount};
     couponAmount=Math.round(couponAmount);    //event value needs to be an integer
     pageTracker._trackEvent('purchase','coupon','${actionBean.couponCode}',couponAmount);
    </c:if>
