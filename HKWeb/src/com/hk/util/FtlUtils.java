@@ -53,50 +53,21 @@ public class FtlUtils {
           out.write(line + lineSeperator);
         }
       }
-      ftlFile = addUtmParams(ftlFile, emailCampaignName);
-      return ftlFile;
     } catch (IOException ioe) {
       logger.error("error generating ftl from html: " + ioe);
+      return null;
     } finally {
       IOUtils.closeQuietly(br);
       IOUtils.closeQuietly(out);
     }
-    return null;
+    ftlFile = addUtmParams(ftlFile, emailCampaignName);
+    return ftlFile;
   }
 
   private static String addAbsolutePathsToFtl(String line, String basicAmazonS3Path) {
     line = line.replaceAll(imageSourceRegex, "$1$2" + basicAmazonS3Path + "$3");
     line = line.replaceAll(backgroundImageSourceRegex, "$1" + basicAmazonS3Path + "$2\"");
     return line;
-  }
-
-  private static File addExtraDataToFtl(File ftlFile, File htmlFile, String basicAmazonS3Path) {
-    String line;
-
-    BufferedReader br = null;
-    PrintWriter out = null;
-    try {
-      br = new BufferedReader(new FileReader(ftlFile));
-      out = new PrintWriter(new FileWriter(ftlFile));
-      while ((line = br.readLine()) != null) {
-        //adding "can't view this email and unsubsribe link" div to the ftl
-        if (line.matches(bodyStartTagRegex)) {
-          out.write(line + lineSeperator);
-          out.write(FtlUtils.getCantViewEmailDiv(basicAmazonS3Path) + lineSeperator);
-        } else if (line.matches(bodyEndTagRegex)) {
-          out.write(FtlUtils.getUnsubscribeEmailDiv() + lineSeperator);
-          out.write(line + lineSeperator);
-          break;
-        }
-      }
-      return ftlFile;
-    } catch (IOException ioe) {
-      logger.error("error adding data to ftl: " + ioe);
-    } finally {
-      IOUtils.closeQuietly(br);
-      IOUtils.closeQuietly(out);
-    }
-    return null;
   }
 
   private static File addUtmParams(File ftlFile, String emailCampaignName) {
