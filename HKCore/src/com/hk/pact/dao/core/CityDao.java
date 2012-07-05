@@ -1,21 +1,19 @@
-package com.hk.admin.pact.service.courier;
+package com.hk.pact.dao.core;
 
+import com.hk.pact.dao.BaseDao;
 import com.hk.domain.core.City;
-import com.hk.domain.core.State;
 
 /**
  * Created by IntelliJ IDEA.
  * User:User
- * Date: Jun 21, 2012
- * Time: 11:11:35 AM
+ * Date: Jun 25, 2012
+ * Time: 10:47:56 AM
  * To change this template use File | Settings | File Templates.
  */
-public interface CourierStateCityService {
+public interface CityDao extends BaseDao {
 
   public City getCityByName(String name);
 
   public boolean isValidCity(String name);
-
-  public State getStateByName(String name);
 
 }

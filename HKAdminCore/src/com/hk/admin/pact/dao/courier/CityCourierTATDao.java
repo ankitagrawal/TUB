@@ -2,6 +2,7 @@ package com.hk.admin.pact.dao.courier;
 
 import com.hk.domain.core.City;
 import com.hk.domain.courier.CityCourierTAT;
+import com.hk.pact.dao.BaseDao;
 
 /**
  * Created by IntelliJ IDEA.
@@ -10,6 +11,6 @@ import com.hk.domain.courier.CityCourierTAT;
  * Time: 4:43:50 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface CityCourierTATDao {
+public interface CityCourierTATDao extends BaseDao {
   public CityCourierTAT getCityTatByCity(City city);
 }
