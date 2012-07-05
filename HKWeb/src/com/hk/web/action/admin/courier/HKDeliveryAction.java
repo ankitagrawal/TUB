@@ -64,7 +64,8 @@ public class HKDeliveryAction extends BaseAction {
             if (shippingOrder != null) {
                 if(shippingOrder.isCOD()){
                         ++totalCODPackets;
-                    totalCODAmount=totalCODAmount+shippingOrder.getBaseOrder().getPayment().getAmount();
+                    totalCODAmount=totalCODAmount+shippingOrder.getAmount();
+                    totalCODAmount=Math.round(totalCODAmount);
                 }  else{
                     ++totalPrepaidPackets;
                 }
@@ -151,27 +152,7 @@ public class HKDeliveryAction extends BaseAction {
 
 
         //creating rows for header.
-        /*row = sheet1.createRow(++rowCounter);
-        cell = row.createCell(2);
-        cell.setCellStyle(style_header);
-        setCellValue(row, 2, CourierConstants.HKD_WORKSHEET_HEADING1);
-        addEmptyLine(row, sheet1, ++rowCounter, cell);
-        row = sheet1.createRow(++rowCounter);
-        cell = row.createCell(2);
-        cell.setCellStyle(style_header);
-        setCellValue(row, 2, CourierConstants.HKD_WORKSHEET_HEADING2);
-        addEmptyLine(row, sheet1, ++rowCounter, cell);
-        row = sheet1.createRow(++rowCounter);
-        cell = row.createCell(2);
-        cell.setCellStyle(style_header);
-        setCellValue(row, 2, CourierConstants.HKD_WORKSHEET_HEADING3);
-        addEmptyLine(row, sheet1, ++rowCounter, cell);
-        row = sheet1.createRow(++rowCounter);
-        cell = row.createCell(2);
-        cell.setCellStyle(style_header);
-        setCellValue(row, 2, CourierConstants.HKD_WORKSHEET_HEADING4);
-        addEmptyLine(row, sheet1, ++rowCounter, cell);
-*/
+        
         row = sheet1.createRow(++rowCounter);
         cell = row.createCell(2);
         cell.setCellStyle(style_header);
@@ -180,19 +161,19 @@ public class HKDeliveryAction extends BaseAction {
         row = sheet1.createRow(++rowCounter);
         cell = row.createCell(0);
         cell.setCellStyle(style_header);
-        setCellValue(row, 0, "T-01,4TH FLOOR,");
+        setCellValue(row, 0, CourierConstants.HKD_WORKSHEET_HEADING2);
         cell = row.createCell(1);
         cell.setCellStyle(style_header);
-        setCellValue(row, 1, "PARSVANATH ARCADIA");
+        setCellValue(row, 1, CourierConstants.HKD_WORKSHEET_HEADING3);
         cell = row.createCell(2);
         cell.setCellStyle(style_header);
-        setCellValue(row, 2, "MG ROAD,SECTOR 14,");
+        setCellValue(row, 2, CourierConstants.HKD_WORKSHEET_HEADING4);
         cell = row.createCell(3);
         cell.setCellStyle(style_header);
-        setCellValue(row, 3, "GURGAON-122001");
+        setCellValue(row, 3, CourierConstants.HKD_WORKSHEET_HEADING5);
         cell = row.createCell(4);
         cell.setCellStyle(style_header);
-        setCellValue(row, 4, "PH.NO-0124-4551616");
+        setCellValue(row, 4, CourierConstants.HKD_WORKSHEET_HEADING6);
 
 
         addEmptyLine(row, sheet1, ++rowCounter, cell);
@@ -224,7 +205,7 @@ public class HKDeliveryAction extends BaseAction {
         setCellValue(row, 2, CourierConstants.HKD_WORKSHEET_TOTAL_PREPAID_BOX+totalPrepaidPackets);
         setCellValue(row, 3, CourierConstants.HKD_WORKSHEET_TOTAL_COD_BOX);
         setCellValue(row, 4, totalCODPackets+"");
-        setCellValue(row, 5, CourierConstants.HKD_WORKSHEET_TOTAL_COD_AMT+totalCODAmount);
+        setCellValue(row, 5, CourierConstants.HKD_WORKSHEET_TOTAL_COD_AMT + totalCODAmount);
         addEmptyLine(row, sheet1, ++rowCounter, cell);
 
         row = sheet1.createRow(++rowCounter);
@@ -272,7 +253,7 @@ public class HKDeliveryAction extends BaseAction {
             pincode = shippingOrderList.get(index).getBaseOrder().getAddress().getPin();
             phone = shippingOrderList.get(index).getBaseOrder().getAddress().getPhone();
             paymentMode = shippingOrderList.get(index).getBaseOrder().getPayment().getPaymentMode().getName();
-            paymentAmt = shippingOrderList.get(index).getBaseOrder().getPayment().getAmount();
+            paymentAmt = shippingOrderList.get(index).getAmount();
             address = "Name:" + name + "\n" + "Address:" + line1 + "," + "\n" + line2 + "," + "\n" + city + "-" + pincode + "\n" + "Phone:" + phone;
             receivedDetails = "Name:" + "\n" + "Relation:" + "\n" + "Mobile No.:" + "\n" + "Received Date,Time:" + "\n" + "Sign";
             sNo = index + 1 + "";

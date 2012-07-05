@@ -65,9 +65,11 @@ public class CourierConstants {
     public static final String HKDELIVERY_EXCEPTION = "Worksheet download failed.";
     public static final String HEALTHKART_DELIVERY = "HealthkartDelivery";
     public static final String HKD_WORKSHEET_HEADING1 = "HEALTHKART DELIVERY";
-    public static final String HKD_WORKSHEET_HEADING2 = "T-01,4TH FLOOR,PARSVANATH ARCADIA";
-    public static final String HKD_WORKSHEET_HEADING3 = "MG ROAD,SECTOR 14,GURGAON-122001";
-    public static final String HKD_WORKSHEET_HEADING4 = "PH.NO-0124-4551616";
+    public static final String HKD_WORKSHEET_HEADING2 = "T-01,4TH FLOOR,";
+    public static final String HKD_WORKSHEET_HEADING3 = "PARSVANATH ARCADIA";
+    public static final String HKD_WORKSHEET_HEADING4 = "MG ROAD,SECTOR 14,";
+    public static final String HKD_WORKSHEET_HEADING5 = "GURGAON-122001";
+    public static final String HKD_WORKSHEET_HEADING6 = "PH.NO-0124-4551616";
     public static final String HKD_WORKSHEET_NAME = "NAME";
     public static final String HKD_WORKSHEET_MOBILE = "MOBILE NO:";
     public static final String HKD_WORKSHEET_DATE = "DATE:";
