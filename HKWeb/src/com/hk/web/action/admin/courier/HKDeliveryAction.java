@@ -149,8 +149,9 @@ public class HKDeliveryAction extends BaseAction {
         style_header.setFont(fontForHeader);
         style_header.setAlignment(HSSFCellStyle.ALIGN_CENTER);
 
+
         //creating rows for header.
-        row = sheet1.createRow(++rowCounter);
+        /*row = sheet1.createRow(++rowCounter);
         cell = row.createCell(2);
         cell.setCellStyle(style_header);
         setCellValue(row, 2, CourierConstants.HKD_WORKSHEET_HEADING1);
@@ -170,6 +171,32 @@ public class HKDeliveryAction extends BaseAction {
         cell.setCellStyle(style_header);
         setCellValue(row, 2, CourierConstants.HKD_WORKSHEET_HEADING4);
         addEmptyLine(row, sheet1, ++rowCounter, cell);
+*/
+        row = sheet1.createRow(++rowCounter);
+        cell = row.createCell(2);
+        cell.setCellStyle(style_header);
+        setCellValue(row, 2, CourierConstants.HKD_WORKSHEET_HEADING1);
+
+        row = sheet1.createRow(++rowCounter);
+        cell = row.createCell(0);
+        cell.setCellStyle(style_header);
+        setCellValue(row, 0, "T-01,4TH FLOOR,");
+        cell = row.createCell(1);
+        cell.setCellStyle(style_header);
+        setCellValue(row, 1, "PARSVANATH ARCADIA");
+        cell = row.createCell(2);
+        cell.setCellStyle(style_header);
+        setCellValue(row, 2, "MG ROAD,SECTOR 14,");
+        cell = row.createCell(3);
+        cell.setCellStyle(style_header);
+        setCellValue(row, 3, "GURGAON-122001");
+        cell = row.createCell(4);
+        cell.setCellStyle(style_header);
+        setCellValue(row, 4, "PH.NO-0124-4551616");
+
+
+        addEmptyLine(row, sheet1, ++rowCounter, cell);
+
 
         row = sheet1.createRow(++rowCounter);
         // style.setFont(font);
