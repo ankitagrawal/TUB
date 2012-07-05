@@ -62,7 +62,7 @@ public class EmailNewsletterCampaignAction extends BaseAction {
   }
 
   public Resolution create() {
-    emailCampaign.setHtmlPath(FtlUtils.getBasicAmazonS3Path() + HKFileUtils.getPathAfterSubstring(htmlPath, "adminUploads"));
+    emailCampaign.setHtmlPath(FtlUtils.getBasicAmazonS3Path() + HKFileUtils.getPathAfterSubstring(htmlPath, "emailContentFiles"));
     emailCampaign.setTemplateFtl(ftlContents);
 
     emailCampaign = emailCampaignDao.save(emailCampaign);

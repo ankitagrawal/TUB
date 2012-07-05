@@ -20,11 +20,11 @@
       </fieldset>
       <fieldset style=" margin-top: 15px; text-align:center;">
         <legend>FTL GENERATED</legend>
-        <s:textarea name="emailCampaign.templateFtl" style="width:95%; margin:10px; resize:none;"/>
+        <s:textarea name="emailCampaign.templateFtl" style="width:95%; margin:10px;"/>
       </fieldset>
       <fieldset style=" margin-top: 15px; text-align:center;">
         <legend>HTML GENERATED</legend>
-        <s:textarea name="htmlContents" style="width:95%; margin:10px; resize:none;"/>
+        <s:textarea name="htmlContents" style="width:95%; margin:10px;"/>
       </fieldset>
       <s:hidden name="emailCampaign"/>
       <s:submit name="saveEmailCampaign" value="SAVE CHANGES"/>
