@@ -41,7 +41,8 @@ public class ReplacementOrderAction extends BaseAction {
     ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
     shippingOrderSearchCriteria.setOrderId(shippingOrderId);
     shippingOrder = shippingOrderService.find(shippingOrderId);
-    return new RedirectResolution(ReplacementOrderAction.class);
+    //return new RedirectResolution(ReplacementOrderAction.class);
+    return new ForwardResolution("/pages/admin/createReplacementOrder.jsp");
   }
 
   public Resolution createReplacementOrder(){
@@ -57,7 +58,7 @@ public class ReplacementOrderAction extends BaseAction {
   }
 
   public ShippingOrder getShippingOrder() {
-    return shippingOrder;
+    return this.shippingOrder;
   }
 
   public void setShippingOrder(ShippingOrder shippingOrder) {
