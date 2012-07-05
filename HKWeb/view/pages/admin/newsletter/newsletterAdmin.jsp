@@ -14,7 +14,7 @@
             beanclass="com.hk.web.action.admin.newsletter.EmailNewsletterCampaignAction">Create New Email Campaign</s:link>
         <br/><br/>
         <s:link beanclass="com.hk.web.action.admin.newsletter.SendEmailNewsletterCampaign">
-          View Campaign Details and Send Email Campaign
+          Send Email Campaign and View Details 
         </s:link>
         <br/><br/>
         <s:link beanclass="com.hk.web.action.admin.marketing.SendWeMissYouEmailer">Send We Miss You Emailer</s:link>

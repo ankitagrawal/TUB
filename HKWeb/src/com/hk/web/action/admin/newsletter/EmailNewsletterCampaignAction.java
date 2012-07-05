@@ -76,7 +76,7 @@ public class EmailNewsletterCampaignAction extends BaseAction {
     try {
       if (contentBean != null) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String contentZipPath = adminUploadsPath + "/emailContentFiles/" + name + sdf.format(new Date()) + ".zip";
+        String contentZipPath = adminUploadsPath + "/emailContentFiles/" + name + "-"+ sdf.format(new Date()) + ".zip";
         contentZipFolder = new File(contentZipPath);
         contentZipFolder.getParentFile().mkdirs();
         contentBean.save(contentZipFolder);
@@ -102,7 +102,7 @@ public class EmailNewsletterCampaignAction extends BaseAction {
           }
 
           String ftlPath = adminUploadsPath + "/emailContentFiles/" + name + ".ftl";
-          File ftlFile = FtlUtils.generateFtlFromHtml(htmlFiles[0], ftlPath,contentZipFolder.getName());
+          File ftlFile = FtlUtils.generateFtlFromHtml(htmlFiles[0], ftlPath,contentFolder.getName());
           //making changes in the .html file also
           FileUtils.copyFile(ftlFile, htmlFiles[0]);
           ftlContents = HKFileUtils.fileToString(ftlFile);
