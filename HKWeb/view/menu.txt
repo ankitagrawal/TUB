@@ -12,8 +12,9 @@
 --/nutrition/sports-nutrition/weight-gainer : Weight Gainer
 --/nutrition/sports-nutrition/protein-bars  : Protein Bars
 --/nutrition/sports-nutrition/athletes      :  Athletes
+--/nutrition/sports-nutrition/contest-preparation :Contest Preparation
 --/nutrition/sports-nutrition/shakers-accessories        :Shakers & Accessories
---/nutrition/sports-nutrition/combos
+--/nutrition/sports-nutrition/muscle-building-combos :Muscle Building Combos
 -/nutrition/dietary-supplements : Dietary Supplements
 --/nutrition/dietary-supplements/multivitamins :  Multivitamins
 ---/nutrition/dietary-supplements/multivitamins/men-s-multivitamins  :Men's Multivitamins
@@ -26,6 +27,7 @@
 --/nutrition/dietary-supplements/hair-skin-nails  :Hair Skin & Nails
 --/nutrition/dietary-supplements/bones             :Bones
 --/nutrition/dietary-supplements/eye               :Eye
+--/nutrition/dietary-supplements/herbal-cleanser :Herbal Cleanser
 --/nutrition/dietary-supplements/herbal-teas
 --/nutrition/dietary-supplements/herbs-a-z  :Herbs A-Z
 --/nutrition/dietary-supplements/herbal-cream-oil  :Herbal Cream & Oil
@@ -39,6 +41,7 @@
 --/nutrition/condition-specific-supplements/brain-memory     :Brain & Memory
 --/nutrition/condition-specific-supplements/vitality
 --/nutrition/condition-specific-supplements/energy-endurance     :Energy & Endurance
+--/nutrition/condition-specific-supplements/daily-nutrition-combos :Daily Nutrition Combos
 -/nutrition/weight-management
 --/nutrition/weight-management/fat-burner
 --/nutrition/weight-management/appetite-control :Appetite Control
