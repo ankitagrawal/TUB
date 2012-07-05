@@ -1,7 +1,6 @@
 package com.hk.impl.service.mooga;
 
 import com.hk.constants.core.Keys;
-import com.hk.pact.service.mooga.MoogaCacheService;
 import com.hk.pact.service.mooga.RecommendationEngine;
 import org.apache.commons.lang.StringUtils;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -37,9 +36,6 @@ public class RecommendationEngineImpl implements RecommendationEngine {
     static Logger logger = LoggerFactory.getLogger(RecommendationEngineImpl.class);
     @Value("#{hkEnvProps['" + Keys.Env.moogaCache + "']}")
     boolean moogaCache;
-
-    @Autowired
-    MoogaCacheService moogaCacheService;
 
     /**
      * Mooga Actions as defined by MOOGA service. Has to be in sync with Mooga
@@ -134,19 +130,8 @@ public class RecommendationEngineImpl implements RecommendationEngine {
     public List<String> getRecommendedProducts(String pId){
         List<String> recommendedItems = new ArrayList<String>();
         try{
-            if (moogaCache) {
-                if(!moogaCacheService.hasProduct(pId)){
-                    String itemResponse = moogaStub.item_GetRecommendedItemsToItem(HK_MOOGA_KEY, pId, "0","0","");
-                    recommendedItems = getProducts(itemResponse);
-                    //push results into caching layer
-                    moogaCacheService.pushReconmmededItems(pId, recommendedItems);
-                }else{
-                    recommendedItems = moogaCacheService.getRecommendedItems(pId);
-                }
-            }else{
-                String itemResponse = moogaStub.item_GetRecommendedItemsToItem(HK_MOOGA_KEY, pId, "0","0","PRODUCT");
-                recommendedItems = getProducts(itemResponse);
-            }
+            String itemResponse = moogaStub.item_GetRecommendedItemsToItem(HK_MOOGA_KEY, pId, "0","0","PRODUCT");
+            recommendedItems = getProducts(itemResponse);
         }catch(RemoteException ex){
 
         }catch (RedisSystemException ex){
@@ -163,19 +148,8 @@ public class RecommendationEngineImpl implements RecommendationEngine {
     public List<String> getRecommendedProductVariants(String pvId){
         List<String> recommendedItems = new ArrayList<String>();
         try{
-            if (moogaCache) {
-                if(!moogaCacheService.hasProduct(pvId)){
-                    String itemResponse = moogaStub.item_GetRecommendedItemsToItem(HK_MOOGA_KEY, pvId, "0","0","");
-                    recommendedItems = getProducts(itemResponse);
-                        //push results into caching layer
-                        moogaCacheService.pushReconmmededItems(pvId, recommendedItems);
-                    }else{
-                        recommendedItems = moogaCacheService.getRecommendedItems(pvId);
-                 }
-            }else{
-                String itemResponse = moogaStub.item_GetRecommendedItemsToItem(HK_MOOGA_KEY, pvId, "0","0","");
-                recommendedItems = getProducts(itemResponse);
-            }
+            String itemResponse = moogaStub.item_GetRecommendedItemsToItem(HK_MOOGA_KEY, pvId, "0","0","");
+            recommendedItems = getProducts(itemResponse);
         }catch(RemoteException ex){
 
         }catch (RedisSystemException ex){
