@@ -264,6 +264,10 @@
                         <label><s:checkbox name="storeId"
                                            value="${store.id}"/> ${store.prefix}</label>
                     </c:forEach>
+                    <label>Sort by date : ${sortByPaymentDate}</label>
+                    <s:checkbox name="sortByPaymentDate"/>
+                    <label>Sort by score : ${sortByScore}</label>
+                    <s:checkbox name="sortByScore"/>
                 </li>
                 <li>
                     <label style="float:left;">Payment Modes </label>
