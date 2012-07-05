@@ -168,7 +168,7 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
             dataMap.put("itemsInCart", Long.valueOf(order.getExclusivelyProductCartLineItems().size() + order.getExclusivelyComboCartLineItems().size()) + 1L);
             HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Product has been added to cart", dataMap);
             noCache();
-            recomendationEngine.pushAddToCart(user.getId(), productVariantList);
+            recomendationEngine.notifyAddToCart(user.getId(), productVariantList);
             return new JsonResolution(healthkartResponse);
         }
         HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Product has not been added to cart", dataMap);
