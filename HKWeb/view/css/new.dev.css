@@ -843,7 +843,7 @@ span.error {
     margin-top: 5px;
 }
 
-/* line 92, ../sass/main.scss */
+/* line 92, ../sass/main.scss kuki */
 .topBar .userCP .right .cartButton {
     height: 32px;
     background: #deeaf6;
@@ -861,6 +861,7 @@ span.error {
     margin-right: 5px;
     border: 1px solid #8db8e0;
     width: 125px;
+    float:right;
 }
 
 /* line 103, ../sass/main.scss */
@@ -897,6 +898,7 @@ span.error {
     background: #23527f;
     position: relative;
     border-bottom: 2px solid #FF8213;
+    clear:both;
 }
 
 /* line 130, ../sass/main.scss */
@@ -981,15 +983,16 @@ span.error {
 }
 
 /* line 169, ../sass/main.scss */
-.menuBar ul.lvl1 li.lvl1:first-child:hover, .menuBar ul.lvl1 li.home_active, #home_button:hover {
+.menuBar ul.lvl1 li.lvl1:first-child:hover, .menuBar ul.lvl1 li.home_active,  {
     background: #ff8213;
     border: 2px solid #ff8213;
 }
 
 #home_button {
     padding: 6px 10px;
+    float:left;
 }
-
+#home_button:hover    { background: #ff8213;}
 /* line 172, ../sass/main.scss */
 .menuBar ul.lvl1 li.lvl1 .icon {
     height: 16px;
@@ -1261,16 +1264,16 @@ span.error {
     -khtml-border-bottom-right-radius: 0.5em 0.5em;
     border-bottom-right-radius: 0.5em 0.5em;
     border-top-color: transparent;
+    clear:both;
 }
 
 /* line 330, ../sass/main.scss */
 .lvl2Bar {
-    margin-left: auto;
-    margin-right: auto;
+
     width: 960px;
-    padding: 0 0px;
+    padding: 0;
     text-align: center;
-    margin: 0 0;
+    margin: 0 auto;
 }
 
 /* line 335, ../sass/main.scss */
@@ -1280,14 +1283,15 @@ span.error {
 }
 
 /* line 339, ../sass/main.scss */
+/* Setup for child navigation kuki */
 .lvl2Bar li.lvl2 {
     text-align: left;
-    display: inline;
-    width: 130px;
     display: inline-block;
-    float: none;
-    vertical-align: top;
+    min-width: 128px;
+       float: none;
+    vertical-align: middle;
     margin: 0 10px;
+    padding:0;
 }
 
 /* line 347, ../sass/main.scss */
@@ -1355,7 +1359,8 @@ span.error {
 .lvl2Bar li.lvl2 .head2 {
     margin: 0;
     padding: 7px 0px;
-    width: 140px;
+    display:inline-block;
+    /*width: 140px;  */
 }
 
 /* line 396, ../sass/main.scss */
@@ -1911,6 +1916,7 @@ h3 a.prod_link {
     width: 16px;
     height: 16px;
     display: block;
+    float:left;
 }
 
 /*CATALOG PAGE*/

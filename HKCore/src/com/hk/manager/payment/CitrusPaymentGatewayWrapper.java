@@ -9,12 +9,12 @@ import com.hk.exception.HealthkartPaymentGatewayException;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
-
 
 public class CitrusPaymentGatewayWrapper extends BasePaymentGatewayWrapper<CitrusPaymentGatewayWrapper> implements PaymentGatewayWrapper {
 
@@ -37,14 +37,15 @@ public class CitrusPaymentGatewayWrapper extends BasePaymentGatewayWrapper<Citru
     public static String pgTxnNo = "pgTxnNo";
     public static String TxStatus = "TxStatus";
     public static String pgRespCode = "pgRespCode";
-    public static String amount = "amount";
     public static String TxMsg = "TxMsg";
     public static String mandatoryErrorMsg = "mandatoryErrorMsg";
     public static String paidTxnExists = "paidTxnExists";
 
+
     public static String email = "email";
     public static String merchantTxnId = "merchantTxnId";
     public static String orderAmount = "orderAmount";
+    public static String amount = "amount";
     public static String CurrCode = "CurrCode";
     public static String currency = "currency";
     public static String firstName = "firstName";
@@ -54,6 +55,8 @@ public class CitrusPaymentGatewayWrapper extends BasePaymentGatewayWrapper<Citru
     public static String merchantURLPart = "merchantURLPart";
     public static String vanityURLPart = "healthkart";
     public static String secSignature = "secSignature";
+    public static String merchantAccessKey = "merchantAccessKey";
+    public static String transactionId = "transactionId";
 
 
     public CitrusPaymentGatewayWrapper(String environmemtDir) {

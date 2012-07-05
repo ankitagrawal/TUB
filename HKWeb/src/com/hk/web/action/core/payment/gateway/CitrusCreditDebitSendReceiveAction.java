@@ -1,4 +1,4 @@
-package com.hk.web.action.core.payment;
+package com.hk.web.action.core.payment.gateway;
 
 import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.akube.framework.stripes.action.BasePaymentGatewaySendReceiveAction;
@@ -16,6 +16,8 @@ import com.hk.manager.payment.CitrusPaymentGatewayWrapper;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.payment.PaymentDao;
 import com.hk.web.AppConstants;
+import com.hk.web.action.core.payment.PaymentFailAction;
+import com.hk.web.action.core.payment.PaymentSuccessAction;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -64,7 +66,7 @@ public class CitrusCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
         citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.firstName, user.getName());
 //        citrusPaymentGatewayWrapper.addParameter("lastName", "HK");
         citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.phoneNumber, address.getPhone());
-        citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.returnUrl, linkManager.getCitrusPaymentGatewayUrl());
+        citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.returnUrl, linkManager.getCitrusPaymentCreditDebitGatewayUrl());
         citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.reqtime, new Date().getTime());
 
         String vanityURLPart = CitrusPaymentGatewayWrapper.vanityURLPart;
@@ -94,7 +96,6 @@ public class CitrusCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
         try {
             // our own validations
             paymentManager.verifyPayment(gatewayOrderId, NumberUtils.toDouble(amount), merchantParam);
-            logger.info("Status returned from Citrus Payment Gateway" + TxStatus);
             // payment callback has been verified. now see if it is successful or failed from the gateway response
             if (TxStatus.equals(EnumCitrusResponseCodes.TxStatusSuccess.getId()) && pgRespCode.equals(EnumCitrusResponseCodes.Transaction_Successful.getId())) {
                 paymentManager.success(gatewayOrderId);

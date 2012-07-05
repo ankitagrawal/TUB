@@ -1,7 +1,6 @@
 .serif{
     font-family: Georgia, Cambria, serif;
 }
-
 @charset
 "UTF-8"
 ;
@@ -100,8 +99,8 @@ a {
     color: #228;
     text-decoration: none;
     border-bottom: 1px solid #eef;
-    margin-top: 1.5em;
-    margin-bottom: 1.5em;
+    /*margin-top: 1.5em;
+   margin-bottom: 1.5em;*/
 }
 
 /* line 57, ../sass/_base.scss */
@@ -136,48 +135,43 @@ h1, h2, h3, h4, h5, h6 {
 : first clear : both;
 }
 
-.main_container h1, .main_container h2, .main_container h3, .main_container h4, .main_container h5, .main_container h6 {
-    margin-left: 5px;
-}
-
-/* line 117, ../sass/_base.scss */
 p {
-    padding-left: 26px;
-    font-size: 12px;
-    margin-top: 1.5em;
-    margin-bottom: 1.5em;
+    padding-left: 1.5em;
+    font-size: 1em;
+    margin-top: 1em;
+    margin-bottom: 1em;
 }
 
 /* line 123, ../sass/_base.scss */
 h1 {
-    font-size: 22px;
+    font-size: 1.833em;
 }
 
 /* line 126, ../sass/_base.scss */
 h2 {
-    font-size: 20px;
+    font-size: 1.667em;
 }
 
 /* line 129, ../sass/_base.scss */
 h3 {
-    font-size: 18px;
+    font-size: 1.5em;
 }
 
 /* line 133, ../sass/_base.scss */
 h4 {
-    font-size: 16px;
+    font-size: 1.333em;
     font-weight: bold;
 }
 
 /* line 137, ../sass/_base.scss */
 h5 {
-    font-size: 14px;
+    font-size: 1.167em;
     font-weight: bold;
 }
 
 /* line 141, ../sass/_base.scss */
 h6 {
-    font-size: 12px;
+    font-size: 1em;
     font-weight: bold;
     text-decoration: underline;
 }
@@ -185,7 +179,7 @@ h6 {
 /* line 146, ../sass/_base.scss */
 ol, ul {
     font-size: 12px;
-    list-style: disc;
+    list-style: none;
     padding-left: 30px;
     margin-top: 1.5em;
     margin-bottom: 1.5em;
@@ -326,8 +320,8 @@ a.prod_link {
 /* line 223, ../sass/_base.scss */
 .pagi .links a.pagi_link {
     display: inline-block;
-    padding: 5px 10px;
-    font-size: 12px;
+    padding: 4px 8px;
+    font-size: 10px;
     font-weight: bold;
     margin: 2px 1px;
     border: 1px solid #ddd;
@@ -391,7 +385,7 @@ input[type="button"], input[type="submit"], .button_green {
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
     margin: 10px 5px;
     text-align: center;
-    display: inline;
+    display: block;
 }
 
 /* line 78, ../sass/_base.scss */
@@ -615,8 +609,7 @@ input[type="button"] .small, .button .small {
 
 /* line 302, ../sass/_base.scss */
 .prices {
-    text-align: center;
-    font-size: 14px;
+    font-size: 1.167em;
     margin: 10px 0 15px 0;
 }
 
@@ -800,6 +793,7 @@ span.error {
     font-size: 14px;
     width: 400px;
     height: 32px;
+    line-height: 1em;
 }
 
 /* line 63, ../sass/main.scss */
@@ -811,6 +805,7 @@ span.error {
 /* line 68, ../sass/main.scss */
 .topBar .userCP {
     float: right;
+    line-height: 1em;
 }
 
 /* line 70, ../sass/main.scss */
@@ -866,6 +861,7 @@ span.error {
     margin-right: 5px;
     border: 1px solid #8db8e0;
     width: 125px;
+    float:right;
 }
 
 /* line 103, ../sass/main.scss */
@@ -902,6 +898,7 @@ span.error {
     background: #23527f;
     position: relative;
     border-bottom: 2px solid #FF8213;
+    clear:both;
 }
 
 /* line 130, ../sass/main.scss */
@@ -922,7 +919,7 @@ span.error {
     float: left;
     vertical-align: middle;
     /*font-size: 18px;*/
-    padding: 5px 10px;
+    padding: 8px 10px;
     border-right: #888;
     border: 2px solid transparent;
     border-bottom: none;
@@ -941,16 +938,6 @@ span.error {
     background-origin: border;
     -moz-background-origin: border-box;
     -webkit-background-origin: border-box;
-}
-
-.menuBar ul.lvl1 li.lvl1 div.lvl2 .categories .head2 {
-    font-size: 12px;
-    font-weight: bold;
-    color: #df6900;
-    line-height: 20px;
-    text-shadow: 0 1px 0 white;
-    margin-top: 5px;
-    padding: 5px 0;
 }
 
 /* line 151, ../sass/main.scss */
@@ -1003,6 +990,7 @@ span.error {
 
 #home_button {
     padding: 6px 10px;
+     float:left;
 }
 
 /* line 172, ../sass/main.scss */
@@ -1020,7 +1008,9 @@ span.error {
     border-bottom-color: transparent;
     font-size: 13px;
 }
-
+#offers_button a {
+    color: #ffff00;
+}
 /* line 180, ../sass/main.scss */
 .menuBar ul.lvl1 li.lvl1 a:hover {
     text-decoration: none;
@@ -1098,11 +1088,11 @@ span.error {
 }
 
 /* line 214, ../sass/main.scss */
-.menuBar ul.lvl1 li.lvl1 div.lvl2 .categories h2 {
+.menuBar ul.lvl1 li.lvl1 div.lvl2 .categories .head2 {
     font-size: 12px;
     font-weight: bold;
     color: #df6900;
-    line-height: 18px;
+    line-height: 20px;
     text-shadow: 0 1px 0 white;
     margin-top: 5px;
     padding: 5px 0;
@@ -1274,16 +1264,16 @@ span.error {
     -khtml-border-bottom-right-radius: 0.5em 0.5em;
     border-bottom-right-radius: 0.5em 0.5em;
     border-top-color: transparent;
+    clear:both;
 }
 
 /* line 330, ../sass/main.scss */
 .lvl2Bar {
-    margin-left: auto;
-    margin-right: auto;
+
     width: 960px;
-    padding: 0 0px;
+    padding: 0;
     text-align: center;
-    margin: 0 0;
+    margin: 0 auto;
 }
 
 /* line 335, ../sass/main.scss */
@@ -1293,14 +1283,16 @@ span.error {
 }
 
 /* line 339, ../sass/main.scss */
+/* Setup for child navigation kuki */
 .lvl2Bar li.lvl2 {
     text-align: left;
-    display: inline;
-    width: 130px;
     display: inline-block;
+    min-width: 128px;
     float: none;
-    vertical-align: top;
+    vertical-align: middle;
     margin: 0 10px;
+    padding:0;
+    
 }
 
 /* line 347, ../sass/main.scss */
@@ -1335,7 +1327,7 @@ span.error {
 }
 
 /* line 369, ../sass/main.scss */
-.lvl2Bar li.lvl2:hover h2 a:after {
+.lvl2Bar li.lvl2:hover .head2 a:after {
     content: "▼";
     color: #df6900;
 }
@@ -1346,7 +1338,7 @@ span.error {
 }
 
 /* line 377, ../sass/main.scss */
-.lvl2Bar li.lvl2:hover h2 {
+.lvl2Bar li.lvl2:hover .head2 {
     -moz-border-radius-topleft: 5px;
     -webkit-border-top-left-radius: 5px;
     -o-border-top-left-radius: 5px;
@@ -1364,20 +1356,12 @@ span.error {
     border-top-width: 2px;
 }
 
-/* line 385, ../sass/main.scss */
-.lvl2Bar li.lvl2 h2 {
+/* line 385, ../sass/main.scss Kuki */
+.lvl2Bar li.lvl2 .head2 {
     margin: 0;
     padding: 7px 0px;
-    padding-left: 0.5em;
-    width: 140px;
-}
-
-/* line 389, ../sass/main.scss */
-.lvl2Bar li.lvl2 h2:hover {
-    background-color: #f2f7fb;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-bottom-color: transparent;
-    border-top-width: 2px;
+    display:inline-block;
+    /*width: 140px;  */
 }
 
 /* line 396, ../sass/main.scss */
@@ -1464,7 +1448,7 @@ span.error {
     font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
     padding-left: 5px;
     margin-top: 5px;
-    margin-bottom: 10px;
+    margin-bottom: 0.833em;
     font-size: 10px;
     border-bottom: 1px dotted transparent;
     color: #bbb;
@@ -1498,7 +1482,7 @@ span.error {
     float: right;
     color: #bbb;
     clear: right;
-    font-size: 16px;
+    font-size: 1.333em;
     margin-right: 5px;
 }
 
@@ -4528,6 +4512,8 @@ select:hover, select:focus {
     width: 16px;
     height: 16px;
     display: block;
+    float:left;
+    
 }
 
 .faq .icon, .main_container .products a.faq .icon {

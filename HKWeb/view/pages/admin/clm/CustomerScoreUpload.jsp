@@ -32,6 +32,24 @@
 					</s:form>
 			</ul>
           </fieldset>
+        <fieldset class="right_label">
+            <legend>Upload Customer Category Score Excel</legend>
+            <ul>
+                <s:form beanclass="com.hk.web.action.admin.clm.CustomerScoreAction">
+                    <br/>
+                    <div >
+                        <li><label>File to Upload</label>
+                            <s:file name="categoryFileBean" size="30"/>
+                        </li>
+                        <li>
+
+                            <s:submit name="uploadCategoryScoreExcel" value="Upload"/>
+                            <br/>
+                            (Worksheet Name: CustomerScore &nbsp&nbsp&nbsp  Fields: userId &nbsp Baby, Beauty, Diabetes, Eye, Home Devices, Nutrition, Personal Care, Services, Sports scores)</li>
+                    </div>
+                </s:form>
+            </ul>
+        </fieldset>
 
 
 	</s:layout-component>
