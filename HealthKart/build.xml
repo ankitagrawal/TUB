@@ -149,6 +149,16 @@
 				<include name="*.jar" />
 			</fileset>
 		</copy>
+        <copy todir="${project.dist.dir}/WEB-INF/lib">
+            <fileset dir="${lib.axis.root}">
+                <include name="*.jar" />
+            </fileset>
+        </copy>
+        <copy todir="${project.dist.dir}/WEB-INF/lib">
+            <fileset dir="${lib.redis.root}">
+                <include name="*.jar" />
+            </fileset>
+        </copy>
 		<copy file="${project.web.dir}/resources/${project.env}/WEB-INF/robots.txt" tofile="${project.dist.dir}/robots.txt" failonerror="false" overwrite="true" />
 	</target>
 
