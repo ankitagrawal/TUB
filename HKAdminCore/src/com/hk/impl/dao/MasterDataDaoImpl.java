@@ -273,18 +273,18 @@ public class MasterDataDaoImpl implements MasterDataDao {
         return storeList;
     }
 
-    public List<State> getStateList() {
-    List<State>  stateList=   stateService.getAllStates();
-       Collections.sort(stateList);
-      return stateList;
+  public List<State> getStateList() {
+    List<State> stateList = stateService.getAllStates();
+    Collections.sort(stateList);
+    return stateList;
 
-    }
+  }
 
-    public List<City> getCityList() {
- List<City>  cityList=   cityService.getAllCity();
-       Collections.sort(cityList);
-      return cityList;
-    }
+  public List<City> getCityList() {
+    List<City> cityList = cityService.getAllCity();
+    Collections.sort(cityList);
+    return cityList;
+  }
 
     public List<Courier> getCourierList() {
         return courierDao.getCourierByIds(EnumCourier.getCourierIDs(EnumCourier.getCurrentlyApplicableCouriers()));
