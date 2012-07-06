@@ -1,7 +1,6 @@
 package com.hk.admin.pact.service.courier;
 
 import com.hk.domain.core.Pincode;
-import com.hk.domain.courier.CityCourierTAT;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.domain.order.Order;
@@ -32,6 +31,6 @@ public interface CourierService {
 
     public Courier getDefaultCourierByPincodeAndWarehouse(Pincode pincode, boolean isCOD);
 
-  public void saveCityCourierTAT(CityCourierTAT cityCourierTAT);
+
 
 }
