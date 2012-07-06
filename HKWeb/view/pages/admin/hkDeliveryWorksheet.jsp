@@ -56,7 +56,7 @@
 
                 /* reloading page on submitting it*/
                 $('#submitButton').click(function() {
-                    setTimeout('location.reload()',750)
+                    setTimeout('location.reload()',1200)
 
                 });
 
