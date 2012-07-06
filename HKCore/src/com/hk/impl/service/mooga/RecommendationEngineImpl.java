@@ -134,8 +134,6 @@ public class RecommendationEngineImpl implements RecommendationEngine {
             recommendedItems = getProducts(itemResponse);
         }catch(RemoteException ex){
 
-        }catch (RedisSystemException ex){
-
         }
         return  recommendedItems;
     }
@@ -151,8 +149,6 @@ public class RecommendationEngineImpl implements RecommendationEngine {
             String itemResponse = moogaStub.item_GetRecommendedItemsToItem(HK_MOOGA_KEY, pvId, "0","0","");
             recommendedItems = getProducts(itemResponse);
         }catch(RemoteException ex){
-
-        }catch (RedisSystemException ex){
 
         }
         return  recommendedItems;
