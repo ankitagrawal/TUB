@@ -33,6 +33,8 @@ import com.hk.pact.dao.MasterDataDao;
 import com.hk.pact.service.RoleService;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.CategoryService;
+import com.hk.pact.service.core.CityService;
+import com.hk.pact.service.core.StateService;
 import com.hk.pact.service.marketing.MarketingService;
 import com.hk.pact.service.store.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +42,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Repository
@@ -59,6 +62,11 @@ public class MasterDataDaoImpl implements MasterDataDao {
     private StoreService     storeService;
     @Autowired
     private CourierDao       courierDao;
+    @Autowired
+    private CityService cityService;
+  @Autowired
+    private StateService stateService;
+
 
     public List<PaymentStatus> getPaymentStatusList() {
         return getBaseDao().getAll(PaymentStatus.class);
@@ -266,11 +274,16 @@ public class MasterDataDaoImpl implements MasterDataDao {
     }
 
     public List<State> getStateList() {
-        return courierDao.getAll(State.class);
+    List<State>  stateList=   stateService.getAllStates();
+       Collections.sort(stateList);
+      return stateList;
+
     }
 
     public List<City> getCityList() {
-        return courierDao.getAll(City.class);
+ List<City>  cityList=   cityService.getAllCity();
+       Collections.sort(cityList);
+      return cityList;
     }
 
     public List<Courier> getCourierList() {
