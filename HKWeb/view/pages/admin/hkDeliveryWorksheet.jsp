@@ -54,6 +54,12 @@
                 /*setting focus on first Awb Number text onbodyload*/
                 $('#trackingIdList0').focus();
 
+                /* reloading page on submitting it*/
+                $('#submitButton').click(function() {
+                    setTimeout('location.reload()',500)
+
+                });
+
 
                 /*function to delete last row.*/
                 $('.removeRowButton').click(function() {
@@ -136,7 +142,7 @@
 
                         </li>
                         <li>
-                            <s:submit name="downloadDeliveryWorkSheet" value="Download Delivery Worksheet"
+                            <s:submit id="submitButton" name="downloadDeliveryWorkSheet" value="Download Delivery Worksheet"
                                       class="verifyData"/>
 
                         </li>
