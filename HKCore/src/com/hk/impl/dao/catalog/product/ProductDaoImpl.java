@@ -61,6 +61,13 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
         return getSession().createQuery("select p from Product p where p.primaryCategory.name = :category order by p.orderRanking asc").setString("category", category).list();
     }
 
+    public List<Product> getAllProductNotByCategory(List<String> categoryNames) {
+        return getSession().createQuery("select p from Product p where p.primaryCategory.name not in (:category) and deleted = :nonDeleted and isGoogleAdDisallowed != :adAllowed order by p.orderRanking asc")
+                .setParameterList("category", categoryNames)
+                .setParameter("adAllowed",true)
+                .setParameter("nonDeleted", false).list();
+    }
+
     /**
      * checks if a brand name exists or not
      * 
@@ -133,7 +140,7 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
                 }
                 criteria.add(Restrictions.in("id", productIds));
                 criteria.add(Restrictions.eq("deleted", false));
-                // criteria.add(Restrictions.eq("isGoogleAdDisallowed", false));
+                criteria.add(Restrictions.eq("isGoogleAdDisallowed", false));
                 criteria.addOrder(Order.asc("orderRanking"));
 
                 return list(criteria, page, perPage);

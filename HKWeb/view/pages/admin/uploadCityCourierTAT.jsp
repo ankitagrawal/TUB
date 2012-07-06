@@ -20,6 +20,10 @@
               <s:submit name="uploadCityExcel" value="Upload"/>
             </div>
           </li>
+          <li>
+            Excel Format CITY(city name) , COURIER_ID(int) ,CITY_TAT(decimal)  
+
+          </li>
              </div>
              </s:form>
          </ul>
