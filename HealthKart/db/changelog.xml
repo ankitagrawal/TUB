@@ -7686,6 +7686,24 @@
         <addForeignKeyConstraint baseColumnNames="store_id" baseTableName="store_product"  constraintName="fk_store_product_price_store1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="store"  referencesUniqueColumn="false"/>
     </changeSet>
 
+  <changeSet author="Rimal (generated)" id="1340180519838-1">
+    <addColumn tableName="email_campaign">
+      <column name="html_path" type="VARCHAR(400)"/>
+    </addColumn>
+  </changeSet>
+  <changeSet author="Rimal (generated)" id="1340180519838-2">
+    <addColumn tableName="email_campaign">
+      <column name="subject" type="VARCHAR(250)"/>
+    </addColumn>
+  </changeSet>
+  <changeSet author="Rimal (generated)" id="1340180519838-3">
+    <addColumn tableName="email_campaign">
+      <column name="template_ftl" type="TEXT"/>
+    </addColumn>
+  </changeSet>
+  <changeSet author="Rimal (generated)" id="1340180519838-4">
+    <dropNotNullConstraint columnDataType="VARCHAR(80)" columnName="template" tableName="email_campaign"/>
+  </changeSet>
     <changeSet author="Rahul (generated)" id="1340900951137-1">
         <createTable tableName="replacement_order">
             <column name="so_ro_id" type="INT">
@@ -7741,5 +7759,10 @@
       <sql>
         UPDATE `purchase_invoice` pi SET pi.`reconcilation_date`= DATE_ADD(pi.`create_date`, INTERVAL 3 DAY) WHERE `reconciled`=1 AND `reconcilation_date` IS NULL
       </sql>
-    </changeSet>
+    </changeSet>    
+    <changeSet author="Rimal (generated)" id="1341381517333-1">
+        <addColumn tableName="category_image">
+            <column name="position" type="VARCHAR(20)"/>
+        </addColumn>
+    </changeSet>    
 </databaseChangeLog>

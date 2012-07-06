@@ -42,6 +42,8 @@ public interface ProductService {
 
     public List<Product> getAllProductBySubCategory(String category);
 
+    public List<Product> getAllProductNotByCategory(List<String> categoryNames);
+
     public List<Product> getAllProductByBrand(String brand);
 
     public Page getAllProductsByCategoryAndBrand(String category, String brand, int page, int perPage);
