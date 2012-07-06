@@ -31,8 +31,6 @@
         <fileset file="${lib.root.dir}/mooga/log4j-1.2.8.jar" />
         <fileset file="${lib.root.dir}/mooga/saaj.jar" />
         <fileset file="${lib.root.dir}/mooga/wsdl4j-1.5.1.jar" />
-        <fileset file="${lib.root.dir}/redis/jedis-2.0.0.jar" />
-        <fileset file="${lib.root.dir}/redis/spring-data-redis-1.0.0.RELEASE.jar" />
         <fileset file="${project.common.dir}/dependencies/javaee.jar" />
         <fileset file="${project.common.dir}/dependencies/testng-5.8-jdk15.jar" />
         <fileset file="${project.common.dir}/dist/hk-common.jar" />
