@@ -55,8 +55,9 @@
                 $('#trackingIdList0').focus();
 
                 /* reloading page on submitting it*/
-                $('#submitButton').click(function() {
-                    setTimeout('location.reload()',1200)
+                $('.reloadLink').click(function() {
+                    location.reload();
+                    return false;
 
                 });
 
@@ -139,12 +140,15 @@
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <a href="hkDeliveryWorksheet.jsp#" class="removeRowButton"
                                style="font-size:1.2em;color:blue;">Remove row</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="hkDeliveryWorksheet.jsp#" class="reloadLink"
+                                                           style="font-size:1.2em;color:blue;">Reload</a>
+
 
                         </li>
                         <li>
                             <s:submit id="submitButton" name="downloadDeliveryWorkSheet" value="Download Delivery Worksheet"
                                       class="verifyData"/>
-
                         </li>
                     </ul>
                 </fieldset>
