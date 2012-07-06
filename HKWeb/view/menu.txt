@@ -361,12 +361,13 @@
 --/eye/sunglasses/women
 --/eye/sunglasses/men
 --/eye/sunglasses/unisex
---/eye/sunglasses/swimming
+--/eye/sunglasses/kids    :   Kids
 -/eye/eyeglasses :Eyeglasses
 --/eye/eyeglasses/half-rim :Half Rim
 --/eye/eyeglasses/full-rim :Full Rim
 --/eye/eyeglasses/frameless
 --/eye/eyeglasses/reading-glasses :Reading Glasses
+--/eye/eyeglasses/kids :  Kids
 -/eye/accessories
 --/eye/accessories/solutions
 --/eye/accessories/lens-case
