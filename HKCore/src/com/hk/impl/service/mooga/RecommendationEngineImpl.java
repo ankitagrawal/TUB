@@ -164,7 +164,7 @@ public class RecommendationEngineImpl implements RecommendationEngine {
                     "1","0",moogaAction,userId, productVariantId, "IT",
                     "0","0","0","0","0","0","0","0");
 
-            String result = moogaStub.trans_NotifyTrans(HK_MOOGA_KEY,"OFBiz.NotifyTransaction",params);
+            String result = moogaStub.trans_NotifyTrans(HK_MOOGA_KEY,"OFBiz.NotifyTransaction", LEFT_OPERATOR + params + RIGHT_OPERATOR);
             result = "";
         }catch(RemoteException ex){
             String err = ex.getMessage();
