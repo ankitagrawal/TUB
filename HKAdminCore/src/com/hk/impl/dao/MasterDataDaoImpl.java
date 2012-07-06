@@ -40,10 +40,7 @@ import com.hk.pact.service.store.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Repository
 public class MasterDataDaoImpl implements MasterDataDao {
@@ -282,7 +279,7 @@ public class MasterDataDaoImpl implements MasterDataDao {
 
   public List<City> getCityList() {
     List<City> cityList = cityService.getAllCity();
-    Collections.sort(cityList);
+    Collections.sort(cityList, new City());
     return cityList;
   }
 
