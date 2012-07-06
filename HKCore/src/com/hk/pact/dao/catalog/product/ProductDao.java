@@ -31,6 +31,8 @@ public interface ProductDao extends BaseDao {
      */
     public List<Product> getAllProductByCategory(String category);
 
+    public List<Product> getAllProductNotByCategory(List<String> category);
+
     /**
      * checks if a brand name exists or not
      * 
