@@ -3,8 +3,10 @@ package com.hk.web.action.admin.replacementOrder;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.order.ReplacementOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.admin.pact.service.shippingOrder.ReplacementOrderService;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 import net.sourceforge.stripes.action.Resolution;
@@ -27,10 +29,13 @@ public class ReplacementOrderAction extends BaseAction {
   private Long shippingOrderId;
   private ShippingOrder shippingOrder;
   private Boolean isRto;
-  private List<LineItem> lineItems = new ArrayList<LineItem>();
+  private ArrayList<LineItem> lineItems = new ArrayList<LineItem>();
 
   @Autowired
   ShippingOrderService shippingOrderService;
+
+  @Autowired
+  ReplacementOrderService replacementOrderService;
 
   @DefaultHandler
   public Resolution pre(){
@@ -46,6 +51,7 @@ public class ReplacementOrderAction extends BaseAction {
   }
 
   public Resolution createReplacementOrder(){
+    ReplacementOrder replacementOrder = replacementOrderService.createReplaceMentOrder(shippingOrder, lineItems, isRto);
     return new ForwardResolution("/pages/admin/createReplacementOrder.jsp");
   }
 
@@ -73,11 +79,11 @@ public class ReplacementOrderAction extends BaseAction {
     isRto = rto;
   }
 
-  public List<LineItem> getLineItems() {
+  public ArrayList<LineItem> getLineItems() {
     return lineItems;
   }
 
-  public void setLineItems(List<LineItem> lineItems) {
+  public void setLineItems(ArrayList<LineItem> lineItems) {
     this.lineItems = lineItems;
   }
 }

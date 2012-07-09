@@ -15,11 +15,13 @@
         $('#shippingOrderId').focus();
 
         $('#is-replacement-radio').click(function(event) {
+          event.preventDefault();
           $('#is-rto').hide();
           $('#is-replacement').slideDown();
         });
 
         $('#is-rto-radio').click(function(event) {
+          event.preventDefault();
           $('#is-replacement').hide();
           $('#is-rto').slideDown();
         });
@@ -60,22 +62,26 @@
           </tr>
           <tr>
             <td>
-              <b>Is RTO:</b>
+
             </td>
             <td>
-              <s:radio value="1" name="isRto" id="is-rto-radio"/>
+              <s:link href="#"  id="is-rto-radio">
+                <b>Is RTO:</b>
+              </s:link>
             </td>
             <td>
-              <b>Is Replacement:</b>
+              <s:link href="#" id="is-replacement-radio">
+                <b>Is Replacement:</b>
+              </s:link>
             </td>
-            <td>
-              <s:radio value="0" name="isRto" id="is-replacement-radio"/>
-            </td>
+            <td></td>
           </tr>
         </table>
       </fieldset>
 
       <fieldset style="display:none;" id="is-rto">
+      <s:form beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction">
+        <s:hidden name="shippingOrder" value="${replacementOrderBean.shippingOrder.id}" />
         <table border="1">
           <thead>
           <th>S No.</th>
@@ -83,22 +89,27 @@
           <th>Original Qty</th>
           <th>Replacement Qty</th>
           </thead>
-          <s:form beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction">
             <s:hidden name="isRto" value="1"/>
             <c:forEach items="${replacementOrderBean.shippingOrder.lineItems}" var="lineItem" varStatus="lineItemCtr">
+              <s:hidden name="lineItems[${lineItemCtr.index}]" value="${lineItem}" />
               <tr>
                 <td>${lineItemCtr.count}</td>
                 <td>${lineItem.cartLineItem.productVariant.product.name}</td>
                 <td>${lineItem.qty}</td>
-                <td>${lineItem.qty}</td>
+                <td>
+                  <s:hidden name="lineItems[${lineItemCtr.index}].qty" value="${lineItem.qty}" />
+                  ${lineItem.qty}
+                </td>
               </tr>
             </c:forEach>
-            <s:submit name="createReplacementOrder" value="Generate Replacement Order"/>
-          </s:form>
         </table>
+        <s:submit name="createReplacementOrder" value="Generate Replacement Order"/>
+        </s:form>
       </fieldset>
 
       <fieldset style="display:none;" id="is-replacement">
+      <s:form beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction">
+        <s:hidden name="shippingOrder" value="${replacementOrderBean.shippingOrder.id}" />        
         <table border="1">
           <thead>
           <th>S No.</th>
@@ -106,19 +117,21 @@
           <th>Original Qty</th>
           <th>Replacement Qty</th>
           </thead>
-          <s:form beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction">
             <s:hidden name="isRto" value="0"/>
             <c:forEach items="${replacementOrderBean.shippingOrder.lineItems}" var="lineItem" varStatus="lineItemCtr">
+              <s:hidden name="lineItems[${lineItemCtr.index}]" value="${lineItem}" />
               <tr>
                 <td>${lineItemCtr.count}</td>
-                <td>${lineItem.cartLineItem.productVariant.product.name}</td>
+                <td>
+                  ${lineItem.cartLineItem.productVariant.product.name}
+                </td>
                 <td>${lineItem.qty}</td>
-                <td><s:text name="lineItems[${lineItemCtr}].qty" value="0"></s:text></td>
+                <td><s:text name="lineItems[${lineItemCtr.index}].qty" value="0"></s:text></td>
               </tr>
             </c:forEach>
-            <s:submit name="createReplacementOrder" value="Generate Replacement Order"/>
-          </s:form>
         </table>
+        <s:submit name="createReplacementOrder" value="Generate Replacement Order"/>
+        </s:form>
       </fieldset>
 
     </c:if>
