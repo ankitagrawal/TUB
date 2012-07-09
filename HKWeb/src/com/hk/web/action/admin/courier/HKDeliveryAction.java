@@ -262,14 +262,22 @@ public class HKDeliveryAction extends BaseAction {
                 cell.setCellStyle(style_data);
             }
 
-            name = shippingOrderList.get(index).getBaseOrder().getAddress().getName();
+            //fetching contact name,contact-number for COD/Non COD
+            paymentMode = shippingOrderList.get(index).getBaseOrder().getPayment().getPaymentMode().getName();
+            if (paymentMode.equalsIgnoreCase("COD")) {
+                name = shippingOrderList.get(index).getBaseOrder().getPayment().getContactName();
+                phone = shippingOrderList.get(index).getBaseOrder().getPayment().getContactNumber();
+
+            } else {
+                name = shippingOrderList.get(index).getBaseOrder().getAddress().getName();
+                phone = shippingOrderList.get(index).getBaseOrder().getAddress().getPhone();
+            }
+
             name=name.toUpperCase();
             line1 = shippingOrderList.get(index).getBaseOrder().getAddress().getLine1();
             line2 = shippingOrderList.get(index).getBaseOrder().getAddress().getLine2();
             city = shippingOrderList.get(index).getBaseOrder().getAddress().getCity();
             pincode = shippingOrderList.get(index).getBaseOrder().getAddress().getPin();
-            phone = shippingOrderList.get(index).getBaseOrder().getAddress().getPhone();
-            paymentMode = shippingOrderList.get(index).getBaseOrder().getPayment().getPaymentMode().getName();
             paymentAmt = shippingOrderList.get(index).getAmount();
             address = "Name:" + name + "\n" + "Address:" + line1 + "," + "\n" + line2 + "," + "\n" + city + "-" + pincode + "\n" + "Phone:" + phone;
             receivedDetails = "Name:" + "\n" + "Relation:" + "\n" + "Mobile No.:" + "\n" + "Received Date,Time:" + "\n" + "Sign";
