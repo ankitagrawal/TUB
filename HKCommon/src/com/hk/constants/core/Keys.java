@@ -90,6 +90,7 @@ public class Keys {
         public static final String barcodeMumbai                = "barcodeMumbai";
 
         public static final String solrUrl                      = "solrUrl";
+        public static final String moogaEnabled                 = "moogaOn";
         public static final String moogaCache                   = "moogaCache";
 
     }

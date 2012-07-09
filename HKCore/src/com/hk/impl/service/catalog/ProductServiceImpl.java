@@ -5,11 +5,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.constants.core.Keys;
 import com.hk.pact.service.mooga.RecommendationEngine;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
 import net.sourceforge.stripes.controller.StripesFilter;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.akube.framework.dao.Page;
@@ -42,6 +44,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private RecommendationEngine recommendationService;
+
+    @Value("#{hkEnvProps['" + Keys.Env.moogaEnabled + "']}")
+    private Boolean moogaOn;
 
     public Product getProductById(String productId) {
         return getProductDAO().getProductById(productId);
@@ -189,17 +194,21 @@ public class ProductServiceImpl implements ProductService {
     return true;
   }
 
-   public List<Product> getRecommendedProducts(String pvID){
-       List<String> pvIdList = recommendationService.getRecommendedProducts(pvID);
+   public List<Product> getRecommendedProducts(String pId){
        List<Product> products = new ArrayList<Product>();
-       Iterator it = pvIdList.iterator();
-       int productCount = 0;
-       while (it.hasNext() && (productCount < MAX_PRODUCT_LIMIT)) {
-           Product product = productDAO.getProductById((String)it.next());
-           if ((product != null) && !product.isDeleted()){
-               products.add(product);
-               ++productCount;
+       if (moogaOn){
+           List<String> pvIdList = recommendationService.getRecommendedProducts(pId);
+           Iterator it = pvIdList.iterator();
+           int productCount = 0;
+           while (it.hasNext() && (productCount < MAX_PRODUCT_LIMIT)) {
+               Product product = productDAO.getProductById((String)it.next());
+               if ((product != null) && !product.isDeleted()){
+                   products.add(product);
+                   ++productCount;
+               }
            }
+       }else{
+           products = productDAO.getRelatedProducts(getProductDAO().getProductById(pId));
        }
        return products;
    }
