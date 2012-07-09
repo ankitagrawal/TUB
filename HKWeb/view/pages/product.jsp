@@ -491,16 +491,16 @@
         People who bought this also bought these products
       </h4>
       <c:forEach items="${hk:getRecommendedProducts(product.id)}" var="relatedProduct">
-        <c:if test="${!relatedProduct.deleted}">
-          <s:layout-render name="/layouts/embed/_productThumb.jsp" productId="${relatedProduct.id}"/>
-        </c:if>
-      </c:forEach>
+    <%--<c:if test="${!relatedProduct.deleted}">--%>
+            <s:layout-render name="/layouts/embed/_productThumb.jsp" productId="${relatedProduct.id}"/>
+          <%--</c:if>--%>
+        </c:forEach>
 
-      <div class="floatfix"></div>
-      <a class='go_to_top' href='#top'>go to top &uarr;</a>
+        <div class="floatfix"></div>
+        <a class='go_to_top' href='#top'>go to top &uarr;</a>
 
-    </div>
-  <%--</c:if>--%>
+      </div>
+    <%--</c:if>--%>
 </s:layout-component>
 
 <%--<s:layout-component name="foot_price">
