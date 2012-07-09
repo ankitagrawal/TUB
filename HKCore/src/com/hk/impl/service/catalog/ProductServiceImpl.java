@@ -208,7 +208,7 @@ public class ProductServiceImpl implements ProductService {
                }
            }
        }else{
-           products = productDAO.getRelatedProducts(getProductDAO().getProductById(pId));
+           products = getProductDAO().getProductById(pId).getRelatedProducts();
        }
        return products;
    }
