@@ -1,9 +1,6 @@
 package com.hk.impl.service.catalog;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import com.hk.constants.core.Keys;
 import com.hk.pact.service.mooga.RecommendationEngine;
@@ -194,12 +191,15 @@ public class ProductServiceImpl implements ProductService {
     return true;
   }
 
-   public List<Product> getRecommendedProducts(String pId){
+   public Map<String, List<Product>> getRecommendedProducts(String pId){
+       Map<String, List<Product>> productsResult = new HashMap<String, List<Product>>();
        List<Product> products = new ArrayList<Product>();
+       String source = "";
        if (moogaOn){
            List<String> pvIdList = recommendationService.getRecommendedProducts(pId);
            Iterator it = pvIdList.iterator();
            int productCount = 0;
+           source = "MOOGA";
            while (it.hasNext() && (productCount < MAX_PRODUCT_LIMIT)) {
                Product product = productDAO.getProductById((String)it.next());
                if ((product != null) && !product.isDeleted()){
@@ -207,9 +207,13 @@ public class ProductServiceImpl implements ProductService {
                    ++productCount;
                }
            }
-       }else{
-           products = getProductDAO().getProductById(pId).getRelatedProducts();
        }
-       return products;
+
+       if (!moogaOn || (products.size() == 0)){
+           products = getProductDAO().getProductById(pId).getRelatedProducts();
+           source = "DB";
+       }
+       productsResult.put(source, products);
+       return productsResult;
    }
 }

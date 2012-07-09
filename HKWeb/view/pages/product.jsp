@@ -491,8 +491,20 @@
         People who bought this also bought these products
       </h4>
       <c:forEach items="${hk:getRecommendedProducts(product.id)}" var="relatedProduct">
+          <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_CATALOG%>">
+          <h6 style="color: red" title="Recommended Product Source">
+              source = ${relatedProduct.key}
+              products =
+              <c:forEach var="product" items="${relatedProduct.value}">
+                  ${product.id}
+              </c:forEach>
+          </h6>
+          </shiro:hasPermission>
+
     <%--<c:if test="${!relatedProduct.deleted}">--%>
-            <s:layout-render name="/layouts/embed/_productThumb.jsp" productId="${relatedProduct.id}"/>
+        <c:forEach var="product" items="${relatedProduct.value}">
+            <s:layout-render name="/layouts/embed/_productThumb.jsp" productId="${product.id}"/>
+        </c:forEach>
           <%--</c:if>--%>
         </c:forEach>
 
