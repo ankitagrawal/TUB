@@ -70,7 +70,6 @@ public class HKDeliveryAction extends BaseAction {
                 }
                 shippingOrderList.add(shippingOrder);
             }
-            continue;
         }
         totalPackets=shippingOrderList.size();
 

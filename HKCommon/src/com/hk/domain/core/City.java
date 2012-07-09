@@ -11,7 +11,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "city")
-public class City implements java.io.Serializable{
+public class City implements java.io.Serializable,Comparable<City>{
 
   @Id
   @Column(name = "id", unique = true, nullable = false)
@@ -41,6 +41,11 @@ public class City implements java.io.Serializable{
 
   @Override
   public String toString() {
-    return id != null ? id.toString() : "";
+    return id == null ? "" : id.toString();
+  }
+
+  public int compareTo(City city) {
+    return this.getName().compareTo(city.getName());
+
   }
 }

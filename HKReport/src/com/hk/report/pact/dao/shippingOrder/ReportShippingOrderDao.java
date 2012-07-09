@@ -11,7 +11,7 @@ import com.hk.report.dto.order.reconcilation.ReconcilationReportDto;
 
 public interface ReportShippingOrderDao {
     
-    public List<ReconcilationReportDto> findReconcilationReportByDate(Date startDate, Date endDate, String paymentProcess, Courier courier, Long warehouseId);
+    public List<ReconcilationReportDto> findReconcilationReportByDate(Date startDate, Date endDate, String paymentProcess, Courier courier, Long warehouseId, Long shippingOrderStatusId);
     
     public List<ShippingOrder> getDeliveredSOForCourierByDate(Date startDate, Date endDate, Long courierId);
     
