@@ -24,24 +24,38 @@
         <s:form beanclass="com.hk.web.action.core.subscription.AddSubscriptionAction" class="addSubscriptionForm">
           <fieldset>
             min frequency: ${sp.minFrequencyDays} days - max frequency: ${sp.maxFrequencyDays} days
-            <br/>
+            <br/>       <br/>
 
-            Start Date: <s:text  name="subscription.startDate" id="subscriptionStartDate" />
-            <br/>
-            subscription period(days): <s:text name="subscription.subscriptionPeriodDays" id="subscriptionPeriod"/>
-            <br/>
-            frequency(days): <s:text name="subscription.frequencyDays" id="subscriptionFrequency" />
-            <br/>
+           <div id="ui-datepicker-div"> Start Date: <s:text class="ui-datepicker-t"  name="subscription.startDate" id="subscriptionStartDate" /></div>
+            <br/>  <br/>
+            subscription period(days): <s:text name="subscription.subscriptionPeriodDays" id="subscriptionPeriod" value="180" style="width: 30px; height: 18px;"/>
+            &nbsp;
+            frequency(days): <s:text name="subscription.frequencyDays" id="subscriptionFrequency" value="${sp.minFrequencyDays}" style="width: 30px; height: 18px;"/>
+            &nbsp;
             <s:hidden name="subscription.productVariant" value="${productVariant.id}"/>
-            total qty:<s:text class="qty" name="subscription.qty"  id="subscriptionQty"/>
-            <br/>
-            qty per delivery:<s:text class="qtyPerDelivery" name="subscription.qtyPerDelivery"  id="subscriptionQtyPerDelivery"/>
-            <s:submit name="addSubscription" value="subscribe" onclick="closeSubscriptionWindow();" />
+
+            qty per delivery:
+            <select name="subscription.qtyPerDelivery" id="subscriptionQtyPerDelivery"  >
+              <c:set var="tempQty" value="1"/>
+              <%
+                for(int i=1;i<=sa.getSubscriptionProduct().getMaxQtyPerDelivery();i++){
+              %>
+              <option value="<%=i%>"><%=i%></option>
+             <%
+                }
+              %>
+
+            </select>
+            <%--<s:text class="qtyPerDelivery" name="subscription.qtyPerDelivery"  id="subscriptionQtyPerDelivery" style="width: 25px; height: 18px;"/>--%>
+            &nbsp;
+            total qty:<s:text class="qty" name="subscription.qty"  id="subscriptionQty" disabled="true" style="width: 25px; height: 18px; border:0px"/>
+
+            <s:submit name="addSubscription" value="subscribe"  />
           </fieldset>
         </s:form>
       </div>
-      <span >Subscribe and save <fmt:formatNumber value="${sp.subscriptionDiscount180Days}" maxFractionDigits="2"/>  to   <fmt:formatNumber value="${sp.subscriptionDiscount360Days}" maxFractionDigits="2"/> &#37;   </span>
-
+      <span >Subscribe and save <fmt:formatNumber value="${sp.subscriptionDiscount180Days}" maxFractionDigits="2"/>  to   <fmt:formatNumber value="${sp.subscriptionDiscount360Days}" maxFractionDigits="2"/> &#37;.   </span>
+      &nbsp; <span> <fmt:formatNumber value="${sp.subscriptionDiscount180Days}" maxFractionDigits="2"/>&#37; for 180-360 days and <fmt:formatNumber value="${sp.subscriptionDiscount360Days}" maxFractionDigits="2"/>&#37; for 360 day plans </span>
       <script type="text/javascript">
         function _addSubscription(res) {
           if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
@@ -61,10 +75,27 @@
         }
         $('.addSubscriptionForm').ajaxForm({dataType: 'json', success: _addSubscription});
 
-          $( "#subscriptionStartDate" ).datepicker({ minDate: -20, maxDate: "+1M +10D" });
+          $( "#subscriptionStartDate" ).datepicker({ minDate: 0, maxDate: "+2M " });
         function closeSubscriptionWindow(){
           $("#subscriptionWindow").jqmHide();
         }
+
+        $('#subscriptionQtyPerDelivery').change(function(){
+
+        });
+        $('#subscriptionFrequency').change(function(){
+
+        });
+        $('#subscriptionPeriod').change(function(){
+              var frequency=$('#subscriptionFrequency').val();
+              var qtyPerDelivery=$('#subscriptionQtyPerDelivery').val();
+              var subscriptionPeriod=$('#subscriptionPeriod').val();
+             $('#subscriptionQty')[0].value=  Math.round(subscriptionPeriod/frequency)*qtyPerDelivery;
+        }).change();
+
+        $('#subscriptionFrequency').jStepper({minValue:${sp.minFrequencyDays},maxValue:${sp.maxFrequencyDays} });
+        $('#subscriptionPeriod').jStepper({minValue:180,maxValue:450 });
+        $('#subscriptionQty')[0].value=Math.round($('#subscriptionPeriod').val()*$('#subscriptionQtyPerDelivery').val()/$('#subscriptionFrequency').val()) ;
       </script>
     </div>
 

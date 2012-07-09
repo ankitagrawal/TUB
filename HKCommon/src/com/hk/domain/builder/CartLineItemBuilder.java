@@ -4,6 +4,7 @@ import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.PricingConstants;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.CartLineItem;
+import com.hk.domain.subscription.Subscription;
 
 public class CartLineItemBuilder {
 
@@ -44,6 +45,15 @@ public class CartLineItemBuilder {
 
   public CartLineItemBuilder discountOnHkPrice(Double discount) {
     this.discountOnHkPrice = discount;
+    return this;
+  }
+
+  public CartLineItemBuilder forSubscription(Subscription subscription){
+    this.hkPrice =subscription.getHkPriceAtSubscription();
+    this.discountOnHkPrice = subscription.getMarkedPriceAtSubscription()*subscription.getSubscriptionDiscountPercent()/100;
+    this.markedPrice = subscription.getMarkedPriceAtSubscription();
+    this.forVariantQty(subscription.getProductVariant(), new Long(subscription.getQty()));
+    this.enumCartLineItemType=EnumCartLineItemType.Subscription;
     return this;
   }
 

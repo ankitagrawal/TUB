@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.hk.constants.subscription.EnumSubscriptionStatus;
+import com.hk.core.fliter.SubscriptionFilter;
 import com.hk.domain.subscription.Subscription;
 import com.hk.pact.service.subscription.SubscriptionService;
 import org.slf4j.Logger;
@@ -317,10 +318,10 @@ public class OrderManager {
          */
 
         // apply pricing and save cart line items
-      List<Subscription> subscriptions = subscriptionService.getSubscriptions(order, EnumSubscriptionStatus.InCart.asSubscriptionStatus());
+      Set<Subscription> inCartSubscriptions = new SubscriptionFilter(order.getSubscriptions()).addSubscriptionStatus(EnumSubscriptionStatus.InCart).filter();
       Set<CartLineItem> cartLIFromPricingEngine;
-      if(subscriptions !=null && subscriptions.size()>0){
-        cartLIFromPricingEngine =getPricingEngine().calculateAndApplyPricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), order.getRewardPointsUsed(),subscriptions);
+      if(inCartSubscriptions !=null && inCartSubscriptions.size()>0){
+        cartLIFromPricingEngine =getPricingEngine().calculateAndApplyPricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), order.getRewardPointsUsed(),inCartSubscriptions);
         subscriptionService.placeSubscriptions(order);
       }else {
         cartLIFromPricingEngine =getPricingEngine().calculateAndApplyPricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), order.getRewardPointsUsed());
@@ -533,7 +534,7 @@ public class OrderManager {
     public Order recalAndUpdateAmount(Order order) {
         OfferInstance offerInstance = order.getOfferInstance();
         PricingDto pricingDto;
-      List<Subscription> subscriptions = subscriptionService.getSubscriptions(order, EnumSubscriptionStatus.InCart.asSubscriptionStatus());
+      Set<Subscription> subscriptions = new SubscriptionFilter(order.getSubscriptions()).addSubscriptionStatus(EnumSubscriptionStatus.InCart).filter();
       if(subscriptions !=null && subscriptions.size()>0){
         pricingDto = new PricingDto(getPricingEngine().calculatePricing(order.getCartLineItems(), offerInstance, order.getAddress(), order.getRewardPointsUsed(),subscriptions),
             order.getAddress());

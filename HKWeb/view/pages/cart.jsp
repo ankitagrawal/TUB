@@ -78,7 +78,8 @@
         $.getJSON($('#lineItemUpdateLink').attr('href'), {'cartLineItem':lineItemId,'cartLineItem.qty':0}, function(responseData) {
           removeItem(lineItemStyleId);
           count = Math.round($('#productsInCart').html());
-          if (count == 1) {
+          simpleProductCount = Math.round($('#simpleProductsInCart').html())
+          if (count == 1 || simpleProductCount==1) {
             location.reload();
           }
           else if (count > 2) {
@@ -166,6 +167,12 @@
         $('#summaryPromoDiscountContainer').show();
       }
       $('#summaryPromoDiscount').html('Rs. ' + responseData.data.totalPromoDiscount);
+      if (responseData.data.subscriptionDiscount == "0.00") {
+        $('#summarySubscriptionDiscountContainer').hide();
+      } else {
+        $('#summarySubscriptionDiscountContainer').show();
+      }
+      $('#totalSubscriptionDiscount').html('Rs. ' + responseData.data.subscriptionDiscount);
 
       if (responseData.data.totalCashback == "0.00") {
         $('#summaryTotalCashbackContainer').hide();
@@ -246,13 +253,16 @@
 </s:layout-component>
 
 <c:if test="${cartAction.pricingDto.productLineCount >= 1}">
+
 <s:layout-component name="cart_items">
 <div class='products_container' style="min-height: 500px;">
 <c:if test="${cartAction.pricingDto.subscriptionLineCount>=1}">
+  <span id="subscriptionsInCart" style="display: none;">${cartAction.pricingDto.subscriptionLineCount}</span>
   <s:layout-render name="/layouts/embed/_subscriptionCart.jsp"
                    subscriptions="${cartAction.subscriptions}" />
 </c:if>
 <c:if test="${(cartAction.pricingDto.productLineCount-cartAction.pricingDto.subscriptionLineCount)>=1}">
+<span id="simpleProductsInCart" style="display: none;">${(cartAction.pricingDto.productLineCount-cartAction.pricingDto.subscriptionLineCount)}</span>
 <div class='tabletitle'>
   <div class='name'>
     Product
@@ -573,6 +583,13 @@
           </c:if>
         </span>
   <br/>
+
+      <span class="special" id="summarySubscriptionDiscountContainer"
+            style="display: ${cartAction.pricingDto.subscriptionDiscount > 0 ? 'block':'none'};">
+        <span style="font-size: 11px;">Subscription Discount</span>: <br/><strong>(<span id="totalSubscriptionDiscount"
+                                                                                  class="green"><fmt:formatNumber
+          value="${cartAction.pricingDto.subscriptionDiscount}" type="currency" currencySymbol="Rs. "/></span>)</strong>
+      </span>
       <span class="special" id="summaryPromoDiscountContainer"
             style="display: ${cartAction.pricingDto.totalPromoDiscount > 0 ? 'block':'none'};">
         <span style="font-size: 11px;">Promo Discount</span>: <br/><strong>(<span id="summaryPromoDiscount"

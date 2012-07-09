@@ -35,6 +35,9 @@ public class SubscriptionProduct{
    @Column(name = "max_frequency_days", nullable = false)
   private int maxFrequencyDays;
 
+  @Column(name = "max_qty_per_delivery", nullable = false)
+  private int maxQtyPerDelivery;
+
   public Long getId() {
     return id;
   }
@@ -81,5 +84,13 @@ public class SubscriptionProduct{
 
   public void setMaxFrequencyDays(int maxFrequencyDays) {
     this.maxFrequencyDays = maxFrequencyDays;
+  }
+
+  public int getMaxQtyPerDelivery() {
+    return maxQtyPerDelivery;
+  }
+
+  public void setMaxQtyPerDelivery(int maxQtyPerDelivery) {
+    this.maxQtyPerDelivery = maxQtyPerDelivery;
   }
 }

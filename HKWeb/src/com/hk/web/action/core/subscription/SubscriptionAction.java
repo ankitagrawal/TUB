@@ -9,6 +9,7 @@ import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.subscription.SubscriptionProductService;
 import com.hk.pact.service.subscription.SubscriptionService;
 import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.validation.Validate;
 import net.sourceforge.stripes.validation.ValidationErrorHandler;
 import net.sourceforge.stripes.validation.ValidationErrors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ public class SubscriptionAction extends BaseAction implements ValidationErrorHan
   //private static Logger logger = Logger.getLogger(AddToCartAction.class);
 
   SubscriptionProduct subscriptionProduct;
+  @Validate(required = true)
   ProductVariant productVariant;
   Product product;
 

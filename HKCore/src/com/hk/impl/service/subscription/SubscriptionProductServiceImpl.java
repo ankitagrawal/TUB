@@ -1,5 +1,6 @@
 package com.hk.impl.service.subscription;
 
+import com.hk.domain.catalog.product.ProductVariant;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,10 @@ public class SubscriptionProductServiceImpl implements SubscriptionProductServic
   @Transactional
   public SubscriptionProduct findByProduct(Product product){
        return subscriptionProductDao.findByProduct(product);
+  }
+
+  public SubscriptionProduct findByProductVariant(ProductVariant productVariant){
+    return  this.findByProduct(productVariant.getProduct());
   }
 
 }

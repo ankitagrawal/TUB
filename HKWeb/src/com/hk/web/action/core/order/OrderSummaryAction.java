@@ -1,10 +1,11 @@
 package com.hk.web.action.core.order;
 
 import java.util.List;
+import java.util.Set;
 
 import com.hk.constants.subscription.EnumSubscriptionStatus;
+import com.hk.core.fliter.SubscriptionFilter;
 import com.hk.domain.subscription.Subscription;
-import com.hk.pact.service.subscription.SubscriptionService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.LocalizableMessage;
@@ -58,8 +59,6 @@ public class OrderSummaryAction extends BaseAction {
   PricingEngine          pricingEngine;
   @Autowired
   ReferrerProgramManager referrerProgramManager;
-  @Autowired
-  SubscriptionService subscriptionService;
 
   @Session(key = HealthkartConstants.Session.useRewardPoints)
   private boolean        useRewardPoints;
@@ -106,9 +105,9 @@ public class OrderSummaryAction extends BaseAction {
       return new RedirectResolution(SelectAddressAction.class);
     }
 
-    List<Subscription> subscriptions = subscriptionService.getSubscriptions(order, EnumSubscriptionStatus.InCart.asSubscriptionStatus());
-    if(subscriptions !=null && subscriptions.size()>0){
-      pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), rewardPointsUsed, subscriptions), order.getAddress());
+    Set<Subscription> inCartSubscriptions = new SubscriptionFilter(order.getSubscriptions()).addSubscriptionStatus(EnumSubscriptionStatus.InCart).filter();
+    if(inCartSubscriptions !=null && inCartSubscriptions.size()>0){
+      pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), rewardPointsUsed, inCartSubscriptions), order.getAddress());
     }else {
       pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), rewardPointsUsed), order.getAddress());
     }
@@ -133,6 +132,11 @@ public class OrderSummaryAction extends BaseAction {
       Double payable = pricingDto.getGrandTotalPayable();
       if (payable < codMinAmount || payable > codMaxAmount) {
         codAllowed = false;
+      }
+    }
+    if(codAllowed){
+      if(inCartSubscriptions!=null && inCartSubscriptions.size()>0){
+        codAllowed=false;
       }
     }
 
@@ -216,11 +220,4 @@ public class OrderSummaryAction extends BaseAction {
     this.availableCourierList = availableCourierList;
   }
 
-  public SubscriptionService getSubscriptionService() {
-    return subscriptionService;
-  }
-
-  public void setSubscriptionService(SubscriptionService subscriptionService) {
-    this.subscriptionService = subscriptionService;
-  }
 }

@@ -252,6 +252,9 @@
 
                 <p>The net payable is not in the range of <strong>Rs.
                         ${codMinAmount} - Rs. ${codMaxAmount}</strong></p>
+
+              <p><strong>OR</strong></p>
+               <p> you have subscriptions in your cart</p>
             </c:otherwise>
         </c:choose></div>
     <div id="tabs_content5" class="tab_content" style="display: none;">

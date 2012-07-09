@@ -7709,6 +7709,9 @@
             <column name="subscription_discount_360days" type="DECIMAL(7,4)">
                 <constraints nullable="false"/>
             </column>
+            <column name="max_qty_per_delivery" type="INT">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
     </changeSet>
     <changeSet author="Pradeep (generated)" id="1340000829379-7">

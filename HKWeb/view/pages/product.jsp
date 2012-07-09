@@ -78,6 +78,7 @@
     <c:if test="${!empty subscriptionProduct}">
         <link href="${pageContext.request.contextPath}/css/jquery-ui.css" rel="stylesheet" type="text/css"/>
         <script type="text/javascript" src="<hk:vhostJs/>/js/jquery-ui.min.js"></script>
+      <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.hkCommonPlugins.js"></script>
     </c:if>
 
 

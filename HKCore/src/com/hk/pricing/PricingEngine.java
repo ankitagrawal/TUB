@@ -77,7 +77,7 @@ public class PricingEngine {
      * @param subscriptions
      * @return
      */
-    public Set<CartLineItem> calculatePricing(final Set<CartLineItem> lineItems, OfferInstance offerInstance, Address address, Double redeemRewardPoints,List<Subscription> subscriptions) {
+    public Set<CartLineItem> calculatePricing(final Set<CartLineItem> lineItems, OfferInstance offerInstance, Address address, Double redeemRewardPoints,Set<Subscription> subscriptions) {
 
         OfferInstance copiedInstance = null;
 
@@ -117,7 +117,7 @@ public class PricingEngine {
         return pricing(cartLineItems, offerInstance, address, redeemRewardPoints);
     }
 
-  public Set<CartLineItem> calculateAndApplyPricing(final Set<CartLineItem> cartLineItems, OfferInstance offerInstance, Address address, Double redeemRewardPoints, List<Subscription> subscriptions) {
+  public Set<CartLineItem> calculateAndApplyPricing(final Set<CartLineItem> cartLineItems, OfferInstance offerInstance, Address address, Double redeemRewardPoints, Set<Subscription> subscriptions) {
       if(subscriptions!=null && subscriptions.size()>0){
         List<CartLineItem> subscriptionLines;
         Set<CartLineItem> lineItems=pricing(cartLineItems, offerInstance, address, redeemRewardPoints);
@@ -610,16 +610,13 @@ public class PricingEngine {
                         + pricingDto.getPrepaidServicesTotal() + shipping : redeemRewardPoints).build();
     }
 
-    private List<CartLineItem> createSubscriptionLineItems(List<Subscription> subscriptions){
+    private List<CartLineItem> createSubscriptionLineItems(Set<Subscription> subscriptions){
          Double discountOnHkPrice = 0.0;
          Double markedPrice =0.0;
          Double hkPrice = 0.0;
          List<CartLineItem> subscriptionLineItemList = new ArrayList<CartLineItem>();
          for(Subscription subscription : subscriptions){
-             discountOnHkPrice = subscription.getMarkedPriceAtSubscription()*subscription.getSubscriptionDiscountPercent()/100;
-             markedPrice = subscription.getMarkedPriceAtSubscription();
-             hkPrice = subscription.getHkPriceAtSubscription();
-             CartLineItem subscriptionLineItem= new CartLineItemBuilder().ofType(EnumCartLineItemType.Subscription).discountOnHkPrice(discountOnHkPrice).hkPrice(hkPrice).markedPrice(markedPrice).forVariantQty(subscription.getProductVariant(), new Long(subscription.getQty())).build();
+             CartLineItem subscriptionLineItem= new CartLineItemBuilder().forSubscription(subscription).build();
             subscriptionLineItemList.add(subscriptionLineItem);
          }
          return  subscriptionLineItemList;

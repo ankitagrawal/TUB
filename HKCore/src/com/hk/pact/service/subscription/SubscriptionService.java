@@ -1,5 +1,6 @@
 package com.hk.pact.service.subscription;
 
+import com.hk.constants.subscription.EnumSubscriptionStatus;
 import com.hk.domain.order.Order;
 import com.hk.domain.subscription.Subscription;
 import com.hk.domain.subscription.SubscriptionStatus;
@@ -20,6 +21,8 @@ public interface SubscriptionService {
   public Subscription save(Subscription subscription);
 
   public List<Subscription> getSubscriptions(Order order, SubscriptionStatus subscriptionStatus);
+
+  public List<Subscription> getSubscriptions(Order order, EnumSubscriptionStatus subscriptionStatus);
 
   public List<Subscription> placeSubscriptions(Order order);
 

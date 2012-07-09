@@ -5,6 +5,7 @@ import com.hk.domain.subscription.SubscriptionStatus;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA.
@@ -48,5 +49,13 @@ public enum EnumSubscriptionStatus {
         subscriptionStatus.setName(this.getName());
         return subscriptionStatus;
     }
+
+  public static List<Long> getSubscriptionStatusIDs(Set<EnumSubscriptionStatus> subscriptionStatuses) {
+    List<Long> subscriptionStatusIDs = new ArrayList<Long>();
+    for (EnumSubscriptionStatus subscriptionStatus : subscriptionStatuses) {
+      subscriptionStatusIDs.add(subscriptionStatus.getId());
+    }
+    return subscriptionStatusIDs;
+  }
 
 }

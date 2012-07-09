@@ -36,6 +36,10 @@ public class SubscriptionServiceImpl implements SubscriptionService{
     return subscriptionDao.getSubscriptions(order,subscriptionStatus);
   }
 
+  public List<Subscription> getSubscriptions(Order order, EnumSubscriptionStatus subscriptionStatus){
+    return subscriptionDao.getSubscriptions(order,subscriptionStatus.asSubscriptionStatus());
+  }
+
   public List<Subscription> placeSubscriptions(Order order){
     List<Subscription> inCartSubscriptions= getSubscriptions(order, EnumSubscriptionStatus.InCart.asSubscriptionStatus());
     for(Subscription subscription : inCartSubscriptions){

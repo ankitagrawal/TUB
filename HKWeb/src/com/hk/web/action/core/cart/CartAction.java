@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Set;
 
 import com.hk.constants.subscription.EnumSubscriptionStatus;
+import com.hk.core.fliter.SubscriptionFilter;
 import com.hk.domain.subscription.Subscription;
-import com.hk.pact.service.subscription.SubscriptionService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -64,7 +64,7 @@ public class CartAction extends BaseAction {
     private PricingDto          pricingDto;
     private Long                itemsInCart   = 0L;
     private String              freebieBanner;
-    private List<Subscription> subscriptions;
+    private Set<Subscription> subscriptions;
 
     @Autowired
     private UserService         userService;
@@ -88,8 +88,6 @@ public class CartAction extends BaseAction {
     private OrderDao            orderDao;
     @Autowired
     private CartFreebieService  cartFreebieService;
-    @Autowired
-    private SubscriptionService subscriptionService;
 
     boolean                     verifyMessage = false;
 
@@ -156,7 +154,7 @@ public class CartAction extends BaseAction {
              * Set<CartLineItem> cartLineItemsSet = new HashSet<CartLineItem>();
              * cartLineItemsSet.addAll(cartLineItems);
              */
-            subscriptions = subscriptionService.getSubscriptions(order, EnumSubscriptionStatus.InCart.asSubscriptionStatus());
+            subscriptions = new SubscriptionFilter(order.getSubscriptions()).addSubscriptionStatus(EnumSubscriptionStatus.InCart).filter();
             if(subscriptions !=null && subscriptions.size()>0){
                 pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), address, 0D, subscriptions), address);
                  itemsInCart+=subscriptions.size();
@@ -186,7 +184,7 @@ public class CartAction extends BaseAction {
                         itemsInCart = Long.valueOf(order.getExclusivelyProductCartLineItems().size() + order.getExclusivelyComboCartLineItems().size());
                     }
                 }
-               List<Subscription> inCartSubscriptions= subscriptionService.getSubscriptions(order, EnumSubscriptionStatus.InCart.asSubscriptionStatus());
+               Set<Subscription> inCartSubscriptions= new SubscriptionFilter(order.getSubscriptions()).addSubscriptionStatus(EnumSubscriptionStatus.InCart).filter();
                if(inCartSubscriptions!=null && inCartSubscriptions.size()>0){
                  itemsInCart+=inCartSubscriptions.size();
                }
@@ -270,19 +268,11 @@ public class CartAction extends BaseAction {
         this.userService = userService;
     }
 
-    public SubscriptionService getSubscriptionService() {
-        return subscriptionService;
-    }
-
-    public void setSubscriptionService(SubscriptionService subscriptionService) {
-        this.subscriptionService = subscriptionService;
-    }
-
-  public List<Subscription> getSubscriptions() {
+  public Set<Subscription> getSubscriptions() {
     return subscriptions;
   }
 
-  public void setSubscriptions(List<Subscription> subscriptions) {
+  public void setSubscriptions(Set<Subscription> subscriptions) {
     this.subscriptions = subscriptions;
   }
 }

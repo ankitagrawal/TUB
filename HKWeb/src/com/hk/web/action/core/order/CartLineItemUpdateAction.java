@@ -3,7 +3,11 @@ package com.hk.web.action.core.order;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import com.hk.constants.subscription.EnumSubscriptionStatus;
+import com.hk.core.fliter.SubscriptionFilter;
+import com.hk.domain.subscription.Subscription;
 import net.sourceforge.stripes.action.JsonResolution;
 import net.sourceforge.stripes.action.Resolution;
 
@@ -88,7 +92,10 @@ public class CartLineItemUpdateAction extends BaseAction {
         if (getPrincipalUser() != null) {
             Order order = orderManager.getOrCreateOrder(getPrincipalUser());
             Address address = order.getAddress() != null ? order.getAddress() : new Address();
-            PricingDto pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), address, 0D), address);
+
+           Set<Subscription> subscriptions=new SubscriptionFilter(order.getSubscriptions()).addSubscriptionStatus(EnumSubscriptionStatus.InCart).filter();
+
+           PricingDto pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), address, 0D, subscriptions), address);
 
             if (cartLineItem != null && cartLineItem.getComboInstance() != null && cartLineItem.getComboInstance().getId() != null) {
                 List<CartLineItem> brotherLineItems = comboInstanceDao.getSiblingLineItems(cartLineItem);

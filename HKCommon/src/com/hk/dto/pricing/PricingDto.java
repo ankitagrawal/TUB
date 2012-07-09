@@ -92,6 +92,7 @@ public class PricingDto {
   private Long codLineCount = 0L;
 
   private Long subscriptionLineCount = 0L;
+  private Double subscriptionDiscount = 0.0;
 
   private Double totalHkProductsDiscount = 0.0;
   private Double totalHkPrepaidServiceDiscount = 0.0;
@@ -245,10 +246,11 @@ public class PricingDto {
       } else if(cartLineItem.isType(EnumCartLineItemType.Subscription)) {
         productsMrpSubTotal += cartLineItem.getMarkedPrice()*cartLineItem.getQty();
         productsHkSubTotal += cartLineItem.getHkPrice()*cartLineItem.getQty();
-        productsDiscount += cartLineItem.getDiscountOnHkPrice()*cartLineItem.getQty();
+        subscriptionDiscount += cartLineItem.getDiscountOnHkPrice()*cartLineItem.getQty();
         productsTotal += cartLineItem.getHkPrice()*cartLineItem.getQty() - cartLineItem.getDiscountOnHkPrice()*cartLineItem.getQty();
         subscriptionLineCount++;
-        productLineCount++;//subscription is also counted as a productLine
+        productLineCount++; //subscription is also treated as a product for cart purposes
+        productLineItems.add(cartLineItem);
       }
 
     }
@@ -281,7 +283,7 @@ public class PricingDto {
 
     payableMrpSubTotal = prepaidServiceMrpSubTotal + productsMrpSubTotal;
     payableHkSubTotal = prepaidServiceHkSubTotal + productsHkSubTotal;
-    payableDiscount = prepaidServiceDiscount + productsDiscount;
+    payableDiscount = prepaidServiceDiscount + productsDiscount + subscriptionDiscount;
 
     grandTotal = productsTotal + prepaidServicesTotal + postpaidServicesTotal + shippingTotal + codTotal - rewardPointTotal;
     grandTotalPayable = productsTotal + prepaidServicesTotal + shippingTotal + codTotal - rewardPointTotal;
@@ -290,7 +292,7 @@ public class PricingDto {
 
     if (FormatUtils.getCurrencyPrecision(grandTotalPayable) < 0)
       throw new HealthkartDefaultWebException("Order Total cannot be lesser than 0");
-    totalLineCount = productLineCount + orderLevelDiscountLines + shippingLineCount + codLineCount;
+    totalLineCount = productLineCount + orderLevelDiscountLines + shippingLineCount + codLineCount + subscriptionLineCount;
 
     totalHkProductsDiscount = productsMrpSubTotal - productsHkSubTotal;
     totalHkPrepaidServiceDiscount = prepaidServiceMrpSubTotal - prepaidServiceHkSubTotal;
@@ -652,5 +654,13 @@ public class PricingDto {
 
   public void setTotalPostpaidAmount(Double totalPostpaidAmount) {
     this.totalPostpaidAmount = totalPostpaidAmount;
+  }
+
+  public Double getSubscriptionDiscount() {
+    return subscriptionDiscount;
+  }
+
+  public void setSubscriptionDiscount(Double subscriptionDiscount) {
+    this.subscriptionDiscount = subscriptionDiscount;
   }
 }

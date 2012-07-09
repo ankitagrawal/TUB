@@ -2,6 +2,8 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
+<%@ page import="com.hk.domain.subscription.Subscription" %>
+<%@ page import="java.util.Set" %>
 <%--
   Created by IntelliJ IDEA.
   User: Pradeep
@@ -14,7 +16,7 @@
 
 <s:layout-definition>
 <%
-  List<SubscriptionProduct> subscriptions = (List<SubscriptionProduct>) pageContext.getAttribute("subscriptions");
+  Set<Subscription> subscriptions = (Set<Subscription>) pageContext.getAttribute("subscriptions");
   pageContext.setAttribute("subscriptions", subscriptions);
 %>
   <div class='tabletitle'>
@@ -67,12 +69,14 @@
       </div>
       <div class="quantity">
         <div class="subscriptionQty" > ${subscription.qty}</div>
-        <a class='edit editSubscriptionLink' href='#'>
-          (edit)
-        </a>
-        <s:link class='remove removeSubscriptionLink' beanclass="com.hk.web.action.core.subscription.SubscriptionUpdateAction" >
-          (remove)
-        <s:param name="subscription" value="${subscription}"/> </s:link>
+    <s:link beanclass="com.hk.web.action.core.subscription.SubscriptionUpdateAction" class="remove editSubscriptionLink">(edit)
+      <s:param name="subscription" value="${subscription}"/>
+    </s:link>
+
+
+        <s:link beanclass="com.hk.web.action.core.subscription.SubscriptionUpdateAction" class="remove removeSubscriptionLink" event="abandon">(remove)
+          <s:param name="subscription" value="${subscription}"/>
+        </s:link>
 
       </div>
       <div class="price">
@@ -97,40 +101,80 @@
                     <span class='num '>
                       Rs  <span class="lineItemSubTotalHkDiscount"><fmt:formatNumber
 
-                        value="${(subscription.markedPriceAtSubscription - subscription.hkPriceAtSubscription - subscription.productVariant.postpaidAmount) * subscription.qty}"
+                        value="${(subscription.markedPriceAtSubscription - subscription.hkPriceAtSubscription +(subscription.subscriptionDiscountPercent*subscription.markedPriceAtSubscription/100) - subscription.productVariant.postpaidAmount) * subscription.qty}"
                         pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>)
                     </span>
             </div>
             <div class="hk">
               <div class="num"> Rs
               <span class="lineItemHkTotal"><fmt:formatNumber
-                  value="${subscription.hkPriceAtSubscription * subscription.qty}"
+                  value="${(subscription.hkPriceAtSubscription - (subscription.subscriptionDiscountPercent*subscription.markedPriceAtSubscription/100) )* subscription.qty}"
                   pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
               </div>
             </div>
           </c:otherwise>
         </c:choose>
-
-        <c:if test="${lineItem_Service_Postpaid == subscription.productVariant.paymentType.id}">
-        <span class="special" style="text-align: center; font-size: 10px; font-weight: bold;">
-          to the service provider
-        </span>
-        </c:if>
       </div>
       <div class="floatfix"></div>
     </div>
   </c:forEach>
-  <div style="display: none;">
-    <s:link beanclass="com.hk.web.action.core.subscription.SubscriptionUpdateAction" event="abandonSubscription" id="removeSubscriptionLink"></s:link>
-  </div>
+
+    <%--  <s:layout-render name="/layouts/embed/_subscription.jsp" subscriptionProduct="${subscriptionProduct}"/> --%>
+    <div class="jqmWindow" style="display:none;" id="subscriptionWindow"></div>
+
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('#subscriptionWindow').jqm({trigger: '.editSubscriptionLink', ajax: '@href'});
+      });
+
+    </script>
+
+
   <script type="text/javascript">
     $(document).ready(function(){
       $('.removeSubscriptionLink').click(function() {
+        clearTimeout(timeout);
+        var itemContainer = $(this).parents('.product');
+        var lineItemId = itemContainer.find('.lineItemId').val();
+        var lineItemStyleId = itemContainer.find('.lineItemId').attr('id');
+        $('#undoLineItemId').val(lineItemId);
+        $('#undoQty').val(itemContainer.find('.subscriptionQty').val());
+        itemContainer.find('.lineItemQty').val(0);
+
         $.getJSON($(this).attr('href'), {}, function(responseData) {
-          location.reload();
+          removeSubscriptionItem(lineItemStyleId);
+          count = Math.round($('#productsInCart').html());
+          subscriptionCount = Math.round($('#subscriptionsInCart').html()) ;
+          if (count == 1 || subscriptionCount==1) {
+            location.reload();
+          }
+          else if (count > 2) {
+            $('#productsInCart').html(count - 1);
+          }
+          else {
+            $('.cartButton').html("<img class='icon' src='${pageContext.request.contextPath}/images/icons/cart.png'/>&nbsp;<span class='num' id='productsInCart'>1</span> item in<br/>your shopping cart");
+          }
+          $('#numProdTitle').html(count - 1);
+          $('.cartButton').glow('#f99', 500, 10);
+          _updateTotals(responseData);
+          if(responseData.message){
+            $(".freebieBanner").attr("src", responseData.message);
+          }else{
+            $(".freebieBanner").attr("src", "");
+          }
         });
         return false;
+        /*$.getJSON($(this).attr('href'), {}, function(responseData) {
+          location.reload();
+        });
+        return false;*/
       });
+      function removeSubscriptionItem(lineItemStyleId) {
+        $('#' + lineItemStyleId).parents('.lineItemRow').fadeOut();
+      }
+
+
+
     });
   </script>
 
