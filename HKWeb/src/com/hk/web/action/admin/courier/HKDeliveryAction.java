@@ -11,6 +11,7 @@ import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.web.action.error.AdminPermissionAction;
+import com.hk.admin.util.BarcodeGenerator;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -25,6 +26,9 @@ import org.springframework.stereotype.Component;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFPatriarch;
+import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
+import org.apache.poi.util.IOUtils;
 import org.stripesstuff.plugin.security.Secure;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,9 +46,15 @@ public class HKDeliveryAction extends BaseAction {
     private int                   totalCODPackets = 0;
     private int                   totalPrepaidPackets = 0;
     private double                totalCODAmount = 0.0;
+    private String                barcodePath;
+
     List<String>                  trackingIdList=new ArrayList<String>();
     @Autowired
     ShippingOrderService          shippingOrderService;
+
+    @Autowired
+    private BarcodeGenerator barcodeGenerator;
+
 
 
     @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
@@ -64,13 +74,13 @@ public class HKDeliveryAction extends BaseAction {
             if (shippingOrder != null) {
                 if(shippingOrder.isCOD()){
                         ++totalCODPackets;
-                    totalCODAmount=totalCODAmount+shippingOrder.getBaseOrder().getPayment().getAmount();
+                    totalCODAmount=totalCODAmount+shippingOrder.getAmount();
+                    totalCODAmount=Math.round(totalCODAmount);
                 }  else{
                     ++totalPrepaidPackets;
                 }
                 shippingOrderList.add(shippingOrder);
             }
-            continue;
         }
         totalPackets=shippingOrderList.size();
 
@@ -101,6 +111,14 @@ public class HKDeliveryAction extends BaseAction {
         Cell cell = null;
         int rowCounter = 0;
         int totalColumnNoInSheet1 = 6;
+        InputStream is=null;
+        byte[] bytes=null;
+        int pictureIdx=0;
+        CreationHelper helper=null;
+        Drawing drawing= sheet1.createDrawingPatriarch();
+
+        ClientAnchor anchor=null;
+        Picture pict=null;
 
         //Dynamic data to be displayed in sheet
         String awbNumber = null;
@@ -111,7 +129,7 @@ public class HKDeliveryAction extends BaseAction {
         String pincode = null;
         String phone = null;
         String paymentMode = null;
-        Double paymentAmt = null;
+        Double paymentAmt = 0.0;
         String address = null;
         String receivedDetails = null;
         String sNo = null;
@@ -149,27 +167,34 @@ public class HKDeliveryAction extends BaseAction {
         style_header.setFont(fontForHeader);
         style_header.setAlignment(HSSFCellStyle.ALIGN_CENTER);
 
+
         //creating rows for header.
+        
         row = sheet1.createRow(++rowCounter);
         cell = row.createCell(2);
         cell.setCellStyle(style_header);
         setCellValue(row, 2, CourierConstants.HKD_WORKSHEET_HEADING1);
-        addEmptyLine(row, sheet1, ++rowCounter, cell);
+
         row = sheet1.createRow(++rowCounter);
-        cell = row.createCell(2);
+        cell = row.createCell(0);
         cell.setCellStyle(style_header);
-        setCellValue(row, 2, CourierConstants.HKD_WORKSHEET_HEADING2);
-        addEmptyLine(row, sheet1, ++rowCounter, cell);
-        row = sheet1.createRow(++rowCounter);
-        cell = row.createCell(2);
+        setCellValue(row, 0, CourierConstants.HKD_WORKSHEET_HEADING2);
+        cell = row.createCell(1);
         cell.setCellStyle(style_header);
-        setCellValue(row, 2, CourierConstants.HKD_WORKSHEET_HEADING3);
-        addEmptyLine(row, sheet1, ++rowCounter, cell);
-        row = sheet1.createRow(++rowCounter);
+        setCellValue(row, 1, CourierConstants.HKD_WORKSHEET_HEADING3);
         cell = row.createCell(2);
         cell.setCellStyle(style_header);
         setCellValue(row, 2, CourierConstants.HKD_WORKSHEET_HEADING4);
+        cell = row.createCell(3);
+        cell.setCellStyle(style_header);
+        setCellValue(row, 3, CourierConstants.HKD_WORKSHEET_HEADING5);
+        cell = row.createCell(4);
+        cell.setCellStyle(style_header);
+        setCellValue(row, 4, CourierConstants.HKD_WORKSHEET_HEADING6);
+
+
         addEmptyLine(row, sheet1, ++rowCounter, cell);
+
 
         row = sheet1.createRow(++rowCounter);
         // style.setFont(font);
@@ -194,10 +219,10 @@ public class HKDeliveryAction extends BaseAction {
         }
         setCellValue(row, 0, CourierConstants.HKD_WORKSHEET_TOTALPKTS);
         setCellValue(row, 1, totalPackets+"");
-        setCellValue(row, 2, CourierConstants.HKD_WORKSHEET_TOTAL_PREPAID_BOX+totalPrepaidPackets);
-        setCellValue(row, 3, CourierConstants.HKD_WORKSHEET_TOTAL_COD_BOX);
-        setCellValue(row, 4, totalCODPackets+"");
-        setCellValue(row, 5, CourierConstants.HKD_WORKSHEET_TOTAL_COD_AMT+totalCODAmount);
+        setCellValue(row, 2, CourierConstants.HKD_WORKSHEET_TOTAL_PREPAID_BOX + totalPrepaidPackets);
+        setCellValue(row, 3, CourierConstants.HKD_WORKSHEET_TOTAL_COD_BOX + totalCODPackets);
+        setCellValue(row, 4, CourierConstants.HKD_WORKSHEET_TOTAL_COD_AMT );
+        setCellValue(row, 5, totalCODAmount +"");
         addEmptyLine(row, sheet1, ++rowCounter, cell);
 
         row = sheet1.createRow(++rowCounter);
@@ -221,7 +246,7 @@ public class HKDeliveryAction extends BaseAction {
             cell.setCellStyle(style);
         }
         setCellValue(row, 0, CourierConstants.HKD_WORKSHEET_SNO);
-        setCellValue(row, 1, CourierConstants.HKD_WORKSHEET_AWB_NO);
+        setCellValue(row, 1, CourierConstants.HKD_WORKSHEET_GATEWAYID);
         setCellValue(row, 2, CourierConstants.HKD_WORKSHEET_ADDRESS);
         setCellValue(row, 3, CourierConstants.HKD_WORKSHEET_AMT);
         setCellValue(row, 4, CourierConstants.HK_WORKSHEET_INFO);
@@ -236,7 +261,7 @@ public class HKDeliveryAction extends BaseAction {
                 cell = row.createCell(columnNo);
                 cell.setCellStyle(style_data);
             }
-            awbNumber = shippingOrderList.get(index).getShipment().getTrackingId();
+
             name = shippingOrderList.get(index).getBaseOrder().getAddress().getName();
             name=name.toUpperCase();
             line1 = shippingOrderList.get(index).getBaseOrder().getAddress().getLine1();
@@ -245,15 +270,45 @@ public class HKDeliveryAction extends BaseAction {
             pincode = shippingOrderList.get(index).getBaseOrder().getAddress().getPin();
             phone = shippingOrderList.get(index).getBaseOrder().getAddress().getPhone();
             paymentMode = shippingOrderList.get(index).getBaseOrder().getPayment().getPaymentMode().getName();
-            paymentAmt = shippingOrderList.get(index).getBaseOrder().getPayment().getAmount();
+            paymentAmt = shippingOrderList.get(index).getAmount();
             address = "Name:" + name + "\n" + "Address:" + line1 + "," + "\n" + line2 + "," + "\n" + city + "-" + pincode + "\n" + "Phone:" + phone;
             receivedDetails = "Name:" + "\n" + "Relation:" + "\n" + "Mobile No.:" + "\n" + "Received Date,Time:" + "\n" + "Sign";
+
+           //adding barcode image to cell
+            barcodePath = barcodeGenerator.getBarcodePath(shippingOrderList.get(index).getGatewayOrderId());
+
+            //add picture data to this workbook.
+            is = new FileInputStream(barcodePath);
+            bytes = IOUtils.toByteArray(is);
+            pictureIdx = wb.addPicture(bytes, Workbook.PICTURE_TYPE_PNG);
+            is.close();
+            helper = wb.getCreationHelper();
+
+            // Create the drawing patriarch.  This is the top level container for all shapes.
+
+            //add a picture shape
+            anchor = helper.createClientAnchor();
+            anchor.setAnchorType(ClientAnchor.MOVE_AND_RESIZE);
+            //set top-left corner of the picture,
+            pict = drawing.createPicture(anchor, pictureIdx);
+            pict.resize(8.0);
+
+
+
             sNo = index + 1 + "";
             setCellValue(row, 0, sNo);
-            setCellValue(row, 1, awbNumber);
+          // setCellValue(row, 1, awbNumber);
+            anchor.setDx1(10);
+            anchor.setDx2(700);
+            anchor.setDy1(10);
+            anchor.setDy2(200);
+            anchor.setCol1(1);
+            anchor.setRow1(rowCounter);
+            anchor.setCol2(1);
+            anchor.setRow2(rowCounter);
             setCellValue(row, 2, address);
             if (paymentMode.equals("COD")) {
-                setCellValue(row, 3, CourierConstants.HKD_WORKSHEET_COD + paymentAmt);
+                setCellValue(row, 3, CourierConstants.HKD_WORKSHEET_COD + Math.round(paymentAmt));
             } else {
                 setCellValue(row, 3, CourierConstants.HKD_WORKSHEET_PREPAID );
 

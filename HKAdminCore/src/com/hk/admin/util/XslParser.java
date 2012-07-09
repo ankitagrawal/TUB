@@ -5,7 +5,6 @@ import com.hk.admin.pact.dao.inventory.PoLineItemDao;
 import com.hk.admin.pact.dao.inventory.PurchaseOrderDao;
 import com.hk.admin.pact.dao.inventory.RetailLineItemDao;
 import com.hk.admin.pact.service.courier.CourierService;
-import com.hk.admin.pact.service.courier.CourierStateCityService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.XslConstants;
@@ -49,9 +48,7 @@ import com.hk.pact.service.RoleService;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
-import com.hk.pact.service.core.PincodeService;
-import com.hk.pact.service.core.TaxService;
-import com.hk.pact.service.core.WarehouseService;
+import com.hk.pact.service.core.*;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.payment.PaymentService;
@@ -141,7 +138,9 @@ public class XslParser {
   @Autowired
   private InventoryService inventoryService;
   @Autowired
-  private CourierStateCityService courierStateCityService;
+  CityService cityService;
+  @Autowired
+  StateService stateService;
  
 
   public Set<Product> readProductList(File objInFile, User loggedOnUser) throws Exception {
@@ -505,13 +504,13 @@ public class XslParser {
           pincode = new Pincode();
         }
         pincode.setPincode(pincodeValue);
-        City city = courierStateCityService.getCityByName(getCellValue(XslConstants.CITY, rowMap, headerMap));
+        City city = cityService.getCityByName(getCellValue(XslConstants.CITY, rowMap, headerMap));
         if(city == null){
          logger.error("Exception @ Row:" + rowCount);
             throw new Exception("City is incorrect Please check spelling @ Row:" + rowCount);
         }
         pincode.setCity(city);
-        State state=courierStateCityService.getStateByName(getCellValue(XslConstants.STATE, rowMap, headerMap));
+        State state=stateService.getStateByName(getCellValue(XslConstants.STATE, rowMap, headerMap));
         if(state == null){
          logger.error("Exception @ Row:" + rowCount);
             throw new Exception("City is incorrect Please check spelling @ Row:" + rowCount);

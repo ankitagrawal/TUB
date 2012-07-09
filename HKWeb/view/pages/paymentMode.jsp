@@ -108,8 +108,10 @@
         <li id="tab2">Debit Cards</li>
         <li id="tab3">Internet Banking</li>
         <shiro:lacksRole name="<%=RoleConstants.COD_BLOCKED%>">
+          <c:if test="${orderSummary.order.offerInstance.offer.id != 1270}">
             <li id="tab4" class="cod-mode">Cash on Delivery</li>
             <li id="tab5">Cheque / Bank Deposit</li>
+          </c:if>
         </shiro:lacksRole>
         <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_ADMINS%>">
             <li id="tab6">Counter Cash</li>
@@ -184,6 +186,7 @@
         </div>
     </s:form></div>
 <shiro:lacksRole name="<%=RoleConstants.COD_BLOCKED%>">
+  <c:if test="${orderSummary.order.offerInstance.offer.id != 1270}">
     <div id="tabs_content4" class="tab_content" style="display: none;">
         <c:choose>
             <c:when test="${orderSummary.codAllowed}">
@@ -329,6 +332,7 @@
             <br />
         </div>
     </div>
+  </c:if>
 </shiro:lacksRole> <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_ADMINS%>">
 <div id="tabs_content6" class="tab_content" style="display: none;">
     <h2 class="offer">Payment Details</h2>

@@ -54,6 +54,16 @@
             <s:option value="techprocess">TechProcess</s:option>
            </s:select>
         </li>
+
+          <li>
+          <label>Shipping Order Status</label>
+          <s:select name="shippingOrderStatusId">
+						<s:option value="">-Select-</s:option>
+						<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="SOStatusForReconcilation" value="id"
+						                           label="name"/>
+					</s:select>
+        </li>
+
         <li>
           <label>Warehouse</label>
           <s:select name="warehouseId">
@@ -71,7 +81,7 @@
 					</s:select>
         </li>
         <li>
-          <s:submit name="generateReconilationReport" value="Generate-Reconcilation-Report"/>
+          <s:submit name="generateReconilationReport" value="Generate-Reconcilation-Report" />
         </li>
       </ul>
     </fieldset>

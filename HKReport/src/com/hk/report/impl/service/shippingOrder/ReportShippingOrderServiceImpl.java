@@ -32,8 +32,8 @@ public class ReportShippingOrderServiceImpl implements ReportShippingOrderServic
     @Autowired
     private ReportOrderDao         reportOrderDao;
 
-    public List<ReconcilationReportDto> findReconcilationReportByDate(Date startDate, Date endDate, String paymentProcess, Courier courier, Long warehouseId) {
-        return getReportShippingOrderDao().findReconcilationReportByDate(startDate, endDate, paymentProcess, courier, warehouseId);
+    public List<ReconcilationReportDto> findReconcilationReportByDate(Date startDate, Date endDate, String paymentProcess, Courier courier, Long warehouseId, Long shippingOrderStatusId) {
+        return getReportShippingOrderDao().findReconcilationReportByDate(startDate, endDate, paymentProcess, courier, warehouseId,shippingOrderStatusId);
     }
 
 
