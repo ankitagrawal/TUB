@@ -276,6 +276,7 @@ public class HKDeliveryAction extends BaseAction {
             name=name.toUpperCase();
             line1 = shippingOrderList.get(index).getBaseOrder().getAddress().getLine1();
             line2 = shippingOrderList.get(index).getBaseOrder().getAddress().getLine2();
+            line2=(line2 == null)?"":line2;
             city = shippingOrderList.get(index).getBaseOrder().getAddress().getCity();
             pincode = shippingOrderList.get(index).getBaseOrder().getAddress().getPin();
             paymentAmt = shippingOrderList.get(index).getAmount();
