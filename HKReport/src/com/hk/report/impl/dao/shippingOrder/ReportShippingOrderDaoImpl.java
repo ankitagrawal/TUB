@@ -57,8 +57,8 @@ public class ReportShippingOrderDaoImpl extends BaseDaoImpl implements ReportShi
                 + " pm.name as payment, so.amount as total,  ship.courier as courier, ship.trackingId as awb, ship.shipDate as shipmentDate,"
                 + " ship.deliveryDate as deliveryDate, rs.name as reconciled, os.name as orderStatus, ship.boxWeight as boxWeight,"
                 + " bs.name as boxSize, so.warehouse as warehouse" + " from ShippingOrder so join so.baseOrder bo join bo.payment p join bo.user user join bo.address adr "
-                + " join so.shipment ship join ship.boxSize bs join so.shippingOrderStatus os " + " join p.paymentMode pm join so.reconciliationStatus rs "
-                + " where p.paymentDate >= :startDate" + " and p.paymentDate <= :endDate"  + " " + paymentWhereClause +shippingOrderClause
+                + " join so.shipment ship join ship.boxSize bs join so.shippingOrderStatus os " + " join p.paymentMode pm join so.reconciliationStatus rs join so.shipment shp "
+                + " where shp.shipDate >= :startDate" + " and shp.shipDate <= :endDate"  + " " + paymentWhereClause +shippingOrderClause
                 + courierWhereClause + warehouseWhereClause;
 
       return getSession().createQuery(hqlQuery).setParameter("startDate", startDate).setParameter("endDate",
