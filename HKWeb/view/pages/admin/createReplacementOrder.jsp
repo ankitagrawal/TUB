@@ -25,10 +25,6 @@
                     $('#is-replacement').hide();
                     $('#is-rto').slideDown();
                 });
-
-                $('.generate-replacement-order').click(function(event) {
-                    ('#so-details').hide();
-                })
             })
         </script>
         <fieldset class="right_label">
@@ -43,20 +39,20 @@
         </fieldset>
 
         <c:if test="${!empty replacementOrderBean.shippingOrder}">
-            <fieldset style="float:left;" id="so-details">
+            <fieldset style="float:left;">
                 <table>
                         <%--          <s:hidden name="shippingOrder" value="${replacementOrderBean.shippingOrderId}"/>--%>
                     <tr>
-                        <td><b>CustomerName:</b></td>
+                        <td><h5>CustomerName:</h5></td>
                         <td>${replacementOrderBean.shippingOrder.baseOrder.user.name}</td>
-                        <td><b>SO date:</b></td>
+                        <td><h5>SO date:</h5></td>
                         <td>${replacementOrderBean.shippingOrder.createDate}</td>
                     </tr>
                     <tr>
-                        <td><b>Email:</b></td>
+                        <td><h5>Email:</h5></td>
                         <td>${replacementOrderBean.shippingOrder.baseOrder.user.email}
                         </td>
-                        <td><b>Address:</b></td>
+                        <td><h5>Address:</h5></td>
                         <td>
                                 ${replacementOrderBean.shippingOrder.baseOrder.address.city}<br/>
                                 ${replacementOrderBean.shippingOrder.baseOrder.address.state}-
@@ -66,24 +62,27 @@
                     </tr>
                     <tr>
                         <td>
-
+                           <h5>Status</h5>
                         </td>
                         <td>
-                            <s:link href="#" id="is-rto-radio">
-                                <b>Is RTO:</b>
-                            </s:link>
+                            ${replacementOrderBean.shippingOrder.orderStatus.name}
                         </td>
                         <td>
                             <s:link href="#" id="is-replacement-radio">
-                                <b>Is Replacement:</b>
+                                <h5>Is Replacement:</h5>
                             </s:link>
                         </td>
-                        <td></td>
+                        <td>
+                            <s:link href="#" id="is-rto-radio">
+                                <h5>Is RTO:</h5>
+                            </s:link>
+                        </td>
                     </tr>
                 </table>
             </fieldset>
 
             <fieldset style="display:none;" id="is-rto">
+                <h4>Returned to origin</h4>
                 <s:form beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction">
                     <s:hidden name="shippingOrder" value="${replacementOrderBean.shippingOrder.id}"/>
                     <table border="1">
@@ -117,11 +116,12 @@
                             </tr>
                         </c:forEach>
                     </table>
-                    <s:submit name="createReplacementOrder" value="Generate Replacement Order" class="generate-replacement-order"/>
+                    <s:submit name="createReplacementOrder" value="Generate Replacement Order"/>
                 </s:form>
             </fieldset>
 
             <fieldset style="display:none;" id="is-replacement">
+                <h4>Replacement</h4>
                 <s:form beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction">
                     <s:hidden name="shippingOrder" value="${replacementOrderBean.shippingOrder.id}"/>
                     <table border="1">
@@ -153,7 +153,7 @@
                             </tr>
                         </c:forEach>
                     </table>
-                    <s:submit name="createReplacementOrder" value="Generate Replacement Order" class="generate-replacement-order"/>
+                    <s:submit name="createReplacementOrder" value="Generate Replacement Order"/>
                 </s:form>
             </fieldset>
 

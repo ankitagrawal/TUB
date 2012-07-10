@@ -9,9 +9,13 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.admin.pact.service.shippingOrder.ReplacementOrderService;
 import com.hk.helper.ReplacementOrderHelper;
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.lang.StringUtils;
 import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.validation.ValidationMethod;
+import net.sourceforge.stripes.validation.SimpleError;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -25,84 +29,100 @@ import java.util.ArrayList;
  */
 @Component
 public class ReplacementOrderAction extends BaseAction {
-  private Long shippingOrderId;
-  private ShippingOrder shippingOrder;
-  private Boolean isRto;
-  private List<LineItem> lineItems = new ArrayList<LineItem>();
+    private Long shippingOrderId;
+    private ShippingOrder shippingOrder;
+    private Boolean isRto;
+    private List<LineItem> lineItems = new ArrayList<LineItem>();
 
-  @Autowired
-  ShippingOrderService shippingOrderService;
+    @Autowired
+    ShippingOrderService shippingOrderService;
 
-  @Autowired
-  ReplacementOrderService replacementOrderService;
+    @Autowired
+    ReplacementOrderService replacementOrderService;
 
-  @Autowired
-  LineItemDao lineItemDao;
+    @Autowired
+    LineItemDao lineItemDao;
 
-  @DefaultHandler
-  public Resolution pre(){
-    return new ForwardResolution("/pages/admin/createReplacementOrder.jsp");
-  }
-
-  public Resolution searchShippingOrder() {
-    ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
-    shippingOrderSearchCriteria.setOrderId(shippingOrderId);
-    shippingOrder = shippingOrderService.find(shippingOrderId);
-    for (LineItem lineItem : shippingOrder.getLineItems()){
-        lineItems.add(ReplacementOrderHelper.getLineItemForReplacementOrder(lineItem));
+    @ValidationMethod(on = "searchShippingOrder")
+    public void validateSearch() {
+        if (shippingOrderId == null) {
+            getContext().getValidationErrors().add("1", new SimpleError("Please Enter a Search Parameter"));
+        }
     }
-    return new ForwardResolution("/pages/admin/createReplacementOrder.jsp");
-  }
 
-  public Resolution createReplacementOrder(){
-    for(LineItem lineItem : lineItems){
-      if(lineItem.getQty() > getLineItemDao().getLineItem(lineItem.getSku(), shippingOrder).getQty()){
-        addRedirectAlertMessage(new SimpleMessage("The quantity of "+lineItem.getCartLineItem().getProductVariant().getProduct().getName()+" cannot be more than original quantity."));
+    @DefaultHandler
+    public Resolution pre() {
         return new ForwardResolution("/pages/admin/createReplacementOrder.jsp");
-      }
     }
-    addRedirectAlertMessage(new SimpleMessage("The Replacement order created"));  
-    replacementOrderService.createReplaceMentOrder(shippingOrder, lineItems, isRto);
-    return new ForwardResolution("/pages/admin/createReplacementOrder.jsp");
-  }
 
-  public Long getShippingOrderId() {
-    return shippingOrderId;
-  }
+    public Resolution searchShippingOrder() {
+        ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
+        shippingOrderSearchCriteria.setOrderId(shippingOrderId);
+        shippingOrder = shippingOrderService.find(shippingOrderId);
+        if(shippingOrder == null){
+            addRedirectAlertMessage(new SimpleMessage("No shipping order found  "));
+            return new ForwardResolution("/pages/admin/createReplacementOrder.jsp");
+        }
+        for (LineItem lineItem : shippingOrder.getLineItems()) {
+            lineItems.add(ReplacementOrderHelper.getLineItemForReplacementOrder(lineItem));
+        }
+        return new ForwardResolution("/pages/admin/createReplacementOrder.jsp");
+    }
 
-  public void setShippingOrderId(Long shippingOrderId) {
-    this.shippingOrderId = shippingOrderId;
-  }
+    public Resolution createReplacementOrder() {
+        if (shippingOrder.getOrderStatus().getId() != EnumShippingOrderStatus.RTO_Initiated.getId()) {
+            addRedirectAlertMessage(new SimpleMessage("Replacement order can be created only for status" + EnumShippingOrderStatus.RTO_Initiated.getName()));
+            return new ForwardResolution("/pages/admin/createReplacementOrder.jsp");
+        }
 
-  public ShippingOrder getShippingOrder() {
-    return this.shippingOrder;
-  }
+        for (LineItem lineItem : lineItems) {
+            if (lineItem.getQty() > getLineItemDao().getLineItem(lineItem.getSku(), shippingOrder).getQty()) {
+                addRedirectAlertMessage(new SimpleMessage("The quantity of " + lineItem.getCartLineItem().getProductVariant().getProduct().getName() + " cannot be more than original quantity."));
+                return new ForwardResolution("/pages/admin/createReplacementOrder.jsp");
+            }
+        }
+        addRedirectAlertMessage(new SimpleMessage("The Replacement order created"));
+        replacementOrderService.createReplaceMentOrder(shippingOrder, lineItems, isRto);
+        return new ForwardResolution("/pages/admin/createReplacementOrder.jsp");
+    }
 
-  public void setShippingOrder(ShippingOrder shippingOrder) {
-    this.shippingOrder = shippingOrder;
-  }
+    public Long getShippingOrderId() {
+        return shippingOrderId;
+    }
 
-  public Boolean getIsRto() {
-    return isRto;
-  }
+    public void setShippingOrderId(Long shippingOrderId) {
+        this.shippingOrderId = shippingOrderId;
+    }
 
-  public void setIsRto(Boolean rto) {
-    isRto = rto;
-  }
+    public ShippingOrder getShippingOrder() {
+        return this.shippingOrder;
+    }
 
-  public List<LineItem> getLineItems() {
-    return lineItems;
-  }
+    public void setShippingOrder(ShippingOrder shippingOrder) {
+        this.shippingOrder = shippingOrder;
+    }
 
-  public void setLineItems(List<LineItem> lineItems) {
-    this.lineItems = lineItems;
-  }
+    public Boolean getIsRto() {
+        return isRto;
+    }
 
-  public LineItemDao getLineItemDao() {
-    return lineItemDao;
-  }
+    public void setIsRto(Boolean rto) {
+        isRto = rto;
+    }
 
-  public void setLineItemDao(LineItemDao lineItemDao) {
-    this.lineItemDao = lineItemDao;
-  }
+    public List<LineItem> getLineItems() {
+        return lineItems;
+    }
+
+    public void setLineItems(List<LineItem> lineItems) {
+        this.lineItems = lineItems;
+    }
+
+    public LineItemDao getLineItemDao() {
+        return lineItemDao;
+    }
+
+    public void setLineItemDao(LineItemDao lineItemDao) {
+        this.lineItemDao = lineItemDao;
+    }
 }
