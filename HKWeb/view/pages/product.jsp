@@ -500,12 +500,13 @@
               </c:forEach>
           </h6>
           </shiro:hasPermission>
-
-    <%--<c:if test="${!relatedProduct.deleted}">--%>
-        <c:forEach var="product" items="${relatedProduct.value}">
-            <s:layout-render name="/layouts/embed/_productThumb.jsp" productId="${product.id}"/>
-        </c:forEach>
-          <%--</c:if>--%>
+          <c:set var="recommendedProductCount" value="0" scope="page" />
+            <c:forEach var="product" items="${relatedProduct.value}">
+                <c:if test = "${recommendedProductCount < 6}">
+                    <s:layout-render name="/layouts/embed/_productThumb.jsp" productId="${product.id}"/>
+                </c:if>
+                <c:set var="recommendedProductCount" value="${recommendedProductCount + 1}" scope="page"/>
+            </c:forEach>
         </c:forEach>
 
         <div class="floatfix"></div>

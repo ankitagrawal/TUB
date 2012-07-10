@@ -200,7 +200,7 @@ public class ProductServiceImpl implements ProductService {
            Iterator it = pvIdList.iterator();
            int productCount = 0;
            source = "MOOGA";
-           while (it.hasNext() && (productCount < MAX_PRODUCT_LIMIT)) {
+           while (it.hasNext()) {
                Product product = productDAO.getProductById((String)it.next());
                if ((product != null) && !product.isDeleted()){
                    products.add(product);
