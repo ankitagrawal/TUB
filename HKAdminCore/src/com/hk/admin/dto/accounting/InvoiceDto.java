@@ -10,6 +10,7 @@ import com.hk.constants.core.TaxConstants;
 import com.hk.constants.courier.StateList;
 import com.hk.core.fliter.LineItemFilter;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.order.ReplacementOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.B2bUserDetails;
 import com.hk.helper.InvoiceNumHelper;
@@ -60,9 +61,14 @@ public class InvoiceDto {
   String accountingInvoiceHeading;
   String invoiceTinNumber;
   String invoiceDLnumber;
+  String replacementOrderString;
 
 
   public InvoiceDto(ShippingOrder shippingOrder, B2bUserDetails b2bUserDetailsLocal) {
+    if(shippingOrder instanceof ReplacementOrder){
+      ReplacementOrder replacementOrder = (ReplacementOrder)shippingOrder;
+      replacementOrderString = "The following order is in lieu of order number: "+replacementOrder.getRefShippingOrder().getId();
+    }
 
     for (EnumTax enumTax : EnumTax.values()) {
 
@@ -414,6 +420,14 @@ public class InvoiceDto {
 
   public void setB2bUserDetails(B2bUserDetails b2bUserDetails) {
     this.b2bUserDetails = b2bUserDetails;
+  }
+
+  public String getReplacementOrderString() {
+    return replacementOrderString;
+  }
+
+  public void setReplacementOrderString(String replacementOrderString) {
+    this.replacementOrderString = replacementOrderString;
   }
 
   public static void main(String[] args) {

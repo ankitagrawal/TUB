@@ -23,8 +23,7 @@ public enum EnumShippingOrderStatus {
     SO_Lost(210L, "SO Lost"),
     SO_Replaced(220L, "SO Replaced"),
     SO_Cancelled(999L, "SO Cancelled"),
-    RO_Initiated(230L, "Replacement Order Initiated"),
-    RO_Created(240L, "Replacement Order Created");
+    RO_Initiated(230L, "RTO Initiated");
 
 
     private java.lang.String name;

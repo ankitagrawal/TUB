@@ -5,6 +5,7 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.stereotype.Component;
 
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 public interface ReplacementOrderService {
   
-    public ReplacementOrder createReplaceMentOrder(ShippingOrder shippingOrder, ArrayList<LineItem> lineItems, Boolean isRto);
+    public void createReplaceMentOrder(ShippingOrder shippingOrder, List<LineItem> lineItems, Boolean isRto);
 
     public void save(ReplacementOrder replacementOrder);
 }

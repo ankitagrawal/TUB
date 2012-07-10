@@ -12,9 +12,9 @@ import com.hk.pact.dao.ReconciliationStatusDao;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.constants.inventory.EnumReconciliationStatus;
 import com.hk.helper.ShippingOrderHelper;
+import com.hk.helper.ReplacementOrderHelper;
 
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,65 +39,35 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService{
   @Autowired
   private ReconciliationStatusDao reconciliationStatusDao;
 
-  public ReplacementOrder createReplaceMentOrder(ShippingOrder shippingOrder, ArrayList<LineItem> lineItems, Boolean isRto) {
-    ReplacementOrder replacementOrder = getReplacementOrderFromShippingOrder(shippingOrder);
+  public void createReplaceMentOrder(ShippingOrder shippingOrder, List<LineItem> lineItems, Boolean isRto) {
+    Set<LineItem> lineItemSet = new HashSet<LineItem>();
+    ReplacementOrder replacementOrder = ReplacementOrderHelper.getReplacementOrderFromShippingOrder(shippingOrder, shippingOrderStatusService, reconciliationStatusDao);
     for (LineItem lineItem : lineItems){
       if(lineItem.getQty() != 0){
 //        lineItem = lineItemDao.getLineItem(lineItem.getSku(), shippingOrder);
-        LineItem lineItemNew = getLineItemForReplacementOrder(lineItem);
-        lineItemNew.setShippingOrder(replacementOrder);
+//        LineItem lineItemNew = ReplacementOrderHelper.getLineItemForReplacementOrder(lineItem);
+        lineItem.setShippingOrder(replacementOrder);
         if(!isRto){
-          lineItemNew.setHkPrice(0.00);
-          lineItemNew.setCodCharges(0.00);
+          lineItem.setHkPrice(0.00);
+          lineItem.setCodCharges(0.00);
         }
-        replacementOrder.getLineItems().add(lineItemNew);
+        lineItemSet.add(lineItem);
 //      lineItem.setShippingOrder(replacementOrder);
 //      lineItemDao.save(lineItemNew);
       }
     }
+    replacementOrder.setLineItems(lineItemSet);
     replacementOrder.setAmount(ShippingOrderHelper.getAmountForSO(replacementOrder));
     replacementOrder.setRto(isRto);
+     
     replacementOrder.setRefShippingOrder(shippingOrder);
     save(replacementOrder);
     ShippingOrderHelper.setGatewayIdOnShippingOrder(replacementOrder);
     save(replacementOrder);
-    return replacementOrder;
-  }
-
-  private ReplacementOrder getReplacementOrderFromShippingOrder(ShippingOrder shippingOrder){
-    ReplacementOrder replacementOrder = new ReplacementOrder();
-    replacementOrder.setBaseOrder(shippingOrder.getBaseOrder());
-    replacementOrder.setWarehouse(shippingOrder.getWarehouse());
-    replacementOrder.setCancellationType(shippingOrder.getCancellationType());
-    replacementOrder.setCancellationRemark(shippingOrder.getCancellationRemark());
-    replacementOrder.setBasketCategory(shippingOrder.getBasketCategory());
-    replacementOrder.setServiceOrder(shippingOrder.isServiceOrder());
-    replacementOrder.setVersion(shippingOrder.getVersion());
-    replacementOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.RO_Created));
-    replacementOrder.setCreateDate(new Date());
-    replacementOrder.setUpdateDate(new Date());
-    replacementOrder.setAmount(0D);
-    replacementOrder.setReconciliationStatus(getReconciliationStatusDao().getReconciliationStatusById(EnumReconciliationStatus.PENDING));
-    return replacementOrder;
-  }
-
-  private LineItem getLineItemForReplacementOrder(LineItem lineItem){
-    LineItem replacementOrderLineItem = new LineItem();
-    replacementOrderLineItem.setSku(lineItem.getSku());
-//    replacementOrderLineItem.setShippingOrder(shippingOrder);
-    replacementOrderLineItem.setCartLineItem(lineItem.getCartLineItem());
-//    replacementOrderLineItem.setQty(cartLineItem.getQty());
-    replacementOrderLineItem.setCostPrice(lineItem.getCartLineItem().getProductVariant().getCostPrice());
-    replacementOrderLineItem.setMarkedPrice(lineItem.getCartLineItem().getMarkedPrice());
-    replacementOrderLineItem.setHkPrice(lineItem.getCartLineItem().getHkPrice());
-    replacementOrderLineItem.setDiscountOnHkPrice(lineItem.getCartLineItem().getDiscountOnHkPrice());
-    replacementOrderLineItem.setTax(lineItem.getSku().getTax());
-    replacementOrderLineItem.setQty(lineItem.getQty());
-    return replacementOrderLineItem;
   }
 
   public void save(ReplacementOrder replacementOrder){
-    getBaseDao().save(replacementOrder);
+    getBaseDao().saveOrUpdate(replacementOrder);
   }
 
   public BaseDao getBaseDao() {

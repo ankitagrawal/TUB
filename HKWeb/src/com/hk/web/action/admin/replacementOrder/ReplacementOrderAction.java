@@ -6,13 +6,12 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ReplacementOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.admin.pact.service.shippingOrder.ReplacementOrderService;
+import com.hk.helper.ReplacementOrderHelper;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.*;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -29,13 +28,16 @@ public class ReplacementOrderAction extends BaseAction {
   private Long shippingOrderId;
   private ShippingOrder shippingOrder;
   private Boolean isRto;
-  private ArrayList<LineItem> lineItems = new ArrayList<LineItem>();
+  private List<LineItem> lineItems = new ArrayList<LineItem>();
 
   @Autowired
   ShippingOrderService shippingOrderService;
 
   @Autowired
   ReplacementOrderService replacementOrderService;
+
+  @Autowired
+  LineItemDao lineItemDao;
 
   @DefaultHandler
   public Resolution pre(){
@@ -46,12 +48,21 @@ public class ReplacementOrderAction extends BaseAction {
     ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
     shippingOrderSearchCriteria.setOrderId(shippingOrderId);
     shippingOrder = shippingOrderService.find(shippingOrderId);
-    //return new RedirectResolution(ReplacementOrderAction.class);
+    for (LineItem lineItem : shippingOrder.getLineItems()){
+        lineItems.add(ReplacementOrderHelper.getLineItemForReplacementOrder(lineItem));
+    }
     return new ForwardResolution("/pages/admin/createReplacementOrder.jsp");
   }
 
   public Resolution createReplacementOrder(){
-    ReplacementOrder replacementOrder = replacementOrderService.createReplaceMentOrder(shippingOrder, lineItems, isRto);
+    for(LineItem lineItem : lineItems){
+      if(lineItem.getQty() > getLineItemDao().getLineItem(lineItem.getSku(), shippingOrder).getQty()){
+        addRedirectAlertMessage(new SimpleMessage("The quantity of "+lineItem.getCartLineItem().getProductVariant().getProduct().getName()+" cannot be more than original quantity."));
+        return new ForwardResolution("/pages/admin/createReplacementOrder.jsp");
+      }
+    }
+    addRedirectAlertMessage(new SimpleMessage("The Replacement order created"));  
+    replacementOrderService.createReplaceMentOrder(shippingOrder, lineItems, isRto);
     return new ForwardResolution("/pages/admin/createReplacementOrder.jsp");
   }
 
@@ -79,11 +90,19 @@ public class ReplacementOrderAction extends BaseAction {
     isRto = rto;
   }
 
-  public ArrayList<LineItem> getLineItems() {
+  public List<LineItem> getLineItems() {
     return lineItems;
   }
 
-  public void setLineItems(ArrayList<LineItem> lineItems) {
+  public void setLineItems(List<LineItem> lineItems) {
     this.lineItems = lineItems;
+  }
+
+  public LineItemDao getLineItemDao() {
+    return lineItemDao;
+  }
+
+  public void setLineItemDao(LineItemDao lineItemDao) {
+    this.lineItemDao = lineItemDao;
   }
 }
