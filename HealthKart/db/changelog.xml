@@ -7765,4 +7765,31 @@
             <column name="position" type="VARCHAR(20)"/>
         </addColumn>
     </changeSet>    
+    <changeSet author="Ajeet (generated)" id="1341923692621-1">
+        <createTable tableName="brands_to_audit">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="auditor_user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="brand" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="audit_date" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="audit_status" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1341923692621-2">
+        <addColumn tableName="offer">
+            <column name="payment_type" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1341923692621-3">
+        <addForeignKeyConstraint baseColumnNames="auditor_user_id" baseTableName="brands_to_audit" constraintName="fk_brands_to_audit_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
 </databaseChangeLog>
