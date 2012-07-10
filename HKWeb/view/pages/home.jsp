@@ -1,5 +1,7 @@
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
+<%@ page import="org.joda.time.DateTime" %>
+<%@ page import="java.util.Date" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.HomeAction" var="homeBean" event="pre"/>
@@ -28,19 +30,34 @@
     <div id="home_header02">
       <h1>the one stop shop for health, fitness and beauty</h1>
 
+      <%
+        DateTime dateTime = new DateTime();
+        Date endOfOfferDate = new Date(new DateTime(2012, 7, 8, 23, 59, 59, 59).getMillis());
+      %>
+      <%
+        if (dateTime.isBefore(endOfOfferDate.getTime())) {
+      %>
+        <img class="banner01" src="<hk:vhostImage/>/images/banners/home/monsoon_sbanner.jpg" border="0"
+             alt="Monsoon offer - Rs. 100 off!"/>
+      <%
+        } else {
+      %>
       <a href="${pageContext.request.contextPath}/product/rossmax-digital-bp-monitor-upper-arm-aw150/ROSMAX001">
         <img class="banner01" src="<hk:vhostImage/>/images/banners/home/home_banner_rossmax.jpg" border="0"
              alt="The most pocket friendly BP Monitor"/>
       </a>
+      <%
+        }
+      %>
         <%--<a href="http://www.healthkart.com/nutrition/sports-nutrition?brand=Dymatize">--%>
         <%--<img class="banner01" src="<hk:vhostImage/>/images/banners/home/dymatize_sbanner.jpg" border="0" alt="Dymatize - free shaker"/>--%>
         <%--</a>--%>
-      <a href="${pageContext.request.contextPath}/sports/fitness-accessories/support-gear/hand-wrist">
-        <img class="banner01" src="<hk:vhostImage/>/images/banners/home/gloves_sbanner.jpg" border="0"
-             alt="Training Gloves"/>
+      <a href="${pageContext.request.contextPath}/sports/sports-equipment?brand=Yonex">
+        <img class="banner01" src="<hk:vhostImage/>/images/banners/home/yonex_sbanner.jpg" border="0"
+             alt="Introducing Yonex"/>
       </a>
-      <a href="${pageContext.request.contextPath}/brand/nutrition/vitamin+shoppe">
-        <img src="<hk:vhostImage/>/images/banners/home/vs_sbanner.jpg" border="0" alt="Introducing Vitamin Shoppe"/>
+      <a href="${pageContext.request.contextPath}/nutrition/condition-specific-supplements/daily-nutrition-combos">
+        <img src="<hk:vhostImage/>/images/banners/home/vs02_sbanner.jpg" border="0" alt="Vitamin Shoppe combos"/>
       </a>
 
         <%--<div class="banner01">--%>

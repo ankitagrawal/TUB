@@ -12,9 +12,9 @@
 --/nutrition/sports-nutrition/weight-gainer : Weight Gainer
 --/nutrition/sports-nutrition/protein-bars  : Protein Bars
 --/nutrition/sports-nutrition/athletes      :  Athletes
+--/nutrition/sports-nutrition/contest-preparation :Contest Preparation
 --/nutrition/sports-nutrition/shakers-accessories        :Shakers & Accessories
---/nutrition/sports-nutrition/combos
---/nutrition/sports-nutrition/clearance-sale  :Clearance Sale
+--/nutrition/sports-nutrition/muscle-building-combos :Muscle Building Combos
 -/nutrition/dietary-supplements : Dietary Supplements
 --/nutrition/dietary-supplements/multivitamins :  Multivitamins
 ---/nutrition/dietary-supplements/multivitamins/men-s-multivitamins  :Men's Multivitamins
@@ -27,6 +27,7 @@
 --/nutrition/dietary-supplements/hair-skin-nails  :Hair Skin & Nails
 --/nutrition/dietary-supplements/bones             :Bones
 --/nutrition/dietary-supplements/eye               :Eye
+--/nutrition/dietary-supplements/herbal-cleanser :Herbal Cleanser
 --/nutrition/dietary-supplements/herbal-teas
 --/nutrition/dietary-supplements/herbs-a-z  :Herbs A-Z
 --/nutrition/dietary-supplements/herbal-cream-oil  :Herbal Cream & Oil
@@ -40,6 +41,7 @@
 --/nutrition/condition-specific-supplements/brain-memory     :Brain & Memory
 --/nutrition/condition-specific-supplements/vitality
 --/nutrition/condition-specific-supplements/energy-endurance     :Energy & Endurance
+--/nutrition/condition-specific-supplements/daily-nutrition-combos :Daily Nutrition Combos
 -/nutrition/weight-management
 --/nutrition/weight-management/fat-burner
 --/nutrition/weight-management/appetite-control :Appetite Control
@@ -71,8 +73,8 @@
 ---/nutrition/fitness-accessories/strength-training/upper-body
 ---/nutrition/fitness-accessories/strength-training/arm-leg-weights : Arm & Leg Weights
 ---/nutrition/fitness-accessories/strength-training/medicine-balls
----/sports/fitness-accessories/strength-training/dumbbells
----/sports/fitness-accessories/strength-training/kettlebells
+---/nutrition/fitness-accessories/strength-training/dumbbells
+---/nutrition/fitness-accessories/strength-training/kettlebells
 --/nutrition/fitness-accessories/aerobics-general-fitness : Aerobics & General Fitness
 ---/nutrition/fitness-accessories/aerobics-general-fitness/aerobic-steppers
 ---/nutrition/fitness-accessories/aerobics-general-fitness/hand-grips
@@ -359,12 +361,13 @@
 --/eye/sunglasses/women
 --/eye/sunglasses/men
 --/eye/sunglasses/unisex
---/eye/sunglasses/swimming
+--/eye/sunglasses/kids    :   Kids
 -/eye/eyeglasses :Eyeglasses
 --/eye/eyeglasses/half-rim :Half Rim
 --/eye/eyeglasses/full-rim :Full Rim
 --/eye/eyeglasses/frameless
 --/eye/eyeglasses/reading-glasses :Reading Glasses
+--/eye/eyeglasses/kids :  Kids
 -/eye/accessories
 --/eye/accessories/solutions
 --/eye/accessories/lens-case
