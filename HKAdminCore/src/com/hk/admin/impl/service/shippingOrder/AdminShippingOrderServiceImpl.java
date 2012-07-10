@@ -220,6 +220,13 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         return shippingOrder;
     }
 
+    @Transactional
+    public ShippingOrder initiateRTOForShippingOrder(ShippingOrder shippingOrder) {
+        shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.RTO_Initiated));
+        getShippingOrderService().save(shippingOrder);
+        return shippingOrder;
+    }
+
     public List<ShippingOrder> getShippingOrderListByCouriers(Date startDate, Date endDate, List<Long> courierId){
         return getAdminShippingOrderDao().getShippingOrderListByCouriers(startDate,endDate,courierId);
     }

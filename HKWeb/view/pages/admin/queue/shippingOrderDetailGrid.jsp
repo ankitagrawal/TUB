@@ -50,6 +50,7 @@
 <c:set var="shippingOrderStatusShipped" value="<%=EnumShippingOrderStatus.SO_Shipped.getId()%>"/>
 <c:set var="shippingOrderStatusDelivered" value="<%=EnumShippingOrderStatus.SO_Delivered.getId()%>"/>
 <c:set var="shippingOrderStatusRTO" value="<%=EnumShippingOrderStatus.SO_Returned.getId()%>"/>
+<c:set var="shippingOrderStatusRTOInitiated" value="<%=EnumShippingOrderStatus.RTO_Initiated.getId()%>"/>
 <c:set var="lineItem_Service_Postpaid" value="<%=EnumProductVariantPaymentType.Postpaid.getId()%>"/>
 
 
@@ -189,6 +190,33 @@
                 <c:set var="shippingOrderStatusId" value="${shippingOrder.orderStatus.id}"/>
                 <c:if
                         test="${shippingOrderStatusId == shippingOrderStatusShipped || shippingOrderStatusId == shippingOrderStatusDelivered}">
+                    <br/>
+                    <s:form beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction" class="markRTOForm">
+                        <s:param name="shippingOrder" value="${shippingOrder.id}"/>
+                        <div class="buttons">
+                            <s:submit name="initiateRTO" value="Initiate RTO" class="markRTOButton"/>
+                        </div>
+                    </s:form>
+                    <script type="text/javascript">
+                        $('.markRTOButton').click(function() {
+                            var proceed = confirm('Are you sure?');
+                            if (!proceed) return false;
+                        });
+
+                        $('.markRTOForm').ajaxForm({dataType: 'json', success: _markOrderRTO});
+
+                        function _markOrderRTO(res) {
+                            if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+                                alert("Order marked as RTO");
+                            }
+                        }
+                    </script>
+                </c:if>
+            </shiro:hasAnyRoles>
+            <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_LOGISTICS_ADMIN%>">
+                <c:set var="shippingOrderStatusId" value="${shippingOrder.orderStatus.id}"/>
+                <c:if
+                        test="${shippingOrderStatusId == shippingOrderStatusShipped || shippingOrderStatusId == shippingOrderStatusDelivered || shippingOrderStatusId == shippingOrderStatusRTOInitiated}">
                     <br/>
                     <s:form beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction" class="markRTOForm">
                         <s:param name="shippingOrder" value="${shippingOrder.id}"/>

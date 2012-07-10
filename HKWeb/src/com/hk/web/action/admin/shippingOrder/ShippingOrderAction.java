@@ -55,6 +55,15 @@ public class ShippingOrderAction extends BaseAction {
     }
 
     @JsonHandler
+    public Resolution initiateRTO() {
+        adminShippingOrderService.initiateRTOForShippingOrder(shippingOrder);
+
+        Map<String, Object> data = new HashMap<String, Object>(1);
+        data.put("orderStatus", JsonUtils.hydrateHibernateObject(shippingOrder.getOrderStatus()));
+        HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "success", data);
+        return new JsonResolution(healthkartResponse);
+    }
+    @JsonHandler
     public Resolution markRTO() {
         adminShippingOrderService.markShippingOrderAsRTO(shippingOrder);
 
