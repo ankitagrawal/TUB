@@ -71,5 +71,17 @@
 		<tstamp />
 	</target>
 
+	<taskdef name="hibernatetool" classname="org.hibernate.tool.ant.HibernateToolTask" classpathref="compile.classpath" />
+	<target name="hibernateGeneration">
+    <hibernatetool destdir="${project.root.dir}/out" templatepath="${lib.dependencies.dir}/hibernate-tools">
+      <jdbcconfiguration
+          configurationfile="${project.root.dir}/hibernate.master.cfg.xml"
+          revengfile="${project.root.dir}/hibernate.reveng.xml"
+          packagename="com.hk.domain"
+          />
+      <hbm2java jdk5="true" ejb3="true" destdir="${project.root.dir}/out/generated"/>
+    </hibernatetool>
+  </target>
+
 
 </project>
