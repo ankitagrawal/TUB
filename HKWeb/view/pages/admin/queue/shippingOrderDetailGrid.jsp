@@ -194,11 +194,11 @@
                     <s:form beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction" class="markRTOForm">
                         <s:param name="shippingOrder" value="${shippingOrder.id}"/>
                         <div class="buttons">
-                            <s:submit name="initiateRTO" value="Initiate RTO" class="markRTOButton"/>
+                            <s:submit name="initiateRTO" value="Initiate RTO" class="initiateRTOButton"/>
                         </div>
                     </s:form>
                     <script type="text/javascript">
-                        $('.markRTOButton').click(function() {
+                        $('.initiateRTOButton').click(function() {
                             var proceed = confirm('Are you sure?');
                             if (!proceed) return false;
                         });
@@ -207,7 +207,7 @@
 
                         function _markOrderRTO(res) {
                             if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
-                                alert("Order marked as RTO");
+                                alert("RTO Initiated.");
                             }
                         }
                     </script>
@@ -216,7 +216,7 @@
             <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_LOGISTICS_ADMIN%>">
                 <c:set var="shippingOrderStatusId" value="${shippingOrder.orderStatus.id}"/>
                 <c:if
-                        test="${shippingOrderStatusId == shippingOrderStatusShipped || shippingOrderStatusId == shippingOrderStatusDelivered || shippingOrderStatusId == shippingOrderStatusRTOInitiated}">
+                        test="${shippingOrderStatusId == shippingOrderStatusRTOInitiated}">
                     <br/>
                     <s:form beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction" class="markRTOForm">
                         <s:param name="shippingOrder" value="${shippingOrder.id}"/>

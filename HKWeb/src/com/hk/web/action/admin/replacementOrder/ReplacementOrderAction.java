@@ -70,8 +70,8 @@ public class ReplacementOrderAction extends BaseAction {
     }
 
     public Resolution createReplacementOrder() {
-        if (shippingOrder.getOrderStatus().getId() != EnumShippingOrderStatus.RTO_Initiated.getId()) {
-            addRedirectAlertMessage(new SimpleMessage("Replacement order can be created only for status" + EnumShippingOrderStatus.RTO_Initiated.getName()));
+        if (shippingOrder.getOrderStatus().getId() != EnumShippingOrderStatus.RTO_Initiated.getId() && shippingOrder.getOrderStatus().getId() != EnumShippingOrderStatus.SO_Returned.getId() ) {
+            addRedirectAlertMessage(new SimpleMessage("Replacement order can be created only for status" + EnumShippingOrderStatus.RTO_Initiated.getName()+" OR "+EnumShippingOrderStatus.SO_Returned.getName()));
             return new ForwardResolution("/pages/admin/createReplacementOrder.jsp");
         }
 
