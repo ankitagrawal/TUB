@@ -98,10 +98,10 @@ public class BusyPopulateSalesData {
       shippingOrderId = accountingInvoice.shipping_order_id
 
       if(accountingInvoice.warehouse_id == 1){
-        series = "main";
+        series = "HR";
       }
       else{
-        series = "mh";
+        series = "MH";
       }
 
       date = accountingInvoice.order_date;

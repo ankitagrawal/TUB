@@ -26,7 +26,7 @@
 		<ant dir="${project.admin.core.dir}" target="clean" inheritall="false" />
 		<ant dir="${project.report.dir}" target="clean" inheritall="false" />
 		<ant dir="${project.core.dir}" target="clean" inheritall="false" />
-    <ant dir="${project.common.dir}" target="clean" inheritall="false" />
+		<ant dir="${project.common.dir}" target="clean" inheritall="false" />
 
 		<!--
 		
@@ -46,6 +46,11 @@
 		<copy todir="${project.dist.dir}/WEB-INF/classes/spring">
 			<fileset dir="${project.common.dir}/resources/${project.env}/spring" />
 		</copy>
+		<replace file="${project.dist.dir}/WEB-INF/classes/spring/spring-hibernate.xml" token="DB_SERVER" value="${DB_SERVER}" />
+		<replace file="${project.dist.dir}/WEB-INF/classes/spring/spring-hibernate.xml" token="DB_PORT" value="${DB_PORT}" />
+		<replace file="${project.dist.dir}/WEB-INF/classes/spring/spring-hibernate.xml" token="DB_NAME" value="${DB_NAME}" />
+		<replace file="${project.dist.dir}/WEB-INF/classes/spring/spring-hibernate.xml" token="DB_USERID" value="${DB_USERID}" />
+		<replace file="${project.dist.dir}/WEB-INF/classes/spring/spring-hibernate.xml" token="DB_PASSWD" value="${DB_PASSWD}" />
 		<copy todir="${project.dist.dir}/WEB-INF/classes">
 			<fileset file="${project.web.dir}/resources/${project.env}/WEB-INF/StripesResources.properties" />
 			<fileset file="${project.web.dir}/resources/${project.env}/WEB-INF/healthkartTagLib.tld" />
@@ -144,12 +149,7 @@
 				<include name="*.jar" />
 			</fileset>
 		</copy>
-    <copy
-        file="${project.web.dir}/resources/${project.env}/WEB-INF/robots.txt"
-        tofile="${project.dist.dir}/robots.txt"
-        failonerror="false"
-        overwrite="true"
-        />
+		<copy file="${project.web.dir}/resources/${project.env}/WEB-INF/robots.txt" tofile="${project.dist.dir}/robots.txt" failonerror="false" overwrite="true" />
 	</target>
 
 	<target name="collect-jar">
@@ -160,21 +160,21 @@
 		<copy todir="${project.dist.dir}/WEB-INF/lib" file="${project.report.dir}/dist/hk-report.jar" />
 	</target>
 
-  <target name="collect-web">
-    <copy todir="${project.dist.dir}">
-      <fileset dir="${project.web.dir}/${project.view.dir}">
-        <include name="**/**"/>
-      </fileset>
-    </copy>
-    <copy todir="${project.dist.dir}/WEB-INF/classes">
-      <fileset dir="${project.web.dir}/${package.target.dir}" excludes="test/**/**"/>
-    </copy>
-    <copy todir="${project.dist.dir}/WEB-INF/">
-      <fileset dir="${project.web.dir}/${project.resources.dir}/${project.env}/WEB-INF" excludes="test/**/**"/>
-    </copy>
-  </target>
-                                       
-  <target name="web">
+	<target name="collect-web">
+		<copy todir="${project.dist.dir}">
+			<fileset dir="${project.web.dir}/${project.view.dir}">
+				<include name="**/**" />
+			</fileset>
+		</copy>
+		<copy todir="${project.dist.dir}/WEB-INF/classes">
+			<fileset dir="${project.web.dir}/${package.target.dir}" excludes="test/**/**" />
+		</copy>
+		<copy todir="${project.dist.dir}/WEB-INF/">
+			<fileset dir="${project.web.dir}/${project.resources.dir}/${project.env}/WEB-INF" excludes="test/**/**" />
+		</copy>
+	</target>
+
+	<target name="web">
 		<copy todir="${project.dist.dir}">
 			<fileset dir="${project.web.dir}/${project.view.dir}" />
 		</copy>
@@ -205,7 +205,7 @@
 			<property name="build.env" value="${build.env}" />
 		</ant>
 
-    <ant dir="${project.web.dir}" target="build" inheritall="false">
+		<ant dir="${project.web.dir}" target="build" inheritall="false">
 			<property name="build.env" value="${build.env}" />
 		</ant>
 	</target>
@@ -215,9 +215,9 @@
 	<target name="prepare">
 		<mkdir dir="${package.target.dir}" />
 		<mkdir dir="${project.dist.dir}" />
-    <mkdir dir="${project.dist.dir}/WEB-INF"/>
-    <mkdir dir="${project.dist.dir}/WEB-INF/classes"/>
-    <mkdir dir="${project.dist.dir}/WEB-INF/classes/spring"/>
+		<mkdir dir="${project.dist.dir}/WEB-INF" />
+		<mkdir dir="${project.dist.dir}/WEB-INF/classes" />
+		<mkdir dir="${project.dist.dir}/WEB-INF/classes/spring" />
 		<ant dir="${project.common.dir}" target="prepare" inheritall="false" />
 		<ant dir="${project.core.dir}" target="prepare" inheritall="false" />
 		<ant dir="${project.admin.core.dir}" target="prepare" inheritall="false" />

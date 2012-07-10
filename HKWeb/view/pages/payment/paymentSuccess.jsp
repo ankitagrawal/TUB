@@ -41,7 +41,7 @@
 <s:layout-component name="menu"> </s:layout-component>
 <s:layout-component name="heading">
     <div style="margin-top: 50px;">
-        <h1 class="green">
+        <h1 class="green" style="font-size: 1.2em;">
             Payment Successful
         </h1>
     </div>
@@ -116,9 +116,11 @@
     );
    </c:if>
 
-     <c:if test="${actionBean.couponAmount > 0}">
+     <c:if test="${actionBean.couponCode !=null}">
       //track couponcode
-    pageTracker._trackEvent('purchase','coupon','${actionBean.couponCode}','${actionBean.couponAmount}');
+    var couponAmount=${actionBean.couponAmount};
+    couponAmount=Math.round(couponAmount);    //event value needs to be an integer
+    pageTracker._trackEvent('purchase','coupon','${actionBean.couponCode}',couponAmount);
    </c:if>
 
 
@@ -151,11 +153,11 @@
             </div>
 
 
-            <h2 class="green">Your payment was successful.</h2>
+            <%--<h2 class="green" style="font-size: 1.2em;" >Your payment was successful.</h2>--%>
 
-            <p>
-                Your order ID is <strong>${actionBean.payment.order.gatewayOrderId}</strong>.</p>
-
+            <h2 style="font-size: 1em; padding-left: 5px;">
+                Your order ID is <strong>${actionBean.payment.order.gatewayOrderId}</strong>.</h2>
+            <br/>
             <shiro:hasRole name="<%=RoleConstants.HK_UNVERIFIED%>">
                 <div class='promos'>
                     <div class='prom yellow help' style="width: 95%; padding:5px;">
@@ -209,11 +211,11 @@
             </c:if>--%>
             <br/>
 
-            <h2>Shipping & Delivery</h2>
+            <h2 style="font-size: 1.2em;">Shipping & Delivery</h2>
 
             <p>Your order will be dispatched within 1-3 business days. Additional time will be taken by the courier company.</p>
 
-            <h2>Customer Support</h2>
+            <h2 style="font-size: 1.2em;">Customer Support</h2>
 
             <p><s:link beanclass="com.hk.web.action.pages.ContactAction">Write to us</s:link> with your Order ID if you have any questions or call us on 0124-4551616</p>
 
@@ -242,7 +244,7 @@
             </c:if>
 
             <div class="step2 success_order_summary" style="padding: 5px; float: left; margin-right: 5px;">
-                <h2 style="margin: 10px;">Order Summary</h2>
+                <h2 style="font-size:1.2em;">Order Summary</h2>
 
                 <s:layout-render name="/layouts/embed/orderSummaryTableDetailed.jsp" pricingDto="${actionBean.pricingDto}"
                                  orderDate="${actionBean.payment.paymentDate}"/>
@@ -250,7 +252,7 @@
             </div>
 
             <div style="margin-top: 10px; float: right; margin-right: 5px;">
-                <h2>Shipping address${actionBean.pricingDto.shippingLineCount > 1 ? 'es' : ''}</h2>
+                <h2 style="font-size: 1.2em;">Shipping address${actionBean.pricingDto.shippingLineCount > 1 ? 'es' : ''}</h2>
 
                 <p>
                     <c:set var="address" value="${actionBean.payment.order.address}"/>

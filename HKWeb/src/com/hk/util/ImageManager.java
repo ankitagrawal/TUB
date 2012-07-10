@@ -24,6 +24,7 @@ import com.hk.pact.dao.catalog.category.CategoryImageDao;
 import com.hk.pact.dao.catalog.combo.ComboDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
+import com.hk.admin.util.S3Utils;
 
 @Component
 public class ImageManager {
@@ -426,7 +427,7 @@ public class ImageManager {
 
         // saving original image
         String imageUrl = HKImageUtils.getS3ImageKey(EnumImageSize.Original, id);
-        S3Utils.uploadImage(awsAccessKey, awsSecretKey, filePath, imageUrl, awsBucket);
+        S3Utils.uploadData(awsAccessKey, awsSecretKey, filePath, imageUrl, awsBucket);
 
         // saving thumbnails for all sizes
         for (EnumImageSize enumImageSize : EnumImageSize.values()) {
@@ -434,7 +435,7 @@ public class ImageManager {
                 repositoryFilePath = HKImageUtils.getRepositoryImagePath(enumImageSize, id);
                 ImageUtils.createThumbnail(filePath, repositoryFilePath, enumImageSize.getDimension(), QUALITY, false, false, .5F);
                 imageUrl = HKImageUtils.getS3ImageKey(enumImageSize, id);
-                S3Utils.uploadImage(awsAccessKey, awsSecretKey, repositoryFilePath, imageUrl, awsBucket);
+                S3Utils.uploadData(awsAccessKey, awsSecretKey, repositoryFilePath, imageUrl, awsBucket);
             }
         }
 
@@ -448,7 +449,7 @@ public class ImageManager {
 
         // saving original image
         String imageUrl = HKImageUtils.getS3CategoryImageKey(EnumImageSize.Original, id);
-        S3Utils.uploadImage(awsAccessKey, awsSecretKey, filePath, imageUrl, awsBucket);
+        S3Utils.uploadData(awsAccessKey, awsSecretKey, filePath, imageUrl, awsBucket);
 
         // saving thumbnails for all sizes
         for (EnumImageSize enumImageSize : EnumImageSize.values()) {
@@ -456,7 +457,7 @@ public class ImageManager {
                 repositoryFilePath = HKImageUtils.getRepositoryImagePath(enumImageSize, id);
                 ImageUtils.createThumbnail(filePath, repositoryFilePath, enumImageSize.getDimension(), QUALITY, false, false, .5F);
                 imageUrl = HKImageUtils.getS3CategoryImageKey(enumImageSize, id);
-                S3Utils.uploadImage(awsAccessKey, awsSecretKey, repositoryFilePath, imageUrl, awsBucket);
+                S3Utils.uploadData(awsAccessKey, awsSecretKey, repositoryFilePath, imageUrl, awsBucket);
             }
         }
 
@@ -465,11 +466,11 @@ public class ImageManager {
     /*
      * private void resizeAndUpload(String filePath, ComboImage comboImage) throws Exception { String repositoryFilePath =
      * null; Long id = comboImage.getId(); // saving original image String imageUrl =
-     * getS3ImageKey(EnumImageSize.Original, id); s3Utils.uploadImage(awsAccessKey, awsSecretKey, filePath, imageUrl,
+     * getS3ImageKey(EnumImageSize.Original, id); s3Utils.uploadMultipleData(awsAccessKey, awsSecretKey, filePath, imageUrl,
      * awsBucket); // saving thumbnails for all sizes for (EnumImageSize enumImageSize : EnumImageSize.values()) { if
      * (enumImageSize != EnumImageSize.Original) { repositoryFilePath = getRepositoryImagePath(enumImageSize, id);
      * imageUtils.createThumbnail(filePath, repositoryFilePath, enumImageSize.getDimension(), QUALITY, false, false,
-     * .5F); imageUrl = getS3ImageKey(enumImageSize, id); s3Utils.uploadImage(awsAccessKey, awsSecretKey,
+     * .5F); imageUrl = getS3ImageKey(enumImageSize, id); s3Utils.uploadMultipleData(awsAccessKey, awsSecretKey,
      * repositoryFilePath, imageUrl, awsBucket); } } }
      */
 
