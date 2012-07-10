@@ -58,7 +58,7 @@
           <li>
           <label>Shipping Order Status</label>
           <s:select name="shippingOrderStatusId">
-						<s:option value="">-Select-</s:option>
+						<s:option value="">All</s:option>
 						<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="SOStatusForReconcilation" value="id"
 						                           label="name"/>
 					</s:select>
