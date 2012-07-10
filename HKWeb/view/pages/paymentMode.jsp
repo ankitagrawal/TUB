@@ -122,14 +122,19 @@
 <div id="tabs_content1" class="tab_content"><s:form
         beanclass="com.hk.web.action.core.payment.PaymentAction" method="post">
     <s:hidden name="order" value="${orderSummary.order.id}" />
-    <s:hidden name="paymentMode" value="<%=defaultGateway%>" />
-    <p><label><s:radio name="bankId" value="70" />VISA
+    <s:hidden name="bankId" value="70" />
+    <p><label><s:radio name="paymentMode" value="15" />VISA
         &nbsp;</label> <img src="<hk:vhostImage/>/images/visa.jpg" height="20px">
     </p>
 
-    <p><label><s:radio name="bankId" value="670" />
-        VISA/MasterCard/Maestro &nbsp;</label> <img
+    <p><label><s:radio name="paymentMode" value="80" />
+        MasterCard/Maestro &nbsp;</label> <img
             src="<hk:vhostImage/>/images/mastercard.jpg" height="30px">
+    </p>
+
+    <p><label><s:radio name="paymentMode" value="80" />
+        Citrus Wallet (Faster Checkout) &nbsp;</label> <img
+            src="<hk:vhostImage/>/images/citrus.jpeg" height="30px">
     </p>
 
     <div style="float: right; width: 90%;"><s:submit
@@ -141,14 +146,19 @@
     <s:form beanclass="com.hk.web.action.core.payment.PaymentAction"
             method="post">
         <s:hidden name="order" value="${orderSummary.order.id}" />
-        <s:hidden name="paymentMode" value="<%=defaultGateway%>" />
-        <p><label><s:radio name="bankId" value="70" />VISA
-            &nbsp;</label> <img src="<hk:vhostImage/>/images/visa.jpg" height="20px" />
+        <s:hidden name="bankId" value="70" />
+        <p><label><s:radio name="paymentMode" value="15" />VISA
+            &nbsp;</label> <img src="<hk:vhostImage/>/images/visa.jpg" height="20px">
         </p>
 
-        <p><label><s:radio name="bankId" value="670" />
-            VISA/MasterCard/Maestro &nbsp;</label> <img
+        <p><label><s:radio name="paymentMode" value="80" />
+            MasterCard/Maestro &nbsp;</label> <img
                 src="<hk:vhostImage/>/images/mastercard.jpg" height="30px">
+        </p>
+
+        <p><label><s:radio name="paymentMode" value="80" />
+            Citrus Wallet (Faster Checkout) &nbsp;</label> <img
+                src="<hk:vhostImage/>/images/citrus.jpeg" height="30px">
         </p>
 
         <div style="float: right; width: 90%;"><s:submit
