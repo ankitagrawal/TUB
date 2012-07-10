@@ -43,7 +43,7 @@ public class RecommendationEngineImpl implements RecommendationEngine {
         public static final String CONSUMER_BUY = "Consumer/Buy";
         public static final String COSUMER_BROWSE = "Consumer/Browse";
         public static final String CONSUMER_ADD_TO_CART = "Consumer/Add to cart";
-        public static final String CONSUMER_REMOVE_FROM_CART = "Consumer/Anonymous Browse";
+        public static final String CONSUMER_REMOVE_FROM_CART = "Consumer/Remove from cart";
         public static final String CONSUMER_ANONYMOUS_BROWSE = "Consumer/Anonymous Browse";
         public static final String CONSUMER_RATE_PRODUCT = "Consumer/Rate";
         public static final String CONSUMER_WRITE_REVIEW = "Consumer/Review";
@@ -95,15 +95,15 @@ public class RecommendationEngineImpl implements RecommendationEngine {
     }
 
     public void notifyPurchase(long userId,  String pvId){
-        notifyUserTransaction(userId, pvId, MoogaActions.CONSUMER_ADD_TO_CART);
+        notifyUserTransaction(userId, pvId, MoogaActions.CONSUMER_BUY);
     }
 
     public void notifyRemoveFromCart(long userId,  String pvId){
-        notifyUserTransaction(userId, pvId, MoogaActions.CONSUMER_ADD_TO_CART);
+        notifyUserTransaction(userId, pvId, MoogaActions.CONSUMER_REMOVE_FROM_CART);
     }
 
     public void notifyWriteReview(long userId,  String pvId){
-        notifyUserTransaction(userId, pvId, MoogaActions.CONSUMER_ADD_TO_CART);
+        notifyUserTransaction(userId, pvId, MoogaActions.CONSUMER_WRITE_REVIEW);
     }
 
     /**
@@ -162,6 +162,9 @@ public class RecommendationEngineImpl implements RecommendationEngine {
             String result = moogaStub.trans_NotifyTrans(HK_MOOGA_KEY,"OFBiz.NotifyTransaction", LEFT_OPERATOR + params + RIGHT_OPERATOR);
             result = "";
         }catch(RemoteException ex){
+            String err = ex.getMessage();
+            err = "";
+        }catch(Exception ex){
             String err = ex.getMessage();
             err = "";
         }
