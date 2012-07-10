@@ -81,7 +81,7 @@ public class BusyTableTransactionGenerator {
 
         String series = '';
         if (purchaseRow.warehouseId == 1) {
-          series = 'MAIN'
+          series = 'HR'
         }
         else if (purchaseRow.warehouseId == 2) {
           series = 'MH';
