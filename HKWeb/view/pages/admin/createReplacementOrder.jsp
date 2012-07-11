@@ -69,12 +69,12 @@
                         </td>
                         <td>
                             <s:link href="#" id="is-replacement-radio">
-                                <h5>Is Replacement:</h5>
+                                <h5>Create RO<br />for replacement</h5>
                             </s:link>
                         </td>
                         <td>
                             <s:link href="#" id="is-rto-radio">
-                                <h5>Is RTO:</h5>
+                                <h5>Create RO<br />for RTO Goods</h5>
                             </s:link>
                         </td>
                     </tr>

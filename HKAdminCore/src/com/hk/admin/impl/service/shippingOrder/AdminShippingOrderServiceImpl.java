@@ -224,6 +224,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     public ShippingOrder initiateRTOForShippingOrder(ShippingOrder shippingOrder) {
         shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.RTO_Initiated));
         getShippingOrderService().save(shippingOrder);
+        getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RTO_Initiated);
         return shippingOrder;
     }
 

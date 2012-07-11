@@ -10,9 +10,11 @@ import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.admin.pact.service.shippingOrder.ReplacementOrderService;
 import com.hk.helper.ReplacementOrderHelper;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.constants.core.PermissionConstants;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.apache.commons.lang.StringUtils;
+import org.stripesstuff.plugin.security.Secure;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.ValidationMethod;
 import net.sourceforge.stripes.validation.SimpleError;
@@ -27,6 +29,7 @@ import java.util.ArrayList;
  * Time: 3:09:58 PM
  * To change this template use File | Settings | File Templates.
  */
+@Secure(hasAnyPermissions = { PermissionConstants.CREATE_REPLACEMENT_ORDER })
 @Component
 public class ReplacementOrderAction extends BaseAction {
     private Long shippingOrderId;
@@ -73,14 +76,27 @@ public class ReplacementOrderAction extends BaseAction {
         if ( (!shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.RTO_Initiated.getId())) &&
                 (!shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Returned.getId()) )) {
             addRedirectAlertMessage(new SimpleMessage("Replacement order can be created only for status" + EnumShippingOrderStatus.RTO_Initiated.getName() + " OR " + EnumShippingOrderStatus.SO_Returned.getName()));
-            return new ForwardResolution("/pages/admin/createReplacementOrder.jsp");
+            return new RedirectResolution("/pages/admin/createReplacementOrder.jsp");
         }
 
+        int valid_item_flag = 0;
+        int negative_qty_flag = 0;
         for (LineItem lineItem : lineItems) {
+            if(lineItem.getQty() > 0){
+                valid_item_flag++;
+            }
+            if(lineItem.getQty() <0 ){
+                addRedirectAlertMessage(new SimpleMessage("The quantity of " + lineItem.getCartLineItem().getProductVariant().getProduct().getName() + " cannot be less than zero."));
+                return new RedirectResolution("/pages/admin/createReplacementOrder.jsp");
+            }
             if (lineItem.getQty() > getLineItemDao().getLineItem(lineItem.getSku(), shippingOrder).getQty()) {
                 addRedirectAlertMessage(new SimpleMessage("The quantity of " + lineItem.getCartLineItem().getProductVariant().getProduct().getName() + " cannot be more than original quantity."));
-                return new ForwardResolution("/pages/admin/createReplacementOrder.jsp");
+                return new RedirectResolution("/pages/admin/createReplacementOrder.jsp");
             }
+        }
+        if(valid_item_flag == 0){
+            addRedirectAlertMessage(new SimpleMessage("The quantity of at least one item should be greater than 0"));
+            return new RedirectResolution("/pages/admin/createReplacementOrder.jsp");
         }
         addRedirectAlertMessage(new SimpleMessage("The Replacement order created"));
         replacementOrderService.createReplaceMentOrder(shippingOrder, lineItems, isRto);
