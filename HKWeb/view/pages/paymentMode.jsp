@@ -134,6 +134,11 @@
             src="<hk:vhostImage/>/images/mastercard.jpg" height="30px">
     </p>
 
+
+
+
+
+
     <div style="float: right; width: 90%;"><s:submit
             name="proceed" value="Make Payment >" class="button"
             disabled="${fn:length(orderSummary.pricingDto.outOfStockLineItems) > 0 ? 'true':'false'}" />
@@ -152,6 +157,11 @@
             VISA/MasterCard/Maestro &nbsp;</label> <img
                 src="<hk:vhostImage/>/images/mastercard.jpg" height="30px">
         </p>
+
+
+
+
+
 
         <div style="float: right; width: 90%;"><s:submit
                 name="proceed" value="Make Payment >" class="button makePayment"
