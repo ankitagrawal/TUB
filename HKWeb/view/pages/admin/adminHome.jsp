@@ -109,7 +109,8 @@
   <h2>Warehouse</h2>
   <c:if test="${whAction.setWarehouse != null}">
       <h3><s:link beanclass="com.hk.web.action.admin.inventory.checkin.InventoryBinAllocationAction">Bin Allocation</s:link></h3>
-  <h3><s:link beanclass="com.hk.web.action.admin.warehouse.AssignBinAction">Assign Bin</s:link></h3>
+
+  <%--<h3><s:link beanclass="com.hk.web.action.admin.warehouse.AssignBinAction">Assign Bin</s:link></h3>--%>
 
   <h3><s:link beanclass="com.hk.web.action.admin.queue.PackingAwaitingQueueAction">Packing Awaiting Queue</s:link></h3>
   <h3>
@@ -236,6 +237,8 @@
 <h3>
     <s:link beanclass="com.hk.web.action.admin.sku.SkuParseExcelAction">Upload SKU Excel</s:link></h3>
 
+	<h3>
+	    <s:link beanclass="com.hk.web.action.admin.inventory.BrandsToAuditAction">Inventory Audit</s:link></h3>
 
 </div>
 
@@ -253,6 +256,8 @@
   <h3><s:link beanclass="com.hk.web.action.admin.user.PendingRewardPointQueueAction">Pending Reward Points</s:link></h3>
 
   <h3><s:link beanclass="com.hk.web.action.admin.catalog.product.PendingProductReviewAction">Pending Product Reviews</s:link></h3>
+
+   <h3><s:link beanclass="com.hk.web.action.report.BinAllocationReport">Generate  Bin Allocation Report</s:link></h3>
 
 </div>
 
