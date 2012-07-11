@@ -74,7 +74,7 @@
                         </td>
                         <td>
                             <s:link href="#" id="is-rto-radio">
-                                <h5>Create RO<br />for RTO Goods</h5>
+                                <h5>Create RO<br />for Returned Goods</h5>
                             </s:link>
                         </td>
                     </tr>
