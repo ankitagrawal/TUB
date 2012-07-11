@@ -1,4 +1,5 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
+<%@ page import="com.hk.constants.payment.EnumPaymentType" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -34,14 +35,15 @@
             <th width="25px">Offer Trigger Product Group</th>
             <th width="25px">Offer Trigger Qty</th>
             <th width="25px">Offer terms</th>
+            <th width="25px">Payment Type</th>
         </tr>
         </thead>
           <tr>
             <td width="10px">${offerBean.offer.id}</td>
-            <td class="offerTextContainer" width="200px" align="center">${offerBean.offer.description} </td>
+            <td class="offerTextContainer" width="50px" align="center">${offerBean.offer.description} </td>
             <td width="25px"><fmt:formatDate value="${offerBean.offer.startDate}" type="both"/></td>
             <td width="25px"><s:text class="date_input" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="offer.endDate" value="${offerBean.offer.endDate}"/></td>
-            <td width="200px" align="center">${offerBean.offer.offerAction.description}</td>
+            <td width="50px" align="center">${offerBean.offer.offerAction.description}</td>
             <td width="25px">${offerBean.offer.offerAction.productGroup.name}</td>
             <td width="25px">${offerBean.offer.offerAction.qty}</td>
             <td width="25px">${offerBean.offer.offerAction.discountPercentOnHkPrice}</td>
@@ -51,7 +53,12 @@
             <td width="200px" align="center">${offerBean.offer.offerTrigger.description}</td>
             <td width="25px">${offerBean.offer.offerTrigger.productGroup.name}</td>
             <td width="25px">${offerBean.offer.offerTrigger.qty}</td>
-            <td width="25px"><s:textarea name="offer.terms"/></td>
+            <td width="50px"><s:textarea name="offer.terms"/></td>
+	          <td width="25px"><s:select name="offer.paymentType">
+		        <c:forEach items="<%=EnumPaymentType.getAllPaymentTypes()%>" var="pType">
+			        <s:option value="${pType.id}">${pType.name}</s:option>
+		        </c:forEach>
+	        </s:select></td>
           </tr>
       </table>
       <s:hidden name="offer" value="${offerBean.offer}"/>

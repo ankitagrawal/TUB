@@ -220,7 +220,7 @@
 --/home-devices/blood-pressure/bp : BP Apparatus
 --/home-devices/blood-pressure/ecg : ECG Machines
 --/home-devices/blood-pressure/accessories
---/home-devices/blood-pressure/combo : Doctor's Day Offer
+--/home-devices/blood-pressure/combo : Star's of the Month
 -/home-devices/respiratory-care
 --/home-devices/respiratory-care/nebulizer
 --/home-devices/respiratory-care/oxygen-concentrator : Oxygen Concentrators
@@ -251,8 +251,15 @@
 ---/home-devices/supports/walking-aids/crutches
 ---/home-devices/supports/walking-aids/walkers
 -/home-devices/rehabilitation-aids
+--/home-devices/rehabilitation-aids/walking-aids
+---/home-devices/rehabilitation-aids/walking-aids/wheel-chair
+---/home-devices/rehabilitation-aids/walking-aids/power-wheel-chair: Power Wheel Chair
+---/home-devices/rehabilitation-aids/walking-aids/walking-sticks
+---/home-devices/rehabilitation-aids/walking-aids/crutches
+---/home-devices/rehabilitation-aids/walking-aids/walkers
+--/home-devices/rehabilitation-aids/commode : Commode WheelChair/Stools
 --/home-devices/rehabilitation-aids/physiotherapy-aids
---/home-devices/rehabilitation-aids/prosthetic-aids
+--/home-devices/rehabilitation-aids/orthotic-aids
 ---/home-devices/rehabilitation-aids/prosthetic-aids/knee
 ---/home-devices/rehabilitation-aids/prosthetic-aids/foot-drop-splints
 --/home-devices/rehabilitation-aids/cosmetic-restoration
@@ -303,13 +310,6 @@
 --/home-devices/clinical-supplies/hearing-aids
 --/home-devices/clinical-supplies/eye-patch
 -/home-devices/miscellaneous
---/home-devices/miscellaneous/walking-aids
----/home-devices/miscellaneous/walking-aids/wheel-chair
----/home-devices/miscellaneous/walking-aids/power-wheel-chair: Power Wheel Chair
----/home-devices/miscellaneous/walking-aids/walking-sticks
----/home-devices/miscellaneous/walking-aids/crutches
----/home-devices/miscellaneous/walking-aids/walkers
---/home-devices/miscellaneous/commode : Commode WheelChair/Stools
 --/home-devices/miscellaneous/digital-thermometer : Digital Thermometer
 ---/home-devices/miscellaneous/flexible-tip
 ---/home-devices/miscellaneous/rigid-tip
