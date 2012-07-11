@@ -54,6 +54,13 @@
                 /*setting focus on first Awb Number text onbodyload*/
                 $('#trackingIdList0').focus();
 
+                /* reloading page on submitting it*/
+                $('.reloadLink').click(function() {
+                    location.reload();
+                    return false;
+
+                });
+
 
                 /*function to delete last row.*/
                 $('.removeRowButton').click(function() {
@@ -133,12 +140,15 @@
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <a href="hkDeliveryWorksheet.jsp#" class="removeRowButton"
                                style="font-size:1.2em;color:blue;">Remove row</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="hkDeliveryWorksheet.jsp#" class="reloadLink"
+                                                           style="font-size:1.2em;color:blue;">Reload</a>
+
 
                         </li>
                         <li>
-                            <s:submit name="downloadDeliveryWorkSheet" value="Download Delivery Worksheet"
+                            <s:submit id="submitButton" name="downloadDeliveryWorkSheet" value="Download Delivery Worksheet"
                                       class="verifyData"/>
-
                         </li>
                     </ul>
                 </fieldset>
