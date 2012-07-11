@@ -496,14 +496,14 @@
               source = ${relatedProduct.key}
               products =
               <c:forEach var="product" items="${relatedProduct.value}">
-                  ${product.id}
+                  ${product}
               </c:forEach>
           </h6>
           </shiro:hasPermission>
           <c:set var="recommendedProductCount" value="0" scope="page" />
             <c:forEach var="product" items="${relatedProduct.value}">
                 <c:if test = "${recommendedProductCount < 6}">
-                    <s:layout-render name="/layouts/embed/_productThumb.jsp" productId="${product.id}"/>
+                    <s:layout-render name="/layouts/embed/_productThumb.jsp" productId="${product}"/>
                 </c:if>
                 <c:set var="recommendedProductCount" value="${recommendedProductCount + 1}" scope="page"/>
             </c:forEach>

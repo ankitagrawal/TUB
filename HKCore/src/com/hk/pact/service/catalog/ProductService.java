@@ -87,6 +87,6 @@ public interface ProductService {
 
     public Double getAverageRating(Product product);
 
-    public Map<String,List<Product>> getRecommendedProducts(String pvID);
+    public Map<String,List<String>> getRecommendedProducts(String pvID);
 
 }

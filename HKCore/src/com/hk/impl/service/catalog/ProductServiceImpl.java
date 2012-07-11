@@ -3,6 +3,7 @@ package com.hk.impl.service.catalog;
 import java.util.*;
 
 import com.hk.constants.core.Keys;
+import com.hk.domain.catalog.product.*;
 import com.hk.pact.service.mooga.RecommendationEngine;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
 import net.sourceforge.stripes.controller.StripesFilter;
@@ -13,11 +14,6 @@ import org.springframework.stereotype.Service;
 
 import com.akube.framework.dao.Page;
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.product.ProductExtraOption;
-import com.hk.domain.catalog.product.ProductGroup;
-import com.hk.domain.catalog.product.ProductImage;
-import com.hk.domain.catalog.product.ProductOption;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.catalog.product.combo.ComboProduct;
 import com.hk.pact.dao.catalog.product.ProductDao;
@@ -74,7 +70,7 @@ public class ProductServiceImpl implements ProductService {
         String contextPath = WebContext.getRequest().getContextPath();
         String urlString = host.concat(contextPath).concat("/product/");
         return urlString + product.getSlug() + "/" + product.getId();
-      }
+    }
 
     public List<Product> getAllProductByBrand(String brand) {
         return getProductDAO().getAllProductByBrand(brand);
@@ -153,15 +149,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public Page getProductReviews(Product product, List<Long> reviewStatusList, int page, int perPage){
-       return getReviewService().getProductReviews(product,reviewStatusList,page,perPage);
+        return getReviewService().getProductReviews(product,reviewStatusList,page,perPage);
     }
 
-  public Long getAllReviews(Product product, List<Long> reviewStatusList){
-       return getReviewService().getAllReviews(product, reviewStatusList);
+    public Long getAllReviews(Product product, List<Long> reviewStatusList){
+        return getReviewService().getAllReviews(product, reviewStatusList);
     }
 
     public Double getAverageRating(Product product){
-       return getReviewService().getProductStarRating(product);
+        return getReviewService().getProductStarRating(product);
     }
 
     public ProductDao getProductDAO() {
@@ -172,48 +168,66 @@ public class ProductServiceImpl implements ProductService {
         this.productDAO = productDAO;
     }
 
-  public ReviewService getReviewService() {
-    return reviewService;
-  }
-
-  public void setReviewService(ReviewService reviewService) {
-    this.reviewService = reviewService;
-  }
-
-  public boolean isComboInStock(Combo combo) {
-    for (ComboProduct comboProduct : combo.getComboProducts()) {
-      if (!comboProduct.getAllowedProductVariants().isEmpty() && comboProduct.getAllowedInStockVariants().isEmpty()) {
-        return false;
-      } else if (comboProduct.getProduct().getInStockVariants().isEmpty()) {
-        return false;
-      }
+    public ReviewService getReviewService() {
+        return reviewService;
     }
-    return true;
-  }
 
-   public Map<String, List<Product>> getRecommendedProducts(String pId){
-       Map<String, List<Product>> productsResult = new HashMap<String, List<Product>>();
-       List<Product> products = new ArrayList<Product>();
-       String source = "";
-       if (moogaOn){
-           List<String> pvIdList = recommendationService.getRecommendedProducts(pId);
-           Iterator it = pvIdList.iterator();
-           int productCount = 0;
-           source = "MOOGA";
-           while (it.hasNext()) {
-               Product product = productDAO.getProductById((String)it.next());
-               if ((product != null) && !product.isDeleted()){
-                   products.add(product);
-                   ++productCount;
-               }
-           }
-       }
+    public void setReviewService(ReviewService reviewService) {
+        this.reviewService = reviewService;
+    }
 
-       if (!moogaOn || (products.size() == 0)){
-           products = getProductDAO().getProductById(pId).getRelatedProducts();
-           source = "DB";
-       }
-       productsResult.put(source, products);
-       return productsResult;
-   }
+    public boolean isComboInStock(Combo combo) {
+        for (ComboProduct comboProduct : combo.getComboProducts()) {
+            if (!comboProduct.getAllowedProductVariants().isEmpty() && comboProduct.getAllowedInStockVariants().isEmpty()) {
+                return false;
+            } else if (comboProduct.getProduct().getInStockVariants().isEmpty()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    public boolean isProductOutOfStock(Product product){
+        List<ProductVariant> productVariants = product.getProductVariants();
+        boolean isOutOfStock = true;
+        for (ProductVariant pv : productVariants){
+            if (!pv.getOutOfStock()){
+                isOutOfStock = false;
+                break;
+            }
+        }
+        return isOutOfStock;
+    }
+
+    public Map<String, List<String>> getRecommendedProducts(String pId){
+        Map<String, List<String>> productsResult = new HashMap<String, List<String>>();
+        List<String> products = new ArrayList<String>();
+        String source = "";
+        if (moogaOn){
+            List<String> pvIdList = recommendationService.getRecommendedProducts(pId);
+            Iterator it = pvIdList.iterator();
+            int productCount = 0;
+            source = "MOOGA";
+            while (it.hasNext()) {
+                Product product = productDAO.getProductById((String)it.next());
+                if ((product != null) && !product.isDeleted() && !isProductOutOfStock(product)){
+                    products.add(product.getId());
+                    ++productCount;
+                }
+            }
+        }
+
+        if (!moogaOn || (products.size() == 0) ){
+            List<Product> productList = getProductDAO().getProductById(pId).getRelatedProducts();
+            for (Product product : productList){
+                if ((product != null) && !product.isDeleted() && !isProductOutOfStock(product)){
+                    products.add(product.getId());
+                }
+            }
+            source = "DB";
+        }
+        productsResult.put(source, products);
+        return productsResult;
+    }
 }
