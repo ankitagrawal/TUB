@@ -150,6 +150,26 @@ public class RecommendationEngineImpl implements RecommendationEngine {
         return  recommendedItems;
     }
 
+    public List<String> getRelatedProducts(String pId, List<String> categories){
+        List<String> recommendedItems = new ArrayList<String>();
+        try{
+            StringBuffer categoryId = new StringBuffer();
+            for (String category : categories){
+                if (StringUtils.isNotBlank(category)){
+                    categoryId.append(category);
+                    categoryId.append("/");
+                }
+            }
+            String catId = categoryId.toString();
+            catId = catId.substring(0, catId.length() - 1);//remove the last "/" character
+            String itemResponse = getMoogaStub().item_GetRelatedItemsToItem(HK_MOOGA_KEY, pId, catId, "0", "PRODUCT");
+            recommendedItems = getProducts(itemResponse);
+        }catch(Exception ex){   //swallow the exception
+
+        }
+        return  recommendedItems;
+    }
+
     /**
      * returns the recommended product variants for given product variant id
      * @param pvId
@@ -196,6 +216,9 @@ public class RecommendationEngineImpl implements RecommendationEngine {
             for (String result : moogaResult){
                 String[] splitResults = result.split(MOOGA_SEPARATOR);
                 String productId = splitResults[0].replace(LEFT_OPERATOR,"").replace(RIGHT_OPERATOR, "").trim();
+                if (productId.contains(":")){
+                    productId = productId.split(":")[0];
+                }
                 Double rank =  Double.parseDouble(splitResults[1].replace(LEFT_OPERATOR, "").replace(RIGHT_OPERATOR, "").trim());
                 if ((splitResults.length > 0) && StringUtils.isNotBlank(productId)){ //Just in case MOOGA misbehaves
                     if (!productResults.contains(productId)){

@@ -201,11 +201,24 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public Map<String, List<String>> getRecommendedProducts(Product findProduct){
+        List<String> pvIdList = recommendationService.getRecommendedProducts(findProduct.getId());
+        return getRecommendedProducts(findProduct,pvIdList );
+    }
+
+    public Map<String, List<String>> getRelatedMoogaProducts(Product findProduct){
+        String category = findProduct.getPrimaryCategory().getName();
+        List<String> categories = new ArrayList<String>();
+        categories.add(category);
+        List<String> pvIdList = recommendationService.getRelatedProducts(findProduct.getId(), categories);
+        return getRecommendedProducts(findProduct,pvIdList );
+    }
+
+    public Map<String, List<String>> getRecommendedProducts(Product findProduct, List<String> pvIdList){
         Map<String, List<String>> productsResult = new HashMap<String, List<String>>();
         List<String> products = new ArrayList<String>();
         String source = "";
         if (moogaOn){
-            List<String> pvIdList = recommendationService.getRecommendedProducts(findProduct.getId());
+
             Iterator it = pvIdList.iterator();
             int productCount = 0;
             source = "MOOGA";

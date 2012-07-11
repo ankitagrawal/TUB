@@ -54,4 +54,6 @@ public interface RecommendationEngine  {
      * @param pvId
      */
     void notifyWriteReview(long userId, String pvId);
+
+    List<String> getRelatedProducts(String pId, List<String> categories);
 }
