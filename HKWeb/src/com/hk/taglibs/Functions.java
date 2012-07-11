@@ -455,8 +455,9 @@ public class Functions {
         return productService.isComboInStock(combo);
     }
 
-    public static Map<String, List<Product>> getRecommendedProducts(String productId) {
+    public static Map<String, List<String>> getRecommendedProducts(Object o) {
+        Product product = (Product)o;
         ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
-        return productService.getRecommendedProducts(productId);
+        return productService.getRecommendedProducts(product);
     }
 }

@@ -731,7 +731,7 @@
         </description>
         <name>getRecommendedProducts</name>
         <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>java.util.Map getRecommendedProducts(java.lang.String)</function-signature>
+        <function-signature>java.util.Map getRecommendedProducts(java.lang.Object)</function-signature>
         <example>
             ${hk:getRecommendedProducts(${productVariantId})}
         </example>

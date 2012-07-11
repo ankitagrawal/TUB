@@ -200,12 +200,12 @@ public class ProductServiceImpl implements ProductService {
         return isOutOfStock;
     }
 
-    public Map<String, List<String>> getRecommendedProducts(String pId){
+    public Map<String, List<String>> getRecommendedProducts(Product findProduct){
         Map<String, List<String>> productsResult = new HashMap<String, List<String>>();
         List<String> products = new ArrayList<String>();
         String source = "";
         if (moogaOn){
-            List<String> pvIdList = recommendationService.getRecommendedProducts(pId);
+            List<String> pvIdList = recommendationService.getRecommendedProducts(findProduct.getId());
             Iterator it = pvIdList.iterator();
             int productCount = 0;
             source = "MOOGA";
@@ -219,7 +219,7 @@ public class ProductServiceImpl implements ProductService {
         }
 
         if (!moogaOn || (products.size() == 0) ){
-            List<Product> productList = getProductDAO().getProductById(pId).getRelatedProducts();
+            List<Product> productList = getProductDAO().getProductById(findProduct.getId()).getRelatedProducts();
             for (Product product : productList){
                 if ((product != null) && !product.isDeleted() && !isProductOutOfStock(product)){
                     products.add(product.getId());

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import javax.xml.rpc.ServiceException;
 import java.rmi.*;
 import java.util.*;
@@ -36,6 +37,8 @@ public class RecommendationEngineImpl implements RecommendationEngine {
     @Value("#{hkEnvProps['" + Keys.Env.moogaCache + "']}")
     boolean moogaCache;
 
+    @Value("#{hkEnvProps['" + Keys.Env.moogaUrl + "']}")
+    String moogaUrl;
     /**
      * Mooga Actions as defined by MOOGA service. Has to be in sync with Mooga
      */
@@ -86,8 +89,18 @@ public class RecommendationEngineImpl implements RecommendationEngine {
     }
 
     public RecommendationEngineImpl(){
-        try{
             servicesLocator = new MoogaWebServicesLocator();
+    }
+
+    private MoogaWebServicesSoap_PortType getMoogaStub(){
+        return moogaStub;
+    }
+
+    @PostConstruct
+    public void initMooga() {
+        try{
+            servicesLocator.setMoogaWebServicesSoap12EndpointAddress(moogaUrl);
+            servicesLocator.setMoogaWebServicesSoapEndpointAddress(moogaUrl);
             moogaStub = servicesLocator.getMoogaWebServicesSoap12();
         }catch (ServiceException ex)  {
 
@@ -129,9 +142,9 @@ public class RecommendationEngineImpl implements RecommendationEngine {
     public List<String> getRecommendedProducts(String pId){
         List<String> recommendedItems = new ArrayList<String>();
         try{
-            String itemResponse = moogaStub.item_GetRecommendedItemsToItem(HK_MOOGA_KEY, pId, "0","0","PRODUCT");
+            String itemResponse = getMoogaStub().item_GetRecommendedItemsToItem(HK_MOOGA_KEY, pId, "0", "0", "PRODUCT");
             recommendedItems = getProducts(itemResponse);
-        }catch(RemoteException ex){
+        }catch(Exception ex){   //swallow the exception
 
         }
         return  recommendedItems;
@@ -145,7 +158,7 @@ public class RecommendationEngineImpl implements RecommendationEngine {
     public List<String> getRecommendedProductVariants(String pvId){
         List<String> recommendedItems = new ArrayList<String>();
         try{
-            String itemResponse = moogaStub.item_GetRecommendedItemsToItem(HK_MOOGA_KEY, pvId, "0","0","");
+            String itemResponse = getMoogaStub().item_GetRecommendedItemsToItem(HK_MOOGA_KEY, pvId, "0", "0", "");
             recommendedItems = getProducts(itemResponse);
         }catch(RemoteException ex){
 
