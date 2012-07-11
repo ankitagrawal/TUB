@@ -28,6 +28,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.admin.util.ChhotuCourierDelivery;
 import com.hk.admin.util.CourierStatusUpdateHelper;
@@ -57,6 +59,9 @@ public class DeliveryStatusUpdateManager {
     List<ShippingOrder>         shippingOrderList             = new ArrayList<ShippingOrder>();
     List<String>                unmodifiedTrackingIds         = null;
     List<Long>                  courierIdList                 = null;
+    int                         batchSize                     = 0;
+    int                         startIndex                    = 0;
+    int                         endIndex                      = 0;
 
     LineItemDao                 lineItemDaoProvider;
 
@@ -196,10 +201,38 @@ public class DeliveryStatusUpdateManager {
             courierIdList = new ArrayList<Long>();
             courierIdList = EnumCourier.getDelhiveryCourierIds();
             shippingOrderList = getAdminShippingOrderService().getShippingOrderListByCouriers(startDate, endDate, courierIdList);
+            List<ShippingOrder> shippingOrderSubList=new ArrayList<ShippingOrder>();
             JsonObject shipmentJsonObj = null;
-            if (shippingOrderList != null && shippingOrderList.size() > 0) {
-                for (ShippingOrder shippingOrderInList : shippingOrderList) {
+            JsonArray shipmentList     = new JsonArray();
+            String deliveryStatus=null;
 
+            if (shippingOrderList != null && shippingOrderList.size() > 0) {
+
+                if (shippingOrderList.size() > 10) {
+                    for (int i = 0; i < shippingOrderList.size(); i++) {
+                        startIndex = i;
+                        endIndex = startIndex + 10;
+                        shippingOrderSubList = shippingOrderList.subList(startIndex, endIndex);
+                        logger.info(shippingOrderSubList.size() + "");
+                        i = endIndex;
+                    }
+                } else {
+                    for (int i = 0; i < shippingOrderList.size(); i++) {
+                        trackingId=trackingId+","+shippingOrderList.get(i).getShipment().getTrackingId();
+                        shipmentList=courierStatusUpdateHelper.bulkUpdateDeliveryStatusDelhivery(trackingId);
+                        if(shipmentList != null && shipmentList.size()>0){
+                        for(JsonElement jsonObj:shipmentList){
+                             trackingId=jsonObj.getAsJsonObject().get("AWB").getAsString();
+                            deliveryStatus=jsonObj.getAsJsonObject().get("Status").getAsString();
+
+                        }
+                        }
+                    }
+                }
+
+
+
+                for (ShippingOrder shippingOrderInList : shippingOrderList) {
                     trackingId = shippingOrderInList.getShipment().getTrackingId();
                     try {
                         shipmentJsonObj = courierStatusUpdateHelper.updateDeliveryStatusDelhivery(trackingId);
