@@ -33,14 +33,14 @@ import com.hk.pact.dao.MasterDataDao;
 import com.hk.pact.service.RoleService;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.CategoryService;
+import com.hk.pact.service.core.CityService;
+import com.hk.pact.service.core.StateService;
 import com.hk.pact.service.marketing.MarketingService;
 import com.hk.pact.service.store.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Repository
 public class MasterDataDaoImpl implements MasterDataDao {
@@ -59,6 +59,11 @@ public class MasterDataDaoImpl implements MasterDataDao {
     private StoreService     storeService;
     @Autowired
     private CourierDao       courierDao;
+    @Autowired
+    private CityService cityService;
+  @Autowired
+    private StateService stateService;
+
 
     public List<PaymentStatus> getPaymentStatusList() {
         return getBaseDao().getAll(PaymentStatus.class);
@@ -265,13 +270,18 @@ public class MasterDataDaoImpl implements MasterDataDao {
         return storeList;
     }
 
-    public List<State> getStateList() {
-        return courierDao.getAll(State.class);
-    }
+  public List<State> getStateList() {
+    List<State> stateList = stateService.getAllStates();
+    Collections.sort(stateList);
+    return stateList;
 
-    public List<City> getCityList() {
-        return courierDao.getAll(City.class);
-    }
+  }
+
+  public List<City> getCityList() {
+    List<City> cityList = cityService.getAllCity();
+    Collections.sort(cityList, new City());
+    return cityList;
+  }
 
     public List<Courier> getCourierList() {
         return courierDao.getCourierByIds(EnumCourier.getCourierIDs(EnumCourier.getCurrentlyApplicableCouriers()));

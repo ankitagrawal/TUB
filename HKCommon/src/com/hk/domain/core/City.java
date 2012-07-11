@@ -1,6 +1,7 @@
 package com.hk.domain.core;
 
 import javax.persistence.*;
+import java.util.Comparator;
 
 /**
  * Created by IntelliJ IDEA.
@@ -11,7 +12,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "city")
-public class City implements java.io.Serializable,Comparable<City>{
+public class City implements java.io.Serializable,Comparator<City>{
 
   @Id
   @Column(name = "id", unique = true, nullable = false)
@@ -44,8 +45,8 @@ public class City implements java.io.Serializable,Comparable<City>{
     return id == null ? "" : id.toString();
   }
 
-  public int compareTo(City city) {
-    return this.getName().compareTo(city.getName());
+  public int compare(City city1, City city2) {
+      return city1.getName().toUpperCase().compareTo(city2.getName().toUpperCase());
 
-  }
+    }
 }

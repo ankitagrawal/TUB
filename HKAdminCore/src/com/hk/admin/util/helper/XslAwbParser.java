@@ -8,7 +8,7 @@ import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.exception.ExcelBlankFieldException;
-import com.hk.pact.dao.warehouse.WarehouseDao;
+import com.hk.pact.service.core.WarehouseService;
 import com.hk.util.io.ExcelSheetParser;
 import com.hk.util.io.HKRow;
 import org.apache.commons.lang.StringUtils;
@@ -34,7 +34,7 @@ public class XslAwbParser {
   @Autowired
   private CourierService courierService;
   @Autowired
-  private WarehouseDao warehouseDao;
+  private WarehouseService warehouseService;
 
 
   public Set<Awb> readAwbExcel(File file) throws Exception {
@@ -84,7 +84,7 @@ public class XslAwbParser {
           logger.error("warehouse cannot be call");
           throw new ExcelBlankFieldException("warehouse cannot be empty " + "    ", rowCount);
         }
-        Warehouse warehoused = warehouseDao.get(Warehouse.class, XslUtil.getLong(warehouse));
+        Warehouse warehoused = warehouseService.getWarehouseById(XslUtil.getLong(warehouse));
         if (warehoused == null) {
           logger.error("warehouseId is not valid  " + warehouse, rowCount);
           throw new ExcelBlankFieldException("warehouseID is not valid  " + "    ", rowCount);
