@@ -1,6 +1,11 @@
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
+<%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
+<c:set var="shippingOrderStatusShipped" value="<%=EnumShippingOrderStatus.SO_Shipped.getId()%>"/>
+<c:set var="shippingOrderStatusDelivrd" value="<%=EnumShippingOrderStatus.SO_Delivered.getId()%>"/>
+<c:set var="shippingOrderStatusRTO_instantiated" value="<%=EnumShippingOrderStatus.SO_Delivered.getId()%>"/>
+<c:set var="shippingOrderStatusSO_returned" value="<%=EnumShippingOrderStatus.SO_Delivered.getId()%>"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Create Replacement Order">
     <s:useActionBean beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction"
@@ -68,14 +73,20 @@
                             ${replacementOrderBean.shippingOrder.orderStatus.name}
                         </td>
                         <td>
-                            <s:link href="#" id="is-replacement-radio">
-                                <h5>Create RO<br />for replacement</h5>
-                            </s:link>
+                            <c:if test="${replacementOrderBean.shippingOrder.orderStatus.id == shippingOrderStatusDelivrd
+                            || replacementOrderBean.shippingOrder.orderStatus.id == shippingOrderStatusShipped}">
+                                <s:link href="#" id="is-replacement-radio">
+                                    <h5>Create RO<br />for replacement</h5>
+                                </s:link>
+                            </c:if>
                         </td>
                         <td>
-                            <s:link href="#" id="is-rto-radio">
-                                <h5>Create RO<br />for Returned Goods</h5>
-                            </s:link>
+                            <c:if test="${replacementOrderBean.shippingOrder.orderStatus.id == shippingOrderStatusRTO_instantiated
+                            || replacementOrderBean.shippingOrder.orderStatus.id == shippingOrderStatusSO_returned}">
+                                <s:link href="#" id="is-rto-radio">
+                                    <h5>Create RO<br />for Returned Goods</h5>
+                                </s:link>
+                            </c:if>
                         </td>
                     </tr>
                 </table>

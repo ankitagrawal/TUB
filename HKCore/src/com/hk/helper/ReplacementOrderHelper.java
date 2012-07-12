@@ -47,7 +47,7 @@ public class ReplacementOrderHelper {
         replacementOrder.setBasketCategory(shippingOrder.getBasketCategory());
         replacementOrder.setServiceOrder(shippingOrder.isServiceOrder());
         replacementOrder.setVersion(shippingOrder.getVersion());
-        replacementOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_ActionAwaiting));
+        replacementOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_ReadyForProcess));
         replacementOrder.setCreateDate(new Date());
         replacementOrder.setUpdateDate(new Date());
         replacementOrder.setAmount(0D);

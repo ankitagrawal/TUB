@@ -6,6 +6,7 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ReplacementOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.admin.pact.service.shippingOrder.ReplacementOrderService;
 import com.hk.helper.ReplacementOrderHelper;
@@ -46,6 +47,9 @@ public class ReplacementOrderAction extends BaseAction {
     @Autowired
     LineItemDao lineItemDao;
 
+    @Autowired
+    InventoryService inventoryService;
+
     @ValidationMethod(on = "searchShippingOrder")
     public void validateSearch() {
         if (shippingOrderId == null) {
@@ -84,6 +88,10 @@ public class ReplacementOrderAction extends BaseAction {
         for (LineItem lineItem : lineItems) {
             if(lineItem.getQty() > 0){
                 valid_item_flag++;
+            }
+            if(lineItem.getQty() > inventoryService.getAvailableUnbookedInventory(lineItem.getSku())){
+                addRedirectAlertMessage(new SimpleMessage("Unable to create replacement order as "+lineItem.getCartLineItem().getProductVariant().getProduct().getName()+" out of stock."));
+                return new RedirectResolution("/pages/admin/createReplacementOrder.jsp");
             }
             if(lineItem.getQty() <0 ){
                 addRedirectAlertMessage(new SimpleMessage("The quantity of " + lineItem.getCartLineItem().getProductVariant().getProduct().getName() + " cannot be less than zero."));
