@@ -46,6 +46,8 @@ public class CreateOfferAction extends BaseAction {
 
   String terms;
 
+	Long paymentType;
+
   @Autowired
    OfferDao offerDao;
 
@@ -65,6 +67,7 @@ public class CreateOfferAction extends BaseAction {
     offer.setExcludeTriggerProducts(excludeTriggerProducts);
     offer.setOfferIdentifier(offerIdentifier);
     offer.setTerms(terms);
+    offer.setPaymentType(paymentType);
     offer = (Offer) offerDao.save(offer);
 
     addRedirectAlertMessage(new SimpleMessage("Offer [{0}] successfully created", description));
@@ -134,4 +137,12 @@ public class CreateOfferAction extends BaseAction {
   public void setTerms(String terms) {
     this.terms = terms;
   }
+
+	public Long getPaymentType() {
+		return paymentType;
+	}
+
+	public void setPaymentType(Long paymentType) {
+		this.paymentType = paymentType;
+	}
 }

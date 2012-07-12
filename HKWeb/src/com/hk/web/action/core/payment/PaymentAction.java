@@ -93,6 +93,8 @@ public class PaymentAction extends BaseAction {
                     bankCode = bank.getTpslBankCode();
                 } else if (gateway.equals(EnumPaymentMode.CITRUS)) {
                     bankCode = bank.getCitrusBankCode();
+                } else if (gateway.equals(EnumPaymentMode.CITRUS_CreditDebit)) {
+                    bankCode = "999";
                 }
             }
 

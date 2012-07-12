@@ -36,17 +36,17 @@ public class EmailServiceImpl implements EmailService {
   private static Logger logger = LoggerFactory.getLogger(EmailServiceImpl.class);
   private final int EMAIL_THREAD_POOL_COUNT = 3;
   @Autowired
-  FreeMarkerService     freeMarkerService;
+  FreeMarkerService freeMarkerService;
   @Value("#{hkEnvProps['" + Keys.Env.hkNoReplyEmail + "']}")
-  private String        noReplyEmail;
+  private String noReplyEmail;
   @Value("#{hkEnvProps['" + Keys.Env.hkNoReplyName + "']}")
-  private String        noReplyName;
+  private String noReplyName;
   @Value("#{hkEnvProps['" + Keys.Env.hkContactEmail + "']}")
-  private String        contactEmail;
+  private String contactEmail;
   @Value("#{hkEnvProps['" + Keys.Env.hkContactName + "']}")
-  private String        contactName;
+  private String contactName;
 
-  private ExecutorService emailExecutorService = Executors.newFixedThreadPool(EMAIL_THREAD_POOL_COUNT );
+  private ExecutorService emailExecutorService = Executors.newFixedThreadPool(EMAIL_THREAD_POOL_COUNT);
   /*@Autowired
   private EmailerHistoryDao emailerHistoryDao;
   @Autowired
@@ -63,31 +63,34 @@ public class EmailServiceImpl implements EmailService {
   * this.contactName = contactName; }
   */
 
-  public boolean sendHtmlEmailNoReply(String templatePath, Object templateValues, String toEmail, String toName) {
-    return sendHtmlEmail(templatePath, templateValues, noReplyEmail, noReplyName, toEmail, toName, null, null, null);
-  }
-  public boolean sendHtmlEmail(String templatePath, Object templateValues, String toEmail, String toName) {
-    return sendHtmlEmail(templatePath, templateValues, noReplyEmail, noReplyName, toEmail, toName, contactEmail, contactName, null);
-  }
-  public boolean sendHtmlEmail(String templatePath, Object templateValues, String toEmail, String toName, String replyToEmail) {
-    return sendHtmlEmail(templatePath, templateValues, noReplyEmail, noReplyName, toEmail, toName, replyToEmail, null, null);
-  }
-  public boolean sendHtmlEmail(String templatePath, Object templateValues, String toEmail, String toName, String replyToEmail, Map<String, String> headerMap) {
-    return sendHtmlEmail(templatePath, templateValues, noReplyEmail, noReplyName, toEmail, toName, replyToEmail, null, headerMap);
+  public boolean sendHtmlEmailNoReply(Template template, Object templateValues, String toEmail, String toName) {
+    return sendHtmlEmail(template, templateValues, noReplyEmail, noReplyName, toEmail, toName, null, null, null);
   }
 
-  public Map<String,HtmlEmail> createHtmlEmail( String templatePath, Object templateValues, String toEmail, String toName, String replyToEmail,Map<String, String> headerMap, Template template){
-    return  createHtmlEmail(templatePath, templateValues, noReplyEmail, noReplyName, toEmail, toName, null, null,headerMap, template);
+  public boolean sendHtmlEmail(Template template, Object templateValues, String toEmail, String toName) {
+    return sendHtmlEmail(template, templateValues, noReplyEmail, noReplyName, toEmail, toName, contactEmail, contactName, null);
   }
 
-  public Map<String,HtmlEmail> createHtmlEmail(String templatePath, Object templateValues, String fromEmail, String fromName, String toEmail, String toName, String replyToEmail,
-                                               String replyToName, Map<String, String> headerMap, Template template){
+  public boolean sendHtmlEmail(Template template, Object templateValues, String toEmail, String toName, String replyToEmail) {
+    return sendHtmlEmail(template, templateValues, noReplyEmail, noReplyName, toEmail, toName, replyToEmail, null, null);
+  }
+
+  public boolean sendHtmlEmail(Template template, Object templateValues, String toEmail, String toName, String replyToEmail, Map<String, String> headerMap) {
+    return sendHtmlEmail(template, templateValues, noReplyEmail, noReplyName, toEmail, toName, replyToEmail, null, headerMap);
+  }
+
+  public Map<String, HtmlEmail> createHtmlEmail(Template template, Object templateValues, String toEmail, String toName, String replyToEmail, Map<String, String> headerMap) {
+    return createHtmlEmail(template, templateValues, noReplyEmail, noReplyName, toEmail, toName, null, null, headerMap);
+  }
+
+  public Map<String, HtmlEmail> createHtmlEmail(Template template, Object templateValues, String fromEmail, String fromName, String toEmail, String toName, String replyToEmail,
+                                                String replyToName, Map<String, String> headerMap) {
     Map<String, HtmlEmail> returnMap = new HashMap<String, HtmlEmail>();
-    FreeMarkerService.RenderOutput renderOutput = freeMarkerService.processCampaignTemplate(template, templatePath, templateValues);
+    FreeMarkerService.RenderOutput renderOutput = freeMarkerService.processCampaignTemplate(template, templateValues);
     HtmlEmail htmlEmail = null;
-    try{
+    try {
       if (renderOutput == null) {
-        logger.error("Error while rendering freemarker template : " + templatePath + " in sendHtmlEmail");
+        logger.error("Error while rendering freemarker template in sendHtmlEmail");
         return null;
       }
       htmlEmail = new HtmlEmail();
@@ -103,32 +106,32 @@ public class EmailServiceImpl implements EmailService {
       logger.debug(renderOutput.getSubject());
       logger.debug("Body:");
       logger.debug(renderOutput.getMessage());
-    }catch(EmailException ex){
-      logger.error("EmailException in sendHtmlEmail for template " + templatePath, ex);
+    } catch (EmailException ex) {
+      logger.error("EmailException in sendHtmlEmail for template ", ex);
       return null;
     }
     return returnMap;
   }
+
   /**
    * This method builds the html email using the template and object values passed. It then calls
    * {@link #sendEmail(org.apache.commons.mail.Email)} to actually send the email
    *
-   * @param templatePath The path of the freemarker template, relative to the template directory configured
+   * @param template   The path of the freemarker template, relative to the template directory configured
    * @param templateValues Usually a HashMap of values to be passed to the template. Can also be any arbitrary object
    * @param toEmail
    * @param toName
    * @return false means email sending failed
    */
-  private boolean sendHtmlEmail(String templatePath, Object templateValues, String fromEmail, String fromName, String toEmail, String toName, String replyToEmail, String replyToName, Map<String, String> headerMap)
-  {
-    Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(templatePath);
+  private boolean sendHtmlEmail(Template template, Object templateValues, String fromEmail, String fromName, String toEmail, String toName, String replyToEmail, String replyToName, Map<String, String> headerMap) {
+//    Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(template);
 
-    Map<String, HtmlEmail> htmlEmailMap = createHtmlEmail(templatePath, templateValues, fromEmail, fromName, toEmail, toName, replyToEmail,replyToName,headerMap,freemarkerTemplate);
-    if (htmlEmailMap == null){
+    Map<String, HtmlEmail> htmlEmailMap = createHtmlEmail(template, templateValues, fromEmail, fromName, toEmail, toName, replyToEmail, replyToName, headerMap);
+    if (htmlEmailMap == null) {
       return false;
     }
 
-    for(Map.Entry<String, HtmlEmail> mapEntry : htmlEmailMap.entrySet()) {
+    for (Map.Entry<String, HtmlEmail> mapEntry : htmlEmailMap.entrySet()) {
       HtmlEmail htmlEmail = mapEntry.getValue();
       // send this email asynchrounously, we do not want to wait for this process
       sendEmail(htmlEmail);
@@ -173,6 +176,7 @@ public class EmailServiceImpl implements EmailService {
   private class SendBulkEmailAsyncThread implements Runnable {
     private final List<Map<String, HtmlEmail>> emails;
     private final EmailCampaign emailCampaign;
+
     SendBulkEmailAsyncThread(List<Map<String, HtmlEmail>> email, EmailCampaign emailCampaign) {
       this.emails = email;
       this.emailCampaign = emailCampaign;
@@ -180,9 +184,9 @@ public class EmailServiceImpl implements EmailService {
 
     public void run() {
       try {
-        for (Map<String, HtmlEmail> emailMap : emails){
+        for (Map<String, HtmlEmail> emailMap : emails) {
 
-          for(String emailId : emailMap.keySet()) {
+          for (String emailId : emailMap.keySet()) {
             Email email = emailMap.get(emailId);
             logger.debug("sending mail : " + emailId);
             email.send();

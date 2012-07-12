@@ -1,12 +1,5 @@
 package com.hk.impl.dao;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
 import com.hk.admin.pact.dao.courier.CourierDao;
 import com.hk.constants.catalog.product.EnumProductVariantPaymentType;
 import com.hk.constants.core.EnumRole;
@@ -21,20 +14,7 @@ import com.hk.domain.accounting.DebitNoteStatus;
 import com.hk.domain.affiliate.AffiliateCategory;
 import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.core.CancellationType;
-import com.hk.domain.core.CartLineItemType;
-import com.hk.domain.core.City;
-import com.hk.domain.core.EmailType;
-import com.hk.domain.core.OrderStatus;
-import com.hk.domain.core.PaymentMode;
-import com.hk.domain.core.PaymentStatus;
-import com.hk.domain.core.ProductVariantPaymentType;
-import com.hk.domain.core.ProductVariantServiceType;
-import com.hk.domain.core.PurchaseFormType;
-import com.hk.domain.core.PurchaseOrderStatus;
-import com.hk.domain.core.State;
-import com.hk.domain.core.Surcharge;
-import com.hk.domain.core.Tax;
+import com.hk.domain.core.*;
 import com.hk.domain.courier.BoxSize;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.RegionType;
@@ -53,8 +33,14 @@ import com.hk.pact.dao.MasterDataDao;
 import com.hk.pact.service.RoleService;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.CategoryService;
+import com.hk.pact.service.core.CityService;
+import com.hk.pact.service.core.StateService;
 import com.hk.pact.service.marketing.MarketingService;
 import com.hk.pact.service.store.StoreService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import java.util.*;
 
 @Repository
 public class MasterDataDaoImpl implements MasterDataDao {
@@ -73,6 +59,11 @@ public class MasterDataDaoImpl implements MasterDataDao {
     private StoreService     storeService;
     @Autowired
     private CourierDao       courierDao;
+    @Autowired
+    private CityService cityService;
+  @Autowired
+    private StateService stateService;
+
 
     public List<PaymentStatus> getPaymentStatusList() {
         return getBaseDao().getAll(PaymentStatus.class);
@@ -270,7 +261,7 @@ public class MasterDataDaoImpl implements MasterDataDao {
     }
 
     public List<RegionType> getRegionTypeList() {
-        return getBaseDao().getAll(RegionType.class);
+        return courierDao.getAll(RegionType.class);
     }
 
     public List<Store> getStoreList() {
@@ -279,15 +270,25 @@ public class MasterDataDaoImpl implements MasterDataDao {
         return storeList;
     }
 
-    public List<State> getStateList() {
-        return getBaseDao().getAll(State.class);
-    }
+  public List<State> getStateList() {
+    List<State> stateList = stateService.getAllStates();
+    Collections.sort(stateList);
+    return stateList;
 
-    public List<City> getCityList() {
-        return getBaseDao().getAll(City.class);
-    }
+  }
+
+  public List<City> getCityList() {
+    List<City> cityList = cityService.getAllCity();
+    Collections.sort(cityList, new City());
+    return cityList;
+  }
 
     public List<Courier> getCourierList() {
         return courierDao.getCourierByIds(EnumCourier.getCourierIDs(EnumCourier.getCurrentlyApplicableCouriers()));
     }
+
+    public List<ShippingOrderStatus> getSOStatusForReconcilation(){
+        return EnumShippingOrderStatus.getStatusForReconcilationReport();
+    }
+
 }

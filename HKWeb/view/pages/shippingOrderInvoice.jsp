@@ -365,7 +365,7 @@
       <td><strong>Grand Total</strong></td>
       <td>
         <strong><fmt:formatNumber value="${orderSummary.invoiceDto.grandTotal}" type="currency"
-                                  currencySymbol="Rs. "/> </strong>
+                                  currencySymbol="Rs. " maxFractionDigits="0"/> </strong>
       </td>
     </tr>
   </table>

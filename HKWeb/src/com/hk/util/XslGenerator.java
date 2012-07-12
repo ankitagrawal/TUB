@@ -499,8 +499,18 @@ public class XslGenerator {
 
        setCellValue(row, 0, pincodeDefaultCourier.getPincode().getPincode());
        setCellValue(row, 1, pincodeDefaultCourier.getWarehouse().getId());
-       setCellValue(row, 2, pincodeDefaultCourier.getCodCourier().getId());
-       setCellValue(row, 3, pincodeDefaultCourier.getNonCodCourier().getId());
+       if(pincodeDefaultCourier.getCodCourier() != null){
+        setCellValue(row, 2, pincodeDefaultCourier.getCodCourier().getId());
+       }
+       else{
+         setCellValue(row, 2, -1L);
+       }
+       if(pincodeDefaultCourier.getNonCodCourier() != null){
+         setCellValue(row, 3, pincodeDefaultCourier.getNonCodCourier().getId());
+       }
+       else{
+         setCellValue(row, 3, -1L);
+       }
        setCellValue(row, 4, pincodeDefaultCourier.getEstimatedShippingCostCod());
        setCellValue(row, 5, pincodeDefaultCourier.getEstimatedShippingCostNonCod());
 
