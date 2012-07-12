@@ -224,7 +224,7 @@ public class ProductServiceImpl implements ProductService {
             source = "MOOGA";
             while (it.hasNext()) {
                 Product product = productDAO.getProductById((String)it.next());
-                if ((product != null) && !product.isDeleted() && !isProductOutOfStock(product)){
+                if (isProductValid(product)){
                     products.add(product.getId());
                     ++productCount;
                 }
@@ -234,7 +234,7 @@ public class ProductServiceImpl implements ProductService {
         if (!moogaOn || (products.size() == 0) ){
             List<Product> productList = getProductDAO().getProductById(findProduct.getId()).getRelatedProducts();
             for (Product product : productList){
-                if ((product != null) && !product.isDeleted() && !isProductOutOfStock(product)){
+                if (isProductValid(product)){
                     products.add(product.getId());
                 }
             }
@@ -242,5 +242,16 @@ public class ProductServiceImpl implements ProductService {
         }
         productsResult.put(source, products);
         return productsResult;
+    }
+
+    private boolean isProductValid(Product product){
+        boolean isDeleted = product.isDeleted() == null ? false : product.isDeleted();
+        boolean isHidden = product.isHidden() == null ? false : product.isHidden();
+        boolean isGoogleAdDisallowed = product.isGoogleAdDisallowed() == null ? false : product.isGoogleAdDisallowed();
+        if ((product != null) && !isDeleted
+                && !isGoogleAdDisallowed && !isHidden && !isProductOutOfStock(product)){
+            return  true;
+        }
+        return false;
     }
 }
