@@ -1,4 +1,5 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
+<%@ page import="com.hk.constants.payment.EnumPaymentType" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -57,6 +58,13 @@
           <li><label>&nbsp;</label>
             <div class="buttons"><s:submit name="create" value="Create Offer"/></div>
           </li>
+	        <li>
+		        <label>Applicable Payment Type</label><s:select name="paymentType">
+		        <c:forEach items="<%=EnumPaymentType.getAllPaymentTypes()%>" var="pType">
+			        <s:option value="${pType.id}">${pType.name}</s:option>
+		        </c:forEach>
+	        </s:select>
+	        </li>
         </ul>
       </fieldset>
     </s:form>
