@@ -63,6 +63,7 @@ public class UploadCategoryImageAction extends BaseAction {
 
   public Resolution uploadCategoryImage() throws Exception {
     String imageFilePath = adminUploadsPath + "/imageFiles/temp/" + System.currentTimeMillis() + "_" + BaseUtils.getRandomString(4) + ".jpg";
+    logger.debug("image uplaod path: " + imageFilePath);
     File imageFile = new File(imageFilePath);
     category = categoryDao.getCategoryByName(categoryName);
     EnumS3UploadStatus status;
