@@ -7802,4 +7802,27 @@
     <changeSet author="Ajeet (generated)" id="1341941781264-2">
         <addForeignKeyConstraint baseColumnNames="warehouse_id" baseTableName="brands_to_audit" constraintName="fk_brands_to_audit_warehouse1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="warehouse" referencesUniqueColumn="false"/>
     </changeSet>
+    <changeSet author="Neha (generated)" id="1342094247845-1">
+        <createTable tableName="demand_forcast">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="forcast_date" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="forcast_value" type="DOUBLE"/>
+            <column name="product_variant_id" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="warehouse_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Neha (generated)" id="1342094247845-4">
+        <addForeignKeyConstraint baseColumnNames="product_variant_id" baseTableName="demand_forcast" constraintName="fk_demand_forcast_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Neha (generated)" id="1342094247845-5">
+        <addForeignKeyConstraint baseColumnNames="warehouse_id" baseTableName="demand_forcast" constraintName="fk_demand_forcast_warehouse1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="warehouse" referencesUniqueColumn="false"/>
+    </changeSet>   
 </databaseChangeLog>
