@@ -7802,4 +7802,21 @@
     <changeSet author="Ajeet (generated)" id="1341941781264-2">
         <addForeignKeyConstraint baseColumnNames="warehouse_id" baseTableName="brands_to_audit" constraintName="fk_brands_to_audit_warehouse1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="warehouse" referencesUniqueColumn="false"/>
     </changeSet>
+    <changeSet author="Tarun (generated)" id="1342085097039-1">
+        <createTable tableName="faq">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="question" type="MEDIUMTEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="answer" type="MEDIUMTEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="primary_category" type="VARCHAR(100)"/>
+            <column name="secondary_category" type="VARCHAR(100)"/>
+            <column name="keywords" type="VARCHAR(100)"/>
+        </createTable>
+    </changeSet>
 </databaseChangeLog>
+                                
