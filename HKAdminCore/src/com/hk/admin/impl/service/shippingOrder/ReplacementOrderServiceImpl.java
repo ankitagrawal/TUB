@@ -50,6 +50,10 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService{
         if(!isRto){
           lineItem.setHkPrice(0.00);
           lineItem.setCodCharges(0.00);
+          lineItem.setDiscountOnHkPrice(0.00);
+          lineItem.setOrderLevelDiscount(0.00);
+          lineItem.setShippingCharges(0.00);
+          lineItem.setRewardPoints(0.00);  
         }
         lineItemSet.add(lineItem);
 //      lineItem.setShippingOrder(replacementOrder);
