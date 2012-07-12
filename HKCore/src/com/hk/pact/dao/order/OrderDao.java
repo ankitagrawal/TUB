@@ -15,8 +15,6 @@ import com.hk.pact.dao.BaseDao;
 
 public interface OrderDao extends BaseDao {
 
-    public static final String HARYANA = "%haryana%";
-
     public Order getLatestOrderForUser(User user);
 
     public Page listOrdersForUser(List<OrderStatus> orderStatusList, User user, int page, int perPage);

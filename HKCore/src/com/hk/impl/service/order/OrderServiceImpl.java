@@ -277,7 +277,7 @@ public class OrderServiceImpl implements OrderService {
         // order = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Ready_For_Process,
         // EnumOrderStatus.ESCALTED, EnumOrderStatus.PARTIAL_ESCALTION);
 
-       User loggedOnUser = getUserService().getLoggedInUser();
+        User loggedOnUser = getUserService().getLoggedInUser();
         if(loggedOnUser == null){
             loggedOnUser = order.getUser();
         }
@@ -420,214 +420,215 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
-  public Order createNewOrder(User user){
-    Order order = new Order();
-    order.setUser(user);
-    order.setOrderStatus(getOrderStatusService().find(EnumOrderStatus.InCart));
-    order.setAmount(0D);
-    order = this.save(order);
-    return order;
-  }
+    public Order createNewOrder(User user){
+        Order order = new Order();
+        order.setUser(user);
+        order.setOrderStatus(getOrderStatusService().find(EnumOrderStatus.InCart));
+        order.setAmount(0D);
+        order = this.save(order);
+        return order;
+    }
 
-  public Order placeOrder(Order order, Set<CartLineItem> cartLineItems, Address address, Payment payment, Store store, boolean isSubscriptionOrder){
+    public Order placeOrder(Order order, Set<CartLineItem> cartLineItems, Address address, Payment payment, Store store, boolean isSubscriptionOrder){
 
-    //first of all save the cartLine items
-    order.setCartLineItems(cartLineItems);
-    //set subscriptionOrder if true
-    order.setSubscriptionOrder(isSubscriptionOrder);
-    order =this.save(order);
+        //first of all save the cartLine items
+        order.setCartLineItems(cartLineItems);
+        //set subscriptionOrder if true
+        order.setSubscriptionOrder(isSubscriptionOrder);
+        order =this.save(order);
 
-    //save address in the base_order
-    order.setAddress(address);
-    //set store in base order
+        //save address in the base_order
+        order.setAddress(address);
+        //set store in base order
 
-    order.setStore(store);
-    order = this.save(order);
+        order.setStore(store);
+        order = this.save(order);
 
-    //update amount to be paid for the order... sequence is important here address need to be created priorhand!!
-    this.recalAndUpdateAmount(order);
+        //update amount to be paid for the order... sequence is important here address need to be created priorhand!!
+        this.calculateAndUpdateAmount(order);
 
-    //update order payment status and order status in general
-    this.orderPaymentReceieved(payment);
+        //update order payment status and order status in general
+        this.orderPaymentReceieved(payment);
 
-    //finalize order -- create shipping order and update inventory
-    finalizeOrder(order);
-    return  order;
-  }
+        //finalize order -- create shipping order and update inventory
+        finalizeOrder(order);
+        return  order;
+    }
 
-  /**
-   * this is not a replacement to the method of same name in OrderManager.
-   * This should be used only in case of automated order creations like MIH and subscription orders
-   * @param order
-   * @return
-   */
-  public Order recalAndUpdateAmount(Order order) {
-    PricingDto pricingDto;
-    //needs to be updated
-    //we are not handling offers for automated orders right now  and we also assume automated order don't contain subscriptions
-    OfferInstance offerInstance=null;
-    pricingDto = new PricingDto(getPricingEngine().calculatePricing(order.getCartLineItems(), offerInstance, order.getAddress(), order.getRewardPointsUsed()),
-          order.getAddress());
+    /**
+     * this is not a replacement to the recalAndUpdate in OrderManager.
+     * This should be used only in case of automated order creations like MIH and subscription orders
+     * @param order
+     * @return
+     */
+    public Order calculateAndUpdateAmount(Order order) {
+        PricingDto pricingDto;
+        //needs to be updated
+        //we are not handling offers for automated orders right now  and we also assume automated order don't contain subscriptions
+        OfferInstance offerInstance=null;
+        pricingDto = new PricingDto(getPricingEngine().calculatePricing(order.getCartLineItems(), offerInstance, order.getAddress(), order.getRewardPointsUsed()),
+                order.getAddress());
 
-    order.setAmount(pricingDto.getGrandTotalPayable());
+        order.setAmount(pricingDto.getGrandTotalPayable());
 
-    return this.save(order);
-  }
+        return this.save(order);
+    }
 
-  /**
-   * This method is not a replacement for orderPaymentReceived in OrderManager.
-   * This should be used only in case of creating automated orders like that of MIH or subscriptionOrders
-   * @param payment
-   * @return
-   */
-  @Transactional
-  public Order orderPaymentReceieved(Payment payment) {
-    Order order = payment.getOrder();
-    order.setPayment(payment);
-    order.setGatewayOrderId(payment.getGatewayOrderId());
+    /**
+     * This method is not a replacement for orderPaymentReceived in OrderManager.
+     * This should be used only in case of creating automated orders like that of MIH or subscription Orders
+     * @param payment
+     * @return
+     */
+    @Transactional
+    public Order orderPaymentReceieved(Payment payment) {
+        Order order = payment.getOrder();
+        order.setPayment(payment);
+        order.setGatewayOrderId(payment.getGatewayOrderId());
 
-      Set<CartLineItem> cartLIFromPricingEngine =getPricingEngine().calculateAndApplyPricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), order.getRewardPointsUsed());
+        Set<CartLineItem> cartLIFromPricingEngine =getPricingEngine().calculateAndApplyPricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), order.getRewardPointsUsed());
 
-    // Set<CartLineItem> cartLIFromPricingEngine = getPricingEngine().calculateAndApplyPricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(),
-    //         order.getRewardPointsUsed());
+        // Set<CartLineItem> cartLIFromPricingEngine = getPricingEngine().calculateAndApplyPricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(),
+        //         order.getRewardPointsUsed());
 
-    Set<CartLineItem> cartLineItems = getCartLineItemsFromPricingCartLi(order, cartLIFromPricingEngine);
+        Set<CartLineItem> cartLineItems = getCartLineItemsFromPricingCartLi(order, cartLIFromPricingEngine);
 
-    PricingDto pricingDto = new PricingDto(cartLineItems, order.getAddress());
+        PricingDto pricingDto = new PricingDto(cartLineItems, order.getAddress());
 
-    // apply cod charges if applicable and update payment object
-    Double codCharges = 0D;
- /*   if (payment.isCODPayment()) {
-      codCharges = this.codCharges;
-      if ((pricingDto.getGrandTotalPayable() - pricingDto.getShippingTotal()) >= this.codFreeAfter) {
-        codCharges = 0D;
+        // apply cod charges if applicable and update payment object
+        Double codCharges = 0D;
+        /*   if (payment.isCODPayment()) {
+          codCharges = this.codCharges;
+          if ((pricingDto.getGrandTotalPayable() - pricingDto.getShippingTotal()) >= this.codFreeAfter) {
+            codCharges = 0D;
+          }
+          CartLineItem codLine = createCodLineItem(order, codCharges);
+          order.setAmount(order.getAmount() + codCharges);
+          cartLineItems.add(codLine);
+          payment.setAmount(order.getAmount());
+          getPaymentService().save(payment);
+        }*/
+        /**
+         * Order lifecycle activity logging - Payement Marked Successful
+         */
+        if (payment.getPaymentStatus().getId().equals(EnumPaymentStatus.SUCCESS.getId())) {
+            getOrderLoggingService().logOrderActivity(order, order.getUser(),
+                    getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful), null);
+        } else if (payment.getPaymentStatus().getId().equals(EnumPaymentStatus.ON_DELIVERY.getId())) {
+            getOrderLoggingService().logOrderActivity(order, getUserService().getAdminUser(),
+                    getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.ConfirmedAuthorization), "Auto confirmation as valid user based on history.");
+        }
+
+        // order.setAmount(pricingDto.getGrandTotalPayable());
+        order.setAmount(pricingDto.getGrandTotalPayable() + codCharges);
+        order.setRewardPointsUsed(pricingDto.getRedeemedRewardPoints());
+
+        // associated with a variant, this will help in
+        // minimizing brutal use of free checkout
+        order.setCartLineItems(cartLineItems);
+
+        // award reward points, if using a reward point offer coupon  No reward points for automated orders
+        //rewardPointService.awardRewardPoints(order);
+
+        // save order with placed status since amount has been applied
+        order.setOrderStatus(getOrderStatusService().find(EnumOrderStatus.Placed));
+
+        Set<OrderCategory> categories = this.getCategoriesForBaseOrder(order);
+        order.setCategories(categories);
+
+        /*
+        * update user karma profile for those whose score is not yet set
+        */
+        KarmaProfile karmaProfile = getKarmaProfileService().updateKarmaAfterOrder(order);
+        if (karmaProfile != null) {
+            order.setScore(new Long(karmaProfile.getKarmaPoints()));
+        }
+
+        order = this.save(order);
+
+        /**
+         * Order lifecycle activity logging - Order Placed
+         */
+        getOrderLoggingService().logOrderActivity(order, order.getUser(), getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderPlaced), null);
+
+        //we dont need this
+        //getUserService().updateIsProductBought(order);
+
+        /**
+         * Spliting of orders and auto-escaltion done while splitting if possible Earlier auto escalation was being done
+         * at the same instant when the shipping orders were created, now first order status is changed and then it is
+         * auto escalated
+         */
+
+        // if reward points redeemed then add reward point txns
+        /*if (pricingDto.getRedeemedRewardPoints() > 0) {
+            getReferrerProgramManager().redeemRewardPoints(order, pricingDto.getRedeemedRewardPoints());
+        }*/
+
+        /*
+        * //Auto escalation of order if inventory is positive if (orderService.autoEscalateOrder(order)) {
+        * orderService.logOrderActivity(order, getUserService.getAdminUser(),
+        * orderLifecycleActivityDaoProvider.get().find(ExnumOrderLifecycleActivity.AutoEscalatedToProcessingQueue.getId()),
+        * null); }
+        */
+
+        // Check if HK order then only send emails
+        /*   if (order.getStore() != null && order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID)) {
+          // Send mail to Customer
+          getPaymentService().sendPaymentEmailForOrder(order);
+          // Send referral program intro email
+          sendReferralProgramEmail(order.getUser());
+        }*/
+        // Send mail to Admin
+        getEmailManager().sendOrderConfirmEmailToAdmin(order);
+
+        return order;
+    }
+
+    @Transactional
+    private Set<CartLineItem> getCartLineItemsFromPricingCartLi(Order order, Set<CartLineItem> cartLineItems) {
+        Set<CartLineItem> finalCartLineItems = new HashSet<CartLineItem>();
+        for (CartLineItem cartLineItem : cartLineItems) {
+            cartLineItem.setOrder(order);
+            OrderUtil.roundOffPricesOnCartLineItem(cartLineItem);
+            cartLineItem = getCartLineItemService().save(cartLineItem);
+            finalCartLineItems.add(cartLineItem);
+        }
+        return finalCartLineItems;
+    }
+
+    /**
+     * This method is used to update inventory and split order after placing the order
+     * @param order
+     */
+    public void finalizeOrder(Order order){
+
+        /*  Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
+
+      boolean shippingOrderExists = false;
+
+      //Check Inventory health of order lineitems
+      for (CartLineItem cartLineItem : productCartLineItems) {
+        if (lineItemDao.getLineItem(cartLineItem) != null) {
+          shippingOrderExists = true;
+        }
       }
-      CartLineItem codLine = createCodLineItem(order, codCharges);
-      order.setAmount(order.getAmount() + codCharges);
-      cartLineItems.add(codLine);
-      payment.setAmount(order.getAmount());
-      getPaymentService().save(payment);
-    }*/
-    /**
-     * Order lifecycle activity logging - Payement Marked Successful
-     */
-    if (payment.getPaymentStatus().getId().equals(EnumPaymentStatus.SUCCESS.getId())) {
-      getOrderLoggingService().logOrderActivity(order, order.getUser(),
-          getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful), null);
-    } else if (payment.getPaymentStatus().getId().equals(EnumPaymentStatus.ON_DELIVERY.getId())) {
-      getOrderLoggingService().logOrderActivity(order, getUserService().getAdminUser(),
-          getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.ConfirmedAuthorization), "Auto confirmation as valid user based on history.");
-    }
 
-    // order.setAmount(pricingDto.getGrandTotalPayable());
-    order.setAmount(pricingDto.getGrandTotalPayable() + codCharges);
-    order.setRewardPointsUsed(pricingDto.getRedeemedRewardPoints());
+      Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
 
-    // associated with a variant, this will help in
-    // minimizing brutal use of free checkout
-    order.setCartLineItems(cartLineItems);
-
-    // award reward points, if using a reward point offer coupon
-    rewardPointService.awardRewardPoints(order);
-
-    // save order with placed status since amount has been applied
-    order.setOrderStatus(getOrderStatusService().find(EnumOrderStatus.Placed));
-
-    Set<OrderCategory> categories = this.getCategoriesForBaseOrder(order);
-    order.setCategories(categories);
-
-    /*
-    * update user karma profile for those whose score is not yet set
-    */
-    KarmaProfile karmaProfile = getKarmaProfileService().updateKarmaAfterOrder(order);
-    if (karmaProfile != null) {
-      order.setScore(new Long(karmaProfile.getKarmaPoints()));
-    }
-
-    order = this.save(order);
-
-    /**
-     * Order lifecycle activity logging - Order Placed
-     */
-    getOrderLoggingService().logOrderActivity(order, order.getUser(), getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderPlaced), null);
-
-    getUserService().updateIsProductBought(order);
-
-    /**
-     * Spliting of orders and auto-escaltion done while splitting if possible Earlier auto escalation was being done
-     * at the same instant when the shipping orders were created, now first order status is changed and then it is
-     * auto escalated
-     */
-
-    // if reward points redeemed then add reward point txns
-    if (pricingDto.getRedeemedRewardPoints() > 0) {
-      getReferrerProgramManager().redeemRewardPoints(order, pricingDto.getRedeemedRewardPoints());
-    }
-
-    /*
-    * //Auto escalation of order if inventory is positive if (orderService.autoEscalateOrder(order)) {
-    * orderService.logOrderActivity(order, getUserService.getAdminUser(),
-    * orderLifecycleActivityDaoProvider.get().find(ExnumOrderLifecycleActivity.AutoEscalatedToProcessingQueue.getId()),
-    * null); }
-    */
-
-    // Check if HK order then only send emails
- /*   if (order.getStore() != null && order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID)) {
-      // Send mail to Customer
-      getPaymentService().sendPaymentEmailForOrder(order);
-      // Send referral program intro email
-      sendReferralProgramEmail(order.getUser());
-    }*/
-    // Send mail to Admin
-    getEmailManager().sendOrderConfirmEmailToAdmin(order);
-
-    return order;
-  }
-
-  @Transactional
-  private Set<CartLineItem> getCartLineItemsFromPricingCartLi(Order order, Set<CartLineItem> cartLineItems) {
-    Set<CartLineItem> finalCartLineItems = new HashSet<CartLineItem>();
-    for (CartLineItem cartLineItem : cartLineItems) {
-      cartLineItem.setOrder(order);
-      OrderUtil.roundOffPricesOnCartLineItem(cartLineItem);
-      cartLineItem = getCartLineItemService().save(cartLineItem);
-      finalCartLineItems.add(cartLineItem);
-    }
-    return finalCartLineItems;
-  }
-
-  /**
-   * This method is used to update inventory and split order after placing the order
-   * @param order
-   */
-  public void finalizeOrder(Order order){
-
-  /*  Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
-
-    boolean shippingOrderExists = false;
-
-    //Check Inventory health of order lineitems
-    for (CartLineItem cartLineItem : productCartLineItems) {
-      if (lineItemDao.getLineItem(cartLineItem) != null) {
-        shippingOrderExists = true;
+      if (!shippingOrderExists) {
+        shippingOrders = getOrderService().createShippingOrders(order);
       }
-    }
 
-    Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
+      if (shippingOrders != null && shippingOrders.size() > 0) {
+        // save order with InProcess status since shipping orders have been created
+        order.setOrderStatus(getOrderStatusService().find(EnumOrderStatus.InProcess));
+        order.setShippingOrders(shippingOrders);
+        order = getOrderService().save(order);
 
-    if (!shippingOrderExists) {
-      shippingOrders = getOrderService().createShippingOrders(order);
-    }
-
-    if (shippingOrders != null && shippingOrders.size() > 0) {
-      // save order with InProcess status since shipping orders have been created
-      order.setOrderStatus(getOrderStatusService().find(EnumOrderStatus.InProcess));
-      order.setShippingOrders(shippingOrders);
-      order = getOrderService().save(order);
-
-      *//**
-       * Order lifecycle activity logging - Order split to shipping orders
-       *//*
+        *//**
+         * Order lifecycle activity logging - Order split to shipping orders
+         *//*
       getOrderLoggingService().logOrderActivity(order, getUserService().getAdminUser(), getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), null);
 
       // auto escalate shipping orders if possible
@@ -646,7 +647,7 @@ public class OrderServiceImpl implements OrderService {
     */
 
 
-  }
+    }
     public OrderDao getOrderDao() {
         return orderDao;
     }
@@ -759,27 +760,27 @@ public class OrderServiceImpl implements OrderService {
         this.orderLoggingService = orderLoggingService;
     }
 
-  public PricingEngine getPricingEngine() {
-    return pricingEngine;
-  }
+    public PricingEngine getPricingEngine() {
+        return pricingEngine;
+    }
 
-  public void setPricingEngine(PricingEngine pricingEngine) {
-    this.pricingEngine = pricingEngine;
-  }
+    public void setPricingEngine(PricingEngine pricingEngine) {
+        this.pricingEngine = pricingEngine;
+    }
 
-  public KarmaProfileService getKarmaProfileService() {
-    return karmaProfileService;
-  }
+    public KarmaProfileService getKarmaProfileService() {
+        return karmaProfileService;
+    }
 
-  public void setKarmaProfileService(KarmaProfileService karmaProfileService) {
-    this.karmaProfileService = karmaProfileService;
-  }
+    public void setKarmaProfileService(KarmaProfileService karmaProfileService) {
+        this.karmaProfileService = karmaProfileService;
+    }
 
-  public CartLineItemService getCartLineItemService() {
-    return cartLineItemService;
-  }
+    public CartLineItemService getCartLineItemService() {
+        return cartLineItemService;
+    }
 
-  public void setCartLineItemService(CartLineItemService cartLineItemService) {
-    this.cartLineItemService = cartLineItemService;
-  }
+    public void setCartLineItemService(CartLineItemService cartLineItemService) {
+        this.cartLineItemService = cartLineItemService;
+    }
 }

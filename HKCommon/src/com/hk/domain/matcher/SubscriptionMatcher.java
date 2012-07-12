@@ -1,5 +1,6 @@
 package com.hk.domain.matcher;
 
+import com.hk.constants.subscription.EnumSubscriptionStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.subscription.Subscription;
 
@@ -14,11 +15,17 @@ import java.util.Set;
  */
 public class SubscriptionMatcher {
   private ProductVariant productVariant;
+  private EnumSubscriptionStatus subscriptionStatus;
 
   public SubscriptionMatcher addProduct(ProductVariant productVariant){
       this.productVariant=productVariant;
       return this;
   }
+
+    public SubscriptionMatcher addSubscriptionStatus(EnumSubscriptionStatus subscriptionStatus){
+        this.subscriptionStatus=subscriptionStatus;
+        return this;
+    }
 
   public Subscription match(Set<Subscription> subscriptionsToMatchFrom){
 
@@ -30,6 +37,11 @@ public class SubscriptionMatcher {
         if(productVariant.equals(subscription.getProductVariant())){
              matchFound=true;
         }
+      }
+      if(subscriptionStatus!=null){
+          if(subscriptionStatus.getId()==subscription.getSubscriptionStatus().getId()){
+              matchFound=false;
+          }
       }
       if(matchFound){
         return subscription;

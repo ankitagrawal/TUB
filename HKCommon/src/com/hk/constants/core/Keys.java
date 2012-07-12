@@ -91,6 +91,9 @@ public class Keys {
 
         public static final String solrUrl                      = "solrUrl";
 
+        public static final String minSubscriptionDays          = "minSubscriptionDays";
+        public static final String maxSubscriptionDays          = "maxSubscriptionDays";
+
     }
 
     /*

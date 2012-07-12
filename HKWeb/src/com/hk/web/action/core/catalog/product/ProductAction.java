@@ -170,7 +170,9 @@ public class ProductAction extends BaseAction {
             }
         }
       //Subscription
-        subscriptionProduct= subscriptionProductService.findByProduct(product);
+        if(product.isSubscribable()){
+         subscriptionProduct= subscriptionProductService.findByProduct(product);
+        }
 
       //User Reviews
       totalReviews = productService.getAllReviews(product, Arrays.asList(EnumReviewStatus.Published.getId()));

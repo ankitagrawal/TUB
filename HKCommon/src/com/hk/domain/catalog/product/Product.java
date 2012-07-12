@@ -147,6 +147,10 @@ public class Product implements java.io.Serializable {
     @Column(name = "drop_shipping")
     private boolean              dropShipping;
 
+    @Column(name = "is_subscribable", nullable = true)
+    private boolean              isSubscribable;
+
+
     @Transient
     private String               categoriesPipeSeparated;
 
@@ -607,4 +611,11 @@ public class Product implements java.io.Serializable {
         }
     }
 
+    public boolean isSubscribable() {
+        return isSubscribable;
+    }
+
+    public void setSubscribable(boolean subscribable) {
+        isSubscribable = subscribable;
+    }
 }
