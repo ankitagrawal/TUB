@@ -318,26 +318,16 @@
         Technical Specs &darr;
       </a>
     </c:if>
-      <%--<a class='top_link' href='#link3'>
-            FAQs
-          </a>
-          <a class='top_link' href='#link4'>
-            User Reviews
-          </a>
-          <a class='top_link' href='#link5'>
-            Payment Options
-          </a>
-        <a class='top_link' href='#related_products'>
-          Related Products &darr;
-        </a>
-      </div>
-
-      <%--<c:if test="${product.id == 'BAB152'}">
-        <p>
-          <a href="${pageContext.request.contextPath}/partners/pediasure.jsp" class="pediasureCounselling" target="_blank">Free
-            Nutrition Counseling </a>
-        </p>
-      </c:if>--%>
+	<c:if test="${!empty pa.relatedCombos}">
+      <a class='top_link' href='#related_combos' style="font-weight:bold;">
+        Special Offers &darr;
+      </a>
+    </c:if>
+	  <c:if test="${!empty product.relatedProducts}">
+      <a class='top_link' href='#related_products'>
+        Related Products &darr;
+      </a>
+    </c:if>
   </div>
   <c:if test="${hk:isNotBlank(product.overview)}">
     <p class="overview">
@@ -483,19 +473,16 @@
       </s:link>
     </div>
 	<c:if test="${!empty pa.relatedCombos}">
-		<div class='products content' id="related_products">
+		<div class='products content' id="related_combos">
 			<h4>
-				Related Super Savers for ${product.name}
+				Special Offers on ${product.name}
 			</h4>
 			<c:forEach items="${pa.relatedCombos}" var="relatedCombo">
-				<c:if test="${hk:isComboInStock(relatedCombo)}">
-					<s:layout-render name="/layouts/embed/_productThumb.jsp" productId="${relatedCombo.id}"/>
-				</c:if>
+				<s:layout-render name="/layouts/embed/_productThumb.jsp" productId="${relatedCombo.id}"/>
 			</c:forEach>
 
 			<div class="floatfix"></div>
 			<a class='go_to_top' href='#top'>go to top &uarr;</a>
-
 		</div>
 	</c:if>
   </shiro:hasPermission>

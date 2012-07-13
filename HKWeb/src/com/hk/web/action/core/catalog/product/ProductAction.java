@@ -65,7 +65,7 @@ public class ProductAction extends BaseAction {
 	Double averageRating;
 	List<UserReview> userReviews = new ArrayList<UserReview>();
 	Long totalReviews = 0L;
-	List<Combo> relatedCombos;
+	List<Combo> relatedCombos = new ArrayList<Combo>();
 
 	@Session (key = HealthkartConstants.Cookie.preferredZone)
 	private String preferredZone;
@@ -174,7 +174,16 @@ public class ProductAction extends BaseAction {
 			}
 		}
 
-		relatedCombos = getProductService().getRelatedCombos(product);
+		//Related Combos
+		List<Combo> relatedCombosForProduct = getProductService().getRelatedCombos(product);
+		for (Combo relatedCombo : relatedCombosForProduct) {
+			if(getProductService().isComboInStock(relatedCombo)){
+				relatedCombos.add(relatedCombo);
+				if(relatedCombos.size() == 6){
+					break;
+				}
+			}
+		}
 
 		return new ForwardResolution("/pages/product.jsp");
 	}
