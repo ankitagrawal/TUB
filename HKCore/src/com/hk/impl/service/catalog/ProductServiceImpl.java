@@ -184,13 +184,17 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	public boolean isComboInStock(Combo combo) {
-		for (ComboProduct comboProduct : combo.getComboProducts()) {
-			if (!comboProduct.getAllowedProductVariants().isEmpty() && comboProduct.getAllowedInStockVariants().isEmpty()) {
-				return false;
-			} else if (comboProduct.getProduct().getInStockVariants().isEmpty()) {
-				return false;
-			} else if (comboProduct.getProduct().isDeleted() != null && comboProduct.getProduct().isDeleted()) {
-				return false;
+		if (combo.isDeleted() != null && combo.isDeleted()) {
+			return false;
+		} else {
+			for (ComboProduct comboProduct : combo.getComboProducts()) {
+				if (!comboProduct.getAllowedProductVariants().isEmpty() && comboProduct.getAllowedInStockVariants().isEmpty()) {
+					return false;
+				} else if (comboProduct.getProduct().getInStockVariants().isEmpty()) {
+					return false;
+				} else if (comboProduct.getProduct().isDeleted() != null && comboProduct.getProduct().isDeleted()) {
+					return false;
+				}
 			}
 		}
 		return true;

@@ -177,7 +177,7 @@ public class ProductAction extends BaseAction {
 		//Related Combos
 		List<Combo> relatedCombosForProduct = getProductService().getRelatedCombos(product);
 		for (Combo relatedCombo : relatedCombosForProduct) {
-			if(relatedCombo.isDeleted() != null && !relatedCombo.isDeleted() && getProductService().isComboInStock(relatedCombo)){
+			if(getProductService().isComboInStock(relatedCombo)){
 				relatedCombos.add(relatedCombo);
 				if(relatedCombos.size() == 6){
 					break;
