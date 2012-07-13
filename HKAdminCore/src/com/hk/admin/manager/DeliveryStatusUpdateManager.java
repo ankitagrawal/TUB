@@ -28,6 +28,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.admin.util.ChhotuCourierDelivery;
 import com.hk.admin.util.CourierStatusUpdateHelper;
@@ -57,6 +59,10 @@ public class DeliveryStatusUpdateManager {
     List<ShippingOrder>         shippingOrderList             = new ArrayList<ShippingOrder>();
     List<String>                unmodifiedTrackingIds         = null;
     List<Long>                  courierIdList                 = null;
+    int                         batchSize                     = 0;
+    int                         startIndex                    = 0;
+    int                         endIndex                      = 0;
+    Map<String,Object>          jsonResponseMap               = new HashMap<String,Object>();
 
     LineItemDao                 lineItemDaoProvider;
 
@@ -196,33 +202,55 @@ public class DeliveryStatusUpdateManager {
             courierIdList = new ArrayList<Long>();
             courierIdList = EnumCourier.getDelhiveryCourierIds();
             shippingOrderList = getAdminShippingOrderService().getShippingOrderListByCouriers(startDate, endDate, courierIdList);
-            JsonObject shipmentJsonObj = null;
-            if (shippingOrderList != null && shippingOrderList.size() > 0) {
-                for (ShippingOrder shippingOrderInList : shippingOrderList) {
+            List<ShippingOrder> shippingOrderSubList = new ArrayList<ShippingOrder>();
+            JsonArray jsonShipmentDataArray = new JsonArray();
+            int listSize = shippingOrderList.size();
+            //Map<String, Object> jsonResponseMap = new HashMap<String, Object>();
+            Date delivery_date = null;
 
-                    trackingId = shippingOrderInList.getShipment().getTrackingId();
-                    try {
-                        shipmentJsonObj = courierStatusUpdateHelper.updateDeliveryStatusDelhivery(trackingId);
-                        if (shipmentJsonObj != null) {
-                            String status = shipmentJsonObj.getAsJsonObject(CourierConstants.DELHIVERY_STATUS).get(CourierConstants.DELHIVERY_STATUS).getAsString();
-                            // String awb = shipmentJsonObj.get(CourierConstants.DELHIVERY_AWB).getAsString();
-                            String deliveryDate = shipmentJsonObj.getAsJsonObject(CourierConstants.DELHIVERY_STATUS).get(CourierConstants.DELHIVERY_STATUS_DATETIME).getAsString();
-
-                            Date delivery_date = getFormattedDeliveryDate(deliveryDate);
-
-
-                            if (delivery_date != null && status.equalsIgnoreCase(CourierConstants.DELIVERED)) {
-                                ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shippingOrderInList.getShipment(), trackingId, delivery_date);
-                            } else {
-                                logger.debug("Delivery date not avaialable or status is not delivered for Tracking Id(Delhivery): " + trackingId);
-                            }
+            if (shippingOrderList != null && listSize > 0) {
+                //Checking if shippingOrderList size is > 10 then we wud divide it into batches of 10 orders each.
+                if (shippingOrderList.size() > 10) {
+                    for (int i = 0; i < listSize; i++) {
+                        //For the first time it wud be 0 and its value won't increment to 1.Bt later it would increment so need to subtract 1 to get correcr startIndex.
+                        if (i == 0) {
+                            startIndex = i;
                         } else {
-                            unmodifiedTrackingIds.add(trackingId);
+                            startIndex = i - 1;
                         }
-                    } catch (Exception ex) {
-                        unmodifiedTrackingIds.add(trackingId);
-                        continue;
+                        //checking if remaining elements are less than 10,then adding that count to the index to get correct endIndex.
+                        if (listSize - endIndex < 10) {
+                            endIndex = (startIndex + (listSize - endIndex)) - 1;
+                        } else {
+                            endIndex = startIndex + 10;
+                        }
+                        //Breaking the original list into batches of 10 or the remaining size.
+                        shippingOrderSubList = shippingOrderList.subList(startIndex, endIndex);
+                        trackingId = getAppendedTrackingIdsString(shippingOrderSubList);
+                        if (trackingId != null) {
+                            //getting the JsonResponeArray for batch of trackingIds
+                            jsonShipmentDataArray = courierStatusUpdateHelper.bulkUpdateDeliveryStatusDelhivery(trackingId);
+                        }
+                        if (jsonShipmentDataArray != null && jsonShipmentDataArray.size() > 0) {
+                            getJsonResponseMap(jsonShipmentDataArray);
+                        }
+                        i = endIndex;
                     }
+                } else {
+                    //Constructing trackingId using all shippingOrders
+                    trackingId = getAppendedTrackingIdsString(shippingOrderList);
+                    if (trackingId != null) {
+                        //getting the JsonResponeArray for batch of trackingIds
+                        jsonShipmentDataArray = courierStatusUpdateHelper.bulkUpdateDeliveryStatusDelhivery(trackingId);
+                    }
+                    if (jsonShipmentDataArray != null && jsonShipmentDataArray.size() > 0) {
+                        getJsonResponseMap(jsonShipmentDataArray);
+                    }
+                }
+                for (Map.Entry mapObj : jsonResponseMap.entrySet()) {
+                    shippingOrder = shippingOrderService.findByTrackingId(mapObj.getKey().toString());
+                    delivery_date = (Date) mapObj.getValue();
+                    ordersDelivered = updateCourierDeliveryStatus(shippingOrder, shippingOrder.getShipment(), shippingOrder.getShipment().getTrackingId(), delivery_date);
                 }
             }
 
@@ -322,6 +350,38 @@ public class DeliveryStatusUpdateManager {
             }
         }
         return orderDeliveryCount;
+    }
+
+    private void getJsonResponseMap(JsonArray jsonShipmentDataArray) {
+        String deliveryStatus = null;
+        String deliveryDate = null;
+        Date delivery_date = null;
+
+        //Iterating over the  jsonShipmentDataArray to extract the required values(AWB,Status,DeliveryDate) and putting
+        //these into map<String,Object> ,AWB as key and  deliveryDate as value
+        for (JsonElement jsonObj : jsonShipmentDataArray) {
+            trackingId = jsonObj.getAsJsonObject().get(CourierConstants.DELHIVERY_SHIPMENT).getAsJsonObject().get(CourierConstants.DELHIVERY_AWB).getAsString();
+            deliveryStatus = jsonObj.getAsJsonObject().get(CourierConstants.DELHIVERY_SHIPMENT).getAsJsonObject().get(CourierConstants.DELHIVERY_STATUS).getAsJsonObject().get(CourierConstants.DELHIVERY_STATUS).getAsString();
+            deliveryDate = jsonObj.getAsJsonObject().get(CourierConstants.DELHIVERY_SHIPMENT).getAsJsonObject().get(CourierConstants.DELHIVERY_STATUS).getAsJsonObject().get(CourierConstants.DELHIVERY_STATUS_DATETIME).getAsString();
+            if (trackingId != null && deliveryStatus != null && deliveryDate != null) {
+                delivery_date = getFormattedDeliveryDate(deliveryDate);
+                //if status is delivered then putting values in the map.
+                if (deliveryStatus.equalsIgnoreCase(CourierConstants.DELIVERED)) {
+                    jsonResponseMap.put(trackingId, delivery_date);
+                }
+            }
+        }
+    }
+
+    private String getAppendedTrackingIdsString(List<ShippingOrder> shippingOrderSubList) {
+        String appendedTrackingId = "";
+
+        //Iterating over the sub-list to get the required trackingId and fetch response
+        for (ShippingOrder shipOrder : shippingOrderSubList) {
+            appendedTrackingId = appendedTrackingId + "," + shipOrder.getShipment().getTrackingId();
+        }
+
+        return appendedTrackingId;
     }
 
     public List<String> getUnmodifiedTrackingIds(){
