@@ -4,6 +4,7 @@
 <%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -481,11 +482,27 @@
         <s:param name="productId" value="${product.id}"/>
       </s:link>
     </div>
+	<c:if test="${!empty pa.relatedCombos}">
+		<div class='products content' id="related_products">
+			<h4>
+				Related Super Savers for ${product.name}
+			</h4>
+			<c:forEach items="${pa.relatedCombos}" var="relatedCombo">
+				<c:if test="${hk:isComboInStock(relatedCombo)}">
+					<s:layout-render name="/layouts/embed/_productThumb.jsp" productId="${relatedCombo.id}"/>
+				</c:if>
+			</c:forEach>
+
+			<div class="floatfix"></div>
+			<a class='go_to_top' href='#top'>go to top &uarr;</a>
+
+		</div>
+	</c:if>
   </shiro:hasPermission>
   <c:if test="${!empty product.relatedProducts}">
     <div class='products content' id="related_products">
       <h4>
-        People who bought this also bought these products
+        People who bought ${product.name} also bought these products
       </h4>
       <c:forEach items="${product.relatedProducts}" var="relatedProduct">
         <c:if test="${!relatedProduct.deleted}">
