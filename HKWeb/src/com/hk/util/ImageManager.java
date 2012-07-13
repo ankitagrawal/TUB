@@ -62,6 +62,8 @@ public class ImageManager {
   CategoryImageDao categoryImageDao;
   private static final float QUALITY = 0.95F;
 
+//    static String                 awsReadBucket = "healthkart-prod";
+  //    static String                 awsBucket     = "healthkart-prod";
   @Value("#{hkEnvProps['" + Keys.Env.bucket + "']}")
   String uploadBucket;
 
@@ -76,9 +78,6 @@ public class ImageManager {
     awsBucket = StringUtils.isNotBlank(uploadBucket) ? uploadBucket : "";
     awsReadBucket = StringUtils.isNotBlank(downloadBucket) ? downloadBucket : "";
   }
-
-//    static String                 awsReadBucket = "healthkart-prod";
-//    static String                 awsBucket     = "healthkart-prod";
 
   static {
 
@@ -157,7 +156,6 @@ public class ImageManager {
       CategoryImage categoryImage = setCategoryImage(imageFile, category, setDefault, checkExists);
 
       if (categoryImage != null) {
-        logger.debug("resizing and uplaoding image");
         resizeAndUpload(imageFile.getAbsolutePath(), categoryImage);
         categoryImage.setUploaded(true);
         categoryImageDao.save(categoryImage);

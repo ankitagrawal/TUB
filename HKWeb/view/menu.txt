@@ -646,6 +646,7 @@
 --/parenting/mom-maternity/personal-care
 --/parenting/mom-maternity/skin-care
 --/parenting/mom-maternity/maternity-belts
+--/parenting/mom-maternity/maternity-pads
 --/parenting/mom-maternity/maternity-bags
 --/parenting/mom-maternity/child-safety
 --/parenting/mom-maternity/breast-feeding
@@ -675,6 +676,7 @@
 --/parenting/infant/grooming
 ---/parenting/infant/grooming/comb-hair-brushes:   Comb & Hair Brushes
 ---/parenting/infant/grooming/nail-clippers-scissors:   Nail Clippers & Scissors
+---/parenting/infant/grooming/buds    :    Ear Buds
 --/parenting/infant/room-accessories
 --/parenting/infant/walkers
 --/parenting/infant/bedtime
@@ -706,6 +708,10 @@
 ---/parenting/toddler/bathtime/lotions
 ---/parenting/toddler/bathtime/creams
 ---/parenting/toddler/bathtime/bath-towels :  Bath Towels
+--/parenting/toddler/grooming
+---/parenting/toddler/grooming/comb-hair-brushes:   Comb & Hair Brushes
+---/parenting/toddler/grooming/nail-clippers-scissors:   Nail Clippers & Scissors
+---/parenting/toddler/grooming/buds    :    Ear Buds
 --/parenting/toddler/oral-care
 ---/parenting/toddler/oral-care/toothbrushes
 ---/parenting/toddler/oral-care/toothpaste-and-tooth-gel:Toothpaste & Tooth gel
