@@ -26,16 +26,16 @@
           <th>
             Rank
           </th>
-          <td>
-            link
-          </td>
-          <td>
-            position
-          </td>
+          <th>
+            Link
+          </th>
+          <th>
+            Position
+          </th>
         </tr>
 
         <tr>
-          <td colspan="5" style="text-align:center;font-size:1.5em;">LEFT BANNERS</td>
+          <td colspan="5" style="text-align:left;font-size:1.2em;font-style:italic;font-weight:bold;">LEFT BANNERS</td>
         </tr>
         <tr>
           <td colspan="5"></td>
@@ -70,7 +70,7 @@
         </c:forEach>
 
         <tr>
-          <td colspan="5" style="text-align:center;font-size:1.5em;">CENTER BANNERS</td>
+          <td colspan="5" style="text-align:left;font-size:1.2em;font-style:italic;font-weight:bold;">CENTER BANNERS</td>
         </tr>
 
         <tr>
@@ -105,7 +105,7 @@
           </c:if>
         </c:forEach>
         <tr>
-          <td colspan="5" style="text-align:center;font-size:1.5em;">RIGHT BANNERS</td>
+          <td colspan="5" style="text-align:left;font-size:1.2em;font-style:italic;font-weight:bold;">RIGHT BANNERS</td>
         </tr>
 
         <tr>
@@ -141,7 +141,7 @@
         </c:forEach>
 
         <tr>
-          <td colspan="5" style="text-align:center;font-size:1.5em;">POSITION: NOT YET ASSIGNED</td>
+          <td colspan="5" style="text-align:left;font-size:1.2em;font-style:italic;font-weight:bold;">POSITION: NOT YET ASSIGNED</td>
         </tr>
 
         <tr>
