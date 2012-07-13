@@ -290,7 +290,7 @@
     <c:if test="${!empty pa.userReviews}">
 
       <div style="float:right;margin-right:5px;margin-bottom:3px;">
-        <a href='#user_reviews' style="border-bottom:0px;">
+        <a class="top_link" href='#user_reviews' style="border-bottom:0px;">
             ${pa.totalReviews} Reviews &darr;
         </a>
 
