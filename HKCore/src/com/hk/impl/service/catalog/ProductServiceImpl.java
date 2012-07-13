@@ -236,7 +236,8 @@ public class ProductServiceImpl implements ProductService {
 
     public Map<String, List<String>> getRecommendedProducts(Product findProduct, List<String> pvIdList){
         Map<String, List<String>> productsResult = new HashMap<String, List<String>>();
-        List<String> products = new ArrayList<String>();
+        List<String> productsList = new ArrayList<String>();
+        Set<String> products = new HashSet<String>();
         String source = "";
         if (moogaOn){
 
@@ -252,7 +253,7 @@ public class ProductServiceImpl implements ProductService {
             }
         }
 
-        if (!moogaOn || (products.size() == 0) ){
+        if (!moogaOn || (products.size() < 6) ){
             List<Product> productList = getProductDAO().getProductById(findProduct.getId()).getRelatedProducts();
             for (Product product : productList){
                 if (isProductValid(product)){
@@ -261,7 +262,10 @@ public class ProductServiceImpl implements ProductService {
             }
             source = "DB";
         }
-        productsResult.put(source, products);
+        for (String product : products){
+            productsList.add(product);
+        }
+        productsResult.put(source, productsList);
         return productsResult;
     }
 
