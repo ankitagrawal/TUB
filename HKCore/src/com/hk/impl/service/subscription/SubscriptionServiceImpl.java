@@ -1,7 +1,9 @@
 package com.hk.impl.service.subscription;
 
+import com.akube.framework.dao.Page;
 import com.hk.constants.subscription.EnumSubscriptionOrderStatus;
 import com.hk.constants.subscription.EnumSubscriptionStatus;
+import com.hk.core.search.SubscriptionSearchCriteria;
 import com.hk.domain.order.Order;
 import com.hk.domain.subscription.SubscriptionStatus;
 import com.hk.pact.service.subscription.SubscriptionService;
@@ -24,35 +26,39 @@ import java.util.Set;
 @Service
 public class SubscriptionServiceImpl implements SubscriptionService{
 
-  @Autowired
-  SubscriptionDao subscriptionDao;
+    @Autowired
+    SubscriptionDao subscriptionDao;
 
-  @Transactional
-  public Subscription save(Subscription subscription){
-    return subscriptionDao.save(subscription);
-  }
-
-  public List<Subscription> getSubscriptions(Order order, SubscriptionStatus subscriptionStatus){
-    return subscriptionDao.getSubscriptions(order,subscriptionStatus);
-  }
-
-  public List<Subscription> getSubscriptions(Order order, EnumSubscriptionStatus subscriptionStatus){
-    return subscriptionDao.getSubscriptions(order,subscriptionStatus.asSubscriptionStatus());
-  }
-
-  public List<Subscription> placeSubscriptions(Order order){
-    List<Subscription> inCartSubscriptions= getSubscriptions(order, EnumSubscriptionStatus.InCart.asSubscriptionStatus());
-    for(Subscription subscription : inCartSubscriptions){
-      subscription.setSubscriptionStatus(EnumSubscriptionStatus.Placed.asSubscriptionStatus());
-      subscription.setAddress(order.getAddress());
-      subscriptionDao.save(subscription);
+    @Transactional
+    public Subscription save(Subscription subscription){
+        return subscriptionDao.save(subscription);
     }
-    return  inCartSubscriptions;
-  }
 
-  public Subscription abandonSubscription(Subscription subscription){
-    subscription.setSubscriptionStatus(EnumSubscriptionStatus.Abandoned.asSubscriptionStatus());
-    this.save(subscription);
-    return subscription;
-  }
+    public List<Subscription> getSubscriptions(Order order, SubscriptionStatus subscriptionStatus){
+        return subscriptionDao.getSubscriptions(order,subscriptionStatus);
+    }
+
+    public List<Subscription> getSubscriptions(Order order, EnumSubscriptionStatus subscriptionStatus){
+        return subscriptionDao.getSubscriptions(order,subscriptionStatus.asSubscriptionStatus());
+    }
+
+    public List<Subscription> placeSubscriptions(Order order){
+        List<Subscription> inCartSubscriptions= getSubscriptions(order, EnumSubscriptionStatus.InCart.asSubscriptionStatus());
+        for(Subscription subscription : inCartSubscriptions){
+            subscription.setSubscriptionStatus(EnumSubscriptionStatus.Placed.asSubscriptionStatus());
+            subscription.setAddress(order.getAddress());
+            subscriptionDao.save(subscription);
+        }
+        return  inCartSubscriptions;
+    }
+
+    public Subscription abandonSubscription(Subscription subscription){
+        subscription.setSubscriptionStatus(EnumSubscriptionStatus.Abandoned.asSubscriptionStatus());
+        this.save(subscription);
+        return subscription;
+    }
+
+    public Page searchSubscriptions(SubscriptionSearchCriteria subscriptionSearchCriteria, int pageNo, int perPage){
+        return subscriptionDao.searchSubscriptions(subscriptionSearchCriteria, pageNo, perPage);
+    }
 }

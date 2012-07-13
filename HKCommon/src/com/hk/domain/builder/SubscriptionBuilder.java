@@ -79,7 +79,7 @@ public class SubscriptionBuilder {
       subscriptionStatus=EnumSubscriptionStatus.InCart;
     }
     Subscription subscription=new Subscription();
-    subscription.setOrder(order);
+    subscription.setBaseOrder(order);
     subscription.setUser(user);
     subscription.setSubscriptionStatus(subscriptionStatus.asSubscriptionStatus());
 

@@ -1,7 +1,10 @@
 package com.hk.impl.dao.subscription;
 
+import com.akube.framework.dao.Page;
 import com.hk.constants.subscription.EnumSubscriptionStatus;
+import com.hk.core.search.SubscriptionSearchCriteria;
 import com.hk.domain.subscription.SubscriptionStatus;
+import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.stereotype.Repository;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.subscription.SubscriptionProductDao;
@@ -24,11 +27,16 @@ import java.util.Set;
 @SuppressWarnings("unchecked")
 public class SubscriptionDaoImpl extends BaseDaoImpl implements SubscriptionDao {
 
-  public Subscription save(Subscription subscription){
-    return (Subscription) super.save(subscription);
-  }
+    public Subscription save(Subscription subscription){
+        return (Subscription) super.save(subscription);
+    }
 
     public List<Subscription> getSubscriptions(Order order, SubscriptionStatus subscriptionStatus){
         return (List<Subscription>) findByNamedParams(" from Subscription sub where sub.order = :order and sub.subscriptionStatus =:subscriptionStatus ", new String[]{"order","subscriptionStatus"}, new Object[]{order, subscriptionStatus});
+    }
+
+    public Page searchSubscriptions(SubscriptionSearchCriteria subscriptionSearchCriteria, int pageNo, int perPage){
+        DetachedCriteria searchCriteria = subscriptionSearchCriteria.getSearchCriteria();
+        return list(searchCriteria, true, pageNo, perPage);
     }
 }

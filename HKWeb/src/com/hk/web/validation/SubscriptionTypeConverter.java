@@ -15,7 +15,6 @@ import java.util.Locale;
  * User: Pradeep
  * Date: 7/6/12
  * Time: 11:28 AM
- * To change this template use File | Settings | File Templates.
  */
 @Component
 public class SubscriptionTypeConverter implements TypeConverter<Subscription> {
@@ -36,7 +35,6 @@ public class SubscriptionTypeConverter implements TypeConverter<Subscription> {
     if (idLong == null) {
       return null;
     } else {
-      // return surchargeDao.find(idLong);
       return getBaseDao().get(Subscription.class, idLong);
     }
   }

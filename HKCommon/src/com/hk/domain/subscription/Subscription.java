@@ -30,7 +30,7 @@ public class Subscription  implements java.io.Serializable {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "base_order_id",  nullable = false)
-  private Order order;
+  private Order baseOrder;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "address_id",  nullable = true)
@@ -127,12 +127,12 @@ public class Subscription  implements java.io.Serializable {
     this.user = user;
   }
 
-  public Order getOrder() {
-    return order;
+  public Order getBaseOrder() {
+    return baseOrder;
   }
 
-  public void setOrder(Order order) {
-    this.order = order;
+  public void setBaseOrder(Order order) {
+    this.baseOrder = order;
   }
 
   public Address getAddress() {

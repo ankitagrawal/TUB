@@ -21,6 +21,7 @@ import com.hk.domain.inventory.rv.ReconciliationStatus;
 import com.hk.domain.inventory.rv.ReconciliationType;
 import com.hk.domain.offer.rewardPoint.RewardPointMode;
 import com.hk.domain.offer.rewardPoint.RewardPointStatus;
+import com.hk.domain.subscription.SubscriptionStatus;
 import com.hk.domain.user.User;
 
 public interface MasterDataDao 
@@ -103,5 +104,7 @@ public interface MasterDataDao
     public List<City> getCityList();
 
     public List<ShippingOrderStatus> getSOStatusForReconcilation();
+
+    public List<SubscriptionStatus> getSubscriptionStatusList();
 
 }

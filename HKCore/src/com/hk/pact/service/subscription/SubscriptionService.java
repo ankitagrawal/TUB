@@ -1,6 +1,8 @@
 package com.hk.pact.service.subscription;
 
+import com.akube.framework.dao.Page;
 import com.hk.constants.subscription.EnumSubscriptionStatus;
+import com.hk.core.search.SubscriptionSearchCriteria;
 import com.hk.domain.order.Order;
 import com.hk.domain.subscription.Subscription;
 import com.hk.domain.subscription.SubscriptionStatus;
@@ -18,14 +20,16 @@ import java.util.Set;
  */
 public interface SubscriptionService {
 
-  public Subscription save(Subscription subscription);
+    public Subscription save(Subscription subscription);
 
-  public List<Subscription> getSubscriptions(Order order, SubscriptionStatus subscriptionStatus);
+    public List<Subscription> getSubscriptions(Order order, SubscriptionStatus subscriptionStatus);
 
-  public List<Subscription> getSubscriptions(Order order, EnumSubscriptionStatus subscriptionStatus);
+    public List<Subscription> getSubscriptions(Order order, EnumSubscriptionStatus subscriptionStatus);
 
-  public List<Subscription> placeSubscriptions(Order order);
+    public List<Subscription> placeSubscriptions(Order order);
 
-  public Subscription abandonSubscription(Subscription subscription);
-  
+    public Subscription abandonSubscription(Subscription subscription);
+
+    public Page searchSubscriptions(SubscriptionSearchCriteria subscriptionSearchCriteria, int pageNo, int perPage);
+
 }
