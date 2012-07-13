@@ -227,9 +227,15 @@ public class DeliveryStatusUpdateManager {
                         //Breaking the original list into batches of 10 or the remaining size.
                         shippingOrderSubList = shippingOrderList.subList(startIndex, endIndex);
                         trackingId = getAppendedTrackingIdsString(shippingOrderSubList);
-                        if (trackingId != null) {
-                            //getting the JsonResponeArray for batch of trackingIds
-                            jsonShipmentDataArray = courierStatusUpdateHelper.bulkUpdateDeliveryStatusDelhivery(trackingId);
+                        try {
+                            if (trackingId != null) {
+                                //getting the JsonResponeArray for batch of trackingIds
+                                jsonShipmentDataArray = courierStatusUpdateHelper.bulkUpdateDeliveryStatusDelhivery(trackingId);
+                            }
+                        } catch (Exception ex) {
+                            logger.debug(CourierConstants.EXCEPTION + "(Delhivery)" + trackingId);
+                            unmodifiedTrackingIds.add(trackingId);
+                            continue;
                         }
                         if (jsonShipmentDataArray != null && jsonShipmentDataArray.size() > 0) {
                             getJsonResponseMap(jsonShipmentDataArray);
