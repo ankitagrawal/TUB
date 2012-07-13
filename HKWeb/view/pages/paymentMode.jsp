@@ -8,6 +8,7 @@
 <%@ page import="com.hk.constants.payment.EnumPaymentMode"%>
 <%@ page import="com.hk.constants.marketing.AnalyticsConstants"%>
 <%@ page import="com.hk.web.HealthkartResponse"%>
+<%@ page import="com.hk.constants.payment.EnumPaymentType" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@include file="/includes/_taglibInclude.jsp"%>
 
@@ -28,6 +29,7 @@
 <c:set var="codMinAmount" value="<%=codMinAmount%>" />
 <c:set var="codCharges" value="<%=codCharges%>" />
 <c:set var="orderDate" value="<%=new DateTime().toDate()%>" />
+<c:set var="prePaidPaymentType" value="<%=EnumPaymentType.PrePaid.getId()%>" />
 
 <s:layout-render name="/layouts/checkoutLayout.jsp"
                  pageTitle="Payment Options">
@@ -108,7 +110,7 @@
         <li id="tab2">Debit Cards</li>
         <li id="tab3">Internet Banking</li>
         <shiro:lacksRole name="<%=RoleConstants.COD_BLOCKED%>">
-          <c:if test="${orderSummary.order.offerInstance.offer.id != 1270}">
+          <c:if test="${orderSummary.order.offerInstance.offer.paymentType != prePaidPaymentType}">
             <li id="tab4" class="cod-mode">Cash on Delivery</li>
             <li id="tab5">Cheque / Bank Deposit</li>
           </c:if>
@@ -132,6 +134,11 @@
             src="<hk:vhostImage/>/images/mastercard.jpg" height="30px">
     </p>
 
+
+
+
+
+
     <div style="float: right; width: 90%;"><s:submit
             name="proceed" value="Make Payment >" class="button"
             disabled="${fn:length(orderSummary.pricingDto.outOfStockLineItems) > 0 ? 'true':'false'}" />
@@ -150,6 +157,11 @@
             VISA/MasterCard/Maestro &nbsp;</label> <img
                 src="<hk:vhostImage/>/images/mastercard.jpg" height="30px">
         </p>
+
+
+
+
+
 
         <div style="float: right; width: 90%;"><s:submit
                 name="proceed" value="Make Payment >" class="button makePayment"
@@ -186,7 +198,7 @@
         </div>
     </s:form></div>
 <shiro:lacksRole name="<%=RoleConstants.COD_BLOCKED%>">
-  <c:if test="${orderSummary.order.offerInstance.offer.id != 1270}">
+  <c:if test="${orderSummary.order.offerInstance.offer.paymentType != prePaidPaymentType}">
     <div id="tabs_content4" class="tab_content" style="display: none;">
         <c:choose>
             <c:when test="${orderSummary.codAllowed}">

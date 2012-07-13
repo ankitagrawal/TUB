@@ -6,6 +6,8 @@ import com.hk.pact.service.core.CityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created by IntelliJ IDEA.
  * User:User
@@ -24,5 +26,9 @@ public class CityServiceImpl implements CityService {
 
   public boolean isValidCity(String name){
     return  cityDao.isValidCity(name);
+  }
+
+  public List<City> getAllCity(){
+    return cityDao.getAll(City.class);
   }
 }

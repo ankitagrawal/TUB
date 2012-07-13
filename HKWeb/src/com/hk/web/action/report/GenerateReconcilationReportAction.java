@@ -89,6 +89,7 @@ public class GenerateReconcilationReportAction extends BaseAction {
         xlsWriter.addHeader("ORDER DATE", "ORDER DATE");
         xlsWriter.addHeader("NAME", "NAME");
         xlsWriter.addHeader("CITY", "CITY");
+        xlsWriter.addHeader("PINCODE","PINCODE");
         xlsWriter.addHeader("PAYMENT", "PAYMENT");
         xlsWriter.addHeader("TOTAL", "TOTAL");
         xlsWriter.addHeader("COURIER", "COURIER");
@@ -107,6 +108,7 @@ public class GenerateReconcilationReportAction extends BaseAction {
             xlsWriter.addCell(row, reconcilationReportDto.getOrderDate());
             xlsWriter.addCell(row, reconcilationReportDto.getName());
             xlsWriter.addCell(row, reconcilationReportDto.getCity());
+            xlsWriter.addCell(row, reconcilationReportDto.getPincode());
             xlsWriter.addCell(row, reconcilationReportDto.getPayment());
             xlsWriter.addCell(row, reconcilationReportDto.getTotal());
             xlsWriter.addCell(row, reconcilationReportDto.getCourier().getName());

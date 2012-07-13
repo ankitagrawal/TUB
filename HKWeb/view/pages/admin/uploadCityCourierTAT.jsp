@@ -16,10 +16,14 @@
                    <s:file name="fileBean" size="30"/>
                  </li>
                 <li>
-            <div class="buttons">
-              <s:submit name="uploadCityExcel" value="Upload"/>
-            </div>
-          </li>
+                    <div class="buttons">
+                        <s:submit name="uploadCityExcel" value="Upload"/>
+                    </div>
+                </li>
+                           <li>
+                               Excel Format CITY(city name) , COURIER_ID(int) ,CITY_TAT(decimal)
+
+                           </li>
              </div>
              </s:form>
          </ul>
