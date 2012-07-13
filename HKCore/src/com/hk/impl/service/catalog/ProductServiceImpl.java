@@ -189,6 +189,8 @@ public class ProductServiceImpl implements ProductService {
 				return false;
 			} else if (comboProduct.getProduct().getInStockVariants().isEmpty()) {
 				return false;
+			} else if (comboProduct.getProduct().isDeleted() != null && comboProduct.getProduct().isDeleted()) {
+				return false;
 			}
 		}
 		return true;
