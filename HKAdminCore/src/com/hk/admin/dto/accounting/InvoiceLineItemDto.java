@@ -56,9 +56,6 @@ public class InvoiceLineItemDto {
         qty = productLineItem.getQty();
         
         hkPrice = productLineItem.getHkPrice();
-        if(cartLineItemConfig !=null){
-            hkPrice += cartLineItemConfig.getPrice(); 
-        }
         
         lineItemTotal = hkPrice * qty;
         costPrice = productLineItem.getCostPrice();
