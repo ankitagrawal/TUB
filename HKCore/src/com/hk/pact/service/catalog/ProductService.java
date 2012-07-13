@@ -88,4 +88,6 @@ public interface ProductService {
 
     public Double getAverageRating(Product product);
 
+    public List<Combo> getRelatedCombos(Product product);
+
 }

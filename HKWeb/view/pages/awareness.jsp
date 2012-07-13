@@ -3,7 +3,7 @@
 <s:layout-render name="/layouts/default100.jsp" pageTitle="Fake Bodybuilding Supplements Retailed in Medical Stores">
 
 	<s:layout-component name="content">
-		<h1>Fake Bodybuilding Supplements Retailed in Medical Stores</h1>
+		<h2>Fake Bodybuilding Supplements Sold in Medical Stores in India</h2>
 		<div align="center" style="padding:50px;">
 
 			<script type="text/javascript" src="http://s3.amazonaws.com/s3.www.universalsubtitles.org/embed.js">
