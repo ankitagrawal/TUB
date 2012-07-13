@@ -1,4 +1,4 @@
-package com.hk.domain.Faq;
+package com.hk.domain.faq;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -15,9 +15,71 @@ import javax.persistence.Column;
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "faq")
-public class faq implements java.io.Serializable {
+public class Faq implements java.io.Serializable {
     @Id
     @Column(name = "id", unique = true, nullable = false, length = 20)
-    private String               id;
-    
+    private Long id;
+
+    @Column(name = "question")
+    private String question;
+
+    @Column(name = "answer")
+    private String answer;
+
+    @Column(name = "primary_category")
+    private String primary_category;
+
+    @Column(name = "secondary_category")
+    private String secondary_category;
+
+    @Column(name = "keywords")
+    private String keywords;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(String question) {
+        this.question = question;
+    }
+
+    public String getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(String answer) {
+        this.answer = answer;
+    }
+
+    public String getPrimary_category() {
+        return primary_category;
+    }
+
+    public void setPrimary_category(String primary_category) {
+        this.primary_category = primary_category;
+    }
+
+    public String getSecondary_category() {
+        return secondary_category;
+    }
+
+    public void setSecondary_category(String secondary_category) {
+        this.secondary_category = secondary_category;
+    }
+
+    public String getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(String keywords) {
+        this.keywords = keywords;
+    }
 }
