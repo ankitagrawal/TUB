@@ -206,9 +206,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public Map<String, List<String>> getRelatedMoogaProducts(Product findProduct){
-        String category = findProduct.getPrimaryCategory().getName();
         List<String> categories = new ArrayList<String>();
-        categories.add(category);
+        categories.add(findProduct.getPrimaryCategory().getName());
+        categories.add(findProduct.getSecondaryCategory().getName());
         List<String> pvIdList = recommendationService.getRelatedProducts(findProduct.getId(), categories);
         return getRecommendedProducts(findProduct,pvIdList );
     }

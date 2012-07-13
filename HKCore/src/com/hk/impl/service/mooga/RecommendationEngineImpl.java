@@ -154,10 +154,19 @@ public class RecommendationEngineImpl implements RecommendationEngine {
         List<String> recommendedItems = new ArrayList<String>();
         try{
             StringBuffer categoryId = new StringBuffer();
+            int maxLevel = Math.min(CategoryPriority.getRecommendationLevel(categories.get(0)), categories.size());
+            int count = 0;
             for (String category : categories){
                 if (StringUtils.isNotBlank(category)){
+                    count++;
                     categoryId.append(category);
                     categoryId.append("/");
+                    //Send only the required level Beauty if level is 2
+                    //Parenting/Toddler if level is 2
+                    //Services/Health Checkups/Thyroid if level is 3
+                    if (count == maxLevel){
+                        break;
+                    }
                 }
             }
             String catId = categoryId.toString();
