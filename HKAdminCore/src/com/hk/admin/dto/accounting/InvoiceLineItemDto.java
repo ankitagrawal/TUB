@@ -9,6 +9,7 @@ import com.hk.constants.courier.StateList;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.ProductOption;
 import com.hk.domain.catalog.product.VariantConfigOptionParam;
+import com.hk.domain.order.CartLineItemConfig;
 import com.hk.domain.order.CartLineItemConfigValues;
 import com.hk.domain.order.CartLineItemExtraOption;
 import com.hk.domain.shippingOrder.LineItem;
@@ -47,12 +48,18 @@ public class InvoiceLineItemDto {
         variantName = productLineItem.getSku().getProductVariant().getVariantName();
         productOptions = productLineItem.getSku().getProductVariant().getProductOptions();
         cartLineItemExtraOptions = productLineItem.getCartLineItem().getCartLineItemExtraOptions();
-        if (productLineItem.getCartLineItem().getCartLineItemConfig() != null) {
-            cartLineItemConfigValues = productLineItem.getCartLineItem().getCartLineItemConfig().getCartLineItemConfigValues();
+        CartLineItemConfig cartLineItemConfig = productLineItem.getCartLineItem().getCartLineItemConfig();
+        if ( cartLineItemConfig!= null) {
+            cartLineItemConfigValues = cartLineItemConfig.getCartLineItemConfigValues();
         }
 
         qty = productLineItem.getQty();
+        
         hkPrice = productLineItem.getHkPrice();
+        if(cartLineItemConfig !=null){
+            hkPrice += cartLineItemConfig.getPrice(); 
+        }
+        
         lineItemTotal = hkPrice * qty;
         costPrice = productLineItem.getCostPrice();
         taxValue = productLineItem.getTax().getValue();
