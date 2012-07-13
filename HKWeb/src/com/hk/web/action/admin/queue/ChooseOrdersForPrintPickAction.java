@@ -20,6 +20,7 @@ import org.stripesstuff.plugin.security.Secure;
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
+import com.hk.admin.pact.dao.inventory.BrandsToAuditDao;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
@@ -27,295 +28,313 @@ import com.hk.domain.catalog.category.Category;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderStatus;
 import com.hk.domain.shippingOrder.LineItem;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.catalog.category.CategoryDao;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.web.action.error.AdminPermissionAction;
 
-@Secure(hasAnyPermissions = { PermissionConstants.VIEW_SHIPMENT_QUEUE }, authActionBean = AdminPermissionAction.class)
+@Secure (hasAnyPermissions = {PermissionConstants.VIEW_SHIPMENT_QUEUE}, authActionBean = AdminPermissionAction.class)
 @Component
 public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
 
-    @SuppressWarnings("unused")
-    private static Logger              logger             = LoggerFactory.getLogger(ChooseOrdersForPrintPickAction.class);
+	@SuppressWarnings ("unused")
+	private static Logger logger = LoggerFactory.getLogger(ChooseOrdersForPrintPickAction.class);
 
-    @Autowired
-    private ShippingOrderService       shippingOrderService;
+	@Autowired
+	private ShippingOrderService shippingOrderService;
 
-    @Autowired
-    private AdminShippingOrderService  adminShippingOrderService;
+	@Autowired
+	private AdminShippingOrderService adminShippingOrderService;
 
-    @Autowired
-    private ShippingOrderStatusService shippingOrderStatusService;
-    @Autowired
-    CategoryDao                        categoryDao;
+	@Autowired
+	private ShippingOrderStatusService shippingOrderStatusService;
+	@Autowired
+	private BrandsToAuditDao brandsToAuditDao;
 
-    Page                               shippingOrdersPage;
-    List<ShippingOrder>                shippingOrdersList = new ArrayList<ShippingOrder>();
-    Category                           category;
-    String                             gatewayOrderId;
-    String                             baseGatewayOrderId;
-    ShippingOrderStatus                shippingOrderStatus;
+	@Autowired
+	CategoryDao categoryDao;
 
-    private static final int           PRINTING           = 1;
-    private static final int           PICKING            = 2;
+	Page shippingOrdersPage;
+	List<ShippingOrder> shippingOrdersList = new ArrayList<ShippingOrder>();
+	Category category;
+	String gatewayOrderId;
+	String baseGatewayOrderId;
+	ShippingOrderStatus shippingOrderStatus;
 
-    private String                     brand;
+	private static final int PRINTING = 1;
+	private static final int PICKING = 2;
 
-    private String getActionMessage(int action) {
-        switch (action) {
-            case PRINTING:
-                return "printing";
-            case PICKING:
-                return "picking";
-        }
-        return "";
-    }
+	private String brand;
 
-    private String getRedirectMessage(int action) {
-        StringBuilder messageString = new StringBuilder();
-        if (shippingOrdersList != null && shippingOrdersList.size() > 0) {
-            messageString.append(Integer.toString(shippingOrdersList.size()));
-            messageString.append(" Orders selected for " + getActionMessage(action));
-        } else {
-            messageString.append("No orders found for " + getActionMessage(action));
-        }
+	private String getActionMessage(int action) {
+		switch (action) {
+			case PRINTING:
+				return "printing";
+			case PICKING:
+				return "picking";
+		}
+		return "";
+	}
 
-        return messageString.toString();
-    }
+	private String getRedirectMessage(int action) {
+		StringBuilder messageString = new StringBuilder();
+		if (shippingOrdersList != null && shippingOrdersList.size() > 0) {
+			messageString.append(Integer.toString(shippingOrdersList.size()));
+			messageString.append(" Orders selected for " + getActionMessage(action));
+		} else {
+			messageString.append("No orders found for " + getActionMessage(action));
+		}
 
-    @DontValidate
-    @DefaultHandler
-    @Secure(hasAnyPermissions = { PermissionConstants.VIEW_PACKING_QUEUE }, authActionBean = AdminPermissionAction.class)
-    public Resolution pre() {
-        return new ForwardResolution("/pages/admin/chooseOrdersForPrintingPicking.jsp");
-    }
+		return messageString.toString();
+	}
 
-    public Resolution searchOrdersForPrinting() {
-        List<ShippingOrder> existingOrdersInPickingQueue = getShippingOrdersForPicking();
+	@DontValidate
+	@DefaultHandler
+	@Secure (hasAnyPermissions = {PermissionConstants.VIEW_PACKING_QUEUE}, authActionBean = AdminPermissionAction.class)
+	public Resolution pre() {
+		return new ForwardResolution("/pages/admin/chooseOrdersForPrintingPicking.jsp");
+	}
 
-        if (existingOrdersInPickingQueue != null && !existingOrdersInPickingQueue.isEmpty()) {
-            shippingOrderStatus = getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_MarkedForPrinting);
-            shippingOrdersList = existingOrdersInPickingQueue;
-            addRedirectAlertMessage(new SimpleMessage(getRedirectMessage(PICKING)));
-        } else {
-            shippingOrderStatus = getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ReadyForProcess);
-            shippingOrdersList = getShippingOrdersForPrintingInCategory();
-            addRedirectAlertMessage(new SimpleMessage(getRedirectMessage(PRINTING)));
-        }
+	public Resolution searchOrdersForPrinting() {
+		List<ShippingOrder> existingOrdersInPickingQueue = getShippingOrdersForPicking();
 
-        return new ForwardResolution("/pages/admin/chooseOrdersForPrintingPicking.jsp");
-    }
+		if (existingOrdersInPickingQueue != null && !existingOrdersInPickingQueue.isEmpty()) {
+			shippingOrderStatus = getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_MarkedForPrinting);
+			shippingOrdersList = existingOrdersInPickingQueue;
+			addRedirectAlertMessage(new SimpleMessage(getRedirectMessage(PICKING)));
+		} else {
+			shippingOrderStatus = getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ReadyForProcess);
+			shippingOrdersList = getShippingOrdersForPrintingInCategory();
+			addRedirectAlertMessage(new SimpleMessage(getRedirectMessage(PRINTING)));
+		}
 
-    private ShippingOrderSearchCriteria getShippingOrderSearchCriteria(List<EnumShippingOrderStatus> shippingOrderStatuses) {
-        ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
-        shippingOrderSearchCriteria.setShippingOrderStatusList(getShippingOrderStatusService().getOrderStatuses(shippingOrderStatuses));
+		return new ForwardResolution("/pages/admin/chooseOrdersForPrintingPicking.jsp");
+	}
 
-        if (baseGatewayOrderId != null) {
-            shippingOrderSearchCriteria.setBaseGatewayOrderId(baseGatewayOrderId);
-        } else if (gatewayOrderId != null) {
-            shippingOrderSearchCriteria.setGatewayOrderId(gatewayOrderId);
-        } else {
-            shippingOrderSearchCriteria.setBasketCategory(category.getName()).setBaseGatewayOrderId(baseGatewayOrderId).setGatewayOrderId(gatewayOrderId);
-        }
+	private ShippingOrderSearchCriteria getShippingOrderSearchCriteria(List<EnumShippingOrderStatus> shippingOrderStatuses) {
+		ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
+		shippingOrderSearchCriteria.setShippingOrderStatusList(getShippingOrderStatusService().getOrderStatuses(shippingOrderStatuses));
 
-        return shippingOrderSearchCriteria;
-    }
+		if (baseGatewayOrderId != null) {
+			shippingOrderSearchCriteria.setBaseGatewayOrderId(baseGatewayOrderId);
+		} else if (gatewayOrderId != null) {
+			shippingOrderSearchCriteria.setGatewayOrderId(gatewayOrderId);
+		} else {
+			shippingOrderSearchCriteria.setBasketCategory(category.getName()).setBaseGatewayOrderId(baseGatewayOrderId).setGatewayOrderId(gatewayOrderId);
+		}
 
-    /*
-     * private void updateShippingOrdersForPrinting() { ShippingOrderSearchCriteria shippingOrderSearchCriteria =
-     * getShippingOrderSearchCriteria(EnumShippingOrderStatus.getStatusForPrinting()); shippingOrdersPage =
-     * shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, 1, 10); //hard coding to get it working
-     * shippingOrdersList = shippingOrdersPage.getList(); }
-     */
+		return shippingOrderSearchCriteria;
+	}
 
-    private List<ShippingOrder> getShippingOrdersForPicking() {
-        ShippingOrderSearchCriteria shippingOrderSearchCriteria = getShippingOrderSearchCriteria(EnumShippingOrderStatus.getStatusForPicking());
+	/*
+		 * private void updateShippingOrdersForPrinting() { ShippingOrderSearchCriteria shippingOrderSearchCriteria =
+		 * getShippingOrderSearchCriteria(EnumShippingOrderStatus.getStatusForPrinting()); shippingOrdersPage =
+		 * shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, 1, 10); //hard coding to get it working
+		 * shippingOrdersList = shippingOrdersPage.getList(); }
+		 */
 
-        return getShippingOrderService().searchShippingOrders(shippingOrderSearchCriteria);
-    }
+	private List<ShippingOrder> getShippingOrdersForPicking() {
+		ShippingOrderSearchCriteria shippingOrderSearchCriteria = getShippingOrderSearchCriteria(EnumShippingOrderStatus.getStatusForPicking());
 
-    private List<ShippingOrder> getShippingOrdersForPrintingInCategory() {
-        ShippingOrderSearchCriteria shippingOrderSearchCriteria = getShippingOrderSearchCriteria(EnumShippingOrderStatus.getStatusForPrinting());
-        
-        shippingOrdersPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, 1, 10);
-        // shippingOrdersList = shippingOrdersPage.getList();
-        shippingOrdersList = filterShippingOrdersByBrand(shippingOrdersPage);
-        return shippingOrdersList;
-    }
+		return getShippingOrderService().searchShippingOrders(shippingOrderSearchCriteria);
+	}
 
-    public Resolution batchPrintOrders() {
+	private List<ShippingOrder> getShippingOrdersForPrintingInCategory() {
+		ShippingOrderSearchCriteria shippingOrderSearchCriteria = getShippingOrderSearchCriteria(EnumShippingOrderStatus.getStatusForPrinting());
 
-        List<ShippingOrder> existingOrdersInPrintingQueue = getShippingOrdersForPrintingInCategory();
+		shippingOrdersPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, 1, 10);
+		// shippingOrdersList = shippingOrdersPage.getList();
+		shippingOrdersList = filterShippingOrdersByBrand(shippingOrdersPage);
+		return shippingOrdersList;
+	}
 
-        int counter = 0;
-        for (ShippingOrder shippingOrder : existingOrdersInPrintingQueue) {
-            if (EnumShippingOrderStatus.SO_ReadyForProcess.getId().equals(shippingOrder.getOrderStatus().getId())) {
-                getAdminShippingOrderService().markShippingOrderAsPrinted(shippingOrder);
-                counter++;
-            }
-            // if (counter == 10) break;
-        }
+	public Resolution batchPrintOrders() {
 
-        // addRedirectAlertMessage(new SimpleMessage("10 Orders for selected category sent for printing"));
-        return searchOrdersForPrinting();
-    }
+		List<ShippingOrder> existingOrdersInPrintingQueue = getShippingOrdersForPrintingInCategory();
 
-    public Resolution sendOrdersBackToProcessingQueue() {
+		int counter = 0;
+		for (ShippingOrder shippingOrder : existingOrdersInPrintingQueue) {
+			if (EnumShippingOrderStatus.SO_ReadyForProcess.getId().equals(shippingOrder.getOrderStatus().getId())) {
+				getAdminShippingOrderService().markShippingOrderAsPrinted(shippingOrder);
+				counter++;
+			}
+			// if (counter == 10) break;
+		}
 
-        for (ShippingOrder shippingOrder : shippingOrdersList) {
-            if (EnumShippingOrderStatus.SO_ReadyForProcess.getId().equals(shippingOrder.getOrderStatus().getId())
-                    || EnumShippingOrderStatus.SO_MarkedForPrinting.getId().equals(shippingOrder.getOrderStatus().getId())) {
-                getAdminShippingOrderService().moveShippingOrderBackToPackingQueue(shippingOrder);
-            }
-        }
-        /*
-         * addRedirectAlertMessage(new SimpleMessage("Selected orders are sent back to processing queue")); return new
-         * ForwardResolution("/pages/admin/chooseOrdersForPrintingPicking.jsp");
-         */
+		// addRedirectAlertMessage(new SimpleMessage("10 Orders for selected category sent for printing"));
+		return searchOrdersForPrinting();
+	}
 
-        return searchOrdersForPrinting();
+	public Resolution sendOrdersBackToProcessingQueue() {
 
-    }
+		for (ShippingOrder shippingOrder : shippingOrdersList) {
+			if (EnumShippingOrderStatus.SO_ReadyForProcess.getId().equals(shippingOrder.getOrderStatus().getId()) || EnumShippingOrderStatus.SO_MarkedForPrinting.getId().equals(shippingOrder.getOrderStatus().getId())) {
+				getAdminShippingOrderService().moveShippingOrderBackToPackingQueue(shippingOrder);
+			}
+		}
+		/*
+				 * addRedirectAlertMessage(new SimpleMessage("Selected orders are sent back to processing queue")); return new
+				 * ForwardResolution("/pages/admin/chooseOrdersForPrintingPicking.jsp");
+				 */
 
-    public Resolution clearPickingQueue() {
-        List<ShippingOrder> existingOrdersInPickingQueue = getShippingOrdersForPicking();
-        for (ShippingOrder shippingOrder : existingOrdersInPickingQueue) {
-            if (EnumShippingOrderStatus.SO_MarkedForPrinting.getId().equals(shippingOrder.getOrderStatus().getId())) {
-                getAdminShippingOrderService().moveShippingOrderToPickingQueue(shippingOrder);
-            }
-        }
+		return searchOrdersForPrinting();
 
-        /*
-         * addRedirectAlertMessage(new SimpleMessage("Selected orders are cleared and marked for picking")); return new
-         * RedirectResolution(ChooseOrdersForPrintPickAction.class);
-         */
+	}
 
-        return searchOrdersForPrinting();
-    }
+	public Resolution clearPickingQueue() {
+		List<ShippingOrder> existingOrdersInPickingQueue = getShippingOrdersForPicking();
+		for (ShippingOrder shippingOrder : existingOrdersInPickingQueue) {
+			if (EnumShippingOrderStatus.SO_MarkedForPrinting.getId().equals(shippingOrder.getOrderStatus().getId())) {
+				getAdminShippingOrderService().moveShippingOrderToPickingQueue(shippingOrder);
+			}
+		}
 
-    private List<ShippingOrder> filterShippingOrdersByBrand(Page shippingOrdersPage) {
-        List<ShippingOrder> shippingOrdersTempList = shippingOrdersPage.getList();
+		/*
+				 * addRedirectAlertMessage(new SimpleMessage("Selected orders are cleared and marked for picking")); return new
+				 * RedirectResolution(ChooseOrdersForPrintPickAction.class);
+				 */
 
-        for (ShippingOrder shippingOrder : shippingOrdersTempList) {
-            if (shippingOrdersList.size() == 10) {
-                break;
-            }
-            boolean shouldAdd = true;
-            for (LineItem lineItem : shippingOrder.getLineItems()) {
-                String brandName = lineItem.getSku().getProductVariant().getProduct().getBrand();
-                if (StringUtils.isNotBlank(brandName) && brandName.equalsIgnoreCase(brand)) {
-                    shouldAdd = false;
-                    break;
-                }
-            }
-            if (shouldAdd) {
-                shippingOrdersList.add(shippingOrder);
-            }
-        }
-        return shippingOrdersList;
-    }
+		return searchOrdersForPrinting();
+	}
 
-    public int getPerPageDefault() {
-        return 10;
-    }
+	private List<ShippingOrder> filterShippingOrdersByBrand(Page shippingOrdersPage) {
+		List<ShippingOrder> shippingOrdersTempList = shippingOrdersPage.getList();
+		List<String> brandsToExclude = new ArrayList<String>();
+		if (getPrincipalUser() != null) {
+			Warehouse warehouse = getPrincipalUser().getSelectedWarehouse();
+			brandsToExclude = getBrandsToAuditDao().brandsToBeAudited(warehouse);
+		}
+		for (ShippingOrder shippingOrder : shippingOrdersTempList) {
+			if (shippingOrdersList.size() == 10) {
+				break;
+			}
+			boolean shouldAdd = true;
+			for (LineItem lineItem : shippingOrder.getLineItems()) {
+				String brandName = lineItem.getSku().getProductVariant().getProduct().getBrand();
+				/*if (StringUtils.isNotBlank(brandName) && brandName.equalsIgnoreCase(brand)) {
+									shouldAdd = false;
+									break;
+								}*/
+				if (StringUtils.isNotBlank(brandName) && brandsToExclude.contains(brandName.toLowerCase())) {
+					shouldAdd = false;
+					break;
+				}
+			}
+			if (shouldAdd) {
+				shippingOrdersList.add(shippingOrder);
+			}
+		}
+		return shippingOrdersList;
+	}
 
-    public int getPageCount() {
-        return shippingOrdersPage == null ? 0 : shippingOrdersPage.getTotalPages();
-    }
+	public int getPerPageDefault() {
+		return 10;
+	}
 
-    public int getResultCount() {
-        return shippingOrdersPage == null ? 0 : shippingOrdersPage.getTotalResults();
-    }
+	public int getPageCount() {
+		return shippingOrdersPage == null ? 0 : shippingOrdersPage.getTotalPages();
+	}
 
-    public Set<String> getParamSet() {
-        return null;
-    }
+	public int getResultCount() {
+		return shippingOrdersPage == null ? 0 : shippingOrdersPage.getTotalResults();
+	}
 
-    /*
-     * public Set<ShippingOrder> getPrintingPickingQueueOrders() { return printingPickingQueueOrders; } public void
-     * setPrintingPickingQueueOrders(Set<ShippingOrder> printingPickingQueueOrders) { this.printingPickingQueueOrders =
-     * printingPickingQueueOrders; }
-     */
+	public Set<String> getParamSet() {
+		return null;
+	}
 
-    public Page getShippingOrdersPage() {
-        return shippingOrdersPage;
-    }
+	/*
+		 * public Set<ShippingOrder> getPrintingPickingQueueOrders() { return printingPickingQueueOrders; } public void
+		 * setPrintingPickingQueueOrders(Set<ShippingOrder> printingPickingQueueOrders) { this.printingPickingQueueOrders =
+		 * printingPickingQueueOrders; }
+		 */
 
-    public void setShippingOrdersPage(Page shippingOrdersPage) {
-        this.shippingOrdersPage = shippingOrdersPage;
-    }
+	public Page getShippingOrdersPage() {
+		return shippingOrdersPage;
+	}
 
-    public Category getCategory() {
-        return category;
-    }
+	public void setShippingOrdersPage(Page shippingOrdersPage) {
+		this.shippingOrdersPage = shippingOrdersPage;
+	}
 
-    public void setCategory(Category category) {
-        this.category = category;
-    }
+	public Category getCategory() {
+		return category;
+	}
 
-    public String getGatewayOrderId() {
-        return gatewayOrderId;
-    }
+	public void setCategory(Category category) {
+		this.category = category;
+	}
 
-    public void setGatewayOrderId(String gatewayOrderId) {
-        this.gatewayOrderId = gatewayOrderId;
-    }
+	public String getGatewayOrderId() {
+		return gatewayOrderId;
+	}
 
-    public String getBaseGatewayOrderId() {
-        return baseGatewayOrderId;
-    }
+	public void setGatewayOrderId(String gatewayOrderId) {
+		this.gatewayOrderId = gatewayOrderId;
+	}
 
-    public void setBaseGatewayOrderId(String baseGatewayOrderId) {
-        this.baseGatewayOrderId = baseGatewayOrderId;
-    }
+	public String getBaseGatewayOrderId() {
+		return baseGatewayOrderId;
+	}
 
-    public List<ShippingOrder> getShippingOrdersList() {
-        return shippingOrdersList;
-    }
+	public void setBaseGatewayOrderId(String baseGatewayOrderId) {
+		this.baseGatewayOrderId = baseGatewayOrderId;
+	}
 
-    public void setShippingOrdersList(List<ShippingOrder> shippingOrdersList) {
-        this.shippingOrdersList = shippingOrdersList;
-    }
+	public List<ShippingOrder> getShippingOrdersList() {
+		return shippingOrdersList;
+	}
 
-    public ShippingOrderStatus getShippingOrderStatus() {
-        return shippingOrderStatus;
-    }
+	public void setShippingOrdersList(List<ShippingOrder> shippingOrdersList) {
+		this.shippingOrdersList = shippingOrdersList;
+	}
 
-    public void setShippingOrderStatus(ShippingOrderStatus shippingOrderStatus) {
-        this.shippingOrderStatus = shippingOrderStatus;
-    }
+	public ShippingOrderStatus getShippingOrderStatus() {
+		return shippingOrderStatus;
+	}
 
-    public void setShippingOrderService(ShippingOrderService shippingOrderService) {
-        this.shippingOrderService = shippingOrderService;
-    }
+	public void setShippingOrderStatus(ShippingOrderStatus shippingOrderStatus) {
+		this.shippingOrderStatus = shippingOrderStatus;
+	}
 
-    public void setShippingOrderStatusService(ShippingOrderStatusService shippingOrderStatusService) {
-        this.shippingOrderStatusService = shippingOrderStatusService;
-    }
+	public void setShippingOrderService(ShippingOrderService shippingOrderService) {
+		this.shippingOrderService = shippingOrderService;
+	}
 
-    public AdminShippingOrderService getAdminShippingOrderService() {
-        return adminShippingOrderService;
-    }
+	public void setShippingOrderStatusService(ShippingOrderStatusService shippingOrderStatusService) {
+		this.shippingOrderStatusService = shippingOrderStatusService;
+	}
 
-    public void setAdminShippingOrderService(AdminShippingOrderService adminShippingOrderService) {
-        this.adminShippingOrderService = adminShippingOrderService;
-    }
+	public AdminShippingOrderService getAdminShippingOrderService() {
+		return adminShippingOrderService;
+	}
 
-    public ShippingOrderService getShippingOrderService() {
-        return shippingOrderService;
-    }
+	public void setAdminShippingOrderService(AdminShippingOrderService adminShippingOrderService) {
+		this.adminShippingOrderService = adminShippingOrderService;
+	}
 
-    public ShippingOrderStatusService getShippingOrderStatusService() {
-        return shippingOrderStatusService;
-    }
+	public ShippingOrderService getShippingOrderService() {
+		return shippingOrderService;
+	}
 
-    public String getBrand() {
-        return brand;
-    }
+	public ShippingOrderStatusService getShippingOrderStatusService() {
+		return shippingOrderStatusService;
+	}
 
-    public void setBrand(String brand) {
-        this.brand = brand;
-    }
+	public String getBrand() {
+		return brand;
+	}
 
+	public void setBrand(String brand) {
+		this.brand = brand;
+	}
+
+	public BrandsToAuditDao getBrandsToAuditDao() {
+		return brandsToAuditDao;
+	}
+
+	public void setBrandsToAuditDao(BrandsToAuditDao brandsToAuditDao) {
+		this.brandsToAuditDao = brandsToAuditDao;
+	}
 }

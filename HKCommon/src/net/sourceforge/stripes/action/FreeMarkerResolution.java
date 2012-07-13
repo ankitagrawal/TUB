@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.hk.service.impl.FreeMarkerService;
+import freemarker.template.Template;
 
 public class FreeMarkerResolution implements Resolution {
 
@@ -19,8 +20,8 @@ public class FreeMarkerResolution implements Resolution {
 
 
   public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-    FreeMarkerService.RenderOutput renderOutput = freeMarkerService.getRenderOutputForTemplate(templatePath, valueObject);
+    Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(templatePath);
+    FreeMarkerService.RenderOutput renderOutput = freeMarkerService.getRenderOutputForTemplate(freemarkerTemplate, valueObject);
     response.setContentType("text/html");
     response.getWriter().write(renderOutput.getMessage());
   }

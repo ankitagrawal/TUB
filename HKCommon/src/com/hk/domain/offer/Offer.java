@@ -67,6 +67,9 @@ public class Offer implements java.io.Serializable {
   @Column(name = "terms", nullable = true)
   private String terms;
 
+	@Column(name = "payment_type", nullable = true)
+  private Long paymentType;
+
   @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinTable(name = "offer_has_role",
       joinColumns = {@JoinColumn(name = "offer_id", nullable = false, updatable = false)},
@@ -162,7 +165,15 @@ public class Offer implements java.io.Serializable {
     this.terms = terms;
   }
 
-  @Override
+	public Long getPaymentType() {
+		return paymentType;
+	}
+
+	public void setPaymentType(Long paymentType) {
+		this.paymentType = paymentType;
+	}
+
+	@Override
   public String toString() {
     return id == null ? "" : id.toString();
   }

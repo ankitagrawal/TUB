@@ -7686,6 +7686,24 @@
         <addForeignKeyConstraint baseColumnNames="store_id" baseTableName="store_product"  constraintName="fk_store_product_price_store1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="store"  referencesUniqueColumn="false"/>
     </changeSet>
 
+  <changeSet author="Rimal (generated)" id="1340180519838-1">
+    <addColumn tableName="email_campaign">
+      <column name="html_path" type="VARCHAR(400)"/>
+    </addColumn>
+  </changeSet>
+  <changeSet author="Rimal (generated)" id="1340180519838-2">
+    <addColumn tableName="email_campaign">
+      <column name="subject" type="VARCHAR(250)"/>
+    </addColumn>
+  </changeSet>
+  <changeSet author="Rimal (generated)" id="1340180519838-3">
+    <addColumn tableName="email_campaign">
+      <column name="template_ftl" type="TEXT"/>
+    </addColumn>
+  </changeSet>
+  <changeSet author="Rimal (generated)" id="1340180519838-4">
+    <dropNotNullConstraint columnDataType="VARCHAR(80)" columnName="template" tableName="email_campaign"/>
+  </changeSet>
     <changeSet author="Rahul (generated)" id="1340900951137-1">
         <createTable tableName="replacement_order">
             <column name="so_ro_id" type="INT">
@@ -7741,5 +7759,50 @@
       <sql>
         UPDATE `purchase_invoice` pi SET pi.`reconcilation_date`= DATE_ADD(pi.`create_date`, INTERVAL 3 DAY) WHERE `reconciled`=1 AND `reconcilation_date` IS NULL
       </sql>
+    </changeSet>    
+    <changeSet author="Rimal (generated)" id="1341381517333-1">
+        <addColumn tableName="category_image">
+            <column name="position" type="VARCHAR(20)"/>
+        </addColumn>
+    </changeSet>    
+    <changeSet author="Ajeet (generated)" id="1341923692621-1">
+        <createTable tableName="brands_to_audit">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="auditor_user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="brand" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="audit_date" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="audit_status" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1341923692621-2">
+        <addColumn tableName="offer">
+            <column name="payment_type" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1341923692621-3">
+        <addForeignKeyConstraint baseColumnNames="auditor_user_id" baseTableName="brands_to_audit" constraintName="fk_brands_to_audit_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1341941781264-1">
+        <addColumn tableName="brands_to_audit">
+            <column name="warehouse_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1341941781264-2">
+        <addForeignKeyConstraint baseColumnNames="warehouse_id" baseTableName="brands_to_audit" constraintName="fk_brands_to_audit_warehouse1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="warehouse" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1342099712051-1">
+        <modifyDataType columnName="value" newDataType="VARCHAR(70)" tableName="cart_line_item_config_values"/>
     </changeSet>
 </databaseChangeLog>

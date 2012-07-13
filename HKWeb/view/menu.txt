@@ -17,9 +17,9 @@
 --/nutrition/sports-nutrition/muscle-building-combos :Muscle Building Combos
 -/nutrition/dietary-supplements : Dietary Supplements
 --/nutrition/dietary-supplements/multivitamins :  Multivitamins
----/nutrition/dietary-supplements/multivitamins/men-s-multivitamins  :Men's Multivitamins
----/nutrition/dietary-supplements/multivitamins/women-s-multivitamins   :Women's Multivitamins
----/nutrition/dietary-supplements/multivitamins/teen-s-multivitamins      :Teen's Multivitamins
+---/nutrition/dietary-supplements/multivitamins/men-s-health  :Men's Health
+---/nutrition/dietary-supplements/multivitamins/women-s-health   :Women's Health
+---/nutrition/dietary-supplements/multivitamins/teen-s-health      :Teen's Health
 --/nutrition/dietary-supplements/vitamin-a-z  : Vitamin A-Z
 --/nutrition/dietary-supplements/all-minerals           :All Minerals
 --/nutrition/dietary-supplements/anti-oxidant            : Anti-Oxidant
@@ -220,7 +220,7 @@
 --/home-devices/blood-pressure/bp : BP Apparatus
 --/home-devices/blood-pressure/ecg : ECG Machines
 --/home-devices/blood-pressure/accessories
---/home-devices/blood-pressure/combo : Doctor's Day Offer
+--/home-devices/blood-pressure/combo : Star's of the Month
 -/home-devices/respiratory-care
 --/home-devices/respiratory-care/nebulizer
 --/home-devices/respiratory-care/oxygen-concentrator : Oxygen Concentrators
@@ -251,8 +251,15 @@
 ---/home-devices/supports/walking-aids/crutches
 ---/home-devices/supports/walking-aids/walkers
 -/home-devices/rehabilitation-aids
+--/home-devices/rehabilitation-aids/walking-aids
+---/home-devices/rehabilitation-aids/walking-aids/wheel-chair
+---/home-devices/rehabilitation-aids/walking-aids/power-wheel-chair: Power Wheel Chair
+---/home-devices/rehabilitation-aids/walking-aids/walking-sticks
+---/home-devices/rehabilitation-aids/walking-aids/crutches
+---/home-devices/rehabilitation-aids/walking-aids/walkers
+--/home-devices/rehabilitation-aids/commode : Commode WheelChair/Stools
 --/home-devices/rehabilitation-aids/physiotherapy-aids
---/home-devices/rehabilitation-aids/prosthetic-aids
+--/home-devices/rehabilitation-aids/orthotic-aids
 ---/home-devices/rehabilitation-aids/prosthetic-aids/knee
 ---/home-devices/rehabilitation-aids/prosthetic-aids/foot-drop-splints
 --/home-devices/rehabilitation-aids/cosmetic-restoration
@@ -303,13 +310,6 @@
 --/home-devices/clinical-supplies/hearing-aids
 --/home-devices/clinical-supplies/eye-patch
 -/home-devices/miscellaneous
---/home-devices/miscellaneous/walking-aids
----/home-devices/miscellaneous/walking-aids/wheel-chair
----/home-devices/miscellaneous/walking-aids/power-wheel-chair: Power Wheel Chair
----/home-devices/miscellaneous/walking-aids/walking-sticks
----/home-devices/miscellaneous/walking-aids/crutches
----/home-devices/miscellaneous/walking-aids/walkers
---/home-devices/miscellaneous/commode : Commode WheelChair/Stools
 --/home-devices/miscellaneous/digital-thermometer : Digital Thermometer
 ---/home-devices/miscellaneous/flexible-tip
 ---/home-devices/miscellaneous/rigid-tip
@@ -361,12 +361,13 @@
 --/eye/sunglasses/women
 --/eye/sunglasses/men
 --/eye/sunglasses/unisex
---/eye/sunglasses/swimming
+--/eye/sunglasses/kids    :   Kids
 -/eye/eyeglasses :Eyeglasses
 --/eye/eyeglasses/half-rim :Half Rim
 --/eye/eyeglasses/full-rim :Full Rim
 --/eye/eyeglasses/frameless
 --/eye/eyeglasses/reading-glasses :Reading Glasses
+--/eye/eyeglasses/kids :  Kids
 -/eye/accessories
 --/eye/accessories/solutions
 --/eye/accessories/lens-case
@@ -645,6 +646,7 @@
 --/parenting/mom-maternity/personal-care
 --/parenting/mom-maternity/skin-care
 --/parenting/mom-maternity/maternity-belts
+--/parenting/mom-maternity/maternity-pads
 --/parenting/mom-maternity/maternity-bags
 --/parenting/mom-maternity/child-safety
 --/parenting/mom-maternity/breast-feeding
@@ -674,6 +676,7 @@
 --/parenting/infant/grooming
 ---/parenting/infant/grooming/comb-hair-brushes:   Comb & Hair Brushes
 ---/parenting/infant/grooming/nail-clippers-scissors:   Nail Clippers & Scissors
+---/parenting/infant/grooming/buds    :    Ear Buds
 --/parenting/infant/room-accessories
 --/parenting/infant/walkers
 --/parenting/infant/bedtime
@@ -705,6 +708,10 @@
 ---/parenting/toddler/bathtime/lotions
 ---/parenting/toddler/bathtime/creams
 ---/parenting/toddler/bathtime/bath-towels :  Bath Towels
+--/parenting/toddler/grooming
+---/parenting/toddler/grooming/comb-hair-brushes:   Comb & Hair Brushes
+---/parenting/toddler/grooming/nail-clippers-scissors:   Nail Clippers & Scissors
+---/parenting/toddler/grooming/buds    :    Ear Buds
 --/parenting/toddler/oral-care
 ---/parenting/toddler/oral-care/toothbrushes
 ---/parenting/toddler/oral-care/toothpaste-and-tooth-gel:Toothpaste & Tooth gel
