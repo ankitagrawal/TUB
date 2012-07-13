@@ -77,9 +77,19 @@ public class ReplacementOrderAction extends BaseAction {
     }
 
     public Resolution createReplacementOrder() {
-        if ( (!shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.RTO_Initiated.getId())) &&
-                (!shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Returned.getId()) )) {
-            addRedirectAlertMessage(new SimpleMessage("Replacement order can be created only for status" + EnumShippingOrderStatus.RTO_Initiated.getName() + " OR " + EnumShippingOrderStatus.SO_Returned.getName()));
+        if ( (!shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.RTO_Initiated.getId()))
+                && (!shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Returned.getId()))
+                && (!shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Delivered.getId()))
+                && (!shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Shipped.getId()))
+                ) {
+            addRedirectAlertMessage(new SimpleMessage("Replacement order can be created only for status" + EnumShippingOrderStatus.RTO_Initiated.getName() +
+                    " OR <br />" + EnumShippingOrderStatus.SO_Returned.getName() +
+                    " OR <br />" + EnumShippingOrderStatus.SO_Shipped.getName() +
+                    " OR <br />" + EnumShippingOrderStatus.SO_Delivered.getName()
+            )
+
+
+            );
             return new RedirectResolution("/pages/admin/createReplacementOrder.jsp");
         }
 
