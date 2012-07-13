@@ -9,7 +9,7 @@
     <div class="grid_18">
 
       <p style="text-align: justify">
-        Founded in March 2011, Healthkart.com was formed on the grounds of giving simple, effective solutions to health enthusiasts.
+        Founded in March 2011, Healthkart.com (Aquamarine HealthCare Pvt. Ltd.) was formed on the grounds of giving simple, effective solutions to health enthusiasts.
         Today, Healthkart offers India's largest range of genuine health products across categories and all major brands.
       </p>
 
