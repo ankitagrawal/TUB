@@ -472,6 +472,7 @@
         <s:param name="productId" value="${product.id}"/>
       </s:link>
     </div>
+  </shiro:hasPermission>
 	<c:if test="${!empty pa.relatedCombos}">
 		<div class='products content' id="related_combos">
 			<h4>
@@ -485,7 +486,6 @@
 			<a class='go_to_top' href='#top'>go to top &uarr;</a>
 		</div>
 	</c:if>
-  </shiro:hasPermission>
   <c:if test="${!empty product.relatedProducts}">
     <div class='products content' id="related_products">
       <h4>
