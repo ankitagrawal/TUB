@@ -17,9 +17,9 @@
 --/nutrition/sports-nutrition/muscle-building-combos :Muscle Building Combos
 -/nutrition/dietary-supplements : Dietary Supplements
 --/nutrition/dietary-supplements/multivitamins :  Multivitamins
----/nutrition/dietary-supplements/multivitamins/men-s-multivitamins  :Men's Multivitamins
----/nutrition/dietary-supplements/multivitamins/women-s-multivitamins   :Women's Multivitamins
----/nutrition/dietary-supplements/multivitamins/teen-s-multivitamins      :Teen's Multivitamins
+---/nutrition/dietary-supplements/multivitamins/men-s-health  :Men's Health
+---/nutrition/dietary-supplements/multivitamins/women-s-health   :Women's Health
+---/nutrition/dietary-supplements/multivitamins/teen-s-health      :Teen's Health
 --/nutrition/dietary-supplements/vitamin-a-z  : Vitamin A-Z
 --/nutrition/dietary-supplements/all-minerals           :All Minerals
 --/nutrition/dietary-supplements/anti-oxidant            : Anti-Oxidant
