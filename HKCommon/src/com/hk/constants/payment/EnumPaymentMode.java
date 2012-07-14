@@ -71,6 +71,9 @@ public enum EnumPaymentMode {
     return Arrays.asList(
         EnumPaymentMode.CCAVENUE_DUMMY.getId(),
         EnumPaymentMode.TECHPROCESS.getId(),
+        EnumPaymentMode.EBS.getId(),
+        EnumPaymentMode.CITRUS_CreditDebit.getId(),
+        EnumPaymentMode.CITRUS_NetBanking_New.getId(),
         EnumPaymentMode.CITRUS.getId());
 
   }
