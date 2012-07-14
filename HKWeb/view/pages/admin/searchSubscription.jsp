@@ -16,7 +16,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" var="orderAdmin" event="pre"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.subscription.SearchSubscriptionAction" var="subscriptionAdmin" event="pre"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Subscription Search">
 
@@ -90,10 +90,10 @@
 
 <c:set var="paymentModeCod" value="<%=EnumPaymentMode.COD.getId()%>"/>
 
-<s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${orderAdmin}"/>
-<s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${orderAdmin}"/>
+<s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${subscriptionAdmin}"/>
+<s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${subscriptionAdmin}"/>
 
-<c:forEach items="${orderAdmin.orderList}" var="order" varStatus="ctr">
+<c:forEach items="${subscriptionAdmin.subscriptionList}" var="subscription" varStatus="ctr">
 <table class="cont" width="100%">
 <thead>
 <tr>

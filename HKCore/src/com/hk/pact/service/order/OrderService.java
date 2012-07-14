@@ -69,7 +69,4 @@ public interface OrderService {
 
     public Order findByGatewayOrderId(String gatewayOrderId);
 
-    public Order createNewOrder(User user);
-
-    public Order placeOrder(Order order,Set<CartLineItem> cartLineItems, Address address,Payment payment, Store store, boolean isSubscriptionOrder);
 }

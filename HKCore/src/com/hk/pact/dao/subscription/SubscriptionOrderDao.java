@@ -1,5 +1,8 @@
 package com.hk.pact.dao.subscription;
 
+import com.hk.domain.subscription.SubscriptionOrder;
+import com.hk.pact.dao.BaseDao;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Pradeep
@@ -7,5 +10,8 @@ package com.hk.pact.dao.subscription;
  * Time: 12:48:01 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface SubscriptionOrderDao {
+public interface SubscriptionOrderDao extends BaseDao{
+
+    public SubscriptionOrder save(SubscriptionOrder subscriptionOrder);
+
 }

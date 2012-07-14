@@ -1,7 +1,6 @@
 package com.hk.impl.service.subscription;
 
 import com.akube.framework.dao.Page;
-import com.hk.constants.subscription.EnumSubscriptionOrderStatus;
 import com.hk.constants.subscription.EnumSubscriptionStatus;
 import com.hk.core.search.SubscriptionSearchCriteria;
 import com.hk.domain.order.Order;
@@ -13,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -42,6 +42,11 @@ public class SubscriptionServiceImpl implements SubscriptionService{
         return subscriptionDao.getSubscriptions(order,subscriptionStatus.asSubscriptionStatus());
     }
 
+    /**
+     * Used to update subscription status to placed after the order containing subscriptions is placed
+     * @param order
+     * @return
+     */
     public List<Subscription> placeSubscriptions(Order order){
         List<Subscription> inCartSubscriptions= getSubscriptions(order, EnumSubscriptionStatus.InCart.asSubscriptionStatus());
         for(Subscription subscription : inCartSubscriptions){
@@ -60,5 +65,28 @@ public class SubscriptionServiceImpl implements SubscriptionService{
 
     public Page searchSubscriptions(SubscriptionSearchCriteria subscriptionSearchCriteria, int pageNo, int perPage){
         return subscriptionDao.searchSubscriptions(subscriptionSearchCriteria, pageNo, perPage);
+    }
+
+    /**
+     * used to escalate subscriptoins to subscription action awaiting queue
+     */
+    public void checkAndUpdateSubscriptionStatus(){
+
+    }
+
+    /**
+     * get subscriptions with a particular status
+     * @param subscriptionStatus
+     * @return
+     */
+    public List<Subscription> getSubscriptions(EnumSubscriptionStatus subscriptionStatus){
+        return subscriptionDao.getSubscriptions(subscriptionStatus);
+    }
+
+    /**
+     * checks inventory prior to handling subscription orders and generates emails in case of low inventory
+     */
+    public void checkInventoryForSubscriptionOrders(){
+
     }
 }

@@ -26,9 +26,6 @@ public class SubscriptionSearchCriteria extends AbstractSubscriptionSearchCriter
 
     private Long                                     baseOrderId;
 
-    private Date                      paymentStartDate;
-    private Date                      paymentEndDate;
-
     private List<SubscriptionStatus> subscriptionStatusList;
 
     public SubscriptionSearchCriteria setLogin(String login) {
@@ -53,16 +50,6 @@ public class SubscriptionSearchCriteria extends AbstractSubscriptionSearchCriter
 
     public SubscriptionSearchCriteria setBaseOrderId(Long baseOrderId) {
         this.baseOrderId = baseOrderId;
-        return this;
-    }
-
-    public SubscriptionSearchCriteria setPaymentStartDate(Date paymentStartDate) {
-        this.paymentStartDate = paymentStartDate;
-        return this;
-    }
-
-    public SubscriptionSearchCriteria setPaymentEndDate(Date paymentEndDate) {
-        this.paymentEndDate = paymentEndDate;
         return this;
     }
 
@@ -99,10 +86,10 @@ public class SubscriptionSearchCriteria extends AbstractSubscriptionSearchCriter
             userCriteria.add(Restrictions.like("name", "%" + name + "%"));
         }
 
-        DetachedCriteria orderCriteria = criteria.createCriteria("order");
+        DetachedCriteria baseOrderCriteria = criteria.createCriteria("baseOrder");
 
         if (baseOrderId != null) {
-             orderCriteria.add(Restrictions.eq("id", baseOrderId));
+            baseOrderCriteria.add(Restrictions.eq("id", baseOrderId));
         }
 
         /**
@@ -112,20 +99,6 @@ public class SubscriptionSearchCriteria extends AbstractSubscriptionSearchCriter
         if (StringUtils.isNotBlank(phone)) {
             addressCriteria.add(Restrictions.like("phone", "%" + phone + "%"));
         }
-
-        /**
-         * payment specific restrictions
-         */
-     /*   DetachedCriteria paymentCriteria = criteria.createCriteria("payment", CriteriaSpecification.LEFT_JOIN);
-        if (paymentStartDate != null || paymentEndDate != null) {
-            paymentCriteria.add(Restrictions.between("paymentDate", paymentStartDate, paymentEndDate));
-        }
-
-
-        if (sortByPaymentDate) {
-            paymentCriteria.addOrder(OrderBySqlFormula.sqlFormula("date(payment_date) asc"));
-
-        }*/
 
         return criteria;
     }

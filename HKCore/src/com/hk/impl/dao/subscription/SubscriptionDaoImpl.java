@@ -32,7 +32,11 @@ public class SubscriptionDaoImpl extends BaseDaoImpl implements SubscriptionDao 
     }
 
     public List<Subscription> getSubscriptions(Order order, SubscriptionStatus subscriptionStatus){
-        return (List<Subscription>) findByNamedParams(" from Subscription sub where sub.order = :order and sub.subscriptionStatus =:subscriptionStatus ", new String[]{"order","subscriptionStatus"}, new Object[]{order, subscriptionStatus});
+        return (List<Subscription>) findByNamedParams(" from Subscription sub where sub.baseOrder = :order and sub.subscriptionStatus =:subscriptionStatus ", new String[]{"order","subscriptionStatus"}, new Object[]{order, subscriptionStatus});
+    }
+
+    public List<Subscription> getSubscriptions(EnumSubscriptionStatus subscriptionStatus){
+        return (List<Subscription>) findByNamedParams(" from Subscription sub where sub.subscriptionStatus =:subscriptionStatus ", new String[]{"subscriptionStatus"}, new Object[]{subscriptionStatus.asSubscriptionStatus()});
     }
 
     public Page searchSubscriptions(SubscriptionSearchCriteria subscriptionSearchCriteria, int pageNo, int perPage){

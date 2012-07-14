@@ -253,4 +253,6 @@ public interface BaseDao {
     public Page list(DetachedCriteria criteria,  int pageNo, int perPage);
 
     public void refresh(Object entity);
+
+    public int bulkUpdate(String queryString, Object[] values);
 }

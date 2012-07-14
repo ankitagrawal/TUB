@@ -18,8 +18,11 @@ import com.hk.db.seed.reward.ReviewStatusSeedData;
 import com.hk.db.seed.reward.RewardPointModeSeedData;
 import com.hk.db.seed.reward.RewardPointStatusSeedData;
 import com.hk.db.seed.reward.RewardPointTxnTypeSeedData;
+import com.hk.db.seed.subscription.SubscriptionOrderStatusSeedData;
+import com.hk.db.seed.subscription.SubscriptionStatusSeedData;
 import com.hk.db.seed.ticket.TicketStatusSeedData;
 import com.hk.db.seed.ticket.TicketTypeSeedData;
+import com.hk.domain.subscription.SubscriptionOrderStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,6 +115,10 @@ public class MasterDataService {
     SecondaryReferrerForOrderSeedData      secondaryReferrerForOrderSeedData;
    @Autowired
    StateSeedData stateSeedData;
+    @Autowired
+    SubscriptionStatusSeedData subscriptionStatusSeedData;
+    @Autowired
+    SubscriptionOrderStatusSeedData subscriptionOrderStatusSeedData;
 
     public void insert() {
 
@@ -238,6 +245,12 @@ public class MasterDataService {
 
        logger.debug("inserting state names");
         stateSeedData.invokeInsert();
+
+        logger.debug("inserting subscription status data");
+        subscriptionStatusSeedData.invokeInsert();
+
+        logger.debug("inserting subscription order status data");
+        subscriptionOrderStatusSeedData.invokeInsert();
     }
 
 }

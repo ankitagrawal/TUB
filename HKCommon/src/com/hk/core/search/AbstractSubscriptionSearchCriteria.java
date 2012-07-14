@@ -14,8 +14,6 @@ public abstract class AbstractSubscriptionSearchCriteria {
 
     private Long               subscriptionId;
 
-    protected boolean          sortByPaymentDate = true;
-    protected boolean          sortByScore       = true;
 
     private boolean            orderAsc          = false;
     private boolean            sortByUpdateDate  = true;
@@ -36,14 +34,6 @@ public abstract class AbstractSubscriptionSearchCriteria {
      */
     protected DetachedCriteria buildSearchCriteriaFromBaseCriteria() {
         return buildBaseCriteria();
-    }
-
-    public void setSortByPaymentDate(boolean sortByPaymentDate) {
-        this.sortByPaymentDate = sortByPaymentDate;
-    }
-
-    public void setSortByScore(boolean sortByScore) {
-        this.sortByScore = sortByScore;
     }
 
     public void setOrderAsc(boolean orderAsc) {

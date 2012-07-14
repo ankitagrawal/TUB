@@ -1,0 +1,128 @@
+package com.hk.impl.service.subscription;
+
+import com.hk.constants.subscription.EnumSubscriptionOrderStatus;
+import com.hk.domain.builder.CartLineItemBuilder;
+import com.hk.domain.builder.SubscriptionOrderBuilder;
+import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.order.CartLineItem;
+import com.hk.domain.order.Order;
+import com.hk.domain.payment.Payment;
+import com.hk.domain.subscription.Subscription;
+import com.hk.domain.subscription.SubscriptionOrder;
+import com.hk.domain.user.User;
+import com.hk.pact.dao.subscription.SubscriptionOrderDao;
+import com.hk.pact.service.order.AutomatedOrderService;
+import com.hk.pact.service.store.StoreService;
+import com.hk.pact.service.subscription.SubscriptionOrderService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
+
+/**
+ * Created with IntelliJ IDEA.
+ * User: Pradeep
+ * Date: 7/13/12
+ * Time: 6:56 PM
+ */
+@Service
+public class SubscriptionOrderServiceImpl implements SubscriptionOrderService {
+
+    @Autowired
+    AutomatedOrderService automatedOrderService;
+    @Autowired
+    StoreService storeService;
+    @Autowired
+    SubscriptionOrderDao subscriptionOrderDao;
+
+    public SubscriptionOrder save(SubscriptionOrder subscriptionOrder){
+        return subscriptionOrderDao.save(subscriptionOrder);
+    }
+
+    /**
+     * create base order for subscription and an entry in subscription_order
+     * @param subscription
+     * @return
+     */
+    public Order createOrderForSubscription(Subscription subscription){
+        User user=subscription.getUser();
+        Order order= automatedOrderService.createNewOrder(user);
+        Set<CartLineItem> cartLineItemSet=createSubscriptionOrderCartLineItems(subscription);
+        Payment payment=createSubscriptionPayment(subscription, order, cartLineItemSet);
+
+        order=  automatedOrderService.placeOrder(order,cartLineItemSet,subscription.getAddress(),payment,storeService.getDefaultStore(),true);
+
+        //create an entry in subscription_order table
+        createSubscriptionOrder(subscription,order);
+
+        return order;
+    }
+
+    /**
+     * create base orders for a list of base orders
+     * @param subscriptions
+     * @return
+     */
+    public List<Order> createOrdersForSubscriptions(List<Subscription> subscriptions){
+        List<Order> orderList=new ArrayList<Order>();
+        for(Subscription subscription: subscriptions){
+            orderList.add(this.createOrderForSubscription(subscription));
+        }
+        return orderList;
+    }
+
+    /**
+     * used to create an entry in subscription_order table
+     * @param subscription
+     * @param order
+     * @return
+     */
+    public SubscriptionOrder createSubscriptionOrder(Subscription subscription,Order order){
+        SubscriptionOrderBuilder subscriptionOrderBuilder=new SubscriptionOrderBuilder();
+        subscriptionOrderBuilder.forSubscription(subscription).withStatus(EnumSubscriptionOrderStatus.Placed).setBaseOrder(order);
+        SubscriptionOrder subscriptionOrder=subscriptionOrderBuilder.build();
+        return this.save(subscriptionOrder);
+    }
+
+
+    /**
+     * creates cartLineItems for subscription based on what is best for customer - current price or price at subscription
+     * @param subscription
+     * @return
+     */
+    private Set<CartLineItem> createSubscriptionOrderCartLineItems(Subscription subscription){
+
+        Set<CartLineItem> cartLineItemSet=new HashSet<CartLineItem>();
+        ProductVariant productVariant=subscription.getProductVariant();
+        Double subscriptionPrice=subscription.getSubscriptionPrice();
+        Double currentPrice=productVariant.getHkPrice();
+
+        Double subscriptionOrderPrice = (currentPrice > subscriptionPrice)? subscriptionPrice : currentPrice;
+
+        CartLineItemBuilder cartLineItemBuilder=new CartLineItemBuilder();
+        cartLineItemBuilder.forVariantQty(productVariant,subscription.getQtyPerDelivery()).hkPrice(subscriptionOrderPrice).markedPrice(productVariant.getMarkedPrice());
+
+        cartLineItemSet.add(cartLineItemBuilder.build());
+        return cartLineItemSet;
+
+    }
+
+    /**
+     * creates payment for subscriptions
+     * @param subscription
+     * @return
+     */
+    private Payment createSubscriptionPayment(Subscription subscription,Order order, Set<CartLineItem> cartLineItems){
+        //todo
+        //create separate subscription payment type for subscriptions
+
+        Double amount=0.0D;
+        for(CartLineItem cartLineItem: cartLineItems){
+            amount+=cartLineItem.getHkPrice();
+        }
+
+        return automatedOrderService.createNewPayment(order,amount, subscription.getBaseOrder().getPayment().getPaymentMode());
+
+    }
+
+}

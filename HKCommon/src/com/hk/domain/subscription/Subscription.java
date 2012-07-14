@@ -18,245 +18,256 @@ public class Subscription  implements java.io.Serializable {
 
 
 
-  @Id @GeneratedValue(strategy=IDENTITY)
+    @Id @GeneratedValue(strategy=IDENTITY)
 
-  @Column(name="id", unique=true, nullable=false)
-  private Long id;
-
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id",  nullable = false)
-  private User user;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "base_order_id",  nullable = false)
-  private Order baseOrder;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "address_id",  nullable = true)
-  private Address address;
+    @Column(name="id", unique=true, nullable=false)
+    private Long id;
 
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "subscription_status_id", nullable = false)
-  private SubscriptionStatus subscriptionStatus;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id",  nullable = false)
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "base_order_id",  nullable = false)
+    private Order baseOrder;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "address_id",  nullable = true)
+    private Address address;
 
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "product_variant_id", nullable = false)
-  private ProductVariant productVariant;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "subscription_status_id", nullable = false)
+    private SubscriptionStatus subscriptionStatus;
 
 
-  @Column(name="qty", nullable=false)
-  private Long qty;
-
-  @Column(name="subscription_period_days", nullable=false)
-  private Long subscriptionPeriodDays;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_variant_id", nullable = false)
+    private ProductVariant productVariant;
 
 
-  @Column(name="qty_per_delivery", nullable=false)
-  private Long qtyPerDelivery;
+    @Column(name="qty", nullable=false)
+    private Long qty;
+
+    @Column(name="subscription_period_days", nullable=false)
+    private Long subscriptionPeriodDays;
 
 
-  @Column(name="frequency_days", nullable=false)
-  private Long frequencyDays;
+    @Column(name="qty_per_delivery", nullable=false)
+    private Long qtyPerDelivery;
+
+    @Column(name="qty_delivered", nullable=false)
+    private Long qtyDelivered;
 
 
-  @Column(name="subscription_price", nullable=false, precision=10)
-  private Double subscriptionPrice;
+    @Column(name="frequency_days", nullable=false)
+    private Long frequencyDays;
 
 
-  @Column(name="subscription_discount_percent", nullable=false, precision=7, scale=4)
-  private Double subscriptionDiscountPercent;
+    @Column(name="subscription_price", nullable=false, precision=10)
+    private Double subscriptionPrice;
 
 
-  @Column(name="hk_discount_at_subscription", nullable=false, precision=7, scale=4)
-  private Double hkDiscountAtSubscription;
+    @Column(name="subscription_discount_percent", nullable=false, precision=7, scale=4)
+    private Double subscriptionDiscountPercent;
 
 
-  @Column(name="hk_price_at_subscription", nullable=false, precision=10)
-  private Double hkPriceAtSubscription;
+    @Column(name="hk_discount_at_subscription", nullable=false, precision=7, scale=4)
+    private Double hkDiscountAtSubscription;
 
 
-  @Column(name="cost_price_at_subscription", nullable=false, precision=10)
-  private Double costPriceAtSubscription;
+    @Column(name="hk_price_at_subscription", nullable=false, precision=10)
+    private Double hkPriceAtSubscription;
 
 
-  @Column(name="marked_price_at_subscription", nullable=false, precision=10)
-  private Double markedPriceAtSubscription;
+    @Column(name="cost_price_at_subscription", nullable=false, precision=10)
+    private Double costPriceAtSubscription;
 
-  @Temporal(TemporalType.TIMESTAMP)
-  @Column(name="create_date", nullable=false, length=19)
-  private Date createDate;
 
-  @Temporal(TemporalType.TIMESTAMP)
-  @Column(name="update_date", length=19)
-  private Date updateDate;
+    @Column(name="marked_price_at_subscription", nullable=false, precision=10)
+    private Double markedPriceAtSubscription;
 
-  @Temporal(TemporalType.TIMESTAMP)
-  @Column(name="start_date", nullable=false, length=19)
-  private Date startDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="create_date", nullable=false, length=19)
+    private Date createDate;
 
-  @Temporal(TemporalType.TIMESTAMP)
-  @Column(name="next_shipment_date", length=19)
-  private Date nextShipmentDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="update_date", length=19)
+    private Date updateDate;
 
-  @Override
-  public int hashCode() {
-    return id != null ? id.hashCode() : 0;
-  }
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="start_date", nullable=false, length=19)
+    private Date startDate;
 
-  @Override
-  public String toString() {
-    return id == null ? "" : id.toString();
-  }
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="next_shipment_date", length=19)
+    private Date nextShipmentDate;
 
-  public Long getId() {
-    return this.id;
-  }
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+    @Override
+    public String toString() {
+        return id == null ? "" : id.toString();
+    }
 
-  public User getUser() {
-    return user;
-  }
+    public Long getId() {
+        return this.id;
+    }
 
-  public void setUser(User user) {
-    this.user = user;
-  }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-  public Order getBaseOrder() {
-    return baseOrder;
-  }
+    public User getUser() {
+        return user;
+    }
 
-  public void setBaseOrder(Order order) {
-    this.baseOrder = order;
-  }
+    public void setUser(User user) {
+        this.user = user;
+    }
 
-  public Address getAddress() {
-    return address;
-  }
+    public Order getBaseOrder() {
+        return baseOrder;
+    }
 
-  public void setAddress(Address address) {
-    this.address = address;
-  }
+    public void setBaseOrder(Order order) {
+        this.baseOrder = order;
+    }
 
-  public SubscriptionStatus getSubscriptionStatus() {
-    return subscriptionStatus;
-  }
+    public Address getAddress() {
+        return address;
+    }
 
-  public void setSubscriptionStatus(SubscriptionStatus subscriptionStatus) {
-    this.subscriptionStatus = subscriptionStatus;
-  }
+    public void setAddress(Address address) {
+        this.address = address;
+    }
 
-  public ProductVariant getProductVariant() {
-    return productVariant;
-  }
+    public SubscriptionStatus getSubscriptionStatus() {
+        return subscriptionStatus;
+    }
 
-  public void setProductVariant(ProductVariant productVariant) {
-    this.productVariant = productVariant;
-  }
+    public void setSubscriptionStatus(SubscriptionStatus subscriptionStatus) {
+        this.subscriptionStatus = subscriptionStatus;
+    }
 
-  public Long getQty() {
-    return this.qty;
-  }
+    public ProductVariant getProductVariant() {
+        return productVariant;
+    }
 
-  public void setQty(Long qty) {
-    this.qty = qty;
-  }
-  public Long getQtyPerDelivery() {
-    return this.qtyPerDelivery;
-  }
+    public void setProductVariant(ProductVariant productVariant) {
+        this.productVariant = productVariant;
+    }
 
-  public void setQtyPerDelivery(Long qtyPerDelivery) {
-    this.qtyPerDelivery = qtyPerDelivery;
-  }
-  public Long getFrequencyDays() {
-    return this.frequencyDays;
-  }
+    public Long getQty() {
+        return this.qty;
+    }
 
-  public void setFrequencyDays(Long frequencyDays) {
-    this.frequencyDays = frequencyDays;
-  }
-  public Double getSubscriptionPrice() {
-    return this.subscriptionPrice;
-  }
+    public void setQty(Long qty) {
+        this.qty = qty;
+    }
+    public Long getQtyPerDelivery() {
+        return this.qtyPerDelivery;
+    }
 
-  public void setSubscriptionPrice(Double subscriptionPrice) {
-    this.subscriptionPrice = subscriptionPrice;
-  }
-  public Double getSubscriptionDiscountPercent() {
-    return this.subscriptionDiscountPercent;
-  }
+    public void setQtyPerDelivery(Long qtyPerDelivery) {
+        this.qtyPerDelivery = qtyPerDelivery;
+    }
+    public Long getFrequencyDays() {
+        return this.frequencyDays;
+    }
 
-  public void setSubscriptionDiscountPercent(Double subscriptionDiscountPercent) {
-    this.subscriptionDiscountPercent = subscriptionDiscountPercent;
-  }
-  public Double getHkDiscountAtSubscription() {
-    return this.hkDiscountAtSubscription;
-  }
+    public void setFrequencyDays(Long frequencyDays) {
+        this.frequencyDays = frequencyDays;
+    }
+    public Double getSubscriptionPrice() {
+        return this.subscriptionPrice;
+    }
 
-  public void setHkDiscountAtSubscription(Double hkDiscountAtSubscription) {
-    this.hkDiscountAtSubscription = hkDiscountAtSubscription;
-  }
-  public Double getHkPriceAtSubscription() {
-    return this.hkPriceAtSubscription;
-  }
+    public void setSubscriptionPrice(Double subscriptionPrice) {
+        this.subscriptionPrice = subscriptionPrice;
+    }
+    public Double getSubscriptionDiscountPercent() {
+        return this.subscriptionDiscountPercent;
+    }
 
-  public void setHkPriceAtSubscription(Double hkPriceAtSubscription) {
-    this.hkPriceAtSubscription = hkPriceAtSubscription;
-  }
-  public Double getCostPriceAtSubscription() {
-    return this.costPriceAtSubscription;
-  }
+    public void setSubscriptionDiscountPercent(Double subscriptionDiscountPercent) {
+        this.subscriptionDiscountPercent = subscriptionDiscountPercent;
+    }
+    public Double getHkDiscountAtSubscription() {
+        return this.hkDiscountAtSubscription;
+    }
 
-  public void setCostPriceAtSubscription(Double costPriceAtSubscription) {
-    this.costPriceAtSubscription = costPriceAtSubscription;
-  }
-  public Double getMarkedPriceAtSubscription() {
-    return this.markedPriceAtSubscription;
-  }
+    public void setHkDiscountAtSubscription(Double hkDiscountAtSubscription) {
+        this.hkDiscountAtSubscription = hkDiscountAtSubscription;
+    }
+    public Double getHkPriceAtSubscription() {
+        return this.hkPriceAtSubscription;
+    }
 
-  public void setMarkedPriceAtSubscription(Double markedPriceAtSubscription) {
-    this.markedPriceAtSubscription = markedPriceAtSubscription;
-  }
-  public Date getCreateDate() {
-    return this.createDate;
-  }
+    public void setHkPriceAtSubscription(Double hkPriceAtSubscription) {
+        this.hkPriceAtSubscription = hkPriceAtSubscription;
+    }
+    public Double getCostPriceAtSubscription() {
+        return this.costPriceAtSubscription;
+    }
 
-  public void setCreateDate(Date createDate) {
-    this.createDate = createDate;
-  }
-  public Date getUpdateDate() {
-    return this.updateDate;
-  }
+    public void setCostPriceAtSubscription(Double costPriceAtSubscription) {
+        this.costPriceAtSubscription = costPriceAtSubscription;
+    }
+    public Double getMarkedPriceAtSubscription() {
+        return this.markedPriceAtSubscription;
+    }
 
-  public void setUpdateDate(Date updateDate) {
-    this.updateDate = updateDate;
-  }
-  public Date getStartDate() {
-    return this.startDate;
-  }
+    public void setMarkedPriceAtSubscription(Double markedPriceAtSubscription) {
+        this.markedPriceAtSubscription = markedPriceAtSubscription;
+    }
+    public Date getCreateDate() {
+        return this.createDate;
+    }
 
-  public void setStartDate(Date startDate) {
-    this.startDate = startDate;
-  }
-  public Date getNextShipmentDate() {
-    return this.nextShipmentDate;
-  }
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+    public Date getUpdateDate() {
+        return this.updateDate;
+    }
 
-  public void setNextShipmentDate(Date nextShipmentDate) {
-    this.nextShipmentDate = nextShipmentDate;
-  }
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
+    public Date getStartDate() {
+        return this.startDate;
+    }
 
-  public Long getSubscriptionPeriodDays() {
-    return subscriptionPeriodDays;
-  }
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+    public Date getNextShipmentDate() {
+        return this.nextShipmentDate;
+    }
 
-  public void setSubscriptionPeriodDays(Long subscriptionPeriodDays) {
-    this.subscriptionPeriodDays = subscriptionPeriodDays;
-  }
+    public void setNextShipmentDate(Date nextShipmentDate) {
+        this.nextShipmentDate = nextShipmentDate;
+    }
+
+    public Long getSubscriptionPeriodDays() {
+        return subscriptionPeriodDays;
+    }
+
+    public void setSubscriptionPeriodDays(Long subscriptionPeriodDays) {
+        this.subscriptionPeriodDays = subscriptionPeriodDays;
+    }
+
+    public Long getQtyDelivered() {
+        return qtyDelivered;
+    }
+
+    public void setQtyDelivered(Long qtyDelivered) {
+        this.qtyDelivered = qtyDelivered;
+    }
 }
 

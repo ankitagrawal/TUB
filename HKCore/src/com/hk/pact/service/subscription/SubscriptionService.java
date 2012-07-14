@@ -16,7 +16,6 @@ import java.util.Set;
  * User: Pradeep
  * Date: Jun 19, 2012
  * Time: 6:28:17 PM
- * To change this template use File | Settings | File Templates.
  */
 public interface SubscriptionService {
 
@@ -26,10 +25,16 @@ public interface SubscriptionService {
 
     public List<Subscription> getSubscriptions(Order order, EnumSubscriptionStatus subscriptionStatus);
 
+    public List<Subscription> getSubscriptions(EnumSubscriptionStatus subscriptionStatus);
+
     public List<Subscription> placeSubscriptions(Order order);
 
     public Subscription abandonSubscription(Subscription subscription);
 
     public Page searchSubscriptions(SubscriptionSearchCriteria subscriptionSearchCriteria, int pageNo, int perPage);
+
+    public void checkAndUpdateSubscriptionStatus();
+
+    public void checkInventoryForSubscriptionOrders();
 
 }

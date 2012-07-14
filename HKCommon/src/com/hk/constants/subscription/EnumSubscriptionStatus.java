@@ -24,6 +24,7 @@ public enum EnumSubscriptionStatus {
     ConfirmedByCustomer(22L,"Confirmed By Customer"),
     Idle(25L, "Idle"),
     Expired(30L, "Expired"),
+    OnHold(40L,"On Hold"),
     Cancelled(99L, "Cancelled");
 
     private java.lang.String name;

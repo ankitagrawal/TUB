@@ -15,96 +15,97 @@ import java.util.Date;
  * User: Pradeep
  * Date: 7/4/12
  * Time: 3:11 PM
- * To change this template use File | Settings | File Templates.
  */
 public class SubscriptionBuilder {
-  private ProductVariant productVariant;
-  private Order order;
-  private User user;
-  private EnumSubscriptionStatus subscriptionStatus;
-  private SubscriptionProduct subscriptionProduct;
-  private Long qty;
-  private Long qtyPerDelivery;
-  private Long subscriptionPeriod;
-  private Long frequency;
-  private Date startDate;
+    private ProductVariant productVariant;
+    private Order order;
+    private User user;
+    private EnumSubscriptionStatus subscriptionStatus;
+    private SubscriptionProduct subscriptionProduct;
+    private Long qty;
+    private Long qtyPerDelivery;
+    private Long subscriptionPeriod;
+    private Long frequency;
+    private Date startDate;
 
-  public SubscriptionBuilder startDate(Date startDate){
-    this.startDate=startDate;
-    return this;
-  }
-  public SubscriptionBuilder forQuantity(Long qty,Long qtyPerDelivery){
-    this.qty=qty;
-    this.qtyPerDelivery=qtyPerDelivery;
-    return this;
-  }
-
-  public SubscriptionBuilder subscriptionPeriod(Long subscriptionPeriod){
-    this.subscriptionPeriod=subscriptionPeriod;
-    return this;
-  }
-
-  public SubscriptionBuilder frequency(Long frequency){
-    this.frequency=frequency;
-    return this;
-  }
-
-  public SubscriptionBuilder forSubscriptionProduct(SubscriptionProduct subscriptionProduct){
-    this.subscriptionProduct =subscriptionProduct;
-    return  this;
-  }
-
-  public SubscriptionBuilder forUser(User user){
-    this.user=user;
-    return  this;
-  }
-
-  public SubscriptionBuilder forOrder(Order order){
-    this.order=order;
-    return  this;
-  }
-
-  public SubscriptionBuilder forProductVariant(ProductVariant productVariant){
-    this.productVariant=productVariant;
-    return  this;
-  }
-
-  public SubscriptionBuilder withStatus(EnumSubscriptionStatus subscriptionStatus){
-    this.subscriptionStatus=subscriptionStatus;
-    return  this;
-  }
-
-  public Subscription build(){
-    if(subscriptionStatus==null){
-      subscriptionStatus=EnumSubscriptionStatus.InCart;
+    public SubscriptionBuilder startDate(Date startDate){
+        this.startDate=startDate;
+        return this;
     }
-    Subscription subscription=new Subscription();
-    subscription.setBaseOrder(order);
-    subscription.setUser(user);
-    subscription.setSubscriptionStatus(subscriptionStatus.asSubscriptionStatus());
-
-    subscription.setCreateDate(BaseUtils.getCurrentTimestamp());
-    subscription.setStartDate(startDate);
-
-    subscription.setProductVariant(productVariant);
-    subscription.setSubscriptionPrice(productVariant.getHkPrice());
-    subscription.setCostPriceAtSubscription(productVariant.getCostPrice());
-    subscription.setMarkedPriceAtSubscription(productVariant.getMarkedPrice());
-    subscription.setHkDiscountAtSubscription(productVariant.getDiscountPercent());
-    subscription.setHkPriceAtSubscription(productVariant.getHkPrice());
-
-    subscription.setSubscriptionPeriodDays(subscriptionPeriod);
-    subscription.setFrequencyDays(frequency);
-    subscription.setQty(qty);
-    subscription.setQtyPerDelivery(qtyPerDelivery);
-    if(subscriptionPeriod<360){
-      subscription.setSubscriptionDiscountPercent(subscriptionProduct.getSubscriptionDiscount180Days());
-    }else{
-      subscription.setSubscriptionDiscountPercent(subscriptionProduct.getSubscriptionDiscount360Days());
+    public SubscriptionBuilder forQuantity(Long qty,Long qtyPerDelivery){
+        this.qty=qty;
+        this.qtyPerDelivery=qtyPerDelivery;
+        return this;
     }
 
-    return  subscription;
-  }
+    public SubscriptionBuilder subscriptionPeriod(Long subscriptionPeriod){
+        this.subscriptionPeriod=subscriptionPeriod;
+        return this;
+    }
+
+    public SubscriptionBuilder frequency(Long frequency){
+        this.frequency=frequency;
+        return this;
+    }
+
+    public SubscriptionBuilder forSubscriptionProduct(SubscriptionProduct subscriptionProduct){
+        this.subscriptionProduct =subscriptionProduct;
+        return  this;
+    }
+
+    public SubscriptionBuilder forUser(User user){
+        this.user=user;
+        return  this;
+    }
+
+    public SubscriptionBuilder forOrder(Order order){
+        this.order=order;
+        return  this;
+    }
+
+    public SubscriptionBuilder forProductVariant(ProductVariant productVariant){
+        this.productVariant=productVariant;
+        return  this;
+    }
+
+    public SubscriptionBuilder withStatus(EnumSubscriptionStatus subscriptionStatus){
+        this.subscriptionStatus=subscriptionStatus;
+        return  this;
+    }
+
+    public Subscription build(){
+        if(subscriptionStatus==null){
+            subscriptionStatus=EnumSubscriptionStatus.InCart;
+        }
+        Subscription subscription=new Subscription();
+        subscription.setBaseOrder(order);
+        subscription.setUser(user);
+        subscription.setSubscriptionStatus(subscriptionStatus.asSubscriptionStatus());
+
+        subscription.setCreateDate(BaseUtils.getCurrentTimestamp());
+        subscription.setStartDate(startDate);
+        subscription.setNextShipmentDate(startDate);
+
+        subscription.setProductVariant(productVariant);
+
+        subscription.setCostPriceAtSubscription(productVariant.getCostPrice());
+        subscription.setMarkedPriceAtSubscription(productVariant.getMarkedPrice());
+        subscription.setHkDiscountAtSubscription(productVariant.getDiscountPercent());
+        subscription.setHkPriceAtSubscription(productVariant.getHkPrice());
+
+        subscription.setSubscriptionPeriodDays(subscriptionPeriod);
+        subscription.setFrequencyDays(frequency);
+        subscription.setQty(qty);
+        subscription.setQtyPerDelivery(qtyPerDelivery);
+        if(subscriptionPeriod<360){
+            subscription.setSubscriptionDiscountPercent(subscriptionProduct.getSubscriptionDiscount180Days());
+        }else{
+            subscription.setSubscriptionDiscountPercent(subscriptionProduct.getSubscriptionDiscount360Days());
+        }
+        subscription.setSubscriptionPrice(productVariant.getMarkedPrice()*(100-productVariant.getDiscountPercent()-subscription.getSubscriptionDiscountPercent())/100);
+
+        return  subscription;
+    }
 
 
 
