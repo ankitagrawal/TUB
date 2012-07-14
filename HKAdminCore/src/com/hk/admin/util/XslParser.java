@@ -883,7 +883,7 @@ public class XslParser {
         }
         if (StringUtils.isNotBlank(awb)) {
 
-          if (!(shipment.getTrackingId().equals(awb))) {
+          if (!(shipment.getAwb() != null && shipment.getAwb().getAwbNumber().equals(awb))) {
             messagePostUpdation += "AWB and shippingOrder no. mismatch at row" + rowCount + ".<br/>";
             continue;
           }
@@ -1032,7 +1032,7 @@ public class XslParser {
         }
         if (StringUtils.isNotBlank(awb)) {
 
-          if (!(shipment.getTrackingId().equals(awb))) {
+          if (!(shipment.getAwb() != null && shipment.getAwb().getAwbNumber().equals(awb))) {
             messagePostUpdation += "AWB and shippingOrder no. mismatch at row" + rowCount + ".<br/>";
             continue;
           }

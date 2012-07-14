@@ -73,7 +73,11 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 
     @ValidationMethod(on = "saveShipmentDetails")
     public void verifyShipmentDetails() {
-        if (StringUtils.isBlank(shipment.getTrackingId()) || shipment.getBoxWeight() == null || shipment.getBoxSize() == null || shipment.getCourier() == null) {
+         String trackingId=null;
+                    if(shipment.getAwb() != null){
+                     trackingId=shipment.getAwb().getAwbNumber();
+                    }
+        if (StringUtils.isBlank(trackingId) || shipment.getBoxWeight() == null || shipment.getBoxSize() == null || shipment.getCourier() == null) {
             getContext().getValidationErrors().add("1", new SimpleError("Tracking Id, Box weight, Box Size, Courier all are mandatory"));
         }
         if (shipment.getBoxSize().getId().equals(EnumBoxSize.MIGRATE.getId()) || shipment.getCourier().getId().equals(EnumCourier.MIGRATE.getId())) {
@@ -160,7 +164,11 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
         shippingOrderDao.save(shippingOrder);
         String comment = "";
         if (shipment != null) {
-            comment = "Shipment Details: " + shipment.getCourier().getName() + "/" + shipment.getTrackingId();
+               String trackingId=null;
+                    if(shipment.getAwb() != null){
+                     trackingId=shipment.getAwb().getAwbNumber();
+                    }
+            comment = "Shipment Details: " + shipment.getCourier().getName() + "/" + trackingId;
         }
         shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Packed, comment);
 

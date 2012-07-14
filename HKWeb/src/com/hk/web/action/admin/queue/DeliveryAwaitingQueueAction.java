@@ -76,7 +76,8 @@ public class DeliveryAwaitingQueueAction extends BasePaginatedAction {
         shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForDeliveryAwaiting()));
         shippingOrderSearchCriteria.setOrderId(orderId).setGatewayOrderId(gatewayOrderId);
         shippingOrderSearchCriteria.setCourierList(courierList);
-        shippingOrderSearchCriteria.setTrackingId(trackingId);
+        
+        shippingOrderSearchCriteria.setAwb(trackingId);
 
         shippingOrderPage = getShippingOrderService().searchShippingOrders(shippingOrderSearchCriteria, getPageNo(), getPerPage());
         if (shippingOrderPage != null) {

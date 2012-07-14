@@ -21,7 +21,9 @@ import org.springframework.stereotype.Component;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.courier.Awb;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.admin.pact.service.courier.AwbService;
 
 @Component
 public class SearchShippingOrderAction extends BasePaginatedAction {
@@ -35,6 +37,8 @@ public class SearchShippingOrderAction extends BasePaginatedAction {
 
   @Autowired
   ShippingOrderService shippingOrderService;
+    @Autowired
+    AwbService awbService;
 
   @ValidationMethod(on = "searchShippingOrder")
   public void validateSearch() {
@@ -54,7 +58,8 @@ public class SearchShippingOrderAction extends BasePaginatedAction {
 
     ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
     shippingOrderSearchCriteria.setOrderId(shippingOrderId).setGatewayOrderId(shippingOrderGatewayId);
-    shippingOrderSearchCriteria.setTrackingId(trackingId);
+     Awb awb= awbService.find(Long.getLong(trackingId));
+    shippingOrderSearchCriteria.setAwb(awb);
     shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, false);
 
     return new ForwardResolution("/pages/admin/searchShippingOrder.jsp");

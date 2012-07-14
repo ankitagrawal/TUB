@@ -253,8 +253,12 @@ public class APIOrderServiceImpl implements APIOrderService {
                     trackingItem.setStatus(shippingOrder.getBaseOrder().getOrderStatus().getName());
 
                 }else if(shippingOrder.getOrderStatus().getId() == EnumShippingOrderStatus.SO_Shipped.getId() && shipment != null){
+                    String trackingId=null;
+                    if(shipment.getAwb() != null){
+                     trackingId=shipment.getAwb().getAwbNumber();
+                    }
 
-                    trackingItem.setStatus("Shipped by"+shipment.getCourier().getName()+" - "+ shipment.getTrackingId() +" on "+ shipment.getShipDate());
+                    trackingItem.setStatus("Shipped by"+shipment.getCourier().getName()+" - "+ trackingId +" on "+ shipment.getShipDate());
                 } else{
                     trackingItem.setStatus(shippingOrder.getOrderStatus().getName());
                 }

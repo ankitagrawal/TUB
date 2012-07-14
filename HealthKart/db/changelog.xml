@@ -7805,4 +7805,64 @@
     <changeSet author="Rahul (generated)" id="1342099712051-1">
         <modifyDataType columnName="value" newDataType="VARCHAR(70)" tableName="cart_line_item_config_values"/>
     </changeSet>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    <changeSet author="Seema (generated)" id="1342122108908-1">
+        <createTable tableName="awb_status">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="status" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1342122108908-2">
+        <addColumn tableName="awb">
+            <column name="awb_status_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1342122108908-3">
+        <addColumn tableName="shipment">
+            <column name="awb_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="Seema (generated)" id="1342122108908-7">
+        <addForeignKeyConstraint baseColumnNames="awb_status_id" baseTableName="awb"  constraintName="fk_awb_awb_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="awb_status"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1342122108908-8">
+        <addForeignKeyConstraint baseColumnNames="awb_id" baseTableName="shipment"  constraintName="fk_shipment_awb1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="awb"  referencesUniqueColumn="false"/>
+    </changeSet>
+    
+
+
+
+    
+
+
+
+
 </databaseChangeLog>
