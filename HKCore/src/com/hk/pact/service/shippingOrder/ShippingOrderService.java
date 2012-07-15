@@ -10,6 +10,8 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderLifeCycleActivity;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.domain.courier.Shipment;
+import com.hk.domain.courier.Awb;
 
 /**
  * @author vaibhav.adlakha
@@ -17,29 +19,29 @@ import com.hk.domain.warehouse.Warehouse;
 public interface ShippingOrderService {
 
     public ShippingOrder find(Long shippingOrderId);
-    
+
     public ShippingOrder findByGatewayOrderId(String gatewayOrderId) ;
-    
-    public ShippingOrder findByTrackingId(String trackingId);
+
+    public ShippingOrder findByAwb(Awb awb);
 
     public ShippingOrder save(ShippingOrder shippingOrder);
-    
+
     public ShippingOrderLifeCycleActivity getShippingOrderLifeCycleActivity( EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity);
 
     public List<ShippingOrder> getShippingOrdersToSendShipmentEmail();
-    
+
     public List<ShippingOrder> searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria);
-    
+
     public Page searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, boolean isSearchForWarehouse, int pageNo, int perPage);
-    
+
     public Page searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, int pageNo, int perPage);
-    
+
     public List<ShippingOrder> searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, boolean isSearchForWarehouse) ;
 
     /**
      * Auto-escalation logic for all successful transactions This method will check inventory availability and escalate
      * orders from action queue to processing queue accordingly.
-     * 
+     *
      * @param shippingOrder
      * @description shipping order
      * @return true if it passes all the use cases i.e jit or availableUnbookedInventory Ajeet - 15-Feb-2012
@@ -52,7 +54,7 @@ public interface ShippingOrderService {
 
     /**
      * Creates a shipping order with basic details
-     * 
+     *
      * @param baseOrder
      * @param warehouse
      * @return
@@ -66,4 +68,6 @@ public interface ShippingOrderService {
 
     public void logShippingOrderActivity(ShippingOrder shippingOrder, User user, ShippingOrderLifeCycleActivity shippingOrderLifeCycleActivity, String comments);
 
+ public List<ShippingOrder>  getShippingOrderByAwb(Awb awb);
+//     public ShippingOrder getShippingOrderForShipment(Shipment shipment);
 }

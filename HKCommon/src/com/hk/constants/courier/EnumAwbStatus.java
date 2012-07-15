@@ -1,5 +1,7 @@
 package com.hk.constants.courier;
 
+import com.hk.domain.courier.AwbStatus;
+
 /**
  * Created by IntelliJ IDEA.
  * User:User
@@ -38,5 +40,10 @@ public enum EnumAwbStatus {
         this.status = status;
     }
 
-    
+   public AwbStatus getAsAwbStatus(){
+      AwbStatus awbStatus = new AwbStatus();
+        awbStatus.setId(this.id);
+        awbStatus.setStatus(this.status);
+        return awbStatus;
+   }
 }

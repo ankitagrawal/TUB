@@ -7818,18 +7818,12 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
     
-    <changeSet author="Seema (generated)" id="1342122108908-1">
+
+
+
+
+    <changeSet author="Seema (generated)" id="1342273389422-1">
         <createTable tableName="awb_status">
             <column name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -7839,30 +7833,87 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Seema (generated)" id="1342122108908-2">
+    <changeSet author="Seema (generated)" id="1342273389422-2">
         <addColumn tableName="awb">
             <column name="awb_status_id" type="INT"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Seema (generated)" id="1342122108908-3">
+    <changeSet author="Seema (generated)" id="1342273389422-3">
         <addColumn tableName="shipment">
             <column name="awb_id" type="INT"/>
         </addColumn>
     </changeSet>
-
-    <changeSet author="Seema (generated)" id="1342122108908-7">
+    <changeSet author="Seema (generated)" id="1342273389422-4">
         <addForeignKeyConstraint baseColumnNames="awb_status_id" baseTableName="awb"  constraintName="fk_awb_awb_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="awb_status"  referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Seema (generated)" id="1342122108908-8">
+    <changeSet author="Seema (generated)" id="1342273389422-5">
         <addForeignKeyConstraint baseColumnNames="awb_id" baseTableName="shipment"  constraintName="fk_shipment_awb1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="awb"  referencesUniqueColumn="false"/>
     </changeSet>
-    
 
+    <changeSet author="Seema (generated)" id="1342274075684-1">
+        <createIndex indexName="courier_awb_whouse_cod" tableName="awb" unique="true">
+            <column name="courier_id"/>
+            <column name="awb_number"/>
+            <column name="warehouse_id"/>
+            <column name="cod"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1342274075684-2">
+        <dropIndex indexName="courier_awb_key" tableName="awb"/>
+    </changeSet>
 
+    <!-- delete shipment which are not present in shippin order -->
+    <changeSet author="Seema (generated)" id="1342274075684-3">
+        <sql>
+            delete s.* from `shipment` s left join `shipping_order` so on s.id=so.shipment_id where so.id is null;
+        </sql>
+    </changeSet>
 
-    
+    <changeSet author="Seema (generated)" id="1342274075684-4">
+        <sql>
+            truncate `awb`;
+        </sql>
+    </changeSet>
 
+    <!-- populate awb from shipment -->
+    <changeSet author="Seema (generated)" id="1342274075684-5">
+        <sql>
+            insert into `awb` (`courier_id`,`awb_number`,`awb_bar_code`,`used`,`warehouse_id`,`cod`,`awb_status_id`)
 
+            select sp.courier_id , sp.tracking_id,sp.tracking_id,1,so.warehouse_id, if (p.payment_mode_id=40,1,0),2
+            from `shipment` sp inner join `shipping_order` so on so.shipment_id=sp.id
+            inner join `base_order` bo on so.base_order_id=bo.id
+            inner join `payment` p on bo.payment_id=p.id
+            on duplicate key update `awb_number`=sp.tracking_id ,`awb_bar_code`=sp.tracking_id;
+        </sql>
+    </changeSet>
+    <!-- populate  awb_id  from Awb -->
+    <changeSet author="Seema (generated)" id="1342274075684-6">
+        <sql>
+            update `shipment` s inner join `awb` a
+            inner join `shipping_order` so on so.shipment_id=s.id
+            inner join `base_order` bo on so.base_order_id=bo.id
+            inner join `payment` p on bo.payment_id=p.id
+            set s.awb_id=a.id
+            where s.tracking_id = a.awb_number and s.courier_id=a.courier_id and so.warehouse_id=a.warehouse_id
+            and a.cod=if(p.payment_mode_id=40,1,0);
 
+        </sql>
+        <!-- Set remaining awb_id in shipment to default value 1 , becoz we will make it not null-->
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1342274075684-7">
+        <sql>
+            update `shipment` set awb_id=1 where awb_id is null;
+        </sql>
+    </changeSet>
 
+     <changeSet author="Seema (generated)" id="1342290147965-1">
+        <addNotNullConstraint columnDataType="INT" columnName="awb_status_id" tableName="awb"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1342290147965-2">
+        <addNotNullConstraint columnDataType="INT" columnName="awb_id" tableName="shipment"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1342290147965-3">
+        <dropColumn columnName="tracking_id" tableName="shipment"/>
+    </changeSet>
 </databaseChangeLog>

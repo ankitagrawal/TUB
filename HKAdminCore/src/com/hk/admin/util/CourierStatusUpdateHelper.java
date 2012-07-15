@@ -17,6 +17,7 @@ import java.net.URL;
 import java.net.MalformedURLException;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.exception.HealthkartCheckedException;
+import com.hk.domain.courier.Awb;
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonObject;
@@ -45,6 +46,7 @@ public class CourierStatusUpdateHelper {
         String inputLine = "";
         String response = "";
         courierName="(AFL)";
+
 
         Map<String, String> responseAFL;
         Date delivery_date = null;

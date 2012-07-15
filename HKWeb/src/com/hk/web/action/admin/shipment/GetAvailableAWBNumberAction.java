@@ -3,6 +3,7 @@ package com.hk.web.action.admin.shipment;
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.admin.pact.dao.courier.AwbDao;
+import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Courier;
@@ -27,7 +28,7 @@ import java.util.*;
 @Component
 public class GetAvailableAWBNumberAction extends BaseAction implements ValidationErrorHandler {
     @Autowired
-    AwbDao awbDao;
+    AwbService awbService;
 
     @Autowired
     UserDao userDao;
@@ -49,7 +50,7 @@ public class GetAvailableAWBNumberAction extends BaseAction implements Validatio
         }
 
         Map<String, Object> data = new HashMap<String, Object>(1);
-        List<Awb> awbs = awbDao.getAvailableAwbForCourierByWarehouseAndCod(courier, warehouses.iterator().next(),null);
+        List<Awb> awbs = awbService.getUnusedAwbForCourierByWarehouseAndCod(courier, warehouses.iterator().next(),null);
         List<String> awbNumbers = new ArrayList<String>();
         for (Awb awb : awbs) {
             awbNumbers.add(awb.getAwbNumber());

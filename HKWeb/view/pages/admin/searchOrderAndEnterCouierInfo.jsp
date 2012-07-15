@@ -74,7 +74,7 @@
               </c:forEach>
             </s:select>
             <label>Box Weight(Kgs):</label><s:text name="shipment.boxWeight" size="5" class="weight"/>
-            <label>Tracking ID:</label><s:text name="shipment.trackingId"/>
+            <label>Tracking ID:</label><s:text name="trackingId"/>
             <label>Courier</label>
             <s:select name="shipment.courier" id="courier" value="${shipmentQueueBean.suggestedCourier.id}">
               <c:forEach var="courier" items="${courierList}">

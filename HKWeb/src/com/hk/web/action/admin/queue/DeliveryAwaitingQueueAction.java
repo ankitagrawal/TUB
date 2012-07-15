@@ -20,11 +20,13 @@ import org.stripesstuff.plugin.security.Secure;
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.courier.Courier;
+import com.hk.domain.courier.Awb;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
@@ -45,6 +47,8 @@ public class DeliveryAwaitingQueueAction extends BasePaginatedAction {
     private AdminShippingOrderService  adminShippingOrderService;
     @Autowired
     private ShippingOrderStatusService shippingOrderStatusService;
+    @Autowired
+    AwbService awbService;
 
     Page                               shippingOrderPage;
     @Autowired
@@ -76,8 +80,10 @@ public class DeliveryAwaitingQueueAction extends BasePaginatedAction {
         shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForDeliveryAwaiting()));
         shippingOrderSearchCriteria.setOrderId(orderId).setGatewayOrderId(gatewayOrderId);
         shippingOrderSearchCriteria.setCourierList(courierList);
-        
-        shippingOrderSearchCriteria.setAwb(trackingId);
+        //yet to confirm  here tracking id is not required---->>
+       if(trackingId != null){
+          Awb awb= awbService.findByCourierWarehouseCodAwbnumber(courier,null,null,trackingId);
+        shippingOrderSearchCriteria.setAwb(awb);       }
 
         shippingOrderPage = getShippingOrderService().searchShippingOrders(shippingOrderSearchCriteria, getPageNo(), getPerPage());
         if (shippingOrderPage != null) {

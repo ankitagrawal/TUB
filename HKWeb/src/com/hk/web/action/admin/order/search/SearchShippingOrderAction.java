@@ -56,13 +56,23 @@ public class SearchShippingOrderAction extends BasePaginatedAction {
 
   public Resolution searchShippingOrder() {
 
-    ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
-    shippingOrderSearchCriteria.setOrderId(shippingOrderId).setGatewayOrderId(shippingOrderGatewayId);
-     Awb awb= awbService.find(Long.getLong(trackingId));
-    shippingOrderSearchCriteria.setAwb(awb);
-    shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, false);
+      ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
+      shippingOrderSearchCriteria.setOrderId(shippingOrderId).setGatewayOrderId(shippingOrderGatewayId);
+      //yet to verify  if either of  shippingid and gateweyid  is present search on ids.if only tracking id present then wet awb
+      //multiple awb can be there. so we should return as a list.change shippingordersearchcriteria attribut awb to awb list.
 
-    return new ForwardResolution("/pages/admin/searchShippingOrder.jsp");
+      if (shippingOrderId != null || (!(StringUtils.isBlank(shippingOrderGatewayId)))) {
+          shippingOrderSearchCriteria.setAwb(null);
+      } else {
+          List<Awb> awbList = awbService.getUsedAwb(trackingId);
+          if (awbList == null || awbList.size() < 1) {
+              shippingOrderSearchCriteria.setAwb(awbList.get(0));
+          }
+      }
+
+      shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, false);
+
+      return new ForwardResolution("/pages/admin/searchShippingOrder.jsp");
 
   }
 

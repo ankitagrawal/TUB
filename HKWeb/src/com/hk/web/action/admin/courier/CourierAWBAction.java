@@ -3,6 +3,7 @@ package com.hk.web.action.admin.courier;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.dao.courier.AwbDao;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
+import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.util.helper.XslAwbParser;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
@@ -42,7 +43,7 @@ public class CourierAWBAction extends BaseAction {
   @Autowired
   private UserService userService;
   @Autowired
-  AwbDao awbDao;
+  AwbService awbService;
 
 
   @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
@@ -139,10 +140,8 @@ public class CourierAWBAction extends BaseAction {
       fileBean.save(excelFile);
       awbSetFromExcel = xslAwbParser.readAwbExcel(excelFile);
       if (null != awbSetFromExcel && awbSetFromExcel.size() > 0) {
-        List<Awb> awbDatabase = awbDao.getAvailableAwbForCourierByWarehouseAndCod(courier, null, null);
-
+        List<Awb> awbDatabase = awbService. getUnusedAwbForCourierByWarehouseAndCod(courier, null, null);
         List<String> commonCourierIdsList = XslAwbParser.getIntersection(awbDatabase, new ArrayList(awbSetFromExcel));
-
         if (commonCourierIdsList.size() > 0) {
           addRedirectAlertMessage(new SimpleMessage("Upload Failed   Courier Ids" + "     " + commonCourierIdsList + "   " +
               "     are already present and used in database"));
@@ -150,7 +149,7 @@ public class CourierAWBAction extends BaseAction {
         }
 
         for (Awb awb : awbSetFromExcel) {
-          awbDao.save(awb);
+          awbService.save(awb);
 
         }
 

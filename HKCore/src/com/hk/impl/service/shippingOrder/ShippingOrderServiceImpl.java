@@ -22,6 +22,8 @@ import com.hk.domain.order.ShippingOrderLifecycle;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.domain.courier.Shipment;
+import com.hk.domain.courier.Awb;
 import com.hk.pact.dao.ReconciliationStatusDao;
 import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
 import com.hk.pact.service.UserService;
@@ -266,7 +268,18 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     }
 
     @Override
-    public ShippingOrder findByTrackingId(String trackingId) {
-        return getShippingOrderDao().findByTrackingId(trackingId);
+    public ShippingOrder findByAwb(Awb awb) {
+        return getShippingOrderDao().findByAwb(awb);
     }
+
+     public List<ShippingOrder>  getShippingOrderByAwb(Awb awb){
+         return  getShippingOrderDao().getShippingOrderByAwb(awb);
+     }
+
+//
+//    public ShippingOrder getShippingOrderForShipment(Shipment shipment){
+//        return getShippingOrderDao().getShippingOrderForShipment(shipment);
+//    }
+
+
 }
