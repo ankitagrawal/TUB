@@ -21,7 +21,8 @@ public enum EnumPaymentMode {
   COUNTER_CASH(50L, "Counter Cash"),
   CITRUS(60L, "Citrus NetBanking"),
   CITRUS_NetBanking_New(70L, "Citrus NetBanking"),
-  CITRUS_CreditDebit(80L, "Citrus Credit Debit");
+  CITRUS_CreditDebit(80L, "Citrus Credit Debit"),
+  SUBSCRIPTION_PAYMENT(90L, "Subscription Payment");
 
   private java.lang.String name;
   private java.lang.Long id;
@@ -70,7 +71,8 @@ public enum EnumPaymentMode {
     return Arrays.asList(
         EnumPaymentMode.CCAVENUE_DUMMY.getId(),
         EnumPaymentMode.TECHPROCESS.getId(),
-        EnumPaymentMode.CITRUS.getId());
+        EnumPaymentMode.CITRUS.getId(),
+        EnumPaymentMode.SUBSCRIPTION_PAYMENT.getId());
 
   }
 

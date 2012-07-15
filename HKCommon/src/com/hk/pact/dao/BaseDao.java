@@ -255,4 +255,5 @@ public interface BaseDao {
     public void refresh(Object entity);
 
     public int bulkUpdate(String queryString, Object[] values);
+
 }

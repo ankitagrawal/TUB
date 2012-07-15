@@ -33,9 +33,9 @@
           <fieldset>
               <br/>
 
-              frequency(days): <s:text name="subscription.frequencyDays" id="subscriptionFrequency" value="${sp.minFrequencyDays}" style="width: 30px; height: 18px;"/>
+              frequency : <s:text name="subscription.frequencyDays" id="subscriptionFrequency" value="${sp.minFrequencyDays}" style="width: 30px; height: 18px;"/>
               &nbsp;(min : ${sp.minFrequencyDays} days - max : ${sp.maxFrequencyDays} days)  <br/>  <br/>
-              subscription period(days): <s:text name="subscription.subscriptionPeriodDays" id="subscriptionPeriod" value="180" style="width: 30px; height: 18px;"/>
+              subscription period :   <s:text name="subscription.subscriptionPeriodDays" id="subscriptionPeriod" value="180" style="width: 30px; height: 18px;"/>
               &nbsp;(min : <%=SubscriptionConstants.minSubscriptionDays%> days - max : <%=SubscriptionConstants.maxSubscriptionDays%> days)   <br/> <br/>
 
 
@@ -71,7 +71,7 @@
         function _addSubscription(res) {
           if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
             closeSubscriptionWindow();
-            $('.message .line1').html("<strong>" + res.data.name + "</strong> has been added to your shopping cart");
+            $('.message .line1').html("<strong>" + res.data.name + "</strong> "+ res.message);
             $('.cartButton').html("<img class='icon' src='${pageContext.request.contextPath}/images/icons/cart.png'/><span class='num' id='productsInCart'>" + res.data.itemsInCart + "</span> items in<br/>your shopping cart");
             $('.progressLoader').hide();
 
@@ -111,7 +111,7 @@
         }
 
         $('#subscriptionFrequency').jStepper({minValue:${sp.minFrequencyDays},maxValue:${sp.maxFrequencyDays} });
-        $('#subscriptionPeriod').jStepper({minValue:180,maxValue:450 });
+        $('#subscriptionPeriod').jStepper({minValue:<%=SubscriptionConstants.minSubscriptionDays%>,maxValue:<%=SubscriptionConstants.maxSubscriptionDays%> });
         /*$('#subscriptionQty')[0].value=Math.round($('#subscriptionPeriod').val()*$('#subscriptionQtyPerDelivery').val()/$('#subscriptionFrequency').val()) ;*/
       </script>
     </div>

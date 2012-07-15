@@ -1,6 +1,7 @@
 package com.hk.impl.dao.subscription;
 
 import com.akube.framework.dao.Page;
+import com.akube.framework.util.BaseUtils;
 import com.hk.constants.subscription.EnumSubscriptionStatus;
 import com.hk.core.search.SubscriptionSearchCriteria;
 import com.hk.domain.subscription.SubscriptionStatus;
@@ -13,6 +14,8 @@ import com.hk.domain.subscription.Subscription;
 import com.hk.domain.user.User;
 import com.hk.domain.order.Order;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -42,5 +45,24 @@ public class SubscriptionDaoImpl extends BaseDaoImpl implements SubscriptionDao 
     public Page searchSubscriptions(SubscriptionSearchCriteria subscriptionSearchCriteria, int pageNo, int perPage){
         DetachedCriteria searchCriteria = subscriptionSearchCriteria.getSearchCriteria();
         return list(searchCriteria, true, pageNo, perPage);
+    }
+
+    public int escalateSubscriptionsToActionQueue(List<SubscriptionStatus> fromStatuses, SubscriptionStatus toStatus, Date referenceDate){
+        String query="update Subscription set subscriptionStatus = ?";
+        Object[] values=new Object[2+fromStatuses.size()];
+        int i=1;
+        values[0]=toStatus;
+        for(SubscriptionStatus subscriptionStatus : fromStatuses){
+            if(i>1){
+                query+=" or subscriptionStatus = ? ";
+            }else{
+                query+=" where subscriptionStatus = ? ";
+            }
+            values[i] = subscriptionStatus;
+            i++;
+        }
+        query+=" and nextShipmentDate < ?";
+        values[i]=referenceDate;
+        return bulkUpdate(query,values);
     }
 }

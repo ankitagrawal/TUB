@@ -1,7 +1,9 @@
 package com.hk.impl.service.subscription;
 
 import com.akube.framework.dao.Page;
+import com.akube.framework.util.BaseUtils;
 import com.hk.constants.subscription.EnumSubscriptionStatus;
+import com.hk.constants.subscription.SubscriptionConstants;
 import com.hk.core.search.SubscriptionSearchCriteria;
 import com.hk.domain.order.Order;
 import com.hk.domain.subscription.SubscriptionStatus;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -68,10 +71,20 @@ public class SubscriptionServiceImpl implements SubscriptionService{
     }
 
     /**
-     * used to escalate subscriptoins to subscription action awaiting queue
+     * used to escalate necessary subscriptoins to subscription action awaiting queue. Customer care
+     * calls the customer for information
      */
-    public void checkAndUpdateSubscriptionStatus(){
+    public int escalateSubscriptionsToActionQueue(){
+        int cusomterBufferDays= SubscriptionConstants.customerBufferDays;
+        Date referenceDate=new Date(BaseUtils.getCurrentTimestamp().getTime()+cusomterBufferDays*24*60*60*1000);
+        List<SubscriptionStatus> fromStatuses=new ArrayList<SubscriptionStatus>();
 
+        fromStatuses.add(EnumSubscriptionStatus.Placed.asSubscriptionStatus());
+        fromStatuses.add(EnumSubscriptionStatus.Idle.asSubscriptionStatus());
+
+        SubscriptionStatus toStatus=EnumSubscriptionStatus.CustomerConfirmationAwaited.asSubscriptionStatus();
+
+        return subscriptionDao.escalateSubscriptionsToActionQueue(fromStatuses,toStatus, referenceDate);
     }
 
     /**

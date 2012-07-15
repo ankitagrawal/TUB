@@ -1,5 +1,6 @@
 package com.hk.impl.service.subscription;
 
+import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.subscription.EnumSubscriptionOrderStatus;
 import com.hk.domain.builder.CartLineItemBuilder;
 import com.hk.domain.builder.SubscriptionOrderBuilder;
@@ -48,7 +49,7 @@ public class SubscriptionOrderServiceImpl implements SubscriptionOrderService {
         User user=subscription.getUser();
         Order order= automatedOrderService.createNewOrder(user);
         Set<CartLineItem> cartLineItemSet=createSubscriptionOrderCartLineItems(subscription);
-        Payment payment=createSubscriptionPayment(subscription, order, cartLineItemSet);
+        Payment payment=createSubscriptionPayment(order, cartLineItemSet);
 
         order=  automatedOrderService.placeOrder(order,cartLineItemSet,subscription.getAddress(),payment,storeService.getDefaultStore(),true);
 
@@ -108,20 +109,19 @@ public class SubscriptionOrderServiceImpl implements SubscriptionOrderService {
     }
 
     /**
-     * creates payment for subscriptions
-     * @param subscription
+     *
+     * @param order
+     * @param cartLineItems
      * @return
      */
-    private Payment createSubscriptionPayment(Subscription subscription,Order order, Set<CartLineItem> cartLineItems){
-        //todo
-        //create separate subscription payment type for subscriptions
+    private Payment createSubscriptionPayment(Order order, Set<CartLineItem> cartLineItems){
 
         Double amount=0.0D;
         for(CartLineItem cartLineItem: cartLineItems){
             amount+=cartLineItem.getHkPrice();
         }
 
-        return automatedOrderService.createNewPayment(order,amount, subscription.getBaseOrder().getPayment().getPaymentMode());
+        return automatedOrderService.createNewPayment(order,amount, EnumPaymentMode.SUBSCRIPTION_PAYMENT.asPaymenMode());
 
     }
 

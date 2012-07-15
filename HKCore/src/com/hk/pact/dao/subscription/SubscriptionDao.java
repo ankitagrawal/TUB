@@ -10,6 +10,7 @@ import com.hk.domain.user.User;
 import com.hk.domain.order.Order;
 import com.hk.pact.dao.BaseDao;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -28,5 +29,7 @@ public interface SubscriptionDao extends BaseDao {
     public List<Subscription> getSubscriptions(EnumSubscriptionStatus subscriptionStatus);
 
     public Page searchSubscriptions(SubscriptionSearchCriteria subscriptionSearchCriteria, int pageNo, int perPage);
+
+    public int escalateSubscriptionsToActionQueue(List<SubscriptionStatus> fromStatuses, SubscriptionStatus toStatus, Date referenceDate);
 
 }

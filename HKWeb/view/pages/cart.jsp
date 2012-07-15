@@ -84,8 +84,10 @@
           }
           else if (count > 2) {
             $('#productsInCart').html(count - 1);
+            $('#simpleProductsInCart').html(simpleProductCount-1);
           }
           else {
+              $('#simpleProductsInCart').html(simpleProductCount-1);
             $('.cartButton').html("<img class='icon' src='${pageContext.request.contextPath}/images/icons/cart.png'/>&nbsp;<span class='num' id='productsInCart'>1</span> item in<br/>your shopping cart");
           }
           $('#numProdTitle').html(count - 1);

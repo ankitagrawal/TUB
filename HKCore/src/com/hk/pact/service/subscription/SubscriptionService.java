@@ -33,7 +33,7 @@ public interface SubscriptionService {
 
     public Page searchSubscriptions(SubscriptionSearchCriteria subscriptionSearchCriteria, int pageNo, int perPage);
 
-    public void checkAndUpdateSubscriptionStatus();
+    public int escalateSubscriptionsToActionQueue();
 
     public void checkInventoryForSubscriptionOrders();
 

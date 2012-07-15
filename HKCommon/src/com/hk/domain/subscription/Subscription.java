@@ -57,7 +57,7 @@ public class Subscription  implements java.io.Serializable {
     @Column(name="qty_per_delivery", nullable=false)
     private Long qtyPerDelivery;
 
-    @Column(name="qty_delivered", nullable=false)
+    @Column(name="qty_delivered", nullable=true)
     private Long qtyDelivered;
 
 
