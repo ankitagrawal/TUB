@@ -116,6 +116,7 @@ public class AutomatedOrderServiceImpl implements AutomatedOrderService{
         if (EnumPaymentMode.getPrePaidPaymentModes().contains(paymentMode.getId())) {
             paymentStatus = paymentStatusDao.getPaymentStatusById(EnumPaymentStatus.SUCCESS.getId());
         }
+        payment.setPaymentStatus(paymentStatus);
         payment.setCreateDate(BaseUtils.getCurrentTimestamp());
         payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
         return paymentService.save(payment);

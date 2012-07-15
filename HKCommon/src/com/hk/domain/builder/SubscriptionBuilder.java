@@ -102,7 +102,8 @@ public class SubscriptionBuilder {
         }else{
             subscription.setSubscriptionDiscountPercent(subscriptionProduct.getSubscriptionDiscount360Days());
         }
-        subscription.setSubscriptionPrice(productVariant.getMarkedPrice()*(100-productVariant.getDiscountPercent()-subscription.getSubscriptionDiscountPercent())/100);
+        //discount percent in hk are stored differently
+        subscription.setSubscriptionPrice(productVariant.getMarkedPrice()*(100-productVariant.getDiscountPercent()*100-subscription.getSubscriptionDiscountPercent())/100);
 
         return  subscription;
     }

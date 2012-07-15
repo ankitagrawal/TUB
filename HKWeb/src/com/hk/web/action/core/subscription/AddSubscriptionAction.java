@@ -15,6 +15,7 @@ import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.dao.user.UserCartDao;
 import com.hk.manager.UserManager;
 import com.hk.manager.OrderManager;
+import com.hk.pact.service.subscription.SubscriptionOrderService;
 import com.hk.pact.service.subscription.SubscriptionProductService;
 import com.hk.pact.service.subscription.SubscriptionService;
 import com.hk.util.UIDateTypeConverter;
@@ -68,6 +69,8 @@ public class AddSubscriptionAction extends BaseAction implements ValidationError
     SubscriptionService subscriptionService;
     @Autowired
     SubscriptionProductService subscriptionProductService;
+    @Autowired
+    SubscriptionOrderService subscriptionOrderService;
 
     @SuppressWarnings({"unchecked", "deprecation"})
     @DefaultHandler
@@ -90,7 +93,7 @@ public class AddSubscriptionAction extends BaseAction implements ValidationError
             if (subscription != null && subscription.getQty()>0 ) {
 
                 priorSubscription= new SubscriptionMatcher().addProduct(subscription.getProductVariant()).addSubscriptionStatus(EnumSubscriptionStatus.InCart).match(new SubscriptionFilter(order.getSubscriptions()).addSubscriptionStatus(EnumSubscriptionStatus.InCart).filter());
-
+                subscriptionOrderService.createOrderForSubscription(priorSubscription);
                 if(priorSubscription==null) {
                     SubscriptionProduct subscriptionProduct=subscriptionProductService.findByProductVariant(subscription.getProductVariant());
                     SubscriptionBuilder subscriptionBuilder=new SubscriptionBuilder();

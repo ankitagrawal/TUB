@@ -1,5 +1,6 @@
 package com.hk.impl.service.subscription;
 
+import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.subscription.EnumSubscriptionOrderStatus;
 import com.hk.domain.builder.CartLineItemBuilder;
@@ -48,7 +49,7 @@ public class SubscriptionOrderServiceImpl implements SubscriptionOrderService {
     public Order createOrderForSubscription(Subscription subscription){
         User user=subscription.getUser();
         Order order= automatedOrderService.createNewOrder(user);
-        Set<CartLineItem> cartLineItemSet=createSubscriptionOrderCartLineItems(subscription);
+        Set<CartLineItem> cartLineItemSet=createSubscriptionOrderCartLineItems(subscription, order);
         Payment payment=createSubscriptionPayment(order, cartLineItemSet);
 
         order=  automatedOrderService.placeOrder(order,cartLineItemSet,subscription.getAddress(),payment,storeService.getDefaultStore(),true);
@@ -91,7 +92,7 @@ public class SubscriptionOrderServiceImpl implements SubscriptionOrderService {
      * @param subscription
      * @return
      */
-    private Set<CartLineItem> createSubscriptionOrderCartLineItems(Subscription subscription){
+    private Set<CartLineItem> createSubscriptionOrderCartLineItems(Subscription subscription,Order order){
 
         Set<CartLineItem> cartLineItemSet=new HashSet<CartLineItem>();
         ProductVariant productVariant=subscription.getProductVariant();
@@ -101,9 +102,13 @@ public class SubscriptionOrderServiceImpl implements SubscriptionOrderService {
         Double subscriptionOrderPrice = (currentPrice > subscriptionPrice)? subscriptionPrice : currentPrice;
 
         CartLineItemBuilder cartLineItemBuilder=new CartLineItemBuilder();
+        cartLineItemBuilder.ofType(EnumCartLineItemType.Product);
         cartLineItemBuilder.forVariantQty(productVariant,subscription.getQtyPerDelivery()).hkPrice(subscriptionOrderPrice).markedPrice(productVariant.getMarkedPrice());
+        CartLineItem cartLineItem=cartLineItemBuilder.build();
+        cartLineItem.setOrder(order);
 
-        cartLineItemSet.add(cartLineItemBuilder.build());
+        cartLineItemSet.add(cartLineItem);
+
         return cartLineItemSet;
 
     }
