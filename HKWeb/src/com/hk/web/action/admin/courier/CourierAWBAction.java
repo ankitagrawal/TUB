@@ -7,6 +7,7 @@ import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.util.helper.XslAwbParser;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierServiceInfo;
@@ -140,7 +141,8 @@ public class CourierAWBAction extends BaseAction {
       fileBean.save(excelFile);
       awbSetFromExcel = xslAwbParser.readAwbExcel(excelFile);
       if (null != awbSetFromExcel && awbSetFromExcel.size() > 0) {
-        List<Awb> awbDatabase = awbService. getUnusedAwbForCourierByWarehouseAndCod(courier, null, null);
+        List<Awb> awbDatabase = awbService. getAvailableAwbForCourierByWarehouseCodStatus(courier, null, null,null, EnumAwbStatus.Attach.getAsAwbStatus());
+         awbDatabase.addAll(awbService. getAvailableAwbForCourierByWarehouseCodStatus(courier, null, null,null, EnumAwbStatus.Unused.getAsAwbStatus()));
         List<String> commonCourierIdsList = XslAwbParser.getIntersection(awbDatabase, new ArrayList(awbSetFromExcel));
         if (commonCourierIdsList.size() > 0) {
           addRedirectAlertMessage(new SimpleMessage("Upload Failed   Courier Ids" + "     " + commonCourierIdsList + "   " +

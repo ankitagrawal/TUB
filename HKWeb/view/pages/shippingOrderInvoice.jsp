@@ -150,6 +150,15 @@
 <div class="clear"></div>
 <div style="margin-top: 5px;"></div>
 
+ <div>
+   <div style="float: right;">
+    <img  style="padding-top: 0px; padding-left: 0px; padding-right: 82px; "src="${pageContext.request.contextPath}/barcodes/${orderSummary.trackingId}.png"/>
+    </div>
+    </div>
+
+   <div class="clear"></div>
+<div style="margin-top: 5px;"></div>
+
 <div class="grid_12">
   <div class="grid_8 alpha omega">
     <div class="formatting" style="float: left; font-size:1.1em;">

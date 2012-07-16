@@ -70,6 +70,11 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
 //        return this;
 //    }
 
+      public ShippingOrderSearchCriteria setAwb(Awb awb) {
+        this.awb = awb;
+        return this;
+    }
+
     public ShippingOrderSearchCriteria setCourierList(List<Courier> courierList) {
         this.courierList = courierList;
         return this;
@@ -114,10 +119,6 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
     }
 
 
-    public void setAwb(Awb awb) {
-        this.awb = awb;
-    }
-
     protected DetachedCriteria buildSearchCriteriaFromBaseCriteria() {
         DetachedCriteria criteria = super.buildSearchCriteriaFromBaseCriteria();
 
@@ -126,7 +127,7 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
         }
 
         DetachedCriteria shipmentCriteria = null;
-        if (StringUtils.isNotBlank(awb.getAwbNumber())) {
+        if (awb != null && awb.getAwbNumber() != null) {
 
             if (shipmentCriteria == null) {
                 shipmentCriteria = criteria.createCriteria("shipment");

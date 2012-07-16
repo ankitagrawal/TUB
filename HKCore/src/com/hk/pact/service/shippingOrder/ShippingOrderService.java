@@ -69,5 +69,5 @@ public interface ShippingOrderService {
     public void logShippingOrderActivity(ShippingOrder shippingOrder, User user, ShippingOrderLifeCycleActivity shippingOrderLifeCycleActivity, String comments);
 
  public List<ShippingOrder>  getShippingOrderByAwb(Awb awb);
-//     public ShippingOrder getShippingOrderForShipment(Shipment shipment);
+
 }

@@ -18,10 +18,13 @@ import java.util.List;
 @Repository
 public class AwbDaoImpl extends BaseDaoImpl implements AwbDao {
 
-    public List<Awb> getAvailableAwbForCourierByWarehouseAndCod(Courier courier, Warehouse warehouse, Boolean isCod , AwbStatus awbStatus) {
+    public List<Awb> getAvailableAwbForCourierByWarehouseCodStatus(Courier courier, String awbNumber, Warehouse warehouse, Boolean isCod, AwbStatus awbStatus) {
         DetachedCriteria detachedCriteria = DetachedCriteria.forClass(Awb.class);
         if (courier != null) {
             detachedCriteria.add(Restrictions.eq("courier", courier));
+        }
+        if (awbNumber != null && StringUtils.isNotBlank(awbNumber)) {
+            detachedCriteria.add(Restrictions.eq("awbNumber", awbNumber));
         }
         if (warehouse != null && StringUtils.isNotBlank(Long.toString(warehouse.getId()))) {
             detachedCriteria.add(Restrictions.eq("warehouse", warehouse));
@@ -29,50 +32,14 @@ public class AwbDaoImpl extends BaseDaoImpl implements AwbDao {
         if (isCod != null) {
             detachedCriteria.add(Restrictions.eq("cod", isCod));
         }
-        if(awbStatus != null){
-        detachedCriteria.add(Restrictions.eq("awbStatus",awbStatus));
+        if (awbStatus != null) {
+            detachedCriteria.add(Restrictions.eq("awbStatus", awbStatus));
         }
-         detachedCriteria.addOrder(org.hibernate.criterion.Order.asc("id"));
+
+        detachedCriteria.addOrder(org.hibernate.criterion.Order.asc("id"));
         return (List<Awb>) findByCriteria(detachedCriteria);
     }
 
-
-    public Awb findByCourierWarehouseCodAwbnumber(Courier courier, Warehouse warehouse, Boolean isCod, String awbNumber) {
-
-        DetachedCriteria detachedCriteria = DetachedCriteria.forClass(Awb.class);
-        detachedCriteria.add(Restrictions.eq("awbNumber", awbNumber));
-        if (courier != null) {
-            detachedCriteria.add(Restrictions.eq("courier", courier));
-        }
-        if (warehouse != null && StringUtils.isNotBlank(Long.toString(warehouse.getId()))) {
-            detachedCriteria.add(Restrictions.eq("warehouse", warehouse));
-        }
-        if (isCod != null) {
-            detachedCriteria.add(Restrictions.eq("cod", isCod));
-        }
-        List<Awb> awbList = findByCriteria(detachedCriteria);
-        if (awbList != null && awbList.size() > 0) {
-            return awbList.get(0);
-        } else {
-            return null;
-        }
-
-    }
-
-    public List<Awb> getUsedAwb(String awbNumber) {
-        AwbStatus awbStatus = EnumAwbStatus.Used.getAsAwbStatus();
-        List<Awb> awbList = getAwbByAwbNumberAndStatus(awbNumber, awbStatus);
-        return awbList;
-
-    }
-
-
-    public List<Awb> getAwbByAwbNumberAndStatus(String awbNumber, AwbStatus awbStatus) {
-        DetachedCriteria detachedCriteria = DetachedCriteria.forClass(Awb.class);
-        detachedCriteria.add(Restrictions.eq("awbNumber", awbNumber));
-        detachedCriteria.add(Restrictions.eq("awbStatus", awbStatus));
-        return (List<Awb>) findByCriteria(detachedCriteria);
-    }
 
 }
 

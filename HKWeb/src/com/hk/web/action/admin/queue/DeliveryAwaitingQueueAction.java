@@ -24,6 +24,7 @@ import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.Awb;
@@ -82,8 +83,8 @@ public class DeliveryAwaitingQueueAction extends BasePaginatedAction {
         shippingOrderSearchCriteria.setCourierList(courierList);
         //yet to confirm  here tracking id is not required---->>
        if(trackingId != null){
-          Awb awb= awbService.findByCourierWarehouseCodAwbnumber(courier,null,null,trackingId);
-        shippingOrderSearchCriteria.setAwb(awb);       }
+         List<Awb> awbList= awbService.getAvailableAwbForCourierByWarehouseCodStatus(courier,trackingId,null,null, EnumAwbStatus.Used.getAsAwbStatus());
+        shippingOrderSearchCriteria.setAwb(awbList.get(0));       }
 
         shippingOrderPage = getShippingOrderService().searchShippingOrders(shippingOrderSearchCriteria, getPageNo(), getPerPage());
         if (shippingOrderPage != null) {

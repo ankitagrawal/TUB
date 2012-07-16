@@ -78,7 +78,7 @@ public class HKDeliveryAction extends BaseAction {
           shippingOrderList = new ArrayList<ShippingOrder>();
         List<Awb> awbList=new ArrayList<Awb>();
         for (String trackingNum : trackingIdList) {
-        awbList=  awbService.getAwbByAwbNumberAndStatus(trackingNum.trim(), EnumAwbStatus.Used.getAsAwbStatus());
+        awbList=  awbService.getAvailableAwbForCourierByWarehouseCodStatus(null,trackingNum.trim(),userService.getWarehouseForLoggedInUser(),null, EnumAwbStatus.Used.getAsAwbStatus());
             for(Awb awb: awbList){
             List<ShippingOrder> shippinglist = shippingOrderService.getShippingOrderByAwb(awb);
                 for( ShippingOrder shippingOrder:shippinglist )
@@ -297,7 +297,7 @@ public class HKDeliveryAction extends BaseAction {
             receivedDetails = "Name:" + "\n" + "Relation:" + "\n" + "Mobile No.:" + "\n" + "Received Date,Time:" + "\n" + "Sign";
 
            //adding barcode image to cell
-            barcodePath = barcodeGenerator.getBarcodePath(shippingOrderList.get(index).getGatewayOrderId());
+            barcodePath = barcodeGenerator.getBarcodePath(shippingOrderList.get(index).getGatewayOrderId(),1.0f);
 
             //add picture data to this workbook.
             is = new FileInputStream(barcodePath);

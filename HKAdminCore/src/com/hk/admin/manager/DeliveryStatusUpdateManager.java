@@ -29,7 +29,6 @@ import org.springframework.stereotype.Component;
 
 import com.google.gson.JsonObject;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
-import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.util.ChhotuCourierDelivery;
 import com.hk.admin.util.CourierStatusUpdateHelper;
 import com.hk.constants.report.ReportConstants;
@@ -37,7 +36,6 @@ import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.courier.Shipment;
-import com.hk.domain.courier.Awb;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
@@ -69,10 +67,7 @@ public class DeliveryStatusUpdateManager {
     ShippingOrderService        shippingOrderService;
 
     @Autowired
-    CourierStatusUpdateHelper courierStatusUpdateHelper;
-
-    @Autowired
-    AwbService awbService;
+    CourierStatusUpdateHelper   courierStatusUpdateHelper;
 
     public String updateDeliveryStatusDTDC(File excelFile) throws Exception {
         String messagePostUpdation = "";
@@ -97,7 +92,7 @@ public class DeliveryStatusUpdateManager {
                 rowCount++;
                 rowMap = getRowMapStringFormat(objRowIt);
                 String gatewayOrderIdInXls = getCellValue(ReportConstants.REF_NO, rowMap, headerMap);
-                String awbNumber = getCellValue(ReportConstants.CN_NO, rowMap, headerMap);
+                String awb = getCellValue(ReportConstants.CN_NO, rowMap, headerMap);
                 String status = getCellValue(ReportConstants.STATUS, rowMap, headerMap);
                 Date deliveryDateInXsl = null;
                 try {
@@ -107,21 +102,19 @@ public class DeliveryStatusUpdateManager {
                     continue;
                 }
                 ShippingOrder shippingOrder = null;
-                if (StringUtils.isBlank(awbNumber)) {
+                if (StringUtils.isBlank(awb)) {
                     messagePostUpdation += "CNNO cannot be blank @Row No." + (rowCount + 1) + "<br/>";
                     continue;
                 }
-                if (StringUtils.isBlank(gatewayOrderIdInXls) && StringUtils.isBlank(awbNumber)) {
+                if (StringUtils.isBlank(gatewayOrderIdInXls) && StringUtils.isBlank(awb)) {
                     messagePostUpdation += "Ref. No. and CNNO cannot be null simultaneously @Row No. " + (rowCount + 1) + "<br/>";
                     continue;
                 }
                 if (StringUtils.isNotBlank(gatewayOrderIdInXls)) {
                     shippingOrder = getShippingOrderService().findByGatewayOrderId(gatewayOrderIdInXls);
                 } else {
-                    //need courier info also ,warehouse,cod
-                   Awb awb= awbService.findByCourierWarehouseCodAwbnumber(null,null,null,awbNumber);
-                    shippingOrder = getShippingOrderService().findByAwb(awb);
-                    trackingId=awb.getAwbNumber();
+                    //code is commented by seema , Tracking Id is replaced by Awb. Need courier in Excel sheet upload
+//                    shippingOrder = getShippingOrderService().findByTrackingId(awb);
                 }
                 if (shippingOrder == null) {
                     messagePostUpdation += "Shipping order not found corresponding to the Ref No. @Row No." + (rowCount + 1) + "<br/>";
@@ -133,7 +126,7 @@ public class DeliveryStatusUpdateManager {
                     continue;
                 }
                 if (status.equalsIgnoreCase("DELIVERED")) {
-                    updateCourierDeliveryStatus(shippingOrder, shipment, trackingId, deliveryDateInXsl);
+                    updateCourierDeliveryStatus(shippingOrder, shipment, awb, deliveryDateInXsl);
                 }
             }
         } catch (Exception e) {
@@ -179,6 +172,7 @@ public class DeliveryStatusUpdateManager {
             shippingOrderList = getAdminShippingOrderService().getShippingOrderListByCouriers(startDate, endDate, courierIdList);
             if (shippingOrderList != null && shippingOrderList.size() > 0) {
                 for (ShippingOrder shippingOrderInList : shippingOrderList) {
+
                     trackingId = shippingOrderInList.getShipment().getAwb().getAwbNumber();
                     try {
                         ChhotuCourierDelivery chhotuCourierDelivery = courierStatusUpdateHelper.updateDeliveryStatusChhotu(trackingId);
@@ -343,7 +337,7 @@ public class DeliveryStatusUpdateManager {
         }
         return order_gateway_id;
     }
-    
+
     public Date getFormattedDeliveryDate(String deliveryDate) {
         Date formattedDate = null;
         if (deliveryDate != null) {

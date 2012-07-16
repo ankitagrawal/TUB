@@ -19,16 +19,11 @@ public interface AwbService {
 
     public Awb find(Long id);
 
-    public List<Awb>  getUnusedAwbForCourierByWarehouseAndCod(Courier courier, Warehouse warehouse, Boolean cod);
 
-    public Awb findByCourierWarehouseCodAwbnumber(Courier courier, Warehouse warehouse, Boolean cod, String awbNumber);
+    public List<Awb> getAvailableAwbForCourierByWarehouseCodStatus(Courier courier, String awbNumber, Warehouse warehouse, Boolean cod, AwbStatus awbStatus);
 
-     public  List<Awb> getAvailableAwbForCourierByWarehouseCodStatus(Courier courier, Warehouse warehouse, Boolean cod, AwbStatus awbStatus);
-
-    public List<Awb> getUsedAwb(String AwbNumber);
 
     public Awb save(Awb awb);
 
-   public  List<Awb> getAwbByAwbNumberAndStatus(String AwbNumber,AwbStatus awbStatus);
 
 }
