@@ -1,20 +1,18 @@
 package com.hk.impl.service.catalog;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
+import com.hk.constants.core.Keys;
+import com.hk.domain.catalog.product.*;
+import com.hk.pact.service.mooga.RecommendationEngine;
 import net.sourceforge.stripes.controller.StripesFilter;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.akube.framework.dao.Page;
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.product.ProductExtraOption;
-import com.hk.domain.catalog.product.ProductGroup;
-import com.hk.domain.catalog.product.ProductImage;
-import com.hk.domain.catalog.product.ProductOption;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.catalog.product.combo.ComboProduct;
 import com.hk.pact.dao.catalog.product.ProductDao;
@@ -36,7 +34,14 @@ public class ProductServiceImpl implements ProductService {
 	@Autowired
 	private ReviewService reviewService;
 
-	public Product getProductById(String productId) {
+    @Autowired
+    private RecommendationEngine recommendationService;
+
+    @Value("#{hkEnvProps['" + Keys.Env.moogaEnabled + "']}")
+    private Boolean moogaOn;
+
+
+    public Product getProductById(String productId) {
 		return getProductDAO().getProductById(productId);
 	}
 
@@ -203,4 +208,75 @@ public class ProductServiceImpl implements ProductService {
 	public List<Combo> getRelatedCombos(Product product) {
 		return getComboDao().getCombos(product);
 	}
+
+    public boolean isProductOutOfStock(Product product){
+        List<ProductVariant> productVariants = product.getProductVariants();
+        boolean isOutOfStock = true;
+        for (ProductVariant pv : productVariants){
+            if (!pv.getOutOfStock()){
+                isOutOfStock = false;
+                break;
+            }
+        }
+        return isOutOfStock;
+    }
+
+    public Map<String, List<String>> getRecommendedProducts(Product findProduct){
+        List<String> pvIdList = recommendationService.getRecommendedProducts(findProduct.getId());
+        return getRecommendedProducts(findProduct,pvIdList );
+    }
+
+    public Map<String, List<String>> getRelatedMoogaProducts(Product findProduct){
+        List<String> categories = new ArrayList<String>();
+        categories.add(findProduct.getPrimaryCategory().getName());
+        categories.add(findProduct.getSecondaryCategory().getName());
+        List<String> pvIdList = recommendationService.getRelatedProducts(findProduct.getId(), categories);
+        return getRecommendedProducts(findProduct,pvIdList );
+    }
+
+    public Map<String, List<String>> getRecommendedProducts(Product findProduct, List<String> pvIdList){
+        Map<String, List<String>> productsResult = new HashMap<String, List<String>>();
+        List<String> productsList = new ArrayList<String>();
+        Set<String> products = new HashSet<String>();
+        String source = "";
+        if (moogaOn){
+
+            Iterator it = pvIdList.iterator();
+            int productCount = 0;
+            source = "MOOGA";
+            while (it.hasNext()) {
+                Product product = productDAO.getProductById((String)it.next());
+                if (isProductValid(product)){
+                    products.add(product.getId());
+                    ++productCount;
+                }
+            }
+        }
+
+        if (!moogaOn || (products.size() < 6) ){
+            List<Product> productList = getProductDAO().getProductById(findProduct.getId()).getRelatedProducts();
+            for (Product product : productList){
+                if (isProductValid(product)){
+                    products.add(product.getId());
+                }
+            }
+            source = "DB";
+        }
+        for (String product : products){
+            productsList.add(product);
+        }
+        productsResult.put(source, productsList);
+        return productsResult;
+    }
+
+    private boolean isProductValid(Product product){
+        boolean isDeleted = product.isDeleted() == null ? false : product.isDeleted();
+        boolean isHidden = product.isHidden() == null ? false : product.isHidden();
+        boolean isGoogleAdDisallowed = product.isGoogleAdDisallowed() == null ? false : product.isGoogleAdDisallowed();
+        if ((product != null) && !isDeleted
+                && !isGoogleAdDisallowed && !isHidden && !isProductOutOfStock(product)){
+            return  true;
+        }
+        return false;
+    }
 }

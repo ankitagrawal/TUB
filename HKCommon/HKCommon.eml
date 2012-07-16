@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component>
+	<contentEntry url="file://$MODULE_DIR$"/>
+	<lib name="barcode4j.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/barcode/barcode4j.jar!/"/>
+	</lib>
+	<lib name="commons-beanutils.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/commons/commons-beanutils.jar!/"/>
+	</lib>
+	<lib name="commons-codec-1.4.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/commons/commons-codec-1.4.jar!/"/>
+	</lib>
+	<lib name="commons-collections-3.1.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/commons/commons-collections-3.1.jar!/"/>
+	</lib>
+	<lib name="commons-collections-3.2.1.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/commons/commons-collections-3.2.1.jar!/"/>
+	</lib>
+	<lib name="commons-email-1.1.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/commons/commons-email-1.1.jar!/"/>
+	</lib>
+	<lib name="commons-fileupload-1.2.1.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/commons/commons-fileupload-1.2.1.jar!/"/>
+	</lib>
+	<lib name="commons-httpclient-3.0.1.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/commons/commons-httpclient-3.0.1.jar!/"/>
+	</lib>
+	<lib name="commons-io-1.4.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/commons/commons-io-1.4.jar!/"/>
+	</lib>
+	<lib name="commons-lang-2.1.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/commons/commons-lang-2.1.jar!/"/>
+	</lib>
+	<lib name="xml-apis-ext.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/xml/xml-apis-ext.jar!/"/>
+	</lib>
+	<lib name="facebook-java-api-3.0.2.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/facebook/facebook-java-api-3.0.2.jar!/"/>
+	</lib>
+	<lib name="facebook-java-api-annotation-processor-3.0.2.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/facebook/facebook-java-api-annotation-processor-3.0.2.jar!/"/>
+	</lib>
+	<lib name="facebook-java-api-schema-3.0.2.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/facebook/facebook-java-api-schema-3.0.2.jar!/"/>
+	</lib>
+	<lib name="restfb-1.6.8.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/facebook/restfb-1.6.8.jar!/"/>
+	</lib>
+	<lib name="freemarker.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/freemarker/freemarker.jar!/"/>
+	</lib>
+	<lib name="beanlib-hibernate-5.0.2beta.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/hibernate/beanlib-hibernate-5.0.2beta.jar!/"/>
+	</lib>
+	<lib name="hibernate-core-3.3.1.GA.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/hibernate/hibernate-core-3.3.1.GA.jar!/"/>
+	</lib>
+	<lib name="hibernate-validator-4.0.2.GA.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/hibernate/hibernate-validator-4.0.2.GA.jar!/"/>
+	</lib>
+	<lib name="scannotation-1.0.3.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/hibernate/scannotation-1.0.3.jar!/"/>
+	</lib>
+	<lib name="httpclient-4.0.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/http/httpclient-4.0.jar!/"/>
+	</lib>
+	<lib name="httpcore-4.0.1.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/http/httpcore-4.0.1.jar!/"/>
+	</lib>
+	<lib name="httpmime-4.0.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/http/httpmime-4.0.jar!/"/>
+	</lib>
+	<lib name="itext-1.4.8.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/itext/itext-1.4.8.jar!/"/>
+	</lib>
+	<lib name="json_simple-1.1.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/json/json_simple-1.1.jar!/"/>
+	</lib>
+	<lib name="json-20070829.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/json/json-20070829.jar!/"/>
+	</lib>
+	<lib name="json-lib-2.3.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/json/json-lib-2.3.jar!/"/>
+	</lib>
+	<lib name="xercesImpl-2.9.1.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/xml/xercesImpl-2.9.1.jar!/"/>
+	</lib>
+	<lib name="xml-apis.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/xml/xml-apis.jar!/"/>
+	</lib>
+	<lib name="activation.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/activation.jar!/"/>
+	</lib>
+	<lib name="antisamy-bin.1.3.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/antisamy-bin.1.3.jar!/"/>
+	</lib>
+	<lib name="antlr-2.7.6.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/antlr-2.7.6.jar!/"/>
+	</lib>
+	<lib name="apache-mime4j-0.6.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/apache-mime4j-0.6.jar!/"/>
+	</lib>
+	<lib name="backport-util-concurrent.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/backport-util-concurrent.jar!/"/>
+	</lib>
+	<lib name="beanlib-5.0.2beta.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/beanlib-5.0.2beta.jar!/"/>
+	</lib>
+	<lib name="beanlib-joda-5.0.2beta.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/beanlib-joda-5.0.2beta.jar!/"/>
+	</lib>
+	<lib name="cglib-nodep-2.2.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/cglib-nodep-2.2.jar!/"/>
+	</lib>
+	<lib name="clibwrapper_jiio.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/clibwrapper_jiio.jar!/"/>
+	</lib>
+	<lib name="core-renderer-R8pre2.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/core-renderer-R8pre2.jar!/"/>
+	</lib>
+	<lib name="cos.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/cos.jar!/"/>
+	</lib>
+	<lib name="dom4j-1.6.1.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/dom4j-1.6.1.jar!/"/>
+	</lib>
+	<lib name="gson-1.4.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/gson-1.4.jar!/"/>
+	</lib>
+	<lib name="jai_codec.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/jai_codec.jar!/"/>
+	</lib>
+	<lib name="jai_core.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/jai_core.jar!/"/>
+	</lib>
+	<lib name="jai_imageio.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/jai_imageio.jar!/"/>
+	</lib>
+	<lib name="javassist-3.9.0.GA.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/javassist-3.9.0.GA.jar!/"/>
+	</lib>
+	<lib name="java-xmlbuilder-0.4.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/java-xmlbuilder-0.4.jar!/"/>
+	</lib>
+	<lib name="jaxen-1.1.1.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/jaxen-1.1.1.jar!/"/>
+	</lib>
+	<lib name="jcip-annotations-1.0.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/jcip-annotations-1.0.jar!/"/>
+	</lib>
+	<lib name="jcl-over-slf4j-1.5.10.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/jcl-over-slf4j-1.5.10.jar!/"/>
+	</lib>
+	<lib name="jcommon-1.0.16.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/jcommon-1.0.16.jar!/"/>
+	</lib>
+	<lib name="jets3t-0.8.1.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/jets3t-0.8.1.jar!/"/>
+	</lib>
+	<lib name="jfreechart-1.0.13.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/jfreechart-1.0.13.jar!/"/>
+	</lib>
+	<lib name="joda-time-1.6.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/joda-time-1.6.jar!/"/>
+	</lib>
+	<lib name="jsoup-1.6.1.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/jsoup-1.6.1.jar!/"/>
+	</lib>
+	<lib name="jstl.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/jstl.jar!/"/>
+	</lib>
+	<lib name="lambdaj-2.0-with-dependencies.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/lambdaj-2.0-with-dependencies.jar!/"/>
+	</lib>
+	<lib name="mail.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/mail.jar!/"/>
+	</lib>
+	<lib name="mediautil-1.0.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/mediautil-1.0.jar!/"/>
+	</lib>
+	<lib name="mlibwrapper_jai.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/mlibwrapper_jai.jar!/"/>
+	</lib>
+	<lib name="nekohtml.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/nekohtml.jar!/"/>
+	</lib>
+	<lib name="openid4java-0.9.5.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/openid4java-0.9.5.jar!/"/>
+	</lib>
+	<lib name="poi-3.6-20091214.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/poi-3.6-20091214.jar!/"/>
+	</lib>
+	<lib name="quartz-all-1.6.6.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/quartz-all-1.6.6.jar!/"/>
+	</lib>
+	<lib name="recaptcha4j-0.0.7.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/recaptcha4j-0.0.7.jar!/"/>
+	</lib>
+	<lib name="sanselan-0.97-incubator.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/sanselan-0.97-incubator.jar!/"/>
+	</lib>
+	<lib name="shiro-all-1.0-incubating-SNAPSHOT.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/shiro-all-1.0-incubating-SNAPSHOT.jar!/"/>
+	</lib>
+	<lib name="standard.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/standard.jar!/"/>
+	</lib>
+	<lib name="tagsoup-1.2.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/tagsoup-1.2.jar!/"/>
+	</lib>
+	<lib name="TechProUtil.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/TechProUtil.jar!/"/>
+	</lib>
+	<lib name="log4j-1.2.13.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/logger/log4j-1.2.13.jar!/"/>
+	</lib>
+	<lib name="slf4j-api-1.5.10.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/logger/slf4j-api-1.5.10.jar!/"/>
+	</lib>
+	<lib name="slf4j-log4j12-1.5.10.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/logger/slf4j-log4j12-1.5.10.jar!/"/>
+	</lib>
+	<lib name="mysql-connector-java-5.1.10-bin.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/mysql/mysql-connector-java-5.1.10-bin.jar!/"/>
+	</lib>
+	<lib name="jackson-core-lgpl-1.4.2.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/rest/jackson-core-lgpl-1.4.2.jar!/"/>
+	</lib>
+	<lib name="jackson-jaxrs-1.4.2.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/rest/jackson-jaxrs-1.4.2.jar!/"/>
+	</lib>
+	<lib name="jackson-mapper-lgpl-1.4.2.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/rest/jackson-mapper-lgpl-1.4.2.jar!/"/>
+	</lib>
+	<lib name="jaxrs-api-1.1.GA.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/rest/jaxrs-api-1.1.GA.jar!/"/>
+	</lib>
+	<lib name="jaxrs-api-2.3.0.GA.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/rest/jaxrs-api-2.3.0.GA.jar!/"/>
+	</lib>
+	<lib name="resteasy-guice-2.3.0.GA.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/rest/resteasy-guice-2.3.0.GA.jar!/"/>
+	</lib>
+	<lib name="resteasy-jackson-provider-1.1.GA.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/rest/resteasy-jackson-provider-1.1.GA.jar!/"/>
+	</lib>
+	<lib name="resteasy-jaxb-provider-1.1.GA.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/rest/resteasy-jaxb-provider-1.1.GA.jar!/"/>
+	</lib>
+	<lib name="resteasy-jaxrs-1.1.GA.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/rest/resteasy-jaxrs-1.1.GA.jar!/"/>
+	</lib>
+	<lib name="resteasy-jaxrs-2.3.0.GA.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/rest/resteasy-jaxrs-2.3.0.GA.jar!/"/>
+	</lib>
+	<lib name="resteasy-multipart-provider-1.1.GA.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/rest/resteasy-multipart-provider-1.1.GA.jar!/"/>
+	</lib>
+	<lib name="resteasy-spring-1.1.GA.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/rest/resteasy-spring-1.1.GA.jar!/"/>
+	</lib>
+	<lib name="apache-solr-solrj-3.3.0.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/solr/apache-solr-solrj-3.3.0.jar!/"/>
+	</lib>
+	<lib name="lucene-analyzers-2.4.1.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/solr/lucene-analyzers-2.4.1.jar!/"/>
+	</lib>
+	<lib name="lucene-core-2.4.1.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/solr/lucene-core-2.4.1.jar!/"/>
+	</lib>
+	<lib name="lucene-spellchecker-2.4.1.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/solr/lucene-spellchecker-2.4.1.jar!/"/>
+	</lib>
+	<lib name="solr-lucene-analyzers-1.3.0.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/solr/solr-lucene-analyzers-1.3.0.jar!/"/>
+	</lib>
+	<lib name="stripes-1.5.3-patched.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/stripes/stripes-1.5.3-patched.jar!/"/>
+	</lib>
+	<lib name="stripes-reload.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/stripes/stripes-reload.jar!/"/>
+	</lib>
+	<lib name="stripesstuff-0.1.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/stripes/stripesstuff-0.1.jar!/"/>
+	</lib>
+	<lib name="bsh-2.0b1.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/dependencies/bsh-2.0b1.jar!/"/>
+	</lib>
+	<lib name="dbunit-2.4.5.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/dependencies/dbunit-2.4.5.jar!/"/>
+	</lib>
+	<lib name="freemarker.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/dependencies/freemarker.jar!/"/>
+	</lib>
+	<lib name="hibernate-tools.patched.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/dependencies/hibernate-tools.patched.jar!/"/>
+	</lib>
+	<lib name="javaee.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/dependencies/javaee.jar!/"/>
+	</lib>
+	<lib name="jtidy-r8-20060801.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/dependencies/jtidy-r8-20060801.jar!/"/>
+	</lib>
+	<lib name="junit-4.9b2.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/dependencies/junit-4.9b2.jar!/"/>
+	</lib>
+	<lib name="liquibase-2.0.1.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/dependencies/liquibase-2.0.1.jar!/"/>
+	</lib>
+	<lib name="modify-column-2.0.0.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/dependencies/modify-column-2.0.0.jar!/"/>
+	</lib>
+	<lib name="hibernate-annotations-3.4.0.GA.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/hibernate/hibernate-annotations-3.4.0.GA.jar!/"/>
+	</lib>
+	<lib name="aopalliance-1.0.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/spring/aopalliance-1.0.jar!/"/>
+	</lib>
+	<lib name="jta-1.1.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/spring/jta-1.1.jar!/"/>
+	</lib>
+	<lib name="org.springframework.aop-3.0.2.RELEASE.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/spring/org.springframework.aop-3.0.2.RELEASE.jar!/"/>
+	</lib>
+	<lib name="org.springframework.asm-3.0.2.RELEASE.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/spring/org.springframework.asm-3.0.2.RELEASE.jar!/"/>
+	</lib>
+	<lib name="org.springframework.aspects-3.0.2.RELEASE.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/spring/org.springframework.aspects-3.0.2.RELEASE.jar!/"/>
+	</lib>
+	<lib name="org.springframework.beans-3.0.2.RELEASE.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/spring/org.springframework.beans-3.0.2.RELEASE.jar!/"/>
+	</lib>
+	<lib name="org.springframework.context.support-3.0.2.RELEASE.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/spring/org.springframework.context.support-3.0.2.RELEASE.jar!/"/>
+	</lib>
+	<lib name="org.springframework.context-3.0.2.RELEASE.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/spring/org.springframework.context-3.0.2.RELEASE.jar!/"/>
+	</lib>
+	<lib name="org.springframework.core-3.0.2.RELEASE.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/spring/org.springframework.core-3.0.2.RELEASE.jar!/"/>
+	</lib>
+	<lib name="org.springframework.expression-3.0.2.RELEASE.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/spring/org.springframework.expression-3.0.2.RELEASE.jar!/"/>
+	</lib>
+	<lib name="org.springframework.instrument.tomcat-3.0.2.RELEASE.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/spring/org.springframework.instrument.tomcat-3.0.2.RELEASE.jar!/"/>
+	</lib>
+	<lib name="org.springframework.instrument-3.0.2.RELEASE.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/spring/org.springframework.instrument-3.0.2.RELEASE.jar!/"/>
+	</lib>
+	<lib name="org.springframework.jdbc-3.0.2.RELEASE.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/spring/org.springframework.jdbc-3.0.2.RELEASE.jar!/"/>
+	</lib>
+	<lib name="org.springframework.jms-3.0.2.RELEASE.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/spring/org.springframework.jms-3.0.2.RELEASE.jar!/"/>
+	</lib>
+	<lib name="org.springframework.orm-3.0.2.RELEASE.jar" scope="COMPILE">
+		<srcroot url="file://D:/source_ref/userrules/UserRules/libraries/spring/org.springframework.orm-sources-3.0.2.RELEASE.jar"/>
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/spring/org.springframework.orm-3.0.2.RELEASE.jar!/"/>
+	</lib>
+	<lib name="org.springframework.transaction-3.0.2.RELEASE.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/spring/org.springframework.transaction-3.0.2.RELEASE.jar!/"/>
+	</lib>
+	<lib name="org.springframework.web.servlet-3.0.2.RELEASE.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/spring/org.springframework.web.servlet-3.0.2.RELEASE.jar!/"/>
+	</lib>
+	<lib name="org.springframework.web-3.0.2.RELEASE.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/spring/org.springframework.web-3.0.2.RELEASE.jar!/"/>
+	</lib>
+	<lib name="metadata-extractor-2.5.0-RC1.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/metadata-extractor-2.5.0-RC1.jar!/"/>
+	</lib>
+	<lib name="google-collect-1.0-rc2.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/google-collect-1.0-rc2.jar!/"/>
+	</lib>
+	<lib name="testng-5.8-jdk15.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/thirdParty/testng-5.8-jdk15.jar!/"/>
+	</lib>
+	<lib name="freemarker.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/HKCommon/lib/freemarker/freemarker.jar!/"/>
+	</lib>
+	<lib name="spring-data-redis-1.0.0.RELEASE.jar" scope="COMPILE">
+		<srcroot url="jar://C:/redis-2.4.5-win32-win64/64bit/spring-data-redis-1.0.0.RELEASE-sources.jar!/"/>
+	</lib>
+</component>
