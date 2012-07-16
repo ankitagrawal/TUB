@@ -1,4 +1,4 @@
-package com.hk.web.action.core.payment.gateway.test;
+package com.hk.web.action.core.payment.gateway;
 
 import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.akube.framework.stripes.action.BasePaymentGatewaySendReceiveAction;

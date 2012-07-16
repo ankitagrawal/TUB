@@ -99,7 +99,7 @@ public class ImageUtils {
    * @return
    */
   public static ImageDimensionDTO createThumbnail(String filePath, String dest, int thumbMaxSize, float quality, boolean returnInfo, boolean unsharp, float unsharpQty) {
-
+    logger.debug("creating thumbnail for image");
     ImageDimensionDTO imageDimensionDTO = new ImageDimensionDTO();
 
     File srcFile = new File(filePath);
@@ -112,6 +112,7 @@ public class ImageUtils {
     if (unsharp)
       scaledImage = UnsharpMaskDescriptor.create(scaledImage, null, unsharpQty, null);
 
+    logger.debug("saving image");
     saveImage(scaledImage, dest, getImageType(filePath), quality);
 
     imageDimensionDTO.setThumbnailWidth((long) scaledImage.getWidth());
