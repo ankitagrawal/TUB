@@ -9241,4 +9241,17 @@
     <changeSet author="Seema (generated)" id="1342290147965-3">
         <dropColumn columnName="tracking_id" tableName="shipment"/>
     </changeSet>
+
+
+
+
+
+
+    <changeSet author="Seema (generated)" id="1342469193763-1">
+        <addColumn tableName="shipment">
+            <column name="shipping_order_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+
+
 </databaseChangeLog>
