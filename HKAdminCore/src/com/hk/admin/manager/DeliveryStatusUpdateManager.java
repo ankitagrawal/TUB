@@ -205,6 +205,8 @@ public class DeliveryStatusUpdateManager {
             List<ShippingOrder> shippingOrderSubList = new ArrayList<ShippingOrder>();
             JsonArray jsonShipmentDataArray = new JsonArray();
             int listSize = shippingOrderList.size();
+            startIndex=0;
+            endIndex=0;
             //Map<String, Object> jsonResponseMap = new HashMap<String, Object>();
             Date delivery_date = null;
 
