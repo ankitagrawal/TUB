@@ -1,11 +1,11 @@
 package com.hk.impl.service.mooga;
 
 import com.hk.constants.core.Keys;
+import com.hk.mooga.MoogaWebServicesLocator;
+import com.hk.mooga.MoogaWebServicesSoap_PortType;
 import com.hk.pact.service.mooga.RecommendationEngine;
 import org.apache.commons.lang.StringUtils;
 import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.pact.service.mooga.MoogaWebServicesLocator;
-import com.hk.pact.service.mooga.MoogaWebServicesSoap_PortType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

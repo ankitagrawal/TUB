@@ -163,6 +163,7 @@
 		<copy todir="${project.dist.dir}/WEB-INF/lib" file="${project.core.dir}/dist/hk-core.jar" />
 		<copy todir="${project.dist.dir}/WEB-INF/lib" file="${project.admin.core.dir}/dist/hk-admin-core.jar" />
 		<copy todir="${project.dist.dir}/WEB-INF/lib" file="${project.report.dir}/dist/hk-report.jar" />
+        <copy todir="${project.dist.dir}/WEB-INF/lib" file="${project.mooga.dir}/dist/hk-mooga.jar" />
 	</target>
 
 	<target name="collect-web">
