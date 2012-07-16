@@ -58,17 +58,20 @@ public class CategoryImage implements java.io.Serializable {
 
   @Column(name = "ranking", nullable = true)
   private Long ranking;
+
   @Column(name = "link", nullable = true, length = 45)
-       private String link;
+  private String link;
 
-     public String getLink() {
-       return link;
-     }
+  @Column(name = "position", nullable = true)
+  private String position;
 
-     public void setLink(String link) {
-       this.link = link;
-     }
-  
+  public String getLink() {
+    return link;
+  }
+
+  public void setLink(String link) {
+    this.link = link;
+  }
 
   public Long getRanking() {
     return ranking;
@@ -142,6 +145,13 @@ public class CategoryImage implements java.io.Serializable {
     this.uploaded = uploaded;
   }
 
+  public String getPosition() {
+    return position;
+  }
+
+  public void setPosition(String position) {
+    this.position = position;
+  }
 
   @Override
   public String toString() {

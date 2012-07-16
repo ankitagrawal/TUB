@@ -6,7 +6,7 @@
 <s:useActionBean beanclass="com.hk.web.action.admin.catalog.product.PendingProductReviewAction" event="pre"
                  var="rpBean"/>
 
-<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Pending Reward Points Queue">
+<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Pending Reviews Queue">
 
   <s:layout-component name="content">
 

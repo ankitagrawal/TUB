@@ -4,6 +4,7 @@
 <%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -289,7 +290,7 @@
     <c:if test="${!empty pa.userReviews}">
 
       <div style="float:right;margin-right:5px;margin-bottom:3px;">
-        <a href='#user_reviews' style="border-bottom:0px;">
+        <a class="top_link" href='#user_reviews' style="border-bottom:0px;">
             ${pa.totalReviews} Reviews &darr;
         </a>
 
@@ -317,26 +318,16 @@
         Technical Specs &darr;
       </a>
     </c:if>
-      <%--<a class='top_link' href='#link3'>
-            FAQs
-          </a>
-          <a class='top_link' href='#link4'>
-            User Reviews
-          </a>
-          <a class='top_link' href='#link5'>
-            Payment Options
-          </a>
-        <a class='top_link' href='#related_products'>
-          Related Products &darr;
-        </a>
-      </div>
-
-      <%--<c:if test="${product.id == 'BAB152'}">
-        <p>
-          <a href="${pageContext.request.contextPath}/partners/pediasure.jsp" class="pediasureCounselling" target="_blank">Free
-            Nutrition Counseling </a>
-        </p>
-      </c:if>--%>
+	<c:if test="${!empty pa.relatedCombos}">
+      <a class='top_link' href='#related_combos' style="font-weight:bold;">
+        Special Offers &darr;
+      </a>
+    </c:if>
+	  <c:if test="${!empty product.relatedProducts}">
+      <a class='top_link' href='#related_products'>
+        Related Products &darr;
+      </a>
+    </c:if>
   </div>
   <c:if test="${hk:isNotBlank(product.overview)}">
     <p class="overview">
@@ -482,10 +473,23 @@
       </s:link>
     </div>
   </shiro:hasPermission>
+	<c:if test="${!empty pa.relatedCombos}">
+		<div class='products content' id="related_combos">
+			<h4>
+				Special Offers on ${product.name}
+			</h4>
+			<c:forEach items="${pa.relatedCombos}" var="relatedCombo">
+				<s:layout-render name="/layouts/embed/_productThumb.jsp" productId="${relatedCombo.id}"/>
+			</c:forEach>
+
+			<div class="floatfix"></div>
+			<a class='go_to_top' href='#top'>go to top &uarr;</a>
+		</div>
+	</c:if>
   <c:if test="${!empty product.relatedProducts}">
     <div class='products content' id="related_products">
       <h4>
-        People who bought this also bought these products
+        People who bought ${product.name} also bought these products
       </h4>
       <c:forEach items="${product.relatedProducts}" var="relatedProduct">
         <c:if test="${!relatedProduct.deleted}">
