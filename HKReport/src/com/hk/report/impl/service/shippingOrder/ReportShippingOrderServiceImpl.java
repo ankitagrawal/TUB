@@ -531,7 +531,7 @@ public class ReportShippingOrderServiceImpl implements ReportShippingOrderServic
             if (orderIds != null && orderIds.size() > 0) {
                 placedOrders.addAll(orderIds);
                 List<Long> tpslOrderList = getReportOrderDao().getOrdersByPaymentModeAndStatus(orderIds,
-                        Arrays.asList(EnumPaymentMode.TECHPROCESS.getId(), EnumPaymentMode.CITRUS.getId()), Arrays.asList(EnumPaymentStatus.SUCCESS.getId()));
+                        EnumPaymentMode.getPrePaidPaymentModes(), Arrays.asList(EnumPaymentStatus.SUCCESS.getId()));
                 tpslOrders.addAll(tpslOrderList);
                 List<Long> codOrderList = getReportOrderDao().getOrdersByPaymentModeAndStatus(orderIds, Arrays.asList(EnumPaymentMode.COD.getId()),
                         Arrays.asList(EnumPaymentStatus.AUTHORIZATION_PENDING.getId(), EnumPaymentStatus.ON_DELIVERY.getId()));

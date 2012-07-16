@@ -14,7 +14,6 @@
 %>
 <c:set var="paymentModeId_DefaultGateway" value="<%=defaultGateway%>"/>
 <c:set var="cashBackPercentage" value="<%=cashBackPercentage%>"/>
-<c:set var="paymentModeTechProcess" value="<%=EnumPaymentMode.TECHPROCESS.getId()%>"/>
 
 <s:useActionBean beanclass="com.hk.web.action.core.payment.PaymentSuccessAction" var="actionBean"/>
 <s:layout-render name="/layouts/default.jsp" pageTitle="Payment Successful">
