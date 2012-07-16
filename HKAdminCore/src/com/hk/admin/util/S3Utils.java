@@ -1,26 +1,27 @@
 package com.hk.admin.util;
 
+import com.hk.util.HKFileUtils;
+import org.apache.commons.io.FileUtils;
 import org.jets3t.service.S3Service;
-import org.jets3t.service.ServiceException;
 import org.jets3t.service.S3ServiceException;
-import org.jets3t.service.multi.SimpleThreadedStorageService;
+import org.jets3t.service.ServiceException;
 import org.jets3t.service.acl.AccessControlList;
 import org.jets3t.service.acl.GroupGrantee;
 import org.jets3t.service.acl.Permission;
 import org.jets3t.service.impl.rest.httpclient.RestS3Service;
 import org.jets3t.service.model.S3Bucket;
 import org.jets3t.service.model.S3Object;
+import org.jets3t.service.multi.SimpleThreadedStorageService;
 import org.jets3t.service.security.AWSCredentials;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-import java.util.*;
-
-import com.hk.util.HKFileUtils;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 
 public class S3Utils {
@@ -65,7 +66,7 @@ public class S3Utils {
     S3Service s3Service = initializeConnectionParams(awsAccess, awsSecret, bucketName);
     try {
       S3Bucket s3Bucket = s3Service.getBucket(bucketName);
-      logger.info("Uploading file: " + file.getName() + " in bucket: " + bucketName + " at Amazon S3");
+      logger.debug("Uploading file: " + file.getName() + " in bucket: " + bucketName + " at Amazon S3");
 
       String contentType = HKFileUtils.getContentType(file.getAbsolutePath());
 
@@ -90,7 +91,7 @@ public class S3Utils {
     try {
       S3Service s3Service = initializeConnectionParams(awsAccess, awsSecret, bucketName);
       S3Bucket s3Bucket = s3Service.getBucket(bucketName);
-      logger.info("Uploading folder: " + folder.getName() + " in bucket: " + bucketName + " at Amazon S3");
+      logger.debug("Uploading folder: " + folder.getName() + " in bucket: " + bucketName + " at Amazon S3");
 
       List<S3Object> folderContents;
       folderContents = readFolderContents(folder, s3Service, s3Bucket);

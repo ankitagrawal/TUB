@@ -31,17 +31,21 @@ public class CartLineItemDaoImpl extends BaseDaoImpl implements CartLineItemDao 
 
     @Transactional
     public CartLineItem save(CartLineItem cartLineItem) {
-
+	   ProductVariant productVariant = cartLineItem.getProductVariant();
         if (cartLineItem.getDiscountOnHkPrice() == null) {
             cartLineItem.setDiscountOnHkPrice(0D);
         }
         if (cartLineItem.getHkPrice() == 0) {
             logger.error("Update cart Line Item hk price in dao:" + cartLineItem.getHkPrice() + ", id : " + cartLineItem.getId() + ", qty :" + cartLineItem.getQty() + ", type :"
                     + cartLineItem.getLineItemType());
-            if (cartLineItem.getProductVariant() != null) {
-                logger.error("HK price null for variant" + cartLineItem.getProductVariant().getId());
+	        if (productVariant != null) {
+                logger.error("HK price null for variant" + productVariant.getId());
             }
             logger.error("HK price null for order " + cartLineItem.getOrder());
+        }else if(productVariant != null && cartLineItem.getHkPrice() != null
+		        && cartLineItem.getHkPrice() > productVariant.getHkPrice() && cartLineItem.getCartLineItemConfig() == null ){
+	        logger.error("HK price of CLI is more than PV. Setting it as PV");
+	        cartLineItem.setHkPrice(productVariant.getHkPrice());
         }
 
         // logger.error("save cart Line Item hk price in dao:" + cartLineItem.getHkPrice() + "id : " +
@@ -51,7 +55,7 @@ public class CartLineItemDaoImpl extends BaseDaoImpl implements CartLineItemDao 
 
     @Transactional
     public void flipProductVariants(ProductVariant srcPV, ProductVariant dstPV, Order order) {
-        
+
         CartLineItem cli = (CartLineItem) findUniqueByNamedParams(" from CartLineItem cli where cli.order = :order and cli.productVariant = :srcPV ", new String[]{"order","srcPV"}, new Object[]{order,srcPV});
         cli.setProductVariant(dstPV);
         update(cli);

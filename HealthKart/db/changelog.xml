@@ -7802,9 +7802,13 @@
     <changeSet author="Ajeet (generated)" id="1341941781264-2">
         <addForeignKeyConstraint baseColumnNames="warehouse_id" baseTableName="brands_to_audit" constraintName="fk_brands_to_audit_warehouse1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="warehouse" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Tarun (generated)" id="1342085097039-1">
+    <changeSet author="Rahul (generated)" id="1342099712051-1">
+        <modifyDataType columnName="value" newDataType="VARCHAR(70)" tableName="cart_line_item_config_values"/>
+    </changeSet>
+    
+    <changeSet author="Tarun (generated)" id="1342434630676-1">
         <createTable tableName="faq">
-            <column name="id" type="INT">
+            <column autoIncrement="true" name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="question" type="MEDIUMTEXT">
@@ -7819,4 +7823,3 @@
         </createTable>
     </changeSet>
 </databaseChangeLog>
-                                
