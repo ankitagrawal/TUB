@@ -227,7 +227,14 @@ public class DeliveryStatusUpdateManager {
                             endIndex = startIndex + 10;
                         }
                         //Breaking the original list into batches of 10 or the remaining size.
+                        try{
                         shippingOrderSubList = shippingOrderList.subList(startIndex, endIndex);
+                        }
+                        catch (IllegalArgumentException iae){
+                            logger.debug("IllegalArgumentException occurred(Delhivery).strtIndx:"+startIndex+"endIndx:"+endIndex+"listIndx"+i);    
+                        }  catch (ArrayIndexOutOfBoundsException exe){
+                            logger.debug("ArrayIndexOutOfBoundsException occurred(Delhivery).strtIndx:"+startIndex+"endIndx:"+endIndex+"listIndx"+i);
+                        }
                         trackingId = getAppendedTrackingIdsString(shippingOrderSubList);
                         try {
                             if (trackingId != null) {
