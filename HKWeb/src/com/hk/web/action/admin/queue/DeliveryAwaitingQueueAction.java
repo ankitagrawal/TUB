@@ -41,33 +41,33 @@ import com.hk.web.action.error.AdminPermissionAction;
 @Component
 public class DeliveryAwaitingQueueAction extends BasePaginatedAction {
     @Autowired
-    private OrderService               orderService;
+    private OrderService orderService;
     @Autowired
-    private ShippingOrderService       shippingOrderService;
+    private ShippingOrderService shippingOrderService;
     @Autowired
-    private AdminShippingOrderService  adminShippingOrderService;
+    private AdminShippingOrderService adminShippingOrderService;
     @Autowired
     private ShippingOrderStatusService shippingOrderStatusService;
     @Autowired
     AwbService awbService;
 
-    Page                               shippingOrderPage;
+    Page shippingOrderPage;
     @Autowired
-    CourierService                     courierService;
+    CourierService courierService;
 
-    List<ShippingOrder>                shippingOrderList = new ArrayList<ShippingOrder>();
+    List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>();
 
-    private Long                       orderId;
-    private String                     gatewayOrderId;
-    private Courier                    courier;
-    private Date                       deliveryDate;
-    Date                               startDate;
-    Date                               endDate;
-    private String                     trackingId;
+    private Long orderId;
+    private String gatewayOrderId;
+    private Courier courier;
+    private Date deliveryDate;
+    Date startDate;
+    Date endDate;
+    private String trackingId;
 
     @DontValidate
     @DefaultHandler
-    @Secure(hasAnyPermissions = { PermissionConstants.VIEW_DELIVERY_QUEUE }, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = {PermissionConstants.VIEW_DELIVERY_QUEUE}, authActionBean = AdminPermissionAction.class)
     public Resolution pre() {
 
         List<Courier> courierList = new ArrayList<Courier>();
@@ -82,9 +82,10 @@ public class DeliveryAwaitingQueueAction extends BasePaginatedAction {
         shippingOrderSearchCriteria.setOrderId(orderId).setGatewayOrderId(gatewayOrderId);
         shippingOrderSearchCriteria.setCourierList(courierList);
         //yet to confirm  here tracking id is not required---->>
-       if(trackingId != null){
-         List<Awb> awbList= awbService.getAvailableAwbForCourierByWarehouseCodStatus(courier,trackingId,null,null, EnumAwbStatus.Used.getAsAwbStatus());
-        shippingOrderSearchCriteria.setAwb(awbList.get(0));       }
+        if (trackingId != null) {
+            List<Awb> awbList = awbService.getAvailableAwbForCourierByWarehouseCodStatus(courier, trackingId, null, null, EnumAwbStatus.Used.getAsAwbStatus());
+            shippingOrderSearchCriteria.setAwb(awbList.get(0));
+        }
 
         shippingOrderPage = getShippingOrderService().searchShippingOrders(shippingOrderSearchCriteria, getPageNo(), getPerPage());
         if (shippingOrderPage != null) {
@@ -94,7 +95,7 @@ public class DeliveryAwaitingQueueAction extends BasePaginatedAction {
         return new ForwardResolution("/pages/admin/deliveryAwaitingQueue.jsp");
     }
 
-    @Secure(hasAnyPermissions = { PermissionConstants.VIEW_DELIVERY_QUEUE }, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = {PermissionConstants.VIEW_DELIVERY_QUEUE}, authActionBean = AdminPermissionAction.class)
     public Resolution searchOrders() {
 
         List<Courier> courierList = new ArrayList<Courier>();
@@ -117,7 +118,7 @@ public class DeliveryAwaitingQueueAction extends BasePaginatedAction {
         return new ForwardResolution("/pages/admin/deliveryAwaitingQueue.jsp");
     }
 
-    @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_DELIVERY_QUEUE }, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_DELIVERY_QUEUE}, authActionBean = AdminPermissionAction.class)
     public Resolution markShippingOrderAsDelivered() {
         if (shippingOrderList != null && !shippingOrderList.isEmpty()) {
             for (ShippingOrder shippingOrder : shippingOrderList) {

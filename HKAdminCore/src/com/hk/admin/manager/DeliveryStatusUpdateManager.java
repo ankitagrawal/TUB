@@ -46,28 +46,28 @@ import org.jdom.Element;
 @Component
 public class DeliveryStatusUpdateManager {
 
-    private static Logger       logger                        = LoggerFactory.getLogger(DeliveryStatusUpdateManager.class);
+    private static Logger logger = LoggerFactory.getLogger(DeliveryStatusUpdateManager.class);
 
-    ShippingOrder               shippingOrder;
-    int                         orderDeliveryCount            = 0;
-    int                         ordersDelivered               = 0;
-    String                      trackingId                    = "";
-    String                      courierName                   = "Delivered by ";
-    public static final int     digitsInGatewayId             = 5;
-    List<ShippingOrder>         shippingOrderList             = new ArrayList<ShippingOrder>();
-    List<String>                unmodifiedTrackingIds         = null;
-    List<Long>                  courierIdList                 = null;
+    ShippingOrder shippingOrder;
+    int orderDeliveryCount = 0;
+    int ordersDelivered = 0;
+    String trackingId = "";
+    String courierName = "Delivered by ";
+    public static final int digitsInGatewayId = 5;
+    List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>();
+    List<String> unmodifiedTrackingIds = null;
+    List<Long> courierIdList = null;
 
-    LineItemDao                 lineItemDaoProvider;
-
-    @Autowired
-    AdminShippingOrderService   adminShippingOrderService;
+    LineItemDao lineItemDaoProvider;
 
     @Autowired
-    ShippingOrderService        shippingOrderService;
+    AdminShippingOrderService adminShippingOrderService;
 
     @Autowired
-    CourierStatusUpdateHelper   courierStatusUpdateHelper;
+    ShippingOrderService shippingOrderService;
+
+    @Autowired
+    CourierStatusUpdateHelper courierStatusUpdateHelper;
 
     public String updateDeliveryStatusDTDC(File excelFile) throws Exception {
         String messagePostUpdation = "";
@@ -254,7 +254,7 @@ public class DeliveryStatusUpdateManager {
                             unmodifiedTrackingIds.add(trackingId);
                         }
                     } catch (Exception ex) {
-                        logger.debug(CourierConstants.EXCEPTION +"(Bluedart)"+ trackingId);
+                        logger.debug(CourierConstants.EXCEPTION + "(Bluedart)" + trackingId);
                         unmodifiedTrackingIds.add(trackingId);
                         continue;
                     }
@@ -326,7 +326,7 @@ public class DeliveryStatusUpdateManager {
         return orderDeliveryCount;
     }
 
-    public List<String> getUnmodifiedTrackingIds(){
+    public List<String> getUnmodifiedTrackingIds() {
         return unmodifiedTrackingIds;
     }
 
