@@ -240,10 +240,8 @@ public class ProductServiceImpl implements ProductService {
         Set<String> products = new HashSet<String>();
         String source = "";
         if (moogaOn){
-
             Iterator it = pvIdList.iterator();
             int productCount = 0;
-            source = "MOOGA";
             while (it.hasNext()) {
                 Product product = productDAO.getProductById((String)it.next());
                 if ((product != null) && isProductValid(product)){
@@ -251,16 +249,22 @@ public class ProductServiceImpl implements ProductService {
                     ++productCount;
                 }
             }
+	        if(products.size() > 0){
+		        source += "MOOGA";
+	        }
         }
 
         if (!moogaOn || (products.size() < 6) ){
+	        if(products.size() > 0){
+		        source += " + ";
+	        }
             List<Product> productList = getProductDAO().getProductById(findProduct.getId()).getRelatedProducts();
             for (Product product : productList){
                 if (isProductValid(product)){
                     products.add(product.getId());
                 }
             }
-            source = "DB";
+            source += "DB";
         }
         for (String product : products){
             productsList.add(product);

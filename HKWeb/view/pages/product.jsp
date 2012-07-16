@@ -497,8 +497,8 @@
         <c:forEach items="${hk:getRecommendedProducts(product)}" var="relatedProduct">
             <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_CATALOG%>">
                 <h6 style="color: red" title="Recommended Product Source">
-                    source = ${relatedProduct.key}
-                    products =
+                    Source = ${relatedProduct.key};
+                    Products =
                     <c:forEach var="product" items="${relatedProduct.value}">
                         ${product}
                     </c:forEach>
