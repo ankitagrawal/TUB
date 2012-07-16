@@ -246,7 +246,7 @@ public class ProductServiceImpl implements ProductService {
             source = "MOOGA";
             while (it.hasNext()) {
                 Product product = productDAO.getProductById((String)it.next());
-                if (isProductValid(product)){
+                if ((product != null) && isProductValid(product)){
                     products.add(product.getId());
                     ++productCount;
                 }
