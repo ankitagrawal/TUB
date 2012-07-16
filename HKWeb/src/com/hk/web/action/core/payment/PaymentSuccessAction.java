@@ -127,6 +127,10 @@ public class PaymentSuccessAction extends BaseAction {
                     }
                 }
 
+                for (ShippingOrder shippingOrder : shippingOrders) {
+
+                }
+
             }
 
             //Check Inventory health of order lineitems

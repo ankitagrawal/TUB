@@ -127,7 +127,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
             if (pinCode != null) {
                 boolean isCod = shippingOrder.isCOD();
                 availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod);
-                suggestedCourier = courierService.getDefaultCourierByPincodeAndWarehouse(pinCode, isCod);
+                suggestedCourier = courierService.getDefaultCourierByPincodeForLoggedInWarehouse(pinCode, isCod);
 /*
               List<Awb> suggestedAwbList= awbDao.getAvailableAwbForCourierByWarehouseAndCod(suggestedCourier,userService.getWarehouseForLoggedInUser(),isCod);
               if(suggestedAwbList != null && suggestedAwbList.size() >0){

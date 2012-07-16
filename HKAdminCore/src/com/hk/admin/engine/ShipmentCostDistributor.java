@@ -6,7 +6,7 @@ import com.hk.domain.shippingOrder.LineItem;
 
 /**
  * Created with IntelliJ IDEA.
- * User: user
+ * User: Pratham
  * Date: 6/29/12
  * Time: 4:45 PM
  * To change this template use File | Settings | File Templates.
@@ -36,7 +36,7 @@ public class ShipmentCostDistributor {
 
                for (LineItem lineItem : shippingOrder.getLineItems()) {
                    Double skuWeight = lineItem.getSku().getProductVariant().getWeight();
-                   skuWeight = skuWeight != null ? skuWeight : 125D;
+                   skuWeight = skuWeight == null || skuWeight == 0D ? 125D : skuWeight;
 
                    Double estLineItemShipmentCost = ((skuWeight * lineItem.getQty()) / shipmentWeight) * totalShipmentCharge;
 
