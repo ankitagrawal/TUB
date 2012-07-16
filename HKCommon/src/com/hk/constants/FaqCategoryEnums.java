@@ -31,6 +31,13 @@ public class FaqCategoryEnums {
         public Long getId() {
             return id;
         }
+
+        public static List<String> getAll(){
+            return Arrays.asList(EnumFaqPrimaryCateogry.Nutrition.getName(),
+                    EnumFaqPrimaryCateogry.WeightManagement.getName(),
+                    EnumFaqPrimaryCateogry.SportAndFitness.getName()
+                    );
+        }
     }
 
     public static enum EnumFaqSecondaryCateogry {
@@ -53,6 +60,12 @@ public class FaqCategoryEnums {
 
         public Long getId() {
             return id;
+        }
+
+        public static List<String> getAll(){
+            return Arrays.asList(EnumFaqSecondaryCateogry.WeightGain.getName(),
+                    EnumFaqSecondaryCateogry.WeightLoss.getName(),
+                    EnumFaqSecondaryCateogry.DietSupplements.getName());
         }
     }
 
