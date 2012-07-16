@@ -62,7 +62,7 @@ public class DeliveryStatusUpdateManager {
     int                         batchSize                     = 0;
     int                         startIndex                    = 0;
     int                         endIndex                      = 0;
-    Map<String,Object>          jsonResponseMap               = new HashMap<String,Object>();
+    //Map<String,Object>          jsonResponseMap               = new HashMap<String,Object>();
 
     LineItemDao                 lineItemDaoProvider;
 
@@ -238,7 +238,7 @@ public class DeliveryStatusUpdateManager {
                             continue;
                         }
                         if (jsonShipmentDataArray != null && jsonShipmentDataArray.size() > 0) {
-                            getJsonResponseMap(jsonShipmentDataArray);
+                            ordersDelivered=updateDelhiveryStatus(jsonShipmentDataArray);
                         }
                         i = endIndex;
                     }
@@ -250,14 +250,14 @@ public class DeliveryStatusUpdateManager {
                         jsonShipmentDataArray = courierStatusUpdateHelper.bulkUpdateDeliveryStatusDelhivery(trackingId);
                     }
                     if (jsonShipmentDataArray != null && jsonShipmentDataArray.size() > 0) {
-                        getJsonResponseMap(jsonShipmentDataArray);
+                        ordersDelivered=updateDelhiveryStatus(jsonShipmentDataArray);
                     }
                 }
-                for (Map.Entry mapObj : jsonResponseMap.entrySet()) {
+                /*for (Map.Entry mapObj : jsonResponseMap.entrySet()) {
                     shippingOrder = shippingOrderService.findByTrackingId(mapObj.getKey().toString());
                     delivery_date = (Date) mapObj.getValue();
                     ordersDelivered = updateCourierDeliveryStatus(shippingOrder, shippingOrder.getShipment(), shippingOrder.getShipment().getTrackingId(), delivery_date);
-                }
+                }*/
             }
 
 
@@ -358,10 +358,12 @@ public class DeliveryStatusUpdateManager {
         return orderDeliveryCount;
     }
 
-    private void getJsonResponseMap(JsonArray jsonShipmentDataArray) {
+    private int updateDelhiveryStatus(JsonArray jsonShipmentDataArray) {
         String deliveryStatus = null;
         String deliveryDate = null;
         Date delivery_date = null;
+        ShippingOrder shippingOrdr = null;
+
 
         //Iterating over the  jsonShipmentDataArray to extract the required values(AWB,Status,DeliveryDate) and putting
         //these into map<String,Object> ,AWB as key and  deliveryDate as value
@@ -373,10 +375,12 @@ public class DeliveryStatusUpdateManager {
                 delivery_date = getFormattedDeliveryDate(deliveryDate);
                 //if status is delivered then putting values in the map.
                 if (deliveryStatus.equalsIgnoreCase(CourierConstants.DELIVERED)) {
-                    jsonResponseMap.put(trackingId, delivery_date);
+                    shippingOrdr = shippingOrderService.findByTrackingId(trackingId);
+                    ordersDelivered=updateCourierDeliveryStatus(shippingOrdr, shippingOrdr.getShipment(), shippingOrdr.getShipment().getTrackingId(), delivery_date);
                 }
             }
         }
+        return ordersDelivered;
     }
 
     private String getAppendedTrackingIdsString(List<ShippingOrder> shippingOrderSubList) {
