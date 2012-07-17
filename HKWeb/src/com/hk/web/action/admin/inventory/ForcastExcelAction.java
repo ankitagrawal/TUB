@@ -10,10 +10,14 @@ import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.exception.ExcelBlankFieldException;
 import com.hk.web.action.admin.AdminHomeAction;
+import com.hk.impl.dao.BaseDaoImpl;
+import com.hk.rest.pact.service.DemandForcastService;
 import com.akube.framework.stripes.action.BaseAction;
 
 import java.util.Iterator;
 import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 import java.text.SimpleDateFormat;
 import java.text.DateFormat;
@@ -22,6 +26,7 @@ import java.io.File;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.slf4j.LoggerFactory;
+import org.apache.commons.lang.StringUtils;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
 
@@ -39,58 +44,69 @@ public class ForcastExcelAction extends BaseAction {
     @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String                          adminUploadsPath;
 
-      //@Validate(required = true)
+    //@Validate(required = true)
     FileBean fileBean;
+
+    @Autowired
+    DemandForcastService dfServ;
 
     @DefaultHandler
     public Resolution pre() {
            return new ForwardResolution("/pages/admin/uploadForcast.jsp");
-       }
-
+    }
 
     public void setFileBean(FileBean fileBean) {
         this.fileBean = fileBean;
     }
 
+    public DemandForcastService getDfService (){
+        return dfServ;
+    }
+
     public Resolution parse() throws Exception
-    {
-        //logger.debug("parsing Demand forcast info : " + fileBean.getAbsolutePath());
+    {           
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String excelFilePath = adminUploadsPath + "/ForcastFiles/" + sdf.format(new Date()) + "/" + "_" + sdf.format(new Date()) + ".xls";
+        String excelFilePath = adminUploadsPath + "/ForcastFiles/" + sdf.format(new Date()) + "/" + sdf.format(new Date()) + ".xls";
         File excelFile = new File(excelFilePath);
         excelFile.getParentFile().mkdirs();
         fileBean.save(excelFile);
-               
+        logger.debug("parsing Demand forcast info : " + excelFile.getAbsolutePath());
         ExcelSheetParser excel = new ExcelSheetParser(excelFile.getAbsolutePath(), "Sheet1");
         Iterator<HKRow> rowiterator = excel.parse();
         int rowCount=1;
-        DemandForcast ob= new DemandForcast();
+        List<DemandForcast> dfList = getBaseDao().getAll(DemandForcast.class);
         try {
               while (rowiterator.hasNext()) {
                 rowCount++;
                 HKRow row = rowiterator.next();
 
                 String forcast_date = row.getColumnValue("Date");
-                String prod_varientId=row.getColumnValue("Product Varient");
+                String prod_varientId = row.getColumnValue("Product Varient");
                 String warehouseId = row.getColumnValue("Warehouse ID");
                 String forcastVal = row.getColumnValue("Forcast");
-                  //insertInDB
+                //error handling for null values
 
-                DateFormat formatter = new SimpleDateFormat("mm/dd/yy");
-                Date date = (Date)formatter.parse(forcast_date);
+                if(StringUtils.isBlank(forcast_date) || StringUtils.isBlank(prod_varientId) ||
+                        StringUtils.isBlank(warehouseId) || StringUtils.isBlank(forcastVal)){
+                    continue;
+                    //throw new ExcelBlankFieldException("value(s) empty at" + "    ", rowCount);
+                }
 
-                ob.setForcastDate(date);
-                ob.setProductVariant(getBaseDao().get(ProductVariant.class,prod_varientId));
-                ob.setWarehouse(getBaseDao().get(Warehouse.class,Long.parseLong(warehouseId)));
-                ob.setForcastValue(Double.parseDouble(forcastVal));
-                getBaseDao().save(ob);
+                List<String> ll = new ArrayList<String>();
+                ll.add(forcast_date);
+                ll.add(prod_varientId);
+                ll.add(warehouseId);
+                ll.add(forcastVal);
 
+                getDfService().InsertInDB(ll,dfList);
+             
               }
             }
         catch (ExcelBlankFieldException e) {
-              throw new ExcelBlankFieldException(e.getMessage());
+                logger.debug(e.getMessage());
+              //throw new ExcelBlankFieldException(e.getMessage());
         }
         return new RedirectResolution(AdminHomeAction.class);
-        }
+        }     
 
     }
