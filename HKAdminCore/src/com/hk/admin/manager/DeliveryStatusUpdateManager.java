@@ -232,6 +232,8 @@ public class DeliveryStatusUpdateManager {
                             logger.debug("IllegalArgumentException occurred(Delhivery).strtIndx:"+startIndex+"endIndx:"+endIndex+"listIndx"+i);    
                         }  catch (ArrayIndexOutOfBoundsException exe){
                             logger.debug("ArrayIndexOutOfBoundsException occurred(Delhivery).strtIndx:"+startIndex+"endIndx:"+endIndex+"listIndx"+i);
+                        } catch (Exception ex){
+                            logger.debug(CourierConstants.EXCEPTION + trackingId);
                         }
                         trackingId = getAppendedTrackingIdsString(shippingOrderSubList);
                         try {
