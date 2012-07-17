@@ -207,8 +207,6 @@ public class DeliveryStatusUpdateManager {
             int listSize = shippingOrderList.size();
             startIndex=0;
             endIndex=0;
-            //Map<String, Object> jsonResponseMap = new HashMap<String, Object>();
-            Date delivery_date = null;
 
             if (shippingOrderList != null && listSize > 0) {
                 //Checking if shippingOrderList size is > 10 then we wud divide it into batches of 10 orders each.
@@ -262,11 +260,6 @@ public class DeliveryStatusUpdateManager {
                         ordersDelivered=updateDelhiveryStatus(jsonShipmentDataArray);
                     }
                 }
-                /*for (Map.Entry mapObj : jsonResponseMap.entrySet()) {
-                    shippingOrder = shippingOrderService.findByTrackingId(mapObj.getKey().toString());
-                    delivery_date = (Date) mapObj.getValue();
-                    ordersDelivered = updateCourierDeliveryStatus(shippingOrder, shippingOrder.getShipment(), shippingOrder.getShipment().getTrackingId(), delivery_date);
-                }*/
             }
 
 
