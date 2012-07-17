@@ -21,7 +21,10 @@ import org.springframework.stereotype.Component;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.courier.Awb;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.admin.pact.service.courier.AwbService;
+import com.hk.constants.courier.EnumAwbStatus;
 
 @Component
 public class SearchShippingOrderAction extends BasePaginatedAction {
@@ -35,6 +38,8 @@ public class SearchShippingOrderAction extends BasePaginatedAction {
 
   @Autowired
   ShippingOrderService shippingOrderService;
+    @Autowired
+    AwbService awbService;
 
   @ValidationMethod(on = "searchShippingOrder")
   public void validateSearch() {
@@ -52,12 +57,23 @@ public class SearchShippingOrderAction extends BasePaginatedAction {
 
   public Resolution searchShippingOrder() {
 
-    ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
-    shippingOrderSearchCriteria.setOrderId(shippingOrderId).setGatewayOrderId(shippingOrderGatewayId);
-    shippingOrderSearchCriteria.setTrackingId(trackingId);
-    shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, false);
+      ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
+      shippingOrderSearchCriteria.setOrderId(shippingOrderId).setGatewayOrderId(shippingOrderGatewayId);
+      //yet to verify  if either of  shippingid and gateweyid  is present search on ids.if only tracking id present then wet awb
+      //multiple awb can be there. so we should return as a list.change shippingordersearchcriteria attribut awb to awb list.
 
-    return new ForwardResolution("/pages/admin/searchShippingOrder.jsp");
+      if (shippingOrderId != null || (!(StringUtils.isBlank(shippingOrderGatewayId)))) {
+          shippingOrderSearchCriteria.setAwb(null);
+      } else {
+          List<Awb> awbList = awbService.getAvailableAwbForCourierByWarehouseCodStatus(null,trackingId,null,null, EnumAwbStatus.Unused.getAsAwbStatus());
+          if (awbList == null || awbList.size() < 1) {
+              shippingOrderSearchCriteria.setAwb(awbList.get(0));
+          }
+      }
+
+      shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, false);
+
+      return new ForwardResolution("/pages/admin/searchShippingOrder.jsp");
 
   }
 

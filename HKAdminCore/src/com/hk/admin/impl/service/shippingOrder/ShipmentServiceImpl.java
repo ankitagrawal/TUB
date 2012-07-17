@@ -2,12 +2,15 @@ package com.hk.admin.impl.service.shippingOrder;
 
 import com.hk.admin.engine.ShipmentPricingEngine;
 import com.hk.admin.pact.dao.courier.AwbDao;
+import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Awb;
+import com.hk.domain.courier.AwbStatus;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.Order;
@@ -20,12 +23,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
-
 @Service
 public class ShipmentServiceImpl implements ShipmentService {
 
     @Autowired
     private BaseDao baseDao;
+    @Autowired
     CourierService courierService;
     @Autowired
     PincodeDao pincodeDao;
@@ -35,6 +38,8 @@ public class ShipmentServiceImpl implements ShipmentService {
     CourierGroupService courierGroupService;
     @Autowired
     ShipmentPricingEngine shipmentPricingEngine;
+    @Autowired
+    AwbService awbService;
 
     public Shipment createShipment(ShippingOrder shippingOrder) {                 //todo handle null checks
         Shipment shipment = new Shipment();
@@ -42,10 +47,10 @@ public class ShipmentServiceImpl implements ShipmentService {
         Pincode pincode = pincodeDao.getByPincode(order.getAddress().getPin());
         Courier suggestedCourier = courierService.getDefaultCourier(pincode, shippingOrder.isCOD(), shippingOrder.getWarehouse());
         shipment.setCourier(suggestedCourier);
-        List<Awb> suggestedAwbList = awbDao.getAvailableAwbForCourierByWarehouseAndCod(suggestedCourier, shippingOrder.getWarehouse(), shippingOrder.isCOD());
+        List<Awb> suggestedAwbList = awbService.getAvailableAwbForCourierByWarehouseCodStatus(suggestedCourier,null,shippingOrder.getWarehouse(),shippingOrder.isCOD(),EnumAwbStatus.Unused.getAsAwbStatus());
         if (suggestedAwbList != null && suggestedAwbList.size() > 0) {
             Awb suggestedAwb = suggestedAwbList.get(0);
-            shipment.setTrackingId(suggestedAwb.getAwbNumber());
+            shipment.setAwb(suggestedAwb);
             suggestedAwb.setUsed(true);
             awbDao.save(suggestedAwb);
         }
@@ -85,5 +90,17 @@ public class ShipmentServiceImpl implements ShipmentService {
         this.baseDao = baseDao;
     }
 
+      public boolean attachAwbToShipment(Courier courier,ShippingOrder shippingOrder){
+          Shipment shipment=shippingOrder.getShipment();
+            List<Awb> suggestedAwbList = awbService.getAvailableAwbForCourierByWarehouseCodStatus(courier,null, shippingOrder.getWarehouse(), shippingOrder.isCOD(), EnumAwbStatus.Unused.getAsAwbStatus());
+                if (suggestedAwbList != null && suggestedAwbList.size() > 0) {
+                   Awb suggestedAwb = suggestedAwbList.get(0);
+                    shipment.setAwb(suggestedAwb);
+                    AwbStatus awbStatus = EnumAwbStatus.Attach.getAsAwbStatus();
+                    suggestedAwb.setAwbStatus(awbStatus);
+                    return true;
+      }
+          return false;
+      }
 
 }

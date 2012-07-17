@@ -10,6 +10,7 @@ import org.hibernate.criterion.Restrictions;
 
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.domain.courier.Courier;
+import com.hk.domain.courier.Awb;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderStatus;
 
@@ -18,7 +19,8 @@ import com.hk.domain.order.ShippingOrderStatus;
  */
 public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
 
-    private String                                   trackingId;
+//    private String                                   trackingId;
+    private Awb awb;
     private List<Courier>                            courierList;
     private Long                                     warehouseId;
     private boolean                                  isServiceOrder = false;
@@ -62,9 +64,14 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
         this.activityEndDate = activityEndDate;
         return this;
     }
+//
+//    public ShippingOrderSearchCriteria setTrackingId(String trackingId) {
+//        this.trackingId = trackingId;
+//        return this;
+//    }
 
-    public ShippingOrderSearchCriteria setTrackingId(String trackingId) {
-        this.trackingId = trackingId;
+      public ShippingOrderSearchCriteria setAwb(Awb awb) {
+        this.awb = awb;
         return this;
     }
 
@@ -111,6 +118,7 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
         return this;
     }
 
+
     protected DetachedCriteria buildSearchCriteriaFromBaseCriteria() {
         DetachedCriteria criteria = super.buildSearchCriteriaFromBaseCriteria();
 
@@ -119,12 +127,12 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
         }
 
         DetachedCriteria shipmentCriteria = null;
-        if (StringUtils.isNotBlank(trackingId)) {
+        if (awb != null && awb.getAwbNumber() != null) {
 
             if (shipmentCriteria == null) {
                 shipmentCriteria = criteria.createCriteria("shipment");
             }
-            shipmentCriteria.add(Restrictions.eq("trackingId", trackingId));
+            shipmentCriteria.add(Restrictions.eq("awb", awb));
         }
 
         if (courierList != null && !courierList.isEmpty()) {

@@ -96,7 +96,7 @@ public class InvoicePDFGenerator {
 
     private void addOrderDetailsContent(Document document, ShippingOrder shippingOrder, Coupon coupon) throws DocumentException, MalformedURLException, IOException {
         InvoiceDto invoiceDto = new InvoiceDto(shippingOrder, null);
-        barcodePath = barcodeGenerator.getBarcodePath(shippingOrder.getGatewayOrderId());
+        barcodePath = barcodeGenerator.getBarcodePath(shippingOrder.getGatewayOrderId(),1.0f);
         Image barcodeImage = Image.getInstance(barcodePath);
         String routingCode = null;
         Address address = addressDao.get(Address.class, shippingOrder.getBaseOrder().getAddress().getId());

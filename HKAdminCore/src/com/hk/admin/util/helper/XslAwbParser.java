@@ -4,8 +4,10 @@ package com.hk.admin.util.helper;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.util.XslUtil;
 import com.hk.constants.XslConstants;
+import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Courier;
+import com.hk.domain.courier.AwbStatus;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.exception.ExcelBlankFieldException;
 import com.hk.pact.service.core.WarehouseService;
@@ -79,6 +81,10 @@ public class XslAwbParser {
         }
         awb.setAwbNumber(awbNumber);
         awb.setAwbBarCode(awbNumber);
+             AwbStatus awbStatus= new AwbStatus();
+          awbStatus.setStatus(EnumAwbStatus.Unused.getStatus());
+          awbStatus.setId(0L);
+         awb.setAwbStatus(awbStatus);
         awb.setUsed(false);
         if (StringUtils.isEmpty(warehouse)) {
           logger.error("warehouse cannot be call");

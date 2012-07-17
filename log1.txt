@@ -1,0 +1,123 @@
+Buildfile: build.xml
+
+build:
+
+prepare:
+
+prepare:
+
+prepare:
+
+prepare:
+
+prepare:
+
+build.common.jar:
+
+prepare:
+
+compile:
+
+compile.groovy:
+
+build:
+
+build-dependencies:
+
+prepare:
+
+dependencies.check:
+
+build.common:
+
+prepare:
+
+compile:
+
+compile.groovy:
+
+build:
+
+build.dependencies:
+
+compile:
+
+build:
+
+prepare:
+
+compile.groovy:
+  [groovyc] Compiling 1 source file to C:\DevProjects\rewrite\HKRejuvenate\HKAdminCore\build
+  [groovyc] C:\DevProjects\rewrite\HKRejuvenate\HKAdminCore\src\com\hk\admin\manager\DeliveryStatusUpdateManager.java
+  [groovyc] Exception in thread "main" org.codehaus.groovy.control.MultipleCompilationErrorsException: startup failed, Compile error during compilation with javac.
+  [groovyc] C:\DevProjects\rewrite\HKRejuvenate\HKAdminCore\src\com\hk\admin\manager\DeliveryStatusUpdateManager.java:123: cannot find symbol
+  [groovyc] symbol  : method findByTrackingId(com.hk.domain.courier.Awb)
+  [groovyc] location: interface com.hk.pact.service.shippingOrder.ShippingOrderService
+  [groovyc]                     shippingOrder = getShippingOrderService().findByTrackingId(awb);
+  [groovyc]                                                              ^
+  [groovyc] C:\DevProjects\rewrite\HKRejuvenate\HKAdminCore\src\com\hk\admin\manager\DeliveryStatusUpdateManager.java:135: cannot find symbol
+  [groovyc] symbol  : variable awb
+  [groovyc] location: class com.hk.admin.manager.DeliveryStatusUpdateManager
+  [groovyc]                     updateCourierDeliveryStatus(shippingOrder, shipment, awb, deliveryDateInXsl);
+  [groovyc]                                                                          ^
+  [groovyc] 2 errors
+  [groovyc] 
+  [groovyc] 
+  [groovyc] 1 error
+  [groovyc] 
+  [groovyc] 
+  [groovyc] 	at org.codehaus.groovy.ant.Groovyc.compile(Groovyc.java:694)
+  [groovyc] 	at org.codehaus.groovy.ant.Groovyc.execute(Groovyc.java:541)
+  [groovyc] 	at org.codehaus.groovy.ant.Groovyc.main(Groovyc.java:841)
+  [groovyc] Caused by: org.codehaus.groovy.control.MultipleCompilationErrorsException: startup failed, Compile error during compilation with javac.
+  [groovyc] C:\DevProjects\rewrite\HKRejuvenate\HKAdminCore\src\com\hk\admin\manager\DeliveryStatusUpdateManager.java:123: cannot find symbol
+  [groovyc] symbol  : method findByTrackingId(com.hk.domain.courier.Awb)
+  [groovyc] location: interface com.hk.pact.service.shippingOrder.ShippingOrderService
+  [groovyc]                     shippingOrder = getShippingOrderService().findByTrackingId(awb);
+  [groovyc]                                                              ^
+  [groovyc] C:\DevProjects\rewrite\HKRejuvenate\HKAdminCore\src\com\hk\admin\manager\DeliveryStatusUpdateManager.java:135: cannot find symbol
+  [groovyc] symbol  : variable awb
+  [groovyc] location: class com.hk.admin.manager.DeliveryStatusUpdateManager
+  [groovyc]                     updateCourierDeliveryStatus(shippingOrder, shipment, awb, deliveryDateInXsl);
+  [groovyc]                                                                          ^
+  [groovyc] 2 errors
+  [groovyc] 
+  [groovyc] 
+  [groovyc] 1 error
+  [groovyc] 
+  [groovyc] 	at org.codehaus.groovy.control.ErrorCollector.failIfErrors(ErrorCollector.java:296)
+  [groovyc] 	at org.codehaus.groovy.control.ErrorCollector.addFatalError(ErrorCollector.java:143)
+  [groovyc] 	at org.codehaus.groovy.tools.javac.JavacJavaCompiler.addJavacError(JavacJavaCompiler.java:90)
+  [groovyc] 	at org.codehaus.groovy.tools.javac.JavacJavaCompiler.compile(JavacJavaCompiler.java:72)
+  [groovyc] 	at org.codehaus.groovy.tools.javac.JavaAwareCompilationUnit.gotoPhase(JavaAwareCompilationUnit.java:85)
+  [groovyc] 	at org.codehaus.groovy.control.CompilationUnit.compile(CompilationUnit.java:450)
+  [groovyc] 	at org.codehaus.groovy.control.CompilationUnit.compile(CompilationUnit.java:417)
+  [groovyc] 	at org.codehaus.groovy.ant.Groovyc.compile(Groovyc.java:685)
+  [groovyc] 	... 2 more
+  [groovyc] --- Nested Exception ---
+  [groovyc] org.codehaus.groovy.control.MultipleCompilationErrorsException: startup failed, Compile error during compilation with javac.
+  [groovyc] C:\DevProjects\rewrite\HKRejuvenate\HKAdminCore\src\com\hk\admin\manager\DeliveryStatusUpdateManager.java:123: cannot find symbol
+  [groovyc] symbol  : method findByTrackingId(com.hk.domain.courier.Awb)
+  [groovyc] location: interface com.hk.pact.service.shippingOrder.ShippingOrderService
+  [groovyc]                     shippingOrder = getShippingOrderService().findByTrackingId(awb);
+  [groovyc]                                                              ^
+  [groovyc] C:\DevProjects\rewrite\HKRejuvenate\HKAdminCore\src\com\hk\admin\manager\DeliveryStatusUpdateManager.java:135: cannot find symbol
+  [groovyc] symbol  : variable awb
+  [groovyc] location: class com.hk.admin.manager.DeliveryStatusUpdateManager
+  [groovyc]                     updateCourierDeliveryStatus(shippingOrder, shipment, awb, deliveryDateInXsl);
+  [groovyc]                                                                          ^
+  [groovyc] 2 errors
+  [groovyc] 
+  [groovyc] 
+  [groovyc] 1 error
+  [groovyc] 
+  [groovyc] 	at org.codehaus.groovy.control.ErrorCollector.failIfErrors(ErrorCollector.java:296)
+  [groovyc] 	at org.codehaus.groovy.control.ErrorCollector.addFatalError(ErrorCollector.java:143)
+  [groovyc] 	at org.codehaus.groovy.tools.javac.JavacJavaCompiler.addJavacError(JavacJavaCompiler.java:90)
+  [groovyc] 	at org.codehaus.groovy.tools.javac.JavacJavaCompiler.compile(JavacJavaCompiler.java:72)
+  [groovyc] 	at org.codehaus.groovy.tools.javac.JavaAwareCompilationUnit.gotoPhase(JavaAwareCompilationUnit.java:85)
+  [groovyc] 	at org.codehaus.groovy.control.CompilationUnit.compile(CompilationUnit.java:450)
+  [groovyc] 	at org.codehaus.groovy.control.CompilationUnit.compile(CompilationUnit.java:417)
+  [groovyc] 	at org.codehaus.groovy.ant.Groovyc.compile(Groovyc.java:685)
+  [groovyc] 	at org.codehaus.groovy.ant.Groovyc.execute(Groovyc.java:541)
+  [groovyc] 	at org.codehaus.groovy.ant.Groovyc.main(Groovyc.java:841)

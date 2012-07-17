@@ -6,12 +6,16 @@ import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.courier.Awb;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.pact.service.UserService;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.CourierConstants;
+import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.web.action.error.AdminPermissionAction;
 import com.hk.admin.util.BarcodeGenerator;
+import com.hk.admin.pact.service.courier.AwbService;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -51,6 +55,10 @@ public class HKDeliveryAction extends BaseAction {
     List<String>                  trackingIdList=new ArrayList<String>();
     @Autowired
     ShippingOrderService          shippingOrderService;
+    @Autowired
+    AwbService awbService;
+    @Autowired
+    UserService userService;
 
     @Autowired
     private BarcodeGenerator barcodeGenerator;
@@ -67,11 +75,14 @@ public class HKDeliveryAction extends BaseAction {
     }
 
     public Resolution downloadDeliveryWorkSheet() {
-        ShippingOrder shippingOrder = null;
-        shippingOrderList = new ArrayList<ShippingOrder>();
+          shippingOrderList = new ArrayList<ShippingOrder>();
+        List<Awb> awbList=new ArrayList<Awb>();
         for (String trackingNum : trackingIdList) {
-            shippingOrder = shippingOrderService.findByTrackingId(trackingNum);
-            if (shippingOrder != null) {
+        awbList=  awbService.getAvailableAwbForCourierByWarehouseCodStatus(null,trackingNum.trim(),userService.getWarehouseForLoggedInUser(),null, EnumAwbStatus.Used.getAsAwbStatus());
+            for(Awb awb: awbList){
+            List<ShippingOrder> shippinglist = shippingOrderService.getShippingOrderByAwb(awb);
+                for( ShippingOrder shippingOrder:shippinglist )
+                {
                 if(shippingOrder.isCOD()){
                         ++totalCODPackets;
                     totalCODAmount=totalCODAmount+shippingOrder.getAmount();
@@ -80,6 +91,8 @@ public class HKDeliveryAction extends BaseAction {
                     ++totalPrepaidPackets;
                 }
                 shippingOrderList.add(shippingOrder);
+            }
+
             }
         }
         totalPackets=shippingOrderList.size();
@@ -284,7 +297,7 @@ public class HKDeliveryAction extends BaseAction {
             receivedDetails = "Name:" + "\n" + "Relation:" + "\n" + "Mobile No.:" + "\n" + "Received Date,Time:" + "\n" + "Sign";
 
            //adding barcode image to cell
-            barcodePath = barcodeGenerator.getBarcodePath(shippingOrderList.get(index).getGatewayOrderId());
+            barcodePath = barcodeGenerator.getBarcodePath(shippingOrderList.get(index).getGatewayOrderId(),1.0f);
 
             //add picture data to this workbook.
             is = new FileInputStream(barcodePath);

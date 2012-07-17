@@ -1,0 +1,42 @@
+package com.hk.domain.courier;
+
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Entity;
+
+/**
+ * Created by IntelliJ IDEA.
+ * User:User
+ * Date: Jul 13, 2012
+ * Time: 9:11:40 AM
+ * To change this template use File | Settings | File Templates.
+ */
+@SuppressWarnings("serial")
+@Entity
+@Table(name = "awb_status")
+public class AwbStatus {
+
+    @Id
+    @Column(name = "id", unique = true, nullable = false)
+    private Long id;
+
+    @Column(name = "status", nullable = false, length = 40)
+    private String status;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+}

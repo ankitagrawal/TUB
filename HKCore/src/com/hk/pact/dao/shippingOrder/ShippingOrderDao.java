@@ -9,13 +9,15 @@ import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderLifeCycleActivity;
 import com.hk.domain.sku.Sku;
+import com.hk.domain.courier.Shipment;
+import com.hk.domain.courier.Awb;
 import com.hk.pact.dao.BaseDao;
 
 public interface ShippingOrderDao extends BaseDao {
 
     public ShippingOrder findById(Long shippingOrderId);
 
-    public ShippingOrder findByTrackingId(String trackingId);
+    public ShippingOrder findByAwb(Awb awb);
 
     public ShippingOrder findByGatewayOrderId(String gatewayOrderId);
 
@@ -37,4 +39,7 @@ public interface ShippingOrderDao extends BaseDao {
 
     public List<Long> getShippingOrderListByCourier(Date startDate, Date endDate, Long courierId);
 
+   public  List<ShippingOrder>  getShippingOrderByAwb(Awb awb);
+//
+//    public ShippingOrder getShippingOrderForShipment(Shipment shipment);
 }

@@ -7,6 +7,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.akube.framework.dao.Page;
@@ -16,6 +17,8 @@ import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderLifeCycleActivity;
 import com.hk.domain.sku.Sku;
+import com.hk.domain.courier.Shipment;
+import com.hk.domain.courier.Awb;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
 
@@ -27,9 +30,9 @@ public class ShippingOrderDaoImpl extends BaseDaoImpl implements ShippingOrderDa
         return get(ShippingOrder.class, shippingOrderId);
     }
 
-    public ShippingOrder findByTrackingId(String trackingId) {
+    public ShippingOrder findByAwb(Awb awb) {
         String query = "select distinct so  from ShippingOrder so  where so.shipment.trackingId =:trackingId";
-        return (ShippingOrder) getSession().createQuery(query).setString("trackingId", trackingId).uniqueResult();
+        return (ShippingOrder) getSession().createQuery(query).setParameter("awb", awb).uniqueResult();
     }
 
     public ShippingOrder findByGatewayOrderId(String gatewayOrderId) {
@@ -112,5 +115,27 @@ public class ShippingOrderDaoImpl extends BaseDaoImpl implements ShippingOrderDa
         return getSession().createQuery(query).setParameter("courierId", courierId).setParameter("startDate", startDate).setParameter("endDate", endDate).list();
     }
 
+
+   public  List<ShippingOrder> getShippingOrderByAwb(Awb awb){
+    DetachedCriteria detachedCriteria = DetachedCriteria.forClass(ShippingOrder.class);
+        detachedCriteria.add(Restrictions.eq("awb",awb));
+       detachedCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));
+       return(List<ShippingOrder>) findByCriteria(detachedCriteria);
+
+
+    }
+
+
+//    public ShippingOrder getShippingOrderForShipment(Shipment shipment) {
+//        DetachedCriteria detachedCriteria = DetachedCriteria.forClass(ShippingOrder.class);
+//        if (shipment != null) {
+//            detachedCriteria.add(Restrictions.eq("shipment", shipment));
+//        }
+//        List<ShippingOrder> shipList = findByCriteria(detachedCriteria);
+//        if (shipList != null && shipList.size() > 0) {
+//            return shipList.get(0);
+//        }
+//        return null;
+//    }
 
 }

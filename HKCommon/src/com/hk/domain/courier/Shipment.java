@@ -16,193 +16,211 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import com.akube.framework.gson.JsonSkip;
+import com.hk.domain.order.ShippingOrder;
 
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "shipment")
 public class Shipment implements java.io.Serializable, Comparable<Shipment> {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "id", unique = true, nullable = false)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", unique = true, nullable = false)
+    private Long id;
 
-	@JsonSkip
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "courier_id")
-  private Courier courier;
+    @JsonSkip
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "courier_id")
+    private Courier courier;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "box_size_id")
-	private BoxSize boxSize;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "box_size_id")
+    private BoxSize boxSize;
 
-	@Column(name = "box_weight")
-	private Double boxWeight;
+    @Column(name = "box_weight")
+    private Double boxWeight;
 
-	@Column(name = "tracking_id", length = 45)
-	private String trackingId;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "ship_date", length = 19)
-	private Date shipDate;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "awb_id")
+    private Awb awb;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "delivery_date", length = 19)
-	private Date deliveryDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "ship_date", length = 19)
+    private Date shipDate;
 
-  @Temporal(TemporalType.TIMESTAMP)
-  @Column(name = "return_date", length = 19)
-  private Date returnDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "delivery_date", length = 19)
+    private Date deliveryDate;
 
-  @Column(name = "email_sent")
-  private Boolean isEmailSent;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "return_date", length = 19)
+    private Date returnDate;
 
-	@Column(name = "shipment_charge")
-  private Double shipmentCharge;
+    @Column(name = "email_sent")
+    private Boolean isEmailSent;
 
-	@Column(name = "collection_charge")
-  private Double collectionCharge;
+    @Column(name = "shipment_charge")
+    private Double shipmentCharge;
 
-	@Column(name = "estm_shipment_charge")
-  private Double estmShipmentCharge;
+    @Column(name = "collection_charge")
+    private Double collectionCharge;
 
-	@Column(name = "estm_collection_charge")
-  private Double estmCollectionCharge;
+    @Column(name = "estm_shipment_charge")
+    private Double estmShipmentCharge;
 
-	@Column(name = "extra_charge")
-  private Double extraCharge;
+    @Column(name = "estm_collection_charge")
+    private Double estmCollectionCharge;
 
-  @Transient
-  private String trackLink;
+    @Column(name = "extra_charge")
+    private Double extraCharge;
 
-	public int compareTo(Shipment shipment) {
-    if (this.getId() < shipment.getId()) return -1;
-    if (this.getId() > shipment.getId()) return 1;
-    return 0;
-  }
+    @Transient
+    private String trackLink;
 
-	public Long getId() {
-		return id;
-	}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "shipping_order_id")
+    private ShippingOrder shippingOrder;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public int compareTo(Shipment shipment) {
+        if (this.getId() < shipment.getId()) return -1;
+        if (this.getId() > shipment.getId()) return 1;
+        return 0;
+    }
 
-	public Courier getCourier() {
-		return courier;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setCourier(Courier courier) {
-		this.courier = courier;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public BoxSize getBoxSize() {
-		return boxSize;
-	}
+    public Courier getCourier() {
+        return courier;
+    }
 
-	public void setBoxSize(BoxSize boxSize) {
-		this.boxSize = boxSize;
-	}
+    public void setCourier(Courier courier) {
+        this.courier = courier;
+    }
 
-	public Double getBoxWeight() {
-		return boxWeight;
-	}
+    public BoxSize getBoxSize() {
+        return boxSize;
+    }
 
-	public void setBoxWeight(Double boxWeight) {
-		this.boxWeight = boxWeight;
-	}
+    public void setBoxSize(BoxSize boxSize) {
+        this.boxSize = boxSize;
+    }
 
-	public String getTrackingId() {
-		return trackingId;
-	}
+    public Double getBoxWeight() {
+        return boxWeight;
+    }
 
-	public void setTrackingId(String trackingId) {
-		this.trackingId = trackingId;
-	}
+    public void setBoxWeight(Double boxWeight) {
+        this.boxWeight = boxWeight;
+    }
 
-	public Date getShipDate() {
-		return shipDate;
-	}
+    public ShippingOrder getShippingOrder() {
+        return shippingOrder;
+    }
 
-	public void setShipDate(Date shipDate) {
-		this.shipDate = shipDate;
-	}
+    public void setShippingOrder(ShippingOrder shippingOrder) {
+        this.shippingOrder = shippingOrder;
+    }
 
-	public Date getDeliveryDate() {
-		return deliveryDate;
-	}
+    public Date getShipDate() {
+        return shipDate;
+    }
 
-	public void setDeliveryDate(Date deliveryDate) {
-		this.deliveryDate = deliveryDate;
-	}
+    public void setShipDate(Date shipDate) {
+        this.shipDate = shipDate;
+    }
 
-  public String getTrackLink() {
-    return trackLink;
-  }
+    public Date getDeliveryDate() {
+        return deliveryDate;
+    }
 
-  public void setTrackLink(String trackLink) {
-    this.trackLink = trackLink;
-  }
+    public void setDeliveryDate(Date deliveryDate) {
+        this.deliveryDate = deliveryDate;
+    }
 
-  public Boolean isEmailSent() {
-    return isEmailSent;
-  }
+    public String getTrackLink() {
+        return trackLink;
+    }
 
-  public void setEmailSent(Boolean emailSent) {
-    isEmailSent = emailSent;
-  }
+    public void setTrackLink(String trackLink) {
+        this.trackLink = trackLink;
+    }
 
-  public Date getReturnDate() {
-    return returnDate;
-  }
+    public Boolean isEmailSent() {
+        return isEmailSent;
+    }
 
-  public void setReturnDate(Date returnDate) {
-    this.returnDate = returnDate;
-  }
+    public void setEmailSent(Boolean emailSent) {
+        isEmailSent = emailSent;
+    }
 
-	public Double getEstmShipmentCharge() {
-		return estmShipmentCharge;
-	}
+    public Date getReturnDate() {
+        return returnDate;
+    }
 
-	public void setEstmShipmentCharge(Double estmShipmentCharge) {
-		this.estmShipmentCharge = estmShipmentCharge;
-	}
+    public void setReturnDate(Date returnDate) {
+        this.returnDate = returnDate;
+    }
 
-	public Double getEstmCollectionCharge() {
-		return estmCollectionCharge;
-	}
+    public Double getEstmShipmentCharge() {
+        return estmShipmentCharge;
+    }
 
-	public void setEstmCollectionCharge(Double estmCollectionCharge) {
-		this.estmCollectionCharge = estmCollectionCharge;
-	}
+    public void setEstmShipmentCharge(Double estmShipmentCharge) {
+        this.estmShipmentCharge = estmShipmentCharge;
+    }
 
-	public Double getExtraCharge() {
-		return extraCharge;
-	}
+    public Double getEstmCollectionCharge() {
+        return estmCollectionCharge;
+    }
 
-	public void setExtraCharge(Double extraCharge) {
-		this.extraCharge = extraCharge;
-	}
+    public void setEstmCollectionCharge(Double estmCollectionCharge) {
+        this.estmCollectionCharge = estmCollectionCharge;
+    }
 
-	public Double getShipmentCharge() {
-		return shipmentCharge;
-	}
+    public Double getExtraCharge() {
+        return extraCharge;
+    }
 
-	public void setShipmentCharge(Double shipmentCharge) {
-		this.shipmentCharge = shipmentCharge;
-	}
+    public void setExtraCharge(Double extraCharge) {
+        this.extraCharge = extraCharge;
+    }
 
-	public Double getCollectionCharge() {
-		return collectionCharge;
-	}
+    public Double getShipmentCharge() {
+        return shipmentCharge;
+    }
 
-	public void setCollectionCharge(Double collectionCharge) {
-		this.collectionCharge = collectionCharge;
-	}
+    public void setShipmentCharge(Double shipmentCharge) {
+        this.shipmentCharge = shipmentCharge;
+    }
 
-	@Override
-  public String toString() {
-    return id != null ? id.toString() : "";
-  }
+    public Double getCollectionCharge() {
+        return collectionCharge;
+    }
+
+    public void setCollectionCharge(Double collectionCharge) {
+        this.collectionCharge = collectionCharge;
+    }
+
+    public Awb getAwb() {
+        if (awb == null) {
+            setAwb(new Awb());
+        }
+        return awb;
+    }
+
+    public void setAwb(Awb awb) {
+        this.awb = awb;
+    }
+
+    @Override
+    public String toString() {
+        return id != null ? id.toString() : "";
+    }
 }
