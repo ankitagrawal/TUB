@@ -15,6 +15,7 @@ import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.report.dto.order.reconcilation.ReconcilationReportDto;
 import com.hk.report.pact.dao.shippingOrder.ReportShippingOrderDao;
@@ -22,45 +23,47 @@ import com.hk.report.pact.dao.shippingOrder.ReportShippingOrderDao;
 @Repository
 public class ReportShippingOrderDaoImpl extends BaseDaoImpl implements ReportShippingOrderDao {
 
-    private static Logger logger = LoggerFactory.getLogger(ReportShippingOrderDaoImpl.class);
+  private static Logger logger = LoggerFactory.getLogger(ReportShippingOrderDaoImpl.class);
 
-    @SuppressWarnings("unchecked")
-    public List<ReconcilationReportDto> findReconcilationReportByDate(Date startDate, Date endDate, String paymentProcess, Courier courier, Long warehouseId) {
-        String paymentWhereClause = "";
-        String warehouseWhereClause = "";
-        String courierWhereClause = "";
-        if (warehouseId != 0) {
-            warehouseWhereClause = " and so.warehouse.id = " + warehouseId;
-        }
+  @SuppressWarnings("unchecked")
+  public List<ReconcilationReportDto> findReconcilationReportByDate(Date startDate, Date endDate, String paymentProcess, Courier courier, Long warehouseId, Long shippingOrderStatusId) {
+    String paymentWhereClause        = "";
+    String warehouseWhereClause      = "";
+    String courierWhereClause        = "";
+    String shippingOrderClause       = "" ;
+    String allSOstatusForReconReport = "";
+      if (warehouseId != 0) {
+          warehouseWhereClause = " and so.warehouse.id = " + warehouseId;
+      }
 
-        if (courier != null) {
-            courierWhereClause = " and ship.courier.id = " + courier.getId();
-        }
+      if (courier != null) {
+          courierWhereClause = " and ship.courier.id = " + courier.getId();
+      }
 
-        if (paymentProcess.equalsIgnoreCase("cod")) {
-            paymentWhereClause = " and pm.id = " + EnumPaymentMode.COD.getId();
-        } else if (paymentProcess.equalsIgnoreCase("techprocess")) {
-            paymentWhereClause = " and pm.id != " + EnumPaymentMode.COD.getId();
-        }
+      if (paymentProcess.equalsIgnoreCase("cod")) {
+          paymentWhereClause = " and pm.id = " + EnumPaymentMode.COD.getId();
+      } else if (paymentProcess.equalsIgnoreCase("techprocess")) {
+          paymentWhereClause = " and pm.id != " + EnumPaymentMode.COD.getId();
+      }
+      if (shippingOrderStatusId == null) {
+          allSOstatusForReconReport= EnumShippingOrderStatus.SO_Delivered.getId()+","+EnumShippingOrderStatus.SO_Returned.getId()+","
+                  + EnumShippingOrderStatus.SO_Lost.getId()+","+ EnumShippingOrderStatus.SO_Shipped.getId();
+          shippingOrderClause = " and os.id in (" + allSOstatusForReconReport+")";
+      } else {
+          shippingOrderClause = " and os.id = " + shippingOrderStatusId;
+      }
 
-        List<Long> applicableOrderStatus = new ArrayList<Long>();
-
-        applicableOrderStatus.add(EnumShippingOrderStatus.SO_Delivered.getId());
-        applicableOrderStatus.add(EnumShippingOrderStatus.SO_Returned.getId());
-        applicableOrderStatus.add(EnumShippingOrderStatus.SO_Lost.getId());
-        applicableOrderStatus.add(EnumShippingOrderStatus.SO_Shipped.getId());
-
-        String hqlQuery = "select so.gatewayOrderId as invoiceId, p.paymentDate as orderDate, user.name as name, adr.city as city, "
+      String hqlQuery = "select so.gatewayOrderId as invoiceId, p.paymentDate as orderDate, user.name as name, adr.city as city, adr.pin as pincode, "
                 + " pm.name as payment, so.amount as total,  ship.courier as courier, ship.trackingId as awb, ship.shipDate as shipmentDate,"
                 + " ship.deliveryDate as deliveryDate, rs.name as reconciled, os.name as orderStatus, ship.boxWeight as boxWeight,"
                 + " bs.name as boxSize, so.warehouse as warehouse" + " from ShippingOrder so join so.baseOrder bo join bo.payment p join bo.user user join bo.address adr "
-                + " join so.shipment ship join ship.boxSize bs join so.shippingOrderStatus os " + " join p.paymentMode pm join so.reconciliationStatus rs "
-                + " where p.paymentDate >= :startDate" + " and p.paymentDate <= :endDate" + " and os.id in (:applicableOrderStatus)" + " " + paymentWhereClause
+                + " join so.shipment ship join ship.boxSize bs join so.shippingOrderStatus os " + " join p.paymentMode pm join so.reconciliationStatus rs join so.shipment shp "
+                + " where shp.shipDate >= :startDate" + " and shp.shipDate <= :endDate"  + " " + paymentWhereClause +shippingOrderClause
                 + courierWhereClause + warehouseWhereClause;
 
-        return getSession().createQuery(hqlQuery).setParameter("startDate", startDate).setParameterList("applicableOrderStatus", applicableOrderStatus).setParameter("endDate",
-                endDate).setResultTransformer(Transformers.aliasToBean(ReconcilationReportDto.class)).list();
-    }
+      return getSession().createQuery(hqlQuery).setParameter("startDate", startDate).setParameter("endDate",
+              endDate).setResultTransformer(Transformers.aliasToBean(ReconcilationReportDto.class)).list();
+  }
 
     @SuppressWarnings("unchecked")
     public List<ShippingOrder> getDeliveredSOForCourierByDate(Date startDate, Date endDate, Long courierId) {
@@ -70,14 +73,14 @@ public class ReportShippingOrderDaoImpl extends BaseDaoImpl implements ReportShi
     }
 
     public List<Long> getActivityPerformedSOCount(List<Long> orderIds, Date activityDate, Long shippingOrderActivity, Integer cutOffDay1, Integer cutOffTimeHH1,
-            Integer cutOffTimeMM1, Integer cutOffDay2, Integer cutOffTimeHH2, Integer cutOffTimeMM2) {
+                                                  Integer cutOffTimeMM1, Integer cutOffDay2, Integer cutOffTimeHH2, Integer cutOffTimeMM2) {
         return this.getActivityPerformedSOCount(orderIds, activityDate, Arrays.asList(shippingOrderActivity), cutOffDay1, cutOffTimeHH1, cutOffTimeMM1, cutOffDay2, cutOffTimeHH2,
                 cutOffTimeMM2);
     }
 
     @SuppressWarnings("unchecked")
     public List<Long> getActivityPerformedSOCount(List<Long> orderIds, Date activityDate, List<Long> shippingOrderActivity, Integer cutOffDay1, Integer cutOffTimeHH1,
-            Integer cutOffTimeMM1, Integer cutOffDay2, Integer cutOffTimeHH2, Integer cutOffTimeMM2) {
+                                                  Integer cutOffTimeMM1, Integer cutOffDay2, Integer cutOffTimeHH2, Integer cutOffTimeMM2) {
         logger.debug("OrderIds for activity-" + shippingOrderActivity + " on " + activityDate + " is - " + orderIds.size());
         List<Long> orderList = new ArrayList<Long>();
 
@@ -105,10 +108,10 @@ public class ReportShippingOrderDaoImpl extends BaseDaoImpl implements ReportShi
                     + "and sol.shippingOrderLifeCycleActivity.id in (:shippingOrderLifeCycleActivityIds) and sol.activityDate between (:startDate) and (:endDate) ";
 
             /*
-             * String query = "select distinct(so.id) from ShippingOrder so inner join so " + "where so.baseOrder.id in
-             * (:orderIds) and so.shippingOrderLifecycles in ( :shippingOrderActivity )" + "and so.updateDate between
-             * :startDate and :endDate";
-             */
+            * String query = "select distinct(so.id) from ShippingOrder so inner join so " + "where so.baseOrder.id in
+            * (:orderIds) and so.shippingOrderLifecycles in ( :shippingOrderActivity )" + "and so.updateDate between
+            * :startDate and :endDate";
+            */
 
             orderList = (List<Long>) getSession().createQuery(query).setParameterList("orderIds", orderIds).setParameterList("shippingOrderLifeCycleActivityIds",
                     shippingOrderActivity).setParameter("startDate", startDate).setParameter("endDate", endDate).list();
@@ -116,19 +119,13 @@ public class ReportShippingOrderDaoImpl extends BaseDaoImpl implements ReportShi
         return orderList;
     }
 
-    public List<ShippingOrder> getShippingOrderListForCouriers(Date startDate,Date endDate,List<Courier> courierList){
-        List<Long> courierIdList=new ArrayList<Long>();
-        List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>();
-        for(Courier courier:courierList){
-              courierIdList.add(courier.getId());
-        }
-        for(Long courierId:courierIdList) {
-        String query = "from ShippingOrder so where " + " so.shipment.shipDate between :startDate and :endDate and so.shipment.courier.id =:courierId";
-        shippingOrderList.addAll(getSession().createQuery(query).setParameter("startDate", startDate).setParameter("endDate", endDate).setParameter("courierId", courierId).list());
-        }
+    public List<ShippingOrder> getShippingOrderListForCouriers(Date startDate, Date endDate, List<Courier> courierList, Warehouse warehouse) {
+        String query = "from ShippingOrder so where " + " so.shipment.shipDate between :startDate and :endDate and so.shipment.courier in (:courierList) " +
+                " and so.warehouse = :warehouse ";
+        List<ShippingOrder> shippingOrderList =
+                findByNamedParams(query, new String[]{"startDate", "endDate", "courierList", "warehouse"}, new Object[]{startDate, endDate, courierList, warehouse});
         return shippingOrderList;
     }
 
-    
 
 }

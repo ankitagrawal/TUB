@@ -6,7 +6,9 @@ import java.util.List;
 import com.hk.constants.core.EnumSurcharge;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.core.Surcharge;
+import org.springframework.stereotype.Component;
 
+@Component
 public class SurchargeSeedData extends BaseSeedData {
 
 

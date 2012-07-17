@@ -4,6 +4,7 @@
 <%@ page import="org.apache.shiro.SecurityUtils" %>
 <%@ page import="com.shiro.PrincipalImpl" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
+<%@ page import="com.hk.constants.marketing.AnalyticsConstants" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.core.cart.CartAction" var="cartAction" event="getCartItems"/>
 <s:useActionBean beanclass="com.hk.web.action.core.discount.RewardPointTxnStatementAction" event="pre" var="rpBean"/>
@@ -16,6 +17,7 @@
     originalUrlHeader = request.getRequestURI();
   }
 %>
+
 <s:layout-definition>
   <c:set var="attachRedirectParam" value="${attachRedirectParam}"/>
   <%
@@ -33,6 +35,7 @@
       <div style='float: left; margin-left: 180px;'
            title='Call us on our customer care number for help regarding anything'>
         <span style="font-size: .8em;">Customer Care: 0124-4551616 <span style="color: gray;">(10am - 9pm, 7 days a week)</span></span>
+
         <div style="cursor:default; margin-top: 2px; width: 313px;">
           <s:form beanclass="com.hk.web.action.core.search.SearchAction" method="get" renderFieldsPresent="false"
                   renderSourcePage="false" autocomplete="off" style="position: relative;">
@@ -42,9 +45,9 @@
             <s:image name="search" src="/images/icons/search2.png" style="position: absolute; right: 3px; top: 1px;"/>
           </s:form>
         </div>
-        <%--<div class='small'>--%>
-        <%--(Monday to Saturday 10am - 8pm)--%>
-        <%--</div>--%>
+          <%--<div class='small'>--%>
+          <%--(Monday to Saturday 10am - 8pm)--%>
+          <%--</div>--%>
       </div>
       <div class="message">
         <div class="arrow"></div>
@@ -119,7 +122,8 @@
                 <%
                   }
                 %>
-                <s:link beanclass="com.hk.web.action.core.auth.LogoutAction" class="toplinksSecondary" rel="noFollow">Logout</s:link>
+                <s:link beanclass="com.hk.web.action.core.auth.LogoutAction" class="toplinksSecondary"
+                        rel="noFollow">Logout</s:link>
               </shiro:lacksRole>
             </shiro:user>
           </div>
@@ -132,7 +136,7 @@
                 <c:when test="${cartAction.itemsInCart > 1}">
                   <img class='icon' src='${pageContext.request.contextPath}/images/icons/cart.png'/>
                                     <span class='num' id="productsInCart">
-                                      ${cartAction.itemsInCart}
+                                        ${cartAction.itemsInCart}
                                     </span>
                   items in
                   <br/>
@@ -165,7 +169,7 @@
   <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.itvCommonPlugins.js"></script>
   <script type="text/javascript">
     $(document).ready(function() {
-       $("#searchbox").autocomplete({url:'${pageContext.request.contextPath}/autocomplete-search/'});
+      $("#searchbox").autocomplete({url:'${pageContext.request.contextPath}/autocomplete-search/'});
     });
   </script>
 </s:layout-definition>

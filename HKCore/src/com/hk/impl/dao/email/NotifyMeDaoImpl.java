@@ -4,7 +4,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import com.hk.domain.user.User;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.akube.framework.dao.Page;
-import com.akube.framework.util.BaseUtils;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -26,8 +24,9 @@ public class NotifyMeDaoImpl extends BaseDaoImpl implements NotifyMeDao {
 
     @Transactional
     public NotifyMe save(NotifyMe notifyMe) {
+      Date currentDate = new Date();
         if (notifyMe.getCreatedDate() == null) {
-            notifyMe.setCreatedDate(BaseUtils.getCurrentTimestamp());
+            notifyMe.setCreatedDate(currentDate);
         }
         return (NotifyMe) super.save(notifyMe);
     }

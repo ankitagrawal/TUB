@@ -13,6 +13,7 @@ bin-groovy/
 *.ipr
 *.iws
 *.iml
+*.eml
 *.ids
 *.classpath
 *.project
@@ -21,3 +22,4 @@ Thumbs.db
 .idea
 .project
 environmentLocator.properties
+rebel.xml

@@ -19,6 +19,7 @@ import com.hk.domain.catalog.category.Category;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.order.ReplacementOrder;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.B2bUserDetails;
 import com.hk.helper.InvoiceNumHelper;
@@ -62,11 +63,17 @@ public class SOInvoiceAction extends BaseAction {
   @DefaultHandler
     public Resolution pre() {
         if (shippingOrder != null) {
+            ReplacementOrder replacementOrder = getBaseDao().get(ReplacementOrder.class, shippingOrder.getId());
             String invoiceType = InvoiceNumHelper.getInvoiceType(shippingOrder.isServiceOrder(), shippingOrder.getBaseOrder().getB2bOrder());
             if (invoiceType.equals(InvoiceNumHelper.PREFIX_FOR_B2B_ORDER)) {
                 b2bUserDetails = b2bUserDetailsDao.getB2bUserDetails(shippingOrder.getBaseOrder().getUser());
             }
-            invoiceDto = new InvoiceDto(shippingOrder, b2bUserDetails);
+            if(replacementOrder != null){
+              invoiceDto = new InvoiceDto(replacementOrder, b2bUserDetails);
+            }
+            else{
+              invoiceDto = new InvoiceDto(shippingOrder, b2bUserDetails);
+            }
             sexualCareCategory = categoryService.getCategoryByName("sexual-care");
             coupon = referrerProgramManager.getOrCreateRefferrerCoupon(shippingOrder.getBaseOrder().getUser());
             barcodePath = barcodeGenerator.getBarcodePath(shippingOrder.getGatewayOrderId());

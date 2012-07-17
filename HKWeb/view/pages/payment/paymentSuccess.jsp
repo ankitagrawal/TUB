@@ -14,7 +14,6 @@
 %>
 <c:set var="paymentModeId_DefaultGateway" value="<%=defaultGateway%>"/>
 <c:set var="cashBackPercentage" value="<%=cashBackPercentage%>"/>
-<c:set var="paymentModeTechProcess" value="<%=EnumPaymentMode.TECHPROCESS.getId()%>"/>
 
 <s:useActionBean beanclass="com.hk.web.action.core.payment.PaymentSuccessAction" var="actionBean"/>
 <s:layout-render name="/layouts/default.jsp" pageTitle="Payment Successful">
@@ -41,7 +40,7 @@
 <s:layout-component name="menu"> </s:layout-component>
 <s:layout-component name="heading">
     <div style="margin-top: 50px;">
-        <h1 class="green">
+        <h1 class="green" style="font-size: 1.2em;">
             Payment Successful
         </h1>
     </div>
@@ -95,9 +94,42 @@
         "${actionBean.pricingDto.codSubTotal - actionBean.pricingDto.codDiscount}", <%-- unit price - required --%>
         "1"                                                                         <%-- quantity - required --%>
         );
-    </c:if>
+    </c:if>                                                                         
 
     pageTracker._trackTrans();
+
+    //track order count
+    pageTracker._setCustomVar(
+      <%=AnalyticsConstants.CustomVarSlot.orderCount%>,                   // This custom var is set to slot #5.  order_count.
+      "OrderCount",     // The name acts as a kind of category for the user activity.  Required parameter.
+      "${fn:length(actionBean.order.user.orders)}",               // This value of the custom variable.  Required parameter.
+      <%=AnalyticsConstants.CustomVarScope.visitorLevel%>                    // Sets the scope to session-level. Optional parameter.
+   );
+
+   <c:if test="${fn:length(actionBean.order.user.orders) eq 1}">
+      pageTracker._setCustomVar(
+      <%=AnalyticsConstants.CustomVarSlot.firstPurchaseDate%>,                   // This custom var is set to slot #2.  first_order_date
+      "FirstPurchaseDate",     // The name acts as a kind of category for the user activity.  Required parameter.
+      "${actionBean.purchaseDate}",               // This value of the custom variable.  Required parameter.
+      <%=AnalyticsConstants.CustomVarScope.visitorLevel%>                    // Sets the scope to visitor-level. Optional parameter.
+    );
+   </c:if>
+
+     <c:if test="${actionBean.couponCode !=null}">
+      //track couponcode
+    var couponAmount=${actionBean.couponAmount};
+    couponAmount=Math.round(couponAmount);    //event value needs to be an integer
+    pageTracker._trackEvent('purchase','coupon','${actionBean.couponCode}',couponAmount);
+   </c:if>
+
+
+    //track purchase date
+    pageTracker._trackEvent('purchase','purchaseDate','${actionBean.purchaseDate}');
+    //payment mode tracking
+    var amount=${actionBean.payment.amount};
+    amount=Math.round(amount);            //event value takes only integer input in ga
+    pageTracker._trackEvent('purchase','paymentType','${actionBean.paymentMode.name}',amount);   
+     
 
   </script>
 
@@ -120,11 +152,11 @@
             </div>
 
 
-            <h2 class="green">Your payment was successful.</h2>
+            <%--<h2 class="green" style="font-size: 1.2em;" >Your payment was successful.</h2>--%>
 
-            <p>
-                Your order ID is <strong>${actionBean.payment.order.gatewayOrderId}</strong>.</p>
-
+            <h2 style="font-size: 1em; padding-left: 15px;">
+                Your order ID is <strong>${actionBean.payment.order.gatewayOrderId}</strong>.</h2>
+            <br/>
             <shiro:hasRole name="<%=RoleConstants.HK_UNVERIFIED%>">
                 <div class='promos'>
                     <div class='prom yellow help' style="width: 95%; padding:5px;">
@@ -178,11 +210,11 @@
             </c:if>--%>
             <br/>
 
-            <h2>Shipping & Delivery</h2>
+            <h2 class="paymentH2">Shipping & Delivery</h2>
 
             <p>Your order will be dispatched within 1-3 business days. Additional time will be taken by the courier company.</p>
 
-            <h2>Customer Support</h2>
+            <h2 class="paymentH2">Customer Support</h2>
 
             <p><s:link beanclass="com.hk.web.action.pages.ContactAction">Write to us</s:link> with your Order ID if you have any questions or call us on 0124-4551616</p>
 
@@ -211,15 +243,17 @@
             </c:if>
 
             <div class="step2 success_order_summary" style="padding: 5px; float: left; margin-right: 5px;">
-                <h2 style="margin: 10px;">Order Summary</h2>
+                <h2 class="paymentH2">Order Summary</h2>
 
                 <s:layout-render name="/layouts/embed/orderSummaryTableDetailed.jsp" pricingDto="${actionBean.pricingDto}"
                                  orderDate="${actionBean.payment.paymentDate}"/>
                 <div class="floatfix"></div>
-            </div>
 
-            <div style="margin-top: 10px; float: right; margin-right: 5px;">
-                <h2>Shipping address${actionBean.pricingDto.shippingLineCount > 1 ? 'es' : ''}</h2>
+            </div>
+          
+          <div style="clear:both;"></div>
+             <div style="margin-top: 10px; float: left; margin-right: 5px;">
+                <h2 class="paymentH2">Shipping address${actionBean.pricingDto.shippingLineCount > 1 ? 'es' : ''}</h2>
 
                 <p>
                     <c:set var="address" value="${actionBean.payment.order.address}"/>
@@ -233,6 +267,8 @@
                     <span class="sml lgry upc">Phone </span> ${address.phone}<br/>
                 </p>
             </div>
+              <div class="floatfix"></div>
+
 
 
         </c:when>

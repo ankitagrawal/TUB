@@ -3,10 +3,7 @@ package com.hk.web.action.admin.catalog.product;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.JsonResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.action.*;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -15,7 +12,6 @@ import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.session.Session;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.admin.manager.ProductManager;
 import com.hk.admin.util.XslParser;
 import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.core.HealthkartConstants;
@@ -84,8 +80,6 @@ public class EditProductAttributesAction extends BaseAction {
     @Autowired
     MenuHelper                    menuHelper;
     @Autowired
-    ProductManager                productManager;
-    @Autowired
     AffiliateDao                  affiliateDao;
     @Autowired
     ComboDao                      comboDao;
@@ -104,7 +98,7 @@ public class EditProductAttributesAction extends BaseAction {
     private String                preferredZone;
     private String                productImageId;
 
-    public Resolution editDescription() {
+  public Resolution editDescription() {
         product = getProductService().getProductById(productId);
         return new ForwardResolution("/pages/editDescription.jsp");
     }
@@ -120,7 +114,7 @@ public class EditProductAttributesAction extends BaseAction {
     }
 
     public Resolution editFeatures() {
-        logger.info("product id " + product);
+        logger.debug("product id " + product);
         productFeatures = product.getProductFeatures();
         return new ForwardResolution("/pages/editFeatures.jsp");
     }
@@ -169,9 +163,9 @@ public class EditProductAttributesAction extends BaseAction {
             addRedirectAlertMessage(new SimpleMessage("Brand cannot be null"));
             return new ForwardResolution("/pages/editProductDetails.jsp");
         }
-        logger.info( "loading combo ");
+        logger.debug( "loading combo ");
         Combo combo = getBaseDao().get(Combo.class, productId);
-        logger.info( "got combo ");
+        logger.debug( "got combo ");
         Supplier supplier = supplierDao.findByTIN(tin);
         if (combo == null && supplier == null) {
             addRedirectAlertMessage(new SimpleMessage("Supplier corresponding to given tin does not exist"));
@@ -180,9 +174,9 @@ public class EditProductAttributesAction extends BaseAction {
         product.setSupplier(supplier);
         product.setBrand(brand);
         product.setManufacturer(manufacturer);
-        logger.info( "actual save call start ");
+        logger.debug( "actual save call start ");
         getProductService().save(product);
-        logger.info( "actual save call  ");
+        logger.debug( "actual save call  ");
         return new ForwardResolution("/pages/close.jsp");
     }
 
@@ -202,13 +196,13 @@ public class EditProductAttributesAction extends BaseAction {
             if (productVariant.isClearanceSale() == null || !productVariant.isClearanceSale()) {
                 if (productVariant.getCostPrice() != null && productVariant.getCostPrice() > productVariant.getHkPrice(null)) {
                     addRedirectAlertMessage(new SimpleMessage("HK Price of variant " + productVariant.getId() + " is less than Cost Price. Please fix it."));
-                    return new ForwardResolution(ProductAction.class, "editProductVariantDetails");
+                    return new RedirectResolution(EditProductAttributesAction.class, "editProductVariantDetails").addParameter("product", product);
                 }
             }
 
             if (productVariant.getMarkedPrice() != null && productVariant.getMarkedPrice() < productVariant.getHkPrice(null)) {
                 addRedirectAlertMessage(new SimpleMessage("HK Price of variant " + productVariant.getId() + " is more than Marked Price. Please fix it."));
-                return new ForwardResolution(ProductAction.class, "editProductVariantDetails");
+                return new RedirectResolution(EditProductAttributesAction.class, "editProductVariantDetails").addParameter("product", product);
             }
 
             String productOpts = "";
@@ -346,7 +340,7 @@ public class EditProductAttributesAction extends BaseAction {
   }
 
   public Resolution saveRelatedProducts() {
-        logger.info("product id " + product);
+        logger.debug("product id " + product);
         List<Product> relatedProductsList = new ArrayList<Product>();
         if (relatedProducts != null) {
             for (Product relatedProduct : relatedProducts) {

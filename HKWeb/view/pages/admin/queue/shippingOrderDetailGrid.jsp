@@ -50,6 +50,7 @@
 <c:set var="shippingOrderStatusShipped" value="<%=EnumShippingOrderStatus.SO_Shipped.getId()%>"/>
 <c:set var="shippingOrderStatusDelivered" value="<%=EnumShippingOrderStatus.SO_Delivered.getId()%>"/>
 <c:set var="shippingOrderStatusRTO" value="<%=EnumShippingOrderStatus.SO_Returned.getId()%>"/>
+<c:set var="shippingOrderStatusRTOInitiated" value="<%=EnumShippingOrderStatus.RTO_Initiated.getId()%>"/>
 <c:set var="lineItem_Service_Postpaid" value="<%=EnumProductVariantPaymentType.Postpaid.getId()%>"/>
 
 
@@ -79,7 +80,7 @@
 <%--<div id="shippingOrder-${shippingOrder.id}" class="detailDiv">--%>
 <td id="shippingOrderDetail-${shippingOrder.id}">
     <div class="floatleft">
-        Store ID: <strong>${shippingOrder.baseOrder.store.prefix}</strong>
+        Store ID: <strong>${shippingOrder.baseOrder.store.prefix}</strong>, Score: ${shippingOrder.baseOrder.score} 
     </div>
     <div class="clear" style=""></div>
     <div class="floatleft">
@@ -107,6 +108,10 @@
         <div class="clear"></div>
         <div class="floatleft">
             Escalted On: <fmt:formatDate value="${(hk:getEscalationDate(shippingOrder))}" type="both" timeStyle="short"/>
+        </div>
+        <div class="clear"></div>
+         <div class="floatleft">
+            Placed On : <fmt:formatDate value="${shippingOrder.baseOrder.payment.paymentDate}" type="date"/>
         </div>
         <div class="clear"></div>
     </c:if>
@@ -167,6 +172,11 @@
             <s:param name="shippingOrder" value="${shippingOrder}"/>
             Cancel SO
         </s:link>)
+        &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction" event="delieverDropShippingOrder"
+                                 class="delieverSO">
+            <s:param name="shippingOrder" value="${shippingOrder}"/>
+            Mark SO Delivered 
+        </s:link>)
         </c:if>
         <c:if test="${isSearchShippingOrder}">
             <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_CATMAN_ADMIN%>">
@@ -180,6 +190,33 @@
                 <c:set var="shippingOrderStatusId" value="${shippingOrder.orderStatus.id}"/>
                 <c:if
                         test="${shippingOrderStatusId == shippingOrderStatusShipped || shippingOrderStatusId == shippingOrderStatusDelivered}">
+                    <br/>
+                    <s:form beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction" class="markRTOForm">
+                        <s:param name="shippingOrder" value="${shippingOrder.id}"/>
+                        <div class="buttons">
+                            <s:submit name="initiateRTO" value="Initiate RTO" class="initiateRTOButton"/>
+                        </div>
+                    </s:form>
+                    <script type="text/javascript">
+                        $('.initiateRTOButton').click(function() {
+                            var proceed = confirm('Are you sure?');
+                            if (!proceed) return false;
+                        });
+
+                        $('.markRTOForm').ajaxForm({dataType: 'json', success: _markOrderRTO});
+
+                        function _markOrderRTO(res) {
+                            if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+                                alert("RTO Initiated.");
+                            }
+                        }
+                    </script>
+                </c:if>
+            </shiro:hasAnyRoles>
+            <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_LOGISTICS_ADMIN%>">
+                <c:set var="shippingOrderStatusId" value="${shippingOrder.orderStatus.id}"/>
+                <c:if
+                        test="${shippingOrderStatusId == shippingOrderStatusRTOInitiated}">
                     <br/>
                     <s:form beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction" class="markRTOForm">
                         <s:param name="shippingOrder" value="${shippingOrder.id}"/>
@@ -379,11 +416,15 @@
         </div>
         <div class="clear"></div>
         <div class="floatleft">
-            Tracking Id: <strong>${shipment.trackingId}</strong>
+	        Tracking Id: <strong>${shipment.trackingId}</strong>
         </div>
         <div class="clear"></div>
         <div class="floatleft">
             Size: ${shipment.boxSize}, Weight: ${shipment.boxWeight}
+        </div>
+        <div class="clear"></div>
+	    <div class="floatleft">
+            Picker: ${shipment.picker}, Packer: ${shipment.packer}
         </div>
         <div class="clear"></div>
     </td>

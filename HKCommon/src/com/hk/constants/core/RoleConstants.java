@@ -44,7 +44,7 @@ public class RoleConstants {
     public static final String ROLE_GROUP_MULTIPLE_WAREHOUSE = CATEGORY_MANAGER + ", " + ADMIN + ", " + WH_MANAGER_L1;
     public static final String ROLE_GROUP_LOGISTICS_ADMIN    = OPS_MANAGER + ", " + ADMIN;
     public static final String ROLE_GROUP_ADMINS             = GOD + ", " + ADMIN + ", " + ROCKSTAR + ", " + OPS_MANAGER + ", " + CUSTOMER_SUPPORT + ", " + FINANCE + ", "
-                                                                     + CATEGORY_MANAGER + ", " + TICKETADMIN + "," + REPORT_ADMIN;
+                                                                     + CATEGORY_MANAGER + ", " + TICKETADMIN + "," + REPORT_ADMIN +"," +BASIC_ROLES;
     public static final String HK_AFFILIATE                  = "HK_AFFILIATE";
     public static final String HK_AFFILIATE_UNVERIFIED       = "HK_AFFILIATE_UNVERIFIED";
     public static final String AFFILIATE                     = HK_AFFILIATE_UNVERIFIED + ", " + HK_AFFILIATE;
@@ -54,6 +54,9 @@ public class RoleConstants {
     public static final String HK_EMPLOYEE                   = "HK_EMPLOYEE";
     public static final String ROLE_GROUP_ACCOUNTING_INVOICE = GOD + ", " + ADMIN + ", " + FINANCE + ", " + ROLE_GROUP_LOGISTICS_ADMIN;
 
-    public static final String  HK_AFFILIATE_MANAGER         = " HK_AFFILIATE_MANAGER";
+    public static final String  HK_AFFILIATE_MANAGER         = "HK_AFFILIATE_MANAGER";
     public static final String FINANCE_ADMIN                 ="FINANCE_ADMIN";
+
+    public static final String DEVELOPER                     = "DEVELOPER";
+    public static final String HK_DELIVERY_GUY               = "HK_DELIVERY_GUY";
 }

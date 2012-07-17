@@ -1,7 +1,12 @@
 package com.hk.impl.service.clm;
 
+import java.util.List;
 import java.util.Set;
 
+import com.hk.constants.order.EnumOrderStatus;
+import com.hk.domain.catalog.category.Category;
+import com.hk.domain.clm.CategoryKarmaProfile;
+import com.hk.pact.dao.clm.CategoryKarmaProfileDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +37,8 @@ public class KarmaProfileServiceImpl implements KarmaProfileService {
     @Autowired
     private KarmaProfileDao karmaProfileDao;
     @Autowired
+    private CategoryKarmaProfileDao categoryKarmaProfileDao;
+    @Autowired
     private OrderService    orderService;
     @Autowired
     private SkuService      skuService;
@@ -41,9 +48,18 @@ public class KarmaProfileServiceImpl implements KarmaProfileService {
         return getKarmaProfileDao().save(karmaProfile);
     }
 
+    public CategoryKarmaProfile save(CategoryKarmaProfile categoryKarmaProfile){
+        return getCategoryKarmaProfileDao().save(categoryKarmaProfile);
+    }
+
     public KarmaProfile findByUser(User user) {
         return getKarmaProfileDao().findByUser(user);
     }
+
+    public CategoryKarmaProfile findByUserAndCategory(User user, Category category){
+         return getCategoryKarmaProfileDao().findByUserAndCategory(user,category);
+    }
+
 
     public KarmaProfile updateKarmaAfterOrder(Order order) {
         User user = order.getUser();
@@ -54,6 +70,34 @@ public class KarmaProfileServiceImpl implements KarmaProfileService {
             karmaProfile.setKarmaPoints(getKarmaPoints(order));
         }
         karmaProfile = this.save(karmaProfile);
+        return karmaProfile;
+    }
+
+    //not using this method anywhere
+    public KarmaProfile updateKarmaAfterOrderCancellation(Order order){
+        User user = order.getUser();
+        KarmaProfile karmaProfile = findByUser(user);
+        //the below code is written for orders which might be pending before the karmaprofile feature is implemented
+        //and must be removed in the future
+        if (karmaProfile == null) {
+            karmaProfile = new KarmaProfile();
+            karmaProfile.setUser(user);
+        }
+        //0 karma points is a safe hardcoding unless the customer buys again the same month
+        List<Order> orderList=user.getOrders();
+        if(orderList.size()>0)  {
+            for(Order ord : orderList){
+                if(ord.getOrderStatus().getId() != EnumOrderStatus.Cancelled.getId()) {
+                    if(ord.getId() == order.getId()){
+                        karmaProfile.setKarmaPoints(0);
+                        karmaProfile = this.save(karmaProfile);
+                        break;
+                    }
+                   break;
+                }
+            }
+
+        }
         return karmaProfile;
     }
 
@@ -99,6 +143,14 @@ public class KarmaProfileServiceImpl implements KarmaProfileService {
 
     public void setKarmaProfileDao(KarmaProfileDao karmaProfileDao) {
         this.karmaProfileDao = karmaProfileDao;
+    }
+
+    public CategoryKarmaProfileDao getCategoryKarmaProfileDao() {
+        return categoryKarmaProfileDao;
+    }
+
+    public void setCategoryKarmaProfileDao(CategoryKarmaProfileDao categoryKarmaProfileDao) {
+        this.categoryKarmaProfileDao = categoryKarmaProfileDao;
     }
 
     public OrderService getOrderService() {

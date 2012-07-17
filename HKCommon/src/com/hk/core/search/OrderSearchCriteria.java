@@ -148,11 +148,11 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
         DetachedCriteria paymentCriteria = criteria.createCriteria("payment", CriteriaSpecification.LEFT_JOIN);
         if (paymentStartDate != null || paymentEndDate != null) {
             paymentCriteria.add(Restrictions.between("paymentDate", paymentStartDate, paymentEndDate));
-            paymentCriteria.addOrder(org.hibernate.criterion.Order.asc("paymentDate"));
-        } else {
-            // criteria.addOrder(org.hibernate.criterion.Order.asc("id"));
-            paymentCriteria.addOrder(org.hibernate.criterion.Order.asc("paymentDate"));
         }
+        /*
+         * else { // criteria.addOrder(org.hibernate.criterion.Order.asc("id"));
+         * paymentCriteria.addOrder(org.hibernate.criterion.Order.asc("paymentDate")); }
+         */
         if (paymentModes != null && paymentModes.size() > 0) {
             /*
              * if (paymentCriteria == null) { paymentCriteria = criteria.createCriteria("payment"); }
@@ -199,9 +199,16 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
             orderCategoryCriteria.add(Restrictions.in("category", categories));
         }
 
-        criteria.addOrder(org.hibernate.criterion.Order.desc("score"));
+        // criteria.addOrder(org.hibernate.criterion.Order.desc("score"));
         // criteria.addOrder(org.hibernate.criterion.Order.desc("updateDate"));
 
+        if (sortByPaymentDate) {
+            paymentCriteria.addOrder(OrderBySqlFormula.sqlFormula("date(payment_date) asc"));
+
+        } if (sortByScore) {
+            criteria.addOrder(org.hibernate.criterion.Order.desc("score"));
+        }
+        
         return criteria;
     }
 }

@@ -1,5 +1,6 @@
 <%@ page import="com.akube.framework.gson.JsonUtils" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
+<%@ page import="com.hk.constants.courier.StateList" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 
@@ -126,7 +127,8 @@
             form.find("input[type='text'][name='address.line2']").val(street2);
           }
           form.find("input[type='text'][name='address.city']").val(city);
-          form.find("input[type='text'][name='address.state']").val(state);
+//          form.find("input[type='text'][name='address.state']").val(state);
+          form.find("[name='address.state']").val(state.toUpperCase());
           form.find("input[type='text'][name='address.pin']").val(pin);
           form.find("input[type='text'][name='address.phone']").val(phone);
           form.find("input[type='hidden'][name='address.id']").val(id);
@@ -187,7 +189,12 @@
           <div class='label'>City<span class="aster">*</span></div>
           <s:text name="address.city"/>
           <div class='label'>State<span class="aster">*</span></div>
-          <s:text name="address.state"/>
+          <s:select name="address.state" style="width:310px;">
+            <c:forEach items="<%=StateList.stateList%>" var="state">
+              <s:option value="${state}">${state}</s:option>
+            </c:forEach>
+          </s:select>
+          <%--<s:text name="address.state"/>--%>
           <div class='label'>PIN Code<span class="aster">*</span></div>
           <s:text name="address.pin" class="pincode" maxlength="6"/>
           <div class='label'>Phone / Mobile<span class="aster">*</span></div>

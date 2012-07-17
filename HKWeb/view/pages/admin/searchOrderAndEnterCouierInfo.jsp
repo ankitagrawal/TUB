@@ -2,6 +2,8 @@
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.domain.courier.BoxSize" %>
+<%@ page import="com.hk.constants.shipment.EnumPicker" %>
+<%@ page import="com.hk.constants.shipment.EnumPacker" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -67,6 +69,16 @@
             </c:if>
 
             <s:hidden name="shippingOrder" value="${shipmentQueueBean.shippingOrder}"/>
+	         <label>Picker:</label><s:select name="shipment.picker">
+		        <c:forEach items="<%=EnumPicker.getAll()%>" var="pType">
+			        <s:option value="${pType.name}">${pType.name}</s:option>
+		        </c:forEach>
+	        </s:select>
+	          <label>Packer:</label><s:select name="shipment.packer">
+		        <c:forEach items="<%=EnumPacker.getAll()%>" var="pType">
+			        <s:option value="${pType.name}">${pType.name}</s:option>
+		        </c:forEach>
+	        </s:select>
             <label>Box Size:</label>
             <s:select name="shipment.boxSize">
               <c:forEach var="box" items="${boxSizeList}">
@@ -87,6 +99,12 @@
               <label>Approx Weight (By System)</label> ${shipmentQueueBean.approxWeight}
 
               <div class="buttons" style="margin-left: 90%;"><s:submit name="saveShipmentDetails" value="Save"/></div>
+
+               <div style="margin:5px;color:red;font-size:18px;">
+              <c:if test="${shipmentQueueBean.shippingOrder.baseOrder.userComments != null}">
+              	User Instructions: ${shipmentQueueBean.shippingOrder.baseOrder.userComments}
+              </c:if>
+              </div>
           </s:form>
         </fieldset>
       </c:otherwise>

@@ -17,6 +17,7 @@ import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.report.dto.order.OrderLifecycleStateTransitionDto;
 import com.hk.report.dto.order.reconcilation.ReconcilationReportDto;
 import com.hk.report.pact.dao.order.ReportOrderDao;
@@ -31,8 +32,8 @@ public class ReportShippingOrderServiceImpl implements ReportShippingOrderServic
     @Autowired
     private ReportOrderDao         reportOrderDao;
 
-    public List<ReconcilationReportDto> findReconcilationReportByDate(Date startDate, Date endDate, String paymentProcess, Courier courier, Long warehouseId) {
-        return getReportShippingOrderDao().findReconcilationReportByDate(startDate, endDate, paymentProcess, courier, warehouseId);
+    public List<ReconcilationReportDto> findReconcilationReportByDate(Date startDate, Date endDate, String paymentProcess, Courier courier, Long warehouseId, Long shippingOrderStatusId) {
+        return getReportShippingOrderDao().findReconcilationReportByDate(startDate, endDate, paymentProcess, courier, warehouseId,shippingOrderStatusId);
     }
 
 
@@ -530,7 +531,7 @@ public class ReportShippingOrderServiceImpl implements ReportShippingOrderServic
             if (orderIds != null && orderIds.size() > 0) {
                 placedOrders.addAll(orderIds);
                 List<Long> tpslOrderList = getReportOrderDao().getOrdersByPaymentModeAndStatus(orderIds,
-                        Arrays.asList(EnumPaymentMode.TECHPROCESS.getId(), EnumPaymentMode.CITRUS.getId()), Arrays.asList(EnumPaymentStatus.SUCCESS.getId()));
+                        EnumPaymentMode.getPrePaidPaymentModes(), Arrays.asList(EnumPaymentStatus.SUCCESS.getId()));
                 tpslOrders.addAll(tpslOrderList);
                 List<Long> codOrderList = getReportOrderDao().getOrdersByPaymentModeAndStatus(orderIds, Arrays.asList(EnumPaymentMode.COD.getId()),
                         Arrays.asList(EnumPaymentStatus.AUTHORIZATION_PENDING.getId(), EnumPaymentStatus.ON_DELIVERY.getId()));
@@ -623,8 +624,8 @@ public class ReportShippingOrderServiceImpl implements ReportShippingOrderServic
         return stateTransitionDtos;
     }
 
-    public List<ShippingOrder> getShippingOrderListForCouriers(Date startDate,Date endDate,List<Courier> courierList){
-        return getReportShippingOrderDao().getShippingOrderListForCouriers(startDate,endDate,courierList);
+    public List<ShippingOrder> getShippingOrderListForCouriers(Date startDate,Date endDate,List<Courier> courierList, Warehouse warehouse){
+        return getReportShippingOrderDao().getShippingOrderListForCouriers(startDate,endDate,courierList,warehouse);
     }
 
     public ReportShippingOrderDao getReportShippingOrderDao() {

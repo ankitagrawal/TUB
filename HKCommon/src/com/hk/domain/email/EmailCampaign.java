@@ -27,102 +27,135 @@ import com.hk.domain.core.EmailType;
 @Table(name = "email_campaign")
 public class EmailCampaign implements java.io.Serializable {
 
-    @Id
-    @GeneratedValue(strategy = AUTO)
-    @Column(name = "id", unique = true, nullable = false)
-    private Long      id;
+  @Id
+  @GeneratedValue(strategy = AUTO)
+  @Column(name = "id", unique = true, nullable = false)
+  private Long id;
 
-    @Column(name = "name", nullable = false, length = 80)
-    private String    name;
+  @Column(name = "name", nullable = false, length = 80)
+  private String name;
 
-    @Column(name = "template", nullable = false, length = 80)
-    private String    template;
+  @Column(name = "template", length = 80)
+  private String template;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "create_date", nullable = false, length = 19)
-    private Date      createDate;
+  @Temporal(TemporalType.TIMESTAMP)
+  @Column(name = "create_date", nullable = false, length = 19)
+  private Date createDate;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "start_date", length = 19)
-    private Date      startDate;
+  @Temporal(TemporalType.TIMESTAMP)
+  @Column(name = "start_date", length = 19)
+  private Date startDate;
 
-    @Column(name = "min_day_gap", nullable = false)
-    private Long      minDayGap;
+  @Column(name = "min_day_gap", nullable = false)
+  private Long minDayGap;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "email_type_id")
-    private EmailType emailType;
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "email_type_id")
+  private EmailType emailType;
 
-    @Column(name = "sent_count", nullable = true)
-    private Long      sentCount;
+  @Column(name = "sent_count", nullable = true)
+  private Long sentCount;
 
-    public Long getId() {
-        return this.id;
-    }
+  @Column(name = "html_path")
+  private String htmlPath;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  @Column(name = "subject")
+  private String subject;
 
-    public String getName() {
-        return this.name;
-    }
+  @Column(name = "template_ftl")
+  private String templateFtl;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public Long getId() {
+    return this.id;
+  }
 
-    public String getTemplate() {
-        return this.template;
-    }
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-    public void setTemplate(String template) {
-        this.template = template;
-    }
+  public String getName() {
+    return this.name;
+  }
 
-    public Date getCreateDate() {
-        return this.createDate;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
+  public String getTemplate() {
+    return this.template;
+  }
 
-    public Date getStartDate() {
-        return this.startDate;
-    }
+  public void setTemplate(String template) {
+    this.template = template;
+  }
 
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
+  public Date getCreateDate() {
+    return this.createDate;
+  }
 
-    public Long getMinDayGap() {
-        return this.minDayGap;
-    }
+  public void setCreateDate(Date createDate) {
+    this.createDate = createDate;
+  }
 
-    public void setMinDayGap(Long minDayGap) {
-        this.minDayGap = minDayGap;
-    }
+  public Date getStartDate() {
+    return this.startDate;
+  }
 
-    public EmailType getEmailType() {
-        return emailType;
-    }
+  public void setStartDate(Date startDate) {
+    this.startDate = startDate;
+  }
 
-    public void setEmailType(EmailType emailType) {
-        this.emailType = emailType;
-    }
+  public Long getMinDayGap() {
+    return this.minDayGap;
+  }
 
-    public Long getSentCount() {
-        return sentCount;
-    }
+  public void setMinDayGap(Long minDayGap) {
+    this.minDayGap = minDayGap;
+  }
 
-    public void setSentCount(Long sentCount) {
-        this.sentCount = sentCount;
-    }
+  public EmailType getEmailType() {
+    return emailType;
+  }
 
-    @Override
-    public String toString() {
-        return id == null ? "" : id.toString();
-    }
+  public void setEmailType(EmailType emailType) {
+    this.emailType = emailType;
+  }
+
+  public Long getSentCount() {
+    return sentCount;
+  }
+
+  public void setSentCount(Long sentCount) {
+    this.sentCount = sentCount;
+  }
+
+  public String getSubject() {
+    return subject;
+  }
+
+  public void setSubject(String subject) {
+    this.subject = subject;
+  }
+
+  public String getTemplateFtl() {
+    return templateFtl;
+  }
+
+  public void setTemplateFtl(String templateFtl) {
+    this.templateFtl = templateFtl;
+  }
+
+  public String getHtmlPath() {
+    return htmlPath;
+  }
+
+  public void setHtmlPath(String htmlPath) {
+    this.htmlPath = htmlPath;
+  }
+
+  @Override
+  public String toString() {
+    return id == null ? "" : id.toString();
+  }
 
 }

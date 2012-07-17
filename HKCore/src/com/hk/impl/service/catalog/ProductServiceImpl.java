@@ -1,208 +1,318 @@
 package com.hk.impl.service.catalog;
 
-import java.util.List;
-import java.util.Set;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.*;
 
+import com.hk.constants.core.Keys;
+import com.hk.domain.catalog.product.*;
+import com.hk.pact.service.mooga.RecommendationEngine;
 import net.sourceforge.stripes.controller.StripesFilter;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.akube.framework.dao.Page;
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.product.ProductExtraOption;
-import com.hk.domain.catalog.product.ProductGroup;
-import com.hk.domain.catalog.product.ProductImage;
-import com.hk.domain.catalog.product.ProductOption;
-import com.hk.domain.content.PrimaryCategoryHeading;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.catalog.product.combo.ComboProduct;
+import com.hk.domain.content.PrimaryCategoryHeading;
 import com.hk.pact.dao.catalog.product.ProductDao;
+import com.hk.pact.dao.catalog.combo.ComboDao;
 import com.hk.pact.dao.review.ReviewDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.review.ReviewService;
 import com.hk.web.filter.WebContext;
+import com.hk.manager.LinkManager;
 import com.hk.impl.dao.content.PrimaryCategoryHeadingDaoImpl;
 import com.hk.util.ProductReferrerMapper;
-import com.hk.manager.LinkManager;
 
 @Service
 public class ProductServiceImpl implements ProductService {
 
+	@Autowired
+	private ProductDao productDAO;
+
+	@Autowired
+	private ComboDao comboDao;
+
+	@Autowired
+	private ReviewService reviewService;
+
     @Autowired
-    private ProductDao productDAO;
+    private RecommendationEngine recommendationService;
+
     @Autowired
     private PrimaryCategoryHeadingDaoImpl primaryCategoryHeadingDaoImpl;
+
     @Autowired
     private LinkManager linkManager;
 
-    @Autowired
-    private ReviewService reviewService;
+    @Value("#{hkEnvProps['" + Keys.Env.moogaEnabled + "']}")
+    private Boolean moogaOn;
+
 
     public Product getProductById(String productId) {
-        return getProductDAO().getProductById(productId);
-    }
+		return getProductDAO().getProductById(productId);
+	}
 
-    public List<Product> getAllProducts(){
-        return getProductDAO().getAll(Product.class);
-    }
+	public List<Product> getAllProducts() {
+		return getProductDAO().getAll(Product.class);
+	}
 
-    public boolean doesBrandExist(String brandName) {
-        return getProductDAO().doesBrandExist(brandName);
-    }
+	public boolean doesBrandExist(String brandName) {
+		return getProductDAO().doesBrandExist(brandName);
+	}
 
-    public ProductExtraOption findProductExtraOptionByNameAndValue(String name, String value) {
-        return getProductDAO().findProductExtraOptionByNameAndValue(name, value);
-    }
+	public ProductExtraOption findProductExtraOptionByNameAndValue(String name, String value) {
+		return getProductDAO().findProductExtraOptionByNameAndValue(name, value);
+	}
 
-    public ProductGroup findProductGroupByName(String name) {
-        return getProductDAO().findProductGroupByName(name);
-    }
+	public ProductGroup findProductGroupByName(String name) {
+		return getProductDAO().findProductGroupByName(name);
+	}
 
-    public ProductOption findProductOptionByNameAndValue(String name, String value) {
-        return getProductDAO().findProductOptionByNameAndValue(name, value);
-    }
+	public ProductOption findProductOptionByNameAndValue(String name, String value) {
+		return getProductDAO().findProductOptionByNameAndValue(name, value);
+	}
 
-    public String getProductUrl(Product product) {
-        String host = "http://".concat(StripesFilter.getConfiguration().getSslConfiguration().getUnsecureHost());
-        String contextPath = WebContext.getRequest().getContextPath();
-        String urlString = host.concat(contextPath).concat("/product/");
-        return urlString + product.getSlug() + "/" + product.getId();
-      }
+	public String getProductUrl(Product product) {
+		String host = "http://".concat(StripesFilter.getConfiguration().getSslConfiguration().getUnsecureHost());
+		String contextPath = WebContext.getRequest().getContextPath();
+		String urlString = host.concat(contextPath).concat("/product/");
+		return urlString + product.getSlug() + "/" + product.getId();
+	}
 
-    public List<Product> getAllProductByBrand(String brand) {
-        return getProductDAO().getAllProductByBrand(brand);
-    }
+	public List<Product> getAllProductByBrand(String brand) {
+		return getProductDAO().getAllProductByBrand(brand);
+	}
 
-    public List<Product> getAllProductByCategory(String category) {
-        return getProductDAO().getAllProductByCategory(category);
-    }
+	public List<Product> getAllProductByCategory(String category) {
+		return getProductDAO().getAllProductByCategory(category);
+	}
 
-    public List<Product> getAllProductBySubCategory(String category) {
-        return getProductDAO().getAllProductBySubCategory(category);
-    }
+	public List<Product> getAllProductNotByCategory(List<String> categoryNames) {
+		return getProductDAO().getAllProductNotByCategory(categoryNames);
+	}
 
-    public Page getAllProductsByCategoryAndBrand(String category, String brand, int page, int perPage) {
-        return getProductDAO().getAllProductsByCategoryAndBrand(category, brand, page, perPage);
-    }
+	public List<Product> getAllProductBySubCategory(String category) {
+		return getProductDAO().getAllProductBySubCategory(category);
+	}
 
-    public List<ProductImage> getImagesByProductForProductMainPage(Product product) {
-        return getProductDAO().getImagesByProductForProductMainPage(product);
-    }
+	public Page getAllProductsByCategoryAndBrand(String category, String brand, int page, int perPage) {
+		return getProductDAO().getAllProductsByCategoryAndBrand(category, brand, page, perPage);
+	}
 
-    public Page getPaginatedResults(List<String> productIdList, int page, int perPage) {
-        return getProductDAO().getPaginatedResults(productIdList, page, perPage);
-    }
+	public List<ProductImage> getImagesByProductForProductMainPage(Product product) {
+		return getProductDAO().getImagesByProductForProductMainPage(product);
+	}
 
-    public Page getProductByBrand(String brand, int page, int perPage) {
-        return getProductDAO().getProductByBrand(brand, page, perPage);
-    }
+	public Page getPaginatedResults(List<String> productIdList, int page, int perPage) {
+		return getProductDAO().getPaginatedResults(productIdList, page, perPage);
+	}
 
-    public List<Product> getProductByCategory(String category) {
-        return getProductDAO().getProductByCategory(category);
-    }
+	public Page getProductByBrand(String brand, int page, int perPage) {
+		return getProductDAO().getProductByBrand(brand, page, perPage);
+	}
 
-    public List<Product> getProductByCategoryAndBrand(String category, String brand) {
-        return getProductDAO().getProductByCategoryAndBrand(category, brand);
-    }
+	public List<Product> getProductByCategory(String category) {
+		return getProductDAO().getProductByCategory(category);
+	}
 
-    public Page getProductByCategoryAndBrand(String category, String brand, int page, int perPage) {
-        return getProductDAO().getProductByCategoryAndBrand(category, brand, page, perPage);
-    }
+	public List<Product> getProductByCategoryAndBrand(String category, String brand) {
+		return getProductDAO().getProductByCategoryAndBrand(category, brand);
+	}
 
-    public Page getProductByCategoryAndBrand(List<String> categoryNames, String brand, int page, int perPage) {
-        return getProductDAO().getProductByCategoryAndBrand(categoryNames, brand, page, perPage);
-    }
+	public Page getProductByCategoryAndBrand(String category, String brand, int page, int perPage) {
+		return getProductDAO().getProductByCategoryAndBrand(category, brand, page, perPage);
+	}
 
-    public Page getProductByCategoryAndBrandNew(Category cat1, Category cat2, Category cat3, String brand, int page, int perPage) {
-        return getProductDAO().getProductByCategoryAndBrandNew(cat1, cat2, cat3, brand, page, perPage);
-    }
+	public Page getProductByCategoryAndBrand(List<String> categoryNames, String brand, int page, int perPage) {
+		return getProductDAO().getProductByCategoryAndBrand(categoryNames, brand, page, perPage);
+	}
 
-    public List<Product> getProductByName(String name) {
-        return getProductDAO().getProductByName(name);
-    }
+	public Page getProductByCategoryAndBrandNew(Category cat1, Category cat2, Category cat3, String brand, int page, int perPage) {
+		return getProductDAO().getProductByCategoryAndBrandNew(cat1, cat2, cat3, brand, page, perPage);
+	}
 
-    public Page getProductByName(String name, int page, int perPage) {
-        return getProductDAO().getProductByName(name, page, perPage);
-    }
+	public List<Product> getProductByName(String name) {
+		return getProductDAO().getProductByName(name);
+	}
 
-    public ProductImage getProductImageByChecksum(String checksum) {
-        return getProductDAO().getProductImageByChecksum(checksum);
-    }
+	public Page getProductByName(String name, int page, int perPage) {
+		return getProductDAO().getProductByName(name, page, perPage);
+	}
 
-    public Set<Product> getProductsFromProductIds(String productIds) {
-        return getProductDAO().getProductsFromProductIds(productIds);
-    }
+	public ProductImage getProductImageByChecksum(String checksum) {
+		return getProductDAO().getProductImageByChecksum(checksum);
+	}
 
-    public List<Product> getRecentlyAddedProducts() {
-        return getProductDAO().getRecentlyAddedProducts();
-    }
+	public Set<Product> getProductsFromProductIds(String productIds) {
+		return getProductDAO().getProductsFromProductIds(productIds);
+	}
 
-    public List<Product> getRelatedProducts(Product product) {
-        return getProductDAO().getRelatedProducts(product);
-    }
+	public List<Product> getRecentlyAddedProducts() {
+		return getProductDAO().getRecentlyAddedProducts();
+	}
 
-    public Product save(Product product) {
-        return getProductDAO().save(product);
-    }
+	public List<Product> getRelatedProducts(Product product) {
+		return getProductDAO().getRelatedProducts(product);
+	}
 
-    public Page getProductReviews(Product product, List<Long> reviewStatusList, int page, int perPage){
-       return getReviewService().getProductReviews(product,reviewStatusList,page,perPage);
-    }
+	public Product save(Product product) {
+		return getProductDAO().save(product);
+	}
 
-  public Long getAllReviews(Product product, List<Long> reviewStatusList){
-       return getReviewService().getAllReviews(product, reviewStatusList);
-    }
+	public Page getProductReviews(Product product, List<Long> reviewStatusList, int page, int perPage) {
+		return getReviewService().getProductReviews(product, reviewStatusList, page, perPage);
+	}
 
-    public Double getAverageRating(Product product){
-       return getReviewService().getProductStarRating(product);
-    }
+	public Long getAllReviews(Product product, List<Long> reviewStatusList) {
+		return getReviewService().getAllReviews(product, reviewStatusList);
+	}
 
-    public ProductDao getProductDAO() {
-        return productDAO;
-    }
+	public Double getAverageRating(Product product) {
+		return getReviewService().getProductStarRating(product);
+	}
 
-    public void setProductDAO(ProductDao productDAO) {
-        this.productDAO = productDAO;
-    }
+	public ProductDao getProductDAO() {
+		return productDAO;
+	}
 
-    public List<Product> ProductsSortedByOrder(Long primaryCategoryHeadingId, String productReferrer){
-      PrimaryCategoryHeading primaryCategoryHeading = primaryCategoryHeadingDaoImpl.get(PrimaryCategoryHeading.class, primaryCategoryHeadingId);
-      Collections.sort(primaryCategoryHeading.getProducts(), new ProductComparator());
-      for(Product product : primaryCategoryHeading.getProducts()){
-        product.setProductURL(linkManager.getProductURL(product, ProductReferrerMapper.getProductReferrerid(productReferrer)));
-      }
-      return primaryCategoryHeading.getProducts();
-    }
+	public void setProductDAO(ProductDao productDAO) {
+		this.productDAO = productDAO;
+	}
 
-  public ReviewService getReviewService() {
-    return reviewService;
-  }
+	public ReviewService getReviewService() {
+		return reviewService;
+	}
 
-  public void setReviewService(ReviewService reviewService) {
-    this.reviewService = reviewService;
-  }
+	public void setReviewService(ReviewService reviewService) {
+		this.reviewService = reviewService;
+	}
 
-    public boolean isComboInStock(Combo combo) {
-      for (ComboProduct comboProduct : combo.getComboProducts()) {
-        if (!comboProduct.getAllowedProductVariants().isEmpty() && comboProduct.getAllowedInStockVariants().isEmpty()) {
-          return false;
-        } else if (comboProduct.getProduct().getInStockVariants().isEmpty()) {
-          return false;
+	public ComboDao getComboDao() {
+		return comboDao;
+	}
+
+	public void setComboDao(ComboDao comboDao) {
+		this.comboDao = comboDao;
+	}
+
+	public boolean isComboInStock(Combo combo) {
+		if (combo.isDeleted() != null && combo.isDeleted()) {
+			return false;
+		} else {
+			for (ComboProduct comboProduct : combo.getComboProducts()) {
+				if (!comboProduct.getAllowedProductVariants().isEmpty() && comboProduct.getAllowedInStockVariants().isEmpty()) {
+					return false;
+				} else if (comboProduct.getProduct().getInStockVariants().isEmpty()) {
+					return false;
+				} else if (comboProduct.getProduct().isDeleted() != null && comboProduct.getProduct().isDeleted()) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	public List<Combo> getRelatedCombos(Product product) {
+		return getComboDao().getCombos(product);
+	}
+
+    public boolean isProductOutOfStock(Product product){
+        List<ProductVariant> productVariants = product.getProductVariants();
+        boolean isOutOfStock = true;
+        for (ProductVariant pv : productVariants){
+            if (!pv.getOutOfStock()){
+                isOutOfStock = false;
+                break;
+            }
         }
-      }
-      return true;
+        return isOutOfStock;
+    }
+
+    public Map<String, List<String>> getRecommendedProducts(Product findProduct){
+        List<String> pvIdList = recommendationService.getRecommendedProducts(findProduct.getId());
+        return getRecommendedProducts(findProduct,pvIdList );
+    }
+
+    public Map<String, List<String>> getRelatedMoogaProducts(Product findProduct){
+        List<String> categories = new ArrayList<String>();
+        categories.add(findProduct.getPrimaryCategory().getName());
+	    if(findProduct.getSecondaryCategory() != null){
+            categories.add(findProduct.getSecondaryCategory().getName());
+	    }
+        List<String> pvIdList = recommendationService.getRelatedProducts(findProduct.getId(), categories);
+        return getRecommendedProducts(findProduct,pvIdList );
+    }
+
+    public Map<String, List<String>> getRecommendedProducts(Product findProduct, List<String> pvIdList){
+        Map<String, List<String>> productsResult = new HashMap<String, List<String>>();
+        List<String> productsList = new ArrayList<String>();
+        Set<String> products = new HashSet<String>();
+        String source = "";
+        if (moogaOn){
+            Iterator it = pvIdList.iterator();
+            int productCount = 0;
+            while (it.hasNext()) {
+                Product product = productDAO.getProductById((String)it.next());
+                if ((product != null) && isProductValid(product)){
+                    products.add(product.getId());
+                    ++productCount;
+                }
+            }
+	        if(products.size() > 0){
+		        source += "MOOGA";
+	        }
+        }
+
+        if (!moogaOn || (products.size() < 6) ){
+	        if(products.size() > 0){
+		        source += " + ";
+	        }
+            List<Product> productList = getProductDAO().getProductById(findProduct.getId()).getRelatedProducts();
+            for (Product product : productList){
+                if (isProductValid(product)){
+                    products.add(product.getId());
+                }
+            }
+            source += "DB";
+        }
+        for (String product : products){
+            productsList.add(product);
+        }
+	    if(!productsList.isEmpty()){
+            productsResult.put(source, productsList);
+	    }
+        return productsResult;
+    }
+
+    private boolean isProductValid(Product product){
+        boolean isDeleted = product.isDeleted() == null ? false : product.isDeleted();
+        boolean isHidden = product.isHidden() == null ? false : product.isHidden();
+        boolean isGoogleAdDisallowed = product.isGoogleAdDisallowed() == null ? false : product.isGoogleAdDisallowed();
+        if ((product != null) && !isDeleted
+                && !isGoogleAdDisallowed && !isHidden && !isProductOutOfStock(product)){
+            return  true;
+        }
+        return false;
+    }
+
+    public List<Product> ProductsSortedByOrder(Long primaryCategoryHeadingId, String productReferrer) {
+        PrimaryCategoryHeading primaryCategoryHeading = primaryCategoryHeadingDaoImpl.get(PrimaryCategoryHeading.class, primaryCategoryHeadingId);
+        Collections.sort(primaryCategoryHeading.getProducts(), new ProductComparator());
+        for (Product product : primaryCategoryHeading.getProducts()) {
+            product.setProductURL(linkManager.getProductURL(product, ProductReferrerMapper.getProductReferrerid(productReferrer)));
+        }
+        return primaryCategoryHeading.getProducts();
     }
 }
 
-class ProductComparator implements Comparator<Product> {
-  public int compare(Product o1, Product o2) {
-    if (o1.getOrderRanking() != null && o2.getOrderRanking() != null) {
-      return o1.getOrderRanking().compareTo(o2.getOrderRanking());
+   class ProductComparator implements Comparator<Product> {
+        public int compare(Product o1, Product o2) {
+            if (o1.getOrderRanking() != null && o2.getOrderRanking() != null) {
+                return o1.getOrderRanking().compareTo(o2.getOrderRanking());
+            }
+            return -1;
+        }
     }
-    return -1;
-  }
-}

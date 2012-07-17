@@ -38,7 +38,7 @@ public class WOMMEmailManager {
             EmailCampaign emailCampaign) {
         for (String recepientEmail : recepientEmailList) {
             EmailRecepient emailRecepient = getEmailRecepientDao().getOrCreateEmailRecepient(recepientEmail);
-            if (emailRecepient.isSubscribed()) {
+            if (emailRecepient.isEmailAllowed()) {
                 getEmailerHistoryDao().createEmailerHistory(senderEmail, senderName, getBaseDao().get(EmailType.class, emailType.getId()), emailRecepient, emailCampaign,
                         customText);
                 String unsubscribeLink = getLinkManager().getEmailUnsubscribeLink(emailRecepient);

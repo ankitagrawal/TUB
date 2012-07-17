@@ -1,23 +1,5 @@
 package com.hk.util;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.hk.admin.pact.dao.courier.CourierDao;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.constants.XslConstants;
@@ -35,6 +17,14 @@ import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.GrnLineItem;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.service.ServiceLocatorFactory;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.*;
 
 @Component
 public class XslGenerator {
@@ -455,8 +445,8 @@ public class XslGenerator {
 
             setCellValue(row, 0, pincode.getId());
             setCellValue(row, 1, pincode.getPincode());
-            setCellValue(row, 2, pincode.getCity());
-            setCellValue(row, 3, pincode.getState());
+            setCellValue(row, 2, pincode.getCity().getName());
+            setCellValue(row, 3, pincode.getState().getName());
             setCellValue(row, 4, pincode.getLocality());
             setCellValue(row, 5, pincode.getDefaultCourier() != null ? pincode.getDefaultCourier().getId() : null);
 
@@ -509,8 +499,18 @@ public class XslGenerator {
 
        setCellValue(row, 0, pincodeDefaultCourier.getPincode().getPincode());
        setCellValue(row, 1, pincodeDefaultCourier.getWarehouse().getId());
-       setCellValue(row, 2, pincodeDefaultCourier.getCodCourier().getId());
-       setCellValue(row, 3, pincodeDefaultCourier.getNonCodCourier().getId());
+       if(pincodeDefaultCourier.getCodCourier() != null){
+        setCellValue(row, 2, pincodeDefaultCourier.getCodCourier().getId());
+       }
+       else{
+         setCellValue(row, 2, -1L);
+       }
+       if(pincodeDefaultCourier.getNonCodCourier() != null){
+         setCellValue(row, 3, pincodeDefaultCourier.getNonCodCourier().getId());
+       }
+       else{
+         setCellValue(row, 3, -1L);
+       }
        setCellValue(row, 4, pincodeDefaultCourier.getEstimatedShippingCostCod());
        setCellValue(row, 5, pincodeDefaultCourier.getEstimatedShippingCostNonCod());
 

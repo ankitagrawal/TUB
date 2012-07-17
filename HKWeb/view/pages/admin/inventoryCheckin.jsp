@@ -25,6 +25,14 @@
             <td>Qty:</td>
             <td><s:text name="qty" value="0"/></td>
           </tr>
+		<tr>
+			<td>Cost Price:</td>
+			<td><s:text name="costPrice" value="0.0"/></td>
+		</tr>
+		<tr>
+			<td>MRP:</td>
+			<td><s:text name="mrp" value="0.0"/></td>
+		</tr>
           <tr>
             <td>Batch Number:</td>
             <td><s:text name="batch"/></td>
@@ -59,7 +67,7 @@
 
         </script>
         <br/>
-        <s:submit name="save" value="Save"/>
+        <s:submit class="invCheckin" name="save" value="Save"/>
       </s:form>
       <span style="display:inline;float:right;"><h2><s:link beanclass="com.hk.web.action.admin.inventory.GRNAction">&lang;&lang;&lang;
         Back to GRN List</s:link></h2></span>
@@ -116,5 +124,12 @@
       </div>--%>
 
     </div>
+    <script type="text/javascript">
+      $(document).ready(function() {
+      $('.invCheckin').click(function disableSaveButton(){
+      $(this).css("display", "none");
+    });
+      });
+    </script>
   </s:layout-component>
 </s:layout-render>

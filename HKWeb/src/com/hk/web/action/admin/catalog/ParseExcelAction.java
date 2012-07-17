@@ -21,8 +21,8 @@ import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.admin.manager.ProductManager;
 import com.hk.admin.util.XslParser;
+import com.hk.admin.impl.task.dbmaster.ProductCatalogServiceImpl;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.catalog.product.Product;
@@ -41,7 +41,7 @@ public class ParseExcelAction extends BaseAction {
     private static Logger           logger = LoggerFactory.getLogger(ParseExcelAction.class);
 
     @Autowired
-    private ProductManager          productManager;
+    private ProductCatalogServiceImpl productCatalogServiceImpl;
 
     @Autowired
     private BatchProcessWorkManager batchProcessWorkManager;
@@ -61,7 +61,7 @@ public class ParseExcelAction extends BaseAction {
     @Validate(required = true)
     String                          category;
 
-    public void setCategory(String category) {
+  public void setCategory(String category) {
         this.category = category;
     }
 
@@ -98,12 +98,16 @@ public class ParseExcelAction extends BaseAction {
         return new ForwardResolution("/pages/admin/catalogDump.jsp");
     }
 
-    public ProductManager getProductManager() {
-        return productManager;
+    public String getCategory() {
+        return category;
     }
 
-    public void setProductManager(ProductManager productManager) {
-        this.productManager = productManager;
+    public ProductCatalogServiceImpl getProductManager() {
+        return productCatalogServiceImpl;
+    }
+
+    public void setProductManager(ProductCatalogServiceImpl productCatalogServiceImpl) {
+        this.productCatalogServiceImpl = productCatalogServiceImpl;
     }
 
     public XslParser getXslParser() {

@@ -54,6 +54,9 @@
   <h3><s:link beanclass="com.hk.web.action.admin.queue.ActionAwaitingQueueAction">Action Awaiting Queue</s:link></h3>
   </c:if>
   <h3><s:link beanclass="com.hk.web.action.admin.marketing.NotifyMeListAction"> Notify Me List </s:link></h3>
+  <shiro:hasRole name="<%=RoleConstants.ADMIN%>">
+    <h3><s:link beanclass="com.hk.web.action.admin.TaskManagerAction"> Ant Builds </s:link></h3>
+  </shiro:hasRole>
   <%--<h3><s:link beanclass="com.hk.web.action.admin.payment.PaymentHistoryAction"> Check Payment History </s:link></h3>--%>
 </div>
 
@@ -97,8 +100,7 @@
 
   <h3><s:link beanclass="com.hk.web.action.admin.catalog.product.RecentlyAddedProductsAction">Recently Added Products</s:link></h3>
   <h3><s:link beanclass="com.hk.web.action.admin.catalog.product.RelatedProductAction">Update Related Products</s:link></h3>
-  <h3><s:link beanclass="com.hk.web.action.report.GenerateReconcilationReportAction">Generate Reconcilation Report</s:link></h3>
-
+  <h3><s:link beanclass="com.hk.web.action.admin.store.StorePricingAction">Store pricing</s:link></h3>
 </div>
 
 <div class="cl"></div>
@@ -107,7 +109,8 @@
   <h2>Warehouse</h2>
   <c:if test="${whAction.setWarehouse != null}">
       <h3><s:link beanclass="com.hk.web.action.admin.inventory.checkin.InventoryBinAllocationAction">Bin Allocation</s:link></h3>
-  <h3><s:link beanclass="com.hk.web.action.admin.warehouse.AssignBinAction">Assign Bin</s:link></h3>
+
+  <%--<h3><s:link beanclass="com.hk.web.action.admin.warehouse.AssignBinAction">Assign Bin</s:link></h3>--%>
 
   <h3><s:link beanclass="com.hk.web.action.admin.queue.PackingAwaitingQueueAction">Packing Awaiting Queue</s:link></h3>
   <h3>
@@ -131,6 +134,7 @@
   <h3><s:link beanclass="com.hk.web.action.admin.inventory.CreateInventoryFileAction">Create Inventory File</s:link></h3>
 
   <h3><s:link beanclass="com.hk.web.action.admin.inventory.SearchHKBatchAction">Search HK Batch</s:link></h3>
+    <h3><s:link beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction">Create Repalcement Order</s:link></h3>
 </div>
 
 <div class="cl"></div>
@@ -155,7 +159,7 @@
 
   <h3><s:link beanclass="com.hk.web.action.admin.courier.ChangeDefaultCourierAction">Change Default Courier</s:link></h3>
 
-  <h3><s:link beanclass="com.hk.web.action.admin.shipment.UpdateAFLChhotuDeliveryStatusAction">Update Delivery Status of AFL,Chhotu,Delhivery,BlueDart</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.admin.shipment.UpdateDeliveryStatusAction">Update Delivery Status of AFL,Chhotu,Delhivery,BlueDart,DTDC</s:link></h3>
 
   <h3><s:link beanclass="com.hk.web.action.admin.shipment.ParseDTDCDeliveryStatusExcelAction">Upload Delivery Status Excel of DTDC</s:link></h3>
 
@@ -164,6 +168,10 @@
 	<h3><s:link beanclass="com.hk.web.action.admin.shipment.ParseEstimatedCourierExpensesExcelAction">Upload Estimated Courier Collection Charges</s:link> </h3>
 
   <h3><s:link beanclass="com.hk.web.action.admin.shipment.ChangeShipmentDetailsAction">Change shipment details</s:link></h3>
+
+   <h3><s:link beanclass="com.hk.web.action.admin.courier.CreateUpdateCourierPricingAction">Change Courier Pricing  details</s:link></h3>
+
+     <h3><s:link beanclass="com.hk.web.action.admin.courier.CityCourierTatAction">Upload City Courier TAT</s:link></h3>
 
   <h3><s:link beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction" event="generateCourierReport">Download Courier Excel
       <s:param name="courierDownloadFunctionality" value="false"/>
@@ -199,6 +207,9 @@
   <h3>
     <s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction">Reconciliation Voucher List</s:link>
   </h3>
+   <h3>
+        <s:link beanclass="com.hk.web.action.report.GenerateReconcilationReportAction">Generate Reconcilation Report</s:link>
+    </h3>
 
 	 <h3>
     <s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction">Stock Transfer List</s:link>
@@ -227,6 +238,8 @@
 <h3>
     <s:link beanclass="com.hk.web.action.admin.sku.SkuParseExcelAction">Upload SKU Excel</s:link></h3>
 
+	<h3>
+	    <s:link beanclass="com.hk.web.action.admin.inventory.BrandsToAuditAction">Inventory Audit</s:link></h3>
 
 </div>
 
@@ -244,6 +257,8 @@
   <h3><s:link beanclass="com.hk.web.action.admin.user.PendingRewardPointQueueAction">Pending Reward Points</s:link></h3>
 
   <h3><s:link beanclass="com.hk.web.action.admin.catalog.product.PendingProductReviewAction">Pending Product Reviews</s:link></h3>
+
+   <h3><s:link beanclass="com.hk.web.action.report.BinAllocationReport">Generate  Bin Allocation Report</s:link></h3>
 
 </div>
 
@@ -314,6 +329,15 @@
   <h3>
     <s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoicePdfAction"
             title="Download AccountingInvoice PDFs">Download AccountingInvoice PDFs</s:link></h3>
+
+</div>
+
+<div class="left roundBox">
+  <h2>Healthkart Delivery</h2>
+
+  <h3>
+    <s:link beanclass="com.hk.web.action.admin.courier.HKDeliveryAction"
+            title="Download Healthkart Delivery Worksheet">Download Healthkart Delivery Worksheet</s:link></h3>
 
 </div>
 

@@ -153,7 +153,7 @@ public class CartLineItem implements java.io.Serializable, Comparable<CartLineIt
   }
 
   public Double getHkPrice() {
-	  //TODO: #imp can someone please explain why this 0 was added here  
+	  //TODO: #imp can someone please explain why this 0 was added here
 
     if(hkPrice == null){
 		  return 0D;
@@ -317,6 +317,11 @@ public class CartLineItem implements java.io.Serializable, Comparable<CartLineIt
       return hashCodeBuilder.toHashCode();
     }
   }
+      @Override
+  public String toString() {
+    return id != null ? id.toString() : "";
+  }
+
 }
 
 

@@ -25,8 +25,9 @@
 		<ant dir="${project.web.dir}" target="clean" inheritall="false" />
 		<ant dir="${project.admin.core.dir}" target="clean" inheritall="false" />
 		<ant dir="${project.report.dir}" target="clean" inheritall="false" />
-		<ant dir="${project.common.dir}" target="clean" inheritall="false" />
 		<ant dir="${project.core.dir}" target="clean" inheritall="false" />
+		<ant dir="${project.common.dir}" target="clean" inheritall="false" />
+
 		<!--
 		
 		<ant dir="${project.admin.web.dir}" target="clean" inheritall="false" />
@@ -45,6 +46,11 @@
 		<copy todir="${project.dist.dir}/WEB-INF/classes/spring">
 			<fileset dir="${project.common.dir}/resources/${project.env}/spring" />
 		</copy>
+		<replace file="${project.dist.dir}/WEB-INF/classes/spring/spring-hibernate.xml" token="DB_SERVER" value="${DB_SERVER}" />
+		<replace file="${project.dist.dir}/WEB-INF/classes/spring/spring-hibernate.xml" token="DB_PORT" value="${DB_PORT}" />
+		<replace file="${project.dist.dir}/WEB-INF/classes/spring/spring-hibernate.xml" token="DB_NAME" value="${DB_NAME}" />
+		<replace file="${project.dist.dir}/WEB-INF/classes/spring/spring-hibernate.xml" token="DB_USERID" value="${DB_USERID}" />
+		<replace file="${project.dist.dir}/WEB-INF/classes/spring/spring-hibernate.xml" token="DB_PASSWD" value="${DB_PASSWD}" />
 		<copy todir="${project.dist.dir}/WEB-INF/classes">
 			<fileset file="${project.web.dir}/resources/${project.env}/WEB-INF/StripesResources.properties" />
 			<fileset file="${project.web.dir}/resources/${project.env}/WEB-INF/healthkartTagLib.tld" />
@@ -143,12 +149,12 @@
 				<include name="*.jar" />
 			</fileset>
 		</copy>
-    <copy
-        file="${project.web.dir}/resources/${project.env}/WEB-INF/robots.txt"
-        tofile="${project.dist.dir}/robots.txt"
-        failonerror="false"
-        overwrite="true"
-        />
+        <copy todir="${project.dist.dir}/WEB-INF/lib">
+            <fileset dir="${lib.axis.root}">
+                <include name="*.jar" />
+            </fileset>
+        </copy>
+		<copy file="${project.web.dir}/resources/${project.env}/WEB-INF/robots.txt" tofile="${project.dist.dir}/robots.txt" failonerror="false" overwrite="true" />
 	</target>
 
 	<target name="collect-jar">
@@ -157,11 +163,26 @@
 		<copy todir="${project.dist.dir}/WEB-INF/lib" file="${project.core.dir}/dist/hk-core.jar" />
 		<copy todir="${project.dist.dir}/WEB-INF/lib" file="${project.admin.core.dir}/dist/hk-admin-core.jar" />
 		<copy todir="${project.dist.dir}/WEB-INF/lib" file="${project.report.dir}/dist/hk-report.jar" />
+        <copy todir="${project.dist.dir}/WEB-INF/lib" file="${project.mooga.dir}/dist/hk-mooga.jar" />
 	</target>
 
 	<target name="collect-web">
 		<copy todir="${project.dist.dir}">
-			<fileset dir="${project.web.dir}/dist" />
+			<fileset dir="${project.web.dir}/${project.view.dir}">
+				<include name="**/**" />
+			</fileset>
+		</copy>
+		<copy todir="${project.dist.dir}/WEB-INF/classes">
+			<fileset dir="${project.web.dir}/${package.target.dir}" excludes="test/**/**" />
+		</copy>
+		<copy todir="${project.dist.dir}/WEB-INF/">
+			<fileset dir="${project.web.dir}/${project.resources.dir}/${project.env}/WEB-INF" excludes="test/**/**" />
+		</copy>
+	</target>
+
+	<target name="web">
+		<copy todir="${project.dist.dir}">
+			<fileset dir="${project.web.dir}/${project.view.dir}" />
 		</copy>
 	</target>
 
@@ -177,18 +198,22 @@
 		<ant dir="${project.core.dir}" target="build" inheritall="false">
 			<property name="build.env" value="${build.env}" />
 		</ant>
-		<ant dir="${project.web.dir}" target="build" inheritall="false">
+		<!--<ant dir="${project.web.dir}" target="build" inheritall="false">
 			<property name="build.env" value="${build.env}" />
-		</ant>
+		</ant>-->
 		<ant dir="${project.admin.core.dir}" target="build" inheritall="false">
 			<property name="build.env" value="${build.env}" />
 		</ant>
 		<!-- <ant dir="${project.admin.web.dir}" target="build" inheritall="false">
 			<property name="build.env" value="${build.env}" />
-		</ant>
+		</ant> -->
 		<ant dir="${project.report.dir}" target="build" inheritall="false">
 			<property name="build.env" value="${build.env}" />
-		</ant> -->
+		</ant>
+
+		<ant dir="${project.web.dir}" target="build" inheritall="false">
+			<property name="build.env" value="${build.env}" />
+		</ant>
 	</target>
 
 
@@ -196,11 +221,14 @@
 	<target name="prepare">
 		<mkdir dir="${package.target.dir}" />
 		<mkdir dir="${project.dist.dir}" />
+		<mkdir dir="${project.dist.dir}/WEB-INF" />
+		<mkdir dir="${project.dist.dir}/WEB-INF/classes" />
+		<mkdir dir="${project.dist.dir}/WEB-INF/classes/spring" />
 		<ant dir="${project.common.dir}" target="prepare" inheritall="false" />
 		<ant dir="${project.core.dir}" target="prepare" inheritall="false" />
 		<ant dir="${project.admin.core.dir}" target="prepare" inheritall="false" />
 		<ant dir="${project.report.dir}" target="prepare" inheritall="false" />
-		<ant dir="${project.web.dir}" target="prepare" inheritall="false" />
+		<!--<ant dir="${project.web.dir}" target="prepare" inheritall="false" />-->
 		<tstamp />
 	</target>
 
@@ -222,13 +250,13 @@
 		</java>
 	</target> -->
 
-	<target name="db">
+	<!--<target name="db">
 		<updateDatabase changelogfile="db/changelog.xml" driver="${database.driver}" url="${database.url.dev}" username="${database.username}" password="${database.password}" classpathref="compile.classpath" />
 	</target>
 
 	<target name="db-diff" description="Does a diff of the current db with the workbench db. adds to changelog.xml any changes to db">
 		<diffDatabaseToChangeLog driver="${database.driver}" url="${database.url.dev}" username="${database.username}" password="${database.password}" changelogfile="db/changelog.xml" referencedriver="${database.driver}" referenceurl="${database.url.workbench}" referenceusername="${database.username}" referencepassword="${database.password}" classpathref="compile.classpath">
 		</diffDatabaseToChangeLog>
-	</target>
+	</target>-->
 
 </project>

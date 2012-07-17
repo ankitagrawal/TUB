@@ -6,8 +6,9 @@ import java.util.List;
 import com.hk.constants.ticket.EnumTicketType;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.TicketType;
+import org.springframework.stereotype.Component;
 
-
+@Component
 public class TicketTypeSeedData extends BaseSeedData{
 
 

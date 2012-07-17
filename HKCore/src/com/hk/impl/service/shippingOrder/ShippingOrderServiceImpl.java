@@ -1,7 +1,5 @@
 package com.hk.impl.service.shippingOrder;
 
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -25,7 +23,6 @@ import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.ReconciliationStatusDao;
-import com.hk.domain.courier.Courier;
 import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.inventory.InventoryService;
@@ -117,11 +114,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 
         for (LineItem lineItem : shippingOrder.getLineItems()) {
             Long availableUnbookedInv = getInventoryService().getAvailableUnbookedInventory(lineItem.getSku()); // This
-            // is
-            // after
-            // including
-            // placed
-            // order qty
+            // is after including placed order qty
             logger.debug("availableUnbookedInv of[" + lineItem.getSku().getId() + "] = " + availableUnbookedInv);
             ProductVariant productVariant = lineItem.getSku().getProductVariant();
             logger.debug("jit: " + productVariant.getProduct().isJit());

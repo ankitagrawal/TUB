@@ -1,11 +1,11 @@
 package com.hk.admin.pact.service.courier;
 
-import java.util.List;
-
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.domain.order.Order;
+
+import java.util.List;
 
 public interface CourierService {
 
@@ -30,5 +30,7 @@ public interface CourierService {
     public Courier getSuggestedCourierService(String pincode, boolean isCOD);
 
     public Courier getDefaultCourierByPincodeAndWarehouse(Pincode pincode, boolean isCOD);
+
+
 
 }

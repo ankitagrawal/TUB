@@ -455,9 +455,14 @@ public class Functions {
     }
 
     public static boolean isComboInStock(Object o) {
-      ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
-      Combo combo = (Combo) o;
-      return productService.isComboInStock(combo);
+        ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
+        Combo combo = (Combo) o;
+        return productService.isComboInStock(combo);
     }
 
+    public static Map<String, List<String>> getRecommendedProducts(Object o) {
+        Product product = (Product)o;
+        ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
+        return productService.getRelatedMoogaProducts(product);
+    }
 }

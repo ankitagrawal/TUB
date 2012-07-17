@@ -1,11 +1,26 @@
 package com.hk.web.action.core.payment;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.validation.Validate;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
+import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.core.fliter.CartLineItemFilter;
+import com.hk.domain.coupon.Coupon;
+import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
@@ -19,16 +34,7 @@ import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.validation.Validate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.util.HashSet;
-import java.util.Set;
+import com.hk.util.ga.GAUtil;
 
 @Component
 public class PaymentSuccessAction extends BaseAction {
@@ -41,6 +47,10 @@ public class PaymentSuccessAction extends BaseAction {
     private Payment payment;
     private Order order;
     private PricingDto pricingDto;
+    private EnumPaymentMode paymentMode;
+    private String purchaseDate;
+    private String couponCode;
+    private int couponAmount=0;
 
     @Autowired
     private PaymentDao paymentDao;
@@ -70,6 +80,17 @@ public class PaymentSuccessAction extends BaseAction {
 
             order = payment.getOrder();
             pricingDto = new PricingDto(order.getCartLineItems(), payment.getOrder().getAddress());
+           
+            //for google analytics
+            paymentMode= EnumPaymentMode.getPaymentModeFromId(payment.getPaymentMode().getId());
+            purchaseDate = GAUtil.formatDate(order.getCreateDate());
+
+            OfferInstance offerInstance=order.getOfferInstance();
+            if(offerInstance!=null){
+                Coupon coupon = offerInstance.getCoupon();
+                couponCode=coupon.getCode()+"@"+offerInstance.getId();
+                couponAmount=pricingDto.getTotalPromoDiscount().intValue();
+            }
 
             Set<CartLineItem> productCartLineItems = new CartLineItemFilter(payment.getOrder().getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
 
@@ -116,6 +137,7 @@ public class PaymentSuccessAction extends BaseAction {
         }
         return new ForwardResolution("/pages/payment/paymentSuccess.jsp");
     }
+
 
     public String getGatewayOrderId() {
         return gatewayOrderId;
@@ -176,5 +198,29 @@ public class PaymentSuccessAction extends BaseAction {
 
     public void setOrder(Order order) {
         this.order = order;
+    }
+
+    public EnumPaymentMode getPaymentMode() {
+        return paymentMode;
+    }
+
+    public void setPaymentMode(EnumPaymentMode paymentMode) {
+        this.paymentMode = paymentMode;
+    }
+
+    public String getPurchaseDate() {
+        return purchaseDate;
+    }
+
+    public void setPurchaseDate(String purchaseDate) {
+        this.purchaseDate = purchaseDate;
+    }
+
+    public String getCouponCode() {
+        return couponCode;
+    }
+
+    public int getCouponAmount() {
+        return couponAmount;
     }
 }

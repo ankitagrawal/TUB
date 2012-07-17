@@ -13,6 +13,23 @@
 	<welcome-file-list>
 		<welcome-file>/pages/home.jsp</welcome-file>
 	</welcome-file-list>
+	
+	<error-page>
+		<error-code>401</error-code>
+		<location>/pages/error/noPage.html</location>
+	</error-page>
+	<error-page>
+		<error-code>404</error-code>
+		<location>/pages/error/noPage.html</location>
+	</error-page>
+	<error-page>
+		<error-code>500</error-code>
+		<location>/pages/error/noPage.html</location>
+	</error-page>
+	<error-page>
+		<error-code>503</error-code>
+		<location>/pages/error/noPage.html</location>
+	</error-page>
 
 	<!--  Listeners Start -->
 	<listener>
@@ -106,11 +123,11 @@
 		</init-param>
 		<init-param>
 			<param-name>SSL.SecureHost</param-name>
-			<param-value>localhost:8443</param-value>
+			<param-value>staging01.healthkart.com:8443</param-value>
 		</init-param>
 		<init-param>
 			<param-name>SSL.UnsecureHost</param-name>
-			<param-value>localhost:80</param-value>
+			<param-value>staging01.healthkart.com:80</param-value>
 		</init-param>
 		<init-param>
 			<param-name>SSL.SessionMode</param-name>

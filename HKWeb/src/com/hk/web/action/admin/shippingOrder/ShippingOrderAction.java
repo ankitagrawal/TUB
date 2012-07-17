@@ -13,7 +13,10 @@ import com.akube.framework.gson.JsonUtils;
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
+import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.SkuService;
@@ -52,6 +55,15 @@ public class ShippingOrderAction extends BaseAction {
     }
 
     @JsonHandler
+    public Resolution initiateRTO() {
+        adminShippingOrderService.initiateRTOForShippingOrder(shippingOrder);
+
+        Map<String, Object> data = new HashMap<String, Object>(1);
+        data.put("orderStatus", JsonUtils.hydrateHibernateObject(shippingOrder.getOrderStatus()));
+        HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "success", data);
+        return new JsonResolution(healthkartResponse);
+    }
+    @JsonHandler
     public Resolution markRTO() {
         adminShippingOrderService.markShippingOrderAsRTO(shippingOrder);
 
@@ -68,6 +80,35 @@ public class ShippingOrderAction extends BaseAction {
         Map<String, Object> data = new HashMap<String, Object>(1);
         data.put("orderStatus", JsonUtils.hydrateHibernateObject(shippingOrder.getOrderStatus()));
         HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "shipping order canceled", data);
+        return new JsonResolution(healthkartResponse);
+    }
+
+    @JsonHandler
+    public Resolution delieverDropShippingOrder() {
+        String message = "";
+        boolean orderHasOnlyDropShipProduct = true;
+
+        for (LineItem lineItem : shippingOrder.getLineItems()) {
+            CartLineItem cartLineItem = lineItem.getCartLineItem();
+
+            if (EnumCartLineItemType.Product.getId().equals(cartLineItem.getLineItemType().getId())) {
+                orderHasOnlyDropShipProduct &= cartLineItem.getProductVariant().getProduct().isDropShipping();
+            }
+            if(!orderHasOnlyDropShipProduct){
+                break;
+            }
+        }
+
+        if (orderHasOnlyDropShipProduct) {
+            adminShippingOrderService.markShippingOrderAsDelivered(shippingOrder);
+            message = "shipping order marked as delieverd";
+        } else {
+            message = "shipping order cannot be marked delievered, since it has non drop ship products";
+        }
+
+        Map<String, Object> data = new HashMap<String, Object>(1);
+        data.put("orderStatus", JsonUtils.hydrateHibernateObject(shippingOrder.getOrderStatus()));
+        HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, message, data);
         return new JsonResolution(healthkartResponse);
     }
 
