@@ -21,7 +21,7 @@
 
 <s:layout-component name="homePageTopContent">
   <div style="visibility:hidden;">
-    <link rel="shortcut icon" href="http://www.healthkart.com/favicon.ico?v=2"/>
+    <link rel="shortcut icon" href="${pageContext.request.contextPath}/favicon.ico?v=2"/>
   </div>
   <div id="home_header02">
     <h1>the one stop shop for health, fitness and beauty</h1>
