@@ -121,7 +121,7 @@ public class SupplierManagementAction extends BasePaginatedAction {
                pattern = Pattern.compile(EMAIL_PATTERN);
                   boolean bool = pattern.matcher(email_id).matches();
                     if(!bool)
-                      getContext().getValidationErrors().add("e1", new SimpleError("Please enter the valid Email-Id")); 
+                      getContext().getValidationErrors().add("e1", new SimpleError("Please enter the valid Email-Id"+supplier.getCreditPeriod()+" "+supplier.getMargins()+" "+supplier.getBrandName()+" "+supplier.getDamageConditions()+" "+supplier.getTOT()));
       }
   }
 

@@ -57,22 +57,22 @@ public class Supplier implements java.io.Serializable {
     private Date   updateDate;
 
     @Column(name = "credit_period")
-    private  String CreditPeriod;
+    private  String creditPeriod;
 
      @Column(name = "brands")
-    private String BrandName;
+    private String brandName;
 
      @Column(name = "dam_exp_cond")
-    private String DamageConditions;
+    private String damageConditions;
 
      @Column(name = "email_id")
     private String email_id;
 
      @Column(name = "margins")
-    private String Margins;
+    private String margins;
 
      @Column(name = "terms_of_trade")
-    private String TOT;
+    private String tot;
     
     public Long getId() {
         return id;
@@ -88,11 +88,11 @@ public class Supplier implements java.io.Serializable {
 
 
     public String getTOT() {
-        return TOT;
+        return tot;
     }
 
     public void setTOT(String TOT) {
-        this.TOT = TOT;
+        this.tot = TOT;
     }
 
     public void setName(String name) {
@@ -101,11 +101,11 @@ public class Supplier implements java.io.Serializable {
     }
 
     public String getMargins() {
-        return Margins;
+        return margins;
     }
 
     public void setMargins(String margins) {
-        Margins = margins;
+        margins = margins;
     }
 
     public String getEmail_id() {
@@ -117,27 +117,27 @@ public class Supplier implements java.io.Serializable {
     }
 
     public String getDamageConditions() {
-        return DamageConditions;
+        return damageConditions;
     }
 
     public void setDamageConditions(String damageConditions) {
-        DamageConditions = damageConditions;
+        damageConditions = damageConditions;
     }
 
     public String getBrandName() {
-        return BrandName;
+        return brandName;
     }
 
     public void setBrandName(String brandName) {
-        BrandName = brandName;
+        brandName = brandName;
     }
 
     public String getCreditPeriod() {
-        return CreditPeriod;
+        return creditPeriod;
     }
 
     public void setCreditPeriod(String creditPeriod) {
-        CreditPeriod = creditPeriod;
+        creditPeriod = creditPeriod;
     }
 
     public String getLine1() {
