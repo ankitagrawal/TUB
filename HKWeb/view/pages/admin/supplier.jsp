@@ -57,9 +57,32 @@
           <td>Contact Number</td>
           <td><s:text name="supplier.contactNumber"/></td>
         </tr>
+          <tr>
+          <td>Credit Period in Days</td>
+          <td><s:text name="supplier.CreditPeriod"/></td>
+        </tr>
+          <tr>
+          <td>Margins in Percentage<br /><font color="red">(Please Enter in numbers like(70 or 85.57), please don't enter the % sign)</font></td>
+          <td><s:text name="supplier.Margins"/></td>
+        </tr>
+          <tr>
+          <td>Damage and Expiry conditions<br /><font color="red">(Max 500 characters)</font></td>
+          <td><s:text name="supplier.Damageconditions"/></td>
+        </tr>
+          <tr>
+          <td>Company/Brands Name <br /><font color="red">(IF more than one Brand Name, Please enter separated by comma(,))</font> </td>
+          <td><s:text name="supplier.BrandName"/></td>
+        </tr>
+          <tr>
+          <td>Email-id</td>
+          <td><s:text name="supplier.email_id"/></td>
+        </tr>
+          <tr>
+          <td>Validity of Terms of Trade</td>
+          <td><s:text name="supplier.TOT"/></td>
+        </tr>
       </table>
-
-      <s:submit name="save" value="Save" class="buttons"/>
+    <s:submit name="save" value="Save" class="buttons"/>
 
     </s:form>
   </s:layout-component>
