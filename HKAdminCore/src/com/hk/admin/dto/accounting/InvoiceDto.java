@@ -67,7 +67,7 @@ public class InvoiceDto {
   public InvoiceDto(ShippingOrder shippingOrder, B2bUserDetails b2bUserDetailsLocal) {
     if(shippingOrder instanceof ReplacementOrder){
       ReplacementOrder replacementOrder = (ReplacementOrder)shippingOrder;
-      replacementOrderString = "The following order is in lieu of order number: "+replacementOrder.getRefShippingOrder().getId();
+      replacementOrderString = "The following order is in lieu of order number: "+replacementOrder.getRefShippingOrder().getGatewayOrderId();
     }
 
     for (EnumTax enumTax : EnumTax.values()) {
