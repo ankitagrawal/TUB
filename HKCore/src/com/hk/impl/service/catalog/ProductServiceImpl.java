@@ -271,7 +271,9 @@ public class ProductServiceImpl implements ProductService {
         for (String product : products){
             productsList.add(product);
         }
-        productsResult.put(source, productsList);
+	    if(!productsList.isEmpty()){
+            productsResult.put(source, productsList);
+	    }
         return productsResult;
     }
 
