@@ -77,6 +77,8 @@ public class InventoryCheckinAction extends BaseAction {
     @Validate(required = true, minvalue = 1.0, on = "save")
     private Long                  qty;
     @Validate(required = true, on = "save")
+    private Double                costPrice;
+    private Double                mrp;
     private String                batch;
     private Date                  mfgDate;
     private Date                  expiryDate;
@@ -139,7 +141,7 @@ public class InventoryCheckinAction extends BaseAction {
                         return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
                     }
 
-                    SkuGroup skuGroup = getAdminInventoryService().createSkuGroup(batch, mfgDate, expiryDate, grn, null,null, sku);
+                    SkuGroup skuGroup = getAdminInventoryService().createSkuGroup(batch, mfgDate, expiryDate, 0.0, 0.0, grn, null,null, sku);
                     getAdminInventoryService().createSkuItemsAndCheckinInventory(skuGroup, qty, null, grnLineItem, null, null,
                             getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKIN), user);
                     getInventoryService().checkInventoryHealth(productVariant);
@@ -234,7 +236,7 @@ public class InventoryCheckinAction extends BaseAction {
                                 "checkinInventoryAgainstStockTransfer", stockTransfer.getId());
                     }
 
-                    SkuGroup skuGroup = adminInventoryService.createSkuGroup(batch, mfgDate, expiryDate, null, null, stockTransfer, sku);
+                    SkuGroup skuGroup = adminInventoryService.createSkuGroup(batch, mfgDate, expiryDate, costPrice, mrp, null, null, stockTransfer, sku);
                     adminInventoryService.createSkuItemsAndCheckinInventory(skuGroup, qty, null, null, null, stockTransferLineItem,
                             inventoryService.getInventoryTxnType(EnumInvTxnType.STOCK_TRANSFER_CHECKIN), user);
                     inventoryService.checkInventoryHealth(productVariant);
@@ -545,4 +547,19 @@ public class InventoryCheckinAction extends BaseAction {
         this.stockTransfer = stockTransfer;
     }
 
+	public Double getCostPrice() {
+		return costPrice;
+	}
+
+	public void setCostPrice(Double costPrice) {
+		this.costPrice = costPrice;
+	}
+
+	public Double getMrp() {
+		return mrp;
+	}
+
+	public void setMrp(Double mrp) {
+		this.mrp = mrp;
+	}
 }
