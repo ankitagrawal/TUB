@@ -29,7 +29,7 @@ public class ShippingOrderDaoImpl extends BaseDaoImpl implements ShippingOrderDa
     public ShippingOrder findById(Long shippingOrderId) {
         return get(ShippingOrder.class, shippingOrderId);
     }
-
+      //todo seema
     public ShippingOrder findByAwb(Awb awb) {
         String query = "select distinct so  from ShippingOrder so  where so.shipment.trackingId =:trackingId";
         return (ShippingOrder) getSession().createQuery(query).setParameter("awb", awb).uniqueResult();
