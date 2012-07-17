@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.domain.catalog.product.Product;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
@@ -133,5 +134,9 @@ public class ProductVariantDaoImpl extends BaseDaoImpl implements ProductVariant
 
     public List<ProductVariant> getAllProductVariant() {
         return getAll(ProductVariant.class);
+    }
+
+    public Product getProductForProudctVariant(String variantId) {
+        return getVariantById(variantId).getProduct();  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

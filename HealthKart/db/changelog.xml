@@ -7805,4 +7805,27 @@
     <changeSet author="Rahul (generated)" id="1342099712051-1">
         <modifyDataType columnName="value" newDataType="VARCHAR(70)" tableName="cart_line_item_config_values"/>
     </changeSet>
+    <changeSet author="Ajeet (generated)" id="1342505244718-1">
+        <addColumn tableName="shipment">
+            <column name="packer" type="VARCHAR(5)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1342505244718-2">
+        <addColumn tableName="shipment">
+            <column name="picker" type="VARCHAR(5)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1342505244718-3">
+        <addColumn tableName="sku_group">
+            <column name="cost_price" type="DECIMAL(8,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1342505244718-4">
+        <addColumn tableName="sku_group">
+            <column name="mrp" type="DECIMAL(8,2)"/>
+        </addColumn>
+    </changeSet>
+    <!--<changeSet author="Ajeet (generated)" id="1342505244718-5">-->
+        <!--<addNotNullConstraint columnDataType="VARCHAR(70)" columnName="value" tableName="cart_line_item_config_values"/>-->
+    <!--</changeSet>-->
 </databaseChangeLog>

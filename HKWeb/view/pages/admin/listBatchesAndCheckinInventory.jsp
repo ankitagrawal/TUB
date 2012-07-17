@@ -14,16 +14,17 @@
   <s:layout-component name="heading">Available Batch List of UPC/VariantID# ${ica.upc}</s:layout-component>
   <s:layout-component name="content">
     <div>
-      <b>${ica.productVariant.product.name}</b><br/>
+      <b>${ica.productVariant.product.name}</b>,
       <span class="sml gry">${ica.productVariant.optionsCommaSeparated}</span>
+      <strong>MRP=${ica.productVariant.markedPrice}</strong>
     </div>
     <br/>
 
     <div style="display:inline;float:left;">
       <c:choose>
         <c:when test="${!empty ica.availableSkuGroups}">
-          <h2>In-stock Batches and Units.</h2>
-          Net Inventory = <h2>${hk:netInventory(ica.productVariant)}</h2>
+          <%--<h2>In-stock Batches and Units.</h2>--%>
+          Net Inventory = <strong>${hk:netInventory(ica.productVariant)}</strong>
           <hr/>
           <table>
             <thead>
@@ -33,6 +34,7 @@
               <th>Batch No.</th>
               <th>Mfg. Date</th>
               <th>Expiry Date</th>
+              <th>MRP</th>
               <th>Checkin Date</th>
               <th>Checked-In Units</th>
               <th>In-stock Units</th>
@@ -42,7 +44,15 @@
             </tr>
             </thead>
             <c:forEach items="${ica.availableSkuGroups}" var="skuGroup" varStatus="ctr">
-              <tr>
+	           <c:set var="batchInv" value="${fn:length(hk:getInStockSkuItems(skuGroup))}"/>
+	              <c:choose>
+		              <c:when test="${batchInv > 0 && skuGroup.mrp < ica.productVariant.markedPrice}">
+			              <tr style="background:lightpink">
+		              </c:when>
+		              <c:otherwise>
+			              <tr>
+		              </c:otherwise>
+	              </c:choose>
                 <td>
                   <c:if test="${skuGroup.goodsReceivedNote != null}">
                     <s:link beanclass="com.hk.web.action.admin.inventory.GRNAction" event="view" target="_blank">
@@ -60,11 +70,12 @@
                 </td>
                 <td>${skuGroup.sku.warehouse.city}</td>
                 <td>${skuGroup.batchNumber}</td>
-                <td><fmt:formatDate value="${skuGroup.mfgDate}" type="both" timeStyle="short"/></td>
-                <td><fmt:formatDate value="${skuGroup.expiryDate}" type="both" timeStyle="short"/></td>
-                <td><fmt:formatDate value="${skuGroup.createDate}" type="both" timeStyle="short"/></td>
+                <td><fmt:formatDate value="${skuGroup.mfgDate}" pattern="dd/MM/yyyy"/></td>
+                <td><fmt:formatDate value="${skuGroup.expiryDate}" pattern="dd/MM/yyyy"/></td>
+	            <td>${skuGroup.mrp}</td>
+                <td><fmt:formatDate value="${skuGroup.createDate}" pattern="dd/MM/yyyy"/></td>
                 <td>${fn:length(skuGroup.skuItems)}</td>
-                <td>${fn:length(hk:getInStockSkuItems(skuGroup))}</td>
+	            <td>${batchInv}</td>
                 <%--<shiro:hasRole name="<%=RoleConstants.GOD%>">
                   <s:form beanclass="com.hk.web.action.admin.inventory.ListBatchesAndCheckinInventory">
                     <td>
@@ -111,6 +122,7 @@
               <th>Batch No.</th>
               <th>Mfg. Date</th>
               <th>Expiry Date</th>
+              <th>MRP</th>
               <th>Checkin Date</th>
               <th>Checked-In Units <br/>
                 <span class="sml gry">0 means deleted all SKUs to adjust inventory</span>
@@ -138,9 +150,10 @@
                 </td>
                 <td>${skuGroup.sku.warehouse.city}</td>
                 <td>${skuGroup.batchNumber}</td>
-                <td><fmt:formatDate value="${skuGroup.mfgDate}" type="both" timeStyle="short"/></td>
-                <td><fmt:formatDate value="${skuGroup.expiryDate}" type="both" timeStyle="short"/></td>
-                <td><fmt:formatDate value="${skuGroup.createDate}" type="both" timeStyle="short"/></td>
+                <td><fmt:formatDate value="${skuGroup.mfgDate}" pattern="dd/MM/yyyy"/></td>
+                <td><fmt:formatDate value="${skuGroup.expiryDate}" pattern="dd/MM/yyyy"/></td>
+	            <td>${skuGroup.mrp}</td>
+                <td><fmt:formatDate value="${skuGroup.createDate}" pattern="dd/MM/yyyy"/></td>
                 <td>${fn:length(skuGroup.skuItems)}</td>
                 <td>${fn:length(hk:getInStockSkuItems(skuGroup))}</td>
               </tr>
