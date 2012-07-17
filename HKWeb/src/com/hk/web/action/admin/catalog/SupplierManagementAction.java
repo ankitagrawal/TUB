@@ -86,25 +86,29 @@ public class SupplierManagementAction extends BasePaginatedAction {
           //Validating for entering only valid double values
           Pattern pattern;
 	   //Matcher matcher;
-           Double margin = supplier.getMargins();
-             String margin_1=Double.toString(margin);
+
+             String margin = supplier.getMargins();
           final String DOUBLE_PATTERN = "^[0-9]*.[0-9]*$";
           pattern = Pattern.compile(DOUBLE_PATTERN);
-          boolean bool=pattern.matcher(margin_1).matches();
+          boolean bool=pattern.matcher(margin).matches();
                 if(!bool)  getContext().getValidationErrors().add("e1", new SimpleError("Please Enter the value in Double"));
           //To check the value in range of percentage
-           else if(supplier.getMargins()<0 && supplier.getMargins() >100)
+           else{
+                  double d = Double.valueOf(supplier.getMargins().trim()).doubleValue();
+                    if(d<0 && d>100)
+
                 getContext().getValidationErrors().add("e1", new SimpleError("Margins is in percentage and must be Enter within the Range"));
+                }
       }
 
      //Validation for the Credit Period
       if(supplier.getCreditPeriod() != null){
        Pattern pattern;
-	 Integer credit_period = supplier.getCreditPeriod();
-             String credit_period_1 = Integer.toString(credit_period);
+
+             String credit_period = supplier.getCreditPeriod();
                 final String INTEGER_PATTERN = "^[0-9]*$";
           pattern = Pattern.compile(INTEGER_PATTERN);
-          boolean bool=pattern.matcher(credit_period_1).matches();
+          boolean bool=pattern.matcher(credit_period).matches();
            if(!bool)
             getContext().getValidationErrors().add("e1", new SimpleError("Please enter the credit period days in number only"));    
       }
