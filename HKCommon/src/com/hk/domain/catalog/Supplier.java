@@ -63,13 +63,13 @@ public class Supplier implements java.io.Serializable {
     private String BrandName;
 
      @Column(name = "dam_exp_cond")
-    private Double DamageConditions;
+    private String DamageConditions;
 
      @Column(name = "email_id")
     private String email_id;
 
      @Column(name = "margins")
-    private String Margins;
+    private Double Margins;
 
      @Column(name = "terms_of_trade")
     private String TOT;
@@ -100,11 +100,11 @@ public class Supplier implements java.io.Serializable {
 
     }
 
-    public String getMargins() {
+    public Double getMargins() {
         return Margins;
     }
 
-    public void setMargins(String margins) {
+    public void setMargins(Double margins) {
         Margins = margins;
     }
 
@@ -132,11 +132,11 @@ public class Supplier implements java.io.Serializable {
         BrandName = brandName;
     }
 
-    public String getCreditPeriod() {
+    public Integer getCreditPeriod() {
         return CreditPeriod;
     }
 
-    public void setCreditPeriod(String creditPeriod) {
+    public void setCreditPeriod(Integer creditPeriod) {
         CreditPeriod = creditPeriod;
     }
 
