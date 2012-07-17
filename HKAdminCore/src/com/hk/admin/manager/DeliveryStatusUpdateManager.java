@@ -225,18 +225,11 @@ public class DeliveryStatusUpdateManager {
                             endIndex = startIndex + 10;
                         }
                         //Breaking the original list into batches of 10 or the remaining size.
-                        try{
-                        shippingOrderSubList = shippingOrderList.subList(startIndex, endIndex);
-                        }
-                        catch (IllegalArgumentException iae){
-                            logger.debug("IllegalArgumentException occurred(Delhivery).strtIndx:"+startIndex+"endIndx:"+endIndex+"listIndx"+i);    
-                        }  catch (ArrayIndexOutOfBoundsException exe){
-                            logger.debug("ArrayIndexOutOfBoundsException occurred(Delhivery).strtIndx:"+startIndex+"endIndx:"+endIndex+"listIndx"+i);
-                        } catch (Exception ex){
-                            logger.debug(CourierConstants.EXCEPTION + trackingId);
-                        }
-                        trackingId = getAppendedTrackingIdsString(shippingOrderSubList);
                         try {
+                            shippingOrderSubList = shippingOrderList.subList(startIndex, endIndex);
+
+                            trackingId = getAppendedTrackingIdsString(shippingOrderSubList);
+
                             if (trackingId != null) {
                                 //getting the JsonResponeArray for batch of trackingIds
                                 jsonShipmentDataArray = courierStatusUpdateHelper.bulkUpdateDeliveryStatusDelhivery(trackingId);
@@ -247,7 +240,7 @@ public class DeliveryStatusUpdateManager {
                             continue;
                         }
                         if (jsonShipmentDataArray != null && jsonShipmentDataArray.size() > 0) {
-                            ordersDelivered=updateDelhiveryStatus(jsonShipmentDataArray);
+                            ordersDelivered = updateDelhiveryStatus(jsonShipmentDataArray);
                         }
                         i = endIndex;
                     }
