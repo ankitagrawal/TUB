@@ -80,7 +80,7 @@ public class SupplierManagementAction extends BasePaginatedAction {
         getContext().getValidationErrors().add("e1", new SimpleError("check the first two digits of TIN"));
       }
     }
-   // New Editing start from here
+   
       //validation for the margins
       if(supplier.getMargins() !=null){
           //Validating for entering only valid double values
@@ -91,7 +91,7 @@ public class SupplierManagementAction extends BasePaginatedAction {
           final String DOUBLE_PATTERN = "^[0-9]*.[0-9]*$";
           pattern = Pattern.compile(DOUBLE_PATTERN);
           boolean bool=pattern.matcher(margin).matches();
-                if(!bool)  getContext().getValidationErrors().add("e1", new SimpleError("Please Enter the value in Double"));
+                if(!bool)  getContext().getValidationErrors().add("e1", new SimpleError("Please Enter the value percent"));
           //To check the value in range of percentage
            else{
                   double d = Double.valueOf(supplier.getMargins().trim()).doubleValue();
