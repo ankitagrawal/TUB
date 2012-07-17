@@ -117,7 +117,7 @@ public class SupplierManagementAction extends BasePaginatedAction {
                pattern = Pattern.compile(EMAIL_PATTERN);
                   boolean bool = pattern.matcher(email_id).matches();
                     if(!bool)
-                      getContext().getValidationErrors().add("e1", new SimpleError("Please enter the credit period days in number only")); 
+                      getContext().getValidationErrors().add("e1", new SimpleError("Please enter the valid Email-Id")); 
       }
   }
 
