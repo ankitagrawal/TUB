@@ -41,6 +41,7 @@ public class SupplierManagementAction extends BasePaginatedAction {
   public static final int LenghtOfTIN = 11;
   private String supplierTin;
   private String supplierName;
+    
   Page supplierPage;
   private Integer defaultPerPage = 30;
 
@@ -77,6 +78,7 @@ public class SupplierManagementAction extends BasePaginatedAction {
         getContext().getValidationErrors().add("e1", new SimpleError("check the first two digits of TIN"));
       }
     }
+  
   }
 
   public Resolution save() {
@@ -104,8 +106,9 @@ public class SupplierManagementAction extends BasePaginatedAction {
   }
 
 
-  public List<Supplier> getSupplierList() {
+    public List<Supplier> getSupplierList() {
     return supplierList;
+
   }
 
   public void setSupplierList(List<Supplier> supplierList) {
