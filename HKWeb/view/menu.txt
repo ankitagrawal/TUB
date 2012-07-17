@@ -196,6 +196,7 @@
 --/diabetes/testing-supplies/meters
 --/diabetes/testing-supplies/lancets
 --/diabetes/testing-supplies/lancing-devices
+--/diabetes/testing-supplies/insulin-supplies
 --/diabetes/testing-supplies/accessories
 --/diabetes/testing-supplies/combos
 -/diabetes/diabetic-food

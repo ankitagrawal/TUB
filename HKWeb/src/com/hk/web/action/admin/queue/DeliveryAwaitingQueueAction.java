@@ -83,7 +83,7 @@ public class DeliveryAwaitingQueueAction extends BasePaginatedAction {
         shippingOrderSearchCriteria.setCourierList(courierList);
         //yet to confirm  here tracking id is not required---->>
        if(trackingId != null){
-         List<Awb> awbList= awbService.getAvailableAwbForCourierByWarehouseCodStatus(courier,trackingId,null,null, EnumAwbStatus.Used.getAsAwbStatus());
+         List<Awb> awbList= awbService.getAvailableAwbListForCourierByWarehouseCodStatus(courier, trackingId, null, null, EnumAwbStatus.Used.getAsAwbStatus());
         shippingOrderSearchCriteria.setAwb(awbList.get(0));       }
 
         shippingOrderPage = getShippingOrderService().searchShippingOrders(shippingOrderSearchCriteria, getPageNo(), getPerPage());

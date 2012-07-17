@@ -23,6 +23,7 @@ import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.order.ReplacementOrder;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.B2bUserDetails;
 import com.hk.domain.core.Pincode;
@@ -90,9 +91,9 @@ public class SOInvoiceAction extends BaseAction {
                     awb = shippingOrder.getShipment().getAwb();
                 } else {
                     if (shippingOrder.isCOD()) {
-                        awbList = awbService.getAvailableAwbForCourierByWarehouseCodStatus(courier, null, shippingOrder.getWarehouse(), true, EnumAwbStatus.Unused.getAsAwbStatus());
+                        awbList = awbService.getAvailableAwbListForCourierByWarehouseCodStatus(courier, null, shippingOrder.getWarehouse(), true, EnumAwbStatus.Unused.getAsAwbStatus());
                     } else {
-                        awbList = awbService.getAvailableAwbForCourierByWarehouseCodStatus(courier, null, shippingOrder.getWarehouse(), false, EnumAwbStatus.Unused.getAsAwbStatus());
+                        awbList = awbService.getAvailableAwbListForCourierByWarehouseCodStatus(courier, null, shippingOrder.getWarehouse(), false, EnumAwbStatus.Unused.getAsAwbStatus());
                     }
 
                     if (awbList != null && awbList.size() > 0) {
@@ -103,11 +104,17 @@ public class SOInvoiceAction extends BaseAction {
                 trackingId = awb.getAwbNumber();
                 barcodePath = barcodeGenerator.getBarcodePath(trackingId, 1.3f);
             }
+            ReplacementOrder replacementOrder = getBaseDao().get(ReplacementOrder.class, shippingOrder.getId());
             String invoiceType = InvoiceNumHelper.getInvoiceType(shippingOrder.isServiceOrder(), shippingOrder.getBaseOrder().getB2bOrder());
             if (invoiceType.equals(InvoiceNumHelper.PREFIX_FOR_B2B_ORDER)) {
                 b2bUserDetails = b2bUserDetailsDao.getB2bUserDetails(shippingOrder.getBaseOrder().getUser());
             }
-            invoiceDto = new InvoiceDto(shippingOrder, b2bUserDetails);
+            if(replacementOrder != null){
+              invoiceDto = new InvoiceDto(replacementOrder, b2bUserDetails);
+            }
+            else{
+              invoiceDto = new InvoiceDto(shippingOrder, b2bUserDetails);
+            }
             sexualCareCategory = categoryService.getCategoryByName("sexual-care");
             coupon = referrerProgramManager.getOrCreateRefferrerCoupon(shippingOrder.getBaseOrder().getUser());
             barcodePath = barcodeGenerator.getBarcodePath(shippingOrder.getGatewayOrderId(), 1.0f);

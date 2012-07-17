@@ -164,7 +164,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
         Awb suggestedAwb = shipment.getAwb();
         Awb finalAwb = suggestedAwb;
         if (!(suggestedAwb.getAwbNumber().equalsIgnoreCase(trackingId.trim()))) {
-            List<Awb> awbList = awbService.getAvailableAwbForCourierByWarehouseCodStatus(shipment.getCourier(), trackingId, shippingOrder.getWarehouse(), shippingOrder.isCOD(), EnumAwbStatus.Unused.getAsAwbStatus());
+            List<Awb> awbList = awbService.getAvailableAwbListForCourierByWarehouseCodStatus(shipment.getCourier(), trackingId, shippingOrder.getWarehouse(), shippingOrder.isCOD(), EnumAwbStatus.Unused.getAsAwbStatus());
             if (awbList != null && awbList.size() > 0) {
                 suggestedAwb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
                 awbService.save(suggestedAwb);

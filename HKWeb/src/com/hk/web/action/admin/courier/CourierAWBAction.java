@@ -1,7 +1,6 @@
 package com.hk.web.action.admin.courier;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.admin.pact.dao.courier.AwbDao;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.util.helper.XslAwbParser;
@@ -141,8 +140,8 @@ public class CourierAWBAction extends BaseAction {
       fileBean.save(excelFile);
       awbSetFromExcel = xslAwbParser.readAwbExcel(excelFile);
       if (null != awbSetFromExcel && awbSetFromExcel.size() > 0) {
-        List<Awb> awbDatabase = awbService. getAvailableAwbForCourierByWarehouseCodStatus(courier, null, null,null, EnumAwbStatus.Attach.getAsAwbStatus());
-         awbDatabase.addAll(awbService. getAvailableAwbForCourierByWarehouseCodStatus(courier, null, null,null, EnumAwbStatus.Unused.getAsAwbStatus()));
+        List<Awb> awbDatabase = awbService.getAvailableAwbListForCourierByWarehouseCodStatus(courier, null, null, null, EnumAwbStatus.Attach.getAsAwbStatus());
+         awbDatabase.addAll(awbService.getAvailableAwbListForCourierByWarehouseCodStatus(courier, null, null, null, EnumAwbStatus.Unused.getAsAwbStatus()));
         List<String> commonCourierIdsList = XslAwbParser.getIntersection(awbDatabase, new ArrayList(awbSetFromExcel));
         if (commonCourierIdsList.size() > 0) {
           addRedirectAlertMessage(new SimpleMessage("Upload Failed   Courier Ids" + "     " + commonCourierIdsList + "   " +

@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+
 @Service
 public class ShipmentServiceImpl implements ShipmentService {
 
@@ -47,11 +48,10 @@ public class ShipmentServiceImpl implements ShipmentService {
         Pincode pincode = pincodeDao.getByPincode(order.getAddress().getPin());
         Courier suggestedCourier = courierService.getDefaultCourier(pincode, shippingOrder.isCOD(), shippingOrder.getWarehouse());
         shipment.setCourier(suggestedCourier);
-        List<Awb> suggestedAwbList = awbService.getAvailableAwbForCourierByWarehouseCodStatus(suggestedCourier,null,shippingOrder.getWarehouse(),shippingOrder.isCOD(),EnumAwbStatus.Unused.getAsAwbStatus());
-        if (suggestedAwbList != null && suggestedAwbList.size() > 0) {
-            Awb suggestedAwb = suggestedAwbList.get(0);
-            shipment.setAwb(suggestedAwb);
+        Awb suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(suggestedCourier, null, shippingOrder.getWarehouse(), shippingOrder.isCOD(), EnumAwbStatus.Unused.getAsAwbStatus());
+        if (suggestedAwb != null) {
             suggestedAwb.setUsed(true);
+            shipment.setAwb(suggestedAwb);
             awbDao.save(suggestedAwb);
         }
         if (courierGroupService.getCourierGroup(shipment.getCourier()) != null) {
@@ -90,17 +90,17 @@ public class ShipmentServiceImpl implements ShipmentService {
         this.baseDao = baseDao;
     }
 
-      public boolean attachAwbToShipment(Courier courier,ShippingOrder shippingOrder){
-          Shipment shipment=shippingOrder.getShipment();
-            List<Awb> suggestedAwbList = awbService.getAvailableAwbForCourierByWarehouseCodStatus(courier,null, shippingOrder.getWarehouse(), shippingOrder.isCOD(), EnumAwbStatus.Unused.getAsAwbStatus());
-                if (suggestedAwbList != null && suggestedAwbList.size() > 0) {
-                   Awb suggestedAwb = suggestedAwbList.get(0);
-                    shipment.setAwb(suggestedAwb);
-                    AwbStatus awbStatus = EnumAwbStatus.Attach.getAsAwbStatus();
-                    suggestedAwb.setAwbStatus(awbStatus);
-                    return true;
-      }
-          return false;
-      }
+    public boolean attachAwbToShipment(Courier courier, ShippingOrder shippingOrder) {
+        Shipment shipment = shippingOrder.getShipment();
+        List<Awb> suggestedAwbList = awbService.getAvailableAwbListForCourierByWarehouseCodStatus(courier, null, shippingOrder.getWarehouse(), shippingOrder.isCOD(), EnumAwbStatus.Unused.getAsAwbStatus());
+        if (suggestedAwbList != null && suggestedAwbList.size() > 0) {
+            Awb suggestedAwb = suggestedAwbList.get(0);
+            shipment.setAwb(suggestedAwb);
+            AwbStatus awbStatus = EnumAwbStatus.Attach.getAsAwbStatus();
+            suggestedAwb.setAwbStatus(awbStatus);
+            return true;
+        }
+        return false;
+    }
 
 }

@@ -30,8 +30,6 @@ import org.springframework.stereotype.Component;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFPatriarch;
-import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
 import org.apache.poi.util.IOUtils;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -78,7 +76,7 @@ public class HKDeliveryAction extends BaseAction {
           shippingOrderList = new ArrayList<ShippingOrder>();
         List<Awb> awbList=new ArrayList<Awb>();
         for (String trackingNum : trackingIdList) {
-        awbList=  awbService.getAvailableAwbForCourierByWarehouseCodStatus(null,trackingNum.trim(),userService.getWarehouseForLoggedInUser(),null, EnumAwbStatus.Used.getAsAwbStatus());
+        awbList=  awbService.getAvailableAwbListForCourierByWarehouseCodStatus(null, trackingNum.trim(), userService.getWarehouseForLoggedInUser(), null, EnumAwbStatus.Used.getAsAwbStatus());
             for(Awb awb: awbList){
             List<ShippingOrder> shippinglist = shippingOrderService.getShippingOrderByAwb(awb);
                 for( ShippingOrder shippingOrder:shippinglist )

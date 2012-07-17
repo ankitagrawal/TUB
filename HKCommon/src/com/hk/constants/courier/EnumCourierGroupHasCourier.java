@@ -31,6 +31,7 @@ public enum EnumCourierGroupHasCourier {
             EnumCourierGroup.Local,
             Arrays.asList(
                     EnumCourier.Chhotu,
+                    EnumCourier.Safexpress,
                     EnumCourier.Delhivery
             )
     ),

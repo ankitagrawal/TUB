@@ -87,7 +87,8 @@ public enum EnumRoleHasPermission {
                     EnumPermission.FINANCE_MANAGEMENT,
                     EnumPermission.RUN_ANT_BUILDS,
                     EnumPermission.HK_DELIVERY_WORKSHEET_DOWNLOAD,
-                    EnumPermission.UPDATE_COURIER_DELIVERY_STATUS
+                    EnumPermission.UPDATE_COURIER_DELIVERY_STATUS,
+                    EnumPermission.CREATE_REPLACEMENT_ORDER
             )
     ),
 
@@ -173,7 +174,8 @@ public enum EnumRoleHasPermission {
                     EnumPermission.VIEW_TICKETS,
                     EnumPermission.CREATE_TICKETS,
                     EnumPermission.AWARD_REWARD_POINTS,
-                    EnumPermission.HK_EMPLOYEE
+                    EnumPermission.HK_EMPLOYEE,
+                    EnumPermission.CREATE_REPLACEMENT_ORDER
             )
     ),
 
