@@ -256,12 +256,9 @@ public class EmailManager {
         }
         // Sending category specific emails to category admins.
         Set<OrderCategory> orderCategories = order.getCategories();
-        int count = 1;
         for (OrderCategory orderCategory : orderCategories) {
             String categoryName = orderCategory.getCategory().getDisplayName();
             for (String categoryAdminEmail : this.categoryAdmins(orderCategory.getCategory())) {
-                logger.error("TO:" + categoryAdminEmail + "count" + count);
-                count++;
                 boolean sent = emailService.sendHtmlEmailNoReply(freemarkerTemplate, valuesMap, categoryAdminEmail, categoryName
                         + " Category Admin");
                 if (!sent)
