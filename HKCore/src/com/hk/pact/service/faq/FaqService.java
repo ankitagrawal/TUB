@@ -18,4 +18,6 @@ public interface FaqService {
     public boolean insertFaq(String question, String answer, String primaryCategory, String secondaryCategory, String keywordString);
 
     public List<Faq> searchFaq(String keywords);
+
+    public Faq save(Faq faq);
 }

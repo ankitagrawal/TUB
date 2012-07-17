@@ -1,7 +1,7 @@
 package com.hk.impl.service.faq;
 
 import com.hk.pact.service.faq.FaqService;
-import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.faq.FaqDao;
 import com.hk.domain.faq.Faq;
 
 import java.util.List;
@@ -22,18 +22,20 @@ import org.slf4j.LoggerFactory;
 @Service
 public class FaqServiceImpl implements FaqService{
     @Autowired
-    BaseDao baseDao;
+    FaqDao faqDao;
+
+
 
     private static Logger logger                 = LoggerFactory.getLogger(FaqServiceImpl.class);
-    
+
     public List<Faq> getFaqByCategory(String primaryCategory){
         List<Faq> faqListFiltered = new ArrayList<Faq>();
-        List<Faq> faqList = getBaseDao().getAll(Faq.class);
+        List<Faq> faqList = getFaqDao().getAll(Faq.class);
         if(primaryCategory == null){
             return faqList;
         }
         for(Faq faq : faqList){
-            if(faq.getPrimary_category().equals(primaryCategory)){
+            if(faq.getPrimaryCategory().equals(primaryCategory)){
                 faqListFiltered.add(faq);
             }
         }
@@ -45,10 +47,10 @@ public class FaqServiceImpl implements FaqService{
         try{
             faq.setQuestion(question);
             faq.setAnswer(answer);
-            faq.setPrimary_category(primaryCategory);
-            faq.setSecondary_category(secondaryCategory);
+            faq.setPrimaryCategory(primaryCategory);
+            faq.setSecondaryCategory(secondaryCategory);
             faq.setKeywords(keywordString);
-            getBaseDao().save(faq);
+            save(faq);
             return true;
         }
         catch(Exception e){
@@ -57,16 +59,20 @@ public class FaqServiceImpl implements FaqService{
         return false;
     }
 
+    public Faq save(Faq faq){
+        return (Faq)getFaqDao().save(faq);
+    }
+
     public List<Faq> searchFaq(String keywords){
-        List<Faq> faqList = new ArrayList<Faq>();
+        List<Faq> faqList = getFaqDao().searchFaq(keywords);
         return faqList;
     }
 
-    public BaseDao getBaseDao() {
-        return baseDao;
+    public FaqDao getFaqDao() {
+        return faqDao;
     }
 
-    public void setBaseDao(BaseDao baseDao) {
-        this.baseDao = baseDao;
+    public void setFaqDao(FaqDao faqDao) {
+        this.faqDao = faqDao;
     }
 }

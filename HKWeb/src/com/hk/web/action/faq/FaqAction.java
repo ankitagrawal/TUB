@@ -32,6 +32,8 @@ public class FaqAction extends BaseAction {
     String answer;
     String secondaryCategory;
     String keywordString;
+    String searchString;
+    private Faq faq;
 
 /*    @ValidationMethod(on = "addNewFaq")
     public void validateSearch() {
@@ -43,14 +45,43 @@ public class FaqAction extends BaseAction {
     @DefaultHandler
     public Resolution pre() {
         primaryCategory = FaqCategoryEnums.EnumFaqPrimaryCateogry.Nutrition.getName();
-        faqList = faqService.getFaqByCategory(primaryCategory);
+        if(searchString != null && !searchString.equals("")){
+            faqList = faqService.searchFaq(searchString);
+        }
+        else{
+            faqList = faqService.getFaqByCategory(primaryCategory);
+        }
         return new ForwardResolution("/pages/faq/faq.jsp");
     }
 
     public Resolution addNewFaq() {
-        faqService.insertFaq(question, answer, primaryCategory, secondaryCategory, keywordString);
-        addRedirectAlertMessage(new SimpleMessage("New FAQ inserted."));
+        Boolean status = faqService.insertFaq(question, answer, primaryCategory, secondaryCategory, keywordString);
+        if(status == true){
+            addRedirectAlertMessage(new SimpleMessage("New FAQ inserted."));
+        }
+        else{
+            addRedirectAlertMessage(new SimpleMessage("Unable to insert faq, please contact admin."));
+        }
+        return new RedirectResolution("/pages/faq/faq.jsp");
+    }
+
+    public Resolution searchFaq(){
+        faqList = faqService.searchFaq(searchString);
         return new ForwardResolution("/pages/faq/faq.jsp");
+    }
+
+    public Resolution saveFaq(){
+        faqService.save(faq);
+        addRedirectAlertMessage(new SimpleMessage("FAQ saved."));
+        return new RedirectResolution("/pages/faq/faq.jsp");
+    }
+
+    public Resolution editFaq(){
+        if(faq == null){
+            addRedirectAlertMessage(new SimpleMessage("Unable to determine faq"));
+            return new ForwardResolution("/pages/faq/faq.jsp");
+        }
+        return new ForwardResolution("/pages/faq/editFaq.jsp");
     }
 
     public List<Faq> getFaqList() {
@@ -99,5 +130,21 @@ public class FaqAction extends BaseAction {
 
     public void setKeywordString(String keywordString) {
         this.keywordString = keywordString;
+    }
+
+    public String getSearchString() {
+        return searchString;
+    }
+
+    public void setSearchString(String searchString) {
+        this.searchString = searchString;
+    }
+
+    public Faq getFaq() {
+        return faq;
+    }
+
+    public void setFaq(Faq faq) {
+        this.faq = faq;
     }
 }

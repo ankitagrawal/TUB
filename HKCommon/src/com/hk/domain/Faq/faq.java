@@ -1,9 +1,6 @@
 package com.hk.domain.faq;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Id;
-import javax.persistence.Column;
+import javax.persistence.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -17,6 +14,7 @@ import javax.persistence.Column;
 @Table(name = "faq")
 public class Faq implements java.io.Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", unique = true, nullable = false, length = 20)
     private Long id;
 
@@ -27,10 +25,10 @@ public class Faq implements java.io.Serializable {
     private String answer;
 
     @Column(name = "primary_category")
-    private String primary_category;
+    private String primaryCategory;
 
     @Column(name = "secondary_category")
-    private String secondary_category;
+    private String secondaryCategory;
 
     @Column(name = "keywords")
     private String keywords;
@@ -59,20 +57,20 @@ public class Faq implements java.io.Serializable {
         this.answer = answer;
     }
 
-    public String getPrimary_category() {
-        return primary_category;
+    public String getPrimaryCategory() {
+        return primaryCategory;
     }
 
-    public void setPrimary_category(String primary_category) {
-        this.primary_category = primary_category;
+    public void setPrimaryCategory(String primaryCategory) {
+        this.primaryCategory = primaryCategory;
     }
 
-    public String getSecondary_category() {
-        return secondary_category;
+    public String getSecondaryCategory() {
+        return secondaryCategory;
     }
 
-    public void setSecondary_category(String secondary_category) {
-        this.secondary_category = secondary_category;
+    public void setSecondaryCategory(String secondaryCategory) {
+        this.secondaryCategory = secondaryCategory;
     }
 
     public String getKeywords() {
@@ -82,4 +80,10 @@ public class Faq implements java.io.Serializable {
     public void setKeywords(String keywords) {
         this.keywords = keywords;
     }
+
+    @Override
+    public String toString() {
+        return id != null ? id.toString() : "";
+    }
 }
+
