@@ -141,7 +141,7 @@ public class InventoryCheckinAction extends BaseAction {
                         return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
                     }
 
-                    SkuGroup skuGroup = getAdminInventoryService().createSkuGroup(batch, mfgDate, expiryDate, 0.0, 0.0, grn, null,null, sku);
+                    SkuGroup skuGroup = getAdminInventoryService().createSkuGroup(batch, mfgDate, expiryDate, costPrice, mrp, grn, null,null, sku);
                     getAdminInventoryService().createSkuItemsAndCheckinInventory(skuGroup, qty, null, grnLineItem, null, null,
                             getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKIN), user);
                     getInventoryService().checkInventoryHealth(productVariant);
@@ -150,17 +150,9 @@ public class InventoryCheckinAction extends BaseAction {
                         grn.setGrnStatus(getGoodsReceivedNoteDao().get(GrnStatus.class, EnumGrnStatus.InventoryCheckedIn.getId()));
                         getGoodsReceivedNoteDao().save(grn);
                     }
+	                //Barcode File
                     try {
                         String productOptionStringBuffer = productVariant.getOptionsPipeSeparated();
-                        /*
-                         * for (Iterator<ProductOption> productOptionIterator =
-                         * productVariant.getProductOptions().iterator(); productOptionIterator.hasNext();) {
-                         * ProductOption productOption = productOptionIterator.next();
-                         * productOptionStringBuffer.append(productOption.getValue()).append("|"); }
-                         */
-                        /*
-                         * if (productOptionStringBuffer.length() == 0) { productOptionStringBuffer.append("NA"); }
-                         */
                         String barcodeFilePath = null;
                         if (userWarehouse.getState().equalsIgnoreCase(StateList.HARYANA)) {
                             barcodeFilePath = barcodeGurgaon;
@@ -177,7 +169,7 @@ public class InventoryCheckinAction extends BaseAction {
                             date = sdf.format(expiryDate);
                         }
                         String data = skuGroup.getBarcode() + "\t" + StringUtils.substring(productVariant.getProduct().getName(), 0, strLength) + "\t"
-                                + StringUtils.substring(productOptionStringBuffer.toString(), 0, strLength) + "\t" + date + "\t" + qty + "\t" + grnLineItem.getMrp();
+                                + StringUtils.substring(productOptionStringBuffer.toString(), 0, strLength) + "\t" + date + "\t" + qty + "\t" + skuGroup.getMrp();
 
                         BarcodeUtil.createBarcodeFile(barcodeFilePath, data);
 
@@ -209,6 +201,7 @@ public class InventoryCheckinAction extends BaseAction {
         if (getPrincipal() != null) {
             user = getUserService().getUserById(getPrincipal().getId());
         }
+
         stockTransfer.setReceivedBy(user);
         logger.debug("upc: " + upc);
         try {
@@ -245,6 +238,33 @@ public class InventoryCheckinAction extends BaseAction {
                     stockTransferLineItem.setMfgDate(mfgDate);
                     stockTransferLineItem.setExpiryDate(expiryDate);
                     stockTransferLineItem = (StockTransferLineItem) stockTransferDao.save(stockTransferLineItem);
+
+	                try {
+                        String productOptionStringBuffer = productVariant.getOptionsPipeSeparated();
+                        String barcodeFilePath = null;
+                        if (stockTransfer.getToWarehouse().getState().equalsIgnoreCase(StateList.HARYANA)) {
+                            barcodeFilePath = barcodeGurgaon;
+                        } else {
+                            barcodeFilePath = barcodeMumbai;
+                        }
+                        barcodeFilePath = barcodeFilePath + "/" + "printBarcode_" + user.getId() + "_" + user.getName() + "_"
+                                + StringUtils.substring(stockTransfer.getToWarehouse().getCity(), 0, 3) + ".txt";
+                        String date = "";
+                        if (expiryDate == null) {
+                            date = "NA";
+                        } else {
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+                            date = sdf.format(expiryDate);
+                        }
+                        String data = skuGroup.getBarcode() + "\t" + StringUtils.substring(productVariant.getProduct().getName(), 0, strLength) + "\t"
+                                + StringUtils.substring(productOptionStringBuffer.toString(), 0, strLength) + "\t" + date + "\t" + qty + "\t" + skuGroup.getMrp();
+
+                        BarcodeUtil.createBarcodeFile(barcodeFilePath, data);
+
+                    } catch (IOException e) {
+                        logger.error("Exception while appending on barcode file", e);
+                        ;
+                    }
                 }
             } else {
                 addRedirectAlertMessage(new SimpleMessage("No such UPC or Variant Id"));
