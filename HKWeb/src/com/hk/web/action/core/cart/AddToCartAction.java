@@ -1,20 +1,6 @@
 package com.hk.web.action.core.cart;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.lang.reflect.Type;
-
-import net.sourceforge.stripes.action.*;
-import net.sourceforge.stripes.validation.SimpleError;
-import net.sourceforge.stripes.validation.ValidationErrorHandler;
-import net.sourceforge.stripes.validation.ValidationErrors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -34,9 +20,20 @@ import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.dao.user.UserProductHistoryDao;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.core.user.SignupAction;
-import com.hk.report.dto.order.LineItemConfigValuesDTO;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.JsonResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.validation.SimpleError;
+import net.sourceforge.stripes.validation.ValidationErrorHandler;
+import net.sourceforge.stripes.validation.ValidationErrors;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
 public class AddToCartAction extends BaseAction implements ValidationErrorHandler {

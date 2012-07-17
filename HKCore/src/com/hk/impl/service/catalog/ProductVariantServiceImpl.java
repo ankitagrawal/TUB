@@ -1,12 +1,5 @@
 package com.hk.impl.service.catalog;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hk.constants.catalog.product.EnumProductVariantServiceType;
 import com.hk.domain.affiliate.AffiliateCategory;
 import com.hk.domain.catalog.product.Product;
@@ -15,6 +8,12 @@ import com.hk.domain.core.ProductVariantServiceType;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author vaibhav.adlakha
