@@ -214,6 +214,9 @@
 
 <div class="grid_12">
   <h3>Order Details</h3>
+  <c:if test="${orderSummary.invoiceDto.replacementOrderString != null}">
+    <h3>${orderSummary.invoiceDto.replacementOrderString}</h3>
+  </c:if>
   <table cellspacing="0">
     <tr>
       <th>Item</th>

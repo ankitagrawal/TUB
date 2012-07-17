@@ -22,7 +22,8 @@ public enum EnumShippingOrderStatus {
     SO_Returned(200L, "SO Returned"),
     SO_Lost(210L, "SO Lost"),
     SO_Replaced(220L, "SO Replaced"),
-    SO_Cancelled(999L, "SO Cancelled");
+    SO_Cancelled(999L, "SO Cancelled"),
+    RTO_Initiated(230L, "RTO Initiated");
 
 
     private java.lang.String name;
