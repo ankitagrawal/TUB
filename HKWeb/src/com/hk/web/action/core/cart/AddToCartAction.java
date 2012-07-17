@@ -5,15 +5,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.lang.reflect.Type;
 
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.JsonResolution;
-import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.SimpleError;
 import net.sourceforge.stripes.validation.ValidationErrorHandler;
 import net.sourceforge.stripes.validation.ValidationErrors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
@@ -34,14 +34,18 @@ import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.dao.user.UserProductHistoryDao;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.core.user.SignupAction;
+import com.hk.report.dto.order.LineItemConfigValuesDTO;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+@Component
 public class AddToCartAction extends BaseAction implements ValidationErrorHandler {
 
     //private static Logger logger = Logger.getLogger(AddToCartAction.class);
 
     List<ProductVariant> productVariantList;
     Combo combo;
-
+    
     @Autowired
     UserDao userDao;
     @Autowired
@@ -60,10 +64,24 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
     @Autowired
     SignupAction signupAction;
 
+    private boolean variantConfigProvided;
+
+    private String  variantId;
+
+    private String  jsonConfigValues;
+
+    private String nameToBeEngraved;
+
+    private String engravingRequired;
+
     @SuppressWarnings({"unchecked", "deprecation"})
     @DefaultHandler
     @JsonHandler
     public Resolution addToCart() {
+        if(isVariantConfigProvided()) {
+            return new ForwardResolution(AddToCartWithLineItemConfigAction.class);
+        }
+        else {
         // I need to pass product info
         User user = null;
         if (getPrincipal() != null) {
@@ -170,7 +188,7 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
         noCache();
         return new JsonResolution(healthkartResponse);
     }
-
+    }
     public List<ProductVariant> getProductVariantList() {
         return productVariantList;
     }
@@ -191,4 +209,43 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
         this.combo = combo;
     }
 
+    public String getNameToBeEngraved() {
+        return nameToBeEngraved;
+    }
+
+    public void setNameToBeEngraved(String nameToBeEngraved) {
+        this.nameToBeEngraved = nameToBeEngraved;
+    }
+
+    public boolean isVariantConfigProvided() {
+        return variantConfigProvided;
+    }
+
+    public void setVariantConfigProvided(boolean variantConfigProvided) {
+        this.variantConfigProvided = variantConfigProvided;
+    }
+
+    public String getVariantId() {
+        return variantId;
+    }
+
+    public void setVariantId(String variantId) {
+        this.variantId = variantId;
+    }
+
+    public String getJsonConfigValues() {
+        return jsonConfigValues;
+    }
+
+    public void setJsonConfigValues(String configValue) {
+        this.jsonConfigValues = configValue;
+    }
+
+    public String getEngravingRequired() {
+        return engravingRequired;
+    }
+
+    public void setEngravingRequired(String engravingRequired) {
+        this.engravingRequired = engravingRequired;
+    }
 }

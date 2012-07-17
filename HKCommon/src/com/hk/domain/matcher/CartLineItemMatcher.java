@@ -56,7 +56,10 @@ public class CartLineItemMatcher {
       if (matchFound && comboInstance != null && !comboInstance.equals(cartLineItem.getComboInstance())) {
         matchFound = false;
       }
-      if (matchFound && cartLineItemConfig != null && !cartLineItemConfig.equals(cartLineItem.getCartLineItemConfig())) {
+      if (matchFound && cartLineItem.getCartLineItemConfig() == null) {
+          matchFound = false;
+      }
+      if (matchFound && cartLineItemConfig != null && cartLineItem.getCartLineItemConfig() != null && !cartLineItemConfig.equals(cartLineItem.getCartLineItemConfig())) {
         matchFound = false;
       }
       if (matchFound && extraOptions != null && extraOptions.size() > 0) {

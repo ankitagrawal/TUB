@@ -44,6 +44,7 @@ import com.hk.pact.dao.sku.SkuDao;
 import com.hk.pact.service.accounting.InvoiceService;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.catalog.ProductService;
+import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.service.ServiceLocatorFactory;
@@ -70,8 +71,8 @@ public class Functions {
     // TODO: rewrite
     static {
         formatter = new PeriodFormatterBuilder().appendYears().appendSuffix(" year, ", " years, ").appendMonths().appendSuffix(" month, ", " months, ").appendWeeks().appendSuffix(
-                " week, ", " weeks, ").appendDays().appendSuffix(" day, ", " days, ").appendHours().appendSuffix(" hour, ", " hours, ").appendMinutes().appendSuffix(" minute, ",
-                " minutes, ").appendSeconds().appendSuffix(" second, ", " seconds").toFormatter();
+          " week, ", " weeks, ").appendDays().appendSuffix(" day, ", " days, ").appendHours().appendSuffix(" hour, ", " hours, ").appendMinutes().appendSuffix(" minute, ",
+          " minutes, ").appendSeconds().appendSuffix(" second, ", " seconds").toFormatter();
 
         // menuHelper = ServiceLocatorFactory.getService(MenuHelper.class);
 
@@ -265,7 +266,7 @@ public class Functions {
         ShippingOrder shippingOrder = (ShippingOrder) o1;
         ShippingOrderLifecycleDao shippingOrderLifecycleDao = ServiceLocatorFactory.getService(ShippingOrderLifecycleDao.class);
         Date date = shippingOrderLifecycleDao.getActivityDateForShippingOrder(shippingOrder, Arrays.asList(EnumShippingOrderLifecycleActivity.SO_AutoEscalatedToProcessingQueue,
-                EnumShippingOrderLifecycleActivity.SO_EscalatedToProcessingQueue));
+          EnumShippingOrderLifecycleActivity.SO_EscalatedToProcessingQueue));
         return date;
     }
 
@@ -334,18 +335,18 @@ public class Functions {
         List<ProductVariant> productVariants = productVariantDao.findVariantsFromFreeVariant((ProductVariant) o);
         return productVariants != null && !productVariants.isEmpty();
     }
-    
+
     public static String getExtraOptionsAsString(Object o1,String str) {
         CartLineItem cartLineItem = (CartLineItem) o1;
 //        String seperator = (String) o2;
         return CartLineItemUtil.getExtraOptionsAsString(cartLineItem, str);
-      }
+    }
 
-      public static String getConfigOptionsAsString(Object o1,String str) {
+    public static String getConfigOptionsAsString(Object o1,String str) {
         CartLineItem cartLineItem = (CartLineItem) o1;
 //        Character seperator = (Character) o2;
         return CartLineItemUtil.getConfigOptionsAsString(cartLineItem, str);
-      }
+    }
 
     public static Boolean alreadyPublishedDeal(Object o) {
         RewardPointDao rewardPointDao = ServiceLocatorFactory.getService(RewardPointDao.class);
@@ -449,10 +450,25 @@ public class Functions {
         return skuDao.filterProductVariantsByWarehouse(sku.getProductVariant().getProduct().getProductVariants(), sku.getWarehouse());
     }
 
-  public static boolean isComboInStock(Object o) {
+    public static boolean isComboInStock(Object o) {
         ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
         Combo combo = (Combo) o;
         return productService.isComboInStock(combo);
     }
 
+    public static boolean isCollectionContainsObject(Collection c, Object o) {
+        return c.contains(o);
+    }
+
+    public static Double getEngravingPrice(Object o) {
+        ProductVariantService productVariantService = ServiceLocatorFactory.getService(ProductVariantService.class);
+        ProductVariant pv = (ProductVariant) o;
+        return productVariantService.getEngravingPrice(pv);
+    }
+
+    public static boolean isEngravingProvidedForProduct(Object o) {
+        ProductVariantService productVariantService = ServiceLocatorFactory.getService(ProductVariantService.class);
+        ProductVariant pv = (ProductVariant) o;
+        return productVariantService.isEngravingProvidedForProduct(pv);
+    }
 }

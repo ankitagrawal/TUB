@@ -58,4 +58,8 @@ public interface ProductVariantService {
     public List<ProductVariant> getAllProductVariantsByCategory(String category);
 
     public List<ProductVariant> getAllProductVariant();
+
+    public Double getEngravingPrice(ProductVariant productVariant);
+
+    public boolean isEngravingProvidedForProduct(ProductVariant productVariant);
 }

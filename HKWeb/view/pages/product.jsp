@@ -344,6 +344,44 @@
     </div>
   </shiro:hasPermission>
 
+    <div class="configOptionsDiv" style="display:none;">
+        <select name="configOptionValueMap" id="configOptionValueMap" multiple="multiple">
+            <c:forEach items="${product.productVariants[0].variantConfig.variantConfigOptions}" var="configOption" varStatus="configOptionCtr">
+                <c:forEach items="${configOption.variantConfigValues}" var="configValue" varStatus="configValueCtr">
+                    <option value="${configOption.id}" valueId="${configValue.id}"></option>
+                </c:forEach>
+            </c:forEach>
+            <option value="-999" valueId="-999" selected="selected"></option>
+        </select>
+    </div>
+    <c:set var="ENG" value="ENG"/>
+    <s:form partial="true" beanclass="com.hk.web.action.core.cart.AddToCartAction" method="get">
+        <c:if test="${hk:isCollectionContainsObject(product.categories, stethoscope)}">
+            <c:if test="${hk:isEngravingProvidedForProduct(product.productVariants[0])}">
+
+            <c:forEach items="${product.productVariants[0].variantConfig.variantConfigOptions}" var="configOption" >
+                <c:if test="${configOption.additionalParam eq ENG}">
+                    <input type="hidden" id="stethoscopeConfigOption" value="${configOption.id}" />
+                <c:forEach items="${configOption.variantConfigValues}" var="configValue" >
+                    <input type="hidden" id="stethoscopeConfigValue" value="${configValue.id}" />
+                </c:forEach>
+                </c:if>
+            </c:forEach>
+
+            <input type="hidden" id="engravingPrice" value="${hk:getEngravingPrice(product.productVariants[0])}"/>
+            <br>
+            <strong>Do you want to Engrave: </strong>
+            <s:checkbox name="engravingRequired" id="checkBoxEngraving" checked="false"/> (at an additional cost of
+            Rs <fmt:formatNumber value="${hk:getEngravingPrice(product.productVariants[0])}" maxFractionDigits="0"/> )
+            <div class="engraveDiv" style="display:none;">
+                <br><strong>Specify name to be Engraved:</strong>
+                <s:text name="nameToBeEngraved" id="engrave" style="width:140px" placeholder='Max 15 characters'
+                        maxlength="15"/>
+            </div>
+            </c:if>
+        </c:if>
+    </s:form>
+
 </s:layout-component>
 
 <s:layout-component name="product_variants">
@@ -629,7 +667,8 @@
 <s:layout-component name="endScripts">
   <script type="text/javascript">
     var validateCheckbox;
-    $(document).ready(function() {      
+    $(document).ready(function() {
+        var params = {};
       function _addToCart(res) {
         if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
           $('.message .line1').html("<strong>" + res.data.name + "</strong> has been added to your shopping cart");
@@ -654,6 +693,31 @@
 
     <c:if test="${pa.combo == null}">
       $('.addToCartButton').click(function(e) {
+          if ($("#checkBoxEngraving").is(":checked")) {
+                              if($("#engrave").val() == '') {
+                                  alert("Please specify name to be engraved, or uncheck the engraving option");
+                                  return false;
+                              }
+                          }
+
+                          var data = new Array();
+                          var idx = 0;
+                          var variantConfigProvided = 'false';
+                          $("#configOptionValueMap option:selected").each(function() {
+                              if($(this).val() != -999) {
+                                  variantConfigProvided = 'true';
+                                  var dto = new Object();
+                                  dto.optionId  = $(this).val();
+                                  dto.valueId = $(this).attr('valueId');
+                                  data[idx] = dto;
+                                  idx++;
+                              }
+                          });
+                          params.variantConfigProvided = (variantConfigProvided == 'true');
+                          var configValues = JSON.stringify(data);
+                          params.jsonConfigValues = configValues;
+                          params.variantId = "${product.productVariants[0].id}";
+                          params.nameToBeEngraved = $("#engrave").val();          
         if (!window.validateCheckbox) {
           $(this).parents().find('.progressLoader').show();
           $(this).parent().append('<span class="add_message">added to <s:link beanclass="com.hk.web.action.core.cart.CartAction" id="message_cart_link"><img class="icon16" src="${pageContext.request.contextPath}/images/icons/cart.png"> cart</s:link></span>');
@@ -685,6 +749,7 @@
             return true;
           }
         }
+          $('.addToCartForm').ajaxForm({dataType: 'json', data: params, success: _addToCart});
       });
     </c:if>
 
@@ -709,7 +774,7 @@
         }, 500);
       }
 
-      $('.addToCartForm').ajaxForm({dataType: 'json', success: _addToCart});
+      /*$('.addToCartForm').ajaxForm({dataType: 'json', success: _addToCart});*/
 
       $(".top_link, .go_to_top").click(function(event) {
         event.preventDefault();
@@ -723,6 +788,20 @@
       });
 
       $('.checkboxError').hide();
+
+        $("#checkBoxEngraving").click(function() {
+                var stethoscopeConfigOption = $("#stethoscopeConfigOption").val();
+                if ($("#checkBoxEngraving").is(":checked")) {
+                    $('#configOptionValueMap option[value='+stethoscopeConfigOption+']').attr('selected', 'selected');
+                    $(".engraveDiv").show();
+                } else {
+                    $('#configOptionValueMap option[value='+stethoscopeConfigOption+']').attr('selected', false);
+                    $("#engrave").val('');
+                    $("#checkBoxEngraving").val(0);
+                    $(".engraveDiv").hide();
+                }
+
+            });
     });
   </script>
   <iframe
