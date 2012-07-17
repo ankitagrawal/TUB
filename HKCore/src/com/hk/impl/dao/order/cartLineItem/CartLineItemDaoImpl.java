@@ -43,7 +43,7 @@ public class CartLineItemDaoImpl extends BaseDaoImpl implements CartLineItemDao 
             }
             logger.error("HK price null for order " + cartLineItem.getOrder());
         }else if(productVariant != null && cartLineItem.getHkPrice() != null
-		        && cartLineItem.getHkPrice() > productVariant.getHkPrice()){
+		        && cartLineItem.getHkPrice() > productVariant.getHkPrice() && cartLineItem.getCartLineItemConfig() == null ){
 	        logger.error("HK price of CLI is more than PV. Setting it as PV");
 	        cartLineItem.setHkPrice(productVariant.getHkPrice());
         }

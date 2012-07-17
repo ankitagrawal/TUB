@@ -269,7 +269,7 @@
 <div class="grid_12">
   <p><strong>Terms &amp; Conditions:</strong></p>
 
-  <p>1. All disputes are subject to Gurgaon Jurisdiction.</p>
+  <p>1. All disputes are subject to ${warehouse.city} Jurisdiction.</p>
   <c:if test="${orderSummary.invoiceDto.b2bUserDetails != null}">
     <p>2. This is computer generated invoice</p>
   </c:if>

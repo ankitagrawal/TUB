@@ -122,7 +122,7 @@ public class LinkManager {
     }
 
     public String getEbsPaymentGatewayReturnUrl() {
-        RedirectResolution redirectResolution = new RedirectResolution("/core/payment/test/EbsSendReceive.action");
+        RedirectResolution redirectResolution = new RedirectResolution("/core/payment/gateway/EbsSendReceive.action");
         return getUrlFromResolution(redirectResolution);
     }
 }

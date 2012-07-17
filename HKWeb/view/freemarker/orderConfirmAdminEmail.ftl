@@ -6,7 +6,7 @@
 <body>
 <#include "header.ftl">
 <p style="margin-bottom:1em">Hi Admin!</p>
-<h4>Invoice for order ${order.gatewayOrderId} placed on ${order.payment.createDate}</h4>
+<h4>Invoice for order ${order.gatewayOrderId} placed on ${order.payment.createDate?string("MMM dd, yyyy hh:mm:ss aa")}</h4>
 
 <div>
   <h3>Order Details</h3>
