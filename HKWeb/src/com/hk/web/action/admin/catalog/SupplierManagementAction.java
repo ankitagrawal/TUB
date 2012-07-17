@@ -85,7 +85,7 @@ public class SupplierManagementAction extends BasePaginatedAction {
       if(supplier.getMargins() !=null){
           //Validating for entering only valid double values
           Pattern pattern;
-	   //Matcher matcher;
+
 
              String margin = supplier.getMargins();
           final String DOUBLE_PATTERN = "^[0-9]*.[0-9]*$";
