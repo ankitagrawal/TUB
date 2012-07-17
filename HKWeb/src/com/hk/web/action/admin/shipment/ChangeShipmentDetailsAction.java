@@ -64,8 +64,6 @@ public class ChangeShipmentDetailsAction extends BaseAction {
     public Resolution save() {
         shippingOrder.setShipment(shipment);
         shippingOrderService.save(shippingOrder);
-        // comments = "Courier:" + shipment.getCourier().getName() + ", TrackingId:" + shipment.getTrackingId() +
-        // ", Status:" + shippingOrder.getOrderStatus().getName();
         String shippingOrderStatus = shippingOrder.getOrderStatus().getName();
         if (!originalShippingOrderStatus.equals(shippingOrderStatus)) {
             comments = "Status changed from " + originalShippingOrderStatus + " to " + shippingOrder.getOrderStatus().getName();
@@ -106,11 +104,4 @@ public class ChangeShipmentDetailsAction extends BaseAction {
     public void setOriginalShippingOrderStatus(String originalShippingOrderStatus) {
         this.originalShippingOrderStatus = originalShippingOrderStatus;
     }
-    // public String getComments() {
-    // return comments;
-    // }
-    //
-    // public void setComments(String comments) {
-    // this.comments = comments;
-    // }
 }
