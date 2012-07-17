@@ -23,6 +23,10 @@
     CategoryDao categoryDao = (CategoryDao)ServiceLocatorFactory.getService(CategoryDao.class);
     Category services = categoryDao.getCategoryByName("services");
     pageContext.setAttribute("services", services);
+    
+    boolean isSecure = pageContext.getRequest().isSecure();
+    pageContext.setAttribute("isSecure", isSecure);
+    
     MapIndiaDao mapIndiaDao = (MapIndiaDao)ServiceLocatorFactory.getService(MapIndiaDao.class);
     Cookie preferredZoneCookie = BaseUtils.getCookie(WebContext.getRequest(), HealthkartConstants.Cookie.preferredZone);
     if (preferredZoneCookie != null && preferredZoneCookie.getValue() != null) {

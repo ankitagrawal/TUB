@@ -6,6 +6,11 @@
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.HomeAction" var="homeBean" event="pre"/>
 
+<%
+  boolean isSecure = pageContext.getRequest().isSecure();
+  pageContext.setAttribute("isSecure", isSecure);
+%>
+
 <s:layout-render name="/layouts/genericG.jsp"
                  pageTitle="HealthKart.com: Buy Nutrition, Health Care, Beauty & Personal Care Products Online in India">
 
@@ -221,10 +226,19 @@
 
   <div class="clear"></div>
 
-
-  <iframe src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e100&section=1&level=1"
+		<c:choose>
+			<c:when test="${isSecure}">
+				<iframe src="https://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e100&section=1&level=1"
           scrolling="no"
           width="1" height="1" marginheight="0" marginwidth="0" frameborder="0"></iframe>
+			</c:when>
+			<c:otherwise>
+				<iframe src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e100&section=1&level=1"
+          scrolling="no"
+          width="1" height="1" marginheight="0" marginwidth="0" frameborder="0"></iframe>
+			</c:otherwise>
+		</c:choose>
+		
 </s:layout-component>
 </s:layout-render>
 

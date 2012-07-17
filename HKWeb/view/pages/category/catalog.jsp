@@ -28,6 +28,9 @@
     applicableCategories.add(categoryDao.getCategoryByName("bp-monitor"));
     pageContext.setAttribute("applicableCategories", applicableCategories);
 
+    boolean isSecure = pageContext.getRequest().isSecure();
+    pageContext.setAttribute("isSecure", isSecure);
+    
     Category services = categoryDao.getCategoryByName("services");
     pageContext.setAttribute("services", services);
     if (ca.getRootCategorySlug().equals("services")) {

@@ -8,7 +8,10 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="lineItem_Service_Postpaid" value="<%=EnumProductVariantPaymentType.Postpaid.getId()%>"/>
 <s:useActionBean beanclass="com.hk.web.action.core.cart.CartAction" var="cartAction"/>
-
+<%
+  boolean isSecure = pageContext.getRequest().isSecure();
+  pageContext.setAttribute("isSecure", isSecure);
+%>
 <s:layout-render name="/layouts/cartLayout.jsp" pageTitle="Shopping Cart">
 
 <s:layout-component name="topHeading">Shopping Cart</s:layout-component>
