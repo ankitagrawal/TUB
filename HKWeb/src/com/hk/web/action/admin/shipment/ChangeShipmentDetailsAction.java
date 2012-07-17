@@ -16,22 +16,27 @@ import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.order.ShippingOrderStatus;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.web.action.error.AdminPermissionAction;
+import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 
-@Secure(hasAnyPermissions = { PermissionConstants.UPDATE_DELIVERY_QUEUE }, authActionBean = AdminPermissionAction.class)
+@Secure(hasAnyPermissions = {PermissionConstants.UPDATE_DELIVERY_QUEUE}, authActionBean = AdminPermissionAction.class)
 public class ChangeShipmentDetailsAction extends BaseAction {
 
     private ShippingOrder shippingOrder;
-    private Shipment      shipment;
-    private String        originalShippingOrderStatus;
-    private String        gatewayOrderId;
-    String                comments;
-    private boolean       visible = false;
-    private static Logger logger  = LoggerFactory.getLogger(ChangeShipmentDetailsAction.class);
+    private Shipment shipment;
+    private String originalShippingOrderStatus;
+    private String gatewayOrderId;
+    String comments;
+    private boolean visible = false;
+    private static Logger logger = LoggerFactory.getLogger(ChangeShipmentDetailsAction.class);
 
     @Autowired
-    ShippingOrderService  shippingOrderService;
+    AdminShippingOrderService adminShippingOrderService;
+
+    @Autowired
+    ShippingOrderService shippingOrderService;
 
     @DefaultHandler
     public Resolution pre() {
@@ -63,11 +68,24 @@ public class ChangeShipmentDetailsAction extends BaseAction {
 
     public Resolution save() {
         shippingOrder.setShipment(shipment);
-        shippingOrderService.save(shippingOrder);
-        String shippingOrderStatus = shippingOrder.getOrderStatus().getName();
-        if (!originalShippingOrderStatus.equals(shippingOrderStatus)) {
-            comments = "Status changed from " + originalShippingOrderStatus + " to " + shippingOrder.getOrderStatus().getName();
-            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_StatusChanged, comments);
+
+        ShippingOrderStatus shippingOrderStatus = shippingOrder.getOrderStatus();
+        Long shippingOrderStatusId = shippingOrderStatus.getId();
+        String shippingOrderStatusName = shippingOrder.getOrderStatus().getName();
+
+        if (!shippingOrderStatusName.equals(originalShippingOrderStatus)) {
+            if (shippingOrderStatusId.equals(EnumShippingOrderStatus.SO_Delivered.getId())) {
+                adminShippingOrderService.markShippingOrderAsDelivered(shippingOrder);
+            } else if (shippingOrderStatusId.equals(EnumShippingOrderStatus.SO_Shipped.getId())) {
+                adminShippingOrderService.markShippingOrderAsShipped(shippingOrder);
+            } else if (shippingOrderStatusId.equals(EnumShippingOrderStatus.SO_Lost.getId())) {
+                adminShippingOrderService.markShippingOrderAsLost(shippingOrder);
+            }
+//        shippingOrderService.save(shippingOrder);
+            if (!originalShippingOrderStatus.equals(shippingOrderStatusName)) {
+                comments = "Status changed from " + originalShippingOrderStatus + " to " + shippingOrderStatusName;
+                shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_StatusChanged, comments);
+            }
         }
         addRedirectAlertMessage(new SimpleMessage("Changes Saved."));
         return new ForwardResolution("/pages/admin/changeShipmentDetails.jsp");

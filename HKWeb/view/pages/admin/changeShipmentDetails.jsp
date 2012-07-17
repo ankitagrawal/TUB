@@ -120,7 +120,7 @@
               <%--<s:text name="comments" class="comment"/>--%>
               <s:hidden name="shippingOrder" value="shippingOrder"/>
               <s:hidden name="shipment" value="shipment"/>
-              <s:hidden name="originalShippingOrderStatus" value="tempShippingOrderStatus"/>
+              <s:hidden name="originalShippingOrderStatus" value="originalShippingOrderStatus"/>
               <s:submit name="save" value="Save Changes" class="button"/>
             </fieldset>
           </s:form>

@@ -234,7 +234,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     public Order markOrderAsLost(Order order) {
         boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Lost, EnumOrderStatus.Lost);
         if (isUpdated) {
-            logOrderActivity(order, EnumOrderLifecycleActivity.OrderDelivered);
+            logOrderActivity(order, EnumOrderLifecycleActivity.OrderLost);
         } else {
             logOrderActivity(order, EnumOrderLifecycleActivity.OrderPartiallyLost);
         }
