@@ -489,35 +489,37 @@
 			<a class='go_to_top' href='#top'>go to top &uarr;</a>
 		</div>
 	</c:if>
-    <%--<c:if test="${!empty product.relatedProducts}">--%>
-    <div class='products content' id="related_products">
-        <h4>
-            People who bought this also bought these products
-        </h4>
-        <c:forEach items="${hk:getRecommendedProducts(product)}" var="relatedProduct">
-            <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_CATALOG%>">
-                <h6 style="color: red" title="Recommended Product Source">
-                    Source = ${relatedProduct.key};
-                    Products =
-                    <c:forEach var="product" items="${relatedProduct.value}">
-                        ${product}
-                    </c:forEach>
-                </h6>
-            </shiro:hasPermission>
-            <c:set var="recommendedProductCount" value="0" scope="page" />
-            <c:forEach var="product" items="${relatedProduct.value}">
-                <c:if test = "${recommendedProductCount < 6}">
-                    <s:layout-render name="/layouts/embed/_productThumb.jsp" productId="${product}"/>
-                </c:if>
-                <c:set var="recommendedProductCount" value="${recommendedProductCount + 1}" scope="page"/>
-            </c:forEach>
-        </c:forEach>
+	<c:set var="recommendedProducts" value="${hk:getRecommendedProducts(product)}"/>
+	<c:if test="${!empty recommendedProducts}">
+		<div class='products content' id="related_products">
+			<h4>
+				People who bought this also bought these products
+			</h4>
 
-        <div class="floatfix"></div>
-        <a class='go_to_top' href='#top'>go to top &uarr;</a>
+			<c:forEach items="${recommendedProducts}" var="relatedProduct">
+				<shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_CATALOG%>">
+					<h6 style="color: red" title="Recommended Product Source">
+						Source = ${relatedProduct.key};
+						Products =
+						<c:forEach var="product" items="${relatedProduct.value}">
+							${product}
+						</c:forEach>
+					</h6>
+				</shiro:hasPermission>
+				<c:set var="recommendedProductCount" value="0" scope="page"/>
+				<c:forEach var="product" items="${relatedProduct.value}">
+					<c:if test="${recommendedProductCount < 6}">
+						<s:layout-render name="/layouts/embed/_productThumb.jsp" productId="${product}"/>
+					</c:if>
+					<c:set var="recommendedProductCount" value="${recommendedProductCount + 1}" scope="page"/>
+				</c:forEach>
+			</c:forEach>
 
-    </div>
-    <%--</c:if>--%>
+			<div class="floatfix"></div>
+			<a class='go_to_top' href='#top'>go to top &uarr;</a>
+
+		</div>
+	</c:if>
 </s:layout-component>
 
 <%--<s:layout-component name="foot_price">
