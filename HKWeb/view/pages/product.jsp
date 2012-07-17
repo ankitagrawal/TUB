@@ -12,9 +12,11 @@
 <c:set var="imageMediumSize" value="<%=EnumImageSize.MediumSize%>"/>
 <c:set var="imageSmallSize" value="<%=EnumImageSize.TinySize%>"/>
 <%
-  CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
-  Category eyeGlass = categoryDao.getCategoryByName("eyeglasses");
-  pageContext.setAttribute("eyeGlass", eyeGlass);
+    CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
+    Category eyeGlass = categoryDao.getCategoryByName("eyeglasses");
+    pageContext.setAttribute("eyeGlass", eyeGlass);
+    Category stethoscope = categoryDao.getCategoryByName("stethoscope");
+    pageContext.setAttribute("stethoscope", stethoscope);
 
 %>
 <c:set var="product" value="${pa.product}"/>
@@ -25,114 +27,113 @@
 
 <s:layout-component name="htmlHead">
 
-  <meta name="keywords" content="${seoData.metaKeyword}"/>
-  <meta name="description" content="${seoData.metaDescription}"/>
-  <style type="text/css">
-    .progressLoader {
-      display: none;
-    }
+    <meta name="keywords" content="${seoData.metaKeyword}"/>
+    <meta name="description" content="${seoData.metaDescription}"/>
+    <style type="text/css">
+        .progressLoader {
+            display: none;
+        }
 
-    ul#thumblist {
-      display: block;
-    }
+        ul#thumblist {
+            display: block;
+        }
 
-    ul#thumblist li {
-      float: left;
-      margin-right: 2px;
-      list-style: none;
-    }
+        ul#thumblist li {
+            float: left;
+            margin-right: 2px;
+            list-style: none;
+        }
 
-    ul#thumblist li a {
-      display: block;
-      border: 1px solid #CCC;
-    }
+        ul#thumblist li a {
+            display: block;
+            border: 1px solid #CCC;
+        }
 
-    ul#thumblist li a.zoomThumbActive {
-      border: 1px solid red;
-    }
+        ul#thumblist li a.zoomThumbActive {
+            border: 1px solid red;
+        }
 
-    .jqzoom {
+        .jqzoom {
 
-      text-decoration: none;
-      float: left;
-    }
+            text-decoration: none;
+            float: left;
+        }
 
-    .rating_bar {
-      width: 80px;
-      background: url('${pageContext.request.contextPath}/images/img/star-off.png') 0 0 repeat-x;
-    }
+        .rating_bar {
+            width: 80px;
+            background: url('${pageContext.request.contextPath}/images/img/star-off.png') 0 0 repeat-x;
+        }
 
-    .rating_bar div {
-      height: 16px;
-      background: url('${pageContext.request.contextPath}/images/img/star-on.png') 0 0 repeat-x;
-    }
-  </style>
-  <link href="${pageContext.request.contextPath}/css/jquery.jqzoom.css" rel="stylesheet" type="text/css"/>
-  <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.jqzoom-core.js"></script>
+        .rating_bar div {
+            height: 16px;
+            background: url('${pageContext.request.contextPath}/images/img/star-on.png') 0 0 repeat-x;
+        }
+    </style>
+    <link href="${pageContext.request.contextPath}/css/jquery.jqzoom.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.jqzoom-core.js"></script>
 
-  <script type="text/javascript">
-    $(document).ready(function() {
-      // stepper not working for some reason for form submit. field is not getting picked up for post request.
-      //    $('.lineItemQty').jqStepper(1);
-      $('.popup').popupWindow({
-        height: 600,
-        width: 900
-      });
+    <script type="text/javascript">
+        $(document).ready(function() {
+            // stepper not working for some reason for form submit. field is not getting picked up for post request.
+            //    $('.lineItemQty').jqStepper(1);
+            $('.popup').popupWindow({
+                height: 600,
+                width: 900
+            });
 
 
-      //Click and change image
-      $('.color_box').click(function() {
-        var variantMainImageId = $(this).find('.variantMainImageId').val();
-        //var url = "http://healthkart-prod.s3.amazonaws.com/1/"+variantMainImageId+"_t.jpg";
-        //$(".img320").html("<img class='icon' src='"+url+"'/>") ;
-        $.getJSON($('#updateProductVariantImageLink').attr('href'), {mainProductImageId: variantMainImageId}, function(resurl) {
-          //                alert(resurl.data);
-          $(".img320").html("<img class='icon' src='" + resurl.data + "'/>");
+            //Click and change image
+            $('.color_box').click(function() {
+                var variantMainImageId = $(this).find('.variantMainImageId').val();
+                //var url = "http://healthkart-prod.s3.amazonaws.com/1/"+variantMainImageId+"_t.jpg";
+                //$(".img320").html("<img class='icon' src='"+url+"'/>") ;
+                $.getJSON($('#updateProductVariantImageLink').attr('href'), {mainProductImageId: variantMainImageId}, function(resurl) {
+                    //                alert(resurl.data);
+                    $(".img320").html("<img class='icon' src='" + resurl.data + "'/>");
+                });
+            });
+
+            $('.jqzoom').jqzoom({
+                zoomType: 'standard',
+                lens:true,
+                preloadImages: false,
+                alwaysOn:false
+            });
+
+            $('#notifyMeWindow').jqm({trigger: '.notifyMe', ajax: '@href'});
+
         });
-      });
-
-      $('.jqzoom').jqzoom({
-        zoomType: 'standard',
-        lens:true,
-        preloadImages: false,
-        alwaysOn:false
-      });
-
-      $('#notifyMeWindow').jqm({trigger: '.notifyMe', ajax: '@href'});
-
-    });
 
 
-  </script>
+    </script>
 
 </s:layout-component>
 
 <s:layout-component name="modal">
 
-  <c:if test="${!empty product.productVariants[0].productExtraOptions}">
-    <s:layout-render name="/pages/modal/productWithExtraOptions.jsp" product="${product}"/>
-  </c:if>
-  <%--<c:if test="${hk:collectionContains(product.categories, eyeGlass)}">--%>
-  <%--<s:layout-render name="/pages/modal/eyeGlasses.jsp" product="${product}"/>--%>
-  <%--</c:if>--%>
+    <c:if test="${!empty product.productVariants[0].productExtraOptions}">
+        <s:layout-render name="/pages/modal/productWithExtraOptions.jsp" product="${product}"/>
+    </c:if>
+    <%--<c:if test="${hk:collectionContains(product.categories, eyeGlass)}">--%>
+    <%--<s:layout-render name="/pages/modal/eyeGlasses.jsp" product="${product}"/>--%>
+    <%--</c:if>--%>
 
-  <c:if test="${pa.combo == null}">
-    <shiro:hasPermission name="<%=PermissionConstants.GET_PRODUCT_LINK%>">
-      <s:layout-render name="/pages/modal/productLink.jsp" product="${product}"
-                       affiliateId="${pa.affiliate.id}"/>
+    <c:if test="${pa.combo == null}">
+        <shiro:hasPermission name="<%=PermissionConstants.GET_PRODUCT_LINK%>">
+            <s:layout-render name="/pages/modal/productLink.jsp" product="${product}"
+                             affiliateId="${pa.affiliate.id}"/>
+            <s:layout-render name="/pages/modal/productBannerLink.jsp" product="${product}"
+                             affiliateId="${pa.affiliate.id}"/>
+        </shiro:hasPermission>
+    </c:if>
 
-      <s:layout-render name="/pages/modal/productBannerLink.jsp" product="${product}"
-                       affiliateId="${pa.affiliate.id}"/>
-    </shiro:hasPermission>
-  </c:if>
-
-  <div class="jqmWindow" style="display:none;" id="notifyMeWindow"></div>
+    <div class="jqmWindow" style="display:none;" id="notifyMeWindow"></div>
 
 </s:layout-component>
 
 <s:layout-component name="breadcrumbs">
-  <s:layout-render name="/layouts/embed/catalogBreadcrumb.jsp" breadcrumbProduct="${product}" lastLink="true"
-                   topHeading="${seoData.h1}"/>
+    <s:layout-render name="/layouts/embed/catalogBreadcrumb.jsp" breadcrumbProduct="${product}" lastLink="true"
+                     topHeading="${seoData.h1}"/>
 </s:layout-component>
 
 <s:layout-component name="topCategory">${pa.topCategoryUrlSlug}</s:layout-component>
@@ -141,363 +142,405 @@
 <s:layout-component name="productNameLabel">${product.name}</s:layout-component>
 
 <s:layout-component name="topBanner">
-  <s:layout-render name="/layouts/embed/_categoryTopBanners.jsp" topCategories="${pa.topCategoryUrlSlug}"/>
-  <div class="clear"></div>
-  <c:if test="${product.service}">
-    <s:layout-render name="/layouts/embed/changePreferredZone.jsp" filterUrlFragment="${pa.urlFragment}"/>
-  </c:if>
+    <s:layout-render name="/layouts/embed/_categoryTopBanners.jsp" topCategories="${pa.topCategoryUrlSlug}"/>
+    <div class="clear"></div>
+    <c:if test="${product.service}">
+        <s:layout-render name="/layouts/embed/changePreferredZone.jsp" filterUrlFragment="${pa.urlFragment}"/>
+    </c:if>
 
 </s:layout-component>
 <s:layout-component name="prod_title">
 
 
-  <div>
-    <shiro:hasPermission name="<%=PermissionConstants.UPDATE_SEO_METADATA%>">
-      <s:link beanclass="com.hk.web.action.core.content.seo.SeoAction" event="pre" target="_blank"
-              class="popup">Edit MetaData
-        <s:param name="seoData" value="${seoData.id}"/>
-      </s:link>
-      &nbsp;|&nbsp;
-    </shiro:hasPermission>
-    <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_CATALOG%>">
-      <s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction"
-              event="editProductVariantDetails"
-              target="_blank" class="popup">
-        Edit Variant Attributes
-        <s:param name="product" value="${product}"/>
-      </s:link>
-      <s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction" event="editProductDetails"
-              target="_blank"
-              class="popup">
-        Edit Product Attributes
-        <s:param name="product" value="${product}"/>
-      </s:link>
-      <s:link beanclass="com.hk.web.action.admin.sku.SkuAction" event="searchSKUs" target="_blank" class="popup">
-        Edit Sku Attributes
-        <s:param name="productId" value="${product.id}"/>
-      </s:link>
-    </shiro:hasPermission>
-  </div>
+    <div>
+        <shiro:hasPermission name="<%=PermissionConstants.UPDATE_SEO_METADATA%>">
+            <s:link beanclass="com.hk.web.action.core.content.seo.SeoAction" event="pre" target="_blank"
+                    class="popup">Edit MetaData
+                <s:param name="seoData" value="${seoData.id}"/>
+            </s:link>
+            &nbsp;|&nbsp;
+        </shiro:hasPermission>
+        <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_CATALOG%>">
+            <s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction"
+                    event="editProductVariantDetails"
+                    target="_blank" class="popup">
+                Edit Variant Attributes
+                <s:param name="product" value="${product}"/>
+            </s:link>
+            <s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction"
+                    event="editProductDetails"
+                    target="_blank"
+                    class="popup">
+                Edit Product Attributes
+                <s:param name="product" value="${product}"/>
+            </s:link>
+            <s:link beanclass="com.hk.web.action.admin.sku.SkuAction" event="searchSKUs" target="_blank" class="popup">
+                Edit Sku Attributes
+                <s:param name="productId" value="${product.id}"/>
+            </s:link>
+        </shiro:hasPermission>
+    </div>
 
 </s:layout-component>
 
 <s:layout-component name="prod_slideshow">
-  <div class='product_slideshow'>
-    <div class="img320">
-      <a href="${hk:getS3ImageUrl(imageLargeSize, product.mainImageId)}" class="jqzoom" rel='gal1'
-         title="${product.name}">
-        <img src="${hk:getS3ImageUrl(imageMediumSize, product.mainImageId)}" alt="${product.name}"
-             title="${product.name}">
-      </a>
-      <c:if test="${fn:length(pa.productImages) > 1}">
-        <ul id="thumblist">
-          <c:forEach items="${pa.productImages}" var="productImage">
-            <li><a href='javascript:void(0);'
-                   rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, productImage.id)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, productImage.id)}'}"><img
-                src='${hk:getS3ImageUrl(imageSmallSize, productImage.id)}'></a></li>
-          </c:forEach>
-        </ul>
-      </c:if>
-    </div>
-    <div><br/><br/><br/></div>
-    <div>
-      <shiro:hasPermission name="<%=PermissionConstants.GET_PRODUCT_LINK%>">
-        <a name="showProductLink" class="linkbutton"
-           onclick="$('#getProductLinkWindow').jqm(); $('#getProductLinkWindow').jqmShow();" style="cursor:pointer">Get
-                                                                                                                    Links</a>
-        <a name="showProductLink" class="linkbutton"
-           onclick="$('#getBannerLinkWindow').jqm(); $('#getBannerLinkWindow').jqmShow();" style="cursor:pointer">Get
-                                                                                                                  Banners</a>
-      </shiro:hasPermission>
-    </div>
-    <shiro:hasPermission name="<%=PermissionConstants.MANAGE_IMAGE%>">
-      <br/>
+    <div class='product_slideshow'>
+        <div class="img320">
+            <a href="${hk:getS3ImageUrl(imageLargeSize, product.mainImageId)}" class="jqzoom" rel='gal1'
+               title="${product.name}">
+                <img src="${hk:getS3ImageUrl(imageMediumSize, product.mainImageId)}" alt="${product.name}"
+                     title="${product.name}">
+            </a>
+            <c:if test="${fn:length(pa.productImages) > 1}">
+                <ul id="thumblist">
+                    <c:forEach items="${pa.productImages}" var="productImage">
+                        <li><a href='javascript:void(0);'
+                               rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, productImage.id)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, productImage.id)}'}"><img
+                          src='${hk:getS3ImageUrl(imageSmallSize, productImage.id)}'></a></li>
+                    </c:forEach>
+                </ul>
+            </c:if>
+        </div>
+        <div><br/><br/><br/></div>
+        <div>
+            <shiro:hasPermission name="<%=PermissionConstants.GET_PRODUCT_LINK%>">
+                <a name="showProductLink" class="linkbutton"
+                   onclick="$('#getProductLinkWindow').jqm(); $('#getProductLinkWindow').jqmShow();"
+                   style="cursor:pointer">Get
+                    Links</a>
+                <a name="showProductLink" class="linkbutton"
+                   onclick="$('#getBannerLinkWindow').jqm(); $('#getBannerLinkWindow').jqmShow();"
+                   style="cursor:pointer">Get
+                    Banners</a>
+            </shiro:hasPermission>
+        </div>
+        <shiro:hasPermission name="<%=PermissionConstants.MANAGE_IMAGE%>">
+            <br/>
 
-      <div><s:link beanclass="com.hk.web.action.core.catalog.image.UploadImageAction" event="pre" target="_blank"
-                   class="popup"> Upload
-        <s:param name="product" value="${product.id}"/>
-      </s:link>
-        <s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction"
-                event="manageProductImages" target="_blank"
-                class="popup">Manage
-                              Images
-          <s:param name="productId" value="${product.id}"/>
-        </s:link>
-      </div>
-    </shiro:hasPermission>
-    <c:if test="${product.videoEmbedCode != null}">
-      <s:layout-render name="/layouts/embed/_productVideo.jsp" productId="${product.id}"/>
+            <div><s:link beanclass="com.hk.web.action.core.catalog.image.UploadImageAction" event="pre" target="_blank"
+                         class="popup"> Upload
+                <s:param name="product" value="${product.id}"/>
+            </s:link>
+                <s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction"
+                        event="manageProductImages" target="_blank"
+                        class="popup">Manage
+                    Images
+                    <s:param name="productId" value="${product.id}"/>
+                </s:link>
+            </div>
+        </shiro:hasPermission>
+        <c:if test="${product.videoEmbedCode != null}">
+            <s:layout-render name="/layouts/embed/_productVideo.jsp" productId="${product.id}"/>
+        </c:if>
+    </div>
+
+    <c:if test="${product.id == 'NUT904'}">
+        <div id="gulal" style="position:absolute; left: 600px; display: none">
+            <img src="<hk:vhostImage/>/images/gulal-spray.png"/>
+        </div>
     </c:if>
-  </div>
-
-  <c:if test="${product.id == 'NUT904'}">
-    <div id="gulal" style="position:absolute; left: 600px; display: none">
-      <img src="<hk:vhostImage/>/images/gulal-spray.png"/>
-    </div>
-  </c:if>
 
 </s:layout-component>
 
 <s:layout-component name="product_detail_links">
-  <h2 class='prod_title'>
-      ${product.name}
-  </h2>
+    <h2 class='prod_title'>
+            ${product.name}
+    </h2>
 
-  <div class='infos' style="border-bottom:0px;">
-    <c:if test="${hk:isNotBlank(product.brand)}">
+    <div class='infos' style="border-bottom:0px;">
+        <c:if test="${hk:isNotBlank(product.brand)}">
           <span class='title'>
             Brand:
           </span>
           <span class='info'>
             <s:link beanclass="com.hk.web.action.core.catalog.BrandCatalogAction" class="bl">
-              ${product.brand}
-              <s:param name="brand" value="${fn:toLowerCase(product.brand)}"/>
-              <s:param name="topLevelCategory" value="${pa.topCategoryUrlSlug}"/>
+                ${product.brand}
+                <s:param name="brand" value="${fn:toLowerCase(product.brand)}"/>
+                <s:param name="topLevelCategory" value="${pa.topCategoryUrlSlug}"/>
             </s:link>
           </span>
-    </c:if>
-    <c:if test="${hk:isNotBlank(product.manufacturer)}">
-      |
+        </c:if>
+        <c:if test="${hk:isNotBlank(product.manufacturer)}">
+            |
           <span class='title'>
             Manufacturer:
           </span>
           <span class='info'>
-              ${product.manufacturer.name}
+                  ${product.manufacturer.name}
           </span>
-    </c:if>
-    |
+        </c:if>
+        |
     <span class='title'>
       Dispatched in:
     </span>
     <span class='info orange' title="Delivery time is extra depending on the location">
       <c:choose><c:when test="${hk:isNotBlank(product.maxDays)}">
-        ${product.minDays} - ${product.maxDays} working days
+          ${product.minDays} - ${product.maxDays} working days
       </c:when>
-        <c:otherwise>
-          <c:choose>
-            <c:when test="${pa.topCategoryUrlSlug == 'beauty'}">
-              2 - 7 working days
-            </c:when>
-            <c:otherwise>
-              1 - 3 working days
-            </c:otherwise>
-          </c:choose>
-        </c:otherwise>
+          <c:otherwise>
+              <c:choose>
+                  <c:when test="${pa.topCategoryUrlSlug == 'beauty'}">
+                      2 - 7 working days
+                  </c:when>
+                  <c:otherwise>
+                      1 - 3 working days
+                  </c:otherwise>
+              </c:choose>
+          </c:otherwise>
       </c:choose>
     </span>
 
-    <c:if test="${!empty pa.userReviews}">
+        <c:if test="${!empty pa.userReviews}">
 
-      <div style="float:right;margin-right:5px;margin-bottom:3px;">
-        <a href='#user_reviews' style="border-bottom:0px;">
-            ${pa.totalReviews} Reviews &darr;
-        </a>
+            <div style="float:right;margin-right:5px;margin-bottom:3px;">
+                <a href='#user_reviews' style="border-bottom:0px;">
+                        ${pa.totalReviews} Reviews &darr;
+                </a>
 
-        <div class="rating_bar">
-          <div class="blueStarTop" id="blueStarTop">
-            <script type="text/javascript">
-              var averageRating = ${pa.averageRating};
-              averageRating = (averageRating * 20) + "%";
-              $('.blueStarTop').width(averageRating);
-            </script>
-          </div>
-        </div>
-      </div>
-    </c:if>
-  </div>
-
-  <div class='top_links'>
-    <c:if test="${!empty product.description}">
-      <a class='top_link' href='#description'>
-        Description &darr;
-      </a>
-    </c:if>
-    <c:if test="${!empty product.productFeatures}">
-      <a class='top_link' href='#features'>
-        Technical Specs &darr;
-      </a>
-    </c:if>
-      <%--<a class='top_link' href='#link3'>
-            FAQs
-          </a>
-          <a class='top_link' href='#link4'>
-            User Reviews
-          </a>
-          <a class='top_link' href='#link5'>
-            Payment Options
-          </a>
-        <a class='top_link' href='#related_products'>
-          Related Products &darr;
-        </a>
-      </div>
-
-      <%--<c:if test="${product.id == 'BAB152'}">
-        <p>
-          <a href="${pageContext.request.contextPath}/partners/pediasure.jsp" class="pediasureCounselling" target="_blank">Free
-            Nutrition Counseling </a>
-        </p>
-      </c:if>--%>
-  </div>
-  <c:if test="${hk:isNotBlank(product.overview)}">
-    <p class="overview">
-        ${product.overview}
-    </p>
-  </c:if>
-  <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_DESCRIPTIONS%>">
-    <div>
-      <s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction" event="editOverview"
-              class="popup">
-        Edit Overview
-        <s:param name="productId" value="${product.id}"/>
-      </s:link>
+                <div class="rating_bar">
+                    <div class="blueStarTop" id="blueStarTop">
+                        <script type="text/javascript">
+                            var averageRating = ${pa.averageRating};
+                            averageRating = (averageRating * 20) + "%";
+                            $('.blueStarTop').width(averageRating);
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </c:if>
     </div>
-  </shiro:hasPermission>
+
+    <div class='top_links'>
+        <c:if test="${!empty product.description}">
+            <a class='top_link' href='#description'>
+                Description &darr;
+            </a>
+        </c:if>
+        <c:if test="${!empty product.productFeatures}">
+            <a class='top_link' href='#features'>
+                Technical Specs &darr;
+            </a>
+        </c:if>
+            <%--<a class='top_link' href='#link3'>
+                  FAQs
+                </a>
+                <a class='top_link' href='#link4'>
+                  User Reviews
+                </a>
+                <a class='top_link' href='#link5'>
+                  Payment Options
+                </a>
+              <a class='top_link' href='#related_products'>
+                Related Products &darr;
+              </a>
+            </div>
+
+            <%--<c:if test="${product.id == 'BAB152'}">
+              <p>
+                <a href="${pageContext.request.contextPath}/partners/pediasure.jsp" class="pediasureCounselling" target="_blank">Free
+                  Nutrition Counseling </a>
+              </p>
+            </c:if>--%>
+    </div>
+    <c:if test="${hk:isNotBlank(product.overview)}">
+        <p class="overview">
+                ${product.overview}
+        </p>
+    </c:if>
+    <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_DESCRIPTIONS%>">
+        <div>
+            <s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction" event="editOverview"
+                    class="popup">
+                Edit Overview
+                <s:param name="productId" value="${product.id}"/>
+            </s:link>
+        </div>
+    </shiro:hasPermission>
+
+    <div class="configOptionsDiv" style="display:none;">
+        <select name="configOptionValueMap" id="configOptionValueMap" multiple="multiple">
+            <c:forEach items="${product.productVariants[0].variantConfig.variantConfigOptions}" var="configOption" varStatus="configOptionCtr">
+                <c:forEach items="${configOption.variantConfigValues}" var="configValue" varStatus="configValueCtr">
+                    <option value="${configOption.id}" valueId="${configValue.id}"></option>
+                </c:forEach>
+            </c:forEach>
+            <option value="-999" valueId="-999" selected="selected"></option>
+        </select>
+    </div>
+    <c:set var="ENG" value="ENG"/>
+    <s:form partial="true" beanclass="com.hk.web.action.core.cart.AddToCartAction" method="get">
+        <c:if test="${hk:isCollectionContainsObject(product.categories, stethoscope)}">
+            <c:if test="${hk:isEngravingProvidedForProduct(product.productVariants[0])}">
+
+            <c:forEach items="${product.productVariants[0].variantConfig.variantConfigOptions}" var="configOption" >
+                <c:if test="${configOption.additionalParam eq ENG}">
+                    <input type="hidden" id="stethoscopeConfigOption" value="${configOption.id}" />
+                <c:forEach items="${configOption.variantConfigValues}" var="configValue" >
+                    <input type="hidden" id="stethoscopeConfigValue" value="${configValue.id}" />
+                </c:forEach>
+                </c:if>
+            </c:forEach>
+
+            <input type="hidden" id="engravingPrice" value="${hk:getEngravingPrice(product.productVariants[0])}"/>
+            <br>
+            <strong>Do you want to Engrave: </strong>
+            <s:checkbox name="engravingRequired" id="checkBoxEngraving" checked="false"/> (at an additional cost of
+            Rs <fmt:formatNumber value="${hk:getEngravingPrice(product.productVariants[0])}" maxFractionDigits="0"/> )
+            <div class="engraveDiv" style="display:none;">
+                <br><strong>Specify name to be Engraved:</strong>
+                <s:text name="nameToBeEngraved" id="engrave" style="width:140px" placeholder='Max 15 characters'
+                        maxlength="15"/>
+            </div>
+            </c:if>
+        </c:if>
+    </s:form>
 
 </s:layout-component>
 
 <s:layout-component name="product_variants">
-  <c:choose>
-    <c:when test="${empty product.productVariants[0].productExtraOptions}">
-      <c:choose>
-        <c:when test="${fn:length(product.productVariants) > 1}">
-          <c:choose>
-            <c:when test="${!product.productHaveColorOptions}">
-              <s:layout-render name="/layouts/embed/_productWithMultipleVariantsWithNoColorOptions.jsp"
-                               product="${product}"/>
-              <s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>
-            </c:when>
-            <c:otherwise>
-              <s:layout-render name="/layouts/embed/_productWithMultipleVariantsWithColorOptions.jsp"
-                               product="${product}"/>
-              <s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>
-            </c:otherwise>
-          </c:choose>
+    <c:choose>
+        <c:when test="${empty product.productVariants[0].productExtraOptions}">
+            <c:choose>
+                <c:when test="${fn:length(product.productVariants) > 1}">
+                    <c:choose>
+                        <c:when test="${!product.productHaveColorOptions}">
+                            <s:layout-render name="/layouts/embed/_productWithMultipleVariantsWithNoColorOptions.jsp"
+                                             product="${product}"/>
+                            <s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>
+                        </c:when>
+                        <c:otherwise>
+                            <s:layout-render name="/layouts/embed/_productWithMultipleVariantsWithColorOptions.jsp"
+                                             product="${product}"/>
+                            <s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>
+                        </c:otherwise>
+                    </c:choose>
+                </c:when>
+                <c:otherwise>
+                    <c:choose>
+                        <c:when test="${pa.combo != null}">
+                            <s:layout-render name="/layouts/embed/_comboProduct.jsp" productId="${product.id}"/>
+                        </c:when>
+                        <c:when test="${hk:collectionContains(product.categories, eyeGlass)}">
+                            <s:layout-render name="/layouts/embed/glasses.jsp" product="${product}"/>
+                        </c:when>
+                        <c:otherwise>
+                            <s:layout-render name="/layouts/embed/_productWithSingleVariant.jsp" product="${product}"/>
+                        </c:otherwise>
+                    </c:choose>
+                </c:otherwise>
+            </c:choose>
         </c:when>
         <c:otherwise>
-          <c:choose>
-            <c:when test="${pa.combo != null}">
-              <s:layout-render name="/layouts/embed/_comboProduct.jsp" productId="${product.id}"/>
-            </c:when>
-            <c:when test="${hk:collectionContains(product.categories, eyeGlass)}">
-              <s:layout-render name="/layouts/embed/glasses.jsp" product="${product}"/>
-            </c:when>
-            <c:otherwise>
-              <s:layout-render name="/layouts/embed/_productWithSingleVariant.jsp" product="${product}"/>
-            </c:otherwise>
-          </c:choose>
+            <s:layout-render name="/layouts/embed/_productWithExtraOptions.jsp" product="${product}"/>
+            <s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>
         </c:otherwise>
-      </c:choose>
-    </c:when>
-    <c:otherwise>
-      <s:layout-render name="/layouts/embed/_productWithExtraOptions.jsp" product="${product}"/>
-      <s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>
-    </c:otherwise>
-  </c:choose>
-  <div class="floatfix"></div>
+    </c:choose>
+    <div class="floatfix"></div>
 </s:layout-component>
 
 
 <s:layout-component name="product_description">
-  <c:if test="${hk:isNotBlank(product.description)}">
-    <div class="content" id="description">
-      <h4>
-        Description
-      </h4>
+    <c:if test="${hk:isNotBlank(product.description)}">
+        <div class="content" id="description">
+            <h4>
+                Description
+            </h4>
 
-      <p>
-          ${product.description}
+            <p>
+                    ${product.description}
 
-      </p>
-    </div>
-  </c:if>
+            </p>
+        </div>
+    </c:if>
 
-  <c:if test="${pa.addressDistanceDtos != null && fn:length(pa.addressDistanceDtos) > 0}">
-    <h3> Service Centres Available Near to You : <br>
-      <ul>
-        <c:forEach items="${pa.addressDistanceDtos}" var="addressDto">
-          <li>  ${addressDto.localityMap.address.line1}, ${addressDto.localityMap.address.line2}<br></li>
-        </c:forEach>
-      </ul>
-    </h3>
-  </c:if>
-  <p>
-    <a class='go_to_top' href='#top' style="float:right;">go to top &uarr;</a>
-  </p>
+    <c:if test="${pa.addressDistanceDtos != null && fn:length(pa.addressDistanceDtos) > 0}">
+        <h3> Service Centres Available Near to You : <br>
+            <ul>
+                <c:forEach items="${pa.addressDistanceDtos}" var="addressDto">
+                    <li>  ${addressDto.localityMap.address.line1}, ${addressDto.localityMap.address.line2}<br></li>
+                </c:forEach>
+            </ul>
+        </h3>
+    </c:if>
+    <p>
+        <a class='go_to_top' href='#top' style="float:right;">go to top &uarr;</a>
+    </p>
 
-  <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_DESCRIPTIONS%>">
-    <div>
-      <s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction" event="editDescription"
-              class="popup">
-        Edit Description
-        <s:param name="productId" value="${product.id}"/>
-      </s:link>
-    </div>
-  </shiro:hasPermission>
+    <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_DESCRIPTIONS%>">
+        <div>
+            <s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction"
+                    event="editDescription"
+                    class="popup">
+                Edit Description
+                <s:param name="productId" value="${product.id}"/>
+            </s:link>
+        </div>
+    </shiro:hasPermission>
 
 
-  <c:if test="${!empty (product.productFeatures)}">
-    <div class="content" id="features">
-      <h4>
-        Product Features
-      </h4>
+    <c:if test="${!empty (product.productFeatures)}">
+        <div class="content" id="features">
+            <h4>
+                Product Features
+            </h4>
 
-      <table class="">
-        <tbody>
-        <c:forEach var="feature" items="${product.productFeatures}">
-          <tr>
-            <td>
-                ${feature.name}
-            </td>
-            <td>
-                ${feature.value}
-            </td>
-          </tr>
-        </c:forEach>
-        </tbody>
-      </table>
-      <a class='go_to_top' href='#top'>go to top &uarr;</a>
+            <table class="">
+                <tbody>
+                <c:forEach var="feature" items="${product.productFeatures}">
+                    <tr>
+                        <td>
+                                ${feature.name}
+                        </td>
+                        <td>
+                                ${feature.value}
+                        </td>
+                    </tr>
+                </c:forEach>
+                </tbody>
+            </table>
+            <a class='go_to_top' href='#top'>go to top &uarr;</a>
 
-    </div>
-  </c:if>
+        </div>
+    </c:if>
 
-  <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_DESCRIPTIONS%>">
-    <s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction" event="editFeatures"
-            class="popup">
-      Edit Features
-      <s:param name="product" value="${product}"/>
-    </s:link>
-  </shiro:hasPermission>
+    <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_DESCRIPTIONS%>">
+        <s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction" event="editFeatures"
+                class="popup">
+            Edit Features
+            <s:param name="product" value="${product}"/>
+        </s:link>
+    </shiro:hasPermission>
 
 </s:layout-component>
 
 <s:layout-component name="related_products">
-  <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_CATALOG%>">
-    <br/>
+    <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_CATALOG%>">
+        <br/>
 
-    <div>
-      <s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction"
-              event="editRelatedProducts" class="popup">
-        Edit Related Products
-        <s:param name="productId" value="${product.id}"/>
-      </s:link>
-    </div>
-  </shiro:hasPermission>
-  <c:if test="${!empty product.relatedProducts}">
-    <div class='products content' id="related_products">
-      <h4>
-        People who bought this also bought these products
-      </h4>
-      <c:forEach items="${product.relatedProducts}" var="relatedProduct">
-        <c:if test="${!relatedProduct.deleted}">
-          <s:layout-render name="/layouts/embed/_productThumb.jsp" productId="${relatedProduct.id}"/>
-        </c:if>
-      </c:forEach>
+        <div>
+            <s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction"
+                    event="editRelatedProducts" class="popup">
+                Edit Related Products
+                <s:param name="productId" value="${product.id}"/>
+            </s:link>
+        </div>
+    </shiro:hasPermission>
+    <c:if test="${!empty product.relatedProducts}">
+        <div class='products content' id="related_products">
+            <h4>
+                People who bought this also bought these products
+            </h4>
+            <c:forEach items="${product.relatedProducts}" var="relatedProduct">
+                <c:if test="${!relatedProduct.deleted}">
+                    <s:layout-render name="/layouts/embed/_productThumb.jsp" productId="${relatedProduct.id}"/>
+                </c:if>
+            </c:forEach>
 
-      <div class="floatfix"></div>
-      <a class='go_to_top' href='#top'>go to top &uarr;</a>
+            <div class="floatfix"></div>
+            <a class='go_to_top' href='#top'>go to top &uarr;</a>
 
-    </div>
-  </c:if>
+        </div>
+    </c:if>
 </s:layout-component>
 
 <%--<s:layout-component name="foot_price">
@@ -523,205 +566,250 @@
 </s:layout-component>--%>
 
 <s:layout-component name="user_reviews">
-  <div class='products content' id="user_reviews">
-  <hr style="color:#F0F0F0;border-style:hidden"/>
+    <div class='products content' id="user_reviews">
+    <hr style="color:#F0F0F0;border-style:hidden"/>
 
-  <c:choose>
-    <c:when test="${!empty pa.userReviews}">
-      <table width="950" class="reviewLinksTable">
-        <tr height="40">
-          <td style="font-size:14px;font-weight:bold;border-style:none">Reviews of ${product.name}</td>
-          <td style="border-style:none">
-            <s:link beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction" event="writeNewReview">
-            <s:param name="product" value="${product.id}"/>
-            <strong>Write a Review<strong>
-              </s:link>
-          </td>
-        </tr>
+    <c:choose>
+        <c:when test="${!empty pa.userReviews}">
+            <table width="950" class="reviewLinksTable">
+                <tr height="40">
+                    <td style="font-size:14px;font-weight:bold;border-style:none">Reviews of ${product.name}</td>
+                    <td style="border-style:none">
+                        <s:link beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction"
+                                event="writeNewReview">
+                        <s:param name="product" value="${product.id}"/>
+                        <strong>Write a Review<strong>
+                            </s:link>
+                    </td>
+                </tr>
 
-        <tr height="50">
-          <td colspan="2" style="border-style:none">Average Rating : <strong><fmt:formatNumber
-              value="${pa.averageRating}"
-              maxFractionDigits="1"/>/5</strong> <br/>
-                                                    (based on ${pa.totalReviews} reviews) <br/>
+                <tr height="50">
+                    <td colspan="2" style="border-style:none">Average Rating : <strong><fmt:formatNumber
+                      value="${pa.averageRating}"
+                      maxFractionDigits="1"/>/5</strong> <br/>
+                        (based on ${pa.totalReviews} reviews) <br/>
 
-              <div class="rating_bar">
-                  <div id="blueStar" class="blueStar">
-                      <script type="text/javascript">
-                          var averageRating = ${pa.averageRating};
-                          averageRating = (averageRating * 20) + "%";
-                          $('.blueStar').width(averageRating);
-                      </script>
-                  </div>
-              </div>
-          </td>
-        </tr>
-      </table>
+                        <div class="rating_bar">
+                            <div id="blueStar" class="blueStar">
+                                <script type="text/javascript">
+                                    var averageRating = ${pa.averageRating};
+                                    averageRating = (averageRating * 20) + "%";
+                                    $('.blueStar').width(averageRating);
+                                </script>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
 
-      <hr style="color:#F0F0F0;border-style:dotted"/>
-      <c:if test="${pa.totalReviews > 5}">
-        <strong>&nbsp;Showing 5 of ${pa.totalReviews} reviews</strong>
-        <s:link beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction">
-          <s:param name="product" value="${product.id}"/>
-          <strong>(Read All Reviews)</strong>
-        </s:link>
-      </c:if>
+            <hr style="color:#F0F0F0;border-style:dotted"/>
+            <c:if test="${pa.totalReviews > 5}">
+                <strong>&nbsp;Showing 5 of ${pa.totalReviews} reviews</strong>
+                <s:link beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction">
+                    <s:param name="product" value="${product.id}"/>
+                    <strong>(Read All Reviews)</strong>
+                </s:link>
+            </c:if>
 
-      <c:forEach items="${pa.userReviews}" var="review" varStatus="ctr">
+            <c:forEach items="${pa.userReviews}" var="review" varStatus="ctr">
 
-        <table width="950" class="reviewContentTable" style="border-style:none">
-          <tr style="border-style:none">
-            <td width="150" style="border-style:none"><strong>${review.postedBy.name}</strong>
-                <%--<td style="border-style:none"><h4>${review.title}</h4></td>--%>
-              <div class="rating_bar">
-                <div class="blueStarRating${ctr.index}"></div>
-                  <script type="text/javascript">
-                  var index = ${ctr.index};
-                  var rating = ${review.starRating};
-                  rating = (rating * 20) + "%";
-                  $('.blueStarRating' + index).width(rating);
-                </script>
-              </div>
-            </td>
-            <td style="border-style:none">
-              <div style="word-wrap:break-word">
-                  ${review.review}
-              </div>
-            </td>
-          </tr>
-          <tr style="border-style:none">
-            <td colspan="2" style="border-style:none">
-              <hr style="color:#F0F0F0;border-style:dotted"/>
-            </td>
-          </tr>
-        </table>
-        <br/>
-      </c:forEach>
-      <a class='go_to_top' href='#top'>go to top &uarr;</a>
-      </div>
-    </c:when>
-    <c:otherwise>
-      <table width="950" style="border:none">
-        <tr height="40">
-          <td colspan="2" style="font-size:14px;font-weight:bold;">No Reviews!!</td>
-        </tr>
-        <tr>
-          <td>
-            Be the first one to <s:link beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction"
-                                        event="writeNewReview">
-            <s:param name="product" value="${product.id}"/>
-            <strong>Write a Review</strong>
-          </s:link>
-          </td>
-        </tr>
-        <tr>
-          <td><a class='go_to_top' href='#top'>go to top &uarr;</a></td>
-        </tr>
-      </table>
-    </c:otherwise>
-  </c:choose>
+                <table width="950" class="reviewContentTable" style="border-style:none">
+                    <tr style="border-style:none">
+                        <td width="150" style="border-style:none"><strong>${review.postedBy.name}</strong>
+                                <%--<td style="border-style:none"><h4>${review.title}</h4></td>--%>
+                            <div class="rating_bar">
+                                <div class="blueStarRating${ctr.index}"></div>
+                                <script type="text/javascript">
+                                    var index = ${ctr.index};
+                                    var rating = ${review.starRating};
+                                    rating = (rating * 20) + "%";
+                                    $('.blueStarRating' + index).width(rating);
+                                </script>
+                            </div>
+                        </td>
+                        <td style="border-style:none">
+                            <div style="word-wrap:break-word">
+                                    ${review.review}
+                            </div>
+                        </td>
+                    </tr>
+                    <tr style="border-style:none">
+                        <td colspan="2" style="border-style:none">
+                            <hr style="color:#F0F0F0;border-style:dotted"/>
+                        </td>
+                    </tr>
+                </table>
+                <br/>
+            </c:forEach>
+            <a class='go_to_top' href='#top'>go to top &uarr;</a>
+            </div>
+        </c:when>
+        <c:otherwise>
+            <table width="950" style="border:none">
+                <tr height="40">
+                    <td colspan="2" style="font-size:14px;font-weight:bold;">No Reviews!!</td>
+                </tr>
+                <tr>
+                    <td>
+                        Be the first one to <s:link
+                      beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction"
+                      event="writeNewReview">
+                        <s:param name="product" value="${product.id}"/>
+                        <strong>Write a Review</strong>
+                    </s:link>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a class='go_to_top' href='#top'>go to top &uarr;</a></td>
+                </tr>
+            </table>
+        </c:otherwise>
+    </c:choose>
 </s:layout-component>
 
 <s:layout-component name="endScripts">
-  <script type="text/javascript">
-    var validateCheckbox;
-    $(document).ready(function() {      
-      function _addToCart(res) {
-        if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
-          $('.message .line1').html("<strong>" + res.data.name + "</strong> has been added to your shopping cart");
-          $('.cartButton').html("<img class='icon' src='${pageContext.request.contextPath}/images/icons/cart.png'/><span class='num' id='productsInCart'>" + res.data.itemsInCart + "</span> items in<br/>your shopping cart");
-          $('.progressLoader').hide();
+    <script type="text/javascript">
+        var validateCheckbox;
+        $(document).ready(function() {
+            var params = {};
+            function _addToCart(res) {
+                if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+                    $('.message .line1').html("<strong>" + res.data.name + "</strong> has been added to your shopping cart");
+                    $('.cartButton').html("<img class='icon' src='${pageContext.request.contextPath}/images/icons/cart.png'/><span class='num' id='productsInCart'>" + res.data.itemsInCart + "</span> items in<br/>your shopping cart");
+                    $('.progressLoader').hide();
 
-          show_message();
-        }
-        $('#gulal').show();
-      }
-
-      function _addToCart2(res) {
-        if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
-          $('.message .line1').html("<strong>" + res.data.name + "</strong> is added to your shopping cart");
-        } else if (res.code == '<%=HealthkartResponse.STATUS_ERROR%>') {
-          $('#cart_error1').html(getErrorHtmlFromJsonResponse(res)).slowFade(3000, 2000);
-        } else if (res.code == '<%=HealthkartResponse.STATUS_REDIRECT%>') {
-          window.location.replace(res.data.url);
-        }
-        $('.progressLoader').hide();
-      }
-
-    <c:if test="${pa.combo == null}">
-      $('.addToCartButton').click(function(e) {
-        if (!window.validateCheckbox) {
-          $(this).parents().find('.progressLoader').show();
-          $(this).parent().append('<span class="add_message">added to <s:link beanclass="com.hk.web.action.core.cart.CartAction" id="message_cart_link"><img class="icon16" src="${pageContext.request.contextPath}/images/icons/cart.png"> cart</s:link></span>');
-          $(this).hide();
-          e.stopPropagation();
-        } else {
-          var selected = 0;
-          $('.checkbox').each(function() {
-            if ($(this).attr("checked") == "checked") {
-              selected = 1;
+                    show_message();
+                }
+                $('#gulal').show();
             }
-          });
-          if (!selected) {
-          <c:choose>
-          <c:when test="${product.primaryCategory == 'eye'}">
-            $(this).parents().find('.checkboxError').html("Please select atleast one lens!");
-          </c:when>
-          <c:when test="${product.primaryCategory == 'beauty'}">
-            $(this).parents().find('.checkboxError').html("Please select a shade!");
-          </c:when>
-          </c:choose>
-            $('.checkboxError').fadeIn();
-            return false;
-          } else {
-            $(this).parents().find('.progressLoader').show();
-            $(this).parent().append('<span class="add_message">added to <s:link beanclass="com.hk.web.action.core.cart.CartAction" id="message_cart_link"><img class="icon16" src="${pageContext.request.contextPath}/images/icons/cart.png"> cart</s:link></span>');
-            $(this).hide();
-            e.stopPropagation();
-            return true;
-          }
-        }
-      });
-    </c:if>
 
-      $(".message .close").click(function() {
-        hide_message();
-      });
-      $(document).click(function() {
-        hide_message();
-      });
+            function _addToCart2(res) {
+                if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+                    $('.message .line1').html("<strong>" + res.data.name + "</strong> is added to your shopping cart");
+                } else if (res.code == '<%=HealthkartResponse.STATUS_ERROR%>') {
+                    $('#cart_error1').html(getErrorHtmlFromJsonResponse(res)).slowFade(3000, 2000);
+                } else if (res.code == '<%=HealthkartResponse.STATUS_REDIRECT%>') {
+                    window.location.replace(res.data.url);
+                }
+                $('.progressLoader').hide();
+            }
 
-      function hide_message() {
-        $('.message').animate({
-          top: '-170px',
-          opacity: 0
-        }, 100);
-      }
+        <c:if test="${pa.combo == null}">
+            $('.addToCartButton').click(function(e) {
+                if ($("#checkBoxEngraving").is(":checked")) {
+                    if($("#engrave").val() == '') {
+                        alert("Please specify name to be engraved, or uncheck the engraving option");
+                        return false;
+                    }
+                }
 
-      function show_message() {
-        $('.message').css("top", "70px");
-        $('.message').animate({
-          opacity: 1
-        }, 500);
-      }
+                var data = new Array();
+                var idx = 0;
+                var variantConfigProvided = 'false';
+                $("#configOptionValueMap option:selected").each(function() {
+                    if($(this).val() != -999) {
+                        variantConfigProvided = 'true';
+                        var dto = new Object();
+                        dto.optionId  = $(this).val();
+                        dto.valueId = $(this).attr('valueId');
+                        data[idx] = dto;
+                        idx++;
+                    }
+                });
+                params.variantConfigProvided = (variantConfigProvided == 'true');
+                var configValues = JSON.stringify(data);
+                params.jsonConfigValues = configValues;
+                params.variantId = "${product.productVariants[0].id}";
+                params.nameToBeEngraved = $("#engrave").val();
+                if (!window.validateCheckbox) {
+                    $(this).parents().find('.progressLoader').show();
+                    $(this).parent().append('<span class="add_message">added to <s:link beanclass="com.hk.web.action.core.cart.CartAction" id="message_cart_link"><img class="icon16" src="${pageContext.request.contextPath}/images/icons/cart.png"> cart</s:link></span>');
+                    $(this).hide();
+                    e.stopPropagation();
 
-      $('.addToCartForm').ajaxForm({dataType: 'json', success: _addToCart});
+                } else {
+                    var selected = 0;
+                    $('.checkbox').each(function() {
+                        if ($(this).attr("checked") == "checked") {
+                            selected = 1;
+                        }
+                    });
+                    if (!selected) {
+                    <c:choose>
+                    <c:when test="${product.primaryCategory == 'eye'}">
+                        $(this).parents().find('.checkboxError').html("Please select atleast one lens!");
+                    </c:when>
+                    <c:when test="${product.primaryCategory == 'beauty'}">
+                        $(this).parents().find('.checkboxError').html("Please select a shade!");
+                    </c:when>
+                    </c:choose>
+                        $('.checkboxError').fadeIn();
+                        return false;
+                    } else {
+                        $(this).parents().find('.progressLoader').show();
+                        $(this).parent().append('<span class="add_message">added to <s:link beanclass="com.hk.web.action.core.cart.CartAction" id="message_cart_link"><img class="icon16" src="${pageContext.request.contextPath}/images/icons/cart.png"> cart</s:link></span>');
+                        $(this).hide();
+                        e.stopPropagation();
+                        return true;
+                    }
+                }
+                $('.addToCartForm').ajaxForm({dataType: 'json', data: params, success: _addToCart});
 
-      $(".top_link, .go_to_top").click(function(event) {
-        event.preventDefault();
-        $('html,body').animate({scrollTop:($(this.hash).offset().top - 45)}, 300);
-      });
+            });
+        </c:if>
 
-      $('#productBannerTextArea').val($('#productBannerTextArea').val().replace(/\s+/g, " "));
+            $(".message .close").click(function() {
+                hide_message();
+            });
+            $(document).click(function() {
+                hide_message();
+            });
 
-      $(document).click(function() {
-        $('.checkboxError').fadeOut();
-      });
+            function hide_message() {
+                $('.message').animate({
+                    top: '-170px',
+                    opacity: 0
+                }, 100);
+            }
 
-      $('.checkboxError').hide();
-    });
-  </script>
-  <iframe
+            function show_message() {
+                $('.message').css("top", "70px");
+                $('.message').animate({
+                    opacity: 1
+                }, 500);
+            }
+
+            /*$('.addToCartForm').ajaxForm({dataType: 'json', data: params, success: _addToCart});*/
+
+            $(".top_link, .go_to_top").click(function(event) {
+                event.preventDefault();
+                $('html,body').animate({scrollTop:($(this.hash).offset().top - 45)}, 300);
+            });
+
+            $('#productBannerTextArea').val($('#productBannerTextArea').val().replace(/\s+/g, " "));
+
+            $(document).click(function() {
+                $('.checkboxError').fadeOut();
+            });
+
+            $('.checkboxError').hide();
+
+            $("#checkBoxEngraving").click(function() {
+                var stethoscopeConfigOption = $("#stethoscopeConfigOption").val();
+                if ($("#checkBoxEngraving").is(":checked")) {
+                    $('#configOptionValueMap option[value='+stethoscopeConfigOption+']').attr('selected', 'selected');
+                    $(".engraveDiv").show();
+                } else {
+                    $('#configOptionValueMap option[value='+stethoscopeConfigOption+']').attr('selected', false);
+                    $("#engrave").val('');
+                    $("#checkBoxEngraving").val(0);
+                    $(".engraveDiv").hide();
+                }
+
+            });
+        });
+    </script>
+    <iframe
       src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e300&pid=${product.id}&catid=${product.primaryCategory.name}&subcat1id=&subcat2id=&section=1&level=1"
       scrolling="no" width="1" height="1" marginheight="0" marginwidth="0" frameborder="0"></iframe>
 </s:layout-component>

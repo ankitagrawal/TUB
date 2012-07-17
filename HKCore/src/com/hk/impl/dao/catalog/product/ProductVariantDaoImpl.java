@@ -14,6 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.akube.framework.util.BaseUtils;
 import com.hk.domain.affiliate.AffiliateCategory;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.catalog.product.VariantConfig;
+import com.hk.domain.catalog.product.VariantConfigOption;
+import com.hk.domain.catalog.product.VariantConfigOptionParam;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
 
@@ -133,5 +136,25 @@ public class ProductVariantDaoImpl extends BaseDaoImpl implements ProductVariant
 
     public List<ProductVariant> getAllProductVariant() {
         return getAll(ProductVariant.class);
+    }
+
+    public Double getEngravingPrice(ProductVariant productVariant) {
+        String query = "select vcv.additonalPrice from ProductVariant pv join pv.variantConfig vc, VariantConfigOption vco, VariantConfigValues vcv " +
+          " where vc = vco.variantConfig and vco = vcv.variantConfigOption and pv = :productVariant ";
+        List<Double> engravedPrice = findByNamedParams(query, new String[]{"productVariant"}, new Object[]{productVariant});
+        if(engravedPrice != null && engravedPrice.size() > 0) {
+            return engravedPrice.get(0);
+        }
+        return 0D;        
+    }
+
+    public boolean isEngravingProvidedForProduct(ProductVariant productVariant) {
+        String query = "select vco from ProductVariant pv join pv.variantConfig vc, VariantConfigOption vco " +
+          " where vc = vco.variantConfig and pv = :productVariant and vco.additionalParam = :additionalParam ";
+        List<VariantConfigOption> variantConfigOptions = findByNamedParams(query, new String[]{"productVariant", "additionalParam"}, new Object[]{productVariant, VariantConfigOptionParam.ENGRAVING.param()});
+        if(variantConfigOptions != null && variantConfigOptions.size() > 0) {
+            return true;
+        }
+        return false;
     }
 }
