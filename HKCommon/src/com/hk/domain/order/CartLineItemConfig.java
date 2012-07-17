@@ -95,6 +95,19 @@ public class CartLineItemConfig implements java.io.Serializable {
     }
     return price;
   }
+  
+  public double getCostPrice(){
+      double costPrice = 0;
+      for (CartLineItemConfigValues configValue : getCartLineItemConfigValues()) {
+        VariantConfigOption configOption = configValue.getVariantConfigOption();
+        if (configOption != null) {
+          @SuppressWarnings("unused")
+          String addParam = configOption.getAdditionalParam();
+          costPrice += configValue.getCostPrice();
+        }
+      }
+      return costPrice;
+  }
 
   @SuppressWarnings("unchecked")
 @Override
