@@ -60,12 +60,13 @@
           <th>H(cm)</th>
           <th>Variant Extra Options</th>
           <th>Consumption Time<br/>(Days)</th>
-
           <th>Lead Time</th>
           <th>Lead Time Factor</th>
           <th>Buffer Time</th>
           <th>Next Avil. Date</th>
           <th>Fol. Avil. Date</th>
+		  <th>Supplier Code</th>
+		  <th>Other Remarks</th>
 
         </tr>
         <c:forEach var="productVariant" items="${pa.productVariants}" varStatus="ctr">
@@ -173,6 +174,8 @@
             <td><s:text name="productVariants[${ctr.index}].bufferTime" style="width:50px;"/></td>
             <td><s:text name="productVariants[${ctr.index}].nextAvailableDate" class="date_input" formatPattern="yyyy-MM-dd" style="width:100px;"/></td>
             <td><s:text name="productVariants[${ctr.index}].followingAvailableDate" class="date_input" formatPattern="yyyy-MM-dd" style="width:100px;"/></td>
+	        <td><s:text name="productVariants[${ctr.index}].supplierCode" style="width:50px;"/></td>
+	        <td><s:textarea name="productVariants[${ctr.index}].otherRemark" style="width:auto; height:auto;"/></td>
 
           </tr>
         </c:forEach>
