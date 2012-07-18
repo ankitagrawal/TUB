@@ -7827,11 +7827,15 @@
             <column name="terms_of_trade" type="VARCHAR(100)"/>
         </addColumn>
     </changeSet>
-<changeSet author="Shrey (generated)" id="1342533458649-3">
-        <modifyDataType columnName="credit_period" newDataType="VARCHAR(10)" tableName="supplier"/>
+     <changeSet author="Shrey (generated)" id="1342533458649-3">
+        <addColumn tableName="supplier">
+            <column name="credit_period" type="VARCHAR(10)"/>
+        </addColumn>
     </changeSet>
     <changeSet author="Shrey (generated)" id="1342533458649-4">
-        <modifyDataType columnName="margins" newDataType="VARCHAR(20)" tableName="supplier"/>
+               <addColumn tableName="supplier">
+            <column name="margins" type="VARCHAR(20)"/>
+        </addColumn>
     </changeSet>
     <changeSet author="Ajeet (generated)" id="1342505244718-1">
         <addColumn tableName="shipment">
