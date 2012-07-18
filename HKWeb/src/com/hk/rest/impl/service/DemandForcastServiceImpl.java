@@ -40,6 +40,12 @@ public class DemandForcastServiceImpl implements DemandForcastService {
 
     public void InsertInDB(List<String> input, List<DemandForcast> dfList)
     {
+        /***
+         * A) sort dfList on forecastDate
+         * b) get minForecastDate nad maxForecastDate from A
+         * c) get list of exisiting rows between max and min date, this is input list as passed currently
+         * build input list
+         */
         boolean set=false;
         DemandForcast dForcast = new DemandForcast();
 
@@ -58,7 +64,10 @@ public class DemandForcastServiceImpl implements DemandForcastService {
                     for (DemandForcast df : dfList )
                     {                          
                         //formatter = new SimpleDateFormat("yyyy-MM-dd");
-                        //Date test=  (Date)formatter.parse(df.getForcastDate().toString());                        
+                        //Date test=  (Date)formatter.parse(df.getForcastDate().toString());
+                        /**
+                         * add constraint for warehouse also
+                         */
                         if (df.getForcastDate().equals(date) && df.getProductVariant().getId().equals(prod_varientId))
                         {
                             df.setForcastValue(Double.parseDouble(forcastVal));
@@ -73,7 +82,7 @@ public class DemandForcastServiceImpl implements DemandForcastService {
                 {
                     dForcast.setForcastDate(date);
                     dForcast.setProductVariant(getBaseDao().get(ProductVariant.class,prod_varientId));
-                    dForcast.setWarehouse(getBaseDao().get(Warehouse.class,Long.parseLong(warehouseId)));
+                    dForcast.setWarehouse(getWarehouseService().getWarehouseById(warehouseId)));
                     dForcast.setForcastValue(Double.parseDouble(forcastVal));
                     getBaseDao().save(dForcast);
                     set = false;

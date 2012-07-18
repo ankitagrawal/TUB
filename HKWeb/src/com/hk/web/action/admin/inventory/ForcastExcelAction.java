@@ -89,6 +89,12 @@ public class ForcastExcelAction extends BaseAction {
                 if(StringUtils.isBlank(forcast_date) || StringUtils.isBlank(prod_varientId) ||
                         StringUtils.isBlank(warehouseId) || StringUtils.isBlank(forcastVal)){
                     continue;
+                    /**
+                     * TODO:
+                     * a) throw an error message blank required field : fail entire upload here
+                     * b) validate that variant id does exist
+                     * 
+                     */
                     //throw new ExcelBlankFieldException("value(s) empty at" + "    ", rowCount);
                 }
 
