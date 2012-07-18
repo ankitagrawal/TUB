@@ -20,8 +20,12 @@
         var google_conversion_value = 0;
         /* ]]> */
     </script>
-    <script type="text/javascript" src="http://www.googleadservices.com/pagead/conversion.js">
-    </script>
+	<script type="text/javascript">
+  var conversionJsHost = (("https:" == document.location.protocol) ? "https://www." : "http://www.");
+  document.write(unescape("%3Cscript src='" + conversionJsHost + "googleadservices.com/pagead/conversion.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+	<!--<script type="text/javascript" src="http://www.googleadservices.com/pagead/conversion.js">
+    --></script>
     <noscript>
         <div style="display:inline;">
             <img height="1" width="1" style="border-style:none;" alt="" src="http://www.googleadservices.com/pagead/conversion/${id}/?label=${label}&amp;guid=ON&amp;script=0"/>
