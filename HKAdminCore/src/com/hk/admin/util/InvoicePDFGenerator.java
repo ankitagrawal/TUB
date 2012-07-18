@@ -25,9 +25,11 @@ import com.hk.domain.catalog.category.Category;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.order.ReplacementOrder;
 import com.hk.domain.user.Address;
 import com.hk.manager.ReferrerProgramManager;
 import com.hk.pact.dao.core.AddressDao;
+import com.hk.pact.dao.BaseDao;
 import com.hk.pact.service.catalog.CategoryService;
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.Document;
@@ -58,6 +60,8 @@ public class InvoicePDFGenerator {
     CourierServiceInfoDao   courierServiceInfoDao;
     @Autowired
     AddressDao              addressDao;
+    @Autowired
+    BaseDao baseDao;
 
     // @Named(Keys.Env.adminDownloads)
     @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
@@ -95,7 +99,13 @@ public class InvoicePDFGenerator {
     }
 
     private void addOrderDetailsContent(Document document, ShippingOrder shippingOrder, Coupon coupon) throws DocumentException, MalformedURLException, IOException {
-        InvoiceDto invoiceDto = new InvoiceDto(shippingOrder, null);
+        ReplacementOrder replacementOrder = getBaseDao().get(ReplacementOrder.class, shippingOrder.getId());
+        if(replacementOrder != null){
+          invoiceDto = new InvoiceDto(replacementOrder, null);
+        }
+        else{
+          invoiceDto = new InvoiceDto(shippingOrder, null);
+        }
         barcodePath = barcodeGenerator.getBarcodePath(shippingOrder.getGatewayOrderId(),1.0f);
         Image barcodeImage = Image.getInstance(barcodePath);
         String routingCode = null;
@@ -197,6 +207,12 @@ public class InvoicePDFGenerator {
         addEmptyLine(preface, 1);
         preface.add(new Paragraph("Order Details", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.BOLD)));
         addEmptyLine(preface, 1);
+
+        if(replacementOrder != null){
+          preface.add(new Paragraph("Following order is against a previous order no. "+shippingOrder.getId(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.BOLD)));
+        }
+      
+        addEmptyLine(preface, 1);
         document.add(preface);
         createOrderDetailTable(document, invoiceDto);
         createOrderSummaryTable(document, invoiceDto);
@@ -211,6 +227,7 @@ public class InvoicePDFGenerator {
         copyrightsParagraph.add(new Paragraph("Note: This is to certify that items inside do not contain any prohibited or hazardous material.", new Font(
                 Font.FontFamily.TIMES_ROMAN, 8, Font.BOLD)));
         // addEmptyLine(copyrightsParagraph,1);
+        
         if (shippingOrder.getBaseOrder().getUser().getRoles().contains(EnumRole.B2B_USER.getRoleName())) {
             copyrightsParagraph.add(new Paragraph("Bright Lifecare Pvt. Ltd. | Khasra No. 146/25/2/1, Jail Road, Dhumaspur, Badshahpur |"
                     + " Gurgaon, Haryana- 122101 | TIN:06101832036", new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.NORMAL)));
@@ -428,4 +445,11 @@ public class InvoicePDFGenerator {
         this.categoryService = categoryService;
     }
 
+    public BaseDao getBaseDao() {
+      return baseDao;
+    }
+
+    public void setBaseDao(BaseDao baseDao) {
+      this.baseDao = baseDao;
+    }
 }

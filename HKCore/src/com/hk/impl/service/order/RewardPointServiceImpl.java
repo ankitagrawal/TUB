@@ -87,8 +87,7 @@ public class RewardPointServiceImpl implements RewardPointService {
                 Double applicableDiscount = applicableOrderAmount * (cashbackPercent != null ? cashbackPercent : 0.0);
                 if (findByReferredOrderAndRewardMode(order, getRewardPointMode(EnumRewardPointMode.HK_CASHBACK)) == null) {
                     if (Boolean.TRUE.equals(offerInstance.getOffer().getOfferAction().isCashback()) && applicableDiscount > 0.00) {
-                        if (order.getPayment().getPaymentMode().equals(getPaymentService().findPaymentMode(EnumPaymentMode.TECHPROCESS))
-                                || order.getPayment().getPaymentMode().equals(getPaymentService().findPaymentMode(EnumPaymentMode.CITRUS))) {
+                        if (EnumPaymentMode.getPrePaidPaymentModes().contains(order.getPayment().getPaymentMode().getId())) {
                             RewardPoint techProcessRewardPoint = getRewardPointDao().addRewardPoints(order.getUser(), null, order,
                                     cashbackLimit != null ? applicableDiscount < cashbackLimit ? applicableDiscount : cashbackLimit : applicableDiscount, "Cashback Offer",
                                     EnumRewardPointStatus.APPROVED, getRewardPointMode(EnumRewardPointMode.HK_CASHBACK));

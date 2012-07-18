@@ -19,6 +19,7 @@ public interface AwbService {
 
     public Awb find(Long id);
 
+    public Awb findByCourierAwbNumber(Courier courier ,String awbNumber);
 
     public List<Awb> getAvailableAwbForCourierByWarehouseCodStatus(Courier courier, String awbNumber, Warehouse warehouse, Boolean cod, AwbStatus awbStatus);
 

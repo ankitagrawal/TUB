@@ -41,5 +41,13 @@ public class AwbDaoImpl extends BaseDaoImpl implements AwbDao {
     }
 
 
+     public Awb findByCourierAwbNumber(Courier courier ,String awbNumber){
+      List<Awb> awbList= getAvailableAwbForCourierByWarehouseCodStatus(courier,awbNumber,null,null,null);
+       if(awbList != null && awbList.size() > 0){
+           return awbList.get(0);
+       }
+         return null;
+
+     }
 }
 
