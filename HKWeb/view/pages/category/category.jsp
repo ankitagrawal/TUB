@@ -257,14 +257,10 @@
   </div>
 
   <div class="clear"></div>
-	      secure
-	      <c:if test="${not isSecure }">
-			test security
-		</c:if>
+	      
 		
 	<c:choose>
 		<c:when test="${not isSecure}">
-			secure page
 		</c:when>
 		<c:otherwise>
 			<iframe
