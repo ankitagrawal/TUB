@@ -24,6 +24,7 @@ import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.courier.Awb;
+import com.hk.domain.courier.Courier;
 import com.hk.pact.dao.ReconciliationStatusDao;
 import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
 import com.hk.pact.service.UserService;
@@ -32,6 +33,8 @@ import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.service.ServiceLocatorFactory;
+import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+
 
 /**
  * @author vaibhav.adlakha
@@ -51,8 +54,10 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     private ShippingOrderStatusService shippingOrderStatusService;
     @Autowired
     private ReconciliationStatusDao    reconciliationStatusDao;
-    
-    private OrderService               orderService;
+    @Autowired
+    ShipmentService shipmentService;
+
+    private OrderService orderService;
     
     public ShippingOrder findByGatewayOrderId(String gatewayOrderId) {
         return getShippingOrderDao().findByGatewayOrderId(gatewayOrderId);
@@ -266,20 +271,5 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     public void setShippingOrderStatusService(ShippingOrderStatusService shippingOrderStatusService) {
         this.shippingOrderStatusService = shippingOrderStatusService;
     }
-
-    @Override
-    public ShippingOrder findByAwb(Awb awb) {
-        return getShippingOrderDao().findByAwb(awb);
-    }
-
-     public List<ShippingOrder>  getShippingOrderByAwb(Awb awb){
-         return  getShippingOrderDao().getShippingOrderByAwb(awb);
-     }
-
-//
-//    public ShippingOrder getShippingOrderForShipment(Shipment shipment){
-//        return getShippingOrderDao().getShippingOrderForShipment(shipment);
-//    }
-
-
+ 
 }

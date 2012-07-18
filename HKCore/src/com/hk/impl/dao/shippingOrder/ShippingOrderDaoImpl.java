@@ -19,6 +19,7 @@ import com.hk.domain.order.ShippingOrderLifeCycleActivity;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.courier.Awb;
+import com.hk.domain.courier.Courier;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
 
@@ -30,10 +31,6 @@ public class ShippingOrderDaoImpl extends BaseDaoImpl implements ShippingOrderDa
         return get(ShippingOrder.class, shippingOrderId);
     }
 
-    public ShippingOrder findByAwb(Awb awb) {
-        String query = "select distinct so  from ShippingOrder so  where so.shipment.trackingId =:trackingId";
-        return (ShippingOrder) getSession().createQuery(query).setParameter("awb", awb).uniqueResult();
-    }
 
     public ShippingOrder findByGatewayOrderId(String gatewayOrderId) {
         return (ShippingOrder) getSession().createQuery("from ShippingOrder o where o.gatewayOrderId = :gatewayOrderId").setString("gatewayOrderId", gatewayOrderId).uniqueResult();
@@ -87,16 +84,16 @@ public class ShippingOrderDaoImpl extends BaseDaoImpl implements ShippingOrderDa
      */
 
     public Long getBookedQtyOfSkuInQueue(List<Sku> skuList) {
-      Long qtyInQueue = 0L;
-      if(skuList != null && !skuList.isEmpty()){
-        String query = "select sum(li.qty) from LineItem li " + "where li.sku in (:skuList) " + "and li.shippingOrder.shippingOrderStatus.id in (:orderStatusIdList) ";
-        qtyInQueue = (Long) getSession().createQuery(query).setParameterList("skuList", skuList).setParameterList("orderStatusIdList",
-                EnumShippingOrderStatus.getShippingOrderStatusIDs(EnumShippingOrderStatus.getStatusForBookedInventory())).uniqueResult();
-        if (qtyInQueue == null) {
-            qtyInQueue = 0L;
+        Long qtyInQueue = 0L;
+        if (skuList != null && !skuList.isEmpty()) {
+            String query = "select sum(li.qty) from LineItem li " + "where li.sku in (:skuList) " + "and li.shippingOrder.shippingOrderStatus.id in (:orderStatusIdList) ";
+            qtyInQueue = (Long) getSession().createQuery(query).setParameterList("skuList", skuList).setParameterList("orderStatusIdList",
+                    EnumShippingOrderStatus.getShippingOrderStatusIDs(EnumShippingOrderStatus.getStatusForBookedInventory())).uniqueResult();
+            if (qtyInQueue == null) {
+                qtyInQueue = 0L;
+            }
         }
-      }
-      return qtyInQueue;
+        return qtyInQueue;
     }
 
     /**
@@ -115,27 +112,5 @@ public class ShippingOrderDaoImpl extends BaseDaoImpl implements ShippingOrderDa
         return getSession().createQuery(query).setParameter("courierId", courierId).setParameter("startDate", startDate).setParameter("endDate", endDate).list();
     }
 
-
-   public  List<ShippingOrder> getShippingOrderByAwb(Awb awb){
-    DetachedCriteria detachedCriteria = DetachedCriteria.forClass(ShippingOrder.class);
-        detachedCriteria.add(Restrictions.eq("awb",awb));
-       detachedCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));
-       return(List<ShippingOrder>) findByCriteria(detachedCriteria);
-
-
-    }
-
-
-//    public ShippingOrder getShippingOrderForShipment(Shipment shipment) {
-//        DetachedCriteria detachedCriteria = DetachedCriteria.forClass(ShippingOrder.class);
-//        if (shipment != null) {
-//            detachedCriteria.add(Restrictions.eq("shipment", shipment));
-//        }
-//        List<ShippingOrder> shipList = findByCriteria(detachedCriteria);
-//        if (shipList != null && shipList.size() > 0) {
-//            return shipList.get(0);
-//        }
-//        return null;
-//    }
 
 }

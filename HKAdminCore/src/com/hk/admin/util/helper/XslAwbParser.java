@@ -81,10 +81,7 @@ public class XslAwbParser {
                 }
                 awb.setAwbNumber(awbNumber);
                 awb.setAwbBarCode(awbNumber);
-                AwbStatus awbStatus = new AwbStatus();
-                awbStatus.setStatus(EnumAwbStatus.Unused.getStatus());
-                awbStatus.setId(0L);
-                awb.setAwbStatus(awbStatus);
+                awb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
                 awb.setUsed(false);
                 if (StringUtils.isEmpty(warehouse)) {
                     logger.error("warehouse cannot be call");

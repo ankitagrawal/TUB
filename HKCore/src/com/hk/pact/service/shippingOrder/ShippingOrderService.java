@@ -12,6 +12,7 @@ import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.courier.Awb;
+import com.hk.domain.courier.Courier;
 
 /**
  * @author vaibhav.adlakha
@@ -21,8 +22,6 @@ public interface ShippingOrderService {
     public ShippingOrder find(Long shippingOrderId);
 
     public ShippingOrder findByGatewayOrderId(String gatewayOrderId) ;
-
-    public ShippingOrder findByAwb(Awb awb);
 
     public ShippingOrder save(ShippingOrder shippingOrder);
 
@@ -68,6 +67,5 @@ public interface ShippingOrderService {
 
     public void logShippingOrderActivity(ShippingOrder shippingOrder, User user, ShippingOrderLifeCycleActivity shippingOrderLifeCycleActivity, String comments);
 
- public List<ShippingOrder>  getShippingOrderByAwb(Awb awb);
 
 }

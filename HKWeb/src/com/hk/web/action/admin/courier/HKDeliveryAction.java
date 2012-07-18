@@ -7,15 +7,19 @@ import net.sourceforge.stripes.action.SimpleMessage;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.courier.Awb;
+import com.hk.domain.courier.Courier;
+import com.hk.domain.courier.Shipment;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.UserService;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.courier.EnumAwbStatus;
+import com.hk.constants.courier.EnumCourier;
 import com.hk.web.action.error.AdminPermissionAction;
 import com.hk.admin.util.BarcodeGenerator;
 import com.hk.admin.pact.service.courier.AwbService;
+import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -59,6 +63,8 @@ public class HKDeliveryAction extends BaseAction {
     AwbService awbService;
     @Autowired
     UserService userService;
+    @Autowired
+    ShipmentService shipmentService;
 
     @Autowired
     private BarcodeGenerator barcodeGenerator;
@@ -75,27 +81,29 @@ public class HKDeliveryAction extends BaseAction {
     }
 
     public Resolution downloadDeliveryWorkSheet() {
-          shippingOrderList = new ArrayList<ShippingOrder>();
-        List<Awb> awbList=new ArrayList<Awb>();
+        shippingOrderList = new ArrayList<ShippingOrder>();
+        List<Awb> awbList = new ArrayList<Awb>();
+        Courier courier = EnumCourier.HK_Delivery.asCourier();
         for (String trackingNum : trackingIdList) {
-        awbList=  awbService.getAvailableAwbForCourierByWarehouseCodStatus(null,trackingNum.trim(),userService.getWarehouseForLoggedInUser(),null, EnumAwbStatus.Used.getAsAwbStatus());
-            for(Awb awb: awbList){
-            List<ShippingOrder> shippinglist = shippingOrderService.getShippingOrderByAwb(awb);
-                for( ShippingOrder shippingOrder:shippinglist )
-                {
-                if(shippingOrder.isCOD()){
-                        ++totalCODPackets;
-                    totalCODAmount=totalCODAmount+shippingOrder.getAmount();
-                    totalCODAmount=Math.round(totalCODAmount);
-                }  else{
-                    ++totalPrepaidPackets;
+            awbList = awbService.getAvailableAwbForCourierByWarehouseCodStatus(courier, trackingNum.trim(), userService.getWarehouseForLoggedInUser(), null, EnumAwbStatus.Used.getAsAwbStatus());
+            for (Awb awb : awbList) {
+                Shipment shipment = shipmentService.findByAwb(awb);
+                if (shipment != null) {
+                    ShippingOrder shippingOrder = shipment.getShippingOrder();
+                    if (shippingOrder != null) {
+                        if (shippingOrder.isCOD()) {
+                            ++totalCODPackets;
+                            totalCODAmount = totalCODAmount + shippingOrder.getAmount();
+                            totalCODAmount = Math.round(totalCODAmount);
+                        } else {
+                            ++totalPrepaidPackets;
+                        }
+                        shippingOrderList.add(shippingOrder);
+                    }
                 }
-                shippingOrderList.add(shippingOrder);
-            }
-
             }
         }
-        totalPackets=shippingOrderList.size();
+        totalPackets = shippingOrderList.size();
 
         try {
             sdf = new SimpleDateFormat("yyyyMMdd");
