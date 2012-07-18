@@ -430,9 +430,9 @@
   </div>
 </c:if>
 </div>
-Secure page
+
 		<c:choose>
-		<c:when test="${isSecure == false}">
+		<c:when test="${not isSecure }">
 		test secure
 			<iframe
 				src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e200&pid=&catid=${ca.rootCategorySlug}&subcat1id=${ca.childCategorySlug}&subcat2id=${ca.secondaryChildCategorySlug}&section=1&level=1"
