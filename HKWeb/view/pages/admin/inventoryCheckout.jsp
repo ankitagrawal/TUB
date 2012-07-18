@@ -107,9 +107,9 @@
             <s:hidden name="shippingOrder" value="${icBean.shippingOrder.id}"/>
             <s:hidden name="upc" value="${icBean.upc}"/>
             <s:hidden name="lineItem" value="${icBean.lineItem.id}"/>
-            <%--<h2>Select from the following In-stock Batches</h2>--%>
             <br/>
-            <h4 style="color:blue">${icBean.productVariant.product.name} - ${icBean.productVariant.id}, MRP=${icBean.productVariant.markedPrice}</h4>
+            <strong style="color:blue">${icBean.productVariant.product.name} - ${icBean.productVariant.id}
+			<br/>MRP=${icBean.productVariant.markedPrice}</strong>
             <table>
               <thead>
               <tr>
