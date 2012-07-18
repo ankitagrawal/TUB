@@ -430,7 +430,7 @@
   </div>
 </c:if>
 </div>
-
+Secure page
 		<c:choose>
 		<c:when test="${isSecure == false}">
 		test secure
