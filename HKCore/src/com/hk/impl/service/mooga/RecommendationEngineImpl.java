@@ -37,6 +37,9 @@ public class RecommendationEngineImpl implements RecommendationEngine {
 
     @Value("#{hkEnvProps['" + Keys.Env.moogaUrl + "']}")
     String moogaUrl;
+
+    @Value("#{hkEnvProps['" + Keys.Env.moogaEnabled + "']}")
+    boolean moogaOn;
     /**
      * Mooga Actions as defined by MOOGA service. Has to be in sync with Mooga
      */
@@ -194,19 +197,21 @@ public class RecommendationEngineImpl implements RecommendationEngine {
     }
 
     private void notifyUserTransaction(long userId, String productVariantId, String moogaAction){
-        try{
-            String params = String.format("%s, %s, %s, %d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s",
-                    "1","0",moogaAction,userId, productVariantId, "IT",
-                    "0","0","0","0","0","0","0","0");
+        if (moogaOn){
+            try{
+                String params = String.format("%s, %s, %s, %d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s",
+                        "1","0",moogaAction,userId, productVariantId, "IT",
+                        "0","0","0","0","0","0","0","0");
 
-            String result = moogaStub.trans_NotifyTrans(HK_MOOGA_KEY,"OFBiz.NotifyTransaction", LEFT_OPERATOR + params + RIGHT_OPERATOR);
-            result = "";
-        }catch(RemoteException ex){
-            String err = ex.getMessage();
-            err = "";
-        }catch(Exception ex){
-            String err = ex.getMessage();
-            err = "";
+                String result = moogaStub.trans_NotifyTrans(HK_MOOGA_KEY,"OFBiz.NotifyTransaction", LEFT_OPERATOR + params + RIGHT_OPERATOR);
+                result = "";
+            }catch(RemoteException ex){
+                String err = ex.getMessage();
+                err = "";
+            }catch(Exception ex){
+                String err = ex.getMessage();
+                err = "";
+            }
         }
     }
     private List<String> getProducts(String itemResponse){
