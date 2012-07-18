@@ -7805,6 +7805,7 @@
     <changeSet author="Rahul (generated)" id="1342099712051-1">
         <modifyDataType columnName="value" newDataType="VARCHAR(70)" tableName="cart_line_item_config_values"/>
     </changeSet>
+<<<<<<< HEAD
     <changeSet author="Shrey (generated)" id="1342445419109-1">
         <addColumn tableName="supplier">
             <column name="brands" type="VARCHAR(45)"/>
@@ -7835,4 +7836,29 @@
     <changeSet author="Shrey (generated)" id="1342533458649-4">
         <modifyDataType columnName="margins" newDataType="VARCHAR(20)" tableName="supplier"/>
     </changeSet>
+=======
+    <changeSet author="Ajeet (generated)" id="1342505244718-1">
+        <addColumn tableName="shipment">
+            <column name="packer" type="VARCHAR(5)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1342505244718-2">
+        <addColumn tableName="shipment">
+            <column name="picker" type="VARCHAR(5)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1342505244718-3">
+        <addColumn tableName="sku_group">
+            <column name="cost_price" type="DECIMAL(8,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1342505244718-4">
+        <addColumn tableName="sku_group">
+            <column name="mrp" type="DECIMAL(8,2)"/>
+        </addColumn>
+    </changeSet>
+    <!--<changeSet author="Ajeet (generated)" id="1342505244718-5">-->
+        <!--<addNotNullConstraint columnDataType="VARCHAR(70)" columnName="value" tableName="cart_line_item_config_values"/>-->
+    <!--</changeSet>-->
+>>>>>>> ba851329cb3f04219c855e3c5863c5e71a0c3087
 </databaseChangeLog>
