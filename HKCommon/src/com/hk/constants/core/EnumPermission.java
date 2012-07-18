@@ -89,7 +89,8 @@ public enum EnumPermission {
   FINANCE_MANAGEMENT                             (PermissionConstants.FINANCE_MANAGEMENT),
   RUN_ANT_BUILDS                                 (PermissionConstants.RUN_ANT_BUILDS),
   UPDATE_COURIER_DELIVERY_STATUS                 (PermissionConstants.UPDATE_COURIER_DELIVERY_STATUS),
-  HK_DELIVERY_WORKSHEET_DOWNLOAD                 (PermissionConstants.HK_DELIVERY_WORKSHEET_DOWNLOAD);
+  HK_DELIVERY_WORKSHEET_DOWNLOAD                 (PermissionConstants.HK_DELIVERY_WORKSHEET_DOWNLOAD),
+  CREATE_REPLACEMENT_ORDER                       (PermissionConstants.CREATE_REPLACEMENT_ORDER);
 
   String permissionName;
 
