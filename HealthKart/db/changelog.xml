@@ -7822,15 +7822,12 @@
             <column name="email_id" type="VARCHAR(50)"/>
         </addColumn>
     </changeSet>
-
-    <changeSet author="Shrey (generated)" id="1342445419109-6">
+<changeSet author="Shrey (generated)" id="1342445419109-6">
         <addColumn tableName="supplier">
             <column name="terms_of_trade" type="VARCHAR(100)"/>
         </addColumn>
     </changeSet>
-
-
-    <changeSet author="Shrey (generated)" id="1342533458649-3">
+<changeSet author="Shrey (generated)" id="1342533458649-3">
         <modifyDataType columnName="credit_period" newDataType="VARCHAR(10)" tableName="supplier"/>
     </changeSet>
     <changeSet author="Shrey (generated)" id="1342533458649-4">
@@ -7859,5 +7856,4 @@
     <!--<changeSet author="Ajeet (generated)" id="1342505244718-5">-->
         <!--<addNotNullConstraint columnDataType="VARCHAR(70)" columnName="value" tableName="cart_line_item_config_values"/>-->
     <!--</changeSet>-->
-
 </databaseChangeLog>
