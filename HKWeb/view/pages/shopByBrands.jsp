@@ -3,7 +3,12 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 
 <s:useActionBean beanclass="com.hk.web.action.core.catalog.ShopByBrandsAction" var="brandAction"/>
+<%
+  
+  boolean isSecure = pageContext.getRequest().isSecure();
+  pageContext.setAttribute("isSecure", isSecure);
 
+%>
 <s:layout-render name="/layouts/default100.jsp" pageTitle="Shop by Brands">
   <s:layout-component name="htmlHead">
     <script type="text/javascript">
@@ -40,16 +45,11 @@
 
       </div>
     </c:forEach>
-
-		<c:choose>
-			<c:when test="${isSecure}">
-				<iframe src="https://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e100&section=1&level=1" scrolling="no" width="1" height="1" marginheight="0" marginwidth="0" frameborder="0"></iframe>
-			</c:when>
-			<c:otherwise>
-				<iframe src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e100&section=1&level=1" scrolling="no" width="1" height="1" marginheight="0" marginwidth="0" frameborder="0"></iframe>
-			</c:otherwise>
-		</c:choose>
 		
+			<c:if test="${!isSecure}">
+				<iframe src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e100&section=1&level=1" scrolling="no" width="1" height="1" marginheight="0" marginwidth="0" frameborder="0"></iframe>
+			</c:if>
+			
   </s:layout-component>
 
 

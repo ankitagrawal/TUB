@@ -430,10 +430,16 @@
   </div>
 </c:if>
 </div>
-<iframe
-    src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e200&pid=&catid=${ca.rootCategorySlug}&subcat1id=${ca.childCategorySlug}&subcat2id=${ca.secondaryChildCategorySlug}&section=1&level=1"
-    scrolling="no" width="1" height="1" marginheight="0" marginwidth="0" frameborder="0"></iframe>
-<div style="height:75px"></div>
+
+		<c:if test="${!isSecure}">
+			<iframe
+				src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e200&pid=&catid=${ca.rootCategorySlug}&subcat1id=${ca.childCategorySlug}&subcat2id=${ca.secondaryChildCategorySlug}&section=1&level=1"
+				scrolling="no" width="1" height="1" marginheight="0" marginwidth="0"
+				frameborder="0"></iframe>
+		</c:if>
+
+
+		<div style="height:75px"></div>
 </s:layout-component>
 
 </s:layout-render>
