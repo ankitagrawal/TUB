@@ -638,7 +638,7 @@
 
 <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="qbr7CMDf6QIQuLjI5QM" id="1018305592"/>
 
-			<c:if test="${!isSecure}">
+			<c:if test="${not isSecure }">
 				<iframe src="" id="vizuryTargeting" scrolling="no" width="1"
 					height="1" marginheight="0" marginwidth="0" frameborder="0"></iframe>
 
