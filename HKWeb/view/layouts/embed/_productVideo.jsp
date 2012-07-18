@@ -15,6 +15,9 @@
   %>
 
   <div>
+  <hk:productVideo videoCode="${product.videoEmbedCode}" />
+  <!--
       ${product.videoEmbedCode}
+  -->
   </div>
 </s:layout-definition>

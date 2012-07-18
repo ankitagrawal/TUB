@@ -132,6 +132,21 @@
     <dynamic-attributes>true</dynamic-attributes>
   </tag>
 
+<tag>
+    <description>Renders product video url</description>
+    <display-name>productVideo</display-name>
+    <name>productVideo</name>
+    <tag-class>com.hk.web.tag.ProductVideoTag</tag-class>
+    <body-content>empty</body-content>
+    <attribute>
+      <name>videoCode</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <dynamic-attributes>true</dynamic-attributes>
+  </tag>
+
+
    <tag>
      <description>Renders category home page banners</description>
      <display-name>categoryImage</display-name>
