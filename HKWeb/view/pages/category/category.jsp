@@ -257,12 +257,23 @@
   </div>
 
   <div class="clear"></div>
-
-		<c:if test="${not isSecure }">
+	      secure
+	<c:choose>
+		<c:when test="${not isSecure}">
+			secure page
+		</c:when>
+		<c:otherwise>
+			<iframe
+					src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e200&catid=${categoryBean.category.name}&subcat1id=&subcat2id=&section=1&level=1"
+					scrolling="no" width="1" height="1" marginheight="0" marginwidth="0"
+					frameborder="0"></iframe>
+		</c:otherwise>
+	</c:choose>
+		<%--<c:if test="${not isSecure }">
 			<iframe
 				src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e200&catid=${categoryBean.category.name}&subcat1id=&subcat2id=&section=1&level=1"
 				scrolling="no" width="1" height="1" marginheight="0" marginwidth="0"
 				frameborder="0"></iframe>
-		</c:if>
+		</c:if>--%>
 	</s:layout-component>
 </s:layout-render>
