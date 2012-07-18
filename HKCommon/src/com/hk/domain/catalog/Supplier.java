@@ -56,11 +56,11 @@ public class Supplier implements java.io.Serializable {
     @Column(name = "update_date", length = 19)
     private Date   updateDate;
 
+      @Column(name = "brands")
+    private String  brandName;
+    
     @Column(name = "credit_period")
     private  String creditPeriod;
-
-     @Column(name = "brands")
-    private String brandName;
 
      @Column(name = "dam_exp_cond")
     private String damageConditions;
@@ -105,7 +105,7 @@ public class Supplier implements java.io.Serializable {
     }
 
     public void setMargins(String margins) {
-        margins = margins;
+        this.margins = margins;
     }
 
     public String getEmail_id() {
@@ -121,7 +121,7 @@ public class Supplier implements java.io.Serializable {
     }
 
     public void setDamageConditions(String damageConditions) {
-        damageConditions = damageConditions;
+        this.damageConditions = damageConditions;
     }
 
     public String getBrandName() {
@@ -129,7 +129,7 @@ public class Supplier implements java.io.Serializable {
     }
 
     public void setBrandName(String brandName) {
-        brandName = brandName;
+        this.brandName = brandName;
     }
 
     public String getCreditPeriod() {
@@ -137,7 +137,7 @@ public class Supplier implements java.io.Serializable {
     }
 
     public void setCreditPeriod(String creditPeriod) {
-        creditPeriod = creditPeriod;
+        this.creditPeriod = creditPeriod;
     }
 
     public String getLine1() {

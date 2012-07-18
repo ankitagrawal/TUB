@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.sourceforge.stripes.action.DefaultHandler;
@@ -91,13 +90,12 @@ public class SupplierManagementAction extends BasePaginatedAction {
           final String DOUBLE_PATTERN = "^[0-9]*.[0-9]*$";
           pattern = Pattern.compile(DOUBLE_PATTERN);
           boolean bool=pattern.matcher(margin).matches();
-                if(!bool)  getContext().getValidationErrors().add("e1", new SimpleError("Please Enter the value percent"));
+                if(!bool)  getContext().getValidationErrors().add("e1", new SimpleError("Please Enter the Margins in percent"));
           //To check the value in range of percentage
            else{
                   double d = Double.valueOf(supplier.getMargins().trim()).doubleValue();
-                    if(d<0 && d>100)
-
-                getContext().getValidationErrors().add("e1", new SimpleError("Margins is in percentage and must be Enter within the Range"));
+                    if(d < 0 || d > 100)
+                 getContext().getValidationErrors().add("e1", new SimpleError("Margins is in percentage and must be Enter within the Range(0 to 100)"));
                 }
       }
 
@@ -110,7 +108,7 @@ public class SupplierManagementAction extends BasePaginatedAction {
           pattern = Pattern.compile(INTEGER_PATTERN);
           boolean bool=pattern.matcher(credit_period).matches();
            if(!bool)
-            getContext().getValidationErrors().add("e1", new SimpleError("Please enter the credit period days in number only"));    
+            getContext().getValidationErrors().add("e1", new SimpleError("Please enter the credit period days in number"));    
       }
 
       // Validation for the Email Id
@@ -121,7 +119,7 @@ public class SupplierManagementAction extends BasePaginatedAction {
                pattern = Pattern.compile(EMAIL_PATTERN);
                   boolean bool = pattern.matcher(email_id).matches();
                     if(!bool)
-                      getContext().getValidationErrors().add("e1", new SimpleError("Please enter the valid Email-Id"+supplier.getCreditPeriod()+" "+supplier.getMargins()+" "+supplier.getBrandName()+" "+supplier.getDamageConditions()+" "+supplier.getTOT()));
+                      getContext().getValidationErrors().add("e1", new SimpleError("Please enter the valid Email-Id"));
       }
   }
 
