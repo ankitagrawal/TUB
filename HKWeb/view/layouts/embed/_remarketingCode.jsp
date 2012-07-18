@@ -3,10 +3,12 @@
 
 <s:layout-definition>
     <%
-        String label= (String) pageContext.getAttribute("label");
-        pageContext.setAttribute("label", label);
+	    boolean isSecure = pageContext.getRequest().isSecure();
+	    pageContext.setAttribute("isSecure", isSecure);
+	    String label = (String) pageContext.getAttribute("label");
+	    pageContext.setAttribute("label", label);
 
-        String id= (String) pageContext.getAttribute("id");
+	    String id= (String) pageContext.getAttribute("id");
         pageContext.setAttribute("id", id);
     %>
     <!-- Google Code for Remarketing List -->
@@ -25,10 +27,18 @@
   document.write(unescape("%3Cscript src='" + conversionJsHost + "googleadservices.com/pagead/conversion.js' type='text/javascript'%3E%3C/script%3E"));
 </script>
 	<!--<script type="text/javascript" src="http://www.googleadservices.com/pagead/conversion.js">
-    --></script>
+    </script>-->
     <noscript>
         <div style="display:inline;">
-            <img height="1" width="1" style="border-style:none;" alt="" src="http://www.googleadservices.com/pagead/conversion/${id}/?label=${label}&amp;guid=ON&amp;script=0"/>
+
+	        <c:choose>
+		        <c:when test="${isSecure}">
+			        <img height="1" width="1" style="border-style:none;" alt="" src="http://www.googleadservices.com/pagead/conversion/${id}/?label=${label}&amp;guid=ON&amp;script=0"/>
+		        </c:when>
+		        <c:otherwise>
+			        <img height="1" width="1" style="border-style:none;" alt="" src="http://www.googleadservices.com/pagead/conversion/${id}/?label=${label}&amp;guid=ON&amp;script=0"/>
+		        </c:otherwise>
+	        </c:choose>
         </div>
     </noscript>
 </s:layout-definition>
