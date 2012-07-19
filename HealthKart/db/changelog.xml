@@ -7702,17 +7702,6 @@
     <changeSet author="Ajeet (generated)" id="1341941781264-2">
         <addForeignKeyConstraint baseColumnNames="warehouse_id" baseTableName="brands_to_audit" constraintName="fk_brands_to_audit_warehouse1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="warehouse" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Pradeep (generated)" id="1342209114419-1">
-        <createTable tableName="replacement_order">
-            <column name="so_ro_id" type="INT">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column defaultValueNumeric="0" name="is_rto" type="TINYINT"/>
-            <column name="ref_shipping_order_id" type="INT">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
     <changeSet author="Pradeep (generated)" id="1342209114419-2">
         <createTable tableName="store_product">
             <column autoIncrement="true" name="id" type="INT">
