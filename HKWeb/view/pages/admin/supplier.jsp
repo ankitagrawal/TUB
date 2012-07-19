@@ -62,7 +62,7 @@
           <td><s:text name="supplier.creditPeriod" maxlength="10" /></td>
         </tr>
           <tr>
-          <td>Margins in Percentage<br /><font color="red">(Please Enter in numbers like(70 or 85.57), please don't enter the % sign)</font></td>
+          <td>Margins in Percentage<br /><font color="red">(Please Enter in numbers like(70 or 85.57 or 0.56), please don't enter the % sign)</font></td>
           <td><s:text name="supplier.margins" maxlength="20"/></td>
         </tr>
           <tr>

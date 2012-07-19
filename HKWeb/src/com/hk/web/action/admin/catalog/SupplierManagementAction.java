@@ -87,7 +87,7 @@ public class SupplierManagementAction extends BasePaginatedAction {
 
 
              String margin = supplier.getMargins();
-          final String DOUBLE_PATTERN = "^[0-9]*.[0-9]*$";
+          final String DOUBLE_PATTERN = "^\\d+\\.?\\d+$";
           pattern = Pattern.compile(DOUBLE_PATTERN);
           boolean bool=pattern.matcher(margin).matches();
                 if(!bool)  getContext().getValidationErrors().add("e1", new SimpleError("Please Enter the Margins in percent"));
