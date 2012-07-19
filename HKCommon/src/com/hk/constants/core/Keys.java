@@ -96,8 +96,8 @@ public class Keys {
 
         public static final String minSubscriptionDays          = "minSubscriptionDays";
         public static final String maxSubscriptionDays          = "maxSubscriptionDays";
-        public static final String customerBufferDays           = "customerBufferDays";
-        public static final String inventoryBufferDays          = "inventoryBufferDays";
+        public static final String subscriptionCustomerBufferDays           = "subscriptionCustomerBufferDays";
+        public static final String subscriptionInventoryBufferDays          = "subscriptionInventoryBufferDays";
 
     }
 

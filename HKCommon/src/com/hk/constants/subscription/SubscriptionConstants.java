@@ -18,8 +18,8 @@ import javax.annotation.PostConstruct;
 public class SubscriptionConstants {
     public static int minSubscriptionDays;
     public static int maxSubscriptionDays;
-    public static int customerBufferDays;
-    public static int inventoryBufferDays;
+    public static int subscriptionCustomerBufferDays;
+    public static int subscriptionInventoryBufferDays;
 
     @Value("#{hkEnvProps['" + Keys.Env.minSubscriptionDays + "']}")
     private String        minSubDaysString;
@@ -27,10 +27,10 @@ public class SubscriptionConstants {
     @Value("#{hkEnvProps['" + Keys.Env.maxSubscriptionDays + "']}")
     private String        maxSubDaysString;
 
-    @Value("#{hkEnvProps['"+ Keys.Env.customerBufferDays + "']}")
+    @Value("#{hkEnvProps['"+ Keys.Env.subscriptionCustomerBufferDays + "']}")
     private String        customerBufferDaysString;
 
-    @Value("#{hkEnvProps['"+ Keys.Env.inventoryBufferDays + "']}")
+    @Value("#{hkEnvProps['"+ Keys.Env.subscriptionInventoryBufferDays + "']}")
     private String        inventoryBufferDaysString;
 
 
@@ -42,9 +42,9 @@ public class SubscriptionConstants {
 
         maxSubscriptionDays = Integer.parseInt(maxSubDaysString);
 
-        customerBufferDays = Integer.parseInt(customerBufferDaysString);
+        subscriptionCustomerBufferDays = Integer.parseInt(customerBufferDaysString);
 
-        inventoryBufferDays = Integer.parseInt(inventoryBufferDaysString);
+        subscriptionInventoryBufferDays = Integer.parseInt(inventoryBufferDaysString);
 
     }
 
