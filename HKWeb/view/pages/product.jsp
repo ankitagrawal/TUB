@@ -391,6 +391,22 @@
     </c:otherwise>
   </c:choose>
   <div class="floatfix"></div>
+
+	<shiro:hasPermission name="<%=PermissionConstants.MANAGE_IMAGE%>">
+    <div>
+      <s:link beanclass="com.hk.web.action.core.catalog.image.UploadImageAction" event="uploadVariantImage"
+              target="_blank"
+              class="popup"> Upload
+        <s:param name="productVariant" value="${product.productVariants[0]}"/>
+      </s:link>
+      &nbsp;|&nbsp;
+      <s:link beanclass="com.hk.web.action.core.catalog.product.ProductVariantAction" event="renderManageImages"
+              target="_blank" class="popup">Manage
+        Images
+        <s:param name="productVariant" value="${product.productVariants[0]}"/>
+      </s:link>
+    </div>
+  </shiro:hasPermission>
 </s:layout-component>
 
 
@@ -499,20 +515,20 @@
 				People who bought this also bought these products
 			</h4>
 
-			<c:forEach items="${recommendedProducts}" var="relatedProduct">
+			<c:forEach items="${recommendedProducts}" var="relatedProducts">
 				<shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_CATALOG%>">
 					<h6 style="color: red" title="Recommended Product Source">
-						Source = ${relatedProduct.key};
+						Source = ${relatedProducts.key};
 						Products =
-						<c:forEach var="product" items="${relatedProduct.value}">
-							${product}
+						<c:forEach var="relatedProduct" items="${relatedProducts.value}">
+							${relatedProduct}
 						</c:forEach>
 					</h6>
 				</shiro:hasPermission>
 				<c:set var="recommendedProductCount" value="0" scope="page"/>
-				<c:forEach var="product" items="${relatedProduct.value}">
+				<c:forEach var="relatedProduct" items="${relatedProducts.value}">
 					<c:if test="${recommendedProductCount < 6}">
-						<s:layout-render name="/layouts/embed/_productThumb.jsp" productId="${product}"/>
+						<s:layout-render name="/layouts/embed/_productThumb.jsp" productId="${relatedProduct}"/>
 					</c:if>
 					<c:set var="recommendedProductCount" value="${recommendedProductCount + 1}" scope="page"/>
 				</c:forEach>
