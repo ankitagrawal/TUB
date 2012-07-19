@@ -82,25 +82,31 @@ public class DeliveryAwaitingQueueAction extends BasePaginatedAction {
     @Secure(hasAnyPermissions = {PermissionConstants.VIEW_DELIVERY_QUEUE}, authActionBean = AdminPermissionAction.class)
     public Resolution searchOrders() {
 
-        Awb awb = null;
         List<Courier> courierList = new ArrayList<Courier>();
-        if (trackingId != null && courier != null) {
-            awb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(courier, trackingId, null, null, EnumAwbStatus.Used.getAsAwbStatus());
-            courierList = Arrays.asList(courier);
+        List<Awb> awbList = new ArrayList<Awb>();
+        if (courier == null) {
+            courierList = getCourierService().getAllCouriers();
+        } else {
+            courierList.add(courier);
         }
-        if (trackingId == null) {
-            if (courier == null) {
-                courierList = getCourierService().getAllCouriers();
+        
+        if (trackingId != null) {
+            if (courier != null) {
+                awbList = awbService.getAwbInShipment(courier, trackingId, null, null, EnumAwbStatus.Used.getAsAwbStatus());
+                awbList.add(awbList.get(0));
             } else {
-                courierList.add(courier);
+                for (Courier courier : courierList) {
+                    awbList = awbService.getAwbInShipment(courier, trackingId, null, null, EnumAwbStatus.Used.getAsAwbStatus());
+                }
             }
+
         }
 
         ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
         shippingOrderSearchCriteria.setShippingOrderStatusList(getShippingOrderStatusService().getOrderStatuses(EnumShippingOrderStatus.getStatusSearchingInDeliveryQueue()));
         shippingOrderSearchCriteria.setOrderId(orderId).setGatewayOrderId(gatewayOrderId);
         shippingOrderSearchCriteria.setCourierList(courierList);
-        shippingOrderSearchCriteria.setAwb(awb);
+        shippingOrderSearchCriteria.setAwbList(awbList);
 
         shippingOrderPage = getShippingOrderService().searchShippingOrders(shippingOrderSearchCriteria, getPageNo(), getPerPage());
         if (shippingOrderPage != null) {

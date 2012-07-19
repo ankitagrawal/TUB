@@ -1,0 +1,126 @@
+Buildfile: build.xml
+
+build:
+
+prepare:
+
+prepare:
+
+prepare:
+
+prepare:
+
+prepare:
+
+build.common.jar:
+
+prepare:
+
+compile:
+
+compile.groovy:
+
+build:
+
+build-dependencies:
+
+prepare:
+
+dependencies.check:
+
+build.common:
+
+prepare:
+
+compile:
+
+compile.groovy:
+
+build:
+
+build.mooga:
+
+prepare:
+
+compile:
+
+build:
+
+build.dependencies:
+
+compile:
+
+build:
+
+prepare:
+
+compile.groovy:
+
+dependencies.check:
+
+build.core:
+
+build.dependencies:
+
+compile:
+
+build:
+
+prepare:
+
+dependencies.check:
+
+build.core:
+
+build.dependencies:
+
+compile:
+
+build:
+
+prepare:
+
+dependencies.check:
+
+build.common:
+
+build.core:
+
+build.admin.core:
+
+build.report:
+
+build.dependencies:
+
+copyresources:
+
+compile:
+    [javac] Compiling 18 source files to C:\DevProjects\rewrite\HKRejuvenate\HKWeb\build
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\admin\order\search\SearchShippingOrderAction.java:17: package org.springframework.mail does not exist
+    [javac] import org.springframework.mail.SimpleMailMessage;
+    [javac]                                ^
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\admin\courier\CourierAWBAction.java:145: warning: [unchecked] unchecked call to ArrayList(java.util.Collection<? extends E>) as a member of the raw type java.util.ArrayList
+    [javac]         List<String> commonCourierIdsList = XslAwbParser.getIntersection(awbDatabase, new ArrayList(awbSetFromExcel));
+    [javac]                                                                                       ^
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\admin\courier\CourierAWBAction.java:145: warning: [unchecked] unchecked conversion
+    [javac] found   : java.util.ArrayList
+    [javac] required: java.util.List<com.hk.domain.courier.Awb>
+    [javac]         List<String> commonCourierIdsList = XslAwbParser.getIntersection(awbDatabase, new ArrayList(awbSetFromExcel));
+    [javac]                                                                                       ^
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\admin\queue\DeliveryAwaitingQueueAction.java:76: warning: [unchecked] unchecked conversion
+    [javac] found   : java.util.List
+    [javac] required: java.util.List<com.hk.domain.order.ShippingOrder>
+    [javac]             shippingOrderList = shippingOrderPage.getList();
+    [javac]                                                          ^
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\admin\queue\DeliveryAwaitingQueueAction.java:113: warning: [unchecked] unchecked conversion
+    [javac] found   : java.util.List
+    [javac] required: java.util.List<com.hk.domain.order.ShippingOrder>
+    [javac]             shippingOrderList = shippingOrderPage.getList();
+    [javac]                                                          ^
+    [javac] C:\DevProjects\rewrite\HKRejuvenate\HKWeb\src\com\hk\web\action\admin\queue\ShipmentAwaitingQueueAction.java:113: warning: [unchecked] unchecked conversion
+    [javac] found   : java.util.List
+    [javac] required: java.util.List<com.hk.domain.order.ShippingOrder>
+    [javac]       shippingOrderList = shippingOrderPage.getList();
+    [javac]                                                    ^
+    [javac] 1 error
+    [javac] 5 warnings
