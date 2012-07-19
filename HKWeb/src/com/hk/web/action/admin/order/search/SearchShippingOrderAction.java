@@ -28,7 +28,7 @@ import com.hk.constants.courier.EnumAwbStatus;
 @Component
 public class SearchShippingOrderAction extends BasePaginatedAction {
 
-  private static Logger logger = LoggerFactory.getLogger(SearchShippingOrderAction.class);
+  private static Logger logger = LoggerFactory.getLogger(SearchShippingOrderAction.class);                  
 
   private String shippingOrderGatewayId;
   private Long shippingOrderId;
