@@ -62,7 +62,6 @@ public class DeliveryStatusUpdateManager {
     List<ShippingOrder>         shippingOrderList             = new ArrayList<ShippingOrder>();
     List<String>                unmodifiedTrackingIds         = null;
     List<Long>                  courierIdList                 = null;
-    int                         batchSize                     = 0;
     int                         startIndex                    = 0;
     int                         endIndex                      = 0;
     //Map<String,Object>          jsonResponseMap               = new HashMap<String,Object>();
@@ -213,12 +212,13 @@ public class DeliveryStatusUpdateManager {
             List<ShippingOrder> shippingOrderSubList = new ArrayList<ShippingOrder>();
             JsonArray jsonShipmentDataArray = new JsonArray();
             int listSize = shippingOrderList.size();
+	        int batchSize = 70;
             startIndex=0;
             endIndex=0;
 
             if (shippingOrderList != null && listSize > 0) {
-                //Checking if shippingOrderList size is > 10 then we wud divide it into batches of 10 orders each.
-                if (shippingOrderList.size() > 10) {
+                //Checking if shippingOrderList size is > batchSize then we wud divide it into batches of 10 orders each.
+                if (shippingOrderList.size() > batchSize) {
                     for (int i = 0; i < listSize; i++) {
                         //For the first time it wud be 0 and its value won't increment to 1.Bt later it would increment so need to subtract 1 to get correcr startIndex.
                         if (i == 0) {
@@ -226,13 +226,13 @@ public class DeliveryStatusUpdateManager {
                         } else {
                             startIndex = i - 1;
                         }
-                        //checking if remaining elements are less than 10,then adding that count to the index to get correct endIndex.
-                        if (listSize - endIndex < 10) {
+                        //checking if remaining elements are less than batchSize,then adding that count to the index to get correct endIndex.
+                        if (listSize - endIndex < batchSize) {
                             endIndex = (startIndex + (listSize - endIndex)) - 1;
                         } else {
-                            endIndex = startIndex + 10;
+                            endIndex = startIndex + batchSize;
                         }
-                        //Breaking the original list into batches of 10 or the remaining size.
+                        //Breaking the original list into batches of batchSize or the remaining size.
                         try {
                             shippingOrderSubList = shippingOrderList.subList(startIndex, endIndex);
 
