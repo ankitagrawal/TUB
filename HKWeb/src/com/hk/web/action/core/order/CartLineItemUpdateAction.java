@@ -8,6 +8,7 @@ import java.util.Set;
 import com.hk.constants.subscription.EnumSubscriptionStatus;
 import com.hk.core.fliter.SubscriptionFilter;
 import com.hk.domain.subscription.Subscription;
+import com.hk.pact.service.mooga.RecommendationEngine;
 import net.sourceforge.stripes.action.JsonResolution;
 import net.sourceforge.stripes.action.Resolution;
 
@@ -58,6 +59,9 @@ public class CartLineItemUpdateAction extends BaseAction {
     @Autowired
     CartLineItemDao cartLineItemDao;
 
+    @Autowired
+    RecommendationEngine recommendationEngine;
+
     @JsonHandler
     public Resolution pre() {
 
@@ -77,6 +81,7 @@ public class CartLineItemUpdateAction extends BaseAction {
                 }
                 if (orderManager.isStepUpAllowed(cartLineItem)) {
                   cartLineItem = cartLineItemService.save(cartLineItem);
+
                 }else{
                   cartLineItemDao.refresh(cartLineItem);
                   HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "fail", cartLineItem.getQty());
@@ -97,6 +102,10 @@ public class CartLineItemUpdateAction extends BaseAction {
 
            PricingDto pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), address, 0D, subscriptions), address);
 
+            //If it is remove from cart event then report it to recommendation engine
+            if (cartLineItem.getQty() == 0){
+                recommendationEngine.notifyRemoveFromCart(getPrincipalUser().getId(),cartLineItem.getProductVariant().getId());
+            }
             if (cartLineItem != null && cartLineItem.getComboInstance() != null && cartLineItem.getComboInstance().getId() != null) {
                 List<CartLineItem> brotherLineItems = comboInstanceDao.getSiblingLineItems(cartLineItem);
                 for (CartLineItem li : brotherLineItems) {

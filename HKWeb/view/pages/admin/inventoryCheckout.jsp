@@ -107,9 +107,9 @@
             <s:hidden name="shippingOrder" value="${icBean.shippingOrder.id}"/>
             <s:hidden name="upc" value="${icBean.upc}"/>
             <s:hidden name="lineItem" value="${icBean.lineItem.id}"/>
-            <%--<h2>Select from the following In-stock Batches</h2>--%>
             <br/>
-            <h2 style="color:blue">${icBean.productVariant.product.name} - ${icBean.productVariant.id}</h2>
+            <strong style="color:blue">${icBean.productVariant.product.name} - ${icBean.productVariant.id}
+			<br/>MRP=${icBean.productVariant.markedPrice}</strong>
             <table>
               <thead>
               <tr>
@@ -119,14 +119,21 @@
                 <th>Batch No.</th>
                 <th>Mfg. Date</th>
                 <th>Expiry Date</th>
-                <th>Checkin Date</th>
-                <th>VariantID</th>
-                <th>In-stock Units</th>
+                <th>MRP</th>
+                <th>Inv.</th>
               </tr>
               </thead>
               <c:forEach items="${icBean.skuGroups}" var="skuGroup" varStatus="ctr">
                 <c:set var="productVariant" value="${skuGroup.sku.productVariant}"/>
-                <tr>
+	              <c:choose>
+		              <c:when test="${productVariant.markedPrice > skuGroup.mrp}">
+			           <tr style="background:lightpink">   
+		              </c:when>
+		              <c:otherwise>
+			          <tr>
+		              </c:otherwise>
+	              </c:choose>
+
                   <td>
                     <c:choose>
                       <c:when test="${ctr.index == 0}">
@@ -142,8 +149,7 @@
                   <td>${skuGroup.batchNumber}</td>
                   <td><fmt:formatDate value="${skuGroup.mfgDate}" pattern="yyyy-MM-dd"/></td>
                   <td><fmt:formatDate value="${skuGroup.expiryDate}" pattern="yyyy-MM-dd"/></td>
-                  <td><fmt:formatDate value="${skuGroup.createDate}" pattern="yyyy-MM-dd"/></td>
-                  <td>${productVariant.id}</td>
+                  <td>${skuGroup.mrp}</td>
                   <td>${fn:length(hk:getInStockSkuItems(skuGroup))}</td>
                 </tr>
               </c:forEach>

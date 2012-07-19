@@ -138,6 +138,7 @@
   <h3><s:link beanclass="com.hk.web.action.admin.inventory.CreateInventoryFileAction">Create Inventory File</s:link></h3>
 
   <h3><s:link beanclass="com.hk.web.action.admin.inventory.SearchHKBatchAction">Search HK Batch</s:link></h3>
+    <h3><s:link beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction">Create Repalcement Order</s:link></h3>
 </div>
 
 <div class="cl"></div>
