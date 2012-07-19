@@ -391,6 +391,22 @@
     </c:otherwise>
   </c:choose>
   <div class="floatfix"></div>
+
+	<shiro:hasPermission name="<%=PermissionConstants.MANAGE_IMAGE%>">
+    <div>
+      <s:link beanclass="com.hk.web.action.core.catalog.image.UploadImageAction" event="uploadVariantImage"
+              target="_blank"
+              class="popup"> Upload
+        <s:param name="productVariant" value="${product.productVariants[0]}"/>
+      </s:link>
+      &nbsp;|&nbsp;
+      <s:link beanclass="com.hk.web.action.core.catalog.product.ProductVariantAction" event="renderManageImages"
+              target="_blank" class="popup">Manage
+        Images
+        <s:param name="productVariant" value="${product.productVariants[0]}"/>
+      </s:link>
+    </div>
+  </shiro:hasPermission>
 </s:layout-component>
 
 

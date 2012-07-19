@@ -15,6 +15,8 @@ import net.sourceforge.stripes.validation.ValidationErrorHandler;
 import net.sourceforge.stripes.validation.ValidationErrors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
@@ -38,7 +40,7 @@ import com.hk.web.action.core.user.SignupAction;
 
 public class AddToCartAction extends BaseAction implements ValidationErrorHandler {
 
-    //private static Logger logger = Logger.getLogger(AddToCartAction.class);
+    private static Logger logger = LoggerFactory.getLogger(AddToCartAction.class);
 
     List<ProductVariant> productVariantList;
     Combo combo;
@@ -100,7 +102,11 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
                         maxQty += comboProduct.getQty();
                     }
                     for (ProductVariant productVariant : productVariantList) {
-                        netQty += productVariant.getQty();
+	                    if (productVariant.getQty() != null) {
+		                    netQty += productVariant.getQty();
+	                    } else {
+		                    logger.error("Null qty for Combo=" + combo.getId());
+	                    }
                     }
                     if (netQty != maxQty) {
                         addValidationError("Combo product variant qty are not in accordance to offer", new SimpleError("Combo product variant qty are not in accordance to offer"));
