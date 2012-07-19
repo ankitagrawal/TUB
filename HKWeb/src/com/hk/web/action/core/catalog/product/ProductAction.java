@@ -315,7 +315,6 @@ public class ProductAction extends BaseAction {
 	public String getAffid() {
 		return affid;
 	}
->>>>>>> master
 
 	public void setAffid(String affid) {
 		this.affid = affid;
