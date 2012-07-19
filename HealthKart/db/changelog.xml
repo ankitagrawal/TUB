@@ -7844,4 +7844,9 @@
             <column name="keywords" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
+    <changeSet author="Tarun (generated)" id="1342684181224-2">
+        <addColumn tableName="faq">
+            <column name="page_rank" type="INT"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

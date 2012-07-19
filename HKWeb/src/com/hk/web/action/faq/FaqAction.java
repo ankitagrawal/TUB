@@ -27,12 +27,8 @@ public class FaqAction extends BaseAction {
     FaqService faqService;
 
     List<Faq> faqList;
-    String primaryCategory;
-    String question;
-    String answer;
-    String secondaryCategory;
-    String keywordString;
     String searchString;
+    String primaryCategory;
     private Faq faq;
 
 /*    @ValidationMethod(on = "addNewFaq")
@@ -55,7 +51,7 @@ public class FaqAction extends BaseAction {
     }
 
     public Resolution addNewFaq() {
-        Boolean status = faqService.insertFaq(question, answer, primaryCategory, secondaryCategory, keywordString);
+        Boolean status = faqService.insertFaq(faq);
         if(status == true){
             addRedirectAlertMessage(new SimpleMessage("New FAQ inserted."));
         }
@@ -103,7 +99,7 @@ public class FaqAction extends BaseAction {
     public void setPrimaryCategory(String primaryCategory) {
         this.primaryCategory = primaryCategory;
     }
-
+/*
     public String getQuestion() {
         return question;
     }
@@ -134,7 +130,7 @@ public class FaqAction extends BaseAction {
 
     public void setKeywordString(String keywordString) {
         this.keywordString = keywordString;
-    }
+    }*/
 
     public String getSearchString() {
         return searchString;

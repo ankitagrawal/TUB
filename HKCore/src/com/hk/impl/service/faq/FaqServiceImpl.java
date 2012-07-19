@@ -29,28 +29,19 @@ public class FaqServiceImpl implements FaqService{
     private static Logger logger                 = LoggerFactory.getLogger(FaqServiceImpl.class);
 
     public List<Faq> getFaqByCategory(String primaryCategory){
-        List<Faq> faqListFiltered = new ArrayList<Faq>();
-        List<Faq> faqList = getFaqDao().getAll(Faq.class);
-        if(primaryCategory == null){
-            return faqList;
-        }
-        for(Faq faq : faqList){
-            if(faq.getPrimaryCategory().equals(primaryCategory)){
-                faqListFiltered.add(faq);
-            }
-        }
-        return faqListFiltered;
+        return getFaqDao().getFaqByCategory(primaryCategory);
     }
 
-    public boolean insertFaq(String question, String answer, String primaryCategory, String secondaryCategory, String keywordString){
-        Faq faq = new Faq();
+    public boolean insertFaq(Faq faq){
+        Faq newFaq = new Faq();
         try{
-            faq.setQuestion(question);
-            faq.setAnswer(answer);
-            faq.setPrimaryCategory(primaryCategory);
-            faq.setSecondaryCategory(secondaryCategory);
-            faq.setKeywords(keywordString);
-            save(faq);
+            newFaq.setQuestion(faq.getQuestion());
+            newFaq.setAnswer(faq.getAnswer());
+            newFaq.setPrimaryCategory(faq.getPrimaryCategory());
+            newFaq.setSecondaryCategory(faq.getSecondaryCategory());
+            newFaq.setKeywords(faq.getKeywords());
+            newFaq.setPageRank(faq.getPageRank());
+            save(newFaq);
             return true;
         }
         catch(Exception e){

@@ -111,11 +111,11 @@
 
     <s:form beanclass="com.hk.web.action.faq.FaqAction" id="new-faq-form" style="display:none;">
       <span class="question"> Question: </span><br/>
-      <textarea class="question-textarea" name="question">${faqBean.question}</textarea>
+      <textarea class="question-textarea" name="faq.question">${  faqBean.faq.question}</textarea>
       <br/><br/>
       <span class="answer"> Answer: </span>
       <br/>
-      <textarea cols="80" id="answer" name="answer" rows="6">${faqBean.answer}</textarea>
+      <textarea cols="80" id="answer" name="faq.answer" rows="6">${faqBean.faq.answer}</textarea>
       <script type="text/javascript">
         //<![CDATA[
         CKEDITOR.replace('answer',
@@ -128,14 +128,14 @@
       </script>
       <br/>
       <span class="question"> Primary Category</span>
-      <s:select name="primaryCategory">
+      <s:select name="faq.primaryCategory">
         <s:option value="">-Select-</s:option>
         <c:forEach items="${primaryCategoryList}" var="primaryCategory">
           <s:option value="${primaryCategory}">${primaryCategory}</s:option>
         </c:forEach>
       </s:select>
       <span class="question" style="margin-left: 30px;"> Secondary Category</span>
-      <s:select name="secondaryCategory">
+      <s:select name="faq.secondaryCategory">
         <s:option value="">-Select-</s:option>
         <c:forEach items="${secondaryCategoryList}" var="secondaryCategory">
           <s:option value="${secondaryCategory}">${secondaryCategory}</s:option>
@@ -143,7 +143,9 @@
       </s:select>
       <br/>
       <span class="question"> Keyword String</span>
-      <s:text name="keywordString" style="width: 25em; margin-top:5px;"/>
+      <s:text name="faq.keywords" style="width: 25em; margin-top:5px;"/>
+      <span class="question" style="margin-left: 20px;"> Rank</span>
+      <s:text name="faq.pageRank" style="width: 20px; margin-top:5px;"/>
       <s:submit name="addNewFaq" value="Save"/>
     </s:form>
     <br/>

@@ -13,5 +13,7 @@ import java.util.List;
 public interface FaqDao extends BaseDao {
 
     public List<Faq> searchFaq(String keywords);
+
+    public List<Faq> getFaqByCategory(String category);
     
 }

@@ -15,7 +15,7 @@ public interface FaqService {
 
     public List<Faq> getFaqByCategory(String category);
 
-    public boolean insertFaq(String question, String answer, String primaryCategory, String secondaryCategory, String keywordString);
+    public boolean insertFaq(Faq faq);
 
     public List<Faq> searchFaq(String keywords);
 

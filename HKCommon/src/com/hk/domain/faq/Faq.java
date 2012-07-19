@@ -33,6 +33,9 @@ public class Faq implements java.io.Serializable {
     @Column(name = "keywords")
     private String keywords;
 
+    @Column(name = "page_rank")
+    private Long pageRank;
+
     public Long getId() {
         return id;
     }
@@ -79,6 +82,14 @@ public class Faq implements java.io.Serializable {
 
     public void setKeywords(String keywords) {
         this.keywords = keywords;
+    }
+
+    public Long getPageRank() {
+        return pageRank;
+    }
+
+    public void setPageRank(Long pageRank) {
+        this.pageRank = pageRank;
     }
 
     @Override
