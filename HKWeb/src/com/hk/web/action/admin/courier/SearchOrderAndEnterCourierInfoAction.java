@@ -138,10 +138,11 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
                 } else {
                     suggestedCourier = courierService.getDefaultCourierByPincodeForLoggedInWarehouse(pinCode, isCod);
                     Awb suggestedAwb = shipmentService.attachAwbToShipment(suggestedCourier, shippingOrder);
-                    if (suggestedAwb != null) {
+                    if (suggestedAwb == null) {
                         addRedirectAlertMessage(new SimpleMessage("AWB numbers are not available for courier  , please contact respective courier service  " + suggestedCourier));
+                    } else {
+                        trackingId = suggestedAwb.getAwbNumber();
                     }
-                    trackingId = suggestedAwb.getAwbNumber();
                 }
 
             } else {
