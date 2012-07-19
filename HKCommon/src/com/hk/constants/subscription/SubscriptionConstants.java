@@ -28,10 +28,10 @@ public class SubscriptionConstants {
     private String        maxSubDaysString;
 
     @Value("#{hkEnvProps['"+ Keys.Env.subscriptionCustomerBufferDays + "']}")
-    private String        customerBufferDaysString;
+    private String        customerBufferDays;
 
     @Value("#{hkEnvProps['"+ Keys.Env.subscriptionInventoryBufferDays + "']}")
-    private String        inventoryBufferDaysString;
+    private String        inventoryBufferDays;
 
 
     @PostConstruct
@@ -42,9 +42,9 @@ public class SubscriptionConstants {
 
         maxSubscriptionDays = Integer.parseInt(maxSubDaysString);
 
-        subscriptionCustomerBufferDays = Integer.parseInt(customerBufferDaysString);
+        subscriptionCustomerBufferDays = Integer.parseInt(customerBufferDays);
 
-        subscriptionInventoryBufferDays = Integer.parseInt(inventoryBufferDaysString);
+        subscriptionInventoryBufferDays = Integer.parseInt(inventoryBufferDays);
 
     }
 

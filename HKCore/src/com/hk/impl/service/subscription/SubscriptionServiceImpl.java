@@ -89,7 +89,7 @@ public class SubscriptionServiceImpl implements SubscriptionService{
      * calls the customer for information
      */
     public int escalateSubscriptionsToActionQueue(){
-        int cusomterBufferDays= SubscriptionConstants.customerBufferDays;
+        int cusomterBufferDays= SubscriptionConstants.subscriptionCustomerBufferDays;
         Date referenceDate=new Date(BaseUtils.getCurrentTimestamp().getTime()+cusomterBufferDays*24*60*60*1000);
         List<SubscriptionStatus> fromStatuses=new ArrayList<SubscriptionStatus>();
 
