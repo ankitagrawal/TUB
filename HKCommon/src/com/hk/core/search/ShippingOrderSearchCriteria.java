@@ -126,7 +126,7 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
             if (shipmentCriteria == null) {
                 shipmentCriteria = criteria.createCriteria("shipment");
             }
-            shipmentCriteria.add(Restrictions.eq("awbList", awbList));
+            shipmentCriteria.add(Restrictions.in("awb", awbList));
         }
 
         if (courierList != null && !courierList.isEmpty()) {
