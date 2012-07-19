@@ -62,6 +62,7 @@ public class ChangeShipmentDetailsAction extends BaseAction {
     }
 
     public Resolution save() {
+
         shippingOrder.setShipment(shipment);
         shippingOrderService.save(shippingOrder);
         // comments = "Courier:" + shipment.getCourier().getName() + ", TrackingId:" + shipment.getTrackingId() +
