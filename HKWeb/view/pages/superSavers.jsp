@@ -57,7 +57,5 @@
                 </s:link>
             </div>
         </c:forEach>
-
-        <img src='<hk:vhostImage/>/images/banners/Combo/banner01.jpg'/>
     </s:layout-component>
 </s:layout-render>

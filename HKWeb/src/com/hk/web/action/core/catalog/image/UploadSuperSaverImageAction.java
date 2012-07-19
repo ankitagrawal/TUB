@@ -77,7 +77,7 @@ public class UploadSuperSaverImageAction extends BaseAction {
                 Product product = productService.getProductById(imageFileName);
                 status = imageManager.uploadSuperSaverFile(imageFile, product, false);
                 addRedirectAlertMessage(new SimpleMessage(status.getMessage()));
-                return new ForwardResolution("/pages/manageSuperSaverImages.jsp");
+                return new ForwardResolution(UploadSuperSaverImageAction.class, "manageSuperSaverImages");
             } else {
                 addRedirectAlertMessage(new SimpleMessage("No combo exists with the specified id! Kindly enter a valid combo id."));
                 return new ForwardResolution("/pages/uploadSuperSaverImage.jsp");
@@ -104,6 +104,14 @@ public class UploadSuperSaverImageAction extends BaseAction {
                         if (!BaseUtils.remoteFileExists(linkValue)) {
                             logger.debug("image link " + linkValue + " invalid!");
                             addRedirectAlertMessage(new SimpleMessage("PLEASE ENTER LINK CORRECTLY .. " + linkValue + " DOES NOT EXIST"));
+                            return new ForwardResolution("/pages/manageSuperSaverImages.jsp");
+                        }
+                    }
+
+                    if (superSaverImage.isHidden() == Boolean.TRUE) {
+                        if (superSaverImage.isMainImage() == Boolean.TRUE) {
+                            logger.debug("main image cannot be set as hidden!");
+                            addRedirectAlertMessage(new SimpleMessage("MAIN IMAGE CANNOT BE SET AS HIDDEN!"));
                             return new ForwardResolution("/pages/manageSuperSaverImages.jsp");
                         }
                     }
