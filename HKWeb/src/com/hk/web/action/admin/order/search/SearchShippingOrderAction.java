@@ -64,7 +64,7 @@ public class SearchShippingOrderAction extends BasePaginatedAction {
 
       if (shippingOrderId != null || (!(StringUtils.isBlank(shippingOrderGatewayId)))) {
           shippingOrderSearchCriteria.setAwbList(null);
-      } else {
+      } else {                 //todo seema can be written in a better way
           List<Awb> awbList = awbService.getAwbInShipment(null, trackingId, null, null, EnumAwbStatus.Attach.getAsAwbStatus());
           awbList.addAll(awbService.getAwbInShipment(null, trackingId, null, null, EnumAwbStatus.Used.getAsAwbStatus()));
           if (awbList == null || awbList.size() == 0) {

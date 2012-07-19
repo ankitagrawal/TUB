@@ -27,6 +27,7 @@ public interface AwbService {
 
     public Awb save(Awb awb);
 
+    //todo seema why do we need this method?
     public List<Awb>  getAwbInShipment(Courier courier, String awbNumber, Warehouse warehouse, Boolean cod, AwbStatus awbStatus);
 
 

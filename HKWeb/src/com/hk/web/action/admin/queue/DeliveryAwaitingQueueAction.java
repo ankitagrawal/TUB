@@ -84,22 +84,13 @@ public class DeliveryAwaitingQueueAction extends BasePaginatedAction {
 
         List<Courier> courierList = new ArrayList<Courier>();
         List<Awb> awbList = new ArrayList<Awb>();
-        if (courier == null) {
-            courierList = getCourierService().getAllCouriers();
-        } else {
-            courierList.add(courier);
-        }
-        
-        if (trackingId != null) {
-            if (courier != null) {
-                awbList = awbService.getAwbInShipment(courier, trackingId, null, null, EnumAwbStatus.Used.getAsAwbStatus());
-                awbList.add(awbList.get(0));
-            } else {
-                for (Courier courier : courierList) {
-                    awbList = awbService.getAwbInShipment(courier, trackingId, null, null, EnumAwbStatus.Used.getAsAwbStatus());
-                }
-            }
 
+        if (trackingId != null) {
+            awbList = awbService.getAvailableAwbListForCourierByWarehouseCodStatus(courier, trackingId, null, null, EnumAwbStatus.Used.getAsAwbStatus());
+        } else if (courier != null) {
+            courierList.add(courier);
+        } else {
+            courierList = getCourierService().getAllCouriers();
         }
 
         ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
