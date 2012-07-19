@@ -186,7 +186,8 @@
                                 </s:select>
                             </td>
                             <td>
-                                    ${lineItem.trackingId}
+                                <%--TO DO deleted by seema--%>
+                                    <%--${lineItem.trackingId}--%>
                             </td>
                             <td>
                                     ${lineItem.courier.name}

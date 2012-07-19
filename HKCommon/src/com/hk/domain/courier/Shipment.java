@@ -49,8 +49,6 @@ public class Shipment implements java.io.Serializable, Comparable<Shipment> {
     @Column (name = "box_weight")
 	private Double boxWeight;
 
-	@Column (name = "tracking_id", length = 45)
-	private String trackingId;
 
 	@Temporal (TemporalType.TIMESTAMP)
 	@Column (name = "ship_date", length = 19)
@@ -127,14 +125,6 @@ public class Shipment implements java.io.Serializable, Comparable<Shipment> {
 
 	public void setBoxWeight(Double boxWeight) {
 		this.boxWeight = boxWeight;
-	}
-
-	public String getTrackingId() {
-		return trackingId;
-	}
-
-	public void setTrackingId(String trackingId) {
-		this.trackingId = trackingId;
 	}
 
 	public Date getShipDate() {

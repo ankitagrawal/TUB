@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.core.search.ShippingOrderSearchCriteria;
-import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.order.ShippingOrder;                                                                          
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Courier;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;

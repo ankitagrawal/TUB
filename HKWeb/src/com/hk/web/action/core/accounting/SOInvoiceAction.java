@@ -215,4 +215,11 @@ public class SOInvoiceAction extends BaseAction {
     this.freebieItem = freebieItem;
   }
 
+    public String getTrackingId() {
+        return trackingId;
+    }
+
+    public void setTrackingId(String trackingId) {
+        this.trackingId = trackingId;
+    }
 }
