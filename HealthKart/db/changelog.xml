@@ -7879,7 +7879,7 @@
     <changeSet author="Seema (generated)" id="1342274075684-5">
         <sql>
             update `shipment`
-            set `tracking_id` = null
+            set `tracking_id` = ''
             where `tracking_id` in(
             select v1.id from(
             (select st.tracking_id as id from `shipment` st
