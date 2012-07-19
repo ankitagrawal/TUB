@@ -178,7 +178,7 @@
           return false;
       }
     else {
-      alert("Thanks.. Your review is submitted successfully.It would appear shortly on Healthkart.com . Please note that all reviews are moderated for quality and relevance");
+      alert("Thanks!! Your review is submitted successfully. It would appear shortly on Healthkart.com. \n Please note that all reviews are moderated for quality and relevance");
     }
   });
 
