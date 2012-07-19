@@ -87,7 +87,7 @@ public class SupplierManagementAction extends BasePaginatedAction {
 
 
              String margin = supplier.getMargins();
-          final String DOUBLE_PATTERN = "^\\d+\\.?\\d+$";
+          final String DOUBLE_PATTERN = "^\\d+\\.?\\d*$";
           pattern = Pattern.compile(DOUBLE_PATTERN);
           boolean bool=pattern.matcher(margin).matches();
                 if(!bool)  getContext().getValidationErrors().add("e1", new SimpleError("Please Enter the Margins in percent"));
@@ -96,6 +96,11 @@ public class SupplierManagementAction extends BasePaginatedAction {
                   double d = Double.valueOf(supplier.getMargins().trim()).doubleValue();
                     if(d < 0 || d > 100)
                  getContext().getValidationErrors().add("e1", new SimpleError("Margins is in percentage and must be Enter within the Range(0 to 100)"));
+                    else if(bool){
+                       int x = margin.indexOf(".");
+                         if(x==(margin.length()-1))
+                            getContext().getValidationErrors().add("e1", new SimpleError("Please Enter the Margins in percent"));  
+                    }
                 }
       }
 
