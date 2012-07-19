@@ -22,9 +22,6 @@ import com.hk.domain.order.ShippingOrderLifecycle;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.domain.courier.Shipment;
-import com.hk.domain.courier.Awb;
-import com.hk.domain.courier.Courier;
 import com.hk.pact.dao.ReconciliationStatusDao;
 import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
 import com.hk.pact.service.UserService;
@@ -33,7 +30,7 @@ import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.service.ServiceLocatorFactory;
-import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+
 
 
 /**
@@ -54,8 +51,6 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     private ShippingOrderStatusService shippingOrderStatusService;
     @Autowired
     private ReconciliationStatusDao    reconciliationStatusDao;
-    @Autowired
-    ShipmentService shipmentService;
 
     private OrderService orderService;
     
