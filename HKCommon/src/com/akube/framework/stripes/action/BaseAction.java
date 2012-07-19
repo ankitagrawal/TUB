@@ -108,6 +108,10 @@ public class BaseAction implements ActionBean {
         response.addHeader("Cache-Control", "proxy-revalidate");
     }
 
+    protected boolean isSecureRequest() {
+        return getContext().getRequest().isSecure();
+    }
+
     public UserService getUserService() {
         return userService;
     }
@@ -136,5 +140,4 @@ public class BaseAction implements ActionBean {
         this.roleService = roleService;
     }
 
-    
 }

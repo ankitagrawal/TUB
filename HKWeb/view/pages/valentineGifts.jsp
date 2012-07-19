@@ -62,13 +62,13 @@ body {background:url(../images/valentine/bg_valentine.jpg) repeat #FFFFFF;}
       <tr>
         <td width="425"><table width="425" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td colspan="2"style="font-size:18px; font-weight:bold;"><a href="http://www.healthkart.com/product/absolute-ly-fabulous-v-day/VDAY1" class="product_link">Absolute(ly) Fabulous V-Day</a></td>
+            <td colspan="2"style="font-size:18px; font-weight:bold;"><a href="${pageContext.request.contextPath}/product/absolute-ly-fabulous-v-day/VDAY1" class="product_link">Absolute(ly) Fabulous V-Day</a></td>
             </tr>
           <tr>
             <td colspan="2" height="10"></td>
           </tr>
           <tr>
-            <td width="250"><a class='product_link' href="http://www.healthkart.com/product/absolute-ly-fabulous-v-day/VDAY1"><img src="${pageContext.request.contextPath}/images/valentine/valen_01.jpg" alt="Absolute(ly) Fabulous V-Day" width="250" height="250" border="0" /></a></td>
+            <td width="250"><a class='product_link' href="${pageContext.request.contextPath}/product/absolute-ly-fabulous-v-day/VDAY1"><img src="${pageContext.request.contextPath}/images/valentine/valen_01.jpg" alt="Absolute(ly) Fabulous V-Day" width="250" height="250" border="0" /></a></td>
             <td><table width="175" border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td style="color:#999999">MRP: <span style="text-decoration:line-through">Rs 3,100</span></td>
@@ -89,7 +89,7 @@ body {background:url(../images/valentine/bg_valentine.jpg) repeat #FFFFFF;}
     <td height="15"></td>
   </tr>
   <tr>
-    <td><a class="product_link" href="http://www.healthkart.com/product/absolute-ly-fabulous-v-day/VDAY1"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
+    <td><a class="product_link" href="${pageContext.request.contextPath}/product/absolute-ly-fabulous-v-day/VDAY1"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
   </tr>
 </table></td>
           </tr>
@@ -104,13 +104,13 @@ body {background:url(../images/valentine/bg_valentine.jpg) repeat #FFFFFF;}
         <td style="border-left:solid #ebebeb 1px">&nbsp;</td>
         <td width="425"><table width="425" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td colspan="2"style="font-size:18px; font-weight:bold;"><a href="http://www.healthkart.com/product/wine-of-love/VDAY14" class="product_link">Wine of Love </a></td>
+            <td colspan="2"style="font-size:18px; font-weight:bold;"><a href="${pageContext.request.contextPath}/product/wine-of-love/VDAY14" class="product_link">Wine of Love </a></td>
             </tr>
           <tr>
             <td colspan="2" height="10"></td>
           </tr>
           <tr>
-            <td width="250"><a  class='product_link' href="http://www.healthkart.com/product/wine-of-love/VDAY14"><img src="${pageContext.request.contextPath}/images/valentine/valen_02.jpg" alt="Wine of Love " width="250" height="250" border="0" /></a></td>
+            <td width="250"><a  class='product_link' href="${pageContext.request.contextPath}/product/wine-of-love/VDAY14"><img src="${pageContext.request.contextPath}/images/valentine/valen_02.jpg" alt="Wine of Love " width="250" height="250" border="0" /></a></td>
             <td><table width="175" border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td style="color:#999999">MRP: <span style="text-decoration:line-through">Rs 2,970</span></td>
@@ -131,7 +131,7 @@ body {background:url(../images/valentine/bg_valentine.jpg) repeat #FFFFFF;}
     <td height="15"></td>
   </tr>
   <tr>
-    <td><a class="product_link" href="http://www.healthkart.com/product/wine-of-love/VDAY14"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
+    <td><a class="product_link" href="${pageContext.request.contextPath}/product/wine-of-love/VDAY14"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
   </tr>
 </table></td>
           </tr>
@@ -159,13 +159,13 @@ body {background:url(../images/valentine/bg_valentine.jpg) repeat #FFFFFF;}
       <tr>
         <td width="425"><table width="425" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td colspan="2"style="font-size:18px; font-weight:bold;"><a href="http://www.healthkart.com/product/carlsbad-mineral-spring-spa-set/VDAY16" class="product_link">Carlsbad Mineral Spring Spa Set</a></td>
+            <td colspan="2"style="font-size:18px; font-weight:bold;"><a href="${pageContext.request.contextPath}/product/carlsbad-mineral-spring-spa-set/VDAY16" class="product_link">Carlsbad Mineral Spring Spa Set</a></td>
             </tr>
           <tr>
             <td colspan="2" height="10"></td>
           </tr>
           <tr>
-            <td width="250"><a  class='product_link' href="http://www.healthkart.com/product/carlsbad-mineral-spring-spa-set/VDAY16"><img src="${pageContext.request.contextPath}/images/valentine/valen_03.jpg" alt="Carlsbad Mineral Spring Spa Set " width="250" height="250" border="0" /></a></td>
+            <td width="250"><a  class='product_link' href="${pageContext.request.contextPath}/product/carlsbad-mineral-spring-spa-set/VDAY16"><img src="${pageContext.request.contextPath}/images/valentine/valen_03.jpg" alt="Carlsbad Mineral Spring Spa Set " width="250" height="250" border="0" /></a></td>
             <td><table width="175" border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td style="color:#999999">MRP: <span style="text-decoration:line-through">Rs 2,670 </span></td>
@@ -186,7 +186,7 @@ body {background:url(../images/valentine/bg_valentine.jpg) repeat #FFFFFF;}
     <td height="15"></td>
   </tr>
   <tr>
-    <td><a class="product_link" href="http://www.healthkart.com/product/carlsbad-mineral-spring-spa-set/VDAY16"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
+    <td><a class="product_link" href="${pageContext.request.contextPath}/product/carlsbad-mineral-spring-spa-set/VDAY16"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
   </tr>
 </table></td>
           </tr>
@@ -201,13 +201,13 @@ body {background:url(../images/valentine/bg_valentine.jpg) repeat #FFFFFF;}
         <td style="border-left:solid #ebebeb 1px">&nbsp;</td>
         <td width="425"><table width="425" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td colspan="2"style="font-size:18px; font-weight:bold;"><a href="http://www.healthkart.com/product/milano-look/BTY791" class="product_link">Milano Look</a></td>
+            <td colspan="2"style="font-size:18px; font-weight:bold;"><a href="${pageContext.request.contextPath}/product/milano-look/BTY791" class="product_link">Milano Look</a></td>
             </tr>
           <tr>
             <td colspan="2" height="10"></td>
           </tr>
           <tr>
-            <td width="250"><a  class='product_link' href="http://www.healthkart.com/product/milano-look/BTY791"><img src="${pageContext.request.contextPath}/images/valentine/valen_04.jpg" alt="Milano Look " width="250" height="250" border="0" /></a></td>
+            <td width="250"><a  class='product_link' href="${pageContext.request.contextPath}/product/milano-look/BTY791"><img src="${pageContext.request.contextPath}/images/valentine/valen_04.jpg" alt="Milano Look " width="250" height="250" border="0" /></a></td>
             <td><table width="175" border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td style="color:#999999">MRP: <span style="text-decoration:line-through">Rs 2815</span></td>
@@ -228,7 +228,7 @@ body {background:url(../images/valentine/bg_valentine.jpg) repeat #FFFFFF;}
     <td height="15"></td>
   </tr>
   <tr>
-    <td><a class="product_link" href="http://www.healthkart.com/product/milano-look/BTY791"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
+    <td><a class="product_link" href="${pageContext.request.contextPath}/product/milano-look/BTY791"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
   </tr>
 </table></td>
           </tr>
@@ -264,13 +264,13 @@ Enjoy the look and let the world stare!</td>
       <tr>
         <td width="425"><table width="425" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td colspan="2"style="font-size:18px; font-weight:bold;"><a href="http://www.healthkart.com/product/sensuous-v-day/VDAY11" class="product_link">Sensuous V Day </a></td>
+            <td colspan="2"style="font-size:18px; font-weight:bold;"><a href="${pageContext.request.contextPath}/product/sensuous-v-day/VDAY11" class="product_link">Sensuous V Day </a></td>
             </tr>
           <tr>
             <td colspan="2" height="10"></td>
           </tr>
           <tr>
-            <td width="250"><a  class='product_link' href="http://www.healthkart.com/product/sensuous-v-day/VDAY11"><img src="${pageContext.request.contextPath}/images/valentine/valen_05.jpg" alt="Sensuous V Day " width="250" height="250" border="0" /></a></td>
+            <td width="250"><a  class='product_link' href="${pageContext.request.contextPath}/product/sensuous-v-day/VDAY11"><img src="${pageContext.request.contextPath}/images/valentine/valen_05.jpg" alt="Sensuous V Day " width="250" height="250" border="0" /></a></td>
             <td><table width="175" border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td style="color:#999999">MRP: <span style="text-decoration:line-through">Rs 3890</span></td>
@@ -291,7 +291,7 @@ Enjoy the look and let the world stare!</td>
     <td height="15"></td>
   </tr>
   <tr>
-    <td><a class="product_link" href="http://www.healthkart.com/product/sensuous-v-day/VDAY11"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
+    <td><a class="product_link" href="${pageContext.request.contextPath}/product/sensuous-v-day/VDAY11"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
   </tr>
 </table></td>
           </tr>
@@ -306,13 +306,13 @@ Enjoy the look and let the world stare!</td>
         <td style="border-left:solid #ebebeb 1px">&nbsp;</td>
         <td width="425"><table width="425" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td colspan="2"style="font-size:18px; font-weight:bold;"><a href="http://www.healthkart.com/product/sea-minerals-for-a-sea-of-love/VDAY12" class="product_link">Sea Minerals for a Sea of Love</a></td>
+            <td colspan="2"style="font-size:18px; font-weight:bold;"><a href="${pageContext.request.contextPath}/product/sea-minerals-for-a-sea-of-love/VDAY12" class="product_link">Sea Minerals for a Sea of Love</a></td>
             </tr>
           <tr>
             <td colspan="2" height="10"></td>
           </tr>
           <tr>
-            <td width="250"><a  class='product_link' href="http://www.healthkart.com/product/sea-minerals-for-a-sea-of-love/VDAY12"><img src="${pageContext.request.contextPath}/images/valentine/valen_06.jpg" alt="Sea minerals for a sea of love" width="250" height="250" border="0" /></a></td>
+            <td width="250"><a  class='product_link' href="${pageContext.request.contextPath}/product/sea-minerals-for-a-sea-of-love/VDAY12"><img src="${pageContext.request.contextPath}/images/valentine/valen_06.jpg" alt="Sea minerals for a sea of love" width="250" height="250" border="0" /></a></td>
             <td><table width="175" border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td style="color:#999999">MRP: <span style="text-decoration:line-through">Rs  2,789  </span></td>
@@ -333,7 +333,7 @@ Enjoy the look and let the world stare!</td>
     <td height="15"></td>
   </tr>
   <tr>
-    <td><a class="product_link" href="http://www.healthkart.com/product/sea-minerals-for-a-sea-of-love/VDAY12"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
+    <td><a class="product_link" href="${pageContext.request.contextPath}/product/sea-minerals-for-a-sea-of-love/VDAY12"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
   </tr>
 </table></td>
           </tr>
@@ -359,13 +359,13 @@ Enjoy the look and let the world stare!</td>
       <tr>
         <td width="425"><table width="425" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td colspan="2"style="font-size:18px; font-weight:bold;"><a href="http://www.healthkart.com/product/fuel-of-love-on-your-face/VDAY17" class="product_link">Fuel of Love</a></td>
+            <td colspan="2"style="font-size:18px; font-weight:bold;"><a href="${pageContext.request.contextPath}/product/fuel-of-love-on-your-face/VDAY17" class="product_link">Fuel of Love</a></td>
             </tr>
           <tr>
             <td colspan="2" height="10"></td>
           </tr>
           <tr>
-            <td width="250"><a  class='product_link' href="http://www.healthkart.com/product/fuel-of-love-on-your-face/VDAY17"><img src="${pageContext.request.contextPath}/images/valentine/valen_07.jpg" alt="Fuel of Love" width="250" height="250" border="0" /></a></td>
+            <td width="250"><a  class='product_link' href="${pageContext.request.contextPath}/product/fuel-of-love-on-your-face/VDAY17"><img src="${pageContext.request.contextPath}/images/valentine/valen_07.jpg" alt="Fuel of Love" width="250" height="250" border="0" /></a></td>
             <td><table width="175" border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td style="color:#999999">MRP: <span style="text-decoration:line-through">Rs 3250</span></td>
@@ -386,7 +386,7 @@ Enjoy the look and let the world stare!</td>
     <td height="15"></td>
   </tr>
   <tr>
-    <td><a class="product_link" href="http://www.healthkart.com/product/fuel-of-love-on-your-face/VDAY17"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
+    <td><a class="product_link" href="${pageContext.request.contextPath}/product/fuel-of-love-on-your-face/VDAY17"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
   </tr>
 </table></td>
           </tr>
@@ -401,13 +401,13 @@ Enjoy the look and let the world stare!</td>
         <td style="border-left:solid #ebebeb 1px">&nbsp;</td>
         <td width="425"><table width="425" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td colspan="2"style="font-size:18px; font-weight:bold;"><a href="http://www.healthkart.com/product/for-you-goddess/VDAY4" class="product_link">For you, Goddess</a></td>
+            <td colspan="2"style="font-size:18px; font-weight:bold;"><a href="${pageContext.request.contextPath}/product/for-you-goddess/VDAY4" class="product_link">For you, Goddess</a></td>
             </tr>
           <tr>
             <td colspan="2" height="10"></td>
           </tr>
           <tr>
-            <td width="250"><a  class='product_link' href="http://www.healthkart.com/product/for-you-goddess/VDAY4"><img src="${pageContext.request.contextPath}/images/valentine/valen_08.jpg" alt="For you, Goddess " width="250" height="250" border="0" /></a></td>
+            <td width="250"><a  class='product_link' href="${pageContext.request.contextPath}/product/for-you-goddess/VDAY4"><img src="${pageContext.request.contextPath}/images/valentine/valen_08.jpg" alt="For you, Goddess " width="250" height="250" border="0" /></a></td>
             <td><table width="175" border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td style="color:#999999">MRP: <span style="text-decoration:line-through">Rs 1975</span></td>
@@ -428,7 +428,7 @@ Enjoy the look and let the world stare!</td>
     <td height="15"></td>
   </tr>
   <tr>
-    <td><a class="product_link" href="http://www.healthkart.com/product/for-you-goddess/VDAY4"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
+    <td><a class="product_link" href="${pageContext.request.contextPath}/product/for-you-goddess/VDAY4"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
   </tr>
 </table></td>
           </tr>
@@ -454,13 +454,13 @@ Enjoy the look and let the world stare!</td>
       <tr>
         <td width="425"><table width="425" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td colspan="2"style="font-size:18px; font-weight:bold;"><a href="http://www.healthkart.com/product/valentine-s-day-special-combo-face/VDAY6" class="product_link">Behold My Beautiful Angel</a></td>
+            <td colspan="2"style="font-size:18px; font-weight:bold;"><a href="${pageContext.request.contextPath}/product/valentine-s-day-special-combo-face/VDAY6" class="product_link">Behold My Beautiful Angel</a></td>
             </tr>
           <tr>
             <td colspan="2" height="10"></td>
           </tr>
           <tr>
-            <td width="250"><a  class='product_link' href="http://www.healthkart.com/product/valentine-s-day-special-combo-face/VDAY6"><img src="${pageContext.request.contextPath}/images/valentine/valen_09.jpg" alt="Behold My Beautiful Angel" width="250" height="250" border="0" /></a></td>
+            <td width="250"><a  class='product_link' href="${pageContext.request.contextPath}/product/valentine-s-day-special-combo-face/VDAY6"><img src="${pageContext.request.contextPath}/images/valentine/valen_09.jpg" alt="Behold My Beautiful Angel" width="250" height="250" border="0" /></a></td>
             <td><table width="175" border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td style="color:#999999">&nbsp;</td>
@@ -481,7 +481,7 @@ Enjoy the look and let the world stare!</td>
     <td height="15"></td>
   </tr>
   <tr>
-    <td><a class="product_link" href="http://www.healthkart.com/product/valentine-s-day-special-combo-face/VDAY6"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
+    <td><a class="product_link" href="${pageContext.request.contextPath}/product/valentine-s-day-special-combo-face/VDAY6"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
   </tr>
 </table></td>
           </tr>
@@ -498,11 +498,11 @@ Enjoy the look and let the world stare!</td>
           <tr>
             <td><table width="425" border="0" cellspacing="0" cellpadding="0">
               <tr>
-                <td width="150"><a class='product_link' href="http://www.healthkart.com/product/special-valentine-s-day-combo/EYE389"><img src="${pageContext.request.contextPath}/images/valentine/valen_15.jpg" alt="Special Valentine's Day Combo" width="150" height="150" border="0" /></a></td>
+                <td width="150"><a class='product_link' href="${pageContext.request.contextPath}/product/special-valentine-s-day-combo/EYE389"><img src="${pageContext.request.contextPath}/images/valentine/valen_15.jpg" alt="Special Valentine's Day Combo" width="150" height="150" border="0" /></a></td>
                 <td width="15"></td>
                 <td><table width="260" border="0" cellspacing="0" cellpadding="0">
                     <tr>
-                      <td style="font-size:18px; font-weight:bold;"><a href="http://www.healthkart.com/product/special-valentine-s-day-combo/EYE389" class="product_link">Special Valentine's Day Combo</a></td>
+                      <td style="font-size:18px; font-weight:bold;"><a href="${pageContext.request.contextPath}/product/special-valentine-s-day-combo/EYE389" class="product_link">Special Valentine's Day Combo</a></td>
       </tr>
       <tr>
                       <td height="15px"></td>
@@ -526,7 +526,7 @@ Enjoy the look and let the world stare!</td>
                       <td height="15"></td>
                     </tr>
                     <tr>
-                      <td><a class="product_link" href="http://www.healthkart.com/product/special-valentine-s-day-combo/EYE389"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
+                      <td><a class="product_link" href="${pageContext.request.contextPath}/product/special-valentine-s-day-combo/EYE389"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
                     </tr>
                 </table></td>
               </tr>
@@ -542,11 +542,11 @@ Enjoy the look and let the world stare!</td>
           <tr>
             <td><table width="425" border="0" cellspacing="0" cellpadding="0">
               <tr>
-                <td width="150"><a class='product_link' href="http://www.healthkart.com/product/valentine-mobility-combo/NUT880"><img src="${pageContext.request.contextPath}/images/valentine/valen_16.jpg" alt="Valentine Mobility Combo" width="150" height="150" border="0" /></a></td>
+                <td width="150"><a class='product_link' href="${pageContext.request.contextPath}/product/valentine-mobility-combo/NUT880"><img src="${pageContext.request.contextPath}/images/valentine/valen_16.jpg" alt="Valentine Mobility Combo" width="150" height="150" border="0" /></a></td>
                 <td width="15"></td>
                 <td><table width="260" border="0" cellspacing="0" cellpadding="0">
                     <tr>
-                      <td style="font-size:18px; font-weight:bold;"><a href="http://www.healthkart.com/product/valentine-mobility-combo/NUT880" class="product_link">Valentine Mobility Combo</a></td>
+                      <td style="font-size:18px; font-weight:bold;"><a href="${pageContext.request.contextPath}/product/valentine-mobility-combo/NUT880" class="product_link">Valentine Mobility Combo</a></td>
                     </tr>
                     <tr>
                       <td height="15px"></td>
@@ -570,7 +570,7 @@ Enjoy the look and let the world stare!</td>
                       <td height="15"></td>
                     </tr>
                     <tr>
-                      <td><a class="product_link" href="http://www.healthkart.com/product/valentine-mobility-combo/NUT880"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
+                      <td><a class="product_link" href="${pageContext.request.contextPath}/product/valentine-mobility-combo/NUT880"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
                     </tr>
                 </table></td>
               </tr>
@@ -603,13 +603,13 @@ Enjoy the look and let the world stare!</td>
       <tr>
         <td width="425"><table width="425" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td colspan="2"style="font-size:18px; font-weight:bold;"><a href="http://www.healthkart.com/product/love-triangle-combo/VDAY10" class="product_link">Love Triangle Combo</a></td>
+            <td colspan="2"style="font-size:18px; font-weight:bold;"><a href="${pageContext.request.contextPath}/product/love-triangle-combo/VDAY10" class="product_link">Love Triangle Combo</a></td>
             </tr>
           <tr>
             <td colspan="2" height="10"></td>
           </tr>
           <tr>
-            <td width="250"><a  class='product_link' href="http://www.healthkart.com/product/love-triangle-combo/VDAY10"><img src="${pageContext.request.contextPath}/images/valentine/valen_10.jpg" alt="Love Triangle combo " width="250" height="250" border="0" /></a></td>
+            <td width="250"><a  class='product_link' href="${pageContext.request.contextPath}/product/love-triangle-combo/VDAY10"><img src="${pageContext.request.contextPath}/images/valentine/valen_10.jpg" alt="Love Triangle combo " width="250" height="250" border="0" /></a></td>
             <td><table width="175" border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td style="color:#999999">MRP: <span style="text-decoration:line-through">Rs 2580</span></td>
@@ -630,7 +630,7 @@ Enjoy the look and let the world stare!</td>
     <td height="15"></td>
   </tr>
   <tr>
-    <td><a class="product_link" href="http://www.healthkart.com/product/love-triangle-combo/VDAY10"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
+    <td><a class="product_link" href="${pageContext.request.contextPath}/product/love-triangle-combo/VDAY10"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
   </tr>
 </table></td>
           </tr>
@@ -645,13 +645,13 @@ Enjoy the look and let the world stare!</td>
         <td style="border-left:solid #ebebeb 1px">&nbsp;</td>
         <td width="425"><table width="425" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td colspan="2"style="font-size:18px; font-weight:bold;"><a href="http://www.healthkart.com/product/for-him-with-love/VDAY2" class="product_link">For Him, with Love</a></td>
+            <td colspan="2"style="font-size:18px; font-weight:bold;"><a href="${pageContext.request.contextPath}/product/for-him-with-love/VDAY2" class="product_link">For Him, with Love</a></td>
             </tr>
           <tr>
             <td colspan="2" height="10"></td>
           </tr>
           <tr>
-            <td width="250"><a  class='product_link' href="http://www.healthkart.com/product/for-him-with-love/VDAY2"><img src="${pageContext.request.contextPath}/images/valentine/valen_11.jpg" alt="For Him, with Love " width="250" height="250" border="0" /></a></td>
+            <td width="250"><a  class='product_link' href="${pageContext.request.contextPath}/product/for-him-with-love/VDAY2"><img src="${pageContext.request.contextPath}/images/valentine/valen_11.jpg" alt="For Him, with Love " width="250" height="250" border="0" /></a></td>
             <td><table width="175" border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td style="color:#999999">MRP: <span style="text-decoration:line-through">Rs 3895</span></td>
@@ -672,7 +672,7 @@ Enjoy the look and let the world stare!</td>
     <td height="15"></td>
   </tr>
   <tr>
-    <td><a class="product_link" href="http://www.healthkart.com/product/for-him-with-love/VDAY2"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" alt="For him with love" width="105" height="28" border="0" /></a></td>
+    <td><a class="product_link" href="${pageContext.request.contextPath}/product/for-him-with-love/VDAY2"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" alt="For him with love" width="105" height="28" border="0" /></a></td>
   </tr>
 </table></td>
           </tr>
@@ -698,13 +698,13 @@ Enjoy the look and let the world stare!</td>
       <tr>
         <td width="425"><table width="425" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td colspan="2"style="font-size:18px; font-weight:bold;"><a href="http://www.healthkart.com/product/valentine-mojito-s-anyone%3F/VDAY15" class="product_link">Valentine Mojito's Anyone</a></td>
+            <td colspan="2"style="font-size:18px; font-weight:bold;"><a href="${pageContext.request.contextPath}/product/valentine-mojito-s-anyone%3F/VDAY15" class="product_link">Valentine Mojito's Anyone</a></td>
             </tr>
           <tr>
             <td colspan="2" height="10"></td>
           </tr>
           <tr>
-            <td width="250"><a  class='product_link' href="http://www.healthkart.com/product/valentine-mojito-s-anyone%3F/VDAY15"><img src="${pageContext.request.contextPath}/images/valentine/valen_12.jpg" alt="Valentine Mojito's Anyone? " width="250" height="250" border="0" /></a></td>
+            <td width="250"><a  class='product_link' href="${pageContext.request.contextPath}/product/valentine-mojito-s-anyone%3F/VDAY15"><img src="${pageContext.request.contextPath}/images/valentine/valen_12.jpg" alt="Valentine Mojito's Anyone? " width="250" height="250" border="0" /></a></td>
             <td><table width="175" border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td style="color:#999999">MRP: <span style="text-decoration:line-through">Rs 2100</span></td>
@@ -725,7 +725,7 @@ Enjoy the look and let the world stare!</td>
     <td height="15"></td>
   </tr>
   <tr>
-    <td><a class="product_link" href="http://www.healthkart.com/product/valentine-mojito-s-anyone%3F/VDAY15"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
+    <td><a class="product_link" href="${pageContext.request.contextPath}/product/valentine-mojito-s-anyone%3F/VDAY15"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
   </tr>
 </table></td>
           </tr>
@@ -742,11 +742,11 @@ Enjoy the look and let the world stare!</td>
           <tr>
             <td><table width="425" border="0" cellspacing="0" cellpadding="0">
               <tr>
-                <td width="150"><a class='product_link' href="http://www.healthkart.com/product/valentine-slim-combo/NUT883"><img src="${pageContext.request.contextPath}/images/valentine/valen_13.jpg" alt="Valentine Slim Combo" width="150" height="150" border="0" /></a></td>
+                <td width="150"><a class='product_link' href="${pageContext.request.contextPath}/product/valentine-slim-combo/NUT883"><img src="${pageContext.request.contextPath}/images/valentine/valen_13.jpg" alt="Valentine Slim Combo" width="150" height="150" border="0" /></a></td>
                 <td width="15"></td>
                 <td><table width="260" border="0" cellspacing="0" cellpadding="0">
                     <tr>
-                      <td style="font-size:18px; font-weight:bold;"><a href="http://www.healthkart.com/product/valentine-slim-combo/NUT883" class="product_link">Valentine Slim Combo</a></td>
+                      <td style="font-size:18px; font-weight:bold;"><a href="${pageContext.request.contextPath}/product/valentine-slim-combo/NUT883" class="product_link">Valentine Slim Combo</a></td>
       </tr>
       <tr>
                       <td height="15px"></td>
@@ -770,7 +770,7 @@ Enjoy the look and let the world stare!</td>
                       <td height="15"></td>
                     </tr>
                     <tr>
-                      <td><a class="product_link" href="http://www.healthkart.com/product/valentine-slim-combo/NUT883"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
+                      <td><a class="product_link" href="${pageContext.request.contextPath}/product/valentine-slim-combo/NUT883"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
                     </tr>
                 </table></td>
               </tr>
@@ -786,11 +786,11 @@ Enjoy the look and let the world stare!</td>
           <tr>
             <td><table width="425" border="0" cellspacing="0" cellpadding="0">
               <tr>
-                <td width="150"><a class='product_link' href="http://www.healthkart.com/product/smart-valentine-combo/NUT882"><img src="${pageContext.request.contextPath}/images/valentine/valen_14.jpg" alt="Smart Valentine Combo" width="150" height="150" border="0" /></a></td>
+                <td width="150"><a class='product_link' href="${pageContext.request.contextPath}/product/smart-valentine-combo/NUT882"><img src="${pageContext.request.contextPath}/images/valentine/valen_14.jpg" alt="Smart Valentine Combo" width="150" height="150" border="0" /></a></td>
                 <td width="15"></td>
                 <td><table width="260" border="0" cellspacing="0" cellpadding="0">
                     <tr>
-                      <td style="font-size:18px; font-weight:bold;"><a href="http://www.healthkart.com/product/smart-valentine-combo/NUT882" class="product_link">Smart Valentine Combo</a></td>
+                      <td style="font-size:18px; font-weight:bold;"><a href="${pageContext.request.contextPath}/product/smart-valentine-combo/NUT882" class="product_link">Smart Valentine Combo</a></td>
                     </tr>
                     <tr>
                       <td height="15px"></td>
@@ -814,7 +814,7 @@ Enjoy the look and let the world stare!</td>
                       <td height="15"></td>
                     </tr>
                     <tr>
-                      <td><a class="product_link" href="http://www.healthkart.com/product/smart-valentine-combo/NUT882"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
+                      <td><a class="product_link" href="${pageContext.request.contextPath}/product/smart-valentine-combo/NUT882"><img src="${pageContext.request.contextPath}/images/valentine/buy_now.jpg" width="105" height="28" border="0" /></a></td>
                     </tr>
                 </table></td>
               </tr>
@@ -831,7 +831,7 @@ Enjoy the look and let the world stare!</td>
         <td colspan="4" height="20">&nbsp;</td>
         </tr>
       <tr>
-        <td colspan="4" height="20"><a class="product_link" style="font-size:15px" href="http://www.healthkart.com/beauty/what-s-new/gift-ideas">For more gift options click here >></a></td>
+        <td colspan="4" height="20"><a class="product_link" style="font-size:15px" href="${pageContext.request.contextPath}/beauty/what-s-new/gift-ideas">For more gift options click here >></a></td>
       </tr>
       <tr>
         <td colspan="4" height="20">&nbsp;</td>

@@ -34,7 +34,7 @@
           <div class="round-cont" style="width:610px;margin-top: 20px;">
             <div class="hk_banner" style="margin-left:200px; height:auto;">
               <div>
-                <a href="http://www.healthkart.com/product/${product.slug}/${product.id}?affid=${affiliate.code}"
+                <a href="${pageContext.request.contextPath}/product/${product.slug}/${product.id}?affid=${affiliate.code}"
                    title="${product.name}" target="_blank">
                   <c:choose>
                     <c:when test="${product.mainImageId != null}">
@@ -49,9 +49,9 @@
                 </a>
               </div>
               <div>
-                <a href="http://www.healthkart.com/product/${product.slug}/${product.id}?affid=${affiliate.code}"
+                <a href="${pageContext.request.contextPath}/product/${product.slug}/${product.id}?affid=${affiliate.code}"
                    title="${product.name}" target="_blank">${product.name}</a>
-                <a href="http://www.healthkart.com/product/${product.slug}/${product.id}?affid=${affiliate.code}"
+                <a href="${pageContext.request.contextPath}/product/${product.slug}/${product.id}?affid=${affiliate.code}"
                    title="${product.name}" target="_blank">
                   <div class='prices' style="font-size: 12px;margin-left:10px;margin-bottom:5px">
                     <div class='cut' style="font-size: 12px;">
@@ -75,7 +75,7 @@
                     </div>
                   </div>
                 </a>
-                <a href="http://www.healthkart.com/product/${product.slug}/${product.id}?affid=${affiliate.code}"
+                <a href="${pageContext.request.contextPath}/product/${product.slug}/${product.id}?affid=${affiliate.code}"
                    target='_blank' target="_blank"><img
                     src="${pageContext.request.contextPath}/images/icons/buy_button_1.png"
                     alt="Buy from HealthKart"/></a>
@@ -93,7 +93,7 @@
                         name="productBannerTextArea" rows="3" cols="65"
                         style="text-align:left; margin-top:20px;height:auto;">
                 <iframe
-                    src="http://www.healthkart.com/product?productBanner=&product=${product.id}&affid=${affiliate.code}"
+                    src="${pageContext.request.contextPath}/product?productBanner=&product=${product.id}&affid=${affiliate.code}"
                     width="180" height="325" scrolling="no"></iframe>
               </textarea>
 
@@ -102,7 +102,7 @@
                 <%--name="productBannerTextArea" rows="3" cols="50"--%>
                 <%--style="margin-top:20px;height:80px;word-wrap:normal;white-space:pre-wrap;">--%>
                 <%--<iframe--%>
-                <%--src="http://www.healthkart.com/product?productBanner=&product=${product.id}&affid=${affiliate.code}"--%>
+                <%--src="${pageContext.request.contextPath}/product?productBanner=&product=${product.id}&affid=${affiliate.code}"--%>
                 <%--width="180" height="325" scrolling="no"></iframe>--%>
                 <%--</textarea>--%>
             </div>
