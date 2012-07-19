@@ -53,7 +53,9 @@
           <span class="question"> Keyword String</span>
           <s:text name="faq.keywords" value="${faqBean.faq.keywords}"
                   style="width: 25em; margin-top:5px;"/>
+          <br/>
           <s:submit name="saveFaq" value="Save"/>
+          <s:submit name="deleteFaq" value="Delete Faq"/>
       </s:form>
 
   </body>

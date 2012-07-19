@@ -62,7 +62,7 @@ public class FaqAction extends BaseAction {
         else{
             addRedirectAlertMessage(new SimpleMessage("Unable to insert faq, please contact admin."));
         }
-        return new RedirectResolution("/pages/faq/faq.jsp");
+        return new RedirectResolution(FaqAction.class);
     }
 
     public Resolution searchFaq(){
@@ -72,8 +72,12 @@ public class FaqAction extends BaseAction {
 
     public Resolution saveFaq(){
         faqService.save(faq);
-        addRedirectAlertMessage(new SimpleMessage("FAQ saved."));
-        return new RedirectResolution("/pages/faq/faq.jsp");
+        return new ForwardResolution("/pages/close.jsp");
+    }
+
+     public Resolution deleteFaq(){
+        Boolean status = faqService.deleteFaq(faq);
+        return new ForwardResolution("/pages/close.jsp");
     }
 
     public Resolution editFaq(){

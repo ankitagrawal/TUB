@@ -17,10 +17,12 @@
 
       .faq-question {
         font-size: 1.1em;
+        margin-bottom: 0px;
       }
 
       .faq-answer {
-        font-size: 1em;
+        font-size: 10px;
+        margin-left: 12px;
       }
 
       .question-textarea {
@@ -33,6 +35,9 @@
       .highlight-text {
         background-color: #FFFF88;
       }
+
+     
+
     </style>
     <script>
       $(document).ready(function() {
@@ -85,16 +90,16 @@
   </s:layout-component>
 
   <s:layout-component name="content">
-    <div class="grid_24">
 
-    <fieldset class="right_label">
-      <s:form beanclass="com.hk.web.action.faq.FaqAction">
-        <label>Search FAQs</label>
-        &nbsp;&nbsp;&nbsp;
-        <s:text name="searchString" id="search-string" style="width:30em; margin-top: 10px"/>
-        <s:submit name="searchFaq" value="Search" style="float:right; margin-right: 200px;"/>
-      </s:form>
-    </fieldset>
+      <img src="<%=request.getContextPath()%>/images/faq/faq_nutrition.jpg" style="width: 100%; border-color:#E3E7E8; border-top-width:10px;"/>
+      <fieldset class="right_label">
+        <s:form beanclass="com.hk.web.action.faq.FaqAction">
+          <label style="margin-left: 100px; ">Search FAQs</label>
+          &nbsp;&nbsp;&nbsp;
+          <s:text name="searchString" id="search-string" style="width:30em; margin-top: 16px; padding-top:10px"/>
+          <s:submit name="searchFaq" value="Search" style="float:right; margin-right:115px; margin-top:15px; padding-top:3px;"/>
+        </s:form>
+      </fieldset>
     <br/>
 
     <%--<h1 id="top">FAQs: Weight Management</h1>--%>
@@ -146,19 +151,12 @@
 
     <h4>${faqBean.primaryCategory}</h4>
 
-    <fieldset id="faq-area">
+    <div id="faq-area">
       <c:forEach items="${faqBean.faqList}" var="faq" varStatus="faqctr">
         <fieldset class="faq">
 
           <p class="faq-question" style="margin-top:10px;"><strong>Q. </strong>
               ${faq.question}
-          </p>
-
-          <p class="faq-answer">
-            <strong>A. </strong>
-          <fieldset class="faq-answer">${faq.answer}</fieldset>
-          </p>
-
           <shiro:hasRole name="<%=RoleConstants.ADMIN%>">
             <s:link beanclass="com.hk.web.action.faq.FaqAction"
                     event="editFaq"
@@ -168,12 +166,16 @@
               <s:param name="faq" value="${faq.id}"/>
             </s:link>
           </shiro:hasRole>
+          </p>
 
-
+         <%-- <p class="faq-answer">
+            <strong>A. </strong>--%>
+          <div class="faq-answer">${faq.answer}</div>
+          <%--</p>--%>
         </fieldset>
       </c:forEach>
 
-    </fieldset>
+    </div>
 
 
   </s:layout-component>

@@ -20,4 +20,8 @@ public interface FaqService {
     public List<Faq> searchFaq(String keywords);
 
     public Faq save(Faq faq);
+
+    public Faq getFaqById(Long id);
+
+    public boolean deleteFaq(Faq faq);
 }

@@ -68,6 +68,21 @@ public class FaqServiceImpl implements FaqService{
         return faqList;
     }
 
+
+    public Faq getFaqById(Long id){
+        return getFaqDao().get(Faq.class, id);
+    }
+
+    public boolean deleteFaq(Faq faq){
+        try{
+            getFaqDao().delete(faq);
+            return true;
+        }catch(Exception e){
+            logger.debug("unable to delete FAQ", e);
+        }
+        return false;
+    }
+
     public FaqDao getFaqDao() {
         return faqDao;
     }
