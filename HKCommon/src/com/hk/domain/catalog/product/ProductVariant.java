@@ -102,8 +102,7 @@ public class ProductVariant implements java.io.Serializable {
   private Double weight;
 
   @Column(name = "upc")
-  private String upc;                                                       // Universal Product
-  // Code
+  private String upc;    // Universal Product Code
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "affiliate_category_name")
@@ -162,6 +161,12 @@ public class ProductVariant implements java.io.Serializable {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "free_product_variant_id", nullable = true)
   private ProductVariant freeProductVariant;
+
+  @Column(name = "supplier_code")
+  private String supplierCode;
+
+  @Column(name = "other_remark")
+  private String otherRemark;  
 
   public List<ProductImage> getProductImages() {
     return productImages;
@@ -662,4 +667,19 @@ public class ProductVariant implements java.io.Serializable {
     this.freeProductVariant = freeProductVariant;
   }
 
+	public String getSupplierCode() {
+		return supplierCode;
+	}
+
+	public void setSupplierCode(String supplierCode) {
+		this.supplierCode = supplierCode;
+	}
+
+	public String getOtherRemark() {
+		return otherRemark;
+	}
+
+	public void setOtherRemark(String otherRemark) {
+		this.otherRemark = otherRemark;
+	}
 }

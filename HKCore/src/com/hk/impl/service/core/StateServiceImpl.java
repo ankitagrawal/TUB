@@ -6,6 +6,8 @@ import com.hk.domain.core.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created by IntelliJ IDEA.
  * User:User
@@ -21,6 +23,11 @@ public class StateServiceImpl implements StateService {
 
   public State getStateByName(String name){
     return stateDao.getStateByName(name);
+  }
+
+  public List<State> getAllStates(){
+   return  stateDao.getAll(State.class);
+
   }
 
 }

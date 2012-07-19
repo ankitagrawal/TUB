@@ -79,10 +79,11 @@
       <c:if test="${printPickBean.category != null}">
         Showing Orders for Category: <strong>${printPickBean.category.displayName}</strong>
       </c:if>
+	    <s:link beanclass="com.hk.web.action.admin.inventory.BrandsToAuditAction" style="float:right;">Brands to Exclude/Audit</s:link>
     </div>
     <div align="center">
       <s:form beanclass="com.hk.web.action.admin.queue.ChooseOrdersForPrintPickAction" method="get" autocomplete="false">
-        <label width="5" style="font-weight:bold;color:red;font-size:1.2em">Brand To Restrict:</label><s:text name="brand" class="brand" />
+        <%--<label width="5" style="font-weight:bold;color:red;font-size:1.2em">Brand To Restrict:</label><s:text name="brand" class="brand" />--%>
         Category
         <s:select name="category" value="${printPickBean.category.name}">
           <c:forEach items="${categoryList}" var="category">
