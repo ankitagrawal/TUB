@@ -19,8 +19,7 @@ import com.hk.domain.order.ShippingOrderStatus;
  */
 public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
 
-//    private String                                   trackingId;
-    private Awb awb;
+    private List<Awb>                                awbList;
     private List<Courier>                            courierList;
     private Long                                     warehouseId;
     private boolean                                  isServiceOrder = false;
@@ -64,14 +63,9 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
         this.activityEndDate = activityEndDate;
         return this;
     }
-//
-//    public ShippingOrderSearchCriteria setTrackingId(String trackingId) {
-//        this.trackingId = trackingId;
-//        return this;
-//    }
 
-      public ShippingOrderSearchCriteria setAwb(Awb awb) {
-        this.awb = awb;
+      public ShippingOrderSearchCriteria setAwbList(List<Awb> awbList) {
+        this.awbList = awbList;
         return this;
     }
 
@@ -127,12 +121,12 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
         }
 
         DetachedCriteria shipmentCriteria = null;
-        if (awb != null && awb.getAwbNumber() != null) {
+        if (awbList != null && awbList.size() >0) {
 
             if (shipmentCriteria == null) {
                 shipmentCriteria = criteria.createCriteria("shipment");
             }
-            shipmentCriteria.add(Restrictions.eq("awb", awb));
+            shipmentCriteria.add(Restrictions.eq("awbList", awbList));
         }
 
         if (courierList != null && !courierList.isEmpty()) {

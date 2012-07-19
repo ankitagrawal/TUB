@@ -5,10 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.DontValidate;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.SimpleError;
 import net.sourceforge.stripes.validation.ValidationMethod;
 
@@ -18,10 +15,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.courier.Awb;
+import com.hk.domain.courier.Courier;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.constants.courier.EnumAwbStatus;
@@ -29,11 +28,12 @@ import com.hk.constants.courier.EnumAwbStatus;
 @Component
 public class SearchShippingOrderAction extends BasePaginatedAction {
 
-  private static Logger logger = LoggerFactory.getLogger(SearchShippingOrderAction.class);
+  private static Logger logger = LoggerFactory.getLogger(SearchShippingOrderAction.class);                  
 
   private String shippingOrderGatewayId;
   private Long shippingOrderId;
   private String trackingId;
+  private Courier courier=null;
   private List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>();
 
   @Autowired
@@ -63,13 +63,16 @@ public class SearchShippingOrderAction extends BasePaginatedAction {
       //multiple awb can be there. so we should return as a list.change shippingordersearchcriteria attribut awb to awb list.
 
       if (shippingOrderId != null || (!(StringUtils.isBlank(shippingOrderGatewayId)))) {
-          shippingOrderSearchCriteria.setAwb(null);
+          shippingOrderSearchCriteria.setAwbList(null);
       } else {
-          //todo seema ask courier also
-          List<Awb> awbList = awbService.getAvailableAwbListForCourierByWarehouseCodStatus(null, trackingId, null, null, EnumAwbStatus.Unused.getAsAwbStatus());
-          if (awbList == null || awbList.size() < 1) {
-              shippingOrderSearchCriteria.setAwb(awbList.get(0));
+          List<Awb> awbList = awbService.getAwbInShipment(null, trackingId, null, null, EnumAwbStatus.Attach.getAsAwbStatus());
+          awbList.addAll(awbService.getAwbInShipment(null, trackingId, null, null, EnumAwbStatus.Used.getAsAwbStatus()));
+          if (awbList == null || awbList.size() == 0) {
+              addRedirectAlertMessage(new SimpleMessage("Wrong Tracking Id"));
+          } else {
+              shippingOrderSearchCriteria.setAwbList(awbList);
           }
+
       }
 
       shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, false);
@@ -131,4 +134,12 @@ public class SearchShippingOrderAction extends BasePaginatedAction {
   public void setShippingOrderId(Long shippingOrderId) {
     this.shippingOrderId = shippingOrderId;
   }
+
+    public Courier getCourier() {
+        return courier;
+    }
+
+    public void setCourier(Courier courier) {
+        this.courier = courier;
+    }
 }

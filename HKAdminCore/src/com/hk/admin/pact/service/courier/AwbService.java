@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
- * User:User
+ * User:Seema
  * Date: Jul 13, 2012
  * Time: 10:55:34 AM
  * To change this template use File | Settings | File Templates.
@@ -26,6 +26,8 @@ public interface AwbService {
     public Awb getAvailableAwbForCourierByWarehouseCodStatus(Courier courier, String awbNumber, Warehouse warehouse, Boolean cod, AwbStatus awbStatus);
 
     public Awb save(Awb awb);
+
+    public List<Awb>  getAwbInShipment(Courier courier, String awbNumber, Warehouse warehouse, Boolean cod, AwbStatus awbStatus);
 
 
 }

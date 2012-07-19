@@ -38,6 +38,7 @@ import com.hk.admin.util.CourierStatusUpdateHelper;
 import com.hk.constants.report.ReportConstants;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.courier.CourierConstants;
+import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.courier.Awb;
@@ -126,7 +127,8 @@ public class DeliveryStatusUpdateManager {
                     shippingOrder = getShippingOrderService().findByGatewayOrderId(gatewayOrderIdInXls);
                 } else {
 //                    yet to verify
-//                    shippingOrder = getShippingOrderService().findByTrackingId(awb);
+//                    Awb awb= awbService.getAwbInShipment(courier,trackingId,null,null, EnumAwbStatus.Used.getAsAwbStatus());
+                    shippingOrder = shipmentService.findByAwb(null).getShippingOrder();
                 }
                 if (shippingOrder == null) {
                     messagePostUpdation += "Shipping order not found corresponding to the Ref No. @Row No." + (rowCount + 1) + "<br/>";
