@@ -131,12 +131,13 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
         }
     }
 
-    public SkuGroup createSkuGroup(String batch, Date mfgDate, Date expiryDate, GoodsReceivedNote goodsReceivedNote, ReconciliationVoucher reconciliationVoucher,
-            StockTransfer stockTransfer, Sku sku) {
+    public SkuGroup createSkuGroup(String batch, Date mfgDate, Date expiryDate, Double costPrice, Double mrp, GoodsReceivedNote goodsReceivedNote, ReconciliationVoucher reconciliationVoucher, StockTransfer stockTransfer, Sku sku) {
         SkuGroup skuGroup = new SkuGroup();
         skuGroup.setBatchNumber(batch);
         skuGroup.setMfgDate(mfgDate);
         skuGroup.setExpiryDate(expiryDate);
+        skuGroup.setCostPrice(costPrice);
+        skuGroup.setMrp(mrp);
         skuGroup.setGoodsReceivedNote(goodsReceivedNote);
         skuGroup.setReconciliationVoucher(reconciliationVoucher);
         skuGroup.setStockTransfer(stockTransfer);

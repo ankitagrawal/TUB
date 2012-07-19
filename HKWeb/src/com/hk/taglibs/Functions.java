@@ -320,13 +320,13 @@ public class Functions {
         return userManager.getProcessedOrdersCount(user);
     }
 
-    public static String getS3ImageUrl(Object o1, Object o2) {
+    public static String getS3ImageUrl(Object o1, Object o2,boolean isSecure) {
         EnumImageSize imageSize = (EnumImageSize) o1;
         Long imageId = (Long) o2;
         if (imageId == null) {
             return "";
         }
-        return HKImageUtils.getS3ImageUrl(imageSize, imageId);
+        return HKImageUtils.getS3ImageUrl(imageSize, imageId,isSecure);
     }
 
     public static Boolean isFreeVariant(Object o) {
@@ -449,10 +449,15 @@ public class Functions {
         return skuDao.filterProductVariantsByWarehouse(sku.getProductVariant().getProduct().getProductVariants(), sku.getWarehouse());
     }
 
-  public static boolean isComboInStock(Object o) {
+    public static boolean isComboInStock(Object o) {
         ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
         Combo combo = (Combo) o;
         return productService.isComboInStock(combo);
     }
 
+    public static Map<String, List<String>> getRecommendedProducts(Object o) {
+        Product product = (Product)o;
+        ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
+        return productService.getRelatedMoogaProducts(product);
+    }
 }

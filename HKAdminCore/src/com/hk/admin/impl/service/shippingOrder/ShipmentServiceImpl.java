@@ -2,6 +2,7 @@ package com.hk.admin.impl.service.shippingOrder;
 
 import com.hk.admin.engine.ShipmentPricingEngine;
 import com.hk.admin.pact.dao.courier.AwbDao;
+import com.hk.admin.pact.dao.shipment.ShipmentDao;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.pact.service.courier.CourierService;
@@ -16,19 +17,15 @@ import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
-import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.courier.PincodeDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.List;
 
 @Service
 public class ShipmentServiceImpl implements ShipmentService {
 
-    @Autowired
-    private BaseDao baseDao;
     @Autowired
     CourierService courierService;
     @Autowired
@@ -41,6 +38,8 @@ public class ShipmentServiceImpl implements ShipmentService {
     ShipmentPricingEngine shipmentPricingEngine;
     @Autowired
     AwbService awbService;
+    @Autowired
+    ShipmentDao shipmentDao;
 
     public Shipment createShipment(ShippingOrder shippingOrder) {                 //todo handle null checks
         Shipment shipment = new Shipment();
@@ -75,32 +74,27 @@ public class ShipmentServiceImpl implements ShipmentService {
 
     public Shipment saveShipmentDate(Shipment shipment) {
         shipment.setShipDate(new Date());
-        return (Shipment) getBaseDao().save(shipment);
+        return save(shipment);
     }
 
     public Shipment save(Shipment shipment) {
-        return (Shipment) getBaseDao().save(shipment);
+        return (Shipment) shipmentDao.save(shipment);
     }
 
-    public BaseDao getBaseDao() {
-        return baseDao;
-    }
-
-    public void setBaseDao(BaseDao baseDao) {
-        this.baseDao = baseDao;
-    }
-
-    public boolean attachAwbToShipment(Courier courier, ShippingOrder shippingOrder) {
+    public Awb attachAwbToShipment(Courier courier, ShippingOrder shippingOrder) {
         Shipment shipment = shippingOrder.getShipment();
-        List<Awb> suggestedAwbList = awbService.getAvailableAwbListForCourierByWarehouseCodStatus(courier, null, shippingOrder.getWarehouse(), shippingOrder.isCOD(), EnumAwbStatus.Unused.getAsAwbStatus());
-        if (suggestedAwbList != null && suggestedAwbList.size() > 0) {
-            Awb suggestedAwb = suggestedAwbList.get(0);
-            shipment.setAwb(suggestedAwb);
+        Awb suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(courier, null, shippingOrder.getWarehouse(), shippingOrder.isCOD(), EnumAwbStatus.Unused.getAsAwbStatus());
+        if (suggestedAwb != null) {
             AwbStatus awbStatus = EnumAwbStatus.Attach.getAsAwbStatus();
             suggestedAwb.setAwbStatus(awbStatus);
-            return true;
+            awbService.save(suggestedAwb);
+            shipment.setAwb(suggestedAwb);
+            return suggestedAwb;
         }
-        return false;
+        return null;
     }
 
+    public Shipment findByAwb(Awb awb) {
+        return shipmentDao.findByAwb(awb);
+    }
 }

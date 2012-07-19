@@ -416,11 +416,15 @@
         </div>
         <div class="clear"></div>
         <div class="floatleft">
-            Tracking Id: <strong>${shipment.trackingId}</strong>
+	        Tracking Id: <strong>${shipment.trackingId}</strong>
         </div>
         <div class="clear"></div>
         <div class="floatleft">
             Size: ${shipment.boxSize}, Weight: ${shipment.boxWeight}
+        </div>
+        <div class="clear"></div>
+	    <div class="floatleft">
+            Picker: ${shipment.picker}, Packer: ${shipment.packer}
         </div>
         <div class="clear"></div>
     </td>

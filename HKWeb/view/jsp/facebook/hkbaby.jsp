@@ -149,7 +149,7 @@ function getGrowthStatus(){
 </div>
 <br></br>
 <div id="promo" style="display: none;">
-<font style='font-size: 14px'>Receive 100 Rs cash discount @ <a class='link' target="_blank" href='http://www.healthkart.com/baby/'>www.healthkart.com/baby</a> on your first purchase.</font>
+<font style='font-size: 14px'>Receive 100 Rs cash discount @ <a class='link' target="_blank" href='${pageContext.request.contextPath}/baby/'>www.healthkart.com/baby</a> on your first purchase.</font>
 <br>
 <font class="heading">Your promo code is </font> <font style='font-size: 20px'>HK100CD</font>
 <div>

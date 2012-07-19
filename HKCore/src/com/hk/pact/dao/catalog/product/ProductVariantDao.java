@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.hk.domain.affiliate.AffiliateCategory;
+import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.pact.dao.BaseDao;
 
@@ -50,4 +51,6 @@ public interface ProductVariantDao extends BaseDao {
     public List<ProductVariant> getAllProductVariantsByCategory(String category);
 
     public List<ProductVariant> getAllProductVariant();
-}
+    
+    public Product getProductForProudctVariant(String variantId);
+}                                                               

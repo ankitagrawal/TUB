@@ -99,8 +99,6 @@ public class InvoicePDFGenerator {
     }
 
     private void addOrderDetailsContent(Document document, ShippingOrder shippingOrder, Coupon coupon) throws DocumentException, MalformedURLException, IOException {
-        InvoiceDto invoiceDto = new InvoiceDto(shippingOrder, null);
-        barcodePath = barcodeGenerator.getBarcodePath(shippingOrder.getGatewayOrderId(),1.0f);
         ReplacementOrder replacementOrder = getBaseDao().get(ReplacementOrder.class, shippingOrder.getId());
         if(replacementOrder != null){
           invoiceDto = new InvoiceDto(replacementOrder, null);
@@ -114,7 +112,7 @@ public class InvoicePDFGenerator {
         Address address = addressDao.get(Address.class, shippingOrder.getBaseOrder().getAddress().getId());
         boolean isCod = shippingOrder.isCOD();
         CourierServiceInfo courierServiceInfo = null;
-        if (EnumCourier.BlueDart_COD.getId().equals(shippingOrder.getShipment().getCourier().getId())){
+        if (EnumCourier.BlueDart_COD.getId().equals(shippingOrder.getShipment().getCourier().getId())) {
             if (isCod) {
                 courierServiceInfo = courierServiceInfoDao.getCourierServiceByPincodeAndCourier(EnumCourier.BlueDart_COD.getId(), address.getPin(), true);
             } else {

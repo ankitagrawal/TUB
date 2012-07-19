@@ -65,6 +65,7 @@ public class SearchShippingOrderAction extends BasePaginatedAction {
       if (shippingOrderId != null || (!(StringUtils.isBlank(shippingOrderGatewayId)))) {
           shippingOrderSearchCriteria.setAwb(null);
       } else {
+          //todo seema ask courier also
           List<Awb> awbList = awbService.getAvailableAwbListForCourierByWarehouseCodStatus(null, trackingId, null, null, EnumAwbStatus.Unused.getAsAwbStatus());
           if (awbList == null || awbList.size() < 1) {
               shippingOrderSearchCriteria.setAwb(awbList.get(0));

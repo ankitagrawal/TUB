@@ -42,4 +42,8 @@ public class AwbServiceImpl implements AwbService {
         return (Awb) awbDao.save(awb);
     }
 
+    public Awb findByCourierAwbNumber(Courier courier ,String awbNumber){
+        return awbDao.findByCourierAwbNumber(courier ,awbNumber);
+    }
+
 }

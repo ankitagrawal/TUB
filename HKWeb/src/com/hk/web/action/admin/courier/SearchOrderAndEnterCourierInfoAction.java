@@ -100,12 +100,12 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
     @DefaultHandler
     @Secure(hasAnyPermissions = {PermissionConstants.VIEW_PACKING_QUEUE}, authActionBean = AdminPermissionAction.class)
     public Resolution pre() {
+
         return new ForwardResolution("/pages/admin/searchOrderAndEnterCouierInfo.jsp");
     }
 
     @DontValidate
     public Resolution searchOrders() {
-                 //todo seema populate trackigg id
         shippingOrder = shippingOrderDao.findByGatewayOrderId(gatewayOrderId);
         if (shippingOrder == null) {
             addRedirectAlertMessage(new SimpleMessage("Shipping Order not found for the corresponding gateway order id"));
@@ -132,15 +132,16 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
             if (pinCode != null) {
                 boolean isCod = shippingOrder.isCOD();
                 availableCouriers = courierService.getAvailableCouriers(pinCode.getPincode(), isCod);
-                if (shippingOrder.getShipment() != null && shippingOrder.getShipment().getCourier() != null && shippingOrder.getShipment().getAwb() != null) {
+                if (shippingOrder.getShipment() != null && shippingOrder.getShipment().getCourier() != null && shippingOrder.getShipment().getAwb().getAwbNumber() != null) {
                     suggestedCourier = shippingOrder.getShipment().getCourier();
+                    trackingId = shippingOrder.getShipment().getAwb().getAwbNumber();
                 } else {
                     suggestedCourier = courierService.getDefaultCourierByPincodeForLoggedInWarehouse(pinCode, isCod);
-                    boolean status = shipmentService.attachAwbToShipment(suggestedCourier, shippingOrder);
-
-                    if (!status) {
+                    Awb suggestedAwb = shipmentService.attachAwbToShipment(suggestedCourier, shippingOrder);
+                    if (suggestedAwb != null) {
                         addRedirectAlertMessage(new SimpleMessage("AWB numbers are not available for courier  , please contact respective courier service  " + suggestedCourier));
                     }
+                    trackingId = suggestedAwb.getAwbNumber();
                 }
 
             } else {
@@ -156,7 +157,6 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
     @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PACKING_QUEUE}, authActionBean = AdminPermissionAction.class)
     public Resolution saveShipmentDetails() {
         shipment.setEmailSent(false);
-        //Can be moved to service ??
         if (trackingId == null) {
             addRedirectAlertMessage(new SimpleMessage("Pincode is INVALID, Please contact Customer Care. It cannot be packed."));
             return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
@@ -176,7 +176,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
         }
 
         finalAwb.setAwbStatus(EnumAwbStatus.Used.getAsAwbStatus());
-        shipment.setAwb(suggestedAwb);
+        shipment.setAwb(finalAwb);
         shippingOrder.setShipment(shipment);
         if (courierGroupService.getCourierGroup(shipment.getCourier()) != null) {
             shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));

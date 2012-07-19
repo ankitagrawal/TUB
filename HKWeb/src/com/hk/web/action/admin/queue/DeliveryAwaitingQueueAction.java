@@ -1,38 +1,27 @@
 package com.hk.web.action.admin.queue;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.DontValidate;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
-import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.courier.AwbService;
+import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.constants.courier.EnumAwbStatus;
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
-import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.Awb;
+import com.hk.domain.courier.Courier;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.web.action.error.AdminPermissionAction;
+import net.sourceforge.stripes.action.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA. User: Pratham Date: Jul 1, 2011 Time: 12:33:24 PM To change this template use File |
@@ -41,33 +30,33 @@ import com.hk.web.action.error.AdminPermissionAction;
 @Component
 public class DeliveryAwaitingQueueAction extends BasePaginatedAction {
     @Autowired
-    private OrderService               orderService;
+    private OrderService orderService;
     @Autowired
-    private ShippingOrderService       shippingOrderService;
+    private ShippingOrderService shippingOrderService;
     @Autowired
-    private AdminShippingOrderService  adminShippingOrderService;
+    private AdminShippingOrderService adminShippingOrderService;
     @Autowired
     private ShippingOrderStatusService shippingOrderStatusService;
     @Autowired
     AwbService awbService;
 
-    Page                               shippingOrderPage;
+    Page shippingOrderPage;
     @Autowired
-    CourierService                     courierService;
+    CourierService courierService;
 
-    List<ShippingOrder>                shippingOrderList = new ArrayList<ShippingOrder>();
+    List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>();
 
-    private Long                       orderId;
-    private String                     gatewayOrderId;
-    private Courier                    courier;
-    private Date                       deliveryDate;
-    Date                               startDate;
-    Date                               endDate;
-    private String                     trackingId;
+    private Long orderId;
+    private String gatewayOrderId;
+    private Courier courier;
+    private Date deliveryDate;
+    Date startDate;
+    Date endDate;
+    private String trackingId;
 
     @DontValidate
     @DefaultHandler
-    @Secure(hasAnyPermissions = { PermissionConstants.VIEW_DELIVERY_QUEUE }, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = {PermissionConstants.VIEW_DELIVERY_QUEUE}, authActionBean = AdminPermissionAction.class)
     public Resolution pre() {
 
         List<Courier> courierList = new ArrayList<Courier>();
@@ -81,10 +70,6 @@ public class DeliveryAwaitingQueueAction extends BasePaginatedAction {
         shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForDeliveryAwaiting()));
         shippingOrderSearchCriteria.setOrderId(orderId).setGatewayOrderId(gatewayOrderId);
         shippingOrderSearchCriteria.setCourierList(courierList);
-        //yet to confirm  here tracking id is not required---->>
-       if(trackingId != null){
-         List<Awb> awbList= awbService.getAvailableAwbListForCourierByWarehouseCodStatus(courier, trackingId, null, null, EnumAwbStatus.Used.getAsAwbStatus());
-        shippingOrderSearchCriteria.setAwb(awbList.get(0));       }
 
         shippingOrderPage = getShippingOrderService().searchShippingOrders(shippingOrderSearchCriteria, getPageNo(), getPerPage());
         if (shippingOrderPage != null) {
@@ -94,20 +79,28 @@ public class DeliveryAwaitingQueueAction extends BasePaginatedAction {
         return new ForwardResolution("/pages/admin/deliveryAwaitingQueue.jsp");
     }
 
-    @Secure(hasAnyPermissions = { PermissionConstants.VIEW_DELIVERY_QUEUE }, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = {PermissionConstants.VIEW_DELIVERY_QUEUE}, authActionBean = AdminPermissionAction.class)
     public Resolution searchOrders() {
 
+        Awb awb = null;
         List<Courier> courierList = new ArrayList<Courier>();
-        if (courier == null) {
-            courierList = getCourierService().getAllCouriers();
-        } else {
-            courierList.add(courier);
+        if (trackingId != null && courier != null) {
+            awb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(courier, trackingId, null, null, EnumAwbStatus.Used.getAsAwbStatus());
+            courierList = Arrays.asList(courier);
+        }
+        if (trackingId == null) {
+            if (courier == null) {
+                courierList = getCourierService().getAllCouriers();
+            } else {
+                courierList.add(courier);
+            }
         }
 
         ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
         shippingOrderSearchCriteria.setShippingOrderStatusList(getShippingOrderStatusService().getOrderStatuses(EnumShippingOrderStatus.getStatusSearchingInDeliveryQueue()));
         shippingOrderSearchCriteria.setOrderId(orderId).setGatewayOrderId(gatewayOrderId);
         shippingOrderSearchCriteria.setCourierList(courierList);
+        shippingOrderSearchCriteria.setAwb(awb);
 
         shippingOrderPage = getShippingOrderService().searchShippingOrders(shippingOrderSearchCriteria, getPageNo(), getPerPage());
         if (shippingOrderPage != null) {
@@ -117,7 +110,7 @@ public class DeliveryAwaitingQueueAction extends BasePaginatedAction {
         return new ForwardResolution("/pages/admin/deliveryAwaitingQueue.jsp");
     }
 
-    @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_DELIVERY_QUEUE }, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_DELIVERY_QUEUE}, authActionBean = AdminPermissionAction.class)
     public Resolution markShippingOrderAsDelivered() {
         if (shippingOrderList != null && !shippingOrderList.isEmpty()) {
             for (ShippingOrder shippingOrder : shippingOrderList) {

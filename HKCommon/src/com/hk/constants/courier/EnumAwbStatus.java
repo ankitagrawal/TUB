@@ -11,18 +11,18 @@ import com.hk.domain.courier.AwbStatus;
  */
 public enum EnumAwbStatus {
 
-    Unused(0L,"Unused"),
-    Attach(1L,"Attach"),
-    Used(2L,"Used");
+    Unused(0L, "Unused"),
+    Attach(1L, "Attach"),
+    Used(2L, "Used");
 
-  private Long id;
+    private Long id;
     private String status;
 
-   EnumAwbStatus(Long id , String status){
-    this.id=id;
-       this.status=status;
+    EnumAwbStatus(Long id, String status) {
+        this.id = id;
+        this.status = status;
 
-   }
+    }
 
     public Long getId() {
         return id;
@@ -40,10 +40,10 @@ public enum EnumAwbStatus {
         this.status = status;
     }
 
-   public AwbStatus getAsAwbStatus(){
-      AwbStatus awbStatus = new AwbStatus();
+    public AwbStatus getAsAwbStatus() {
+        AwbStatus awbStatus = new AwbStatus();
         awbStatus.setId(this.id);
         awbStatus.setStatus(this.status);
         return awbStatus;
-   }
+    }
 }
