@@ -16,107 +16,171 @@
 <c:set var="product" value="${sa.product}"/>
 <c:set var="sp" value="${sa.subscriptionProduct}"/>
 <s:layout-render name="/layouts/modal.jsp">
-  <s:layout-component name="heading">
-    Subscription for ${product.name}
-  </s:layout-component>
+    <s:layout-component name="heading">
+        Subscription for ${product.name}
+    </s:layout-component>
 
-  <s:layout-component name="content">
-    <div  id="subscription-container">
-      <div id="subcriptionErrors"></div
-          <%
-              SimpleDateFormat simpleDateFormat=new SimpleDateFormat("dd/MM/yyyy");
-              String currentDate=simpleDateFormat.format(BaseUtils.getCurrentTimestamp());
-          %>
+    <s:layout-component name="content">
+        <div  id="subscription-container">
+            <div id="subcriptionErrors"></div
+            <%
+                SimpleDateFormat simpleDateFormat=new SimpleDateFormat("dd/MM/yyyy");
+                String currentDate=simpleDateFormat.format(BaseUtils.getCurrentTimestamp());
+            %>
 
-      <div >
-        <s:form beanclass="com.hk.web.action.core.subscription.AddSubscriptionAction" class="addSubscriptionForm">
-          <fieldset>
-              <br/>
+            <div >
+                <s:form beanclass="com.hk.web.action.core.subscription.AddSubscriptionAction" class="addSubscriptionForm">
+                    <fieldset>
+                        <br/>
 
-              frequency : <s:text name="subscription.frequencyDays" id="subscriptionFrequency" value="${sp.minFrequencyDays}" style="width: 30px; height: 18px;"/>
-              &nbsp;(min : ${sp.minFrequencyDays} days - max : ${sp.maxFrequencyDays} days)  <br/>  <br/>
-              subscription period :   <s:text name="subscription.subscriptionPeriodDays" id="subscriptionPeriod" value="180" style="width: 30px; height: 18px;"/>
-              &nbsp;(min : <%=SubscriptionConstants.minSubscriptionDays%> days - max : <%=SubscriptionConstants.maxSubscriptionDays%> days)   <br/> <br/>
+                        <div style="width:400px; float: left;">
+                            frequency : <s:text name="subscription.frequencyDays" id="subscriptionFrequency" value="${sp.minFrequencyDays}" style="width: 30px; height: 18px;"/>
+                            &nbsp;(min : ${sp.minFrequencyDays} days - max : ${sp.maxFrequencyDays} days)  <br/>  <br/>
+                            period  &nbsp; &nbsp;  :   <s:text name="subscription.subscriptionPeriodDays" id="subscriptionPeriod" value="<%=SubscriptionConstants.minSubscriptionDays%>" style="width: 30px; height: 18px;"/>
+                            &nbsp;(min : <%=SubscriptionConstants.minSubscriptionDays%> days - max : <%=SubscriptionConstants.maxSubscriptionDays%> days)   <br/> <br/>
 
 
-           Start Date: <s:text name="subscription.startDate" value="<%=currentDate%>" id="subscriptionStartDate" style="width: 90px; height: 22px;"/>
-            <br/> <br/>
+                            Start Date : <s:text name="subscription.startDate" value="<%=currentDate%>" id="subscriptionStartDate" style="width: 90px; height: 22px;"/>
+                            <br/> <br/>
 
-            <s:hidden name="subscription.productVariant" value="${productVariant.id}"/>
+                            <s:hidden name="subscription.productVariant" value="${productVariant.id}"/>
 
-            qty per delivery:
-            <select name="subscription.qtyPerDelivery" id="subscriptionQtyPerDelivery"  >
-              <c:set var="tempQty" value="1"/>
-              <%
-                for(int i=1;i<=sa.getSubscriptionProduct().getMaxQtyPerDelivery();i++){
-              %>
-              <option value="<%=i%>"><%=i%></option>
-             <%
+                            qty  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  :
+                            <select name="subscription.qtyPerDelivery" id="subscriptionQtyPerDelivery"  >
+                                <c:set var="tempQty" value="1"/>
+                                <%
+                                    for(int i=1;i<=sa.getSubscriptionProduct().getMaxQtyPerDelivery();i++){
+                                %>
+                                <option value="<%=i%>"><%=i%></option>
+                                <%
+                                    }
+                                %>
+
+                            </select> (per delivery)
+                                <%--<s:text class="qtyPerDelivery" name="subscription.qtyPerDelivery"  id="subscriptionQtyPerDelivery" style="width: 25px; height: 18px;"/>--%>
+                            <br/> <br/>
+                            <strong>Total Qty</strong> &nbsp;:&nbsp; <span class="hk num" id="totalQuantity" style="color: orangered;"></span>
+                            <s:hidden class="qty" name="subscription.qty"  id="subscriptionQty" />
+                            <br/>
+
+                            <br/><br/>
+                        </div>
+                        <div >
+                            <br/> <br/>
+                            <br/>
+                            <table>
+                                <tr>
+                                    <td>
+                                        MRP
+                                    </td>
+                                    <td>&nbsp;</td>
+                                    <td>
+                             <span class='cut num'>
+                  Rs <fmt:formatNumber value="${productVariant.markedPrice}" maxFractionDigits="0"/>
+                </span>  <br/><br/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        HK price
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                             <span class='hk num'  style="font-size: 14px;" :>
+                  Rs <fmt:formatNumber value="${productVariant.hkPrice}"
+                                       maxFractionDigits="0"/>
+                </span>          <br/><br/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Subscription price
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                             <span class='hk num' id="subscriptionPrice" style="font-size: 14px;" :>
+
+                </span>
+                                    </td>
+                                    <td>
+                                        <span id="extraDiscount" ></span>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <br/> <br/>
+                            <s:submit name="addSubscription" id="addSubscription" value="subscribe"   />
+                        </div>
+                    </fieldset>
+                </s:form>
+            </div>
+            <span >Subscribe and save <fmt:formatNumber value="${sp.subscriptionDiscount180Days}" maxFractionDigits="2"/>  to   <fmt:formatNumber value="${sp.subscriptionDiscount360Days}" maxFractionDigits="2"/> &#37; extra.   </span>
+            &nbsp; <span> <fmt:formatNumber value="${sp.subscriptionDiscount180Days}" maxFractionDigits="2"/>&#37; for <%=SubscriptionConstants.minSubscriptionDays%>-360 days and <fmt:formatNumber value="${sp.subscriptionDiscount360Days}" maxFractionDigits="2"/>&#37; for 360-<%=SubscriptionConstants.maxSubscriptionDays%> day plans </span>
+            <script type="text/javascript" src="<hk:vhostJs/>/js/jquery-ui.min.js"></script>
+            <script type="text/javascript">
+                function _addSubscription(res) {
+                    if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+                        closeSubscriptionWindow();
+                        $('.message .line1').html("<strong>" + res.data.name + "</strong> "+ res.message);
+                        $('.cartButton').html("<img class='icon' src='${pageContext.request.contextPath}/images/icons/cart.png'/><span class='num' id='productsInCart'>" + res.data.itemsInCart + "</span> items in<br/>your shopping cart");
+                        $('.progressLoader').hide();
+
+                        show_sub_message();
+                    }else if(res.code == '<%=HealthkartResponse.STATUS_ERROR%>'){
+                        $('#subcriptionErrors').html(getErrorHtmlFromJsonResponse(res));
+                    }
+                    $('#gulal').show();
                 }
-              %>
+                function show_sub_message() {
+                    $('.message').css("top", "70px");
+                    $('.message').animate({
+                        opacity: 1
+                    }, 500);
+                }
+                $('.addSubscriptionForm').ajaxForm({dataType: 'json', success: _addSubscription});
 
-            </select>
-            <%--<s:text class="qtyPerDelivery" name="subscription.qtyPerDelivery"  id="subscriptionQtyPerDelivery" style="width: 25px; height: 18px;"/>--%>
-            &nbsp; &nbsp; &nbsp; &nbsp;
-            total qty:<span id="totalQuantity"></span>
-            <s:hidden class="qty" name="subscription.qty"  id="subscriptionQty" />
+                //          $( "#subscriptionStartDate" ).datepicker({ minDate: 0, maxDate: "+2M ",dateFormat : 'dd/mm/yy',showOn: 'button' }).next('button').text('').button({icons:{primary : 'ui-icon-calendar'}});
+                $("#subscriptionStartDate" ).datepicker({ minDate: 0, maxDate: "+2M ",dateFormat : 'dd/mm/yy' });
+                function closeSubscriptionWindow(){
+                    $("#subscriptionWindow").jqmHide();
+                }
 
-            <s:submit name="addSubscription" value="subscribe"  />
-          </fieldset>
-        </s:form>
-      </div>
-      <span >Subscribe and save <fmt:formatNumber value="${sp.subscriptionDiscount180Days}" maxFractionDigits="2"/>  to   <fmt:formatNumber value="${sp.subscriptionDiscount360Days}" maxFractionDigits="2"/> &#37; extra.   </span>
-      &nbsp; <span> <fmt:formatNumber value="${sp.subscriptionDiscount180Days}" maxFractionDigits="2"/>&#37; for <%=SubscriptionConstants.minSubscriptionDays%>-360 days and <fmt:formatNumber value="${sp.subscriptionDiscount360Days}" maxFractionDigits="2"/>&#37; for 360-<%=SubscriptionConstants.maxSubscriptionDays%> day plans </span>
-      <script type="text/javascript">
-        function _addSubscription(res) {
-          if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
-            closeSubscriptionWindow();
-            $('.message .line1').html("<strong>" + res.data.name + "</strong> "+ res.message);
-            $('.cartButton').html("<img class='icon' src='${pageContext.request.contextPath}/images/icons/cart.png'/><span class='num' id='productsInCart'>" + res.data.itemsInCart + "</span> items in<br/>your shopping cart");
-            $('.progressLoader').hide();
+                $('#subscriptionPeriod,#subscriptionFrequency,#subscriptionQtyPerDelivery').change(function(){
+                    var frequency=$('#subscriptionFrequency').val();
+                    var qtyPerDelivery=$('#subscriptionQtyPerDelivery').val();
+                    var subscriptionPeriod=$('#subscriptionPeriod').val();
+                    var totalQty=Math.round(subscriptionPeriod/frequency)*qtyPerDelivery;
+                    if(totalQty !=null && totalQty!=undefined && !isNaN(totalQty) && totalQty !=Infinity){
+                        updateTotalQtyAndPrice(totalQty);
+                    }
+                }).change();
 
-            show_sub_message();
-          }else if(res.code == '<%=HealthkartResponse.STATUS_ERROR%>'){
-             $('#subcriptionErrors').html(getErrorHtmlFromJsonResponse(res));
-          }
-          $('#gulal').show();
-        }
-        function show_sub_message() {
-          $('.message').css("top", "70px");
-          $('.message').animate({
-            opacity: 1
-          }, 500);
-        }
-        $('.addSubscriptionForm').ajaxForm({dataType: 'json', success: _addSubscription});
+                function updateTotalQtyAndPrice(totalQty){
+                    var subscriptionPrice180=Math.round(${productVariant.hkPrice}-${sp.subscriptionDiscount180Days}*${productVariant.markedPrice}/100);
+                    var subscriptionPrice360=Math.round(${productVariant.hkPrice}-${sp.subscriptionDiscount360Days}*${productVariant.markedPrice}/100);
+                    var subscriptionPeriod=$('#subscriptionPeriod').val();
+                    $('#totalQuantity').html('<b>'+totalQty+'</b>');
+                    $('#subscriptionQty').attr('value',totalQty);
+                    if(subscriptionPeriod<360){
+                        $('#subscriptionPrice').html('<strong><b>Rs '+subscriptionPrice180+'</b></strong>');
+                        $('#extraDiscount').html('( ${sp.subscriptionDiscount180Days} &#37;)' );
+                    }else{
+                        $('#subscriptionPrice').html('<strong><b>Rs '+subscriptionPrice360+'</b></strong>');
+                        $('#extraDiscount').html('( ${sp.subscriptionDiscount360Days} &#37;)' );
+                    }
+                }
 
-//          $( "#subscriptionStartDate" ).datepicker({ minDate: 0, maxDate: "+2M ",dateFormat : 'dd/mm/yy',showOn: 'button' }).next('button').text('').button({icons:{primary : 'ui-icon-calendar'}});
-        $("#subscriptionStartDate" ).datepicker({ minDate: 0, maxDate: "+2M ",dateFormat : 'dd/mm/yy' });
-        function closeSubscriptionWindow(){
-          $("#subscriptionWindow").jqmHide();
-        }
-
-        $('#subscriptionPeriod,#subscriptionFrequency,#subscriptionQtyPerDelivery').change(function(){
-              var frequency=$('#subscriptionFrequency').val();
-              var qtyPerDelivery=$('#subscriptionQtyPerDelivery').val();
-              var subscriptionPeriod=$('#subscriptionPeriod').val();
-             var totalQty=Math.round(subscriptionPeriod/frequency)*qtyPerDelivery;
-            if(totalQty !=null && totalQty!=undefined && !isNaN(totalQty)){
-                updateTotalQty(totalQty);
-            }
-        }).change();
-
-        function updateTotalQty(totalQty){
-            $('#totalQuantity').html('<b>'+totalQty+'</b>');
-            $('#subscriptionQty').attr('value',totalQty);
-        }
-
-        $('#subscriptionFrequency').jStepper({minValue:${sp.minFrequencyDays},maxValue:${sp.maxFrequencyDays} });
-        $('#subscriptionPeriod').jStepper({minValue:<%=SubscriptionConstants.minSubscriptionDays%>,maxValue:<%=SubscriptionConstants.maxSubscriptionDays%> });
-        /*$('#subscriptionQty')[0].value=Math.round($('#subscriptionPeriod').val()*$('#subscriptionQtyPerDelivery').val()/$('#subscriptionFrequency').val()) ;*/
-      </script>
-    </div>
+                $('#subscriptionFrequency').jStepper({minValue:${sp.minFrequencyDays},maxValue:${sp.maxFrequencyDays} });
+                $('#subscriptionPeriod').jStepper({minValue:<%=SubscriptionConstants.minSubscriptionDays%>,maxValue:<%=SubscriptionConstants.maxSubscriptionDays%> });
+                /*$('#subscriptionQty')[0].value=Math.round($('#subscriptionPeriod').val()*$('#subscriptionQtyPerDelivery').val()/$('#subscriptionFrequency').val()) ;*/
+            </script>
+        </div>
 
 
-  </s:layout-component>
+    </s:layout-component>
 
 </s:layout-render>

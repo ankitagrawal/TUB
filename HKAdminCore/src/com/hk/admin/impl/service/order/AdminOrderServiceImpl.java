@@ -4,6 +4,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.domain.subscription.Subscription;
+import com.hk.domain.subscription.SubscriptionOrder;
+import com.hk.pact.service.subscription.SubscriptionOrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +58,8 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     private EmailManager              emailManager;
     @Autowired
     private OrderLoggingService       orderLoggingService;
+    @Autowired
+    private SubscriptionOrderService   subscriptionOrderService;
 
     @Transactional
     public Order putOrderOnHold(Order order) {
@@ -202,6 +207,8 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Shipped, EnumOrderStatus.Shipped);
         if (isUpdated) {
             logOrderActivity(order, EnumOrderLifecycleActivity.OrderShipped);
+            //update in case of subscription orders
+            subscriptionOrderService.markSubscriptionOrderAsShipped(order);
         }
         return order;
     }
@@ -215,6 +222,10 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             // Currently commented as we aren't doing COD for services as of yet, When we start, We may have to put a
             // check if payment mode was COD and email hasn't been sent yet
             // sendEmailToServiceProvidersForOrder(order);
+
+            //if the order is a subscription order update subscription status
+            subscriptionOrderService.markSubscriptionOrderAsDelivered(order);
+
         }
         return order;
     }
@@ -319,4 +330,11 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         this.orderLoggingService = orderLoggingService;
     }
 
+    public SubscriptionOrderService getSubscriptionOrderService() {
+        return subscriptionOrderService;
+    }
+
+    public void setSubscriptionOrderService(SubscriptionOrderService subscriptionOrderService) {
+        this.subscriptionOrderService = subscriptionOrderService;
+    }
 }

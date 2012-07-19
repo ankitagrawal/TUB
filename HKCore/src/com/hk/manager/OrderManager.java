@@ -143,7 +143,7 @@ public class OrderManager {
     @Transactional
     public Order getOrCreateOrder(User user) {
         Order order = getOrderService().findByUserAndOrderStatus(user, EnumOrderStatus.InCart);
-        if (order != null)
+        if (order != null && !order.isSubscriptionOrder())
             return order;
 
         order = new Order();

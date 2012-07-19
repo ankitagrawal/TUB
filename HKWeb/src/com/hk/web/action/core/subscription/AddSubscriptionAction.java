@@ -1,6 +1,7 @@
 package com.hk.web.action.core.subscription;
 
 import com.akube.framework.util.BaseUtils;
+import com.hk.constants.subscription.EnumSubscriptionLifecycleActivity;
 import com.hk.constants.subscription.EnumSubscriptionStatus;
 import com.hk.constants.subscription.SubscriptionConstants;
 import com.hk.core.fliter.SubscriptionFilter;
@@ -15,7 +16,7 @@ import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.dao.user.UserCartDao;
 import com.hk.manager.UserManager;
 import com.hk.manager.OrderManager;
-import com.hk.pact.service.subscription.SubscriptionOrderService;
+import com.hk.pact.service.subscription.SubscriptionLoggingService;
 import com.hk.pact.service.subscription.SubscriptionProductService;
 import com.hk.pact.service.subscription.SubscriptionService;
 import com.hk.util.UIDateTypeConverter;
@@ -70,7 +71,8 @@ public class AddSubscriptionAction extends BaseAction implements ValidationError
     @Autowired
     SubscriptionProductService subscriptionProductService;
     @Autowired
-    SubscriptionOrderService subscriptionOrderService;
+    SubscriptionLoggingService subscriptionLoggingService;
+
 
     @SuppressWarnings({"unchecked", "deprecation"})
     @DefaultHandler
@@ -90,19 +92,19 @@ public class AddSubscriptionAction extends BaseAction implements ValidationError
         List<ProductVariant> selectedProductVariants = new ArrayList<ProductVariant>();
         Subscription priorSubscription=null;
         try {
-            if (subscription != null && subscription.getQty()>0 ) {
+            if (subscription != null &&subscription.getId()==null && subscription.getQty()>0 ) {
 
                 priorSubscription= new SubscriptionMatcher().addProduct(subscription.getProductVariant()).addSubscriptionStatus(EnumSubscriptionStatus.InCart).match(new SubscriptionFilter(order.getSubscriptions()).addSubscriptionStatus(EnumSubscriptionStatus.InCart).filter());
-                subscriptionOrderService.createOrderForSubscription(priorSubscription);
                 if(priorSubscription==null) {
                     SubscriptionProduct subscriptionProduct=subscriptionProductService.findByProductVariant(subscription.getProductVariant());
                     SubscriptionBuilder subscriptionBuilder=new SubscriptionBuilder();
                     subscriptionBuilder.forUser(user).forOrder(order).forSubscriptionProduct(subscriptionProduct);
                     subscriptionBuilder.forProductVariant(subscription.getProductVariant()).forQuantity(subscription.getQty(),subscription.getQtyPerDelivery()).frequency(subscription.getFrequencyDays()).startDate(subscription.getStartDate()).subscriptionPeriod(subscription.getSubscriptionPeriodDays());
                     subscriptionService.save(subscriptionBuilder.withStatus(EnumSubscriptionStatus.InCart).build());
+                    subscriptionLoggingService.logSubscriptionActivity(subscription, EnumSubscriptionLifecycleActivity.AddedToCart);
                 }
             }
-        } catch (OutOfStockException e) {
+        } catch (Exception e) {
             getContext().getValidationErrors().add("e2", new SimpleError(e.getMessage()));
             return new JsonResolution(getContext().getValidationErrors(), getContext().getLocale());
         }

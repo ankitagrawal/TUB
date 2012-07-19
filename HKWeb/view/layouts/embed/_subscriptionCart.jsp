@@ -101,14 +101,14 @@
                     <span class='num '>
                       Rs  <span class="lineItemSubTotalHkDiscount"><fmt:formatNumber
 
-                        value="${(subscription.markedPriceAtSubscription - subscription.hkPriceAtSubscription +(subscription.subscriptionDiscountPercent*subscription.markedPriceAtSubscription/100) - subscription.productVariant.postpaidAmount) * subscription.qty}"
+                        value="${(subscription.markedPriceAtSubscription - subscription.subscriptionPrice - subscription.productVariant.postpaidAmount) * subscription.qty}"
                         pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>)
                     </span>
             </div>
             <div class="hk">
               <div class="num"> Rs
               <span class="lineItemHkTotal"><fmt:formatNumber
-                  value="${(subscription.hkPriceAtSubscription - (subscription.subscriptionDiscountPercent*subscription.markedPriceAtSubscription/100) )* subscription.qty}"
+                  value="${subscription.subscriptionPrice * subscription.qty}"
                   pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
               </div>
             </div>

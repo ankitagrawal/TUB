@@ -18,6 +18,7 @@ import com.hk.db.seed.reward.ReviewStatusSeedData;
 import com.hk.db.seed.reward.RewardPointModeSeedData;
 import com.hk.db.seed.reward.RewardPointStatusSeedData;
 import com.hk.db.seed.reward.RewardPointTxnTypeSeedData;
+import com.hk.db.seed.subscription.SubscriptionLifeCycleActivitySeedData;
 import com.hk.db.seed.subscription.SubscriptionOrderStatusSeedData;
 import com.hk.db.seed.subscription.SubscriptionStatusSeedData;
 import com.hk.db.seed.ticket.TicketStatusSeedData;
@@ -119,6 +120,8 @@ public class MasterDataService {
     SubscriptionStatusSeedData subscriptionStatusSeedData;
     @Autowired
     SubscriptionOrderStatusSeedData subscriptionOrderStatusSeedData;
+    @Autowired
+    SubscriptionLifeCycleActivitySeedData subscriptionLifeCycleActivitySeedData;
 
     public void insert() {
 
@@ -251,6 +254,9 @@ public class MasterDataService {
 
         logger.debug("inserting subscription order status data");
         subscriptionOrderStatusSeedData.invokeInsert();
+
+        logger.debug("inserting subscription lifecycle activity data");
+        subscriptionLifeCycleActivitySeedData.invokeInsert();
     }
 
 }

@@ -1,5 +1,8 @@
 package com.hk.constants.subscription;
 
+import com.hk.domain.subscription.SubscriptionLifecycle;
+import com.hk.domain.subscription.SubscriptionLifecycleActivity;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Pradeep
@@ -8,10 +11,17 @@ package com.hk.constants.subscription;
  * To change this template use File | Settings | File Templates.
  */
 public enum EnumSubscriptionLifecycleActivity {
+    AddedToCart(5L,"Subscription In Cart"),
+    SubscriptionAbandoned(6L,"Subscription Abandoned"),
     SubscriptionPlaced(10L, "Subscription Placed"),
     AddressChanged(15L, "Address Changed"),
+    ConfirmedSubscriptionOrder(16L, "Confirmed Subscription Order"),
+    EscalatedToActionQueue(17L,"Subscription Escalated to action queue"),
     NextShipmentDateChanged(20L, "Next Shipment Date Changed"),
-    SubscriptionCancelled(99L, "Subscription Cancelled");
+    SubscriptionOrderPlaced(25L, "Subscription Order Placed"),
+    SubscriptionOrderDelivered(30L, "Subscription Order Delivered"),
+    LoggedComment(120L, "Logged Comment"),
+    SubscriptionCancelled(199L, "Subscription Cancelled");
 
     private String name;
     private Long id;
@@ -27,5 +37,12 @@ public enum EnumSubscriptionLifecycleActivity {
 
     public Long getId() {
         return id;
+    }
+
+    public SubscriptionLifecycleActivity asSubscriptionLifecycleActivity(){
+        SubscriptionLifecycleActivity subscriptionLifecycleActivity=new SubscriptionLifecycleActivity();
+        subscriptionLifecycleActivity.setId(this.id);
+        subscriptionLifecycleActivity.setName(this.name);
+        return subscriptionLifecycleActivity;
     }
 }

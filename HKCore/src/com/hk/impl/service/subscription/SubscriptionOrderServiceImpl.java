@@ -2,7 +2,9 @@ package com.hk.impl.service.subscription;
 
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.payment.EnumPaymentMode;
+import com.hk.constants.subscription.EnumSubscriptionLifecycleActivity;
 import com.hk.constants.subscription.EnumSubscriptionOrderStatus;
+import com.hk.constants.subscription.EnumSubscriptionStatus;
 import com.hk.domain.builder.CartLineItemBuilder;
 import com.hk.domain.builder.SubscriptionOrderBuilder;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -15,7 +17,9 @@ import com.hk.domain.user.User;
 import com.hk.pact.dao.subscription.SubscriptionOrderDao;
 import com.hk.pact.service.order.AutomatedOrderService;
 import com.hk.pact.service.store.StoreService;
+import com.hk.pact.service.subscription.SubscriptionLoggingService;
 import com.hk.pact.service.subscription.SubscriptionOrderService;
+import com.hk.pact.service.subscription.SubscriptionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,9 +40,17 @@ public class SubscriptionOrderServiceImpl implements SubscriptionOrderService {
     StoreService storeService;
     @Autowired
     SubscriptionOrderDao subscriptionOrderDao;
+    @Autowired
+    SubscriptionService subscriptionService;
+    @Autowired
+    SubscriptionLoggingService subscriptionLoggingService;
 
     public SubscriptionOrder save(SubscriptionOrder subscriptionOrder){
         return subscriptionOrderDao.save(subscriptionOrder);
+    }
+
+    public SubscriptionOrder findSubscriptionOrderByBaseOrder(Order order){
+        return subscriptionOrderDao.findSubscriptionOrderByBaseOrder(order);
     }
 
     /**
@@ -54,8 +66,11 @@ public class SubscriptionOrderServiceImpl implements SubscriptionOrderService {
 
         order=  automatedOrderService.placeOrder(order,cartLineItemSet,subscription.getAddress(),payment,storeService.getDefaultStore(),true);
 
+        subscription.setSubscriptionStatus(EnumSubscriptionStatus.InProcess.asSubscriptionStatus());
+        subscriptionService.save(subscription);
+        subscriptionLoggingService.logSubscriptionActivityByAdmin(subscription, EnumSubscriptionLifecycleActivity.SubscriptionOrderPlaced, "automated order generation");
         //create an entry in subscription_order table
-        createSubscriptionOrder(subscription,order);
+        createSubscriptionOrder(subscription, order);
 
         return order;
     }
@@ -128,6 +143,28 @@ public class SubscriptionOrderServiceImpl implements SubscriptionOrderService {
 
         return automatedOrderService.createNewPayment(order,amount, EnumPaymentMode.SUBSCRIPTION_PAYMENT.asPaymenMode());
 
+    }
+
+    public void markSubscriptionOrderAsDelivered(Order order){
+        if(order.isSubscriptionOrder()){
+            SubscriptionOrder subscriptionOrder= this.findSubscriptionOrderByBaseOrder(order);
+            Subscription subscription=subscriptionOrder.getSubscription();
+
+            subscriptionOrder.setSubscriptionOrderStatus(EnumSubscriptionOrderStatus.Delivered.asSubscriptionOrderStatus());
+            subscriptionService.updateSubscriptionAfterOrderDelivery(subscription);
+            this.save(subscriptionOrder);
+        }
+    }
+
+    public void markSubscriptionOrderAsShipped(Order order){
+        if(order.isSubscriptionOrder()){
+            SubscriptionOrder subscriptionOrder= this.findSubscriptionOrderByBaseOrder(order);
+            Subscription subscription=subscriptionOrder.getSubscription();
+
+            subscriptionOrder.setSubscriptionOrderStatus(EnumSubscriptionOrderStatus.Shipped.asSubscriptionOrderStatus());
+
+            this.save(subscriptionOrder);
+        }
     }
 
 }

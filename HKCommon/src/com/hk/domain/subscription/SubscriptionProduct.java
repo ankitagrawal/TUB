@@ -14,83 +14,88 @@ import javax.persistence.*;
 @Table(name="subscription_product")
 public class SubscriptionProduct{
 
-  @Id
-  @Column(name = "id")
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private Long id;
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-  @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "product_id", unique = true, nullable = false)
-  private Product product;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", unique = true, nullable = false)
+    private Product product;
 
-  @Column(name = "subscription_discount_180days", nullable = false)
-  private Double subscriptionDiscount180Days;
+    @Column(name = "subscription_discount_180days", nullable = false)
+    private Double subscriptionDiscount180Days;
 
-  @Column(name = "subscription_discount_360days", nullable = false)
-  private Double subscriptionDiscount360Days;
+    @Column(name = "subscription_discount_360days", nullable = false)
+    private Double subscriptionDiscount360Days;
 
-   @Column(name = "min_frequency_days", nullable = false)
-  private int minFrequencyDays;
+    @Column(name = "min_frequency_days", nullable = false)
+    private int minFrequencyDays;
 
-   @Column(name = "max_frequency_days", nullable = false)
-  private int maxFrequencyDays;
+    @Column(name = "max_frequency_days", nullable = false)
+    private int maxFrequencyDays;
 
-  @Column(name = "max_qty_per_delivery", nullable = false)
-  private int maxQtyPerDelivery;
+    @Column(name = "max_qty_per_delivery", nullable = false)
+    private int maxQtyPerDelivery;
 
-  public Long getId() {
-    return id;
-  }
+    @Override
+    public String toString() {
+        return id != null ? id.toString() : "";
+    }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+    public Long getId() {
+        return id;
+    }
 
-  public Product getProduct() {
-    return product;
-  }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-  public void setProduct(Product product) {
-    this.product = product;
-  }
+    public Product getProduct() {
+        return product;
+    }
 
-  public Double getSubscriptionDiscount180Days() {
-    return subscriptionDiscount180Days;
-  }
+    public void setProduct(Product product) {
+        this.product = product;
+    }
 
-  public void setSubscriptionDiscount180Days(Double subscriptionDiscount180Days) {
-    this.subscriptionDiscount180Days = subscriptionDiscount180Days;
-  }
+    public Double getSubscriptionDiscount180Days() {
+        return subscriptionDiscount180Days;
+    }
 
-  public Double getSubscriptionDiscount360Days() {
-    return subscriptionDiscount360Days;
-  }
+    public void setSubscriptionDiscount180Days(Double subscriptionDiscount180Days) {
+        this.subscriptionDiscount180Days = subscriptionDiscount180Days;
+    }
 
-  public void setSubscriptionDiscount360Days(Double subscriptionDiscount360Days) {
-    this.subscriptionDiscount360Days = subscriptionDiscount360Days;
-  }
+    public Double getSubscriptionDiscount360Days() {
+        return subscriptionDiscount360Days;
+    }
 
-  public int getMinFrequencyDays() {
-    return minFrequencyDays;
-  }
+    public void setSubscriptionDiscount360Days(Double subscriptionDiscount360Days) {
+        this.subscriptionDiscount360Days = subscriptionDiscount360Days;
+    }
 
-  public void setMinFrequencyDays(int minFrequencyDays) {
-    this.minFrequencyDays = minFrequencyDays;
-  }
+    public int getMinFrequencyDays() {
+        return minFrequencyDays;
+    }
 
-  public int getMaxFrequencyDays() {
-    return maxFrequencyDays;
-  }
+    public void setMinFrequencyDays(int minFrequencyDays) {
+        this.minFrequencyDays = minFrequencyDays;
+    }
 
-  public void setMaxFrequencyDays(int maxFrequencyDays) {
-    this.maxFrequencyDays = maxFrequencyDays;
-  }
+    public int getMaxFrequencyDays() {
+        return maxFrequencyDays;
+    }
 
-  public int getMaxQtyPerDelivery() {
-    return maxQtyPerDelivery;
-  }
+    public void setMaxFrequencyDays(int maxFrequencyDays) {
+        this.maxFrequencyDays = maxFrequencyDays;
+    }
 
-  public void setMaxQtyPerDelivery(int maxQtyPerDelivery) {
-    this.maxQtyPerDelivery = maxQtyPerDelivery;
-  }
+    public int getMaxQtyPerDelivery() {
+        return maxQtyPerDelivery;
+    }
+
+    public void setMaxQtyPerDelivery(int maxQtyPerDelivery) {
+        this.maxQtyPerDelivery = maxQtyPerDelivery;
+    }
 }

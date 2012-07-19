@@ -17,7 +17,8 @@ public enum EnumSubscriptionOrderStatus {
 
     Placed(10L, "Placed"),
     InProcess(15L, "In Process"),
-    Delivered(20L, "Shipped"),
+    Shipped(20L, "Shipped"),
+    Delivered(25L, "Delivered"),
     Cancelled(99L, "Cancelled");
 
     private java.lang.String name;

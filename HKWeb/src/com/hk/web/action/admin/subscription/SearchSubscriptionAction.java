@@ -2,16 +2,19 @@ package com.hk.web.action.admin.subscription;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
+import com.hk.constants.core.PermissionConstants;
 import com.hk.core.search.SubscriptionSearchCriteria;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.order.Order;
 import com.hk.domain.subscription.Subscription;
 import com.hk.domain.subscription.SubscriptionStatus;
 import com.hk.pact.service.subscription.SubscriptionService;
+import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.stripesstuff.plugin.security.Secure;
 
 import java.util.*;
 
@@ -22,9 +25,12 @@ import java.util.*;
  * Time: 3:25 PM
  * To change this template use File | Settings | File Templates.
  */
+
+@Secure(hasAnyPermissions = { PermissionConstants.SEARCH_ORDERS }, authActionBean = AdminPermissionAction.class)
 public class SearchSubscriptionAction extends BasePaginatedAction{
 
     private SubscriptionStatus subscriptionStatus;
+    private Long subscriptionId;
     private Long          orderId;
 
     private String        login;
@@ -44,7 +50,7 @@ public class SearchSubscriptionAction extends BasePaginatedAction{
 
     @DefaultHandler
     public Resolution pre() {
-        return new ForwardResolution("/pages/admin/searchSubscription.jsp");
+        return new ForwardResolution("/pages/admin/subscription/searchSubscription.jsp");
     }
 
     public Resolution searchSubscriptions() {
@@ -54,15 +60,16 @@ public class SearchSubscriptionAction extends BasePaginatedAction{
         if (subscriptionStatus != null){
             subscriptionSearchCriteria.setSubscriptionStatusList(Arrays.asList(subscriptionStatus));
         }
+        subscriptionSearchCriteria.setSubscriptionId(subscriptionId);
         subscriptionSearchCriteria.setBaseOrderId(orderId);
         //subscriptionSearchCriteria.setPaymentStartDate(startDate).setPaymentEndDate(endDate);
         subscriptionSearchCriteria.setEmail(email).setLogin(login).setName(name).setPhone(phone);
-        subscriptionSearchCriteria.setOrderAsc(false);
+        //subscriptionSearchCriteria.setOrderAsc(false);
 
         subscriptionPage = subscriptionService.searchSubscriptions(subscriptionSearchCriteria, getPageNo(), getPerPage());
 
         subscriptionList = subscriptionPage.getList();
-        return new ForwardResolution("/pages/admin/searchSubscription.jsp");
+        return new ForwardResolution("/pages/admin/subscription/searchSubscription.jsp");
     }
 
     public int getPerPageDefault() {
@@ -176,5 +183,13 @@ public class SearchSubscriptionAction extends BasePaginatedAction{
 
     public void setOrder(Order order) {
         this.order = order;
+    }
+
+    public Long getSubscriptionId() {
+        return subscriptionId;
+    }
+
+    public void setSubscriptionId(Long subscriptionId) {
+        this.subscriptionId = subscriptionId;
     }
 }

@@ -1,5 +1,6 @@
 package com.hk.pact.dao.subscription;
 
+import com.hk.domain.order.Order;
 import com.hk.domain.subscription.SubscriptionOrder;
 import com.hk.pact.dao.BaseDao;
 
@@ -13,5 +14,7 @@ import com.hk.pact.dao.BaseDao;
 public interface SubscriptionOrderDao extends BaseDao{
 
     public SubscriptionOrder save(SubscriptionOrder subscriptionOrder);
+
+    public SubscriptionOrder findSubscriptionOrderByBaseOrder(Order order);
 
 }

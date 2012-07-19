@@ -1,5 +1,6 @@
 package com.hk.impl.dao.subscription;
 
+import com.hk.domain.order.Order;
 import com.hk.domain.subscription.SubscriptionOrder;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.subscription.SubscriptionOrderDao;
@@ -19,4 +20,7 @@ public class SubscriptionOrderDaoImpl extends BaseDaoImpl implements Subscriptio
         return (SubscriptionOrder) super.save(subscriptionOrder);
     }
 
+    public SubscriptionOrder findSubscriptionOrderByBaseOrder(Order order){
+        return (SubscriptionOrder) findUniqueByNamedParams("from SubscriptionOrder so where so.baseOrder = :order ", new String[]{"order"}, new Object[]{order});
+    }
 }

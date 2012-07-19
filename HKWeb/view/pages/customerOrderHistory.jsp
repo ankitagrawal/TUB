@@ -21,17 +21,22 @@
               <th>Order Date</th>
               <th>Invoices</th>
               <th>Order Status</th>
-              <th>View Order</th>
 
             </tr>
             <tbody>
             <c:forEach items="${coha.orderList}" var="order">
               <tr>
                 <td>
+                    <c:if test="${!empty (order.gatewayOrderId)}">
+                    <s:link beanclass="com.hk.web.action.core.accounting.BOInvoiceAction" target="_blank">
+                    <s:param name="order" value="${order}"/>
                     ${order.gatewayOrderId}
+                </s:link>
+                    </c:if>
+
                 </td>
                 <td>
-                  <fmt:formatDate value="${order.payment.paymentDate}" pattern="dd/MM/yyyy"/>
+                  <fmt:formatDate value="${order.payment.paymentDate}" />
                 </td>
                 <td>
                   <c:set var="shippingOrders" value="${order.shippingOrders}"/>
@@ -57,12 +62,6 @@
                   <s:link beanclass="com.hk.web.action.core.order.OrderDetailsAction" target="_blank">
                     <s:param name="order" value="${order}"/>
                     (View Details)
-                  </s:link>
-                </td>
-                <td>
-                  <s:link beanclass="com.hk.web.action.core.accounting.BOInvoiceAction" target="_blank">
-                    <s:param name="order" value="${order}"/>
-                    View Order
                   </s:link>
                 </td>
               </tr>

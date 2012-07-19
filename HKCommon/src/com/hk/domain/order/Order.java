@@ -454,7 +454,11 @@ public class Order implements java.io.Serializable {
     }
 
   public Boolean isSubscriptionOrder() {
-    return subscriptionOrder;
+      if(subscriptionOrder!=null) {
+          return subscriptionOrder;
+      }else {
+          return false;
+      }
   }
 
   public void setSubscriptionOrder(Boolean subscriptionOrder) {

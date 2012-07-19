@@ -2,11 +2,13 @@ package com.hk.impl.service.subscription;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.util.BaseUtils;
+import com.hk.constants.subscription.EnumSubscriptionLifecycleActivity;
 import com.hk.constants.subscription.EnumSubscriptionStatus;
 import com.hk.constants.subscription.SubscriptionConstants;
 import com.hk.core.search.SubscriptionSearchCriteria;
 import com.hk.domain.order.Order;
 import com.hk.domain.subscription.SubscriptionStatus;
+import com.hk.pact.service.subscription.SubscriptionLoggingService;
 import com.hk.pact.service.subscription.SubscriptionService;
 import com.hk.pact.dao.subscription.SubscriptionDao;
 import com.hk.domain.subscription.Subscription;
@@ -31,6 +33,8 @@ public class SubscriptionServiceImpl implements SubscriptionService{
 
     @Autowired
     SubscriptionDao subscriptionDao;
+    @Autowired
+    SubscriptionLoggingService subscriptionLoggingService;
 
     @Transactional
     public Subscription save(Subscription subscription){
@@ -56,13 +60,23 @@ public class SubscriptionServiceImpl implements SubscriptionService{
             subscription.setSubscriptionStatus(EnumSubscriptionStatus.Placed.asSubscriptionStatus());
             subscription.setAddress(order.getAddress());
             subscriptionDao.save(subscription);
+            subscriptionLoggingService.logSubscriptionActivity(subscription, EnumSubscriptionLifecycleActivity.SubscriptionPlaced);
         }
         return  inCartSubscriptions;
     }
 
     public Subscription abandonSubscription(Subscription subscription){
         subscription.setSubscriptionStatus(EnumSubscriptionStatus.Abandoned.asSubscriptionStatus());
-        this.save(subscription);
+        subscription=this.save(subscription);
+        subscriptionLoggingService.logSubscriptionActivity(subscription,EnumSubscriptionLifecycleActivity.SubscriptionAbandoned);
+        return subscription;
+    }
+
+    public Subscription cancelSubscription(Subscription subscription){
+        subscription.setSubscriptionStatus(EnumSubscriptionStatus.Cancelled.asSubscriptionStatus());
+        subscription= this.save(subscription);
+        subscriptionLoggingService.logSubscriptionActivity(subscription,EnumSubscriptionLifecycleActivity.SubscriptionCancelled);
+        //to do award reward point after penalty or write relavent business logic
         return subscription;
     }
 
@@ -101,5 +115,23 @@ public class SubscriptionServiceImpl implements SubscriptionService{
      */
     public void checkInventoryForSubscriptionOrders(){
 
+    }
+
+    public Subscription updateSubscriptionAfterOrderDelivery(Subscription subscription){
+        long qtyPerDelivery = subscription.getQtyPerDelivery();
+        long qtyDelivered = subscription.getQtyDelivered();
+        long totalQty = subscription.getQty();
+
+        //update qty Delivered
+        qtyDelivered+=qtyPerDelivery;
+
+        subscription.setQtyDelivered(qtyDelivered);
+        if(totalQty<=qtyDelivered){
+            subscription.setSubscriptionStatus(EnumSubscriptionStatus.Expired.asSubscriptionStatus());
+        }else{
+            subscription.setSubscriptionStatus(EnumSubscriptionStatus.Idle.asSubscriptionStatus());
+        }
+        subscriptionLoggingService.logSubscriptionActivity(subscription, EnumSubscriptionLifecycleActivity.SubscriptionOrderDelivered);
+        return this.save(subscription);
     }
 }

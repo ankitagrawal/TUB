@@ -17,8 +17,14 @@ public interface SubscriptionOrderService {
 
     public SubscriptionOrder save(SubscriptionOrder subscriptionOrder);
 
+    public SubscriptionOrder findSubscriptionOrderByBaseOrder(Order order);
+
     public Order createOrderForSubscription(Subscription subscription);
 
     public List<Order> createOrdersForSubscriptions(List<Subscription> subscriptions);
+
+    public void markSubscriptionOrderAsDelivered(Order order);
+
+    public void markSubscriptionOrderAsShipped(Order order);
 
 }

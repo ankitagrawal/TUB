@@ -24,13 +24,13 @@ import java.util.Set;
  * User: Pradeep
  * Date: Jun 18, 2012
  * Time: 12:51:44 PM
- * To change this template use File | Settings | File Templates.
  */
 @Repository
 @SuppressWarnings("unchecked")
 public class SubscriptionDaoImpl extends BaseDaoImpl implements SubscriptionDao {
 
     public Subscription save(Subscription subscription){
+        subscription.setUpdateDate(BaseUtils.getCurrentTimestamp());
         return (Subscription) super.save(subscription);
     }
 

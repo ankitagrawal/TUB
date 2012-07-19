@@ -300,7 +300,7 @@ public class PricingDto {
 
     totalPromoDiscount = productsDiscount + prepaidServiceDiscount + postpaidServiceDiscount + orderLevelDiscount;
 
-    totalDiscount = productsDiscount + prepaidServiceDiscount + postpaidServiceDiscount + shippingDiscount + orderLevelDiscount + codDiscount;
+    totalDiscount = productsDiscount + prepaidServiceDiscount + postpaidServiceDiscount + shippingDiscount + orderLevelDiscount + codDiscount +subscriptionDiscount;
   }
 
   @Override

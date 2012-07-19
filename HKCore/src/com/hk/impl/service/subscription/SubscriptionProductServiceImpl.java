@@ -1,6 +1,8 @@
 package com.hk.impl.service.subscription;
 
+import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.pact.service.catalog.ProductService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +10,8 @@ import com.hk.pact.service.subscription.SubscriptionProductService;
 import com.hk.pact.dao.subscription.SubscriptionProductDao;
 import com.hk.domain.subscription.SubscriptionProduct;
 import com.hk.domain.catalog.product.Product;
+
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -19,21 +23,31 @@ import com.hk.domain.catalog.product.Product;
 @Service
 public class SubscriptionProductServiceImpl implements SubscriptionProductService{
 
-  @Autowired
-  SubscriptionProductDao subscriptionProductDao;
+    @Autowired
+    SubscriptionProductDao subscriptionProductDao;
+    @Autowired
+    ProductService productService;
 
-  @Transactional
-  public SubscriptionProduct save(SubscriptionProduct subscriptionProduct){
-       return subscriptionProductDao.save(subscriptionProduct);
-  }
+    @Transactional
+    public SubscriptionProduct save(SubscriptionProduct subscriptionProduct){
+        Product product=subscriptionProduct.getProduct();
+        product.setSubscribable(true);
+        productService.save(product);
 
-  @Transactional
-  public SubscriptionProduct findByProduct(Product product){
-       return subscriptionProductDao.findByProduct(product);
-  }
+        return subscriptionProductDao.save(subscriptionProduct);
+    }
 
-  public SubscriptionProduct findByProductVariant(ProductVariant productVariant){
-    return  this.findByProduct(productVariant.getProduct());
-  }
+    @Transactional
+    public SubscriptionProduct findByProduct(Product product){
+        return subscriptionProductDao.findByProduct(product);
+    }
+
+    public SubscriptionProduct findByProductVariant(ProductVariant productVariant){
+        return  this.findByProduct(productVariant.getProduct());
+    }
+
+    public List<SubscriptionProduct> findByCategory(Category category){
+        return subscriptionProductDao.findByCategory(category);
+    }
 
 }

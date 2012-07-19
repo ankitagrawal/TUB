@@ -76,7 +76,7 @@
 
   <!-- using jquery datepicker in subscription form  -->
     <c:if test="${!empty subscriptionProduct}">
-        <script type="text/javascript" src="<hk:vhostJs/>/js/jquery-ui.min.js"></script>
+
     </c:if>
 
 
@@ -404,7 +404,7 @@
               <s:layout-render name="/layouts/embed/glasses.jsp" product="${product}"/>
             </c:when>
             <c:otherwise>
-              <s:layout-render name="/layouts/embed/_productWithSingleVariant.jsp" product="${product}"/>
+              <s:layout-render name="/layouts/embed/_productWithSingleVariant.jsp" product="${product}"  subscriptionProduct="${subscriptionProduct}"/>
             </c:otherwise>
           </c:choose>
         </c:otherwise>

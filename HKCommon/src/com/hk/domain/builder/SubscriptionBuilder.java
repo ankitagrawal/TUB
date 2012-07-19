@@ -97,13 +97,17 @@ public class SubscriptionBuilder {
         subscription.setFrequencyDays(frequency);
         subscription.setQty(qty);
         subscription.setQtyPerDelivery(qtyPerDelivery);
+
+        subscription.setQtyDelivered(0L);
+
         if(subscriptionPeriod<360){
             subscription.setSubscriptionDiscountPercent(subscriptionProduct.getSubscriptionDiscount180Days());
         }else{
             subscription.setSubscriptionDiscountPercent(subscriptionProduct.getSubscriptionDiscount360Days());
         }
         //discount percent in hk are stored differently
-        subscription.setSubscriptionPrice(productVariant.getMarkedPrice()*(100-productVariant.getDiscountPercent()*100-subscription.getSubscriptionDiscountPercent())/100);
+        double subscriptionPrice=productVariant.getHkPrice()-Math.round(productVariant.getMarkedPrice()*(subscription.getSubscriptionDiscountPercent()/100.0));
+        subscription.setSubscriptionPrice(subscriptionPrice);
 
         return  subscription;
     }

@@ -5,6 +5,7 @@ import com.hk.domain.subscription.SubscriptionStatus;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import java.util.Date;
@@ -17,7 +18,18 @@ import java.util.Set;
  * Date: 7/12/12
  * Time: 3:35 PM
  */
-public class SubscriptionSearchCriteria extends AbstractSubscriptionSearchCriteria{
+public class SubscriptionSearchCriteria{
+    private Long               subscriptionId;
+
+
+    private boolean            sortByUpdateDate  = true;
+
+    protected DetachedCriteria baseCriteria;
+
+
+
+
+
 
     private String                    login;
     private String                    phone;
@@ -27,6 +39,43 @@ public class SubscriptionSearchCriteria extends AbstractSubscriptionSearchCriter
     private Long                                     baseOrderId;
 
     private List<SubscriptionStatus> subscriptionStatusList;
+
+    public void setSubscriptionId(Long subscriptionId) {
+        this.subscriptionId = subscriptionId;
+    }
+
+    public void setSortByUpdateDate(boolean sortByUpdateDate) {
+        this.sortByUpdateDate = sortByUpdateDate;
+    }
+
+    private DetachedCriteria buildBaseCriteria() {
+
+        this.baseCriteria = getBaseCriteria();
+
+        if (subscriptionId != null) {
+            baseCriteria.add(Restrictions.eq("id", subscriptionId));
+        }
+
+        if(sortByUpdateDate){
+            baseCriteria.addOrder(Order.desc("updateDate"));
+        }
+
+        /*
+         * if (sortByUpdateDate) { if (!orderAsc) {
+         * baseCriteria.addOrder(org.hibernate.criterion.Order.desc("updateDate")); } else {
+         * baseCriteria.addOrder(org.hibernate.criterion.Order.asc("updateDate")); } }
+         */
+
+        /*    if (sortByUpdateDate && orderAsc) {
+                    baseCriteria.addOrder(org.hibernate.criterion.Order.asc("updateDate"));
+                }
+        */
+        return baseCriteria;
+    }
+
+    public DetachedCriteria getSearchCriteria() {
+        return buildSearchCriteriaFromBaseCriteria();
+    }
 
     public SubscriptionSearchCriteria setLogin(String login) {
         this.login = login;
@@ -64,7 +113,7 @@ public class SubscriptionSearchCriteria extends AbstractSubscriptionSearchCriter
     }
 
     protected DetachedCriteria buildSearchCriteriaFromBaseCriteria() {
-        DetachedCriteria criteria = super.buildSearchCriteriaFromBaseCriteria();
+        DetachedCriteria criteria = buildBaseCriteria();
 
         if (subscriptionStatusList != null && subscriptionStatusList.size() > 0) {
             criteria.add(Restrictions.in("subscriptionStatus", subscriptionStatusList));

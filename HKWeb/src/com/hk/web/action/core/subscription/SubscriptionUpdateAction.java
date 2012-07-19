@@ -2,27 +2,34 @@ package com.hk.web.action.core.subscription;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
+import com.akube.framework.util.BaseUtils;
 import com.hk.constants.subscription.EnumSubscriptionStatus;
+import com.hk.constants.subscription.SubscriptionConstants;
 import com.hk.core.fliter.SubscriptionFilter;
 import com.hk.domain.builder.CartLineItemBuilder;
+import com.hk.domain.matcher.SubscriptionMatcher;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.subscription.Subscription;
 import com.hk.domain.subscription.SubscriptionProduct;
 import com.hk.domain.user.Address;
+import com.hk.domain.user.User;
 import com.hk.dto.pricing.PricingDto;
 import com.hk.manager.OrderManager;
+import com.hk.manager.UserManager;
+import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.order.CartFreebieService;
 import com.hk.pact.service.subscription.SubscriptionProductService;
 import com.hk.pact.service.subscription.SubscriptionService;
 import com.hk.pricing.PricingEngine;
 import com.hk.report.dto.pricing.PricingSubDto;
+import com.hk.util.UIDateTypeConverter;
 import com.hk.web.HealthkartResponse;
 import net.sourceforge.stripes.action.*;
-import net.sourceforge.stripes.validation.ValidationErrorHandler;
-import net.sourceforge.stripes.validation.ValidationErrors;
+import net.sourceforge.stripes.validation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -31,143 +38,195 @@ import java.util.Set;
  * User: Pradeep
  * Date: 7/4/12
  * Time: 2:17 PM
- * To change this template use File | Settings | File Templates.
  */
 public class SubscriptionUpdateAction extends BaseAction implements ValidationErrorHandler {
-  Subscription subscription;
-  PricingSubDto                     pricingSubDto;
-  SubscriptionProduct subscriptionProduct;
 
-  @Autowired
-  SubscriptionService subscriptionService;
-  @Autowired
-  OrderManager orderManager;
-  @Autowired
-  PricingEngine pricingEngine;
-  @Autowired
-  CartFreebieService cartFreebieService;
-  @Autowired
-  SubscriptionProductService subscriptionProductService;
+    @ValidateNestedProperties({
+            @Validate(field="subscriptionPeriodDays",required = true,mask = "[0-9]{1,9}",on="save"),
+            @Validate(field = "qty",required = true, minvalue = 1, mask = "[0-9]{1,9}",on="save"),
+            @Validate(field = "frequencyDays",required = true,minvalue = 1, mask = "[0-9]{1,9}",on="save"),
+            @Validate(field = "qtyPerDelivery",required = true, minvalue = 1, mask = "[0-9]{1,9}",on="save"),
+            @Validate(field = "startDate",required = true, converter = UIDateTypeConverter.class,on="save"),
+            @Validate(field = "productVariant",required = true,on="save")
+    })
+    Subscription subscription;
+    PricingSubDto                     pricingSubDto;
+    SubscriptionProduct subscriptionProduct;
 
-  @DontValidate
-  @DefaultHandler
-  public Resolution editSubscription() {
+    @Autowired
+    SubscriptionService subscriptionService;
+    @Autowired
+    OrderManager orderManager;
+    @Autowired
+    PricingEngine pricingEngine;
+    @Autowired
+    CartFreebieService cartFreebieService;
+    @Autowired
+    SubscriptionProductService subscriptionProductService;
+    @Autowired
+    UserDao userDao;
+    @Autowired
+    UserManager userManager;
 
-    subscriptionProduct = subscriptionProductService.findByProduct(subscription.getProductVariant().getProduct());
+    @DefaultHandler
+    public Resolution editSubscription() {
 
-    HealthkartResponse healthkartResponse;
+        subscriptionProduct = subscriptionProductService.findByProduct(subscription.getProductVariant().getProduct());
 
-    healthkartResponse= new HealthkartResponse(HealthkartResponse.STATUS_OK, "");
-
-    return new ForwardResolution("/pages/modal/editSubscription.jsp");
-  }
-
-  @HandlesEvent("save")
-  @JsonHandler
-  public Resolution saveSubscription(){
-    subscriptionService.save(subscription);
-
-    HealthkartResponse healthkartResponse;
-
-    healthkartResponse= new HealthkartResponse(HealthkartResponse.STATUS_OK, "");
-    return new JsonResolution(healthkartResponse);
-  }
-
-  @HandlesEvent("abandon")
-  @JsonHandler
-  public Resolution abandonSubscription(){
-    subscriptionService.abandonSubscription(subscription);
-    HealthkartResponse healthkartResponse;
-    // there is a null pointer here (prodbably getPricipalUser() --> putting null check
-    if (getPrincipalUser() != null) {
-      Order order = orderManager.getOrCreateOrder(getPrincipalUser());
-      Address address = order.getAddress() != null ? order.getAddress() : new Address();
-      Set<Subscription> inCartSubscriptions= new SubscriptionFilter(order.getSubscriptions()).addSubscriptionStatus(EnumSubscriptionStatus.InCart).filter();
-
-      PricingDto pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), address, 0D, inCartSubscriptions), address);
-
-       CartLineItem cartLineItem=new CartLineItemBuilder().forSubscription(subscription).build();
-      pricingSubDto = new PricingSubDto(pricingDto, cartLineItem);
-
-      String freebieBanner = cartFreebieService.getFreebieBanner(order);
-      healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, freebieBanner, pricingSubDto);
-
-
-      return new JsonResolution(healthkartResponse);
-    } else {
-       healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "fail", pricingSubDto);
-
-      return new JsonResolution(healthkartResponse);
+        return new ForwardResolution("/pages/modal/editSubscription.jsp");
     }
-    /*healthkartResponse= new HealthkartResponse(HealthkartResponse.STATUS_OK, "");
-    return new JsonResolution(healthkartResponse);*/
-  }
 
-  public Resolution handleValidationErrors(ValidationErrors validationErrors) throws Exception {
-    return new JsonResolution(validationErrors, getContext().getLocale());
-  }
+    @HandlesEvent("save")
+    @JsonHandler
+    public Resolution saveSubscription(){
 
-  public Subscription getSubscription() {
-    return subscription;
-  }
+        User user = null;
+        if (getPrincipal() != null) {
+            user = userDao.getUserById(getPrincipal().getId());
+            if (user == null) {
+                user = userManager.createAndLoginAsGuestUser(null, null);
+            }
+        } else {
+            user = userManager.createAndLoginAsGuestUser(null, null);
+        }
 
-  public void setSubscription(Subscription subscription) {
-    this.subscription = subscription;
-  }
+        Order order = orderManager.getOrCreateOrder(user);
+        HealthkartResponse healthkartResponse;
+        if(subscription.getBaseOrder().getId() == order.getId()){
+            subscriptionService.save(subscription);
+            healthkartResponse= new HealthkartResponse(HealthkartResponse.STATUS_OK, "");
+            return new JsonResolution(healthkartResponse);
+        }else{
+            healthkartResponse= new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "please don't try to mess up with our system");
+            return new JsonResolution(healthkartResponse);
+        }
+    }
 
-  public PricingSubDto getPricingSubDto() {
-    return pricingSubDto;
-  }
+    @HandlesEvent("abandon")
+    @JsonHandler
+    public Resolution abandonSubscription(){
 
-  public void setPricingSubDto(PricingSubDto pricingSubDto) {
-    this.pricingSubDto = pricingSubDto;
-  }
+        HealthkartResponse healthkartResponse;
+        // there is a null pointer here (prodbably getPricipalUser() --> putting null check
+        if (getPrincipalUser() != null) {
+            Order order = orderManager.getOrCreateOrder(getPrincipalUser());
+            if(subscription.getBaseOrder().getId()!=order.getId()){
+                healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "please don't try to mess up with our system");
+                return new JsonResolution(healthkartResponse);
+            }
+            subscriptionService.abandonSubscription(subscription);
+            Address address = order.getAddress() != null ? order.getAddress() : new Address();
+            Set<Subscription> inCartSubscriptions= new SubscriptionFilter(order.getSubscriptions()).addSubscriptionStatus(EnumSubscriptionStatus.InCart).filter();
 
-  public OrderManager getOrderManager() {
-    return orderManager;
-  }
+            PricingDto pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), address, 0D, inCartSubscriptions), address);
 
-  public void setOrderManager(OrderManager orderManager) {
-    this.orderManager = orderManager;
-  }
+            CartLineItem cartLineItem=new CartLineItemBuilder().forSubscription(subscription).build();
+            pricingSubDto = new PricingSubDto(pricingDto, cartLineItem);
 
-  public PricingEngine getPricingEngine() {
-    return pricingEngine;
-  }
+            String freebieBanner = cartFreebieService.getFreebieBanner(order);
+            healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, freebieBanner, pricingSubDto);
 
-  public void setPricingEngine(PricingEngine pricingEngine) {
-    this.pricingEngine = pricingEngine;
-  }
 
-  public CartFreebieService getCartFreebieService() {
-    return cartFreebieService;
-  }
+            return new JsonResolution(healthkartResponse);
+        } else {
+            healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "fail", pricingSubDto);
 
-  public void setCartFreebieService(CartFreebieService cartFreebieService) {
-    this.cartFreebieService = cartFreebieService;
-  }
+            return new JsonResolution(healthkartResponse);
+        }
+        /*healthkartResponse= new HealthkartResponse(HealthkartResponse.STATUS_OK, "");
+      return new JsonResolution(healthkartResponse);*/
+    }
 
-  public SubscriptionService getSubscriptionService() {
-    return subscriptionService;
-  }
+    @ValidationMethod(on = {"save"})
+    public void validateSubscriptionDays() {
+        subscriptionProduct = subscriptionProductService.findByProductVariant(subscription.getProductVariant());
+        if (subscriptionProduct == null) {
+            getContext().getValidationErrors().add("1", new SimpleError("Don't mess up with our product codes"));
+        }else {
+            if(subscription.getFrequencyDays()<subscriptionProduct.getMinFrequencyDays()|| subscription.getFrequencyDays()>subscriptionProduct.getMaxFrequencyDays()){
+                getContext().getValidationErrors().add("2", new SimpleError("Enter valid no of days for subscription frequency"));
+            }
+            if(subscription.getSubscriptionPeriodDays()< SubscriptionConstants.minSubscriptionDays || subscription.getSubscriptionPeriodDays()>SubscriptionConstants.maxSubscriptionDays){
+                getContext().getValidationErrors().add("3",new SimpleError("Enter valid no of days for total subscription period"));
+            }
+            if(subscription.getQtyPerDelivery()<0 || subscription.getQtyPerDelivery()>subscriptionProduct.getMaxQtyPerDelivery()){
+                getContext().getValidationErrors().add("4",new SimpleError("you can only have 0 to "+subscriptionProduct.getMaxQtyPerDelivery()+" products per delivery"));
+            }
+            Date currentTime= BaseUtils.getCurrentTimestamp();
+            int oneDay= 24*60*60*1000;
+            Long days=(subscription.getStartDate().getTime() - BaseUtils.getCurrentTimestamp().getTime())/oneDay;
+            if(days<-2 || days>62){
+                getContext().getValidationErrors().add("4",new SimpleError("Please enter a start date with in two months from current date"));
+            }
+            //to do validate startDate to be within two months from current date
+        }
+    }
 
-  public void setSubscriptionService(SubscriptionService subscriptionService) {
-    this.subscriptionService = subscriptionService;
-  }
+    public Resolution handleValidationErrors(ValidationErrors validationErrors) throws Exception {
+        return new JsonResolution(validationErrors, getContext().getLocale());
+    }
 
-  public SubscriptionProduct getSubscriptionProduct() {
-    return subscriptionProduct;
-  }
+    public Subscription getSubscription() {
+        return subscription;
+    }
 
-  public void setSubscriptionProduct(SubscriptionProduct subscriptionProduct) {
-    this.subscriptionProduct = subscriptionProduct;
-  }
+    public void setSubscription(Subscription subscription) {
+        this.subscription = subscription;
+    }
 
-  public SubscriptionProductService getSubscriptionProductService() {
-    return subscriptionProductService;
-  }
+    public PricingSubDto getPricingSubDto() {
+        return pricingSubDto;
+    }
 
-  public void setSubscriptionProductService(SubscriptionProductService subscriptionProductService) {
-    this.subscriptionProductService = subscriptionProductService;
-  }
+    public void setPricingSubDto(PricingSubDto pricingSubDto) {
+        this.pricingSubDto = pricingSubDto;
+    }
+
+    public OrderManager getOrderManager() {
+        return orderManager;
+    }
+
+    public void setOrderManager(OrderManager orderManager) {
+        this.orderManager = orderManager;
+    }
+
+    public PricingEngine getPricingEngine() {
+        return pricingEngine;
+    }
+
+    public void setPricingEngine(PricingEngine pricingEngine) {
+        this.pricingEngine = pricingEngine;
+    }
+
+    public CartFreebieService getCartFreebieService() {
+        return cartFreebieService;
+    }
+
+    public void setCartFreebieService(CartFreebieService cartFreebieService) {
+        this.cartFreebieService = cartFreebieService;
+    }
+
+    public SubscriptionService getSubscriptionService() {
+        return subscriptionService;
+    }
+
+    public void setSubscriptionService(SubscriptionService subscriptionService) {
+        this.subscriptionService = subscriptionService;
+    }
+
+    public SubscriptionProduct getSubscriptionProduct() {
+        return subscriptionProduct;
+    }
+
+    public void setSubscriptionProduct(SubscriptionProduct subscriptionProduct) {
+        this.subscriptionProduct = subscriptionProduct;
+    }
+
+    public SubscriptionProductService getSubscriptionProductService() {
+        return subscriptionProductService;
+    }
+
+    public void setSubscriptionProductService(SubscriptionProductService subscriptionProductService) {
+        this.subscriptionProductService = subscriptionProductService;
+    }
 }

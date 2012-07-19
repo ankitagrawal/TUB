@@ -50,7 +50,7 @@ public class CartLineItemBuilder {
 
   public CartLineItemBuilder forSubscription(Subscription subscription){
     this.hkPrice =subscription.getHkPriceAtSubscription();
-    this.discountOnHkPrice = subscription.getMarkedPriceAtSubscription()*subscription.getSubscriptionDiscountPercent()/100;
+    this.discountOnHkPrice = subscription.getHkPriceAtSubscription()-subscription.getSubscriptionPrice();
     this.markedPrice = subscription.getMarkedPriceAtSubscription();
     this.forVariantQty(subscription.getProductVariant(), new Long(subscription.getQty()));
     this.enumCartLineItemType=EnumCartLineItemType.Subscription;

@@ -5,7 +5,10 @@ import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.domain.catalog.product.ProductVariant;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
 import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.*;
 
@@ -87,6 +90,9 @@ public class Subscription  implements java.io.Serializable {
 
     @Column(name="marked_price_at_subscription", nullable=false, precision=10)
     private Double markedPriceAtSubscription;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "subscription")
+    private List<SubscriptionLifecycle> subscriptionLifecycles = new ArrayList<SubscriptionLifecycle>();
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name="create_date", nullable=false, length=19)
@@ -268,6 +274,14 @@ public class Subscription  implements java.io.Serializable {
 
     public void setQtyDelivered(Long qtyDelivered) {
         this.qtyDelivered = qtyDelivered;
+    }
+
+    public List<SubscriptionLifecycle> getSubscriptionLifecycles() {
+        return subscriptionLifecycles;
+    }
+
+    public void setSubscriptionLifecycles(List<SubscriptionLifecycle> subscriptionLifecycles) {
+        this.subscriptionLifecycles = subscriptionLifecycles;
     }
 }
 
