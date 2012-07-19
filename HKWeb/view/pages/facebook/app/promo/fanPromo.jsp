@@ -105,7 +105,7 @@
     </div>
     <div style="display:none;" class="couponContainer">
         <img src="${pageContext.request.contextPath}/common/images/fb/FanDeal-ITMD11.jpg"/>
-        <a href="http://www.healthkart.com/" target="_blank"><img src="${pageContext.request.contextPath}/common/images/fb/FanDeal-4.jpg"/></a>
+        <a href="${pageContext.request.contextPath}/" target="_blank"><img src="${pageContext.request.contextPath}/common/images/fb/FanDeal-4.jpg"/></a>
     </div>
     <%
       }else{

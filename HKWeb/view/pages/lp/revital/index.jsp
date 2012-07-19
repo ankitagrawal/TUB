@@ -9,7 +9,7 @@
 
 <body>
 <div id="header_top">
-<div class="header"><a href="http://www.healthkart.com/"><img class="logo" src="${pageContext.request.contextPath}/pages/lp/revital/images/logo_hkart.png" /></a>
+<div class="header"><a href="${pageContext.request.contextPath}/"><img class="logo" src="${pageContext.request.contextPath}/pages/lp/revital/images/logo_hkart.png" /></a>
 <p class="slogen"> the one stop shop for health, fitness and beauty</p>
 
 <p class="customer"> Customer Care: +91 124 4551616</p></div>
