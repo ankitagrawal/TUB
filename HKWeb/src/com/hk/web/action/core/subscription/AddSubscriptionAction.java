@@ -100,7 +100,7 @@ public class AddSubscriptionAction extends BaseAction implements ValidationError
                     SubscriptionBuilder subscriptionBuilder=new SubscriptionBuilder();
                     subscriptionBuilder.forUser(user).forOrder(order).forSubscriptionProduct(subscriptionProduct);
                     subscriptionBuilder.forProductVariant(subscription.getProductVariant()).forQuantity(subscription.getQty(),subscription.getQtyPerDelivery()).frequency(subscription.getFrequencyDays()).startDate(subscription.getStartDate()).subscriptionPeriod(subscription.getSubscriptionPeriodDays());
-                    subscriptionService.save(subscriptionBuilder.withStatus(EnumSubscriptionStatus.InCart).build());
+                    subscription=subscriptionService.save(subscriptionBuilder.withStatus(EnumSubscriptionStatus.InCart).build());
                     subscriptionLoggingService.logSubscriptionActivity(subscription, EnumSubscriptionLifecycleActivity.AddedToCart);
                 }
             }

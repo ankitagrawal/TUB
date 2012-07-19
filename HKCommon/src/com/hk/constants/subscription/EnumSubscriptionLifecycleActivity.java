@@ -11,7 +11,7 @@ import com.hk.domain.subscription.SubscriptionLifecycleActivity;
  * To change this template use File | Settings | File Templates.
  */
 public enum EnumSubscriptionLifecycleActivity {
-    AddedToCart(5L,"Subscription In Cart"),
+    AddedToCart(5L,"Subscription added to Cart"),
     SubscriptionAbandoned(6L,"Subscription Abandoned"),
     SubscriptionPlaced(10L, "Subscription Placed"),
     AddressChanged(15L, "Address Changed"),
