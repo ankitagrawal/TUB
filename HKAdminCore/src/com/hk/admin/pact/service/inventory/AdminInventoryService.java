@@ -31,8 +31,7 @@ public interface AdminInventoryService {
     /**
      * SkuGroup/SkuItem/PVI Inventory Checkin / Checkout Functions
      */
-    public SkuGroup createSkuGroup(String batch, Date mfgDate, Date expiryDate, GoodsReceivedNote goodsReceivedNote, ReconciliationVoucher reconciliationVoucher,
-            StockTransfer stockTransfer, Sku sku);
+    public SkuGroup createSkuGroup(String batch, Date mfgDate, Date expiryDate, Double costPrice, Double mrp, GoodsReceivedNote goodsReceivedNote, ReconciliationVoucher reconciliationVoucher, StockTransfer stockTransfer, Sku sku);
 
     public void createSkuItemsAndCheckinInventory(SkuGroup skuGroup, Long qty, LineItem lineItem, GrnLineItem grnLineItem, RvLineItem rvLineItem,
             StockTransferLineItem stockTransferLineItem, InvTxnType invTxnType, User txnBy);

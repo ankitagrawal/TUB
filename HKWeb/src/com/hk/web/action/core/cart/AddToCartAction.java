@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.hk.pact.service.mooga.RecommendationEngine;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.JsonResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -59,6 +60,9 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
 
     @Autowired
     SignupAction signupAction;
+    
+    @Autowired
+    RecommendationEngine recomendationEngine;
 
     @SuppressWarnings({"unchecked", "deprecation"})
     @DefaultHandler
@@ -164,6 +168,7 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
             dataMap.put("itemsInCart", Long.valueOf(order.getExclusivelyProductCartLineItems().size() + order.getExclusivelyComboCartLineItems().size()) + 1L);
             HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Product has been added to cart", dataMap);
             noCache();
+            recomendationEngine.notifyAddToCart(user.getId(), productVariantList);
             return new JsonResolution(healthkartResponse);
         }
         HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Product has not been added to cart", dataMap);

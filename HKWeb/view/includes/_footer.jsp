@@ -23,7 +23,7 @@
           </li>
           <li><a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp"><span class="txt-white">Return and Cancellations</span></a>
           </li>
-          <li><a href="http://www.healthkart.com/blog" target="_blank"><span class="txt-white">Blog</span></a></li>
+          <li><a href="${pageContext.request.contextPath}/blog" target="_blank"><span class="txt-white">Blog</span></a></li>
           <li><a href="${pageContext.request.contextPath}/pages/careers.jsp"><span class="txt-white">Careers</span></a>
           </li>
         </ul>
@@ -83,7 +83,7 @@
         <a href="http://www.twitter.com/healthkart" target="_blank" style="border-bottom:none">
           <img src="<hk:vhostImage/>/images/banners/home/twitter.png" alt="HealthKart Twitter">
         </a>
-        <a href="http://www.healthkart.com/blog" target="_blank" style="border-bottom:none">
+        <a href="${pageContext.request.contextPath}/blog" target="_blank" style="border-bottom:none">
           <img src="<hk:vhostImage/>/images/banners/home/Blog.png" alt="HealthKart Blog"></a>
 
         <div class='floatfix'></div>

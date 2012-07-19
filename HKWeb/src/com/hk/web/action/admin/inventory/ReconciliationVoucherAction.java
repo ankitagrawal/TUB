@@ -121,7 +121,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
                     rvLineItem = (RvLineItem) getBaseDao().save(rvLineItem);
                     if (productVariantInventoryDao.getPVIForRV(sku, rvLineItem).isEmpty()) {
                         // Create batch and checkin inv
-                        SkuGroup skuGroup = adminInventoryService.createSkuGroup(rvLineItem.getBatchNumber(), rvLineItem.getMfgDate(), rvLineItem.getExpiryDate(), null, reconciliationVoucher, null, sku);
+                        SkuGroup skuGroup = adminInventoryService.createSkuGroup(rvLineItem.getBatchNumber(), rvLineItem.getMfgDate(), rvLineItem.getExpiryDate(), rvLineItem.getCostPrice(), rvLineItem.getMrp(), null, reconciliationVoucher, null, sku);
                         adminInventoryService.createSkuItemsAndCheckinInventory(skuGroup, rvLineItem.getQty(), null, null, rvLineItem, null, inventoryService.getInventoryTxnType(EnumInvTxnType.RV_CHECKIN), loggedOnUser);
                     }
                 } else if (rvLineItem.getReconciliationType().equals(reconciliationVoucherDao.get(ReconciliationType.class, EnumReconciliationType.Subtract.getId()))) {
