@@ -51,16 +51,5 @@ public class AwbServiceImpl implements AwbService {
         return awbDao.findByCourierAwbNumber(courier ,awbNumber);
     }
 
-    public List<Awb> getAwbInShipment(Courier courier, String awbNumber, Warehouse warehouse, Boolean cod, AwbStatus awbStatus) {
-        List<Awb> awbList = awbDao.getAvailableAwbForCourierByWarehouseCodStatus(courier, awbNumber, warehouse, cod, awbStatus);
-        List<Awb> awbInShipment = new ArrayList<Awb>();
-        for (Awb awb : awbList) {
-            Shipment shipment = shipmentService.findByAwb(awb);
-            if (shipment != null && shipment.getAwb().getAwbNumber() != null) {
-                awbInShipment.add(awb);
-            }
-        }
-        return awbList;
-    }
 
 }
