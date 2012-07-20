@@ -10,7 +10,7 @@
 	<body>
 		<div id="wraper">
 			<div id="header">
-				<a href="http://www.healthkart.com/"><img class="logo" src="images/logo_hkart.png" /></a>
+				<a href="${pageContext.request.contextPath}/"><img class="logo" src="images/logo_hkart.png" /></a>
 				<p class="slogen"> the one stop shop for health, fitness and beauty</p>
 
 				<p class="customer"> Customer Care: +91 124 4551616</p>

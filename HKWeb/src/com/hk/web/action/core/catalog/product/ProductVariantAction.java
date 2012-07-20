@@ -73,7 +73,7 @@ public class ProductVariantAction extends BaseAction {
 
     public Resolution changeProductLink() {
         if (mainProductImageId != null) {
-            String productImageLink = HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, Long.parseLong(mainProductImageId));
+            String productImageLink = HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, Long.parseLong(mainProductImageId),isSecureRequest());
             HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "success", productImageLink);
             return new JsonResolution(healthkartResponse);
         } else {

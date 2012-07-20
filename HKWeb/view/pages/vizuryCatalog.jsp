@@ -10,7 +10,7 @@
   <c:if test="${fn:length(product.productVariants) > 0 && product.minimumMRPProducVariant.hkPrice != null && product.maximumMRPProducVariant.hkPrice != null}">
     <product id="${product.id}">
       <name><![CDATA[${hk:escapeHtml(product.name)}]]></name>
-      <url>http://www.healthkart.com/product/${product.slug}/${product.id}</url>
+      <url>${pageContext.request.contextPath}/product/${product.slug}/${product.id}</url>
       <priceMin marked="${product.minimumMRPProducVariant.markedPrice}" hk="${product.minimumMRPProducVariant.hkPrice}"/>
       <priceMax marked="${product.maximumMRPProducVariant.markedPrice}" hk="${product.maximumMRPProducVariant.hkPrice}"/>
       <categories>
@@ -23,9 +23,9 @@
             <c:set var="imageId" value="${product.mainImageId}"/>
             <%Long imageId = (Long) pageContext.getAttribute("imageId");%>
             <image
-                srcSmall="<%=HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, imageId)%>"
-                srcMedium="<%=HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, imageId)%>"
-                srcLarge="<%=HKImageUtils.getS3ImageUrl(EnumImageSize.LargeSize, imageId)%>"
+                srcSmall="<%=HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, imageId,false)%>"
+                srcMedium="<%=HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, imageId,false)%>"
+                srcLarge="<%=HKImageUtils.getS3ImageUrl(EnumImageSize.LargeSize, imageId,false)%>"
                 />
           </c:when>
           <c:otherwise>
