@@ -21,7 +21,7 @@ import java.util.List;
  * Time: 12:23 AM
  * To change this template use File | Settings | File Templates.
  */
-public class DemandHistoryDaoImpl extends BaseDaoImpl implements DemandHistoryDao {
+public class DemandHistoryDaoImpl extends BaseDaoImpl implements DemandHistoryDao {          //todo think logic
 
     public DemandHistory createOrUpdateEntry(CartLineItem cartLineItem, Warehouse warehouse, Order order) {
         ProductVariant productVariant = cartLineItem.getProductVariant();
