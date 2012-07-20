@@ -10,7 +10,7 @@
   <c:if test="${fn:length(product.productVariants) > 0 && product.minimumMRPProducVariant.hkPrice != null && product.maximumMRPProducVariant.hkPrice != null}">
     <product id="${product.id}">
       <name><![CDATA[${hk:escapeHtml(product.name)}]]></name>
-      <url>${pageContext.request.contextPath}/product/${product.slug}/${product.id}</url>
+      <url>http://www.healthkart.com/product/${product.slug}/${product.id}</url>
       <priceMin marked="${product.minimumMRPProducVariant.markedPrice}" hk="${product.minimumMRPProducVariant.hkPrice}"/>
       <priceMax marked="${product.maximumMRPProducVariant.markedPrice}" hk="${product.maximumMRPProducVariant.hkPrice}"/>
       <categories>
