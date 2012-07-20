@@ -86,12 +86,10 @@ of
                     </li>
                 </c:if>
             </c:forEach>
-            <shiro:lacksRole name="<%=RoleConstants.ADMIN%>">
                 <li class='lvl1' id='brands_button' style='float:left;'><s:link href='/brands'>Brands</s:link></li>
-            </shiro:lacksRole>
             <shiro:hasRole name="<%=RoleConstants.ADMIN%>">
-                <li class='lvl1' id='super_savers_button' style='float:left;'><s:link
-                        href='/super-savers'>Super Savers</s:link></li>
+                <li class='lvl1 new' id='super_savers_button' style='float:left;'><s:link
+                        href='/super-savers'>Offers</s:link></li>
             </shiro:hasRole>
                 <%--<li class='lvl1' id='offers_button' style='float:left;'><s:link href='/pages/valentineGifts.jsp'>Gifts</s:link></li>--%>
                 <%--<li class='' id='brands_button' style='float:right; margin: 4px 6px 0 0; padding: 2px 4px; background-color: #2b659d; -moz-border-radius: 3px; border-radius: 3px; border: 1px solid #4c97df;'>--%>
