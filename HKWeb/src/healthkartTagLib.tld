@@ -166,6 +166,25 @@
      <dynamic-attributes>true</dynamic-attributes>
     </tag>
 
+    <tag>
+     <description>Renders super saver banners</description>
+     <display-name>superSaverImage</display-name>
+     <name>superSaverImage</name>
+     <tag-class>com.hk.web.tag.SuperSaverImageTag</tag-class>
+     <body-content>empty</body-content>
+     <attribute>
+       <name>imageId</name>
+       <required>true</required>
+       <rtexprvalue>true</rtexprvalue>
+     </attribute>
+     <attribute>
+       <name>size</name>
+       <required>true</required>
+       <rtexprvalue>true</rtexprvalue>
+     </attribute>
+     <dynamic-attributes>true</dynamic-attributes>
+    </tag>
+
   <function>
     <description>
       Escapes characters that could be interpreted as XML markup.
