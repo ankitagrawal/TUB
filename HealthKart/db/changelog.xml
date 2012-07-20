@@ -7848,6 +7848,11 @@
             <column name="awb_id" type="INT"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Seema (generated)" id="1342274075684-4">
+        <sql>
+            truncate `awb`;
+        </sql>
+    </changeSet>
     <changeSet author="Seema (generated)" id="1342273389422-4">
         <addForeignKeyConstraint baseColumnNames="awb_status_id" baseTableName="awb" constraintName="fk_awb_awb_status1"
                                  deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
@@ -7863,11 +7868,6 @@
     <changeSet author="Seema (generated)" id="1342274075684-3">
         <sql>
             delete s.* from `shipment` s left join `shipping_order` so on s.id=so.shipment_id where so.id is null;
-        </sql>
-    </changeSet>
-    <changeSet author="Seema (generated)" id="1342274075684-4">
-        <sql>
-            truncate `awb`;
         </sql>
     </changeSet>
     <changeSet author="Seema (generated)" id="1342274075684-14">
