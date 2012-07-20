@@ -103,7 +103,7 @@
     <br/>
 
     <%--<h1 id="top">FAQs: Weight Management</h1>--%>
-    <shiro:hasRole name="<%=RoleConstants.ADMIN%>">
+    <shiro:hasRole name="<%=RoleConstants.SITE_CONTENT_MANAGER%>">
       <s:link href="#" id="show-new-faq-form"
               class="popup" style="margin-bottom:20px;">Add FAQ
       </s:link>
@@ -159,7 +159,7 @@
 
           <p class="faq-question" style="margin-top:10px;"><strong>Q. </strong>
               ${faq.question}
-          <shiro:hasRole name="<%=RoleConstants.ADMIN%>">
+          <shiro:hasRole name="<%=RoleConstants.SITE_CONTENT_MANAGER%>">
             <s:link beanclass="com.hk.web.action.faq.FaqAction"
                     event="editFaq"
                     class="popup_window popup"

@@ -15,15 +15,15 @@ public class FaqDaoImpl extends BaseDaoImpl implements FaqDao {
 
     public List<Faq> searchFaq(String searchString) {
 
-        String hqlQueryForNotNullPageRank = "from Faq faq where faq.question like :searchString or faq.answer like :searchString or faq.primaryCategory like :searchString " +
+        String hqlQueryForNotNullPageRank = "from Faq faq where (faq.question like :searchString or faq.answer like :searchString or faq.primaryCategory like :searchString) " +
                                          "and faq.pageRank is not null order by faq.pageRank";
 
         Query faqListQuery = getSession().createQuery(hqlQueryForNotNullPageRank).setParameter("searchString", "%"+searchString+"%");
 
         List<Faq> faqList =  (List<Faq>) faqListQuery.list();
 
-        String hqlQueryForNullPageRank = "from Faq faq where faq.question like :searchString or faq.answer like :searchString or faq.primaryCategory like :searchString " +
-                                         "and faq.pageRank is null";
+        String hqlQueryForNullPageRank = "from Faq faq where (faq.question like :searchString or faq.answer like :searchString or faq.primaryCategory like :searchString) " +
+                                         "and faq.pageRank is null order by faq.pageRank";
 
         faqListQuery = getSession().createQuery(hqlQueryForNullPageRank).setParameter("searchString", "%"+searchString+"%");
 
