@@ -32,23 +32,13 @@ public class SuperSaverImageDaoImpl extends BaseDaoImpl implements SuperSaverIma
 
         StringBuilder hqlBuilder = new StringBuilder("from SuperSaverImage ssi where 1=1 ");
 
-        /* String visibleString = "";
-     String productString = "";
-     String concatenator = "";*/
-
         if (product != null) {
-            //productString = "where product = " + product;
             hqlBuilder.append(" and product.id = '" + product.getId() + "'");
         }
 
         if (getVisible) {
             hqlBuilder.append(" and ranking is not null and hidden = false");
-
-            //concatenator = productString.equals("") ? "where " : "and ";
-
-            //visibleString = concatenator + "ranking is not null and hidden = false";
             if (getMainImage) {
-//                visibleString += " and isMainImage = true";
                 hqlBuilder.append(" and isMainImage = true");
             }
         }

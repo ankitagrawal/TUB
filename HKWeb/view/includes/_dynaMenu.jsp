@@ -1,4 +1,5 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
 <s:useActionBean beanclass="com.hk.web.action.core.menu.MenuAction" var="menuAction" event="pre"/>
 <s:layout-definition>
     <%--<script type="text/javascript" src="${pageContext.request.contextPath}/js/menu.jsp"></script>--%>
@@ -30,8 +31,13 @@
             menuStr += "</div></li>";
         </c:if>
         </c:forEach>
-        <%--menuStr += "<li class='lvl1' id='brands_button' style='float:left;'><a href='${pageContext.request.contextPath}/brands'>Brands</a></li>"--%>
+        <shiro:lacksRole name="<%=RoleConstants.ADMIN%>">
+            menuStr += "<li class='lvl1' id='brands_button' style='float:left;'><a href='${pageContext.request.contextPath}/brands'>Brands</a></li>"
+        </shiro:lacksRole>
+
+        <shiro:hasRole name="<%=RoleConstants.ADMIN%>">
             menuStr += "<li class='lvl1' id='super_savers_button' style='float:left;'><a href='${pageContext.request.contextPath}/super-savers'>Super Savers</a></li>"
+        </shiro:hasRole>
         <%--menuStr += "<li class='lvl1' id='offers_button' style='float:left;'><a href='${pageContext.request.contextPath}/pages/valentineGifts.jsp'>Gifts</a></li>"--%>
             return menuStr;
         }
