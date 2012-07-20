@@ -20,6 +20,10 @@ public class SuperSaverImageServiceImpl implements SuperSaverImageService {
         return (SuperSaverImage) superSaverImageDao.save(superSaverImage);
     }
 
+    public void saveSuperSaverImages(List<SuperSaverImage> superSaverImages) {
+        superSaverImageDao.saveOrUpdate(superSaverImages);        
+    }
+
     public SuperSaverImage getSuperSaverImageByChecksum(String checksum) {
         return superSaverImageDao.getSuperSaverImageByChecksum(checksum);
     }

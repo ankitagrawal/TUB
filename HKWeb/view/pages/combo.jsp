@@ -18,12 +18,13 @@
 </s:layout-component>
 
 <s:layout-component name="topBanner">
-    <%--<s:layout-render name="/layouts/embed/catalogBreadcrumb.jsp" breadcrumbProduct="${productCombo}" lastLink="true"--%>
-    <%--topHeading="${seoData.h1}"/>--%>
-    <%----%>
-    <%--<s:layout-render name="/layouts/embed/_categoryTopBanners.jsp" topCategories="${productBean.topCategoryUrlSlug}"/>--%>
-    <%----%>
-    <%--<div class="clear"></div>--%>
+    <div class='crumb_outer'>
+        <a href="${pageContext.request.contextPath}" class="crumb">Home</a>
+        &gt;
+        <a href="${pageContext.request.contextPath}/super-savers" class="crumb">Super Savers</a>        
+
+        <h1 class="title">${productBean.seoData.h1}</h1>
+    </div>
 
     <c:if test="${productCombo.service}">
         <s:layout-render name="/layouts/embed/changePreferredZone.jsp" filterUrlFragment="${productBean.urlFragment}"/>
@@ -69,18 +70,18 @@
 
 <div class="contentDiv">
 <shiro:hasPermission name="<%=PermissionConstants.MANAGE_IMAGE%>">
-      <div><s:link beanclass="com.hk.web.action.core.catalog.image.UploadImageAction" event="pre" target="_blank"
-                   class="popup"> Upload
+    <div><s:link beanclass="com.hk.web.action.core.catalog.image.UploadImageAction" event="pre" target="_blank"
+                 class="popup"> Upload
         <s:param name="product" value="${productCombo.id}"/>
-      </s:link>
+    </s:link>
         <s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction"
                 event="manageProductImages" target="_blank"
                 class="popup">Manage
-                              Images
-          <s:param name="productId" value="${productCombo.id}"/>
+            Images
+            <s:param name="productId" value="${productCombo.id}"/>
         </s:link>
-      </div>
-    </shiro:hasPermission>
+    </div>
+</shiro:hasPermission>
 <h2 class='prod_title'>
         ${productCombo.name}
 </h2>
@@ -597,7 +598,7 @@
             resultDiv.find('.selValue').attr("name", "productVariantList[" + idx + "].selected");
             resultDiv.find('.qtyValue').attr("name", "productVariantList[" + idx + "].qty");
 
-            resultDiv.find('.qtyValue').val("1");             
+            resultDiv.find('.qtyValue').val("1");
         });
 
         function _addToCart(res) {

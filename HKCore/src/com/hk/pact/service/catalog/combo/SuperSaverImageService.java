@@ -8,6 +8,8 @@ import java.util.List;
 public interface SuperSaverImageService {
     public SuperSaverImage saveSuperSaverImage(SuperSaverImage superSaverImage);
 
+    public void saveSuperSaverImages(List<SuperSaverImage> superSaverImages);
+
     public SuperSaverImage getSuperSaverImageByChecksum(String checksum);
 
     public List<SuperSaverImage> getSuperSaverImages();

@@ -25,7 +25,7 @@
                 width: 100%;
             }
 
-            table th {
+            table th, table td {
                 text-align: center;
             }
 
@@ -63,9 +63,11 @@
 
                         <td><hk:superSaverImage imageId="${superSaverImage.id}"
                                                 size="<%=EnumImageSize.MediumSize%>" class="image"/></td>
-                        <td><s:text name="superSaverImages[${productCtr.index}].product" value="${superSaverImage.product.id}" class="productId"/></td>
+                        <td><s:text name="superSaverImages[${productCtr.index}].product"
+                                    value="${superSaverImage.product.id}" class="productId"/></td>
                         <td><s:text name="superSaverImages[${productCtr.index}].ranking" class="ranking"/></td>
-                        <td><s:text name="superSaverImages[${productCtr.index}].altText" value="${superSaverImage.altText}" class="altText"/></td>
+                        <td><s:text name="superSaverImages[${productCtr.index}].altText"
+                                    value="${superSaverImage.altText}" class="altText"/></td>
                             <%--<td><s:checkbox name="superSaverImages[${productCtr.index}].mainImage"/></td>--%>
                         <td><s:checkbox name="superSaverImages[${productCtr.index}].hidden" class="hiddenCheck"/></td>
                     </tr>
@@ -83,7 +85,7 @@
 
         <script type="text/javascript">
             $(document).ready(function() {
-               /* $('.submitButton').click(function() {
+                $('.submitButton').click(function() {
                     var error = false;
                     $('.productId').each(function() {
                         if ($(this).val().trim() === "") {
@@ -96,13 +98,13 @@
                             return false;
                         }
                     });
-                    
+
                     $('.altText').each(function() {
                         $(this).val($(this).val().trim());
                     });
 
                     return !error;
-                });*/
+                });
             });
         </script>
     </s:layout-component>
