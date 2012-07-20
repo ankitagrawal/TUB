@@ -76,9 +76,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 
     @ValidationMethod(on = "saveShipmentDetails")
     public void verifyShipmentDetails() {
-        String trackingId = null;
-        trackingId = shipment.getAwb().getAwbNumber();
-        if (StringUtils.isBlank(trackingId) || shipment.getBoxWeight() == null || shipment.getBoxSize() == null || shipment.getCourier() == null) {
+             if (StringUtils.isBlank(trackingId) || shipment.getBoxWeight() == null || shipment.getBoxSize() == null || shipment.getCourier() == null) {
             getContext().getValidationErrors().add("1", new SimpleError("Tracking Id, Box weight, Box Size, Courier all are mandatory"));
         }
         if (shipment.getBoxSize().getId().equals(EnumBoxSize.MIGRATE.getId()) || shipment.getCourier().getId().equals(EnumCourier.MIGRATE.getId())) {
