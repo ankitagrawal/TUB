@@ -7,48 +7,52 @@
 
 <s:layout-render name="/layouts/default100.jsp" pageTitle="Super Savers">
     <s:layout-component name="htmlHead">
-        <script type="text/javascript">
-            $(document).ready(function() {
-                $('#super_savers_button').addClass("active");
-            });
-        </script>
+        <style type="text/css">
+            div.heading {
+                text-align: center;
+                padding: 5px;
+                margin: 5px;
+            }
+        </style>
     </s:layout-component>
 
     <s:layout-component name="content">
-        <h1>Super Savers</h1>
+        <div class="heading">
+            <h1>Super Savers</h1>
+        </div>
 
-        <fieldset>
-            <legend>Upload/Edit Banners</legend>
-            <shiro:hasPermission name="<%=PermissionConstants.UPLOAD_PRODUCT_CATALOG%>">
+        <div class="clear"></div>
+
+        <shiro:hasPermission name="<%=PermissionConstants.UPLOAD_PRODUCT_CATALOG%>">
+            <div style="padding:5px;">
                 <div class="grid_24 alpha omega">
                     <s:link beanclass="com.hk.web.action.core.catalog.image.UploadSuperSaverImageAction">
-                        Upload
+                        <span>Upload</span>
                     </s:link>
                     &nbsp;|&nbsp;
                     <s:link beanclass="com.hk.web.action.core.catalog.image.UploadSuperSaverImageAction"
                             event="manageSuperSaverImages">
-                        Manage Images
+                        <span>Manage Images</span>
                     </s:link>
                 </div>
-            </shiro:hasPermission>
-        </fieldset>
+            </div>
 
-        <div class="clear"></div>
-        <div style="margin-top:15px;"></div>
+            <div class="clear"></div>
+            <div style="margin-top:15px;"></div>
+        </shiro:hasPermission>
 
         <c:forEach items="${comboBean.superSaverImages}" var="image">
             <c:set var="product" value="${image.product}"/>
             <c:set var="productName" value="${product.name}"/>
-            <div>
+            <div style="margin:15px 0;">
                 <s:link beanclass="com.hk.web.action.core.catalog.product.ProductAction" class="prod_link"
                         title="${productName}">
                     <s:param name="productId" value="${product.id}"/>
                     <s:param name="productSlug" value="${product.slug}"/>
-                    <s:param name="imageId" value="${image.id}"/>
                     <c:choose>
                         <c:when test="${product.mainImageId != null}">
                             <hk:superSaverImage imageId="${image.id}" size="<%=EnumImageSize.Original%>"
-                                                alt="${productName}"/>
+                                                alt="${image.altText}"/>
                         </c:when>
                         <c:otherwise>
                             <img src='<hk:vhostImage/>/images/banners/Combo/${product.id}.jpg' alt="${productName}"/>
@@ -57,5 +61,11 @@
                 </s:link>
             </div>
         </c:forEach>
+
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#super_savers_button').addClass("active");
+            });
+        </script>
     </s:layout-component>
 </s:layout-render>

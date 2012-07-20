@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.apache.log4j.Logger;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 
 public class UploadSuperSaverImageAction extends BaseAction {
     FileBean fileBean;
@@ -69,19 +70,10 @@ public class UploadSuperSaverImageAction extends BaseAction {
             fileBean.save(imageFile);
             EnumS3UploadStatus status;
 
-            //check whether combo exists
-            String imageFileName = BaseUtils.getFilenameWithoutExtension(fileBean.getFileName());
-            Combo combo = comboDao.getComboById(imageFileName);
 
-            if (combo != null) {
-                Product product = productService.getProductById(imageFileName);
-                status = imageManager.uploadSuperSaverFile(imageFile, product, false);
-                addRedirectAlertMessage(new SimpleMessage(status.getMessage()));
-                return new ForwardResolution(UploadSuperSaverImageAction.class, "manageSuperSaverImages");
-            } else {
-                addRedirectAlertMessage(new SimpleMessage("No combo exists with the specified id! Kindly enter a valid combo id."));
-                return new ForwardResolution("/pages/uploadSuperSaverImage.jsp");
-            }
+            status = imageManager.uploadSuperSaverFile(imageFile, Boolean.TRUE);
+            addRedirectAlertMessage(new SimpleMessage(status.getMessage()));
+            return new ForwardResolution(UploadSuperSaverImageAction.class, "manageSuperSaverImages");
         } catch (IOException ioe) {
             logger.error("Error while uploading super saver image: " + ioe);
         } finally {
@@ -92,37 +84,35 @@ public class UploadSuperSaverImageAction extends BaseAction {
     }
 
     public Resolution editSuperSaverImageSettings() {
-        String host = "http://".concat(StripesFilter.getConfiguration().getSslConfiguration().getUnsecureHost());
-        String contextPath = WebContext.getRequest().getContextPath();
-        String urlString = host.concat(contextPath);
         if (superSaverImages != null) {
-            try {
-                for (SuperSaverImage superSaverImage : superSaverImages) {
-                    // For checking whether entered link is correct or not
-                    if (superSaverImage.getLink() != null) {
-                        String linkValue = urlString.concat(superSaverImage.getLink());
-                        if (!BaseUtils.remoteFileExists(linkValue)) {
-                            logger.debug("image link " + linkValue + " invalid!");
-                            addRedirectAlertMessage(new SimpleMessage("PLEASE ENTER LINK CORRECTLY .. " + linkValue + " DOES NOT EXIST"));
-                            return new ForwardResolution("/pages/manageSuperSaverImages.jsp");
-                        }
-                    }
+            for (SuperSaverImage superSaverImage : superSaverImages) {
+                Product superSaverProduct = superSaverImage.getProduct();
 
-                    if (superSaverImage.isHidden() == Boolean.TRUE) {
+                //check whether combo exists or not
+                Combo combo = comboDao.getComboById(superSaverProduct.getId());
+                if (combo != null) {
+                    //while place this check once main image id logic is implemented
+                    /*if (superSaverImage.isHidden() == Boolean.TRUE) {
                         if (superSaverImage.isMainImage() == Boolean.TRUE) {
                             logger.debug("main image cannot be set as hidden!");
                             addRedirectAlertMessage(new SimpleMessage("MAIN IMAGE CANNOT BE SET AS HIDDEN!"));
                             return new ForwardResolution("/pages/manageSuperSaverImages.jsp");
                         }
-                    }
+                    }*/
+                    superSaverImage.setMainImage(Boolean.TRUE);
+
+                    String altText = superSaverImage.getAltText();
+                    String productName = superSaverProduct.getName();
+                    superSaverImage.setUrl(productName);
+                    superSaverImage.setAltText(StringUtils.isNotBlank(altText) ? altText : productName);
                     superSaverImageService.saveSuperSaverImage(superSaverImage);
+                } else {
+                    addRedirectAlertMessage(new SimpleMessage("No combo exists with the specified id! Kindly enter a valid combo id."));
+                    return new ForwardResolution("/pages/uploadSuperSaverImage.jsp");
                 }
-                return new RedirectResolution(SuperSaversAction.class);
-            } catch (IOException ioe) {
-                logger.error("Exception while checking link for images: " + ioe);
             }
         }
-        return new ForwardResolution("/pages/manageSuperSaverImages.jsp");
+        return new RedirectResolution(SuperSaversAction.class);
     }
 
     public FileBean getFileBean() {

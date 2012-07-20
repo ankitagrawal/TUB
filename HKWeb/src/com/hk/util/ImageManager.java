@@ -158,38 +158,24 @@ public class ImageManager {
         }
     }
 
-    public EnumS3UploadStatus uploadSuperSaverFile(File imageFile, Product product, boolean checkExists) {
+    public EnumS3UploadStatus uploadSuperSaverFile(File imageFile, boolean checkExists) {
+        SuperSaverImage superSaverImage = setSuperSaverImage(imageFile, checkExists);
 
-        // if product is null even after reading tags, then message that the product was not found.
-        if (product == null) {
-            return EnumS3UploadStatus.NotFound;
+        if (superSaverImage != null) {
+            resizeAndUpload(imageFile.getAbsolutePath(), superSaverImage);
+            superSaverImage.setUploaded(true);
+            superSaverImageService.saveSuperSaverImage(superSaverImage);
+
+            if (imageFile.exists()) {
+                logger.debug("deleting : " + imageFile.getAbsolutePath());
+                imageFile.delete();
+            }
+
+            return EnumS3UploadStatus.Uploaded;
         } else {
-            // check is the product has a null image
-            boolean setDefault = false;
-
-            if (product.getProductImages() == null || product.getProductImages().isEmpty()) {
-                setDefault = true;
-            }
-
-            SuperSaverImage superSaverImage = setSuperSaverImage(imageFile, product, setDefault, checkExists);
-
-            if (superSaverImage != null) {
-                resizeAndUpload(imageFile.getAbsolutePath(), superSaverImage);
-                superSaverImage.setUploaded(true);
-                superSaverImageService.saveSuperSaverImage(superSaverImage);
-
-                if (imageFile.exists()) {
-                    logger.debug("deleting : " + imageFile.getAbsolutePath());
-                    imageFile.delete();
-                }
-
-                return EnumS3UploadStatus.Uploaded;
-            } else {
-                return EnumS3UploadStatus.Checked;
-            }
+            return EnumS3UploadStatus.Checked;
         }
     }
-
 
     /*
     * public EnumS3UploadStatus uploadComboFile(File imageFile, Combo combo, boolean checkExists) throws Exception {
@@ -419,7 +405,7 @@ public class ImageManager {
         }
     }
 
-    private SuperSaverImage setSuperSaverImage(File imageFile, Product product, boolean defaultImage, boolean checkExists) {
+    private SuperSaverImage setSuperSaverImage(File imageFile, boolean checkExists) {
         String checksum = BaseUtils.getMD5Checksum(imageFile);
         SuperSaverImage superSaverImage = superSaverImageService.getSuperSaverImageByChecksum(checksum);
         if (superSaverImage != null && superSaverImage.isUploaded() && checkExists) {
@@ -427,9 +413,7 @@ public class ImageManager {
         } else {
             if (superSaverImage == null) {
                 superSaverImage = new SuperSaverImage();
-                superSaverImage.setProduct(product);
-                superSaverImage.setUrl(product.getName());
-                superSaverImage.setAltText(product.getName());
+                superSaverImage.setUrl("");
                 superSaverImage.setChecksum(checksum);
                 superSaverImage = superSaverImageService.saveSuperSaverImage(superSaverImage);
             }

@@ -26,6 +26,7 @@ import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductImage;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.combo.Combo;
+import com.hk.domain.catalog.product.combo.SuperSaverImage;
 import com.hk.domain.content.SeoData;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
@@ -39,6 +40,7 @@ import com.hk.pact.dao.location.LocalityMapDao;
 import com.hk.pact.dao.location.MapIndiaDao;
 import com.hk.pact.dao.user.UserProductHistoryDao;
 import com.hk.pact.service.catalog.ProductService;
+import com.hk.pact.service.catalog.combo.SuperSaverImageService;
 import com.hk.util.SeoManager;
 import com.hk.web.action.core.search.SearchAction;
 import com.hk.web.filter.WebContext;
@@ -50,7 +52,7 @@ public class ProductAction extends BaseAction {
     @SuppressWarnings("unused")
     private static Logger logger = Logger.getLogger(ProductAction.class);
 
-    Long imageId;
+    Long superSaverImageId;
     String productId;
     Product product;
     String productSlug;
@@ -80,9 +82,6 @@ public class ProductAction extends BaseAction {
     @Autowired
     private AffiliateDao affiliateDao;
 
-    /*
-          * @Autowired private ComboDao comboDao;
-          */
     @Autowired
     private MapIndiaDao mapIndiaDao;
     @Autowired
@@ -95,6 +94,8 @@ public class ProductAction extends BaseAction {
     private AddressDao addressDao;
     @Autowired
     private ProductService productService;
+    @Autowired
+    private SuperSaverImageService superSaverImageService;
 
     @DefaultHandler
     @DontValidate
@@ -189,7 +190,17 @@ public class ProductAction extends BaseAction {
         if (combo == null) {
             return new ForwardResolution("/pages/product.jsp");
         } else {
-            return new ForwardResolution("/pages/combo.jsp");
+            List<SuperSaverImage> superSaverImages = superSaverImageService.getSuperSaverImages(product, Boolean.FALSE, Boolean.TRUE);
+            String directTo;
+            if (superSaverImages == null || superSaverImages.isEmpty()) {
+                directTo = "product.jsp";
+            } else {
+                SuperSaverImage latestSuperSaverImage= superSaverImages.get(superSaverImages.size() - 1);
+                superSaverImageId = latestSuperSaverImage.getId();
+                directTo = "combo.jsp";
+            }
+
+            return new ForwardResolution("/pages/" + directTo);
         }
     }
 
@@ -356,11 +367,11 @@ public class ProductAction extends BaseAction {
         this.relatedCombos = relatedCombos;
     }
 
-    public Long getImageId() {
-        return imageId;
+    public Long getSuperSaverImageId() {
+        return superSaverImageId;
     }
 
-    public void setImageId(Long imageId) {
-        this.imageId = imageId;
+    public void setSuperSaverImageId(Long superSaverImageId) {
+        this.superSaverImageId = superSaverImageId;
     }
 }

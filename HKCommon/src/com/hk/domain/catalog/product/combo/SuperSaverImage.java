@@ -15,20 +15,14 @@ public class SuperSaverImage implements java.io.Serializable {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = false)
+    @JoinColumn(name = "product_id")
     private Product product;
 
-    @Column(name = "url", nullable = false, length = 45)
+    @Column(name = "url", nullable = false, length = 100)
     private String url;
 
     @Column(name = "alt_text", length = 200)
     private String altText;
-
-    @Column(name = "height")
-    private Long height;
-
-    @Column(name = "width")
-    private Long width;
 
     @Column(name = "hidden", nullable = false)
     private boolean hidden;
@@ -41,9 +35,6 @@ public class SuperSaverImage implements java.io.Serializable {
 
     @Column(name = "ranking")
     private Long ranking;
-
-    @Column(name = "link", length = 450)
-    private String link;
 
     @Column(name = "is_main_image", nullable = false)
     private boolean isMainImage;
@@ -78,22 +69,6 @@ public class SuperSaverImage implements java.io.Serializable {
 
     public void setAltText(String altText) {
         this.altText = altText;
-    }
-
-    public Long getHeight() {
-        return this.height;
-    }
-
-    public void setHeight(Long height) {
-        this.height = height;
-    }
-
-    public Long getWidth() {
-        return this.width;
-    }
-
-    public void setWidth(Long width) {
-        this.width = width;
     }
 
     public boolean getHidden() {
@@ -134,15 +109,7 @@ public class SuperSaverImage implements java.io.Serializable {
 
     public void setRanking(Long ranking) {
         this.ranking = ranking;
-    }
-
-    public String getLink() {
-        return this.link;
-    }
-
-    public void setLink(String link) {
-        this.link = link;
-    }
+    }   
 
     public boolean getIsMainImage() {
         return this.isMainImage;

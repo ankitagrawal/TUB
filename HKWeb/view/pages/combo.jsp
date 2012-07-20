@@ -3,19 +3,64 @@
 <%@ page import="com.hk.pact.dao.catalog.combo.ComboDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.core.catalog.product.ProductAction" var="productBean"/>
 
-<s:layout-render name="/layouts/genericG.jsp" pageTitle="Super Savers">
+<c:set var="productCombo" value="${productBean.product}"/>
+<c:set var="seoData" value="${productBean.seoData}"/>
+<s:layout-render name="/layouts/genericG.jsp" pageTitle="${seoData.title}">
+
 <s:layout-component name="htmlHead">
+    <meta name="keywords" content="${seoData.metaKeyword}"/>
+    <meta name="description" content="${seoData.metaDescription}"/>
+</s:layout-component>
+
+<s:layout-component name="topBanner">
+    <%--<s:layout-render name="/layouts/embed/catalogBreadcrumb.jsp" breadcrumbProduct="${productCombo}" lastLink="true"--%>
+    <%--topHeading="${seoData.h1}"/>--%>
+    <%----%>
+    <%--<s:layout-render name="/layouts/embed/_categoryTopBanners.jsp" topCategories="${productBean.topCategoryUrlSlug}"/>--%>
+    <%----%>
+    <%--<div class="clear"></div>--%>
+
+    <c:if test="${productCombo.service}">
+        <s:layout-render name="/layouts/embed/changePreferredZone.jsp" filterUrlFragment="${productBean.urlFragment}"/>
+    </c:if>
+
+    <div>
+        <shiro:hasPermission name="<%=PermissionConstants.UPDATE_SEO_METADATA%>">
+            <s:link beanclass="com.hk.web.action.core.content.seo.SeoAction" event="pre" target="_blank"
+                    class="popup">Edit MetaData
+                <s:param name="seoData" value="${seoData.id}"/>
+            </s:link>
+            &nbsp;|&nbsp;
+        </shiro:hasPermission>
+
+        <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_CATALOG%>">
+            <s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction"
+                    event="editProductVariantDetails"
+                    target="_blank" class="popup">
+                Edit Variant Attributes
+                <s:param name="product" value="${productCombo}"/>
+            </s:link>
+            <s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction"
+                    event="editProductDetails" target="_blank" class="popup">
+                Edit Product Attributes
+                <s:param name="product" value="${productCombo}"/>
+            </s:link>
+            <s:link beanclass="com.hk.web.action.admin.sku.SkuAction" event="searchSKUs" target="_blank" class="popup">
+                Edit Sku Attributes
+                <s:param name="productId" value="${productCombo.id}"/>
+            </s:link>
+        </shiro:hasPermission>
+    </div>
 </s:layout-component>
 
 <s:layout-component name="content">
-
-<c:set var="productCombo" value="${productBean.product}"/>
-<div style="text-align:center; margin:10px 0 10px 0;">
-    <hk:superSaverImage imageId="${productBean.imageId}" size="<%=EnumImageSize.Original%>"
+<div style="text-align:center; margin:10px 0;">
+    <hk:superSaverImage imageId="${productBean.superSaverImageId}" size="<%=EnumImageSize.Original%>"
                         alt="${productCombo.name}"/>
 </div>
 
@@ -23,17 +68,113 @@
 <div style="margin-top:10px;"></div>
 
 <div class="contentDiv">
-    <h1>${productCombo.name}</h1>
+
+<h2 class='prod_title'>
+        ${productCombo.name}
+</h2>
+
+<div style="margin-top:5px;"></div>
+
+<div class='infos' style="border-bottom:0;">
+    <c:if test="${hk:isNotBlank(productCombo.brand)}">
+          <span class='title'>
+            Brand:
+          </span>
+          <span class='info'>
+            <s:link beanclass="com.hk.web.action.core.catalog.BrandCatalogAction" class="bl">
+                ${productCombo.brand}
+                <s:param name="brand" value="${fn:toLowerCase(productCombo.brand)}"/>
+                <s:param name="topLevelCategory" value="${productBean.topCategoryUrlSlug}"/>
+            </s:link>
+          </span>
+    </c:if>
+    <c:if test="${hk:isNotBlank(productCombo.manufacturer)}">
+        |
+          <span class='title'>
+            Manufacturer:
+          </span>
+          <span class='info'>
+                  ${productCombo.manufacturer.name}
+          </span>
+    </c:if>
+    |
+    <span class='title'>
+      Dispatched in:
+    </span>
+    <span class='info orange' title="Delivery time may vary depending on the location">
+      <c:choose>
+          <c:when test="${hk:isNotBlank(productCombo.maxDays)}">
+              ${productCombo.minDays} - ${productCombo.maxDays} working days
+          </c:when>
+          <c:otherwise>
+              <c:choose>
+                  <c:when test="${productBean.topCategoryUrlSlug == 'beauty'}">
+                      2 - 7 working days
+                  </c:when>
+                  <c:otherwise>
+                      1 - 3 working days
+                  </c:otherwise>
+              </c:choose>
+          </c:otherwise>
+      </c:choose>
+    </span>
 
     <div style="margin-top:5px;"></div>
 
-    <h4>Brand: ${productCombo.brand} | Dispatched in: ${productCombo.minDays} - ${productCombo.maxDays} working
-        days</h4>
+    <c:if test="${!empty productBean.userReviews}">
+        <div style="float:right;margin-right:5px;margin-bottom:3px;">
+            <a class="top_link" href='#user_reviews' style="border-bottom:0;">
+                    ${productBean.totalReviews} Reviews &darr;
+            </a>
 
-    <div style="margin-top:5px;"></div>
+            <div class="rating_bar">
+                <div class="blueStarTop" id="blueStarTop">
+                    <script type="text/javascript">
+                        var averageRating = ${productBean.averageRating};
+                        averageRating = (averageRating * 20) + "%";
+                        $('.blueStarTop').width(averageRating);
+                    </script>
+                </div>
+            </div>
+        </div>
+    </c:if>
 
-    Description:
-    <p>${productCombo.description}</p>
+    <div class='top_links'>
+        <c:if test="${!empty productCombo.description}">
+            <a class='top_link' href='#description'>
+                Description &darr;
+            </a>
+        </c:if>
+        <c:if test="${!empty productCombo.productFeatures}">
+            <a class='top_link' href='#features'>
+                Technical Specs &darr;
+            </a>
+        </c:if>
+        <c:if test="${!empty productBean.relatedCombos}">
+            <a class='top_link' href='#related_combos' style="font-weight:bold;">
+                Special Offers &darr;
+            </a>
+        </c:if>
+        <c:if test="${!empty productCombo.relatedProducts}">
+            <a class='top_link' href='#related_products'>
+                Related Products &darr;
+            </a>
+        </c:if>
+    </div>
+    <c:if test="${hk:isNotBlank(productCombo.overview)}">
+        <p class="overview">
+                ${productCombo.overview}
+        </p>
+    </c:if>
+    <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_DESCRIPTIONS%>">
+        <div>
+            <s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction" event="editOverview"
+                    class="popup">
+                Edit Overview
+                <s:param name="productId" value="${productCombo.id}"/>
+            </s:link>
+        </div>
+    </shiro:hasPermission>
 </div>
 
 <div class="clear"></div>
@@ -69,7 +210,7 @@
                     </c:otherwise>
                 </c:choose>
 
-                <div class="grid_23 optionsDiv">
+                <div class="grid_20 optionsDiv">
                     <fieldset>
                         <legend>&nbsp;&nbsp;Available Options</legend>
                         <c:forEach items="${inStockVariants}" var="variant" varStatus="variantCtr">
@@ -87,7 +228,7 @@
                                 <c:choose>
                                     <c:when test="${idForImage != null}">
                                         <hk:productImage imageId="${idForImage}"
-                                                         size="<%=EnumImageSize.MediumSize%>"
+                                                         size="<%=EnumImageSize.SmallSize%>"
                                                          alt="${product.name}" class="imageTag"/>
                                     </c:when>
                                     <c:otherwise>
@@ -96,11 +237,12 @@
                                     </c:otherwise>
                                 </c:choose>
                                 <c:forEach items="${variant.productOptions}" var="option">
-                                    ${option.name}:${option.value};
-                                </c:forEach>      
-                                <input type="hidden"  class="variantIdValue" idx="${productCtr.index}"  value="${variant.id}"/>
-                                <input type="hidden" class="selValue" idx="${productCtr.index}"  value="true"/>
-                                <input type="hidden" class="qtyValue" idx="${productCtr.index}"  value="0" />
+                                    <p class="productOptions">${option.name}:${option.value}</p>
+                                </c:forEach>
+                                <input type="hidden" class="variantIdValue" idx="${productCtr.index}"
+                                       value="${variant.id}"/>
+                                <input type="hidden" class="selValue" idx="${productCtr.index}" value="true"/>
+                                <input type="hidden" class="qtyValue" idx="${productCtr.index}" value="0"/>
                             </div>
                         </c:forEach>
                     </fieldset>
@@ -125,9 +267,13 @@
         <div style="margin-top:15px;"></div>
 
         <div class="grid_24">
-            <div class="progressLoader"><img src="${pageContext.request.contextPath}/images/ajax-loader.gif"/></div>
+            <div class="grid_15 errorDiv"></div>
 
-            <div class="buyDiv">
+            <div class="grid_8 buyDiv">
+                <div class="progressLoader"><img src="${pageContext.request.contextPath}/images/ajax-loader.gif"/></div>
+
+                <div class="clear"></div>
+
                 <div class="left_col" style="float:left;">
                     <div class='prices' style="font-size: 14px;">
                         <div class='cut' style="font-size: 14px;">
@@ -151,13 +297,15 @@
                         </div>
                     </div>
                 </div>
-                <div class="right_col" style="float:right;">
+                <div class="right_col">
                     <c:choose>
                         <c:when test="${hk:isComboInStock(combo)}">
-                            <s:submit name="addToCart" value="Buy Now" class="addToCartButton cta"/>
+                            <s:submit name="addToCart" value="Buy Now" class="addToCartButton cta"
+                                      style="vertical-align:text-bottom;"/>
                         </c:when>
                         <c:otherwise>
-                            <div align="center"><a class="button_orange"><b>Sold Out</b></a></div>
+                            <div align="center"><a class="button_orange" style="vertical-align:text-bottom;"><b>Sold
+                                Out</b></a></div>
                         </c:otherwise>
                     </c:choose>
                 </div>
@@ -169,13 +317,258 @@
     </s:form>
 </div>
 
+<div class="productDescription">
+    <c:if test="${hk:isNotBlank(productCombo.description)}">
+        <div class="content" id="description">
+            <h4>
+                Description
+            </h4>
+
+            <p>
+                    ${productCombo.description}
+
+            </p>
+        </div>
+    </c:if>
+
+    <c:if test="${productBean.addressDistanceDtos != null && fn:length(productBean.addressDistanceDtos) > 0}">
+        <h3> Service Centres Available Near to You : <br>
+            <ul>
+                <c:forEach items="${productBean.addressDistanceDtos}" var="addressDto">
+                    <li>  ${addressDto.localityMap.address.line1}, ${addressDto.localityMap.address.line2}<br></li>
+                </c:forEach>
+            </ul>
+        </h3>
+    </c:if>
+    <p>
+            <%--<a class='go_to_top' href='#top' style="float:right;">go to top &uarr;</a>--%>
+    </p>
+
+    <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_DESCRIPTIONS%>">
+        <div>
+            <s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction"
+                    event="editDescription"
+                    class="popup">
+                Edit Description
+                <s:param name="productId" value="${productCombo.id}"/>
+            </s:link>
+        </div>
+    </shiro:hasPermission>
+
+
+    <c:if test="${!empty (productCombo.productFeatures)}">
+        <div class="content" id="features">
+            <h4>
+                Product Features
+            </h4>
+
+            <table class="">
+                <tbody>
+                <c:forEach var="feature" items="${productCombo.productFeatures}">
+                    <tr>
+                        <td>
+                                ${feature.name}
+                        </td>
+                        <td>
+                                ${feature.value}
+                        </td>
+                    </tr>
+                </c:forEach>
+                </tbody>
+            </table>
+                <%--<a class='go_to_top' href='#top'>go to top &uarr;</a>--%>
+
+        </div>
+    </c:if>
+
+    <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_DESCRIPTIONS%>">
+        <s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction" event="editFeatures"
+                class="popup">
+            Edit Features
+            <s:param name="product" value="${productCombo}"/>
+        </s:link>
+    </shiro:hasPermission>
+</div>
+
+<div class="relatedProducts">
+    <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_CATALOG%>">
+        <div>
+            <s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction"
+                    event="editRelatedProducts" class="popup">
+                Edit Related Products
+                <s:param name="productId" value="${productCombo.id}"/>
+            </s:link>
+        </div>
+    </shiro:hasPermission>
+    <c:if test="${!empty productBean.relatedCombos}">
+        <div class='products content' id="related_combos">
+            <h4>
+                Special Offers on ${productCombo.name}
+            </h4>
+            <c:forEach items="${productBean.relatedCombos}" var="relatedCombo">
+                <s:layout-render name="/layouts/embed/_productThumb.jsp" productId="${relatedCombo.id}"/>
+            </c:forEach>
+
+            <div class="floatfix"></div>
+                <%--<a class='go_to_top' href='#top'>go to top &uarr;</a>--%>
+        </div>
+    </c:if>
+    <c:set var="recommendedProducts" value="${hk:getRecommendedProducts(productCombo)}"/>
+    <c:if test="${!empty recommendedProducts}">
+        <div class='products content' id="related_products">
+            <h4>
+                People who bought this also bought these products
+            </h4>
+
+            <c:forEach items="${recommendedProducts}" var="relatedProduct">
+                <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_CATALOG%>">
+                    <h6 style="color: red" title="Recommended Product Source">
+                        Source = ${relatedProduct.key};
+                        Products =
+                        <c:forEach var="product" items="${relatedProduct.value}">
+                            ${product}
+                        </c:forEach>
+                    </h6>
+                </shiro:hasPermission>
+                <c:set var="recommendedProductCount" value="0" scope="page"/>
+                <c:forEach var="product" items="${relatedProduct.value}">
+                    <c:if test="${recommendedProductCount < 6}">
+                        <s:layout-render name="/layouts/embed/_productThumb.jsp" productId="${product}"/>
+                    </c:if>
+                    <c:set var="recommendedProductCount" value="${recommendedProductCount + 1}" scope="page"/>
+                </c:forEach>
+            </c:forEach>
+
+            <div class="floatfix"></div>
+                <%--<a class='go_to_top' href='#top'>go to top &uarr;</a>--%>
+
+        </div>
+    </c:if>
+</div>
+
+<div class="userReviews">
+    <div class='products content' id="user_reviews">
+        <hr style="color:#F0F0F0;border-style:hidden"/>
+
+        <c:choose>
+        <c:when test="${!empty productBean.userReviews}">
+        <table width="950" class="reviewLinksTable">
+            <tr height="40">
+                <td style="font-size:14px;font-weight:bold;border-style:none">Reviews of ${productCombo.name}</td>
+                <td style="border-style:none">
+                    <s:link beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction"
+                            event="writeNewReview">
+                    <s:param name="product" value="${productCombo.id}"/>
+                    <strong>Write a Review<strong>
+                        </s:link>
+                </td>
+            </tr>
+
+            <tr height="50">
+                <td colspan="2" style="border-style:none">
+                    Average Rating :
+                    <strong><fmt:formatNumber value="${productBean.averageRating}" maxFractionDigits="1"/>/5</strong>
+                    <br/>
+                    (based on ${productBean.totalReviews} reviews)
+                    <br/>
+
+                    <div class="rating_bar">
+                        <div id="blueStar" class="blueStar">
+                            <script type="text/javascript">
+                                var averageRating = ${productBean.averageRating};
+                                averageRating = (averageRating * 20) + "%";
+                                $('.blueStar').width(averageRating);
+                            </script>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        <hr style="color:#F0F0F0;border-style:dotted"/>
+        <c:if test="${productBean.totalReviews > 5}">
+            <strong>&nbsp;Showing 5 of ${productBean.totalReviews} reviews</strong>
+            <s:link beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction">
+                <s:param name="product" value="${productCombo.id}"/>
+                <strong>(Read All Reviews)</strong>
+            </s:link>
+        </c:if>
+
+        <c:forEach items="${productBean.userReviews}" var="review" varStatus="ctr">
+
+            <table width="950" class="reviewContentTable" style="border-style:none">
+                <tr style="border-style:none">
+                    <td width="150" style="border-style:none">
+                        <strong>${review.postedBy.name}</strong>
+
+                        <div class="rating_bar">
+                            <div class="blueStarRating${ctr.index}"></div>
+                            <script type="text/javascript">
+                                var index = ${ctr.index};
+                                var rating = ${review.starRating};
+                                rating = (rating * 20) + "%";
+                                $('.blueStarRating' + index).width(rating);
+                            </script>
+                        </div>
+                    </td>
+                    <td style="border-style:none">
+                        <div style="word-wrap:break-word">
+                                ${review.review}
+                        </div>
+                    </td>
+                </tr>
+                <tr style="border-style:none">
+                    <td colspan="2" style="border-style:none">
+                        <hr style="color:#F0F0F0;border-style:dotted"/>
+                    </td>
+                </tr>
+            </table>
+            <br/>
+        </c:forEach>
+            <%--<a class='go_to_top' href='#top'>go to top &uarr;</a>--%>
+    </div>
+    </c:when>
+    <c:otherwise>
+        <table width="950" style="border:none">
+            <tr height="40">
+                <td colspan="2" style="font-size:14px;font-weight:bold;">No Reviews!!</td>
+            </tr>
+            <tr>
+                <td>
+                    Be the first one to <s:link beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction"
+                                                event="writeNewReview">
+                    <s:param name="product" value="${productCombo.id}"/>
+                    <strong>Write a Review</strong>
+                </s:link>
+                </td>
+            </tr>
+            <tr>
+                    <%--<td><a class='go_to_top' href='#top'>go to top &uarr;</a></td>--%>
+            </tr>
+        </table>
+    </c:otherwise>
+    </c:choose>
+</div>
+
+<div class="goToTop" style="float:right;text-align:right; padding:5px;margin:15px;">
+    <a class='go_to_top' href='#top'>go to top &uarr;</a>
+</div>
+
 <script type="text/javascript">
     $(document).ready(function() {
         $('.progressLoader').hide();
 
-        //        $('.optionsDiv').css({
-        //            marginLeft:($('.grid_20').width() - $('.optionsDiv').outerWidth()) / 2
-        //        });
+        $('.comboProduct').css({
+            marginLeft:($('.grid_24').width() - $('.comboProduct').outerWidth()) / 2
+        });
+
+        $('.right_col').css({
+            height:$('.left_col').height()
+        });
+
+        $('.optionsDiv').css({
+            marginLeft:($('.grid_23').width() - $('.optionsDiv').outerWidth()) / 2
+        });
 
         $('.options').click(function() {
             //        $(this).parents('.productDiv').find('.activeImg').each(function() {
@@ -183,17 +576,16 @@
             //        });
             //            $(this).addClass("activeImg");
 
-           
-            
+
             var resultDiv = $(this).parents('.optionsDiv').find('.result');
             resultDiv.html($(this).html());
 
             var idx = resultDiv.find('.variantIdValue').attr("idx");
-            resultDiv.find('.variantIdValue').attr("name","productVariantList["+ idx + "]");
-            resultDiv.find('.selValue').attr("name","productVariantList["+ idx + "].selected");
-            resultDiv.find('.qtyValue').attr("name","productVariantList["+ idx + "].qty");
-            
-            resultDiv.find('.qtyValue').val("1");
+            resultDiv.find('.variantIdValue').attr("name", "productVariantList[" + idx + "]");
+            resultDiv.find('.selValue').attr("name", "productVariantList[" + idx + "].selected");
+            resultDiv.find('.qtyValue').attr("name", "productVariantList[" + idx + "].qty");
+
+            resultDiv.find('.qtyValue').val("1");             
         });
 
         function _addToCart(res) {
@@ -235,9 +627,14 @@
         $('.addToCartButton').click(function() {
             var isResultEmpty = 0 ;
             $('.result').each(function() {
-                if ($(this).text().trim() === "") {
+                if ($(this).find('img').size() == 0) {
                     isResultEmpty = 1;
-                    alert('Please select one of the options available for all the products in the combo!');
+                    //                    alert('Please select one of the options available for all the products in the combo!');
+                    $('.errorDiv').html('Please select one of the options available for all the products in the combo!');
+                    $('.errorDiv').css({
+                        paddingTop:$('.left_col').height() / 3
+                    });
+                    $('.errorDiv').show();
                     return false;
                 }
             });
@@ -304,7 +701,7 @@
         -webkit-transform: scale(1.25);
         -moz-transform: scale(1.25);
         position: relative;
-        z-index: 3;
+        z-index: 1;
     }
 
     .options img {
@@ -331,6 +728,53 @@
     .buyDiv .right_col {
         text-align: right;
         float: right;
+    }
+
+    p.productOptions {
+        padding: 0;
+        text-align: center;
+    }
+
+    ul#thumblist {
+        display: block;
+    }
+
+    ul#thumblist li {
+        float: left;
+        margin-right: 2px;
+        list-style: none;
+    }
+
+    ul#thumblist li a {
+        display: block;
+        border: 1px solid #CCC;
+    }
+
+    ul#thumblist li a.zoomThumbActive {
+        border: 1px solid red;
+    }
+
+    .rating_bar {
+        width: 80px;
+        background: url('${pageContext.request.contextPath}/images/img/star-off.png') 0 0 repeat-x;
+    }
+
+    .rating_bar div {
+        height: 16px;
+        background: url('${pageContext.request.contextPath}/images/img/star-on.png') 0 0 repeat-x;
+    }
+
+    .special, .hk, .cut {
+        margin: 5px;
+    }
+
+    div.errorDiv {
+        margin: 10px;
+        padding: 5px;
+        display: none;
+        color: #E80000;
+        float: left;
+        font-size: 1.05em;
     }
 </style>
 </s:layout-component>

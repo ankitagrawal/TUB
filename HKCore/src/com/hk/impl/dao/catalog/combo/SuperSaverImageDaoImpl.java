@@ -4,6 +4,7 @@ import org.springframework.stereotype.Repository;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.catalog.combo.SuperSaverImageDao;
 import com.hk.domain.catalog.product.combo.SuperSaverImage;
+import com.hk.domain.catalog.product.Product;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ public class SuperSaverImageDaoImpl extends BaseDaoImpl implements SuperSaverIma
         return (SuperSaverImage) getSession().createQuery("from SuperSaverImage ssi where ssi.checksum = :checksum")
                 .setString("checksum", checksum)
                 .uniqueResult();
-    }    
+    }
 
     public List<SuperSaverImage> getSuperSaverImages() {
         return getSuperSaverImages(Boolean.FALSE, Boolean.FALSE);
@@ -24,16 +25,36 @@ public class SuperSaverImageDaoImpl extends BaseDaoImpl implements SuperSaverIma
     }
 
     public List<SuperSaverImage> getSuperSaverImages(Boolean getVisible, Boolean getMainImage) {
-        String visibleString = "";
-        if (getVisible) {
-            visibleString = "where ranking is not null and hidden = false";
-            if (getMainImage) {
-                visibleString += " and isMainImage = true";
-            }
+        return getSuperSaverImages(null, getVisible, getMainImage);
+    }
+
+    public List<SuperSaverImage> getSuperSaverImages(Product product, Boolean getVisible, Boolean getMainImage) {
+
+        StringBuilder hqlBuilder = new StringBuilder("from SuperSaverImage ssi where 1=1 ");
+
+        /* String visibleString = "";
+     String productString = "";
+     String concatenator = "";*/
+
+        if (product != null) {
+            //productString = "where product = " + product;
+            hqlBuilder.append(" and product.id = '" + product.getId() + "'");
         }
 
-        String hqlQuery = "from SuperSaverImage ssi " + visibleString + " order by ranking";
-        return (List<SuperSaverImage>) getSession().createQuery(hqlQuery)
+        if (getVisible) {
+            hqlBuilder.append(" and ranking is not null and hidden = false");
+
+            //concatenator = productString.equals("") ? "where " : "and ";
+
+            //visibleString = concatenator + "ranking is not null and hidden = false";
+            if (getMainImage) {
+//                visibleString += " and isMainImage = true";
+                hqlBuilder.append(" and isMainImage = true");
+            }
+        }
+        hqlBuilder.append(" order by ranking");
+
+        return (List<SuperSaverImage>) getSession().createQuery(hqlBuilder.toString())
                 .list();
     }
 }
