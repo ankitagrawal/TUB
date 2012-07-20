@@ -143,8 +143,7 @@
                 }
                 $('.addSubscriptionForm').ajaxForm({dataType: 'json', success: _addSubscription});
 
-                //          $( "#subscriptionStartDate" ).datepicker({ minDate: 0, maxDate: "+2M ",dateFormat : 'dd/mm/yy',showOn: 'button' }).next('button').text('').button({icons:{primary : 'ui-icon-calendar'}});
-                $("#subscriptionStartDate" ).datepicker({ minDate: 0, maxDate: "+2M ",dateFormat : 'dd/mm/yy' });
+
                 function closeSubscriptionWindow(){
                     $("#subscriptionWindow").jqmHide();
                 }
@@ -176,7 +175,7 @@
 
                 $('#subscriptionFrequency').jStepper({minValue:${sp.minFrequencyDays},maxValue:${sp.maxFrequencyDays} });
                 $('#subscriptionPeriod').jStepper({minValue:<%=SubscriptionConstants.minSubscriptionDays%>,maxValue:<%=SubscriptionConstants.maxSubscriptionDays%> });
-                /*$('#subscriptionQty')[0].value=Math.round($('#subscriptionPeriod').val()*$('#subscriptionQtyPerDelivery').val()/$('#subscriptionFrequency').val()) ;*/
+                $("#subscriptionStartDate" ).datepicker({ minDate: 0, maxDate: "+2M ",dateFormat : 'dd/mm/yy' });
             </script>
         </div>
 
