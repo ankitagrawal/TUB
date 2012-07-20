@@ -264,7 +264,7 @@ public class HKDeliveryAction extends BaseAction {
             }
 
             //fetching contact name,contact-number for COD/Non COD
-            paymentMode = shippingOrderList.get(index).getBaseOrder().getPayment().getPaymentMode().getName();
+	        paymentMode = shippingOrderList.get(index).getBaseOrder().getPayment().getPaymentMode().getName();
 	        if (paymentMode.equalsIgnoreCase("COD")) {
 		        if (shippingOrderList.get(index).getBaseOrder().getStore().getId().equals(StoreService.MIH_STORE_ID)) {
 			        name = shippingOrderList.get(index).getBaseOrder().getAddress().getName();
@@ -274,9 +274,9 @@ public class HKDeliveryAction extends BaseAction {
 			        phone = shippingOrderList.get(index).getBaseOrder().getPayment().getContactNumber();
 		        }
 	        } else {
-                name = shippingOrderList.get(index).getBaseOrder().getAddress().getName();
-                phone = shippingOrderList.get(index).getBaseOrder().getAddress().getPhone();
-            }
+		        name = shippingOrderList.get(index).getBaseOrder().getAddress().getName();
+		        phone = shippingOrderList.get(index).getBaseOrder().getAddress().getPhone();
+	        }
 
             name=name.toUpperCase();
             line1 = shippingOrderList.get(index).getBaseOrder().getAddress().getLine1();
