@@ -7805,7 +7805,7 @@
     <changeSet author="Rahul (generated)" id="1342099712051-1">
         <modifyDataType columnName="value" newDataType="VARCHAR(70)" tableName="cart_line_item_config_values"/>
     </changeSet>
-<<<<<<< HEAD
+
     <changeSet author="Shrey (generated)" id="1342445419109-1">
         <addColumn tableName="supplier">
             <column name="brands" type="VARCHAR(45)"/>
@@ -7822,21 +7822,21 @@
             <column name="email_id" type="VARCHAR(50)"/>
         </addColumn>
     </changeSet>
-
-    <changeSet author="Shrey (generated)" id="1342445419109-6">
+<changeSet author="Shrey (generated)" id="1342445419109-6">
         <addColumn tableName="supplier">
             <column name="terms_of_trade" type="VARCHAR(100)"/>
         </addColumn>
     </changeSet>
-
-    
-    <changeSet author="Shrey (generated)" id="1342533458649-3">
-        <modifyDataType columnName="credit_period" newDataType="VARCHAR(10)" tableName="supplier"/>
+     <changeSet author="Shrey (generated)" id="1342533458649-3">
+        <addColumn tableName="supplier">
+            <column name="credit_period" type="VARCHAR(10)"/>
+        </addColumn>
     </changeSet>
     <changeSet author="Shrey (generated)" id="1342533458649-4">
-        <modifyDataType columnName="margins" newDataType="VARCHAR(20)" tableName="supplier"/>
+               <addColumn tableName="supplier">
+            <column name="margins" type="VARCHAR(20)"/>
+        </addColumn>
     </changeSet>
-=======
     <changeSet author="Ajeet (generated)" id="1342505244718-1">
         <addColumn tableName="shipment">
             <column name="packer" type="VARCHAR(5)"/>
@@ -7860,5 +7860,4 @@
     <!--<changeSet author="Ajeet (generated)" id="1342505244718-5">-->
         <!--<addNotNullConstraint columnDataType="VARCHAR(70)" columnName="value" tableName="cart_line_item_config_values"/>-->
     <!--</changeSet>-->
->>>>>>> ba851329cb3f04219c855e3c5863c5e71a0c3087
 </databaseChangeLog>
