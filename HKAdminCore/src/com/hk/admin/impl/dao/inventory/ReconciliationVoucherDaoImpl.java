@@ -10,6 +10,7 @@ import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -35,6 +36,7 @@ public class ReconciliationVoucherDaoImpl extends BaseDaoImpl implements Reconci
             DetachedCriteria userCriteria = reconciliationVoucherCriteria.createCriteria("createdBy");
             userCriteria.add(Restrictions.like("login".toLowerCase(), "%" + userLogin.toLowerCase() + "%"));
         }
+        reconciliationVoucherCriteria.addOrder(Order.desc("id"));
         return list(reconciliationVoucherCriteria, pageNo, perPage);
     }
 
