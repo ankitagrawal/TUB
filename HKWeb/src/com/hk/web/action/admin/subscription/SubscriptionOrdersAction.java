@@ -21,7 +21,7 @@ import java.util.List;
  * Date: 7/19/12
  * Time: 7:40 PM
  */
-@Secure(hasAnyPermissions = { PermissionConstants.SEARCH_ORDERS }, authActionBean = AdminPermissionAction.class)
+@Secure(hasAnyPermissions = { PermissionConstants.SEARCH_SUBSCRIPTIONS }, authActionBean = AdminPermissionAction.class)
 @Component
 public class SubscriptionOrdersAction extends BaseAction{
     private Subscription subscription;

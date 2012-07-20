@@ -22,7 +22,7 @@ import java.util.Date;
  * Date: 7/16/12
  * Time: 1:18 PM
  */
-@Secure(hasAnyPermissions = { PermissionConstants.SEARCH_ORDERS }, authActionBean = AdminPermissionAction.class)
+@Secure(hasAnyPermissions = { PermissionConstants.SEARCH_SUBSCRIPTIONS }, authActionBean = AdminPermissionAction.class)
 @Component
 public class SubscriptionLifecycleAction extends BaseAction {
 

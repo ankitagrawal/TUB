@@ -1,6 +1,7 @@
 package com.hk.web.action.admin.catalog.subscription;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.akube.framework.stripes.population.CustomPopulationStrategy;
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
@@ -14,6 +15,8 @@ import com.hk.util.io.HKRow;
 import com.hk.util.io.HkXlsWriter;
 import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.controller.LifecycleStage;
+import net.sourceforge.stripes.tag.BeanFirstPopulationStrategy;
 import net.sourceforge.stripes.validation.*;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -34,7 +37,9 @@ import java.util.*;
  * Date: 7/15/12
  * Time: 5:21 PM
  */
+
 @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_PRODUCT_CATALOG }, authActionBean = AdminPermissionAction.class)
+@CustomPopulationStrategy(BeanFirstPopulationStrategy.class)
 @Component
 public class CreateEditSubscriptionProductAction extends BaseAction {
     @Autowired
@@ -101,7 +106,18 @@ public class CreateEditSubscriptionProductAction extends BaseAction {
 
     public Resolution saveSubscriptionProduct(){
         editSubscription=false;
-        subscriptionProductService.save(subscriptionProduct);
+        subscriptionProduct.setProduct(product);
+        SubscriptionProduct priorSubscriptionProduct=subscriptionProductService.findByProduct(product);
+        if(priorSubscriptionProduct!=null){
+             priorSubscriptionProduct.setMaxFrequencyDays(subscriptionProduct.getMaxFrequencyDays());
+            priorSubscriptionProduct.setMinFrequencyDays(subscriptionProduct.getMinFrequencyDays());
+            priorSubscriptionProduct.setMaxQtyPerDelivery(subscriptionProduct.getMaxQtyPerDelivery());
+            priorSubscriptionProduct.setSubscriptionDiscount180Days(subscriptionProduct.getSubscriptionDiscount180Days());
+            priorSubscriptionProduct.setSubscriptionDiscount360Days(subscriptionProduct.getSubscriptionDiscount360Days());
+        }   else{
+            priorSubscriptionProduct=subscriptionProduct;
+        }
+        subscriptionProductService.save(priorSubscriptionProduct);
         addRedirectAlertMessage(new SimpleMessage("subscription product saved successfully."));
         return new ForwardResolution("/pages/admin/subscription/createSubscriptionProduct.jsp");
     }

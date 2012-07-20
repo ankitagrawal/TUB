@@ -23,7 +23,7 @@ import org.stripesstuff.plugin.security.Secure;
  * Date: 7/18/12
  * Time: 3:26 PM
  */
-@Secure(hasAnyPermissions = { PermissionConstants.UPDATE_ORDER })
+@Secure(hasAnyPermissions = { PermissionConstants.UPDATE_SUBSCRIPTION })
 @Component
 public class ChangeSubscriptionAddressAction extends BaseAction {
 

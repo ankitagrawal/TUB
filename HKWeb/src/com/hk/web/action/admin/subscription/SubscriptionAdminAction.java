@@ -34,7 +34,7 @@ import java.util.Map;
  * Date: 7/15/12
  * Time: 3:07 PM
  */
-@Secure(hasAnyPermissions = { PermissionConstants.SEARCH_ORDERS }, authActionBean = AdminPermissionAction.class)
+@Secure(hasAnyPermissions = { PermissionConstants.UPDATE_SUBSCRIPTION }, authActionBean = AdminPermissionAction.class)
 @Component
 public class SubscriptionAdminAction extends BaseAction implements ValidationErrorHandler{
     @Autowired

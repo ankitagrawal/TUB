@@ -4,12 +4,10 @@
   Date: 7/15/12
   Time: 5:58 PM
 --%>
-<%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.catalog.subscription.CreateEditSubscriptionProductAction" var="cspa"    />
-<%--<c:set var="subscriptionProduct" value="${cspa.subscriptionProduct}" />--%>
 <s:layout-render name="/layouts/defaultAdmin.jsp">
 
     <s:layout-component name="content">
@@ -19,6 +17,10 @@
 
             <fieldset class="right_label">
                 <legend>Create a new Subscription Product</legend>
+                <c:if test="${cspa.editSubscription}">
+                    <s:hidden name="subscription.id"/>
+                </c:if>
+
                 <ul class="variantList">
                     <li>
                         <label>Product ID</label>
@@ -26,11 +28,11 @@
                     </li>
                     <li>
                         <label>Max Qty Per Delivery</label>
-                        <s:text name="subscriptionProduct.maxQtyPerDelivery" value="${cspa.subscriptionProduct.id}" />
+                        <s:text name="subscriptionProduct.maxQtyPerDelivery"  />
                     </li>
                     <li>
                         <label>Min Frequency(days)</label>
-                        <s:text name="subscriptionProduct.minFrequencyDays" />
+                        <s:text name="subscriptionProduct.minFrequencyDays"  />
                     </li>
                     <li>
                         <label>Max Frequency(days)</label>

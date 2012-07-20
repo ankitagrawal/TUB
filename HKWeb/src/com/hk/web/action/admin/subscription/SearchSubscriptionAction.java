@@ -26,7 +26,7 @@ import java.util.*;
  * To change this template use File | Settings | File Templates.
  */
 
-@Secure(hasAnyPermissions = { PermissionConstants.SEARCH_ORDERS }, authActionBean = AdminPermissionAction.class)
+@Secure(hasAnyPermissions = { PermissionConstants.SEARCH_SUBSCRIPTIONS }, authActionBean = AdminPermissionAction.class)
 public class SearchSubscriptionAction extends BasePaginatedAction{
 
     private SubscriptionStatus subscriptionStatus;

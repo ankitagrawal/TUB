@@ -26,6 +26,7 @@ public class SubscriptionProductDaoImpl extends BaseDaoImpl implements Subscript
         return (SubscriptionProduct) super.save(subscriptionProduct);
     }
 
+
     public SubscriptionProduct findByProduct(Product product){
         return (SubscriptionProduct) findUniqueByNamedParams("from SubscriptionProduct sp where sp.product = :product ", new String[]{"product"}, new Object[]{product});
     }
