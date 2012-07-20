@@ -5,6 +5,7 @@ import com.hk.util.io.HKRow;
 import com.hk.constants.XslConstants;
 import com.hk.constants.core.Keys;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.service.core.WarehouseService;
 import com.hk.domain.warehouse.DemandForcast;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -29,6 +30,7 @@ import org.slf4j.LoggerFactory;
 import org.apache.commons.lang.StringUtils;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
+import net.sourceforge.stripes.validation.SimpleError;
 
 /**
  * Created by IntelliJ IDEA.
@@ -48,7 +50,10 @@ public class ForcastExcelAction extends BaseAction {
     FileBean fileBean;
 
     @Autowired
-    DemandForcastService dfServ;
+    DemandForcastService domainForcastService;
+
+    @Autowired
+    private WarehouseService warehouseService;
 
     @DefaultHandler
     public Resolution pre() {
@@ -59,8 +64,8 @@ public class ForcastExcelAction extends BaseAction {
         this.fileBean = fileBean;
     }
 
-    public DemandForcastService getDfService (){
-        return dfServ;
+    public DemandForcastService getDomainForcastService (){
+        return domainForcastService;
     }
 
     public Resolution parse() throws Exception
@@ -74,21 +79,25 @@ public class ForcastExcelAction extends BaseAction {
         ExcelSheetParser excel = new ExcelSheetParser(excelFile.getAbsolutePath(), "Sheet1");
         Iterator<HKRow> rowiterator = excel.parse();
         int rowCount=1;
-        List<DemandForcast> dfList = getBaseDao().getAll(DemandForcast.class);
+        String forecast_date = null;
+        Date min_forecastDate = null;
+        List<DemandForcast> excelInputList = new ArrayList<DemandForcast>();
+        //List<DemandForcast> dfList = getBaseDao().getAll(DemandForcast.class);
+
         try {
               while (rowiterator.hasNext()) {
                 rowCount++;
                 HKRow row = rowiterator.next();
 
-                String forcast_date = row.getColumnValue("Date");
-                String prod_varientId = row.getColumnValue("Product Varient");
+                forecast_date = row.getColumnValue("Forecast Date");
+                String prod_variantId = row.getColumnValue("Product Variant");
                 String warehouseId = row.getColumnValue("Warehouse ID");
-                String forcastVal = row.getColumnValue("Forcast");
+                String forecastVal = row.getColumnValue("Forecast Value");
                 //error handling for null values
 
-                if(StringUtils.isBlank(forcast_date) || StringUtils.isBlank(prod_varientId) ||
-                        StringUtils.isBlank(warehouseId) || StringUtils.isBlank(forcastVal)){
-                    continue;
+                if(StringUtils.isBlank(forecast_date) || StringUtils.isBlank(prod_variantId) ||
+                        StringUtils.isBlank(warehouseId) || StringUtils.isBlank(forecastVal)){
+                getContext().getValidationErrors().add("1", new SimpleError("Please correct the excel.Value(s) empty at row "+rowCount+""));
                     /**
                      * TODO:
                      * a) throw an error message blank required field : fail entire upload here
@@ -98,15 +107,37 @@ public class ForcastExcelAction extends BaseAction {
                     //throw new ExcelBlankFieldException("value(s) empty at" + "    ", rowCount);
                 }
 
-                List<String> ll = new ArrayList<String>();
-                ll.add(forcast_date);
-                ll.add(prod_varientId);
-                ll.add(warehouseId);
-                ll.add(forcastVal);
 
-                getDfService().InsertInDB(ll,dfList);
-             
+               /*
+                excelInputList.add(forecast_date);
+                excelInputList.add(prod_variantId);
+                excelInputList.add(warehouseId);
+                excelInputList.add(forecastVal);
+
+                 */
+                try{
+                DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                Date date = (Date)formatter.parse(forecast_date);
+
+                    if(rowCount == 2){
+                   min_forecastDate = date;
+                }
+                DemandForcast dForecast = new DemandForcast();
+                dForecast.setForcastDate(date);
+                dForecast.setProductVariant(getBaseDao().get(ProductVariant.class,prod_variantId));
+                dForecast.setWarehouse(warehouseService.getWarehouseById(Long.parseLong(warehouseId)));  //ask - long operation
+                dForecast.setForcastValue(Double.parseDouble(forecastVal));
+
+                excelInputList.add(dForecast);
+                }
+                catch (java.text.ParseException pe){
+                    logger.error(pe.getMessage(),0);
+                    }
               }
+
+              //String max_forecastDate = forecast_date;
+
+              getDomainForcastService().SaveOrUpdateForecastInDB(excelInputList,min_forecastDate);
             }
         catch (ExcelBlankFieldException e) {
                 logger.debug(e.getMessage());

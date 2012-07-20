@@ -5,9 +5,13 @@ import com.hk.domain.warehouse.DemandForcast;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.inventory.DemandForcastDao;
+import com.hk.pact.service.core.WarehouseService;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Collection;
+import java.util.ArrayList;
 import java.text.SimpleDateFormat;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -33,68 +37,72 @@ public class DemandForcastServiceImpl implements DemandForcastService {
     @Autowired
     private BaseDao baseDao;
 
-    public BaseDao getBaseDao()
-    {
+    @Autowired
+    private WarehouseService warehouseService;
+
+    @Autowired
+    private DemandForcastDao demandforcastDao;
+
+    public BaseDao getBaseDao(){
         return this.baseDao;
     }
 
-    public void InsertInDB(List<String> input, List<DemandForcast> dfList)
-    {
+    public void SaveOrUpdateForecastInDB (List<DemandForcast> excelInput, Date minForecastDate){
         /***
          * A) sort dfList on forecastDate
          * b) get minForecastDate nad maxForecastDate from A
          * c) get list of exisiting rows between max and min date, this is input list as passed currently
          * build input list
          */
+        Collection<DemandForcast> CollectionToUpdate = new ArrayList<DemandForcast>();
         boolean set=false;
-        DemandForcast dForcast = new DemandForcast();
 
-        String forcast_date = input.get(0);
-        String prod_varientId = input.get(1);
-        String warehouseId = input.get(2);
-        String forcastVal = input.get(3);
+        List<DemandForcast> existingInDB = demandforcastDao.findByDate(minForecastDate);
+        //DemandForcast dForecast = new DemandForcast();
+        for (DemandForcast dfExcel : excelInput){
+            Date forcast_date = dfExcel.getForcastDate();
+            String prod_variantId = dfExcel.getProductVariant().getId();
+            Long warehouseId = dfExcel.getWarehouse().getId();
+            Double forcastVal = dfExcel.getForcastValue();
 
-        try{
-        //DateFormat formatter = new SimpleDateFormat("MM/dd/yy");
-        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = (Date)formatter.parse(forcast_date);
+            try{
+            //DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            //Date date = (Date)formatter.parse(forcast_date);
 
-        if (dfList.size() != 0)
-                {
-                    for (DemandForcast df : dfList )
-                    {                          
-                        //formatter = new SimpleDateFormat("yyyy-MM-dd");
-                        //Date test=  (Date)formatter.parse(df.getForcastDate().toString());
-                        /**
-                         * add constraint for warehouse also
-                         */
-                        if (df.getForcastDate().equals(date) && df.getProductVariant().getId().equals(prod_varientId))
-                        {
-                            df.setForcastValue(Double.parseDouble(forcastVal));
-                            getBaseDao().save(df);
-                            set=true;
-                            break;
-                        }
-                    }
+            if (existingInDB.size() != 0){
+             for (DemandForcast df : existingInDB ){
+              if (df.getForcastDate().equals(forcast_date) && df.getProductVariant().getId().equals(prod_variantId) && df.getWarehouse().getId().equals(warehouseId)){
+                df.setForcastValue(forcastVal);
+                CollectionToUpdate.add(df);
+                  //getBaseDao().save(df);
+                set=true;
+                break;
                 }
-                 
-                if (set == false)
-                {
-                    dForcast.setForcastDate(date);
-                    dForcast.setProductVariant(getBaseDao().get(ProductVariant.class,prod_varientId));
-                    dForcast.setWarehouse(getWarehouseService().getWarehouseById(warehouseId)));
-                    dForcast.setForcastValue(Double.parseDouble(forcastVal));
-                    getBaseDao().save(dForcast);
-                    set = false;
-                }
-                  //getBaseDao().update(ob);            // needs Id value also
-                 
               }
-        catch (java.text.ParseException pe){
+            }
+                 
+            if (set == false){
+                /*
+                dForecast.setForcastDate(date);
+                dForecast.setProductVariant(getBaseDao().get(ProductVariant.class,prod_variantId));
+                dForecast.setWarehouse(warehouseService.getWarehouseById(warehouseId));  //ask - long operation
+                dForecast.setForcastValue(forcastVal);
+                */
+                //getBaseDao().save(dForecast);
+                CollectionToUpdate.add(dfExcel);
+                set = false;
+                }
+            }
+                  //getBaseDao().update(ob);            // needs Id value also
+            catch(Exception e){
+                logger.error(e.getMessage());
+            }
+        }
+        getBaseDao().saveOrUpdate(CollectionToUpdate);
+            /*
+            catch (java.text.ParseException pe){
            logger.error(pe.getMessage(),0);
         }
-        catch(Exception e){      
-            logger.error(e.getMessage());
-        }
-  }
+        */
+    }
 }
