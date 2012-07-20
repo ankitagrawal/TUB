@@ -49,6 +49,7 @@
 	                    title="${productName}">
 		            <s:param name="productId" value="${product.id}"/>
 		            <s:param name="productSlug" value="${product.slug}"/>
+		            <s:param name="renderComboUI" value="true"/>
 		            <hk:superSaverImage imageId="${image.id}" size="<%=EnumImageSize.Original%>"
 		                                alt="${image.altText}"/>
 	            </s:link>
