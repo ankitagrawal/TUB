@@ -411,6 +411,21 @@
 
 
 <s:layout-component name="product_description">
+
+	<c:if test="${!empty pa.relatedCombos}">
+		<div class='products content' id="related_combos">
+			<h4>
+				Special Offers on ${product.name}
+			</h4>
+			<c:forEach items="${pa.relatedCombos}" var="relatedCombo">
+				<s:layout-render name="/layouts/embed/_productThumb.jsp" productId="${relatedCombo.id}"/>
+			</c:forEach>
+
+			<div class="floatfix"></div>
+			<a class='go_to_top' href='#top'>go to top &uarr;</a>
+		</div>
+	</c:if>
+
   <c:if test="${hk:isNotBlank(product.description)}">
     <div class="content" id="description">
       <h4>
@@ -495,19 +510,7 @@
       </s:link>
     </div>
   </shiro:hasPermission>
-	<c:if test="${!empty pa.relatedCombos}">
-		<div class='products content' id="related_combos">
-			<h4>
-				Special Offers on ${product.name}
-			</h4>
-			<c:forEach items="${pa.relatedCombos}" var="relatedCombo">
-				<s:layout-render name="/layouts/embed/_productThumb.jsp" productId="${relatedCombo.id}"/>
-			</c:forEach>
-
-			<div class="floatfix"></div>
-			<a class='go_to_top' href='#top'>go to top &uarr;</a>
-		</div>
-	</c:if>
+	
 	<c:set var="recommendedProducts" value="${hk:getRecommendedProducts(product)}"/>
 	<c:if test="${!empty recommendedProducts}">
 		<div class='products content' id="related_products">
