@@ -63,9 +63,9 @@
 
                         <td><hk:superSaverImage imageId="${superSaverImage.id}"
                                                 size="<%=EnumImageSize.MediumSize%>" class="image"/></td>
-                        <td><s:text name="superSaverImages[${productCtr.index}].product" class="productId"/></td>
+                        <td><s:text name="superSaverImages[${productCtr.index}].product" value="${superSaverImage.product.id}" class="productId"/></td>
                         <td><s:text name="superSaverImages[${productCtr.index}].ranking" class="ranking"/></td>
-                        <td><s:text name="superSaverImages[${productCtr.index}].altText" class="altText"/></td>
+                        <td><s:text name="superSaverImages[${productCtr.index}].altText" value="${superSaverImage.altText}" class="altText"/></td>
                             <%--<td><s:checkbox name="superSaverImages[${productCtr.index}].mainImage"/></td>--%>
                         <td><s:checkbox name="superSaverImages[${productCtr.index}].hidden" class="hiddenCheck"/></td>
                     </tr>
@@ -83,11 +83,11 @@
 
         <script type="text/javascript">
             $(document).ready(function() {
-                $('.submitButton').click(function() {
-                    var error = 0;
+               /* $('.submitButton').click(function() {
+                    var error = false;
                     $('.productId').each(function() {
                         if ($(this).val().trim() === "") {
-                            error = 1;
+                            error = true;
                             $('.errorDiv').html("COMBO ID IS A MANDATORY FIELD FOR SUPER SAVER BANNER. KINDLY ENTER APPROPRIATE DATA....");
                             $(this).parents('.row').css({
                                 "background":"#E80000"
@@ -100,7 +100,7 @@
                     $('.altText').val($('.altText').val().trim());
 
                     return !error;
-                });
+                });*/
             });
         </script>
     </s:layout-component>

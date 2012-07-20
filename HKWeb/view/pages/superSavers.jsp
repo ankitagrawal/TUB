@@ -45,20 +45,13 @@
             <c:set var="product" value="${image.product}"/>
             <c:set var="productName" value="${product.name}"/>
             <div style="margin:15px 0;">
-                <s:link beanclass="com.hk.web.action.core.catalog.product.ProductAction" class="prod_link"
-                        title="${productName}">
-                    <s:param name="productId" value="${product.id}"/>
-                    <s:param name="productSlug" value="${product.slug}"/>
-                    <c:choose>
-                        <c:when test="${product.mainImageId != null}">
-                            <hk:superSaverImage imageId="${image.id}" size="<%=EnumImageSize.Original%>"
-                                                alt="${image.altText}"/>
-                        </c:when>
-                        <c:otherwise>
-                            <img src='<hk:vhostImage/>/images/banners/Combo/${product.id}.jpg' alt="${productName}"/>
-                        </c:otherwise>
-                    </c:choose>
-                </s:link>
+	            <s:link beanclass="com.hk.web.action.core.catalog.product.ProductAction" class="prod_link"
+	                    title="${productName}">
+		            <s:param name="productId" value="${product.id}"/>
+		            <s:param name="productSlug" value="${product.slug}"/>
+		            <hk:superSaverImage imageId="${image.id}" size="<%=EnumImageSize.Original%>"
+		                                alt="${image.altText}"/>
+	            </s:link>
             </div>
         </c:forEach>
 
