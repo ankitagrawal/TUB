@@ -3,6 +3,7 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="java.util.List" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" var="pa"/>
@@ -191,19 +192,19 @@
         <a href="reconciliationVoucher.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>
 
         <s:submit name="save" value="Save" class="saveButton"/>
-
+        <shiro:hasRole name="<%=RoleConstants.WH_MANAGER%>">
         <hr/>
-
         <fieldset>
             <legend>Upload Excel to Create RV LineItems</legend>
             <br/>
-            <span class="large gry">(VARIANT_ID, QTY, COST, MRP) as excel headers</span>
+            <span class="large gry">(VARIANT_ID, QTY, BATCH_NUMBER, EXP_DATE(yyyy/MM), MFG_DATE(yyyy/MM), MRP, COST) as excel headers</span>
             <br/><br/>
             <h2>File to Upload: <s:file name="fileBean" size="30"/></h2>
             <div class="buttons">
                 <s:submit name="parse" value="Create RV LineItems"/>
             </div>
         </fieldset>
+        </shiro:hasRole>
 
     </s:form>
 

@@ -30,6 +30,7 @@ import com.hk.pact.service.inventory.SkuService;
 import com.hk.util.io.ExcelSheetParser;
 import com.hk.util.io.HKRow;
 import com.hk.web.action.error.AdminPermissionAction;
+import com.restfb.util.StringUtils;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
 import org.apache.log4j.Logger;
@@ -238,7 +239,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
                 String batchNumber = row.getColumnValue(XslConstants.BATCH_NUMBER);
                 String strExpiryDate = row.getColumnValue(XslConstants.EXP_DATE);
                 Date expiryDate = new Date();
-                if(strExpiryDate != null) {
+                if(strExpiryDate != null && !StringUtils.isBlank(strExpiryDate)) {
                     expiryDate = XslUtil.getDate(strExpiryDate);
                     if(expiryDate == null) {
                         throw new Exception("Incorrect format for expiry date ");
@@ -246,7 +247,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
                 }
                 String strMfgDate = row.getColumnValue(XslConstants.MFG_DATE);
                 Date mfgDate = new Date();
-                if(strMfgDate != null) {
+                if(strMfgDate != null && !StringUtils.isBlank(strMfgDate)) {
                     mfgDate = XslUtil.getDate(strMfgDate);
                     if(mfgDate == null) {
                         throw new Exception("Incorrect format for mfg date ");
@@ -255,9 +256,30 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 
                 ProductVariant productVariant = getProductVariantService().getVariantById(variantId);
 
-                if(productVariant == null || qty == null || mrp == null || cost == null || batchNumber == null || mrp <=0D || cost <= 0 || qty <=0) {
-                    throw new Exception("Incorrect value for one or more columns");
+                if (cost == null || cost == 0D) {
+                    if (productVariant != null) {
+                        cost = productVariant.getCostPrice();
+                    }
                 }
+
+                if(productVariant == null) {
+                    throw new Exception("Incorrect product variant");
+                }
+
+                if(qty == null || qty <= 0) {
+                    throw new Exception("Qty should be greater than zero");
+                }
+
+                if(mrp == null || mrp <= 0) {
+                    throw new Exception("MRP should be greater than zero");
+                }
+                if(cost == null || cost <= 0) {
+                    throw new Exception("COST should be greater than zero");
+                }
+                if(batchNumber == null || StringUtils.isBlank(batchNumber)) {
+                    throw new Exception("Invalid batch number");
+                }
+
                 Sku sku = skuService.getSKU(productVariant, reconciliationVoucher.getWarehouse());
 
                 if(productVariant != null) {
