@@ -510,31 +510,16 @@
       </s:link>
     </div>
   </shiro:hasPermission>
-	
-	<c:set var="recommendedProducts" value="${hk:getRecommendedProducts(product)}"/>
-	<c:if test="${!empty recommendedProducts}">
+
+	<c:set var="relatedProducts" value="${product.relatedProducts}"/>
+	<c:if test="${!empty relatedProducts}">
 		<div class='products content' id="related_products">
 			<h4>
 				People who bought this also bought these products
 			</h4>
 
-			<c:forEach items="${recommendedProducts}" var="relatedProducts">
-				<shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_CATALOG%>">
-					<h6 style="color: red" title="Recommended Product Source">
-						Source = ${relatedProducts.key};
-						Products =
-						<c:forEach var="relatedProduct" items="${relatedProducts.value}">
-							${relatedProduct}
-						</c:forEach>
-					</h6>
-				</shiro:hasPermission>
-				<c:set var="recommendedProductCount" value="0" scope="page"/>
-				<c:forEach var="relatedProduct" items="${relatedProducts.value}">
-					<c:if test="${recommendedProductCount < 6}">
-						<s:layout-render name="/layouts/embed/_productThumb.jsp" productId="${relatedProduct}"/>
-					</c:if>
-					<c:set var="recommendedProductCount" value="${recommendedProductCount + 1}" scope="page"/>
-				</c:forEach>
+			<c:forEach items="${relatedProducts}" var="relatedProduct">
+				<s:layout-render name="/layouts/embed/_productThumbG.jsp" product="${relatedProduct}"/>
 			</c:forEach>
 
 			<div class="floatfix"></div>
