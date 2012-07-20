@@ -82,7 +82,7 @@ public class SOInvoiceAction extends BaseAction {
                 Pincode pincode = pincodeService.getByPincode(pin);
                 Courier courier = pincode.getDefaultCourier();
                 Awb awb = null;
-                if (shippingOrder.getShipment().getAwb() != null && shippingOrder.getShipment().getAwb().getAwbNumber() != null) {
+                if (shippingOrder.getShipment() != null && shippingOrder.getShipment().getAwb() != null && shippingOrder.getShipment().getAwb().getAwbNumber() != null) {
                     awb = shippingOrder.getShipment().getAwb();
                 } else {
                     if (shippingOrder.isCOD()) {

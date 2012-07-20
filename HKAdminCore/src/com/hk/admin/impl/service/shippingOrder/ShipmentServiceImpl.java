@@ -99,7 +99,6 @@ public class ShipmentServiceImpl implements ShipmentService {
         if (suggestedAwb != null) {
             AwbStatus awbStatus = EnumAwbStatus.Attach.getAsAwbStatus();
             suggestedAwb.setAwbStatus(awbStatus);
-            awbService.save(suggestedAwb);
             shipment.setAwb(suggestedAwb);
             return suggestedAwb;
         }

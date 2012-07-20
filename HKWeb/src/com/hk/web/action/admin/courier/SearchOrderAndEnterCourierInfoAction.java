@@ -133,14 +133,6 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
                 if (shippingOrder.getShipment() != null && shippingOrder.getShipment().getCourier() != null && shippingOrder.getShipment().getAwb().getAwbNumber() != null) {
                     suggestedCourier = shippingOrder.getShipment().getCourier();
                     trackingId = shippingOrder.getShipment().getAwb().getAwbNumber();
-                } else {
-                    suggestedCourier = courierService.getDefaultCourierByPincodeForLoggedInWarehouse(pinCode, isCod);
-                    Awb suggestedAwb = shipmentService.attachAwbToShipment(suggestedCourier, shippingOrder);
-                    if (suggestedAwb == null) {
-                        addRedirectAlertMessage(new SimpleMessage("AWB numbers are not available for courier  , please contact respective courier service  " + suggestedCourier));
-                    } else {
-                        trackingId = suggestedAwb.getAwbNumber();
-                    }
                 }
 
             } else {
@@ -162,15 +154,25 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
         }
         Awb suggestedAwb = shipment.getAwb();
         Awb finalAwb = suggestedAwb;
-        if (!(suggestedAwb.getAwbNumber().equalsIgnoreCase(trackingId.trim()))) {
-            List<Awb> awbList = awbService.getAvailableAwbListForCourierByWarehouseCodStatus(shipment.getCourier(), trackingId, shippingOrder.getWarehouse(), shippingOrder.isCOD(), EnumAwbStatus.Unused.getAsAwbStatus());
-            if (awbList != null && awbList.size() > 0) {
+        if (suggestedAwb == null || (!(suggestedAwb.getAwbNumber().equalsIgnoreCase(trackingId.trim())))) {
+            if (suggestedAwb != null) {
                 suggestedAwb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
                 awbService.save(suggestedAwb);
+            }
+
+            List<Awb> awbList = awbService.getAvailableAwbListForCourierByWarehouseCodStatus(shipment.getCourier(), trackingId, shippingOrder.getWarehouse(), shippingOrder.isCOD(), EnumAwbStatus.Unused.getAsAwbStatus());
+            if (awbList != null && awbList.size() > 0) {
                 finalAwb = awbList.get(0);
             } else {
-                addRedirectAlertMessage(new SimpleMessage(" Tracking Id :   " + trackingId + "does not exist in system "));
-                return new ForwardResolution("/pages/admin/searchOrderAndEnterCouierInfo.jsp");
+                Awb awb = new Awb();
+                awb.setAwbNumber(trackingId.trim());
+                awb.setAwbBarCode(trackingId.trim());
+                awb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
+                awb.setCourier(shipment.getCourier());
+                awb.setCod(shippingOrder.isCOD());
+                awb.setWarehouse(shippingOrder.getWarehouse());
+                awb = awbService.save(awb);
+                finalAwb = awb;
             }
         }
 
