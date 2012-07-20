@@ -81,11 +81,11 @@
       </div>
       <div class="price">
         <c:choose>
-          <c:when test="${subscription.markedPriceAtSubscription == subscription.hkPriceAtSubscription}">
+          <c:when test="${subscription.markedPriceAtSubscription == subscription.subscriptionPrice}">
             <div class="hk">
               <div class="num"> Rs
               <span class="lineItemSubTotalMrp"><fmt:formatNumber
-                  value="${subscription.hkPrice * subscription.qty}"
+                  value="${subscription.subscriptionPrice * subscription.qty}"
                   pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
               </div>
             </div>
