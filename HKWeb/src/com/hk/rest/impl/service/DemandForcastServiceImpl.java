@@ -82,27 +82,17 @@ public class DemandForcastServiceImpl implements DemandForcastService {
             }
                  
             if (set == false){
-                /*
-                dForecast.setForcastDate(date);
-                dForecast.setProductVariant(getBaseDao().get(ProductVariant.class,prod_variantId));
-                dForecast.setWarehouse(warehouseService.getWarehouseById(warehouseId));  //ask - long operation
-                dForecast.setForcastValue(forcastVal);
-                */
                 //getBaseDao().save(dForecast);
                 CollectionToUpdate.add(dfExcel);
                 set = false;
                 }
             }
-                  //getBaseDao().update(ob);            // needs Id value also
+
             catch(Exception e){
                 logger.error(e.getMessage());
             }
         }
         getBaseDao().saveOrUpdate(CollectionToUpdate);
-            /*
-            catch (java.text.ParseException pe){
-           logger.error(pe.getMessage(),0);
-        }
-        */
+           
     }
 }

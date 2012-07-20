@@ -23,6 +23,6 @@ import org.springframework.stereotype.Repository;
 public class DemandForcastDaoImpl extends BaseDaoImpl implements DemandForcastDao {
 
     public List<DemandForcast> findByDate (Date minDate){
-            return (List<DemandForcast>) getSession().createQuery("from DemandForcast df where df.forcastDate > :minDate order by df.forcastDate").setDate("minDate", minDate).list();
+            return (List<DemandForcast>) getSession().createQuery("from DemandForcast df where df.forcastDate >= :minDate order by df.forcastDate").setDate("minDate", minDate).list();
     }
 }

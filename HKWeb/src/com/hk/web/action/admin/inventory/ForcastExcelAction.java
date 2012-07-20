@@ -31,6 +31,7 @@ import org.apache.commons.lang.StringUtils;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
 import net.sourceforge.stripes.validation.SimpleError;
+import net.sourceforge.stripes.validation.ValidationMethod;
 
 /**
  * Created by IntelliJ IDEA.
@@ -67,6 +68,12 @@ public class ForcastExcelAction extends BaseAction {
     public DemandForcastService getDomainForcastService (){
         return domainForcastService;
     }
+    /*
+    @ValidationMethod
+    public void validateExcel(){
+       getContext().getValidationErrors().add("1", new SimpleError("Please correct the excel.Value(s) empty at row"));
+    }
+    */
 
     public Resolution parse() throws Exception
     {           
@@ -79,17 +86,17 @@ public class ForcastExcelAction extends BaseAction {
         ExcelSheetParser excel = new ExcelSheetParser(excelFile.getAbsolutePath(), "Sheet1");
         Iterator<HKRow> rowiterator = excel.parse();
         int rowCount=1;
-        String forecast_date = null;
+        Boolean error = false;
+        //String forecast_date = null;
         Date min_forecastDate = null;
         List<DemandForcast> excelInputList = new ArrayList<DemandForcast>();
-        //List<DemandForcast> dfList = getBaseDao().getAll(DemandForcast.class);
 
         try {
               while (rowiterator.hasNext()) {
                 rowCount++;
                 HKRow row = rowiterator.next();
 
-                forecast_date = row.getColumnValue("Forecast Date");
+                String forecast_date = row.getColumnValue("Forecast Date");
                 String prod_variantId = row.getColumnValue("Product Variant");
                 String warehouseId = row.getColumnValue("Warehouse ID");
                 String forecastVal = row.getColumnValue("Forecast Value");
@@ -97,7 +104,10 @@ public class ForcastExcelAction extends BaseAction {
 
                 if(StringUtils.isBlank(forecast_date) || StringUtils.isBlank(prod_variantId) ||
                         StringUtils.isBlank(warehouseId) || StringUtils.isBlank(forecastVal)){
-                getContext().getValidationErrors().add("1", new SimpleError("Please correct the excel.Value(s) empty at row "+rowCount+""));
+                getContext().getValidationErrors().add("1", new SimpleError("Please correct the excel. Value(s) empty at row "+rowCount+""));
+                error = true;
+                return new ForwardResolution("/pages/admin/uploadForcast.jsp");
+                }
                     /**
                      * TODO:
                      * a) throw an error message blank required field : fail entire upload here
@@ -105,16 +115,8 @@ public class ForcastExcelAction extends BaseAction {
                      * 
                      */
                     //throw new ExcelBlankFieldException("value(s) empty at" + "    ", rowCount);
-                }
 
 
-               /*
-                excelInputList.add(forecast_date);
-                excelInputList.add(prod_variantId);
-                excelInputList.add(warehouseId);
-                excelInputList.add(forecastVal);
-
-                 */
                 try{
                 DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
                 Date date = (Date)formatter.parse(forecast_date);
@@ -136,8 +138,9 @@ public class ForcastExcelAction extends BaseAction {
               }
 
               //String max_forecastDate = forecast_date;
-
-              getDomainForcastService().SaveOrUpdateForecastInDB(excelInputList,min_forecastDate);
+              if(error == false){
+                 getDomainForcastService().SaveOrUpdateForecastInDB(excelInputList, min_forecastDate);
+              }
             }
         catch (ExcelBlankFieldException e) {
                 logger.debug(e.getMessage());
