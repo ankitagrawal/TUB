@@ -7828,7 +7828,7 @@
     <!--<changeSet author="Ajeet (generated)" id="1342505244718-5">-->
         <!--<addNotNullConstraint columnDataType="VARCHAR(70)" columnName="value" tableName="cart_line_item_config_values"/>-->
     <!--&lt;!&ndash;</changeSet>->-->
-    <changeSet author="Seema (generated)" id="1342273389422-1">
+    <changeSet author="Seema (generated)" id="1342273389422-100">
         <createTable tableName="awb_status">
             <column name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -7838,12 +7838,12 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Seema (generated)" id="1342273389422-2">
+    <changeSet author="Seema (generated)" id="1342273389422-200">
         <addColumn tableName="awb">
             <column name="awb_status_id" type="INT"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Seema (generated)" id="1342273389422-3">
+    <changeSet author="Seema (generated)" id="1342273389422-300">
         <addColumn tableName="shipment">
             <column name="awb_id" type="INT"/>
         </addColumn>
