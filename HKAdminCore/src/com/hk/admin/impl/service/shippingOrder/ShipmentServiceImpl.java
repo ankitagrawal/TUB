@@ -18,6 +18,7 @@ import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.pact.dao.courier.PincodeDao;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,25 +40,28 @@ public class ShipmentServiceImpl implements ShipmentService {
     @Autowired
     AwbService awbService;
     @Autowired
+    ShippingOrderService shippingOrderService;
+    @Autowired
     ShipmentDao shipmentDao;
 
-    public Shipment createShipment(ShippingOrder shippingOrder) {                 //todo handle null checks
-        Shipment shipment = new Shipment();
+    public Shipment createShipment(ShippingOrder shippingOrder) {
         Order order = shippingOrder.getBaseOrder();
         Pincode pincode = pincodeDao.getByPincode(order.getAddress().getPin());
+        if (pincode != null) {
+            return null;
+        }
         Courier suggestedCourier = courierService.getDefaultCourier(pincode, shippingOrder.isCOD(), shippingOrder.getWarehouse());
-        shipment.setCourier(suggestedCourier);
+        if (suggestedCourier == null) {
+            return null;
+        }
         Awb suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(suggestedCourier, null, shippingOrder.getWarehouse(), shippingOrder.isCOD(), EnumAwbStatus.Unused.getAsAwbStatus());
-        if (suggestedAwb != null) {
-            suggestedAwb.setUsed(true);
-            shipment.setAwb(suggestedAwb);
-            awbDao.save(suggestedAwb);
+        if (suggestedAwb == null) {
+            return null;
         }
-        if (courierGroupService.getCourierGroup(shipment.getCourier()) != null) {
-            shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
-            shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
-            shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
-        }
+        Shipment shipment = new Shipment();
+        shipment.setCourier(suggestedCourier);
+        suggestedAwb.setUsed(true);
+        shipment.setAwb(suggestedAwb);
         Double estimatedWeight = 0D;
         for (LineItem lineItem : shippingOrder.getLineItems()) {
             ProductVariant productVariant = lineItem.getSku().getProductVariant();
@@ -69,7 +73,15 @@ public class ShipmentServiceImpl implements ShipmentService {
             }
         }
         shipment.setBoxWeight(estimatedWeight);
-        return save(shipment);
+        shippingOrder.setShipment(shipment);
+        if (courierGroupService.getCourierGroup(shipment.getCourier()) != null) {
+            shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
+            shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
+            shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
+        }
+//        shipment.setShippingOrder(shippingOrder);
+        shippingOrder = shippingOrderService.save(shippingOrder);
+        return shippingOrder.getShipment();
     }
 
     public Shipment saveShipmentDate(Shipment shipment) {

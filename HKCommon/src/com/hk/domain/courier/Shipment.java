@@ -37,10 +37,10 @@ public class Shipment implements java.io.Serializable, Comparable<Shipment> {
     @JoinColumn(name = "awb_id")
     private Awb awb;
 
+    @JsonSkip
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shipping_order_id")
     private ShippingOrder shippingOrder;
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "box_size_id")
@@ -48,7 +48,6 @@ public class Shipment implements java.io.Serializable, Comparable<Shipment> {
 
     @Column (name = "box_weight")
 	private Double boxWeight;
-
 
 	@Temporal (TemporalType.TIMESTAMP)
 	@Column (name = "ship_date", length = 19)
