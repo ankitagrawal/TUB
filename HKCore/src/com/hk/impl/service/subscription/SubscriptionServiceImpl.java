@@ -6,7 +6,9 @@ import com.hk.constants.subscription.EnumSubscriptionLifecycleActivity;
 import com.hk.constants.subscription.EnumSubscriptionStatus;
 import com.hk.constants.subscription.SubscriptionConstants;
 import com.hk.core.search.SubscriptionSearchCriteria;
+import com.hk.domain.catalog.category.Category;
 import com.hk.domain.order.Order;
+import com.hk.domain.subscription.SubscriptionProduct;
 import com.hk.domain.subscription.SubscriptionStatus;
 import com.hk.pact.service.subscription.SubscriptionLoggingService;
 import com.hk.pact.service.subscription.SubscriptionService;
@@ -134,4 +136,5 @@ public class SubscriptionServiceImpl implements SubscriptionService{
         subscriptionLoggingService.logSubscriptionActivity(subscription, EnumSubscriptionLifecycleActivity.SubscriptionOrderDelivered);
         return this.save(subscription);
     }
+
 }

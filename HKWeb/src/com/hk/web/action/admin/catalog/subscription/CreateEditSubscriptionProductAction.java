@@ -9,6 +9,7 @@ import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.subscription.Subscription;
 import com.hk.domain.subscription.SubscriptionProduct;
+import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.subscription.SubscriptionProductService;
 import com.hk.util.io.ExcelSheetParser;
 import com.hk.util.io.HKRow;
@@ -44,6 +45,8 @@ import java.util.*;
 public class CreateEditSubscriptionProductAction extends BaseAction {
     @Autowired
     SubscriptionProductService subscriptionProductService;
+    @Autowired
+    ProductService productService;
 
     private static final String SHEET_NAME_SUBSCRIPTION_PRODUCTS = "subscriptionProducts";
 
@@ -62,6 +65,8 @@ public class CreateEditSubscriptionProductAction extends BaseAction {
             @Validate(field = "subscriptionDiscount360Days", required = true, on = {"createSubscriptionProduct","saveSubscriptionProduct"})
     })
     private SubscriptionProduct      subscriptionProduct;
+
+    private boolean subscribable;
 
     @Validate(required = true, on={"createSubscriptionProduct","editSubscriptionProduct","saveSubscriptionProduct"})
     private Product product;
@@ -87,6 +92,9 @@ public class CreateEditSubscriptionProductAction extends BaseAction {
             addRedirectAlertMessage(new SimpleMessage("subscription product already exists!!"));
             return new ForwardResolution("/pages/admin/subscription/createSubscriptionProduct.jsp");
         } else {
+            product.setSubscribable(subscribable);
+            productService.save(product);
+
             subscriptionProduct.setProduct(product);
             subscriptionProductService.save(subscriptionProduct);
             addRedirectAlertMessage(new SimpleMessage("subscription product saved successfully."));
@@ -100,6 +108,8 @@ public class CreateEditSubscriptionProductAction extends BaseAction {
         if(subscriptionProduct==null){
             editSubscription=false;
             addRedirectAlertMessage(new SimpleMessage("Subscription Product doesn't exist"));
+        }else{
+            subscribable=subscriptionProduct.getProduct().isSubscribable();
         }
         return new ForwardResolution("/pages/admin/subscription/createSubscriptionProduct.jsp");
     }
@@ -107,23 +117,17 @@ public class CreateEditSubscriptionProductAction extends BaseAction {
     public Resolution saveSubscriptionProduct(){
         editSubscription=false;
         subscriptionProduct.setProduct(product);
-        SubscriptionProduct priorSubscriptionProduct=subscriptionProductService.findByProduct(product);
-        if(priorSubscriptionProduct!=null){
-             priorSubscriptionProduct.setMaxFrequencyDays(subscriptionProduct.getMaxFrequencyDays());
-            priorSubscriptionProduct.setMinFrequencyDays(subscriptionProduct.getMinFrequencyDays());
-            priorSubscriptionProduct.setMaxQtyPerDelivery(subscriptionProduct.getMaxQtyPerDelivery());
-            priorSubscriptionProduct.setSubscriptionDiscount180Days(subscriptionProduct.getSubscriptionDiscount180Days());
-            priorSubscriptionProduct.setSubscriptionDiscount360Days(subscriptionProduct.getSubscriptionDiscount360Days());
-        }   else{
-            priorSubscriptionProduct=subscriptionProduct;
-        }
-        subscriptionProductService.save(priorSubscriptionProduct);
+
+        product.setSubscribable(subscribable);
+        productService.save(product);
+
+        subscriptionProductService.save(subscriptionProduct);
         addRedirectAlertMessage(new SimpleMessage("subscription product saved successfully."));
         return new ForwardResolution("/pages/admin/subscription/createSubscriptionProduct.jsp");
     }
 
     public Resolution uploadSubscriptionProductsExcel() throws Exception {
-        String excelFilePath = adminUploadsPath + "/storeFiles/subscriptionProducts"+ System.currentTimeMillis() +".xls";
+        String excelFilePath = adminUploadsPath + "/subscriptionFiles/subscriptionProducts"+ System.currentTimeMillis() +".xls";
         File excelFile = new File(excelFilePath);
         excelFile.getParentFile().mkdirs();
         fileBean.save(excelFile);
@@ -133,45 +137,52 @@ public class CreateEditSubscriptionProductAction extends BaseAction {
         excelFile.delete();
 
         addRedirectAlertMessage(new SimpleMessage("File Uploaded"));
-        return new ForwardResolution("/pages/admin/store/storepricing.jsp");
+        return new ForwardResolution("/pages/admin/subscription/createSubscriptionProduct.jsp");
     }
 
     public void uploadInDB(String excelFilePath) {
         try {
             ExcelSheetParser parser = new ExcelSheetParser(excelFilePath, SHEET_NAME_SUBSCRIPTION_PRODUCTS);
             Iterator<HKRow> rowIterator = parser.parse();
-            Set<SubscriptionProduct> storeProductSet = new HashSet<SubscriptionProduct>();
+            Set<SubscriptionProduct> subscriptionProductSet = new HashSet<SubscriptionProduct>();
 
             while (null != rowIterator && rowIterator.hasNext()) {
                 HKRow curHkRow = rowIterator.next();
-                SubscriptionProduct storeProduct;
+                SubscriptionProduct subscriptionProductItem;
+                Product productItem;
 
                 int i = 0;
                 while (null != curHkRow && curHkRow.columnValues != null && i < curHkRow.columnValues.length) {
-                   /* storeProduct = getStoreService().getStoreProductByHKVariantIDAndStoreId(StringUtils.trim(curHkRow.getColumnValue(i)),store.getId());
-                    if (storeProduct == null) {
-                        storeProduct = new StoreProduct();
-                        storeProduct.setProductVariant(getProductVariantService().getVariantById(StringUtils.trim(curHkRow.getColumnValue(i))));
-                        i++;
-                        storeProduct.setStore(store);
+                    productItem = productService.getProductById(StringUtils.trim(curHkRow.getColumnValue(i)));
+                    subscriptionProductItem = subscriptionProductService.findByProduct(productItem);
+                    if (subscriptionProductItem == null) {
+                        subscriptionProductItem = new SubscriptionProduct();
+                        subscriptionProductItem.setProduct(product);
                     }
-                    if(i<1){
-                        i++;
-                    }
-                    storeProduct.setStorePrice(Double.parseDouble(curHkRow.getColumnValue(i)));
                     i++;
-                    storeProduct.setHidden(Boolean.parseBoolean(curHkRow.getColumnValue(i)));
+                    subscriptionProductItem.setMaxQtyPerDelivery(Integer.parseInt(StringUtils.trim(curHkRow.getColumnValue(i))));
                     i++;
-                    storeProductSet.add(storeProduct);*/
+                    subscriptionProductItem.setMinFrequencyDays(Integer.parseInt(StringUtils.trim(curHkRow.getColumnValue(i))));
+                    i++;
+                    subscriptionProductItem.setMaxFrequencyDays(Integer.parseInt(StringUtils.trim(curHkRow.getColumnValue(i))));
+                    i++;
+                    subscriptionProductItem.setSubscriptionDiscount180Days(Double.parseDouble(StringUtils.trim(curHkRow.getColumnValue(i))));
+                    i++;
+                    subscriptionProductItem.setSubscriptionDiscount360Days(Double.parseDouble(StringUtils.trim(curHkRow.getColumnValue(i))));
+                    i++;
+                    productItem.setSubscribable(Boolean.parseBoolean(StringUtils.trim(curHkRow.getColumnValue(i))));
+                    i++;
+                    productService.save(productItem);
+                    subscriptionProductSet.add(subscriptionProductItem);
                 }
             }
 
-           /* for (StoreProduct storeProduct : storeProductSet) {
-                if (storeProduct != null) {
-                    getStoreService().saveStoreProduct(storeProduct);
+            for (SubscriptionProduct subscriptionProduct1 : subscriptionProductSet) {
+                if (subscriptionProduct1 != null) {
+                    subscriptionProductService.save(subscriptionProduct1);
                 }
-                logger.info("inserting or updating into variantId:" + storeProduct.getProductVariant().getId() + " store: " + storeProduct.getStore().getName().toString());
-            }*/
+                logger.info("inserting or updating subscription product for: " + subscriptionProduct1.getProduct().getId().toString());
+            }
         } catch (Exception e) {
             logger.error("Exception while reading excel sheet.", e);
             addRedirectAlertMessage(new SimpleMessage("Upload failed " + e.getMessage()));
@@ -180,12 +191,12 @@ public class CreateEditSubscriptionProductAction extends BaseAction {
     }
 
     public Resolution downloadSubscriptionProductsExcel() throws Exception {
-        String excelFilePath = adminDownloads + "/storeFiles/"+category.getDisplayName()+"_SubscriptionProducts"+System.currentTimeMillis()+".xls";
+        String excelFilePath = adminDownloads + "/subscriptionFiles/"+category.getDisplayName()+"_SubscriptionProducts"+System.currentTimeMillis()+".xls";
         xlsFile = new File(excelFilePath);
         xlsFile.getParentFile().mkdirs();
 
-       /* List<SubscriptionProduct> storeProductList= storeService.getProductListForStore(store);
-        createSubscriptionProductsExcel(subscriptionProductList);*/
+        List<SubscriptionProduct> subscriptionProductList= subscriptionProductService.findByCategory(category);
+        createSubscriptionProductsExcel(subscriptionProductList);
 
         return new HTTPResponseResolution();
 
@@ -195,19 +206,27 @@ public class CreateEditSubscriptionProductAction extends BaseAction {
         try{
             HkXlsWriter xlsWriter = new HkXlsWriter();
 
-            xlsWriter.addHeader("variantId", "variantId");
-            xlsWriter.addHeader("storePrice", "storePrice");
-            xlsWriter.addHeader("hidden", "hidden");
+            xlsWriter.addHeader("productId", "productId");
+            xlsWriter.addHeader("maxQtyPerDelivery", "maxQtyPerDelivery");
+            xlsWriter.addHeader("minFrequencyDays", "minFrequencyDays");
+            xlsWriter.addHeader("maxFrequencyDays", "maxFrequencyDays");
+            xlsWriter.addHeader("DiscountPercent180Days", "DiscountPercent180Days");
+            xlsWriter.addHeader("DiscountPercent360Days", "DiscountPercent360Days");
+            xlsWriter.addHeader("isSubscribable", "isSubscribable");
 
             int i=1;
-            /*for(SubscriptionProduct subscriptionProduct : subscriptionProductList){
-                xlsWriter.addCell(i,storeProduct.getProductVariant().getId().toString());
-                xlsWriter.addCell(i,storeProduct.getStorePrice());
-                xlsWriter.addCell(i,storeProduct.isHidden());
+            for(SubscriptionProduct subscriptionProduct : subscriptionProductList){
+                xlsWriter.addCell(i,subscriptionProduct.getProduct().getId());
+                xlsWriter.addCell(i,subscriptionProduct.getMaxQtyPerDelivery());
+                xlsWriter.addCell(i,subscriptionProduct.getMinFrequencyDays());
+                xlsWriter.addCell(i,subscriptionProduct.getMaxFrequencyDays());
+                xlsWriter.addCell(i,subscriptionProduct.getSubscriptionDiscount180Days());
+                xlsWriter.addCell(i,subscriptionProduct.getSubscriptionDiscount360Days());
+                xlsWriter.addCell(i,subscriptionProduct.getProduct().isSubscribable());
                 i++;
-            }*/
+            }
 
-            xlsWriter.writeData(xlsFile, "subscriptionProducts");
+            xlsWriter.writeData(xlsFile, SHEET_NAME_SUBSCRIPTION_PRODUCTS);
         } catch (Exception e) {
             logger.error("Exception while generating excel ", e);
             addRedirectAlertMessage(new SimpleMessage("excel generation failed " + e.getMessage()));
@@ -270,5 +289,13 @@ public class CreateEditSubscriptionProductAction extends BaseAction {
 
     public void setEditSubscription(boolean editSubscription) {
         this.editSubscription = editSubscription;
+    }
+
+    public boolean isSubscribable() {
+        return subscribable;
+    }
+
+    public void setSubscribable(boolean subscribable) {
+        this.subscribable = subscribable;
     }
 }

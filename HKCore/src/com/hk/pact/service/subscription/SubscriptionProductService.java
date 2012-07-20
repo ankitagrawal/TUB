@@ -12,16 +12,17 @@ import java.util.List;
  * User: Pradeep
  * Date: Jun 17, 2012
  * Time: 1:43:46 PM
- * To change this template use File | Settings | File Templates.
  */
 public interface SubscriptionProductService {
 
-  public SubscriptionProduct save(SubscriptionProduct subscriptionProduct);
+    public SubscriptionProduct save(SubscriptionProduct subscriptionProduct);
 
-  public SubscriptionProduct findByProduct(Product product);
+    public SubscriptionProduct findByProduct(Product product);
 
-  public SubscriptionProduct findByProductVariant(ProductVariant productVariant);
+    public SubscriptionProduct findByProductId(String productId);
 
-  public List<SubscriptionProduct> findByCategory(Category category);
-  
+    public SubscriptionProduct findByProductVariant(ProductVariant productVariant);
+
+    public List<SubscriptionProduct> findByCategory(Category category);
+
 }

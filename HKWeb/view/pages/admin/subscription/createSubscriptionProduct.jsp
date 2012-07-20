@@ -18,7 +18,7 @@
             <fieldset class="right_label">
                 <legend>Create a new Subscription Product</legend>
                 <c:if test="${cspa.editSubscription}">
-                    <s:hidden name="subscription.id"/>
+                    <s:hidden name="subscriptionProduct.id"/>
                 </c:if>
 
                 <ul class="variantList">
@@ -42,9 +42,14 @@
                         <label>Discount Percent 180 days</label>
                         <s:text name="subscriptionProduct.subscriptionDiscount180Days"  />   (eg: 2.65 for 2.65%)
                     </li>
+
                     <li>
                         <label>Discount Percent 360 days</label>
-                        <s:text name="subscriptionProduct.subscriptionDiscount360Days"  />   (eg: 2.65 for 2.65%)  &nbsp;&nbsp;
+                        <s:text name="subscriptionProduct.subscriptionDiscount360Days"  />   (eg: 2.65 for 2.65%)
+                    </li>
+                    <li>
+                        <label>is Subscribable</label>
+                        <s:checkbox name="subscribable"/> &nbsp;&nbsp;
                         <c:if test="${cspa.editSubscription}">
                             <s:submit name="saveSubscriptionProduct" value="save"/>
                         </c:if>
@@ -65,13 +70,13 @@
                     <ul>
                         <li><label>File to Upload</label>
                             <s:file name="fileBean" size="30"/>
-                            &nbsp; <s:submit name="uploadStorePricingExcel" value="Upload"/>
+                            &nbsp; <s:submit name="uploadSubscriptionProductsExcel" value="Upload"/>
                         </li>
                         <li>
                     </ul>
                     <p>
                         <strong>Worksheet Name:</strong> subscriptionProducts<br/>
-                        <strong>6 Fields:</strong> productId &nbsp; maxQtyPerDelivery &nbsp; minFrequencyDays &nbsp; maxFrequencyDays &nbsp;DiscountPercent180Days &nbsp; DiscountPercent360Days
+                        <strong>7 Fields:</strong> productId &nbsp; maxQtyPerDelivery &nbsp; minFrequencyDays &nbsp; maxFrequencyDays &nbsp;DiscountPercent180Days &nbsp; DiscountPercent360Days &nbsp; isSubscribable
                     </p>
                 </div>
             </fieldset>
@@ -92,7 +97,7 @@
                                 <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="topLevelCategoryList"
                                                            value="name" label="displayName"/>
                             </s:select>
-                            <s:submit name="downloadStorePricingExcel" style="padding:1px;">
+                            <s:submit name="downloadSubscriptionProductsExcel" style="padding:1px;">
                                 Download Subscription Products Excel
                             </s:submit>
 

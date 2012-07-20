@@ -8,7 +8,6 @@ import com.hk.domain.subscription.SubscriptionStatus;
 import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.stereotype.Repository;
 import com.hk.impl.dao.BaseDaoImpl;
-import com.hk.pact.dao.subscription.SubscriptionProductDao;
 import com.hk.pact.dao.subscription.SubscriptionDao;
 import com.hk.domain.subscription.Subscription;
 import com.hk.domain.user.User;
@@ -65,4 +64,5 @@ public class SubscriptionDaoImpl extends BaseDaoImpl implements SubscriptionDao 
         values[i]=referenceDate;
         return bulkUpdate(query,values);
     }
+
 }

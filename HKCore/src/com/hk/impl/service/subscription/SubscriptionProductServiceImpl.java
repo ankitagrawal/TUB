@@ -2,7 +2,6 @@ package com.hk.impl.service.subscription;
 
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.pact.service.catalog.ProductService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,21 +24,19 @@ public class SubscriptionProductServiceImpl implements SubscriptionProductServic
 
     @Autowired
     SubscriptionProductDao subscriptionProductDao;
-    @Autowired
-    ProductService productService;
 
     @Transactional
     public SubscriptionProduct save(SubscriptionProduct subscriptionProduct){
-        Product product=subscriptionProduct.getProduct();
-        product.setSubscribable(true);
-        productService.save(product);
-
         return subscriptionProductDao.save(subscriptionProduct);
     }
 
     @Transactional
     public SubscriptionProduct findByProduct(Product product){
         return subscriptionProductDao.findByProduct(product);
+    }
+
+    public SubscriptionProduct findByProductId(String productId){
+        return subscriptionProductDao.findByProductId(productId);
     }
 
     public SubscriptionProduct findByProductVariant(ProductVariant productVariant){
