@@ -7838,11 +7838,6 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Seema (generated)" id="1342274075684-30">
-        <sql>
-            insert into awb_status(`id`,`status`) values (0,'Unused'),(1,'Attach'),(2,'Used');
-        </sql>
-    </changeSet>
     <changeSet author="Seema (generated)" id="1342273389422-2">
         <addColumn tableName="awb">
             <column name="awb_status_id" type="INT"/>
@@ -7852,6 +7847,11 @@
         <addColumn tableName="shipment">
             <column name="awb_id" type="INT"/>
         </addColumn>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1342274075684-30">
+        <sql>
+            insert into awb_status(`id`,`status`) values (0,'Unused'),(1,'Attach'),(2,'Used');
+        </sql>
     </changeSet>
     <changeSet author="Seema (generated)" id="1342273389422-4">
         <addForeignKeyConstraint baseColumnNames="awb_status_id" baseTableName="awb" constraintName="fk_awb_awb_status1"
