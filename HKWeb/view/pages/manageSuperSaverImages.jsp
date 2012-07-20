@@ -96,8 +96,10 @@
                             return false;
                         }
                     });
-
-                    $('.altText').val($('.altText').val().trim());
+                    
+                    $('.altText').each(function() {
+                        $(this).val($(this).val().trim());
+                    });
 
                     return !error;
                 });

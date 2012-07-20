@@ -17,11 +17,11 @@ public class SuperSaverImageDaoImpl extends BaseDaoImpl implements SuperSaverIma
     }
 
     public List<SuperSaverImage> getSuperSaverImages() {
-        return getSuperSaverImages(Boolean.FALSE, Boolean.FALSE);
+        return getSuperSaverImages(null, Boolean.FALSE, Boolean.FALSE);
     }
 
     public List<SuperSaverImage> getSuperSaverImages(Boolean getVisible) {
-        return getSuperSaverImages(getVisible, Boolean.FALSE);
+        return getSuperSaverImages(null, getVisible, Boolean.FALSE);
     }
 
     public List<SuperSaverImage> getSuperSaverImages(Boolean getVisible, Boolean getMainImage) {
