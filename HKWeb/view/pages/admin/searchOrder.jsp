@@ -46,6 +46,11 @@
     <%--
     Cancel order
     --%>
+
+        $('.cancelOrderButton').click(function(){
+            var proceed = confirm('Are you sure?');
+            if (!proceed) return false;
+        });
       $('.cancelOrderLink').click(function() {
         var proceed = confirm('Are you sure?');
         if (!proceed) return false;
@@ -291,14 +296,11 @@
       Remark:
       <s:textarea name="cancellationRemark" style="height:100px"/>
       <div class="buttons">
-        <s:submit name="pre" value="Cancel" class="cancelOrderButton" onclick="areYouSure();"/>
+        <s:submit name="pre" value="Cancel" class="cancelOrderButton" />
       </div>
     </s:form>
     <script type="text/javascript">
-        function areYouSure(){
-            var proceed = confirm('Are you sure?');
-            if (!proceed) return false;
-        }
+
       $('.cancelOrderForm').ajaxForm({dataType: 'json', success: _cancelOrder});
 
       function _cancelOrder(res) {

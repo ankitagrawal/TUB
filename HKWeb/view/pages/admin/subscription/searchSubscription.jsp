@@ -63,6 +63,15 @@
                 return false;
             } );
 
+
+            $('.cancelSubscriptionButton').click(function(){
+                var proceed = confirm('Are you sure?');
+                if (!proceed) return false;
+            });
+            $('.changeShipmentDateButton').click(function(){
+                var proceed = confirm('Are you sure?');
+                if (!proceed) return false;
+            });
         });
         function areYouSure(){
             var proceed = confirm('Are you sure?');
@@ -200,7 +209,7 @@
                 Remark:
                 <s:textarea name="cancellationRemark" style="height:70px"/> <br/>
 
-                <s:submit name="cancelSubscription" value="Cancel" class="cancelSubscriptionButton" onclick="areYouSure();"/>
+                <s:submit name="cancelSubscription" value="Cancel" class="cancelSubscriptionButton"/>
 
             </s:form>
         </div>
@@ -336,7 +345,7 @@
         <s:form beanclass="com.hk.web.action.admin.subscription.SubscriptionAdminAction" class="shipmentDateForm">
             <s:param name="subscription" value="${subscription.id}"/>`
             <s:text class="date_input nextShipmentDate" style="width:100px" name="nextShipmentDate"/>
-            <s:submit name="changeNextShipmentDate" value="change" onclick="areYouSure();"/>
+            <s:submit name="changeNextShipmentDate" value="change" class="changeShipmentDateButton" />
         </s:form>
         <script type="text/javascript">
 
