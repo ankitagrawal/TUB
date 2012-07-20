@@ -31,12 +31,10 @@
             menuStr += "</div></li>";
         </c:if>
         </c:forEach>
-        <shiro:lacksRole name="<%=RoleConstants.ADMIN%>">
             menuStr += "<li class='lvl1' id='brands_button' style='float:left;'><a href='${pageContext.request.contextPath}/brands'>Brands</a></li>"
-        </shiro:lacksRole>
 
         <shiro:hasRole name="<%=RoleConstants.ADMIN%>">
-            menuStr += "<li class='lvl1' id='super_savers_button' style='float:left;'><a href='${pageContext.request.contextPath}/super-savers'>Super Savers</a></li>"
+            menuStr += "<li class='lvl1 new' id='super_savers_button' style='float:left;'><a href='${pageContext.request.contextPath}/super-savers'>Offers</a></li>"
         </shiro:hasRole>
         <%--menuStr += "<li class='lvl1' id='offers_button' style='float:left;'><a href='${pageContext.request.contextPath}/pages/valentineGifts.jsp'>Gifts</a></li>"--%>
             return menuStr;
