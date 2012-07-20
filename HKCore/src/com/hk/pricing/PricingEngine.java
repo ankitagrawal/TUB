@@ -560,6 +560,7 @@ public class PricingEngine {
                     lineItem.setHkPrice(variantHKPrice + configPrice);
                     lineItem.setMarkedPrice(variantMarkedPrice + configPrice);
                 } else if (lineItem.getComboInstance() != null) {
+                }else if (lineItem.getOrder().isSubscriptionOrder()){
                 } else {
                     lineItem.setMarkedPrice(variantMarkedPrice);
                     lineItem.setHkPrice(variantHKPrice);

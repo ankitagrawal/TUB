@@ -53,6 +53,10 @@ public class SubscriptionOrderServiceImpl implements SubscriptionOrderService {
         return subscriptionOrderDao.findSubscriptionOrderByBaseOrder(order);
     }
 
+    public List<SubscriptionOrder> findSubscriptionOrdersForSubscription(Subscription subscription){
+        return subscriptionOrderDao.findSubscriptionOrdersForSubscription(subscription);
+    }
+
     /**
      * create base order for subscription and an entry in subscription_order
      * @param subscription

@@ -65,9 +65,10 @@ public class SubscriptionAdminAction extends BaseAction implements ValidationErr
             data.put("subscriptionStatus", JsonUtils.hydrateHibernateObject(subscription.getSubscriptionStatus()));
             HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "success", data);
             return new JsonResolution(healthkartResponse);
+        } else {
+            HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_RELOAD, "check your subscription", data);
+            return new JsonResolution(healthkartResponse);
         }
-        HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_RELOAD, "check your subscription", data);
-        return new JsonResolution(healthkartResponse);
     }
 
     @JsonHandler
@@ -83,9 +84,10 @@ public class SubscriptionAdminAction extends BaseAction implements ValidationErr
             data.put("subscriptionStatus", JsonUtils.hydrateHibernateObject(subscription.getSubscriptionStatus()));
             HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "success", data);
             return new JsonResolution(healthkartResponse);
+        } else{
+            HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_RELOAD, "check your subscription", data);
+            return new JsonResolution(healthkartResponse);
         }
-        HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_RELOAD, "check your subscription", data);
-        return new JsonResolution(healthkartResponse);
     }
 
     public Resolution changeAddress(){
@@ -97,7 +99,7 @@ public class SubscriptionAdminAction extends BaseAction implements ValidationErr
         try{
             subscription.setNextShipmentDate(nextShipmentDate);
             subscriptionService.save(subscription);
-             subscriptionLoggingService.logSubscriptionActivity(subscription, EnumSubscriptionLifecycleActivity.NextShipmentDateChanged);
+            subscriptionLoggingService.logSubscriptionActivity(subscription, EnumSubscriptionLifecycleActivity.NextShipmentDateChanged);
 
             subscriptionOrderService.createOrderForSubscription(subscription);
 

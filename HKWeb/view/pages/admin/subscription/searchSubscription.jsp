@@ -173,8 +173,7 @@
     </c:if>
     <br/>
 
-    <c:if
-            test="${subscription.subscriptionStatus.id == constomerConfirmationAwaited }">
+    <c:if test="${subscription.subscriptionStatus.id == constomerConfirmationAwaited }">
         <span class="codOrderText">&middot;</span>
         <s:link beanclass="com.hk.web.action.admin.subscription.SubscriptionAdminAction" event="confirmedByCustomer" class="confirmSubscriptionOrderLink">
             <s:param name="subscription" value="${subscription.id}"/>
@@ -323,7 +322,7 @@
     qty per delivery: <strong><span class="or"> ${subscription.qtyPerDelivery}</span></strong><br/>
     qty delivered: <strong><span class="or"> ${subscription.qtyDelivered}</span></strong> <br/>
 
-    <s:link class="changeNextShipmentDateLink" href="#">
+    <s:link beanclass="com.hk.web.action.admin.subscription.SubscriptionOrdersAction" event="pre" target="_blank">
         (view subscription orders)
         <s:param name="subscription" value="${subscription}"/>
     </s:link>

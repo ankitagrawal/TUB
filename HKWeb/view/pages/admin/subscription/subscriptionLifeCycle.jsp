@@ -7,7 +7,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.subscription.SubscriptionLifecycleAction" var="subscriptionLifeCycleBean"/>
-<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Order Lifecycle">
+<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Subscription Lifecycle">
     <s:layout-component name="heading">Subscription Lifecycle : Subscription#${subscriptionLifeCycleBean.subscription.id}</s:layout-component>
     <s:layout-component name="content">
         <table width="100%" border="0" cellspacing="0" cellpadding="0" class="zebra_vert">

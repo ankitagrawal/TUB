@@ -26,11 +26,6 @@ public class SubscriptionSearchCriteria{
 
     protected DetachedCriteria baseCriteria;
 
-
-
-
-
-
     private String                    login;
     private String                    phone;
     private String                    name;
@@ -46,31 +41,6 @@ public class SubscriptionSearchCriteria{
 
     public void setSortByUpdateDate(boolean sortByUpdateDate) {
         this.sortByUpdateDate = sortByUpdateDate;
-    }
-
-    private DetachedCriteria buildBaseCriteria() {
-
-        this.baseCriteria = getBaseCriteria();
-
-        if (subscriptionId != null) {
-            baseCriteria.add(Restrictions.eq("id", subscriptionId));
-        }
-
-        if(sortByUpdateDate){
-            baseCriteria.addOrder(Order.desc("updateDate"));
-        }
-
-        /*
-         * if (sortByUpdateDate) { if (!orderAsc) {
-         * baseCriteria.addOrder(org.hibernate.criterion.Order.desc("updateDate")); } else {
-         * baseCriteria.addOrder(org.hibernate.criterion.Order.asc("updateDate")); } }
-         */
-
-        /*    if (sortByUpdateDate && orderAsc) {
-                    baseCriteria.addOrder(org.hibernate.criterion.Order.asc("updateDate"));
-                }
-        */
-        return baseCriteria;
     }
 
     public DetachedCriteria getSearchCriteria() {
@@ -113,13 +83,21 @@ public class SubscriptionSearchCriteria{
     }
 
     protected DetachedCriteria buildSearchCriteriaFromBaseCriteria() {
-        DetachedCriteria criteria = buildBaseCriteria();
+        this.baseCriteria = getBaseCriteria();
 
-        if (subscriptionStatusList != null && subscriptionStatusList.size() > 0) {
-            criteria.add(Restrictions.in("subscriptionStatus", subscriptionStatusList));
+        if (subscriptionId != null) {
+            baseCriteria.add(Restrictions.eq("id", subscriptionId));
         }
 
-        DetachedCriteria userCriteria = criteria.createCriteria("user");
+        if(sortByUpdateDate){
+            baseCriteria.addOrder(Order.desc("updateDate"));
+        }
+
+        if (subscriptionStatusList != null && subscriptionStatusList.size() > 0) {
+            baseCriteria.add(Restrictions.in("subscriptionStatus", subscriptionStatusList));
+        }
+
+        DetachedCriteria userCriteria = baseCriteria.createCriteria("user");
 
         /**
          * user specific restrictions
@@ -135,7 +113,7 @@ public class SubscriptionSearchCriteria{
             userCriteria.add(Restrictions.like("name", "%" + name + "%"));
         }
 
-        DetachedCriteria baseOrderCriteria = criteria.createCriteria("baseOrder");
+        DetachedCriteria baseOrderCriteria = baseCriteria.createCriteria("baseOrder");
 
         if (baseOrderId != null) {
             baseOrderCriteria.add(Restrictions.eq("id", baseOrderId));
@@ -144,12 +122,12 @@ public class SubscriptionSearchCriteria{
         /**
          * address specific restrictions
          */
-        DetachedCriteria addressCriteria = criteria.createCriteria("address");
+        DetachedCriteria addressCriteria = baseCriteria.createCriteria("address");
         if (StringUtils.isNotBlank(phone)) {
             addressCriteria.add(Restrictions.like("phone", "%" + phone + "%"));
         }
 
-        return criteria;
+        return baseCriteria;
     }
 
 }

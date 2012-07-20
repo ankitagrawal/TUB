@@ -19,6 +19,8 @@ public interface SubscriptionOrderService {
 
     public SubscriptionOrder findSubscriptionOrderByBaseOrder(Order order);
 
+    public List<SubscriptionOrder> findSubscriptionOrdersForSubscription(Subscription subscription);
+
     public Order createOrderForSubscription(Subscription subscription);
 
     public List<Order> createOrdersForSubscriptions(List<Subscription> subscriptions);
