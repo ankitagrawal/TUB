@@ -7,6 +7,7 @@ import net.sourceforge.stripes.action.SimpleMessage;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.pact.service.store.StoreService;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.CourierConstants;
@@ -264,11 +265,15 @@ public class HKDeliveryAction extends BaseAction {
 
             //fetching contact name,contact-number for COD/Non COD
             paymentMode = shippingOrderList.get(index).getBaseOrder().getPayment().getPaymentMode().getName();
-            if (paymentMode.equalsIgnoreCase("COD")) {
-                name = shippingOrderList.get(index).getBaseOrder().getPayment().getContactName();
-                phone = shippingOrderList.get(index).getBaseOrder().getPayment().getContactNumber();
-
-            } else {
+	        if (paymentMode.equalsIgnoreCase("COD")) {
+		        if (shippingOrderList.get(index).getBaseOrder().getStore().getId().equals(StoreService.MIH_STORE_ID)) {
+			        name = shippingOrderList.get(index).getBaseOrder().getAddress().getName();
+			        phone = shippingOrderList.get(index).getBaseOrder().getAddress().getPhone();
+		        } else {
+			        name = shippingOrderList.get(index).getBaseOrder().getPayment().getContactName();
+			        phone = shippingOrderList.get(index).getBaseOrder().getPayment().getContactNumber();
+		        }
+	        } else {
                 name = shippingOrderList.get(index).getBaseOrder().getAddress().getName();
                 phone = shippingOrderList.get(index).getBaseOrder().getAddress().getPhone();
             }

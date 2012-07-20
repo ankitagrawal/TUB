@@ -68,7 +68,19 @@
 <div style="margin-top:10px;"></div>
 
 <div class="contentDiv">
-
+<shiro:hasPermission name="<%=PermissionConstants.MANAGE_IMAGE%>">
+      <div><s:link beanclass="com.hk.web.action.core.catalog.image.UploadImageAction" event="pre" target="_blank"
+                   class="popup"> Upload
+        <s:param name="product" value="${productCombo.id}"/>
+      </s:link>
+        <s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction"
+                event="manageProductImages" target="_blank"
+                class="popup">Manage
+                              Images
+          <s:param name="productId" value="${productCombo.id}"/>
+        </s:link>
+      </div>
+    </shiro:hasPermission>
 <h2 class='prod_title'>
         ${productCombo.name}
 </h2>
