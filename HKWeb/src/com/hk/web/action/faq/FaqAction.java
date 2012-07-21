@@ -41,43 +41,51 @@ public class FaqAction extends BaseAction {
     @DefaultHandler
     public Resolution pre() {
         primaryCategory = FaqCategoryEnums.EnumFaqPrimaryCateogry.Nutrition.getName();
-        if(searchString != null && !searchString.equals("")){
+        if (searchString != null && !searchString.equals("")) {
             faqList = faqService.searchFaq(searchString);
-        }
-        else{
+        } else {
             faqList = faqService.getFaqByCategory(primaryCategory);
         }
         return new ForwardResolution("/pages/faq/faq.jsp");
     }
 
     public Resolution addNewFaq() {
-        Boolean status = faqService.insertFaq(faq);
-        if(status == true){
-            addRedirectAlertMessage(new SimpleMessage("New FAQ inserted."));
+        if (faq==null || faq.getAnswer() == null || faq.getQuestion() == null) {
+            return new RedirectResolution(FaqAction.class);
         }
-        else{
-            addRedirectAlertMessage(new SimpleMessage("Unable to insert faq, please contact admin."));
+        Boolean status = faqService.insertFaq(faq);
+
+        if (!status) {
+            return new RedirectResolution(FaqAction.class);
         }
         return new RedirectResolution(FaqAction.class);
     }
 
-    public Resolution searchFaq(){
+    public Resolution searchFaq() {
         faqList = faqService.searchFaq(searchString);
         return new ForwardResolution("/pages/faq/faq.jsp");
     }
 
-    public Resolution saveFaq(){
-        faqService.save(faq);
+    public Resolution saveFaq() {
+        if (faq.getAnswer() == null
+                || faq.getQuestion() == null
+                || faq.getQuestion().equals("")
+                || faq.getAnswer().equals("")
+                ) {
+            addRedirectAlertMessage(new SimpleMessage("Question or answer cannot be left blank"));
+            return new ForwardResolution("/pages/faq/editFaq.jsp");
+        }
+        faq = faqService.save(faq);
         return new ForwardResolution("/pages/close.jsp");
     }
 
-     public Resolution deleteFaq(){
+    public Resolution deleteFaq() {
         Boolean status = faqService.deleteFaq(faq);
         return new ForwardResolution("/pages/close.jsp");
     }
 
-    public Resolution editFaq(){
-        if(faq == null){
+    public Resolution editFaq() {
+        if (faq == null) {
             addRedirectAlertMessage(new SimpleMessage("Unable to determine faq"));
             return new ForwardResolution("/pages/faq/faq.jsp");
         }
@@ -99,38 +107,6 @@ public class FaqAction extends BaseAction {
     public void setPrimaryCategory(String primaryCategory) {
         this.primaryCategory = primaryCategory;
     }
-/*
-    public String getQuestion() {
-        return question;
-    }
-
-    public void setQuestion(String question) {
-        this.question = question;
-    }
-
-    public String getAnswer() {
-        return answer;
-    }
-
-    public void setAnswer(String answer) {
-        this.answer = answer;
-    }
-
-    public String getSecondaryCategory() {
-        return secondaryCategory;
-    }
-
-    public void setSecondaryCategory(String secondaryCategory) {
-        this.secondaryCategory = secondaryCategory;
-    }
-
-    public String getKeywordString() {
-        return keywordString;
-    }
-
-    public void setKeywordString(String keywordString) {
-        this.keywordString = keywordString;
-    }*/
 
     public String getSearchString() {
         return searchString;

@@ -81,8 +81,16 @@
           if (!content) return;
           $(this).html(content.replace(pattern, o.template));
         });
-      }
-      ;
+      };
+
+        function validate(){
+            var question = $('#new-question').val();
+            var answer = $('#new-answer').val();
+            if(question == "" || answer==""){
+                alert('question or answer cannot be left blank');
+            }
+            return false;
+        }
     </script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/ckeditor/ckeditor.js"></script>
     <script src="${pageContext.request.contextPath}/ckeditor/_samples/sample.js" type="text/javascript"></script>
@@ -111,14 +119,14 @@
 
     <s:form beanclass="com.hk.web.action.faq.FaqAction" id="new-faq-form" style="display:none;">
       <span class="question"> Question: </span><br/>
-      <textarea class="question-textarea" name="faq.question">${  faqBean.faq.question}</textarea>
+      <textarea class="question-textarea" name="faq.question" id="new-question">${  faqBean.faq.question}</textarea>
       <br/><br/>
       <span class="answer"> Answer: </span>
       <br/>
-      <textarea cols="80" id="answer" name="faq.answer" rows="6">${faqBean.faq.answer}</textarea>
+      <textarea cols="80" id="new-answer" name="faq.answer" rows="6">${faqBean.faq.answer}</textarea>
       <script type="text/javascript">
         //<![CDATA[
-        CKEDITOR.replace('answer',
+        CKEDITOR.replace('faq.answer',
         {
           fullPage : false,
           extraPlugins : 'docprops'
@@ -146,7 +154,7 @@
       <s:text name="faq.keywords" style="width: 25em; margin-top:5px;"/>
       <span class="question" style="margin-left: 20px;"> Rank</span>
       <s:text name="faq.pageRank" style="width: 20px; margin-top:5px;"/>
-      <s:submit name="addNewFaq" value="Save"/>
+      <s:submit name="addNewFaq" value="Save" onclick="validate()"/>
     </s:form>
     <br/>
     <br/>

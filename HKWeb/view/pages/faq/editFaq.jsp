@@ -8,7 +8,16 @@
  <script type="text/javascript" src="${pageContext.request.contextPath}/ckeditor/ckeditor.js"></script>
 <script src="${pageContext.request.contextPath}/ckeditor/_samples/sample.js" type="text/javascript"></script>
 <link href="${pageContext.request.contextPath}/ckeditor/_samples/sample.css" rel="stylesheet" type="text/css"/>
-
+<script>
+    function validate(){
+            var question = document.getElementById('edit-question').value;
+            var answer = document.getElementById('edit-answer').value;
+            if(question == "" || answer==""){
+                alert('question or answer cannot be left blank');
+            }
+            return false;
+        }
+</script>
   <head><title></title></head>
   <body>
 
@@ -16,16 +25,16 @@
           <s:hidden name="faq.id" value="${faqBean.faq.id}"/>
           <span class="faq-question"> Question: </span><br/>
           <textarea class="question-textarea"
-                    name="faq.question" rows="3" cols="80"> ${faqBean.faq.question}</textarea>
+                    name="faq.question" rows="3" cols="80" id="edit-question"> ${faqBean.faq.question}</textarea>
           <br/><br/>
           <span class="faq-answer"> Answer: </span>
           <br/>
           <textarea cols="80" name="faq.answer"
-                    rows="6" class="ckeditor">${faqBean.faq.answer}</textarea>
+                    rows="6" class="ckeditor" id="edit-answer">${faqBean.faq.answer}</textarea>
           <script type="text/javascript">
               //<![CDATA[
 
-              CKEDITOR.replace('faq-answer',
+              CKEDITOR.replace('faq.answer',
               {
                   fullPage : false,
                   extraPlugins : 'docprops'
@@ -56,7 +65,7 @@
           <span class="question"> Rank</span>
           <s:text name="faq.pageRank" style="width: 25em; margin-top:5px;"/>
           <br/>
-          <s:submit name="saveFaq" value="Save"/>
+          <s:submit name="saveFaq" value="Save" onclick="validate()"/>
           <s:submit name="deleteFaq" value="Delete Faq"/>
       </s:form>
 
