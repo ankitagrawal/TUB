@@ -9,9 +9,11 @@ import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.exception.ExcelBlankFieldException;
+import com.hk.exception.DuplicateAwbexception;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.util.io.ExcelSheetParser;
 import com.hk.util.io.HKRow;
+import com.hk.util.io.LongStringUniqueObject;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +41,7 @@ public class XslAwbParser {
 
 
     public Set<Awb> readAwbExcel(File file) throws Exception {
+        List<LongStringUniqueObject> constraintList=new ArrayList<LongStringUniqueObject>();
         logger.debug("parsing Awb info : " + file.getAbsolutePath());
         Set<Awb> awbSet = new HashSet<Awb>();
         int rowCount = 1;
@@ -67,8 +70,8 @@ public class XslAwbParser {
                     }
 
                 }
-
-                Courier courier = courierService.getCourierById(XslUtil.getLong(courierId));
+                Long courierLongId= XslUtil.getLong(courierId.trim());
+                Courier courier = courierService.getCourierById(courierLongId);
                 if (courier == null) {
                     logger.error("courierId is not valid  " + courierId, rowCount);
                     throw new ExcelBlankFieldException("courierId is not valid  " + "    ", rowCount);
@@ -78,6 +81,11 @@ public class XslAwbParser {
                     logger.error("awbNumber cannot be null/empty");
                     throw new ExcelBlankFieldException("awbNumber cannot be empty " + "    ", rowCount);
                 }
+                LongStringUniqueObject courierAwbConstraint = new LongStringUniqueObject(courierLongId, awbNumber);
+                if (constraintList.contains(courierAwbConstraint)) {
+                    throw new DuplicateAwbexception("DUPLICATE VALUES ", courierAwbConstraint);
+                }
+                constraintList.add(courierAwbConstraint);
                 awb.setAwbNumber(awbNumber);
                 awb.setAwbBarCode(awbNumber);
                 awb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());

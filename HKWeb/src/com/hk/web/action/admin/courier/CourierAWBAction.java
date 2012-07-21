@@ -14,6 +14,7 @@ import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.UserService;
 import com.hk.util.XslGenerator;
 import com.hk.web.action.error.AdminPermissionAction;
+import com.hk.exception.DuplicateAwbexception;
 import net.sourceforge.stripes.action.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -154,23 +155,27 @@ public class CourierAWBAction extends BaseAction {
 
         }
 
-        addRedirectAlertMessage(new SimpleMessage("database updated"));
-        return new RedirectResolution("/pages/admin/updateCourierAWB.jsp");
+          addRedirectAlertMessage(new SimpleMessage("database updated"));
+          return new RedirectResolution("/pages/admin/updateCourierAWB.jsp");
       } else {
 
-        addRedirectAlertMessage(new SimpleMessage("Empty Excel Sheet"));
+          addRedirectAlertMessage(new SimpleMessage("Empty Excel Sheet"));
+          return new RedirectResolution("/pages/admin/updateCourierAWB.jsp");
+
+      }
+
+    }
+    catch (DuplicateAwbexception dup) {
+        addRedirectAlertMessage(new SimpleMessage("The AWb -- >" + dup.getUniqueObject().getValue() + "  is present in Excel twice for courier --> " + dup.getUniqueObject().getId()));
         return new RedirectResolution("/pages/admin/updateCourierAWB.jsp");
+    }
+    catch (Exception ex) {
+        if (awbSetFromExcel == null) {
+            addRedirectAlertMessage(new SimpleMessage(ex.getMessage()));
 
-      }
-
-    } catch (Exception ex) {
-
-      if (awbSetFromExcel == null) {
-        addRedirectAlertMessage(new SimpleMessage(ex.getMessage()));
-
-      }
-      addRedirectAlertMessage(new SimpleMessage("Error in uploading file"));
-      return new RedirectResolution("/pages/admin/updateCourierAWB.jsp");
+        }
+        addRedirectAlertMessage(new SimpleMessage("Error in uploading file"));
+        return new RedirectResolution("/pages/admin/updateCourierAWB.jsp");
 
 
     }
