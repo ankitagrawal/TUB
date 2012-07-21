@@ -1,9 +1,12 @@
 package com.hk.web.action.admin.courier;
 
 import com.akube.framework.stripes.action.BaseAction;
+
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.admin.util.BarcodeGenerator;
+import com.hk.domain.order.ShippingOrder;
+import com.hk.pact.service.store.StoreService;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.CourierConstants;
@@ -12,7 +15,6 @@ import com.hk.constants.courier.EnumCourier;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.Shipment;
-import com.hk.domain.order.ShippingOrder;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.web.action.error.AdminPermissionAction;
@@ -276,15 +278,19 @@ public class HKDeliveryAction extends BaseAction {
             }
 
             //fetching contact name,contact-number for COD/Non COD
-            paymentMode = shippingOrderList.get(index).getBaseOrder().getPayment().getPaymentMode().getName();
-            if (paymentMode.equalsIgnoreCase("COD")) {
-                name = shippingOrderList.get(index).getBaseOrder().getPayment().getContactName();
-                phone = shippingOrderList.get(index).getBaseOrder().getPayment().getContactNumber();
-
-            } else {
-                name = shippingOrderList.get(index).getBaseOrder().getAddress().getName();
-                phone = shippingOrderList.get(index).getBaseOrder().getAddress().getPhone();
-            }
+	        paymentMode = shippingOrderList.get(index).getBaseOrder().getPayment().getPaymentMode().getName();
+	        if (paymentMode.equalsIgnoreCase("COD")) {
+		        if (shippingOrderList.get(index).getBaseOrder().getStore().getId().equals(StoreService.MIH_STORE_ID)) {
+			        name = shippingOrderList.get(index).getBaseOrder().getAddress().getName();
+			        phone = shippingOrderList.get(index).getBaseOrder().getAddress().getPhone();
+		        } else {
+			        name = shippingOrderList.get(index).getBaseOrder().getPayment().getContactName();
+			        phone = shippingOrderList.get(index).getBaseOrder().getPayment().getContactNumber();
+		        }
+	        } else {
+		        name = shippingOrderList.get(index).getBaseOrder().getAddress().getName();
+		        phone = shippingOrderList.get(index).getBaseOrder().getAddress().getPhone();
+	        }
 
             name = name.toUpperCase();
             line1 = shippingOrderList.get(index).getBaseOrder().getAddress().getLine1();
