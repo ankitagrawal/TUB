@@ -27,6 +27,7 @@
   <target name="build">
     <ant dir="${project.healthkart.dir}" target="build" inheritall="false" />
   </target>
+	<target name="dev-clean" depends="clean, build"/>
 	<target name="db">
 		<updateDatabase changelogfile="${project.healthkart.dir}/db/changelog.xml" driver="${database.driver}" url="${database.url.dev}" username="${database.username}" password="${database.password}" classpathref="compile.classpath" />
 	</target>
