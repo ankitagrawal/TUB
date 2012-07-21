@@ -7825,7 +7825,7 @@
             <column name="mrp" type="DECIMAL(8,2)"/>
         </addColumn>
     </changeSet>
-<<<<<<< HEAD
+
     <!--<changeSet author="Ajeet (generated)" id="1342505244718-5">-->
         <!--<addNotNullConstraint columnDataType="VARCHAR(70)" columnName="value" tableName="cart_line_item_config_values"/>-->
     <!--&lt;!&ndash;</changeSet>->-->
