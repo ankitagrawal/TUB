@@ -10,6 +10,7 @@ public enum EnumCourierGroupHasCourier {
             Arrays.asList(
                     EnumCourier.DTDC_COD,
                     EnumCourier.DTDC_Lite,
+                    EnumCourier.Speedpost, //new
                     EnumCourier.DTDC_Plus,
                     EnumCourier.DTDC_Surface,
                     EnumCourier.FirstFLight,
@@ -26,7 +27,7 @@ public enum EnumCourierGroupHasCourier {
             )
     ),
 
-
+      //todo ps add quantum
     Local(
             EnumCourierGroup.Local,
             Arrays.asList(

@@ -105,8 +105,8 @@ public class ShipmentCostCalculatorAction extends BaseAction {
     @Autowired
     CourierDao courierDao;
 
-    @Autowired
-    DemandHistoryDao demandHistoryDao;
+//    @Autowired
+//    DemandHistoryDao demandHistoryDao;
 
     @Autowired
     OrderStatusService orderStatusService;
@@ -163,7 +163,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
                 if (dummyOrders != null) {
                     for (DummyOrder dummyOrder : dummyOrders) {
                         for (CartLineItem cartLineItem : dummyOrder.getCartLineItemList()) {
-                            demandHistoryDao.createOrUpdateEntry(cartLineItem, dummyOrder.getWarehouse(), order);
+//                            demandHistoryDao.createOrUpdateEntry(cartLineItem, dummyOrder.getWarehouse(), order);
                         }
                     }
                 }

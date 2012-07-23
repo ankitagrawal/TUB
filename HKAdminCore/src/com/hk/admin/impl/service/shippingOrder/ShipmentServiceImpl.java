@@ -44,6 +44,7 @@ public class ShipmentServiceImpl implements ShipmentService {
     @Autowired
     ShipmentDao shipmentDao;
 
+    //todo ps test this piece of code
     public Shipment createShipment(ShippingOrder shippingOrder) {
         Order order = shippingOrder.getBaseOrder();
         Pincode pincode = pincodeDao.getByPincode(order.getAddress().getPin());

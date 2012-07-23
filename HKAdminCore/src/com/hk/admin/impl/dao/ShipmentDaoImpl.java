@@ -19,7 +19,7 @@ import java.util.List;
  */
 @Repository
 public class ShipmentDaoImpl extends BaseDaoImpl implements ShipmentDao {
-
+    //todo ps
     public Shipment findByAwb(Awb awb) {
         DetachedCriteria criteria = DetachedCriteria.forClass(Shipment.class);
         criteria.add(Restrictions.eq("awb", awb));
