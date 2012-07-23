@@ -16,11 +16,13 @@
         <label>Name:</label><s:text name="supplierName" style="width:150px"/>
 
         <s:submit name="pre" value="Search"/>
+          <s:submit name="generateExcelReport" value="Download to Excel" />
       </fieldset>
     </s:form>
 
     <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${sma}"/>
     <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${sma}"/>
+
     <table class="zebra_vert">
       <thead>
       <tr>

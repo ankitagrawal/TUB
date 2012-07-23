@@ -29,15 +29,15 @@ public class SupplierDaoImpl extends BaseDaoImpl implements SupplierDao {
     public List<Supplier> getListOrderedByName() {
         return (List<Supplier>) getSession().createQuery("from Supplier s order by s.name asc").list();
     }
-    
+
     public Supplier save(Supplier supplier){
 
         if(supplier.getCreateDate() == null){
-          supplier.setCreateDate(BaseUtils.getCurrentTimestamp());
+            supplier.setCreateDate(BaseUtils.getCurrentTimestamp());
         }
         supplier.setUpdateDate(BaseUtils.getCurrentTimestamp());
         return (Supplier) super.save(supplier);
-      }
+    }
 
     public Page getSupplierByTinAndName(String tinNumber, String name, int page, int perPage) {
         DetachedCriteria criteria = DetachedCriteria.forClass(Supplier.class);
@@ -50,6 +50,18 @@ public class SupplierDaoImpl extends BaseDaoImpl implements SupplierDao {
 
         criteria.addOrder(Order.asc("name"));
         return list(criteria, page, perPage);
+    }
+
+    public List<Supplier> getAllSupplierListByTinAndName(String tinNumber, String name) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(Supplier.class);
+        if (!StringUtils.isBlank(tinNumber))
+            criteria.add(Restrictions.eq("tinNumber", tinNumber));
+
+        if (!StringUtils.isBlank(name))
+            criteria.add(Restrictions.like("name".toLowerCase(), "%" + name.toLowerCase() + "%"));
+
+        criteria.addOrder(Order.asc("name"));
+        return findByCriteria(criteria);
     }
 
     public boolean doesTinNumberExist(String tinNumber) {
