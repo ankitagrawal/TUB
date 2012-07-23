@@ -174,20 +174,7 @@
             </a>
         </c:if>
     </div>
-    <c:if test="${hk:isNotBlank(productCombo.overview)}">
-        <p class="overview">
-                ${productCombo.overview}
-        </p>
-    </c:if>
-    <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_DESCRIPTIONS%>">
-        <div>
-            <s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction" event="editOverview"
-                    class="popup">
-                Edit Overview
-                <s:param name="productId" value="${productCombo.id}"/>
-            </s:link>
-        </div>
-    </shiro:hasPermission>
+
 </div>
 
 <div class="clear"></div>
@@ -331,6 +318,21 @@
 </div>
 
 <div class="productDescription">
+	<c:if test="${hk:isNotBlank(productCombo.overview)}">
+		<h4>Overview</h4>
+        <p class="overview">
+                ${productCombo.overview}
+        </p>
+    </c:if>
+    <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_DESCRIPTIONS%>">
+        <div>
+            <s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction" event="editOverview"
+                    class="popup">
+                Edit Overview
+                <s:param name="productId" value="${productCombo.id}"/>
+            </s:link>
+        </div>
+    </shiro:hasPermission>
     <c:if test="${hk:isNotBlank(productCombo.description)}">
         <div class="content" id="description">
             <h4>
