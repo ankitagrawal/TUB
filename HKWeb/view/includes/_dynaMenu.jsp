@@ -1,5 +1,6 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
 <s:useActionBean beanclass="com.hk.web.action.core.menu.MenuAction" var="menuAction" event="pre"/>
 <s:layout-definition>
     <%--<script type="text/javascript" src="${pageContext.request.contextPath}/js/menu.jsp"></script>--%>
@@ -33,9 +34,9 @@
         </c:forEach>
             menuStr += "<li class='lvl1' id='brands_button' style='float:left;'><a href='${pageContext.request.contextPath}/brands'>Brands</a></li>"
 
-        <shiro:hasRole name="<%=RoleConstants.ADMIN%>">
+        <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_CATALOG%>">
             menuStr += "<li class='lvl1 new' id='super_savers_button' style='float:left;'><a href='${pageContext.request.contextPath}/super-savers'>Offers</a></li>"
-        </shiro:hasRole>
+        </shiro:hasPermission>
         <%--menuStr += "<li class='lvl1' id='offers_button' style='float:left;'><a href='${pageContext.request.contextPath}/pages/valentineGifts.jsp'>Gifts</a></li>"--%>
             return menuStr;
         }
