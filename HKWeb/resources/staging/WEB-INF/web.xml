@@ -254,6 +254,7 @@
 		<url-pattern>/sitemap.xml</url-pattern>
 		<url-pattern>/sitemap.txt</url-pattern>
 		<url-pattern>/ror.xml</url-pattern>
+        <url-pattern>/super-savers</url-pattern>
 	</servlet-mapping>
 
 

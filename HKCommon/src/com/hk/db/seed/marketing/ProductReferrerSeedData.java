@@ -4,6 +4,7 @@ package com.hk.db.seed.marketing;
 import com.hk.domain.marketing.ProductReferrer;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.constants.marketing.EnumProductReferrer;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 /**
  * Generated
  */
+@Component
 public class ProductReferrerSeedData extends BaseSeedData {
 
   public void insert(java.lang.String name, java.lang.Long id) {

@@ -2,6 +2,9 @@ package com.hk.web.action.core.catalog.product;
 
 import java.util.*;
 
+import com.hk.constants.marketing.EnumProductReferrer;
+import com.hk.manager.LinkManager;
+import com.hk.util.ProductReferrerMapper;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -17,7 +20,6 @@ import org.stripesstuff.plugin.session.Session;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.review.EnumReviewStatus;
-import com.hk.constants.marketing.EnumProductReferrer;
 import com.hk.domain.MapIndia;
 import com.hk.domain.review.UserReview;
 import com.hk.domain.affiliate.Affiliate;
@@ -27,6 +29,7 @@ import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductImage;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.combo.Combo;
+import com.hk.domain.catalog.product.combo.SuperSaverImage;
 import com.hk.domain.content.SeoData;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
@@ -40,325 +43,351 @@ import com.hk.pact.dao.location.LocalityMapDao;
 import com.hk.pact.dao.location.MapIndiaDao;
 import com.hk.pact.dao.user.UserProductHistoryDao;
 import com.hk.pact.service.catalog.ProductService;
+import com.hk.pact.service.catalog.combo.SuperSaverImageService;
 import com.hk.util.SeoManager;
-import com.hk.util.ProductReferrerMapper;
 import com.hk.web.action.core.search.SearchAction;
 import com.hk.web.filter.WebContext;
-import com.hk.manager.LinkManager;
 
-@UrlBinding ("/product/{productSlug}/{productId}")
+@UrlBinding("/product/{productSlug}/{productId}")
 @Component
 public class ProductAction extends BaseAction {
 
-	@SuppressWarnings ("unused")
-	private static Logger logger = Logger.getLogger(ProductAction.class);
+    @SuppressWarnings("unused")
+    private static Logger logger = Logger.getLogger(ProductAction.class);
 
-	String productId;
-	Product product;
-	String productSlug;
-	List<ProductImage> productImages;
-	private List<AddressDistanceDto> addressDistanceDtos;
-	SeoData seoData;
-	String topCategoryUrlSlug;
-	String allCategories;
-	Affiliate affiliate;
-	Combo combo;
-	String feed;
-	String affid;
-	Double averageRating;
-	List<UserReview> userReviews = new ArrayList<UserReview>();
-	Long totalReviews = 0L;
-	List<Combo> relatedCombos = new ArrayList<Combo>();
+    Long superSaverImageId;
+    String productId;
+    Product product;
+    String productSlug;
+    List<ProductImage> productImages;
+    private List<AddressDistanceDto> addressDistanceDtos;
+    SeoData seoData;
+    String topCategoryUrlSlug;
+    String allCategories;
+    Affiliate affiliate;
+    Combo combo;
+    String feed;
+    String affid;
+    Double averageRating;
+    List<UserReview> userReviews = new ArrayList<UserReview>();
+    Long totalReviews = 0L;
+    List<Combo> relatedCombos = new ArrayList<Combo>();
     Long productReferrerId;
+    String renderComboUI = "false";
 
-	@Session (key = HealthkartConstants.Cookie.preferredZone)
-	private String preferredZone;
-	private String urlFragment;
+    @Session(key = HealthkartConstants.Cookie.preferredZone)
+    private String preferredZone;
+    private String urlFragment;
 
-	@Autowired
-	private SeoManager seoManager;
+    @Autowired
+    private SeoManager seoManager;
 
-	@Autowired
-	private MenuHelper menuHelper;
-	@Autowired
-	private AffiliateDao affiliateDao;
+    @Autowired
+    private MenuHelper menuHelper;
+    @Autowired
+    private AffiliateDao affiliateDao;
 
-	/*
-		 * @Autowired private ComboDao comboDao;
-		 */
-	@Autowired
-	private MapIndiaDao mapIndiaDao;
-	@Autowired
-	private LocalityMapDao localityMapDao;
-	@Autowired
-	private ProductCountDao productCountDao;
-	@Autowired
-	private UserProductHistoryDao userProductHistoryDao;
-	@Autowired
-	private AddressDao addressDao;
-	@Autowired
-	private ProductService productService;
+    @Autowired
+    private MapIndiaDao mapIndiaDao;
+    @Autowired
+    private LocalityMapDao localityMapDao;
+    @Autowired
+    private ProductCountDao productCountDao;
+    @Autowired
+    private UserProductHistoryDao userProductHistoryDao;
+    @Autowired
+    private AddressDao addressDao;
+    @Autowired
+    private ProductService productService;
+    @Autowired
+    private SuperSaverImageService superSaverImageService;
     @Autowired
     private LinkManager linkManager;
 
     @DefaultHandler
-	@DontValidate
-	public Resolution pre() {
-		// getContext().getResponse().setDateHeader("Expires", System.currentTimeMillis() + (300*1000)); // 5 min in future.
-		User user = null;
-		if (productId == null || StringUtils.isBlank(productId)) {
-			WebContext.getResponse().setStatus(310); // redirection
-			return new ForwardResolution(SearchAction.class).addParameter("query", productSlug);
-		}
-		try {
-			combo = getBaseDao().get(Combo.class, productId);
-		} catch (Exception e) {
-
-		}
-		product = getProductService().getProductById(productId);
-		if (product == null) {
-			WebContext.getResponse().setStatus(310); // redirection
-			return new ForwardResolution(SearchAction.class).addParameter("query", productSlug);
-		}
-
-		if (getPrincipal() != null) {
-			user = getUserService().getUserById(getPrincipal().getId());
-			if (user != null) {
-				userProductHistoryDao.addToUserProductHistory(product, user);
-				affiliate = affiliateDao.getAffilateByUser(user);
-			}
-		}
-
-		List<Product> relatedProducts = product.getRelatedProducts();
-		if (relatedProducts == null || relatedProducts.size() == 0) {
-			relatedProducts = getProductService().getRelatedProducts(product);
-			product.setRelatedProducts(relatedProducts);
-		}
-        for (Product product : relatedProducts) {
-          product.setProductURL(linkManager.getProductURL(product, ProductReferrerMapper.getProductReferrerid(EnumProductReferrer.relatedProductsPage.getName())));
+    @DontValidate
+    public Resolution pre() {
+        // getContext().getResponse().setDateHeader("Expires", System.currentTimeMillis() + (300*1000)); // 5 min in future.
+        User user = null;
+        if (productId == null || StringUtils.isBlank(productId)) {
+            WebContext.getResponse().setStatus(310); // redirection
+            return new ForwardResolution(SearchAction.class).addParameter("query", productSlug);
         }
-		if (product.isProductHaveColorOptions()) {
-			Integer outOfStockOrDeletedCtr = 0;
-			for (ProductVariant productVariant : product.getProductVariants()) {
-				if (productVariant.isOutOfStock() || productVariant.isDeleted()) {
-					outOfStockOrDeletedCtr++;
-				}
-			}
-			if (product.getProductVariants().size() == outOfStockOrDeletedCtr) {
-				product.setOutOfStock(true);
-			}
-		}
-		if (product.isService() != null && product.isService() && preferredZone != null) {
-			MapIndia zone = mapIndiaDao.findByCity(preferredZone);
-			Manufacturer manufacturer = product.getManufacturer();
-			if (manufacturer != null) {
-				List<Address> manufacturerAddresses = addressDao.getVisibleAddresses(manufacturer.getAddresses());
-				if (!preferredZone.equals("All") && zone != null && manufacturerAddresses != null && manufacturerAddresses.size() > 0) {
-					addressDistanceDtos = localityMapDao.getClosestAddressList(zone.getLattitude(), zone.getLongitude(), 60D, 15, manufacturerAddresses);
-					if (addressDistanceDtos != null) addressDistanceDtos = getSortedByDistanceList(addressDistanceDtos);
-				}
-			}
-		}
-		urlFragment = getContext().getRequest().getRequestURI().replaceAll(getContext().getRequest().getContextPath(), "");
-		productImages = getProductService().getImagesByProductForProductMainPage(product);
-		seoData = seoManager.generateSeo(productId);
-		String breadcrumbUrlFragment = menuHelper.getUrlFragementFromProduct(product);
-		MenuNode breadcrumbMenuNode = menuHelper.getMenuNode(breadcrumbUrlFragment);
-		topCategoryUrlSlug = menuHelper.getTopCategorySlug(breadcrumbMenuNode);
-		allCategories = menuHelper.getAllCategoriesString(breadcrumbMenuNode);
+        try {
+            combo = getBaseDao().get(Combo.class, productId);
+        } catch (Exception e) {
 
-		if (StringUtils.isNotBlank(feed)) {
-			if (feed.equals("xml")) {
-				return new ForwardResolution("/pages/productFeedXml.jsp");
-			}
-		}
+        }
+        product = getProductService().getProductById(productId);
+        if (product == null) {
+            WebContext.getResponse().setStatus(310); // redirection
+            return new ForwardResolution(SearchAction.class).addParameter("query", productSlug);
+        }
 
-		//User Reviews
-		totalReviews = productService.getAllReviews(product, Arrays.asList(EnumReviewStatus.Published.getId()));
-		if (totalReviews != null && totalReviews > 0) {
-			averageRating = getProductService().getAverageRating(product);
-			Page userReviewPage = getProductService().getProductReviews(product, Arrays.asList(EnumReviewStatus.Published.getId()), 1, 5);
-			if (userReviewPage != null) {
-				userReviews = userReviewPage.getList();
-			}
-		}
+        if (getPrincipal() != null) {
+            user = getUserService().getUserById(getPrincipal().getId());
+            if (user != null) {
+                userProductHistoryDao.addToUserProductHistory(product, user);
+                affiliate = affiliateDao.getAffilateByUser(user);
+            }
+        }
 
-		//Related Combos
-		List<Combo> relatedCombosForProduct = getProductService().getRelatedCombos(product);
-		for (Combo relatedCombo : relatedCombosForProduct) {
-			if(getProductService().isComboInStock(relatedCombo)){
-				relatedCombos.add(relatedCombo);
-				if(relatedCombos.size() == 6){
-					break;
-				}
-			}
-		}
+        List<Product> relatedProducts = product.getRelatedProducts();
+        if (relatedProducts == null || relatedProducts.size() == 0) {
+            relatedProducts = getProductService().getRelatedProducts(product);
+            product.setRelatedProducts(relatedProducts);
+        }
+        for (Product product : relatedProducts) {
+            product.setProductURL(linkManager.getProductURL(product, ProductReferrerMapper.getProductReferrerid(EnumProductReferrer.relatedProductsPage.getName())));
+        }
+        if (product.isProductHaveColorOptions()) {
+            Integer outOfStockOrDeletedCtr = 0;
+            for (ProductVariant productVariant : product.getProductVariants()) {
+                if (productVariant.isOutOfStock() || productVariant.isDeleted()) {
+                    outOfStockOrDeletedCtr++;
+                }
+            }
+            if (product.getProductVariants().size() == outOfStockOrDeletedCtr) {
+                product.setOutOfStock(true);
+            }
+        }
+        if (product.isService() != null && product.isService() && preferredZone != null) {
+            MapIndia zone = mapIndiaDao.findByCity(preferredZone);
+            Manufacturer manufacturer = product.getManufacturer();
+            if (manufacturer != null) {
+                List<Address> manufacturerAddresses = addressDao.getVisibleAddresses(manufacturer.getAddresses());
+                if (!preferredZone.equals("All") && zone != null && manufacturerAddresses != null && manufacturerAddresses.size() > 0) {
+                    addressDistanceDtos = localityMapDao.getClosestAddressList(zone.getLattitude(), zone.getLongitude(), 60D, 15, manufacturerAddresses);
+                    if (addressDistanceDtos != null) addressDistanceDtos = getSortedByDistanceList(addressDistanceDtos);
+                }
+            }
+        }
+        urlFragment = getContext().getRequest().getRequestURI().replaceAll(getContext().getRequest().getContextPath(), "");
+        productImages = getProductService().getImagesByProductForProductMainPage(product);
+        seoData = seoManager.generateSeo(productId);
+        String breadcrumbUrlFragment = menuHelper.getUrlFragementFromProduct(product);
+        MenuNode breadcrumbMenuNode = menuHelper.getMenuNode(breadcrumbUrlFragment);
+        topCategoryUrlSlug = menuHelper.getTopCategorySlug(breadcrumbMenuNode);
+        allCategories = menuHelper.getAllCategoriesString(breadcrumbMenuNode);
 
-		return new ForwardResolution("/pages/product.jsp");
-	}
+        if (StringUtils.isNotBlank(feed)) {
+            if (feed.equals("xml")) {
+                return new ForwardResolution("/pages/productFeedXml.jsp");
+            }
+        }
 
-	public Resolution productBanner() {
-		affiliate = affiliateDao.getAffiliateByCode(affid);
-		return new ForwardResolution("/pages/affiliate/productBanner.jsp");
-	}
+        //User Reviews
+        totalReviews = productService.getAllReviews(product, Arrays.asList(EnumReviewStatus.Published.getId()));
+        if (totalReviews != null && totalReviews > 0) {
+            averageRating = getProductService().getAverageRating(product);
+            Page userReviewPage = getProductService().getProductReviews(product, Arrays.asList(EnumReviewStatus.Published.getId()), 1, 5);
+            if (userReviewPage != null) {
+                userReviews = userReviewPage.getList();
+            }
+        }
 
-	public List<AddressDistanceDto> getSortedByDistanceList(List<AddressDistanceDto> addressDistanceDtos) {
-		Collections.sort(addressDistanceDtos, new DistanceComparator());
-		return addressDistanceDtos;
-	}
+        //Related Combos
+        List<Combo> relatedCombosForProduct = getProductService().getRelatedCombos(product);
+        for (Combo relatedCombo : relatedCombosForProduct) {
+            if (getProductService().isComboInStock(relatedCombo)) {
+                relatedCombos.add(relatedCombo);
+                if (relatedCombos.size() == 6) {
+                    break;
+                }
+            }
+        }
 
-	public class DistanceComparator implements Comparator<AddressDistanceDto> {
-		public int compare(AddressDistanceDto dist1, AddressDistanceDto dist2) {
-			if (dist1.getDistance() != null && dist2.getDistance() != null) {
-				return dist1.getDistance().compareTo(dist2.getDistance());
-			}
-			return -1;
-		}
-	}
+        if (combo == null) {
+            return new ForwardResolution("/pages/product.jsp");
+        } else {
+            List<SuperSaverImage> superSaverImages = superSaverImageService.getSuperSaverImages(product, Boolean.FALSE, Boolean.TRUE);
+            String directTo;
+            if (renderComboUI != null && renderComboUI.equals("true")) {
+                SuperSaverImage latestSuperSaverImage = superSaverImages.get(superSaverImages.size() - 1);
+                superSaverImageId = latestSuperSaverImage.getId();
+                directTo = "combo.jsp";
+            } else {
+                directTo = "product.jsp";
+            }
 
-	public String getProductId() {
-		return productId;
-	}
+            return new ForwardResolution("/pages/" + directTo);
+        }
+    }
 
-	public void setProductId(String productId) {
-		this.productId = productId;
-	}
+    public Resolution productBanner() {
+        affiliate = affiliateDao.getAffiliateByCode(affid);
+        return new ForwardResolution("/pages/affiliate/productBanner.jsp");
+    }
 
-	public Product getProduct() {
-		return product;
-	}
+    public List<AddressDistanceDto> getSortedByDistanceList(List<AddressDistanceDto> addressDistanceDtos) {
+        Collections.sort(addressDistanceDtos, new DistanceComparator());
+        return addressDistanceDtos;
+    }
 
-	public void setProduct(Product product) {
-		this.product = product;
-	}
+    public class DistanceComparator implements Comparator<AddressDistanceDto> {
+        public int compare(AddressDistanceDto dist1, AddressDistanceDto dist2) {
+            if (dist1.getDistance() != null && dist2.getDistance() != null) {
+                return dist1.getDistance().compareTo(dist2.getDistance());
+            }
+            return -1;
+        }
+    }
 
-	public String getProductSlug() {
-		return productSlug;
-	}
+    public String getProductId() {
+        return productId;
+    }
 
-	public void setProductSlug(String productSlug) {
-		this.productSlug = productSlug;
-	}
+    public void setProductId(String productId) {
+        this.productId = productId;
+    }
 
-	public List<ProductImage> getProductImages() {
-		return productImages;
-	}
+    public Product getProduct() {
+        return product;
+    }
 
-	public void setProductImages(List<ProductImage> productImages) {
-		this.productImages = productImages;
-	}
+    public void setProduct(Product product) {
+        this.product = product;
+    }
 
-	public SeoData getSeoData() {
-		return seoData;
-	}
+    public String getProductSlug() {
+        return productSlug;
+    }
 
-	public void setSeoData(SeoData seoData) {
-		this.seoData = seoData;
-	}
+    public void setProductSlug(String productSlug) {
+        this.productSlug = productSlug;
+    }
 
-	public String getTopCategoryUrlSlug() {
-		return topCategoryUrlSlug;
-	}
+    public List<ProductImage> getProductImages() {
+        return productImages;
+    }
 
-	public void setTopCategoryUrlSlug(String topCategoryUrlSlug) {
-		this.topCategoryUrlSlug = topCategoryUrlSlug;
-	}
+    public void setProductImages(List<ProductImage> productImages) {
+        this.productImages = productImages;
+    }
 
-	public String getAllCategories() {
-		return allCategories;
-	}
+    public SeoData getSeoData() {
+        return seoData;
+    }
 
-	public void setAllCategories(String allCategories) {
-		this.allCategories = allCategories;
-	}
+    public void setSeoData(SeoData seoData) {
+        this.seoData = seoData;
+    }
 
-	public Combo getCombo() {
-		return combo;
-	}
+    public String getTopCategoryUrlSlug() {
+        return topCategoryUrlSlug;
+    }
 
-	public void setCombo(Combo combo) {
-		this.combo = combo;
-	}
+    public void setTopCategoryUrlSlug(String topCategoryUrlSlug) {
+        this.topCategoryUrlSlug = topCategoryUrlSlug;
+    }
 
-	public String getFeed() {
-		return feed;
-	}
+    public String getAllCategories() {
+        return allCategories;
+    }
 
-	public void setFeed(String feed) {
-		this.feed = feed;
-	}
+    public void setAllCategories(String allCategories) {
+        this.allCategories = allCategories;
+    }
 
-	public Affiliate getAffiliate() {
-		return affiliate;
-	}
+    public Combo getCombo() {
+        return combo;
+    }
 
-	public void setAffiliate(Affiliate affiliate) {
-		this.affiliate = affiliate;
-	}
+    public void setCombo(Combo combo) {
+        this.combo = combo;
+    }
 
-	public List<AddressDistanceDto> getAddressDistanceDtos() {
-		return addressDistanceDtos;
-	}
+    public String getFeed() {
+        return feed;
+    }
 
-	public void setAddressDistanceDtos(List<AddressDistanceDto> addressDistanceDtos) {
-		this.addressDistanceDtos = addressDistanceDtos;
-	}
+    public void setFeed(String feed) {
+        this.feed = feed;
+    }
 
-	public String getPreferredZone() {
-		return preferredZone;
-	}
+    public Affiliate getAffiliate() {
+        return affiliate;
+    }
 
-	public void setPreferredZone(String preferredZone) {
-		this.preferredZone = preferredZone;
-	}
+    public void setAffiliate(Affiliate affiliate) {
+        this.affiliate = affiliate;
+    }
 
-	public String getAffid() {
-		return affid;
-	}
+    public List<AddressDistanceDto> getAddressDistanceDtos() {
+        return addressDistanceDtos;
+    }
 
-	public void setAffid(String affid) {
-		this.affid = affid;
-	}
+    public void setAddressDistanceDtos(List<AddressDistanceDto> addressDistanceDtos) {
+        this.addressDistanceDtos = addressDistanceDtos;
+    }
 
-	public Double getAverageRating() {
-		return averageRating;
-	}
+    public String getPreferredZone() {
+        return preferredZone;
+    }
 
-	public void setAverageRating(Double averageRating) {
-		this.averageRating = averageRating;
-	}
+    public void setPreferredZone(String preferredZone) {
+        this.preferredZone = preferredZone;
+    }
 
-	public List<UserReview> getUserReviews() {
-		return userReviews;
-	}
+    public String getAffid() {
+        return affid;
+    }
 
-	public ProductService getProductService() {
-		return productService;
-	}
+    public void setAffid(String affid) {
+        this.affid = affid;
+    }
 
-	public void setProductService(ProductService productService) {
-		this.productService = productService;
-	}
+    public Double getAverageRating() {
+        return averageRating;
+    }
 
-	public String getUrlFragment() {
-		return urlFragment;
-	}
+    public void setAverageRating(Double averageRating) {
+        this.averageRating = averageRating;
+    }
 
-	public void setUrlFragment(String urlFragment) {
-		this.urlFragment = urlFragment;
-	}
+    public List<UserReview> getUserReviews() {
+        return userReviews;
+    }
 
-	public Long getTotalReviews() {
-		return totalReviews;
-	}
+    public ProductService getProductService() {
+        return productService;
+    }
 
-	public List<Combo> getRelatedCombos() {
-		return relatedCombos;
-	}
+    public void setProductService(ProductService productService) {
+        this.productService = productService;
+    }
 
-	public void setRelatedCombos(List<Combo> relatedCombos) {
-		this.relatedCombos = relatedCombos;
-	}
+    public String getUrlFragment() {
+        return urlFragment;
+    }
+
+    public void setUrlFragment(String urlFragment) {
+        this.urlFragment = urlFragment;
+    }
+
+    public Long getTotalReviews() {
+        return totalReviews;
+    }
+
+    public List<Combo> getRelatedCombos() {
+        return relatedCombos;
+    }
+
+    public void setRelatedCombos(List<Combo> relatedCombos) {
+        this.relatedCombos = relatedCombos;
+    }
+
+    public Long getSuperSaverImageId() {
+        return superSaverImageId;
+    }
+
+    public void setSuperSaverImageId(Long superSaverImageId) {
+        this.superSaverImageId = superSaverImageId;
+    }
+
+    public void setRenderComboUI(String renderComboUI) {
+        this.renderComboUI = renderComboUI;
+    }
 
     public Long getProductReferrerId() {
         return productReferrerId;

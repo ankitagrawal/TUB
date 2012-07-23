@@ -131,7 +131,7 @@
     validateCheckbox = 1;
   </script>
 
-  <shiro:hasPermission name="<%=PermissionConstants.MANAGE_IMAGE%>">
+  <%--<shiro:hasPermission name="<%=PermissionConstants.MANAGE_IMAGE%>">
     <div>
       <s:link beanclass="com.hk.web.action.core.catalog.image.UploadImageAction" event="uploadVariantImage"
               target="_blank"
@@ -145,5 +145,5 @@
         <s:param name="productVariant" value="${product.productVariants[0]}"/>
       </s:link>
     </div>
-  </shiro:hasPermission>
+  </shiro:hasPermission>--%>
 </s:layout-definition>
