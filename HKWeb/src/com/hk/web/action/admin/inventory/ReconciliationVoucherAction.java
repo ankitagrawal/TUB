@@ -13,7 +13,6 @@ import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.inventory.EnumReconciliationType;
 import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.inventory.rv.ReconciliationType;
 import com.hk.domain.inventory.rv.ReconciliationVoucher;
 import com.hk.domain.inventory.rv.RvLineItem;
 import com.hk.domain.sku.Sku;
@@ -34,7 +33,6 @@ import com.restfb.util.StringUtils;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
 import org.apache.log4j.Logger;
-import org.apache.solr.common.util.StrUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -249,9 +247,9 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
                 Date mfgDate = new Date();
                 if(strMfgDate != null && !StringUtils.isBlank(strMfgDate)) {
                     mfgDate = XslUtil.getDate(strMfgDate);
-                    if(mfgDate == null) {
+                    /*if(mfgDate == null) {
                         throw new Exception("Incorrect format for mfg date ");
-                    }
+                    }*/
                 }
 
                 ProductVariant productVariant = getProductVariantService().getVariantById(variantId);
