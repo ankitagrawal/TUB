@@ -5,6 +5,11 @@
 <% response.setContentType("text/xml"); %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.core.catalog.category.CatalogAction" var="catalogBean"/>
+<%
+  boolean isSecure = pageContext.getRequest().isSecure();
+  pageContext.setAttribute("isSecure", isSecure);
+%>
+
 <catalog>
   <page current="${catalogBean.pageNo}" total="${catalogBean.pageCount}" perPage="${catalogBean.perPage}"/>
   <c:forEach items="${catalogBean.productList}" var="product">
@@ -25,9 +30,9 @@
             <c:set var="imageId" value="${product.mainImageId}"/>
             <%Long imageId = (Long) pageContext.getAttribute("imageId");%>
             <image
-                srcSmall="<%=HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, imageId)%>"
-                srcMedium="<%=HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, imageId)%>"
-                srcLarge="<%=HKImageUtils.getS3ImageUrl(EnumImageSize.LargeSize, imageId)%>"
+                srcSmall="<%=HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, imageId, isSecure)%>"
+                srcMedium="<%=HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, imageId, isSecure)%>"
+                srcLarge="<%=HKImageUtils.getS3ImageUrl(EnumImageSize.LargeSize, imageId, isSecure)%>"
                 />
           </c:when>
           <c:otherwise>

@@ -7857,7 +7857,39 @@
             <column name="mrp" type="DECIMAL(8,2)"/>
         </addColumn>
     </changeSet>
-    <!--<changeSet author="Ajeet (generated)" id="1342505244718-5">-->
-        <!--<addNotNullConstraint columnDataType="VARCHAR(70)" columnName="value" tableName="cart_line_item_config_values"/>-->
-    <!--</changeSet>-->
+    <changeSet author="Rimal (generated)" id="1342741292282-1">
+        <createTable tableName="super_saver_image">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="url" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="alt_text" type="VARCHAR(200)"/>
+            <column defaultValueNumeric="0" name="hidden" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="checksum" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="uploaded" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ranking" type="INT"/>
+            <column defaultValueNumeric="0" name="is_main_image" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_id" type="VARCHAR(20)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Rimal (generated)" id="1342741292282-7">
+        <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="super_saver_image"
+                                 constraintName="fk_super_saver_image_product1" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="product"
+                                 referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1342792751303-1">
+        <addNotNullConstraint columnDataType="VARCHAR(70)" columnName="value" tableName="cart_line_item_config_values"/>
+    </changeSet>
 </databaseChangeLog>
