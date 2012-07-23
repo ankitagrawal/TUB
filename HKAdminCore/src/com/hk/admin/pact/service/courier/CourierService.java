@@ -11,7 +11,7 @@ import java.util.List;
 public interface CourierService {
 
     public List<Courier> getAllCouriers();
-    
+
     public Courier getCourierById(Long courierId);
     
     public Courier getCourierByName(String name);

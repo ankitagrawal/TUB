@@ -2,12 +2,16 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
+<%@ page import="com.hk.admin.pact.service.courier.CourierService" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Calculate Shipment Cost">
     <s:useActionBean beanclass="com.hk.web.action.admin.shipment.ShipmentCostCalculatorAction" var="calculator"/>
     <%
         WarehouseService warehouseService = ServiceLocatorFactory.getService(WarehouseService.class);
+        CourierService courierService = ServiceLocatorFactory.getService(CourierService.class);
         pageContext.setAttribute("whList", warehouseService.getServiceableWarehouses());
+        pageContext.setAttribute("applicableCourierList", courierService.getAllCouriers());
     %>
 
     <s:layout-component name="heading">
@@ -90,6 +94,16 @@
                                                     formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="shippedEndDate"/>
                         </li>
                         <div class="clear"></div>
+                        <s:label name="courier" class="label">Courier</s:label>
+                        <c:forEach items="${applicableCourierList}" var="orderStatus" varStatus="ctr">
+                            <label><s:checkbox name="orderStatuses[${ctr.index}]"
+                                               value="${orderStatus.id}"/> ${orderStatus.name}</label>
+                        </c:forEach>
+                        <s:select name="courier">
+                            <option value="">All Couriers</option>
+                            <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList"
+                                                       value="id" label="name"/>
+                        </s:select>
                         <s:label name="overrideHistoricalShipmentCost"
                                  class="label">Override Historical Shipment Cost ?</s:label>
                         <s:checkbox name="overrideHistoricalShipmentCost"/>
@@ -99,6 +113,7 @@
                         <s:submit name="calculateCourierCostingForShippingOrder" value="Get Shipping Cost for an SO"/>
                         <shiro:hasAnyRoles name="<%=RoleConstants.ADMIN%>">
                             <s:submit name="saveHistoricalShipmentCost" value="Save Historical Shipping Cost"/>
+                            <s:submit name="saveHistoricalDemand" value="Save Historical Demand"/>
                             <s:submit name="saveActualShippingCostForShippingOrder"
                                       value="Save Actual Shipping Cost for SO's"/>
                         </shiro:hasAnyRoles>
