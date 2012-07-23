@@ -31,6 +31,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
+import com.hk.admin.pact.dao.courier.CourierDao;
 import com.hk.admin.util.ChhotuCourierDelivery;
 import com.hk.admin.util.CourierStatusUpdateHelper;
 import com.hk.constants.report.ReportConstants;
@@ -38,6 +39,7 @@ import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.courier.Shipment;
+import com.hk.domain.courier.Courier;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
@@ -74,7 +76,10 @@ public class DeliveryStatusUpdateManager {
     @Autowired
     CourierStatusUpdateHelper   courierStatusUpdateHelper;
 
-    public String updateDeliveryStatusDTDC(File excelFile) throws Exception {
+    @Autowired
+    CourierDao                  courierDao;
+
+    public String updateCourierDeliveryStatusByExcel(File excelFile) throws Exception {
         String messagePostUpdation = "";
         logger.debug("parsing Delivery Details DTDC Upload : " + excelFile.getAbsolutePath());
         POIFSFileSystem objInFileSys = new POIFSFileSystem(new FileInputStream(excelFile));
@@ -99,7 +104,10 @@ public class DeliveryStatusUpdateManager {
                 String gatewayOrderIdInXls = getCellValue(ReportConstants.REF_NO, rowMap, headerMap);
                 String awb = getCellValue(ReportConstants.CN_NO, rowMap, headerMap);
                 String status = getCellValue(ReportConstants.STATUS, rowMap, headerMap);
+                String courierId=getCellValue(ReportConstants.COURIER_ID_STR, rowMap, headerMap);
+                Long courier_Id=Long.parseLong(courierId);
                 Date deliveryDateInXsl = null;
+                Courier courierObj = courierDao.get(Courier.class,courier_Id);
                 try {
                     deliveryDateInXsl = sdf_date.parse(getCellValue(ReportConstants.DELIVERED_DATE, rowMap, headerMap));
                 } catch (Exception e) {
