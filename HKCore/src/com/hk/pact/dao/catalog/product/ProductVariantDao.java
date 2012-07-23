@@ -1,6 +1,7 @@
 package com.hk.pact.dao.catalog.product;
 
 import com.hk.domain.affiliate.AffiliateCategory;
+import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.pact.dao.BaseDao;
 
@@ -54,4 +55,6 @@ public interface ProductVariantDao extends BaseDao {
     public Double getEngravingPrice(ProductVariant productVariant);
 
     public boolean isEngravingProvidedForProduct(ProductVariant productVariant);
-}
+
+    public Product getProductForProudctVariant(String variantId);
+}                                                               

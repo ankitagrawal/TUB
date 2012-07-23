@@ -71,8 +71,8 @@ public class Functions {
     // TODO: rewrite
     static {
         formatter = new PeriodFormatterBuilder().appendYears().appendSuffix(" year, ", " years, ").appendMonths().appendSuffix(" month, ", " months, ").appendWeeks().appendSuffix(
-          " week, ", " weeks, ").appendDays().appendSuffix(" day, ", " days, ").appendHours().appendSuffix(" hour, ", " hours, ").appendMinutes().appendSuffix(" minute, ",
-          " minutes, ").appendSeconds().appendSuffix(" second, ", " seconds").toFormatter();
+                " week, ", " weeks, ").appendDays().appendSuffix(" day, ", " days, ").appendHours().appendSuffix(" hour, ", " hours, ").appendMinutes().appendSuffix(" minute, ",
+                " minutes, ").appendSeconds().appendSuffix(" second, ", " seconds").toFormatter();
 
         // menuHelper = ServiceLocatorFactory.getService(MenuHelper.class);
 
@@ -266,7 +266,7 @@ public class Functions {
         ShippingOrder shippingOrder = (ShippingOrder) o1;
         ShippingOrderLifecycleDao shippingOrderLifecycleDao = ServiceLocatorFactory.getService(ShippingOrderLifecycleDao.class);
         Date date = shippingOrderLifecycleDao.getActivityDateForShippingOrder(shippingOrder, Arrays.asList(EnumShippingOrderLifecycleActivity.SO_AutoEscalatedToProcessingQueue,
-          EnumShippingOrderLifecycleActivity.SO_EscalatedToProcessingQueue));
+                EnumShippingOrderLifecycleActivity.SO_EscalatedToProcessingQueue));
         return date;
     }
 
@@ -321,13 +321,13 @@ public class Functions {
         return userManager.getProcessedOrdersCount(user);
     }
 
-    public static String getS3ImageUrl(Object o1, Object o2) {
+    public static String getS3ImageUrl(Object o1, Object o2,boolean isSecure) {
         EnumImageSize imageSize = (EnumImageSize) o1;
         Long imageId = (Long) o2;
         if (imageId == null) {
             return "";
         }
-        return HKImageUtils.getS3ImageUrl(imageSize, imageId);
+        return HKImageUtils.getS3ImageUrl(imageSize, imageId,isSecure);
     }
 
     public static Boolean isFreeVariant(Object o) {
@@ -456,6 +456,12 @@ public class Functions {
         return productService.isComboInStock(combo);
     }
 
+    public static Map<String, List<String>> getRecommendedProducts(Object o) {
+        Product product = (Product)o;
+        ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
+        return productService.getRelatedMoogaProducts(product);
+    }
+
     public static boolean isCollectionContainsObject(Collection c, Object o) {
         return c.contains(o);
     }
@@ -471,4 +477,3 @@ public class Functions {
         ProductVariant pv = (ProductVariant) o;
         return productVariantService.isEngravingProvidedForProduct(pv);
     }
-}

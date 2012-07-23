@@ -164,6 +164,7 @@
 --/sports/sports-equipment/boxing
 ---/sports/sports-equipment/boxing/punching-bags
 ---/sports/sports-equipment/boxing/gloves
+--/sports/sports-equipment/skating
 --/sports/sports-equipment/other-balls
 --/sports/sports-equipment/combos
 -/sports/apparel
@@ -180,6 +181,7 @@
 --/sports/footwear/basketball-shoes
 --/sports/footwear/cricket-shoes
 --/sports/footwear/jogging-shoes
+--/sports/footwear/table-tennis-shoes
 --/sports/footwear/kids-shoes
 --/sports/footwear/other-shoes
 --/sports/footwear/accessories
@@ -196,6 +198,7 @@
 --/diabetes/testing-supplies/meters
 --/diabetes/testing-supplies/lancets
 --/diabetes/testing-supplies/lancing-devices
+--/diabetes/testing-supplies/insulin-supplies
 --/diabetes/testing-supplies/accessories
 --/diabetes/testing-supplies/combos
 -/diabetes/diabetic-food
@@ -310,6 +313,7 @@
 --/home-devices/clinical-supplies/hearing-aids
 --/home-devices/clinical-supplies/eye-patch
 -/home-devices/miscellaneous
+--/home-devices/miscellaneous/weighing-scales
 --/home-devices/miscellaneous/digital-thermometer : Digital Thermometer
 ---/home-devices/miscellaneous/flexible-tip
 ---/home-devices/miscellaneous/rigid-tip

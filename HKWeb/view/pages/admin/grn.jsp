@@ -252,6 +252,8 @@
 				<th></th>
 				<th>VariantID</th>
 				<th>UPC</th>
+				<th>Supplier Code</th>
+				<th>Remarks</th>
 				<th>Details</th>
 				<th>Tax<br/>Category</th>
 				<th>Asked Qty</th>
@@ -262,10 +264,10 @@
 				<th>Tax</th>
 				<th>Surcharge</th>
 				<th>Payable</th>
-        <th>Weight</th>
-        <th>Length</th>
-        <th>Breadth</th>
-        <th>Height</th>
+				<th>Weight</th>
+				<th>Length</th>
+				<th>Breadth</th>
+				<th>Height</th>
 
 			</tr>
 			</thead>
@@ -300,7 +302,9 @@
             <%--<s:hidden class="sku" name="grnLineItems[${ctr.index}].sku"
                       value="${sku}"></s:hidden>--%>
 					</td>
-					<td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.upc" value="${grnLineItemDto.grnLineItem.sku.productVariant.upc}"/></td>
+					<td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.upc" value="${productVariant.upc}"/></td>
+					<td>${productVariant.supplierCode}</td>
+					<td>${productVariant.otherRemark}</td>
 					<td>${product.name}<br/>${productVariant.optionsCommaSeparated}
 					</td>
 					<td class="taxCategory">
@@ -316,7 +320,7 @@
 						<shiro:lacksPermission name="<%=PermissionConstants.UPDATE_RECONCILIATION_REPORTS%>">
 							${grnLineItemDto.grnLineItem.sku.tax.value}
 						</shiro:lacksPermission>--%>
-            ${grnLineItemDto.grnLineItem.sku.tax.value}
+                    ${grnLineItemDto.grnLineItem.sku.tax.value}
 					</td>
 					<td>${hk:askedPOQty(pa.grn.purchaseOrder, productVariant)}</td>
 					<td>
@@ -343,10 +347,10 @@
 					<td class="payableAmount">
 						<fmt:formatNumber value="${grnLineItemDto.payable}" maxFractionDigits="2"/>
 					</td>
-          <td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.weight" class="weight" value="${grnLineItemDto.grnLineItem.sku.productVariant.weight}"/></td>
-          <td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.length" value="${grnLineItemDto.grnLineItem.sku.productVariant.length}"/></td>
-          <td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.breadth" value="${grnLineItemDto.grnLineItem.sku.productVariant.breadth}"/></td>
-          <td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.height" value="${grnLineItemDto.grnLineItem.sku.productVariant.height}"/></td>
+          <td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.weight" class="weight" value="${productVariant.weight}"/></td>
+          <td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.length" value="${productVariant.length}"/></td>
+          <td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.breadth" value="${productVariant.breadth}"/></td>
+          <td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.height" value="${productVariant.height}"/></td>
 				</tr>
 			</c:forEach>
 			</tbody>

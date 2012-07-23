@@ -3,10 +3,7 @@ package com.hk.web.action.admin.catalog.product;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.JsonResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.action.*;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -199,13 +196,13 @@ public class EditProductAttributesAction extends BaseAction {
             if (productVariant.isClearanceSale() == null || !productVariant.isClearanceSale()) {
                 if (productVariant.getCostPrice() != null && productVariant.getCostPrice() > productVariant.getHkPrice(null)) {
                     addRedirectAlertMessage(new SimpleMessage("HK Price of variant " + productVariant.getId() + " is less than Cost Price. Please fix it."));
-                    return new ForwardResolution(ProductAction.class, "editProductVariantDetails");
+                    return new RedirectResolution(EditProductAttributesAction.class, "editProductVariantDetails").addParameter("product", product);
                 }
             }
 
             if (productVariant.getMarkedPrice() != null && productVariant.getMarkedPrice() < productVariant.getHkPrice(null)) {
                 addRedirectAlertMessage(new SimpleMessage("HK Price of variant " + productVariant.getId() + " is more than Marked Price. Please fix it."));
-                return new ForwardResolution(ProductAction.class, "editProductVariantDetails");
+                return new RedirectResolution(EditProductAttributesAction.class, "editProductVariantDetails").addParameter("product", product);
             }
 
             String productOpts = "";
@@ -370,7 +367,7 @@ public class EditProductAttributesAction extends BaseAction {
         product = getProductService().getProductById(productId);
         productImages = product.getProductImages();
         if (productImageId != null) {
-            String productImageLink = HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, Long.parseLong(productImageId));
+            String productImageLink = HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, Long.parseLong(productImageId),isSecureRequest());
             HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "success", productImageLink);
             return new JsonResolution(healthkartResponse);
         } else {

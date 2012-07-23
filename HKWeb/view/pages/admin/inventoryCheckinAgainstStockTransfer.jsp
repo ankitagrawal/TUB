@@ -32,6 +32,14 @@
 						<td><s:text name="qty" value="0"/></td>
 					</tr>
 					<tr>
+					<td>Cost Price:</td>
+						<td><s:text name="costPrice" value="0.0"/></td>
+					</tr>
+					<tr>
+						<td>MRP:</td>
+						<td><s:text name="mrp" value="0.0"/></td>
+					</tr>
+					<tr>
 						<td>Batch Number:</td>
 						<td><s:text name="batch" class="batchNumber"/></td>
 					</tr>
