@@ -665,7 +665,7 @@
         border-radius: 0.5em;
         background: #EEEEEE;
         padding: 10px 0;
-        height: 165px;
+        height: 150px;
     }
 
     .result {
@@ -673,7 +673,7 @@
         border-radius: 0.5em;
         background: #EEEEEE;
         padding: 10px 0;
-        height: 165px;
+        height: 150px;
     }
 
     div.arrowDiv {
