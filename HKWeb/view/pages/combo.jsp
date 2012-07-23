@@ -665,7 +665,7 @@
         border-radius: 0.5em;
         background: #EEEEEE;
         padding: 10px 0;
-        height: 120px;
+        height: 165px;
     }
 
     .result {
@@ -673,7 +673,7 @@
         border-radius: 0.5em;
         background: #EEEEEE;
         padding: 10px 0;
-        height: 120px;
+        height: 165px;
     }
 
     div.arrowDiv {
@@ -725,7 +725,7 @@
         -moz-box-shadow: 0 3px 6px rgba(0, 0, 0, .5);
     }
 
-    imageTag {
+    .imageTag {
         width: 120px;
         height: 120px;
     }
