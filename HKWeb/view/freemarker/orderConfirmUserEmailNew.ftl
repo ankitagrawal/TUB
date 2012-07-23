@@ -50,8 +50,17 @@ Order Confirmation for Order ID ${order.gatewayOrderId}
                         <br/>
 
                         Your order, dated ${order.payment.paymentDate}, for INR ${pricingDto.grandTotalPayable}, with
-                        order confirmation number ${order.gatewayOrderId} is being processed. The following items will
-                        be shipped shortly:<br/>
+                        order confirmation number ${order.gatewayOrderId} is being processed. <br/>
+                        <#if isServiceOrder == true>
+                        Please carry a printout of this confirmation email to avail the services at any of the centers
+                        mentioned on the website <br/>
+                            <#if  (categoryCountInOrder > 1)>
+                                The following items will be shipped shortly:<br/>
+                            </#if>
+                        <#else>
+                            The following items will be shipped shortly:<br/>
+                        </#if>                        
+
                         <br/>
                         <table cellpadding="5" cellspacing="0" border="1" style="font-size:12px;">
                             <tr>
