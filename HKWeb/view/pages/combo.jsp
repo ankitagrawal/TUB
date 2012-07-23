@@ -559,7 +559,7 @@
 	    $('.options').each(function selectFirst() {
 		    var resultDiv = $(this).parents('.optionsDiv').find('.result');
 		    resultDiv.html($(this).html());
-		    var idx = 0;
+		    var idx = resultDiv.find('.variantIdValue').attr("idx");
 		    resultDiv.find('.variantIdValue').attr("name", "productVariantList[" + idx + "]");
 		    resultDiv.find('.selValue').attr("name", "productVariantList[" + idx + "].selected");
 		    resultDiv.find('.qtyValue').attr("name", "productVariantList[" + idx + "].qty");
