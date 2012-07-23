@@ -41,6 +41,13 @@
         <br>
       </s:form>
     </div>
+      <div style="display:inline;float:left; width:450px">
+            <s:form beanclass="com.hk.web.action.admin.catalog.GenerateExcelAction">
+                <br>
+              <h2> Download All Categories : </h2>
+              <s:submit name="generateCatalogForAllCategories" value="Download Catalog For All Categories"/>
+            </s:form>
+          </div>
   </s:layout-component>
 
 

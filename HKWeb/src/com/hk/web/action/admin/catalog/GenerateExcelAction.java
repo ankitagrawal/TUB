@@ -55,6 +55,7 @@ public class GenerateExcelAction extends BaseAction {
     // @Validate(required = true)
     String                   category;
     String                   brand;
+    File                     excelFile;
 
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -71,115 +72,77 @@ public class GenerateExcelAction extends BaseAction {
         }
     }
 
+    private class HTTPResponseResolution implements Resolution {
+        public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
+            OutputStream out = null;
+            InputStream in = new BufferedInputStream(new FileInputStream(excelFile));
+            res.setContentLength((int) excelFile.length());
+            res.setHeader("Content-Disposition", "attachment; filename=\"" + excelFile.getName() + "\";");
+            out = res.getOutputStream();
+
+            // Copy the contents of the file to the output stream
+            byte[] buf = new byte[4096];
+            int count = 0;
+            while ((count = in.read(buf)) >= 0) {
+                out.write(buf, 0, count);
+            }
+        }
+
+    }
+
     public Resolution generateCatalogByCategory() throws Exception {
         List<Product> products = productDao.getAllProductByCategory(category);
         String excelFilePath = adminDownloadsPath + "/categoryExcelFiles/Category_" + sdf.format(new Date()) + "/" + category + "_" + sdf.format(new Date()) + ".xls";
-        final File excelFile = new File(excelFilePath);
+        excelFile = new File(excelFilePath);
 
         xslGenerator.generateCatalogExcel(products, excelFilePath);
         addRedirectAlertMessage(new SimpleMessage("Downlaod complete"));
 
-        return new Resolution() {
+        return new HTTPResponseResolution();
+    }
 
-            public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
-                OutputStream out = null;
-                InputStream in = new BufferedInputStream(new FileInputStream(excelFile));
-                res.setContentLength((int) excelFile.length());
-                res.setHeader("Content-Disposition", "attachment; filename=\"" + excelFile.getName() + "\";");
-                out = res.getOutputStream();
+    public Resolution generateCatalogForAllCategories() throws Exception {
+        List<Product> products = productDao.getAllProductsForCatalog();
+        String excelFilePath = adminDownloadsPath + "/categoryExcelFiles/Category_ALL_" + sdf.format(new Date()) + ".xls";
+        excelFile = new File(excelFilePath);
 
-                // Copy the contents of the file to the output stream
-                byte[] buf = new byte[8192];
-                int count = 0;
-                while ((count = in.read(buf)) >= 0) {
-                    out.write(buf, 0, count);
-                }
-            }
-        };
+        xslGenerator.generateCatalogExcel(products, excelFilePath);
+        addRedirectAlertMessage(new SimpleMessage("Download complete"));
 
+        return new HTTPResponseResolution();
     }
 
     public Resolution generateCatalogBySubCategory() throws Exception {
         List<Product> products = productDao.getAllProductBySubCategory(category);
         String excelFilePath = adminDownloadsPath + "/categoryExcelFiles/Category_" + sdf.format(new Date()) + "/" + category + "_" + sdf.format(new Date()) + ".xls";
-        final File excelFile = new File(excelFilePath);
+        excelFile = new File(excelFilePath);
 
         xslGenerator.generateCatalogExcel(products, excelFilePath);
         addRedirectAlertMessage(new SimpleMessage("Downlaod complete"));
 
-        return new Resolution() {
-
-            public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
-                OutputStream out = null;
-                InputStream in = new BufferedInputStream(new FileInputStream(excelFile));
-                res.setContentLength((int) excelFile.length());
-                res.setHeader("Content-Disposition", "attachment; filename=\"" + excelFile.getName() + "\";");
-                out = res.getOutputStream();
-
-                // Copy the contents of the file to the output stream
-                byte[] buf = new byte[4096];
-                int count = 0;
-                while ((count = in.read(buf)) >= 0) {
-                    out.write(buf, 0, count);
-                }
-            }
-        };
-
+        return new HTTPResponseResolution();
     }
 
     public Resolution generateCatalogByBrand() throws Exception {
         List<Product> products = productDao.getAllProductByBrand(brand);
         String excelFilePath = adminDownloadsPath + "/categoryExcelFiles/Brand_" + sdf.format(new Date()) + "/" + brand + "_" + sdf.format(new Date()) + ".xls";
-        final File excelFile = new File(excelFilePath);
+        excelFile = new File(excelFilePath);
 
         xslGenerator.generateCatalogExcel(products, excelFilePath);
         addRedirectAlertMessage(new SimpleMessage("Downlaod complete"));
 
-        return new Resolution() {
-
-            public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
-                OutputStream out = null;
-                InputStream in = new BufferedInputStream(new FileInputStream(excelFile));
-                res.setContentLength((int) excelFile.length());
-                res.setHeader("Content-Disposition", "attachment; filename=\"" + excelFile.getName() + "\";");
-                out = res.getOutputStream();
-
-                // Copy the contents of the file to the output stream
-                byte[] buf = new byte[4096];
-                int count = 0;
-                while ((count = in.read(buf)) >= 0) {
-                    out.write(buf, 0, count);
-                }
-            }
-        };
+        return new HTTPResponseResolution();
     }
 
     public Resolution generateAmazonCatalogByCategory() throws Exception {
         List<Product> products = productDao.getAllProductByCategory(category);
         String excelFilePath = adminDownloadsPath + "/categoryExcelFiles/Amazon_" + sdf.format(new Date()) + "/" + category + "_" + sdf.format(new Date()) + ".xls";
-        final File excelFile = new File(excelFilePath);
+        excelFile = new File(excelFilePath);
 
         amazonXslGenerator.generateCatalogExcel(products, excelFilePath);
         addRedirectAlertMessage(new SimpleMessage("Downlaod complete"));
 
-        return new Resolution() {
-
-            public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
-                OutputStream out = null;
-                InputStream in = new BufferedInputStream(new FileInputStream(excelFile));
-                res.setContentLength((int) excelFile.length());
-                res.setHeader("Content-Disposition", "attachment; filename=\"" + excelFile.getName() + "\";");
-                out = res.getOutputStream();
-
-                // Copy the contents of the file to the output stream
-                byte[] buf = new byte[4096];
-                int count = 0;
-                while ((count = in.read(buf)) >= 0) {
-                    out.write(buf, 0, count);
-                }
-            }
-        };
-
+        return new HTTPResponseResolution();
     }
 
     public String getCategory() {

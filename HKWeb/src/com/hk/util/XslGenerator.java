@@ -29,7 +29,7 @@ import java.util.*;
 @Component
 public class XslGenerator {
 
-    //private static Logger         logger             = LoggerFactory.getLogger(XslGenerator.class);
+    //private static Logger         logger             = Logger.getLogger(XslGenerator.class);
 
     public static final String    ID                 = "ID";
     public static final String    PINCODE            = "PINCODE";
@@ -118,6 +118,8 @@ public class XslGenerator {
         setHeaderCellValue(row, cellCounter++, XslConstants.HK_PRICE);
         setHeaderCellValue(row, cellCounter++, XslConstants.POSTPAID_AMOUNT);
         setHeaderCellValue(row, cellCounter++, XslConstants.SHIPPING);
+        setHeaderCellValue(row, cellCounter++, XslConstants.MARGIN_HK_CP);
+        setHeaderCellValue(row, cellCounter++, XslConstants.MARGIN_MRP_CP);
         setHeaderCellValue(row, cellCounter++, XslConstants.AVAILABILITY);
         setHeaderCellValue(row, cellCounter++, XslConstants.MANUFACTURER_CODE);
         setHeaderCellValue(row, cellCounter++, XslConstants.DELETED);
@@ -197,6 +199,9 @@ public class XslGenerator {
                     /* setCellValue(row, this.getColumnIndex(XslParser.TAX), productVariant.getTax().getName()); */
                     setCellValue(row, this.getColumnIndex(XslConstants.PERCENTAGE_DISCOUNT), productVariant.getDiscountPercent());
                     setCellValue(row, this.getColumnIndex(XslConstants.SHIPPING), productVariant.getShippingBasePrice());
+                    setCellValue(row, this.getColumnIndex(XslConstants.MARGIN_HK_CP), (productVariant.getHkPrice() - productVariant.getCostPrice())/productVariant.getCostPrice() * 100);
+                    setCellValue(row, this.getColumnIndex(XslConstants.MARGIN_MRP_CP), (productVariant.getMarkedPrice() - productVariant.getCostPrice())/productVariant.getCostPrice() * 100);
+
                     setCellValue(row, this.getColumnIndex(XslConstants.AVAILABILITY), productVariant.isOutOfStock() ? "N" : "Y");
                     setCellValue(row, this.getColumnIndex(XslConstants.MANUFACTURER_CODE), "");
                     setCellValue(row, this.getColumnIndex(XslConstants.DELETED), productVariant.isDeleted() ? "Y" : "N");
