@@ -27,5 +27,7 @@ public interface AwbService {
 
     public Awb save(Awb awb);
 
+    public List<Awb> getAllAwb();
+
 
 }

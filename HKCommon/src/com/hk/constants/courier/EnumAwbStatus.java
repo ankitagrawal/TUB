@@ -11,9 +11,10 @@ import com.hk.domain.courier.AwbStatus;
  */
 public enum EnumAwbStatus {
 
-    Unused(0L, "Unused"),
-    Attach(1L, "Attach"),
-    Used(2L, "Used");
+    Unused(10L, "Unused"),
+    Attach(20L, "Attach"),
+    Authorization_Pending(30L, "Authorization Pending"),
+    Used(40L, "Used");
 
     private Long id;
     private String status;

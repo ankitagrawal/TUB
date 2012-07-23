@@ -51,5 +51,7 @@ public class AwbServiceImpl implements AwbService {
         return awbDao.findByCourierAwbNumber(courier ,awbNumber);
     }
 
-
+  public List<Awb> getAllAwb(){
+      return awbDao.getAll(Awb.class);
+  }
 }

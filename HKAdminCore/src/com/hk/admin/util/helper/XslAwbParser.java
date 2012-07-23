@@ -2,6 +2,7 @@ package com.hk.admin.util.helper;
 
 
 import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.util.XslUtil;
 import com.hk.constants.XslConstants;
 import com.hk.constants.courier.EnumAwbStatus;
@@ -38,6 +39,8 @@ public class XslAwbParser {
     private CourierService courierService;
     @Autowired
     private WarehouseService warehouseService;
+    @Autowired
+    AwbService awbService;
 
 
     public Set<Awb> readAwbExcel(File file) throws Exception {
@@ -137,5 +140,7 @@ public class XslAwbParser {
         }
         return commonCourierIds;
     }
+
+
 
 }
