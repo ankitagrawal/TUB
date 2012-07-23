@@ -477,3 +477,4 @@ public class Functions {
         ProductVariant pv = (ProductVariant) o;
         return productVariantService.isEngravingProvidedForProduct(pv);
     }
+}
