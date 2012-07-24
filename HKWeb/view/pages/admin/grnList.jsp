@@ -94,6 +94,7 @@
             </c:otherwise>
           </c:choose>
         <s:submit name="pre" value="Search GRN"/>
+          <s:submit name="generateExcelReport" value="Download to Excel" />
       </s:form>
     </fieldset>
 

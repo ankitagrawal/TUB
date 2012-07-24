@@ -1,18 +1,17 @@
 package com.hk.impl.dao.core;
 
-import java.util.List;
-
+import com.akube.framework.dao.Page;
+import com.akube.framework.util.BaseUtils;
+import com.hk.domain.catalog.Supplier;
+import com.hk.impl.dao.BaseDaoImpl;
+import com.hk.pact.dao.core.SupplierDao;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
-import com.akube.framework.dao.Page;
-import com.akube.framework.util.BaseUtils;
-import com.hk.domain.catalog.Supplier;
-import com.hk.impl.dao.BaseDaoImpl;
-import com.hk.pact.dao.core.SupplierDao;
+import java.util.List;
 
 @SuppressWarnings("unchecked")
 @Repository
@@ -40,6 +39,14 @@ public class SupplierDaoImpl extends BaseDaoImpl implements SupplierDao {
     }
 
     public Page getSupplierByTinAndName(String tinNumber, String name, int page, int perPage) {
+        return list(getSupplierSearchCriteria(tinNumber, name), page, perPage);
+    }
+
+    public List<Supplier> getSupplierByTinAndName(String tinNumber, String name) {
+        return findByCriteria(getSupplierSearchCriteria(tinNumber, name));
+    }
+
+    private DetachedCriteria getSupplierSearchCriteria(String tinNumber, String name) {
         DetachedCriteria criteria = DetachedCriteria.forClass(Supplier.class);
         // Criteria criteria = getSession().createCriteria(Supplier.class);
         if (!StringUtils.isBlank(tinNumber))
@@ -49,20 +56,9 @@ public class SupplierDaoImpl extends BaseDaoImpl implements SupplierDao {
             criteria.add(Restrictions.like("name".toLowerCase(), "%" + name.toLowerCase() + "%"));
 
         criteria.addOrder(Order.asc("name"));
-        return list(criteria, page, perPage);
+        return criteria;
     }
 
-    public List<Supplier> getAllSupplierListByTinAndName(String tinNumber, String name) {
-        DetachedCriteria criteria = DetachedCriteria.forClass(Supplier.class);
-        if (!StringUtils.isBlank(tinNumber))
-            criteria.add(Restrictions.eq("tinNumber", tinNumber));
-
-        if (!StringUtils.isBlank(name))
-            criteria.add(Restrictions.like("name".toLowerCase(), "%" + name.toLowerCase() + "%"));
-
-        criteria.addOrder(Order.asc("name"));
-        return findByCriteria(criteria);
-    }
 
     public boolean doesTinNumberExist(String tinNumber) {
         Long count = (Long) (getSession().createQuery("select count(distinct s.tinNumber) from Supplier s where s.tinNumber = :tinNumber").setString("tinNumber", tinNumber).uniqueResult());

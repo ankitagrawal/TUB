@@ -60,6 +60,7 @@
             </c:otherwise>
           </c:choose>   &nbsp; &nbsp;
         <s:submit name="pre" value="Search PO"/>
+          <s:submit name="generateExcelReport" value="Download to Excel" />
       </s:form>
     </fieldset>
 

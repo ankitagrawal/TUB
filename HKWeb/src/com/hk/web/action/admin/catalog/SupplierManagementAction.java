@@ -1,22 +1,17 @@
 package com.hk.web.action.admin.catalog;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import com.akube.framework.dao.Page;
+import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.constants.core.Keys;
-import com.hk.report.dto.inventory.StockReportDto;
+import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.courier.StateList;
+import com.hk.domain.catalog.Supplier;
+import com.hk.pact.dao.core.SupplierDao;
 import com.hk.util.io.HkXlsWriter;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
+import com.hk.web.action.error.AdminPermissionAction;
+import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.SimpleError;
 import net.sourceforge.stripes.validation.ValidationMethod;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,16 +19,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-import com.akube.framework.dao.Page;
-import com.akube.framework.stripes.action.BasePaginatedAction;
-import com.hk.constants.core.PermissionConstants;
-import com.hk.constants.courier.StateList;
-import com.hk.domain.catalog.Supplier;
-import com.hk.pact.dao.core.SupplierDao;
-import com.hk.web.action.error.AdminPermissionAction;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Secure(hasAnyPermissions = {PermissionConstants.SUPPLIER_MANAGEMENT}, authActionBean = AdminPermissionAction.class)
 @Component
@@ -115,7 +107,7 @@ public class SupplierManagementAction extends BasePaginatedAction {
     }
 
     public Resolution generateExcelReport() {
-        supplierList = supplierDao.getAllSupplierListByTinAndName(supplierTin, supplierName);
+        supplierList = supplierDao.getSupplierByTinAndName(supplierTin, supplierName, 1, -1).getList();//.getAllSupplierListByTinAndName(supplierTin, supplierName);
 
         xlsFile = new File(adminDownloads + "/reports/SupplierList.xls");
         HkXlsWriter xlsWriter = new HkXlsWriter();
@@ -137,14 +129,13 @@ public class SupplierManagementAction extends BasePaginatedAction {
                 xlsWriter.writeData(xlsFile, "SupplierList");
                 xlsRow++;
             }
-            addRedirectAlertMessage(new SimpleMessage("Download complete"));
 
             return new HTTPResponseResolution();
         }
         return new RedirectResolution(SupplierManagementAction.class);
     }
 
-    public class HTTPResponseResolution implements Resolution {
+    private class HTTPResponseResolution implements Resolution {
             public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
                 OutputStream out = null;
                 InputStream in = new BufferedInputStream(new FileInputStream(xlsFile));

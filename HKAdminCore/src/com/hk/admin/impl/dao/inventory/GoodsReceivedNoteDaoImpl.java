@@ -1,9 +1,13 @@
 package com.hk.admin.impl.dao.inventory;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
+import com.akube.framework.dao.Page;
+import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
+import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.inventory.GoodsReceivedNote;
+import com.hk.domain.inventory.GrnStatus;
+import com.hk.domain.inventory.po.PurchaseOrder;
+import com.hk.domain.warehouse.Warehouse;
+import com.hk.impl.dao.BaseDaoImpl;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
@@ -13,14 +17,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
-import com.akube.framework.dao.Page;
-import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
-import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.inventory.GoodsReceivedNote;
-import com.hk.domain.inventory.GrnStatus;
-import com.hk.domain.inventory.po.PurchaseOrder;
-import com.hk.domain.warehouse.Warehouse;
-import com.hk.impl.dao.BaseDaoImpl;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @SuppressWarnings("unchecked")
 @Repository
@@ -43,7 +42,17 @@ public class GoodsReceivedNoteDaoImpl extends BaseDaoImpl implements GoodsReceiv
     }
 
     public Page searchGRN(GoodsReceivedNote grn, GrnStatus grnStatus, String invoiceNumber, String tinNumber, String supplierName, Boolean isReconciled,
-            Warehouse warehouse, int pageNo, int perPage) {
+                          Warehouse warehouse, int pageNo, int perPage) {
+        return list(getGRNCriteria(grn, grnStatus, invoiceNumber, tinNumber, supplierName, isReconciled, warehouse), pageNo, perPage);
+    }
+
+    public List<GoodsReceivedNote> searchGRN(GoodsReceivedNote grn, GrnStatus grnStatus, String invoiceNumber, String tinNumber, String supplierName, Boolean isReconciled,
+                                             Warehouse warehouse) {
+        return findByCriteria( getGRNCriteria(grn, grnStatus, invoiceNumber, tinNumber, supplierName, isReconciled, warehouse) );
+    }
+
+    private DetachedCriteria getGRNCriteria(GoodsReceivedNote grn, GrnStatus grnStatus, String invoiceNumber, String tinNumber, String supplierName, Boolean isReconciled,
+                                            Warehouse warehouse) {
         List<PurchaseOrder> poList = new ArrayList<PurchaseOrder>();
         if (StringUtils.isNotBlank(tinNumber) || StringUtils.isNotBlank(supplierName)) {
             Criteria purchaseOrderCriteria = getSession().createCriteria(PurchaseOrder.class);
@@ -83,8 +92,7 @@ public class GoodsReceivedNoteDaoImpl extends BaseDaoImpl implements GoodsReceiv
             grnCriteria.add(Restrictions.eq("warehouse", warehouse));
         }
         grnCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));
-        return list(grnCriteria, pageNo, perPage);
-
+        return grnCriteria;
     }
 
     public List<GoodsReceivedNote> listGRNsIncludingStatus(List<Long> grnStatusList) {
