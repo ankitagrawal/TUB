@@ -31,13 +31,19 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
+import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.admin.pact.service.courier.AwbService;
+import com.hk.admin.pact.dao.courier.CourierDao;
 import com.hk.admin.util.ChhotuCourierDelivery;
 import com.hk.admin.util.CourierStatusUpdateHelper;
 import com.hk.constants.report.ReportConstants;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.courier.CourierConstants;
+import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.courier.Shipment;
+import com.hk.domain.courier.Awb;
+import com.hk.domain.courier.Courier;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
@@ -73,8 +79,15 @@ public class DeliveryStatusUpdateManager {
 
     @Autowired
     CourierStatusUpdateHelper   courierStatusUpdateHelper;
+    @Autowired
+    AwbService awbService;
+    @Autowired
+    ShipmentService shipmentService;
 
-    public String updateDeliveryStatusDTDC(File excelFile) throws Exception {
+    @Autowired
+    CourierDao                  courierDao;
+
+    public String updateCourierDeliveryStatusByExcel(File excelFile) throws Exception {
         String messagePostUpdation = "";
         logger.debug("parsing Delivery Details DTDC Upload : " + excelFile.getAbsolutePath());
         POIFSFileSystem objInFileSys = new POIFSFileSystem(new FileInputStream(excelFile));
@@ -99,7 +112,10 @@ public class DeliveryStatusUpdateManager {
                 String gatewayOrderIdInXls = getCellValue(ReportConstants.REF_NO, rowMap, headerMap);
                 String awb = getCellValue(ReportConstants.CN_NO, rowMap, headerMap);
                 String status = getCellValue(ReportConstants.STATUS, rowMap, headerMap);
+                String courierId=getCellValue(ReportConstants.COURIER_ID_STR, rowMap, headerMap);
+                Long courier_Id=Long.parseLong(courierId);
                 Date deliveryDateInXsl = null;
+                Courier courierObj = courierDao.get(Courier.class,courier_Id);
                 try {
                     deliveryDateInXsl = sdf_date.parse(getCellValue(ReportConstants.DELIVERED_DATE, rowMap, headerMap));
                 } catch (Exception e) {
@@ -118,7 +134,13 @@ public class DeliveryStatusUpdateManager {
                 if (StringUtils.isNotBlank(gatewayOrderIdInXls)) {
                     shippingOrder = getShippingOrderService().findByGatewayOrderId(gatewayOrderIdInXls);
                 } else {
-                    shippingOrder = getShippingOrderService().findByTrackingId(awb);
+                    Courier courier = courierDao.get(Courier.class, courier_Id);
+                    Awb shipmentAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(courier, trackingId, null, null, EnumAwbStatus.Used.getAsAwbStatus());
+                    if (shipmentAwb == null) {
+                        messagePostUpdation += "Awb number(Tracking_id) at   @Row No." + (rowCount + 1) + " does not exist in Healthkart system<br/>";
+                        continue;
+                    }
+                    shippingOrder = shipmentService.findByAwb(shipmentAwb).getShippingOrder();
                 }
                 if (shippingOrder == null) {
                     messagePostUpdation += "Shipping order not found corresponding to the Ref No. @Row No." + (rowCount + 1) + "<br/>";
@@ -152,14 +174,14 @@ public class DeliveryStatusUpdateManager {
             shippingOrderList = getAdminShippingOrderService().getShippingOrderListByCouriers(startDate, endDate, courierIdList);
             if (shippingOrderList != null && shippingOrderList.size() > 0) {
                 for (ShippingOrder shippingOrderInList : shippingOrderList) {
-                    trackingId = shippingOrderInList.getShipment().getTrackingId();
+                    trackingId = shippingOrderInList.getShipment().getAwb().getAwbNumber();
                     try {
                         Date deliveryDate = courierStatusUpdateHelper.updateDeliveryStatusAFL(trackingId);
                         if (deliveryDate != null) {
                             ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shippingOrderInList.getShipment(),
-                                    shippingOrderInList.getShipment().getTrackingId(), deliveryDate);
+                                    shippingOrderInList.getShipment().getAwb().getAwbNumber(), deliveryDate);
                         } else {
-                            logger.debug("Delivery date not available or status is not delivered for Tracking Id (AFL): " + shippingOrderInList.getShipment().getTrackingId());
+                            logger.debug("Delivery date not available or status is not delivered for Tracking Id (AFL): " + shippingOrderInList.getShipment().getAwb().getAwbNumber());
                             unmodifiedTrackingIds.add(trackingId);
 
                         }
@@ -176,7 +198,7 @@ public class DeliveryStatusUpdateManager {
             shippingOrderList = getAdminShippingOrderService().getShippingOrderListByCouriers(startDate, endDate, courierIdList);
             if (shippingOrderList != null && shippingOrderList.size() > 0) {
                 for (ShippingOrder shippingOrderInList : shippingOrderList) {
-                    trackingId = shippingOrderInList.getShipment().getTrackingId();
+                    trackingId = shippingOrderInList.getShipment().getAwb().getAwbNumber();
                     try {
                         ChhotuCourierDelivery chhotuCourierDelivery = courierStatusUpdateHelper.updateDeliveryStatusChhotu(trackingId);
                         Date delivery_date = null;
@@ -187,9 +209,9 @@ public class DeliveryStatusUpdateManager {
                         }
 
                         if (delivery_date != null && chhotuCourierDelivery.getShipmentStatus().equalsIgnoreCase(CourierConstants.DELIVERED) && chhotuCourierDelivery.getTrackingId() != null) {
-                            ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shippingOrderInList.getShipment(), shippingOrderInList.getShipment().getTrackingId(), delivery_date);
+                            ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shippingOrderInList.getShipment(), shippingOrderInList.getShipment().getAwb().getAwbNumber(), delivery_date);
                         } else {
-                            logger.debug("Delivery date not available or status is not delivered for Tracking Id (Chhotu): " + shippingOrderInList.getShipment().getTrackingId());
+                            logger.debug("Delivery date not available or status is not delivered for Tracking Id (Chhotu): " + shippingOrderInList.getShipment().getAwb().getAwbNumber());
                         }
                     } catch (Exception ex) {
                         unmodifiedTrackingIds.add(trackingId);
@@ -265,7 +287,7 @@ public class DeliveryStatusUpdateManager {
             shippingOrderList = getAdminShippingOrderService().getShippingOrderListByCouriers(startDate, endDate, courierIdList);
             if (shippingOrderList != null && shippingOrderList.size() > 0) {
                 for (ShippingOrder shippingOrderInList : shippingOrderList) {
-                    trackingId = shippingOrderInList.getShipment().getTrackingId();
+                    trackingId = shippingOrderInList.getShipment().getAwb().getAwbNumber();
                     try {
                         Element ele = courierStatusUpdateHelper.updateDeliveryStatusBlueDart(trackingId);
                         if (ele != null) {
@@ -299,7 +321,7 @@ public class DeliveryStatusUpdateManager {
             String deliveryDateString = null;
             if (shippingOrderList != null && shippingOrderList.size() > 0) {
                 for (ShippingOrder shippingOrderInList : shippingOrderList) {
-                    trackingId = shippingOrderInList.getShipment().getTrackingId();
+                    trackingId = shippingOrderInList.getShipment().getAwb().getAwbNumber();
                     try {
                         responseMap = courierStatusUpdateHelper.updateDeliveryStatusDTDC(trackingId);
                         if (responseMap != null) {
@@ -346,7 +368,7 @@ public class DeliveryStatusUpdateManager {
                 deliveryDateAsShipDatePlusOne.add(Calendar.DAY_OF_MONTH, 1);
                 deliveryDate = deliveryDateAsShipDatePlusOne.getTime();
             }
-            if (shipment != null && shipment.getTrackingId() != null && shipment.getTrackingId().equals(trackingId)) {
+            if (shipment != null && shipment.getAwb().getAwbNumber() != null && shipment.getAwb().getAwbNumber().equals(trackingId)) {
                 shipment.setDeliveryDate(deliveryDate);
                 getAdminShippingOrderService().markShippingOrderAsDelivered(shippingOrder);
                 orderDeliveryCount++;
@@ -372,8 +394,10 @@ public class DeliveryStatusUpdateManager {
                 delivery_date = getFormattedDeliveryDate(deliveryDate);
                 //if status is delivered then putting values in the map.
                 if (deliveryStatus.equalsIgnoreCase(CourierConstants.DELIVERED)) {
-                    shippingOrdr = shippingOrderService.findByTrackingId(trackingId);
-                    ordersDelivered=updateCourierDeliveryStatus(shippingOrdr, shippingOrdr.getShipment(), shippingOrdr.getShipment().getTrackingId(), delivery_date);
+                      Awb awb= awbService.findByCourierAwbNumber(EnumCourier.Delhivery.asCourier(),trackingId);
+                    Shipment shipment=shipmentService.findByAwb(awb);
+                    shippingOrdr = shipment.getShippingOrder();
+                    ordersDelivered=updateCourierDeliveryStatus(shippingOrdr, shippingOrdr.getShipment(), shippingOrdr.getShipment().getAwb().getAwbNumber(), delivery_date);
                 }
             }
         }
@@ -385,7 +409,7 @@ public class DeliveryStatusUpdateManager {
 
         //Iterating over the sub-list to get the required trackingId and fetch response
         for (ShippingOrder shipOrder : shippingOrderSubList) {
-            appendedTrackingId = appendedTrackingId + "," + shipOrder.getShipment().getTrackingId();
+            appendedTrackingId = appendedTrackingId + "," + shipOrder.getShipment().getAwb().getAwbNumber();
         }
 
         return appendedTrackingId;
