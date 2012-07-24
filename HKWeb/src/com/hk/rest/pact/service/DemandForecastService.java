@@ -13,6 +13,6 @@ import java.util.Date;
  * Time: 1:37:22 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface DemandForcastService {
+public interface DemandForecastService {
     public void SaveOrUpdateForecastInDB (List<DemandForcast> input, Date minForcastDate);
 }

@@ -1,20 +1,15 @@
 package com.hk.rest.impl.service;
 
-import com.hk.rest.pact.service.DemandForcastService;
-import com.hk.domain.warehouse.DemandForcast;
-import com.hk.domain.warehouse.Warehouse;
-import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.rest.pact.service.DemandForecastService;
+import com.hk.domain.warehouse.DemandForecast;
 import com.hk.pact.dao.BaseDao;
-import com.hk.pact.dao.inventory.DemandForcastDao;
+import com.hk.pact.dao.inventory.DemandForecastDao;
 import com.hk.pact.service.core.WarehouseService;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Collection;
 import java.util.ArrayList;
-import java.text.SimpleDateFormat;
-import java.text.DateFormat;
-import java.text.ParseException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,9 +25,9 @@ import org.slf4j.LoggerFactory;
  */
 
 @Service
-public class DemandForcastServiceImpl implements DemandForcastService {
+public class DemandForecastServiceImpl implements DemandForecastService {
 
-    private static Logger logger = LoggerFactory.getLogger(DemandForcastServiceImpl.class);
+    private static Logger logger = LoggerFactory.getLogger(DemandForecastServiceImpl.class);
 
     @Autowired
     private BaseDao baseDao;
@@ -41,36 +36,33 @@ public class DemandForcastServiceImpl implements DemandForcastService {
     private WarehouseService warehouseService;
 
     @Autowired
-    private DemandForcastDao demandforcastDao;
+    private DemandForecastDao demandforcastDao;
 
     public BaseDao getBaseDao(){
         return this.baseDao;
     }
 
-    public void SaveOrUpdateForecastInDB (List<DemandForcast> excelInput, Date minForecastDate){
+    public void SaveOrUpdateForecastInDB (List<DemandForecast> excelInput, Date minForecastDate){
         /***
          * A) sort dfList on forecastDate
          * b) get minForecastDate nad maxForecastDate from A
          * c) get list of exisiting rows between max and min date, this is input list as passed currently
          * build input list
          */
-        Collection<DemandForcast> CollectionToUpdate = new ArrayList<DemandForcast>();
+        Collection<DemandForecast> CollectionToUpdate = new ArrayList<DemandForecast>();
         boolean set=false;
-
-        List<DemandForcast> existingInDB = demandforcastDao.findByDate(minForecastDate);
-        //DemandForcast dForecast = new DemandForcast();
-        for (DemandForcast dfExcel : excelInput){
+        try{
+        List<DemandForecast> existingInDB = demandforcastDao.findDemandForcastByDate(minForecastDate);
+        //DemandForecast dForecast = new DemandForecast();
+        for (DemandForecast dfExcel : excelInput){
+            set=false;
             Date forcast_date = dfExcel.getForcastDate();
             String prod_variantId = dfExcel.getProductVariant().getId();
             Long warehouseId = dfExcel.getWarehouse().getId();
             Double forcastVal = dfExcel.getForcastValue();
 
-            try{
-            //DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-            //Date date = (Date)formatter.parse(forcast_date);
-
             if (existingInDB.size() != 0){
-             for (DemandForcast df : existingInDB ){
+             for (DemandForecast df : existingInDB ){
               if (df.getForcastDate().equals(forcast_date) && df.getProductVariant().getId().equals(prod_variantId) && df.getWarehouse().getId().equals(warehouseId)){
                 df.setForcastValue(forcastVal);
                 CollectionToUpdate.add(df);
@@ -84,15 +76,13 @@ public class DemandForcastServiceImpl implements DemandForcastService {
             if (set == false){
                 //getBaseDao().save(dForecast);
                 CollectionToUpdate.add(dfExcel);
-                set = false;
                 }
             }
 
-            catch(Exception e){
+        getBaseDao().saveOrUpdate(CollectionToUpdate);
+        }
+         catch(Exception e){
                 logger.error(e.getMessage());
             }
-        }
-        getBaseDao().saveOrUpdate(CollectionToUpdate);
-           
     }
 }

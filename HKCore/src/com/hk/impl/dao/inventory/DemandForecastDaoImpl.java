@@ -20,9 +20,9 @@ import org.springframework.stereotype.Repository;
 
 @SuppressWarnings("unchecked")
 @Repository
-public class DemandForcastDaoImpl extends BaseDaoImpl implements DemandForcastDao {
+public class DemandForecastDaoImpl extends BaseDaoImpl implements DemandForcastDao {
 
-    public List<DemandForcast> findByDate (Date minDate){
+    public List<DemandForcast> findDemandForcastByDate (Date minDate){
             return (List<DemandForcast>) getSession().createQuery("from DemandForcast df where df.forcastDate >= :minDate order by df.forcastDate").setDate("minDate", minDate).list();
     }
 }

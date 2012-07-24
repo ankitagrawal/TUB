@@ -11,7 +11,7 @@ import java.util.*;
  * Time: 2:46:00 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface DemandForcastDao {
+public interface DemandForecastDao {
 
-    public List<DemandForcast> findByDate (Date minDate);
+    public List<DemandForcast> findDemandForcastByDate (Date minDate);
 }

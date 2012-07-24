@@ -15,7 +15,7 @@ import java.io.Serializable;
 
 @Entity
 @Table (name="demand_forcast")
-public class DemandForcast implements Serializable{
+public class DemandForecast implements Serializable{
 
      @Id
      @GeneratedValue(strategy = GenerationType.AUTO)
