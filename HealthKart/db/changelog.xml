@@ -7898,7 +7898,7 @@
     <!-- populate awb from shipment -->
     <changeSet author="Seema (generated)" id="1342274075684-30">
         <sql>
-            insert into awb_status(`id`,`status`) values (0,'Unused'),(1,'Attach'),(2,'Used');
+            insert into awb_status(`id`,`status`) values (10,'Unused'),(20,'Attach'),(30,'Authorization Pending'),(40,'Used');
         </sql>
     </changeSet>
     <changeSet author="Seema (generated)" id="1342274075684-6">

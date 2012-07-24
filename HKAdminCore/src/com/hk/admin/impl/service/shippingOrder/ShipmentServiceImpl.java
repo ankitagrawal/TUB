@@ -62,6 +62,7 @@ public class ShipmentServiceImpl implements ShipmentService {
         }
         Shipment shipment = new Shipment();
         shipment.setCourier(suggestedCourier);
+        shipment.setEmailSent(false);
         suggestedAwb.setUsed(true);
         shipment.setAwb(suggestedAwb);
         Double estimatedWeight = 0D;
