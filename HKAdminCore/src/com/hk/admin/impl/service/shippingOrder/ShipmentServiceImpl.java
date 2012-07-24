@@ -64,19 +64,20 @@ public class ShipmentServiceImpl implements ShipmentService {
         shipment.setCourier(suggestedCourier);
         shipment.setEmailSent(false);
         suggestedAwb.setUsed(true);
+        suggestedAwb.setAwbStatus(EnumAwbStatus.Attach.getAsAwbStatus());
         shipment.setAwb(suggestedAwb);
         Double estimatedWeight = 0D;
         for (LineItem lineItem : shippingOrder.getLineItems()) {
             ProductVariant productVariant = lineItem.getSku().getProductVariant();
             Double variantWeight = productVariant.getWeight();
             if (variantWeight == null || variantWeight == 0D) {
-                estimatedWeight += 125D;
+                estimatedWeight += 0D;
             } else {
                 estimatedWeight += variantWeight;
             }
         }
         shipment.setBoxWeight(estimatedWeight);
-        shipment.setBoxSize(EnumBoxSize.M.asBoxSize());
+        shipment.setBoxSize(EnumBoxSize.MIGRATE.asBoxSize());
         shippingOrder.setShipment(shipment);
         if (courierGroupService.getCourierGroup(shipment.getCourier()) != null) {
             shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
