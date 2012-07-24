@@ -91,7 +91,7 @@
                 <%--//todo ps need to rethink--%>
               <!--TO DO we will change it later on change --  -->
               <s:label name="trackingId" class="label">Tracking Id</s:label>
-                ${csda.shipment.awb.awbNumber"}
+                ${csda.shipment.awb.awbNumber}
               <%--<s:text name="shipment.awb.awbNumber" id="trackingId" value="${csda.shipment.trackingId}" style="width:170px"--%>
                       <%--class="text fields"/>--%>
 
