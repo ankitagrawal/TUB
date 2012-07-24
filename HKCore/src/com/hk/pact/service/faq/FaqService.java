@@ -1,5 +1,6 @@
 package com.hk.pact.service.faq;
 
+import com.akube.framework.dao.Page;
 import com.hk.domain.faq.Faq;
 
 import java.util.List;
@@ -13,15 +14,17 @@ import java.util.List;
  */
 public interface FaqService {
 
-    public List<Faq> getFaqByCategory(String category);
+    public Page getFaqByCategory(String primaryCategory, String secondaryCategory,  int pageNo, int perPage);
 
     public boolean insertFaq(Faq faq);
 
-    public List<Faq> searchFaq(String keywords);
+    public Page searchFaq(String keywords, String primaryCategory, String secondaryCategory,  int pageNo, int perPage);
 
     public Faq save(Faq faq);
 
     public Faq getFaqById(Long id);
 
     public boolean deleteFaq(Faq faq);
+
+    public String getCategoryFromSlug(String categorySlug);
 }

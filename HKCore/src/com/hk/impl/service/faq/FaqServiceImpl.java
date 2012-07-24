@@ -1,5 +1,6 @@
 package com.hk.impl.service.faq;
 
+import com.akube.framework.dao.Page;
 import com.hk.pact.service.faq.FaqService;
 import com.hk.pact.dao.faq.FaqDao;
 import com.hk.domain.faq.Faq;
@@ -28,8 +29,8 @@ public class FaqServiceImpl implements FaqService{
 
     private static Logger logger                 = LoggerFactory.getLogger(FaqServiceImpl.class);
 
-    public List<Faq> getFaqByCategory(String primaryCategory){
-        return getFaqDao().getFaqByCategory(primaryCategory);
+    public Page getFaqByCategory(String primaryCategory, String secondaryCategory,  int pageNo, int perPage){
+        return getFaqDao().getFaqByCategory(primaryCategory, secondaryCategory, pageNo, perPage);
     }
 
     public boolean insertFaq(Faq faq){
@@ -54,9 +55,8 @@ public class FaqServiceImpl implements FaqService{
         return (Faq)getFaqDao().save(faq);
     }
 
-    public List<Faq> searchFaq(String keywords){
-        List<Faq> faqList = getFaqDao().searchFaq(keywords);
-        return faqList;
+    public Page searchFaq(String keywords, String primaryCategory, String secondaryCategory,  int pageNo, int perPage){
+        return getFaqDao().searchFaq(keywords, primaryCategory, secondaryCategory, pageNo, perPage);
     }
 
 
@@ -72,6 +72,15 @@ public class FaqServiceImpl implements FaqService{
             logger.debug("unable to delete FAQ", e);
         }
         return false;
+    }
+
+    public String getCategoryFromSlug(String categorySlug){
+        if(categorySlug != null){
+            return categorySlug.replace("-", " ");
+        }
+        else{
+            return null;
+        }
     }
 
     public FaqDao getFaqDao() {

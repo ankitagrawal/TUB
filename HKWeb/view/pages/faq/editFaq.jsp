@@ -11,8 +11,8 @@
 <script>
     function validate(){
             var question = document.getElementById('edit-question').value;
-            var answer = document.getElementById('edit-answer').value;
-            if(question == "" || answer==""){
+            var answer = document.getElementsByName('edit-answer').value;
+            if(question == ""){
                 alert('question or answer cannot be left blank');
             }
             return false;

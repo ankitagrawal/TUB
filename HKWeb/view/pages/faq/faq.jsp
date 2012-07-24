@@ -5,6 +5,7 @@
 
 <c:set var="primaryCategoryList" value="<%= FaqCategoryEnums.EnumFaqPrimaryCateogry.getAll() %>"/>
 <c:set var="secondaryCategoryList" value="<%= FaqCategoryEnums.EnumFaqSecondaryCateogry.getAll() %>"/>
+<c:set var="primaryCategoryNutrition" value="<%= FaqCategoryEnums.EnumFaqPrimaryCateogry.Nutrition.getName()%>" />
 <s:layout-render name="/layouts/default100.jsp" pageTitle="FAQs: Nutrition">
   <s:useActionBean beanclass="com.hk.web.action.faq.FaqAction" var="faqBean"/>
   <s:layout-component name="htmlHead">
@@ -86,7 +87,7 @@
         function validate(){
             var question = $('#new-question').val();
             var answer = $('#new-answer').val();
-            if(question == "" || answer==""){
+            if(question == ""){
                 alert('question or answer cannot be left blank');
             }
             return false;
@@ -98,10 +99,13 @@
   </s:layout-component>
 
   <s:layout-component name="content">
-
-      <img src="<%=request.getContextPath()%>/images/faq/faq_nutrition.jpg" style="width: 100%; border-color:#E3E7E8; border-top-width:10px;"/>
+      <c:if test="${faqBean.primaryCategory == primaryCategoryNutrition}">
+        <img src="<%=request.getContextPath()%>/images/faq/faq_nutrition.jpg" style="width: 100%; border-color:#E3E7E8; border-top-width:10px;"/>
+      </c:if>
       <fieldset class="right_label">
         <s:form beanclass="com.hk.web.action.faq.FaqAction">
+          <s:hidden name="primaryCategory" value="${faqBean.primaryCategory }" />
+          <s:hidden name="secondaryCategory" value="${faqBean.secondaryCategory}" />
           <label style="margin-left: 100px; ">Search FAQs</label>
           &nbsp;&nbsp;&nbsp;
           <s:text name="searchString" id="search-string" style="width:30em; margin-top: 16px; padding-top:10px"/>
@@ -119,7 +123,7 @@
 
     <s:form beanclass="com.hk.web.action.faq.FaqAction" id="new-faq-form" style="display:none;">
       <span class="question"> Question: </span><br/>
-      <textarea class="question-textarea" name="faq.question" id="new-question">${  faqBean.faq.question}</textarea>
+      <textarea class="question-textarea" name="faq.question" id="new-question">${faqBean.faq.question}</textarea>
       <br/><br/>
       <span class="answer"> Answer: </span>
       <br/>
@@ -160,7 +164,10 @@
     <br/>
 
     <h4>${faqBean.primaryCategory}</h4>
-
+      <br/>
+ <%--   <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${faqBean}"/>--%>
+    <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${faqBean}"/>
+      
     <div id="faq-area">
       <c:forEach items="${faqBean.faqList}" var="faq" varStatus="faqctr">
         <fieldset class="faq">

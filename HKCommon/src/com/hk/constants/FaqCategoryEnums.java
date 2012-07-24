@@ -12,9 +12,9 @@ import java.util.Arrays;
  */
 public class FaqCategoryEnums {
     public static enum EnumFaqPrimaryCateogry {
-        WeightManagement(1L, "Weight Management"),
-        SportAndFitness(2L, "Sports and Fitness"),
-        Nutrition(3L, "Nutrition");
+        WeightManagement(1L, "weight management"),
+        SportAndFitness(2L, "sport And fitness"),
+        Nutrition(3L, "nutrition");
 
         private String name;
         private Long id;
@@ -42,9 +42,9 @@ public class FaqCategoryEnums {
 
     public static enum EnumFaqSecondaryCateogry {
 
-        WeightGain(1L, "Weight Gain"),
-        WeightLoss(2L, "Weight Loss"),
-        DietSupplements(3L, "Diet Supplements");
+        WeightGain(1L, "weight gain"),
+        WeightLoss(2L, "weight loss"),
+        DietSupplements(3L, "diet supplements");
 
         private String name;
         private Long id;

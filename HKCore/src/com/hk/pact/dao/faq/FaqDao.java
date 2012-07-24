@@ -12,8 +12,8 @@ import java.util.List;
 
 public interface FaqDao extends BaseDao {
 
-    public List<Faq> searchFaq(String keywords);
+    public Page searchFaq(String keywords, String primaryCategory, String secondaryCategory, int pageNo, int perPage);
 
-    public List<Faq> getFaqByCategory(String category);
+    public Page getFaqByCategory(String primaryCategory, String secondaryCategory, int pageNo, int perPage);
     
 }
