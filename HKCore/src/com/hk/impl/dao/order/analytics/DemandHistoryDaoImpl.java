@@ -1,5 +1,6 @@
 package com.hk.impl.dao.order.analytics;
 
+import com.akube.framework.util.DateUtils;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
@@ -10,6 +11,7 @@ import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.order.analytics.DemandHistoryDao;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
@@ -21,6 +23,7 @@ import java.util.List;
  * Time: 12:23 AM
  * To change this template use File | Settings | File Templates.
  */
+@Service
 public class DemandHistoryDaoImpl extends BaseDaoImpl implements DemandHistoryDao {          //todo think logic
 
     public DemandHistory createOrUpdateEntry(CartLineItem cartLineItem, Warehouse warehouse, Order order) {
