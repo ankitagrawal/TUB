@@ -76,6 +76,7 @@ public class CreateEditSubscriptionProductAction extends BaseAction {
 
     boolean editSubscription=false;
 
+    @Validate(required = true, on="uploadSubscriptionProductsExcel")
     FileBean fileBean;
 
     private static Logger logger                    = LoggerFactory.getLogger(CreateEditSubscriptionProductAction.class);
