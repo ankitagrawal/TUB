@@ -161,7 +161,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 
             Awb awbFromDb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(shipment.getCourier(), trackingId, shippingOrder.getWarehouse(), shippingOrder.isCOD(), null);
             if (awbFromDb != null && awbFromDb.getAwbNumber() != null) {
-                if (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Used.getId()) || awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Attach.getId())) {
+                if (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Used.getId()) || (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Attach.getId())) || (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Authorization_Pending.getId()))) {
                     addRedirectAlertMessage(new SimpleMessage(" OPERATION FAILED *********  Tracking Id : " + trackingId + "is already Used with other  shipping Order"));
                     return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
                 }
