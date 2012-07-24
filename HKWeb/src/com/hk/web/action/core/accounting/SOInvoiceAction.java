@@ -85,12 +85,7 @@ public class SOInvoiceAction extends BaseAction {
                 if (shippingOrder.getShipment() != null && shippingOrder.getShipment().getAwb() != null && shippingOrder.getShipment().getAwb().getAwbNumber() != null) {
                     awb = shippingOrder.getShipment().getAwb();
                 } else {
-                    if (shippingOrder.isCOD()) {
-                        awbList = awbService.getAvailableAwbListForCourierByWarehouseCodStatus(courier, null, shippingOrder.getWarehouse(), true, EnumAwbStatus.Unused.getAsAwbStatus());
-                    } else {
-                        awbList = awbService.getAvailableAwbListForCourierByWarehouseCodStatus(courier, null, shippingOrder.getWarehouse(), false, EnumAwbStatus.Unused.getAsAwbStatus());
-                    }
-
+                      awbList = awbService.getAvailableAwbListForCourierByWarehouseCodStatus(courier, null, shippingOrder.getWarehouse(),shippingOrder.isCOD() , EnumAwbStatus.Unused.getAsAwbStatus());
                     if (awbList != null && awbList.size() > 0) {
                         awb = awbList.get(0);
                         awb.setAwbStatus(EnumAwbStatus.Attach.getAsAwbStatus());

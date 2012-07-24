@@ -137,6 +137,10 @@ public class DeliveryStatusUpdateManager {
                     //todo ps test
                     Courier courier = courierDao.get(Courier.class, courier_Id);
                     Awb awbOfshipment = awbService.getAvailableAwbForCourierByWarehouseCodStatus(courier, trackingId, null, null, EnumAwbStatus.Used.getAsAwbStatus());
+                    if (awbOfshipment == null) {
+                        messagePostUpdation += "Awb number(Tracking_id) at   @Row No." + (rowCount + 1) + " does not exist in Healthkart system<br/>";
+                        continue;
+                    }
                     shippingOrder = shipmentService.findByAwb(awbOfshipment).getShippingOrder();
                 }
                 if (shippingOrder == null) {

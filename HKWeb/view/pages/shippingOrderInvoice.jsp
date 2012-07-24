@@ -150,21 +150,36 @@
 <div class="clear"></div>
 <div style="margin-top: 5px;"></div>
 
-<c:if test="${orderSummary.trackingId != null}">
-    <div>
-        <div style="float: right;">
-            <img style="padding-top: 0px; padding-left: 0px; padding-right: 82px; "
-                 src="${pageContext.request.contextPath}/barcodes/${orderSummary.trackingId}.png"/>
-        </div>
-    </div>
-</c:if>
+<%--<c:if test="${orderSummary.trackingId != null}">--%>
+    <%--<div>--%>
+        <%--<div style="float: right;">--%>
+            <%--<img style="padding-top: 0px; padding-left: 0px; padding-right: 82px; "--%>
+                 <%--src="${pageContext.request.contextPath}/barcodes/${orderSummary.trackingId}.png"/>--%>
+        <%--</div>--%>
+    <%--</div>--%>
+<%--</c:if>--%>
    <div class="clear"></div>
 <div style="margin-top: 5px;"></div>
 
 <div class="grid_12">
-  <div class="grid_8 alpha omega">
-    <div class="formatting" style="float: left; font-size:1.1em;">
-      <p><strong>Name & Address</strong></p>
+    <div class="grid_8 alpha omega">
+        <div class="formatting" style="float: left; font-size:1.1em;">
+
+            <div style="width:100%;">
+                <div style="width:50%; float:left; height:40px;"><strong>Name & Address</strong></div>
+
+                <div  style="width:50%;float: right;">
+                    <c:if test="${orderSummary.trackingId != null}">
+                        <div>
+                            <div>
+                                <img style="padding-top: 0px; padding-left: 0px; padding-right: 82px; "
+                                     src="${pageContext.request.contextPath}/barcodes/${orderSummary.trackingId}.png"/>
+                            </div>
+                        </div>
+                    </c:if>
+                </div>
+
+            </div>
 
       <p>${address.name}</p>
 
