@@ -7904,7 +7904,7 @@
     <changeSet author="Seema (generated)" id="1342274075684-6">
         <sql>
             insert into `awb` (`courier_id`,`awb_number`,`awb_bar_code`,`used`,`warehouse_id`,`cod`,`awb_status_id`)
-            select sp.courier_id , sp.tracking_id,sp.tracking_id,1,so.warehouse_id, if (p.payment_mode_id=40,1,0),2
+            select sp.courier_id , sp.tracking_id,sp.tracking_id,1,so.warehouse_id, if (p.payment_mode_id=40,1,0),40
             from `shipment` sp inner join `shipping_order` so on so.shipment_id=sp.id
             inner join `base_order` bo on so.base_order_id=bo.id
             inner join `payment` p on bo.payment_id=p.id;
@@ -7979,8 +7979,5 @@
     </changeSet>
     <changeSet author="Seema (generated)" id="1343128834437-2">
         <addForeignKeyConstraint baseColumnNames="shipping_order_id" baseTableName="shipment" constraintName="fk_shipment_shipping_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="shipping_order" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="Seema (generated)" id="1343128834437-3">
-        <dropColumn columnName="used" tableName="awb"/>
     </changeSet>
 </databaseChangeLog>
