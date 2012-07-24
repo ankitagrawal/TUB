@@ -8,6 +8,7 @@ import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.courier.EnumAwbStatus;
+import com.hk.constants.shipment.EnumBoxSize;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Awb;
@@ -19,6 +20,7 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import org.apache.poi.ddf.EscherBSERecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +46,6 @@ public class ShipmentServiceImpl implements ShipmentService {
     @Autowired
     ShipmentDao shipmentDao;
 
-    //todo ps test this piece of code
     public Shipment createShipment(ShippingOrder shippingOrder) {
         Order order = shippingOrder.getBaseOrder();
         Pincode pincode = pincodeDao.getByPincode(order.getAddress().getPin());
@@ -61,19 +62,22 @@ public class ShipmentServiceImpl implements ShipmentService {
         }
         Shipment shipment = new Shipment();
         shipment.setCourier(suggestedCourier);
+        shipment.setEmailSent(false);
         suggestedAwb.setUsed(true);
+        suggestedAwb.setAwbStatus(EnumAwbStatus.Attach.getAsAwbStatus());
         shipment.setAwb(suggestedAwb);
         Double estimatedWeight = 0D;
         for (LineItem lineItem : shippingOrder.getLineItems()) {
             ProductVariant productVariant = lineItem.getSku().getProductVariant();
             Double variantWeight = productVariant.getWeight();
             if (variantWeight == null || variantWeight == 0D) {
-                estimatedWeight += 125D;
+                estimatedWeight += 0D;
             } else {
                 estimatedWeight += variantWeight;
             }
         }
         shipment.setBoxWeight(estimatedWeight);
+        shipment.setBoxSize(EnumBoxSize.MIGRATE.asBoxSize());
         shippingOrder.setShipment(shipment);
         if (courierGroupService.getCourierGroup(shipment.getCourier()) != null) {
             shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));

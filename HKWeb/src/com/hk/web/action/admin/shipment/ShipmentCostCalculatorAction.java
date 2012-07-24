@@ -105,21 +105,6 @@ public class ShipmentCostCalculatorAction extends BaseAction {
     @Autowired
     CourierDao courierDao;
 
-//    @Autowired
-//    DemandHistoryDao demandHistoryDao;
-
-    @Autowired
-    OrderStatusService orderStatusService;
-
-    @Autowired
-    OrderSplitterService orderSplitterService;
-
-    @Autowired
-    WarehouseService warehouseService;
-
-    @Autowired
-    OrderService orderService;
-
     TreeMap<Courier, Long> courierCostingMap = new TreeMap<Courier, java.lang.Long>();
     List<Courier> applicableCourierList;
 
@@ -142,32 +127,6 @@ public class ShipmentCostCalculatorAction extends BaseAction {
             }
         } else {
             addRedirectAlertMessage(new SimpleMessage("No SO found for the corresponding gateway order id"));
-        }
-        return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
-    }
-
-    public Resolution saveHistoricalDemand() {
-        OrderSearchCriteria orderSearchCriteria = new OrderSearchCriteria();
-        orderSearchCriteria.setOrderStatusList(orderStatusService.getOrderStatuses(EnumOrderStatus.getStatusForReporting()));
-        orderSearchCriteria.setPaymentStartDate(shippedStartDate);
-        orderSearchCriteria.setPaymentEndDate(shippedEndDate);
-
-        List<Order> orderList = orderService.searchOrders(orderSearchCriteria);
-
-        Warehouse ggnWarehouse = warehouseService.getDefaultWarehouse();
-        Warehouse mumWarehouse = warehouseService.getMumbaiWarehouse();
-
-        if (orderList != null) {
-            for (Order order : orderList) {
-                List<DummyOrder> dummyOrders = orderSplitterService.listBestDummyOrdersIdeally(order, ggnWarehouse, mumWarehouse);
-                if (dummyOrders != null) {
-                    for (DummyOrder dummyOrder : dummyOrders) {
-                        for (CartLineItem cartLineItem : dummyOrder.getCartLineItemList()) {
-//                            demandHistoryDao.createOrUpdateEntry(cartLineItem, dummyOrder.getWarehouse(), order);
-                        }
-                    }
-                }
-            }
         }
         return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
     }

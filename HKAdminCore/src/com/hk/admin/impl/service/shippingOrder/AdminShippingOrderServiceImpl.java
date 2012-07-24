@@ -145,6 +145,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
             shippingOrder = ShippingOrderHelper.setGatewayIdOnShippingOrder(shippingOrder);
             shippingOrder = getShippingOrderService().save(shippingOrder);
 
+            shipmentService.createShipment(shippingOrder);
             return shippingOrder;
         }
         return null;

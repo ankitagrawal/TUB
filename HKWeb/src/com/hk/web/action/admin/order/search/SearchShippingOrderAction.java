@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.SimpleError;
 import net.sourceforge.stripes.validation.ValidationMethod;
@@ -54,35 +55,21 @@ public class SearchShippingOrderAction extends BasePaginatedAction {
     return new ForwardResolution("/pages/admin/searchShippingOrder.jsp");
   }
 
+    public Resolution searchShippingOrder() {
+        List<Awb> awbList = new ArrayList<Awb>();
+        if (trackingId != null) {
+            awbList = awbService.getAvailableAwbListForCourierByWarehouseCodStatus(null, trackingId, null, null, EnumAwbStatus.Used.getAsAwbStatus());
+        }
+        ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
+        shippingOrderSearchCriteria.setOrderId(shippingOrderId).setGatewayOrderId(shippingOrderGatewayId);
+        shippingOrderSearchCriteria.setAwbList(awbList);
 
-  public Resolution searchShippingOrder() {
-
-      ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
-      shippingOrderSearchCriteria.setOrderId(shippingOrderId).setGatewayOrderId(shippingOrderGatewayId);
-      //yet to verify  if either of  shippingid and gateweyid  is present search on ids.if only tracking id present then wet awb
-      //multiple awb can be there. so we should return as a list.change shippingordersearchcriteria attribut awb to awb list.
-
-      if (shippingOrderId != null || (!(StringUtils.isBlank(shippingOrderGatewayId)))) {
-          shippingOrderSearchCriteria.setAwbList(null);
-      } else {
-          List<Awb> awbList =awbService.getAvailableAwbListForCourierByWarehouseCodStatus(null, trackingId, null, null, EnumAwbStatus.Attach.getAsAwbStatus());
-          awbList.addAll(awbService.getAvailableAwbListForCourierByWarehouseCodStatus(null, trackingId, null, null, EnumAwbStatus.Used.getAsAwbStatus()));
-          if (awbList == null || awbList.size() == 0) {
-              addRedirectAlertMessage(new SimpleMessage("Wrong Tracking Id"));
-          } else {
-              shippingOrderSearchCriteria.setAwbList(awbList);
-          }
-
-      }
-
-      shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, false);
-
-      return new ForwardResolution("/pages/admin/searchShippingOrder.jsp");
-
-  }
+        shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, false);
+        return new ForwardResolution("/pages/admin/searchShippingOrder.jsp");
+    }
 
 
-  public String getShippingOrderGatewayId() {
+    public String getShippingOrderGatewayId() {
     return shippingOrderGatewayId;
   }
 

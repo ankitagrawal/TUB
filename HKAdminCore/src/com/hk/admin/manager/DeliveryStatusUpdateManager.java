@@ -134,14 +134,13 @@ public class DeliveryStatusUpdateManager {
                 if (StringUtils.isNotBlank(gatewayOrderIdInXls)) {
                     shippingOrder = getShippingOrderService().findByGatewayOrderId(gatewayOrderIdInXls);
                 } else {
-                    //todo ps test
                     Courier courier = courierDao.get(Courier.class, courier_Id);
-                    Awb awbOfshipment = awbService.getAvailableAwbForCourierByWarehouseCodStatus(courier, trackingId, null, null, EnumAwbStatus.Used.getAsAwbStatus());
-                    if (awbOfshipment == null) {
+                    Awb shipmentAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(courier, trackingId, null, null, EnumAwbStatus.Used.getAsAwbStatus());
+                    if (shipmentAwb == null) {
                         messagePostUpdation += "Awb number(Tracking_id) at   @Row No." + (rowCount + 1) + " does not exist in Healthkart system<br/>";
                         continue;
                     }
-                    shippingOrder = shipmentService.findByAwb(awbOfshipment).getShippingOrder();
+                    shippingOrder = shipmentService.findByAwb(shipmentAwb).getShippingOrder();
                 }
                 if (shippingOrder == null) {
                     messagePostUpdation += "Shipping order not found corresponding to the Ref No. @Row No." + (rowCount + 1) + "<br/>";

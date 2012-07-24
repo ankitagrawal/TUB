@@ -86,12 +86,12 @@
                         <li>
                             <label>Start
                                 date</label><s:text class="date_input startDate" style="width:150px"
-                                                    formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="shippedStartDate"/>
+                                                    formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="streamStartDate"/>
                         </li>
                         <li>
                             <label>End
                                 date</label><s:text class="date_input endDate" style="width:150px"
-                                                    formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="shippedEndDate"/>
+                                                    formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="streamEndDate"/>
                         </li>
                         <div class="clear"></div>
                         <s:label name="courier" class="label">Courier</s:label>
@@ -120,6 +120,29 @@
                     </fieldset>
                 </s:form>
             </div>
+            <s:form beanclass="com.hk.web.action.admin.order.analytics.DemandStreamInjectorAction">
+                <fieldset class="top_label">
+                    <legend> Enter Details</legend>
+
+                    <li>
+                        <label>Start
+                            date</label><s:text class="date_input startDate" style="width:150px"
+                                                formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="streamStartDate"/>
+                    </li>
+                    <li>
+                        <label>End
+                            date</label><s:text class="date_input endDate" style="width:150px"
+                                                formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="streamEndDate"/>
+                    </li>
+                    <div class="clear"></div>
+
+                    <div style="margin-top:15px;"></div>
+                    <shiro:hasAnyRoles name="<%=RoleConstants.ADMIN%>">
+                        <s:submit name="saveHistoricalDemand" value="Save Historical Demand"/>
+                    </shiro:hasAnyRoles>
+                </fieldset>
+            </s:form>
+
 
             <div class="clear"></div>
             <div style="margin-top:40px;"></div>
