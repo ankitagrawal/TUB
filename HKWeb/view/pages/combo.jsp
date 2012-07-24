@@ -230,17 +230,19 @@
 
 
                                 <div class="grid_4 options">
-                                    <c:choose>
-                                        <c:when test="${idForImage != null}">
-                                            <hk:productImage imageId="${idForImage}"
-                                                             size="<%=EnumImageSize.SmallSize%>"
-                                                             alt="${product.name}" class="imageTag"/>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <img src='<hk:vhostImage/>/images/ProductImages/ProductImagesThumb/test/${variant.id}.jpg'
-                                                 alt="${product.name}" class="imageTag"/>
-                                        </c:otherwise>
-                                    </c:choose>
+                                    <div class="imageDiv">
+                                        <c:choose>
+                                            <c:when test="${idForImage != null}">
+                                                <hk:productImage imageId="${idForImage}"
+                                                                 size="<%=EnumImageSize.SmallSize%>"
+                                                                 alt="${product.name}"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <img src='<hk:vhostImage/>/images/ProductImages/ProductImagesThumb/test/${variant.id}.jpg'
+                                                     alt="${product.name}"/>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </div>
                                     <c:forEach items="${variant.productOptions}" var="option">
                                         <p class="productOptions">${option.name}:${option.value}</p>
                                     </c:forEach>
@@ -626,19 +628,49 @@
         $('.addToCartForm').ajaxForm({dataType: 'json', success: _addToCart});
 
         $('.addToCartButton').click(function() {
-            var isResultEmpty = 0 ;
-            $('.result').each(function() {
-                if ($(this).find('img').size() == 0) {
-                    isResultEmpty = 1;
-                    $('.errorDiv').html('Please select one of the options available for all the products in the combo!');
-                    $('.errorDiv').css({
-                        paddingTop:$('.left_col').height() / 3
-                    });
-                    $('.errorDiv').show();
-                    return false;
+            $('.progressLoader').show();
+            /*var isResultEmpty = 0 ;
+             $('.result').each(function() {
+             if ($(this).find('img').size() == 0) {
+             isResultEmpty = 1;
+             $('.errorDiv').html('Please select one of the options available for all the products in the combo!');
+             $('.errorDiv').css({
+             paddingTop:$('.left_col').height() / 3
+             });
+             $('.errorDiv').show();
+             return false;
+             }
+             });
+             return !isResultEmpty;    */
+
+            var selectedVariants = $('[name^= "productVariantList"][name$="\\]"]');
+            var variantIds = new Array();
+            for (var i = 0; i < selectedVariants.size(); i++) {
+                variantIds.push(selectedVariants[i].value);
+            }
+
+            $('[name^= "productVariantList"]').attr("name", "abandoned");
+
+            var variantCtr = -1;
+
+            for (var j = 0; j < variantIds.length; j++) {
+                variantCtr++;
+                var target = variantIds[j];
+                var qty = $.grep(variantIds, function (elem) {
+                    return elem === target;
+                }).length;
+
+                $('<input class="variantIdValue" type="hidden" value="' + target + '" idx="' + variantCtr + '" name="productVariantList[' + variantCtr + ']">').appendTo('.addToCartForm');
+
+                $('<input class="selValue" type="hidden" value="true" idx="' + variantCtr + '" name="productVariantList[' + variantCtr + '].selected">').appendTo('.addToCartForm');
+
+                $('<input class="qtyValue" type="hidden" value="' + qty + '" idx="' + variantCtr + '" name="productVariantList[' + variantCtr + '].qty">').appendTo('.addToCartForm');
+
+                if (qty > 1) {
+                    j = j + qty - 1;
                 }
-            });
-            return !isResultEmpty;
+            }
+            return true;
         });
     });
 </script>
@@ -654,7 +686,7 @@
         border-radius: 0.5em;
         background: #EEEEEE;
         padding: 10px 0;
-        height: 150px;
+        height: 160px;
     }
 
     .result {
@@ -714,9 +746,9 @@
         -moz-box-shadow: 0 3px 6px rgba(0, 0, 0, .5);
     }
 
-    .imageTag {
-        width: 120px;
-        height: 120px;
+    .imageDiv {
+        min-width: 130px;
+        min-height: 130px;
     }
 
     .buyDiv {
