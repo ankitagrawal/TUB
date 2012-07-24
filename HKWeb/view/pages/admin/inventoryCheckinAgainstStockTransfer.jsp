@@ -32,7 +32,7 @@
 						<td><s:text name="qty" value="0"/></td>
 					</tr>
 					<tr>
-					<td>Cost Price:</td>
+						<td>Cost Price:</td>
 						<td><s:text name="costPrice" value="0.0"/></td>
 					</tr>
 					<tr>
@@ -64,21 +64,26 @@
 					}
 					document.onkeypress = stopRKey;
 					$(document).ready(function() {
-									$('.requiredFieldValidator').click(function() {
+						$('.requiredFieldValidator').click(function() {
 
-						var batchNumber = $('.batchNumber').val();
-						if (batchNumber == "" ) {
-							alert("Batch Number is must.");
-							return false;
-						}
-								});
-								});
+							var batchNumber = $('.batchNumber').val();
+							if (batchNumber == "") {
+								alert("Batch Number is must.");
+								return false;
+							}
+						});
+
+					 	$(".pvId").click(function() {
+							$('.variant').val(this.innerHTML);
+						})
+					});
 
 				</script>
 				<br/>
 				<s:submit name="saveInventoryAgainstStockTransfer" value="Save" class="requiredFieldValidator"/>
 			</s:form>
-      <span style="display:inline;float:right;"><h2><s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction">&lang;&lang;&lang;
+      <span style="display:inline;float:right;"><h2><s:link
+		      beanclass="com.hk.web.action.admin.inventory.StockTransferAction">&lang;&lang;&lang;
 	      Back to Stock Transfer List</s:link></h2></span>
 		</div>
 		<div style="display:inline;" align="center">
@@ -89,6 +94,7 @@
 					<th width="">Item</th>
 					<th width="">VariantId</th>
 					<th width="">UPC</th>
+					<th width="">Batch</th>
 					<th width="">Checked-out Qty</th>
 					<th width="">Checked-in Qty</th>
 				</tr>
@@ -102,9 +108,12 @@
 								${productOption.name} ${productOption.value}
 							</c:forEach></em>
 						</td>
-						<td><a href="#" onclick="$('.variant').val(this.innerHTML);">${productVariant.id}</a></td>
-						<td>${productVariant.upc}</td>
+						<td><a href="#" class="pvId">${productVariant.id}</a></td>
+						<%--<td>${productVariant.upc}</td>--%>
+						<td>${stockTransferLineItem.batchNumber}</td>
+
 						<td>${stockTransferLineItem.checkedoutQty}</td>
+
 						<td style="color:green; font-weight:bold">${stockTransferLineItem.checkedinQty}</td>
 					</tr>
 				</c:forEach>
