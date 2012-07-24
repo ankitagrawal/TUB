@@ -27,12 +27,12 @@ public enum EnumCourierGroupHasCourier {
             )
     ),
 
-      //todo ps add quantum
     Local(
             EnumCourierGroup.Local,
             Arrays.asList(
                     EnumCourier.Chhotu,
                     EnumCourier.Safexpress,
+                    EnumCourier.Quantium,
                     EnumCourier.Delhivery
             )
     ),

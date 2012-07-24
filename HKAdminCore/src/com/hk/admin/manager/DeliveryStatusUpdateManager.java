@@ -126,7 +126,6 @@ public class DeliveryStatusUpdateManager {
                 if (StringUtils.isNotBlank(gatewayOrderIdInXls)) {
                     shippingOrder = getShippingOrderService().findByGatewayOrderId(gatewayOrderIdInXls);
                 } else {
-                    //todo ps test
 //                    yet to verify
 //                    Awb awb= awbService.getAwbInShipment(courier,trackingId,null,null, EnumAwbStatus.Used.getAsAwbStatus());
                     shippingOrder = shipmentService.findByAwb(null).getShippingOrder();

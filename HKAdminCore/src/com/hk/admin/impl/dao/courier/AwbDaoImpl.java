@@ -40,7 +40,6 @@ public class AwbDaoImpl extends BaseDaoImpl implements AwbDao {
         return (List<Awb>) findByCriteria(detachedCriteria);
     }
 
-     //todo ps
      public Awb findByCourierAwbNumber(Courier courier ,String awbNumber){
       List<Awb> awbList= getAvailableAwbForCourierByWarehouseCodStatus(courier,awbNumber,null,null,null);
        if(awbList != null && awbList.size() > 0){
