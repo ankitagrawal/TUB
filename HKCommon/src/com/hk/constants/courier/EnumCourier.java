@@ -88,8 +88,8 @@ public enum EnumCourier {
                 EnumCourier.BlueDart_COD,
                 EnumCourier.FirstFLight,
                 EnumCourier.Safexpress,
-                EnumCourier.FirstFLight_COD,
                 EnumCourier.Quantium,
+                EnumCourier.FirstFLight_COD,
                 EnumCourier.HK_Delivery
         );
     }

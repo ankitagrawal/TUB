@@ -132,6 +132,11 @@ public class CourierAWBAction extends BaseAction {
 
   @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_COURIER_INFO}, authActionBean = AdminPermissionAction.class)
   public Resolution uploadCourierAWBExcel() {
+      if ((courier == null) ||(fileBean == null)) {
+          addRedirectAlertMessage(new SimpleMessage("Select Courier  and choose file to upload"));
+          return new RedirectResolution("/pages/admin/updateCourierAWB.jsp");
+      }
+
     Warehouse warehouse = userService.getWarehouseForLoggedInUser();
     String excelFilePath = adminUploadsPath + "/courierFiles/" + System.currentTimeMillis() + ".xls";
     File excelFile = new File(excelFilePath);
@@ -139,15 +144,15 @@ public class CourierAWBAction extends BaseAction {
     Set<Awb> awbSetFromExcel = null;
     try {
       fileBean.save(excelFile);
-      awbSetFromExcel = xslAwbParser.readAwbExcel(excelFile);
-      if (null != awbSetFromExcel && awbSetFromExcel.size() > 0) {
-        List<Awb> awbDatabase = awbService.getAvailableAwbListForCourierByWarehouseCodStatus(courier, null, null, null, EnumAwbStatus.Attach.getAsAwbStatus());
-         awbDatabase.addAll(awbService.getAvailableAwbListForCourierByWarehouseCodStatus(courier, null, null, null, EnumAwbStatus.Unused.getAsAwbStatus()));
-        List<String> commonCourierIdsList = XslAwbParser.getIntersection(awbDatabase, new ArrayList(awbSetFromExcel));
-        if (commonCourierIdsList.size() > 0) {
-          addRedirectAlertMessage(new SimpleMessage("Upload Failed   Courier Ids" + "     " + commonCourierIdsList + "   " +
-              "     are already present and used in database"));
-          return new RedirectResolution("/pages/admin/updateCourierAWB.jsp");
+        
+        awbSetFromExcel = xslAwbParser.readAwbExcel(excelFile);
+        if (null != awbSetFromExcel && awbSetFromExcel.size() > 0) {
+            List<Awb> awbDatabase = awbService.getAvailableAwbListForCourierByWarehouseCodStatus(courier, null, null, null, null);
+            List<String> commonCourierIdsList = XslAwbParser.getIntersection(awbDatabase, new ArrayList(awbSetFromExcel));
+            if (commonCourierIdsList.size() > 0) {
+                addRedirectAlertMessage(new SimpleMessage("Upload Failed   Courier Ids" + "     " + commonCourierIdsList + "   " +
+                        "     are already present and used in database"));
+                return new RedirectResolution("/pages/admin/updateCourierAWB.jsp");
         }
 
         for (Awb awb : awbSetFromExcel) {

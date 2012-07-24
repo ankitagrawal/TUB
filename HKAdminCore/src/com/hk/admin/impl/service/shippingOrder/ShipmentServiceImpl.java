@@ -47,7 +47,7 @@ public class ShipmentServiceImpl implements ShipmentService {
     public Shipment createShipment(ShippingOrder shippingOrder) {
         Order order = shippingOrder.getBaseOrder();
         Pincode pincode = pincodeDao.getByPincode(order.getAddress().getPin());
-        if (pincode != null) {
+        if (pincode == null) {
             return null;
         }
         Courier suggestedCourier = courierService.getDefaultCourier(pincode, shippingOrder.isCOD(), shippingOrder.getWarehouse());
