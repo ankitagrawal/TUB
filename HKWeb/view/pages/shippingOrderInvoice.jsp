@@ -160,12 +160,13 @@
             <div style="width:100%;">
                 <div style="width:50%; float:left; height:40px;"><strong>Name & Address</strong></div>
 
-                <div  style="width:50%;float: right;">
-                    <c:if test="${orderSummary.trackingId != null}">
+                <div style="width:50%;float: right;">
+                    <c:if test="${orderSummary.shipment != null}">
                         <div>
                             <div>
+                                    ${orderSummary.shipment.courier.name}
                                 <img style="padding-top: 0px; padding-left: 0px; padding-right: 82px; "
-                                     src="${pageContext.request.contextPath}/barcodes/${orderSummary.trackingId}.png"/>
+                                     src="${pageContext.request.contextPath}/barcodes/${orderSummary.shipment.awb.awbNumber}.png"/>
                             </div>
                         </div>
                     </c:if>
