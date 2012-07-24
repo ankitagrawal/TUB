@@ -33,6 +33,7 @@ import com.google.gson.JsonElement;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.admin.pact.service.courier.AwbService;
+import com.hk.admin.pact.dao.courier.CourierDao;
 import com.hk.admin.util.ChhotuCourierDelivery;
 import com.hk.admin.util.CourierStatusUpdateHelper;
 import com.hk.constants.report.ReportConstants;
@@ -42,6 +43,7 @@ import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.courier.Awb;
+import com.hk.domain.courier.Courier;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
@@ -82,7 +84,10 @@ public class DeliveryStatusUpdateManager {
     @Autowired
     ShipmentService shipmentService;
 
-    public String updateDeliveryStatusDTDC(File excelFile) throws Exception {
+    @Autowired
+    CourierDao                  courierDao;
+
+    public String updateCourierDeliveryStatusByExcel(File excelFile) throws Exception {
         String messagePostUpdation = "";
         logger.debug("parsing Delivery Details DTDC Upload : " + excelFile.getAbsolutePath());
         POIFSFileSystem objInFileSys = new POIFSFileSystem(new FileInputStream(excelFile));
@@ -107,7 +112,10 @@ public class DeliveryStatusUpdateManager {
                 String gatewayOrderIdInXls = getCellValue(ReportConstants.REF_NO, rowMap, headerMap);
                 String awb = getCellValue(ReportConstants.CN_NO, rowMap, headerMap);
                 String status = getCellValue(ReportConstants.STATUS, rowMap, headerMap);
+                String courierId=getCellValue(ReportConstants.COURIER_ID_STR, rowMap, headerMap);
+                Long courier_Id=Long.parseLong(courierId);
                 Date deliveryDateInXsl = null;
+                Courier courierObj = courierDao.get(Courier.class,courier_Id);
                 try {
                     deliveryDateInXsl = sdf_date.parse(getCellValue(ReportConstants.DELIVERED_DATE, rowMap, headerMap));
                 } catch (Exception e) {
@@ -127,9 +135,9 @@ public class DeliveryStatusUpdateManager {
                     shippingOrder = getShippingOrderService().findByGatewayOrderId(gatewayOrderIdInXls);
                 } else {
                     //todo ps test
-//                    yet to verify
-//                    Awb awb= awbService.getAwbInShipment(courier,trackingId,null,null, EnumAwbStatus.Used.getAsAwbStatus());
-                    shippingOrder = shipmentService.findByAwb(null).getShippingOrder();
+                    Courier courier = courierDao.get(Courier.class, courier_Id);
+                    Awb awbOfshipment = awbService.getAvailableAwbForCourierByWarehouseCodStatus(courier, trackingId, null, null, EnumAwbStatus.Used.getAsAwbStatus());
+                    shippingOrder = shipmentService.findByAwb(awbOfshipment).getShippingOrder();
                 }
                 if (shippingOrder == null) {
                     messagePostUpdation += "Shipping order not found corresponding to the Ref No. @Row No." + (rowCount + 1) + "<br/>";
