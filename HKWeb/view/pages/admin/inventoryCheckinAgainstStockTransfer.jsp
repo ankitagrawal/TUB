@@ -29,7 +29,7 @@
 					</tr>
 					<tr>
 						<td>Checkin Qty:</td>
-						<td><s:text name="qty" value="0"/></td>
+						<td><s:text name="qty" class="qty" value="0"/></td>
 					</tr>
 					<tr>
 						<td>Cost Price:</td>
@@ -73,9 +73,12 @@
 							}
 						});
 
-					 	$(".pvId").click(function() {
+					 	$(".st_pvId").click(function() {
 							$('.variant').val(this.innerHTML);
-						})
+							$(".batchNumber").val($(this).parent().siblings('.st_batchNum').html());
+							$('.qty').val($($('.st_pvId')).parent().siblings('.st_checkOutQty').html());
+
+						});
 					});
 
 				</script>
@@ -93,7 +96,6 @@
 					<th width="">S.No.</th>
 					<th width="">Item</th>
 					<th width="">VariantId</th>
-					<th width="">UPC</th>
 					<th width="">Batch</th>
 					<th width="">Checked-out Qty</th>
 					<th width="">Checked-in Qty</th>
@@ -108,11 +110,11 @@
 								${productOption.name} ${productOption.value}
 							</c:forEach></em>
 						</td>
-						<td><a href="#" class="pvId">${productVariant.id}</a></td>
+						<td><a href="#" class="st_pvId">${productVariant.id}</a></td>
 						<%--<td>${productVariant.upc}</td>--%>
-						<td>${stockTransferLineItem.batchNumber}</td>
+						<td class="st_batchNum">${stockTransferLineItem.batchNumber}</td>
 
-						<td>${stockTransferLineItem.checkedoutQty}</td>
+						<td class="st_checkOutQty">${stockTransferLineItem.checkedoutQty}</td>
 
 						<td style="color:green; font-weight:bold">${stockTransferLineItem.checkedinQty}</td>
 					</tr>
