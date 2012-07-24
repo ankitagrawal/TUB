@@ -7974,4 +7974,13 @@
     <changeSet author="Rahul (generated)" id="1342792751303-1">
         <addNotNullConstraint columnDataType="VARCHAR(70)" columnName="value" tableName="cart_line_item_config_values"/>
     </changeSet>
+    <changeSet author="Seema (generated)" id="1343128834437-1">
+        <addNotNullConstraint columnDataType="INT" columnName="shipping_order_id" tableName="shipment"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1343128834437-2">
+        <addForeignKeyConstraint baseColumnNames="shipping_order_id" baseTableName="shipment" constraintName="fk_shipment_shipping_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="shipping_order" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1343128834437-3">
+        <dropColumn columnName="used" tableName="awb"/>
+    </changeSet>
 </databaseChangeLog>
