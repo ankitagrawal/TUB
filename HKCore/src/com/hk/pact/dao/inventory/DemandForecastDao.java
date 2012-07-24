@@ -4,6 +4,8 @@ import com.hk.domain.warehouse.DemandForecast;
 
 import java.util.*;
 
+import org.springframework.dao.DataAccessException;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Neha
@@ -14,6 +16,6 @@ import java.util.*;
 public interface DemandForecastDao {
 
     public List<DemandForecast> findDemandforecastByDate (Date minDate);
-
-    public boolean doesProductVariantExist(String variantId);
+    
+    public void saveOrUpdate(Collection entities) throws DataAccessException;
 }

@@ -6,8 +6,10 @@ import com.hk.pact.dao.inventory.DemandForecastDao;
 
 import java.util.List;
 import java.util.Date;
+import java.util.Collection;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.dao.DataAccessException;
 
 /**
  * Created by IntelliJ IDEA.
@@ -22,11 +24,11 @@ import org.springframework.stereotype.Repository;
 public class DemandForecastDaoImpl extends BaseDaoImpl implements DemandForecastDao {
 
     public List<DemandForecast> findDemandforecastByDate (Date minDate){
-            return (List<DemandForecast>) getSession().createQuery("from DemandForecast df where df.forecastDate >= :minDate order by df.forecastDate").setDate("minDate", minDate).list();
+            return (List<DemandForecast>) findByNamedParams("from DemandForecast df where df.forecastDate >= :minDate order by df.forecastDate", new String[]{"minDate"},new Object[]{minDate});
     }
 
-    public boolean doesProductVariantExist(String variantId) {
-        Long count = (Long) (getSession().createQuery("select count(p.id) from ProductVariant p where p.id = :id").setString("id", variantId).uniqueResult());
-        return (count != null && count > 0);
-    }
+   public void saveOrUpdate(Collection entities) throws DataAccessException{
+       super.saveOrUpdate(entities);
+   }
+       
 }

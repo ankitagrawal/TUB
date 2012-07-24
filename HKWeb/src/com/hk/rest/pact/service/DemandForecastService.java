@@ -13,7 +13,5 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 public interface DemandForecastService {
-    public void SaveOrUpdateForecastInDB (List<DemandForecast> input, Date minforecastDate);
-
-    public boolean doesProductVariantExist(String variantId);
+    public void saveOrUpdateForecastInDB (List<DemandForecast> input, Date minforecastDate);
 }
