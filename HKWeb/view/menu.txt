@@ -31,7 +31,7 @@
 --/nutrition/dietary-supplements/herbal-teas
 --/nutrition/dietary-supplements/herbs-a-z  :Herbs A-Z
 --/nutrition/dietary-supplements/herbal-cream-oil  :Herbal Cream & Oil
--/nutrition/condition-specific-supplements
+-/nutrition/condition-specific-supplements : Condition Specific
 --/nutrition/condition-specific-supplements/cardiovascular
 --/nutrition/condition-specific-supplements/joint-muscle    :Joint & Muscle
 --/nutrition/condition-specific-supplements/stress-anxiety  :Stress & Anxiety
@@ -205,6 +205,7 @@
 --/diabetes/diabetic-food/sweetener
 --/diabetes/diabetic-food/sugar-free-drinks : Sugar Free Drinks
 --/diabetes/diabetic-food/sugar-free-food-candy : Sugar Free Food & Candy
+--/diabetes/diabetic-food/diabetic-supplements
 --/diabetes/diabetic-food/combos
 -/diabetes/devices
 --/diabetes/devices/step-counter: Step Counter
@@ -221,6 +222,11 @@
 ---/home-devices/blood-pressure/bp-monitor/wrist-bp-monitor
 --/home-devices/blood-pressure/heart-rate-monitor
 --/home-devices/blood-pressure/bp : BP Apparatus
+---/home-devices/blood-pressure/bp/aneroid-sphygmomanometer
+---/home-devices/blood-pressure/bp/clock-type-sphygmomanometer
+---/home-devices/blood-pressure/bp/mercury-sphygmomanometer
+---/home-devices/blood-pressure/bp/mercury-free-sphygmomanometer
+---/home-devices/blood-pressure/bp/electrical-sphygmomanometer
 --/home-devices/blood-pressure/ecg : ECG Machines
 --/home-devices/blood-pressure/accessories
 --/home-devices/blood-pressure/combo : Star's of the Month
