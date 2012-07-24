@@ -439,6 +439,7 @@ public class GRNAction extends BasePaginatedAction {
         params.add("supplierName");
         params.add("grn");
         params.add("grnStatus");
+        params.add("isReconciled");
         return params;
     }
 
