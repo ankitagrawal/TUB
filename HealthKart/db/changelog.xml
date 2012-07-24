@@ -7980,7 +7980,6 @@
     <changeSet author="Seema (generated)" id="1343128834437-2">
         <addForeignKeyConstraint baseColumnNames="shipping_order_id" baseTableName="shipment" constraintName="fk_shipment_shipping_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="shipping_order" referencesUniqueColumn="false"/>
     </changeSet>
-    <!--delete from demand_history where base_order_id is null-->
     <changeSet author="Seema (generated)" id="1343128834437-3">
         <sql>
        delete from `demand_history` where `base_order_id` is null;
