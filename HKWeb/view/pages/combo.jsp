@@ -174,20 +174,7 @@
             </a>
         </c:if>
     </div>
-    <c:if test="${hk:isNotBlank(productCombo.overview)}">
-        <p class="overview">
-                ${productCombo.overview}
-        </p>
-    </c:if>
-    <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_DESCRIPTIONS%>">
-        <div>
-            <s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction" event="editOverview"
-                    class="popup">
-                Edit Overview
-                <s:param name="productId" value="${productCombo.id}"/>
-            </s:link>
-        </div>
-    </shiro:hasPermission>
+
 </div>
 
 <div class="clear"></div>
@@ -250,7 +237,7 @@
                                     </c:otherwise>
                                 </c:choose>
                                 <c:forEach items="${variant.productOptions}" var="option">
-                                    <p class="productOptions">${option.name}:${option.value}</p>
+                                    <span>${option.name}:${option.value}</span><br/>
                                 </c:forEach>
                                 <input type="hidden" class="variantIdValue" idx="${productCtr.index}"
                                        value="${variant.id}"/>
@@ -331,6 +318,21 @@
 </div>
 
 <div class="productDescription">
+	<c:if test="${hk:isNotBlank(productCombo.overview)}">
+		<h4>Overview</h4>
+        <p class="overview">
+                ${productCombo.overview}
+        </p>
+    </c:if>
+    <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_DESCRIPTIONS%>">
+        <div>
+            <s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction" event="editOverview"
+                    class="popup">
+                Edit Overview
+                <s:param name="productId" value="${productCombo.id}"/>
+            </s:link>
+        </div>
+    </shiro:hasPermission>
     <c:if test="${hk:isNotBlank(productCombo.description)}">
         <div class="content" id="description">
             <h4>
@@ -426,37 +428,22 @@
                 <%--<a class='go_to_top' href='#top'>go to top &uarr;</a>--%>
         </div>
     </c:if>
-    <c:set var="recommendedProducts" value="${hk:getRecommendedProducts(productCombo)}"/>
-    <c:if test="${!empty recommendedProducts}">
-        <div class='products content' id="related_products">
-            <h4>
-                People who bought this also bought these products
-            </h4>
+    <c:set var="relatedProducts" value="${productCombo.relatedProducts}"/>
+	<c:if test="${!empty relatedProducts}">
+		<div class='products content' id="related_products">
+			<h4>
+				People who bought this also bought these products
+			</h4>
 
-            <c:forEach items="${recommendedProducts}" var="relatedProduct">
-                <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_CATALOG%>">
-                    <h6 style="color: red" title="Recommended Product Source">
-                        Source = ${relatedProduct.key};
-                        Products =
-                        <c:forEach var="product" items="${relatedProduct.value}">
-                            ${product}
-                        </c:forEach>
-                    </h6>
-                </shiro:hasPermission>
-                <c:set var="recommendedProductCount" value="0" scope="page"/>
-                <c:forEach var="product" items="${relatedProduct.value}">
-                    <c:if test="${recommendedProductCount < 6}">
-                        <s:layout-render name="/layouts/embed/_productThumb.jsp" productId="${product}"/>
-                    </c:if>
-                    <c:set var="recommendedProductCount" value="${recommendedProductCount + 1}" scope="page"/>
-                </c:forEach>
-            </c:forEach>
+			<c:forEach items="${relatedProducts}" var="relatedProduct">
+				<s:layout-render name="/layouts/embed/_productThumbG.jsp" product="${relatedProduct}"/>
+			</c:forEach>
 
-            <div class="floatfix"></div>
-                <%--<a class='go_to_top' href='#top'>go to top &uarr;</a>--%>
+			<div class="floatfix"></div>
+			<a class='go_to_top' href='#top'>go to top &uarr;</a>
 
-        </div>
-    </c:if>
+		</div>
+	</c:if>
 </div>
 
 <div class="userReviews">
@@ -569,6 +556,19 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
+	    $('.options').each(function selectFirst() {
+		    var resultDiv = $(this).parents('.optionsDiv').find('.result');
+		    resultDiv.html($(this).html());
+		    var idx = resultDiv.find('.variantIdValue').attr("idx");
+		    resultDiv.find('.variantIdValue').attr("name", "productVariantList[" + idx + "]");
+		    resultDiv.find('.selValue').attr("name", "productVariantList[" + idx + "].selected");
+		    resultDiv.find('.qtyValue').attr("name", "productVariantList[" + idx + "].qty");
+
+		    resultDiv.find('.qtyValue').val("1");
+	    });
+
+
+
         $('.progressLoader').hide();
 
         $('.comboProduct').css({
@@ -667,7 +667,7 @@
         border-radius: 0.5em;
         background: #EEEEEE;
         padding: 10px 0;
-        height: 120px;
+        height: 150px;
     }
 
     .result {
@@ -675,7 +675,7 @@
         border-radius: 0.5em;
         background: #EEEEEE;
         padding: 10px 0;
-        height: 120px;
+        height: 150px;
     }
 
     div.arrowDiv {
@@ -711,8 +711,8 @@
         -moz-box-shadow: 1px 1px 5px #999;
         -webkit-box-shadow: 1px 1px 5px #999;
         box-shadow: 1px 1px 5px #999;
-        -webkit-transform: scale(1.25);
-        -moz-transform: scale(1.25);
+        -webkit-transform: scale(1.05);
+        -moz-transform: scale(1.05);
         position: relative;
         z-index: 1;
     }
@@ -727,7 +727,7 @@
         -moz-box-shadow: 0 3px 6px rgba(0, 0, 0, .5);
     }
 
-    imageTag {
+    .imageTag {
         width: 120px;
         height: 120px;
     }
