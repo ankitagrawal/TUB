@@ -11,7 +11,7 @@
       if (dateTime.isBefore(endOfOfferDate.getTime())) {
     %>
         <img src="${pageContext.request.contextPath}/images/banners/top/eye_promotional_strip_banner.jpg" alt="Buy a Frame and get Standard Anti Glare Lenses Free">
-      <%--<h4><span style="font-weight:bolder;">Rs. 500 Off </span> on all <a href="http://www.healthkart.com/eye/eyeglasses">prescription glasses</a> and standard anti-glare lenses Free! Use coupon code <strong>GLASS500</strong></h4>--%>
+      <%--<h4><span style="font-weight:bolder;">Rs. 500 Off </span> on all <a href="${pageContext.request.contextPath}/eye/eyeglasses">prescription glasses</a> and standard anti-glare lenses Free! Use coupon code <strong>GLASS500</strong></h4>--%>
     <%
       }
     %>

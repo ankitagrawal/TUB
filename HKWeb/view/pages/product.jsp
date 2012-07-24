@@ -5,6 +5,7 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
+<%@ page import="com.hk.pact.service.catalog.ProductService" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -15,7 +16,12 @@
 <%
   CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
   Category eyeGlass = categoryDao.getCategoryByName("eyeglasses");
+  ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
+  pageContext.setAttribute("productService", productService);
   pageContext.setAttribute("eyeGlass", eyeGlass);
+  
+  boolean isSecure = pageContext.getRequest().isSecure();
+  pageContext.setAttribute("isSecure", isSecure);
 
 %>
 <c:set var="product" value="${pa.product}"/>
@@ -185,17 +191,17 @@
 <s:layout-component name="prod_slideshow">
   <div class='product_slideshow'>
     <div class="img320">
-      <a href="${hk:getS3ImageUrl(imageLargeSize, product.mainImageId)}" class="jqzoom" rel='gal1'
+      <a href="${hk:getS3ImageUrl(imageLargeSize, product.mainImageId,isSecure)}" class="jqzoom" rel='gal1'
          title="${product.name}">
-        <img src="${hk:getS3ImageUrl(imageMediumSize, product.mainImageId)}" alt="${product.name}"
+        <img src="${hk:getS3ImageUrl(imageMediumSize, product.mainImageId,isSecure)}" alt="${product.name}"
              title="${product.name}">
       </a>
       <c:if test="${fn:length(pa.productImages) > 1}">
         <ul id="thumblist">
           <c:forEach items="${pa.productImages}" var="productImage">
             <li><a href='javascript:void(0);'
-                   rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, productImage.id)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, productImage.id)}'}"><img
-                src='${hk:getS3ImageUrl(imageSmallSize, productImage.id)}'></a></li>
+                   rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, productImage.id,isSecure)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, productImage.id,isSecure)}'}"><img
+                src='${hk:getS3ImageUrl(imageSmallSize, productImage.id,isSecure)}'></a></li>
           </c:forEach>
         </ul>
       </c:if>
@@ -385,10 +391,41 @@
     </c:otherwise>
   </c:choose>
   <div class="floatfix"></div>
+
+	<shiro:hasPermission name="<%=PermissionConstants.MANAGE_IMAGE%>">
+    <div>
+      <s:link beanclass="com.hk.web.action.core.catalog.image.UploadImageAction" event="uploadVariantImage"
+              target="_blank"
+              class="popup"> Upload
+        <s:param name="productVariant" value="${product.productVariants[0]}"/>
+      </s:link>
+      &nbsp;|&nbsp;
+      <s:link beanclass="com.hk.web.action.core.catalog.product.ProductVariantAction" event="renderManageImages"
+              target="_blank" class="popup">Manage
+        Images
+        <s:param name="productVariant" value="${product.productVariants[0]}"/>
+      </s:link>
+    </div>
+  </shiro:hasPermission>
 </s:layout-component>
 
 
 <s:layout-component name="product_description">
+
+	<c:if test="${!empty pa.relatedCombos}">
+		<div class='products content' id="related_combos">
+			<h4>
+				Special Offers on ${product.name}
+			</h4>
+			<c:forEach items="${pa.relatedCombos}" var="relatedCombo">
+				<s:layout-render name="/layouts/embed/_productThumb.jsp" productId="${relatedCombo.id}"/>
+			</c:forEach>
+
+			<div class="floatfix"></div>
+			<a class='go_to_top' href='#top'>go to top &uarr;</a>
+		</div>
+	</c:if>
+
   <c:if test="${hk:isNotBlank(product.description)}">
     <div class="content" id="description">
       <h4>
@@ -473,35 +510,23 @@
       </s:link>
     </div>
   </shiro:hasPermission>
-	<c:if test="${!empty pa.relatedCombos}">
-		<div class='products content' id="related_combos">
+
+	<c:set var="relatedProducts" value="${product.relatedProducts}"/>
+	<c:if test="${!empty relatedProducts}">
+		<div class='products content' id="related_products">
 			<h4>
-				Special Offers on ${product.name}
+				People who bought this also bought these products
 			</h4>
-			<c:forEach items="${pa.relatedCombos}" var="relatedCombo">
-				<s:layout-render name="/layouts/embed/_productThumb.jsp" productId="${relatedCombo.id}"/>
+
+			<c:forEach items="${relatedProducts}" var="relatedProduct">
+				<s:layout-render name="/layouts/embed/_productThumbG.jsp" product="${relatedProduct}"/>
 			</c:forEach>
 
 			<div class="floatfix"></div>
 			<a class='go_to_top' href='#top'>go to top &uarr;</a>
+
 		</div>
 	</c:if>
-  <c:if test="${!empty product.relatedProducts}">
-    <div class='products content' id="related_products">
-      <h4>
-        People who bought ${product.name} also bought these products
-      </h4>
-      <c:forEach items="${product.relatedProducts}" var="relatedProduct">
-        <c:if test="${!relatedProduct.deleted}">
-          <s:layout-render name="/layouts/embed/_productThumb.jsp" productId="${relatedProduct.id}"/>
-        </c:if>
-      </c:forEach>
-
-      <div class="floatfix"></div>
-      <a class='go_to_top' href='#top'>go to top &uarr;</a>
-
-    </div>
-  </c:if>
 </s:layout-component>
 
 <%--<s:layout-component name="foot_price">
@@ -725,8 +750,13 @@
       $('.checkboxError').hide();
     });
   </script>
-  <iframe
-      src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e300&pid=${product.id}&catid=${product.primaryCategory.name}&subcat1id=&subcat2id=&section=1&level=1"
-      scrolling="no" width="1" height="1" marginheight="0" marginwidth="0" frameborder="0"></iframe>
-</s:layout-component>
+
+		<c:if test="${not isSecure }">
+			<iframe
+				src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e300&pid=${product.id}&catid=${product.primaryCategory.name}&subcat1id=&subcat2id=&section=1&level=1"
+				scrolling="no" width="1" height="1" marginheight="0" marginwidth="0"
+				frameborder="0"></iframe>
+		</c:if>
+
+	</s:layout-component>
 </s:layout-render>

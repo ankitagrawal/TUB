@@ -132,11 +132,45 @@
     <dynamic-attributes>true</dynamic-attributes>
   </tag>
 
+<tag>
+    <description>Renders product video url</description>
+    <display-name>productVideo</display-name>
+    <name>productVideo</name>
+    <tag-class>com.hk.web.tag.ProductVideoTag</tag-class>
+    <body-content>empty</body-content>
+    <attribute>
+      <name>videoCode</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <dynamic-attributes>true</dynamic-attributes>
+  </tag>
+
+
    <tag>
      <description>Renders category home page banners</description>
      <display-name>categoryImage</display-name>
      <name>categoryImage</name>
      <tag-class>com.hk.web.tag.CategoryImageTag</tag-class>
+     <body-content>empty</body-content>
+     <attribute>
+       <name>imageId</name>
+       <required>true</required>
+       <rtexprvalue>true</rtexprvalue>
+     </attribute>
+     <attribute>
+       <name>size</name>
+       <required>true</required>
+       <rtexprvalue>true</rtexprvalue>
+     </attribute>
+     <dynamic-attributes>true</dynamic-attributes>
+    </tag>
+
+    <tag>
+     <description>Renders super saver banners</description>
+     <display-name>superSaverImage</display-name>
+     <name>superSaverImage</name>
+     <tag-class>com.hk.web.tag.SuperSaverImageTag</tag-class>
      <body-content>empty</body-content>
      <attribute>
        <name>imageId</name>
@@ -520,7 +554,7 @@
     </description>
     <name>getS3ImageUrl</name>
     <function-class>com.hk.taglibs.Functions</function-class>
-    <function-signature>java.lang.String getS3ImageUrl(java.lang.Object, java.lang.Object)</function-signature>
+    <function-signature>java.lang.String getS3ImageUrl(java.lang.Object, java.lang.Object,boolean)</function-signature>
     <example>
       ${hk:getS3ImageUrl(${object}, ${object})}
     </example>
@@ -725,7 +759,16 @@
       ${hk:isComboInStock(${object})}
     </example>
   </function>
-
-
+    <function>
+        <description>
+            returns stock check of combo
+        </description>
+        <name>getRecommendedProducts</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.util.Map getRecommendedProducts(java.lang.Object)</function-signature>
+        <example>
+            ${hk:getRecommendedProducts(${productVariantId})}
+        </example>
+    </function>
 
 </taglib>

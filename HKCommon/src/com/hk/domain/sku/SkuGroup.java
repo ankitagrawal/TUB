@@ -27,175 +27,197 @@ import com.hk.domain.inventory.StockTransfer;
 import com.hk.domain.inventory.rv.ReconciliationVoucher;
 
 @Entity
-@Table(name = "sku_group")
+@Table (name = "sku_group")
 /* @Cache(usage = CacheConcurrencyStrategy.READ_WRITE) */
 public class SkuGroup implements java.io.Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", unique = true, nullable = false)
-    private Long                  id;
+	@Id
+	@GeneratedValue (strategy = GenerationType.AUTO)
+	@Column (name = "id", unique = true, nullable = false)
+	private Long id;
 
-    @Column(name = "barcode", length = 45)
-    private String                barcode;
+	@Column (name = "barcode", length = 45)
+	private String barcode;
 
-    @Column(name = "batch_number", nullable = false, length = 45)
-    private String                batchNumber;
+	@Column (name = "batch_number", nullable = false, length = 45)
+	private String batchNumber;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "mfg_date", length = 19)
-    private Date                  mfgDate;
+	@Temporal (TemporalType.TIMESTAMP)
+	@Column (name = "mfg_date", length = 19)
+	private Date mfgDate;
 
-    @Temporal(TemporalType.DATE)
-    @Column(name = "expiry_date", length = 10)
-    private Date                  expiryDate;
+	@Temporal (TemporalType.DATE)
+	@Column (name = "expiry_date", length = 10)
+	private Date expiryDate;
 
-    @JsonSkip
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sku_id", nullable = false)
-    private Sku                   sku;
+	@JsonSkip
+	@ManyToOne (fetch = FetchType.LAZY)
+	@JoinColumn (name = "sku_id", nullable = false)
+	private Sku sku;
 
-    @JsonSkip
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "goods_received_note_id")
-    private GoodsReceivedNote     goodsReceivedNote;
+	@JsonSkip
+	@ManyToOne (fetch = FetchType.LAZY)
+	@JoinColumn (name = "goods_received_note_id")
+	private GoodsReceivedNote goodsReceivedNote;
 
-    @JsonSkip
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reconciliation_voucher_id")
-    private ReconciliationVoucher reconciliationVoucher;
+	@JsonSkip
+	@ManyToOne (fetch = FetchType.LAZY)
+	@JoinColumn (name = "reconciliation_voucher_id")
+	private ReconciliationVoucher reconciliationVoucher;
 
-    @JsonSkip
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "stock_transfer_id")
-    private StockTransfer         stockTransfer;
+	@JsonSkip
+	@ManyToOne (fetch = FetchType.LAZY)
+	@JoinColumn (name = "stock_transfer_id")
+	private StockTransfer stockTransfer;
 
-    @Column(name = "invoice_number")
-    private String                invoiceNumber;
+	@Column (name = "invoice_number")
+	private String invoiceNumber;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "invoice_date", length = 19)
-    private Date                  invoiceDate;
+	@Temporal (TemporalType.TIMESTAMP)
+	@Column (name = "invoice_date", length = 19)
+	private Date invoiceDate;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "create_date", nullable = false, length = 19)
-    private Date                  createDate;
+	@Temporal (TemporalType.TIMESTAMP)
+	@Column (name = "create_date", nullable = false, length = 19)
+	private Date createDate;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "skuGroup")
-    private Set<SkuItem>          skuItems = new HashSet<SkuItem>(0);
+	@Column (name = "cost_price")
+	private Double costPrice;
 
-    @Transient
-    private Long                  qty;
+	@Column (name = "mrp")
+	private Double mrp;
 
-    public Long getId() {
-        return id;
-    }
+	@OneToMany (cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "skuGroup")
+	private Set<SkuItem> skuItems = new HashSet<SkuItem>(0);
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	@Transient
+	private Long qty;
 
-    public String getBarcode() {
-        return barcode;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setBarcode(String barcode) {
-        this.barcode = barcode;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public String getBatchNumber() {
-        return batchNumber;
-    }
+	public String getBarcode() {
+		return barcode;
+	}
 
-    public void setBatchNumber(String batchNumber) {
-        this.batchNumber = batchNumber;
-    }
+	public void setBarcode(String barcode) {
+		this.barcode = barcode;
+	}
 
-    public Date getMfgDate() {
-        return mfgDate;
-    }
+	public String getBatchNumber() {
+		return batchNumber;
+	}
 
-    public void setMfgDate(Date mfgDate) {
-        this.mfgDate = mfgDate;
-    }
+	public void setBatchNumber(String batchNumber) {
+		this.batchNumber = batchNumber;
+	}
 
-    public Date getExpiryDate() {
-        return expiryDate;
-    }
+	public Date getMfgDate() {
+		return mfgDate;
+	}
 
-    public void setExpiryDate(Date expiryDate) {
-        this.expiryDate = expiryDate;
-    }
+	public void setMfgDate(Date mfgDate) {
+		this.mfgDate = mfgDate;
+	}
 
-    public GoodsReceivedNote getGoodsReceivedNote() {
-        return goodsReceivedNote;
-    }
+	public Date getExpiryDate() {
+		return expiryDate;
+	}
 
-    public void setGoodsReceivedNote(GoodsReceivedNote goodsReceivedNote) {
-        this.goodsReceivedNote = goodsReceivedNote;
-    }
+	public void setExpiryDate(Date expiryDate) {
+		this.expiryDate = expiryDate;
+	}
 
-    public ReconciliationVoucher getReconciliationVoucher() {
-        return reconciliationVoucher;
-    }
+	public GoodsReceivedNote getGoodsReceivedNote() {
+		return goodsReceivedNote;
+	}
 
-    public void setReconciliationVoucher(ReconciliationVoucher reconciliationVoucher) {
-        this.reconciliationVoucher = reconciliationVoucher;
-    }
+	public void setGoodsReceivedNote(GoodsReceivedNote goodsReceivedNote) {
+		this.goodsReceivedNote = goodsReceivedNote;
+	}
 
-    public StockTransfer getStockTransfer() {
-        return stockTransfer;
-    }
+	public ReconciliationVoucher getReconciliationVoucher() {
+		return reconciliationVoucher;
+	}
 
-    public void setStockTransfer(StockTransfer stockTransfer) {
-        this.stockTransfer = stockTransfer;
-    }
+	public void setReconciliationVoucher(ReconciliationVoucher reconciliationVoucher) {
+		this.reconciliationVoucher = reconciliationVoucher;
+	}
 
-    public String getInvoiceNumber() {
-        return invoiceNumber;
-    }
+	public StockTransfer getStockTransfer() {
+		return stockTransfer;
+	}
 
-    public void setInvoiceNumber(String invoiceNumber) {
-        this.invoiceNumber = invoiceNumber;
-    }
+	public void setStockTransfer(StockTransfer stockTransfer) {
+		this.stockTransfer = stockTransfer;
+	}
 
-    public Date getInvoiceDate() {
-        return invoiceDate;
-    }
+	public String getInvoiceNumber() {
+		return invoiceNumber;
+	}
 
-    public void setInvoiceDate(Date invoiceDate) {
-        this.invoiceDate = invoiceDate;
-    }
+	public void setInvoiceNumber(String invoiceNumber) {
+		this.invoiceNumber = invoiceNumber;
+	}
 
-    public Date getCreateDate() {
-        return createDate;
-    }
+	public Date getInvoiceDate() {
+		return invoiceDate;
+	}
 
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
+	public void setInvoiceDate(Date invoiceDate) {
+		this.invoiceDate = invoiceDate;
+	}
 
-    public Set<SkuItem> getSkuItems() {
-        return skuItems;
-    }
+	public Date getCreateDate() {
+		return createDate;
+	}
 
-    public void setSkuItems(Set<SkuItem> skuItems) {
-        this.skuItems = skuItems;
-    }
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
 
-    public Long getQty() {
-        return qty;
-    }
+	public Set<SkuItem> getSkuItems() {
+		return skuItems;
+	}
 
-    public void setQty(Long qty) {
-        this.qty = qty;
-    }
+	public void setSkuItems(Set<SkuItem> skuItems) {
+		this.skuItems = skuItems;
+	}
 
-    public Sku getSku() {
-        return sku;
-    }
+	public Long getQty() {
+		return qty;
+	}
 
-    public void setSku(Sku sku) {
-        this.sku = sku;
-    }
+	public void setQty(Long qty) {
+		this.qty = qty;
+	}
+
+	public Sku getSku() {
+		return sku;
+	}
+
+	public void setSku(Sku sku) {
+		this.sku = sku;
+	}
+
+	public Double getCostPrice() {
+		return costPrice;
+	}
+
+	public void setCostPrice(Double costPrice) {
+		this.costPrice = costPrice;
+	}
+
+	public Double getMrp() {
+		return mrp;
+	}
+
+	public void setMrp(Double mrp) {
+		this.mrp = mrp;
+	}
 }

@@ -6,6 +6,11 @@
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.HomeAction" var="homeBean" event="pre"/>
 
+<%
+  boolean isSecure = pageContext.getRequest().isSecure();
+  pageContext.setAttribute("isSecure", isSecure);
+%>
+
 <s:layout-render name="/layouts/genericG.jsp"
                  pageTitle="HealthKart.com: Buy Nutrition, Health Care, Beauty & Personal Care Products Online in India">
 
@@ -21,7 +26,7 @@
 
 <s:layout-component name="homePageTopContent">
   <div style="visibility:hidden;">
-    <link rel="shortcut icon" href="http://www.healthkart.com/favicon.ico?v=2"/>
+    <link rel="shortcut icon" href="${pageContext.request.contextPath}/favicon.ico?v=2"/>
   </div>
   <div id="home_header02">
     <h1>the one stop shop for health, fitness and beauty</h1>
@@ -220,12 +225,15 @@
 
 
   <div class="clear"></div>
+		
+		<c:if test="${not isSecure }">
+			<iframe
+				src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e100&section=1&level=1"
+				scrolling="no" width="1" height="1" marginheight="0" marginwidth="0"
+				frameborder="0"></iframe>
+		</c:if>
 
-
-  <iframe src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e100&section=1&level=1"
-          scrolling="no"
-          width="1" height="1" marginheight="0" marginwidth="0" frameborder="0"></iframe>
-</s:layout-component>
+	</s:layout-component>
 </s:layout-render>
 
 

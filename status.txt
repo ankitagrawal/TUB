@@ -1,0 +1,46 @@
+# On branch https-master-final
+# Changes to be committed:
+#   (use "git reset HEAD <file>..." to unstage)
+#
+#	modified:   HKAdminCore/src/com/hk/admin/manager/AdminEmailManager.java
+#	modified:   HKCommon/src/com/akube/framework/stripes/action/BaseAction.java
+#	modified:   HKCommon/src/com/hk/util/HKImageUtils.java
+#	modified:   HKWeb/src/com/hk/taglibs/Functions.java
+#	modified:   HKWeb/src/com/hk/util/AmazonXslGenerator.java
+#	modified:   HKWeb/src/com/hk/web/action/admin/catalog/product/EditProductAttributesAction.java
+#	modified:   HKWeb/src/com/hk/web/action/core/catalog/product/ProductVariantAction.java
+#	modified:   HKWeb/src/com/hk/web/tag/CategoryImageTag.java
+#	modified:   HKWeb/src/com/hk/web/tag/ProductImageTag.java
+#	modified:   HKWeb/src/healthkartTagLib.tld
+#	modified:   HKWeb/view/pages/modal/productLink.jsp
+#	modified:   HKWeb/view/pages/product.jsp
+#	modified:   HKWeb/view/pages/productFeedXml.jsp
+#	modified:   HKWeb/view/pages/shopByBrands.jsp
+#	modified:   HKWeb/view/pages/vizuryCatalog.jsp
+#
+# Changes not staged for commit:
+#   (use "git add <file>..." to update what will be committed)
+#   (use "git checkout -- <file>..." to discard changes in working directory)
+#
+#	modified:   HKWeb/view/categoryBanners/eyeDiscount.jsp
+#	modified:   HKWeb/view/categoryBanners/stethescopeStripBanner.jsp
+#	modified:   HKWeb/view/includes/_footer.jsp
+#	modified:   HKWeb/view/jsp/facebook/hkbaby.jsp
+#	modified:   HKWeb/view/pages/affiliate/productBanner.jsp
+#	modified:   HKWeb/view/pages/affiliate/productLink.jsp
+#	modified:   HKWeb/view/pages/facebook/app/coupon/fanCoupon.jsp
+#	modified:   HKWeb/view/pages/facebook/app/promo/fanPromo.jsp
+#	modified:   HKWeb/view/pages/home.jsp
+#	modified:   HKWeb/view/pages/lp/nutrition/nutrition-advice.jsp
+#	modified:   HKWeb/view/pages/lp/revital/index.jsp
+#	modified:   HKWeb/view/pages/modal/productBannerLink.jsp
+#	modified:   HKWeb/view/pages/referralProgram.jsp
+#	modified:   HKWeb/view/pages/referralSignup.jsp
+#	modified:   HKWeb/view/pages/republicDayOffers.jsp
+#	modified:   HKWeb/view/pages/valentineGifts.jsp
+#	modified:   HKWeb/view/pages/vizuryCatalog.jsp
+#
+# Untracked files:
+#   (use "git add <file>..." to include in what will be committed)
+#
+#	status.txt

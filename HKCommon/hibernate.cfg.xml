@@ -160,5 +160,6 @@
 
 	  <!-- Ajeet Added His on 10-July-->
     <mapping class="com.hk.domain.inventory.BrandsToAudit"/>
+    <mapping class="com.hk.domain.catalog.product.combo.SuperSaverImage"/>
   </session-factory>
 </hibernate-configuration>
