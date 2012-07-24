@@ -24,14 +24,14 @@ public class BarcodeGenerator {
 
     public static Logger logger = LoggerFactory.getLogger(BarcodeGenerator.class);
 
-    public String getBarcodePath(String gatewayOrderId) {
+    public String getBarcodePath(String gatewayOrderId,float inch) {
         String barcodeFilePath = barcodeDir + "/" + gatewayOrderId + ".png";
         try {
             Code128Bean bean = new Code128Bean();
             final int dpi = 150;
 
             // Configure the barcode generator
-            bean.setModuleWidth(UnitConv.in2mm(1.0f / dpi)); // makes the narrow bar
+            bean.setModuleWidth(UnitConv.in2mm(inch / dpi)); // makes the narrow bar
             // width exactly one pixel
             // bean.setWideFactor(3);
             bean.setHeight(7.5);
