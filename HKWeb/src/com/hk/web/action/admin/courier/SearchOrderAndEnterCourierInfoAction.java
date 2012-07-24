@@ -159,10 +159,15 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
         if ((suggestedAwb == null) || (!(suggestedAwb.getAwbNumber().equalsIgnoreCase(trackingId.trim()))) ||
                 (suggestedCourier != null && (!(shipment.getCourier().equals(suggestedCourier))))) {
 
-            Awb awbFromDb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(shipment.getCourier(), trackingId.trim(), shippingOrder.getWarehouse(), shippingOrder.isCOD(), null);
+            Awb awbFromDb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(shipment.getCourier(), trackingId.trim(),null, null, null);
             if (awbFromDb != null && awbFromDb.getAwbNumber() != null) {
                 if (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Used.getId()) || (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Attach.getId())) || (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Authorization_Pending.getId()))) {
                     addRedirectAlertMessage(new SimpleMessage(" OPERATION FAILED *********  Tracking Id : " + trackingId + "is already Used with other  shipping Order"));
+                    return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
+                }
+                if( (!awbFromDb.getWarehouse().getId().equals(shippingOrder.getWarehouse().getId())) || (awbFromDb.getCod() != shippingOrder.isCOD())  ) {
+                    addRedirectAlertMessage(new SimpleMessage(" OPERATION FAILED *********  Tracking Id : " + trackingId + "is already Present in another warehouse with same courier" +
+                            "  : " +shipment.getCourier().getName()  +"  you are Trying to use COD tracking id with NON COD   TRY AGAIN "));
                     return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
                 }
 
