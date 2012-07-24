@@ -1,6 +1,6 @@
 package com.hk.pact.dao.inventory;
 
-import com.hk.domain.warehouse.DemandForcast;
+import com.hk.domain.warehouse.DemandForecast;
 
 import java.util.*;
 
@@ -13,5 +13,7 @@ import java.util.*;
  */
 public interface DemandForecastDao {
 
-    public List<DemandForcast> findDemandForcastByDate (Date minDate);
+    public List<DemandForecast> findDemandforecastByDate (Date minDate);
+
+    public boolean doesProductVariantExist(String variantId);
 }

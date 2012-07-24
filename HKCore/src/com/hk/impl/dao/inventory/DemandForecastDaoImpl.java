@@ -1,9 +1,8 @@
 package com.hk.impl.dao.inventory;
 
 import com.hk.impl.dao.BaseDaoImpl;
-import com.hk.domain.warehouse.DemandForcast;
-import com.hk.domain.catalog.Supplier;
-import com.hk.pact.dao.inventory.DemandForcastDao;
+import com.hk.domain.warehouse.DemandForecast;
+import com.hk.pact.dao.inventory.DemandForecastDao;
 
 import java.util.List;
 import java.util.Date;
@@ -20,9 +19,14 @@ import org.springframework.stereotype.Repository;
 
 @SuppressWarnings("unchecked")
 @Repository
-public class DemandForecastDaoImpl extends BaseDaoImpl implements DemandForcastDao {
+public class DemandForecastDaoImpl extends BaseDaoImpl implements DemandForecastDao {
 
-    public List<DemandForcast> findDemandForcastByDate (Date minDate){
-            return (List<DemandForcast>) getSession().createQuery("from DemandForcast df where df.forcastDate >= :minDate order by df.forcastDate").setDate("minDate", minDate).list();
+    public List<DemandForecast> findDemandforecastByDate (Date minDate){
+            return (List<DemandForecast>) getSession().createQuery("from DemandForecast df where df.forecastDate >= :minDate order by df.forecastDate").setDate("minDate", minDate).list();
+    }
+
+    public boolean doesProductVariantExist(String variantId) {
+        Long count = (Long) (getSession().createQuery("select count(p.id) from ProductVariant p where p.id = :id").setString("id", variantId).uniqueResult());
+        return (count != null && count > 0);
     }
 }

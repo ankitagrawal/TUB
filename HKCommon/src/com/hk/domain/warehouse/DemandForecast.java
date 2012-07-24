@@ -14,7 +14,7 @@ import java.util.Date;
 import java.io.Serializable;
 
 @Entity
-@Table (name="demand_forcast")
+@Table (name="demand_forecast")
 public class DemandForecast implements Serializable{
 
      @Id
@@ -23,8 +23,8 @@ public class DemandForecast implements Serializable{
      private Long id;
     
      @Temporal(TemporalType.DATE)
-     @Column(name = "forcast_date", nullable = false, length = 19)
-     private Date forcastDate;
+     @Column(name = "forecast_date", nullable = false, length = 19)
+     private Date forecastDate;
 
      @ManyToOne(fetch = FetchType.LAZY)
      @JoinColumn(name = "product_variant_id", unique = true, nullable = false)
@@ -34,8 +34,8 @@ public class DemandForecast implements Serializable{
      @JoinColumn(name = "warehouse_id", nullable = false)
      private Warehouse warehouse;
 
-     @Column(name = "forcast_value", precision = 11, nullable=false)
-     private Double forcastValue;
+     @Column(name = "forecast_value", precision = 11, nullable=false)
+     private Double forecastValue;
 
     public Long getId() {
         return id;
@@ -45,12 +45,12 @@ public class DemandForecast implements Serializable{
         this.id = id;
     }
 
-    public Date getForcastDate() {
-        return forcastDate;
+    public Date getforecastDate() {
+        return forecastDate;
     }
 
-    public void setForcastDate(Date ForcastDate) {
-        this.forcastDate = ForcastDate;
+    public void setforecastDate(Date forecastDate) {
+        this.forecastDate = forecastDate;
     }
 
     public ProductVariant getProductVariant() {
@@ -69,12 +69,12 @@ public class DemandForecast implements Serializable{
         this.warehouse = warehouse;
     }
 
-    public Double getForcastValue() {
-        return forcastValue;
+    public Double getforecastValue() {
+        return forecastValue;
     }
 
-    public void setForcastValue(Double forcastValue) {
-        this.forcastValue = forcastValue;
+    public void setforecastValue(Double forecastValue) {
+        this.forecastValue = forecastValue;
     }
 }
 

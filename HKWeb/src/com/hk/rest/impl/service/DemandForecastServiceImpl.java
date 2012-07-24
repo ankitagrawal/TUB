@@ -36,7 +36,7 @@ public class DemandForecastServiceImpl implements DemandForecastService {
     private WarehouseService warehouseService;
 
     @Autowired
-    private DemandForecastDao demandforcastDao;
+    private DemandForecastDao demandforecastDao;
 
     public BaseDao getBaseDao(){
         return this.baseDao;
@@ -52,21 +52,20 @@ public class DemandForecastServiceImpl implements DemandForecastService {
         Collection<DemandForecast> CollectionToUpdate = new ArrayList<DemandForecast>();
         boolean set=false;
         try{
-        List<DemandForecast> existingInDB = demandforcastDao.findDemandForcastByDate(minForecastDate);
-        //DemandForecast dForecast = new DemandForecast();
+        List<DemandForecast> existingInDB = demandforecastDao.findDemandforecastByDate(minForecastDate);
+        
         for (DemandForecast dfExcel : excelInput){
             set=false;
-            Date forcast_date = dfExcel.getForcastDate();
+            Date forecast_date = dfExcel.getforecastDate();
             String prod_variantId = dfExcel.getProductVariant().getId();
             Long warehouseId = dfExcel.getWarehouse().getId();
-            Double forcastVal = dfExcel.getForcastValue();
+            Double forecastVal = dfExcel.getforecastValue();
 
             if (existingInDB.size() != 0){
              for (DemandForecast df : existingInDB ){
-              if (df.getForcastDate().equals(forcast_date) && df.getProductVariant().getId().equals(prod_variantId) && df.getWarehouse().getId().equals(warehouseId)){
-                df.setForcastValue(forcastVal);
+              if (df.getforecastDate().equals(forecast_date) && df.getProductVariant().getId().equals(prod_variantId) && df.getWarehouse().getId().equals(warehouseId)){
+                df.setforecastValue(forecastVal);
                 CollectionToUpdate.add(df);
-                  //getBaseDao().save(df);
                 set=true;
                 break;
                 }
@@ -85,4 +84,9 @@ public class DemandForecastServiceImpl implements DemandForecastService {
                 logger.error(e.getMessage());
             }
     }
+
+    public boolean doesProductVariantExist(String variantId){
+         return demandforecastDao.doesProductVariantExist(variantId);
+    }
+
 }

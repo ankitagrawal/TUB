@@ -4,11 +4,11 @@ import com.hk.util.io.ExcelSheetParser;
 import com.hk.util.io.HKRow;
 import com.hk.constants.core.Keys;
 import com.hk.pact.service.core.WarehouseService;
-import com.hk.domain.warehouse.DemandForcast;
+import com.hk.domain.warehouse.DemandForecast;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.exception.ExcelBlankFieldException;
 import com.hk.web.action.admin.AdminHomeAction;
-import com.hk.rest.pact.service.DemandForcastService;
+import com.hk.rest.pact.service.DemandForecastService;
 import com.akube.framework.stripes.action.BaseAction;
 
 import java.util.*;
@@ -30,7 +30,7 @@ import net.sourceforge.stripes.validation.SimpleError;
  * Time: 11:33:22 AM
  * To change this template use File | Settings | File Templates.
  */
-public class ForecastExcelAction extends BaseAction implements Comparator<DemandForcast> {
+public class ForecastExcelAction extends BaseAction implements Comparator<DemandForecast> {
 
     private static org.slf4j.Logger logger = LoggerFactory.getLogger(ForecastExcelAction.class);
 
@@ -41,7 +41,7 @@ public class ForecastExcelAction extends BaseAction implements Comparator<Demand
     FileBean fileBean;
 
     @Autowired
-    DemandForcastService domainForcastService;
+    DemandForecastService domainForecastService;
 
     @Autowired
     private WarehouseService warehouseService;
@@ -55,24 +55,24 @@ public class ForecastExcelAction extends BaseAction implements Comparator<Demand
         this.fileBean = fileBean;
     }
 
-    public DemandForcastService getDomainForcastService (){
-        return domainForcastService;
+    public DemandForecastService getDomainForecastService (){
+        return domainForecastService;
     }
     
     public Resolution parse() throws Exception
     {           
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String excelFilePath = adminUploadsPath + "/ForcastFiles/" + sdf.format(new Date()) + "/" + sdf.format(new Date()) + ".xls";
+        String excelFilePath = adminUploadsPath + "/forecastFiles/" + sdf.format(new Date()) + "/" + sdf.format(new Date()) + ".xls";
         File excelFile = new File(excelFilePath);
         excelFile.getParentFile().mkdirs();
         fileBean.save(excelFile);
-        logger.debug("parsing Demand forcast info : " + excelFile.getAbsolutePath());
+        logger.debug("parsing Demand forecast info : " + excelFile.getAbsolutePath());
         ExcelSheetParser excel = new ExcelSheetParser(excelFile.getAbsolutePath(), "Sheet1");
         Iterator<HKRow> rowiterator = excel.parse();
         int rowCount=1;
 
         Date min_forecastDate = null;
-        List<DemandForcast> excelInputList = new ArrayList<DemandForcast>();
+        List<DemandForecast> excelInputList = new ArrayList<DemandForecast>();
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
         try {
@@ -91,24 +91,27 @@ public class ForecastExcelAction extends BaseAction implements Comparator<Demand
                 getContext().getValidationErrors().add("1", new SimpleError("Please correct the excel. Value(s) empty at row "+rowCount+""));
                 return new ForwardResolution("/pages/admin/uploadForecast.jsp");
                 }
+
+                if (!domainForecastService.doesProductVariantExist(prod_variantId)) {
+                    getContext().getValidationErrors().add("1", new SimpleError("No product variant exists with the entered Product Variant at row "+rowCount+""));
+                    return new ForwardResolution("/pages/admin/uploadForecast.jsp");
+                }
                     /**
                      * TODO:
                      * a) throw an error message blank required field : fail entire upload here
                      * b) validate that variant id does exist
                      * 
                      */
-                    //throw new ExcelBlankFieldException("value(s) empty at" + "    ", rowCount);
-
-
+                   
                 try{
 
                 Date date = (Date)formatter.parse(forecast_date);
 
-                DemandForcast dForecast = new DemandForcast();
-                dForecast.setForcastDate(date);
+                DemandForecast dForecast = new DemandForecast();
+                dForecast.setforecastDate(date);
                 dForecast.setProductVariant(getBaseDao().get(ProductVariant.class,prod_variantId));
                 dForecast.setWarehouse(warehouseService.getWarehouseById(Long.parseLong(warehouseId)));  //ask - long operation
-                dForecast.setForcastValue(Double.parseDouble(forecastVal));
+                dForecast.setforecastValue(Double.parseDouble(forecastVal));
 
                 excelInputList.add(dForecast);
                 }
@@ -119,21 +122,21 @@ public class ForecastExcelAction extends BaseAction implements Comparator<Demand
                             
 
               Collections.sort(excelInputList, this );
-              min_forecastDate = excelInputList.get(0).getForcastDate();
+              min_forecastDate = excelInputList.get(0).getforecastDate();
 
-              getDomainForcastService().SaveOrUpdateForecastInDB(excelInputList, min_forecastDate);
+              getDomainForecastService().SaveOrUpdateForecastInDB(excelInputList, min_forecastDate);
 
             }
-        catch (ExcelBlankFieldException e) {
+            catch (Exception e) {
                 logger.debug(e.getMessage());
+            }
 
-        }
-        return new RedirectResolution(AdminHomeAction.class);
+         return new RedirectResolution(AdminHomeAction.class);
         }     
 
 
-        public int compare(DemandForcast df1 , DemandForcast df2){
-            return df1.getForcastDate().compareTo(df2.getForcastDate());
+        public int compare(DemandForecast df1 , DemandForecast df2){
+            return df1.getforecastDate().compareTo(df2.getforecastDate());
         }
 
     }

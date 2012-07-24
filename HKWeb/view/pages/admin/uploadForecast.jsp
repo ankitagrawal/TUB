@@ -13,6 +13,11 @@
       <div class="buttons">
         <s:submit name="parse" value="Upload Excel"/>
       </div>
+        <li>
+           Excel Format: <br>
+           Forecast Date (date e.g. 11-04-2012) , Product Variant (String id) ,Warehouse ID (int), Forecast Value (decimal)
+        </li>  
+
     </s:form>
 
   </s:layout-component>

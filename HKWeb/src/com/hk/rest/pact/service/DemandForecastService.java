@@ -1,7 +1,6 @@
 package com.hk.rest.pact.service;
 
-import com.hk.domain.warehouse.DemandForcast;
-import com.hk.pact.dao.BaseDao;
+import com.hk.domain.warehouse.DemandForecast;
 
 import java.util.List;
 import java.util.Date;
@@ -14,5 +13,7 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 public interface DemandForecastService {
-    public void SaveOrUpdateForecastInDB (List<DemandForcast> input, Date minForcastDate);
+    public void SaveOrUpdateForecastInDB (List<DemandForecast> input, Date minforecastDate);
+
+    public boolean doesProductVariantExist(String variantId);
 }
