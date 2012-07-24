@@ -65,7 +65,9 @@ public class ShipmentServiceImpl implements ShipmentService {
         shipment.setEmailSent(false);
         suggestedAwb.setUsed(true);
         suggestedAwb.setAwbStatus(EnumAwbStatus.Attach.getAsAwbStatus());
+        suggestedAwb = awbService.save(suggestedAwb);
         shipment.setAwb(suggestedAwb);
+        shipment.setShippingOrder(shippingOrder);
         Double estimatedWeight = 0D;
         for (LineItem lineItem : shippingOrder.getLineItems()) {
             ProductVariant productVariant = lineItem.getSku().getProductVariant();
