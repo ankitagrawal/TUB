@@ -888,9 +888,10 @@ public class XslParser {
             continue;
           }
         }
-        shipment.setCollectionCharge(collectionCharge);
-        shipment.setShipmentCharge(shippingCharge);
-        shipmentService.save(shipment);
+          shipment.setCollectionCharge(collectionCharge);
+          shipment.setShipmentCharge(shippingCharge);
+          shipment.setShippingOrder(shippingOrder);
+          shipmentService.save(shipment);
 
         /*
         * if (courier != null) { productLineItemsByCourier =

@@ -191,6 +191,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 
 
         shipment.setAwb(finalAwb);
+        shipment.setShippingOrder(shippingOrder);
         shippingOrder.setShipment(shipment);
         if (courierGroupService.getCourierGroup(shipment.getCourier()) != null) {
             shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
