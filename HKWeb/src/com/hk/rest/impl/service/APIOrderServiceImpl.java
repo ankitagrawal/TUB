@@ -1,6 +1,7 @@
 package com.hk.rest.impl.service;
 
 
+import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
@@ -72,7 +73,6 @@ public class APIOrderServiceImpl implements APIOrderService {
     @Autowired
     PaymentStatusDao paymentStatusDao;
     @Autowired
-
     PaymentService paymentService;
     @Autowired
     LineItemDao lineItemDao;
@@ -86,6 +86,8 @@ public class APIOrderServiceImpl implements APIOrderService {
     InventoryService inventoryService;
     @Autowired
     UserService userService;
+    @Autowired
+    ShipmentService shipmentService;
 
     public String createOrderInHK(APIOrder apiOrder) {
         Set<CartLineItem> cartLineItems = new HashSet<CartLineItem>();
@@ -160,13 +162,16 @@ public class APIOrderServiceImpl implements APIOrderService {
                 }
             }
 
+            for (ShippingOrder shippingOrder : shippingOrders) {
+                shipmentService.createShipment(shippingOrder);
+            }
+
         }
 
         //Check Inventory health of order lineitems
         for (CartLineItem cartLineItem : productCartLineItems) {
             inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
         }
-
 
     }
 

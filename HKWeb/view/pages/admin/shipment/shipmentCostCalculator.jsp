@@ -140,7 +140,20 @@
                     </shiro:hasAnyRoles>
                 </fieldset>
             </s:form>
+            <shiro:hasAnyRoles name="<%=RoleConstants.GOD%>">
+                <s:form beanclass="com.hk.web.action.admin.order.split.BulkOrderSplitterAction">
+                    <fieldset class="top_label">
+                        <legend> Bulk BO Splitter</legend>
 
+                        <div class="clear"></div>
+
+                        <div style="margin-top:15px;"></div>
+                        <shiro:hasAnyRoles name="<%=RoleConstants.GOD%>">
+                            <s:submit name="bulkSplitOrders" value="Bulk Split Orders"/>
+                        </shiro:hasAnyRoles>
+                    </fieldset>
+                </s:form>
+            </shiro:hasAnyRoles>
 
             <div class="clear"></div>
             <div style="margin-top:40px;"></div>
