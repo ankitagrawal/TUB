@@ -103,9 +103,9 @@ public class CartLineItemUpdateAction extends BaseAction {
            PricingDto pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), address, 0D, subscriptions), address);
 
             //If it is remove from cart event then report it to recommendation engine
-            if (cartLineItem.getQty() == 0){
+            /*if (cartLineItem.getQty() == 0){
                 recommendationEngine.notifyRemoveFromCart(getPrincipalUser().getId(),cartLineItem.getProductVariant().getId());
-            }
+            }*/
             if (cartLineItem != null && cartLineItem.getComboInstance() != null && cartLineItem.getComboInstance().getId() != null) {
                 List<CartLineItem> brotherLineItems = comboInstanceDao.getSiblingLineItems(cartLineItem);
                 for (CartLineItem li : brotherLineItems) {

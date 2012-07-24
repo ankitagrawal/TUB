@@ -1,11 +1,6 @@
 package com.hk.domain.catalog.product;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -27,6 +22,7 @@ import javax.persistence.Transient;
 import com.akube.framework.gson.JsonSkip;
 import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.Supplier;
+import com.hk.domain.catalog.product.combo.SuperSaverImage;
 import com.hk.domain.catalog.category.Category;
 
 /**
@@ -153,6 +149,9 @@ public class Product implements java.io.Serializable {
 
     @Transient
     private String               categoriesPipeSeparated;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
+    private Set<SuperSaverImage> superSaverImages = new HashSet<SuperSaverImage>(0);
 
     public String getSlug() {
         return Category.getNameFromDisplayName(this.getName());

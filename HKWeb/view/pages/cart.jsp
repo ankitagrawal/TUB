@@ -8,7 +8,10 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="lineItem_Service_Postpaid" value="<%=EnumProductVariantPaymentType.Postpaid.getId()%>"/>
 <s:useActionBean beanclass="com.hk.web.action.core.cart.CartAction" var="cartAction"/>
-
+<%
+  boolean isSecure = pageContext.getRequest().isSecure();
+  pageContext.setAttribute("isSecure", isSecure);
+%>
 <s:layout-render name="/layouts/cartLayout.jsp" pageTitle="Shopping Cart">
 
 <s:layout-component name="topHeading">Shopping Cart</s:layout-component>
@@ -660,8 +663,12 @@
 
 <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="qbr7CMDf6QIQuLjI5QM" id="1018305592"/>
 
-<iframe src="" id="vizuryTargeting" scrolling="no" width="1" height="1" marginheight="0" marginwidth="0" frameborder="0"></iframe>
-<script type="text/javascript">
+			<c:if test="${not isSecure }">
+				<iframe src="" id="vizuryTargeting" scrolling="no" width="1"
+					height="1" marginheight="0" marginwidth="0" frameborder="0"></iframe>
+
+
+				<script type="text/javascript">
   var vizuryLink = "http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e400";
   <c:forEach items="${cartAction.order.productCartLineItems}" var="cartLineItem" varStatus="liCtr">
   vizuryLink += "&pid${liCtr.count}=${cartLineItem.productVariant.product.id}&catid${liCtr.count}=${cartLineItem.productVariant.product.primaryCategory.name}&quantity${liCtr.count}=${cartLineItem.qty}";
@@ -669,6 +676,7 @@
   vizuryLink += "&currency=INR&section=1&level=1";
   document.getElementById("vizuryTargeting").src = vizuryLink;
 </script>
+			</c:if>
 </s:layout-component>
 </c:if>
 

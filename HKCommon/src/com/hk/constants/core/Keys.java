@@ -99,6 +99,7 @@ public class Keys {
         public static final String subscriptionCustomerBufferDays           = "subscriptionCustomerBufferDays";
         public static final String subscriptionInventoryBufferDays          = "subscriptionInventoryBufferDays";
 
+
     }
 
     /*

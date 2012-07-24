@@ -50,13 +50,13 @@
           <div class="label">
             <c:choose>
               <c:when test="${fn:startsWith(pa.anchor,'buy_button')}">
-                <a href="http://www.healthkart.com/product/${pa.product.slug}/${pa.product.id}?affid=${pa.affiliate.code}">
+                <a href="${pageContext.request.contextPath}/product/${pa.product.slug}/${pa.product.id}?affid=${pa.affiliate.code}">
                   <img class='prod320'
                        src='${pageContext.request.contextPath}/images/icons/${pa.anchor}.png'/>
                 </a>
               </c:when>
               <c:otherwise>
-                <a href="http://www.healthkart.com/product/${pa.product.slug}/${pa.product.id}?affid=${pa.affiliate.code}">${pa.anchor}</a>
+                <a href="${pageContext.request.contextPath}/product/${pa.product.slug}/${pa.product.id}?affid=${pa.affiliate.code}">${pa.anchor}</a>
               </c:otherwise>
             </c:choose>
           </div>
