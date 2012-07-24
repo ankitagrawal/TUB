@@ -109,7 +109,7 @@
           <label style="margin-left: 100px; ">Search FAQs</label>
           &nbsp;&nbsp;&nbsp;
           <s:text name="searchString" id="search-string" style="width:30em; margin-top: 16px; padding-top:10px"/>
-          <s:submit name="searchFaq" value="Search" style="float:right; margin-right:115px; margin-top:15px; padding-top:3px;"/>
+          <s:submit name="pre" value="Search" style="float:right; margin-right:115px; margin-top:15px; padding-top:3px;"/>
         </s:form>
       </fieldset>
     <br/>
@@ -162,9 +162,15 @@
     </s:form>
     <br/>
     <br/>
-
-    <h4>${faqBean.primaryCategory}</h4>
+    <c:if test="${faqBean.primaryCategory != null}" >
+        <span style="font-size:1.7em; font-weight:bold; margin-left:25px;"> ${faqBean.primaryCategory}</span>
+    </c:if>
+    <c:if test="${faqBean.secondaryCategory != null}" >
+        <span style="font-size:1.1em; font-weight:bold;"> :- ${faqBean.secondaryCategory} </span>
+    </c:if>
       <br/>
+      <br />
+      
  <%--   <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${faqBean}"/>--%>
     <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${faqBean}"/>
       

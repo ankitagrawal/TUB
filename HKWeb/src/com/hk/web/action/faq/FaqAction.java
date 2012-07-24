@@ -64,16 +64,16 @@ public class FaqAction extends BasePaginatedAction {
         if (!status) {
             return new RedirectResolution(FaqAction.class);
         }
-        return new RedirectResolution(FaqAction.class);
+        return new RedirectResolution(FaqAction.class, "pre");
     }
 
-    public Resolution searchFaq() {
+/*    public Resolution searchFaq() {
         primaryCategory = faqService.getCategoryFromSlug(primaryCategory);
         secondaryCategory = faqService.getCategoryFromSlug(secondaryCategory);
         faqPage = faqService.searchFaq(searchString, primaryCategory, secondaryCategory, getPageNo(), getPerPage());
         faqList = faqPage.getList();
-        return new ForwardResolution("/pages/faq/faq.jsp");
-    }
+        return new ForwardResolution(FaqAction.class, "pre").addParameter("primaryCategory", primaryCategory).addParameter("secondaryCategory", secondaryCategory).addParameter("searchString", searchString);
+    }*/
 
     public Resolution saveFaq() {
         if (faq.getAnswer() == null
