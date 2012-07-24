@@ -96,16 +96,14 @@
                         <div class="clear"></div>
                         <s:label name="courier" class="label">Courier</s:label>
                         <c:forEach items="${applicableCourierList}" var="orderStatus" varStatus="ctr">
-                            <label><s:checkbox name="orderStatuses[${ctr.index}]"
+                            <div class="clear"></div>
+                            <label><s:checkbox name="applicableCourierList[${ctr.index}]"
                                                value="${orderStatus.id}"/> ${orderStatus.name}</label>
                         </c:forEach>
-                        <s:select name="courier">
-                            <option value="">All Couriers</option>
-                            <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList"
-                                                       value="id" label="name"/>
-                        </s:select>
+                        <div class="clear"></div>
                         <s:label name="overrideHistoricalShipmentCost"
                                  class="label">Override Historical Shipment Cost ?</s:label>
+                        <div class="clear"></div>
                         <s:checkbox name="overrideHistoricalShipmentCost"/>
                         <div class="clear"></div>
 
