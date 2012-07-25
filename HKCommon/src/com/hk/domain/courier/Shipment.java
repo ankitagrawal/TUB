@@ -16,6 +16,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import com.akube.framework.gson.JsonSkip;
+import com.hk.domain.order.ShippingOrder;
 
 @SuppressWarnings ("serial")
 @Entity
@@ -27,20 +28,26 @@ public class Shipment implements java.io.Serializable, Comparable<Shipment> {
 	@Column (name = "id", unique = true, nullable = false)
 	private Long id;
 
-	@JsonSkip
-	@ManyToOne (fetch = FetchType.LAZY)
-	@JoinColumn (name = "courier_id")
-	private Courier courier;
+    @JsonSkip
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "courier_id")
+    private Courier courier;
 
-	@ManyToOne (fetch = FetchType.LAZY)
-	@JoinColumn (name = "box_size_id")
-	private BoxSize boxSize;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "awb_id")
+    private Awb awb;
 
-	@Column (name = "box_weight")
+    @JsonSkip
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "shipping_order_id")
+    private ShippingOrder shippingOrder;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "box_size_id")
+    private BoxSize boxSize;
+
+    @Column (name = "box_weight")
 	private Double boxWeight;
-
-	@Column (name = "tracking_id", length = 45)
-	private String trackingId;
 
 	@Temporal (TemporalType.TIMESTAMP)
 	@Column (name = "ship_date", length = 19)
@@ -117,14 +124,6 @@ public class Shipment implements java.io.Serializable, Comparable<Shipment> {
 
 	public void setBoxWeight(Double boxWeight) {
 		this.boxWeight = boxWeight;
-	}
-
-	public String getTrackingId() {
-		return trackingId;
-	}
-
-	public void setTrackingId(String trackingId) {
-		this.trackingId = trackingId;
 	}
 
 	public Date getShipDate() {
@@ -223,7 +222,23 @@ public class Shipment implements java.io.Serializable, Comparable<Shipment> {
 		this.packer = packer;
 	}
 
-	@Override
+    public Awb getAwb() {
+        return awb;
+    }
+
+    public void setAwb(Awb awb) {
+        this.awb = awb;
+    }
+
+    public ShippingOrder getShippingOrder() {
+        return shippingOrder;
+    }
+
+    public void setShippingOrder(ShippingOrder shippingOrder) {
+        this.shippingOrder = shippingOrder;
+    }
+
+    @Override
 	public String toString() {
 		return id != null ? id.toString() : "";
 	}

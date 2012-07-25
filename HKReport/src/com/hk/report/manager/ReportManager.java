@@ -410,7 +410,11 @@ public class ReportManager {
               }
               Shipment shipment = order.getShipment();
               Address address = order.getBaseOrder().getAddress();
-              setCellValue(row, 0, shipment.getTrackingId());
+              String trackingId=null;
+              if(shipment.getAwb() != null){
+                trackingId= shipment.getAwb().getAwbNumber(); 
+              }
+              setCellValue(row, 0, trackingId);
               setCellValue(row, 1, order.getGatewayOrderId());
               setCellValue(row, 2, address.getName());
               setCellValue(row, 3, address.getName());
@@ -534,9 +538,11 @@ public class ReportManager {
       /**
        * Realted changed for Partial Escalation
        */
-      Address address = order.getBaseOrder().getAddress();
-      Shipment shipment = order.getShipment();
-      setCellValue(row, 0, shipment.getTrackingId());
+        Address address = order.getBaseOrder().getAddress();
+        Shipment shipment = order.getShipment();
+        if (shipment != null && shipment.getAwb() != null) {
+            setCellValue(row, 0, shipment.getAwb().getAwbNumber());
+        }
       setCellValue(row, 1, order.getGatewayOrderId());
       setCellValue(row, 2, "AQUAMARINE HEALTHCARE");
       setCellValue(row, 3, address.getName());
@@ -927,9 +933,11 @@ public class ReportManager {
       Shipment shipment = shippingOrder.getShipment();
       days_to_deliver = 0;
       rowCounter++;
-      xlsWriter.addCell(rowCounter, shippingOrder.getId());
-      xlsWriter.addCell(rowCounter, shipment.getTrackingId());
-      xlsWriter.addCell(rowCounter, shipment.getCourier().getName());
+        xlsWriter.addCell(rowCounter, shippingOrder.getId());
+        if (shipment != null && shipment.getAwb() != null) {
+            xlsWriter.addCell(rowCounter, shipment.getAwb().getAwbNumber());
+        }
+        xlsWriter.addCell(rowCounter, shipment.getCourier().getName());
       xlsWriter.addCell(rowCounter, shippingOrder.getWarehouse().getName());
       xlsWriter.addCell(rowCounter, shipment.getShipDate().toString());
       xlsWriter.addCell(rowCounter, shipment.getDeliveryDate().toString());
