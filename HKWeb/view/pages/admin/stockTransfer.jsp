@@ -158,6 +158,8 @@
 					<th>Batch Number</th>
 					<th>Mfg. Date<br/>(yyyy-MM-dd)</th>
 					<th>Exp. Date<br/>(yyyy-MM-dd)</th>
+					<th>Cost Price</th>
+					<th>MRP</th>
 				</tr>
 				</thead>
 				<tbody id="stTable">
@@ -181,6 +183,8 @@
 							<fmt:formatDate value="${stockTransferLineItem.mfgDate}" type="both"/></td>
 						<td>
 							<fmt:formatDate value="${stockTransferLineItem.expiryDate}" type="both"/></td>
+						<td>${stockTransferLineItem.costPrice}</td>
+						<td>${stockTransferLineItem.mrp}</td>
 					</tr>
 
 				</c:forEach>
