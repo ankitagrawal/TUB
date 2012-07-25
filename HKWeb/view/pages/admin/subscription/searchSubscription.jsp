@@ -32,27 +32,6 @@
 
         $(document).ready(function() {
 
-            <%--
-            Confirm subscription order
-            --%>
-            $('.confirmSubscriptionOrderLink').click(function() {
-                this.prototype.i=0;
-                if (this.prototype.i>0) i++;
-                var proceed = confirm('Are you sure?'+i);
-                if (!proceed) return false;
-
-                var clickedLink = $(this);
-                $.getJSON(clickedLink.attr('href'), function(res) {
-                    if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
-                        clickedLink.parents('h2').find('.paymentStatusName').html(res.data.paymentStatus.name);
-                        clickedLink.parents('h2').find('.codOrderText').hide();
-                        clickedLink.hide();
-                    }
-                });
-
-                return false;
-            });
-
             $('.changeNextShipmentDateLink').click(function(){
                 $(this).siblings('.changeNextShipmentDateDiv').show();
                 return false;
@@ -69,6 +48,16 @@
                 if (!proceed) return false;
             });
             $('.changeShipmentDateButton').click(function(){
+                var proceed = confirm('Are you sure?');
+                if (!proceed) return false;
+            });
+            $('.confirmSubscriptionOrderLink').click(function(){
+                $(this).siblings('.confirmSubscriptionDiv').show();
+                return false;
+            } );
+
+
+            $('.confirmSubscriptionOrderButton').click(function(){
                 var proceed = confirm('Are you sure?');
                 if (!proceed) return false;
             });
@@ -106,6 +95,9 @@
 <c:set var="subscriptionStatusAbandoned" value="<%=EnumSubscriptionStatus.Abandoned.getId()%>"/>
 
 <s:errors/>
+<s:form beanclass="com.hk.web.action.admin.subscription.SubscriptionAdminAction" method="get">
+    <s:submit name="escalateSubscriptions" value="escalate Subscriptions"></s:submit>
+</s:form>
 <s:form beanclass="com.hk.web.action.admin.subscription.SearchSubscriptionAction" method="get" autocomplete="false">
     <fieldset class="top_label">
         <ul>
@@ -122,7 +114,7 @@
                                                label="name"/>
                 </s:select></li>
                     <%--<li><label>Tracking ID</label> <s:text name="trackingId" style="width: 120px;"/></li>--%>
-                <li>
+               <%-- <li>
                     <label>Start
                         date</label><s:text class="date_input" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
                                             name="startDate"/>
@@ -131,7 +123,7 @@
                     <label>End
                         date</label><s:text class="date_input" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
                                             name="endDate"/>
-                </li>
+                </li>--%>
             </div>
         </ul>
         <div class="buttons"><s:submit name="searchSubscriptions" value="Search Subscriptions"/></div>
@@ -184,10 +176,30 @@
 
     <c:if test="${subscription.subscriptionStatus.id == constomerConfirmationAwaited }">
         <span class="codOrderText">&middot;</span>
-        <s:link beanclass="com.hk.web.action.admin.subscription.SubscriptionAdminAction" event="confirmedByCustomer" class="confirmSubscriptionOrderLink">
+
+        <s:link href="#" class="confirmSubscriptionOrderLink">(confirm subscription Order)</s:link>
+        <s:link href="#" class="cancelSubscriptionLink">(cancel subscription)</s:link>
+        <div class="confirmSubscriptionDiv" style="display: none;">
+        <s:form beanclass="com.hk.web.action.admin.subscription.SubscriptionAdminAction" class="confirmSubscriptionOrderForm" >
             <s:param name="subscription" value="${subscription.id}"/>
-            Confirm Subscription Order
-        </s:link>
+
+        </s:form>
+        </div>
+        <script type="text/javascript">
+            $('.confirmSubscriptionOrderForm').ajaxForm({dataType: 'json', success: _confirmSubscriptionOrder});
+
+            function _confirmSubscriptionOrder(res) {
+                if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+                    var status = res.data.subscriptionStatus.name;
+                    if (status == "Confirmed By Customer") {
+                        alert("Subscription order Confirmed");
+                        $('.confirmSubscriptionDiv').hide();
+                    } else {
+                        alert("Subscription cannot be confirmed");
+                    }
+                }
+            }
+        </script>
     </c:if>
     <hr/>
     <c:if test="${! empty subscription.subscriptionLifecycles}">
@@ -198,6 +210,7 @@
             "${subscription.subscriptionLifecycles[fn:length(subscription.subscriptionLifecycles)-1].user.name}"
             <s:param name="subscription" value="${subscription}"/>
         </s:link>
+
     </c:if>
     <br/> <br/>
     <c:if test="${!(subscription.subscriptionStatus.id == subscriptionStatusCancelled || subscription.subscriptionStatus.id == subscriptionStatusCart || subscription.subscriptionStatus.id == subscriptionStatusAbandoned)}">

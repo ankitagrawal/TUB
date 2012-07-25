@@ -1,5 +1,6 @@
 package com.hk.impl.dao.order;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -59,8 +60,10 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao {
 
     public Page listOrdersForUser(List<OrderStatus> orderStatusList, User user, int page, int perPage) {
         DetachedCriteria criteria = DetachedCriteria.forClass(Order.class);
+        Boolean[] subscriptionOrders={false,null};
         criteria.add(Restrictions.in("orderStatus", orderStatusList));
         criteria.add(Restrictions.eq("user", user));
+        criteria.add(Restrictions.in("subscriptionOrder",subscriptionOrders));
         criteria.addOrder(org.hibernate.criterion.Order.desc("createDate"));
         return list(criteria, page, perPage);
     }

@@ -461,15 +461,15 @@ public class Order implements java.io.Serializable {
       }
   }
 
-  public void setSubscriptionOrder(Boolean subscriptionOrder) {
-    this.subscriptionOrder = subscriptionOrder;
-  }
+    public Boolean getSubscriptionOrder() {
+        return subscriptionOrder;
+    }
 
-  public Boolean getSubscriptionOrder(Boolean subscriptionOrder) {
-    return subscriptionOrder;
-  }
+    public void setSubscriptionOrder(Boolean subscriptionOrder) {
+        this.subscriptionOrder = subscriptionOrder;
+    }
 
-  public Set<ShippingOrder> getShippingOrders() {
+    public Set<ShippingOrder> getShippingOrders() {
         return shippingOrders;
     }
 

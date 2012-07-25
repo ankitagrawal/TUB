@@ -32,5 +32,14 @@
       <li><s:link beanclass="com.hk.web.action.core.affiliate.AffiliateInsightsAction" title="Insights">
         <span id="myReferredOrders">Insights</span> </s:link></li>
     </shiro:hasRole>
+      <li>
+          <s:link beanclass="com.hk.web.action.core.user.CustomerOrderHistoryAction" title="My Orders"> <span
+                  id="ohLink">MY ORDERS</span> </s:link>
+      </li>
+      <li>
+          <s:link beanclass="com.hk.web.action.core.user.CustomerSubscriptionHistoryAction" title="My Subscriptions"> <span
+                  id="shLink">MY Subscriptions</span> </s:link>
+      </li>
+
   </ul>
 </fieldset>

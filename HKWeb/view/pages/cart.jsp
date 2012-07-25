@@ -419,6 +419,7 @@
                   pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
             </div>
           </div>
+
         </c:otherwise>
       </c:choose>
 
@@ -427,11 +428,26 @@
           to the service provider
         </span>
       </c:if>
+      <c:if test="${cartLineItem.productVariant.product.subscribable}">
+       <br/> <div style="font-style: italic; font-size: 11px; font-weight: normal; font-family: Georgia, Cambria, serif;">
+          <s:link beanclass="com.hk.web.action.core.subscription.SubscriptionAction" class="addSubscriptionLink"><b>subscribe and save more</b>
+              <s:param name="productVariant" value="${cartLineItem.productVariant}"/>
+          <s:param name="fromCart" value="true"/> </s:link>
     </div>
-    <div class="floatfix"></div>
+      </c:if>
+    </div>
+    <div class="floatfix"> </div>
+
   </div>
 </c:forEach>
+<div class="jqmWindow" style="display:none;" id="addSubscriptionWindow"></div>
 
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#addSubscriptionWindow').jqm({trigger: '.addSubscriptionLink', ajax: '@href'});
+    });
+
+</script>
 <c:forEach items="${cartAction.order.exclusivelyComboCartLineItems}" var="cartLineItem" varStatus="ctr1">
   <div class="lineItemRow product">
     <input type="hidden" value="${cartLineItem.id}" class="lineItemId" id="item_${cartLineItem.id}"/>

@@ -29,6 +29,7 @@ public class SubscriptionAction extends BaseAction implements ValidationErrorHan
   @Validate(required = true)
   ProductVariant productVariant;
   Product product;
+  private boolean fromCart=false;
 
   @Autowired
   SubscriptionProductService subscriptionProductService;
@@ -67,7 +68,15 @@ public class SubscriptionAction extends BaseAction implements ValidationErrorHan
     this.product = product;
   }
 
-  public Resolution handleValidationErrors(ValidationErrors validationErrors) throws Exception {
+    public boolean isFromCart() {
+        return fromCart;
+    }
+
+    public void setFromCart(boolean fromCart) {
+        this.fromCart = fromCart;
+    }
+
+    public Resolution handleValidationErrors(ValidationErrors validationErrors) throws Exception {
     return new JsonResolution(validationErrors, getContext().getLocale());
   }
 

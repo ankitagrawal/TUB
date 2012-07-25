@@ -6,6 +6,7 @@ import com.hk.constants.subscription.EnumSubscriptionStatus;
 import com.hk.core.search.SubscriptionSearchCriteria;
 import com.hk.domain.subscription.SubscriptionStatus;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.subscription.SubscriptionDao;
@@ -44,6 +45,14 @@ public class SubscriptionDaoImpl extends BaseDaoImpl implements SubscriptionDao 
     public Page searchSubscriptions(SubscriptionSearchCriteria subscriptionSearchCriteria, int pageNo, int perPage){
         DetachedCriteria searchCriteria = subscriptionSearchCriteria.getSearchCriteria();
         return list(searchCriteria, true, pageNo, perPage);
+    }
+
+    public Page getSubscriptionsForUsers(List<SubscriptionStatus> subscriptionStatusList,User user, int page, int perPage){
+        DetachedCriteria criteria = DetachedCriteria.forClass(Subscription.class);
+        criteria.add(Restrictions.in("subscriptionStatus", subscriptionStatusList));
+        criteria.add(Restrictions.eq("user", user));
+        criteria.addOrder(org.hibernate.criterion.Order.desc("createDate"));
+        return list(criteria, page, perPage);
     }
 
     public int escalateSubscriptionsToActionQueue(List<SubscriptionStatus> fromStatuses, SubscriptionStatus toStatus, Date referenceDate){

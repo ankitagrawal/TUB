@@ -8,6 +8,7 @@ import com.hk.domain.order.Order;
 import com.hk.domain.subscription.Subscription;
 import com.hk.domain.subscription.SubscriptionProduct;
 import com.hk.domain.subscription.SubscriptionStatus;
+import com.hk.domain.user.User;
 
 import java.util.List;
 import java.util.Set;
@@ -36,6 +37,8 @@ public interface SubscriptionService {
     public Subscription cancelSubscription(Subscription subscription);
 
     public Page searchSubscriptions(SubscriptionSearchCriteria subscriptionSearchCriteria, int pageNo, int perPage);
+
+    public Page getSubscriptionsForUsers(User user, int page, int perPage);
 
     public int escalateSubscriptionsToActionQueue();
 

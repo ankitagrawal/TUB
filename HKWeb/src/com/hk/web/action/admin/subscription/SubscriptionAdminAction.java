@@ -13,10 +13,7 @@ import com.hk.pact.service.subscription.SubscriptionOrderService;
 import com.hk.pact.service.subscription.SubscriptionService;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.error.AdminPermissionAction;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.JsonResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -57,13 +54,14 @@ public class SubscriptionAdminAction extends BaseAction implements ValidationErr
         if (EnumSubscriptionStatus.CustomerConfirmationAwaited.getId().equals(subscription.getSubscriptionStatus().getId())) {
             subscription.setSubscriptionStatus(EnumSubscriptionStatus.ConfirmedByCustomer.asSubscriptionStatus());
             subscriptionService.save(subscription);
+            data.put("subscriptionStatus", JsonUtils.hydrateHibernateObject(subscription.getSubscriptionStatus()));
+            HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "success", data);
 
             subscriptionLoggingService.logSubscriptionActivity(subscription, EnumSubscriptionLifecycleActivity.ConfirmedSubscriptionOrder);
 
             subscriptionOrderService.createOrderForSubscription(subscription);
 
-            data.put("subscriptionStatus", JsonUtils.hydrateHibernateObject(subscription.getSubscriptionStatus()));
-            HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "success", data);
+
             return new JsonResolution(healthkartResponse);
         } else {
             HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_RELOAD, "check your subscription", data);
@@ -92,6 +90,12 @@ public class SubscriptionAdminAction extends BaseAction implements ValidationErr
 
     public Resolution changeAddress(){
         return new RedirectResolution(ChangeSubscriptionAddressAction.class).addParameter("subscription",subscription);
+    }
+
+    @DontValidate
+    public Resolution escalateSubscriptions(){
+        subscriptionService.escalateSubscriptionsToActionQueue();
+        return new ForwardResolution("/pages/admin/subscription/searchSubscription.jsp");
     }
 
     @JsonHandler

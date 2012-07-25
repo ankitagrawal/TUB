@@ -30,11 +30,8 @@
   <fieldset>
     <c:if test="${!empty productVariants}">
       <ul style="list-style: none; line-height: 25px;">
-        <li>
-          <s:link beanclass="com.hk.web.action.core.user.CustomerOrderHistoryAction" title="My Orders"> <span
-              id="ohLink">MY ORDERS</span> </s:link>
-        </li>
-        <s:label name="Recently Ordered Items" style="color:darkblue;"/>
+
+        <s:label name="Recently Ordered Items" />
 
         <s:form beanclass="com.hk.web.action.core.cart.AddToCartAction" class="addToCartForm">
           <fieldset>

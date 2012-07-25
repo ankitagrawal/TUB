@@ -8,6 +8,7 @@
   </s:layout-component>
 
   <s:layout-component name="rhsContent">
+
     <div class="main-inn-right">
 
       <div class="round-cont">

@@ -59,4 +59,15 @@ public enum EnumSubscriptionStatus {
     return subscriptionStatusIDs;
   }
 
+    public static List<EnumSubscriptionStatus> getStatusForCustomers() {
+        return Arrays.asList(EnumSubscriptionStatus.Placed,
+                EnumSubscriptionStatus.Cancelled,
+                EnumSubscriptionStatus.InProcess,
+                EnumSubscriptionStatus.OnHold,
+                EnumSubscriptionStatus.CustomerConfirmationAwaited,
+                EnumSubscriptionStatus.ConfirmedByCustomer,
+                EnumSubscriptionStatus.Idle,
+                EnumSubscriptionStatus.Expired);
+    }
+
 }

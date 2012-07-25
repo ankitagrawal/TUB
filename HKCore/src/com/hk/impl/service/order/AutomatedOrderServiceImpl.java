@@ -17,6 +17,7 @@ import com.hk.domain.store.Store;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.manager.OrderManager;
+import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.payment.PaymentStatusDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.service.OrderStatusService;
@@ -117,6 +118,7 @@ public class AutomatedOrderServiceImpl implements AutomatedOrderService{
             paymentStatus = paymentStatusDao.getPaymentStatusById(EnumPaymentStatus.SUCCESS.getId());
         }
         payment.setPaymentStatus(paymentStatus);
+        payment.setGatewayOrderId(PaymentManager.getUniqueGatewayOrderId(order));
         payment.setCreateDate(BaseUtils.getCurrentTimestamp());
         payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
         return paymentService.save(payment);

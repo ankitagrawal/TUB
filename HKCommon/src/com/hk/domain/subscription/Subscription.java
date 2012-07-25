@@ -1,5 +1,6 @@
 package com.hk.domain.subscription;
 
+import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
@@ -30,6 +31,10 @@ public class Subscription  implements java.io.Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id",  nullable = false)
     private User user;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cart_line_item_id",  nullable = true)
+    private CartLineItem cartLineItem;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "base_order_id",  nullable = false)
@@ -282,6 +287,14 @@ public class Subscription  implements java.io.Serializable {
 
     public void setSubscriptionLifecycles(List<SubscriptionLifecycle> subscriptionLifecycles) {
         this.subscriptionLifecycles = subscriptionLifecycles;
+    }
+
+    public CartLineItem getCartLineItem() {
+        return cartLineItem;
+    }
+
+    public void setCartLineItem(CartLineItem cartLineItem) {
+        this.cartLineItem = cartLineItem;
     }
 }
 

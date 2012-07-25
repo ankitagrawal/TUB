@@ -70,6 +70,9 @@
                             <br/>
                             <table>
                                 <tr>
+                                    <td><b><strong>Single Unit Price:</strong></b> <br/></td>
+                                </tr>
+                                <tr>
                                     <td>
                                         MRP
                                     </td>
@@ -88,7 +91,7 @@
                                         &nbsp;
                                     </td>
                                     <td>
-                             <span class='hk num'  style="font-size: 14px;" :>
+                             <span class='cut num'  style="font-size: 14px;" :>
                   Rs <fmt:formatNumber value="${productVariant.hkPrice}"
                                        maxFractionDigits="0"/>
                 </span>          <br/><br/>
@@ -119,17 +122,26 @@
                 </s:form>
             </div>
             <span >Subscribe and save <fmt:formatNumber value="${sp.subscriptionDiscount180Days}" maxFractionDigits="2"/>  to   <fmt:formatNumber value="${sp.subscriptionDiscount360Days}" maxFractionDigits="2"/> &#37; extra.   </span>
-            &nbsp; <span> <fmt:formatNumber value="${sp.subscriptionDiscount180Days}" maxFractionDigits="2"/>&#37; for <%=SubscriptionConstants.minSubscriptionDays%>-360 days and <fmt:formatNumber value="${sp.subscriptionDiscount360Days}" maxFractionDigits="2"/>&#37; for 360-<%=SubscriptionConstants.maxSubscriptionDays%> day plans </span>
+
+            &nbsp; <span> <fmt:formatNumber value="${sp.subscriptionDiscount180Days}" maxFractionDigits="2"/>&#37; for <%=SubscriptionConstants.minSubscriptionDays%>-360 days and <fmt:formatNumber value="${sp.subscriptionDiscount360Days}" maxFractionDigits="2"/>&#37; for 360-<%=SubscriptionConstants.maxSubscriptionDays%> day plans. &nbsp; </span>
+            <s:link beanclass="com.hk.web.action.core.subscription.AboutSubscriptionAction" event="pre" target="_blank">(click here) </s:link> to know more
             <script type="text/javascript" src="<hk:vhostJs/>/js/jquery-ui.min.js"></script>
             <script type="text/javascript">
                 function _addSubscription(res) {
                     if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+                        <c:choose>
+                            <c:when test="${sa.fromCart}">
+                               location.reload();
+                            </c:when>
+                            <c:otherwise>
                         closeSubscriptionWindow();
                         $('.message .line1').html("<strong>" + res.data.name + "</strong> "+ res.message);
                         $('.cartButton').html("<img class='icon' src='${pageContext.request.contextPath}/images/icons/cart.png'/><span class='num' id='productsInCart'>" + res.data.itemsInCart + "</span> items in<br/>your shopping cart");
-                        $('.progressLoader').hide();
 
                         show_sub_message();
+                            </c:otherwise>
+                        </c:choose>
+
                     }else if(res.code == '<%=HealthkartResponse.STATUS_ERROR%>'){
                         $('#subcriptionErrors').html(getErrorHtmlFromJsonResponse(res));
                     }
@@ -146,6 +158,7 @@
 
                 function closeSubscriptionWindow(){
                     $("#subscriptionWindow").jqmHide();
+                    $("#addSubscriptionWindow").jqmHide();
                 }
 
                 $('#subscriptionPeriod,#subscriptionFrequency,#subscriptionQtyPerDelivery').change(function(){
@@ -166,10 +179,10 @@
                     $('#subscriptionQty').attr('value',totalQty);
                     if(subscriptionPeriod<360){
                         $('#subscriptionPrice').html('<strong><b>Rs '+subscriptionPrice180+'</b></strong>');
-                        $('#extraDiscount').html('( ${sp.subscriptionDiscount180Days} &#37;)' );
+                        $('#extraDiscount').html('( ${sp.subscriptionDiscount180Days} &#37; off on MRP)' );
                     }else{
                         $('#subscriptionPrice').html('<strong><b>Rs '+subscriptionPrice360+'</b></strong>');
-                        $('#extraDiscount').html('( ${sp.subscriptionDiscount360Days} &#37;)' );
+                        $('#extraDiscount').html('( ${sp.subscriptionDiscount360Days} &#37; off on MRP)' );
                     }
                 }
 

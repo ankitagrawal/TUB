@@ -421,8 +421,8 @@ public class OrderManager {
          * null); }
          */
 
-        // Check if HK order then only send emails
-        if (order.getStore() != null && order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID)) {
+        // Check if HK order then only send emails and no order placed email is necessary for subscription orders
+        if (order.getStore() != null && order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID) && !order.isSubscriptionOrder()) {
             // Send mail to Customer
             getPaymentService().sendPaymentEmailForOrder(order);
             // Send referral program intro email

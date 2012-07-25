@@ -9,6 +9,7 @@ import java.util.Set;
 
 import javax.persistence.*;
 
+import com.hk.domain.subscription.Subscription;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Where;
@@ -119,6 +120,9 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Order>           orders             = new ArrayList<Order>();
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<Subscription> subscriptions;
+
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "warehouse_has_user", uniqueConstraints = @UniqueConstraint(columnNames = { "user_id", "warehouse_id" }), joinColumns = { @JoinColumn(name = "user_id", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "warehouse_id", nullable = false, updatable = false) })
     private Set<Warehouse>        warehouses         = new HashSet<Warehouse>(0);
@@ -169,6 +173,14 @@ public class User {
 
     public void setOrders(List<Order> orders) {
         this.orders = orders;
+    }
+
+    public List<Subscription> getSubscriptions() {
+        return subscriptions;
+    }
+
+    public void setSubscriptions(List<Subscription> subscriptions) {
+        this.subscriptions = subscriptions;
     }
 
     @Deprecated

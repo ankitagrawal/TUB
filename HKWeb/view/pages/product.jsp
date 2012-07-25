@@ -81,12 +81,6 @@
     }
   </style>
 
-  <!-- using jquery datepicker in subscription form  -->
-    <c:if test="${!empty subscriptionProduct}">
-
-    </c:if>
-
-
   <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.jqzoom-core.js"></script>
 
   <script type="text/javascript">

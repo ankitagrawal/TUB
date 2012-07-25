@@ -124,7 +124,7 @@
 
                         <s:link beanclass="com.hk.web.action.core.subscription.SubscriptionAction" class="addSubscriptionButton"><b>Subscribe</b>
                           <s:param name="productVariant" value="${variant}"/> </s:link>
-                       &nbsp; <s:link href="#" class="addSubscriptionButton" title="help"><b>?</b> </s:link>
+                       &nbsp; <s:link beanclass="com.hk.web.action.core.subscription.AboutSubscriptionAction" event="pre" title="info" target="_blank"><b>?</b> </s:link>
                        </c:if>                      
                       <s:submit name="addToCart" value="Place Order"
                                 class="addToCartButton cta button_green"

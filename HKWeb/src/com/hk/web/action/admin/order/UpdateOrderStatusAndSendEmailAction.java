@@ -43,9 +43,11 @@ public class UpdateOrderStatusAndSendEmailAction extends BaseAction {
             Shipment shipment = shippingOrder.getShipment();
             Order order = shippingOrder.getBaseOrder();
             boolean isEmailSent = false;
-            if (order.getStore() != null && order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID)) {
+            if (order.getStore() != null && order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID) && !order.isSubscriptionOrder()) {
                 isEmailSent = emailManager.sendOrderShippedEmail(shippingOrder, linkManager.getShippingOrderInvoiceLink(shippingOrder));
-            } else {
+            }else if(order.isSubscriptionOrder()){
+                isEmailSent = emailManager.sendSubscriptionOrderShippedEmail(shippingOrder, linkManager.getShippingOrderInvoiceLink(shippingOrder));
+            }else {
                 isEmailSent = true; // Incase on non HK order
             }
             if (isEmailSent && shipment != null) {

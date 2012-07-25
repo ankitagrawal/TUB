@@ -10,18 +10,17 @@ import com.hk.domain.catalog.category.Category;
 import com.hk.domain.order.Order;
 import com.hk.domain.subscription.SubscriptionProduct;
 import com.hk.domain.subscription.SubscriptionStatus;
+import com.hk.domain.user.User;
 import com.hk.pact.service.subscription.SubscriptionLoggingService;
 import com.hk.pact.service.subscription.SubscriptionService;
 import com.hk.pact.dao.subscription.SubscriptionDao;
 import com.hk.domain.subscription.Subscription;
+import com.hk.pact.service.subscription.SubscriptionStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -37,6 +36,8 @@ public class SubscriptionServiceImpl implements SubscriptionService{
     SubscriptionDao subscriptionDao;
     @Autowired
     SubscriptionLoggingService subscriptionLoggingService;
+    @Autowired
+    SubscriptionStatusService subscriptionStatusService;
 
     @Transactional
     public Subscription save(Subscription subscription){
@@ -84,6 +85,10 @@ public class SubscriptionServiceImpl implements SubscriptionService{
 
     public Page searchSubscriptions(SubscriptionSearchCriteria subscriptionSearchCriteria, int pageNo, int perPage){
         return subscriptionDao.searchSubscriptions(subscriptionSearchCriteria, pageNo, perPage);
+    }
+
+    public Page getSubscriptionsForUsers(User user, int page, int perPage){
+       return subscriptionDao.getSubscriptionsForUsers(subscriptionStatusService.getSubscriptionStatusesForUsers(),user, page, perPage);
     }
 
     /**
@@ -134,6 +139,12 @@ public class SubscriptionServiceImpl implements SubscriptionService{
             subscription.setSubscriptionStatus(EnumSubscriptionStatus.Idle.asSubscriptionStatus());
         }
         subscriptionLoggingService.logSubscriptionActivity(subscription, EnumSubscriptionLifecycleActivity.SubscriptionOrderDelivered);
+        Calendar c = Calendar.getInstance();
+        c.setTime(subscription.getNextShipmentDate());
+        c.add(Calendar.DATE,Integer.parseInt(subscription.getFrequencyDays().toString()));
+
+        subscription.setNextShipmentDate(c.getTime());
+        subscriptionLoggingService.logSubscriptionActivity(subscription, EnumSubscriptionLifecycleActivity.NextShipmentDateChanged);
         return this.save(subscription);
     }
 
