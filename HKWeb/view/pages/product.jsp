@@ -721,8 +721,9 @@
             <c:if test="${pa.combo == null}">
             $('.addToCartButton').click(function(e) {
                 if ($("#checkBoxEngraving").is(":checked")) {
-                    if($.trim(("#engrave").val()) == '') {
+                    if($.trim($("#engrave").val()) == '') {
                         alert("Please specify name to be engraved, or uncheck the engraving option");
+                        $('.progressLoader').hide();
                         return false;
                     }
                 }
@@ -809,7 +810,10 @@
                 $('html,body').animate({scrollTop:($(this.hash).offset().top - 45)}, 300);
             });
 
-            $('#productBannerTextArea').val($('#productBannerTextArea').val().replace(/\s+/g, " "));
+            if($("#productBannerTextArea").length > 0) {
+                $('#productBannerTextArea').val($('#productBannerTextArea').val().replace(/\s+/g, " "));
+            }
+
 
             $(document).click(function() {
                 $('.checkboxError').fadeOut();
