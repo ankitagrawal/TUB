@@ -17,6 +17,10 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.hk.admin.dto.inventory.PurchaseOrderDto;
+import com.hk.domain.inventory.GoodsReceivedNote;
+import com.hk.domain.inventory.GrnLineItem;
+import com.hk.domain.inventory.po.PurchaseOrder;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -825,6 +829,68 @@ public class ReportAction extends BaseAction {
         }
         addRedirectAlertMessage(new SimpleMessage("Product Variant not entered"));
         return null;
+    }
+
+    public Resolution generatePOReportByVariant() {
+        if (productIdListCommaSeparated != null) {
+            productIdArray = productIdListCommaSeparated.split(",");
+            for (String productVariantId : productIdArray) {
+                ProductVariant productVariant = productVariantDao.getVariantById(productVariantId);
+                String productVariantOptions = productVariant.getOptionsCommaSeparated();
+                List<GrnLineItem> grnLineItemList = getReportProductVariantService().getPurchaseOrderByProductVariant(productVariant, startDate, endDate);
+
+                xlsFile = new File(adminDownloads + "/reports/POReportByVariant.xls");
+                HkXlsWriter xlsWriter = new HkXlsWriter();
+                int xlsRow = 1;
+                xlsWriter.addHeader("PRODUCT VARIANT ID", "PRODUCT VARIANT ID");
+                xlsWriter.addHeader("PRODUCT NAME", "PRODUCT NAME");
+                xlsWriter.addHeader("PRODUCT OPTIONS", "PRODUCT OPTIONS");
+                xlsWriter.addHeader("PO CREATE DATE", "PO CREATE DATE");
+                xlsWriter.addHeader("PO CREATED BY", "PO CREATED BY");
+                xlsWriter.addHeader("PO APPROVER", "PO APPROVER");
+                xlsWriter.addHeader("SUPPLIER", "SUPPLIER");
+                xlsWriter.addHeader("SUPPLIER TIN", "SUPPLIER TIN");
+                xlsWriter.addHeader("WAREHOUSE", "WAREHOUSE");
+                xlsWriter.addHeader("PO STATUS", "PO STATUS");
+                xlsWriter.addHeader("GRN QTY", "GRN QTY");
+                xlsWriter.addHeader("CHECKED IN QTY", "CHECKED IN QTY");
+                xlsWriter.addHeader("GRN DATE", "GRN DATE");
+                xlsWriter.addHeader("GRN STATUS", "GRN STATUS");
+
+                xlsWriter.writeData(xlsFile, "POByVariant_Report");
+
+                for (GrnLineItem grnLineItem : grnLineItemList) {
+                    PurchaseOrder purchaseOrder = grnLineItem.getGoodsReceivedNote().getPurchaseOrder();
+
+                    xlsWriter.addCell(xlsRow, productVariantId);
+                    xlsWriter.addCell(xlsRow, productVariant.getProduct().getName());
+                    xlsWriter.addCell(xlsRow, productVariantOptions);
+                    xlsWriter.addCell(xlsRow, purchaseOrder.getId());
+                    xlsWriter.addCell(xlsRow, purchaseOrder.getCreateDate());
+                    xlsWriter.addCell(xlsRow, purchaseOrder.getCreatedBy().getName());
+                    xlsWriter.addCell(xlsRow, purchaseOrder.getApprovedBy());
+                    xlsWriter.addCell(xlsRow, purchaseOrder.getSupplier().getName());
+                    xlsWriter.addCell(xlsRow, purchaseOrder.getSupplier().getTinNumber());
+                    xlsWriter.addCell(xlsRow, purchaseOrder.getWarehouse().getName());
+                    xlsWriter.addCell(xlsRow, purchaseOrder.getPurchaseOrderStatus().getName());
+                    xlsWriter.addCell(xlsRow, grnLineItem.getQty());
+                    xlsWriter.addCell(xlsRow, grnLineItem.getCheckedInQty());
+                    xlsWriter.addCell(xlsRow, grnLineItem.getGoodsReceivedNote().getGrnDate());
+                    xlsWriter.addCell(xlsRow, grnLineItem.getGoodsReceivedNote().getGrnStatus().getName());
+
+                    xlsWriter.writeData(xlsFile, "POByVariant_Report");
+
+                    xlsRow++;
+                }
+
+            }
+            addRedirectAlertMessage(new SimpleMessage("Download complete"));
+
+            return new HTTPResponseResolution();
+        }
+        addRedirectAlertMessage(new SimpleMessage("Product Variant not entered"));
+        return null;
+
     }
 
     public Date getStartDate() {
