@@ -8020,5 +8020,16 @@
         <addColumn tableName="faq">
             <column name="page_rank" type="INT"/>
         </addColumn>
-    </changeSet>   
+    </changeSet>
+    <changeSet author="Rohit" id="20120725-01">
+        <sql>
+            insert into variant_config (name) values ('stethoscope_config');
+            insert into variant_config_option (name, variant_config_id, additional_param, display_name, display_order)
+            values('ENG', 2, 'ENG', 'Engraving', 100);
+            insert into variant_config_values(value, additonal_price, variant_config_option_id, display_order, cost_price)
+            values('Engraving', 100, 32, 100, 50);
+            update product_variant set variant_config_id = 2 where product_id = 'LIT001';
+        </sql>
+      </changeSet>
+
 </databaseChangeLog>
