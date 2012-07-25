@@ -23,7 +23,6 @@
 		$(document).ready(function() {
 
 			var validateForm = function() {
-				alert('hh');
 				var isValidated = true;
 				var checkedoutQty = $('.checkedoutQty').val();
 				if (checkedoutQty == "" || checkedoutQty < 0 || isNaN(checkedoutQty)) {
@@ -37,11 +36,10 @@
 					isValidated =  false;
 				}
 
-				$.each($('.batchNumber'), function(index, value) {
-					alert(index + ': ' + value);
+				$.each($('.batchNumber'), function() {
 					var batchNumber = $(this).val();
 					if (batchNumber == "") {
-						alert("mat karo aiise");
+						alert("Enter a valid batch number");
 						isValidated =  false;
 						return false;
 					}
@@ -49,9 +47,8 @@
 				return isValidated;
 			};
 
-			$("#saveBtn").click(function(event) {
+			$("#saveBtn").click(function() {
 				var isValidated = validateForm();
-				alert('xx' + isValidated);
 				return isValidated;
 
 			});
