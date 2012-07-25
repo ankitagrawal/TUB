@@ -31,6 +31,13 @@ public enum EnumBoxSize {
         return null;
     }
 
+    public BoxSize asBoxSize() {
+        BoxSize boxSize = new BoxSize();
+        boxSize.setId(this.id);
+        boxSize.setName(this.name);
+        return boxSize;
+    }
+
     EnumBoxSize(Long id, String name, Double weight, Double packagingCost) {
         this.name = name;
         this.id = id;
