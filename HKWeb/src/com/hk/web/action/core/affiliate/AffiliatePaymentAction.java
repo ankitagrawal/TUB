@@ -9,6 +9,7 @@ import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.affiliate.AffiliateCategoryCommission;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.Role;
+import com.hk.domain.user.User;
 import com.hk.impl.dao.CheckDetailsDaoImpl;
 import com.hk.impl.dao.affiliate.AffiliateCategoryDaoImpl;
 import com.hk.manager.AffiliateManager;
@@ -65,7 +66,11 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
     @DefaultHandler
     public Resolution pre() {
         affiliatePage = getUserService().findByRole(name, email, getRoleService().getRoleByName(RoleConstants.HK_AFFILIATE), getPageNo(), getPerPage());
-        List<Affiliate> affiliates = affiliatePage.getList();
+        List<User> affiliatesUsers = affiliatePage.getList();
+        List<Affiliate> affiliates = new ArrayList<Affiliate>();
+        for (User user : affiliatesUsers) {
+            affiliates.add(affiliateDao.getAffilateByUser(user));
+        }
         for (Affiliate affiliate : affiliates) {
                 AffiliatePaymentDto affiliatePaymentDto = new AffiliatePaymentDto();
                 affiliatePaymentDto.setAffiliate(affiliate);
