@@ -72,7 +72,8 @@
       <div style="margin-top:40px;"></div>
       <div style="float: left; width:40%">
         <c:if test="${csda.visible == true}">
-          <s:form beanclass="com.hk.web.action.admin.shipment.ChangeShipmentDetailsAction" id="newFormForAWB">
+            <s:form beanclass="com.hk.web.action.admin.shipment.ChangeShipmentDetailsAction" id="newFormForAWB">
+                <s:hidden name="attachedCourier" value="${csda.shipment.courier}"/>
             <fieldset>
               <legend> Edit Courier Or Tracking Id</legend>
 
@@ -90,10 +91,9 @@
               <div class="clear"></div>
                 <%--//todo ps need to rethink--%>
               <!--TO DO we will change it later on change --  -->
-              <s:label name="trackingId" class="label">Tracking Id</s:label>
-                ${csda.shipment.awb.awbNumber}
-              <%--<s:text name="shipment.awb.awbNumber" id="trackingId" value="${csda.shipment.trackingId}" style="width:170px"--%>
-                      <%--class="text fields"/>--%>
+              <s:label name="trackingId" class="label">Tracking Id</s:label>               
+              <s:text name="trackingId" id="trackingId" value="${csda.shipment.awb.awbNumber}" style="width:170px"
+                      class="text fields"/>
 
               <div class="clear"></div>
 
