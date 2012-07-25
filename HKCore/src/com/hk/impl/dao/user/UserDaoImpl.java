@@ -104,8 +104,14 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao {
     return criteria.list();
   }
 
-  public Page findByRole(Role role, int pageNo, int perPage) {
-    DetachedCriteria criteria = DetachedCriteria.forClass(User.class);
+    public Page findByRole(String name, String email, Role role, int pageNo, int perPage){
+	DetachedCriteria criteria = DetachedCriteria.forClass(User.class);
+	if (StringUtils.isNotBlank(email)) {
+		criteria.add(Restrictions.eq("email", email));
+	}
+	if (StringUtils.isNotBlank(name)) {
+		criteria.add(Restrictions.like("name", "%" + name + "%"));
+	}
     DetachedCriteria roleCriteria = criteria.createCriteria("roles");
     roleCriteria.add(Restrictions.eq("name", role.getName()));
     criteria.addOrder(org.hibernate.criterion.Order.desc("id"));
