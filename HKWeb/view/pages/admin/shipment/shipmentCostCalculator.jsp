@@ -95,10 +95,10 @@
                         </li>
                         <div class="clear"></div>
                         <s:label name="courier" class="label">Courier</s:label>
-                        <c:forEach items="${applicableCourierList}" var="orderStatus" varStatus="ctr">
+                        <c:forEach items="${applicableCourierList}" var="applicableCourier" varStatus="ctr">
                             <div class="clear"></div>
                             <label><s:checkbox name="applicableCourierList[${ctr.index}]"
-                                               value="${orderStatus.id}"/> ${orderStatus.name}</label>
+                                               value="${applicableCourier.id}"/> ${applicableCourier.name}</label>
                         </c:forEach>
                         <div class="clear"></div>
                         <s:label name="overrideHistoricalShipmentCost"
@@ -150,6 +150,17 @@
                         <div style="margin-top:15px;"></div>
                         <shiro:hasAnyRoles name="<%=RoleConstants.GOD%>">
                             <s:submit name="bulkSplitOrders" value="Bulk Split Orders"/>
+                        </shiro:hasAnyRoles>
+                    </fieldset>
+                </s:form>
+                <div class="clear"></div>
+                <s:form beanclass="com.hk.web.action.admin.util.MarkVariantsInStockAction">
+                    <fieldset class="top_label">
+                        <legend> Mark Variants In Stock</legend>
+                        <div class="clear"></div>
+                        <div style="margin-top:15px;"></div>
+                        <shiro:hasAnyRoles name="<%=RoleConstants.GOD%>">
+                            <s:submit name="setVariantsInStockHavingInventory" value="Mark Variants In Stock"/>
                         </shiro:hasAnyRoles>
                     </fieldset>
                 </s:form>

@@ -1,13 +1,14 @@
 <%@ page import="com.hk.constants.FaqCategoryEnums" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-
+<s:useActionBean beanclass="com.hk.web.action.faq.FaqAction" var="faqBean"/>
 <c:set var="primaryCategoryList" value="<%= FaqCategoryEnums.EnumFaqPrimaryCateogry.getAll() %>"/>
 <c:set var="secondaryCategoryList" value="<%= FaqCategoryEnums.EnumFaqSecondaryCateogry.getAll() %>"/>
 <c:set var="primaryCategoryNutrition" value="<%= FaqCategoryEnums.EnumFaqPrimaryCateogry.Nutrition.getName()%>" />
-<s:layout-render name="/layouts/default100.jsp" pageTitle="FAQs: Nutrition">
-  <s:useActionBean beanclass="com.hk.web.action.faq.FaqAction" var="faqBean"/>
+<s:layout-render name="/layouts/default100.jsp" pageTitle="FAQs: ${fn:toUpperCase(faqBean.primaryCategory)} ${fn:toUpperCase(faqBean.secondaryCategory)}">
+
   <s:layout-component name="htmlHead">
     <style type="text/css">
       p {
@@ -104,8 +105,10 @@
       </c:if>
       <fieldset class="right_label">
         <s:form beanclass="com.hk.web.action.faq.FaqAction">
-          <s:hidden name="primaryCategory" value="${faqBean.primaryCategory }" />
-          <s:hidden name="secondaryCategory" value="${faqBean.secondaryCategory}" />
+	        <s:param name="primaryCategory" value="${faqBean.primaryCategory }"/>
+	        <c:if test="${faqBean.secondaryCategory != null}">
+		        <s:param name="secondaryCategory" value="${faqBean.secondaryCategory}"/>
+	        </c:if>
           <label style="margin-left: 100px; ">Search FAQs</label>
           &nbsp;&nbsp;&nbsp;
           <s:text name="searchString" id="search-string" style="width:30em; margin-top: 16px; padding-top:10px"/>
@@ -114,7 +117,6 @@
       </fieldset>
     <br/>
 
-    <%--<h1 id="top">FAQs: Weight Management</h1>--%>
     <shiro:hasRole name="<%=RoleConstants.SITE_CONTENT_MANAGER%>">
       <s:link href="#" id="show-new-faq-form"
               class="popup" style="margin-bottom:20px;">Add FAQ
@@ -123,7 +125,7 @@
 
     <s:form beanclass="com.hk.web.action.faq.FaqAction" id="new-faq-form" style="display:none;">
       <span class="question"> Question: </span><br/>
-      <textarea class="question-textarea" name="faq.question" id="new-question">${faqBean.faq.question}</textarea>
+      <textarea class="question-textarea" name="faq.question" id="new-question" rows="2" cols="80">${faqBean.faq.question}</textarea>
       <br/><br/>
       <span class="answer"> Answer: </span>
       <br/>
@@ -163,10 +165,10 @@
     <br/>
     <br/>
     <c:if test="${faqBean.primaryCategory != null}" >
-        <span style="font-size:1.7em; font-weight:bold; margin-left:25px;"> ${faqBean.primaryCategory}</span>
+        <span style="font-size:1.7em; font-weight:bold; margin-left:25px;"> ${fn:toUpperCase(faqBean.primaryCategory)}</span>
     </c:if>
     <c:if test="${faqBean.secondaryCategory != null}" >
-        <span style="font-size:1.1em; font-weight:bold;"> :- ${faqBean.secondaryCategory} </span>
+        <span style="font-size:1.1em; font-weight:bold;"> - ${fn:toUpperCase(faqBean.secondaryCategory)} </span>
     </c:if>
       <br/>
       <br />
