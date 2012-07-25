@@ -7992,4 +7992,11 @@
     <changeSet author="Seema (generated)" id="1343136104792-2">
         <dropColumn columnName="base_order_id" tableName="demand_history"/>
     </changeSet>
+    
+    <changeSet author="Seema (generated)" id="1343199117613-1">
+        <modifyDataType columnName="awb_bar_code" newDataType="VARCHAR(70)" tableName="awb"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1343199117613-2">
+        <modifyDataType columnName="awb_number" newDataType="VARCHAR(70)" tableName="awb"/>
+    </changeSet>
 </databaseChangeLog>
