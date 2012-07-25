@@ -176,7 +176,7 @@
       
     <div id="faq-area">
       <c:forEach items="${faqBean.faqList}" var="faq" varStatus="faqctr">
-        <fieldset class="faq">
+        <div class="faq">
 
           <p class="faq-question" style="margin-top:10px;"><strong>Q. </strong>
               ${faq.question}
@@ -195,7 +195,7 @@
             <strong>A. </strong>--%>
           <div class="faq-answer">${faq.answer}</div>
           <%--</p>--%>
-        </fieldset>
+        </div>
       </c:forEach>
 
     </div>
