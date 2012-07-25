@@ -4,6 +4,7 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
 import com.hk.pact.service.inventory.InventoryService;
+import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class MarkVariantsInStockAction extends BaseAction {
 
     List<ProductVariant> productVariants = new ArrayList<ProductVariant>();
 
-
+    @DefaultHandler
     public Resolution setVariantsInStockHavingInventory() {
         productVariants = productVariantDao.getAllProductVariant();
         for (ProductVariant productVariant : productVariants) {
