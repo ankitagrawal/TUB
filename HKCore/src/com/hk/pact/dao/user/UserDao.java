@@ -38,7 +38,7 @@ public interface UserDao extends BaseDao {
 
   public List<User> findByRole(Role role);
 
-  public Page findByRole(Role role, int pageNo, int perPage);
+  public Page findByRole(String name, String email, Role role, int pageNo, int perPage);
 
   public Page listUsersByRole(Role role, int page, int perPage);
 

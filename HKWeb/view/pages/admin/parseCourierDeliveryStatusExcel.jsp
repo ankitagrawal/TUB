@@ -22,7 +22,7 @@
             </div>
             <br>
 
-            <p><b>Columns in Excel </b>- S No, CNNO, Ref. No ,Courier_Id, Customer, Code, Booking D, No. Of Pieces ,Dest.
+            <p><b>Columns in Excel </b>- S No, CNNO, Ref. No ,Courier Id, Customer, Code, Booking D, No. Of Pieces ,Dest.
                 Pincode, Destination ,Status , Delivered Date, Remarks </p>
         </fieldset>
     </s:form>

@@ -7992,6 +7992,34 @@
     <changeSet author="Seema (generated)" id="1343136104792-2">
         <dropColumn columnName="base_order_id" tableName="demand_history"/>
     </changeSet>
+    <changeSet author="Seema (generated)" id="1343199117613-1">
+        <modifyDataType columnName="awb_bar_code" newDataType="VARCHAR(70)" tableName="awb"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1343199117613-2">
+        <modifyDataType columnName="awb_number" newDataType="VARCHAR(70)" tableName="awb"/>
+    </changeSet>
+
+     <changeSet author="Tarun (generated)" id="1342434630676-1">
+        <createTable tableName="faq">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="question" type="MEDIUMTEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="answer" type="MEDIUMTEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="primary_category" type="VARCHAR(100)"/>
+            <column name="secondary_category" type="VARCHAR(100)"/>
+            <column name="keywords" type="VARCHAR(100)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1342684181224-2">
+        <addColumn tableName="faq">
+            <column name="page_rank" type="INT"/>
+        </addColumn>
+    </changeSet>   
 	<changeSet author="Rahul (generated)" id="1343129589883-1">
 	    <dropForeignKeyConstraint baseTableName="stock_transfer_line_item" constraintName="fk_stock_transfer_line_item_sku1"/>
 	</changeSet>
@@ -8007,4 +8035,5 @@
 	<changeSet author="Rahul (generated)" id="1343130936367-2">
 	    <addForeignKeyConstraint baseColumnNames="stock_transfer_id" baseTableName="stock_transfer_line_item" constraintName="fk_stock_transfer_line_item_stock_transfer1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="stock_transfer" referencesUniqueColumn="false"/>
 	</changeSet>
+
 </databaseChangeLog>

@@ -117,8 +117,8 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public Page findByRole(Role role, int pageNo, int perPage) {
-    return getUserDao().findByRole(role, pageNo, perPage);
+    public Page findByRole(String name, String email, Role role, int pageNo, int perPage){
+    return getUserDao().findByRole(name, email,role, pageNo, perPage);
   }
 
   @Override
