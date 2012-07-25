@@ -33,11 +33,11 @@
 					</tr>
 					<tr>
 						<td>Cost Price:</td>
-						<td><s:text name="costPrice" value="0.0"/></td>
+						<td><s:text name="costPrice" class="costPrice" value="0.0"/></td>
 					</tr>
 					<tr>
 						<td>MRP:</td>
-						<td><s:text name="mrp" value="0.0"/></td>
+						<td><s:text name="mrp" class="mrp" value="0.0"/></td>
 					</tr>
 					<tr>
 						<td>Batch Number:</td>
@@ -73,10 +73,12 @@
 							}
 						});
 
-					 	$(".st_pvId").click(function() {
+					 	$(".stPvId").click(function() {
 							$('.variant').val(this.innerHTML);
-							$(".batchNumber").val($(this).parent().siblings('.st_batchNum').html());
-							$('.qty').val($($('.st_pvId')).parent().siblings('.st_checkOutQty').html());
+							$(".batchNumber").val($(this).parent().siblings('.stBatchNum').html());
+							$('.qty').val($(this).parent().siblings('.stCheckOutQty').html());
+							$('.costPrice').val($(this).parent().siblings('.stCostPrice').html());
+							$('.mrp').val($(this).parent().siblings('.stMrp').html());
 
 						});
 					});
@@ -99,6 +101,8 @@
 					<th width="">Batch</th>
 					<th width="">Checked-out Qty</th>
 					<th width="">Checked-in Qty</th>
+					<th width="">Cost Price</th>
+					<th width="">Mrp</th>
 				</tr>
 				<c:forEach items="${ica.stockTransfer.stockTransferLineItems}" var="stockTransferLineItem" varStatus="ctr">
 					<c:set value="${stockTransferLineItem.sku.productVariant}" var="productVariant"/>
@@ -110,13 +114,15 @@
 								${productOption.name} ${productOption.value}
 							</c:forEach></em>
 						</td>
-						<td><a href="#" class="st_pvId">${productVariant.id}</a></td>
+						<td><a href="#" class="stPvId">${productVariant.id}</a></td>
 						<%--<td>${productVariant.upc}</td>--%>
-						<td class="st_batchNum">${stockTransferLineItem.batchNumber}</td>
+						<td class="stBatchNum">${stockTransferLineItem.batchNumber}</td>
 
-						<td class="st_checkOutQty">${stockTransferLineItem.checkedoutQty}</td>
+						<td class="stCheckOutQty">${stockTransferLineItem.checkedoutQty}</td>
 
 						<td style="color:green; font-weight:bold">${stockTransferLineItem.checkedinQty}</td>
+						<td class="stCostPrice">${stockTransferLineItem.costPrice}</td>
+						<td class="stMrp" >${stockTransferLineItem.mrp}</td>
 					</tr>
 				</c:forEach>
 			</table>
