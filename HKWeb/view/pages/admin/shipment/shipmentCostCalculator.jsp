@@ -95,10 +95,10 @@
                         </li>
                         <div class="clear"></div>
                         <s:label name="courier" class="label">Courier</s:label>
-                        <c:forEach items="${applicableCourierList}" var="orderStatus" varStatus="ctr">
+                        <c:forEach items="${applicableCourierList}" var="applicableCourier" varStatus="ctr">
                             <div class="clear"></div>
                             <label><s:checkbox name="applicableCourierList[${ctr.index}]"
-                                               value="${orderStatus.id}"/> ${orderStatus.name}</label>
+                                               value="${applicableCourier.id}"/> ${applicableCourier.name}</label>
                         </c:forEach>
                         <div class="clear"></div>
                         <s:label name="overrideHistoricalShipmentCost"
