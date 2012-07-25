@@ -217,7 +217,7 @@ public class InventoryCheckinAction extends BaseAction {
                                 "checkinInventoryAgainstStockTransfer", stockTransfer.getId());
               }
                 Long askedQty = 0L;
-                StockTransferLineItem stockTransferLineItem = stockTransferDao.getStockTransferLineItem(stockTransfer, productVariant);
+                StockTransferLineItem stockTransferLineItem = stockTransferDao.getStockTransferLineItem(stockTransfer, productVariant, batch);
                 if (stockTransferLineItem != null && sku != null) {
                     askedQty = stockTransferLineItem.getCheckedoutQty();
                     Long alreadyCheckedInQty = adminInventoryService.countOfCheckedInUnitsForStockTransferLineItem(stockTransferLineItem);
