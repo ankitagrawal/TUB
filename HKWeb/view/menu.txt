@@ -31,7 +31,7 @@
 --/nutrition/dietary-supplements/herbal-teas
 --/nutrition/dietary-supplements/herbs-a-z  :Herbs A-Z
 --/nutrition/dietary-supplements/herbal-cream-oil  :Herbal Cream & Oil
--/nutrition/condition-specific-supplements
+-/nutrition/condition-specific-supplements : Condition Specific
 --/nutrition/condition-specific-supplements/cardiovascular
 --/nutrition/condition-specific-supplements/joint-muscle    :Joint & Muscle
 --/nutrition/condition-specific-supplements/stress-anxiety  :Stress & Anxiety
@@ -205,6 +205,7 @@
 --/diabetes/diabetic-food/sweetener
 --/diabetes/diabetic-food/sugar-free-drinks : Sugar Free Drinks
 --/diabetes/diabetic-food/sugar-free-food-candy : Sugar Free Food & Candy
+--/diabetes/diabetic-food/diabetic-supplements
 --/diabetes/diabetic-food/combos
 -/diabetes/devices
 --/diabetes/devices/step-counter: Step Counter
@@ -221,6 +222,11 @@
 ---/home-devices/blood-pressure/bp-monitor/wrist-bp-monitor
 --/home-devices/blood-pressure/heart-rate-monitor
 --/home-devices/blood-pressure/bp : BP Apparatus
+---/home-devices/blood-pressure/bp/aneroid-sphygmomanometer
+---/home-devices/blood-pressure/bp/clock-type-sphygmomanometer
+---/home-devices/blood-pressure/bp/mercury-sphygmomanometer
+---/home-devices/blood-pressure/bp/mercury-free-sphygmomanometer
+---/home-devices/blood-pressure/bp/electrical-sphygmomanometer
 --/home-devices/blood-pressure/ecg : ECG Machines
 --/home-devices/blood-pressure/accessories
 --/home-devices/blood-pressure/combo : Star's of the Month
@@ -465,6 +471,7 @@
 --/personal-care/misc/pain-relief : Pain Relief
 --/personal-care/misc/air-freshener : Air Freshener
 --/personal-care/misc/buds
+--/personal-care/misc/cotton-balls     :     Cotton Balls
 
 /beauty
 -/beauty/what-s-new: What's New
@@ -477,7 +484,11 @@
 --/beauty/what-s-new/natural-products
 --/beauty/what-s-new/home-spa-products
 --/beauty/what-s-new/spas-salons : Spas & Salons
+---/beauty/what-s-new/women-nutrition/calcium
+---/beauty/what-s-new/women-nutrition/wellness
+---/beauty/what-s-new/women-nutrition/weight-watch
 --/beauty/what-s-new/women-nutrition
+--/beauty/what-s-new/cosmetic-restoration
 -/beauty/face-care
 --/beauty/face-care/cleanser
 ---/beauty/face-care/cleanser/normal
@@ -681,6 +692,7 @@
 ---/parenting/infant/grooming/comb-hair-brushes:   Comb & Hair Brushes
 ---/parenting/infant/grooming/nail-clippers-scissors:   Nail Clippers & Scissors
 ---/parenting/infant/grooming/buds    :    Ear Buds
+---/parenting/infant/grooming/cotton-balls   :    Cotton Balls
 --/parenting/infant/room-accessories
 --/parenting/infant/walkers
 --/parenting/infant/bedtime
@@ -716,6 +728,7 @@
 ---/parenting/toddler/grooming/comb-hair-brushes:   Comb & Hair Brushes
 ---/parenting/toddler/grooming/nail-clippers-scissors:   Nail Clippers & Scissors
 ---/parenting/toddler/grooming/buds    :    Ear Buds
+---/parenting/toddler/grooming/cotton-balls   :    Cotton Balls
 --/parenting/toddler/oral-care
 ---/parenting/toddler/oral-care/toothbrushes
 ---/parenting/toddler/oral-care/toothpaste-and-tooth-gel:Toothpaste & Tooth gel
