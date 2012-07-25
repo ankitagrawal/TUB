@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.apache.commons.lang.StringUtils;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.SimpleError;
+import net.sourceforge.stripes.validation.Validate;
 
 /**
  * Created by IntelliJ IDEA.
@@ -37,7 +38,7 @@ public class ForecastExcelAction extends BaseAction {
     @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String adminUploadsPath;
 
-    //@Validate(required = true)
+    @Validate(required = true)
     FileBean fileBean;
 
     @Autowired
@@ -50,6 +51,7 @@ public class ForecastExcelAction extends BaseAction {
     private ProductVariantService productVariantService;
 
     @DefaultHandler
+    @DontValidate
     public Resolution pre() {
         return new ForwardResolution("/pages/admin/uploadForecast.jsp");
     }
@@ -134,7 +136,9 @@ public class ForecastExcelAction extends BaseAction {
             return new ForwardResolution("/pages/admin/uploadForecast.jsp");
         }
 
-        return new RedirectResolution(AdminHomeAction.class);
+        addRedirectAlertMessage(new SimpleMessage("Database Updated"));
+        return new ForwardResolution("/pages/admin/uploadForecast.jsp");
+        //return new RedirectResolution(AdminHomeAction.class);
     }
 
 
