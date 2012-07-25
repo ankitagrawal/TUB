@@ -153,6 +153,17 @@
                         </shiro:hasAnyRoles>
                     </fieldset>
                 </s:form>
+                <div class="clear"></div>
+                <s:form beanclass="com.hk.web.action.admin.util.MarkVariantsInStockAction">
+                    <fieldset class="top_label">
+                        <legend> Mark Variants In Stock</legend>
+                        <div class="clear"></div>
+                        <div style="margin-top:15px;"></div>
+                        <shiro:hasAnyRoles name="<%=RoleConstants.GOD%>">
+                            <s:submit name="setVariantsInStockHavingInventory" value="Mark Variants In Stock"/>
+                        </shiro:hasAnyRoles>
+                    </fieldset>
+                </s:form>
             </shiro:hasAnyRoles>
 
             <div class="clear"></div>
