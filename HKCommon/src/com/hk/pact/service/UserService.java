@@ -42,7 +42,7 @@ public interface UserService {
 
   public List<User> findByRole(Role role);
 
-  public Page findByRole(Role role, int pageNo, int perPage);
+  public Page findByRole(String name, String email, Role role, int pageNo, int perPage);
 
   public User findByLoginAndStoreId(String login, Long storeId);
 }
