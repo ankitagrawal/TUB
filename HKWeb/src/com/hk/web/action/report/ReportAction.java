@@ -837,7 +837,7 @@ public class ReportAction extends BaseAction {
             for (String productVariantId : productIdArray) {
                 ProductVariant productVariant = productVariantDao.getVariantById(productVariantId);
                 String productVariantOptions = productVariant.getOptionsCommaSeparated();
-                List<GrnLineItem> grnLineItemList = getReportProductVariantService().getPurchaseOrderByProductVariant(productVariant, startDate, endDate);
+                List<GrnLineItem> grnLineItemList = getReportProductVariantService().getPurchaseOrderByProductVariant(productVariant, warehouse, startDate, endDate);
 
                 xlsFile = new File(adminDownloads + "/reports/POReportByVariant.xls");
                 HkXlsWriter xlsWriter = new HkXlsWriter();
@@ -845,17 +845,20 @@ public class ReportAction extends BaseAction {
                 xlsWriter.addHeader("PRODUCT VARIANT ID", "PRODUCT VARIANT ID");
                 xlsWriter.addHeader("PRODUCT NAME", "PRODUCT NAME");
                 xlsWriter.addHeader("PRODUCT OPTIONS", "PRODUCT OPTIONS");
+                xlsWriter.addHeader("PO ID", "PO ID");
                 xlsWriter.addHeader("PO CREATE DATE", "PO CREATE DATE");
                 xlsWriter.addHeader("PO CREATED BY", "PO CREATED BY");
                 xlsWriter.addHeader("PO APPROVER", "PO APPROVER");
                 xlsWriter.addHeader("SUPPLIER", "SUPPLIER");
                 xlsWriter.addHeader("SUPPLIER TIN", "SUPPLIER TIN");
-                xlsWriter.addHeader("WAREHOUSE", "WAREHOUSE");
                 xlsWriter.addHeader("PO STATUS", "PO STATUS");
                 xlsWriter.addHeader("GRN QTY", "GRN QTY");
                 xlsWriter.addHeader("CHECKED IN QTY", "CHECKED IN QTY");
                 xlsWriter.addHeader("GRN DATE", "GRN DATE");
                 xlsWriter.addHeader("GRN STATUS", "GRN STATUS");
+                xlsWriter.addHeader("MRP", "MRP");
+                xlsWriter.addHeader("COST PRICE", "COST PRICE");
+                xlsWriter.addHeader("MARGIN(CP vs MRP)", "MARGIN(CP vs MRP)");
 
                 xlsWriter.writeData(xlsFile, "POByVariant_Report");
 
@@ -868,21 +871,22 @@ public class ReportAction extends BaseAction {
                     xlsWriter.addCell(xlsRow, purchaseOrder.getId());
                     xlsWriter.addCell(xlsRow, purchaseOrder.getCreateDate());
                     xlsWriter.addCell(xlsRow, purchaseOrder.getCreatedBy().getName());
-                    xlsWriter.addCell(xlsRow, purchaseOrder.getApprovedBy());
+                    xlsWriter.addCell(xlsRow, purchaseOrder.getApprovedBy().getName());
                     xlsWriter.addCell(xlsRow, purchaseOrder.getSupplier().getName());
                     xlsWriter.addCell(xlsRow, purchaseOrder.getSupplier().getTinNumber());
-                    xlsWriter.addCell(xlsRow, purchaseOrder.getWarehouse().getName());
                     xlsWriter.addCell(xlsRow, purchaseOrder.getPurchaseOrderStatus().getName());
                     xlsWriter.addCell(xlsRow, grnLineItem.getQty());
                     xlsWriter.addCell(xlsRow, grnLineItem.getCheckedInQty());
                     xlsWriter.addCell(xlsRow, grnLineItem.getGoodsReceivedNote().getGrnDate());
                     xlsWriter.addCell(xlsRow, grnLineItem.getGoodsReceivedNote().getGrnStatus().getName());
+                    xlsWriter.addCell(xlsRow, productVariant.getMarkedPrice());
+                    xlsWriter.addCell(xlsRow, productVariant.getCostPrice());
+                    xlsWriter.addCell(xlsRow, (productVariant.getMarkedPrice() - productVariant.getCostPrice())/productVariant.getCostPrice()*100);
 
                     xlsWriter.writeData(xlsFile, "POByVariant_Report");
 
                     xlsRow++;
                 }
-
             }
             addRedirectAlertMessage(new SimpleMessage("Download complete"));
 

@@ -625,7 +625,18 @@
                     (Enter Ids separated by comma)
                 </li>
                 <li>
-                        <%--<s:submit name="generateSKUSalesExcel" value="Generate Excel"/>--%>
+                    <label>
+                        Warehouse
+                    </label>
+
+                    <s:select name="warehouse" style="height:30px;font-size:1.2em;padding:1px;">
+                        <c:forEach items="${whList}" var="wh">
+                            <s:option value="${wh.id}">${wh.city}</s:option>
+                        </c:forEach>
+                    </s:select>
+
+                </li>
+                <li>
                     <s:submit name="generatePOReportByVariant" value="Generate Report"/>
                 </li>
             </ul>

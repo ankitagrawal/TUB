@@ -104,13 +104,14 @@ public class ReportProductVariantDaoImpl extends BaseDaoImpl implements ReportPr
                 .setResultTransformer(Transformers.aliasToBean(RVReportDto.class)).list();
     }
 
-    public List<GrnLineItem> getPurchaseOrderByProductVariant(ProductVariant productVariant, Date startDate, Date endDate) {
+    public List<GrnLineItem> getPurchaseOrderByProductVariant(ProductVariant productVariant, Warehouse warehouse, Date startDate, Date endDate) {
         /*String query1 = "select po from PurchaseOrder po join po.goodsReceivedNotes grn join grn.grnLineItems grnli join grnli.sku sku join sku.productVariant pv " +
                 " where pv = :productVariant and grn.grnDate between :startDate and :endDate";
 */
         String query = "select grnli from GrnLineItem grnli join grnli.goodsReceivedNote grn join grn.purchaseOrder po " +
-                        " where grnli.sku.productVariant = :productVariant and grn.grnDate between :startDate and :endDate";
-        return getSession().createQuery(query).setParameter("productVariant", productVariant).setParameter("startDate", startDate).setParameter("endDate", endDate).list();
+                        " where grnli.sku.productVariant = :productVariant and grnli.sku.warehouse = :warehouse and grn.grnDate between :startDate and :endDate";
+        return getSession().createQuery(query).setParameter("productVariant", productVariant).setParameter("startDate", startDate)
+                .setParameter("warehouse", warehouse).setParameter("endDate", endDate).list();
 
     }
 
