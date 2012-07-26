@@ -104,13 +104,12 @@ public class ChangeShipmentDetailsAction extends BaseAction {
                 Awb awb = new Awb();
                 awb.setAwbNumber(trackingId.trim());
                 awb.setAwbBarCode(trackingId.trim());
-                awb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
+                awb.setAwbStatus(EnumAwbStatus.Used.getAsAwbStatus());
                 awb.setCourier(shipment.getCourier());
                 awb.setCod(shippingOrder.isCOD());
                 awb.setWarehouse(shippingOrder.getWarehouse());
                 awb = awbService.save(awb);
                 finalAwb = awb;
-                finalAwb.setAwbStatus(EnumAwbStatus.Used.getAsAwbStatus());
             }
             //Todo Seema -- Awb  detached from Shipment, their status should not change : Need to decide whether awb will be deleted or made available
             //attachedAwb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
@@ -132,12 +131,12 @@ public class ChangeShipmentDetailsAction extends BaseAction {
             } else if (shippingOrderStatusId.equals(EnumShippingOrderStatus.SO_Lost.getId())) {
                 adminShippingOrderService.markShippingOrderAsLost(shippingOrder);
             }
-//        shippingOrderService.save(shippingOrder);
             if (!originalShippingOrderStatus.equals(shippingOrderStatusName)) {
                 comments = "Status changed from " + originalShippingOrderStatus + " to " + shippingOrderStatusName;
                 shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_StatusChanged, comments);
             }
         }
+        shippingOrderService.save(shippingOrder);
         addRedirectAlertMessage(new SimpleMessage("Changes Saved."));
         return new ForwardResolution("/pages/admin/changeShipmentDetails.jsp");
     }
