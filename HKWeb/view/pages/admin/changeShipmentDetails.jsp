@@ -58,7 +58,7 @@
           <fieldset class="top_label">
             <legend> Search Shipping Order</legend>
             <s:label name="gatewayOrderId" class="label">Gateway Order Id</s:label>
-            <s:text name="gatewayOrderId" style="width:200px" class="text"/> <br/>
+            <s:text name="gatewayOrderId" style="width:170px" class="text"/> <br/>
 
             <div class="clear"></div>
             <div style="margin-top:15px;"></div>
@@ -98,13 +98,13 @@
               <div class="clear"></div>
 
               <s:label name="Delivery Date" class="label"/>
-              <s:text name="shipment.deliveryDate" class="date_input startDate text fields" style="width:170px"
+              <s:text name="shipment.deliveryDate" class="date_input startDate text fields" style="width:160px"
                       id="deliveryDate" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"/>
 
               <div class="clear"></div>
 
               <s:label name="returnDate" class="label">Return Date</s:label>
-              <s:text name="shipment.returnDate" class="date_input startDate text fields" style="width:170px"
+              <s:text name="shipment.returnDate" class="date_input startDate text fields" style="width:160px"
                       id="returnDate" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"/>
 
               <div class="clear"></div>

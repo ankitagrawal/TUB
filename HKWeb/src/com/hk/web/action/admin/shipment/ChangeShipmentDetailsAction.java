@@ -16,27 +16,35 @@ import com.hk.domain.courier.Shipment;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.order.ShippingOrderStatus;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.web.action.error.AdminPermissionAction;
+
 import com.hk.admin.pact.service.courier.AwbService;
 
-@Secure(hasAnyPermissions = { PermissionConstants.UPDATE_DELIVERY_QUEUE }, authActionBean = AdminPermissionAction.class)
+import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
+
+@Secure(hasAnyPermissions = {PermissionConstants.UPDATE_DELIVERY_QUEUE}, authActionBean = AdminPermissionAction.class)
 public class ChangeShipmentDetailsAction extends BaseAction {
 
     private ShippingOrder shippingOrder;
-    private Shipment      shipment;
-    private String        originalShippingOrderStatus;
-    private String        gatewayOrderId;
-    String                comments;
-    private boolean       visible = false;
     private String trackingId;
     private Courier attachedCourier;
-    private static Logger logger  = LoggerFactory.getLogger(ChangeShipmentDetailsAction.class);
+    private Shipment shipment;
+    private String originalShippingOrderStatus;
+    private String gatewayOrderId;
+    String comments;
+    private boolean visible = false;
+    private static Logger logger = LoggerFactory.getLogger(ChangeShipmentDetailsAction.class);
+
 
     @Autowired
-    ShippingOrderService  shippingOrderService;
-    @Autowired
     AwbService awbService;
+    @Autowired
+    AdminShippingOrderService adminShippingOrderService;
+    @Autowired
+    ShippingOrderService shippingOrderService;
+
 
     @DefaultHandler
     public Resolution pre() {
@@ -104,20 +112,31 @@ public class ChangeShipmentDetailsAction extends BaseAction {
                 finalAwb = awb;
                 finalAwb.setAwbStatus(EnumAwbStatus.Used.getAsAwbStatus());
             }
-            //To Do Seema --  the status of Awb which are detached from Shipment, should not change
+            //To Do Seema -- Awb  Status which are detached from Shipment, should not change
 //            attachedAwb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
 //            awbService.save(attachedAwb);
-            shipment.setAwb(finalAwb);            
+            shipment.setAwb(finalAwb);
         }
 
         shippingOrder.setShipment(shipment);
-        shippingOrderService.save(shippingOrder);
-        // comments = "Courier:" + shipment.getCourier().getName() + ", TrackingId:" + shipment.getTrackingId() +
-        // ", Status:" + shippingOrder.getOrderStatus().getName();
-        String shippingOrderStatus = shippingOrder.getOrderStatus().getName();
-        if (!originalShippingOrderStatus.equals(shippingOrderStatus)) {
-            comments = "Status changed from " + originalShippingOrderStatus + " to " + shippingOrder.getOrderStatus().getName();
-            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_StatusChanged, comments);
+
+        ShippingOrderStatus shippingOrderStatus = shippingOrder.getOrderStatus();
+        Long shippingOrderStatusId = shippingOrderStatus.getId();
+        String shippingOrderStatusName = shippingOrder.getOrderStatus().getName();
+
+        if (!shippingOrderStatusName.equals(originalShippingOrderStatus)) {
+            if (shippingOrderStatusId.equals(EnumShippingOrderStatus.SO_Delivered.getId())) {
+                adminShippingOrderService.markShippingOrderAsDelivered(shippingOrder);
+            } else if (shippingOrderStatusId.equals(EnumShippingOrderStatus.SO_Shipped.getId())) {
+                adminShippingOrderService.markShippingOrderAsShipped(shippingOrder);
+            } else if (shippingOrderStatusId.equals(EnumShippingOrderStatus.SO_Lost.getId())) {
+                adminShippingOrderService.markShippingOrderAsLost(shippingOrder);
+            }
+//        shippingOrderService.save(shippingOrder);
+            if (!originalShippingOrderStatus.equals(shippingOrderStatusName)) {
+                comments = "Status changed from " + originalShippingOrderStatus + " to " + shippingOrderStatusName;
+                shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_StatusChanged, comments);
+            }
         }
         addRedirectAlertMessage(new SimpleMessage("Changes Saved."));
         return new ForwardResolution("/pages/admin/changeShipmentDetails.jsp");
@@ -155,7 +174,8 @@ public class ChangeShipmentDetailsAction extends BaseAction {
         this.originalShippingOrderStatus = originalShippingOrderStatus;
     }
 
-      public String getTrackingId() {
+
+    public String getTrackingId() {
         return trackingId;
     }
 
@@ -170,4 +190,5 @@ public class ChangeShipmentDetailsAction extends BaseAction {
     public void setAttachedCourier(Courier attachedCourier) {
         this.attachedCourier = attachedCourier;
     }
+
 }
