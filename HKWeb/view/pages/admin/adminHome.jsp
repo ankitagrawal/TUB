@@ -237,6 +237,9 @@
 
 <h3>
     <s:link beanclass="com.hk.web.action.admin.sku.SkuParseExcelAction">Upload SKU Excel</s:link></h3>
+    <h3>
+        <s:link beanclass="com.hk.web.action.admin.inventory.ForecastExcelAction">Upload Forecast Demand Excel</s:link>
+    </h3>
 
 	<h3>
 	    <s:link beanclass="com.hk.web.action.admin.inventory.BrandsToAuditAction">Inventory Audit</s:link></h3>
