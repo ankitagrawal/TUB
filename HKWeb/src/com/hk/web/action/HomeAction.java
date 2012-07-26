@@ -2,20 +2,19 @@ package com.hk.web.action;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.domain.catalog.category.Category;
+import com.hk.domain.catalog.category.CategoryImage;
 import com.hk.domain.content.PrimaryCategoryHeading;
-import com.hk.pact.dao.content.PrimaryCategoryHeadingDao;
+import com.hk.helper.MenuHelper;
+import com.hk.manager.UserManager;
 import com.hk.pact.dao.catalog.category.CategoryImageDao;
+import com.hk.pact.dao.content.PrimaryCategoryHeadingDao;
+import com.hk.pact.service.catalog.CategoryService;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import com.hk.domain.catalog.category.CategoryImage;
-import com.hk.helper.MenuHelper;
-import com.hk.manager.UserManager;
-import com.hk.pact.service.catalog.CategoryService;
 
 
 //@HttpCache(expires=20000)
@@ -44,7 +43,7 @@ public class HomeAction extends BaseAction {
     category = categoryService.getCategoryByName("home");
     categoryImages = categoryImageDao.getCategoryImageByCategoryHome(category);
     headings = primaryCategoryHeadingDao.getHeadingsByCategory(category);
-    getContext().getResponse().setDateHeader("Expires", System.currentTimeMillis() + (900 * 1000)); // 15 min in future.
+    //getContext().getResponse().setDateHeader("Expires", System.currentTimeMillis() + (900 * 1000)); // 15 min in future.
 
 
     return new ForwardResolution("/pages/home.jsp");

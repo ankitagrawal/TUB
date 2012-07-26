@@ -7,6 +7,7 @@ import java.util.Set;
 
 import javax.persistence.*;
 
+import com.akube.framework.gson.JsonSkip;
 import org.hibernate.annotations.Where;
 
 import com.hk.domain.accounting.AccountingInvoice;
@@ -84,18 +85,17 @@ public class ShippingOrder implements java.io.Serializable {
   @JoinColumn(name = "base_order_id")
   private Order baseOrder;
 
-
-
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinColumn(name = "warehouse_id")
   private Warehouse warehouse;
 
-  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  @JoinColumn(name = "shipment_id")
-  private Shipment shipment;
+    @JsonSkip
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "shipment_id")
+    private Shipment shipment;
 
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "shippingOrder")
-  @Where(clause = "deleted = 0")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "shippingOrder")
+    @Where(clause = "deleted = 0")
   private Set<LineItem> lineItems = new HashSet<LineItem>();
 
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "shippingOrder")

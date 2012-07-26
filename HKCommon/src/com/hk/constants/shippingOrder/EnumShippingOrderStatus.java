@@ -130,4 +130,10 @@ public enum EnumShippingOrderStatus {
                 EnumShippingOrderStatus.SO_Lost.asShippingOrderStatus());
     }
 
+    public static List<Long> getStatusForSearchOrderAndEnterCourierInfo() {
+           return Arrays.asList(EnumShippingOrderStatus.SO_Packed.asShippingOrderStatus().getId(),
+                   EnumShippingOrderStatus.SO_CheckedOut.asShippingOrderStatus().getId());
+       }
+
+
 }
