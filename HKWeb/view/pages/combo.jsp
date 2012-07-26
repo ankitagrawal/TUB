@@ -229,11 +229,11 @@
                                     <c:when test="${idForImage != null}">
                                         <hk:productImage imageId="${idForImage}"
                                                          size="<%=EnumImageSize.SmallSize%>"
-                                                         alt="${product.name}" class="imageTag"/>
+                                                         alt="${product.name}" class="imageTag1"/>
                                     </c:when>
                                     <c:otherwise>
                                         <img src='<hk:vhostImage/>/images/ProductImages/ProductImagesThumb/test/${variant.id}.jpg'
-                                             alt="${product.name}" class="imageTag"/>
+                                             alt="${product.name}" class="imageTag1"/>
                                     </c:otherwise>
                                 </c:choose>
                                 <c:forEach items="${variant.productOptions}" var="option">
