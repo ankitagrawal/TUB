@@ -112,9 +112,9 @@ public class ChangeShipmentDetailsAction extends BaseAction {
                 finalAwb = awb;
                 finalAwb.setAwbStatus(EnumAwbStatus.Used.getAsAwbStatus());
             }
-            //To Do Seema -- Awb  detached from Shipment, their status should not change
-//            attachedAwb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
-//            awbService.save(attachedAwb);
+            //Todo Seema -- Awb  detached from Shipment, their status should not change : Need to decide whether awb will be deleted or made available
+            //attachedAwb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
+            //awbService.save(attachedAwb);
             shipment.setAwb(finalAwb);
         }
 
