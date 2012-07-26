@@ -688,16 +688,16 @@
           $('.errors').append("<br/> Please enter brand for: " + productId);
         }
       });
-      $('.productSupplierTin').each(function() {
-        if ($(this).val().trim() === "") {
-          ctr = 1;
-          var productId = $(this).parents('.productRow').find('.productId').val();
-          $('.errors').append("<br/> Please enter supplier's tin number for: " + productId);
-        }
-      });
+//      $('.productSupplierTin').each(function() {
+//        if ($(this).val().trim() === "") {
+//          ctr = 1;
+//          var productId = $(this).parents('.productRow').find('.productId').val();
+//          $('.errors').append("<br/> Please enter supplier's tin number for: " + productId);
+//        }
+//      });
 
       if (ctr) {
-        alert("Errors encoountered! Kindly go to the top of the page to view.");
+        alert("Errors encountered! Kindly go to the top of the page to view.");
         $('.errors').show();
       }
       return !ctr;
