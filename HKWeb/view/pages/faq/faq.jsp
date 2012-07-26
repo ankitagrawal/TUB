@@ -3,12 +3,12 @@
 <%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-
+<s:useActionBean beanclass="com.hk.web.action.faq.FaqAction" var="faqBean"/>
 <c:set var="primaryCategoryList" value="<%= FaqCategoryEnums.EnumFaqPrimaryCateogry.getAll() %>"/>
 <c:set var="secondaryCategoryList" value="<%= FaqCategoryEnums.EnumFaqSecondaryCateogry.getAll() %>"/>
 <c:set var="primaryCategoryNutrition" value="<%= FaqCategoryEnums.EnumFaqPrimaryCateogry.Nutrition.getName()%>" />
-<s:layout-render name="/layouts/default100.jsp" pageTitle="FAQs: Nutrition">
-  <s:useActionBean beanclass="com.hk.web.action.faq.FaqAction" var="faqBean"/>
+<s:layout-render name="/layouts/default100.jsp" pageTitle="FAQs: ${fn:toUpperCase(faqBean.primaryCategory)} ${fn:toUpperCase(faqBean.secondaryCategory)}">
+
   <s:layout-component name="htmlHead">
     <style type="text/css">
       p {
@@ -117,12 +117,11 @@
       </fieldset>
     <br/>
 
-    <%--<h1 id="top">FAQs: Weight Management</h1>--%>
-    <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_DESCRIPTIONS%>">
+    <shiro:hasRole name="<%=RoleConstants.SITE_CONTENT_MANAGER%>">
       <s:link href="#" id="show-new-faq-form"
               class="popup" style="margin-bottom:20px;">Add FAQ
       </s:link>
-    </shiro:hasPermission>
+    </shiro:hasRole>
 
     <s:form beanclass="com.hk.web.action.faq.FaqAction" id="new-faq-form" style="display:none;">
       <span class="question"> Question: </span><br/>
@@ -183,7 +182,7 @@
 
           <p class="faq-question" style="margin-top:10px;"><strong>Q. </strong>
               ${faq.question}
-          <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_DESCRIPTIONS%>">
+          <shiro:hasRole name="<%=RoleConstants.SITE_CONTENT_MANAGER%>">
             <s:link beanclass="com.hk.web.action.faq.FaqAction"
                     event="editFaq"
                     class="popup_window popup"
@@ -191,7 +190,7 @@
               Edit Faq
               <s:param name="faq" value="${faq.id}"/>
             </s:link>
-          </shiro:hasPermission>
+          </shiro:hasRole>
           </p>
 
          <%-- <p class="faq-answer">

@@ -35,7 +35,7 @@
             menuStr += "<li class='lvl1' id='brands_button' style='float:left;'><a href='${pageContext.request.contextPath}/brands'>Brands</a></li>"
 
         <%--<shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_CATALOG%>">--%>
-            menuStr += "<li class='lvl1 new' id='super_savers_button' style='float:left;'><a href='${pageContext.request.contextPath}/super-savers'>Offers</a></li>"
+            menuStr += "<li class='lvl1 new' id='super_savers_button' style='float:left;background-color:red;font-weight:bold;'><a href='${pageContext.request.contextPath}/super-savers'>Offers</a></li>"
         <%--</shiro:hasPermission>--%>
         <%--menuStr += "<li class='lvl1' id='offers_button' style='float:left;'><a href='${pageContext.request.contextPath}/pages/valentineGifts.jsp'>Gifts</a></li>"--%>
             return menuStr;

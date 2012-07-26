@@ -83,7 +83,7 @@ public class SOInvoiceAction extends BaseAction {
                 Awb awb = shipment.getAwb();
                 if (awb != null && awb.getAwbNumber() != null ) {
                     String trackingId = awb.getAwbNumber();
-                    barcodePath = barcodeGenerator.getBarcodePath(trackingId, 1.3f);
+                    barcodePath = barcodeGenerator.getBarcodePath(trackingId, 1.0f);
                 }
             }
             ReplacementOrder replacementOrder = getBaseDao().get(ReplacementOrder.class, shippingOrder.getId());
