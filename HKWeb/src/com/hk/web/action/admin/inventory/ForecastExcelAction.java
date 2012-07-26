@@ -71,8 +71,18 @@ public class ForecastExcelAction extends BaseAction {
         excelFile.getParentFile().mkdirs();
         fileBean.save(excelFile);
         logger.debug("parsing Demand forecast info : " + excelFile.getAbsolutePath());
-        ExcelSheetParser excel = new ExcelSheetParser(excelFile.getAbsolutePath(), "Sheet1");
-        Iterator<HKRow> rowiterator = excel.parse();
+
+        Iterator<HKRow> rowiterator = null;
+        try{
+        ExcelSheetParser excel = new ExcelSheetParser(excelFile.getAbsolutePath(), "Sheet1");    
+        rowiterator = excel.parse();
+        }
+        catch(Exception e){
+            logger.error("Exception while reading excel sheet.", e);
+            addRedirectAlertMessage(new SimpleMessage("Upload failed - " + e.getMessage()));
+            return new ForwardResolution("/pages/admin/uploadForecast.jsp");
+        }
+
         int rowCount = 1;
 
         List<DemandForecast> excelInputList = new ArrayList<DemandForecast>();
