@@ -15,6 +15,8 @@
 <s:layout-component name="htmlHead">
     <meta name="keywords" content="${seoData.metaKeyword}"/>
     <meta name="description" content="${seoData.metaDescription}"/>
+    <%-- The styling was getting overidden by that in new.dev.css
+    To avoid so, it is written at the end of the page.--%>
 </s:layout-component>
 
 <s:layout-component name="topBanner">
@@ -206,7 +208,7 @@
 
                     <c:choose>
                         <c:when test="${!empty comboProduct.allowedProductVariants}">
-                            <c:set var="inStockVariants" value="${comboProduct.allowedInStockVariants}"/>
+                            <c:set var="inStockVariants" value="${comboProduct.allowedProductVariants}"/>
                         </c:when>
                         <c:otherwise>
                             <c:set var="inStockVariants" value="${comboProduct.product.inStockVariants}"/>
@@ -217,40 +219,48 @@
                         <fieldset>
                             <legend>&nbsp;&nbsp;Available Options</legend>
                             <c:forEach items="${inStockVariants}" var="variant" varStatus="variantCtr">
-                                <c:set var="globalCtr" value="${globalCtr + 1}"/>
+                                <c:if test="${!variant.deleted}">
+                                    <c:set var="globalCtr" value="${globalCtr + 1}"/>
 
-                                <c:choose>
-                                    <c:when test="${fn:length(product.productVariants) == 1}">
-                                        <c:set var="idForImage" value="${product.mainImageId}"/>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <c:set var="idForImage" value="${variant.mainImageId}"/>
-                                    </c:otherwise>
-                                </c:choose>
+                                    <c:choose>
+                                        <c:when test="${fn:length(product.productVariants) == 1}">
+                                            <c:set var="idForImage" value="${product.mainImageId}"/>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <c:set var="idForImage" value="${variant.mainImageId}"/>
+                                        </c:otherwise>
+                                    </c:choose>
 
-
-                                <div class="grid_4 options">
-                                    <div class="imageDiv">
-                                        <c:choose>
-                                            <c:when test="${idForImage != null}">
-                                                <hk:productImage imageId="${idForImage}"
-                                                                 size="<%=EnumImageSize.SmallSize%>"
-                                                                 alt="${product.name}"/>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <img src='<hk:vhostImage/>/images/ProductImages/ProductImagesThumb/test/${variant.id}.jpg'
-                                                     alt="${product.name}"/>
-                                            </c:otherwise>
-                                        </c:choose>
+                                    <div class="grid_4 options">
+                                        <div class="imageDiv">
+                                            <c:choose>
+                                                <c:when test="${idForImage != null}">
+                                                    <hk:productImage imageId="${idForImage}"
+                                                                     size="<%=EnumImageSize.SmallSize%>"
+                                                                     alt="${product.name}"/>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <img src='<hk:vhostImage/>/images/ProductImages/ProductImagesThumb/test/${variant.id}.jpg'
+                                                         alt="${product.name}"/>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </div>
+                                        <div class="productOptions">
+                                            <c:forEach items="${variant.productOptions}" var="option">
+                                                <p class="productOptions">${option.name}:${option.value}</p>
+                                            </c:forEach>
+                                        </div>
+                                        <c:if test="${variant.outOfStock}">
+                                            <div class="soldOut" style="font-style:italic; color:red;">
+                                                Sold Out
+                                            </div>
+                                        </c:if>
+                                        <input type="hidden" class="variantIdValue" idx="${globalCtr}"
+                                               value="${variant.id}"/>
+                                        <input type="hidden" class="selValue" idx="${globalCtr}" value="true"/>
+                                        <input type="hidden" class="qtyValue" idx="${globalCtr}" value="0"/>
                                     </div>
-                                    <c:forEach items="${variant.productOptions}" var="option">
-                                        <p class="productOptions">${option.name}:${option.value}</p>
-                                    </c:forEach>
-                                    <input type="hidden" class="variantIdValue" idx="${globalCtr}"
-                                           value="${variant.id}"/>
-                                    <input type="hidden" class="selValue" idx="${globalCtr}" value="true"/>
-                                    <input type="hidden" class="qtyValue" idx="${globalCtr}" value="0"/>
-                                </div>
+                                </c:if>
                             </c:forEach>
                         </fieldset>
 
@@ -553,17 +563,16 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        $('.options').each(function selectFirst() {
-            var resultDiv = $(this).parents('.optionsDiv').find('.result');
-            resultDiv.html($(this).html());
-            var idx = resultDiv.find('.variantIdValue').attr("idx");
-            resultDiv.find('.variantIdValue').attr("name", "productVariantList[" + idx + "]");
-            resultDiv.find('.selValue').attr("name", "productVariantList[" + idx + "].selected");
-            resultDiv.find('.qtyValue').attr("name", "productVariantList[" + idx + "].qty");
-
-            resultDiv.find('.qtyValue').val("1");
-        });
-
+        //        $('.options').each(function selectFirst() {
+        //            var resultDiv = $(this).parents('.optionsDiv').find('.result');
+        //            resultDiv.html($(this).html());
+        //            var idx = resultDiv.find('.variantIdValue').attr("idx");
+        //            resultDiv.find('.variantIdValue').attr("name", "productVariantList[" + idx + "]");
+        //            resultDiv.find('.selValue').attr("name", "productVariantList[" + idx + "].selected");
+        //            resultDiv.find('.qtyValue').attr("name", "productVariantList[" + idx + "].qty");
+        //
+        //            resultDiv.find('.qtyValue').val("1");
+        //        });
 
         $('.progressLoader').hide();
 
@@ -580,15 +589,17 @@
         });
 
         $('.options').click(function() {
-            var resultDiv = $(this).parents('.optionsDiv').find('.result');
-            resultDiv.html($(this).html());
+            if ($(this).find('div.soldOut').size() == 0) {
+                var resultDiv = $(this).parents('.optionsDiv').find('.result');
+                resultDiv.html($(this).html());
 
-            var idx = resultDiv.find('.variantIdValue').attr("idx");
-            resultDiv.find('.variantIdValue').attr("name", "productVariantList[" + idx + "]");
-            resultDiv.find('.selValue').attr("name", "productVariantList[" + idx + "].selected");
-            resultDiv.find('.qtyValue').attr("name", "productVariantList[" + idx + "].qty");
+                var idx = resultDiv.find('.variantIdValue').attr("idx");
+                resultDiv.find('.variantIdValue').attr("name", "productVariantList[" + idx + "]");
+                resultDiv.find('.selValue').attr("name", "productVariantList[" + idx + "].selected");
+                resultDiv.find('.qtyValue').attr("name", "productVariantList[" + idx + "].qty");
 
-            resultDiv.find('.qtyValue').val("1");
+                resultDiv.find('.qtyValue').val("1");
+            }
         });
 
         function _addToCart(res) {
@@ -660,11 +671,14 @@
                     return elem === target;
                 }).length;
 
-                $('<input class="variantIdValue" type="hidden" value="' + target + '" idx="' + variantCtr + '" name="productVariantList[' + variantCtr + ']">').appendTo('.addToCartForm');
+                $('<input class="variantIdValue" type="hidden" value="' + target + '" idx="' + variantCtr +
+                  '" name="productVariantList[' + variantCtr + ']">').appendTo('.addToCartForm');
 
-                $('<input class="selValue" type="hidden" value="true" idx="' + variantCtr + '" name="productVariantList[' + variantCtr + '].selected">').appendTo('.addToCartForm');
+                $('<input class="selValue" type="hidden" value="true" idx="' + variantCtr +
+                  '" name="productVariantList[' + variantCtr + '].selected">').appendTo('.addToCartForm');
 
-                $('<input class="qtyValue" type="hidden" value="' + qty + '" idx="' + variantCtr + '" name="productVariantList[' + variantCtr + '].qty">').appendTo('.addToCartForm');
+                $('<input class="qtyValue" type="hidden" value="' + qty + '" idx="' + variantCtr +
+                  '" name="productVariantList[' + variantCtr + '].qty">').appendTo('.addToCartForm');
 
                 if (qty > 1) {
                     j = j + qty - 1;
@@ -672,34 +686,70 @@
             }
             return true;
         });
+
+        $('.optionsDiv').each(function() {
+            var availableOptions = $(this).find('.options');
+            var image = $(this).find('.imageDiv');
+            var arrow = $(this).find('.arrowDiv');
+
+            var optionsHeight = new Array();
+            $(this).find('div.productOptions').each(function() {
+                optionsHeight.push($(this).height());
+            });
+
+            var soldOutHeight = $('.soldOut').height() == null ? 0 : $('.soldOut').height();
+
+            $(availableOptions).css({
+                height: $(image).height() + Math.max.apply(Math, optionsHeight) + soldOutHeight
+            });
+
+            $(arrow).css({
+                paddingTop:10 + $(availableOptions).height() / 2
+            });
+
+            var resultDiv = $(this).find('.result');
+            $(resultDiv).css({
+                height: $(availableOptions).height()
+            });
+
+            $(availableOptions).each(function() {
+                if ($(this).find('.soldOut').size() == 0) {
+                    resultDiv.html($(this).html());
+                    var idx = resultDiv.find('.variantIdValue').attr("idx");
+                    resultDiv.find('.variantIdValue').attr("name", "productVariantList[" + idx + "]");
+                    resultDiv.find('.selValue').attr("name", "productVariantList[" + idx + "].selected");
+                    resultDiv.find('.qtyValue').attr("name", "productVariantList[" + idx + "].qty");
+
+                    resultDiv.find('.qtyValue').val("1");
+                    return false;
+                }
+            });
+        });
     });
 </script>
 <style type="text/css">
-    .comboProduct {
+    div.comboProduct {
         text-align: left;
         background: none repeat scroll 0 0 #EEEEEE;
         padding: 5px;
     }
 
-    .options {
+    div.options {
         border: 1px solid darkgray;
         border-radius: 0.5em;
         background: #EEEEEE;
         padding: 10px 0;
-        height: 160px;
     }
 
-    .result {
+    div.result {
         border: 2px solid darkgray;
         border-radius: 0.5em;
         background: #EEEEEE;
         padding: 10px 0;
-        height: 150px;
     }
 
     div.arrowDiv {
         text-align: center;
-        padding-top: 80px;
         height: 20px;
         width: 25px;
         opacity: 0.4;
@@ -725,7 +775,7 @@
         margin: 10px 5px;
     }
 
-    .options:hover {
+    div.options:hover {
         border: solid 1px #CCC;
         -moz-box-shadow: 1px 1px 5px #999;
         -webkit-box-shadow: 1px 1px 5px #999;
@@ -736,28 +786,28 @@
         z-index: 1;
     }
 
-    .options img {
+    div.options img {
         -webkit-box-shadow: 0 3px 6px rgba(0, 0, 0, .5);
         -moz-box-shadow: 0 3px 6px rgba(0, 0, 0, .5);
     }
 
-    .result img {
+    div.result img {
         -webkit-box-shadow: 0 3px 6px rgba(0, 0, 0, .5);
         -moz-box-shadow: 0 3px 6px rgba(0, 0, 0, .5);
     }
 
-    .imageDiv {
+    div.imageDiv {
         min-width: 130px;
         min-height: 130px;
     }
 
-    .buyDiv {
+    div.buyDiv {
         font-size: 1em;
         text-align: right;
         float: right;
     }
 
-    .buyDiv .right_col {
+    div.buyDiv div.right_col {
         text-align: right;
         float: right;
     }
@@ -783,17 +833,17 @@
         border: 1px solid #CCC;
     }
 
-    .rating_bar {
+    div.rating_bar {
         width: 80px;
         background: url('${pageContext.request.contextPath}/images/img/star-off.png') 0 0 repeat-x;
     }
 
-    .rating_bar div {
+    div.rating_bar div {
         height: 16px;
         background: url('${pageContext.request.contextPath}/images/img/star-on.png') 0 0 repeat-x;
     }
 
-    .special, .hk, .cut {
+    div.special, div.hk, div.cut {
         margin: 5px;
     }
 
