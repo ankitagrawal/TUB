@@ -8060,8 +8060,8 @@
         <addColumn tableName="pincode">
             <column name="tier" type="VARCHAR(20)"/>
         </addColumn>
-    </changeSet>   
-    <changeSet author="Neha (generated)" id="1343292004317-1">
+    </changeSet>    
+    <changeSet author="Neha (generated)" id="1343293102089-1">
         <createTable tableName="demand_forecast">
             <column autoIncrement="true" name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -8080,10 +8080,10 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Neha (generated)" id="1343292004317-2">
-        <addForeignKeyConstraint baseColumnNames="product_variant_id" baseTableName="demand_forecast" constraintName="fk_demand_forecast_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant" referencedTableSchemaName="healthkart_workbench" referencesUniqueColumn="false"/>
+    <changeSet author="Neha (generated)" id="1343293102089-2">
+        <addForeignKeyConstraint baseColumnNames="product_variant_id" baseTableName="demand_forecast" constraintName="fk_demand_forecast_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant"  referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Neha (generated)" id="1343292004317-3">
-        <addForeignKeyConstraint baseColumnNames="warehouse_id" baseTableName="demand_forecast" constraintName="fk_demand_forecast_warehouse1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="warehouse" referencedTableSchemaName="healthkart_workbench" referencesUniqueColumn="false"/>
+    <changeSet author="Neha (generated)" id="1343293102089-3">
+        <addForeignKeyConstraint baseColumnNames="warehouse_id" baseTableName="demand_forecast"  constraintName="fk_demand_forecast_warehouse1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="warehouse"  referencesUniqueColumn="false"/>
     </changeSet>
 </databaseChangeLog>
