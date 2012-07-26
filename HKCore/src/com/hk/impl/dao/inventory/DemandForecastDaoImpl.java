@@ -12,23 +12,21 @@ import org.springframework.stereotype.Repository;
 import org.springframework.dao.DataAccessException;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Neha
- * Date: Jul 20, 2012
- * Time: 2:43:50 PM
- * To change this template use File | Settings | File Templates.
+ * Created by IntelliJ IDEA. User: Neha Date: Jul 20, 2012 Time: 2:43:50 PM To change this template use File | Settings |
+ * File Templates.
  */
 
 @SuppressWarnings("unchecked")
 @Repository
 public class DemandForecastDaoImpl extends BaseDaoImpl implements DemandForecastDao {
 
-    public List<DemandForecast> findDemandforecastByDate (Date minDate){
-            return (List<DemandForecast>) findByNamedParams("from DemandForecast df where df.forecastDate >= :minDate order by df.forecastDate", new String[]{"minDate"},new Object[]{minDate});
+    public List<DemandForecast> findDemandforecastByDate(Date minDate) {
+        return (List<DemandForecast>) findByNamedParams("from DemandForecast df where df.forecastDate >= :minDate order by df.forecastDate", new String[] { "minDate" },
+                new Object[] { minDate });
     }
 
-   public void saveOrUpdate(Collection entities) throws DataAccessException{
-       super.saveOrUpdate(entities);
-   }
-       
+    public void saveOrUpdate(Collection entities) throws DataAccessException {
+        super.saveOrUpdate(entities);
+    }
+
 }

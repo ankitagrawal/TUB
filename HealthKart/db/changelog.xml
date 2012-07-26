@@ -8086,4 +8086,11 @@
     <changeSet author="Neha (generated)" id="1343293102089-3">
         <addForeignKeyConstraint baseColumnNames="warehouse_id" baseTableName="demand_forecast"  constraintName="fk_demand_forecast_warehouse1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="warehouse"  referencesUniqueColumn="false"/>
     </changeSet>
+    <changeSet author="AdminUser (generated)" id="1343308646000-1">
+        <createIndex indexName="variant_wh_date_unique" tableName="demand_forecast" unique="true">
+            <column name="warehouse_id"/>
+            <column name="product_variant_id"/>
+            <column name="forecast_date"/>
+        </createIndex>
+    </changeSet>
 </databaseChangeLog>
