@@ -8028,7 +8028,9 @@
             <column name="forecast_date" type="DATE">
                 <constraints nullable="false"/>
             </column>
-            <column name="forecast_value" type="DOUBLE"/>
+            <column name="forecast_value" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
             <column name="product_variant_id" type="VARCHAR(20)">
                 <constraints nullable="false"/>
             </column>
