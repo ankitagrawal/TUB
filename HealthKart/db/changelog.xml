@@ -8019,32 +8019,7 @@
         <addColumn tableName="faq">
             <column name="page_rank" type="INT"/>
         </addColumn>
-    </changeSet>
-    <changeSet author="Neha (generated)" id="1343209719372-1">
-        <createTable tableName="demand_forecast">
-            <column autoIncrement="true" name="id" type="INT">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="forecast_date" type="DATE">
-                <constraints nullable="false"/>
-            </column>
-            <column name="forecast_value" type="DOUBLE">
-                <constraints nullable="false"/>
-            </column>
-            <column name="product_variant_id" type="VARCHAR(20)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="warehouse_id" type="INT">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-    <changeSet author="Neha (generated)" id="1343209719372-2">
-        <addForeignKeyConstraint baseColumnNames="product_variant_id" baseTableName="demand_forecast"  constraintName="fk_demand_forecast_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant"  referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="Neha (generated)" id="1343209719372-3">
-        <addForeignKeyConstraint baseColumnNames="warehouse_id" baseTableName="demand_forecast"  constraintName="fk_demand_forecast_warehouse1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="warehouse"  referencesUniqueColumn="false"/>
-    </changeSet>
+    </changeSet>        
 	<changeSet author="Rahul (generated)" id="1343129589883-1">
 	    <dropForeignKeyConstraint baseTableName="stock_transfer_line_item" constraintName="fk_stock_transfer_line_item_sku1"/>
 	</changeSet>
@@ -8085,5 +8060,30 @@
         <addColumn tableName="pincode">
             <column name="tier" type="VARCHAR(20)"/>
         </addColumn>
+    </changeSet>   
+    <changeSet author="Neha (generated)" id="1343292004317-1">
+        <createTable tableName="demand_forecast">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="forecast_date" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="forecast_value" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_variant_id" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="warehouse_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Neha (generated)" id="1343292004317-2">
+        <addForeignKeyConstraint baseColumnNames="product_variant_id" baseTableName="demand_forecast" constraintName="fk_demand_forecast_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant" referencedTableSchemaName="healthkart_workbench" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Neha (generated)" id="1343292004317-3">
+        <addForeignKeyConstraint baseColumnNames="warehouse_id" baseTableName="demand_forecast" constraintName="fk_demand_forecast_warehouse1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="warehouse" referencedTableSchemaName="healthkart_workbench" referencesUniqueColumn="false"/>
     </changeSet>
 </databaseChangeLog>
