@@ -1,20 +1,5 @@
 package com.hk.web.action.admin.inventory;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
@@ -32,6 +17,11 @@ import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
+import net.sourceforge.stripes.action.*;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.*;
 
 public class StockTransferAction extends BasePaginatedAction {
 
@@ -123,7 +113,7 @@ public class StockTransferAction extends BasePaginatedAction {
                             stockTransferLineItem = (StockTransferLineItem) stockTransferDao.save(stockTransferLineItem);
                         } catch (Exception e) {
                             e.printStackTrace();
-                            addRedirectAlertMessage(new SimpleMessage("Duplicate variant - " + stockTransferLineItem.getSku().getProductVariant().getId()));
+                            addRedirectAlertMessage(new SimpleMessage("Duplicate batch and variant - " + stockTransferLineItem.getSku().getProductVariant().getId()));
                             return new RedirectResolution(StockTransferAction.class).addParameter("stockTransfer", stockTransfer.getId());
                         }
 

@@ -17,9 +17,11 @@ import java.net.URL;
 import java.net.MalformedURLException;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.exception.HealthkartCheckedException;
+import com.hk.domain.courier.Awb;
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonArray;
 
 /**
  * Created by IntelliJ IDEA.
@@ -45,6 +47,7 @@ public class CourierStatusUpdateHelper {
         String inputLine = "";
         String response = "";
         courierName="(AFL)";
+
 
         Map<String, String> responseAFL;
         Date delivery_date = null;
@@ -186,6 +189,55 @@ public class CourierStatusUpdateHelper {
             }
         }
         return shipmentJsonObj;
+    }
+
+
+    public JsonArray bulkUpdateDeliveryStatusDelhivery(String trackingId) throws HealthkartCheckedException {
+        JsonObject shipmentJsonObj = null;
+        String inputLine;
+        String jsonFormattedResponse = "";
+        JsonParser jsonParser = new JsonParser();
+        JsonArray shipmentList     = new JsonArray();
+        courierName = "(Delhivery)";
+
+
+        try {
+            //added for debugging
+            //trackingId ="10410239481";
+            url = new URL("http://track.delhivery.com/api/packages/json/?token=" + authenticationIdForDelhivery + "&waybill=" + trackingId);
+            bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
+
+            while ((inputLine = bufferedReader.readLine()) != null) {
+                jsonFormattedResponse += inputLine;
+            }
+
+            //shipmentJsonObj = jsonParser.parse(jsonFormattedResponse).getAsJsonObject().getAsJsonArray(CourierConstants.DELHIVERY_SHIPMENT_DATA).get(0).getAsJsonObject().getAsJsonObject(CourierConstants.DELHIVERY_SHIPMENT);
+            shipmentList =jsonParser.parse(jsonFormattedResponse).getAsJsonObject().getAsJsonArray(CourierConstants.DELHIVERY_SHIPMENT_DATA);
+        } catch (MalformedURLException mue) {
+            logger.debug(CourierConstants.MALFORMED_URL_EXCEPTION + courierName + trackingId);
+            throw new HealthkartCheckedException(CourierConstants.MALFORMED_URL_EXCEPTION + trackingId);
+
+        } catch (IOException ioe) {
+            logger.debug(CourierConstants.IO_EXCEPTION + courierName + trackingId);
+            throw new HealthkartCheckedException(CourierConstants.IO_EXCEPTION + trackingId);
+
+        } catch (NullPointerException npe) {
+            logger.debug(CourierConstants.NULL_POINTER_EXCEPTION + courierName + trackingId);
+            throw new HealthkartCheckedException(CourierConstants.NULL_POINTER_EXCEPTION + trackingId);
+
+        } catch (Exception e) {
+            logger.debug(CourierConstants.EXCEPTION + courierName + trackingId);
+            throw new HealthkartCheckedException(CourierConstants.EXCEPTION + trackingId);
+        }
+        finally {
+            try {
+                bufferedReader.close();
+            } catch (IOException e) {
+                logger.debug(CourierConstants.IO_EXCEPTION + courierName + trackingId);
+                throw new HealthkartCheckedException(CourierConstants.IO_EXCEPTION + trackingId);
+            }
+        }
+        return shipmentList;
     }
 
 

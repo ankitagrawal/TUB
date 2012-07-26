@@ -134,6 +134,7 @@
   <h3><s:link beanclass="com.hk.web.action.admin.inventory.CreateInventoryFileAction">Create Inventory File</s:link></h3>
 
   <h3><s:link beanclass="com.hk.web.action.admin.inventory.SearchHKBatchAction">Search HK Batch</s:link></h3>
+    <h3><s:link beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction">Create Repalcement Order</s:link></h3>
 </div>
 
 <div class="cl"></div>
@@ -160,7 +161,7 @@
 
   <h3><s:link beanclass="com.hk.web.action.admin.shipment.UpdateDeliveryStatusAction">Update Delivery Status of AFL,Chhotu,Delhivery,BlueDart,DTDC</s:link></h3>
 
-  <h3><s:link beanclass="com.hk.web.action.admin.shipment.ParseDTDCDeliveryStatusExcelAction">Upload Delivery Status Excel of DTDC</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.admin.shipment.ParseCourierDeliveryStatusExcelAction">Upload Courier Delivery Status Excel</s:link></h3>
 
   <h3><s:link beanclass="com.hk.web.action.admin.shipment.ParseCourierCollectionChargeExcelAction">Upload Courier Collection Charge Excel</s:link></h3>
 

@@ -22,7 +22,8 @@ public enum EnumShippingOrderStatus {
     SO_Returned(200L, "SO Returned"),
     SO_Lost(210L, "SO Lost"),
     SO_Replaced(220L, "SO Replaced"),
-    SO_Cancelled(999L, "SO Cancelled");
+    SO_Cancelled(999L, "SO Cancelled"),
+    RTO_Initiated(230L, "RTO Initiated");
 
 
     private java.lang.String name;
@@ -126,5 +127,11 @@ public enum EnumShippingOrderStatus {
                 EnumShippingOrderStatus.SO_Returned.asShippingOrderStatus(),
                 EnumShippingOrderStatus.SO_Lost.asShippingOrderStatus());
     }
+
+    public static List<Long> getStatusForSearchOrderAndEnterCourierInfo() {
+           return Arrays.asList(EnumShippingOrderStatus.SO_Packed.asShippingOrderStatus().getId(),
+                   EnumShippingOrderStatus.SO_CheckedOut.asShippingOrderStatus().getId());
+       }
+
 
 }

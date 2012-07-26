@@ -16,7 +16,8 @@ public class ProductImageTag extends HtmlTagSupport {
   public int doEndTag() throws JspException {
 
     JspWriter out = getPageContext().getOut();
-    set("src", HKImageUtils.getS3ImageUrl(size, imageId));
+    boolean isSecure = pageContext.getRequest().isSecure();
+    set("src", HKImageUtils.getS3ImageUrl(size, imageId,isSecure));
     writeSingletonTag(out, "img");
 
     return EVAL_PAGE;

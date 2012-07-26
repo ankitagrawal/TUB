@@ -18,6 +18,7 @@ import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.CartLineItem;
@@ -144,6 +145,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
             shippingOrder = ShippingOrderHelper.setGatewayIdOnShippingOrder(shippingOrder);
             shippingOrder = getShippingOrderService().save(shippingOrder);
 
+            shipmentService.createShipment(shippingOrder);
             return shippingOrder;
         }
         return null;
@@ -230,6 +232,13 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         return shippingOrder;
     }
 
+    public ShippingOrder initiateRTOForShippingOrder(ShippingOrder shippingOrder) {
+        shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.RTO_Initiated));
+        getShippingOrderService().save(shippingOrder);
+        getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RTO_Initiated);
+        return shippingOrder;
+    }
+
     public List<ShippingOrder> getShippingOrderListByCouriers(Date startDate, Date endDate, List<Long> courierId) {
         return getAdminShippingOrderDao().getShippingOrderListByCouriers(startDate, endDate, courierId);
     }
@@ -241,6 +250,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         Shipment shipment = shippingOrder.getShipment();
 
         if (shipment != null) {
+            shipment.getAwb().setAwbStatus(EnumAwbStatus.Used.getAsAwbStatus());
             getShipmentService().saveShipmentDate(shipment);
         }
 

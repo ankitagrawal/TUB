@@ -5,21 +5,9 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
+import com.akube.framework.gson.JsonSkip;
 import org.hibernate.annotations.Where;
 
 import com.hk.domain.accounting.AccountingInvoice;
@@ -33,6 +21,7 @@ import com.hk.constants.payment.EnumPaymentMode;
 
 @SuppressWarnings("serial")
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "shipping_order")
 public class ShippingOrder implements java.io.Serializable {
 
@@ -96,18 +85,17 @@ public class ShippingOrder implements java.io.Serializable {
   @JoinColumn(name = "base_order_id")
   private Order baseOrder;
 
-
-
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinColumn(name = "warehouse_id")
   private Warehouse warehouse;
 
-  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  @JoinColumn(name = "shipment_id")
-  private Shipment shipment;
+    @JsonSkip
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "shipment_id")
+    private Shipment shipment;
 
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "shippingOrder")
-  @Where(clause = "deleted = 0")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "shippingOrder")
+    @Where(clause = "deleted = 0")
   private Set<LineItem> lineItems = new HashSet<LineItem>();
 
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "shippingOrder")
@@ -116,6 +104,8 @@ public class ShippingOrder implements java.io.Serializable {
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "shippingOrder")
   private Set<ShippingOrderLifecycle> shippingOrderLifecycles = new HashSet<ShippingOrderLifecycle>(0);
 
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "refShippingOrder")
+  private Set<ReplacementOrder> replacementOrders = new HashSet<ReplacementOrder>();
 
   public Long getId() {
     return this.id;

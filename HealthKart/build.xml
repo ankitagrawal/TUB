@@ -149,6 +149,11 @@
 				<include name="*.jar" />
 			</fileset>
 		</copy>
+        <copy todir="${project.dist.dir}/WEB-INF/lib">
+            <fileset dir="${lib.axis.root}">
+                <include name="*.jar" />
+            </fileset>
+        </copy>
 		<copy file="${project.web.dir}/resources/${project.env}/WEB-INF/robots.txt" tofile="${project.dist.dir}/robots.txt" failonerror="false" overwrite="true" />
 	</target>
 
@@ -158,6 +163,7 @@
 		<copy todir="${project.dist.dir}/WEB-INF/lib" file="${project.core.dir}/dist/hk-core.jar" />
 		<copy todir="${project.dist.dir}/WEB-INF/lib" file="${project.admin.core.dir}/dist/hk-admin-core.jar" />
 		<copy todir="${project.dist.dir}/WEB-INF/lib" file="${project.report.dir}/dist/hk-report.jar" />
+        <copy todir="${project.dist.dir}/WEB-INF/lib" file="${project.mooga.dir}/dist/hk-mooga.jar" />
 	</target>
 
 	<target name="collect-web">

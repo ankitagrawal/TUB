@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.hk.pact.service.mooga.RecommendationEngine;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.JsonResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -14,6 +15,8 @@ import net.sourceforge.stripes.validation.ValidationErrorHandler;
 import net.sourceforge.stripes.validation.ValidationErrors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
@@ -37,7 +40,7 @@ import com.hk.web.action.core.user.SignupAction;
 
 public class AddToCartAction extends BaseAction implements ValidationErrorHandler {
 
-    //private static Logger logger = Logger.getLogger(AddToCartAction.class);
+    private static Logger logger = LoggerFactory.getLogger(AddToCartAction.class);
 
     List<ProductVariant> productVariantList;
     Combo combo;
@@ -59,6 +62,9 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
 
     @Autowired
     SignupAction signupAction;
+    
+    @Autowired
+    RecommendationEngine recomendationEngine;
 
     @SuppressWarnings({"unchecked", "deprecation"})
     @DefaultHandler
@@ -96,7 +102,11 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
                         maxQty += comboProduct.getQty();
                     }
                     for (ProductVariant productVariant : productVariantList) {
-                        netQty += productVariant.getQty();
+	                    if (productVariant.getQty() != null) {
+		                    netQty += productVariant.getQty();
+	                    } else {
+		                    logger.error("Null qty for Combo=" + combo.getId());
+	                    }
                     }
                     if (netQty != maxQty) {
                         addValidationError("Combo product variant qty are not in accordance to offer", new SimpleError("Combo product variant qty are not in accordance to offer"));
@@ -164,6 +174,7 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
             dataMap.put("itemsInCart", Long.valueOf(order.getExclusivelyProductCartLineItems().size() + order.getExclusivelyComboCartLineItems().size()) + 1L);
             HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Product has been added to cart", dataMap);
             noCache();
+            //recomendationEngine.notifyAddToCart(user.getId(), productVariantList);
             return new JsonResolution(healthkartResponse);
         }
         HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Product has not been added to cart", dataMap);

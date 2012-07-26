@@ -40,5 +40,7 @@ public interface AdminShippingOrderService {
 
     public ShippingOrder markShippingOrderAsLost(ShippingOrder shippingOrder);
 
+    ShippingOrder initiateRTOForShippingOrder(ShippingOrder shippingOrder);
+
     public List<ShippingOrder> getShippingOrderListByCouriers(Date startDate, Date endDate, List<Long> courierId);
 }

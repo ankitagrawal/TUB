@@ -28,14 +28,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
+import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.admin.pact.service.courier.AwbService;
+import com.hk.admin.pact.dao.courier.CourierDao;
 import com.hk.admin.util.ChhotuCourierDelivery;
 import com.hk.admin.util.CourierStatusUpdateHelper;
 import com.hk.constants.report.ReportConstants;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.courier.CourierConstants;
+import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.courier.Shipment;
+import com.hk.domain.courier.Awb;
+import com.hk.domain.courier.Courier;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
@@ -57,6 +65,9 @@ public class DeliveryStatusUpdateManager {
     List<ShippingOrder>         shippingOrderList             = new ArrayList<ShippingOrder>();
     List<String>                unmodifiedTrackingIds         = null;
     List<Long>                  courierIdList                 = null;
+    int                         startIndex                    = 0;
+    int                         endIndex                      = 0;
+    //Map<String,Object>          jsonResponseMap               = new HashMap<String,Object>();
 
     LineItemDao                 lineItemDaoProvider;
 
@@ -68,8 +79,15 @@ public class DeliveryStatusUpdateManager {
 
     @Autowired
     CourierStatusUpdateHelper   courierStatusUpdateHelper;
+    @Autowired
+    AwbService awbService;
+    @Autowired
+    ShipmentService shipmentService;
 
-    public String updateDeliveryStatusDTDC(File excelFile) throws Exception {
+    @Autowired
+    CourierDao                  courierDao;
+
+    public String updateCourierDeliveryStatusByExcel(File excelFile) throws Exception {
         String messagePostUpdation = "";
         logger.debug("parsing Delivery Details DTDC Upload : " + excelFile.getAbsolutePath());
         POIFSFileSystem objInFileSys = new POIFSFileSystem(new FileInputStream(excelFile));
@@ -94,7 +112,14 @@ public class DeliveryStatusUpdateManager {
                 String gatewayOrderIdInXls = getCellValue(ReportConstants.REF_NO, rowMap, headerMap);
                 String awb = getCellValue(ReportConstants.CN_NO, rowMap, headerMap);
                 String status = getCellValue(ReportConstants.STATUS, rowMap, headerMap);
+                String courierId = getCellValue(ReportConstants.COURIER_ID_STR, rowMap, headerMap);
+                if (StringUtils.isBlank(courierId)) {
+                    messagePostUpdation += "courierId(courierId) at   @Row No." + (rowCount + 1) + " isnull<br/>";
+                    continue;
+                }
+                Long courier_Id = Long.parseLong(courierId.trim());
                 Date deliveryDateInXsl = null;
+               
                 try {
                     deliveryDateInXsl = sdf_date.parse(getCellValue(ReportConstants.DELIVERED_DATE, rowMap, headerMap));
                 } catch (Exception e) {
@@ -113,7 +138,13 @@ public class DeliveryStatusUpdateManager {
                 if (StringUtils.isNotBlank(gatewayOrderIdInXls)) {
                     shippingOrder = getShippingOrderService().findByGatewayOrderId(gatewayOrderIdInXls);
                 } else {
-                    shippingOrder = getShippingOrderService().findByTrackingId(awb);
+                    Courier courier = courierDao.get(Courier.class, courier_Id);
+                    Awb shipmentAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(courier, awb.trim(), null, null, EnumAwbStatus.Used.getAsAwbStatus());
+                    if (shipmentAwb == null) {
+                        messagePostUpdation += "Awb number(Tracking_id) at   @Row No." + (rowCount + 1) + " does not exist in Healthkart system<br/>";
+                        continue;
+                    }
+                    shippingOrder = shipmentService.findByAwb(shipmentAwb).getShippingOrder();
                 }
                 if (shippingOrder == null) {
                     messagePostUpdation += "Shipping order not found corresponding to the Ref No. @Row No." + (rowCount + 1) + "<br/>";
@@ -147,14 +178,14 @@ public class DeliveryStatusUpdateManager {
             shippingOrderList = getAdminShippingOrderService().getShippingOrderListByCouriers(startDate, endDate, courierIdList);
             if (shippingOrderList != null && shippingOrderList.size() > 0) {
                 for (ShippingOrder shippingOrderInList : shippingOrderList) {
-                    trackingId = shippingOrderInList.getShipment().getTrackingId();
+                    trackingId = shippingOrderInList.getShipment().getAwb().getAwbNumber();
                     try {
                         Date deliveryDate = courierStatusUpdateHelper.updateDeliveryStatusAFL(trackingId);
                         if (deliveryDate != null) {
                             ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shippingOrderInList.getShipment(),
-                                    shippingOrderInList.getShipment().getTrackingId(), deliveryDate);
+                                    shippingOrderInList.getShipment().getAwb().getAwbNumber(), deliveryDate);
                         } else {
-                            logger.debug("Delivery date not available or status is not delivered for Tracking Id (AFL): " + shippingOrderInList.getShipment().getTrackingId());
+                            logger.debug("Delivery date not available or status is not delivered for Tracking Id (AFL): " + shippingOrderInList.getShipment().getAwb().getAwbNumber());
                             unmodifiedTrackingIds.add(trackingId);
 
                         }
@@ -171,7 +202,7 @@ public class DeliveryStatusUpdateManager {
             shippingOrderList = getAdminShippingOrderService().getShippingOrderListByCouriers(startDate, endDate, courierIdList);
             if (shippingOrderList != null && shippingOrderList.size() > 0) {
                 for (ShippingOrder shippingOrderInList : shippingOrderList) {
-                    trackingId = shippingOrderInList.getShipment().getTrackingId();
+                    trackingId = shippingOrderInList.getShipment().getAwb().getAwbNumber();
                     try {
                         ChhotuCourierDelivery chhotuCourierDelivery = courierStatusUpdateHelper.updateDeliveryStatusChhotu(trackingId);
                         Date delivery_date = null;
@@ -182,9 +213,9 @@ public class DeliveryStatusUpdateManager {
                         }
 
                         if (delivery_date != null && chhotuCourierDelivery.getShipmentStatus().equalsIgnoreCase(CourierConstants.DELIVERED) && chhotuCourierDelivery.getTrackingId() != null) {
-                            ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shippingOrderInList.getShipment(), shippingOrderInList.getShipment().getTrackingId(), delivery_date);
+                            ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shippingOrderInList.getShipment(), shippingOrderInList.getShipment().getAwb().getAwbNumber(), delivery_date);
                         } else {
-                            logger.debug("Delivery date not available or status is not delivered for Tracking Id (Chhotu): " + shippingOrderInList.getShipment().getTrackingId());
+                            logger.debug("Delivery date not available or status is not delivered for Tracking Id (Chhotu): " + shippingOrderInList.getShipment().getAwb().getAwbNumber());
                         }
                     } catch (Exception ex) {
                         unmodifiedTrackingIds.add(trackingId);
@@ -196,32 +227,58 @@ public class DeliveryStatusUpdateManager {
             courierIdList = new ArrayList<Long>();
             courierIdList = EnumCourier.getDelhiveryCourierIds();
             shippingOrderList = getAdminShippingOrderService().getShippingOrderListByCouriers(startDate, endDate, courierIdList);
-            JsonObject shipmentJsonObj = null;
-            if (shippingOrderList != null && shippingOrderList.size() > 0) {
-                for (ShippingOrder shippingOrderInList : shippingOrderList) {
+            List<ShippingOrder> shippingOrderSubList = new ArrayList<ShippingOrder>();
+            JsonArray jsonShipmentDataArray = new JsonArray();
+            int listSize = shippingOrderList.size();
+	        int batchSize = 70;
+            startIndex=0;
+            endIndex=0;
 
-                    trackingId = shippingOrderInList.getShipment().getTrackingId();
-                    try {
-                        shipmentJsonObj = courierStatusUpdateHelper.updateDeliveryStatusDelhivery(trackingId);
-                        if (shipmentJsonObj != null) {
-                            String status = shipmentJsonObj.getAsJsonObject(CourierConstants.DELHIVERY_STATUS).get(CourierConstants.DELHIVERY_STATUS).getAsString();
-                            // String awb = shipmentJsonObj.get(CourierConstants.DELHIVERY_AWB).getAsString();
-                            String deliveryDate = shipmentJsonObj.getAsJsonObject(CourierConstants.DELHIVERY_STATUS).get(CourierConstants.DELHIVERY_STATUS_DATETIME).getAsString();
-
-                            Date delivery_date = getFormattedDeliveryDate(deliveryDate);
-
-
-                            if (delivery_date != null && status.equalsIgnoreCase(CourierConstants.DELIVERED)) {
-                                ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shippingOrderInList.getShipment(), trackingId, delivery_date);
-                            } else {
-                                logger.debug("Delivery date not avaialable or status is not delivered for Tracking Id(Delhivery): " + trackingId);
-                            }
+            if (shippingOrderList != null && listSize > 0) {
+                //Checking if shippingOrderList size is > batchSize then we wud divide it into batches of 10 orders each.
+                if (shippingOrderList.size() > batchSize) {
+                    for (int i = 0; i < listSize; i++) {
+                        //For the first time it wud be 0 and its value won't increment to 1.Bt later it would increment so need to subtract 1 to get correcr startIndex.
+                        if (i == 0) {
+                            startIndex = i;
                         } else {
-                            unmodifiedTrackingIds.add(trackingId);
+                            startIndex = i - 1;
                         }
-                    } catch (Exception ex) {
-                        unmodifiedTrackingIds.add(trackingId);
-                        continue;
+                        //checking if remaining elements are less than batchSize,then adding that count to the index to get correct endIndex.
+                        if (listSize - endIndex < batchSize) {
+                            endIndex = (startIndex + (listSize - endIndex)) - 1;
+                        } else {
+                            endIndex = startIndex + batchSize;
+                        }
+                        //Breaking the original list into batches of batchSize or the remaining size.
+                        try {
+                            shippingOrderSubList = shippingOrderList.subList(startIndex, endIndex);
+
+                            trackingId = getAppendedTrackingIdsString(shippingOrderSubList);
+
+                            if (trackingId != null) {
+                                //getting the JsonResponeArray for batch of trackingIds
+                                jsonShipmentDataArray = courierStatusUpdateHelper.bulkUpdateDeliveryStatusDelhivery(trackingId);
+                            }
+                        } catch (Exception ex) {
+                            logger.debug(CourierConstants.EXCEPTION + "(Delhivery)" + trackingId);
+                            unmodifiedTrackingIds.add(trackingId);
+                            continue;
+                        }
+                        if (jsonShipmentDataArray != null && jsonShipmentDataArray.size() > 0) {
+                            ordersDelivered = updateDelhiveryStatus(jsonShipmentDataArray);
+                        }
+                        i = endIndex;
+                    }
+                } else {
+                    //Constructing trackingId using all shippingOrders
+                    trackingId = getAppendedTrackingIdsString(shippingOrderList);
+                    if (trackingId != null) {
+                        //getting the JsonResponeArray for batch of trackingIds
+                        jsonShipmentDataArray = courierStatusUpdateHelper.bulkUpdateDeliveryStatusDelhivery(trackingId);
+                    }
+                    if (jsonShipmentDataArray != null && jsonShipmentDataArray.size() > 0) {
+                        ordersDelivered=updateDelhiveryStatus(jsonShipmentDataArray);
                     }
                 }
             }
@@ -234,7 +291,7 @@ public class DeliveryStatusUpdateManager {
             shippingOrderList = getAdminShippingOrderService().getShippingOrderListByCouriers(startDate, endDate, courierIdList);
             if (shippingOrderList != null && shippingOrderList.size() > 0) {
                 for (ShippingOrder shippingOrderInList : shippingOrderList) {
-                    trackingId = shippingOrderInList.getShipment().getTrackingId();
+                    trackingId = shippingOrderInList.getShipment().getAwb().getAwbNumber();
                     try {
                         Element ele = courierStatusUpdateHelper.updateDeliveryStatusBlueDart(trackingId);
                         if (ele != null) {
@@ -268,7 +325,7 @@ public class DeliveryStatusUpdateManager {
             String deliveryDateString = null;
             if (shippingOrderList != null && shippingOrderList.size() > 0) {
                 for (ShippingOrder shippingOrderInList : shippingOrderList) {
-                    trackingId = shippingOrderInList.getShipment().getTrackingId();
+                    trackingId = shippingOrderInList.getShipment().getAwb().getAwbNumber();
                     try {
                         responseMap = courierStatusUpdateHelper.updateDeliveryStatusDTDC(trackingId);
                         if (responseMap != null) {
@@ -315,13 +372,51 @@ public class DeliveryStatusUpdateManager {
                 deliveryDateAsShipDatePlusOne.add(Calendar.DAY_OF_MONTH, 1);
                 deliveryDate = deliveryDateAsShipDatePlusOne.getTime();
             }
-            if (shipment != null && shipment.getTrackingId() != null && shipment.getTrackingId().equals(trackingId)) {
+            if (shipment != null && shipment.getAwb().getAwbNumber() != null && shipment.getAwb().getAwbNumber().equals(trackingId)) {
                 shipment.setDeliveryDate(deliveryDate);
                 getAdminShippingOrderService().markShippingOrderAsDelivered(shippingOrder);
                 orderDeliveryCount++;
             }
         }
         return orderDeliveryCount;
+    }
+
+    private int updateDelhiveryStatus(JsonArray jsonShipmentDataArray) {
+        String deliveryStatus = null;
+        String deliveryDate = null;
+        Date delivery_date = null;
+        ShippingOrder shippingOrdr = null;
+
+
+        //Iterating over the  jsonShipmentDataArray to extract the required values(AWB,Status,DeliveryDate) and putting
+        //these into map<String,Object> ,AWB as key and  deliveryDate as value
+        for (JsonElement jsonObj : jsonShipmentDataArray) {
+            trackingId = jsonObj.getAsJsonObject().get(CourierConstants.DELHIVERY_SHIPMENT).getAsJsonObject().get(CourierConstants.DELHIVERY_AWB).getAsString();
+            deliveryStatus = jsonObj.getAsJsonObject().get(CourierConstants.DELHIVERY_SHIPMENT).getAsJsonObject().get(CourierConstants.DELHIVERY_STATUS).getAsJsonObject().get(CourierConstants.DELHIVERY_STATUS).getAsString();
+            deliveryDate = jsonObj.getAsJsonObject().get(CourierConstants.DELHIVERY_SHIPMENT).getAsJsonObject().get(CourierConstants.DELHIVERY_STATUS).getAsJsonObject().get(CourierConstants.DELHIVERY_STATUS_DATETIME).getAsString();
+            if (trackingId != null && deliveryStatus != null && deliveryDate != null) {
+                delivery_date = getFormattedDeliveryDate(deliveryDate);
+                //if status is delivered then putting values in the map.
+                if (deliveryStatus.equalsIgnoreCase(CourierConstants.DELIVERED)) {
+                      Awb awb= awbService.findByCourierAwbNumber(EnumCourier.Delhivery.asCourier(),trackingId);
+                    Shipment shipment=shipmentService.findByAwb(awb);
+                    shippingOrdr = shipment.getShippingOrder();
+                    ordersDelivered=updateCourierDeliveryStatus(shippingOrdr, shippingOrdr.getShipment(), shippingOrdr.getShipment().getAwb().getAwbNumber(), delivery_date);
+                }
+            }
+        }
+        return ordersDelivered;
+    }
+
+    private String getAppendedTrackingIdsString(List<ShippingOrder> shippingOrderSubList) {
+        String appendedTrackingId = "";
+
+        //Iterating over the sub-list to get the required trackingId and fetch response
+        for (ShippingOrder shipOrder : shippingOrderSubList) {
+            appendedTrackingId = appendedTrackingId + "," + shipOrder.getShipment().getAwb().getAwbNumber();
+        }
+
+        return appendedTrackingId;
     }
 
     public List<String> getUnmodifiedTrackingIds(){

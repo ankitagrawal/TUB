@@ -666,7 +666,7 @@ public class XslParser {
             if (checkinQty != null && checkinQty > 0) {
               String batch = getCellValue(XslConstants.BATCH_NUMBER, rowMap, headerMap);
               SkuGroup skuGroup = adminInventoryService.createSkuGroup(batch, getDate(getCellValue(XslConstants.MFG_DATE, rowMap, headerMap)), getDate(getCellValue(
-                  XslConstants.EXP_DATE, rowMap, headerMap)), goodsReceivedNote, null, null, null);
+                  XslConstants.EXP_DATE, rowMap, headerMap)), 0.0, 0.0, goodsReceivedNote, null, null, null);
               adminInventoryService.createSkuItemsAndCheckinInventory(skuGroup, checkinQty, null, grnLineItem, null, null, getInventoryService().getInventoryTxnType(
                   EnumInvTxnType.INV_CHECKIN), null);
 
@@ -883,14 +883,15 @@ public class XslParser {
         }
         if (StringUtils.isNotBlank(awb)) {
 
-          if (!(shipment.getTrackingId().equals(awb))) {
+          if (!(shipment.getAwb() != null && shipment.getAwb().getAwbNumber().equals(awb))) {
             messagePostUpdation += "AWB and shippingOrder no. mismatch at row" + rowCount + ".<br/>";
             continue;
           }
         }
-        shipment.setCollectionCharge(collectionCharge);
-        shipment.setShipmentCharge(shippingCharge);
-        shipmentService.save(shipment);
+          shipment.setCollectionCharge(collectionCharge);
+          shipment.setShipmentCharge(shippingCharge);
+          shipment.setShippingOrder(shippingOrder);
+          shipmentService.save(shipment);
 
         /*
         * if (courier != null) { productLineItemsByCourier =
@@ -1032,7 +1033,7 @@ public class XslParser {
         }
         if (StringUtils.isNotBlank(awb)) {
 
-          if (!(shipment.getTrackingId().equals(awb))) {
+          if (!(shipment.getAwb() != null && shipment.getAwb().getAwbNumber().equals(awb))) {
             messagePostUpdation += "AWB and shippingOrder no. mismatch at row" + rowCount + ".<br/>";
             continue;
           }

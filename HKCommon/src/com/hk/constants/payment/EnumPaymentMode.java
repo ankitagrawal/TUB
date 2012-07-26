@@ -63,7 +63,10 @@ public enum EnumPaymentMode {
         EnumPaymentMode.FREE_CHECKOUT,
         EnumPaymentMode.NEFT,
         EnumPaymentMode.TECHPROCESS,
-        EnumPaymentMode.CITRUS);
+        EnumPaymentMode.CITRUS,
+        EnumPaymentMode.EBS,
+        EnumPaymentMode.CITRUS_CreditDebit,
+        EnumPaymentMode.CITRUS_NetBanking_New);
 
   }
 
