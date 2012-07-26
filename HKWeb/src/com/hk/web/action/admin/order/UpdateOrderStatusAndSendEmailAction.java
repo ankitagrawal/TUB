@@ -2,6 +2,9 @@ package com.hk.web.action.admin.order;
 
 import java.util.List;
 
+import com.hk.domain.subscription.Subscription;
+import com.hk.domain.subscription.SubscriptionOrder;
+import com.hk.pact.service.subscription.SubscriptionOrderService;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
@@ -35,6 +38,8 @@ public class UpdateOrderStatusAndSendEmailAction extends BaseAction {
     private LinkManager          linkManager;
     @Autowired
     private ShipmentServiceImpl  shipmentService;
+    @Autowired
+    private SubscriptionOrderService subscriptionOrderService;
 
     public Resolution pre() {
         List<ShippingOrder> shippingOrderList = shippingOrderService.getShippingOrdersToSendShipmentEmail();
@@ -46,7 +51,7 @@ public class UpdateOrderStatusAndSendEmailAction extends BaseAction {
             if (order.getStore() != null && order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID) && !order.isSubscriptionOrder()) {
                 isEmailSent = emailManager.sendOrderShippedEmail(shippingOrder, linkManager.getShippingOrderInvoiceLink(shippingOrder));
             }else if(order.isSubscriptionOrder()){
-                isEmailSent = emailManager.sendSubscriptionOrderShippedEmail(shippingOrder, linkManager.getShippingOrderInvoiceLink(shippingOrder));
+                isEmailSent = emailManager.sendSubscriptionOrderShippedEmail(shippingOrder,getSubscriptionOrderService().findSubscriptionOrderByBaseOrder(shippingOrder.getBaseOrder()).getSubscription(), linkManager.getShippingOrderInvoiceLink(shippingOrder));
             }else {
                 isEmailSent = true; // Incase on non HK order
             }
@@ -75,5 +80,13 @@ public class UpdateOrderStatusAndSendEmailAction extends BaseAction {
 
     public void setShipmentService(ShipmentServiceImpl shipmentService) {
         this.shipmentService = shipmentService;
+    }
+
+    public SubscriptionOrderService getSubscriptionOrderService() {
+        return subscriptionOrderService;
+    }
+
+    public void setSubscriptionOrderService(SubscriptionOrderService subscriptionOrderService) {
+        this.subscriptionOrderService = subscriptionOrderService;
     }
 }

@@ -24,6 +24,7 @@ import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.OrderCategory;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.subscription.Subscription;
 import com.hk.domain.user.User;
 import com.hk.dto.pricing.PricingDto;
 import com.hk.pact.dao.BaseDao;
@@ -35,7 +36,6 @@ import com.hk.pact.service.EmailService;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.order.OrderLoggingService;
-import com.hk.pact.service.subscription.SubscriptionOrderService;
 import com.hk.service.impl.FreeMarkerService;
 import com.hk.util.HtmlUtil;
 import org.joda.time.DateTime;
@@ -88,8 +88,6 @@ public class EmailManager {
     private OrderLoggingService orderLoggingService;
     @Autowired
     private FreeMarkerService freeMarkerService;
-    @Autowired
-    private SubscriptionOrderService subscriptionOrderService;
 
     @Value("#{hkEnvProps['" + Keys.Env.hkAdminEmails + "']}")
     private String hkAdminEmailsString;
@@ -468,11 +466,11 @@ public class EmailManager {
                 shippingOrder.getBaseOrder().getUser().getName());
     }
 
-    public boolean sendSubscriptionOrderShippedEmail(ShippingOrder shippingOrder, String invoiceLink){
+    public boolean sendSubscriptionOrderShippedEmail(ShippingOrder shippingOrder,Subscription subscription, String invoiceLink){
         Shipment shipment = shippingOrder.getShipment();
         shipment.setTrackLink(getLinkManager().getOrderTrackLink(shipment.getTrackingId(), shipment.getCourier().getId(), shippingOrder));
         HashMap valuesMap = new HashMap();
-        valuesMap.put("subscription",subscriptionOrderService.findSubscriptionOrderByBaseOrder(shippingOrder.getBaseOrder()).getSubscription());
+        valuesMap.put("subscription",subscription);
         valuesMap.put("order", shippingOrder);
         valuesMap.put("invoiceLink", invoiceLink);
 
@@ -769,13 +767,5 @@ public class EmailManager {
 
     public void setOrderLoggingService(OrderLoggingService orderLoggingService) {
         this.orderLoggingService = orderLoggingService;
-    }
-
-    public SubscriptionOrderService getSubscriptionOrderService() {
-        return subscriptionOrderService;
-    }
-
-    public void setSubscriptionOrderService(SubscriptionOrderService subscriptionOrderService) {
-        this.subscriptionOrderService = subscriptionOrderService;
     }
 }

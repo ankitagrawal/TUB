@@ -51,10 +51,6 @@
                 var proceed = confirm('Are you sure?');
                 if (!proceed) return false;
             });
-            $('.confirmSubscriptionOrderLink').click(function(){
-                $(this).siblings('.confirmSubscriptionDiv').show();
-                return false;
-            } );
 
 
             $('.confirmSubscriptionOrderButton').click(function(){
@@ -178,14 +174,19 @@
         <span class="codOrderText">&middot;</span>
 
         <s:link href="#" class="confirmSubscriptionOrderLink">(confirm subscription Order)</s:link>
-        <s:link href="#" class="cancelSubscriptionLink">(cancel subscription)</s:link>
         <div class="confirmSubscriptionDiv" style="display: none;">
         <s:form beanclass="com.hk.web.action.admin.subscription.SubscriptionAdminAction" class="confirmSubscriptionOrderForm" >
             <s:param name="subscription" value="${subscription.id}"/>
-
+           <s:submit name="confirmedByCustomer" class="confirmSubscriptionOrderButton" value="confirm"/>
         </s:form>
         </div>
         <script type="text/javascript">
+
+            $('.confirmSubscriptionOrderLink').click(function(){
+                $(this).siblings('.confirmSubscriptionDiv').show();
+                return false;
+            } );
+
             $('.confirmSubscriptionOrderForm').ajaxForm({dataType: 'json', success: _confirmSubscriptionOrder});
 
             function _confirmSubscriptionOrder(res) {

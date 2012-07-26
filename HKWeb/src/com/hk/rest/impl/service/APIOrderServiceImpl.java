@@ -94,6 +94,7 @@ public class APIOrderServiceImpl implements APIOrderService {
 
     //first place a base order  or find one if it already exists
     Order order = getOrderManager().getOrCreateOrder(hkUser);
+    order.setCartLineItems(cartLineItems);
     order = getOrderService().save(order);
     //add items in the cart
     cartLineItems = addCartLineItems(apiOrder.getApiOrderDetails(), order);
