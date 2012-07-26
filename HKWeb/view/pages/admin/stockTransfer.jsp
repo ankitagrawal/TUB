@@ -24,26 +24,48 @@
 
 			var validateForm = function() {
 				var isValidated = true;
-				var checkedoutQty = $('.checkedoutQty').val();
-				if (checkedoutQty == "" || checkedoutQty < 0 || isNaN(checkedoutQty)) {
-					alert("Enter checkedout Qty in correct format.");
-					isValidated =  false;
+				if ($('.checkedoutQty').length > 0 && isValidated) {
+					$.each($('.checkedoutQty'), function() {
+						var checkedoutQty = $(this).val();
+						if (checkedoutQty == "" || checkedoutQty < 0 || isNaN(checkedoutQty)) {
+							alert("Enter valid checkedoutQty");
+							isValidated = false;
+							return false;
+						}
+					});
 				}
-				var costPrice = $('.costPrice').val();
-				var mrp = $('.mrp').val();
-				if (costPrice == "" || costPrice < 0 || mrp == "" || mrp < 0 || isNaN(costPrice) || isNaN(mrp)) {
-					alert("Enter valid cost price and mrp.");
-					isValidated =  false;
+				if ($('.costPrice').length > 0 && isValidated) {
+					$.each($('.costPrice'), function() {
+						var costPrice = $(this).val();
+						if (costPrice == "" || costPrice < 0 || isNaN(costPrice)) {
+							alert("Enter valid costPrice");
+							isValidated = false;
+							return false;
+						}
+					});
+				}
+				if ($('.mrp').length > 0 && isValidated) {
+					$.each($('.mrp'), function() {
+						var mrp = $(this).val();
+						if (mrp == "" || mrp < 0 || isNaN(mrp)) {
+							alert("Enter valid mrp");
+							isValidated = false;
+							return false;
+						}
+					});
+				}
+				if ($('.batchNumber').length > 0 && isValidated) {
+					$.each($('.batchNumber'), function() {
+						var batchNumber = $(this).val();
+						if (batchNumber == "") {
+							alert("Enter a valid batch number");
+							isValidated = false;
+							return false;
+						}
+					});
 				}
 
-				$.each($('.batchNumber'), function() {
-					var batchNumber = $(this).val();
-					if (batchNumber == "") {
-						alert("Enter a valid batch number");
-						isValidated =  false;
-						return false;
-					}
-				});
+
 				return isValidated;
 			};
 
