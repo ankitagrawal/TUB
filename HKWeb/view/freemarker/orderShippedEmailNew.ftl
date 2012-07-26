@@ -71,7 +71,7 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
                             <tr>
                                 <td>${lineItem.sku.productVariant.product.name}
                                     <#if lineItem.sku.productVariant.variantName??>
-                                        ${lineItem.sku.productVariant.variantName}
+                                    ${lineItem.sku.productVariant.variantName}
                                     </#if>
                                     <br/>
                                     <#list lineItem.sku.productVariant.productOptions as
@@ -83,7 +83,7 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
                                     ${lineItem.qty}
                                 </td>
                                 <td>
-                                    ${order.shipment.trackingId}
+                                    ${order.shipment.awb.awbNumber}
                                     <#if order.shipment.trackLink??>
                                     <h5><a href="${order.shipment.trackLink}" target="_blank"> Track This </a></h5>
                                     </#if>

@@ -62,7 +62,7 @@ public class BOInvoiceAction extends BaseAction {
   public Resolution pre() {
     pricingDto = new PricingDto(order.getCartLineItems(), order.getAddress());
     coupon = referrerProgramManager.getOrCreateRefferrerCoupon(order.getUser());
-    barcodePath = barcodeGenerator.getBarcodePath(order.getGatewayOrderId());
+    barcodePath = barcodeGenerator.getBarcodePath(order.getGatewayOrderId(),1.0f);
     return new ForwardResolution("/pages/invoice.jsp");
   }
 

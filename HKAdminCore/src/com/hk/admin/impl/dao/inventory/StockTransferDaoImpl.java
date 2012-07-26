@@ -1,13 +1,5 @@
 package com.hk.admin.impl.dao.inventory;
 
-import java.util.Date;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.stereotype.Repository;
-
 import com.akube.framework.dao.Page;
 import com.akube.framework.util.DateUtils;
 import com.hk.admin.pact.dao.inventory.StockTransferDao;
@@ -16,6 +8,13 @@ import com.hk.domain.inventory.StockTransfer;
 import com.hk.domain.inventory.StockTransferLineItem;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
+import org.apache.commons.lang.StringUtils;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
+
+import java.util.Date;
+import java.util.List;
 
 @Repository
 public class StockTransferDaoImpl extends BaseDaoImpl implements StockTransferDao {
@@ -43,10 +42,13 @@ public class StockTransferDaoImpl extends BaseDaoImpl implements StockTransferDa
     }
 
     @SuppressWarnings("unchecked")
-    public StockTransferLineItem getStockTransferLineItem(StockTransfer stockTransfer, ProductVariant productVariant) {
+    public StockTransferLineItem getStockTransferLineItem(StockTransfer stockTransfer, ProductVariant productVariant, String batchNumber) {
         List<StockTransferLineItem> stockTransferLineItems = getSession().createQuery(
-                "from StockTransferLineItem stli where stli.stockTransfer = :stockTransfer and stli.sku.productVariant = :productVariant").setParameter("stockTransfer",
-                stockTransfer).setParameter("productVariant", productVariant).list();
+                "from StockTransferLineItem stli where stli.stockTransfer = :stockTransfer and stli.sku.productVariant = :productVariant" +
+		                " and stli.batchNumber = :batchNumber")
+		        .setParameter("stockTransfer", stockTransfer)
+		        .setParameter("productVariant", productVariant)
+		        .setParameter("batchNumber", batchNumber).list();
         return stockTransferLineItems != null && !stockTransferLineItems.isEmpty() ? stockTransferLineItems.get(0) : null;
     }
 

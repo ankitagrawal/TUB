@@ -13,23 +13,6 @@
 	<welcome-file-list>
 		<welcome-file>/pages/home.jsp</welcome-file>
 	</welcome-file-list>
-	
-	<error-page>
-		<error-code>401</error-code>
-		<location>/pages/error/noPage.html</location>
-	</error-page>
-	<error-page>
-		<error-code>404</error-code>
-		<location>/pages/error/noPage.html</location>
-	</error-page>
-	<error-page>
-		<error-code>500</error-code>
-		<location>/pages/error/noPage.html</location>
-	</error-page>
-	<error-page>
-		<error-code>503</error-code>
-		<location>/pages/error/noPage.html</location>
-	</error-page>
 
 	<!--  Listeners Start -->
 	<listener>
@@ -255,6 +238,7 @@
 		<url-pattern>/sitemap.txt</url-pattern>
 		<url-pattern>/ror.xml</url-pattern>
         <url-pattern>/super-savers</url-pattern>
+        <url-pattern>/faq/*</url-pattern>
 	</servlet-mapping>
 
 

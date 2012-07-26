@@ -15,8 +15,6 @@ import com.hk.pact.dao.BaseDao;
 
 public interface OrderDao extends BaseDao {
 
-    public static final String HARYANA = "%haryana%";
-
     public Order getLatestOrderForUser(User user);
 
     public Page listOrdersForUser(List<OrderStatus> orderStatusList, User user, int page, int perPage);
@@ -35,16 +33,6 @@ public interface OrderDao extends BaseDao {
     public Long getBookedQtyOfProductVariantInQueue(ProductVariant productVariant);
 
     public void logOrderActivity(Order order, User user, OrderLifecycleActivity orderLifecycleActivity, String comments);
-
-    /**
-     * @param productVariant
-     * @return Sum of Qty of lineitems for product variant which are not yet shipped
-     */
-    public Long getQtyOfProductVariantInQueue(ProductVariant productVariant, List<Long> lineItemStatusList, List<Long> paymentModeList);
-
-    @Deprecated
-    public Page searchDeliveryAwaitingOrders(Date startDate, Date endDate, Long orderId, OrderStatus orderStatus, String gatewayOrderId, String trackingId, int pageNo,
-            int perPage, Long courierId);
 
     public Order findByGatewayOrderId(String gatewayOrderId);
 }
