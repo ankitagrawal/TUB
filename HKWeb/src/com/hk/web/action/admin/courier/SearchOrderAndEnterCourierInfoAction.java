@@ -133,6 +133,8 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
                     trackingId = shippingOrder.getShipment().getAwb().getAwbNumber();
                 } else {
                     suggestedCourier = courierService.getDefaultCourierByPincodeForLoggedInWarehouse(pinCode, isCod);
+                    //TO DO Seema ."reason=create  shipment without correct Awb alse " Action: default Tracking id= gateway_order_id
+                    trackingId =shippingOrder.getGatewayOrderId();
                 }
             } else {
                 addRedirectAlertMessage(new SimpleMessage("Pincode is INVALID, Please contact Customer Care. It cannot be packed."));
@@ -186,10 +188,11 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
                 finalAwb = awb;
                 finalAwb.setAwbStatus(EnumAwbStatus.Authorization_Pending.getAsAwbStatus());
             }
-            if (suggestedAwb != null) {
-                suggestedAwb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
-                awbService.save(suggestedAwb);
-            }
+            //To Do Seema --  the status of Awb which are detached from Shipment, should not change
+//            if (suggestedAwb != null) {
+//                suggestedAwb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
+//                awbService.save(suggestedAwb);
+//            }
 
         } else {
             finalAwb.setAwbStatus(EnumAwbStatus.Attach.getAsAwbStatus());
