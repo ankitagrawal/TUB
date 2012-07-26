@@ -133,7 +133,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
                     trackingId = shippingOrder.getShipment().getAwb().getAwbNumber();
                 } else {
                     suggestedCourier = courierService.getDefaultCourierByPincodeForLoggedInWarehouse(pinCode, isCod);
-                    //TO DO Seema ."reason=create  shipment without correct Awb also " Action: default Tracking id= gateway_order_id
+                    //TO DO Seema ."reason=create  shipment without default Awb  " Action: default Tracking id= gateway_order_id
                     trackingId = shippingOrder.getGatewayOrderId();
                 }
             } else {
@@ -188,7 +188,7 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
                 finalAwb = awb;
                 finalAwb.setAwbStatus(EnumAwbStatus.Authorization_Pending.getAsAwbStatus());
             }
-            //To Do Seema --  the status of Awb which are detached from Shipment, should not change
+            //To Do Seema --  Awb which are detached from Shipment,their status should not change
 //            if (suggestedAwb != null) {
 //                suggestedAwb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
 //                awbService.save(suggestedAwb);
