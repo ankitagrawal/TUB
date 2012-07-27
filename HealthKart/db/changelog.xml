@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
- <databaseChangeLog
-     xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-     xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
-     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
     <changeSet author="kani (generated)" id="1304412710257-1">
         <createTable tableName="address">
             <column autoIncrement="true" name="id" type="INT">
@@ -760,7 +760,7 @@
         </addColumn>
     </changeSet>
 
-  <!-- Extra Options -->
+    <!-- Extra Options -->
     <changeSet author="USER (generated)" id="1306243889811-1">
         <createTable tableName="line_item_extra_option">
             <column autoIncrement="true" name="id" type="INT">
@@ -1018,20 +1018,20 @@
         </addColumn>
     </changeSet>
 
-  <changeSet author="USER (generated)" id="1307442237711-1">
-    <addColumn tableName="product_variant">
-        <column name="deleted" type="TINYINT">
-            <constraints nullable="false"/>
-        </column>
-    </addColumn>
-  </changeSet>
-  <changeSet author="USER (generated)" id="1307442237711-2">
-      <addColumn tableName="product_variant">
-          <column name="order_ranking" type="DOUBLE"/>
-      </addColumn>
-  </changeSet>
+    <changeSet author="USER (generated)" id="1307442237711-1">
+        <addColumn tableName="product_variant">
+            <column name="deleted" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="USER (generated)" id="1307442237711-2">
+        <addColumn tableName="product_variant">
+            <column name="order_ranking" type="DOUBLE"/>
+        </addColumn>
+    </changeSet>
 
-  <!-- Product features and images -->
+    <!-- Product features and images -->
     <changeSet author="USER (generated)" id="1307428374361-1">
         <createTable tableName="product_feature">
             <column autoIncrement="true" name="id" type="INT">
@@ -1084,9 +1084,9 @@
         <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="product_feature" constraintName="fk_product_feature_product1" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="product"/>
     </changeSet>
 
-  <changeSet author="kani (generated)" id="1307856688643-1">
-      <addAutoIncrement tableName="product_image" columnName="id" columnDataType="int"/>
-  </changeSet>
+    <changeSet author="kani (generated)" id="1307856688643-1">
+        <addAutoIncrement tableName="product_image" columnName="id" columnDataType="int"/>
+    </changeSet>
 
     <changeSet author="nitin (generated)" id="1307520904495-1">
         <createTable tableName="seo_data">
@@ -1101,437 +1101,437 @@
         </createTable>
     </changeSet>
 
-  <changeSet author="nitin" id="20110613-01">
-    <addDefaultValue tableName="product_variant" columnName="deleted" defaultValue="0"/>
-    <addDefaultValue tableName="product_variant" columnName="out_of_stock" defaultValue="0"/>
-  </changeSet>
+    <changeSet author="nitin" id="20110613-01">
+        <addDefaultValue tableName="product_variant" columnName="deleted" defaultValue="0"/>
+        <addDefaultValue tableName="product_variant" columnName="out_of_stock" defaultValue="0"/>
+    </changeSet>
 
-  <changeSet author="USER (generated)" id="1308117179834-1">
-      <createTable tableName="offer_has_role">
-          <column name="offer_id" type="INT">
-              <constraints nullable="false"/>
-          </column>
-          <column name="role_name" type="VARCHAR(20)">
-              <constraints nullable="false"/>
-          </column>
-      </createTable>
-  </changeSet>
-  <changeSet author="USER (generated)" id="1308117179834-2">
-      <addPrimaryKey columnNames="offer_id, role_name" tableName="offer_has_role"/>
-  </changeSet>
-  <changeSet author="USER (generated)" id="1308117179834-3">
-      <addForeignKeyConstraint baseColumnNames="offer_id" baseTableName="offer_has_role" constraintName="fk_offer_has_role_offer1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="offer" referencesUniqueColumn="false"/>
-  </changeSet>
-  <changeSet author="USER (generated)" id="1308117179834-4">
-      <addForeignKeyConstraint baseColumnNames="role_name" baseTableName="offer_has_role" constraintName="fk_offer_has_role_role1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="name" referencedTableName="role" referencesUniqueColumn="false"/>
-  </changeSet>
+    <changeSet author="USER (generated)" id="1308117179834-1">
+        <createTable tableName="offer_has_role">
+            <column name="offer_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_name" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="USER (generated)" id="1308117179834-2">
+        <addPrimaryKey columnNames="offer_id, role_name" tableName="offer_has_role"/>
+    </changeSet>
+    <changeSet author="USER (generated)" id="1308117179834-3">
+        <addForeignKeyConstraint baseColumnNames="offer_id" baseTableName="offer_has_role" constraintName="fk_offer_has_role_offer1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="offer" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="USER (generated)" id="1308117179834-4">
+        <addForeignKeyConstraint baseColumnNames="role_name" baseTableName="offer_has_role" constraintName="fk_offer_has_role_role1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="name" referencedTableName="role" referencesUniqueColumn="false"/>
+    </changeSet>
 
-  <changeSet author="USER (generated)" id="1308124564884-1">
-      <createTable tableName="email_subscription">
-          <column autoIncrement="true" name="id" type="INT">
-              <constraints nullable="false" primaryKey="true"/>
-          </column>
-          <column name="promotional" type="TINYINT"/>
-          <column name="unsubscribe_token" type="VARCHAR(45)">
-              <constraints nullable="false"/>
-          </column>
-          <column defaultValueNumeric="0" name="invalid" type="TINYINT"/>
-          <column defaultValueNumeric="0" name="bounce" type="TINYINT"/>
-          <column name="user_id" type="INT">
-              <constraints nullable="false"/>
-          </column>
-      </createTable>
-  </changeSet>
-  <changeSet author="USER (generated)" id="1308124564884-2">
-      <createTable tableName="temp_token">
-          <column autoIncrement="true" name="id" type="INT">
-              <constraints nullable="false" primaryKey="true"/>
-          </column>
-          <column name="token" type="VARCHAR(45)">
-              <constraints nullable="false"/>
-          </column>
-          <column name="create_date" type="DATETIME">
-              <constraints nullable="false"/>
-          </column>
-          <column name="expiry_date" type="DATETIME">
-              <constraints nullable="false"/>
-          </column>
-          <column defaultValueNumeric="0" name="expired" type="TINYINT">
-              <constraints nullable="false"/>
-          </column>
-          <column name="user_id" type="INT">
-              <constraints nullable="false"/>
-          </column>
-      </createTable>
-  </changeSet>
-  <changeSet author="USER (generated)" id="1308124564884-3">
-      <addNotNullConstraint columnDataType="VARCHAR(1000)" columnName="value" tableName="product_extra_option"/>
-  </changeSet>
-  <changeSet author="USER (generated)" id="1308124564884-4">
-      <createIndex indexName="token_UNIQUE" tableName="temp_token" unique="true">
-          <column name="token"/>
-      </createIndex>
-  </changeSet>
-  <changeSet author="USER (generated)" id="1308124564884-5">
-      <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="email_subscription" constraintName="fk_email_subscription_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
-  </changeSet>
-  <changeSet author="USER (generated)" id="1308124564884-6">
-      <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="temp_token" constraintName="fk_temp_token_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
-  </changeSet>
+    <changeSet author="USER (generated)" id="1308124564884-1">
+        <createTable tableName="email_subscription">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="promotional" type="TINYINT"/>
+            <column name="unsubscribe_token" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="invalid" type="TINYINT"/>
+            <column defaultValueNumeric="0" name="bounce" type="TINYINT"/>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="USER (generated)" id="1308124564884-2">
+        <createTable tableName="temp_token">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="token" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expiry_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="expired" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="USER (generated)" id="1308124564884-3">
+        <addNotNullConstraint columnDataType="VARCHAR(1000)" columnName="value" tableName="product_extra_option"/>
+    </changeSet>
+    <changeSet author="USER (generated)" id="1308124564884-4">
+        <createIndex indexName="token_UNIQUE" tableName="temp_token" unique="true">
+            <column name="token"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="USER (generated)" id="1308124564884-5">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="email_subscription" constraintName="fk_email_subscription_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="USER (generated)" id="1308124564884-6">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="temp_token" constraintName="fk_temp_token_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
 
-  <changeSet author="USER (generated)" id="1309426870197-1">
-      <createTable tableName="comment">
-          <column autoIncrement="true" name="id" type="INT">
-              <constraints nullable="false" primaryKey="true"/>
-          </column>
-          <column name="name" type="VARCHAR(45)">
-              <constraints nullable="false"/>
-          </column>
-          <column name="comment" type="TEXT">
-              <constraints nullable="false"/>
-          </column>
-          <column name="date" type="DATETIME">
-              <constraints nullable="false"/>
-          </column>
-          <column name="order_id" type="INT">
-              <constraints nullable="false"/>
-          </column>
-      </createTable>
-  </changeSet>
-  <changeSet author="USER (generated)" id="1309426870197-2">
-      <addForeignKeyConstraint baseColumnNames="order_id" baseTableName="comment" constraintName="fk_comment_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order" referencesUniqueColumn="false"/>
-  </changeSet>
+    <changeSet author="USER (generated)" id="1309426870197-1">
+        <createTable tableName="comment">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="comment" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="order_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="USER (generated)" id="1309426870197-2">
+        <addForeignKeyConstraint baseColumnNames="order_id" baseTableName="comment" constraintName="fk_comment_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order" referencesUniqueColumn="false"/>
+    </changeSet>
 
-  <changeSet author="kani (generated)" id="1308923890579-1">
-      <createTable tableName="ticket">
-          <column autoIncrement="true" name="id" type="INT">
-              <constraints nullable="false" primaryKey="true"/>
-          </column>
-          <column name="short_description" type="VARCHAR(200)">
-              <constraints nullable="false"/>
-          </column>
-          <column name="full_description" type="TEXT"/>
-          <column name="create_date" type="DATETIME">
-              <constraints nullable="false"/>
-          </column>
-          <column name="update_date" type="DATETIME">
-              <constraints nullable="false"/>
-          </column>
-          <column name="associated_email" type="VARCHAR(100)"/>
-          <column name="associated_phone" type="VARCHAR(25)"/>
-          <column name="associated_tracking_id" type="VARCHAR(20)"/>
-          <column name="ticket_status_id" type="INT">
-              <constraints nullable="false"/>
-          </column>
-          <column name="ticket_type_id" type="INT">
-              <constraints nullable="false"/>
-          </column>
-          <column name="owner" type="INT">
-              <constraints nullable="false"/>
-          </column>
-          <column name="reporter" type="INT">
-              <constraints nullable="false"/>
-          </column>
-          <column name="associated_user" type="INT"/>
-          <column name="associated_order" type="INT"/>
-          <column name="associated_courier" type="INT"/>
-      </createTable>
-  </changeSet>
-  <changeSet author="kani (generated)" id="1308923890579-2">
-      <createTable tableName="ticket_history">
-          <column autoIncrement="true" name="id" type="INT">
-              <constraints nullable="false" primaryKey="true"/>
-          </column>
-          <column name="ticket_id" type="INT">
-              <constraints nullable="false"/>
-          </column>
-          <column name="comment" type="TEXT"/>
-          <column name="create_date" type="DATETIME">
-              <constraints nullable="false"/>
-          </column>
-          <column name="short_description" type="VARCHAR(200)">
-              <constraints nullable="false"/>
-          </column>
-          <column name="full_description_changed" type="TINYINT">
-              <constraints nullable="false"/>
-          </column>
-          <column name="associated_email" type="VARCHAR(100)"/>
-          <column name="associated_phone" type="VARCHAR(20)"/>
-          <column name="associated_tracking_id" type="VARCHAR(20)"/>
-          <column name="ticket_status_id" type="INT">
-              <constraints nullable="false"/>
-          </column>
-          <column name="ticket_type_id" type="INT">
-              <constraints nullable="false"/>
-          </column>
-          <column name="owner" type="INT">
-              <constraints nullable="false"/>
-          </column>
-          <column name="changed_by" type="INT">
-              <constraints nullable="false"/>
-          </column>
-          <column name="associated_user" type="INT"/>
-          <column name="associated_order" type="INT"/>
-          <column name="associated_courier" type="INT"/>
-      </createTable>
-  </changeSet>
-  <changeSet author="kani (generated)" id="1308923890579-3">
-      <createTable tableName="ticket_status">
-          <column name="id" type="INT">
-              <constraints nullable="false" primaryKey="true"/>
-          </column>
-          <column name="name" type="VARCHAR(45)">
-              <constraints nullable="false"/>
-          </column>
-      </createTable>
-  </changeSet>
-  <changeSet author="kani (generated)" id="1308923890579-4">
-      <createTable tableName="ticket_type">
-          <column name="id" type="INT">
-              <constraints nullable="false" primaryKey="true"/>
-          </column>
-          <column name="name" type="VARCHAR(45)">
-              <constraints nullable="false"/>
-          </column>
-          <column name="description" type="VARCHAR(200)"/>
-      </createTable>
-  </changeSet>
-  <changeSet author="kani (generated)" id="1308923890579-5">
-      <addForeignKeyConstraint baseColumnNames="associated_courier" baseTableName="ticket" constraintName="fk_ticket_courier1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="courier" referencesUniqueColumn="false"/>
-  </changeSet>
-  <changeSet author="kani (generated)" id="1308923890579-6">
-      <addForeignKeyConstraint baseColumnNames="associated_order" baseTableName="ticket" constraintName="fk_ticket_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order" referencesUniqueColumn="false"/>
-  </changeSet>
-  <changeSet author="kani (generated)" id="1308923890579-7">
-      <addForeignKeyConstraint baseColumnNames="associated_user" baseTableName="ticket" constraintName="fk_ticket_user3" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
-  </changeSet>
-  <changeSet author="kani (generated)" id="1308923890579-8">
-      <addForeignKeyConstraint baseColumnNames="owner" baseTableName="ticket" constraintName="fk_ticket_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
-  </changeSet>
-  <changeSet author="kani (generated)" id="1308923890579-9">
-      <addForeignKeyConstraint baseColumnNames="reporter" baseTableName="ticket" constraintName="fk_ticket_user2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
-  </changeSet>
-  <changeSet author="kani (generated)" id="1308923890579-10">
-      <addForeignKeyConstraint baseColumnNames="ticket_status_id" baseTableName="ticket" constraintName="fk_ticket_ticket_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="ticket_status" referencesUniqueColumn="false"/>
-  </changeSet>
-  <changeSet author="kani (generated)" id="1308923890579-11">
-      <addForeignKeyConstraint baseColumnNames="ticket_type_id" baseTableName="ticket" constraintName="fk_ticket_ticket_type1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="ticket_type" referencesUniqueColumn="false"/>
-  </changeSet>
-  <changeSet author="kani (generated)" id="1308923890579-12">
-      <addForeignKeyConstraint baseColumnNames="associated_courier" baseTableName="ticket_history" constraintName="fk_ticket_history_courier1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="courier" referencesUniqueColumn="false"/>
-  </changeSet>
-  <changeSet author="kani (generated)" id="1308923890579-13">
-      <addForeignKeyConstraint baseColumnNames="associated_order" baseTableName="ticket_history" constraintName="fk_ticket_history_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order" referencesUniqueColumn="false"/>
-  </changeSet>
-  <changeSet author="kani (generated)" id="1308923890579-14">
-      <addForeignKeyConstraint baseColumnNames="associated_user" baseTableName="ticket_history" constraintName="fk_ticket_history_user3" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
-  </changeSet>
-  <changeSet author="kani (generated)" id="1308923890579-15">
-      <addForeignKeyConstraint baseColumnNames="changed_by" baseTableName="ticket_history" constraintName="fk_ticket_history_user2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
-  </changeSet>
-  <changeSet author="kani (generated)" id="1308923890579-16">
-      <addForeignKeyConstraint baseColumnNames="owner" baseTableName="ticket_history" constraintName="fk_ticket_history_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
-  </changeSet>
-  <changeSet author="kani (generated)" id="1308923890579-17">
-      <addForeignKeyConstraint baseColumnNames="ticket_id" baseTableName="ticket_history" constraintName="fk_ticket_history_ticket1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="ticket" referencesUniqueColumn="false"/>
-  </changeSet>
-  <changeSet author="kani (generated)" id="1308923890579-18">
-      <addForeignKeyConstraint baseColumnNames="ticket_status_id" baseTableName="ticket_history" constraintName="fk_ticket_history_ticket_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="ticket_status" referencesUniqueColumn="false"/>
-  </changeSet>
-  <changeSet author="kani (generated)" id="1308923890579-19">
-      <addForeignKeyConstraint baseColumnNames="ticket_type_id" baseTableName="ticket_history" constraintName="fk_ticket_history_ticket_type1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="ticket_type" referencesUniqueColumn="false"/>
-  </changeSet>
+    <changeSet author="kani (generated)" id="1308923890579-1">
+        <createTable tableName="ticket">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="short_description" type="VARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="full_description" type="TEXT"/>
+            <column name="create_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="update_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="associated_email" type="VARCHAR(100)"/>
+            <column name="associated_phone" type="VARCHAR(25)"/>
+            <column name="associated_tracking_id" type="VARCHAR(20)"/>
+            <column name="ticket_status_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ticket_type_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="owner" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reporter" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="associated_user" type="INT"/>
+            <column name="associated_order" type="INT"/>
+            <column name="associated_courier" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="kani (generated)" id="1308923890579-2">
+        <createTable tableName="ticket_history">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="ticket_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="comment" type="TEXT"/>
+            <column name="create_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="short_description" type="VARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="full_description_changed" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="associated_email" type="VARCHAR(100)"/>
+            <column name="associated_phone" type="VARCHAR(20)"/>
+            <column name="associated_tracking_id" type="VARCHAR(20)"/>
+            <column name="ticket_status_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ticket_type_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="owner" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="changed_by" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="associated_user" type="INT"/>
+            <column name="associated_order" type="INT"/>
+            <column name="associated_courier" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="kani (generated)" id="1308923890579-3">
+        <createTable tableName="ticket_status">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="kani (generated)" id="1308923890579-4">
+        <createTable tableName="ticket_type">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(200)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="kani (generated)" id="1308923890579-5">
+        <addForeignKeyConstraint baseColumnNames="associated_courier" baseTableName="ticket" constraintName="fk_ticket_courier1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="courier" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="kani (generated)" id="1308923890579-6">
+        <addForeignKeyConstraint baseColumnNames="associated_order" baseTableName="ticket" constraintName="fk_ticket_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="kani (generated)" id="1308923890579-7">
+        <addForeignKeyConstraint baseColumnNames="associated_user" baseTableName="ticket" constraintName="fk_ticket_user3" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="kani (generated)" id="1308923890579-8">
+        <addForeignKeyConstraint baseColumnNames="owner" baseTableName="ticket" constraintName="fk_ticket_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="kani (generated)" id="1308923890579-9">
+        <addForeignKeyConstraint baseColumnNames="reporter" baseTableName="ticket" constraintName="fk_ticket_user2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="kani (generated)" id="1308923890579-10">
+        <addForeignKeyConstraint baseColumnNames="ticket_status_id" baseTableName="ticket" constraintName="fk_ticket_ticket_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="ticket_status" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="kani (generated)" id="1308923890579-11">
+        <addForeignKeyConstraint baseColumnNames="ticket_type_id" baseTableName="ticket" constraintName="fk_ticket_ticket_type1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="ticket_type" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="kani (generated)" id="1308923890579-12">
+        <addForeignKeyConstraint baseColumnNames="associated_courier" baseTableName="ticket_history" constraintName="fk_ticket_history_courier1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="courier" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="kani (generated)" id="1308923890579-13">
+        <addForeignKeyConstraint baseColumnNames="associated_order" baseTableName="ticket_history" constraintName="fk_ticket_history_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="kani (generated)" id="1308923890579-14">
+        <addForeignKeyConstraint baseColumnNames="associated_user" baseTableName="ticket_history" constraintName="fk_ticket_history_user3" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="kani (generated)" id="1308923890579-15">
+        <addForeignKeyConstraint baseColumnNames="changed_by" baseTableName="ticket_history" constraintName="fk_ticket_history_user2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="kani (generated)" id="1308923890579-16">
+        <addForeignKeyConstraint baseColumnNames="owner" baseTableName="ticket_history" constraintName="fk_ticket_history_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="kani (generated)" id="1308923890579-17">
+        <addForeignKeyConstraint baseColumnNames="ticket_id" baseTableName="ticket_history" constraintName="fk_ticket_history_ticket1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="ticket" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="kani (generated)" id="1308923890579-18">
+        <addForeignKeyConstraint baseColumnNames="ticket_status_id" baseTableName="ticket_history" constraintName="fk_ticket_history_ticket_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="ticket_status" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="kani (generated)" id="1308923890579-19">
+        <addForeignKeyConstraint baseColumnNames="ticket_type_id" baseTableName="ticket_history" constraintName="fk_ticket_history_ticket_type1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="ticket_type" referencesUniqueColumn="false"/>
+    </changeSet>
 
-  <changeSet author="kani (generated)" id="1308925071841-1">
-      <modifyDataType columnName="name" newDataType="VARCHAR(30)" tableName="permission"/>
-  </changeSet>
+    <changeSet author="kani (generated)" id="1308925071841-1">
+        <modifyDataType columnName="name" newDataType="VARCHAR(30)" tableName="permission"/>
+    </changeSet>
 
-  <changeSet author="kani (generated)" id="1308925184301-1">
-      <modifyDataType columnName="permission_name" newDataType="VARCHAR(30)" tableName="role_has_permission"/>
-  </changeSet>
+    <changeSet author="kani (generated)" id="1308925184301-1">
+        <modifyDataType columnName="permission_name" newDataType="VARCHAR(30)" tableName="role_has_permission"/>
+    </changeSet>
 
-  <changeSet author="kani (generated)" id="1309356157792-1">
-      <createTable tableName="fbcoupon_campaign">
-          <column name="code" type="VARCHAR(45)">
-              <constraints nullable="false" primaryKey="true"/>
-          </column>
-          <column name="name" type="VARCHAR(45)">
-              <constraints nullable="false"/>
-          </column>
-          <column name="share_url" type="VARCHAR(200)"/>
-          <column name="create_date" type="DATETIME">
-              <constraints nullable="false"/>
-          </column>
-      </createTable>
-  </changeSet>
-  <changeSet author="kani (generated)" id="1309356157792-2">
-      <createTable tableName="fbcoupon_coupon">
-          <column autoIncrement="true" name="id" type="INT">
-              <constraints nullable="false" primaryKey="true"/>
-          </column>
-          <column name="coupon" type="VARCHAR(45)">
-              <constraints nullable="false"/>
-          </column>
-          <column name="bonus_coupon" type="VARCHAR(45)"/>
-          <column name="coupon_use_count" type="INT">
-              <constraints nullable="false"/>
-          </column>
-          <column name="bonus_coupon_use_count" type="INT">
-              <constraints nullable="false"/>
-          </column>
-          <column name="fbcoupon_campaign_code" type="VARCHAR(45)">
-              <constraints nullable="false"/>
-          </column>
-          <column name="create_date" type="DATETIME">
-              <constraints nullable="false"/>
-          </column>
-      </createTable>
-  </changeSet>
-  <changeSet author="kani (generated)" id="1309356157792-3">
-      <createTable tableName="fbcoupon_user">
-          <column autoIncrement="true" name="id" type="INT">
-              <constraints nullable="false" primaryKey="true"/>
-          </column>
-          <column name="fbuid" type="BIGINT">
-              <constraints nullable="false"/>
-          </column>
-          <column name="email" type="VARCHAR(60)"/>
-          <column name="name" type="VARCHAR(60)"/>
-          <column name="create_date" type="DATETIME">
-              <constraints nullable="false"/>
-          </column>
-          <column name="update_date" type="DATETIME">
-              <constraints nullable="false"/>
-          </column>
-      </createTable>
-  </changeSet>
-  <changeSet author="kani (generated)" id="1309356157792-4">
-      <createTable tableName="fbcoupon_user_campaign">
-          <column name="fbcoupon_user_id" type="INT">
-              <constraints nullable="false"/>
-          </column>
-          <column name="fbcoupon_campaign_code" type="VARCHAR(45)">
-              <constraints nullable="false"/>
-          </column>
-          <column name="fbcoupon_coupon_id" type="INT">
-              <constraints nullable="false"/>
-          </column>
-          <column name="shared" type="TINYINT">
-              <constraints nullable="false"/>
-          </column>
-          <column name="create_date" type="DATETIME">
-              <constraints nullable="false"/>
-          </column>
-      </createTable>
-  </changeSet>
-  <changeSet author="kani (generated)" id="1309356157792-7">
-      <addPrimaryKey columnNames="fbcoupon_user_id, fbcoupon_campaign_code" tableName="fbcoupon_user_campaign"/>
-  </changeSet>
-  <changeSet author="kani (generated)" id="1309356157792-8">
-      <addForeignKeyConstraint baseColumnNames="fbcoupon_campaign_code" baseTableName="fbcoupon_coupon" constraintName="fk_fbcoupon_coupon_fbcoupon_campaign1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="code" referencedTableName="fbcoupon_campaign" referencesUniqueColumn="false"/>
-  </changeSet>
-  <changeSet author="kani (generated)" id="1309356157792-9">
-      <addForeignKeyConstraint baseColumnNames="fbcoupon_campaign_code" baseTableName="fbcoupon_user_campaign" constraintName="fk_fbcoupon_user_campaign_fbcoupon_campaign1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="code" referencedTableName="fbcoupon_campaign" referencesUniqueColumn="false"/>
-  </changeSet>
-  <changeSet author="kani (generated)" id="1309356157792-10">
-      <addForeignKeyConstraint baseColumnNames="fbcoupon_coupon_id" baseTableName="fbcoupon_user_campaign" constraintName="fk_fbcoupon_user_has_coupon_fbcoupon_coupon1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="fbcoupon_coupon" referencesUniqueColumn="false"/>
-  </changeSet>
-  <changeSet author="kani (generated)" id="1309356157792-11">
-      <addForeignKeyConstraint baseColumnNames="fbcoupon_user_id" baseTableName="fbcoupon_user_campaign" constraintName="fk_fbcoupon_user_has_coupon_fbcoupon_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="fbcoupon_user" referencesUniqueColumn="false"/>
-  </changeSet>
+    <changeSet author="kani (generated)" id="1309356157792-1">
+        <createTable tableName="fbcoupon_campaign">
+            <column name="code" type="VARCHAR(45)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="share_url" type="VARCHAR(200)"/>
+            <column name="create_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="kani (generated)" id="1309356157792-2">
+        <createTable tableName="fbcoupon_coupon">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="coupon" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bonus_coupon" type="VARCHAR(45)"/>
+            <column name="coupon_use_count" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bonus_coupon_use_count" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fbcoupon_campaign_code" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="kani (generated)" id="1309356157792-3">
+        <createTable tableName="fbcoupon_user">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="fbuid" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(60)"/>
+            <column name="name" type="VARCHAR(60)"/>
+            <column name="create_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="update_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="kani (generated)" id="1309356157792-4">
+        <createTable tableName="fbcoupon_user_campaign">
+            <column name="fbcoupon_user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fbcoupon_campaign_code" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fbcoupon_coupon_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="shared" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="kani (generated)" id="1309356157792-7">
+        <addPrimaryKey columnNames="fbcoupon_user_id, fbcoupon_campaign_code" tableName="fbcoupon_user_campaign"/>
+    </changeSet>
+    <changeSet author="kani (generated)" id="1309356157792-8">
+        <addForeignKeyConstraint baseColumnNames="fbcoupon_campaign_code" baseTableName="fbcoupon_coupon" constraintName="fk_fbcoupon_coupon_fbcoupon_campaign1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="code" referencedTableName="fbcoupon_campaign" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="kani (generated)" id="1309356157792-9">
+        <addForeignKeyConstraint baseColumnNames="fbcoupon_campaign_code" baseTableName="fbcoupon_user_campaign" constraintName="fk_fbcoupon_user_campaign_fbcoupon_campaign1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="code" referencedTableName="fbcoupon_campaign" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="kani (generated)" id="1309356157792-10">
+        <addForeignKeyConstraint baseColumnNames="fbcoupon_coupon_id" baseTableName="fbcoupon_user_campaign" constraintName="fk_fbcoupon_user_has_coupon_fbcoupon_coupon1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="fbcoupon_coupon" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="kani (generated)" id="1309356157792-11">
+        <addForeignKeyConstraint baseColumnNames="fbcoupon_user_id" baseTableName="fbcoupon_user_campaign" constraintName="fk_fbcoupon_user_has_coupon_fbcoupon_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="fbcoupon_user" referencesUniqueColumn="false"/>
+    </changeSet>
 
-  <changeSet author="USER (generated)" id="1309536662140-1">
-      <createTable tableName="product_variant_inventory">
-          <column autoIncrement="true" name="id" type="INT">
-              <constraints nullable="false" primaryKey="true"/>
-          </column>
-          <column name="qty" type="INT">
-              <constraints nullable="false"/>
-          </column>
-          <column name="product_variant_id" type="VARCHAR(12)">
-              <constraints nullable="false"/>
-          </column>
-          <column name="line_item_id" type="INT"/>
-          <column name="txn_date" type="DATETIME">
-              <constraints nullable="false"/>
-          </column>
-      </createTable>
-  </changeSet>
-  <changeSet author="USER (generated)" id="1309536662140-2">
-      <addForeignKeyConstraint baseColumnNames="line_item_id" baseTableName="product_variant_inventory" constraintName="fk_variant_inventory_line_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="line_item" referencesUniqueColumn="false"/>
-  </changeSet>
-  <changeSet author="USER (generated)" id="1309536662140-3">
-      <addForeignKeyConstraint baseColumnNames="product_variant_id" baseTableName="product_variant_inventory" constraintName="fk_variant_inventory_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant" referencesUniqueColumn="false"/>
-  </changeSet>
+    <changeSet author="USER (generated)" id="1309536662140-1">
+        <createTable tableName="product_variant_inventory">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="qty" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_variant_id" type="VARCHAR(12)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="line_item_id" type="INT"/>
+            <column name="txn_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="USER (generated)" id="1309536662140-2">
+        <addForeignKeyConstraint baseColumnNames="line_item_id" baseTableName="product_variant_inventory" constraintName="fk_variant_inventory_line_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="line_item" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="USER (generated)" id="1309536662140-3">
+        <addForeignKeyConstraint baseColumnNames="product_variant_id" baseTableName="product_variant_inventory" constraintName="fk_variant_inventory_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant" referencesUniqueColumn="false"/>
+    </changeSet>
 
-  <changeSet author="Pratham (generated)" id="1309853849696-1">
-      <createTable tableName="reconciliation_status">
-          <column name="id" type="INT">
-              <constraints nullable="false" primaryKey="true"/>
-          </column>
-          <column name="name" type="VARCHAR(45)"/>
-      </createTable>
-  </changeSet>
-  <changeSet author="Pratham (generated)" id="1309853849696-2">
-      <addColumn tableName="base_order">
-          <column defaultValue="10" name="reconciliation_status_id" type="INT">
-              <constraints nullable="false"/>
-          </column>
-      </addColumn>
-  </changeSet>
-  <changeSet author="Pratham (generated)" id="1309853849696-3">
-      <addColumn tableName="line_item">
-          <column name="delivery_date" type="DATETIME"/>
-      </addColumn>
-  </changeSet>
-  <changeSet author="ajeet" id="20110708-01">
-    <sql>
-      update base_order set reconciliation_status_id = 10;
-    </sql>
-  </changeSet>
-  <changeSet author="ajeet" id="20110708-02">
-    <sql>
-      insert into reconciliation_status values (10, 'PENDING');
-    </sql>
-  </changeSet>
-  <changeSet author="Pratham (generated)" id="1309853849696-4">
-      <addForeignKeyConstraint baseColumnNames="reconciliation_status_id" baseTableName="base_order"  constraintName="fk_base_order_reconciliation_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="reconciliation_status"  referencesUniqueColumn="false"/>
-  </changeSet>
+    <changeSet author="Pratham (generated)" id="1309853849696-1">
+        <createTable tableName="reconciliation_status">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1309853849696-2">
+        <addColumn tableName="base_order">
+            <column defaultValue="10" name="reconciliation_status_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1309853849696-3">
+        <addColumn tableName="line_item">
+            <column name="delivery_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ajeet" id="20110708-01">
+        <sql>
+            update base_order set reconciliation_status_id = 10;
+        </sql>
+    </changeSet>
+    <changeSet author="ajeet" id="20110708-02">
+        <sql>
+            insert into reconciliation_status values (10, 'PENDING');
+        </sql>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1309853849696-4">
+        <addForeignKeyConstraint baseColumnNames="reconciliation_status_id" baseTableName="base_order"  constraintName="fk_base_order_reconciliation_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="reconciliation_status"  referencesUniqueColumn="false"/>
+    </changeSet>
     <changeSet author="Pratham (generated)" id="1310105022010-1">
         <addColumn tableName="base_order">
             <column name="user_comments" type="TEXT"/>
         </addColumn>
-   </changeSet>
+    </changeSet>
 
-  <changeSet author="ajeet (generated)" id="1310486296355-1">
-      <createTable tableName="cancellation_type">
-          <column name="id" type="INT">
-              <constraints nullable="false" primaryKey="true"/>
-          </column>
-          <column name="name" type="VARCHAR(100)">
-              <constraints nullable="false"/>
-          </column>
-      </createTable>
-  </changeSet>
-  <changeSet author="ajeet (generated)" id="1310486296355-2">
-      <addColumn tableName="base_order">
-          <column name="cancellation_remark" type="TEXT"/>
-      </addColumn>
-  </changeSet>
-  <changeSet author="ajeet (generated)" id="1310486296355-3">
-      <addColumn tableName="base_order">
-          <column name="cancellation_type_id" type="INT"/>
-      </addColumn>
-  </changeSet>
-  <changeSet author="ajeet (generated)" id="1310486296355-4">
-      <addNotNullConstraint columnDataType="VARCHAR(45)" columnName="name" tableName="reconciliation_status"/>
-  </changeSet>
-  <changeSet author="ajeet (generated)" id="1310486296355-5">
-      <addForeignKeyConstraint baseColumnNames="cancellation_type_id" baseTableName="base_order" constraintName="fk_base_order_cancellation_type1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="cancellation_type" referencesUniqueColumn="false"/>
-  </changeSet>
-  <changeSet author="ajeet (generated)" id="1312990290509-1">
-      <modifyDataType columnName="alt_text" newDataType="VARCHAR(200)" tableName="product_image"/>
-  </changeSet>
+    <changeSet author="ajeet (generated)" id="1310486296355-1">
+        <createTable tableName="cancellation_type">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="ajeet (generated)" id="1310486296355-2">
+        <addColumn tableName="base_order">
+            <column name="cancellation_remark" type="TEXT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ajeet (generated)" id="1310486296355-3">
+        <addColumn tableName="base_order">
+            <column name="cancellation_type_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ajeet (generated)" id="1310486296355-4">
+        <addNotNullConstraint columnDataType="VARCHAR(45)" columnName="name" tableName="reconciliation_status"/>
+    </changeSet>
+    <changeSet author="ajeet (generated)" id="1310486296355-5">
+        <addForeignKeyConstraint baseColumnNames="cancellation_type_id" baseTableName="base_order" constraintName="fk_base_order_cancellation_type1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="cancellation_type" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="ajeet (generated)" id="1312990290509-1">
+        <modifyDataType columnName="alt_text" newDataType="VARCHAR(200)" tableName="product_image"/>
+    </changeSet>
     <changeSet author="Pratham (generated)" id="1313514449776-1">
         <createTable tableName="affiliate">
             <column autoIncrement="true" name="id" type="INT">
@@ -1735,17 +1735,17 @@
         <addForeignKeyConstraint baseColumnNames="affiliate_category_name" baseTableName="product_variant" constraintName="fk_product_variant_affiliate_category1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="affiliate_category_name" referencedTableName="affiliate_category" referencesUniqueColumn="false"/>
     </changeSet>
     <changeSet author="Pratham (generated)" id="1312871859172-1">
-      <addColumn tableName="product_variant">
-          <column name="main_image_id" type="INT"/>
-      </addColumn>
+        <addColumn tableName="product_variant">
+            <column name="main_image_id" type="INT"/>
+        </addColumn>
     </changeSet>
     <changeSet author="Pratham (generated)" id="1312882542214-1">
-      <addColumn tableName="product_image">
-          <column name="product_variant_id" type="VARCHAR(12)"/>
-      </addColumn>
+        <addColumn tableName="product_image">
+            <column name="product_variant_id" type="VARCHAR(12)"/>
+        </addColumn>
     </changeSet>
     <changeSet author="Pratham (generated)" id="1312882542214-2">
-      <addForeignKeyConstraint baseColumnNames="product_variant_id" baseTableName="product_image" constraintName="fk_product_image_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant" referencesUniqueColumn="false"/>
+        <addForeignKeyConstraint baseColumnNames="product_variant_id" baseTableName="product_image" constraintName="fk_product_image_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant" referencesUniqueColumn="false"/>
     </changeSet>
     <changeSet author="Pratham (generated)" id="1313669518603-1">
         <addColumn tableName="product">
@@ -1964,13 +1964,13 @@
         </createIndex>
     </changeSet>
 
-  <changeSet author="ajeet (generated)" id="1317209501067-1">
-      <addColumn tableName="product_variant">
-          <column name="upc" type="VARCHAR(45)"/>
-      </addColumn>
-  </changeSet>
+    <changeSet author="ajeet (generated)" id="1317209501067-1">
+        <addColumn tableName="product_variant">
+            <column name="upc" type="VARCHAR(45)"/>
+        </addColumn>
+    </changeSet>
 
-     <changeSet author="kani (generated)" id="1317221160413-1">
+    <changeSet author="kani (generated)" id="1317221160413-1">
         <createTable tableName="email_campaign">
             <column autoIncrement="true" name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -2600,29 +2600,29 @@
             <column name="main_product_image_id" type="INT"/>
         </addColumn>
     </changeSet>
-  <changeSet author="ajeet (generated)" id="1319702297197-1">
-      <addColumn tableName="coupon">
-          <column name="repetitive_usage" type="TINYINT"/>
-      </addColumn>
-  </changeSet>
-  <changeSet author="ajeet (generated)" id="1319702297197-2">
-      <addColumn tableName="product">
-          <column name="primary_category" type="VARCHAR(80)"/>
-      </addColumn>
-  </changeSet>
-  <changeSet author="ajeet (generated)" id="1319702297197-13">
-      <addForeignKeyConstraint baseColumnNames="primary_category" baseTableName="product" constraintName="fk_product_category1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="name" referencedTableName="category" referencesUniqueColumn="false"/>
-  </changeSet>
+    <changeSet author="ajeet (generated)" id="1319702297197-1">
+        <addColumn tableName="coupon">
+            <column name="repetitive_usage" type="TINYINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ajeet (generated)" id="1319702297197-2">
+        <addColumn tableName="product">
+            <column name="primary_category" type="VARCHAR(80)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ajeet (generated)" id="1319702297197-13">
+        <addForeignKeyConstraint baseColumnNames="primary_category" baseTableName="product" constraintName="fk_product_category1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="name" referencedTableName="category" referencesUniqueColumn="false"/>
+    </changeSet>
 
-  <changeSet author="ajeet" id="20111027-01">
-    <sql>
-      update coupon set repetitive_usage = false;
-    </sql>
-  </changeSet>
+    <changeSet author="ajeet" id="20111027-01">
+        <sql>
+            update coupon set repetitive_usage = false;
+        </sql>
+    </changeSet>
 
-  <changeSet author="ajeet (generated)" id="1319707369862-1">
-      <addNotNullConstraint columnDataType="TINYINT" columnName="repetitive_usage" tableName="coupon"/>
-  </changeSet>
+    <changeSet author="ajeet (generated)" id="1319707369862-1">
+        <addNotNullConstraint columnDataType="TINYINT" columnName="repetitive_usage" tableName="coupon"/>
+    </changeSet>
 
     <changeSet author="USER (generated)" id="1319535258887-2">
         <createTable tableName="manufacturer_has_address">
@@ -2699,65 +2699,65 @@
     <changeSet author="USER (generated)" id="1319535258887-16">
         <addForeignKeyConstraint baseColumnNames="product_variant_service_type_id" baseTableName="product_variant" constraintName="fk_product_variant_product_variant_service_type1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant_service_type" referencesUniqueColumn="false"/>
     </changeSet>
-  <changeSet author="ajeet (generated)" id="1320039307783-1">
-      <addColumn tableName="product_variant_inventory">
-          <column name="order_id" type="INT"/>
-      </addColumn>
-  </changeSet>
-  <changeSet author="ajeet (generated)" id="1320039307783-2">
-      <addForeignKeyConstraint baseColumnNames="order_id" baseTableName="product_variant_inventory" constraintName="fk_product_variant_inventory_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order" referencesUniqueColumn="false"/>
-  </changeSet>
-  <changeSet author="ajeet (generated)" id="1320827431977-1">
-      <addColumn tableName="po_line_item">
-          <column name="mrp" type="DECIMAL(8,2)"/>
-      </addColumn>
-  </changeSet>
-  <changeSet author="ajeet (generated)" id="1320827431977-2">
-      <addColumn tableName="purchase_order">
-          <column name="invoice_date" type="DATETIME"/>
-      </addColumn>
-  </changeSet>
-  <changeSet author="ajeet (generated)" id="1320827431977-3">
-      <addColumn tableName="purchase_order">
-          <column name="invoice_number" type="VARCHAR(45)"/>
-      </addColumn>
-  </changeSet>
+    <changeSet author="ajeet (generated)" id="1320039307783-1">
+        <addColumn tableName="product_variant_inventory">
+            <column name="order_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ajeet (generated)" id="1320039307783-2">
+        <addForeignKeyConstraint baseColumnNames="order_id" baseTableName="product_variant_inventory" constraintName="fk_product_variant_inventory_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="ajeet (generated)" id="1320827431977-1">
+        <addColumn tableName="po_line_item">
+            <column name="mrp" type="DECIMAL(8,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ajeet (generated)" id="1320827431977-2">
+        <addColumn tableName="purchase_order">
+            <column name="invoice_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ajeet (generated)" id="1320827431977-3">
+        <addColumn tableName="purchase_order">
+            <column name="invoice_number" type="VARCHAR(45)"/>
+        </addColumn>
+    </changeSet>
 
-  <changeSet author="ajeet (generated)" id="1320933726703-1">
-      <createTable tableName="aqua_accounting_invoice_number">
-          <column autoIncrement="true" name="id" type="INT">
-              <constraints nullable="false" primaryKey="true"/>
-          </column>
-      </createTable>
-  </changeSet>
-  <changeSet author="ajeet (generated)" id="1320933726703-2">
-      <createTable tableName="reward_point_mode">
-          <column name="id" type="INT">
-              <constraints nullable="false" primaryKey="true"/>
-          </column>
-          <column name="name" type="VARCHAR(45)"/>
-      </createTable>
-  </changeSet>
-  <changeSet author="ajeet (generated)" id="1320933726703-3">
-      <addColumn tableName="base_order">
-          <column name="aqua_accounting_invoice_number_id" type="INT"/>
-      </addColumn>
-  </changeSet>
-  <changeSet author="ajeet (generated)" id="1320933726703-6">
-      <addForeignKeyConstraint baseColumnNames="aqua_accounting_invoice_number_id" baseTableName="base_order" constraintName="fk_base_order_aqua_accounting_invoice_number1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="aqua_accounting_invoice_number" referencesUniqueColumn="false"/>
-  </changeSet>
-  <changeSet author="ajeet (generated)" id="1320951893087-1">
-      <addColumn tableName="reward_point">
-          <column name="reward_point_mode_id" type="INT"/>
-      </addColumn>
-  </changeSet>
-  <changeSet author="ajeet (generated)" id="1320951893087-2">
-      <addForeignKeyConstraint baseColumnNames="reward_point_mode_id" baseTableName="reward_point" constraintName="fk_reward_point_reward_point_mode1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="reward_point_mode" referencesUniqueColumn="false"/>
-  </changeSet>
-  <changeSet author="ajeet (generated)" id="1320951893087-3">
-      <dropColumn columnName="tax" tableName="po_line_item"/>
-  </changeSet>
-  <changeSet author="USER (generated)" id="1320664670530-1">
+    <changeSet author="ajeet (generated)" id="1320933726703-1">
+        <createTable tableName="aqua_accounting_invoice_number">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="ajeet (generated)" id="1320933726703-2">
+        <createTable tableName="reward_point_mode">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ajeet (generated)" id="1320933726703-3">
+        <addColumn tableName="base_order">
+            <column name="aqua_accounting_invoice_number_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ajeet (generated)" id="1320933726703-6">
+        <addForeignKeyConstraint baseColumnNames="aqua_accounting_invoice_number_id" baseTableName="base_order" constraintName="fk_base_order_aqua_accounting_invoice_number1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="aqua_accounting_invoice_number" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="ajeet (generated)" id="1320951893087-1">
+        <addColumn tableName="reward_point">
+            <column name="reward_point_mode_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="ajeet (generated)" id="1320951893087-2">
+        <addForeignKeyConstraint baseColumnNames="reward_point_mode_id" baseTableName="reward_point" constraintName="fk_reward_point_reward_point_mode1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="reward_point_mode" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="ajeet (generated)" id="1320951893087-3">
+        <dropColumn columnName="tax" tableName="po_line_item"/>
+    </changeSet>
+    <changeSet author="USER (generated)" id="1320664670530-1">
         <createTable tableName="locality_map">
             <column autoIncrement="true" name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -2805,48 +2805,48 @@
         <modifyDataType columnName="description" newDataType="LONGTEXT" tableName="product"/>
     </changeSet>
     <changeSet author="USER (generated)" id="20111115-01">
-      <sql>update product set is_service = false;</sql>
+        <sql>update product set is_service = false;</sql>
     </changeSet>
     <changeSet author="USER (generated)" id="20111115-02">
-      <sql>update map_india set target_city = false;</sql>
+        <sql>update map_india set target_city = false;</sql>
     </changeSet>
     <changeSet author="Pratham (generated)" id="20111115-04">
-      <sql>update product_variant set postpaid_amount = 0.0;</sql>
+        <sql>update product_variant set postpaid_amount = 0.0;</sql>
     </changeSet>
 
-  <changeSet author="ajeet (generated)" id="1321249399157-1">
-      <createTable tableName="accounting_invoice">
-          <column autoIncrement="true" name="id" type="INT">
-              <constraints nullable="false" primaryKey="true"/>
-          </column>
-          <column name="order_id" type="INT">
-              <constraints nullable="false"/>
-          </column>
-          <column name="invoice_id" type="INT">
-              <constraints nullable="false"/>
-          </column>
-          <column name="invoice_date" type="DATETIME">
-              <constraints nullable="false"/>
-          </column>
-      </createTable>
-  </changeSet>
-  <changeSet author="ajeet (generated)" id="1321249399157-2">
-      <addForeignKeyConstraint baseColumnNames="order_id" baseTableName="accounting_invoice" constraintName="fk_table1_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order" referencesUniqueColumn="false"/>
-  </changeSet>
+    <changeSet author="ajeet (generated)" id="1321249399157-1">
+        <createTable tableName="accounting_invoice">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="order_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="invoice_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="invoice_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="ajeet (generated)" id="1321249399157-2">
+        <addForeignKeyConstraint baseColumnNames="order_id" baseTableName="accounting_invoice" constraintName="fk_table1_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order" referencesUniqueColumn="false"/>
+    </changeSet>
 
-  <changeSet author="ajeet (generated)" id="1321253999631-1">
-      <createTable tableName="invoice_line_item">
-          <column autoIncrement="true" name="id" type="INT">
-              <constraints nullable="false" primaryKey="true"/>
-          </column>
-          <column name="accounting_invoice_id" type="INT">
-              <constraints nullable="false"/>
-          </column>
-          <column name="line_item_id" type="INT">
-    <constraints nullable="false"/>
-          </column>
-      </createTable>
-  </changeSet>
+    <changeSet author="ajeet (generated)" id="1321253999631-1">
+        <createTable tableName="invoice_line_item">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="accounting_invoice_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="line_item_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
 
     <changeSet author="ajeet (generated)" id="1321600992879-1">
         <addColumn tableName="product">
@@ -2898,28 +2898,28 @@
         <dropForeignKeyConstraint baseTableName="base_order" constraintName="fk_base_order_aqua_accounting_invoice_number1"/>
     </changeSet>
 
-  <changeSet author="ajeet (generated)" id="1321865550959-4">
+    <changeSet author="ajeet (generated)" id="1321865550959-4">
         <dropColumn columnName="aqua_accounting_invoice_number_id" tableName="base_order"/>
     </changeSet>
 
-  <changeSet author="ajeet (generated)" id="1321865550959-5">
+    <changeSet author="ajeet (generated)" id="1321865550959-5">
         <sql>update accounting_invoice set retail_invoice_id=invoice_id</sql>
-  </changeSet>
+    </changeSet>
 
-  <changeSet author="ajeet (generated)" id="1321865550959-6">
-      <dropColumn columnName="invoice_id" tableName="accounting_invoice"/>
-  </changeSet>
-  <changeSet author="ajeet (generated)" id="1321875338567-1">
-      <dropTable tableName="aqua_accounting_invoice_number"/>
-  </changeSet>
-  <changeSet author="USER (generated)" id="1321946593782-2">
+    <changeSet author="ajeet (generated)" id="1321865550959-6">
+        <dropColumn columnName="invoice_id" tableName="accounting_invoice"/>
+    </changeSet>
+    <changeSet author="ajeet (generated)" id="1321875338567-1">
+        <dropTable tableName="aqua_accounting_invoice_number"/>
+    </changeSet>
+    <changeSet author="USER (generated)" id="1321946593782-2">
         <addColumn tableName="manufacturer">
             <column defaultValue="0" name="is_available_all_over_india" type="TINYINT"/>
         </addColumn>
-  </changeSet>
-  <changeSet author="USER (generated)" id="1321946593782-5">
+    </changeSet>
+    <changeSet author="USER (generated)" id="1321946593782-5">
         <modifyDataType columnName="referral_url" newDataType="VARCHAR(1000)" tableName="campaign_tracking"/>
-  </changeSet>
+    </changeSet>
 
     <changeSet author="rahul (generated)" id="1322032121242-1">
         <createTable tableName="notify_me">
@@ -2953,9 +2953,9 @@
             <column name="created_date" type="DATETIME"/>
         </addColumn>
     </changeSet>
-  <changeSet author="rahul (generated)" id="1322462106501-2">
-    <sql>update product_variant set created_date = '2011-11-26 00:00:00'</sql>
-  </changeSet>
+    <changeSet author="rahul (generated)" id="1322462106501-2">
+        <sql>update product_variant set created_date = '2011-11-26 00:00:00'</sql>
+    </changeSet>
 
     <changeSet author="rahul (generated)" id="1322509144609-1">
         <addColumn tableName="notify_me">
@@ -3019,7 +3019,7 @@
         <modifyDataType columnName="payable" newDataType="DECIMAL(12,2)" tableName="purchase_order"/>
     </changeSet>
 
-  <changeSet author="USER (generated)" id="1323339872645-2">
+    <changeSet author="USER (generated)" id="1323339872645-2">
         <createTable tableName="user_cart">
             <column autoIncrement="true" name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -3092,7 +3092,7 @@
         <addForeignKeyConstraint baseColumnNames="sku_item_id" baseTableName="product_variant_damage_inventory" constraintName="fk_product_variant_inventory_sku_item10" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku_item" referencesUniqueColumn="false"/>
     </changeSet>
 
-   <changeSet author="USER (generated)" id="1323759341786-1">
+    <changeSet author="USER (generated)" id="1323759341786-1">
         <addColumn tableName="campaign_tracking">
             <column name="user_id" type="INT"/>
         </addColumn>
@@ -3136,7 +3136,7 @@
     </changeSet>
 
 
-   <changeSet author="ajeet (generated)" id="1323857008931-1">
+    <changeSet author="ajeet (generated)" id="1323857008931-1">
         <createTable tableName="reconciliation_voucher">
             <column autoIncrement="true" name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -3356,21 +3356,21 @@
         </addColumn>
     </changeSet>
 
-  <changeSet author="ajeet (generated)" id="1322738252183-3">
+    <changeSet author="ajeet (generated)" id="1322738252183-3">
         <addColumn tableName="goods_received_note">
             <column name="reconciled" type="TINYINT"/>
         </addColumn>
-  </changeSet>
+    </changeSet>
 
-  <changeSet author="ajeet (generated)" id="1323954251838-1">
-      <addColumn tableName="sku_group">
-          <column name="goods_received_note_id" type="INT"/>
-      </addColumn>
-  </changeSet>
+    <changeSet author="ajeet (generated)" id="1323954251838-1">
+        <addColumn tableName="sku_group">
+            <column name="goods_received_note_id" type="INT"/>
+        </addColumn>
+    </changeSet>
 
-  <changeSet author="ajeet (generated)" id="1323954251838-2">
-      <addForeignKeyConstraint baseColumnNames="goods_received_note_id" baseTableName="sku_group" constraintName="fk_sku_group_goods_received_note1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="goods_received_note" referencesUniqueColumn="false"/>
-  </changeSet>
+    <changeSet author="ajeet (generated)" id="1323954251838-2">
+        <addForeignKeyConstraint baseColumnNames="goods_received_note_id" baseTableName="sku_group" constraintName="fk_sku_group_goods_received_note1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="goods_received_note" referencesUniqueColumn="false"/>
+    </changeSet>
 
     <changeSet author="ajeet (generated)" id="1323963177773-1">
         <addColumn tableName="goods_received_note">
@@ -3502,7 +3502,7 @@
         <dropColumn columnName="user_id" tableName="campaign_tracking"/>
     </changeSet>
 
-  <changeSet author="vikas (generated)" id="1325077007205-1">
+    <changeSet author="vikas (generated)" id="1325077007205-1">
         <createTable tableName="awb">
             <column autoIncrement="true" name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -3690,19 +3690,19 @@
         </createIndex>
     </changeSet>
 
-  <changeSet author="Vaibhav (generated)" id="1326176675933-1">
+    <changeSet author="Vaibhav (generated)" id="1326176675933-1">
         <addColumn tableName="seo_data">
             <column name="description_title" type="VARCHAR(250)"/>
         </addColumn>
     </changeSet>
 
-  <changeSet author="Ajeet (generated)" id="1326184553665-1">
+    <changeSet author="Ajeet (generated)" id="1326184553665-1">
         <addColumn tableName="product">
             <column name="video_embed_code" type="LONGTEXT"/>
         </addColumn>
-  </changeSet>
+    </changeSet>
 
-  <changeSet author="Ajeet (generated)" id="1325749690480-1">
+    <changeSet author="Ajeet (generated)" id="1325749690480-1">
         <addColumn tableName="courier_service_info">
             <column name="is_deleted" type="TINYINT"/>
         </addColumn>
@@ -3719,11 +3719,11 @@
     <changeSet author="Ajeet (generated)" id="1325749690480-5">
         <dropColumn columnName="state" tableName="courier_service_info"/>
     </changeSet>
-  <changeSet author="Ajeet (generated)" id="1325749690480-6">
-    <sql>
-      update courier_service_info set is_deleted=0;
-    </sql>
-  </changeSet>
+    <changeSet author="Ajeet (generated)" id="1325749690480-6">
+        <sql>
+            update courier_service_info set is_deleted=0;
+        </sql>
+    </changeSet>
     <changeSet author="Ajeet (generated)" id="1325754511592-1">
         <createTable tableName="state_courier_service">
             <column autoIncrement="true" name="id" type="INT">
@@ -3742,92 +3742,92 @@
     <changeSet author="Ajeet (generated)" id="1325756023057-1">
         <modifyDataType columnName="pincode" newDataType="VARCHAR(8)" tableName="pincode"/>
     </changeSet>
-  <!--
-  commenting this changeset as it is confilicting with changeset 1338816774783-12 when creating db from scratch
-  <changeSet author="Ajeet (generated)" id="1325756023057-2">
-    <sql>
-      insert into state_courier_service(state) values('ANDAMAN AND NICOBAR ISLAND');
-      insert into state_courier_service(state) values('ANDHRA PRADESH');
-      insert into state_courier_service(state) values('ARUNACHAL PRADESH');
-      insert into state_courier_service(state) values('ASSAM');
-      insert into state_courier_service(state) values('BIHAR');
-      insert into state_courier_service(state) values('CHANDIGARH');
-      insert into state_courier_service(state) values('CHHATISGARH');
-      insert into state_courier_service(state) values('DADRA AND NAGAR HAVELI');
-      insert into state_courier_service(state) values('DAMAN AND DIU');
-      insert into state_courier_service(state) values('DELHI');
-      insert into state_courier_service(state) values('GOA');
-      insert into state_courier_service(state) values('GUJARAT');
-      insert into state_courier_service(state) values('HARYANA');
-      insert into state_courier_service(state) values('HIMACHAL PRADESH');
-      insert into state_courier_service(state) values('JAMMU AND KASHMIR');
-      insert into state_courier_service(state) values('JHARKHAND');
-      insert into state_courier_service(state) values('KARNATAKA');
-      insert into state_courier_service(state) values('KERALA');
-      insert into state_courier_service(state) values('LAKSHADWEEP');
-      insert into state_courier_service(state) values('MADHYA PRADESH');
-      insert into state_courier_service(state) values('MAHARASHTRA');
-      insert into state_courier_service(state) values('MANIPUR');
-      insert into state_courier_service(state) values('MEGHALAYA');
-      insert into state_courier_service(state) values('MIZORAM');
-      insert into state_courier_service(state) values('NAGALAND');
-      insert into state_courier_service(state) values('ORRISA');
-      insert into state_courier_service(state) values('PUDUCHERRY');
-      insert into state_courier_service(state) values('PUNJAB');
-      insert into state_courier_service(state) values('RAJASTHAN');
-      insert into state_courier_service(state) values('SIKKIM');
-      insert into state_courier_service(state) values('TAMIL NADU');
-      insert into state_courier_service(state) values('TRIPURA');
-      insert into state_courier_service(state) values('UTTAR PRADESH');
-      insert into state_courier_service(state) values('UTTARAKHAND');
-      insert into state_courier_service(state) values('WEST BENGAL');
-    </sql>
-  </changeSet>-->
+    <!--
+    commenting this changeset as it is confilicting with changeset 1338816774783-12 when creating db from scratch
+    <changeSet author="Ajeet (generated)" id="1325756023057-2">
+      <sql>
+        insert into state_courier_service(state) values('ANDAMAN AND NICOBAR ISLAND');
+        insert into state_courier_service(state) values('ANDHRA PRADESH');
+        insert into state_courier_service(state) values('ARUNACHAL PRADESH');
+        insert into state_courier_service(state) values('ASSAM');
+        insert into state_courier_service(state) values('BIHAR');
+        insert into state_courier_service(state) values('CHANDIGARH');
+        insert into state_courier_service(state) values('CHHATISGARH');
+        insert into state_courier_service(state) values('DADRA AND NAGAR HAVELI');
+        insert into state_courier_service(state) values('DAMAN AND DIU');
+        insert into state_courier_service(state) values('DELHI');
+        insert into state_courier_service(state) values('GOA');
+        insert into state_courier_service(state) values('GUJARAT');
+        insert into state_courier_service(state) values('HARYANA');
+        insert into state_courier_service(state) values('HIMACHAL PRADESH');
+        insert into state_courier_service(state) values('JAMMU AND KASHMIR');
+        insert into state_courier_service(state) values('JHARKHAND');
+        insert into state_courier_service(state) values('KARNATAKA');
+        insert into state_courier_service(state) values('KERALA');
+        insert into state_courier_service(state) values('LAKSHADWEEP');
+        insert into state_courier_service(state) values('MADHYA PRADESH');
+        insert into state_courier_service(state) values('MAHARASHTRA');
+        insert into state_courier_service(state) values('MANIPUR');
+        insert into state_courier_service(state) values('MEGHALAYA');
+        insert into state_courier_service(state) values('MIZORAM');
+        insert into state_courier_service(state) values('NAGALAND');
+        insert into state_courier_service(state) values('ORRISA');
+        insert into state_courier_service(state) values('PUDUCHERRY');
+        insert into state_courier_service(state) values('PUNJAB');
+        insert into state_courier_service(state) values('RAJASTHAN');
+        insert into state_courier_service(state) values('SIKKIM');
+        insert into state_courier_service(state) values('TAMIL NADU');
+        insert into state_courier_service(state) values('TRIPURA');
+        insert into state_courier_service(state) values('UTTAR PRADESH');
+        insert into state_courier_service(state) values('UTTARAKHAND');
+        insert into state_courier_service(state) values('WEST BENGAL');
+      </sql>
+    </changeSet>-->
 
-  <changeSet author="Ajeet (generated)" id="1326471094500-1">
-      <createIndex indexName="po_pv_key" tableName="po_line_item" unique="true">
-          <column name="purchase_order_id"/>
-          <column name="product_variant_id"/>
-      </createIndex>
-  </changeSet>
+    <changeSet author="Ajeet (generated)" id="1326471094500-1">
+        <createIndex indexName="po_pv_key" tableName="po_line_item" unique="true">
+            <column name="purchase_order_id"/>
+            <column name="product_variant_id"/>
+        </createIndex>
+    </changeSet>
 
-  <changeSet author="Rahul (generated)" id="1326569681430-1">
-    <addColumn tableName="retail_line_item">
-      <column name="cod_charge" type="DECIMAL(10,2)"/>
-    </addColumn>
-  </changeSet>
-  <changeSet author="Rahul (generated)" id="1326569681430-2">
-    <addColumn tableName="retail_line_item">
-      <column name="shipping_charge" type="DECIMAL(10,2)"/>
-    </addColumn>
-  </changeSet>
-  <changeSet author="Rahul (generated)" id="1326629578279-1">
-    <addColumn tableName="retail_line_item">
-      <column name="collection_charged_by_courier" type="DECIMAL(10,2)"/>
-    </addColumn>
-  </changeSet>
-  <changeSet author="Rahul (generated)" id="1326629578279-2">
-    <addColumn tableName="retail_line_item">
-      <column name="shipping_charged_by_courier" type="DECIMAL(10,2)"/>
-    </addColumn>
-  </changeSet>
+    <changeSet author="Rahul (generated)" id="1326569681430-1">
+        <addColumn tableName="retail_line_item">
+            <column name="cod_charge" type="DECIMAL(10,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1326569681430-2">
+        <addColumn tableName="retail_line_item">
+            <column name="shipping_charge" type="DECIMAL(10,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1326629578279-1">
+        <addColumn tableName="retail_line_item">
+            <column name="collection_charged_by_courier" type="DECIMAL(10,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1326629578279-2">
+        <addColumn tableName="retail_line_item">
+            <column name="shipping_charged_by_courier" type="DECIMAL(10,2)"/>
+        </addColumn>
+    </changeSet>
 
-  <changeSet author="Ajeet (generated)" id="1326793577242-2">
-      <addColumn tableName="accounting_invoice">
-          <column name="b2b_invoice_id" type="VARCHAR(45)"/>
-      </addColumn>
-  </changeSet>
-  <changeSet author="Ajeet (generated)" id="1326793577242-3">
-      <addColumn tableName="product_variant">
-          <column name="b2b_price" type="DECIMAL(10,2)"/>
-      </addColumn>
-  </changeSet>
+    <changeSet author="Ajeet (generated)" id="1326793577242-2">
+        <addColumn tableName="accounting_invoice">
+            <column name="b2b_invoice_id" type="VARCHAR(45)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1326793577242-3">
+        <addColumn tableName="product_variant">
+            <column name="b2b_price" type="DECIMAL(10,2)"/>
+        </addColumn>
+    </changeSet>
 
-  <changeSet author="Ajeet (generated)" id="1326885204757-1">
-      <addColumn tableName="base_order">
-          <column name="is_b2b_order" type="TINYINT"/>
-      </addColumn>
-  </changeSet>
+    <changeSet author="Ajeet (generated)" id="1326885204757-1">
+        <addColumn tableName="base_order">
+            <column name="is_b2b_order" type="TINYINT"/>
+        </addColumn>
+    </changeSet>
     <changeSet author="PRATHAM (generated)" id="1326966110028-1">
         <addNotNullConstraint columnDataType="VARCHAR(45)" columnName="aisle" tableName="bin"/>
     </changeSet>
@@ -3879,32 +3879,32 @@
     <changeSet author="PRATHAM (generated)" id="1327480917684-6">
         <addNotNullConstraint columnDataType="VARCHAR(80)" columnName="primary_category" tableName="product"/>
     </changeSet>
-  <changeSet author="Pratham (generated)" id="1327480917684-11">
-    <sql>
-      insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("Allahabad Bank","280",null,15);
-      insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("Axis Bank","50","ISS002",null);
-      insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("Bank of Bahrain and Kuwait","340",null,15);
-      insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("Bank of Baroda","310",null,15);
-      insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("Bank of India","240",null,15);
-      insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("Bank of Rajasthan","170",null,15);
-      insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("Corporation Bank","120",null,15);
-      insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("Deutsche Bank","330","ISS006",null);
-      insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("Dhanlaxmi Bank","370",null,15);
-      insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("Federal Bank","270",null,15);
-      insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("HDFC Bank","300","ISS003",null);
-      insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("ICICI Bank","10","ISS001",null);
-      insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("IDBI Bank","520",null,15);
-      insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("Indian Overseas NetBanking","420",null,15);
-      insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("Karnataka Bank","140",null,15);
-      insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("Oriental Bank Of Commerce","160",null,15);
-      insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("South Indian Bank","180",null,15);
-      insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("Standard Chartered Bank","450",null,15);
-      insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("State Bank of India",null,"ISS008",60);
-      insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("Union Bank of India","190","ISS007",null);
-      insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("Vijaya Bank","200",null,15);
-      insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("Yes Bank","130","ISS004",null);
-    </sql>
-  </changeSet>
+    <changeSet author="Pratham (generated)" id="1327480917684-11">
+        <sql>
+            insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("Allahabad Bank","280",null,15);
+            insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("Axis Bank","50","ISS002",null);
+            insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("Bank of Bahrain and Kuwait","340",null,15);
+            insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("Bank of Baroda","310",null,15);
+            insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("Bank of India","240",null,15);
+            insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("Bank of Rajasthan","170",null,15);
+            insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("Corporation Bank","120",null,15);
+            insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("Deutsche Bank","330","ISS006",null);
+            insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("Dhanlaxmi Bank","370",null,15);
+            insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("Federal Bank","270",null,15);
+            insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("HDFC Bank","300","ISS003",null);
+            insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("ICICI Bank","10","ISS001",null);
+            insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("IDBI Bank","520",null,15);
+            insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("Indian Overseas NetBanking","420",null,15);
+            insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("Karnataka Bank","140",null,15);
+            insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("Oriental Bank Of Commerce","160",null,15);
+            insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("South Indian Bank","180",null,15);
+            insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("Standard Chartered Bank","450",null,15);
+            insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("State Bank of India",null,"ISS008",60);
+            insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("Union Bank of India","190","ISS007",null);
+            insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("Vijaya Bank","200",null,15);
+            insert into preferred_bank_gateway(bank_name,tpsl_bank_code,citrus_bank_code,preferred_gateway_id) values ("Yes Bank","130","ISS004",null);
+        </sql>
+    </changeSet>
     <changeSet author="PRATHAM (generated)" id="1327651614314-1">
         <addColumn tableName="product">
             <column defaultValue="0" name="is_jit" type="TINYINT"/>
@@ -3915,15 +3915,15 @@
             <column name="bank_code" type="VARCHAR(45)"/>
         </addColumn>
     </changeSet>
-  <changeSet author="PRATHAM (generated)" id="1327671351010-8">
-      <dropColumn columnName="searchable" tableName="product"/>
-  </changeSet>
+    <changeSet author="PRATHAM (generated)" id="1327671351010-8">
+        <dropColumn columnName="searchable" tableName="product"/>
+    </changeSet>
     <changeSet author="PRATHAM (generated)" id="1327671351010-1">
         <addColumn tableName="product">
             <column defaultValue="0" name="hidden" type="TINYINT"/>
         </addColumn>
-  </changeSet>
-  <changeSet author="meenal (generated)" id="1326892461919-1">
+    </changeSet>
+    <changeSet author="meenal (generated)" id="1326892461919-1">
         <createTable tableName="category_has_heading">
             <column name="category_name" type="VARCHAR(80)">
                 <constraints nullable="false"/>
@@ -4322,19 +4322,19 @@
         <dropForeignKeyConstraint baseTableName="line_item" constraintName="fk_line_item_combo_instance1"/>
     </changeSet>
     <changeSet author="Ajeet (written)" id="20120202-03">
-      <dropForeignKeyConstraint baseTableName="combo" constraintName="fk_combo_combo_image1"/>
+        <dropForeignKeyConstraint baseTableName="combo" constraintName="fk_combo_combo_image1"/>
     </changeSet>
     <changeSet author="Ajeet (written)" id="20120202-02">
-      <sql>
-        drop table combo_product_allowed_variant;
-        drop table combo_has_product;
-        drop table combo_instance_has_product_variant;
-        alter table line_item drop column combo_instance_id;
-        drop table combo_instance;
-        drop table category_has_combo;
-        drop table combo_image;
-        drop table combo;
-      </sql>
+        <sql>
+            drop table combo_product_allowed_variant;
+            drop table combo_has_product;
+            drop table combo_instance_has_product_variant;
+            alter table line_item drop column combo_instance_id;
+            drop table combo_instance;
+            drop table category_has_combo;
+            drop table combo_image;
+            drop table combo;
+        </sql>
     </changeSet>
 
     <changeSet author="Ajeet (generated)" id="1328204238791-1">
@@ -4466,7 +4466,7 @@
     <changeSet author="PRATHAM (generated)" id="1328258212933-5">
         <modifyDataType columnName="id" newDataType="VARCHAR(20)" tableName="product"/>
     </changeSet>
-      <changeSet author="PRATHAM (written)" id="1328258212933-6">
+    <changeSet author="PRATHAM (written)" id="1328258212933-6">
         <sql>update line_item set line_item_status_id=13 where line_item_status_id=20;</sql>
     </changeSet>
     <changeSet author="Rahul (generated)" id="1328528228171-1">
@@ -4492,10 +4492,10 @@
     <changeSet author="Rahul (generated)" id="1328528228171-4">
         <dropForeignKeyConstraint baseTableName="heading_has_product"  constraintName="fk_heading_has_product_heading1"/>
     </changeSet>
-	<changeSet author="Rahul (generated)" id="1328528228171-5">
-      <sql>
-        delete from heading_has_product;
-      </sql>
+    <changeSet author="Rahul (generated)" id="1328528228171-5">
+        <sql>
+            delete from heading_has_product;
+        </sql>
     </changeSet>
 
     <changeSet author="Rahul (generated)" id="1328528228171-6">
@@ -4755,42 +4755,42 @@
         <addNotNullConstraint columnDataType="BIT" columnName="is_left" tableName="line_item_config"/>
     </changeSet>
     <changeSet author="Rahul (generated)" id="1328776980942-4">
-      <sql>
+        <sql>
 
-        CREATE TABLE `date_temp` (
-        `date` datetime NOT NULL
-        ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-
-        CREATE TABLE num (i int);
-        INSERT INTO num (i) VALUES (0), (1), (2), (3), (4), (5), (6), (7), (8), (9);
-
-        insert into date_temp (date) (select adddate('2011-01-01', numlist.id) as `date` from
-        (SELECT n1.i + n10.i*10 + n100.i*100 + n1000.i*1000 AS id
-        FROM num n1 cross join num as n10 cross join num as n100 cross join num as n1000) as numlist
-        where adddate('2011-01-01', numlist.id)
-        &lt;
-        '2021-01-02');
+            CREATE TABLE `date_temp` (
+            `date` datetime NOT NULL
+            ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
-        insert into lu_time
-        (date_column,day_column,week_column,month_column,quarter_column,year_column,month_sort,quarter_sort)
+            CREATE TABLE num (i int);
+            INSERT INTO num (i) VALUES (0), (1), (2), (3), (4), (5), (6), (7), (8), (9);
 
-        (select date(dt.date) as date_column,
-        dayname(dt.date) as day_column,
-        concat("WEEK ",DATE_FORMAT((dt.date),'%x %v')) as week_column,
-        concat(DATE_FORMAT((dt.date),'%M %Y')) as month_column,
-        concat("Q",quarter(dt.date)," ",year(dt.date)) as quarter_column,
-        concat("YEAR ",year(dt.date)) as year_column,
-        concat(DATE_FORMAT((dt.date),'%Y-%m')) as month_sort,
-        concat(year(dt.date)," ","Q",quarter(dt.date)) as quarter_sort
-        from date_temp dt );
+            insert into date_temp (date) (select adddate('2011-01-01', numlist.id) as `date` from
+            (SELECT n1.i + n10.i*10 + n100.i*100 + n1000.i*1000 AS id
+            FROM num n1 cross join num as n10 cross join num as n100 cross join num as n1000) as numlist
+            where adddate('2011-01-01', numlist.id)
+            &lt;
+            '2021-01-02');
 
 
-        drop table `date_temp`;
-        drop table num;
+            insert into lu_time
+            (date_column,day_column,week_column,month_column,quarter_column,year_column,month_sort,quarter_sort)
 
-      </sql>
+            (select date(dt.date) as date_column,
+            dayname(dt.date) as day_column,
+            concat("WEEK ",DATE_FORMAT((dt.date),'%x %v')) as week_column,
+            concat(DATE_FORMAT((dt.date),'%M %Y')) as month_column,
+            concat("Q",quarter(dt.date)," ",year(dt.date)) as quarter_column,
+            concat("YEAR ",year(dt.date)) as year_column,
+            concat(DATE_FORMAT((dt.date),'%Y-%m')) as month_sort,
+            concat(year(dt.date)," ","Q",quarter(dt.date)) as quarter_sort
+            from date_temp dt );
+
+
+            drop table `date_temp`;
+            drop table num;
+
+        </sql>
     </changeSet>
 
     <changeSet author="Rimal (generated)" id="1328889586046-1">
@@ -4799,17 +4799,17 @@
         </addColumn>
     </changeSet>
 
-  <!--<changeSet author="Rahul (generated)" id="1329156268769-2">
-    <createView viewName="vw_product_variant_product_options">
-      select `pv`.`id` AS `product_variant_id`,
-      substr(group_concat(concat(`po`.`name`,':',`po`.`value`) separator '|'),1,100) AS `product_options`
-      from ((`product_variant` `pv` left join
-            `product_variant_has_product_option` `pvpo`
-            on((`pv`.`id` = `pvpo`.`product_variant_id`))) left join
-            `product_option` `po` on((`po`.`id` = `pvpo`.`product_option_id`)))
-      group by `pv`.`id`
-    </createView>
-  </changeSet>-->
+    <!--<changeSet author="Rahul (generated)" id="1329156268769-2">
+      <createView viewName="vw_product_variant_product_options">
+        select `pv`.`id` AS `product_variant_id`,
+        substr(group_concat(concat(`po`.`name`,':',`po`.`value`) separator '|'),1,100) AS `product_options`
+        from ((`product_variant` `pv` left join
+              `product_variant_has_product_option` `pvpo`
+              on((`pv`.`id` = `pvpo`.`product_variant_id`))) left join
+              `product_option` `po` on((`po`.`id` = `pvpo`.`product_option_id`)))
+        group by `pv`.`id`
+      </createView>
+    </changeSet>-->
 
 
     <changeSet author="Rahul (generated)" id="1329205227438-1">
@@ -4943,7 +4943,7 @@
             <column name="is_amazon_product" type="TINYINT"/>
         </addColumn>
     </changeSet>
-  <changeSet author="Rahul (generated)" id="1329485179201-1">
+    <changeSet author="Rahul (generated)" id="1329485179201-1">
         <createTable tableName="purchase_invoice_has_grn">
             <column name="purchase_invoice_id" type="INT">
                 <constraints nullable="false"/>
@@ -5270,29 +5270,29 @@
             </column>
         </addColumn>
     </changeSet>
-  <changeSet author="PRATHAM (generated)" id="1329933652918-12">
-      <createTable tableName="product_thumb_tag">
-          <column autoIncrement="true" name="id" type="INT">
-              <constraints nullable="false" primaryKey="true"/>
-          </column>
-          <column name="name" type="VARCHAR(45)">
-              <constraints nullable="false"/>
-          </column>
-      </createTable>
-  </changeSet>
-  <changeSet author="PRATHAM (generated)" id="1329933652918-14">
-      <addColumn tableName="user_product_history">
-          <column name="out_of_stock" type="TINYINT"/>
-      </addColumn>
-  </changeSet>
-  <changeSet author="PRATHAM (generated)" id="1329933652918-16">
-      <modifyDataType columnName="value" newDataType="DECIMAL(12,5)" tableName="surcharge"/>
-  </changeSet>
-  <changeSet author="PRATHAM (generated)" id="1329936848159-13">
-      <addColumn tableName="user_product_history">
-          <column name="product_thumb_tag_id" type="INT"/>
-      </addColumn>
-  </changeSet>
+    <changeSet author="PRATHAM (generated)" id="1329933652918-12">
+        <createTable tableName="product_thumb_tag">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="PRATHAM (generated)" id="1329933652918-14">
+        <addColumn tableName="user_product_history">
+            <column name="out_of_stock" type="TINYINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="PRATHAM (generated)" id="1329933652918-16">
+        <modifyDataType columnName="value" newDataType="DECIMAL(12,5)" tableName="surcharge"/>
+    </changeSet>
+    <changeSet author="PRATHAM (generated)" id="1329936848159-13">
+        <addColumn tableName="user_product_history">
+            <column name="product_thumb_tag_id" type="INT"/>
+        </addColumn>
+    </changeSet>
     <changeSet author="PRATHAM (generated)" id="1329936848159-35">
         <addForeignKeyConstraint baseColumnNames="product_thumb_tag_id" baseTableName="user_product_history" constraintName="fk_user_product_history_product_thumb_tag1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_thumb_tag" referencesUniqueColumn="false"/>
     </changeSet>
@@ -5369,10 +5369,10 @@
         </addColumn>
     </changeSet>
 
-  <changeSet author="Rimal (written)" id="1330950533631-15">
-      <sql>
-        update primary_category_heading set ranking = id;
-      </sql>
+    <changeSet author="Rimal (written)" id="1330950533631-15">
+        <sql>
+            update primary_category_heading set ranking = id;
+        </sql>
     </changeSet>
     <changeSet author="Praveen (generated)" id="1331040872256-1">
         <createTable tableName="ad_networks">
@@ -5423,20 +5423,20 @@
     <changeSet author="PRATHAM (generated)" id="1331395353005-1">
         <addColumn tableName="rv_line_item">
             <column name="reconciliation_type_id" type="INT"/>
-       </addColumn>
+        </addColumn>
     </changeSet>
-     <changeSet author="PRATHAM (generated)" id="1331395353005-48">
-      <addForeignKeyConstraint baseColumnNames="reconciliation_type_id" baseTableName="rv_line_item" constraintName="fk_rv_line_item_reconciliation_type1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="reconciliation_type" referencesUniqueColumn="false"/>
-     </changeSet>
+    <changeSet author="PRATHAM (generated)" id="1331395353005-48">
+        <addForeignKeyConstraint baseColumnNames="reconciliation_type_id" baseTableName="rv_line_item" constraintName="fk_rv_line_item_reconciliation_type1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="reconciliation_type" referencesUniqueColumn="false"/>
+    </changeSet>
     <changeSet author="PRATHAM (written)" id="10032012-01">
-      <sql>
-          UPDATE rv_line_item SET reconciliation_type_id = 10 WHERE qty &gt; 0;
-      </sql>
+        <sql>
+            UPDATE rv_line_item SET reconciliation_type_id = 10 WHERE qty &gt; 0;
+        </sql>
     </changeSet>
     <changeSet author="PRATHAM (written)" id="10032012-02">
-      <sql>
-          UPDATE rv_line_item SET qty = qty * -1, reconciliation_type_id = 20 WHERE qty &lt; 0;
-      </sql>
+        <sql>
+            UPDATE rv_line_item SET qty = qty * -1, reconciliation_type_id = 20 WHERE qty &lt; 0;
+        </sql>
     </changeSet>
     <changeSet author="Ajeet (generated)" id="1331798247774-1">
         <addColumn tableName="low_inventory">
@@ -5445,9 +5445,9 @@
     </changeSet>
 
     <changeSet author="rahul" id="1332342105236-159">
-      <sql>
-        insert into warehouse values (1,'badshahpur','gurgaon','HARYANA','123456789');
-      </sql>
+        <sql>
+            insert into warehouse values (1,'badshahpur','gurgaon','HARYANA','123456789');
+        </sql>
     </changeSet>
 
 
@@ -5499,114 +5499,114 @@
         </createTable>
     </changeSet>
 
-  <changeSet author="rahul" id="1332342105236-200">
-    <sql>
+    <changeSet author="rahul" id="1332342105236-200">
+        <sql>
 
-      insert into category values ('nutrition','Nutrition') on duplicate key update display_name = 'Nutrition';
-      insert into category values ('home','Home') on duplicate key update display_name = 'Home' ;
+            insert into category values ('nutrition','Nutrition') on duplicate key update display_name = 'Nutrition';
+            insert into category values ('home','Home') on duplicate key update display_name = 'Home' ;
 
-      INSERT INTO tax (id, name, value) VALUES (1, 'Service Tax @ 10.3%', 0.10300) on duplicate key update
-      value=0.10300;
-      INSERT INTO tax (id, name, value) VALUES (2, 'VAT @ 5.25%', 0.05250) on duplicate key update value=0.05250;
-      INSERT INTO tax (id, name, value) VALUES (3, 'VAT @ 13.125%', 0.13125) on duplicate key update value=0.13125;
-      INSERT INTO tax (id, name, value) VALUES (5, 'VAT - 5.25%', 0.05250) on duplicate key update value=0.05250;
-      INSERT INTO tax (id, name, value) VALUES (6, '0.0', 0.00000) on duplicate key update value=0.00000;
-      INSERT INTO tax (id, name, value) VALUES (7, '0.125', 0.12500) on duplicate key update value=0.12500;
-      INSERT INTO tax (id, name, value) VALUES (8, '0.05', 0.05000) on duplicate key update value=0.05000;
-      INSERT INTO tax (id, name, value) VALUES (32, '0.103', 0.10300) on duplicate key update value=0.10300;
-      INSERT INTO tax (id, name, value) VALUES (51, 'NA', 0.00000) on duplicate key update value=0.00000;
+            INSERT INTO tax (id, name, value) VALUES (1, 'Service Tax @ 10.3%', 0.10300) on duplicate key update
+            value=0.10300;
+            INSERT INTO tax (id, name, value) VALUES (2, 'VAT @ 5.25%', 0.05250) on duplicate key update value=0.05250;
+            INSERT INTO tax (id, name, value) VALUES (3, 'VAT @ 13.125%', 0.13125) on duplicate key update value=0.13125;
+            INSERT INTO tax (id, name, value) VALUES (5, 'VAT - 5.25%', 0.05250) on duplicate key update value=0.05250;
+            INSERT INTO tax (id, name, value) VALUES (6, '0.0', 0.00000) on duplicate key update value=0.00000;
+            INSERT INTO tax (id, name, value) VALUES (7, '0.125', 0.12500) on duplicate key update value=0.12500;
+            INSERT INTO tax (id, name, value) VALUES (8, '0.05', 0.05000) on duplicate key update value=0.05000;
+            INSERT INTO tax (id, name, value) VALUES (32, '0.103', 0.10300) on duplicate key update value=0.10300;
+            INSERT INTO tax (id, name, value) VALUES (51, 'NA', 0.00000) on duplicate key update value=0.00000;
 
-      insert into order_status (id, name)  values (10,'In Cart') on duplicate key update name = 'In Cart';
-      insert into line_item_type (id, name) values (10, 'Product') on duplicate key update name = 'Product';
-
-
-    </sql>
-  </changeSet>
+            insert into order_status (id, name)  values (10,'In Cart') on duplicate key update name = 'In Cart';
+            insert into line_item_type (id, name) values (10, 'Product') on duplicate key update name = 'Product';
 
 
-    <changeSet author="rahul" id="1332342105236-160">
-      <sql>
-
-        insert into supplier
-        (id, name, line1, line2, city, state, pincode, contact_person,
-        contact_number, tin_number)
-        values
-        (-1, 'MIGRATE', 'line1', 'line2', 'city', 'state', 'pincode', 'contact_person',
-        '12345', '12345');
-
-        insert into product
-        (id,name,thumb_url,order_ranking,brand,
-        manufacturer_id,pack_type,overview,description,
-        keywords,min_days,max_days,deleted,main_image_id,
-        product_has_color_options,supplier_id,create_date,
-        primary_category,is_service,is_google_ad_disallowed,
-        video_embed_code,is_jit,hidden,is_amazon_product,secondary_category)
-        values ('MIGRATE','Misc','no-image.jpg',0,'migrate',
-        NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,
-        0,-1,'2012-03-15 00:00:00','nutrition',0,0,NULL,0,0,NULL,NULL);
-
-        insert into product_variant
-        (id,marked_price,discount_percent,hk_price,tax_id,
-        product_id,shipping_base_qty,shipping_base_price,shipping_add_qty,
-        shipping_add_price,out_of_stock,variant_name,deleted,
-        order_ranking,affiliate_category_name,main_image_id,color_hex,
-        breadth,height,length,weight,upc,cut_off_inventory,main_product_image_id,
-        payment_type_id,product_variant_service_type_id,postpaid_amount,created_date,b2b_price,
-        free_product_variant_id,variant_config_id,clearance_sale)
-
-        values ('MIGRATE-01','10.00','0.0000','10.00',5,'MIGRATE',1,'0.00',1,'0.00',0,'',
-        0,1000,NULL,NULL,'',0,0,0,0,'890265322332',
-        NULL,NULL,NULL,NULL,0,'2012-03-15 00:00:00',
-        NULL,NULL,NULL,NULL);
-
-        insert into user
-        (
-        id,
-        login,
-        password_checksum,
-        create_date,
-        update_date,
-        last_login_date,
-        user_hash
-        )
-        values
-        (-1,
-        'rahul@migration.com',
-        'MD5baakipatanahi',
-        '2012-03-17 00:00:00',
-        '2012-03-17 00:00:00',
-        '2012-03-17 00:00:00',
-        'patanahi'
-        );
-
-        insert into base_order
-        (id,
-        user_id,
-        order_status_id,
-        create_date,
-        update_date,
-        reconciliation_status_id
-        )
-        values
-        (-1,-1,10,
-        '2012-03-16 00:00:00',
-        '2012-03-16 00:00:00',
-        10
-        );
-
-        insert into cart_line_item
-        (id, order_id, qty, product_variant_id, marked_price,
-        hk_price, line_item_type_id,
-        discount_on_hk_price, version)
-        values
-        (-1, -1, 1, 'MIGRATE-01', 1,
-        1, 10,
-        1, 0);
-      </sql>
+        </sql>
     </changeSet>
 
 
-  <changeSet author="Rahul (generated)" id="1332342105236-3">
+    <changeSet author="rahul" id="1332342105236-160">
+        <sql>
+
+            insert into supplier
+            (id, name, line1, line2, city, state, pincode, contact_person,
+            contact_number, tin_number)
+            values
+            (-1, 'MIGRATE', 'line1', 'line2', 'city', 'state', 'pincode', 'contact_person',
+            '12345', '12345');
+
+            insert into product
+            (id,name,thumb_url,order_ranking,brand,
+            manufacturer_id,pack_type,overview,description,
+            keywords,min_days,max_days,deleted,main_image_id,
+            product_has_color_options,supplier_id,create_date,
+            primary_category,is_service,is_google_ad_disallowed,
+            video_embed_code,is_jit,hidden,is_amazon_product,secondary_category)
+            values ('MIGRATE','Misc','no-image.jpg',0,'migrate',
+            NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,
+            0,-1,'2012-03-15 00:00:00','nutrition',0,0,NULL,0,0,NULL,NULL);
+
+            insert into product_variant
+            (id,marked_price,discount_percent,hk_price,tax_id,
+            product_id,shipping_base_qty,shipping_base_price,shipping_add_qty,
+            shipping_add_price,out_of_stock,variant_name,deleted,
+            order_ranking,affiliate_category_name,main_image_id,color_hex,
+            breadth,height,length,weight,upc,cut_off_inventory,main_product_image_id,
+            payment_type_id,product_variant_service_type_id,postpaid_amount,created_date,b2b_price,
+            free_product_variant_id,variant_config_id,clearance_sale)
+
+            values ('MIGRATE-01','10.00','0.0000','10.00',5,'MIGRATE',1,'0.00',1,'0.00',0,'',
+            0,1000,NULL,NULL,'',0,0,0,0,'890265322332',
+            NULL,NULL,NULL,NULL,0,'2012-03-15 00:00:00',
+            NULL,NULL,NULL,NULL);
+
+            insert into user
+            (
+            id,
+            login,
+            password_checksum,
+            create_date,
+            update_date,
+            last_login_date,
+            user_hash
+            )
+            values
+            (-1,
+            'rahul@migration.com',
+            'MD5baakipatanahi',
+            '2012-03-17 00:00:00',
+            '2012-03-17 00:00:00',
+            '2012-03-17 00:00:00',
+            'patanahi'
+            );
+
+            insert into base_order
+            (id,
+            user_id,
+            order_status_id,
+            create_date,
+            update_date,
+            reconciliation_status_id
+            )
+            values
+            (-1,-1,10,
+            '2012-03-16 00:00:00',
+            '2012-03-16 00:00:00',
+            10
+            );
+
+            insert into cart_line_item
+            (id, order_id, qty, product_variant_id, marked_price,
+            hk_price, line_item_type_id,
+            discount_on_hk_price, version)
+            values
+            (-1, -1, 1, 'MIGRATE-01', 1,
+            1, 10,
+            1, 0);
+        </sql>
+    </changeSet>
+
+
+    <changeSet author="Rahul (generated)" id="1332342105236-3">
         <createTable tableName="cart_line_item_config">
             <column autoIncrement="true" name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -5768,23 +5768,23 @@
     </changeSet>
 
     <changeSet author="rahul" id="1332342105236-161">
-      <sql>
+        <sql>
 
-        insert into shipping_order_status
-        (id, name)
-        values
-        (-1, 'MIGRATE');
+            insert into shipping_order_status
+            (id, name)
+            values
+            (-1, 'MIGRATE');
 
-        insert into shipping_order
-        (id, shipping_order_status_id, amount, create_date, update_date,
-        gateway_order_id, reconciliation_status_id,
-        base_order_id, warehouse_id, is_service_order, version)
-        values
-        (-1, -1, 1, '2012-03-16 00:00:00', '2012-03-16 00:00:00',
-        '123', 10,
-        -1, 1, 0, 0);
+            insert into shipping_order
+            (id, shipping_order_status_id, amount, create_date, update_date,
+            gateway_order_id, reconciliation_status_id,
+            base_order_id, warehouse_id, is_service_order, version)
+            values
+            (-1, -1, 1, '2012-03-16 00:00:00', '2012-03-16 00:00:00',
+            '123', 10,
+            -1, 1, 0, 0);
 
-      </sql>
+        </sql>
     </changeSet>
 
     <changeSet author="Rahul (generated)" id="1332342105236-12">
@@ -5814,13 +5814,13 @@
     </changeSet>
 
     <changeSet author="rahul" id="1332342105236-162">
-      <sql>
-        insert into sku values (-1,'MIGRATE-01',1,0,0,0,1);
-      </sql>
+        <sql>
+            insert into sku values (-1,'MIGRATE-01',1,0,0,0,1);
+        </sql>
     </changeSet>
 
 
-  <changeSet author="Rahul (generated)" id="1332342105236-13">
+    <changeSet author="Rahul (generated)" id="1332342105236-13">
         <addColumn tableName="accounting_invoice">
             <column name="shipping_order_id" type="INT">
                 <constraints nullable="false"/>
@@ -5961,7 +5961,7 @@
     <changeSet author="Rahul (generated)" id="1332342105236-33">
         <addColumn tableName="purchase_invoice_line_item">
             <column defaultValue="-1" name="sku_id" type="INT">
-              <constraints nullable="false"/>
+                <constraints nullable="false"/>
             </column>
         </addColumn>
     </changeSet>
@@ -6026,14 +6026,14 @@
     </changeSet>
 
     <changeSet author="rahul" id="1332342105236-163">
-      <sql>
-        update line_item set cost_price = 0.0 where cost_price is null;
-        update line_item set tax_id = 51 where tax_id is null;
-        update po_line_item set cost_price = 0.0 where cost_price is null;
-        update po_line_item set mrp = 0.0 where mrp is null;
-        update product_variant_inventory set user_id = 1 where user_id is null;
-        update line_item set cart_line_item_id = -1;
-      </sql>
+        <sql>
+            update line_item set cost_price = 0.0 where cost_price is null;
+            update line_item set tax_id = 51 where tax_id is null;
+            update po_line_item set cost_price = 0.0 where cost_price is null;
+            update po_line_item set mrp = 0.0 where mrp is null;
+            update product_variant_inventory set user_id = 1 where user_id is null;
+            update line_item set cart_line_item_id = -1;
+        </sql>
     </changeSet>
 
     <changeSet author="Rahul (generated)" id="1332342105236-43">
@@ -6129,7 +6129,7 @@
         <dropForeignKeyConstraint baseTableName="sku_group"  constraintName="fk_sku_group_purchase_order1"/>
     </changeSet>
 
-<!--    <changeSet author="Rahul (generated)" id="1332342105236-76">
+    <!--    <changeSet author="Rahul (generated)" id="1332342105236-76">
         <addForeignKeyConstraint baseColumnNames="shipping_order_id" baseTableName="accounting_invoice" constraintName="fk_accounting_invoice_shipping_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="shipping_order"  referencesUniqueColumn="false"/>
     </changeSet>-->
     <changeSet author="Rahul (generated)" id="1332342105236-77">
@@ -6263,15 +6263,15 @@
     </changeSet>
 
 
-  <changeSet author="rahul" id="1332342105236-201">
-    <sql>
-      alter table po_line_item drop key fk_po_line_item_product_variant1;
-      alter table po_line_item drop foreign key fk_po_line_item_purchase_order1;
-      alter table shipping_order drop foreign key fk_base_order_accounting_invoice_number10;
-    </sql>
-  </changeSet>
+    <changeSet author="rahul" id="1332342105236-201">
+        <sql>
+            alter table po_line_item drop key fk_po_line_item_product_variant1;
+            alter table po_line_item drop foreign key fk_po_line_item_purchase_order1;
+            alter table shipping_order drop foreign key fk_base_order_accounting_invoice_number10;
+        </sql>
+    </changeSet>
     <changeSet author="Rahul (generated)" id="1332342105236-120">
-      <dropIndex indexName="po_pv_key" tableName="po_line_item"/>
+        <dropIndex indexName="po_pv_key" tableName="po_line_item"/>
     </changeSet>
 
     <changeSet author="rahul" id="1332342105236-202">
@@ -6282,10 +6282,10 @@
     </changeSet>
 
     <changeSet author="rahul" id="1332342105236-164">
-      <sql>
-        <!--alter table base_order drop foreign key fk_base_order_accounting_invoice_number1;-->
-        alter table base_order drop key fk_base_order_reconciliation_status1;
-      </sql>
+        <sql>
+            <!--alter table base_order drop foreign key fk_base_order_accounting_invoice_number1;-->
+            alter table base_order drop key fk_base_order_reconciliation_status1;
+        </sql>
     </changeSet>
 
     <changeSet author="Rahul (generated)" id="1332342105236-75">
@@ -6296,17 +6296,17 @@
     </changeSet>
 
     <changeSet author="Rahul (generated)" id="1332342105236-74">
-      <createIndex indexName="po_pv_key" tableName="po_line_item" unique="true">
-        <column name="purchase_order_id"/>
-        <column name="sku_id"/>
-      </createIndex>
+        <createIndex indexName="po_pv_key" tableName="po_line_item" unique="true">
+            <column name="purchase_order_id"/>
+            <column name="sku_id"/>
+        </createIndex>
     </changeSet>
 
     <changeSet author="Rahul (generated)" id="1332342105236-73">
-      <createIndex indexName="grn_sku" tableName="grn_line_item" unique="true">
-        <column name="goods_received_note_id"/>
-        <column name="sku_id"/>
-      </createIndex>
+        <createIndex indexName="grn_sku" tableName="grn_line_item" unique="true">
+            <column name="goods_received_note_id"/>
+            <column name="sku_id"/>
+        </createIndex>
     </changeSet>
 
     <changeSet author="Rahul (generated)" id="1332342105236-121">
@@ -6421,30 +6421,30 @@
     <changeSet author="Rahul (generated)" id="1332342105236-158">
         <dropTable tableName="line_item_status"/>
     </changeSet>
-  <changeSet author="PRATHAM (generated)" id="1332788122250-4">
-      <createTable tableName="pincode_default_courier">
-          <column autoIncrement="true" name="id" type="INT">
-              <constraints nullable="false" primaryKey="true"/>
-          </column>
-          <column name="pincode_id" type="INT">
-              <constraints nullable="false"/>
-          </column>
-          <column name="warehouse_id" type="INT">
-              <constraints nullable="false"/>
-          </column>
-          <column name="courier_id" type="INT"/>
-          <column name="cod" type="TINYINT"/>
-      </createTable>
-  </changeSet>
-  <changeSet author="PRATHAM (generated)" id="1332788122250-10">
-      <addForeignKeyConstraint baseColumnNames="courier_id" baseTableName="pincode_default_courier" constraintName="fk_pincode_default_courier_courier1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="courier" referencesUniqueColumn="false"/>
-  </changeSet>
-  <changeSet author="PRATHAM (generated)" id="1332788122250-11">
-      <addForeignKeyConstraint baseColumnNames="pincode_id" baseTableName="pincode_default_courier" constraintName="fk_pincode_default_courier_pincode1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="pincode" referencesUniqueColumn="false"/>
-  </changeSet>
-  <changeSet author="PRATHAM (generated)" id="1332788122250-12">
-      <addForeignKeyConstraint baseColumnNames="warehouse_id" baseTableName="pincode_default_courier" constraintName="fk_pincode_default_courier_warehouse1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="warehouse" referencesUniqueColumn="false"/>
-  </changeSet>
+    <changeSet author="PRATHAM (generated)" id="1332788122250-4">
+        <createTable tableName="pincode_default_courier">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="pincode_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="warehouse_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="courier_id" type="INT"/>
+            <column name="cod" type="TINYINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="PRATHAM (generated)" id="1332788122250-10">
+        <addForeignKeyConstraint baseColumnNames="courier_id" baseTableName="pincode_default_courier" constraintName="fk_pincode_default_courier_courier1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="courier" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="PRATHAM (generated)" id="1332788122250-11">
+        <addForeignKeyConstraint baseColumnNames="pincode_id" baseTableName="pincode_default_courier" constraintName="fk_pincode_default_courier_pincode1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="pincode" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="PRATHAM (generated)" id="1332788122250-12">
+        <addForeignKeyConstraint baseColumnNames="warehouse_id" baseTableName="pincode_default_courier" constraintName="fk_pincode_default_courier_warehouse1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="warehouse" referencesUniqueColumn="false"/>
+    </changeSet>
 
     <changeSet author="Rahul (generated)" id="1333359844542-1">
         <addColumn tableName="shipment">
@@ -6464,9 +6464,9 @@
         </addColumn>
     </changeSet>
     <changeSet author="rahul" id="1333359844542-30">
-      <sql>
-        update shipping_order set basket_category = 'nutrition' where id = -1;
-      </sql>
+        <sql>
+            update shipping_order set basket_category = 'nutrition' where id = -1;
+        </sql>
     </changeSet>
     <changeSet author="Rahul (generated)" id="1333359844542-4">
         <addNotNullConstraint columnDataType="VARCHAR(45)" columnName="basket_category" tableName="shipping_order"/>
@@ -6485,10 +6485,10 @@
     </changeSet>
 
     <changeSet author="vaibhav" id="1333359844542-8">
-      <sql>
-        insert into `warehouse` (`id`,`city`,`state`,`wh_phone`,`line1`,`line2`,`name`,`pincode`,`tin`) values (999,'Gurgaon','HARYANA','123456789','Khasra No. 146/25/2/1','Jail Road, Dhumaspur, Badshahpur ','Corporate Office','122101','06101832327');
-        update sku, product_variant pv, product p set warehouse_id = 999 where sku.product_variant_id = pv.id and pv.product_id = p.id and p.is_service = 1;
-      </sql>
+        <sql>
+            insert into `warehouse` (`id`,`city`,`state`,`wh_phone`,`line1`,`line2`,`name`,`pincode`,`tin`) values (999,'Gurgaon','HARYANA','123456789','Khasra No. 146/25/2/1','Jail Road, Dhumaspur, Badshahpur ','Corporate Office','122101','06101832327');
+            update sku, product_variant pv, product p set warehouse_id = 999 where sku.product_variant_id = pv.id and pv.product_id = p.id and p.is_service = 1;
+        </sql>
     </changeSet>
 
     <changeSet author="Ajeet (generated)" id="1333446286312-1">
@@ -6498,7 +6498,7 @@
         <addNotNullConstraint columnDataType="INT" columnName="sku_item_id" tableName="product_variant_damage_inventory"/>
     </changeSet>
 
-     <changeSet author="Tarun (written)" id="20120402-1">
+    <changeSet author="Tarun (written)" id="20120402-1">
         <sql>
             CREATE TABLE pincode_default_courier_backup AS (SELECT * FROM pincode_default_courier)
         </sql>
@@ -6620,14 +6620,14 @@
     <changeSet author="Ajeet (generated)" id="1333781139071-3">
         <dropNotNullConstraint columnDataType="DECIMAL(10,2)" columnName="cost_price" tableName="sku"/>
     </changeSet>
-   <changeSet author="Ajeet (written)" id="1333781139071-4">
-     <sql>
-       update product_variant set cost_price = 0;
-       update product_variant pv, sku sku set pv.cost_price = sku.cost_price where sku.warehouse_id = 1 and sku.product_variant_id = pv.id;
-       update product_variant pv, sku sku set pv.cost_price = sku.cost_price where sku.warehouse_id = 2 and sku.product_variant_id = pv.id and sku.cost_price > pv.cost_price;
-       update product_variant pv, sku sku set pv.cost_price = sku.cost_price where sku.warehouse_id = 999 and sku.product_variant_id = pv.id and sku.cost_price > pv.cost_price;
-     </sql>
-   </changeSet>
+    <changeSet author="Ajeet (written)" id="1333781139071-4">
+        <sql>
+            update product_variant set cost_price = 0;
+            update product_variant pv, sku sku set pv.cost_price = sku.cost_price where sku.warehouse_id = 1 and sku.product_variant_id = pv.id;
+            update product_variant pv, sku sku set pv.cost_price = sku.cost_price where sku.warehouse_id = 2 and sku.product_variant_id = pv.id and sku.cost_price > pv.cost_price;
+            update product_variant pv, sku sku set pv.cost_price = sku.cost_price where sku.warehouse_id = 999 and sku.product_variant_id = pv.id and sku.cost_price > pv.cost_price;
+        </sql>
+    </changeSet>
     <changeSet author="Ajeet (generated)" id="1333781139071-5">
         <dropNotNullConstraint columnDataType="INT" columnName="goods_received_note_id" tableName="debit_note"/>
     </changeSet>
@@ -6657,55 +6657,55 @@
         <addNotNullConstraint columnDataType="DECIMAL(8,2)" columnName="cost_price" tableName="product_variant"/>
     </changeSet>
 
-  <changeSet author="Vaibhav (written)" id="20120410-01">
-    <sql>
+    <changeSet author="Vaibhav (written)" id="20120410-01">
+        <sql>
 
-      insert into `warehouse` (`id`,`city`,`state`,`wh_phone`,`line1`,`line2`,`name`,`pincode`,`tin`) values
-        (2,'Mumbai','MAHARASHTRA','123456789','Bhiwandi','Nerul Road','Mumbai Warehouse','400101','A/F') on duplicate key update city='Mumbai';
-      insert into `warehouse` (`id`,`city`,`state`,`wh_phone`,`line1`,`line2`,`name`,`pincode`,`tin`) values
-        (999,'Gurgaon Corporate','HARYANA','123456789','Khasra No. 146/25/2/1','Jail Road, Dhumaspur, Badshahpur ','Corporate Office','122101','06101832327') on duplicate key update city='Gurgaon Corporate';
+            insert into `warehouse` (`id`,`city`,`state`,`wh_phone`,`line1`,`line2`,`name`,`pincode`,`tin`) values
+            (2,'Mumbai','MAHARASHTRA','123456789','Bhiwandi','Nerul Road','Mumbai Warehouse','400101','A/F') on duplicate key update city='Mumbai';
+            insert into `warehouse` (`id`,`city`,`state`,`wh_phone`,`line1`,`line2`,`name`,`pincode`,`tin`) values
+            (999,'Gurgaon Corporate','HARYANA','123456789','Khasra No. 146/25/2/1','Jail Road, Dhumaspur, Badshahpur ','Corporate Office','122101','06101832327') on duplicate key update city='Gurgaon Corporate';
 
-      insert into seek_invoice_num (id,warehouse_id,invoice_num,prefix,description) values (1,1,1,'R','Retail Invoice 2012');
-      insert into seek_invoice_num (id,warehouse_id,invoice_num,prefix,description) values (2,1,1,'S','Service Invoice 2012');
-      insert into seek_invoice_num (id,warehouse_id,invoice_num,prefix,description) values (3,1,1,'T','B2B Invoice 2012');
-      insert into seek_invoice_num (id,warehouse_id,invoice_num,prefix,description) values (4,2,1,'R','Retail Invoice 2012');
-      insert into seek_invoice_num (id,warehouse_id,invoice_num,prefix,description) values (5,2,1,'S','Service Invoice 2012');
-      insert into seek_invoice_num (id,warehouse_id,invoice_num,prefix,description) values (6,2,1,'T','B2B Invoice 2012');
-      insert into seek_invoice_num (id,warehouse_id,invoice_num,prefix,description) values (7,999,1,'T','Service Invoice 2012');
-
-
-    </sql>
-  </changeSet>
-
-  <changeSet author="RajniHooda" id="20120412-01">
-    <sql>
-
-      insert into category values ('hk-brand','HK Brand');
-    </sql>
-  </changeSet>
+            insert into seek_invoice_num (id,warehouse_id,invoice_num,prefix,description) values (1,1,1,'R','Retail Invoice 2012');
+            insert into seek_invoice_num (id,warehouse_id,invoice_num,prefix,description) values (2,1,1,'S','Service Invoice 2012');
+            insert into seek_invoice_num (id,warehouse_id,invoice_num,prefix,description) values (3,1,1,'T','B2B Invoice 2012');
+            insert into seek_invoice_num (id,warehouse_id,invoice_num,prefix,description) values (4,2,1,'R','Retail Invoice 2012');
+            insert into seek_invoice_num (id,warehouse_id,invoice_num,prefix,description) values (5,2,1,'S','Service Invoice 2012');
+            insert into seek_invoice_num (id,warehouse_id,invoice_num,prefix,description) values (6,2,1,'T','B2B Invoice 2012');
+            insert into seek_invoice_num (id,warehouse_id,invoice_num,prefix,description) values (7,999,1,'T','Service Invoice 2012');
 
 
-  <changeSet author="Seema (generated)" id="1334241904480-1">
-    <addColumn tableName="sku">
-      <column name="create_date" type="DATETIME"/>
-    </addColumn>
-  </changeSet>
-  <changeSet author="Seema (generated)" id="1334241904480-2">
-    <addColumn tableName="sku">
-      <column name="update_date" type="DATETIME"/>
-    </addColumn>
-  </changeSet>
-  <changeSet author="Seema (written)" id="20120412-001">
-    <sql>
-      update sku set create_date = '2012-05-02 10:00:00', update_date = '2012-05-02 10:00:00';
-    </sql>
-  </changeSet>
-  <changeSet author="Seema (generated)" id="1334242265176-1">
-    <addNotNullConstraint columnDataType="DATETIME" columnName="create_date" tableName="sku"/>
-  </changeSet>
-  <changeSet author="Seema (generated)" id="1334242265176-2">
-    <addNotNullConstraint columnDataType="DATETIME" columnName="update_date" tableName="sku"/>
-  </changeSet>
+        </sql>
+    </changeSet>
+
+    <changeSet author="RajniHooda" id="20120412-01">
+        <sql>
+
+            insert into category values ('hk-brand','HK Brand');
+        </sql>
+    </changeSet>
+
+
+    <changeSet author="Seema (generated)" id="1334241904480-1">
+        <addColumn tableName="sku">
+            <column name="create_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1334241904480-2">
+        <addColumn tableName="sku">
+            <column name="update_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Seema (written)" id="20120412-001">
+        <sql>
+            update sku set create_date = '2012-05-02 10:00:00', update_date = '2012-05-02 10:00:00';
+        </sql>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1334242265176-1">
+        <addNotNullConstraint columnDataType="DATETIME" columnName="create_date" tableName="sku"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1334242265176-2">
+        <addNotNullConstraint columnDataType="DATETIME" columnName="update_date" tableName="sku"/>
+    </changeSet>
 
     <changeSet author="Tarun (generated)" id="1334912510831-1">
         <createTable tableName="payment_history">
@@ -6732,22 +6732,22 @@
     </changeSet>
 
     <changeSet author="Tarun (generated)" id="1334917876974-1">
-         <addColumn tableName="pincode_default_courier">
-             <column name="estimated_shipping_cost_cod" type="DECIMAL(10,2)"/>
-         </addColumn>
-     </changeSet>
-     <changeSet author="Tarun (generated)" id="1334917876974-2">
-         <addColumn tableName="pincode_default_courier">
-             <column name="estimated_shipping_cost_non_cod" type="DECIMAL(10,2)"/>
-         </addColumn>
-     </changeSet>
+        <addColumn tableName="pincode_default_courier">
+            <column name="estimated_shipping_cost_cod" type="DECIMAL(10,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1334917876974-2">
+        <addColumn tableName="pincode_default_courier">
+            <column name="estimated_shipping_cost_non_cod" type="DECIMAL(10,2)"/>
+        </addColumn>
+    </changeSet>
     <changeSet author="Tarun (generated)" id="1334917876974-8">
         <dropColumn columnName="cod" tableName="pincode_default_courier"/>
     </changeSet>
 
 
 
-   <changeSet author="Ajeet (generated)" id="1335525883323-1">
+    <changeSet author="Ajeet (generated)" id="1335525883323-1">
         <createTable tableName="courier_pricing_engine">
             <column autoIncrement="true" name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -6957,16 +6957,16 @@
         <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_review" constraintName="fk_user_review_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
     </changeSet>
 
-  <changeSet author="Rimal (generated)" id="1334046628464-1">
-    <addColumn tableName="user">
-      <column name="birth_date" type="DATETIME"/>
-    </addColumn>
-  </changeSet>
-  <changeSet author="Rimal (generated)" id="1334046628464-2">
-    <addColumn tableName="user">
-      <column name="gender" type="VARCHAR(6)"/>
-    </addColumn>
-  </changeSet>
+    <changeSet author="Rimal (generated)" id="1334046628464-1">
+        <addColumn tableName="user">
+            <column name="birth_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rimal (generated)" id="1334046628464-2">
+        <addColumn tableName="user">
+            <column name="gender" type="VARCHAR(6)"/>
+        </addColumn>
+    </changeSet>
     <changeSet author="Abhay (generated)" id="1335597987003-1">
         <createTable tableName="stock_transfer">
             <column autoIncrement="true" name="id" type="INT">
@@ -7096,24 +7096,24 @@
             <column name="update_date" type="DATETIME"/>
         </addColumn>
     </changeSet>
-  <changeSet author="user (written)" id="1336040367315-3">
-    <sql>
-      update supplier set create_date = '2012-05-02 10:00:00', update_date = '2012-05-02 10:00:00';
-    </sql>
-  </changeSet>
+    <changeSet author="user (written)" id="1336040367315-3">
+        <sql>
+            update supplier set create_date = '2012-05-02 10:00:00', update_date = '2012-05-02 10:00:00';
+        </sql>
+    </changeSet>
 
-  <changeSet author="user (generated)" id="1336040945149-2">
-      <addNotNullConstraint columnDataType="DATETIME" columnName="create_date" tableName="supplier"/>
-  </changeSet>
-  <changeSet author="user (generated)" id="1336040945149-3">
-      <addNotNullConstraint columnDataType="DATETIME" columnName="update_date" tableName="supplier"/>
-  </changeSet>
- <changeSet author="RajniHooda" id="20120504-01">
-    <sql>
+    <changeSet author="user (generated)" id="1336040945149-2">
+        <addNotNullConstraint columnDataType="DATETIME" columnName="create_date" tableName="supplier"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1336040945149-3">
+        <addNotNullConstraint columnDataType="DATETIME" columnName="update_date" tableName="supplier"/>
+    </changeSet>
+    <changeSet author="RajniHooda" id="20120504-01">
+        <sql>
 
-      insert into tax values (10,'0.1236',0.12360)
-    </sql>
-  </changeSet>
+            insert into tax values (10,'0.1236',0.12360)
+        </sql>
+    </changeSet>
 
     <changeSet author="Rahul (generated)" id="1336160116745-1">
         <createTable tableName="store">
@@ -7144,19 +7144,19 @@
     <changeSet author="Rahul (generated)" id="1336160116745-5">
         <addForeignKeyConstraint baseColumnNames="store_id" baseTableName="user" constraintName="fk_user_store1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="store" referencesUniqueColumn="false"/>
     </changeSet>
-   <changeSet author="Rahul" id="20120405-01">
-      <sql>
-        insert into store values(1,'HealthKart','HK');
-        update user set store_id = 1;
-        update base_order set store_id = 1;
-      </sql>
+    <changeSet author="Rahul" id="20120405-01">
+        <sql>
+            insert into store values(1,'HealthKart','HK');
+            update user set store_id = 1;
+            update base_order set store_id = 1;
+        </sql>
     </changeSet>
 
-  <changeSet author="Tarun (generated)" id="1336118698201-1">
-      <addColumn tableName="payment_history">
-          <column name="payment_reference" type="VARCHAR(100)"/>
-      </addColumn>
-  </changeSet>
+    <changeSet author="Tarun (generated)" id="1336118698201-1">
+        <addColumn tableName="payment_history">
+            <column name="payment_reference" type="VARCHAR(100)"/>
+        </addColumn>
+    </changeSet>
 
     <changeSet author="Rahul (generated)" id="1336160704165-1">
         <addNotNullConstraint columnDataType="INT" columnName="store_id" tableName="base_order"/>
@@ -7165,67 +7165,67 @@
         <addNotNullConstraint columnDataType="INT" columnName="store_id" tableName="user"/>
     </changeSet>
 
-  <changeSet author="Rimal (generated)" id="1336378786007-1">
-    <addColumn tableName="email_campaign">
-      <column name="email_type_id" type="INT"/>
-    </addColumn>
-  </changeSet>
-  <changeSet author="Rimal (generated)" id="1336378786007-3">
-    <addForeignKeyConstraint baseColumnNames="email_type_id" baseTableName="email_campaign"
-                             constraintName="fk_email_campaign_email_type1"
-                             deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
-                             referencedColumnNames="id" referencedTableName="email_type"
-                             referencesUniqueColumn="false"/>
-  </changeSet>
-  <changeSet author="Rimal (generated)" id="1336472195312-1">
-    <addColumn tableName="email_campaign">
-      <column defaultValue="0" name="sent_count" type="INT"/>
-    </addColumn>
-  </changeSet>
-  <changeSet author="Rimal (generated)" id="1336570361449-10">
-    <createTable tableName="courier_group">
-      <column name="id" type="INT">
-        <constraints nullable="false" primaryKey="true"/>
-      </column>
-      <column name="name" type="VARCHAR(45)"/>
-      <column name="courier_id" type="INT"/>
-    </createTable>
-  </changeSet>
-  <changeSet author="Rimal (generated)" id="1336570361449-20">
-    <addColumn tableName="pincode_region_zone">
-      <column name="courier_group_id" type="INT">
-        <constraints nullable="false"/>
-      </column>
-    </addColumn>
-  </changeSet>
-  <changeSet author="Rimal (generated)" id="1336570361449-30">
-    <dropForeignKeyConstraint baseTableName="pincode_region_zone" constraintName="fk_pincode_region_zone_courier1"/>
-  </changeSet>
-  <changeSet author="Rimal (generated)" id="1336570361449-40">
-    <createIndex indexName="pincode_region_index" tableName="pincode_region_zone" unique="false">
-      <column name="pincode_id"/>
-      <column name="warehouse_id"/>
-      <column name="region_type_id"/>
-      <column name="courier_group_id"/>
-    </createIndex>
-  </changeSet>
-  <changeSet author="Rimal (generated)" id="1336570361449-50">
-    <addForeignKeyConstraint baseColumnNames="courier_id" baseTableName="courier_group"
-                             constraintName="fk_courier_group_courier1" deferrable="false" initiallyDeferred="false"
-                             onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
-                             referencedTableName="courier"
-                             referencesUniqueColumn="false"/>
-  </changeSet>
-  <changeSet author="Rimal (generated)" id="1336570361449-60">
-    <addForeignKeyConstraint baseColumnNames="courier_group_id" baseTableName="pincode_region_zone"
-                             constraintName="fk_pincode_region_zone_courier_group1" deferrable="false"
-                             initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
-                             referencedColumnNames="id" referencedTableName="courier_group"
-                             referencesUniqueColumn="false"/>
-  </changeSet>
-  <changeSet author="Rimal (generated)" id="1336570361449-80">
-    <dropColumn columnName="courier_id" tableName="pincode_region_zone"/>
-  </changeSet>
+    <changeSet author="Rimal (generated)" id="1336378786007-1">
+        <addColumn tableName="email_campaign">
+            <column name="email_type_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rimal (generated)" id="1336378786007-3">
+        <addForeignKeyConstraint baseColumnNames="email_type_id" baseTableName="email_campaign"
+                                 constraintName="fk_email_campaign_email_type1"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="email_type"
+                                 referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Rimal (generated)" id="1336472195312-1">
+        <addColumn tableName="email_campaign">
+            <column defaultValue="0" name="sent_count" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rimal (generated)" id="1336570361449-10">
+        <createTable tableName="courier_group">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)"/>
+            <column name="courier_id" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Rimal (generated)" id="1336570361449-20">
+        <addColumn tableName="pincode_region_zone">
+            <column name="courier_group_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rimal (generated)" id="1336570361449-30">
+        <dropForeignKeyConstraint baseTableName="pincode_region_zone" constraintName="fk_pincode_region_zone_courier1"/>
+    </changeSet>
+    <changeSet author="Rimal (generated)" id="1336570361449-40">
+        <createIndex indexName="pincode_region_index" tableName="pincode_region_zone" unique="false">
+            <column name="pincode_id"/>
+            <column name="warehouse_id"/>
+            <column name="region_type_id"/>
+            <column name="courier_group_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Rimal (generated)" id="1336570361449-50">
+        <addForeignKeyConstraint baseColumnNames="courier_id" baseTableName="courier_group"
+                                 constraintName="fk_courier_group_courier1" deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+                                 referencedTableName="courier"
+                                 referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Rimal (generated)" id="1336570361449-60">
+        <addForeignKeyConstraint baseColumnNames="courier_group_id" baseTableName="pincode_region_zone"
+                                 constraintName="fk_pincode_region_zone_courier_group1" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="courier_group"
+                                 referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Rimal (generated)" id="1336570361449-80">
+        <dropColumn columnName="courier_id" tableName="pincode_region_zone"/>
+    </changeSet>
 
     <changeSet author="Ajeet (generated)" id="1336994156706-1">
         <createTable tableName="courier_group_has_courier">
@@ -7321,7 +7321,7 @@
         <addForeignKeyConstraint baseColumnNames="secondary_referrer_for_order_id" baseTableName="base_order" constraintName="fk_base_order_secondary_referrer_for_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="secondary_referrer_for_order" referencesUniqueColumn="false"/>
     </changeSet>
 
-   <changeSet author="vaibhav (generated)" id="1337667700199-1">
+    <changeSet author="vaibhav (generated)" id="1337667700199-1">
         <createTable tableName="badge">
             <column autoIncrement="true" name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -7388,7 +7388,7 @@
             <column name="activity_name"/>
         </createIndex>
     </changeSet>
-     <changeSet author="vaibhav (generated)" id="1337667700199-8">
+    <changeSet author="vaibhav (generated)" id="1337667700199-8">
         <addForeignKeyConstraint baseColumnNames="badge_id" baseTableName="base_order_badge"  constraintName="fk_order_badge_badge1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="badge"  referencesUniqueColumn="false"/>
     </changeSet>
     <changeSet author="vaibhav (generated)" id="1337667700199-9">
@@ -7441,10 +7441,10 @@
             <column name="purchase_form_type_id" type="INT"/>
         </addColumn>
     </changeSet>
-        <changeSet author="Rajni (generated)" id="1338295577580-4">
+    <changeSet author="Rajni (generated)" id="1338295577580-4">
         <addForeignKeyConstraint baseColumnNames="purchase_form_type_id" baseTableName="purchase_invoice" constraintName="fk_purchase_invoice_purchase_form_type1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="purchase_form_type" referencesUniqueColumn="false"/>
     </changeSet>
-     <changeSet author="Seema (generated)" id="1338892921767-1">
+    <changeSet author="Seema (generated)" id="1338892921767-1">
         <addColumn tableName="cart_line_item_config_values">
             <column name="cost_price" type="DECIMAL(10,2)">
                 <constraints nullable="false"/>
@@ -7457,70 +7457,70 @@
                 <constraints nullable="false"/>
             </column>
         </addColumn>
-        </changeSet>
+    </changeSet>
     <changeSet author="Seema (generated)" id="1339056902031-4">
         <modifyDataType columnName="value" newDataType="VARCHAR(70)" tableName="variant_config_values"/>
     </changeSet>
-       <changeSet author="vaibhav (generated)" id="1339582614718-1">
+    <changeSet author="vaibhav (generated)" id="1339582614718-1">
         <addNotNullConstraint columnDataType="VARCHAR(100)" columnName="name" tableName="secondary_referrer_for_order"/>
     </changeSet>
     <changeSet author="vaibhav (generated)" id="1339582614718-2">
         <addNotNullConstraint columnDataType="VARCHAR(70)" columnName="value" tableName="variant_config_values"/>
     </changeSet>
     <changeSet author="vaibhav (generated)" id="1339582614718-3">
-      <createIndex indexName="user_id_UNIQUE" tableName="user_karma_profile" unique="true">
-          <column name="user_id"/>
-      </createIndex>
-  </changeSet>
-  <changeSet author="Seema (generated)" id="1338816774783-1">
-         <createTable tableName="city_courier_tat">
-             <column autoIncrement="true" name="id" type="INT">
-                 <constraints nullable="false" primaryKey="true"/>
-             </column>
-             <column name="city" type="VARCHAR(45)">
-                 <constraints nullable="false"/>
-             </column>
-           <column name="courier_id" type="INT">
-                 <constraints nullable="false"/>
-             </column>
-             <column name="turnaround_time" type="DECIMAL(10,2)">
-                 <constraints nullable="false"/>
-             </column>
-         </createTable>
-     </changeSet>
-     <changeSet author="Seema (generated)" id="1338816774783-2">
-         <addColumn tableName="awb">
-             <column name="cod" type="TINYINT">
- <constraints nullable="false"/>
-             </column>
-         </addColumn>
-     </changeSet>
-     <changeSet author="Seema (generated)" id="1338816774783-3">
-         <addColumn tableName="state_courier_service">
-             <column name="preference" type="INT">
-                 <constraints nullable="false"/>
-             </column>
-         </addColumn>
-     </changeSet>
-     <changeSet author="Seema (generated)" id="1338816774783-8">
-         <createIndex indexName="fk_pincode_city" tableName="pincode" unique="false">
-             <column name="city"/>
-         </createIndex>
-     </changeSet>
-     <changeSet author="Seema (generated)" id="1338816774783-9">
-         <createIndex indexName="fk_pincode_state" tableName="pincode" unique="false">
-             <column name="state"/>
-         </createIndex>
-     </changeSet>
-     <changeSet author="Seema (generated)" id="1338816774783-10">
-         <addForeignKeyConstraint baseColumnNames="city" baseTableName="city_courier_tat"  constraintName="city_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="city" referencedTableName="pincode"  referencesUniqueColumn="false"/>
-     </changeSet>
-     <changeSet author="Seema (generated)" id="1338816774783-11">
-         <addForeignKeyConstraint baseColumnNames="courier_id" baseTableName="city_courier_tat"  constraintName="fk_city_courier_tat_courier1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="courier"  referencesUniqueColumn="false"/>
-     </changeSet>
-     <changeSet author="Seema (generated)" id="1338816774783-12">
-         <addForeignKeyConstraint baseColumnNames="state" baseTableName="state_courier_service" constraintName="fk_state_pincode" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="state" referencedTableName="pincode"  referencesUniqueColumn="false"/>
-     </changeSet>
+        <createIndex indexName="user_id_UNIQUE" tableName="user_karma_profile" unique="true">
+            <column name="user_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1338816774783-1">
+        <createTable tableName="city_courier_tat">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="city" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="courier_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="turnaround_time" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1338816774783-2">
+        <addColumn tableName="awb">
+            <column name="cod" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1338816774783-3">
+        <addColumn tableName="state_courier_service">
+            <column name="preference" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1338816774783-8">
+        <createIndex indexName="fk_pincode_city" tableName="pincode" unique="false">
+            <column name="city"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1338816774783-9">
+        <createIndex indexName="fk_pincode_state" tableName="pincode" unique="false">
+            <column name="state"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1338816774783-10">
+        <addForeignKeyConstraint baseColumnNames="city" baseTableName="city_courier_tat"  constraintName="city_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="city" referencedTableName="pincode"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1338816774783-11">
+        <addForeignKeyConstraint baseColumnNames="courier_id" baseTableName="city_courier_tat"  constraintName="fk_city_courier_tat_courier1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="courier"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1338816774783-12">
+        <addForeignKeyConstraint baseColumnNames="state" baseTableName="state_courier_service" constraintName="fk_state_pincode" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="state" referencedTableName="pincode"  referencesUniqueColumn="false"/>
+    </changeSet>
     <changeSet author="Tarun (generated)" id="1340010134657-3">
         <modifyDataType columnName="created_date" newDataType="DATE" tableName="notify_me"/>
     </changeSet>
@@ -7537,7 +7537,7 @@
             <column name="product_variant_id"/>
         </createIndex>
     </changeSet>
-          <changeSet author="Seema (generated)" id="1340352635898-1">
+    <changeSet author="Seema (generated)" id="1340352635898-1">
         <createTable tableName="city">
             <column autoIncrement="true" name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -7686,24 +7686,24 @@
         <addForeignKeyConstraint baseColumnNames="store_id" baseTableName="store_product"  constraintName="fk_store_product_price_store1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="store"  referencesUniqueColumn="false"/>
     </changeSet>
 
-  <changeSet author="Rimal (generated)" id="1340180519838-1">
-    <addColumn tableName="email_campaign">
-      <column name="html_path" type="VARCHAR(400)"/>
-    </addColumn>
-  </changeSet>
-  <changeSet author="Rimal (generated)" id="1340180519838-2">
-    <addColumn tableName="email_campaign">
-      <column name="subject" type="VARCHAR(250)"/>
-    </addColumn>
-  </changeSet>
-  <changeSet author="Rimal (generated)" id="1340180519838-3">
-    <addColumn tableName="email_campaign">
-      <column name="template_ftl" type="TEXT"/>
-    </addColumn>
-  </changeSet>
-  <changeSet author="Rimal (generated)" id="1340180519838-4">
-    <dropNotNullConstraint columnDataType="VARCHAR(80)" columnName="template" tableName="email_campaign"/>
-  </changeSet>
+    <changeSet author="Rimal (generated)" id="1340180519838-1">
+        <addColumn tableName="email_campaign">
+            <column name="html_path" type="VARCHAR(400)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rimal (generated)" id="1340180519838-2">
+        <addColumn tableName="email_campaign">
+            <column name="subject" type="VARCHAR(250)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rimal (generated)" id="1340180519838-3">
+        <addColumn tableName="email_campaign">
+            <column name="template_ftl" type="TEXT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rimal (generated)" id="1340180519838-4">
+        <dropNotNullConstraint columnDataType="VARCHAR(80)" columnName="template" tableName="email_campaign"/>
+    </changeSet>
     <changeSet author="Rahul (generated)" id="1340900951137-1">
         <createTable tableName="replacement_order">
             <column name="so_ro_id" type="INT">
@@ -7756,15 +7756,15 @@
         <modifyDataType columnName="role_name" newDataType="VARCHAR(40)" tableName="role_has_permission"/>
     </changeSet>
     <changeSet author="Tarun" id="1340949623064-3">
-      <sql>
-        UPDATE `purchase_invoice` pi SET pi.`reconcilation_date`= DATE_ADD(pi.`create_date`, INTERVAL 3 DAY) WHERE `reconciled`=1 AND `reconcilation_date` IS NULL
-      </sql>
-    </changeSet>    
+        <sql>
+            UPDATE `purchase_invoice` pi SET pi.`reconcilation_date`= DATE_ADD(pi.`create_date`, INTERVAL 3 DAY) WHERE `reconciled`=1 AND `reconcilation_date` IS NULL
+        </sql>
+    </changeSet>
     <changeSet author="Rimal (generated)" id="1341381517333-1">
         <addColumn tableName="category_image">
             <column name="position" type="VARCHAR(20)"/>
         </addColumn>
-    </changeSet>    
+    </changeSet>
     <changeSet author="Ajeet (generated)" id="1341923692621-1">
         <createTable tableName="brands_to_audit">
             <column autoIncrement="true" name="id" type="INT">
@@ -7827,7 +7827,7 @@
     </changeSet>
 
     <!--<changeSet author="Ajeet (generated)" id="1342505244718-5">-->
-        <!--<addNotNullConstraint columnDataType="VARCHAR(70)" columnName="value" tableName="cart_line_item_config_values"/>-->
+    <!--<addNotNullConstraint columnDataType="VARCHAR(70)" columnName="value" tableName="cart_line_item_config_values"/>-->
     <!--&lt;!&ndash;</changeSet>->-->
     <changeSet author="Seema (generated)" id="1342273389422-100">
         <createTable tableName="awb_status">
@@ -7982,17 +7982,16 @@
     </changeSet>
     <changeSet author="Seema (generated)" id="1343128834437-3">
         <sql>
-       delete from `demand_history` where `base_order_id` is null;
+            delete from `demand_history` where `base_order_id` is null;
         </sql>
     </changeSet>
-    
+
     <changeSet author="Seema (generated)" id="1343136104792-1">
         <dropForeignKeyConstraint baseTableName="demand_history"  constraintName="fk_demand_history_base_order1"/>
     </changeSet>
     <changeSet author="Seema (generated)" id="1343136104792-2">
         <dropColumn columnName="base_order_id" tableName="demand_history"/>
     </changeSet>
-    
     <changeSet author="Seema (generated)" id="1343199117613-1">
         <modifyDataType columnName="awb_bar_code" newDataType="VARCHAR(70)" tableName="awb"/>
     </changeSet>
@@ -8000,7 +7999,7 @@
         <modifyDataType columnName="awb_number" newDataType="VARCHAR(70)" tableName="awb"/>
     </changeSet>
 
-     <changeSet author="Tarun (generated)" id="1342434630676-1">
+    <changeSet author="Tarun (generated)" id="1342434630676-1">
         <createTable tableName="faq">
             <column autoIncrement="true" name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -8021,7 +8020,80 @@
             <column name="page_rank" type="INT"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Rohit" id="20120725-01">
+    <changeSet author="Rahul (generated)" id="1343129589883-1">
+        <dropForeignKeyConstraint baseTableName="stock_transfer_line_item" constraintName="fk_stock_transfer_line_item_sku1"/>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1343129589883-2">
+        <dropForeignKeyConstraint baseTableName="stock_transfer_line_item" constraintName="fk_stock_transfer_line_item_stock_transfer1"/>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1343129589883-3">
+        <dropIndex indexName="stock_transfer_id_UNIQUE" tableName="stock_transfer_line_item"/>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1343130936367-1">
+        <addForeignKeyConstraint baseColumnNames="sku_id" baseTableName="stock_transfer_line_item" constraintName="fk_stock_transfer_line_item_sku1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1343130936367-2">
+        <addForeignKeyConstraint baseColumnNames="stock_transfer_id" baseTableName="stock_transfer_line_item" constraintName="fk_stock_transfer_line_item_stock_transfer1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="stock_transfer" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1343219588902-1">
+        <addNotNullConstraint columnDataType="VARCHAR(70)" columnName="awb_bar_code" tableName="awb"/>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1343219588902-2">
+        <addNotNullConstraint columnDataType="VARCHAR(70)" columnName="awb_number" tableName="awb"/>
+    </changeSet>
+    <changeSet author="RajniHooda" id="2012-07-25-01">
+        <sql>
+            update stock_transfer_line_item set batch_number = 'NOBATCH' where batch_number is null;
+        </sql>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1343219588902-3">
+        <addNotNullConstraint columnDataType="VARCHAR(45)" columnName="batch_number" tableName="stock_transfer_line_item"/>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1343219588902-4">
+        <createIndex indexName="stock_transfer_id_UNIQUE" tableName="stock_transfer_line_item" unique="true">
+            <column name="stock_transfer_id"/>
+            <column name="sku_id"/>
+            <column name="batch_number"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1343223097728-1">
+        <addColumn tableName="pincode">
+            <column name="tier" type="VARCHAR(20)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Neha (generated)" id="1343293102089-1">
+        <createTable tableName="demand_forecast">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="forecast_date" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="forecast_value" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_variant_id" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="warehouse_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Neha (generated)" id="1343293102089-2">
+        <addForeignKeyConstraint baseColumnNames="product_variant_id" baseTableName="demand_forecast" constraintName="fk_demand_forecast_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Neha (generated)" id="1343293102089-3">
+        <addForeignKeyConstraint baseColumnNames="warehouse_id" baseTableName="demand_forecast"  constraintName="fk_demand_forecast_warehouse1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="warehouse"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="AdminUser (generated)" id="1343308646000-1">
+        <createIndex indexName="variant_wh_date_unique" tableName="demand_forecast" unique="true">
+            <column name="warehouse_id"/>
+            <column name="product_variant_id"/>
+            <column name="forecast_date"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Rohit" id="20120727-01">
         <sql>
             insert into variant_config (name) values ('stethoscope_config');
             insert into variant_config_option (name, variant_config_id, additional_param, display_name, display_order)
@@ -8030,6 +8102,5 @@
             values('Engraving', 100, 32, 100, 50);
             update product_variant set variant_config_id = 2 where product_id = 'LIT001';
         </sql>
-      </changeSet>
-
+    </changeSet>
 </databaseChangeLog>

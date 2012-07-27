@@ -6,6 +6,8 @@ import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.domain.faq.Faq;
 import com.hk.pact.service.faq.FaqService;
 import com.hk.constants.FaqCategoryEnums;
+import com.hk.constants.core.PermissionConstants;
+import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.ValidationMethod;
 import net.sourceforge.stripes.validation.SimpleError;
@@ -16,16 +18,19 @@ import java.util.ArrayList;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.apache.commons.lang.StringUtils;
+import org.stripesstuff.plugin.security.Secure;
 
 /**
  * Created by IntelliJ IDEA.
- * User: user
+ * User: Tarun Mittal
  * Date: Jul 12, 2012
  * Time: 3:20:54 PM
  * To change this template use File | Settings | File Templates.
  */
 @UrlBinding("/faq/{primaryCategory}/{secondaryCategory}")
+@Component
 public class FaqAction extends BasePaginatedAction {
 
     @Autowired
@@ -42,7 +47,6 @@ public class FaqAction extends BasePaginatedAction {
 
     @DefaultHandler
     public Resolution pre() {
-        //      primaryCategory = FaqCategoryEnums.EnumFaqPrimaryCateogry.Nutrition.getName();
         primaryCategory = faqService.getCategoryFromSlug(primaryCategory);
         secondaryCategory = faqService.getCategoryFromSlug(secondaryCategory);
         if (searchString != null && !searchString.equals("")) {
@@ -55,6 +59,7 @@ public class FaqAction extends BasePaginatedAction {
         return new ForwardResolution("/pages/faq/faq.jsp");
     }
 
+	@Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PRODUCT_DESCRIPTIONS}, authActionBean = AdminPermissionAction.class)
     public Resolution addNewFaq() {
         if (faq == null || faq.getAnswer() == null || faq.getQuestion() == null) {
             return new RedirectResolution(FaqAction.class);
@@ -67,14 +72,7 @@ public class FaqAction extends BasePaginatedAction {
         return new RedirectResolution(FaqAction.class, "pre");
     }
 
-/*    public Resolution searchFaq() {
-        primaryCategory = faqService.getCategoryFromSlug(primaryCategory);
-        secondaryCategory = faqService.getCategoryFromSlug(secondaryCategory);
-        faqPage = faqService.searchFaq(searchString, primaryCategory, secondaryCategory, getPageNo(), getPerPage());
-        faqList = faqPage.getList();
-        return new ForwardResolution(FaqAction.class, "pre").addParameter("primaryCategory", primaryCategory).addParameter("secondaryCategory", secondaryCategory).addParameter("searchString", searchString);
-    }*/
-
+	@Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PRODUCT_DESCRIPTIONS}, authActionBean = AdminPermissionAction.class)
     public Resolution saveFaq() {
         if (faq.getAnswer() == null
                 || faq.getQuestion() == null
@@ -88,11 +86,13 @@ public class FaqAction extends BasePaginatedAction {
         return new ForwardResolution("/pages/close.jsp");
     }
 
+	@Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PRODUCT_DESCRIPTIONS}, authActionBean = AdminPermissionAction.class)
     public Resolution deleteFaq() {
         Boolean status = faqService.deleteFaq(faq);
         return new ForwardResolution("/pages/close.jsp");
     }
 
+	@Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PRODUCT_DESCRIPTIONS}, authActionBean = AdminPermissionAction.class)
     public Resolution editFaq() {
         if (faq == null) {
             addRedirectAlertMessage(new SimpleMessage("Unable to determine faq"));
