@@ -195,10 +195,10 @@
           <div class="faq-answer">${faq.answer}</div>
         </div>
       </c:forEach>
-
     </div>
-
-
+	<s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${faqBean}"/>
+    <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${faqBean}"/>
+	<br/><br/>
   </s:layout-component>
 </s:layout-render>
 
