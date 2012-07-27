@@ -148,8 +148,8 @@ public class ReportProductVariantServiceImpl implements ReportProductVariantServ
         return rvReportDtoList;
     }
 
-    public List<GrnLineItem> getPurchaseOrderByProductVariant(ProductVariant productVariant, Warehouse warehouse, Date startDate, Date endDate){
-        return getReportProductVariantDao().getPurchaseOrderByProductVariant(productVariant, warehouse, startDate, endDate);
+    public List<GrnLineItem> getGrnLineItemForPurchaseOrder(ProductVariant productVariant, Warehouse warehouse, Date startDate, Date endDate){
+        return getReportProductVariantDao().getGrnLineItemForPurchaseOrder(productVariant, warehouse, startDate, endDate);
     }
 
     public ReportProductVariantDao getReportProductVariantDao() {

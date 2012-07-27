@@ -602,7 +602,7 @@
     <s:form beanclass="com.hk.web.action.report.ReportAction" target="_blank">
         <s:errors/>
         <fieldset class="right_label">
-            <legend>Purchase Report By Product </legend>
+            <legend>Purchase Order Report (Product Id Optional)</legend>
             <ul>
                 <li>
                     <label>Start date</label>

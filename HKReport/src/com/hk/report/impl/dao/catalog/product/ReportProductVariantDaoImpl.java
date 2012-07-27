@@ -9,6 +9,7 @@ import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.report.dto.inventory.*;
 import com.hk.report.pact.dao.catalog.product.ReportProductVariantDao;
+import org.hibernate.Query;
 import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
 
@@ -104,15 +105,21 @@ public class ReportProductVariantDaoImpl extends BaseDaoImpl implements ReportPr
                 .setResultTransformer(Transformers.aliasToBean(RVReportDto.class)).list();
     }
 
-    public List<GrnLineItem> getPurchaseOrderByProductVariant(ProductVariant productVariant, Warehouse warehouse, Date startDate, Date endDate) {
+    public List<GrnLineItem> getGrnLineItemForPurchaseOrder(ProductVariant productVariant, Warehouse warehouse, Date startDate, Date endDate) {
         /*String query1 = "select po from PurchaseOrder po join po.goodsReceivedNotes grn join grn.grnLineItems grnli join grnli.sku sku join sku.productVariant pv " +
                 " where pv = :productVariant and grn.grnDate between :startDate and :endDate";
 */
-        String query = "select grnli from GrnLineItem grnli join grnli.goodsReceivedNote grn join grn.purchaseOrder po " +
-                        " where grnli.sku.productVariant = :productVariant and grnli.sku.warehouse = :warehouse and grn.grnDate between :startDate and :endDate";
-        return getSession().createQuery(query).setParameter("productVariant", productVariant).setParameter("startDate", startDate)
-                .setParameter("warehouse", warehouse).setParameter("endDate", endDate).list();
+        String sql = "select grnli from GrnLineItem grnli join grnli.goodsReceivedNote grn join grn.purchaseOrder po " +
+                " where grnli.sku.warehouse = :warehouse and grn.grnDate between :startDate and :endDate";
+        if(productVariant != null) {
+            sql = sql + " and grnli.sku.productVariant = :productVariant ";
+        }
+        Query query = getSession().createQuery(sql).setParameter("startDate", startDate).setParameter("warehouse", warehouse).setParameter("endDate", endDate);
+        if(productVariant != null){
+            query.setParameter("productVariant", productVariant);
 
+        }
+        return  query.list();
     }
 
 }

@@ -21,6 +21,6 @@ public interface ReportProductVariantService {
 
     public List<RVReportDto> getReconciliationVoucherDetail(String productVariantId, Warehouse warehouse, Date startDate, Date endDate);
 
-    public List<GrnLineItem> getPurchaseOrderByProductVariant(ProductVariant productVariant, Warehouse warehouse, Date startDate, Date endDate);
+    public List<GrnLineItem> getGrnLineItemForPurchaseOrder(ProductVariant productVariant, Warehouse warehouse, Date startDate, Date endDate);
 
 }
