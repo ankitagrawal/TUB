@@ -17,6 +17,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.apache.commons.lang.StringUtils;
+import org.stripesstuff.plugin.security.Secure;
 
 /**
  * Created by IntelliJ IDEA.
@@ -55,6 +56,7 @@ public class FaqAction extends BasePaginatedAction {
         return new ForwardResolution("/pages/faq/faq.jsp");
     }
 
+	@Secure
     public Resolution addNewFaq() {
         if (faq == null || faq.getAnswer() == null || faq.getQuestion() == null) {
             return new RedirectResolution(FaqAction.class);
@@ -75,6 +77,7 @@ public class FaqAction extends BasePaginatedAction {
         return new ForwardResolution(FaqAction.class, "pre").addParameter("primaryCategory", primaryCategory).addParameter("secondaryCategory", secondaryCategory).addParameter("searchString", searchString);
     }*/
 
+	@Secure
     public Resolution saveFaq() {
         if (faq.getAnswer() == null
                 || faq.getQuestion() == null
@@ -88,11 +91,13 @@ public class FaqAction extends BasePaginatedAction {
         return new ForwardResolution("/pages/close.jsp");
     }
 
+	@Secure
     public Resolution deleteFaq() {
         Boolean status = faqService.deleteFaq(faq);
         return new ForwardResolution("/pages/close.jsp");
     }
 
+	@Secure
     public Resolution editFaq() {
         if (faq == null) {
             addRedirectAlertMessage(new SimpleMessage("Unable to determine faq"));

@@ -117,11 +117,11 @@
       </fieldset>
     <br/>
 
-    <shiro:hasRole name="<%=RoleConstants.SITE_CONTENT_MANAGER%>">
+    <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_DESCRIPTIONS%>">
       <s:link href="#" id="show-new-faq-form"
               class="popup" style="margin-bottom:20px;">Add FAQ
       </s:link>
-    </shiro:hasRole>
+    </shiro:hasPermission>
 
     <s:form beanclass="com.hk.web.action.faq.FaqAction" id="new-faq-form" style="display:none;">
       <span class="question"> Question: </span><br/>
@@ -182,7 +182,7 @@
 
           <p class="faq-question" style="margin-top:10px;"><strong>Q. </strong>
               ${faq.question}
-          <shiro:hasRole name="<%=RoleConstants.SITE_CONTENT_MANAGER%>">
+          <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_DESCRIPTIONS%>">
             <s:link beanclass="com.hk.web.action.faq.FaqAction"
                     event="editFaq"
                     class="popup_window popup"
@@ -190,7 +190,7 @@
               Edit Faq
               <s:param name="faq" value="${faq.id}"/>
             </s:link>
-          </shiro:hasRole>
+          </shiro:hasPermission>
           </p>
 
          <%-- <p class="faq-answer">

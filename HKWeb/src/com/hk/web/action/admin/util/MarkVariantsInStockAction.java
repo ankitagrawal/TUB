@@ -49,7 +49,7 @@ public class MarkVariantsInStockAction extends BaseAction {
 
     @DefaultHandler
     public Resolution setVariantsInStockHavingInventory() {
-        productVariants = productVariantDao.getAllProductVariant();
+        productVariants = productVariantDao.getAllNonDeletedProductVariant();
         for (ProductVariant productVariant : productVariants) {
             inventoryService.checkInventoryHealth(productVariant);
         }
