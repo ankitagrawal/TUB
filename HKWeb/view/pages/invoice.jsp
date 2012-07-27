@@ -218,6 +218,7 @@
                   <c:set var="THBF" value="THBF"/>
                   <c:set var="CO" value="CO"/>
                   <c:set var="COBF" value="COBF"/>
+                  <c:set var="ENG" value="ENG"/>
                   <c:forEach items="${productLineItem.cartLineItemConfig.cartLineItemConfigValues}" var="configValue"
                              varStatus="configCtr">
                     <c:set var="variantConfigOption" value="${configValue.variantConfigOption}"/>
@@ -235,6 +236,7 @@
                       </c:if>
                     </c:if>
                     ${!configCtr.last?',':''}
+                      <c:if test="${variantConfigOption.additionalParam eq ENG}"> &nbsp;<b> +Rs. ${configValue.additionalPrice}</b></c:if>
 
                   </c:forEach>
                 </c:if>

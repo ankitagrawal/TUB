@@ -138,25 +138,6 @@ public class ProductVariantDaoImpl extends BaseDaoImpl implements ProductVariant
         return getAll(ProductVariant.class);
     }
 
-    public Double getEngravingPrice(ProductVariant productVariant) {
-        String query = "select vcv.additonalPrice from ProductVariant pv join pv.variantConfig vc, VariantConfigOption vco, VariantConfigValues vcv " +
-                " where vc = vco.variantConfig and vco = vcv.variantConfigOption and pv = :productVariant ";
-        List<Double> engravedPrice = findByNamedParams(query, new String[]{"productVariant"}, new Object[]{productVariant});
-        if(engravedPrice != null && engravedPrice.size() > 0) {
-            return engravedPrice.get(0);
-        }
-        return 0D;
-    }
-
-    public boolean isEngravingProvidedForProduct(ProductVariant productVariant) {
-        String query = "select vco from ProductVariant pv join pv.variantConfig vc, VariantConfigOption vco " +
-                " where vc = vco.variantConfig and pv = :productVariant and vco.additionalParam = :additionalParam ";
-        List<VariantConfigOption> variantConfigOptions = findByNamedParams(query, new String[]{"productVariant", "additionalParam"}, new Object[]{productVariant, VariantConfigOptionParam.ENGRAVING.param()});
-        if(variantConfigOptions != null && variantConfigOptions.size() > 0) {
-            return true;
-        }
-        return false;
-    }
     public Product getProductForProudctVariant(String variantId) {
         return getVariantById(variantId).getProduct();  //To change body of implemented methods use File | Settings | File Templates.
 

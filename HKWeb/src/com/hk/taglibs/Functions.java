@@ -15,8 +15,7 @@ import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.catalog.product.*;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.inventory.GrnLineItem;
@@ -467,14 +466,33 @@ public class Functions {
     }
 
     public static Double getEngravingPrice(Object o) {
-        ProductVariantService productVariantService = ServiceLocatorFactory.getService(ProductVariantService.class);
-        ProductVariant pv = (ProductVariant) o;
-        return productVariantService.getEngravingPrice(pv);
+        ProductVariant productVariant = (ProductVariant) o;
+        VariantConfig variantConfig = productVariant.getVariantConfig();
+        if(variantConfig != null) {
+            Set<VariantConfigOption> variantConfigOptions = variantConfig.getVariantConfigOptions();
+            for(VariantConfigOption variantConfigOption : variantConfigOptions) {
+                if(variantConfigOption.getAdditionalParam().equals(VariantConfigOptionParam.ENGRAVING.param())){
+                    for(VariantConfigValues variantConfigValue : variantConfigOption.getVariantConfigValues()) {
+                        return variantConfigValue.getAdditonalPrice();
+                    }
+                }
+            }
+        }
+        return 0D;
     }
 
     public static boolean isEngravingProvidedForProduct(Object o) {
-        ProductVariantService productVariantService = ServiceLocatorFactory.getService(ProductVariantService.class);
-        ProductVariant pv = (ProductVariant) o;
-        return productVariantService.isEngravingProvidedForProduct(pv);
+        ProductVariant productVariant = (ProductVariant) o;
+        VariantConfig variantConfig = productVariant.getVariantConfig();
+        if(variantConfig != null) {
+            Set<VariantConfigOption> variantConfigOptions = variantConfig.getVariantConfigOptions();
+            for(VariantConfigOption variantConfigOption : variantConfigOptions) {
+                if(variantConfigOption.getAdditionalParam().equals(VariantConfigOptionParam.ENGRAVING.param())){
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

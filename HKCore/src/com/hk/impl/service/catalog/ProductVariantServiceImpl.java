@@ -120,14 +120,6 @@ public class ProductVariantServiceImpl implements ProductVariantService {
     public List<ProductVariant> getAllProductVariant() {
         return getProductVariantDao().getAllProductVariant();
     }
-    
-    public Double getEngravingPrice(ProductVariant productVariant) {
-        return getProductVariantDao().getEngravingPrice(productVariant);
-    }
-
-    public boolean isEngravingProvidedForProduct(ProductVariant productVariant) {
-        return getProductVariantDao().isEngravingProvidedForProduct(productVariant);
-    }
 
     public ProductService getProductService() {
         return productService;

@@ -52,9 +52,5 @@ public interface ProductVariantDao extends BaseDao {
 
     public List<ProductVariant> getAllProductVariant();
 
-    public Double getEngravingPrice(ProductVariant productVariant);
-
-    public boolean isEngravingProvidedForProduct(ProductVariant productVariant);
-
     public Product getProductForProudctVariant(String variantId);
 }                                                               

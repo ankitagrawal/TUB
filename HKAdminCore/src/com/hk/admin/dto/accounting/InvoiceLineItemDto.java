@@ -54,9 +54,9 @@ public class InvoiceLineItemDto {
         }
 
         qty = productLineItem.getQty();
-        
+
         hkPrice = productLineItem.getHkPrice();
-        
+
         lineItemTotal = hkPrice * qty;
         costPrice = productLineItem.getCostPrice();
         taxValue = productLineItem.getTax().getValue();
@@ -183,9 +183,12 @@ public class InvoiceLineItemDto {
                 stringBuffer.append(cartLineItemExtraOption.getName()).append(":").append(cartLineItemExtraOption.getValue());
                 stringBuffer.append(" |");
             }
+            if(stringBuffer.length() > 0 && stringBuffer.charAt(stringBuffer.length()-1) == '|') {
+                return stringBuffer.substring(0, stringBuffer.length()-1);
+            }
         }
-        return stringBuffer.toString();
 
+        return stringBuffer.toString();
     }
 
     public String getProductOptionsPipeSeparated() {
@@ -195,9 +198,12 @@ public class InvoiceLineItemDto {
                 stringBuffer.append(productOption.getName()).append(" ").append(productOption.getValue());
                 stringBuffer.append(" |");
             }
+            if(stringBuffer.length() > 0 && stringBuffer.charAt(stringBuffer.length()-1) == '|') {
+                return stringBuffer.substring(0, stringBuffer.length()-1);
+            }
         }
-        return stringBuffer.toString();
 
+        return stringBuffer.toString();
     }
 
     public String getConfigOptionsPipeSeparated() {
@@ -214,7 +220,13 @@ public class InvoiceLineItemDto {
                     if (configName.startsWith("L"))
                         stringBuffer.append("(L) ");
                 }
+                if(additionalParam.equals(VariantConfigOptionParam.ENGRAVING.param()))  {
+                    stringBuffer.append(" <b>+Rs. ").append(cartLineItemConfigValue.getAdditionalPrice()).append("</b>");
+                }
                 stringBuffer.append(" |");
+            }
+            if(stringBuffer.length() > 0 && stringBuffer.charAt(stringBuffer.length()-1) == '|') {
+                return stringBuffer.substring(0, stringBuffer.length()-1);
             }
         }
         return stringBuffer.toString();

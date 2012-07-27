@@ -58,7 +58,4 @@ public interface ProductVariantService {
 
     public List<ProductVariant> getAllProductVariant();
 
-    public Double getEngravingPrice(ProductVariant productVariant);
-
-    public boolean isEngravingProvidedForProduct(ProductVariant productVariant);
 }
