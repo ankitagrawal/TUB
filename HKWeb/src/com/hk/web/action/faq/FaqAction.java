@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.apache.commons.lang.StringUtils;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -27,6 +28,7 @@ import org.stripesstuff.plugin.security.Secure;
  * To change this template use File | Settings | File Templates.
  */
 @UrlBinding("/faq/{primaryCategory}/{secondaryCategory}")
+@Component
 public class FaqAction extends BasePaginatedAction {
 
     @Autowired
