@@ -192,7 +192,7 @@ public class GRNAction extends BasePaginatedAction {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
             xlsFile = new File(adminDownloads + "/reports/Purchase_Order-GRN-" + sdf.format(new Date()) + ".xls");
-            xlsFile = grnManager.generateGRNXls(xlsFile.getPath(), grnStatusValue, startDate, endDate, warehouse);
+            xlsFile = grnManager.generateGRNXls(xlsFile.getPath(), grnStatusValue, startDate, endDate, warehouse, reconciled);
             addRedirectAlertMessage(new SimpleMessage("Purchase Order successfully generated"));
         } catch (Exception e) {
             e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.

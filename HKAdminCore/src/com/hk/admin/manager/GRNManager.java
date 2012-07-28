@@ -63,7 +63,7 @@ public class GRNManager {
 
     SimpleDateFormat                dateFormat      = new SimpleDateFormat("dd/MM/yyyy");
 
-    public File generateGRNXls(String xslFilePath, Long grnStatusValue, Date startDate, Date endDate, Warehouse warehouse) throws Exception {
+    public File generateGRNXls(String xslFilePath, Long grnStatusValue, Date startDate, Date endDate, Warehouse warehouse, Boolean reconciled) throws Exception {
 
         File file = new File(xslFilePath);
         FileOutputStream out = new FileOutputStream(file);
@@ -108,7 +108,7 @@ public class GRNManager {
 
         int rowCounter = 1;
 
-        grnList = getGoodsReceivedNoteDao().listGRNsExcludingStatusInTimeFrame(grnStatusValue, startDate, endDate, warehouse);
+        grnList = getGoodsReceivedNoteDao().listGRNsExcludingStatusInTimeFrame(grnStatusValue, startDate, endDate, warehouse, reconciled);
         // System.out.println("grnList: " + grnList.size());
         for (GoodsReceivedNote grn : grnList) {
             String poDetail = "";
