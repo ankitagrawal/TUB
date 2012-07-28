@@ -35,7 +35,7 @@
           <li><label>Is Amazon Product</label><s:checkbox name="product.amazonProduct"/></li>
           <li><label>Is Hidden</label><s:checkbox name="product.hidden"/></li>
           <li><label>Is JIT</label><s:checkbox name="product.jit"/></li>
-          <li><label>Is Drop Shipping</label><s:checkbox name="product.dropShipping"/></li>
+          <li><label>Is Drop Shipping</label><s:checkbox name="product.dropShipping"/></li>           
           <li>
 
             <label>Select Manufacturer</label>

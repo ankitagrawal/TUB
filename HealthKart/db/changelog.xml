@@ -8093,4 +8093,47 @@
             <column name="forecast_date"/>
         </createIndex>
     </changeSet>
+   <changeSet author="Ankit (generated)" id="1343376395846-192">
+        <createTable tableName="wishlist_line_item">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="product_variant_id" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="wishlist_line_item_status_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ankit (generated)" id="1343376395846-193">
+        <createTable tableName="wishlist_line_item_status">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    
+    <changeSet author="Ankit (generated)" id="1343376395846-536">
+        <addForeignKeyConstraint baseColumnNames="product_variant_id" baseTableName="wishlist_line_item" constraintName="fk_wishlist_line_item_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant" referencedTableSchemaName="" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ankit (generated)" id="1343376395846-537">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="wishlist_line_item" constraintName="fk_wishlist_line_item_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencedTableSchemaName="" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ankit (generated)" id="1343376395846-538">
+        <addForeignKeyConstraint baseColumnNames="wishlist_line_item_status_id" baseTableName="wishlist_line_item" constraintName="fk_wishlist_line_item_wishlist_line_item_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="wishlist_line_item_status" referencedTableSchemaName="" referencesUniqueColumn="false"/>
+    </changeSet>
+    
+    <changeSet author="Ankit (generated)" id="1343387125863-1">
+        <addColumn tableName="product">
+            <column defaultValue="0" name="ground_shipping" type="TINYINT"/>
+        </addColumn>
+    </changeSet>      
+
 </databaseChangeLog>
