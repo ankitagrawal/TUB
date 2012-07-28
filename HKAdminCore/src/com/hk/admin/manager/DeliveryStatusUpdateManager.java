@@ -112,10 +112,14 @@ public class DeliveryStatusUpdateManager {
                 String gatewayOrderIdInXls = getCellValue(ReportConstants.REF_NO, rowMap, headerMap);
                 String awb = getCellValue(ReportConstants.CN_NO, rowMap, headerMap);
                 String status = getCellValue(ReportConstants.STATUS, rowMap, headerMap);
-                String courierId=getCellValue(ReportConstants.COURIER_ID_STR, rowMap, headerMap);
-                Long courier_Id=Long.parseLong(courierId);
+                String courierId = getCellValue(ReportConstants.COURIER_ID_STR, rowMap, headerMap);
+                if (StringUtils.isBlank(courierId)) {
+                    messagePostUpdation += "courierId(courierId) at   @Row No." + (rowCount + 1) + " isnull<br/>";
+                    continue;
+                }
+                Long courier_Id = Long.parseLong(courierId.trim());
                 Date deliveryDateInXsl = null;
-                Courier courierObj = courierDao.get(Courier.class,courier_Id);
+               
                 try {
                     deliveryDateInXsl = sdf_date.parse(getCellValue(ReportConstants.DELIVERED_DATE, rowMap, headerMap));
                 } catch (Exception e) {
@@ -135,7 +139,7 @@ public class DeliveryStatusUpdateManager {
                     shippingOrder = getShippingOrderService().findByGatewayOrderId(gatewayOrderIdInXls);
                 } else {
                     Courier courier = courierDao.get(Courier.class, courier_Id);
-                    Awb shipmentAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(courier, trackingId, null, null, EnumAwbStatus.Used.getAsAwbStatus());
+                    Awb shipmentAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(courier, awb.trim(), null, null, EnumAwbStatus.Used.getAsAwbStatus());
                     if (shipmentAwb == null) {
                         messagePostUpdation += "Awb number(Tracking_id) at   @Row No." + (rowCount + 1) + " does not exist in Healthkart system<br/>";
                         continue;

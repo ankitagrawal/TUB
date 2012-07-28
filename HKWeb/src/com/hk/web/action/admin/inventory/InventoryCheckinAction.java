@@ -140,7 +140,14 @@ public class InventoryCheckinAction extends BaseAction {
                         addRedirectAlertMessage(new SimpleMessage("Qty mentioned - " + qty + " is exceeding required checked in qty. Plz check."));
                         return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
                     }
-
+	                if (StringUtils.isBlank(batch) || StringUtils.isEmpty(batch)) {
+		                addRedirectAlertMessage(new SimpleMessage("Batch is required. Plz check."));
+		                return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
+	                }
+	                if (mrp != null && mrp.equals(0.0D)) {
+		                addRedirectAlertMessage(new SimpleMessage("MRP is required. Plz check."));
+		                return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
+	                }
                     SkuGroup skuGroup = getAdminInventoryService().createSkuGroup(batch, mfgDate, expiryDate, costPrice, mrp, grn, null,null, sku);
                     getAdminInventoryService().createSkuItemsAndCheckinInventory(skuGroup, qty, null, grnLineItem, null, null,
                             getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKIN), user);
@@ -217,7 +224,7 @@ public class InventoryCheckinAction extends BaseAction {
                                 "checkinInventoryAgainstStockTransfer", stockTransfer.getId());
               }
                 Long askedQty = 0L;
-                StockTransferLineItem stockTransferLineItem = stockTransferDao.getStockTransferLineItem(stockTransfer, productVariant);
+                StockTransferLineItem stockTransferLineItem = stockTransferDao.getStockTransferLineItem(stockTransfer, productVariant, batch);
                 if (stockTransferLineItem != null && sku != null) {
                     askedQty = stockTransferLineItem.getCheckedoutQty();
                     Long alreadyCheckedInQty = adminInventoryService.countOfCheckedInUnitsForStockTransferLineItem(stockTransferLineItem);

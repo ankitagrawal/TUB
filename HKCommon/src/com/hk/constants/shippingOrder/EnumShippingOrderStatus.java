@@ -118,9 +118,7 @@ public enum EnumShippingOrderStatus {
     public static List<ShippingOrderStatus> getStatusForChangingShipmentDetails() {
         return Arrays.asList(EnumShippingOrderStatus.SO_Shipped.asShippingOrderStatus(),
                 EnumShippingOrderStatus.SO_Delivered.asShippingOrderStatus(),
-                EnumShippingOrderStatus.SO_Returned.asShippingOrderStatus(),
-                EnumShippingOrderStatus.SO_Lost.asShippingOrderStatus(),
-                EnumShippingOrderStatus.SO_Replaced.asShippingOrderStatus());
+                EnumShippingOrderStatus.SO_Lost.asShippingOrderStatus());
     }
 
     public static List<ShippingOrderStatus> getStatusForReconcilationReport() {
@@ -132,9 +130,7 @@ public enum EnumShippingOrderStatus {
 
     public static List<Long> getStatusForSearchOrderAndEnterCourierInfo() {
            return Arrays.asList(EnumShippingOrderStatus.SO_Packed.asShippingOrderStatus().getId(),
-                   EnumShippingOrderStatus.SO_CheckedOut.asShippingOrderStatus().getId(),
-                   EnumShippingOrderStatus.SO_Shipped.asShippingOrderStatus().getId());
-
+                   EnumShippingOrderStatus.SO_CheckedOut.asShippingOrderStatus().getId());
        }
 
 

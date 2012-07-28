@@ -7992,7 +7992,6 @@
     <changeSet author="Seema (generated)" id="1343136104792-2">
         <dropColumn columnName="base_order_id" tableName="demand_history"/>
     </changeSet>
-    
     <changeSet author="Seema (generated)" id="1343199117613-1">
         <modifyDataType columnName="awb_bar_code" newDataType="VARCHAR(70)" tableName="awb"/>
     </changeSet>
@@ -8020,5 +8019,78 @@
         <addColumn tableName="faq">
             <column name="page_rank" type="INT"/>
         </addColumn>
-    </changeSet>   
+    </changeSet>        
+	<changeSet author="Rahul (generated)" id="1343129589883-1">
+	    <dropForeignKeyConstraint baseTableName="stock_transfer_line_item" constraintName="fk_stock_transfer_line_item_sku1"/>
+	</changeSet>
+	<changeSet author="Rahul (generated)" id="1343129589883-2">
+	    <dropForeignKeyConstraint baseTableName="stock_transfer_line_item" constraintName="fk_stock_transfer_line_item_stock_transfer1"/>
+	</changeSet>
+	<changeSet author="Rahul (generated)" id="1343129589883-3">
+	    <dropIndex indexName="stock_transfer_id_UNIQUE" tableName="stock_transfer_line_item"/>
+	</changeSet>
+	<changeSet author="Rahul (generated)" id="1343130936367-1">
+	    <addForeignKeyConstraint baseColumnNames="sku_id" baseTableName="stock_transfer_line_item" constraintName="fk_stock_transfer_line_item_sku1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="Rahul (generated)" id="1343130936367-2">
+	    <addForeignKeyConstraint baseColumnNames="stock_transfer_id" baseTableName="stock_transfer_line_item" constraintName="fk_stock_transfer_line_item_stock_transfer1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="stock_transfer" referencesUniqueColumn="false"/>
+	</changeSet>
+    <changeSet author="Rahul (generated)" id="1343219588902-1">
+        <addNotNullConstraint columnDataType="VARCHAR(70)" columnName="awb_bar_code" tableName="awb"/>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1343219588902-2">
+        <addNotNullConstraint columnDataType="VARCHAR(70)" columnName="awb_number" tableName="awb"/>
+    </changeSet>
+	<changeSet author="RajniHooda" id="2012-07-25-01">
+		<sql>
+			update stock_transfer_line_item set batch_number = 'NOBATCH' where batch_number is null;
+		</sql>
+	</changeSet>
+    <changeSet author="Rahul (generated)" id="1343219588902-3">
+        <addNotNullConstraint columnDataType="VARCHAR(45)" columnName="batch_number" tableName="stock_transfer_line_item"/>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1343219588902-4">
+        <createIndex indexName="stock_transfer_id_UNIQUE" tableName="stock_transfer_line_item" unique="true">
+            <column name="stock_transfer_id"/>
+            <column name="sku_id"/>
+            <column name="batch_number"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1343223097728-1">
+        <addColumn tableName="pincode">
+            <column name="tier" type="VARCHAR(20)"/>
+        </addColumn>
+    </changeSet>    
+    <changeSet author="Neha (generated)" id="1343293102089-1">
+        <createTable tableName="demand_forecast">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="forecast_date" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="forecast_value" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_variant_id" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="warehouse_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Neha (generated)" id="1343293102089-2">
+        <addForeignKeyConstraint baseColumnNames="product_variant_id" baseTableName="demand_forecast" constraintName="fk_demand_forecast_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Neha (generated)" id="1343293102089-3">
+        <addForeignKeyConstraint baseColumnNames="warehouse_id" baseTableName="demand_forecast"  constraintName="fk_demand_forecast_warehouse1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="warehouse"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="AdminUser (generated)" id="1343308646000-1">
+        <createIndex indexName="variant_wh_date_unique" tableName="demand_forecast" unique="true">
+            <column name="warehouse_id"/>
+            <column name="product_variant_id"/>
+            <column name="forecast_date"/>
+        </createIndex>
+    </changeSet>
 </databaseChangeLog>
