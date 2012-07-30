@@ -97,7 +97,7 @@
 		</div>
 
 		<div class="buy_prod">
-			
+
 			<div class="left_col">
 				<div class='prices' style="font-size: 14px;">
 					<c:if test="${variant.discountPercent > 0}">
@@ -132,16 +132,18 @@
 						</div>
 					</c:if>
 					<div style="font-weight:bold;">
-					<c:if test="${hk:isNotBlank(variant.optionsCommaSeparated)}">
-						${variant.optionsCommaSeparated}
-					</c:if>
-				</div>
+						<c:if test="${hk:isNotBlank(variant.optionsCommaSeparated)}">
+							${variant.optionsCommaSeparated}
+						</c:if>
+					</div>
 				</div>
 
 
 			</div>
 			<div class="right_col">
-				<p><strong>+ FREE!! ${variant.freeProductVariant.product.name}</strong></p>
+				<c:if test="${variant.freeProductVariant != null}">
+					<p style="font-weight:bold;font-size:1.0em">+ FREE!! ${variant.freeProductVariant.product.name}</p>
+				</c:if>
 				<s:submit name="addToCart" value="Place Order"
 				          class="addToCartButton cta button_green"/>
 			</div>
