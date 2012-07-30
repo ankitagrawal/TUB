@@ -54,6 +54,7 @@ public class UserProductHistoryDaoImpl extends BaseDaoImpl implements UserProduc
     Criteria criteria = getSession().createCriteria(UserProductHistory.class);
     criteria.add(Restrictions.eq("product", product));
     criteria.add(Restrictions.eq("user", user));
+    criteria.add(Restrictions.isNull("order"));
     List<UserProductHistory> userProductHistoryList = criteria.list();
     return userProductHistoryList == null || userProductHistoryList.isEmpty() ? null : userProductHistoryList.get(0);
   }
