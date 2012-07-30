@@ -41,7 +41,7 @@
      
 
     </style>
-    <script>
+    <script type="text/javascript">
       $(document).ready(function() {
         $('#show-new-faq-form').click(function(event) {
           event.preventDefault();
@@ -87,7 +87,6 @@
 
         function validate(){
             var question = $('#new-question').val();
-            var answer = $('#new-answer').val();
             if(question == ""){
                 alert('question or answer cannot be left blank');
             }
@@ -117,11 +116,11 @@
       </fieldset>
     <br/>
 
-    <shiro:hasRole name="<%=RoleConstants.SITE_CONTENT_MANAGER%>">
-      <s:link href="#" id="show-new-faq-form"
+    <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_DESCRIPTIONS%>">
+      <a href="#" id="show-new-faq-form"
               class="popup" style="margin-bottom:20px;">Add FAQ
-      </s:link>
-    </shiro:hasRole>
+      </a>
+    </shiro:hasPermission>
 
     <s:form beanclass="com.hk.web.action.faq.FaqAction" id="new-faq-form" style="display:none;">
       <span class="question"> Question: </span><br/>
@@ -173,7 +172,7 @@
       <br/>
       <br />
       
- <%--   <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${faqBean}"/>--%>
+    <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${faqBean}"/>
     <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${faqBean}"/>
       
     <div id="faq-area">
@@ -182,7 +181,7 @@
 
           <p class="faq-question" style="margin-top:10px;"><strong>Q. </strong>
               ${faq.question}
-          <shiro:hasRole name="<%=RoleConstants.SITE_CONTENT_MANAGER%>">
+          <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_DESCRIPTIONS%>">
             <s:link beanclass="com.hk.web.action.faq.FaqAction"
                     event="editFaq"
                     class="popup_window popup"
@@ -190,19 +189,16 @@
               Edit Faq
               <s:param name="faq" value="${faq.id}"/>
             </s:link>
-          </shiro:hasRole>
+          </shiro:hasPermission>
           </p>
 
-         <%-- <p class="faq-answer">
-            <strong>A. </strong>--%>
           <div class="faq-answer">${faq.answer}</div>
-          <%--</p>--%>
         </div>
       </c:forEach>
-
     </div>
-
-
+	<s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${faqBean}"/>
+    <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${faqBean}"/>
+	<br/><br/>
   </s:layout-component>
 </s:layout-render>
 

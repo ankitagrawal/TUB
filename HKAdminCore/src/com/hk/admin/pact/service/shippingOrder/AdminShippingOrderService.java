@@ -10,8 +10,8 @@ import com.hk.domain.warehouse.Warehouse;
 
 public interface AdminShippingOrderService {
 
-  //  public List<Long> getShippingOrderListByCourier(Date startDate, Date endDate, Long courierId);
-    
+    //  public List<Long> getShippingOrderListByCourier(Date startDate, Date endDate, Long courierId);
+
     public void cancelShippingOrder(ShippingOrder shippingOrder);
 
     public boolean updateWarehouseForShippingOrder(ShippingOrder shippingOrder, Warehouse warehouse);
@@ -38,9 +38,9 @@ public interface AdminShippingOrderService {
 
     ShippingOrder markShippingOrderAsRTO(ShippingOrder shippingOrder);
 
+    public ShippingOrder markShippingOrderAsLost(ShippingOrder shippingOrder);
+
     ShippingOrder initiateRTOForShippingOrder(ShippingOrder shippingOrder);
 
     public List<ShippingOrder> getShippingOrderListByCouriers(Date startDate, Date endDate, List<Long> courierId);
-
-
 }

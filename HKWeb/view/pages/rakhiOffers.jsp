@@ -161,7 +161,7 @@
 
         <div class="productThumb">
         <p class="tNum">4</p>
-        <h3><a href="http://www.healthkart.com/product/rakhee-combo-women-4/RKHCMB8">...For your Sis is a Diva</a></h3>
+        <h3><a href="http://www.healthkart.com/product/rakhee-combo-women-4/RKHCMB8">For your Diva like Sis</a></h3>
         <div class="cl"></div>
         <img src="${pageContext.request.contextPath}/images/rakhi/sister-4.jpg" width="170" height="170"  class="tThumb" />
         <div class="tDesc">NYX Mosaic Powder Blush + NYX Brush On Lip Gloss + NYX Lip Lacquer Pot

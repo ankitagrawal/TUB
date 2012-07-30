@@ -112,7 +112,7 @@ public class StockTransferAction extends BasePaginatedAction {
                         try {
                             stockTransferLineItem = (StockTransferLineItem) stockTransferDao.save(stockTransferLineItem);
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            logger.info("Duplicate batch and variant in stock transfer for - " + stockTransferLineItem.getSku().getProductVariant().getId());
                             addRedirectAlertMessage(new SimpleMessage("Duplicate batch and variant - " + stockTransferLineItem.getSku().getProductVariant().getId()));
                             return new RedirectResolution(StockTransferAction.class).addParameter("stockTransfer", stockTransfer.getId());
                         }

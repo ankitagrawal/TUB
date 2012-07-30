@@ -42,25 +42,25 @@ import com.hk.service.ServiceLocatorFactory;
 public class AdminShippingOrderServiceImpl implements AdminShippingOrderService {
 
     @Autowired
-    private ShippingOrderService       shippingOrderService;
+    private ShippingOrderService shippingOrderService;
     @Autowired
-    private AdminInventoryService      adminInventoryService;
+    private AdminInventoryService adminInventoryService;
 
     @Autowired
-    private InventoryService           inventoryService;
+    private InventoryService inventoryService;
     @Autowired
-    private OrderService               orderService;
+    private OrderService orderService;
     @Autowired
     private ShippingOrderStatusService shippingOrderStatusService;
     @Autowired
-    private SkuService                 skuService;
+    private SkuService skuService;
     @Autowired
-    private WarehouseService           warehouseService;
-    private AdminOrderService          adminOrderService;
+    private WarehouseService warehouseService;
+    private AdminOrderService adminOrderService;
     @Autowired
-    private ShipmentService            shipmentService;
+    private ShipmentService shipmentService;
     @Autowired
-    private AdminShippingOrderDao      adminShippingOrderDao;
+    private AdminShippingOrderDao adminShippingOrderDao;
 
     // public List<Long> getShippingOrderListByCourier(Date startDate, Date endDate, Long courierId) {
     // List<Long> shippingOrderList = getAdminShippingOrderDao().getShippingOrderListByCourier(startDate, endDate,
@@ -223,6 +223,15 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     }
 
     @Transactional
+    public ShippingOrder markShippingOrderAsLost(ShippingOrder shippingOrder) {
+        shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_Lost));
+        getShippingOrderService().save(shippingOrder);
+        getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Lost);
+        Order order = shippingOrder.getBaseOrder();
+        getAdminOrderService().markOrderAsLost(order);
+        return shippingOrder;
+    }
+
     public ShippingOrder initiateRTOForShippingOrder(ShippingOrder shippingOrder) {
         shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.RTO_Initiated));
         getShippingOrderService().save(shippingOrder);
@@ -230,8 +239,8 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         return shippingOrder;
     }
 
-    public List<ShippingOrder> getShippingOrderListByCouriers(Date startDate, Date endDate, List<Long> courierId){
-        return getAdminShippingOrderDao().getShippingOrderListByCouriers(startDate,endDate,courierId);
+    public List<ShippingOrder> getShippingOrderListByCouriers(Date startDate, Date endDate, List<Long> courierId) {
+        return getAdminShippingOrderDao().getShippingOrderListByCouriers(startDate, endDate, courierId);
     }
 
 
