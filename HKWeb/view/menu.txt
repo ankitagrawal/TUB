@@ -37,7 +37,7 @@
 --/nutrition/condition-specific-supplements/stress-anxiety  :Stress & Anxiety
 --/nutrition/condition-specific-supplements/digestion
 --/nutrition/condition-specific-supplements/immunity
---/nutrition/condition-specific-supplements/blood-sugar
+--/nutrition/condition-specific-supplements/blood-sugar :Diabetic Care
 --/nutrition/condition-specific-supplements/brain-memory     :Brain & Memory
 --/nutrition/condition-specific-supplements/vitality
 --/nutrition/condition-specific-supplements/energy-endurance     :Energy & Endurance
