@@ -1,10 +1,15 @@
 package com.hk.impl.dao.catalog.combo;
 
 import org.springframework.stereotype.Repository;
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.DetachedCriteria;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.catalog.combo.SuperSaverImageDao;
 import com.hk.domain.catalog.product.combo.SuperSaverImage;
 import com.hk.domain.catalog.product.Product;
+import com.akube.framework.dao.Page;
 
 import java.util.List;
 
@@ -29,22 +34,44 @@ public class SuperSaverImageDaoImpl extends BaseDaoImpl implements SuperSaverIma
     }
 
     public List<SuperSaverImage> getSuperSaverImages(Product product, Boolean getVisible, Boolean getMainImage) {
-
-        StringBuilder hqlBuilder = new StringBuilder("from SuperSaverImage ssi where 1=1 ");
+        Criteria criteria = getSession().createCriteria(SuperSaverImage.class);
+        criteria.add(Restrictions.eq("deleted", Boolean.FALSE));
 
         if (product != null) {
-            hqlBuilder.append(" and product.id = '" + product.getId() + "'");
+            criteria.add(Restrictions.eq("product", product));
         }
 
         if (getVisible) {
-            hqlBuilder.append(" and ranking is not null and hidden = false");
+            criteria.add(Restrictions.isNotNull("ranking"));
+            criteria.add(Restrictions.eq("hidden", Boolean.FALSE));
             if (getMainImage) {
-                hqlBuilder.append(" and isMainImage = true");
+                criteria.add(Restrictions.eq("isMainImage", Boolean.TRUE));
             }
         }
-        hqlBuilder.append(" order by ranking");
 
-        return (List<SuperSaverImage>) getSession().createQuery(hqlBuilder.toString())
-                .list();
+        criteria.addOrder(Order.asc("ranking"));
+        return (List<SuperSaverImage>) criteria.list();
+    }
+
+    public Page getSuperSaverImages(String category, String brand, Boolean getVisible, int page, int perPage) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(SuperSaverImage.class);
+        DetachedCriteria productCriteria = criteria.createCriteria("product");
+
+        if (brand != null) {
+            productCriteria.add(Restrictions.eq("brand", brand));
+        }
+
+        if (category != null) {
+            DetachedCriteria categoryCriteria = productCriteria.createCriteria("categories");
+            categoryCriteria.add(Restrictions.eq("name", category));
+        }
+
+        if (getVisible) {
+            criteria.add(Restrictions.isNotNull("ranking"));
+            criteria.add(Restrictions.eq("hidden", Boolean.FALSE));
+        }
+
+        criteria.addOrder(Order.asc("ranking"));
+        return list(criteria, page, perPage);
     }
 }

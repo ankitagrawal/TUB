@@ -36,11 +36,62 @@
             table td input[type="text"].altText {
                 width: 500px;
             }
+
+            div.paginationDiv {
+                float: right;
+                margin: 15px;
+            }
+
+            fieldset {
+                padding: 5px;
+                text-align:center;
+            }
+
+            fieldset#categoryBrandFilter, fieldset#productFilter {
+                width: 45%;
+            }
+
+            fieldset#categoryBrandFilter {
+                float: left;
+            }
+
+            fieldset#productFilter {
+                float: right;
+            }
         </style>
     </s:layout-component>
     <s:layout-component name="content">
         <div class="headingDiv">
             <h2>SUPER SAVER IMAGES</h2>
+        </div>
+
+        <div class="searchDiv">
+            <s:form beanclass="com.hk.web.action.core.catalog.image.UploadSuperSaverImageAction">
+                <fieldset>
+                    <legend>Filter Super Savers</legend>
+
+                    <fieldset id="categoryBrandFilter">
+                        <legend>By Category and Brand</legend>
+                        <label>Category:</label><s:text name="category"/>
+                        &nbsp; &nbsp;
+                        <label>Brand:</label><s:text name="brand"/>
+                        &nbsp; &nbsp;
+                        <s:submit name="getSuperSaversForCategoryAndBrand" value="Filter" id="categoryBrandSubmit"/>
+                    </fieldset>
+
+                    <fieldset id="productFilter">
+                        <legend>By Product Id</legend>
+                        <label>Product Id:</label><s:text name="product"/>
+                        &nbsp; &nbsp;
+                        <s:submit name="getSuperSaversForProduct" value="Filter" id="productSubmit"/>
+                    </fieldset>
+                </fieldset>
+            </s:form>
+        </div>
+
+        <div class="paginationDiv">
+            <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${comboBean}"/>
+            <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${comboBean}"/>
         </div>
 
         <s:form beanclass="com.hk.web.action.core.catalog.image.UploadSuperSaverImageAction">
@@ -56,6 +107,7 @@
                     <th>ALT TEXT</th>
                         <%--<th>IS MAIN IMAGE</th>--%>
                     <th>HIDE</th>
+                    <th>DELETE</th>
                 </tr>
                 <c:forEach var="superSaverImage" items="${comboBean.superSaverImages}" varStatus="productCtr">
                     <tr class="row">
@@ -70,6 +122,7 @@
                                     value="${superSaverImage.altText}" class="altText"/></td>
                             <%--<td><s:checkbox name="superSaverImages[${productCtr.index}].mainImage"/></td>--%>
                         <td><s:checkbox name="superSaverImages[${productCtr.index}].hidden" class="hiddenCheck"/></td>
+                        <td><s:checkbox name="superSaverImages[${productCtr.index}].deleted" class="deleteCheck"/></td>
                     </tr>
                 </c:forEach>
             </table>
@@ -78,6 +131,11 @@
                 <s:submit name="editSuperSaverImageSettings" value="Save Changes" class="submitButton"/>
             </div>
         </s:form>
+
+        <div class="paginationDiv">
+            <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${comboBean}"/>
+            <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${comboBean}"/>
+        </div>
 
         <s:form beanclass="com.hk.web.action.core.catalog.SuperSaversAction">
             <s:submit name="pre" value="Back to Super Savers"/>
@@ -105,6 +163,8 @@
 
                     return !error;
                 });
+
+
             });
         </script>
     </s:layout-component>

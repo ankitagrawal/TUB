@@ -27,6 +27,9 @@ public class SuperSaverImage implements java.io.Serializable {
     @Column(name = "hidden", nullable = false)
     private boolean hidden;
 
+    @Column(name = "deleted")
+    private boolean deleted;
+
     @Column(name = "checksum", nullable = false, length = 45)
     private String checksum;
 
@@ -81,6 +84,18 @@ public class SuperSaverImage implements java.io.Serializable {
 
     public void setHidden(boolean hidden) {
         this.hidden = hidden;
+    }
+
+    public boolean getDeleted() {
+        return this.deleted;
+    }
+
+    public boolean isDeleted() {
+        return this.deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
     public String getChecksum() {

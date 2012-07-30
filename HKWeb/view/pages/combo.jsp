@@ -799,6 +799,7 @@
     div.imageDiv {
         min-width: 130px;
         min-height: 130px;
+        cursor: pointer;
     }
 
     div.buyDiv {

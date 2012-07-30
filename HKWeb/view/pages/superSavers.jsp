@@ -13,12 +13,31 @@
                 padding: 5px;
                 margin: 5px;
             }
+
+            input[type="text"].offerQuery {
+                height: 14px;
+                font-size: .8em;
+                width: 90%;
+            }
         </style>
     </s:layout-component>
 
     <s:layout-component name="content">
         <div class="heading">
-            <h1>Super Savers</h1>
+            <div style="width:70%; float:left;">
+                <h1>Super Savers</h1>
+            </div>
+
+            <div style="cursor:default; width: 30%; float:right;">
+                <s:form beanclass="com.hk.web.action.core.search.SearchAction" method="get" renderFieldsPresent="false"
+                        renderSourcePage="false" autocomplete="off" style="position: relative;">
+                    <s:text name="query" id="searchbox" class="input_tip offerQuery" title='search our catalog'
+                            value="${param['query']}" placeholder='search our catalog'/>
+
+                    <s:image name="search" src="/images/icons/search2.png"
+                             style="position: absolute; right: 3px; top: 1px;"/>
+                </s:form>
+            </div>
         </div>
 
         <div class="clear"></div>
@@ -45,13 +64,13 @@
             <c:set var="product" value="${image.product}"/>
             <c:set var="productName" value="${product.name}"/>
             <div style="margin:15px 0;">
-	            <s:link beanclass="com.hk.web.action.core.catalog.product.ProductAction" class="prod_link"
-	                    title="${productName}">
-		            <s:param name="productId" value="${product.id}"/>
-		            <s:param name="productSlug" value="${product.slug}"/>
-		            <hk:superSaverImage imageId="${image.id}" size="<%=EnumImageSize.Original%>"
-		                                alt="${image.altText}"/>
-	            </s:link>
+                <s:link beanclass="com.hk.web.action.core.catalog.product.ProductAction" class="prod_link"
+                        title="${productName}">
+                    <s:param name="productId" value="${product.id}"/>
+                    <s:param name="productSlug" value="${product.slug}"/>
+                    <hk:superSaverImage imageId="${image.id}" size="<%=EnumImageSize.Original%>"
+                                        alt="${image.altText}"/>
+                </s:link>
             </div>
         </c:forEach>
 
