@@ -113,7 +113,7 @@
               <s:param name="productVariant" value="${product.productVariants[0]}"/> </s:link></div>
           </c:when>
           <c:otherwise>
-            <div class="checkboxError" style="background-color:salmon; font-size:0.9em; padding: 5px;"></div>  
+            <div class="checkboxError" style="background-color:salmon; font-size:0.9em;"></div>  
             <s:submit name="addToCart" value="Place Order"
                       class="addToCartButton cta button_green"
                       style="float:right;"/>

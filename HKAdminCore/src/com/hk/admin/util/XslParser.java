@@ -883,14 +883,15 @@ public class XslParser {
         }
         if (StringUtils.isNotBlank(awb)) {
 
-          if (!(shipment.getTrackingId().equals(awb))) {
+          if (!(shipment.getAwb() != null && shipment.getAwb().getAwbNumber().equals(awb))) {
             messagePostUpdation += "AWB and shippingOrder no. mismatch at row" + rowCount + ".<br/>";
             continue;
           }
         }
-        shipment.setCollectionCharge(collectionCharge);
-        shipment.setShipmentCharge(shippingCharge);
-        shipmentService.save(shipment);
+          shipment.setCollectionCharge(collectionCharge);
+          shipment.setShipmentCharge(shippingCharge);
+          shipment.setShippingOrder(shippingOrder);
+          shipmentService.save(shipment);
 
         /*
         * if (courier != null) { productLineItemsByCourier =
@@ -1032,7 +1033,7 @@ public class XslParser {
         }
         if (StringUtils.isNotBlank(awb)) {
 
-          if (!(shipment.getTrackingId().equals(awb))) {
+          if (!(shipment.getAwb() != null && shipment.getAwb().getAwbNumber().equals(awb))) {
             messagePostUpdation += "AWB and shippingOrder no. mismatch at row" + rowCount + ".<br/>";
             continue;
           }

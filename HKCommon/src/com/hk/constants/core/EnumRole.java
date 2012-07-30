@@ -94,6 +94,9 @@ public enum EnumRole {
     public static List<String> listOpsRoles() {
         return Arrays.asList(
                 EnumRole.HK_USER.getRoleName(),
+                EnumRole.HK_DELIVERY_GUY.getRoleName(),
+                EnumRole.BASIC_ROLES.getRoleName(),
+                EnumRole.TICKETADMIN.getRoleName(),
                 EnumRole.OPS_MANAGER.getRoleName(),
                 EnumRole.WH_EMPLOYEE.getRoleName(),
                 EnumRole.WH_MANAGER.getRoleName());

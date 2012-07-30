@@ -4,8 +4,21 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.core.affiliate.AffiliatePaymentAction" var="paymentAction"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp">
-  <s:layout-component name="content">
-    <table>
+
+    <s:layout-component name="content">
+        <s:form beanclass="com.hk.web.action.core.affiliate.AffiliatePaymentAction">
+            <fieldset>
+                <legend>Search Affiliates</legend>
+
+                <label>Name:</label><s:text name="name" style="width:150px"/>
+                &nbsp; &nbsp;
+                <label>Email:</label><s:text name="email" style="width:150px"/>
+
+                <s:submit name="pre" value="Search"/>
+            </fieldset>
+        </s:form>
+
+        <table>
     <tr>
       <th>
         Name
