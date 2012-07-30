@@ -140,8 +140,14 @@ public class Product implements java.io.Serializable {
     @JoinColumn(name = "secondary_category", nullable = true)
     private Category             secondaryCategory;
 
+
     @Column(name = "drop_shipping")
     private boolean              dropShipping;
+
+
+
+    @Column(name = "ground_shipping")
+    private boolean              groundShipping;
 
     @Transient
     private String               categoriesPipeSeparated;
@@ -531,6 +537,14 @@ public class Product implements java.io.Serializable {
 
     public void setDropShipping(boolean dropShipping) {
         this.dropShipping = dropShipping;
+    }
+
+    public boolean isGroundShipping() {
+        return groundShipping;
+    }
+
+    public void setGroundShipping(boolean groundShipping) {
+        this.groundShipping = groundShipping;
     }
 
     @Override
