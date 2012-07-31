@@ -1,17 +1,5 @@
 package com.hk.manager;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.hk.constants.HttpRequestAndSessionConstants;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.core.Keys;
@@ -32,13 +20,7 @@ import com.hk.domain.catalog.product.combo.ComboInstanceHasProductVariant;
 import com.hk.domain.clm.KarmaProfile;
 import com.hk.domain.matcher.CartLineItemMatcher;
 import com.hk.domain.offer.OfferInstance;
-import com.hk.domain.order.CartLineItem;
-import com.hk.domain.order.CartLineItemConfig;
-import com.hk.domain.order.CartLineItemExtraOption;
-import com.hk.domain.order.Order;
-import com.hk.domain.order.OrderCategory;
-import com.hk.domain.order.PrimaryReferrerForOrder;
-import com.hk.domain.order.SecondaryReferrerForOrder;
+import com.hk.domain.order.*;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.user.User;
@@ -66,6 +48,17 @@ import com.hk.pact.service.store.StoreService;
 import com.hk.pricing.PricingEngine;
 import com.hk.util.OrderUtil;
 import com.hk.web.filter.WebContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 @Component
 public class OrderManager {
@@ -295,7 +288,8 @@ public class OrderManager {
     private CartLineItem updateCartLineItemWithQty(CartLineItem cartLineItem, Long variantQty) {
         // TODO: # warehouse should not it be cartLineItem.getQty != variantQty
         if (variantQty != null && variantQty > 0 && cartLineItem.getQty() != variantQty) {
-            Long previousQty = cartLineItem.getQty();
+
+            Long previousQty = cartLineItem.getQty() == null ? 0 : cartLineItem.getQty() ;
             cartLineItem.setQty(previousQty + variantQty);
             cartLineItem = getCartLineItemService().save(cartLineItem);
         }
