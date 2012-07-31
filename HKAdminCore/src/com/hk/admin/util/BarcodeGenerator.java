@@ -39,7 +39,7 @@ public class BarcodeGenerator {
             bean.setModuleWidth(UnitConv.in2mm(inch / dpi)); // makes the narrow bar
             // width exactly one pixel
             // bean.setWideFactor(3);
-            bean.setHeight(10.0);
+            bean.setHeight(7.5);
             bean.doQuietZone(false);
 
             // Open output file
@@ -47,7 +47,7 @@ public class BarcodeGenerator {
             OutputStream out = new FileOutputStream(outputFile);
             try {
                 // Set up the canvas provider for monochrome PNG output
-                BitmapCanvasProvider canvas = new BitmapCanvasProvider(out, "image/x-png", dpi, BufferedImage.TYPE_BYTE_BINARY, false, 0);
+                BitmapCanvasProvider canvas = new BitmapCanvasProvider(out, "image/x-png", dpi, BufferedImage.TYPE_BYTE_BINARY, true, 0);
 
                 // Generate the barcode
                 bean.generateBarcode(canvas, gatewayOrderId);
