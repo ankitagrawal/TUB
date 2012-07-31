@@ -66,8 +66,7 @@
 <div class="container_12" style="border: 1px solid; padding-top: 10px;">
 <div class="grid_4">
     <div style="float: left;">
-        <img src="${pageContext.request.contextPath}/barcodes/${orderSummary.shipment.awb.awbNumber}.png"/>
-        <%--<img src="${pageContext.request.contextPath}/barcodes/${orderSummary.shippingOrder.gatewayOrderId}.png"/>--%>
+        <img src="${pageContext.request.contextPath}/barcodes/${orderSummary.shippingOrder.gatewayOrderId}.png"/>
     </div>
 </div>
 
@@ -167,8 +166,8 @@
                         <div>
                             <div>
                                     ${orderSummary.shipment.courier.name}
-                                <%--<img style="padding-top: 0px; padding-left: 0px; padding-right: 82px; "--%>
-                                     <%--src="${pageContext.request.contextPath}/barcodes/${orderSummary.shipment.awb.awbNumber}.png"/>--%>
+                                <img style="padding-top: 0px; padding-left: 0px; padding-right: 82px; "
+                                     src="${pageContext.request.contextPath}/barcodes/${orderSummary.shipment.awb.awbNumber}.png"/>
                             </div>
                         </div>
                     </c:if>
@@ -273,10 +272,52 @@
                     <em>
                         <p>
                                 ${invoiceLineItem.productOptionsPipeSeparated}
+                                <%--<c:forEach items="${invoiceLineItem.productOptions}" var="productOption">--%>
+                                <%--${productOption.name} ${productOption.value}&nbsp--%>
+                                <%--</c:forEach>--%>
                         </p>
+
                         <p>
                                 ${invoiceLineItem.extraOptionsPipeSeparated}
+                                <%--<c:forEach items="${invoiceLineItem.cartLineItemExtraOptions}" var="extraOption">--%>
+                                <%--<label>${extraOption.name} : ${extraOption.value}</label>&nbsp--%>
+                                <%--</c:forEach>--%>
+
                                 ${invoiceLineItem.configOptionsPipeSeparated}
+                                <%--<c:if test="${not empty invoiceLineItem.cartLineItemConfigValues}">--%>
+
+                                <%--<c:set var="TH" value="TH"/>--%>
+                                <%--<c:set var="THBF" value="THBF"/>--%>
+                                <%--<c:set var="CO" value="CO"/>--%>
+                                <%--<c:set var="COBF" value="COBF"/>--%>
+                                <%--<c:forEach items="${invoiceLineItem.cartLineItemConfigValues}" var="configValue"--%>
+                                <%--varStatus="configCtr">--%>
+                                <%--<c:set var="variantConfigOption" value="${configValue.variantConfigOption}"/>--%>
+                                <%--<c:set var="additionalParam" value="${variantConfigOption.additionalParam}"/>--%>
+                                <%--${variantConfigOption.displayName} : ${configValue.value}--%>
+                                <%--<c:if--%>
+                                <%--test="${(additionalParam ne TH) or (additionalParam ne THBF) or (additionalParam ne CO) or (additionalParam ne COBF) }">--%>
+                                <%--<c:if--%>
+                                <%--test="${fn:startsWith(variantConfigOption.name, 'R')==true}">--%>
+                                <%--(R)--%>
+                                <%--</c:if>--%>
+                                <%--<c:if--%>
+                                <%--test="${fn:startsWith(variantConfigOption.name, 'L')==true}">--%>
+                                <%--(L)--%>
+                                <%--</c:if>--%>
+                                <%--</c:if>--%>
+                                <%--${!configCtr.last?',':''}--%>
+
+                                <%--</c:forEach>--%>
+                                <%--</c:if>--%>
+
+
+                                <%--<c:forEach items="${invoiceLineItem.cartLineItemConfigValues}" var="configValue">--%>
+                                <%--<c:set var="variantConfigOption" value="${configValue.variantConfigOption}"/>--%>
+                                <%--<label>${variantConfigOption.displayName} : ${configValue.value}</label>&nbsp--%>
+                                <%--</c:forEach>--%>
+
+
                         </p>
                     </em>
                 </td>

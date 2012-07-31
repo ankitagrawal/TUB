@@ -98,7 +98,7 @@ public class SOInvoiceAction extends BaseAction {
             }
             sexualCareCategory = categoryService.getCategoryByName("sexual-care");
             coupon = referrerProgramManager.getOrCreateRefferrerCoupon(shippingOrder.getBaseOrder().getUser());
-//            barcodePath = barcodeGenerator.getBarcodePath(shippingOrder.getGatewayOrderId(), 1.0f);
+            barcodePath = barcodeGenerator.getBarcodePath(shippingOrder.getGatewayOrderId(), 1.0f);
             Address address = getBaseDao().get(Address.class, shippingOrder.getBaseOrder().getAddress().getId());
             boolean isCod = shippingOrder.isCOD();
             CourierServiceInfo courierServiceInfo = null;
