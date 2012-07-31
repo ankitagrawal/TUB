@@ -31,6 +31,8 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.service.ServiceLocatorFactory;
 
+
+
 /**
  * @author vaibhav.adlakha
  */
@@ -49,8 +51,8 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     private ShippingOrderStatusService shippingOrderStatusService;
     @Autowired
     private ReconciliationStatusDao    reconciliationStatusDao;
-    
-    private OrderService               orderService;
+
+    private OrderService orderService;
     
     public ShippingOrder findByGatewayOrderId(String gatewayOrderId) {
         return getShippingOrderDao().findByGatewayOrderId(gatewayOrderId);
@@ -265,8 +267,4 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         this.shippingOrderStatusService = shippingOrderStatusService;
     }
 
-    @Override
-    public ShippingOrder findByTrackingId(String trackingId) {
-        return getShippingOrderDao().findByTrackingId(trackingId);
-    }
 }

@@ -34,15 +34,5 @@ public interface OrderDao extends BaseDao {
 
     public void logOrderActivity(Order order, User user, OrderLifecycleActivity orderLifecycleActivity, String comments);
 
-    /**
-     * @param productVariant
-     * @return Sum of Qty of lineitems for product variant which are not yet shipped
-     */
-    public Long getQtyOfProductVariantInQueue(ProductVariant productVariant, List<Long> lineItemStatusList, List<Long> paymentModeList);
-
-    @Deprecated
-    public Page searchDeliveryAwaitingOrders(Date startDate, Date endDate, Long orderId, OrderStatus orderStatus, String gatewayOrderId, String trackingId, int pageNo,
-            int perPage, Long courierId);
-
     public Order findByGatewayOrderId(String gatewayOrderId);
 }

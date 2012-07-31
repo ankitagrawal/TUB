@@ -255,6 +255,7 @@
         <url-pattern>/ror.xml</url-pattern>
         <url-pattern>/revital</url-pattern>
         <url-pattern>/super-savers</url-pattern>
+        <url-pattern>/faq/*</url-pattern>
     </servlet-mapping>
 
 

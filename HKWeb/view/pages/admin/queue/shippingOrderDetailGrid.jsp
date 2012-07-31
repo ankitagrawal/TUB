@@ -416,7 +416,7 @@
         </div>
         <div class="clear"></div>
         <div class="floatleft">
-	        Tracking Id: <strong>${shipment.trackingId}</strong>
+	        Tracking Id: <strong>${shipment.awb.awbNumber}</strong>
         </div>
         <div class="clear"></div>
         <div class="floatleft">

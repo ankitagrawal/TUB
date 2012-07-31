@@ -66,7 +66,7 @@ public class CodPaymentReceiveAction extends BaseAction {
 
     public Resolution pre() {
         Resolution resolution = null;
-        if (order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())) {
+        if (order != null && order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())) {
 
             if (StringUtils.isBlank(codContactName)) {
                 addRedirectAlertMessage(new SimpleMessage("Cod Contact Name cannot be blank"));
@@ -122,7 +122,7 @@ public class CodPaymentReceiveAction extends BaseAction {
                 resolution = e.getRedirectResolution().addParameter("gatewayOrderId", gatewayOrderId);
             }
         } else {
-            addRedirectAlertMessage(new SimpleMessage("Payment for the order is already made."));
+            addRedirectAlertMessage(new SimpleMessage("Please try again, else Payment for the order has already been recorded."));
             resolution = new RedirectResolution(PaymentModeAction.class).addParameter("order", order);
         }
         return resolution;

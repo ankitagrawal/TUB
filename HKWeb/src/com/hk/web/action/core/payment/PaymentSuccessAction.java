@@ -3,6 +3,7 @@ package com.hk.web.action.core.payment;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.validation.Validate;
@@ -68,6 +69,8 @@ public class PaymentSuccessAction extends BaseAction {
     private OrderStatusService orderStatusService;
     @Autowired
     private LineItemDao lineItemDao;
+    @Autowired
+    ShipmentService shipmentService;
 
 
     public Resolution pre() {
@@ -126,6 +129,10 @@ public class PaymentSuccessAction extends BaseAction {
                     for (ShippingOrder shippingOrder : shippingOrders) {
                         getShippingOrderService().autoEscalateShippingOrder(shippingOrder);
                     }
+                }
+
+                for (ShippingOrder shippingOrder : shippingOrders) {
+                    shipmentService.createShipment(shippingOrder);
                 }
 
             }
