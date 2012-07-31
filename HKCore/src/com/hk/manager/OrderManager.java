@@ -295,7 +295,8 @@ public class OrderManager {
     private CartLineItem updateCartLineItemWithQty(CartLineItem cartLineItem, Long variantQty) {
         // TODO: # warehouse should not it be cartLineItem.getQty != variantQty
         if (variantQty != null && variantQty > 0 && cartLineItem.getQty() != variantQty) {
-            cartLineItem.setQty(variantQty);
+            Long previousQty = cartLineItem.getQty();
+            cartLineItem.setQty(previousQty + variantQty);
             cartLineItem = getCartLineItemService().save(cartLineItem);
         }
         return cartLineItem;
