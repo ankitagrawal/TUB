@@ -24,6 +24,11 @@ public class BarcodeGenerator {
 
     public static Logger logger = LoggerFactory.getLogger(BarcodeGenerator.class);
 
+
+    public static void main(String[] args) {
+        new BarcodeGenerator().getBarcodePath("psq1334w73472dfsk",1.0f);
+    }
+
     public String getBarcodePath(String gatewayOrderId,float inch) {
         String barcodeFilePath = barcodeDir + "/" + gatewayOrderId + ".png";
         try {
