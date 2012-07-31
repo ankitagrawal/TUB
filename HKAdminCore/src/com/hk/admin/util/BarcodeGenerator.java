@@ -39,7 +39,7 @@ public class BarcodeGenerator {
             bean.setModuleWidth(UnitConv.in2mm(inch / dpi)); // makes the narrow bar
             // width exactly one pixel
             // bean.setWideFactor(3);
-            bean.setHeight(7.5);
+            bean.setHeight(10.0);
             bean.doQuietZone(false);
 
             // Open output file
