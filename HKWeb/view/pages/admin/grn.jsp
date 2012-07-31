@@ -227,8 +227,8 @@
 				<td></td>
 			</tr>
 			<tr>
-				<td>Reconciled</td>
-				<td><s:checkbox name="grn.reconciled"/></td>
+				<%--<td>Reconciled</td>
+				<td><s:checkbox name="grn.reconciled"/></td>--%>
 				<td>Status</td>
 				<td><s:select name="grn.grnStatus" value="${pa.grn.grnStatus.id}">
 					<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="grnStatusList"
