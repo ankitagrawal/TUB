@@ -18,7 +18,7 @@
 	.productThumb h3  { font-size:15px;  line-height:27px; margin-bottom:10px; font-weight:bold; }
 	.productThumb h3 a { font-size:15px; color:#505050; border:none; }
 	.productThumb h3 a:hover { color:#000; }
-	.productThumb .tDesc { background:#f0f0f0; border:1px solid #d9d9d9; width:214px; height:70px; float:right; padding:5px; margin-bottom:50px; line-height: 14px; }
+	.productThumb .tDesc { font-size:13px; background:#f0f0f0; border:1px solid #d9d9d9; width:214px; height:85px; float:right; padding:5px; margin-bottom:35px; line-height: 14px; }
 	.productThumb .tPrice { font-size:16px; clear:right;  color:#2484c6; margin-bottom:10px; }
 	.productThumb .tPrice span { font-size:12px; color:#a1a1a1; text-decoration:line-through; margin-right:15px;  }
 	.productThumb .tSave { float:left; font-size:16px; color:#e73721; font-weight:bold; }
@@ -112,7 +112,7 @@
       <div class="cl"></div>
     	<div class="productThumb">
         <p class="tNum">1</p>
-        <h3><a href="http://www.healthkart.com/product/rakhee-combo-women-1/RKHCMB5">For your Darling Sis</a></h3>
+        <h3><a href="http://www.healthkart.com/product/rakhee-combo-women-1/RKHCMB5">For Your Darling Sister</a></h3>
         <div class="cl"></div>
         <img src="${pageContext.request.contextPath}/images/rakhi/sister-1.jpg" width="170" height="170"  class="tThumb" />
         <div class="tDesc">Bath &amp; Body Works Body Lotion White Citrus + Victoria's Secret Shimmer Mist - Amber Romance
@@ -129,7 +129,7 @@
 
         <div class="productThumb">
         <p class="tNum">2</p>
-        <h3><a href="http://www.healthkart.com/product/rakhee-combo-women-2/RKHCMB6">For your Sis's Glamorous Skin</a></h3>
+        <h3><a href="http://www.healthkart.com/product/rakhee-combo-women-2/RKHCMB6">For Your Snow-White Sister</a></h3>
         <div class="cl"></div>
         <img src="${pageContext.request.contextPath}/images/rakhi/sister-2.jpg" width="170" height="170"  class="tThumb" />
         <div class="tDesc">Saint Pure Sensual Merlot Whipped Face and Body Butter + Saint Pure Strawberries & Cream Luscious Face Soap + Saint Pure Cinnamon Spa Face and Body Sugar Scrub Cubes
@@ -146,7 +146,7 @@
 
         <div class="productThumb">
         <p class="tNum">3</p>
-        <h3><a href="http://www.healthkart.com/product/rakhee-combo-women-3/RKHCMB7">For your Peppy Sis</a></h3>
+        <h3><a href="http://www.healthkart.com/product/rakhee-combo-women-3/RKHCMB7">For Your Peppy Sister</a></h3>
         <div class="cl"></div>
         <img src="${pageContext.request.contextPath}/images/rakhi/sister-3.jpg" width="170" height="170"  class="tThumb" />
         <div class="tDesc">Maybelline The Colossal Kajal + Maybelline Color Senstational Lip Color + Maybelline Colorama Nail Color + Miners Glitzy Kitz Lipstick Pouch</div>
@@ -161,7 +161,7 @@
 
         <div class="productThumb">
         <p class="tNum">4</p>
-        <h3><a href="http://www.healthkart.com/product/rakhee-combo-women-4/RKHCMB8">For your Diva like Sis</a></h3>
+        <h3><a href="http://www.healthkart.com/product/rakhee-combo-women-4/RKHCMB8">For Your Diva Like Sister</a></h3>
         <div class="cl"></div>
         <img src="${pageContext.request.contextPath}/images/rakhi/sister-4.jpg" width="170" height="170"  class="tThumb" />
         <div class="tDesc">NYX Mosaic Powder Blush + NYX Brush On Lip Gloss + NYX Lip Lacquer Pot
@@ -178,7 +178,7 @@
 
         <div class="productThumb">
         <p class="tNum">5</p>
-        <h3><a href="http://www.healthkart.com/product/rakhee-combo-women-5/RKHCMB9">For your Rapunzel Sis</a></h3>
+        <h3><a href="http://www.healthkart.com/product/rakhee-combo-women-5/RKHCMB9">For Your Rapunzel Sister</a></h3>
         <div class="cl"></div>
         <img src="${pageContext.request.contextPath}/images/rakhi/sister-5.jpg" width="170" height="170"  class="tThumb" />
         <div class="tDesc">Remington CI19 Tong + Kent LPB1 Large Paddle Brush Floral Design
@@ -195,7 +195,7 @@
 
         <div class="productThumb">
         <p class="tNum">6</p>
-        <h3><a href="http://www.healthkart.com/product/nutritious-rakhi-gift-2-young-sis/NUTCMB32">For the Youthful Sis</a></h3>
+        <h3><a href="http://www.healthkart.com/product/nutritious-rakhi-gift-2-young-sis/NUTCMB32">For Your Youthful Sister</a></h3>
         <div class="cl"></div>
         <img src="${pageContext.request.contextPath}/images/rakhi/sister-6.jpg" width="170" height="170"  class="tThumb" />
         <div class="tDesc">With this combo, help your sister maintain her charming youth
@@ -212,10 +212,10 @@
 
         <div class="productThumb">
         <p class="tNum">7</p>
-        <h3><a href="http://www.healthkart.com/product/nutritious-rakhi-gift-for-40+-sis/NUTCMB33">For your Elder Sis</a></h3>
+        <h3><a href="http://www.healthkart.com/product/nutritious-rakhi-gift-for-40+-sis/NUTCMB33">For Your Elder Sister</a></h3>
         <div class="cl"></div>
         <img src="${pageContext.request.contextPath}/images/rakhi/sister-7.jpg" width="170" height="170"  class="tThumb" />
-        <div class="tDesc">Elegance knows no age. This Combo is meant for the maintenance your classy sister requires.
+        <div class="tDesc">Elegance knows no age. This Combo is meant for the maintenance of your classy sister.
         </div>
 
         <p class="tPrice">
@@ -229,7 +229,7 @@
 
         <div class="productThumb">
         <p class="tNum">8</p>
-        <h3><a href="http://www.healthkart.com/product/nutritious-rakhi-gift-2-teenage-sis/NUTCMB34">For your Health Conscious Sis </a></h3>
+        <h3><a href="http://www.healthkart.com/product/nutritious-rakhi-gift-2-teenage-sis/NUTCMB34">For Your Health Conscious Sister</a></h3>
         <div class="cl"></div>
         <img src="${pageContext.request.contextPath}/images/rakhi/sister-8.jpg" width="170" height="170"  class="tThumb" />
         <div class="tDesc">Assure your chirpy sister doesn’t lose her good health. Make sure she gets proper nutrition with this combo.
@@ -245,22 +245,22 @@
 
         <div class="productThumb">
         <p class="tNum">9</p>
-        <h3><a href="http://www.healthkart.com/product/kool-kidz-infant-musical-cozy-coupe-asst/BAB1261">For the Baby Sis</a></h3>
+        <h3><a href="http://www.healthkart.com/product/kool-kidz-infant-musical-cozy-coupe-asst/BAB1261">For Your Baby Sister</a></h3>
         <div class="cl"></div>
         <img src="${pageContext.request.contextPath}/images/rakhi/sister-9.jpg" width="170" height="170"  class="tThumb" />
         <div class="tDesc">See your little sibling smiling with this cute, colourful and musical toy.</div>
 
         <p class="tPrice">
-        <span>Rs 899</span>
-        Rs 799
+        <span>Rs 999</span>
+        Rs 849
         </p>
-        <p class="tSave">You Save 11%</p>
+        <p class="tSave">You Save 15%</p>
         <p class="tBuy"><a href="http://www.healthkart.com/product/kool-kidz-infant-musical-cozy-coupe-asst/BAB1261"><img src="${pageContext.request.contextPath}/images/rakhi/buynow.gif" width="89" height="26" alt="Buy Now" /></a></p>
         </div>
 
         <div class="productThumb">
         <p class="tNum">10</p>
-        <h3><a href="http://www.healthkart.com/product/cobra-magnum/PP001">Protecting your Sis always</a></h3>
+        <h3><a href="http://www.healthkart.com/product/cobra-magnum/PP001">Protecting Your Sister Always</a></h3>
         <div class="cl"></div>
         <img src="${pageContext.request.contextPath}/images/rakhi/sister-10.jpg" width="170" height="170"  class="tThumb" />
         <div class="tDesc">Let your sister be her own cop. Protect her from the psychopaths.</div>
@@ -275,7 +275,7 @@
 
         <div class="productThumb">
         <p class="tNum">11</p>
-        <h3><a href="http://www.healthkart.com/product/casper-3-in-alarm/COP003">For your Night Riding Hood</a></h3>
+        <h3><a href="http://www.healthkart.com/product/casper-3-in-alarm/COP003">For Your Night Riding Hood</a></h3>
         <div class="cl"></div>
         <img src="${pageContext.request.contextPath}/images/rakhi/sister-11.jpg" width="170" height="170"  class="tThumb" />
         <div class="tDesc">Her safety is your priority. Protect her at all times with this 3-in-1 alarm.
@@ -308,10 +308,10 @@
 
         <div class="productThumb">
         <p class="tNum">13</p>
-        <h3><a href="http://www.healthkart.com/product/i-m-waist-shaper-nb-507/RD001">Desired Figure for your Sis</a></h3>
+        <h3><a href="http://www.healthkart.com/product/i-m-waist-shaper-nb-507/RD001">Desired Figure For Your Sister</a></h3>
         <div class="cl"></div>
         <img src="${pageContext.request.contextPath}/images/rakhi/sister-13.jpg" width="170" height="170"  class="tThumb" />
-        <div class="tDesc">Make sure your sis achieves the figure she always desired.</div>
+        <div class="tDesc">Make sure your sister achieves the figure she always desired.</div>
 
         <p class="tPrice">
 
@@ -326,7 +326,7 @@
 
         <div class="productThumb">
         <p class="tNum">14</p>
-        <h3><a href="http://www.healthkart.com/product/special-girl-boy-kids-combo/CMB-EYE02">For Li'l Miss India</a></h3>
+        <h3><a href="http://www.healthkart.com/product/special-girl-boy-kids-combo/CMB-EYE02">For Your Li'l Miss India</a></h3>
         <div class="cl"></div>
         <img src="${pageContext.request.contextPath}/images/rakhi/sister-14.jpg" width="170" height="170"  class="tThumb" />
         <div class="tDesc">Hotwheels AI1015 C104 + Barbie AI1014 C161<br />
@@ -349,7 +349,7 @@
       <div class="cl"></div>
     	<div class="productThumb">
         <p class="tNum">1</p>
-        <h3><a href="http://www.healthkart.com/product/rakhee-combo-men-1/RKHCMB1">For your High Maintenance Bro</a></h3>
+        <h3><a href="http://www.healthkart.com/product/rakhee-combo-men-1/RKHCMB1">For Your High Maintenance Brother</a></h3>
         <div class="cl"></div>
         <img src="${pageContext.request.contextPath}/images/rakhi/brother-1.jpg" width="170" height="170"  class="tThumb" />
         <div class="tDesc">Gillette Fusion ProGlide (Manual) + Gillette Fusion ProGlide Cartridges + Gillette Series Shaving Foam + Gillette Deodorant
@@ -366,7 +366,7 @@
 
         <div class="productThumb">
         <p class="tNum">2</p>
-        <h3><a href="http://www.healthkart.com/product/rakhee-combo-men-2/RKHCMB2">For your Handsome &amp; Sleek Bro</a></h3>
+        <h3><a href="http://www.healthkart.com/product/rakhee-combo-men-2/RKHCMB2">For Your Handsome &amp; Sleek Brother</a></h3>
         <div class="cl"></div>
         <img src="${pageContext.request.contextPath}/images/rakhi/brother-2.jpg" width="170" height="170"  class="tThumb" />
         <div class="tDesc">Andis NT1 Fast Cordless Personal Trimmer + Denim After Shave Lotion + Imperial Leather Men Energise Shower Gel + Park Avenue Body Deodorant- Classic Range
@@ -383,7 +383,7 @@
 
         <div class="productThumb">
         <p class="tNum">3</p>
-        <h3><a href="http://www.healthkart.com/product/rakhee-combo-men-3/RKHCMB3">For your Brand Conscious Bro</a></h3>
+        <h3><a href="http://www.healthkart.com/product/rakhee-combo-men-3/RKHCMB3">For Your Brand Conscious Brother</a></h3>
         <div class="cl"></div>
         <img src="${pageContext.request.contextPath}/images/rakhi/brother-3.jpg" width="170" height="170"  class="tThumb" />
         <div class="tDesc">Adidas Aftershave + Adidas Men Combo-Victory League + Andis MNT3 Easy Trim Battery Operated Personal Trimmer
@@ -400,7 +400,7 @@
 
         <div class="productThumb">
         <p class="tNum">4</p>
-        <h3><a href="http://www.healthkart.com/product/rakhee-combo-men-4/RKHCMB4">For your Well Groomed Bro</a></h3>
+        <h3><a href="http://www.healthkart.com/product/rakhee-combo-men-4/RKHCMB4">For Your Well Groomed Brother</a></h3>
         <div class="cl"></div>
         <img src="${pageContext.request.contextPath}/images/rakhi/brother-4.jpg" width="170" height="170"  class="tThumb" />
         <div class="tDesc">Park Avenue Body Deodorant- Classic Range + Gatsby Body Shower Gel + Denim EDT
@@ -417,7 +417,7 @@
 
         <div class="productThumb">
         <p class="tNum">5</p>
-        <h3><a href="http://www.healthkart.com/product/nutritious-gift-2-working-bro/NUTCMB35">For a Workaholic Bro</a></h3>
+        <h3><a href="http://www.healthkart.com/product/nutritious-gift-2-working-bro/NUTCMB35">For Your Workaholic Brother</a></h3>
         <div class="cl"></div>
         <img src="${pageContext.request.contextPath}/images/rakhi/brother-5.jpg" width="170" height="170"  class="tThumb" />
         <div class="tDesc">Nature's Bounty Ultra Man High Potency + Vitamin Shoppe Korean Ginseng
@@ -434,7 +434,7 @@
 
         <div class="productThumb">
         <p class="tNum">6</p>
-        <h3><a href="http://www.healthkart.com/product/nutritious-gift-2-body-bulider-bro/NUTCMB36">For Muscle Head Bro</a></h3>
+        <h3><a href="http://www.healthkart.com/product/nutritious-gift-2-body-bulider-bro/NUTCMB36">For Your Muscle Head Brother</a></h3>
         <div class="cl"></div>
         <img src="${pageContext.request.contextPath}/images/rakhi/brother-6.jpg" width="170" height="170"  class="tThumb" />
         <div class="tDesc">MusclePharm Combat Powder + HK Shaker &amp; Blender Bottle
@@ -451,7 +451,7 @@
 
         <div class="productThumb">
         <p class="tNum">7</p>
-        <h3><a href="http://www.healthkart.com/product/nutritious-gift-2-big-bro/NUTCMB37">For the Elder Bro</a></h3>
+        <h3><a href="http://www.healthkart.com/product/nutritious-gift-2-big-bro/NUTCMB37">For Your Elder Brother</a></h3>
         <div class="cl"></div>
         <img src="${pageContext.request.contextPath}/images/rakhi/brother-7.jpg" width="170" height="170"  class="tThumb" />
         <div class="tDesc">Vitamin Shoppe Ultimate Men's 50+ Multivitamin + Osteo Bi Flex Advanced
@@ -468,7 +468,7 @@
 
         <div class="productThumb">
         <p class="tNum">8</p>
-        <h3><a href="http://www.healthkart.com/product/kool-kidz-discover-sounds-camera-pink/BAB1298">For Brotographer</a></h3>
+        <h3><a href="http://www.healthkart.com/product/kool-kidz-discover-sounds-camera-pink/BAB1298">For Your Little Brotographer</a></h3>
         <div class="cl"></div>
         <img src="${pageContext.request.contextPath}/images/rakhi/brother-8.jpg" width="170" height="170"  class="tThumb" />
         <div class="tDesc">See your little angel becoming a skilled photographer
@@ -484,7 +484,7 @@
 
         <div class="productThumb">
         <p class="tNum">9</p>
-        <h3><a href="http://www.healthkart.com/product/wallet-alarm/COP004">For your Irresponsible Bro</a></h3>
+        <h3><a href="http://www.healthkart.com/product/wallet-alarm/COP004">For Your Irresponsible Brother</a></h3>
         <div class="cl"></div>
         <img src="${pageContext.request.contextPath}/images/rakhi/brother-9.jpg" width="170" height="170"  class="tThumb" />
         <div class="tDesc">Make sure your brother is safe; money wise.
@@ -500,7 +500,7 @@
 
         <div class="productThumb">
         <p class="tNum">10</p>
-        <h3><a href="http://www.healthkart.com/product/littmann-special-colour-classic-ii-s.e-brass-copper/LITT005">For your Doctor Bro</a></h3>
+        <h3><a href="http://www.healthkart.com/product/littmann-special-colour-classic-ii-s.e-brass-copper/LITT005">For Your Doctor Brother</a></h3>
         <div class="cl"></div>
         <img src="${pageContext.request.contextPath}/images/rakhi/brother-10.jpg" width="170" height="170"  class="tThumb" />
         <div class="tDesc">A special gift for your doctor brother.
@@ -516,7 +516,7 @@
 
         <div class="productThumb">
         <p class="tNum">11</p>
-        <h3><a href="http://www.healthkart.com/product/arm-sling-net/RF005">Supporting Bro-in-need</a></h3>
+        <h3><a href="http://www.healthkart.com/product/arm-sling-net/RF005">Supporting Brother-In-Need</a></h3>
         <div class="cl"></div>
         <img src="${pageContext.request.contextPath}/images/rakhi/brother-11.jpg" width="170" height="170"  class="tThumb" />
         <div class="tDesc">Comfort your brother in the time of need.
@@ -533,7 +533,7 @@
 
         <div class="productThumb">
         <p class="tNum">12</p>
-        <h3><a href="http://www.healthkart.com/product/super-discount%3A-reebok-and-tnf-sunglasses-combo/CMB-EYE03">For the "Dabangg" Bro</a></h3>
+        <h3><a href="http://www.healthkart.com/product/super-discount%3A-reebok-and-tnf-sunglasses-combo/CMB-EYE03">For Your "Dabangg" Brother</a></h3>
         <div class="cl"></div>
         <img src="${pageContext.request.contextPath}/images/rakhi/brother-12.jpg" width="170" height="170" class="tThumb" />
         <div class="tDesc">Aviators never go out of fashion. A stylish gift this rakhee for your classy sibling.
@@ -549,7 +549,7 @@
 
         <div class="productThumb">
         <p class="tNum">13</p>
-        <h3><a href="http://www.healthkart.com/product/adidas-men-combo-pure-game/ADIDAS14">For the Party Freak Bro</a></h3>
+        <h3><a href="http://www.healthkart.com/product/adidas-men-combo-pure-game/ADIDAS14">For Your Party Freak Brother</a></h3>
         <div class="cl"></div>
         <img src="${pageContext.request.contextPath}/images/rakhi/brother-13.jpg" width="170" height="170" class="tThumb" />
         <div class="tDesc">Gift your brother a heavy duty fragrance pack that lasts longer.
@@ -565,10 +565,10 @@
 
         <div class="productThumb">
         <p class="tNum">14</p>
-        <h3><a href="http://www.healthkart.com/product/auravedic-hair-loss-treatment-for-dry-hair/ARVDC27">Save your bro from Hair Loss</a></h3>
+        <h3><a href="http://www.healthkart.com/product/auravedic-hair-loss-treatment-for-dry-hair/ARVDC27">Save Your Brother From Hair Loss</a></h3>
         <div class="cl"></div>
         <img src="${pageContext.request.contextPath}/images/rakhi/brother-14.jpg" width="170" height="170" class="tThumb" />
-        <div class="tDesc">Be a caring sis so that he doesn’t lose his youthful looks.
+        <div class="tDesc">Be a caring sister so that he doesn’t lose his youthful looks.
         </div>
 
         <p class="tPrice">
