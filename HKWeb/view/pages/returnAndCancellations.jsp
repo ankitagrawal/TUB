@@ -13,7 +13,7 @@
       <p style="text-align: justify">
 
         Should you wish to return all or a part of your order, you need to let us know within 3 working days from the
-        date of receiving your parcel. You can either call our Customer Support No. 0124-4417350 between 10am and 9pm,
+        date of receiving your parcel. You can either call our Customer Support No. 0124-4551616 between 10am and 9pm,
         On all 7 DAYS or write to us info@healthkart.com.
 
         After validating your return request over phone we will send you an email authorizing a return. The mail will
