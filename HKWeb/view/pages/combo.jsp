@@ -734,13 +734,6 @@
         padding: 5px;
     }
 
-    div.options {
-        border: 1px solid darkgray;
-        border-radius: 0.5em;
-        background: #EEEEEE;
-        padding: 10px 0;
-    }
-
     div.result {
         border: 2px solid darkgray;
         border-radius: 0.5em;
@@ -773,6 +766,17 @@
 
     div.contentDiv {
         margin: 10px 5px;
+    }
+
+    div.options {
+        border: 1px solid darkgray;
+        border-radius: 0.5em;
+        background: #EEEEEE;
+        padding: 10px 0;
+
+        -webkit-transition-duration: 0.2s;
+        -moz-transition-duration: 0.2s;
+        transition-duration: 0.2s;
     }
 
     div.options:hover {

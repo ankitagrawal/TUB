@@ -29,22 +29,19 @@
             top: 7px;
         }
 
-        input[type="submit"]#filterBtn {
-            float: right;
-            padding: 2px;
-            background: none;
-            color: #222288; /*border: 0px;*/
-        /*border-radius: 0;*/
-        /*box-shadow: 0 0 0 rgba(0, 0, 0, 0);*/
-        /*text-shadow: Background;*/
+        input[type="submit"].btn {
+            width: 70px;
+            margin: 0px 6px 5px;
+            padding: 4px;
             font-size: 0.8em;
             font-weight: normal;
             font-style: italic;
             font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
 
+            color: #222288;
             -webkit-border-radius: 1em;
             -moz-border-radius: 1em;
-            border-radius: 1em;
+            border-radius: 2em;
             border: 1px solid lightblue;
             text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.4);
             -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
@@ -53,29 +50,24 @@
             -webkit-transition-duration: 0.2s;
             -moz-transition-duration: 0.2s;
             transition-duration: 0.2s;
+            background: -moz-linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0) 100%) repeat scroll 0 0 #F27506;
         }
 
-        input[type="submit"]#filterBtn:hover, input[type="submit"]#filterBtn:focus {
-        /*border-radius: 1em;*/
-        /*border: solid 1px #CCC;*/
-        /*-moz-box-shadow: 1px 1px 5px #999;*/
-        /*-webkit-box-shadow: 1px 1px 5px #999;*/
-        /*box-shadow: 1px 1px 5px #999;*/
+        input[type="submit"].btn:hover, input[type="submit"].btn:focus {
             position: relative;
             z-index: 1;
-            text-shadow: 1px 1px 5px #999;
-
-            background: #2A4E77;
-            border: solid 1px #222288;
-            color: lightblue;
+            text-shadow: 1px 1px 5px #999; /*background: #2A4E77;*/
+        /*border: solid 1px #222288;*/
+        /*color: lightblue;*/
+            border: solid 1px orangered;
         }
 
-        input[type="submit"]#filterBtn:active {
+        input[type="submit"].btn:active {
             -webkit-box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.6);
             -moz-box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.6);
-            box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.6);
-            background: #2E5481;
-            border: solid 1px #203E5F;
+            box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.6); /*background: #2E5481;*/
+        /*border: solid 1px #203E5F;*/
+            background: -moz-linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0) 100%) repeat scroll 0 0 orangered;
         }
 
         img.superSaverBanner {
@@ -104,7 +96,7 @@
         }
 
         fieldset#categoryField {
-            margin: 20px;
+            margin: 20px 10px;
             border: 1px solid lightblue;
             border-radius: 0.3em;
             color: #222288;
@@ -119,6 +111,11 @@
 
         body {
             color: #222288;
+        }
+
+        p.category {
+            margin: 5px 2px;
+            padding: 2px;
         }
     </style>
 </s:layout-component>
@@ -145,7 +142,7 @@
 
     <shiro:hasPermission name="<%=PermissionConstants.UPLOAD_PRODUCT_CATALOG%>">
         <div style="padding:5px;">
-            <div class="grid_24 alpha omega" style="padding:0 20px;">
+            <div class="grid_24 alpha omega" style="padding:0 10px;">
                 <s:link beanclass="com.hk.web.action.core.catalog.image.UploadSuperSaverImageAction">
                     <span>Upload</span>
                 </s:link>
@@ -166,33 +163,48 @@
             <div id="filterDiv">
                 <fieldset id="categoryField">
                     <legend>Filter by Category</legend>
-                    <c:forEach items="<%=categoryService.getPrimaryCategories()%>" var="primaryCategory">
-                        <c:set var="categoryName" value="${primaryCategory.name}"/>
-                        <c:set var="isSelected" value="false"/>
-                        <c:forEach items="${comboBean.categories}" var="selectedCategory">
-                            <c:if test="${selectedCategory == categoryName}">
-                                <c:set var="isSelected" value="true"/>
-                            </c:if>
+
+                    <div>
+                        <c:forEach items="<%=categoryService.getPrimaryCategories()%>" var="primaryCategory">
+                            <c:set var="categoryName" value="${primaryCategory.name}"/>
+                            <c:set var="isSelected" value="false"/>
+                            <c:forEach items="${comboBean.categories}" var="selectedCategory">
+                                <c:if test="${selectedCategory == categoryName}">
+                                    <c:set var="isSelected" value="true"/>
+                                </c:if>
+                            </c:forEach>
+
+                            <p class="category">
+                                <c:choose>
+                                    <c:when test="${isSelected eq true}">
+                                        <input type="checkbox" class="categoryCheck" value="${categoryName}"
+                                               checked="checked"/>
+                                        ${primaryCategory.displayName}
+                                    </c:when>
+                                    <c:otherwise>
+                                        <input type="checkbox" class="categoryCheck" value="${categoryName}"/>
+                                        ${primaryCategory.displayName}
+                                    </c:otherwise>
+                                </c:choose>
+                            </p>
                         </c:forEach>
+                    </div>
 
-                        <p>
-                            <c:choose>
-                                <c:when test="${isSelected eq true}">
-                                    <input type="checkbox" class="categoryCheck" value="${categoryName}"
-                                           checked="checked"/>
-                                    ${primaryCategory.displayName}
-                                </c:when>
-                                <c:otherwise>
-                                    <input type="checkbox" class="categoryCheck" value="${categoryName}"/>
-                                    ${primaryCategory.displayName}
-                                </c:otherwise>
-                            </c:choose>
-                        </p>
-                    </c:forEach>
+                    <div class="clear"></div>
 
-                    <s:submit name="getSuperSaversForCategoryAndBrand" id="filterBtn">
-                        Filter Offers ->
-                    </s:submit>
+                    <div style="text-align:center; margin-top:10px;">
+                        <s:submit name="getSuperSaversForCategoryAndBrand" id="filterBtn" class="btn"
+                                  style="float:left;">
+                            Filter
+                        </s:submit>
+
+                        &nbsp;
+
+                        <s:submit name="getSuperSaversForCategoryAndBrand" id="showAllBtn" class="btn"
+                                  style="float:right;">
+                            Show All
+                        </s:submit>
+                    </div>
                 </fieldset>
                 <s:link beanclass="com.hk.web.action.core.catalog.SuperSaversAction"
                         event="getSuperSaversForCategoryAndBrand" id="hrefLink"/>
