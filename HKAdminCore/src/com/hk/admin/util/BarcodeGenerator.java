@@ -26,14 +26,14 @@ public class BarcodeGenerator {
 
 
     public static void main(String[] args) {
-        new BarcodeGenerator().getBarcodePath("psq1334w73472dfsk",1.0f);
+        new BarcodeGenerator().getBarcodePath("psq1334w73472dfsk",1.5f, 225);
     }
 
-    public String getBarcodePath(String gatewayOrderId,float inch) {
-        String barcodeFilePath = barcodeDir + "/" + gatewayOrderId + ".png";
+    public String getBarcodePath(String barcodeString,float inch, int dpi) {
+        String barcodeFilePath = barcodeDir + "/" + barcodeString + ".png";
         try {
             Code128Bean bean = new Code128Bean();
-            final int dpi = 150;
+//            final int dpi = 150;
 
             // Configure the barcode generator
             bean.setModuleWidth(UnitConv.in2mm(inch / dpi)); // makes the narrow bar
@@ -50,7 +50,7 @@ public class BarcodeGenerator {
                 BitmapCanvasProvider canvas = new BitmapCanvasProvider(out, "image/x-png", dpi, BufferedImage.TYPE_BYTE_BINARY, true, 0);
 
                 // Generate the barcode
-                bean.generateBarcode(canvas, gatewayOrderId);
+                bean.generateBarcode(canvas, barcodeString);
 
                 // Signal end of generation
                 canvas.finish();

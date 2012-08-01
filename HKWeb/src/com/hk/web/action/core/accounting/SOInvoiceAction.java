@@ -83,7 +83,7 @@ public class SOInvoiceAction extends BaseAction {
                 Awb awb = shipment.getAwb();
                 if (awb != null && awb.getAwbNumber() != null ) {
                     String trackingId = awb.getAwbNumber();
-                    barcodePath = barcodeGenerator.getBarcodePath(trackingId, 1.0f);
+                    barcodePath = barcodeGenerator.getBarcodePath(trackingId, 1.5f, 225);
                 }
             }
             ReplacementOrder replacementOrder = getBaseDao().get(ReplacementOrder.class, shippingOrder.getId());
@@ -98,7 +98,7 @@ public class SOInvoiceAction extends BaseAction {
             }
             sexualCareCategory = categoryService.getCategoryByName("sexual-care");
             coupon = referrerProgramManager.getOrCreateRefferrerCoupon(shippingOrder.getBaseOrder().getUser());
-            barcodePath = barcodeGenerator.getBarcodePath(shippingOrder.getGatewayOrderId(), 1.0f);
+            barcodePath = barcodeGenerator.getBarcodePath(shippingOrder.getGatewayOrderId(), 1.0f, 150);
             Address address = getBaseDao().get(Address.class, shippingOrder.getBaseOrder().getAddress().getId());
             boolean isCod = shippingOrder.isCOD();
             CourierServiceInfo courierServiceInfo = null;
