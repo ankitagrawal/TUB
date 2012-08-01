@@ -59,6 +59,10 @@ public class SearchShippingOrderAction extends BasePaginatedAction {
         List<Awb> awbList = new ArrayList<Awb>();
         if (trackingId != null) {
             awbList = awbService.getAvailableAwbListForCourierByWarehouseCodStatus(null, trackingId, null, null, EnumAwbStatus.Used.getAsAwbStatus());
+            if(awbList.isEmpty()){
+                addRedirectAlertMessage(new SimpleMessage("InValid Tracking ID"));
+                return new ForwardResolution("/pages/admin/searchShippingOrder.jsp");
+            }
         }
         ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
         shippingOrderSearchCriteria.setOrderId(shippingOrderId).setGatewayOrderId(shippingOrderGatewayId);
