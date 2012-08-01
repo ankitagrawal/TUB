@@ -108,7 +108,7 @@
     <th>Qty</th>
     <th>Cost Price<br/>(Without TAX)</th>
     <th>MRP</th>
-    <th>VAT</th>
+    <%--<th>VAT</th>--%>
     <th>Taxable</th>
     <th>Tax</th>
     <th>Surcharge</th>
@@ -134,9 +134,9 @@
       </td>
       <td>${debitNoteDto.debitNoteLineItem.mrp}
       </td>
-      <td>
+      <%--<td>
         <fmt:formatNumber value="${debitNoteDto.debitNoteLineItem.sku.tax.value * 100}" maxFractionDigits="2"/>%
-      </td>
+      </td>--%>
       <td>
         <fmt:formatNumber value="${debitNoteDto.taxable}" maxFractionDigits="2"/>
       </td>
@@ -154,7 +154,7 @@
   </tbody>
   <tfoot>
   <tr>
-    <td colspan="8">Total</td>
+    <td colspan="7">Total</td>
     <td><fmt:formatNumber value="${debitNoteSummary.debitNoteDto.totalTaxable}" maxFractionDigits="2"/></td>
     <td><fmt:formatNumber value="${debitNoteSummary.debitNoteDto.totalTax}" maxFractionDigits="2"/></td>
     <td><fmt:formatNumber value="${debitNoteSummary.debitNoteDto.totalSurcharge}" maxFractionDigits="2"/></td>

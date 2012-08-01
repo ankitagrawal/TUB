@@ -77,6 +77,9 @@
 						<s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction" event="checkinInventoryAgainstStockTransfer">Inventory Checkin
 							<s:param name="stockTransfer" value="${stockTransfer.id}"/></s:link>
 						</c:if>
+                        &nbsp;
+                        <s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction" event="print" target="_blank">Print
+                          <s:param name="stockTransfer" value="${stockTransfer.id}"/></s:link>
 					</td>
 				</tr>
 			</c:forEach>
