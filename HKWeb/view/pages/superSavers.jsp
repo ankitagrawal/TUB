@@ -249,5 +249,7 @@
             });
         });
     </script>
+    
 </s:layout-component>
+<jsp:include page="/includes/_analytics.jsp"/>
 </s:layout-render>
