@@ -111,16 +111,16 @@
                                                label="name"/>
                 </s:select></li>
                     <%--<li><label>Tracking ID</label> <s:text name="trackingId" style="width: 120px;"/></li>--%>
-               <%-- <li>
-                    <label>Start
-                        date</label><s:text class="date_input" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
-                                            name="startDate"/>
-                </li>
-                <li>
-                    <label>End
-                        date</label><s:text class="date_input" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
-                                            name="endDate"/>
-                </li>--%>
+                    <%-- <li>
+                        <label>Start
+                            date</label><s:text class="date_input" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
+                                                name="startDate"/>
+                    </li>
+                    <li>
+                        <label>End
+                            date</label><s:text class="date_input" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
+                                                name="endDate"/>
+                    </li>--%>
             </div>
         </ul>
         <div class="buttons"><s:submit name="searchSubscriptions" value="Search Subscriptions"/></div>
@@ -151,36 +151,46 @@
     <br/>
 
     <c:if test="${subscription.subscriptionStatus.id == constomerConfirmationAwaited }">
-        <span class="codOrderText">&middot;</span>
+        <c:choose>
+            <c:when test="${subscription.productVariant.outOfStock}">
+                    <strong style="color: red"> out of stock!!</strong>
+            </c:when>
+            <c:otherwise>
+                <span class="codOrderText">&middot;</span>
 
-        <s:link href="#" class="confirmSubscriptionOrderLink">(confirm subscription Order)</s:link>
-        <div class="confirmSubscriptionDiv" style="display: none;">
-        <s:form beanclass="com.hk.web.action.admin.subscription.SubscriptionAdminAction" class="confirmSubscriptionOrderForm" >
-            <s:param name="subscription" value="${subscription.id}"/>
-           <s:submit name="confirmedByCustomer" class="confirmSubscriptionOrderButton" value="confirm"/>
-        </s:form>
-        </div>
-        <script type="text/javascript">
+                <s:link href="#" class="confirmSubscriptionOrderLink">(confirm subscription Order)</s:link>
+                <div class="confirmSubscriptionDiv" style="display: none;">
+                    <s:form beanclass="com.hk.web.action.admin.subscription.SubscriptionAdminAction" class="confirmSubscriptionOrderForm" >
+                        <s:param name="subscription" value="${subscription.id}"/>
+                        <s:submit name="confirmedByCustomer" class="confirmSubscriptionOrderButton" value="confirm"/>
+                    </s:form>
+                </div>
+                <script type="text/javascript">
 
-            $('.confirmSubscriptionOrderLink').click(function(){
-                $(this).siblings('.confirmSubscriptionDiv').show();
-                return false;
-            } );
+                    $('.confirmSubscriptionOrderLink').click(function(){
+                        $(this).siblings('.confirmSubscriptionDiv').show();
+                        return false;
+                    } );
 
-            $('.confirmSubscriptionOrderForm').ajaxForm({dataType: 'json', success: _confirmSubscriptionOrder});
+                    $('.confirmSubscriptionOrderForm').ajaxForm({dataType: 'json', success: _confirmSubscriptionOrder});
 
-            function _confirmSubscriptionOrder(res) {
-                if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
-                    var status = res.data.subscriptionStatus.name;
-                    if (status == "Confirmed By Customer") {
-                        alert("Subscription order Confirmed");
-                        $('.confirmSubscriptionDiv').hide();
-                    } else {
-                        alert("Subscription cannot be confirmed");
+                    function _confirmSubscriptionOrder(res) {
+                        if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+                            var status = res.data.subscriptionStatus.name;
+                            if (status == "Confirmed By Customer") {
+                                alert("Subscription order Confirmed");
+                                $('.confirmSubscriptionDiv').hide();
+                            } else {
+                                alert("Subscription cannot be confirmed");
+                            }
+                        }
                     }
-                }
-            }
-        </script>
+                </script>
+            </c:otherwise>
+        </c:choose>
+        <c:if test="${!subscription.productVariant.outOfStock}">
+
+        </c:if>
     </c:if>
     <hr/>
     <c:if test="${! empty subscription.subscriptionLifecycles}">
@@ -313,12 +323,12 @@
 
         <tr> <td>
             <c:if test="${!(subscription.subscriptionStatus.id==subscriptionStatusAbandoned || subscription.subscriptionStatus.id==subscriptionStatusExpired || subscription.subscriptionStatus.id==subscriptionStatusCancelled || subscription.subscriptionStatus.id==subscriptionStatusCart)}">
-            <s:link beanclass="com.hk.web.action.admin.subscription.SubscriptionAdminAction" event="changeAddress" target="_blank">
-                <img src="<hk:vhostImage/>/images/admin/icon_edit_add.png" alt="Change Address"
-                     title="Change Address"/> Change Address
-                <s:param name="subscription" value="${subscription.id}"/>
-            </s:link>
-                </c:if></td>
+                <s:link beanclass="com.hk.web.action.admin.subscription.SubscriptionAdminAction" event="changeAddress" target="_blank">
+                    <img src="<hk:vhostImage/>/images/admin/icon_edit_add.png" alt="Change Address"
+                         title="Change Address"/> Change Address
+                    <s:param name="subscription" value="${subscription.id}"/>
+                </s:link>
+            </c:if></td>
         </tr>
 
     </table>
@@ -333,40 +343,40 @@
     </s:link>
     <br/>
     <c:if test="${!(subscription.subscriptionStatus.id == subscriptionStatusCancelled || subscription.subscriptionStatus.id == subscriptionStatusCart || subscription.subscriptionStatus.id == subscriptionStatusAbandoned || subscription.subscriptionStatus.id == subscriptionStatusExpired)}">
-    <c:choose>
-           <c:when test="${subscription.subscriptionStatus.id == subscriptionStatusInProcess}">
+        <c:choose>
+            <c:when test="${subscription.subscriptionStatus.id == subscriptionStatusInProcess}">
                 order in process for <strong><span class="or"><fmt:formatDate value="${subscription.nextShipmentDate}"/> </span></strong>
-           </c:when>
-        <c:otherwise>
-            next due date: <strong><span class="or"><fmt:formatDate value="${subscription.nextShipmentDate}"/> </span></strong>
-            <s:link class="changeNextShipmentDateLink" href="#">
-                (change)
-            </s:link>
-        </c:otherwise>
-    </c:choose>
+            </c:when>
+            <c:otherwise>
+                next due date: <strong><span class="or"><fmt:formatDate value="${subscription.nextShipmentDate}"/> </span></strong>
+                <s:link class="changeNextShipmentDateLink" href="#">
+                    (change)
+                </s:link>
+            </c:otherwise>
+        </c:choose>
 
-    <div class="changeNextShipmentDateDiv" style="display: none;">
-        <s:form beanclass="com.hk.web.action.admin.subscription.SubscriptionAdminAction" class="shipmentDateForm">
-            <s:param name="subscription" value="${subscription.id}"/>`
-            <s:text class="date_input nextShipmentDate" style="width:100px" name="nextShipmentDate"/>
-            <s:submit name="changeNextShipmentDate" value="change" class="changeShipmentDateButton" />
-        </s:form>
-        <script type="text/javascript">
+        <div class="changeNextShipmentDateDiv" style="display: none;">
+            <s:form beanclass="com.hk.web.action.admin.subscription.SubscriptionAdminAction" class="shipmentDateForm">
+                <s:param name="subscription" value="${subscription.id}"/>`
+                <s:text class="date_input nextShipmentDate" style="width:100px" name="nextShipmentDate"/>
+                <s:submit name="changeNextShipmentDate" value="change" class="changeShipmentDateButton" />
+            </s:form>
+            <script type="text/javascript">
 
-            $('.shipmentDateForm').ajaxForm({dataType: 'json', success: _changeShipmentDate});
-            function _changeShipmentDate(res){
-                if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
-                    var status = res.message;
-                    if (status == "success") {
-                        alert("next shipment date changed");
-                        $('.changeNextShipmentDateDiv').hide();
-                    } else {
-                        alert("next shipment date  cannot be changed");
+                $('.shipmentDateForm').ajaxForm({dataType: 'json', success: _changeShipmentDate});
+                function _changeShipmentDate(res){
+                    if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+                        var status = res.message;
+                        if (status == "success") {
+                            alert("next shipment date changed");
+                            $('.changeNextShipmentDateDiv').hide();
+                        } else {
+                            alert("next shipment date  cannot be changed");
+                        }
                     }
                 }
-            }
-        </script>
-    </div>
+            </script>
+        </div>
     </c:if>
     <br/>
 
