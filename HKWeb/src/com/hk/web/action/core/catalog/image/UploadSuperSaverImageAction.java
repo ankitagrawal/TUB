@@ -1,39 +1,42 @@
 package com.hk.web.action.core.catalog.image;
 
-import net.sourceforge.stripes.action.*;
-import net.sourceforge.stripes.controller.StripesFilter;
-import net.sourceforge.stripes.validation.ValidationMethod;
-import net.sourceforge.stripes.validation.SimpleError;
-import com.hk.domain.catalog.product.combo.Combo;
-import com.hk.domain.catalog.product.combo.SuperSaverImage;
-import com.hk.domain.catalog.product.Product;
-import com.hk.constants.EnumS3UploadStatus;
-import com.hk.constants.core.Keys;
-import com.hk.util.ImageManager;
-import com.hk.pact.dao.catalog.combo.ComboDao;
-import com.hk.pact.dao.catalog.product.ProductDao;
-import com.hk.pact.service.catalog.ProductService;
-import com.hk.pact.service.catalog.CategoryService;
-import com.hk.pact.service.catalog.combo.SuperSaverImageService;
-import com.hk.web.action.core.catalog.SuperSaversAction;
-import com.hk.web.filter.WebContext;
-import com.akube.framework.util.BaseUtils;
-import com.akube.framework.stripes.action.BaseAction;
-import com.akube.framework.stripes.action.BasePaginatedAction;
-import com.akube.framework.dao.Page;
-
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.HashSet;
 
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.FileBean;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.validation.SimpleError;
+import net.sourceforge.stripes.validation.ValidationMethod;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.apache.log4j.Logger;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
+
+import com.akube.framework.dao.Page;
+import com.akube.framework.stripes.action.BasePaginatedAction;
+import com.akube.framework.util.BaseUtils;
+import com.hk.constants.EnumS3UploadStatus;
+import com.hk.constants.core.Keys;
+import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.combo.Combo;
+import com.hk.domain.catalog.product.combo.SuperSaverImage;
+import com.hk.pact.dao.catalog.combo.ComboDao;
+import com.hk.pact.dao.catalog.product.ProductDao;
+import com.hk.pact.service.catalog.CategoryService;
+import com.hk.pact.service.catalog.ProductService;
+import com.hk.pact.service.catalog.combo.SuperSaverImageService;
+import com.hk.util.ImageManager;
+import com.hk.web.action.core.catalog.SuperSaversAction;
 
 @Component
 public class UploadSuperSaverImageAction extends BasePaginatedAction {
@@ -54,10 +57,7 @@ public class UploadSuperSaverImageAction extends BasePaginatedAction {
     ImageManager imageManager;
 
     @Autowired
-    ProductService productService;
-
-    @Autowired
-    ProductDao productDao;
+    private ProductService productService;
 
     @Autowired
     ComboDao comboDao;
@@ -72,7 +72,7 @@ public class UploadSuperSaverImageAction extends BasePaginatedAction {
     public void validateCategoryAndBrand() {
         for (String brand : brands) {
             if (!StringUtils.isBlank(brand)) {
-                if (!productDao.doesBrandExist(brand)) {
+                if (!getProductService().doesBrandExist(brand)) {
                     getContext().getValidationErrors().add("1", new SimpleError("Brand not found: " + brand));
                 }
             }
@@ -231,4 +231,10 @@ public class UploadSuperSaverImageAction extends BasePaginatedAction {
         params.add("brands");
         return params;
     }
+
+    public ProductService getProductService() {
+        return productService;
+    }
+    
+    
 }

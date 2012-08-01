@@ -1,18 +1,21 @@
 package com.hk.web.action.core.catalog;
 
-import net.sourceforge.stripes.action.*;
-import org.springframework.stereotype.Component;
-import org.springframework.beans.factory.annotation.Autowired;
-import com.akube.framework.stripes.action.BaseAction;
-import com.akube.framework.stripes.action.BasePaginatedAction;
-import com.akube.framework.dao.Page;
-import com.hk.domain.catalog.product.combo.SuperSaverImage;
-import com.hk.pact.service.catalog.combo.SuperSaverImageService;
-import com.hk.web.HealthkartResponse;
-
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.HashSet;
+
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.UrlBinding;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.akube.framework.dao.Page;
+import com.akube.framework.stripes.action.BasePaginatedAction;
+import com.hk.domain.catalog.product.combo.SuperSaverImage;
+import com.hk.pact.service.catalog.combo.SuperSaverImageService;
 
 @UrlBinding("/super-savers")
 @Component
