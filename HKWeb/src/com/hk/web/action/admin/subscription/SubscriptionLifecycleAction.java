@@ -38,7 +38,7 @@ public class SubscriptionLifecycleAction extends BaseAction {
     @DefaultHandler
     @DontValidate
     public Resolution pre() {
-        return new ForwardResolution("/pages/admin/subscription/subscriptionLifecycle.jsp");
+        return new ForwardResolution("/pages/admin/subscription/subscriptionLifeCycle.jsp");
     }
 
     public Resolution saveComment() {

@@ -53,7 +53,7 @@ Your order ${order.baseOrder.gatewayOrderId} for subscription ${subscription.id}
                 <tr>
                     <td width="579" valign="top">Hi ${order.baseOrder.address.name}!<br/>
 
-                        your order ${order.baseOrder.gatewayOrderId} for subscription ${subscription.id} has been dispatched.Till now ${subscription.qtyDelivered/subscription.qtyPerDelivery} shipments were delivered for your subscription.
+                        your order ${order.baseOrder.gatewayOrderId} for subscription ${subscription.id} has been dispatched. Till now ${subscription.qtyDelivered/subscription.qtyPerDelivery} shipments were delivered for your subscription.
                         Here are the details for the present shipment:<br/>
                         <br/>
                         <table style="font-size:12px;" cellpadding="5" cellspacing="0" border="1">
@@ -75,7 +75,7 @@ Your order ${order.baseOrder.gatewayOrderId} for subscription ${subscription.id}
                                 ${lineItem.qty}
                                 </td>
                                 <td>
-                                ${order.shipment.trackingId}
+                                ${order.shipment.awb.awbNumber}
                                     <#if order.shipment.trackLink??>
                                         <h5><a href="${order.shipment.trackLink}" target="_blank"> Track This </a></h5>
                                     </#if>

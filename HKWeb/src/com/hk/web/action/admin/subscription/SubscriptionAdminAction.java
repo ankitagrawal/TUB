@@ -105,8 +105,6 @@ public class SubscriptionAdminAction extends BaseAction implements ValidationErr
             subscriptionService.save(subscription);
             subscriptionLoggingService.logSubscriptionActivity(subscription, EnumSubscriptionLifecycleActivity.NextShipmentDateChanged);
 
-            subscriptionOrderService.createOrderForSubscription(subscription);
-
             HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "success");
             return new JsonResolution(healthkartResponse);
         }catch (Exception e){

@@ -89,6 +89,7 @@
 <c:set var="subscriptionStatusCancelled" value="<%=EnumSubscriptionStatus.Cancelled.getId()%>"/>
 <c:set var="subscriptionStatusCart" value="<%=EnumSubscriptionStatus.InCart.getId()%>"/>
 <c:set var="subscriptionStatusAbandoned" value="<%=EnumSubscriptionStatus.Abandoned.getId()%>"/>
+<c:set var="subscriptionStatusInProcess" value="<%=EnumSubscriptionStatus.InProcess.getId()%>"/>
 
 <s:errors/>
 <s:form beanclass="com.hk.web.action.admin.subscription.SubscriptionAdminAction" method="get">
@@ -214,7 +215,7 @@
 
     </c:if>
     <br/> <br/>
-    <c:if test="${!(subscription.subscriptionStatus.id == subscriptionStatusCancelled || subscription.subscriptionStatus.id == subscriptionStatusCart || subscription.subscriptionStatus.id == subscriptionStatusAbandoned)}">
+    <c:if test="${!(subscription.subscriptionStatus.id == subscriptionStatusCancelled || subscription.subscriptionStatus.id == subscriptionStatusCart || subscription.subscriptionStatus.id == subscriptionStatusAbandoned || subscription.subscriptionStatus.id == subscriptionStatusInProcess)}">
         <s:link href="#" class="cancelSubscriptionLink">(cancel subscription)</s:link>
         <div class="cancelSubscriptionDiv" style="display: none;">
             <s:form beanclass="com.hk.web.action.admin.subscription.SubscriptionAdminAction" class="cancelSubscriptionForm" >
@@ -351,10 +352,18 @@
     </s:link>
     <br/>
     <c:if test="${!(subscription.subscriptionStatus.id == subscriptionStatusCancelled || subscription.subscriptionStatus.id == subscriptionStatusCart || subscription.subscriptionStatus.id == subscriptionStatusAbandoned)}">
-    next due date: <strong><span class="or"><fmt:formatDate value="${subscription.nextShipmentDate}"/> </span></strong>
-    <s:link class="changeNextShipmentDateLink" href="#">
-        (change)
-    </s:link>
+    <c:choose>
+           <c:when test="${subscription.subscriptionStatus.id == subscriptionStatusInProcess}">
+                order in process for <strong><span class="or"><fmt:formatDate value="${subscription.nextShipmentDate}"/> </span></strong>
+           </c:when>
+        <c:otherwise>
+            next due date: <strong><span class="or"><fmt:formatDate value="${subscription.nextShipmentDate}"/> </span></strong>
+            <s:link class="changeNextShipmentDateLink" href="#">
+                (change)
+            </s:link>
+        </c:otherwise>
+    </c:choose>
+
     <div class="changeNextShipmentDateDiv" style="display: none;">
         <s:form beanclass="com.hk.web.action.admin.subscription.SubscriptionAdminAction" class="shipmentDateForm">
             <s:param name="subscription" value="${subscription.id}"/>`
