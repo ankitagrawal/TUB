@@ -152,22 +152,27 @@ public class SubscriptionOrderServiceImpl implements SubscriptionOrderService {
     public void markSubscriptionOrderAsDelivered(Order order){
         if(order.isSubscriptionOrder()){
             SubscriptionOrder subscriptionOrder= this.findSubscriptionOrderByBaseOrder(order);
-            Subscription subscription=subscriptionOrder.getSubscription();
+            if(!(subscriptionOrder.getSubscriptionOrderStatus().getId()==EnumSubscriptionOrderStatus.Delivered.getId())){
+                Subscription subscription=subscriptionOrder.getSubscription();
 
-            subscriptionOrder.setSubscriptionOrderStatus(EnumSubscriptionOrderStatus.Delivered.asSubscriptionOrderStatus());
-            subscriptionService.updateSubscriptionAfterOrderDelivery(subscription);
-            this.save(subscriptionOrder);
+                subscriptionOrder.setSubscriptionOrderStatus(EnumSubscriptionOrderStatus.Delivered.asSubscriptionOrderStatus());
+                subscriptionService.updateSubscriptionAfterOrderDelivery(subscription);
+                this.save(subscriptionOrder);
+            }
         }
     }
 
     public void markSubscriptionOrderAsShipped(Order order){
         if(order.isSubscriptionOrder()){
+
             SubscriptionOrder subscriptionOrder= this.findSubscriptionOrderByBaseOrder(order);
-            Subscription subscription=subscriptionOrder.getSubscription();
+            if(!(subscriptionOrder.getSubscriptionOrderStatus().getId()==EnumSubscriptionOrderStatus.Shipped.getId())){
+                Subscription subscription=subscriptionOrder.getSubscription();
 
-            subscriptionOrder.setSubscriptionOrderStatus(EnumSubscriptionOrderStatus.Shipped.asSubscriptionOrderStatus());
+                subscriptionOrder.setSubscriptionOrderStatus(EnumSubscriptionOrderStatus.Shipped.asSubscriptionOrderStatus());
 
-            this.save(subscriptionOrder);
+                this.save(subscriptionOrder);
+            }
         }
     }
 
