@@ -17,10 +17,8 @@
           <td>
             <s:select name="db_master_service">
               <s:option value="static">Master</s:option>
-<%--
               <s:option value="catalog">Catalog</s:option>
               <s:option value="both">Both</s:option>
---%>
             </s:select>
           </td>
         </tr>
