@@ -166,7 +166,7 @@
                         <div>
                             <div>
                                     ${orderSummary.shipment.courier.name}
-                                <img style="padding-top: 0px; padding-left: 0px; padding-right: 82px; "
+                                <img style="padding-top: 0px; padding-left: 0px; padding-right: 150px; "
                                      src="${pageContext.request.contextPath}/barcodes/${orderSummary.shipment.awb.awbNumber}.png"/>
                             </div>
                         </div>

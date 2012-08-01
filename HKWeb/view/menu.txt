@@ -232,6 +232,9 @@
 --/home-devices/blood-pressure/combo : Star's of the Month
 -/home-devices/respiratory-care
 --/home-devices/respiratory-care/nebulizer
+---/home-devices/respiratory-care/nebulizer/compressor-nebulizer
+---/home-devices/respiratory-care/nebulizer/ultrsonic-nebulizer
+---/home-devices/respiratory-care/nebulizer/nebulizer-for-kids
 --/home-devices/respiratory-care/oxygen-concentrator : Oxygen Concentrators
 --/home-devices/respiratory-care/pulse-oximeters : Pulse Oximeters
 ---/home-devices/respiratory-care/pulse-oximeters/fingertip-oximeter
@@ -318,6 +321,7 @@
 --/home-devices/clinical-supplies/urinary-system
 --/home-devices/clinical-supplies/hearing-aids
 --/home-devices/clinical-supplies/eye-patch
+--/home-devices/clinical-supplies/diagnostic-products
 -/home-devices/miscellaneous
 --/home-devices/miscellaneous/weighing-scales
 --/home-devices/miscellaneous/digital-thermometer : Digital Thermometer
