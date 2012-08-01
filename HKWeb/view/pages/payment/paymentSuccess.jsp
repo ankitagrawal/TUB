@@ -219,7 +219,7 @@
 
             <h2 class="paymentH2">Customer Support</h2>
 
-            <p><s:link beanclass="com.hk.web.action.pages.ContactAction">Write to us</s:link> with your Order ID if you have any questions or call us on 0124-4417350</p>
+            <p><s:link beanclass="com.hk.web.action.pages.ContactAction">Write to us</s:link> with your Order ID if you have any questions or call us on 0124-4551616</p>
 
             <c:if test="${actionBean.payment.order.offerInstance != null && actionBean.payment.order.offerInstance.coupon != null && hk:isNotBlank(actionBean.payment.order.offerInstance.coupon.complimentaryCoupon)}">
                 <div style="background-color: lightgoldenrodyellow;">
