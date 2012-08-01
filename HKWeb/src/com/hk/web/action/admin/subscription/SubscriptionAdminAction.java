@@ -102,6 +102,9 @@ public class SubscriptionAdminAction extends BaseAction implements ValidationErr
     public Resolution changeNextShipmentDate(){
         try{
             subscription.setNextShipmentDate(nextShipmentDate);
+            if(subscription.getSubscriptionStatus().getId()==EnumSubscriptionStatus.CustomerConfirmationAwaited.getId()){
+                subscription.setSubscriptionStatus(EnumSubscriptionStatus.Idle.asSubscriptionStatus());
+            }
             subscriptionService.save(subscription);
             subscriptionLoggingService.logSubscriptionActivity(subscription, EnumSubscriptionLifecycleActivity.NextShipmentDateChanged);
 

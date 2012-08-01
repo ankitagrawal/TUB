@@ -1,5 +1,6 @@
 package com.hk.impl.dao.subscription;
 
+import com.akube.framework.util.BaseUtils;
 import com.hk.domain.order.Order;
 import com.hk.domain.subscription.Subscription;
 import com.hk.domain.subscription.SubscriptionOrder;
@@ -20,6 +21,7 @@ import java.util.List;
 public class SubscriptionOrderDaoImpl extends BaseDaoImpl implements SubscriptionOrderDao {
 
     public SubscriptionOrder save(SubscriptionOrder subscriptionOrder){
+        subscriptionOrder.setUpdateDate(BaseUtils.getCurrentTimestamp());
         return (SubscriptionOrder) super.save(subscriptionOrder);
     }
 
