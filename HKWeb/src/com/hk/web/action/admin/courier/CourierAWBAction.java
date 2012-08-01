@@ -137,39 +137,43 @@ public class CourierAWBAction extends BaseAction {
           return new RedirectResolution("/pages/admin/updateCourierAWB.jsp");
       }
 
-    Warehouse warehouse = userService.getWarehouseForLoggedInUser();
-    String excelFilePath = adminUploadsPath + "/courierFiles/" + System.currentTimeMillis() + ".xls";
-    File excelFile = new File(excelFilePath);
-    excelFile.getParentFile().mkdirs();
-    Set<Awb> awbSetFromExcel = null;
-    try {
-      fileBean.save(excelFile);
-        
-        awbSetFromExcel = xslAwbParser.readAwbExcel(excelFile);
-        if (null != awbSetFromExcel && awbSetFromExcel.size() > 0) {
-            List<Awb> awbDatabase = awbService.getAvailableAwbListForCourierByWarehouseCodStatus(courier, null, null, null, null);
-            List<String> commonCourierIdsList = XslAwbParser.getIntersection(awbDatabase, new ArrayList(awbSetFromExcel));
-            if (commonCourierIdsList.size() > 0) {
-                addRedirectAlertMessage(new SimpleMessage("Upload Failed   Courier Ids" + "     " + commonCourierIdsList + "   " +
-                        "     are already present and used in database"));
-                return new RedirectResolution("/pages/admin/updateCourierAWB.jsp");
-        }
+      String excelFilePath = adminUploadsPath + "/courierFiles/" + System.currentTimeMillis() + ".xls";
+      File excelFile = new File(excelFilePath);
+      excelFile.getParentFile().mkdirs();
+      Set<Awb> awbSetFromExcel = null;
+      try {
+          fileBean.save(excelFile);
+          awbSetFromExcel = xslAwbParser.readAwbExcel(excelFile);
+          List<Awb> awbListFromExcel = new ArrayList(awbSetFromExcel);
+          if (null != awbSetFromExcel && awbSetFromExcel.size() > 0) {
+              List<Awb> alreadyAwbList = awbService.getAlreadyPresentAwb(awbListFromExcel);
+              if (alreadyAwbList != null && alreadyAwbList.size() > 0) {
+                  for (int i = 0; i < alreadyAwbList.size(); i++) {
+                      awbSetFromExcel.remove(alreadyAwbList.get(i));
+                  }
 
-        for (Awb awb : awbSetFromExcel) {
-          awbService.save(awb);
+              }
+              for (Awb awb : awbSetFromExcel) {
+                  awbService.save(awb);
 
-        }
+              }
+              addRedirectAlertMessage(new SimpleMessage("database updated"));
+              if (alreadyAwbList != null && alreadyAwbList.size() > 0) {
+                  addRedirectAlertMessage(new SimpleMessage("Upload Failed   for below listed  " + alreadyAwbList.size() + " Awb records. They are already present in database"));
+                  for (Awb awb : alreadyAwbList) {
+                      addRedirectAlertMessage(new SimpleMessage("Awb Number :: " + awb.getAwbNumber() + " ,  Courier  ::  " + awb.getCourier().getName()));
+                  }
 
-          addRedirectAlertMessage(new SimpleMessage("database updated"));
-          return new RedirectResolution("/pages/admin/updateCourierAWB.jsp");
-      } else {
+              }
+             return new RedirectResolution("/pages/admin/updateCourierAWB.jsp");
+          } else {
 
-          addRedirectAlertMessage(new SimpleMessage("Empty Excel Sheet"));
-          return new RedirectResolution("/pages/admin/updateCourierAWB.jsp");
+              addRedirectAlertMessage(new SimpleMessage("Empty Excel Sheet"));
+              return new RedirectResolution("/pages/admin/updateCourierAWB.jsp");
+
+          }
 
       }
-
-    }
     catch (DuplicateAwbexception dup) {
         addRedirectAlertMessage(new SimpleMessage("The AWb -- >" + dup.getUniqueObject().getValue() + "  is present in Excel twice for courier --> " + dup.getUniqueObject().getId()));
         return new RedirectResolution("/pages/admin/updateCourierAWB.jsp");

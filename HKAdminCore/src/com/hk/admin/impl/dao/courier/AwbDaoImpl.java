@@ -49,7 +49,13 @@ public class AwbDaoImpl extends BaseDaoImpl implements AwbDao {
 
      }
 
-    
+    public List<Awb> getAlreadyPresentAwb(List<Awb> inputAwbList) {
+        DetachedCriteria detachedCriteria = DetachedCriteria.forClass(Awb.class);
+        if (inputAwbList != null && inputAwbList.size() > 0) {
+            detachedCriteria.add(Restrictions.in("awb", inputAwbList));
+        }
+        return (List<Awb>) findByCriteria(detachedCriteria);
+    }
 
 }
 

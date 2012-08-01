@@ -130,17 +130,4 @@ public class XslAwbParser {
 
     }
 
-    public static List<String> getIntersection(List<Awb> awbDatabase, List<Awb> awbSetFromExcel) {
-        List<String> commonCourierIds = new ArrayList<String>();
-        for (int i = 0; i < awbSetFromExcel.size(); i++) {
-            if (awbDatabase.contains(awbSetFromExcel.get(i))) {
-                commonCourierIds.add(awbSetFromExcel.get(i).getAwbNumber());
-            }
-
-        }
-        return commonCourierIds;
-    }
-
-
-
 }
