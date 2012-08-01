@@ -722,6 +722,7 @@
                 if ($("#checkBoxEngraving").is(":checked")) {
                     if($.trim($("#engrave").val()) == '') {
                         alert("Please specify name to be engraved, or uncheck the engraving option");
+                        $('.progressLoader').hide();
                         return false;
                     }
                 }
