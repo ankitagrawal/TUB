@@ -90,7 +90,7 @@
 <c:set var="subscriptionStatusCart" value="<%=EnumSubscriptionStatus.InCart.getId()%>"/>
 <c:set var="subscriptionStatusAbandoned" value="<%=EnumSubscriptionStatus.Abandoned.getId()%>"/>
 <c:set var="subscriptionStatusInProcess" value="<%=EnumSubscriptionStatus.InProcess.getId()%>"/>
-
+<c:set var="subscriptionStatusExpired" value="<%=EnumSubscriptionStatus.Expired.getId()%>"/>
 <s:errors/>
 <s:form beanclass="com.hk.web.action.admin.subscription.SubscriptionAdminAction" method="get">
     <s:submit name="escalateSubscriptions" value="escalate Subscriptions"></s:submit>
@@ -147,28 +147,7 @@
     <span class="xsml gry">Subscription Status :</span>
 
     <span class="orderStatusName or">${subscription.subscriptionStatus.name}</span>
-    <c:if test="${subscription.subscriptionStatus.id == EnumSubscriptionStatus.CustomerConfirmationAwaited.id || order.orderStatus.id == orderStatusHold}">
-        <s:link beanclass="com.hk.web.action.admin.order.OrderOnHoldAction" event="unHoldOrder" title="Unhold Order"
-                class="orderStatusLink onHoldStatusLink"
-                style="${order.orderStatus.id == orderStatusHold ? '': 'display:none;'}">
-            <s:param name="subscription" value="${subscription.id}"/>
-            <img src="<hk:vhostImage/>/images/admin/icon_unhold.png" alt="Unhold Order" title="Unhold Order"/>
-        </s:link>
-        <s:link beanclass="com.hk.web.action.admin.order.OrderOnHoldAction" event="holdOrder" title="Put Order on Hold"
-                class="orderStatusLink normalStatusLink"
-                style="${order.orderStatus.id == orderStatusHold ? 'display:none;': ''}">
-            <s:param name="order" value="${order.id}"/>
-            <img src="<hk:vhostImage/>/images/admin/icon_hold.png" alt="Put Order on Hold" title="Put Order on Hold"/>
-        </s:link>
-    </c:if>
-    <c:if test="${order.orderStatus.id == orderStatusCancelled}">
-        <br>
-        <span>Cancellation Type :</span>
-        <span>${order.cancellationType.name}</span>
-        <br>
-        <span>Cancellation Remark :</span>
-        <span>${order.cancellationRemark}</span>
-    </c:if>
+
     <br/>
 
     <c:if test="${subscription.subscriptionStatus.id == constomerConfirmationAwaited }">
@@ -215,7 +194,7 @@
 
     </c:if>
     <br/> <br/>
-    <c:if test="${!(subscription.subscriptionStatus.id == subscriptionStatusCancelled || subscription.subscriptionStatus.id == subscriptionStatusCart || subscription.subscriptionStatus.id == subscriptionStatusAbandoned || subscription.subscriptionStatus.id == subscriptionStatusInProcess)}">
+    <c:if test="${!(subscription.subscriptionStatus.id == subscriptionStatusCancelled || subscription.subscriptionStatus.id == subscriptionStatusCart || subscription.subscriptionStatus.id == subscriptionStatusAbandoned || subscription.subscriptionStatus.id == subscriptionStatusInProcess || subscription.subscriptionStatus.id== subscriptionStatusExpired)}">
         <s:link href="#" class="cancelSubscriptionLink">(cancel subscription)</s:link>
         <div class="cancelSubscriptionDiv" style="display: none;">
             <s:form beanclass="com.hk.web.action.admin.subscription.SubscriptionAdminAction" class="cancelSubscriptionForm" >
@@ -332,12 +311,14 @@
         </tr>
 
 
-        <tr>
-            <td><s:link beanclass="com.hk.web.action.admin.subscription.SubscriptionAdminAction" event="changeAddress" target="_blank">
+        <tr> <td>
+            <c:if test="${!(subscription.subscriptionStatus.id==subscriptionStatusAbandoned || subscription.subscriptionStatus.id==subscriptionStatusExpired || subscription.subscriptionStatus.id==subscriptionStatusCancelled || subscription.subscriptionStatus.id=subscriptionStatusCart)}">
+            <s:link beanclass="com.hk.web.action.admin.subscription.SubscriptionAdminAction" event="changeAddress" target="_blank">
                 <img src="<hk:vhostImage/>/images/admin/icon_edit_add.png" alt="Change Address"
                      title="Change Address"/> Change Address
                 <s:param name="subscription" value="${subscription.id}"/>
-            </s:link></td>
+            </s:link>
+                </c:if></td>
         </tr>
 
     </table>
@@ -351,7 +332,7 @@
         <s:param name="subscription" value="${subscription}"/>
     </s:link>
     <br/>
-    <c:if test="${!(subscription.subscriptionStatus.id == subscriptionStatusCancelled || subscription.subscriptionStatus.id == subscriptionStatusCart || subscription.subscriptionStatus.id == subscriptionStatusAbandoned)}">
+    <c:if test="${!(subscription.subscriptionStatus.id == subscriptionStatusCancelled || subscription.subscriptionStatus.id == subscriptionStatusCart || subscription.subscriptionStatus.id == subscriptionStatusAbandoned || subscription.subscriptionStatus.id == subscriptionStatusExpired)}">
     <c:choose>
            <c:when test="${subscription.subscriptionStatus.id == subscriptionStatusInProcess}">
                 order in process for <strong><span class="or"><fmt:formatDate value="${subscription.nextShipmentDate}"/> </span></strong>
