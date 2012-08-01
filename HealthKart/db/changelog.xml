@@ -7805,6 +7805,38 @@
     <changeSet author="Rahul (generated)" id="1342099712051-1">
         <modifyDataType columnName="value" newDataType="VARCHAR(70)" tableName="cart_line_item_config_values"/>
     </changeSet>
+
+    <changeSet author="Shrey (generated)" id="1342445419109-1">
+        <addColumn tableName="supplier">
+            <column name="brands" type="VARCHAR(45)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="Shrey (generated)" id="1342445419109-3">
+        <addColumn tableName="supplier">
+            <column name="dam_exp_cond" type="VARCHAR(500)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1342445419109-4">
+        <addColumn tableName="supplier">
+            <column name="email_id" type="VARCHAR(50)"/>
+        </addColumn>
+    </changeSet>
+<changeSet author="Shrey (generated)" id="1342445419109-6">
+        <addColumn tableName="supplier">
+            <column name="terms_of_trade" type="VARCHAR(100)"/>
+        </addColumn>
+    </changeSet>
+     <changeSet author="Shrey (generated)" id="1342533458649-3">
+        <addColumn tableName="supplier">
+            <column name="credit_period" type="VARCHAR(10)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1342533458649-4">
+               <addColumn tableName="supplier">
+            <column name="margins" type="VARCHAR(20)"/>
+        </addColumn>
+    </changeSet>
     <changeSet author="Ajeet (generated)" id="1342505244718-1">
         <addColumn tableName="shipment">
             <column name="packer" type="VARCHAR(5)"/>

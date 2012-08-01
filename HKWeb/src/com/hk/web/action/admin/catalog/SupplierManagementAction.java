@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -41,6 +42,7 @@ public class SupplierManagementAction extends BasePaginatedAction {
   public static final int LenghtOfTIN = 11;
   private String supplierTin;
   private String supplierName;
+    
   Page supplierPage;
   private Integer defaultPerPage = 30;
 
@@ -77,6 +79,53 @@ public class SupplierManagementAction extends BasePaginatedAction {
         getContext().getValidationErrors().add("e1", new SimpleError("check the first two digits of TIN"));
       }
     }
+   
+      //validation for the margins
+      if(supplier.getMargins() !=null){
+          //Validating for entering only valid double values
+          Pattern pattern;
+
+
+             String margin = supplier.getMargins();
+          final String DOUBLE_PATTERN = "^\\d+\\.?\\d*$";
+          pattern = Pattern.compile(DOUBLE_PATTERN);
+          boolean bool=pattern.matcher(margin).matches();
+                if(!bool)  getContext().getValidationErrors().add("e1", new SimpleError("Please Enter the Margins in percent"));
+          //To check the value in range of percentage
+           else{
+                  double d = Double.valueOf(supplier.getMargins().trim()).doubleValue();
+                    if(d < 0 || d > 100)
+                 getContext().getValidationErrors().add("e1", new SimpleError("Margins is in percentage and must be Enter within the Range(0 to 100)"));
+                    else if(bool){
+                       int x = margin.indexOf(".");
+                         if(x==(margin.length()-1))
+                            getContext().getValidationErrors().add("e1", new SimpleError("Please Enter the Margins in percent"));  
+                    }
+                }
+      }
+
+     //Validation for the Credit Period
+      if(supplier.getCreditPeriod() != null){
+       Pattern pattern;
+
+             String credit_period = supplier.getCreditPeriod();
+                final String INTEGER_PATTERN = "^[0-9]*$";
+          pattern = Pattern.compile(INTEGER_PATTERN);
+          boolean bool=pattern.matcher(credit_period).matches();
+           if(!bool)
+            getContext().getValidationErrors().add("e1", new SimpleError("Please enter the credit period days in number"));    
+      }
+
+      // Validation for the Email Id
+      if(supplier.getEmail_id() != null){
+           Pattern pattern;
+            String email_id = supplier.getEmail_id();
+            final String EMAIL_PATTERN = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+               pattern = Pattern.compile(EMAIL_PATTERN);
+                  boolean bool = pattern.matcher(email_id).matches();
+                    if(!bool)
+                      getContext().getValidationErrors().add("e1", new SimpleError("Please enter the valid Email-Id"));
+      }
   }
 
   public Resolution save() {
@@ -100,12 +149,14 @@ public class SupplierManagementAction extends BasePaginatedAction {
     } else {
       addRedirectAlertMessage(new SimpleMessage("Supplier with provided TIN already exists."));
     }
+
     return new RedirectResolution(SupplierManagementAction.class);
   }
 
 
-  public List<Supplier> getSupplierList() {
+    public List<Supplier> getSupplierList() {
     return supplierList;
+
   }
 
   public void setSupplierList(List<Supplier> supplierList) {

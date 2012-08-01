@@ -19,12 +19,11 @@
     ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
     pageContext.setAttribute("productService", productService);
     pageContext.setAttribute("eyeGlass", eyeGlass);
-    Category stethoscope = categoryDao.getCategoryByName("stethoscope");
-    pageContext.setAttribute("stethoscope", stethoscope);
 
     boolean isSecure = pageContext.getRequest().isSecure();
     pageContext.setAttribute("isSecure", isSecure);
-
+    Category stethoscope = categoryDao.getCategoryByName("stethoscope");
+    pageContext.setAttribute("stethoscope", stethoscope);
 %>
 <c:set var="product" value="${pa.product}"/>
 <c:set var="seoData" value="${pa.seoData}"/>
@@ -427,7 +426,7 @@
         </c:when>
         <c:otherwise>
             <s:layout-render name="/layouts/embed/_productWithExtraOptions.jsp" product="${product}"/>
-            <s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>
+            <%--<s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>--%>
         </c:otherwise>
     </c:choose>
     <div class="floatfix"></div>
@@ -723,7 +722,6 @@
                 if ($("#checkBoxEngraving").is(":checked")) {
                     if($.trim($("#engrave").val()) == '') {
                         alert("Please specify name to be engraved, or uncheck the engraving option");
-                        $('.progressLoader').hide();
                         return false;
                     }
                 }
@@ -803,7 +801,7 @@
                 }, 500);
             }
 
-            /*  $('.addToCartForm').ajaxForm({dataType: 'json', success: _addToCart});*/
+            /*$('.addToCartForm').ajaxForm({dataType: 'json', success: _addToCart});*/
 
             $(".top_link, .go_to_top").click(function(event) {
                 event.preventDefault();
@@ -814,13 +812,11 @@
                 $('#productBannerTextArea').val($('#productBannerTextArea').val().replace(/\s+/g, " "));
             }
 
-
             $(document).click(function() {
                 $('.checkboxError').fadeOut();
             });
 
             $('.checkboxError').hide();
-
             $("#checkBoxEngraving").click(function() {
                 var stethoscopeConfigOption = $("#stethoscopeConfigOption").val();
                 if ($("#checkBoxEngraving").is(":checked")) {
