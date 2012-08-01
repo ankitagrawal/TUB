@@ -8124,5 +8124,4 @@
             <column name="product_variant_id"/>
             <column name="forecast_date"/>
         </createIndex>
-    </changeSet>
-</databaseChangeLog>
+    </databaseChangeLog>
