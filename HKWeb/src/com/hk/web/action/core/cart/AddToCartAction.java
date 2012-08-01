@@ -95,7 +95,10 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
     @JsonHandler
     public Resolution addToCart() {
         if(isVariantConfigProvided()) {
-            return new ForwardResolution(AddToCartWithLineItemConfigAction.class);
+            if(productVariantList != null && productVariantList.size() > 0){
+                setVariantId(productVariantList.get(0).getId());
+            }
+            return new ForwardResolution(AddToCartWithLineItemConfigAction.class).addParameter("variantId", variantId);
         }
         else {
         // I need to pass product info

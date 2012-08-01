@@ -743,7 +743,6 @@
                 params.variantConfigProvided = (variantConfigProvided == 'true');
                 var configValues = JSON.stringify(data);
                 params.jsonConfigValues = configValues;
-                params.variantId = "${product.productVariants[0].id}";
                 params.nameToBeEngraved = $("#engrave").val();
 
                 if (!window.validateCheckbox) {
