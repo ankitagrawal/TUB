@@ -28,7 +28,7 @@
   time you access this website. If you have any queries about these
   terms & conditions or have any comments or complaints on or about
   the website, please email us at info@healthkart.com or call us on
-  0124-4551616 We reserve the right to change these terms & conditions
+  0124-4417350 We reserve the right to change these terms & conditions
   from time to time without any obligation to inform you and it is
   your responsibility to look through them as often as possible.</p>
 <b>Ownership of rights:</b>

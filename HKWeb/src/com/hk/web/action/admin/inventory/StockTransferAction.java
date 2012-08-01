@@ -112,7 +112,7 @@ public class StockTransferAction extends BasePaginatedAction {
                         try {
                             stockTransferLineItem = (StockTransferLineItem) stockTransferDao.save(stockTransferLineItem);
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            logger.info("Duplicate batch and variant in stock transfer for - " + stockTransferLineItem.getSku().getProductVariant().getId());
                             addRedirectAlertMessage(new SimpleMessage("Duplicate batch and variant - " + stockTransferLineItem.getSku().getProductVariant().getId()));
                             return new RedirectResolution(StockTransferAction.class).addParameter("stockTransfer", stockTransfer.getId());
                         }
@@ -152,6 +152,11 @@ public class StockTransferAction extends BasePaginatedAction {
             return new RedirectResolution(StockTransferAction.class);
         }
         return new ForwardResolution("/pages/admin/inventoryCheckinAgainstStockTransfer.jsp");
+    }
+
+    public Resolution print(){
+        logger.debug("purchaseOrder: " + stockTransfer);
+        return new ForwardResolution("/pages/admin/stPrintView.jsp");
     }
 
     public int getPerPageDefault() {

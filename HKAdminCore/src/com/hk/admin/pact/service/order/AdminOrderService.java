@@ -22,6 +22,8 @@ public interface AdminOrderService {
 
     public Order markOrderAsRTO(Order order);
 
+    public Order markOrderAsLost(Order order);
+
     public Order unHoldOrder(Order order);
 
     public Order putOrderOnHold(Order order);
