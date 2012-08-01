@@ -312,7 +312,7 @@
 
 
         <tr> <td>
-            <c:if test="${!(subscription.subscriptionStatus.id==subscriptionStatusAbandoned || subscription.subscriptionStatus.id==subscriptionStatusExpired || subscription.subscriptionStatus.id==subscriptionStatusCancelled || subscription.subscriptionStatus.id=subscriptionStatusCart)}">
+            <c:if test="${!(subscription.subscriptionStatus.id==subscriptionStatusAbandoned || subscription.subscriptionStatus.id==subscriptionStatusExpired || subscription.subscriptionStatus.id==subscriptionStatusCancelled || subscription.subscriptionStatus.id==subscriptionStatusCart)}">
             <s:link beanclass="com.hk.web.action.admin.subscription.SubscriptionAdminAction" event="changeAddress" target="_blank">
                 <img src="<hk:vhostImage/>/images/admin/icon_edit_add.png" alt="Change Address"
                      title="Change Address"/> Change Address
