@@ -20,6 +20,7 @@ public enum EnumSubscriptionLifecycleActivity {
     NextShipmentDateChanged(20L, "Next Shipment Date Changed"),
     SubscriptionOrderPlaced(25L, "Subscription Order Placed"),
     SubscriptionOrderDelivered(30L, "Subscription Order Delivered"),
+    SubscriptionExpired(40L, "Subscription Expired"),
     LoggedComment(120L, "Logged Comment"),
     SubscriptionCancelled(199L, "Subscription Cancelled");
 

@@ -133,18 +133,21 @@ public class SubscriptionServiceImpl implements SubscriptionService{
         qtyDelivered+=qtyPerDelivery;
 
         subscription.setQtyDelivered(qtyDelivered);
+
+        subscriptionLoggingService.logSubscriptionActivity(subscription, EnumSubscriptionLifecycleActivity.SubscriptionOrderDelivered);
         if(totalQty<=qtyDelivered){
             subscription.setSubscriptionStatus(EnumSubscriptionStatus.Expired.asSubscriptionStatus());
+            subscriptionLoggingService.logSubscriptionActivity(subscription, EnumSubscriptionLifecycleActivity.SubscriptionExpired);
         }else{
             subscription.setSubscriptionStatus(EnumSubscriptionStatus.Idle.asSubscriptionStatus());
-        }
-        subscriptionLoggingService.logSubscriptionActivity(subscription, EnumSubscriptionLifecycleActivity.SubscriptionOrderDelivered);
-        Calendar c = Calendar.getInstance();
-        c.setTime(subscription.getNextShipmentDate());
-        c.add(Calendar.DATE,Integer.parseInt(subscription.getFrequencyDays().toString()));
+            Calendar c = Calendar.getInstance();
+            c.setTime(subscription.getNextShipmentDate());
+            c.add(Calendar.DATE,Integer.parseInt(subscription.getFrequencyDays().toString()));
 
-        subscription.setNextShipmentDate(c.getTime());
-        subscriptionLoggingService.logSubscriptionActivity(subscription, EnumSubscriptionLifecycleActivity.NextShipmentDateChanged);
+            subscription.setNextShipmentDate(c.getTime());
+            subscriptionLoggingService.logSubscriptionActivity(subscription, EnumSubscriptionLifecycleActivity.NextShipmentDateChanged);
+        }
+
         return this.save(subscription);
     }
 
