@@ -3,6 +3,7 @@ package com.hk.domain.catalog.product.combo;
 
 
 import com.hk.domain.catalog.product.Product;
+import com.akube.framework.gson.JsonSkip;
 
 import javax.persistence.*;
 
@@ -14,6 +15,7 @@ public class SuperSaverImage implements java.io.Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
+    @JsonSkip
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;

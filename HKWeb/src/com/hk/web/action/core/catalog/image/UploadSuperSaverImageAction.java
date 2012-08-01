@@ -39,8 +39,8 @@ import org.apache.commons.lang.StringUtils;
 public class UploadSuperSaverImageAction extends BasePaginatedAction {
     FileBean fileBean;
     List<SuperSaverImage> superSaverImages;
-    String category;
-    String brand;
+    List<String> categories;
+    List<String> brands;
     Product product;
     private Integer defaultPerPage = 10;
     Page superSaverPage;
@@ -70,15 +70,19 @@ public class UploadSuperSaverImageAction extends BasePaginatedAction {
 
     @ValidationMethod(on = "getSuperSaversByCategoryAndBrand")
     public void validateCategoryAndBrand() {
-        if (!StringUtils.isBlank(brand)) {
-            if (!productDao.doesBrandExist(brand)) {
-                getContext().getValidationErrors().add("1", new SimpleError("Brand not found"));
+        for (String brand : brands) {
+            if (!StringUtils.isBlank(brand)) {
+                if (!productDao.doesBrandExist(brand)) {
+                    getContext().getValidationErrors().add("1", new SimpleError("Brand not found: " + brand));
+                }
             }
         }
 
-        if (!StringUtils.isBlank(category)) {
-            if (categoryService.getCategoryByName(category) == null) {
-                getContext().getValidationErrors().add("1", new SimpleError("Category not found"));
+        for (String category : categories) {
+            if (!StringUtils.isBlank(category)) {
+                if (categoryService.getCategoryByName(category) == null) {
+                    getContext().getValidationErrors().add("1", new SimpleError("Category not found: " + category));
+                }
             }
         }
     }
@@ -95,7 +99,7 @@ public class UploadSuperSaverImageAction extends BasePaginatedAction {
     }
 
     public Resolution getSuperSaversForCategoryAndBrand() {
-        superSaverPage = superSaverImageService.getSuperSaverImages(category, brand, Boolean.FALSE, getPageNo(), getPerPage());
+        superSaverPage = superSaverImageService.getSuperSaverImages(categories, brands, Boolean.FALSE, getPageNo(), getPerPage());
         superSaverImages = superSaverPage.getList();
         return new ForwardResolution("/pages/manageSuperSaverImages.jsp");
     }
@@ -110,7 +114,7 @@ public class UploadSuperSaverImageAction extends BasePaginatedAction {
         }
         superSaverImages = superSaverImageService.getSuperSaverImages(product, Boolean.FALSE, Boolean.FALSE);
         superSaverPage = new Page(superSaverImages, defaultPerPage, getPageNo(), superSaverImages.size());
-        
+
         superSaverImages = superSaverPage.getList();
         return new ForwardResolution("/pages/manageSuperSaverImages.jsp");
     }
@@ -185,20 +189,20 @@ public class UploadSuperSaverImageAction extends BasePaginatedAction {
         this.superSaverImages = superSaverImages;
     }
 
-    public String getCategory() {
-        return category;
+    public List<String> getCategories() {
+        return categories;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setCategories(List<String> categories) {
+        this.categories = categories;
     }
 
-    public String getBrand() {
-        return brand;
+    public List<String> getBrands() {
+        return brands;
     }
 
-    public void setBrand(String brand) {
-        this.brand = brand;
+    public void setBrands(List<String> brands) {
+        this.brands = brands;
     }
 
     public Product getProduct() {
@@ -223,8 +227,8 @@ public class UploadSuperSaverImageAction extends BasePaginatedAction {
 
     public Set<String> getParamSet() {
         HashSet<String> params = new HashSet<String>();
-        params.add("category");
-        params.add("brand");
+        params.add("categories");
+        params.add("brands");
         return params;
     }
 }

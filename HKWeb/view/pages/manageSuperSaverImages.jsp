@@ -72,9 +72,9 @@
 
                     <fieldset id="categoryBrandFilter">
                         <legend>By Category and Brand</legend>
-                        <label>Category:</label><s:text name="category"/>
+                        <label>Category:</label><s:text name="categories[0]"/>
                         &nbsp; &nbsp;
-                        <label>Brand:</label><s:text name="brand"/>
+                        <label>Brand:</label><s:text name="brands[0]"/>
                         &nbsp; &nbsp;
                         <s:submit name="getSuperSaversForCategoryAndBrand" value="Filter" id="categoryBrandSubmit"/>
                     </fieldset>

@@ -7,6 +7,7 @@ import com.hk.domain.catalog.product.Product;
 import com.akube.framework.dao.Page;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,7 @@ public class SuperSaverImageServiceImpl implements SuperSaverImageService {
         return superSaverImageDao.getSuperSaverImages(product, getVisible, getMainImage);
     }
 
-    public Page getSuperSaverImages(String category, String brand, Boolean getVisible, int page, int perPage) {
-        return superSaverImageDao.getSuperSaverImages(category, brand, getVisible, page, perPage);
+    public Page getSuperSaverImages(List<String> categories, List<String> brands, Boolean getVisible, int page, int perPage){
+        return superSaverImageDao.getSuperSaverImages(categories, brands, getVisible, page, perPage);
     }
 }

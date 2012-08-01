@@ -53,17 +53,17 @@ public class SuperSaverImageDaoImpl extends BaseDaoImpl implements SuperSaverIma
         return (List<SuperSaverImage>) criteria.list();
     }
 
-    public Page getSuperSaverImages(String category, String brand, Boolean getVisible, int page, int perPage) {
+    public Page getSuperSaverImages(List<String> categories, List<String> brands, Boolean getVisible, int page, int perPage) {
         DetachedCriteria criteria = DetachedCriteria.forClass(SuperSaverImage.class);
         DetachedCriteria productCriteria = criteria.createCriteria("product");
 
-        if (brand != null) {
-            productCriteria.add(Restrictions.eq("brand", brand));
+        if (brands != null) {
+            productCriteria.add(Restrictions.in("brand", brands));
         }
 
-        if (category != null) {
+        if (categories != null) {
             DetachedCriteria categoryCriteria = productCriteria.createCriteria("categories");
-            categoryCriteria.add(Restrictions.eq("name", category));
+            categoryCriteria.add(Restrictions.in("name", categories));
         }
 
         if (getVisible) {
