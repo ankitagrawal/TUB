@@ -113,6 +113,10 @@
                 <li id="tab4" class="cod-mode">Cash on Delivery</li>
                 <li id="tab5">Cheque / Bank Deposit</li>
             </c:if>
+            <c:if test="${orderSummary.hideCod}">
+                   <li id="tab4" class="cod-mode">Cash on Delivery</li>
+                    <li id="tab5">Cheque / Bank Deposit</li>
+            </c:if>
         </shiro:lacksRole>
         <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_ADMINS%>">
             <li id="tab6">Counter Cash</li>
@@ -233,6 +237,22 @@
                         </p>
                     </s:form>
                 </c:when>
+
+                <c:when test="${order.hideCod}">
+                        <h4 style="text-align: center;">We are sorry</h4>
+
+                    <p><strong>Either</strong></p>
+
+                    <p>Cash on Delivery is not available for Ground Shipped items.                         
+                        <br />
+                         We suggest you to choose pre-payment option and you will get this much amount save  </p>
+
+                    <p><strong>And</strong></p>
+
+                    <p>Delivery may take 5-7 days</p>
+
+               </c:when>
+
                 <c:otherwise>
                     <h4 style="text-align: center;">We are sorry</h4>
 

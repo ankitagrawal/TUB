@@ -1,7 +1,10 @@
 package com.hk.web.action.core.order;
 
 import java.util.List;
+import java.util.Set;
 
+import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.order.CartLineItem;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.LocalizableMessage;
@@ -65,6 +68,7 @@ public class OrderSummaryAction extends BaseAction {
     private boolean        codAllowed;
     private Double         redeemableRewardPoints;
     private List<Courier>  availableCourierList;
+    private boolean        hideCod;
 
     // COD related changes
     @Autowired
@@ -92,6 +96,18 @@ public class OrderSummaryAction extends BaseAction {
         // Trimming empty line items once again.
         orderManager.trimEmptyLineItems(order);
         OfferInstance offerInstance = order.getOfferInstance();
+
+          Set<CartLineItem> cartLineItems =  order.getCartLineItems();
+                 for (CartLineItem lineItem : cartLineItems) {
+                   if (lineItem != null && lineItem.getProductVariant() != null){
+                          ProductVariant productVariant = lineItem.getProductVariant();
+                          if (productVariant.getProduct().isGroundShipping()){
+                                  hideCod = true;
+                                  break;
+                          }
+                   }
+                 }
+
 
         Double rewardPointsUsed = 0D;
         redeemableRewardPoints = referrerProgramManager.getTotalRedeemablePoints(user);
@@ -203,5 +219,14 @@ public class OrderSummaryAction extends BaseAction {
 
     public void setAvailableCourierList(List<Courier> availableCourierList) {
         this.availableCourierList = availableCourierList;
+    }
+
+
+    public boolean isHideCod() {
+        return hideCod;
+    }
+
+    public void setHideCod(boolean hideCod) {
+        this.hideCod = hideCod;
     }
 }
