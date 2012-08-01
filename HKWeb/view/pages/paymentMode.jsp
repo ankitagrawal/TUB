@@ -109,14 +109,13 @@
         <li class='selected' id="tab1">Credit/Debit Cards</li>
         <li id="tab3">Internet Banking</li>
         <shiro:lacksRole name="<%=RoleConstants.COD_BLOCKED%>">
-            <c:if test="${orderSummary.order.offerInstance.offer.paymentType != prePaidPaymentType}">
+
+
+            <c:if test="${(orderSummary.order.offerInstance.offer.paymentType != prePaidPaymentType) &&(orderSummary.hideCod == false) }">
                 <li id="tab4" class="cod-mode">Cash on Delivery</li>
                 <li id="tab5">Cheque / Bank Deposit</li>
             </c:if>
-            <c:if test="${orderSummary.hideCod}">
-                   <li id="tab4" class="cod-mode">Cash on Delivery</li>
-                    <li id="tab5">Cheque / Bank Deposit</li>
-            </c:if>
+            
         </shiro:lacksRole>
         <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_ADMINS%>">
             <li id="tab6">Counter Cash</li>

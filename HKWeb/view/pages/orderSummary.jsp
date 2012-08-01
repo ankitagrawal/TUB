@@ -56,9 +56,21 @@
     <div class='current_step_content step2'>
 
     <jsp:include page="/includes/checkoutNotice.jsp"/>
-    <c:if test="${orderSummary.availableCourierList == null}">
-      <div align="center" style="color:red; font-size:1.2em;">This pincode is serviced only through Speed Post. Delivery may take 5-7 days</div>
-    </c:if>
+      <c:choose>
+          <c:when test="${(orderSummary.hideCod == true)}">
+                    <div align="center" style="color:red; font-size:1.2em;">Your order contain Ground shipping item. We suggest you to choose pre-payment option and you will get this much amount save<br>
+                        Delivery may take 5-7 days</div>
+          </c:when>
+
+           <c:when test="${orderSummary.availableCourierList == null}">
+                <div align="center" style="color:red; font-size:1.2em;">This pincode is serviced only through Speed Post. Delivery may take 5-7 days</div>
+           </c:when>
+
+      </c:choose>
+      
+    <%--<c:if test="${orderSummary.availableCourierList == null}">--%>
+      <%--<div align="center" style="color:red; font-size:1.2em;">This pincode is serviced only through Speed Post. Delivery may take 5-7 days</div>--%>
+    <%--</c:if>--%>
 
     <h3>
       You selected
