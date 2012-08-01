@@ -115,33 +115,60 @@
                     <fmt:formatNumber value="${orderSummary.invoiceDto.grandTotal}" type="currency"
                                       currencySymbol="Rs. " maxFractionDigits="0"/></h2>
             </c:if>
-            <h3>
+
+            <c:if test="${orderSummary.shipment != null}">
+                <div style="margin-top:5px;">
+                    <div style="font-weight:bold;">${orderSummary.shipment.courier.name}</div>
+                    <div class="clear"></div>
+                    <img style="padding-top: 0px; padding-left: 0px; padding-right: 150px; "
+                         src="${pageContext.request.contextPath}/barcodes/${orderSummary.shipment.awb.awbNumber}.png"/>
+                </div>
+            </c:if>
+
+            <h3 style="10px 0px;">
                 Please do not accept if the box is tampered
             </h3>
         </div>
     </div>
 
     <div class="grid_4 alpha omega" style="width: 320px;">
+        <%--<div class="formatting" style="float: right;">--%>
+        <%--<c:if test="${orderSummary.shippingOrder.baseOrder.user.login != 'support@madeinhealth.com'}">--%>
+        <%--<div--%>
+        <%--style="float:right; width: 300px; padding: 10px; font-size: .7em; outline: 1px dotted gray; font-family: sans-serif;">--%>
+        <%--<p style="margin-bottom: 4px;">Introducing the <strong>Refer and Earn</strong> program</p>--%>
+
+        <%--<p>Your referral coupon code is</p>--%>
+
+        <%--<p><strong--%>
+        <%--style="text-transform:uppercase; font-size: 1.2em;">${orderSummary.coupon.code}</strong></p>--%>
+
+        <%--<p><strong>How it works: </strong></p>--%>
+
+        <%--<p>--%>
+        <%--Pass this coupon code to your friends and family. They get a <strong>Rs. 100 discount on their--%>
+        <%--first--%>
+        <%--purchase*</strong> at healthkart.com--%>
+        <%--and you--%>
+        <%--<strong>get reward points worth Rs. 100</strong> in your account for your referral*.--%>
+        <%--</p>--%>
+        <%--</div>--%>
+        <%--</c:if>--%>
+        <%--</div>--%>
+
         <div class="formatting" style="float: right;">
-            <c:if test="${orderSummary.shippingOrder.baseOrder.user.login != 'support@madeinhealth.com'}">
+            <c:if
+                    test="${baseOrder.offerInstance != null && baseOrder.offerInstance.coupon != null && hk:isNotBlank(baseOrder.offerInstance.coupon.complimentaryCoupon)}">
                 <div
-                        style="float:right; width: 300px; padding: 10px; font-size: .7em; outline: 1px dotted gray; font-family: sans-serif;">
-                    <p style="margin-bottom: 4px;">Introducing the <strong>Refer and Earn</strong> program</p>
+                        style="width: 300px; padding: 10px; font-size: .7em; outline: 1px dotted gray; font-family: sans-serif; margin-top: 30px;">
+                    <h4>You have won a Complementary Coupon!</h4>
 
-                    <p>Your referral coupon code is</p>
+                    <p>${baseOrder.offerInstance.offer.complimentaryCouponDescription}</p>
 
-                    <p><strong
-                            style="text-transform:uppercase; font-size: 1.2em;">${orderSummary.coupon.code}</strong></p>
+                    <p>Your Complementary Coupon Code :</p>
 
-                    <p><strong>How it works: </strong></p>
 
-                    <p>
-                        Pass this coupon code to your friends and family. They get a <strong>Rs. 100 discount on their
-                        first
-                        purchase*</strong> at healthkart.com
-                        and you
-                        <strong>get reward points worth Rs. 100</strong> in your account for your referral*.
-                    </p>
+                    <p><strong>${baseOrder.offerInstance.coupon.complimentaryCoupon}</strong></p>
                 </div>
             </c:if>
         </div>
@@ -151,31 +178,28 @@
 <div class="clear"></div>
 <div style="margin-top: 5px;"></div>
 
-<div class="clear"></div>
-<div style="margin-top: 5px;"></div>
-
 <div class="grid_12">
     <div class="grid_8 alpha omega">
         <div class="formatting" style="float: left; font-size:1.1em;">
 
-            <div style="width:100%;">
-                <div style="width:50%; float:left; height:40px;"><strong>Name & Address</strong></div>
+            <%--<div style="width:100%;">--%>
+            <%--<div style="width:50%; float:left; height:40px;"><strong>Name & Address</strong></div>--%>
 
-                <div style="width:50%;float: right; height:40px;">
-                    <c:if test="${orderSummary.shipment != null}">
-                        <div>
-                            <div>
-                                    ${orderSummary.shipment.courier.name}
-                                <img style="padding-top: 0px; padding-left: 0px; padding-right: 150px; "
-                                     src="${pageContext.request.contextPath}/barcodes/${orderSummary.shipment.awb.awbNumber}.png"/>
-                            </div>
-                        </div>
-                    </c:if>
-                </div>
+            <%--<div style="width:50%;float: right; height:40px;">--%>
+            <%--<c:if test="${orderSummary.shipment != null}">--%>
+            <%--<div>--%>
+            <%--<div>--%>
+            <%--${orderSummary.shipment.courier.name}--%>
+            <%--<img style="padding-top: 0px; padding-left: 0px; padding-right: 150px; "--%>
+            <%--src="${pageContext.request.contextPath}/barcodes/${orderSummary.shipment.awb.awbNumber}.png"/>--%>
+            <%--</div>--%>
+            <%--</div>--%>
+            <%--</c:if>--%>
+            <%--</div>--%>
 
-            </div>
+            <%--</div>--%>
 
-            <div class="clear"></div>
+            <strong>Name & Address</strong>
 
             <p>${address.name}</p>
 
@@ -201,22 +225,22 @@
     </div>
 
     <div class="grid_4 alpha omega" style="width: 320px;">
-        <div class="formatting" style="float: right;">
-            <c:if
-                    test="${baseOrder.offerInstance != null && baseOrder.offerInstance.coupon != null && hk:isNotBlank(baseOrder.offerInstance.coupon.complimentaryCoupon)}">
-                <div
-                        style="width: 300px; padding: 10px; font-size: .7em; outline: 1px dotted gray; font-family: sans-serif; margin-top: 30px;">
-                    <h4>You have won a Complementary Coupon!</h4>
+        <%--<div class="formatting" style="float: right;">--%>
+        <%--<c:if--%>
+        <%--test="${baseOrder.offerInstance != null && baseOrder.offerInstance.coupon != null && hk:isNotBlank(baseOrder.offerInstance.coupon.complimentaryCoupon)}">--%>
+        <%--<div--%>
+        <%--style="width: 300px; padding: 10px; font-size: .7em; outline: 1px dotted gray; font-family: sans-serif; margin-top: 30px;">--%>
+        <%--<h4>You have won a Complementary Coupon!</h4>--%>
 
-                    <p>${baseOrder.offerInstance.offer.complimentaryCouponDescription}</p>
+        <%--<p>${baseOrder.offerInstance.offer.complimentaryCouponDescription}</p>--%>
 
-                    <p>Your Complementary Coupon Code :</p>
+        <%--<p>Your Complementary Coupon Code :</p>--%>
 
 
-                    <p><strong>${baseOrder.offerInstance.coupon.complimentaryCoupon}</strong></p>
-                </div>
-            </c:if>
-        </div>
+        <%--<p><strong>${baseOrder.offerInstance.coupon.complimentaryCoupon}</strong></p>--%>
+        <%--</div>--%>
+        <%--</c:if>--%>
+        <%--</div>--%>
     </div>
 </div>
 
