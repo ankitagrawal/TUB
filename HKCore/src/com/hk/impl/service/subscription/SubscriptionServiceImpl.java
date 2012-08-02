@@ -11,6 +11,7 @@ import com.hk.domain.order.Order;
 import com.hk.domain.subscription.SubscriptionProduct;
 import com.hk.domain.subscription.SubscriptionStatus;
 import com.hk.domain.user.User;
+import com.hk.manager.EmailManager;
 import com.hk.pact.service.subscription.SubscriptionLoggingService;
 import com.hk.pact.service.subscription.SubscriptionService;
 import com.hk.pact.dao.subscription.SubscriptionDao;
@@ -38,6 +39,8 @@ public class SubscriptionServiceImpl implements SubscriptionService{
     SubscriptionLoggingService subscriptionLoggingService;
     @Autowired
     SubscriptionStatusService subscriptionStatusService;
+    @Autowired
+    EmailManager emailManager;
 
     @Transactional
     public Subscription save(Subscription subscription){
@@ -64,6 +67,8 @@ public class SubscriptionServiceImpl implements SubscriptionService{
             subscription.setAddress(order.getAddress());
             subscriptionDao.save(subscription);
             subscriptionLoggingService.logSubscriptionActivity(subscription, EnumSubscriptionLifecycleActivity.SubscriptionPlaced);
+            emailManager.sendSubscriptionPlacedEmailToUser(subscription);
+            emailManager.sendSubscriptionPlacedEmailToAdmin(subscription);
         }
         return  inCartSubscriptions;
     }

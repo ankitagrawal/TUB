@@ -50,4 +50,6 @@ public class EmailTemplateConstants {
     public static final String subscriptionOrderShippedEmail       = "/subscription/subscriptionOrderShippedEmail.ftl";
     public static final String subscriptionCancelEmailUser         = "/subscription/subscriptionCancelEmailUser.ftl";
     public static final String subscriptionCancelEmailAdmin        = "/subscription/subscriptionCancelEmailAdmin.ftl";
+    public static final String subscriptionPlacedEmailUser         = "/subscription/subscriptionPlacedEmailToUser.ftl";
+    public static final String subscriptionPlacedEmailAdmin        = "/subscription/subscriptionPlacedEmailToAdmin.ftl";
 }
