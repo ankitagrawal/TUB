@@ -100,6 +100,7 @@
         <ul>
             <div class="grouped">
                 <li><label>Subscription ID</label> <s:text name="subscriptionId" style="width: 100px;"/></li>
+                <li><label>Product Variant ID</label><s:text name="productVariant" style="width: 100px;"/></li>
                 <li><label>BO Order ID</label> <s:text name="orderId" style="width: 100px;"/></li>
                 <li><label>Email ID</label> <s:text name="email"/></li>
                 <li><label>Login ID</label> <s:text name="login"/></li>

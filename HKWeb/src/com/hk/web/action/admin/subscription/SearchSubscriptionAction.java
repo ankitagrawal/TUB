@@ -4,6 +4,7 @@ import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.core.search.SubscriptionSearchCriteria;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.order.Order;
 import com.hk.domain.subscription.Subscription;
@@ -38,6 +39,8 @@ public class SearchSubscriptionAction extends BasePaginatedAction{
     private String        name;
     private String        phone;
 
+    private ProductVariant productVariant;
+
     private Date startDate;
     private Date          endDate;
 
@@ -63,7 +66,7 @@ public class SearchSubscriptionAction extends BasePaginatedAction{
         subscriptionSearchCriteria.setSubscriptionId(subscriptionId);
         subscriptionSearchCriteria.setBaseOrderId(orderId);
         //subscriptionSearchCriteria.setPaymentStartDate(startDate).setPaymentEndDate(endDate);
-        subscriptionSearchCriteria.setEmail(email).setLogin(login).setName(name).setPhone(phone);
+        subscriptionSearchCriteria.setEmail(email).setLogin(login).setName(name).setPhone(phone).setProductVariant(productVariant);
         //subscriptionSearchCriteria.setOrderAsc(false);
 
         subscriptionPage = subscriptionService.searchSubscriptions(subscriptionSearchCriteria, getPageNo(), getPerPage());
@@ -94,6 +97,7 @@ public class SearchSubscriptionAction extends BasePaginatedAction{
         params.add("phone");
         params.add("startDate");
         params.add("endDate");
+        params.add("productVariant");
         return params;
     }
 
@@ -191,5 +195,13 @@ public class SearchSubscriptionAction extends BasePaginatedAction{
 
     public void setSubscriptionId(Long subscriptionId) {
         this.subscriptionId = subscriptionId;
+    }
+
+    public ProductVariant getProductVariant() {
+        return productVariant;
+    }
+
+    public void setProductVariant(ProductVariant productVariant) {
+        this.productVariant = productVariant;
     }
 }

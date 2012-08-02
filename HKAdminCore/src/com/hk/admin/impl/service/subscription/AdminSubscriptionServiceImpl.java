@@ -2,6 +2,7 @@ package com.hk.admin.impl.service.subscription;
 
 import com.hk.admin.pact.service.subscription.AdminSubscriptionService;
 import com.hk.constants.subscription.EnumSubscriptionOrderStatus;
+import com.hk.constants.subscription.EnumSubscriptionStatus;
 import com.hk.domain.subscription.Subscription;
 import com.hk.domain.subscription.SubscriptionOrder;
 import com.hk.manager.EmailManager;
@@ -48,12 +49,18 @@ public class AdminSubscriptionServiceImpl implements AdminSubscriptionService{
 
     public boolean sendSubscriptionCancellationEmails(Subscription subscription){
         boolean sent=false;
+
         sent= emailManager.sendSubscriptionCancellationEmail(subscription) &&  emailManager.sendSubscriptionCancellationEmailToAdmin(subscription);
+
         return sent;
     }
 
     public Subscription cancelSubscription(Subscription subscription,String cancellationRemark){
-        sendSubscriptionCancellationEmails(subscription);
-        return  subscriptionService.cancelSubscription(subscription,cancellationRemark);
+        if(subscription.getSubscriptionStatus().getId().longValue()!= EnumSubscriptionStatus.Cancelled.getId().longValue()){
+            sendSubscriptionCancellationEmails(subscription);
+            return  subscriptionService.cancelSubscription(subscription,cancellationRemark);
+        }else{
+            return subscription;
+        }
     }
 }

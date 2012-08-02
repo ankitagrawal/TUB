@@ -1,5 +1,6 @@
 package com.hk.core.search;
 
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.subscription.Subscription;
 import com.hk.domain.subscription.SubscriptionStatus;
 import org.apache.commons.lang.StringUtils;
@@ -30,6 +31,8 @@ public class SubscriptionSearchCriteria{
     private String                    phone;
     private String                    name;
     private String                    email;
+
+    private ProductVariant productVariant;
 
     private Long                                     baseOrderId;
 
@@ -82,6 +85,14 @@ public class SubscriptionSearchCriteria{
         return criteria;
     }
 
+    public ProductVariant getProductVariant() {
+        return productVariant;
+    }
+
+    public void setProductVariant(ProductVariant productVariant) {
+        this.productVariant = productVariant;
+    }
+
     protected DetachedCriteria buildSearchCriteriaFromBaseCriteria() {
         this.baseCriteria = getBaseCriteria();
 
@@ -95,6 +106,10 @@ public class SubscriptionSearchCriteria{
 
         if (subscriptionStatusList != null && subscriptionStatusList.size() > 0) {
             baseCriteria.add(Restrictions.in("subscriptionStatus", subscriptionStatusList));
+        }
+
+        if(productVariant !=null){
+            baseCriteria.add(Restrictions.eq("productVariant",productVariant));
         }
 
         DetachedCriteria userCriteria = baseCriteria.createCriteria("user");
