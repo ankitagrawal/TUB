@@ -111,7 +111,7 @@
         alwaysOn:false
       });
 
-      $('#notifyMeWindow').jqm({trigger: '.notifyMe', ajax: '@href'});
+      $('#notifyMeWindow').jqm({trigger: '.notifyMe', ajax: '@href', ajaxText:'<label>testing   </label>'});
 
     });
 
