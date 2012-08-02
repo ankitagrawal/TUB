@@ -235,6 +235,27 @@
 
     </c:if>
 
+    <c:if test="${subscription.subscriptionStatus.id == subscriptionStatusCancelled}">
+        <s:form beanclass="com.hk.web.action.admin.subscription.SubscriptionAdminAction" class="rewardPointsForm" >
+            <s:param name="subscription" value="${subscription.id}"/>
+
+            <s:submit name="rewardPointsOnSubscriptionCancellation" value="get reward points"/>
+
+        </s:form>
+        <script type="text/javascript">
+            $('.rewardPointsForm').ajaxForm({dataType: 'json', success: _rewardPoints});
+
+            function _rewardPoints(res) {
+                if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+                    var rewardPoints = res.data.rewardPoints;
+                    alert("reward points to be given: "+rewardPoints);
+                }else{
+                    alert("error");
+                }
+            }
+        </script>
+    </c:if>
+
 </td>
 
 <td >

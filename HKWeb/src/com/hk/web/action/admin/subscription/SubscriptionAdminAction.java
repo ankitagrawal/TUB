@@ -3,6 +3,7 @@ package com.hk.web.action.admin.subscription;
 import com.akube.framework.gson.JsonUtils;
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
+import com.hk.admin.pact.service.subscription.AdminSubscriptionService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.subscription.EnumSubscriptionLifecycleActivity;
 import com.hk.constants.subscription.EnumSubscriptionStatus;
@@ -38,6 +39,8 @@ public class SubscriptionAdminAction extends BaseAction implements ValidationErr
     SubscriptionOrderService subscriptionOrderService;
     @Autowired
     SubscriptionService subscriptionService;
+    @Autowired
+    AdminSubscriptionService adminSubscriptionService;
     @Autowired
     SubscriptionLoggingService subscriptionLoggingService;
 
@@ -121,11 +124,31 @@ public class SubscriptionAdminAction extends BaseAction implements ValidationErr
     @JsonHandler
     public Resolution cancelSubscription(){
         try{
-            subscription = subscriptionService.cancelSubscription(subscription,cancellationRemark);
+            subscription = adminSubscriptionService.cancelSubscription(subscription,cancellationRemark);
             Map<String, Object> data = new HashMap<String, Object>(1);
             data.put("subscriptionStatus", JsonUtils.hydrateHibernateObject(subscription.getSubscriptionStatus()));
             HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "cancelled",data);
             return new JsonResolution(healthkartResponse);
+        }catch (Exception e){
+            getContext().getValidationErrors().add("e2", new SimpleError(e.getMessage()));
+            return new JsonResolution(getContext().getValidationErrors(), getContext().getLocale());
+        }
+    }
+
+    @JsonHandler
+    public Resolution rewardPointsOnSubscriptionCancellation(){
+        try{
+            if(subscription.getSubscriptionStatus().getId().longValue()==EnumSubscriptionStatus.Cancelled.getId().longValue()){
+                Double rewardPoints = adminSubscriptionService.getRewardPointsForSubscriptionCancellation(subscription);
+                Map<String, Object> data = new HashMap<String, Object>(1);
+                data.put("rewardPoints", JsonUtils.hydrateHibernateObject(rewardPoints));
+                HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "cancelled",data);
+                return new JsonResolution(healthkartResponse);
+            }else{
+                HealthkartResponse healthkartResponse =new HealthkartResponse(HealthkartResponse.STATUS_ERROR,"error");
+                return new JsonResolution(healthkartResponse);
+            }
+
         }catch (Exception e){
             getContext().getValidationErrors().add("e2", new SimpleError(e.getMessage()));
             return new JsonResolution(getContext().getValidationErrors(), getContext().getLocale());

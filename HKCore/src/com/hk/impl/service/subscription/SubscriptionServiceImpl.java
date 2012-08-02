@@ -11,7 +11,6 @@ import com.hk.domain.order.Order;
 import com.hk.domain.subscription.SubscriptionProduct;
 import com.hk.domain.subscription.SubscriptionStatus;
 import com.hk.domain.user.User;
-import com.hk.manager.EmailManager;
 import com.hk.pact.service.subscription.SubscriptionLoggingService;
 import com.hk.pact.service.subscription.SubscriptionService;
 import com.hk.pact.dao.subscription.SubscriptionDao;
@@ -39,8 +38,6 @@ public class SubscriptionServiceImpl implements SubscriptionService{
     SubscriptionLoggingService subscriptionLoggingService;
     @Autowired
     SubscriptionStatusService subscriptionStatusService;
-    @Autowired
-    EmailManager emailManager;
 
     @Transactional
     public Subscription save(Subscription subscription){
@@ -83,9 +80,6 @@ public class SubscriptionServiceImpl implements SubscriptionService{
         subscription= this.save(subscription);
         subscriptionLoggingService.logSubscriptionActivity(subscription,EnumSubscriptionLifecycleActivity.SubscriptionCancelled,cancellationRemark);
         //to do award reward point after penalty or write relavent business logic
-
-        //send cancellation email to subscription user
-         emailManager.sendSubscriptionCancellationEmail(subscription);
         return subscription;
     }
 

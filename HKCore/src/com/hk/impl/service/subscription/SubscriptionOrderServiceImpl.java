@@ -152,7 +152,7 @@ public class SubscriptionOrderServiceImpl implements SubscriptionOrderService {
     public void markSubscriptionOrderAsDelivered(Order order){
         if(order.isSubscriptionOrder()){
             SubscriptionOrder subscriptionOrder= this.findSubscriptionOrderByBaseOrder(order);
-            if(!(subscriptionOrder.getSubscriptionOrderStatus().getId()==EnumSubscriptionOrderStatus.Delivered.getId() || subscriptionOrder.getSubscriptionOrderStatus().getId()==EnumSubscriptionOrderStatus.Shipped.getId())){
+            if(!(subscriptionOrder.getSubscriptionOrderStatus().getId().longValue()==EnumSubscriptionOrderStatus.Delivered.getId().longValue() || subscriptionOrder.getSubscriptionOrderStatus().getId().longValue()==EnumSubscriptionOrderStatus.Shipped.getId().longValue())){
                 Subscription subscription=subscriptionOrder.getSubscription();
 
                 subscriptionOrder.setSubscriptionOrderStatus(EnumSubscriptionOrderStatus.Delivered.asSubscriptionOrderStatus());
@@ -166,7 +166,7 @@ public class SubscriptionOrderServiceImpl implements SubscriptionOrderService {
         if(order.isSubscriptionOrder()){
 
             SubscriptionOrder subscriptionOrder= this.findSubscriptionOrderByBaseOrder(order);
-            if(!(subscriptionOrder.getSubscriptionOrderStatus().getId()==EnumSubscriptionOrderStatus.Shipped.getId()|| subscriptionOrder.getSubscriptionOrderStatus().getId()==EnumSubscriptionOrderStatus.Delivered.getId() )){
+            if(!(subscriptionOrder.getSubscriptionOrderStatus().getId().longValue()==EnumSubscriptionOrderStatus.Shipped.getId().longValue()|| subscriptionOrder.getSubscriptionOrderStatus().getId().longValue()==EnumSubscriptionOrderStatus.Delivered.getId().longValue() )){
                 Subscription subscription=subscriptionOrder.getSubscription();
 
                 subscriptionOrder.setSubscriptionOrderStatus(EnumSubscriptionOrderStatus.Shipped.asSubscriptionOrderStatus());
