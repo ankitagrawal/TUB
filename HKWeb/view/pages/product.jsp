@@ -111,7 +111,7 @@
         alwaysOn:false
       });
 
-      $('#notifyMeWindow').jqm({trigger: '.notifyMe', ajax: '@href', ajaxText:'<label>testing   </label>'});
+      $('#notifyMeWindow').jqm({trigger: '.notifyMe', ajax: '@href'});
 
     });
 
@@ -346,7 +346,7 @@
 
     <script type="text/javascript">
       $(document).ready(function(){
-        $('#subscriptionWindow').jqm({trigger: '.addSubscriptionButton', ajax: '@href'});
+        $('#subscriptionWindow').jqm({trigger: '.addSubscriptionButton', ajax: '@href', ajaxText:'<label>testing   </label>'});
       });
 
     </script>
