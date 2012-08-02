@@ -63,7 +63,7 @@ public class GRNManager {
 
     SimpleDateFormat                dateFormat      = new SimpleDateFormat("dd/MM/yyyy");
 
-    public File generateGRNXls(String xslFilePath, Long grnStatusValue, Date startDate, Date endDate, Warehouse warehouse) throws Exception {
+    public File generateGRNXls(String xslFilePath, Long grnStatusValue, Date startDate, Date endDate, Warehouse warehouse, Boolean reconciled) throws Exception {
 
         File file = new File(xslFilePath);
         FileOutputStream out = new FileOutputStream(file);
@@ -108,7 +108,7 @@ public class GRNManager {
 
         int rowCounter = 1;
 
-        grnList = getGoodsReceivedNoteDao().listGRNsExcludingStatusInTimeFrame(grnStatusValue, startDate, endDate, warehouse);
+        grnList = getGoodsReceivedNoteDao().listGRNsExcludingStatusInTimeFrame(grnStatusValue, startDate, endDate, warehouse, reconciled);
         // System.out.println("grnList: " + grnList.size());
         for (GoodsReceivedNote grn : grnList) {
             String poDetail = "";
@@ -130,16 +130,16 @@ public class GRNManager {
                     cell = row1.createCell(columnNo);
                 }
                 String productOptions = "";
-                if (grnLineItem != null && grnLineItem.getProductVariant() != null && grnLineItem.getProductVariant().getProductOptions() != null) {
-                    for (ProductOption productOption : grnLineItem.getProductVariant().getProductOptions()) {
+                if (grnLineItem != null && grnLineItem.getSku().getProductVariant() != null && grnLineItem.getSku().getProductVariant().getProductOptions() != null) {
+                    for (ProductOption productOption : grnLineItem.getSku().getProductVariant().getProductOptions()) {
                         if (productOption != null && productOption.getName() != null) {
                             productOptions += productOption.getName() + " " + productOption.getValue() + " ";
                         }
                     }
                 }
-                setCellValue(row1, 1, grnLineItem.getProductVariant().getProduct().getName() + productOptions);
-                setCellValue(row1, 2, grnLineItem.getProductVariant().getId());
-                setCellValue(row1, 3, grnLineItem.getProductVariant().getUpc());
+                setCellValue(row1, 1, grnLineItem.getSku().getProductVariant().getProduct().getName() + productOptions);
+                setCellValue(row1, 2, grnLineItem.getSku().getProductVariant().getId());
+                setCellValue(row1, 3, grnLineItem.getSku().getProductVariant().getUpc());
                 setCellValue(row1, 4, grnLineItem.getQty());
                 setCellValue(row1, 5, getAdminInventoryService().countOfCheckedInUnitsForGrnLineItem(grnLineItem));
             }

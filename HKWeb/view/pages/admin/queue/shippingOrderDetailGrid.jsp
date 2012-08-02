@@ -290,9 +290,11 @@
             <c:set var="cartLineItem" value="${lineItem.cartLineItem}"/>
             <c:set var="productVariant" value="${lineItem.sku.productVariant}"/>
             <c:set var="sku" value="${lineItem.sku}"/>
-            <c:set var="skuNetInventory" value="${hk:netInventory(sku)}"/>
+				<c:if test="${isActionQueue == true}">
+					<c:set var="skuNetInventory" value="${hk:netInventory(sku)}" />
+				</c:if>
 
-            <%--<tr>--%>
+			<%--<tr>--%>
             <c:choose>
                 <%--if order is in action awaiting state draw appropriate colour border for line item div--%>
                 <c:when test="${shippingOrderStatusActionAwaiting == shippingOrder.orderStatus.id}">
@@ -398,10 +400,12 @@
             <td style="border:1px solid gray;border-left:none;">
                 <%--<c:if test="${orderStatusActionAwaiting == shippingOrder.shippingOrderStatus.id}">--%>
                 ${lineItem.qty}
-                <c:if test="${!productVariant.product.service}">
+                <c:if test="${isActionQueue == true}">
+							<c:if test="${!productVariant.product.service}">
                     [${hk:bookedQty(sku)}]
                     (${skuNetInventory})
                 </c:if>
+						</c:if>
             </td>
             </tr>
             <%--</c:if>--%>

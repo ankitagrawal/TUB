@@ -16,6 +16,4 @@ public interface AdminSubscriptionService {
 
     public Subscription cancelSubscription(Subscription subscription,String cancellationRemark);
 
-    public Subscription updateSubscriptionAfterOrderDelivery(Subscription subscription);
-
 }

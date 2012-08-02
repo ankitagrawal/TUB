@@ -87,6 +87,10 @@ public class DeliveryAwaitingQueueAction extends BasePaginatedAction {
 
         if (trackingId != null) {
             awbList = awbService.getAvailableAwbListForCourierByWarehouseCodStatus(courier, trackingId, null, null, EnumAwbStatus.Used.getAsAwbStatus());
+            if(awbList.isEmpty()){
+                addRedirectAlertMessage(new SimpleMessage("InValid Tracking ID"));
+                return new ForwardResolution("/pages/admin/searchShippingOrder.jsp");
+            }
         } else if (courier != null) {
             courierList.add(courier);
         } else {

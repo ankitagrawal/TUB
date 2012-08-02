@@ -403,7 +403,7 @@
     </c:when>
     <c:otherwise>
       <s:layout-render name="/layouts/embed/_productWithExtraOptions.jsp" product="${product}"/>
-      <s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>
+      <%--<s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>--%>
     </c:otherwise>
   </c:choose>
   <div class="floatfix"></div>

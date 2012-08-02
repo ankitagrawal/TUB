@@ -31,6 +31,8 @@ import com.shiro.PrincipalImpl;
  */
 public class CampaignTrackingFilter implements Filter {
 
+    private static final String PING_URL = "http://www.healthkart.com/hello.jsp";
+
     private static Logger logger = LoggerFactory.getLogger(CampaignTrackingFilter.class);
 
     private CampaignTrackingDao campaignTrackingDao;
@@ -51,7 +53,15 @@ public class CampaignTrackingFilter implements Filter {
             chain.doFilter(request, response);
             return;
         }
+        
         HttpServletRequest httpRequest = (HttpServletRequest) request;
+        
+        String requestURL = httpRequest.getRequestURL().toString();
+        
+        if(requestURL.equals(PING_URL)){
+            return ;
+        }
+        
         String utm_source = httpRequest.getParameter(HttpRequestAndSessionConstants.UTM_SOURCE);
         String utm_campaign = httpRequest.getParameter(HttpRequestAndSessionConstants.UTM_CAMPAIGN);
         String utm_medium = httpRequest.getParameter(HttpRequestAndSessionConstants.UTM_MEDIUM);

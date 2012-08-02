@@ -1,21 +1,5 @@
 package com.hk.manager;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import com.hk.constants.subscription.EnumSubscriptionStatus;
-import com.hk.core.fliter.SubscriptionFilter;
-import com.hk.domain.subscription.Subscription;
-import com.hk.pact.service.subscription.SubscriptionService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.hk.constants.HttpRequestAndSessionConstants;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.core.Keys;
@@ -24,7 +8,9 @@ import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.referrer.EnumPrimaryReferrerForOrder;
+import com.hk.constants.subscription.EnumSubscriptionStatus;
 import com.hk.core.fliter.CartLineItemFilter;
+import com.hk.core.fliter.SubscriptionFilter;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.builder.CartLineItemBuilder;
 import com.hk.domain.catalog.Supplier;
@@ -36,15 +22,10 @@ import com.hk.domain.catalog.product.combo.ComboInstanceHasProductVariant;
 import com.hk.domain.clm.KarmaProfile;
 import com.hk.domain.matcher.CartLineItemMatcher;
 import com.hk.domain.offer.OfferInstance;
-import com.hk.domain.order.CartLineItem;
-import com.hk.domain.order.CartLineItemConfig;
-import com.hk.domain.order.CartLineItemExtraOption;
-import com.hk.domain.order.Order;
-import com.hk.domain.order.OrderCategory;
-import com.hk.domain.order.PrimaryReferrerForOrder;
-import com.hk.domain.order.SecondaryReferrerForOrder;
+import com.hk.domain.order.*;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.sku.Sku;
+import com.hk.domain.subscription.Subscription;
 import com.hk.domain.user.User;
 import com.hk.dto.pricing.PricingDto;
 import com.hk.exception.OutOfStockException;
@@ -67,9 +48,21 @@ import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.payment.PaymentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.store.StoreService;
+import com.hk.pact.service.subscription.SubscriptionService;
 import com.hk.pricing.PricingEngine;
 import com.hk.util.OrderUtil;
 import com.hk.web.filter.WebContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 @Component
 public class OrderManager {
@@ -301,7 +294,9 @@ public class OrderManager {
     private CartLineItem updateCartLineItemWithQty(CartLineItem cartLineItem, Long variantQty) {
         // TODO: # warehouse should not it be cartLineItem.getQty != variantQty
         if (variantQty != null && variantQty > 0 && cartLineItem.getQty() != variantQty) {
-            cartLineItem.setQty(variantQty);
+
+            Long previousQty = cartLineItem.getQty() == null ? 0 : cartLineItem.getQty() ;
+            cartLineItem.setQty(previousQty + variantQty);
             cartLineItem = getCartLineItemService().save(cartLineItem);
         }
         return cartLineItem;

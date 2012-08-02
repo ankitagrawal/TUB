@@ -56,6 +56,24 @@ public class Supplier implements java.io.Serializable {
     @Column(name = "update_date", length = 19)
     private Date   updateDate;
 
+      @Column(name = "brands")
+    private String  brandName;
+    
+    @Column(name = "credit_period")
+    private  String creditPeriod;
+
+     @Column(name = "dam_exp_cond")
+    private String damageConditions;
+
+     @Column(name = "email_id")
+    private String email_id;
+
+     @Column(name = "margins")
+    private String margins;
+
+     @Column(name = "terms_of_trade")
+    private String tot;
+    
     public Long getId() {
         return id;
     }
@@ -68,12 +86,63 @@ public class Supplier implements java.io.Serializable {
         return name;
     }
 
+
+    public String getTOT() {
+        return tot;
+    }
+
+    public void setTOT(String TOT) {
+        this.tot = TOT;
+    }
+
     public void setName(String name) {
         this.name = name;
+
+    }
+
+    public String getMargins() {
+        return margins;
+    }
+
+    public void setMargins(String margins) {
+        this.margins = margins;
+    }
+
+    public String getEmail_id() {
+        return email_id;
+    }
+
+    public void setEmail_id(String email_id) {
+        this.email_id = email_id;
+    }
+
+    public String getDamageConditions() {
+        return damageConditions;
+    }
+
+    public void setDamageConditions(String damageConditions) {
+        this.damageConditions = damageConditions;
+    }
+
+    public String getBrandName() {
+        return brandName;
+    }
+
+    public void setBrandName(String brandName) {
+        this.brandName = brandName;
+    }
+
+    public String getCreditPeriod() {
+        return creditPeriod;
+    }
+
+    public void setCreditPeriod(String creditPeriod) {
+        this.creditPeriod = creditPeriod;
     }
 
     public String getLine1() {
         return line1;
+
     }
 
     public void setLine1(String line1) {
