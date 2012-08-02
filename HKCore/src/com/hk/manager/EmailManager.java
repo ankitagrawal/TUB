@@ -479,6 +479,15 @@ public class EmailManager {
                 shippingOrder.getBaseOrder().getUser().getName());
     }
 
+    public boolean sendSubscriptionCancellationEmail(Subscription subscription){
+        HashMap valuesMap = new HashMap();
+        valuesMap.put("subscription",subscription);
+
+        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.subscriptionOrderShippedEmail);
+        return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, subscription.getBaseOrder().getUser().getEmail(),
+                subscription.getBaseOrder().getUser().getName());
+    }
+
     public boolean sendOrderShippedInPartsEmail(Order order, String invoiceLink) {
         HashMap valuesMap = new HashMap();
         valuesMap.put("order", order);

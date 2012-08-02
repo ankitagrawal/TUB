@@ -1,4 +1,4 @@
-Order Cancellation for Subscription ID ${subscription.id}
+Subscription Cancellation for Subscription ID ${subscription.id}
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -37,7 +37,7 @@ Order Cancellation for Subscription ID ${subscription.id}
                             <tr>
                                 <td colspan="5"><a href="http://www.healthkart.com"><img
                                         src="http://img.healthkart.com/email/order_cancel_user_new/main_banner.jpg" width="500"
-                                        height="148" alt="Your order has been cancelled." border="0"/></a></td>
+                                        height="148" alt="Your subscription has been cancelled." border="0"/></a></td>
                             </tr>
 
 
@@ -50,9 +50,9 @@ Order Cancellation for Subscription ID ${subscription.id}
                     <td align="left" height="15"></td>
                 </tr>
                 <tr>
-                    <td width="579" valign="top">Hi ${order.user.name}! <br/>
+                    <td width="579" valign="top">Hi ${subscription.user.name}! <br/>
                         <br/>
-                        Your Subscription for ID${subscription.id} has been canceled, as you instructed. <br/>
+                        Your Subscription for ID ${subscription.id} has been canceled, as per your instructions. <br/>
                         <br/>
 
                         You had subscribed for:<br/>
@@ -61,25 +61,22 @@ Order Cancellation for Subscription ID ${subscription.id}
                                 <td><strong>Item</strong></td>
                                 <td><strong>Quantity</strong></td>
                                 <td><strong>Unit Price</strong></td>
-                                <td><strong>Total (Rs.)</strong></td>
                             </tr>
 
-                        <#list pricingDto.productLineItems as productLineItem>
+
                             <tr>
-                                <td>${productLineItem.productVariant.product.name}<br/>
-                                    <em style="font-size:0.9em; color:#666"><#list productLineItem.productVariant.productOptions as productOption>
+                                <td>${subscription.productVariant.product.name}<br/>
+                                    <em style="font-size:0.9em; color:#666"><#list subscription.productVariant.productOptions as productOption>
                     ${productOption.name} ${productOption.value}
                     </#list></em>
                                 </td>
                                 <td>
-                                ${productLineItem.qty/pricingDto.shippingLineCount}
+                                ${subscription.qty}
                                 </td>
                                 <td><span
-                                        style="text-decoration: line-through;">${productLineItem.markedPrice}</span> ${productLineItem.hkPrice}
+                                       ${subscription.subscriptionPrice}
                                 </td>
-                                <td> ${productLineItem.hkPrice * productLineItem.qty} </td>
                             </tr>
-                        </#list>
                         </table>
                         <br/>
                         <br/>
