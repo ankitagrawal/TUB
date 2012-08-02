@@ -73,7 +73,7 @@ Subscription Cancellation for Subscription ID ${subscription.id}
                                 <td>
                                 ${subscription.qty}
                                 </td>
-                                <td><span
+                                <td>
                                        ${subscription.subscriptionPrice}
                                 </td>
                             </tr>

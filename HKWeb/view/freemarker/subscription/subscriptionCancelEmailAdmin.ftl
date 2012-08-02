@@ -73,7 +73,7 @@ Subscription Cancellation for Subscription ID ${subscription.id}
                                 <td>
                                 ${subscription.qty}
                                 </td>
-                                <td><span
+                                <td>
                                 ${subscription.subscriptionPrice}
                                 </td>
                             </tr>
@@ -112,12 +112,11 @@ ${subscription.address.line1}<br/>
 <#if subscription.address.line2??>
 ${subscription.address.line2}<br/>
 </#if>
-${subscription.address.city} - ${order.address.pin}<br/>
+${subscription.address.city} - ${subscription.address.pin}<br/>
 ${subscription.address.state} (India)<br/>
     Ph: ${subscription.address.phone}<br/>
 </p>
 
 <p style="margin-bottom:1em"><strong>HealthKart.com</strong></p>
-<#include "../footer.ftl">
 </body>
 </html>
