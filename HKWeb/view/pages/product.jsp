@@ -346,7 +346,7 @@
 
     <script type="text/javascript">
       $(document).ready(function(){
-        $('#subscriptionWindow').jqm({trigger: '.addSubscriptionButton', ajax: '@href', ajaxText:'<label>testing   </label>'});
+        $('#subscriptionWindow').jqm({trigger: '.addSubscriptionButton', ajax: '@href', ajaxText:'<img src="${pageContext.request.contextPath}/images/ajax-loader.gif"/>'});
       });
 
     </script>
