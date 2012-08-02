@@ -489,12 +489,20 @@ public class EmailManager {
     }
 
     public boolean sendSubscriptionCancellationEmailToAdmin(Subscription subscription){
+        boolean success = false;
         HashMap valuesMap = new HashMap();
         valuesMap.put("subscription",subscription);
-
-        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.subscriptionCancelEmailAdmin);
-        return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, subscription.getBaseOrder().getUser().getEmail(),
-                subscription.getBaseOrder().getUser().getName());
+        Category basketCategory = getCategoryService().getTopLevelCategory(subscription.getProductVariant().getProduct());
+        if (basketCategory != null) {
+            Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.subscriptionCancelEmailAdmin);
+            String basketCategoryName = basketCategory.getDisplayName();
+            for (String categoryAdminEmail : this.categoryAdmins(basketCategory)) {
+                success = emailService.sendHtmlEmailNoReply(freemarkerTemplate, valuesMap, categoryAdminEmail, basketCategoryName
+                        + " Category Admin");
+                /* if (!sent) success = false; */
+            }
+        }
+        return success;
     }
 
     public boolean sendOrderShippedInPartsEmail(Order order, String invoiceLink) {
