@@ -1,157 +1,123 @@
-Order cancellation for  ${order.gatewayOrderId} [${order.payment.paymentMode.name} - ${pricingDto.grandTotalPayable} - ${order.payment.paymentStatus.name}] [<#if order.offerInstance??><#if order.offerInstance.coupon??>${order.offerInstance.coupon.code}</#if></#if>]
-<html>
+Subscription Cancellation for Subscription ID ${subscription.id}
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Order Cancellation for Order ID ${order.gatewayOrderId}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Your Subscription has been cancelled.</title>
 </head>
-<body>
-<#include "header.ftl">
-<p style="margin-bottom:1em">Hi ${order.user.name}!,</p>
 
-<p style="margin-bottom:1em">We have cancelled your order id ${order.gatewayOrderId}.</p>
-<p style="margin-bottom:1em">In case of any confusion, please feel free to contact us about this on our customer care email - info@healthkart.com
-    or our customer care phone on 0124-4551616
-</p>
+<body style="margin:0; padding:0; font-family:Arial, Helvetica, sans-serif; background-color:#FFFFFF;">
+<table width="530" border="0" align="center" cellpadding="0" cellspacing="0">
+    <tr>
+        <td align="center" valign="top">
+            <table width="500" border="0" cellspacing="0" cellpadding="0" align="center"
+                   style="font-size:13px; line-height:1.75em;">
 
-<div>
-    <h3>Order Details</h3>
-    <h5>No of shipping addresses - ${pricingDto.shippingLineCount}</h5>
-    <table cellpadding="5" cellspacing="0" border="1" style="font-size:12px;">
-        <tr>
-            <td width="150"><strong>Item</strong></td>
-            <td width="50"><strong>Quantity</strong></td>
-            <td width="50"><strong>Unit price</strong></td>
-            <td width="50"><strong>Total(Rs.)</strong></td>
-        </tr>
 
-    <#list pricingDto.productLineItems as productLineItem>
-        <tr>
-            <td>${productLineItem.productVariant.product.name}<br/>
-                <em style="font-size:0.9em; color:#666"><#list productLineItem.productVariant.productOptions as productOption>
-            ${productOption.name} ${productOption.value}
-          </#list></em>
-            </td>
-            <td>
-            ${productLineItem.qty/pricingDto.shippingLineCount}
-            </td>
-            <td><span style="text-decoration: line-through;">${productLineItem.markedPrice}</span> ${productLineItem.hkPrice} </td>
-            <td> ${productLineItem.hkPrice * productLineItem.qty} </td>
-        </tr>
-    </#list>
-    </table>
-<#--<#if pricingDto.totalDiscount &gt; 0 >-->
-<#--<h3>Discounts </h3>-->
-<#--</#if>-->
-<#--<table cellpadding="5" cellspacing="0" border="1" style="font-size:12px;">-->
-<#--<#list pricingDto.productLineItems as productLineItem>-->
-<#--<#if productLineItem.discountOnHkPrice &gt; 0>-->
-<#--<tr>-->
-<#--<td width="150">${productLineItem.productVariant.product.name}<br/>-->
-<#--<em style="font-size:0.9em; color:#666"><#list productLineItem.productVariant.productOptions as productOption>-->
-<#--${productOption.name} ${productOption.value}-->
-<#--</#list></em>-->
-<#--</td>-->
-<#--<td width="50"></td>-->
-<#--<td width="50"></td>-->
-<#--<td width="50">${productLineItem.discountOnHkPrice}</td>-->
-<#--</tr>-->
-<#--</#if>-->
-<#--</#list>-->
-<#--<#if pricingDto.orderLevelDiscount &gt; 0>-->
-<#--<tr>-->
-<#--<td width="150">Order Discount</td>-->
-<#--<td width="50"></td>-->
-<#--<td width="50"></td>-->
-<#--<td width="50">${-pricingDto.orderLevelDiscount}</td>-->
-<#--</tr>-->
-<#--</#if>-->
-<#--<#if pricingDto.shippingDiscount &gt; 0>-->
-<#--<tr>-->
-<#--<td width="150">Shipping Discount</td>-->
-<#--<td width="50"></td>-->
-<#--<td width="50"></td>-->
-<#--<td width="50">${pricingDto.shippingDiscount}</td>-->
-<#--</tr>-->
-<#--</#if>-->
-<#--</table>-->
-</div>
+                <tr>
+                    <td height="20"></td>
+                </tr>
 
-<div>
-    <h3>Order Summary</h3>
-    <table cellpadding="5" cellspacing="0" border="1" style="font-size:12px;">
-        <tr>
-            <td>Item Total</td>
-            <td>
-            ${pricingDto.productsHkSubTotal}
-            </td>
-        </tr>
-        <tr>
-            <td>Shipping</td>
-            <td>
-            ${pricingDto.shippingSubTotal - pricingDto.shippingDiscount}
-            <#if pricingDto.shippingLineCount &gt; 1>
-                (${pricingDto.shippingLineCount} addresses)
-            </#if>
-            </td>
-        </tr>
-        <tr>
-            <td>Discount</td>
-            <td>
-            ${pricingDto.totalDiscount - pricingDto.shippingDiscount}
-            <#if pricingDto.shippingLineCount &gt; 1>
-                (${pricingDto.shippingLineCount} addresses)
-            </#if>
-            </td>
-        </tr>
-        <tr>
-            <td><strong>Grand Total</strong></td>
-            <td>
-                <strong>${pricingDto.grandTotalPayable}</strong>
-            </td>
-        </tr>
-    </table>
-</div>
 
-<div>
-    <h3>Other Details</h3>
-    <table cellpadding="5" cellspacing="0" border="1" style="font-size:12px;">
-        <tr>
-            <td>Payment mode</td>
-            <td>
-            ${order.payment.paymentMode.name}
-            </td>
-        </tr>
-    <#if order.payment.contactName??>
-        <tr>
-            <td>Contact Name</td>
-            <td>
-            ${order.payment.contactName}
-            </td>
-        </tr>
-    </#if>
-    <#if order.payment.contactNumber??>
-        <tr>
-            <td>Contact Number</td>
-            <td>
-            ${order.payment.contactNumber}
-            </td>
-        </tr>
-    </#if>
-    </table>
-</div>
+                <tr>
+                    <td>
+                        <table width="500" border="0" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td width="222"><a href="http://www.healthkart.com"><img
+                                        src="http://img.healthkart.com/email/logos/logo.png" alt="HealthKart.com Logo" width="207"
+                                        height="30" border="0"/></a></td>
+                                <td width="15" style="border-left: solid 1px #999999"></td>
+                                <td width="245" align="left" style="font-size:13px; font-weight:bold; color:#666666"><a
+                                        href="http://www.healthkart.com" style="color:#666666; text-decoration:none">India&#39;s premier
+                                    e-health store!</a></td>
+                                <td width="18">&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td colspan="5" height="10"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="5"><a href="http://www.healthkart.com"><img
+                                        src="http://img.healthkart.com/email/order_cancel_user_new/main_banner.jpg" width="500"
+                                        height="148" alt="Your subscription has been cancelled." border="0"/></a></td>
+                            </tr>
+
+
+                        </table>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td align="left" height="15"></td>
+                </tr>
+                <tr>
+                    <td width="579" valign="top">Hi ${subscription.user.name}! <br/>
+                        <br/>
+                        Your Subscription for ID ${subscription.id} has been canceled, as per your instructions. <br/>
+                        <br/>
+
+                        You had subscribed for:<br/>
+                        <table style="font-size:12px;" cellpadding="5" cellspacing="0" border="1">
+                            <tr>
+                                <td><strong>Item</strong></td>
+                                <td><strong>Quantity</strong></td>
+                                <td><strong>Unit Price</strong></td>
+                            </tr>
+
+
+                            <tr>
+                                <td>${subscription.productVariant.product.name}<br/>
+                                    <em style="font-size:0.9em; color:#666"><#list subscription.productVariant.productOptions as productOption>
+                    ${productOption.name} ${productOption.value}
+                    </#list></em>
+                                </td>
+                                <td>
+                                ${subscription.qty}
+                                </td>
+                                <td><span
+                                ${subscription.subscriptionPrice}
+                                </td>
+                            </tr>
+                        </table>
+                        <br/>
+                        <br/>
+
+                        If you have any questions, you can chat online with our Customer Care or call them at 0124-4551616.<br/>
+                        <br/>
+
+
+                        Healthy Shopping!<br/>
+
+                        HealthKart.com <br/>
+
+                        (India&#39;s Premier eHealth Store)
+                    </td>
+                </tr>
+                <tr>
+                    <td height="15"></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<br/>
+<br/>
+<br/>
+
 
 <h3>Shipping Address & Customer details</h3>
 <p style="margin-bottom:1em">
-${order.address.name}<br/>
-${order.address.line1}<br/>
-<#if order.address.line2??>
-${order.address.line2}<br/>
+${subscription.address.name}<br/>
+${subscription.address.line1}<br/>
+<#if subscription.address.line2??>
+${subscription.address.line2}<br/>
 </#if>
-${order.address.city} - ${order.address.pin}<br/>
-${order.address.state} (India)<br/>
-    Ph: ${order.address.phone}<br/>
+${subscription.address.city} - ${order.address.pin}<br/>
+${subscription.address.state} (India)<br/>
+    Ph: ${subscription.address.phone}<br/>
 </p>
 
 <p style="margin-bottom:1em"><strong>HealthKart.com</strong></p>
-<#include "footer.ftl">
+<#include "../footer.ftl">
 </body>
 </html>

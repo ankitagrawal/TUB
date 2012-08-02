@@ -483,7 +483,16 @@ public class EmailManager {
         HashMap valuesMap = new HashMap();
         valuesMap.put("subscription",subscription);
 
-        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.subscriptionOrderShippedEmail);
+        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.subscriptionCancelEmailUser);
+        return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, subscription.getBaseOrder().getUser().getEmail(),
+                subscription.getBaseOrder().getUser().getName());
+    }
+
+    public boolean sendSubscriptionCancellationEmailToAdmin(Subscription subscription){
+        HashMap valuesMap = new HashMap();
+        valuesMap.put("subscription",subscription);
+
+        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.subscriptionCancelEmailAdmin);
         return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, subscription.getBaseOrder().getUser().getEmail(),
                 subscription.getBaseOrder().getUser().getName());
     }

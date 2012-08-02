@@ -78,10 +78,10 @@ public class SubscriptionServiceImpl implements SubscriptionService{
         return subscription;
     }
 
-    public Subscription cancelSubscription(Subscription subscription){
+    public Subscription cancelSubscription(Subscription subscription, String cancellationRemark){
         subscription.setSubscriptionStatus(EnumSubscriptionStatus.Cancelled.asSubscriptionStatus());
         subscription= this.save(subscription);
-        subscriptionLoggingService.logSubscriptionActivity(subscription,EnumSubscriptionLifecycleActivity.SubscriptionCancelled);
+        subscriptionLoggingService.logSubscriptionActivity(subscription,EnumSubscriptionLifecycleActivity.SubscriptionCancelled,cancellationRemark);
         //to do award reward point after penalty or write relavent business logic
 
         //send cancellation email to subscription user

@@ -34,7 +34,7 @@ public interface SubscriptionService {
 
     public Subscription abandonSubscription(Subscription subscription);
 
-    public Subscription cancelSubscription(Subscription subscription);
+    public Subscription cancelSubscription(Subscription subscription,String cancellationRemark);
 
     public Page searchSubscriptions(SubscriptionSearchCriteria subscriptionSearchCriteria, int pageNo, int perPage);
 

@@ -47,6 +47,8 @@ public class SubscriptionAdminAction extends BaseAction implements ValidationErr
     @Validate(required = true, on="changeNextShipmentDate")
     private Date nextShipmentDate;
 
+    private String cancellationRemark;
+
     @JsonHandler
     public Resolution confirmedByCustomer(){
         User loggedOnUser = getUserService().getLoggedInUser();
@@ -119,7 +121,7 @@ public class SubscriptionAdminAction extends BaseAction implements ValidationErr
     @JsonHandler
     public Resolution cancelSubscription(){
         try{
-            subscription = subscriptionService.cancelSubscription(subscription);
+            subscription = subscriptionService.cancelSubscription(subscription,cancellationRemark);
             Map<String, Object> data = new HashMap<String, Object>(1);
             data.put("subscriptionStatus", JsonUtils.hydrateHibernateObject(subscription.getSubscriptionStatus()));
             HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "cancelled",data);
@@ -149,5 +151,13 @@ public class SubscriptionAdminAction extends BaseAction implements ValidationErr
 
     public void setNextShipmentDate(Date nextShipmentDate) {
         this.nextShipmentDate = nextShipmentDate;
+    }
+
+    public String getCancellationRemark() {
+        return cancellationRemark;
+    }
+
+    public void setCancellationRemark(String cancellationRemark) {
+        this.cancellationRemark = cancellationRemark;
     }
 }
