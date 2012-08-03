@@ -86,8 +86,17 @@
         width: 900
       });
 
+        //$("#frameChart").hide();
 
-      //Click and change image
+        $("#frameChartVM").click(function showVM(){
+            $("#frameChart").show();
+        });
+
+        $("#sizeGuide").click(function toggleVM(){
+            $("#frameChart").toggle();
+        });
+
+        //Click and change image
       $('.color_box').click(function() {
         var variantMainImageId = $(this).find('.variantMainImageId').val();
         //var url = "http://healthkart-prod.s3.amazonaws.com/1/"+variantMainImageId+"_t.jpg";
@@ -235,6 +244,23 @@
             </s:link>
         </shiro:hasPermission>
         </div>
+        <c:if test="${hk:collectionContains(product.categories, eyeGlass)}">
+            <div id="sizeGuide" style="background-color:#DDDDDD;padding:5px; line-height:1.3em;cursor:pointer;margin-top:8px;margin-bottom:5px;width:940px;font-weight:bold;text-align:left;">
+                Size Guide
+            </div>
+            <div id="frameChart">
+                <table width="900px;">
+                    <tr><td>
+                        <img src="${pageContext.request.contextPath}/images/banners/frame_chart.jpg"/>
+                    </td>
+                        <td style="padding:25px;" valign="top">
+                            It is very important to verify the size of your eyes before you venture into the market looking for the perfect pair of frames to wear. This manual will help you decide what the pre-requisites are and how to go about it in a proper structured manner.<a target="_blank"  href="${pageContext.request.contextPath}/pages/lp/eye_glasses/choosing-eye-glasses.html"> Read More.....</a>
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+        </c:if>
         <c:if test="${product.videoEmbedCode != null}">
             <s:layout-render name="/layouts/embed/_productVideo.jsp" productId="${product.id}"/>
         </c:if>
