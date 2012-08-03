@@ -109,14 +109,9 @@ public class OrderSummaryAction extends BaseAction {
             return new RedirectResolution(SelectAddressAction.class);
         }
 
+        pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), rewardPointsUsed), order.getAddress());
         Set<CartLineItem> subscriptionCartLineItems=new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
-        Set<Subscription> inCartSubscriptions=new HashSet<Subscription>();
-        if(subscriptionCartLineItems !=null && subscriptionCartLineItems.size()>0){
-            inCartSubscriptions = new SubscriptionFilter(order.getSubscriptions()).addSubscriptionStatus(EnumSubscriptionStatus.InCart).filter();
-            pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), rewardPointsUsed, inCartSubscriptions), order.getAddress());
-        }else {
-            pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), rewardPointsUsed), order.getAddress());
-        }
+
         order.setRewardPointsUsed(rewardPointsUsed);
         order = (Order) getBaseDao().save(order);
 
@@ -141,7 +136,7 @@ public class OrderSummaryAction extends BaseAction {
             }
         }
         if(codAllowed){
-            if(inCartSubscriptions!=null && inCartSubscriptions.size()>0){
+            if(subscriptionCartLineItems!=null && subscriptionCartLineItems.size()>0){
                 codAllowed=false;
             }
         }

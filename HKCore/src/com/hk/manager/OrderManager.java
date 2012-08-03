@@ -313,16 +313,15 @@ public class OrderManager {
          */
 
         // apply pricing and save cart line items
-      Set<Subscription> inCartSubscriptions = new SubscriptionFilter(order.getSubscriptions()).addSubscriptionStatus(EnumSubscriptionStatus.InCart).filter();
-      Set<CartLineItem> cartLIFromPricingEngine;
-      if(inCartSubscriptions !=null && inCartSubscriptions.size()>0){
-        cartLIFromPricingEngine =getPricingEngine().calculateAndApplyPricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), order.getRewardPointsUsed(),inCartSubscriptions);
-        subscriptionService.placeSubscriptions(order);
-      }else {
-        cartLIFromPricingEngine =getPricingEngine().calculateAndApplyPricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), order.getRewardPointsUsed());
-      }
-       // Set<CartLineItem> cartLIFromPricingEngine = getPricingEngine().calculateAndApplyPricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(),
-       //         order.getRewardPointsUsed());
+
+        Set<CartLineItem> cartLIFromPricingEngine =getPricingEngine().calculateAndApplyPricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), order.getRewardPointsUsed());
+
+        Set<CartLineItem> subscriptionCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
+        if(subscriptionCartLineItems !=null && subscriptionCartLineItems.size()>0){
+            subscriptionService.placeSubscriptions(order);
+        }
+        // Set<CartLineItem> cartLIFromPricingEngine = getPricingEngine().calculateAndApplyPricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(),
+        //         order.getRewardPointsUsed());
         Set<CartLineItem> cartLineItems = getCartLineItemsFromPricingCartLi(order, cartLIFromPricingEngine);
 
         PricingDto pricingDto = new PricingDto(cartLineItems, order.getAddress());
@@ -508,8 +507,8 @@ public class OrderManager {
         CartLineItem codLine = null;
         if (cartLineItems == null || cartLineItems.size() == 0) {
             CartLineItem cartLineItem = new CartLineItemBuilder().ofType(EnumCartLineItemType.CodCharges)
-            // .tax(serviceTaxProvider.get())
-            .hkPrice(codAmount).build();
+                    // .tax(serviceTaxProvider.get())
+                    .hkPrice(codAmount).build();
             cartLineItem.setOrder(order);
             codLine = cartLineItem;
         } else {
@@ -528,18 +527,10 @@ public class OrderManager {
 
     public Order recalAndUpdateAmount(Order order) {
         OfferInstance offerInstance = order.getOfferInstance();
-        PricingDto pricingDto;
 
-       Set<CartLineItem> subscriptionCartLineItems=new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
+        PricingDto pricingDto = new PricingDto(getPricingEngine().calculatePricing(order.getCartLineItems(), offerInstance, order.getAddress(), order.getRewardPointsUsed()),
+                order.getAddress());
 
-      if(subscriptionCartLineItems !=null && subscriptionCartLineItems.size()>0){
-          Set<Subscription> subscriptions = new SubscriptionFilter(order.getSubscriptions()).addSubscriptionStatus(EnumSubscriptionStatus.InCart).filter();
-        pricingDto = new PricingDto(getPricingEngine().calculatePricing(order.getCartLineItems(), offerInstance, order.getAddress(), order.getRewardPointsUsed(),subscriptions),
-            order.getAddress());
-      }else {
-        pricingDto = new PricingDto(getPricingEngine().calculatePricing(order.getCartLineItems(), offerInstance, order.getAddress(), order.getRewardPointsUsed()),
-            order.getAddress());
-      }
 
         order.setAmount(pricingDto.getGrandTotalPayable());
 
@@ -682,7 +673,7 @@ public class OrderManager {
 
     /**
      * This method need to be re-written as multiple wh would be having different tax rates hence different margins
-     * 
+     *
      * @param order
      * @return
      */
@@ -895,11 +886,11 @@ public class OrderManager {
         this.orderLoggingService = orderLoggingService;
     }
 
-  public SubscriptionService getSubscriptionService() {
-    return subscriptionService;
-  }
+    public SubscriptionService getSubscriptionService() {
+        return subscriptionService;
+    }
 
-  public void setSubscriptionService(SubscriptionService subscriptionService) {
-    this.subscriptionService = subscriptionService;
-  }
+    public void setSubscriptionService(SubscriptionService subscriptionService) {
+        this.subscriptionService = subscriptionService;
+    }
 }

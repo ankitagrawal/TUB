@@ -129,9 +129,8 @@ public class SubscriptionUpdateAction extends BaseAction implements ValidationEr
             cartLineItem=cartLineItemService.save(cartLineItem);
 
             Address address = order.getAddress() != null ? order.getAddress() : new Address();
-            Set<Subscription> inCartSubscriptions= new SubscriptionFilter(order.getSubscriptions()).addSubscriptionStatus(EnumSubscriptionStatus.InCart).filter();
 
-            PricingDto pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), address, 0D, inCartSubscriptions), address);
+            PricingDto pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), address, 0D), address);
 
 //            CartLineItem cartLineItem=new CartLineItemBuilder().forSubscription(subscription).build();
             pricingSubDto = new PricingSubDto(pricingDto, cartLineItem);

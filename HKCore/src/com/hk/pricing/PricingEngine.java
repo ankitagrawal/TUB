@@ -2,6 +2,7 @@ package com.hk.pricing;
 
 import java.util.*;
 
+import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.subscription.Subscription;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -58,50 +59,16 @@ public class PricingEngine {
 
         Set<CartLineItem> invoiceLines = pricing(lineItems, offerInstance, address, redeemRewardPoints);
 
+        Set<CartLineItem> subscriptionCartLineItems= new CartLineItemFilter(lineItems).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
+        for(CartLineItem subscriptionCartLineItem: subscriptionCartLineItems){
+            invoiceLines.add(subscriptionCartLineItem);
+        }
+
         if (copiedInstance != null) {
             offerInstance.setActive(copiedInstance.isActive());
         }
 
         return invoiceLines;
-    }
-
-    /**
-     * This method reset the state of offer instance. i.e after calculating the price it reset the offer intance to its
-     * intial state. This way we can prevent the un-intentional saving of intermediate state of offer instance at the
-     * time of automatic session/database flushing by hibernate.
-     * this method is added for subscriptions in order not to interfere much with the other code base and the pricing engine
-     * @param lineItems
-     * @param offerInstance
-     * @param address
-     * @param redeemRewardPoints
-     * @param subscriptions
-     * @return
-     */
-    public Set<CartLineItem> calculatePricing(final Set<CartLineItem> lineItems, OfferInstance offerInstance, Address address, Double redeemRewardPoints,Set<Subscription> subscriptions) {
-
-        OfferInstance copiedInstance = null;
-
-        if (offerInstance != null) {
-            copiedInstance = new OfferInstance();
-            copiedInstance.setActive(offerInstance.isActive());
-        }
-
-        Set<CartLineItem> invoiceLines = pricing(lineItems, offerInstance, address, redeemRewardPoints);
-
-        if (copiedInstance != null) {
-            offerInstance.setActive(copiedInstance.isActive());
-        }
-
-        if(subscriptions!=null && subscriptions.size()>0 ){
-            List<CartLineItem> subscriptionLines;
-            subscriptionLines=createSubscriptionLineItems(subscriptions);
-            for(CartLineItem subscriptionItem: subscriptionLines){
-                invoiceLines.add(subscriptionItem);
-            }
-        }
-
-        return invoiceLines;
-
     }
 
     /**
@@ -114,23 +81,15 @@ public class PricingEngine {
      * @return
      */
     public Set<CartLineItem> calculateAndApplyPricing(final Set<CartLineItem> cartLineItems, OfferInstance offerInstance, Address address, Double redeemRewardPoints) {
-        return pricing(cartLineItems, offerInstance, address, redeemRewardPoints);
-    }
-
-    public Set<CartLineItem> calculateAndApplyPricing(final Set<CartLineItem> cartLineItems, OfferInstance offerInstance, Address address, Double redeemRewardPoints, Set<Subscription> subscriptions) {
-        if(subscriptions!=null && subscriptions.size()>0){
-            List<CartLineItem> subscriptionLines;
-            Set<CartLineItem> lineItems=pricing(cartLineItems, offerInstance, address, redeemRewardPoints);
-            subscriptionLines=createSubscriptionLineItems(subscriptions);
-            for(CartLineItem subscriptionItem: subscriptionLines){
-                lineItems.add(subscriptionItem);
-            }
-            return  lineItems;
-        }else{
-            return pricing(cartLineItems, offerInstance, address, redeemRewardPoints);
+        Set<CartLineItem> invoiceLines = pricing(cartLineItems, offerInstance, address, redeemRewardPoints);
+        Set<CartLineItem> subscriptionCartLineItems= new CartLineItemFilter(cartLineItems).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
+        for(CartLineItem subscriptionCartLineItem: subscriptionCartLineItems){
+            invoiceLines.add(subscriptionCartLineItem);
         }
 
+        return invoiceLines;
     }
+
     private Set<CartLineItem> pricing(final Set<CartLineItem> lineItems, OfferInstance offerInstance, Address address, Double redeemRewardPoints) {
         Set<CartLineItemWrapper> cartLineItemWrappers = initProductLineItems(lineItems, address);
         Set<CartLineItem> orderLevelDiscountLineItems = new HashSet<CartLineItem>();
@@ -613,15 +572,4 @@ public class PricingEngine {
                         + pricingDto.getPrepaidServicesTotal() + shipping : redeemRewardPoints).build();
     }
 
-    private List<CartLineItem> createSubscriptionLineItems(Set<Subscription> subscriptions){
-        Double discountOnHkPrice = 0.0;
-        Double markedPrice =0.0;
-        Double hkPrice = 0.0;
-        List<CartLineItem> subscriptionLineItemList = new ArrayList<CartLineItem>();
-        for(Subscription subscription : subscriptions){
-            CartLineItem subscriptionLineItem= new CartLineItemBuilder().forSubscription(subscription).build();
-            subscriptionLineItemList.add(subscriptionLineItem);
-        }
-        return  subscriptionLineItemList;
-    }
 }

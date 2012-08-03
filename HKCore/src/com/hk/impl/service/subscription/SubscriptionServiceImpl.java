@@ -65,6 +65,10 @@ public class SubscriptionServiceImpl implements SubscriptionService{
         for(Subscription subscription : inCartSubscriptions){
             subscription.setSubscriptionStatus(EnumSubscriptionStatus.Placed.asSubscriptionStatus());
             subscription.setAddress(order.getAddress());
+            if(subscription.getStartDate().getTime()<BaseUtils.getCurrentTimestamp().getTime()){
+                subscription.setStartDate(BaseUtils.getCurrentTimestamp());
+                subscription.setNextShipmentDate(BaseUtils.getCurrentTimestamp());
+            }
             subscriptionDao.save(subscription);
             subscriptionLoggingService.logSubscriptionActivity(subscription, EnumSubscriptionLifecycleActivity.SubscriptionPlaced);
             emailManager.sendSubscriptionPlacedEmailToUser(subscription);

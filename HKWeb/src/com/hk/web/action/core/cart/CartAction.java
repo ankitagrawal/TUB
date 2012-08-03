@@ -154,15 +154,12 @@ public class CartAction extends BaseAction {
              * Set<CartLineItem> cartLineItemsSet = new HashSet<CartLineItem>();
              * cartLineItemsSet.addAll(cartLineItems);
              */
-            Set<CartLineItem> subscriptionCartLineItems=new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
+            pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), address, 0D), address);
 
+            Set<CartLineItem> subscriptionCartLineItems=new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
             if(subscriptionCartLineItems !=null && subscriptionCartLineItems.size()>0){
                 subscriptions = new SubscriptionFilter(order.getSubscriptions()).addSubscriptionStatus(EnumSubscriptionStatus.InCart).filter();
-                pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), address, 0D, subscriptions), address);
-                 itemsInCart+=subscriptions.size();
-
-            }else {
-                pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), address, 0D), address);
+                itemsInCart+=subscriptions.size();
             }
         }
 
@@ -186,8 +183,8 @@ public class CartAction extends BaseAction {
                         itemsInCart = Long.valueOf(order.getExclusivelyProductCartLineItems().size() + order.getExclusivelyComboCartLineItems().size());
                     }
                 }
-               int inCartSubscriptions= new CartLineItemFilter(cartLineItems).addCartLineItemType(EnumCartLineItemType.Subscription).filter().size();
-               itemsInCart+=inCartSubscriptions;
+                int inCartSubscriptions= new CartLineItemFilter(cartLineItems).addCartLineItemType(EnumCartLineItemType.Subscription).filter().size();
+                itemsInCart+=inCartSubscriptions;
             }
         }
         return new ForwardResolution("/pages/cart.jsp");
@@ -195,7 +192,7 @@ public class CartAction extends BaseAction {
 
     /**
      * method used to update the latest pricing, for eg when an offer is applied/changed
-     * 
+     *
      * @return
      */
     @JsonHandler
@@ -268,11 +265,11 @@ public class CartAction extends BaseAction {
         this.userService = userService;
     }
 
-  public Set<Subscription> getSubscriptions() {
-    return subscriptions;
-  }
+    public Set<Subscription> getSubscriptions() {
+        return subscriptions;
+    }
 
-  public void setSubscriptions(Set<Subscription> subscriptions) {
-    this.subscriptions = subscriptions;
-  }
+    public void setSubscriptions(Set<Subscription> subscriptions) {
+        this.subscriptions = subscriptions;
+    }
 }

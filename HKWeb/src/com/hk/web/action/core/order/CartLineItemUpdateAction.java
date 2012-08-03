@@ -98,9 +98,7 @@ public class CartLineItemUpdateAction extends BaseAction {
             Order order = orderManager.getOrCreateOrder(getPrincipalUser());
             Address address = order.getAddress() != null ? order.getAddress() : new Address();
 
-           Set<Subscription> subscriptions=new SubscriptionFilter(order.getSubscriptions()).addSubscriptionStatus(EnumSubscriptionStatus.InCart).filter();
-
-           PricingDto pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), address, 0D, subscriptions), address);
+           PricingDto pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), address, 0D), address);
 
             //If it is remove from cart event then report it to recommendation engine
             /*if (cartLineItem.getQty() == 0){
