@@ -76,17 +76,20 @@
                           <c:choose>
                               <c:when test="${variant.mainImageId != null}">
                                   <li><a href='javascript:void(0);'
-                                         rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, variant.mainImageId,isSecure)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, variant.mainImageId,isSecure)}'}"><img
+                                         rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, variant.mainProductImageId,isSecure)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, variant.mainProductImageId,isSecure)}'}"><img
                                           src='${hk:getS3ImageUrl(imageSmallSize, variant.mainImageId,isSecure)}'></a>
-                                      <s:checkbox name="productVariantList[${ctr.index}].selected" class="checkbox" style="align:center"/>
+                                      <s:checkbox name="productVariantList[${ctr.index}].selected" class="checkbox" style="align:center;padding-left:2px;"/>
                                   </li>
                               </c:when>
                               <c:otherwise>
-                                  <c:if test="${hk:isNotBlank(variant.colorHex)}">
-                                      <div style="height: 40px; width: 40px; background-color:${variant.colorHex};"
-                                           title="${variant.colorOptionsValue}">
-                                          &nbsp;</div>
-                                  </c:if>
+                                  <div class="color_box">
+                                      <c:if test="${hk:isNotBlank(variant.colorHex)}">
+                                          <div style="height: 40px; width: 40px; background-color:${variant.colorHex};"
+                                               title="${variant.colorOptionsValue}">
+                                              &nbsp;</div>
+                                          <s:checkbox name="productVariantList[${ctr.index}].selected" class="checkbox" style="align:center;padding-left:2px;"/>
+                                      </c:if>
+                                  </div>
                               </c:otherwise>
                           </c:choose>
 
