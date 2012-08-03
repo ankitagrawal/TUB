@@ -214,6 +214,11 @@
             <div id="bannersDiv">
                 <div style="margin-top:30px;"></div>
                 <div class="clear"></div>
+                <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${comboBean}"/>
+                <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${comboBean}"/>
+
+                <div style="margin-top:30px;"></div>
+                <div class="clear"></div>
 
                 <c:forEach items="${comboBean.superSaverImages}" var="image">
                     <c:set var="product" value="${image.product}"/>
@@ -230,6 +235,11 @@
 
                     <div class="clear"></div>
                 </c:forEach>
+                <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${comboBean}"/>
+                <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${comboBean}"/>
+
+                <div style="margin-top:30px;"></div>
+                <div class="clear"></div>
             </div>
         </s:form>
     </div>
