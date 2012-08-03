@@ -3,6 +3,7 @@ package com.hk.impl.dao.inventory;
 import java.util.Arrays;
 import java.util.List;
 
+import com.hk.domain.warehouse.Warehouse;
 import org.springframework.stereotype.Repository;
 
 import com.hk.domain.sku.Sku;
@@ -21,6 +22,22 @@ public class ProductVariantInventoryDaoImpl extends BaseDaoImpl implements Produ
         if (skuList != null && !skuList.isEmpty()) {
             String query = "select sum(pvi.qty) from ProductVariantInventory pvi where pvi.sku in (:skuList)";
             netInv = (Long) getSession().createQuery(query).setParameterList("skuList", skuList).uniqueResult();
+            if (netInv == null) {
+                netInv = 0L;
+            }
+        }
+        return netInv;
+    }
+
+    public Long getNetInventoryForSkuInWarehouse(Sku sku, Warehouse warehouse) {
+        return getNetInventoryForSkuInWarehouse(Arrays.asList(sku), warehouse);
+    }
+
+    public Long getNetInventoryForSkuInWarehouse(List<Sku> skuList, Warehouse warehouse) {
+        Long netInv = 0L;
+        if (skuList != null && !skuList.isEmpty()) {
+            String query = "select sum(pvi.qty) from ProductVariantInventory pvi where pvi.sku in (:skuList) and pvi.sku.warehouse = :warehouse";
+            netInv = (Long) getSession().createQuery(query).setParameter("warehouse", warehouse).setParameterList("skuList", skuList).uniqueResult();
             if (netInv == null) {
                 netInv = 0L;
             }

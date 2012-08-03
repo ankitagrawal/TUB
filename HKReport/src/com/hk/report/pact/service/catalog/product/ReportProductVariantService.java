@@ -13,6 +13,8 @@ public interface ReportProductVariantService {
 
     public InventorySoldDto findInventorySoldByDateAndProduct(Date startDate, Date endDate, String productId);
 
+    public InventorySoldDto findInventorySoldByDateAndProduct(Date startDate, Date endDate, String productId, Warehouse warehouse);
+
     public List<ExpiryAlertReportDto> getToBeExpiredProductDetails(Date startDate, Date endDate, Warehouse warehouse);
 
     public StockReportDto getStockDetailsByProductVariant(String productVariantId, Warehouse warehouse, Date startDate, Date endDate);

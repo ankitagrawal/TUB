@@ -35,6 +35,10 @@ public class ReportProductVariantServiceImpl implements ReportProductVariantServ
         return getReportProductVariantDao().findInventorySoldByDateAndProduct(startDate, endDate,productId);
     }
 
+    public InventorySoldDto findInventorySoldByDateAndProduct(Date startDate, Date endDate, String productId, Warehouse warehouse) {
+        return getReportProductVariantDao().findInventorySoldByDateAndProduct(startDate, endDate, productId, warehouse);
+    }
+
     public List<ExpiryAlertReportDto> getToBeExpiredProductDetails(Date startDate, Date endDate, Warehouse warehouse) {
         List<ExpiryAlertReportDto> expiryAlertReportDtoList = reportProductVariantDao.getToBeExpiredProductDetails(startDate, endDate, warehouse);
         List<ExpiryAlertReportDto> expiryAlertReturnList = new ArrayList<ExpiryAlertReportDto>();

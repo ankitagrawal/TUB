@@ -13,6 +13,7 @@ import org.hibernate.Query;
 import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -30,12 +31,27 @@ public class ReportProductVariantDaoImpl extends BaseDaoImpl implements ReportPr
                 Transformers.aliasToBean(InventorySoldDto.class)).list();
     }
 
+    public InventorySoldDto findInventorySoldByDateAndProduct(Date startDate, Date endDate, String productId, Warehouse warehouse) {
+        String sql = "select count(li.id) as countSold,li.sku.productVariant.product.id as productId, li.sku.productVariant.product.name as productName"
+                + " from LineItem li"
+                + " where  li.shippingOrder.shippingOrderStatus.id in (:shippingOrderStatus) and li.shippingOrder.shipment.shipDate > :startDate "
+                + " and li.shippingOrder.shipment.shipDate < :endDate and li.sku.productVariant.product.id = :productId ";
+
+        if(warehouse != null) {
+            sql += " and li.shippingOrder.warehouse = :warehouse";
+        }
+        sql += " order by count(li.id) desc ";
+        Query query = getSession().createQuery(sql).setParameter("startDate", startDate).setParameter("endDate", endDate).setParameter("productId", productId)
+                .setParameterList("shippingOrderStatus", Arrays.asList(EnumShippingOrderStatus.SO_Shipped.getId(), EnumShippingOrderStatus.SO_Delivered.getId()));
+
+        if(warehouse != null) {
+            query.setParameter("warehouse", warehouse);
+        }
+        return (InventorySoldDto) query.setResultTransformer(Transformers.aliasToBean(InventorySoldDto.class)).uniqueResult();
+    }
+
     public InventorySoldDto findInventorySoldByDateAndProduct(Date startDate, Date endDate, String productId) {
-        return (InventorySoldDto) getSession().createQuery(
-                "select count(li.id) as countSold,li.sku.productVariant.product.id as productId," + " li.sku.productVariant.product.name as productName" + " from LineItem li"
-                        + " where  li.shippingOrder.shippingOrderStatus.id in (180,190) and li.shippingOrder.shipment.shipDate > :startDate "
-                        + " and li.shippingOrder .shipment.shipDate < :endDate " + " and li.sku.productVariant.product.id = :productId order by count(li.id) desc ").setParameter(
-                "startDate", startDate).setParameter("endDate", endDate).setParameter("productId", productId).setResultTransformer(Transformers.aliasToBean(InventorySoldDto.class)).uniqueResult();
+        return findInventorySoldByDateAndProduct(startDate, endDate, productId, null);
     }
 
     public List<ExpiryAlertReportDto> getToBeExpiredProductDetails(Date startDate, Date endDate, Warehouse warehouse) {

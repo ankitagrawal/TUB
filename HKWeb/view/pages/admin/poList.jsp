@@ -91,6 +91,9 @@
           <td>${purchaseOrder.id}</td>
           <td><fmt:formatDate value="${purchaseOrder.createDate}" type="both" timeStyle="short"/></td>
           <td>${purchaseOrder.createdBy.name}</td>
+            <c:forEach items="${purchaseOrder.poLineItems}" var="purchaseOrderLineItems">
+                ${purchaseOrderLineItems.sku}
+            </c:forEach>
           <td>${purchaseOrder.approvedBy.name}</td>
           <td>${purchaseOrder.supplier.name}</td>
           <td>${purchaseOrder.supplier.tinNumber}</td>

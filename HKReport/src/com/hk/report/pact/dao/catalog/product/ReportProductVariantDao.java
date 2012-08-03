@@ -16,6 +16,8 @@ public interface ReportProductVariantDao{
 
     public InventorySoldDto findInventorySoldByDateAndProduct(Date startDate, Date endDate, String productId);
 
+    public InventorySoldDto findInventorySoldByDateAndProduct(Date startDate, Date endDate, String productId, Warehouse warehouse);
+
     public List<ExpiryAlertReportDto> getToBeExpiredProductDetails(Date startDate, Date endDate, Warehouse warehouse);
 
     public Long getOpeningStockOfProductVariantOnDate(String productVariant, Date txnDate, Warehouse warehouse);
