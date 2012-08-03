@@ -1,11 +1,18 @@
 <%@ page import="com.hk.domain.catalog.product.Product" %>
+<%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
+<c:set var="imageLargeSize" value="<%=EnumImageSize.LargeSize%>"/>
+<c:set var="imageMediumSize" value="<%=EnumImageSize.MediumSize%>"/>
+<c:set var="imageSmallSize" value="<%=EnumImageSize.TinySize%>"/>
 <s:layout-definition>
   <%
-    Product product = (Product) pageContext.getAttribute("product");
-    pageContext.setAttribute("product", product);
+      Product product = (Product) pageContext.getAttribute("product");
+      pageContext.setAttribute("product", product);
+
+      boolean isSecure = pageContext.getRequest().isSecure();
+      pageContext.setAttribute("isSecure", isSecure);
   %>
 <div class='variants'>
     <span style="font-style: italic; font-size: 16px;;"> ${hk:getNonDeletedVariants(product)}</span>
@@ -38,31 +45,46 @@
               <div class='row prods'>
                 <div class='prod' style="text-align: center;">
                   <c:choose>
-                    <c:when
-                        test="${hk:isNotBlank(variant.variantName) && hk:topLevelCategory(variant.product).name != 'eye'}">
-                      ${variant.variantName}
-                      <br/>
-                      <br/>
-                    </c:when>
-                    <c:otherwise>
-                      <c:forEach items="${variant.productOptions}" var="variantOption">
-                        <c:if
-                            test="${variantOption.name == 'TYPE' || variantOption.name == 'type' || variantOption.name == 'Type' || variantOption.name == 'BABY WEIGHT' || variantOption.name == 'baby weight' || variantOption.name == 'Baby Weight' || variantOption.name == 'SIZE' || variantOption.name == 'Size' || variantOption.name == 'size' || variantOption.name == 'FLAVOR' || variantOption.name == 'flavor' || variantOption.name == 'Flavor'}">
-                          ${variantOption.value}
+                      <c:when test="${variant.mainImageId != null}">
+                          <a href='javascript:void(0);'
+                             rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, variant.mainImageId,isSecure)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, variant.mainImageId,isSecure)}'}"><img
+                                  src='${hk:getS3ImageUrl(imageSmallSize, variant.mainImageId,isSecure)}'></a>
                           <br/>
                           <br/>
-                        </c:if>
-                      </c:forEach>
-                    </c:otherwise>
-                  </c:choose>
-                  <c:if test="${variant.discountPercent > 0}">
-                    <div class="special green" style="text-align: center;">
+                          <c:if test="${hk:isNotBlank(variant.variantName) && hk:topLevelCategory(variant.product).name != 'eye'}">
+                              ${variant.variantName}
+                          </c:if>
+                      </c:when>
+                      <c:otherwise>
+                          <c:choose>
+                              <c:when
+                                      test="${hk:isNotBlank(variant.variantName) && hk:topLevelCategory(variant.product).name != 'eye'}">
+                                  ${variant.variantName}
+                                  <br/>
+                                  <br/>
+                              </c:when>
+                              <c:otherwise>
+                                  <c:forEach items="${variant.productOptions}" var="variantOption">
+                                      <c:if
+                                              test="${variantOption.name == 'TYPE' || variantOption.name == 'type' || variantOption.name == 'Type' || variantOption.name == 'BABY WEIGHT' || variantOption.name == 'baby weight' || variantOption.name == 'Baby Weight' || variantOption.name == 'SIZE' || variantOption.name == 'Size' || variantOption.name == 'size' || variantOption.name == 'FLAVOR' || variantOption.name == 'flavor' || variantOption.name == 'Flavor'}">
+                                          ${variantOption.value}
+                                          <br/>
+                                          <br/>
+                                      </c:if>
+                                  </c:forEach>
+                              </c:otherwise>
+                          </c:choose>
+                          <c:if test="${variant.discountPercent > 0}">
+                              <div class="special green" style="text-align: center;">
                                                 <span style="font-weight: bold;"><fmt:formatNumber
-                                                    value="${variant.discountPercent*100}"
-                                                    maxFractionDigits="0"/>%</span>
-                      off
-                    </div>
-                  </c:if>
+                                                        value="${variant.discountPercent*100}"
+                                                        maxFractionDigits="0"/>%</span>
+                                  off
+                              </div>
+                          </c:if>
+                      </c:otherwise>
+                  </c:choose>
+                    <br/><br/>
                 </div>
                 <div class='desc'>
                   <c:forEach items="${variant.productOptions}" var="variantOption">
@@ -71,20 +93,29 @@
                   </c:forEach>
                 </div>
                 <c:if test="${variant.discountPercent > 0}">
-                  <div class='prices'>
-                    <div class='cut'>
+                    <div class='prices'>
+                        <div class='cut'>
                 <span class='num'>
                   Rs <fmt:formatNumber value="${variant.markedPrice}" maxFractionDigits="0"/>
                 </span>
-                    </div>
-                    <div class='hk'>
-                      Our Price <br/>
+                        </div>
+                        <div class='hk'>
+                            Our Price <br/>
                 <span class='num' style="font-size: 14px;" :>
                   Rs <fmt:formatNumber value="${hk:getApplicableOfferPrice(variant) + hk:getPostpaidAmount(variant)}"
                                        maxFractionDigits="0"/>
                 </span>
+                        </div>
+                        <br/><br/>
+                        <c:if test="${variant.mainImageId != null}">
+                            <div class="special green" style="text-align: center;font-size: 12px">
+                                                <span style="font-weight: bold;"><fmt:formatNumber
+                                                        value="${variant.discountPercent*100}"
+                                                        maxFractionDigits="0"/>%</span>
+                                off
+                            </div>
+                        </c:if>
                     </div>
-                  </div>
                 </c:if>
                 <c:if test="${variant.discountPercent == 0}">
                   <div class='prices'>

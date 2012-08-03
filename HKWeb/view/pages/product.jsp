@@ -189,59 +189,56 @@
 </s:layout-component>
 
 <s:layout-component name="prod_slideshow">
-  <div class='product_slideshow'>
-    <div class="img320">
-      <a href="${hk:getS3ImageUrl(imageLargeSize, product.mainImageId,isSecure)}" class="jqzoom" rel='gal1'
-         title="${product.name}">
-        <img src="${hk:getS3ImageUrl(imageMediumSize, product.mainImageId,isSecure)}" alt="${product.name}"
-             title="${product.name}">
-      </a>
-      <c:if test="${fn:length(pa.productImages) > 1}">
-        <ul id="thumblist">
-          <c:forEach items="${pa.productImages}" var="productImage">
-            <li><a href='javascript:void(0);'
-                   rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, productImage.id,isSecure)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, productImage.id,isSecure)}'}"><img
-                src='${hk:getS3ImageUrl(imageSmallSize, productImage.id,isSecure)}'></a></li>
-          </c:forEach>
-        </ul>
-      </c:if>
+    <div class='product_slideshow'>
+        <div class="img320">
+            <a href="${hk:getS3ImageUrl(imageLargeSize, product.mainImageId,isSecure)}" class="jqzoom" rel='gal1'
+               title="${product.name}">
+                <img src="${hk:getS3ImageUrl(imageMediumSize, product.mainImageId,isSecure)}" alt="${product.name}"
+                     title="${product.name}">
+            </a>
+        </div>
+        <div class="thumblist">
+            <c:if test="${fn:length(pa.productImages) > 1}">
+                <ul id="thumblist">
+                    <c:forEach items="${pa.productImages}" var="productImage">
+                        <li><a href='javascript:void(0);'
+                               rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, productImage.id,isSecure)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, productImage.id,isSecure)}'}"><img
+                                src='${hk:getS3ImageUrl(imageSmallSize, productImage.id,isSecure)}'></a></li>
+                    </c:forEach>
+                </ul>
+            </c:if>
+        </div>
+        <div class="clear"></div>
+        <div style="padding-top: 15px">
+            <shiro:hasPermission name="<%=PermissionConstants.GET_PRODUCT_LINK%>">
+                <a name="showProductLink" class="linkbutton"
+                   onclick="$('#getProductLinkWindow').jqm(); $('#getProductLinkWindow').jqmShow();"
+                   style="cursor:pointer">Get
+                    Links</a>
+                <a name="showProductLink" class="linkbutton"
+                   onclick="$('#getBannerLinkWindow').jqm(); $('#getBannerLinkWindow').jqmShow();"
+                   style="cursor:pointer">Get
+                    Banners</a>
+            </shiro:hasPermission>
+        </div>
+        <div class="clear"></div>
+        <div><shiro:hasPermission name="<%=PermissionConstants.MANAGE_IMAGE%>">
+            <s:link beanclass="com.hk.web.action.core.catalog.image.UploadImageAction" event="pre" target="_blank"
+                    class="popup"> Upload
+                <s:param name="product" value="${product.id}"/>
+            </s:link>
+            <s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction"
+                    event="manageProductImages" target="_blank"
+                    class="popup">Manage
+                Images
+                <s:param name="productId" value="${product.id}"/>
+            </s:link>
+        </shiro:hasPermission>
+        </div>
+        <c:if test="${product.videoEmbedCode != null}">
+            <s:layout-render name="/layouts/embed/_productVideo.jsp" productId="${product.id}"/>
+        </c:if>
     </div>
-    <div><br/><br/><br/></div>
-    <div>
-      <shiro:hasPermission name="<%=PermissionConstants.GET_PRODUCT_LINK%>">
-        <a name="showProductLink" class="linkbutton"
-           onclick="$('#getProductLinkWindow').jqm(); $('#getProductLinkWindow').jqmShow();" style="cursor:pointer">Get
-                                                                                                                    Links</a>
-        <a name="showProductLink" class="linkbutton"
-           onclick="$('#getBannerLinkWindow').jqm(); $('#getBannerLinkWindow').jqmShow();" style="cursor:pointer">Get
-                                                                                                                  Banners</a>
-      </shiro:hasPermission>
-    </div>
-    <shiro:hasPermission name="<%=PermissionConstants.MANAGE_IMAGE%>">
-      <br/>
-
-      <div><s:link beanclass="com.hk.web.action.core.catalog.image.UploadImageAction" event="pre" target="_blank"
-                   class="popup"> Upload
-        <s:param name="product" value="${product.id}"/>
-      </s:link>
-        <s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction"
-                event="manageProductImages" target="_blank"
-                class="popup">Manage
-                              Images
-          <s:param name="productId" value="${product.id}"/>
-        </s:link>
-      </div>
-    </shiro:hasPermission>
-    <c:if test="${product.videoEmbedCode != null}">
-      <s:layout-render name="/layouts/embed/_productVideo.jsp" productId="${product.id}"/>
-    </c:if>
-  </div>
-
-  <c:if test="${product.id == 'NUT904'}">
-    <div id="gulal" style="position:absolute; left: 600px; display: none">
-      <img src="<hk:vhostImage/>/images/gulal-spray.png"/>
-    </div>
-  </c:if>
 
 </s:layout-component>
 
