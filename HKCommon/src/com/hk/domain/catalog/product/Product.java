@@ -143,7 +143,7 @@ public class Product implements java.io.Serializable {
     @Column(name = "drop_shipping")
     private boolean              dropShipping;
 
-    @Column(name = "is_subscribable", nullable = true)
+    @Column(name = "is_subscribable", nullable = false)
     private boolean              isSubscribable;
 
 
