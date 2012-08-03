@@ -734,13 +734,6 @@
         padding: 5px;
     }
 
-    div.options {
-        border: 1px solid darkgray;
-        border-radius: 0.5em;
-        background: #EEEEEE;
-        padding: 10px 0;
-    }
-
     div.result {
         border: 2px solid darkgray;
         border-radius: 0.5em;
@@ -775,6 +768,17 @@
         margin: 10px 5px;
     }
 
+    div.options {
+        border: 1px solid darkgray;
+        border-radius: 0.5em;
+        background: #EEEEEE;
+        padding: 10px 0;
+
+        -webkit-transition-duration: 0.2s;
+        -moz-transition-duration: 0.2s;
+        transition-duration: 0.2s;
+    }
+
     div.options:hover {
         border: solid 1px #CCC;
         -moz-box-shadow: 1px 1px 5px #999;
@@ -799,6 +803,7 @@
     div.imageDiv {
         min-width: 130px;
         min-height: 130px;
+        cursor: pointer;
     }
 
     div.buyDiv {

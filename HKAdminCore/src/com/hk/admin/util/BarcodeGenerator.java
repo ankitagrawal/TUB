@@ -1,11 +1,6 @@
 package com.hk.admin.util;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-
+import com.hk.constants.core.Keys;
 import org.krysalis.barcode4j.impl.code128.Code128Bean;
 import org.krysalis.barcode4j.output.bitmap.BitmapCanvasProvider;
 import org.krysalis.barcode4j.tools.UnitConv;
@@ -14,7 +9,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.hk.constants.core.Keys;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 @Component
 public class BarcodeGenerator {
@@ -26,14 +25,14 @@ public class BarcodeGenerator {
 
 
     public static void main(String[] args) {
-        new BarcodeGenerator().getBarcodePath("psq1334w73472dfsk",1.0f);
+        new BarcodeGenerator().getBarcodePath("psq1334w73472dfsk",1.5f, 225);
     }
 
-    public String getBarcodePath(String gatewayOrderId,float inch) {
-        String barcodeFilePath = barcodeDir + "/" + gatewayOrderId + ".png";
+    public String getBarcodePath(String barcodeString,float inch, int dpi) {
+        String barcodeFilePath = barcodeDir + "/" + barcodeString + ".png";
         try {
             Code128Bean bean = new Code128Bean();
-            final int dpi = 150;
+//            final int dpi = 150;
 
             // Configure the barcode generator
             bean.setModuleWidth(UnitConv.in2mm(inch / dpi)); // makes the narrow bar
@@ -50,7 +49,7 @@ public class BarcodeGenerator {
                 BitmapCanvasProvider canvas = new BitmapCanvasProvider(out, "image/x-png", dpi, BufferedImage.TYPE_BYTE_BINARY, false, 0);
 
                 // Generate the barcode
-                bean.generateBarcode(canvas, gatewayOrderId);
+                bean.generateBarcode(canvas, barcodeString);
 
                 // Signal end of generation
                 canvas.finish();

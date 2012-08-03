@@ -303,7 +303,7 @@ public class HKDeliveryAction extends BaseAction {
             receivedDetails = "Name:" + "\n" + "Relation:" + "\n" + "Mobile No.:" + "\n" + "Received Date,Time:" + "\n" + "Sign";
 
             //adding barcode image to cell
-            barcodePath = barcodeGenerator.getBarcodePath(shippingOrderList.get(index).getGatewayOrderId(), 1.0f);
+            barcodePath = barcodeGenerator.getBarcodePath(shippingOrderList.get(index).getGatewayOrderId(), 1.0f, 150);
 
             //add picture data to this workbook.
             is = new FileInputStream(barcodePath);

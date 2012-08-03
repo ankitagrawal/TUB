@@ -92,11 +92,11 @@
    <jsp:include page="/categoryBanners/beautyBrandDiscount.jsp"/>
   </c:if>
 
-  <c:if test="${hk:collectionContains(topCategoryNameList, 'personal-care')}">
+  <!--<c:if test="${hk:collectionContains(topCategoryNameList, 'personal-care')}">
    <jsp:include page="/categoryBanners/personalCareTopBanner.jsp"/>
   </c:if>
 
-  <%--<c:if test="${hk:collectionContains(brandList, 'Soulflower')}">--%>
+  --><%--<c:if test="${hk:collectionContains(brandList, 'Soulflower')}">--%>
    <%--<jsp:include page="/categoryBanners/beautyBrandDiscount.jsp"/>--%>
   <%--</c:if>--%>
 
