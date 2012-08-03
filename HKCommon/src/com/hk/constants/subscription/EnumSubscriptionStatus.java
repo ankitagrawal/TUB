@@ -25,6 +25,7 @@ public enum EnumSubscriptionStatus {
     Idle(25L, "Idle"),
     Expired(30L, "Expired"),
     OnHold(40L,"On Hold"),
+    OutOfStock(50L,"Out Of Stock"),
     Cancelled(99L, "Cancelled");
 
     private java.lang.String name;

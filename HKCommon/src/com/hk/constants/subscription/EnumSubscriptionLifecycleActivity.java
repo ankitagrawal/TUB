@@ -21,6 +21,7 @@ public enum EnumSubscriptionLifecycleActivity {
     SubscriptionOrderPlaced(25L, "Subscription Order Placed"),
     SubscriptionOrderDelivered(30L, "Subscription Order Delivered"),
     SubscriptionExpired(40L, "Subscription Expired"),
+    OutOfStockEmailSent(50L, "Product Variant Out of Stock Email"),
     LoggedComment(120L, "Logged Comment"),
     SubscriptionCancelled(199L, "Subscription Cancelled");
 

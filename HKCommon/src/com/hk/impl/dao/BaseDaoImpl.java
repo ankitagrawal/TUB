@@ -433,7 +433,4 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
     getHibernateTemplate().refresh(entity);
   }
 
-    public int bulkUpdate(String queryString, Object[] values){
-        return getHibernateTemplate().bulkUpdate(queryString,values);
-    }
 }

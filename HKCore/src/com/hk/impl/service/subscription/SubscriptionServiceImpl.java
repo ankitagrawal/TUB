@@ -80,16 +80,12 @@ public class SubscriptionServiceImpl implements SubscriptionService{
         return subscription;
     }
 
-    public Subscription cancelSubscription(Subscription subscription, String cancellationRemark){
-        subscription.setSubscriptionStatus(EnumSubscriptionStatus.Cancelled.asSubscriptionStatus());
-        subscription= this.save(subscription);
-        subscriptionLoggingService.logSubscriptionActivity(subscription,EnumSubscriptionLifecycleActivity.SubscriptionCancelled,cancellationRemark);
-        //to do award reward point after penalty or write relavent business logic
-        return subscription;
-    }
-
     public Page searchSubscriptions(SubscriptionSearchCriteria subscriptionSearchCriteria, int pageNo, int perPage){
         return subscriptionDao.searchSubscriptions(subscriptionSearchCriteria, pageNo, perPage);
+    }
+
+    public List<Subscription> searchSubscriptions(SubscriptionSearchCriteria subscriptionSearchCriteria){
+       return subscriptionDao.searchSubscriptions(subscriptionSearchCriteria);
     }
 
     public Page getSubscriptionsForUsers(User user, int page, int perPage){
@@ -101,16 +97,33 @@ public class SubscriptionServiceImpl implements SubscriptionService{
      * calls the customer for information
      */
     public int escalateSubscriptionsToActionQueue(){
+        SubscriptionSearchCriteria subscriptionSearchCriteria=new SubscriptionSearchCriteria();
+
         int cusomterBufferDays= SubscriptionConstants.subscriptionCustomerBufferDays;
+        //going back a week just in case this process din't run on schedule
+        Date currentDate=new Date(BaseUtils.getCurrentTimestamp().getTime()-7*24*60*60*1000);
         Date referenceDate=new Date(BaseUtils.getCurrentTimestamp().getTime()+cusomterBufferDays*24*60*60*1000);
+        subscriptionSearchCriteria.setStartNextShipmentDate(currentDate);
+        subscriptionSearchCriteria.setEndNextShipmentDate(referenceDate);
+
         List<SubscriptionStatus> fromStatuses=new ArrayList<SubscriptionStatus>();
 
         fromStatuses.add(EnumSubscriptionStatus.Placed.asSubscriptionStatus());
         fromStatuses.add(EnumSubscriptionStatus.Idle.asSubscriptionStatus());
+        fromStatuses.add(EnumSubscriptionStatus.OutOfStock.asSubscriptionStatus());
 
         SubscriptionStatus toStatus=EnumSubscriptionStatus.CustomerConfirmationAwaited.asSubscriptionStatus();
 
-        return subscriptionDao.escalateSubscriptionsToActionQueue(fromStatuses,toStatus, referenceDate);
+        subscriptionSearchCriteria.setSubscriptionStatusList(fromStatuses);
+
+        List<Subscription> subscriptions=this.searchSubscriptions(subscriptionSearchCriteria);
+        for(Subscription subscription : subscriptions){
+            subscription.setSubscriptionStatus(toStatus);
+            this.save(subscription);
+            subscriptionLoggingService.logSubscriptionActivityByAdmin(subscription, EnumSubscriptionLifecycleActivity.EscalatedToActionQueue, "automated escalation on due date");
+        }
+
+        return subscriptions.size();
     }
 
     /**
@@ -126,7 +139,35 @@ public class SubscriptionServiceImpl implements SubscriptionService{
      * checks inventory prior to handling subscription orders and generates emails in case of low inventory
      */
     public void checkInventoryForSubscriptionOrders(){
+        SubscriptionSearchCriteria subscriptionSearchCriteria=new SubscriptionSearchCriteria();
 
+        int inventoryBufferDays=SubscriptionConstants.subscriptionInventoryBufferDays;
+        //going back a week just in case this process din't run on schedule
+        Date currentDate=new Date(BaseUtils.getCurrentTimestamp().getTime()-7*24*60*60*1000);
+        Date referenceDate=new Date(BaseUtils.getCurrentTimestamp().getTime()+inventoryBufferDays*24*60*60*1000);
+        subscriptionSearchCriteria.setStartNextShipmentDate(currentDate);
+        subscriptionSearchCriteria.setEndNextShipmentDate(referenceDate);
+
+        List<SubscriptionStatus> fromStatuses=new ArrayList<SubscriptionStatus>();
+
+        fromStatuses.add(EnumSubscriptionStatus.Placed.asSubscriptionStatus());
+        fromStatuses.add(EnumSubscriptionStatus.Idle.asSubscriptionStatus());
+
+        subscriptionSearchCriteria.setSubscriptionStatusList(fromStatuses);
+
+
+        List<Subscription> subscriptions=this.searchSubscriptions(subscriptionSearchCriteria);
+        for(Subscription subscription : subscriptions){
+            if(subscription.getProductVariant().isOutOfStock()){
+                subscription.setSubscriptionStatus(EnumSubscriptionStatus.OutOfStock.asSubscriptionStatus());
+                this.save(subscription);
+                if(emailManager.sendSubscriptionVariantOutOfStockEmailAdmin(subscription)){
+                    subscriptionLoggingService.logSubscriptionActivityByAdmin(subscription,EnumSubscriptionLifecycleActivity.OutOfStockEmailSent,"out of stock email sent to admin");
+                }else{
+                    subscriptionLoggingService.logSubscriptionActivityByAdmin(subscription,EnumSubscriptionLifecycleActivity.OutOfStockEmailSent,"out of stock email to admin failed");
+                }
+            }
+        }
     }
 
     public Subscription updateSubscriptionAfterOrderDelivery(Subscription subscription){

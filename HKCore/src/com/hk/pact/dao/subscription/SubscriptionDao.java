@@ -34,6 +34,6 @@ public interface SubscriptionDao extends BaseDao {
 
     public Page getSubscriptionsForUsers(List<SubscriptionStatus> subscriptionStatusList, User user, int page, int perPage);
 
-    public int escalateSubscriptionsToActionQueue(List<SubscriptionStatus> fromStatuses, SubscriptionStatus toStatus, Date referenceDate);
+    public List<Subscription> searchSubscriptions(SubscriptionSearchCriteria subscriptionSearchCriteria);
 
 }

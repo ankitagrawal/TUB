@@ -1,11 +1,13 @@
 package com.hk.admin.impl.service.subscription;
 
 import com.hk.admin.pact.service.subscription.AdminSubscriptionService;
+import com.hk.constants.subscription.EnumSubscriptionLifecycleActivity;
 import com.hk.constants.subscription.EnumSubscriptionOrderStatus;
 import com.hk.constants.subscription.EnumSubscriptionStatus;
 import com.hk.domain.subscription.Subscription;
 import com.hk.domain.subscription.SubscriptionOrder;
 import com.hk.manager.EmailManager;
+import com.hk.pact.service.subscription.SubscriptionLoggingService;
 import com.hk.pact.service.subscription.SubscriptionOrderService;
 import com.hk.pact.service.subscription.SubscriptionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,8 @@ public class AdminSubscriptionServiceImpl implements AdminSubscriptionService{
     EmailManager emailManager;
     @Autowired
     SubscriptionService subscriptionService;
+    @Autowired
+    SubscriptionLoggingService subscriptionLoggingService;
 
     public Double getRewardPointsForSubscriptionCancellation(Subscription subscription){
         Double rewardPoints=0.0;
@@ -57,10 +61,12 @@ public class AdminSubscriptionServiceImpl implements AdminSubscriptionService{
 
     public Subscription cancelSubscription(Subscription subscription,String cancellationRemark){
         if(subscription.getSubscriptionStatus().getId().longValue()!= EnumSubscriptionStatus.Cancelled.getId().longValue()){
+            subscription.setSubscriptionStatus(EnumSubscriptionStatus.Cancelled.asSubscriptionStatus());
+            subscription= subscriptionService.save(subscription);
+            subscriptionLoggingService.logSubscriptionActivity(subscription, EnumSubscriptionLifecycleActivity.SubscriptionCancelled,cancellationRemark);
+
             sendSubscriptionCancellationEmails(subscription);
-            return  subscriptionService.cancelSubscription(subscription,cancellationRemark);
-        }else{
-            return subscription;
         }
+        return subscription;
     }
 }

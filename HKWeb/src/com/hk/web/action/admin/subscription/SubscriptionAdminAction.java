@@ -99,6 +99,7 @@ public class SubscriptionAdminAction extends BaseAction implements ValidationErr
 
     @DontValidate
     public Resolution escalateSubscriptions(){
+        subscriptionService.checkInventoryForSubscriptionOrders();
         subscriptionService.escalateSubscriptionsToActionQueue();
         return new ForwardResolution("/pages/admin/subscription/searchSubscription.jsp");
     }

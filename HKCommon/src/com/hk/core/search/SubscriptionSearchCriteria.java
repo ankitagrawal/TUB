@@ -25,8 +25,6 @@ public class SubscriptionSearchCriteria{
 
     private boolean            sortByUpdateDate  = true;
 
-    protected DetachedCriteria baseCriteria;
-
     private String                    login;
     private String                    phone;
     private String                    name;
@@ -35,6 +33,9 @@ public class SubscriptionSearchCriteria{
     private ProductVariant productVariant;
 
     private Long                                     baseOrderId;
+
+    private Date startNextShipmentDate;
+    private Date endNextShipmentDate;
 
     private List<SubscriptionStatus> subscriptionStatusList;
 
@@ -47,7 +48,7 @@ public class SubscriptionSearchCriteria{
     }
 
     public DetachedCriteria getSearchCriteria() {
-        return buildSearchCriteriaFromBaseCriteria();
+        return buildSearchCriteria();
     }
 
     public SubscriptionSearchCriteria setLogin(String login) {
@@ -80,11 +81,6 @@ public class SubscriptionSearchCriteria{
         return this;
     }
 
-    protected DetachedCriteria getBaseCriteria() {
-        DetachedCriteria criteria = DetachedCriteria.forClass(Subscription.class);
-        return criteria;
-    }
-
     public ProductVariant getProductVariant() {
         return productVariant;
     }
@@ -93,26 +89,42 @@ public class SubscriptionSearchCriteria{
         this.productVariant = productVariant;
     }
 
-    protected DetachedCriteria buildSearchCriteriaFromBaseCriteria() {
-        this.baseCriteria = getBaseCriteria();
+    public Date getStartNextShipmentDate() {
+        return startNextShipmentDate;
+    }
+
+    public void setStartNextShipmentDate(Date startNextShipmentDate) {
+        this.startNextShipmentDate = startNextShipmentDate;
+    }
+
+    public Date getEndNextShipmentDate() {
+        return endNextShipmentDate;
+    }
+
+    public void setEndNextShipmentDate(Date endNextShipmentDate) {
+        this.endNextShipmentDate = endNextShipmentDate;
+    }
+
+    protected DetachedCriteria buildSearchCriteria() {
+        DetachedCriteria subscriptionCriteria = DetachedCriteria.forClass(Subscription.class);
 
         if (subscriptionId != null) {
-            baseCriteria.add(Restrictions.eq("id", subscriptionId));
+            subscriptionCriteria.add(Restrictions.eq("id", subscriptionId));
         }
 
         if(sortByUpdateDate){
-            baseCriteria.addOrder(Order.desc("updateDate"));
+            subscriptionCriteria.addOrder(Order.desc("updateDate"));
         }
 
         if (subscriptionStatusList != null && subscriptionStatusList.size() > 0) {
-            baseCriteria.add(Restrictions.in("subscriptionStatus", subscriptionStatusList));
+            subscriptionCriteria.add(Restrictions.in("subscriptionStatus", subscriptionStatusList));
         }
 
         if(productVariant !=null){
-            baseCriteria.add(Restrictions.eq("productVariant",productVariant));
+            subscriptionCriteria.add(Restrictions.eq("productVariant",productVariant));
         }
 
-        DetachedCriteria userCriteria = baseCriteria.createCriteria("user");
+        DetachedCriteria userCriteria = subscriptionCriteria.createCriteria("user");
 
         /**
          * user specific restrictions
@@ -128,7 +140,7 @@ public class SubscriptionSearchCriteria{
             userCriteria.add(Restrictions.like("name", "%" + name + "%"));
         }
 
-        DetachedCriteria baseOrderCriteria = baseCriteria.createCriteria("baseOrder");
+        DetachedCriteria baseOrderCriteria = subscriptionCriteria.createCriteria("baseOrder");
 
         if (baseOrderId != null) {
             baseOrderCriteria.add(Restrictions.eq("id", baseOrderId));
@@ -137,12 +149,19 @@ public class SubscriptionSearchCriteria{
         /**
          * address specific restrictions
          */
-        DetachedCriteria addressCriteria = baseCriteria.createCriteria("address");
+        DetachedCriteria addressCriteria = subscriptionCriteria.createCriteria("address");
         if (StringUtils.isNotBlank(phone)) {
             addressCriteria.add(Restrictions.like("phone", "%" + phone + "%"));
         }
 
-        return baseCriteria;
+        /**
+         * restrictions for next shipment dates
+         */
+        if (startNextShipmentDate != null || endNextShipmentDate != null) {
+            subscriptionCriteria.add(Restrictions.between("nextShipmentDate", startNextShipmentDate, endNextShipmentDate));
+        }
+
+        return subscriptionCriteria;
     }
 
 }

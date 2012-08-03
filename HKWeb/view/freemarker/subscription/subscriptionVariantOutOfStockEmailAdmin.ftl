@@ -1,17 +1,17 @@
-Subscription Id ${subscription.id} placed.
+Variant for Subscription Id ${subscription.id} is out of stock.
 <html>
 <head>
-    <title>Subscription Id ${subscription.id} placed. </title>
+    <title>Variant for Subscription Id ${subscription.id} is out of stock. </title>
 </head>
 <body>
 <#include "*/header.ftl">
 <p style="margin-bottom:1em">Hi ${subscription.user.name}!,</p>
 
 <p style="margin-bottom:1em">
-    Thanks for subscribing with us. We will give you a call whenever your shipment is due and then process your subscription.
-    In case you need a change in the address or the next shipment date, please call our customer care.
+    Please resolve this issue. The subscription Id ${subscription.id} is due in a week and the corresponding product variant is out of stock. Please fulfil this order.
+
 </p>
-<p style="margin-bottom:1em">Here are your subscription details for the subscription <strong> ${subscription.id}</strong> placed on<strong> ${subscription.baseOrder.payment.createDate} </strong></p>
+<p style="margin-bottom:1em">Here are the subscription details for the subscription <strong> ${subscription.id}</strong> placed on<strong> ${subscription.baseOrder.payment.createDate} </strong></p>
 
 <div>
     <h3>Subscription Details</h3>
@@ -31,7 +31,7 @@ Subscription Id ${subscription.id} placed.
           </#list></em>
             </td>
             <td>
-          ${subscription.qty}
+            ${subscription.qty}
             </td>
             <td><span style="text-decoration: line-through;">${subscription.markedPriceAtSubscription}</span> ${subscription.subscriptionPrice} </td>
             <td> ${subscription.subscriptionPrice * subscription.qty} </td>
@@ -48,10 +48,10 @@ ${subscription.address.line1}<br/>
 ${subscription.address.line2}<br/>
 </#if>
 ${subscription.address.city} - ${subscription.address.pin}<br/>
+${subscription.address.state} (India)<br/>
     Ph: ${subscription.address.phone}<br/>
 </p>
 
-<p style="margin-bottom:1em">We will inform you when ever your shipment is due and also drop you an email when even your subscription order is shipped.</p>
 
 <p style="margin-bottom:1em"><strong>HealthKart.com</strong></p>
 <#include "*/footer.ftl">

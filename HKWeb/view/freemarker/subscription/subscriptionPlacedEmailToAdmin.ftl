@@ -33,7 +33,7 @@ Subscription Id ${subscription.id} placed.
             <td>
             ${subscription.qty}
             </td>
-            <td><span style="text-decoration: line-through;">${productLineItem.markedPrice}</span> ${subscription.subscriptionPrice} </td>
+            <td><span style="text-decoration: line-through;">${subscription.markedPriceAtSubscription}</span> ${subscription.subscriptionPrice} </td>
             <td> ${subscription.subscriptionPrice * subscription.qty} </td>
         </tr>
     </table>
