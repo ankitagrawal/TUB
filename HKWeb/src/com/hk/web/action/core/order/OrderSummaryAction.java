@@ -1,10 +1,14 @@
 package com.hk.web.action.core.order;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.subscription.EnumSubscriptionStatus;
+import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.core.fliter.SubscriptionFilter;
+import com.hk.domain.order.CartLineItem;
 import com.hk.domain.subscription.Subscription;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -45,179 +49,181 @@ import com.hk.web.action.core.user.SelectAddressAction;
 @Component
 public class OrderSummaryAction extends BaseAction {
 
-  private static Logger  logger = LoggerFactory.getLogger(OrderSummaryAction.class);
+    private static Logger  logger = LoggerFactory.getLogger(OrderSummaryAction.class);
 
-  @Autowired
-  private CourierService courierService;
-  @Autowired
-  UserDao                userDao;
-  @Autowired
-  OrderManager           orderManager;
-  @Autowired
-  private OrderService   orderService;
-  @Autowired
-  PricingEngine          pricingEngine;
-  @Autowired
-  ReferrerProgramManager referrerProgramManager;
+    @Autowired
+    private CourierService courierService;
+    @Autowired
+    UserDao                userDao;
+    @Autowired
+    OrderManager           orderManager;
+    @Autowired
+    private OrderService   orderService;
+    @Autowired
+    PricingEngine          pricingEngine;
+    @Autowired
+    ReferrerProgramManager referrerProgramManager;
 
-  @Session(key = HealthkartConstants.Session.useRewardPoints)
-  private boolean        useRewardPoints;
+    @Session(key = HealthkartConstants.Session.useRewardPoints)
+    private boolean        useRewardPoints;
 
-  private PricingDto     pricingDto;
-  private Order          order;
-  private Address        billingAddress;
-  private boolean        codAllowed;
-  private Double         redeemableRewardPoints;
-  private List<Courier>  availableCourierList;
+    private PricingDto     pricingDto;
+    private Order          order;
+    private Address        billingAddress;
+    private boolean        codAllowed;
+    private Double         redeemableRewardPoints;
+    private List<Courier>  availableCourierList;
 
-  // COD related changes
-  @Autowired
-  PaymentManager         paymentManager;
-  @Autowired
-  PaymentModeDao         paymentModeDao;
+    // COD related changes
+    @Autowired
+    PaymentManager         paymentManager;
+    @Autowired
+    PaymentModeDao         paymentModeDao;
 
-  @Value("#{hkEnvProps['" + Keys.Env.codCharges + "']}")
-  private Double         codCharges;
+    @Value("#{hkEnvProps['" + Keys.Env.codCharges + "']}")
+    private Double         codCharges;
 
-  @Value("#{hkEnvProps['" + Keys.Env.codFreeAfter + "']}")
-  private Double         codFreeAfter;
+    @Value("#{hkEnvProps['" + Keys.Env.codFreeAfter + "']}")
+    private Double         codFreeAfter;
 
-  @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
-  private Double         codMinAmount;
+    @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
+    private Double         codMinAmount;
 
-  // @Named(Keys.Env.codMaxAmount)
-  @Value("#{hkEnvProps['codMaxAmount']}")
-  private Double         codMaxAmount;
+    // @Named(Keys.Env.codMaxAmount)
+    @Value("#{hkEnvProps['codMaxAmount']}")
+    private Double         codMaxAmount;
 
-  @DefaultHandler
-  public Resolution pre() {
-    User user = getUserService().getUserById(getPrincipal().getId());
-    order = orderManager.getOrCreateOrder(user);
-    // Trimming empty line items once again.
-    orderManager.trimEmptyLineItems(order);
-    OfferInstance offerInstance = order.getOfferInstance();
+    @DefaultHandler
+    public Resolution pre() {
+        User user = getUserService().getUserById(getPrincipal().getId());
+        order = orderManager.getOrCreateOrder(user);
+        // Trimming empty line items once again.
+        orderManager.trimEmptyLineItems(order);
+        OfferInstance offerInstance = order.getOfferInstance();
 
-    Double rewardPointsUsed = 0D;
-    redeemableRewardPoints = referrerProgramManager.getTotalRedeemablePoints(user);
-    if (useRewardPoints)
-      rewardPointsUsed = redeemableRewardPoints;
-    if (order.getAddress() == null) {
-      return new RedirectResolution(SelectAddressAction.class);
+        Double rewardPointsUsed = 0D;
+        redeemableRewardPoints = referrerProgramManager.getTotalRedeemablePoints(user);
+        if (useRewardPoints)
+            rewardPointsUsed = redeemableRewardPoints;
+        if (order.getAddress() == null) {
+            return new RedirectResolution(SelectAddressAction.class);
+        }
+
+        Set<CartLineItem> subscriptionCartLineItems=new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
+        Set<Subscription> inCartSubscriptions=new HashSet<Subscription>();
+        if(subscriptionCartLineItems !=null && subscriptionCartLineItems.size()>0){
+            inCartSubscriptions = new SubscriptionFilter(order.getSubscriptions()).addSubscriptionStatus(EnumSubscriptionStatus.InCart).filter();
+            pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), rewardPointsUsed, inCartSubscriptions), order.getAddress());
+        }else {
+            pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), rewardPointsUsed), order.getAddress());
+        }
+        order.setRewardPointsUsed(rewardPointsUsed);
+        order = (Order) getBaseDao().save(order);
+
+        // billingAddress = userPreferenceDao.getOrCreateUserPreference(user).getBillingAddress();
+
+        // doing this after populating the pricingDto as this actionBean is also used to display pricing elsewhere
+        // using the useActionBean tag
+        if (order.getAddress() == null) {
+            // addRedirectAlertMessage(new LocalizableMessage("/CheckoutAction.action.address.not.selected"));
+            return new RedirectResolution(SelectAddressAction.class);
+        } else if (pricingDto.getProductLineCount() == 0) {
+            addRedirectAlertMessage(new LocalizableMessage("/CheckoutAction.action.checkout.not.allowed.on.empty.cart"));
+            return new RedirectResolution(CartAction.class);
+        }
+        Address address = order.getAddress();
+        String pin = address != null ? address.getPin() : null;
+        codAllowed = courierService.isCodAllowed(pin);
+        if (codAllowed) {
+            Double payable = pricingDto.getGrandTotalPayable();
+            if (payable < codMinAmount || payable > codMaxAmount) {
+                codAllowed = false;
+            }
+        }
+        if(codAllowed){
+            if(inCartSubscriptions!=null && inCartSubscriptions.size()>0){
+                codAllowed=false;
+            }
+        }
+
+        Double netShopping = pricingDto.getGrandTotalPayable() - pricingDto.getShippingTotal();
+        if (netShopping > codFreeAfter) {
+            codCharges = 0.0;
+        }
+        availableCourierList = courierService.getAvailableCouriers(order);
+        if (availableCourierList.size() == 0) {
+            availableCourierList = null;
+        }
+        return new ForwardResolution("/pages/orderSummary.jsp");
     }
 
-    Set<Subscription> inCartSubscriptions = new SubscriptionFilter(order.getSubscriptions()).addSubscriptionStatus(EnumSubscriptionStatus.InCart).filter();
-    if(inCartSubscriptions !=null && inCartSubscriptions.size()>0){
-      pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), rewardPointsUsed, inCartSubscriptions), order.getAddress());
-    }else {
-      pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), rewardPointsUsed), order.getAddress());
-    }
-    order.setRewardPointsUsed(rewardPointsUsed);
-    order = (Order) getBaseDao().save(order);
-
-    // billingAddress = userPreferenceDao.getOrCreateUserPreference(user).getBillingAddress();
-
-    // doing this after populating the pricingDto as this actionBean is also used to display pricing elsewhere
-    // using the useActionBean tag
-    if (order.getAddress() == null) {
-      // addRedirectAlertMessage(new LocalizableMessage("/CheckoutAction.action.address.not.selected"));
-      return new RedirectResolution(SelectAddressAction.class);
-    } else if (pricingDto.getProductLineCount() == 0) {
-      addRedirectAlertMessage(new LocalizableMessage("/CheckoutAction.action.checkout.not.allowed.on.empty.cart"));
-      return new RedirectResolution(CartAction.class);
-    }
-    Address address = order.getAddress();
-    String pin = address != null ? address.getPin() : null;
-    codAllowed = courierService.isCodAllowed(pin);
-    if (codAllowed) {
-      Double payable = pricingDto.getGrandTotalPayable();
-      if (payable < codMinAmount || payable > codMaxAmount) {
-        codAllowed = false;
-      }
-    }
-    if(codAllowed){
-      if(inCartSubscriptions!=null && inCartSubscriptions.size()>0){
-        codAllowed=false;
-      }
+    public Resolution withoutRewardPoints() {
+        boolean originalUserRewardPoints = useRewardPoints;
+        useRewardPoints = false;
+        Resolution resolution = pre();
+        useRewardPoints = originalUserRewardPoints;
+        return resolution;
     }
 
-    Double netShopping = pricingDto.getGrandTotalPayable() - pricingDto.getShippingTotal();
-    if (netShopping > codFreeAfter) {
-      codCharges = 0.0;
+    public Resolution orderReviewed() {
+        getBaseDao().save(order);
+        return new RedirectResolution(PaymentModeAction.class);
     }
-    availableCourierList = courierService.getAvailableCouriers(order);
-    if (availableCourierList.size() == 0) {
-      availableCourierList = null;
+
+    public PricingDto getPricingDto() {
+        return pricingDto;
     }
-    return new ForwardResolution("/pages/orderSummary.jsp");
-  }
 
-  public Resolution withoutRewardPoints() {
-    boolean originalUserRewardPoints = useRewardPoints;
-    useRewardPoints = false;
-    Resolution resolution = pre();
-    useRewardPoints = originalUserRewardPoints;
-    return resolution;
-  }
+    public Order getOrder() {
+        return order;
+    }
 
-  public Resolution orderReviewed() {
-    getBaseDao().save(order);
-    return new RedirectResolution(PaymentModeAction.class);
-  }
+    public void setOrder(Order order) {
+        this.order = order;
+    }
 
-  public PricingDto getPricingDto() {
-    return pricingDto;
-  }
+    public Address getBillingAddress() {
+        return billingAddress;
+    }
 
-  public Order getOrder() {
-    return order;
-  }
+    public boolean isCodAllowed() {
+        return codAllowed;
+    }
 
-  public void setOrder(Order order) {
-    this.order = order;
-  }
+    public void setCodAllowed(boolean codAllowed) {
+        this.codAllowed = codAllowed;
+    }
 
-  public Address getBillingAddress() {
-    return billingAddress;
-  }
+    public boolean isUseRewardPoints() {
+        return useRewardPoints;
+    }
 
-  public boolean isCodAllowed() {
-    return codAllowed;
-  }
+    public void setUseRewardPoints(boolean useRewardPoints) {
+        this.useRewardPoints = useRewardPoints;
+    }
 
-  public void setCodAllowed(boolean codAllowed) {
-    this.codAllowed = codAllowed;
-  }
+    public Double getRedeemableRewardPoints() {
+        return redeemableRewardPoints;
+    }
 
-  public boolean isUseRewardPoints() {
-    return useRewardPoints;
-  }
+    public void setRedeemableRewardPoints(Double redeemableRewardPoints) {
+        this.redeemableRewardPoints = redeemableRewardPoints;
+    }
 
-  public void setUseRewardPoints(boolean useRewardPoints) {
-    this.useRewardPoints = useRewardPoints;
-  }
+    public Double getCodCharges() {
+        return codCharges;
+    }
 
-  public Double getRedeemableRewardPoints() {
-    return redeemableRewardPoints;
-  }
+    public void setCodCharges(Double codCharges) {
+        this.codCharges = codCharges;
+    }
 
-  public void setRedeemableRewardPoints(Double redeemableRewardPoints) {
-    this.redeemableRewardPoints = redeemableRewardPoints;
-  }
+    public List<Courier> getAvailableCourierList() {
+        return availableCourierList;
+    }
 
-  public Double getCodCharges() {
-    return codCharges;
-  }
-
-  public void setCodCharges(Double codCharges) {
-    this.codCharges = codCharges;
-  }
-
-  public List<Courier> getAvailableCourierList() {
-    return availableCourierList;
-  }
-
-  public void setAvailableCourierList(List<Courier> availableCourierList) {
-    this.availableCourierList = availableCourierList;
-  }
+    public void setAvailableCourierList(List<Courier> availableCourierList) {
+        this.availableCourierList = availableCourierList;
+    }
 
 }

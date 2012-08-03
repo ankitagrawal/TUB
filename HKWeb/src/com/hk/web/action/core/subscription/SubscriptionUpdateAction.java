@@ -19,6 +19,7 @@ import com.hk.manager.OrderManager;
 import com.hk.manager.UserManager;
 import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.order.CartFreebieService;
+import com.hk.pact.service.order.CartLineItemService;
 import com.hk.pact.service.subscription.SubscriptionProductService;
 import com.hk.pact.service.subscription.SubscriptionService;
 import com.hk.pricing.PricingEngine;
@@ -67,6 +68,8 @@ public class SubscriptionUpdateAction extends BaseAction implements ValidationEr
     UserDao userDao;
     @Autowired
     UserManager userManager;
+    @Autowired
+    CartLineItemService cartLineItemService;
 
     @DefaultHandler
     public Resolution editSubscription() {
@@ -94,6 +97,12 @@ public class SubscriptionUpdateAction extends BaseAction implements ValidationEr
         HealthkartResponse healthkartResponse;
         if(subscription.getBaseOrder().getId() == order.getId()){
             subscriptionService.save(subscription);
+
+            CartLineItem cartLineItem=subscription.getCartLineItem();
+            cartLineItem.setQty(subscription.getQty());
+            cartLineItem.setDiscountOnHkPrice(subscription.getHkPriceAtSubscription()-subscription.getSubscriptionPrice());
+            cartLineItemService.save(cartLineItem);
+
             healthkartResponse= new HealthkartResponse(HealthkartResponse.STATUS_OK, "");
             return new JsonResolution(healthkartResponse);
         }else{
@@ -115,12 +124,16 @@ public class SubscriptionUpdateAction extends BaseAction implements ValidationEr
                 return new JsonResolution(healthkartResponse);
             }
             subscriptionService.abandonSubscription(subscription);
+            CartLineItem cartLineItem=subscription.getCartLineItem();
+            cartLineItem.setQty(0L);
+            cartLineItem=cartLineItemService.save(cartLineItem);
+
             Address address = order.getAddress() != null ? order.getAddress() : new Address();
             Set<Subscription> inCartSubscriptions= new SubscriptionFilter(order.getSubscriptions()).addSubscriptionStatus(EnumSubscriptionStatus.InCart).filter();
 
             PricingDto pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), address, 0D, inCartSubscriptions), address);
 
-            CartLineItem cartLineItem=new CartLineItemBuilder().forSubscription(subscription).build();
+//            CartLineItem cartLineItem=new CartLineItemBuilder().forSubscription(subscription).build();
             pricingSubDto = new PricingSubDto(pricingDto, cartLineItem);
 
             String freebieBanner = cartFreebieService.getFreebieBanner(order);

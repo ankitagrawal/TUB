@@ -529,8 +529,11 @@ public class OrderManager {
     public Order recalAndUpdateAmount(Order order) {
         OfferInstance offerInstance = order.getOfferInstance();
         PricingDto pricingDto;
-      Set<Subscription> subscriptions = new SubscriptionFilter(order.getSubscriptions()).addSubscriptionStatus(EnumSubscriptionStatus.InCart).filter();
-      if(subscriptions !=null && subscriptions.size()>0){
+
+       Set<CartLineItem> subscriptionCartLineItems=new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
+
+      if(subscriptionCartLineItems !=null && subscriptionCartLineItems.size()>0){
+          Set<Subscription> subscriptions = new SubscriptionFilter(order.getSubscriptions()).addSubscriptionStatus(EnumSubscriptionStatus.InCart).filter();
         pricingDto = new PricingDto(getPricingEngine().calculatePricing(order.getCartLineItems(), offerInstance, order.getAddress(), order.getRewardPointsUsed(),subscriptions),
             order.getAddress());
       }else {
@@ -558,7 +561,7 @@ public class OrderManager {
         if (order != null && order.getCartLineItems() != null && !(order.getCartLineItems()).isEmpty()) {
             for (Iterator<CartLineItem> iterator = order.getCartLineItems().iterator(); iterator.hasNext();) {
                 CartLineItem lineItem = iterator.next();
-                if (lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Product.getId())) {
+                if (lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Product.getId())||lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Subscription.getId())) {
                     if (lineItem.getQty() <= 0) {
                         iterator.remove();
                         getCartLineItemDao().delete(lineItem);

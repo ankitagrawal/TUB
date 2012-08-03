@@ -40,7 +40,7 @@ public class PricingEngine {
      * This method reset the state of offer instance. i.e after calculating the price it reset the offer intance to its
      * intial state. This way we can prevent the un-intentional saving of intermediate state of offer instance at the
      * time of automatic session/database flushing by hibernate.
-     * 
+     *
      * @param lineItems
      * @param offerInstance
      * @param address
@@ -93,11 +93,11 @@ public class PricingEngine {
         }
 
         if(subscriptions!=null && subscriptions.size()>0 ){
-          List<CartLineItem> subscriptionLines;
-          subscriptionLines=createSubscriptionLineItems(subscriptions);
-          for(CartLineItem subscriptionItem: subscriptionLines){
-            invoiceLines.add(subscriptionItem);
-          }
+            List<CartLineItem> subscriptionLines;
+            subscriptionLines=createSubscriptionLineItems(subscriptions);
+            for(CartLineItem subscriptionItem: subscriptionLines){
+                invoiceLines.add(subscriptionItem);
+            }
         }
 
         return invoiceLines;
@@ -106,7 +106,7 @@ public class PricingEngine {
 
     /**
      * Its just a simple wrapper over the pricing function.
-     * 
+     *
      * @param cartLineItems
      * @param offerInstance
      * @param address
@@ -117,20 +117,20 @@ public class PricingEngine {
         return pricing(cartLineItems, offerInstance, address, redeemRewardPoints);
     }
 
-  public Set<CartLineItem> calculateAndApplyPricing(final Set<CartLineItem> cartLineItems, OfferInstance offerInstance, Address address, Double redeemRewardPoints, Set<Subscription> subscriptions) {
-      if(subscriptions!=null && subscriptions.size()>0){
-        List<CartLineItem> subscriptionLines;
-        Set<CartLineItem> lineItems=pricing(cartLineItems, offerInstance, address, redeemRewardPoints);
-        subscriptionLines=createSubscriptionLineItems(subscriptions);
-        for(CartLineItem subscriptionItem: subscriptionLines){
-          lineItems.add(subscriptionItem);
+    public Set<CartLineItem> calculateAndApplyPricing(final Set<CartLineItem> cartLineItems, OfferInstance offerInstance, Address address, Double redeemRewardPoints, Set<Subscription> subscriptions) {
+        if(subscriptions!=null && subscriptions.size()>0){
+            List<CartLineItem> subscriptionLines;
+            Set<CartLineItem> lineItems=pricing(cartLineItems, offerInstance, address, redeemRewardPoints);
+            subscriptionLines=createSubscriptionLineItems(subscriptions);
+            for(CartLineItem subscriptionItem: subscriptionLines){
+                lineItems.add(subscriptionItem);
+            }
+            return  lineItems;
+        }else{
+            return pricing(cartLineItems, offerInstance, address, redeemRewardPoints);
         }
-        return  lineItems;
-      }else{
-         return pricing(cartLineItems, offerInstance, address, redeemRewardPoints);
-      }
 
-  }
+    }
     private Set<CartLineItem> pricing(final Set<CartLineItem> lineItems, OfferInstance offerInstance, Address address, Double redeemRewardPoints) {
         Set<CartLineItemWrapper> cartLineItemWrappers = initProductLineItems(lineItems, address);
         Set<CartLineItem> orderLevelDiscountLineItems = new HashSet<CartLineItem>();
@@ -538,7 +538,7 @@ public class PricingEngine {
      * invoice lines are created : <p/> <p/> These invoice lines are simply based upon the qty's passed in via line
      * items and the appropriate scaffold pricing depending on the qty are stored in
      * {@link mhc.domain.order.CartLineItem} <p/>
-     * 
+     *
      * @param cartLineItems from the shopping cart
      * @param address
      * @return List of initial invoice lines
@@ -549,25 +549,27 @@ public class PricingEngine {
         Set<CartLineItemWrapper> cartLineItemWrappers = new HashSet<CartLineItemWrapper>();
 
         for (CartLineItem lineItem : cartLineItems) {
-            if (lineItem.getProductVariant() != null) {
-                ProductVariant productVariant = lineItem.getProductVariant();
-                double variantMarkedPrice = productVariant.getMarkedPrice();
-                double variantHKPrice = productVariant.getHkPrice(lineItem.getOrder().getUser().getRoleStrings());
-                CartLineItemConfig lineItemConfig = lineItem.getCartLineItemConfig();
+            if(lineItem.isType(EnumCartLineItemType.Product)){
+                if (lineItem.getProductVariant() != null) {
+                    ProductVariant productVariant = lineItem.getProductVariant();
+                    double variantMarkedPrice = productVariant.getMarkedPrice();
+                    double variantHKPrice = productVariant.getHkPrice(lineItem.getOrder().getUser().getRoleStrings());
+                    CartLineItemConfig lineItemConfig = lineItem.getCartLineItemConfig();
 
-                if (lineItemConfig != null) {
-                    double configPrice = lineItemConfig.getPrice();
-                    lineItem.setHkPrice(variantHKPrice + configPrice);
-                    lineItem.setMarkedPrice(variantMarkedPrice + configPrice);
-                } else if (lineItem.getComboInstance() != null) {
-                }else if (lineItem.getOrder().isSubscriptionOrder()){
-                } else {
-                    lineItem.setMarkedPrice(variantMarkedPrice);
-                    lineItem.setHkPrice(variantHKPrice);
+                    if (lineItemConfig != null) {
+                        double configPrice = lineItemConfig.getPrice();
+                        lineItem.setHkPrice(variantHKPrice + configPrice);
+                        lineItem.setMarkedPrice(variantMarkedPrice + configPrice);
+                    } else if (lineItem.getComboInstance() != null) {
+                    }else if (lineItem.getOrder().isSubscriptionOrder()){
+                    } else {
+                        lineItem.setMarkedPrice(variantMarkedPrice);
+                        lineItem.setHkPrice(variantHKPrice);
+                    }
                 }
+                lineItem.setDiscountOnHkPrice(0D);
+                cartLineItemWrappers.add(new CartLineItemWrapper(lineItem));
             }
-            lineItem.setDiscountOnHkPrice(0D);
-            cartLineItemWrappers.add(new CartLineItemWrapper(lineItem));
         }
 
         return cartLineItemWrappers;
@@ -575,7 +577,7 @@ public class PricingEngine {
 
     /**
      * <p/> This is a single invoice line containing the calculated shipping for all the items
-     * 
+     *
      * @param cartLineItems
      * @param address
      * @return
@@ -590,8 +592,8 @@ public class PricingEngine {
          */
 
         CartLineItem lineItem = new CartLineItemBuilder().ofType(EnumCartLineItemType.Shipping)
-        // .tax(serviceTaxProvider.get())
-        .hkPrice(shippingAmount).discountOnHkPrice(PricingConstants.DEFAULT_DISCOUNT).build();
+                // .tax(serviceTaxProvider.get())
+                .hkPrice(shippingAmount).discountOnHkPrice(PricingConstants.DEFAULT_DISCOUNT).build();
 
         return new CartLineItemWrapper(lineItem, address);
     }
@@ -612,14 +614,14 @@ public class PricingEngine {
     }
 
     private List<CartLineItem> createSubscriptionLineItems(Set<Subscription> subscriptions){
-         Double discountOnHkPrice = 0.0;
-         Double markedPrice =0.0;
-         Double hkPrice = 0.0;
-         List<CartLineItem> subscriptionLineItemList = new ArrayList<CartLineItem>();
-         for(Subscription subscription : subscriptions){
-             CartLineItem subscriptionLineItem= new CartLineItemBuilder().forSubscription(subscription).build();
+        Double discountOnHkPrice = 0.0;
+        Double markedPrice =0.0;
+        Double hkPrice = 0.0;
+        List<CartLineItem> subscriptionLineItemList = new ArrayList<CartLineItem>();
+        for(Subscription subscription : subscriptions){
+            CartLineItem subscriptionLineItem= new CartLineItemBuilder().forSubscription(subscription).build();
             subscriptionLineItemList.add(subscriptionLineItem);
-         }
-         return  subscriptionLineItemList;
+        }
+        return  subscriptionLineItemList;
     }
 }
