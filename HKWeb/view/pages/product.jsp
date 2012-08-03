@@ -39,22 +39,22 @@
       display: none;
     }
 
-    ul#thumblist {
+    ul.thumblist {
       display: block;
     }
 
-    ul#thumblist li {
+    ul.thumblist li {
       float: left;
       margin-right: 2px;
       list-style: none;
     }
 
-    ul#thumblist li a {
+    ul.thumblist li a {
       display: block;
       border: 1px solid #CCC;
     }
 
-    ul#thumblist li a.zoomThumbActive {
+    ul.thumblist li a.zoomThumbActive {
       border: 1px solid red;
     }
 
@@ -206,9 +206,9 @@
                      title="${product.name}">
             </a>
         </div>
-        <div class="thumblist">
+        <div>
             <c:if test="${fn:length(pa.productImages) > 1}">
-                <ul id="thumblist">
+                <ul class="thumblist">
                     <c:forEach items="${pa.productImages}" var="productImage">
                         <li><a href='javascript:void(0);'
                                rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, productImage.id,isSecure)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, productImage.id,isSecure)}'}"><img

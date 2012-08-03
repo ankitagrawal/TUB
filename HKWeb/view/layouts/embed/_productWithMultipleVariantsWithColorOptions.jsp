@@ -68,17 +68,17 @@
     </div>
     <div>
       <div style="float:left;">
-          <ul id="thumblist">
+          <ul class="thumblist">
               <c:forEach items="${product.productVariants}" var="variant" varStatus="ctr">
                   <c:if test="${!variant.outOfStock && !variant.deleted}">
 
-                      <div>
                           <input type="hidden" class="variantMainImageId" value="${variant.mainProductImageId}"/>
                           <c:choose>
                               <c:when test="${variant.mainImageId != null}">
                                   <li><a href='javascript:void(0);'
                                          rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, variant.mainImageId,isSecure)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, variant.mainImageId,isSecure)}'}"><img
                                           src='${hk:getS3ImageUrl(imageSmallSize, variant.mainImageId,isSecure)}'></a>
+                                      <s:checkbox name="productVariantList[${ctr.index}].selected" class="checkbox" style="align:center"/>
                                   </li>
                               </c:when>
                               <c:otherwise>
@@ -89,8 +89,7 @@
                                   </c:if>
                               </c:otherwise>
                           </c:choose>
-                          <s:checkbox name="productVariantList[${ctr.index}].selected" class="checkbox"/>
-                      </div>
+
 
                       <s:hidden name="productVariantList[${ctr.index}]" value="${variant.id}"/>
                       <s:hidden name="productVariantList[${ctr.index}].qty" value="1" class="lineItemQty"/>
