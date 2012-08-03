@@ -142,7 +142,7 @@ public class AddSubscriptionAction extends BaseAction implements ValidationError
                 dataMap.put("name", subscription.getProductVariant().getProduct().getName()+" subscription");
                 dataMap.put("options", subscription.getProductVariant().getOptionsCommaSeparated());
                 dataMap.put("qty", subscription.getQty());
-                dataMap.put("itemsInCart", Long.valueOf(order.getExclusivelyProductCartLineItems().size() + order.getExclusivelyComboCartLineItems().size()) + subscriptionCartLineItems.size()+1L);
+                dataMap.put("itemsInCart", Long.valueOf(order.getExclusivelyProductCartLineItems().size() + order.getExclusivelyComboCartLineItems().size()) + subscriptionCartLineItems.size());
                 HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, " Subscription has been added to cart", dataMap);
                 noCache();
                 return new JsonResolution(healthkartResponse);

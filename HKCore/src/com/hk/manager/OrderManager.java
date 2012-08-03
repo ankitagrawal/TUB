@@ -192,13 +192,13 @@ public class OrderManager {
             if (canAddVariantToCart(productVariant)) {
                 CartLineItem cartLineItem = null;
                 if (comboInstance != null) {
-                    CartLineItemMatcher cartLineItemMatcher = new CartLineItemMatcher().addProductVariant(productVariant).addComboInstance(comboInstance);
+                    CartLineItemMatcher cartLineItemMatcher = new CartLineItemMatcher().addProductVariant(productVariant).addComboInstance(comboInstance).addCartLineItemType(EnumCartLineItemType.Product);
                     cartLineItem = getCartLineItemService().getMatchingCartLineItemFromOrder(order, cartLineItemMatcher);
 
                     // cartLineItem = getCartLineItemService().getCartLineItemFromOrder(order, productVariant,
                     // comboInstance);
                 } else {
-                    CartLineItemMatcher cartLineItemMatcher = new CartLineItemMatcher().addProductVariant(productVariant);
+                    CartLineItemMatcher cartLineItemMatcher = new CartLineItemMatcher().addProductVariant(productVariant).addCartLineItemType(EnumCartLineItemType.Product);
                     cartLineItem = getCartLineItemService().getMatchingCartLineItemFromOrder(order, cartLineItemMatcher);
                     // cartLineItem = getCartLineItemService().getCartLineItemFromOrder(order, productVariant);
                 }
