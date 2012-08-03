@@ -5,9 +5,11 @@ import com.hk.constants.subscription.EnumSubscriptionLifecycleActivity;
 import com.hk.constants.subscription.EnumSubscriptionStatus;
 import com.hk.constants.subscription.SubscriptionConstants;
 import com.hk.core.fliter.SubscriptionFilter;
+import com.hk.domain.builder.CartLineItemBuilder;
 import com.hk.domain.builder.SubscriptionBuilder;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.matcher.SubscriptionMatcher;
+import com.hk.domain.order.CartLineItem;
 import com.hk.domain.subscription.Subscription;
 import com.hk.domain.subscription.SubscriptionProduct;
 import com.hk.domain.user.User;
@@ -16,6 +18,7 @@ import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.dao.user.UserCartDao;
 import com.hk.manager.UserManager;
 import com.hk.manager.OrderManager;
+import com.hk.pact.service.order.CartLineItemService;
 import com.hk.pact.service.subscription.SubscriptionLoggingService;
 import com.hk.pact.service.subscription.SubscriptionProductService;
 import com.hk.pact.service.subscription.SubscriptionService;
@@ -72,6 +75,8 @@ public class AddSubscriptionAction extends BaseAction implements ValidationError
     SubscriptionProductService subscriptionProductService;
     @Autowired
     SubscriptionLoggingService subscriptionLoggingService;
+    @Autowired
+    CartLineItemService cartLineItemService;
 
 
     @SuppressWarnings({"unchecked", "deprecation"})
@@ -100,7 +105,17 @@ public class AddSubscriptionAction extends BaseAction implements ValidationError
                     SubscriptionBuilder subscriptionBuilder=new SubscriptionBuilder();
                     subscriptionBuilder.forUser(user).forOrder(order).forSubscriptionProduct(subscriptionProduct);
                     subscriptionBuilder.forProductVariant(subscription.getProductVariant()).forQuantity(subscription.getQty(),subscription.getQtyPerDelivery()).frequency(subscription.getFrequencyDays()).startDate(subscription.getStartDate()).subscriptionPeriod(subscription.getSubscriptionPeriodDays());
+
                     subscription=subscriptionService.save(subscriptionBuilder.withStatus(EnumSubscriptionStatus.InCart).build());
+
+                    CartLineItemBuilder cartLineItemBuilder  = new CartLineItemBuilder();
+                    CartLineItem cartLineItem=cartLineItemBuilder.forSubscription(subscription).build();
+                    cartLineItem.setOrder(order);
+                    cartLineItem=cartLineItemService.save(cartLineItem);
+
+                    subscription.setCartLineItem(cartLineItem);
+                    subscription =subscriptionService.save(subscription);
+
                     subscriptionLoggingService.logSubscriptionActivity(subscription, EnumSubscriptionLifecycleActivity.AddedToCart);
                 }
             }

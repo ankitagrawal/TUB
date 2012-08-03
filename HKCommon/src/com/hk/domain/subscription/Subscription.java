@@ -5,10 +5,10 @@ import com.hk.domain.order.Order;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.domain.catalog.product.ProductVariant;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.*;
@@ -31,10 +31,6 @@ public class Subscription  implements java.io.Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id",  nullable = false)
     private User user;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cart_line_item_id",  nullable = true)
-    private CartLineItem cartLineItem;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "base_order_id",  nullable = false)
@@ -114,6 +110,14 @@ public class Subscription  implements java.io.Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name="next_shipment_date", length=19)
     private Date nextShipmentDate;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @Fetch(value = FetchMode.SELECT)
+    @JoinTable(name = "subscription_cart_line_item",
+            joinColumns = @JoinColumn(name = "subscription_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "cart_line_item_id", referencedColumnName = "id")
+    )
+    private CartLineItem cartLineItem;
 
     @Override
     public int hashCode() {
