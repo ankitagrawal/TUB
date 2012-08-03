@@ -73,6 +73,11 @@
       height: 16px;
       background: url('${pageContext.request.contextPath}/images/img/star-on.png') 0 0 repeat-x;
     }
+
+	.frameSize td{
+		border:1px solid #DDD;
+		padding:5px;
+	}
   </style>
   <link href="${pageContext.request.contextPath}/css/jquery.jqzoom.css" rel="stylesheet" type="text/css"/>
   <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.jqzoom-core.js"></script>
@@ -85,17 +90,6 @@
         height: 600,
         width: 900
       });
-
-	  //$("#frameChart").hide();
-
-	  $("#frameChartVM").click(function showVM(){
-		  $("#frameChart").show();
-	  });
-
-	  $("#sizeGuide").click(function toggleVM(){
-		  $("#frameChart").toggle();
-	  });
-
 
       //Click and change image
       $('.color_box').click(function() {
@@ -448,7 +442,7 @@
 					<td>
 						<img src="${pageContext.request.contextPath}/images/banners/frame_chart.jpg"/>
 					</td>
-					<td style="padding:25px;" valign="top">
+					<td valign="top" class="content" style="vertical-align:top;padding-top:10px;">
 						It is very important to verify the size of your eyes before you venture into the market looking
 						for the perfect pair of frames to wear. This manual will help you decide what the pre-requisites
 						are and how to go about it in a proper structured manner.<a target="_blank"
