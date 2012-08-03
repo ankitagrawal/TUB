@@ -104,7 +104,7 @@
                                         &nbsp;
                                     </td>
                                     <td>
-                             <span class='hk num' id="subscriptionPrice" style="font-size: 14px;" > </span>
+                                        <span class='hk num' id="subscriptionPrice" style="font-size: 14px;" > </span>
                                     </td>
                                     <td>
                                         <span id="extraDiscount" ></span>  <br/>
@@ -130,18 +130,18 @@
             <script type="text/javascript">
                 function _addSubscription(res) {
                     if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
-                        <c:choose>
-                            <c:when test="${sa.fromCart}">
-                               location.reload();
-                            </c:when>
-                            <c:otherwise>
+                    <c:choose>
+                    <c:when test="${sa.fromCart}">
+                        location.reload();
+                    </c:when>
+                    <c:otherwise>
                         closeSubscriptionWindow();
                         $('.message .line1').html("<strong>" + res.data.name + "</strong> "+ res.message);
                         $('.cartButton').html("<img class='icon' src='${pageContext.request.contextPath}/images/icons/cart.png'/><span class='num' id='productsInCart'>" + res.data.itemsInCart + "</span> items in<br/>your shopping cart");
 
                         show_sub_message();
-                            </c:otherwise>
-                        </c:choose>
+                    </c:otherwise>
+                    </c:choose>
 
                     }else if(res.code == '<%=HealthkartResponse.STATUS_ERROR%>'){
                         $('#subcriptionErrors').html(getErrorHtmlFromJsonResponse(res));

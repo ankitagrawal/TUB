@@ -4,8 +4,11 @@ package com.hk.web.action.core.cart;
 
 import java.util.*;
 
+import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.subscription.EnumSubscriptionStatus;
+import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.core.fliter.SubscriptionFilter;
+import com.hk.domain.order.CartLineItem;
 import com.hk.domain.subscription.Subscription;
 import com.hk.pact.service.mooga.RecommendationEngine;
 import net.sourceforge.stripes.action.DefaultHandler;
@@ -172,8 +175,8 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
             }
             dataMap.put("options", selectedProductVariants.get(0).getOptionsCommaSeparated());
             dataMap.put("qty", selectedProductVariants.get(0).getQty());
-            Set<Subscription> inCartSubscriptions= new SubscriptionFilter(order.getSubscriptions()).addSubscriptionStatus(EnumSubscriptionStatus.InCart).filter();
-            dataMap.put("itemsInCart", Long.valueOf(order.getExclusivelyProductCartLineItems().size() + order.getExclusivelyComboCartLineItems().size()) +inCartSubscriptions.size()+ 1L);
+            Set<CartLineItem> subscriptionCartLineItems= new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
+            dataMap.put("itemsInCart", Long.valueOf(order.getExclusivelyProductCartLineItems().size() + order.getExclusivelyComboCartLineItems().size()) +subscriptionCartLineItems.size()+ 1L);
             HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Product has been added to cart", dataMap);
             noCache();
             //recomendationEngine.notifyAddToCart(user.getId(), productVariantList);

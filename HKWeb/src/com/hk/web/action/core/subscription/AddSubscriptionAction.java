@@ -1,9 +1,11 @@
 package com.hk.web.action.core.subscription;
 
 import com.akube.framework.util.BaseUtils;
+import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.subscription.EnumSubscriptionLifecycleActivity;
 import com.hk.constants.subscription.EnumSubscriptionStatus;
 import com.hk.constants.subscription.SubscriptionConstants;
+import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.core.fliter.SubscriptionFilter;
 import com.hk.domain.builder.CartLineItemBuilder;
 import com.hk.domain.builder.SubscriptionBuilder;
@@ -125,14 +127,14 @@ public class AddSubscriptionAction extends BaseAction implements ValidationError
         }
 
         Map dataMap = new HashMap();
-        Set<Subscription> inCartSubscriptions=new SubscriptionFilter(order.getSubscriptions()).addSubscriptionStatus(EnumSubscriptionStatus.InCart).filter();
+        Set<CartLineItem> subscriptionCartLineItems=new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
         //null pointer here --> putting a null check
         if (subscription != null && subscription.getQty()>0) {
             if(priorSubscription!=null){
                 dataMap.put("name", subscription.getProductVariant().getProduct().getName());
                 dataMap.put("options", subscription.getProductVariant().getOptionsCommaSeparated());
                 dataMap.put("qty", subscription.getQty());
-                dataMap.put("itemsInCart", Long.valueOf(order.getExclusivelyProductCartLineItems().size() + order.getExclusivelyComboCartLineItems().size()) + inCartSubscriptions.size());
+                dataMap.put("itemsInCart", Long.valueOf(order.getExclusivelyProductCartLineItems().size() + order.getExclusivelyComboCartLineItems().size()) + subscriptionCartLineItems.size());
                 HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, " variant subscription was already added to your cart", dataMap);
                 noCache();
                 return new JsonResolution(healthkartResponse);
@@ -140,7 +142,7 @@ public class AddSubscriptionAction extends BaseAction implements ValidationError
                 dataMap.put("name", subscription.getProductVariant().getProduct().getName()+" subscription");
                 dataMap.put("options", subscription.getProductVariant().getOptionsCommaSeparated());
                 dataMap.put("qty", subscription.getQty());
-                dataMap.put("itemsInCart", Long.valueOf(order.getExclusivelyProductCartLineItems().size() + order.getExclusivelyComboCartLineItems().size()) + inCartSubscriptions.size()+1L);
+                dataMap.put("itemsInCart", Long.valueOf(order.getExclusivelyProductCartLineItems().size() + order.getExclusivelyComboCartLineItems().size()) + subscriptionCartLineItems.size()+1L);
                 HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, " Subscription has been added to cart", dataMap);
                 noCache();
                 return new JsonResolution(healthkartResponse);

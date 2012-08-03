@@ -1,7 +1,10 @@
 package com.hk.web.action.core.payment;
 
+import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.subscription.EnumSubscriptionStatus;
+import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.core.fliter.SubscriptionFilter;
+import com.hk.domain.order.CartLineItem;
 import com.hk.domain.subscription.Subscription;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -82,8 +85,8 @@ public class CodPaymentReceiveAction extends BaseAction {
                 return new RedirectResolution(PaymentModeAction.class);
             }
 
-            Set<Subscription> inCartSubscriptions= new SubscriptionFilter(order.getSubscriptions()).addSubscriptionStatus(EnumSubscriptionStatus.InCart).filter();
-           if(inCartSubscriptions!=null && inCartSubscriptions.size()>0){
+            Set<CartLineItem> subscriptionCartLineItems=new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
+           if(subscriptionCartLineItems!=null && subscriptionCartLineItems.size()>0){
              addRedirectAlertMessage(new SimpleMessage("Cod is not allowed as you have subscriptions in your cart"));
              return new RedirectResolution(PaymentModeAction.class);
            }
