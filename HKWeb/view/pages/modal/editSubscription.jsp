@@ -68,7 +68,6 @@
                             <br/><br/>
                         </div>
                         <div >
-                            <br/> <br/>
                             <br/>
                             <table>
                                 <tr>
@@ -87,7 +86,7 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        HK price
+                                        Normal price
                                     </td>
                                     <td>
                                         &nbsp;
@@ -107,13 +106,15 @@
                                         &nbsp;
                                     </td>
                                     <td>
-                             <span class='hk num' id="subscriptionPrice" style="font-size: 14px;" :>
-
-                </span>
+                                        <span class='hk num' id="subscriptionPrice" style="font-size: 14px;" > </span>
                                     </td>
                                     <td>
-                                        <span id="extraDiscount" ></span>
+                                        <span id="extraDiscount" ></span>  <br/>
                                     </td>
+                                </tr>
+                                <tr>
+                                    <td><br/><b><strong>Total Price:</strong></b></td> <td>&nbsp;</td>
+                                    <td><br/><span class='hk num' id="totalSubscriptionPrice" style="font-size: 14px;" > </span></td>
                                 </tr>
                             </table>
 
@@ -170,10 +171,12 @@
                     $('#subscriptionQty').attr('value',totalQty);
                     if(subscriptionPeriod<360){
                         $('#subscriptionPrice').html('<strong><b>Rs '+subscriptionPrice180+'</b></strong>');
-                        $('#extraDiscount').html('( ${sp.subscriptionDiscount180Days} &#37; off on MRP)' );
+                        $('#extraDiscount').html('(extra ${sp.subscriptionDiscount180Days} &#37; off)' );
+                        $('#totalSubscriptionPrice').html('<strong><b>Rs '+(subscriptionPrice180*totalQty)+'</b></strong>');
                     }else{
                         $('#subscriptionPrice').html('<strong><b>Rs '+subscriptionPrice360+'</b></strong>');
-                        $('#extraDiscount').html('( ${sp.subscriptionDiscount360Days} &#37; off on MRP)' );
+                        $('#extraDiscount').html('(extra ${sp.subscriptionDiscount360Days} &#37; off)' );
+                        $('#totalSubscriptionPrice').html('<strong><b>Rs '+(subscriptionPrice360*totalQty)+'</b></strong>');
                     }
                 }
 
