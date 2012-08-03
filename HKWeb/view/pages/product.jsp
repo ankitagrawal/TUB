@@ -439,7 +439,7 @@
 
 	<c:if test="${hk:collectionContains(product.categories, eyeGlass)}">
 		<div id="sizeGuide"
-		     style="background-color:#DDDDDD;padding:5px; line-height:1.3em;cursor:pointer;margin-top:8px;margin-bottom:5px;width:940px;font-weight:bold;text-align:left;">
+		      class="content" style="background-color:#DDDDDD;padding:5px; cursor:pointer;font-weight:bold;text-align:left;">
 			Size Guide
 		</div>
 		<div id="frameChart">
