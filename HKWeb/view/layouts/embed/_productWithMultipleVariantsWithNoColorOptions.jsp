@@ -47,7 +47,7 @@
                   <c:choose>
                       <c:when test="${variant.mainImageId != null}">
                           <a href='javascript:void(0);'
-                             rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, variant.mainImageId,isSecure)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, variant.mainImageId,isSecure)}'}"><img
+                             rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, variant.mainProductImageId,isSecure)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, variant.mainProductImageId,isSecure)}'}"><img
                                   src='${hk:getS3ImageUrl(imageSmallSize, variant.mainImageId,isSecure)}'></a>
                           <br/>
                           <br/>
