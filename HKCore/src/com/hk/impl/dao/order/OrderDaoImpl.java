@@ -60,7 +60,7 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao {
 
     public Page listOrdersForUser(List<OrderStatus> orderStatusList, User user, int page, int perPage) {
         DetachedCriteria criteria = DetachedCriteria.forClass(Order.class);
-        Boolean[] subscriptionOrders={false,null};
+        Boolean[] subscriptionOrders={false};
         criteria.add(Restrictions.in("orderStatus", orderStatusList));
         criteria.add(Restrictions.eq("user", user));
         criteria.add(Restrictions.in("subscriptionOrder",subscriptionOrders));

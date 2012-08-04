@@ -1,3 +1,4 @@
+
 package com.hk.domain.catalog.product;
 
 import java.util.*;

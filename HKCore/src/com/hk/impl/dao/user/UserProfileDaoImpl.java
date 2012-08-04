@@ -25,6 +25,8 @@ public class UserProfileDaoImpl extends BaseDaoImpl implements UserProfileDao {
 
         orderCriteria.add(Restrictions.in("orderStatus", orderStatusList));
         orderCriteria.addOrder(org.hibernate.criterion.Order.desc("createDate"));
+        Boolean[] subscriptionOrders={false};
+        orderCriteria.add(Restrictions.in("subscriptionOrder",subscriptionOrders));
         return findByCriteria(orderCriteria);
     }
 

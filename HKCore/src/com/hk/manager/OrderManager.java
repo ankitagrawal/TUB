@@ -141,6 +141,7 @@ public class OrderManager {
         order.setUser(user);
         order.setOrderStatus(getOrderStatusService().find(EnumOrderStatus.InCart));
         order.setAmount(0D);
+        order.setSubscriptionOrder(false);
 
         if (user.getRoleStrings().contains(EnumRole.B2B_USER.getRoleName())) {
             order.setB2bOrder(true);

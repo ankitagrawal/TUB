@@ -45,7 +45,7 @@
 
 
     <div class="main_container">
-        <h1 style="text-align: center; margin-bottom: 0.5em;">
+        <h1 style="text-align: center; margin-bottom: 0.5em; font-weight: bold; font-size: 22px">
           <s:layout-component name="heading"/>
         </h1>
       
