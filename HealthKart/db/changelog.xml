@@ -8038,16 +8038,12 @@
     </changeSet>
     <changeSet author="Pradeep (generated)" id="1342694724512-8">
         <addColumn tableName="base_order">
-            <column defaultValue="0" name="is_subscription_order" type="TINYINT">
-                <constraints nullable="false"/>
-            </column>
+            <column defaultValue="0" name="is_subscription_order" type="TINYINT"/>
         </addColumn>
     </changeSet>
     <changeSet author="Pradeep (generated)" id="1342694724512-9">
         <addColumn tableName="product">
-            <column defaultValue="0" name="is_subscribable" type="TINYINT">
-             <constraints nullable="false"/>
-            </column>
+            <column defaultValue="0" name="is_subscribable" type="TINYINT"/>
         </addColumn>
     </changeSet>
     <changeSet author="Pradeep (generated)" id="1342694724512-11">

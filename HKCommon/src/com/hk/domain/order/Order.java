@@ -132,7 +132,7 @@ public class Order implements java.io.Serializable {
     @Column(name = "is_b2b_order")
     private Boolean                   b2bOrder;
 
-  @Column(name = "is_subscription_order", nullable = false)
+  @Column(name = "is_subscription_order", nullable = true)
   private Boolean                   subscriptionOrder;
 
 
