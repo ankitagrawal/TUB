@@ -34,16 +34,4 @@ public class PaymentModeDaoImpl extends BaseDaoImpl implements PaymentModeDao {
         return criteria.list();
     }
 
-    /*
-     * public List<PaymentMode> listWorkingPaymentModes() { List<PaymentMode> paymentModeList = new ArrayList<PaymentMode>();
-     * //paymentModeList = this.listAll(); paymentModeList.add(this.find(EnumPaymentMode.CashDeposit.getId()));
-     * paymentModeList.add(this.find(EnumPaymentMode.ChequeDeposit.getId()));
-     * paymentModeList.add(this.find(EnumPaymentMode.COD.getId()));
-     * paymentModeList.add(this.find(EnumPaymentMode.COUNTER_CASH.getId()));
-     * paymentModeList.add(this.find(EnumPaymentMode.FREE_CHECKOUT.getId()));
-     * paymentModeList.add(this.find(EnumPaymentMode.NEFT.getId()));
-     * paymentModeList.add(this.find(EnumPaymentMode.TECHPROCESS.getId()));
-     * paymentModeList.add(this.find(EnumPaymentMode.CITRUS.getId())); return paymentModeList; }
-     */
-
 }

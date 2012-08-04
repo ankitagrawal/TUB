@@ -49,6 +49,7 @@ public class CitrusPaymentGatewayWrapper extends BasePaymentGatewayWrapper<Citru
     public static String CurrCode = "CurrCode";
     public static String currency = "currency";
     public static String firstName = "firstName";
+    public static String lastName = "lastName";
     public static String phoneNumber = "phoneNumber";
     public static String returnUrl = "returnUrl";
     public static String reqtime = "reqtime";
