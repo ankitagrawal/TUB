@@ -63,6 +63,7 @@
                                     </td>
                                     <td width="200">
                                         subscription Period: ${subscription.subscriptionPeriodDays} days<br/>
+                                        start date : <fmt:formatDate value="${subscription.startDate}"/> <br/>
                                         fequency : ${subscription.frequencyDays} days<br/>
                                         qty per delivery : ${subscription.qtyPerDelivery} <br/>
 
@@ -72,7 +73,7 @@
                                         <c:choose>
                                             <c:when test="${subscription.subscriptionStatus.id !=subscriptionStatusExpired && subscription.subscriptionStatus.id!=subscriptionStatusCancelled}">
                                                 <c:choose>
-                                                    <c:when test="${(subscription.subscriptionStatus.id ==subscriptionStatusOutOfStock)||(subscription.subscriptionStatus.id==subscriptionStatusInProcess)}">
+                                                    <c:when test="${subscription.subscriptionStatus.id==subscriptionStatusInProcess}">
                                                         shipment for <b><strong> <fmt:formatDate value="${subscription.nextShipmentDate}" /> </strong>  </b> is in process<br/>
                                                     </c:when>
                                                     <c:otherwise>

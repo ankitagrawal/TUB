@@ -68,6 +68,7 @@ public enum EnumSubscriptionStatus {
                 EnumSubscriptionStatus.CustomerConfirmationAwaited,
                 EnumSubscriptionStatus.ConfirmedByCustomer,
                 EnumSubscriptionStatus.Idle,
+                EnumSubscriptionStatus.OutOfStock,
                 EnumSubscriptionStatus.Expired);
     }
 

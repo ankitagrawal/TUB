@@ -34,30 +34,70 @@
                         <br/>
 
                         <div style="width:400px; float: left;">
-                            frequency : <s:text name="subscription.frequencyDays" id="subscriptionFrequency" value="${sp.maxFrequencyDays}" style="width: 30px; height: 18px;"/>
-                            &nbsp;(min : ${sp.minFrequencyDays} days - max : ${sp.maxFrequencyDays} days)  <br/>  <br/>
-                            period  &nbsp; &nbsp;  :   <s:text name="subscription.subscriptionPeriodDays" id="subscriptionPeriod" value="<%=SubscriptionConstants.minSubscriptionDays%>" style="width: 30px; height: 18px;"/>
-                            &nbsp;(min : <%=SubscriptionConstants.minSubscriptionDays%> days - max : <%=SubscriptionConstants.maxSubscriptionDays%> days)   <br/> <br/>
+                            <table>
+                                <tr>
+                                    <td>
+                                        frequency
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        <s:text name="subscription.frequencyDays" id="subscriptionFrequency" value="${sp.maxFrequencyDays}" style="width: 30px; height: 18px;"/>
+                                        &nbsp;(${sp.minFrequencyDays}  - ${sp.maxFrequencyDays} days)
+                                    </td>
+                                </tr>
+                                <tr><td>&nbsp;</td></tr>
+                                <tr>
+                                    <td>
+                                        plan
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        <s:text name="subscription.subscriptionPeriodDays" id="subscriptionPeriod" value="<%=SubscriptionConstants.minSubscriptionDays%>" style="width: 30px; height: 18px;"/>
+                                        &nbsp;(<%=SubscriptionConstants.minSubscriptionDays%> - <%=SubscriptionConstants.maxSubscriptionDays%> days)
+                                    </td>
+                                </tr>
+                                <tr><td>&nbsp;</td></tr>
+                                <tr>
+                                    <td>
+                                        start date
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        <s:text name="subscription.startDate" value="<%=currentDate%>" id="subscriptionStartDate" style="width: 90px; height: 22px;"/>
+                                    </td>
+                                </tr>
+                                <tr><td>&nbsp;</td></tr>
+                                <tr>
+                                    <td>
+                                        quantity
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        <select name="subscription.qtyPerDelivery" id="subscriptionQtyPerDelivery"  >
+                                            <c:set var="tempQty" value="1"/>
+                                            <%
+                                                for(int i=1;i<=sa.getSubscriptionProduct().getMaxQtyPerDelivery();i++){
+                                            %>
+                                            <option value="<%=i%>"><%=i%></option>
+                                            <%
+                                                }
+                                            %>
 
-
-                            Start Date : <s:text name="subscription.startDate" value="<%=currentDate%>" id="subscriptionStartDate" style="width: 90px; height: 22px;"/>
-                            <br/> <br/>
+                                        </select> (per delivery)
+                                    </td>
+                                </tr>
+                            </table>
 
                             <s:hidden name="subscription.productVariant" value="${productVariant.id}"/>
 
-                            qty  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  :
-                            <select name="subscription.qtyPerDelivery" id="subscriptionQtyPerDelivery"  >
-                                <c:set var="tempQty" value="1"/>
-                                <%
-                                    for(int i=1;i<=sa.getSubscriptionProduct().getMaxQtyPerDelivery();i++){
-                                %>
-                                <option value="<%=i%>"><%=i%></option>
-                                <%
-                                    }
-                                %>
-
-                            </select> (per delivery)
-                                <%--<s:text class="qtyPerDelivery" name="subscription.qtyPerDelivery"  id="subscriptionQtyPerDelivery" style="width: 25px; height: 18px;"/>--%>
                             <br/> <br/>
                             <strong>Total Qty</strong> &nbsp;:&nbsp; <span class="hk num" id="totalQuantity" style="color: orangered;"></span>
                             <s:hidden class="qty" name="subscription.qty"  id="subscriptionQty" />
