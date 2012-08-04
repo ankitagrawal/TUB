@@ -46,6 +46,10 @@ public class UserProfileServiceImpl implements UserProfileService {
             for (Order order : ordersByRecentDate) {
                 CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(new HashSet<CartLineItem>(order.getCartLineItems()));
                 Set<CartLineItem> productCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).filter();
+                Set<CartLineItem> subscriptionCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Subscription).filter();
+                for(CartLineItem cartLineItem:subscriptionCartLineItems){
+                    productCartLineItems.add(cartLineItem);
+                }
                 for (CartLineItem cartLineItem : productCartLineItems) {
                     productVariant = cartLineItem.getProductVariant();
                     product = cartLineItem.getProductVariant().getProduct();
