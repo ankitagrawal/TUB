@@ -34,7 +34,9 @@ public enum EnumAuditStatus {
 	public static List<EnumAuditStatus> getAllList() {
     return Arrays.asList(
         EnumAuditStatus.Pending,
-        EnumAuditStatus.Done);
+        EnumAuditStatus.Done,
+        EnumAuditStatus.Invalid,
+        EnumAuditStatus.Deleted);
 
   }
 
