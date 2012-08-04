@@ -322,7 +322,6 @@
 <script type="text/javascript">
   window.onload = function() {
     document.getElementById('myAccountLink').style.fontWeight = "bold";
-    document.getElementById('ohLink').style.fontWeight = "bold";
   };
 
   $(document).ready(function() {
