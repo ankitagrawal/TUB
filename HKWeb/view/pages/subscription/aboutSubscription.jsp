@@ -67,6 +67,10 @@
             <div>
                 <p>No. You have to prepay the whole amount if you have subscriptions in your cart.</p>
             </div>
+            <h3>Why aren't discount coupons working for my subscription?</h3>
+            <div>
+                <p>You won't get any additional discounts apart from the subscription discount. So, coupons won't work for subscriptions.</p>
+            </div>
             <h3>What if my address changes?</h3>
             <div>
                 <p>In case of a change of shipping address, the customer can drop in an e-mail to info@healthkart.com or a call our customer care
@@ -89,7 +93,7 @@
             <h3>Can I cancel my subscription midway?</h3>
             <div>
                 <p>You are free to cancel your subscription anytime. If a customer opts out, the discounts and benifits that you received  as part of the subscription will be added to the cost of
-                    the shipments delivered till that point and balance amount would be credited as reward points or refunded as per your preference.
+                    the shipments delivered till that point and the balance amount would be credited as reward points or refunded as per your preference.
                 </p>
             </div>
             <h3>Where can I see my subscriptions and shipment details?</h3>
@@ -108,28 +112,27 @@
         <div style="font-size: 13px;">
 
             <h4>How does it work?</h4>
+        <p>You select a product and subscribe for a plan specifying your frequency. You have to prepay the amount. When
+            the due date arrives, we will give you a reminder call and will send you the shipment.
+        </p>
 
-        HealthKart subscribers are also liable to enjoy some amazing discounts while they shop. The
-        subscription may vary from minimum 180 days to 450 days. Our privileged are special and will always
-        stand out of the lot.
+           <p></p>
 
-        When you purchase online, all you have to do is to click on the ‘subscription’ and fill in the
-        required information. After your inputs are recorded successfully, you will receive a conformation mail
-        from us stating your subscription details.
-            <br/>                      <br/>
-            <h4>Benifits of subscribing</h4>
-            <ul>
-                <li>Additional Discounts</li>
-                <li>Price protection</li>
-                <li>Additional Freebies</li>
-            </ul>
-            <h4>Price Protection</h4>
+            <h4>Benifits of subscription</h4>
             <br/>
+            <strong>Additional Discount</strong>
+            <p>You get additinal 4-10% discount on the subscription products according to your subscription plan. </p>
+            <strong> Price Protection</strong>
+            <p>Prices of nutrition products vary with time. </p>
+            <strong>Additional Freebies</strong>
+            <p>You will be entitled to additional freebies as and when applicable to your subscription product.</p>
+            </ul>
 
             <h4>Cancellation </h4>
+            <p>
             A customer is free to cancel his subscription anytime. If a customer opts out, the discounts and benifits that he/she received  as part of the subscription will be added to the cost of
-            the shipments delivered till that point and balance amount would be credited as reward points or refunded as per your preference.
-            <br/><br/>
+            the shipments delivered till that point and the balance amount would be credited as reward points or refunded as per customer preference.
+                </p>
             <br/><br/>
            Please refer to the Frequently Asked Questions(<s:link beanclass="com.hk.web.action.core.subscription.AboutSubscriptionAction" event="faqs" style="font-size:14px;">FAQs</s:link>) in case of any questions. If you still have unanswered questions, please contact our customer care through email
             or a phone call.
