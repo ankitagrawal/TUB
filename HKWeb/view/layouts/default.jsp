@@ -51,7 +51,12 @@
       
         <s:errors/>
         <div class="alert messages"><s:messages key="generalMessages"/></div>
+       <%-- central content should be used only when you don't use lhscontent and rhscontent--%>
+        <div class="centralContent">
+            <s:layout-component name="centralContent"/>
 
+            <div class="floatfix"></div>
+        </div>
 
       <div class="lhsContent">
         <s:layout-component name="lhsContent"/>

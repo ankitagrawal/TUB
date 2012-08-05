@@ -8,6 +8,8 @@ import com.hk.pact.service.subscription.SubscriptionService;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
 
 import java.util.HashSet;
 import java.util.List;
@@ -19,6 +21,8 @@ import java.util.Set;
  * Date: 7/24/12
  * Time: 5:24 PM
  */
+@Secure
+@Component
 public class CustomerSubscriptionHistoryAction extends BasePaginatedAction{
 
     private User user;

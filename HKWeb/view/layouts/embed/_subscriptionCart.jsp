@@ -124,7 +124,7 @@
 
     <script type="text/javascript">
       $(document).ready(function(){
-        $('#subscriptionWindow').jqm({trigger: '.editSubscriptionLink', ajax: '@href'});
+        $('#subscriptionWindow').jqm({trigger: '.editSubscriptionLink', ajax: '@href',ajaxText:'<br/><div style="text-align: center;">loading... please wait..</div> <br/>'});
       });
 
     </script>

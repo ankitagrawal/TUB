@@ -347,9 +347,40 @@
     <script type="text/javascript">
       $(document).ready(function(){
         $('#subscriptionWindow').jqm({trigger: '.addSubscriptionButton', ajax: '@href', ajaxText:'<br/><div style="text-align: center;">loading... please wait..</div> <br/>'});
+          $('.addSubscriptionButton').mouseover(function(){
+              var top = this.offsetTop-$('#subscription-tooltip').outerHeight()-10;
+              var left = $(this).offset().left-$('#subscription-tooltip').outerWidth()/2+$(this).outerWidth()/2;
+
+              $('#subscription-tooltip').css({
+                  'top': top,
+                  'left': left
+              });
+              $('#subscription-tooltip').fadeIn();
+          });
+          var timer;
+          $('.addSubscriptionButton').mouseleave(function(){
+              timer=setTimeout(function(){
+                  $('#subscription-tooltip').fadeOut();
+              },200);
+          });
+          $('.hk-tooltip').mouseover(function(){
+              clearTimeout(timer);
+          });
+          $('.hk-tooltip').mouseleave(function(){
+              $('#subscription-tooltip').fadeOut();
+          });
       });
 
     </script>
+      <div class="hk-tooltip" style="display: none;" id="subscription-tooltip">
+          Subscribe and save <fmt:formatNumber value="${subscriptionProduct.subscriptionDiscount180Days}" maxFractionDigits="2"/>  to   <fmt:formatNumber value="${subscriptionProduct.subscriptionDiscount360Days}" maxFractionDigits="2"/> &#37; extra.
+          Save money and time.
+           <br/><br/>
+          <s:link beanclass="com.hk.web.action.core.subscription.AboutSubscriptionAction" event="pre" target="_blank">(click here) </s:link> to know more..
+          <div class="pointer">
+              <div class="inner-pointer"></div>
+          </div>
+      </div>
   </c:if>
   <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_DESCRIPTIONS%>">
     <div>

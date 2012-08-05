@@ -88,10 +88,9 @@
               </c:when>
               <c:otherwise>
                   <c:if test="${!empty subscriptionProduct}">
-
+                     &nbsp;&nbsp;
                       <s:link beanclass="com.hk.web.action.core.subscription.SubscriptionAction" class="addSubscriptionButton"><b>Subscribe</b>
                           <s:param name="productVariant" value="${product.productVariants[0]}"/> </s:link>
-                      &nbsp;  <s:link beanclass="com.hk.web.action.core.subscription.AboutSubscriptionAction" event="pre" title="info" target="_blank"><b>?</b> </s:link>
                   </c:if>
                   <s:submit name="addToCart" value="Place Order" class="addToCartButton cta button_green"/>
               </c:otherwise>

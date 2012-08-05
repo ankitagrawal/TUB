@@ -1267,7 +1267,7 @@ function AddOrSubtractTwoFloats(fltValue1, fltValue2, bAddSubtract) {
                 var self=this;
                 delay(function(){
                     CheckValue(o, self);
-                }, 3000 );
+                }, 2500 );
             });
 
         });
