@@ -140,20 +140,19 @@ public class CourierAWBAction extends BaseAction {
       String excelFilePath = adminUploadsPath + "/courierFiles/" + System.currentTimeMillis() + ".xls";
       File excelFile = new File(excelFilePath);
       excelFile.getParentFile().mkdirs();
-      Set<Awb> awbSetFromExcel = null;
+      List<Awb> awbListFromExcel = null;
       try {
           fileBean.save(excelFile);
-          awbSetFromExcel = xslAwbParser.readAwbExcel(excelFile);
-          List<Awb> awbListFromExcel = new ArrayList(awbSetFromExcel);
-          if (null != awbSetFromExcel && awbSetFromExcel.size() > 0) {
+          awbListFromExcel = xslAwbParser.readAwbExcel(excelFile);
+              if (null != awbListFromExcel && awbListFromExcel.size() > 0) {
               List<Awb> alreadyAwbList = awbService.getAlreadyPresentAwb(awbListFromExcel);
               if (alreadyAwbList != null && alreadyAwbList.size() > 0) {
                   for (int i = 0; i < alreadyAwbList.size(); i++) {
-                      awbSetFromExcel.remove(alreadyAwbList.get(i));
+                      awbListFromExcel.remove(alreadyAwbList.get(i));
                   }
 
               }
-              for (Awb awb : awbSetFromExcel) {
+              for (Awb awb : awbListFromExcel) {
                   awbService.save(awb);
 
               }
@@ -179,7 +178,7 @@ public class CourierAWBAction extends BaseAction {
         return new RedirectResolution("/pages/admin/updateCourierAWB.jsp");
     }
     catch (Exception ex) {
-        if (awbSetFromExcel == null) {
+        if (awbListFromExcel == null) {
             addRedirectAlertMessage(new SimpleMessage(ex.getMessage()));
 
         }

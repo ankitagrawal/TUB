@@ -43,10 +43,10 @@ public class XslAwbParser {
     AwbService awbService;
 
 
-    public Set<Awb> readAwbExcel(File file) throws Exception {
+    public List<Awb> readAwbExcel(File file) throws Exception {
         List<LongStringUniqueObject> constraintList=new ArrayList<LongStringUniqueObject>();
         logger.debug("parsing Awb info : " + file.getAbsolutePath());
-        Set<Awb> awbSet = new HashSet<Awb>();
+        List<Awb> awbList = new ArrayList<Awb>();
         int rowCount = 1;
         ExcelSheetParser excel = new ExcelSheetParser(file.getAbsolutePath(), "Sheet1", true);
         Iterator<HKRow> rowiterator = excel.parse();
@@ -62,8 +62,8 @@ public class XslAwbParser {
                 if (StringUtils.isEmpty(courierId)) {
 
                     if (StringUtils.isEmpty(awbNumber) && cod.isEmpty() && warehouse.isEmpty()) {
-                        if (awbSet.size() > 0) {
-                            return awbSet;
+                        if (awbList.size() > 0) {
+                            return awbList;
                         }
                         return null;
 
@@ -111,7 +111,7 @@ public class XslAwbParser {
                 } else if (XslUtil.getLong(cod).equals(0l)) {
                     awb.setCod(false);
                 }
-                awbSet.add(awb);
+                awbList.add(awb);
 
 
             }
@@ -122,8 +122,8 @@ public class XslAwbParser {
 
         }
 
-        if (awbSet.size() > 0) {
-            return awbSet;
+        if (awbList.size() > 0) {
+            return awbList;
         }
 
         return null;
