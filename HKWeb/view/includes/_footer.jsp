@@ -26,7 +26,7 @@
           <li><a href="${pageContext.request.contextPath}/blog" target="_blank"><span class="txt-white">Blog</span></a></li>
           <li><a href="${pageContext.request.contextPath}/pages/careers.jsp"><span class="txt-white">Careers</span></a>
           </li>
-            <li>   <s:link beanclass="com.hk.web.action.core.subscription.AboutSubscriptionAction" event="pre" >Subscriptions </s:link> </li>
+
         </ul>
       </div>
       <div class='column'>
@@ -67,6 +67,14 @@
           </shiro:lacksRole>
         </ul>
       </div>
+        <div class='column'>
+            <h5>
+                Misc
+            </h5>
+            <ul>
+                <li>   <s:link beanclass="com.hk.web.action.core.subscription.AboutSubscriptionAction" event="pre" >Subscriptions </s:link> </li>
+            </ul>
+        </div>
       <div style="float:right;">
         <img src="<hk:vhostImage/>/images/banners/home/safe_secure_footer.gif" alt="safe and secure shopping at healthkart">
       </div>

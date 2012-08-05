@@ -1,6 +1,7 @@
 package com.hk.web.action.core.subscription;
 
 import com.akube.framework.stripes.action.BaseAction;
+import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 
@@ -12,6 +13,8 @@ import net.sourceforge.stripes.action.Resolution;
  */
 public class AboutSubscriptionAction extends BaseAction {
     private boolean faqs=false;
+
+    @DefaultHandler
     public Resolution pre(){
         faqs=false;
         return new ForwardResolution("/pages/subscription/aboutSubscription.jsp");
