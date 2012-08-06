@@ -34,8 +34,6 @@ public interface MasterDataDao
 
     public List<Courier> getCourierList();
 
-    public List<PaymentMode> getpaymentModesForReconciliationReport();
-
     public List<ReconciliationStatus> getReconciliationStatus();
 
     public List<CartLineItemType> getLineItemTypeList();
