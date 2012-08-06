@@ -2,12 +2,16 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
+<%@ page import="com.hk.admin.pact.service.courier.CourierService" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Calculate Shipment Cost">
     <s:useActionBean beanclass="com.hk.web.action.admin.shipment.ShipmentCostCalculatorAction" var="calculator"/>
     <%
         WarehouseService warehouseService = ServiceLocatorFactory.getService(WarehouseService.class);
+        CourierService courierService = ServiceLocatorFactory.getService(CourierService.class);
         pageContext.setAttribute("whList", warehouseService.getServiceableWarehouses());
+        pageContext.setAttribute("applicableCourierList", courierService.getAllCouriers());
     %>
 
     <s:layout-component name="heading">
@@ -82,16 +86,24 @@
                         <li>
                             <label>Start
                                 date</label><s:text class="date_input startDate" style="width:150px"
-                                                    formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="shippedStartDate"/>
+                                                    formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="streamStartDate"/>
                         </li>
                         <li>
                             <label>End
                                 date</label><s:text class="date_input endDate" style="width:150px"
-                                                    formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="shippedEndDate"/>
+                                                    formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="streamEndDate"/>
                         </li>
+                        <div class="clear"></div>
+                        <s:label name="courier" class="label">Courier</s:label>
+                        <c:forEach items="${applicableCourierList}" var="applicableCourier" varStatus="ctr">
+                            <div class="clear"></div>
+                            <label><s:checkbox name="applicableCourierList[${ctr.index}]"
+                                               value="${applicableCourier.id}"/> ${applicableCourier.name}</label>
+                        </c:forEach>
                         <div class="clear"></div>
                         <s:label name="overrideHistoricalShipmentCost"
                                  class="label">Override Historical Shipment Cost ?</s:label>
+                        <div class="clear"></div>
                         <s:checkbox name="overrideHistoricalShipmentCost"/>
                         <div class="clear"></div>
 
@@ -99,12 +111,60 @@
                         <s:submit name="calculateCourierCostingForShippingOrder" value="Get Shipping Cost for an SO"/>
                         <shiro:hasAnyRoles name="<%=RoleConstants.ADMIN%>">
                             <s:submit name="saveHistoricalShipmentCost" value="Save Historical Shipping Cost"/>
+                            <s:submit name="saveHistoricalDemand" value="Save Historical Demand"/>
                             <s:submit name="saveActualShippingCostForShippingOrder"
                                       value="Save Actual Shipping Cost for SO's"/>
                         </shiro:hasAnyRoles>
                     </fieldset>
                 </s:form>
             </div>
+            <s:form beanclass="com.hk.web.action.admin.order.analytics.DemandStreamInjectorAction">
+                <fieldset class="top_label">
+                    <legend> Enter Details</legend>
+
+                    <li>
+                        <label>Start
+                            date</label><s:text class="date_input startDate" style="width:150px"
+                                                formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="streamStartDate"/>
+                    </li>
+                    <li>
+                        <label>End
+                            date</label><s:text class="date_input endDate" style="width:150px"
+                                                formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="streamEndDate"/>
+                    </li>
+                    <div class="clear"></div>
+
+                    <div style="margin-top:15px;"></div>
+                    <shiro:hasAnyRoles name="<%=RoleConstants.ADMIN%>">
+                        <s:submit name="saveHistoricalDemand" value="Save Historical Demand"/>
+                    </shiro:hasAnyRoles>
+                </fieldset>
+            </s:form>
+            <shiro:hasAnyRoles name="<%=RoleConstants.GOD%>">
+                <s:form beanclass="com.hk.web.action.admin.order.split.BulkOrderSplitterAction">
+                    <fieldset class="top_label">
+                        <legend> Bulk BO Splitter</legend>
+
+                        <div class="clear"></div>
+
+                        <div style="margin-top:15px;"></div>
+                        <shiro:hasAnyRoles name="<%=RoleConstants.GOD%>">
+                            <s:submit name="bulkSplitOrders" value="Bulk Split Orders"/>
+                        </shiro:hasAnyRoles>
+                    </fieldset>
+                </s:form>
+                <div class="clear"></div>
+                <s:form beanclass="com.hk.web.action.admin.util.MarkVariantsInStockAction">
+                    <fieldset class="top_label">
+                        <legend> Mark Variants In Stock</legend>
+                        <div class="clear"></div>
+                        <div style="margin-top:15px;"></div>
+                        <shiro:hasAnyRoles name="<%=RoleConstants.GOD%>">
+                            <s:submit name="setVariantsInStockHavingInventory" value="Mark Variants In Stock"/>
+                        </shiro:hasAnyRoles>
+                    </fieldset>
+                </s:form>
+            </shiro:hasAnyRoles>
 
             <div class="clear"></div>
             <div style="margin-top:40px;"></div>

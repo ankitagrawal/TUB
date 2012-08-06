@@ -387,7 +387,7 @@
     </c:when>
     <c:otherwise>
       <s:layout-render name="/layouts/embed/_productWithExtraOptions.jsp" product="${product}"/>
-      <s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>
+      <%--<s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>--%>
     </c:otherwise>
   </c:choose>
   <div class="floatfix"></div>
@@ -411,6 +411,21 @@
 
 
 <s:layout-component name="product_description">
+
+	<c:if test="${!empty pa.relatedCombos}">
+		<div class='products content' id="related_combos">
+			<h4>
+				Special Offers on ${product.name}
+			</h4>
+			<c:forEach items="${pa.relatedCombos}" var="relatedCombo">
+				<s:layout-render name="/layouts/embed/_productThumb.jsp" productId="${relatedCombo.id}"/>
+			</c:forEach>
+
+			<div class="floatfix"></div>
+			<a class='go_to_top' href='#top'>go to top &uarr;</a>
+		</div>
+	</c:if>
+
   <c:if test="${hk:isNotBlank(product.description)}">
     <div class="content" id="description">
       <h4>
@@ -495,43 +510,16 @@
       </s:link>
     </div>
   </shiro:hasPermission>
-	<c:if test="${!empty pa.relatedCombos}">
-		<div class='products content' id="related_combos">
-			<h4>
-				Special Offers on ${product.name}
-			</h4>
-			<c:forEach items="${pa.relatedCombos}" var="relatedCombo">
-				<s:layout-render name="/layouts/embed/_productThumb.jsp" productId="${relatedCombo.id}"/>
-			</c:forEach>
 
-			<div class="floatfix"></div>
-			<a class='go_to_top' href='#top'>go to top &uarr;</a>
-		</div>
-	</c:if>
-	<c:set var="recommendedProducts" value="${hk:getRecommendedProducts(product)}"/>
-	<c:if test="${!empty recommendedProducts}">
+	<c:set var="relatedProducts" value="${product.relatedProducts}"/>
+	<c:if test="${!empty relatedProducts}">
 		<div class='products content' id="related_products">
 			<h4>
 				People who bought this also bought these products
 			</h4>
 
-			<c:forEach items="${recommendedProducts}" var="relatedProducts">
-				<shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_CATALOG%>">
-					<h6 style="color: red" title="Recommended Product Source">
-						Source = ${relatedProducts.key};
-						Products =
-						<c:forEach var="relatedProduct" items="${relatedProducts.value}">
-							${relatedProduct}
-						</c:forEach>
-					</h6>
-				</shiro:hasPermission>
-				<c:set var="recommendedProductCount" value="0" scope="page"/>
-				<c:forEach var="relatedProduct" items="${relatedProducts.value}">
-					<c:if test="${recommendedProductCount < 6}">
-						<s:layout-render name="/layouts/embed/_productThumb.jsp" productId="${relatedProduct}"/>
-					</c:if>
-					<c:set var="recommendedProductCount" value="${recommendedProductCount + 1}" scope="page"/>
-				</c:forEach>
+			<c:forEach items="${relatedProducts}" var="relatedProduct">
+				<s:layout-render name="/layouts/embed/_productThumbG.jsp" product="${relatedProduct}"/>
 			</c:forEach>
 
 			<div class="floatfix"></div>

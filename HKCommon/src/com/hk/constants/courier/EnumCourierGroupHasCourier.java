@@ -14,6 +14,7 @@ public enum EnumCourierGroupHasCourier {
                     EnumCourier.DTDC_Surface,
                     EnumCourier.FirstFLight,
                     EnumCourier.FirstFLight_COD,
+                    EnumCourier.Speedpost,
                     EnumCourier.AFLWiz
             )
     ),
@@ -31,6 +32,8 @@ public enum EnumCourierGroupHasCourier {
             EnumCourierGroup.Local,
             Arrays.asList(
                     EnumCourier.Chhotu,
+                    EnumCourier.Quantium,
+                    EnumCourier.Safexpress,
                     EnumCourier.Delhivery
             )
     ),
@@ -38,7 +41,6 @@ public enum EnumCourierGroupHasCourier {
     EarthMovers(
             EnumCourierGroup.EarthMovers,
             Arrays.asList(
-                    EnumCourier.EarthMoversPune,
                     EnumCourier.IndiaEarthMovers
             )
     ),;

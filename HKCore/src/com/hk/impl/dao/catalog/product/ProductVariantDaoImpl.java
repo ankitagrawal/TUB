@@ -136,6 +136,11 @@ public class ProductVariantDaoImpl extends BaseDaoImpl implements ProductVariant
         return getAll(ProductVariant.class);
     }
 
+	public List<ProductVariant> getAllNonDeletedProductVariant() {
+        return getSession().createQuery(
+                "select pv from ProductVariant pv where pv.product.deleted != 1 and pv.deleted != 1").list();
+    }
+
     public Product getProductForProudctVariant(String variantId) {
         return getVariantById(variantId).getProduct();  //To change body of implemented methods use File | Settings | File Templates.
     }

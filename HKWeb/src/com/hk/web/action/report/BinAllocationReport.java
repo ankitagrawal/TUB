@@ -162,7 +162,7 @@ public class BinAllocationReport extends BaseAction {
         Double mrp = reconciliationVoucherDao.getRvLineItem(skugroup.getReconciliationVoucher(), skugroup.getSku()).getMrp();
         markedPrice = Double.toString(mrp);
       } else if (skugroup.getStockTransfer() != null) {
-        Double mrp = stockTransferDao.getStockTransferLineItem(skugroup.getStockTransfer(), productVariant).getMrp();
+        Double mrp = stockTransferDao.getStockTransferLineItem(skugroup.getStockTransfer(), productVariant, skugroup.getBatchNumber()).getMrp();
         markedPrice = Double.toString(mrp);
       } else {
         markedPrice = Double.toString(skugroup.getSku().getProductVariant().getMarkedPrice());

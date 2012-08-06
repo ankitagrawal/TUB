@@ -29,15 +29,15 @@
 					</tr>
 					<tr>
 						<td>Checkin Qty:</td>
-						<td><s:text name="qty" value="0"/></td>
+						<td><s:text name="qty" class="qty" value="0"/></td>
 					</tr>
 					<tr>
-					<td>Cost Price:</td>
-						<td><s:text name="costPrice" value="0.0"/></td>
+						<td>Cost Price:</td>
+						<td><s:text name="costPrice" class="costPrice" value="0.0"/></td>
 					</tr>
 					<tr>
 						<td>MRP:</td>
-						<td><s:text name="mrp" value="0.0"/></td>
+						<td><s:text name="mrp" class="mrp" value="0.0"/></td>
 					</tr>
 					<tr>
 						<td>Batch Number:</td>
@@ -64,21 +64,31 @@
 					}
 					document.onkeypress = stopRKey;
 					$(document).ready(function() {
-									$('.requiredFieldValidator').click(function() {
+						$('.requiredFieldValidator').click(function() {
 
-						var batchNumber = $('.batchNumber').val();
-						if (batchNumber == "" ) {
-							alert("Batch Number is must.");
-							return false;
-						}
-								});
-								});
+							var batchNumber = $('.batchNumber').val();
+							if (batchNumber == "") {
+								alert("Batch Number is must.");
+								return false;
+							}
+						});
+
+					 	$(".stPvId").click(function() {
+							$('.variant').val(this.innerHTML);
+							$(".batchNumber").val($(this).parent().siblings('.stBatchNum').html());
+							$('.qty').val($(this).parent().siblings('.stCheckOutQty').html());
+							$('.costPrice').val($(this).parent().siblings('.stCostPrice').html());
+							$('.mrp').val($(this).parent().siblings('.stMrp').html());
+
+						});
+					});
 
 				</script>
 				<br/>
 				<s:submit name="saveInventoryAgainstStockTransfer" value="Save" class="requiredFieldValidator"/>
 			</s:form>
-      <span style="display:inline;float:right;"><h2><s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction">&lang;&lang;&lang;
+      <span style="display:inline;float:right;"><h2><s:link
+		      beanclass="com.hk.web.action.admin.inventory.StockTransferAction">&lang;&lang;&lang;
 	      Back to Stock Transfer List</s:link></h2></span>
 		</div>
 		<div style="display:inline;" align="center">
@@ -88,9 +98,11 @@
 					<th width="">S.No.</th>
 					<th width="">Item</th>
 					<th width="">VariantId</th>
-					<th width="">UPC</th>
+					<th width="">Batch</th>
 					<th width="">Checked-out Qty</th>
 					<th width="">Checked-in Qty</th>
+					<th width="">Cost Price</th>
+					<th width="">Mrp</th>
 				</tr>
 				<c:forEach items="${ica.stockTransfer.stockTransferLineItems}" var="stockTransferLineItem" varStatus="ctr">
 					<c:set value="${stockTransferLineItem.sku.productVariant}" var="productVariant"/>
@@ -102,10 +114,15 @@
 								${productOption.name} ${productOption.value}
 							</c:forEach></em>
 						</td>
-						<td><a href="#" onclick="$('.variant').val(this.innerHTML);">${productVariant.id}</a></td>
-						<td>${productVariant.upc}</td>
-						<td>${stockTransferLineItem.checkedoutQty}</td>
+						<td><a href="#" class="stPvId">${productVariant.id}</a></td>
+						<%--<td>${productVariant.upc}</td>--%>
+						<td class="stBatchNum">${stockTransferLineItem.batchNumber}</td>
+
+						<td class="stCheckOutQty">${stockTransferLineItem.checkedoutQty}</td>
+
 						<td style="color:green; font-weight:bold">${stockTransferLineItem.checkedinQty}</td>
+						<td class="stCostPrice">${stockTransferLineItem.costPrice}</td>
+						<td class="stMrp" >${stockTransferLineItem.mrp}</td>
 					</tr>
 				</c:forEach>
 			</table>
