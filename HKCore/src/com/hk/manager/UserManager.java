@@ -3,9 +3,11 @@ package com.hk.manager;
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.core.HealthkartConstants;
+import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.domain.TempToken;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.matcher.CartLineItemMatcher;
 import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
@@ -76,7 +78,7 @@ public class UserManager {
 
     //Please do not add @Autowired has been taken care of in getter .
     private OrderManager     orderManager;
-    
+
     public UserLoginDto login(String email, String password, boolean rememberMe) throws HealthkartLoginException {
         /**
          * Check whether any user is logged in or not. if yes then if the user is TEMP_USER then save a reference to
@@ -234,23 +236,23 @@ public class UserManager {
     }
 
     public User createGuestUser(String email, String name) {
-      User user = new User();
-      user.setName(StringUtils.isBlank(name) ? "Guest" : name);
-      String randomLogin = TokenUtils.generateGuestLogin();
-      user.setLogin(randomLogin);
-      user.setEmail(email);
-      user.setPasswordChecksum(BaseUtils.passwordEncrypt(randomLogin));
-      user.getRoles().add(getRoleService().getRoleByName(RoleConstants.TEMP_USER));
-      user = getUserService().save(user);
+        User user = new User();
+        user.setName(StringUtils.isBlank(name) ? "Guest" : name);
+        String randomLogin = TokenUtils.generateGuestLogin();
+        user.setLogin(randomLogin);
+        user.setEmail(email);
+        user.setPasswordChecksum(BaseUtils.passwordEncrypt(randomLogin));
+        user.getRoles().add(getRoleService().getRoleByName(RoleConstants.TEMP_USER));
+        user = getUserService().save(user);
 
-      //ADD In Cookie
-      Cookie cookie = new Cookie(HealthkartConstants.Cookie.tempHealthKartUser, user.getUserHash());
-      cookie.setPath("/");
-      cookie.setMaxAge(30 * 24 * 60 * 60);
-      HttpServletResponse httpResponse = WebContext.getResponse();
-      httpResponse.addCookie(cookie);
-      logger.debug("Added Cookie for New Temp User="+user.getUserHash());
-      return user;
+        //ADD In Cookie
+        Cookie cookie = new Cookie(HealthkartConstants.Cookie.tempHealthKartUser, user.getUserHash());
+        cookie.setPath("/");
+        cookie.setMaxAge(30 * 24 * 60 * 60);
+        HttpServletResponse httpResponse = WebContext.getResponse();
+        httpResponse.addCookie(cookie);
+        logger.debug("Added Cookie for New Temp User="+user.getUserHash());
+        return user;
     }
 
     @Transactional
@@ -260,9 +262,18 @@ public class UserManager {
         Set<CartLineItem> guestLineItems = guestOrder.getCartLineItems();
         for (CartLineItem guestLineItem : guestLineItems) {
             // The variant is not added in user account already
-            if (getCartLineItemDao().getLineItem(guestLineItem.getProductVariant(), loggedOnUserOrder) == null) {
-                guestLineItem.setOrder(loggedOnUserOrder);
-                getCartLineItemDao().save(guestLineItem);
+            CartLineItemMatcher cartLineItemMatcher=new CartLineItemMatcher();
+            EnumCartLineItemType guestCartLineItemType=EnumCartLineItemType.Product;
+            for(EnumCartLineItemType enumCartLineItemType :EnumCartLineItemType.values()){
+                if(enumCartLineItemType.getId().longValue()==guestCartLineItemType.getId().longValue()){
+                    guestCartLineItemType= enumCartLineItemType;
+                }
+            }
+            if(cartLineItemMatcher.addProductVariant(guestLineItem.getProductVariant()).addCartLineItemType(guestCartLineItemType).match(loggedOnUserOrder.getCartLineItems())==null){
+                if(guestLineItem.getQty()>0){
+                    guestLineItem.setOrder(loggedOnUserOrder);
+                    getCartLineItemDao().save(guestLineItem);
+                }
             }
         }
         getOrderDao().save(loggedOnUserOrder);
