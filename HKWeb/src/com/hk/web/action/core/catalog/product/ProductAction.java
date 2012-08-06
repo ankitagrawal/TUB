@@ -69,7 +69,6 @@ public class ProductAction extends BaseAction {
     List<UserReview> userReviews = new ArrayList<UserReview>();
     Long totalReviews = 0L;
     List<Combo> relatedCombos = new ArrayList<Combo>();
-    String renderComboUI = "false";
 
     @Session(key = HealthkartConstants.Cookie.preferredZone)
     private String preferredZone;
@@ -193,12 +192,12 @@ public class ProductAction extends BaseAction {
         } else {
             List<SuperSaverImage> superSaverImages = superSaverImageService.getSuperSaverImages(product, Boolean.FALSE, Boolean.TRUE);
             String directTo;
-            if (renderComboUI != null && renderComboUI.equals("true")) {
+            if (superSaverImages == null || superSaverImages.isEmpty()) {
+                directTo = "product.jsp";
+            } else {
                 SuperSaverImage latestSuperSaverImage = superSaverImages.get(superSaverImages.size() - 1);
                 superSaverImageId = latestSuperSaverImage.getId();
                 directTo = "combo.jsp";
-            } else {
-                directTo = "product.jsp";
             }
 
             return new ForwardResolution("/pages/" + directTo);
@@ -374,9 +373,5 @@ public class ProductAction extends BaseAction {
 
     public void setSuperSaverImageId(Long superSaverImageId) {
         this.superSaverImageId = superSaverImageId;
-    }
-
-    public void setRenderComboUI(String renderComboUI) {
-        this.renderComboUI = renderComboUI;
-    }
+    }    
 }
