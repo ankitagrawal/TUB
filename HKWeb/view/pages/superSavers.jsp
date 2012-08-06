@@ -197,9 +197,6 @@
                                   style="float:left;">
                             Filter
                         </s:submit>
-
-                        &nbsp;
-
                         <s:submit name="getSuperSaversForCategoryAndBrand" id="showAllBtn" class="btn"
                                   style="float:right;">
                             Show All
