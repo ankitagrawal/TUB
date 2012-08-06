@@ -8124,4 +8124,10 @@
             <column name="product_variant_id"/>
             <column name="forecast_date"/>
         </createIndex>
-    </databaseChangeLog>
+    </changeSet>
+    <changeSet author="Rimal (generated)" id="1343625966349-1">
+        <addColumn tableName="super_saver_image">
+            <column defaultValue="0" name="deleted" type="TINYINT"/>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>
