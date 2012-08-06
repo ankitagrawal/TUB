@@ -198,9 +198,9 @@
 <div class="clear"></div>
 <div style="margin-top: 5px;"></div>
 <div class="grid_12">
-    <h3>Order Details</h3>Merchant Transaction Ref No ${baseOrder.gatewayOrderId} for order
+    <h3 style="margin-bottom:2px">Order Details</h3>Merchant Transaction Ref No ${baseOrder.gatewayOrderId} for order
     placed on: <fmt:formatDate value="${baseOrder.payment.paymentDate}" type="both" timeStyle="short"/>
-
+    <div style="margin-top: 5px;"></div>
     <c:if test="${orderSummary.invoiceDto.replacementOrderString != null}">
         <h3>${orderSummary.invoiceDto.replacementOrderString}</h3>
     </c:if>
