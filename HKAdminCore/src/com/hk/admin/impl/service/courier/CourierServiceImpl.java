@@ -3,17 +3,22 @@ package com.hk.admin.impl.service.courier;
 import com.hk.admin.pact.dao.courier.CityCourierTATDao;
 import com.hk.admin.pact.dao.courier.CourierDao;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
+import com.hk.admin.pact.service.courier.CourierCostCalculator;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.CityCourierTAT;
 import com.hk.domain.courier.Courier;
+import com.hk.domain.courier.CourierPricingEngine;
 import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.domain.order.Order;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.dto.pricing.PricingDto;
+import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.core.PincodeService;
+import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.payment.PaymentService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +41,16 @@ public class CourierServiceImpl implements CourierService {
     private CourierDao courierDao;
     @Autowired
     private CourierServiceInfoDao courierServiceInfoDao;
+
+     @Autowired
+    WarehouseService  warehouseService;
+
+    @Autowired
+    PincodeDao pincodeDao;
+      @Autowired
+      CourierCostCalculator courierCostCalculator;
+       @Autowired
+       CourierService  courierService;
 
 
     @Override
@@ -89,6 +104,30 @@ public class CourierServiceImpl implements CourierService {
     public Courier getDefaultCourier(Pincode pincode, boolean isCOD, Warehouse warehouse) {
         return getCourierServiceInfoDao().getDefaultCourierForPincode(pincode, isCOD, warehouse);
     }
+
+     public Double getCashbackOnGroundShippedItem(PricingDto pricingDto,Order order,Double groundshipItemweight)  {
+          String pincode = order.getAddress().getPin();
+        Pincode pincodeObj = pincodeDao.getByPincode(pincode);
+        if(pincodeObj == null)   {
+//            logger.info("Illegal pincode " + pincode + "for BO order " + order.getId());
+            return null;
+        }
+         List <Warehouse> warehouses = warehouseService.getAllWarehouses();
+
+         for (Warehouse warehouse : warehouses)   {
+           Courier courier =  courierService.getDefaultCourier(pincodeObj,true,warehouse);
+          CourierPricingEngine courierPricingInfo = courierCostCalculator.getCourierPricingInfo(courier, pincodeObj, warehouse);
+            
+         courierService.  calculateShipmentCost(courierPricingInfo, groundshipItemweight);
+
+       }
+
+
+
+         return 10.0;
+
+     }
+
 
     public CourierDao getCourierDao() {
         return courierDao;

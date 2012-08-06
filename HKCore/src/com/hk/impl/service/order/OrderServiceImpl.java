@@ -13,6 +13,8 @@ import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.OrderLifecycleActivity;
 import com.hk.domain.core.OrderStatus;
+import com.hk.domain.core.Pincode;
+import com.hk.domain.courier.CourierPricingEngine;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.OrderCategory;
@@ -21,12 +23,14 @@ import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.dto.pricing.PricingDto;
 import com.hk.exception.OrderSplitException;
 import com.hk.helper.LineItemHelper;
 import com.hk.helper.ShippingOrderHelper;
 import com.hk.manager.EmailManager;
 import com.hk.manager.ReferrerProgramManager;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.UserService;
@@ -40,6 +44,7 @@ import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.OrderSplitterService;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
+
 import com.hk.pojo.DummyOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,6 +90,12 @@ public class OrderServiceImpl implements OrderService {
     private OrderLoggingService orderLoggingService;
     @Autowired
     private OrderSplitterService orderSplitterService;
+
+     @Autowired
+     PincodeDao pincodeDao;
+
+     @Autowired
+    CourierCostCalculator courierCostCalculator;
 
     @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
     private Double codMinAmount;
@@ -403,6 +414,8 @@ public class OrderServiceImpl implements OrderService {
             emailManager.sendServiceVoucherMailToServiceProvider(order, lineItem);
         }
     }
+
+
 
     public OrderDao getOrderDao() {
         return orderDao;

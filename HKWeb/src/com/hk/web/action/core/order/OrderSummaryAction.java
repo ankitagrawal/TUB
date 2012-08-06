@@ -3,6 +3,7 @@ package com.hk.web.action.core.order;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.admin.engine.ShipmentPricingEngine;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.ShippingOrder;
@@ -59,6 +60,8 @@ public class OrderSummaryAction extends BaseAction {
     PricingEngine pricingEngine;
     @Autowired
     ReferrerProgramManager referrerProgramManager;
+    @Autowired
+    ShipmentPricingEngine shipmentPricingEngine;
 
     @Session(key = HealthkartConstants.Session.useRewardPoints)
     private boolean useRewardPoints;
@@ -93,22 +96,29 @@ public class OrderSummaryAction extends BaseAction {
     private Double codMaxAmount;
     
     private Double cashbackOnGroundshipped;
+    private Double groundshipItemweight;
+
 
 
     @DefaultHandler
     public Resolution pre() {
+        CartLineItem lineItem_1 = null;
         User user = getUserService().getUserById(getPrincipal().getId());
         order = orderManager.getOrCreateOrder(user);
         // Trimming empty line items once again.
         orderManager.trimEmptyLineItems(order);
         OfferInstance offerInstance = order.getOfferInstance();
 
+
         Set<CartLineItem> cartLineItems = order.getCartLineItems();
         for (CartLineItem lineItem : cartLineItems) {
             if (lineItem != null && lineItem.getProductVariant() != null) {
                 ProductVariant productVariant = lineItem.getProductVariant();
                 if (productVariant.getProduct().isGroundShipping()) {
+                 groundshipItemweight =  productVariant.getWeight();
                     hideCod = true;
+
+                    lineItem_1 =  lineItem;
                     break;
                 }
             }
@@ -147,8 +157,28 @@ public class OrderSummaryAction extends BaseAction {
         }
 
         if (hideCod) {
-         ShippingOrder shippingOrder = order.getShippingOrders().;
-            cashbackOnGroundshipped = pricingDto.getCashbackOnGroundShippedItem();
+//            Double reconciliationcost =  0.2 * pricingDto.getShippingTotal();
+//            double Shippingcost = pricingDto.getShippingTotal();
+//            double cost =       Shippingcost +  reconciliationcost;
+//              cashbackOnGroundshipped = pricingDto.getCashbackOnGroundShippedItem(cost);
+//
+////            Set<ShippingOrder> shippingOrders = order.getShippingOrders();
+////            if (shippingOrders != null) {
+////                for (ShippingOrder shippingOrder : order.getShippingOrders()) {
+//////                    getAdminShippingOrderService().cancelShippingOrder(shippingOrder);
+////
+////                    if (shippingOrder.getLineItems().contains(lineItem_1)) {
+////                        Double shippingCost = shipmentPricingEngine.calculateShipmentCost(shippingOrder);
+////                        Double reconciliationcost = shipmentPricingEngine.calculateReconciliationCost(shippingOrder);
+////                        Double totalCost = shippingCost + reconciliationcost;
+//////                        cashbackOnGroundshipped = pricingDto.getCashbackOnGroundShippedItem(totalCost);
+////                    }
+////                }
+////            }
+
+         cashbackOnGroundshipped=        courierService. getCashbackOnGroundShippedItem(pricingDto,order,groundshipItemweight);
+
+            
         }
 
 
