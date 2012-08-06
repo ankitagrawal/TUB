@@ -267,19 +267,12 @@ public class UserManager {
         for (CartLineItem guestLineItem : guestLineItems) {
             // The variant is not added in user account already
             CartLineItemMatcher cartLineItemMatcher=new CartLineItemMatcher();
-            EnumCartLineItemType guestCartLineItemType=null;
-            for(EnumCartLineItemType enumCartLineItemType :EnumCartLineItemType.values()){
-                if(enumCartLineItemType.getId().longValue()==guestLineItem.getLineItemType().getId().longValue()){
-                    guestCartLineItemType= enumCartLineItemType;
-                }
-            }
-            if(guestCartLineItemType ==null) guestCartLineItemType=EnumCartLineItemType.Product;
 
-            if(cartLineItemMatcher.addProductVariant(guestLineItem.getProductVariant()).addCartLineItemType(guestCartLineItemType).match(loggedOnUserOrder.getCartLineItems())==null){
+            if(cartLineItemMatcher.addProductVariant(guestLineItem.getProductVariant()).addCartLineItemTypeId(guestLineItem.getId()).match(loggedOnUserOrder.getCartLineItems())==null){
                 if(guestLineItem.getQty()>0){
                     guestLineItem.setOrder(loggedOnUserOrder);
                     getCartLineItemDao().save(guestLineItem);
-                    if(guestCartLineItemType.getId().longValue()==EnumCartLineItemType.Subscription.getId().longValue()){
+                    if(guestLineItem.getLineItemType().getId().longValue()==EnumCartLineItemType.Subscription.getId().longValue()){
                         Subscription subscription=subscriptionService.getSubscriptionFromCartLineItem(guestLineItem);
                         subscription.setBaseOrder(loggedOnUserOrder);
                         subscription.setUser(dstUser);

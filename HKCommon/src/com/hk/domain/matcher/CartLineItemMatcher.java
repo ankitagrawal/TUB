@@ -20,6 +20,7 @@ public class CartLineItemMatcher {
     private CartLineItemConfig cartLineItemConfig;
     private List<CartLineItemExtraOption> extraOptions;
     private EnumCartLineItemType enumCartLineItemType;
+    private Long cartLineItemTypeId;
 
     public CartLineItemMatcher addProductVariant(ProductVariant productVariant) {
         this.productVariant = productVariant;
@@ -43,6 +44,11 @@ public class CartLineItemMatcher {
 
     public CartLineItemMatcher addCartLineItemType(EnumCartLineItemType enumCartLineItemType){
         this.enumCartLineItemType = enumCartLineItemType;
+        return this;
+    }
+
+    public CartLineItemMatcher addCartLineItemTypeId(Long cartLineItemTypeId){
+        this.cartLineItemTypeId = cartLineItemTypeId;
         return this;
     }
 
@@ -79,6 +85,11 @@ public class CartLineItemMatcher {
             }
             if(matchFound && enumCartLineItemType!=null){
                 if(!cartLineItem.isType(enumCartLineItemType)){
+                    matchFound = false;
+                }
+            }
+            if(matchFound && cartLineItemTypeId!=null){
+                if(cartLineItem.getId().longValue()!=cartLineItemTypeId.longValue()){
                     matchFound = false;
                 }
             }
