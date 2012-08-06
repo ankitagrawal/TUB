@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.CartLineItem;
+import com.hk.domain.order.ShippingOrder;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.LocalizableMessage;
@@ -44,50 +45,55 @@ import com.hk.web.action.core.user.SelectAddressAction;
 @Component
 public class OrderSummaryAction extends BaseAction {
 
-    private static Logger  logger = LoggerFactory.getLogger(OrderSummaryAction.class);
+    private static Logger logger = LoggerFactory.getLogger(OrderSummaryAction.class);
 
     @Autowired
     private CourierService courierService;
     @Autowired
-    UserDao                userDao;
+    UserDao userDao;
     @Autowired
-    OrderManager           orderManager;
+    OrderManager orderManager;
     @Autowired
-    private OrderService   orderService;
+    private OrderService orderService;
     @Autowired
-    PricingEngine          pricingEngine;
+    PricingEngine pricingEngine;
     @Autowired
     ReferrerProgramManager referrerProgramManager;
 
     @Session(key = HealthkartConstants.Session.useRewardPoints)
-    private boolean        useRewardPoints;
+    private boolean useRewardPoints;
 
-    private PricingDto     pricingDto;
-    private Order          order;
-    private Address        billingAddress;
-    private boolean        codAllowed;
-    private Double         redeemableRewardPoints;
-    private List<Courier>  availableCourierList;
-    private boolean        hideCod;
+    private PricingDto pricingDto;
+    private Order order;
+    private Address billingAddress;
+    private boolean codAllowed;
+    private Double redeemableRewardPoints;
+    private List<Courier> availableCourierList;
+    private boolean hideCod;
+//    private double        cashback;
+
 
     // COD related changes
     @Autowired
-    PaymentManager         paymentManager;
+    PaymentManager paymentManager;
     @Autowired
-    PaymentModeDao         paymentModeDao;
+    PaymentModeDao paymentModeDao;
 
     @Value("#{hkEnvProps['" + Keys.Env.codCharges + "']}")
-    private Double         codCharges;
+    private Double codCharges;
 
     @Value("#{hkEnvProps['" + Keys.Env.codFreeAfter + "']}")
-    private Double         codFreeAfter;
+    private Double codFreeAfter;
 
     @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
-    private Double         codMinAmount;
+    private Double codMinAmount;
 
     // @Named(Keys.Env.codMaxAmount)
     @Value("#{hkEnvProps['codMaxAmount']}")
-    private Double         codMaxAmount;
+    private Double codMaxAmount;
+    
+    private Double cashbackOnGroundshipped;
+
 
     @DefaultHandler
     public Resolution pre() {
@@ -97,17 +103,16 @@ public class OrderSummaryAction extends BaseAction {
         orderManager.trimEmptyLineItems(order);
         OfferInstance offerInstance = order.getOfferInstance();
 
-          Set<CartLineItem> cartLineItems =  order.getCartLineItems();
-                 for (CartLineItem lineItem : cartLineItems) {
-                   if (lineItem != null && lineItem.getProductVariant() != null){
-                          ProductVariant productVariant = lineItem.getProductVariant();
-                          if (productVariant.getProduct().isGroundShipping()){
-                                  hideCod = true;
-                                  break;
-                          }
-                   }
-                 }
-
+        Set<CartLineItem> cartLineItems = order.getCartLineItems();
+        for (CartLineItem lineItem : cartLineItems) {
+            if (lineItem != null && lineItem.getProductVariant() != null) {
+                ProductVariant productVariant = lineItem.getProductVariant();
+                if (productVariant.getProduct().isGroundShipping()) {
+                    hideCod = true;
+                    break;
+                }
+            }
+        }
 
         Double rewardPointsUsed = 0D;
         redeemableRewardPoints = referrerProgramManager.getTotalRedeemablePoints(user);
@@ -140,6 +145,12 @@ public class OrderSummaryAction extends BaseAction {
                 codAllowed = false;
             }
         }
+
+        if (hideCod) {
+         ShippingOrder shippingOrder = order.getShippingOrders().;
+            cashbackOnGroundshipped = pricingDto.getCashbackOnGroundShippedItem();
+        }
+
 
         Double netShopping = pricingDto.getGrandTotalPayable() - pricingDto.getShippingTotal();
         if (netShopping > codFreeAfter) {
@@ -228,5 +239,13 @@ public class OrderSummaryAction extends BaseAction {
 
     public void setHideCod(boolean hideCod) {
         this.hideCod = hideCod;
+    }
+
+    public Double getCashbackOnGroundshipped() {
+        return cashbackOnGroundshipped;
+    }
+
+    public void setCashbackOnGroundshipped(Double cashbackOnGroundshipped) {
+        this.cashbackOnGroundshipped = cashbackOnGroundshipped;
     }
 }

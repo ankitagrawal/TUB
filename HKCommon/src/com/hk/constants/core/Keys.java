@@ -48,7 +48,9 @@ public class Keys {
         public static final String defaultGateway               = "defaultGateway";
 
         public static final String cashBackPercentage           = "cashBackPercentage";
-        public static final String cashBackLimit                = "cashBackLimit";
+//        public static final String cashbackOnGroundshipped      = "cashbackOnGroundshipped";
+
+         public static final String cashBackLimit                = "cashBackLimit";
 
         public static final String accessKey                    = "accessKey";
         public static final String secretKey                    = "secretKey";

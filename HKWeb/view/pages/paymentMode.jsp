@@ -111,7 +111,7 @@
         <shiro:lacksRole name="<%=RoleConstants.COD_BLOCKED%>">
 
 
-            <c:if test="${(orderSummary.order.offerInstance.offer.paymentType != prePaidPaymentType) &&(orderSummary.hideCod == false) }">
+            <c:if test="${(orderSummary.order.offerInstance.offer.paymentType != prePaidPaymentType)}">
                 <li id="tab4" class="cod-mode">Cash on Delivery</li>
                 <li id="tab5">Cheque / Bank Deposit</li>
             </c:if>
@@ -184,8 +184,19 @@
     <c:if test="${orderSummary.order.offerInstance.offer.paymentType != prePaidPaymentType}">
         <div id="tabs_content4" class="tab_content" style="display: none;">
             <c:choose>
-                <c:when test="${orderSummary.codAllowed}">
+                <c:when test="${(orderSummary.hideCod == true)}">
+                    <h4 style="text-align: center;">We are sorry</h4>
 
+                    <p>Cash on Delivery is not available for Ground Shipped items.
+                        <br/>
+                        We suggest you to choose pre-payment option and you will get <strong style="color:green">
+                            CASHBACK </strong> of <strong class='num' style="color:green"> <fmt:formatNumber
+                                value="${orderSummary.cashbackOnGroundshipped}" currencySymbol="Rs. "
+                                type="currency"/> </strong></p>
+                    <p><strong>And</strong></p>
+                    <p>Delivery may take 5-8 days</p>
+                </c:when>
+                <c:when test="${orderSummary.codAllowed}">
                     <div class="grid_5">
                         <h4>Order Total</h4>
                         <br />
@@ -235,22 +246,7 @@
                             given location for pick-up at all times.<br />
                         </p>
                     </s:form>
-                </c:when>
-
-                <c:when test="${order.hideCod}">
-                        <h4 style="text-align: center;">We are sorry</h4>
-
-                    <p><strong>Either</strong></p>
-
-                    <p>Cash on Delivery is not available for Ground Shipped items.                         
-                        <br />
-                         We suggest you to choose pre-payment option and you will get this much amount save  </p>
-
-                    <p><strong>And</strong></p>
-
-                    <p>Delivery may take 5-7 days</p>
-
-               </c:when>
+                </c:when>        
 
                 <c:otherwise>
                     <h4 style="text-align: center;">We are sorry</h4>
