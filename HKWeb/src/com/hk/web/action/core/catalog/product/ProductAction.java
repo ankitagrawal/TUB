@@ -194,6 +194,7 @@ public class ProductAction extends BaseAction {
                     break;
                 }
             }
+            relatedCombo.setProductURL(linkManager.getProductURL(relatedCombo, ProductReferrerMapper.getProductReferrerid(EnumProductReferrer.relatedProductsPage.getName())));
         }
 
         if (combo == null) {
