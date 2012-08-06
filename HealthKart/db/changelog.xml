@@ -8370,9 +8370,4 @@
             UPDATE base_order SET is_subscription_order=0;
         </sql>
     </changeSet>
-    <changeSet author="Pradeep" id="subscription-3-8-2012-02">
-        <sql>
-            UPDATE product SET is_subscribable=false;
-        </sql>
-    </changeSet>
 </databaseChangeLog>
