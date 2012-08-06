@@ -24,7 +24,7 @@ public class SuperSaversAction extends BasePaginatedAction {
     List<SuperSaverImage> superSaverImages;
     List<String> categories;
     List<String> brands;
-    private Integer defaultPerPage = 3;
+    private Integer defaultPerPage = 10;
     Page superSaverPage;
 
     @Autowired

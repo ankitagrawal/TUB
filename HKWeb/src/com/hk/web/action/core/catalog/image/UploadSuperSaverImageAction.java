@@ -45,7 +45,7 @@ public class UploadSuperSaverImageAction extends BasePaginatedAction {
     List<String> categories;
     List<String> brands;
     Product product;
-    private Integer defaultPerPage = 3;
+    private Integer defaultPerPage = 10;
     Page superSaverPage;
 
     private static Logger logger = Logger.getLogger(SuperSaversAction.class);
