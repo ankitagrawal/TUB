@@ -436,21 +436,6 @@
 			<a class='go_to_top' href='#top'>go to top &uarr;</a>
 		</div>
 	</c:if>
-    <c:if test="${hk:collectionContains(product.categories, eyeGlass)}">
-        <div id="sizeGuide" class="content" style="background-color:#DDDDDD;padding:5px; cursor:pointer;font-weight:bold;text-align:left;">
-            Size Guide
-        </div>
-        <div id="frameChart">
-            <table width="900px;">
-                <tr><td>
-                    <img src="${pageContext.request.contextPath}/images/banners/frame_chart.jpg"/>
-                </td>
-                    <td style="padding:25px;" valign="top">
-                        It is very important to verify the size of your eyes before you venture into the market looking for the perfect pair of frames to wear. This manual will help you decide what the pre-requisites are and how to go about it in a proper structured manner.<a target="_blank"  href="${pageContext.request.contextPath}/pages/lp/eye_glasses/choosing-eye-glasses.html"> Read More.....</a>
-                    </td>
-                </tr>
-            </table>
-
 	<c:if test="${hk:collectionContains(product.categories, eyeGlass)}">
 		<div id="sizeGuide"
 		      class="content" style="background-color:#DDDDDD;padding:5px; cursor:pointer;font-weight:bold;text-align:left;">
