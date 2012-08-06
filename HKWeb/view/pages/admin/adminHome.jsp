@@ -238,7 +238,7 @@
 			<s:link beanclass="com.hk.web.action.admin.inventory.DebitNoteAction">Debit Note List</s:link></h3>
 
 		<h3>
-			<s:link beanclass="com.hk.web.action.admin.inventory.BrandsToAuditAction">Inventory Audit List</s:link></h3>
+			<s:link beanclass="com.hk.web.action.admin.inventory.BrandsToAuditAction">Brand Audit List</s:link></h3>
 
 		<h3>
 			<s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction">Reconciliation Voucher List</s:link>
