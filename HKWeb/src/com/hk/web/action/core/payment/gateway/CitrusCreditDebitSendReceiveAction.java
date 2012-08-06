@@ -64,7 +64,7 @@ public class CitrusCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
         citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.orderAmount, amountStr);
         citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.currency, currency);
         citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.firstName, user.getName());
-//        citrusPaymentGatewayWrapper.addParameter("lastName", "HK");
+        citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.lastName, "HK");        //hardcoded last name, disabled it from citrus UI
         citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.phoneNumber, address.getPhone());
         citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.returnUrl, linkManager.getCitrusPaymentCreditDebitGatewayUrl());
         citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.reqtime, new Date().getTime());
