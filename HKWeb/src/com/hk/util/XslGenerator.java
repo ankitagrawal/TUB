@@ -15,8 +15,10 @@ import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.domain.courier.PincodeDefaultCourier;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.GrnLineItem;
+import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.service.ServiceLocatorFactory;
+import com.hk.util.io.HkXlsWriter;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,8 +58,8 @@ public class XslGenerator {
     private InventoryService      inventoryService;
     @Autowired
     private AdminInventoryService adminInventoryService;
-   /* @Autowired
-    private SkuService                    skuService;*/
+    /* @Autowired
+private SkuService                    skuService;*/
 
     private Map<String, Integer>  headerMap          = new HashMap<String, Integer>();
 
@@ -463,69 +465,148 @@ public class XslGenerator {
         return file;
     }
 
-  public File generatePincodeDefaultCourierXsl(List<PincodeDefaultCourier> pincodeDefaultCourierList, String xslFilePath) throws Exception {
+    public File generatePincodeDefaultCourierXsl(List<PincodeDefaultCourier> pincodeDefaultCourierList, String xslFilePath) throws Exception {
 
-     File file = new File(xslFilePath);
-     file.getParentFile().mkdirs();
-     FileOutputStream out = new FileOutputStream(file);
-     Workbook wb = new HSSFWorkbook();
+        File file = new File(xslFilePath);
+        file.getParentFile().mkdirs();
+        FileOutputStream out = new FileOutputStream(file);
+        Workbook wb = new HSSFWorkbook();
 
-     CellStyle style = wb.createCellStyle();
-     Font font = wb.createFont();
-     font.setFontHeightInPoints((short) 12);
-     font.setColor(Font.COLOR_NORMAL);
-     font.setBoldweight(Font.BOLDWEIGHT_BOLD);
-     style.setFont(font);
-     Sheet sheet1 = wb.createSheet(XslConstants.DEFAULT_COURIER_SHEET);
-     Row row = sheet1.createRow(0);
-     row.setHeightInPoints((short) 25);
+        CellStyle style = wb.createCellStyle();
+        Font font = wb.createFont();
+        font.setFontHeightInPoints((short) 12);
+        font.setColor(Font.COLOR_NORMAL);
+        font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+        style.setFont(font);
+        Sheet sheet1 = wb.createSheet(XslConstants.DEFAULT_COURIER_SHEET);
+        Row row = sheet1.createRow(0);
+        row.setHeightInPoints((short) 25);
 
-     int totalColumnNo = 8;
+        int totalColumnNo = 8;
 
-     Cell cell;
-     for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
-       cell = row.createCell(columnNo);
-       cell.setCellStyle(style);
-     }
-     setCellValue(row, 0, PINCODE);
-     setCellValue(row, 1, WAREHOUSE);
-     setCellValue(row, 2, COD_COURIER_ID);
-     setCellValue(row, 3, TECH_PROCESS_COURIER_ID);
-     setCellValue(row, 4, ESTIMATED_SHIPPING_COST_COD);
-     setCellValue(row, 5, ESTIMATED_SHIPPING_COST_TECH);
+        Cell cell;
+        for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
+            cell = row.createCell(columnNo);
+            cell.setCellStyle(style);
+        }
+        setCellValue(row, 0, PINCODE);
+        setCellValue(row, 1, WAREHOUSE);
+        setCellValue(row, 2, COD_COURIER_ID);
+        setCellValue(row, 3, TECH_PROCESS_COURIER_ID);
+        setCellValue(row, 4, ESTIMATED_SHIPPING_COST_COD);
+        setCellValue(row, 5, ESTIMATED_SHIPPING_COST_TECH);
 
-     int initialRowNo = 1;
-     for (PincodeDefaultCourier pincodeDefaultCourier : pincodeDefaultCourierList) {
+        int initialRowNo = 1;
+        for (PincodeDefaultCourier pincodeDefaultCourier : pincodeDefaultCourierList) {
 
-       row = sheet1.createRow(initialRowNo);
-       for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
-         row.createCell(columnNo);
-       }
+            row = sheet1.createRow(initialRowNo);
+            for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
+                row.createCell(columnNo);
+            }
 
-       setCellValue(row, 0, pincodeDefaultCourier.getPincode().getPincode());
-       setCellValue(row, 1, pincodeDefaultCourier.getWarehouse().getId());
-       if(pincodeDefaultCourier.getCodCourier() != null){
-        setCellValue(row, 2, pincodeDefaultCourier.getCodCourier().getId());
-       }
-       else{
-         setCellValue(row, 2, -1L);
-       }
-       if(pincodeDefaultCourier.getNonCodCourier() != null){
-         setCellValue(row, 3, pincodeDefaultCourier.getNonCodCourier().getId());
-       }
-       else{
-         setCellValue(row, 3, -1L);
-       }
-       setCellValue(row, 4, pincodeDefaultCourier.getEstimatedShippingCostCod());
-       setCellValue(row, 5, pincodeDefaultCourier.getEstimatedShippingCostNonCod());
+            setCellValue(row, 0, pincodeDefaultCourier.getPincode().getPincode());
+            setCellValue(row, 1, pincodeDefaultCourier.getWarehouse().getId());
+            if(pincodeDefaultCourier.getCodCourier() != null){
+                setCellValue(row, 2, pincodeDefaultCourier.getCodCourier().getId());
+            }
+            else{
+                setCellValue(row, 2, -1L);
+            }
+            if(pincodeDefaultCourier.getNonCodCourier() != null){
+                setCellValue(row, 3, pincodeDefaultCourier.getNonCodCourier().getId());
+            }
+            else{
+                setCellValue(row, 3, -1L);
+            }
+            setCellValue(row, 4, pincodeDefaultCourier.getEstimatedShippingCostCod());
+            setCellValue(row, 5, pincodeDefaultCourier.getEstimatedShippingCostNonCod());
 
-       initialRowNo++;
-     }
+            initialRowNo++;
+        }
 
-     wb.write(out);
-     out.close();
-     return file;
-   }
+        wb.write(out);
+        out.close();
+        return file;
+    }
+
+    public File generateGRNListExcel(File xlsFile, List<GoodsReceivedNote> grnList) {
+        HkXlsWriter xlsWriter = new HkXlsWriter();
+
+        if (grnList != null) {
+            int xlsRow = 1;
+            xlsWriter.addHeader(XslConstants.GRN_ID, XslConstants.GRN_ID);
+            xlsWriter.addHeader(XslConstants.PO_ID, XslConstants.PO_ID);
+            xlsWriter.addHeader(XslConstants.INVOICE_NO, XslConstants.INVOICE_NO);
+            xlsWriter.addHeader(XslConstants.RECEIVED_BY, XslConstants.RECEIVED_BY);
+            xlsWriter.addHeader(XslConstants.WAREHOUSE, XslConstants.WAREHOUSE);
+            xlsWriter.addHeader(XslConstants.SUPPLIER_NAME, XslConstants.SUPPLIER_NAME);
+            xlsWriter.addHeader(XslConstants.SUPPLIER_TIN, XslConstants.SUPPLIER_TIN);
+            xlsWriter.addHeader(XslConstants.STATUS, XslConstants.STATUS);
+            xlsWriter.addHeader(XslConstants.RECONCILED, XslConstants.RECONCILED);
+            xlsWriter.addHeader(XslConstants.PAYABLE, XslConstants.PAYABLE);
+
+            for (GoodsReceivedNote goodsReceivedNote : grnList) {
+                xlsWriter.addCell(xlsRow, goodsReceivedNote.getId());
+                xlsWriter.addCell(xlsRow, goodsReceivedNote.getPurchaseOrder().getId());
+                xlsWriter.addCell(xlsRow, goodsReceivedNote.getInvoiceNumber());
+                xlsWriter.addCell(xlsRow, goodsReceivedNote.getReceivedBy().getName());
+                if(goodsReceivedNote.getWarehouse() != null) {
+                    xlsWriter.addCell(xlsRow, goodsReceivedNote.getWarehouse().getName());
+                }else {
+                    xlsWriter.addCell(xlsRow, null);
+                }
+                xlsWriter.addCell(xlsRow, goodsReceivedNote.getPurchaseOrder().getSupplier().getName());
+                xlsWriter.addCell(xlsRow, goodsReceivedNote.getPurchaseOrder().getSupplier().getTinNumber());
+                xlsWriter.addCell(xlsRow, goodsReceivedNote.getGrnStatus().getName());
+                xlsWriter.addCell(xlsRow, goodsReceivedNote.getReconciled()!=null && goodsReceivedNote.getReconciled().booleanValue() ? "Yes" : "No");
+                xlsWriter.addCell(xlsRow, goodsReceivedNote.getPayable());
+
+                xlsWriter.writeData(xlsFile, XslConstants.GRN_LIST_SHEET);
+                xlsRow++;
+            }
+        }
+        return xlsFile;
+    }
+
+    public File generatePOListExcel(File xlsFile, List<PurchaseOrder> purchaseOrderList) {
+        HkXlsWriter xlsWriter = new HkXlsWriter();
+
+        if (purchaseOrderList != null) {
+            int xlsRow = 1;
+            xlsWriter.addHeader(XslConstants.PO_ID, XslConstants.PO_ID);
+            xlsWriter.addHeader(XslConstants.CREATE_DATE, XslConstants.CREATE_DATE);
+            xlsWriter.addHeader(XslConstants.CREATED_BY, XslConstants.CREATED_BY);
+            xlsWriter.addHeader(XslConstants.APPROVER, XslConstants.APPROVER);
+            xlsWriter.addHeader(XslConstants.SUPPLIER_NAME, XslConstants.SUPPLIER_NAME);
+            xlsWriter.addHeader(XslConstants.SUPPLIER_TIN, XslConstants.SUPPLIER_TIN);
+            xlsWriter.addHeader(XslConstants.WAREHOUSE, XslConstants.WAREHOUSE);
+            xlsWriter.addHeader(XslConstants.STATUS, XslConstants.STATUS);
+            xlsWriter.addHeader(XslConstants.LAST_UPDATED_DATE, XslConstants.LAST_UPDATED_DATE);
+            xlsWriter.addHeader(XslConstants.PAYABLE, XslConstants.PAYABLE);
+
+            for (PurchaseOrder purchaseOrder : purchaseOrderList) {
+                xlsWriter.addCell(xlsRow, purchaseOrder.getId());
+                xlsWriter.addCell(xlsRow, purchaseOrder.getCreateDate());
+                xlsWriter.addCell(xlsRow, purchaseOrder.getCreatedBy().getName());
+                xlsWriter.addCell(xlsRow, purchaseOrder.getApprovedBy());
+                xlsWriter.addCell(xlsRow, purchaseOrder.getSupplier().getName());
+                xlsWriter.addCell(xlsRow, purchaseOrder.getSupplier().getTinNumber());
+                if(purchaseOrder.getWarehouse() != null) {
+                    xlsWriter.addCell(xlsRow, purchaseOrder.getWarehouse().getName());
+                } else {
+                    xlsWriter.addCell(xlsRow, null);
+                }
+
+                xlsWriter.addCell(xlsRow, purchaseOrder.getPurchaseOrderStatus().getName());
+                xlsWriter.addCell(xlsRow, purchaseOrder.getUpdateDate());
+                xlsWriter.addCell(xlsRow, purchaseOrder.getPayable());
+
+                xlsWriter.writeData(xlsFile, "POList");
+                xlsRow++;
+            }
+        }
+        return xlsFile;
+    }
 
     private void setCellValue(Row row, int column, Double cellValue) {
         if (cellValue != null) {

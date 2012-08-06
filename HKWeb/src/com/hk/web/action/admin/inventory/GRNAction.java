@@ -31,6 +31,7 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.util.CustomDateTypeConvertor;
+import com.hk.util.XslGenerator;
 import com.hk.util.io.HkXlsWriter;
 import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
@@ -72,6 +73,9 @@ public class GRNAction extends BasePaginatedAction {
 
     @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
     String adminDownloads;
+
+    @Autowired
+    XslGenerator xslGenerator;
 
     private File xlsFile;
     Page grnPage;
@@ -116,48 +120,16 @@ public class GRNAction extends BasePaginatedAction {
             if (warehouse == null && getPrincipalUser() != null && getPrincipalUser().getSelectedWarehouse() != null) {
                 warehouse = getPrincipalUser().getSelectedWarehouse();
             }
-            grnList = goodsReceivedNoteDao.searchGRN(grn, grnStatus, invoiceNumber, tinNumber, supplierName, isReconciled, warehouse);
+            grnList = goodsReceivedNoteDao.searchGRN(grn, grnStatus, invoiceNumber, tinNumber, supplierName, reconciled, warehouse);
         }
-
-        xlsFile = new File(adminDownloads + "/reports/GRNList.xls");
-        HkXlsWriter xlsWriter = new HkXlsWriter();
-
-        if (grnList != null) {
-            int xlsRow = 1;
-            xlsWriter.addHeader("GRN ID", "GRN ID");
-            xlsWriter.addHeader("PO ID", "PO ID");
-            xlsWriter.addHeader("INVOICE NO", "INVOICE NO");
-            xlsWriter.addHeader("RECEIVED BY", "RECEIVED BY");
-            xlsWriter.addHeader("WAREHOUSE", "WAREHOUSE");
-            xlsWriter.addHeader("SUPPLIER", "SUPPLIER");
-            xlsWriter.addHeader("SUPPLIER TIN", "SUPPLIER TIN");
-            xlsWriter.addHeader("STATUS", "STATUS");
-            xlsWriter.addHeader("RECONCILED", "RECONCILED");
-            xlsWriter.addHeader("PAYABLE", "PAYABLE");
-
-            for (GoodsReceivedNote goodsReceivedNote : grnList) {
-                xlsWriter.addCell(xlsRow, goodsReceivedNote.getId());
-                xlsWriter.addCell(xlsRow, goodsReceivedNote.getPurchaseOrder().getId());
-                xlsWriter.addCell(xlsRow, goodsReceivedNote.getInvoiceNumber());
-                xlsWriter.addCell(xlsRow, goodsReceivedNote.getReceivedBy().getName());
-                if(goodsReceivedNote.getWarehouse() != null) {
-                    xlsWriter.addCell(xlsRow, goodsReceivedNote.getWarehouse().getName());
-                }else {
-                    xlsWriter.addCell(xlsRow, null);
-                }
-                xlsWriter.addCell(xlsRow, goodsReceivedNote.getPurchaseOrder().getSupplier().getName());
-                xlsWriter.addCell(xlsRow, goodsReceivedNote.getPurchaseOrder().getSupplier().getTinNumber());
-                xlsWriter.addCell(xlsRow, goodsReceivedNote.getGrnStatus().getName());
-                xlsWriter.addCell(xlsRow, goodsReceivedNote.getReconciled()!=null && goodsReceivedNote.getReconciled().booleanValue() ? "Yes" : "No");
-                xlsWriter.addCell(xlsRow, goodsReceivedNote.getPayable());
-
-                xlsWriter.writeData(xlsFile, "GRNList");
-                xlsRow++;
-            }
+        if(grnList != null) {
+            xlsFile = new File(adminDownloads + "/reports/GRNList.xls");
+            xlsFile = xslGenerator.generateGRNListExcel(xlsFile, grnList);
 
             return new HTTPResponseResolution();
         }
         return new RedirectResolution(GRNAction.class);
+
     }
 
 

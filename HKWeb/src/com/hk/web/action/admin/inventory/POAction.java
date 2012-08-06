@@ -25,7 +25,7 @@ import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.util.CustomDateTypeConvertor;
-import com.hk.util.io.HkXlsWriter;
+import com.hk.util.XslGenerator;
 import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
@@ -63,6 +63,9 @@ public class POAction extends BasePaginatedAction {
 
     @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
     String                       adminDownloads;
+
+    @Autowired
+        XslGenerator xslGenerator;
 
     private File                 xlsFile;
     Page                         purchaseOrderPage;
@@ -108,43 +111,9 @@ public class POAction extends BasePaginatedAction {
             purchaseOrderList = getPurchaseOrderDao().searchPO(purchaseOrder, purchaseOrderStatus, approvedBy, createdBy, invoiceNumber, tinNumber, supplierName, warehouse);
         }
 
-        xlsFile = new File(adminDownloads + "/reports/POList.xls");
-        HkXlsWriter xlsWriter = new HkXlsWriter();
-
-        if (purchaseOrderList != null) {
-            int xlsRow = 1;
-            xlsWriter.addHeader("PO ID", "PO ID");
-            xlsWriter.addHeader("CREATE DATE", "CREATE DATE");
-            xlsWriter.addHeader("CREATED BY", "CREATED BY");
-            xlsWriter.addHeader("APPROVER", "APPROVER");
-            xlsWriter.addHeader("SUPPLIER", "SUPPLIER");
-            xlsWriter.addHeader("SUPPLIER TIN", "SUPPLIER TIN");
-            xlsWriter.addHeader("WAREHOUSE", "WAREHOUSE");
-            xlsWriter.addHeader("STATUS", "STATUS");
-            xlsWriter.addHeader("LAST UPDATED DATE", "LAST UPDATED DATE");
-            xlsWriter.addHeader("PAYABLE", "PAYABLE");
-
-            for (PurchaseOrder purchaseOrder : purchaseOrderList) {
-                xlsWriter.addCell(xlsRow, purchaseOrder.getId());
-                xlsWriter.addCell(xlsRow, purchaseOrder.getCreateDate());
-                xlsWriter.addCell(xlsRow, purchaseOrder.getCreatedBy().getName());
-                xlsWriter.addCell(xlsRow, purchaseOrder.getApprovedBy());
-                xlsWriter.addCell(xlsRow, purchaseOrder.getSupplier().getName());
-                xlsWriter.addCell(xlsRow, purchaseOrder.getSupplier().getTinNumber());
-                if(purchaseOrder.getWarehouse() != null) {
-                    xlsWriter.addCell(xlsRow, purchaseOrder.getWarehouse().getName());
-                } else {
-                    xlsWriter.addCell(xlsRow, null);
-                }
-
-                xlsWriter.addCell(xlsRow, purchaseOrder.getPurchaseOrderStatus().getName());
-                xlsWriter.addCell(xlsRow, purchaseOrder.getUpdateDate());
-                xlsWriter.addCell(xlsRow, purchaseOrder.getPayable());
-
-                xlsWriter.writeData(xlsFile, "POList");
-                xlsRow++;
-            }
-
+        if(purchaseOrderList != null) {
+            xlsFile = new File(adminDownloads + "/reports/POList.xls");
+            xslGenerator.generatePOListExcel(xlsFile, purchaseOrderList);
             return new HTTPResponseResolution();
         }
         return new RedirectResolution(POAction.class);

@@ -2,7 +2,7 @@
 package com.hk.constants;
 
 public class XslConstants {
-    
+
     public static final String    PRODUCT_ID                      = "PRODUCT_ID";
     public static final String    CROSS_PRODUCT_ID                = "CROSS_PRODUCT_ID";
     public static final String    VARIANT_ID                      = "VARIANT_ID";
@@ -111,7 +111,20 @@ public class XslConstants {
     public static final String VARIABLE_COD_CHARGES = "VARIABLE_COD_CHARGES";
     public static final String FUEL_CHARGES = "FUEL_CHARGES";
 
-  //Excel Constants needed while uploading CityCourierTaT for couriers
+    //Excel Constants needed while uploading CityCourierTaT for couriers
     public static final String CITY_TAT = "CITY_TAT";
 
+    //Excel constant for GRN List
+    public static final String GRN_ID = "GRN ID";
+    public static final String INVOICE_NO = "INVOICE NO";
+    public static final String RECEIVED_BY = "RECEIVED BY";
+    public static final String SUPPLIER_NAME = "SUPPLIER";
+    public static final String STATUS = "STATUS";
+    public static final String RECONCILED = "RECONCILED";
+    public static final String PAYABLE = "PAYABLE";
+    public static final String GRN_LIST_SHEET = "GRNList";
+    public static final String CREATE_DATE = "CREATE DATE";
+    public static final String CREATED_BY = "CREATED BY";
+    public static final String APPROVER = "APPROVER";
+    public static final String LAST_UPDATED_DATE = "LAST UPDATED DATE";
 }
