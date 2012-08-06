@@ -5,6 +5,7 @@ import java.util.List;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.Criteria;
 import org.springframework.stereotype.Repository;
 
 import com.akube.framework.dao.Page;
@@ -81,7 +82,8 @@ public class SuperSaverImageDaoImpl extends BaseDaoImpl implements SuperSaverIma
             criteria.add(Restrictions.eq("hidden", Boolean.FALSE));
         }
 
+
         criteria.addOrder(Order.asc("ranking"));
-        return list(criteria, page, perPage);
+        return list(criteria,true, page, perPage);
     }
 }
