@@ -13,6 +13,9 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
 @SuppressWarnings("unchecked")
 @Repository
@@ -49,7 +52,17 @@ public class AwbDaoImpl extends BaseDaoImpl implements AwbDao {
 
      }
 
-    
+    public List<Awb> getAlreadyPresentAwb(Courier courier, List<String> awbNumberList) {
+        DetachedCriteria detachedCriteria = DetachedCriteria.forClass(Awb.class);
+
+        if (awbNumberList != null && awbNumberList.size() > 0 && courier != null && courier.getId() != null) {
+            detachedCriteria.add(Restrictions.in("awbNumber", awbNumberList));
+            detachedCriteria.add(Restrictions.eq("courier", courier));
+            return (List<Awb>) findByCriteria(detachedCriteria);
+        }
+        return null;
+
+    }
 
 }
 

@@ -78,7 +78,7 @@ public class ShipmentServiceImpl implements ShipmentService {
                 estimatedWeight += variantWeight;
             }
         }
-        shipment.setBoxWeight(estimatedWeight);
+        shipment.setBoxWeight(estimatedWeight/1000);
         shipment.setBoxSize(EnumBoxSize.MIGRATE.asBoxSize());
         shippingOrder.setShipment(shipment);
         if (courierGroupService.getCourierGroup(shipment.getCourier()) != null) {
