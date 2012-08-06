@@ -4,6 +4,7 @@ import com.akube.framework.dao.Page;
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.subscription.EnumSubscriptionStatus;
 import com.hk.core.search.SubscriptionSearchCriteria;
+import com.hk.domain.order.CartLineItem;
 import com.hk.domain.subscription.SubscriptionStatus;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
@@ -33,6 +34,10 @@ public class SubscriptionDaoImpl extends BaseDaoImpl implements SubscriptionDao 
     public Subscription save(Subscription subscription){
         subscription.setUpdateDate(BaseUtils.getCurrentTimestamp());
         return (Subscription) super.save(subscription);
+    }
+
+    public Subscription getSubscriptionFromCartLineItem(CartLineItem cartLineItem){
+        return (Subscription) findUniqueByNamedParams(" from Subscription sub where sub.cartLineItem = :cartLineItem", new String[]{"cartLineItem"}, new Object[]{cartLineItem});
     }
 
     public List<Subscription> getSubscriptions(Order order, SubscriptionStatus subscriptionStatus){

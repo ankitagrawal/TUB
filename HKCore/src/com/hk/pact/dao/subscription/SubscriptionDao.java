@@ -5,6 +5,7 @@ import com.hk.constants.subscription.EnumSubscriptionOrderStatus;
 import com.hk.constants.subscription.EnumSubscriptionStatus;
 import com.hk.core.search.SubscriptionSearchCriteria;
 import com.hk.domain.catalog.category.Category;
+import com.hk.domain.order.CartLineItem;
 import com.hk.domain.subscription.Subscription;
 import com.hk.domain.subscription.SubscriptionProduct;
 import com.hk.domain.subscription.SubscriptionStatus;
@@ -25,6 +26,8 @@ import java.util.Set;
 public interface SubscriptionDao extends BaseDao {
 
     public Subscription save(Subscription subscriptionProduct);
+
+    public Subscription getSubscriptionFromCartLineItem(CartLineItem cartLineItem);
 
     public List<Subscription> getSubscriptions(Order order, SubscriptionStatus subscriptionStatus);
 

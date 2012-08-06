@@ -21,6 +21,7 @@ import com.hk.pact.dao.user.UserCartDao;
 import com.hk.manager.UserManager;
 import com.hk.manager.OrderManager;
 import com.hk.pact.service.order.CartLineItemService;
+import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.subscription.SubscriptionLoggingService;
 import com.hk.pact.service.subscription.SubscriptionProductService;
 import com.hk.pact.service.subscription.SubscriptionService;
@@ -66,8 +67,9 @@ public class AddSubscriptionAction extends BaseAction implements ValidationError
     @Autowired
     OrderManager orderManager;
     @Autowired
+    OrderService orderService;
+    @Autowired
     UserCartDao userCartDao;
-
     @Autowired
     SignupAction signupAction;
 
@@ -127,6 +129,7 @@ public class AddSubscriptionAction extends BaseAction implements ValidationError
         }
 
         Map dataMap = new HashMap();
+        userDao.refresh(order);
         Set<CartLineItem> subscriptionCartLineItems=new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
         //null pointer here --> putting a null check
         if (subscription != null && subscription.getQty()>0) {

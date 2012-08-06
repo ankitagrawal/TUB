@@ -11,6 +11,7 @@ import com.hk.domain.matcher.CartLineItemMatcher;
 import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
+import com.hk.domain.subscription.Subscription;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
@@ -25,6 +26,7 @@ import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.dao.order.cartLineItem.CartLineItemDao;
 import com.hk.pact.service.RoleService;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.subscription.SubscriptionService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.TokenUtils;
 import com.hk.web.filter.WebContext;
@@ -75,6 +77,8 @@ public class UserManager {
     private OfferInstanceDao offerInstanceDao;
     @Autowired
     private AddressDao       addressDao;
+    @Autowired
+    private SubscriptionService subscriptionService;
 
     //Please do not add @Autowired has been taken care of in getter .
     private OrderManager     orderManager;
@@ -263,16 +267,24 @@ public class UserManager {
         for (CartLineItem guestLineItem : guestLineItems) {
             // The variant is not added in user account already
             CartLineItemMatcher cartLineItemMatcher=new CartLineItemMatcher();
-            EnumCartLineItemType guestCartLineItemType=EnumCartLineItemType.Product;
+            EnumCartLineItemType guestCartLineItemType=null;
             for(EnumCartLineItemType enumCartLineItemType :EnumCartLineItemType.values()){
-                if(enumCartLineItemType.getId().longValue()==guestCartLineItemType.getId().longValue()){
+                if(enumCartLineItemType.getId().longValue()==guestLineItem.getLineItemType().getId().longValue()){
                     guestCartLineItemType= enumCartLineItemType;
                 }
             }
+            if(guestCartLineItemType ==null) guestCartLineItemType=EnumCartLineItemType.Product;
+
             if(cartLineItemMatcher.addProductVariant(guestLineItem.getProductVariant()).addCartLineItemType(guestCartLineItemType).match(loggedOnUserOrder.getCartLineItems())==null){
                 if(guestLineItem.getQty()>0){
                     guestLineItem.setOrder(loggedOnUserOrder);
                     getCartLineItemDao().save(guestLineItem);
+                    if(guestCartLineItemType.getId().longValue()==EnumCartLineItemType.Subscription.getId().longValue()){
+                        Subscription subscription=subscriptionService.getSubscriptionFromCartLineItem(guestLineItem);
+                        subscription.setBaseOrder(loggedOnUserOrder);
+                        subscription.setUser(dstUser);
+                        subscriptionService.save(subscription);
+                    }
                 }
             }
         }
@@ -418,4 +430,11 @@ public class UserManager {
         this.addressDao = addressDao;
     }
 
+    public SubscriptionService getSubscriptionService() {
+        return subscriptionService;
+    }
+
+    public void setSubscriptionService(SubscriptionService subscriptionService) {
+        this.subscriptionService = subscriptionService;
+    }
 }

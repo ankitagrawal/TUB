@@ -7,6 +7,7 @@ import com.hk.constants.subscription.EnumSubscriptionStatus;
 import com.hk.constants.subscription.SubscriptionConstants;
 import com.hk.core.search.SubscriptionSearchCriteria;
 import com.hk.domain.catalog.category.Category;
+import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.subscription.SubscriptionProduct;
 import com.hk.domain.subscription.SubscriptionStatus;
@@ -45,6 +46,10 @@ public class SubscriptionServiceImpl implements SubscriptionService{
     @Transactional
     public Subscription save(Subscription subscription){
         return subscriptionDao.save(subscription);
+    }
+
+    public Subscription getSubscriptionFromCartLineItem(CartLineItem cartLineItem){
+        return subscriptionDao.getSubscriptionFromCartLineItem(cartLineItem);
     }
 
     public List<Subscription> getSubscriptions(Order order, SubscriptionStatus subscriptionStatus){

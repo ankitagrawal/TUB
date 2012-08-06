@@ -4,6 +4,7 @@ import com.akube.framework.dao.Page;
 import com.hk.constants.subscription.EnumSubscriptionStatus;
 import com.hk.core.search.SubscriptionSearchCriteria;
 import com.hk.domain.catalog.category.Category;
+import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.subscription.Subscription;
 import com.hk.domain.subscription.SubscriptionProduct;
@@ -23,6 +24,8 @@ import java.util.Set;
 public interface SubscriptionService {
 
     public Subscription save(Subscription subscription);
+
+    public Subscription getSubscriptionFromCartLineItem(CartLineItem cartLineItem);
 
     public List<Subscription> getSubscriptions(Order order, SubscriptionStatus subscriptionStatus);
 
