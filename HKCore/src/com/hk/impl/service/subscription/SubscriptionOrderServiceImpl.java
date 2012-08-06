@@ -13,6 +13,7 @@ import com.hk.domain.order.Order;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.subscription.Subscription;
 import com.hk.domain.subscription.SubscriptionOrder;
+import com.hk.domain.subscription.SubscriptionOrderStatus;
 import com.hk.domain.user.User;
 import com.hk.pact.dao.subscription.SubscriptionOrderDao;
 import com.hk.pact.service.order.AutomatedOrderService;
@@ -55,6 +56,10 @@ public class SubscriptionOrderServiceImpl implements SubscriptionOrderService {
 
     public List<SubscriptionOrder> findSubscriptionOrdersForSubscription(Subscription subscription){
         return subscriptionOrderDao.findSubscriptionOrdersForSubscription(subscription);
+    }
+
+    public List<SubscriptionOrder> findSubscriptionOrdersForSubscription(Subscription subscription, SubscriptionOrderStatus subscriptionOrderStatus){
+        return subscriptionOrderDao.findSubscriptionOrdersForSubscription(subscription,subscriptionOrderStatus);
     }
 
     /**
@@ -152,12 +157,15 @@ public class SubscriptionOrderServiceImpl implements SubscriptionOrderService {
     public void markSubscriptionOrderAsDelivered(Order order){
         if(order.isSubscriptionOrder()){
             SubscriptionOrder subscriptionOrder= this.findSubscriptionOrderByBaseOrder(order);
-            if(!(subscriptionOrder.getSubscriptionOrderStatus().getId().longValue()==EnumSubscriptionOrderStatus.Delivered.getId().longValue() || subscriptionOrder.getSubscriptionOrderStatus().getId().longValue()==EnumSubscriptionOrderStatus.Shipped.getId().longValue())){
-                Subscription subscription=subscriptionOrder.getSubscription();
-
+            if(!(subscriptionOrder.getSubscriptionOrderStatus().getId().longValue()==EnumSubscriptionOrderStatus.Delivered.getId().longValue())){
                 subscriptionOrder.setSubscriptionOrderStatus(EnumSubscriptionOrderStatus.Delivered.asSubscriptionOrderStatus());
+                subscriptionOrder=this.save(subscriptionOrder);
+
+                Subscription subscription=subscriptionOrder.getSubscription();
+                List<SubscriptionOrder> subscriptionOrders=this.findSubscriptionOrdersForSubscription(subscription,EnumSubscriptionOrderStatus.Delivered.asSubscriptionOrderStatus());
+                subscription.setQtyDelivered(new Long(subscriptionOrders.size()));
                 subscriptionService.updateSubscriptionAfterOrderDelivery(subscription);
-                this.save(subscriptionOrder);
+
             }
         }
     }
@@ -166,12 +174,14 @@ public class SubscriptionOrderServiceImpl implements SubscriptionOrderService {
         if(order.isSubscriptionOrder()){
 
             SubscriptionOrder subscriptionOrder= this.findSubscriptionOrderByBaseOrder(order);
-            if(!(subscriptionOrder.getSubscriptionOrderStatus().getId().longValue()==EnumSubscriptionOrderStatus.Shipped.getId().longValue()|| subscriptionOrder.getSubscriptionOrderStatus().getId().longValue()==EnumSubscriptionOrderStatus.Delivered.getId().longValue() )){
-                Subscription subscription=subscriptionOrder.getSubscription();
-
+            if(!(subscriptionOrder.getSubscriptionOrderStatus().getId().longValue()==EnumSubscriptionOrderStatus.Shipped.getId().longValue() )){
                 subscriptionOrder.setSubscriptionOrderStatus(EnumSubscriptionOrderStatus.Shipped.asSubscriptionOrderStatus());
+                subscriptionOrder=this.save(subscriptionOrder);
 
-                this.save(subscriptionOrder);
+                Subscription subscription=subscriptionOrder.getSubscription();
+                List<SubscriptionOrder> subscriptionOrders=this.findSubscriptionOrdersForSubscription(subscription,EnumSubscriptionOrderStatus.Delivered.asSubscriptionOrderStatus());
+                subscription.setQtyDelivered(new Long(subscriptionOrders.size()));
+                subscriptionService.save(subscription);
             }
         }
     }

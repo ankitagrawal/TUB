@@ -3,6 +3,7 @@ package com.hk.pact.dao.subscription;
 import com.hk.domain.order.Order;
 import com.hk.domain.subscription.Subscription;
 import com.hk.domain.subscription.SubscriptionOrder;
+import com.hk.domain.subscription.SubscriptionOrderStatus;
 import com.hk.pact.dao.BaseDao;
 
 import java.util.List;
@@ -21,5 +22,7 @@ public interface SubscriptionOrderDao extends BaseDao{
     public SubscriptionOrder findSubscriptionOrderByBaseOrder(Order order);
 
     public List<SubscriptionOrder> findSubscriptionOrdersForSubscription(Subscription subscription);
+
+    public List<SubscriptionOrder> findSubscriptionOrdersForSubscription(Subscription subscription, SubscriptionOrderStatus subscriptionOrderStatus);
 
 }

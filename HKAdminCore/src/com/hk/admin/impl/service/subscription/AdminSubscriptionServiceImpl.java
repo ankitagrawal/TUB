@@ -39,7 +39,7 @@ public class AdminSubscriptionServiceImpl implements AdminSubscriptionService{
         List<SubscriptionOrder> subscriptionOrderList=subscriptionOrderService.findSubscriptionOrdersForSubscription(subscription);
         double subscriptionPrice=subscription.getSubscriptionPrice();
         for(SubscriptionOrder subscriptionOrder : subscriptionOrderList){
-            if(subscriptionOrder.getSubscriptionOrderStatus().getId()!= EnumSubscriptionOrderStatus.Cancelled.getId()){
+            if(!subscriptionOrder.getSubscriptionOrderStatus().getId().equals(EnumSubscriptionOrderStatus.Cancelled.getId())){
                 double hkPrice=subscriptionOrder.getHkPriceNow();
                 double benifit=0.0;
                 if(hkPrice>subscriptionPrice){

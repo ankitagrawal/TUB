@@ -184,10 +184,7 @@ public class SubscriptionServiceImpl implements SubscriptionService{
         long qtyDelivered = subscription.getQtyDelivered();
         long totalQty = subscription.getQty();
 
-        //update qty Delivered
-        qtyDelivered+=qtyPerDelivery;
-
-        subscription.setQtyDelivered(qtyDelivered);
+        //update qty Delivered  - done in subscription order service due to errors ordes marked shipped and delivered status
 
         subscriptionLoggingService.logSubscriptionActivity(subscription, EnumSubscriptionLifecycleActivity.SubscriptionOrderDelivered);
         if(totalQty<=qtyDelivered){

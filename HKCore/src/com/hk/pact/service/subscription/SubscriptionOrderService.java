@@ -3,6 +3,7 @@ package com.hk.pact.service.subscription;
 import com.hk.domain.order.Order;
 import com.hk.domain.subscription.Subscription;
 import com.hk.domain.subscription.SubscriptionOrder;
+import com.hk.domain.subscription.SubscriptionOrderStatus;
 import com.hk.domain.user.User;
 
 import java.util.List;
@@ -20,6 +21,8 @@ public interface SubscriptionOrderService {
     public SubscriptionOrder findSubscriptionOrderByBaseOrder(Order order);
 
     public List<SubscriptionOrder> findSubscriptionOrdersForSubscription(Subscription subscription);
+
+    public List<SubscriptionOrder> findSubscriptionOrdersForSubscription(Subscription subscription, SubscriptionOrderStatus subscriptionOrderStatus);
 
     public Order createOrderForSubscription(Subscription subscription);
 
