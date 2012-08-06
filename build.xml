@@ -37,4 +37,13 @@
 		</diffDatabaseToChangeLog>
 	</target>
 
+    <target name="db-supplier" description="To insert suppliers before inserting catalog.">
+       <sql driver="${database.driver}"
+         url="${database.url.dev}"
+         userid="${database.username}"
+         password="${database.password}" encoding="UTF-8"  src="${project.healthkart.dir}/test/supplier.sql"
+         classpathref="compile.classpath">
+       </sql>
+    </target>
+
 </project>

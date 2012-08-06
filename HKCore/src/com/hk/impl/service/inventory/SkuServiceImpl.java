@@ -142,6 +142,20 @@ public class SkuServiceImpl implements SkuService {
         }
     }
 
+    public void insertSKUs(Set<Sku> skuSet) throws Exception {
+        for (Sku skuObj : skuSet) {
+            if (skuObj.getId() == null) {
+                Sku sku = new Sku();
+                sku.setProductVariant(skuObj.getProductVariant());
+                sku.setCutOffInventory(skuObj.getCutOffInventory());
+                sku.setForecastedQuantity(skuObj.getForecastedQuantity());
+                sku.setTax(skuObj.getTax());
+                sku.setWarehouse(skuObj.getWarehouse());
+                saveSku(sku);
+            }
+        }
+    }
+
 
 
     public SkuDao getSkuDao() {
