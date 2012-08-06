@@ -25,7 +25,7 @@ public class PaymentModeActionFactory {
             return TekprocessGatewaySendReceiveAction.class;
         } else if (EnumPaymentMode.COD.getId().equals(enumPaymentMode.getId())) {
             return CodGatewaySendReceiveAction.class;
-        } else if (EnumPaymentMode.CITRUS.getId().equals(enumPaymentMode.getId())) {
+        } else if (EnumPaymentMode.CITRUS_NetBanking_Old.getId().equals(enumPaymentMode.getId())) {
             return CitrusGatewaySendReceiveAction.class;
         } else if (EnumPaymentMode.CITRUS_NetBanking_New.getId().equals(enumPaymentMode.getId())) {
             return CitrusNetbankingSendReceiveAction.class;
