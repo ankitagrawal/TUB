@@ -84,7 +84,7 @@
                                           </li>
                                       </c:when>
                                       <c:otherwise>
-                                          <img src="${hk:getS3ImageUrl(imageSmallSize, product.mainImageId,isSecure)}" alt="${product.name}"
+                                          <img src="${hk:getS3ImageUrl(imageSmallSize, variant.mainImageId,isSecure)}" alt="${product.name}"
                                                title="${variant.colorOptionsValue}">
                                       </c:otherwise>
                                   </c:choose>
