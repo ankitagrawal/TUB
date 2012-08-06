@@ -52,16 +52,16 @@ public class AwbDaoImpl extends BaseDaoImpl implements AwbDao {
 
      }
 
-    public List<Awb> getAlreadyPresentAwb(List<Awb> inputAwbList) {
+    public List<Awb> getAlreadyPresentAwb(Courier courier, List<String> awbNumberList) {
         DetachedCriteria detachedCriteria = DetachedCriteria.forClass(Awb.class);
-        Map<String,Long> awbmap= new HashMap<String,Long>();
-        for(Awb awb:inputAwbList){
-       awbmap.put(awb.getAwbNumber(),awb.getCourier().getId());
+
+        if (awbNumberList != null && awbNumberList.size() > 0 && courier != null && courier.getId() != null) {
+            detachedCriteria.add(Restrictions.in("awbNumber", awbNumberList));
+            detachedCriteria.add(Restrictions.eq("courier", courier));
+            return (List<Awb>) findByCriteria(detachedCriteria);
         }
-        if (inputAwbList != null && inputAwbList.size() > 0) {
-            detachedCriteria.add(Restrictions.allEq();
-        }
-        return (List<Awb>) findByCriteria(detachedCriteria);
+        return null;
+
     }
 
 }

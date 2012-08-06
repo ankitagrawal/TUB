@@ -55,7 +55,7 @@ public class AwbServiceImpl implements AwbService {
         return awbDao.getAll(Awb.class);
     }
 
-    public List<Awb> getAlreadyPresentAwb(List<Awb> inputAwbList) {
-        return awbDao.getAlreadyPresentAwb(inputAwbList);
+    public List<Awb> getAlreadyPresentAwb(Courier courier,List<String> awbNumberList) {
+        return awbDao.getAlreadyPresentAwb(courier,awbNumberList);
     }
 }

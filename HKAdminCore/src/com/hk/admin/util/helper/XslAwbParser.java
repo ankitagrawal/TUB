@@ -41,17 +41,18 @@ public class XslAwbParser {
     private WarehouseService warehouseService;
     @Autowired
     AwbService awbService;
-
+    private List<LongStringUniqueObject> constraintList = null;
 
     public List<Awb> readAwbExcel(File file) throws Exception {
-        List<LongStringUniqueObject> constraintList=new ArrayList<LongStringUniqueObject>();
+
         logger.debug("parsing Awb info : " + file.getAbsolutePath());
         List<Awb> awbList = new ArrayList<Awb>();
         int rowCount = 1;
         ExcelSheetParser excel = new ExcelSheetParser(file.getAbsolutePath(), "Sheet1", true);
         Iterator<HKRow> rowiterator = excel.parse();
+        constraintList=new ArrayList<LongStringUniqueObject>();
         try {
-            while (rowiterator.hasNext()) {
+            while (rowiterator.hasNext()) {              
                 rowCount++;
                 HKRow row = rowiterator.next();
                 String courierId = row.getColumnValue(XslConstants.COURIER_ID);
@@ -61,7 +62,7 @@ public class XslAwbParser {
                 Awb awb = new Awb();
                 if (StringUtils.isEmpty(courierId)) {
 
-                    if (StringUtils.isEmpty(awbNumber) && cod.isEmpty() && warehouse.isEmpty()) {
+                    if ( (awbNumber == null || StringUtils.isEmpty(awbNumber))  && (cod == null||cod.isEmpty()) &&(warehouse == null|| warehouse.isEmpty())  ) {
                         if (awbList.size() > 0) {
                             return awbList;
                         }
@@ -73,7 +74,7 @@ public class XslAwbParser {
                     }
 
                 }
-                Long courierLongId= XslUtil.getLong(courierId.trim());
+                Long courierLongId = XslUtil.getLong(courierId.trim());
                 Courier courier = courierService.getCourierById(courierLongId);
                 if (courier == null) {
                     logger.error("courierId is not valid  " + courierId, rowCount);
@@ -130,4 +131,9 @@ public class XslAwbParser {
 
     }
 
+    public List<LongStringUniqueObject> getConstraintList() {
+        return constraintList;
+    }
+
+   
 }

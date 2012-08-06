@@ -29,7 +29,7 @@ public interface AwbService {
 
     public List<Awb> getAllAwb();
 
-    public List<Awb> getAlreadyPresentAwb(List<Awb> inputAwbList);
+    public List<Awb> getAlreadyPresentAwb(Courier courier,List<String> awbNumberList);
 
 
 }
