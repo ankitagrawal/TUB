@@ -107,31 +107,6 @@ public class CourierAWBAction extends BaseAction {
         };
     }
 
-//    @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_COURIER_INFO }, authActionBean = AdminPermissionAction.class)
-//    public Resolution uploadCourierAWBExcel() throws Exception {
-//        String excelFilePath = adminUploadsPath + "/courierFiles/" + System.currentTimeMillis() + ".xls";
-//        File excelFile = new File(excelFilePath);
-//        excelFile.getParentFile().mkdirs();
-//        fileBean.save(excelFile);
-//        CourierServiceInfo tmpObj = null;
-//        /*
-//         * try { Set<CourierServiceInfo> courierServiceInfoSet = xslParser.readCourierServiceInfoList(excelFile); for
-//         * (CourierServiceInfo courierServiceInfo : courierServiceInfoSet) { tmpObj = courierServiceInfo;
-//         * CourierServiceInfo tmpObj2 = courierServiceInfoDao.findByPincodeAndCourier(courierServiceInfo.getPincode(),
-//         * courierServiceInfo.getCourier()); if (tmpObj2 != null) { if (courierServiceInfo.isDelete()) {
-//         * courierServiceInfoDao.remove(tmpObj2.getId()); } else {
-//         * tmpObj2.setCodAvailable(courierServiceInfo.isCodAvailable()); courierServiceInfoDao.save(tmpObj2); } } else {
-//         * courierServiceInfoDao.save(courierServiceInfo); } } } catch (Exception e) { logger.error("Exception while
-//         * reading excel sheet.", e); addRedirectAlertMessage(new SimpleMessage("Upload failed for - " +
-//         * tmpObj.getPincode() + "; length - " + tmpObj.getPincode().length())); return new
-//         * ForwardResolution("/pages/admin/updateCourierServiceInfo.jsp"); }
-//         */
-//
-//        excelFile.delete();
-//        addRedirectAlertMessage(new SimpleMessage("Database Updated"));
-//        return new ForwardResolution("/pages/admin/updateCourierServiceInfo.jsp");
-//    }
-
     @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_COURIER_INFO}, authActionBean = AdminPermissionAction.class)
     public Resolution uploadCourierAWBExcel() {
         if ((courier == null) || (fileBean == null)) {
@@ -173,8 +148,8 @@ public class CourierAWBAction extends BaseAction {
                 }
 
                 if (alreadyExstingAwbInDbList != null && alreadyExstingAwbInDbList.size() > 0) {
-                    for (int i = 0; i < alreadyExstingAwbInDbList.size(); i++) {
-                        awbListFromExcel.remove(alreadyExstingAwbInDbList.get(i));
+                    for (Awb anAlreadyExstingAwbInDbList : alreadyExstingAwbInDbList) {
+                        awbListFromExcel.remove(anAlreadyExstingAwbInDbList);
                     }
 
                 }

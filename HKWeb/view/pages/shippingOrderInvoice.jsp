@@ -198,7 +198,9 @@
 <div class="clear"></div>
 <div style="margin-top: 5px;"></div>
 <div class="grid_12">
-    <h3>Order Details</h3>
+    <h3>Order Details</h3>Merchant Transaction Ref No ${baseOrder.gatewayOrderId} for order
+    placed on: <fmt:formatDate value="${baseOrder.payment.paymentDate}" type="both" timeStyle="short"/>
+
     <c:if test="${orderSummary.invoiceDto.replacementOrderString != null}">
         <h3>${orderSummary.invoiceDto.replacementOrderString}</h3>
     </c:if>
@@ -210,7 +212,6 @@
             <th>Total(Rs.)</th>
         </tr>
         <c:forEach items="${orderSummary.invoiceDto.invoiceLineItemDtos}" var="invoiceLineItem">
-            <%--<c:if test="${invoiceLineItem.lineItemStatus.id != orderStatus_actionAwaiting}">--%>
             <tr>
                 <td>
                     <c:choose>
@@ -235,52 +236,10 @@
                     <em>
                         <p>
                                 ${invoiceLineItem.productOptionsPipeSeparated}
-                                <%--<c:forEach items="${invoiceLineItem.productOptions}" var="productOption">--%>
-                                <%--${productOption.name} ${productOption.value}&nbsp--%>
-                                <%--</c:forEach>--%>
                         </p>
-
                         <p>
                                 ${invoiceLineItem.extraOptionsPipeSeparated}
-                                <%--<c:forEach items="${invoiceLineItem.cartLineItemExtraOptions}" var="extraOption">--%>
-                                <%--<label>${extraOption.name} : ${extraOption.value}</label>&nbsp--%>
-                                <%--</c:forEach>--%>
-
                                 ${invoiceLineItem.configOptionsPipeSeparated}
-                                <%--<c:if test="${not empty invoiceLineItem.cartLineItemConfigValues}">--%>
-
-                                <%--<c:set var="TH" value="TH"/>--%>
-                                <%--<c:set var="THBF" value="THBF"/>--%>
-                                <%--<c:set var="CO" value="CO"/>--%>
-                                <%--<c:set var="COBF" value="COBF"/>--%>
-                                <%--<c:forEach items="${invoiceLineItem.cartLineItemConfigValues}" var="configValue"--%>
-                                <%--varStatus="configCtr">--%>
-                                <%--<c:set var="variantConfigOption" value="${configValue.variantConfigOption}"/>--%>
-                                <%--<c:set var="additionalParam" value="${variantConfigOption.additionalParam}"/>--%>
-                                <%--${variantConfigOption.displayName} : ${configValue.value}--%>
-                                <%--<c:if--%>
-                                <%--test="${(additionalParam ne TH) or (additionalParam ne THBF) or (additionalParam ne CO) or (additionalParam ne COBF) }">--%>
-                                <%--<c:if--%>
-                                <%--test="${fn:startsWith(variantConfigOption.name, 'R')==true}">--%>
-                                <%--(R)--%>
-                                <%--</c:if>--%>
-                                <%--<c:if--%>
-                                <%--test="${fn:startsWith(variantConfigOption.name, 'L')==true}">--%>
-                                <%--(L)--%>
-                                <%--</c:if>--%>
-                                <%--</c:if>--%>
-                                <%--${!configCtr.last?',':''}--%>
-
-                                <%--</c:forEach>--%>
-                                <%--</c:if>--%>
-
-
-                                <%--<c:forEach items="${invoiceLineItem.cartLineItemConfigValues}" var="configValue">--%>
-                                <%--<c:set var="variantConfigOption" value="${configValue.variantConfigOption}"/>--%>
-                                <%--<label>${variantConfigOption.displayName} : ${configValue.value}</label>&nbsp--%>
-                                <%--</c:forEach>--%>
-
-
                         </p>
                     </em>
                 </td>
