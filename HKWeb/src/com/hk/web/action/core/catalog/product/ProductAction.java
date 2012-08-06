@@ -190,7 +190,7 @@ public class ProductAction extends BaseAction {
         if (combo == null) {
             return new ForwardResolution("/pages/product.jsp");
         } else {
-            List<SuperSaverImage> superSaverImages = superSaverImageService.getSuperSaverImages(product, Boolean.FALSE, Boolean.TRUE);
+            List<SuperSaverImage> superSaverImages = getSuperSaverImageService().getSuperSaverImages(product, Boolean.FALSE, Boolean.TRUE, Boolean.FALSE);
             String directTo;
             if (superSaverImages == null || superSaverImages.isEmpty()) {
                 directTo = "product.jsp";
@@ -373,5 +373,9 @@ public class ProductAction extends BaseAction {
 
     public void setSuperSaverImageId(Long superSaverImageId) {
         this.superSaverImageId = superSaverImageId;
-    }    
+    }
+
+    public SuperSaverImageService getSuperSaverImageService() {
+        return superSaverImageService;
+    }
 }
