@@ -79,7 +79,7 @@ public class PaymentAction extends BaseAction {
                     if (random % 2 == 0) {
                         paymentMode = getBaseDao().get(PaymentMode.class,EnumPaymentMode.TECHPROCESS.getId());
                     } else {
-                        paymentMode = getBaseDao().get(PaymentMode.class,EnumPaymentMode.CITRUS.getId());
+                        paymentMode = getBaseDao().get(PaymentMode.class,EnumPaymentMode.CITRUS_NetBanking_Old.getId());
                     }
                 } else {
                     paymentMode = getBaseDao().get(PaymentMode.class,bank.getPreferredGatewayId());
@@ -91,7 +91,7 @@ public class PaymentAction extends BaseAction {
             if (bank != null && gateway != null) {
                 if (gateway.equals(EnumPaymentMode.TECHPROCESS)) {
                     bankCode = bank.getTpslBankCode();
-                } else if (gateway.equals(EnumPaymentMode.CITRUS)) {
+                } else if (gateway.equals(EnumPaymentMode.CITRUS_NetBanking_Old)) {
                     bankCode = bank.getCitrusBankCode();
                 } else if (gateway.equals(EnumPaymentMode.CITRUS_CreditDebit)) {
                     bankCode = "999";
