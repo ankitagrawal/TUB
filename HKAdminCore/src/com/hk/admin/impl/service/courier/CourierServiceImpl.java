@@ -1,5 +1,6 @@
 package com.hk.admin.impl.service.courier;
 
+import com.hk.admin.engine.ShipmentPricingEngine;
 import com.hk.admin.pact.dao.courier.CityCourierTATDao;
 import com.hk.admin.pact.dao.courier.CourierDao;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
@@ -49,8 +50,9 @@ public class CourierServiceImpl implements CourierService {
     PincodeDao pincodeDao;
       @Autowired
       CourierCostCalculator courierCostCalculator;
-       @Autowired
-       CourierService  courierService;
+
+    @Autowired
+    ShipmentPricingEngine       shipmentPricingEngine;
 
 
     @Override
@@ -114,17 +116,15 @@ public class CourierServiceImpl implements CourierService {
         }
          List <Warehouse> warehouses = warehouseService.getAllWarehouses();
 
+          Double [] arrShipmentCost = new Double [warehouses.size()];
+         int index =0;
          for (Warehouse warehouse : warehouses)   {
-           Courier courier =  courierService.getDefaultCourier(pincodeObj,true,warehouse);
+           Courier courier =  getDefaultCourier(pincodeObj,true,warehouse);
           CourierPricingEngine courierPricingInfo = courierCostCalculator.getCourierPricingInfo(courier, pincodeObj, warehouse);
-            
-         courierService.  calculateShipmentCost(courierPricingInfo, groundshipItemweight);
-
+          arrShipmentCost[index]=   shipmentPricingEngine.calculateShipmentCost(courierPricingInfo, groundshipItemweight);
+            index ++;
        }
-
-
-
-         return 10.0;
+         return arrShipmentCost[0];
 
      }
 

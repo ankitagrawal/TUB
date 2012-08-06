@@ -115,7 +115,10 @@ public class OrderSummaryAction extends BaseAction {
             if (lineItem != null && lineItem.getProductVariant() != null) {
                 ProductVariant productVariant = lineItem.getProductVariant();
                 if (productVariant.getProduct().isGroundShipping()) {
-                 groundshipItemweight =  productVariant.getWeight();
+                 groundshipItemweight =  productVariant.getWeight()*1000;
+                    if (groundshipItemweight == null){
+                    groundshipItemweight= 2.0;
+                    }
                     hideCod = true;
 
                     lineItem_1 =  lineItem;
@@ -176,7 +179,7 @@ public class OrderSummaryAction extends BaseAction {
 ////                }
 ////            }
 
-         cashbackOnGroundshipped=        courierService. getCashbackOnGroundShippedItem(pricingDto,order,groundshipItemweight);
+         cashbackOnGroundshipped=   courierService. getCashbackOnGroundShippedItem(pricingDto,order,groundshipItemweight);
 
             
         }
