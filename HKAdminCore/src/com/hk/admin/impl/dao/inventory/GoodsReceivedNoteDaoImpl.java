@@ -100,13 +100,21 @@ public class GoodsReceivedNoteDaoImpl extends BaseDaoImpl implements GoodsReceiv
                 grnStatusList).list();
     }
 
-    public List<GoodsReceivedNote> listGRNsExcludingStatusInTimeFrame(Long grnStatusValue, Date startDate, Date endDate, Warehouse warehouse) {
+    public List<GoodsReceivedNote> listGRNsExcludingStatusInTimeFrame(Long grnStatusValue, Date startDate, Date endDate, Warehouse warehouse, Boolean reconciled) {
         StringBuilder hqlQuery = new StringBuilder("select o from GoodsReceivedNote o where o.grnDate >= (:startDate) and o.grnDate <= (:endDate)");
         if (grnStatusValue != null) {
             hqlQuery.append(" and o.grnStatus.id = :grnStatusValue");
         }
         if (warehouse != null) {
             hqlQuery.append(" and o.warehouse = :warehouse");
+        }
+        if(reconciled != null){
+            if(reconciled){
+                hqlQuery.append(" and o.reconciled = :reconciled");
+            }
+            else{
+                hqlQuery.append(" and (o.reconciled = :reconciled or o.reconciled is null)");
+            }
         }
         Query hqlGrnQuery = getSession().createQuery(hqlQuery.toString());
         hqlGrnQuery.setParameter("startDate", startDate);
@@ -116,6 +124,9 @@ public class GoodsReceivedNoteDaoImpl extends BaseDaoImpl implements GoodsReceiv
         }
         if (warehouse != null) {
             hqlGrnQuery.setParameter("warehouse", warehouse);
+        }
+        if(reconciled != null){
+            hqlGrnQuery.setParameter("reconciled", reconciled);
         }
 
         return hqlGrnQuery.list();

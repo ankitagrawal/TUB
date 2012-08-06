@@ -55,7 +55,15 @@
              <s:option value="">-All-</s:option>
                 <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="grnStatusList"
                                            label="name" value="id"/>
-              </s:select><br/>
+              </s:select>
+          <br/>
+          <label style="margin-top:20px;">Reconciled</label>
+          <s:select name="reconciled"  style="margin-top:20px;">
+            <s:option value="">-All-</s:option>
+            <s:option value="true">True</s:option>
+            <s:option value="false">False</s:option>
+          </s:select>
+          <br/>
         <s:submit name="downloadGRN" value="Download GRN"/>
       </s:form>
     </fieldset>

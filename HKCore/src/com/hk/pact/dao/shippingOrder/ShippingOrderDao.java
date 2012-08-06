@@ -9,15 +9,16 @@ import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderLifeCycleActivity;
 import com.hk.domain.sku.Sku;
+import com.hk.domain.courier.Shipment;
+import com.hk.domain.courier.Awb;
+import com.hk.domain.courier.Courier;
 import com.hk.pact.dao.BaseDao;
 
 public interface ShippingOrderDao extends BaseDao {
 
     public ShippingOrder findById(Long shippingOrderId);
 
-    public ShippingOrder findByTrackingId(String trackingId);
-
-    public ShippingOrder findByGatewayOrderId(String gatewayOrderId);
+     public ShippingOrder findByGatewayOrderId(String gatewayOrderId);
 
     public Page searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, int pageNo, int perPage);
 
@@ -36,5 +37,4 @@ public interface ShippingOrderDao extends BaseDao {
     public Long getBookedQtyOfSkuInQueue(Sku sku);
 
     public List<Long> getShippingOrderListByCourier(Date startDate, Date endDate, Long courierId);
-
 }

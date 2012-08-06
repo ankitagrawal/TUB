@@ -39,18 +39,6 @@ public class ShipmentPricingEngine {
     private static Logger logger = LoggerFactory.getLogger(ShipmentPricingEngine.class);
 
     @Autowired
-    CourierPricingEngineDao courierPricingEngineDao;
-
-    @Autowired
-    PincodeRegionZoneDao pincodeRegionZoneDao;
-
-    @Autowired
-    WarehouseService warehouseService;
-
-    @Autowired
-    CourierServiceInfoDao courierServiceInfoDao;
-
-    @Autowired
     PincodeDao pincodeDao;
 
     @Autowired
@@ -131,7 +119,7 @@ public class ShipmentPricingEngine {
     public Double calculatePackagingCost(ShippingOrder shippingOrder) {
         Shipment shipment = shippingOrder.getShipment();
         EnumBoxSize enumBoxSize = EnumBoxSize.getBoxSize(shipment.getBoxSize());
-        return enumBoxSize.getPackagingCost();
+        return enumBoxSize != null ? enumBoxSize.getPackagingCost() : 16D;
     }
 
     public Double calculateReconciliationCost(CourierPricingEngine courierPricingEngine, ShippingOrder shippingOrder) {

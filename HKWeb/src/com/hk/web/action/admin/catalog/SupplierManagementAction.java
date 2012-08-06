@@ -1,17 +1,22 @@
 package com.hk.web.action.admin.catalog;
 
-import com.akube.framework.dao.Page;
-import com.akube.framework.stripes.action.BasePaginatedAction;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.regex.Pattern;
+
 import com.hk.constants.core.Keys;
-import com.hk.constants.core.PermissionConstants;
-import com.hk.constants.courier.StateList;
-import com.hk.domain.catalog.Supplier;
-import com.hk.pact.dao.core.SupplierDao;
 import com.hk.util.io.HkXlsWriter;
-import com.hk.web.action.error.AdminPermissionAction;
-import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.SimpleError;
 import net.sourceforge.stripes.validation.ValidationMethod;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +24,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
+import com.akube.framework.dao.Page;
+import com.akube.framework.stripes.action.BasePaginatedAction;
+import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.courier.StateList;
+import com.hk.domain.catalog.Supplier;
+import com.hk.pact.dao.core.SupplierDao;
+import com.hk.web.action.error.AdminPermissionAction;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @Secure(hasAnyPermissions = {PermissionConstants.SUPPLIER_MANAGEMENT}, authActionBean = AdminPermissionAction.class)
 @Component
@@ -35,7 +43,8 @@ public class SupplierManagementAction extends BasePaginatedAction {
 
     File xlsFile;
     @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
-        String adminDownloads;
+    String adminDownloads;
+
     @Autowired
     SupplierDao supplierDao;
 
@@ -44,6 +53,7 @@ public class SupplierManagementAction extends BasePaginatedAction {
     public static final int LenghtOfTIN = 11;
     private String supplierTin;
     private String supplierName;
+
     Page supplierPage;
     private Integer defaultPerPage = 30;
 
@@ -80,6 +90,53 @@ public class SupplierManagementAction extends BasePaginatedAction {
                 getContext().getValidationErrors().add("e1", new SimpleError("check the first two digits of TIN"));
             }
         }
+
+        //validation for the margins
+        if(supplier.getMargins() !=null){
+            //Validating for entering only valid double values
+            Pattern pattern;
+
+
+            String margin = supplier.getMargins();
+            final String DOUBLE_PATTERN = "^\\d+\\.?\\d*$";
+            pattern = Pattern.compile(DOUBLE_PATTERN);
+            boolean bool=pattern.matcher(margin).matches();
+            if(!bool)  getContext().getValidationErrors().add("e1", new SimpleError("Please Enter the Margins in percent"));
+                //To check the value in range of percentage
+            else{
+                double d = Double.valueOf(supplier.getMargins().trim()).doubleValue();
+                if(d < 0 || d > 100)
+                    getContext().getValidationErrors().add("e1", new SimpleError("Margins is in percentage and must be Enter within the Range(0 to 100)"));
+                else if(bool){
+                    int x = margin.indexOf(".");
+                    if(x==(margin.length()-1))
+                        getContext().getValidationErrors().add("e1", new SimpleError("Please Enter the Margins in percent"));
+                }
+            }
+        }
+
+        //Validation for the Credit Period
+        if(supplier.getCreditPeriod() != null){
+            Pattern pattern;
+
+            String credit_period = supplier.getCreditPeriod();
+            final String INTEGER_PATTERN = "^[0-9]*$";
+            pattern = Pattern.compile(INTEGER_PATTERN);
+            boolean bool=pattern.matcher(credit_period).matches();
+            if(!bool)
+                getContext().getValidationErrors().add("e1", new SimpleError("Please enter the credit period days in number"));
+        }
+
+        // Validation for the Email Id
+        if(supplier.getEmail_id() != null){
+            Pattern pattern;
+            String email_id = supplier.getEmail_id();
+            final String EMAIL_PATTERN = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+            pattern = Pattern.compile(EMAIL_PATTERN);
+            boolean bool = pattern.matcher(email_id).matches();
+            if(!bool)
+                getContext().getValidationErrors().add("e1", new SimpleError("Please enter the valid Email-Id"));
+        }
     }
 
     public Resolution save() {
@@ -103,59 +160,62 @@ public class SupplierManagementAction extends BasePaginatedAction {
         } else {
             addRedirectAlertMessage(new SimpleMessage("Supplier with provided TIN already exists."));
         }
+
         return new RedirectResolution(SupplierManagementAction.class);
     }
 
     public Resolution generateExcelReport() {
-        supplierList = supplierDao.getSupplierByTinAndName(supplierTin, supplierName, 1, -1).getList();//.getAllSupplierListByTinAndName(supplierTin, supplierName);
+            supplierList = supplierDao.getSupplierByTinAndName(supplierTin, supplierName, 1, -1).getList();//.getAllSupplierListByTinAndName(supplierTin, supplierName);
 
-        xlsFile = new File(adminDownloads + "/reports/SupplierList.xls");
-        HkXlsWriter xlsWriter = new HkXlsWriter();
+            xlsFile = new File(adminDownloads + "/reports/SupplierList.xls");
+            HkXlsWriter xlsWriter = new HkXlsWriter();
 
-        if (supplierList != null) {
-            int xlsRow = 1;
-            xlsWriter.addHeader("NAME", "NAME");
-            xlsWriter.addHeader("TIN", "TIN");
-            xlsWriter.addHeader("ADDRESS", "ADDRESS");
-            xlsWriter.addHeader("CONTACT PERSON", "CONTACT PERSON");
-            xlsWriter.addHeader("CONTACT NUMBER", "CONTACT NUMBER");
+            if (supplierList != null) {
+                int xlsRow = 1;
+                xlsWriter.addHeader("NAME", "NAME");
+                xlsWriter.addHeader("TIN", "TIN");
+                xlsWriter.addHeader("ADDRESS", "ADDRESS");
+                xlsWriter.addHeader("CONTACT PERSON", "CONTACT PERSON");
+                xlsWriter.addHeader("CONTACT NUMBER", "CONTACT NUMBER");
 
-            for (Supplier supplier : supplierList) {
-                xlsWriter.addCell(xlsRow, supplier.getName());
-                xlsWriter.addCell(xlsRow, supplier.getTinNumber());
-                xlsWriter.addCell(xlsRow, supplier.getLine1() + "\n" + supplier.getLine2() + "\n" + supplier.getCity() + "\n" + supplier.getPincode() + "\n" + supplier.getState());
-                xlsWriter.addCell(xlsRow, supplier.getContactPerson());
-                xlsWriter.addCell(xlsRow, supplier.getContactNumber());
-                xlsWriter.writeData(xlsFile, "SupplierList");
-                xlsRow++;
-            }
-
-            return new HTTPResponseResolution();
-        }
-        return new RedirectResolution(SupplierManagementAction.class);
-    }
-
-    private class HTTPResponseResolution implements Resolution {
-            public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
-                OutputStream out = null;
-                InputStream in = new BufferedInputStream(new FileInputStream(xlsFile));
-                res.setContentLength((int) xlsFile.length());
-                res.setHeader("Content-Disposition", "attachment; filename=\"" + xlsFile.getName() + "\";");
-                out = res.getOutputStream();
-
-                // Copy the contents of the file to the output stream
-                byte[] buf = new byte[4096];
-                int count = 0;
-                while ((count = in.read(buf)) >= 0) {
-                    out.write(buf, 0, count);
+                for (Supplier supplier : supplierList) {
+                    xlsWriter.addCell(xlsRow, supplier.getName());
+                    xlsWriter.addCell(xlsRow, supplier.getTinNumber());
+                    xlsWriter.addCell(xlsRow, supplier.getLine1() + "\n" + supplier.getLine2() + "\n" + supplier.getCity() + "\n" + supplier.getPincode() + "\n" + supplier.getState());
+                    xlsWriter.addCell(xlsRow, supplier.getContactPerson());
+                    xlsWriter.addCell(xlsRow, supplier.getContactNumber());
+                    xlsWriter.writeData(xlsFile, "SupplierList");
+                    xlsRow++;
                 }
+
+                return new HTTPResponseResolution();
+            }
+            return new RedirectResolution(SupplierManagementAction.class);
+        }
+
+        private class HTTPResponseResolution implements Resolution {
+                public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
+                    OutputStream out = null;
+                    InputStream in = new BufferedInputStream(new FileInputStream(xlsFile));
+                    res.setContentLength((int) xlsFile.length());
+                    res.setHeader("Content-Disposition", "attachment; filename=\"" + xlsFile.getName() + "\";");
+                    out = res.getOutputStream();
+
+                    // Copy the contents of the file to the output stream
+                    byte[] buf = new byte[4096];
+                    int count = 0;
+                    while ((count = in.read(buf)) >= 0) {
+                        out.write(buf, 0, count);
+                    }
+                }
+
             }
 
-        }
 
 
     public List<Supplier> getSupplierList() {
         return supplierList;
+
     }
 
     public void setSupplierList(List<Supplier> supplierList) {
@@ -196,6 +256,14 @@ public class SupplierManagementAction extends BasePaginatedAction {
 
     public int getResultCount() {
         return supplierPage == null ? 0 : supplierPage.getTotalResults();
+    }
+
+    public File getXlsFile() {
+        return xlsFile;
+    }
+
+    public void setXlsFile(File xlsFile) {
+        this.xlsFile = xlsFile;
     }
 
     public Set<String> getParamSet() {

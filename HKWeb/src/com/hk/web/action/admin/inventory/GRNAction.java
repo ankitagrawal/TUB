@@ -85,7 +85,7 @@ public class GRNAction extends BasePaginatedAction {
     private String tinNumber;
     private String invoiceNumber;
     private String supplierName;
-    private Boolean isReconciled;
+    private Boolean reconciled;
     private Warehouse warehouse;
     public GRNDto grnDto;
     private ProductVariant productVariant;
@@ -103,7 +103,7 @@ public class GRNAction extends BasePaginatedAction {
             if (warehouse == null && getPrincipalUser() != null && getPrincipalUser().getSelectedWarehouse() != null) {
                 warehouse = getPrincipalUser().getSelectedWarehouse();
             }
-            grnPage = goodsReceivedNoteDao.searchGRN(grn, grnStatus, invoiceNumber, tinNumber, supplierName, isReconciled, warehouse, getPageNo(), getPerPage());
+            grnPage = goodsReceivedNoteDao.searchGRN(grn, grnStatus, invoiceNumber, tinNumber, supplierName, reconciled, warehouse, getPageNo(), getPerPage());
             grnList = grnPage.getList();
         }
         return new ForwardResolution("/pages/admin/grnList.jsp");
@@ -246,7 +246,7 @@ public class GRNAction extends BasePaginatedAction {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
             xlsFile = new File(adminDownloads + "/reports/Purchase_Order-GRN-" + sdf.format(new Date()) + ".xls");
-            xlsFile = grnManager.generateGRNXls(xlsFile.getPath(), grnStatusValue, startDate, endDate, warehouse);
+            xlsFile = grnManager.generateGRNXls(xlsFile.getPath(), grnStatusValue, startDate, endDate, warehouse, reconciled);
             addRedirectAlertMessage(new SimpleMessage("Purchase Order successfully generated"));
         } catch (Exception e) {
             e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.
@@ -493,6 +493,7 @@ public class GRNAction extends BasePaginatedAction {
         params.add("supplierName");
         params.add("grn");
         params.add("grnStatus");
+        params.add("reconciled");
         return params;
     }
 
@@ -517,15 +518,15 @@ public class GRNAction extends BasePaginatedAction {
     }
 
     public Boolean isReconciled() {
-        return isReconciled;
+        return reconciled;
     }
 
     public Boolean getReconciled() {
-        return isReconciled;
+        return reconciled;
     }
 
     public void setReconciled(Boolean reconciled) {
-        isReconciled = reconciled;
+        this.reconciled = reconciled;
     }
 
     public Long getGrnStatusValue() {

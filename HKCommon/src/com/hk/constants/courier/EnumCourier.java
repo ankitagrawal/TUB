@@ -27,6 +27,8 @@ public enum EnumCourier {
     Safexpress_Chhotu(120L, " Safexpress - Chhotu"),
     Safexpress_Delhivery(130L, " Safexpress - Delhivery"),
     Safexpress(170L, " Safexpress"),
+    Quantium(180L, "Quantium"),
+    Smile_EExpress(190L, "Smile EExpress"),
     EarthMoversPune(200L, "Earth Movers Pune"),
     HK_Delivery(500L, "HealthKart Delivery"),
 
@@ -81,15 +83,14 @@ public enum EnumCourier {
                 EnumCourier.DTDC_COD,
                 EnumCourier.Speedpost,
                 EnumCourier.Delhivery,
-                EnumCourier.Chhotu,
+                EnumCourier.Smile_EExpress,
                 EnumCourier.AFLWiz,
                 EnumCourier.BlueDart,
                 EnumCourier.BlueDart_COD,
                 EnumCourier.FirstFLight,
                 EnumCourier.Safexpress,
+                EnumCourier.Quantium,
                 EnumCourier.FirstFLight_COD,
-                EnumCourier.IndiaEarthMovers,
-                EnumCourier.EarthMoversPune,
                 EnumCourier.HK_Delivery
         );
     }

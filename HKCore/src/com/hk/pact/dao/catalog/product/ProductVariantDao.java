@@ -51,6 +51,8 @@ public interface ProductVariantDao extends BaseDao {
     public List<ProductVariant> getAllProductVariantsByCategory(String category);
 
     public List<ProductVariant> getAllProductVariant();
-    
+
+    public List<ProductVariant> getAllNonDeletedProductVariant();
+
     public Product getProductForProudctVariant(String variantId);
 }                                                               
