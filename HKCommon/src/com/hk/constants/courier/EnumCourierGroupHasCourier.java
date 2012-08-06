@@ -33,15 +33,9 @@ public enum EnumCourierGroupHasCourier {
             Arrays.asList(
                     EnumCourier.Chhotu,
                     EnumCourier.Quantium,
+                    EnumCourier.Smile_EExpress,
                     EnumCourier.Safexpress,
                     EnumCourier.Delhivery
-            )
-    ),
-
-    EarthMovers(
-            EnumCourierGroup.EarthMovers,
-            Arrays.asList(
-                    EnumCourier.IndiaEarthMovers
             )
     ),;
 
