@@ -73,6 +73,11 @@
       height: 16px;
       background: url('${pageContext.request.contextPath}/images/img/star-on.png') 0 0 repeat-x;
     }
+
+	.frameSize td{
+		border:1px solid #DDD;
+		padding:5px;
+	}
   </style>
   <link href="${pageContext.request.contextPath}/css/jquery.jqzoom.css" rel="stylesheet" type="text/css"/>
   <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.jqzoom-core.js"></script>
@@ -85,7 +90,6 @@
         height: 600,
         width: 900
       });
-
 
       //Click and change image
       $('.color_box').click(function() {
@@ -207,6 +211,7 @@
         </ul>
       </c:if>
     </div>
+
     <div><br/><br/><br/></div>
     <div>
       <shiro:hasPermission name="<%=PermissionConstants.GET_PRODUCT_LINK%>">
@@ -388,7 +393,7 @@
     </c:when>
     <c:otherwise>
       <s:layout-render name="/layouts/embed/_productWithExtraOptions.jsp" product="${product}" productReferrerId="${pa.productReferrerId}"/>
-      <s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>
+      <%--<s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>--%>
     </c:otherwise>
   </c:choose>
   <div class="floatfix"></div>
@@ -424,6 +429,30 @@
 
 			<div class="floatfix"></div>
 			<a class='go_to_top' href='#top'>go to top &uarr;</a>
+		</div>
+	</c:if>
+
+	<c:if test="${hk:collectionContains(product.categories, eyeGlass)}">
+		<div id="sizeGuide"
+		      class="content" style="background-color:#DDDDDD;padding:5px; cursor:pointer;font-weight:bold;text-align:left;">
+			Size Guide
+		</div>
+		<div id="frameChart">
+			<table width="900px;">
+				<tr>
+					<td>
+						<img src="${pageContext.request.contextPath}/images/banners/frame_chart.jpg"/>
+					</td>
+					<td valign="top" class="content" style="vertical-align:top;padding-top:10px;">
+						It is very important to verify the size of your eyes before you venture into the market looking
+						for the perfect pair of frames to wear. This manual will help you decide what the pre-requisites
+						are and how to go about it in a proper structured manner.<a target="_blank"
+						                                                            href="${pageContext.request.contextPath}/pages/lp/eye_glasses/choosing-eye-glasses.html">
+						Read More.....</a>
+					</td>
+				</tr>
+			</table>
+
 		</div>
 	</c:if>
 
@@ -564,8 +593,8 @@
           <td style="border-style:none">
             <s:link beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction" event="writeNewReview">
             <s:param name="product" value="${product.id}"/>
-            <strong>Write a Review<strong>
-              </s:link>
+            <strong>Write a Review</strong>
+             </s:link>
           </td>
         </tr>
 
