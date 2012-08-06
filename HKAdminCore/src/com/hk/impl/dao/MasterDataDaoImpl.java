@@ -10,6 +10,7 @@ import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.TicketStatus;
 import com.hk.domain.TicketType;
+import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.accounting.DebitNoteStatus;
 import com.hk.domain.affiliate.AffiliateCategory;
 import com.hk.domain.catalog.Manufacturer;
@@ -35,6 +36,7 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.core.CityService;
 import com.hk.pact.service.core.StateService;
+import com.hk.pact.service.core.HubService;
 import com.hk.pact.service.marketing.MarketingService;
 import com.hk.pact.service.store.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,9 +62,11 @@ public class MasterDataDaoImpl implements MasterDataDao {
     @Autowired
     private CourierDao       courierDao;
     @Autowired
-    private CityService cityService;
-  @Autowired
-    private StateService stateService;
+    private CityService      cityService;
+    @Autowired
+    private StateService     stateService;
+    @Autowired
+    private HubService       hubService;
 
 
     public List<PaymentStatus> getPaymentStatusList() {
@@ -291,4 +295,7 @@ public class MasterDataDaoImpl implements MasterDataDao {
         return EnumShippingOrderStatus.getStatusForReconcilationReport();
     }
 
+    public List<Hub> getHubList() {
+        return hubService.getAllHubs();
+    }
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.hk.domain.TicketStatus;
 import com.hk.domain.TicketType;
+import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.review.ReviewStatus;
 import com.hk.domain.store.Store;
 import com.hk.domain.order.ShippingOrderStatus;
@@ -103,5 +104,7 @@ public interface MasterDataDao
     public List<City> getCityList();
 
     public List<ShippingOrderStatus> getSOStatusForReconcilation();
+
+    public List<Hub> getHubList();
 
 }

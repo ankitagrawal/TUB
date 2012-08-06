@@ -8130,4 +8130,38 @@
             <column defaultValue="0" name="deleted" type="TINYINT"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Rajni (generated)" id="1344235653962-1">
+        <addColumn tableName="consignment_status">
+            <column name="status" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rajni (generated)" id="1344235653962-2">
+        <addColumn tableName="hub">
+            <column name="name" type="VARCHAR(150)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rajni (generated)" id="1344235653962-6">
+        <dropColumn columnName="name" tableName="consignment_status"/>
+    </changeSet>
+    <changeSet author="Rajni Hooda" id="2012-08-06-03">
+        <sql>
+            insert into consignment_status(`id`,`status`) values
+            (10,'Shipment received at hub'), (20,'Shipment out for delivery'),
+            (30,'Shipment Delivered')      , (40,'Shipment on Hold'),
+            (50,'Shipment Lost')           , (60,'Shipment Damaged'),
+            (70,'RTO');
+        </sql>
+    </changeSet>
+    <changeSet author="Rajni Hooda" id="2012-08-06-05">
+        <sql>
+            insert into hub values
+            (1,'2nd Floor, Parsvanth Arcadia, MG Road, Sector 14','India',157,6,4925,'Gurgaon Hub'),
+            (2,'Office 102, White House, Building No. 382, Sant Nagar Market Lane, East of Kailash','India',125,7,3672,'South Delhi Hub'),
+            (100,'2nd Floor, Parsvanth Arcadia, MG Road, Sector 14','India',157,6,4925,'Delivered');
+        </sql>
+    </changeSet>
 </databaseChangeLog>

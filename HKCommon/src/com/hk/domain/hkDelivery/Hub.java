@@ -56,6 +56,8 @@ public class Hub implements java.io.Serializable {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "hub")
     private Set<Runsheet> runsheets = new HashSet<Runsheet>(0);
 
+    private String name;
+
     public Long getId() {
         return this.id;
     }
@@ -120,7 +122,13 @@ public class Hub implements java.io.Serializable {
         this.runsheets = runsheets;
     }
 
+    public String getName() {
+        return name;
+    }
 
+    public void setName(String name) {
+        this.name = name;
+    }
 }
 
 
