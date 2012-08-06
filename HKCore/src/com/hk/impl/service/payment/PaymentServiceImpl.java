@@ -83,7 +83,10 @@ public class PaymentServiceImpl implements PaymentService {
         EnumPaymentMode enumPaymentMode = EnumPaymentMode.getPaymentModeFromId(payment.getPaymentMode().getId());
 
         switch (enumPaymentMode) {
-            case CITRUS:
+            case CITRUS_NetBanking_Old:
+            case CITRUS_CreditDebit:
+            case CITRUS_NetBanking_New:
+            case EBS:
             case TECHPROCESS:
             case CCAVENUE_DUMMY:
             case FREE_CHECKOUT:

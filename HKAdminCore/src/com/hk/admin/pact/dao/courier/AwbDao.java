@@ -14,4 +14,6 @@ public interface AwbDao extends BaseDao {
 
      public Awb findByCourierAwbNumber(Courier courier ,String awbNumber);
 
+     public List<Awb> getAlreadyPresentAwb(Courier courier,List<String> awbNumberList);
+
 }
