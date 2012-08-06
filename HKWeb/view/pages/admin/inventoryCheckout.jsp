@@ -45,7 +45,7 @@
     <s:hidden name="wronglyPickedBox" id="wronglyPickedBox" />
     <s:hidden name="earlierExpiryDate" id="earlierExpiryDate" />
     <s:hidden name="earlierMfgDate" id="earlierMfgDate" />
-    <s:hidden name="earlierCreationDate" id="earlierCreationDate" />  
+    <s:hidden name="earlierCreationDate" id="earlierCreationDate" />
     </s:form>
     <c:choose>
         <c:when test="${! hk:allItemsCheckedOut(icBean.shippingOrder)}">
@@ -60,7 +60,7 @@
         </c:otherwise>
       </c:choose>
     <div style="display:inline;float:left;">
-      
+
       <c:choose><c:when test="${empty icBean.skuGroups}">
         <c:choose>
           <c:when test="${icBean.upc == null}">
@@ -121,13 +121,14 @@
                 <th>Expiry Date</th>
                 <th>MRP</th>
                 <th>Inv.</th>
+                <th></th>
               </tr>
               </thead>
               <c:forEach items="${icBean.skuGroups}" var="skuGroup" varStatus="ctr">
                 <c:set var="productVariant" value="${skuGroup.sku.productVariant}"/>
 	              <c:choose>
 		              <c:when test="${productVariant.markedPrice > skuGroup.mrp}">
-			           <tr style="background:lightpink">   
+			           <tr style="background:lightpink">
 		              </c:when>
 		              <c:otherwise>
 			          <tr>
@@ -151,6 +152,13 @@
                   <td><fmt:formatDate value="${skuGroup.expiryDate}" pattern="yyyy-MM-dd"/></td>
                   <td>${skuGroup.mrp}</td>
                   <td>${fn:length(hk:getInStockSkuItems(skuGroup))}</td>
+	              <td>
+		              <s:link beanclass="com.hk.web.action.admin.inventory.SkuGroupAction">
+			              <s:param name="gatewayOrderId" value="${icBean.shippingOrder.gatewayOrderId}"/>
+			              <s:param name="skuGroup" value="${skuGroup.id}"/>
+			              <img src="${pageContext.request.contextPath}/images/edit.gif" alt="Edit Batch"/>
+		              </s:link>
+	              </td>
                 </tr>
               </c:forEach>
               <tfoot style="border-top:1px solid gray">
