@@ -353,7 +353,7 @@
       $(document).ready(function(){
         $('#subscriptionWindow').jqm({trigger: '.addSubscriptionButton', ajax: '@href', ajaxText:'<br/><div style="text-align: center;">loading... please wait..</div> <br/>'});
           $('.addSubscriptionButton').mouseover(function(){
-              var top = this.offsetTop-$('#subscription-tooltip').outerHeight()-10;
+              var top = $(this).offset().top-$('#subscription-tooltip').outerHeight()-55;
               var left = $(this).offset().left-$('#subscription-tooltip').outerWidth()/2+$(this).outerWidth()/2;
 
               $('#subscription-tooltip').css({
