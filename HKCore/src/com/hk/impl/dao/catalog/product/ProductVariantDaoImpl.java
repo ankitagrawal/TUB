@@ -5,8 +5,6 @@ import com.akube.framework.util.BaseUtils;
 import com.hk.domain.affiliate.AffiliateCategory;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.catalog.product.VariantConfigOption;
-import com.hk.domain.catalog.product.VariantConfigOptionParam;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
 import org.hibernate.Criteria;

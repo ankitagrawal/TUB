@@ -43,7 +43,6 @@ import com.hk.pact.dao.sku.SkuDao;
 import com.hk.pact.service.accounting.InvoiceService;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.catalog.ProductService;
-import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.service.ServiceLocatorFactory;
