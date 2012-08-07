@@ -699,17 +699,21 @@
 
             var soldOutHeight = $('.soldOut').height() == null ? 0 : $('.soldOut').height();
 
+            var maxHtOfOptions = $(image).height() + Math.max.apply(Math, optionsHeight) + soldOutHeight;
             $(availableOptions).css({
-                height: $(image).height() + Math.max.apply(Math, optionsHeight) + soldOutHeight
+                height: maxHtOfOptions
             });
 
+//            alert("max ht: " + maxHtOfOptions);
+//            alert("avail options  ht: " + $(availableOptions).height());
+
             $(arrow).css({
-                paddingTop:10 + $(availableOptions).height() / 2
+                paddingTop:10 + maxHtOfOptions / 2
             });
 
             var resultDiv = $(this).find('.result');
             $(resultDiv).css({
-                height: $(availableOptions).height()
+                height: maxHtOfOptions
             });
 
             $(availableOptions).each(function() {
