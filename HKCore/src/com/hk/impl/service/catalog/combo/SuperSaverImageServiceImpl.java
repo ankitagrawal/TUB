@@ -42,11 +42,11 @@ public class SuperSaverImageServiceImpl implements SuperSaverImageService {
         return superSaverImageDao.getSuperSaverImages(getVisible, getMainImage);
     }
 
-    public List<SuperSaverImage> getSuperSaverImages(Product product, Boolean getVisible, Boolean getMainImage) {
-        return superSaverImageDao.getSuperSaverImages(product, getVisible, getMainImage);
+    public List<SuperSaverImage> getSuperSaverImages(Product product, Boolean getVisible, Boolean getMainImage, Boolean getDeleted) {
+        return superSaverImageDao.getSuperSaverImages(product, getVisible, getMainImage, getDeleted);
     }
 
-    public Page getSuperSaverImages(List<String> categories, List<String> brands, Boolean getVisible, int page, int perPage){
-        return superSaverImageDao.getSuperSaverImages(categories, brands, getVisible, page, perPage);
+    public Page getSuperSaverImages(List<String> categories, List<String> brands, Boolean getVisible, Boolean getDeleted, int page, int perPage) {
+        return superSaverImageDao.getSuperSaverImages(categories, brands, getVisible, getDeleted, page, perPage);
     }
 }
