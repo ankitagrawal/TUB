@@ -12,15 +12,15 @@
 	%>
 
 	<s:form beanclass="com.hk.web.action.core.cart.AddToCartWithExtraOptionsAction" class="addToCartForm2">
+		<c:set value="${product.productVariants[0]}" var="variant"/>
 		<div class='variants'>
-    <span
-		    style="font-style: italic; font-size: 16px;;"> ${fn:length(product.inStockVariants)}</span>
-			variants
-			available.
-			<span>Please select Desired Product Variant(s) &darr;</span>
-
+			<div style="font-weight:bold;">
+				<c:if test="${hk:isNotBlank(variant.optionsCommaSeparated)}">
+					${variant.optionsCommaSeparated}
+				</c:if>
+			</div>
 			<div class='prod_table' style="padding:10px;width:90%">
-				<c:set value="${product.productVariants[0]}" var="variant"/>
+
 				<div class="checkboxError" style="margin-bottom:20px; font-size:1.2em; color:salmon;"></div>
 				<table width="100%">
 					<tr>
@@ -131,11 +131,7 @@
                 </span>
 						</div>
 					</c:if>
-					<div style="font-weight:bold;">
-						<c:if test="${hk:isNotBlank(variant.optionsCommaSeparated)}">
-							${variant.optionsCommaSeparated}
-						</c:if>
-					</div>
+					
 				</div>
 
 

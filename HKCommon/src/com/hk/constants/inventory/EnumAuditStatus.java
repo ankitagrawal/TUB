@@ -10,7 +10,9 @@ import com.hk.constants.payment.EnumPaymentType;
 
 public enum EnumAuditStatus {
   Pending(0L, "Pending"),
-  Done(1L, "Done")
+  Done(1L, "Done"),
+  Invalid(99L, "Invalid"),
+  Deleted(999L, "Deleted")
 	;
 
   private String name;
@@ -32,7 +34,9 @@ public enum EnumAuditStatus {
 	public static List<EnumAuditStatus> getAllList() {
     return Arrays.asList(
         EnumAuditStatus.Pending,
-        EnumAuditStatus.Done);
+        EnumAuditStatus.Done,
+        EnumAuditStatus.Invalid,
+        EnumAuditStatus.Deleted);
 
   }
 

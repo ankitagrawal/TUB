@@ -106,7 +106,7 @@ public class InvoicePDFGenerator {
         else{
           invoiceDto = new InvoiceDto(shippingOrder, null);
         }
-        barcodePath = barcodeGenerator.getBarcodePath(shippingOrder.getGatewayOrderId(),1.0f, 150);
+        barcodePath = barcodeGenerator.getBarcodePath(shippingOrder.getGatewayOrderId(),1.0f, 150, false);
         Image barcodeImage = Image.getInstance(barcodePath);
         String routingCode = null;
         Address address = addressDao.get(Address.class, shippingOrder.getBaseOrder().getAddress().getId());

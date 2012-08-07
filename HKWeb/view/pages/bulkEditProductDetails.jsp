@@ -697,7 +697,7 @@
       });
 
       if (ctr) {
-        alert("Errors encoountered! Kindly go to the top of the page to view.");
+        alert("Errors encountered! Kindly go to the top of the page to view.");
         $('.errors').show();
       }
       return !ctr;
