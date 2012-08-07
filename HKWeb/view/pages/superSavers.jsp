@@ -117,6 +117,11 @@
             margin: 5px 2px;
             padding: 2px;
         }
+
+        div.paginationDiv {
+            /*margin: 15px;*/
+            text-align:center;
+        }
     </style>
 </s:layout-component>
 
@@ -148,7 +153,7 @@
                 </s:link>
                 &nbsp;|&nbsp;
                 <s:link beanclass="com.hk.web.action.core.catalog.image.UploadSuperSaverImageAction"
-                        event="manageSuperSaverImages">
+                        event="getSuperSaversForCategoryAndBrand">
                     <span>Manage Images</span>
                 </s:link>
             </div>
@@ -193,26 +198,24 @@
                     <div class="clear"></div>
 
                     <div style="text-align:center; margin-top:10px;">
-                        <s:submit name="getSuperSaversForCategoryAndBrand" id="filterBtn" class="btn"
+                        <s:submit name="pre" id="filterBtn" class="btn"
                                   style="float:left;">
                             Filter
                         </s:submit>
-
-                        &nbsp;
-
-                        <s:submit name="getSuperSaversForCategoryAndBrand" id="showAllBtn" class="btn"
+                        <s:submit name="pre" id="showAllBtn" class="btn"
                                   style="float:right;">
                             Show All
                         </s:submit>
                     </div>
                 </fieldset>
-                <s:link beanclass="com.hk.web.action.core.catalog.SuperSaversAction"
-                        event="getSuperSaversForCategoryAndBrand" id="hrefLink"/>
-
             </div>
 
             <div id="bannersDiv">
-                <div style="margin-top:30px;"></div>
+                <div class="paginationDiv">
+                    <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${comboBean}"/>
+                    <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${comboBean}"/>
+                </div>
+
                 <div class="clear"></div>
 
                 <c:forEach items="${comboBean.superSaverImages}" var="image">
@@ -230,6 +233,13 @@
 
                     <div class="clear"></div>
                 </c:forEach>
+
+                <div class="paginationDiv">
+                    <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${comboBean}"/>
+                    <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${comboBean}"/>
+                </div>
+
+                <div class="clear"></div>
             </div>
         </s:form>
     </div>
@@ -249,7 +259,7 @@
             });
         });
     </script>
-    
+
 </s:layout-component>
 <jsp:include page="/includes/_analytics.jsp"/>
 </s:layout-render>

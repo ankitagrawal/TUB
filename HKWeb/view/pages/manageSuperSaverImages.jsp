@@ -44,7 +44,7 @@
 
             fieldset {
                 padding: 5px;
-                text-align:center;
+                text-align: center;
             }
 
             fieldset#categoryBrandFilter, fieldset#productFilter {
@@ -56,7 +56,13 @@
             }
 
             fieldset#productFilter {
+                float: left;
+                width: 25%;
+            }
+
+            fieldset#productAssignFilter {
                 float: right;
+                width: 18%;
             }
         </style>
     </s:layout-component>
@@ -81,9 +87,14 @@
 
                     <fieldset id="productFilter">
                         <legend>By Product Id</legend>
-                        <label>Product Id:</label><s:text name="product"/>
+                        <label>Product Id:</label><s:text name="product" id="productText"/>
                         &nbsp; &nbsp;
                         <s:submit name="getSuperSaversForProduct" value="Filter" id="productSubmit"/>
+                    </fieldset>
+
+                    <fieldset id="productAssignFilter">
+                        <legend>No Product Assigned</legend>
+                        <s:submit name="getSuperSaversWithNoProductAssigned" value="Filter" id="noProductSubmit"/>
                     </fieldset>
                 </fieldset>
             </s:form>
@@ -164,7 +175,16 @@
                     return !error;
                 });
 
-
+                $('#productSubmit').click(function() {
+                    var productId = $('#productText').val().trim();
+                    if (productId === "") {
+                        $('.errorDiv').html("KINDLY ENTER A VALID PRODUCT ID FOR WHICH SUPER SAVERS NEED TO BE FILTERED....");
+                        $('.errorDiv').show();
+                        return false;
+                    } else {
+                        return true;
+                    }
+                });
             });
         </script>
     </s:layout-component>
