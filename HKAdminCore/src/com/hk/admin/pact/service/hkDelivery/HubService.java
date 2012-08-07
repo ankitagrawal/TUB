@@ -1,4 +1,4 @@
-package com.hk.pact.service.core;
+package com.hk.admin.pact.service.hkDelivery;
 
 import com.hk.domain.hkDelivery.Hub;
 

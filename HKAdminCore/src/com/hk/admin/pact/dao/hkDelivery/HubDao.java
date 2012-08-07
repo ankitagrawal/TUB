@@ -1,4 +1,4 @@
-package com.hk.pact.dao.hub;
+package com.hk.admin.pact.dao.hkDelivery;
 
 import com.hk.domain.hkDelivery.Hub;
 import com.hk.pact.dao.BaseDao;

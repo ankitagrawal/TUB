@@ -1,12 +1,12 @@
 package com.hk.impl.dao;
 
 import com.hk.admin.pact.dao.courier.CourierDao;
+import com.hk.admin.pact.service.hkDelivery.HubService;
 import com.hk.constants.catalog.product.EnumProductVariantPaymentType;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.inventory.EnumReconciliationStatus;
-import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.TicketStatus;
 import com.hk.domain.TicketType;
@@ -36,7 +36,6 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.core.CityService;
 import com.hk.pact.service.core.StateService;
-import com.hk.pact.service.core.HubService;
 import com.hk.pact.service.marketing.MarketingService;
 import com.hk.pact.service.store.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +65,7 @@ public class MasterDataDaoImpl implements MasterDataDao {
     @Autowired
     private StateService     stateService;
     @Autowired
-    private HubService       hubService;
+    private HubService hubService;
 
 
     public List<PaymentStatus> getPaymentStatusList() {

@@ -1,6 +1,6 @@
-package com.hk.impl.dao.hub;
+package com.hk.admin.impl.dao.hkDelivery;
 
-import com.hk.pact.dao.hub.HubDao;
+import com.hk.admin.pact.dao.hkDelivery.HubDao;
 import com.hk.domain.hkDelivery.Hub;
 import com.hk.impl.dao.BaseDaoImpl;
 
@@ -11,8 +11,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class HubDaoImpl extends BaseDaoImpl implements HubDao {
-
-    @Override
+    
     public List<Hub> getAllHubs() {
         List<Hub> validHubs = new ArrayList<Hub>();
         for (Hub hubObj : getAll(Hub.class)) {
