@@ -8172,6 +8172,5 @@
         <addColumn tableName="super_saver_image">
             <column defaultValue="0" name="deleted" type="TINYINT"/>
         </addColumn>
-    </changeSet>
+    </changeSet>  
 </databaseChangeLog>
-
