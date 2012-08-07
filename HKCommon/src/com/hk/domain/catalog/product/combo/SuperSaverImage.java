@@ -3,6 +3,7 @@ package com.hk.domain.catalog.product.combo;
 
 
 import com.hk.domain.catalog.product.Product;
+import com.akube.framework.gson.JsonSkip;
 
 import javax.persistence.*;
 
@@ -14,6 +15,7 @@ public class SuperSaverImage implements java.io.Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
+    @JsonSkip
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
@@ -26,6 +28,9 @@ public class SuperSaverImage implements java.io.Serializable {
 
     @Column(name = "hidden", nullable = false)
     private boolean hidden;
+
+    @Column(name = "deleted")
+    private boolean deleted;
 
     @Column(name = "checksum", nullable = false, length = 45)
     private String checksum;
@@ -81,6 +86,18 @@ public class SuperSaverImage implements java.io.Serializable {
 
     public void setHidden(boolean hidden) {
         this.hidden = hidden;
+    }
+
+    public boolean getDeleted() {
+        return this.deleted;
+    }
+
+    public boolean isDeleted() {
+        return this.deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
     public String getChecksum() {

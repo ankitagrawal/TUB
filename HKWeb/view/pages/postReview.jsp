@@ -104,7 +104,7 @@
       <s:form beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction">
         <table class="reviewTable" style="border-left:1px solid #EEEEEE;">
           <tr>
-            <td><label><strong>Title</strong></label><label style="color:red;">*</label></td>
+         <td><label><strong>Title</strong></label><label style="color:red;">*</label></td>
             <td><s:text name="review.title" class="title" maxlength="45" style="width:480px"/></td>
           </tr>
 
@@ -131,7 +131,7 @@
             <td><s:hidden name="review.postedBy" value="${pa.review.postedBy.id}"/>
               <s:hidden name="review.starRating" id="starRating" value="3"/>
               <s:hidden name="review.product" value="${product.id}"/>
-              <label style="color:red;">* All fields are mandatory.</label><br/>
+              <label style="color:#ff0000;">* All fields are mandatory.</label><br/>
               <s:submit name="postReview" value="Submit"
                         class="requiredFieldValidator"/></td>
           </tr>
@@ -145,6 +145,9 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.raty.min.js"></script>
 
 <script type="text/javascript">
+    String.prototype.trim = function () {
+    return this.replace(/^\s*/, "").replace(/\s*$/, "");
+}
   $(document).ready(function() {
     var rating;
     $('#star').raty({
@@ -160,11 +163,22 @@
     //alert("in validator");
     var title = $('.title').val();
     var review = $('.review').val();
-    if (title == "" || review == "") {
+       var validChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+      if (title == "" || review == "") {
       alert("Please enter all fields .");
       return false;
-    } else {
-      alert("Thanks.. Your review is submitted successfully.It would appear shortly on Healthkart.com . Please note that all reviews are moderated for quality and relevance");
+    }
+    else if (title.trim().length==0 || review.trim().length==0){
+           alert("Please enter characters in Title or Review ");
+        return false;
+    }
+      else if((validChars.indexOf(title.trim().charAt(0))<0) || (validChars.indexOf(review.trim().charAt(0))<0)){
+          alert("Please start Title and Review with character");
+          return false;
+      }
+    else {
+      alert("Thanks!! Your review is submitted successfully. It would appear shortly on Healthkart.com. \n Please note that all reviews are moderated for quality and relevance");
     }
   });
 
