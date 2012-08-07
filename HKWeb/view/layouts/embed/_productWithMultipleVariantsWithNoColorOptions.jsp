@@ -46,9 +46,17 @@
                 <div class='prod' style="text-align: center;">
                   <c:choose>
                       <c:when test="${variant.mainImageId != null}">
-                          <a href='javascript:void(0);'
-                             rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, variant.mainProductImageId,isSecure)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, variant.mainProductImageId,isSecure)}'}"><img
-                                  src='${hk:getS3ImageUrl(imageSmallSize, variant.mainImageId,isSecure)}'></a>
+                          <c:choose>
+                              <c:when test="${variant.mainProductImageId != null}">
+                                  <a href='javascript:void(0);'
+                                     rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, variant.mainProductImageId,isSecure)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, variant.mainProductImageId,isSecure)}'}"><img
+                                          src='${hk:getS3ImageUrl(imageSmallSize, variant.mainImageId,isSecure)}'></a>
+                              </c:when>
+                              <c:otherwise>
+                                  <img src="${hk:getS3ImageUrl(imageSmallSize, product.mainImageId,isSecure)}" alt="${product.name}"
+                                       title="${product.name}">
+                              </c:otherwise>
+                          </c:choose>
                           <br/>
                           <br/>
                           <c:if test="${hk:isNotBlank(variant.variantName) && hk:topLevelCategory(variant.product).name != 'eye'}">

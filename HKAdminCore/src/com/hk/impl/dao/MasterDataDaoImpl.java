@@ -77,10 +77,6 @@ public class MasterDataDaoImpl implements MasterDataDao {
         return getBaseDao().getAll(OrderStatus.class);
     }
 
-    public List<PaymentMode> getpaymentModesForReconciliationReport() {   //todo, there are more modes
-        return Arrays.asList(EnumPaymentMode.TECHPROCESS.asPaymenMode(), EnumPaymentMode.COD.asPaymenMode(), EnumPaymentMode.CITRUS.asPaymenMode());
-    }
-
     public List<ReconciliationStatus> getReconciliationStatus() {
         return Arrays.asList(EnumReconciliationStatus.DONE.asReconciliationStatus(), EnumReconciliationStatus.PENDING.asReconciliationStatus());
     }

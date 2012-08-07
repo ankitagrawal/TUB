@@ -73,6 +73,11 @@
       height: 16px;
       background: url('${pageContext.request.contextPath}/images/img/star-on.png') 0 0 repeat-x;
     }
+
+	.frameSize td{
+		border:1px solid #DDD;
+		padding:5px;
+	}
   </style>
   <link href="${pageContext.request.contextPath}/css/jquery.jqzoom.css" rel="stylesheet" type="text/css"/>
   <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.jqzoom-core.js"></script>
@@ -431,23 +436,30 @@
 			<a class='go_to_top' href='#top'>go to top &uarr;</a>
 		</div>
 	</c:if>
-    <c:if test="${hk:collectionContains(product.categories, eyeGlass)}">
-        <div id="sizeGuide" class="content" style="background-color:#DDDDDD;padding:5px; cursor:pointer;font-weight:bold;text-align:left;">
-            Size Guide
-        </div>
-        <div id="frameChart">
-            <table width="900px;">
-                <tr><td>
-                    <img src="${pageContext.request.contextPath}/images/banners/frame_chart.jpg"/>
-                </td>
-                    <td style="padding:25px;" valign="top">
-                        It is very important to verify the size of your eyes before you venture into the market looking for the perfect pair of frames to wear. This manual will help you decide what the pre-requisites are and how to go about it in a proper structured manner.<a target="_blank"  href="${pageContext.request.contextPath}/pages/lp/eye_glasses/choosing-eye-glasses.html"> Read More.....</a>
-                    </td>
-                </tr>
-            </table>
+	<c:if test="${hk:collectionContains(product.categories, eyeGlass)}">
+		<div id="sizeGuide"
+		      class="content" style="background-color:#DDDDDD;padding:5px; cursor:pointer;font-weight:bold;text-align:left;">
+			Size Guide
+		</div>
+		<div id="frameChart">
+			<table width="900px;">
+				<tr>
+					<td>
+						<img src="${pageContext.request.contextPath}/images/banners/frame_chart.jpg"/>
+					</td>
+					<td valign="top" class="content" style="vertical-align:top;padding-top:10px;">
+						It is very important to verify the size of your eyes before you venture into the market looking
+						for the perfect pair of frames to wear. This manual will help you decide what the pre-requisites
+						are and how to go about it in a proper structured manner.<a target="_blank"
+						                                                            href="${pageContext.request.contextPath}/pages/lp/eye_glasses/choosing-eye-glasses.html">
+						Read More.....</a>
+					</td>
+				</tr>
+			</table>
 
-        </div>
-    </c:if>
+		</div>
+	</c:if>
+
   <c:if test="${hk:isNotBlank(product.description)}">
     <div class="content" id="description">
       <h4>
