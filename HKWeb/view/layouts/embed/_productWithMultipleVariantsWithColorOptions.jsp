@@ -78,7 +78,7 @@
                                   <div class="color_box">
                                       <c:choose>
                                           <c:when test="${variant.mainProductImageId != null}">
-                                              <li><a href='javascript:void(0);'
+                                              <li><a class="color_pallete" href='javascript:void(0);'
                                                      rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, variant.mainProductImageId,isSecure)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, variant.mainProductImageId,isSecure)}'}">
                                                   <div style="height: 40px; width: 40px; background-color:${variant.colorHex};"
                                                        title="${variant.colorOptionsValue}">
@@ -113,7 +113,7 @@
                                           </c:when>
                                           <c:otherwise>
                                               <div class="color_box">
-                                                  <img src="${hk:getS3ImageUrl(imageSmallSize, variant.mainImageId,isSecure)}"
+                                                  <img class="color_pallete" src="${hk:getS3ImageUrl(imageSmallSize, variant.mainImageId,isSecure)}"
                                                        alt="${product.name}"
                                                        title="${variant.colorOptionsValue}">
                                                   <s:checkbox name="productVariantList[${ctr.index}].selected"

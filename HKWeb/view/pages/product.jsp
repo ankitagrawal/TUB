@@ -102,7 +102,7 @@
         });
 
         //Click and change image
-      $('.color_box').click(function() {
+      $('.color_pallete').click(function() {
         var variantMainImageId = $(this).find('.variantMainImageId').val();
         //var url = "http://healthkart-prod.s3.amazonaws.com/1/"+variantMainImageId+"_t.jpg";
         //$(".img320").html("<img class='icon' src='"+url+"'/>") ;
