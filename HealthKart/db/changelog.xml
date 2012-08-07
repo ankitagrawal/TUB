@@ -8174,5 +8174,5 @@
     </changeSet>
     <changeSet author="Tarun (generated)" id="1339071974252-10">
       <dropTable tableName="product_thumb_tag"/>
-    </changeSet>    
+    </changeSet>
 </databaseChangeLog>
