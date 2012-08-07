@@ -8125,7 +8125,6 @@
             <column name="forecast_date"/>
         </createIndex>
     </changeSet>
-<<<<<<< HEAD
    <changeSet author="Ankit (generated)" id="1343376395846-192">
         <createTable tableName="wishlist_line_item">
             <column autoIncrement="true" name="id" type="INT">
