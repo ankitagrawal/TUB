@@ -8,6 +8,7 @@ import com.hk.admin.manager.PurchaseOrderManager;
 import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
 import com.hk.admin.pact.dao.inventory.GrnLineItemDao;
 import com.hk.admin.pact.dao.inventory.PurchaseOrderDao;
+import com.hk.admin.util.PurchaseOrderPDFGenerator;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.inventory.EnumGrnStatus;
@@ -65,7 +66,9 @@ public class POAction extends BasePaginatedAction {
     String                       adminDownloads;
 
     @Autowired
-        XslGenerator xslGenerator;
+    XslGenerator xslGenerator;
+    @Autowired
+    PurchaseOrderPDFGenerator purchaseOrderPDFGenerator;
 
     private File                 xlsFile;
     Page                         purchaseOrderPage;
@@ -225,6 +228,21 @@ public class POAction extends BasePaginatedAction {
         }
         return new HTTPResponseResolution();
 
+    }
+
+    public Resolution poInPdf() {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+
+            xlsFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() + ".pdf");
+            purchaseOrderDto = getPurchaseOrderManager().generatePurchaseOrderDto(purchaseOrder);
+            getPurchaseOrderPDFGenerator().generatePurchaseOrderPdf(xlsFile.getPath(), purchaseOrderDto);
+            addRedirectAlertMessage(new SimpleMessage("Purchase Order successfully generated"));
+        } catch (Exception e) {
+            e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.
+            addRedirectAlertMessage(new SimpleMessage("PurchaseOrder generation failed"));
+        }
+        return new HTTPResponseResolution();
     }
 
     public List<PurchaseOrder> getPurchaseOrderList() {
@@ -413,4 +431,11 @@ public class POAction extends BasePaginatedAction {
         this.purchaseOrderManager = purchaseOrderManager;
     }
 
+    public PurchaseOrderPDFGenerator getPurchaseOrderPDFGenerator() {
+        return purchaseOrderPDFGenerator;
+    }
+
+    public void setPurchaseOrderPDFGenerator(PurchaseOrderPDFGenerator purchaseOrderPDFGenerator) {
+        this.purchaseOrderPDFGenerator = purchaseOrderPDFGenerator;
+    }
 }

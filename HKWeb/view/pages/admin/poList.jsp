@@ -73,6 +73,7 @@
         <th>ID</th>
         <th>Create Date</th>
         <th>Created By</th>
+        <th>No. of Sku</th>
         <th>Approver</th>
         <th>Supplier</th>
         <th>Supplier TIN</th>
@@ -91,9 +92,11 @@
           <td>${purchaseOrder.id}</td>
           <td><fmt:formatDate value="${purchaseOrder.createDate}" type="both" timeStyle="short"/></td>
           <td>${purchaseOrder.createdBy.name}</td>
-            <c:forEach items="${purchaseOrder.poLineItems}" var="purchaseOrderLineItems">
-                ${purchaseOrderLineItems.sku}
+            <td>
+            <c:forEach items="${purchaseOrder.poLineItems}" var="purchaseOrderLineItems" varStatus="counter">
+                <c:if test="${counter.last}" >${counter.count}</c:if>
             </c:forEach>
+            </td>
           <td>${purchaseOrder.approvedBy.name}</td>
           <td>${purchaseOrder.supplier.name}</td>
           <td>${purchaseOrder.supplier.tinNumber}</td>
@@ -127,6 +130,8 @@
             &nbsp;
             <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="poInExcel" target="_blank">Excel
               <s:param name="purchaseOrder" value="${purchaseOrder.id}"/></s:link>
+              <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="poInPdf" target="_blank">PDF
+                            <s:param name="purchaseOrder" value="${purchaseOrder.id}"/></s:link>
             <c:if test="${purchaseOrder.purchaseOrderStatus.id >= approved}">
                 <br/>
                 <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="generateGRNCheck">Create GRN
