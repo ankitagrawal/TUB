@@ -124,6 +124,13 @@ public class ProductAction extends BaseAction {
                 affiliate = affiliateDao.getAffilateByUser(user);
             }
         }
+        
+        boolean isUserHkEmployee = user !=null ? user.isHKEmployee() : false;
+        
+        if(!isUserHkEmployee && product.isDeleted()!=null && product.isDeleted() == true ){
+            WebContext.getResponse().setStatus(404); // redirection
+            return new ForwardResolution("/pages/error/noPage.html");    
+        }
 
         List<Product> relatedProducts = product.getRelatedProducts();
         if (relatedProducts == null || relatedProducts.size() == 0) {
