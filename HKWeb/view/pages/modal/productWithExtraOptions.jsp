@@ -8,8 +8,6 @@
 <s:layout-definition>
   <%
     Product product = (Product) pageContext.getAttribute("product");
-    Long productReferrerId = (Long)pageContext.getAttribute("productReferrerId");
-    pageContext.setAttribute("productReferrerId", productReferrerId);
     pageContext.setAttribute("product", product);
   %>
   <div class="jqmWindow" id="cartWindow2">
@@ -29,7 +27,6 @@
             </c:forEach>
           </tr>
           <s:form beanclass="com.hk.web.action.core.cart.AddToCartWithExtraOptionsAction" class="addToCartForm2">
-            <s:hidden name="productReferrerId" value="${productReferrerId}"/>
             <c:set value="${product.productVariants[0]}" var="variant"/>
             <tr height="50px;">
               <s:hidden name="productLineItemWithExtraOptionsDtos[0].productVariant"

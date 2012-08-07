@@ -8,8 +8,6 @@
 <s:layout-definition>
 	<%
 		Product product = (Product) pageContext.getAttribute("product");
-        Long productReferrerId = (Long)pageContext.getAttribute("productReferrerId");
-        pageContext.setAttribute("productReferrerId", productReferrerId);
 		pageContext.setAttribute("product", product);
 	%>
 
@@ -142,7 +140,6 @@
 				<c:if test="${variant.freeProductVariant != null}">
 					<p style="font-weight:bold;font-size:1.0em">+ FREE!! ${variant.freeProductVariant.product.name}</p>
 				</c:if>
-                <s:hidden name="productReferrerId" value="${productReferrerId}"/>
 				<s:submit name="addToCart" value="Place Order"
 				          class="addToCartButton cta button_green"/>
 			</div>

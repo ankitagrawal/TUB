@@ -8,10 +8,8 @@
 
 <s:layout-definition>
   <%    
-    Long productReferrerId = (Long)pageContext.getAttribute("productReferrerId");
     Product product = (Product) pageContext.getAttribute("product");
     pageContext.setAttribute("product", product);
-    pageContext.setAttribute("productReferrerId", productReferrerId);
   %>
   <div class='variants'>
     <div class='add_to_cart'>
@@ -98,7 +96,6 @@
 
             <s:hidden name="productVariantList[${ctr.index}]" value="${variant.id}"/>
             <s:hidden name="productVariantList[${ctr.index}].qty" value="1" class="lineItemQty"/>
-            <s:hidden name="productReferrerId" value="${productReferrerId}"/>
           </c:if>
         </c:forEach>
       </div>

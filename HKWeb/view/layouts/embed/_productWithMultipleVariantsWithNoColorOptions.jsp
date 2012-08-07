@@ -4,10 +4,8 @@
 
 <s:layout-definition>
   <%
-    Long productReferrerId = (Long)pageContext.getAttribute("productReferrerId");
     Product product = (Product) pageContext.getAttribute("product");
     pageContext.setAttribute("product", product);
-    pageContext.setAttribute("productReferrerId", productReferrerId);
   %>
 <div class='variants'>
     <span style="font-style: italic; font-size: 16px;;"> ${hk:getNonDeletedVariants(product)}</span>
@@ -119,7 +117,6 @@
 
                     </c:when>
                     <c:otherwise>
-                      <s:hidden name="productReferrerId" value="${productReferrerId}"/>
                       <s:submit name="addToCart" value="Place Order"
                                 class="addToCartButton cta button_green"
                                 style="float:right;"/>

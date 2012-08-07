@@ -5,10 +5,8 @@
 
 <s:layout-definition>
 <%
-    Long productReferrerId = (Long)pageContext.getAttribute("productReferrerId");
     Product product = (Product) pageContext.getAttribute("product");
     pageContext.setAttribute("product", product);
-    pageContext.setAttribute("productReferrerId", productReferrerId);    
 %>
 
 <c:set value="${product.productVariants[0]}" var="variant"/>
@@ -471,7 +469,6 @@
 
     <div class="floatright" style="height:80px;border-left:solid #CCCCCC;padding:20px;">
       <s:form beanclass="com.hk.web.action.core.cart.AddToCartWithLineItemConfigAction" onsubmit="return false;">
-        <s:hidden name="productReferrerId" value="${productReferrerId}"/>
         <s:submit name="buyNow" id="buyNow" value="Buy Now" class=""
             />
       </s:form>
