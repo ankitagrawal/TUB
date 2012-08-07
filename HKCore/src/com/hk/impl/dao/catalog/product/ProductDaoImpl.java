@@ -41,7 +41,7 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
         }
         if (product.getGoogleAdDisallowed() == null) {
             product.setGoogleAdDisallowed(Boolean.FALSE);
-        }
+        }           
         return (Product) super.save(product);
     }
 

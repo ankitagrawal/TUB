@@ -258,11 +258,9 @@ public class XslParser {
           String isGoogleAdDisallowed = getCellValue(XslConstants.IS_GOOGLE_AD_DISALLOWED, rowMap, headerMap);
           boolean isGoogleAdDisallowedBoolean = StringUtils.isNotBlank(isGoogleAdDisallowed) && isGoogleAdDisallowed.trim().toLowerCase().equals("y") ? true : false;
           product.setGoogleAdDisallowed(isGoogleAdDisallowedBoolean);
-
           String isJit = getCellValue(XslConstants.IS_JIT, rowMap, headerMap);
           boolean isJitBoolean =  StringUtils.isNotBlank(isJit) && isJit.trim().toLowerCase().equals("y") ? true : false;
           product.setJit(isJitBoolean);  
-
           product.setProductVariants(productVariants);
           product.setRelatedProducts(getRelatedProductsFromExcel(getCellValue(XslConstants.RELATED_PRODUCTS, rowMap, headerMap)));
           productDeleted = true;
