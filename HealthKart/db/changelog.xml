@@ -8321,4 +8321,21 @@
         <addForeignKeyConstraint baseColumnNames="runsheet_id" baseTableName="runsheet_has_consignment" constraintName="fk_runsheet_has_consignment_runsheet1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="runsheet" referencesUniqueColumn="false"/>
     </changeSet>
     
+    <changeSet author="Tarun (generated)" id="1344319279457-1">
+        <addColumn tableName="consignment_status">
+            <column name="status" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1344319279457-2">
+        <addColumn tableName="hub">
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1344319279457-3">
+        <dropColumn columnName="name" tableName="consignment_status"/>
+    </changeSet>
 </databaseChangeLog>
