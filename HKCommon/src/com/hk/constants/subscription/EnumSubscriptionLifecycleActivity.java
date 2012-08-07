@@ -11,19 +11,19 @@ import com.hk.domain.subscription.SubscriptionLifecycleActivity;
  * To change this template use File | Settings | File Templates.
  */
 public enum EnumSubscriptionLifecycleActivity {
-    AddedToCart(5L,"Subscription added to Cart"),
-    SubscriptionAbandoned(6L,"Subscription Abandoned"),
-    SubscriptionPlaced(10L, "Subscription Placed"),
-    AddressChanged(15L, "Address Changed"),
-    ConfirmedSubscriptionOrder(16L, "Confirmed Subscription Order"),
-    EscalatedToActionQueue(17L,"Subscription Escalated to action queue"),
-    NextShipmentDateChanged(20L, "Next Shipment Date Changed"),
-    SubscriptionOrderPlaced(25L, "Subscription Order Placed"),
-    SubscriptionOrderDelivered(30L, "Subscription Order Delivered"),
-    SubscriptionExpired(40L, "Subscription Expired"),
-    OutOfStockEmailSent(50L, "Product Variant Out of Stock Email"),
+    AddedToCart(10L,"Subscription added to Cart"),
+    SubscriptionAbandoned(20L,"Subscription Abandoned"),
+    SubscriptionPlaced(30L, "Subscription Placed"),
+    AddressChanged(40L, "Address Changed"),
+    ConfirmedSubscriptionOrder(50L, "Confirmed Subscription Order"),
+    EscalatedToActionQueue(60L,"Subscription Escalated to action queue"),
+    NextShipmentDateChanged(70L, "Next Shipment Date Changed"),
+    SubscriptionOrderPlaced(80L, "Subscription Order Placed"),
+    SubscriptionOrderDelivered(90L, "Subscription Order Delivered"),
+    SubscriptionExpired(100L, "Subscription Expired"),
+    OutOfStockEmailSent(110L, "Product Variant Out of Stock Email"),
     LoggedComment(120L, "Logged Comment"),
-    SubscriptionCancelled(199L, "Subscription Cancelled");
+    SubscriptionCancelled(999L, "Subscription Cancelled");
 
     private String name;
     private Long id;
