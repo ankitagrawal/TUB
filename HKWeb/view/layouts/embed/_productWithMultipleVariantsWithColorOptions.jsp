@@ -112,11 +112,13 @@
                                               </li>
                                           </c:when>
                                           <c:otherwise>
-                                              <img src="${hk:getS3ImageUrl(imageSmallSize, variant.mainImageId,isSecure)}"
-                                                   alt="${product.name}"
-                                                   title="${variant.colorOptionsValue}">
-                                              <s:checkbox name="productVariantList[${ctr.index}].selected"
-                                                          class="checkbox" style="align:center;padding-left:2px;"/>
+                                              <div class="color_box">
+                                                  <img src="${hk:getS3ImageUrl(imageSmallSize, variant.mainImageId,isSecure)}"
+                                                       alt="${product.name}"
+                                                       title="${variant.colorOptionsValue}">
+                                                  <s:checkbox name="productVariantList[${ctr.index}].selected"
+                                                              class="checkbox" style="align:center;padding-left:2px;"/>
+                                              </div>
                                           </c:otherwise>
                                       </c:choose>
                                   </c:if>
