@@ -704,9 +704,6 @@
                 height: maxHtOfOptions
             });
 
-//            alert("max ht: " + maxHtOfOptions);
-//            alert("avail options  ht: " + $(availableOptions).height());
-
             $(arrow).css({
                 paddingTop:10 + maxHtOfOptions / 2
             });
