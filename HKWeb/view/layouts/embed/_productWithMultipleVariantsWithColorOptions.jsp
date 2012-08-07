@@ -74,48 +74,52 @@
 
                           <input type="hidden" class="variantMainImageId" value="${variant.mainProductImageId}"/>
                           <c:choose>
-                              <c:when test="${variant.mainImageId != null}">
+                              <c:when test="${hk:isNotBlank(variant.colorHex)}">
                                   <div class="color_box">
-                                      <c:if test="${hk:isNotBlank(variant.colorHex)}">
-                                          <c:choose>
-                                              <c:when test="${variant.mainProductImageId != null}">
-                                                  <li><a href='javascript:void(0);'
-                                                         rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, variant.mainProductImageId,isSecure)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, variant.mainProductImageId,isSecure)}'}">
-                                                      <div style="height: 40px; width: 40px; background-color:${variant.colorHex};"
-                                                           title="${variant.colorOptionsValue}">
-                                                          &nbsp;</div></a>
-                                                      <s:checkbox name="productVariantList[${ctr.index}].selected"
-                                                                  class="checkbox"
-                                                                  style="align:center;padding-left:2px;"/>
-                                                  </li>
-                                              </c:when>
-                                              <c:otherwise>
+                                      <c:choose>
+                                          <c:when test="${variant.mainProductImageId != null}">
+                                              <li><a href='javascript:void(0);'
+                                                     rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, variant.mainProductImageId,isSecure)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, variant.mainProductImageId,isSecure)}'}">
                                                   <div style="height: 40px; width: 40px; background-color:${variant.colorHex};"
                                                        title="${variant.colorOptionsValue}">
                                                       &nbsp;</div>
+                                              </a>
                                                   <s:checkbox name="productVariantList[${ctr.index}].selected"
-                                                              class="checkbox" style="align:center;padding-left:2px;"/>
-                                              </c:otherwise>
-                                          </c:choose>
-                                      </c:if>
+                                                              class="checkbox"
+                                                              style="align:center;padding-left:2px;"/>
+                                              </li>
+                                          </c:when>
+                                          <c:otherwise>
+                                              <div style="height: 40px; width: 40px; background-color:${variant.colorHex};"
+                                                   title="${variant.colorOptionsValue}">
+                                                  &nbsp;</div>
+                                              <s:checkbox name="productVariantList[${ctr.index}].selected"
+                                                          class="checkbox" style="align:center;padding-left:2px;"/>
+                                          </c:otherwise>
+                                      </c:choose>
                                   </div>
                               </c:when>
                               <c:otherwise>
-                                  <c:choose>
-                                      <c:when test="${variant.mainProductImageId != null}">
-                                          <li><a href='javascript:void(0);'
-                                                 rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, variant.mainProductImageId,isSecure)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, variant.mainProductImageId,isSecure)}'}"><img
-                                                  src='${hk:getS3ImageUrl(imageSmallSize, variant.mainImageId,isSecure)}' title="${variant.colorOptionsValue}"></a>
-                                              <s:checkbox name="productVariantList[${ctr.index}].selected" class="checkbox" style="align:center;padding-left:2px;"/>
-                                          </li>
-                                      </c:when>
-                                      <c:otherwise>
-                                          <img src="${hk:getS3ImageUrl(imageSmallSize, variant.mainImageId,isSecure)}" alt="${product.name}"
-                                               title="${variant.colorOptionsValue}">
-                                          <s:checkbox name="productVariantList[${ctr.index}].selected"
-                                                      class="checkbox" style="align:center;padding-left:2px;"/>
-                                      </c:otherwise>
-                                  </c:choose>
+                                  <c:if test="${variant.mainImageId != null}">
+                                      <c:choose>
+                                          <c:when test="${variant.mainProductImageId != null}">
+                                              <li><a href='javascript:void(0);'
+                                                     rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, variant.mainProductImageId,isSecure)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, variant.mainProductImageId,isSecure)}'}"><img
+                                                      src='${hk:getS3ImageUrl(imageSmallSize, variant.mainImageId,isSecure)}'
+                                                      title="${variant.colorOptionsValue}"></a>
+                                                  <s:checkbox name="productVariantList[${ctr.index}].selected"
+                                                              class="checkbox" style="align:center;padding-left:2px;"/>
+                                              </li>
+                                          </c:when>
+                                          <c:otherwise>
+                                              <img src="${hk:getS3ImageUrl(imageSmallSize, variant.mainImageId,isSecure)}"
+                                                   alt="${product.name}"
+                                                   title="${variant.colorOptionsValue}">
+                                              <s:checkbox name="productVariantList[${ctr.index}].selected"
+                                                          class="checkbox" style="align:center;padding-left:2px;"/>
+                                          </c:otherwise>
+                                      </c:choose>
+                                  </c:if>
                               </c:otherwise>
                           </c:choose>
                       <s:hidden name="productVariantList[${ctr.index}]" value="${variant.id}"/>
