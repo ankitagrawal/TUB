@@ -115,13 +115,13 @@ public class OrderSummaryAction extends BaseAction {
             if (lineItem != null && lineItem.getProductVariant() != null) {
                 ProductVariant productVariant = lineItem.getProductVariant();
                 if (productVariant.getProduct().isGroundShipping()) {
-                 groundshipItemweight =  productVariant.getWeight()*1000;
-                    if (groundshipItemweight == null){
-                    groundshipItemweight= 2.0;
+                    groundshipItemweight = productVariant.getWeight() * 1000;
+                    if (groundshipItemweight == null) {
+                        groundshipItemweight = 2.0;
                     }
                     hideCod = true;
 
-                    lineItem_1 =  lineItem;
+                    lineItem_1 = lineItem;
                     break;
                 }
             }
@@ -160,28 +160,7 @@ public class OrderSummaryAction extends BaseAction {
         }
 
         if (hideCod) {
-//            Double reconciliationcost =  0.2 * pricingDto.getShippingTotal();
-//            double Shippingcost = pricingDto.getShippingTotal();
-//            double cost =       Shippingcost +  reconciliationcost;
-//              cashbackOnGroundshipped = pricingDto.getCashbackOnGroundShippedItem(cost);
-//
-////            Set<ShippingOrder> shippingOrders = order.getShippingOrders();
-////            if (shippingOrders != null) {
-////                for (ShippingOrder shippingOrder : order.getShippingOrders()) {
-//////                    getAdminShippingOrderService().cancelShippingOrder(shippingOrder);
-////
-////                    if (shippingOrder.getLineItems().contains(lineItem_1)) {
-////                        Double shippingCost = shipmentPricingEngine.calculateShipmentCost(shippingOrder);
-////                        Double reconciliationcost = shipmentPricingEngine.calculateReconciliationCost(shippingOrder);
-////                        Double totalCost = shippingCost + reconciliationcost;
-//////                        cashbackOnGroundshipped = pricingDto.getCashbackOnGroundShippedItem(totalCost);
-////                    }
-////                }
-////            }
-
-         cashbackOnGroundshipped=   courierService. getCashbackOnGroundShippedItem(pricingDto,order,groundshipItemweight);
-
-            
+         cashbackOnGroundshipped=   courierService. getCashbackOnGroundShippedItem(pricingDto,order,groundshipItemweight);            
         }
 
 
