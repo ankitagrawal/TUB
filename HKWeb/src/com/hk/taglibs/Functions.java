@@ -451,7 +451,7 @@ public class Functions {
 
     public static List<Product> getCategoryHeadingProductsSortedByOrder(Long primaryCategoryHeadingId, String productReferrer){
       ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
-      return productService.ProductsSortedByOrder(primaryCategoryHeadingId, productReferrer);
+      return productService.productsSortedByOrder(primaryCategoryHeadingId, productReferrer);
     }
 
     public static boolean isComboInStock(Object o) {

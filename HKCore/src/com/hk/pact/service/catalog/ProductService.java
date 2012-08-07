@@ -37,7 +37,7 @@ public interface ProductService {
      */
     public boolean doesBrandExist(String brandName);
     
-    public String getProductUrl(Product product);
+    public String getProductUrl(Product product,boolean isSecure);
     
     public List<Product> getAllProducts();
 
@@ -81,7 +81,7 @@ public interface ProductService {
 
     public ProductOption findProductOptionByNameAndValue(String name, String value);
 
-    public List<Product> ProductsSortedByOrder(Long primaryCategoryHeadingId, String productReferrer);
+    public List<Product> productsSortedByOrder(Long primaryCategoryHeadingId, String productReferrer);
 
     public boolean isComboInStock(Combo combo);
 
