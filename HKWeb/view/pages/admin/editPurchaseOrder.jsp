@@ -49,6 +49,9 @@
                                 '<td></td>' +
                                 '  <td class="pvDetails"></td>' +
                                 '<td></td>' +
+                                '<td></td>' +
+                                '<td></td>' +
+                                '<td></td>' +
                                 '  <td>' +
                                 '    <input type="text" name="poLineItems[' + nextIndex + '].qty" class="quantity" />' +
                                 '  </td>' +
@@ -226,6 +229,7 @@
         <th>Qty</th>
         <th>Cost Price<br/>(Without TAX)</th>
         <th>MRP</th>
+        <th>Margin(MRP vs CP)</th>
         <th>Taxable</th>
         <th>Tax</th>
         <th>Surcharge</th>
@@ -284,13 +288,13 @@
                 <fmt:formatNumber value="${sku.tax.value * 100}" maxFractionDigits="2"/>
             </td>
             <td>
-                ${netInventoryWrtWarehouse}
+                    ${netInventoryWrtWarehouse}
             </td>
             <td>
-                ${netInventory}
+                    ${netInventory}
             </td>
             <td>
-                ${lastThirtyDaysSale}
+                    ${lastThirtyDaysSale}
             </td>
             <td>
                 <s:text name="poLineItems[${ctr.index}].qty" value="${poLineItemDto.poLineItem.qty}" class="quantity"/>
@@ -301,6 +305,9 @@
             </td>
             <td>
                 <s:text class="mrp" name="poLineItems[${ctr.index}].mrp" value="${poLineItemDto.poLineItem.mrp}"/>
+            </td>
+            <td>
+                <fmt:formatNumber value="${poLineItemDto.marginMrpVsCP}" maxFractionDigits="2"/>
             </td>
             <td>
                 <fmt:formatNumber value="${poLineItemDto.taxable}" maxFractionDigits="2"/>
@@ -319,7 +326,7 @@
     </tbody>
     <tfoot>
     <tr>
-        <td colspan="9">Total</td>
+        <td colspan="13">Total</td>
         <td><fmt:formatNumber value="${pa.purchaseOrderDto.totalTaxable}" maxFractionDigits="2"/></td>
         <td><fmt:formatNumber value="${pa.purchaseOrderDto.totalTax}" maxFractionDigits="2"/></td>
         <td><fmt:formatNumber value="${pa.purchaseOrderDto.totalSurcharge}" maxFractionDigits="2"/></td>

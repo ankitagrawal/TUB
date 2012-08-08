@@ -233,8 +233,8 @@ public class POAction extends BasePaginatedAction {
     public Resolution poInPdf() {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-
             xlsFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() + ".pdf");
+            String logoImagePath = getContext().getRequest().getContextPath() + "/images/logo/HealthKartLogo.png";
             purchaseOrderDto = getPurchaseOrderManager().generatePurchaseOrderDto(purchaseOrder);
             getPurchaseOrderPDFGenerator().generatePurchaseOrderPdf(xlsFile.getPath(), purchaseOrderDto);
             addRedirectAlertMessage(new SimpleMessage("Purchase Order successfully generated"));

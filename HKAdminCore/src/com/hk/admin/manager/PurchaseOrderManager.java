@@ -193,6 +193,7 @@ public class PurchaseOrderManager {
             Double tax = 0.0;
             Double surcharge = 0.0;
             Double payable = 0.0;
+            Double marginMrpVsCP = 0.0;
             ProductVariant productVariant = poLineItem.getSku().getProductVariant();
             Sku sku = skuService.getSKU(productVariant, warehouse);
 
@@ -200,6 +201,9 @@ public class PurchaseOrderManager {
             poLineItemDto.setPoLineItem(poLineItem);
             if (poLineItem != null && poLineItem.getCostPrice() != null && poLineItem.getQty() != null) {
                 taxable = poLineItem.getCostPrice() * poLineItem.getQty();
+                if(poLineItem.getMrp() != null) {
+                    marginMrpVsCP = (poLineItem.getMrp() - poLineItem.getCostPrice())/poLineItem.getCostPrice()*100;
+                }
             }
             if (purchaseOrder.getSupplier() != null && purchaseOrder.getSupplier().getState() != null && productVariant != null && sku.getTax() != null) {
                 TaxComponent taxComponent = TaxUtil.getSupplierTaxForPV(purchaseOrder.getSupplier(), sku, taxable);
@@ -220,12 +224,13 @@ public class PurchaseOrderManager {
             poLineItemDto.setSurcharge(surcharge);
             poLineItemDto.setTax(tax);
 
+            poLineItemDto.setMarginMrpVsCP(marginMrpVsCP);
+
             poLineItemDtoList.add(poLineItemDto);
             totalTaxable += taxable;
             totalTax += tax;
             totalSurcharge += surcharge;
             totalPayable += payable;
-
         }
         purchaseOrderDto.setPoLineItemDtoList(poLineItemDtoList);
         purchaseOrderDto.setTotalTaxable(totalTaxable);
