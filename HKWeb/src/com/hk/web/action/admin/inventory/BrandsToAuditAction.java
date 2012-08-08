@@ -164,7 +164,7 @@ public class BrandsToAuditAction extends BasePaginatedAction {
 		HashSet<String> params = new HashSet<String>();
 		params.add("brand");
 		params.add("warehouse");
-		params.add("auditor");
+		params.add("auditorLogin");
 		params.add("startDate");
 		params.add("endDate");
 		return params;
