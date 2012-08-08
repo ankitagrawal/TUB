@@ -806,7 +806,7 @@
                         return true;
                     }
                 }
-                $('.addToCartForm').ajaxForm({dataType: 'json', data: params, success: _addToCart});
+               /* $('.addToCartForm').ajaxForm({dataType: 'json', data: params, success: _addToCart});*/
             });
             </c:if>
 
@@ -831,7 +831,7 @@
                 }, 500);
             }
 
-            /*$('.addToCartForm').ajaxForm({dataType: 'json', success: _addToCart});*/
+            $('.addToCartForm').ajaxForm({dataType: 'json', data:params, success: _addToCart});
 
             $(".top_link, .go_to_top").click(function(event) {
                 event.preventDefault();
