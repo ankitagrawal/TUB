@@ -6,8 +6,11 @@ import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.combo.ComboInstance;
 import com.hk.domain.core.CartLineItemType;
+import com.hk.domain.subscription.Subscription;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -78,6 +81,14 @@ public class CartLineItem implements java.io.Serializable, Comparable<CartLineIt
 
   @Column(name = "version", nullable = false)
   private Long version = new Long(1);
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @Fetch(value = FetchMode.SELECT)
+    @JoinTable(name = "subscription_cart_line_item",
+            joinColumns = @JoinColumn(name = "cart_line_item_id", referencedColumnName = "id", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "subscription_id", referencedColumnName = "id", nullable = false)
+    )
+    private Subscription subscription;
 
   public CartLineItem() {
 

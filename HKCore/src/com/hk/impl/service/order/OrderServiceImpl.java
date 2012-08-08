@@ -47,7 +47,6 @@ import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.order.*;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pojo.DummyOrder;
-import com.hk.pricing.PricingEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,8 +91,6 @@ public class OrderServiceImpl implements OrderService {
     private OrderLoggingService orderLoggingService;
     @Autowired
     private OrderSplitterService orderSplitterService;
-    @Autowired
-    private PricingEngine pricingEngine;
 
     @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
     private Double codMinAmount;
@@ -525,11 +522,4 @@ public class OrderServiceImpl implements OrderService {
         this.orderLoggingService = orderLoggingService;
     }
 
-    public PricingEngine getPricingEngine() {
-        return pricingEngine;
-    }
-
-    public void setPricingEngine(PricingEngine pricingEngine) {
-        this.pricingEngine = pricingEngine;
-    }
 }

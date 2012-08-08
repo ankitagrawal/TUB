@@ -35,18 +35,12 @@ public class SubscriptionProductDaoImpl extends BaseDaoImpl implements Subscript
         return (SubscriptionProduct) findUniqueByNamedParams("from SubscriptionProduct sp where sp.product = :product ", new String[]{"product"}, new Object[]{product});
     }
 
-    public SubscriptionProduct findByProductId(String productId){
-        return (SubscriptionProduct) findUniqueByNamedParams("from SubscriptionProduct sp where sp.product.id = :productId ", new String[]{"productId"}, new Object[]{productId});
-    }
-
     public List<SubscriptionProduct> findByCategory(Category category){
         List<SubscriptionProduct> subscriptionProductList=new ArrayList<SubscriptionProduct>();
         List<Product> productList=new ArrayList<Product>();
-        productList = productDao.getAllProductByCategory(category.getName());
+        productList = productDao.getAllSubscribableProductsByCategory(category.getName());
         for(Product product: productList){
-            if(product.isSubscribable()){
                 subscriptionProductList.add(this.findByProduct(product));
-            }
         }
         return subscriptionProductList;
     }

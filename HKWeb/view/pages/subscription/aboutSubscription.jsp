@@ -26,6 +26,7 @@
                 });
             });
         </script>
+        <img src="../../images/banners/Subscription-banner.jpg" alt="subscription banner">
         <%
             if(aba.isFaqs()){
         %>

@@ -19,8 +19,6 @@ public interface SubscriptionProductDao extends BaseDao {
 
     public SubscriptionProduct findByProduct(Product product);
 
-    public SubscriptionProduct findByProductId(String productId);
-
     public List<SubscriptionProduct> findByCategory(Category category);
 
 }

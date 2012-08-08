@@ -35,10 +35,6 @@ public class SubscriptionProductServiceImpl implements SubscriptionProductServic
         return subscriptionProductDao.findByProduct(product);
     }
 
-    public SubscriptionProduct findByProductId(String productId){
-        return subscriptionProductDao.findByProductId(productId);
-    }
-
     public SubscriptionProduct findByProductVariant(ProductVariant productVariant){
         return  this.findByProduct(productVariant.getProduct());
     }

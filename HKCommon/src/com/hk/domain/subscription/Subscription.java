@@ -114,8 +114,8 @@ public class Subscription  implements java.io.Serializable {
     @OneToOne(fetch = FetchType.LAZY)
     @Fetch(value = FetchMode.SELECT)
     @JoinTable(name = "subscription_cart_line_item",
-            joinColumns = @JoinColumn(name = "subscription_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "cart_line_item_id", referencedColumnName = "id")
+            joinColumns = @JoinColumn(name = "subscription_id", referencedColumnName = "id",nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "cart_line_item_id", referencedColumnName = "id", nullable = false)
     )
     private CartLineItem cartLineItem;
 

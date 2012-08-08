@@ -61,6 +61,10 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
         return getSession().createQuery("select p from Product p where p.primaryCategory.name = :category order by p.orderRanking asc").setString("category", category).list();
     }
 
+    public List<Product> getAllSubscribableProductsByCategory(String category){
+        return getSession().createQuery("select p from Product p where p.primaryCategory.name = :category and isSubscribable=true order by p.orderRanking asc").setString("category", category).list();
+    }
+
     public List<Product> getAllProductNotByCategory(List<String> categoryNames) {
         return getSession().createQuery("select p from Product p where p.primaryCategory.name not in (:category) and deleted = :nonDeleted and isGoogleAdDisallowed != :adAllowed order by p.orderRanking asc")
                 .setParameterList("category", categoryNames)

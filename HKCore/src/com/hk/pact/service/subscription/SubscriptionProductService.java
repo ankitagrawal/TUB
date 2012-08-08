@@ -19,8 +19,6 @@ public interface SubscriptionProductService {
 
     public SubscriptionProduct findByProduct(Product product);
 
-    public SubscriptionProduct findByProductId(String productId);
-
     public SubscriptionProduct findByProductVariant(ProductVariant productVariant);
 
     public List<SubscriptionProduct> findByCategory(Category category);
