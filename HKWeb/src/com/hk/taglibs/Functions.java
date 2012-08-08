@@ -1,5 +1,6 @@
 package com.hk.taglibs;
 
+import com.akube.framework.util.DateUtils;
 import com.akube.framework.util.FormatUtils;
 import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
 import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
@@ -31,6 +32,7 @@ import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.user.User;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.dto.menu.MenuNode;
 import com.hk.helper.MenuHelper;
 import com.hk.manager.OrderManager;
@@ -46,6 +48,8 @@ import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
+import com.hk.report.dto.inventory.InventorySoldDto;
+import com.hk.report.pact.service.catalog.product.ReportProductVariantService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.CartLineItemUtil;
 import com.hk.util.HKImageUtils;
@@ -210,6 +214,22 @@ public class Functions {
         }
     }
 
+    public static Long netInventoryInWarehouse(Object o1, Object o2) {
+        AdminInventoryService adminInventoryService = ServiceLocatorFactory.getService(AdminInventoryService.class);
+        Warehouse warehouse;
+        if(o2 instanceof Warehouse) {
+            warehouse = (Warehouse) o2;
+        } else return null;
+
+        if (o1 instanceof Sku) {
+            Sku sku = (Sku) o1;
+            return adminInventoryService.getNetInventoryInWarehouse(sku, warehouse);
+        } else if (o1 instanceof ProductVariant) {
+            ProductVariant productVariant = (ProductVariant) o1;
+            return adminInventoryService.getNetInventoryInWarehouse(productVariant, warehouse);
+        } else return null;
+    }
+
     public static Long bookedQty(Object o) {
         AdminInventoryService adminInventoryService = ServiceLocatorFactory.getService(AdminInventoryService.class);
         if (o instanceof Sku) {
@@ -334,18 +354,18 @@ public class Functions {
         List<ProductVariant> productVariants = productVariantDao.findVariantsFromFreeVariant((ProductVariant) o);
         return productVariants != null && !productVariants.isEmpty();
     }
-    
+
     public static String getExtraOptionsAsString(Object o1,String str) {
         CartLineItem cartLineItem = (CartLineItem) o1;
 //        String seperator = (String) o2;
         return CartLineItemUtil.getExtraOptionsAsString(cartLineItem, str);
-      }
+    }
 
-      public static String getConfigOptionsAsString(Object o1,String str) {
+    public static String getConfigOptionsAsString(Object o1,String str) {
         CartLineItem cartLineItem = (CartLineItem) o1;
 //        Character seperator = (Character) o2;
         return CartLineItemUtil.getConfigOptionsAsString(cartLineItem, str);
-      }
+    }
 
     public static Boolean alreadyPublishedDeal(Object o) {
         RewardPointDao rewardPointDao = ServiceLocatorFactory.getService(RewardPointDao.class);
@@ -459,5 +479,14 @@ public class Functions {
         Product product = (Product)o;
         ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
         return productService.getRelatedMoogaProducts(product);
+    }
+
+    public static Long findInventorySoldInGivenNoOfDays(Sku sku, Warehouse warehouse, int noOfDays) {
+        ReportProductVariantService reportProductVariantService = ServiceLocatorFactory.getService(ReportProductVariantService.class);
+
+        Calendar calendar = Calendar.getInstance();
+        Date endDate = calendar.getTime();
+
+        return reportProductVariantService.findInventorySoldByDateAndProduct(DateUtils.getDateMinusDays(noOfDays), endDate, sku.getProductVariant().getId(), warehouse).getCountSold();
     }
 }

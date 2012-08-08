@@ -88,14 +88,16 @@
       </tr>
       </thead>
       <c:forEach items="${poa.purchaseOrderList}" var="purchaseOrder" varStatus="ctr">
+          <%--<c:set var="noOfSkuInPO" value="<%=poa.getPurchaseOrderList() != null ? poa.getPurchaseOrder().getPoLineItems().size() : 0%>"/>--%>
         <tr>
           <td>${purchaseOrder.id}</td>
           <td><fmt:formatDate value="${purchaseOrder.createDate}" type="both" timeStyle="short"/></td>
           <td>${purchaseOrder.createdBy.name}</td>
             <td>
-            <c:forEach items="${purchaseOrder.poLineItems}" var="purchaseOrderLineItems" varStatus="counter">
+                <%--${noOfSkuInPO}--%>
+            <%--<c:forEach items="${purchaseOrder.poLineItems}" var="purchaseOrderLineItems" varStatus="counter">
                 <c:if test="${counter.last}" >${counter.count}</c:if>
-            </c:forEach>
+            </c:forEach>--%>
             </td>
           <td>${purchaseOrder.approvedBy.name}</td>
           <td>${purchaseOrder.supplier.name}</td>

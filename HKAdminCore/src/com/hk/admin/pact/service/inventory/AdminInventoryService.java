@@ -17,6 +17,7 @@ import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.user.User;
+import com.hk.domain.warehouse.Warehouse;
 
 public interface AdminInventoryService {
 
@@ -50,6 +51,10 @@ public interface AdminInventoryService {
     public Long getNetInventory(Sku sku);
 
     public Long getNetInventory(ProductVariant productVariant);
+
+    public Long getNetInventoryInWarehouse(Sku sku, Warehouse warehouse);
+
+    public Long getNetInventoryInWarehouse(ProductVariant productVariant, Warehouse warehouse);
 
     public void adjustInventory(SkuGroup skuGroup, Long qty);
 

@@ -17,6 +17,8 @@ import org.springframework.stereotype.Component;
 import java.io.FileOutputStream;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -74,6 +76,7 @@ public class PurchaseOrderPDFGenerator {
 
         PdfPCell c1 = new PdfPCell();
         Paragraph supplierParagraph = new Paragraph("Supplier", new Font(Font.FontFamily.TIMES_ROMAN, 10,Font.BOLD));
+
         c1.addElement(supplierParagraph);
         supplierDetailTable.addCell(c1);
 
@@ -148,6 +151,7 @@ public class PurchaseOrderPDFGenerator {
         poDetailTable.setWidths(widths);
         poDetailTable.setWidthPercentage(100f);
 
+        java.util.List<Map<String, Font>> columnContentWithFont = new ArrayList<Map<String, Font>>();
         PdfPCell cell = new PdfPCell();
 
         cell.addElement(new Paragraph("S.No.", new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.BOLD)));

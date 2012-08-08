@@ -29,11 +29,11 @@ public class ProductVariantInventoryDaoImpl extends BaseDaoImpl implements Produ
         return netInv;
     }
 
-    public Long getNetInventoryForSkuInWarehouse(Sku sku, Warehouse warehouse) {
-        return getNetInventoryForSkuInWarehouse(Arrays.asList(sku), warehouse);
+    public Long getNetInventoryInWarehouse(Sku sku, Warehouse warehouse) {
+        return getNetInventoryInWarehouse(Arrays.asList(sku), warehouse);
     }
 
-    public Long getNetInventoryForSkuInWarehouse(List<Sku> skuList, Warehouse warehouse) {
+    public Long getNetInventoryInWarehouse(List<Sku> skuList, Warehouse warehouse) {
         Long netInv = 0L;
         if (skuList != null && !skuList.isEmpty()) {
             String query = "select sum(pvi.qty) from ProductVariantInventory pvi where pvi.sku in (:skuList) and pvi.sku.warehouse = :warehouse";

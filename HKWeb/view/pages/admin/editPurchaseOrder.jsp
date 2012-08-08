@@ -241,19 +241,8 @@
     <c:forEach var="poLineItemDto" items="${pa.purchaseOrderDto.poLineItemDtoList}" varStatus="ctr">
         <c:set value="${poLineItemDto.poLineItem.sku.productVariant}" var="productVariant"/>
         <c:set value="${poLineItemDto.poLineItem.sku}" var="sku"/>
-        <%
-            ProductVariantInventoryDao productVariantInventoryDao = ServiceLocatorFactory.getService(ProductVariantInventoryDao.class);
-            Sku sku = (Sku)pageContext.getAttribute("sku");
-            pageContext.setAttribute("netInventory", productVariantInventoryDao.getNetInventory(sku));
-            EditPurchaseOrderAction editPurchaseOrderAction = (EditPurchaseOrderAction)pageContext.getAttribute("pa");
-            Warehouse warehouse = editPurchaseOrderAction.getPurchaseOrder().getWarehouse();
-            pageContext.setAttribute("netInventoryWrtWarehouse", productVariantInventoryDao.getNetInventoryForSkuInWarehouse(sku, warehouse));
-            ReportProductVariantService reportProductVariantService = ServiceLocatorFactory.getService(ReportProductVariantService.class);
-            Calendar calendar = Calendar.getInstance();
-            Date endDate = calendar.getTime();
-            Long productSoldInLastThirtyDays = reportProductVariantService.findInventorySoldByDateAndProduct(DateUtils.getDateMinusDays(30), endDate, sku.getProductVariant().getId(), warehouse).getCountSold();
-            pageContext.setAttribute("lastThirtyDaysSale", productSoldInLastThirtyDays);
-        %>
+        <c:set value="${pa.purchaseOrder.warehouse}" var="warehouse" />
+
         <s:hidden name="poLineItems[${ctr.index}]" value="${poLineItemDto.poLineItem.id}"/>
         <s:hidden name="poLineItems[${ctr.index}].productVariant" value="${productVariant.id}"/>
 
@@ -288,13 +277,13 @@
                 <fmt:formatNumber value="${sku.tax.value * 100}" maxFractionDigits="2"/>
             </td>
             <td>
-                    ${netInventoryWrtWarehouse}
+                    ${hk:netInventoryInWarehouse(sku, warehouse)}
             </td>
             <td>
-                    ${netInventory}
+                ${hk:netInventory(sku)}
             </td>
             <td>
-                    ${lastThirtyDaysSale}
+                    ${hk:findInventorySoldInGivenNoOfDays(sku, warehouse, 30)}
             </td>
             <td>
                 <s:text name="poLineItems[${ctr.index}].qty" value="${poLineItemDto.poLineItem.qty}" class="quantity"/>

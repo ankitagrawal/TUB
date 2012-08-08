@@ -237,6 +237,7 @@ public class PurchaseOrderManager {
         purchaseOrderDto.setTotalTax(totalTax);
         purchaseOrderDto.setTotalSurcharge(totalSurcharge);
         purchaseOrderDto.setTotalPayable(totalPayable);
+        purchaseOrderDto.setNoOfSkuInPO(purchaseOrder.getPoLineItems().size());
         return purchaseOrderDto;
 
     }

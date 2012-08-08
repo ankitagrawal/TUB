@@ -12,8 +12,8 @@ public interface ProductVariantInventoryDao extends BaseDao {
 
     public Long getNetInventory(List<Sku> skuList);
 
-    public Long getNetInventoryForSkuInWarehouse(Sku sku, Warehouse warehouse);
+    public Long getNetInventoryInWarehouse(Sku sku, Warehouse warehouse);
 
-    public Long getNetInventoryForSkuInWarehouse(List<Sku> skuList, Warehouse warehouse);
+    public Long getNetInventoryInWarehouse(List<Sku> skuList, Warehouse warehouse);
 
 }
