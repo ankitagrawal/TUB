@@ -58,7 +58,7 @@ public class SearchAction extends BasePaginatedAction {
       productPage = productDao.getProductByName(query, getPageNo(), getPerPage());
       productList = productPage.getList();
       for(Product product : productList){
-        product.setProductURL(linkManager.getProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.SEARCH_PAGE)));
+        product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.SEARCH_PAGE)));
       }
     }
     if (productList != null && productList.size() == 0) {

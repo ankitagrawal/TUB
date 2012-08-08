@@ -144,7 +144,7 @@ public class ProductAction extends BaseAction {
             product.setRelatedProducts(relatedProducts);
         }
         for (Product product : relatedProducts) {
-            product.setProductURL(linkManager.getProductURL(product, ProductReferrerMapper.getProductReferrerid(EnumProductReferrer.relatedProductsPage.getName())));
+            product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(EnumProductReferrer.relatedProductsPage.getName())));
         }
         if (product.isProductHaveColorOptions()) {
             Integer outOfStockOrDeletedCtr = 0;
@@ -201,7 +201,7 @@ public class ProductAction extends BaseAction {
                     break;
                 }
             }
-            relatedCombo.setProductURL(linkManager.getProductURL(relatedCombo, ProductReferrerMapper.getProductReferrerid(EnumProductReferrer.relatedProductsPage.getName())));
+            relatedCombo.setProductURL(linkManager.getRelativeProductURL(relatedCombo, ProductReferrerMapper.getProductReferrerid(EnumProductReferrer.relatedProductsPage.getName())));
         }
 
         if (combo == null) {

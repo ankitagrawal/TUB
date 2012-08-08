@@ -130,6 +130,20 @@ public class LinkManager {
         return getUrlFromResolution(redirectResolution);
     }
 
+    public String getRelativeProductURL(Product product, Long productReferrerId) {
+        String productURL = null;
+        String productSlug = product.getSlug();
+        String productId = product.getId();
+        productURL = "/product/" + productSlug + "/" + productId + "?productReferrerId=" + productReferrerId;
+        /*
+             RedirectResolution redirectResolution = new RedirectResolution(ProductAction.class).
+                 addParameter("referrer", referrerId).
+                 addParameter("productId", productId).addParameter("productSlug", productSlug);
+             return getUrlFromResolution(redirectResolution);
+        */
+        return productURL;
+    }
+
     public String getProductURL(Product product, Long productReferrerId) {
 
         String productURL = null;
@@ -145,6 +159,6 @@ public class LinkManager {
          * referrerId). addParameter("productId", productId).addParameter("productSlug", productSlug); return
          * getUrlFromResolution(redirectResolution);
          */
-        
+
     }
 }

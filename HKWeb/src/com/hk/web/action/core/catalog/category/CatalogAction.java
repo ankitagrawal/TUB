@@ -198,7 +198,7 @@ public class CatalogAction extends BasePaginatedAction {
         if (productPage != null) {
           productList = productPage.getList();
           for(Product product : productList){
-          product.setProductURL(linkManager.getProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
+          product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
         }
         }
         trimListByCategory(productList, secondaryCategory);
@@ -210,7 +210,7 @@ public class CatalogAction extends BasePaginatedAction {
         if (productPage != null) {
           productList = productPage.getList();
           for(Product product : productList){
-          product.setProductURL(linkManager.getProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
+          product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
         }
         }
         trimListByCategory(productList, secondaryCategory);

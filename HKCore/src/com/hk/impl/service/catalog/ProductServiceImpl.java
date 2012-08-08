@@ -2,7 +2,6 @@ package com.hk.impl.service.catalog;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -316,7 +315,7 @@ public class ProductServiceImpl implements ProductService {
         PrimaryCategoryHeading primaryCategoryHeading = primaryCategoryHeadingDao.get(PrimaryCategoryHeading.class, primaryCategoryHeadingId);
         Collections.sort(primaryCategoryHeading.getProducts(), new ProductOrderRankingComparator());
         for (Product product : primaryCategoryHeading.getProducts()) {
-            product.setProductURL(linkManager.getProductURL(product, ProductReferrerMapper.getProductReferrerid(productReferrer)));
+            product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(productReferrer)));
         }
         return primaryCategoryHeading.getProducts();
     }

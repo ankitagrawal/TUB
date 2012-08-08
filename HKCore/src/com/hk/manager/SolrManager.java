@@ -164,7 +164,7 @@ public class SolrManager {
         for (Object document : documents) {
             SolrDocument doc = (SolrDocument) document;
       			Product product = getProductService().getProductById((String) doc.getFieldValue(SolrSchemaConstants.productID));
-            product.setProductURL(linkManager.getProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
+            product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
 			      productList.add(product);
         }
         if (rootCategorySlug.equals("services")) {
@@ -207,7 +207,7 @@ public class SolrManager {
         for (Object document : documents) {
             SolrDocument doc = (SolrDocument) document;
             Product product = getProductService().getProductById((String) doc.getFieldValue(SolrSchemaConstants.productID));
-            product.setProductURL(linkManager.getProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.SEARCH_PAGE)));
+            product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.SEARCH_PAGE)));
             productList.add(product);
         }
         return new Page(productList, perPage, page, (int) resultCount);
@@ -232,7 +232,7 @@ public class SolrManager {
         for (Object document : documents) {
             SolrDocument doc = (SolrDocument) document;
 			      Product product = getProductService().getProductById((String) doc.getFieldValue(SolrSchemaConstants.productID));
-            product.setProductURL(linkManager.getProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.BRAND_PAGE)));
+            product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.BRAND_PAGE)));
 			      productList.add(product);
         }
         // productList = trimListByDistance(productList, preferredZone);
