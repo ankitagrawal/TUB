@@ -28,11 +28,8 @@ public class ConsignmentStatus implements java.io.Serializable {
     private Long id;
 
 
-    @Column(name = "name", nullable = false, length = 100)
-    private String name;
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "consignmentStatus")
-    private Set<Consignment> consignments = new HashSet<Consignment>(0);
+    @Column(name = "status", nullable = false, length = 100)
+    private String status;
 
     public Long getId() {
         return this.id;
@@ -42,20 +39,17 @@ public class ConsignmentStatus implements java.io.Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return this.name;
+    public String getStatus() {
+        return status;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public Set<Consignment> getConsignments() {
-        return this.consignments;
-    }
-
-    public void setConsignments(Set<Consignment> consignments) {
-        this.consignments = consignments;
+    @Override
+    public String toString() {
+        return id == null ? "" : id.toString();
     }
 
 
