@@ -59,11 +59,6 @@ public class PricingEngine {
 
         Set<CartLineItem> invoiceLines = pricing(lineItems, offerInstance, address, redeemRewardPoints);
 
-        Set<CartLineItem> subscriptionCartLineItems= new CartLineItemFilter(lineItems).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
-        for(CartLineItem subscriptionCartLineItem: subscriptionCartLineItems){
-            invoiceLines.add(subscriptionCartLineItem);
-        }
-
         if (copiedInstance != null) {
             offerInstance.setActive(copiedInstance.isActive());
         }
@@ -508,7 +503,7 @@ public class PricingEngine {
         Set<CartLineItemWrapper> cartLineItemWrappers = new HashSet<CartLineItemWrapper>();
 
         for (CartLineItem lineItem : cartLineItems) {
-            if(lineItem.isType(EnumCartLineItemType.Product)){
+            if(lineItem.isType(EnumCartLineItemType.Product)||lineItem.isType(EnumCartLineItemType.Subscription)){
                 if (lineItem.getProductVariant() != null) {
                     ProductVariant productVariant = lineItem.getProductVariant();
                     double variantMarkedPrice = productVariant.getMarkedPrice();
@@ -521,6 +516,7 @@ public class PricingEngine {
                         lineItem.setMarkedPrice(variantMarkedPrice + configPrice);
                     } else if (lineItem.getComboInstance() != null) {
                     }else if (lineItem.getOrder().isSubscriptionOrder()){
+                        //this is to prevent price changes in subscription order line items
                     } else {
                         lineItem.setMarkedPrice(variantMarkedPrice);
                         lineItem.setHkPrice(variantHKPrice);
