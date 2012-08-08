@@ -161,5 +161,15 @@
 	  <!-- Ajeet Added His on 10-July-->
     <mapping class="com.hk.domain.inventory.BrandsToAudit"/>
     <mapping class="com.hk.domain.catalog.product.combo.SuperSaverImage"/>
+      <!--Added for HK Delivery -->
+    <mapping class="com.hk.domain.hkDelivery.Consignment"/>
+    <mapping class="com.hk.domain.hkDelivery.ConsignmentStatus"/>
+    <mapping class="com.hk.domain.hkDelivery.Runsheet"/>
+    <mapping class="com.hk.domain.hkDelivery.RunsheetHasConsignment"/>
+    <mapping class="com.hk.domain.hkDelivery.Hub"/>
+    <mapping class="com.hk.domain.hkDelivery.PaymentHasConsignment"/>
+    <mapping class="com.hk.domain.hkDelivery.PaymentReconciliation"/>
+
+
   </session-factory>
 </hibernate-configuration>

@@ -1,15 +1,16 @@
 package com.hk.impl.dao;
 
 import com.hk.admin.pact.dao.courier.CourierDao;
+import com.hk.admin.pact.service.hkDelivery.HubService;
 import com.hk.constants.catalog.product.EnumProductVariantPaymentType;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.inventory.EnumReconciliationStatus;
-import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.TicketStatus;
 import com.hk.domain.TicketType;
+import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.accounting.DebitNoteStatus;
 import com.hk.domain.affiliate.AffiliateCategory;
 import com.hk.domain.catalog.Manufacturer;
@@ -60,9 +61,11 @@ public class MasterDataDaoImpl implements MasterDataDao {
     @Autowired
     private CourierDao       courierDao;
     @Autowired
-    private CityService cityService;
-  @Autowired
-    private StateService stateService;
+    private CityService      cityService;
+    @Autowired
+    private StateService     stateService;
+    @Autowired
+    private HubService hubService;
 
 
     public List<PaymentStatus> getPaymentStatusList() {
@@ -287,4 +290,7 @@ public class MasterDataDaoImpl implements MasterDataDao {
         return EnumShippingOrderStatus.getStatusForReconcilationReport();
     }
 
+    public List<Hub> getHubList() {
+        return hubService.getAllHubs();
+    }
 }

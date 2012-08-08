@@ -383,6 +383,9 @@
 <div class="left roundBox">
 	<h2>Healthkart Delivery</h2>
 
+    <h3>
+        <s:link beanclass="com.hk.web.action.admin.courier.HKConsignmentAction"
+                title="Download Healthkart Delivery Worksheet">Mark Shipments Received</s:link></h3>
 	<h3>
 		<s:link beanclass="com.hk.web.action.admin.courier.HKDeliveryAction"
 		        title="Download Healthkart Delivery Worksheet">Download Healthkart Delivery Worksheet</s:link></h3>
