@@ -247,7 +247,7 @@ public class PricingDto {
         productsMrpSubTotal += cartLineItem.getMarkedPrice()*cartLineItem.getQty();
         productsHkSubTotal += cartLineItem.getHkPrice()*cartLineItem.getQty();
         subscriptionDiscount += cartLineItem.getDiscountOnHkPrice()*cartLineItem.getQty();
-        productsTotal += cartLineItem.getHkPrice()*cartLineItem.getQty() - cartLineItem.getDiscountOnHkPrice()*cartLineItem.getQty();
+        productsTotal += cartLineItem.getHkPrice()*cartLineItem.getQty() - cartLineItem.getDiscountOnHkPrice();
         subscriptionLineCount++;
         productLineCount++; //subscription is also treated as a product for cart purposes
         productLineItems.add(cartLineItem);
