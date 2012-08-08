@@ -770,5 +770,16 @@
             ${hk:getRecommendedProducts(${productVariantId})}
         </example>
     </function>
+    <function>
+        <description>
+            returns dispatch days for order, this is max of all items in order
+        </description>
+        <name>getDispatchDaysForOrder</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>String getDispatchDaysForOrder(com.hk.domain.order.Order)</function-signature>
+        <example>
+            ${getDispatchDaysForOrder(${order})}
+        </example>
+    </function>
 
 </taglib>
