@@ -574,8 +574,6 @@
         //            resultDiv.find('.qtyValue').val("1");
         //        });
 
-        var params = {};
-        params.productReferrerId = $('#productReferrerId').val();
         
         $('.progressLoader').hide();
 
@@ -639,7 +637,7 @@
             }, 500);
         }
 
-        $('.addToCartForm').ajaxForm({dataType: 'json', data:params, success: _addToCart});
+        $('.addToCartForm').ajaxForm({dataType: 'json', success: _addToCart});
 
         $('.addToCartButton').click(function() {
             $('.progressLoader').show();
