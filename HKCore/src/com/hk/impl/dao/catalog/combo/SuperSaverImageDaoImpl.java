@@ -5,6 +5,7 @@ import java.util.List;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.Criteria;
 import org.springframework.stereotype.Repository;
 
 import com.akube.framework.dao.Page;
@@ -22,23 +23,28 @@ public class SuperSaverImageDaoImpl extends BaseDaoImpl implements SuperSaverIma
     }
 
     public List<SuperSaverImage> getSuperSaverImages() {
-        return getSuperSaverImages(null, Boolean.FALSE, Boolean.FALSE);
+        return getSuperSaverImages(null, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE);
     }
 
     public List<SuperSaverImage> getSuperSaverImages(Boolean getVisible) {
-        return getSuperSaverImages(null, getVisible, Boolean.FALSE);
+        return getSuperSaverImages(null, getVisible, Boolean.FALSE, Boolean.FALSE);
     }
 
     public List<SuperSaverImage> getSuperSaverImages(Boolean getVisible, Boolean getMainImage) {
-        return getSuperSaverImages(null, getVisible, getMainImage);
+        return getSuperSaverImages(null, getVisible, getMainImage, Boolean.FALSE);
     }
 
-    public List<SuperSaverImage> getSuperSaverImages(Product product, Boolean getVisible, Boolean getMainImage) {
+    public List<SuperSaverImage> getSuperSaverImages(Product product, Boolean getVisible, Boolean getMainImage, Boolean getDeleted) {
         DetachedCriteria criteria = DetachedCriteria.forClass(SuperSaverImage.class);
-        criteria.add(Restrictions.eq("deleted", Boolean.FALSE));
+
+        if (!getDeleted) {
+            criteria.add(Restrictions.eq("deleted", Boolean.FALSE));
+        }
 
         if (product != null) {
             criteria.add(Restrictions.eq("product", product));
+        } else {
+            criteria.add(Restrictions.isNull("product"));
         }
 
         if (getVisible) {
@@ -53,8 +59,13 @@ public class SuperSaverImageDaoImpl extends BaseDaoImpl implements SuperSaverIma
         return (List<SuperSaverImage>) findByCriteria(criteria);
     }
 
-    public Page getSuperSaverImages(List<String> categories, List<String> brands, Boolean getVisible, int page, int perPage) {
+    public Page getSuperSaverImages(List<String> categories, List<String> brands, Boolean getVisible, Boolean getDeleted, int page, int perPage) {
         DetachedCriteria criteria = DetachedCriteria.forClass(SuperSaverImage.class);
+
+        if (!getDeleted) {
+            criteria.add(Restrictions.eq("deleted", Boolean.FALSE));
+        }
+
         DetachedCriteria productCriteria = criteria.createCriteria("product");
 
         if (brands != null) {
@@ -71,7 +82,8 @@ public class SuperSaverImageDaoImpl extends BaseDaoImpl implements SuperSaverIma
             criteria.add(Restrictions.eq("hidden", Boolean.FALSE));
         }
 
+
         criteria.addOrder(Order.asc("ranking"));
-        return list(criteria, page, perPage);
+        return list(criteria,true, page, perPage);
     }
 }
