@@ -522,7 +522,9 @@ public class PricingEngine {
                         lineItem.setHkPrice(variantHKPrice);
                     }
                 }
-                lineItem.setDiscountOnHkPrice(0D);
+                if(!lineItem.isType(EnumCartLineItemType.Subscription)){
+                    lineItem.setDiscountOnHkPrice(0D);
+                }
                 cartLineItemWrappers.add(new CartLineItemWrapper(lineItem));
             }
         }

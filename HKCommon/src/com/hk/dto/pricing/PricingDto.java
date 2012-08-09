@@ -246,7 +246,7 @@ public class PricingDto {
       } else if(cartLineItem.isType(EnumCartLineItemType.Subscription)) {
         productsMrpSubTotal += cartLineItem.getMarkedPrice()*cartLineItem.getQty();
         productsHkSubTotal += cartLineItem.getHkPrice()*cartLineItem.getQty();
-        subscriptionDiscount += cartLineItem.getDiscountOnHkPrice()*cartLineItem.getQty();
+        subscriptionDiscount += cartLineItem.getDiscountOnHkPrice();
         productsTotal += cartLineItem.getHkPrice()*cartLineItem.getQty() - cartLineItem.getDiscountOnHkPrice();
         subscriptionLineCount++;
         productLineCount++; //subscription is also treated as a product for cart purposes
