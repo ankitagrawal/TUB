@@ -1,15 +1,14 @@
-Subscription Id ${subscription.id} placed.
+Your Subscription with Id ${subscription.id} is placed.
 <html>
 <head>
-    <title>Subscription Id ${subscription.id} placed. </title>
+    <title>Your Subscription with Id ${subscription.id} is placed. </title>
 </head>
 <body>
-<#include "*/header.ftl">
 <p style="margin-bottom:1em">Hi ${subscription.user.name}!,</p>
 
 <p style="margin-bottom:1em">
     Thanks for subscribing with us. We will give you a call whenever your shipment is due and then process your subscription.
-    In case you need a change in the address or the next shipment date, please call our customer care.
+    In case you need a change in the address or the next shipment date, please call our customer care or just drop us an email at info@healthkart.com.
 </p>
 <p style="margin-bottom:1em">Here are your subscription details for the subscription <strong> ${subscription.id}</strong> placed on<strong> ${subscription.baseOrder.payment.createDate} </strong></p>
 
@@ -54,6 +53,5 @@ ${subscription.address.city} - ${subscription.address.pin}<br/>
 <p style="margin-bottom:1em">We will inform you when ever your shipment is due and also drop you an email when even your subscription order is shipped.</p>
 
 <p style="margin-bottom:1em"><strong>HealthKart.com</strong></p>
-<#include "*/footer.ftl">
 </body>
 </html>

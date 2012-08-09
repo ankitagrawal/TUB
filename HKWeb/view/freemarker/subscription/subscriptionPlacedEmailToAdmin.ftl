@@ -4,7 +4,6 @@ Subscription Id ${subscription.id} placed.
     <title>Subscription Id ${subscription.id} placed. </title>
 </head>
 <body>
-<#include "*/header.ftl">
 <p style="margin-bottom:1em">Hi ${subscription.user.name}!,</p>
 
 <p style="margin-bottom:1em">
@@ -55,6 +54,5 @@ ${subscription.address.state} (India)<br/>
 <p style="margin-bottom:1em">We will inform you when ever your shipment is due and also drop you an email when even your subscription order is shipped.</p>
 
 <p style="margin-bottom:1em"><strong>HealthKart.com</strong></p>
-<#include "*/footer.ftl">
 </body>
 </html>
