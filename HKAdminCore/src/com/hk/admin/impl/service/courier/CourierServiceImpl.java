@@ -107,7 +107,7 @@ public class CourierServiceImpl implements CourierService {
         return getCourierServiceInfoDao().getDefaultCourierForPincode(pincode, isCOD, warehouse);
     }
 
-    public Double getCashbackOnGroundShippedItem(PricingDto pricingDto, Order order, Double groundshipItemweight) {
+    public Double getCashbackOnGroundShippedItem(Double groundshipItemAmount, Order order, Double groundshipItemweight) {
         String pincode = order.getAddress().getPin();
         Pincode pincodeObj = pincodeDao.getByPincode(pincode);
         if (pincodeObj == null) {
@@ -118,16 +118,18 @@ public class CourierServiceImpl implements CourierService {
         Double[] arrShipmentCost = new Double[warehouses.size()];
         int index = 0;
         for (Warehouse warehouse : warehouses) {
-            Courier courier = getDefaultCourier(pincodeObj, true, warehouse);
-            CourierPricingEngine courierPricingInfo = courierCostCalculator.getCourierPricingInfo(courier, pincodeObj, warehouse);
-            if (courierPricingInfo == null) {
-                return null;
+            if (warehouse.getId() != warehouseService.getCorporateOffice().getId()) {
+                Courier courier = getDefaultCourier(pincodeObj, true, warehouse);
+                CourierPricingEngine courierPricingInfo = courierCostCalculator.getCourierPricingInfo(courier, pincodeObj, warehouse);
+                if (courierPricingInfo == null) {
+                    return null;
+                }
+                arrShipmentCost[index] = shipmentPricingEngine.calculateShipmentCost(courierPricingInfo, groundshipItemweight) + shipmentPricingEngine.calculateReconciliationCost(courierPricingInfo,groundshipItemAmount,true) ; 
+
+                index++;
             }
-           arrShipmentCost[index] = shipmentPricingEngine.calculateShipmentCost(courierPricingInfo, groundshipItemweight) ;
-//               shipmentPricingEngine.calculateReconciliationCost()  ;
-            index++;
         }
-       return minimumShippingCost(arrShipmentCost);
+        return minimumShippingCost(arrShipmentCost);
     }
 
 
@@ -174,7 +176,7 @@ public class CourierServiceImpl implements CourierService {
     public Double minimumShippingCost(Double arrShipmentCost[]) {
         if (arrShipmentCost == null || arrShipmentCost.length == 0) return null;
         Double min = arrShipmentCost[0];
-        for (int i = 1; i < arrShipmentCost.length; i++) {
+        for (int i = 1; i < arrShipmentCost.length - 1; i++) {
             if (min > arrShipmentCost[i]) min = arrShipmentCost[i];
         }
         return min;

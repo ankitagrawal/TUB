@@ -98,10 +98,10 @@ public class OrderSummaryAction extends BaseAction {
     
     private Double cashbackOnGroundshipped;
     private Double groundshipItemweight;
+     private Double groundshipItemAmount;
 
     @DefaultHandler
-    public Resolution pre() {
-        CartLineItem lineItem_1 = null;
+    public Resolution pre() {          
         User user = getUserService().getUserById(getPrincipal().getId());
         order = orderManager.getOrCreateOrder(user);
         // Trimming empty line items once again.
@@ -114,9 +114,13 @@ public class OrderSummaryAction extends BaseAction {
             if (lineItem != null && lineItem.getProductVariant() != null) {
                 ProductVariant productVariant = lineItem.getProductVariant();
                 if (productVariant.getProduct().isGroundShipping()) {
-                    groundshipItemweight = productVariant.getWeight() * 1000;
-                    if (groundshipItemweight == null) {
-                        groundshipItemweight = 2.0;
+                    groundshipItemAmount =  productVariant.getHkPrice() ;
+                     if (groundshipItemAmount == null ) {
+                        groundshipItemAmount = 0.0;
+                    }
+                    groundshipItemweight = productVariant.getWeight();
+                    if (groundshipItemweight == null || groundshipItemweight == 0.0) {
+                        groundshipItemweight = 125D;
                     }
                     hideCod = true;
                     break;
@@ -157,7 +161,7 @@ public class OrderSummaryAction extends BaseAction {
         }
 
         if (hideCod) {
-            cashbackOnGroundshipped = courierService.getCashbackOnGroundShippedItem(pricingDto, order, groundshipItemweight) ;
+            cashbackOnGroundshipped = courierService.getCashbackOnGroundShippedItem(groundshipItemAmount, order, groundshipItemweight) ;
             if (cashbackOnGroundshipped == null ||cashbackOnGroundshipped == -0.0  ) {
                      cashbackOnGroundshipped = 0.0;
             }else {
