@@ -2,9 +2,7 @@ package com.hk.domain.hkDelivery;
 // Generated Aug 3, 2012 3:17:40 PM by Hibernate Tools 3.2.4.CR1
 
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -72,7 +70,7 @@ public class Runsheet implements java.io.Serializable {
     private Long userId;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "runsheet")
-    private Set<RunsheetHasConsignment> runsheetHasConsignments = new HashSet<RunsheetHasConsignment>(0);
+	private List<Consignment> consignments = new ArrayList<Consignment>(0);
 
     public Long getId() {
         return this.id;
@@ -154,15 +152,13 @@ public class Runsheet implements java.io.Serializable {
         this.userId = userId;
     }
 
-    public Set<RunsheetHasConsignment> getRunsheetHasConsignments() {
-        return this.runsheetHasConsignments;
+    public List<Consignment> getConsignments() {
+        return consignments;
     }
 
-    public void setRunsheetHasConsignments(Set<RunsheetHasConsignment> runsheetHasConsignments) {
-        this.runsheetHasConsignments = runsheetHasConsignments;
+    public void setConsignments(List<Consignment> consignments) {
+        this.consignments = consignments;
     }
-
-
 }
 
 

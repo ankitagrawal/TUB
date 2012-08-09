@@ -43,7 +43,7 @@ public class Consignment implements java.io.Serializable {
     private ConsignmentStatus consignmentStatus;
 
 
-    @Column(name = "awb_id", nullable = false)
+    @Column(name = "awb_id", unique = true, nullable = false)
     private Long awbId;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -62,11 +62,13 @@ public class Consignment implements java.io.Serializable {
     @Column(name = "payment_mode", nullable = false, length = 15)
     private String paymentMode;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "consignment")
-    private Set<RunsheetHasConsignment> runsheetHasConsignments = new HashSet<RunsheetHasConsignment>(0);
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "runsheet_id", nullable = false)
+    private Runsheet runsheet;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "consignment")
-    private Set<PaymentHasConsignment> paymentHasConsignments = new HashSet<PaymentHasConsignment>(0);
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "payment_reconciliation_id", nullable = false)
+    private PaymentReconciliation paymentReconciliation;
 
     public Long getId() {
         return this.id;
@@ -132,23 +134,21 @@ public class Consignment implements java.io.Serializable {
         this.paymentMode = paymentMode;
     }
 
-    public Set<RunsheetHasConsignment> getRunsheetHasConsignments() {
-        return this.runsheetHasConsignments;
+    public Runsheet getRunsheet() {
+        return runsheet;
     }
 
-    public void setRunsheetHasConsignments(Set<RunsheetHasConsignment> runsheetHasConsignments) {
-        this.runsheetHasConsignments = runsheetHasConsignments;
+    public void setRunsheet(Runsheet runsheet) {
+        this.runsheet = runsheet;
     }
 
-    public Set<PaymentHasConsignment> getPaymentHasConsignments() {
-        return this.paymentHasConsignments;
+    public PaymentReconciliation getPaymentReconciliation() {
+        return paymentReconciliation;
     }
 
-    public void setPaymentHasConsignments(Set<PaymentHasConsignment> paymentHasConsignments) {
-        this.paymentHasConsignments = paymentHasConsignments;
+    public void setPaymentReconciliation(PaymentReconciliation paymentReconciliation) {
+        this.paymentReconciliation = paymentReconciliation;
     }
-
-
 }
 
 
