@@ -21,21 +21,42 @@
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
     <jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
-	  <script type="text/javascript">
-		  $(document).ready(function() {
-			  $('.weight').keyup(function() {
-				  var weight = $('.weight').val();
-				  if (weight > 5) {
-					  confirm("Box Weight entered is " + weight + " Kgs. Do you wanna continue with the same?");
-				  }
-			  });
-		  });
-	  </script>
+      <script type="text/javascript">
+          $(document).ready(function() {
+              $('.weight').keyup(function() {
+                  var weight = $('.weight').val();
+                  if (weight > 5) {
+                      confirm("Box Weight entered is " + weight + " Kgs. Do you wanna continue with the same?");
+                  }
+              });
+
+              $("#shipmentbutton").click(function(event) {
+                  var tracking = $('.tracking').val();
+                  if (tracking == "" || tracking == null) {
+                       $('.error').html("");
+                      $('.error').append("Enter Tracking Id");
+                      $('.error').show();
+                      return false;
+                  }
+                  if (tracking.length > 20) {
+                      $('.error').html("");
+                      $('.error').append(" Tracking Id length can not be greater than 20");
+                      $('.error').show();
+                      return false;
+                  }
+
+              });
+
+
+          });
+      </script>
 
   </s:layout-component>
   <s:layout-component name="heading">Enter Tracking Details for Packed Orders</s:layout-component>
   <s:layout-component name="content">
+    <div  class="error" style= "background-color:salmon; width:380px; display:none;">       
 
+    </div>
     <c:choose>
       <c:when test="${shipmentQueueBean.shippingOrder == null}">
         <div height="500px" align="center">
@@ -58,7 +79,7 @@
       </c:when>
       <c:otherwise>
         <fieldset class="top_label">
-          <s:form beanclass="com.hk.web.action.admin.courier.SearchOrderAndEnterCourierInfoAction">
+          <s:form  beanclass="com.hk.web.action.admin.courier.SearchOrderAndEnterCourierInfoAction">
               <s:hidden name="shipment" value="${shipmentQueueBean.shipment.id}"/>
                 <s:hidden name="suggestedCourier" value="${shipmentQueueBean.suggestedCourier}"/>
              <c:if test="${! empty shipmentQueueBean.availableCouriers}">
@@ -87,7 +108,7 @@
               </c:forEach>
             </s:select>
             <label>Box Weight(Kgs):</label><s:text name="shipment.boxWeight" size="5" class="weight"/>
-            <label>Tracking ID:</label><s:text name="trackingId"/>
+            <label>Tracking ID:</label><s:text class="tracking" name="trackingId"/>
             <label>Courier</label>
             <s:select name="shipment.courier" id="courier" value="${shipmentQueueBean.suggestedCourier.id}">
               <c:forEach var="courier" items="${courierList}">
@@ -99,7 +120,7 @@
             </c:if>
               <label>Approx Weight (By System)</label> ${shipmentQueueBean.approxWeight}
 
-              <div class="buttons" style="margin-left: 90%;"><s:submit name="saveShipmentDetails" value="Save"/></div>
+              <div class="buttons" style="margin-left: 90%;"><s:submit id="shipmentbutton" name="saveShipmentDetails" value="Save"/></div>
 
                <div style="margin:5px;color:red;font-size:18px;">
               <c:if test="${shipmentQueueBean.shippingOrder.baseOrder.userComments != null}">

@@ -7,14 +7,11 @@ import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.util.helper.XslAwbParser;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierServiceInfo;
-import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.UserService;
 import com.hk.util.XslGenerator;
-import com.hk.util.io.LongStringUniqueObject;
 import com.hk.web.action.error.AdminPermissionAction;
 import com.hk.exception.DuplicateAwbexception;
 import net.sourceforge.stripes.action.*;
@@ -118,30 +115,17 @@ public class CourierAWBAction extends BaseAction {
         File excelFile = new File(excelFilePath);
         excelFile.getParentFile().mkdirs();
         List<Awb> awbListFromExcel = null;
+         Map<Courier, List<String>> courierIdAwbnumberMap ;
         try {
             fileBean.save(excelFile);
             awbListFromExcel = xslAwbParser.readAwbExcel(excelFile);
-            //create Map <courier ,list of awbNumber for this courier in excel>.
-            if (null != awbListFromExcel && awbListFromExcel.size() > 0) {
-                List<LongStringUniqueObject> constraintList = xslAwbParser.getConstraintList();
-                Map<Long, List<String>> courierIdAwbnumberMap = new HashMap<Long, List<String>>();
-                for (LongStringUniqueObject numberCourier : constraintList) {
-                    String awbNumber = numberCourier.getValue();
-                    Long courierId = numberCourier.getId();
-                    if (courierIdAwbnumberMap.containsKey(courierId)) {
-                        courierIdAwbnumberMap.get(courierId).add(awbNumber);
-                    } else {
-                        List<String> awbNumbers = new ArrayList<String>();
-                        awbNumbers.add(numberCourier.getValue());
-                        courierIdAwbnumberMap.put(numberCourier.getId(), awbNumbers);
-                    }
-                }
 
+            if (null != awbListFromExcel && awbListFromExcel.size() > 0) {
+                courierIdAwbnumberMap = xslAwbParser.getCourierWithAllAwbsInExcel();
                 List<Awb> alreadyExstingAwbInDbList = new ArrayList<Awb>();
-                // hit db for every pair in Map <courier,list of AWBs for this courier in excel>
-                for (Long courierId : courierIdAwbnumberMap.keySet()) {
-                    Courier courier = courierService.getCourierById(courierId);
-                    List<Awb> courierAwbList = awbService.getAlreadyPresentAwb(courier, courierIdAwbnumberMap.get(courierId));
+                // Hit DB for every pair in Map <courier,list of AWBs for this courier in excel> 
+                for (Courier couriern : courierIdAwbnumberMap.keySet()) {
+                    List<Awb> courierAwbList = awbService.getAlreadyPresentAwb(couriern, courierIdAwbnumberMap.get(couriern));
                     if (courierAwbList != null && courierAwbList.size() > 0) {
                         alreadyExstingAwbInDbList.addAll(courierAwbList);
                     }
@@ -161,7 +145,7 @@ public class CourierAWBAction extends BaseAction {
                 if (alreadyExstingAwbInDbList != null && alreadyExstingAwbInDbList.size() > 0) {
                     addRedirectAlertMessage(new SimpleMessage("Upload Failed   for below listed  " + alreadyExstingAwbInDbList.size() + " Awb records. They are already present in database"));
                     for (Awb awb : alreadyExstingAwbInDbList) {
-                        addRedirectAlertMessage(new SimpleMessage("Awb Number :: " + awb.getAwbNumber() + " ,  Courier  ::  " + awb.getCourier().getName()));
+                        addRedirectAlertMessage(new SimpleMessage("Awb Number :: " + awb.getAwbNumber() + " ,  Courier Id  ::  " + awb.getCourier().getId()));
                     }
 
                 }
@@ -175,7 +159,7 @@ public class CourierAWBAction extends BaseAction {
 
         }
         catch (DuplicateAwbexception dup) {
-            addRedirectAlertMessage(new SimpleMessage("The AWb -- >" + dup.getUniqueObject().getValue() + "  is present in Excel twice for courier --> " + dup.getUniqueObject().getId()));
+            addRedirectAlertMessage(new SimpleMessage(dup.getMessage() + " AWB_Number  : " + dup.getAwbNumber() + "  is present in Excel twice for Courier ::   " + dup.getCourier().getId()));
             return new RedirectResolution("/pages/admin/updateCourierAWB.jsp");
         }
         catch (Exception ex) {
@@ -191,6 +175,7 @@ public class CourierAWBAction extends BaseAction {
 
         finally {
             excelFile.delete();
+            courierIdAwbnumberMap=null;
         }
     }
 

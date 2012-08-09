@@ -547,7 +547,7 @@ public class OrderManager {
     }
 
     public Order trimEmptyLineItems(Order order) {
-        orderDao.refresh(order);
+        //orderDao.refresh(order);
         if (order != null && order.getCartLineItems() != null && !(order.getCartLineItems()).isEmpty()) {
             for (Iterator<CartLineItem> iterator = order.getCartLineItems().iterator(); iterator.hasNext();) {
                 CartLineItem lineItem = iterator.next();

@@ -15,6 +15,7 @@ import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Where;
 
 import com.hk.constants.core.EnumPermission;
+import com.hk.constants.core.RoleConstants;
 import com.hk.constants.clm.CLMConstants;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.offer.OfferInstance;
@@ -29,7 +30,7 @@ import com.hk.domain.clm.KarmaProfile;
  * Author: Kani Date: Aug 29, 2008
  */
 @Entity
-@Table(name = "user", uniqueConstraints = @UniqueConstraint (columnNames = {"login", "store_id"}))
+@Table(name = "user", uniqueConstraints = @UniqueConstraint(columnNames = { "login", "store_id" }))
 @NamedQueries( {
         @NamedQuery(name = "user.findByEmail", query = "from User u where u.email = :email"),
         @NamedQuery(name = "user.findByLogin", query = "from User u where u.login = :login"),
@@ -132,7 +133,7 @@ public class User {
     private Store                 store;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
-    private KarmaProfile karmaProfile;
+    private KarmaProfile          karmaProfile;
 
     public KarmaProfile getKarmaProfile() {
         return karmaProfile;
@@ -143,12 +144,24 @@ public class User {
     }
 
     public boolean isPriorityUser() {
-        KarmaProfile karmaProfile=getKarmaProfile();
-         if(karmaProfile!=null){
-            return (karmaProfile.getKarmaPoints()>= CLMConstants.thresholdScore);
-        }else{
+        KarmaProfile karmaProfile = getKarmaProfile();
+        if (karmaProfile != null) {
+            return (karmaProfile.getKarmaPoints() >= CLMConstants.thresholdScore);
+        } else {
             return false;
         }
+    }
+
+    public boolean isHKEmployee() {
+        boolean isUserHKEmployee = false;
+        for (Role role : getRoles()) {
+            if (RoleConstants.HK_EMPLOYEE.equalsIgnoreCase(role.getName())) {
+                isUserHKEmployee = true;
+                break;
+            }
+        }
+
+        return isUserHKEmployee;
     }
 
     public List<Address> getAddresses() {
