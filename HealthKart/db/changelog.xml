@@ -8175,4 +8175,9 @@
     <changeSet author="Tarun (generated)" id="1339071974252-10">
       <dropTable tableName="product_thumb_tag"/>
     </changeSet>
+    <changeSet author="Ankit (generated)" id="1344534829764-1">
+        <addColumn tableName="product">
+            <column defaultValue="0" name="ground_shipping" type="TINYINT"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
