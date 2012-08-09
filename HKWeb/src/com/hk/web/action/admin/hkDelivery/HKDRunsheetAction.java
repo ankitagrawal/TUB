@@ -20,6 +20,7 @@ import com.hk.pact.service.UserService;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
+import com.hk.admin.pact.service.hkDelivery.RunSheetService;
 import com.hk.admin.manager.HKDRunsheetManager;
 import com.hk.constants.core.Keys;
 import com.hk.constants.courier.EnumCourier;
@@ -62,6 +63,8 @@ public class HKDRunsheetAction extends BaseAction {
     ConsignmentService consignmentService;
     @Autowired
     HKDRunsheetManager hkdRunsheetManager;
+    @Autowired
+    RunSheetService  runsheetService;
 
 
     @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
@@ -115,7 +118,7 @@ public class HKDRunsheetAction extends BaseAction {
             sdf = new SimpleDateFormat("yyyyMMdd");
             xlsFile = new File(adminDownloads + "/" + CourierConstants.HKDELIVERY_WORKSHEET_FOLDER + "/" + CourierConstants.HKDELIVERY_WORKSHEET + "_" + sdf.format(new Date()) + ".xls");
             runsheet = createRunsheet();
-            
+            runsheetService.createRunSheet(runsheet);
             xlsFile = hkdRunsheetManager.generateWorkSheetXls(xlsFile.getPath(), shippingOrderList, assignedTo, totalCODAmount, totalPackets, totalCODPackets);
         } catch (IOException ioe) {
             addRedirectAlertMessage(new SimpleMessage(CourierConstants.HKDELIVERY_IOEXCEPTION));
@@ -139,7 +142,8 @@ public class HKDRunsheetAction extends BaseAction {
         runsheetObj.setPrePaidBoxCount(prePaidBoxCount);
         runsheetObj.setUserId(1l);
         runsheetObj.setHub(hub);
-       return null;
+        runsheetObj.setConsignments(consignmentList);
+       return runsheetObj;
     }
 
     public class HTTPResponseResolution implements Resolution {
