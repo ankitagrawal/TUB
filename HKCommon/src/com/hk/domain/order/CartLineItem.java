@@ -85,8 +85,8 @@ public class CartLineItem implements java.io.Serializable, Comparable<CartLineIt
     @OneToOne(fetch = FetchType.LAZY)
     @Fetch(value = FetchMode.SELECT)
     @JoinTable(name = "subscription_cart_line_item",
-            joinColumns = @JoinColumn(name = "cart_line_item_id", referencedColumnName = "id", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "subscription_id", referencedColumnName = "id", nullable = false)
+            joinColumns = @JoinColumn(name = "cart_line_item_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "subscription_id", referencedColumnName = "id")
     )
     private Subscription subscription;
 

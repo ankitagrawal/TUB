@@ -66,7 +66,7 @@
             </div>
             <h3>Is CashOnDelivery available for subscriptions?</h3>
             <div>
-                <p>No. You have to prepay the whole amount if you have subscriptions in your cart.</p>
+                <p>No. You have to prepay the whole amount if you have subscribed for the product in your cart.</p>
             </div>
             <h3>Why aren't discount coupons working for my subscription?</h3>
             <div>
@@ -74,18 +74,15 @@
             </div>
             <h3>What if my address changes?</h3>
             <div>
-                <p>In case of a change of shipping address, the customer can drop in an e-mail to info@healthkart.com or a call our customer care
-                    notifying us about the new address of delivery.</p>
+                <p>In case of a change of shipping address, the customer can drop in an email to info@healthkart.com or a call our customer care at 0124-4551616 notifying us about the new address of delivery.</p>
             </div>
             <h3>What if I go on a vacation?</h3>
             <div>
-                <p>Just request for a change in shipment date. Please notify our customer care when you receive a reminder call about your order or
-                    you can can drop an e-mail to info@healthkart.com or you can call our customer care.</p>
+                <p>Send in a request for a change in the shipping date. Please notify our customer care when you receive a reminder call about your order or you can drop an e-mail to info@healthkart.com or you can call our customer care.</p>
             </div>
             <h3>Can I change my next shipment date?</h3>
             <div>
-                <p>Yes, you can. You can notify our customer care when you receive a reminder call about your order or
-                    you can can drop an e-mail to info@healthkart.com or you can call our customer care.</p>
+                <p>Yes, you can. You can notify our customer care when you receive a reminder call about your order or you can drop an email to info@healthkart.com or you can call our customer care at 0124-4551616.</p>
             </div>
             <h3>Can I change the product during subscription?</h3>
             <div>
@@ -93,8 +90,7 @@
             </div>
             <h3>Can I cancel my subscription midway?</h3>
             <div>
-                <p>You are free to cancel your subscription anytime. If a customer opts out, the discounts and benifits that you received  as part of the subscription will be added to the cost of
-                    the shipments delivered till that point and the balance amount would be credited as reward points or refunded as per your preference.
+                <p>A customer is free to cancel his subscription anytime. If a customer opts out, the discounts and benefits will be added to the cost of the shipments delivered till that point. The balance would be credited as reward points.
                 </p>
             </div>
             <h3>Where can I see my subscriptions and shipment details?</h3>
@@ -111,10 +107,14 @@
             }else{
         %>
         <div style="font-size: 13px;">
-
+            <div>
+            <b><strong>HealthKart Subscriptions</strong></b> is a feature which makes life easy for the customer. It is a great tool for those who are looking to save time as well as money when it comes to managing products which they require in continuous supply throughout the year.
+            </div>
             <h4>How does it work?</h4>
-        <p>You select a product and subscribe for a plan specifying your frequency. You have to prepay the amount. When
-            the due date arrives, we will give you a reminder call and will send you the shipment.
+        <p>You can buy product subscriptions only for the products that can be subscribed. You can select a product and subscribe for a plan specifying your delivery frequency. To avail the subscription feature a customer needs to prepay the whole amount. When the due date arrives, our Customer Care Executive will give you a reminder call and will ensure a safe and sound delivery of your specified products.
+          </p>
+            <p>
+                You can notify our customer care in case of any change in delivery date or postponed shipment, according to your convenience. In case of a change of shipping address, the customer can drop in an email to info@healthkart.com or can call our Customer Care at 0124-4551616 notifying us about the new address of delivery.
         </p>
 
            <p></p>
@@ -122,17 +122,17 @@
             <h4>Benifits of subscription</h4>
             <br/>
             <strong>Additional Discount</strong>
-            <p>You get additinal 4-10% discount on the subscription products according to your subscription plan. </p>
+            <p>You get an additional discount which may vary from 4-10% on the subscribed products according to your subscription plan.</p>
             <strong> Price Protection</strong>
-            <p>Prices of nutrition products vary with time. </p>
+            <p>Prices of nutrition products may vary with time. In a situation of increase of the price of the product, the customer will receive the product at subscription price. In case, the price of the product goes down, the customer gets reward points after </p>
             <strong>Additional Freebies</strong>
-            <p>You will be entitled to additional freebies as and when applicable to your subscription product.</p>
+            <p>You will be entitled to avail additional freebies as and when applicable to your subscribed products.</p>
             </ul>
 
             <h4>Cancellation </h4>
             <p>
             A customer is free to cancel his subscription anytime. If a customer opts out, the discounts and benifits that he/she received  as part of the subscription will be added to the cost of
-            the shipments delivered till that point and the balance amount would be credited as reward points or refunded as per customer preference.
+            the shipments delivered till that point and the balance amount would be credited as reward points.
                 </p>
             <br/><br/>
            Please refer to the Frequently Asked Questions(<s:link beanclass="com.hk.web.action.core.subscription.AboutSubscriptionAction" event="faqs" style="font-size:14px;">FAQs</s:link>) in case of any questions. If you still have unanswered questions, please contact our customer care through email
