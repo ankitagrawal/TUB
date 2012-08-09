@@ -10,6 +10,7 @@ import com.hk.constants.hkDelivery.EnumConsignmentStatus;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
+import java.util.List;
 
 @Repository
 public class ConsignmentDaoImpl extends BaseDaoImpl implements ConsignmentDao {
@@ -24,17 +25,17 @@ public class ConsignmentDaoImpl extends BaseDaoImpl implements ConsignmentDao {
         consignmentObj.setCnnNumber(shipment.getShippingOrder().getGatewayOrderId());
         consignmentObj.setCreateDate(new Date());
         consignmentObj.setPaymentMode(shipment.getShippingOrder().getBaseOrder().getPayment().getPaymentMode().getName());
-        saveConsignment(consignmentObj);
+        save(consignmentObj);
         return consignmentObj;
-    }
-
-    @Override
-    public void saveConsignment(Consignment consignment) {
-        save(consignment);
     }
 
     @Override
     public ConsignmentStatus getConsignmentStatus(Long consignmentStatusId) {
         return get(ConsignmentStatus.class,consignmentStatusId);
+    }
+
+    @Override
+    public List<Consignment> getAllConsignments() {
+        return getAll(Consignment.class);
     }
 }
