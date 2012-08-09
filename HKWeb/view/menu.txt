@@ -487,11 +487,23 @@
 --/beauty/what-s-new/limited-period-offers
 --/beauty/what-s-new/natural-products
 --/beauty/what-s-new/home-spa-products
---/beauty/what-s-new/spas-salons : Spas & Salons
+--/beauty/what-s-new/personal-hygiene
+---/beauty/what-s-new/personal-hygiene/sanitary-napkins
+---/beauty/what-s-new/personal-hygiene/tampons
+---/beauty/what-s-new/personal-hygiene/panty-liners:Panty Liners
+---/beauty/what-s-new/personal-hygiene/ovulation-kits
+---/beauty/what-s-new/personal-hygiene/menopause-kits
+---/beauty/what-s-new/personal-hygiene/pregnancy
+---/beauty/what-s-new/personal-hygiene/chlamydia-test
+---/beauty/what-s-new/personal-hygiene/condoms
+---/beauty/what-s-new/personal-hygiene/intimate-care:Intimate Care
+---/beauty/what-s-new/personal-hygiene/combo-offers
 --/beauty/what-s-new/women-nutrition
+---/beauty/what-s-new/women-nutrition/fertility
 ---/beauty/what-s-new/women-nutrition/calcium
 ---/beauty/what-s-new/women-nutrition/wellness
 ---/beauty/what-s-new/women-nutrition/weight-watch
+--/beauty/what-s-new/spas-salons : Spas & Salons
 --/beauty/what-s-new/cosmetic-restoration
 -/beauty/face-care
 --/beauty/face-care/cleanser

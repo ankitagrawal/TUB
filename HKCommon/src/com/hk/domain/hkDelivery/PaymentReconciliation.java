@@ -2,9 +2,7 @@ package com.hk.domain.hkDelivery;
 // Generated Aug 3, 2012 3:17:40 PM by Hibernate Tools 3.2.4.CR1
 
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -49,8 +47,8 @@ public class PaymentReconciliation implements java.io.Serializable {
     @Column(name = "user_id")
     private Long userId;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "paymentReconciliation")
-    private Set<PaymentHasConsignment> paymentHasConsignments = new HashSet<PaymentHasConsignment>(0);
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "runsheet")
+	private List<Consignment> consignments = new ArrayList<Consignment>(0);
 
     public Long getId() {
         return this.id;
@@ -92,15 +90,13 @@ public class PaymentReconciliation implements java.io.Serializable {
         this.userId = userId;
     }
 
-    public Set<PaymentHasConsignment> getPaymentHasConsignments() {
-        return this.paymentHasConsignments;
+    public List<Consignment> getConsignments() {
+        return consignments;
     }
 
-    public void setPaymentHasConsignments(Set<PaymentHasConsignment> paymentHasConsignments) {
-        this.paymentHasConsignments = paymentHasConsignments;
+    public void setConsignments(List<Consignment> consignments) {
+        this.consignments = consignments;
     }
-
-
 }
 
 
