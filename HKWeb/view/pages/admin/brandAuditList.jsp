@@ -22,6 +22,7 @@
 			<legend>Search Audit List</legend>
 			<s:form beanclass="com.hk.web.action.admin.inventory.BrandsToAuditAction">
 				<label>Brand:</label><s:text name="brand"/>
+				<label>Auditor Login:</label><s:text name="auditorLogin"/>
 				<label>WH:</label><s:select name="warehouse">
 				<s:option value="">-ALL-</s:option>
               <c:forEach items="${whList}" var="wh">

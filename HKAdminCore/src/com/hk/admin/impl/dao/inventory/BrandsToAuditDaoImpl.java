@@ -25,19 +25,15 @@ public class BrandsToAuditDaoImpl extends BaseDaoImpl implements BrandsToAuditDa
 		if (StringUtils.isNotBlank(brand)) {
 			auditCriteria.add(Restrictions.eq("brand", brand));
 		}
-
-
 		if (warehouse != null) {
 			auditCriteria.add(Restrictions.eq("warehouse", warehouse));
 		}
 		if (auditor != null) {
 			auditCriteria.add(Restrictions.eq("auditor", auditor));
 		}
-
 		if (startDate != null && endDate != null) {
 			auditCriteria.add(Restrictions.between("auditDate", startDate, endDate));
 		}
-
 		auditCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));
 		return list(auditCriteria, pageNo, perPage);
 

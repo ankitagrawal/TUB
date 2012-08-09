@@ -1,6 +1,7 @@
 package com.hk.exception;
 
-import com.hk.util.io.LongStringUniqueObject;
+
+import com.hk.domain.courier.Courier;
 
 
 /**
@@ -11,21 +12,22 @@ import com.hk.util.io.LongStringUniqueObject;
  * To change this template use File | Settings | File Templates.
  */
 public class DuplicateAwbexception extends HealthkartRuntimeException {
-    LongStringUniqueObject uniqueObject;
+ private   Courier courier;
+ private  String awbNumber;
 
-    public DuplicateAwbexception(String message, LongStringUniqueObject uniqueObject) {
+
+    public DuplicateAwbexception(String message, Courier courier,String awbNumber) {
         super(message);
-        this.uniqueObject = uniqueObject;
-
-    }
-
-    public DuplicateAwbexception(LongStringUniqueObject uniqueObject) {
-        super("The AWb -- >" + uniqueObject.getValue() + "  is present in Excel twice for courier --> " + uniqueObject.getId());
-        this.uniqueObject = uniqueObject;
+        this.courier =courier;
+        this.awbNumber=awbNumber;
     }
 
 
-    public LongStringUniqueObject getUniqueObject() {
-        return uniqueObject;
+    public Courier getCourier() {
+        return courier;
+    }
+
+    public String getAwbNumber() {
+        return awbNumber;
     }
 }
