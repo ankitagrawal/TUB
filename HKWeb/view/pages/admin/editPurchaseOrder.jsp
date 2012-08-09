@@ -5,14 +5,6 @@
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="com.hk.pact.dao.warehouse.WarehouseDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
-<%@ page import="com.hk.pact.dao.inventory.ProductVariantInventoryDao" %>
-<%@ page import="com.hk.domain.sku.Sku" %>
-<%@ page import="com.hk.web.action.admin.inventory.EditPurchaseOrderAction" %>
-<%@ page import="com.hk.report.pact.service.catalog.product.ReportProductVariantService" %>
-<%@ page import="java.util.Calendar" %>
-<%@ page import="java.util.Date" %>
-<%@ page import="com.akube.framework.util.DateUtils" %>
-<%@ page import="com.hk.domain.warehouse.Warehouse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction" var="pa"/>

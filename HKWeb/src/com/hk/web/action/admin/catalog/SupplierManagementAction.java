@@ -165,51 +165,74 @@ public class SupplierManagementAction extends BasePaginatedAction {
     }
 
     public Resolution generateExcelReport() {
-            supplierList = supplierDao.getSupplierByTinAndName(supplierTin, supplierName, 1, -1).getList();//.getAllSupplierListByTinAndName(supplierTin, supplierName);
+        supplierList = supplierDao.getSupplierByTinAndName(supplierTin, supplierName);//.getAllSupplierListByTinAndName(supplierTin, supplierName);
 
-            xlsFile = new File(adminDownloads + "/reports/SupplierList.xls");
-            HkXlsWriter xlsWriter = new HkXlsWriter();
+        xlsFile = new File(adminDownloads + "/reports/SupplierList.xls");
+        HkXlsWriter xlsWriter = new HkXlsWriter();
 
-            if (supplierList != null) {
-                int xlsRow = 1;
-                xlsWriter.addHeader("NAME", "NAME");
-                xlsWriter.addHeader("TIN", "TIN");
-                xlsWriter.addHeader("ADDRESS", "ADDRESS");
-                xlsWriter.addHeader("CONTACT PERSON", "CONTACT PERSON");
-                xlsWriter.addHeader("CONTACT NUMBER", "CONTACT NUMBER");
+        if (supplierList != null) {
+            int xlsRow = 1;
+            xlsWriter.addHeader("NAME", "NAME");
+            xlsWriter.addHeader("TIN", "TIN");
+            xlsWriter.addHeader("ADDRESS", "ADDRESS");
+            xlsWriter.addHeader("CONTACT PERSON", "CONTACT PERSON");
+            xlsWriter.addHeader("CONTACT NUMBER", "CONTACT NUMBER");
 
-                for (Supplier supplier : supplierList) {
-                    xlsWriter.addCell(xlsRow, supplier.getName());
-                    xlsWriter.addCell(xlsRow, supplier.getTinNumber());
-                    xlsWriter.addCell(xlsRow, supplier.getLine1() + "\n" + supplier.getLine2() + "\n" + supplier.getCity() + "\n" + supplier.getPincode() + "\n" + supplier.getState());
-                    xlsWriter.addCell(xlsRow, supplier.getContactPerson());
-                    xlsWriter.addCell(xlsRow, supplier.getContactNumber());
-                    xlsWriter.writeData(xlsFile, "SupplierList");
-                    xlsRow++;
+            for (Supplier supplier : supplierList) {
+                xlsWriter.addCell(xlsRow, supplier.getName());
+                xlsWriter.addCell(xlsRow, supplier.getTinNumber());
+                StringBuffer supplierAddress = new StringBuffer();
+
+                if(supplier.getLine1() != null) {
+                    supplierAddress.append(supplier.getLine1());
+                    supplierAddress.append(", ");
                 }
 
-                return new HTTPResponseResolution();
+                if(supplier.getLine2() != null) {
+                    supplierAddress.append(supplier.getLine2());
+                    supplierAddress.append(", ");
+                }
+                if(supplier.getCity() != null) {
+                    supplierAddress.append(supplier.getCity());
+                    supplierAddress.append(", ");
+                }
+                if(supplier.getPincode() != null) {
+                    supplierAddress.append(supplier.getPincode());
+                    supplierAddress.append(", ");
+                }
+                if(supplier.getState() != null) {
+                    supplierAddress.append(supplier.getState());
+                }
+
+                xlsWriter.addCell(xlsRow, supplierAddress.toString());
+                xlsWriter.addCell(xlsRow, supplier.getContactPerson());
+                xlsWriter.addCell(xlsRow, supplier.getContactNumber());
+                xlsWriter.writeData(xlsFile, "SupplierList");
+                xlsRow++;
             }
-            return new RedirectResolution(SupplierManagementAction.class);
+
+            return new HTTPResponseResolution();
+        }
+        return new RedirectResolution(SupplierManagementAction.class);
+    }
+
+    private class HTTPResponseResolution implements Resolution {
+        public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
+            OutputStream out = null;
+            InputStream in = new BufferedInputStream(new FileInputStream(xlsFile));
+            res.setContentLength((int) xlsFile.length());
+            res.setHeader("Content-Disposition", "attachment; filename=\"" + xlsFile.getName() + "\";");
+            out = res.getOutputStream();
+
+            // Copy the contents of the file to the output stream
+            byte[] buf = new byte[4096];
+            int count = 0;
+            while ((count = in.read(buf)) >= 0) {
+                out.write(buf, 0, count);
+            }
         }
 
-        private class HTTPResponseResolution implements Resolution {
-                public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
-                    OutputStream out = null;
-                    InputStream in = new BufferedInputStream(new FileInputStream(xlsFile));
-                    res.setContentLength((int) xlsFile.length());
-                    res.setHeader("Content-Disposition", "attachment; filename=\"" + xlsFile.getName() + "\";");
-                    out = res.getOutputStream();
-
-                    // Copy the contents of the file to the output stream
-                    byte[] buf = new byte[4096];
-                    int count = 0;
-                    while ((count = in.read(buf)) >= 0) {
-                        out.write(buf, 0, count);
-                    }
-                }
-
-            }
+    }
 
 
 

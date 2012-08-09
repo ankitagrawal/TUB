@@ -18,45 +18,23 @@ import java.util.Map;
  */
 public class PdfGenerator {
 
-    PdfPTable pdfPTable;
-    public PdfGenerator(){
-
-    }
-
-    public void generateTable(List<String> columnNames ){
-
-    }
-
-    public PdfGenerator addBottomComment(String comment){
-
-        return this;
-    }
-
-    public void addHeading(){
-
-    }
-
-    public void createTable(int noOfColumns, float widthOfcolumns[], float widthPercentage) {
+    public static PdfPTable createTable(int noOfColumns, float widthOfcolumns[], float widthPercentage) throws Exception{
         PdfPTable pdfPTable = new PdfPTable(noOfColumns);
-        try{
-            pdfPTable.setWidths(widthOfcolumns);
-            pdfPTable.setWidthPercentage(widthPercentage);
+        pdfPTable.setWidths(widthOfcolumns);
+        pdfPTable.setWidthPercentage(widthPercentage);
 
-        }catch (DocumentException de) {
-
-        }
-
+        return pdfPTable;
     }
 
-    public void createCell(PdfPTable pdfPTable, java.util.List<Map<String, Font>> columnContentWithFontList) {
+    public static PdfPCell createCell(String paragraphContent, Font font) {
         PdfPCell cell = new PdfPCell();
-        for (Map<String, Font> columnContentWithFont : columnContentWithFontList) {
-            for(String columnContent : columnContentWithFont.keySet()) {
-                Font font = columnContentWithFont.get(columnContent);
-            }
-        }
-        cell.addElement(new Paragraph("S.No.", new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.BOLD)));
-        pdfPTable.addCell(cell);
+        cell.addElement(new Paragraph(paragraphContent, font));
+        return cell;
+    }
 
+    public static PdfPCell createCell(String paragraphContent) {
+        PdfPCell cell = new PdfPCell();
+        cell.addElement(new Paragraph(paragraphContent));
+        return cell;
     }
 }

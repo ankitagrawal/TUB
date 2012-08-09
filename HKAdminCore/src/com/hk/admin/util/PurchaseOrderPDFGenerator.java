@@ -16,8 +16,10 @@ import org.springframework.stereotype.Component;
 
 import java.io.FileOutputStream;
 import java.net.URL;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -31,7 +33,7 @@ import java.util.Map;
 public class PurchaseOrderPDFGenerator {
     private static Logger logger = LoggerFactory.getLogger(InvoicePDFGenerator.class);
 
-    public void generatePurchaseOrderPdf(String pdfFilePath, PurchaseOrderDto purchaseOrderDto) throws Exception {
+    public void generatePurchaseOrderPdf(String pdfFilePath, PurchaseOrderDto purchaseOrderDto, String logoImagePath) throws Exception {
         PurchaseOrder purchaseOrder = purchaseOrderDto.getPurchaseOrder();
         Document purchaseOrderDocument = new Document();
         try {
@@ -39,19 +41,20 @@ public class PurchaseOrderPDFGenerator {
             purchaseOrderDocument.open();
             if(purchaseOrder != null) {
                 Paragraph addressParagraph = new Paragraph();
-                addressParagraph.add(new Paragraph("Bright Lifecare Pvt. Ltd.", new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.NORMAL)));
-                addressParagraph.add(new Paragraph(purchaseOrder.getWarehouse().getLine1(), new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.NORMAL)));
-                addressParagraph.add(new Paragraph(purchaseOrder.getWarehouse().getLine2(), new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.NORMAL)));
-                addressParagraph.add(new Paragraph(purchaseOrder.getWarehouse().getCity() + " -" + purchaseOrder.getWarehouse().getPincode(),
-                        new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.NORMAL)));
-                addressParagraph.add(new Paragraph(purchaseOrder.getWarehouse().getState(), new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.NORMAL)));
-                addressParagraph.add(new Paragraph("TIN: " + purchaseOrder.getWarehouse().getTin(), new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.NORMAL)));
+                Font font = new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.NORMAL);
+                addressParagraph.add(new Paragraph("Bright Lifecare Pvt. Ltd.", font));
+                addressParagraph.add(new Paragraph(purchaseOrder.getWarehouse().getLine1(), font));
+                addressParagraph.add(new Paragraph(purchaseOrder.getWarehouse().getLine2(), font));
+                addressParagraph.add(new Paragraph(purchaseOrder.getWarehouse().getCity() + " -" + purchaseOrder.getWarehouse().getPincode(), font));
+                addressParagraph.add(new Paragraph(purchaseOrder.getWarehouse().getState(), font));
+                addressParagraph.add(new Paragraph("TIN: " + purchaseOrder.getWarehouse().getTin(), font));
 
                 Paragraph header = new Paragraph("PURCHASE ORDER \n\n", new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.BOLD));
                 header.setAlignment(Element.ALIGN_CENTER);
-                //TODO: Change this logo path
-                Image image = Image.getInstance("C:/Users/Rohit/IdeaProjects/rewrite/HKRejuvenate/HealthKart/dist/images/logo/HealthKartLogo.png");
+
+                Image image = Image.getInstance(logoImagePath);
                 image.setAlignment(Element.ALIGN_RIGHT);
+
                 purchaseOrderDocument.add(addressParagraph);
                 purchaseOrderDocument.add(image);
                 purchaseOrderDocument.add(header);
@@ -69,32 +72,12 @@ public class PurchaseOrderPDFGenerator {
 
     private void createSupplierDetailTable(Document document, PurchaseOrder purchaseOrder) throws Exception{
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        PdfPTable supplierDetailTable = new PdfPTable(4);
         float[] widths = {25f, 25f, 25f, 25f};
-        supplierDetailTable.setWidths(widths);
-        supplierDetailTable.setWidthPercentage(100f);
+        PdfPTable supplierDetailTable = PdfGenerator.createTable(4, widths, 100f);
 
-        PdfPCell c1 = new PdfPCell();
-        Paragraph supplierParagraph = new Paragraph("Supplier", new Font(Font.FontFamily.TIMES_ROMAN, 10,Font.BOLD));
+        Font font1 = new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.BOLD);
+        Font font2 = new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.NORMAL);
 
-        c1.addElement(supplierParagraph);
-        supplierDetailTable.addCell(c1);
-
-        c1 = new PdfPCell();
-        c1.addElement(new Paragraph(purchaseOrder.getSupplier().getName(), new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.NORMAL)));
-        supplierDetailTable.addCell(c1);
-
-        c1 = new PdfPCell();
-        c1.addElement(new Paragraph("PO Date", new Font(Font.FontFamily.TIMES_ROMAN, 10,Font.BOLD)));
-        supplierDetailTable.addCell(c1);
-
-        c1 = new PdfPCell();
-        c1.addElement(new Paragraph(simpleDateFormat.format(purchaseOrder.getPoDate()), new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.NORMAL)));
-        supplierDetailTable.addCell(c1);
-
-        c1 = new PdfPCell();
-        c1.addElement(new Paragraph("Address", new Font(Font.FontFamily.TIMES_ROMAN, 10,Font.BOLD)));
-        supplierDetailTable.addCell(c1);
         StringBuffer supplierAddress = new StringBuffer();
 
         if(purchaseOrder.getSupplier().getLine1() != null) {
@@ -113,159 +96,72 @@ public class PurchaseOrderPDFGenerator {
             supplierAddress.append(purchaseOrder.getSupplier().getState());
         }
 
-        c1 = new PdfPCell();
-        c1.addElement(new Paragraph(supplierAddress.toString(), new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.NORMAL)));
-        supplierDetailTable.addCell(c1);
-
-        c1 = new PdfPCell();
-        c1.addElement(new Paragraph("PO#", new Font(Font.FontFamily.TIMES_ROMAN, 10,Font.BOLD)));
-        supplierDetailTable.addCell(c1);
-
-        c1 = new PdfPCell();
-        c1.addElement(new Paragraph(""+purchaseOrder.getId(), new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.NORMAL)));
-        supplierDetailTable.addCell(c1);
-
-        c1 = new PdfPCell();
-        c1.addElement(new Paragraph("Contact Name", new Font(Font.FontFamily.TIMES_ROMAN, 10,Font.BOLD)));
-        supplierDetailTable.addCell(c1);
-
-        c1 = new PdfPCell();
-        c1.addElement(new Paragraph(purchaseOrder.getSupplier().getContactPerson(), new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.NORMAL)));
-        supplierDetailTable.addCell(c1);
-
-        c1 = new PdfPCell();
-        c1.addElement(new Paragraph("Contact Number", new Font(Font.FontFamily.TIMES_ROMAN, 10,Font.BOLD)));
-        supplierDetailTable.addCell(c1);
-
-        c1 = new PdfPCell();
-        c1.addElement(new Paragraph(purchaseOrder.getSupplier().getContactNumber(), new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.NORMAL)));
-        supplierDetailTable.addCell(c1);
+        supplierDetailTable.addCell(PdfGenerator.createCell("Supplier", font1));
+        supplierDetailTable.addCell(PdfGenerator.createCell(purchaseOrder.getSupplier().getName(), font2));
+        supplierDetailTable.addCell(PdfGenerator.createCell("PO Date", font1));
+        supplierDetailTable.addCell(PdfGenerator.createCell(simpleDateFormat.format(purchaseOrder.getPoDate()), font2));
+        supplierDetailTable.addCell(PdfGenerator.createCell("Address", font1));
+        supplierDetailTable.addCell(PdfGenerator.createCell(supplierAddress.toString(), font2));
+        supplierDetailTable.addCell(PdfGenerator.createCell("PO#", font1));
+        supplierDetailTable.addCell(PdfGenerator.createCell(""+purchaseOrder.getId(), font2));
+        supplierDetailTable.addCell(PdfGenerator.createCell("Contact Name", font1));
+        supplierDetailTable.addCell(PdfGenerator.createCell(purchaseOrder.getSupplier().getContactPerson(), font2));
+        supplierDetailTable.addCell(PdfGenerator.createCell("Contact Number", font1));
+        supplierDetailTable.addCell(PdfGenerator.createCell(purchaseOrder.getSupplier().getContactNumber(), font2));
 
         document.add(supplierDetailTable);
     }
 
     private void createPODetails(Document document, PurchaseOrderDto purchaseOrderDto) throws Exception{
         java.util.List<PoLineItemDto> poLineItemDtoList = purchaseOrderDto.getPoLineItemDtoList();
-        PdfPTable poDetailTable = new PdfPTable(11);
-        float[] widths = {4.33f, 11.33f, 11.33f,  14.66f,  8.33f,  8.33f,  8.33f,  8.33f, 8.33f,  8.33f,  8.33f};
-        poDetailTable.setWidths(widths);
-        poDetailTable.setWidthPercentage(100f);
+        NumberFormat numberFormat = NumberFormat.getInstance();
+        numberFormat.setMaximumFractionDigits(2);
+        float[] widths = {4.33f, 11.33f, 10.33f,  13.33f,  6.33f,  8.33f,  8.33f,  4.33f, 8.33f, 8.33f,  8.33f,  8.33f};
 
-        java.util.List<Map<String, Font>> columnContentWithFont = new ArrayList<Map<String, Font>>();
-        PdfPCell cell = new PdfPCell();
+        PdfPTable poDetailTable = PdfGenerator.createTable(12, widths, 100f);
 
-        cell.addElement(new Paragraph("S.No.", new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.BOLD)));
-        poDetailTable.addCell(cell);
+        Font font1 = new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.BOLD);
+        Font font2 = new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.NORMAL);
 
-        cell = new PdfPCell();
-        cell.addElement(new Paragraph("VariantID", new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.BOLD)));
-        poDetailTable.addCell(cell);
-
-        cell = new PdfPCell();
-        cell.addElement(new Paragraph("UPC", new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.BOLD)));
-        poDetailTable.addCell(cell);
-
-        cell = new PdfPCell();
-        cell.addElement(new Paragraph("Details", new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.BOLD)));
-        poDetailTable.addCell(cell);
-
-        cell = new PdfPCell();
-        cell.addElement(new Paragraph("Qty", new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.BOLD)));
-        poDetailTable.addCell(cell);
-
-        cell = new PdfPCell();
-        cell.addElement(new Paragraph("Cost Price\n(Without Tax)", new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.BOLD)));
-        poDetailTable.addCell(cell);
-
-        cell = new PdfPCell();
-        cell.addElement(new Paragraph("MRP", new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.BOLD)));
-        poDetailTable.addCell(cell);
-
-        cell = new PdfPCell();
-        cell.addElement(new Paragraph("Taxable", new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.BOLD)));
-        poDetailTable.addCell(cell);
-
-        cell = new PdfPCell();
-        cell.addElement(new Paragraph("Tax", new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.BOLD)));
-        poDetailTable.addCell(cell);
-
-        cell = new PdfPCell();
-        cell.addElement(new Paragraph("Surcharge", new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.BOLD)));
-        poDetailTable.addCell(cell);
-
-        cell = new PdfPCell();
-        cell.addElement(new Paragraph("Payable", new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.BOLD)));
-        poDetailTable.addCell(cell);
+        poDetailTable.addCell(PdfGenerator.createCell("S. No", font1));
+        poDetailTable.addCell(PdfGenerator.createCell("VariantID", font1));
+        poDetailTable.addCell(PdfGenerator.createCell("UPC", font1));
+        poDetailTable.addCell(PdfGenerator.createCell("Details", font1));
+        poDetailTable.addCell(PdfGenerator.createCell("Qty", font1));
+        poDetailTable.addCell(PdfGenerator.createCell("Cost Price\n (Without Tax)", font1));
+        poDetailTable.addCell(PdfGenerator.createCell("MRP", font1));
+        poDetailTable.addCell(PdfGenerator.createCell("Tax %", font1));
+        poDetailTable.addCell(PdfGenerator.createCell("Taxable", font1));
+        poDetailTable.addCell(PdfGenerator.createCell("Tax", font1));
+        poDetailTable.addCell(PdfGenerator.createCell("Surcharge", font1));
+        poDetailTable.addCell(PdfGenerator.createCell("Payable", font1));
 
         int counter = 1;
         for(PoLineItemDto poLineItemDto : poLineItemDtoList) {
             ProductVariant productVariant = poLineItemDto.getPoLineItem().getSku().getProductVariant();
-            cell = new PdfPCell();
-            cell.addElement(new Paragraph("" + counter, new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.NORMAL)));
-            poDetailTable.addCell(cell);
-
-            cell = new PdfPCell();
-            cell.addElement(new Paragraph(productVariant.getId(), new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.NORMAL)));
-            poDetailTable.addCell(cell);
-
-            cell = new PdfPCell();
-            cell.addElement(new Paragraph(productVariant.getUpc(), new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.NORMAL)));
-            poDetailTable.addCell(cell);
-
-            cell = new PdfPCell();
-            cell.addElement(new Paragraph(productVariant.getProduct().getName(), new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.NORMAL)));
-            poDetailTable.addCell(cell);
-
-            cell = new PdfPCell();
-            cell.addElement(new Paragraph("" + poLineItemDto.getPoLineItem().getQty(), new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.NORMAL)));
-            poDetailTable.addCell(cell);
-
-            cell = new PdfPCell();
-            cell.addElement(new Paragraph("" + poLineItemDto.getPoLineItem().getCostPrice(), new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.NORMAL)));
-            poDetailTable.addCell(cell);
-
-            cell = new PdfPCell();
-            cell.addElement(new Paragraph("" + poLineItemDto.getPoLineItem().getMrp(), new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.NORMAL)));
-            poDetailTable.addCell(cell);
-
-            cell = new PdfPCell();
-            cell.addElement(new Paragraph("" + poLineItemDto.getTaxable(), new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.NORMAL)));
-            poDetailTable.addCell(cell);
-
-            cell = new PdfPCell();
-            cell.addElement(new Paragraph("" + poLineItemDto.getTax(), new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.NORMAL)));
-            poDetailTable.addCell(cell);
-
-            cell = new PdfPCell();
-            cell.addElement(new Paragraph("" + poLineItemDto.getSurcharge(), new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.NORMAL)));
-            poDetailTable.addCell(cell);
-
-            cell = new PdfPCell();
-            cell.addElement(new Paragraph("" + poLineItemDto.getPayable(), new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.NORMAL)));
-            poDetailTable.addCell(cell);
+            poDetailTable.addCell(PdfGenerator.createCell("" + counter++, font2));
+            poDetailTable.addCell(PdfGenerator.createCell(productVariant.getId(), font2));
+            poDetailTable.addCell(PdfGenerator.createCell(productVariant.getUpc(), font2));
+            poDetailTable.addCell(PdfGenerator.createCell(productVariant.getProduct().getName(), font2));
+            poDetailTable.addCell(PdfGenerator.createCell("" + poLineItemDto.getPoLineItem().getQty(), font2));
+            poDetailTable.addCell(PdfGenerator.createCell(numberFormat.format(poLineItemDto.getPoLineItem().getCostPrice()), font2));
+            poDetailTable.addCell(PdfGenerator.createCell(numberFormat.format(poLineItemDto.getPoLineItem().getMrp()), font2));
+            poDetailTable.addCell(PdfGenerator.createCell(numberFormat.format(poLineItemDto.getPoLineItem().getSku().getTax().getValue() * 100), font2));
+            poDetailTable.addCell(PdfGenerator.createCell(numberFormat.format(poLineItemDto.getTaxable()), font2));
+            poDetailTable.addCell(PdfGenerator.createCell(numberFormat.format(poLineItemDto.getTax()), font2));
+            poDetailTable.addCell(PdfGenerator.createCell(numberFormat.format(poLineItemDto.getSurcharge()), font2));
+            poDetailTable.addCell(PdfGenerator.createCell(numberFormat.format(poLineItemDto.getPayable()), font2));
         }
 
-        cell = new PdfPCell();
-        cell.addElement(new Paragraph("Total", new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.NORMAL)));
-        cell.setColspan(7);
+        PdfPCell cell = new PdfPCell();
+        cell.addElement(new Paragraph("Total", font2));
+        cell.setColspan(8);
         poDetailTable.addCell(cell);
 
-        cell = new PdfPCell();
-        cell.addElement(new Paragraph("" + purchaseOrderDto.getTotalTaxable(), new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.NORMAL)));
-        poDetailTable.addCell(cell);
-
-        cell = new PdfPCell();
-        cell.addElement(new Paragraph("" + purchaseOrderDto.getTotalTax(), new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.NORMAL)));
-        poDetailTable.addCell(cell);
-
-        cell = new PdfPCell();
-        cell.addElement(new Paragraph("" + purchaseOrderDto.getTotalSurcharge(), new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.NORMAL)));
-        poDetailTable.addCell(cell);
-
-        cell = new PdfPCell();
-        cell.addElement(new Paragraph("" + purchaseOrderDto.getTotalPayable(), new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.NORMAL)));
-        poDetailTable.addCell(cell);
-
+        poDetailTable.addCell(PdfGenerator.createCell(numberFormat.format(purchaseOrderDto.getTotalTaxable()), font2));
+        poDetailTable.addCell(PdfGenerator.createCell(numberFormat.format(purchaseOrderDto.getTotalTax()), font2));
+        poDetailTable.addCell(PdfGenerator.createCell(numberFormat.format(purchaseOrderDto.getTotalSurcharge()), font2));
+        poDetailTable.addCell(PdfGenerator.createCell(numberFormat.format(purchaseOrderDto.getTotalPayable()), font2));
 
         document.add(poDetailTable);
     }

@@ -234,9 +234,11 @@ public class POAction extends BasePaginatedAction {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
             xlsFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() + ".pdf");
-            String logoImagePath = getContext().getRequest().getContextPath() + "/images/logo/HealthKartLogo.png";
+            //String logoImagePath = getContext().getRequest().getContextPath() + "/images/logo/HealthKartLogo.png";
+            //TODO: Change this logo image path
+            String logoImagePath = "C:/Users/Rohit/IdeaProjects/rewrite/HKRejuvenate/HealthKart/dist/images/logo/HealthKartLogo.png";
             purchaseOrderDto = getPurchaseOrderManager().generatePurchaseOrderDto(purchaseOrder);
-            getPurchaseOrderPDFGenerator().generatePurchaseOrderPdf(xlsFile.getPath(), purchaseOrderDto);
+            getPurchaseOrderPDFGenerator().generatePurchaseOrderPdf(xlsFile.getPath(), purchaseOrderDto, logoImagePath);
             addRedirectAlertMessage(new SimpleMessage("Purchase Order successfully generated"));
         } catch (Exception e) {
             e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.
