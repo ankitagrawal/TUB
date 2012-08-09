@@ -8,6 +8,8 @@ import com.hk.domain.hkDelivery.Consignment;
 import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.courier.Shipment;
 
+import java.util.List;
+
 @Service
 public class ConsignmentServiceImpl implements ConsignmentService {
 
@@ -17,5 +19,10 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     @Override
     public Consignment createConsignment(Shipment shipment, Hub hub) {
         return consignmentDao.createConsignment(shipment,hub);
+    }
+
+    @Override
+    public List<Consignment> getAllConsignments() {
+        return consignmentDao.getAllConsignments();
     }
 }

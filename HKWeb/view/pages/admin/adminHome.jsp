@@ -385,10 +385,10 @@
 
     <h3>
         <s:link beanclass="com.hk.web.action.admin.courier.HKConsignmentAction"
-                title="Download Healthkart Delivery Worksheet">Mark Shipments Received</s:link></h3>
+                title="Download Healthkart Delivery Worksheet">Mark Shipments Inward at Hub</s:link></h3>
 	<h3>
 		<s:link beanclass="com.hk.web.action.admin.courier.HKDeliveryAction"
-		        title="Download Healthkart Delivery Worksheet">Download Healthkart Delivery Worksheet</s:link></h3>
+		        title="Download Healthkart Delivery Worksheet">Download Healthkart Delivery Runsheet</s:link></h3>
 
 </div>
 
