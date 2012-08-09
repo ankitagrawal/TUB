@@ -579,6 +579,7 @@
         //            resultDiv.find('.qtyValue').val("1");
         //        });
 
+        
         $('.progressLoader').hide();
 
         $('.comboProduct').css({
