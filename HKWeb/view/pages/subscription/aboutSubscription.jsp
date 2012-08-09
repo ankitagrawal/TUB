@@ -108,13 +108,16 @@
         %>
         <div style="font-size: 13px;">
             <div>
-            <b><strong>HealthKart Subscriptions</strong></b> is a feature which makes life easy for the customer. It is a great tool for those who are looking to save time as well as money when it comes to managing products which they require in continuous supply throughout the year.
+                We know it is hard to manage products which you require in continuous supply throughout the year.
+            <b><strong>HealthKart Subscriptions</strong></b> is a feature which makes life easy for you.
+
             </div>
+            <br/>
             <h4>How does it work?</h4>
         <p>You can buy product subscriptions only for the products that can be subscribed. You can select a product and subscribe for a plan specifying your delivery frequency. To avail the subscription feature a customer needs to prepay the whole amount. When the due date arrives, our Customer Care Executive will give you a reminder call and will ensure a safe and sound delivery of your specified products.
           </p>
             <p>
-                You can notify our customer care in case of any change in delivery date or postponed shipment, according to your convenience. In case of a change of shipping address, the customer can drop in an email to info@healthkart.com or can call our Customer Care at 0124-4551616 notifying us about the new address of delivery.
+                You can notify our customer care in case of any change in delivery date or postponed shipment, according to your convenience. In case of a change of shipping address, the customer can drop in an email to <strong>info@healthkart.com</strong> or can call our Customer Care at <strong>0124-4551616</strong> notifying us about the new address of delivery.
         </p>
 
            <p></p>
