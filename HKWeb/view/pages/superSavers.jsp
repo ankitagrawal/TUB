@@ -120,7 +120,7 @@
         }
 
         div.paginationDiv {
-        /*margin: 15px;*/
+            margin: 10px;
             text-align: center;
         }
     </style>
