@@ -130,8 +130,9 @@
 
 <s:layout-component name="modal">
 
+
   <c:if test="${!empty product.productVariants[0].productExtraOptions}">
-    <s:layout-render name="/pages/modal/productWithExtraOptions.jsp" product="${product}"/>
+    <s:layout-render name="/pages/modal/productWithExtraOptions.jsp" product="${product}" />
   </c:if>
   <%--<c:if test="${hk:collectionContains(product.categories, eyeGlass)}">--%>
   <%--<s:layout-render name="/pages/modal/eyeGlasses.jsp" product="${product}"/>--%>
@@ -351,6 +352,7 @@
         ${product.overview}
     </p>
   </c:if>
+    <input type="hidden" id="productReferrerId" value="${pa.productReferrerId}" />
   <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_DESCRIPTIONS%>">
     <div>
       <s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction" event="editOverview"
@@ -371,12 +373,12 @@
           <c:choose>
             <c:when test="${!product.productHaveColorOptions}">
               <s:layout-render name="/layouts/embed/_productWithMultipleVariantsWithNoColorOptions.jsp"
-                               product="${product}"/>
+                               product="${product}" />
               <s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>
             </c:when>
             <c:otherwise>
               <s:layout-render name="/layouts/embed/_productWithMultipleVariantsWithColorOptions.jsp"
-                               product="${product}"/>
+                               product="${product}" />
               <s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>
             </c:otherwise>
           </c:choose>
@@ -387,17 +389,17 @@
               <s:layout-render name="/layouts/embed/_comboProduct.jsp" productId="${product.id}"/>
             </c:when>
             <c:when test="${hk:collectionContains(product.categories, eyeGlass)}">
-              <s:layout-render name="/layouts/embed/glasses.jsp" product="${product}"/>
+              <s:layout-render name="/layouts/embed/glasses.jsp" product="${product}" />
             </c:when>
             <c:otherwise>
-              <s:layout-render name="/layouts/embed/_productWithSingleVariant.jsp" product="${product}"/>
+              <s:layout-render name="/layouts/embed/_productWithSingleVariant.jsp" product="${product}" />
             </c:otherwise>
           </c:choose>
         </c:otherwise>
       </c:choose>
     </c:when>
     <c:otherwise>
-      <s:layout-render name="/layouts/embed/_productWithExtraOptions.jsp" product="${product}"/>
+      <s:layout-render name="/layouts/embed/_productWithExtraOptions.jsp" product="${product}" />
       <%--<s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>--%>
     </c:otherwise>
   </c:choose>
@@ -597,8 +599,8 @@
           <td style="border-style:none">
             <s:link beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction" event="writeNewReview">
             <s:param name="product" value="${product.id}"/>
-            <strong>Write a Review<strong>
-              </s:link>
+            <strong>Write a Review</strong>
+             </s:link>
           </td>
         </tr>
 
@@ -688,7 +690,9 @@
 <s:layout-component name="endScripts">
   <script type="text/javascript">
     var validateCheckbox;
-    $(document).ready(function() {      
+    $(document).ready(function() {
+        var params = {};
+        params.productReferrerId = $('#productReferrerId').val();
       function _addToCart(res) {
         if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
           $('.message .line1').html("<strong>" + res.data.name + "</strong> has been added to your shopping cart");
@@ -744,6 +748,7 @@
             return true;
           }
         }
+          /*$('.addToCartForm').ajaxForm({dataType: 'json', data: params, success: _addToCart});*/
       });
     </c:if>
 
@@ -768,7 +773,7 @@
         }, 500);
       }
 
-      $('.addToCartForm').ajaxForm({dataType: 'json', success: _addToCart});
+      $('.addToCartForm').ajaxForm({dataType: 'json', data: params, success: _addToCart});
 
       $(".top_link, .go_to_top").click(function(event) {
         event.preventDefault();

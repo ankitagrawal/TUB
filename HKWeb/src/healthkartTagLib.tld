@@ -356,17 +356,6 @@
     </function>
     <function>
         <description>
-            returns the net inventory  of product variant or sku in the given warehouse
-        </description>
-        <name>netInventoryInWarehouse</name>
-        <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>java.lang.Long netInventoryInWarehouse(java.lang.Object,java.lang.Object)</function-signature>
-        <example>
-            ${hk:netInventoryInWarehouse(${object},${object})}
-        </example>
-    </function>
-    <function>
-        <description>
             returns the net available unbooked inventory of product variant or sku
         </description>
         <name>netAvailableUnbookedInventory</name>
@@ -750,6 +739,17 @@
     </function>
     <function>
         <description>
+            product list for a primary heading in a sorted order.
+        </description>
+        <name>getCategoryHeadingProductsSortedByOrder</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.util.List getCategoryHeadingProductsSortedByOrder(java.lang.Long,java.lang.String)</function-signature>
+        <example>
+            ${hk:getCategoryHeadingProductsSortedByOrder(${id}, ${str})}
+        </example>
+    </function>
+    <function>
+        <description>
             returns surcharge based on supplier and warehouse state
         </description>
         <name>getSurchargeValue</name>
@@ -782,15 +782,37 @@
         </example>
     </function>
     <function>
-            <description>
-                returns the net sku inventory sold in the given no. of days in the given warehouse
-            </description>
-            <name>findInventorySoldInGivenNoOfDays</name>
-            <function-class>com.hk.taglibs.Functions</function-class>
-            <function-signature>java.lang.Long findInventorySoldInGivenNoOfDays(com.hk.domain.sku.Sku,com.hk.domain.warehouse.Warehouse,int)</function-signature>
-            <example>
-                ${hk:findInventorySoldByDateAndProduct(${sku},${warehouse},${noOfDays})}
-            </example>
-        </function>
+        <description>
+            returns dispatch days for order, this is max of all items in order
+        </description>
+        <name>getDispatchDaysForOrder</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.String getDispatchDaysForOrder(com.hk.domain.order.Order)</function-signature>
+        <example>
+            ${getDispatchDaysForOrder(${order})}
+        </example>
+    </function>
+    <function>
+        <description>
+            returns the net inventory  of product variant or sku in the given warehouse
+        </description>
+        <name>netInventoryInWarehouse</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.Long netInventoryInWarehouse(java.lang.Object,java.lang.Object)</function-signature>
+        <example>
+            ${hk:netInventoryInWarehouse(${object},${object})}
+        </example>
+    </function>
+    <function>
+        <description>
+            returns the net sku inventory sold in the given no. of days in the given warehouse
+        </description>
+        <name>findInventorySoldInGivenNoOfDays</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.Long findInventorySoldInGivenNoOfDays(com.hk.domain.sku.Sku,com.hk.domain.warehouse.Warehouse,int)</function-signature>
+        <example>
+            ${hk:findInventorySoldByDateAndProduct(${sku},${warehouse},${noOfDays})}
+        </example>
+    </function>
 
 </taglib>

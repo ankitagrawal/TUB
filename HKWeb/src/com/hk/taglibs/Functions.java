@@ -48,7 +48,6 @@ import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
-import com.hk.report.dto.inventory.InventorySoldDto;
 import com.hk.report.pact.service.catalog.product.ReportProductVariantService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.CartLineItemUtil;
@@ -71,6 +70,12 @@ public class Functions {
 
     @SuppressWarnings("unused")
     private static final PeriodFormatter formatter;
+
+    private static final String          DEFAULT_DELIEVERY_DAYS = "1-3";
+    private static final String          BUSINESS_DAYS          = " business days";
+    private static final long            DEFAULT_MIN_DEL_DAYS   = 1;
+
+
     // TODO: rewrite
     static {
         formatter = new PeriodFormatterBuilder().appendYears().appendSuffix(" year, ", " years, ").appendMonths().appendSuffix(" month, ", " months, ").appendWeeks().appendSuffix(
@@ -82,7 +87,7 @@ public class Functions {
         // TODO: rewrite
     }
 
-    private static Logger                logger     = LoggerFactory.getLogger(Functions.class);
+    private static Logger                logger                 = LoggerFactory.getLogger(Functions.class);
 
     public static boolean isNotBlank(String str) {
         return StringUtils.isNotBlank(str);
@@ -340,13 +345,13 @@ public class Functions {
         return userManager.getProcessedOrdersCount(user);
     }
 
-    public static String getS3ImageUrl(Object o1, Object o2,boolean isSecure) {
+    public static String getS3ImageUrl(Object o1, Object o2, boolean isSecure) {
         EnumImageSize imageSize = (EnumImageSize) o1;
         Long imageId = (Long) o2;
         if (imageId == null) {
             return "";
         }
-        return HKImageUtils.getS3ImageUrl(imageSize, imageId,isSecure);
+        return HKImageUtils.getS3ImageUrl(imageSize, imageId, isSecure);
     }
 
     public static Boolean isFreeVariant(Object o) {
@@ -355,15 +360,15 @@ public class Functions {
         return productVariants != null && !productVariants.isEmpty();
     }
 
-    public static String getExtraOptionsAsString(Object o1,String str) {
+    public static String getExtraOptionsAsString(Object o1, String str) {
         CartLineItem cartLineItem = (CartLineItem) o1;
-//        String seperator = (String) o2;
+        // String seperator = (String) o2;
         return CartLineItemUtil.getExtraOptionsAsString(cartLineItem, str);
     }
 
-    public static String getConfigOptionsAsString(Object o1,String str) {
+    public static String getConfigOptionsAsString(Object o1, String str) {
         CartLineItem cartLineItem = (CartLineItem) o1;
-//        Character seperator = (Character) o2;
+        // Character seperator = (Character) o2;
         return CartLineItemUtil.getConfigOptionsAsString(cartLineItem, str);
     }
 
@@ -469,6 +474,11 @@ public class Functions {
         return skuDao.filterProductVariantsByWarehouse(sku.getProductVariant().getProduct().getProductVariants(), sku.getWarehouse());
     }
 
+    public static List<Product> getCategoryHeadingProductsSortedByOrder(Long primaryCategoryHeadingId, String productReferrer){
+        ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
+        return productService.productsSortedByOrder(primaryCategoryHeadingId, productReferrer);
+    }
+
     public static boolean isComboInStock(Object o) {
         ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
         Combo combo = (Combo) o;
@@ -476,9 +486,35 @@ public class Functions {
     }
 
     public static Map<String, List<String>> getRecommendedProducts(Object o) {
-        Product product = (Product)o;
+        Product product = (Product) o;
         ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
         return productService.getRelatedMoogaProducts(product);
+    }
+
+    public static String getDispatchDaysForOrder(Order order) {
+        if (order != null) {
+            Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
+            long minDays = DEFAULT_MIN_DEL_DAYS, maxDays = DEFAULT_MIN_DEL_DAYS;
+
+            for (CartLineItem cartLineItem : productCartLineItems) {
+                ProductVariant productVariant = cartLineItem.getProductVariant();
+                if (productVariant != null) {
+                    Product product = productVariant.getProduct();
+                    if (product.getMinDays() != null && product.getMinDays() > minDays) {
+                        minDays = product.getMinDays();
+                    }
+                    if (product.getMaxDays() != null && product.getMaxDays() > maxDays) {
+                        maxDays = product.getMaxDays();
+                    }
+                }
+
+            }
+
+            return String.valueOf(minDays).concat("-").concat(String.valueOf(maxDays)).concat(BUSINESS_DAYS);
+        } else {
+            return DEFAULT_DELIEVERY_DAYS.concat(BUSINESS_DAYS);
+        }
+
     }
 
     public static Long findInventorySoldInGivenNoOfDays(Sku sku, Warehouse warehouse, int noOfDays) {
@@ -489,4 +525,5 @@ public class Functions {
 
         return reportProductVariantService.findInventorySoldByDateAndProduct(DateUtils.getDateMinusDays(noOfDays), endDate, sku.getProductVariant().getId(), warehouse).getCountSold();
     }
+
 }
