@@ -152,6 +152,9 @@ public class Product implements java.io.Serializable {
     @Transient
     private String               categoriesPipeSeparated;
 
+    @Transient
+    private String               productURL;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
     private Set<SuperSaverImage> superSaverImages = new HashSet<SuperSaverImage>(0);
 
@@ -515,6 +518,14 @@ public class Product implements java.io.Serializable {
         this.secondaryCategory = secondaryCategory;
     }
 
+    public String getProductURL() {
+      return productURL;
+    }
+
+	  public void setProductURL(String productURL) {
+		  this.productURL = productURL;
+	  }
+  
     public String getPipeSeparatedCategories() {
         StringBuffer stringBuffer = new StringBuffer();
         for (Iterator<Category> categoriesIterator = categories.iterator(); categoriesIterator.hasNext();) {

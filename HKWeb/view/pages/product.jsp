@@ -39,22 +39,22 @@
       display: none;
     }
 
-    ul#thumblist {
+    ul.thumblist {
       display: block;
     }
 
-    ul#thumblist li {
+    ul.thumblist li {
       float: left;
       margin-right: 2px;
       list-style: none;
     }
 
-    ul#thumblist li a {
+    ul.thumblist li a {
       display: block;
       border: 1px solid #CCC;
     }
 
-    ul#thumblist li a.zoomThumbActive {
+    ul.thumblist li a.zoomThumbActive {
       border: 1px solid red;
     }
 
@@ -91,7 +91,17 @@
         width: 900
       });
 
-      //Click and change image
+        //$("#frameChart").hide();
+
+        $("#frameChartVM").click(function showVM(){
+            $("#frameChart").show();
+        });
+
+        $("#sizeGuide").click(function toggleVM(){
+            $("#frameChart").toggle();
+        });
+
+        //Click and change image
       $('.color_box').click(function() {
         var variantMainImageId = $(this).find('.variantMainImageId').val();
         //var url = "http://healthkart-prod.s3.amazonaws.com/1/"+variantMainImageId+"_t.jpg";
@@ -120,8 +130,9 @@
 
 <s:layout-component name="modal">
 
+
   <c:if test="${!empty product.productVariants[0].productExtraOptions}">
-    <s:layout-render name="/pages/modal/productWithExtraOptions.jsp" product="${product}"/>
+    <s:layout-render name="/pages/modal/productWithExtraOptions.jsp" product="${product}" />
   </c:if>
   <%--<c:if test="${hk:collectionContains(product.categories, eyeGlass)}">--%>
   <%--<s:layout-render name="/pages/modal/eyeGlasses.jsp" product="${product}"/>--%>
@@ -193,60 +204,56 @@
 </s:layout-component>
 
 <s:layout-component name="prod_slideshow">
-  <div class='product_slideshow'>
-    <div class="img320">
-      <a href="${hk:getS3ImageUrl(imageLargeSize, product.mainImageId,isSecure)}" class="jqzoom" rel='gal1'
-         title="${product.name}">
-        <img src="${hk:getS3ImageUrl(imageMediumSize, product.mainImageId,isSecure)}" alt="${product.name}"
-             title="${product.name}">
-      </a>
-      <c:if test="${fn:length(pa.productImages) > 1}">
-        <ul id="thumblist">
-          <c:forEach items="${pa.productImages}" var="productImage">
-            <li><a href='javascript:void(0);'
-                   rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, productImage.id,isSecure)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, productImage.id,isSecure)}'}"><img
-                src='${hk:getS3ImageUrl(imageSmallSize, productImage.id,isSecure)}'></a></li>
-          </c:forEach>
-        </ul>
-      </c:if>
+    <div class='product_slideshow'>
+        <div class="img320">
+            <a href="${hk:getS3ImageUrl(imageLargeSize, product.mainImageId,isSecure)}" class="jqzoom" rel='gal1'
+               title="${product.name}">
+                <img src="${hk:getS3ImageUrl(imageMediumSize, product.mainImageId,isSecure)}" alt="${product.name}"
+                     title="${product.name}">
+            </a>
+        </div>
+        <div>
+            <c:if test="${fn:length(pa.productImages) > 1}">
+                <ul class="thumblist">
+                    <c:forEach items="${pa.productImages}" var="productImage">
+                        <li><a href='javascript:void(0);'
+                               rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, productImage.id,isSecure)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, productImage.id,isSecure)}'}"><img
+                                src='${hk:getS3ImageUrl(imageSmallSize, productImage.id,isSecure)}'></a></li>
+                    </c:forEach>
+                </ul>
+            </c:if>
+        </div>
+        <div class="clear"></div>
+        <div style="padding-top: 15px">
+            <shiro:hasPermission name="<%=PermissionConstants.GET_PRODUCT_LINK%>">
+                <a name="showProductLink" class="linkbutton"
+                   onclick="$('#getProductLinkWindow').jqm(); $('#getProductLinkWindow').jqmShow();"
+                   style="cursor:pointer">Get
+                    Links</a>
+                <a name="showProductLink" class="linkbutton"
+                   onclick="$('#getBannerLinkWindow').jqm(); $('#getBannerLinkWindow').jqmShow();"
+                   style="cursor:pointer">Get
+                    Banners</a>
+            </shiro:hasPermission>
+        </div>
+        <div class="clear"></div>
+        <div><shiro:hasPermission name="<%=PermissionConstants.MANAGE_IMAGE%>">
+            <s:link beanclass="com.hk.web.action.core.catalog.image.UploadImageAction" event="pre" target="_blank"
+                    class="popup"> Upload
+                <s:param name="product" value="${product.id}"/>
+            </s:link>
+            <s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction"
+                    event="manageProductImages" target="_blank"
+                    class="popup">Manage
+                Images
+                <s:param name="productId" value="${product.id}"/>
+            </s:link>
+        </shiro:hasPermission>
+        </div>
+        <c:if test="${product.videoEmbedCode != null}">
+            <s:layout-render name="/layouts/embed/_productVideo.jsp" productId="${product.id}"/>
+        </c:if>
     </div>
-
-    <div><br/><br/><br/></div>
-    <div>
-      <shiro:hasPermission name="<%=PermissionConstants.GET_PRODUCT_LINK%>">
-        <a name="showProductLink" class="linkbutton"
-           onclick="$('#getProductLinkWindow').jqm(); $('#getProductLinkWindow').jqmShow();" style="cursor:pointer">Get
-                                                                                                                    Links</a>
-        <a name="showProductLink" class="linkbutton"
-           onclick="$('#getBannerLinkWindow').jqm(); $('#getBannerLinkWindow').jqmShow();" style="cursor:pointer">Get
-                                                                                                                  Banners</a>
-      </shiro:hasPermission>
-    </div>
-    <shiro:hasPermission name="<%=PermissionConstants.MANAGE_IMAGE%>">
-      <br/>
-
-      <div><s:link beanclass="com.hk.web.action.core.catalog.image.UploadImageAction" event="pre" target="_blank"
-                   class="popup"> Upload
-        <s:param name="product" value="${product.id}"/>
-      </s:link>
-        <s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction"
-                event="manageProductImages" target="_blank"
-                class="popup">Manage
-                              Images
-          <s:param name="productId" value="${product.id}"/>
-        </s:link>
-      </div>
-    </shiro:hasPermission>
-    <c:if test="${product.videoEmbedCode != null}">
-      <s:layout-render name="/layouts/embed/_productVideo.jsp" productId="${product.id}"/>
-    </c:if>
-  </div>
-
-  <c:if test="${product.id == 'NUT904'}">
-    <div id="gulal" style="position:absolute; left: 600px; display: none">
-      <img src="<hk:vhostImage/>/images/gulal-spray.png"/>
-    </div>
-  </c:if>
 
 </s:layout-component>
 
@@ -345,6 +352,7 @@
         ${product.overview}
     </p>
   </c:if>
+    <input type="hidden" id="productReferrerId" value="${pa.productReferrerId}" />
   <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_DESCRIPTIONS%>">
     <div>
       <s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction" event="editOverview"
@@ -365,12 +373,12 @@
           <c:choose>
             <c:when test="${!product.productHaveColorOptions}">
               <s:layout-render name="/layouts/embed/_productWithMultipleVariantsWithNoColorOptions.jsp"
-                               product="${product}"/>
+                               product="${product}" />
               <s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>
             </c:when>
             <c:otherwise>
               <s:layout-render name="/layouts/embed/_productWithMultipleVariantsWithColorOptions.jsp"
-                               product="${product}"/>
+                               product="${product}" />
               <s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>
             </c:otherwise>
           </c:choose>
@@ -381,17 +389,17 @@
               <s:layout-render name="/layouts/embed/_comboProduct.jsp" productId="${product.id}"/>
             </c:when>
             <c:when test="${hk:collectionContains(product.categories, eyeGlass)}">
-              <s:layout-render name="/layouts/embed/glasses.jsp" product="${product}"/>
+              <s:layout-render name="/layouts/embed/glasses.jsp" product="${product}" />
             </c:when>
             <c:otherwise>
-              <s:layout-render name="/layouts/embed/_productWithSingleVariant.jsp" product="${product}"/>
+              <s:layout-render name="/layouts/embed/_productWithSingleVariant.jsp" product="${product}" />
             </c:otherwise>
           </c:choose>
         </c:otherwise>
       </c:choose>
     </c:when>
     <c:otherwise>
-      <s:layout-render name="/layouts/embed/_productWithExtraOptions.jsp" product="${product}"/>
+      <s:layout-render name="/layouts/embed/_productWithExtraOptions.jsp" product="${product}" />
       <%--<s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>--%>
     </c:otherwise>
   </c:choose>
@@ -430,7 +438,6 @@
 			<a class='go_to_top' href='#top'>go to top &uarr;</a>
 		</div>
 	</c:if>
-
 	<c:if test="${hk:collectionContains(product.categories, eyeGlass)}">
 		<div id="sizeGuide"
 		      class="content" style="background-color:#DDDDDD;padding:5px; cursor:pointer;font-weight:bold;text-align:left;">
@@ -592,8 +599,8 @@
           <td style="border-style:none">
             <s:link beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction" event="writeNewReview">
             <s:param name="product" value="${product.id}"/>
-            <strong>Write a Review<strong>
-              </s:link>
+            <strong>Write a Review</strong>
+             </s:link>
           </td>
         </tr>
 
@@ -683,7 +690,9 @@
 <s:layout-component name="endScripts">
   <script type="text/javascript">
     var validateCheckbox;
-    $(document).ready(function() {      
+    $(document).ready(function() {
+        var params = {};
+        params.productReferrerId = $('#productReferrerId').val();
       function _addToCart(res) {
         if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
           $('.message .line1').html("<strong>" + res.data.name + "</strong> has been added to your shopping cart");
@@ -739,6 +748,7 @@
             return true;
           }
         }
+          /*$('.addToCartForm').ajaxForm({dataType: 'json', data: params, success: _addToCart});*/
       });
     </c:if>
 
@@ -763,7 +773,7 @@
         }, 500);
       }
 
-      $('.addToCartForm').ajaxForm({dataType: 'json', success: _addToCart});
+      $('.addToCartForm').ajaxForm({dataType: 'json', data: params, success: _addToCart});
 
       $(".top_link, .go_to_top").click(function(event) {
         event.preventDefault();
