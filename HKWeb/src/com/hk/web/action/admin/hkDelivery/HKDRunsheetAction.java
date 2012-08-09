@@ -1,5 +1,7 @@
 package com.hk.web.action.admin.hkDelivery;
 
+import com.akube.framework.dao.Page;
+import com.hk.domain.hkDelivery.Runsheet;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -45,6 +47,8 @@ public class HKDRunsheetAction extends BaseAction{
     private int totalPrepaidPackets = 0;
     private double totalCODAmount = 0.0;
     private String awbWithoutConsignmntString = null;
+    private Page runsheetPage;
+    private List<Runsheet> runsheetList = new ArrayList<Runsheet>();
 
     List<String> trackingIdList = new ArrayList<String>();
     List<String> trackingIdsWithoutConsignment = new ArrayList<String>();
@@ -154,5 +158,11 @@ public class HKDRunsheetAction extends BaseAction{
         this.trackingIdList = trackingIdList;
     }
 
+    public List<Runsheet> getRunsheetList() {
+        return runsheetList;
+    }
 
+    public void setRunsheetList(List<Runsheet> runsheetList) {
+        this.runsheetList = runsheetList;
+    }
 }
