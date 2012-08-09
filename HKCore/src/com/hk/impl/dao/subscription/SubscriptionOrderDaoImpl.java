@@ -35,6 +35,6 @@ public class SubscriptionOrderDaoImpl extends BaseDaoImpl implements Subscriptio
     }
 
     public List<SubscriptionOrder> findSubscriptionOrdersForSubscription(Subscription subscription, SubscriptionOrderStatus subscriptionOrderStatus){
-        return (List<SubscriptionOrder>) findByNamedParams("from SubscriptionOrder so where so.subscription = :subscription and so.subscriptionOrderStatus :=subscriptionOrderStatus", new String[]{"subscription","subscriptionOrderStatus"}, new Object[]{subscription,subscriptionOrderStatus});
+        return (List<SubscriptionOrder>) findByNamedParams("from SubscriptionOrder so where so.subscription = :subscription and so.subscriptionOrderStatus = :subscriptionOrderStatus", new String[]{"subscription","subscriptionOrderStatus"}, new Object[]{subscription,subscriptionOrderStatus});
     }
 }
