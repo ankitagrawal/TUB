@@ -384,14 +384,14 @@
 --/eye/eyeglasses/frameless
 --/eye/eyeglasses/reading-glasses :Reading Glasses
 --/eye/eyeglasses/kids :  Kids
--/eye/accessories
---/eye/accessories/solutions
---/eye/accessories/lens-case
---/eye/accessories/lens-cleaner :Lens Cleaner
---/eye/accessories/eye-patches : Eye Patches
---/eye/accessories/under-eye-creams : Under Eye Creams
---/eye/accessories/relaxing-masks : Relaxing Masks
---/eye/accessories/eye-supplements  :Eye Supplements
+-/eye/eye-care
+--/eye/eye-care/solutions
+--/eye/eye-care/lens-case
+--/eye/eye-care/lens-cleaner :Lens Cleaner
+--/eye/eye-care/eye-patches : Eye Patches
+--/eye/eye-care/under-eye-creams : Under Eye Creams
+--/eye/eye-care/relaxing-masks : Relaxing Masks
+--/eye/eye-care/eye-supplements  :Eye Supplements
 -/eye/what-s-new  :What's New
 --/eye/what-s-new/just-in :Just In
 --/eye/what-s-new/top-deals:Top Deals
