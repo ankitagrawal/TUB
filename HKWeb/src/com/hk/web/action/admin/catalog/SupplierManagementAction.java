@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import com.hk.constants.core.Keys;
+import com.hk.util.XslGenerator;
 import com.hk.util.io.HkXlsWriter;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -47,6 +48,9 @@ public class SupplierManagementAction extends BasePaginatedAction {
 
     @Autowired
     SupplierDao supplierDao;
+
+    @Autowired
+    XslGenerator xslGenerator;
 
     private List<Supplier> supplierList = new ArrayList<Supplier>();
     private Supplier supplier;
@@ -165,51 +169,16 @@ public class SupplierManagementAction extends BasePaginatedAction {
     }
 
     public Resolution generateExcelReport() {
-        supplierList = supplierDao.getSupplierByTinAndName(supplierTin, supplierName);//.getAllSupplierListByTinAndName(supplierTin, supplierName);
+        supplierList = supplierDao.getSupplierByTinAndName(supplierTin, supplierName);
 
         xlsFile = new File(adminDownloads + "/reports/SupplierList.xls");
-        HkXlsWriter xlsWriter = new HkXlsWriter();
+
+
 
         if (supplierList != null) {
-            int xlsRow = 1;
-            xlsWriter.addHeader("NAME", "NAME");
-            xlsWriter.addHeader("TIN", "TIN");
-            xlsWriter.addHeader("ADDRESS", "ADDRESS");
-            xlsWriter.addHeader("CONTACT PERSON", "CONTACT PERSON");
-            xlsWriter.addHeader("CONTACT NUMBER", "CONTACT NUMBER");
+            xslGenerator.generateSupplierListExcel(xlsFile, supplierList);
 
-            for (Supplier supplier : supplierList) {
-                xlsWriter.addCell(xlsRow, supplier.getName());
-                xlsWriter.addCell(xlsRow, supplier.getTinNumber());
-                StringBuffer supplierAddress = new StringBuffer();
 
-                if(supplier.getLine1() != null) {
-                    supplierAddress.append(supplier.getLine1());
-                    supplierAddress.append(", ");
-                }
-
-                if(supplier.getLine2() != null) {
-                    supplierAddress.append(supplier.getLine2());
-                    supplierAddress.append(", ");
-                }
-                if(supplier.getCity() != null) {
-                    supplierAddress.append(supplier.getCity());
-                    supplierAddress.append(", ");
-                }
-                if(supplier.getPincode() != null) {
-                    supplierAddress.append(supplier.getPincode());
-                    supplierAddress.append(", ");
-                }
-                if(supplier.getState() != null) {
-                    supplierAddress.append(supplier.getState());
-                }
-
-                xlsWriter.addCell(xlsRow, supplierAddress.toString());
-                xlsWriter.addCell(xlsRow, supplier.getContactPerson());
-                xlsWriter.addCell(xlsRow, supplier.getContactNumber());
-                xlsWriter.writeData(xlsFile, "SupplierList");
-                xlsRow++;
-            }
 
             return new HTTPResponseResolution();
         }
@@ -231,10 +200,7 @@ public class SupplierManagementAction extends BasePaginatedAction {
                 out.write(buf, 0, count);
             }
         }
-
     }
-
-
 
     public List<Supplier> getSupplierList() {
         return supplierList;

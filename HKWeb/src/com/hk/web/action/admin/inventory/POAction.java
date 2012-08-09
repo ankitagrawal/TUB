@@ -114,7 +114,7 @@ public class POAction extends BasePaginatedAction {
             purchaseOrderList = getPurchaseOrderDao().searchPO(purchaseOrder, purchaseOrderStatus, approvedBy, createdBy, invoiceNumber, tinNumber, supplierName, warehouse);
         }
 
-        if(purchaseOrderList != null) {
+        if (purchaseOrderList != null) {
             xlsFile = new File(adminDownloads + "/reports/POList.xls");
             xslGenerator.generatePOListExcel(xlsFile, purchaseOrderList);
             return new HTTPResponseResolution();
@@ -232,11 +232,8 @@ public class POAction extends BasePaginatedAction {
 
     public Resolution poInPdf() {
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
             xlsFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() + ".pdf");
-            //String logoImagePath = getContext().getRequest().getContextPath() + "/images/logo/HealthKartLogo.png";
-            //TODO: Change this logo image path
-            String logoImagePath = "C:/Users/Rohit/IdeaProjects/rewrite/HKRejuvenate/HealthKart/dist/images/logo/HealthKartLogo.png";
+            String logoImagePath = getContext().getServletContext().getRealPath("/") + "/images/logo/HealthKartLogo.png";
             purchaseOrderDto = getPurchaseOrderManager().generatePurchaseOrderDto(purchaseOrder);
             getPurchaseOrderPDFGenerator().generatePurchaseOrderPdf(xlsFile.getPath(), purchaseOrderDto, logoImagePath);
             addRedirectAlertMessage(new SimpleMessage("Purchase Order successfully generated"));

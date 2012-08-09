@@ -127,4 +127,12 @@ public class XslConstants {
     public static final String CREATED_BY = "CREATED BY";
     public static final String APPROVER = "APPROVER";
     public static final String LAST_UPDATED_DATE = "LAST UPDATED DATE";
+
+    //For supplier
+    public static final String ADDRESS = "ADDRESS";
+    public static final String CONTACT_PERSON = "CONTACT PERSON";
+    public static final String CONTACT_NUMBER = "CONTACT NUMBER";
+    public static final String CREDIT_PERIOD = "CREDIT PERIOD";
+    public static final String MARGIN = "MARGIN";
+    public static final String VALIDITY_TERMS_OF_TRADE = "VALIDITY OF TERMS OF TRADE";
 }

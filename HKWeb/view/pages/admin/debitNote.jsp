@@ -42,9 +42,6 @@
                                 '  <td>' +
                                 '    <input class="mrp" type="text" name="debitNoteLineItems[' + nextIndex + '].mrp" />' +
                                 '  </td>' +
-                                '  <td>' +
-                                '    <input class="remarks" type="text" name="debitNoteLineItems[' + nextIndex + '].remarks" />' +
-                                '  </td>' +
                                 '</tr>';
 
                 $('#poTable').append(newRowHtml);
@@ -126,7 +123,10 @@
                 <td>
                     <s:hidden name="debitNote.warehouse" value="${whAction.setWarehouse.id}"/>
                         ${whAction.setWarehouse.city}
-                </td></tr>
+                </td>
+                <td>Remarks</td>
+                <td><s:textarea name="debitNote.remarks" style="height:50px;"/></td>
+            </tr>
         </table>
 
         <table border="1">
@@ -140,7 +140,6 @@
                 <th>Debit Qty</th>
                 <th>Cost Price<br/>(Without TAX)</th>
                 <th>MRP</th>
-                <th>Remarks</th>
                 <th>Taxable</th>
                 <th>Tax</th>
                 <th>Surcharge</th>
@@ -195,7 +194,6 @@
                                       value="${debitNoteLineItemDto.debitNoteLineItem.mrp}"/>
                         </shiro:lacksRole>
                     </td>
-                    <td><s:text name="debitNoteLineItems[${ctr.index}].remarks" value="${debitNoteLineItemDto.debitNoteLineItem.remarks}" /></td>
                     <td>
                         <fmt:formatNumber value="${debitNoteLineItemDto.taxable}" maxFractionDigits="2"/>
                     </td>
@@ -213,7 +211,7 @@
             </tbody>
             <tfoot>
             <tr>
-                <td colspan="9">Total</td>
+                <td colspan="8">Total</td>
                 <td><fmt:formatNumber value="${pa.debitNoteDto.totalTaxable}" maxFractionDigits="2"/></td>
                 <td><fmt:formatNumber value="${pa.debitNoteDto.totalTax}" maxFractionDigits="2"/></td>
                 <td><fmt:formatNumber value="${pa.debitNoteDto.totalSurcharge}" maxFractionDigits="2"/></td>

@@ -236,8 +236,8 @@
                 <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="grnStatusList"
                                            value="id" label="name"/>
             </s:select></td>
-            <td></td>
-            <td></td>
+            <td>Remarks</td>
+            <td><s:textarea name="grn.remarks" style="height:50px;"/></td>
         </tr>
         <tr>
             <td>For Warehouse</td>

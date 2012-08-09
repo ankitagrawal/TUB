@@ -4,6 +4,7 @@ import com.hk.admin.pact.dao.courier.CourierDao;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.constants.XslConstants;
 import com.hk.domain.catalog.Manufacturer;
+import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductExtraOption;
@@ -604,6 +605,57 @@ private SkuService                    skuService;*/
                 xlsWriter.writeData(xlsFile, "POList");
                 xlsRow++;
             }
+        }
+        return xlsFile;
+    }
+
+    public File generateSupplierListExcel(File xlsFile, List<Supplier> supplierList) {
+        HkXlsWriter xlsWriter = new HkXlsWriter();
+        int xlsRow = 1;
+        xlsWriter.addHeader(XslConstants.SUPPLIER_NAME, XslConstants.SUPPLIER_NAME);
+        xlsWriter.addHeader(XslConstants.SUPPLIER_TIN, XslConstants.SUPPLIER_TIN);
+        xlsWriter.addHeader(XslConstants.ADDRESS, XslConstants.ADDRESS);
+        xlsWriter.addHeader(XslConstants.CONTACT_PERSON, XslConstants.CONTACT_PERSON);
+        xlsWriter.addHeader(XslConstants.CONTACT_NUMBER, XslConstants.CONTACT_NUMBER);
+        xlsWriter.addHeader(XslConstants.CREDIT_PERIOD, XslConstants.CREDIT_PERIOD);
+        xlsWriter.addHeader(XslConstants.MARGIN, XslConstants.MARGIN);
+        xlsWriter.addHeader(XslConstants.BRAND, XslConstants.BRAND);
+        xlsWriter.addHeader(XslConstants.VALIDITY_TERMS_OF_TRADE, XslConstants.VALIDITY_TERMS_OF_TRADE);
+
+        for (Supplier supplier : supplierList) {
+            xlsWriter.addCell(xlsRow, supplier.getName());
+            xlsWriter.addCell(xlsRow, supplier.getTinNumber());
+            StringBuffer supplierAddress = new StringBuffer();
+
+            if(supplier.getLine1() != null) {
+                supplierAddress.append(supplier.getLine1());
+                supplierAddress.append(", ");
+            }
+            if(supplier.getLine2() != null) {
+                supplierAddress.append(supplier.getLine2());
+                supplierAddress.append(", ");
+            }
+            if(supplier.getCity() != null) {
+                supplierAddress.append(supplier.getCity());
+                supplierAddress.append(", ");
+            }
+            if(supplier.getPincode() != null) {
+                supplierAddress.append(supplier.getPincode());
+                supplierAddress.append(", ");
+            }
+            if(supplier.getState() != null) {
+                supplierAddress.append(supplier.getState());
+            }
+
+            xlsWriter.addCell(xlsRow, supplierAddress.toString());
+            xlsWriter.addCell(xlsRow, supplier.getContactPerson());
+            xlsWriter.addCell(xlsRow, supplier.getContactNumber());
+            xlsWriter.addCell(xlsRow, supplier.getCreditPeriod());
+            xlsWriter.addCell(xlsRow, supplier.getMargins());
+            xlsWriter.addCell(xlsRow, supplier.getBrandName());
+            xlsWriter.addCell(xlsRow, supplier.getTOT());
+            xlsWriter.writeData(xlsFile, "SupplierList");
+            xlsRow++;
         }
         return xlsFile;
     }

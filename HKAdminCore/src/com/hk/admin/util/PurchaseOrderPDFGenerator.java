@@ -116,7 +116,7 @@ public class PurchaseOrderPDFGenerator {
         java.util.List<PoLineItemDto> poLineItemDtoList = purchaseOrderDto.getPoLineItemDtoList();
         NumberFormat numberFormat = NumberFormat.getInstance();
         numberFormat.setMaximumFractionDigits(2);
-        float[] widths = {4.33f, 11.33f, 10.33f,  13.33f,  6.33f,  8.33f,  8.33f,  4.33f, 8.33f, 8.33f,  8.33f,  8.33f};
+        float[] widths = {3.33f, 11.33f, 11.33f,  13.33f,  6.33f,  8.33f,  8.33f,  4.33f, 8.33f, 8.33f,  8.33f,  8.33f};
 
         PdfPTable poDetailTable = PdfGenerator.createTable(12, widths, 100f);
 
@@ -128,8 +128,8 @@ public class PurchaseOrderPDFGenerator {
         poDetailTable.addCell(PdfGenerator.createCell("UPC", font1));
         poDetailTable.addCell(PdfGenerator.createCell("Details", font1));
         poDetailTable.addCell(PdfGenerator.createCell("Qty", font1));
-        poDetailTable.addCell(PdfGenerator.createCell("Cost Price\n (Without Tax)", font1));
         poDetailTable.addCell(PdfGenerator.createCell("MRP", font1));
+        poDetailTable.addCell(PdfGenerator.createCell("Cost Price\n (Without Tax)", font1));
         poDetailTable.addCell(PdfGenerator.createCell("Tax %", font1));
         poDetailTable.addCell(PdfGenerator.createCell("Taxable", font1));
         poDetailTable.addCell(PdfGenerator.createCell("Tax", font1));
@@ -144,8 +144,8 @@ public class PurchaseOrderPDFGenerator {
             poDetailTable.addCell(PdfGenerator.createCell(productVariant.getUpc(), font2));
             poDetailTable.addCell(PdfGenerator.createCell(productVariant.getProduct().getName(), font2));
             poDetailTable.addCell(PdfGenerator.createCell("" + poLineItemDto.getPoLineItem().getQty(), font2));
-            poDetailTable.addCell(PdfGenerator.createCell(numberFormat.format(poLineItemDto.getPoLineItem().getCostPrice()), font2));
             poDetailTable.addCell(PdfGenerator.createCell(numberFormat.format(poLineItemDto.getPoLineItem().getMrp()), font2));
+            poDetailTable.addCell(PdfGenerator.createCell(numberFormat.format(poLineItemDto.getPoLineItem().getCostPrice()), font2));
             poDetailTable.addCell(PdfGenerator.createCell(numberFormat.format(poLineItemDto.getPoLineItem().getSku().getTax().getValue() * 100), font2));
             poDetailTable.addCell(PdfGenerator.createCell(numberFormat.format(poLineItemDto.getTaxable()), font2));
             poDetailTable.addCell(PdfGenerator.createCell(numberFormat.format(poLineItemDto.getTax()), font2));

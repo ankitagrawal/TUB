@@ -61,7 +61,6 @@ public class GoodsReceivedNoteDaoImpl extends BaseDaoImpl implements GoodsReceiv
                 supplierCriteria.add(Restrictions.eq("tinNumber", tinNumber));
             }
             if (StringUtils.isNotBlank(supplierName)) {
-
                 supplierCriteria.add(Restrictions.like("name", "%" + supplierName + "%"));
             }
             poList = purchaseOrderCriteria.list();
@@ -75,13 +74,29 @@ public class GoodsReceivedNoteDaoImpl extends BaseDaoImpl implements GoodsReceiv
                 grnCriteria.add(Restrictions.eq("reconciled", isReconciled));
             }
         }
+
         if (grn != null) {
             grnCriteria.add(Restrictions.eq("id", grn.getId()));
         }
 
-        if (!poList.isEmpty() && poList.size() > 0) {
-            grnCriteria.add(Restrictions.in("purchaseOrder", poList));
+        DetachedCriteria purchaseOrderCriteria = null;
+        DetachedCriteria supplierCriteria = null;
+        if (supplierName != null || tinNumber != null) {
+            purchaseOrderCriteria  = grnCriteria.createCriteria("purchase_order");
+
+            if(tinNumber != null) {
+            purchaseOrderCriteria.add(Restrictions.eq("tinNumber", tinNumber));
+            }
+
+            if(supplierName != null ){
+                supplierCriteria = purchaseOrderCriteria.createCriteria("supplier");
+                supplierCriteria.add(Restrictions.like("name", "%" + supplierName + "%"));
+            }
+
         }
+        /*if (!poList.isEmpty() && poList.size() > 0) {
+            grnCriteria.add(Restrictions.in("purchaseOrder", poList));
+        }*/
         if (StringUtils.isNotBlank(invoiceNumber)) {
             grnCriteria.add(Restrictions.eq("invoiceNumber", invoiceNumber));
         }
