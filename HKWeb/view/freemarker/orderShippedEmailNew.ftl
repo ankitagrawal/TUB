@@ -69,11 +69,13 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
                             </tr>
                             <#list order.lineItems as lineItem>
                             <tr>
+
                                 <td>${lineItem.sku.productVariant.product.name}
                                     <#if lineItem.sku.productVariant.variantName??>
                                     ${lineItem.sku.productVariant.variantName}
                                     </#if>
                                     <br/>
+
                                     <#list lineItem.sku.productVariant.productOptions as
                                  productOption>
                                     <em style="font-size:0.9em; color:#666">${productOption.name} ${productOption.value} </em>
@@ -98,6 +100,10 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
                         <br/>
                         <br/>
 
+                        <strong>Note: Our products are shipped in sealed bags & boxes and we request you not to accept
+                            any tampered packets.</strong>
+                        <br/>
+                        <br/>
                         In case you have any queries, feel free to chat with our Customer Care or call them at
                         0124-4551616. <br/>
                         <br/>

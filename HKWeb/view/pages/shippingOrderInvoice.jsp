@@ -65,9 +65,22 @@
 
 <div class="container_12" style="border: 1px solid; padding-top: 10px;">
 <div class="grid_4">
-    <div style="float: left;">
-        <img src="${pageContext.request.contextPath}/barcodes/${orderSummary.shippingOrder.gatewayOrderId}.png"/>
-    </div>
+    <c:choose>
+        <c:when test="${orderSummary.shipment != null}">
+            <div style="float: left;">
+                <strong>AWB NO.</strong>
+
+                <div class="clear"></div>
+                <div style="font-weight:bold; margin-top:5px;">${orderSummary.shipment.courier.name}</div>
+                <div class="clear"></div>
+                <img style="padding-top: 0px; padding-left: 0px; padding-right: 150px; "
+                     src="${pageContext.request.contextPath}/barcodes/${orderSummary.shipment.awb.awbNumber}.png"/>
+            </div>
+        </c:when>
+        <c:otherwise>
+            &nbsp;&nbsp;
+        </c:otherwise>
+    </c:choose>
 </div>
 
 <div class="grid_4">
@@ -90,92 +103,13 @@
 </div>
 
 <div class="clear"></div>
-<div style="margin-top: 5px;"></div>
-
-<div class="grid_12">
-    <div class="grid_8 alpha omega">
-        <div class="formatting" style="margin-top: 30px;">
-            <p style="margin-bottom: 2px;">Proforma Invoice for
-                Order#${orderSummary.shippingOrder.gatewayOrderId}</p>
-
-            <p>placed on: <fmt:formatDate
-                    value="${baseOrder.payment.createDate}" type="both" timeStyle="short"/>
-            </p>
-
-            <p>Fulfillment Centre: ${orderSummary.shippingOrder.warehouse.name}</p>
-            <c:if test="${orderSummary.shippingOrder.warehouse.id == 1}">
-                <p>Return Location: <b>DEL/ITG/111117</b></p>
-            </c:if>
-            <c:if test="${orderSummary.shippingOrder.warehouse.id == 2}">
-                <p>Return Location: <b>BOM/BPT/421302</b></p>
-            </c:if>
-
-            <c:if test="${baseOrder.payment.paymentMode.id == paymentMode_COD && orderSummary.invoiceDto.grandTotal > 0}">
-                <h2>Cash on Delivery :
-                    <fmt:formatNumber value="${orderSummary.invoiceDto.grandTotal}" type="currency"
-                                      currencySymbol="Rs. " maxFractionDigits="0"/></h2>
-            </c:if>
-            <h3>
-                Please do not accept if the box is tampered
-            </h3>
-        </div>
-    </div>
-
-    <div class="grid_4 alpha omega" style="width: 320px;">
-        <div class="formatting" style="float: right;">
-            <c:if test="${orderSummary.shippingOrder.baseOrder.user.login != 'support@madeinhealth.com'}">
-                <div
-                        style="float:right; width: 300px; padding: 10px; font-size: .7em; outline: 1px dotted gray; font-family: sans-serif;">
-                    <p style="margin-bottom: 4px;">Introducing the <strong>Refer and Earn</strong> program</p>
-
-                    <p>Your referral coupon code is</p>
-
-                    <p><strong
-                            style="text-transform:uppercase; font-size: 1.2em;">${orderSummary.coupon.code}</strong></p>
-
-                    <p><strong>How it works: </strong></p>
-
-                    <p>
-                        Pass this coupon code to your friends and family. They get a <strong>Rs. 100 discount on their
-                        first
-                        purchase*</strong> at healthkart.com
-                        and you
-                        <strong>get reward points worth Rs. 100</strong> in your account for your referral*.
-                    </p>
-                </div>
-            </c:if>
-        </div>
-    </div>
-</div>
-
-<div class="clear"></div>
-<div style="margin-top: 5px;"></div>
-
-<div class="clear"></div>
-<div style="margin-top: 5px;"></div>
+<div style="margin-top: 15px;"></div>
 
 <div class="grid_12">
     <div class="grid_8 alpha omega">
         <div class="formatting" style="float: left; font-size:1.1em;">
 
-            <div style="width:100%;">
-                <div style="width:50%; float:left; height:40px;"><strong>Name & Address</strong></div>
-
-                <div style="width:50%;float: right; height:40px;">
-                    <c:if test="${orderSummary.shipment != null}">
-                        <div>
-                            <div>
-                                    ${orderSummary.shipment.courier.name}
-                                <img style="padding-top: 0px; padding-left: 0px; padding-right: 82px; "
-                                     src="${pageContext.request.contextPath}/barcodes/${orderSummary.shipment.awb.awbNumber}.png"/>
-                            </div>
-                        </div>
-                    </c:if>
-                </div>
-
-            </div>
-
-            <div class="clear"></div>
+            <strong>Name & Address</strong>
 
             <p>${address.name}</p>
 
@@ -197,26 +131,29 @@
             <p>${address.state}</p>
 
             <p>Ph: ${address.phone}</p>
+
+            <c:if test="${baseOrder.payment.paymentMode.id == paymentMode_COD && orderSummary.invoiceDto.grandTotal > 0}">
+                <h2>Cash on Delivery :
+                    <fmt:formatNumber value="${orderSummary.invoiceDto.grandTotal}" type="currency"
+                                      currencySymbol="Rs. " maxFractionDigits="0"/></h2>
+            </c:if>
         </div>
     </div>
 
     <div class="grid_4 alpha omega" style="width: 320px;">
-        <div class="formatting" style="float: right;">
-            <c:if
-                    test="${baseOrder.offerInstance != null && baseOrder.offerInstance.coupon != null && hk:isNotBlank(baseOrder.offerInstance.coupon.complimentaryCoupon)}">
-                <div
-                        style="width: 300px; padding: 10px; font-size: .7em; outline: 1px dotted gray; font-family: sans-serif; margin-top: 30px;">
-                    <h4>You have won a Complementary Coupon!</h4>
+        <strong>ORDER NO.</strong>
 
-                    <p>${baseOrder.offerInstance.offer.complimentaryCouponDescription}</p>
+        <div class="clear"></div>
+        <div style="margin-top:5px;"></div>
+        <img src="${pageContext.request.contextPath}/barcodes/${orderSummary.shippingOrder.gatewayOrderId}.png"/>
 
-                    <p>Your Complementary Coupon Code :</p>
-
-
-                    <p><strong>${baseOrder.offerInstance.coupon.complimentaryCoupon}</strong></p>
-                </div>
-            </c:if>
-        </div>
+        <p>Fulfillment Centre: ${orderSummary.shippingOrder.warehouse.name}</p>
+        <c:if test="${orderSummary.shippingOrder.warehouse.id == 1}">
+            <p>Return Location: <b>DEL/ITG/111117</b></p>
+        </c:if>
+        <c:if test="${orderSummary.shippingOrder.warehouse.id == 2}">
+            <p>Return Location: <b>BOM/BPT/421302</b></p>
+        </c:if>
     </div>
 </div>
 
@@ -235,7 +172,35 @@
 <div style="margin-top: 5px;"></div>
 
 <div class="grid_12">
-    <h3>Order Details</h3>
+    <div style="font-size:.8em">
+        <h3 style="margin:0;">Please do not accept if the box is tampered</h3>
+
+        Note: This is to certify that items inside do not contain any prohibited or hazardous
+        material.
+    </div>
+    <hr/>
+    <c:set var="warehouse" value="${orderSummary.shippingOrder.warehouse}"/>
+    <c:choose>
+        <c:when test="${hk:collectionContains(baseOrder.user.roleStrings, b2bUser)}">
+            <p style="font-size: .8em;">Bright Lifecare Pvt. Ltd. | Khasra No. 146/25/2/1, Jail Road, Dhumaspur,
+                Badshahpur |
+                Gurgaon, Haryana- 122101 | TIN:
+                06101832036 </p>
+        </c:when>
+        <c:otherwise>
+            <p style="font-size: .8em;">Aquamarine Healthcare Pvt. Ltd. | ${warehouse.line1}, ${warehouse.line2} |
+                    ${warehouse.city}, ${warehouse.state}- ${warehouse.pincode} | TIN:
+                    ${warehouse.tin} </p>
+        </c:otherwise>
+    </c:choose>
+
+</div>
+<div class="clear"></div>
+<div style="margin-top: 5px;"></div>
+<div class="grid_12">
+    <h3 style="margin-bottom:2px">Order Details</h3>Merchant Transaction Ref No ${baseOrder.gatewayOrderId} for order
+    placed on: <fmt:formatDate value="${baseOrder.payment.paymentDate}" type="both" timeStyle="short"/>
+    <div style="margin-top: 5px;"></div>
     <c:if test="${orderSummary.invoiceDto.replacementOrderString != null}">
         <h3>${orderSummary.invoiceDto.replacementOrderString}</h3>
     </c:if>
@@ -247,7 +212,6 @@
             <th>Total(Rs.)</th>
         </tr>
         <c:forEach items="${orderSummary.invoiceDto.invoiceLineItemDtos}" var="invoiceLineItem">
-            <%--<c:if test="${invoiceLineItem.lineItemStatus.id != orderStatus_actionAwaiting}">--%>
             <tr>
                 <td>
                     <c:choose>
@@ -272,52 +236,10 @@
                     <em>
                         <p>
                                 ${invoiceLineItem.productOptionsPipeSeparated}
-                                <%--<c:forEach items="${invoiceLineItem.productOptions}" var="productOption">--%>
-                                <%--${productOption.name} ${productOption.value}&nbsp--%>
-                                <%--</c:forEach>--%>
                         </p>
-
                         <p>
                                 ${invoiceLineItem.extraOptionsPipeSeparated}
-                                <%--<c:forEach items="${invoiceLineItem.cartLineItemExtraOptions}" var="extraOption">--%>
-                                <%--<label>${extraOption.name} : ${extraOption.value}</label>&nbsp--%>
-                                <%--</c:forEach>--%>
-
                                 ${invoiceLineItem.configOptionsPipeSeparated}
-                                <%--<c:if test="${not empty invoiceLineItem.cartLineItemConfigValues}">--%>
-
-                                <%--<c:set var="TH" value="TH"/>--%>
-                                <%--<c:set var="THBF" value="THBF"/>--%>
-                                <%--<c:set var="CO" value="CO"/>--%>
-                                <%--<c:set var="COBF" value="COBF"/>--%>
-                                <%--<c:forEach items="${invoiceLineItem.cartLineItemConfigValues}" var="configValue"--%>
-                                <%--varStatus="configCtr">--%>
-                                <%--<c:set var="variantConfigOption" value="${configValue.variantConfigOption}"/>--%>
-                                <%--<c:set var="additionalParam" value="${variantConfigOption.additionalParam}"/>--%>
-                                <%--${variantConfigOption.displayName} : ${configValue.value}--%>
-                                <%--<c:if--%>
-                                <%--test="${(additionalParam ne TH) or (additionalParam ne THBF) or (additionalParam ne CO) or (additionalParam ne COBF) }">--%>
-                                <%--<c:if--%>
-                                <%--test="${fn:startsWith(variantConfigOption.name, 'R')==true}">--%>
-                                <%--(R)--%>
-                                <%--</c:if>--%>
-                                <%--<c:if--%>
-                                <%--test="${fn:startsWith(variantConfigOption.name, 'L')==true}">--%>
-                                <%--(L)--%>
-                                <%--</c:if>--%>
-                                <%--</c:if>--%>
-                                <%--${!configCtr.last?',':''}--%>
-
-                                <%--</c:forEach>--%>
-                                <%--</c:if>--%>
-
-
-                                <%--<c:forEach items="${invoiceLineItem.cartLineItemConfigValues}" var="configValue">--%>
-                                <%--<c:set var="variantConfigOption" value="${configValue.variantConfigOption}"/>--%>
-                                <%--<label>${variantConfigOption.displayName} : ${configValue.value}</label>&nbsp--%>
-                                <%--</c:forEach>--%>
-
-
                         </p>
                     </em>
                 </td>
@@ -399,30 +321,29 @@
 <div class="clear"></div>
 <div style="margin-top: 5px;"></div>
 
+<%--<div class="grid_12">--%>
+<%--<div style="font-size:.8em">Note: This is to certify that items inside do not contain any prohibited or hazardous--%>
+<%--material.--%>
+<%--</div>--%>
+<%--<hr/>--%>
+<%--<c:set var="warehouse" value="${orderSummary.shippingOrder.warehouse}"/>--%>
+<%--<c:choose>--%>
+<%--<c:when test="${hk:collectionContains(baseOrder.user.roleStrings, b2bUser)}">--%>
+<%--<p style="font-size: .8em;">Bright Lifecare Pvt. Ltd. | Khasra No. 146/25/2/1, Jail Road, Dhumaspur,--%>
+<%--Badshahpur |--%>
+<%--Gurgaon, Haryana- 122101 | TIN:--%>
+<%--06101832036 </p>--%>
+<%--</c:when>--%>
+<%--<c:otherwise>--%>
+<%--<p style="font-size: .8em;">Aquamarine Healthcare Pvt. Ltd. | ${warehouse.line1}, ${warehouse.line2} |--%>
+<%--${warehouse.city}, ${warehouse.state}- ${warehouse.pincode} | TIN:--%>
+<%--${warehouse.tin} </p>--%>
+<%--</c:otherwise>--%>
+<%--</c:choose>--%>
 
-<div class="grid_12">
-    <div style="font-size:.8em">Note: This is to certify that items inside do not contain any prohibited or hazardous
-        material.
-    </div>
-    <hr/>
-    <c:set var="warehouse" value="${orderSummary.shippingOrder.warehouse}"/>
-    <c:choose>
-        <c:when test="${hk:collectionContains(baseOrder.user.roleStrings, b2bUser)}">
-            <p style="font-size: .8em;">Bright Lifecare Pvt. Ltd. | Khasra No. 146/25/2/1, Jail Road, Dhumaspur,
-                Badshahpur |
-                Gurgaon, Haryana- 122101 | TIN:
-                06101832036 </p>
-        </c:when>
-        <c:otherwise>
-            <p style="font-size: .8em;">Aquamarine Healthcare Pvt. Ltd. | ${warehouse.line1}, ${warehouse.line2} |
-                    ${warehouse.city}, ${warehouse.state}- ${warehouse.pincode} | TIN:
-                    ${warehouse.tin} </p>
-        </c:otherwise>
-    </c:choose>
-
-</div>
-<div class="clear"></div>
-<div style="margin-top: 5px;"></div>
+<%--</div>--%>
+<%--<div class="clear"></div>--%>
+<%--<div style="margin-top: 5px;"></div>--%>
 </div>
 </body>
 </html>

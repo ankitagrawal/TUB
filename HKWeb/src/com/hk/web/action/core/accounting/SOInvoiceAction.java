@@ -16,26 +16,21 @@ import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.util.BarcodeGenerator;
 import com.hk.constants.courier.EnumCourier;
-import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.domain.courier.Awb;
-import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ReplacementOrder;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.B2bUserDetails;
-import com.hk.domain.core.Pincode;
 import com.hk.helper.InvoiceNumHelper;
 import com.hk.manager.ReferrerProgramManager;
 import com.hk.pact.dao.user.B2bUserDetailsDao;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.order.CartFreebieService;
 import com.hk.pact.service.core.PincodeService;
-
-import java.util.List;
 
 @Component
 public class SOInvoiceAction extends BaseAction {
@@ -83,7 +78,7 @@ public class SOInvoiceAction extends BaseAction {
                 Awb awb = shipment.getAwb();
                 if (awb != null && awb.getAwbNumber() != null ) {
                     String trackingId = awb.getAwbNumber();
-                    barcodePath = barcodeGenerator.getBarcodePath(trackingId, 1.0f);
+                    barcodePath = barcodeGenerator.getBarcodePath(trackingId, 2.0f, 200, true);
                 }
             }
             ReplacementOrder replacementOrder = getBaseDao().get(ReplacementOrder.class, shippingOrder.getId());
@@ -98,7 +93,7 @@ public class SOInvoiceAction extends BaseAction {
             }
             sexualCareCategory = categoryService.getCategoryByName("sexual-care");
             coupon = referrerProgramManager.getOrCreateRefferrerCoupon(shippingOrder.getBaseOrder().getUser());
-            barcodePath = barcodeGenerator.getBarcodePath(shippingOrder.getGatewayOrderId(), 1.0f);
+            barcodePath = barcodeGenerator.getBarcodePath(shippingOrder.getGatewayOrderId(), 1.0f, 150, false);
             Address address = getBaseDao().get(Address.class, shippingOrder.getBaseOrder().getAddress().getId());
             boolean isCod = shippingOrder.isCOD();
             CourierServiceInfo courierServiceInfo = null;

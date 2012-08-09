@@ -47,7 +47,7 @@ public class ImageManager {
     @Autowired
     ComboDao comboDao;
     @Autowired
-    SuperSaverImageService superSaverImageService;
+    private SuperSaverImageService superSaverImageService;
     @Autowired
     private ProductService productService;
     @Autowired
@@ -164,7 +164,7 @@ public class ImageManager {
         if (superSaverImage != null) {
             resizeAndUpload(imageFile.getAbsolutePath(), superSaverImage);
             superSaverImage.setUploaded(true);
-            superSaverImageService.saveSuperSaverImage(superSaverImage);
+            getSuperSaverImageService().saveSuperSaverImage(superSaverImage);
 
             if (imageFile.exists()) {
                 logger.debug("deleting : " + imageFile.getAbsolutePath());
@@ -407,7 +407,7 @@ public class ImageManager {
 
     private SuperSaverImage setSuperSaverImage(File imageFile, boolean checkExists) {
         String checksum = BaseUtils.getMD5Checksum(imageFile);
-        SuperSaverImage superSaverImage = superSaverImageService.getSuperSaverImageByChecksum(checksum);
+        SuperSaverImage superSaverImage = getSuperSaverImageService().getSuperSaverImageByChecksum(checksum);
         if (superSaverImage != null && superSaverImage.isUploaded() && checkExists) {
             return null;
         } else {
@@ -415,7 +415,7 @@ public class ImageManager {
                 superSaverImage = new SuperSaverImage();
                 superSaverImage.setUrl("");
                 superSaverImage.setChecksum(checksum);
-                superSaverImage = superSaverImageService.saveSuperSaverImage(superSaverImage);
+                superSaverImage = getSuperSaverImageService().saveSuperSaverImage(superSaverImage);
             }
             return superSaverImage;
         }
@@ -557,5 +557,9 @@ public class ImageManager {
 
     public void setProductVariantService(ProductVariantService productVariantService) {
         this.productVariantService = productVariantService;
+    }
+
+    public SuperSaverImageService getSuperSaverImageService() {
+        return superSaverImageService;
     }
 }
