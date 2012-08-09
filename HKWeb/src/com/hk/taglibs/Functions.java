@@ -455,6 +455,11 @@ public class Functions {
         return skuDao.filterProductVariantsByWarehouse(sku.getProductVariant().getProduct().getProductVariants(), sku.getWarehouse());
     }
 
+    public static List<Product> getCategoryHeadingProductsSortedByOrder(Long primaryCategoryHeadingId, String productReferrer){
+      ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
+      return productService.productsSortedByOrder(primaryCategoryHeadingId, productReferrer);
+    }
+
     public static boolean isComboInStock(Object o) {
         ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
         Combo combo = (Combo) o;

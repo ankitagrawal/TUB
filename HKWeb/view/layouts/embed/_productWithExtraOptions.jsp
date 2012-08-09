@@ -151,6 +151,8 @@ border-radius: 0.3em;"><!--<span style="font-size:16px;font-weight:bold;">Offer:
 
 	<script type="text/javascript">
 		$(document).ready(function() {
+            var params = {};
+            params.productReferrerId = $('#productReferrerId').val();
 			function _addToCart2(res) {
 				if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
 					$('.message .line1').html("<strong>" + res.data.name + "</strong> is added to your shopping cart");
@@ -162,7 +164,7 @@ border-radius: 0.3em;"><!--<span style="font-size:16px;font-weight:bold;">Offer:
 				$('.progressLoader').hide();
 			}
 
-			$('.addToCartForm2').ajaxForm({dataType: 'json', success: _addToCart2});
+			$('.addToCartForm2').ajaxForm({dataType: 'json', data: params,success: _addToCart2});
 		});
 		validateCheckbox = 1;
 	</script>

@@ -132,21 +132,6 @@
     <dynamic-attributes>true</dynamic-attributes>
   </tag>
 
-<tag>
-    <description>Renders product video url</description>
-    <display-name>productVideo</display-name>
-    <name>productVideo</name>
-    <tag-class>com.hk.web.tag.ProductVideoTag</tag-class>
-    <body-content>empty</body-content>
-    <attribute>
-      <name>videoCode</name>
-      <required>true</required>
-      <rtexprvalue>true</rtexprvalue>
-    </attribute>
-    <dynamic-attributes>true</dynamic-attributes>
-  </tag>
-
-
    <tag>
      <description>Renders category home page banners</description>
      <display-name>categoryImage</display-name>
@@ -166,31 +151,12 @@
      <dynamic-attributes>true</dynamic-attributes>
     </tag>
 
-    <tag>
-     <description>Renders super saver banners</description>
-     <display-name>superSaverImage</display-name>
-     <name>superSaverImage</name>
-     <tag-class>com.hk.web.tag.SuperSaverImageTag</tag-class>
-     <body-content>empty</body-content>
-     <attribute>
-       <name>imageId</name>
-       <required>true</required>
-       <rtexprvalue>true</rtexprvalue>
-     </attribute>
-     <attribute>
-       <name>size</name>
-       <required>true</required>
-       <rtexprvalue>true</rtexprvalue>
-     </attribute>
-     <dynamic-attributes>true</dynamic-attributes>
-    </tag>
-
   <function>
     <description>
       Escapes characters that could be interpreted as XML markup.
     </description>
     <name>convertNewLineToBr</name>
-    <function-class>com.hk.util.HtmlUtil</function-class>
+    <function-class>com.hk.taglibs.Functions</function-class>
     <function-signature>java.lang.String convertNewLineToBr(java.lang.String)</function-signature>
     <example>
       ${hk:convertNewLineToBr(param:info)}
@@ -554,7 +520,7 @@
     </description>
     <name>getS3ImageUrl</name>
     <function-class>com.hk.taglibs.Functions</function-class>
-    <function-signature>java.lang.String getS3ImageUrl(java.lang.Object, java.lang.Object,boolean)</function-signature>
+    <function-signature>java.lang.String getS3ImageUrl(java.lang.Object, java.lang.Object)</function-signature>
     <example>
       ${hk:getS3ImageUrl(${object}, ${object})}
     </example>
@@ -578,7 +544,7 @@
     </description>
     <name>getTopDealVariant</name>
     <function-class>com.hk.taglibs.Functions</function-class>
-    <function-signature>com.hk.domain.catalog.product.ProductVariant getTopDealVariant(java.lang.Object)</function-signature>
+    <function-signature>mhc.domain.ProductVariant getTopDealVariant(java.lang.Object)</function-signature>
     <example>
       ${hk:getTopDealVariant(${object})}
     </example>
@@ -662,7 +628,7 @@
     </description>
     <name>getMenuNodeForProduct</name>
     <function-class>com.hk.taglibs.Functions</function-class>
-    <function-signature>com.hk.dto.menu.MenuNode getMenuNodeForProduct(com.hk.domain.catalog.product.Product)</function-signature>
+    <function-signature>mhc.common.dto.MenuNode getMenuNodeForProduct(mhc.domain.Product)</function-signature>
     <example>
       ${hk:getMenuNodeForProduct(${product)}
     </example>
@@ -710,7 +676,7 @@
     </description>
     <name>getCombo</name>
     <function-class>com.hk.taglibs.Functions</function-class>
-    <function-signature>com.hk.domain.catalog.product.combo.Combo getCombo(java.lang.Object))</function-signature>
+    <function-signature>mhc.domain.Combo getCombo(java.lang.Object)</function-signature>
     <example>
       ${hk:getCombo(${object})}
     </example>
@@ -748,49 +714,4 @@
       ${hk:getCategoryHeadingProductsSortedByOrder(${id}, ${str})}
     </example>
   </function>
-  <function>
-    <description>
-    returns surcharge based on supplier and warehouse state
-    </description>
-    <name>getSurchargeValue</name>
-    <function-class>com.hk.admin.util.TaxUtil</function-class>
-    <function-signature>java.lang.Double getSurchargeValue(java.lang.String,java.lang.String)</function-signature>
-    <example>
-      ${hk:getSurchargeValue(${str1}, ${str2})}
-    </example>
-  </function>
-  <function>
-    <description>
-      returns stock check of combo
-    </description>
-    <name>isComboInStock</name>
-    <function-class>com.hk.taglibs.Functions</function-class>
-    <function-signature>boolean isComboInStock(java.lang.Object)</function-signature>
-    <example>
-      ${hk:isComboInStock(${object})}
-    </example>
-  </function>
-    <function>
-        <description>
-            returns stock check of combo
-        </description>
-        <name>getRecommendedProducts</name>
-        <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>java.util.Map getRecommendedProducts(java.lang.Object)</function-signature>
-        <example>
-            ${hk:getRecommendedProducts(${productVariantId})}
-        </example>
-    </function>
-    <function>
-        <description>
-            returns dispatch days for order, this is max of all items in order
-        </description>
-        <name>getDispatchDaysForOrder</name>
-        <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>String getDispatchDaysForOrder(com.hk.domain.order.Order)</function-signature>
-        <example>
-            ${getDispatchDaysForOrder(${order})}
-        </example>
-    </function>
-
 </taglib>
