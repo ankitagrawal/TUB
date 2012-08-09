@@ -169,7 +169,7 @@ public class SubscriptionServiceImpl implements SubscriptionService{
         for(Subscription subscription : subscriptions){
             if(subscription.getProductVariant().isOutOfStock()){
                 subscription.setSubscriptionStatus(EnumSubscriptionStatus.OutOfStock.asSubscriptionStatus());
-                this.save(subscription);
+                subscription=this.save(subscription);
                 if(emailManager.sendSubscriptionVariantOutOfStockEmailAdmin(subscription)){
                     subscriptionLoggingService.logSubscriptionActivityByAdmin(subscription,EnumSubscriptionLifecycleActivity.OutOfStockEmailSent,"out of stock email sent to admin");
                 }else{
