@@ -13,12 +13,13 @@ import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.hkDelivery.Consignment;
+import com.hk.domain.hkDelivery.Hub;
+import com.hk.domain.hkDelivery.Runsheet;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.UserService;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
-import com.hk.admin.util.BarcodeGenerator;
 import com.hk.admin.manager.HKDRunsheetManager;
 import com.hk.constants.core.Keys;
 import com.hk.constants.courier.EnumCourier;
@@ -34,20 +35,21 @@ import java.util.ArrayList;
 import java.util.Date;
 
 @Component
-public class HKDRunsheetAction extends BaseAction{
+public class HKDRunsheetAction extends BaseAction {
 
-   private File xlsFile;
-    private String assignedTo;
-    private SimpleDateFormat sdf;
-    private List<ShippingOrder> shippingOrderList;
-    private int totalPackets;
-    private int totalCODPackets = 0;
-    private int totalPrepaidPackets = 0;
-    private double totalCODAmount = 0.0;
-    private String awbWithoutConsignmntString = null;
+    private         File                  xlsFile;
+    private         String                assignedTo;
+    private         SimpleDateFormat      sdf;
+    private         List<ShippingOrder>   shippingOrderList;
+    private         int                   totalPackets;
+    private         int                   totalCODPackets                 = 0;
+    private         double                totalCODAmount                  = 0.0;
+    private         String                awbIdsWithoutConsignmntString      = null;
 
-    List<String> trackingIdList = new ArrayList<String>();
-    List<String> trackingIdsWithoutConsignment = new ArrayList<String>();
+    private         List<String>          trackingIdList                  = new ArrayList<String>();
+    private         Hub                   hub;
+    private         List<String>          trackingIdsWithoutConsignment   = new ArrayList<String>();
+    private         List<Consignment>     consignmentList                 = new ArrayList<Consignment>();
     @Autowired
     ShippingOrderService shippingOrderService;
     @Autowired
@@ -59,8 +61,7 @@ public class HKDRunsheetAction extends BaseAction{
     @Autowired
     ConsignmentService consignmentService;
     @Autowired
-    HKDRunsheetManager  hkdRunsheetManager;
-
+    HKDRunsheetManager hkdRunsheetManager;
 
 
     @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
@@ -73,39 +74,49 @@ public class HKDRunsheetAction extends BaseAction{
     }
 
     public Resolution downloadDeliveryWorkSheet() {
+        Runsheet runsheet = new Runsheet();
         shippingOrderList = new ArrayList<ShippingOrder>();
+        //Getting HK-Delivery Courier Object.
         Courier hkDeliveryCourier = EnumCourier.HK_Delivery.asCourier();
+
+        //Iterating over list to get shippingOrders,consignmentList for the corresponding trackingIdList entered by user.
         for (String trackingNum : trackingIdList) {
             Awb awb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(hkDeliveryCourier, trackingNum.trim(), userService.getWarehouseForLoggedInUser(), null, EnumAwbStatus.Used.getAsAwbStatus());
             Consignment consignment = consignmentService.getConsignmentByAwbId(awb.getId());
-            if(consignment != null) {
-            Shipment shipment = shipmentService.findByAwb(awb);
-            if (shipment != null) {
-                ShippingOrder shippingOrder = shipment.getShippingOrder();
-                if (shippingOrder != null) {
-                    if (shippingOrder.isCOD()) {
-                        ++totalCODPackets;
-                        totalCODAmount = totalCODAmount + shippingOrder.getAmount();
-                        totalCODAmount = Math.round(totalCODAmount);
-                    } else {
-                        ++totalPrepaidPackets;
+
+            //This is a check to ensure that runsheet wud be created for those trackingIds for which Consignment exists in DB.
+            if (consignment != null) {
+                //Fetching shippingOrder for corresponding trackingID in order to calculate totalCodAmount and totalCodPackets
+                Shipment shipment = shipmentService.findByAwb(awb);
+                if (shipment != null) {
+                    ShippingOrder shippingOrder = shipment.getShippingOrder();
+                    if (shippingOrder != null) {
+                        if (shippingOrder.isCOD()) {
+                            ++totalCODPackets;
+                            totalCODAmount = totalCODAmount + shippingOrder.getAmount();
+                            totalCODAmount = Math.round(totalCODAmount);
+                        }
+                        shippingOrderList.add(shippingOrder);
                     }
-                    shippingOrderList.add(shippingOrder);
                 }
-            }
-        }
-            else {
+                consignmentList.add(consignment);
+            } else {
+                //adding the trackingId without a consignment to a list.
                 trackingIdsWithoutConsignment.add(trackingNum);
                 continue;
             }
         }
-        awbWithoutConsignmntString = hkdRunsheetManager.getAwbWithoutConsignmntString(trackingIdsWithoutConsignment);
+        // Converting list to comma seperated string(to be displayed on UI)
+        awbIdsWithoutConsignmntString = hkdRunsheetManager.getAwbWithoutConsignmntString(trackingIdsWithoutConsignment);
+        // Calculating no. of total packets in runsheet.
         totalPackets = shippingOrderList.size();
 
         try {
             sdf = new SimpleDateFormat("yyyyMMdd");
             xlsFile = new File(adminDownloads + "/" + CourierConstants.HKDELIVERY_WORKSHEET_FOLDER + "/" + CourierConstants.HKDELIVERY_WORKSHEET + "_" + sdf.format(new Date()) + ".xls");
-            xlsFile = hkdRunsheetManager.generateWorkSheetXls(xlsFile.getPath(), shippingOrderList,assignedTo,totalCODAmount,totalPackets ,totalCODPackets);
+            runsheet = createRunsheet();
+            
+            xlsFile = hkdRunsheetManager.generateWorkSheetXls(xlsFile.getPath(), shippingOrderList, assignedTo, totalCODAmount, totalPackets, totalCODPackets);
         } catch (IOException ioe) {
             addRedirectAlertMessage(new SimpleMessage(CourierConstants.HKDELIVERY_IOEXCEPTION));
             return new ForwardResolution(HKDRunsheetAction.class);
@@ -119,6 +130,17 @@ public class HKDRunsheetAction extends BaseAction{
         return new HTTPResponseResolution();
     }
 
+    private Runsheet createRunsheet(){
+        Long prePaidBoxCount = Long.parseLong((totalPackets - totalCODPackets)+"");
+        Runsheet runsheetObj = new Runsheet();
+        runsheetObj.setCodBoxCount(Long.parseLong(totalCODPackets+""));
+        runsheetObj.setCreateDate(new Date());
+        runsheetObj.setExpectedCollection(totalCODAmount);
+        runsheetObj.setPrePaidBoxCount(prePaidBoxCount);
+        runsheetObj.setUserId(1l);
+        runsheetObj.setHub(hub);
+       return null;
+    }
 
     public class HTTPResponseResolution implements Resolution {
         public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
@@ -154,5 +176,11 @@ public class HKDRunsheetAction extends BaseAction{
         this.trackingIdList = trackingIdList;
     }
 
+    public String getAwbIdsWithoutConsignmntString() {
+        return awbIdsWithoutConsignmntString;
+    }
 
+    public void setAwbIdsWithoutConsignmntString(String awbIdsWithoutConsignmntString) {
+        this.awbIdsWithoutConsignmntString = awbIdsWithoutConsignmntString;
+    }
 }

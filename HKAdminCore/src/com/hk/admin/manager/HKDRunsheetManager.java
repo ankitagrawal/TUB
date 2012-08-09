@@ -28,17 +28,13 @@ import javax.servlet.http.HttpServletResponse;
 public class HKDRunsheetManager {
 
     private SimpleDateFormat sdf;
-    private int totalPackets;
-    private int totalCODPackets = 0;
-    private int totalPrepaidPackets = 0;
-    private String barcodePath;
-    private File xlsFile;
 
+    private String barcodePath;
     @Autowired
     private BarcodeGenerator barcodeGenerator;
 
 
-    public File generateWorkSheetXls(String xslFilePath, List<ShippingOrder> shippingOrderList, String assignedTo, Double totalCODAmount,int totalPackets ,int totalCODPackets) throws NullPointerException, IOException, ParseException {
+    public File generateWorkSheetXls(String xslFilePath, List<ShippingOrder> shippingOrderList, String assignedTo, Double totalCODAmount, int totalPackets, int totalCODPackets) throws NullPointerException, IOException, ParseException {
         File file = new File(xslFilePath);
         FileOutputStream out = new FileOutputStream(file);
         Workbook wb = new HSSFWorkbook();
@@ -70,6 +66,7 @@ public class HKDRunsheetManager {
         String address = null;
         String receivedDetails = null;
         String sNo = null;
+        int totalPrepaidPackets = totalPackets - totalCODPackets;
 
 
         //creating different styles for different elements of excel.
@@ -270,24 +267,6 @@ public class HKDRunsheetManager {
         wb.write(out);
         out.close();
         return file;
-    }
-
-    public class HTTPResponseResolution implements Resolution {
-        public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
-            OutputStream out = null;
-            InputStream in = new BufferedInputStream(new FileInputStream(xlsFile));
-            res.setContentLength((int) xlsFile.length());
-            res.setHeader("Content-Disposition", "attachment; filename=\"" + xlsFile.getName() + "\";");
-            out = res.getOutputStream();
-
-            // Copy the contents of the file to the output stream
-            byte[] buf = new byte[4096];
-            int count = 0;
-            while ((count = in.read(buf)) >= 0) {
-                out.write(buf, 0, count);
-            }
-        }
-
     }
 
     public String getAwbWithoutConsignmntString(List<String> trackingIdsWithoutConsignment) {
