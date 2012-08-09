@@ -485,7 +485,7 @@ public class Functions {
                         minDays = product.getMinDays();
                     }
                     if (product.getMaxDays() != null && product.getMaxDays() > maxDays) {
-                        minDays = product.getMaxDays();
+                        maxDays = product.getMaxDays();
                     }
                 }
 
