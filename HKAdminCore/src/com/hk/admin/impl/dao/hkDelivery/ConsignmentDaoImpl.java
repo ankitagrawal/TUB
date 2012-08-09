@@ -35,7 +35,13 @@ public class ConsignmentDaoImpl extends BaseDaoImpl implements ConsignmentDao {
     }
 
     @Override
-    public List<Consignment> getAllConsignments() {
-        return getAll(Consignment.class);
+    public List<Long> getAwbIds() {
+       return (List<Long>) getSession().createQuery(
+                "select distinct cn.awbId from Consignment cn ").list();
+    }
+
+    @Override
+    public Consignment getConsignmentByAwbId(Long awbId) {
+        return (Consignment) getSession().createQuery("from Consignment cn where cn.awbId = :awbId").setLong("awbId", awbId).uniqueResult();
     }
 }

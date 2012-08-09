@@ -1,122 +1,44 @@
-package com.hk.web.action.admin.courier;
+package com.hk.admin.manager;
 
-import com.akube.framework.stripes.action.BaseAction;
-
-import com.hk.admin.pact.service.courier.AwbService;
-import com.hk.admin.pact.service.shippingOrder.ShipmentService;
-import com.hk.admin.util.BarcodeGenerator;
 import com.hk.domain.order.ShippingOrder;
-import com.hk.pact.service.store.StoreService;
-import com.hk.constants.core.Keys;
-import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.CourierConstants;
-import com.hk.constants.courier.EnumAwbStatus;
-import com.hk.constants.courier.EnumCourier;
-import com.hk.domain.courier.Awb;
-import com.hk.domain.courier.Courier;
-import com.hk.domain.courier.Shipment;
-import com.hk.pact.service.UserService;
-import com.hk.pact.service.shippingOrder.ShippingOrderService;
-import com.hk.web.action.error.AdminPermissionAction;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import com.hk.pact.service.store.StoreService;
+import com.hk.admin.util.BarcodeGenerator;
+
+import java.io.*;
+import java.util.List;
+import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.util.IOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
+import org.springframework.beans.factory.annotation.Autowired;
+import net.sourceforge.stripes.action.Resolution;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
-@Secure(hasAnyPermissions = {PermissionConstants.HK_DELIVERY_WORKSHEET_DOWNLOAD}, authActionBean = AdminPermissionAction.class)
+
+@SuppressWarnings("unchecked")
 @Component
-public class HKDeliveryAction extends BaseAction {
+public class HKDRunsheetManager {
 
-    private File xlsFile;
     private SimpleDateFormat sdf;
-    private List<ShippingOrder> shippingOrderList;
-    private String assignedTo;
     private int totalPackets;
     private int totalCODPackets = 0;
     private int totalPrepaidPackets = 0;
-    private double totalCODAmount = 0.0;
     private String barcodePath;
-
-    List<String> trackingIdList = new ArrayList<String>();
-    @Autowired
-    ShippingOrderService shippingOrderService;
-    @Autowired
-    AwbService awbService;
-    @Autowired
-    UserService userService;
-    @Autowired
-    ShipmentService shipmentService;
+    private File xlsFile;
 
     @Autowired
     private BarcodeGenerator barcodeGenerator;
 
 
-    @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
-    String adminDownloads;
-
-
-    @DefaultHandler
-    public Resolution pre() {
-        return new ForwardResolution("/pages/admin/hkDeliveryWorksheet.jsp");
-    }
-
-    public Resolution downloadDeliveryWorkSheet() {
-        shippingOrderList = new ArrayList<ShippingOrder>();
-        Courier hkDeliveryCourier = EnumCourier.HK_Delivery.asCourier();
-        for (String trackingNum : trackingIdList) {
-            Awb awb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(hkDeliveryCourier, trackingNum.trim(), userService.getWarehouseForLoggedInUser(), null, EnumAwbStatus.Used.getAsAwbStatus());
-            Shipment shipment = shipmentService.findByAwb(awb);
-            if (shipment != null) {
-                ShippingOrder shippingOrder = shipment.getShippingOrder();
-                if (shippingOrder != null) {
-                    if (shippingOrder.isCOD()) {
-                        ++totalCODPackets;
-                        totalCODAmount = totalCODAmount + shippingOrder.getAmount();
-                        totalCODAmount = Math.round(totalCODAmount);
-                    } else {
-                        ++totalPrepaidPackets;
-                    }
-                    shippingOrderList.add(shippingOrder);
-                }
-            }
-        }
-        totalPackets = shippingOrderList.size();
-
-        try {
-            sdf = new SimpleDateFormat("yyyyMMdd");
-            xlsFile = new File(adminDownloads + "/" + CourierConstants.HKDELIVERY_WORKSHEET_FOLDER + "/" + CourierConstants.HKDELIVERY_WORKSHEET + "_" + sdf.format(new Date()) + ".xls");
-            xlsFile = generateWorkSheetXls(xlsFile.getPath(), shippingOrderList);
-        } catch (IOException ioe) {
-            addRedirectAlertMessage(new SimpleMessage(CourierConstants.HKDELIVERY_IOEXCEPTION));
-            return new ForwardResolution(HKDeliveryAction.class);
-        } catch (NullPointerException npe) {
-            addRedirectAlertMessage(new SimpleMessage(CourierConstants.HKDELIVERY_NULLEXCEPTION));
-            return new ForwardResolution(HKDeliveryAction.class);
-        } catch (Exception ex) {
-            addRedirectAlertMessage(new SimpleMessage(CourierConstants.HKDELIVERY_EXCEPTION));
-            return new ForwardResolution(HKDeliveryAction.class);
-        }
-        return new HTTPResponseResolution();
-    }
-
-    public File generateWorkSheetXls(String xslFilePath, List<ShippingOrder> shippingOrderList) throws NullPointerException, IOException, ParseException {
+    public File generateWorkSheetXls(String xslFilePath, List<ShippingOrder> shippingOrderList, String assignedTo, Double totalCODAmount,int totalPackets ,int totalCODPackets) throws NullPointerException, IOException, ParseException {
         File file = new File(xslFilePath);
         FileOutputStream out = new FileOutputStream(file);
         Workbook wb = new HSSFWorkbook();
@@ -278,19 +200,19 @@ public class HKDeliveryAction extends BaseAction {
             }
 
             //fetching contact name,contact-number for COD/Non COD
-	        paymentMode = shippingOrderList.get(index).getBaseOrder().getPayment().getPaymentMode().getName();
-	        if (paymentMode.equalsIgnoreCase("COD")) {
-		        if (shippingOrderList.get(index).getBaseOrder().getStore().getId().equals(StoreService.MIH_STORE_ID)) {
-			        name = shippingOrderList.get(index).getBaseOrder().getAddress().getName();
-			        phone = shippingOrderList.get(index).getBaseOrder().getAddress().getPhone();
-		        } else {
-			        name = shippingOrderList.get(index).getBaseOrder().getPayment().getContactName();
-			        phone = shippingOrderList.get(index).getBaseOrder().getPayment().getContactNumber();
-		        }
-	        } else {
-		        name = shippingOrderList.get(index).getBaseOrder().getAddress().getName();
-		        phone = shippingOrderList.get(index).getBaseOrder().getAddress().getPhone();
-	        }
+            paymentMode = shippingOrderList.get(index).getBaseOrder().getPayment().getPaymentMode().getName();
+            if (paymentMode.equalsIgnoreCase("COD")) {
+                if (shippingOrderList.get(index).getBaseOrder().getStore().getId().equals(StoreService.MIH_STORE_ID)) {
+                    name = shippingOrderList.get(index).getBaseOrder().getAddress().getName();
+                    phone = shippingOrderList.get(index).getBaseOrder().getAddress().getPhone();
+                } else {
+                    name = shippingOrderList.get(index).getBaseOrder().getPayment().getContactName();
+                    phone = shippingOrderList.get(index).getBaseOrder().getPayment().getContactNumber();
+                }
+            } else {
+                name = shippingOrderList.get(index).getBaseOrder().getAddress().getName();
+                phone = shippingOrderList.get(index).getBaseOrder().getAddress().getPhone();
+            }
 
             name = name.toUpperCase();
             line1 = shippingOrderList.get(index).getBaseOrder().getAddress().getLine1();
@@ -368,6 +290,15 @@ public class HKDeliveryAction extends BaseAction {
 
     }
 
+    public String getAwbWithoutConsignmntString(List<String> trackingIdsWithoutConsignment) {
+        StringBuffer strBuffr = new StringBuffer();
+        for (String unmodifiedTrackingId : trackingIdsWithoutConsignment) {
+            strBuffr.append(unmodifiedTrackingId);
+            strBuffr.append(",");
+        }
+        return strBuffr.toString();
+    }
+
     public static void setCellValue(Row row, int column, Long cellValue) {
         if (cellValue != null) {
             Cell cell = row.getCell(column);
@@ -399,19 +330,4 @@ public class HKDeliveryAction extends BaseAction {
 
     }
 
-    public String getAssignedTo() {
-        return assignedTo;
-    }
-
-    public void setAssignedTo(String assignedTo) {
-        this.assignedTo = assignedTo;
-    }
-
-    public List<String> getTrackingIdList() {
-        return trackingIdList;
-    }
-
-    public void setTrackingIdList(List<String> trackingIdList) {
-        this.trackingIdList = trackingIdList;
-    }
 }
