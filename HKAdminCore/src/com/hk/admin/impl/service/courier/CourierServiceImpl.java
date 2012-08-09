@@ -107,26 +107,28 @@ public class CourierServiceImpl implements CourierService {
         return getCourierServiceInfoDao().getDefaultCourierForPincode(pincode, isCOD, warehouse);
     }
 
-     public Double getCashbackOnGroundShippedItem(PricingDto pricingDto,Order order,Double groundshipItemweight)  {
-          String pincode = order.getAddress().getPin();
+    public Double getCashbackOnGroundShippedItem(PricingDto pricingDto, Order order, Double groundshipItemweight) {
+        String pincode = order.getAddress().getPin();
         Pincode pincodeObj = pincodeDao.getByPincode(pincode);
-        if(pincodeObj == null)   {
-//            logger.info("Illegal pincode " + pincode + "for BO order " + order.getId());
+        if (pincodeObj == null) {
             return null;
         }
-         List <Warehouse> warehouses = warehouseService.getAllWarehouses();
+        List<Warehouse> warehouses = warehouseService.getAllWarehouses();
 
-          Double [] arrShipmentCost = new Double [warehouses.size()];
-         int index =0;
-         for (Warehouse warehouse : warehouses)   {
-           Courier courier =  getDefaultCourier(pincodeObj,true,warehouse);
-          CourierPricingEngine courierPricingInfo = courierCostCalculator.getCourierPricingInfo(courier, pincodeObj, warehouse);
-          arrShipmentCost[index]=   shipmentPricingEngine.calculateShipmentCost(courierPricingInfo, groundshipItemweight);
-            index ++;
-       }
-         return arrShipmentCost[0];
-
-     }
+        Double[] arrShipmentCost = new Double[warehouses.size()];
+        int index = 0;
+        for (Warehouse warehouse : warehouses) {
+            Courier courier = getDefaultCourier(pincodeObj, true, warehouse);
+            CourierPricingEngine courierPricingInfo = courierCostCalculator.getCourierPricingInfo(courier, pincodeObj, warehouse);
+            if (courierPricingInfo == null) {
+                return null;
+            }
+           arrShipmentCost[index] = shipmentPricingEngine.calculateShipmentCost(courierPricingInfo, groundshipItemweight) ;
+//               shipmentPricingEngine.calculateReconciliationCost()  ;
+            index++;
+        }
+       return minimumShippingCost(arrShipmentCost);
+    }
 
 
     public CourierDao getCourierDao() {
@@ -167,5 +169,14 @@ public class CourierServiceImpl implements CourierService {
 
     public void setPincodeService(PincodeService pincodeService) {
         this.pincodeService = pincodeService;
+    }
+
+    public Double minimumShippingCost(Double arrShipmentCost[]) {
+        if (arrShipmentCost == null || arrShipmentCost.length == 0) return null;
+        Double min = arrShipmentCost[0];
+        for (int i = 1; i < arrShipmentCost.length; i++) {
+            if (min > arrShipmentCost[i]) min = arrShipmentCost[i];
+        }
+        return min;
     }
 }

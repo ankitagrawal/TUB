@@ -48,7 +48,6 @@ public class Keys {
         public static final String defaultGateway               = "defaultGateway";
 
         public static final String cashBackPercentage           = "cashBackPercentage";
-//        public static final String cashbackOnGroundshipped      = "cashbackOnGroundshipped";
 
          public static final String cashBackLimit                = "cashBackLimit";
 
@@ -94,6 +93,8 @@ public class Keys {
         public static final String solrUrl                      = "solrUrl";
         public static final String moogaUrl                     = "moogaUrl";
         public static final String moogaEnabled                 = "moogaOn";
+
+        public static final String cashBackPercentageOnGroundShipped   = "cashBackPercentageOnGroundShipped";
     }
 
     /*

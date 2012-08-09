@@ -73,8 +73,6 @@ public class OrderSummaryAction extends BaseAction {
     private Double redeemableRewardPoints;
     private List<Courier> availableCourierList;
     private boolean hideCod;
-//    private double        cashback;
-
 
     // COD related changes
     @Autowired
@@ -91,14 +89,15 @@ public class OrderSummaryAction extends BaseAction {
     @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
     private Double codMinAmount;
 
+    @Value("#{hkEnvProps['" + Keys.Env.cashBackPercentageOnGroundShipped + "']}")
+    private Double cashBackPercentageOnGroundShipped;
+    
     // @Named(Keys.Env.codMaxAmount)
     @Value("#{hkEnvProps['codMaxAmount']}")
     private Double codMaxAmount;
     
     private Double cashbackOnGroundshipped;
     private Double groundshipItemweight;
-
-
 
     @DefaultHandler
     public Resolution pre() {
@@ -120,8 +119,6 @@ public class OrderSummaryAction extends BaseAction {
                         groundshipItemweight = 2.0;
                     }
                     hideCod = true;
-
-                    lineItem_1 = lineItem;
                     break;
                 }
             }
@@ -160,7 +157,12 @@ public class OrderSummaryAction extends BaseAction {
         }
 
         if (hideCod) {
-         cashbackOnGroundshipped=   courierService. getCashbackOnGroundShippedItem(pricingDto,order,groundshipItemweight);            
+            cashbackOnGroundshipped = courierService.getCashbackOnGroundShippedItem(pricingDto, order, groundshipItemweight) ;
+            if (cashbackOnGroundshipped == null ||cashbackOnGroundshipped == -0.0  ) {
+                     cashbackOnGroundshipped = 0.0;
+            }else {
+                cashbackOnGroundshipped = cashbackOnGroundshipped * cashBackPercentageOnGroundShipped;
+            }
         }
 
 
