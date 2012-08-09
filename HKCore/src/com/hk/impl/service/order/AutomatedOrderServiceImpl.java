@@ -103,6 +103,7 @@ public class AutomatedOrderServiceImpl implements AutomatedOrderService{
         order.setUser(user);
         order.setOrderStatus(orderStatusService.find(EnumOrderStatus.InCart));
         order.setAmount(0D);
+        order.setSubscriptionOrder(false);
         order = orderService.save(order);
         return order;
     }
