@@ -55,7 +55,7 @@
                     You can buy product subscriptions only for products that are subscribable. You can know that a product is subscribable in two ways:
                 <ul >
                 <li>
-                    In case of subscribable products, you will be given an option to subscribe from the product page itself.  or
+                    In case of subscribable products, you will be given an option to subscribe from the product page itself.  <strong>or</strong>
                 </li>
                     <li>
                         You will be given an option to subscribe for a product in the cart page if that product is subscribable.
@@ -114,10 +114,11 @@
             </div>
             <br/>
             <h4>How does it work?</h4>
-        <p>You can buy product subscriptions only for the products that can be subscribed. You can select a product and subscribe for a plan specifying your delivery frequency. To avail the subscription feature a customer needs to prepay the whole amount. When the due date arrives, our Customer Care Executive will give you a reminder call and will ensure a safe and sound delivery of your specified products.
+        <p> You select a product and choose a plan specifying your delivery frequency; you get additional discounts based on the plan you choose.
+            After finalizing your product and plan, you have to prepay the whole amount for your subscription. When the delivery date arrives, our Customer Care Executive will give you a reminder call and will ensure a safe and sound delivery of your specified products.
           </p>
             <p>
-                You can notify our customer care in case of any change in delivery date or postponed shipment, according to your convenience. In case of a change of shipping address, the customer can drop in an email to <strong>info@healthkart.com</strong> or can call our Customer Care at <strong>0124-4551616</strong> notifying us about the new address of delivery.
+                You can notify our customer care in case you want to change your delivery date or your shipment address, according to your convenience.  The customer can drop in an email to <strong>info@healthkart.com</strong> or can call our Customer Care at <strong>0124-4551616</strong> notifying us about the new address of delivery.
         </p>
 
            <p></p>

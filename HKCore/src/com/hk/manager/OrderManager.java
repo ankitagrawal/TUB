@@ -315,10 +315,7 @@ public class OrderManager {
 
         Set<CartLineItem> cartLIFromPricingEngine =getPricingEngine().calculateAndApplyPricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), order.getRewardPointsUsed());
 
-        Set<CartLineItem> subscriptionCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
-        if(subscriptionCartLineItems !=null && subscriptionCartLineItems.size()>0){
-            subscriptionService.placeSubscriptions(order);
-        }
+
         // Set<CartLineItem> cartLIFromPricingEngine = getPricingEngine().calculateAndApplyPricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(),
         //         order.getRewardPointsUsed());
         Set<CartLineItem> cartLineItems = getCartLineItemsFromPricingCartLi(order, cartLIFromPricingEngine);
@@ -413,6 +410,10 @@ public class OrderManager {
          * orderLifecycleActivityDaoProvider.get().find(ExnumOrderLifecycleActivity.AutoEscalatedToProcessingQueue.getId()),
          * null); }
          */
+        Set<CartLineItem> subscriptionCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
+        if(subscriptionCartLineItems !=null && subscriptionCartLineItems.size()>0){
+            subscriptionService.placeSubscriptions(order);
+        }
 
         // Check if HK order then only send emails and no order placed email is necessary for subscription orders
         if (order.getStore() != null && order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID) && !order.isSubscriptionOrder()) {
