@@ -119,7 +119,7 @@ public class ShipmentPricingEngine {
     public Double calculatePackagingCost(ShippingOrder shippingOrder) {
         Shipment shipment = shippingOrder.getShipment();
         EnumBoxSize enumBoxSize = EnumBoxSize.getBoxSize(shipment.getBoxSize());
-        return enumBoxSize != null ? enumBoxSize.getPackagingCost() : 16D;
+        return enumBoxSize != null && enumBoxSize.getId() != -1 ? enumBoxSize.getPackagingCost() : 15.5D;
     }
 
     public Double calculateReconciliationCost(CourierPricingEngine courierPricingEngine, ShippingOrder shippingOrder) {
