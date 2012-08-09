@@ -11,6 +11,8 @@ public interface ConsignmentService {
 
     public Consignment createConsignment(Shipment shipment, Hub hub);
 
-    public List<Consignment> getAllConsignments();
+    public List<Long> getAwbIds();
+
+    public Consignment getConsignmentByAwbId(Long awbId);
 
 }

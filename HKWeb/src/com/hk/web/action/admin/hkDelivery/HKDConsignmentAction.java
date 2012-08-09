@@ -1,4 +1,4 @@
-package com.hk.web.action.admin.courier;
+package com.hk.web.action.admin.hkDelivery;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.domain.hkDelivery.Hub;
@@ -10,7 +10,6 @@ import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.hkDelivery.HKDeliveryConstants;
-import com.hk.exception.HealthkartCheckedException;
 import net.sourceforge.stripes.action.*;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +22,9 @@ import java.util.Set;
 import java.util.HashSet;
 
 @Component
-public class HKConsignmentAction extends BaseAction{
+public class HKDConsignmentAction extends BaseAction{
 
-    private static       Logger               logger                   = LoggerFactory.getLogger(HKConsignmentAction.class);
+    private static       Logger               logger                   = LoggerFactory.getLogger(HKDConsignmentAction.class);
     private              Hub                  hub;
     private              List<String>         trackingIdList           = new ArrayList<String>();
     private              int                  noOfConsignmentsCreated  = 0;
@@ -34,8 +33,6 @@ public class HKConsignmentAction extends BaseAction{
     private              AwbService           awbService;
     @Autowired
     private              ConsignmentService   consignmentService;
-    @Autowired
-    private              CourierService       courierService;
     @Autowired
     private              ShipmentService      shipmentService;
 
@@ -47,7 +44,7 @@ public class HKConsignmentAction extends BaseAction{
 
     public Resolution markShipmentsReceived(){
         Set<Awb>   awbSet ;
-        Courier    hkDelivery  = courierService.getCourierById(EnumCourier.HK_Delivery.getId());
+        Courier    hkDelivery  = EnumCourier.HK_Delivery.asCourier();
        if(trackingIdList != null && trackingIdList.size() > 0){
         awbSet = getAWBSet(trackingIdList,hkDelivery);
         logger.info(awbSet.toString());
@@ -56,11 +53,12 @@ public class HKConsignmentAction extends BaseAction{
        } else {
            addRedirectAlertMessage(new SimpleMessage(HKDeliveryConstants.CONSIGNMNT_CREATION_FAILURE));
        }
-        return new RedirectResolution(HKConsignmentAction.class);
+        return new RedirectResolution(HKDConsignmentAction.class);
     }
 
     // Method to check data duplicacy
     private boolean checkAwbDuplicacy(Set<Awb> awbSet){
+        List<Long> consignmentAwbId = consignmentService.getAwbIds();
         
         return false;
     }

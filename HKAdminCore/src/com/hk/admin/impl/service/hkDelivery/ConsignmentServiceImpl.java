@@ -22,7 +22,12 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     }
 
     @Override
-    public List<Consignment> getAllConsignments() {
-        return consignmentDao.getAllConsignments();
+    public List<Long> getAwbIds() {
+        return consignmentDao.getAwbIds();
+    }
+
+    @Override
+     public Consignment getConsignmentByAwbId(Long awbId) {
+        return consignmentDao.getConsignmentByAwbId(awbId);
     }
 }

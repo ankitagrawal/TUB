@@ -4,7 +4,7 @@
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.admin.courier.HKConsignmentAction" var="hkcBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction" var="hkcBean"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Healthkart Delivery">
 
     <s:layout-component name="htmlHead">
@@ -102,7 +102,7 @@
 
     <s:layout-component name="content">
         <div class="hkDeliveryBox">
-            <s:form beanclass="com.hk.web.action.admin.courier.HKConsignmentAction">
+            <s:form beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction">
                 <fieldset class="right_label">
                     <legend>Scan and Mark Shipments as Received</legend>
                     <ul>
