@@ -318,6 +318,8 @@ public class XslParser {
           }
         }
         productVariant.setUpc(getCellValue(XslConstants.UPC, rowMap, headerMap) == null ? "" : getCellValue(XslConstants.UPC, rowMap, headerMap));
+        productVariant.setOtherRemark(getCellValue(XslConstants.OTHER_REMARK, rowMap, headerMap) == null ? "" : getCellValue(XslConstants.OTHER_REMARK, rowMap, headerMap));
+        productVariant.setSupplierCode(getCellValue(XslConstants.SUPPLIER_CODE, rowMap, headerMap) == null ? "" : getCellValue(XslConstants.SUPPLIER_CODE, rowMap, headerMap));
         productVariant.setColorHex(getCellValue(XslConstants.COLOR_HEX, rowMap, headerMap));
         productVariant.setVariantName(getCellValue(XslConstants.VARIANT_NAME, rowMap, headerMap));
         Double mrp = Double.parseDouble(getCellValue(XslConstants.MRP, rowMap, headerMap));
