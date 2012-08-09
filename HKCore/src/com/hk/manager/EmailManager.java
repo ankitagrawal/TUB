@@ -307,7 +307,7 @@ public class EmailManager {
 //        Set<CartLineItem> serviceCartLineItems = new HashSet<CartLineItem>();
 
         for (OrderCategory orderCategory : orderCategories) {
-            if (orderCategory.getCategory().getName().equals("services")) {
+            if (orderCategory.getCategory().getName().equals(CategoryConstants.SERVICES)) {
                 isServiceOrder = Boolean.TRUE;
                 break;
             }
