@@ -8167,7 +8167,7 @@
         </createTable>
     </changeSet>
     <changeSet author="Tarun (generated)" id="1344513478843-3">
-        <createTable tableName="cosignment_tracking">
+        <createTable tableName="consignment_tracking">
             <column autoIncrement="true" name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
