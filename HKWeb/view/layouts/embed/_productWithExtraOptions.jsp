@@ -140,7 +140,7 @@
 				 <c:if test="${variant.freeProductVariant != null}">
 						<div align="left" style="border:1px solid transparent;color:white;padding:3px;margin:5px 20px 5px 3px;background:#37BCDD;-moz-border-radius: 0.3em;
 border-radius: 0.3em;"><!--<span style="font-size:16px;font-weight:bold;">Offer:</span><br/>
-						--><span style="clear:both;margin-top: 5px;"> Buy ${variant.product.name} and Get ${variant.freeProductVariant.product.name} Free !! </span>
+						--><span style="clear:both;margin-top: 5px;"> Buy ${variant.product.name} & Get ${variant.freeProductVariant.product.name} Free With Every Box!! </span>
 </div>
 				  </c:if>
 				<s:submit name="addToCart" value="Place Order"
