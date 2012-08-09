@@ -8125,9 +8125,8 @@
             <column name="forecast_date"/>
         </createIndex>
     </changeSet>
-
-    
-    <changeSet author="Tarun (generated)" id="1343985650047-1">
+        
+    <changeSet author="Tarun (generated)" id="1344513478843-1">
         <createTable tableName="consignment">
             <column autoIncrement="true" name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -8153,19 +8152,21 @@
             <column name="payment_mode" type="VARCHAR(15)">
                 <constraints nullable="false"/>
             </column>
+            <column name="runsheet_id" type="INT"/>
+            <column name="payment_reconciliation_id" type="INT"/>
         </createTable>
     </changeSet>
-    <changeSet author="Tarun (generated)" id="1343985650047-2">
+    <changeSet author="Tarun (generated)" id="1344513478843-2">
         <createTable tableName="consignment_status">
             <column name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
-            <column name="name" type="VARCHAR(100)">
+            <column name="status" type="VARCHAR(100)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Tarun (generated)" id="1343985650047-3">
+    <changeSet author="Tarun (generated)" id="1344513478843-3">
         <createTable tableName="cosignment_tracking">
             <column autoIncrement="true" name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -8180,7 +8181,7 @@
             <column name="user_id" type="INT"/>
         </createTable>
     </changeSet>
-    <changeSet author="Tarun (generated)" id="1343985650047-4">
+    <changeSet author="Tarun (generated)" id="1344513478843-4">
         <createTable tableName="hub">
             <column autoIncrement="true" name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -8196,22 +8197,15 @@
             <column name="pincode_id" type="INT">
                 <constraints nullable="false"/>
             </column>
-        </createTable>
-    </changeSet>
-    <changeSet author="Tarun (generated)" id="1343985650047-5">
-        <createTable tableName="payment_has_consignment">
-            <column name="id" type="INT">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="payment_reconciliation_id" type="INT">
+            <column name="name" type="VARCHAR(100)">
                 <constraints nullable="false"/>
             </column>
-            <column name="consignment_id" type="INT">
+            <column name="status" type="TINYINT">
                 <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Tarun (generated)" id="1343985650047-6">
+    <changeSet author="Tarun (generated)" id="1344513478843-5">
         <createTable tableName="payment_reconciliation">
             <column autoIncrement="true" name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -8224,7 +8218,7 @@
             <column name="user_id" type="INT"/>
         </createTable>
     </changeSet>
-    <changeSet author="Tarun (generated)" id="1343985650047-7">
+    <changeSet author="Tarun (generated)" id="1344513478843-6">
         <createTable tableName="runsheet">
             <column autoIncrement="true" name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -8250,92 +8244,50 @@
             <column name="user_id" type="INT"/>
         </createTable>
     </changeSet>
-    <changeSet author="Tarun (generated)" id="1343985650047-8">
-        <createTable tableName="runsheet_has_consignment">
-            <column autoIncrement="true" name="id" type="INT">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="runsheet_id" type="INT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="consignment_id" type="INT">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-    <changeSet author="Tarun (generated)" id="1343985650047-9">
-        <createIndex indexName="runsheet_consignment_combo_uniqueness" tableName="runsheet_has_consignment" unique="true">
-            <column name="runsheet_id"/>
-            <column name="consignment_id"/>
-        </createIndex>
-    </changeSet>
-    <changeSet author="Tarun (generated)" id="1343985650047-10">
+    <changeSet author="Tarun (generated)" id="1344513478843-7">
         <addForeignKeyConstraint baseColumnNames="awb_id" baseTableName="consignment" constraintName="fk_consignment_awb1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="awb" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Tarun (generated)" id="1343985650047-11">
+    <changeSet author="Tarun (generated)" id="1344513478843-8">
         <addForeignKeyConstraint baseColumnNames="consignment_status_id" baseTableName="consignment" constraintName="fk_consignment_consignment_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="consignment_status" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Tarun (generated)" id="1343985650047-12">
+    <changeSet author="Tarun (generated)" id="1344513478843-9">
         <addForeignKeyConstraint baseColumnNames="hub_id" baseTableName="consignment" constraintName="fk_consignment_hub1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="hub" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Tarun (generated)" id="1343985650047-13">
+    <changeSet author="Tarun (generated)" id="1344513478843-10">
+        <addForeignKeyConstraint baseColumnNames="payment_reconciliation_id" baseTableName="consignment" constraintName="fk_consignment_payment_reconciliation1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="payment_reconciliation" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1344513478843-11">
+        <addForeignKeyConstraint baseColumnNames="runsheet_id" baseTableName="consignment" constraintName="fk_consignment_runsheet1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="runsheet" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1344513478843-12">
         <addForeignKeyConstraint baseColumnNames="consignment_id" baseTableName="cosignment_tracking" constraintName="fk_cosignment_tracking_consignment1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="consignment" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Tarun (generated)" id="1343985650047-14">
+    <changeSet author="Tarun (generated)" id="1344513478843-13">
         <addForeignKeyConstraint baseColumnNames="destination_id" baseTableName="cosignment_tracking" constraintName="fk_cosignment_tracking_hub2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="hub" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Tarun (generated)" id="1343985650047-15">
+    <changeSet author="Tarun (generated)" id="1344513478843-14">
         <addForeignKeyConstraint baseColumnNames="source_hub_id" baseTableName="cosignment_tracking" constraintName="fk_cosignment_tracking_hub1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="hub" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Tarun (generated)" id="1343985650047-16">
+    <changeSet author="Tarun (generated)" id="1344513478843-15">
         <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="cosignment_tracking" constraintName="fk_cosignment_tracking_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Tarun (generated)" id="1343985650047-17">
+    <changeSet author="Tarun (generated)" id="1344513478843-16">
         <addForeignKeyConstraint baseColumnNames="city_id" baseTableName="hub" constraintName="fk_hub_city1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="city" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Tarun (generated)" id="1343985650047-18">
+    <changeSet author="Tarun (generated)" id="1344513478843-17">
         <addForeignKeyConstraint baseColumnNames="pincode_id" baseTableName="hub" constraintName="fk_hub_pincode1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="pincode" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Tarun (generated)" id="1343985650047-19">
+    <changeSet author="Tarun (generated)" id="1344513478843-18">
         <addForeignKeyConstraint baseColumnNames="state_id" baseTableName="hub" constraintName="fk_hub_state1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="state" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Tarun (generated)" id="1343985650047-20">
-        <addForeignKeyConstraint baseColumnNames="consignment_id" baseTableName="payment_has_consignment" constraintName="fk_payment_has_consignment_consignment1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="consignment" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="Tarun (generated)" id="1343985650047-21">
-        <addForeignKeyConstraint baseColumnNames="payment_reconciliation_id" baseTableName="payment_has_consignment" constraintName="fk_payment_has_consignment_payment_reconciliation1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="payment_reconciliation" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="Tarun (generated)" id="1343985650047-22">
+    <changeSet author="Tarun (generated)" id="1344513478843-19">
         <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="payment_reconciliation" constraintName="fk_payment_reconciliation_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Tarun (generated)" id="1343985650047-23">
+    <changeSet author="Tarun (generated)" id="1344513478843-20">
         <addForeignKeyConstraint baseColumnNames="hub_id" baseTableName="runsheet" constraintName="fk_runsheet_hub1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="hub" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Tarun (generated)" id="1343985650047-24">
+    <changeSet author="Tarun (generated)" id="1344513478843-21">
         <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="runsheet" constraintName="fk_runsheet_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Tarun (generated)" id="1343985650047-25">
-        <addForeignKeyConstraint baseColumnNames="consignment_id" baseTableName="runsheet_has_consignment" constraintName="fk_runsheet_has_consignment_consignment1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="consignment" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="Tarun (generated)" id="1343985650047-26">
-        <addForeignKeyConstraint baseColumnNames="runsheet_id" baseTableName="runsheet_has_consignment" constraintName="fk_runsheet_has_consignment_runsheet1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="runsheet" referencesUniqueColumn="false"/>
-    </changeSet>
-    
-    <changeSet author="Tarun (generated)" id="1344319279457-1">
-        <addColumn tableName="consignment_status">
-            <column name="status" type="VARCHAR(100)">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-    </changeSet>
-    <changeSet author="Tarun (generated)" id="1344319279457-2">
-        <addColumn tableName="hub">
-            <column name="name" type="VARCHAR(100)">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-    </changeSet>
-    <changeSet author="Tarun (generated)" id="1344319279457-3">
-        <dropColumn columnName="name" tableName="consignment_status"/>
-    </changeSet>
+ 
 </databaseChangeLog>
