@@ -545,12 +545,18 @@ private SkuService                    skuService;*/
             xlsWriter.addHeader(XslConstants.STATUS, XslConstants.STATUS);
             xlsWriter.addHeader(XslConstants.RECONCILED, XslConstants.RECONCILED);
             xlsWriter.addHeader(XslConstants.PAYABLE, XslConstants.PAYABLE);
+            xlsWriter.writeData(xlsFile, XslConstants.GRN_LIST_SHEET);
 
             for (GoodsReceivedNote goodsReceivedNote : grnList) {
                 xlsWriter.addCell(xlsRow, goodsReceivedNote.getId());
                 xlsWriter.addCell(xlsRow, goodsReceivedNote.getPurchaseOrder().getId());
                 xlsWriter.addCell(xlsRow, goodsReceivedNote.getInvoiceNumber());
-                xlsWriter.addCell(xlsRow, goodsReceivedNote.getReceivedBy().getName());
+                if(goodsReceivedNote.getReceivedBy() != null) {
+                    xlsWriter.addCell(xlsRow, goodsReceivedNote.getReceivedBy().getName());
+                } else {
+                    xlsWriter.addCell(xlsRow, null);
+                }
+
                 if(goodsReceivedNote.getWarehouse() != null) {
                     xlsWriter.addCell(xlsRow, goodsReceivedNote.getWarehouse().getName());
                 }else {
@@ -585,13 +591,18 @@ private SkuService                    skuService;*/
             xlsWriter.addHeader(XslConstants.STATUS, XslConstants.STATUS);
             xlsWriter.addHeader(XslConstants.LAST_UPDATED_DATE, XslConstants.LAST_UPDATED_DATE);
             xlsWriter.addHeader(XslConstants.PAYABLE, XslConstants.PAYABLE);
+            xlsWriter.writeData(xlsFile, "POList");
 
             for (PurchaseOrder purchaseOrder : purchaseOrderList) {
                 xlsWriter.addCell(xlsRow, purchaseOrder.getId());
                 xlsWriter.addCell(xlsRow, purchaseOrder.getCreateDate());
                 xlsWriter.addCell(xlsRow, purchaseOrder.getCreatedBy().getName());
                 xlsWriter.addCell(xlsRow, purchaseOrder.getNoOfSku());
-                xlsWriter.addCell(xlsRow, purchaseOrder.getApprovedBy().getName());
+                if(purchaseOrder.getApprovedBy() != null) {
+                    xlsWriter.addCell(xlsRow, purchaseOrder.getApprovedBy().getName());
+                } else {
+                    xlsWriter.addCell(xlsRow, purchaseOrder.getApprovedBy());
+                }
                 xlsWriter.addCell(xlsRow, purchaseOrder.getSupplier().getName());
                 xlsWriter.addCell(xlsRow, purchaseOrder.getSupplier().getTinNumber());
                 if(purchaseOrder.getWarehouse() != null) {
@@ -623,6 +634,7 @@ private SkuService                    skuService;*/
         xlsWriter.addHeader(XslConstants.MARGIN, XslConstants.MARGIN);
         xlsWriter.addHeader(XslConstants.BRAND, XslConstants.BRAND);
         xlsWriter.addHeader(XslConstants.VALIDITY_TERMS_OF_TRADE, XslConstants.VALIDITY_TERMS_OF_TRADE);
+        xlsWriter.writeData(xlsFile, "SupplierList");
 
         for (Supplier supplier : supplierList) {
             xlsWriter.addCell(xlsRow, supplier.getName());

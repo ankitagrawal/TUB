@@ -41,7 +41,7 @@ public class ReportProductVariantDaoImpl extends BaseDaoImpl implements ReportPr
         }
 
     public Long findSkuInventorySold(Date startDate, Date endDate, Sku sku) {
-        String sql = "select count(li.id) as countSold "
+        String sql = "select sum(li.qty) as countSold "
                 + " from LineItem li"
                 + " where  li.shippingOrder.shippingOrderStatus.id in (:shippingOrderStatus) and li.shippingOrder.shipment.shipDate > :startDate "
                 + " and li.shippingOrder.shipment.shipDate < :endDate and li.sku = :sku ";

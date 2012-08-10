@@ -265,7 +265,7 @@ public class PurchaseOrder implements java.io.Serializable {
     }
 
     public int getNoOfSku() {
-        return this.poLineItems.size();
+        return this.poLineItems != null ? this.poLineItems.size() : 0;
     }
 }
 
