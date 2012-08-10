@@ -31,6 +31,7 @@ import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.hkDelivery.EnumRunsheetStatus;
+import com.hk.constants.hkDelivery.EnumConsignmentStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -124,6 +125,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
                         shippingOrderList.add(shippingOrder);
                     }
                 }
+                consignment.setConsignmentStatus(EnumConsignmentStatus.ShipmntOutForDelivry.asConsignmentStatus());
                 consignmentList.add(consignment);
             } else {
                 //adding the trackingId without a consignment to a list.
