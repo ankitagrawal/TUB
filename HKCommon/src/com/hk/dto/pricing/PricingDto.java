@@ -356,22 +356,7 @@ public class PricingDto {
     if (gt == -0.0) gt = 0.0;
     return gt;
   }
-
-// Adding cashback code for Ground shiping
-
-    public Double getCashbackOnGroundShippedItem( Double totalCost) {
-        
-//              Double totalCost = 100.0;
-        Double cashbackAmount = totalCost*(0.2);
-
-        if (cashbackAmount == -0.0) {
-            cashbackAmount = 0.0;
-        }
-        return cashbackAmount;
-    }
-
-//  end
-
+    
   public Long getTotalLineCount() {
     return totalLineCount;
   }
