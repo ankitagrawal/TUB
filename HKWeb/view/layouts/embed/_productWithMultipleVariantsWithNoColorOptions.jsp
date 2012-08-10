@@ -178,7 +178,6 @@
                 <s:hidden name="productVariantList[0]" value="${variant.id}"/>
                 <s:hidden name="productVariantList[0].qty" value="1" class="lineItemQty"/>
                 <s:hidden name="productVariantList[0].selected" value="true"/>
-
                 <div class='floatfix'></div>
               </div>
             </s:form>

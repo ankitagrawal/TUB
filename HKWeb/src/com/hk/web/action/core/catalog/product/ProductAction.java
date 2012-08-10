@@ -2,6 +2,9 @@ package com.hk.web.action.core.catalog.product;
 
 import java.util.*;
 
+import com.hk.constants.marketing.EnumProductReferrer;
+import com.hk.manager.LinkManager;
+import com.hk.util.ProductReferrerMapper;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -72,6 +75,7 @@ public class ProductAction extends BaseAction {
     List<Combo> relatedCombos = new ArrayList<Combo>();
     String renderComboUI = "false";
     SubscriptionProduct              subscriptionProduct;
+    Long productReferrerId;
 
     @Session(key = HealthkartConstants.Cookie.preferredZone)
     private String preferredZone;
@@ -101,6 +105,7 @@ public class ProductAction extends BaseAction {
     private SuperSaverImageService superSaverImageService;
     @Autowired
     private SubscriptionProductService subscriptionProductService;
+    private LinkManager linkManager;
 
     @DefaultHandler
     @DontValidate
@@ -141,6 +146,9 @@ public class ProductAction extends BaseAction {
         if (relatedProducts == null || relatedProducts.size() == 0) {
             relatedProducts = getProductService().getRelatedProducts(product);
             product.setRelatedProducts(relatedProducts);
+        }
+        for (Product product : relatedProducts) {
+            product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(EnumProductReferrer.relatedProductsPage.getName())));
         }
         if (product.isProductHaveColorOptions()) {
             Integer outOfStockOrDeletedCtr = 0;
@@ -201,6 +209,7 @@ public class ProductAction extends BaseAction {
                     break;
                 }
             }
+            relatedCombo.setProductURL(linkManager.getRelativeProductURL(relatedCombo, ProductReferrerMapper.getProductReferrerid(EnumProductReferrer.relatedProductsPage.getName())));
         }
 
         if (combo == null) {
@@ -405,6 +414,14 @@ public class ProductAction extends BaseAction {
 
     public void setSuperSaverImageId(Long superSaverImageId) {
         this.superSaverImageId = superSaverImageId;
+    }
+
+    public Long getProductReferrerId() {
+        return productReferrerId;
+    }
+
+    public void setProductReferrerId(Long productReferrerId) {
+        this.productReferrerId = productReferrerId;
     }
 
     public SuperSaverImageService getSuperSaverImageService() {

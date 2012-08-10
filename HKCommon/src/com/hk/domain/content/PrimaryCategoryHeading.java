@@ -79,6 +79,7 @@ public class PrimaryCategoryHeading implements java.io.Serializable {
     return products;
   }
 
+/*
   public List<Product> getProductSortedByOrderRanking() {
     Collections.sort(products, new ProductComparator());
     return products;
@@ -92,6 +93,7 @@ public class PrimaryCategoryHeading implements java.io.Serializable {
       return -1;
     }
   }
+*/
 
   public String getName() {
     return this.name;
