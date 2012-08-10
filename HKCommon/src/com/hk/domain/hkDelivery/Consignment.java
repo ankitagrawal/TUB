@@ -63,11 +63,11 @@ public class Consignment implements java.io.Serializable {
     private String paymentMode;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "runsheet_id", nullable = false)
+    @JoinColumn(name = "runsheet_id")
     private Runsheet runsheet;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "payment_reconciliation_id", nullable = false)
+    @JoinColumn(name = "payment_reconciliation_id")
     private PaymentReconciliation paymentReconciliation;
 
     public Long getId() {

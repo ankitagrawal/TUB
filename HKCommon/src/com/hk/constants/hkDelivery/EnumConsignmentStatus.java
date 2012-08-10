@@ -1,15 +1,17 @@
 package com.hk.constants.hkDelivery;
 
+import com.hk.domain.hkDelivery.ConsignmentStatus;
+
 
 public enum EnumConsignmentStatus {
 
-    ShipmntRcvdAtHub    (10L, "Shipment Received at Hub"),
-    ShipmntOutForDelivry(20L, "Shipment out for Delivery"),
-    ShpmntDelivered     (30L, "Shipment Delivered"),
-    ShipmntOnHold       (40L, "Shipment on Hold"),
-    ShipmntLost         (50L, "Shipment Lost"),
-    ShipmntDamaged        (60L, "Shipment Damaged"),
-    ShipmentRTO(70L, "Shipment Returned");
+    ShipmntRcvdAtHub       (10L, "Shipment Received at Hub"),
+    ShipmntOutForDelivry   (20L, "Shipment out for Delivery"),
+    ShpmntDelivered        (30L, "Shipment Delivered"),
+    ShipmntOnHold          (40L, "Shipment on Hold"),
+    ShipmntLost            (50L, "Shipment Lost"),
+    ShipmntDamaged         (60L, "Shipment Damaged"),
+    ShipmentRTO            (70L, "Shipment Returned");
 
 
     private java.lang.Long id;
@@ -36,4 +38,13 @@ public enum EnumConsignmentStatus {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public ConsignmentStatus asConsignmentStatus() {
+        ConsignmentStatus consignmentStatus = new ConsignmentStatus();
+        consignmentStatus.setId(this.getId());
+        consignmentStatus.setStatus(this.getStatus());
+        return consignmentStatus;
+    }
+
+
 }

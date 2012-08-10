@@ -69,7 +69,8 @@ public class Runsheet implements java.io.Serializable {
     @Column(name = "user_id")
     private Long userId;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "runsheet")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "runsheet_id")
 	private List<Consignment> consignments = new ArrayList<Consignment>(0);
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -162,6 +163,14 @@ public class Runsheet implements java.io.Serializable {
 
     public void setConsignments(List<Consignment> consignments) {
         this.consignments = consignments;
+    }
+
+    public RunsheetStatus getRunsheetStatus() {
+        return runsheetStatus;
+    }
+
+    public void setRunsheetStatus(RunsheetStatus runsheetStatus) {
+        this.runsheetStatus = runsheetStatus;
     }
 }
 

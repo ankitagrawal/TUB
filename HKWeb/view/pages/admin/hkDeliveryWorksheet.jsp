@@ -1,9 +1,10 @@
 <%@ taglib prefix="s" uri="http://stripes.sourceforge.net/stripes-dynattr.tld" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.admin.courier.HKDeliveryAction" var="hkdBean"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.hkDelivery.HKDRunsheetAction" var="hkdBean"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Healthkart Delivery">
 
     <s:layout-component name="htmlHead">
@@ -101,11 +102,19 @@
 
     <s:layout-component name="content">
         <div class="hkDeliveryWorksheetBox">
-            <s:form beanclass="com.hk.web.action.admin.courier.HKDeliveryAction">
+            <s:form beanclass="com.hk.web.action.admin.hkDelivery.HKDRunsheetAction">
                 <fieldset class="right_label">
                     <legend>Download Healthkart Delivery Worksheet</legend>
                     <ul>
-
+                        <li>
+                            <label style="font-size:medium;">Hub :</label>
+                            <s:select name="hub" class="hubName">
+                                <s:option value="-Select Hub-">-Select Hub-</s:option>
+                                <hk:master-data-collection service="<%=MasterDataDao.class%>"
+                                                           serviceProperty="hubList" value="id"
+                                                           label="name"/>
+                            </s:select>
+                        </li>
                         <li>
                             <label style="font-size:medium;">Assigned to:</label><s:text name="assignedTo"/>
                         </li>
@@ -148,10 +157,18 @@
                         </li>
                         <li>
                             <s:submit id="submitButton" name="downloadDeliveryWorkSheet" value="Download Delivery Worksheet"
-                                      class="verifyData"/>
+                                      class="verifyData">
+                                Download Delivery Worksheet
+                                <s:param name="runsheetDownloadFunctionality" value="true"/>
+                                </s:submit>
                         </li>
                     </ul>
                 </fieldset>
+                <c:if test="${hkdBean.awbIdsWithoutConsignmntString != null}">
+                               <p> Consignment not created for following Tracking Ids:</p>
+                                <p>${hkdBean.awbIdsWithoutConsignmntString}</p>
+
+                            </c:if>
             </s:form>
         </div>
 

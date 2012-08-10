@@ -387,11 +387,10 @@
         <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction"
                 title="Download Healthkart Delivery Worksheet">Mark Shipments Inward at Hub</s:link></h3>
 	<h3>
-		<s:link beanclass="com.hk.web.action.admin.courier.HKDeliveryAction"
-		        title="Download Healthkart Delivery Worksheet">Download Healthkart Delivery Runsheet</s:link></h3>
-    <h3>
             <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDRunsheetAction"
-                    title="Download Healthkart Delivery Runsheet">Download Delivery Runsheet</s:link></h3>
+                    title="Download Healthkart Delivery Runsheet" event="downloadDeliveryWorkSheet">Download Delivery Runsheet
+                <s:param name="runsheetDownloadFunctionality" value="false"/>
+            </s:link></h3>
 
 </div>
 

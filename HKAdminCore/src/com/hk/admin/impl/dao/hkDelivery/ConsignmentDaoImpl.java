@@ -19,7 +19,7 @@ public class ConsignmentDaoImpl extends BaseDaoImpl implements ConsignmentDao {
     public Consignment createConsignment(Shipment shipment, Hub hub) {
         Consignment consignmentObj = new Consignment();
         consignmentObj.setHub(hub);
-        consignmentObj.setConsignmentStatus(getConsignmentStatus(EnumConsignmentStatus.ShipmntRcvdAtHub.getId()));
+        consignmentObj.setConsignmentStatus(EnumConsignmentStatus.ShipmntRcvdAtHub.asConsignmentStatus());
         consignmentObj.setAwbId(shipment.getAwb().getId());
         consignmentObj.setAmount(shipment.getShippingOrder().getAmount());
         consignmentObj.setCnnNumber(shipment.getShippingOrder().getGatewayOrderId());
@@ -27,11 +27,6 @@ public class ConsignmentDaoImpl extends BaseDaoImpl implements ConsignmentDao {
         consignmentObj.setPaymentMode(shipment.getShippingOrder().getBaseOrder().getPayment().getPaymentMode().getName());
         save(consignmentObj);
         return consignmentObj;
-    }
-
-    @Override
-    public ConsignmentStatus getConsignmentStatus(Long consignmentStatusId) {
-        return get(ConsignmentStatus.class,consignmentStatusId);
     }
 
     @Override

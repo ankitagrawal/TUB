@@ -7,7 +7,6 @@ import com.hk.domain.hkDelivery.RunsheetStatus;
 import com.hk.domain.user.User;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.admin.pact.dao.hkDelivery.RunSheetDao;
-import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -15,13 +14,19 @@ import org.springframework.stereotype.Repository;
 import java.util.Date;
 
 @Repository
-public class RunSheetDaoImpl extends BaseDaoImpl implements RunSheetDao{
-    
-    public Page searchRunsheet(Runsheet runsheet, Date startDate, Date endDate, RunsheetStatus runsheetStatus, User agent, Hub hub, int pageNo, int perPage ) {
+public class RunSheetDaoImpl extends BaseDaoImpl implements RunSheetDao {
+
+    @Override
+    public void createRunSheet(Runsheet runsheet) {
+        save(runsheet);
+    }
+
+    @Override
+    public Page searchRunsheet(Runsheet runsheet, Date startDate, Date endDate, RunsheetStatus runsheetStatus, User agent, Hub hub, int pageNo, int perPage) {
         DetachedCriteria runsheetCriteria = DetachedCriteria.forClass(Runsheet.class);
 
         DetachedCriteria supplierCriteria = null;
-       
+
         if (runsheet != null) {
             runsheetCriteria.add(Restrictions.eq("id", runsheet.getId()));
         }
@@ -35,10 +40,10 @@ public class RunSheetDaoImpl extends BaseDaoImpl implements RunSheetDao{
             runsheetCriteria.add(Restrictions.eq("runsheetStatus", runsheetStatus));
         }
         if (agent != null) {
-           runsheetCriteria.add(Restrictions.eq("userId", agent));
+            runsheetCriteria.add(Restrictions.eq("userId", agent));
         }
-        if(hub!= null){
-          runsheetCriteria.add(Restrictions.eq("hub",hub));
+        if (hub != null) {
+            runsheetCriteria.add(Restrictions.eq("hub", hub));
         }
 
         runsheetCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));
