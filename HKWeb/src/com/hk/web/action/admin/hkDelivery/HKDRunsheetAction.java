@@ -1,6 +1,7 @@
 package com.hk.web.action.admin.hkDelivery;
 
 import com.akube.framework.dao.Page;
+import com.hk.admin.pact.service.hkDelivery.RunSheetService;
 import com.hk.domain.hkDelivery.Runsheet;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.Resolution;
@@ -64,6 +65,8 @@ public class HKDRunsheetAction extends BaseAction{
     ConsignmentService consignmentService;
     @Autowired
     HKDRunsheetManager  hkdRunsheetManager;
+    @Autowired
+    RunSheetService runSheetService;
 
 
 
@@ -73,6 +76,7 @@ public class HKDRunsheetAction extends BaseAction{
 
     @DefaultHandler
     public Resolution pre() {
+        runsheetPage = runSheetService.searchRunsheet()
         return new ForwardResolution("/pages/admin/hkDeliveryWorksheet.jsp");
     }
 
