@@ -133,6 +133,7 @@
 ---/sports/sports-equipment/badminton/shuttles
 ---/sports/sports-equipment/badminton/accessories
 --/sports/sports-equipment/table-tennis
+---/sports/sports-equipment/table-tennis/tt-tables: TT Tables
 ---/sports/sports-equipment/table-tennis/rackets
 ---/sports/sports-equipment/table-tennis/blades
 ---/sports/sports-equipment/table-tennis/rubbers
