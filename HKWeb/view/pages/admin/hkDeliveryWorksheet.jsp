@@ -157,7 +157,10 @@
                         </li>
                         <li>
                             <s:submit id="submitButton" name="downloadDeliveryWorkSheet" value="Download Delivery Worksheet"
-                                      class="verifyData"/>
+                                      class="verifyData">
+                                Download Delivery Worksheet
+                                <s:param name="runsheetDownloadFunctionality" value="true"/>
+                                </s:submit>
                         </li>
                     </ul>
                 </fieldset>

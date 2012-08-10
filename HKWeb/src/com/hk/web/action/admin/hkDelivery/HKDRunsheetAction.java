@@ -55,6 +55,7 @@ public class HKDRunsheetAction extends BaseAction {
     private         List<String>          trackingIdsWithoutConsignment   = new ArrayList<String>();
     private         List<Consignment>     consignmentList                 = new ArrayList<Consignment>();
     private         List<Runsheet>        runsheetList                    = new ArrayList<Runsheet>();
+    private         Boolean               runsheetDownloadFunctionality;
     @Autowired
     ShippingOrderService                  shippingOrderService;
     @Autowired
@@ -81,6 +82,10 @@ public class HKDRunsheetAction extends BaseAction {
     }
 
     public Resolution downloadDeliveryWorkSheet() {
+
+        if(!runsheetDownloadFunctionality){
+           return new ForwardResolution("/pages/admin/hkDeliveryWorksheet.jsp");
+        } else {
         Runsheet runsheet = new Runsheet();
         shippingOrderList = new ArrayList<ShippingOrder>();
         //Getting HK-Delivery Courier Object.
@@ -135,6 +140,7 @@ public class HKDRunsheetAction extends BaseAction {
             return new ForwardResolution(HKDRunsheetAction.class);
         }
         return new HTTPResponseResolution();
+        }
     }
 
     private Runsheet createRunsheet(){
@@ -206,5 +212,13 @@ public class HKDRunsheetAction extends BaseAction {
 
     public void setRunsheetList(List<Runsheet> runsheetList) {
         this.runsheetList = runsheetList;
+    }
+
+    public Boolean isRunsheetDownloadFunctionality() {
+        return runsheetDownloadFunctionality;
+    }
+
+    public void setRunsheetDownloadFunctionality(Boolean runsheetDownloadFunctionality) {
+        this.runsheetDownloadFunctionality = runsheetDownloadFunctionality;
     }
 }
