@@ -26,37 +26,59 @@
                 });
             });
         </script>
+        <div>
+            <p>
+            We know it is hard to manage products which you require in continuous supply throughout the year.
+            <b><strong>HealthKart Subscriptions</strong></b> is a feature which makes life easy for you.
+            </p>
+        </div>
         <img src="../../images/banners/Subscription-banner.jpg" alt="subscription banner">
-        <%
-            if(aba.isFaqs()){
-        %>
-        <p style="text-align:center;font-size: 14px;">
-            <s:link beanclass="com.hk.web.action.core.subscription.AboutSubscriptionAction" event="pre" style="font-size:14px;">About Subscriptions</s:link> |
-           <b><strong> FAQs </strong></b>
-        </p>
-        <%
-            }else{
-        %>
-        <p style="text-align:center;font-size: 14px;">
-            <b><strong> About Subscriptions </strong></b> | <s:link beanclass="com.hk.web.action.core.subscription.AboutSubscriptionAction" event="faqs" style="font-size:14px;">FAQs</s:link>
 
-        </p>
-        <%
-            }
-        %>
+        <div style="font-size: 13px;">
 
-        <%
-            if(aba.isFaqs()){
-        %>
-        <div class="faqs">
+            <br/>
+            <h4>How does it work?</h4>
+        <p> You select a product and choose a plan specifying your delivery frequency; you get additional discounts based on the plan you choose.
+            After finalizing your product and plan, you have to prepay the whole amount for your subscription. When the delivery date arrives, our Customer Care Executive will give you a reminder call and will ensure a safe and sound delivery of your specified products.
+          </p>
+            <p>
+                You can notify our customer care in case you want to change your delivery date or your shipment address, according to your convenience.  The customer can drop in an email to <strong>info@healthkart.com</strong> or can call our Customer Care at <strong>0124-4551616</strong> notifying us about the new address of delivery.
+        </p>
+
+           <p></p>
+
+            <h4>Benifits of subscription</h4>
+            <br/>
+            <strong>Additional Discount</strong>
+            <p>You get an additional discount which may vary from 4-10% on the subscribed products according to your subscription plan.</p>
+            <strong> Price Protection</strong>
+            <p>Prices of nutrition products may vary with time. In a situation of increase of the price of the product, the customer will receive the product at subscription price. In case, the price of the product goes down, the customer gets reward points after </p>
+            <strong>Additional Freebies</strong>
+            <p>You will be entitled to avail additional freebies as and when applicable to your subscribed products.</p>
+            </ul>
+
+            <h4>Cancellation </h4>
+            <p>
+            A customer is free to cancel his subscription anytime. If a customer opts out, the discounts and benifits that he/she received  as part of the subscription will be added to the cost of
+            the shipments delivered till that point and the balance amount would be credited as reward points.
+                </p>
+            <br/><br/>
+           Please refer to the following Frequently Asked Question in case of any questions. If you still have unanswered questions, please contact our customer care through email
+            or a phone call.
+
+        </div>
+        <br/><br/>
+
+        <div id="faqs" class="faqs">
+            <h4>Frequently Asked Questions</h4><br/>
             <h3>How can I buy a product subscription?</h3>
             <div>
                 <p>
                     You can buy product subscriptions only for products that are subscribable. You can know that a product is subscribable in two ways:
                 <ul >
-                <li>
-                    In case of subscribable products, you will be given an option to subscribe from the product page itself.  <strong>or</strong>
-                </li>
+                    <li>
+                        In case of subscribable products, you will be given an option to subscribe from the product page itself.  <strong>or</strong>
+                    </li>
                     <li>
                         You will be given an option to subscribe for a product in the cart page if that product is subscribable.
                     </li>
@@ -103,51 +125,6 @@
             <br/><br/>
 
         </div>
-        <%
-            }else{
-        %>
-        <div style="font-size: 13px;">
-            <div>
-                We know it is hard to manage products which you require in continuous supply throughout the year.
-            <b><strong>HealthKart Subscriptions</strong></b> is a feature which makes life easy for you.
-
-            </div>
-            <br/>
-            <h4>How does it work?</h4>
-        <p> You select a product and choose a plan specifying your delivery frequency; you get additional discounts based on the plan you choose.
-            After finalizing your product and plan, you have to prepay the whole amount for your subscription. When the delivery date arrives, our Customer Care Executive will give you a reminder call and will ensure a safe and sound delivery of your specified products.
-          </p>
-            <p>
-                You can notify our customer care in case you want to change your delivery date or your shipment address, according to your convenience.  The customer can drop in an email to <strong>info@healthkart.com</strong> or can call our Customer Care at <strong>0124-4551616</strong> notifying us about the new address of delivery.
-        </p>
-
-           <p></p>
-
-            <h4>Benifits of subscription</h4>
-            <br/>
-            <strong>Additional Discount</strong>
-            <p>You get an additional discount which may vary from 4-10% on the subscribed products according to your subscription plan.</p>
-            <strong> Price Protection</strong>
-            <p>Prices of nutrition products may vary with time. In a situation of increase of the price of the product, the customer will receive the product at subscription price. In case, the price of the product goes down, the customer gets reward points after </p>
-            <strong>Additional Freebies</strong>
-            <p>You will be entitled to avail additional freebies as and when applicable to your subscribed products.</p>
-            </ul>
-
-            <h4>Cancellation </h4>
-            <p>
-            A customer is free to cancel his subscription anytime. If a customer opts out, the discounts and benifits that he/she received  as part of the subscription will be added to the cost of
-            the shipments delivered till that point and the balance amount would be credited as reward points.
-                </p>
-            <br/><br/>
-           Please refer to the Frequently Asked Questions(<s:link beanclass="com.hk.web.action.core.subscription.AboutSubscriptionAction" event="faqs" style="font-size:14px;">FAQs</s:link>) in case of any questions. If you still have unanswered questions, please contact our customer care through email
-            or a phone call.
-
-        </div>
-        <br/><br/>
-        <%
-            }
-        %>
-
 
     </s:layout-component>
 
