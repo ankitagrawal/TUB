@@ -261,6 +261,13 @@
 
 <s:layout-component name="cart_items">
 <div class='products_container' style="min-height: 500px;">
+
+<div style="display: none;">
+    <s:link beanclass="com.hk.web.action.core.order.CartLineItemUpdateAction" id="lineItemUpdateLink"></s:link>
+    <s:link beanclass="com.hk.web.action.core.discount.ApplyCouponAction" style="display:none;" id="couponBaseLink"></s:link>
+    <s:link beanclass="com.hk.web.action.core.cart.CartAction" style="display:none;" id="updatePricingLink" event="pricing"></s:link>
+</div>
+
 <c:if test="${cartAction.pricingDto.subscriptionLineCount>=1}">
   <span id="subscriptionsInCart" style="display: none;">${cartAction.pricingDto.subscriptionLineCount}</span>
   <s:layout-render name="/layouts/embed/_subscriptionCart.jsp"
@@ -280,13 +287,6 @@
   </div>
   <div class='floatfix'></div>
 </div>
-
-<div style="display: none;">
-  <s:link beanclass="com.hk.web.action.core.order.CartLineItemUpdateAction" id="lineItemUpdateLink"></s:link>
-  <s:link beanclass="com.hk.web.action.core.discount.ApplyCouponAction" style="display:none;" id="couponBaseLink"></s:link>
-  <s:link beanclass="com.hk.web.action.core.cart.CartAction" style="display:none;" id="updatePricingLink" event="pricing"></s:link>
-</div>
-
 <c:forEach items="${cartAction.order.exclusivelyProductCartLineItems}" var="cartLineItem" varStatus="ctr">
   <div class="lineItemRow product">
     <input type="hidden" value="${cartLineItem.id}" class="lineItemId" id="item_${cartLineItem.id}"/>
