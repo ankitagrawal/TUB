@@ -1,11 +1,13 @@
 package com.hk.constants.hkDelivery;
 
+import com.hk.domain.hkDelivery.RunsheetStatus;
+
 
 public enum EnumRunsheetStatus {
 
-    Open    (10L, "Open"),
-    Close(20L, "Closed"),
-    OnHold     (30L, "On Hold");
+    Open     (10L, "Open"),
+    Close    (20L, "Closed"),
+    OnHold   (30L, "On Hold");
 
 
     private Long id;
@@ -32,4 +34,11 @@ public enum EnumRunsheetStatus {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public RunsheetStatus asRunsheetStatus() {
+    RunsheetStatus runsheetStatus = new RunsheetStatus();
+    runsheetStatus.setId(this.getId());
+    runsheetStatus.setStatus(this.getStatus());
+    return runsheetStatus;
+  }
 }

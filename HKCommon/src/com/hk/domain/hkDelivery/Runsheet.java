@@ -164,6 +164,14 @@ public class Runsheet implements java.io.Serializable {
     public void setConsignments(List<Consignment> consignments) {
         this.consignments = consignments;
     }
+
+    public RunsheetStatus getRunsheetStatus() {
+        return runsheetStatus;
+    }
+
+    public void setRunsheetStatus(RunsheetStatus runsheetStatus) {
+        this.runsheetStatus = runsheetStatus;
+    }
 }
 
 

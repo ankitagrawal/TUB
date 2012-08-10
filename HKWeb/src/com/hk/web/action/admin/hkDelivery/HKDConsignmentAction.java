@@ -56,6 +56,7 @@ public class HKDConsignmentAction extends BaseAction{
         return new RedirectResolution(HKDConsignmentAction.class);
     }
 
+    //todo data duplicacy
     // Method to check data duplicacy
     private boolean checkAwbDuplicacy(Set<Awb> awbSet){
         List<Long> consignmentAwbId = consignmentService.getAwbIds();

@@ -28,6 +28,7 @@ import com.hk.constants.core.Keys;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.courier.CourierConstants;
+import com.hk.constants.hkDelivery.EnumRunsheetStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -146,6 +147,7 @@ public class HKDRunsheetAction extends BaseAction {
         runsheetObj.setUserId(1l);
         runsheetObj.setHub(hub);
         runsheetObj.setConsignments(consignmentList);
+        runsheetObj.setRunsheetStatus(EnumRunsheetStatus.Open.asRunsheetStatus());
        return runsheetObj;
     }
 

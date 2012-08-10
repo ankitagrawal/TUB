@@ -14,8 +14,6 @@ public interface ConsignmentDao extends BaseDao {
 
     public Consignment createConsignment(Shipment shipment, Hub hub);
 
-    public ConsignmentStatus getConsignmentStatus(Long consignmentStatusId);
-
     public List<Long> getAwbIds();
 
     public Consignment getConsignmentByAwbId(Long awbId);
