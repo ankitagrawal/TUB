@@ -794,17 +794,6 @@
     </function>
     <function>
         <description>
-            returns the net inventory  of product variant or sku in the given warehouse
-        </description>
-        <name>netInventoryInWarehouse</name>
-        <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>java.lang.Long netInventoryInWarehouse(java.lang.Object,java.lang.Object)</function-signature>
-        <example>
-            ${hk:netInventoryInWarehouse(${object},${object})}
-        </example>
-    </function>
-    <function>
-        <description>
             returns the net sku inventory sold in the given no. of days in the given warehouse
         </description>
         <name>findInventorySoldInGivenNoOfDays</name>

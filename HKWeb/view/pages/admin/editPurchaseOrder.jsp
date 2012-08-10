@@ -269,10 +269,10 @@
                 <fmt:formatNumber value="${sku.tax.value * 100}" maxFractionDigits="2"/>
             </td>
             <td>
-                    ${hk:netInventoryInWarehouse(sku, warehouse)}
+                ${hk:netInventory(sku)}
             </td>
             <td>
-                ${hk:netInventory(sku)}
+                ${hk:netInventory(productVariant)}
             </td>
             <td>
                     ${hk:findInventorySoldInGivenNoOfDays(sku, warehouse, 30)}

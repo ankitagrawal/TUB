@@ -219,22 +219,6 @@ public class Functions {
         }
     }
 
-    public static Long netInventoryInWarehouse(Object o1, Object o2) {
-        AdminInventoryService adminInventoryService = ServiceLocatorFactory.getService(AdminInventoryService.class);
-        Warehouse warehouse;
-        if(o2 instanceof Warehouse) {
-            warehouse = (Warehouse) o2;
-        } else return null;
-
-        if (o1 instanceof Sku) {
-            Sku sku = (Sku) o1;
-            return adminInventoryService.getNetInventoryInWarehouse(sku, warehouse);
-        } else if (o1 instanceof ProductVariant) {
-            ProductVariant productVariant = (ProductVariant) o1;
-            return adminInventoryService.getNetInventoryInWarehouse(productVariant, warehouse);
-        } else return null;
-    }
-
     public static Long bookedQty(Object o) {
         AdminInventoryService adminInventoryService = ServiceLocatorFactory.getService(AdminInventoryService.class);
         if (o instanceof Sku) {
@@ -523,7 +507,7 @@ public class Functions {
         Calendar calendar = Calendar.getInstance();
         Date endDate = calendar.getTime();
 
-        return reportProductVariantService.findInventorySoldByDateAndProduct(DateUtils.getDateMinusDays(noOfDays), endDate, sku.getProductVariant().getId(), warehouse).getCountSold();
+        return reportProductVariantService.findInventorySoldByDateAndProduct(DateUtils.getDateMinusDays(noOfDays), endDate, sku.getProductVariant().getProduct().getId(), warehouse).getCountSold();
     }
 
 }
