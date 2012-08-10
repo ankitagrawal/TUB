@@ -72,6 +72,10 @@ public class Runsheet implements java.io.Serializable {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "runsheet")
 	private List<Consignment> consignments = new ArrayList<Consignment>(0);
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "runsheet_status_id", nullable = false)
+    private RunsheetStatus runsheetStatus;
+
     public Long getId() {
         return this.id;
     }
