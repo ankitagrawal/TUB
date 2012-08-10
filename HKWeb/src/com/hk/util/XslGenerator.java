@@ -106,6 +106,7 @@ public class XslGenerator {
         setHeaderCellValue(row, cellCounter++, XslConstants.COLOR_PRODUCT);
         setHeaderCellValue(row, cellCounter++, XslConstants.IS_SERVICE);
         setHeaderCellValue(row, cellCounter++, XslConstants.IS_GOOGLE_AD_DISALLOWED);
+        setHeaderCellValue(row, cellCounter++, XslConstants.IS_JIT);
         setHeaderCellValue(row, cellCounter++, XslConstants.VARIANT_ID);
         setHeaderCellValue(row, cellCounter++, XslConstants.VARIANT_SORTING);
         setHeaderCellValue(row, cellCounter++, XslConstants.VARIANT_NAME);
@@ -133,6 +134,8 @@ public class XslGenerator {
         setHeaderCellValue(row, cellCounter++, XslConstants.UPC);
         setHeaderCellValue(row, cellCounter++, XslConstants.SERVICE_TYPE);
         setHeaderCellValue(row, cellCounter++, XslConstants.PAYMENT_TYPE);
+        setHeaderCellValue(row, cellCounter++, XslConstants.OTHER_REMARK);
+        setHeaderCellValue(row, cellCounter++, XslConstants.SUPPLIER_CODE);
 
         int initialRowNo = 1;
         for (Product product : products) {
@@ -180,6 +183,7 @@ public class XslGenerator {
                     setCellValue(row, this.getColumnIndex(XslConstants.IS_SERVICE), product.isService() != null ? product.isService() ? "Y" : "N" : null);
                     setCellValue(row, this.getColumnIndex(XslConstants.IS_GOOGLE_AD_DISALLOWED), product.isGoogleAdDisallowed() != null ? product.isGoogleAdDisallowed() ? "Y"
                             : "N" : null);
+                    setCellValue(row, this.getColumnIndex(XslConstants.IS_JIT), product.isJit() != null ? product.isJit() ? "Y" : "N" : null);
                 }
                 if (productVariant.getId().startsWith(product.getId() + "-")) {
                     setCellValue(row, this.getColumnIndex(XslConstants.VARIANT_ID), productVariant.getId());
@@ -215,6 +219,8 @@ public class XslGenerator {
                     setCellValue(row, this.getColumnIndex(XslConstants.UPC), productVariant.getUpc() == null ? null : productVariant.getUpc());
                     setCellValue(row, this.getColumnIndex(XslConstants.SERVICE_TYPE), productVariant.getServiceType() != null ? productVariant.getServiceType().getName() : null);
                     setCellValue(row, this.getColumnIndex(XslConstants.PAYMENT_TYPE), productVariant.getPaymentType() != null ? productVariant.getPaymentType().getName() : null);
+                    setCellValue(row, this.getColumnIndex(XslConstants.OTHER_REMARK), productVariant.getOtherRemark() == null ? null : productVariant.getOtherRemark());
+                    setCellValue(row, this.getColumnIndex(XslConstants.SUPPLIER_CODE), productVariant.getSupplierCode() == null ? null : productVariant.getSupplierCode());
                     initialRowNo++;
                 }
             }
