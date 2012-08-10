@@ -91,7 +91,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
     public Resolution pre() {
         runsheetPage = runsheetService.searchRunsheet(runsheet, startDate, endDate, runsheetStatus, agent, hub, getPageNo(), getPerPage());
         runsheetList = runsheetPage.getList();
-        return new ForwardResolution("/pages/admin/hkDeliveryWorksheet.jsp");
+        return new ForwardResolution("/pages/admin/hkRunsheetList.jsp");
     }
 
     public Resolution downloadDeliveryWorkSheet() {
