@@ -233,7 +233,7 @@
 -/home-devices/respiratory-care
 --/home-devices/respiratory-care/nebulizer
 ---/home-devices/respiratory-care/nebulizer/compressor-nebulizer
----/home-devices/respiratory-care/nebulizer/ultrsonic-nebulizer
+---/home-devices/respiratory-care/nebulizer/ultrasonic-nebulizer
 ---/home-devices/respiratory-care/nebulizer/nebulizer-for-kids
 --/home-devices/respiratory-care/oxygen-concentrator : Oxygen Concentrators
 --/home-devices/respiratory-care/pulse-oximeters : Pulse Oximeters
@@ -321,6 +321,7 @@
 --/home-devices/clinical-supplies/urinary-system
 --/home-devices/clinical-supplies/hearing-aids
 --/home-devices/clinical-supplies/eye-patch
+--/home-devices/clinical-supplies/suction-devices
 --/home-devices/clinical-supplies/diagnostic-products
 -/home-devices/miscellaneous
 --/home-devices/miscellaneous/weighing-scales
@@ -355,6 +356,7 @@
 --/home-devices/miscellaneous/personal-hygiene
 --/home-devices/miscellaneous/steamer : Steamer/Vaporiser
 --/home-devices/miscellaneous/air-humidifiers
+--/home-devices/miscellaneous/stature-meter
 
 /eye
 -/eye/lenses
@@ -382,14 +384,14 @@
 --/eye/eyeglasses/frameless
 --/eye/eyeglasses/reading-glasses :Reading Glasses
 --/eye/eyeglasses/kids :  Kids
--/eye/accessories
---/eye/accessories/solutions
---/eye/accessories/lens-case
---/eye/accessories/lens-cleaner :Lens Cleaner
---/eye/accessories/eye-patches : Eye Patches
---/eye/accessories/under-eye-creams : Under Eye Creams
---/eye/accessories/relaxing-masks : Relaxing Masks
---/eye/accessories/eye-supplements  :Eye Supplements
+-/eye/eye-care
+--/eye/eye-care/solutions
+--/eye/eye-care/lens-case
+--/eye/eye-care/lens-cleaner :Lens Cleaner
+--/eye/eye-care/eye-patches : Eye Patches
+--/eye/eye-care/under-eye-creams : Under Eye Creams
+--/eye/eye-care/relaxing-masks : Relaxing Masks
+--/eye/eye-care/eye-supplements  :Eye Supplements
 -/eye/what-s-new  :What's New
 --/eye/what-s-new/just-in :Just In
 --/eye/what-s-new/top-deals:Top Deals
@@ -426,7 +428,10 @@
 --/personal-care/women/panty-liners:Panty Liners
 --/personal-care/women/ovulation-kits
 --/personal-care/women/menopause-kits
---/personal-care/women/pregnancy-kits
+--/personal-care/women/pregnancy
+---/personal-care/women/pregnancy/pregnancy-kits
+---/personal-care/women/pregnancy/pre-pregnancy : Pre Pregnancy
+---/personal-care/women/pregnancy/post-pregnancy : Post Pregnancy
 --/personal-care/women/chlamydia-test
 --/personal-care/women/condoms
 --/personal-care/women/intimate-care:Intimate Care
@@ -684,6 +689,7 @@
 ---/parenting/mom-maternity/breast-feeding/breast-pumps
 ---/parenting/mom-maternity/breast-feeding/breast-pads
 ---/parenting/mom-maternity/breast-feeding/breast-milk-bottles
+---/parenting/mom-maternity/breast-feeding/breast-milk-cooler-bags
 --/parenting/mom-maternity/multivitamins-nutrition : Multivitamins & Nutrition
 -/parenting/infant
 --/parenting/infant/diapering
@@ -691,11 +697,15 @@
 ---/parenting/infant/diapering/wipes
 ---/parenting/infant/diapering/diaper-rash-cream
 --/parenting/infant/formula-baby-food : Formula & Baby Food
---/parenting/infant/nursing-feeding : Nursing & Feeding
----/parenting/infant/nursing-feeding/feeding-bottles
----/parenting/infant/nursing-feeding/feeding-accessories
----/parenting/infant/nursing-feeding/sterilizers-warmers : Sterilizers & Warmers
----/parenting/infant/nursing-feeding/bottle-cleaning
+--/parenting/infant/feeding-accessories    :    Feeding Accessories
+---/parenting/infant/feeding-accessories/feeding-bottles    :   Feeding Bottles
+---/parenting/infant/feeding-accessories/nipples-and-teats    :     Nipples & Teats
+---/parenting/infant/feeding-accessories/bowls
+---/parenting/infant/feeding-accessories/spoons
+---/parenting/infant/feeding-accessories/feeding-set
+---/parenting/infant/feeding-accessories/bottle-and-nipple-brushes  :   Bottle & Nipple Brushes
+---/parenting/infant/feeding-accessories/bottle-cleaners
+---/parenting/infant/feeding-accessories/sterilizers-warmers : Sterilizers & Warmers
 --/parenting/infant/sippers-mugs :Sippers & Mugs
 --/parenting/infant/gifts-combos : Gifts & Combos
 --/parenting/infant/health-safety : Health & Safety
@@ -725,12 +735,15 @@
 ---/parenting/toddler/diapering/diapers
 ---/parenting/toddler/diapering/wipes
 --/parenting/toddler/formula-baby-food : Formula & Baby Food
+--/parenting/toddler/feeding-accessories    :    Feeding Accessories
+---/parenting/toddler/feeding-accessories/feeding-bottles    :   Feeding Bottles
+---/parenting/toddler/feeding-accessories/nipples-and-teats    :     Nipples & Teats
+---/parenting/toddler/feeding-accessories/bowls
+---/parenting/toddler/feeding-accessories/spoons
+---/parenting/toddler/feeding-accessories/feeding-set
+---/parenting/toddler/feeding-accessories/bottle-and-nipple-brushes  :   Bottle & Nipple Brushes
+---/parenting/toddler/feeding-accessories/bottle-cleaners
 --/parenting/toddler/sippers-and-mugs:       Sippers & Mugs
---/parenting/toddler/nursing-feeding
----/parenting/toddler/nursing-feeding/feeding-bottles
----/parenting/toddler/nursing-feeding/feeding-accessories
----/parenting/toddler/nursing-feeding/warmers-and-sterlizers : Sterilizers & Warmers
----/parenting/toddler/nursing-feeding/bottle-cleaning
 --/parenting/toddler/bedtime
 --/parenting/toddler/bathtime
 ---/parenting/toddler/bathtime/soaps-and-bath-foams: Soaps & Bath Foams
