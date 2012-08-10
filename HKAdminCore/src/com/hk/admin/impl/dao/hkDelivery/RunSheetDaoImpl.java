@@ -17,7 +17,7 @@ import java.util.Date;
 public class RunSheetDaoImpl extends BaseDaoImpl implements RunSheetDao {
 
     @Override
-    public void createRunSheet(Runsheet runsheet) {
+    public void saveRunSheet(Runsheet runsheet) {
         save(runsheet);
     }
 

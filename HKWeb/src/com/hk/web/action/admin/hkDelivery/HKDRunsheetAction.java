@@ -96,80 +96,72 @@ public class HKDRunsheetAction extends BasePaginatedAction {
     }
 
     public Resolution downloadDeliveryWorkSheet() {
-
-        if(!runsheetDownloadFunctionality){
-           return new ForwardResolution("/pages/admin/hkDeliveryWorksheet.jsp");
+        
+        //checking url-parameter to see if only jsp has to be displayed or runsheet has to be created.
+        if (!runsheetDownloadFunctionality) {
+            return new ForwardResolution("/pages/admin/hkDeliveryWorksheet.jsp");
         } else {
-        Runsheet runsheetObj;
-        shippingOrderList = new ArrayList<ShippingOrder>();
-        //Getting HK-Delivery Courier Object.
-        Courier hkDeliveryCourier = EnumCourier.HK_Delivery.asCourier();
+            Runsheet runsheetObj;
+            Long prePaidBoxCount = Long.parseLong((totalPackets - totalCODPackets) + "");
+            //todo fetch userId from agent.
+            Long userId = 1l;
+            shippingOrderList = new ArrayList<ShippingOrder>();
+            //Getting HK-Delivery Courier Object.
+            Courier hkDeliveryCourier = EnumCourier.HK_Delivery.asCourier();
 
-        //Iterating over list to get shippingOrders,consignmentList for the corresponding trackingIdList entered by user.
-        for (String trackingNum : trackingIdList) {
-            Awb awb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(hkDeliveryCourier, trackingNum.trim(), userService.getWarehouseForLoggedInUser(), null, EnumAwbStatus.Used.getAsAwbStatus());
-            Consignment consignment = consignmentService.getConsignmentByAwbId(awb.getId());
+            //Iterating over list to get shippingOrders,consignmentList for the corresponding trackingIdList entered by user.
+            for (String trackingNum : trackingIdList) {
+                Awb awb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(hkDeliveryCourier, trackingNum.trim(), userService.getWarehouseForLoggedInUser(), null, EnumAwbStatus.Used.getAsAwbStatus());
+                Consignment consignment = consignmentService.getConsignmentByAwbId(awb.getId());
 
-            //This is a check to ensure that runsheetObj wud be created for those trackingIds for which Consignment exists in DB.
-            if (consignment != null) {
-                //Fetching shippingOrder for corresponding trackingID in order to calculate totalCodAmount and totalCodPackets
-                Shipment shipment = shipmentService.findByAwb(awb);
-                if (shipment != null) {
-                    ShippingOrder shippingOrder = shipment.getShippingOrder();
-                    if (shippingOrder != null) {
-                        if (shippingOrder.isCOD()) {
-                            ++totalCODPackets;
-                            totalCODAmount = totalCODAmount + shippingOrder.getAmount();
-                            totalCODAmount = Math.round(totalCODAmount);
+                //This is a check to ensure that runsheetObj wud be created for those trackingIds for which Consignment exists in DB.
+                if (consignment != null) {
+                    //Fetching shippingOrder for corresponding trackingID in order to calculate totalCodAmount and totalCodPackets
+                    Shipment shipment = shipmentService.findByAwb(awb);
+                    if (shipment != null) {
+                        ShippingOrder shippingOrder = shipment.getShippingOrder();
+                        if (shippingOrder != null) {
+                            if (shippingOrder.isCOD()) {
+                                ++totalCODPackets;
+                                totalCODAmount = totalCODAmount + shippingOrder.getAmount();
+                                totalCODAmount = Math.round(totalCODAmount);
+                            }
+                            shippingOrderList.add(shippingOrder);
                         }
-                        shippingOrderList.add(shippingOrder);
                     }
+                    consignment.setConsignmentStatus(EnumConsignmentStatus.ShipmntOutForDelivry.asConsignmentStatus());
+                    consignmentList.add(consignment);
+                } else {
+                    //adding the trackingId without a consignment to a list.
+                    trackingIdsWithoutConsignment.add(trackingNum);
+                    continue;
                 }
-                consignment.setConsignmentStatus(EnumConsignmentStatus.ShipmntOutForDelivry.asConsignmentStatus());
-                consignmentList.add(consignment);
-            } else {
-                //adding the trackingId without a consignment to a list.
-                trackingIdsWithoutConsignment.add(trackingNum);
-                continue;
             }
-        }
-        // Converting list to comma seperated string(to be displayed on UI)
-        awbIdsWithoutConsignmntString = hkdRunsheetManager.getAwbWithoutConsignmntString(trackingIdsWithoutConsignment);
-        // Calculating no. of total packets in runsheetObj.
-        totalPackets = shippingOrderList.size();
+            // Converting list to comma seperated string(to be displayed on UI)
+            awbIdsWithoutConsignmntString = hkdRunsheetManager.getAwbWithoutConsignmntString(trackingIdsWithoutConsignment);
+            // Calculating no. of total packets in runsheetObj.
+            totalPackets = shippingOrderList.size();
 
-        try {
-            sdf = new SimpleDateFormat("yyyyMMdd");
-            xlsFile = new File(adminDownloads + "/" + CourierConstants.HKDELIVERY_WORKSHEET_FOLDER + "/" + CourierConstants.HKDELIVERY_WORKSHEET + "_" + sdf.format(new Date()) + ".xls");
-            runsheetObj = createRunsheet();
-            runsheetService.createRunSheet(runsheetObj);
-            xlsFile = hkdRunsheetManager.generateWorkSheetXls(xlsFile.getPath(), shippingOrderList, assignedTo, totalCODAmount, totalPackets, totalCODPackets);
-        } catch (IOException ioe) {
-            addRedirectAlertMessage(new SimpleMessage(CourierConstants.HKDELIVERY_IOEXCEPTION));
-            return new ForwardResolution(HKDRunsheetAction.class);
-        } catch (NullPointerException npe) {
-            addRedirectAlertMessage(new SimpleMessage(CourierConstants.HKDELIVERY_NULLEXCEPTION));
-            return new ForwardResolution(HKDRunsheetAction.class);
-        } catch (Exception ex) {
-            addRedirectAlertMessage(new SimpleMessage(CourierConstants.HKDELIVERY_EXCEPTION));
-            return new ForwardResolution(HKDRunsheetAction.class);
+            try {
+                sdf = new SimpleDateFormat("yyyyMMdd");
+                xlsFile = new File(adminDownloads + "/" + CourierConstants.HKDELIVERY_WORKSHEET_FOLDER + "/" + CourierConstants.HKDELIVERY_WORKSHEET + "_" + sdf.format(new Date()) + ".xls");
+                // Creating Runsheet object.
+                runsheetObj = runsheetService.createRunsheet(hub, consignmentList, EnumRunsheetStatus.Open.asRunsheetStatus(), userId, prePaidBoxCount, Long.parseLong(totalCODPackets + ""), totalCODAmount);
+                // Saving Runsheet in db.
+                runsheetService.saveRunSheet(runsheetObj);
+                xlsFile = hkdRunsheetManager.generateWorkSheetXls(xlsFile.getPath(), shippingOrderList, assignedTo, totalCODAmount, totalPackets, totalCODPackets);
+            } catch (IOException ioe) {
+                addRedirectAlertMessage(new SimpleMessage(CourierConstants.HKDELIVERY_IOEXCEPTION));
+                return new ForwardResolution(HKDRunsheetAction.class);
+            } catch (NullPointerException npe) {
+                addRedirectAlertMessage(new SimpleMessage(CourierConstants.HKDELIVERY_NULLEXCEPTION));
+                return new ForwardResolution(HKDRunsheetAction.class);
+            } catch (Exception ex) {
+                addRedirectAlertMessage(new SimpleMessage(CourierConstants.HKDELIVERY_EXCEPTION));
+                return new ForwardResolution(HKDRunsheetAction.class);
+            }
+            return new HTTPResponseResolution();
         }
-        return new HTTPResponseResolution();
-        }
-    }
-
-    private Runsheet createRunsheet(){
-        Long prePaidBoxCount = Long.parseLong((totalPackets - totalCODPackets)+"");
-        Runsheet runsheetObj = new Runsheet();
-        runsheetObj.setCodBoxCount(Long.parseLong(totalCODPackets+""));
-        runsheetObj.setCreateDate(new Date());
-        runsheetObj.setExpectedCollection(totalCODAmount);
-        runsheetObj.setPrePaidBoxCount(prePaidBoxCount);
-        runsheetObj.setUserId(1l);
-        runsheetObj.setHub(hub);
-        runsheetObj.setConsignments(consignmentList);
-        runsheetObj.setRunsheetStatus(EnumRunsheetStatus.Open.asRunsheetStatus());
-       return runsheetObj;
     }
 
     public class HTTPResponseResolution implements Resolution {

@@ -13,7 +13,7 @@ import java.util.Date;
 
 public interface RunSheetDao extends BaseDao {
 
-    public void createRunSheet(Runsheet runsheet);
+    public void saveRunSheet(Runsheet runsheet);
 
     public Page searchRunsheet(Runsheet runsheet, Date startDate, Date endDate, RunsheetStatus runsheetStatus, User agent, Hub hub, int pageNo, int perPage);
 }

@@ -2,9 +2,6 @@ package com.hk.admin.impl.service.hkDelivery;
 
 import com.akube.framework.dao.Page;
 import com.hk.admin.pact.dao.hkDelivery.RunSheetDao;
-import com.hk.domain.hkDelivery.Hub;
-import com.hk.domain.hkDelivery.Runsheet;
-import com.hk.domain.hkDelivery.RunsheetStatus;
 import com.hk.domain.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,12 +11,14 @@ import com.hk.admin.pact.dao.hkDelivery.RunSheetDao;
 import com.hk.domain.hkDelivery.Runsheet;
 import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.hkDelivery.RunsheetStatus;
+import com.hk.domain.hkDelivery.*;
 import com.hk.domain.user.User;
 import com.akube.framework.dao.Page;
 
 import java.util.Date;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 
@@ -27,9 +26,22 @@ public class RunSheetServiceImpl implements RunSheetService {
 
     @Autowired
     private RunSheetDao runsheetDao;
-    
-    public void createRunSheet(Runsheet runsheet) {
-        runsheetDao.createRunSheet(runsheet);  
+
+    public Runsheet createRunsheet(Hub hub, List<Consignment> consignmentList,RunsheetStatus runsheetStatus,Long userId,Long prePaidBoxCount,Long totalCODPackets,Double totalCODAmount) {
+        Runsheet runsheetObj = new Runsheet();
+        runsheetObj.setCodBoxCount(totalCODPackets);
+        runsheetObj.setCreateDate(new Date());
+        runsheetObj.setExpectedCollection(totalCODAmount);
+        runsheetObj.setPrePaidBoxCount(prePaidBoxCount);
+        runsheetObj.setUserId(userId);
+        runsheetObj.setHub(hub);
+        runsheetObj.setConsignments(consignmentList);
+        runsheetObj.setRunsheetStatus(runsheetStatus);
+       return runsheetObj;
+    }
+
+    public void saveRunSheet(Runsheet runsheet) {
+        runsheetDao.saveRunSheet(runsheet);
     }
 
     public Page searchRunsheet(Runsheet runsheet, Date startDate, Date endDate, RunsheetStatus runsheetStatus, User agent, Hub hub, int pageNo, int perPage) {
