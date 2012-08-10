@@ -1,8 +1,11 @@
 package com.hk.web.action.admin.hkDelivery;
 
 import com.akube.framework.dao.Page;
+import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.pact.service.hkDelivery.RunSheetService;
 import com.hk.domain.hkDelivery.Runsheet;
+import com.hk.domain.hkDelivery.RunsheetStatus;
+import com.hk.domain.user.User;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -17,13 +20,11 @@ import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.hkDelivery.Consignment;
 import com.hk.domain.hkDelivery.Hub;
-import com.hk.domain.hkDelivery.Runsheet;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.UserService;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
-import com.hk.admin.pact.service.hkDelivery.RunSheetService;
 import com.hk.admin.manager.HKDRunsheetManager;
 import com.hk.constants.core.Keys;
 import com.hk.constants.courier.EnumCourier;
@@ -36,12 +37,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
 
 @Component
-public class HKDRunsheetAction extends BaseAction {
+public class HKDRunsheetAction extends BasePaginatedAction {
 
     private         File                  xlsFile;
     private         String                assignedTo;
@@ -58,6 +57,17 @@ public class HKDRunsheetAction extends BaseAction {
     private         List<Consignment>     consignmentList                 = new ArrayList<Consignment>();
     private         List<Runsheet>        runsheetList                    = new ArrayList<Runsheet>();
     private         Boolean               runsheetDownloadFunctionality;
+    private         Runsheet              runsheet;
+    private         Page                  runsheetPage;
+    //search filters for runsheet list
+
+    private         Date                  startDate;
+    private         Date                  endDate;
+    private         RunsheetStatus        runsheetStatus;
+    private         User                  agent;
+    private         Integer               defaultPerPage            = 20;
+
+    private
     @Autowired
     ShippingOrderService                  shippingOrderService;
     @Autowired
@@ -80,7 +90,8 @@ public class HKDRunsheetAction extends BaseAction {
 
     @DefaultHandler
     public Resolution pre() {
-        /*runsheetPage = runSheetService.searchRunsheet()*/
+        runsheetPage = runsheetService.searchRunsheet(runsheet, startDate, endDate, runsheetStatus, agent, hub, getPageNo(), getPerPage());
+        runsheetList = runsheetPage.getList();
         return new ForwardResolution("/pages/admin/hkDeliveryWorksheet.jsp");
     }
 
@@ -89,7 +100,7 @@ public class HKDRunsheetAction extends BaseAction {
         if(!runsheetDownloadFunctionality){
            return new ForwardResolution("/pages/admin/hkDeliveryWorksheet.jsp");
         } else {
-        Runsheet runsheet = new Runsheet();
+        Runsheet runsheetObj;
         shippingOrderList = new ArrayList<ShippingOrder>();
         //Getting HK-Delivery Courier Object.
         Courier hkDeliveryCourier = EnumCourier.HK_Delivery.asCourier();
@@ -99,7 +110,7 @@ public class HKDRunsheetAction extends BaseAction {
             Awb awb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(hkDeliveryCourier, trackingNum.trim(), userService.getWarehouseForLoggedInUser(), null, EnumAwbStatus.Used.getAsAwbStatus());
             Consignment consignment = consignmentService.getConsignmentByAwbId(awb.getId());
 
-            //This is a check to ensure that runsheet wud be created for those trackingIds for which Consignment exists in DB.
+            //This is a check to ensure that runsheetObj wud be created for those trackingIds for which Consignment exists in DB.
             if (consignment != null) {
                 //Fetching shippingOrder for corresponding trackingID in order to calculate totalCodAmount and totalCodPackets
                 Shipment shipment = shipmentService.findByAwb(awb);
@@ -124,14 +135,14 @@ public class HKDRunsheetAction extends BaseAction {
         }
         // Converting list to comma seperated string(to be displayed on UI)
         awbIdsWithoutConsignmntString = hkdRunsheetManager.getAwbWithoutConsignmntString(trackingIdsWithoutConsignment);
-        // Calculating no. of total packets in runsheet.
+        // Calculating no. of total packets in runsheetObj.
         totalPackets = shippingOrderList.size();
 
         try {
             sdf = new SimpleDateFormat("yyyyMMdd");
             xlsFile = new File(adminDownloads + "/" + CourierConstants.HKDELIVERY_WORKSHEET_FOLDER + "/" + CourierConstants.HKDELIVERY_WORKSHEET + "_" + sdf.format(new Date()) + ".xls");
-            runsheet = createRunsheet();
-            runsheetService.createRunSheet(runsheet);
+            runsheetObj = createRunsheet();
+            runsheetService.createRunSheet(runsheetObj);
             xlsFile = hkdRunsheetManager.generateWorkSheetXls(xlsFile.getPath(), shippingOrderList, assignedTo, totalCODAmount, totalPackets, totalCODPackets);
         } catch (IOException ioe) {
             addRedirectAlertMessage(new SimpleMessage(CourierConstants.HKDELIVERY_IOEXCEPTION));
@@ -224,5 +235,28 @@ public class HKDRunsheetAction extends BaseAction {
 
     public void setRunsheetDownloadFunctionality(Boolean runsheetDownloadFunctionality) {
         this.runsheetDownloadFunctionality = runsheetDownloadFunctionality;
+    }
+    
+    public int getPerPageDefault() {
+        return defaultPerPage; // To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public int getPageCount() {
+        return runsheetPage == null ? 0 : runsheetPage.getTotalPages();
+    }
+
+    public int getResultCount() {
+        return runsheetPage == null ? 0 : runsheetPage.getTotalResults();
+    }
+
+    public Set<String> getParamSet() {
+        HashSet<String> params = new HashSet<String>();
+        params.add("runsheet");
+        params.add("agent");
+        params.add("hub");
+        params.add("runsheetStatus");
+        params.add("startDate");
+        params.add("endDate");        
+        return params;
     }
 }
