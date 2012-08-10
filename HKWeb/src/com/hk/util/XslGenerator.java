@@ -546,7 +546,6 @@ private SkuService                    skuService;*/
             xlsWriter.addHeader(XslConstants.STATUS, XslConstants.STATUS);
             xlsWriter.addHeader(XslConstants.RECONCILED, XslConstants.RECONCILED);
             xlsWriter.addHeader(XslConstants.PAYABLE, XslConstants.PAYABLE);
-            xlsWriter.writeData(xlsFile, XslConstants.GRN_LIST_SHEET);
 
             for (GoodsReceivedNote goodsReceivedNote : grnList) {
                 xlsWriter.addCell(xlsRow, goodsReceivedNote.getId());
@@ -569,9 +568,9 @@ private SkuService                    skuService;*/
                 xlsWriter.addCell(xlsRow, goodsReceivedNote.getReconciled()!=null && goodsReceivedNote.getReconciled().booleanValue() ? "Yes" : "No");
                 xlsWriter.addCell(xlsRow, goodsReceivedNote.getPayable());
 
-                xlsWriter.writeData(xlsFile, XslConstants.GRN_LIST_SHEET);
                 xlsRow++;
             }
+            xlsWriter.writeData(xlsFile, XslConstants.GRN_LIST_SHEET);
         }
         return xlsFile;
     }
@@ -636,7 +635,6 @@ private SkuService                    skuService;*/
         xlsWriter.addHeader(XslConstants.MARGIN, XslConstants.MARGIN);
         xlsWriter.addHeader(XslConstants.BRAND, XslConstants.BRAND);
         xlsWriter.addHeader(XslConstants.VALIDITY_TERMS_OF_TRADE, XslConstants.VALIDITY_TERMS_OF_TRADE);
-        xlsWriter.writeData(xlsFile, "SupplierList");
 
         for (Supplier supplier : supplierList) {
             xlsWriter.addCell(xlsRow, supplier.getName());
@@ -670,9 +668,9 @@ private SkuService                    skuService;*/
             xlsWriter.addCell(xlsRow, supplier.getMargins());
             xlsWriter.addCell(xlsRow, supplier.getBrandName());
             xlsWriter.addCell(xlsRow, supplier.getTOT());
-            xlsWriter.writeData(xlsFile, "SupplierList");
             xlsRow++;
         }
+        xlsWriter.writeData(xlsFile, "SupplierList");
         return xlsFile;
     }
 

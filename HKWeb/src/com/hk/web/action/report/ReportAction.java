@@ -716,10 +716,10 @@ public class ReportAction extends BaseAction {
                     xlsWriter.addCell(xlsRow, stockReportDto.getStockTransferCheckin());
                     xlsWriter.addCell(xlsRow, stockReportDto.getTransitLost());
 
-                    xlsWriter.writeData(xlsFile, "Stock_Report");
                 }
                 xlsRow++;
             }
+            xlsWriter.writeData(xlsFile, "Stock_Report");
             addRedirectAlertMessage(new SimpleMessage("Download complete"));
 
             return new HTTPResponseResolution();
@@ -751,9 +751,9 @@ public class ReportAction extends BaseAction {
                 xlsWriter.addCell(xlsRow, rtoReportDto.getProductOptions());
                 xlsWriter.addCell(xlsRow, rtoReportDto.getRtoCheckinQty());
                 xlsWriter.addCell(xlsRow, rtoReportDto.getRtoDamageCheckinQty());
-                xlsWriter.writeData(xlsFile, "RTO_Report");
                 xlsRow++;
             }
+            xlsWriter.writeData(xlsFile, "RTO_Report");
             addRedirectAlertMessage(new SimpleMessage("Download complete"));
 
             return new HTTPResponseResolution();
@@ -770,7 +770,6 @@ public class ReportAction extends BaseAction {
         xlsWriter.addHeader("PRODUCT NAME", "PRODUCT NAME");
         xlsWriter.addHeader("PRODUCT OPTIONS", "PRODUCT OPTIONS");
         xlsWriter.addHeader("STOCK LEFT", "STOCK LEFT");
-        xlsWriter.writeData(xlsFile, "ExpiryAlert_Report");
 
         for (ExpiryAlertReportDto expiryAlertReportDto : expiryAlertReportDtoList) {
             xlsWriter.addCell(xlsRow, expiryAlertReportDto.getBatchNumber());
@@ -778,10 +777,10 @@ public class ReportAction extends BaseAction {
             xlsWriter.addCell(xlsRow, expiryAlertReportDto.getProductName());
             xlsWriter.addCell(xlsRow, expiryAlertReportDto.getProductOption());
             xlsWriter.addCell(xlsRow, expiryAlertReportDto.getBatchQty());
-            xlsWriter.writeData(xlsFile, "ExpiryAlert_Report");
 
             xlsRow++;
         }
+        xlsWriter.writeData(xlsFile, "ExpiryAlert_Report");
         addRedirectAlertMessage(new SimpleMessage("Download complete"));
 
         return new HTTPResponseResolution();
@@ -804,7 +803,6 @@ public class ReportAction extends BaseAction {
                 xlsWriter.addHeader("INVENTORY TXN TYPE", "INVENTORY TXN TYPE");
                 xlsWriter.addHeader("TXN DATE", "TXN DATE");
                 xlsWriter.addHeader("QUANTITY", "QUANTITY");
-                xlsWriter.writeData(xlsFile, "ReconciliationVoucher_Report");
 
                 for (RVReportDto rvReportDto : rvReportDtoList) {
                     xlsWriter.addCell(xlsRow, productVariantId);
@@ -815,10 +813,10 @@ public class ReportAction extends BaseAction {
                     xlsWriter.addCell(xlsRow, rvReportDto.getProductVariantInventory().getTxnDate());
                     Long qty = rvReportDto.getQtyRV() < 0L ? rvReportDto.getQtyRV() * -1L : rvReportDto.getQtyRV();
                     xlsWriter.addCell(xlsRow, qty);
-                    xlsWriter.writeData(xlsFile, "ReconciliationVoucher_Report");
 
                     xlsRow++;
                 }
+                xlsWriter.writeData(xlsFile, "ReconciliationVoucher_Report");
 
             }
             addRedirectAlertMessage(new SimpleMessage("Download complete"));
@@ -880,10 +878,9 @@ public class ReportAction extends BaseAction {
             xlsWriter.addCell(xlsRow, productVariant.getCostPrice());
             xlsWriter.addCell(xlsRow, (productVariant.getMarkedPrice() - productVariant.getCostPrice())/productVariant.getCostPrice()*100);
 
-            xlsWriter.writeData(xlsFile, "PurchaseOrder_Report");
-
             xlsRow++;
         }
+        xlsWriter.writeData(xlsFile, "PurchaseOrder_Report");
 
     }
     public Resolution generatePOReportByVariant() {
