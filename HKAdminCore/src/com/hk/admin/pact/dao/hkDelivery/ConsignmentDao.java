@@ -17,4 +17,8 @@ public interface ConsignmentDao extends BaseDao {
     public List<Long> getAwbIds();
 
     public Consignment getConsignmentByAwbId(Long awbId);
+
+    void updateConsignmentTracking(Long sourceHubId, Long destinationHubId, Long userId, Consignment consignment);
+
+    void updateConsignmentTracking(Long sourceHubId, Long destinationHubId, Long userId, List<Consignment> consignmentList);
 }

@@ -2,11 +2,14 @@ package com.hk.web.action.admin.hkDelivery;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.domain.hkDelivery.Hub;
+import com.hk.domain.hkDelivery.Consignment;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Courier;
+import com.hk.domain.user.User;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
+import com.hk.admin.pact.service.hkDelivery.HubService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.hkDelivery.HKDeliveryConstants;
@@ -35,6 +38,8 @@ public class HKDConsignmentAction extends BaseAction{
     private              ConsignmentService   consignmentService;
     @Autowired
     private              ShipmentService      shipmentService;
+    @Autowired
+    private              HubService           hubService;
 
 
     @DefaultHandler
@@ -42,17 +47,22 @@ public class HKDConsignmentAction extends BaseAction{
         return new ForwardResolution("/pages/admin/hkDeliveryConsignment.jsp");        
     }
 
-    public Resolution markShipmentsReceived(){
-        Set<Awb>   awbSet ;
-        Courier    hkDelivery  = EnumCourier.HK_Delivery.asCourier();
-       if(trackingIdList != null && trackingIdList.size() > 0){
-        awbSet = getAWBSet(trackingIdList,hkDelivery);
-        logger.info(awbSet.toString());
-        noOfConsignmentsCreated = createConsignments(awbSet);
-        addRedirectAlertMessage(new SimpleMessage(noOfConsignmentsCreated +HKDeliveryConstants.CONSIGNMNT_CREATION_SUCCESS));
-       } else {
-           addRedirectAlertMessage(new SimpleMessage(HKDeliveryConstants.CONSIGNMNT_CREATION_FAILURE));
-       }
+    public Resolution markShipmentsReceived() {
+        Set<Awb> awbSet;
+        Courier hkDelivery = EnumCourier.HK_Delivery.asCourier();
+        User loggedOnUser = null;
+        Hub healthkartHub = hubService.findHubByName(HKDeliveryConstants.HEALTHKART_HUB);
+        if (trackingIdList != null && trackingIdList.size() > 0) {
+            if (getPrincipal() != null) {
+                loggedOnUser = getUserService().getUserById(getPrincipal().getId());
+            }
+            awbSet = getAWBSet(trackingIdList, hkDelivery);
+            logger.info(awbSet.toString());
+            noOfConsignmentsCreated = createConsignments(awbSet, healthkartHub.getId(),hub.getId(),loggedOnUser.getId());
+            addRedirectAlertMessage(new SimpleMessage(noOfConsignmentsCreated + HKDeliveryConstants.CONSIGNMNT_CREATION_SUCCESS));
+        } else {
+            addRedirectAlertMessage(new SimpleMessage(HKDeliveryConstants.CONSIGNMNT_CREATION_FAILURE));
+        }
         return new RedirectResolution(HKDConsignmentAction.class);
     }
 
@@ -65,17 +75,21 @@ public class HKDConsignmentAction extends BaseAction{
     }
 
     // Method to create consignments.It wud interact with service layer.
-    private int createConsignments(Set<Awb> awbSet) {
+    private int createConsignments(Set<Awb> awbSet, Long sourceHubId, Long destinationHubId, Long userId) {
         int consignmentCount = 0;
-            for (Awb awbObj : awbSet) {
-                try{
-                consignmentService.createConsignment(shipmentService.findByAwb(awbObj), hub);
+        Consignment consignment = new Consignment();
+        for (Awb awbObj : awbSet) {
+            try {
+                // Creating consignment object.
+                consignment = consignmentService.createConsignment(shipmentService.findByAwb(awbObj), hub);
+                // Making an entry in consignment-tracking for the created consignment.
+                consignmentService.updateConsignmentTracking(sourceHubId, destinationHubId, userId, consignment);
                 consignmentCount++;
-                } catch (Exception ex){
-                    logger.info(HKDeliveryConstants.EXCEPTION+awbObj.getAwbNumber());
-                    continue;
-                }
+            } catch (Exception ex) {
+                logger.info(HKDeliveryConstants.EXCEPTION + awbObj.getAwbNumber());
+                continue;
             }
+        }
         return consignmentCount;
     }
 

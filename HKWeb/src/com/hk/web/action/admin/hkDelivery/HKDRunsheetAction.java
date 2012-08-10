@@ -101,8 +101,8 @@ public class HKDRunsheetAction extends BasePaginatedAction {
         if (!runsheetDownloadFunctionality) {
             return new ForwardResolution("/pages/admin/hkDeliveryWorksheet.jsp");
         } else {
-            Runsheet runsheetObj;
-            Long prePaidBoxCount = Long.parseLong((totalPackets - totalCODPackets) + "");
+            Runsheet runsheetObj = null;
+            Long prePaidBoxCount = null;
             //todo fetch userId from agent.
             Long userId = 1l;
             shippingOrderList = new ArrayList<ShippingOrder>();
@@ -141,6 +141,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
             awbIdsWithoutConsignmntString = hkdRunsheetManager.getAwbWithoutConsignmntString(trackingIdsWithoutConsignment);
             // Calculating no. of total packets in runsheetObj.
             totalPackets = shippingOrderList.size();
+            prePaidBoxCount = Long.parseLong((totalPackets - totalCODPackets) + "");
 
             try {
                 sdf = new SimpleDateFormat("yyyyMMdd");
@@ -152,13 +153,13 @@ public class HKDRunsheetAction extends BasePaginatedAction {
                 xlsFile = hkdRunsheetManager.generateWorkSheetXls(xlsFile.getPath(), shippingOrderList, assignedTo, totalCODAmount, totalPackets, totalCODPackets);
             } catch (IOException ioe) {
                 addRedirectAlertMessage(new SimpleMessage(CourierConstants.HKDELIVERY_IOEXCEPTION));
-                return new ForwardResolution(HKDRunsheetAction.class);
+                return new ForwardResolution(HKDRunsheetAction.class).addParameter("runsheetDownloadFunctionality",false);
             } catch (NullPointerException npe) {
                 addRedirectAlertMessage(new SimpleMessage(CourierConstants.HKDELIVERY_NULLEXCEPTION));
-                return new ForwardResolution(HKDRunsheetAction.class);
+                return new ForwardResolution(HKDRunsheetAction.class).addParameter("runsheetDownloadFunctionality",false);
             } catch (Exception ex) {
                 addRedirectAlertMessage(new SimpleMessage(CourierConstants.HKDELIVERY_EXCEPTION));
-                return new ForwardResolution(HKDRunsheetAction.class);
+                return new ForwardResolution(HKDRunsheetAction.class).addParameter("runsheetDownloadFunctionality",false);
             }
             return new HTTPResponseResolution();
         }

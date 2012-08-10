@@ -18,7 +18,7 @@ public class ConsignmentServiceImpl implements ConsignmentService {
 
     @Override
     public Consignment createConsignment(Shipment shipment, Hub hub) {
-        return consignmentDao.createConsignment(shipment,hub);
+        return consignmentDao.createConsignment(shipment, hub);
     }
 
     @Override
@@ -27,7 +27,17 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     }
 
     @Override
-     public Consignment getConsignmentByAwbId(Long awbId) {
+    public Consignment getConsignmentByAwbId(Long awbId) {
         return consignmentDao.getConsignmentByAwbId(awbId);
+    }
+
+    @Override
+    public void updateConsignmentTracking(Long sourceHubId, Long destinationHubId, Long userId, Consignment consignment) {
+        consignmentDao.updateConsignmentTracking(sourceHubId, destinationHubId, userId, consignment);
+    }
+
+    @Override
+    public void updateConsignmentTracking(Long sourceHubId, Long destinationHubId, Long userId, List<Consignment> consignmentList) {
+        consignmentDao.updateConsignmentTracking(sourceHubId, destinationHubId, userId, consignmentList);
     }
 }
