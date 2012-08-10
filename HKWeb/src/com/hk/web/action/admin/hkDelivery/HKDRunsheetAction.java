@@ -1,5 +1,7 @@
 package com.hk.web.action.admin.hkDelivery;
 
+import com.akube.framework.dao.Page;
+import com.hk.domain.hkDelivery.Runsheet;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -51,20 +53,21 @@ public class HKDRunsheetAction extends BaseAction {
     private         Hub                   hub;
     private         List<String>          trackingIdsWithoutConsignment   = new ArrayList<String>();
     private         List<Consignment>     consignmentList                 = new ArrayList<Consignment>();
+    private         List<Runsheet>        runsheetList                    = new ArrayList<Runsheet>();
     @Autowired
-    ShippingOrderService shippingOrderService;
+    ShippingOrderService                  shippingOrderService;
     @Autowired
-    AwbService awbService;
+    AwbService                            awbService;
     @Autowired
-    UserService userService;
+    UserService                           userService;
     @Autowired
-    ShipmentService shipmentService;
+    ShipmentService                       shipmentService;
     @Autowired
-    ConsignmentService consignmentService;
+    ConsignmentService                    consignmentService;
     @Autowired
-    HKDRunsheetManager hkdRunsheetManager;
+    HKDRunsheetManager                    hkdRunsheetManager;
     @Autowired
-    RunSheetService  runsheetService;
+    RunSheetService                       runsheetService;
 
 
     @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
@@ -194,5 +197,12 @@ public class HKDRunsheetAction extends BaseAction {
 
     public void setHub(Hub hub) {
         this.hub = hub;
+    }
+    public List<Runsheet> getRunsheetList() {
+        return runsheetList;
+    }
+
+    public void setRunsheetList(List<Runsheet> runsheetList) {
+        this.runsheetList = runsheetList;
     }
 }

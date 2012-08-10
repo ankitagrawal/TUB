@@ -165,11 +165,10 @@
     <mapping class="com.hk.domain.hkDelivery.Consignment"/>
     <mapping class="com.hk.domain.hkDelivery.ConsignmentStatus"/>
     <mapping class="com.hk.domain.hkDelivery.Runsheet"/>
-    <mapping class="com.hk.domain.hkDelivery.RunsheetHasConsignment"/>
     <mapping class="com.hk.domain.hkDelivery.Hub"/>
-    <mapping class="com.hk.domain.hkDelivery.PaymentHasConsignment"/>
     <mapping class="com.hk.domain.hkDelivery.PaymentReconciliation"/>
-
+    <mapping class="com.hk.domain.hkDelivery.ConsignmentTracking"/>
+    <mapping class="com.hk.domain.hkDelivery.RunsheetStatus"/>
 
   </session-factory>
 </hibernate-configuration>
