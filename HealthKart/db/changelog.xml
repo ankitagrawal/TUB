@@ -8290,4 +8290,38 @@
         <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="runsheet" constraintName="fk_runsheet_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
     </changeSet>
  
+    <changeSet author="Tarun (generated)" id="1344579281048-2">
+        <createTable tableName="runsheet_status">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="status" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1344579281048-3">
+        <addColumn tableName="runsheet">
+            <column name="runsheet_status_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+   
+    <changeSet author="Tarun (generated)" id="1344579281048-7">
+        <addForeignKeyConstraint baseColumnNames="consignment_id" baseTableName="consignment_tracking" constraintName="fk_cosignment_tracking_consignment1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="consignment" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1344579281048-8">
+        <addForeignKeyConstraint baseColumnNames="destination_id" baseTableName="consignment_tracking" constraintName="fk_cosignment_tracking_hub2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="hub" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1344579281048-9">
+        <addForeignKeyConstraint baseColumnNames="source_hub_id" baseTableName="consignment_tracking" constraintName="fk_cosignment_tracking_hub1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="hub" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1344579281048-10">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="consignment_tracking" constraintName="fk_cosignment_tracking_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1344579281048-11">
+        <addForeignKeyConstraint baseColumnNames="runsheet_status_id" baseTableName="runsheet" constraintName="fk_runsheet_runsheet_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="runsheet_status" referencesUniqueColumn="false"/>
+    </changeSet>
+   
 </databaseChangeLog>
