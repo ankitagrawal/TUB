@@ -36,7 +36,7 @@ Subscription Cancellation for Subscription ID ${subscription.id}
                             </tr>
                             <tr>
                                 <td colspan="5"><a href="http://www.healthkart.com"><img
-                                        src="http://img.healthkart.com/email/order_cancel_user_new/main_banner.jpg" width="500"
+                                        src="http://img.healthkart.com/email/subscription/subscription_cancel_email.jpg" width="500"
                                         height="148" alt="Your subscription has been cancelled." border="0"/></a></td>
                             </tr>
 
