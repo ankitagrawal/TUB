@@ -582,7 +582,7 @@ private SkuService                    skuService;*/
         if (purchaseOrderList != null) {
             int xlsRow = 1;
             xlsWriter.addHeader(XslConstants.PO_ID, XslConstants.PO_ID);
-            /*xlsWriter.addHeader(XslConstants.CREATE_DATE, XslConstants.CREATE_DATE);
+            xlsWriter.addHeader(XslConstants.CREATE_DATE, XslConstants.CREATE_DATE);
             xlsWriter.addHeader(XslConstants.CREATED_BY, XslConstants.CREATED_BY);
             xlsWriter.addHeader(XslConstants.NO_OF_SKU, XslConstants.NO_OF_SKU);
             xlsWriter.addHeader(XslConstants.APPROVER, XslConstants.APPROVER);
@@ -591,14 +591,13 @@ private SkuService                    skuService;*/
             xlsWriter.addHeader(XslConstants.WAREHOUSE, XslConstants.WAREHOUSE);
             xlsWriter.addHeader(XslConstants.STATUS, XslConstants.STATUS);
             xlsWriter.addHeader(XslConstants.LAST_UPDATED_DATE, XslConstants.LAST_UPDATED_DATE);
-            xlsWriter.addHeader(XslConstants.PAYABLE, XslConstants.PAYABLE);*/
-            xlsWriter.writeData(xlsFile, "POList");
+            xlsWriter.addHeader(XslConstants.PAYABLE, XslConstants.PAYABLE);
 
             logger.debug("size of PO list ::" + purchaseOrderList.size());
             for (PurchaseOrder purchaseOrder : purchaseOrderList) {
                 logger.debug("row no.: " + xlsRow + "po number:::" + purchaseOrder.getId());
                 xlsWriter.addCell(xlsRow, purchaseOrder.getId());
-                /*xlsWriter.addCell(xlsRow, purchaseOrder.getCreateDate());
+                xlsWriter.addCell(xlsRow, purchaseOrder.getCreateDate());
                 xlsWriter.addCell(xlsRow, purchaseOrder.getCreatedBy().getName());
                 xlsWriter.addCell(xlsRow, purchaseOrder.getNoOfSku());
                 if(purchaseOrder.getApprovedBy() != null) {
@@ -617,10 +616,10 @@ private SkuService                    skuService;*/
                 xlsWriter.addCell(xlsRow, purchaseOrder.getPurchaseOrderStatus().getName());
                 xlsWriter.addCell(xlsRow, purchaseOrder.getUpdateDate());
                 xlsWriter.addCell(xlsRow, purchaseOrder.getPayable());
-*/
-                xlsWriter.writeData(xlsFile, "POList");
+
                 xlsRow++;
             }
+            xlsWriter.writeData(xlsFile, "POList");
         }
         return xlsFile;
     }
