@@ -501,13 +501,13 @@ public class Functions {
 
     }
 
-    public static Long findInventorySoldInGivenNoOfDays(Sku sku, Warehouse warehouse, int noOfDays) {
+    public static Long findInventorySoldInGivenNoOfDays(Sku sku, int noOfDays) {
         ReportProductVariantService reportProductVariantService = ServiceLocatorFactory.getService(ReportProductVariantService.class);
 
         Calendar calendar = Calendar.getInstance();
         Date endDate = calendar.getTime();
 
-        return reportProductVariantService.findInventorySoldByDateAndProduct(DateUtils.getDateMinusDays(noOfDays), endDate, sku.getProductVariant().getProduct().getId(), warehouse).getCountSold();
+        return reportProductVariantService.findSkuInventorySold(DateUtils.getDateMinusDays(noOfDays), endDate, sku);
     }
 
 }

@@ -577,6 +577,7 @@ private SkuService                    skuService;*/
             xlsWriter.addHeader(XslConstants.PO_ID, XslConstants.PO_ID);
             xlsWriter.addHeader(XslConstants.CREATE_DATE, XslConstants.CREATE_DATE);
             xlsWriter.addHeader(XslConstants.CREATED_BY, XslConstants.CREATED_BY);
+            xlsWriter.addHeader(XslConstants.NO_OF_SKU, XslConstants.NO_OF_SKU);
             xlsWriter.addHeader(XslConstants.APPROVER, XslConstants.APPROVER);
             xlsWriter.addHeader(XslConstants.SUPPLIER_NAME, XslConstants.SUPPLIER_NAME);
             xlsWriter.addHeader(XslConstants.SUPPLIER_TIN, XslConstants.SUPPLIER_TIN);
@@ -589,7 +590,8 @@ private SkuService                    skuService;*/
                 xlsWriter.addCell(xlsRow, purchaseOrder.getId());
                 xlsWriter.addCell(xlsRow, purchaseOrder.getCreateDate());
                 xlsWriter.addCell(xlsRow, purchaseOrder.getCreatedBy().getName());
-                xlsWriter.addCell(xlsRow, purchaseOrder.getApprovedBy());
+                xlsWriter.addCell(xlsRow, purchaseOrder.getNoOfSku());
+                xlsWriter.addCell(xlsRow, purchaseOrder.getApprovedBy().getName());
                 xlsWriter.addCell(xlsRow, purchaseOrder.getSupplier().getName());
                 xlsWriter.addCell(xlsRow, purchaseOrder.getSupplier().getTinNumber());
                 if(purchaseOrder.getWarehouse() != null) {

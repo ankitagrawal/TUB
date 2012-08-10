@@ -5,6 +5,7 @@ import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.report.dto.inventory.*;
@@ -31,27 +32,22 @@ public class ReportProductVariantDaoImpl extends BaseDaoImpl implements ReportPr
                 Transformers.aliasToBean(InventorySoldDto.class)).list();
     }
 
-    public InventorySoldDto findInventorySoldByDateAndProduct(Date startDate, Date endDate, String productId, Warehouse warehouse) {
-        String sql = "select count(li.id) as countSold,li.sku.productVariant.product.id as productId, li.sku.productVariant.product.name as productName"
+    public InventorySoldDto findInventorySoldByDateAndProduct(Date startDate, Date endDate, String productId) {
+            return (InventorySoldDto) getSession().createQuery(
+              "select count(li.id) as countSold,li.sku.productVariant.product.id as productId," + " li.sku.productVariant.product.name as productName" + " from LineItem li"
+                + " where  li.shippingOrder.shippingOrderStatus.id in (180,190) and li.shippingOrder.shipment.shipDate > :startDate "
+                + " and li.shippingOrder .shipment.shipDate < :endDate " + " and li.sku.productVariant.product.id = :productId order by count(li.id) desc ").setParameter(
+              "startDate", startDate).setParameter("endDate", endDate).setParameter("productId", productId).setResultTransformer(Transformers.aliasToBean(InventorySoldDto.class)).uniqueResult();
+        }
+
+    public Long findSkuInventorySold(Date startDate, Date endDate, Sku sku) {
+        String sql = "select count(li.id) as countSold "
                 + " from LineItem li"
                 + " where  li.shippingOrder.shippingOrderStatus.id in (:shippingOrderStatus) and li.shippingOrder.shipment.shipDate > :startDate "
-                + " and li.shippingOrder.shipment.shipDate < :endDate and li.sku.productVariant.product.id = :productId ";
+                + " and li.shippingOrder.shipment.shipDate < :endDate and li.sku = :sku ";
 
-        if(warehouse != null) {
-            sql += " and li.shippingOrder.warehouse = :warehouse";
-        }
-        sql += " order by count(li.id) desc ";
-        Query query = getSession().createQuery(sql).setParameter("startDate", startDate).setParameter("endDate", endDate).setParameter("productId", productId)
-                .setParameterList("shippingOrderStatus", Arrays.asList(EnumShippingOrderStatus.SO_Shipped.getId(), EnumShippingOrderStatus.SO_Delivered.getId()));
-
-        if(warehouse != null) {
-            query.setParameter("warehouse", warehouse);
-        }
-        return (InventorySoldDto) query.setResultTransformer(Transformers.aliasToBean(InventorySoldDto.class)).uniqueResult();
-    }
-
-    public InventorySoldDto findInventorySoldByDateAndProduct(Date startDate, Date endDate, String productId) {
-        return findInventorySoldByDateAndProduct(startDate, endDate, productId, null);
+        return (Long)getSession().createQuery(sql).setParameter("startDate", startDate).setParameter("endDate", endDate).setParameter("sku", sku)
+                .setParameterList("shippingOrderStatus", Arrays.asList(EnumShippingOrderStatus.SO_Shipped.getId(), EnumShippingOrderStatus.SO_Delivered.getId())).uniqueResult();
     }
 
     public List<ExpiryAlertReportDto> getToBeExpiredProductDetails(Date startDate, Date endDate, Warehouse warehouse) {

@@ -233,7 +233,6 @@
     <c:forEach var="poLineItemDto" items="${pa.purchaseOrderDto.poLineItemDtoList}" varStatus="ctr">
         <c:set value="${poLineItemDto.poLineItem.sku.productVariant}" var="productVariant"/>
         <c:set value="${poLineItemDto.poLineItem.sku}" var="sku"/>
-        <c:set value="${pa.purchaseOrder.warehouse}" var="warehouse" />
 
         <s:hidden name="poLineItems[${ctr.index}]" value="${poLineItemDto.poLineItem.id}"/>
         <s:hidden name="poLineItems[${ctr.index}].productVariant" value="${productVariant.id}"/>
@@ -275,7 +274,7 @@
                 ${hk:netInventory(productVariant)}
             </td>
             <td>
-                    ${hk:findInventorySoldInGivenNoOfDays(sku, warehouse, 30)}
+                    ${hk:findInventorySoldInGivenNoOfDays(sku, 30)}
             </td>
             <td>
                 <s:text name="poLineItems[${ctr.index}].qty" value="${poLineItemDto.poLineItem.qty}" class="quantity"/>

@@ -794,13 +794,13 @@
     </function>
     <function>
         <description>
-            returns the net sku inventory sold in the given no. of days in the given warehouse
+            returns the net sku inventory sold in the given no. of days
         </description>
         <name>findInventorySoldInGivenNoOfDays</name>
         <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>java.lang.Long findInventorySoldInGivenNoOfDays(com.hk.domain.sku.Sku,com.hk.domain.warehouse.Warehouse,int)</function-signature>
+        <function-signature>java.lang.Long findInventorySoldInGivenNoOfDays(com.hk.domain.sku.Sku,int)</function-signature>
         <example>
-            ${hk:findInventorySoldByDateAndProduct(${sku},${warehouse},${noOfDays})}
+            ${hk:findInventorySoldByDateAndProduct(${sku},${noOfDays})}
         </example>
     </function>
 

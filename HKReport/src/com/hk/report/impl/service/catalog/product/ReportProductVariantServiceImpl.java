@@ -5,6 +5,7 @@ import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
@@ -35,8 +36,8 @@ public class ReportProductVariantServiceImpl implements ReportProductVariantServ
         return getReportProductVariantDao().findInventorySoldByDateAndProduct(startDate, endDate,productId);
     }
 
-    public InventorySoldDto findInventorySoldByDateAndProduct(Date startDate, Date endDate, String productId, Warehouse warehouse) {
-        return getReportProductVariantDao().findInventorySoldByDateAndProduct(startDate, endDate, productId, warehouse);
+    public Long findSkuInventorySold(Date startDate, Date endDate, Sku sku) {
+        return getReportProductVariantDao().findSkuInventorySold(startDate, endDate, sku);
     }
 
     public List<ExpiryAlertReportDto> getToBeExpiredProductDetails(Date startDate, Date endDate, Warehouse warehouse) {

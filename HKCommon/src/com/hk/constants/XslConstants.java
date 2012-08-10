@@ -125,6 +125,7 @@ public class XslConstants {
     public static final String GRN_LIST_SHEET = "GRNList";
     public static final String CREATE_DATE = "CREATE DATE";
     public static final String CREATED_BY = "CREATED BY";
+    public static final String NO_OF_SKU = "NO. OF SKU";
     public static final String APPROVER = "APPROVER";
     public static final String LAST_UPDATED_DATE = "LAST UPDATED DATE";
 

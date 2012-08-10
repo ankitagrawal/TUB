@@ -4,6 +4,7 @@ import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.report.dto.inventory.*;
 
@@ -16,7 +17,7 @@ public interface ReportProductVariantDao{
 
     public InventorySoldDto findInventorySoldByDateAndProduct(Date startDate, Date endDate, String productId);
 
-    public InventorySoldDto findInventorySoldByDateAndProduct(Date startDate, Date endDate, String productId, Warehouse warehouse);
+    public Long findSkuInventorySold(Date startDate, Date endDate, Sku sku);
 
     public List<ExpiryAlertReportDto> getToBeExpiredProductDetails(Date startDate, Date endDate, Warehouse warehouse);
 
