@@ -53,7 +53,13 @@ Your order ${order.baseOrder.gatewayOrderId} for subscription ${subscription.id}
                 <tr>
                     <td width="579" valign="top">Hi ${order.baseOrder.address.name}!<br/>
 
-                        your order ${order.baseOrder.gatewayOrderId} for subscription ${subscription.id} has been dispatched. Till now ${subscription.qtyDelivered/subscription.qtyPerDelivery} shipments were delivered for your subscription.
+                        your order ${order.baseOrder.gatewayOrderId} for subscription ${subscription.id} has been dispatched.
+                        <#if ((subscription.qtyDelivered/subscription.qtyPerDelivery)  > 0)>
+                            Till now ${subscription.qtyDelivered/subscription.qtyPerDelivery} shipments were delivered for your subscription.
+                        <#else>
+                            This is your first shipment in this subscription.
+                        </#if>
+
                         Here are the details for the present shipment:<br/>
                         <br/>
                         <table style="font-size:12px;" cellpadding="5" cellspacing="0" border="1">
