@@ -20,6 +20,7 @@ import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.io.HkXlsWriter;
+import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ import java.util.*;
 @Component
 public class XslGenerator {
 
-    //private static Logger         logger             = Logger.getLogger(XslGenerator.class);
+    private static Logger         logger             = Logger.getLogger(XslGenerator.class);
 
     public static final String    ID                 = "ID";
     public static final String    PINCODE            = "PINCODE";
@@ -594,6 +595,7 @@ private SkuService                    skuService;*/
             xlsWriter.writeData(xlsFile, "POList");
 
             for (PurchaseOrder purchaseOrder : purchaseOrderList) {
+                logger.debug("row no.: " + xlsRow);
                 xlsWriter.addCell(xlsRow, purchaseOrder.getId());
                 xlsWriter.addCell(xlsRow, purchaseOrder.getCreateDate());
                 xlsWriter.addCell(xlsRow, purchaseOrder.getCreatedBy().getName());
