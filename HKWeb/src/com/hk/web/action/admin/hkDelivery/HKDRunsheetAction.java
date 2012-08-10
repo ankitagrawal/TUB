@@ -187,4 +187,12 @@ public class HKDRunsheetAction extends BaseAction {
     public void setAwbIdsWithoutConsignmntString(String awbIdsWithoutConsignmntString) {
         this.awbIdsWithoutConsignmntString = awbIdsWithoutConsignmntString;
     }
+
+    public Hub getHub() {
+        return hub;
+    }
+
+    public void setHub(Hub hub) {
+        this.hub = hub;
+    }
 }
