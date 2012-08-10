@@ -12,20 +12,19 @@ import java.util.Set;
  * User: Pradeep
  * Date: Jun 18, 2012
  * Time: 12:54:04 PM
- * To change this template use File | Settings | File Templates.
  */
 public enum EnumSubscriptionStatus {
 
     InCart(10L, "In Cart"),
-    Abandoned(11L, "Abandoned"),
-    Placed(15L, "Placed"),
-    InProcess(20L, "In Process"),
-    CustomerConfirmationAwaited(21L,"Customer Confirmation Awaited"),
-    ConfirmedByCustomer(22L,"Confirmed By Customer"),
-    Idle(25L, "Idle"),
-    Expired(30L, "Expired"),
-    OnHold(40L,"On Hold"),
-    OutOfStock(50L,"Out Of Stock"),
+    Abandoned(15L, "Abandoned"),
+    Placed(20L, "Placed"),
+    InProcess(25L, "In Process"),
+    CustomerConfirmationAwaited(30L,"Customer Confirmation Awaited"),
+    ConfirmedByCustomer(35L,"Confirmed By Customer"),
+    Idle(40L, "Idle"),
+    Expired(45L, "Expired"),
+    OnHold(50L,"On Hold"),
+    OutOfStock(55L,"Out Of Stock"),
     Cancelled(99L, "Cancelled");
 
     private java.lang.String name;

@@ -13,7 +13,6 @@ import java.util.List;
  * User: Pradeep
  * Date: Jun 18, 2012
  * Time: 12:48:01 PM
- * To change this template use File | Settings | File Templates.
  */
 public interface SubscriptionOrderDao extends BaseDao{
 

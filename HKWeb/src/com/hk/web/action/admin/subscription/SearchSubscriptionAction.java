@@ -24,7 +24,6 @@ import java.util.*;
  * User: Pradeep
  * Date: 7/12/12
  * Time: 3:25 PM
- * To change this template use File | Settings | File Templates.
  */
 
 @Secure(hasAnyPermissions = { PermissionConstants.SEARCH_SUBSCRIPTIONS }, authActionBean = AdminPermissionAction.class)
