@@ -112,7 +112,9 @@ public class MasterDataService {
     @Autowired
     AwbStatusSeedData awbStatusSeedData;
     @Autowired
-    ConsignmentStatusSeedData consignmentStatusSeedData;
+    ConsignmentStatusSeedData consignmentStatusSeedData;    
+    @Autowired
+    RunsheetStatusSeedData runsheetStatusSeedData;
 
     public void insert() {
 
@@ -245,6 +247,9 @@ public class MasterDataService {
 
         logger.debug("inserting consignment status");
         consignmentStatusSeedData.invokeInsert();
+
+        logger.debug("inserting runsheet status");
+        runsheetStatusSeedData.invokeInsert();
     }
 
 
