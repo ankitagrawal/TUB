@@ -59,9 +59,7 @@ public class OrderSummaryAction extends BaseAction {
     @Autowired
     PricingEngine pricingEngine;
     @Autowired
-    ReferrerProgramManager referrerProgramManager;
-    @Autowired
-    ShipmentPricingEngine shipmentPricingEngine;
+    ReferrerProgramManager referrerProgramManager;     
 
     @Session(key = HealthkartConstants.Session.useRewardPoints)
     private boolean useRewardPoints;
@@ -72,7 +70,10 @@ public class OrderSummaryAction extends BaseAction {
     private boolean codAllowed;
     private Double redeemableRewardPoints;
     private List<Courier> availableCourierList;
-    private boolean hideCod;
+    private boolean  hideCod;
+    private Double  cashbackOnGroundshipped;
+    private Double  groundshipItemweight;
+    private Double  groundshipItemAmount;
 
     // COD related changes
     @Autowired
@@ -96,9 +97,7 @@ public class OrderSummaryAction extends BaseAction {
     @Value("#{hkEnvProps['codMaxAmount']}")
     private Double codMaxAmount;
     
-    private Double cashbackOnGroundshipped;
-    private Double groundshipItemweight;
-     private Double groundshipItemAmount;
+
 
     @DefaultHandler
     public Resolution pre() {          
@@ -161,10 +160,10 @@ public class OrderSummaryAction extends BaseAction {
         }
 
         if (hideCod) {
-            cashbackOnGroundshipped = courierService.getCashbackOnGroundShippedItem(groundshipItemAmount, order, groundshipItemweight) ;
-            if (cashbackOnGroundshipped == null ||cashbackOnGroundshipped == -0.0  ) {
-                     cashbackOnGroundshipped = 0.0;
-            }else {
+            cashbackOnGroundshipped = courierService.getCashbackOnGroundShippedItem(groundshipItemAmount, order, groundshipItemweight);
+            if (cashbackOnGroundshipped == null || cashbackOnGroundshipped == -0.0) {
+                cashbackOnGroundshipped = 0.0;
+            } else {
                 cashbackOnGroundshipped = cashbackOnGroundshipped * cashBackPercentageOnGroundShipped;
             }
         }

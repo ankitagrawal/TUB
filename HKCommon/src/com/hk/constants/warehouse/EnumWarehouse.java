@@ -7,25 +7,25 @@ package com.hk.constants.warehouse;
  * Time: 1:12:19 PM
  * To change this template use File | Settings | File Templates.
  */
-public enum  EnumWarehouse {
+public enum EnumWarehouse {
 
-    Gurgoan (1, "Gurgoan"),
-     Mumbai (2, "Mumbai")  ;
+    Gurgoan(1, "Gurgoan"),
+    Mumbai(2, "Mumbai");
 
     private String name;
-         private int id;
+    private int id;
 
-     EnumWarehouse(int id ,String name) {
-        this.id = id  ;
+    EnumWarehouse(int id, String name) {
+        this.id = id;
         this.name = name;
     }
 
     public String getName() {
-          return name;
-        }
+        return name;
+    }
 
-        public int getId() {
-          return id;
-        }
-          
+    public int getId() {
+        return id;
+    }
+
 }
