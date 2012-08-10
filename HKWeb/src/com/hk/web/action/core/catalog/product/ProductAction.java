@@ -105,6 +105,7 @@ public class ProductAction extends BaseAction {
     private SuperSaverImageService superSaverImageService;
     @Autowired
     private SubscriptionProductService subscriptionProductService;
+    @Autowired
     private LinkManager linkManager;
 
     @DefaultHandler
