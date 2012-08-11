@@ -8,6 +8,7 @@ import com.hk.db.seed.email.EmailTypeSeedData;
 import com.hk.db.seed.inventory.*;
 import com.hk.db.seed.marketing.AdNetworksSeedData;
 import com.hk.db.seed.marketing.GoogleBannedWordSeedData;
+import com.hk.db.seed.marketing.ProductReferrerSeedData;
 import com.hk.db.seed.order.*;
 import com.hk.db.seed.payment.PaymentModeSeedData;
 import com.hk.db.seed.payment.PaymentStatusSeedData;
@@ -97,6 +98,8 @@ public class MasterDataService {
     ReconciliationTypeSeedData             reconciliationTypeSeedData;
     @Autowired
     ReviewStatusSeedData                   reviewStatusSeedData;
+	@Autowired
+    ProductReferrerSeedData                productReferrerSeedData;
     @Autowired
     CourierGroupSeedData                   courierGroupSeedData;
     @Autowired
@@ -227,6 +230,9 @@ public class MasterDataService {
         logger.debug("inserting courier group seed data");
         courierGroupSeedData.invokeInsert();
 
+        logger.debug("inserting product referrer seed data");
+        productReferrerSeedData.invokeInsert();
+
         logger.debug("inserting courier group has courier seed data");
         courierGroupHasCourierSeedData.invokeInsert();
 
@@ -251,6 +257,4 @@ public class MasterDataService {
         logger.debug("inserting runsheet status");
         runsheetStatusSeedData.invokeInsert();
     }
-
-
 }

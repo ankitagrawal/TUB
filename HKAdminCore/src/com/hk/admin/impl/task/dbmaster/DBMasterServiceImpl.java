@@ -23,7 +23,6 @@ public class DBMasterServiceImpl implements TaskService{
   @Autowired
   MasterDataService masterDataService;
 
-  @Override
   public boolean execute(String masterData) {
     boolean isSuccessful = false;
     if (!(masterData.equals("static") || masterData.equals("both") || masterData.equals("catalog"))) {

@@ -21,9 +21,12 @@ import org.stripesstuff.plugin.session.Session;
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.constants.core.HealthkartConstants;
+import com.hk.constants.marketing.ProductReferrerConstants;
 import com.hk.domain.catalog.product.Product;
 import com.hk.manager.SolrManager;
+import com.hk.manager.LinkManager;
 import com.hk.pact.dao.catalog.product.ProductDao;
+import com.hk.util.ProductReferrerMapper;
 
 @UrlBinding("/search")
 @Component
@@ -41,6 +44,8 @@ public class SearchAction extends BasePaginatedAction {
   private int perPage;
   @Autowired
   SolrManager solrManager;
+  @Autowired
+  LinkManager linkManager;
 
   private int defaultPerPage = 20;
 
@@ -52,6 +57,9 @@ public class SearchAction extends BasePaginatedAction {
       logger.debug("SOLR NOT WORKING, HITTING DB TO ACCESS DATA");
       productPage = productDao.getProductByName(query, getPageNo(), getPerPage());
       productList = productPage.getList();
+      for(Product product : productList){
+        product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.SEARCH_PAGE)));
+      }
     }
     if (productList != null && productList.size() == 0) {
       addRedirectAlertMessage(new SimpleMessage("No results found."));
