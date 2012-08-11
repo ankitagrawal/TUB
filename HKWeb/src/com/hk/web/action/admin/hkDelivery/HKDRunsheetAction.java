@@ -13,7 +13,6 @@ import net.sourceforge.stripes.action.SimpleMessage;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import com.akube.framework.stripes.action.BaseAction;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.Awb;
@@ -25,6 +24,7 @@ import com.hk.pact.service.UserService;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
+import com.hk.admin.pact.service.hkDelivery.HubService;
 import com.hk.admin.manager.HKDRunsheetManager;
 import com.hk.constants.core.Keys;
 import com.hk.constants.courier.EnumCourier;
@@ -32,6 +32,7 @@ import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.hkDelivery.EnumRunsheetStatus;
 import com.hk.constants.hkDelivery.EnumConsignmentStatus;
+import com.hk.constants.hkDelivery.HKDeliveryConstants;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,18 +45,10 @@ public class HKDRunsheetAction extends BasePaginatedAction {
 
     private         File                  xlsFile;
     private         String                assignedTo;
-    private         SimpleDateFormat      sdf;
-    private         List<ShippingOrder>   shippingOrderList;
-    private         int                   totalPackets;
-    private         int                   totalCODPackets                 = 0;
-    private         double                totalCODAmount                  = 0.0;
     private         String                awbIdsWithoutConsignmntString      = null;
-
-    private         List<String>          trackingIdList                  = new ArrayList<String>();
+    private         List<String>          trackingIdList                     = new ArrayList<String>();
     private         Hub                   hub;
-    private         List<String>          trackingIdsWithoutConsignment   = new ArrayList<String>();
-    private         List<Consignment>     consignmentList                 = new ArrayList<Consignment>();
-    private         List<Runsheet>        runsheetList                    = new ArrayList<Runsheet>();
+    private         List<Runsheet>        runsheetList                       = new ArrayList<Runsheet>();
     private         Boolean               runsheetDownloadFunctionality;
     private         Runsheet              runsheet;
     private         Page                  runsheetPage;
@@ -65,9 +58,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
     private         Date                  endDate;
     private         RunsheetStatus        runsheetStatus;
     private         User                  agent;
-    private         Integer               defaultPerPage            = 20;
-
-    private
+    private         Integer               defaultPerPage                     = 20;
     @Autowired
     ShippingOrderService                  shippingOrderService;
     @Autowired
@@ -82,6 +73,8 @@ public class HKDRunsheetAction extends BasePaginatedAction {
     HKDRunsheetManager                    hkdRunsheetManager;
     @Autowired
     RunSheetService                       runsheetService;
+    @Autowired
+    HubService                            hubService;
 
 
     @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
@@ -95,25 +88,42 @@ public class HKDRunsheetAction extends BasePaginatedAction {
         return new ForwardResolution("/pages/admin/hkDeliveryWorksheet.jsp");
     }
 
+    // Method to create and download runsheet.It also makes an entry in consignment-tracking.
     public Resolution downloadDeliveryWorkSheet() {
         
         //checking url-parameter to see if only jsp has to be displayed or runsheet has to be created.
         if (!runsheetDownloadFunctionality) {
+
             return new ForwardResolution("/pages/admin/hkDeliveryWorksheet.jsp");
+
         } else {
-            Runsheet runsheetObj = null;
-            Long prePaidBoxCount = null;
+            Runsheet              runsheetObj                     = null;
+            Long                  prePaidBoxCount                 = null;
+            User                  loggedOnUser                    = null;
+            Hub                   deliveryHub                     = hubService.findHubByName(HKDeliveryConstants.DELIVERY_HUB);
+            SimpleDateFormat      sdf                             = new SimpleDateFormat("yyyyMMdd");
+            List<ShippingOrder>   shippingOrderList               = new ArrayList<ShippingOrder>();
+            int                   totalPackets                    = 0;
+            int                   totalCODPackets                 = 0;
+            double                totalCODAmount                  = 0.0;
+            List<String>          trackingIdsWithoutConsignment   = new ArrayList<String>();
+            List<Consignment>     consignmentList                 = new ArrayList<Consignment>();
             //todo fetch userId from agent.
-            Long userId = 1l;
-            shippingOrderList = new ArrayList<ShippingOrder>();
+            Long                  userId                          = 1l;
             //Getting HK-Delivery Courier Object.
-            Courier hkDeliveryCourier = EnumCourier.HK_Delivery.asCourier();
+            Courier               hkDeliveryCourier               = EnumCourier.HK_Delivery.asCourier();
 
-            //Iterating over list to get shippingOrders,consignmentList for the corresponding trackingIdList entered by user.
+            //Iterating over trackingIdList(entered by the user) to get coreesponding shippingOrderList,consignmentList.
             for (String trackingNum : trackingIdList) {
-                Awb awb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(hkDeliveryCourier, trackingNum.trim(), userService.getWarehouseForLoggedInUser(), null, EnumAwbStatus.Used.getAsAwbStatus());
-                Consignment consignment = consignmentService.getConsignmentByAwbId(awb.getId());
 
+                //fetching awb object from trackingId (or awbNumber).
+                Awb awb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(hkDeliveryCourier, trackingNum.trim(), userService.getWarehouseForLoggedInUser(), null, EnumAwbStatus.Used.getAsAwbStatus());
+                // Fetching consignment from Awb.
+                Consignment consignment = consignmentService.getConsignmentByAwbId(awb.getId());
+                //Getting loggedIn user,needed for consignment-tracking
+                if (getPrincipal() != null) {
+                    loggedOnUser = getUserService().getUserById(getPrincipal().getId());
+                }
                 //This is a check to ensure that runsheetObj wud be created for those trackingIds for which Consignment exists in DB.
                 if (consignment != null) {
                     //Fetching shippingOrder for corresponding trackingID in order to calculate totalCodAmount and totalCodPackets
@@ -129,6 +139,8 @@ public class HKDRunsheetAction extends BasePaginatedAction {
                             shippingOrderList.add(shippingOrder);
                         }
                     }
+
+                    //Changing consignment-status from ShipmntRcvdAtHub(10) to ShipmntOutForDelivry(20).
                     consignment.setConsignmentStatus(EnumConsignmentStatus.ShipmntOutForDelivry.asConsignmentStatus());
                     consignmentList.add(consignment);
                 } else {
@@ -139,27 +151,29 @@ public class HKDRunsheetAction extends BasePaginatedAction {
             }
             // Converting list to comma seperated string(to be displayed on UI)
             awbIdsWithoutConsignmntString = hkdRunsheetManager.getAwbWithoutConsignmntString(trackingIdsWithoutConsignment);
-            // Calculating no. of total packets in runsheetObj.
+            // Calculating no. of total packets,no of prepaid boxes in runsheetObj.
             totalPackets = shippingOrderList.size();
             prePaidBoxCount = Long.parseLong((totalPackets - totalCODPackets) + "");
 
             try {
-                sdf = new SimpleDateFormat("yyyyMMdd");
                 xlsFile = new File(adminDownloads + "/" + CourierConstants.HKDELIVERY_WORKSHEET_FOLDER + "/" + CourierConstants.HKDELIVERY_WORKSHEET + "_" + sdf.format(new Date()) + ".xls");
                 // Creating Runsheet object.
                 runsheetObj = runsheetService.createRunsheet(hub, consignmentList, EnumRunsheetStatus.Open.asRunsheetStatus(), userId, prePaidBoxCount, Long.parseLong(totalCODPackets + ""), totalCODAmount);
                 // Saving Runsheet in db.
                 runsheetService.saveRunSheet(runsheetObj);
+                //making corresponding entry in consignment tracking.
+                consignmentService.updateConsignmentTracking(hub.getId(),deliveryHub.getId(),loggedOnUser.getId(),consignmentList);
+                // generating Xls file.
                 xlsFile = hkdRunsheetManager.generateWorkSheetXls(xlsFile.getPath(), shippingOrderList, assignedTo, totalCODAmount, totalPackets, totalCODPackets);
             } catch (IOException ioe) {
                 addRedirectAlertMessage(new SimpleMessage(CourierConstants.HKDELIVERY_IOEXCEPTION));
-                return new ForwardResolution(HKDRunsheetAction.class).addParameter("runsheetDownloadFunctionality",false);
+                return new ForwardResolution(HKDRunsheetAction.class).addParameter(HKDeliveryConstants.RUNSHEET_DOWNLOAD,false);
             } catch (NullPointerException npe) {
                 addRedirectAlertMessage(new SimpleMessage(CourierConstants.HKDELIVERY_NULLEXCEPTION));
-                return new ForwardResolution(HKDRunsheetAction.class).addParameter("runsheetDownloadFunctionality",false);
+                return new ForwardResolution(HKDRunsheetAction.class).addParameter(HKDeliveryConstants.RUNSHEET_DOWNLOAD,false);
             } catch (Exception ex) {
                 addRedirectAlertMessage(new SimpleMessage(CourierConstants.HKDELIVERY_EXCEPTION));
-                return new ForwardResolution(HKDRunsheetAction.class).addParameter("runsheetDownloadFunctionality",false);
+                return new ForwardResolution(HKDRunsheetAction.class).addParameter(HKDeliveryConstants.RUNSHEET_DOWNLOAD,false);
             }
             return new HTTPResponseResolution();
         }

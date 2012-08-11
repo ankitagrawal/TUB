@@ -18,5 +18,8 @@ public class HKDeliveryConstants {
     public static final String GURGAON_HUB = "Gurgaon Hub";
     public static final String SOUTH_DELHI_HUB = "South Delhi Hub";
 
+    // Constants for url-parameters used in HK Delivery.
+    public static final String RUNSHEET_DOWNLOAD ="runsheetDownloadFunctionality";
+
 
 }
