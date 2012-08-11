@@ -45,25 +45,25 @@ import java.util.Set;
 public class AutomatedOrderServiceImpl implements AutomatedOrderService{
 
     @Autowired
-    OrderManager orderManager;
+    private OrderManager orderManager;
     @Autowired
-    OrderService orderService;
+    private OrderService orderService;
     @Autowired
-    InventoryService inventoryService;
+    private InventoryService inventoryService;
     @Autowired
-    OrderStatusService orderStatusService;
+    private OrderStatusService orderStatusService;
     @Autowired
-    OrderLoggingService orderLoggingService;
+    private OrderLoggingService orderLoggingService;
     @Autowired
-    UserService userService;
+    private UserService userService;
     @Autowired
-    ShippingOrderService shippingOrderService;
+    private ShippingOrderService shippingOrderService;
     @Autowired
-    LineItemDao lineItemDao;
+    private LineItemDao lineItemDao;
     @Autowired
-    PaymentStatusDao paymentStatusDao;
+    private PaymentStatusDao paymentStatusDao;
     @Autowired
-    PaymentService paymentService;
+    private PaymentService paymentService;
 
     /**
      * creates base orders from within the code rather than through the usual UI flow.
@@ -172,5 +172,85 @@ public class AutomatedOrderServiceImpl implements AutomatedOrderService{
         for (CartLineItem cartLineItem : productCartLineItems) {
             inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
         }
+    }
+
+    public OrderManager getOrderManager() {
+        return orderManager;
+    }
+
+    public void setOrderManager(OrderManager orderManager) {
+        this.orderManager = orderManager;
+    }
+
+    public OrderService getOrderService() {
+        return orderService;
+    }
+
+    public void setOrderService(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
+    public InventoryService getInventoryService() {
+        return inventoryService;
+    }
+
+    public void setInventoryService(InventoryService inventoryService) {
+        this.inventoryService = inventoryService;
+    }
+
+    public OrderStatusService getOrderStatusService() {
+        return orderStatusService;
+    }
+
+    public void setOrderStatusService(OrderStatusService orderStatusService) {
+        this.orderStatusService = orderStatusService;
+    }
+
+    public OrderLoggingService getOrderLoggingService() {
+        return orderLoggingService;
+    }
+
+    public void setOrderLoggingService(OrderLoggingService orderLoggingService) {
+        this.orderLoggingService = orderLoggingService;
+    }
+
+    public UserService getUserService() {
+        return userService;
+    }
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    public ShippingOrderService getShippingOrderService() {
+        return shippingOrderService;
+    }
+
+    public void setShippingOrderService(ShippingOrderService shippingOrderService) {
+        this.shippingOrderService = shippingOrderService;
+    }
+
+    public LineItemDao getLineItemDao() {
+        return lineItemDao;
+    }
+
+    public void setLineItemDao(LineItemDao lineItemDao) {
+        this.lineItemDao = lineItemDao;
+    }
+
+    public PaymentStatusDao getPaymentStatusDao() {
+        return paymentStatusDao;
+    }
+
+    public void setPaymentStatusDao(PaymentStatusDao paymentStatusDao) {
+        this.paymentStatusDao = paymentStatusDao;
+    }
+
+    public PaymentService getPaymentService() {
+        return paymentService;
+    }
+
+    public void setPaymentService(PaymentService paymentService) {
+        this.paymentService = paymentService;
     }
 }

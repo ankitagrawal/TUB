@@ -36,15 +36,15 @@ import java.util.*;
 public class SubscriptionOrderServiceImpl implements SubscriptionOrderService {
 
     @Autowired
-    AutomatedOrderService automatedOrderService;
+    private AutomatedOrderService automatedOrderService;
     @Autowired
-    StoreService storeService;
+    private StoreService storeService;
     @Autowired
-    SubscriptionOrderDao subscriptionOrderDao;
+    private SubscriptionOrderDao subscriptionOrderDao;
     @Autowired
-    SubscriptionService subscriptionService;
+    private SubscriptionService subscriptionService;
     @Autowired
-    SubscriptionLoggingService subscriptionLoggingService;
+    private SubscriptionLoggingService subscriptionLoggingService;
 
     public SubscriptionOrder save(SubscriptionOrder subscriptionOrder){
         return subscriptionOrderDao.save(subscriptionOrder);
@@ -186,4 +186,43 @@ public class SubscriptionOrderServiceImpl implements SubscriptionOrderService {
         }
     }
 
+    public AutomatedOrderService getAutomatedOrderService() {
+        return automatedOrderService;
+    }
+
+    public void setAutomatedOrderService(AutomatedOrderService automatedOrderService) {
+        this.automatedOrderService = automatedOrderService;
+    }
+
+    public StoreService getStoreService() {
+        return storeService;
+    }
+
+    public void setStoreService(StoreService storeService) {
+        this.storeService = storeService;
+    }
+
+    public SubscriptionOrderDao getSubscriptionOrderDao() {
+        return subscriptionOrderDao;
+    }
+
+    public void setSubscriptionOrderDao(SubscriptionOrderDao subscriptionOrderDao) {
+        this.subscriptionOrderDao = subscriptionOrderDao;
+    }
+
+    public SubscriptionService getSubscriptionService() {
+        return subscriptionService;
+    }
+
+    public void setSubscriptionService(SubscriptionService subscriptionService) {
+        this.subscriptionService = subscriptionService;
+    }
+
+    public SubscriptionLoggingService getSubscriptionLoggingService() {
+        return subscriptionLoggingService;
+    }
+
+    public void setSubscriptionLoggingService(SubscriptionLoggingService subscriptionLoggingService) {
+        this.subscriptionLoggingService = subscriptionLoggingService;
+    }
 }

@@ -35,13 +35,13 @@ import java.util.*;
 public class SubscriptionServiceImpl implements SubscriptionService{
 
     @Autowired
-    SubscriptionDao subscriptionDao;
+    private SubscriptionDao subscriptionDao;
     @Autowired
-    SubscriptionLoggingService subscriptionLoggingService;
+    private SubscriptionLoggingService subscriptionLoggingService;
     @Autowired
-    SubscriptionStatusService subscriptionStatusService;
+    private SubscriptionStatusService subscriptionStatusService;
     @Autowired
-    EmailManager emailManager;
+    private EmailManager emailManager;
 
     @Transactional
     public Subscription save(Subscription subscription){
@@ -203,4 +203,35 @@ public class SubscriptionServiceImpl implements SubscriptionService{
         return this.save(subscription);
     }
 
+    public SubscriptionDao getSubscriptionDao() {
+        return subscriptionDao;
+    }
+
+    public void setSubscriptionDao(SubscriptionDao subscriptionDao) {
+        this.subscriptionDao = subscriptionDao;
+    }
+
+    public SubscriptionLoggingService getSubscriptionLoggingService() {
+        return subscriptionLoggingService;
+    }
+
+    public void setSubscriptionLoggingService(SubscriptionLoggingService subscriptionLoggingService) {
+        this.subscriptionLoggingService = subscriptionLoggingService;
+    }
+
+    public SubscriptionStatusService getSubscriptionStatusService() {
+        return subscriptionStatusService;
+    }
+
+    public void setSubscriptionStatusService(SubscriptionStatusService subscriptionStatusService) {
+        this.subscriptionStatusService = subscriptionStatusService;
+    }
+
+    public EmailManager getEmailManager() {
+        return emailManager;
+    }
+
+    public void setEmailManager(EmailManager emailManager) {
+        this.emailManager = emailManager;
+    }
 }

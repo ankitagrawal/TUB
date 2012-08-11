@@ -23,7 +23,7 @@ import java.util.List;
 public class SubscriptionProductServiceImpl implements SubscriptionProductService{
 
     @Autowired
-    SubscriptionProductDao subscriptionProductDao;
+    private SubscriptionProductDao subscriptionProductDao;
 
     @Transactional
     public SubscriptionProduct save(SubscriptionProduct subscriptionProduct){
@@ -43,4 +43,11 @@ public class SubscriptionProductServiceImpl implements SubscriptionProductServic
         return subscriptionProductDao.findByCategory(category);
     }
 
+    public SubscriptionProductDao getSubscriptionProductDao() {
+        return subscriptionProductDao;
+    }
+
+    public void setSubscriptionProductDao(SubscriptionProductDao subscriptionProductDao) {
+        this.subscriptionProductDao = subscriptionProductDao;
+    }
 }

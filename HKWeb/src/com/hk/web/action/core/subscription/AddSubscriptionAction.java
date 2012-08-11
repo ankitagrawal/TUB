@@ -61,26 +61,26 @@ public class AddSubscriptionAction extends BaseAction implements ValidationError
     private SubscriptionProduct subscriptionProduct;
 
     @Autowired
-    UserDao userDao;
+    private UserDao userDao;
     @Autowired
-    UserManager userManager;
+    private UserManager userManager;
     @Autowired
-    OrderManager orderManager;
+    private OrderManager orderManager;
     @Autowired
-    OrderService orderService;
+    private OrderService orderService;
     @Autowired
-    UserCartDao userCartDao;
+    private UserCartDao userCartDao;
     @Autowired
-    SignupAction signupAction;
+    private SignupAction signupAction;
 
     @Autowired
-    SubscriptionService subscriptionService;
+    private SubscriptionService subscriptionService;
     @Autowired
-    SubscriptionProductService subscriptionProductService;
+    private SubscriptionProductService subscriptionProductService;
     @Autowired
-    SubscriptionLoggingService subscriptionLoggingService;
+    private SubscriptionLoggingService subscriptionLoggingService;
     @Autowired
-    CartLineItemService cartLineItemService;
+    private CartLineItemService cartLineItemService;
 
 
     @SuppressWarnings({"unchecked", "deprecation"})
@@ -201,4 +201,83 @@ public class AddSubscriptionAction extends BaseAction implements ValidationError
         return new JsonResolution(validationErrors, getContext().getLocale());
     }
 
+    public UserDao getUserDao() {
+        return userDao;
+    }
+
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
+
+    public UserManager getUserManager() {
+        return userManager;
+    }
+
+    public void setUserManager(UserManager userManager) {
+        this.userManager = userManager;
+    }
+
+    public OrderManager getOrderManager() {
+        return orderManager;
+    }
+
+    public void setOrderManager(OrderManager orderManager) {
+        this.orderManager = orderManager;
+    }
+
+    public OrderService getOrderService() {
+        return orderService;
+    }
+
+    public void setOrderService(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
+    public UserCartDao getUserCartDao() {
+        return userCartDao;
+    }
+
+    public void setUserCartDao(UserCartDao userCartDao) {
+        this.userCartDao = userCartDao;
+    }
+
+    public SignupAction getSignupAction() {
+        return signupAction;
+    }
+
+    public void setSignupAction(SignupAction signupAction) {
+        this.signupAction = signupAction;
+    }
+
+    public SubscriptionService getSubscriptionService() {
+        return subscriptionService;
+    }
+
+    public void setSubscriptionService(SubscriptionService subscriptionService) {
+        this.subscriptionService = subscriptionService;
+    }
+
+    public SubscriptionProductService getSubscriptionProductService() {
+        return subscriptionProductService;
+    }
+
+    public void setSubscriptionProductService(SubscriptionProductService subscriptionProductService) {
+        this.subscriptionProductService = subscriptionProductService;
+    }
+
+    public SubscriptionLoggingService getSubscriptionLoggingService() {
+        return subscriptionLoggingService;
+    }
+
+    public void setSubscriptionLoggingService(SubscriptionLoggingService subscriptionLoggingService) {
+        this.subscriptionLoggingService = subscriptionLoggingService;
+    }
+
+    public CartLineItemService getCartLineItemService() {
+        return cartLineItemService;
+    }
+
+    public void setCartLineItemService(CartLineItemService cartLineItemService) {
+        this.cartLineItemService = cartLineItemService;
+    }
 }

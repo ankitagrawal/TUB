@@ -70,4 +70,19 @@ public class SubscriptionLoggingServiceImpl implements SubscriptionLoggingServic
         this.save(subscriptionLifecycle);
     }
 
+    public UserService getUserService() {
+        return userService;
+    }
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    public SubscriptionLifecycleDao getSubscriptionLifecycleDao() {
+        return subscriptionLifecycleDao;
+    }
+
+    public void setSubscriptionLifecycleDao(SubscriptionLifecycleDao subscriptionLifecycleDao) {
+        this.subscriptionLifecycleDao = subscriptionLifecycleDao;
+    }
 }

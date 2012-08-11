@@ -55,21 +55,21 @@ public class SubscriptionUpdateAction extends BaseAction implements ValidationEr
     SubscriptionProduct subscriptionProduct;
 
     @Autowired
-    SubscriptionService subscriptionService;
+    private SubscriptionService subscriptionService;
     @Autowired
-    OrderManager orderManager;
+    private OrderManager orderManager;
     @Autowired
-    PricingEngine pricingEngine;
+    private PricingEngine pricingEngine;
     @Autowired
-    CartFreebieService cartFreebieService;
+    private CartFreebieService cartFreebieService;
     @Autowired
-    SubscriptionProductService subscriptionProductService;
+    private SubscriptionProductService subscriptionProductService;
     @Autowired
-    UserDao userDao;
+    private UserDao userDao;
     @Autowired
-    UserManager userManager;
+    private UserManager userManager;
     @Autowired
-    CartLineItemService cartLineItemService;
+    private CartLineItemService cartLineItemService;
 
     @DefaultHandler
     public Resolution editSubscription() {
@@ -240,5 +240,29 @@ public class SubscriptionUpdateAction extends BaseAction implements ValidationEr
 
     public void setSubscriptionProductService(SubscriptionProductService subscriptionProductService) {
         this.subscriptionProductService = subscriptionProductService;
+    }
+
+    public UserDao getUserDao() {
+        return userDao;
+    }
+
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
+
+    public UserManager getUserManager() {
+        return userManager;
+    }
+
+    public void setUserManager(UserManager userManager) {
+        this.userManager = userManager;
+    }
+
+    public CartLineItemService getCartLineItemService() {
+        return cartLineItemService;
+    }
+
+    public void setCartLineItemService(CartLineItemService cartLineItemService) {
+        this.cartLineItemService = cartLineItemService;
     }
 }
