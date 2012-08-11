@@ -45,8 +45,10 @@ public class BrandsToAuditDaoImpl extends BaseDaoImpl implements BrandsToAuditDa
 	}
 
 	public boolean isBrandAudited(String brand, Warehouse warehouse) {
-		String queryString = "from BrandsToAudit ba where ba.warehouse = :warehouse and ba.brand = :brand";
-		List<BrandsToAudit> brandsToAuditList = findByNamedParams(queryString, new String[]{"warehouse", "brand"}, new Object[]{warehouse, brand});
+		String queryString = "from BrandsToAudit ba where ba.warehouse = :warehouse and ba.brand = :brand and ba.auditStatus = :auditStatus";
+		List<BrandsToAudit> brandsToAuditList = findByNamedParams(queryString,
+				new String[]{"warehouse", "brand", "auditStatus"},
+				new Object[]{warehouse, brand, EnumAuditStatus.Done.getId()});
 		if (!brandsToAuditList.isEmpty()) {
 			return true;
 		}
