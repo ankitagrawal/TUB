@@ -787,7 +787,7 @@
         </description>
         <name>getDispatchDaysForOrder</name>
         <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>String getDispatchDaysForOrder(com.hk.domain.order.Order)</function-signature>
+        <function-signature>java.lang.String getDispatchDaysForOrder(com.hk.domain.order.Order)</function-signature>
         <example>
             ${getDispatchDaysForOrder(${order})}
         </example>

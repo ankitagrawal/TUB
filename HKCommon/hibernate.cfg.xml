@@ -161,6 +161,7 @@
         <!-- Ajeet Added His on 10-July-->
         <mapping class="com.hk.domain.inventory.BrandsToAudit"/>
         <mapping class="com.hk.domain.catalog.product.combo.SuperSaverImage"/>
+	    <mapping class="com.hk.domain.marketing.ProductReferrer"/>
         <mapping class="com.hk.domain.clm.CategoryKarmaProfile"/>
         <mapping class="com.hk.domain.clm.KarmaProfile"/>
         <mapping class="com.hk.domain.subscription.Subscription" />
