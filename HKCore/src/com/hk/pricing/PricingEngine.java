@@ -77,10 +77,6 @@ public class PricingEngine {
      */
     public Set<CartLineItem> calculateAndApplyPricing(final Set<CartLineItem> cartLineItems, OfferInstance offerInstance, Address address, Double redeemRewardPoints) {
         Set<CartLineItem> invoiceLines = pricing(cartLineItems, offerInstance, address, redeemRewardPoints);
-        Set<CartLineItem> subscriptionCartLineItems= new CartLineItemFilter(cartLineItems).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
-        for(CartLineItem subscriptionCartLineItem: subscriptionCartLineItems){
-            invoiceLines.add(subscriptionCartLineItem);
-        }
 
         return invoiceLines;
     }
