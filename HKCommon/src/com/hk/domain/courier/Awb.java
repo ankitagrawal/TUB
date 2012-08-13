@@ -17,7 +17,7 @@ public class Awb implements java.io.Serializable {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(name = "id", unique = true, nullable = false)
-  private Long id;
+  private Awb id;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "courier_id", nullable = false)
@@ -54,11 +54,11 @@ public class Awb implements java.io.Serializable {
   }
 
 
-  public Long getId() {
+  public Awb getId() {
     return this.id;
   }
 
-  public void setId(Long id) {
+  public void setId(Awb id) {
     this.id = id;
   }
 

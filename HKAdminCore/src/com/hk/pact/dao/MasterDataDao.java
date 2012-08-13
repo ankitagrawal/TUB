@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.hk.domain.TicketStatus;
 import com.hk.domain.TicketType;
+import com.hk.domain.hkDelivery.ConsignmentStatus;
 import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.hkDelivery.RunsheetStatus;
 import com.hk.domain.review.ReviewStatus;
@@ -109,4 +110,6 @@ public interface MasterDataDao
     public List<User>  getHKDeliveryAgentList();
 
     public List<RunsheetStatus> getRunsheetStatusList();
+
+    public List<ConsignmentStatus> getConsignmentStatusList();
 }

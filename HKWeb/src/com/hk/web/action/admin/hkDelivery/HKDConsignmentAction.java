@@ -69,7 +69,7 @@ public class HKDConsignmentAction extends BaseAction{
     //todo data duplicacy
     // Method to check data duplicacy
     private boolean checkAwbDuplicacy(Set<Awb> awbSet){
-        List<Long> consignmentAwbId = consignmentService.getAwbIds();
+        List<Awb> consignmentAwbId = consignmentService.getAwbIds();
         
         return false;
     }

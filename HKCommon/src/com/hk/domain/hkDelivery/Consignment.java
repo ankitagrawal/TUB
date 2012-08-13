@@ -1,10 +1,9 @@
 package com.hk.domain.hkDelivery;
 // Generated Aug 3, 2012 3:17:40 PM by Hibernate Tools 3.2.4.CR1
 
+import com.hk.domain.courier.Awb;
+
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,7 +14,6 @@ import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -42,9 +40,9 @@ public class Consignment implements java.io.Serializable {
     @JoinColumn(name = "consignment_status_id", nullable = false)
     private ConsignmentStatus consignmentStatus;
 
-
-    @Column(name = "awb_id", unique = true, nullable = false)
-    private Long awbId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "awb_id", unique = true, nullable = false)
+    private Awb awb;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_date", nullable = false, length = 19)
@@ -94,12 +92,12 @@ public class Consignment implements java.io.Serializable {
         this.consignmentStatus = consignmentStatus;
     }
 
-    public Long getAwbId() {
-        return this.awbId;
+    public Awb getAwb() {
+        return this.awb;
     }
 
-    public void setAwbId(Long awbId) {
-        this.awbId = awbId;
+    public void setAwb(Awb awb) {
+        this.awb = awb;
     }
 
     public Date getCreateDate() {

@@ -1,5 +1,6 @@
 package com.hk.admin.impl.service.hkDelivery;
 
+import com.hk.domain.courier.Awb;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
@@ -22,12 +23,12 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     }
 
     @Override
-    public List<Long> getAwbIds() {
+    public List<Awb> getAwbIds() {
         return consignmentDao.getAwbIds();
     }
 
     @Override
-    public Consignment getConsignmentByAwbId(Long awbId) {
+    public Consignment getConsignmentByAwbId(Awb awbId) {
         return consignmentDao.getConsignmentByAwbId(awbId);
     }
 
