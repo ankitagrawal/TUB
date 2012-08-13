@@ -62,8 +62,8 @@ public class TaskManagerAction extends BaseAction {
       BusyTableTransactionGenerator busyTableTransactionGenerator = new BusyTableTransactionGenerator(hostName, dbName, serverUser, serverPassword);
       BusyPopulateSalesData busyPopulateSalesData = new BusyPopulateSalesData(hostName, dbName, serverUser, serverPassword);
 
-      System.out.println("Populating Items ");
-        busyPopulateItemData.populateItemData();
+     /* System.out.println("Populating Items ");
+        busyPopulateItemData.populateItemData();*/
       System.out.println("Populating Suppliers ");
         busyPopulateSupplierData.busySupplierUpdate();
       System.out.println("Populating Sales ");
