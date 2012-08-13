@@ -2,6 +2,9 @@ package com.hk.constants.hkDelivery;
 
 import com.hk.domain.hkDelivery.RunsheetStatus;
 
+import java.util.Arrays;
+import java.util.List;
+
 
 public enum EnumRunsheetStatus {
 
@@ -41,4 +44,11 @@ public enum EnumRunsheetStatus {
     runsheetStatus.setStatus(this.getStatus());
     return runsheetStatus;
   }
+    
+    public static List<RunsheetStatus> getAll() {
+        return Arrays.asList(
+                EnumRunsheetStatus.Open.asRunsheetStatus(),
+                EnumRunsheetStatus.Close.asRunsheetStatus(),
+                EnumRunsheetStatus.OnHold.asRunsheetStatus());
+    }
 }

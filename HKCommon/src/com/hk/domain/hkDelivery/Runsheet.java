@@ -2,6 +2,8 @@ package com.hk.domain.hkDelivery;
 // Generated Aug 3, 2012 3:17:40 PM by Hibernate Tools 3.2.4.CR1
 
 
+import com.hk.domain.user.User;
+
 import java.util.*;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -67,7 +69,7 @@ public class Runsheet implements java.io.Serializable {
 
 
     @Column(name = "user_id")
-    private Long userId;
+    private User hkDeliveryAgent;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "runsheet_id")
@@ -149,12 +151,12 @@ public class Runsheet implements java.io.Serializable {
         this.remarks = remarks;
     }
 
-    public Long getUserId() {
-        return this.userId;
+    public User getHkDeliveryAgent() {
+        return this.hkDeliveryAgent;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setHkDeliveryAgent(User hkDeliveryAgent) {
+        this.hkDeliveryAgent = hkDeliveryAgent;
     }
 
     public List<Consignment> getConsignments() {

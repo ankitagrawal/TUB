@@ -13,7 +13,6 @@ import net.sourceforge.stripes.action.SimpleMessage;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import com.akube.framework.stripes.action.BaseAction;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.Awb;
@@ -165,7 +164,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
         runsheetObj.setCreateDate(new Date());
         runsheetObj.setExpectedCollection(totalCODAmount);
         runsheetObj.setPrePaidBoxCount(prePaidBoxCount);
-        runsheetObj.setUserId(1l);
+        runsheetObj.setHkDeliveryAgent(1l);
         runsheetObj.setHub(hub);
         runsheetObj.setConsignments(consignmentList);
         runsheetObj.setRunsheetStatus(EnumRunsheetStatus.Open.asRunsheetStatus());

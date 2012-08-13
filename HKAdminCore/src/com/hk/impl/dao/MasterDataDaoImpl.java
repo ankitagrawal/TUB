@@ -6,6 +6,7 @@ import com.hk.constants.catalog.product.EnumProductVariantPaymentType;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.courier.EnumCourier;
+import com.hk.constants.hkDelivery.EnumRunsheetStatus;
 import com.hk.constants.inventory.EnumReconciliationStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.TicketStatus;
@@ -19,6 +20,7 @@ import com.hk.domain.core.*;
 import com.hk.domain.courier.BoxSize;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.RegionType;
+import com.hk.domain.hkDelivery.RunsheetStatus;
 import com.hk.domain.inventory.GrnStatus;
 import com.hk.domain.inventory.po.PurchaseInvoiceStatus;
 import com.hk.domain.inventory.rv.ReconciliationStatus;
@@ -292,5 +294,13 @@ public class MasterDataDaoImpl implements MasterDataDao {
 
     public List<Hub> getHubList() {
         return hubService.getAllHubs();
+    }
+
+    public List<User> getHKDeliveryAgentList(){
+        return getUserService().findByRole(getRoleService().getRoleByName(EnumRole.HK_DELIVERY_GUY));
+    }
+
+    public List<RunsheetStatus> getRunsheetStatusList(){
+        return EnumRunsheetStatus.getAll();
     }
 }
