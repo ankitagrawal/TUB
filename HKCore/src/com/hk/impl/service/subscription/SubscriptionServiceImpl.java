@@ -189,7 +189,7 @@ public class SubscriptionServiceImpl implements SubscriptionService{
         subscriptionLoggingService.logSubscriptionActivity(subscription, EnumSubscriptionLifecycleActivity.SubscriptionOrderDelivered);
         if(totalQty<=qtyDelivered){
             subscription.setSubscriptionStatus(EnumSubscriptionStatus.Expired.asSubscriptionStatus());
-            subscriptionLoggingService.logSubscriptionActivity(subscription, EnumSubscriptionLifecycleActivity.SubscriptionExpired);
+            subscriptionLoggingService.logSubscriptionActivityByAdmin(subscription, EnumSubscriptionLifecycleActivity.SubscriptionExpired, "Subscription marked as expired");
         }else{
             subscription.setSubscriptionStatus(EnumSubscriptionStatus.Idle.asSubscriptionStatus());
             Calendar c = Calendar.getInstance();
@@ -197,7 +197,7 @@ public class SubscriptionServiceImpl implements SubscriptionService{
             c.add(Calendar.DATE,Integer.parseInt(subscription.getFrequencyDays().toString()));
 
             subscription.setNextShipmentDate(c.getTime());
-            subscriptionLoggingService.logSubscriptionActivity(subscription, EnumSubscriptionLifecycleActivity.NextShipmentDateChanged);
+            subscriptionLoggingService.logSubscriptionActivityByAdmin(subscription, EnumSubscriptionLifecycleActivity.NextShipmentDateChanged,"Automatic shipment date change");
         }
 
         return this.save(subscription);
