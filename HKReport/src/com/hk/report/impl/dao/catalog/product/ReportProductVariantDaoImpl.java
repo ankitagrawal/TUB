@@ -48,8 +48,12 @@ public class ReportProductVariantDaoImpl extends BaseDaoImpl implements ReportPr
                 + " where  li.shippingOrder.shippingOrderStatus.id in (:shippingOrderStatus) and li.shippingOrder.shipment.shipDate > :startDate "
                 + " and li.shippingOrder.shipment.shipDate < :endDate and li.sku = :sku ";
 
-        return (Long)getSession().createQuery(sql).setParameter("startDate", startDate).setParameter("endDate", endDate).setParameter("sku", sku)
+        Long inventory = (Long)getSession().createQuery(sql).setParameter("startDate", startDate).setParameter("endDate", endDate).setParameter("sku", sku)
                 .setParameterList("shippingOrderStatus", Arrays.asList(EnumShippingOrderStatus.SO_Shipped.getId(), EnumShippingOrderStatus.SO_Delivered.getId())).uniqueResult();
+        if(inventory != null) {
+            return inventory;
+        }
+        return 0L;
     }
 
     public List<ExpiryAlertReportDto> getToBeExpiredProductDetails(Date startDate, Date endDate, Warehouse warehouse) {
