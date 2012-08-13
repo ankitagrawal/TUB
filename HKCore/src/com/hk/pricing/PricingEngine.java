@@ -518,7 +518,7 @@ public class PricingEngine {
                         lineItem.setHkPrice(variantHKPrice);
                     }
                 }
-                if(!lineItem.isType(EnumCartLineItemType.Subscription)){
+                if(!lineItem.isType(EnumCartLineItemType.Subscription)&& !lineItem.getOrder().isSubscriptionOrder()){
                     lineItem.setDiscountOnHkPrice(0D);
                 }
                 cartLineItemWrappers.add(new CartLineItemWrapper(lineItem));
