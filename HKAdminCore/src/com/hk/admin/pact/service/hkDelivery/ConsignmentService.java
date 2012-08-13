@@ -15,4 +15,8 @@ public interface ConsignmentService {
 
     public Consignment getConsignmentByAwbId(Long awbId);
 
+    public void updateConsignmentTracking(Long sourceHubId, Long destinationHubId, Long userId, Consignment consignment);
+
+    public void updateConsignmentTracking(Long sourceHubId, Long destinationHubId, Long userId, List<Consignment> consignmentList);
+
 }

@@ -18,4 +18,8 @@ public class HubServiceImpl implements HubService {
     public List<Hub> getAllHubs() {
         return hubDao.getAllHubs();  
     }
+
+    public Hub findHubByName(String hubName) {
+        return hubDao.findHubByName(hubName);
+    }
 }

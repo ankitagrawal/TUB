@@ -36,6 +36,8 @@ public class SuperSaverImageDaoImpl extends BaseDaoImpl implements SuperSaverIma
 
     public List<SuperSaverImage> getSuperSaverImages(Product product, Boolean getVisible, Boolean getMainImage, Boolean getDeleted) {
         DetachedCriteria criteria = DetachedCriteria.forClass(SuperSaverImage.class);
+        DetachedCriteria productCriteria = criteria.createCriteria("product");
+        productCriteria.add(Restrictions.eq("deleted", Boolean.FALSE));
 
         if (!getDeleted) {
             criteria.add(Restrictions.eq("deleted", Boolean.FALSE));
@@ -67,6 +69,7 @@ public class SuperSaverImageDaoImpl extends BaseDaoImpl implements SuperSaverIma
         }
 
         DetachedCriteria productCriteria = criteria.createCriteria("product");
+        productCriteria.add(Restrictions.eq("deleted", Boolean.FALSE));
 
         if (brands != null) {
             productCriteria.add(Restrictions.in("brand", brands));
@@ -82,8 +85,7 @@ public class SuperSaverImageDaoImpl extends BaseDaoImpl implements SuperSaverIma
             criteria.add(Restrictions.eq("hidden", Boolean.FALSE));
         }
 
-
         criteria.addOrder(Order.asc("ranking"));
-        return list(criteria,true, page, perPage);
+        return list(criteria, true, page, perPage);
     }
 }

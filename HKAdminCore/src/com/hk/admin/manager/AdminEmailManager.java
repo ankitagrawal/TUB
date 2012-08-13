@@ -439,7 +439,7 @@ public class AdminEmailManager {
         Long productMainImageId = product.getMainImageId();
         excelMap.put(EmailMapKeyConstants.product, product);
         //excelMap.put(EmailMapKeyConstants.productUrl, productService.getProductUrl(product));
-        excelMap.put(EmailMapKeyConstants.productUrl, convertToWww(getProductService().getProductUrl(product)));
+        excelMap.put(EmailMapKeyConstants.productUrl, convertToWww(getProductService().getProductUrl(product,false)));
 
         if (productMainImageId != null) {
           excelMap.put(EmailMapKeyConstants.productImageUrlMedium, HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, productMainImageId,false));
@@ -471,7 +471,7 @@ public class AdminEmailManager {
           Long productMainImageId = product.getMainImageId();
           excelMap.put(EmailMapKeyConstants.product, product);
           //excelMap.put(EmailMapKeyConstants.productUrl, productService.getProductUrl(product));
-          excelMap.put(EmailMapKeyConstants.productUrl, convertToWww(getProductService().getProductUrl(product)));
+          excelMap.put(EmailMapKeyConstants.productUrl, convertToWww(getProductService().getProductUrl(product,false)));
 
           if (productMainImageId != null) {
             excelMap.put(EmailMapKeyConstants.productImageUrlMedium, HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, productMainImageId,false));

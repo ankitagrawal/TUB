@@ -8,5 +8,6 @@ import java.util.List;
 public interface HubDao extends BaseDao{
 
     public List<Hub> getAllHubs();
-    
+
+    Hub findHubByName(String hubName);
 }

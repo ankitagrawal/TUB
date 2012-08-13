@@ -170,5 +170,6 @@
     <mapping class="com.hk.domain.hkDelivery.ConsignmentTracking"/>
     <mapping class="com.hk.domain.hkDelivery.RunsheetStatus"/>
 
+    <mapping class="com.hk.domain.marketing.ProductReferrer"/>
   </session-factory>
 </hibernate-configuration>

@@ -8,4 +8,6 @@ import java.util.List;
 public interface HubService {
 
     public List<Hub> getAllHubs();
+
+    public Hub findHubByName(String hubName);
 }
