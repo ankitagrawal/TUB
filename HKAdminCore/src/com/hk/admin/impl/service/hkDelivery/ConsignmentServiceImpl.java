@@ -77,11 +77,11 @@ public class ConsignmentServiceImpl implements ConsignmentService {
 
     @Override
     public List<Awb> getDuplicateAwbs(List<Awb> awbList) {
-        List<Long> consignmentAwbIds = getAwbIds();
+        List<Awb> consignmentAwb = getAwbIds();
         List<Awb> duplicatedAwbs = new ArrayList<Awb>();
-        for (Awb awb : awbList) {
-            for (Long awbNumber : consignmentAwbIds) {
-                if (awbNumber.equals(awb.getId())) {
+        for (Awb awbObj : awbList) {
+            for (Awb awb :  consignmentAwb) {
+                if (awb.equals(awbObj)) {
                     duplicatedAwbs.add(awb);
                 }
             }

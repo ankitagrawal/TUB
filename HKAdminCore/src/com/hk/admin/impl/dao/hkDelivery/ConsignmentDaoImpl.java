@@ -38,7 +38,7 @@ public class ConsignmentDaoImpl extends BaseDaoImpl implements ConsignmentDao {
 
     @Override
     public Consignment getConsignmentByAwbId(Awb awb) {
-        return (Consignment) getSession().createQuery("from Consignment cn where cn.awb = :awbId").setParameter("awb", awb).uniqueResult();
+        return (Consignment) getSession().createQuery("from Consignment cn where cn.awb = :awb").setParameter("awb", awb).uniqueResult();
     }
 
     public void updateConsignmentTracking(Long sourceHubId, Long destinationHubId, Long userId, List<Consignment> consignmentList) {
