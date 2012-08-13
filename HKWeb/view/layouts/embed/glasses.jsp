@@ -12,7 +12,7 @@
 <c:set value="${product.productVariants[0]}" var="variant"/>
 <c:set value="${variant.hkPrice + hk:getPostpaidAmount(variant)}" var="ourPriceForVariant"/>
 
-<%--<div align="right" style="margin-bottom:10px;"><a class='top_link' href="#sizeGuide">view size guide &darr;</a></div>--%>
+
 
 <div id="tabs">
 <input id="variantId" type="hidden" value="${product.productVariants[0].id}">
