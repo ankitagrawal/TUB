@@ -1,9 +1,9 @@
 package com.hk.admin.dto.inventory;
 
+import com.hk.domain.inventory.po.PurchaseOrder;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.hk.domain.inventory.po.PurchaseOrder;
 
 /**
  * Created by IntelliJ IDEA.
@@ -25,8 +25,6 @@ public class PurchaseOrderDto {
     private Double totalTaxable = 0.0;
 
     private Double totalSurcharge = 0.0;
-
-    private int noOfSkuInPO;
 
     public List<PoLineItemDto> getPoLineItemDtoList() {
         return poLineItemDtoList;
@@ -76,11 +74,4 @@ public class PurchaseOrderDto {
         this.totalSurcharge = totalSurcharge;
     }
 
-    public int getNoOfSkuInPO() {
-        return noOfSkuInPO;
-    }
-
-    public void setNoOfSkuInPO(int noOfSkuInPO) {
-        this.noOfSkuInPO = noOfSkuInPO;
-    }
 }

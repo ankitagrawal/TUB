@@ -592,9 +592,7 @@ private SkuService                    skuService;*/
             xlsWriter.addHeader(XslConstants.LAST_UPDATED_DATE, XslConstants.LAST_UPDATED_DATE);
             xlsWriter.addHeader(XslConstants.PAYABLE, XslConstants.PAYABLE);
 
-            logger.debug("size of PO list ::" + purchaseOrderList.size());
             for (PurchaseOrder purchaseOrder : purchaseOrderList) {
-                logger.debug("row no.: " + xlsRow + "po number:::" + purchaseOrder.getId());
                 xlsWriter.addCell(xlsRow, purchaseOrder.getId());
                 xlsWriter.addCell(xlsRow, purchaseOrder.getCreateDate());
                 xlsWriter.addCell(xlsRow, purchaseOrder.getCreatedBy().getName());

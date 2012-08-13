@@ -13,12 +13,8 @@ import com.hk.domain.warehouse.Warehouse;
 import com.hk.dto.TaxComponent;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
-import com.itextpdf.text.*;
-
-import com.itextpdf.text.pdf.PdfWriter;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.ss.usermodel.Font;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -237,7 +233,6 @@ public class PurchaseOrderManager {
         purchaseOrderDto.setTotalTax(totalTax);
         purchaseOrderDto.setTotalSurcharge(totalSurcharge);
         purchaseOrderDto.setTotalPayable(totalPayable);
-        purchaseOrderDto.setNoOfSkuInPO(purchaseOrder.getPoLineItems().size());
         return purchaseOrderDto;
 
     }
