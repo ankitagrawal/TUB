@@ -13,28 +13,50 @@ import javax.persistence.Table;
 public class ReconciliationType implements java.io.Serializable {
 
 
-  @Id
-  @Column(name = "id", unique = true, nullable = false)
-  private Long id;
+    @Id
+    @Column(name = "id", unique = true, nullable = false)
+    private Long id;
 
-  @Column(name = "name", nullable = false, length = 45)
-  private String name;
+    @Column(name = "name", nullable = false, length = 45)
+    private String name;
 
-  public Long getId() {
-    return this.id;
-  }
+    public Long getId() {
+        return this.id;
+    }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-  public String getName() {
-    return this.name;
-  }
+    public String getName() {
+        return this.name;
+    }
 
-  public void setName(String name) {
-    this.name = name;
-  }
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(this == obj) {
+            return true;
+        }
+
+        if(obj instanceof ReconciliationType) {
+            ReconciliationType reconciliationType = (ReconciliationType)obj;
+            if(this.getId().longValue() == reconciliationType.getId().longValue()) {
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
+
 }
 
 

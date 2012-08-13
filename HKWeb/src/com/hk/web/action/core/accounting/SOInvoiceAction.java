@@ -13,11 +13,14 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.dto.accounting.InvoiceDto;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.util.BarcodeGenerator;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.courier.CourierServiceInfo;
+import com.hk.domain.courier.Awb;
+import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ReplacementOrder;
 import com.hk.domain.user.Address;
@@ -27,58 +30,71 @@ import com.hk.manager.ReferrerProgramManager;
 import com.hk.pact.dao.user.B2bUserDetailsDao;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.order.CartFreebieService;
+import com.hk.pact.service.core.PincodeService;
 
 @Component
 public class SOInvoiceAction extends BaseAction {
 
     // private static Logger logger = LoggerFactory.getLogger(SOInvoiceAction.class);
 
-    private boolean                printable;
-    private Category               sexualCareCategory;
+    private boolean printable;
+    private Category sexualCareCategory;
 
     @Validate(required = true, encrypted = true)
-    private ShippingOrder          shippingOrder;
+    private ShippingOrder shippingOrder;
     @Autowired
     private ReferrerProgramManager referrerProgramManager;
     @Autowired
-    private BarcodeGenerator       barcodeGenerator;
+    private BarcodeGenerator barcodeGenerator;
     @Autowired
-    private CategoryService        categoryService;
+    private CategoryService categoryService;
     @Autowired
-    private CourierService         courierService;
+    private CourierService courierService;
     @Autowired
-    private CartFreebieService     cartFreebieService;
+    private CartFreebieService cartFreebieService;
     @Autowired
-    private B2bUserDetailsDao      b2bUserDetailsDao;
+    private B2bUserDetailsDao b2bUserDetailsDao;
     @Autowired
-    private CourierServiceInfoDao  courierServiceInfoDao;
+    private CourierServiceInfoDao courierServiceInfoDao;
+    @Autowired
+    PincodeService pincodeService;
+    @Autowired
+    AwbService awbService;
 
-    private String                 barcodePath;
-    private Coupon                 coupon;
-    private String                 routingCode;
-    private InvoiceDto             invoiceDto;
-    private B2bUserDetails         b2bUserDetails;
+    private String barcodePath;
+    private Coupon coupon;
+    private String routingCode;
+    private InvoiceDto invoiceDto;
+    private B2bUserDetails b2bUserDetails;
     private String freebieItem;
 
-  @DefaultHandler
+    private Shipment shipment;
+
+    @DefaultHandler
     public Resolution pre() {
         if (shippingOrder != null) {
+            shipment = shippingOrder.getShipment();
+            if (shipment != null) {
+                Awb awb = shipment.getAwb();
+                if (awb != null && awb.getAwbNumber() != null ) {
+                    String trackingId = awb.getAwbNumber();
+                    barcodePath = barcodeGenerator.getBarcodePath(trackingId, 2.0f, 200, true);
+                }
+            }
             ReplacementOrder replacementOrder = getBaseDao().get(ReplacementOrder.class, shippingOrder.getId());
             String invoiceType = InvoiceNumHelper.getInvoiceType(shippingOrder.isServiceOrder(), shippingOrder.getBaseOrder().getB2bOrder());
             if (invoiceType.equals(InvoiceNumHelper.PREFIX_FOR_B2B_ORDER)) {
                 b2bUserDetails = b2bUserDetailsDao.getB2bUserDetails(shippingOrder.getBaseOrder().getUser());
             }
-            if(replacementOrder != null){
-              invoiceDto = new InvoiceDto(replacementOrder, b2bUserDetails);
-            }
-            else{
-              invoiceDto = new InvoiceDto(shippingOrder, b2bUserDetails);
+            if (replacementOrder != null) {
+                invoiceDto = new InvoiceDto(replacementOrder, b2bUserDetails);
+            } else {
+                invoiceDto = new InvoiceDto(shippingOrder, b2bUserDetails);
             }
             sexualCareCategory = categoryService.getCategoryByName("sexual-care");
             coupon = referrerProgramManager.getOrCreateRefferrerCoupon(shippingOrder.getBaseOrder().getUser());
-            barcodePath = barcodeGenerator.getBarcodePath(shippingOrder.getGatewayOrderId());
+            barcodePath = barcodeGenerator.getBarcodePath(shippingOrder.getGatewayOrderId(), 1.0f, 150, false);
             Address address = getBaseDao().get(Address.class, shippingOrder.getBaseOrder().getAddress().getId());
-            // As of now we have routing codes for BlueDart only so printing it by default.
             boolean isCod = shippingOrder.isCOD();
             CourierServiceInfo courierServiceInfo = null;
             if (isCod) {
@@ -170,11 +186,19 @@ public class SOInvoiceAction extends BaseAction {
         this.courierService = courierService;
     }
 
-  public String getFreebieItem() {
-    return freebieItem;
-  }
+    public String getFreebieItem() {
+        return freebieItem;
+    }
 
-  public void setFreebieItem(String freebieItem) {
-    this.freebieItem = freebieItem;
-  }
+    public void setFreebieItem(String freebieItem) {
+        this.freebieItem = freebieItem;
+    }
+
+    public Shipment getShipment() {
+        return shipment;
+    }
+
+    public void setShipment(Shipment shipment) {
+        this.shipment = shipment;
+    }
 }

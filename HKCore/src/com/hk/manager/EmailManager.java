@@ -46,6 +46,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
+
 import freemarker.template.Template;
 
 @SuppressWarnings("unchecked")
@@ -163,6 +164,7 @@ public class EmailManager {
     */
 
     // TODO:rewrite
+
     public boolean sendInventoryRedZoneMail(ProductVariant productVariant) {
         HashMap valuesMap = new HashMap();
         valuesMap.put("productVariant", productVariant);
@@ -296,18 +298,31 @@ public class EmailManager {
 
     public boolean sendOrderConfirmEmailToUser(Order order) {
         HashMap valuesMap = new HashMap();
-        valuesMap.put("order", order);
-        PricingDto pricingDto = new PricingDto(order.getCartLineItems(), order.getAddress());
-        valuesMap.put("pricingDto", pricingDto);
+        Set<CartLineItem> orderCartLineItems = order.getCartLineItems();
+        PricingDto pricingDto = new PricingDto(orderCartLineItems, order.getAddress());
 
-        // for (LineItem lineItem : pricingDto.getProductLineItems()) {
-        // ProcessingDatesDto dto =
-        // processingDateCalculatorProvider.get().calculateProcessingDate(order.getPayment().getPaymentDate() == null ?
-        // order.getPayment().getCreateDate() : order.getPayment().getPaymentDate(), invoiceLine.getProductScaffold());
-        // String expectedDates = FormatUtils.getFormattedDateForUserEnd(dto.getMinProcessDate().toDate()) + " - " +
-        // FormatUtils.getFormattedDateForUserEnd(dto.getMaxProcessDate().toDate());
-        // lineItem.setExpectedShipDates(expectedDates);
-        // }
+        Set<OrderCategory> orderCategories = order.getCategories();
+        int categoryCountInOrder = orderCategories.size();
+        Boolean isServiceOrder = Boolean.FALSE;
+//        Set<CartLineItem> serviceCartLineItems = new HashSet<CartLineItem>();
+
+        for (OrderCategory orderCategory : orderCategories) {
+            if (orderCategory.getCategory().getName().equals(CategoryConstants.SERVICES)) {
+                isServiceOrder = Boolean.TRUE;
+                break;
+            }
+        }
+
+//        if (isServiceOrder) {
+//            serviceCartLineItems = new CartLineItemFilter(orderCartLineItems).setCategoryName("services").filter();
+//        }
+
+        valuesMap.put("order", order);
+        valuesMap.put("pricingDto", pricingDto);
+        valuesMap.put("categoryCountInOrder", categoryCountInOrder);
+        valuesMap.put("isServiceOrder", isServiceOrder);
+//        valuesMap.put("serviceCartLineItems", serviceCartLineItems);
+ 
         Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.orderConfirmUserEmail);
         return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, order.getUser().getEmail(), order.getUser().getName());
     }
@@ -455,7 +470,7 @@ public class EmailManager {
 
     public boolean sendOrderShippedEmail(ShippingOrder shippingOrder, String invoiceLink) {
         Shipment shipment = shippingOrder.getShipment();
-        shipment.setTrackLink(getLinkManager().getOrderTrackLink(shipment.getTrackingId(), shipment.getCourier().getId(), shippingOrder));
+        shipment.setTrackLink(getLinkManager().getOrderTrackLink(shipment.getAwb().getAwbNumber(), shipment.getCourier().getId(), shippingOrder));
         HashMap valuesMap = new HashMap();
         valuesMap.put("order", shippingOrder);
         valuesMap.put("invoiceLink", invoiceLink);

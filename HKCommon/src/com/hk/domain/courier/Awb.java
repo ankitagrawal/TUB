@@ -35,6 +35,9 @@ public class Awb implements java.io.Serializable {
   @Column(name = "awb_bar_code", nullable = false, length = 25)
   private String awbBarCode;
 
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "awb_status_id", nullable = false)
+  private AwbStatus awbStatus;
 
   @Column(name = "used", nullable = false)
   private boolean used;
@@ -98,21 +101,27 @@ public class Awb implements java.io.Serializable {
   public void setUsed(boolean used) {
     this.used = used;
   }
-  public boolean equals(Object obj) {
-    if (!(obj instanceof Awb)) {
-      throw new ClassCastException("object compared are not of same Type");
+
+    public AwbStatus getAwbStatus() {
+        return awbStatus;
+    }
+
+    public void setAwbStatus(AwbStatus awbStatus) {
+        this.awbStatus = awbStatus;
+    }
+
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Awb)) {
+            throw new ClassCastException("object compared are not of same Type");
+
+        }
+        Awb awb = (Awb) obj;
+        if (this.awbNumber.equals(awb.getAwbNumber()) && this.courier.equals(awb.getCourier())) {
+            return true;
+        } else
+            return false;
 
     }
-    Awb awb = (Awb) obj;
-    if (this.awbNumber.equals(awb.getAwbNumber())) {
-      return true;
-    } else
-      return false;
-
-  }
-
-
-  
 
 }
 

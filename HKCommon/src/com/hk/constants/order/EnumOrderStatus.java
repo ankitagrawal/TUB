@@ -66,9 +66,6 @@ public enum EnumOrderStatus {
         EnumOrderStatus.Delivered);
   }
 
-/*public static List<EnumOrderStatus> getStatusForDelivered() {
-  return Arrays.asList(EnumOrderStatus.SO_Shipped);
-}*/
 
   public static List<EnumOrderStatus> getStatusForReporting() {
     return Arrays.asList(

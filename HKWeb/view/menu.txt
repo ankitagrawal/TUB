@@ -31,13 +31,13 @@
 --/nutrition/dietary-supplements/herbal-teas
 --/nutrition/dietary-supplements/herbs-a-z  :Herbs A-Z
 --/nutrition/dietary-supplements/herbal-cream-oil  :Herbal Cream & Oil
--/nutrition/condition-specific-supplements
+-/nutrition/condition-specific-supplements : Condition Specific
 --/nutrition/condition-specific-supplements/cardiovascular
 --/nutrition/condition-specific-supplements/joint-muscle    :Joint & Muscle
 --/nutrition/condition-specific-supplements/stress-anxiety  :Stress & Anxiety
 --/nutrition/condition-specific-supplements/digestion
 --/nutrition/condition-specific-supplements/immunity
---/nutrition/condition-specific-supplements/blood-sugar
+--/nutrition/condition-specific-supplements/blood-sugar :Diabetic Care
 --/nutrition/condition-specific-supplements/brain-memory     :Brain & Memory
 --/nutrition/condition-specific-supplements/vitality
 --/nutrition/condition-specific-supplements/energy-endurance     :Energy & Endurance
@@ -133,6 +133,7 @@
 ---/sports/sports-equipment/badminton/shuttles
 ---/sports/sports-equipment/badminton/accessories
 --/sports/sports-equipment/table-tennis
+---/sports/sports-equipment/table-tennis/tt-tables: TT Tables
 ---/sports/sports-equipment/table-tennis/rackets
 ---/sports/sports-equipment/table-tennis/blades
 ---/sports/sports-equipment/table-tennis/rubbers
@@ -164,6 +165,7 @@
 --/sports/sports-equipment/boxing
 ---/sports/sports-equipment/boxing/punching-bags
 ---/sports/sports-equipment/boxing/gloves
+--/sports/sports-equipment/skating
 --/sports/sports-equipment/other-balls
 --/sports/sports-equipment/combos
 -/sports/apparel
@@ -180,6 +182,7 @@
 --/sports/footwear/basketball-shoes
 --/sports/footwear/cricket-shoes
 --/sports/footwear/jogging-shoes
+--/sports/footwear/table-tennis-shoes
 --/sports/footwear/kids-shoes
 --/sports/footwear/other-shoes
 --/sports/footwear/accessories
@@ -203,6 +206,7 @@
 --/diabetes/diabetic-food/sweetener
 --/diabetes/diabetic-food/sugar-free-drinks : Sugar Free Drinks
 --/diabetes/diabetic-food/sugar-free-food-candy : Sugar Free Food & Candy
+--/diabetes/diabetic-food/diabetic-supplements
 --/diabetes/diabetic-food/combos
 -/diabetes/devices
 --/diabetes/devices/step-counter: Step Counter
@@ -219,11 +223,19 @@
 ---/home-devices/blood-pressure/bp-monitor/wrist-bp-monitor
 --/home-devices/blood-pressure/heart-rate-monitor
 --/home-devices/blood-pressure/bp : BP Apparatus
+---/home-devices/blood-pressure/bp/aneroid-sphygmomanometer
+---/home-devices/blood-pressure/bp/clock-type-sphygmomanometer
+---/home-devices/blood-pressure/bp/mercury-sphygmomanometer
+---/home-devices/blood-pressure/bp/mercury-free-sphygmomanometer
+---/home-devices/blood-pressure/bp/electrical-sphygmomanometer
 --/home-devices/blood-pressure/ecg : ECG Machines
 --/home-devices/blood-pressure/accessories
 --/home-devices/blood-pressure/combo : Star's of the Month
 -/home-devices/respiratory-care
 --/home-devices/respiratory-care/nebulizer
+---/home-devices/respiratory-care/nebulizer/compressor-nebulizer
+---/home-devices/respiratory-care/nebulizer/ultrasonic-nebulizer
+---/home-devices/respiratory-care/nebulizer/nebulizer-for-kids
 --/home-devices/respiratory-care/oxygen-concentrator : Oxygen Concentrators
 --/home-devices/respiratory-care/pulse-oximeters : Pulse Oximeters
 ---/home-devices/respiratory-care/pulse-oximeters/fingertip-oximeter
@@ -310,6 +322,8 @@
 --/home-devices/clinical-supplies/urinary-system
 --/home-devices/clinical-supplies/hearing-aids
 --/home-devices/clinical-supplies/eye-patch
+--/home-devices/clinical-supplies/suction-devices
+--/home-devices/clinical-supplies/diagnostic-products
 -/home-devices/miscellaneous
 --/home-devices/miscellaneous/weighing-scales
 --/home-devices/miscellaneous/digital-thermometer : Digital Thermometer
@@ -343,6 +357,7 @@
 --/home-devices/miscellaneous/personal-hygiene
 --/home-devices/miscellaneous/steamer : Steamer/Vaporiser
 --/home-devices/miscellaneous/air-humidifiers
+--/home-devices/miscellaneous/stature-meter
 
 /eye
 -/eye/lenses
@@ -370,14 +385,14 @@
 --/eye/eyeglasses/frameless
 --/eye/eyeglasses/reading-glasses :Reading Glasses
 --/eye/eyeglasses/kids :  Kids
--/eye/accessories
---/eye/accessories/solutions
---/eye/accessories/lens-case
---/eye/accessories/lens-cleaner :Lens Cleaner
---/eye/accessories/eye-patches : Eye Patches
---/eye/accessories/under-eye-creams : Under Eye Creams
---/eye/accessories/relaxing-masks : Relaxing Masks
---/eye/accessories/eye-supplements  :Eye Supplements
+-/eye/eye-care
+--/eye/eye-care/solutions
+--/eye/eye-care/lens-case
+--/eye/eye-care/lens-cleaner :Lens Cleaner
+--/eye/eye-care/eye-patches : Eye Patches
+--/eye/eye-care/under-eye-creams : Under Eye Creams
+--/eye/eye-care/relaxing-masks : Relaxing Masks
+--/eye/eye-care/eye-supplements  :Eye Supplements
 -/eye/what-s-new  :What's New
 --/eye/what-s-new/just-in :Just In
 --/eye/what-s-new/top-deals:Top Deals
@@ -414,7 +429,10 @@
 --/personal-care/women/panty-liners:Panty Liners
 --/personal-care/women/ovulation-kits
 --/personal-care/women/menopause-kits
---/personal-care/women/pregnancy-kits
+--/personal-care/women/pregnancy
+---/personal-care/women/pregnancy/pregnancy-kits
+---/personal-care/women/pregnancy/pre-pregnancy : Pre Pregnancy
+---/personal-care/women/pregnancy/post-pregnancy : Post Pregnancy
 --/personal-care/women/chlamydia-test
 --/personal-care/women/condoms
 --/personal-care/women/intimate-care:Intimate Care
@@ -463,6 +481,7 @@
 --/personal-care/misc/pain-relief : Pain Relief
 --/personal-care/misc/air-freshener : Air Freshener
 --/personal-care/misc/buds
+--/personal-care/misc/cotton-balls     :     Cotton Balls
 
 /beauty
 -/beauty/what-s-new: What's New
@@ -474,8 +493,24 @@
 --/beauty/what-s-new/limited-period-offers
 --/beauty/what-s-new/natural-products
 --/beauty/what-s-new/home-spa-products
---/beauty/what-s-new/spas-salons : Spas & Salons
+--/beauty/what-s-new/personal-hygiene
+---/beauty/what-s-new/personal-hygiene/sanitary-napkins
+---/beauty/what-s-new/personal-hygiene/tampons
+---/beauty/what-s-new/personal-hygiene/panty-liners:Panty Liners
+---/beauty/what-s-new/personal-hygiene/ovulation-kits
+---/beauty/what-s-new/personal-hygiene/menopause-kits
+---/beauty/what-s-new/personal-hygiene/pregnancy
+---/beauty/what-s-new/personal-hygiene/chlamydia-test
+---/beauty/what-s-new/personal-hygiene/condoms
+---/beauty/what-s-new/personal-hygiene/intimate-care:Intimate Care
+---/beauty/what-s-new/personal-hygiene/combo-offers
 --/beauty/what-s-new/women-nutrition
+---/beauty/what-s-new/women-nutrition/fertility
+---/beauty/what-s-new/women-nutrition/calcium
+---/beauty/what-s-new/women-nutrition/wellness
+---/beauty/what-s-new/women-nutrition/weight-watch
+--/beauty/what-s-new/spas-salons : Spas & Salons
+--/beauty/what-s-new/cosmetic-restoration
 -/beauty/face-care
 --/beauty/face-care/cleanser
 ---/beauty/face-care/cleanser/normal
@@ -655,6 +690,7 @@
 ---/parenting/mom-maternity/breast-feeding/breast-pumps
 ---/parenting/mom-maternity/breast-feeding/breast-pads
 ---/parenting/mom-maternity/breast-feeding/breast-milk-bottles
+---/parenting/mom-maternity/breast-feeding/breast-milk-cooler-bags
 --/parenting/mom-maternity/multivitamins-nutrition : Multivitamins & Nutrition
 -/parenting/infant
 --/parenting/infant/diapering
@@ -662,11 +698,15 @@
 ---/parenting/infant/diapering/wipes
 ---/parenting/infant/diapering/diaper-rash-cream
 --/parenting/infant/formula-baby-food : Formula & Baby Food
---/parenting/infant/nursing-feeding : Nursing & Feeding
----/parenting/infant/nursing-feeding/feeding-bottles
----/parenting/infant/nursing-feeding/feeding-accessories
----/parenting/infant/nursing-feeding/sterilizers-warmers : Sterilizers & Warmers
----/parenting/infant/nursing-feeding/bottle-cleaning
+--/parenting/infant/feeding-accessories    :    Feeding Accessories
+---/parenting/infant/feeding-accessories/feeding-bottles    :   Feeding Bottles
+---/parenting/infant/feeding-accessories/nipples-and-teats    :     Nipples & Teats
+---/parenting/infant/feeding-accessories/bowls
+---/parenting/infant/feeding-accessories/spoons
+---/parenting/infant/feeding-accessories/feeding-set
+---/parenting/infant/feeding-accessories/bottle-and-nipple-brushes  :   Bottle & Nipple Brushes
+---/parenting/infant/feeding-accessories/bottle-cleaners
+---/parenting/infant/feeding-accessories/sterilizers-warmers : Sterilizers & Warmers
 --/parenting/infant/sippers-mugs :Sippers & Mugs
 --/parenting/infant/gifts-combos : Gifts & Combos
 --/parenting/infant/health-safety : Health & Safety
@@ -679,6 +719,7 @@
 ---/parenting/infant/grooming/comb-hair-brushes:   Comb & Hair Brushes
 ---/parenting/infant/grooming/nail-clippers-scissors:   Nail Clippers & Scissors
 ---/parenting/infant/grooming/buds    :    Ear Buds
+---/parenting/infant/grooming/cotton-balls   :    Cotton Balls
 --/parenting/infant/room-accessories
 --/parenting/infant/walkers
 --/parenting/infant/bedtime
@@ -695,12 +736,15 @@
 ---/parenting/toddler/diapering/diapers
 ---/parenting/toddler/diapering/wipes
 --/parenting/toddler/formula-baby-food : Formula & Baby Food
+--/parenting/toddler/feeding-accessories    :    Feeding Accessories
+---/parenting/toddler/feeding-accessories/feeding-bottles    :   Feeding Bottles
+---/parenting/toddler/feeding-accessories/nipples-and-teats    :     Nipples & Teats
+---/parenting/toddler/feeding-accessories/bowls
+---/parenting/toddler/feeding-accessories/spoons
+---/parenting/toddler/feeding-accessories/feeding-set
+---/parenting/toddler/feeding-accessories/bottle-and-nipple-brushes  :   Bottle & Nipple Brushes
+---/parenting/toddler/feeding-accessories/bottle-cleaners
 --/parenting/toddler/sippers-and-mugs:       Sippers & Mugs
---/parenting/toddler/nursing-feeding
----/parenting/toddler/nursing-feeding/feeding-bottles
----/parenting/toddler/nursing-feeding/feeding-accessories
----/parenting/toddler/nursing-feeding/warmers-and-sterlizers : Sterilizers & Warmers
----/parenting/toddler/nursing-feeding/bottle-cleaning
 --/parenting/toddler/bedtime
 --/parenting/toddler/bathtime
 ---/parenting/toddler/bathtime/soaps-and-bath-foams: Soaps & Bath Foams
@@ -714,6 +758,7 @@
 ---/parenting/toddler/grooming/comb-hair-brushes:   Comb & Hair Brushes
 ---/parenting/toddler/grooming/nail-clippers-scissors:   Nail Clippers & Scissors
 ---/parenting/toddler/grooming/buds    :    Ear Buds
+---/parenting/toddler/grooming/cotton-balls   :    Cotton Balls
 --/parenting/toddler/oral-care
 ---/parenting/toddler/oral-care/toothbrushes
 ---/parenting/toddler/oral-care/toothpaste-and-tooth-gel:Toothpaste & Tooth gel

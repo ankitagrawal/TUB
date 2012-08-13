@@ -166,6 +166,25 @@
      <dynamic-attributes>true</dynamic-attributes>
     </tag>
 
+    <tag>
+     <description>Renders super saver banners</description>
+     <display-name>superSaverImage</display-name>
+     <name>superSaverImage</name>
+     <tag-class>com.hk.web.tag.SuperSaverImageTag</tag-class>
+     <body-content>empty</body-content>
+     <attribute>
+       <name>imageId</name>
+       <required>true</required>
+       <rtexprvalue>true</rtexprvalue>
+     </attribute>
+     <attribute>
+       <name>size</name>
+       <required>true</required>
+       <rtexprvalue>true</rtexprvalue>
+     </attribute>
+     <dynamic-attributes>true</dynamic-attributes>
+    </tag>
+
   <function>
     <description>
       Escapes characters that could be interpreted as XML markup.
@@ -720,7 +739,18 @@
   </function>
   <function>
     <description>
-      returns surcharge based on supplier and warehouse state
+      product list for a primary heading in a sorted order.
+    </description>
+    <name>getCategoryHeadingProductsSortedByOrder</name>
+    <function-class>com.hk.taglibs.Functions</function-class>
+    <function-signature>java.util.List getCategoryHeadingProductsSortedByOrder(java.lang.Long,java.lang.String)</function-signature>
+    <example>
+      ${hk:getCategoryHeadingProductsSortedByOrder(${id}, ${str})}
+    </example>
+  </function>
+  <function>
+    <description>
+    returns surcharge based on supplier and warehouse state
     </description>
     <name>getSurchargeValue</name>
     <function-class>com.hk.admin.util.TaxUtil</function-class>
@@ -749,6 +779,17 @@
         <function-signature>java.util.Map getRecommendedProducts(java.lang.Object)</function-signature>
         <example>
             ${hk:getRecommendedProducts(${productVariantId})}
+        </example>
+    </function>
+    <function>
+        <description>
+            returns dispatch days for order, this is max of all items in order
+        </description>
+        <name>getDispatchDaysForOrder</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.String getDispatchDaysForOrder(com.hk.domain.order.Order)</function-signature>
+        <example>
+            ${getDispatchDaysForOrder(${order})}
         </example>
     </function>
 

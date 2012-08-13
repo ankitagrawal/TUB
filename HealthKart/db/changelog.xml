@@ -7805,6 +7805,38 @@
     <changeSet author="Rahul (generated)" id="1342099712051-1">
         <modifyDataType columnName="value" newDataType="VARCHAR(70)" tableName="cart_line_item_config_values"/>
     </changeSet>
+
+    <changeSet author="Shrey (generated)" id="1342445419109-1">
+        <addColumn tableName="supplier">
+            <column name="brands" type="VARCHAR(45)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="Shrey (generated)" id="1342445419109-3">
+        <addColumn tableName="supplier">
+            <column name="dam_exp_cond" type="VARCHAR(500)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1342445419109-4">
+        <addColumn tableName="supplier">
+            <column name="email_id" type="VARCHAR(50)"/>
+        </addColumn>
+    </changeSet>
+<changeSet author="Shrey (generated)" id="1342445419109-6">
+        <addColumn tableName="supplier">
+            <column name="terms_of_trade" type="VARCHAR(100)"/>
+        </addColumn>
+    </changeSet>
+     <changeSet author="Shrey (generated)" id="1342533458649-3">
+        <addColumn tableName="supplier">
+            <column name="credit_period" type="VARCHAR(10)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1342533458649-4">
+               <addColumn tableName="supplier">
+            <column name="margins" type="VARCHAR(20)"/>
+        </addColumn>
+    </changeSet>
     <changeSet author="Ajeet (generated)" id="1342505244718-1">
         <addColumn tableName="shipment">
             <column name="packer" type="VARCHAR(5)"/>
@@ -7825,7 +7857,322 @@
             <column name="mrp" type="DECIMAL(8,2)"/>
         </addColumn>
     </changeSet>
+
     <!--<changeSet author="Ajeet (generated)" id="1342505244718-5">-->
         <!--<addNotNullConstraint columnDataType="VARCHAR(70)" columnName="value" tableName="cart_line_item_config_values"/>-->
-    <!--</changeSet>-->
+    <!--&lt;!&ndash;</changeSet>->-->
+    <changeSet author="Seema (generated)" id="1342273389422-100">
+        <createTable tableName="awb_status">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="status" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1342273389422-200">
+        <addColumn tableName="awb">
+            <column name="awb_status_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1342273389422-300">
+        <addColumn tableName="shipment">
+            <column name="awb_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1342274075684-4">
+        <sql>
+            truncate `awb`;
+        </sql>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1342273389422-4">
+        <addForeignKeyConstraint baseColumnNames="awb_status_id" baseTableName="awb" constraintName="fk_awb_awb_status1"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="awb_status"
+                                 referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1342273389422-5">
+        <addForeignKeyConstraint baseColumnNames="awb_id" baseTableName="shipment" constraintName="fk_shipment_awb1"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="awb" referencesUniqueColumn="false"/>
+    </changeSet>
+    <!-- delete shipment which are not present in shipping order -->
+    <changeSet author="Seema (generated)" id="1342274075684-3">
+        <sql>
+            delete s.* from `shipment` s left join `shipping_order` so on s.id=so.shipment_id where so.id is null;
+        </sql>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1342274075684-14">
+        <sql>
+            update `shipment` set tracking_id = '' WHERE length(tracking_id) &gt; 17 or length(tracking_id) &lt; 9;
+        </sql>
+    </changeSet>
+    <!-- change all redundant tracking id in shipment to unique values -->
+    <changeSet author="Seema (generated)" id="1342274075684-5">
+        <sql>
+            update `shipment`
+            set `tracking_id` = ''
+            where `tracking_id` in(
+            select v1.id from(
+            (select st.tracking_id as id from `shipment` st
+            group by st.tracking_id having count(st.id) > 1 )v1
+            ));
+        </sql>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1342274075684-10">
+        <sql>
+            update `shipment` s inner join shipping_order so on s.id=so.shipment_id
+            set s.tracking_id = so.gateway_order_id where s.tracking_id = '';
+
+        </sql>
+    </changeSet>
+    <!-- populate awb from shipment -->
+    <changeSet author="Seema (generated)" id="1342274075684-30">
+        <sql>
+            insert into awb_status(`id`,`status`) values (10,'Unused'),(20,'Attach'),(30,'Authorization Pending'),(40,'Used');
+        </sql>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1342274075684-6">
+        <sql>
+            insert into `awb` (`courier_id`,`awb_number`,`awb_bar_code`,`used`,`warehouse_id`,`cod`,`awb_status_id`)
+            select sp.courier_id , sp.tracking_id,sp.tracking_id,1,so.warehouse_id, if (p.payment_mode_id=40,1,0),40
+            from `shipment` sp inner join `shipping_order` so on so.shipment_id=sp.id
+            inner join `base_order` bo on so.base_order_id=bo.id
+            inner join `payment` p on bo.payment_id=p.id;
+        </sql>
+    </changeSet>
+    <!-- populate  awb_id  in shipment -->
+    <changeSet author="Seema (generated)" id="1342274075684-7">
+        <sql>
+            update `shipment` s inner join `awb` a
+            set s.awb_id=a.id
+            where s.tracking_id = a.awb_number and s.courier_id=a.courier_id;
+        </sql>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1342290147965-1">
+        <addNotNullConstraint columnDataType="INT" columnName="awb_status_id" tableName="awb"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1342290147965-2">
+        <addNotNullConstraint columnDataType="INT" columnName="awb_id" tableName="shipment"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1342290147965-3">
+        <dropColumn columnName="tracking_id" tableName="shipment"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1342469193763-1">
+        <addColumn tableName="shipment">
+            <column name="shipping_order_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1342469193763-2">
+        <sql>
+            update `shipment` s inner join `shipping_order` so
+            set s.shipping_order_id=so.id
+            where s.id = so.shipment_id;
+        </sql>
+    </changeSet>
+    <changeSet author="Rimal (generated)" id="1342741292282-1">
+        <createTable tableName="super_saver_image">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="url" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="alt_text" type="VARCHAR(200)"/>
+            <column defaultValueNumeric="0" name="hidden" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="checksum" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="uploaded" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ranking" type="INT"/>
+            <column defaultValueNumeric="0" name="is_main_image" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_id" type="VARCHAR(20)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Rimal (generated)" id="1342741292282-7">
+        <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="super_saver_image"
+                                 constraintName="fk_super_saver_image_product1" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="product"
+                                 referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1342792751303-1">
+        <addNotNullConstraint columnDataType="VARCHAR(70)" columnName="value" tableName="cart_line_item_config_values"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1343128834437-1">
+        <addNotNullConstraint columnDataType="INT" columnName="shipping_order_id" tableName="shipment"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1343128834437-2">
+        <addForeignKeyConstraint baseColumnNames="shipping_order_id" baseTableName="shipment" constraintName="fk_shipment_shipping_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="shipping_order" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1343128834437-3">
+        <sql>
+       delete from `demand_history` where `base_order_id` is null;
+        </sql>
+    </changeSet>
+    
+    <changeSet author="Seema (generated)" id="1343136104792-1">
+        <dropForeignKeyConstraint baseTableName="demand_history"  constraintName="fk_demand_history_base_order1"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1343136104792-2">
+        <dropColumn columnName="base_order_id" tableName="demand_history"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1343199117613-1">
+        <modifyDataType columnName="awb_bar_code" newDataType="VARCHAR(70)" tableName="awb"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1343199117613-2">
+        <modifyDataType columnName="awb_number" newDataType="VARCHAR(70)" tableName="awb"/>
+    </changeSet>
+
+     <changeSet author="Tarun (generated)" id="1342434630676-1">
+        <createTable tableName="faq">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="question" type="MEDIUMTEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="answer" type="MEDIUMTEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="primary_category" type="VARCHAR(100)"/>
+            <column name="secondary_category" type="VARCHAR(100)"/>
+            <column name="keywords" type="VARCHAR(100)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1342684181224-2">
+        <addColumn tableName="faq">
+            <column name="page_rank" type="INT"/>
+        </addColumn>
+    </changeSet>        
+	<changeSet author="Rahul (generated)" id="1343129589883-1">
+	    <dropForeignKeyConstraint baseTableName="stock_transfer_line_item" constraintName="fk_stock_transfer_line_item_sku1"/>
+	</changeSet>
+	<changeSet author="Rahul (generated)" id="1343129589883-2">
+	    <dropForeignKeyConstraint baseTableName="stock_transfer_line_item" constraintName="fk_stock_transfer_line_item_stock_transfer1"/>
+	</changeSet>
+	<changeSet author="Rahul (generated)" id="1343129589883-3">
+	    <dropIndex indexName="stock_transfer_id_UNIQUE" tableName="stock_transfer_line_item"/>
+	</changeSet>
+	<changeSet author="Rahul (generated)" id="1343130936367-1">
+	    <addForeignKeyConstraint baseColumnNames="sku_id" baseTableName="stock_transfer_line_item" constraintName="fk_stock_transfer_line_item_sku1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="Rahul (generated)" id="1343130936367-2">
+	    <addForeignKeyConstraint baseColumnNames="stock_transfer_id" baseTableName="stock_transfer_line_item" constraintName="fk_stock_transfer_line_item_stock_transfer1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="stock_transfer" referencesUniqueColumn="false"/>
+	</changeSet>
+    <changeSet author="Rahul (generated)" id="1343219588902-1">
+        <addNotNullConstraint columnDataType="VARCHAR(70)" columnName="awb_bar_code" tableName="awb"/>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1343219588902-2">
+        <addNotNullConstraint columnDataType="VARCHAR(70)" columnName="awb_number" tableName="awb"/>
+    </changeSet>
+	<changeSet author="RajniHooda" id="2012-07-25-01">
+		<sql>
+			update stock_transfer_line_item set batch_number = 'NOBATCH' where batch_number is null;
+		</sql>
+	</changeSet>
+    <changeSet author="Rahul (generated)" id="1343219588902-3">
+        <addNotNullConstraint columnDataType="VARCHAR(45)" columnName="batch_number" tableName="stock_transfer_line_item"/>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1343219588902-4">
+        <createIndex indexName="stock_transfer_id_UNIQUE" tableName="stock_transfer_line_item" unique="true">
+            <column name="stock_transfer_id"/>
+            <column name="sku_id"/>
+            <column name="batch_number"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Rahul (generated)" id="1343223097728-1">
+        <addColumn tableName="pincode">
+            <column name="tier" type="VARCHAR(20)"/>
+        </addColumn>
+    </changeSet>    
+    <changeSet author="Neha (generated)" id="1343293102089-1">
+        <createTable tableName="demand_forecast">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="forecast_date" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="forecast_value" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_variant_id" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="warehouse_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Neha (generated)" id="1343293102089-2">
+        <addForeignKeyConstraint baseColumnNames="product_variant_id" baseTableName="demand_forecast" constraintName="fk_demand_forecast_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Neha (generated)" id="1343293102089-3">
+        <addForeignKeyConstraint baseColumnNames="warehouse_id" baseTableName="demand_forecast"  constraintName="fk_demand_forecast_warehouse1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="warehouse"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="AdminUser (generated)" id="1343308646000-1">
+        <createIndex indexName="variant_wh_date_unique" tableName="demand_forecast" unique="true">
+            <column name="warehouse_id"/>
+            <column name="product_variant_id"/>
+            <column name="forecast_date"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Rimal (generated)" id="1343625966349-1">
+        <addColumn tableName="super_saver_image">
+            <column defaultValue="0" name="deleted" type="TINYINT"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="Tarun (generated)" id="1339071974252-1">
+      <createTable tableName="product_referrer">
+        <column autoIncrement="true" name="id" type="INT">
+          <constraints nullable="false" primaryKey="true"/>
+        </column>
+        <column name="name" type="VARCHAR(45)">
+          <constraints nullable="false"/>
+        </column>
+      </createTable>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1339071974252-2">
+      <addColumn tableName="cart_line_item">
+        <column name="product_referrer_id" type="INT"/>
+      </addColumn>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1339071974252-3">
+      <addColumn tableName="user_product_history">
+        <column name="base_order_id" type="INT"/>
+      </addColumn>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1339071974252-6">
+      <dropForeignKeyConstraint baseTableName="user_product_history"
+                                constraintName="fk_user_product_history_product_thumb_tag1"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1339071974252-7">
+      <addForeignKeyConstraint baseColumnNames="product_referrer_id" baseTableName="cart_line_item"
+                               constraintName="fk_cart_line_item_product_referrer1" deferrable="false"
+                               initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                               referencedColumnNames="id" referencedTableName="product_referrer"
+                               referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1339071974252-8">
+      <addForeignKeyConstraint baseColumnNames="base_order_id" baseTableName="user_product_history"
+                               constraintName="fk_user_product_history_base_order1" deferrable="false"
+                               initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                               referencedColumnNames="id" referencedTableName="base_order"
+                               referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1339071974252-9">
+      <dropColumn columnName="product_thumb_tag_id" tableName="user_product_history"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1339071974252-10">
+      <dropTable tableName="product_thumb_tag"/>
+    </changeSet>
 </databaseChangeLog>
