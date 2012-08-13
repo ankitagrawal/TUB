@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.Order;
+import com.hk.domain.subscription.Subscription;
 import com.hk.domain.user.User;
 
 public interface UserProfileService {

@@ -123,6 +123,7 @@ public class PaymentSuccessAction extends BaseAction {
                  */
                 getOrderLoggingService().logOrderActivity(order, getUserService().getAdminUser(), getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), null);
 
+
                 // auto escalate shipping orders if possible
                 if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
                     for (ShippingOrder shippingOrder : shippingOrders) {

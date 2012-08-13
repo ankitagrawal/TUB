@@ -1,3 +1,4 @@
+
 package com.hk.domain.catalog.product;
 
 import java.util.*;
@@ -142,6 +143,10 @@ public class Product implements java.io.Serializable {
 
     @Column(name = "drop_shipping")
     private boolean              dropShipping;
+
+    @Column(name = "is_subscribable", nullable = true)
+    private Boolean              isSubscribable;
+
 
     @Transient
     private String               categoriesPipeSeparated;
@@ -617,4 +622,15 @@ public class Product implements java.io.Serializable {
         }
     }
 
+    public boolean isSubscribable() {
+        if(isSubscribable!=null){
+            return isSubscribable;
+        }else{
+            return false;
+        }
+    }
+
+    public void setSubscribable(boolean subscribable) {
+        isSubscribable = subscribable;
+    }
 }
