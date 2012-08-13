@@ -29,7 +29,7 @@
           <s:select name="agent" >
                                 <s:option value="-Select Agent-">-Select Agent-</s:option>
                                 <hk:master-data-collection service="<%=MasterDataDao.class%>"
-                                                           serviceProperty="hKDeliveryAgentList" value="id"
+                                                           serviceProperty="HKDeliveryAgentList" value="id"
                                                            label="name"/>
                             </s:select>
         <label>Status:</label>
@@ -46,7 +46,7 @@
                                                            serviceProperty="hubList" value="id"
                                                            label="name"/>
                             </s:select>       
-        <s:submit name="pre" value="Search Purchase Invoice"/>
+        <s:submit name="pre" value="Search Runsheets"/>
       </s:form>
     </fieldset>
 

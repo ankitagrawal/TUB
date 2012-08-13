@@ -116,7 +116,13 @@
                             </s:select>
                         </li>
                         <li>
-                            <label style="font-size:medium;">Assigned to:</label><s:text name="assignedTo"/>
+                            <label style="font-size:medium;">Assigned to:</label>
+                            <s:select name="agent" >
+                                <s:option value="-Select Agent-">-Select Agent-</s:option>
+                                <hk:master-data-collection service="<%=MasterDataDao.class%>"
+                                                           serviceProperty="HKDeliveryAgentList" value="id"
+                                                           label="name"/>
+                            </s:select>
                         </li>
                         <br>
                         <li>

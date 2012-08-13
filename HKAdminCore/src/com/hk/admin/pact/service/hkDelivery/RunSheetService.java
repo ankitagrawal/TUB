@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface RunSheetService {
 
-    public Runsheet createRunsheet(Hub hub, List<Consignment> consignmentList,RunsheetStatus runsheetStatus,Long userId,Long prePaidBoxCount,Long totalCODPackets,Double totalCODAmount);
+    public Runsheet createRunsheet(Hub hub, List<Consignment> consignmentList,RunsheetStatus runsheetStatus,User user,Long prePaidBoxCount,Long totalCODPackets,Double totalCODAmount);
 
     public void saveRunSheet(Runsheet runsheet);
 

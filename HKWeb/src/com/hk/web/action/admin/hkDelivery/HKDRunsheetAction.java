@@ -109,7 +109,6 @@ public class HKDRunsheetAction extends BasePaginatedAction {
             List<String>          trackingIdsWithoutConsignment   = new ArrayList<String>();
             List<Consignment>     consignmentList                 = new ArrayList<Consignment>();
             //todo fetch userId from agent.
-            Long                  userId                          = 1l;
             //Getting HK-Delivery Courier Object.
             Courier               hkDeliveryCourier               = EnumCourier.HK_Delivery.asCourier();
 
@@ -158,13 +157,13 @@ public class HKDRunsheetAction extends BasePaginatedAction {
             try {
                 xlsFile = new File(adminDownloads + "/" + CourierConstants.HKDELIVERY_WORKSHEET_FOLDER + "/" + CourierConstants.HKDELIVERY_WORKSHEET + "_" + sdf.format(new Date()) + ".xls");
                 // Creating Runsheet object.
-                runsheetObj = runsheetService.createRunsheet(hub, consignmentList, EnumRunsheetStatus.Open.asRunsheetStatus(), userId, prePaidBoxCount, Long.parseLong(totalCODPackets + ""), totalCODAmount);
+                runsheetObj = runsheetService.createRunsheet(hub, consignmentList, EnumRunsheetStatus.Open.asRunsheetStatus(), agent, prePaidBoxCount, Long.parseLong(totalCODPackets + ""), totalCODAmount);
                 // Saving Runsheet in db.
                 runsheetService.saveRunSheet(runsheetObj);
                 //making corresponding entry in consignment tracking.
                 consignmentService.updateConsignmentTracking(hub.getId(),deliveryHub.getId(),loggedOnUser.getId(),consignmentList);
                 // generating Xls file.
-                xlsFile = hkdRunsheetManager.generateWorkSheetXls(xlsFile.getPath(), shippingOrderList, assignedTo, totalCODAmount, totalPackets, totalCODPackets);
+                xlsFile = hkdRunsheetManager.generateWorkSheetXls(xlsFile.getPath(), shippingOrderList, agent.getName(), totalCODAmount, totalPackets, totalCODPackets);
             } catch (IOException ioe) {
                 addRedirectAlertMessage(new SimpleMessage(CourierConstants.HKDELIVERY_IOEXCEPTION));
                 return new ForwardResolution(HKDRunsheetAction.class).addParameter(HKDeliveryConstants.RUNSHEET_DOWNLOAD,false);
@@ -221,6 +220,8 @@ public class HKDRunsheetAction extends BasePaginatedAction {
         this.awbIdsWithoutConsignmntString = awbIdsWithoutConsignmntString;
     }
 
+
+
     public Hub getHub() {
         return hub;
     }
@@ -243,7 +244,15 @@ public class HKDRunsheetAction extends BasePaginatedAction {
     public void setRunsheetDownloadFunctionality(Boolean runsheetDownloadFunctionality) {
         this.runsheetDownloadFunctionality = runsheetDownloadFunctionality;
     }
-    
+
+    public User getAgent() {
+        return agent;
+    }
+
+    public void setAgent(User agent) {
+        this.agent = agent;
+    }
+
     public int getPerPageDefault() {
         return defaultPerPage; // To change body of implemented methods use File | Settings | File Templates.
     }

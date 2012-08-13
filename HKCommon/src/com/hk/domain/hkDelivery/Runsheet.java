@@ -67,9 +67,10 @@ public class Runsheet implements java.io.Serializable {
     @Column(name = "remarks", length = 16777215)
     private String remarks;
 
-
-    @Column(name = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User hkDeliveryAgent;
+
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "runsheet_id")
