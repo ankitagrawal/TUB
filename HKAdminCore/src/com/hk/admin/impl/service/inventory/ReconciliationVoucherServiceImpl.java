@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,6 +42,7 @@ import net.sourceforge.stripes.action.FileBean;
  * Time: 1:26:40 PM
  * To change this template use File | Settings | File Templates.
  */
+@Service
 public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherService {
 
     private static Logger logger                 = LoggerFactory.getLogger(ReconciliationVoucherServiceImpl.class);

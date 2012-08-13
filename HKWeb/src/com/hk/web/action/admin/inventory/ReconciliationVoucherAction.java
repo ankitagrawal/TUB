@@ -128,7 +128,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
         fileBean.save(excelFile);
 
         try {
-            rvParser.setReconciliationVoucher(reconciliationVoucher);
+            rvParser.setReconciliationVoucher(reconciliationVoucher); //has warehouse and today's date
             rvLineItems = rvParser.readAndCreateRVLineItems(excelFilePath, "Sheet1");
             save();
         } catch (Exception e) {

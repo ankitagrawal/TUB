@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.commons.lang.StringUtils;
@@ -30,6 +31,7 @@ import org.apache.commons.lang.StringUtils;
  * Time: 1:59:17 PM
  * To change this template use File | Settings | File Templates.
  */
+@Component
 public class ReconciliationVoucherParser {
 
     private static Logger logger                 = LoggerFactory.getLogger(ReconciliationVoucherParser.class);

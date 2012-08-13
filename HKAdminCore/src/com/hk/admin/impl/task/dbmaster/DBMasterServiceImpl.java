@@ -16,6 +16,7 @@ import com.hk.domain.sku.Sku;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.inventory.rv.RvLineItem;
 import com.hk.domain.inventory.rv.ReconciliationVoucher;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.dao.courier.PincodeDao;
@@ -25,6 +26,7 @@ import com.hk.impl.service.inventory.SkuServiceImpl;
 import java.util.Set;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 import java.io.File;
 
 /**
@@ -57,8 +59,8 @@ public class DBMasterServiceImpl implements TaskService{
   @Autowired
   PincodeDao pincodeDao;
 
-  @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
-  String                          adminUploadsPath;
+  @Value("#{hkEnvProps['" + Keys.Env.testDataDump + "']}")
+  String                          testDataDump;
 
   @Autowired
   private XslParser xslParser;
@@ -82,79 +84,91 @@ public class DBMasterServiceImpl implements TaskService{
       }
 
       if ("catalog".equals(masterData) || "both".equals(masterData)) {
-          /*
-           String excelFilePath;
-           File excelFile;
-           List<String> categoryList = new ArrayList<String>();
-           categoryList.add("nutrition");
-           //categoryList.add("beauty");
-           for (String category : categoryList){
-             excelFilePath = adminUploadsPath + "/DBDumpFiles/" + category + ".xls"; //change path to a dir with constant files
-             excelFile = new File(excelFilePath);
-             getProductManager().insertCatalogue(excelFile, null);
-           }
-            */
+          
         String catalogFiles;
 	    String skuFiles;
-        String catalogPath = adminUploadsPath + "/DBDumpCatalogFiles/"; //change path to a dir with constant files
-	    String skuPath = adminUploadsPath + "/DBDumpSkuFiles/";
-        String pincodePath = adminUploadsPath + "/DBDumpPincodeFiles/";
-        String reconciliationVoucherPath = adminUploadsPath + "/DBDumpRVFiles/";
+        String catalogPath = testDataDump + "/DBDumpCatalogFiles/"; //change path to a dir with constant files
+	    String skuPath = testDataDump + "/DBDumpSkuFiles/";
+        String pincodePath = testDataDump + "/DBDumpPincodeFiles/";
+        String reconciliationVoucherPath = testDataDump + "/DBDumpRVFiles/";
         File catalogFolder = new File(catalogPath);
 	    File skuFolder = new File(skuPath);
+        File pincodeFolder = new File(pincodePath);
+        File rvFolder = new File(reconciliationVoucherPath);
 	    File[] listOfCatalogExcels = catalogFolder.listFiles();
 	    File[] listOfSkuExcels = skuFolder.listFiles();
-        File pincodeExcel = new File(pincodePath);
-        File reconciliationVoucherExcel = new File(reconciliationVoucherPath);
+        File[] listOfPincodeExcels =  pincodeFolder.listFiles();
+        File[] listOfRVExcels = rvFolder.listFiles();
+
 
 	    for (int i = 0; i < listOfCatalogExcels.length; i++) {
 
 		    if (listOfCatalogExcels[i].isFile()) {
 			    catalogFiles = listOfCatalogExcels[i].getName();
 			    if (catalogFiles.endsWith(".xls") || catalogFiles.endsWith(".XLS")) {
-
+                   try{
 				    getProductManager().insertCatalogue(listOfCatalogExcels[i], null);
-
+                   }
+                   catch(Exception e){
+                      logger.error("Exception while reading catalog excel sheet.", e);
+                        }
+                   }
 			    }
 		    }
-	    }
-	    for (int i = 0; i < listOfSkuExcels.length; i++) {
 
+
+	    for (int i = 0; i < listOfSkuExcels.length; i++) {
 		    if (listOfSkuExcels[i].isFile()) {
 			    skuFiles = listOfSkuExcels[i].getName();
 			    if (skuFiles.endsWith(".xls") || skuFiles.endsWith(".XLS")) {
+                  try{
                     Set<Sku>skuSet = skuXslParser.readSKUCatalog(listOfSkuExcels[i]);
 				    getSkuServiceImpl().insertSKUs(skuSet);
-			    }
+                  }
+                  catch(Exception e){
+                        logger.error("Exception while reading Sku excel sheet.", e);
+                  }
+                }
 		    }
 	    }
 
-		String pincodeFile = pincodeExcel.getName();
-	    if (pincodeFile.endsWith(".xls") || pincodeFile.endsWith(".XLS")) {
-         try {
-           Set<Pincode> pincodeSet = xslParser.readPincodeList(pincodeExcel);
-           for (Pincode pincode : pincodeSet) {
-            if (pincode != null)
-               pincodeDao.save(pincode);   //avoided changing the service class
-            logger.info("inserting or updating:" + pincode.getPincode());
-            }
-          } catch (Exception e) {
-            logger.error("Exception while reading pincode excel sheet.", e);            
-            }
-	    }
 
-        String reconciliationVoucherFile = reconciliationVoucherExcel.getName();
-	    if (reconciliationVoucherFile.endsWith(".xls") || reconciliationVoucherFile.endsWith(".XLS")) {
-         try {
-           List<RvLineItem> rvLineItems = rvParser.readAndCreateRVLineItems(reconciliationVoucherPath, "Sheet1");
-           ReconciliationVoucher reconciliationVoucher = new ReconciliationVoucher() ;
-           reconciliationVoucherService.save(null , rvLineItems, reconciliationVoucher);   
+        for (int i = 0; i < listOfPincodeExcels.length; i++) {
+		    String pincodeFile = listOfPincodeExcels[i].getName();
+	        if (pincodeFile.endsWith(".xls") || pincodeFile.endsWith(".XLS")) {
+              try {
+                Set<Pincode> pincodeSet = xslParser.readPincodeList(listOfPincodeExcels[i]);
+                for (Pincode pincode : pincodeSet) {
+                if (pincode != null)
+                    pincodeDao.save(pincode);   //avoided changing the service class
+                    logger.info("inserting or updating:" + pincode.getPincode());
+                }
+               } catch (Exception e) {
+                logger.error("Exception while reading pincode excel sheet.", e);
+                 }
+	        }
+         }
 
-          } catch (Exception e) {
-            logger.error("Exception while reading reconciliationVoucher excel sheet.", e);            
-            }
-	    }
-          isSuccessful = true;
+         for (int i = 0; i < listOfRVExcels.length; i++) {
+            String reconciliationVoucherFile = listOfRVExcels[i].getName();
+	        if (reconciliationVoucherFile.endsWith(".xls") || reconciliationVoucherFile.endsWith(".XLS")) {
+              try{
+                 ReconciliationVoucher reconciliationVoucher = new ReconciliationVoucher() ;
+                 Warehouse testWarehouse = new Warehouse();
+                 testWarehouse.setId(Long.parseLong("1"));
+                 reconciliationVoucher.setWarehouse(testWarehouse);
+                  //setWarehouse = userService.getWarehouseForLoggedInUser();   //can be null
+                 rvParser.setReconciliationVoucher(reconciliationVoucher); // required for sku table
+                 List<RvLineItem> rvLineItems = rvParser.readAndCreateRVLineItems(listOfRVExcels[i].getAbsolutePath(), "Sheet1");
+                 reconciliationVoucherService.save(userService.getLoggedInUser() , rvLineItems, reconciliationVoucher);
+
+                } catch (Exception e) {
+                    logger.error("Exception while reading reconciliationVoucher excel sheet.", e);
+                    }
+	        }
+         }
+
+         isSuccessful = true;
          
       }
 
