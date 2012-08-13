@@ -1,17 +1,5 @@
 package com.hk.manager;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.hk.constants.HttpRequestAndSessionConstants;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.core.Keys;
@@ -32,16 +20,12 @@ import com.hk.domain.catalog.product.combo.ComboInstanceHasProductVariant;
 import com.hk.domain.clm.KarmaProfile;
 import com.hk.domain.matcher.CartLineItemMatcher;
 import com.hk.domain.offer.OfferInstance;
-import com.hk.domain.order.CartLineItem;
-import com.hk.domain.order.CartLineItemConfig;
-import com.hk.domain.order.CartLineItemExtraOption;
-import com.hk.domain.order.Order;
-import com.hk.domain.order.OrderCategory;
-import com.hk.domain.order.PrimaryReferrerForOrder;
-import com.hk.domain.order.SecondaryReferrerForOrder;
+import com.hk.domain.order.*;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.user.User;
+import com.hk.domain.marketing.ProductReferrer;
+import com.hk.domain.clm.KarmaProfile;
 import com.hk.dto.pricing.PricingDto;
 import com.hk.exception.OutOfStockException;
 import com.hk.pact.dao.BaseDao;
@@ -66,6 +50,17 @@ import com.hk.pact.service.store.StoreService;
 import com.hk.pricing.PricingEngine;
 import com.hk.util.OrderUtil;
 import com.hk.web.filter.WebContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 @Component
 public class OrderManager {
@@ -172,9 +167,9 @@ public class OrderManager {
         return order;
     }
 
-    public boolean createLineItems(List<ProductVariant> productVariants, Order order, Combo combo, ComboInstance comboInstance) throws OutOfStockException {
+    public boolean createLineItems(List<ProductVariant> productVariants, Order order, Combo combo, ComboInstance comboInstance, ProductReferrer productReferrer) throws OutOfStockException {
         boolean isCartLineItemCreated = false;
-        Double totalActualHkPriceofComboVariants = 0D;
+        Double totalActualHkPriceofComboVariants = 0D;        
         if (combo != null && combo.getId() != null) {
 
             for (ComboInstanceHasProductVariant variant : comboInstanceHasProductVariantDao.findByComboInstance(comboInstance)) {
@@ -223,6 +218,9 @@ public class OrderManager {
                     } else {
                         cartLineItem = getCartLineItemService().createCartLineItemWithBasicDetails(productVariant, order);
                     }
+                  if(productReferrer != null){
+                    cartLineItem.setProductReferrer(productReferrer);
+                  }
                     cartLineItem = getCartLineItemService().save(cartLineItem);
                     isCartLineItemCreated = true;
                 }
@@ -231,7 +229,7 @@ public class OrderManager {
         return isCartLineItemCreated;
     }
 
-    public boolean createLineItems(ProductVariant productVariant, CartLineItemConfig cartLineItemConfig, Order order) throws OutOfStockException {
+    public boolean createLineItems(ProductVariant productVariant, CartLineItemConfig cartLineItemConfig, Order order, ProductReferrer productReferrer) throws OutOfStockException {
         boolean isCartLineItemCreated = false;
 
         if (canAddVariantToCart(productVariant)) {
@@ -248,6 +246,9 @@ public class OrderManager {
                 double configPrice = cartLineItemConfig.getPrice();
                 cartLineItem.setMarkedPrice(productVariant.getMarkedPrice() + configPrice);
                 cartLineItem.setHkPrice(productVariant.getHkPrice() + configPrice);
+                if(productReferrer != null){
+                  cartLineItem.setProductReferrer(productReferrer);
+                }
                 // cartLineItem.setCostPrice(productVariant.getCostPrice() + configPrice);
                 cartLineItem = getCartLineItemService().save(cartLineItem);
                 isCartLineItemCreated = true;
@@ -257,7 +258,7 @@ public class OrderManager {
         return isCartLineItemCreated;
     }
 
-    public boolean createLineItems(ProductVariant productVariant, List<CartLineItemExtraOption> extraOptions, Order order) throws OutOfStockException {
+    public boolean createLineItems(ProductVariant productVariant, List<CartLineItemExtraOption> extraOptions, Order order, ProductReferrer productReferrer) throws OutOfStockException {
         boolean isCartLineItemCreated = false;
         if (canAddVariantToCart(productVariant)) {
             CartLineItemMatcher cartLineItemMatcher = new CartLineItemMatcher().addProductVariant(productVariant).addExtraOptions(extraOptions);
@@ -269,6 +270,9 @@ public class OrderManager {
                 updateCartLineItemWithQty(cartLineItem, productVariant.getQty());
             } else {
                 cartLineItem = getCartLineItemService().createCartLineItemWithBasicDetails(productVariant, order);
+                if(productReferrer != null){
+                  cartLineItem.setProductReferrer(productReferrer);
+                }
                 cartLineItem = getCartLineItemService().save(cartLineItem);
                 for (CartLineItemExtraOption extraOption : extraOptions) {
                     extraOption.setCartLineItem(cartLineItem);
@@ -295,7 +299,9 @@ public class OrderManager {
     private CartLineItem updateCartLineItemWithQty(CartLineItem cartLineItem, Long variantQty) {
         // TODO: # warehouse should not it be cartLineItem.getQty != variantQty
         if (variantQty != null && variantQty > 0 && cartLineItem.getQty() != variantQty) {
-            cartLineItem.setQty(variantQty);
+
+            Long previousQty = cartLineItem.getQty() == null ? 0 : cartLineItem.getQty() ;
+            cartLineItem.setQty(previousQty + variantQty);
             cartLineItem = getCartLineItemService().save(cartLineItem);
         }
         return cartLineItem;
@@ -537,6 +543,7 @@ public class OrderManager {
     }
 
     public Order trimEmptyLineItems(Order order) {
+        //orderDao.refresh(order);
         if (order != null && order.getCartLineItems() != null && !(order.getCartLineItems()).isEmpty()) {
             for (Iterator<CartLineItem> iterator = order.getCartLineItems().iterator(); iterator.hasNext();) {
                 CartLineItem lineItem = iterator.next();

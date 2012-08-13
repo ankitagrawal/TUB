@@ -106,13 +106,13 @@ public class InvoicePDFGenerator {
         else{
           invoiceDto = new InvoiceDto(shippingOrder, null);
         }
-        barcodePath = barcodeGenerator.getBarcodePath(shippingOrder.getGatewayOrderId());
+        barcodePath = barcodeGenerator.getBarcodePath(shippingOrder.getGatewayOrderId(),1.0f, 150, false);
         Image barcodeImage = Image.getInstance(barcodePath);
         String routingCode = null;
         Address address = addressDao.get(Address.class, shippingOrder.getBaseOrder().getAddress().getId());
         boolean isCod = shippingOrder.isCOD();
         CourierServiceInfo courierServiceInfo = null;
-        if (EnumCourier.BlueDart_COD.getId() == shippingOrder.getShipment().getCourier().getId()) {
+        if (EnumCourier.BlueDart_COD.getId().equals(shippingOrder.getShipment().getCourier().getId())) {
             if (isCod) {
                 courierServiceInfo = courierServiceInfoDao.getCourierServiceByPincodeAndCourier(EnumCourier.BlueDart_COD.getId(), address.getPin(), true);
             } else {

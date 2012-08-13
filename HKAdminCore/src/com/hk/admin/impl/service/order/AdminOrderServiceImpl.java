@@ -36,25 +36,25 @@ import com.hk.service.ServiceLocatorFactory;
 @Service
 public class AdminOrderServiceImpl implements AdminOrderService {
 
-    private static Logger             logger = LoggerFactory.getLogger(AdminOrderService.class);
+    private static Logger logger = LoggerFactory.getLogger(AdminOrderService.class);
 
     @Autowired
-    private UserService               userService;
+    private UserService userService;
     @Autowired
-    private OrderStatusService        orderStatusService;
+    private OrderStatusService orderStatusService;
     @Autowired
-    private RewardPointService        rewardPointService;
+    private RewardPointService rewardPointService;
     @Autowired
-    private OrderService              orderService;
+    private OrderService orderService;
     private AdminShippingOrderService adminShippingOrderService;
     @Autowired
-    private AffilateService           affilateService;
+    private AffilateService affilateService;
     @Autowired
-    private ReferrerProgramManager    referrerProgramManager;
+    private ReferrerProgramManager referrerProgramManager;
     @Autowired
-    private EmailManager              emailManager;
+    private EmailManager emailManager;
     @Autowired
-    private OrderLoggingService       orderLoggingService;
+    private OrderLoggingService orderLoggingService;
 
     @Transactional
     public Order putOrderOnHold(Order order) {
@@ -190,9 +190,9 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             order = getOrderService().save(order);
         }
         /*
-         * else { order.setOrderStatus(orderStatusDao.find(boStatusOnFailure.getId())); order =
-         * orderDaoProvider.get().save(order); }
-         */
+        * else { order.setOrderStatus(orderStatusDao.find(boStatusOnFailure.getId())); order =
+        * orderDaoProvider.get().save(order); }
+        */
 
         return shouldUpdate;
     }
@@ -230,13 +230,24 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         return order;
     }
 
+    @Transactional
+    public Order markOrderAsLost(Order order) {
+        boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Lost, EnumOrderStatus.Lost);
+        if (isUpdated) {
+            logOrderActivity(order, EnumOrderLifecycleActivity.OrderLost);
+        } else {
+            logOrderActivity(order, EnumOrderLifecycleActivity.OrderPartiallyLost);
+        }
+        return order;
+    }
+
     @Override
     @Transactional
     public Order moveOrderBackToActionQueue(Order order, String shippingOrderGatewayId) {
         /*
-         * order.setOrderStatus(orderStatusDao.find(EnumOrderStatus.ActionAwaiting.getId())); order =
-         * orderDaoProvider.get().save(order);
-         */
+        * order.setOrderStatus(orderStatusDao.find(EnumOrderStatus.ActionAwaiting.getId())); order =
+        * orderDaoProvider.get().save(order);
+        */
 
         OrderLifecycleActivity orderLifecycleActivity = getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.EscalatedBackToAwaitingQueue);
         logOrderActivity(order, userService.getLoggedInUser(), orderLifecycleActivity, shippingOrderGatewayId + "escalated back to  action queue");
@@ -269,7 +280,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     }
 
     public AdminShippingOrderService getAdminShippingOrderService() {
-        if(adminShippingOrderService ==null){
+        if (adminShippingOrderService == null) {
             adminShippingOrderService = ServiceLocatorFactory.getService(AdminShippingOrderService.class);
         }
         return adminShippingOrderService;

@@ -71,15 +71,10 @@ public class CitrusNetbankingSendReceiveAction extends BasePaymentGatewaySendRec
         cust.setPhoneNumber(address.getPhone());
 
         com.citruspay.pg.model.Address addressDummy = new com.citruspay.pg.model.Address();
-        addressDummy.setAddressCity("PUNE");
-        addressDummy.setAddressCountry("India");
-        addressDummy.setAddressState("MH");
-        addressDummy.setAddressStreet1("Test");
-        addressDummy.setAddressStreet2("Test");
-        addressDummy.setAddressZip("411045");
 
         params.put(CitrusPaymentGatewayWrapper.merchantAccessKey, properties.get(CitrusPaymentGatewayWrapper.merchantAccessKey));
-        params.put("bankName", "ICICI Bank");
+//        params.put("bankName", "ICICI Bank");
+        params.put("issuerCode", data.getPaymentMethod());
         params.put(CitrusPaymentGatewayWrapper.transactionId, merchantTxnId);
         params.put(CitrusPaymentGatewayWrapper.amount, amountStr);
         params.put(CitrusPaymentGatewayWrapper.returnUrl, linkManager.getCitrusPaymentNetBankingGatewayUrl());

@@ -3,6 +3,18 @@
 <s:useActionBean beanclass="com.hk.web.action.core.affiliate.VerifyAffiliateAction" var="verifyAction"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp">
   <s:layout-component name="content">
+	 <s:form beanclass="com.hk.web.action.core.affiliate.VerifyAffiliateAction">
+           <fieldset>
+        <legend>Search Affiliates</legend>
+
+        <label>Name:</label><s:text name="name" style="width:150px"/>
+        &nbsp; &nbsp;
+        <label>Email:</label><s:text name="email" style="width:150px"/>
+
+        <s:submit name="pre" value="Search"/>
+      </fieldset>
+    </s:form>
+
     <s:form beanclass="com.hk.web.action.core.affiliate.VerifyAffiliateAction">
       <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${verifyAction}"/>
       <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${verifyAction}"/>

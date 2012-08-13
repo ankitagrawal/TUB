@@ -7,8 +7,8 @@
 
 <s:layout-definition>
   <%
-      Product product = (Product) pageContext.getAttribute("product");
-      pageContext.setAttribute("product", product);
+    Product product = (Product) pageContext.getAttribute("product");
+    pageContext.setAttribute("product", product);
 
     CategoryDao categoryDao = (CategoryDao)ServiceLocatorFactory.getService(CategoryDao.class);
     Category eyeGlass = categoryDao.getCategoryByName("eyeglasses");

@@ -39,18 +39,6 @@ public class ShipmentPricingEngine {
     private static Logger logger = LoggerFactory.getLogger(ShipmentPricingEngine.class);
 
     @Autowired
-    CourierPricingEngineDao courierPricingEngineDao;
-
-    @Autowired
-    PincodeRegionZoneDao pincodeRegionZoneDao;
-
-    @Autowired
-    WarehouseService warehouseService;
-
-    @Autowired
-    CourierServiceInfoDao courierServiceInfoDao;
-
-    @Autowired
     PincodeDao pincodeDao;
 
     @Autowired
@@ -131,7 +119,7 @@ public class ShipmentPricingEngine {
     public Double calculatePackagingCost(ShippingOrder shippingOrder) {
         Shipment shipment = shippingOrder.getShipment();
         EnumBoxSize enumBoxSize = EnumBoxSize.getBoxSize(shipment.getBoxSize());
-        return enumBoxSize.getPackagingCost();
+        return enumBoxSize != null ? enumBoxSize.getPackagingCost() : 16D;
     }
 
     public Double calculateReconciliationCost(CourierPricingEngine courierPricingEngine, ShippingOrder shippingOrder) {
@@ -144,12 +132,9 @@ public class ShipmentPricingEngine {
             if (payment.isCODPayment()) {
                 reconciliationCharges = amount > courierPricingEngine.getCodCutoffAmount() ? amount * courierPricingEngine.getVariableCodCharges() : courierPricingEngine.getMinCodCharges();
                 reconciliationCharges = reconciliationCharges * (1 + EnumTax.VAT_12_36.getValue());
-            } else if (payment.getPaymentMode().getId().equals(EnumPaymentMode.CITRUS.getId())) {   //todo for citrus credit/debit and ebs rates
-                reconciliationCharges = amount * 0.017;
-            } else if (payment.getPaymentMode().getId().equals(EnumPaymentMode.TECHPROCESS.getId())) {
-                reconciliationCharges = amount * 0.0236;
-            } else{
-                reconciliationCharges = amount * 0.02;
+            }else{
+                reconciliationCharges = amount * EnumPaymentMode.getPaymentMode(payment.getPaymentMode()).getReconciliationCharges();
+                reconciliationCharges = reconciliationCharges * (1 + EnumTax.VAT_12_36.getValue());
             }
         }
         return reconciliationCharges;
@@ -161,7 +146,7 @@ public class ShipmentPricingEngine {
             reconciliationCharges = amount > courierPricingEngine.getCodCutoffAmount() ? amount * courierPricingEngine.getVariableCodCharges() : courierPricingEngine.getMinCodCharges();
             reconciliationCharges = reconciliationCharges * (1 + EnumTax.VAT_12_36.getValue());
         } else {
-            reconciliationCharges = amount * 0.0218;
+            reconciliationCharges = amount * 0.022;
         }
         return reconciliationCharges;
     }
