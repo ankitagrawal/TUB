@@ -64,7 +64,7 @@
 		</c:when>
 		<c:otherwise>
 			<input type="button" id="buyFrame" style="float: left"
-				value="Buy Just Frame" class="cta button_green" />
+				value="Buy This Frame" class="cta button_green" />
 			<input type="button" id="addLens" style="float: left"
 				value="Add Lens & Buy" class="cta button_green" />
 		</c:otherwise>

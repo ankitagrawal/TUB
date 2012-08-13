@@ -107,6 +107,10 @@ ul.thumblist li a.zoomThumbActive {
         $("#sizeGuide").click(function toggleVM(){
             $("#frameChart").toggle();
         });
+        
+         $("#productVariations").click(function toggleVM(){
+            $("#productVariationsVM").toggle();
+        });
 
         //Click and change image
       $('.color_box').click(function() {
@@ -425,10 +429,10 @@ ul.thumblist li a.zoomThumbActive {
 		</c:if>
 		<c:if test="${hk:collectionContains(product.categories, eyeGlass)}">
 			<c:if test="${!empty product.variations}">
-				<div class="content"
+				<div class="content" id="productVariations"
 					style="background-color: #DDDDDD; padding: 5px; cursor: pointer; font-weight: bold; text-align: left;">
 				Colors/Sizes for glasses</div>
-				<div style="margin-top: 5px;">
+				<div id="productVariationsVM" style="margin-top: 5px;">
 				<table width="900px;" style="margin-left: 10px; margin-right: 10px;">
 					<tr>
 						<c:forEach items="${product.variations}" var="variation">
