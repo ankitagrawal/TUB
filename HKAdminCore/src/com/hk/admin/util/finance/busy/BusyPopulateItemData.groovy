@@ -55,7 +55,7 @@ public class BusyPopulateItemData {
      try{
       sql.executeInsert("""
 
-INSERT INTO healthkart_busy.item_detail(item_code ,item_name ,print_name ,parent_group ,unit,sale_price ,purchase_price ,mrp ,
+INSERT IGNORE INTO healthkart_busy.item_detail(item_code ,item_name ,print_name ,parent_group ,unit,sale_price ,purchase_price ,mrp ,
 tax_rate_local,tax_rate_central ,item_description_1 , item_description_2 ,item_description_3 ,item_description_4 ,
  imported,create_date)
 
