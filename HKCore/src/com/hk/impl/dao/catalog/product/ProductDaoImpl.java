@@ -156,6 +156,32 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
         return null;
     }
 
+	 public Page getProductByCategoryBrandAndOptions(List<String> categoryNames, String brand, List<Long> options, int page, int perPage){
+        if (categoryNames != null && categoryNames.size() > 0) {
+            List<String> productIds = getSession().createQuery(
+                    "select pv.product.id from ProductVariant pv inner join pv.productOptions po  inner join pv.product.categories c " +
+		                    "where c.name in (:categories) and po.id in (:options) group by pv.product.id having count(*) = :tagCount")
+		            .setParameterList("categories", categoryNames)
+		            .setParameterList("options", options)
+		            .setInteger("tagCount", categoryNames.size()).list();
+
+            if (productIds != null && productIds.size() > 0) {
+
+                DetachedCriteria criteria = DetachedCriteria.forClass(Product.class);
+                if (StringUtils.isNotBlank(brand)) {
+                    criteria.add(Restrictions.eq("brand", brand));
+                }
+                criteria.add(Restrictions.in("id", productIds));
+                criteria.add(Restrictions.eq("deleted", false));
+                criteria.add(Restrictions.eq("isGoogleAdDisallowed", false));
+                criteria.addOrder(Order.asc("orderRanking"));
+
+                return list(criteria, page, perPage);
+            }
+        }
+        return null;
+    }
+
     // test code
     public Page getProductByCategoryAndBrandNew(Category cat1, Category cat2, Category cat3, String brand, int page, int perPage) {
 

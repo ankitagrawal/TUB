@@ -2,9 +2,12 @@ package com.hk.pact.service.catalog;
 
 import java.util.List;
 import java.util.Set;
+import java.util.Map;
 
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductOption;
+import com.hk.dto.ProductOptionDto;
 
 public interface CategoryService {
     
@@ -21,4 +24,6 @@ public interface CategoryService {
     public List<Category> getPrimaryCategories();
     
     public Category getTopLevelCategory(Product product);
+
+    public List<ProductOptionDto> getFilterOptions(String category);
 }

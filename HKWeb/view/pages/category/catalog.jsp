@@ -27,6 +27,7 @@
     List<Category> applicableCategories = new ArrayList<Category>();
     applicableCategories.add(categoryDao.getCategoryByName("bp-monitor"));
     pageContext.setAttribute("applicableCategories", applicableCategories);
+    pageContext.setAttribute("eyeglasses", categoryDao.getCategoryByName("eyeglasses"));
 
     boolean isSecure = pageContext.getRequest().isSecure();
     pageContext.setAttribute("isSecure", isSecure);
@@ -186,7 +187,15 @@
   </div>
 </div>
 <div class='catalog_filters grid_6 bk_blue alpha'>
-  <s:layout-render name="/layouts/catalogFilter.jsp" filterUrlFragment="${ca.urlFragment}"/>
+<c:choose>
+	<c:when test="${ca.childCategorySlug == 'eyeglasses'}">
+		<s:layout-render name="/layouts/eyeCatalogFilter.jsp" filterUrlFragment="${ca.urlFragment}"/>
+	</c:when>
+	<c:otherwise>
+		<s:layout-render name="/layouts/catalogFilter.jsp" filterUrlFragment="${ca.urlFragment}"/>
+	</c:otherwise>
+</c:choose>
+
 </div>
 
 <div class="catalog container_24">
