@@ -4,6 +4,7 @@
 <%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
+<%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="com.hk.pact.service.catalog.ProductService" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -26,6 +27,7 @@
 %>
 <c:set var="product" value="${pa.product}"/>
 <c:set var="seoData" value="${pa.seoData}"/>
+<c:set var="subscriptionProduct" value="${pa.subscriptionProduct}" />
 <s:layout-render name="/layouts/productLayout.jsp" pageTitle="${seoData.title}">
 <%--<s:layout-render name="/layouts/default.jsp" pageTitle="${seoData.title}">--%>
 
@@ -79,7 +81,7 @@
 		padding:5px;
 	}
   </style>
-  <link href="${pageContext.request.contextPath}/css/jquery.jqzoom.css" rel="stylesheet" type="text/css"/>
+
   <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.jqzoom-core.js"></script>
 
   <script type="text/javascript">
@@ -122,7 +124,6 @@
       $('#notifyMeWindow').jqm({trigger: '.notifyMe', ajax: '@href'});
 
     });
-
 
   </script>
 
@@ -347,10 +348,47 @@
       </a>
     </c:if>
   </div>
-  <c:if test="${hk:isNotBlank(product.overview)}">
-    <p class="overview">
-        ${product.overview}
-    </p>
+  <c:if test="${!empty subscriptionProduct}">
+    <%--  <s:layout-render name="/layouts/embed/_subscription.jsp" subscriptionProduct="${subscriptionProduct}"/> --%>
+    <div class="jqmWindow" style="display:none;" id="subscriptionWindow"></div>
+
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('#subscriptionWindow').jqm({trigger: '.addSubscriptionButton', ajax: '@href', ajaxText:'<br/><div style="text-align: center;">loading... please wait..</div> <br/>'});
+          $('.addSubscriptionButton').mouseover(function(){
+              var top = $(this).offset().top-$('#subscription-tooltip').outerHeight()-55;
+              var left = $(this).offset().left-$('#subscription-tooltip').outerWidth()/2+$(this).outerWidth()/2;
+
+              $('#subscription-tooltip').css({
+                  'top': top,
+                  'left': left
+              });
+              $('#subscription-tooltip').fadeIn();
+          });
+          var timer;
+          $('.addSubscriptionButton').mouseleave(function(){
+              timer=setTimeout(function(){
+                  $('#subscription-tooltip').fadeOut();
+              },200);
+          });
+          $('.hk-tooltip').mouseover(function(){
+              clearTimeout(timer);
+          });
+          $('.hk-tooltip').mouseleave(function(){
+              $('#subscription-tooltip').fadeOut();
+          });
+      });
+
+    </script>
+      <div class="hk-tooltip" style="display: none;" id="subscription-tooltip">
+          Subscribe and save <fmt:formatNumber value="${subscriptionProduct.subscriptionDiscount180Days}" maxFractionDigits="2"/>  to   <fmt:formatNumber value="${subscriptionProduct.subscriptionDiscount360Days}" maxFractionDigits="2"/> &#37; extra.
+          Save money and time.
+           <br/><br/>
+          <s:link beanclass="com.hk.web.action.core.subscription.AboutSubscriptionAction" event="pre" target="_blank">(click here) </s:link> to know more..
+          <div class="pointer">
+              <div class="inner-pointer"></div>
+          </div>
+      </div>
   </c:if>
     <input type="hidden" id="productReferrerId" value="${pa.productReferrerId}" />
   <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_DESCRIPTIONS%>">
@@ -362,6 +400,11 @@
       </s:link>
     </div>
   </shiro:hasPermission>
+  <c:if test="${hk:isNotBlank(product.overview)}">
+    <p class="overview">
+        ${product.overview}
+    </p>
+  </c:if>
 
 </s:layout-component>
 
@@ -373,7 +416,9 @@
           <c:choose>
             <c:when test="${!product.productHaveColorOptions}">
               <s:layout-render name="/layouts/embed/_productWithMultipleVariantsWithNoColorOptions.jsp"
-                               product="${product}" />
+
+                               product="${product}" subscriptionProduct="${subscriptionProduct}"/>
+
               <s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>
             </c:when>
             <c:otherwise>
@@ -392,7 +437,8 @@
               <s:layout-render name="/layouts/embed/glasses.jsp" product="${product}" />
             </c:when>
             <c:otherwise>
-              <s:layout-render name="/layouts/embed/_productWithSingleVariant.jsp" product="${product}" />
+              <s:layout-render name="/layouts/embed/_productWithSingleVariant.jsp" product="${product}"  subscriptionProduct="${subscriptionProduct}"/>
+
             </c:otherwise>
           </c:choose>
         </c:otherwise>

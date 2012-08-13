@@ -6,21 +6,30 @@ import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
+import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.constants.subscription.EnumSubscriptionStatus;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.core.search.OrderSearchCriteria;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.clm.KarmaProfile;
 import com.hk.domain.core.OrderLifecycleActivity;
 import com.hk.domain.core.OrderStatus;
+import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.OrderCategory;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.payment.Payment;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
+import com.hk.domain.store.Store;
+import com.hk.domain.subscription.Subscription;
+import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.dto.pricing.PricingDto;
 import com.hk.exception.OrderSplitException;
 import com.hk.helper.LineItemHelper;
 import com.hk.helper.ShippingOrderHelper;
@@ -35,10 +44,7 @@ import com.hk.pact.service.core.AffilateService;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
-import com.hk.pact.service.order.OrderLoggingService;
-import com.hk.pact.service.order.OrderService;
-import com.hk.pact.service.order.OrderSplitterService;
-import com.hk.pact.service.order.RewardPointService;
+import com.hk.pact.service.order.*;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pojo.DummyOrder;
 import org.slf4j.Logger;
@@ -109,7 +115,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Page searchOrders(OrderSearchCriteria orderSearchCriteria, int pageNo, int perPage) {
-        return getOrderDao().searchOrders(orderSearchCriteria, pageNo, perPage);
+            return getOrderDao().searchOrders(orderSearchCriteria, pageNo, perPage);
     }
 
     @Override
@@ -261,7 +267,7 @@ public class OrderServiceImpl implements OrderService {
         // order = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Ready_For_Process,
         // EnumOrderStatus.ESCALTED, EnumOrderStatus.PARTIAL_ESCALTION);
 
-       User loggedOnUser = getUserService().getLoggedInUser();
+        User loggedOnUser = getUserService().getLoggedInUser();
         if(loggedOnUser == null){
             loggedOnUser = order.getUser();
         }
