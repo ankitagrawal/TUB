@@ -124,7 +124,7 @@
         beanclass="com.hk.web.action.core.payment.PaymentAction" method="post">
     <s:hidden name="order" value="${orderSummary.order.id}" />
     <s:hidden name="bankId" value="70"/>
-    <p><label><s:radio name="paymentMode" value="15" />VISA
+    <p><label><s:radio name="paymentMode" value="<%=defaultGateway%>" />VISA
         &nbsp;</label> <img src="<hk:vhostImage/>/images/gateway/visa.jpg" height="30px">
     </p>
 
