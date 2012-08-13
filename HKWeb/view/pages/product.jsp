@@ -756,118 +756,118 @@
 
             <c:if test="${pa.combo == null}">
             $('.addToCartButton').click(function(e) {
-                $('.addToCartButton').click(function(e) {
-                    if ($("#checkBoxEngraving").is(":checked")) {
-                        if($.trim($("#engrave").val()) == '') {
-                            alert("Please specify name to be engraved, or uncheck the engraving option");
-                            $('.progressLoader').hide();
-                            return false;
-                        }
+                if ($("#checkBoxEngraving").is(":checked")) {
+                    if($.trim($("#engrave").val()) == '') {
+                        alert("Please specify name to be engraved, or uncheck the engraving option");
+                        $('.progressLoader').hide();
+                        return false;
                     }
+                }
 
-                    var data = new Array();
-                    var idx = 0;
-                    var variantConfigProvided = 'false';
-                    $("#configOptionValueMap option:selected").each(function() {
-                        if($(this).val() != -999) {
-                            variantConfigProvided = 'true';
-                            var dto = new Object();
-                            dto.optionId  = $(this).val();
-                            dto.valueId = $(this).attr('valueId');
-                            data[idx] = dto;
-                            idx++;
+                var data = new Array();
+                var idx = 0;
+                var variantConfigProvided = 'false';
+                $("#configOptionValueMap option:selected").each(function() {
+                    if($(this).val() != -999) {
+                        variantConfigProvided = 'true';
+                        var dto = new Object();
+                        dto.optionId  = $(this).val();
+                        dto.valueId = $(this).attr('valueId');
+                        data[idx] = dto;
+                        idx++;
+                    }
+                });
+                params.variantConfigProvided = (variantConfigProvided == 'true');
+                var configValues = JSON.stringify(data);
+                params.jsonConfigValues = configValues;
+                params.nameToBeEngraved = $("#engrave").val();
+
+                if (!window.validateCheckbox) {
+                    $(this).parents().find('.progressLoader').show();
+                    $(this).parent().append('<span class="add_message">added to <s:link beanclass="com.hk.web.action.core.cart.CartAction" id="message_cart_link"><img class="icon16" src="${pageContext.request.contextPath}/images/icons/cart.png"> cart</s:link></span>');
+                    $(this).hide();
+                    e.stopPropagation();
+                } else {
+                    var selected = 0;
+                    $('.checkbox').each(function() {
+                        if ($(this).attr("checked") == "checked") {
+                            selected = 1;
                         }
                     });
-                    params.variantConfigProvided = (variantConfigProvided == 'true');
-                    var configValues = JSON.stringify(data);
-                    params.jsonConfigValues = configValues;
-                    params.nameToBeEngraved = $("#engrave").val();
-
-                    if (!window.validateCheckbox) {
+                    if (!selected) {
+                    <c:choose>
+                    <c:when test="${product.primaryCategory == 'eye'}">
+                        $(this).parents().find('.checkboxError').html("Please select atleast one lens!");
+                    </c:when>
+                    <c:when test="${product.primaryCategory == 'beauty'}">
+                        $(this).parents().find('.checkboxError').html("Please select a shade!");
+                    </c:when>
+                    </c:choose>
+                        $('.checkboxError').fadeIn();
+                        return false;
+                    } else {
                         $(this).parents().find('.progressLoader').show();
                         $(this).parent().append('<span class="add_message">added to <s:link beanclass="com.hk.web.action.core.cart.CartAction" id="message_cart_link"><img class="icon16" src="${pageContext.request.contextPath}/images/icons/cart.png"> cart</s:link></span>');
                         $(this).hide();
                         e.stopPropagation();
-                    } else {
-                        var selected = 0;
-                        $('.checkbox').each(function() {
-                            if ($(this).attr("checked") == "checked") {
-                                selected = 1;
-                            }
-                        });
-                        if (!selected) {
-                        <c:choose>
-                        <c:when test="${product.primaryCategory == 'eye'}">
-                            $(this).parents().find('.checkboxError').html("Please select atleast one lens!");
-                        </c:when>
-                        <c:when test="${product.primaryCategory == 'beauty'}">
-                            $(this).parents().find('.checkboxError').html("Please select a shade!");
-                        </c:when>
-                        </c:choose>
-                            $('.checkboxError').fadeIn();
-                            return false;
-                        } else {
-                            $(this).parents().find('.progressLoader').show();
-                            $(this).parent().append('<span class="add_message">added to <s:link beanclass="com.hk.web.action.core.cart.CartAction" id="message_cart_link"><img class="icon16" src="${pageContext.request.contextPath}/images/icons/cart.png"> cart</s:link></span>');
-                            $(this).hide();
-                            e.stopPropagation();
-                            return true;
-                        }
+                        return true;
                     }
-                    /*$('.addToCartForm').ajaxForm({dataType: 'json', data: params, success: _addToCart});*/
-                });
-                </c:if>
-
-                $(".message .close").click(function() {
-                    hide_message();
-                });
-                $(document).click(function() {
-                    hide_message();
-                });
-
-                function hide_message() {
-                    $('.message').animate({
-                        top: '-170px',
-                        opacity: 0
-                    }, 100);
                 }
 
-                function show_message() {
-                    $('.message').css("top", "70px");
-                    $('.message').animate({
-                        opacity: 1
-                    }, 500);
-                }
-
-                $('.addToCartForm').ajaxForm({dataType: 'json', data: params, success: _addToCart});
-
-                $(".top_link, .go_to_top").click(function(event) {
-                    event.preventDefault();
-                    $('html,body').animate({scrollTop:($(this.hash).offset().top - 45)}, 300);
-                });
-
-                if($("#productBannerTextArea").length > 0) {
-                    $('#productBannerTextArea').val($('#productBannerTextArea').val().replace(/\s+/g, " "));
-                }
-                $(document).click(function() {
-                    $('.checkboxError').fadeOut();
-                });
-
-                $('.checkboxError').hide();
-                $("#checkBoxEngraving").click(function() {
-                    var stethoscopeConfigOption = $("#stethoscopeConfigOption").val();
-                    if ($("#checkBoxEngraving").is(":checked")) {
-                        $('#configOptionValueMap option[value='+stethoscopeConfigOption+']').attr('selected', 'selected');
-                        $(".engraveDiv").show();
-                    } else {
-                        $('#configOptionValueMap option[value='+stethoscopeConfigOption+']').attr('selected', false);
-                        $("#engrave").val('');
-                        $("#checkBoxEngraving").val(0);
-                        $(".engraveDiv").hide();
-                    }
-                });
-
+                /*$('.addToCartForm').ajaxForm({dataType: 'json', data: params, success: _addToCart});*/
             });
+            </c:if>
+
+            $(".message .close").click(function() {
+                hide_message();
+            });
+            $(document).click(function() {
+                hide_message();
+            });
+
+            function hide_message() {
+                $('.message').animate({
+                    top: '-170px',
+                    opacity: 0
+                }, 100);
+            }
+
+            function show_message() {
+                $('.message').css("top", "70px");
+                $('.message').animate({
+                    opacity: 1
+                }, 500);
+            }
+
+            $('.addToCartForm').ajaxForm({dataType: 'json', data: params, success: _addToCart});
+
+            $(".top_link, .go_to_top").click(function(event) {
+                event.preventDefault();
+                $('html,body').animate({scrollTop:($(this.hash).offset().top - 45)}, 300);
+            });
+
+            if($("#productBannerTextArea").length > 0) {
+                $('#productBannerTextArea').val($('#productBannerTextArea').val().replace(/\s+/g, " "));
+            }
+            $(document).click(function() {
+                $('.checkboxError').fadeOut();
+            });
+
+            $('.checkboxError').hide();
+            $("#checkBoxEngraving").click(function() {
+                var stethoscopeConfigOption = $("#stethoscopeConfigOption").val();
+                if ($("#checkBoxEngraving").is(":checked")) {
+                    $('#configOptionValueMap option[value='+stethoscopeConfigOption+']').attr('selected', 'selected');
+                    $(".engraveDiv").show();
+                } else {
+                    $('#configOptionValueMap option[value='+stethoscopeConfigOption+']').attr('selected', false);
+                    $("#engrave").val('');
+                    $("#checkBoxEngraving").val(0);
+                    $(".engraveDiv").hide();
+                }
+            });
+
+        });
     </script>
 
     <c:if test="${not isSecure }">
