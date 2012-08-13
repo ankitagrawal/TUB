@@ -1,8 +1,5 @@
 package com.hk.admin.engine;
 
-import com.hk.admin.pact.dao.courier.CourierPricingEngineDao;
-import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
-import com.hk.admin.pact.dao.courier.PincodeRegionZoneDao;
 import com.hk.admin.pact.service.courier.CourierCostCalculator;
 import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.constants.core.EnumTax;
@@ -19,7 +16,6 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.courier.PincodeDao;
-import com.hk.pact.service.core.WarehouseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,8 +50,8 @@ public class ShipmentPricingEngine {
         if (EnumCourierGroup.COMMON.getId().equals(courierGroupService.getCourierGroup(courier).getId())) {
             EnumBoxSize enumBoxSize = EnumBoxSize.getBoxSize(shipment.getBoxSize());
             if (enumBoxSize != null) {
-                if (enumBoxSize.getWeight() > weight) {
-                    weight = enumBoxSize.getWeight();
+                if (enumBoxSize.getVolumetricWeight() > weight) {
+                    weight = enumBoxSize.getVolumetricWeight();
                 }
             }
         }
@@ -119,7 +115,7 @@ public class ShipmentPricingEngine {
     public Double calculatePackagingCost(ShippingOrder shippingOrder) {
         Shipment shipment = shippingOrder.getShipment();
         EnumBoxSize enumBoxSize = EnumBoxSize.getBoxSize(shipment.getBoxSize());
-        return enumBoxSize != null ? enumBoxSize.getPackagingCost() : 16D;
+        return enumBoxSize != null && enumBoxSize.getId() != -1 ? enumBoxSize.getPackagingCost() : 15.5D;
     }
 
     public Double calculateReconciliationCost(CourierPricingEngine courierPricingEngine, ShippingOrder shippingOrder) {

@@ -117,11 +117,16 @@
 ---/sports/fitness-accessories/support-gear/ankle
 --/sports/fitness-accessories/combos
 --/sports/fitness-accessories/miscellaneous-accessories
+--/sports/fitness-accessories/sklz : SKLZ
 -/sports/fitness-equipment
 --/sports/fitness-equipment/treadmills
 --/sports/fitness-equipment/crosstrainers
 --/sports/fitness-equipment/exercise-bike
 --/sports/fitness-equipment/rowers
+--/sports/fitness-equipment/home-gym
+--/sports/fitness-equipment/steppers
+--/sports/fitness-equipment/bench-equipments
+--/sports/fitness-equipment/miscellaneous-equipments
 -/sports/sports-equipment
 --/sports/sports-equipment/football
 ---/sports/sports-equipment/football/balls
@@ -165,9 +170,11 @@
 --/sports/sports-equipment/boxing
 ---/sports/sports-equipment/boxing/punching-bags
 ---/sports/sports-equipment/boxing/gloves
+--/sports/sports-equipment/golf
 --/sports/sports-equipment/skating
 --/sports/sports-equipment/other-balls
 --/sports/sports-equipment/combos
+--/sports/sports-equipment/sklz : SKLZ
 -/sports/apparel
 --/sports/apparel/men
 --/sports/apparel/women
@@ -381,10 +388,43 @@
 --/eye/sunglasses/kids    :   Kids
 -/eye/eyeglasses :Eyeglasses
 --/eye/eyeglasses/half-rim :Half Rim
+---/eye/eyeglasses/half-rim/small   : Small 
+---/eye/eyeglasses/half-rim/medium  : Medium
+---/eye/eyeglasses/half-rim/large   :   Large
+---/eye/eyeglasses/half-rim/oval
+---/eye/eyeglasses/half-rim/rectangular
 --/eye/eyeglasses/full-rim :Full Rim
+---/eye/eyeglasses/full-rim/small   : Small 
+---/eye/eyeglasses/full-rim/medium  : Medium
+---/eye/eyeglasses/full-rim/large   :   Large
+---/eye/eyeglasses/full-rim/oval
+---/eye/eyeglasses/full-rim/rectangular
 --/eye/eyeglasses/frameless
+---/eye/eyeglasses/frameless/small   : Small 
+---/eye/eyeglasses/frameless/medium  : Medium
+---/eye/eyeglasses/frameless/large   :   Large
+---/eye/eyeglasses/frameless/oval
+---/eye/eyeglasses/frameless/rectangular
 --/eye/eyeglasses/reading-glasses :Reading Glasses
 --/eye/eyeglasses/kids :  Kids
+--/eye/eyeglasses/men    : Men
+---/eye/eyeglasses/men/small   : Small 
+---/eye/eyeglasses/men/medium  : Medium
+---/eye/eyeglasses/men/large   :   Large
+---/eye/eyeglasses/men/oval
+---/eye/eyeglasses/men/rectangular
+--/eye/eyeglasses/women   :  Women
+---/eye/eyeglasses/women/small   : Small 
+---/eye/eyeglasses/women/medium  : Medium
+---/eye/eyeglasses/women/large   :   Large
+---/eye/eyeglasses/women/oval
+---/eye/eyeglasses/women/rectangular
+--/eye/eyeglasses/unisex   : Unisex
+---/eye/eyeglasses/unisex/small   : Small 
+---/eye/eyeglasses/unisex/medium  : Medium
+---/eye/eyeglasses/unisex/large   :   Large
+---/eye/eyeglasses/unisex/oval
+---/eye/eyeglasses/unisex/rectangular 
 -/eye/eye-care
 --/eye/eye-care/solutions
 --/eye/eye-care/lens-case
