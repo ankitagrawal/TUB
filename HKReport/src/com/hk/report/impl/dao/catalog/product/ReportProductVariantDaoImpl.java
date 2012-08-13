@@ -27,7 +27,8 @@ public class ReportProductVariantDaoImpl extends BaseDaoImpl implements ReportPr
                 "select count(li.id) as countSold,li.sku.productVariant.product.id as productId,"
                         + " li.sku.productVariant.product.name as productName"
                         + " from LineItem li"
-                        + " where li.shippingOrder.shippingOrderStatus.id in (180,190) and li.shippingOrder.shipment.shipDate  > :startDate and li.shippingOrder.shipment.shipDate  < :endDate "
+                        + " where li.shippingOrder.shippingOrderStatus.id in ( "
+                        + EnumShippingOrderStatus.SO_Shipped.getId() + "," + EnumShippingOrderStatus.SO_Delivered.getId() +" ) and li.shippingOrder.shipment.shipDate  < :endDate "
                         + " group by li.sku.productVariant.product.id  order by count(li.id) desc").setParameter("startDate", startDate).setParameter("endDate", endDate).setResultTransformer(
                 Transformers.aliasToBean(InventorySoldDto.class)).list();
     }
@@ -35,7 +36,8 @@ public class ReportProductVariantDaoImpl extends BaseDaoImpl implements ReportPr
     public InventorySoldDto findInventorySoldByDateAndProduct(Date startDate, Date endDate, String productId) {
             return (InventorySoldDto) getSession().createQuery(
               "select count(li.id) as countSold,li.sku.productVariant.product.id as productId," + " li.sku.productVariant.product.name as productName" + " from LineItem li"
-                + " where  li.shippingOrder.shippingOrderStatus.id in (180,190) and li.shippingOrder.shipment.shipDate > :startDate "
+                + " where  li.shippingOrder.shippingOrderStatus.id in ( "
+                + EnumShippingOrderStatus.SO_Shipped.getId() + "," + EnumShippingOrderStatus.SO_Delivered.getId() +" ) and li.shippingOrder.shipment.shipDate > :startDate "
                 + " and li.shippingOrder .shipment.shipDate < :endDate " + " and li.sku.productVariant.product.id = :productId order by count(li.id) desc ").setParameter(
               "startDate", startDate).setParameter("endDate", endDate).setParameter("productId", productId).setResultTransformer(Transformers.aliasToBean(InventorySoldDto.class)).uniqueResult();
         }
