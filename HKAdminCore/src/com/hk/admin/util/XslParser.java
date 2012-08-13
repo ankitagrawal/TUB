@@ -258,6 +258,9 @@ public class XslParser {
           String isGoogleAdDisallowed = getCellValue(XslConstants.IS_GOOGLE_AD_DISALLOWED, rowMap, headerMap);
           boolean isGoogleAdDisallowedBoolean = StringUtils.isNotBlank(isGoogleAdDisallowed) && isGoogleAdDisallowed.trim().toLowerCase().equals("y") ? true : false;
           product.setGoogleAdDisallowed(isGoogleAdDisallowedBoolean);
+          String isJit = getCellValue(XslConstants.IS_JIT, rowMap, headerMap);
+          boolean isJitBoolean =  StringUtils.isNotBlank(isJit) && isJit.trim().toLowerCase().equals("y") ? true : false;
+          product.setJit(isJitBoolean);  
           product.setProductVariants(productVariants);
           product.setRelatedProducts(getRelatedProductsFromExcel(getCellValue(XslConstants.RELATED_PRODUCTS, rowMap, headerMap)));
           productDeleted = true;
@@ -315,6 +318,8 @@ public class XslParser {
           }
         }
         productVariant.setUpc(getCellValue(XslConstants.UPC, rowMap, headerMap) == null ? "" : getCellValue(XslConstants.UPC, rowMap, headerMap));
+        productVariant.setOtherRemark(getCellValue(XslConstants.OTHER_REMARK, rowMap, headerMap) == null ? "" : getCellValue(XslConstants.OTHER_REMARK, rowMap, headerMap));
+        productVariant.setSupplierCode(getCellValue(XslConstants.SUPPLIER_CODE, rowMap, headerMap) == null ? "" : getCellValue(XslConstants.SUPPLIER_CODE, rowMap, headerMap));
         productVariant.setColorHex(getCellValue(XslConstants.COLOR_HEX, rowMap, headerMap));
         productVariant.setVariantName(getCellValue(XslConstants.VARIANT_NAME, rowMap, headerMap));
         Double mrp = Double.parseDouble(getCellValue(XslConstants.MRP, rowMap, headerMap));
