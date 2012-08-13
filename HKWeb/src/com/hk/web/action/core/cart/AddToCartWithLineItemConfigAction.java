@@ -12,11 +12,13 @@ import com.hk.domain.order.CartLineItemConfig;
 import com.hk.domain.order.CartLineItemConfigValues;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
+import com.hk.domain.marketing.ProductReferrer;
 import com.hk.exception.OutOfStockException;
 import com.hk.manager.LinkManager;
 import com.hk.manager.OrderManager;
 import com.hk.manager.UserManager;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.user.UserProductHistoryDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.report.dto.order.LineItemConfigValuesDTO;
@@ -53,6 +55,8 @@ public class AddToCartWithLineItemConfigAction extends BaseAction {
 
     private String                        jsonConfigValues;
 
+    private Long                          productReferrerId;
+
     @Autowired
     private ProductVariantService         productVariantService;
 
@@ -69,6 +73,9 @@ public class AddToCartWithLineItemConfigAction extends BaseAction {
     @Autowired
     private BaseDao                       baseDao;
 
+    @Autowired
+    UserProductHistoryDao                 userProductHistoryDao;
+
     @SuppressWarnings("unchecked")
     @JsonHandler
     @DefaultHandler
@@ -77,6 +84,7 @@ public class AddToCartWithLineItemConfigAction extends BaseAction {
 
         ProductVariant productVariant = getProductVariantService().getVariantById(variantId);
         User user = null;
+        ProductReferrer productReferrer = null;
 
         if (getPrincipal() != null) {
             user = getUserService().getUserById(getPrincipal().getId());
@@ -120,7 +128,11 @@ public class AddToCartWithLineItemConfigAction extends BaseAction {
                 lineItemConfig.getCartLineItemConfigValues().add(configValue);
             }
             productVariant.setQty(new Long(1));
-            isLineItemCreated = orderManager.createLineItems(productVariant, lineItemConfig, order);
+            if(productReferrerId != null){
+              productReferrer = getBaseDao().get(ProductReferrer.class, productReferrerId);
+            }
+            isLineItemCreated = orderManager.createLineItems(productVariant, lineItemConfig, order, productReferrer);
+            userProductHistoryDao.updateIsAddedToCart(productVariant.getProduct(), user, order);
 
         } catch (OutOfStockException e) {
             getContext().getValidationErrors().add("e2", new SimpleError(e.getMessage()));
@@ -203,5 +215,13 @@ public class AddToCartWithLineItemConfigAction extends BaseAction {
             List<LineItemConfigValuesDTO> lineItemConfigValuesDTOs = (List<LineItemConfigValuesDTO>)obj;
             setConfigValues(lineItemConfigValuesDTOs);
         }
+    }
+
+    public Long getProductReferrerId() {
+      return productReferrerId;
+    }
+
+    public void setProductReferrerId(Long productReferrerId) {
+      this.productReferrerId = productReferrerId;
     }
 }

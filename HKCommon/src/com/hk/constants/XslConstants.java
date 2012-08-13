@@ -91,9 +91,12 @@ public class XslConstants {
 
     public static final String    IS_SERVICE                      = "IS_SERVICE";
     public static final String    IS_GOOGLE_AD_DISALLOWED         = "IS_GOOGLE_AD_DISALLOWED";
+    public static final String    IS_JIT                          = "IS_JIT" ;
     public static final String    PAYMENT_TYPE                    = "PAYMENT_TYPE";
     public static final String    SERVICE_TYPE                    = "SERVICE_TYPE";
     public static final String    POSTPAID_AMOUNT                 = "POSTPAID_AMOUNT";
+    public static final String   OTHER_REMARK                     = "OTHER_REMARK";
+    public static final String   SUPPLIER_CODE                    = "SUPPLIER_CODE" ;
 
     //Excel Constants needed while uploading AWB for couriers
     public static final String AWB_NUMBER = "AWB_NUMBER";

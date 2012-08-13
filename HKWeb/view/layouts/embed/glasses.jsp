@@ -837,7 +837,7 @@ $("#addPowers").click(function() {
     data[idx] = values;
     params.configValues = data;
     params.variantId = $("#variantId").val();
-
+    params.productReferrerId = $('#productReferrerId').val();
     var form = this.form;
     $.ajax({
       type: "POST",

@@ -41,22 +41,22 @@
             display: none;
         }
 
-        ul#thumblist {
+        ul.thumblist {
             display: block;
         }
 
-        ul#thumblist li {
+        ul.thumblist li {
             float: left;
             margin-right: 2px;
             list-style: none;
         }
 
-        ul#thumblist li a {
+        ul.thumblist li a {
             display: block;
             border: 1px solid #CCC;
         }
 
-        ul#thumblist li a.zoomThumbActive {
+        ul.thumblist li a.zoomThumbActive {
             border: 1px solid red;
         }
 
@@ -93,6 +93,16 @@
                 width: 900
             });
 
+            //$("#frameChart").hide();
+
+            $("#frameChartVM").click(function showVM(){
+                $("#frameChart").show();
+            });
+
+            $("#sizeGuide").click(function toggleVM(){
+                $("#frameChart").toggle();
+            });
+
             //Click and change image
             $('.color_box').click(function() {
                 var variantMainImageId = $(this).find('.variantMainImageId').val();
@@ -122,8 +132,9 @@
 
 <s:layout-component name="modal">
 
+
     <c:if test="${!empty product.productVariants[0].productExtraOptions}">
-        <s:layout-render name="/pages/modal/productWithExtraOptions.jsp" product="${product}"/>
+        <s:layout-render name="/pages/modal/productWithExtraOptions.jsp" product="${product}" />
     </c:if>
     <%--<c:if test="${hk:collectionContains(product.categories, eyeGlass)}">--%>
     <%--<s:layout-render name="/pages/modal/eyeGlasses.jsp" product="${product}"/>--%>
@@ -202,8 +213,10 @@
                 <img src="${hk:getS3ImageUrl(imageMediumSize, product.mainImageId,isSecure)}" alt="${product.name}"
                      title="${product.name}">
             </a>
+        </div>
+        <div>
             <c:if test="${fn:length(pa.productImages) > 1}">
-                <ul id="thumblist">
+                <ul class="thumblist">
                     <c:forEach items="${pa.productImages}" var="productImage">
                         <li><a href='javascript:void(0);'
                                rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, productImage.id,isSecure)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, productImage.id,isSecure)}'}"><img
@@ -212,43 +225,37 @@
                 </ul>
             </c:if>
         </div>
-
-        <div><br/><br/><br/></div>
-        <div>
+        <div class="clear"></div>
+        <div style="padding-top: 15px">
             <shiro:hasPermission name="<%=PermissionConstants.GET_PRODUCT_LINK%>">
                 <a name="showProductLink" class="linkbutton"
-                   onclick="$('#getProductLinkWindow').jqm(); $('#getProductLinkWindow').jqmShow();" style="cursor:pointer">Get
+                   onclick="$('#getProductLinkWindow').jqm(); $('#getProductLinkWindow').jqmShow();"
+                   style="cursor:pointer">Get
                     Links</a>
                 <a name="showProductLink" class="linkbutton"
-                   onclick="$('#getBannerLinkWindow').jqm(); $('#getBannerLinkWindow').jqmShow();" style="cursor:pointer">Get
+                   onclick="$('#getBannerLinkWindow').jqm(); $('#getBannerLinkWindow').jqmShow();"
+                   style="cursor:pointer">Get
                     Banners</a>
             </shiro:hasPermission>
         </div>
-        <shiro:hasPermission name="<%=PermissionConstants.MANAGE_IMAGE%>">
-            <br/>
-
-            <div><s:link beanclass="com.hk.web.action.core.catalog.image.UploadImageAction" event="pre" target="_blank"
-                         class="popup"> Upload
+        <div class="clear"></div>
+        <div><shiro:hasPermission name="<%=PermissionConstants.MANAGE_IMAGE%>">
+            <s:link beanclass="com.hk.web.action.core.catalog.image.UploadImageAction" event="pre" target="_blank"
+                    class="popup"> Upload
                 <s:param name="product" value="${product.id}"/>
             </s:link>
-                <s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction"
-                        event="manageProductImages" target="_blank"
-                        class="popup">Manage
-                    Images
-                    <s:param name="productId" value="${product.id}"/>
-                </s:link>
-            </div>
+            <s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction"
+                    event="manageProductImages" target="_blank"
+                    class="popup">Manage
+                Images
+                <s:param name="productId" value="${product.id}"/>
+            </s:link>
         </shiro:hasPermission>
+        </div>
         <c:if test="${product.videoEmbedCode != null}">
             <s:layout-render name="/layouts/embed/_productVideo.jsp" productId="${product.id}"/>
         </c:if>
     </div>
-
-    <c:if test="${product.id == 'NUT904'}">
-        <div id="gulal" style="position:absolute; left: 600px; display: none">
-            <img src="<hk:vhostImage/>/images/gulal-spray.png"/>
-        </div>
-    </c:if>
 
 </s:layout-component>
 
@@ -347,6 +354,7 @@
                 ${product.overview}
         </p>
     </c:if>
+    <input type="hidden" id="productReferrerId" value="${pa.productReferrerId}" />
     <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_DESCRIPTIONS%>">
         <div>
             <s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction" event="editOverview"
@@ -356,7 +364,6 @@
             </s:link>
         </div>
     </shiro:hasPermission>
-
     <div class="configOptionsDiv" style="display:none;">
         <select name="configOptionValueMap" id="configOptionValueMap" multiple="multiple">
             <c:forEach items="${product.productVariants[0].variantConfig.variantConfigOptions}" var="configOption" varStatus="configOptionCtr">
@@ -405,12 +412,12 @@
                     <c:choose>
                         <c:when test="${!product.productHaveColorOptions}">
                             <s:layout-render name="/layouts/embed/_productWithMultipleVariantsWithNoColorOptions.jsp"
-                                             product="${product}"/>
+                                             product="${product}" />
                             <s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>
                         </c:when>
                         <c:otherwise>
                             <s:layout-render name="/layouts/embed/_productWithMultipleVariantsWithColorOptions.jsp"
-                                             product="${product}"/>
+                                             product="${product}" />
                             <s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>
                         </c:otherwise>
                     </c:choose>
@@ -421,17 +428,17 @@
                             <s:layout-render name="/layouts/embed/_comboProduct.jsp" productId="${product.id}"/>
                         </c:when>
                         <c:when test="${hk:collectionContains(product.categories, eyeGlass)}">
-                            <s:layout-render name="/layouts/embed/glasses.jsp" product="${product}"/>
+                            <s:layout-render name="/layouts/embed/glasses.jsp" product="${product}" />
                         </c:when>
                         <c:otherwise>
-                            <s:layout-render name="/layouts/embed/_productWithSingleVariant.jsp" product="${product}"/>
+                            <s:layout-render name="/layouts/embed/_productWithSingleVariant.jsp" product="${product}" />
                         </c:otherwise>
                     </c:choose>
                 </c:otherwise>
             </c:choose>
         </c:when>
         <c:otherwise>
-            <s:layout-render name="/layouts/embed/_productWithExtraOptions.jsp" product="${product}"/>
+            <s:layout-render name="/layouts/embed/_productWithExtraOptions.jsp" product="${product}" />
             <%--<s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>--%>
         </c:otherwise>
     </c:choose>
@@ -470,7 +477,6 @@
             <a class='go_to_top' href='#top'>go to top &uarr;</a>
         </div>
     </c:if>
-
     <c:if test="${hk:collectionContains(product.categories, eyeGlass)}">
         <div id="sizeGuide"
              class="content" style="background-color:#DDDDDD;padding:5px; cursor:pointer;font-weight:bold;text-align:left;">
@@ -631,9 +637,9 @@
                     <td style="font-size:14px;font-weight:bold;border-style:none">Reviews of ${product.name}</td>
                     <td style="border-style:none">
                         <s:link beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction" event="writeNewReview">
-                        <s:param name="product" value="${product.id}"/>
-                        <strong>Write a Review<strong>
-                            </s:link>
+                            <s:param name="product" value="${product.id}"/>
+                            <strong>Write a Review</strong>
+                        </s:link>
                     </td>
                 </tr>
 
@@ -725,6 +731,7 @@
         var validateCheckbox;
         $(document).ready(function() {
             var params = {};
+            params.productReferrerId = $('#productReferrerId').val();
             function _addToCart(res) {
                 if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
                     $('.message .line1').html("<strong>" + res.data.name + "</strong> has been added to your shopping cart");
@@ -749,117 +756,118 @@
 
             <c:if test="${pa.combo == null}">
             $('.addToCartButton').click(function(e) {
-                if ($("#checkBoxEngraving").is(":checked")) {
-                    if($.trim($("#engrave").val()) == '') {
-                        alert("Please specify name to be engraved, or uncheck the engraving option");
-                        $('.progressLoader').hide();
-                        return false;
+                $('.addToCartButton').click(function(e) {
+                    if ($("#checkBoxEngraving").is(":checked")) {
+                        if($.trim($("#engrave").val()) == '') {
+                            alert("Please specify name to be engraved, or uncheck the engraving option");
+                            $('.progressLoader').hide();
+                            return false;
+                        }
                     }
-                }
 
-                var data = new Array();
-                var idx = 0;
-                var variantConfigProvided = 'false';
-                $("#configOptionValueMap option:selected").each(function() {
-                    if($(this).val() != -999) {
-                        variantConfigProvided = 'true';
-                        var dto = new Object();
-                        dto.optionId  = $(this).val();
-                        dto.valueId = $(this).attr('valueId');
-                        data[idx] = dto;
-                        idx++;
-                    }
-                });
-                params.variantConfigProvided = (variantConfigProvided == 'true');
-                var configValues = JSON.stringify(data);
-                params.jsonConfigValues = configValues;
-                params.nameToBeEngraved = $("#engrave").val();
-
-                if (!window.validateCheckbox) {
-                    $(this).parents().find('.progressLoader').show();
-                    $(this).parent().append('<span class="add_message">added to <s:link beanclass="com.hk.web.action.core.cart.CartAction" id="message_cart_link"><img class="icon16" src="${pageContext.request.contextPath}/images/icons/cart.png"> cart</s:link></span>');
-                    $(this).hide();
-                    e.stopPropagation();
-                } else {
-                    var selected = 0;
-                    $('.checkbox').each(function() {
-                        if ($(this).attr("checked") == "checked") {
-                            selected = 1;
+                    var data = new Array();
+                    var idx = 0;
+                    var variantConfigProvided = 'false';
+                    $("#configOptionValueMap option:selected").each(function() {
+                        if($(this).val() != -999) {
+                            variantConfigProvided = 'true';
+                            var dto = new Object();
+                            dto.optionId  = $(this).val();
+                            dto.valueId = $(this).attr('valueId');
+                            data[idx] = dto;
+                            idx++;
                         }
                     });
-                    if (!selected) {
-                    <c:choose>
-                    <c:when test="${product.primaryCategory == 'eye'}">
-                        $(this).parents().find('.checkboxError').html("Please select atleast one lens!");
-                    </c:when>
-                    <c:when test="${product.primaryCategory == 'beauty'}">
-                        $(this).parents().find('.checkboxError').html("Please select a shade!");
-                    </c:when>
-                    </c:choose>
-                        $('.checkboxError').fadeIn();
-                        return false;
-                    } else {
+                    params.variantConfigProvided = (variantConfigProvided == 'true');
+                    var configValues = JSON.stringify(data);
+                    params.jsonConfigValues = configValues;
+                    params.nameToBeEngraved = $("#engrave").val();
+
+                    if (!window.validateCheckbox) {
                         $(this).parents().find('.progressLoader').show();
                         $(this).parent().append('<span class="add_message">added to <s:link beanclass="com.hk.web.action.core.cart.CartAction" id="message_cart_link"><img class="icon16" src="${pageContext.request.contextPath}/images/icons/cart.png"> cart</s:link></span>');
                         $(this).hide();
                         e.stopPropagation();
-                        return true;
+                    } else {
+                        var selected = 0;
+                        $('.checkbox').each(function() {
+                            if ($(this).attr("checked") == "checked") {
+                                selected = 1;
+                            }
+                        });
+                        if (!selected) {
+                        <c:choose>
+                        <c:when test="${product.primaryCategory == 'eye'}">
+                            $(this).parents().find('.checkboxError').html("Please select atleast one lens!");
+                        </c:when>
+                        <c:when test="${product.primaryCategory == 'beauty'}">
+                            $(this).parents().find('.checkboxError').html("Please select a shade!");
+                        </c:when>
+                        </c:choose>
+                            $('.checkboxError').fadeIn();
+                            return false;
+                        } else {
+                            $(this).parents().find('.progressLoader').show();
+                            $(this).parent().append('<span class="add_message">added to <s:link beanclass="com.hk.web.action.core.cart.CartAction" id="message_cart_link"><img class="icon16" src="${pageContext.request.contextPath}/images/icons/cart.png"> cart</s:link></span>');
+                            $(this).hide();
+                            e.stopPropagation();
+                            return true;
+                        }
                     }
+                    /*$('.addToCartForm').ajaxForm({dataType: 'json', data: params, success: _addToCart});*/
+                });
+                </c:if>
+
+                $(".message .close").click(function() {
+                    hide_message();
+                });
+                $(document).click(function() {
+                    hide_message();
+                });
+
+                function hide_message() {
+                    $('.message').animate({
+                        top: '-170px',
+                        opacity: 0
+                    }, 100);
                 }
-               /* $('.addToCartForm').ajaxForm({dataType: 'json', data: params, success: _addToCart});*/
-            });
-            </c:if>
 
-            $(".message .close").click(function() {
-                hide_message();
-            });
-            $(document).click(function() {
-                hide_message();
-            });
-
-            function hide_message() {
-                $('.message').animate({
-                    top: '-170px',
-                    opacity: 0
-                }, 100);
-            }
-
-            function show_message() {
-                $('.message').css("top", "70px");
-                $('.message').animate({
-                    opacity: 1
-                }, 500);
-            }
-
-            $('.addToCartForm').ajaxForm({dataType: 'json', data:params, success: _addToCart});
-
-            $(".top_link, .go_to_top").click(function(event) {
-                event.preventDefault();
-                $('html,body').animate({scrollTop:($(this.hash).offset().top - 45)}, 300);
-            });
-
-            if($("#productBannerTextArea").length > 0) {
-                $('#productBannerTextArea').val($('#productBannerTextArea').val().replace(/\s+/g, " "));
-            }
-
-            $(document).click(function() {
-                $('.checkboxError').fadeOut();
-            });
-
-            $('.checkboxError').hide();
-            $("#checkBoxEngraving").click(function() {
-                var stethoscopeConfigOption = $("#stethoscopeConfigOption").val();
-                if ($("#checkBoxEngraving").is(":checked")) {
-                    $('#configOptionValueMap option[value='+stethoscopeConfigOption+']').attr('selected', 'selected');
-                    $(".engraveDiv").show();
-                } else {
-                    $('#configOptionValueMap option[value='+stethoscopeConfigOption+']').attr('selected', false);
-                    $("#engrave").val('');
-                    $("#checkBoxEngraving").val(0);
-                    $(".engraveDiv").hide();
+                function show_message() {
+                    $('.message').css("top", "70px");
+                    $('.message').animate({
+                        opacity: 1
+                    }, 500);
                 }
+
+                $('.addToCartForm').ajaxForm({dataType: 'json', data: params, success: _addToCart});
+
+                $(".top_link, .go_to_top").click(function(event) {
+                    event.preventDefault();
+                    $('html,body').animate({scrollTop:($(this.hash).offset().top - 45)}, 300);
+                });
+
+                if($("#productBannerTextArea").length > 0) {
+                    $('#productBannerTextArea').val($('#productBannerTextArea').val().replace(/\s+/g, " "));
+                }
+                $(document).click(function() {
+                    $('.checkboxError').fadeOut();
+                });
+
+                $('.checkboxError').hide();
+                $("#checkBoxEngraving").click(function() {
+                    var stethoscopeConfigOption = $("#stethoscopeConfigOption").val();
+                    if ($("#checkBoxEngraving").is(":checked")) {
+                        $('#configOptionValueMap option[value='+stethoscopeConfigOption+']').attr('selected', 'selected');
+                        $(".engraveDiv").show();
+                    } else {
+                        $('#configOptionValueMap option[value='+stethoscopeConfigOption+']').attr('selected', false);
+                        $("#engrave").val('');
+                        $("#checkBoxEngraving").val(0);
+                        $(".engraveDiv").hide();
+                    }
+                });
+
             });
-        });
     </script>
 
     <c:if test="${not isSecure }">

@@ -7759,12 +7759,12 @@
       <sql>
         UPDATE `purchase_invoice` pi SET pi.`reconcilation_date`= DATE_ADD(pi.`create_date`, INTERVAL 3 DAY) WHERE `reconciled`=1 AND `reconcilation_date` IS NULL
       </sql>
-    </changeSet>    
+    </changeSet>
     <changeSet author="Rimal (generated)" id="1341381517333-1">
         <addColumn tableName="category_image">
             <column name="position" type="VARCHAR(20)"/>
         </addColumn>
-    </changeSet>    
+    </changeSet>
     <changeSet author="Ajeet (generated)" id="1341923692621-1">
         <createTable tableName="brands_to_audit">
             <column autoIncrement="true" name="id" type="INT">
@@ -8017,7 +8017,7 @@
        delete from `demand_history` where `base_order_id` is null;
         </sql>
     </changeSet>
-    
+
     <changeSet author="Seema (generated)" id="1343136104792-1">
         <dropForeignKeyConstraint baseTableName="demand_history"  constraintName="fk_demand_history_base_order1"/>
     </changeSet>
@@ -8051,7 +8051,7 @@
         <addColumn tableName="faq">
             <column name="page_rank" type="INT"/>
         </addColumn>
-    </changeSet>        
+    </changeSet>
 	<changeSet author="Rahul (generated)" id="1343129589883-1">
 	    <dropForeignKeyConstraint baseTableName="stock_transfer_line_item" constraintName="fk_stock_transfer_line_item_sku1"/>
 	</changeSet>
@@ -8092,7 +8092,7 @@
         <addColumn tableName="pincode">
             <column name="tier" type="VARCHAR(20)"/>
         </addColumn>
-    </changeSet>    
+    </changeSet>
     <changeSet author="Neha (generated)" id="1343293102089-1">
         <createTable tableName="demand_forecast">
             <column autoIncrement="true" name="id" type="INT">
@@ -8130,14 +8130,59 @@
             <column defaultValue="0" name="deleted" type="TINYINT"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Rohit" id="20120727-01">
-           <sql>
+
+    <changeSet author="Tarun (generated)" id="1339071974252-1">
+      <createTable tableName="product_referrer">
+        <column autoIncrement="true" name="id" type="INT">
+          <constraints nullable="false" primaryKey="true"/>
+        </column>
+        <column name="name" type="VARCHAR(45)">
+          <constraints nullable="false"/>
+        </column>
+      </createTable>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1339071974252-2">
+      <addColumn tableName="cart_line_item">
+        <column name="product_referrer_id" type="INT"/>
+      </addColumn>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1339071974252-3">
+      <addColumn tableName="user_product_history">
+        <column name="base_order_id" type="INT"/>
+      </addColumn>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1339071974252-6">
+      <dropForeignKeyConstraint baseTableName="user_product_history"
+                                constraintName="fk_user_product_history_product_thumb_tag1"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1339071974252-7">
+      <addForeignKeyConstraint baseColumnNames="product_referrer_id" baseTableName="cart_line_item"
+                               constraintName="fk_cart_line_item_product_referrer1" deferrable="false"
+                               initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                               referencedColumnNames="id" referencedTableName="product_referrer"
+                               referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1339071974252-8">
+      <addForeignKeyConstraint baseColumnNames="base_order_id" baseTableName="user_product_history"
+                               constraintName="fk_user_product_history_base_order1" deferrable="false"
+                               initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                               referencedColumnNames="id" referencedTableName="base_order"
+                               referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1339071974252-9">
+      <dropColumn columnName="product_thumb_tag_id" tableName="user_product_history"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1339071974252-10">
+      <dropTable tableName="product_thumb_tag"/>
+    </changeSet>
+    <changeSet author="Rohit" id="20120813-01">
+       <sql>
                insert into variant_config (name) values ('stethoscope_config');
                insert into variant_config_option (name, variant_config_id, additional_param, display_name, display_order)
                values('ENG', 2, 'ENG', 'Engraving', 100);
                insert into variant_config_values(value, additonal_price, variant_config_option_id, display_order, cost_price)
                values('Engraving', 100, 32, 100, 50);
                update product_variant set variant_config_id = 2 where product_id = 'LIT001';
-           </sql>
+       </sql>
     </changeSet>
 </databaseChangeLog>

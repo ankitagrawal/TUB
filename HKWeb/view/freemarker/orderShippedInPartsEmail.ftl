@@ -6,7 +6,8 @@ Your order ${order.gatewayOrderId} has been fully shipped.
 <body>
 <#include "header.ftl">
 
-<p style="margin-bottom:1em">Some items in your order ${order.gatewayOrderId} have been shipped and should reach you shortly.</p>
+<p style="margin-bottom:1em">Some items in your order ${order.gatewayOrderId} have been shipped and should reach you
+    shortly.</p>
 
 <h4>Shipping details for order ${order.gatewayOrderId} placed on ${order.payment.paymentDate}</h4>
 
@@ -51,7 +52,13 @@ Your order ${order.gatewayOrderId} has been fully shipped.
         </#list>
     </table>
 </div>
-<p style="margin-bottom:1em">You can <strong><a href="${invoiceLink}" target="_blank"> view the invoice for your order here.</a></strong></p>
+<p style="margin-bottom:1em">You can <strong><a href="${invoiceLink}" target="_blank"> view the invoice for your order
+    here.</a></strong></p>
+
+<strong>Note: Our products are shipped in sealed bags & boxes and we request you not to accept
+    any tampered packets.</strong>
+<br/>
+<br/>
 
 <p style="margin-bottom:1em">Happy Shopping!</p>
 
