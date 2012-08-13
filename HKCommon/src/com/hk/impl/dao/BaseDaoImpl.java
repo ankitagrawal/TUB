@@ -432,4 +432,5 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
   public void refresh(Object entity) {
     getHibernateTemplate().refresh(entity);
   }
+
 }

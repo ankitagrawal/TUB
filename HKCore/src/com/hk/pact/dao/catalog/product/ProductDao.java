@@ -33,6 +33,8 @@ public interface ProductDao extends BaseDao {
 
     public List<Product> getAllProductsForCatalog();
 
+    public List<Product> getAllSubscribableProductsByCategory(String category);
+
     public List<Product> getAllProductNotByCategory(List<String> category);
 
     /**

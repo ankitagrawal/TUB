@@ -69,7 +69,13 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
                             </tr>
                             <#list order.lineItems as lineItem>
                             <tr>
-                                <td>${lineItem.sku.productVariant.product.name}<br/>
+
+                                <td>${lineItem.sku.productVariant.product.name}
+                                    <#if lineItem.sku.productVariant.variantName??>
+                                    ${lineItem.sku.productVariant.variantName}
+                                    </#if>
+                                    <br/>
+
                                     <#list lineItem.sku.productVariant.productOptions as
                                  productOption>
                                     <em style="font-size:0.9em; color:#666">${productOption.name} ${productOption.value} </em>

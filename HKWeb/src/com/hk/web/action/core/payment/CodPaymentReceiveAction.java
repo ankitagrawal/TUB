@@ -1,5 +1,11 @@
 package com.hk.web.action.core.payment;
 
+import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.constants.subscription.EnumSubscriptionStatus;
+import com.hk.core.fliter.CartLineItemFilter;
+import com.hk.core.fliter.SubscriptionFilter;
+import com.hk.domain.order.CartLineItem;
+import com.hk.domain.subscription.Subscription;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
@@ -25,6 +31,8 @@ import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.manager.OrderManager;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.service.payment.PaymentService;
+
+import java.util.Set;
 
 /**
  * User: kani Time: 12 Feb, 2010 3:59:02 PM
@@ -76,6 +84,12 @@ public class CodPaymentReceiveAction extends BaseAction {
                 addRedirectAlertMessage(new SimpleMessage("Cod Contact Phone cannot be longer than 25 characters"));
                 return new RedirectResolution(PaymentModeAction.class);
             }
+
+            Set<CartLineItem> subscriptionCartLineItems=new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
+           if(subscriptionCartLineItems!=null && subscriptionCartLineItems.size()>0){
+             addRedirectAlertMessage(new SimpleMessage("Cod is not allowed as you have subscriptions in your cart"));
+             return new RedirectResolution(PaymentModeAction.class);
+           }
 
             // recalculate the pricing before creating a payment.
             order = orderManager.recalAndUpdateAmount(order);

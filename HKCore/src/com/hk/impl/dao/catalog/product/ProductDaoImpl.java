@@ -42,6 +42,9 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
         if (product.getGoogleAdDisallowed() == null) {
             product.setGoogleAdDisallowed(Boolean.FALSE);
         }
+        if (product.getJit() == null)   {
+            product.setJit(Boolean.FALSE);
+        }
         return (Product) super.save(product);
     }
 
@@ -61,6 +64,7 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
         return getSession().createQuery("select p from Product p where p.primaryCategory.name = :category order by p.orderRanking asc").setString("category", category).list();
     }
 
+
     /**
      * returns list of all products irrespective of category
      * @param
@@ -68,6 +72,9 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
      */
     public List<Product> getAllProductsForCatalog() {
         return getSession().createQuery("select p from Product p order by p.primaryCategory.name asc, p.orderRanking asc ").list();
+    }
+    public List<Product> getAllSubscribableProductsByCategory(String category){
+        return getSession().createQuery("select p from Product p where p.primaryCategory.name = :category and isSubscribable=true order by p.orderRanking asc").setString("category", category).list();
     }
 
     public List<Product> getAllProductNotByCategory(List<String> categoryNames) {

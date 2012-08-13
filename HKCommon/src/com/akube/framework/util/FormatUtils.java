@@ -22,6 +22,7 @@ public class FormatUtils {
 
   public static final String defaultDateFormatPattern = "yyyy-MM-dd HH:mm";
   public static final String currencyFormatPattern = "###,##0.00";
+  public static final String uiDateFormatPattern ="dd/MM/yyyy";
 
   private static NumberFormat currencyFormat = NumberFormat.getNumberInstance();
   private static NumberFormat decimalFormat = NumberFormat.getNumberInstance();

@@ -83,7 +83,7 @@
               <s:hidden name="shipment" value="${shipmentQueueBean.shipment.id}"/>
                 <s:hidden name="suggestedCourier" value="${shipmentQueueBean.suggestedCourier}"/>
              <c:if test="${! empty shipmentQueueBean.availableCouriers}">
-              <div style="margin-top:5px;margin-bottom:5px;font-size:.9em">Available Couriers:
+              <div style="margin-top:5px;margin-bottom:5px;font-size:.9em"><A></A>vailable Couriers:
               <c:forEach items="${shipmentQueueBean.availableCouriers}" var="courier">
                 ${courier.name},
               </c:forEach>

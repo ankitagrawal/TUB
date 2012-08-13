@@ -45,7 +45,7 @@
 
                             <s:submit name="uploadCategoryScoreExcel" value="Upload"/>
                             <br/>
-                            (Worksheet Name: CustomerScore &nbsp&nbsp&nbsp  Fields: userId &nbsp Baby, Beauty, Diabetes, Eye, Home Devices, Nutrition, Personal Care, Services, Sports scores)</li>
+                            (Worksheet Name: CustomerScore &nbsp&nbsp&nbsp  Fields: userId, Baby, Beauty, Diabetes, Eye, Home Devices, Nutrition, Personal Care, Services, Sports scores)</li>
                     </div>
                 </s:form>
             </ul>
