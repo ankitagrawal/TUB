@@ -42,4 +42,5 @@ public class CatalogFilter {
 	public Map<String, Set<ProductOptionDto>> getFilterMap() {
 		return filterMap;
 	}
+	
 }

@@ -19,7 +19,7 @@
 			<h5 class='heading1'>
 				Filter by ${filter.key}
 			</h5>
-			<ul>
+			<ul style="padding-left:0px">
 				<c:forEach items="${filter.value}" var="option">
 					<li><s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction">
 						<s:param name="rootCategorySlug" value="${ca.rootCategorySlug}"/>
