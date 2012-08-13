@@ -2,15 +2,11 @@ package com.hk.web.action.admin.hkDelivery;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.domain.hkDelivery.Hub;
-import com.hk.domain.hkDelivery.Consignment;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.user.User;
-import com.hk.admin.pact.service.courier.AwbService;
-import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
 import com.hk.admin.pact.service.hkDelivery.HubService;
-import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.hkDelivery.HKDeliveryConstants;
 import net.sourceforge.stripes.action.*;
@@ -33,11 +29,7 @@ public class HKDConsignmentAction extends BaseAction{
     private              int                  noOfConsignmentsCreated  = 0;
 
     @Autowired
-    private              AwbService           awbService;
-    @Autowired
     private              ConsignmentService   consignmentService;
-    @Autowired
-    private              ShipmentService      shipmentService;
     @Autowired
     private              HubService           hubService;
 
@@ -48,60 +40,56 @@ public class HKDConsignmentAction extends BaseAction{
     }
 
     public Resolution markShipmentsReceived() {
-        Set<Awb> awbSet;
-        Courier hkDelivery = EnumCourier.HK_Delivery.asCourier();
-        User loggedOnUser = null;
-        Hub healthkartHub = hubService.findHubByName(HKDeliveryConstants.HEALTHKART_HUB);
+        Set<Awb>     awbSet;
+        List<Awb>    awbList;
+        List<Awb>    duplicateAwbs;
+        Hub          healthkartHub;
+        String       duplicateAwbString = "";
+        User         loggedOnUser       = null;
+        Courier      hkDelivery         = EnumCourier.HK_Delivery.asCourier();
+
+
         if (trackingIdList != null && trackingIdList.size() > 0) {
+            healthkartHub = hubService.findHubByName(HKDeliveryConstants.HEALTHKART_HUB);
             if (getPrincipal() != null) {
                 loggedOnUser = getUserService().getUserById(getPrincipal().getId());
             }
-            awbSet = getAWBSet(trackingIdList, hkDelivery);
-            logger.info(awbSet.toString());
-            noOfConsignmentsCreated = createConsignments(awbSet, healthkartHub.getId(),hub.getId(),loggedOnUser.getId());
-            addRedirectAlertMessage(new SimpleMessage(noOfConsignmentsCreated + HKDeliveryConstants.CONSIGNMNT_CREATION_SUCCESS));
+            // getting AWB set for the entered trackingIdList.
+            awbSet = consignmentService.getAWBSet(trackingIdList, hkDelivery);
+            //Creating a list out of set(needed for consignment-duplication check).
+            awbList = new ArrayList<Awb>(awbSet);
+            //Checking if consignment is already created for the enterd awbNumber and fetching the awb for the same .
+            duplicateAwbs = consignmentService.getDuplicateAwbs(awbList);
+            if (duplicateAwbs.size() > 0) {
+                // removing duplicated awbs from the list.
+                awbList.removeAll(duplicateAwbs);
+                // creating a string for user-display.
+                duplicateAwbString = getDuplicateAwbString(duplicateAwbs);
+                duplicateAwbString = "Consignments already created for following trackingIds:" + duplicateAwbString;
+                // convertig list to set to delete/remove duplicate elements from the list.
+                awbSet = new HashSet<Awb>(awbList);
+
+            }
+            // Creating consignments.
+            noOfConsignmentsCreated = consignmentService.createConsignments(awbSet, healthkartHub, hub ,loggedOnUser.getId());
+            addRedirectAlertMessage(new SimpleMessage(noOfConsignmentsCreated + HKDeliveryConstants.CONSIGNMNT_CREATION_SUCCESS + duplicateAwbString));
         } else {
             addRedirectAlertMessage(new SimpleMessage(HKDeliveryConstants.CONSIGNMNT_CREATION_FAILURE));
         }
         return new RedirectResolution(HKDConsignmentAction.class);
     }
 
-    //todo data duplicacy
-    // Method to check data duplicacy
-    private boolean checkAwbDuplicacy(Set<Awb> awbSet){
-        List<Long> consignmentAwbId = consignmentService.getAwbIds();
-        
-        return false;
-    }
 
-    // Method to create consignments.It wud interact with service layer.
-    private int createConsignments(Set<Awb> awbSet, Long sourceHubId, Long destinationHubId, Long userId) {
-        int consignmentCount = 0;
-        Consignment consignment = new Consignment();
-        for (Awb awbObj : awbSet) {
-            try {
-                // Creating consignment object.
-                consignment = consignmentService.createConsignment(shipmentService.findByAwb(awbObj), hub);
-                // Making an entry in consignment-tracking for the created consignment.
-                consignmentService.updateConsignmentTracking(sourceHubId, destinationHubId, userId, consignment);
-                consignmentCount++;
-            } catch (Exception ex) {
-                logger.info(HKDeliveryConstants.EXCEPTION + awbObj.getAwbNumber());
-                continue;
-            }
+    // Getting comma seperated string for the duplicated
+    public String getDuplicateAwbString(List<Awb> duplicatedAwbs) {
+        StringBuffer strBuffr = new StringBuffer();
+        for (Awb awb :duplicatedAwbs ) {
+            strBuffr.append(awb.getAwbNumber());
+            strBuffr.append(",");
         }
-        return consignmentCount;
+        return strBuffr.toString();
     }
-
-
-    // Method to get AWB set from trackingId list.
-    private Set<Awb> getAWBSet(List<String> awbNumberList, Courier hkDelivery){
-        Set<Awb>   awbSet      = new HashSet<Awb>();
-        for(String awbNumbr:awbNumberList){
-            awbSet.add(awbService.findByCourierAwbNumber(hkDelivery,awbNumbr));
-        }
-        return awbSet;
-    }
+    
     public Hub getHub() {
         return hub;
     }
