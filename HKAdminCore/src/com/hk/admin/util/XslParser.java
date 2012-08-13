@@ -267,7 +267,7 @@ public class XslParser {
           product.setRelatedProducts(getRelatedProductsFromExcel(getCellValue(XslConstants.RELATED_PRODUCTS, rowMap, headerMap)));
           productDeleted = true;
           product.setDeleted(productDeleted);
-          product.setSupplier(getSupplierDetails(getCellValue(XslConstants.SUPPLIER_TIN, rowMap, headerMap),
+            product.setSupplier(getSupplierDetails(getCellValue(XslConstants.SUPPLIER_TIN, rowMap, headerMap),
               getCellValue(XslConstants.SUPPLIER_STATE, rowMap, headerMap), rowCount));
 
           product.setMaxDays(getLong(getCellValue(XslConstants.MAX_DAYS_TO_PROCESS, rowMap, headerMap)));

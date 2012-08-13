@@ -1,7 +1,15 @@
 package com.hk.web.action.core.order;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.constants.subscription.EnumSubscriptionStatus;
+import com.hk.core.fliter.CartLineItemFilter;
+import com.hk.core.fliter.SubscriptionFilter;
+import com.hk.domain.order.CartLineItem;
+import com.hk.domain.subscription.Subscription;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.LocalizableMessage;
@@ -100,7 +108,10 @@ public class OrderSummaryAction extends BaseAction {
         if (order.getAddress() == null) {
             return new RedirectResolution(SelectAddressAction.class);
         }
+
         pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), rewardPointsUsed), order.getAddress());
+        Set<CartLineItem> subscriptionCartLineItems=new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
+
         order.setRewardPointsUsed(rewardPointsUsed);
         order = (Order) getBaseDao().save(order);
 
@@ -122,6 +133,11 @@ public class OrderSummaryAction extends BaseAction {
             Double payable = pricingDto.getGrandTotalPayable();
             if (payable < codMinAmount || payable > codMaxAmount) {
                 codAllowed = false;
+            }
+        }
+        if(codAllowed){
+            if(subscriptionCartLineItems!=null && subscriptionCartLineItems.size()>0){
+                codAllowed=false;
             }
         }
 
@@ -204,4 +220,5 @@ public class OrderSummaryAction extends BaseAction {
     public void setAvailableCourierList(List<Courier> availableCourierList) {
         this.availableCourierList = availableCourierList;
     }
+
 }

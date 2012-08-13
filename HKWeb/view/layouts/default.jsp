@@ -45,13 +45,18 @@
 
 
     <div class="main_container">
-        <h1 style="text-align: center; margin-bottom: 0.5em;">
+        <h1 style="text-align: center; margin-bottom: 0.5em; font-weight: bold; font-size: 22px">
           <s:layout-component name="heading"/>
         </h1>
       
         <s:errors/>
         <div class="alert messages"><s:messages key="generalMessages"/></div>
+       <%-- central content should be used only when you don't use lhscontent and rhscontent--%>
+        <div class="centralContent">
+            <s:layout-component name="centralContent"/>
 
+            <div class="floatfix"></div>
+        </div>
 
       <div class="lhsContent">
         <s:layout-component name="lhsContent"/>

@@ -78,11 +78,16 @@
     </s:link>
         <s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction"
                 event="manageProductImages" target="_blank"
-                class="popup">Manage
+                class="popup">&nbsp;&nbsp;Manage
             Images
             <s:param name="productId" value="${productCombo.id}"/>
         </s:link>
     </div>
+</shiro:hasPermission>
+<shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_CATALOG%>">
+  <s:link beanclass="com.hk.web.action.admin.catalog.product.CreateEditComboAction" event="pre" target="_blank" class="popup">&nbsp;&nbsp;Edit Combo
+    <s:param name="combo" value="${productCombo.id}"/>
+  </s:link>
 </shiro:hasPermission>
 <h2 class='prod_title'>
         ${productCombo.name}
@@ -704,9 +709,6 @@
             $(availableOptions).css({
                 height: maxHtOfOptions
             });
-
-//            alert("max ht: " + maxHtOfOptions);
-//            alert("avail options  ht: " + $(availableOptions).height());
 
             $(arrow).css({
                 paddingTop:10 + maxHtOfOptions / 2

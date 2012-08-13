@@ -69,7 +69,7 @@ public class UserCartDaoImpl extends BaseDaoImpl implements UserCartDao {
     @Transactional
     public void updateIsProductBought(Order order) {
         User user = order.getUser();
-        Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
+        Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
         for (CartLineItem productLineItem : productCartLineItems) {
             Criteria criteria = getSession().createCriteria(UserCart.class);
             criteria.add(Restrictions.eq("product", productLineItem.getProductVariant().getProduct()));

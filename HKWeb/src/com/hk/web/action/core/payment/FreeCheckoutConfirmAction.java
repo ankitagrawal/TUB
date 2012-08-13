@@ -71,6 +71,7 @@ public class FreeCheckoutConfirmAction extends BaseAction {
 
     public Resolution confirm() {
         Order order = orderManager.getOrCreateOrder(user);
+
         PricingDto pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), order.getRewardPointsUsed()),
                 order.getAddress());
         logger.debug("pricingDto.getGrandTotalPayable(): " + pricingDto.getGrandTotalPayable());
