@@ -1,16 +1,15 @@
 <%@ page import="com.hk.helper.CatalogFilter" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
-<%@ page import="com.hk.domain.catalog.product.ProductOption" %>
-<%@ page import="java.util.List" %>
 <%@ page import="com.hk.dto.ProductOptionDto" %>
 <%@ page import="java.util.Map" %>
+<%@ page import="java.util.Set" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.core.catalog.category.CatalogAction" var="ca"/>
 <s:layout-definition>
 
 	<%
 		CatalogFilter catalogFilter = (CatalogFilter) ServiceLocatorFactory.getService("CatalogFilter");
-		Map<String, List<ProductOptionDto>> filterMap = catalogFilter.getFilterOptions(ca.getChildCategorySlug());
+		Map<String, Set<ProductOptionDto>> filterMap = catalogFilter.getFilterOptions(ca.getChildCategorySlug());
 		pageContext.setAttribute("filterMap", filterMap);
 
 	%>

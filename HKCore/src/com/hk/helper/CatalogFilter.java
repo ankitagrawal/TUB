@@ -5,10 +5,7 @@ import com.hk.pact.service.catalog.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -23,25 +20,26 @@ public class CatalogFilter {
 	@Autowired
 	private CategoryService categoryService;
 
-	private Map<String, List<ProductOptionDto>> filterMap = new HashMap<String, List<ProductOptionDto>>();
-	private List<ProductOptionDto> filterOptionDtoList;
+	private Map<String, Set<ProductOptionDto>> filterMap;
+	private Set<ProductOptionDto> filterOptionDtoSet;
 
-	public Map<String, List<ProductOptionDto>> getFilterOptions(String category) {
+	public Map<String, Set<ProductOptionDto>> getFilterOptions(String category) {
+		filterMap = new HashMap<String, Set<ProductOptionDto>>();
 		List<ProductOptionDto> optionDtoList = categoryService.getFilterOptions(category);
 		for (ProductOptionDto productOptionDto : optionDtoList) {
 			String option = productOptionDto.getName().toUpperCase();
 			if (filterMap.containsKey(option)) {
-				filterOptionDtoList = filterMap.get(option);
+				filterOptionDtoSet = filterMap.get(option);
 			} else {
-				filterOptionDtoList = new ArrayList<ProductOptionDto>();
+				filterOptionDtoSet = new HashSet<ProductOptionDto>(0);
 			}
-			filterOptionDtoList.add(productOptionDto);
-			filterMap.put(option, filterOptionDtoList);
+			filterOptionDtoSet.add(productOptionDto);
+			filterMap.put(option, filterOptionDtoSet);
 		}
 		return filterMap;
 	}
 
-	public Map<String, List<ProductOptionDto>> getFilterMap() {
+	public Map<String, Set<ProductOptionDto>> getFilterMap() {
 		return filterMap;
 	}
 }
