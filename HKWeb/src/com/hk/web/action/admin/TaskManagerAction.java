@@ -71,7 +71,7 @@ public class TaskManagerAction extends BaseAction {
       System.out.println("Populating Purchases ");
         busyTableTransactionGenerator.populatePurchaseData();
     }catch (Exception e){
-//      Logger.error("Unable to insert: ", e);
+      logger.error("Unable to insert: ", e);
     }
      return new ForwardResolution("/pages/admin/taskManager.jsp");
   }
