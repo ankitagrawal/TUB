@@ -1,5 +1,6 @@
 package com.hk.admin.util;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Cell;
@@ -26,14 +27,14 @@ import javax.servlet.http.HttpServletResponse;
  */
  @Component
 public class XslUtil {
-
+    private static Logger logger                 = Logger.getLogger(XslUtil.class);
    public static Date getDate(String value) {
     Date date = null;
     try {
       SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM");
       date = (Date) formatter.parse(value);
     } catch (Exception e) {
-
+        logger.error("Error while parsing Date in XslUtil " + e.getMessage());
     }
     return date;
   }
