@@ -358,11 +358,11 @@ public class XslParser {
         productVariant.setProductOptions(productOptions);
         productVariant.setProductExtraOptions(productExtraOptions);
         String availability = getCellValue(XslConstants.AVAILABILITY, rowMap, headerMap);
-          if (isJitBoolean) {
-              outOfStock = false;           
+         if (isJitBoolean) {
+              outOfStock = false;
           } else {
               outOfStock = StringUtils.isNotBlank(availability) && availability.trim().toLowerCase().equals("y") ? false : true;
-          }                                                                                     
+          }
           productVariant.setOutOfStock(outOfStock);
         String deleted = getCellValue(XslConstants.DELETED, rowMap, headerMap);
         boolean deletedBoolean = StringUtils.isNotBlank(deleted) && deleted.trim().toLowerCase().equals("y") ? true : false;

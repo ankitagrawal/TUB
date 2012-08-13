@@ -39,7 +39,9 @@
             '    <input type="text" class="variant" name="poLineItems[' + nextIndex + '].productVariant"/>' +
             '  </td>' +
             '<td></td>' +
-            '  <td class="pvDetails"></td>' +
+            '<td class="supplierCode"></td>'+
+            '<td class="otherRemark"></td>' +
+            ' <td class="pvDetails"></td>' +
             '<td></td>' +
             '  <td>' +
             '    <input type="text" name="poLineItems[' + nextIndex + '].qty" class="quantity" />' +
@@ -65,6 +67,8 @@
             $('#pvInfoLink').attr('href'), {productVariantId: productVariantId},
             function(res) {
               if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+                variantRow.find('.supplierCode').html(res.data.variant.supplierCode);
+                variantRow.find('.otherRemark').html(res.data.variant.otherRemark);
                 variantRow.find('.mrp').val(res.data.variant.markedPrice);
                 variantRow.find('.costPrice').val(res.data.variant.costPrice);
                 productVariantDetails.html(
@@ -210,6 +214,8 @@
       <th></th>
       <th>VariantID</th>
       <th>UPC</th>
+      <th>Supplier Code</th>
+	  <th>Remarks</th>  
       <th>Details</th>
       <th>Tax<br/>Category</th>
       <th>Qty</th>
@@ -254,6 +260,8 @@
                     value="${poLineItemDto.poLineItem.productVariant.id}"/>
         </td>
         <td>${productVariant.upc}</td>
+        <td class="supplierCode" >${productVariant.supplierCode}</td>
+		<td class="otherRemark">${productVariant.otherRemark} </label></td>
         <td>${productVariant.product.name}<br/>${productVariant.optionsCommaSeparated}
         </td>
         <td>
@@ -286,11 +294,11 @@
     </tbody>
     <tfoot>
     <tr>
-      <td colspan="9">Total</td>
-      <td><fmt:formatNumber value="${pa.purchaseOrderDto.totalTaxable}" maxFractionDigits="2"/></td>
-      <td><fmt:formatNumber value="${pa.purchaseOrderDto.totalTax}" maxFractionDigits="2"/></td>
-      <td><fmt:formatNumber value="${pa.purchaseOrderDto.totalSurcharge}" maxFractionDigits="2"/></td>
-      <td><fmt:formatNumber value="${pa.purchaseOrderDto.totalPayable}" maxFractionDigits="2"/></td>
+      <td colspan="11">Total</td>
+      &nbsp; &nbsp; <td><fmt:formatNumber value="${pa.purchaseOrderDto.totalTaxable}" maxFractionDigits="2"/></td>
+      &nbsp; <td><fmt:formatNumber value="${pa.purchaseOrderDto.totalTax}" maxFractionDigits="2"/></td>
+      &nbsp; <td><fmt:formatNumber value="${pa.purchaseOrderDto.totalSurcharge}" maxFractionDigits="2"/></td>
+      &nbsp; <td><fmt:formatNumber value="${pa.purchaseOrderDto.totalPayable}" maxFractionDigits="2"/></td>
     </tr>
     </tfoot>
   </table>
