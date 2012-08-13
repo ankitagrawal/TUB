@@ -156,5 +156,9 @@
     <mapping class="com.hk.domain.courier.CourierGroup"/>
     <mapping class="com.hk.domain.order.PrimaryReferrerForOrder"/>
     <mapping class="com.hk.domain.order.SecondaryReferrerForOrder"/>
+	  <!-- Please Add All Domains Post HKR Here-->
+
+	  <!-- Ajeet Added His on 10-July-->
+    <mapping class="com.hk.domain.inventory.BrandsToAudit"/>
   </session-factory>
 </hibernate-configuration>

@@ -1,6 +1,7 @@
 package com.hk.pact.service.catalog;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.akube.framework.dao.Page;
@@ -88,4 +89,9 @@ public interface ProductService {
 
     public Double getAverageRating(Product product);
 
+    public List<Combo> getRelatedCombos(Product product);
+
+    public Map<String,List<String>> getRecommendedProducts(Product product);
+
+    Map<String, List<String>> getRelatedMoogaProducts(Product findProduct);
 }

@@ -79,11 +79,11 @@
             <td></td>
             <td><!-- AddThis Button BEGIN -->
               <div class="addthis_toolbox addthis_default_style addthis_32x32_style"
-                   addThis:url="http://www.healthkart.com/action/invite/${couponBean.principal.userHash}"
+                   addThis:url="${pageContext.request.contextPath}/action/invite/${couponBean.principal.userHash}"
                    addTHis:title="HealthKart referral program"
                    addTHis:description="Get Rs. 100 and Gift Rs. 100">
                 <a class="addthis_button_preferred_1">
-                  &nbsp;&nbsp;http://www.healthkart.com/action/invite/${couponBean.principal.userHash}</a>
+                  &nbsp;&nbsp;${pageContext.request.contextPath}/action/invite/${couponBean.principal.userHash}</a>
               </div>
               <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-4df7053a23664e11"></script>
               <!-- AddThis Button END --></td>

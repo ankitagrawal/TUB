@@ -1,6 +1,6 @@
 package com.hk.admin.util.helper;
 
-import com.hk.admin.pact.dao.courier.CityCourierTATDao;
+import com.hk.admin.pact.service.courier.CityCourierTATService;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.util.XslUtil;
 import com.hk.constants.XslConstants;
@@ -37,7 +37,8 @@ public class XslCityCourierTATParser {
   @Autowired
   CourierService courierService;
   @Autowired
-    CityCourierTATDao cityCourierTATDao;
+  CityCourierTATService cityCourierTATService;
+
 
 
   public Set<CityCourierTAT> readCityCourierTATExcel(File file) throws Exception {
@@ -89,7 +90,7 @@ public class XslCityCourierTATParser {
           logger.error(" cityTAT cannot be null/empty");
           throw new ExcelBlankFieldException("cityTAT cannot be empty " + "    ", rowCount);
         }
-        CityCourierTAT cityCourierTAT=  cityCourierTATDao.getCityTatByCity(city); 
+        CityCourierTAT cityCourierTAT=  cityCourierTATService.getCityTatByCity(city); 
         if(cityCourierTAT != null){
          cityCourierTAT.setCity(city);
          cityCourierTAT.setCourier(courier);

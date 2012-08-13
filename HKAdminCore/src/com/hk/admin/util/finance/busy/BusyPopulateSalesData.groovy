@@ -55,7 +55,7 @@ public class BusyPopulateSalesData {
                            u.name as account_name, pm.name as debtors, pm.id as payment_mode_id,
                            a.line1 as address_1, a.line2 as address_2, a.city, a.state,
                            w.name as warehouse, w.id as warehouse_id, so.amount as net_amount, c.name as courier_name,
-                           so.is_service_order, bo.is_b2b_order
+                           so.is_service_order, bo.is_b2b_order, so.shipping_order_status_id  , ship.return_date as return_date
                     from 	  shipping_order so
 
                     inner join base_order bo on so.base_order_id = bo.id
@@ -116,7 +116,15 @@ public class BusyPopulateSalesData {
         vch_prefix = "R";
       }
       vch_no = vch_prefix+accountingInvoice.vch_no;
-      vch_type = 9;
+
+      if(accountingInvoice.shipping_order_status_id == 200){
+        vch_type = 3;
+        date =   accountingInvoice.return_date;
+      }
+      else{
+        vch_type = 9;
+      }
+
       sale_type = "VAT TAX INC";
       account_name = accountingInvoice.account_name;
       

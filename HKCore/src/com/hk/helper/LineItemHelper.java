@@ -1,6 +1,7 @@
 package com.hk.helper;
 
 import com.hk.domain.order.CartLineItem;
+import com.hk.domain.order.CartLineItemConfig;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
@@ -18,7 +19,13 @@ public class LineItemHelper {
         shippingOrderLineItem.setShippingOrder(shippingOrder);
         shippingOrderLineItem.setCartLineItem(cartLineItem);
         shippingOrderLineItem.setQty(cartLineItem.getQty());
-        shippingOrderLineItem.setCostPrice(cartLineItem.getProductVariant().getCostPrice());
+        
+        CartLineItemConfig config = cartLineItem.getCartLineItemConfig();
+        double costPrice = cartLineItem.getProductVariant().getCostPrice();
+        if(config !=null){
+            costPrice += config.getCostPrice();
+        }
+        shippingOrderLineItem.setCostPrice(costPrice);
         shippingOrderLineItem.setMarkedPrice(cartLineItem.getMarkedPrice());
         shippingOrderLineItem.setHkPrice(cartLineItem.getHkPrice());
         shippingOrderLineItem.setDiscountOnHkPrice(cartLineItem.getDiscountOnHkPrice());

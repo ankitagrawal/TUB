@@ -41,41 +41,39 @@
 <div class="clear"></div>
 
 <div class="grid_12" style="border: 1px black solid;">
-  <div class="grid_4 alpha omega">
-    <div class="column">
-      <c:choose>
-        <c:when test="${orderSummary.invoiceDto.b2bUserDetails != null}">
-          <p>BrightLifecare Pvt Ltd.</p>
-
-          <p>3rd Floor, Parshavnath Arcadia,</p>
-
-          <p>1, MG Road, Gurgaon, Haryana - 122001</p>
-          <c:choose>
-            <c:when test="${orderSummary.invoiceDto.warehouseState == 'HARYANA'}">
-              <p> TIN# 06101832036
-            </c:when>
-            <c:when test="${orderSummary.invoiceDto.warehouseState == 'MAHARASHTRA'}">
-              <p> TIN# 27210893736
-            </c:when>
-          </c:choose>
-          <br/>
-          D. L. No. HR-6600-219-OW(H),HR-6600-219-W(H)</p>
-        </c:when>
-        <c:otherwise>
-
-          <p>Aquamarine HealthCare Pvt. Ltd.</p>
-
-          <p>3rd Floor, Parshavnath Arcadia,</p>
-
-          <p>1, MG Road, Gurgaon, Haryana 122001</p>
-
-          <p>TIN#06101832327 </p>
-
-
-        </c:otherwise>
-      </c:choose>
-    </div>
-  </div>
+	<div class="grid_4 alpha omega">
+		<div class="column">
+			<c:set var="warehouse" value="${orderSummary.shippingOrder.warehouse}"/>
+			<c:set var="isB2BOrder" value="${orderSummary.shippingOrder.baseOrder.b2bOrder}"/>
+			<c:choose>
+				<c:when test="${isB2BOrder}">
+					<p>Bright Lifecare Pvt. Ltd.</p>
+				</c:when>
+				<c:otherwise>
+					<p>Aquamarine HealthCare Pvt. Ltd.</p>
+				</c:otherwise>
+			</c:choose>
+			<p>${warehouse.line1}</p>
+			<p>${warehouse.line2}</p>
+			<p>${warehouse.city}, ${warehouse.state} - ${warehouse.pincode}</p>
+			<c:choose>
+				<c:when test="${isB2BOrder}">
+					<c:choose>
+						<c:when test="${orderSummary.invoiceDto.warehouseState == 'HARYANA'}">
+							<p> TIN# 06101832036</p>
+						</c:when>
+						<c:when test="${orderSummary.invoiceDto.warehouseState == 'MAHARASHTRA'}">
+							<p> TIN# 27210893736</p>
+						</c:when>
+					</c:choose>
+					<p>D.L.No. <br/>HR-6600-219-OW(H), HR-6600-219-W(H)</p>
+				</c:when>
+				<c:otherwise>
+					TIN# ${warehouse.tin}
+				</c:otherwise>
+			</c:choose>
+		</div>
+	</div>
 
   <div class="grid_4 alpha omega">
     <div class="column" style="border-right: 1px black solid; border-left: 1px black solid;">
@@ -271,7 +269,7 @@
 <div class="grid_12">
   <p><strong>Terms &amp; Conditions:</strong></p>
 
-  <p>1. All disputes are subject to Gurgaon Jurisdiction.</p>
+  <p>1. All disputes are subject to ${warehouse.city} Jurisdiction.</p>
   <c:if test="${orderSummary.invoiceDto.b2bUserDetails != null}">
     <p>2. This is computer generated invoice</p>
   </c:if>

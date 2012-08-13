@@ -30,143 +30,146 @@ import com.hk.web.filter.WebContext;
 
 @Component
 public class UploadCategoryImageAction extends BaseAction {
-	//    @Validate(required = true)
-	FileBean fileBean;
-	Category category;
-	String name;
-	String categoryName;
-	String errorMessage = null;
+  //    @Validate(required = true)
+  FileBean fileBean;
+  Category category;
+  String name;
+  String categoryName;
+  String errorMessage = null;
 
-	@Autowired
-	public CategoryImageDao categoryImageDao;
-	
-	private static Logger logger = Logger.getLogger(UploadCategoryImageAction.class);
-	List<CategoryImage> categoryImages;
+  @Autowired
+  public CategoryImageDao categoryImageDao;
 
-
-	
-	//@Named(Keys.Env.adminUploads)
-	@Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
-	String adminUploadsPath;
-
-	@Autowired
-	ImageManager imageManager;
-	
-	@Autowired
-	CategoryDao categoryDao;
+  private static Logger logger = Logger.getLogger(UploadCategoryImageAction.class);
+  List<CategoryImage> categoryImages;
 
 
-	@DefaultHandler
-	@DontValidate
-	public Resolution pre() {
-		return new ForwardResolution("/pages/uploadCategoryImage.jsp");
-	}
+  //@Named(Keys.Env.adminUploads)
+  @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
+  String adminUploadsPath;
 
-	public Resolution uploadCategoryImage() throws Exception {
-		String imageFilePath = adminUploadsPath + "/imageFiles/temp/" + System.currentTimeMillis() + "_" + BaseUtils.getRandomString(4) + ".jpg";
-		File imageFile = new File(imageFilePath);
-		category = categoryDao.getCategoryByName(categoryName);
-		EnumS3UploadStatus status;
-		try {
-			imageFile.getParentFile().mkdirs();
-			if (fileBean == null) {
-				//System.out.println("nullll");
-			}
+  @Autowired
+  ImageManager imageManager;
 
-			fileBean.save(imageFile);
-			status = imageManager.uploadCategoryFile(imageFile, category, false);
-		} finally {
-			if (imageFile.exists()) imageFile.delete();
-		}
-		addRedirectAlertMessage(new SimpleMessage(status.getMessage()));
-		return new ForwardResolution("/pages/uploadCategoryImage.jsp");
-	}
+  @Autowired
+  CategoryDao categoryDao;
 
 
-	@DontValidate
-	public Resolution manageCategoryImages() {
-		categoryImages = categoryImageDao.getCategoryImageByCategory(category);
-		//     mainImageId = category.getMainImageId() != null ? category.getMainImageId().toString() : "";
-		return new ForwardResolution("/pages/manageCategoryImages.jsp");
-	}
+  @DefaultHandler
+  @DontValidate
+  public Resolution pre() {
+    return new ForwardResolution("/pages/uploadCategoryImage.jsp");
+  }
 
-	public Resolution editCategoryImageSettings() throws Exception {
-		String host = "http://".concat(StripesFilter.getConfiguration().getSslConfiguration().getUnsecureHost());
-		String contextPath = WebContext.getRequest().getContextPath();
-		String urlString = host.concat(contextPath);
+  public Resolution uploadCategoryImage() throws Exception {
+    String imageFilePath = adminUploadsPath + "/imageFiles/temp/" + System.currentTimeMillis() + "_" + BaseUtils.getRandomString(4) + ".jpg";
+    logger.debug("image uplaod path: " + imageFilePath);
+    File imageFile = new File(imageFilePath);
+    category = categoryDao.getCategoryByName(categoryName);
+    EnumS3UploadStatus status;
+    try {
+      imageFile.getParentFile().mkdirs();
+      if (fileBean == null) {
+        //System.out.println("nullll");
+      }
 
-		if (categoryImages != null) {
-			for (CategoryImage categoryImage : categoryImages) {
-				// For checking whether entered link is correct or not
-				if (categoryImage.getLink() != null) {
-					String linkValue = urlString.concat(categoryImage.getLink());
-					try {
-						if (!BaseUtils.remoteFileExists(linkValue)) {
-							logger.debug("heading link " + linkValue + " invalid!");
-							errorMessage = "PLEASE ENTER LINK CORRECTLY .. ENTERED LINK DOES NOT EXIST";
-							return new ForwardResolution("/pages/manageCategoryImages.jsp");
-						}
-					} catch (Exception e) {
-						logger.debug("heading link " + linkValue + " invalid!");
-						errorMessage = "PLEASE ENTER LINK CORRECTLY .. ENTERED LINK DOES NOT EXIST";
-						return new ForwardResolution("/pages/manageCategoryImages.jsp");
-					}
-				}
-				//
-				categoryImageDao.save(categoryImage);
-			}
-		}
-		return new ForwardResolution("/pages/close.jsp");
-	}
+      fileBean.save(imageFile);
+      status = imageManager.uploadCategoryFile(imageFile, category, false);
+    } finally {
+      if (imageFile.exists()) imageFile.delete();
+    }
+    addRedirectAlertMessage(new SimpleMessage(status.getMessage()));
+    return new ForwardResolution("/pages/uploadCategoryImage.jsp");
+  }
 
 
-	public FileBean getFileBean() {
-		return fileBean;
-	}
+  @DontValidate
+  public Resolution manageCategoryImages() {
+    categoryImages = categoryImageDao.getCategoryImageByCategory(category);
+    //     mainImageId = category.getMainImageId() != null ? category.getMainImageId().toString() : "";
+    if (category.getName().equalsIgnoreCase("home")) {
+      return new ForwardResolution("/pages/manageHomeImages.jsp");
+    }
+    return new ForwardResolution("/pages/manageCategoryImages.jsp");
+  }
 
-	public void setFileBean(FileBean fileBean) {
-		this.fileBean = fileBean;
-	}
 
-	public Category getCategory() {
-		return category;
-	}
+  public Resolution editCategoryImageSettings() throws Exception {
+    String host = "http://".concat(StripesFilter.getConfiguration().getSslConfiguration().getUnsecureHost());
+    String contextPath = WebContext.getRequest().getContextPath();
+    String urlString = host.concat(contextPath);
+    if (categoryImages != null) {
+      for (CategoryImage categoryImage : categoryImages) {
+        // For checking whether entered link is correct or not
+        if (categoryImage.getLink() != null) {
+          String linkValue = urlString.concat(categoryImage.getLink());
+          try {
+            if (!BaseUtils.remoteFileExists(linkValue)) {
+              logger.debug("heading link " + linkValue + " invalid!");
+              errorMessage = "PLEASE ENTER LINK CORRECTLY .. ENTERED LINK DOES NOT EXIST";
+              return new ForwardResolution("/pages/manageCategoryImages.jsp");
+            }
+          } catch (Exception e) {
+            logger.debug("heading link " + linkValue + " invalid!");
+            errorMessage = "PLEASE ENTER LINK CORRECTLY .. ENTERED LINK DOES NOT EXIST";
+            return new ForwardResolution("/pages/manageCategoryImages.jsp");
+          }
+        }
+        //
+        categoryImageDao.save(categoryImage);
+      }
+    }
+    return new ForwardResolution("/pages/close.jsp");
+  }
 
-	public void setCategory(Category category) {
-		this.category = category;
-	}
 
-	public String getCategoryName() {
-		return categoryName;
-	}
+  public FileBean getFileBean() {
+    return fileBean;
+  }
 
-	public void setCategoryName(String categoryName) {
-		this.categoryName = categoryName;
-	}
+  public void setFileBean(FileBean fileBean) {
+    this.fileBean = fileBean;
+  }
 
-	public String getName() {
-		return name;
-	}
+  public Category getCategory() {
+    return category;
+  }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+  public void setCategory(Category category) {
+    this.category = category;
+  }
 
-	public List<CategoryImage> getCategoryImages() {
-		return categoryImages;
-	}
+  public String getCategoryName() {
+    return categoryName;
+  }
 
-	public void setCategoryImages(List<CategoryImage> categoryImages) {
-		this.categoryImages = categoryImages;
-	}
+  public void setCategoryName(String categoryName) {
+    this.categoryName = categoryName;
+  }
 
-	public String getErrorMessage() {
-		return errorMessage;
-	}
+  public String getName() {
+    return name;
+  }
 
-	public void setErrorMessage(String errorMessage) {
-		this.errorMessage = errorMessage;
-	}
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public List<CategoryImage> getCategoryImages() {
+    return categoryImages;
+  }
+
+  public void setCategoryImages(List<CategoryImage> categoryImages) {
+    this.categoryImages = categoryImages;
+  }
+
+  public String getErrorMessage() {
+    return errorMessage;
+  }
+
+  public void setErrorMessage(String errorMessage) {
+    this.errorMessage = errorMessage;
+  }
 
 
 }

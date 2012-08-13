@@ -13,7 +13,7 @@
 <body>
 <div class="hk_banner" style="margin-left:20px; margin-top:20px; height:auto;">
   <div>
-    <a href="http://www.healthkart.com/product/${pa.product.slug}/${pa.product.id}?affid=${pa.affiliate.code}"
+    <a href="${pageContext.request.contextPath}/product/${pa.product.slug}/${pa.product.id}?affid=${pa.affiliate.code}"
        title="${pa.product.name}" target="_parent">
       <c:choose>
         <c:when test="${pa.product.mainImageId != null}">
@@ -28,10 +28,10 @@
     </a>
   </div>
   <div>
-    <a href="http://www.healthkart.com/product/${pa.product.slug}/${pa.product.id}?affid=${pa.affiliate.code}"
+    <a href="${pageContext.request.contextPath}/product/${pa.product.slug}/${pa.product.id}?affid=${pa.affiliate.code}"
        title="${pa.product.name}" target="_parent">${pa.product.name}</a>
 
-    <a href="http://www.healthkart.com/product/${pa.product.slug}/${pa.product.id}?affid=${pa.affiliate.code}"
+    <a href="${pageContext.request.contextPath}/product/${pa.product.slug}/${pa.product.id}?affid=${pa.affiliate.code}"
        title="${pa.product.name}" target="_parent">
 
       <div class='prices' style="font-size: 12px;margin-left:10px;margin-bottom:5px">
@@ -56,7 +56,7 @@
       </div>
     </a>
 
-    <a href="http://www.healthkart.com/product/${pa.product.slug}/${pa.product.id}?affid=${pa.affiliate.code}"
+    <a href="${pageContext.request.contextPath}/product/${pa.product.slug}/${pa.product.id}?affid=${pa.affiliate.code}"
        target="_parent">
       <img src="${pageContext.request.contextPath}/images/icons/buy_button_1.png" alt="Buy from HealthKart"/>
     </a>

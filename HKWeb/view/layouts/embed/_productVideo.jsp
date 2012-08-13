@@ -6,7 +6,6 @@
 
 <s:layout-definition>
 
-
   <%
     ProductDao productDao = (ProductDao)ServiceLocatorFactory.getService(ProductDao.class);
     String product_productThumbId = (String) pageContext.getAttribute("productId");
@@ -15,6 +14,9 @@
   %>
 
   <div>
+  <hk:productVideo videoCode="${product.videoEmbedCode}" />
+  <!--
       ${product.videoEmbedCode}
+  -->
   </div>
 </s:layout-definition>
