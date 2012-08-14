@@ -11,16 +11,23 @@
 
 	<%
 		CatalogFilter catalogFilter = (CatalogFilter) ServiceLocatorFactory.getService("CatalogFilter");
-		Map<String, Set<ProductOptionDto>> filterMap = catalogFilter.getFilterOptions(ca.getChildCategorySlug());
+		String category = ca.getChildCategorySlug();
+		if(ca.getSecondaryChildCategorySlug() != null){
+			category = ca.getSecondaryChildCategorySlug();
+		}
+		if(ca.getTertiaryChildCategorySlug() != null){
+			category = ca.getTertiaryChildCategorySlug();
+		}
+		Map<String, Set<ProductOptionDto>> filterMap = catalogFilter.getFilterOptions(category);
 		pageContext.setAttribute("filterMap", filterMap);
 
-		PriceRangeDto priceRange = catalogFilter.getPriceRange(ca.getChildCategorySlug());
+		PriceRangeDto priceRange = catalogFilter.getPriceRange(category);
 		pageContext.setAttribute("priceRange", priceRange);
 
 		PriceRangeDto filteredPriceRange = null;
 		if (ca.getMinPrice() != null && ca.getMaxPrice() != null) {
 			filteredPriceRange = new PriceRangeDto(ca.getMinPrice(), ca.getMaxPrice());
-		}else{
+		} else {
 			filteredPriceRange = priceRange;
 		}
 		pageContext.setAttribute("filteredPriceRange", filteredPriceRange);
@@ -33,7 +40,7 @@
 		}
 
 		.ui-slider .ui-slider-range {
-			background-color: blue;
+			background-color: #1D456B;
 		}
 	</style>
 	<script type="text/javascript" src="<hk:vhostJs/>/js/jquery-ui.min.js"></script>
@@ -42,7 +49,7 @@
 		$(document).ready(function() {
 			var min = ${filteredPriceRange.minPrice};
 			var max = ${filteredPriceRange.maxPrice};
-			$("#amount").html("Rs" + min + " - Rs." + max);
+			$("#amount").html("Rs." + min + " - Rs." + max);
 
 			$("#slider-range").slider({
 				range: true,
@@ -52,10 +59,12 @@
 				values: [ min, max ],
 				change: function(event, ui) {
 					$("#amount").html("Rs." + ui.values[ 0 ] + " - Rs." + ui.values[ 1 ]);
-					var href = $('#pricingFilterLink').attr('href');
-					href += "&minPrice=" + ui.values[ 0 ];
-					href += "&maxPrice=" + ui.values[ 1 ];
-					window.location.href = href;
+					/*var href = $('#pricingFilterLink').attr('href');
+					 href += "&minPrice=" + ui.values[ 0 ];
+					 href += "&maxPrice=" + ui.values[ 1 ];
+					 window.location.href = href;*/
+					$("#minPrice").val(ui.values[ 0 ]);
+					$("#maxPrice").val(ui.values[ 1 ]);
 				}
 			});
 
@@ -63,51 +72,46 @@
 	</script>
 	<div class='box'>
 		<c:set var="ctr" value="0"/>
-		<c:forEach items="${filterMap}" var="filter">
-			<h5 class='heading1'>
-				Filter by ${filter.key}
-			</h5>
-			<ul style="padding-left:0px;">
-				<c:forEach items="${filter.value}" var="option">
-					<li><s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction">
-						<s:param name="rootCategorySlug" value="${ca.rootCategorySlug}"/>
-						<s:param name="childCategorySlug" value="${ca.childCategorySlug}"/>
-						<c:if test="${ca.secondaryChildCategorySlug != null}">
-							<s:param name="secondaryChildCategorySlug" value="${ca.secondaryChildCategorySlug}"/>
-						</c:if>
-						<c:if test="${ca.tertiaryChildCategorySlug != null}">
-							<s:param name="tertiaryChildCategorySlug" value="${ca.tertiaryChildCategorySlug}"/>
-						</c:if>
-						<s:param name="filterOptions[${ctr+1}]" value="${option.id}"/>
-						<s:param name="minPrice" value="${filteredPriceRange.minPrice}"/>
-						<s:param name="maxPrice" value="${filteredPriceRange.maxPrice}"/>
-						${option.value} (${option.qty})</s:link></li>
-				</c:forEach>
-			</ul>
-		</c:forEach>
-
-		<h5 class='heading1'>
-			Filter by Price
-		</h5>
-
-		<div style="display: none;"><s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction"
-		                                    id="pricingFilterLink">
+		<s:form beanclass="com.hk.web.action.core.catalog.category.CatalogAction">
 			<s:param name="rootCategorySlug" value="${ca.rootCategorySlug}"/>
 			<s:param name="childCategorySlug" value="${ca.childCategorySlug}"/>
-			<s:param name="secondaryChildCategorySlug" value="${ca.secondaryChildCategorySlug}"/>
-			<s:param name="tertiaryChildCategorySlug" value="${ca.tertiaryChildCategorySlug}"/>
-		</s:link>
-		</div>
+			<c:if test="${ca.secondaryChildCategorySlug != null}">
+				<s:param name="secondaryChildCategorySlug" value="${ca.secondaryChildCategorySlug}"/>
+			</c:if>
+			<c:if test="${ca.tertiaryChildCategorySlug != null}">
+				<s:param name="tertiaryChildCategorySlug" value="${ca.tertiaryChildCategorySlug}"/>
+			</c:if>
+			<s:hidden name="minPrice" id="minPrice" value="${filteredPriceRange.minPrice}"/>
+			<s:hidden name="maxPrice" id="maxPrice" value="${filteredPriceRange.maxPrice}"/>
+			<c:forEach items="${filterMap}" var="filter">
+				<h5 class='heading1'>
+					Filter by ${filter.key}
+				</h5>
+				<ul style="padding-left:0px;">
+					<c:forEach items="${filter.value}" var="option">
+						<li><s:checkbox name="filterOptions[${ctr}]" checked="${option.id}" value="${option.id}"/>
+								${option.value} (${option.qty})
+						</li>
+						<c:set var="ctr2" value="${ctr}"/>
+						<c:set var="ctr" value="${ctr2+1}"/>
+					</c:forEach>
+				</ul>
+			</c:forEach>
 
-		<div class="demo">
-			<div style="padding-bottom:10px;">
-				<label for="amount">Range:</label>
-				<label id="amount" style="border:0; color:#f6931f; font-weight:bold;"></label>
+			<h5 class='heading1'>
+				Filter by Price
+			</h5>
+
+			<div class="demo">
+				<div style="padding-bottom:10px;">
+					<label id="amount" style="font-weight:bold;"></label>
+				</div>
+				<div id="slider-range" style="background-color:#f6931f"></div>
 			</div>
-			<div id="slider-range" style="background-color:red"></div>
-		</div>
-		<!-- End demo -->
-
+			<div align="right">
+				<s:submit name="pre" value="Filter"/>
+			</div>
+		</s:form>
 	</div>
 
 

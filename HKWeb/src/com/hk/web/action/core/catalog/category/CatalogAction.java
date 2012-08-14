@@ -32,6 +32,7 @@ import com.hk.domain.MapIndia;
 import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductOption;
 import com.hk.domain.content.SeoData;
 import com.hk.domain.user.Address;
 import com.hk.dto.menu.MenuNode;
@@ -199,14 +200,6 @@ public class CatalogAction extends BasePaginatedAction {
 			if (categoryNames.size() == 0) {
 				return new RedirectResolution(HomeAction.class);
 			}
-
-			logger.debug("filterOptions:"+filterOptions.size());
-			for (Long filterOption : filterOptions) {
-				if(filterOption == null){
-					filterOptions.remove(filterOption);
-				}
-			}
-			logger.debug("filterOptions:"+filterOptions.size());
 
 			if (!filterOptions.isEmpty() || (minPrice != null && maxPrice != null)) {
 				productPage = productDao.getProductByCategoryBrandAndOptions(categoryNames, brand, filterOptions, minPrice, maxPrice, getPageNo(), getPerPage());

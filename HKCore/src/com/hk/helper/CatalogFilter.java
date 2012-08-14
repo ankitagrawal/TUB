@@ -21,7 +21,6 @@ public class CatalogFilter {
 	@Autowired
 	private CategoryService categoryService;
 
-	private PriceRangeDto priceRangeDto;
 	private Map<String, Set<ProductOptionDto>> filterMap;
 	private Set<ProductOptionDto> filterOptionDtoSet;
 
@@ -48,9 +47,5 @@ public class CatalogFilter {
 
 	public Map<String, Set<ProductOptionDto>> getFilterMap() {
 		return filterMap;
-	}
-
-	public PriceRangeDto getPriceRangeDto() {
-		return priceRangeDto;
 	}
 }
