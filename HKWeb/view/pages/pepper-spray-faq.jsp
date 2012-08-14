@@ -1,3 +1,4 @@
+<%--
 <%@page import="mhc.pojo.FAQ"%>
 <%@page import="mhc.servlet.action.FAQAction"%>
 <%@page import="java.util.Iterator"%>
@@ -55,4 +56,4 @@ else if (window.attachEvent)
 else
 	window.onload=initializeScroller
 
-</script>
+</script>--%>
