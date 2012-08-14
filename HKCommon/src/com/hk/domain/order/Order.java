@@ -36,6 +36,7 @@ import com.hk.domain.courier.Courier;
 import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.store.Store;
+import com.hk.domain.subscription.Subscription;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 
@@ -102,6 +103,9 @@ public class Order implements java.io.Serializable {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "order")
     private Set<CartLineItem>         cartLineItems   = new HashSet<CartLineItem>();
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "baseOrder")
+    private Set<Subscription>         subscriptions   = new HashSet<Subscription>();
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "order")
     private Set<Payment>              payments        = new HashSet<Payment>(0);
 
@@ -127,6 +131,10 @@ public class Order implements java.io.Serializable {
 
     @Column(name = "is_b2b_order")
     private Boolean                   b2bOrder;
+
+  @Column(name = "is_subscription_order", nullable = false)
+  private Boolean                   subscriptionOrder;
+
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "order")
     private List<OrderLifecycle>      orderLifecycles = new ArrayList<OrderLifecycle>();
@@ -445,6 +453,22 @@ public class Order implements java.io.Serializable {
         this.b2bOrder = b2bOrder;
     }
 
+  public Boolean isSubscriptionOrder() {
+      if(subscriptionOrder!=null) {
+          return subscriptionOrder;
+      }else {
+          return false;
+      }
+  }
+
+    public Boolean getSubscriptionOrder() {
+        return subscriptionOrder;
+    }
+
+    public void setSubscriptionOrder(Boolean subscriptionOrder) {
+        this.subscriptionOrder = subscriptionOrder;
+    }
+
     public Set<ShippingOrder> getShippingOrders() {
         return shippingOrders;
     }
@@ -565,7 +589,15 @@ public class Order implements java.io.Serializable {
         return "NA";
     }
 
-    /*
-     * public void setBasketCategory(String basketCategory) { this.basketCategory = basketCategory; }
-     */
+  public Set<Subscription> getSubscriptions() {
+    return subscriptions;
+  }
+
+  public void setSubscriptions(Set<Subscription> subscriptions) {
+    this.subscriptions = subscriptions;
+  }
+
+  /*
+  * public void setBasketCategory(String basketCategory) { this.basketCategory = basketCategory; }
+  */
 }

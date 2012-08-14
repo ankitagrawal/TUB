@@ -1,4 +1,5 @@
 <%@ page import="com.hk.domain.catalog.product.Product" %>
+<%@ page import="com.hk.domain.subscription.SubscriptionProduct" %>
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
@@ -13,6 +14,9 @@
 
       boolean isSecure = pageContext.getRequest().isSecure();
       pageContext.setAttribute("isSecure", isSecure);
+
+      SubscriptionProduct subscriptionProduct = (SubscriptionProduct) pageContext.getAttribute("subscriptionProduct");
+      pageContext.setAttribute("subscriptionProduct", subscriptionProduct);
   %>
 <div class='variants'>
     <span style="font-style: italic; font-size: 16px;;"> ${hk:getNonDeletedVariants(product)}</span>
@@ -156,6 +160,12 @@
 
                     </c:when>
                     <c:otherwise>
+                      <c:if test="${!empty subscriptionProduct}">
+                        <div style="text-align: center">
+                        <s:link beanclass="com.hk.web.action.core.subscription.SubscriptionAction" class="addSubscriptionButton"><b>Subscribe</b>
+                          <s:param name="productVariant" value="${variant}"/> </s:link>
+                        </div>
+                       </c:if>
                       <s:submit name="addToCart" value="Place Order"
                                 class="addToCartButton cta button_green"
                                 style="float:right;"/>
@@ -177,7 +187,6 @@
           $('.addToCartButton').click(function() {
             $(this).parent().parent().children('.progressLoader').show();
           });
-
         </script>
 
       </div>

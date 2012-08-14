@@ -3,7 +3,11 @@ package com.hk.web.action.core.order;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import com.hk.constants.subscription.EnumSubscriptionStatus;
+import com.hk.core.fliter.SubscriptionFilter;
+import com.hk.domain.subscription.Subscription;
 import com.hk.pact.service.mooga.RecommendationEngine;
 import net.sourceforge.stripes.action.JsonResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -93,7 +97,8 @@ public class CartLineItemUpdateAction extends BaseAction {
         if (getPrincipalUser() != null) {
             Order order = orderManager.getOrCreateOrder(getPrincipalUser());
             Address address = order.getAddress() != null ? order.getAddress() : new Address();
-            PricingDto pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), address, 0D), address);
+
+           PricingDto pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), address, 0D), address);
 
             //If it is remove from cart event then report it to recommendation engine
             /*if (cartLineItem.getQty() == 0){

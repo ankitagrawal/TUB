@@ -172,6 +172,8 @@ public class XslParser {
 
       // Iterating on the available rows
       boolean productDeleted = false;
+      boolean outOfStock = false;
+      boolean isJitBoolean = false;
       String refProdId = "";
       Boolean refIsService = false;
       Product refProduct = null;
@@ -259,13 +261,13 @@ public class XslParser {
           boolean isGoogleAdDisallowedBoolean = StringUtils.isNotBlank(isGoogleAdDisallowed) && isGoogleAdDisallowed.trim().toLowerCase().equals("y") ? true : false;
           product.setGoogleAdDisallowed(isGoogleAdDisallowedBoolean);
           String isJit = getCellValue(XslConstants.IS_JIT, rowMap, headerMap);
-          boolean isJitBoolean =  StringUtils.isNotBlank(isJit) && isJit.trim().toLowerCase().equals("y") ? true : false;
+          isJitBoolean =  StringUtils.isNotBlank(isJit) && isJit.trim().toLowerCase().equals("y") ? true : false;
           product.setJit(isJitBoolean);  
           product.setProductVariants(productVariants);
           product.setRelatedProducts(getRelatedProductsFromExcel(getCellValue(XslConstants.RELATED_PRODUCTS, rowMap, headerMap)));
           productDeleted = true;
           product.setDeleted(productDeleted);
-          product.setSupplier(getSupplierDetails(getCellValue(XslConstants.SUPPLIER_TIN, rowMap, headerMap),
+            product.setSupplier(getSupplierDetails(getCellValue(XslConstants.SUPPLIER_TIN, rowMap, headerMap),
               getCellValue(XslConstants.SUPPLIER_STATE, rowMap, headerMap), rowCount));
 
           product.setMaxDays(getLong(getCellValue(XslConstants.MAX_DAYS_TO_PROCESS, rowMap, headerMap)));
@@ -356,8 +358,12 @@ public class XslParser {
         productVariant.setProductOptions(productOptions);
         productVariant.setProductExtraOptions(productExtraOptions);
         String availability = getCellValue(XslConstants.AVAILABILITY, rowMap, headerMap);
-        boolean outOfStock = StringUtils.isNotBlank(availability) && availability.trim().toLowerCase().equals("y") ? false : true;
-        productVariant.setOutOfStock(outOfStock);
+         if (isJitBoolean) {
+              outOfStock = false;
+          } else {
+              outOfStock = StringUtils.isNotBlank(availability) && availability.trim().toLowerCase().equals("y") ? false : true;
+          }
+          productVariant.setOutOfStock(outOfStock);
         String deleted = getCellValue(XslConstants.DELETED, rowMap, headerMap);
         boolean deletedBoolean = StringUtils.isNotBlank(deleted) && deleted.trim().toLowerCase().equals("y") ? true : false;
         productVariant.setDeleted(deletedBoolean);

@@ -27,6 +27,7 @@ import com.hk.domain.offer.rewardPoint.RewardPointStatus;
 import com.hk.domain.order.ShippingOrderStatus;
 import com.hk.domain.review.ReviewStatus;
 import com.hk.domain.store.Store;
+import com.hk.domain.subscription.SubscriptionStatus;
 import com.hk.domain.user.User;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.MasterDataDao;
@@ -264,6 +265,10 @@ public class MasterDataDaoImpl implements MasterDataDao {
         List<Store> storeList = getStoreService().getAllStores();
         storeList.remove(getStoreService().getDefaultStore());
         return storeList;
+    }
+
+    public List<SubscriptionStatus> getSubscriptionStatusList(){
+        return getBaseDao().getAll(SubscriptionStatus.class);
     }
 
   public List<State> getStateList() {
