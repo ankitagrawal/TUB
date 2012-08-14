@@ -118,4 +118,8 @@ public class ShipmentServiceImpl implements ShipmentService {
     public Shipment findByAwb(Awb awb) {
         return shipmentDao.findByAwb(awb);
     }
+
+    public void delete(Shipment shipment){
+         shipmentDao.delete(shipment);
+    }
 }

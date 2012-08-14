@@ -16,4 +16,6 @@ public interface ShipmentService {
     public Awb attachAwbToShipment(Courier courier, ShippingOrder shippingOrder);
 
     public Shipment findByAwb(Awb awb);
+
+    public void delete(Shipment shipment);
 }
