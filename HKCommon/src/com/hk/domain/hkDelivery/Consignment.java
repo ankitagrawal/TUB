@@ -33,9 +33,8 @@ public class Consignment implements java.io.Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "awb_id", nullable = false)
-    private Awb awb;
+    @Column(name = "awb_id", nullable = false, unique = true)
+    private String awbNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payment_reconciliation_id")
@@ -77,12 +76,12 @@ public class Consignment implements java.io.Serializable {
         this.id = id;
     }
 
-    public Awb getAwb() {
-        return this.awb;
+    public String getAwbNumber() {
+        return this.awbNumber;
     }
 
-    public void setAwb(Awb awb) {
-        this.awb = awb;
+    public void setAwbNumber(String awbNumber) {
+        this.awbNumber = awbNumber;
     }
 
     public PaymentReconciliation getPaymentReconciliation() {

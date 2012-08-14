@@ -21,7 +21,7 @@ public class ConsignmentDaoImpl extends BaseDaoImpl implements ConsignmentDao {
         Consignment consignmentObj = new Consignment();
         consignmentObj.setHub(hub);
         consignmentObj.setConsignmentStatus(EnumConsignmentStatus.ShipmntRcvdAtHub.asConsignmentStatus());
-        consignmentObj.setAwb(shipment.getAwb());
+        consignmentObj.setAwbNumber(shipment.getAwb());
         consignmentObj.setAmount(shipment.getShippingOrder().getAmount());
         consignmentObj.setCnnNumber(shipment.getShippingOrder().getGatewayOrderId());
         consignmentObj.setCreateDate(new Date());
@@ -33,12 +33,12 @@ public class ConsignmentDaoImpl extends BaseDaoImpl implements ConsignmentDao {
     @Override
     public List<Awb> getAwbIds() {
         return (List<Awb>) getSession().createQuery(
-                "select distinct cn.awb from Consignment cn ").list();
+                "select distinct cn.awbNumber from Consignment cn ").list();
     }
 
     @Override
     public Consignment getConsignmentByAwbId(Awb awb) {
-        return (Consignment) getSession().createQuery("from Consignment cn where cn.awb = :awb").setParameter("awb", awb).uniqueResult();
+        return (Consignment) getSession().createQuery("from Consignment cn where cn.awbNumber = :awb").setParameter("awb", awb).uniqueResult();
     }
 
     public void updateConsignmentTracking(Long sourceHubId, Long destinationHubId, Long userId, List<Consignment> consignmentList) {
