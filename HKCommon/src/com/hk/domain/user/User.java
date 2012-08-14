@@ -9,11 +9,13 @@ import java.util.Set;
 
 import javax.persistence.*;
 
+import com.hk.domain.subscription.Subscription;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Where;
 
 import com.hk.constants.core.EnumPermission;
+import com.hk.constants.core.RoleConstants;
 import com.hk.constants.clm.CLMConstants;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.offer.OfferInstance;
@@ -28,7 +30,7 @@ import com.hk.domain.clm.KarmaProfile;
  * Author: Kani Date: Aug 29, 2008
  */
 @Entity
-@Table(name = "user", uniqueConstraints = @UniqueConstraint (columnNames = {"login", "store_id"}))
+@Table(name = "user", uniqueConstraints = @UniqueConstraint(columnNames = { "login", "store_id" }))
 @NamedQueries( {
         @NamedQuery(name = "user.findByEmail", query = "from User u where u.email = :email"),
         @NamedQuery(name = "user.findByLogin", query = "from User u where u.login = :login"),
@@ -119,6 +121,9 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Order>           orders             = new ArrayList<Order>();
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<Subscription> subscriptions;
+
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "warehouse_has_user", uniqueConstraints = @UniqueConstraint(columnNames = { "user_id", "warehouse_id" }), joinColumns = { @JoinColumn(name = "user_id", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "warehouse_id", nullable = false, updatable = false) })
     private Set<Warehouse>        warehouses         = new HashSet<Warehouse>(0);
@@ -128,7 +133,7 @@ public class User {
     private Store                 store;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
-    private KarmaProfile karmaProfile;
+    private KarmaProfile          karmaProfile;
 
     public KarmaProfile getKarmaProfile() {
         return karmaProfile;
@@ -139,12 +144,24 @@ public class User {
     }
 
     public boolean isPriorityUser() {
-        KarmaProfile karmaProfile=getKarmaProfile();
-         if(karmaProfile!=null){
-            return (karmaProfile.getKarmaPoints()>= CLMConstants.thresholdScore);
-        }else{
+        KarmaProfile karmaProfile = getKarmaProfile();
+        if (karmaProfile != null) {
+            return (karmaProfile.getKarmaPoints() >= CLMConstants.thresholdScore);
+        } else {
             return false;
         }
+    }
+
+    public boolean isHKEmployee() {
+        boolean isUserHKEmployee = false;
+        for (Role role : getRoles()) {
+            if (RoleConstants.HK_EMPLOYEE.equalsIgnoreCase(role.getName())) {
+                isUserHKEmployee = true;
+                break;
+            }
+        }
+
+        return isUserHKEmployee;
     }
 
     public List<Address> getAddresses() {
@@ -169,6 +186,14 @@ public class User {
 
     public void setOrders(List<Order> orders) {
         this.orders = orders;
+    }
+
+    public List<Subscription> getSubscriptions() {
+        return subscriptions;
+    }
+
+    public void setSubscriptions(List<Subscription> subscriptions) {
+        this.subscriptions = subscriptions;
     }
 
     @Deprecated

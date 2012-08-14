@@ -52,6 +52,8 @@ public enum EnumRoleHasPermission {
                     EnumPermission.DETAILED_SALES_REPORT,
                     EnumPermission.REPORT_ADMIN,
                     EnumPermission.SEARCH_ORDERS,
+                    EnumPermission.SEARCH_SUBSCRIPTIONS,
+                    EnumPermission.UPDATE_SUBSCRIPTION,
                     EnumPermission.SEARCH_USERS,
                     EnumPermission.CREATE_OFFER,
                     EnumPermission.UPDATE_OFFER,
@@ -137,6 +139,7 @@ public enum EnumRoleHasPermission {
                     EnumPermission.UPDATE_PAYMENT,
                     EnumPermission.SEND_SHIPPING_MAILS,
                     EnumPermission.SEARCH_ORDERS,
+                    EnumPermission.SEARCH_SUBSCRIPTIONS,
                     EnumPermission.SEARCH_USERS,
                     EnumPermission.VIEW_TICKETS,
                     EnumPermission.CREATE_TICKETS,
@@ -170,6 +173,8 @@ public enum EnumRoleHasPermission {
                     EnumPermission.UPDATE_PAYMENT,
                     EnumPermission.CONFIRM_COD,
                     EnumPermission.SEARCH_ORDERS,
+                    EnumPermission.SEARCH_SUBSCRIPTIONS,
+                    EnumPermission.UPDATE_SUBSCRIPTION,
                     EnumPermission.SEARCH_USERS,
                     EnumPermission.VIEW_TICKETS,
                     EnumPermission.CREATE_TICKETS,
@@ -221,6 +226,7 @@ public enum EnumRoleHasPermission {
                     EnumPermission.VIEW_SERVICE_QUEUE,
                     EnumPermission.UPDATE_SERVICE_QUEUE,
                     EnumPermission.SEARCH_ORDERS,
+                    EnumPermission.SEARCH_SUBSCRIPTIONS,
                     EnumPermission.SEARCH_USERS,
                     EnumPermission.AWARD_REWARD_POINTS,
                     EnumPermission.VIEW_OFFER,
@@ -251,6 +257,7 @@ public enum EnumRoleHasPermission {
             EnumRole.BASIC_ROLES,
             Arrays.asList(
                     EnumPermission.SEARCH_ORDERS,
+                    EnumPermission.SEARCH_SUBSCRIPTIONS,
                     EnumPermission.SEARCH_USERS
             )
     ),

@@ -1,11 +1,15 @@
+
 package com.hk.web.action.core.cart;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.constants.subscription.EnumSubscriptionStatus;
+import com.hk.core.fliter.CartLineItemFilter;
+import com.hk.core.fliter.SubscriptionFilter;
+import com.hk.domain.order.CartLineItem;
+import com.hk.domain.subscription.Subscription;
 import com.hk.pact.service.mooga.RecommendationEngine;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.JsonResolution;
@@ -27,6 +31,7 @@ import com.hk.domain.catalog.product.combo.ComboInstanceHasProductVariant;
 import com.hk.domain.catalog.product.combo.ComboProduct;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
+import com.hk.domain.marketing.ProductReferrer;
 import com.hk.exception.OutOfStockException;
 import com.hk.manager.OrderManager;
 import com.hk.manager.UserManager;
@@ -60,6 +65,7 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
     @Autowired
     UserProductHistoryDao userProductHistoryDao;
 
+    private Long  productReferrerId;
     @Autowired
     SignupAction signupAction;
     
@@ -72,6 +78,7 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
     public Resolution addToCart() {
         // I need to pass product info
         User user = null;
+        ProductReferrer productReferrer = null;
         if (getPrincipal() != null) {
             user = userDao.getUserById(getPrincipal().getId());
             if (user == null) {
@@ -89,7 +96,7 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
                     if (productVariant != null && productVariant.isSelected() != null && productVariant.isSelected()) {
                         selectedProductVariants.add(productVariant);
                         userCartDao.addToCartHistory(productVariant.getProduct(), user);
-                        userProductHistoryDao.updateIsAddedToCart(productVariant.getProduct(), user);
+                        userProductHistoryDao.updateIsAddedToCart(productVariant.getProduct(), user, order);
                     }
                 }
             }
@@ -146,7 +153,10 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
                     }
                 }
             }
-            orderManager.createLineItems(selectedProductVariants, order, combo, comboInstance);
+            if(productReferrerId != null){
+              productReferrer = userCartDao.get(ProductReferrer.class, productReferrerId); 
+            }
+            orderManager.createLineItems(selectedProductVariants, order, combo, comboInstance, productReferrer);
         } catch (OutOfStockException e) {
             getContext().getValidationErrors().add("e2", new SimpleError(e.getMessage()));
             return new JsonResolution(getContext().getValidationErrors(), getContext().getLocale());
@@ -171,7 +181,8 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
             }
             dataMap.put("options", selectedProductVariants.get(0).getOptionsCommaSeparated());
             dataMap.put("qty", selectedProductVariants.get(0).getQty());
-            dataMap.put("itemsInCart", Long.valueOf(order.getExclusivelyProductCartLineItems().size() + order.getExclusivelyComboCartLineItems().size()) + 1L);
+            Set<CartLineItem> subscriptionCartLineItems= new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
+            dataMap.put("itemsInCart", Long.valueOf(order.getExclusivelyProductCartLineItems().size() + order.getExclusivelyComboCartLineItems().size()) +subscriptionCartLineItems.size()+ 1L);
             HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Product has been added to cart", dataMap);
             noCache();
             //recomendationEngine.notifyAddToCart(user.getId(), productVariantList);
@@ -202,4 +213,11 @@ public class AddToCartAction extends BaseAction implements ValidationErrorHandle
         this.combo = combo;
     }
 
+    public Long getProductReferrerId() {
+      return productReferrerId;
+    }
+
+    public void setProductReferrerId(Long productReferrerId) {
+      this.productReferrerId = productReferrerId;
+    }
 }

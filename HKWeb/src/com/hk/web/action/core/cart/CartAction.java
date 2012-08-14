@@ -4,6 +4,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.constants.subscription.EnumSubscriptionStatus;
+import com.hk.core.fliter.SubscriptionFilter;
+import com.hk.domain.subscription.Subscription;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -61,6 +64,7 @@ public class CartAction extends BaseAction {
     private PricingDto          pricingDto;
     private Long                itemsInCart   = 0L;
     private String              freebieBanner;
+    private Set<Subscription> subscriptions;
 
     @Autowired
     private UserService         userService;
@@ -151,6 +155,12 @@ public class CartAction extends BaseAction {
              * cartLineItemsSet.addAll(cartLineItems);
              */
             pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), address, 0D), address);
+
+            Set<CartLineItem> subscriptionCartLineItems=new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
+            if(subscriptionCartLineItems !=null && subscriptionCartLineItems.size()>0){
+                subscriptions = new SubscriptionFilter(order.getSubscriptions()).addSubscriptionStatus(EnumSubscriptionStatus.InCart).filter();
+                itemsInCart+=subscriptions.size();
+            }
         }
 
         freebieBanner = cartFreebieService.getFreebieBanner(order);
@@ -173,6 +183,8 @@ public class CartAction extends BaseAction {
                         itemsInCart = Long.valueOf(order.getExclusivelyProductCartLineItems().size() + order.getExclusivelyComboCartLineItems().size());
                     }
                 }
+                int inCartSubscriptions= new CartLineItemFilter(cartLineItems).addCartLineItemType(EnumCartLineItemType.Subscription).filter().size();
+                itemsInCart+=inCartSubscriptions;
             }
         }
         return new ForwardResolution("/pages/cart.jsp");
@@ -180,7 +192,7 @@ public class CartAction extends BaseAction {
 
     /**
      * method used to update the latest pricing, for eg when an offer is applied/changed
-     * 
+     *
      * @return
      */
     @JsonHandler
@@ -253,4 +265,11 @@ public class CartAction extends BaseAction {
         this.userService = userService;
     }
 
+    public Set<Subscription> getSubscriptions() {
+        return subscriptions;
+    }
+
+    public void setSubscriptions(Set<Subscription> subscriptions) {
+        this.subscriptions = subscriptions;
+    }
 }

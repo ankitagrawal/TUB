@@ -31,6 +31,8 @@ public interface ProductDao extends BaseDao {
      */
     public List<Product> getAllProductByCategory(String category);
 
+    public List<Product> getAllSubscribableProductsByCategory(String category);
+
     public List<Product> getAllProductNotByCategory(List<String> category);
 
     /**

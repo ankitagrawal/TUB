@@ -71,7 +71,7 @@ public abstract class AbstractOrderSearchCriteria {
     protected abstract DetachedCriteria getBaseCriteria();
 
     /**
-     * override this method in child search criterias and enusre to call super.buildSearchCriteriaFromBaseCriteria()
+     * override this method in child search criterias and ensure to call super.buildSearchCriteriaFromBaseCriteria()
      * before adding more restrictions.
      * 
      * @return

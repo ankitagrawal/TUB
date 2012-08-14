@@ -7,6 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.hk.constants.subscription.EnumSubscriptionStatus;
+import com.hk.domain.subscription.Subscription;
+import com.hk.domain.subscription.SubscriptionStatus;
+import com.hk.pact.service.subscription.SubscriptionStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +34,8 @@ public class UserProfileServiceImpl implements UserProfileService {
     private OrderStatusService orderStatusService;
     @Autowired
     private UserProfileDao     userProfileDao;
+    @Autowired
+    private SubscriptionStatusService subscriptionStatusService;
 
     public Set<ProductVariant> getRecentlyOrderedProductVariantsForUser(User user) {
         Map<String, ProductVariant> recentlyOrderedProductVariantsMap = new HashMap<String, ProductVariant>();
@@ -39,7 +45,7 @@ public class UserProfileServiceImpl implements UserProfileService {
         if (!ordersByRecentDate.isEmpty()) {
             for (Order order : ordersByRecentDate) {
                 CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(new HashSet<CartLineItem>(order.getCartLineItems()));
-                Set<CartLineItem> productCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).filter();
+                Set<CartLineItem> productCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
                 for (CartLineItem cartLineItem : productCartLineItems) {
                     productVariant = cartLineItem.getProductVariant();
                     product = cartLineItem.getProductVariant().getProduct();
@@ -81,4 +87,11 @@ public class UserProfileServiceImpl implements UserProfileService {
         this.userProfileDao = userProfileDao;
     }
 
+    public SubscriptionStatusService getSubscriptionStatusService() {
+        return subscriptionStatusService;
+    }
+
+    public void setSubscriptionStatusService(SubscriptionStatusService subscriptionStatusService) {
+        this.subscriptionStatusService = subscriptionStatusService;
+    }
 }

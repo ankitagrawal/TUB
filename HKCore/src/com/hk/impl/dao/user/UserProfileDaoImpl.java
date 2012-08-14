@@ -2,6 +2,8 @@ package com.hk.impl.dao.user;
 
 import java.util.List;
 
+import com.hk.domain.subscription.Subscription;
+import com.hk.domain.subscription.SubscriptionStatus;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -23,6 +25,8 @@ public class UserProfileDaoImpl extends BaseDaoImpl implements UserProfileDao {
 
         orderCriteria.add(Restrictions.in("orderStatus", orderStatusList));
         orderCriteria.addOrder(org.hibernate.criterion.Order.desc("createDate"));
+       /* Boolean[] subscriptionOrders={false};
+        orderCriteria.add(Restrictions.in("subscriptionOrder",subscriptionOrders));*/
         return findByCriteria(orderCriteria);
     }
 

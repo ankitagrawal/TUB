@@ -78,11 +78,16 @@
     </s:link>
         <s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction"
                 event="manageProductImages" target="_blank"
-                class="popup">Manage
+                class="popup">&nbsp;&nbsp;Manage
             Images
             <s:param name="productId" value="${productCombo.id}"/>
         </s:link>
     </div>
+</shiro:hasPermission>
+<shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_CATALOG%>">
+  <s:link beanclass="com.hk.web.action.admin.catalog.product.CreateEditComboAction" event="pre" target="_blank" class="popup">&nbsp;&nbsp;Edit Combo
+    <s:param name="combo" value="${productCombo.id}"/>
+  </s:link>
 </shiro:hasPermission>
 <h2 class='prod_title'>
         ${productCombo.name}
@@ -574,6 +579,7 @@
         //            resultDiv.find('.qtyValue').val("1");
         //        });
 
+        
         $('.progressLoader').hide();
 
         $('.comboProduct').css({
@@ -699,17 +705,18 @@
 
             var soldOutHeight = $('.soldOut').height() == null ? 0 : $('.soldOut').height();
 
+            var maxHtOfOptions = $(image).height() + Math.max.apply(Math, optionsHeight) + soldOutHeight;
             $(availableOptions).css({
-                height: $(image).height() + Math.max.apply(Math, optionsHeight) + soldOutHeight
+                height: maxHtOfOptions
             });
 
             $(arrow).css({
-                paddingTop:10 + $(availableOptions).height() / 2
+                paddingTop:10 + maxHtOfOptions / 2
             });
 
             var resultDiv = $(this).find('.result');
             $(resultDiv).css({
-                height: $(availableOptions).height()
+                height: maxHtOfOptions
             });
 
             $(availableOptions).each(function() {
@@ -732,13 +739,6 @@
         text-align: left;
         background: none repeat scroll 0 0 #EEEEEE;
         padding: 5px;
-    }
-
-    div.options {
-        border: 1px solid darkgray;
-        border-radius: 0.5em;
-        background: #EEEEEE;
-        padding: 10px 0;
     }
 
     div.result {
@@ -775,6 +775,17 @@
         margin: 10px 5px;
     }
 
+    div.options {
+        border: 1px solid darkgray;
+        border-radius: 0.5em;
+        background: #EEEEEE;
+        padding: 10px 0;
+
+        -webkit-transition-duration: 0.2s;
+        -moz-transition-duration: 0.2s;
+        transition-duration: 0.2s;
+    }
+
     div.options:hover {
         border: solid 1px #CCC;
         -moz-box-shadow: 1px 1px 5px #999;
@@ -799,6 +810,7 @@
     div.imageDiv {
         min-width: 130px;
         min-height: 130px;
+        cursor: pointer;
     }
 
     div.buyDiv {

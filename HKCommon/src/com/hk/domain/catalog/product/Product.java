@@ -1,3 +1,4 @@
+
 package com.hk.domain.catalog.product;
 
 import java.util.*;
@@ -143,8 +144,15 @@ public class Product implements java.io.Serializable {
     @Column(name = "drop_shipping")
     private boolean              dropShipping;
 
+    @Column(name = "is_subscribable", nullable = true)
+    private Boolean              isSubscribable;
+
+
     @Transient
     private String               categoriesPipeSeparated;
+
+    @Transient
+    private String               productURL;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
     private Set<SuperSaverImage> superSaverImages = new HashSet<SuperSaverImage>(0);
@@ -509,6 +517,14 @@ public class Product implements java.io.Serializable {
         this.secondaryCategory = secondaryCategory;
     }
 
+    public String getProductURL() {
+      return productURL;
+    }
+
+	  public void setProductURL(String productURL) {
+		  this.productURL = productURL;
+	  }
+  
     public String getPipeSeparatedCategories() {
         StringBuffer stringBuffer = new StringBuffer();
         for (Iterator<Category> categoriesIterator = categories.iterator(); categoriesIterator.hasNext();) {
@@ -606,4 +622,15 @@ public class Product implements java.io.Serializable {
         }
     }
 
+    public boolean isSubscribable() {
+        if(isSubscribable!=null){
+            return isSubscribable;
+        }else{
+            return false;
+        }
+    }
+
+    public void setSubscribable(boolean subscribable) {
+        isSubscribable = subscribable;
+    }
 }

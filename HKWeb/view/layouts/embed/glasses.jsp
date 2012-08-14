@@ -12,6 +12,8 @@
 <c:set value="${product.productVariants[0]}" var="variant"/>
 <c:set value="${variant.hkPrice + hk:getPostpaidAmount(variant)}" var="ourPriceForVariant"/>
 
+<%--<div align="right" style="margin-bottom:10px;"><a class='top_link' href="#sizeGuide">view size guide &darr;</a></div>--%>
+
 <div id="tabs">
 <input id="variantId" type="hidden" value="${product.productVariants[0].id}">
 <ul>
@@ -69,23 +71,23 @@
           <s:param name="productVariant" value="${variant}"/> </s:link></div>
       </c:when>
       <c:otherwise>
-        <input type="button" id="addLens" value="Add Lens & Buy Now" class="cta button_green"/>
+        <input type="button" id="addLens" value="Add Lens & Buy" class="cta button_green"/>
       </c:otherwise>
     </c:choose>
   </div>
   <div style="float:right;font-size: 14px;border-left:1px solid #CCCCCC;">
-    <h4 style="color:#009900; margin-bottom:10px;">In Stock</h4>
 
     <div style="margin:5px;font-size:16px;">
-      <s:layout-render name="/layouts/embed/_hkAssistanceMessageForSingleVariant.jsp"/>
+      <%--<s:layout-render name="/layouts/embed/_hkAssistanceMessageForSingleVariant.jsp"/>--%>
+	    <%--<img src="${pageContext.request.contextPath}/images/banners/frame_chart.jpg"/>--%>
     </div>
   </div>
   <div class="clear"></div>
   <div style="font-size: 12px; ">
 
-    <c:if test="${hk:isNotBlank(variant.optionsCommaSeparated)}">
+    <%--<c:if test="${hk:isNotBlank(variant.optionsCommaSeparated)}">
       <h4>Options</h4><br/> ${variant.optionsCommaSeparated}
-    </c:if>
+    </c:if>--%>
   </div>
 </div>
 
@@ -480,6 +482,16 @@
 <!-- End Tabs-->
 </div>
 
+<%--<div>
+	<strong>Eye:</strong>52mm&nbsp;
+	<strong>Bridge:</strong>12mm&nbsp;
+	<strong>Vertical:</strong>24mm&nbsp;
+	<strong>Temple:</strong>112mm&nbsp;
+</div>
+<div align="center">
+	<img src="${pageContext.request.contextPath}/images/banners/frame_chart.jpg"/>
+</div>--%>
+
 <script type="text/javascript" src="<hk:vhostJs/>/js/jquery-ui.min.js"></script>
 <link href="<hk:vhostCss/>/css/jquery-ui.css" rel="stylesheet" type="text/css"/>
 
@@ -825,7 +837,7 @@ $("#addPowers").click(function() {
     data[idx] = values;
     params.configValues = data;
     params.variantId = $("#variantId").val();
-
+    params.productReferrerId = $('#productReferrerId').val();
     var form = this.form;
     $.ajax({
       type: "POST",
