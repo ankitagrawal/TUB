@@ -89,6 +89,8 @@ public class CartLineItemConfigValues implements java.io.Serializable, Comparabl
 
 		if (this == o) return true;
 
+		if(o == null) return false;
+
 		if (o instanceof CartLineItemConfigValues) {
 			CartLineItemConfigValues configValue = (CartLineItemConfigValues) o;
 
