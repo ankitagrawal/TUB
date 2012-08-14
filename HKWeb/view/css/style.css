@@ -614,8 +614,8 @@ a.modal_close:hover {
     position: fixed;
     top: 12%;
     left: 50%;
-    margin-left: -300px;
-    width: 800px;
+    margin-left: -350px;
+    width: 700px;
     font-family: Arial, sans-serif;
     border-radius: 10px;
 }
