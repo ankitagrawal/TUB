@@ -41,6 +41,7 @@ public class MarketingExpenseAction extends BasePaginatedAction {
 	private Long marketingExpenseId;
 	private MarketingExpense marketingExpense;
 	private MarketingExpense uniqueMarketingExpense;
+    private Long adNetworksId;
 
 	Page marketingExpensePage;
 
@@ -49,7 +50,7 @@ public class MarketingExpenseAction extends BasePaginatedAction {
 	@DefaultHandler
 	public Resolution pre() {
 
-		marketingExpensePage = marketingExpenseDao.searchMarketingExpense(category, startDate, endDate, getPageNo(), getPerPage());
+		marketingExpensePage = marketingExpenseDao.searchMarketingExpense(category, adNetworksId, startDate, endDate, getPageNo(), getPerPage());
 		marketingExpenseList = marketingExpensePage.getList();
 		return new ForwardResolution("/pages/admin/marketingExpenseList.jsp");
 	}
@@ -106,7 +107,15 @@ public class MarketingExpenseAction extends BasePaginatedAction {
 		return startDate;
 	}
 
-	public void setStartDate(Date startDate) {
+    public Long getAdNetworksId() {
+        return adNetworksId;
+    }
+
+    public void setAdNetworksId(Long adNetworksId) {
+        this.adNetworksId = adNetworksId;
+    }
+
+    public void setStartDate(Date startDate) {
 		this.startDate = startDate;
 	}
 
