@@ -7,60 +7,62 @@ import com.hk.domain.hkDelivery.Consignment;
 import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.hkDelivery.ConsignmentTracking;
 import com.hk.domain.courier.Shipment;
+import com.hk.domain.user.User;
 import com.hk.constants.hkDelivery.EnumConsignmentStatus;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public class ConsignmentDaoImpl extends BaseDaoImpl implements ConsignmentDao {
 
     @Override
-    public Consignment createConsignment(Shipment shipment, Hub hub) {
+    public Consignment createConsignment(String awbNumber,String cnnNumber ,double amount, String paymentMode ,Hub hub) {
         Consignment consignmentObj = new Consignment();
         consignmentObj.setHub(hub);
         consignmentObj.setConsignmentStatus(EnumConsignmentStatus.ShipmntRcvdAtHub.asConsignmentStatus());
-        consignmentObj.setAwbNumber(shipment.getAwb());
-        consignmentObj.setAmount(shipment.getShippingOrder().getAmount());
-        consignmentObj.setCnnNumber(shipment.getShippingOrder().getGatewayOrderId());
+        consignmentObj.setAwbNumber(awbNumber);
+        consignmentObj.setAmount(amount);
+        consignmentObj.setCnnNumber(cnnNumber);
         consignmentObj.setCreateDate(new Date());
-        consignmentObj.setPaymentMode(shipment.getShippingOrder().getBaseOrder().getPayment().getPaymentMode().getName());
+        consignmentObj.setPaymentMode(paymentMode);
         consignmentObj = (Consignment)save(consignmentObj);
         return consignmentObj;
     }
 
     @Override
-    public List<Awb> getAwbIds() {
-        return (List<Awb>) getSession().createQuery(
+    public List<String> getAwbIds() {
+        return (List<String>) getSession().createQuery(
                 "select distinct cn.awbNumber from Consignment cn ").list();
     }
 
     @Override
-    public Consignment getConsignmentByAwbId(Awb awb) {
-        return (Consignment) getSession().createQuery("from Consignment cn where cn.awbNumber = :awb").setParameter("awb", awb).uniqueResult();
+    public Consignment getConsignmentByAwbNumber(String awbNumber) {
+        return (Consignment) getSession().createQuery("from Consignment cn where cn.awbNumber = :awbNumber").setParameter("awbNumber", awbNumber).uniqueResult();
     }
 
-    public void updateConsignmentTracking(Long sourceHubId, Long destinationHubId, Long userId, List<Consignment> consignmentList) {
-        for (Consignment consignment : consignmentList) {
+    public void updateConsignmentTracking(Hub sourceHub, Hub destinationHub, User user, Set<Consignment> consignments) {
+        for (Consignment consignment : consignments) {
             ConsignmentTracking consignmntTracking = new ConsignmentTracking();
-            consignmntTracking.setConsignmentId(consignment.getId());
+            consignmntTracking.setConsignment(consignment);
             consignmntTracking.setCreateDate(new Date());
-            consignmntTracking.setSourceHubId(sourceHubId);
-            consignmntTracking.setDestinationId(destinationHubId);
-            consignmntTracking.setUserId(userId);
+            consignmntTracking.setSourceHub(sourceHub);
+            consignmntTracking.setDestinationHub(destinationHub);
+            consignmntTracking.setUser(user);
             save(consignmntTracking);
         }
     }
 
     @Override
-    public void updateConsignmentTracking(Long sourceHubId, Long destinationHubId, Long userId, Consignment consignment) {
+    public void updateConsignmentTracking(Hub sourceHub, Hub destinationHub, User user, Consignment consignment) {
         ConsignmentTracking consignmntTracking = new ConsignmentTracking();
-        consignmntTracking.setConsignmentId(consignment.getId());
+        consignmntTracking.setConsignment(consignment);
         consignmntTracking.setCreateDate(new Date());
-        consignmntTracking.setSourceHubId(sourceHubId);
-        consignmntTracking.setDestinationId(destinationHubId);
-        consignmntTracking.setUserId(userId);
+        consignmntTracking.setSourceHub(sourceHub);
+        consignmntTracking.setDestinationHub(destinationHub);
+        consignmntTracking.setUser(user);
         save(consignmntTracking);
     }
 

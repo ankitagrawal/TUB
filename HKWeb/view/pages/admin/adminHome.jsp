@@ -403,6 +403,12 @@
             </s:link>
     </h3>
 
+    <h3>
+        <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDHubAction"
+                title="Add/Edit Hub">Add/Edit Hub
+        </s:link>
+    </h3>
+
 </div>
 
 <script type="text/javascript">

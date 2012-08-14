@@ -33,7 +33,7 @@ public class Consignment implements java.io.Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @Column(name = "awb_id", nullable = false, unique = true)
+    @Column(name = "awb_number", nullable = false, unique = true)
     private String awbNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)

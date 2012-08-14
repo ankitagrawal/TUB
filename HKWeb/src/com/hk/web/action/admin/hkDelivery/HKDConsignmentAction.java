@@ -2,11 +2,15 @@ package com.hk.web.action.admin.hkDelivery;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.domain.hkDelivery.Hub;
+import com.hk.domain.hkDelivery.Consignment;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Courier;
+import com.hk.domain.courier.Shipment;
 import com.hk.domain.user.User;
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
 import com.hk.admin.pact.service.hkDelivery.HubService;
+import com.hk.admin.pact.service.courier.AwbService;
+import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.hkDelivery.HKDeliveryConstants;
 import net.sourceforge.stripes.action.*;
@@ -27,11 +31,20 @@ public class HKDConsignmentAction extends BaseAction{
     private              Hub                  hub;
     private              List<String>         trackingIdList           = new ArrayList<String>();
     private              int                  noOfConsignmentsCreated  = 0;
+    private              String               cnnNumber                = null;
+    private              String               paymentMode              = null;
+    private              Double               amount                   = null;
 
     @Autowired
     private              ConsignmentService   consignmentService;
     @Autowired
     private              HubService           hubService;
+    @Autowired
+    private              AwbService           awbService;
+    @Autowired
+    private              ShipmentService      shipmentService;
+
+
 
 
     @DefaultHandler
@@ -40,38 +53,50 @@ public class HKDConsignmentAction extends BaseAction{
     }
 
     public Resolution markShipmentsReceived() {
-        Set<Awb>     awbSet;
-        List<Awb>    awbList;
-        List<Awb>    duplicateAwbs;
+        Set<String>  trackingIdSet ;
+        List<String> existingAwbNumbers;
         Hub          healthkartHub;
         String       duplicateAwbString = "";
         User         loggedOnUser       = null;
+        Shipment     shipmentObj        = null;
+        int          consignmentCreatedCount   = 0;
         Courier      hkDelivery         = EnumCourier.HK_Delivery.asCourier();
-
 
         if (trackingIdList != null && trackingIdList.size() > 0) {
             healthkartHub = hubService.findHubByName(HKDeliveryConstants.HEALTHKART_HUB);
             if (getPrincipal() != null) {
                 loggedOnUser = getUserService().getUserById(getPrincipal().getId());
             }
-            // getting AWB set for the entered trackingIdList.
-            awbSet = consignmentService.getAWBSet(trackingIdList, hkDelivery);
-            //Creating a list out of set(needed for consignment-duplication check).
-            awbList = new ArrayList<Awb>(awbSet);
             //Checking if consignment is already created for the enterd awbNumber and fetching the awb for the same .
-            duplicateAwbs = consignmentService.getDuplicateAwbs(awbList);
-            if (duplicateAwbs.size() > 0) {
+            existingAwbNumbers = consignmentService.getDuplicateAwbs(trackingIdList);
+            if (existingAwbNumbers.size() > 0) {
                 // removing duplicated awbs from the list.
-                awbList.removeAll(duplicateAwbs);
+                trackingIdList.removeAll(existingAwbNumbers);
                 // creating a string for user-display.
-                duplicateAwbString = getDuplicateAwbString(duplicateAwbs);
+                duplicateAwbString = getDuplicateAwbString(existingAwbNumbers);
                 duplicateAwbString = "Consignments already created for following trackingIds:" + duplicateAwbString;
-                // convertig list to set to delete/remove duplicate elements from the list.
-                awbSet = new HashSet<Awb>(awbList);
-
             }
+            // convertig list to set to delete/remove duplicate elements from the list.
+                trackingIdSet = new HashSet<String>(trackingIdList);
             // Creating consignments.
-            noOfConsignmentsCreated = consignmentService.createConsignments(awbSet, healthkartHub, hub ,loggedOnUser.getId());
+            for (String awbNumber : trackingIdSet) {
+            try {
+                shipmentObj = shipmentService.findByAwb(awbService.findByCourierAwbNumber(hkDelivery,awbNumber));
+                amount = shipmentObj.getShippingOrder().getAmount();
+                cnnNumber = shipmentObj.getShippingOrder().getGatewayOrderId();
+                paymentMode = shipmentObj.getShippingOrder().getBaseOrder().getPayment().getPaymentMode().getName();
+                Consignment consignment = new Consignment();
+
+                // Creating consignment object.
+                consignment = consignmentService.createConsignment(awbNumber,cnnNumber,amount,paymentMode,hub);
+                // Making an entry in consignment-tracking for the created consignment.
+                consignmentService.updateConsignmentTracking(healthkartHub, hub, loggedOnUser, consignment);
+                consignmentCreatedCount++;
+            } catch (Exception ex) {
+                logger.info("Exception occurred"+ex.getMessage());
+                continue;
+            }
+        }
             addRedirectAlertMessage(new SimpleMessage(noOfConsignmentsCreated + HKDeliveryConstants.CONSIGNMNT_CREATION_SUCCESS + duplicateAwbString));
         } else {
             addRedirectAlertMessage(new SimpleMessage(HKDeliveryConstants.CONSIGNMNT_CREATION_FAILURE));
@@ -80,10 +105,10 @@ public class HKDConsignmentAction extends BaseAction{
     }
 
     // Getting comma seperated string for the duplicated
-    public String getDuplicateAwbString(List<Awb> duplicatedAwbs) {
+    public String getDuplicateAwbString(List<String> duplicatedAwbs) {
         StringBuffer strBuffr = new StringBuffer();
-        for (Awb awb :duplicatedAwbs ) {
-            strBuffr.append(awb.getAwbNumber());
+        for (String awbNumber :duplicatedAwbs ) {
+            strBuffr.append(awbNumber);
             strBuffr.append(",");
         }
         return strBuffr.toString();

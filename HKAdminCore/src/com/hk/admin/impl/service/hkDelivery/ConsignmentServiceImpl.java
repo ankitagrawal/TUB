@@ -12,6 +12,7 @@ import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Courier;
+import com.hk.domain.user.User;
 import com.hk.constants.hkDelivery.HKDeliveryConstants;
 
 import java.util.List;
@@ -32,68 +33,41 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     private AwbService awbService;
 
     @Override
-    public Consignment createConsignment(Shipment shipment, Hub hub) {
-        return consignmentDao.createConsignment(shipment, hub);
+    public Consignment createConsignment(String awbNumber,String cnnNumber ,double amount, String paymentMode ,Hub hub){
+        return consignmentDao.createConsignment(awbNumber,cnnNumber,amount,paymentMode,hub);
     }
 
     @Override
-    public List<Awb> getAwbIds() {
+    public List<String> getAwbIds() {
         return consignmentDao.getAwbIds();
     }
 
     @Override
-    public Consignment getConsignmentByAwbId(Awb awbId) {
-        return consignmentDao.getConsignmentByAwbId(awbId);
+    public Consignment getConsignmentByAwbNumber(String awbNumber) {
+        return consignmentDao.getConsignmentByAwbNumber(awbNumber);
+    }
+    
+    @Override
+    public void updateConsignmentTracking(Hub sourceHub, Hub destinationHub, User user, Consignment consignment) {
+        consignmentDao.updateConsignmentTracking(sourceHub, destinationHub, user, consignment);
     }
 
     @Override
-    public void updateConsignmentTracking(Long sourceHubId, Long destinationHubId, Long userId, Consignment consignment) {
-        consignmentDao.updateConsignmentTracking(sourceHubId, destinationHubId, userId, consignment);
+    public void updateConsignmentTracking(Hub sourceHub, Hub destinationHub, User user, Set<Consignment> consignments) {
+        consignmentDao.updateConsignmentTracking(sourceHub, destinationHub, user, consignments);
     }
 
     @Override
-    public void updateConsignmentTracking(Long sourceHubId, Long destinationHubId, Long userId, List<Consignment> consignmentList) {
-        consignmentDao.updateConsignmentTracking(sourceHubId, destinationHubId, userId, consignmentList);
-    }
-
-    @Override
-    public int createConsignments(Set<Awb> awbSet, Hub sourceHub, Hub destinationHub, Long userId) {
-        int consignmentCount = 0;
-        Consignment consignment = new Consignment();
-        for (Awb awbObj : awbSet) {
-            try {
-                // Creating consignment object.
-                consignment = createConsignment(shipmentService.findByAwb(awbObj), destinationHub);
-                // Making an entry in consignment-tracking for the created consignment.
-                updateConsignmentTracking(sourceHub.getId(), destinationHub.getId(), userId, consignment);
-                consignmentCount++;
-            } catch (Exception ex) {
-                continue;
-            }
-        }
-        return consignmentCount;
-
-    }
-
-    @Override
-    public List<Awb> getDuplicateAwbs(List<Awb> awbList) {
-        List<Awb> consignmentAwb = getAwbIds();
-        List<Awb> duplicatedAwbs = new ArrayList<Awb>();
-        for (Awb awbObj : awbList) {
-            for (Awb awb :  consignmentAwb) {
-                if (awb.equals(awbObj)) {
-                    duplicatedAwbs.add(awb);
+    public List<String> getDuplicateAwbs(List<String> awbNumbers) {
+        List<String> existingAwbNumInConsignment = getAwbIds();
+        List<String> duplicatedAwbNumbers = new ArrayList<String>();
+        for (String existingAwbNum : existingAwbNumInConsignment) {
+            for (String awbNumber :  awbNumbers) {
+                if (awbNumber.equals(existingAwbNum)) {
+                    duplicatedAwbNumbers.add(awbNumber);
                 }
             }
         }
-        return duplicatedAwbs;
-    }
-
-    public Set<Awb> getAWBSet(List<String> awbNumberList, Courier hkDelivery) {
-        Set<Awb> awbSet = new HashSet<Awb>();
-        for (String awbNumbr : awbNumberList) {
-            awbSet.add(awbService.findByCourierAwbNumber(hkDelivery, awbNumbr));
-        }
-        return awbSet;
+        return duplicatedAwbNumbers;
     }
 }
