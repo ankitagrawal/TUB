@@ -1,23 +1,23 @@
 package com.hk.web.action.admin.newsletter;
 
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.JsonResolution;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
 import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.JsonResolution;
+import net.sourceforge.stripes.action.Resolution;
 
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.web.action.error.AdminPermissionAction;
-import com.hk.web.HealthkartResponse;
-import com.hk.web.AppConstants;
 import com.hk.util.HKFileUtils;
-
-import java.util.Map;
-import java.util.HashMap;
-import java.io.File;
+import com.hk.web.AppConstants;
+import com.hk.web.HealthkartResponse;
+import com.hk.web.action.error.AdminPermissionAction;
 
 @Secure(hasAnyPermissions = {PermissionConstants.SEND_MARKETING_MAILS}, authActionBean = AdminPermissionAction.class)
 @Component

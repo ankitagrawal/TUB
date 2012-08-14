@@ -872,7 +872,6 @@
     </function>
     <function>
         <description>
-<<<<<<< HEAD
             checks if collection contains the given object
         </description>
         <name>isCollectionContainsObject</name>

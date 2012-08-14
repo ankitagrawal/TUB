@@ -1,5 +1,7 @@
 package com.hk.pact.dao.catalog.combo;
 
+import java.util.List;
+
 import com.akube.framework.dao.Page;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
@@ -8,8 +10,6 @@ import com.hk.domain.catalog.product.combo.ComboProduct;
 import com.hk.domain.order.Order;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.pact.dao.BaseDao;
-
-import java.util.List;
 
 public interface ComboDao extends BaseDao {
 

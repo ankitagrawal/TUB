@@ -1,6 +1,14 @@
 
 package com.hk.report.impl.dao.catalog.product;
 
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
+import org.hibernate.Query;
+import org.hibernate.transform.Transformers;
+import org.springframework.stereotype.Repository;
+
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GrnLineItem;
@@ -8,15 +16,13 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
-import com.hk.report.dto.inventory.*;
+import com.hk.report.dto.inventory.ExpiryAlertReportDto;
+import com.hk.report.dto.inventory.InventorySoldDto;
+import com.hk.report.dto.inventory.RTODamageReportDto;
+import com.hk.report.dto.inventory.RTOFineReportDto;
+import com.hk.report.dto.inventory.RVReportDto;
+import com.hk.report.dto.inventory.StockReportDto;
 import com.hk.report.pact.dao.catalog.product.ReportProductVariantDao;
-import org.hibernate.Query;
-import org.hibernate.transform.Transformers;
-import org.springframework.stereotype.Repository;
-
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 
 @Repository
 public class ReportProductVariantDaoImpl extends BaseDaoImpl implements ReportProductVariantDao {

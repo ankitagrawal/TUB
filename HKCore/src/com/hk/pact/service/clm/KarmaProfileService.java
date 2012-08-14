@@ -3,8 +3,8 @@ package com.hk.pact.service.clm;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.clm.CategoryKarmaProfile;
 import com.hk.domain.clm.KarmaProfile;
-import com.hk.domain.user.User;
 import com.hk.domain.order.Order;
+import com.hk.domain.user.User;
 
 /**
  * Created by IntelliJ IDEA.

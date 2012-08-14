@@ -1,10 +1,8 @@
 package com.hk.pact.service.mooga;
 
-import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.impl.service.mooga.RecommendationEngineImpl;
-
 import java.util.List;
-import java.util.Set;
+
+import com.hk.domain.catalog.product.ProductVariant;
 
 /**
  * Created by IntelliJ IDEA.

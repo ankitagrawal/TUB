@@ -2,8 +2,6 @@ package com.hk.impl.dao.user;
 
 import java.util.List;
 
-import com.hk.domain.subscription.Subscription;
-import com.hk.domain.subscription.SubscriptionStatus;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;

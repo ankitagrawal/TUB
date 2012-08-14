@@ -1,15 +1,20 @@
 package com.hk.report.pact.dao.catalog.product;
 
+import java.util.Date;
+import java.util.List;
+
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.report.dto.inventory.*;
-
-import java.util.Date;
-import java.util.List;
+import com.hk.report.dto.inventory.ExpiryAlertReportDto;
+import com.hk.report.dto.inventory.InventorySoldDto;
+import com.hk.report.dto.inventory.RTODamageReportDto;
+import com.hk.report.dto.inventory.RTOFineReportDto;
+import com.hk.report.dto.inventory.RVReportDto;
+import com.hk.report.dto.inventory.StockReportDto;
 
 public interface ReportProductVariantDao{
 

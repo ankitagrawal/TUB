@@ -1,7 +1,16 @@
 package com.hk.domain.subscription;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
 import com.hk.domain.catalog.product.Product;
-import javax.persistence.*;
 
 /**
  * Created by IntelliJ IDEA.

@@ -1,9 +1,9 @@
 package com.hk.admin.dto.inventory;
 
-import com.hk.domain.inventory.po.PurchaseOrder;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.hk.domain.inventory.po.PurchaseOrder;
 
 /**
  * Created by IntelliJ IDEA.

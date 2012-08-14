@@ -2,11 +2,20 @@ package com.hk.domain.order;
 // Generated Feb 7, 2012 4:39:32 PM by Hibernate Tools 3.2.4.CR1
 
 
-import com.hk.domain.catalog.product.VariantConfigOption;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
-import javax.persistence.*;
+import com.hk.domain.catalog.product.VariantConfigOption;
 
 
 @SuppressWarnings("serial")

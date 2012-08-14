@@ -1,15 +1,17 @@
 package com.hk.web.validation;
 
-import com.hk.domain.catalog.product.Product;
-import com.hk.pact.dao.BaseDao;
-import com.hk.pact.dao.catalog.product.ProductDao;
+import java.util.Collection;
+import java.util.Locale;
+
 import net.sourceforge.stripes.validation.TypeConverter;
 import net.sourceforge.stripes.validation.ValidationError;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
-import java.util.Locale;
+import com.hk.domain.catalog.product.Product;
+import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.catalog.product.ProductDao;
 
 @Component
 public class ProductTypeConverter implements TypeConverter<Product> {

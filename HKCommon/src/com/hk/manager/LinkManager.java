@@ -1,20 +1,22 @@
 package com.hk.manager;
 
+import java.util.Locale;
+
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.util.ssl.SslUtil;
+
+import org.springframework.stereotype.Component;
+
 import com.hk.domain.TempToken;
 import com.hk.domain.Ticket;
-import com.hk.domain.catalog.product.Product;
 import com.hk.domain.accounting.AccountingInvoice;
+import com.hk.domain.catalog.product.Product;
 import com.hk.domain.email.EmailRecepient;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.User;
 import com.hk.web.AppConstants;
 import com.hk.web.filter.WebContext;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.util.ssl.SslUtil;
-import org.springframework.stereotype.Component;
-
-import java.util.Locale;
 
 @Component
 public class LinkManager {

@@ -1,13 +1,12 @@
 package com.hk.impl.dao.user;
 
-import java.util.*;
-import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
-import org.hibernate.Query;
-import org.hibernate.SQLQuery;
-import org.hibernate.transform.Transformers;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.LoggerFactory;
@@ -23,11 +22,8 @@ import com.hk.domain.catalog.category.Category;
 import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
-import com.hk.domain.email.EmailCampaign;
-import com.hk.domain.email.EmailRecepient;
 import com.hk.dto.user.UserFilterDto;
 import com.hk.impl.dao.BaseDaoImpl;
-import com.hk.impl.dto.mail.UserEmailDto;
 import com.hk.pact.dao.RoleDao;
 import com.hk.pact.dao.user.UserDao;
 

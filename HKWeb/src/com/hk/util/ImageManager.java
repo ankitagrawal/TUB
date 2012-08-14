@@ -3,14 +3,17 @@ package com.hk.util;
 import java.io.File;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.imaging.ImageUtils;
 import com.akube.framework.util.BaseUtils;
+import com.hk.admin.util.S3Utils;
 import com.hk.constants.EnumS3UploadStatus;
 import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.core.Keys;
@@ -27,9 +30,6 @@ import com.hk.pact.dao.catalog.combo.ComboDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.catalog.combo.SuperSaverImageService;
-import com.hk.admin.util.S3Utils;
-
-import javax.annotation.PostConstruct;
 
 @Component
 public class ImageManager {

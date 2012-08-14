@@ -1,8 +1,5 @@
 package com.hk.web.action.core.payment.gateway.test;
 
-import com.hk.web.action.core.payment.PaymentFailAction;
-import com.hk.web.action.core.payment.PaymentPendingApprovalAction;
-import com.hk.web.action.core.payment.PaymentSuccessAction;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -18,6 +15,9 @@ import com.hk.manager.EmailManager;
 import com.hk.manager.payment.CCAvenueDummyPaymentGatewayWrapper;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.payment.PaymentDao;
+import com.hk.web.action.core.payment.PaymentFailAction;
+import com.hk.web.action.core.payment.PaymentPendingApprovalAction;
+import com.hk.web.action.core.payment.PaymentSuccessAction;
 
 /**
  * Author: Kani Date: Jan 14, 2009
