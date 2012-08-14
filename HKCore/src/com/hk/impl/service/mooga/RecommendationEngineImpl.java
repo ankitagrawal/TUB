@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 
 import com.hk.constants.core.Keys;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.mooga.MoogaWebServicesLocator;
+import com.hk.mooga.MoogaWebServicesSoap_PortType;
 import com.hk.pact.service.mooga.RecommendationEngine;
 
 /**
