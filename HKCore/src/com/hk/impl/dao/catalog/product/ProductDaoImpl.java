@@ -156,33 +156,37 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
         return null;
     }
 
-	 public Page getProductByCategoryBrandAndOptions(List<String> categoryNames, String brand, List<Long> options, int page, int perPage){
-        if (categoryNames != null && categoryNames.size() > 0) {
-            List<String> productIds = getSession().createQuery(
-                    "select pv.product.id from ProductVariant pv inner join pv.productOptions po  inner join pv.product.categories c " +
-		                    "where c.name in (:categories) and po.id in (:options) group by pv.product.id having count(*) = :tagCount")
-		            .setParameterList("categories", categoryNames)
-		            .setParameterList("options", options)
-		            .setInteger("tagCount", categoryNames.size()).list();
+	public Page getProductByCategoryBrandAndOptions(List<String> categoryNames, String brand, List<Long> options, Double minPrice, Double maxPrice, int page, int perPage) {
+		if (categoryNames != null && categoryNames.size() > 0) {
+			String query = "select pv.product.id from ProductVariant pv inner join pv.productOptions po inner join pv.product.categories c " + "where c.name in (:categories) and pv.hkPrice between :min and :max ";
+			if (!options.isEmpty()) {
+				query += "and po.id in (:options)";
+			}
+			query += "group by pv.product.id having count(*) = :tagCount";
+			List<String> productIds;
+			if (!options.isEmpty()) {
+				productIds = getSession().createQuery(query).setParameterList("categories", categoryNames).setParameterList("options", options).setParameter("min", minPrice).setParameter("max", maxPrice).setInteger("tagCount", categoryNames.size()).list();
+			} else {
+				productIds = getSession().createQuery(query).setParameterList("categories", categoryNames).setParameter("min", minPrice).setParameter("max", maxPrice).setInteger("tagCount", categoryNames.size()).list();
+			}
+			if (productIds != null && productIds.size() > 0) {
 
-            if (productIds != null && productIds.size() > 0) {
+				DetachedCriteria criteria = DetachedCriteria.forClass(Product.class);
+				if (StringUtils.isNotBlank(brand)) {
+					criteria.add(Restrictions.eq("brand", brand));
+				}
+				criteria.add(Restrictions.in("id", productIds));
+				criteria.add(Restrictions.eq("deleted", false));
+				criteria.add(Restrictions.eq("isGoogleAdDisallowed", false));
+				criteria.addOrder(Order.asc("orderRanking"));
 
-                DetachedCriteria criteria = DetachedCriteria.forClass(Product.class);
-                if (StringUtils.isNotBlank(brand)) {
-                    criteria.add(Restrictions.eq("brand", brand));
-                }
-                criteria.add(Restrictions.in("id", productIds));
-                criteria.add(Restrictions.eq("deleted", false));
-                criteria.add(Restrictions.eq("isGoogleAdDisallowed", false));
-                criteria.addOrder(Order.asc("orderRanking"));
+				return list(criteria, page, perPage);
+			}
+		}
+		return null;
+	}
 
-                return list(criteria, page, perPage);
-            }
-        }
-        return null;
-    }
-
-    // test code
+	// test code
     public Page getProductByCategoryAndBrandNew(Category cat1, Category cat2, Category cat3, String brand, int page, int perPage) {
 
         String q = "SELECT c.product_id FROM category_has_product c WHERE c.category_name =\"" + cat1.getName() + ""

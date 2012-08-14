@@ -82,6 +82,8 @@ public class CatalogAction extends BasePaginatedAction {
 	List<MenuNode> menuNodes;
 
 	List<Long> filterOptions = new ArrayList<Long>();
+	Double minPrice;
+	Double maxPrice;
 
 	MenuNode menuNode;
 
@@ -198,8 +200,16 @@ public class CatalogAction extends BasePaginatedAction {
 				return new RedirectResolution(HomeAction.class);
 			}
 
-			if (StringUtils.isBlank(brand)) {
-				productPage = productDao.getProductByCategoryAndBrand(categoryNames, null, getPageNo(), getPerPage());
+			logger.debug("filterOptions:"+filterOptions.size());
+			for (Long filterOption : filterOptions) {
+				if(filterOption == null){
+					filterOptions.remove(filterOption);
+				}
+			}
+			logger.debug("filterOptions:"+filterOptions.size());
+
+			if (!filterOptions.isEmpty() || (minPrice != null && maxPrice != null)) {
+				productPage = productDao.getProductByCategoryBrandAndOptions(categoryNames, brand, filterOptions, minPrice, maxPrice, getPageNo(), getPerPage());
 				if (productPage != null) {
 					productList = productPage.getList();
 					for (Product product : productList) {
@@ -207,33 +217,34 @@ public class CatalogAction extends BasePaginatedAction {
 					}
 				}
 				trimListByCategory(productList, secondaryCategory);
-				if (rootCategorySlug.equals("services")) {
-					productList = trimListByDistance(productList, preferredZone);
-				}
 			} else {
-				productPage = productDao.getProductByCategoryAndBrand(categoryNames, brand, getPageNo(), getPerPage());
-				if (productPage != null) {
-					productList = productPage.getList();
-					for (Product product : productList) {
-						product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
+				if (StringUtils.isBlank(brand)) {
+					productPage = productDao.getProductByCategoryAndBrand(categoryNames, null, getPageNo(), getPerPage());
+					if (productPage != null) {
+						productList = productPage.getList();
+						for (Product product : productList) {
+							product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
+						}
 					}
-				}
-				trimListByCategory(productList, secondaryCategory);
-				if (rootCategorySlug.equals("services")) {
-					productList = trimListByDistance(productList, preferredZone);
+					trimListByCategory(productList, secondaryCategory);
+					if (rootCategorySlug.equals("services")) {
+						productList = trimListByDistance(productList, preferredZone);
+					}
+				} else {
+					productPage = productDao.getProductByCategoryAndBrand(categoryNames, brand, getPageNo(), getPerPage());
+					if (productPage != null) {
+						productList = productPage.getList();
+						for (Product product : productList) {
+							product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
+						}
+					}
+					trimListByCategory(productList, secondaryCategory);
+					if (rootCategorySlug.equals("services")) {
+						productList = trimListByDistance(productList, preferredZone);
+					}
 				}
 			}
 
-			if(!filterOptions.isEmpty()){
-			   productPage = productDao.getProductByCategoryBrandAndOptions(categoryNames, brand, filterOptions,getPageNo(), getPerPage());
-				if (productPage != null) {
-					productList = productPage.getList();
-					for (Product product : productList) {
-						product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
-					}
-				}
-				trimListByCategory(productList, secondaryCategory);
-			}
 		}
 		urlFragment = getContext().getRequest().getRequestURI().replaceAll(getContext().getRequest().getContextPath(), "");
 		menuNodes = menuHelper.getSiblings(urlFragment);
@@ -546,6 +557,22 @@ public class CatalogAction extends BasePaginatedAction {
 
 	public void setFilterOptions(List<Long> filterOptions) {
 		this.filterOptions = filterOptions;
+	}
+
+	public Double getMinPrice() {
+		return minPrice;
+	}
+
+	public void setMinPrice(Double minPrice) {
+		this.minPrice = minPrice;
+	}
+
+	public Double getMaxPrice() {
+		return maxPrice;
+	}
+
+	public void setMaxPrice(Double maxPrice) {
+		this.maxPrice = maxPrice;
 	}
 }
 

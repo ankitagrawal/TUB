@@ -6,6 +6,7 @@ import com.hk.domain.catalog.product.ProductOption;
 import com.hk.pact.dao.catalog.category.CategoryDao;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.dto.ProductOptionDto;
+import com.hk.dto.PriceRangeDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -92,13 +93,15 @@ public class CategoryServiceImpl  implements CategoryService{
 		return getCategoryDao().getProductOptions(category);
 	}
 
+	public PriceRangeDto getPriceRange(String category){
+		return getCategoryDao().getPriceRange(category);
+	}
+
     public CategoryDao getCategoryDao() {
         return categoryDao;
     }
 
     public void setCategoryDao(CategoryDao categoryDao) {
         this.categoryDao = categoryDao;
-    }
-
-    
+    }    
 }

@@ -57,7 +57,7 @@ public interface ProductDao extends BaseDao {
 
     public Page getProductByCategoryAndBrand(List<String> categoryNames, String brand, int page, int perPage);
 
-	public Page getProductByCategoryBrandAndOptions(List<String> categoryNames, String brand, List<Long> options, int page, int perPage);
+	public Page getProductByCategoryBrandAndOptions(List<String> categoryNames, String brand, List<Long> options, Double minPrice, Double maxPrice, int page, int perPage);
 
     public Page getProductByCategoryAndBrandNew(Category cat1, Category cat2, Category cat3, String brand, int page, int perPage);
 

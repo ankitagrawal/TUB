@@ -1,6 +1,7 @@
 package com.hk.helper;
 
 import com.hk.dto.ProductOptionDto;
+import com.hk.dto.PriceRangeDto;
 import com.hk.pact.service.catalog.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,7 @@ public class CatalogFilter {
 	@Autowired
 	private CategoryService categoryService;
 
+	private PriceRangeDto priceRangeDto;
 	private Map<String, Set<ProductOptionDto>> filterMap;
 	private Set<ProductOptionDto> filterOptionDtoSet;
 
@@ -39,8 +41,16 @@ public class CatalogFilter {
 		return filterMap;
 	}
 
+	public PriceRangeDto getPriceRange(String category){
+		PriceRangeDto priceRange = categoryService.getPriceRange(category);
+		return priceRange;
+	}
+
 	public Map<String, Set<ProductOptionDto>> getFilterMap() {
 		return filterMap;
 	}
-	
+
+	public PriceRangeDto getPriceRangeDto() {
+		return priceRangeDto;
+	}
 }

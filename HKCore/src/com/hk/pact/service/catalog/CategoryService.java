@@ -8,6 +8,7 @@ import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductOption;
 import com.hk.dto.ProductOptionDto;
+import com.hk.dto.PriceRangeDto;
 
 public interface CategoryService {
     
@@ -26,4 +27,6 @@ public interface CategoryService {
     public Category getTopLevelCategory(Product product);
 
     public List<ProductOptionDto> getFilterOptions(String category);
+
+    public PriceRangeDto getPriceRange(String category);
 }
