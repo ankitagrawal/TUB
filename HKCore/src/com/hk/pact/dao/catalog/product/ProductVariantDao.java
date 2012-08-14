@@ -1,12 +1,12 @@
 package com.hk.pact.dao.catalog.product;
 
-import java.util.List;
-import java.util.Set;
-
 import com.hk.domain.affiliate.AffiliateCategory;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.pact.dao.BaseDao;
+
+import java.util.List;
+import java.util.Set;
 
 public interface ProductVariantDao extends BaseDao {
 

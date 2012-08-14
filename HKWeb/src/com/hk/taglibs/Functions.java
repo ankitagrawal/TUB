@@ -15,8 +15,7 @@ import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.catalog.product.*;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.inventory.GrnLineItem;
@@ -71,7 +70,7 @@ public class Functions {
     private static final String          DEFAULT_DELIEVERY_DAYS = "1-3";
     private static final String          BUSINESS_DAYS          = " business days";
     private static final long            DEFAULT_MIN_DEL_DAYS   = 1;
-    
+
 
     // TODO: rewrite
     static {
@@ -456,8 +455,8 @@ public class Functions {
     }
 
     public static List<Product> getCategoryHeadingProductsSortedByOrder(Long primaryCategoryHeadingId, String productReferrer){
-      ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
-      return productService.productsSortedByOrder(primaryCategoryHeadingId, productReferrer);
+        ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
+        return productService.productsSortedByOrder(primaryCategoryHeadingId, productReferrer);
     }
 
     public static boolean isComboInStock(Object o) {
@@ -496,5 +495,39 @@ public class Functions {
             return DEFAULT_DELIEVERY_DAYS.concat(BUSINESS_DAYS);
         }
 
+    }
+
+    public static boolean isCollectionContainsObject(Collection c, Object o) {
+        return c.contains(o);
+    }
+
+    public static Double getEngravingPrice(Object o) {
+        ProductVariant productVariant = (ProductVariant) o;
+        VariantConfig variantConfig = productVariant.getVariantConfig();
+        if(variantConfig != null) {
+            Set<VariantConfigOption> variantConfigOptions = variantConfig.getVariantConfigOptions();
+            for(VariantConfigOption variantConfigOption : variantConfigOptions) {
+                if(variantConfigOption.getAdditionalParam().equals(VariantConfigOptionParam.ENGRAVING.param())){
+                    for(VariantConfigValues variantConfigValue : variantConfigOption.getVariantConfigValues()) {
+                        return variantConfigValue.getAdditonalPrice();
+                    }
+                }
+            }
+        }
+        return 0D;
+    }
+
+    public static boolean isEngravingProvidedForProduct(Object o) {
+        ProductVariant productVariant = (ProductVariant) o;
+        VariantConfig variantConfig = productVariant.getVariantConfig();
+        if(variantConfig != null) {
+            Set<VariantConfigOption> variantConfigOptions = variantConfig.getVariantConfigOptions();
+            for(VariantConfigOption variantConfigOption : variantConfigOptions) {
+                if(variantConfigOption.getAdditionalParam().equals(VariantConfigOptionParam.ENGRAVING.param())){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
