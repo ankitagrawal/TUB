@@ -92,7 +92,7 @@ public class CartLineItemMatcher {
 				}
 			}
 			if (matchFound && cartLineItemTypeId != null) {
-				if (cartLineItem.getId().longValue() != cartLineItemTypeId.longValue()) {
+				if (cartLineItem.getLineItemType().getId().longValue() != cartLineItemTypeId.longValue()) {
 					matchFound = false;
 				}
 			}
