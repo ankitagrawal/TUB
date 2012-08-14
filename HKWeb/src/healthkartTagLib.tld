@@ -559,7 +559,6 @@
             ${hk:getS3ImageUrl(${object}, ${object})}
         </example>
     </function>
-<<<<<<< HEAD
 
     <function>
         <description>
@@ -582,24 +581,11 @@
         <function-signature>com.hk.domain.catalog.product.ProductVariant getTopDealVariant(java.lang.Object)</function-signature>
         <example>
             ${hk:getTopDealVariant(${object})}
-=======
-
-    <function>
-        <description>
-            returns boolean for already awarded FB points
-        </description>
-        <name>alreadyPublishedDeal</name>
-        <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>java.lang.Boolean alreadyPublishedDeal(java.lang.Object)</function-signature>
-        <example>
-            ${hk:alreadyPublishedDeal(${object})}
->>>>>>> 4963bc1f924f5d7a3cf3070bf2dd21b9625f0c37
         </example>
     </function>
 
     <function>
         <description>
-<<<<<<< HEAD
             returns count of checked in units of a variant - RTO
         </description>
         <name>getReCheckedinUnitsCount</name>
@@ -607,21 +593,11 @@
         <function-signature>java.lang.Long getReCheckedinUnitsCount(java.lang.Object)</function-signature>
         <example>
             ${hk:getReCheckedinUnitsCount(${object1})}
-=======
-            returns top deal product variant
-        </description>
-        <name>getTopDealVariant</name>
-        <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>com.hk.domain.catalog.product.ProductVariant getTopDealVariant(java.lang.Object)</function-signature>
-        <example>
-            ${hk:getTopDealVariant(${object})}
->>>>>>> 4963bc1f924f5d7a3cf3070bf2dd21b9625f0c37
         </example>
     </function>
 
     <function>
         <description>
-<<<<<<< HEAD
             returns count of checked in damage units of a variant - RTO
         </description>
         <name>getDamageUnitsCount</name>
@@ -629,21 +605,11 @@
         <function-signature>java.lang.Long getDamageUnitsCount(java.lang.Object)</function-signature>
         <example>
             ${hk:getDamageUnitsCount(${object1})}
-=======
-            returns count of checked in units of a variant - RTO
-        </description>
-        <name>getReCheckedinUnitsCount</name>
-        <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>java.lang.Long getReCheckedinUnitsCount(java.lang.Object)</function-signature>
-        <example>
-            ${hk:getReCheckedinUnitsCount(${object1})}
->>>>>>> 4963bc1f924f5d7a3cf3070bf2dd21b9625f0c37
         </example>
     </function>
 
     <function>
         <description>
-<<<<<<< HEAD
             returns count of asked units of a variant of a purchase order
         </description>
         <name>askedPOQty</name>
@@ -651,21 +617,11 @@
         <function-signature>java.lang.Long askedPOQty(java.lang.Object,java.lang.Object)</function-signature>
         <example>
             ${hk:askedPOQty(${object1}, ${object2})}
-=======
-            returns count of checked in damage units of a variant - RTO
-        </description>
-        <name>getDamageUnitsCount</name>
-        <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>java.lang.Long getDamageUnitsCount(java.lang.Object)</function-signature>
-        <example>
-            ${hk:getDamageUnitsCount(${object1})}
->>>>>>> 4963bc1f924f5d7a3cf3070bf2dd21b9625f0c37
         </example>
     </function>
 
     <function>
         <description>
-<<<<<<< HEAD
             escape special chars for valid HTML or XML
         </description>
         <name>escapeHtml</name>
@@ -673,44 +629,11 @@
         <function-signature>java.lang.String escapeHtml(java.lang.String)</function-signature>
         <example>
             ${hk:escapeHtml(${str)}
-=======
-            returns count of asked units of a variant of a purchase order
-        </description>
-        <name>askedPOQty</name>
-        <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>java.lang.Long askedPOQty(java.lang.Object,java.lang.Object)</function-signature>
-        <example>
-            ${hk:askedPOQty(${object1}, ${object2})}
->>>>>>> 4963bc1f924f5d7a3cf3070bf2dd21b9625f0c37
         </example>
     </function>
 
     <function>
         <description>
-<<<<<<< HEAD
-            returns applicable offer price based on logged on user ie. General User, B2B User, Preferred User etc.
-        </description>
-        <name>getApplicableOfferPrice</name>
-        <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>java.lang.Double getApplicableOfferPrice(java.lang.Object)</function-signature>
-        <example>
-            ${hk:getApplicableOfferPrice(${object})}
-=======
-            escape special chars for valid HTML or XML
-        </description>
-        <name>escapeHtml</name>
-        <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>java.lang.String escapeHtml(java.lang.String)</function-signature>
-        <example>
-            ${hk:escapeHtml(${str)}
->>>>>>> 4963bc1f924f5d7a3cf3070bf2dd21b9625f0c37
-        </example>
-    </function>
-
-    <function>
-        <description>
-<<<<<<< HEAD
-=======
             returns applicable offer price based on logged on user ie. General User, B2B User, Preferred User etc.
         </description>
         <name>getApplicableOfferPrice</name>
@@ -723,7 +646,6 @@
 
     <function>
         <description>
->>>>>>> 4963bc1f924f5d7a3cf3070bf2dd21b9625f0c37
             returns applicable offer price based on order user ie. General User, B2B User, Preferred User etc.
         </description>
         <name>getOrderBasedApplicableOfferPrice</name>
@@ -872,6 +794,17 @@
     </function>
     <function>
         <description>
+            returns the net sku inventory sold in the given no. of days
+        </description>
+        <name>findInventorySoldInGivenNoOfDays</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.Long findInventorySoldInGivenNoOfDays(com.hk.domain.sku.Sku,int)</function-signature>
+        <example>
+            ${hk:findInventorySoldByDateAndProduct(${sku},${noOfDays})}
+        </example>
+    </function>
+ <function>
+        <description>
             checks if collection contains the given object
         </description>
         <name>isCollectionContainsObject</name>
@@ -893,31 +826,14 @@
         </example>
     </function>
     <function>
-    	<description>
-    		returns true if engraving is allowed for the stethoscope
-    	</description>
-    	<name>isEngravingProvidedForProduct</name>
-    	<function-class>com.hk.taglibs.Functions</function-class>
-    	<function-signature>
-    		boolean isEngravingProvidedForProduct(java.lang.Object)
-    	</function-signature>
-    	<example>
-    		${hk:isEngravingProvidedForProduct(${object})}
-    	</example>
+        <description>
+            returns true if engraving is allowed for the stethoscope
+        </description>
+        <name>isEngravingProvidedForProduct</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>boolean isEngravingProvidedForProduct(java.lang.Object)</function-signature>
+        <example>
+            ${hk:isEngravingProvidedForProduct(${object})}
+        </example>
     </function>
-    <function>
-    	<description>
-    		returns the net sku inventory sold in the given no. of days
-    	</description>
-    	<name>findInventorySoldInGivenNoOfDays</name>
-    	<function-class>com.hk.taglibs.Functions</function-class>
-    	<function-signature>
-    		java.lang.Long
-    		findInventorySoldInGivenNoOfDays(com.hk.domain.sku.Sku,int)
-    	</function-signature>
-    	<example>
-    		${hk:findInventorySoldByDateAndProduct(${sku},${noOfDays})}
-    	</example>
-    </function>
-
 </taglib>
