@@ -236,16 +236,16 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
                 Long qty =  XslUtil.getLong( row.getColumnValue(XslConstants.QTY) );
                 String batchNumber = row.getColumnValue(XslConstants.BATCH_NUMBER);
                 String strExpiryDate = row.getColumnValue(XslConstants.EXP_DATE);
-                Date expiryDate = new Date();
-                if(strExpiryDate != null && !StringUtils.isBlank(strExpiryDate)) {
+                Date expiryDate = null;
+                if(!StringUtils.isBlank(strExpiryDate)) {
                     expiryDate = XslUtil.getDate(strExpiryDate);
-                    if(expiryDate == null) {
+                    /*if(expiryDate == null) {
                         throw new Exception("Incorrect format for expiry date ");
-                    }
+                    }*/
                 }
                 String strMfgDate = row.getColumnValue(XslConstants.MFG_DATE);
-                Date mfgDate = new Date();
-                if(strMfgDate != null && !StringUtils.isBlank(strMfgDate)) {
+                Date mfgDate = null;
+                if(!StringUtils.isBlank(strMfgDate)) {
                     mfgDate = XslUtil.getDate(strMfgDate);
                     /*if(mfgDate == null) {
                         throw new Exception("Incorrect format for mfg date ");

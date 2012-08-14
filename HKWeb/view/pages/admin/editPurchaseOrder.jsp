@@ -39,7 +39,9 @@
                                 '    <input type="text" class="variant" name="poLineItems[' + nextIndex + '].productVariant"/>' +
                                 '  </td>' +
                                 '<td></td>' +
-                                '  <td class="pvDetails"></td>' +
+                                '<td class="supplierCode"></td>' +
+                                '<td class="otherRemark"></td>' +
+                                ' <td class="pvDetails"></td>' +
                                 '<td></td>' +
                                 '<td></td>' +
                                 '<td></td>' +
@@ -68,6 +70,8 @@
                         $('#pvInfoLink').attr('href'), {productVariantId: productVariantId},
                         function(res) {
                             if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+                                variantRow.find('.supplierCode').html(res.data.variant.supplierCode);
+                                variantRow.find('.otherRemark').html(res.data.variant.otherRemark);
                                 variantRow.find('.mrp').val(res.data.variant.markedPrice);
                                 variantRow.find('.costPrice').val(res.data.variant.costPrice);
                                 productVariantDetails.html(
@@ -75,7 +79,7 @@
                                                 res.data.options
                                 );
                             } else {
-                                $('.variantDetails').html('<h2>'+res.message+'</h2>');
+                                $('.variantDetails').html('<h2>' + res.message + '</h2>');
                             }
                         }
                 );
@@ -87,10 +91,10 @@
                     alert("Please enter a valid quantity.");
                     return false;
                 }
-                var statusSelected=$('.status').find('option:selected');
+                var statusSelected = $('.status').find('option:selected');
                 var approver = $('.approver').find('option:selected');
-                var test =approver.text();
-                if(statusSelected.text() == "Sent For Approval" && approver.text()=="-Select Approver-"){
+                var test = approver.text();
+                if (statusSelected.text() == "Sent For Approval" && approver.text() == "-Select Approver-") {
                     alert("Approver Not Selected.");
                     return false;
                 }
@@ -108,7 +112,8 @@
 
 <s:layout-component name="content">
 <div style="display: none;">
-    <s:link beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction" id="pvInfoLink" event="getPVDetails"></s:link>
+    <s:link beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction" id="pvInfoLink"
+            event="getPVDetails"></s:link>
 </div>
 <h2>Edit PO# ${pa.purchaseOrder.id}</h2>
 <s:form beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction">
@@ -161,8 +166,10 @@
         <td class="status">
             <c:if test="${pa.purchaseOrder.purchaseOrderStatus.id >= poApproved}">
                 <shiro:hasRole name="<%=RoleConstants.PO_APPROVER%>">
-                    <s:select name="purchaseOrder.purchaseOrderStatus" value="${pa.purchaseOrder.purchaseOrderStatus.id}">
-                        <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="purchaseOrderStatusList"
+                    <s:select name="purchaseOrder.purchaseOrderStatus"
+                              value="${pa.purchaseOrder.purchaseOrderStatus.id}">
+                        <hk:master-data-collection service="<%=MasterDataDao.class%>"
+                                                   serviceProperty="purchaseOrderStatusList"
                                                    value="id" label="name"/>
                     </s:select>
                 </shiro:hasRole>
@@ -172,7 +179,8 @@
             </c:if>
             <c:if test="${pa.purchaseOrder.purchaseOrderStatus.id < poApproved}">
                 <s:select name="purchaseOrder.purchaseOrderStatus" value="${pa.purchaseOrder.purchaseOrderStatus.id}">
-                    <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="purchaseOrderStatusList"
+                    <hk:master-data-collection service="<%=MasterDataDao.class%>"
+                                               serviceProperty="purchaseOrderStatusList"
                                                value="id" label="name"/>
                 </s:select>
             </c:if>
@@ -203,7 +211,8 @@
         <td>
             <s:hidden name="purchaseOrder.warehouse" value="${pa.purchaseOrder.warehouse}"/>
                 ${pa.purchaseOrder.warehouse}
-        </td></tr>
+        </td>
+    </tr>
 </table>
 
 <table border="1">
@@ -213,6 +222,8 @@
         <th></th>
         <th>VariantID</th>
         <th>UPC</th>
+        <th>Supplier Code</th>
+        <th>Remarks</th>
         <th>Details</th>
         <th>Tax<br/>Category</th>
         <th>Current Inventory <br>Selected Warehouse</th>
@@ -236,7 +247,6 @@
 
         <s:hidden name="poLineItems[${ctr.index}]" value="${poLineItemDto.poLineItem.id}"/>
         <s:hidden name="poLineItems[${ctr.index}].productVariant" value="${productVariant.id}"/>
-
         <%--<s:hidden name="poLineItems[${ctr.index}].sku" value="${sku.id}"/>--%>
 
         <tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
@@ -262,16 +272,18 @@
                           value="${poLineItemDto.poLineItem.productVariant.id}"/>
             </td>
             <td>${productVariant.upc}</td>
+            <td class="supplierCode">${productVariant.supplierCode}</td>
+            <td class="otherRemark">${productVariant.otherRemark} </label></td>
             <td>${productVariant.product.name}<br/>${productVariant.optionsCommaSeparated}
             </td>
             <td>
                 <fmt:formatNumber value="${sku.tax.value * 100}" maxFractionDigits="2"/>
             </td>
             <td>
-                ${hk:netInventory(sku)}
+                    ${hk:netInventory(sku)}
             </td>
             <td>
-                ${hk:netInventory(productVariant)}
+                    ${hk:netInventory(productVariant)}
             </td>
             <td>
                     ${hk:findInventorySoldInGivenNoOfDays(sku, 30)}
@@ -306,10 +318,14 @@
     </tbody>
     <tfoot>
     <tr>
-        <td colspan="13">Total</td>
+        <td colspan="15">Total</td>
+        &nbsp; &nbsp;
         <td><fmt:formatNumber value="${pa.purchaseOrderDto.totalTaxable}" maxFractionDigits="2"/></td>
+        &nbsp;
         <td><fmt:formatNumber value="${pa.purchaseOrderDto.totalTax}" maxFractionDigits="2"/></td>
+        &nbsp;
         <td><fmt:formatNumber value="${pa.purchaseOrderDto.totalSurcharge}" maxFractionDigits="2"/></td>
+        &nbsp;
         <td><fmt:formatNumber value="${pa.purchaseOrderDto.totalPayable}" maxFractionDigits="2"/></td>
     </tr>
     </tfoot>
