@@ -175,6 +175,11 @@ public class Runsheet implements java.io.Serializable {
     public void setRunsheetStatus(RunsheetStatus runsheetStatus) {
         this.runsheetStatus = runsheetStatus;
     }
+
+    @Override
+    public String toString() {
+        return id == null ? "" : id.toString();
+    }
 }
 
 

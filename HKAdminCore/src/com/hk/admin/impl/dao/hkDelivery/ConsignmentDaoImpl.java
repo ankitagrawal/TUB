@@ -21,7 +21,7 @@ public class ConsignmentDaoImpl extends BaseDaoImpl implements ConsignmentDao {
         Consignment consignmentObj = new Consignment();
         consignmentObj.setHub(hub);
         consignmentObj.setConsignmentStatus(EnumConsignmentStatus.ShipmntRcvdAtHub.asConsignmentStatus());
-        consignmentObj.setAwb(shipment.getAwb().getId());
+        consignmentObj.setAwb(shipment.getAwb());
         consignmentObj.setAmount(shipment.getShippingOrder().getAmount());
         consignmentObj.setCnnNumber(shipment.getShippingOrder().getGatewayOrderId());
         consignmentObj.setCreateDate(new Date());

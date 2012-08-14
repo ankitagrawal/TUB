@@ -147,6 +147,11 @@ public class Consignment implements java.io.Serializable {
     public void setPaymentReconciliation(PaymentReconciliation paymentReconciliation) {
         this.paymentReconciliation = paymentReconciliation;
     }
+
+    @Override
+    public String toString() {
+        return id == null ? "" : id.toString();
+    }
 }
 
 
