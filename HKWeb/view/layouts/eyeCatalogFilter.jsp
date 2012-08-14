@@ -13,13 +13,17 @@
 		CatalogFilter catalogFilter = (CatalogFilter) ServiceLocatorFactory.getService("CatalogFilter");
 		Map<String, Set<ProductOptionDto>> filterMap = catalogFilter.getFilterOptions(ca.getChildCategorySlug());
 		pageContext.setAttribute("filterMap", filterMap);
-		PriceRangeDto priceRange = null;
-		if (ca.getMinPrice() != null && ca.getMaxPrice() != null) {
-			priceRange = new PriceRangeDto(ca.getMinPrice(), ca.getMaxPrice());
-		} else {
-			priceRange = catalogFilter.getPriceRange(ca.getChildCategorySlug());
-		}
+
+		PriceRangeDto priceRange = catalogFilter.getPriceRange(ca.getChildCategorySlug());
 		pageContext.setAttribute("priceRange", priceRange);
+
+		PriceRangeDto filteredPriceRange = null;
+		if (ca.getMinPrice() != null && ca.getMaxPrice() != null) {
+			filteredPriceRange = new PriceRangeDto(ca.getMinPrice(), ca.getMaxPrice());
+		}else{
+			filteredPriceRange = priceRange;
+		}
+		pageContext.setAttribute("filteredPriceRange", filteredPriceRange);
 
 	%>
 
@@ -36,16 +40,14 @@
 	<link href="<hk:vhostCss/>/css/jquery-ui.css" rel="stylesheet" type="text/css"/>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			var min = 0;
-			var max = 1000;
-			min = ${priceRange.minPrice};
-			max = ${priceRange.maxPrice};
+			var min = ${filteredPriceRange.minPrice};
+			var max = ${filteredPriceRange.maxPrice};
 			$("#amount").html("Rs" + min + " - Rs." + max);
-			
+
 			$("#slider-range").slider({
 				range: true,
-				min: 0,
-				max: 2000,
+				min: ${priceRange.minPrice},
+				max: ${priceRange.maxPrice},
 				step:50,
 				values: [ min, max ],
 				change: function(event, ui) {
@@ -70,9 +72,15 @@
 					<li><s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction">
 						<s:param name="rootCategorySlug" value="${ca.rootCategorySlug}"/>
 						<s:param name="childCategorySlug" value="${ca.childCategorySlug}"/>
-						<s:param name="secondaryChildCategorySlug" value="${ca.secondaryChildCategorySlug}"/>
-						<s:param name="tertiaryChildCategorySlug" value="${ca.tertiaryChildCategorySlug}"/>
+						<c:if test="${ca.secondaryChildCategorySlug != null}">
+							<s:param name="secondaryChildCategorySlug" value="${ca.secondaryChildCategorySlug}"/>
+						</c:if>
+						<c:if test="${ca.tertiaryChildCategorySlug != null}">
+							<s:param name="tertiaryChildCategorySlug" value="${ca.tertiaryChildCategorySlug}"/>
+						</c:if>
 						<s:param name="filterOptions[${ctr+1}]" value="${option.id}"/>
+						<s:param name="minPrice" value="${filteredPriceRange.minPrice}"/>
+						<s:param name="maxPrice" value="${filteredPriceRange.maxPrice}"/>
 						${option.value} (${option.qty})</s:link></li>
 				</c:forEach>
 			</ul>
