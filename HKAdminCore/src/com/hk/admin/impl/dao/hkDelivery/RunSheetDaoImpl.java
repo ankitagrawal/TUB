@@ -40,7 +40,7 @@ public class RunSheetDaoImpl extends BaseDaoImpl implements RunSheetDao {
             runsheetCriteria.add(Restrictions.eq("runsheetStatus", runsheetStatus));
         }
         if (agent != null) {
-            runsheetCriteria.add(Restrictions.eq("userId", agent));
+            runsheetCriteria.add(Restrictions.eq("agent", agent));
         }
         if (hub != null) {
             runsheetCriteria.add(Restrictions.eq("hub", hub));

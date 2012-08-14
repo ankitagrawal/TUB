@@ -19,6 +19,7 @@ import java.util.Date;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Service
 
@@ -27,13 +28,13 @@ public class RunSheetServiceImpl implements RunSheetService {
     @Autowired
     private RunSheetDao runsheetDao;
 
-    public Runsheet createRunsheet(Hub hub, List<Consignment> consignmentList,RunsheetStatus runsheetStatus,User user,Long prePaidBoxCount,Long totalCODPackets,Double totalCODAmount) {
+    public Runsheet createRunsheet(Hub hub, Set<Consignment> consignmentList,RunsheetStatus runsheetStatus,User user,Long prePaidBoxCount,Long totalCODPackets,Double totalCODAmount) {
         Runsheet runsheetObj = new Runsheet();
         runsheetObj.setCodBoxCount(totalCODPackets);
         runsheetObj.setCreateDate(new Date());
         runsheetObj.setExpectedCollection(totalCODAmount);
-        runsheetObj.setPrePaidBoxCount(prePaidBoxCount);
-        runsheetObj.setHkDeliveryAgent(user);
+        runsheetObj.setPrepaidBoxCount(prePaidBoxCount);
+        runsheetObj.setAgent(user);
         runsheetObj.setHub(hub);
         runsheetObj.setConsignments(consignmentList);
         runsheetObj.setRunsheetStatus(runsheetStatus);

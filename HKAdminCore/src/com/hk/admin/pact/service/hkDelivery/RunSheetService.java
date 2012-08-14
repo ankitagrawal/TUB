@@ -8,11 +8,12 @@ import com.akube.framework.dao.Page;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 
 public interface RunSheetService {
 
-    public Runsheet createRunsheet(Hub hub, List<Consignment> consignmentList,RunsheetStatus runsheetStatus,User user,Long prePaidBoxCount,Long totalCODPackets,Double totalCODAmount);
+    public Runsheet createRunsheet(Hub hub, Set<Consignment> consignmentList,RunsheetStatus runsheetStatus,User user,Long prePaidBoxCount,Long totalCODPackets,Double totalCODAmount);
 
     public void saveRunSheet(Runsheet runsheet);
 

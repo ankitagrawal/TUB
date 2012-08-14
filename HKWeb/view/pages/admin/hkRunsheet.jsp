@@ -39,7 +39,7 @@
                         <td><s:text name="runsheet.actualCollection"
                                     value="${runsheetAction.runsheet.actualCollection}"/></td>
                         <td><label>Pre paid Boxes: </label></td>
-                        <td>${runsheetAction.runsheet.prePaidBoxCount}</td>
+                        <td>${runsheetAction.runsheet.prepaidBoxCount}</td>
                     </tr>
                     <tr>
                         <td><label>Agent:</label></td>
@@ -80,10 +80,10 @@
 
             </tr>
             </thead>
-            <c:forEach items="${runsheetAction.consignmentsList}" var="consignment" varStatus="ctr">
+            <c:forEach items="${runsheetAction.runsheet.consignments}" var="consignment" varStatus="ctr">
                 <tr>
                     <td>${consignment.id}</td>
-                    <td>${consignment.awb.awbBarCode}</td>
+                    <td>${consignment.awbNumber}</td>
                     <td>${consignment.cnnNumber}</td>
                     <td><fmt:formatNumber value="${consignment.amount}" type="currency" currencySymbol=" "
                                           maxFractionDigits="0"/></td>
