@@ -1,10 +1,10 @@
 package com.hk.domain.hkDelivery;
-// Generated Aug 3, 2012 3:17:40 PM by Hibernate Tools 3.2.4.CR1
+// Generated Aug 14, 2012 1:18:49 PM by Hibernate Tools 3.2.4.CR1
+
+
+import com.hk.domain.courier.Awb;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,7 +15,6 @@ import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -34,17 +33,24 @@ public class Consignment implements java.io.Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
+    @Column(name = "awb_id", nullable = false, unique = true)
+    private String awbNumber;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "payment_reconciliation_id")
+    private PaymentReconciliation paymentReconciliation;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hub_id", nullable = false)
     private Hub hub;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "runsheet_id")
+    private Runsheet runsheet;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "consignment_status_id", nullable = false)
     private ConsignmentStatus consignmentStatus;
-
-
-    @Column(name = "awb_id", unique = true, nullable = false)
-    private Long awbId;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_date", nullable = false, length = 19)
@@ -62,20 +68,28 @@ public class Consignment implements java.io.Serializable {
     @Column(name = "payment_mode", nullable = false, length = 15)
     private String paymentMode;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "runsheet_id")
-    private Runsheet runsheet;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "payment_reconciliation_id")
-    private PaymentReconciliation paymentReconciliation;
-
     public Long getId() {
         return this.id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getAwbNumber() {
+        return this.awbNumber;
+    }
+
+    public void setAwbNumber(String awbNumber) {
+        this.awbNumber = awbNumber;
+    }
+
+    public PaymentReconciliation getPaymentReconciliation() {
+        return this.paymentReconciliation;
+    }
+
+    public void setPaymentReconciliation(PaymentReconciliation paymentReconciliation) {
+        this.paymentReconciliation = paymentReconciliation;
     }
 
     public Hub getHub() {
@@ -86,20 +100,20 @@ public class Consignment implements java.io.Serializable {
         this.hub = hub;
     }
 
+    public Runsheet getRunsheet() {
+        return this.runsheet;
+    }
+
+    public void setRunsheet(Runsheet runsheet) {
+        this.runsheet = runsheet;
+    }
+
     public ConsignmentStatus getConsignmentStatus() {
         return this.consignmentStatus;
     }
 
     public void setConsignmentStatus(ConsignmentStatus consignmentStatus) {
         this.consignmentStatus = consignmentStatus;
-    }
-
-    public Long getAwbId() {
-        return this.awbId;
-    }
-
-    public void setAwbId(Long awbId) {
-        this.awbId = awbId;
     }
 
     public Date getCreateDate() {
@@ -134,21 +148,7 @@ public class Consignment implements java.io.Serializable {
         this.paymentMode = paymentMode;
     }
 
-    public Runsheet getRunsheet() {
-        return runsheet;
-    }
 
-    public void setRunsheet(Runsheet runsheet) {
-        this.runsheet = runsheet;
-    }
-
-    public PaymentReconciliation getPaymentReconciliation() {
-        return paymentReconciliation;
-    }
-
-    public void setPaymentReconciliation(PaymentReconciliation paymentReconciliation) {
-        this.paymentReconciliation = paymentReconciliation;
-    }
 }
 
 

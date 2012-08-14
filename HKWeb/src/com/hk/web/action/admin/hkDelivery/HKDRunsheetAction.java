@@ -58,7 +58,8 @@ public class HKDRunsheetAction extends BasePaginatedAction {
     private         Date                  endDate;
     private         RunsheetStatus        runsheetStatus;
     private         User                  agent;
-    private         Integer               defaultPerPage                     = 20;
+    private         Integer               defaultPerPage                     = 1;
+
     @Autowired
     ShippingOrderService                  shippingOrderService;
     @Autowired
@@ -86,6 +87,21 @@ public class HKDRunsheetAction extends BasePaginatedAction {
         runsheetPage = runsheetService.searchRunsheet(runsheet, startDate, endDate, runsheetStatus, agent, hub, getPageNo(), getPerPage());
         runsheetList = runsheetPage.getList();
         return new ForwardResolution("/pages/admin/hkRunsheetList.jsp");
+    }
+
+    public Resolution editRunsheet(){
+        return new ForwardResolution("pages/admin/hkRunsheet.jsp");
+    }
+
+    public Resolution saveRunsheet(){
+        if(runsheet != null){
+            runsheetService.saveRunSheet(runsheet);
+            addRedirectAlertMessage(new SimpleMessage("Runsheet saved"));
+        }
+        else{
+            addRedirectAlertMessage(new SimpleMessage("Runsheet not found."));
+        }
+        return new ForwardResolution("pages/admin/hkRunsheet.jsp");
     }
 
     // Method to create and download runsheet.It also makes an entry in consignment-tracking.
@@ -237,6 +253,14 @@ public class HKDRunsheetAction extends BasePaginatedAction {
         this.runsheetList = runsheetList;
     }
 
+    public Runsheet getRunsheet() {
+        return runsheet;
+    }
+
+    public void setRunsheet(Runsheet runsheet) {
+        this.runsheet = runsheet;
+    }
+
     public Boolean isRunsheetDownloadFunctionality() {
         return runsheetDownloadFunctionality;
     }
@@ -251,6 +275,30 @@ public class HKDRunsheetAction extends BasePaginatedAction {
 
     public void setAgent(User agent) {
         this.agent = agent;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public RunsheetStatus getRunsheetStatus() {
+        return runsheetStatus;
+    }
+
+    public void setRunsheetStatus(RunsheetStatus runsheetStatus) {
+        this.runsheetStatus = runsheetStatus;
     }
 
     public int getPerPageDefault() {

@@ -79,7 +79,6 @@ public class HKDConsignmentAction extends BaseAction{
         return new RedirectResolution(HKDConsignmentAction.class);
     }
 
-
     // Getting comma seperated string for the duplicated
     public String getDuplicateAwbString(List<Awb> duplicatedAwbs) {
         StringBuffer strBuffr = new StringBuffer();

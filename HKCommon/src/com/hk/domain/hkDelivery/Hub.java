@@ -1,6 +1,8 @@
 package com.hk.domain.hkDelivery;
-// Generated Aug 3, 2012 3:17:40 PM by Hibernate Tools 3.2.4.CR1
+// Generated Aug 14, 2012 1:18:49 PM by Hibernate Tools 3.2.4.CR1
 
+
+import com.hk.domain.core.Pincode;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,6 +15,8 @@ import javax.persistence.GeneratedValue;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -30,25 +34,21 @@ public class Hub implements java.io.Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pincode_id", nullable = false)
+    private Pincode pincode;
+
+
+    @Column(name = "name", nullable = false, length = 150)
+    private String name;
+
 
     @Column(name = "address", length = 150)
     private String address;
 
 
-    @Column(name = "country", length = 45)
+    @Column(name = "country", length = 50)
     private String country;
-
-
-    @Column(name = "city_id", nullable = false)
-    private Long cityId;
-
-
-    @Column(name = "state_id", nullable = false)
-    private Long stateId;
-
-
-    @Column(name = "pincode_id", nullable = false)
-    private Long pincodeId;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "hub")
     private Set<Consignment> consignments = new HashSet<Consignment>(0);
@@ -56,14 +56,28 @@ public class Hub implements java.io.Serializable {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "hub")
     private Set<Runsheet> runsheets = new HashSet<Runsheet>(0);
 
-    private String name;
-
     public Long getId() {
         return this.id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Pincode getPincode() {
+        return this.pincode;
+    }
+
+    public void setPincode(Pincode pincode) {
+        this.pincode = pincode;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getAddress() {
@@ -82,30 +96,6 @@ public class Hub implements java.io.Serializable {
         this.country = country;
     }
 
-    public Long getCityId() {
-        return this.cityId;
-    }
-
-    public void setCityId(Long cityId) {
-        this.cityId = cityId;
-    }
-
-    public Long getStateId() {
-        return this.stateId;
-    }
-
-    public void setStateId(Long stateId) {
-        this.stateId = stateId;
-    }
-
-    public Long getPincodeId() {
-        return this.pincodeId;
-    }
-
-    public void setPincodeId(Long pincodeId) {
-        this.pincodeId = pincodeId;
-    }
-
     public Set<Consignment> getConsignments() {
         return this.consignments;
     }
@@ -122,13 +112,7 @@ public class Hub implements java.io.Serializable {
         this.runsheets = runsheets;
     }
 
-    public String getName() {
-        return name;
-    }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 }
 
 

@@ -1,8 +1,6 @@
 package com.hk.domain.hkDelivery;
-// Generated Aug 3, 2012 3:17:40 PM by Hibernate Tools 3.2.4.CR1
+// Generated Aug 14, 2012 1:18:49 PM by Hibernate Tools 3.2.4.CR1
 
-
-import com.hk.domain.hkDelivery.Consignment;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -31,6 +29,9 @@ public class ConsignmentStatus implements java.io.Serializable {
     @Column(name = "status", nullable = false, length = 100)
     private String status;
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "consignmentStatus")
+    private Set<Consignment> consignments = new HashSet<Consignment>(0);
+
     public Long getId() {
         return this.id;
     }
@@ -40,16 +41,19 @@ public class ConsignmentStatus implements java.io.Serializable {
     }
 
     public String getStatus() {
-        return status;
+        return this.status;
     }
 
     public void setStatus(String status) {
         this.status = status;
     }
 
-    @Override
-    public String toString() {
-        return id == null ? "" : id.toString();
+    public Set<Consignment> getConsignments() {
+        return this.consignments;
+    }
+
+    public void setConsignments(Set<Consignment> consignments) {
+        this.consignments = consignments;
     }
 
 

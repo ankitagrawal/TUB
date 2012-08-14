@@ -2,6 +2,9 @@ package com.hk.constants.hkDelivery;
 
 import com.hk.domain.hkDelivery.ConsignmentStatus;
 
+import java.util.Arrays;
+import java.util.List;
+
 
 public enum EnumConsignmentStatus {
 
@@ -46,5 +49,15 @@ public enum EnumConsignmentStatus {
         return consignmentStatus;
     }
 
-
+    public static List<ConsignmentStatus> getAll() {
+        return Arrays.asList(
+                EnumConsignmentStatus.ShipmntRcvdAtHub.asConsignmentStatus(),
+                EnumConsignmentStatus.ShipmntOutForDelivry.asConsignmentStatus(),
+                EnumConsignmentStatus.ShpmntDelivered.asConsignmentStatus(),
+                EnumConsignmentStatus.ShipmntOnHold.asConsignmentStatus(),
+                EnumConsignmentStatus.ShipmntLost.asConsignmentStatus(),
+                EnumConsignmentStatus.ShipmntDamaged.asConsignmentStatus(),
+                EnumConsignmentStatus.ShipmentRTO.asConsignmentStatus()
+        );
+    }
 }
