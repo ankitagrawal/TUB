@@ -16,7 +16,7 @@
         <tr>
           <td>
             <s:select name="db_master_service">
-              <s:option value="static">Master</s:option>
+              <s:option value="static">Static</s:option>
               <s:option value="catalog">Catalog</s:option>
               <s:option value="both">Both</s:option>
             </s:select>
@@ -27,6 +27,10 @@
         </tr>
         </s:form>
       </table>
+        <div>* Please run the following before running DB Master : <br>
+            ant db-dump <br>
+
+        </div>
     </fieldset>
   </s:layout-component>
 </s:layout-render>

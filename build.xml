@@ -46,11 +46,11 @@
        </sql>
     </target>
 
-    <target name="db-city" description="To insert cities for placing order">
+    <target name="db-dump" description="To insert roles/cities">
        <sql driver="${database.driver}"
          url="${database.url.dev}"
          userid="${database.username}"
-         password="${database.password}" encoding="UTF-8"  src="${project.healthkart.dir}/test/city.sql"
+         password="${database.password}" encoding="UTF-8"  src="${project.healthkart.dir}/test/dump.sql"
          classpathref="compile.classpath">
        </sql>
     </target>

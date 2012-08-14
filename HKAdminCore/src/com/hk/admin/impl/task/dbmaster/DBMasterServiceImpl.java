@@ -100,7 +100,7 @@ public class DBMasterServiceImpl implements TaskService{
         File[] listOfPincodeExcels =  pincodeFolder.listFiles();
         File[] listOfRVExcels = rvFolder.listFiles();
 
-
+        /* Inserting product catalog for different categories*/
 	    for (int i = 0; i < listOfCatalogExcels.length; i++) {
 
 		    if (listOfCatalogExcels[i].isFile()) {
@@ -116,7 +116,7 @@ public class DBMasterServiceImpl implements TaskService{
 			    }
 		    }
 
-
+        /* Inserting Sku for different categories  */
 	    for (int i = 0; i < listOfSkuExcels.length; i++) {
 		    if (listOfSkuExcels[i].isFile()) {
 			    skuFiles = listOfSkuExcels[i].getName();
@@ -126,13 +126,13 @@ public class DBMasterServiceImpl implements TaskService{
 				    getSkuServiceImpl().insertSKUs(skuSet);
                   }
                   catch(Exception e){
-                        logger.error("Exception while reading Sku excel sheet.", e);
+                        logger.error("Exception while reading "+skuFiles+" Sku excel sheet.", e);
                   }
                 }
 		    }
 	    }
 
-
+        /* adding pincodes */
         for (int i = 0; i < listOfPincodeExcels.length; i++) {
 		    String pincodeFile = listOfPincodeExcels[i].getName();
 	        if (pincodeFile.endsWith(".xls") || pincodeFile.endsWith(".XLS")) {
@@ -149,6 +149,7 @@ public class DBMasterServiceImpl implements TaskService{
 	        }
          }
 
+          /* Creating inventory via reconciliation voucher */
          for (int i = 0; i < listOfRVExcels.length; i++) {
             String reconciliationVoucherFile = listOfRVExcels[i].getName();
 	        if (reconciliationVoucherFile.endsWith(".xls") || reconciliationVoucherFile.endsWith(".XLS")) {
@@ -179,14 +180,6 @@ public class DBMasterServiceImpl implements TaskService{
         productCatalogService.insertCatalogue(catalog_baby, null);
         batchProcessWorkManager.endWork();
 
-        batchProcessWorkManager.beginWork();
-        productCatalogService.insertCatalogue(catalog_beauty, null);
-        batchProcessWorkManager.endWork();
-
-        batchProcessWorkManager.beginWork();
-        productCatalogService.insertCatalogue(catalog_diabetes, null);
-        batchProcessWorkManager.endWork();
-      
 */
 
     }catch (Exception e){
