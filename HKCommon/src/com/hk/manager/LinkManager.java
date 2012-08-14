@@ -136,13 +136,19 @@ public class LinkManager {
         String productURL = null;
         String productSlug = product.getSlug();
         String productId = product.getId();
-        productURL = "/product/" + productSlug + "/" + productId + "?productReferrerId=" + productReferrerId;
+        //commented to stop internal product tagging
+ //       productURL = "/product/" + productSlug + "/" + productId + "?productReferrerId=" + productReferrerId;
+               productURL = "/product/" + productSlug + "/" + productId;
         /*
              RedirectResolution redirectResolution = new RedirectResolution(ProductAction.class).
                  addParameter("referrer", referrerId).
                  addParameter("productId", productId).addParameter("productSlug", productSlug);
              return getUrlFromResolution(redirectResolution);
         */
+
+        /*RedirectResolution redirectResolution = new RedirectResolution("/core/catalog/product/Product.action").
+                addParameter("productId", productId).addParameter("productSlug", productSlug);
+        return getUrlFromResolution(redirectResolution);*/
         return productURL;
     }
 

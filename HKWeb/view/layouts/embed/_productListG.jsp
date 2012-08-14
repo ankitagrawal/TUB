@@ -32,8 +32,6 @@
       <c:otherwise>
         <div class="grid_4">
           <s:link class="img128"  href="${product.productURL}" title="${product.name}">
-            <s:param name="productId" value="${product.id}"/>
-            <s:param name="productSlug" value="${product.slug}"/>
             <c:choose>
               <c:when test="${product.mainImageId != null}">
                 <hk:productImage imageId="${product.mainImageId}" size="<%=EnumImageSize.SmallSize%>"
@@ -48,8 +46,6 @@
         </div>
         <div class="grid_13">
           <s:link href="${product.productURL}" title="${product.name}" class="prod_top_link">
-            <s:param name="productId" value="${product.id}"/>
-            <s:param name="productSlug" value="${product.slug}"/>
             <h3>
                 ${product.name}
             </h3>
@@ -178,8 +174,6 @@
               ${product.overview}
             <div class='more'>
               <s:link href="${product.productURL}" title="${product.name}">
-                <s:param name="productId" value="${product.id}"/>
-                <s:param name="productSlug" value="${product.slug}"/>
                 read more and place order &rarr;
               </s:link>
             </div>
