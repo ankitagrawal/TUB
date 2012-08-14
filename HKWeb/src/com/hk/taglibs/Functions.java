@@ -1,5 +1,6 @@
 package com.hk.taglibs;
 
+import com.akube.framework.util.DateUtils;
 import com.akube.framework.util.FormatUtils;
 import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
 import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
@@ -30,6 +31,7 @@ import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.user.User;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.dto.menu.MenuNode;
 import com.hk.helper.MenuHelper;
 import com.hk.manager.OrderManager;
@@ -45,6 +47,7 @@ import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
+import com.hk.report.pact.service.catalog.product.ReportProductVariantService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.CartLineItemUtil;
 import com.hk.util.HKImageUtils;
@@ -497,6 +500,7 @@ public class Functions {
 
     }
 
+
     public static boolean isCollectionContainsObject(Collection c, Object o) {
         return c.contains(o);
     }
@@ -530,4 +534,14 @@ public class Functions {
         }
         return false;
     }
+
+    public static Long findInventorySoldInGivenNoOfDays(Sku sku, int noOfDays) {
+        ReportProductVariantService reportProductVariantService = ServiceLocatorFactory.getService(ReportProductVariantService.class);
+
+        Calendar calendar = Calendar.getInstance();
+        Date endDate = calendar.getTime();
+
+        return reportProductVariantService.findSkuInventorySold(DateUtils.getDateMinusDays(noOfDays), endDate, sku);
+    }
+
 }

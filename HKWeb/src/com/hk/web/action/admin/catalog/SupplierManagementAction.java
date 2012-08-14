@@ -1,11 +1,15 @@
 package com.hk.web.action.admin.catalog;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import com.hk.constants.core.Keys;
+import com.hk.util.XslGenerator;
+import com.hk.util.io.HkXlsWriter;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
@@ -17,6 +21,7 @@ import net.sourceforge.stripes.validation.ValidationMethod;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -28,181 +33,232 @@ import com.hk.domain.catalog.Supplier;
 import com.hk.pact.dao.core.SupplierDao;
 import com.hk.web.action.error.AdminPermissionAction;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 @Secure(hasAnyPermissions = {PermissionConstants.SUPPLIER_MANAGEMENT}, authActionBean = AdminPermissionAction.class)
 @Component
 public class SupplierManagementAction extends BasePaginatedAction {
 
-  private static Logger logger = Logger.getLogger(SupplierManagementAction.class);
+    private static Logger logger = Logger.getLogger(SupplierManagementAction.class);
 
-  @Autowired
-  SupplierDao supplierDao;
+    File xlsFile;
+    @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
+    String adminDownloads;
 
-  private List<Supplier> supplierList = new ArrayList<Supplier>();
-  private Supplier supplier;
-  public static final int LenghtOfTIN = 11;
-  private String supplierTin;
-  private String supplierName;
-    
-  Page supplierPage;
-  private Integer defaultPerPage = 30;
+    @Autowired
+    SupplierDao supplierDao;
 
-  @ValidationMethod(on = "pre")
-  public void validateSupplierTinNumber() {
-    if (!StringUtils.isBlank(supplierTin)) {
-      if (!supplierDao.doesTinNumberExist(supplierTin)) {
-        getContext().getValidationErrors().add("1", new SimpleError("No supplier exists with the entered Tin Number!"));
-      }
+    @Autowired
+    XslGenerator xslGenerator;
+
+    private List<Supplier> supplierList = new ArrayList<Supplier>();
+    private Supplier supplier;
+    public static final int LenghtOfTIN = 11;
+    private String supplierTin;
+    private String supplierName;
+
+    Page supplierPage;
+    private Integer defaultPerPage = 30;
+
+    @ValidationMethod(on = "pre")
+    public void validateSupplierTinNumber() {
+        if (!StringUtils.isBlank(supplierTin)) {
+            if (!supplierDao.doesTinNumberExist(supplierTin)) {
+                getContext().getValidationErrors().add("1", new SimpleError("No supplier exists with the entered Tin Number!"));
+            }
+        }
     }
-  }
 
-  @DefaultHandler
-  public Resolution pre() {
-    supplierPage = supplierDao.getSupplierByTinAndName(supplierTin, supplierName, getPageNo(), getPerPage());
-    supplierList = supplierPage.getList();
-    return new ForwardResolution("/pages/admin/supplierList.jsp");
-  }
-
-  public Resolution createOrEdit() {
-    logger.debug("supplier: " + supplier);
-    return new ForwardResolution("/pages/admin/supplier.jsp");
-  }
-
-  @ValidationMethod(on = "save")
-  public void validateSaveSupplier() {
-    String regex = "^0-9$";
-    if (supplier.getState() != null && supplier.getTinNumber() != null) {
-
-      if (supplier.getTinNumber().length() != LenghtOfTIN) {
-        getContext().getValidationErrors().add("e1", new SimpleError("TIN should be of 11 digits"));
-      }
-      if (!(supplier.getTinNumber().substring(0, 2).equals(StateList.stateMapTIN.get(supplier.getState())))) {
-        getContext().getValidationErrors().add("e1", new SimpleError("check the first two digits of TIN"));
-      }
+    @DefaultHandler
+    public Resolution pre() {
+        supplierPage = supplierDao.getSupplierByTinAndName(supplierTin, supplierName, getPageNo(), getPerPage());
+        supplierList = supplierPage.getList();
+        return new ForwardResolution("/pages/admin/supplierList.jsp");
     }
-   
-      //validation for the margins
-      if(supplier.getMargins() !=null){
-          //Validating for entering only valid double values
-          Pattern pattern;
+
+    public Resolution createOrEdit() {
+        logger.debug("supplier: " + supplier);
+        return new ForwardResolution("/pages/admin/supplier.jsp");
+    }
+
+    @ValidationMethod(on = "save")
+    public void validateSaveSupplier() {
+        String regex = "^0-9$";
+        if (supplier.getState() != null && supplier.getTinNumber() != null) {
+
+            if (supplier.getTinNumber().length() != LenghtOfTIN) {
+                getContext().getValidationErrors().add("e1", new SimpleError("TIN should be of 11 digits"));
+            }
+            if (!(supplier.getTinNumber().substring(0, 2).equals(StateList.stateMapTIN.get(supplier.getState())))) {
+                getContext().getValidationErrors().add("e1", new SimpleError("check the first two digits of TIN"));
+            }
+        }
+
+        //validation for the margins
+        if(supplier.getMargins() !=null){
+            //Validating for entering only valid double values
+            Pattern pattern;
 
 
-             String margin = supplier.getMargins();
-          final String DOUBLE_PATTERN = "^\\d+\\.?\\d*$";
-          pattern = Pattern.compile(DOUBLE_PATTERN);
-          boolean bool=pattern.matcher(margin).matches();
-                if(!bool)  getContext().getValidationErrors().add("e1", new SimpleError("Please Enter the Margins in percent"));
-          //To check the value in range of percentage
-           else{
-                  double d = Double.valueOf(supplier.getMargins().trim()).doubleValue();
-                    if(d < 0 || d > 100)
-                 getContext().getValidationErrors().add("e1", new SimpleError("Margins is in percentage and must be Enter within the Range(0 to 100)"));
-                    else if(bool){
-                       int x = margin.indexOf(".");
-                         if(x==(margin.length()-1))
-                            getContext().getValidationErrors().add("e1", new SimpleError("Please Enter the Margins in percent"));  
-                    }
+            String margin = supplier.getMargins();
+            final String DOUBLE_PATTERN = "^\\d+\\.?\\d*$";
+            pattern = Pattern.compile(DOUBLE_PATTERN);
+            boolean bool=pattern.matcher(margin).matches();
+            if(!bool)  getContext().getValidationErrors().add("e1", new SimpleError("Please Enter the Margins in percent"));
+                //To check the value in range of percentage
+            else{
+                double d = Double.valueOf(supplier.getMargins().trim()).doubleValue();
+                if(d < 0 || d > 100)
+                    getContext().getValidationErrors().add("e1", new SimpleError("Margins is in percentage and must be Enter within the Range(0 to 100)"));
+                else if(bool){
+                    int x = margin.indexOf(".");
+                    if(x==(margin.length()-1))
+                        getContext().getValidationErrors().add("e1", new SimpleError("Please Enter the Margins in percent"));
                 }
-      }
+            }
+        }
 
-     //Validation for the Credit Period
-      if(supplier.getCreditPeriod() != null){
-       Pattern pattern;
+        //Validation for the Credit Period
+        if(supplier.getCreditPeriod() != null){
+            Pattern pattern;
 
-             String credit_period = supplier.getCreditPeriod();
-                final String INTEGER_PATTERN = "^[0-9]*$";
-          pattern = Pattern.compile(INTEGER_PATTERN);
-          boolean bool=pattern.matcher(credit_period).matches();
-           if(!bool)
-            getContext().getValidationErrors().add("e1", new SimpleError("Please enter the credit period days in number"));    
-      }
+            String credit_period = supplier.getCreditPeriod();
+            final String INTEGER_PATTERN = "^[0-9]*$";
+            pattern = Pattern.compile(INTEGER_PATTERN);
+            boolean bool=pattern.matcher(credit_period).matches();
+            if(!bool)
+                getContext().getValidationErrors().add("e1", new SimpleError("Please enter the credit period days in number"));
+        }
 
-      // Validation for the Email Id
-      if(supplier.getEmail_id() != null){
-           Pattern pattern;
+        // Validation for the Email Id
+        if(supplier.getEmail_id() != null){
+            Pattern pattern;
             String email_id = supplier.getEmail_id();
             final String EMAIL_PATTERN = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-               pattern = Pattern.compile(EMAIL_PATTERN);
-                  boolean bool = pattern.matcher(email_id).matches();
-                    if(!bool)
-                      getContext().getValidationErrors().add("e1", new SimpleError("Please enter the valid Email-Id"));
-      }
-  }
-
-  public Resolution save() {
-    Supplier oldSupplier = supplierDao.findByTIN(supplier.getTinNumber());
-    if (oldSupplier == null) {
-      if (StringUtils.isNotBlank(supplier.getTinNumber()) && StringUtils.isNotBlank(supplier.getName()) && StringUtils.isNotBlank(supplier.getState())) {
-        addRedirectAlertMessage(new SimpleMessage("Supplier added successfully."));
-        supplierDao.save(supplier);
-      } else {
-        addRedirectAlertMessage(new SimpleMessage("* marked fields are mandatory."));
-        return new RedirectResolution(SupplierManagementAction.class).addParameter("createOrEdit").addParameter("supplier", supplier.getId());
-      }
-    } else if (supplier.getId() != null) {
-      if (StringUtils.isNotBlank(supplier.getTinNumber()) && StringUtils.isNotBlank(supplier.getName()) && StringUtils.isNotBlank(supplier.getState())) {
-        addRedirectAlertMessage(new SimpleMessage("Supplier edited successfully."));
-        supplierDao.save(supplier);
-      } else {
-        addRedirectAlertMessage(new SimpleMessage("* marked fields are mandatory."));
-        return new RedirectResolution(SupplierManagementAction.class).addParameter("createOrEdit").addParameter("supplier", supplier.getId());
-      }
-    } else {
-      addRedirectAlertMessage(new SimpleMessage("Supplier with provided TIN already exists."));
+            pattern = Pattern.compile(EMAIL_PATTERN);
+            boolean bool = pattern.matcher(email_id).matches();
+            if(!bool)
+                getContext().getValidationErrors().add("e1", new SimpleError("Please enter the valid Email-Id"));
+        }
     }
 
-    return new RedirectResolution(SupplierManagementAction.class);
-  }
+    public Resolution save() {
+        Supplier oldSupplier = supplierDao.findByTIN(supplier.getTinNumber());
+        if (oldSupplier == null) {
+            if (StringUtils.isNotBlank(supplier.getTinNumber()) && StringUtils.isNotBlank(supplier.getName()) && StringUtils.isNotBlank(supplier.getState())) {
+                addRedirectAlertMessage(new SimpleMessage("Supplier added successfully."));
+                supplierDao.save(supplier);
+            } else {
+                addRedirectAlertMessage(new SimpleMessage("* marked fields are mandatory."));
+                return new RedirectResolution(SupplierManagementAction.class).addParameter("createOrEdit").addParameter("supplier", supplier.getId());
+            }
+        } else if (supplier.getId() != null) {
+            if (StringUtils.isNotBlank(supplier.getTinNumber()) && StringUtils.isNotBlank(supplier.getName()) && StringUtils.isNotBlank(supplier.getState())) {
+                addRedirectAlertMessage(new SimpleMessage("Supplier edited successfully."));
+                supplierDao.save(supplier);
+            } else {
+                addRedirectAlertMessage(new SimpleMessage("* marked fields are mandatory."));
+                return new RedirectResolution(SupplierManagementAction.class).addParameter("createOrEdit").addParameter("supplier", supplier.getId());
+            }
+        } else {
+            addRedirectAlertMessage(new SimpleMessage("Supplier with provided TIN already exists."));
+        }
 
+        return new RedirectResolution(SupplierManagementAction.class);
+    }
+
+    public Resolution generateExcelReport() {
+        supplierList = supplierDao.getSupplierByTinAndName(supplierTin, supplierName);
+
+        xlsFile = new File(adminDownloads + "/reports/SupplierList.xls");
+
+
+
+        if (supplierList != null) {
+            xslGenerator.generateSupplierListExcel(xlsFile, supplierList);
+
+
+
+            return new HTTPResponseResolution();
+        }
+        return new RedirectResolution(SupplierManagementAction.class);
+    }
+
+    private class HTTPResponseResolution implements Resolution {
+        public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
+            OutputStream out = null;
+            InputStream in = new BufferedInputStream(new FileInputStream(xlsFile));
+            res.setContentLength((int) xlsFile.length());
+            res.setHeader("Content-Disposition", "attachment; filename=\"" + xlsFile.getName() + "\";");
+            out = res.getOutputStream();
+
+            // Copy the contents of the file to the output stream
+            byte[] buf = new byte[4096];
+            int count = 0;
+            while ((count = in.read(buf)) >= 0) {
+                out.write(buf, 0, count);
+            }
+        }
+    }
 
     public List<Supplier> getSupplierList() {
-    return supplierList;
+        return supplierList;
 
-  }
+    }
 
-  public void setSupplierList(List<Supplier> supplierList) {
-    this.supplierList = supplierList;
-  }
+    public void setSupplierList(List<Supplier> supplierList) {
+        this.supplierList = supplierList;
+    }
 
-  public Supplier getSupplier() {
-    return supplier;
-  }
+    public Supplier getSupplier() {
+        return supplier;
+    }
 
-  public void setSupplier(Supplier supplier) {
-    this.supplier = supplier;
-  }
+    public void setSupplier(Supplier supplier) {
+        this.supplier = supplier;
+    }
 
-  public String getSupplierName() {
-    return supplierName;
-  }
+    public String getSupplierName() {
+        return supplierName;
+    }
 
-  public void setSupplierName(String supplierName) {
-    this.supplierName = supplierName;
-  }
+    public void setSupplierName(String supplierName) {
+        this.supplierName = supplierName;
+    }
 
-  public String getSupplierTin() {
-    return supplierTin;
-  }
+    public String getSupplierTin() {
+        return supplierTin;
+    }
 
-  public void setSupplierTin(String supplierTin) {
-    this.supplierTin = supplierTin;
-  }
+    public void setSupplierTin(String supplierTin) {
+        this.supplierTin = supplierTin;
+    }
 
-  public int getPerPageDefault() {
-    return defaultPerPage;
-  }
+    public int getPerPageDefault() {
+        return defaultPerPage;
+    }
 
-  public int getPageCount() {
-    return supplierPage == null ? 0 : supplierPage.getTotalPages();
-  }
+    public int getPageCount() {
+        return supplierPage == null ? 0 : supplierPage.getTotalPages();
+    }
 
-  public int getResultCount() {
-    return supplierPage == null ? 0 : supplierPage.getTotalResults();
-  }
+    public int getResultCount() {
+        return supplierPage == null ? 0 : supplierPage.getTotalResults();
+    }
 
-  public Set<String> getParamSet() {
-    HashSet<String> params = new HashSet<String>();
-    params.add("supplierTin");
-    params.add("supplierName");
-    return params;
-  }
+    public File getXlsFile() {
+        return xlsFile;
+    }
+
+    public void setXlsFile(File xlsFile) {
+        this.xlsFile = xlsFile;
+    }
+
+    public Set<String> getParamSet() {
+        HashSet<String> params = new HashSet<String>();
+        params.add("supplierTin");
+        params.add("supplierName");
+        return params;
+    }
 }

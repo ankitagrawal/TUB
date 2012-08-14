@@ -1,8 +1,5 @@
 package com.hk.admin.pact.service.inventory;
 
-import java.util.Date;
-import java.util.List;
-
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.InvTxnType;
 import com.hk.domain.inventory.GoodsReceivedNote;
@@ -17,6 +14,9 @@ import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.user.User;
+
+import java.util.Date;
+import java.util.List;
 
 public interface AdminInventoryService {
 

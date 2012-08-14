@@ -21,6 +21,7 @@ import com.hk.domain.inventory.GrnStatus;
 import com.hk.domain.inventory.po.PurchaseInvoice;
 import com.hk.domain.inventory.po.PurchaseInvoiceLineItem;
 import com.hk.domain.inventory.po.PurchaseInvoiceStatus;
+import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
@@ -30,6 +31,8 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.util.CustomDateTypeConvertor;
+import com.hk.util.XslGenerator;
+import com.hk.util.io.HkXlsWriter;
 import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
@@ -71,6 +74,9 @@ public class GRNAction extends BasePaginatedAction {
     @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
     String adminDownloads;
 
+    @Autowired
+    XslGenerator xslGenerator;
+
     private File xlsFile;
     Page grnPage;
     Long grnStatusValue;
@@ -107,6 +113,26 @@ public class GRNAction extends BasePaginatedAction {
         return new ForwardResolution("/pages/admin/grnList.jsp");
     }
 
+    public Resolution generateExcelReport() {
+        if (productVariant != null) {
+            grnList = goodsReceivedNoteDao.listGRNsWithProductVariant(productVariant);
+        } else {
+            if (warehouse == null && getPrincipalUser() != null && getPrincipalUser().getSelectedWarehouse() != null) {
+                warehouse = getPrincipalUser().getSelectedWarehouse();
+            }
+            grnList = goodsReceivedNoteDao.searchGRN(grn, grnStatus, invoiceNumber, tinNumber, supplierName, reconciled, warehouse);
+        }
+        if(grnList != null) {
+            xlsFile = new File(adminDownloads + "/reports/GRNList.xls");
+            xlsFile = xslGenerator.generateGRNListExcel(xlsFile, grnList);
+
+            return new HTTPResponseResolution();
+        }
+        return new RedirectResolution(GRNAction.class);
+
+    }
+
+
     public Resolution print() {
         logger.debug("grn: " + grn);
         grnDto = grnManager.generateGRNDto(grn);
@@ -123,9 +149,9 @@ public class GRNAction extends BasePaginatedAction {
     }
 
     public Resolution save() {
-      if (warehouse == null && getPrincipalUser() != null && getPrincipalUser().getSelectedWarehouse() != null) {
-        warehouse = getPrincipalUser().getSelectedWarehouse();
-      }
+        if (warehouse == null && getPrincipalUser() != null && getPrincipalUser().getSelectedWarehouse() != null) {
+            warehouse = getPrincipalUser().getSelectedWarehouse();
+        }
         if (grn != null && grn.getId() != null) {
             logger.debug("grnLineItems@Save: " + grnLineItems.size());
 
@@ -137,7 +163,7 @@ public class GRNAction extends BasePaginatedAction {
             for (GrnLineItem grnLineItem : grnLineItems) {
                 //setting sku when adding new grn line item
                 if(grnLineItem.getSku() == null && grnLineItem.getProductVariant() != null){
-                  grnLineItem.setSku(skuService.getSKU(grnLineItem.getProductVariant(), warehouse));
+                    grnLineItem.setSku(skuService.getSKU(grnLineItem.getProductVariant(), warehouse));
                 }
                 if (grnLineItem.getQty() != null && grnLineItem.getQty() == 0 && grnLineItem.getId() != null) {
                     grnLineItemDao.delete(grnLineItem);

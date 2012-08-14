@@ -17,6 +17,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.hk.domain.inventory.GrnLineItem;
+import com.hk.domain.inventory.po.PurchaseOrder;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -714,10 +716,10 @@ public class ReportAction extends BaseAction {
                     xlsWriter.addCell(xlsRow, stockReportDto.getStockTransferCheckin());
                     xlsWriter.addCell(xlsRow, stockReportDto.getTransitLost());
 
-                    xlsWriter.writeData(xlsFile, "Stock_Report");
                 }
                 xlsRow++;
             }
+            xlsWriter.writeData(xlsFile, "Stock_Report");
             addRedirectAlertMessage(new SimpleMessage("Download complete"));
 
             return new HTTPResponseResolution();
@@ -749,9 +751,9 @@ public class ReportAction extends BaseAction {
                 xlsWriter.addCell(xlsRow, rtoReportDto.getProductOptions());
                 xlsWriter.addCell(xlsRow, rtoReportDto.getRtoCheckinQty());
                 xlsWriter.addCell(xlsRow, rtoReportDto.getRtoDamageCheckinQty());
-                xlsWriter.writeData(xlsFile, "RTO_Report");
                 xlsRow++;
             }
+            xlsWriter.writeData(xlsFile, "RTO_Report");
             addRedirectAlertMessage(new SimpleMessage("Download complete"));
 
             return new HTTPResponseResolution();
@@ -768,7 +770,6 @@ public class ReportAction extends BaseAction {
         xlsWriter.addHeader("PRODUCT NAME", "PRODUCT NAME");
         xlsWriter.addHeader("PRODUCT OPTIONS", "PRODUCT OPTIONS");
         xlsWriter.addHeader("STOCK LEFT", "STOCK LEFT");
-        xlsWriter.writeData(xlsFile, "ExpiryAlert_Report");
 
         for (ExpiryAlertReportDto expiryAlertReportDto : expiryAlertReportDtoList) {
             xlsWriter.addCell(xlsRow, expiryAlertReportDto.getBatchNumber());
@@ -776,10 +777,10 @@ public class ReportAction extends BaseAction {
             xlsWriter.addCell(xlsRow, expiryAlertReportDto.getProductName());
             xlsWriter.addCell(xlsRow, expiryAlertReportDto.getProductOption());
             xlsWriter.addCell(xlsRow, expiryAlertReportDto.getBatchQty());
-            xlsWriter.writeData(xlsFile, "ExpiryAlert_Report");
 
             xlsRow++;
         }
+        xlsWriter.writeData(xlsFile, "ExpiryAlert_Report");
         addRedirectAlertMessage(new SimpleMessage("Download complete"));
 
         return new HTTPResponseResolution();
@@ -802,7 +803,6 @@ public class ReportAction extends BaseAction {
                 xlsWriter.addHeader("INVENTORY TXN TYPE", "INVENTORY TXN TYPE");
                 xlsWriter.addHeader("TXN DATE", "TXN DATE");
                 xlsWriter.addHeader("QUANTITY", "QUANTITY");
-                xlsWriter.writeData(xlsFile, "ReconciliationVoucher_Report");
 
                 for (RVReportDto rvReportDto : rvReportDtoList) {
                     xlsWriter.addCell(xlsRow, productVariantId);
@@ -813,10 +813,10 @@ public class ReportAction extends BaseAction {
                     xlsWriter.addCell(xlsRow, rvReportDto.getProductVariantInventory().getTxnDate());
                     Long qty = rvReportDto.getQtyRV() < 0L ? rvReportDto.getQtyRV() * -1L : rvReportDto.getQtyRV();
                     xlsWriter.addCell(xlsRow, qty);
-                    xlsWriter.writeData(xlsFile, "ReconciliationVoucher_Report");
 
                     xlsRow++;
                 }
+                xlsWriter.writeData(xlsFile, "ReconciliationVoucher_Report");
 
             }
             addRedirectAlertMessage(new SimpleMessage("Download complete"));
@@ -825,6 +825,80 @@ public class ReportAction extends BaseAction {
         }
         addRedirectAlertMessage(new SimpleMessage("Product Variant not entered"));
         return null;
+    }
+
+    private void prepareXlsForPurchaseOrder(List<GrnLineItem> grnLineItemList) {
+        xlsFile = new File(adminDownloads + "/reports/POReportByVariant.xls");
+        HkXlsWriter xlsWriter = new HkXlsWriter();
+        int xlsRow = 1;
+        xlsWriter.addHeader("PRODUCT VARIANT ID", "PRODUCT VARIANT ID");
+        xlsWriter.addHeader("PRODUCT NAME", "PRODUCT NAME");
+        xlsWriter.addHeader("PRODUCT OPTIONS", "PRODUCT OPTIONS");
+        xlsWriter.addHeader("PO ID", "PO ID");
+        xlsWriter.addHeader("PO CREATE DATE", "PO CREATE DATE");
+        xlsWriter.addHeader("PO CREATED BY", "PO CREATED BY");
+        xlsWriter.addHeader("PO APPROVER", "PO APPROVER");
+        xlsWriter.addHeader("SUPPLIER", "SUPPLIER");
+        xlsWriter.addHeader("SUPPLIER TIN", "SUPPLIER TIN");
+        xlsWriter.addHeader("PO STATUS", "PO STATUS");
+        xlsWriter.addHeader("GRN QTY", "GRN QTY");
+        xlsWriter.addHeader("CHECKED IN QTY", "CHECKED IN QTY");
+        xlsWriter.addHeader("GRN DATE", "GRN DATE");
+        xlsWriter.addHeader("GRN STATUS", "GRN STATUS");
+        xlsWriter.addHeader("MRP", "MRP");
+        xlsWriter.addHeader("COST PRICE", "COST PRICE");
+        xlsWriter.addHeader("MARGIN(CP vs MRP)", "MARGIN(CP vs MRP)");
+
+        xlsWriter.writeData(xlsFile, "PurchaseOrder_Report");
+
+        for (GrnLineItem grnLineItem : grnLineItemList) {
+            PurchaseOrder purchaseOrder = grnLineItem.getGoodsReceivedNote().getPurchaseOrder();
+            ProductVariant productVariant = grnLineItem.getSku().getProductVariant();
+
+            xlsWriter.addCell(xlsRow, productVariant.getId());
+            xlsWriter.addCell(xlsRow, productVariant.getProduct().getName());
+            xlsWriter.addCell(xlsRow, productVariant.getOptionsCommaSeparated());
+            xlsWriter.addCell(xlsRow, purchaseOrder.getId());
+            xlsWriter.addCell(xlsRow, purchaseOrder.getCreateDate());
+            xlsWriter.addCell(xlsRow, purchaseOrder.getCreatedBy().getName());
+            if(purchaseOrder.getApprovedBy() != null) {
+                xlsWriter.addCell(xlsRow, purchaseOrder.getApprovedBy().getName());
+            } else {
+                xlsWriter.addCell(xlsRow, purchaseOrder.getApprovedBy());
+            }
+
+            xlsWriter.addCell(xlsRow, purchaseOrder.getSupplier().getName());
+            xlsWriter.addCell(xlsRow, purchaseOrder.getSupplier().getTinNumber());
+            xlsWriter.addCell(xlsRow, purchaseOrder.getPurchaseOrderStatus().getName());
+            xlsWriter.addCell(xlsRow, grnLineItem.getQty());
+            xlsWriter.addCell(xlsRow, grnLineItem.getCheckedInQty());
+            xlsWriter.addCell(xlsRow, grnLineItem.getGoodsReceivedNote().getGrnDate());
+            xlsWriter.addCell(xlsRow, grnLineItem.getGoodsReceivedNote().getGrnStatus().getName());
+            xlsWriter.addCell(xlsRow, productVariant.getMarkedPrice());
+            xlsWriter.addCell(xlsRow, productVariant.getCostPrice());
+            xlsWriter.addCell(xlsRow, (productVariant.getMarkedPrice() - productVariant.getCostPrice())/productVariant.getCostPrice()*100);
+
+            xlsRow++;
+        }
+        xlsWriter.writeData(xlsFile, "PurchaseOrder_Report");
+
+    }
+    public Resolution generatePOReportByVariant() {
+        if (productIdListCommaSeparated == null) {
+            List<GrnLineItem> grnLineItemList = getReportProductVariantService().getGrnLineItemForPurchaseOrder(null, warehouse, startDate, endDate);
+            prepareXlsForPurchaseOrder(grnLineItemList);
+        }else {
+            productIdArray = productIdListCommaSeparated.split(",");
+            for (String productVariantId : productIdArray) {
+                ProductVariant productVariant = productVariantDao.getVariantById(productVariantId);
+                List<GrnLineItem> grnLineItemList = getReportProductVariantService().getGrnLineItemForPurchaseOrder(productVariant, warehouse, startDate, endDate);
+                prepareXlsForPurchaseOrder(grnLineItemList);
+
+            }
+        }
+        addRedirectAlertMessage(new SimpleMessage("Download complete"));
+
+        return new HTTPResponseResolution();
     }
 
     public Date getStartDate() {

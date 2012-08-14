@@ -8415,4 +8415,14 @@
     <changeSet author="Tarun (generated)" id="1339071974252-10">
       <dropTable tableName="product_thumb_tag"/>
     </changeSet>
+    <changeSet author="Rohit (generated)" id="1344867984432-1">
+        <addColumn tableName="debit_note">
+            <column name="remarks" type="TEXT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1344867984432-2">
+        <addColumn tableName="goods_received_note">
+            <column name="remarks" type="TEXT"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

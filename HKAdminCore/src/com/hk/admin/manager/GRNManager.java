@@ -158,6 +158,7 @@ public class GRNManager {
         Double totalSurcharge = 0.0;
         Double totalTaxable = 0.0;
         Double totalPayable = 0.0;
+        Double marginMrpVsCP = 0.0;
 
         @SuppressWarnings("unused")
         Warehouse warehouse = grn.getWarehouse();
@@ -171,6 +172,9 @@ public class GRNManager {
             grnLineItemDto.setGrnLineItem(grnLineItem);
             if (grnLineItem != null && grnLineItem.getCostPrice() != null && grnLineItem.getQty() != null) {
                 taxable = grnLineItem.getCostPrice() * grnLineItem.getQty();
+                if(grnLineItem.getMrp() != null) {
+                    marginMrpVsCP = (grnLineItem.getMrp() - grnLineItem.getCostPrice())/grnLineItem.getCostPrice()*100;
+                }
             }
 
             Sku sku = grnLineItem.getSku();
@@ -184,6 +188,7 @@ public class GRNManager {
             grnLineItemDto.setPayable(payable);
             grnLineItemDto.setSurcharge(surcharge);
             grnLineItemDto.setTax(tax);
+            grnLineItemDto.setMarginMrpVsCP(marginMrpVsCP);
 
             grnLineItemDtoList.add(grnLineItemDto);
             totalTaxable += taxable;
