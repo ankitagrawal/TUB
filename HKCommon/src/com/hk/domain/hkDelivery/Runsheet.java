@@ -1,10 +1,12 @@
 package com.hk.domain.hkDelivery;
-// Generated Aug 3, 2012 3:17:40 PM by Hibernate Tools 3.2.4.CR1
+// Generated Aug 14, 2012 1:18:49 PM by Hibernate Tools 3.2.4.CR1
 
 
 import com.hk.domain.user.User;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -36,6 +38,14 @@ public class Runsheet implements java.io.Serializable {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "runsheet_status_id", nullable = false)
+    private RunsheetStatus runsheetStatus;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "agent")
+    private User agent;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hub_id", nullable = false)
     private Hub hub;
 
@@ -56,29 +66,19 @@ public class Runsheet implements java.io.Serializable {
     private Double actualCollection;
 
 
-    @Column(name = "cod_box_count", nullable = false)
+    @Column(name = "cod_box_count")
     private Long codBoxCount;
 
 
-    @Column(name = "pre_paid_box_count", nullable = false)
-    private Long prePaidBoxCount;
+    @Column(name = "prepaid_box_count")
+    private Long prepaidBoxCount;
 
 
     @Column(name = "remarks", length = 16777215)
     private String remarks;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User hkDeliveryAgent;
-
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "runsheet_id")
-	private List<Consignment> consignments = new ArrayList<Consignment>(0);
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "runsheet_status_id", nullable = false)
-    private RunsheetStatus runsheetStatus;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "runsheet")
+    private Set<Consignment> consignments = new HashSet<Consignment>(0);
 
     public Long getId() {
         return this.id;
@@ -86,6 +86,22 @@ public class Runsheet implements java.io.Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public RunsheetStatus getRunsheetStatus() {
+        return this.runsheetStatus;
+    }
+
+    public void setRunsheetStatus(RunsheetStatus runsheetStatus) {
+        this.runsheetStatus = runsheetStatus;
+    }
+
+    public User getAgent() {
+        return this.agent;
+    }
+
+    public void setAgent(User agent) {
+        this.agent = agent;
     }
 
     public Hub getHub() {
@@ -136,12 +152,12 @@ public class Runsheet implements java.io.Serializable {
         this.codBoxCount = codBoxCount;
     }
 
-    public Long getPrePaidBoxCount() {
-        return this.prePaidBoxCount;
+    public Long getPrepaidBoxCount() {
+        return this.prepaidBoxCount;
     }
 
-    public void setPrePaidBoxCount(Long prePaidBoxCount) {
-        this.prePaidBoxCount = prePaidBoxCount;
+    public void setPrepaidBoxCount(Long prepaidBoxCount) {
+        this.prepaidBoxCount = prepaidBoxCount;
     }
 
     public String getRemarks() {
@@ -152,34 +168,15 @@ public class Runsheet implements java.io.Serializable {
         this.remarks = remarks;
     }
 
-    public User getHkDeliveryAgent() {
-        return this.hkDeliveryAgent;
+    public Set<Consignment> getConsignments() {
+        return this.consignments;
     }
 
-    public void setHkDeliveryAgent(User hkDeliveryAgent) {
-        this.hkDeliveryAgent = hkDeliveryAgent;
-    }
-
-    public List<Consignment> getConsignments() {
-        return consignments;
-    }
-
-    public void setConsignments(List<Consignment> consignments) {
+    public void setConsignments(Set<Consignment> consignments) {
         this.consignments = consignments;
     }
 
-    public RunsheetStatus getRunsheetStatus() {
-        return runsheetStatus;
-    }
 
-    public void setRunsheetStatus(RunsheetStatus runsheetStatus) {
-        this.runsheetStatus = runsheetStatus;
-    }
-
-    @Override
-    public String toString() {
-        return id == null ? "" : id.toString();
-    }
 }
 
 
