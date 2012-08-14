@@ -33,6 +33,7 @@ import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.hkDelivery.EnumRunsheetStatus;
 import com.hk.constants.hkDelivery.EnumConsignmentStatus;
 import com.hk.constants.hkDelivery.HKDeliveryConstants;
+import com.hk.constants.payment.EnumPaymentMode;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -123,7 +124,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
             int                   totalCODPackets                 = 0;
             double                totalCODAmount                  = 0.0;
             List<String>          trackingIdsWithoutConsignment   = new ArrayList<String>();
-            List<Consignment>     consignmentList                 = new ArrayList<Consignment>();
+            Set<Consignment>     consignments                     = new HashSet<Consignment>();
             //todo fetch userId from agent.
             //Getting HK-Delivery Courier Object.
             Courier               hkDeliveryCourier               = EnumCourier.HK_Delivery.asCourier();
@@ -131,33 +132,26 @@ public class HKDRunsheetAction extends BasePaginatedAction {
             //Iterating over trackingIdList(entered by the user) to get coreesponding shippingOrderList,consignmentList.
             for (String trackingNum : trackingIdList) {
 
-                //fetching awb object from trackingId (or awbNumber).
+                /*//fetching awb object from trackingId (or awbNumber).
                 Awb awb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(hkDeliveryCourier, trackingNum.trim(), userService.getWarehouseForLoggedInUser(), null, EnumAwbStatus.Used.getAsAwbStatus());
-                // Fetching consignment from Awb.
-                Consignment consignment = consignmentService.getConsignmentByAwbId(awb.getId());
+*/                // Fetching consignment from Awb.
+                Consignment consignment = consignmentService.getConsignmentByAwbNumber(trackingNum);
                 //Getting loggedIn user,needed for consignment-tracking
                 if (getPrincipal() != null) {
                     loggedOnUser = getUserService().getUserById(getPrincipal().getId());
                 }
                 //This is a check to ensure that runsheetObj wud be created for those trackingIds for which Consignment exists in DB.
                 if (consignment != null) {
-                    //Fetching shippingOrder for corresponding trackingID in order to calculate totalCodAmount and totalCodPackets
-                    Shipment shipment = shipmentService.findByAwb(awb);
-                    if (shipment != null) {
-                        ShippingOrder shippingOrder = shipment.getShippingOrder();
-                        if (shippingOrder != null) {
-                            if (shippingOrder.isCOD()) {
-                                ++totalCODPackets;
-                                totalCODAmount = totalCODAmount + shippingOrder.getAmount();
+                    if(EnumPaymentMode.COD.equals(consignment.getPaymentMode())) {
+                       ++totalCODPackets;
+                                totalCODAmount = totalCODAmount + consignment.getAmount();
                                 totalCODAmount = Math.round(totalCODAmount);
-                            }
-                            shippingOrderList.add(shippingOrder);
-                        }
                     }
+                    shippingOrderList.add(shipmentService.findByAwb(awbService.findByCourierAwbNumber(hkDeliveryCourier,trackingNum)).getShippingOrder());
 
                     //Changing consignment-status from ShipmntRcvdAtHub(10) to ShipmntOutForDelivry(20).
                     consignment.setConsignmentStatus(EnumConsignmentStatus.ShipmntOutForDelivry.asConsignmentStatus());
-                    consignmentList.add(consignment);
+                    consignments.add(consignment);
                 } else {
                     //adding the trackingId without a consignment to a list.
                     trackingIdsWithoutConsignment.add(trackingNum);
@@ -173,11 +167,11 @@ public class HKDRunsheetAction extends BasePaginatedAction {
             try {
                 xlsFile = new File(adminDownloads + "/" + CourierConstants.HKDELIVERY_WORKSHEET_FOLDER + "/" + CourierConstants.HKDELIVERY_WORKSHEET + "_" + sdf.format(new Date()) + ".xls");
                 // Creating Runsheet object.
-                runsheetObj = runsheetService.createRunsheet(hub, consignmentList, EnumRunsheetStatus.Open.asRunsheetStatus(), agent, prePaidBoxCount, Long.parseLong(totalCODPackets + ""), totalCODAmount);
+                runsheetObj = runsheetService.createRunsheet(hub, consignments, EnumRunsheetStatus.Open.asRunsheetStatus(), agent, prePaidBoxCount, Long.parseLong(totalCODPackets + ""), totalCODAmount);
                 // Saving Runsheet in db.
                 runsheetService.saveRunSheet(runsheetObj);
                 //making corresponding entry in consignment tracking.
-                consignmentService.updateConsignmentTracking(hub.getId(),deliveryHub.getId(),loggedOnUser.getId(),consignmentList);
+                consignmentService.updateConsignmentTracking(hub,deliveryHub,loggedOnUser,consignments);
                 // generating Xls file.
                 xlsFile = hkdRunsheetManager.generateWorkSheetXls(xlsFile.getPath(), shippingOrderList, agent.getName(), totalCODAmount, totalPackets, totalCODPackets);
             } catch (IOException ioe) {

@@ -28,7 +28,7 @@ public class RunSheetServiceImpl implements RunSheetService {
     @Autowired
     private RunSheetDao runsheetDao;
 
-    public Runsheet createRunsheet(Hub hub, Set<Consignment> consignmentList,RunsheetStatus runsheetStatus,User user,Long prePaidBoxCount,Long totalCODPackets,Double totalCODAmount) {
+    public Runsheet createRunsheet(Hub hub, Set<Consignment> consignments,RunsheetStatus runsheetStatus,User user,Long prePaidBoxCount,Long totalCODPackets,Double totalCODAmount) {
         Runsheet runsheetObj = new Runsheet();
         runsheetObj.setCodBoxCount(totalCODPackets);
         runsheetObj.setCreateDate(new Date());
@@ -36,7 +36,7 @@ public class RunSheetServiceImpl implements RunSheetService {
         runsheetObj.setPrepaidBoxCount(prePaidBoxCount);
         runsheetObj.setAgent(user);
         runsheetObj.setHub(hub);
-        runsheetObj.setConsignments(consignmentList);
+        runsheetObj.setConsignments(consignments);
         runsheetObj.setRunsheetStatus(runsheetStatus);
        return runsheetObj;
     }

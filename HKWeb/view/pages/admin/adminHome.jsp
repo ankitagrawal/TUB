@@ -208,6 +208,12 @@
 		<s:param name="courierDownloadFunctionality" value="false"/>
 	</s:link></h3>
 
+    <h3><s:link beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction"
+                event="generateCourierReport">Add/Edit Hub
+        <s:param name="courierDownloadFunctionality" value="false"/>
+    </s:link></h3>
+
+
 </div>
 
 <div class="cl"></div>
@@ -395,6 +401,12 @@
             <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDRunsheetAction"
                     title="View Runsheets" >View Runsheets
             </s:link>
+    </h3>
+
+    <h3>
+        <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDHubAction"
+                title="Add/Edit Hub">Add/Edit Hub
+        </s:link>
     </h3>
 
 </div>

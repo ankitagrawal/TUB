@@ -2,6 +2,8 @@ package com.hk.domain.hkDelivery;
 // Generated Aug 14, 2012 3:05:58 PM by Hibernate Tools 3.2.4.CR1
 
 
+import com.hk.domain.user.User;
+
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -37,11 +39,11 @@ public class ConsignmentTracking implements java.io.Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "source_hub_id")
-    private Hub sourceHubId;
+    private Hub sourceHub;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "destination_hub_id")
-    private Hub destinationHubId;
+    private Hub destinationHub;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_date", length = 19)
@@ -50,6 +52,10 @@ public class ConsignmentTracking implements java.io.Serializable {
 
     @Column(name = "remarks", length = 45)
     private String remarks;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     public Long getId() {
         return this.id;
@@ -67,20 +73,20 @@ public class ConsignmentTracking implements java.io.Serializable {
         this.consignment = consignment;
     }
 
-    public Hub getSourceHubId() {
-        return this.sourceHubId;
+    public Hub getSourceHub() {
+        return sourceHub;
     }
 
-    public void setSourceHubId(Hub sourceHubId) {
-        this.sourceHubId = sourceHubId;
+    public void setSourceHub(Hub sourceHub) {
+        this.sourceHub = sourceHub;
     }
 
-    public Hub getDestinationHubId() {
-        return this.destinationHubId;
+    public Hub getDestinationHub() {
+        return destinationHub;
     }
 
-    public void setDestinationHubId(Hub destinationHubId) {
-        this.destinationHubId = destinationHubId;
+    public void setDestinationHub(Hub destinationHub) {
+        this.destinationHub = destinationHub;
     }
 
     public Date getCreateDate() {
@@ -99,7 +105,13 @@ public class ConsignmentTracking implements java.io.Serializable {
         this.remarks = remarks;
     }
 
+    public User getUser() {
+        return user;
+    }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
 }
 
 
