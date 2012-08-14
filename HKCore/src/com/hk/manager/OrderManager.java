@@ -489,7 +489,7 @@ public class OrderManager {
             CartLineItem existingCartLineItem = getCartLineItemDao().getLineItem(freeVariant, order);
             if (existingCartLineItem == null) { // The variant is not added in user account already
                 CartLineItem freeCartLineItem = cartLineItemService.createCartLineItemWithBasicDetails(freeVariant, order);
-                freeCartLineItem.setDiscountOnHkPrice(freeVariant.getHkPrice());
+                freeCartLineItem.setDiscountOnHkPrice(freeVariant.getHkPrice() * freeVariant.getQty());
                 return cartLineItemService.save(freeCartLineItem);
             } else {
                 existingCartLineItem.setQty(existingCartLineItem.getQty() + freeVariant.getQty());
