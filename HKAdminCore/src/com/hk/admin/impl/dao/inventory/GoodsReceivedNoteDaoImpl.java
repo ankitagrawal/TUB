@@ -53,7 +53,7 @@ public class GoodsReceivedNoteDaoImpl extends BaseDaoImpl implements GoodsReceiv
 
     private DetachedCriteria getGRNCriteria(GoodsReceivedNote grn, GrnStatus grnStatus, String invoiceNumber, String tinNumber, String supplierName, Boolean isReconciled,
                                             Warehouse warehouse) {
-        List<PurchaseOrder> poList = new ArrayList<PurchaseOrder>();
+        /*List<PurchaseOrder> poList = new ArrayList<PurchaseOrder>();
         if (StringUtils.isNotBlank(tinNumber) || StringUtils.isNotBlank(supplierName)) {
             Criteria purchaseOrderCriteria = getSession().createCriteria(PurchaseOrder.class);
             Criteria supplierCriteria = purchaseOrderCriteria.createCriteria("supplier");
@@ -64,8 +64,8 @@ public class GoodsReceivedNoteDaoImpl extends BaseDaoImpl implements GoodsReceiv
                 supplierCriteria.add(Restrictions.like("name", "%" + supplierName + "%"));
             }
             poList = purchaseOrderCriteria.list();
-            logger.debug("poList=" + poList.size());
-        }
+            //logger.debug("poList=" + poList.size());
+        }*/
         DetachedCriteria grnCriteria = DetachedCriteria.forClass(GoodsReceivedNote.class);
         if (isReconciled != null) {
             if (!isReconciled) {
