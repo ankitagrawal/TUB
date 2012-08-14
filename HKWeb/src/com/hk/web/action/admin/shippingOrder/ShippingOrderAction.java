@@ -46,7 +46,7 @@ public class ShippingOrderAction extends BaseAction {
         if (isWarehouseUpdated) {
             responseMsg = "warehouse flipped";
         } else {
-            responseMsg = "All products not avaialable in other warehouse. so cannot update.";
+            responseMsg = " Either All products not avaialable in other warehouse or sku for all products are nor available , so cannot update.";
         }
 
         Map<String, Object> data = new HashMap<String, Object>(1);

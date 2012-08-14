@@ -95,16 +95,19 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 
         boolean shouldUpdate = true;
         Set<LineItem> lineItems = shippingOrder.getLineItems();
+        try {
         for (LineItem lineItem : lineItems) {
             Sku skuInOtherWarehouse = getSkuService().getSKU(lineItem.getSku().getProductVariant(), warehouse);
-            if (skuInOtherWarehouse == null) {
-                shouldUpdate = false;
-                break;
-            } else {
+//            if (skuInOtherWarehouse == null) {
+//                shouldUpdate = false;
+//                break;
+//            } else {
                 lineItemToSkuUpdate.put(lineItem.getId(), skuInOtherWarehouse);
-            }
+//            }
         }
-
+        }catch(NoSkuException noSku){
+        shouldUpdate = false;
+        }
         if (shouldUpdate) {
             for (LineItem lineItem : lineItems) {
                 lineItem.setSku(lineItemToSkuUpdate.get(lineItem.getId()));
@@ -117,7 +120,8 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
                 awbService.save(awb);
                 Shipment shipment = shipmentService.createShipment(shippingOrder);
                 shippingOrder.setShipment(shipment);
-                shipmentService.delete(oldShipment);
+                shipmentService.delete(oldShipment);                
+
             }
             shippingOrder = getShippingOrderService().save(shippingOrder);
             getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_WarehouseChanged);
