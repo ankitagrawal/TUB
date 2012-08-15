@@ -82,9 +82,11 @@
 			});
 
 			$(".removeFilters").click(function() {
-				$("#minPrice").val(${priceRange.minPrice});
+				/*$("#minPrice").val(${priceRange.minPrice});
 				$("#maxPrice").val(${priceRange.maxPrice});
-				$(".filterCatalogForm").submit();
+				$(".filterCatalogForm").submit();*/
+
+				window.location.reload();
 			});
 
 		});
