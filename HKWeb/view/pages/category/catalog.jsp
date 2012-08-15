@@ -189,7 +189,7 @@
 <div class='catalog_filters grid_6 bk_blue alpha'>
 <c:choose>
 	<c:when test="${ca.childCategorySlug == 'eyeglasses'}">
-		<s:layout-render name="/layouts/eyeCatalogFilter.jsp" filterUrlFragment="${ca.urlFragment}"/>
+		<s:layout-render name="/layouts/advCatalogFilter.jsp" filterUrlFragment="${ca.urlFragment}"/>
 	</c:when>
 	<c:otherwise>
 		<s:layout-render name="/layouts/catalogFilter.jsp" filterUrlFragment="${ca.urlFragment}"/>
