@@ -29,9 +29,6 @@ public class RunsheetStatus implements java.io.Serializable {
     @Column(name = "status", nullable = false, length = 100)
     private String status;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "runsheetStatus")
-    private Set<Runsheet> runsheets = new HashSet<Runsheet>(0);
-
     public Long getId() {
         return this.id;
     }
@@ -47,16 +44,6 @@ public class RunsheetStatus implements java.io.Serializable {
     public void setStatus(String status) {
         this.status = status;
     }
-
-    public Set<Runsheet> getRunsheets() {
-        return this.runsheets;
-    }
-
-    public void setRunsheets(Set<Runsheet> runsheets) {
-        this.runsheets = runsheets;
-    }
-
-
 }
 
 

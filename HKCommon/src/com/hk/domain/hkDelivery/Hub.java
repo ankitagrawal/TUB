@@ -50,12 +50,12 @@ public class Hub implements java.io.Serializable {
     @Column(name = "country", length = 50)
     private String country;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "hub")
+  /*  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "hub")
     private Set<Consignment> consignments = new HashSet<Consignment>(0);
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "hub")
     private Set<Runsheet> runsheets = new HashSet<Runsheet>(0);
-
+*/
     public Long getId() {
         return this.id;
     }
@@ -95,6 +95,7 @@ public class Hub implements java.io.Serializable {
     public void setCountry(String country) {
         this.country = country;
     }
+/*
 
     public Set<Consignment> getConsignments() {
         return this.consignments;
@@ -112,6 +113,7 @@ public class Hub implements java.io.Serializable {
         this.runsheets = runsheets;
     }
 
+*/
 
 }
 

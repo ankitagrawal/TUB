@@ -29,9 +29,6 @@ public class ConsignmentStatus implements java.io.Serializable {
     @Column(name = "status", nullable = false, length = 100)
     private String status;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "consignmentStatus")
-    private Set<Consignment> consignments = new HashSet<Consignment>(0);
-
     public Long getId() {
         return this.id;
     }
@@ -47,16 +44,6 @@ public class ConsignmentStatus implements java.io.Serializable {
     public void setStatus(String status) {
         this.status = status;
     }
-
-    public Set<Consignment> getConsignments() {
-        return this.consignments;
-    }
-
-    public void setConsignments(Set<Consignment> consignments) {
-        this.consignments = consignments;
-    }
-
-
 }
 
 

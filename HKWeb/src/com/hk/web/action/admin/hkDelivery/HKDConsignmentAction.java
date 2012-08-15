@@ -61,6 +61,7 @@ public class HKDConsignmentAction extends BaseAction{
         Shipment     shipmentObj        = null;
         int          consignmentCreatedCount   = 0;
         Courier      hkDelivery         = EnumCourier.HK_Delivery.asCourier();
+        Consignment consignment;
 
         if (trackingIdList != null && trackingIdList.size() > 0) {
             healthkartHub = hubService.findHubByName(HKDeliveryConstants.HEALTHKART_HUB);
@@ -85,7 +86,7 @@ public class HKDConsignmentAction extends BaseAction{
                 amount = shipmentObj.getShippingOrder().getAmount();
                 cnnNumber = shipmentObj.getShippingOrder().getGatewayOrderId();
                 paymentMode = shipmentObj.getShippingOrder().getBaseOrder().getPayment().getPaymentMode().getName();
-                Consignment consignment = new Consignment();
+                
 
                 // Creating consignment object.
                 consignment = consignmentService.createConsignment(awbNumber,cnnNumber,amount,paymentMode,hub);

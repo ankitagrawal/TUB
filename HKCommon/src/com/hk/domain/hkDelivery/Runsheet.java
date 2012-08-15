@@ -176,7 +176,10 @@ public class Runsheet implements java.io.Serializable {
         this.consignments = consignments;
     }
 
-
+    @Override
+    public String toString() {
+        return id == null ? "" : id.toString();
+    }
 }
 
 

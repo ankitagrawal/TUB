@@ -148,7 +148,10 @@ public class Consignment implements java.io.Serializable {
         this.paymentMode = paymentMode;
     }
 
-
+    @Override
+    public String toString() {
+        return id == null ? "" : id.toString();
+    }
 }
 
 
