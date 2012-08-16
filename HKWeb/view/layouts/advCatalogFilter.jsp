@@ -132,7 +132,10 @@
 		});
 
 		$(".removeFilters").click(function() {
-			window.location.reload();
+			$("#minPrice").val(${priceRange.minPrice});
+			$("#maxPrice").val(${priceRange.maxPrice});			
+			$(".filterCatalogForm").submit();
+			//window.location.reload();
 		});
 
 	});
