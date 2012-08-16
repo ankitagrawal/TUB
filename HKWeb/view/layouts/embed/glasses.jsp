@@ -794,7 +794,6 @@ $("#addPowers").click(function() {
   }
   
   $("#buyFrame").click(function() {
-  	alert('buy frame');
   	 var params = {}, idx = 0, data={};
   	 var variantList = [{
   	 	qty : 1,
