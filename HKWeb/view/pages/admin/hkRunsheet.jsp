@@ -20,87 +20,90 @@
     <s:layout-component name="content">
 
         <fieldset class="right_label">
-            <legend>Search Runsheet</legend>
-            <s:form beanclass="com.hk.web.action.admin.hkDelivery.HKDRunsheetAction">
-                <s:hidden name="runsheet" value="${runsheetAction.runsheet.id}"/>
-                <table>
-                    <tr>
-                        <td><label>Runsheet ID:</label></td>
-                        <td> ${runsheetAction.runsheet.id}</td>
-                        <td><label>Hub: </label></td>
-                        <td>runsheetAction.hub.name</td>
-                        <td><label>COD Boxes: </label></td>
-                        <td>${runsheetAction.runsheet.codBoxCount}</td>
-                    </tr>
-                    <tr>
-                        <td><label>Expected amount:</label></td>
-                        <td> ${runsheetAction.runsheet.expectedCollection}</td>
-                        <td><label>Actual collected amount: </label></td>
-                        <td><s:text name="runsheet.actualCollection"
-                                    value="${runsheetAction.runsheet.actualCollection}"/></td>
-                        <td><label>Pre paid Boxes: </label></td>
-                        <td>${runsheetAction.runsheet.prepaidBoxCount}</td>
-                    </tr>
-                    <tr>
-                        <td><label>Agent:</label></td>
-                        <td>
-                            <s:select name="runsheet.hkDeliveryAgent">
-                                <hk:master-data-collection service="<%=MasterDataDao.class%>"
-                                                           serviceProperty="HKDeliveryAgentList" value="id"
-                                                           label="name"/>
-                            </s:select>
-                        </td>
-                        <td><label>Remarks: </label></td>
-                        <td><s:textarea name="runsheet.remarks" style="height:50px;"/></td>
-                        <td><label>Status: </label></td>
-                        <td><s:select name="runsheet.runsheetStatus">
-                            <hk:master-data-collection service="<%=MasterDataDao.class%>"
-                                                       serviceProperty="runsheetStatusList" value="id"
-                                                       label="status"/>
-                        </s:select>
-                        </td>
-                    </tr>
-                </table>
-
-        </fieldset>
-         <h3><strong>Consignments</strong></h3>
-        <table class="zebra_vert">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>AWB Number</th>
-                <th>CNN Number</th>
-                <th>Amount</th>
-                <th>Payment Mode</th>
-                <th>Reconciliation Id</th>
-                <th>Status</th>
-                <th>Action</th>
-
-            </tr>
-            </thead>
-            <c:forEach items="${runsheetAction.runsheet.consignments}" var="consignment" varStatus="ctr">
+        <legend>Runsheet</legend>
+        <s:form beanclass="com.hk.web.action.admin.hkDelivery.HKDRunsheetAction">
+            <s:hidden name="runsheet" value="${runsheetAction.runsheet.id}"/>
+            <table>
                 <tr>
-                    <td>${consignment.id}</td>
-                    <td>${consignment.awbNumber}</td>
-                    <td>${consignment.cnnNumber}</td>
-                    <td><fmt:formatNumber value="${consignment.amount}" type="currency" currencySymbol=" "
-                                          maxFractionDigits="0"/></td>
-                    <td>${consignment.paymentMode}</td>
-                    <td>${consignment.paymentReconciliation.id}</td>
-                    <td>      <s:select name="consignment.consignmentStatus">
-                    <hk:master-data-collection service="<%=MasterDataDao.class%>"
-                                               serviceProperty="consignmentStatusList" value="id"
-                                               label="status"/>
-                </s:select></td>
+                    <td><label>Runsheet ID:</label></td>
+                    <td> ${runsheetAction.runsheet.id}</td>
+                    <td><label>Hub: </label></td>
+                    <td>runsheetAction.hub.name</td>
+                    <td><label>COD Boxes: </label></td>
+                    <td>${runsheetAction.runsheet.codBoxCount}</td>
+                </tr>
+                <tr>
+                    <td><label>Expected amount:</label></td>
+                    <td> ${runsheetAction.runsheet.expectedCollection}</td>
+                    <td><label>Actual collected amount: </label></td>
+                    <td><s:text name="runsheet.actualCollection"
+                                value="${runsheetAction.runsheet.actualCollection}"/></td>
+                    <td><label>Pre paid Boxes: </label></td>
+                    <td>${runsheetAction.runsheet.prepaidBoxCount}</td>
+                </tr>
+                <tr>
+                    <td><label>Agent:</label></td>
                     <td>
-                       
+                        <s:select name="runsheet.agent" value="${runsheetAction.runsheet.agent.id}">
+                            <hk:master-data-collection service="<%=MasterDataDao.class%>"
+                                                       serviceProperty="HKDeliveryAgentList" value="id"
+                                                       label="name"/>
+                        </s:select>
+                    </td>
+                    <td><label>Remarks: </label></td>
+                    <td><s:textarea name="runsheet.remarks" style="height:50px;"/></td>
+                    <td><label>Status: </label></td>
+                    <td><s:select name="runsheet.runsheetStatus" value="${runsheetAction.runsheet.runsheetStatus.id}">
+                        <hk:master-data-collection service="<%=MasterDataDao.class%>"
+                                                   serviceProperty="runsheetStatusList" value="id"
+                                                   label="status"/>
+                    </s:select>
                     </td>
                 </tr>
-            </c:forEach>
-        </table>
+            </table>
 
+            </fieldset>
 
-        <s:submit name="saveRunsheet" value="Save runsheet"/>
-            </s:form>
+            <h3><strong>Consignments</strong></h3>
+            <table class="zebra_vert">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>AWB Number</th>
+                    <th>CNN Number</th>
+                    <th>Amount</th>
+                    <th>Payment Mode</th>
+                    <th>Reconciliation Id</th>
+                    <th>Status</th>
+                    <th>Action</th>
+
+                </tr>
+                </thead>
+                <c:forEach items="${runsheetAction.runsheetConsignments}" var="consignment" varStatus="ctr">
+                    <tr>
+                        <td><s:hidden name="runsheetConsignments[${ctr.index}]" value="${consignment.id}"/>${consignment.id}</td>
+                        <td>${consignment.awbNumber}</td>
+                        <td>${consignment.cnnNumber}</td>
+                        <td><fmt:formatNumber value="${consignment.amount}" type="currency" currencySymbol=" "
+                                              maxFractionDigits="0"/></td>
+                        <td>${consignment.paymentMode}</td>
+                        <td>${consignment.paymentReconciliation.id}</td>
+                        <td><s:select name="runsheetConsignments[${ctr.index}].consignmentStatus"
+                                      value="${consignment.consignmentStatus.id}">
+                            <hk:master-data-collection service="<%=MasterDataDao.class%>"
+                                                       serviceProperty="consignmentStatusList" value="id"
+                                                       label="status"/>
+                        </s:select></td>
+                        <td>
+
+                        </td>
+                    </tr>
+                </c:forEach>
+            </table>
+
+            <s:submit name="saveRunsheet" value="Save runsheet" />
+            <s:submit name="closeRunsheet" value="Close runsheet" />
+            <s:submit name="markAllDelivered" value="Mark all as delivered"/>
+        </s:form>
     </s:layout-component>
 </s:layout-render>

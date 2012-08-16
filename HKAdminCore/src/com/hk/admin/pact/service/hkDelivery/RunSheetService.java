@@ -18,4 +18,8 @@ public interface RunSheetService {
     public void saveRunSheet(Runsheet runsheet);
 
     public Page searchRunsheet(Runsheet runsheet, Date startDate, Date endDate, RunsheetStatus runsheetStatus, User agent, Hub hub, int pageNo, int perPage);
+
+    public boolean isRunsheetClosable(Runsheet runsheet);
+
+    public Runsheet markAllConsignmentsAsDelivered(Runsheet runsheet);
 }

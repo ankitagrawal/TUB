@@ -6,10 +6,7 @@ import com.hk.admin.pact.service.hkDelivery.RunSheetService;
 import com.hk.domain.hkDelivery.Runsheet;
 import com.hk.domain.hkDelivery.RunsheetStatus;
 import com.hk.domain.user.User;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.action.*;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -60,6 +57,8 @@ public class HKDRunsheetAction extends BasePaginatedAction {
     private         RunsheetStatus        runsheetStatus;
     private         User                  agent;
     private         Integer               defaultPerPage                     = 20;
+    private         Set<Consignment>      consignments;
+    private         List<Consignment>     runsheetConsignments;
 
     @Autowired
     ShippingOrderService                  shippingOrderService;
@@ -94,20 +93,47 @@ public class HKDRunsheetAction extends BasePaginatedAction {
         if(runsheet == null){
             return new ForwardResolution("/pages/admin/hkRunsheetList.jsp");
         }
+        runsheetConsignments = new ArrayList<Consignment>(runsheet.getConsignments());
         return new ForwardResolution("/pages/admin/hkRunsheet.jsp");
     }
 
     public Resolution saveRunsheet(){
         if(runsheet != null){
+            consignments = new HashSet<Consignment>(runsheetConsignments);
+            runsheet.setConsignments(consignments);
+            if(runsheet.getRunsheetStatus().getId().equals(EnumRunsheetStatus.Close.getId()) && runsheetService.isRunsheetClosable(runsheet) == false){
+                addRedirectAlertMessage(new SimpleMessage("Cannot close runsheet with a consignment status out for delivery"));
+                return new ForwardResolution(HKDRunsheetAction.class).addParameter("editRunsheet").addParameter("runsheet", runsheet.getId());
+            }
             runsheetService.saveRunSheet(runsheet);
             addRedirectAlertMessage(new SimpleMessage("Runsheet saved"));
+            return new RedirectResolution(HKDRunsheetAction.class).addParameter("editRunsheet").addParameter("runsheet", runsheet.getId());
         }
         else{
             addRedirectAlertMessage(new SimpleMessage("Runsheet not found."));
         }
-        return new ForwardResolution("pages/admin/hkRunsheet.jsp");
+        return new RedirectResolution(HKDRunsheetAction.class).addParameter("editRunsheet").addParameter("runsheet", runsheet.getId());
     }
 
+    public Resolution markAllDelivered(){
+        if(runsheet != null){
+            runsheetService.markAllConsignmentsAsDelivered(runsheet);
+            runsheetService.saveRunSheet(runsheet);
+        }
+        return new RedirectResolution(HKDRunsheetAction.class).addParameter("editRunsheet").addParameter("runsheet", runsheet.getId());
+    }
+
+    public Resolution closeRunsheet(){
+        if(runsheet != null){
+            if(runsheetService.isRunsheetClosable(runsheet)){
+                runsheet.setRunsheetStatus(EnumRunsheetStatus.Close.asRunsheetStatus());
+            }
+            runsheetService.saveRunSheet(runsheet);
+        }
+        return new RedirectResolution(HKDRunsheetAction.class).addParameter("editRunsheet").addParameter("runsheet", runsheet.getId());
+
+    }
+   
     // Method to create and download runsheet.It also makes an entry in consignment-tracking.
     public Resolution downloadDeliveryWorkSheet() {
         
@@ -127,7 +153,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
             int                   totalCODPackets                 = 0;
             double                totalCODAmount                  = 0.0;
             List<String>          trackingIdsWithoutConsignment   = new ArrayList<String>();
-            Set<Consignment>     consignments                     = new HashSet<Consignment>();
+            consignments                     = new HashSet<Consignment>();
             //todo fetch userId from agent.
             //Getting HK-Delivery Courier Object.
             Courier               hkDeliveryCourier               = EnumCourier.HK_Delivery.asCourier();
@@ -319,5 +345,13 @@ public class HKDRunsheetAction extends BasePaginatedAction {
         params.add("startDate");
         params.add("endDate");        
         return params;
+    }
+
+    public List<Consignment> getRunsheetConsignments() {
+        return runsheetConsignments;
+    }
+
+    public void setRunsheetConsignments(List<Consignment> runsheetConsignments) {
+        this.runsheetConsignments = runsheetConsignments;
     }
 }
