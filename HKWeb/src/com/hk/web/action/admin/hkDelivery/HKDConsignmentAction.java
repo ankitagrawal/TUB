@@ -107,7 +107,7 @@ public class HKDConsignmentAction extends BaseAction{
     // Getting comma seperated string for the duplicated
     public String getDuplicateAwbString(List<String> duplicatedAwbs) {
         StringBuffer strBuffr = new StringBuffer();
-        for (String awbNumber :duplicatedAwbs ) {
+        for (String awbNumber : new HashSet<String>(duplicatedAwbs) ) {
             strBuffr.append(awbNumber);
             strBuffr.append(",");
         }

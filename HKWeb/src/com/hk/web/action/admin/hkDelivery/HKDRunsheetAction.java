@@ -170,6 +170,9 @@ public class HKDRunsheetAction extends BasePaginatedAction {
                     // creating a string for user-display.
                     duplicateAwbString = getDuplicateAwbString(duplicatedAwbNumbers);
                     duplicateAwbString = HKDeliveryConstants.OPEN_RUNSHEET_MESSAGE + duplicateAwbString;
+                    addRedirectAlertMessage(new SimpleMessage(duplicateAwbString));
+                    return new ForwardResolution(HKDRunsheetAction.class).addParameter(HKDeliveryConstants.RUNSHEET_DOWNLOAD, false);
+                }
                     //Iterating over trackingIdList(entered by the user) to get coressponding shippingOrderList,consignmentList.
                     for (String trackingNum : trackingIdList) {
                         //Fetching consignment from trackingId(or awbNumber)
@@ -196,11 +199,9 @@ public class HKDRunsheetAction extends BasePaginatedAction {
                             continue;
                         }
                     }
-                    addRedirectAlertMessage(new SimpleMessage(duplicateAwbString));
-                    return new ForwardResolution(HKDRunsheetAction.class).addParameter(HKDeliveryConstants.RUNSHEET_DOWNLOAD, false);
-
-                }
             }
+
+            if (duplicatedAwbNumbers.size()== 0)   {
             // Converting list to comma seperated string(to be displayed on UI)
             awbIdsWithoutConsignmntString = hkdRunsheetManager.getAwbWithoutConsignmntString(trackingIdsWithoutConsignment);
             // Calculating no. of total packets,no of prepaid boxes in runsheetObj.
@@ -228,7 +229,11 @@ public class HKDRunsheetAction extends BasePaginatedAction {
                 return new ForwardResolution(HKDRunsheetAction.class).addParameter(HKDeliveryConstants.RUNSHEET_DOWNLOAD, false);
             }
             return new HTTPResponseResolution();
+            }
+            addRedirectAlertMessage(new SimpleMessage(duplicateAwbString));
+            return new ForwardResolution(HKDRunsheetAction.class,"downloadDeliveryWorkSheet").addParameter(HKDeliveryConstants.RUNSHEET_DOWNLOAD, false);
         }
+
     }
 
     public class HTTPResponseResolution implements Resolution {
@@ -252,7 +257,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
     // Getting comma seperated string for the duplicated
     public String getDuplicateAwbString(List<String> duplicatedAwbs) {
         StringBuffer strBuffr = new StringBuffer();
-        for (String awbNumber : duplicatedAwbs) {
+        for (String awbNumber : new HashSet<String>(duplicatedAwbs)) {
             strBuffr.append(awbNumber);
             strBuffr.append(",");
         }
