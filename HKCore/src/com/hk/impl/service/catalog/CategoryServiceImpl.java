@@ -89,12 +89,12 @@ public class CategoryServiceImpl  implements CategoryService{
         return topLevelCategory;
     }
 
-	public List<ProductOptionDto> getFilterOptions(String category){
-		return getCategoryDao().getProductOptions(category);
+	public List<ProductOptionDto> getFilterOptions(List<String> categoryNames){
+		return getCategoryDao().getProductOptions(categoryNames);
 	}
 
-	public PriceRangeDto getPriceRange(String category){
-		return getCategoryDao().getPriceRange(category);
+	public PriceRangeDto getPriceRange(List<String> categoryNames){
+		return getCategoryDao().getPriceRange(categoryNames);
 	}
 
     public CategoryDao getCategoryDao() {

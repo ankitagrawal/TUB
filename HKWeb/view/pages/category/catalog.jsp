@@ -186,17 +186,19 @@
 
   </div>
 </div>
-<div class='catalog_filters grid_6 bk_blue alpha'>
 <c:choose>
 	<c:when test="${ca.childCategorySlug == 'eyeglasses'}">
+		<div class='catalog_filters grid_6 alpha'>
 		<s:layout-render name="/layouts/advCatalogFilter.jsp" filterUrlFragment="${ca.urlFragment}"/>
+		</div>
 	</c:when>
 	<c:otherwise>
+		<div class='catalog_filters grid_6 bk_blue alpha'>
 		<s:layout-render name="/layouts/catalogFilter.jsp" filterUrlFragment="${ca.urlFragment}"/>
+		</div>
 	</c:otherwise>
 </c:choose>
 
-</div>
 
 <div class="catalog container_24">
 

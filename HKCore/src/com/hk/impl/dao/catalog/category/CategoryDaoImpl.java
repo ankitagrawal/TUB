@@ -22,7 +22,7 @@ import com.hk.dto.PriceRangeDto;
 @Repository
 public class CategoryDaoImpl extends BaseDaoImpl implements CategoryDao{
 
-    
+
     public List<String> getBrandsByCategory(List<String> categoryNames) {
         String queryString = "select distinct p.brand from Product p inner join p.categories c where c.name in (:categories) and p.deleted=:deleted  group by p.id having count(*) = :tagCount order by p.brand asc";
         return findByNamedParams(queryString, new String[] { "categories", "deleted", "tagCount" }, new Object[] { categoryNames, false, new Long(categoryNames.size()) });
@@ -55,20 +55,31 @@ public class CategoryDaoImpl extends BaseDaoImpl implements CategoryDao{
         return findByQuery("select distinct p.primaryCategory from Product p");
     }
 
-	public List<ProductOptionDto> getProductOptions(String category) {
-		String queryString = "select po.id as id, upper(po.name) as name, po.value as value, count(po.id) as qty from ProductVariant pv inner join pv.productOptions po inner join pv.product.categories c " + "where c.name = :category and pv.product.deleted <> 1 and pv.deleted <> 1 and pv.outOfStock <> 1 group by po.id order by po.name desc , po.value asc ";
-		Query query = getSession().createQuery(queryString).setParameter("category", category).setCacheable(true);
-		query.setResultTransformer(Transformers.aliasToBean(ProductOptionDto.class)).list();
-		return query.list();
+	public List<ProductOptionDto> getProductOptions(List<String> categoryNames) {
+		if (categoryNames != null && categoryNames.size() > 0) {
+			List<String> productIds = getSession().createQuery("select p.id from Product p inner join p.categories c where c.name in (:categories) group by p.id having count(*) = :tagCount").setParameterList("categories", categoryNames).setInteger("tagCount", categoryNames.size()).list();
+			if (productIds != null && !productIds.isEmpty()) {
+				String queryString = "select po.id as id, upper(po.name) as name, po.value as value, count(po.id) as qty from ProductVariant pv inner join pv.productOptions po where pv.product.id in(:productIds) and pv.product.deleted <> 1 and pv.deleted <> 1 and pv.outOfStock <> 1 group by po.id order by po.name desc , po.value asc";
+				Query query = getSession().createQuery(queryString).setParameterList("productIds", productIds);
+				query.setResultTransformer(Transformers.aliasToBean(ProductOptionDto.class)).list();
+				return query.list();
+			}
+		}
+		return null;
 	}
 
-	public PriceRangeDto getPriceRange(String category) {
-		String queryString = "select min(pv.hkPrice) from ProductVariant pv inner join pv.productOptions po inner join pv.product.categories c " + "where c.name = :category and pv.product.deleted <> 1 and pv.deleted <> 1 and pv.outOfStock <> 1";
-		Double minPrice = (Double)getSession().createQuery(queryString).setParameter("category", category).uniqueResult();
-		String queryString2 = "select max(pv.hkPrice) from ProductVariant pv inner join pv.productOptions po inner join pv.product.categories c " + "where c.name = :category and pv.product.deleted <> 1 and pv.deleted <> 1 and pv.outOfStock <> 1";
-		Double maxPrice = (Double)getSession().createQuery(queryString2).setParameter("category", category).uniqueResult();
-		PriceRangeDto priceRangeDto = new PriceRangeDto(minPrice-1.0, maxPrice+1.0);
-		return priceRangeDto;
+	public PriceRangeDto getPriceRange(List<String> categoryNames) {
+		if (categoryNames != null && categoryNames.size() > 0) {
+			List<String> productIds = getSession().createQuery("select p.id from Product p inner join p.categories c where c.name in (:categories) group by p.id having count(*) = :tagCount").setParameterList("categories", categoryNames).setInteger("tagCount", categoryNames.size()).list();
+			if (productIds != null && !productIds.isEmpty()) {
+				String queryString = "select min(pv.hkPrice) from ProductVariant pv where pv.product.id in (:productIds) and pv.product.deleted <> 1 and pv.deleted <> 1 and pv.outOfStock <> 1";
+				Double minPrice = (Double) getSession().createQuery(queryString).setParameterList("productIds", productIds).uniqueResult();
+				String queryString2 = "select max(pv.hkPrice) from ProductVariant pv where pv.product.id in (:productIds) and pv.product.deleted <> 1 and pv.deleted <> 1 and pv.outOfStock <> 1";
+				Double maxPrice = (Double) getSession().createQuery(queryString2).setParameterList("productIds", productIds).uniqueResult();
+				PriceRangeDto priceRangeDto = new PriceRangeDto(Math.floor(minPrice), Math.ceil(maxPrice));
+				return priceRangeDto;
+			}
+		}
+		return null;
 	}
-
 }

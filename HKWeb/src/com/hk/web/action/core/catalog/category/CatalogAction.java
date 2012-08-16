@@ -458,6 +458,14 @@ public class CatalogAction extends BasePaginatedAction {
 		params.add("sortOrder");
 		params.add("startRange");
 		params.add("endRange");
+		params.add("maxPrice");
+		params.add("minPrice");
+		if (filterOptions != null && !filterOptions.isEmpty()) {
+			for (int i = 0; i < filterOptions.size(); i++) {
+				params.add("filterOptions[" + i + "]");
+			}
+
+		}
 		if (getTopCategoryUrlSlug().equals("services")) {
 			params.add("preferredZone");
 		}
