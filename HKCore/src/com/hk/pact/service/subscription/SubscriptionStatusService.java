@@ -1,8 +1,8 @@
 package com.hk.pact.service.subscription;
 
-import com.hk.domain.subscription.SubscriptionStatus;
-
 import java.util.List;
+
+import com.hk.domain.subscription.SubscriptionStatus;
 
 /**
  * Created with IntelliJ IDEA.

@@ -171,5 +171,10 @@
         <mapping class="com.hk.domain.subscription.SubscriptionOrderStatus" />
         <mapping class="com.hk.domain.subscription.SubscriptionProduct"/>
         <mapping class="com.hk.domain.subscription.SubscriptionStatus" />
+        <mapping class="com.hk.domain.core.PurchaseFormType" />
+        <mapping class="com.hk.domain.order.ReplacementOrder" />
+        <mapping class="com.hk.domain.core.State" />
+        <mapping class="com.hk.domain.core.City" />
+        <mapping class="com.hk.domain.courier.AwbStatus" />
     </session-factory>
 </hibernate-configuration>

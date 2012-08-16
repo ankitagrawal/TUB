@@ -1,5 +1,13 @@
 package com.hk.web.action.admin.order.analytics;
 
+import java.util.Date;
+import java.util.List;
+
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.Resolution;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.core.search.OrderSearchCriteria;
@@ -12,12 +20,6 @@ import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.OrderSplitterService;
 import com.hk.pojo.DummyOrder;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.Date;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.

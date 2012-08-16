@@ -56,7 +56,7 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
 
     /**
      * returns list of all the products irrespective of whether they are deleted or not.
-     * 
+     *
      * @param category
      * @return
      */
@@ -64,6 +64,15 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
         return getSession().createQuery("select p from Product p where p.primaryCategory.name = :category order by p.orderRanking asc").setString("category", category).list();
     }
 
+
+    /**
+     * returns list of all products irrespective of category
+     * @param
+     * @return
+     */
+    public List<Product> getAllProductsForCatalog() {
+        return getSession().createQuery("select p from Product p order by p.primaryCategory.name asc, p.orderRanking asc ").list();
+    }
     public List<Product> getAllSubscribableProductsByCategory(String category){
         return getSession().createQuery("select p from Product p where p.primaryCategory.name = :category and isSubscribable=true order by p.orderRanking asc").setString("category", category).list();
     }
@@ -77,7 +86,7 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
 
     /**
      * checks if a brand name exists or not
-     * 
+     *
      * @param brandName
      * @return
      */
@@ -279,8 +288,8 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
     public List<ProductImage> getImagesByProductForProductMainPage(Product product) {
         return getSession().createQuery("from ProductImage pi where pi.product = :product and pi.productVariant is null and pi.hidden != :isHidden").setParameter("product",
                 product)
-        // .setParameter("productMainImageId", product.getMainImageId())
-        .setBoolean("isHidden", true).list();
+                // .setParameter("productMainImageId", product.getMainImageId())
+                .setBoolean("isHidden", true).list();
     }
 
     @SuppressWarnings("unchecked")

@@ -3,10 +3,11 @@ package com.hk.db.seed.inventory;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.core.PurchaseOrderStatus;
-import org.springframework.stereotype.Component;
 
 @Component
 public class PurchaseOrderStatusSeedData extends BaseSeedData {

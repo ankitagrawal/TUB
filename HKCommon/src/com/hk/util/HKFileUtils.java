@@ -1,14 +1,19 @@
 package com.hk.util;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.FileNameMap;
+import java.net.URLConnection;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.*;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipEntry;
-import java.net.FileNameMap;
-import java.net.URLConnection;
 
 
 public class HKFileUtils {

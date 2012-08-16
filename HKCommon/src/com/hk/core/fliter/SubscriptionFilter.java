@@ -1,12 +1,11 @@
 package com.hk.core.fliter;
 
-import com.hk.constants.subscription.EnumSubscriptionStatus;
-import com.hk.domain.subscription.Subscription;
-import org.apache.commons.lang.StringUtils;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import com.hk.constants.subscription.EnumSubscriptionStatus;
+import com.hk.domain.subscription.Subscription;
 
 /**
  * Created with IntelliJ IDEA.

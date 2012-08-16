@@ -1,3 +1,4 @@
+<%--
 <%@ page import="mhc.pojo.FAQ" %>
 <%@ page import="java.util.List" %>
 <%@ page import="mhc.servlet.action.FAQAction" %>
@@ -48,4 +49,4 @@
           }
         %>
   </s:layout-component>
-</s:layout-render>
+</s:layout-render>--%>

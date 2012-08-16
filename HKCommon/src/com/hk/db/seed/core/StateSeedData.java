@@ -1,12 +1,13 @@
 package com.hk.db.seed.core;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Component;
+
 import com.hk.constants.core.EnumState;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.core.State;
-import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.

@@ -1,17 +1,16 @@
 package com.hk.core.search;
 
-import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.subscription.Subscription;
-import com.hk.domain.subscription.SubscriptionStatus;
+import java.util.Date;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
-import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.subscription.Subscription;
+import com.hk.domain.subscription.SubscriptionStatus;
 
 /**
  * Created with IntelliJ IDEA.

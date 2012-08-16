@@ -1,20 +1,26 @@
 package com.hk.web.action.core.catalog;
 
-import com.akube.framework.stripes.action.BaseAction;
-import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.order.Order;
-import com.hk.domain.user.User;
-import com.hk.domain.marketing.ProductReferrer;
-import com.hk.manager.OrderManager;
-import com.hk.manager.UserManager;
-import com.hk.pact.service.catalog.ProductVariantService;
-import com.hk.pact.dao.BaseDao;
-import com.hk.web.action.core.cart.CartAction;
-import net.sourceforge.stripes.action.*;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.UrlBinding;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.akube.framework.stripes.action.BaseAction;
+import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.marketing.ProductReferrer;
+import com.hk.domain.order.Order;
+import com.hk.domain.user.User;
+import com.hk.manager.OrderManager;
+import com.hk.manager.UserManager;
+import com.hk.pact.dao.BaseDao;
+import com.hk.pact.service.catalog.ProductVariantService;
+import com.hk.web.action.core.cart.CartAction;
 
 @UrlBinding ("/revital")
 public class RevitalLandingPageAction extends BaseAction {

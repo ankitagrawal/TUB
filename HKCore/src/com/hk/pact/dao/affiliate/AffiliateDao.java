@@ -1,12 +1,12 @@
 package com.hk.pact.dao.affiliate;
 
+import java.util.List;
+
 import com.akube.framework.dao.Page;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.affiliate.AffiliateCategoryCommission;
 import com.hk.domain.user.User;
 import com.hk.pact.dao.BaseDao;
-
-import java.util.List;
 
 public interface AffiliateDao extends BaseDao {
 

@@ -1,27 +1,32 @@
 package com.hk.admin.util;
 
-import org.springframework.stereotype.Component;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.xpath.XPath;
 import org.jdom.input.SAXBuilder;
+import org.jdom.xpath.XPath;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
-import java.util.*;
-import java.io.*;
-import java.text.SimpleDateFormat;
-import java.text.ParseException;
-import java.net.URL;
-import java.net.MalformedURLException;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.exception.HealthkartCheckedException;
-import com.hk.domain.courier.Awb;
-import com.google.gson.Gson;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonArray;
 
 /**
  * Created by IntelliJ IDEA.
@@ -293,6 +298,7 @@ public class CourierStatusUpdateHelper {
     }
 
 
+    @SuppressWarnings("unchecked")
     public Map updateDeliveryStatusDTDC(String trackingId) throws HealthkartCheckedException{
 
         String                 inputLine="";

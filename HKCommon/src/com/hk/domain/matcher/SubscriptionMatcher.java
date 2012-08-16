@@ -1,10 +1,10 @@
 package com.hk.domain.matcher;
 
+import java.util.Set;
+
 import com.hk.constants.subscription.EnumSubscriptionStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.subscription.Subscription;
-
-import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.

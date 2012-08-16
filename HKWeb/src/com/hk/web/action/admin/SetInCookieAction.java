@@ -3,6 +3,9 @@ package com.hk.web.action.admin;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.JsonResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -14,9 +17,6 @@ import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.filter.WebContext;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Cookie;
 
 @Secure
 public class SetInCookieAction extends BaseAction {

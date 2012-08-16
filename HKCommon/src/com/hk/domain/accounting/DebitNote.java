@@ -29,100 +29,111 @@ import com.hk.domain.warehouse.Warehouse;
 @Table (name = "debit_note")
 public class DebitNote implements java.io.Serializable {
 
-  @Id
-  @GeneratedValue (strategy = GenerationType.AUTO)
-  @Column (name = "id", unique = true, nullable = false)
-  private Long id;
+    @Id
+    @GeneratedValue (strategy = GenerationType.AUTO)
+    @Column (name = "id", unique = true, nullable = false)
+    private Long id;
 
-  @ManyToOne (fetch = FetchType.LAZY)
-  @JoinColumn (name = "supplier_id", nullable = false)
-  private Supplier supplier;
+    @ManyToOne (fetch = FetchType.LAZY)
+    @JoinColumn (name = "supplier_id", nullable = false)
+    private Supplier supplier;
 
-  @ManyToOne (fetch = FetchType.LAZY)
-  @JoinColumn (name = "goods_received_note_id", nullable = true)
-  private GoodsReceivedNote goodsReceivedNote;
+    @ManyToOne (fetch = FetchType.LAZY)
+    @JoinColumn (name = "goods_received_note_id", nullable = true)
+    private GoodsReceivedNote goodsReceivedNote;
 
-  @ManyToOne (fetch = FetchType.LAZY)
-  @JoinColumn (name = "debit_note_status_id", nullable = false)
-  private DebitNoteStatus debitNoteStatus;
+    @ManyToOne (fetch = FetchType.LAZY)
+    @JoinColumn (name = "debit_note_status_id", nullable = false)
+    private DebitNoteStatus debitNoteStatus;
 
-  @Temporal (TemporalType.TIMESTAMP)
-  @Column (name = "create_date", nullable = false, length = 19)
-  private Date createDate;
+    @Temporal (TemporalType.TIMESTAMP)
+    @Column (name = "create_date", nullable = false, length = 19)
+    private Date createDate;
 
-  @Column (name = "is_debit_to_supplier")
-  private Boolean isDebitToSupplier;
+    @Column (name = "is_debit_to_supplier")
+    private Boolean isDebitToSupplier;
 
-  @ManyToOne (fetch = FetchType.LAZY)
-  @JoinColumn (name = "warehouse_id")
-  private Warehouse warehouse;
+    @ManyToOne (fetch = FetchType.LAZY)
+    @JoinColumn (name = "warehouse_id")
+    private Warehouse warehouse;
 
-  @OneToMany (cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "debitNote")
-  private Set<DebitNoteLineItem> debitNoteLineItems = new HashSet<DebitNoteLineItem>(0);
+    @Column(name = "remarks")
+    private String remarks;
 
-  public Long getId() {
-    return this.id;
-  }
+    @OneToMany (cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "debitNote")
+    private Set<DebitNoteLineItem> debitNoteLineItems = new HashSet<DebitNoteLineItem>(0);
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+    public Long getId() {
+        return this.id;
+    }
 
-  public Supplier getSupplier() {
-    return supplier;
-  }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-  public void setSupplier(Supplier supplier) {
-    this.supplier = supplier;
-  }
+    public Supplier getSupplier() {
+        return supplier;
+    }
 
-  public GoodsReceivedNote getGoodsReceivedNote() {
-    return this.goodsReceivedNote;
-  }
+    public void setSupplier(Supplier supplier) {
+        this.supplier = supplier;
+    }
 
-  public void setGoodsReceivedNote(GoodsReceivedNote goodsReceivedNote) {
-    this.goodsReceivedNote = goodsReceivedNote;
-  }
+    public GoodsReceivedNote getGoodsReceivedNote() {
+        return this.goodsReceivedNote;
+    }
 
-  public DebitNoteStatus getDebitNoteStatus() {
-    return this.debitNoteStatus;
-  }
+    public void setGoodsReceivedNote(GoodsReceivedNote goodsReceivedNote) {
+        this.goodsReceivedNote = goodsReceivedNote;
+    }
 
-  public void setDebitNoteStatus(DebitNoteStatus debitNoteStatus) {
-    this.debitNoteStatus = debitNoteStatus;
-  }
+    public DebitNoteStatus getDebitNoteStatus() {
+        return this.debitNoteStatus;
+    }
 
-  public Date getCreateDate() {
-    return this.createDate;
-  }
+    public void setDebitNoteStatus(DebitNoteStatus debitNoteStatus) {
+        this.debitNoteStatus = debitNoteStatus;
+    }
 
-  public void setCreateDate(Date createDate) {
-    this.createDate = createDate;
-  }
+    public Date getCreateDate() {
+        return this.createDate;
+    }
 
-  public Boolean getIsDebitToSupplier() {
-    return this.isDebitToSupplier;
-  }
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
 
-  public void setIsDebitToSupplier(Boolean isDebitToSupplier) {
-    this.isDebitToSupplier = isDebitToSupplier;
-  }
+    public Boolean getIsDebitToSupplier() {
+        return this.isDebitToSupplier;
+    }
 
-  public Set<DebitNoteLineItem> getDebitNoteLineItems() {
-    return this.debitNoteLineItems;
-  }
+    public void setIsDebitToSupplier(Boolean isDebitToSupplier) {
+        this.isDebitToSupplier = isDebitToSupplier;
+    }
 
-  public void setDebitNoteLineItems(Set<DebitNoteLineItem> debitNoteLineItems) {
-    this.debitNoteLineItems = debitNoteLineItems;
-  }
+    public Set<DebitNoteLineItem> getDebitNoteLineItems() {
+        return this.debitNoteLineItems;
+    }
 
-  public Warehouse getWarehouse() {
-    return warehouse;
-  }
+    public void setDebitNoteLineItems(Set<DebitNoteLineItem> debitNoteLineItems) {
+        this.debitNoteLineItems = debitNoteLineItems;
+    }
 
-  public void setWarehouse(Warehouse warehouse) {
-    this.warehouse = warehouse;
-  }
+    public Warehouse getWarehouse() {
+        return warehouse;
+    }
+
+    public void setWarehouse(Warehouse warehouse) {
+        this.warehouse = warehouse;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
 }
 
 

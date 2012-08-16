@@ -1,7 +1,6 @@
 package com.hk.impl.service.core;
 
 import java.util.List;
-import java.math.BigInteger;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.mgt.SecurityManager;
@@ -15,8 +14,6 @@ import com.hk.domain.order.Order;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.domain.email.EmailCampaign;
-import com.hk.domain.email.EmailRecepient;
 import com.hk.impl.dao.user.UserDaoImpl;
 import com.hk.pact.dao.user.UserCartDao;
 import com.hk.pact.dao.user.UserDao;

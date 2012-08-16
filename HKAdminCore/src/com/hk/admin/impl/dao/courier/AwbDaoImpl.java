@@ -1,21 +1,18 @@
 package com.hk.admin.impl.dao.courier;
 
-import com.hk.admin.pact.dao.courier.AwbDao;
-import com.hk.domain.courier.Awb;
-import com.hk.domain.courier.Courier;
-import com.hk.domain.courier.AwbStatus;
-import com.hk.domain.warehouse.Warehouse;
-import com.hk.impl.dao.BaseDaoImpl;
-import com.hk.constants.courier.EnumAwbStatus;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
+import com.hk.admin.pact.dao.courier.AwbDao;
+import com.hk.domain.courier.Awb;
+import com.hk.domain.courier.AwbStatus;
+import com.hk.domain.courier.Courier;
+import com.hk.domain.warehouse.Warehouse;
+import com.hk.impl.dao.BaseDaoImpl;
 
 @SuppressWarnings("unchecked")
 @Repository

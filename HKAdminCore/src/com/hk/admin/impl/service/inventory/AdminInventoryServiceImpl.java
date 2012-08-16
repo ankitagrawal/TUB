@@ -154,7 +154,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
     }
 
     public void createSkuItemsAndCheckinInventory(SkuGroup skuGroup, Long qty, LineItem lineItem, GrnLineItem grnLineItem, RvLineItem rvLineItem,
-            StockTransferLineItem stockTransferLineItem, InvTxnType invTxnType, User txnBy) {
+                                                  StockTransferLineItem stockTransferLineItem, InvTxnType invTxnType, User txnBy) {
         for (int i = 0; i < qty; i++) {
             SkuItem skuItem = new SkuItem();
             skuItem.setSkuGroup(skuGroup);
@@ -169,7 +169,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
     }
 
     public void inventoryCheckinCheckout(Sku sku, SkuItem skuItem, LineItem lineItem, ShippingOrder shippingOrder, GrnLineItem grnLineItem, RvLineItem rvLineItem,
-            StockTransferLineItem stockTransferLineItem, InvTxnType invTxnType, Long qty, User txnBy) {
+                                         StockTransferLineItem stockTransferLineItem, InvTxnType invTxnType, Long qty, User txnBy) {
         ProductVariantInventory pvi = new ProductVariantInventory();
         // pvi.setProductVariant(sku.getProductVariant());
         pvi.setSku(sku);
@@ -370,7 +370,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
     public void setSkuGroupDao(SkuGroupDao skuGroupDao) {
         this.skuGroupDao = skuGroupDao;
     }
-    
-    
+
+
 
 }
