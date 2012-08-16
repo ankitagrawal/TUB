@@ -186,6 +186,7 @@ public class AmazonXslGenerator {
         int initialRowNo = 2;
         for (Product product : products) {
             for (ProductVariant productVariant : product.getProductVariants()) {
+                if (productVariant.isDeleted()) continue;
                 AmazonFeed amazonFeed = amazonFeedDao.findByPV(productVariant);
                 row = sheet1.createRow(initialRowNo);
                 for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
