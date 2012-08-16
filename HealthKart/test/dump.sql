@@ -224,7 +224,28 @@ INSERT INTO `variant_config_values` (`id`, `value`, `additonal_price`, `variant_
 (97, '-7', '0.00', 16, 94, '0.00'),
 (98, '-7.25', '0.00', 16, 95, '0.00'),
 (99, '-7.5', '0.00', 16, 96, '0.00'),
-(100, '-7.75', '0.00', 16, 97, '0.00');
+(100, '-7.75', '0.00', 16, 97, '0.00')
+(407, '1.56 CR Thin plastic', '150.00', 25, 100, '150.00'),
+(408, '1.61 CR Very thin plastic', '400.00', 25, 98, '350.00'),
+(409, '1.67 CR Very thin plastic', '775.00', 25, 97, '725.00'),
+(410, '1.59 CR Thin unbreakable Polycarbonate', '475.00', 25, 96, '425.00'),
+(424, '1.5 CR Plastic', '150.00', 25, 99, '150.00'),
+(411, '1.50 CR Thin plastic for Bifocal', '450.00', 26, 100, '400.00'),
+(412, '1.50 CR Thin plastic for Progressive', '800.00', 26, 99, '750.00'),
+(413, '1.56 CR Very Thin plastic for Progressive', '800.00', 26, 98, '750.00'),
+(414, 'Standard Anti-Glare', '0.00', 27, 100, '0.00'),
+(415, 'Branded Lenses (Zeiss/Crizal)', '600.00', 29, 100, '0.00'),
+(416, '1.5 CR Plastic (Crizal)', '150.00', 30, 100, '437.50'),
+(417, '1.56 CR Thin plastic (Crizal)', '150.00', 30, 99, '562.50'),
+(418, '1.61 CR Very thin plastic (Zeiss)', '400.00', 30, 98, '787.50'),
+(419, '1.67 CR Very thin plastic (Zeiss)', '775.00', 30, 97, '887.50'),
+(420, '1.59 CR Thin unbreakable Polycarbonate (Crizal)', '475.00', 30, 96, '687.50'),
+(421, '1.50 CR Thin plastic for Bifocal (Crizal)', '450.00', 31, 100, '587.50'),
+(422, '1.50 CR Thin plastic for Progressive (Crizal)', '800.00', 31, 99, '862.50'),
+(423, '1.56 CR Very Thin plastic for Progressive (Crizal)', '800.00', 31, 98, '862.50'),
+(425, 'Engraving', '100.00', 32, 100, '50.00');
+
+
 
 --
 -- Dumping data for table `supplier`
