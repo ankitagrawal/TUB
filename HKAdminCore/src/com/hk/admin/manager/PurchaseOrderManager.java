@@ -204,7 +204,7 @@ public class PurchaseOrderManager {
             poLineItemDto.setPoLineItem(poLineItem);
             if (poLineItem != null && poLineItem.getCostPrice() != null && poLineItem.getQty() != null) {
                 taxable = poLineItem.getCostPrice() * poLineItem.getQty();
-                if(poLineItem.getMrp() != null) {
+                if(poLineItem.getMrp() != null && poLineItem.getMrp() > 0) {
                     marginMrpVsCP = (poLineItem.getMrp() - poLineItem.getCostPrice())/poLineItem.getMrp()*100;
                 }
             }

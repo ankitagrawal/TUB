@@ -172,7 +172,7 @@ public class GRNManager {
             grnLineItemDto.setGrnLineItem(grnLineItem);
             if (grnLineItem != null && grnLineItem.getCostPrice() != null && grnLineItem.getQty() != null) {
                 taxable = grnLineItem.getCostPrice() * grnLineItem.getQty();
-                if(grnLineItem.getMrp() != null) {
+                if(grnLineItem.getMrp() != null && grnLineItem.getMrp() > 0) {
                     marginMrpVsCP = (grnLineItem.getMrp() - grnLineItem.getCostPrice())/grnLineItem.getMrp()*100;
                 }
             }
