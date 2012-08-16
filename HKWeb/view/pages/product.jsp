@@ -536,10 +536,10 @@
 	<c:if test="${hk:collectionContains(product.categories, eyeGlass)}">
 
 			<c:if test="${!empty product.similarProducts}">
-				<div class="content" id="simlarProducts"
+				<div class="content" id="similarProducts"
 					style="background-color: #DDDDDD; padding: 5px; cursor: pointer; font-weight: bold; text-align: left;">
 				Colors/Sizes for glasses</div>
-				<div id="simlarProductsVM" style="margin-top: 5px;">
+				<div id="similarProductsVM" style="margin-top: 5px;">
 				<table width="900px;" style="margin-left: 10px; margin-right: 10px;">
 					<tr>
 						<c:forEach items="${product.similarProducts}" var="similarProduct">
