@@ -8,7 +8,7 @@ import org.apache.commons.lang.StringUtils;
  *
  */
 public enum VariantConfigOptionParam {
-  THICKNESS("TH"), BFTHICKNESS("THBF"), COATING("CO"), BFCOATING("COBF"), PRESCRIPTION("PR");
+  THICKNESS("TH"), BFTHICKNESS("THBF"), COATING("CO"), BFCOATING("COBF"), PRESCRIPTION("PR"), ENGRAVING("ENG");
 
   public String param() {
     return this.param;

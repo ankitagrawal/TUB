@@ -2,6 +2,7 @@ package com.hk.pact.dao.marketing;
 
 import java.util.Date;
 import java.util.List;
+
 import com.hk.domain.email.EmailCampaign;
 import com.hk.domain.email.EmailRecepient;
 import com.hk.pact.dao.BaseDao;

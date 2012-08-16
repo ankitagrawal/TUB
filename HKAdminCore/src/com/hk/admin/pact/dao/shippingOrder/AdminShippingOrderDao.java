@@ -1,10 +1,10 @@
 
 package com.hk.admin.pact.dao.shippingOrder;
 
-import com.hk.domain.order.ShippingOrder;
-
 import java.util.Date;
 import java.util.List;
+
+import com.hk.domain.order.ShippingOrder;
 
 
 public interface AdminShippingOrderDao {

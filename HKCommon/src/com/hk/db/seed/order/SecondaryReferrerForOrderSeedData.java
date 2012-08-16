@@ -1,13 +1,14 @@
 package com.hk.db.seed.order;
 
 
-import com.hk.domain.order.SecondaryReferrerForOrder;
-import com.hk.constants.referrer.EnumSecondaryReferrerForOrder;
-import com.hk.db.seed.BaseSeedData;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.stereotype.Component;
+
+import com.hk.constants.referrer.EnumSecondaryReferrerForOrder;
+import com.hk.db.seed.BaseSeedData;
+import com.hk.domain.order.SecondaryReferrerForOrder;
 
 /**
  * Generated

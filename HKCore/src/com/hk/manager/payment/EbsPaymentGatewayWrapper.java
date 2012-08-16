@@ -1,22 +1,15 @@
 package com.hk.manager.payment;
 
-import com.akube.framework.service.BasePaymentGatewayWrapper;
-import com.akube.framework.service.PaymentGatewayWrapper;
-import com.hk.domain.order.Order;
-import com.hk.domain.user.Address;
-import com.hk.manager.LinkManager;
-import com.hk.pact.service.order.OrderService;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.math.BigInteger;
-import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
+import com.akube.framework.service.BasePaymentGatewayWrapper;
+import com.akube.framework.service.PaymentGatewayWrapper;
 
 /**
  * Created with IntelliJ IDEA.

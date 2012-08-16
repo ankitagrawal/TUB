@@ -10,9 +10,6 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderLifeCycleActivity;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.domain.courier.Shipment;
-import com.hk.domain.courier.Awb;
-import com.hk.domain.courier.Courier;
 
 /**
  * @author vaibhav.adlakha

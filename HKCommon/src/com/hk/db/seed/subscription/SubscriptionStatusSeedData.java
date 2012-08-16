@@ -1,12 +1,13 @@
 package com.hk.db.seed.subscription;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Component;
+
 import com.hk.constants.subscription.EnumSubscriptionStatus;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.subscription.SubscriptionStatus;
-import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.

@@ -1,13 +1,14 @@
 package com.hk.pojo;
 
+import java.util.List;
+
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import com.hk.domain.core.Pincode;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.warehouse.Warehouse;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.

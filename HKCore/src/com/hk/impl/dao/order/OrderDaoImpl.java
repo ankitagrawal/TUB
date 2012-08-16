@@ -1,6 +1,5 @@
 package com.hk.impl.dao.order;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -26,8 +25,8 @@ import com.hk.domain.core.OrderLifecycleActivity;
 import com.hk.domain.core.OrderStatus;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.OrderLifecycle;
-import com.hk.domain.user.User;
 import com.hk.domain.payment.Payment;
+import com.hk.domain.user.User;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.dao.order.OrderLifecycleDao;

@@ -1,11 +1,11 @@
 package com.hk.impl.dao.catalog.product;
 
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.hk.domain.catalog.product.Product;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.akube.framework.util.BaseUtils;
 import com.hk.domain.affiliate.AffiliateCategory;
+import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
@@ -111,7 +112,7 @@ public class ProductVariantDaoImpl extends BaseDaoImpl implements ProductVariant
 
     /**
      * returns list of all the variants irrespective of whether they are deleted or not.
-     * 
+     *
      * @param category
      * @return
      */
@@ -122,7 +123,7 @@ public class ProductVariantDaoImpl extends BaseDaoImpl implements ProductVariant
 
     /**
      * returns list of all the variants which are not deleted.
-     * 
+     *
      * @param category
      * @return
      */
@@ -143,5 +144,6 @@ public class ProductVariantDaoImpl extends BaseDaoImpl implements ProductVariant
 
     public Product getProductForProudctVariant(String variantId) {
         return getVariantById(variantId).getProduct();  //To change body of implemented methods use File | Settings | File Templates.
+
     }
 }

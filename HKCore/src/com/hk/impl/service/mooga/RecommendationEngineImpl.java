@@ -1,21 +1,26 @@
 package com.hk.impl.service.mooga;
 
-import com.hk.constants.core.Keys;
-import com.hk.mooga.MoogaWebServicesLocator;
-import com.hk.mooga.MoogaWebServicesSoap_PortType;
-import com.hk.pact.service.mooga.RecommendationEngine;
-import org.apache.commons.lang.StringUtils;
-import com.hk.domain.catalog.product.ProductVariant;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.xml.rpc.ServiceException;
-import java.rmi.*;
-import java.util.*;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import com.hk.constants.core.Keys;
+import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.mooga.MoogaWebServicesLocator;
+import com.hk.mooga.MoogaWebServicesSoap_PortType;
+import com.hk.pact.service.mooga.RecommendationEngine;
 
 /**
  * Created by IntelliJ IDEA. User: Marut Date: 6/23/12 Time: 11:18 AM To change this template use File | Settings | File

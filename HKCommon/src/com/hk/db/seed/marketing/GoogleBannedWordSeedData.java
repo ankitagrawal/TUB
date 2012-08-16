@@ -3,10 +3,11 @@ package com.hk.db.seed.marketing;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.hk.constants.marketing.EnumGoogleBannedWord;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.marketing.GoogleBannedWord;
-import org.springframework.stereotype.Component;
 
 
 @Component

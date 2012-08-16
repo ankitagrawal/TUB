@@ -1,6 +1,12 @@
 package com.hk.admin.util;
 
-import com.hk.util.HKFileUtils;
+import java.io.File;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.apache.commons.io.FileUtils;
 import org.jets3t.service.S3Service;
 import org.jets3t.service.S3ServiceException;
@@ -16,12 +22,7 @@ import org.jets3t.service.security.AWSCredentials;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import com.hk.util.HKFileUtils;
 
 
 public class S3Utils {

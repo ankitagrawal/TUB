@@ -1,12 +1,11 @@
 package com.hk.pact.service.subscription;
 
+import java.util.List;
+
 import com.hk.domain.order.Order;
 import com.hk.domain.subscription.Subscription;
 import com.hk.domain.subscription.SubscriptionOrder;
 import com.hk.domain.subscription.SubscriptionOrderStatus;
-import com.hk.domain.user.User;
-
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.

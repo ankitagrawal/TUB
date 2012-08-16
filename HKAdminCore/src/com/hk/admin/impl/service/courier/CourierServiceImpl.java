@@ -1,13 +1,17 @@
 package com.hk.admin.impl.service.courier;
 
-import com.hk.admin.pact.dao.courier.CityCourierTATDao;
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hk.admin.pact.dao.courier.CourierDao;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.service.courier.CourierService;
-import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.core.Pincode;
-import com.hk.domain.courier.CityCourierTAT;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.domain.order.Order;
@@ -15,13 +19,6 @@ import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.core.PincodeService;
 import com.hk.pact.service.payment.PaymentService;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
 
 @Service
 public class CourierServiceImpl implements CourierService {

@@ -1,11 +1,11 @@
 package com.hk.constants.subscription;
 
-import com.hk.constants.core.Keys;
-import org.apache.commons.lang.StringUtils;
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
+import com.hk.constants.core.Keys;
 
 /**
  * Created with IntelliJ IDEA.

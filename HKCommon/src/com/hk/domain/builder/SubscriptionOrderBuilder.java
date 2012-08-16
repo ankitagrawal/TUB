@@ -6,7 +6,6 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.Order;
 import com.hk.domain.subscription.Subscription;
 import com.hk.domain.subscription.SubscriptionOrder;
-import com.hk.domain.subscription.SubscriptionOrderStatus;
 
 /**
  * Created with IntelliJ IDEA.

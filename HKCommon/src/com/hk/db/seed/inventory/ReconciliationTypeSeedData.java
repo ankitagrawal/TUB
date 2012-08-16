@@ -3,10 +3,11 @@ package com.hk.db.seed.inventory;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.hk.constants.inventory.EnumReconciliationType;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.inventory.rv.ReconciliationType;
-import org.springframework.stereotype.Component;
 
 @Component
 public class ReconciliationTypeSeedData extends BaseSeedData {

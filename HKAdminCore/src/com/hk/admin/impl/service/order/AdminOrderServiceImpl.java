@@ -4,9 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-import com.hk.domain.subscription.Subscription;
-import com.hk.domain.subscription.SubscriptionOrder;
-import com.hk.pact.service.subscription.SubscriptionOrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +31,7 @@ import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.store.StoreService;
+import com.hk.pact.service.subscription.SubscriptionOrderService;
 import com.hk.service.ServiceLocatorFactory;
 
 @Service
