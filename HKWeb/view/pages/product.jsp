@@ -545,7 +545,7 @@
 						<c:forEach items="${product.similarProducts}" var="similarProduct">
 							<td>
 							<div class="relatedGlass" style="float: left; margin-left: 3px;">
-							<a
+							<a href="${hk:getProductURL(similarProduct.similarProduct,null)}"
 								style="text-decoration: none; cursor: pointer; border-bottom: none;">
 							<hk:productImage
 								imageId="${similarProduct.similarProduct.mainImageId}"

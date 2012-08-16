@@ -836,4 +836,15 @@
             ${hk:isEngravingProvidedForProduct(${object})}
         </example>
     </function>
+    <function>
+        <description>
+            get product url for a product
+        </description>
+        <name>getProductURL</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.String getProductURL(com.hk.domain.catalog.product.Product , java.lang.Long )</function-signature>
+        <example>
+            ${hk:getProductURL(${product},1)}
+        </example>
+    </function>
 </taglib>
