@@ -75,14 +75,14 @@
                     <td>${runsheet.id}</td>
                     <td><fmt:formatDate value="${runsheet.createDate}" type="both" timeStyle="short"/></td>
                     <td>${runsheet.hub.name}</td>
-                    <td>${runsheet.hkDeliveryAgent.name}</td>
+                    <td>${runsheet.agent.name}</td>
                     <td>${runsheet.runsheetStatus.status}</td>
                     <td><fmt:formatNumber value="${runsheet.expectedCollection}" type="currency" currencySymbol=" "
                                           maxFractionDigits="0"/></td>
                     <td><fmt:formatNumber value="${runsheet.actualCollection}" type="currency" currencySymbol=" "
                                           maxFractionDigits="0"/></td>
                     <td>${runsheet.codBoxCount}</td>
-                    <td>${runsheet.prePaidBoxCount}</td>
+                    <td>${runsheet.prepaidBoxCount}</td>
                     <td>${runsheet.remarks}</td>
                     <td>
                         <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDRunsheetAction" event="editRunsheet"

@@ -45,7 +45,6 @@
                         <td><label>Agent:</label></td>
                         <td>
                             <s:select name="runsheet.hkDeliveryAgent">
-                                <s:option value="-Select Agent-">-Select Agent-</s:option>
                                 <hk:master-data-collection service="<%=MasterDataDao.class%>"
                                                            serviceProperty="HKDeliveryAgentList" value="id"
                                                            label="name"/>
@@ -55,7 +54,6 @@
                         <td><s:textarea name="runsheet.remarks" style="height:50px;"/></td>
                         <td><label>Status: </label></td>
                         <td><s:select name="runsheet.runsheetStatus">
-                            <s:option value="-Select Status-">-Select Status-</s:option>
                             <hk:master-data-collection service="<%=MasterDataDao.class%>"
                                                        serviceProperty="runsheetStatusList" value="id"
                                                        label="status"/>
@@ -90,15 +88,12 @@
                     <td>${consignment.paymentMode}</td>
                     <td>${consignment.paymentReconciliation.id}</td>
                     <td>      <s:select name="consignment.consignmentStatus">
-                    <s:option value="-Select Status-">-Select Status-</s:option>
                     <hk:master-data-collection service="<%=MasterDataDao.class%>"
                                                serviceProperty="consignmentStatusList" value="id"
                                                label="status"/>
                 </s:select></td>
                     <td>
-                        <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction" event="deleteConsignment"
-                                target="_blank">Delete consignment
-                            <s:param name="runsheetAction.consignment" value="${consignment.id}"/></s:link>
+                       
                     </td>
                 </tr>
             </c:forEach>

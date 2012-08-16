@@ -59,7 +59,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
     private         Date                  endDate;
     private         RunsheetStatus        runsheetStatus;
     private         User                  agent;
-    private         Integer               defaultPerPage                     = 1;
+    private         Integer               defaultPerPage                     = 20;
 
     @Autowired
     ShippingOrderService                  shippingOrderService;
@@ -91,7 +91,10 @@ public class HKDRunsheetAction extends BasePaginatedAction {
     }
 
     public Resolution editRunsheet(){
-        return new ForwardResolution("pages/admin/hkRunsheet.jsp");
+        if(runsheet == null){
+            return new ForwardResolution("/pages/admin/hkRunsheetList.jsp");
+        }
+        return new ForwardResolution("/pages/admin/hkRunsheet.jsp");
     }
 
     public Resolution saveRunsheet(){

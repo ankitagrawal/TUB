@@ -53,11 +53,11 @@ public class Awb implements java.io.Serializable {
 
 
     @Column(name = "used", nullable = false)
-    private byte used;
+    private boolean used;
 
 
     @Column(name = "cod", nullable = false)
-    private byte cod;
+    private boolean cod;
 
     public Long getId() {
         return this.id;
@@ -107,19 +107,19 @@ public class Awb implements java.io.Serializable {
         this.awbBarCode = awbBarCode;
     }
 
-    public byte getUsed() {
+    public boolean getUsed() {
         return this.used;
     }
 
-    public void setUsed(byte used) {
+    public void setUsed(boolean used) {
         this.used = used;
     }
 
-    public byte getCod() {
+    public boolean getCod() {
         return this.cod;
     }
 
-    public void setCod(byte cod) {
+    public void setCod(boolean cod) {
         this.cod = cod;
     }
 
