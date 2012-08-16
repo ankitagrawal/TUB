@@ -23,8 +23,8 @@
             <legend>Search Runsheet</legend>
             <s:form beanclass="com.hk.web.action.admin.hkDelivery.HKDRunsheetAction">
                 <label>Runsheet ID:</label><s:text name="runsheet"/>
-                <label>Start Date:</label><s:text name="startDate"/>
-                <label>End Date:</label><s:text name="endDate"/>
+                <label>Start Date:</label><s:text style="width:150px" class="date_input startDate" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startDate"/>
+                <label>End Date:</label><s:text style="width:150px" class="date_input endDate" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endDate"/>
                 <label>Agent Name:</label>
                 <s:select name="agent">
                     <s:option value="-Select Agent-">-Select Agent-</s:option>
@@ -39,6 +39,7 @@
                                                serviceProperty="runsheetStatusList" value="id"
                                                label="status"/>
                 </s:select>
+                <br />
                 <label>Hub:</label>
                 <s:select name="hub" class="hubName">
                     <s:option value="-Select Hub-">-Select Hub-</s:option>

@@ -6,7 +6,9 @@ import com.hk.admin.pact.service.hkDelivery.RunSheetService;
 import com.hk.domain.hkDelivery.Runsheet;
 import com.hk.domain.hkDelivery.RunsheetStatus;
 import com.hk.domain.user.User;
+import com.hk.util.CustomDateTypeConvertor;
 import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.validation.Validate;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -304,6 +306,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
         return startDate;
     }
 
+    @Validate(converter = CustomDateTypeConvertor.class)
     public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
@@ -312,6 +315,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
         return endDate;
     }
 
+    @Validate(converter = CustomDateTypeConvertor.class)
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
