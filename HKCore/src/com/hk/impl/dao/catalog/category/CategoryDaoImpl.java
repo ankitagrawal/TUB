@@ -56,7 +56,7 @@ public class CategoryDaoImpl extends BaseDaoImpl implements CategoryDao{
     }
 
 	public List<ProductOptionDto> getProductOptions(String category) {
-		String queryString = "select po.id as id, upper(po.name) as name, po.value as value, count(po.id) as qty from ProductVariant pv inner join pv.productOptions po inner join pv.product.categories c " + "where c.name = :category and pv.product.deleted <> 1 and pv.deleted <> 1 and pv.outOfStock <> 1 group by po.id order by po.name desc ";
+		String queryString = "select po.id as id, upper(po.name) as name, po.value as value, count(po.id) as qty from ProductVariant pv inner join pv.productOptions po inner join pv.product.categories c " + "where c.name = :category and pv.product.deleted <> 1 and pv.deleted <> 1 and pv.outOfStock <> 1 group by po.id order by po.name desc , po.value asc ";
 		Query query = getSession().createQuery(queryString).setParameter("category", category).setCacheable(true);
 		query.setResultTransformer(Transformers.aliasToBean(ProductOptionDto.class)).list();
 		return query.list();

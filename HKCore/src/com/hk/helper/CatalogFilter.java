@@ -21,18 +21,18 @@ public class CatalogFilter {
 	@Autowired
 	private CategoryService categoryService;
 
-	private Map<String, Set<ProductOptionDto>> filterMap;
-	private Set<ProductOptionDto> filterOptionDtoSet;
+	private Map<String, List<ProductOptionDto>> filterMap;
+	private List<ProductOptionDto> filterOptionDtoSet;
 
-	public Map<String, Set<ProductOptionDto>> getFilterOptions(String category) {
-		filterMap = new HashMap<String, Set<ProductOptionDto>>();
+	public Map<String, List<ProductOptionDto>> getFilterOptions(String category) {
+		filterMap = new HashMap<String, List<ProductOptionDto>>();
 		List<ProductOptionDto> optionDtoList = categoryService.getFilterOptions(category);
 		for (ProductOptionDto productOptionDto : optionDtoList) {
 			String option = productOptionDto.getName().toUpperCase();
 			if (filterMap.containsKey(option)) {
 				filterOptionDtoSet = filterMap.get(option);
 			} else {
-				filterOptionDtoSet = new HashSet<ProductOptionDto>(0);
+				filterOptionDtoSet = new ArrayList<ProductOptionDto>(0);
 			}
 			filterOptionDtoSet.add(productOptionDto);
 			filterMap.put(option, filterOptionDtoSet);
@@ -45,7 +45,7 @@ public class CatalogFilter {
 		return priceRange;
 	}
 
-	public Map<String, Set<ProductOptionDto>> getFilterMap() {
+	public Map<String, List<ProductOptionDto>> getFilterMap() {
 		return filterMap;
 	}
 }
