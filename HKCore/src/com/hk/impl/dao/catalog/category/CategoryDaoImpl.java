@@ -67,7 +67,7 @@ public class CategoryDaoImpl extends BaseDaoImpl implements CategoryDao{
 		Double minPrice = (Double)getSession().createQuery(queryString).setParameter("category", category).uniqueResult();
 		String queryString2 = "select max(pv.hkPrice) from ProductVariant pv inner join pv.productOptions po inner join pv.product.categories c " + "where c.name = :category and pv.product.deleted <> 1 and pv.deleted <> 1 and pv.outOfStock <> 1";
 		Double maxPrice = (Double)getSession().createQuery(queryString2).setParameter("category", category).uniqueResult();
-		PriceRangeDto priceRangeDto = new PriceRangeDto(minPrice, maxPrice);
+		PriceRangeDto priceRangeDto = new PriceRangeDto(minPrice-1.0, maxPrice+1.0);
 		return priceRangeDto;
 	}
 

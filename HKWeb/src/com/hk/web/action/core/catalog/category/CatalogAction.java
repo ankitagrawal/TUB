@@ -2,11 +2,7 @@ package com.hk.web.action.core.catalog.category;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import javax.servlet.http.Cookie;
 
@@ -47,6 +43,7 @@ import com.hk.pact.dao.catalog.product.ProductDao;
 import com.hk.pact.dao.location.LocalityMapDao;
 import com.hk.pact.dao.location.MapIndiaDao;
 import com.hk.pact.dao.user.UserDao;
+import com.hk.pact.service.catalog.ProductService;
 import com.hk.util.ProductReferrerMapper;
 import com.hk.util.SeoManager;
 import com.hk.web.AppConstants;
@@ -104,6 +101,8 @@ public class CatalogAction extends BasePaginatedAction {
 	CategoryImageDaoImpl categoryImageDao;
 	@Autowired
 	ProductDao productDao;
+	@Autowired
+	ProductService productService;
 	@Autowired
 	ComboDao comboDao;
 	//@Autowired
@@ -202,7 +201,12 @@ public class CatalogAction extends BasePaginatedAction {
 			}
 
 			if (!filterOptions.isEmpty() || (minPrice != null && maxPrice != null)) {
-				productPage = productDao.getProductByCategoryBrandAndOptions(categoryNames, brand, filterOptions, minPrice, maxPrice, getPageNo(), getPerPage());
+				int groupsCount = 0;
+				if(!filterOptions.isEmpty()){
+					Map<String, List<Long>> groupedFilters = productService.getGroupedFilters(filterOptions);
+					groupsCount = groupedFilters.size();
+				}
+				productPage = productDao.getProductByCategoryBrandAndOptions(categoryNames, brand, filterOptions, groupsCount, minPrice, maxPrice, getPageNo(), getPerPage());
 				if (productPage != null) {
 					productList = productPage.getList();
 					for (Product product : productList) {

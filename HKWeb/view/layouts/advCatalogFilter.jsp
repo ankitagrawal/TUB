@@ -63,8 +63,11 @@
 				max: ${priceRange.maxPrice},
 				step:50,
 				values: [ min, max ],
-				change: function(event, ui) {
+				slide: function(event, ui) {
 					$("#amount").html("Rs." + ui.values[ 0 ] + " - Rs." + ui.values[ 1 ]);
+				},
+				change: function(event, ui) {
+					//$("#amount").html("Rs." + ui.values[ 0 ] + " - Rs." + ui.values[ 1 ]);
 					$("#minPrice").val(ui.values[ 0 ]);
 					$("#maxPrice").val(ui.values[ 1 ]);
 					$(".filterCatalogForm").submit();
@@ -83,10 +86,6 @@
 			});
 
 			$(".removeFilters").click(function() {
-				/*$("#minPrice").val(${priceRange.minPrice});
-				$("#maxPrice").val(${priceRange.maxPrice});
-				$(".filterCatalogForm").submit();*/
-
 				window.location.reload();
 			});
 
