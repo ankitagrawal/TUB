@@ -1,10 +1,10 @@
 package com.hk.pact.dao.core;
 
+import java.util.List;
+
 import com.akube.framework.dao.Page;
 import com.hk.domain.catalog.Supplier;
 import com.hk.pact.dao.BaseDao;
-
-import java.util.List;
 
 public interface SupplierDao extends BaseDao {
 

@@ -1,21 +1,35 @@
 package com.hk.domain.order;
 
 
-import com.akube.framework.gson.JsonSkip;
-import com.hk.constants.order.EnumCartLineItemType;
-import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.catalog.product.combo.ComboInstance;
-import com.hk.domain.core.CartLineItemType;
-import com.hk.domain.subscription.Subscription;
-import com.hk.domain.marketing.ProductReferrer;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import com.akube.framework.gson.JsonSkip;
+import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.catalog.product.combo.ComboInstance;
+import com.hk.domain.core.CartLineItemType;
+import com.hk.domain.marketing.ProductReferrer;
+import com.hk.domain.subscription.Subscription;
 
 @SuppressWarnings("serial")
 @Entity

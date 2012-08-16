@@ -10,13 +10,9 @@ import com.hk.core.search.OrderSearchCriteria;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.OrderStatus;
-import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.OrderCategory;
 import com.hk.domain.order.ShippingOrder;
-import com.hk.domain.payment.Payment;
-import com.hk.domain.store.Store;
-import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.exception.OrderSplitException;
 

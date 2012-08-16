@@ -1,5 +1,7 @@
 package com.hk.pact.service.order;
 
+import java.util.Set;
+
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
@@ -7,8 +9,6 @@ import com.hk.domain.payment.Payment;
 import com.hk.domain.store.Store;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
-
-import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.

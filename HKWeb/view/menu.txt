@@ -738,15 +738,21 @@
 ---/parenting/infant/diapering/wipes
 ---/parenting/infant/diapering/diaper-rash-cream
 --/parenting/infant/formula-baby-food : Formula & Baby Food
+--/parenting/infant/feeding-bottles    :   Feeding Bottles
+---/parenting/infant/feeding-bottles/glass-bottles
+---/parenting/infant/feeding-bottles/bpa-free-plastic-bottles       :    BPA Free Plastic Bottles
+---/parenting/infant/feeding-bottles/non-bpa-free-plastic-bottles    :   Non BPA Free Plastic Bottles
 --/parenting/infant/feeding-accessories    :    Feeding Accessories
----/parenting/infant/feeding-accessories/feeding-bottles    :   Feeding Bottles
 ---/parenting/infant/feeding-accessories/nipples-and-teats    :     Nipples & Teats
----/parenting/infant/feeding-accessories/bowls
----/parenting/infant/feeding-accessories/spoons
----/parenting/infant/feeding-accessories/feeding-set
----/parenting/infant/feeding-accessories/bottle-and-nipple-brushes  :   Bottle & Nipple Brushes
----/parenting/infant/feeding-accessories/bottle-cleaners
----/parenting/infant/feeding-accessories/sterilizers-warmers : Sterilizers & Warmers
+---/parenting/infant/feeding-accessories/bowls    :   Bowls
+---/parenting/infant/feeding-accessories/spoons   :  Spoons
+---/parenting/infant/feeding-accessories/dish-plate    :   Dish Plates
+---/parenting/infant/feeding-accessories/feeding-set    :   Feeding Set
+---/parenting/infant/feeding-accessories/misc-accessories
+--/parenting/infant/bottle-cleaning
+---/parenting/infant/bottle-cleaning/bottle-and-nipple-brushes  :   Bottle & Nipple Brushes
+---/parenting/infant/bottle-cleaning/bottle-cleaners
+---/parenting/infant/bottle-cleaning/sterilizers-warmers : Sterilizers & Warmers
 --/parenting/infant/sippers-mugs :Sippers & Mugs
 --/parenting/infant/gifts-combos : Gifts & Combos
 --/parenting/infant/health-safety : Health & Safety
@@ -760,6 +766,7 @@
 ---/parenting/infant/grooming/nail-clippers-scissors:   Nail Clippers & Scissors
 ---/parenting/infant/grooming/buds    :    Ear Buds
 ---/parenting/infant/grooming/cotton-balls   :    Cotton Balls
+---/parenting/infant/grooming/safety-pins    :   Safety Pins
 --/parenting/infant/room-accessories
 --/parenting/infant/walkers
 --/parenting/infant/bedtime
@@ -776,14 +783,21 @@
 ---/parenting/toddler/diapering/diapers
 ---/parenting/toddler/diapering/wipes
 --/parenting/toddler/formula-baby-food : Formula & Baby Food
+--/parenting/toddler/feeding-bottles    :   Feeding Bottles
+---/parenting/toddler/feeding-bottles/glass-bottles
+---/parenting/toddler/feeding-bottles/bpa-free-plastic-bottles       :    BPA Free Plastic Bottles
+---/parenting/toddler/feeding-bottles/non-bpa-free-plastic-bottles    :   Non BPA Free Plastic Bottles
 --/parenting/toddler/feeding-accessories    :    Feeding Accessories
----/parenting/toddler/feeding-accessories/feeding-bottles    :   Feeding Bottles
 ---/parenting/toddler/feeding-accessories/nipples-and-teats    :     Nipples & Teats
----/parenting/toddler/feeding-accessories/bowls
----/parenting/toddler/feeding-accessories/spoons
----/parenting/toddler/feeding-accessories/feeding-set
----/parenting/toddler/feeding-accessories/bottle-and-nipple-brushes  :   Bottle & Nipple Brushes
----/parenting/toddler/feeding-accessories/bottle-cleaners
+---/parenting/toddler/feeding-accessories/bowls      :    Bowls
+---/parenting/toddler/feeding-accessories/spoons     :     Spoons
+---/parenting/toddler/feeding-accessories/dish-plates      :    Dish Plates
+---/parenting/toddler/feeding-accessories/feeding-set      :    Feeding Set
+---/parenting/toddler/feeding-accessories/misc-accessories
+--/parenting/toddler/bottle-cleaning   :    Bottle Cleaning
+---/parenting/toddler/bottle-cleaning/bottle-and-nipple-brushes  :   Bottle & Nipple Brushes
+---/parenting/toddler/bottle-cleaning/sterilizers-and-warmers    :   Sterilizers & Warmers
+---/parenting/toddler/bottle-cleaning/bottle-cleaners
 --/parenting/toddler/sippers-and-mugs:       Sippers & Mugs
 --/parenting/toddler/bedtime
 --/parenting/toddler/bathtime
@@ -799,6 +813,7 @@
 ---/parenting/toddler/grooming/nail-clippers-scissors:   Nail Clippers & Scissors
 ---/parenting/toddler/grooming/buds    :    Ear Buds
 ---/parenting/toddler/grooming/cotton-balls   :    Cotton Balls
+---/parenting/toddler/grooming/safety-pins    :   Safety Pins
 --/parenting/toddler/oral-care
 ---/parenting/toddler/oral-care/toothbrushes
 ---/parenting/toddler/oral-care/toothpaste-and-tooth-gel:Toothpaste & Tooth gel

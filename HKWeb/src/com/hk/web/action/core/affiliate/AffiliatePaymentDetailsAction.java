@@ -3,7 +3,6 @@ package com.hk.web.action.core.affiliate;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.domain.affiliate.Affiliate;
 import com.hk.impl.dao.affiliate.AffiliateTxnDaoImpl;
 
 public class AffiliatePaymentDetailsAction extends BaseAction {
@@ -11,7 +10,7 @@ public class AffiliatePaymentDetailsAction extends BaseAction {
   AffiliateTxnDaoImpl affiliateTxnDao;
 
 
-  private Affiliate affiliate;
+  /*private Affiliate affiliate;*/
 
 //  public Resolution pre() {
 //    List<AffiliateTxn> affiliateTxnList = affiliateTxnDao.getTxnListByAffiliate(affiliate);

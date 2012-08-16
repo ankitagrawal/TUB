@@ -1,17 +1,14 @@
 package com.hk.impl.service.faq;
 
-import com.akube.framework.dao.Page;
-import com.hk.pact.service.faq.FaqService;
-import com.hk.pact.dao.faq.FaqDao;
-import com.hk.domain.faq.Faq;
-
-import java.util.List;
-import java.util.ArrayList;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.akube.framework.dao.Page;
+import com.hk.domain.faq.Faq;
+import com.hk.pact.dao.faq.FaqDao;
+import com.hk.pact.service.faq.FaqService;
 
 /**
  * Created by IntelliJ IDEA.

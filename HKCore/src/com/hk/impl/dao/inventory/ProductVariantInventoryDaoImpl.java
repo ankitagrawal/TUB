@@ -1,12 +1,13 @@
 package com.hk.impl.dao.inventory;
 
+import java.util.Arrays;
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
 import com.hk.domain.sku.Sku;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.inventory.ProductVariantInventoryDao;
-import org.springframework.stereotype.Repository;
-
-import java.util.Arrays;
-import java.util.List;
 
 @Repository
 public class ProductVariantInventoryDaoImpl extends BaseDaoImpl implements ProductVariantInventoryDao {

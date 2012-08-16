@@ -4,7 +4,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.math.BigInteger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,8 +13,6 @@ import com.akube.framework.dao.Page;
 import com.hk.constants.core.Keys;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.user.User;
-import com.hk.domain.email.EmailCampaign;
-import com.hk.domain.email.EmailRecepient;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.CategoryService;
 

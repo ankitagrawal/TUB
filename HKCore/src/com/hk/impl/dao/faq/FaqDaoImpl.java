@@ -1,17 +1,13 @@
 package com.hk.impl.dao.faq;
 
-import com.akube.framework.dao.Page;
-import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
-import org.hibernate.Query;
+
+import com.akube.framework.dao.Page;
+import com.hk.domain.faq.Faq;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.faq.FaqDao;
-import com.hk.domain.faq.Faq;
-
-import java.util.List;
-import java.util.ArrayList;
 
 @SuppressWarnings("unchecked")
 @Repository

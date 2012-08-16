@@ -1,12 +1,13 @@
 package com.hk.util;
 
-import com.hk.constants.catalog.image.EnumImageSize;
-import com.hk.constants.core.Keys;
+import javax.annotation.PostConstruct;
+
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.apache.commons.lang.StringUtils;
 
-import javax.annotation.PostConstruct;
+import com.hk.constants.catalog.image.EnumImageSize;
+import com.hk.constants.core.Keys;
 
 @Component
 public class HKImageUtils {

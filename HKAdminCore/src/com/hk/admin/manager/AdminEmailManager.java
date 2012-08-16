@@ -1,8 +1,30 @@
 package com.hk.admin.manager;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.annotation.PostConstruct;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.mail.HtmlEmail;
+import org.hibernate.Session;
+import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import com.akube.framework.util.BaseUtils;
 import com.akube.framework.util.DateUtils;
-import com.hk.admin.dto.DisplayTicketHistoryDto;
 import com.hk.admin.dto.marketing.GoogleBannedWordDto;
 import com.hk.admin.pact.service.email.AdminEmailService;
 import com.hk.constants.catalog.category.CategoryConstants;
@@ -11,7 +33,6 @@ import com.hk.constants.core.EnumEmailType;
 import com.hk.constants.core.Keys;
 import com.hk.constants.email.EmailMapKeyConstants;
 import com.hk.constants.email.EmailTemplateConstants;
-import com.hk.domain.Ticket;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.EmailType;
@@ -39,21 +60,8 @@ import com.hk.util.HKImageUtils;
 import com.hk.util.SendGridUtil;
 import com.hk.util.io.ExcelSheetParser;
 import com.hk.util.io.HKRow;
-import freemarker.template.Template;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.mail.HtmlEmail;
-import org.hibernate.Session;
-import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import freemarker.template.Template;
 
 @SuppressWarnings("unchecked")
 @Component

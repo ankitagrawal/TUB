@@ -1,13 +1,17 @@
 package com.hk.report.pact.service.catalog.product;
 
+import java.util.Date;
+import java.util.List;
+
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.report.dto.inventory.*;
-
-import java.util.Date;
-import java.util.List;
+import com.hk.report.dto.inventory.ExpiryAlertReportDto;
+import com.hk.report.dto.inventory.InventorySoldDto;
+import com.hk.report.dto.inventory.RTOReportDto;
+import com.hk.report.dto.inventory.RVReportDto;
+import com.hk.report.dto.inventory.StockReportDto;
 
 public interface ReportProductVariantService {
     public List<InventorySoldDto> findInventorySoldByDate(Date startDate, Date endDate);

@@ -121,8 +121,7 @@ public class ProductVariantServiceImpl implements ProductVariantService {
     public List<ProductVariant> getAllProductVariant() {
         return getProductVariantDao().getAllProductVariant();
     }
-    
-    
+
     public ProductService getProductService() {
         return productService;
     }
@@ -139,6 +138,4 @@ public class ProductVariantServiceImpl implements ProductVariantService {
         this.productVariantDao = productVariantDao;
     }
 
-
-    
 }

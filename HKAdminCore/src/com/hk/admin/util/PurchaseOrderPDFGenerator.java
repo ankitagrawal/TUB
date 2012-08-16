@@ -1,26 +1,25 @@
 package com.hk.admin.util;
 
-import com.hk.admin.dto.inventory.PoLineItemDto;
-import com.hk.admin.dto.inventory.PurchaseOrderDto;
-import com.hk.domain.accounting.PoLineItem;
-import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.inventory.po.PurchaseOrder;
-import com.hk.domain.order.ShippingOrder;
-import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
+import java.io.FileOutputStream;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.io.FileOutputStream;
-import java.net.URL;
-import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import com.hk.admin.dto.inventory.PoLineItemDto;
+import com.hk.admin.dto.inventory.PurchaseOrderDto;
+import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.inventory.po.PurchaseOrder;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 
 /**
  * Created with IntelliJ IDEA.

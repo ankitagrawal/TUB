@@ -1,9 +1,9 @@
 package com.hk.pact.dao.inventory;
 
+import java.util.List;
+
 import com.hk.domain.sku.Sku;
 import com.hk.pact.dao.BaseDao;
-
-import java.util.List;
 
 public interface ProductVariantInventoryDao extends BaseDao {
 

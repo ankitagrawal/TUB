@@ -1,6 +1,5 @@
 package com.hk.constants.subscription;
 
-import com.hk.domain.subscription.SubscriptionLifecycle;
 import com.hk.domain.subscription.SubscriptionLifecycleActivity;
 
 /**

@@ -2,10 +2,18 @@ package com.hk.domain.catalog.product.combo;
 // Generated Jul 17, 2012 1:59:37 PM by Hibernate Tools 3.2.4.CR1
 
 
-import com.hk.domain.catalog.product.Product;
-import com.akube.framework.gson.JsonSkip;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
-import javax.persistence.*;
+import com.akube.framework.gson.JsonSkip;
+import com.hk.domain.catalog.product.Product;
 
 @Entity
 @Table(name = "super_saver_image")

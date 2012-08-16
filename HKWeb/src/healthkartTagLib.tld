@@ -803,5 +803,48 @@
             ${hk:findInventorySoldByDateAndProduct(${sku},${noOfDays})}
         </example>
     </function>
-
+ <function>
+        <description>
+            checks if collection contains the given object
+        </description>
+        <name>isCollectionContainsObject</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>boolean isCollectionContainsObject(java.util.Collection,java.lang.Object))</function-signature>
+        <example>
+            ${hk:isCollectionContainsObject(${collection},${object})}
+        </example>
+    </function>
+    <function>
+        <description>
+            returns the price applicable for engraving
+        </description>
+        <name>getEngravingPrice</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.Double getEngravingPrice(java.lang.Object)</function-signature>
+        <example>
+            ${hk:getEngravingPrice(${object})}
+        </example>
+    </function>
+    <function>
+        <description>
+            returns true if engraving is allowed for the stethoscope
+        </description>
+        <name>isEngravingProvidedForProduct</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>boolean isEngravingProvidedForProduct(java.lang.Object)</function-signature>
+        <example>
+            ${hk:isEngravingProvidedForProduct(${object})}
+        </example>
+    </function>
+    <function>
+        <description>
+            get product url for a product
+        </description>
+        <name>getProductURL</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.String getProductURL(com.hk.domain.catalog.product.Product , java.lang.Long )</function-signature>
+        <example>
+            ${hk:getProductURL(${product},1)}
+        </example>
+    </function>
 </taglib>

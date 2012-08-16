@@ -2,8 +2,8 @@ package com.hk.service.impl;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.io.StringReader;
+import java.io.StringWriter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

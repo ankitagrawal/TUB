@@ -1,14 +1,16 @@
 package com.hk.web.tag;
 
-import com.hk.constants.core.Keys;
-import com.hk.service.ServiceLocatorFactory;
-import org.springframework.stereotype.Component;
+import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
-import java.io.IOException;
+
+import org.springframework.stereotype.Component;
+
+import com.hk.constants.core.Keys;
+import com.hk.service.ServiceLocatorFactory;
 
 @Component
 public class VirtualHostImageTag extends TagSupport {

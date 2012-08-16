@@ -257,7 +257,13 @@
   </div>
 
   <div class="clear"></div>
-	      
+
+<c:if test="${hk:isNotBlank(categoryBean.seoData.description)}">
+  <div style="margin-top: 45px; background-color: #FAFCFE; padding: 10px; float: none; clear: both;">
+    <h2><i>${categoryBean.seoData.descriptionTitle}</i>: </h2>
+      ${categoryBean.seoData.description}
+  </div>
+</c:if>
 		
 	<c:choose>
 		<c:when test="${not isSecure}">

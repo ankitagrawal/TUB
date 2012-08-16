@@ -1,11 +1,11 @@
 package com.hk.constants.subscription;
 
-import com.hk.domain.subscription.SubscriptionStatus;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+
+import com.hk.domain.subscription.SubscriptionStatus;
 
 /**
  * Created by IntelliJ IDEA.
