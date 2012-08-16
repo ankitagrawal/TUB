@@ -13,24 +13,24 @@
                     <s:hidden name="hub.id" value="${hubAction.hub.id}"/>
                     <tr>
                         <td>Name:<span class='aster' title="this field is required">*</span></td>
-                        <td><s:text name="hub.name" value="${hubAction.hub.name}"/></td>
+                        <td><s:text name="hub.name" value="${hubAction.hub.name}" class="name"/></td>
                     </tr>
                     <tr>
                         <td>Address:<span class='aster' title="this field is required">*</span></td>
-                        <td><s:text name="hub.address" value="${hubAction.hub.address}"/></td>
+                        <td><s:text name="hub.address" value="${hubAction.hub.address}" class="address"/></td>
                     </tr>
                     <tr>
                         <td>Pincode:<span class='aster' title="this field is required">*</span></td>
-                        <td><s:text name="pincode" value="${hubAction.pincode}"/></td>
+                        <td><s:text name="pincode" value="${hubAction.pincode}" class="pincode"/></td>
 
                     </tr>
                     <tr>
                         <td>Country:<span class='aster' title="this field is required">*</span></td>
-                        <td><s:text name="hub.country" value="${hubAction.hub.country}"/></td>
+                        <td><s:text name="hub.country" value="${hubAction.hub.country}" class="country"/></td>
 
                     </tr>
                     <tr>
-                        <td><s:submit name="editHub" value="Add New Hub">
+                        <td><s:submit name="editHub" value="Add New Hub" class="dataValidator">
                             <s:param name="editExistingHub" value="true"></s:param>
                             Edit Hub
                             </s:submit>
@@ -41,3 +41,17 @@
         </div>
     </s:layout-component>
 </s:layout-render>
+<script type="text/javascript">
+   $('.dataValidator').click(function() {
+    //alert("in validator");
+    var name = $('.name').val();
+    var address = $('.address').val();
+    var pincode = $('.pincode').val();
+    var country = $('.country').val();
+       //alert(name + address+pincode+country);
+    if (name == " " || address == " " || pincode == "" || country == "") {
+      alert("Please enter all fields .");
+      return false;
+    }
+  });
+  </script>

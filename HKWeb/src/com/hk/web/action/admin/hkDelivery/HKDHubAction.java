@@ -39,13 +39,17 @@ public class HKDHubAction extends BaseAction {
 
     public Resolution addNewHub() {
         if (addHub) {
-            try{
-            pincodeObj = pincodeService.getByPincode(pincode);
-            hub.setPincode(pincodeObj);
-            hubDao.save(hub);
-            addRedirectAlertMessage(new SimpleMessage(HKDeliveryConstants.HUB_CREATION_SUCCESS));
-            }catch (Exception ex){
-              addRedirectAlertMessage(new SimpleMessage(HKDeliveryConstants.HUB_CREATION_FAILURE));
+            try {
+                pincodeObj = pincodeService.getByPincode(pincode);
+                if (pincodeObj != null) {
+                    hub.setPincode(pincodeObj);
+                    hubDao.save(hub);
+                    addRedirectAlertMessage(new SimpleMessage(HKDeliveryConstants.HUB_CREATION_SUCCESS));
+                } else {
+                    addRedirectAlertMessage(new SimpleMessage(HKDeliveryConstants.INVALID_PINCODE_MSG));
+                }
+            } catch (Exception ex) {
+                addRedirectAlertMessage(new SimpleMessage(HKDeliveryConstants.HUB_CREATION_FAILURE));
             }
             return new ForwardResolution("/pages/admin/addNewHub.jsp");
         } else {
@@ -57,9 +61,13 @@ public class HKDHubAction extends BaseAction {
         if (editExistingHub) {
             try {
                 pincodeObj = pincodeService.getByPincode(pincode);
+                if(pincodeObj != null) {
                 hub.setPincode(pincodeObj);
                 hubDao.save(hub);
                 addRedirectAlertMessage(new SimpleMessage(HKDeliveryConstants.HUB_EDIT_SUCCESS));
+                }else {
+                   addRedirectAlertMessage(new SimpleMessage(HKDeliveryConstants.INVALID_PINCODE_MSG));
+                }
             } catch (Exception ex) {
                 addRedirectAlertMessage(new SimpleMessage(HKDeliveryConstants.HUB_EDIT_FAILURE));
             }
