@@ -7,6 +7,7 @@ import com.hk.domain.courier.Shipment;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.user.User;
+import com.hk.domain.core.PaymentMode;
 
 import java.util.List;
 import java.util.Set;
@@ -27,5 +28,7 @@ public interface ConsignmentService {
     public List<String> getDuplicateAwbs(List<String> awbNumbers ,List<String> existingAwbNumbers);
 
     public List<String> getAllAwbNumbersWithRunsheet();
+
+    public String  getConsignmentPaymentMode(PaymentMode paymentMode);
 
 }

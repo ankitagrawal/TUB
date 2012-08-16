@@ -117,7 +117,7 @@
                         </li>
                         <li>
                             <label style="font-size:medium;">Assigned to:</label>
-                            <s:select name="agent" >
+                            <s:select name="agent" class="agentName">
                                 <s:option value="-Select Agent-">-Select Agent-</s:option>
                                 <hk:master-data-collection service="<%=MasterDataDao.class%>"
                                                            serviceProperty="HKDeliveryAgentList" value="id"
@@ -180,5 +180,21 @@
 
     </s:layout-component>
 </s:layout-render>
+<script type="text/javascript">
+   $('.verifyData').click(function() {
+    //alert("in validator");
+    var hub = $('.hubName').val();
+    var assignedTo =$('.agentName').val();
+       //alert(hub);
+    if (hub == "-Select Hub-") {
+      alert("Please select a Hub.");
+      return false;
+    }
+       if (assignedTo == "-Select Agent-") {
+           alert("Please select an Agent.");
+           return false;
+       }
+  });
+   </script>
 
 

@@ -13,7 +13,9 @@ import com.hk.domain.courier.Shipment;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.user.User;
+import com.hk.domain.core.PaymentMode;
 import com.hk.constants.hkDelivery.HKDeliveryConstants;
+import com.hk.constants.payment.EnumPaymentMode;
 
 import java.util.List;
 import java.util.Set;
@@ -73,5 +75,16 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     @Override
     public List<String> getAllAwbNumbersWithRunsheet() {
         return consignmentDao.getAllAwbNumbersWithRunsheet();
+    }
+
+    @Override
+    public String getConsignmentPaymentMode(PaymentMode paymentMode) {
+        String paymentModeString = null;
+        if(paymentMode.getId().equals(EnumPaymentMode.COD.getId())){
+            paymentModeString = HKDeliveryConstants.COD;
+        } else {
+            paymentModeString = HKDeliveryConstants.PREPAID;
+        }
+        return paymentModeString;
     }
 }

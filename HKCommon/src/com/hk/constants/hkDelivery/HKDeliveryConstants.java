@@ -10,7 +10,7 @@ public class HKDeliveryConstants {
     public static final String CONSIGNMNT_CREATION_SUCCESS = "Consignments created successfully.";
     public static final String CONSIGNMNT_CREATION_FAILURE = "Consignment cannot be created.Please enter awb number.";
     public static final String CONSIGNMNT_DUPLICATION_MSG = "Consignments already created for following trackingIds:";
-    public static final String OPEN_RUNSHEET_MESSAGE = "Cannot create runsheet.Following awbNumbers are already linked to OPEN runsheet:";
+    public static final String OPEN_RUNSHEET_MESSAGE = "Cannot create runsheet.Following awbNumbers are already linked to an OPEN runsheet:";
     public static final String HUB_CREATION_SUCCESS = "New Hub created successfully.";
     public static final String HUB_EDIT_SUCCESS = "Hub edited successfully.";
     public static final String HUB_CREATION_FAILURE = "Some problem occurred while creating a hub.Please try later.";
@@ -30,6 +30,10 @@ public class HKDeliveryConstants {
 
     // Constants for url-parameters used in HK Delivery.
     public static final String RUNSHEET_DOWNLOAD ="runsheetDownloadFunctionality";
+
+    //Constants for consignment payment mode
+    public static final String COD = "COD";
+    public static final String PREPAID = "PrePaid";
 
 
 }

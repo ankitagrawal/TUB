@@ -149,7 +149,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
         
         //checking url-parameter to see if only jsp has to be displayed or runsheet has to be created.
         if (!runsheetDownloadFunctionality) {
-
+            trackingIdList = null;
             return new ForwardResolution("/pages/admin/hkDeliveryWorksheet.jsp");
 
         } else {
@@ -163,13 +163,17 @@ public class HKDRunsheetAction extends BasePaginatedAction {
             int                   totalCODPackets                 = 0;
             double                totalCODAmount                  = 0.0;
             List<String>          trackingIdsWithoutConsignment   = new ArrayList<String>();
-            consignments                     = new HashSet<Consignment>();
-            //todo fetch userId from agent.
+            consignments                                          = new HashSet<Consignment>();
             //Getting HK-Delivery Courier Object.
             Courier               hkDeliveryCourier               = EnumCourier.HK_Delivery.asCourier();
             List<String>          duplicatedAwbNumbers            = null ;
             String                duplicateAwbString              = "";
 
+            //Checking if agent selected has any open runsheet or not.
+            if (runsheetService.agentHasOpenRunsheet(agent) == true) {
+                addRedirectAlertMessage(new SimpleMessage(agent.getName() + " already has an open runsheet"));
+                return new ForwardResolution(HKDRunsheetAction.class,"downloadDeliveryWorkSheet").addParameter(HKDeliveryConstants.RUNSHEET_DOWNLOAD, false);
+            }
 
             if (trackingIdList != null && trackingIdList.size() > 0) {
                 //Fetching those awbNumbers which are present in open runsheets.(such consignments wont't be added to any new runsheet)
@@ -191,7 +195,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
                         }
                         //This is a check to ensure that runsheetObj wud be created for those trackingIds for which Consignment exists in DB.
                         if (consignment != null) {
-                            if (EnumPaymentMode.COD.equals(consignment.getPaymentMode())) {
+                            if (HKDeliveryConstants.COD.equals(consignment.getPaymentMode())) {
                                 ++totalCODPackets;
                                 totalCODAmount = totalCODAmount + consignment.getAmount();
                                 totalCODAmount = Math.round(totalCODAmount);
@@ -207,11 +211,8 @@ public class HKDRunsheetAction extends BasePaginatedAction {
                             continue;
                         }
                     }
-            }
 
-            if (duplicatedAwbNumbers.size()== 0)   {
-            // Converting list to comma seperated string(to be displayed on UI)
-            awbIdsWithoutConsignmntString = hkdRunsheetManager.getAwbWithoutConsignmntString(trackingIdsWithoutConsignment);
+                //logic for creating runsheet,downloading sheet
             // Calculating no. of total packets,no of prepaid boxes in runsheetObj.
             totalPackets = shippingOrderList.size();
             prePaidBoxCount = Long.parseLong((totalPackets - totalCODPackets) + "");
@@ -237,8 +238,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
                 return new ForwardResolution(HKDRunsheetAction.class).addParameter(HKDeliveryConstants.RUNSHEET_DOWNLOAD, false);
             }
             return new HTTPResponseResolution();
-            }
-            addRedirectAlertMessage(new SimpleMessage(duplicateAwbString));
+            } 
             return new ForwardResolution(HKDRunsheetAction.class,"downloadDeliveryWorkSheet").addParameter(HKDeliveryConstants.RUNSHEET_DOWNLOAD, false);
         }
 

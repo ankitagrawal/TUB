@@ -84,9 +84,7 @@ public class HKDConsignmentAction extends BaseAction{
                 shipmentObj = shipmentService.findByAwb(awbService.findByCourierAwbNumber(hkDelivery,awbNumber));
                 amount = shipmentObj.getShippingOrder().getAmount();
                 cnnNumber = shipmentObj.getShippingOrder().getGatewayOrderId();
-                paymentMode = shipmentObj.getShippingOrder().getBaseOrder().getPayment().getPaymentMode().getName();
-                
-
+                paymentMode = consignmentService.getConsignmentPaymentMode(shipmentObj.getShippingOrder().getBaseOrder().getPayment().getPaymentMode());
                 // Creating consignment object.
                 consignment = consignmentService.createConsignment(awbNumber,cnnNumber,amount,paymentMode,hub);
                 // Making an entry in consignment-tracking for the created consignment.
