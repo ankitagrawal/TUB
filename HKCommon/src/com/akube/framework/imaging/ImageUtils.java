@@ -1,26 +1,49 @@
 package com.akube.framework.imaging;
 
-import com.hk.exception.ImagingException;
-import com.sun.media.jai.codec.JPEGEncodeParam;
-import com.sun.media.jai.codec.SeekableStream;
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
+import java.awt.image.renderable.ParameterBlock;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Iterator;
+import java.util.zip.CRC32;
+
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
+import javax.media.jai.BorderExtenderConstant;
+import javax.media.jai.InterpolationBilinear;
+import javax.media.jai.JAI;
+import javax.media.jai.OpImage;
+import javax.media.jai.RenderedOp;
+import javax.media.jai.operator.AWTImageDescriptor;
+import javax.media.jai.operator.CropDescriptor;
+import javax.media.jai.operator.RotateDescriptor;
+import javax.media.jai.operator.ScaleDescriptor;
+import javax.media.jai.operator.SubsampleAverageDescriptor;
+import javax.media.jai.operator.UnsharpMaskDescriptor;
+
 import mediautil.image.jpeg.LLJTran;
 import mediautil.image.jpeg.LLJTranException;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-import javax.imageio.stream.ImageInputStream;
-import javax.media.jai.*;
-import javax.media.jai.operator.*;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.awt.image.renderable.ParameterBlock;
-import java.io.*;
-import java.util.Iterator;
-import java.util.zip.CRC32;
+import com.hk.exception.ImagingException;
+import com.sun.media.jai.codec.JPEGEncodeParam;
+import com.sun.media.jai.codec.SeekableStream;
 
 /**
  * User: rahul

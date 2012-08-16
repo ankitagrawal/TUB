@@ -1,13 +1,15 @@
 package com.hk.web.validation;
 
-import com.hk.domain.inventory.StockTransferLineItem;
-import com.hk.pact.dao.BaseDao;
-import net.sourceforge.stripes.validation.TypeConverter;
-import net.sourceforge.stripes.validation.ValidationError;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.Collection;
 import java.util.Locale;
+
+import net.sourceforge.stripes.validation.TypeConverter;
+import net.sourceforge.stripes.validation.ValidationError;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.hk.domain.inventory.StockTransferLineItem;
+import com.hk.pact.dao.BaseDao;
 
 /**
  * Created by IntelliJ IDEA. User: Developer Date: May 1, 2012 Time: 11:00:52 AM To change this template use File |

@@ -1,8 +1,14 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.admin.pact.dao.marketing.AdNetworksDao" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
+
+<%
+    AdNetworksDao adNetworksDao = ServiceLocatorFactory.getService(AdNetworksDao.class);
+    pageContext.setAttribute("adNetworksList", adNetworksDao.listAdNetworks());
+		%>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Purchase Order List">
   <s:useActionBean beanclass="com.hk.web.action.admin.marketing.MarketingExpenseAction" var="mea"/>
@@ -40,6 +46,12 @@
         <label>Category:</label><s:select name="category">
           <s:option value="">-All-</s:option>
           <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="marketExpenseCategoriesList" value="name" label="displayName"/>
+        </s:select>
+			<label>Ad Networks:</label><s:select name="adNetworksId">
+          <s:option value="">-Select-</s:option>
+           <c:forEach items="${adNetworksList}" var="adNetworks">
+	           <s:option value="${adNetworks.id}">${adNetworks.name}</s:option>
+           </c:forEach>
         </s:select>
         <label>Start Date:</label><s:text class="date_input startDate" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startDate"/>
         <label>End Date:</label><s:text class="date_input endDate" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endDate"/>

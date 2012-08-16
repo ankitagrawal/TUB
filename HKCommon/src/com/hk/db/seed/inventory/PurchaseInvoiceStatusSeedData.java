@@ -5,10 +5,11 @@ package com.hk.db.seed.inventory;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.hk.constants.inventory.EnumPurchaseInvoiceStatus;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.inventory.po.PurchaseInvoiceStatus;
-import org.springframework.stereotype.Component;
 
 
 @Component

@@ -1,13 +1,15 @@
 package com.hk.web.validation;
 
-import com.hk.domain.courier.RegionType;
-import com.hk.pact.dao.BaseDao;
-import net.sourceforge.stripes.validation.TypeConverter;
-import net.sourceforge.stripes.validation.ValidationError;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.Collection;
 import java.util.Locale;
+
+import net.sourceforge.stripes.validation.TypeConverter;
+import net.sourceforge.stripes.validation.ValidationError;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.hk.domain.courier.RegionType;
+import com.hk.pact.dao.BaseDao;
 
 /**
  * Created by IntelliJ IDEA.

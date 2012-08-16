@@ -1,9 +1,9 @@
 package com.hk.rest.pact.service;
 
-import com.hk.domain.warehouse.DemandForecast;
-
-import java.util.List;
 import java.util.Date;
+import java.util.List;
+
+import com.hk.domain.warehouse.DemandForecast;
 
 /**
  * Created by IntelliJ IDEA.

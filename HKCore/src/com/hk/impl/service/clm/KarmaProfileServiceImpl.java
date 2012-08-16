@@ -3,10 +3,6 @@ package com.hk.impl.service.clm;
 import java.util.List;
 import java.util.Set;
 
-import com.hk.constants.order.EnumOrderStatus;
-import com.hk.domain.catalog.category.Category;
-import com.hk.domain.clm.CategoryKarmaProfile;
-import com.hk.pact.dao.clm.CategoryKarmaProfileDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,13 +10,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hk.constants.clm.EnumCLMMargin;
-import com.hk.constants.clm.CLMConstants;
 import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.constants.order.EnumOrderStatus;
 import com.hk.core.fliter.CartLineItemFilter;
+import com.hk.domain.catalog.category.Category;
+import com.hk.domain.clm.CategoryKarmaProfile;
 import com.hk.domain.clm.KarmaProfile;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
+import com.hk.pact.dao.clm.CategoryKarmaProfileDao;
 import com.hk.pact.dao.clm.KarmaProfileDao;
 import com.hk.pact.service.clm.KarmaProfileService;
 import com.hk.pact.service.inventory.SkuService;

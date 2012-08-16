@@ -26,14 +26,10 @@
       <c:otherwise>
         <h3>
           <s:link href="${product.productURL}" title="${product.name}" class="prod_link">
-            <s:param name="productId" value="${product.id}"/>
-            <s:param name="productSlug" value="${product.slug}"/>
             ${product.name}
           </s:link>
         </h3>
         <s:link href="${product.productURL}" class="prod_link" title="${product.name}">
-          <s:param name="productId" value="${product.id}"/>
-          <s:param name="productSlug" value="${product.slug}"/>
           <div class='img128'>
               <%--<img src="${pageContext.request.contextPath}/images/ProductImages/ProductImagesThumb/${product.id}.jpg" alt="${product.name}"/>--%>
             <c:choose>

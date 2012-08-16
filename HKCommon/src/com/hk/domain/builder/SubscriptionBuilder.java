@@ -1,5 +1,7 @@
 package com.hk.domain.builder;
 
+import java.util.Date;
+
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.subscription.EnumSubscriptionStatus;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -7,8 +9,6 @@ import com.hk.domain.order.Order;
 import com.hk.domain.subscription.Subscription;
 import com.hk.domain.subscription.SubscriptionProduct;
 import com.hk.domain.user.User;
-
-import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA.

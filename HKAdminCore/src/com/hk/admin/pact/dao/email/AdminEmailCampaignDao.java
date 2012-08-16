@@ -5,8 +5,6 @@ import com.hk.domain.core.EmailType;
 import com.hk.domain.email.EmailCampaign;
 import com.hk.pact.dao.BaseDao;
 
-import java.util.List;
-
 public interface AdminEmailCampaignDao extends BaseDao {
   /**
    * returns email campaigns belonging to a particular email type. the result is reverse sorted on basis of create date

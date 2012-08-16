@@ -4,8 +4,6 @@ import java.util.List;
 
 import com.hk.domain.core.OrderStatus;
 import com.hk.domain.order.Order;
-import com.hk.domain.subscription.Subscription;
-import com.hk.domain.subscription.SubscriptionStatus;
 import com.hk.domain.user.User;
 import com.hk.pact.dao.BaseDao;
 

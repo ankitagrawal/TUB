@@ -1,6 +1,8 @@
 package com.hk.web.validation;
 
-import com.akube.framework.stripes.population.CustomPopulationStrategy;
+import java.util.HashMap;
+import java.util.Map;
+
 import net.sourceforge.stripes.action.ActionBean;
 import net.sourceforge.stripes.config.Configuration;
 import net.sourceforge.stripes.exception.StripesJspException;
@@ -8,8 +10,7 @@ import net.sourceforge.stripes.tag.DefaultPopulationStrategy;
 import net.sourceforge.stripes.tag.InputTagSupport;
 import net.sourceforge.stripes.tag.PopulationStrategy;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.akube.framework.stripes.population.CustomPopulationStrategy;
 
 /**
  * Created with IntelliJ IDEA.

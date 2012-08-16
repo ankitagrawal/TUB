@@ -1,7 +1,6 @@
 package com.hk.pact.dao.user;
 
 import java.util.List;
-import java.math.BigInteger;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,12 +9,9 @@ import com.hk.domain.catalog.category.Category;
 import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
-import com.hk.domain.email.EmailCampaign;
-import com.hk.domain.email.EmailRecepient;
 import com.hk.dto.user.UserFilterDto;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.RoleDao;
-import com.hk.impl.dto.mail.UserEmailDto;
 
 public interface UserDao extends BaseDao {
 

@@ -1,5 +1,22 @@
 package com.hk.manager;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.annotation.PostConstruct;
+
+import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.core.EnumEmailType;
@@ -38,15 +55,6 @@ import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.service.impl.FreeMarkerService;
 import com.hk.util.HtmlUtil;
-import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import java.util.*;
 
 import freemarker.template.Template;
 

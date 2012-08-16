@@ -1,8 +1,25 @@
 package com.hk.manager;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.mgt.SecurityManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.akube.framework.util.BaseUtils;
-import com.hk.constants.core.RoleConstants;
 import com.hk.constants.core.HealthkartConstants;
+import com.hk.constants.core.RoleConstants;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.domain.TempToken;
@@ -31,21 +48,6 @@ import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.TokenUtils;
 import com.hk.web.filter.WebContext;
 import com.shiro.PrincipalImpl;
-import org.apache.commons.lang.StringUtils;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.mgt.SecurityManager;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
 
 @Component
 public class UserManager {
@@ -268,7 +270,7 @@ public class UserManager {
             // The variant is not added in user account already
             CartLineItemMatcher cartLineItemMatcher=new CartLineItemMatcher();
 
-            if(cartLineItemMatcher.addProductVariant(guestLineItem.getProductVariant()).addCartLineItemTypeId(guestLineItem.getId()).match(loggedOnUserOrder.getCartLineItems())==null){
+            if(cartLineItemMatcher.addProductVariant(guestLineItem.getProductVariant()).addCartLineItemTypeId(guestLineItem.getLineItemType().getId()).match(loggedOnUserOrder.getCartLineItems())==null){
                 if(guestLineItem.getQty()>0){
                     guestLineItem.setOrder(loggedOnUserOrder);
                     getCartLineItemDao().save(guestLineItem);

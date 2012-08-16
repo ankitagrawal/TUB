@@ -1,8 +1,8 @@
 package com.hk.impl.service;
 
-import java.util.Map;
-import java.util.List;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -17,15 +17,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.hk.constants.core.Keys;
-//import com.hk.constants.core.EnumEmailType;
-import com.hk.pact.service.EmailService;
-/*
-import com.hk.pact.dao.email.EmailerHistoryDao;
-import com.hk.pact.dao.email.EmailRecepientDao;
-import com.hk.pact.dao.BaseDao;
-*/
-import com.hk.service.impl.FreeMarkerService;
 import com.hk.domain.email.EmailCampaign;
+import com.hk.pact.service.EmailService;
+import com.hk.service.impl.FreeMarkerService;
+
 import freemarker.template.Template;
 
 /**

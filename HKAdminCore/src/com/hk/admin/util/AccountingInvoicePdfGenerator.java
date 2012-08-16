@@ -1,35 +1,41 @@
 package com.hk.admin.util;
 
-import org.springframework.stereotype.Component;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Arrays;
-import java.util.Set;
-import java.util.HashSet;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.text.DecimalFormat;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
-import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.PdfWriter;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.hk.constants.core.Keys;
-import com.hk.constants.core.EnumTax;
-import com.hk.pact.dao.user.B2bUserDetailsDao;
-import com.hk.pact.dao.BaseDao;
-import com.hk.pact.service.catalog.CategoryService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import com.hk.admin.dto.accounting.InvoiceDto;
 import com.hk.admin.dto.accounting.InvoiceLineItemDto;
-import com.hk.domain.user.B2bUserDetails;
+import com.hk.constants.core.EnumTax;
+import com.hk.constants.core.Keys;
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ReplacementOrder;
+import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.user.B2bUserDetails;
 import com.hk.helper.InvoiceNumHelper;
+import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.user.B2bUserDetailsDao;
+import com.hk.pact.service.catalog.CategoryService;
+import com.itextpdf.text.BadElementException;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 
 /**
  * Created by IntelliJ IDEA.

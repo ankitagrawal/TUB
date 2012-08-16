@@ -1,8 +1,8 @@
 package com.hk.admin.pact.dao.shipment;
 
-import com.hk.pact.dao.BaseDao;
-import com.hk.domain.courier.Shipment;
 import com.hk.domain.courier.Awb;
+import com.hk.domain.courier.Shipment;
+import com.hk.pact.dao.BaseDao;
 
 /**
  * Created by IntelliJ IDEA.

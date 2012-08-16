@@ -1,7 +1,6 @@
 package com.hk.pact.service.subscription;
 
 import com.hk.constants.subscription.EnumSubscriptionLifecycleActivity;
-import com.hk.db.seed.subscription.SubscriptionLifeCycleActivitySeedData;
 import com.hk.domain.subscription.Subscription;
 import com.hk.domain.subscription.SubscriptionLifecycle;
 import com.hk.domain.subscription.SubscriptionLifecycleActivity;

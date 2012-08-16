@@ -27,5 +27,4 @@ public class ProductVariantInventoryDaoImpl extends BaseDaoImpl implements Produ
         }
         return netInv;
     }
-
 }

@@ -1,5 +1,20 @@
 package com.hk.web.action.admin.warehouse;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.Resolution;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.engine.PreferredWarehouseDecider;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -9,15 +24,6 @@ import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.

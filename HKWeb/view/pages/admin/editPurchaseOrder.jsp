@@ -32,27 +32,30 @@
                 var nextIndex = eval(lastIndex + "+1");
                 var newRowHtml =
                         '<tr count="' + nextIndex + '" class="lastRow lineItemRow">' +
-                        '<td>' + Math.round(nextIndex + 1) + '.</td>' +
-                        '<td></td>' +
-                        '  <td>' +
-                        '    <input type="hidden" name="poLineItems[' + nextIndex + '].id" />' +
-                        '    <input type="text" class="variant" name="poLineItems[' + nextIndex + '].productVariant"/>' +
-                        '  </td>' +
-                        '<td></td>' +
-                        '<td class="supplierCode"></td>' +
-                        '<td class="otherRemark"></td>' +
-                        ' <td class="pvDetails"></td>' +
-                        '<td></td>' +
-                        '  <td>' +
-                        '    <input type="text" name="poLineItems[' + nextIndex + '].qty" class="quantity" />' +
-                        '  </td>' +
-                        '  <td>' +
-                        '    <input class="costPrice" type="text" name="poLineItems[' + nextIndex + '].costPrice" />' +
-                        '  </td>' +
-                        '  <td>' +
-                        '    <input class="mrp" type="text" name="poLineItems[' + nextIndex + '].mrp" />' +
-                        '  </td>' +
-                        '</tr>';
+                                '<td>' + Math.round(nextIndex + 1) + '.</td>' +
+                                '<td></td>' +
+                                '  <td>' +
+                                '    <input type="hidden" name="poLineItems[' + nextIndex + '].id" />' +
+                                '    <input type="text" class="variant" name="poLineItems[' + nextIndex + '].productVariant"/>' +
+                                '  </td>' +
+                                '<td></td>' +
+                                '<td class="supplierCode"></td>' +
+                                '<td class="otherRemark"></td>' +
+                                ' <td class="pvDetails"></td>' +
+                                '<td></td>' +
+                                '<td></td>' +
+                                '<td></td>' +
+                                '<td></td>' +
+                                '  <td>' +
+                                '    <input type="text" name="poLineItems[' + nextIndex + '].qty" class="quantity" />' +
+                                '  </td>' +
+                                '  <td>' +
+                                '    <input class="costPrice" type="text" name="poLineItems[' + nextIndex + '].costPrice" />' +
+                                '  </td>' +
+                                '  <td>' +
+                                '    <input class="mrp" type="text" name="poLineItems[' + nextIndex + '].mrp" />' +
+                                '  </td>' +
+                                '</tr>';
 
                 $('#poTable').append(newRowHtml);
 
@@ -73,13 +76,13 @@
                                 variantRow.find('.costPrice').val(res.data.variant.costPrice);
                                 productVariantDetails.html(
                                         res.data.product + '<br/>' +
-                                        res.data.options
-                                        );
+                                                res.data.options
+                                );
                             } else {
                                 $('.variantDetails').html('<h2>' + res.message + '</h2>');
                             }
                         }
-                        );
+                );
             });
 
             $('.requiredFieldValidator').click(function() {
@@ -223,9 +226,13 @@
         <th>Remarks</th>
         <th>Details</th>
         <th>Tax<br/>Category</th>
+        <th>Current Inventory <br>Selected Warehouse</th>
+        <th>Current Inventory <br>All Warehouses</th>
+        <th>Last 30 days Sale</th>
         <th>Qty</th>
         <th>Cost Price<br/>(Without TAX)</th>
         <th>MRP</th>
+        <th>Margin(MRP vs CP)</th>
         <th>Taxable</th>
         <th>Tax</th>
         <th>Surcharge</th>
@@ -273,6 +280,15 @@
                 <fmt:formatNumber value="${sku.tax.value * 100}" maxFractionDigits="2"/>
             </td>
             <td>
+                    ${hk:netInventory(sku)}
+            </td>
+            <td>
+                    ${hk:netInventory(productVariant)}
+            </td>
+            <td>
+                    ${hk:findInventorySoldInGivenNoOfDays(sku, 30)}
+            </td>
+            <td>
                 <s:text name="poLineItems[${ctr.index}].qty" value="${poLineItemDto.poLineItem.qty}" class="quantity"/>
             </td>
             <td>
@@ -281,6 +297,9 @@
             </td>
             <td>
                 <s:text class="mrp" name="poLineItems[${ctr.index}].mrp" value="${poLineItemDto.poLineItem.mrp}"/>
+            </td>
+            <td>
+                <fmt:formatNumber value="${poLineItemDto.marginMrpVsCP}" maxFractionDigits="2"/>
             </td>
             <td>
                 <fmt:formatNumber value="${poLineItemDto.taxable}" maxFractionDigits="2"/>
@@ -299,7 +318,7 @@
     </tbody>
     <tfoot>
     <tr>
-        <td colspan="11">Total</td>
+        <td colspan="15">Total</td>
         &nbsp; &nbsp;
         <td><fmt:formatNumber value="${pa.purchaseOrderDto.totalTaxable}" maxFractionDigits="2"/></td>
         &nbsp;

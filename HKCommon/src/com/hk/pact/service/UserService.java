@@ -1,7 +1,6 @@
 package com.hk.pact.service;
 
 import java.util.List;
-import java.math.BigInteger;
 
 import com.akube.framework.dao.Page;
 import com.hk.domain.catalog.category.Category;
@@ -9,8 +8,6 @@ import com.hk.domain.order.Order;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.domain.email.EmailCampaign;
-import com.hk.domain.email.EmailRecepient;
 
 public interface UserService {
 

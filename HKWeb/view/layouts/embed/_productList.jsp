@@ -26,8 +26,6 @@
       <c:otherwise>
         <h2>
           <s:link href="${product.productURL}" title="${product.name}" class="prod_top_link">
-            <s:param name="productId" value="${product.id}"/>
-            <s:param name="productSlug" value="${product.slug}"/>
             ${product.name}
 
             <c:choose>
@@ -51,8 +49,6 @@
           </s:link>
         </h2>
         <s:link class="img128" href="${product.productURL}" title="${product.name}">
-          <s:param name="productId" value="${product.id}"/>
-          <s:param name="productSlug" value="${product.slug}"/>
           <c:choose>
             <c:when test="${product.mainImageId != null}">
               <hk:productImage imageId="${product.mainImageId}" size="<%=EnumImageSize.SmallSize%>"
@@ -119,8 +115,6 @@
             ${product.overview}
           <div class='more'>
             <s:link href="${product.productURL}" title="${product.name}">
-              <s:param name="productId" value="${product.id}"/>
-              <s:param name="productSlug" value="${product.slug}"/>
               read more and place order &rarr;
             </s:link>
           </div>

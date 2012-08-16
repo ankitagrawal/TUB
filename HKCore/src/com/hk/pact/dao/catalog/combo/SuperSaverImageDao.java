@@ -1,12 +1,11 @@
 package com.hk.pact.dao.catalog.combo;
 
-import com.hk.pact.dao.BaseDao;
-import com.hk.domain.catalog.product.combo.SuperSaverImage;
-import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.category.Category;
-import com.akube.framework.dao.Page;
-
 import java.util.List;
+
+import com.akube.framework.dao.Page;
+import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.combo.SuperSaverImage;
+import com.hk.pact.dao.BaseDao;
 
 public interface SuperSaverImageDao extends BaseDao {
     public SuperSaverImage getSuperSaverImageByChecksum(String checksum);
