@@ -16,11 +16,13 @@ public interface ConsignmentDao extends BaseDao {
 
     public Consignment createConsignment(String awbNumber,String cnnNumber ,double amount, String paymentMode ,Hub hub);
 
-    public List<String> getAwbIds();
+    public List<String> getAwbNumbersInConsignment();
 
     public Consignment getConsignmentByAwbNumber(String awbNumber);
 
     void updateConsignmentTracking(Hub sourceHubI, Hub destinationHub, User user, Consignment consignment);
 
     void updateConsignmentTracking(Hub sourceHub, Hub destinationHub, User user, Set<Consignment> consignments);
+
+    List<String> getAllAwbNumbersWithRunsheet();
 }

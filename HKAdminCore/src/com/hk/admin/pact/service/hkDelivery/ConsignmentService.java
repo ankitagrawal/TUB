@@ -16,7 +16,7 @@ public interface ConsignmentService {
 
     public Consignment createConsignment(String awbNumber,String cnnNumber ,double amount, String paymentMode ,Hub hub);
 
-    public List<String> getAwbIds();
+    public List<String> getAwbNumbersInConsignment();
 
     public Consignment getConsignmentByAwbNumber(String awbNumber);
 
@@ -24,6 +24,8 @@ public interface ConsignmentService {
 
     public void updateConsignmentTracking(Hub sourceHub, Hub destinationHub, User user, Set<Consignment> consignmentList);
 
-    public List<String> getDuplicateAwbs(List<String> awbNumbers);
+    public List<String> getDuplicateAwbs(List<String> awbNumbers ,List<String> existingAwbNumbers);
+
+    public List<String> getAllAwbNumbersWithRunsheet();
 
 }

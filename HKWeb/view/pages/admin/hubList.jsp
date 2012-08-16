@@ -100,11 +100,25 @@
 
     </s:layout-component>
 
+    <s:layout-component name="heading">
+        Add/Edit Hub
+    </s:layout-component>
+
     <s:layout-component name="content">
         <div class="hkDeliveryBox">
             <s:form beanclass="com.hk.web.action.admin.hkDelivery.HKDHubAction">
+
+
+                <fieldset>
+                    <legend>Add New Hub</legend>
+                    <s:submit name="addNewHub" value="Add a New Hub">
+                        <s:param name="addHub" value="false"></s:param>
+                        Add a New Hub
+                    </s:submit>
+                </fieldset>
+
                 <fieldset class="right_label">
-                    <legend>Add/Edit Hub</legend>
+                    <legend>Edit Hub</legend>
                     <ul>
                         <br>
                         <li>
@@ -135,9 +149,9 @@
                                         <td><s:link
                                                 beanclass="com.hk.web.action.admin.hkDelivery.HKDHubAction"
                                                 event="editHub">
-                                           <%-- <s:param name="saveReview" value="false"/>--%>
+                                            <s:param name="editExistingHub" value="false"/>
                                             <s:param name="hubId" value="${hubList.id}"/>
-                                            <b>Edit & Save</b>  </s:link>
+                                            <b>Edit & Save</b> </s:link>
                                         </td>
 
                                     </tr>
@@ -155,16 +169,16 @@
     </s:layout-component>
 </s:layout-render>
 <script type="text/javascript">
-   $('.verifyData').click(function() {
-    //alert("in validator");
-    var hub = $('.hubName').val();
-       //alert(hub);
-    if (hub == "-Select Hub-" ) {
-      alert("Please select a Hub.");
-      return false;
-    }
-  });
-  </script>
+    $('.verifyData').click(function() {
+        //alert("in validator");
+        var hub = $('.hubName').val();
+        //alert(hub);
+        if (hub == "-Select Hub-") {
+            alert("Please select a Hub.");
+            return false;
+        }
+    });
+</script>
 
 
 

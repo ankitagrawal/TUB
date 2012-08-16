@@ -38,8 +38,8 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     }
 
     @Override
-    public List<String> getAwbIds() {
-        return consignmentDao.getAwbIds();
+    public List<String> getAwbNumbersInConsignment() {
+        return consignmentDao.getAwbNumbersInConsignment();
     }
 
     @Override
@@ -58,10 +58,9 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     }
 
     @Override
-    public List<String> getDuplicateAwbs(List<String> awbNumbers) {
-        List<String> existingAwbNumInConsignment = getAwbIds();
+    public List<String> getDuplicateAwbs(List<String> awbNumbers ,List<String> existingAwbNumbers) {
         List<String> duplicatedAwbNumbers = new ArrayList<String>();
-        for (String existingAwbNum : existingAwbNumInConsignment) {
+        for (String existingAwbNum : existingAwbNumbers) {
             for (String awbNumber :  awbNumbers) {
                 if (awbNumber.equals(existingAwbNum)) {
                     duplicatedAwbNumbers.add(awbNumber);
@@ -69,5 +68,10 @@ public class ConsignmentServiceImpl implements ConsignmentService {
             }
         }
         return duplicatedAwbNumbers;
+    }
+
+    @Override
+    public List<String> getAllAwbNumbersWithRunsheet() {
+        return consignmentDao.getAllAwbNumbersWithRunsheet();
     }
 }

@@ -6,9 +6,11 @@ import com.hk.admin.pact.dao.hkDelivery.ConsignmentDao;
 import com.hk.domain.hkDelivery.Consignment;
 import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.hkDelivery.ConsignmentTracking;
+import com.hk.domain.hkDelivery.RunsheetStatus;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.user.User;
 import com.hk.constants.hkDelivery.EnumConsignmentStatus;
+import com.hk.constants.hkDelivery.EnumRunsheetStatus;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
@@ -33,7 +35,7 @@ public class ConsignmentDaoImpl extends BaseDaoImpl implements ConsignmentDao {
     }
 
     @Override
-    public List<String> getAwbIds() {
+    public List<String> getAwbNumbersInConsignment() {
         return (List<String>) getSession().createQuery(
                 "select distinct cn.awbNumber from Consignment cn ").list();
     }
@@ -66,5 +68,12 @@ public class ConsignmentDaoImpl extends BaseDaoImpl implements ConsignmentDao {
         save(consignmntTracking);
     }
 
+    @Override
+    public List<String> getAllAwbNumbersWithRunsheet() {
+
+        return (List<String>) getSession().createQuery(
+                "select distinct cn.awbNumber from Consignment cn where cn.runsheet != null and cn.runsheet.runsheetStatus.id = :runsheetStatusId").setLong("runsheetStatusId",EnumRunsheetStatus.Open.getId()).list();
+
+    }
 }
 

@@ -127,38 +127,49 @@ public class HKDRunsheetAction extends BasePaginatedAction {
             int                   totalCODPackets                 = 0;
             double                totalCODAmount                  = 0.0;
             List<String>          trackingIdsWithoutConsignment   = new ArrayList<String>();
-            Set<Consignment>     consignments                     = new HashSet<Consignment>();
-            //todo fetch userId from agent.
+            Set<Consignment>      consignments                    = new HashSet<Consignment>();
             //Getting HK-Delivery Courier Object.
             Courier               hkDeliveryCourier               = EnumCourier.HK_Delivery.asCourier();
+            List<String>          duplicatedAwbNumbers            = null ;
+            String                duplicateAwbString              = "";
 
-            //Iterating over trackingIdList(entered by the user) to get coreesponding shippingOrderList,consignmentList.
-            for (String trackingNum : trackingIdList) {
 
-                /*//fetching awb object from trackingId (or awbNumber).
-                Awb awb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(hkDeliveryCourier, trackingNum.trim(), userService.getWarehouseForLoggedInUser(), null, EnumAwbStatus.Used.getAsAwbStatus());
-*/                // Fetching consignment from Awb.
-                Consignment consignment = consignmentService.getConsignmentByAwbNumber(trackingNum);
-                //Getting loggedIn user,needed for consignment-tracking
-                if (getPrincipal() != null) {
-                    loggedOnUser = getUserService().getUserById(getPrincipal().getId());
-                }
-                //This is a check to ensure that runsheetObj wud be created for those trackingIds for which Consignment exists in DB.
-                if (consignment != null) {
-                    if(EnumPaymentMode.COD.equals(consignment.getPaymentMode())) {
-                       ++totalCODPackets;
+            if (trackingIdList != null && trackingIdList.size() > 0) {
+                //Fetching those awbNumbers which are present in open runsheets.(such consignments wont't be added to any new runsheet)
+                duplicatedAwbNumbers = consignmentService.getDuplicateAwbs(trackingIdList, consignmentService.getAllAwbNumbersWithRunsheet());
+                if (duplicatedAwbNumbers.size() > 0) {
+                    // creating a string for user-display.
+                    duplicateAwbString = getDuplicateAwbString(duplicatedAwbNumbers);
+                    duplicateAwbString = HKDeliveryConstants.OPEN_RUNSHEET_MESSAGE + duplicateAwbString;
+                    //Iterating over trackingIdList(entered by the user) to get coressponding shippingOrderList,consignmentList.
+                    for (String trackingNum : trackingIdList) {
+                        //Fetching consignment from trackingId(or awbNumber)
+                        Consignment consignment = consignmentService.getConsignmentByAwbNumber(trackingNum);
+                        //Getting loggedIn user,needed for consignment-tracking
+                        if (getPrincipal() != null) {
+                            loggedOnUser = getUserService().getUserById(getPrincipal().getId());
+                        }
+                        //This is a check to ensure that runsheetObj wud be created for those trackingIds for which Consignment exists in DB.
+                        if (consignment != null) {
+                            if (EnumPaymentMode.COD.equals(consignment.getPaymentMode())) {
+                                ++totalCODPackets;
                                 totalCODAmount = totalCODAmount + consignment.getAmount();
                                 totalCODAmount = Math.round(totalCODAmount);
-                    }
-                    shippingOrderList.add(shipmentService.findByAwb(awbService.findByCourierAwbNumber(hkDeliveryCourier,trackingNum)).getShippingOrder());
+                            }
+                            shippingOrderList.add(shipmentService.findByAwb(awbService.findByCourierAwbNumber(hkDeliveryCourier, trackingNum)).getShippingOrder());
 
-                    //Changing consignment-status from ShipmntRcvdAtHub(10) to ShipmntOutForDelivry(20).
-                    consignment.setConsignmentStatus(EnumConsignmentStatus.ShipmntOutForDelivry.asConsignmentStatus());
-                    consignments.add(consignment);
-                } else {
-                    //adding the trackingId without a consignment to a list.
-                    trackingIdsWithoutConsignment.add(trackingNum);
-                    continue;
+                            //Changing consignment-status from ShipmntRcvdAtHub(10) to ShipmntOutForDelivry(20).
+                            consignment.setConsignmentStatus(EnumConsignmentStatus.ShipmntOutForDelivry.asConsignmentStatus());
+                            consignments.add(consignment);
+                        } else {
+                            //adding the trackingId without a consignment to a list.
+                            trackingIdsWithoutConsignment.add(trackingNum);
+                            continue;
+                        }
+                    }
+                    addRedirectAlertMessage(new SimpleMessage(duplicateAwbString));
+                    return new ForwardResolution(HKDRunsheetAction.class).addParameter(HKDeliveryConstants.RUNSHEET_DOWNLOAD, false);
+
                 }
             }
             // Converting list to comma seperated string(to be displayed on UI)
@@ -174,18 +185,18 @@ public class HKDRunsheetAction extends BasePaginatedAction {
                 // Saving Runsheet in db.
                 runsheetService.saveRunSheet(runsheetObj);
                 //making corresponding entry in consignment tracking.
-                consignmentService.updateConsignmentTracking(hub,deliveryHub,loggedOnUser,consignments);
+                consignmentService.updateConsignmentTracking(hub, deliveryHub, loggedOnUser, consignments);
                 // generating Xls file.
                 xlsFile = hkdRunsheetManager.generateWorkSheetXls(xlsFile.getPath(), shippingOrderList, agent.getName(), totalCODAmount, totalPackets, totalCODPackets);
             } catch (IOException ioe) {
                 addRedirectAlertMessage(new SimpleMessage(CourierConstants.HKDELIVERY_IOEXCEPTION));
-                return new ForwardResolution(HKDRunsheetAction.class).addParameter(HKDeliveryConstants.RUNSHEET_DOWNLOAD,false);
+                return new ForwardResolution(HKDRunsheetAction.class).addParameter(HKDeliveryConstants.RUNSHEET_DOWNLOAD, false);
             } catch (NullPointerException npe) {
                 addRedirectAlertMessage(new SimpleMessage(CourierConstants.HKDELIVERY_NULLEXCEPTION));
-                return new ForwardResolution(HKDRunsheetAction.class).addParameter(HKDeliveryConstants.RUNSHEET_DOWNLOAD,false);
+                return new ForwardResolution(HKDRunsheetAction.class).addParameter(HKDeliveryConstants.RUNSHEET_DOWNLOAD, false);
             } catch (Exception ex) {
                 addRedirectAlertMessage(new SimpleMessage(CourierConstants.HKDELIVERY_EXCEPTION));
-                return new ForwardResolution(HKDRunsheetAction.class).addParameter(HKDeliveryConstants.RUNSHEET_DOWNLOAD,false);
+                return new ForwardResolution(HKDRunsheetAction.class).addParameter(HKDeliveryConstants.RUNSHEET_DOWNLOAD, false);
             }
             return new HTTPResponseResolution();
         }
@@ -207,6 +218,16 @@ public class HKDRunsheetAction extends BasePaginatedAction {
             }
         }
 
+    }
+
+    // Getting comma seperated string for the duplicated
+    public String getDuplicateAwbString(List<String> duplicatedAwbs) {
+        StringBuffer strBuffr = new StringBuffer();
+        for (String awbNumber : duplicatedAwbs) {
+            strBuffr.append(awbNumber);
+            strBuffr.append(",");
+        }
+        return strBuffr.toString();
     }
 
     public String getAssignedTo() {

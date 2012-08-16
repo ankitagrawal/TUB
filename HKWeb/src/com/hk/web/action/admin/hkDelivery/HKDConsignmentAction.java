@@ -68,13 +68,13 @@ public class HKDConsignmentAction extends BaseAction{
                 loggedOnUser = getUserService().getUserById(getPrincipal().getId());
             }
             //Checking if consignment is already created for the enterd awbNumber and fetching the awb for the same .
-            existingAwbNumbers = consignmentService.getDuplicateAwbs(trackingIdList);
+            existingAwbNumbers = consignmentService.getDuplicateAwbs(trackingIdList,consignmentService.getAwbNumbersInConsignment());
             if (existingAwbNumbers.size() > 0) {
                 // removing duplicated awbs from the list.
                 trackingIdList.removeAll(existingAwbNumbers);
                 // creating a string for user-display.
                 duplicateAwbString = getDuplicateAwbString(existingAwbNumbers);
-                duplicateAwbString = "Consignments already created for following trackingIds:" + duplicateAwbString;
+                duplicateAwbString =HKDeliveryConstants.CONSIGNMNT_DUPLICATION_MSG + duplicateAwbString;
             }
             // convertig list to set to delete/remove duplicate elements from the list.
                 trackingIdSet = new HashSet<String>(trackingIdList);
