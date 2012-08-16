@@ -3,6 +3,7 @@ package com.hk.admin.impl.service.hkDelivery;
 import com.akube.framework.dao.Page;
 import com.hk.admin.pact.dao.hkDelivery.RunSheetDao;
 import com.hk.constants.hkDelivery.EnumConsignmentStatus;
+import com.hk.constants.hkDelivery.EnumRunsheetStatus;
 import com.hk.domain.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -67,5 +68,12 @@ public class RunSheetServiceImpl implements RunSheetService {
         }
         runsheet.setConsignments(consignments);
         return runsheet;
+    }
+
+    public boolean agentHasOpenRunsheet(User agent){
+        if(searchRunsheet(null,null,null, EnumRunsheetStatus.Open.asRunsheetStatus(),agent,null,1,10).getList().size() > 0){
+            return true;
+        }
+        return false;
     }
 }
