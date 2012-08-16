@@ -1,6 +1,7 @@
 package com.hk.web.action.core.order;
 
 import java.util.List;
+import java.util.Set;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -20,8 +21,11 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.core.Keys;
+import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.offer.OfferInstance;
+import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
@@ -100,7 +104,10 @@ public class OrderSummaryAction extends BaseAction {
         if (order.getAddress() == null) {
             return new RedirectResolution(SelectAddressAction.class);
         }
+
         pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), rewardPointsUsed), order.getAddress());
+        Set<CartLineItem> subscriptionCartLineItems=new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
+
         order.setRewardPointsUsed(rewardPointsUsed);
         order = (Order) getBaseDao().save(order);
 
@@ -122,6 +129,11 @@ public class OrderSummaryAction extends BaseAction {
             Double payable = pricingDto.getGrandTotalPayable();
             if (payable < codMinAmount || payable > codMaxAmount) {
                 codAllowed = false;
+            }
+        }
+        if(codAllowed){
+            if(subscriptionCartLineItems!=null && subscriptionCartLineItems.size()>0){
+                codAllowed=false;
             }
         }
 
@@ -204,4 +216,5 @@ public class OrderSummaryAction extends BaseAction {
     public void setAvailableCourierList(List<Courier> availableCourierList) {
         this.availableCourierList = availableCourierList;
     }
+
 }

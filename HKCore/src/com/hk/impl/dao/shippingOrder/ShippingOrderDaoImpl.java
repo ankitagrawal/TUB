@@ -7,7 +7,6 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.akube.framework.dao.Page;
@@ -17,9 +16,6 @@ import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderLifeCycleActivity;
 import com.hk.domain.sku.Sku;
-import com.hk.domain.courier.Shipment;
-import com.hk.domain.courier.Awb;
-import com.hk.domain.courier.Courier;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
 

@@ -1,6 +1,12 @@
 package com.hk.impl.dao.order.analytics;
 
-import com.akube.framework.util.DateUtils;
+import java.util.Date;
+import java.util.List;
+
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Service;
+
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
@@ -9,12 +15,6 @@ import com.hk.domain.payment.Payment;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.order.analytics.DemandHistoryDao;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.stereotype.Service;
-
-import java.util.Date;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.

@@ -1,10 +1,11 @@
 package com.hk.web.action.core.catalog.product;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
-import com.hk.constants.marketing.EnumProductReferrer;
-import com.hk.manager.LinkManager;
-import com.hk.util.ProductReferrerMapper;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -17,14 +18,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.session.Session;
 
+import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.HealthkartConstants;
+import com.hk.constants.marketing.EnumProductReferrer;
 import com.hk.constants.review.EnumReviewStatus;
 import com.hk.domain.MapIndia;
-import com.hk.domain.review.UserReview;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.catalog.Manufacturer;
-import com.akube.framework.dao.Page;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductImage;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -32,11 +33,14 @@ import com.hk.domain.catalog.product.ProductVariation;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.catalog.product.combo.SuperSaverImage;
 import com.hk.domain.content.SeoData;
+import com.hk.domain.review.UserReview;
+import com.hk.domain.subscription.SubscriptionProduct;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.dto.AddressDistanceDto;
 import com.hk.dto.menu.MenuNode;
 import com.hk.helper.MenuHelper;
+import com.hk.manager.LinkManager;
 import com.hk.pact.dao.affiliate.AffiliateDao;
 import com.hk.pact.dao.catalog.product.ProductCountDao;
 import com.hk.pact.dao.core.AddressDao;
@@ -45,6 +49,8 @@ import com.hk.pact.dao.location.MapIndiaDao;
 import com.hk.pact.dao.user.UserProductHistoryDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.combo.SuperSaverImageService;
+import com.hk.pact.service.subscription.SubscriptionProductService;
+import com.hk.util.ProductReferrerMapper;
 import com.hk.util.SeoManager;
 import com.hk.web.action.core.search.SearchAction;
 import com.hk.web.filter.WebContext;
@@ -52,7 +58,6 @@ import com.hk.web.filter.WebContext;
 @UrlBinding("/product/{productSlug}/{productId}")
 @Component
 public class ProductAction extends BaseAction {
-
     @SuppressWarnings("unused")
     private static Logger logger = Logger.getLogger(ProductAction.class);
 
@@ -73,6 +78,8 @@ public class ProductAction extends BaseAction {
     List<UserReview> userReviews = new ArrayList<UserReview>();
     Long totalReviews = 0L;
     List<Combo> relatedCombos = new ArrayList<Combo>();
+    String renderComboUI = "false";
+    SubscriptionProduct              subscriptionProduct;
     Long productReferrerId;
 
     @Session(key = HealthkartConstants.Cookie.preferredZone)
@@ -101,6 +108,8 @@ public class ProductAction extends BaseAction {
     private ProductService productService;
     @Autowired
     private SuperSaverImageService superSaverImageService;
+    @Autowired
+    private SubscriptionProductService subscriptionProductService;
     @Autowired
     private LinkManager linkManager;
 
@@ -181,6 +190,10 @@ public class ProductAction extends BaseAction {
             if (feed.equals("xml")) {
                 return new ForwardResolution("/pages/productFeedXml.jsp");
             }
+        }
+
+        if(product.isSubscribable()){
+            subscriptionProduct= subscriptionProductService.findByProduct(product);
         }
 
         //User Reviews
@@ -373,9 +386,25 @@ public class ProductAction extends BaseAction {
         this.urlFragment = urlFragment;
     }
 
-    public Long getTotalReviews() {
-        return totalReviews;
-    }
+  public SubscriptionProductService getSubscriptionProductService() {
+    return subscriptionProductService;
+  }
+
+  public void setSubscriptionProductService(SubscriptionProductService subscriptionProductService) {
+    this.subscriptionProductService = subscriptionProductService;
+  }
+
+  public SubscriptionProduct getSubscriptionProduct() {
+    return subscriptionProduct;
+  }
+
+  public void setSubscriptionProduct(SubscriptionProduct subscriptionProduct) {
+    this.subscriptionProduct = subscriptionProduct;
+  }
+
+	public Long getTotalReviews() {
+		return totalReviews;
+	}
 
     public List<Combo> getRelatedCombos() {
         return relatedCombos;

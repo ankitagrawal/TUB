@@ -1,20 +1,20 @@
 package com.hk.admin.impl.dao.inventory;
 
-import com.akube.framework.dao.Page;
-import com.hk.admin.pact.dao.inventory.BrandsToAuditDao;
-import com.hk.domain.inventory.BrandsToAudit;
-import com.hk.domain.user.User;
-import com.hk.domain.warehouse.Warehouse;
-import com.hk.domain.sku.Sku;
-import com.hk.impl.dao.BaseDaoImpl;
-import com.hk.constants.inventory.EnumAuditStatus;
+import java.util.Date;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
-import java.util.List;
+import com.akube.framework.dao.Page;
+import com.hk.admin.pact.dao.inventory.BrandsToAuditDao;
+import com.hk.constants.inventory.EnumAuditStatus;
+import com.hk.domain.inventory.BrandsToAudit;
+import com.hk.domain.user.User;
+import com.hk.domain.warehouse.Warehouse;
+import com.hk.impl.dao.BaseDaoImpl;
 
 @SuppressWarnings ("unchecked")
 @Repository

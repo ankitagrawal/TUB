@@ -218,6 +218,7 @@
                   <c:set var="THBF" value="THBF"/>
                   <c:set var="CO" value="CO"/>
                   <c:set var="COBF" value="COBF"/>
+                  <c:set var="ENG" value="ENG"/>
                   <c:forEach items="${productLineItem.cartLineItemConfig.cartLineItemConfigValues}" var="configValue"
                              varStatus="configCtr">
                     <c:set var="variantConfigOption" value="${configValue.variantConfigOption}"/>
@@ -235,6 +236,7 @@
                       </c:if>
                     </c:if>
                     ${!configCtr.last?',':''}
+                      <c:if test="${variantConfigOption.additionalParam eq ENG}"> &nbsp;<b> +Rs. ${configValue.additionalPrice}</b></c:if>
 
                   </c:forEach>
                 </c:if>
@@ -307,10 +309,19 @@
     <tr>
       <td>Discount ${orderSummary.order.offerInstance.coupon.code}</td>
       <td>
-        <fmt:formatNumber value="${orderSummary.pricingDto.totalDiscount - orderSummary.pricingDto.shippingDiscount}"
+        <fmt:formatNumber value="${orderSummary.pricingDto.totalDiscount - orderSummary.pricingDto.shippingDiscount - orderSummary.pricingDto.subscriptionDiscount}"
                           type="currency" currencySymbol="Rs. "/>
       </td>
     </tr>
+     <c:if test="${orderSummary.pricingDto.subscriptionDiscount >0}">
+      <tr>
+          <td>Subscription Discount </td>
+          <td>
+              <fmt:formatNumber value="${orderSummary.pricingDto.subscriptionDiscount}"
+                                type="currency" currencySymbol="Rs. "/>
+          </td>
+      </tr>
+     </c:if>
     <c:if test="${orderSummary.pricingDto.redeemedRewardPoints > 0}">
       <tr>
         <td>Redeemed Rewards Point</td>

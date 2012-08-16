@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.hk.constants.core.EnumPermission;
 import com.hk.constants.core.EnumRoleHasPermission;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.user.Permission;
 import com.hk.domain.user.Role;
-import org.springframework.stereotype.Component;
 
 /**
  * User: rahul Time: 5 Jan, 2010 3:09:49 PM

@@ -1,9 +1,9 @@
 package com.hk.pact.dao.email;
 
+import java.util.List;
+
 import com.hk.domain.email.EmailRecepient;
 import com.hk.pact.dao.BaseDao;
-
-import java.util.List;
 
 public interface EmailRecepientDao extends BaseDao {
 

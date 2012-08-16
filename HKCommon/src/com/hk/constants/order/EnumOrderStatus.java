@@ -60,6 +60,7 @@ public enum EnumOrderStatus {
 
   public static List<EnumOrderStatus> getStatusForCustomers() {
     return Arrays.asList(EnumOrderStatus.Placed,
+        EnumOrderStatus.Cancelled,
         EnumOrderStatus.InProcess,
         EnumOrderStatus.OnHold,
         EnumOrderStatus.Shipped,

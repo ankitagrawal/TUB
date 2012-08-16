@@ -69,6 +69,11 @@
           every purchase by the person you refer. So you earn, as we grow!!
         </p>
 
+        <p>
+          Please read the <a href="${pageContext.request.contextPath}/pages/affiliate/affiliateTnC.jsp">affiliate terms and conditions</a> for details on
+          usage.
+        </p>
+
         <div style="float:left; font-size: 1.2em; width: 85%; margin-top: 5px; margin-left:20px">
           <s:link beanclass="com.hk.web.action.core.affiliate.AffiliateAction" event="goToSignUp" class="button_orange">Join Now for Free
           </s:link>

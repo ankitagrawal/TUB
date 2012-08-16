@@ -3,10 +3,11 @@ package com.hk.db.seed.courier;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.hk.constants.courier.EnumCourier;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.courier.Courier;
-import org.springframework.stereotype.Component;
 
 @Component
 public class CourierSeedData extends BaseSeedData {
