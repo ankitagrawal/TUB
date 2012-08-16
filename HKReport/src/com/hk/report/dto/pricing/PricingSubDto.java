@@ -28,6 +28,7 @@ public class PricingSubDto {
   private String totalHkDiscount;
   private String totalPromoDiscount;
   private String totalCashback;
+  private String subscriptionDiscount;
 
   private String shippingSubTotal;
   private String shippingDiscount;
@@ -59,6 +60,7 @@ public class PricingSubDto {
     totalHkDiscount = FormatUtils.getCurrencyFormat(pricingDto.getTotalHkProductsDiscount() + pricingDto.getTotalHkPrepaidServiceDiscount() + pricingDto.getPostpaidServiceDiscount());
     totalPromoDiscount = FormatUtils.getCurrencyFormat(pricingDto.getTotalPromoDiscount());
     totalCashback = FormatUtils.getCurrencyFormat(pricingDto.getTotalCashback());
+    subscriptionDiscount = FormatUtils.getCurrencyFormat(pricingDto.getSubscriptionDiscount());
 
     shippingSubTotal = FormatUtils.getCurrencyFormat(pricingDto.getShippingSubTotal());
     shippingDiscount = FormatUtils.getCurrencyFormat(pricingDto.getShippingDiscount());
@@ -174,5 +176,13 @@ public class PricingSubDto {
 
   public void setTotalCashback(String totalCashback) {
     this.totalCashback = totalCashback;
+  }
+
+  public String getSubscriptionDiscount() {
+    return subscriptionDiscount;
+  }
+
+  public void setSubscriptionDiscount(String subscriptionDiscount) {
+    this.subscriptionDiscount = subscriptionDiscount;
   }
 }

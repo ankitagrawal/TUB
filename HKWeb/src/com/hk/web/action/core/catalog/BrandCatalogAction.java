@@ -31,13 +31,13 @@ import com.hk.domain.content.SeoData;
 import com.hk.dto.menu.MenuNode;
 import com.hk.helper.MenuHelper;
 import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
+import com.hk.manager.LinkManager;
 import com.hk.manager.SolrManager;
 import com.hk.manager.UserManager;
-import com.hk.manager.LinkManager;
 import com.hk.pact.dao.catalog.product.ProductDao;
 import com.hk.pact.dao.user.UserDao;
-import com.hk.util.SeoManager;
 import com.hk.util.ProductReferrerMapper;
+import com.hk.util.SeoManager;
 
 @UrlBinding("/brand/{topLevelCategory}/{brand}")
 @Component

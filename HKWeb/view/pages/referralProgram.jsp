@@ -35,7 +35,7 @@
       }
     </style>
   </s:layout-component>
-  <s:layout-component name="heading">Referral Program</s:layout-component>
+  <s:layout-component name="heading">100/100 Referral Program!</s:layout-component>
   <s:layout-component name="lhsContent">
     <jsp:include page="myaccount-nav.jsp"/>
   </s:layout-component>
@@ -44,11 +44,7 @@
       <div class="jqmWindow" id="referralTerms"></div>
     </s:layout-component>
 
-    <h2>
-      100/100 Referral Program!
-    </h2>
-
-    <p style="text-align:right;">
+    <p style="text-align:left;">
       Referral Program |
       <s:link beanclass="com.hk.web.action.core.referral.ReferralManagerAction">My Referrals</s:link> |
       
@@ -56,7 +52,7 @@
     </p>
     <br/>
 
-    <h2>How it works?</h2>
+    <h4>How it works?</h4>
 
     <div class="">
       <p class="lrg">
@@ -69,10 +65,11 @@
     <br>
 
 
-    <h2>How to refer?</h2>
+    <h4>How to refer?</h4>
     <ul class="instr">
       <li>
         <strong>1. Facebook : </strong> Publish your referral link on Facebook wall.
+          <br/>
         <table cellpadding="0" cellspacing="0">
 
           <tr>
@@ -93,6 +90,7 @@
       </li>
 
       <li>
+          <br/>
         <strong>2. Email : </strong>
         <table cellpadding="0" cellspacing="0">
           <tr>
@@ -105,7 +103,7 @@
                     <s:hidden name="senderEmail"/>
                     <li>
                       <label><strong>Your friends' email addresses</strong></label><br />
-                        <span class="small">(Separate emails by a comma. Maximum 50 allowed at a time.)</span>
+                        <span >(Separate emails by a comma. Maximum 50 allowed at a time.)</span>
 
                       <div class="text_input_grouped">
                         <s:textarea rows="" cols="50" name="recipientEmails" id="emails"></s:textarea>

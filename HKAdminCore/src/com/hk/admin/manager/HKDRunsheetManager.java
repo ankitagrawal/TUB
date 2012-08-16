@@ -1,26 +1,34 @@
 package com.hk.admin.manager;
 
-import com.hk.domain.order.ShippingOrder;
-import com.hk.constants.courier.CourierConstants;
-import com.hk.pact.service.store.StoreService;
-import com.hk.admin.util.BarcodeGenerator;
 
-import java.io.*;
-import java.util.List;
-import java.util.Date;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import java.util.Date;
+import java.util.List;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.Picture;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.util.IOUtils;
-import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
-import net.sourceforge.stripes.action.Resolution;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import org.springframework.stereotype.Component;
+import com.hk.admin.util.BarcodeGenerator;
+import com.hk.constants.courier.CourierConstants;
+import com.hk.domain.order.ShippingOrder;
+import com.hk.pact.service.store.StoreService;
 
 
 @SuppressWarnings("unchecked")

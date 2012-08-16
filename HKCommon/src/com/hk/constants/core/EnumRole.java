@@ -1,9 +1,9 @@
 package com.hk.constants.core;
 
-import com.hk.domain.user.Role;
-
 import java.util.Arrays;
 import java.util.List;
+
+import com.hk.domain.user.Role;
 
 public enum EnumRole {
 

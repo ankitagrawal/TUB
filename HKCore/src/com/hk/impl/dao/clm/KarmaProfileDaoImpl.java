@@ -1,11 +1,12 @@
 package com.hk.impl.dao.clm;
 
-import com.hk.pact.dao.clm.KarmaProfileDao;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.hk.domain.clm.KarmaProfile;
 import com.hk.domain.user.User;
 import com.hk.impl.dao.BaseDaoImpl;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.stereotype.Repository;
+import com.hk.pact.dao.clm.KarmaProfileDao;
 
 /**
  * Created by IntelliJ IDEA.

@@ -1,19 +1,18 @@
 package com.hk.rest.impl.service;
 
-import com.hk.rest.pact.service.DemandForecastService;
-import com.hk.domain.warehouse.DemandForecast;
-
-import com.hk.pact.dao.inventory.DemandForecastDao;
-
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Collection;
-import java.util.ArrayList;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.hk.domain.warehouse.DemandForecast;
+import com.hk.pact.dao.inventory.DemandForecastDao;
+import com.hk.rest.pact.service.DemandForecastService;
 
 /**
  * Created by IntelliJ IDEA. User: Neha Date: Jul 16, 2012 Time: 1:40:58 PM To change this template use File | Settings |

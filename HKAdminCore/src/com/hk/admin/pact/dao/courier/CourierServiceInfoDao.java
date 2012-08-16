@@ -1,12 +1,12 @@
 package com.hk.admin.pact.dao.courier;
 
+import java.util.List;
+
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.BaseDao;
-
-import java.util.List;
 
 public interface CourierServiceInfoDao extends BaseDao {
 

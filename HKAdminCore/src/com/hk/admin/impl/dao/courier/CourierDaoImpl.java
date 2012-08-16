@@ -2,13 +2,11 @@ package com.hk.admin.impl.dao.courier;
 
 import java.util.List;
 
-import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.hk.admin.pact.dao.courier.CourierDao;
-import com.hk.constants.courier.EnumCourier;
 import com.hk.domain.courier.Courier;
 import com.hk.impl.dao.BaseDaoImpl;
 

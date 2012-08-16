@@ -19,6 +19,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.Supplier;
@@ -36,243 +37,249 @@ import com.hk.domain.warehouse.Warehouse;
 public class PurchaseOrder implements java.io.Serializable {
 
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "id", unique = true, nullable = false)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", unique = true, nullable = false)
+    private Long id;
 
-  @Temporal(TemporalType.TIMESTAMP)
-  @Column(name = "create_date", nullable = false, length = 19)
-  private Date createDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "create_date", nullable = false, length = 19)
+    private Date createDate;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "purchase_order_status_id", nullable = false)
-  private PurchaseOrderStatus purchaseOrderStatus;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "purchase_order_status_id", nullable = false)
+    private PurchaseOrderStatus purchaseOrderStatus;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "supplier_id", nullable = false)
-  private Supplier supplier;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "supplier_id", nullable = false)
+    private Supplier supplier;
 
-  @Temporal(TemporalType.TIMESTAMP)
-  @Column(name = "invoice_date", length = 19)
-  private Date invoiceDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "invoice_date", length = 19)
+    private Date invoiceDate;
 
-  @Column(name = "invoice_number")
-  private String invoiceNumber;
+    @Column(name = "invoice_number")
+    private String invoiceNumber;
 
-  @Temporal(TemporalType.TIMESTAMP)
-  @Column(name = "po_date", length = 19)
-  private Date poDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "po_date", length = 19)
+    private Date poDate;
 
-  @Column(name = "po_number")
-  private String poNumber;
+    @Column(name = "po_number")
+    private String poNumber;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "created_by", nullable = false)
-  private User createdBy;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "created_by", nullable = false)
+    private User createdBy;
 
-  @Temporal(TemporalType.TIMESTAMP)
-  @Column(name = "update_date", nullable = false, length = 19)
-  private Date updateDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "update_date", nullable = false, length = 19)
+    private Date updateDate;
 
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "purchaseOrder")
-  private List<PoLineItem> poLineItems = new ArrayList<PoLineItem>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "purchaseOrder")
+    private List<PoLineItem> poLineItems = new ArrayList<PoLineItem>();
 
-  @Column(name = "payable", precision = 8)
-  private Double payable;
+    @Column(name = "payable", precision = 8)
+    private Double payable;
 
-  @Column(name = "adv_payment", precision = 8)
-  private Double advPayment;
+    @Column(name = "adv_payment", precision = 8)
+    private Double advPayment;
 
-  @Column(name = "payment_details", length = 100)
-  private String paymentDetails;
+    @Column(name = "payment_details", length = 100)
+    private String paymentDetails;
 
-  @Column(name = "reconciled")
-  private Boolean reconciled;
+    @Column(name = "reconciled")
+    private Boolean reconciled;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "approved_by")
-  private User approvedBy;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "approved_by")
+    private User approvedBy;
 
-  @Temporal(TemporalType.TIMESTAMP)
-  @Column(name = "est_del_date", length = 19)
-  private Date estDelDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "est_del_date", length = 19)
+    private Date estDelDate;
 
-  @Temporal(TemporalType.TIMESTAMP)
-  @Column(name = "est_payment_date", length = 19)
-  private Date estPaymentDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "est_payment_date", length = 19)
+    private Date estPaymentDate;
 
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "purchaseOrder")
-  private List<GoodsReceivedNote> goodsReceivedNotes = new ArrayList<GoodsReceivedNote>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "purchaseOrder")
+    private List<GoodsReceivedNote> goodsReceivedNotes = new ArrayList<GoodsReceivedNote>();
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "warehouse_id")
-  private Warehouse warehouse;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "warehouse_id")
+    private Warehouse warehouse;
 
+    @Transient
+    private int noOfSku;
 
-  public Long getId() {
-    return id;
-  }
+    public Long getId() {
+        return id;
+    }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-  public Date getCreateDate() {
-    return createDate;
-  }
+    public Date getCreateDate() {
+        return createDate;
+    }
 
-  public void setCreateDate(Date createDate) {
-    this.createDate = createDate;
-  }
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
 
-  public PurchaseOrderStatus getPurchaseOrderStatus() {
-    return purchaseOrderStatus;
-  }
+    public PurchaseOrderStatus getPurchaseOrderStatus() {
+        return purchaseOrderStatus;
+    }
 
-  public void setPurchaseOrderStatus(PurchaseOrderStatus purchaseOrderStatus) {
-    this.purchaseOrderStatus = purchaseOrderStatus;
-  }
+    public void setPurchaseOrderStatus(PurchaseOrderStatus purchaseOrderStatus) {
+        this.purchaseOrderStatus = purchaseOrderStatus;
+    }
 
-  public Supplier getSupplier() {
-    return supplier;
-  }
+    public Supplier getSupplier() {
+        return supplier;
+    }
 
-  public void setSupplier(Supplier supplier) {
-    this.supplier = supplier;
-  }
+    public void setSupplier(Supplier supplier) {
+        this.supplier = supplier;
+    }
 
-  public Date getPoDate() {
-    return poDate;
-  }
+    public Date getPoDate() {
+        return poDate;
+    }
 
-  public void setPoDate(Date poDate) {
-    this.poDate = poDate;
-  }
+    public void setPoDate(Date poDate) {
+        this.poDate = poDate;
+    }
 
-  public String getPoNumber() {
-    return poNumber;
-  }
+    public String getPoNumber() {
+        return poNumber;
+    }
 
-  public void setPoNumber(String poNumber) {
-    this.poNumber = poNumber;
-  }
+    public void setPoNumber(String poNumber) {
+        this.poNumber = poNumber;
+    }
 
-  public Date getInvoiceDate() {
-    return invoiceDate;
-  }
+    public Date getInvoiceDate() {
+        return invoiceDate;
+    }
 
-  public void setInvoiceDate(Date invoiceDate) {
-    this.invoiceDate = invoiceDate;
-  }
+    public void setInvoiceDate(Date invoiceDate) {
+        this.invoiceDate = invoiceDate;
+    }
 
-  public String getInvoiceNumber() {
-    return invoiceNumber;
-  }
+    public String getInvoiceNumber() {
+        return invoiceNumber;
+    }
 
-  public void setInvoiceNumber(String invoiceNumber) {
-    this.invoiceNumber = invoiceNumber;
-  }
+    public void setInvoiceNumber(String invoiceNumber) {
+        this.invoiceNumber = invoiceNumber;
+    }
 
-  public User getCreatedBy() {
-    return createdBy;
-  }
+    public User getCreatedBy() {
+        return createdBy;
+    }
 
-  public void setCreatedBy(User createdBy) {
-    this.createdBy = createdBy;
-  }
+    public void setCreatedBy(User createdBy) {
+        this.createdBy = createdBy;
+    }
 
-  public Date getUpdateDate() {
-    return updateDate;
-  }
+    public Date getUpdateDate() {
+        return updateDate;
+    }
 
-  public void setUpdateDate(Date updateDate) {
-    this.updateDate = updateDate;
-  }
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
 
-  public List<PoLineItem> getPoLineItems() {
-    return poLineItems;
-  }
+    public List<PoLineItem> getPoLineItems() {
+        return poLineItems;
+    }
 
-  public void setPoLineItems(List<PoLineItem> poLineItems) {
-    this.poLineItems = poLineItems;
-  }
+    public void setPoLineItems(List<PoLineItem> poLineItems) {
+        this.poLineItems = poLineItems;
+    }
 
-  public Double getPayable() {
-    return payable;
-  }
+    public Double getPayable() {
+        return payable;
+    }
 
-  public void setPayable(Double payable) {
-    this.payable = payable;
-  }
+    public void setPayable(Double payable) {
+        this.payable = payable;
+    }
 
-  public Double getAdvPayment() {
-    return advPayment;
-  }
+    public Double getAdvPayment() {
+        return advPayment;
+    }
 
-  public void setAdvPayment(Double advPayment) {
-    this.advPayment = advPayment;
-  }
+    public void setAdvPayment(Double advPayment) {
+        this.advPayment = advPayment;
+    }
 
-  public String getPaymentDetails() {
-    return paymentDetails;
-  }
+    public String getPaymentDetails() {
+        return paymentDetails;
+    }
 
-  public void setPaymentDetails(String paymentDetails) {
-    this.paymentDetails = paymentDetails;
-  }
+    public void setPaymentDetails(String paymentDetails) {
+        this.paymentDetails = paymentDetails;
+    }
 
-  public Boolean isReconciled() {
-    return reconciled;
-  }
+    public Boolean isReconciled() {
+        return reconciled;
+    }
 
-  public Boolean getReconciled() {
-    return reconciled;
-  }
+    public Boolean getReconciled() {
+        return reconciled;
+    }
 
-  public void setReconciled(Boolean reconciled) {
-    this.reconciled = reconciled;
-  }
+    public void setReconciled(Boolean reconciled) {
+        this.reconciled = reconciled;
+    }
 
-  public User getApprovedBy() {
-    return approvedBy;
-  }
+    public User getApprovedBy() {
+        return approvedBy;
+    }
 
-  public void setApprovedBy(User approvedBy) {
-    this.approvedBy = approvedBy;
-  }
+    public void setApprovedBy(User approvedBy) {
+        this.approvedBy = approvedBy;
+    }
 
-  public Date getEstDelDate() {
-    return estDelDate;
-  }
+    public Date getEstDelDate() {
+        return estDelDate;
+    }
 
-  public void setEstDelDate(Date estDelDate) {
-    this.estDelDate = estDelDate;
-  }
+    public void setEstDelDate(Date estDelDate) {
+        this.estDelDate = estDelDate;
+    }
 
-  public Date getEstPaymentDate() {
-    return estPaymentDate;
-  }
+    public Date getEstPaymentDate() {
+        return estPaymentDate;
+    }
 
-  public void setEstPaymentDate(Date estPaymentDate) {
-    this.estPaymentDate = estPaymentDate;
-  }
+    public void setEstPaymentDate(Date estPaymentDate) {
+        this.estPaymentDate = estPaymentDate;
+    }
 
-  public List<GoodsReceivedNote> getGoodsReceivedNotes() {
-    return goodsReceivedNotes;
-  }
+    public List<GoodsReceivedNote> getGoodsReceivedNotes() {
+        return goodsReceivedNotes;
+    }
 
-  public void setGoodsReceivedNotes(List<GoodsReceivedNote> goodsReceivedNotes) {
-    this.goodsReceivedNotes = goodsReceivedNotes;
-  }
+    public void setGoodsReceivedNotes(List<GoodsReceivedNote> goodsReceivedNotes) {
+        this.goodsReceivedNotes = goodsReceivedNotes;
+    }
 
-  public Warehouse getWarehouse() {
-    return warehouse;
-  }
+    public Warehouse getWarehouse() {
+        return warehouse;
+    }
 
-  public void setWarehouse(Warehouse warehouse) {
-    this.warehouse = warehouse;
-  }
+    public void setWarehouse(Warehouse warehouse) {
+        this.warehouse = warehouse;
+    }
+
+    public int getNoOfSku() {
+        return this.poLineItems != null ? this.poLineItems.size() : 0;
+    }
 }
 
 

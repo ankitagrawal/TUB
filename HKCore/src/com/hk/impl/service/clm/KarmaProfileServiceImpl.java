@@ -3,10 +3,6 @@ package com.hk.impl.service.clm;
 import java.util.List;
 import java.util.Set;
 
-import com.hk.constants.order.EnumOrderStatus;
-import com.hk.domain.catalog.category.Category;
-import com.hk.domain.clm.CategoryKarmaProfile;
-import com.hk.pact.dao.clm.CategoryKarmaProfileDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,17 +10,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hk.constants.clm.EnumCLMMargin;
-import com.hk.constants.clm.CLMConstants;
 import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.constants.order.EnumOrderStatus;
 import com.hk.core.fliter.CartLineItemFilter;
+import com.hk.domain.catalog.category.Category;
+import com.hk.domain.clm.CategoryKarmaProfile;
 import com.hk.domain.clm.KarmaProfile;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
+import com.hk.pact.dao.clm.CategoryKarmaProfileDao;
 import com.hk.pact.dao.clm.KarmaProfileDao;
 import com.hk.pact.service.clm.KarmaProfileService;
 import com.hk.pact.service.inventory.SkuService;
-import com.hk.pact.service.order.OrderService;
 
 /**
  * Created by IntelliJ IDEA. User: Pradeep Date: May 29, 2012 Time: 3:57:32 PM To change this template use File |
@@ -38,8 +36,6 @@ public class KarmaProfileServiceImpl implements KarmaProfileService {
     private KarmaProfileDao karmaProfileDao;
     @Autowired
     private CategoryKarmaProfileDao categoryKarmaProfileDao;
-    @Autowired
-    private OrderService    orderService;
     @Autowired
     private SkuService      skuService;
 
@@ -101,14 +97,6 @@ public class KarmaProfileServiceImpl implements KarmaProfileService {
         return karmaProfile;
     }
 
-   /* private void setKarmaInOrderForUser(Order order, User user) {
-        KarmaProfile karmaProfile = this.findByUser(user);
-        if (karmaProfile != null) {
-            order.setScore(new Long(karmaProfile.getKarmaPoints()));
-            getOrderService().save(order);
-        }
-    }*/
-
     private int getKarmaPoints(Order order) {
         Double points = 0.0;
         try {
@@ -151,14 +139,6 @@ public class KarmaProfileServiceImpl implements KarmaProfileService {
 
     public void setCategoryKarmaProfileDao(CategoryKarmaProfileDao categoryKarmaProfileDao) {
         this.categoryKarmaProfileDao = categoryKarmaProfileDao;
-    }
-
-    public OrderService getOrderService() {
-        return orderService;
-    }
-
-    public void setOrderService(OrderService orderService) {
-        this.orderService = orderService;
     }
 
     public SkuService getSkuService() {

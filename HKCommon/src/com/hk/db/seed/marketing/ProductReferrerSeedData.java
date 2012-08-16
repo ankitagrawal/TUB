@@ -1,13 +1,14 @@
 package com.hk.db.seed.marketing;
 
 
-import com.hk.domain.marketing.ProductReferrer;
-import com.hk.db.seed.BaseSeedData;
-import com.hk.constants.marketing.EnumProductReferrer;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.ArrayList;
+import com.hk.constants.marketing.EnumProductReferrer;
+import com.hk.db.seed.BaseSeedData;
+import com.hk.domain.marketing.ProductReferrer;
 
 /**
  * Generated

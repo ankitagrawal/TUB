@@ -4,10 +4,11 @@ package com.hk.db.seed.reward;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.hk.constants.review.EnumReviewStatus;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.review.ReviewStatus;
-import org.springframework.stereotype.Component;
 
 
 @Component

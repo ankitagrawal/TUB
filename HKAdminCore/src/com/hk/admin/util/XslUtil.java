@@ -1,21 +1,12 @@
 package com.hk.admin.util;
 
-import org.springframework.stereotype.Component;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Sheet;
-
-import java.util.Date;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.io.OutputStream;
-import java.io.InputStream;
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
+import java.util.Date;
 
-import net.sourceforge.stripes.action.Resolution;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,38 +15,40 @@ import javax.servlet.http.HttpServletResponse;
  * Time: 3:15:56 PM
  * To change this template use File | Settings | File Templates.
  */
- @Component
+@Component
 public class XslUtil {
 
-   public static Date getDate(String value) {
-    Date date = null;
-    try {
-      SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM");
-      date = (Date) formatter.parse(value);
-    } catch (Exception e) {
+	private static Logger logger = LoggerFactory.getLogger(XslUtil.class);
 
-    }
-    return date;
-  }
+	public static Date getDate(String value) {
+		Date date = null;
+		try {
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM");
+			date = (Date) formatter.parse(value);
+		} catch (ParseException pe) {
+			logger.error("trying to format :" + value + " to format yyyy/MM");
+		}
+		return date;
+	}
 
-  public static Double getDouble(String value) {
-    Double valueInDouble = null;
-    try {
-      valueInDouble = Double.parseDouble(value);
-    } catch (Exception e) {
+	public static Double getDouble(String value) {
+		Double valueInDouble = null;
+		try {
+			valueInDouble = Double.parseDouble(value);
+		} catch (NumberFormatException nfe) {
+			logger.error("cannot parse to double::" + value);
+		}
+		return valueInDouble;
+	}
 
-    }
-    return valueInDouble;
-  }
-
-  public static Long getLong(String value) {
-    Long valueInLong = null;
-    try {
-      valueInLong = Long.parseLong(value.replace(".0", ""));
-    } catch (Exception e) {
-
-    }
-    return valueInLong;
-  }
+	public static Long getLong(String value) {
+		Long valueInLong = null;
+		try {
+			valueInLong = Long.parseLong(value.replace(".0", ""));
+		} catch (NumberFormatException nfe) {
+			logger.error("cannot parse to long::" + value);
+		}
+		return valueInLong;
+	}
 
 }

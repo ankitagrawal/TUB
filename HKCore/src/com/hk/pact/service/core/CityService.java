@@ -1,8 +1,8 @@
 package com.hk.pact.service.core;
 
-import com.hk.domain.core.City;
-
 import java.util.List;
+
+import com.hk.domain.core.City;
 
 /**
  * Created by IntelliJ IDEA.

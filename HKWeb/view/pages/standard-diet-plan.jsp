@@ -1,3 +1,4 @@
+<%--
 <%@ page import="mhc.pojo.HCUser" %>
 <%@ page import="mhc.pojo.DietPlanItem" %>
 <%@ page import="mhc.servlet.action.DietFrameworkAction" %>
@@ -368,4 +369,4 @@
   .item_suggestion li.selected a {
     background: #DDDDDD;
   }
-</style>
+</style>--%>

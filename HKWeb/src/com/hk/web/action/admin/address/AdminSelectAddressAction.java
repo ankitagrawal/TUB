@@ -9,8 +9,6 @@ import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.Validate;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
@@ -29,7 +27,7 @@ import com.hk.web.action.error.AdminPermissionAction;
 @Component
 public class AdminSelectAddressAction extends BaseAction {
 
-    private static Logger logger = LoggerFactory.getLogger(AdminSelectAddressAction.class);
+    /*private static Logger logger = LoggerFactory.getLogger(AdminSelectAddressAction.class);*/
 
     @Validate(required = true)
     private Order         order;

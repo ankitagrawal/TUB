@@ -5,7 +5,6 @@ import java.util.List;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.Criteria;
 import org.springframework.stereotype.Repository;
 
 import com.akube.framework.dao.Page;
@@ -36,8 +35,6 @@ public class SuperSaverImageDaoImpl extends BaseDaoImpl implements SuperSaverIma
 
     public List<SuperSaverImage> getSuperSaverImages(Product product, Boolean getVisible, Boolean getMainImage, Boolean getDeleted) {
         DetachedCriteria criteria = DetachedCriteria.forClass(SuperSaverImage.class);
-        DetachedCriteria productCriteria = criteria.createCriteria("product");
-        productCriteria.add(Restrictions.eq("deleted", Boolean.FALSE));
 
         if (!getDeleted) {
             criteria.add(Restrictions.eq("deleted", Boolean.FALSE));
@@ -45,6 +42,8 @@ public class SuperSaverImageDaoImpl extends BaseDaoImpl implements SuperSaverIma
 
         if (product != null) {
             criteria.add(Restrictions.eq("product", product));
+            DetachedCriteria productCriteria = criteria.createCriteria("product");
+            productCriteria.add(Restrictions.eq("deleted", Boolean.FALSE));
         } else {
             criteria.add(Restrictions.isNull("product"));
         }

@@ -1,7 +1,5 @@
 package com.hk.manager.payment;
 
-import java.text.DecimalFormat;
-import java.util.Arrays;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
@@ -13,14 +11,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.akube.framework.util.BaseUtils;
-import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.core.Keys;
-import com.hk.constants.discount.EnumRewardPointMode;
-import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.domain.core.PaymentMode;
-import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.payment.Payment;
@@ -35,11 +29,6 @@ import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.payment.PaymentService;
 import com.hk.util.TokenUtils;
-import com.hk.web.filter.WebContext;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Cookie;
 
 /**
  * Author: Kani Date: Jan 3, 2009

@@ -93,7 +93,7 @@
             <s:label class="rowLabel" name="DOB"/>
             <s:text id="birthDate" class="date_input"
                     value="<%=FormatUtils.getFormattedDateForUserEnd(maa.getUser().getBirthDate())%>"
-                    name="user.birthDate"/>
+                    name="user.birthDate" style="width:100px;"/>
           </div>
         </div>
 

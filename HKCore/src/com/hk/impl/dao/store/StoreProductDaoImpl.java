@@ -1,14 +1,14 @@
 package com.hk.impl.dao.store;
 
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.store.Store;
 import com.hk.domain.store.StoreProduct;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.store.StoreProductDao;
-import org.springframework.stereotype.Repository;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
