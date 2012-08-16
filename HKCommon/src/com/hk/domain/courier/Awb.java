@@ -2,18 +2,7 @@ package com.hk.domain.courier;
 // Generated Aug 15, 2012 1:02:45 PM by Hibernate Tools 3.2.4.CR1
 
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-
-import static javax.persistence.GenerationType.IDENTITY;
-
+import javax.persistence.*;
 import com.hk.domain.warehouse.Warehouse;
 
 /**
@@ -25,7 +14,7 @@ public class Awb implements java.io.Serializable {
 
 
     @Id
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
 
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
@@ -120,6 +109,19 @@ public class Awb implements java.io.Serializable {
 
     public void setCod(boolean cod) {
         this.cod = cod;
+    }
+
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Awb)) {
+            throw new ClassCastException("object compared are not of same Type");
+
+        }
+        Awb awb = (Awb) obj;
+        if (this.awbNumber.equals(awb.getAwbNumber()) && this.courier.equals(awb.getCourier())) {
+            return true;
+        } else
+            return false;
+
     }
 }
 
