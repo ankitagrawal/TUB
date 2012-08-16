@@ -179,68 +179,72 @@
 		</ul>
 	</div>
 </div>
-<div class='' style="margin-top:10px;border:1px solid #CCC">
-	<div class="">
-		<h5 class='heading1' style="background-color:#DDD;padding:3px;">
-			Filter By
-			<c:if test="${!empty ca.filterOptions || (filteredPriceRange.minPrice != priceRange.minPrice) || (filteredPriceRange.maxPrice != priceRange.maxPrice)}">
-				<a class="removeFilters"
-				   style="cursor:pointer;float:right;margin-right:10px;color:red;font-size:.9em;font-weight:bold;">(Clear
-				                                                                                                        All)</a>
-			</c:if>
-		</h5>
-	</div>
-	<c:set var="ctr" value="0"/>
-	<s:form beanclass="com.hk.web.action.core.catalog.category.CatalogAction" class="filterCatalogForm">
-		<s:param name="rootCategorySlug" value="${ca.rootCategorySlug}"/>
-		<s:param name="childCategorySlug" value="${ca.childCategorySlug}"/>
-		<c:if test="${ca.secondaryChildCategorySlug != null}">
-			<s:param name="secondaryChildCategorySlug" value="${ca.secondaryChildCategorySlug}"/>
-		</c:if>
-		<c:if test="${ca.tertiaryChildCategorySlug != null}">
-			<s:param name="tertiaryChildCategorySlug" value="${ca.tertiaryChildCategorySlug}"/>
-		</c:if>
-		<s:hidden name="minPrice" id="minPrice" value="${filteredPriceRange.minPrice}"/>
-		<s:hidden name="maxPrice" id="maxPrice" value="${filteredPriceRange.maxPrice}"/>
-		<div class="separator" style="margin-top:10px;">
-			<h5 class='heading1' style="padding-left:5px;">
-				PRICE <label id="amount" style="font-weight:normal; font-size:.9em;"></label>
+
+<c:if test="${filteredPriceRange != null || !empty filterMap}">
+	<div class='' style="margin-top:10px;border:1px solid #CCC">
+		<div class="">
+			<h5 class='heading1' style="background-color:#DDD;padding:3px;">
+				Filter By
+				<c:if test="${!empty ca.filterOptions || (filteredPriceRange.minPrice != priceRange.minPrice) || (filteredPriceRange.maxPrice != priceRange.maxPrice)}">
+					<a class="removeFilters"
+					   style="cursor:pointer;float:right;margin-right:10px;color:red;font-size:.9em;font-weight:bold;">(Clear
+					                                                                                                   All)</a>
+				</c:if>
 			</h5>
-
-			<div class="demo" style="padding:15px;">
-				<%--<div style="padding-bottom:10px;">
-					<label id="amount" style="font-weight:bold;"></label>
-				</div>--%>
-				<div id="slider-range" style="background-color:#f6931f"></div>
-			</div>
 		</div>
-		<c:forEach items="${filterMap}" var="filter">
-			<div class="">
-				<h5 class='heading1' style="padding-left:5px;">
-						${filter.key}
-				</h5>
-				<ul style="padding-left:10px;">
-					<c:forEach items="${filter.value}" var="option">
-						<li>
-							<c:choose>
-								<c:when test="${hk:collectionContains(ca.filterOptions, option.id)}">
-									<input type="checkbox" class="filterOption" value="${option.id}"
-									       checked="checked"/>
-								</c:when>
-								<c:otherwise>
-									<input type="checkbox" class="filterOption" value="${option.id}"/>
-								</c:otherwise>
-							</c:choose>
-								${option.value} (${option.qty})
-						</li>
-						<c:set var="ctr2" value="${ctr}"/>
-						<c:set var="ctr" value="${ctr2+1}"/>
-					</c:forEach>
-				</ul>
-			</div>
-		</c:forEach>
-	</s:form>
-</div>
+		<c:set var="ctr" value="0"/>
+		<s:form beanclass="com.hk.web.action.core.catalog.category.CatalogAction" class="filterCatalogForm">
+			<s:param name="rootCategorySlug" value="${ca.rootCategorySlug}"/>
+			<s:param name="childCategorySlug" value="${ca.childCategorySlug}"/>
+			<c:if test="${ca.secondaryChildCategorySlug != null}">
+				<s:param name="secondaryChildCategorySlug" value="${ca.secondaryChildCategorySlug}"/>
+			</c:if>
+			<c:if test="${ca.tertiaryChildCategorySlug != null}">
+				<s:param name="tertiaryChildCategorySlug" value="${ca.tertiaryChildCategorySlug}"/>
+			</c:if>
+			<s:hidden name="minPrice" id="minPrice" value="${filteredPriceRange.minPrice}"/>
+			<s:hidden name="maxPrice" id="maxPrice" value="${filteredPriceRange.maxPrice}"/>
+			<c:if test="${filteredPriceRange != null}">
+				<div class="separator" style="margin-top:10px;">
+					<h5 class='heading1' style="padding-left:5px;">
+						PRICE <label id="amount" style="font-weight:normal; font-size:.9em;"></label>
+					</h5>
 
+					<div class="demo" style="padding:15px;">
+							<%--<div style="padding-bottom:10px;">
+												  <label id="amount" style="font-weight:bold;"></label>
+											  </div>--%>
+						<div id="slider-range" style="background-color:#f6931f"></div>
+					</div>
+				</div>
+			</c:if>
+			<c:forEach items="${filterMap}" var="filter">
+				<div class="">
+					<h5 class='heading1' style="padding-left:5px;">
+							${filter.key}
+					</h5>
+					<ul style="padding-left:10px;">
+						<c:forEach items="${filter.value}" var="option">
+							<li>
+								<c:choose>
+									<c:when test="${hk:collectionContains(ca.filterOptions, option.id)}">
+										<input type="checkbox" class="filterOption" value="${option.id}"
+										       checked="checked"/>
+									</c:when>
+									<c:otherwise>
+										<input type="checkbox" class="filterOption" value="${option.id}"/>
+									</c:otherwise>
+								</c:choose>
+									${option.value} (${option.qty})
+							</li>
+							<c:set var="ctr2" value="${ctr}"/>
+							<c:set var="ctr" value="${ctr2+1}"/>
+						</c:forEach>
+					</ul>
+				</div>
+			</c:forEach>
+		</s:form>
+	</div>
+</c:if>
 
 </s:layout-definition>

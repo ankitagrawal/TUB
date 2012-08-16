@@ -27,20 +27,22 @@ public class CatalogFilter {
 	public Map<String, List<ProductOptionDto>> getFilterOptions(List<String> categoryNames) {
 		filterMap = new HashMap<String, List<ProductOptionDto>>();
 		List<ProductOptionDto> optionDtoList = categoryService.getFilterOptions(categoryNames);
-		for (ProductOptionDto productOptionDto : optionDtoList) {
-			String option = productOptionDto.getName().toUpperCase();
-			if (filterMap.containsKey(option)) {
-				filterOptionDtoSet = filterMap.get(option);
-			} else {
-				filterOptionDtoSet = new ArrayList<ProductOptionDto>(0);
+		if (optionDtoList != null) {
+			for (ProductOptionDto productOptionDto : optionDtoList) {
+				String option = productOptionDto.getName().toUpperCase();
+				if (filterMap.containsKey(option)) {
+					filterOptionDtoSet = filterMap.get(option);
+				} else {
+					filterOptionDtoSet = new ArrayList<ProductOptionDto>(0);
+				}
+				filterOptionDtoSet.add(productOptionDto);
+				filterMap.put(option, filterOptionDtoSet);
 			}
-			filterOptionDtoSet.add(productOptionDto);
-			filterMap.put(option, filterOptionDtoSet);
 		}
 		return filterMap;
 	}
 
-	public PriceRangeDto getPriceRange(List<String> categoryNames){
+	public PriceRangeDto getPriceRange(List<String> categoryNames) {
 		PriceRangeDto priceRange = categoryService.getPriceRange(categoryNames);
 		return priceRange;
 	}
