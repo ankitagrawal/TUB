@@ -30,7 +30,6 @@ public class HKDConsignmentAction extends BaseAction{
     private static       Logger               logger                   = LoggerFactory.getLogger(HKDConsignmentAction.class);
     private              Hub                  hub;
     private              List<String>         trackingIdList           = new ArrayList<String>();
-    private              int                  noOfConsignmentsCreated  = 0;
     private              String               cnnNumber                = null;
     private              String               paymentMode              = null;
     private              Double               amount                   = null;
@@ -98,7 +97,7 @@ public class HKDConsignmentAction extends BaseAction{
                 continue;
             }
         }
-            addRedirectAlertMessage(new SimpleMessage(noOfConsignmentsCreated + HKDeliveryConstants.CONSIGNMNT_CREATION_SUCCESS + duplicateAwbString));
+            addRedirectAlertMessage(new SimpleMessage(consignmentCreatedCount + HKDeliveryConstants.CONSIGNMNT_CREATION_SUCCESS + duplicateAwbString));
         } else {
             addRedirectAlertMessage(new SimpleMessage(HKDeliveryConstants.CONSIGNMNT_CREATION_FAILURE));
         }

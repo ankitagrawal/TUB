@@ -77,7 +77,8 @@ public class Runsheet implements java.io.Serializable {
     @Column(name = "remarks", length = 16777215)
     private String remarks;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "runsheet")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "runsheet_id")
     private Set<Consignment> consignments = new HashSet<Consignment>(0);
 
     public Long getId() {
