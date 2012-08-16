@@ -22,4 +22,6 @@ public interface RunSheetService {
     public boolean isRunsheetClosable(Runsheet runsheet);
 
     public Runsheet markAllConsignmentsAsDelivered(Runsheet runsheet);
+
+    public boolean agentHasOpenRunsheet(User agent);
 }

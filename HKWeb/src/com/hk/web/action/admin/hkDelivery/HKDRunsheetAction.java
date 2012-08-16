@@ -105,24 +105,32 @@ public class HKDRunsheetAction extends BasePaginatedAction {
             runsheet.setConsignments(consignments);
             if(runsheet.getRunsheetStatus().getId().equals(EnumRunsheetStatus.Close.getId()) && runsheetService.isRunsheetClosable(runsheet) == false){
                 addRedirectAlertMessage(new SimpleMessage("Cannot close runsheet with a consignment status out for delivery"));
-                return new ForwardResolution(HKDRunsheetAction.class).addParameter("editRunsheet").addParameter("runsheet", runsheet.getId());
+                return new ForwardResolution(HKDRunsheetAction.class,"editRunsheet").addParameter("runsheet", runsheet.getId());
+            }
+            if(runsheetService.agentHasOpenRunsheet(runsheet.getAgent()) == true){
+                addRedirectAlertMessage(new SimpleMessage(runsheet.getAgent().getName() +" already has an open runsheet"));
+                return new ForwardResolution(HKDRunsheetAction.class, "editRunsheet").addParameter("runsheet", runsheet.getId());
             }
             runsheetService.saveRunSheet(runsheet);
             addRedirectAlertMessage(new SimpleMessage("Runsheet saved"));
-            return new RedirectResolution(HKDRunsheetAction.class).addParameter("editRunsheet").addParameter("runsheet", runsheet.getId());
+            return new RedirectResolution(HKDRunsheetAction.class, "editRunsheet").addParameter("runsheet", runsheet.getId());
         }
         else{
             addRedirectAlertMessage(new SimpleMessage("Runsheet not found."));
         }
-        return new RedirectResolution(HKDRunsheetAction.class).addParameter("editRunsheet").addParameter("runsheet", runsheet.getId());
+        return new RedirectResolution(HKDRunsheetAction.class, "editRunsheet").addParameter("runsheet", runsheet.getId());
     }
 
     public Resolution markAllDelivered(){
         if(runsheet != null){
+            if(runsheetService.agentHasOpenRunsheet(runsheet.getAgent()) == true){
+                addRedirectAlertMessage(new SimpleMessage(runsheet.getAgent().getName() +"already has an open runsheet"));
+                return new ForwardResolution(HKDRunsheetAction.class, "editRunsheet").addParameter("runsheet", runsheet.getId());
+            }
             runsheetService.markAllConsignmentsAsDelivered(runsheet);
             runsheetService.saveRunSheet(runsheet);
         }
-        return new RedirectResolution(HKDRunsheetAction.class).addParameter("editRunsheet").addParameter("runsheet", runsheet.getId());
+        return new RedirectResolution(HKDRunsheetAction.class, "editRunsheet").addParameter("runsheet", runsheet.getId());
     }
 
     public Resolution closeRunsheet(){
@@ -132,7 +140,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
             }
             runsheetService.saveRunSheet(runsheet);
         }
-        return new RedirectResolution(HKDRunsheetAction.class).addParameter("editRunsheet").addParameter("runsheet", runsheet.getId());
+        return new RedirectResolution(HKDRunsheetAction.class, "editRunsheet").addParameter("runsheet", runsheet.getId());
 
     }
    
