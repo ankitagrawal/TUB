@@ -198,7 +198,7 @@ public class PurchaseOrderManager {
             if (poLineItem != null && poLineItem.getCostPrice() != null && poLineItem.getQty() != null) {
                 taxable = poLineItem.getCostPrice() * poLineItem.getQty();
                 if(poLineItem.getMrp() != null) {
-                    marginMrpVsCP = (poLineItem.getMrp() - poLineItem.getCostPrice())/poLineItem.getCostPrice()*100;
+                    marginMrpVsCP = (poLineItem.getMrp() - poLineItem.getCostPrice())/poLineItem.getMrp()*100;
                 }
             }
             if (purchaseOrder.getSupplier() != null && purchaseOrder.getSupplier().getState() != null && productVariant != null && sku.getTax() != null) {

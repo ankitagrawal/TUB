@@ -207,8 +207,8 @@ private SkuService                    skuService;*/
                     /* setCellValue(row, this.getColumnIndex(XslParser.TAX), productVariant.getTax().getName()); */
                     setCellValue(row, this.getColumnIndex(XslConstants.PERCENTAGE_DISCOUNT), productVariant.getDiscountPercent());
                     setCellValue(row, this.getColumnIndex(XslConstants.SHIPPING), productVariant.getShippingBasePrice());
-                    setCellValue(row, this.getColumnIndex(XslConstants.MARGIN_HK_CP), (productVariant.getHkPrice() - productVariant.getCostPrice())/productVariant.getCostPrice() * 100);
-                    setCellValue(row, this.getColumnIndex(XslConstants.MARGIN_MRP_CP), (productVariant.getMarkedPrice() - productVariant.getCostPrice())/productVariant.getCostPrice() * 100);
+                    setCellValue(row, this.getColumnIndex(XslConstants.MARGIN_HK_CP), (productVariant.getHkPrice() - productVariant.getCostPrice())/productVariant.getHkPrice() * 100);
+                    setCellValue(row, this.getColumnIndex(XslConstants.MARGIN_MRP_CP), (productVariant.getMarkedPrice() - productVariant.getCostPrice())/productVariant.getMarkedPrice() * 100);
 
                     setCellValue(row, this.getColumnIndex(XslConstants.AVAILABILITY), productVariant.isOutOfStock() ? "N" : "Y");
                     setCellValue(row, this.getColumnIndex(XslConstants.MANUFACTURER_CODE), "");
