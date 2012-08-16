@@ -5,6 +5,7 @@
 <%@ page import="java.util.Set" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="com.hk.dto.PriceRangeDto" %>
+<%@ page import="java.util.List" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.core.catalog.category.CatalogAction" var="ca"/>
 <s:layout-definition>
@@ -18,7 +19,7 @@
 		if (ca.getTertiaryChildCategorySlug() != null) {
 			category = ca.getTertiaryChildCategorySlug();
 		}
-		Map<String, Set<ProductOptionDto>> filterMap = catalogFilter.getFilterOptions(category);
+		Map<String, List<ProductOptionDto>> filterMap = catalogFilter.getFilterOptions(category);
 		pageContext.setAttribute("filterMap", filterMap);
 
 		PriceRangeDto priceRange = catalogFilter.getPriceRange(category);
