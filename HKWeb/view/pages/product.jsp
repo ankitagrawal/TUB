@@ -13,16 +13,16 @@
 <c:set var="imageMediumSize" value="<%=EnumImageSize.MediumSize%>"/>
 <c:set var="imageSmallSize" value="<%=EnumImageSize.TinySize%>"/>
 <%
-	CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
-	Category eyeGlass = categoryDao.getCategoryByName("eyeglasses");
-	ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
-	pageContext.setAttribute("productService", productService);
-	pageContext.setAttribute("eyeGlass", eyeGlass);
+    CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
+    Category eyeGlass = categoryDao.getCategoryByName("eyeglasses");
+    ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
+    pageContext.setAttribute("productService", productService);
+    pageContext.setAttribute("eyeGlass", eyeGlass);
 
-	boolean isSecure = pageContext.getRequest().isSecure();
-	pageContext.setAttribute("isSecure", isSecure);
-	Category stethoscope = categoryDao.getCategoryByName("stethoscope");
-	pageContext.setAttribute("stethoscope", stethoscope);
+    boolean isSecure = pageContext.getRequest().isSecure();
+    pageContext.setAttribute("isSecure", isSecure);
+    Category stethoscope = categoryDao.getCategoryByName("stethoscope");
+    pageContext.setAttribute("stethoscope", stethoscope);
 %>
 <c:set var="product" value="${pa.product}"/>
 <c:set var="seoData" value="${pa.seoData}"/>
@@ -102,6 +102,10 @@
 			$("#sizeGuide").click(function toggleVM() {
 				$("#frameChart").toggle();
 			});
+			
+			 $("#similarProducts").click(function toggleVM(){
+           		 $("#similarProductsVM").toggle();
+        	});
 
 			//Click and change image
 			$('.color_box').click(function () {
@@ -530,7 +534,34 @@
 		</div>
 	</c:if>
 	<c:if test="${hk:collectionContains(product.categories, eyeGlass)}">
-		<div id="sizeGuide"
+
+			<c:if test="${!empty product.similarProducts}">
+				<div class="content" id="simlarProducts"
+					style="background-color: #DDDDDD; padding: 5px; cursor: pointer; font-weight: bold; text-align: left;">
+				Colors/Sizes for glasses</div>
+				<div id="simlarProductsVM" style="margin-top: 5px;">
+				<table width="900px;" style="margin-left: 10px; margin-right: 10px;">
+					<tr>
+						<c:forEach items="${product.similarProducts}" var="similarProduct">
+							<td>
+							<div class="relatedGlass" style="float: left; margin-left: 3px;">
+							<a
+								style="text-decoration: none; cursor: pointer; border-bottom: none;">
+							<hk:productImage
+								imageId="${similarProduct.similarProduct.mainImageId}"
+								size="<%=EnumImageSize.SmallSize%>"
+								alt="${similarProduct.similarProduct.name}" />
+
+							<p class="productOptions">${similarProduct.relationShip}</p>
+							</a></div>
+							</td>
+						</c:forEach>
+					</tr>
+				</table>
+				</div>
+			</c:if>
+			
+			<div id="sizeGuide"
 		     class="content"
 		     style="background-color:#DDDDDD;padding:5px; cursor:pointer;font-weight:bold;text-align:left;">
 			Size Guide

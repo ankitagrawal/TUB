@@ -1,4 +1,3 @@
-
 package com.hk.domain.catalog.product;
 
 import java.util.ArrayList;
@@ -45,128 +44,127 @@ public class Product implements java.io.Serializable {
 
     @Id
     @Column(name = "id", unique = true, nullable = false, length = 20)
-    private String                 id;
+    private String               id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "manufacturer_id")
-    private Manufacturer           manufacturer;
+    private Manufacturer         manufacturer;
 
     @Column(name = "name", nullable = false, length = 150)
-    private String                 name;
+    private String               name;
 
     @Column(name = "thumb_url", nullable = false, length = 150)
-    private String                 thumbUrl;
+    private String               thumbUrl;
 
     @Column(name = "order_ranking", precision = 22, scale = 0)
-    private Double                 orderRanking;
+    private Double               orderRanking;
 
     @Column(name = "brand", length = 100)
-    private String                 brand;
+    private String               brand;
 
     @Column(name = "pack_type", length = 45)
-    private String                 packType;
+    private String               packType;
 
     @Column(name = "overview")
-    private String                 overview;
+    private String               overview;
 
     @Column(name = "description")
-    private String                 description;
+    private String               description;
 
     @Column(name = "keywords", length = 150)
-    private String                 keywords;
+    private String               keywords;
 
     @Column(name = "min_days")
-    private Long                   minDays;
+    private Long                 minDays;
 
     @Column(name = "max_days")
-    private Long                   maxDays;
+    private Long                 maxDays;
 
     @Column(name = "deleted", scale = 0)
-    private Boolean                deleted;
+    private Boolean              deleted;
 
     @Column(name = "main_image_id")
-    private Long                   mainImageId;
+    private Long                 mainImageId;
 
     @Column(name = "product_has_color_options", scale = 0)
-    private Boolean                isProductHaveColorOptions;
+    private Boolean              isProductHaveColorOptions;
 
     @Column(name = "is_service", scale = 0)
-    private Boolean                isService;
+    private Boolean              isService;
 
     @Column(name = "is_google_ad_disallowed", scale = 0)
-    private Boolean                isGoogleAdDisallowed;
+    private Boolean              isGoogleAdDisallowed;
 
     @Column(name = "hidden", scale = 0)
-    private Boolean                hidden;
+    private Boolean              hidden;
 
     @Column(name = "is_jit", scale = 0)
-    private Boolean                isJit;
+    private Boolean              isJit;
 
     @Column(name = "is_amazon_product")
-    private Boolean                isAmazonProduct;
+    private Boolean              isAmazonProduct;
 
     @Transient
-    private Boolean                outOfStock;
+    private Boolean              outOfStock;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "supplier_id")
-    private Supplier               supplier;
+    private Supplier             supplier;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_date", length = 19)
-    private Date                   createDate;
+    private Date                 createDate;
 
     @Column(name = "video_embed_code")
-    private String                 videoEmbedCode;
+    private String               videoEmbedCode;
 
     @JsonSkip
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "product_has_related_product", joinColumns = { @JoinColumn(name = "product_id", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "related_product_id", nullable = false, updatable = false) })
-    private List<Product>          relatedProducts  = new ArrayList<Product>(0);
+    private List<Product>        relatedProducts  = new ArrayList<Product>(0);
 
     @JsonSkip
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
-    private List<ProductVariant>   productVariants  = new ArrayList<ProductVariant>(0);
+    private List<ProductVariant> productVariants  = new ArrayList<ProductVariant>(0);
 
     @JsonSkip
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "category_has_product", joinColumns = { @JoinColumn(name = "product_id", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "category_name", nullable = false, updatable = false) })
-    private List<Category>         categories       = new ArrayList<Category>(0);
+    private List<Category>       categories       = new ArrayList<Category>(0);
 
     @JsonSkip
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
-    private List<ProductVariation> variations       = new ArrayList<ProductVariation>(0);
+    private List<SimilarProduct> similarProducts  = new ArrayList<SimilarProduct>(0);
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
-    private List<ProductFeature>   productFeatures  = new ArrayList<ProductFeature>();
+    private List<ProductFeature> productFeatures  = new ArrayList<ProductFeature>();
 
     @JsonSkip
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
-    private List<ProductImage>     productImages    = new ArrayList<ProductImage>();
+    private List<ProductImage>   productImages    = new ArrayList<ProductImage>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "primary_category", nullable = false)
-    private Category               primaryCategory;
+    private Category             primaryCategory;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "secondary_category", nullable = true)
-    private Category               secondaryCategory;
+    private Category             secondaryCategory;
 
     @Column(name = "drop_shipping")
-    private boolean                dropShipping;
+    private boolean              dropShipping;
 
     @Column(name = "is_subscribable", nullable = true)
     private Boolean              isSubscribable;
 
+    @Transient
+    private String               categoriesPipeSeparated;
 
     @Transient
-    private String                 categoriesPipeSeparated;
-
-    @Transient
-    private String                 productURL;
+    private String               productURL;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
-    private Set<SuperSaverImage>   superSaverImages = new HashSet<SuperSaverImage>(0);
+    private Set<SuperSaverImage> superSaverImages = new HashSet<SuperSaverImage>(0);
 
     public String getSlug() {
         return Category.getNameFromDisplayName(this.getName());
@@ -536,12 +534,12 @@ public class Product implements java.io.Serializable {
         this.productURL = productURL;
     }
 
-    public List<ProductVariation> getVariations() {
-        return variations;
+    public List<SimilarProduct> getSimilarProducts() {
+        return similarProducts;
     }
 
-    public void setVariations(List<ProductVariation> variations) {
-        this.variations = variations;
+    public void setSimilarProducts(List<SimilarProduct> similarProducts) {
+        this.similarProducts = similarProducts;
     }
 
     public String getPipeSeparatedCategories() {
@@ -642,9 +640,9 @@ public class Product implements java.io.Serializable {
     }
 
     public boolean isSubscribable() {
-        if(isSubscribable!=null){
+        if (isSubscribable != null) {
             return isSubscribable;
-        }else{
+        } else {
             return false;
         }
     }

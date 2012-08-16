@@ -12,24 +12,24 @@ import javax.persistence.Table;
 
 @SuppressWarnings("serial")
 @Entity
-@Table(name = "product_variations")
-public class ProductVariation {
+@Table(name = "similar_product")
+public class SimilarProduct {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", unique = true, nullable = false)
-    private String               id;
-    
+    private String  id;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "variation_product_id")
-    private Product productVariation;
-    
-    @Column(name = "relation_info", nullable = false, length = 500)
-    private String relationShip;
+    @JoinColumn(name = "similar_product_id")
+    private Product similarProduct;
+
+    @Column(name = "relationship", nullable = true, length = 500)
+    private String  relationShip;
 
     public String getId() {
         return id;
@@ -47,12 +47,12 @@ public class ProductVariation {
         this.product = product;
     }
 
-    public Product getProductVariation() {
-        return productVariation;
+    public Product getSimilarProduct() {
+        return similarProduct;
     }
 
-    public void setProductVariation(Product productVariation) {
-        this.productVariation = productVariation;
+    public void setSimilarProduct(Product similarProduct) {
+        this.similarProduct = similarProduct;
     }
 
     public String getRelationShip() {
@@ -62,5 +62,5 @@ public class ProductVariation {
     public void setRelationShip(String relationShip) {
         this.relationShip = relationShip;
     }
-    
+
 }
