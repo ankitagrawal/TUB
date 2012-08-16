@@ -18,6 +18,8 @@ public enum EnumPermission {
   CONFIRM_COD                                    (PermissionConstants.CONFIRM_COD),
   SEND_SHIPPING_MAILS                            (PermissionConstants.SEND_SHIPPING_MAILS),
   SEARCH_ORDERS                                  (PermissionConstants.SEARCH_ORDERS),
+  SEARCH_SUBSCRIPTIONS                            (PermissionConstants.SEARCH_SUBSCRIPTIONS),
+  UPDATE_SUBSCRIPTION                             (PermissionConstants.UPDATE_SUBSCRIPTION),
   SEARCH_USERS                                   (PermissionConstants.SEARCH_USERS),
   VIEW_NOTIFY_LIST                               (PermissionConstants.VIEW_NOTIFY_LIST),
   AWARD_REWARD_POINTS                            (PermissionConstants.AWARD_REWARD_POINTS),

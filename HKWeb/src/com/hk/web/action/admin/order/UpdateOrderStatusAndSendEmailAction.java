@@ -21,6 +21,7 @@ import com.hk.manager.EmailManager;
 import com.hk.manager.LinkManager;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.store.StoreService;
+import com.hk.pact.service.subscription.SubscriptionOrderService;
 import com.hk.web.action.admin.AdminHomeAction;
 import com.hk.web.action.error.AdminPermissionAction;
 
@@ -35,6 +36,8 @@ public class UpdateOrderStatusAndSendEmailAction extends BaseAction {
     private LinkManager          linkManager;
     @Autowired
     private ShipmentServiceImpl  shipmentService;
+    @Autowired
+    private SubscriptionOrderService subscriptionOrderService;
 
     public Resolution pre() {
         List<ShippingOrder> shippingOrderList = shippingOrderService.getShippingOrdersToSendShipmentEmail();
@@ -43,9 +46,11 @@ public class UpdateOrderStatusAndSendEmailAction extends BaseAction {
             Shipment shipment = shippingOrder.getShipment();
             Order order = shippingOrder.getBaseOrder();
             boolean isEmailSent = false;
-            if (order.getStore() != null && order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID)) {
+            if (order.getStore() != null && order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID) && !order.isSubscriptionOrder()) {
                 isEmailSent = emailManager.sendOrderShippedEmail(shippingOrder, linkManager.getShippingOrderInvoiceLink(shippingOrder));
-            } else {
+            }else if(order.isSubscriptionOrder()){
+                isEmailSent = emailManager.sendSubscriptionOrderShippedEmail(shippingOrder,getSubscriptionOrderService().findSubscriptionOrderByBaseOrder(shippingOrder.getBaseOrder()).getSubscription(), linkManager.getShippingOrderInvoiceLink(shippingOrder));
+            }else {
                 isEmailSent = true; // Incase on non HK order
             }
             if (isEmailSent && shipment != null) {
@@ -73,5 +78,13 @@ public class UpdateOrderStatusAndSendEmailAction extends BaseAction {
 
     public void setShipmentService(ShipmentServiceImpl shipmentService) {
         this.shipmentService = shipmentService;
+    }
+
+    public SubscriptionOrderService getSubscriptionOrderService() {
+        return subscriptionOrderService;
+    }
+
+    public void setSubscriptionOrderService(SubscriptionOrderService subscriptionOrderService) {
+        this.subscriptionOrderService = subscriptionOrderService;
     }
 }

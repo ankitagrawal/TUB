@@ -1,5 +1,17 @@
 package com.hk.manager;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.hk.constants.HttpRequestAndSessionConstants;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.core.Keys;
@@ -18,14 +30,19 @@ import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.catalog.product.combo.ComboInstance;
 import com.hk.domain.catalog.product.combo.ComboInstanceHasProductVariant;
 import com.hk.domain.clm.KarmaProfile;
+import com.hk.domain.marketing.ProductReferrer;
 import com.hk.domain.matcher.CartLineItemMatcher;
 import com.hk.domain.offer.OfferInstance;
-import com.hk.domain.order.*;
+import com.hk.domain.order.CartLineItem;
+import com.hk.domain.order.CartLineItemConfig;
+import com.hk.domain.order.CartLineItemExtraOption;
+import com.hk.domain.order.Order;
+import com.hk.domain.order.OrderCategory;
+import com.hk.domain.order.PrimaryReferrerForOrder;
+import com.hk.domain.order.SecondaryReferrerForOrder;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.user.User;
-import com.hk.domain.marketing.ProductReferrer;
-import com.hk.domain.clm.KarmaProfile;
 import com.hk.dto.pricing.PricingDto;
 import com.hk.exception.OutOfStockException;
 import com.hk.pact.dao.BaseDao;
@@ -47,20 +64,10 @@ import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.payment.PaymentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.store.StoreService;
+import com.hk.pact.service.subscription.SubscriptionService;
 import com.hk.pricing.PricingEngine;
 import com.hk.util.OrderUtil;
 import com.hk.web.filter.WebContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
 
 @Component
 public class OrderManager {
@@ -109,6 +116,8 @@ public class OrderManager {
     private OrderLoggingService               orderLoggingService;
     @Autowired
     private KarmaProfileService               karmaProfileService;
+    @Autowired
+    private SubscriptionService               subscriptionService;
 
     @Autowired
     private ComboInstanceHasProductVariantDao comboInstanceHasProductVariantDao;
@@ -132,13 +141,14 @@ public class OrderManager {
     @Transactional
     public Order getOrCreateOrder(User user) {
         Order order = getOrderService().findByUserAndOrderStatus(user, EnumOrderStatus.InCart);
-        if (order != null)
+        if (order != null && !order.isSubscriptionOrder())
             return order;
 
         order = new Order();
         order.setUser(user);
         order.setOrderStatus(getOrderStatusService().find(EnumOrderStatus.InCart));
         order.setAmount(0D);
+        order.setSubscriptionOrder(false);
 
         if (user.getRoleStrings().contains(EnumRole.B2B_USER.getRoleName())) {
             order.setB2bOrder(true);
@@ -190,13 +200,13 @@ public class OrderManager {
             if (canAddVariantToCart(productVariant)) {
                 CartLineItem cartLineItem = null;
                 if (comboInstance != null) {
-                    CartLineItemMatcher cartLineItemMatcher = new CartLineItemMatcher().addProductVariant(productVariant).addComboInstance(comboInstance);
+                    CartLineItemMatcher cartLineItemMatcher = new CartLineItemMatcher().addProductVariant(productVariant).addComboInstance(comboInstance).addCartLineItemType(EnumCartLineItemType.Product);
                     cartLineItem = getCartLineItemService().getMatchingCartLineItemFromOrder(order, cartLineItemMatcher);
 
                     // cartLineItem = getCartLineItemService().getCartLineItemFromOrder(order, productVariant,
                     // comboInstance);
                 } else {
-                    CartLineItemMatcher cartLineItemMatcher = new CartLineItemMatcher().addProductVariant(productVariant);
+                    CartLineItemMatcher cartLineItemMatcher = new CartLineItemMatcher().addProductVariant(productVariant).addCartLineItemType(EnumCartLineItemType.Product);
                     cartLineItem = getCartLineItemService().getMatchingCartLineItemFromOrder(order, cartLineItemMatcher);
                     // cartLineItem = getCartLineItemService().getCartLineItemFromOrder(order, productVariant);
                 }
@@ -318,8 +328,12 @@ public class OrderManager {
          */
 
         // apply pricing and save cart line items
-        Set<CartLineItem> cartLIFromPricingEngine = getPricingEngine().calculateAndApplyPricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(),
-                order.getRewardPointsUsed());
+
+        Set<CartLineItem> cartLIFromPricingEngine =getPricingEngine().calculateAndApplyPricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), order.getRewardPointsUsed());
+
+
+        // Set<CartLineItem> cartLIFromPricingEngine = getPricingEngine().calculateAndApplyPricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(),
+        //         order.getRewardPointsUsed());
         Set<CartLineItem> cartLineItems = getCartLineItemsFromPricingCartLi(order, cartLIFromPricingEngine);
 
         PricingDto pricingDto = new PricingDto(cartLineItems, order.getAddress());
@@ -409,12 +423,16 @@ public class OrderManager {
         /*
          * //Auto escalation of order if inventory is positive if (orderService.autoEscalateOrder(order)) {
          * orderService.logOrderActivity(order, getUserService.getAdminUser(),
-         * orderLifecycleActivityDaoProvider.get().find(EnumOrderLifecycleActivity.AutoEscalatedToProcessingQueue.getId()),
+         * orderLifecycleActivityDaoProvider.get().find(ExnumOrderLifecycleActivity.AutoEscalatedToProcessingQueue.getId()),
          * null); }
          */
+        Set<CartLineItem> subscriptionCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
+        if(subscriptionCartLineItems !=null && subscriptionCartLineItems.size()>0){
+            subscriptionService.placeSubscriptions(order);
+        }
 
-        // Check if HK order then only send emails
-        if (order.getStore() != null && order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID)) {
+        // Check if HK order then only send emails and no order placed email is necessary for subscription orders
+        if (order.getStore() != null && order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID) && !order.isSubscriptionOrder()) {
             // Send mail to Customer
             getPaymentService().sendPaymentEmailForOrder(order);
             // Send referral program intro email
@@ -476,7 +494,7 @@ public class OrderManager {
             CartLineItem existingCartLineItem = getCartLineItemDao().getLineItem(freeVariant, order);
             if (existingCartLineItem == null) { // The variant is not added in user account already
                 CartLineItem freeCartLineItem = cartLineItemService.createCartLineItemWithBasicDetails(freeVariant, order);
-                freeCartLineItem.setDiscountOnHkPrice(freeVariant.getHkPrice());
+                freeCartLineItem.setDiscountOnHkPrice(freeVariant.getHkPrice() * freeVariant.getQty());
                 return cartLineItemService.save(freeCartLineItem);
             } else {
                 existingCartLineItem.setQty(existingCartLineItem.getQty() + freeVariant.getQty());
@@ -505,8 +523,8 @@ public class OrderManager {
         CartLineItem codLine = null;
         if (cartLineItems == null || cartLineItems.size() == 0) {
             CartLineItem cartLineItem = new CartLineItemBuilder().ofType(EnumCartLineItemType.CodCharges)
-            // .tax(serviceTaxProvider.get())
-            .hkPrice(codAmount).build();
+                    // .tax(serviceTaxProvider.get())
+                    .hkPrice(codAmount).build();
             cartLineItem.setOrder(order);
             codLine = cartLineItem;
         } else {
@@ -525,8 +543,11 @@ public class OrderManager {
 
     public Order recalAndUpdateAmount(Order order) {
         OfferInstance offerInstance = order.getOfferInstance();
+
         PricingDto pricingDto = new PricingDto(getPricingEngine().calculatePricing(order.getCartLineItems(), offerInstance, order.getAddress(), order.getRewardPointsUsed()),
                 order.getAddress());
+
+
         order.setAmount(pricingDto.getGrandTotalPayable());
 
         // set order as referred order if this order is using referral coupon and availing discount as well
@@ -547,7 +568,7 @@ public class OrderManager {
         if (order != null && order.getCartLineItems() != null && !(order.getCartLineItems()).isEmpty()) {
             for (Iterator<CartLineItem> iterator = order.getCartLineItems().iterator(); iterator.hasNext();) {
                 CartLineItem lineItem = iterator.next();
-                if (lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Product.getId())) {
+                if (lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Product.getId())||lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Subscription.getId())) {
                     if (lineItem.getQty() <= 0) {
                         iterator.remove();
                         getCartLineItemDao().delete(lineItem);
@@ -668,7 +689,7 @@ public class OrderManager {
 
     /**
      * This method need to be re-written as multiple wh would be having different tax rates hence different margins
-     * 
+     *
      * @param order
      * @return
      */
@@ -879,5 +900,13 @@ public class OrderManager {
 
     public void setOrderLoggingService(OrderLoggingService orderLoggingService) {
         this.orderLoggingService = orderLoggingService;
+    }
+
+    public SubscriptionService getSubscriptionService() {
+        return subscriptionService;
+    }
+
+    public void setSubscriptionService(SubscriptionService subscriptionService) {
+        this.subscriptionService = subscriptionService;
     }
 }

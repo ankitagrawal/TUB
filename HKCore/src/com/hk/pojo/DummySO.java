@@ -1,7 +1,6 @@
 package com.hk.pojo;
 
 import com.hk.domain.courier.Courier;
-import com.hk.pojo.DummyOrder;
 
 /**
  * Created with IntelliJ IDEA.

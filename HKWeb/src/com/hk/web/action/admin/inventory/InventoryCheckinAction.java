@@ -1,5 +1,34 @@
 package com.hk.web.action.admin.inventory;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.DontValidate;
+import net.sourceforge.stripes.action.FileBean;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.validation.Validate;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
 import com.hk.admin.pact.dao.inventory.GrnLineItemDao;
@@ -13,7 +42,11 @@ import com.hk.constants.courier.StateList;
 import com.hk.constants.inventory.EnumGrnStatus;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.inventory.*;
+import com.hk.domain.inventory.GoodsReceivedNote;
+import com.hk.domain.inventory.GrnLineItem;
+import com.hk.domain.inventory.GrnStatus;
+import com.hk.domain.inventory.StockTransfer;
+import com.hk.domain.inventory.StockTransferLineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.user.User;
@@ -25,21 +58,6 @@ import com.hk.pact.service.inventory.SkuService;
 import com.hk.util.XslGenerator;
 import com.hk.web.action.admin.AdminHomeAction;
 import com.hk.web.action.error.AdminPermissionAction;
-import net.sourceforge.stripes.action.*;
-import net.sourceforge.stripes.validation.Validate;
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Set;
 
 @Secure(hasAnyPermissions = { PermissionConstants.INVENTORY_CHECKIN }, authActionBean = AdminPermissionAction.class)
 @Component

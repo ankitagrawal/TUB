@@ -1,12 +1,13 @@
 package com.hk.pact.service;
 
-import freemarker.template.Template;
-
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.mail.HtmlEmail;
+
 import com.hk.domain.email.EmailCampaign;
+
+import freemarker.template.Template;
 
 public interface EmailService {
 

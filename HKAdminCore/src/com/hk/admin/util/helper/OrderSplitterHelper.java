@@ -1,5 +1,15 @@
 package com.hk.admin.util.helper;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.hk.admin.engine.ShipmentPricingEngine;
 import com.hk.admin.pact.service.courier.CourierCostCalculator;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -13,15 +23,6 @@ import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pojo.DummyOrder;
 import com.hk.pojo.DummySO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * Created with IntelliJ IDEA.

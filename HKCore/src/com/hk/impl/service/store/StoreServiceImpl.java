@@ -2,15 +2,15 @@ package com.hk.impl.service.store;
 
 import java.util.List;
 
-import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.store.StoreProduct;
-import com.hk.pact.dao.store.StoreProductDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.store.Store;
-import com.hk.pact.dao.store.StoreDao;
+import com.hk.domain.store.StoreProduct;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.store.StoreDao;
+import com.hk.pact.dao.store.StoreProductDao;
 import com.hk.pact.service.store.StoreService;
 
 @Service

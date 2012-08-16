@@ -1,5 +1,16 @@
 package com.hk.admin.manager;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
 import com.hk.admin.pact.dao.warehouse.BinDao;
 import com.hk.domain.catalog.category.Category;
@@ -16,12 +27,6 @@ import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.inventory.SkuService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.util.*;
 
 /**
  * Created by IntelliJ IDEA. User: PRATHAM Date: 1/16/12 Time: 7:01 PM To change this template use File | Settings |

@@ -7,14 +7,23 @@ import com.hk.domain.TicketType;
 import com.hk.domain.hkDelivery.ConsignmentStatus;
 import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.hkDelivery.RunsheetStatus;
-import com.hk.domain.review.ReviewStatus;
-import com.hk.domain.store.Store;
-import com.hk.domain.order.ShippingOrderStatus;
 import com.hk.domain.accounting.DebitNoteStatus;
 import com.hk.domain.affiliate.AffiliateCategory;
 import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.core.*;
+import com.hk.domain.core.CancellationType;
+import com.hk.domain.core.CartLineItemType;
+import com.hk.domain.core.City;
+import com.hk.domain.core.OrderStatus;
+import com.hk.domain.core.PaymentMode;
+import com.hk.domain.core.PaymentStatus;
+import com.hk.domain.core.ProductVariantPaymentType;
+import com.hk.domain.core.ProductVariantServiceType;
+import com.hk.domain.core.PurchaseFormType;
+import com.hk.domain.core.PurchaseOrderStatus;
+import com.hk.domain.core.State;
+import com.hk.domain.core.Surcharge;
+import com.hk.domain.core.Tax;
 import com.hk.domain.courier.BoxSize;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.RegionType;
@@ -24,6 +33,10 @@ import com.hk.domain.inventory.rv.ReconciliationStatus;
 import com.hk.domain.inventory.rv.ReconciliationType;
 import com.hk.domain.offer.rewardPoint.RewardPointMode;
 import com.hk.domain.offer.rewardPoint.RewardPointStatus;
+import com.hk.domain.order.ShippingOrderStatus;
+import com.hk.domain.review.ReviewStatus;
+import com.hk.domain.store.Store;
+import com.hk.domain.subscription.SubscriptionStatus;
 import com.hk.domain.user.User;
 
 public interface MasterDataDao 
@@ -112,4 +125,7 @@ public interface MasterDataDao
     public List<RunsheetStatus> getRunsheetStatusList();
 
     public List<ConsignmentStatus> getConsignmentStatusList();
+
+    public List<SubscriptionStatus> getSubscriptionStatusList();
+
 }

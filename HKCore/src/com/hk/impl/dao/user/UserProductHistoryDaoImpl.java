@@ -3,18 +3,17 @@ package com.hk.impl.dao.user;
 import java.util.Date;
 import java.util.List;
 
-import com.hk.constants.core.RoleConstants;
-import com.hk.domain.user.Role;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.hk.constants.core.RoleConstants;
 import com.hk.domain.catalog.product.Product;
+import com.hk.domain.order.Order;
+import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.domain.user.UserProductHistory;
-import com.hk.domain.order.Order;
-import com.hk.domain.marketing.ProductReferrer;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.user.UserProductHistoryDao;
 

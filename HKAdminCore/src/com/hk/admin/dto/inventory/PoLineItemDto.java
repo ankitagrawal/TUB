@@ -11,53 +11,63 @@ import com.hk.domain.accounting.PoLineItem;
  */
 public class PoLineItemDto {
 
-  private PoLineItem poLineItem;
+    private PoLineItem poLineItem;
 
-  private Double taxable = 0.0;
+    private Double taxable = 0.0;
 
-  private Double tax = 0.0;
+    private Double tax = 0.0;
 
-  private Double surcharge = 0.0;
+    private Double surcharge = 0.0;
 
-  private Double payable = 0.0;
+    private Double payable = 0.0;
 
-  public PoLineItem getPoLineItem() {
-    return poLineItem;
-  }
+    private Double marginMrpVsCP = 0.0;
 
-  public void setPoLineItem(PoLineItem poLineItem) {
-    this.poLineItem = poLineItem;
-  }
+    public PoLineItem getPoLineItem() {
+        return poLineItem;
+    }
 
-  public Double getTaxable() {
-    return taxable;
-  }
+    public void setPoLineItem(PoLineItem poLineItem) {
+        this.poLineItem = poLineItem;
+    }
 
-  public void setTaxable(Double taxable) {
-    this.taxable = taxable;
-  }
+    public Double getTaxable() {
+        return taxable;
+    }
 
-  public Double getTax() {
-    return tax;
-  }
+    public void setTaxable(Double taxable) {
+        this.taxable = taxable;
+    }
 
-  public void setTax(Double tax) {
-    this.tax = tax;
-  }
+    public Double getTax() {
+        return tax;
+    }
 
-  public Double getSurcharge() {
-    return surcharge;
-  }
+    public void setTax(Double tax) {
+        this.tax = tax;
+    }
 
-  public void setSurcharge(Double surcharge) {
-    this.surcharge = surcharge;
-  }
+    public Double getSurcharge() {
+        return surcharge;
+    }
 
-  public Double getPayable() {
-    return payable;
-  }
+    public void setSurcharge(Double surcharge) {
+        this.surcharge = surcharge;
+    }
 
-  public void setPayable(Double payable) {
-    this.payable = payable;
-  }
+    public Double getPayable() {
+        return payable;
+    }
+
+    public void setPayable(Double payable) {
+        this.payable = payable;
+    }
+
+    public Double getMarginMrpVsCP() {
+        return marginMrpVsCP;
+    }
+
+    public void setMarginMrpVsCP(Double marginMrpVsCP) {
+        this.marginMrpVsCP = marginMrpVsCP;
+    }
 }

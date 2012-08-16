@@ -1,10 +1,10 @@
 package com.hk.constants.courier;
 
-import com.hk.domain.courier.Courier;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import com.hk.domain.courier.Courier;
 
 public enum EnumCourier {
 

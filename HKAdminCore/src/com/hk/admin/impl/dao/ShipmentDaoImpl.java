@@ -1,14 +1,15 @@
 package com.hk.admin.impl.dao;
 
-import com.hk.admin.pact.dao.shipment.ShipmentDao;
-import com.hk.domain.courier.Shipment;
-import com.hk.domain.courier.Awb;
-import com.hk.impl.dao.BaseDaoImpl;
-import org.springframework.stereotype.Repository;
+import java.util.List;
+
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import com.hk.admin.pact.dao.shipment.ShipmentDao;
+import com.hk.domain.courier.Awb;
+import com.hk.domain.courier.Shipment;
+import com.hk.impl.dao.BaseDaoImpl;
 
 /**
  * Created by IntelliJ IDEA.
