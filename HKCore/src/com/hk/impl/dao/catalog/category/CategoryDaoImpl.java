@@ -52,41 +52,25 @@ public class CategoryDaoImpl extends BaseDaoImpl implements CategoryDao{
         return findByQuery("select distinct p.primaryCategory from Product p");
     }
 
-	public List<ProductOptionDto> getProductOptions(List<String> categoryNames, List<Long> filterOptions, int groupsCount, Double minPrice, Double maxPrice) {
+	public List<ProductOptionDto> getProductOptions(String primaryCategory, List<String> categoryNames, List<Long> filterOptions, int groupsCount, Double minPrice, Double maxPrice) {
 		if (categoryNames != null && categoryNames.size() > 0) {
-			String query1 = "select pv.product.id from ProductVariant pv inner join pv.product.categories c where c.name in (:categories) and pv.hkPrice between :min and :max group by pv.product.id having count(*) = :tagCount";
-			List<String> productIds;
-			Query queryObj = getSession().createQuery(query1).setParameterList("categories", categoryNames);
-			queryObj = queryObj.setParameter("min", minPrice).setParameter("max", maxPrice).setInteger("tagCount", categoryNames.size());
-			productIds = queryObj.list();
-			logger.debug("productIds: " + productIds);if (productIds != null && !productIds.isEmpty()) {
+			List<String> productIds = getSession().createQuery("select p.id from Product p inner join p.categories c where c.name in (:categories) group by p.id having count(*) = :tagCount").setParameterList("categories", categoryNames).setInteger("tagCount", categoryNames.size()).list();
+			if (productIds != null && !productIds.isEmpty()) {
+				List<String> pvIds = getSession().createQuery("select pv.id from ProductVariant pv where pv.product.id in (:productIds) and pv.hkPrice between :minPrice and :maxPrice").setParameterList("productIds", productIds).setParameter("minPrice", minPrice).setParameter("maxPrice", maxPrice).list();
 				if (filterOptions != null && !filterOptions.isEmpty()) {
-					String query2 = "select distinct pv.id from product_variant_has_product_option pvhpo, product_variant pv " + "where pvhpo.product_variant_id=pv.id and pvhpo.product_option_id in (:filterOptions) and pv.product_id in (:productIds) " + "group by pvhpo.product_variant_id having count(pvhpo.product_variant_id) = :groupsCount";
-					List<String> pvIds = getSession().createSQLQuery(query2)
-							.setParameterList("filterOptions", filterOptions)
-							.setParameterList("productIds", productIds)
-							.setInteger("groupsCount", groupsCount).list();
-					if (pvIds != null && !pvIds.isEmpty()) {
-						String queryString = "select po.id as id, upper(po.name) as name, po.value as value, count(po.id) as qty from ProductVariant pv inner join pv.productOptions po where pv.id in(:pvIds) and pv.product.deleted <> 1 and pv.deleted <> 1 and pv.outOfStock <> 1 group by po.id order by po.name desc , po.value asc";
-						Query query3 = getSession().createQuery(queryString).setParameterList("pvIds", pvIds);
-						query3.setResultTransformer(Transformers.aliasToBean(ProductOptionDto.class)).list();
-						return query3.list();
-					} else
-						return null;
-				} else {
-					String queryString = "select po.id as id, upper(po.name) as name, po.value as value, count(po.id) as qty from ProductVariant pv inner join pv.productOptions po where pv.product.id in(:productIds) and pv.product.deleted <> 1 and pv.deleted <> 1 and pv.outOfStock <> 1 group by po.id order by po.name desc , po.value asc";
-					Query query = getSession().createQuery(queryString).setParameterList("productIds", productIds);
-					query.setResultTransformer(Transformers.aliasToBean(ProductOptionDto.class)).list();
-					return query.list();
+					pvIds = getSession().createSQLQuery("select distinct pv.id from product_variant_has_product_option pvhpo, product_variant pv where pvhpo.product_variant_id=pv.id and pv.id in (:pvIds) and pvhpo.product_option_id in (:filterOptions) group by pvhpo.product_variant_id having count(pvhpo.product_variant_id) = :groupsCount").setParameterList("pvIds", pvIds).setParameterList("filterOptions", filterOptions).setParameter("groupsCount", groupsCount).list();
+				}
+				if (pvIds != null && !pvIds.isEmpty()) {
+					return getSession().createQuery("select po.id as id, upper(po.name) as name, po.value as value, count(po.id) as qty from ProductVariant pv inner join pv.productOptions po where pv.id in(:pvIds) and pv.product.deleted <> 1 and pv.deleted <> 1 and pv.outOfStock <> 1 group by po.id order by po.name desc , po.value asc").setParameterList("pvIds", pvIds).setResultTransformer(Transformers.aliasToBean(ProductOptionDto.class)).list();
 				}
 			}
 		}
 		return null;
 	}
 
-	public PriceRangeDto getPriceRange(List<String> categoryNames, List<Long> filterOptions, int groupsCount) {
+	public PriceRangeDto getPriceRange(String primaryCategory, List<String> categoryNames, List<Long> filterOptions, int groupsCount) {
 		if (categoryNames != null && categoryNames.size() > 0) {
-			List<String> productIds = getSession().createQuery("select p.id from Product p inner join p.categories c where c.name in (:categories) group by p.id having count(*) = :tagCount").setParameterList("categories", categoryNames).setInteger("tagCount", categoryNames.size()).list();
+			List<String> productIds = getSession().createQuery("select p.id from Product p inner join p.categories c where p.primaryCategory.name =:primaryCategory and c.name in (:categories) group by p.id having count(*) = :tagCount").setParameter("primaryCategory", primaryCategory).setParameterList("categories", categoryNames).setInteger("tagCount", categoryNames.size()).list();
 			if (productIds != null && !productIds.isEmpty()) {
 				/*if (filterOptions != null && !filterOptions.isEmpty()) {
 					String query2 = "select distinct pv.id from product_variant_has_product_option pvhpo, product_variant pv " + "where pvhpo.product_variant_id=pv.id and pvhpo.product_option_id in (:filterOptions) and pv.product_id in (:productIds) " + "group by pvhpo.product_variant_id having count(pvhpo.product_variant_id) = :groupsCount";

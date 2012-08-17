@@ -26,7 +26,7 @@ public interface CategoryService {
     
     public Category getTopLevelCategory(Product product);
 
-    public List<ProductOptionDto> getFilterOptions(List<String> categoryNames, List<Long> filterOptions, Double minPrice, Double maxPrice);
+    public List<ProductOptionDto> getFilterOptions(String primaryCategory, List<String> categoryNames, List<Long> filterOptions, Double minPrice, Double maxPrice);
 
-    public PriceRangeDto getPriceRange(List<String> categoryNames, List<Long> filterOptions);
+    public PriceRangeDto getPriceRange(String primaryCategory, List<String> categoryNames, List<Long> filterOptions);
 }

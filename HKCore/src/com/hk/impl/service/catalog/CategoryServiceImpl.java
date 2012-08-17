@@ -95,22 +95,22 @@ public class CategoryServiceImpl implements CategoryService {
 		return topLevelCategory;
 	}
 
-	public List<ProductOptionDto> getFilterOptions(List<String> categoryNames, List<Long> filterOptions, Double minPrice, Double maxPrice) {
+	public List<ProductOptionDto> getFilterOptions(String primaryCategory, List<String> categoryNames, List<Long> filterOptions, Double minPrice, Double maxPrice) {
 		int groupsCount = 0;
 		if (!filterOptions.isEmpty()) {
 			Map<String, List<Long>> groupedFilters = productService.getGroupedFilters(filterOptions);
 			groupsCount = groupedFilters.size();
 		}
-		return getCategoryDao().getProductOptions(categoryNames, filterOptions, groupsCount, minPrice, maxPrice);
+		return getCategoryDao().getProductOptions(primaryCategory, categoryNames, filterOptions, groupsCount, minPrice, maxPrice);
 	}
 
-	public PriceRangeDto getPriceRange(List<String> categoryNames, List<Long> filterOptions) {
+	public PriceRangeDto getPriceRange(String primaryCategory, List<String> categoryNames, List<Long> filterOptions) {
 		int groupsCount = 0;
 		if (filterOptions != null && !filterOptions.isEmpty()) {
 			Map<String, List<Long>> groupedFilters = productService.getGroupedFilters(filterOptions);
 			groupsCount = groupedFilters.size();
 		}
-		return getCategoryDao().getPriceRange(categoryNames, filterOptions, groupsCount);
+		return getCategoryDao().getPriceRange(primaryCategory, categoryNames, filterOptions, groupsCount);
 	}
 
 	public CategoryDao getCategoryDao() {

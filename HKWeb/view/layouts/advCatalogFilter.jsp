@@ -57,7 +57,7 @@
 
 	CatalogFilter catalogFilter = (CatalogFilter) ServiceLocatorFactory.getService("CatalogFilter");
 
-	PriceRangeDto priceRange = catalogFilter.getPriceRange(categoryNames, ca.getFilterOptions());
+	PriceRangeDto priceRange = catalogFilter.getPriceRange(ca.getRootCategorySlug(), categoryNames, ca.getFilterOptions());
 	pageContext.setAttribute("priceRange", priceRange);
 
 	PriceRangeDto filteredPriceRange = null;
@@ -68,7 +68,7 @@
 	}
 	pageContext.setAttribute("filteredPriceRange", filteredPriceRange);
 
-	Map<String, List<ProductOptionDto>> filterMap = catalogFilter.getFilterOptions(categoryNames, ca.getFilterOptions(), filteredPriceRange.getMinPrice(), filteredPriceRange.getMaxPrice());
+	Map<String, List<ProductOptionDto>> filterMap = catalogFilter.getFilterOptions(ca.getRootCategorySlug(), categoryNames, ca.getFilterOptions(), filteredPriceRange.getMinPrice(), filteredPriceRange.getMaxPrice());
 	pageContext.setAttribute("filterMap", filterMap);
 
 %>
