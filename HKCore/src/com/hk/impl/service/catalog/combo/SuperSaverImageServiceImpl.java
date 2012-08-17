@@ -1,6 +1,6 @@
 package com.hk.impl.service.catalog.combo;
 
-import java.util.List;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +10,7 @@ import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.combo.SuperSaverImage;
 import com.hk.pact.dao.catalog.combo.SuperSaverImageDao;
 import com.hk.pact.service.catalog.combo.SuperSaverImageService;
+import com.hk.util.ProductUtil;
 
 @Service
 public class SuperSaverImageServiceImpl implements SuperSaverImageService {
@@ -42,10 +43,29 @@ public class SuperSaverImageServiceImpl implements SuperSaverImageService {
     }
 
     public List<SuperSaverImage> getSuperSaverImages(Product product, Boolean getVisible, Boolean getMainImage, Boolean getDeleted) {
-        return superSaverImageDao.getSuperSaverImages(product, getVisible, getMainImage, getDeleted);
+        List<SuperSaverImage> superSaverImages = superSaverImageDao.getSuperSaverImages(product, getVisible, getMainImage, getDeleted);
+        Iterator<SuperSaverImage> superSaverImageIterator = superSaverImages.listIterator();
+        while (superSaverImageIterator.hasNext()) {
+            SuperSaverImage superSaverImage = superSaverImageIterator.next();
+            if (!ProductUtil.isDisplayedInResults(superSaverImage)) {
+                superSaverImageIterator.remove();
+            }
+        }
+        return superSaverImages;
     }
 
     public Page getSuperSaverImages(List<String> categories, List<String> brands, Boolean getVisible, Boolean getDeleted, int page, int perPage) {
-        return superSaverImageDao.getSuperSaverImages(categories, brands, getVisible, getDeleted, page, perPage);
+        Page superSaverPage;
+        Set<SuperSaverImage> superSaverImages = new HashSet<SuperSaverImage>(superSaverImageDao.getSuperSaverImages(categories, brands, getVisible, getDeleted));
+
+        Iterator<SuperSaverImage> superSaverImageIterator = superSaverImages.iterator();
+        while (superSaverImageIterator.hasNext()) {
+            SuperSaverImage superSaverImage = superSaverImageIterator.next();
+            if (!ProductUtil.isDisplayedInResults(superSaverImage)) {
+                superSaverImageIterator.remove();
+            }
+        }
+        superSaverPage = new Page(new ArrayList<SuperSaverImage>(superSaverImages), perPage, page, superSaverImages.size());
+        return superSaverPage;
     }
 }

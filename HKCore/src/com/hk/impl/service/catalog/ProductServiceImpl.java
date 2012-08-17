@@ -35,31 +35,32 @@ import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.mooga.RecommendationEngine;
 import com.hk.pact.service.review.ReviewService;
 import com.hk.util.ProductReferrerMapper;
+import com.hk.util.ProductUtil;
 import com.hk.web.filter.WebContext;
 
 @Service
 public class ProductServiceImpl implements ProductService {
 
     @Autowired
-    private ProductDao                productDAO;
+    private ProductDao productDAO;
 
     @Autowired
-    private ComboDao                  comboDao;
+    private ComboDao comboDao;
 
     @Autowired
-    private ReviewService             reviewService;
+    private ReviewService reviewService;
 
     @Autowired
-    private RecommendationEngine      recommendationService;
+    private RecommendationEngine recommendationService;
 
     @Autowired
     private PrimaryCategoryHeadingDao primaryCategoryHeadingDao;
 
     @Autowired
-    private LinkManager               linkManager;
+    private LinkManager linkManager;
 
     @Value("#{hkEnvProps['" + Keys.Env.moogaEnabled + "']}")
-    private Boolean                   moogaOn;
+    private Boolean moogaOn;
 
     public Product getProductById(String productId) {
         return getProductDAO().getProductById(productId);
@@ -213,20 +214,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public boolean isComboInStock(Combo combo) {
-        if (combo.isDeleted() != null && combo.isDeleted()) {
-            return false;
-        } else {
-            for (ComboProduct comboProduct : combo.getComboProducts()) {
-                if (!comboProduct.getAllowedProductVariants().isEmpty() && comboProduct.getAllowedInStockVariants().isEmpty()) {
-                    return false;
-                } else if (comboProduct.getProduct().getInStockVariants().isEmpty()) {
-                    return false;
-                } else if (comboProduct.getProduct().isDeleted() != null && comboProduct.getProduct().isDeleted()) {
-                    return false;
-                }
-            }
-        }
-        return true;
+        return ProductUtil.isComboInStock(combo);
     }
 
     public List<Combo> getRelatedCombos(Product product) {
