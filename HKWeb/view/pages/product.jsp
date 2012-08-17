@@ -537,13 +537,13 @@
 
 			<c:if test="${!empty product.similarProducts}">
 				<div class="content" id="similarProducts"
-					style="background-color: #DDDDDD; padding: 5px; cursor: pointer; font-weight: bold; text-align: left;">
-				Colors/Sizes for glasses</div>
+					style="background-color: #F2F2F2; padding: 5px; cursor: pointer; font-weight: bold; text-align: left;">
+				Colors options</div>
 				<div id="similarProductsVM" style="margin-top: 5px;">
 				<table width="900px;" style="margin-left: 10px; margin-right: 10px;">
 					<tr>
 						<c:forEach items="${product.similarProducts}" var="similarProduct">
-							<td>
+							<td width="160px">
 							<div class="relatedGlass" style="float: left; margin-left: 3px;">
 							<a href="${hk:getProductURL(similarProduct.similarProduct,null)}"
 								style="text-decoration: none; cursor: pointer; border-bottom: none;">
@@ -563,22 +563,61 @@
 			
 			<div id="sizeGuide"
 		     class="content"
-		     style="background-color:#DDDDDD;padding:5px; cursor:pointer;font-weight:bold;text-align:left;">
+		     style="background-color:#F2F2F2;padding:5px; cursor:pointer;font-weight:bold;text-align:left;">
 			Size Guide
 		</div>
 		<div id="frameChart">
 			<table width="900px;">
 				<tr>
 					<td>
-						<img src="${pageContext.request.contextPath}/images/banners/frame_chart.jpg"/>
+						<img src="${pageContext.request.contextPath}/images/banners/frame_chart_new.jpg"/>
 					</td>
-					<td valign="top" class="content" style="vertical-align:top;padding-top:10px;">
-						It is very important to verify the size of your eyes before you venture into the market looking
-						for the perfect pair of frames to wear. This manual will help you decide what the pre-requisites
-						are and how to go about it in a proper structured manner.<a target="_blank"
-						                                                            href="${pageContext.request.contextPath}/pages/lp/eye_glasses/choosing-eye-glasses.html">
-						Read More.....</a>
-					</td>
+					<td valign="top" class="content"
+						style="vertical-align: top; padding-top: 5px;">
+						<span style="font-weight: bold">How to choose the frame that fits you?</span><br/> 
+						Frames are typically of 3 sizes – <span style="font-weight: bold">Large,
+					Medium and Small</span>. 90% of adult population use medium sized frames.
+					Small frames are typically used by children and large sizes are
+					used by people with exceptionally large faces. Chances are very
+					likely that you will need a <span style="font-weight: bold">medium</span> sized frame. 
+					<br/><br/>
+					However, to be
+					completely certain of your frame size, please compare the size
+					specified on your existing eyeglass with the size of the frame you
+					are considering to purchase. Size of your current frame can be
+					found on the inside portion of your frame (see attached diagram).
+					The size will read something like <<span style="font-weight: bold">[a]-[b]-[c]</span>- below are the
+					instructions on how to read the parameters<br/> 
+					<ul> 
+					<li>[a]: First parameter
+					is the size of your eye in millimeters. The eye size of the frame
+					you are buying should be within +/- 2mm of eye size of your
+					existing frame 
+					</li><li> [b]: Second parameter is the size of your bridge
+					in millimeters. The bridge size of the frame you are buying should
+					be within +/- 1mm of bridge size your existing frame 
+					</li><li> [c]: Third
+					parameter is the size of your temple in millimeters. The temple
+					size of the frame you are buying should be within +/- 10mm of
+					temple size your existing frame </li><br/><span style="font-weight: bold">Example:</span> Suppose the measurement
+					mentioned in your current frame is 50-16-130 and the frame you
+					choose has the following measurements. 
+					<table align="center">
+					<tr>
+					<td>Eye</td>
+					<td>Bridge</td>
+					<td>Temple</td>
+					</tr>
+					<tr>
+					<td>52</td>
+					<td>17</td>
+					<td>135</td>
+					</tr>
+					</table>
+					The measurements mentioned in the table lie within the prescribed
+					range and hence should fit you. <a target="_blank"
+						href="${pageContext.request.contextPath}/pages/lp/eye_glasses/choosing-eye-glasses.html">
+					Read More.....</a></td>
 				</tr>
 			</table>
 
