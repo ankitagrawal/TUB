@@ -570,52 +570,33 @@
 			<table width="900px;">
 				<tr>
 					<td>
-						<img src="${pageContext.request.contextPath}/images/banners/frame_chart_new.jpg"/>
+						<img src="${pageContext.request.contextPath}/images/banners/frame_chart_new_1.jpg"/>
 					</td>
 					<td valign="top" class="content"
-						style="vertical-align: top; padding-top: 5px;">
-						<span style="font-weight: bold">How to choose the frame that fits you?</span><br/> 
-						Frames are typically of 3 sizes – <span style="font-weight: bold">Large,
-					Medium and Small</span>. 90% of adult population use medium sized frames.
-					Small frames are typically used by children and large sizes are
-					used by people with exceptionally large faces. Chances are very
-					likely that you will need a <span style="font-weight: bold">medium</span> sized frame. 
-					<br/><br/>
-					However, to be
-					completely certain of your frame size, please compare the size
-					specified on your existing eyeglass with the size of the frame you
-					are considering to purchase. Size of your current frame can be
-					found on the inside portion of your frame (see attached diagram).
-					The size will read something like <<span style="font-weight: bold">[a]-[b]-[c]</span>- below are the
-					instructions on how to read the parameters<br/> 
-					<ul> 
-					<li>[a]: First parameter
-					is the size of your eye in millimeters. The eye size of the frame
-					you are buying should be within +/- 2mm of eye size of your
-					existing frame 
-					</li><li> [b]: Second parameter is the size of your bridge
-					in millimeters. The bridge size of the frame you are buying should
-					be within +/- 1mm of bridge size your existing frame 
-					</li><li> [c]: Third
-					parameter is the size of your temple in millimeters. The temple
-					size of the frame you are buying should be within +/- 10mm of
-					temple size your existing frame </li><br/><span style="font-weight: bold">Example:</span> Suppose the measurement
-					mentioned in your current frame is 50-16-130 and the frame you
-					choose has the following measurements. 
-					<table align="center">
-					<tr>
-					<td>Eye</td>
-					<td>Bridge</td>
-					<td>Temple</td>
-					</tr>
-					<tr>
-					<td>52</td>
-					<td>17</td>
-					<td>135</td>
-					</tr>
+						style="vertical-align: top; padding-top: 5px;"><span
+						style="font-weight: bold">How to choose the frame that fits
+					you?</span><br />
+					Frames are typically of 3 sizes – <span
+						style="font-weight: bold">Large, Medium and Small.</span> 90% of
+					adult population use medium sized frames. What you need to look at
+					is at the measurement indicated on the frame. So for example the
+					measurement mentioned in your current frame is <span
+						style="font-weight: bold">52-16-130.</span> The first
+					figure, 52, is the Eye Size of the frame. This is also indicated in
+					the diagram on the side. The table below gives the size range for
+					the different types of frames. <br/><br/>
+					<div align="center">
+					<table style="text-align: center">
+					<tr><td><span
+						style="font-weight: bold">Frame Type</span></td><td><span
+						style="font-weight: bold">Dimension Range</span></td></tr>
+					<tr><td>Small</td><td style="text-align: center;">40-48 mm</td></tr>
+					<tr><td>Medium</td><td style="text-align: center;">49-54 mm</td></tr>
+					<tr><td>Large</td><td style="text-align: center;">55-58 mm</td></tr>
+					<tr><td>Extra Large</td><td style="text-align: center;">58 mm and above</td></tr>
 					</table>
-					The measurements mentioned in the table lie within the prescribed
-					range and hence should fit you. <a target="_blank"
+					</div>
+					<a target="_blank"
 						href="${pageContext.request.contextPath}/pages/lp/eye_glasses/choosing-eye-glasses.html">
 					Read More.....</a></td>
 				</tr>
