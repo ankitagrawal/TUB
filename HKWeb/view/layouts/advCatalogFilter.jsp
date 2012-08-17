@@ -268,7 +268,11 @@
 										<input type="checkbox" class="filterOption" value="${option.id}"/>
 									</c:otherwise>
 								</c:choose>
-									<a style="color:black;cursor:pointer;" class="filterOptionLink">${option.value} (${option.qty})</a>
+								<a style="color:black;cursor:pointer;" class="filterOptionLink">${option.value} (${option.qty})</a>
+								<c:if test="${filter.key == 'COLOR'}">
+									<span style="background-color:${option.value};height:10px;width:10px;float:right;margin-right:10px;margin-top:8px;">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+								</c:if>
+
 							</li>
 							<c:set var="ctr2" value="${ctr}"/>
 							<c:set var="ctr" value="${ctr2+1}"/>
