@@ -29,6 +29,7 @@ import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductImage;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.catalog.product.SimilarProduct;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.catalog.product.combo.SuperSaverImage;
 import com.hk.domain.content.SeoData;
