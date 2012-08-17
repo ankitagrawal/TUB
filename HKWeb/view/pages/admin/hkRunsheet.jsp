@@ -28,7 +28,7 @@
                     <td><label>Runsheet ID:</label></td>
                     <td> ${runsheetAction.runsheet.id}</td>
                     <td><label>Hub: </label></td>
-                    <td>runsheetAction.hub.name</td>
+                    <td> ${runsheetAction.runsheet.hub.name}</td>
                     <td><label>COD Boxes: </label></td>
                     <td>${runsheetAction.runsheet.codBoxCount}</td>
                 </tr>
