@@ -8607,4 +8607,50 @@
         <addForeignKeyConstraint baseColumnNames="runsheet_status_id" baseTableName="runsheet" constraintName="fk_runsheet_runsheet_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="runsheet_status" referencesUniqueColumn="false"/>
     </changeSet>
 
+    <changeSet author="Tarun (generated)" id="1345197771767-1">
+        <createTable tableName="consignment_lifecycle_status">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="status" type="VARCHAR(60)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1345197771767-2">
+        <createTable tableName="hkdelivery_payment_reconciliation">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="amount" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_date" type="DATETIME"/>
+            <column name="update_date" type="DATETIME"/>
+            <column name="user_id" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1345197771767-3">
+        <addColumn tableName="consignment_tracking">
+            <column name="consignment_lifecycle_status_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1345197771767-4">
+        <dropForeignKeyConstraint baseTableName="consignment" baseTableSchemaName="healthkart_dev" constraintName="fk_consignment_payment_reconciliation1"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1345197771767-5">
+        <dropForeignKeyConstraint baseTableName="payment_reconciliation" baseTableSchemaName="healthkart_dev" constraintName="fk_payment_reconciliation_user1"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1345197771767-6">
+        <addForeignKeyConstraint baseColumnNames="payment_reconciliation_id" baseTableName="consignment" constraintName="fk_consignment_payment_reconciliation1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="hkdelivery_payment_reconciliation" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1345197771767-7">
+        <addForeignKeyConstraint baseColumnNames="consignment_lifecycle_status_id" baseTableName="consignment_tracking" constraintName="fk_consignment_tracking_consignment_lifecycle_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="consignment_lifecycle_status" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1345197771767-8">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="hkdelivery_payment_reconciliation" constraintName="fk_payment_reconciliation_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1345197771767-9">
+        <dropTable tableName="payment_reconciliation"/>
+    </changeSet>
 </databaseChangeLog>
