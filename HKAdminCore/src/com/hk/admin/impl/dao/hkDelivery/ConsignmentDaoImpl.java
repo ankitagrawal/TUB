@@ -75,5 +75,13 @@ public class ConsignmentDaoImpl extends BaseDaoImpl implements ConsignmentDao {
                 "select distinct cn.awbNumber from Consignment cn where cn.runsheet != null and cn.runsheet.runsheetStatus.id = :runsheetStatusId").setLong("runsheetStatusId",EnumRunsheetStatus.Open.getId()).list();
 
     }
+
+    @Override
+    public List<String> getDuplicateAwbNumbers(List<String> trackingIdList) {
+        List<String> duplicateAwbNums;
+        String query = "select cn.awbNumber from Consignment cn where cn.awbNumber in (:trackingIdList)";
+        duplicateAwbNums = findByQuery(query).
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 }
 

@@ -87,4 +87,9 @@ public class ConsignmentServiceImpl implements ConsignmentService {
         }
         return paymentModeString;
     }
+
+    @Override
+    public List<String> getDuplicateAwbNumbers(List<String> trackingIdList) {
+        return consignmentDao.getDuplicateAwbNumbers(trackingIdList);
+    }
 }

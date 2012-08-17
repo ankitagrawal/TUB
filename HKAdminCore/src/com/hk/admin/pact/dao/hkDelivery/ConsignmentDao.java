@@ -25,4 +25,6 @@ public interface ConsignmentDao extends BaseDao {
     void updateConsignmentTracking(Hub sourceHub, Hub destinationHub, User user, Set<Consignment> consignments);
 
     List<String> getAllAwbNumbersWithRunsheet();
+
+    List<String> getDuplicateAwbNumbers(List<String> trackingIdList);
 }

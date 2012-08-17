@@ -31,4 +31,6 @@ public interface ConsignmentService {
 
     public String  getConsignmentPaymentMode(PaymentMode paymentMode);
 
+    public List<String> getDuplicateAwbNumbers(List<String> trackingIdList);
+
 }

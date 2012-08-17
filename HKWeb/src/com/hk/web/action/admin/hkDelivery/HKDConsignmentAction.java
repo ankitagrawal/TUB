@@ -30,9 +30,7 @@ public class HKDConsignmentAction extends BaseAction{
     private static       Logger               logger                   = LoggerFactory.getLogger(HKDConsignmentAction.class);
     private              Hub                  hub;
     private              List<String>         trackingIdList           = new ArrayList<String>();
-    private              String               cnnNumber                = null;
-    private              String               paymentMode              = null;
-    private              Double               amount                   = null;
+    private              Courier              hkDelivery               = EnumCourier.HK_Delivery.asCourier();
 
     @Autowired
     private              ConsignmentService   consignmentService;
@@ -55,12 +53,14 @@ public class HKDConsignmentAction extends BaseAction{
         Set<String>  trackingIdSet ;
         List<String> existingAwbNumbers;
         Hub          healthkartHub;
-        String       duplicateAwbString = "";
-        User         loggedOnUser       = null;
-        Shipment     shipmentObj        = null;
-        int          consignmentCreatedCount   = 0;
-        Courier      hkDelivery         = EnumCourier.HK_Delivery.asCourier();
-        Consignment consignment;
+        String       duplicateAwbString       = "";
+        User         loggedOnUser             = null;
+        Shipment     shipmentObj              = null;
+        int          consignmentCreatedCount  = 0;
+        String       cnnNumber                = null;
+        String       paymentMode              = null;
+        Double       amount                   = null;
+        Consignment  consignment              = null;
 
         if (trackingIdList != null && trackingIdList.size() > 0) {
             healthkartHub = hubService.findHubByName(HKDeliveryConstants.HEALTHKART_HUB);
