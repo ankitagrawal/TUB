@@ -16,6 +16,7 @@ public class HKDeliveryConstants {
     public static final String HUB_CREATION_FAILURE = "Some problem occurred while creating a hub.Please try later.";
     public static final String HUB_EDIT_FAILURE = "Some problem occurred while editing a hub.Please try later.";
     public static final String INVALID_PINCODE_MSG ="Entered pincode doesn't exist in database.";
+    public static final String CONSIGNMENT_FAILURE = "Consignments cannot be created.Some problem occurred.";
 
 
 

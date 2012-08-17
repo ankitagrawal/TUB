@@ -13,18 +13,9 @@ import java.util.Set;
 
 public interface ConsignmentDao extends BaseDao {
 
-
-    public Consignment createConsignment(String awbNumber,String cnnNumber ,double amount, String paymentMode ,Hub hub);
-
-    public List<String> getAwbNumbersInConsignment();
-
     public Consignment getConsignmentByAwbNumber(String awbNumber);
 
-    void updateConsignmentTracking(Hub sourceHubI, Hub destinationHub, User user, Consignment consignment);
+    List<String> getDuplicateAwbNumbersinRunsheet(List<String> trackingIdList);
 
-    void updateConsignmentTracking(Hub sourceHub, Hub destinationHub, User user, Set<Consignment> consignments);
-
-    List<String> getAllAwbNumbersWithRunsheet();
-
-    List<String> getDuplicateAwbNumbers(List<String> trackingIdList);
+    List<String> getDuplicateAwbNumbersinConsignment(List<String> trackingIdList);
 }

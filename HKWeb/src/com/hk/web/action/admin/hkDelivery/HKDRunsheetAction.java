@@ -25,6 +25,7 @@ import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
 import com.hk.admin.pact.service.hkDelivery.HubService;
 import com.hk.admin.manager.HKDRunsheetManager;
+import com.hk.admin.util.HKDeliveryUtil;
 import com.hk.constants.core.Keys;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.courier.EnumAwbStatus;
@@ -177,10 +178,10 @@ public class HKDRunsheetAction extends BasePaginatedAction {
 
             if (trackingIdList != null && trackingIdList.size() > 0) {
                 //Fetching those awbNumbers which are present in open runsheets.(such consignments wont't be added to any new runsheet)
-                duplicatedAwbNumbers = consignmentService.getDuplicateAwbs(trackingIdList, consignmentService.getAllAwbNumbersWithRunsheet());
+                duplicatedAwbNumbers = consignmentService.getDuplicateAwbNumbersinRunsheet(trackingIdList);
                 if (duplicatedAwbNumbers.size() > 0) {
                     // creating a string for user-display.
-                    duplicateAwbString = getDuplicateAwbString(duplicatedAwbNumbers);
+                    duplicateAwbString = HKDeliveryUtil.convertListToString(duplicatedAwbNumbers);
                     duplicateAwbString = HKDeliveryConstants.OPEN_RUNSHEET_MESSAGE + duplicateAwbString;
                     addRedirectAlertMessage(new SimpleMessage(duplicateAwbString));
                     return new ForwardResolution(HKDRunsheetAction.class).addParameter(HKDeliveryConstants.RUNSHEET_DOWNLOAD, false);
@@ -260,16 +261,6 @@ public class HKDRunsheetAction extends BasePaginatedAction {
             }
         }
 
-    }
-
-    // Getting comma seperated string for the duplicated
-    public String getDuplicateAwbString(List<String> duplicatedAwbs) {
-        StringBuffer strBuffr = new StringBuffer();
-        for (String awbNumber : new HashSet<String>(duplicatedAwbs)) {
-            strBuffr.append(awbNumber);
-            strBuffr.append(",");
-        }
-        return strBuffr.toString();
     }
 
     public String getAssignedTo() {

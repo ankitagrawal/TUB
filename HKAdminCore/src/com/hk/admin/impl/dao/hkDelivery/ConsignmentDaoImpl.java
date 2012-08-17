@@ -21,67 +21,22 @@ import java.util.Set;
 public class ConsignmentDaoImpl extends BaseDaoImpl implements ConsignmentDao {
 
     @Override
-    public Consignment createConsignment(String awbNumber,String cnnNumber ,double amount, String paymentMode ,Hub hub) {
-        Consignment consignmentObj = new Consignment();
-        consignmentObj.setHub(hub);
-        consignmentObj.setConsignmentStatus(EnumConsignmentStatus.ShipmntRcvdAtHub.asConsignmentStatus());
-        consignmentObj.setAwbNumber(awbNumber);
-        consignmentObj.setAmount(amount);
-        consignmentObj.setCnnNumber(cnnNumber);
-        consignmentObj.setCreateDate(new Date());
-        consignmentObj.setPaymentMode(paymentMode);
-        consignmentObj = (Consignment)save(consignmentObj);
-        return consignmentObj;
-    }
-
-    @Override
-    public List<String> getAwbNumbersInConsignment() {
-        return (List<String>) getSession().createQuery(
-                "select distinct cn.awbNumber from Consignment cn ").list();
-    }
-
-    @Override
     public Consignment getConsignmentByAwbNumber(String awbNumber) {
-        return (Consignment) getSession().createQuery("from Consignment cn where cn.awbNumber = :awbNumber").setParameter("awbNumber", awbNumber).uniqueResult();
+        String query = "from Consignment cn where cn.awbNumber = :awbNumber";
+        return (Consignment) findUniqueByNamedParams(query,new String[]{"awbNumber"},new Object[]{awbNumber});
     }
 
-    public void updateConsignmentTracking(Hub sourceHub, Hub destinationHub, User user, Set<Consignment> consignments) {
-        for (Consignment consignment : consignments) {
-            ConsignmentTracking consignmntTracking = new ConsignmentTracking();
-            consignmntTracking.setConsignment(consignment);
-            consignmntTracking.setCreateDate(new Date());
-            consignmntTracking.setSourceHub(sourceHub);
-            consignmntTracking.setDestinationHub(destinationHub);
-            consignmntTracking.setUser(user);
-            save(consignmntTracking);
-        }
+
+    @Override
+    public List<String> getDuplicateAwbNumbersinRunsheet(List<String> trackingIdList) {
+        String query = "select cn.awbNumber from Consignment cn where cn.runsheet != null and cn.runsheet.runsheetStatus.id = :runsheetStatusId and cn.awbNumber in (:trackingIdList)";
+        return (List<String>) findByNamedParams(query, new String[]{"runsheetStatusId", "trackingIdList"}, new Object[]{EnumRunsheetStatus.Open.getId(), trackingIdList});
     }
 
     @Override
-    public void updateConsignmentTracking(Hub sourceHub, Hub destinationHub, User user, Consignment consignment) {
-        ConsignmentTracking consignmntTracking = new ConsignmentTracking();
-        consignmntTracking.setConsignment(consignment);
-        consignmntTracking.setCreateDate(new Date());
-        consignmntTracking.setSourceHub(sourceHub);
-        consignmntTracking.setDestinationHub(destinationHub);
-        consignmntTracking.setUser(user);
-        save(consignmntTracking);
-    }
-
-    @Override
-    public List<String> getAllAwbNumbersWithRunsheet() {
-
-        return (List<String>) getSession().createQuery(
-                "select distinct cn.awbNumber from Consignment cn where cn.runsheet != null and cn.runsheet.runsheetStatus.id = :runsheetStatusId").setLong("runsheetStatusId",EnumRunsheetStatus.Open.getId()).list();
-
-    }
-
-    @Override
-    public List<String> getDuplicateAwbNumbers(List<String> trackingIdList) {
-        List<String> duplicateAwbNums;
+    public List<String> getDuplicateAwbNumbersinConsignment(List<String> trackingIdList) {
         String query = "select cn.awbNumber from Consignment cn where cn.awbNumber in (:trackingIdList)";
-        duplicateAwbNums = findByQuery(query).
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return (List<String>)findByNamedParams(query,new String[]{"trackingIdList"},new Object[]{trackingIdList});
     }
 }
 
