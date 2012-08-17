@@ -86,6 +86,8 @@ public class HKDConsignmentAction extends BaseAction{
             // convertig list to set to delete/remove duplicate elements from the list.
             newAwbNumbers = trackingIdList;
             awbNumberSet = new HashSet<String>(newAwbNumbers);
+
+            if(awbNumberSet.size()>0) {
             // Creating consignments.
             for (String awbNumber : awbNumberSet) {
             try {
@@ -112,6 +114,11 @@ public class HKDConsignmentAction extends BaseAction{
             addRedirectAlertMessage(new SimpleMessage(consignmentTrackingList.size() + HKDeliveryConstants.CONSIGNMNT_CREATION_SUCCESS + duplicateAwbString));
             } catch (Exception ex){
               addRedirectAlertMessage(new SimpleMessage(HKDeliveryConstants.CONSIGNMENT_FAILURE));
+            }
+
+            } else {
+                addRedirectAlertMessage(new SimpleMessage(consignmentTrackingList.size() + HKDeliveryConstants.CONSIGNMNT_CREATION_SUCCESS + duplicateAwbString));
+                return new RedirectResolution(HKDConsignmentAction.class);
             }
         } else {
             addRedirectAlertMessage(new SimpleMessage(HKDeliveryConstants.CONSIGNMNT_CREATION_FAILURE));

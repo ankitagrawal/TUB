@@ -57,6 +57,10 @@ public class ConsignmentTracking implements java.io.Serializable {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "consignment_lifecycle_status_id")
+    private ConsignmentLifecycleStatus consignmentLifecycleStatus;
+
     public Long getId() {
         return this.id;
     }
@@ -111,6 +115,14 @@ public class ConsignmentTracking implements java.io.Serializable {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public ConsignmentLifecycleStatus getConsignmentLifecycleStatus() {
+        return consignmentLifecycleStatus;
+    }
+
+    public void setConsignmentLifecycleStatus(ConsignmentLifecycleStatus consignmentLifecycleStatus) {
+        this.consignmentLifecycleStatus = consignmentLifecycleStatus;
     }
 }
 
