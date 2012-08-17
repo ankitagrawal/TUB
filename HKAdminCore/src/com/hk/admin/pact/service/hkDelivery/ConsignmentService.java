@@ -19,7 +19,7 @@ public interface ConsignmentService {
 
     public Consignment createConsignment(String awbNumber,String cnnNumber ,double amount, String paymentMode ,Hub hub);
 
-    public ConsignmentTracking createConsignmentTracking(Hub sourceHub, Hub destinationHub, User user, Consignment consignment);
+    public List<ConsignmentTracking> createConsignmentTracking(Hub sourceHub, Hub destinationHub, User user, List<Consignment> consignment);
 
     public void saveConsignments(List<Consignment> consignmentList);
 
@@ -27,12 +27,12 @@ public interface ConsignmentService {
 
     public Consignment getConsignmentByAwbNumber(String awbNumber);
 
-    public void updateConsignmentTracking(Hub sourceHub, Hub destinationHub, User user, Set<Consignment> consignmentList);
-
     public List<String> getDuplicateAwbNumbersinRunsheet(List<String> trackingIdList);
 
     public String  getConsignmentPaymentMode(ShippingOrder shipppingOrder);
 
     public List<String> getDuplicateAwbNumbersinConsignment(List<String> trackingIdList);
+
+    public List<Consignment> getConsignmentListByAwbNumbers(List<String> awbNumbers);
 
 }

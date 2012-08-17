@@ -15,7 +15,9 @@ public interface ConsignmentDao extends BaseDao {
 
     public Consignment getConsignmentByAwbNumber(String awbNumber);
 
-    List<String> getDuplicateAwbNumbersinRunsheet(List<String> trackingIdList);
+    public List<String> getDuplicateAwbNumbersinRunsheet(List<String> trackingIdList);
 
-    List<String> getDuplicateAwbNumbersinConsignment(List<String> trackingIdList);
+    public List<String> getDuplicateAwbNumbersinConsignment(List<String> trackingIdList);
+
+    public List<Consignment> getConsignmentListByAwbNumbers(List<String> awbNumbers);
 }

@@ -95,8 +95,6 @@ public class HKDConsignmentAction extends BaseAction{
                 paymentMode = consignmentService.getConsignmentPaymentMode(shipmentObj.getShippingOrder());
                 // Creating consignment object and adding to consignmentList.
                 consignmentList.add(consignmentService.createConsignment(awbNumber,cnnNumber,amount,paymentMode,hub));
-                // Creating consignmentTracking object and adding it to consignmentTrackingList.
-                consignmentTrackingList.add(consignmentService.createConsignmentTracking(healthkartHub, hub, loggedOnUser, consignment));
             } catch (Exception ex) {
                 logger.info("Exception occurred"+ex.getMessage());
                 continue;
@@ -105,6 +103,11 @@ public class HKDConsignmentAction extends BaseAction{
             try{
             //saving consignmentList and consignmentTrackingList.
             consignmentService.saveConsignments(consignmentList);
+            //fetching the consignments just created above.
+            consignmentList = consignmentService.getConsignmentListByAwbNumbers(new ArrayList<String>(awbNumberSet));
+            //creating consignmentTrackingList
+            consignmentTrackingList = consignmentService.createConsignmentTracking(healthkartHub,hub,loggedOnUser,consignmentList);
+            //saving it.
             consignmentService.saveConsignmentTracking(consignmentTrackingList);
             addRedirectAlertMessage(new SimpleMessage(consignmentTrackingList.size() + HKDeliveryConstants.CONSIGNMNT_CREATION_SUCCESS + duplicateAwbString));
             } catch (Exception ex){

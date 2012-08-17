@@ -48,14 +48,19 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     }
 
     @Override
-    public ConsignmentTracking createConsignmentTracking(Hub sourceHub, Hub destinationHub, User user, Consignment consignment) {
+    public List<ConsignmentTracking> createConsignmentTracking(Hub sourceHub, Hub destinationHub, User user, List<Consignment> consignments) {
+       List<ConsignmentTracking> consignmntTrackingList = new ArrayList<ConsignmentTracking>();
+        for(Consignment consignment: consignments)
+        {
         ConsignmentTracking consignmntTracking = new ConsignmentTracking();
         consignmntTracking.setConsignment(consignment);
         consignmntTracking.setCreateDate(new Date());
         consignmntTracking.setSourceHub(sourceHub);
         consignmntTracking.setDestinationHub(destinationHub);
         consignmntTracking.setUser(user);
-        return consignmntTracking;
+        consignmntTrackingList.add(consignmntTracking);
+        }
+        return consignmntTrackingList;
     }
 
     @Override
@@ -71,15 +76,6 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     @Override
     public Consignment getConsignmentByAwbNumber(String awbNumber) {
         return consignmentDao.getConsignmentByAwbNumber(awbNumber);
-    }
-
-    @Override
-    public void updateConsignmentTracking(Hub sourceHub, Hub destinationHub, User user, Set<Consignment> consignments) {
-        List<ConsignmentTracking> consignmentTrackingList = new ArrayList<ConsignmentTracking>();
-        for(Consignment consignment:consignments){
-            consignmentTrackingList.add(createConsignmentTracking(sourceHub,destinationHub,user,consignment));
-        }
-        consignmentDao.saveOrUpdate(consignmentTrackingList);
     }
 
     @Override
@@ -101,5 +97,10 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     @Override
     public List<String> getDuplicateAwbNumbersinConsignment(List<String> trackingIdList) {
         return consignmentDao.getDuplicateAwbNumbersinConsignment(trackingIdList);
+    }
+
+    @Override
+    public List<Consignment> getConsignmentListByAwbNumbers(List<String> awbNumbers) {
+        return consignmentDao.getConsignmentListByAwbNumbers(awbNumbers);
     }
 }

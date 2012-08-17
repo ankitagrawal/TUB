@@ -225,7 +225,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
                 // Saving Runsheet in db.
                 runsheetService.saveRunSheet(runsheetObj);
                 //making corresponding entry in consignment tracking.
-                consignmentService.updateConsignmentTracking(hub, deliveryHub, loggedOnUser, consignments);
+                consignmentService.saveConsignmentTracking(consignmentService.createConsignmentTracking(hub,deliveryHub,loggedOnUser,new ArrayList<Consignment>(consignments)));
                 // generating Xls file.
                 xlsFile = hkdRunsheetManager.generateWorkSheetXls(xlsFile.getPath(), shippingOrderList, agent.getName(), totalCODAmount, totalPackets, totalCODPackets);
             } catch (IOException ioe) {
