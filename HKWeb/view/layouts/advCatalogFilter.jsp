@@ -64,10 +64,10 @@
 	if (ca.getTertiaryChildCategorySlug() != null) {
 		childCategory = ca.getTertiaryChildCategorySlug();
 	}*/
-	Map<String, List<ProductOptionDto>> filterMap = catalogFilter.getFilterOptions(categoryNames);
+	Map<String, List<ProductOptionDto>> filterMap = catalogFilter.getFilterOptions(categoryNames, ca.getFilterOptions());
 	pageContext.setAttribute("filterMap", filterMap);
 
-	PriceRangeDto priceRange = catalogFilter.getPriceRange(categoryNames);
+	PriceRangeDto priceRange = catalogFilter.getPriceRange(categoryNames, ca.getFilterOptions());
 	pageContext.setAttribute("priceRange", priceRange);
 
 	PriceRangeDto filteredPriceRange = null;
@@ -86,13 +86,19 @@
 	}
 
 	.ui-slider .ui-slider-range {
-		background-color: #1D456B;
+		background-color: #aaa;
 		width: 90%;
 	}
 
 	.separator {
 		border-bottom: 1px dotted #CCC;
 		padding-bottom: 10px; /*padding-top: 5px;*/
+	}
+
+	.filterOption{
+		font-size:.9em;
+		padding:0px;
+		border:0px;
 	}
 </style>
 <script type="text/javascript" src="<hk:vhostJs/>/js/jquery-ui.min.js"></script>
@@ -133,16 +139,26 @@
 
 		$(".removeFilters").click(function() {
 			$("#minPrice").val(${priceRange.minPrice});
-			$("#maxPrice").val(${priceRange.maxPrice});			
+			$("#maxPrice").val(${priceRange.maxPrice});
 			$(".filterCatalogForm").submit();
 			//window.location.reload();
 		});
-
 	});
+
+	function toggle(ulId, elm) {
+		$("#" + ulId).toggle();
+		if (elm.innerHTML == "+"){
+			elm.innerHTML = "-";
+			elm.title = "Collapse";
+		}else{
+			elm.innerHTML = "+";
+			elm.title = "Expand";
+		}
+	}
 </script>
-<div class='' style="border:1px solid #CCC">
+<div class='' style="border-right:1px dotted #ddd">
 	<div class="">
-		<h5 class='heading1' style="background-color:#DDD;padding:3px;">
+		<h5 class='heading1' style="background-color:#DDD;padding:5px;">
 			Browse By Category
 		</h5>
 		<ul style="padding-left:10px;">
@@ -184,14 +200,13 @@
 </div>
 
 <c:if test="${filteredPriceRange != null || !empty filterMap}">
-	<div class='' style="margin-top:10px;border:1px solid #CCC">
+	<div class='' style="margin-top:0px;border:1px dotted #ddd">
 		<div class="">
-			<h5 class='heading1' style="background-color:#DDD;padding:3px;">
+			<h5 class='heading1' style="background-color:#DDD;padding:5px;">
 				Filter By
 				<c:if test="${!empty ca.filterOptions || (filteredPriceRange.minPrice != priceRange.minPrice) || (filteredPriceRange.maxPrice != priceRange.maxPrice)}">
 					<a class="removeFilters"
-					   style="cursor:pointer;float:right;margin-right:10px;color:red;font-size:.9em;font-weight:bold;">(Clear
-					                                                                                                   All)</a>
+					   style="cursor:pointer;float:right;margin-right:10px;color:black;font-size:.9em;font-weight:normal;">Reset</a>
 				</c:if>
 			</h5>
 		</div>
@@ -217,18 +232,19 @@
 							<%--<div style="padding-bottom:10px;">
 												  <label id="amount" style="font-weight:bold;"></label>
 											  </div>--%>
-						<div id="slider-range" style="background-color:#f6931f"></div>
+						<div id="slider-range" style="background-color:#ddd"></div>
 					</div>
 				</div>
 			</c:if>
 			<c:forEach items="${filterMap}" var="filter">
 				<div class="">
-					<h5 class='heading1' style="padding-left:5px;">
+					<h5 class='heading1' style="padding:5px;background-color:#DDD;">
 							${filter.key}
+						<a title="Collapse" style="float:right; font-size:1.2em;color:black;cursor:pointer;" onclick="toggle('${filter.key}', this)">-</a>
 					</h5>
-					<ul style="padding-left:10px;">
+					<ul style="padding-left:10px;" id="${filter.key}">
 						<c:forEach items="${filter.value}" var="option">
-							<li>
+							<li style="vertical-align:middle;">
 								<c:choose>
 									<c:when test="${hk:collectionContains(ca.filterOptions, option.id)}">
 										<input type="checkbox" class="filterOption" value="${option.id}"

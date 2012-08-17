@@ -24,9 +24,9 @@ public class CatalogFilter {
 	private Map<String, List<ProductOptionDto>> filterMap;
 	private List<ProductOptionDto> filterOptionDtoSet;
 
-	public Map<String, List<ProductOptionDto>> getFilterOptions(List<String> categoryNames) {
+	public Map<String, List<ProductOptionDto>> getFilterOptions(List<String> categoryNames, List<Long> filterOptions) {
 		filterMap = new HashMap<String, List<ProductOptionDto>>();
-		List<ProductOptionDto> optionDtoList = categoryService.getFilterOptions(categoryNames);
+		List<ProductOptionDto> optionDtoList = categoryService.getFilterOptions(categoryNames, filterOptions);
 		if (optionDtoList != null) {
 			for (ProductOptionDto productOptionDto : optionDtoList) {
 				String option = productOptionDto.getName().toUpperCase();
@@ -42,8 +42,8 @@ public class CatalogFilter {
 		return filterMap;
 	}
 
-	public PriceRangeDto getPriceRange(List<String> categoryNames) {
-		PriceRangeDto priceRange = categoryService.getPriceRange(categoryNames);
+	public PriceRangeDto getPriceRange(List<String> categoryNames, List<Long> filterOptions) {
+		PriceRangeDto priceRange = categoryService.getPriceRange(categoryNames, filterOptions);
 		return priceRange;
 	}
 

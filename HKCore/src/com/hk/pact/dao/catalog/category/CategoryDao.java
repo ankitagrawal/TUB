@@ -21,8 +21,8 @@ public interface CategoryDao extends BaseDao {
 
     public List<Category> getPrimaryCategories();
 
-	public List<ProductOptionDto> getProductOptions(List<String> categoryNames);
+	public List<ProductOptionDto> getProductOptions(List<String> categoryNames, List<Long> filterOptions, int groupsCount);
 
-	public PriceRangeDto getPriceRange(List<String> categoryNames);
+	public PriceRangeDto getPriceRange(List<String> categoryNames, List<Long> filterOptions, int groupsCount);
 
 }
