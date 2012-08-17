@@ -25,8 +25,6 @@ public class RunSheetDaoImpl extends BaseDaoImpl implements RunSheetDao {
     public Page searchRunsheet(Runsheet runsheet, Date startDate, Date endDate, RunsheetStatus runsheetStatus, User agent, Hub hub, int pageNo, int perPage) {
         DetachedCriteria runsheetCriteria = DetachedCriteria.forClass(Runsheet.class);
 
-        DetachedCriteria supplierCriteria = null;
-
         if (runsheet != null) {
             runsheetCriteria.add(Restrictions.eq("id", runsheet.getId()));
         }
