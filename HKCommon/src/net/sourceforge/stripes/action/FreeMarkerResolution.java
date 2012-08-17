@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.hk.service.impl.FreeMarkerService;
+
 import freemarker.template.Template;
 
 public class FreeMarkerResolution implements Resolution {

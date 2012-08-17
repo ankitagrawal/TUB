@@ -1,32 +1,15 @@
 package com.hk.web.action.core.order;
 
-import java.util.List;
-import java.util.Set;
-
-import com.hk.admin.engine.ShipmentPricingEngine;
-import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.order.CartLineItem;
-import com.hk.domain.order.ShippingOrder;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.LocalizableMessage;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-import org.stripesstuff.plugin.session.Session;
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.core.Keys;
+import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.core.fliter.CartLineItemFilter;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.offer.OfferInstance;
+import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
@@ -41,6 +24,17 @@ import com.hk.pricing.PricingEngine;
 import com.hk.web.action.core.cart.CartAction;
 import com.hk.web.action.core.payment.PaymentModeAction;
 import com.hk.web.action.core.user.SelectAddressAction;
+import net.sourceforge.stripes.action.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+import org.stripesstuff.plugin.session.Session;
+
+import java.util.List;
+import java.util.Set;
 
 @Secure
 @Component
@@ -134,7 +128,10 @@ public class OrderSummaryAction extends BaseAction {
         if (order.getAddress() == null) {
             return new RedirectResolution(SelectAddressAction.class);
         }
+
         pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), rewardPointsUsed), order.getAddress());
+        Set<CartLineItem> subscriptionCartLineItems=new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
+
         order.setRewardPointsUsed(rewardPointsUsed);
         order = (Order) getBaseDao().save(order);
 
@@ -156,6 +153,11 @@ public class OrderSummaryAction extends BaseAction {
             Double payable = pricingDto.getGrandTotalPayable();
             if (payable < codMinAmount || payable > codMaxAmount) {
                 codAllowed = false;
+            }
+        }
+        if(codAllowed){
+            if(subscriptionCartLineItems!=null && subscriptionCartLineItems.size()>0){
+                codAllowed=false;
             }
         }
 
@@ -249,7 +251,6 @@ public class OrderSummaryAction extends BaseAction {
         this.availableCourierList = availableCourierList;
     }
 
-
     public boolean isHideCod() {
         return hideCod;
     }
@@ -265,4 +266,5 @@ public class OrderSummaryAction extends BaseAction {
     public void setCashbackOnGroundshipped(Double cashbackOnGroundshipped) {
         this.cashbackOnGroundshipped = cashbackOnGroundshipped;
     }
+
 }

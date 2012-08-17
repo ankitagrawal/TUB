@@ -10,7 +10,7 @@ import com.hk.pact.dao.BaseDao;
 
 public interface MarketingExpenseDao extends BaseDao {
 
-    public Page searchMarketingExpense(Category category, Date startDate, Date endDate, int pageNo, int perPage);
+    public Page searchMarketingExpense(Category category,  Long adNetworksId, Date startDate, Date endDate, int pageNo, int perPage);
 
     public MarketingExpense checkUniqueMarketingExpense(Category category, Date date, AdNetworks adNetworks);
 

@@ -2,13 +2,16 @@
 <%@ page import="com.hk.domain.catalog.product.Product" %>
 <%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.domain.subscription.SubscriptionProduct" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
 <s:layout-definition>
   <%
-    Product product = (Product) pageContext.getAttribute("product");
-    pageContext.setAttribute("product", product);
+      Product product = (Product) pageContext.getAttribute("product");
+      pageContext.setAttribute("product", product);
+      SubscriptionProduct subscriptionProduct = (SubscriptionProduct) pageContext.getAttribute("subscriptionProduct");
+      pageContext.setAttribute("subscriptionProduct", subscriptionProduct);
 
     CategoryDao categoryDao = (CategoryDao)ServiceLocatorFactory.getService(CategoryDao.class);
     Category eyeGlass = categoryDao.getCategoryByName("eyeglasses");
@@ -84,7 +87,12 @@
                           class="eyeGlass cta button_green"/>
               </c:when>
               <c:otherwise>
-                <s:submit name="addToCart" value="Place Order" class="addToCartButton cta button_green"/>
+                  <c:if test="${!empty subscriptionProduct}">
+                     &nbsp;&nbsp;
+                      <s:link beanclass="com.hk.web.action.core.subscription.SubscriptionAction" class="addSubscriptionButton"><b>Subscribe</b>
+                          <s:param name="productVariant" value="${product.productVariants[0]}"/> </s:link>
+                  </c:if>
+                  <s:submit name="addToCart" value="Place Order" class="addToCartButton cta button_green"/>
               </c:otherwise>
             </c:choose>
 

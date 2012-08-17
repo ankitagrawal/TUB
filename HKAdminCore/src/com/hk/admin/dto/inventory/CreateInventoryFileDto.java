@@ -1,11 +1,11 @@
 package com.hk.admin.dto.inventory;
 
+import java.util.Date;
+
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.ProductVariantInventory;
 import com.hk.domain.sku.SkuGroup;
-
-import java.util.Date;
 
 public class CreateInventoryFileDto {
     String barcode;

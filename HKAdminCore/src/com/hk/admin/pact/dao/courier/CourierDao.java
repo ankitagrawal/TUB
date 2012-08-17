@@ -1,9 +1,9 @@
 package com.hk.admin.pact.dao.courier;
 
+import java.util.List;
+
 import com.hk.domain.courier.Courier;
 import com.hk.pact.dao.BaseDao;
-
-import java.util.List;
 
 public interface CourierDao extends BaseDao {
 

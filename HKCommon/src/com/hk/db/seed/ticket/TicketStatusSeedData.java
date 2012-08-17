@@ -3,10 +3,11 @@ package com.hk.db.seed.ticket;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.hk.constants.ticket.EnumTicketStatus;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.TicketStatus;
-import org.springframework.stereotype.Component;
 
 @Component
 public class TicketStatusSeedData extends BaseSeedData {

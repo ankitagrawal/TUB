@@ -50,8 +50,8 @@
             -webkit-transition-duration: 0.2s;
             -moz-transition-duration: 0.2s;
             transition-duration: 0.2s;
-            background: -moz-linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0) 100%) repeat scroll 0 0 #F27506;
             background-color: #F27506;
+            background: -moz-linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0) 100%) repeat scroll 0 0 #F27506;
         }
 
         input[type="submit"].btn:hover, input[type="submit"].btn:focus {
@@ -120,7 +120,7 @@
         }
 
         div.paginationDiv {
-        /*margin: 15px;*/
+            margin: 10px;
             text-align: center;
         }
     </style>

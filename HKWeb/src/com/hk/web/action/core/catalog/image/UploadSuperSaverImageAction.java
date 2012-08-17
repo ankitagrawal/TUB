@@ -1,5 +1,28 @@
 package com.hk.web.action.core.catalog.image;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.FileBean;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.validation.SimpleError;
+import net.sourceforge.stripes.validation.ValidationMethod;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.akube.framework.util.BaseUtils;
@@ -14,22 +37,6 @@ import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.combo.SuperSaverImageService;
 import com.hk.util.ImageManager;
 import com.hk.web.action.core.catalog.SuperSaversAction;
-import net.sourceforge.stripes.action.*;
-import net.sourceforge.stripes.validation.SimpleError;
-import net.sourceforge.stripes.validation.ValidationMethod;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @Component
 public class UploadSuperSaverImageAction extends BasePaginatedAction {
@@ -40,7 +47,7 @@ public class UploadSuperSaverImageAction extends BasePaginatedAction {
     Product product;
     private Integer defaultPerPage = 10;
     Page superSaverPage;
-	private SuperSaverImage unassignedSuperSaver;
+    private SuperSaverImage unassignedSuperSaver;
 
     private static Logger logger = Logger.getLogger(SuperSaversAction.class);
 
@@ -95,17 +102,22 @@ public class UploadSuperSaverImageAction extends BasePaginatedAction {
 
     public Resolution getSuperSaversForProduct() {
         if (product != null) {
-            Combo combo = getComboDao().getComboById(product.getId());
-            if (combo == null) {
-                addRedirectAlertMessage(new SimpleMessage("No combo exists with the specified id! Kindly enter a valid combo id."));
-                return new ForwardResolution("/pages/manageSuperSaverImages.jsp");
-            } else {
-                superSaverImages = getSuperSaverImageService().getSuperSaverImages(product, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE);
-                superSaverPage = new Page(superSaverImages, defaultPerPage, getPageNo(), superSaverImages.size());
+            if (!product.isDeleted()) {
+                Combo combo = getComboDao().getComboById(product.getId());
+                if (combo == null) {
+                    addRedirectAlertMessage(new SimpleMessage("No combo exists with the specified id! Kindly enter a valid combo id."));
+                    return new ForwardResolution("/pages/manageSuperSaverImages.jsp");
+                } else {
+                    superSaverImages = getSuperSaverImageService().getSuperSaverImages(product, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE);
+                    superSaverPage = new Page(superSaverImages, defaultPerPage, getPageNo(), superSaverImages.size());
 
-                superSaverImages = superSaverPage.getList();
-                return new ForwardResolution("/pages/manageSuperSaverImages.jsp");
-            }
+                    superSaverImages = superSaverPage.getList();
+                    return new ForwardResolution("/pages/manageSuperSaverImages.jsp");
+                }
+            }else {
+            addRedirectAlertMessage(new SimpleMessage("The product entered has the isDeleted property set to true!"));
+            return new ForwardResolution("/pages/manageSuperSaverImages.jsp");
+        }
         } else {
             addRedirectAlertMessage(new SimpleMessage("No combo exists with the specified id! Kindly enter a valid combo id."));
             return new ForwardResolution("/pages/manageSuperSaverImages.jsp");
@@ -172,14 +184,14 @@ public class UploadSuperSaverImageAction extends BasePaginatedAction {
         return new RedirectResolution(SuperSaversAction.class);
     }
 
-	public Resolution editUnassignedSuperSaver() {
-		return new ForwardResolution("/pages/editUnassignedSuperSaver.jsp");
-	}
+    public Resolution editUnassignedSuperSaver() {
+        return new ForwardResolution("/pages/editUnassignedSuperSaver.jsp");
+    }
 
-	public Resolution saveUnassignedSuperSaver() {
-		superSaverImages = Arrays.asList(unassignedSuperSaver);
-		return editSuperSaverImageSettings();
-	}
+    public Resolution saveUnassignedSuperSaver() {
+        superSaverImages = Arrays.asList(unassignedSuperSaver);
+        return editSuperSaverImageSettings();
+    }
 
     public FileBean getFileBean() {
         return fileBean;
@@ -260,11 +272,11 @@ public class UploadSuperSaverImageAction extends BasePaginatedAction {
         return categoryService;
     }
 
-	public SuperSaverImage getUnassignedSuperSaver() {
-		return unassignedSuperSaver;
-	}
+    public SuperSaverImage getUnassignedSuperSaver() {
+        return unassignedSuperSaver;
+    }
 
-	public void setUnassignedSuperSaver(SuperSaverImage unassignedSuperSaver) {
-		this.unassignedSuperSaver = unassignedSuperSaver;
-	}
+    public void setUnassignedSuperSaver(SuperSaverImage unassignedSuperSaver) {
+        this.unassignedSuperSaver = unassignedSuperSaver;
+    }
 }

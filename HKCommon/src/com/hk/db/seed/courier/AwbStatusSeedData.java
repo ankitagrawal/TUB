@@ -1,13 +1,13 @@
 package com.hk.db.seed.courier;
 
-import com.hk.constants.courier.EnumAwbStatus;
-import com.hk.domain.courier.AwbStatus;
-import com.hk.db.seed.BaseSeedData;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
+
+import com.hk.constants.courier.EnumAwbStatus;
+import com.hk.db.seed.BaseSeedData;
+import com.hk.domain.courier.AwbStatus;
 
 /**
  * Created by IntelliJ IDEA.

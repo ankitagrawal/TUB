@@ -1,16 +1,17 @@
 package com.hk.admin.impl.dao.warehouse;
 
-import com.hk.admin.pact.dao.warehouse.BinDao;
-import com.hk.domain.inventory.Bin;
-import com.hk.domain.warehouse.Warehouse;
-import com.hk.impl.dao.BaseDaoImpl;
+import java.util.List;
+
 import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import com.hk.admin.pact.dao.warehouse.BinDao;
+import com.hk.domain.inventory.Bin;
+import com.hk.domain.warehouse.Warehouse;
+import com.hk.impl.dao.BaseDaoImpl;
 
 @Repository
 public class BinDaoImpl extends BaseDaoImpl implements BinDao {

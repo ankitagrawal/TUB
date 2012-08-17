@@ -1,5 +1,13 @@
 package com.hk.impl.dao.affiliate;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
 import com.akube.framework.dao.Page;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.core.RoleConstants;
@@ -10,14 +18,6 @@ import com.hk.domain.user.User;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.affiliate.AffiliateDao;
 import com.hk.pact.service.RoleService;
-
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Repository
 public class AffiliateDaoImpl extends BaseDaoImpl implements AffiliateDao {

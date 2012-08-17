@@ -1,5 +1,19 @@
 package com.hk.impl.service.order;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.akube.framework.dao.Page;
 import com.hk.comparator.BasketCategory;
 import com.hk.constants.core.Keys;
@@ -42,14 +56,6 @@ import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 
 import com.hk.pojo.DummyOrder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.*;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -113,7 +119,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Page searchOrders(OrderSearchCriteria orderSearchCriteria, int pageNo, int perPage) {
-        return getOrderDao().searchOrders(orderSearchCriteria, pageNo, perPage);
+            return getOrderDao().searchOrders(orderSearchCriteria, pageNo, perPage);
     }
 
     @Override
@@ -265,7 +271,7 @@ public class OrderServiceImpl implements OrderService {
         // order = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Ready_For_Process,
         // EnumOrderStatus.ESCALTED, EnumOrderStatus.PARTIAL_ESCALTION);
 
-       User loggedOnUser = getUserService().getLoggedInUser();
+        User loggedOnUser = getUserService().getLoggedInUser();
         if(loggedOnUser == null){
             loggedOnUser = order.getUser();
         }

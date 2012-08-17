@@ -17,6 +17,7 @@ public enum EnumCartLineItemType {
   OrderLevelDiscount(30L, "OrderLevelDiscount"),
   CodCharges(40L, "COD Charges"),
   RewardPoint(50L, "Reward Point"),
+  Subscription(70L, "Subscription"),
   ;
 
   private java.lang.String name;

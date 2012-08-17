@@ -95,6 +95,15 @@ public class Keys {
         public static final String moogaEnabled                 = "moogaOn";
 
         public static final String cashBackPercentageOnGroundShipped   = "cashBackPercentageOnGroundShipped";
+
+        public static final String moogaCache                   = "moogaCache";
+
+        public static final String minSubscriptionDays          = "minSubscriptionDays";
+        public static final String maxSubscriptionDays          = "maxSubscriptionDays";
+        public static final String subscriptionCustomerBufferDays           = "subscriptionCustomerBufferDays";
+        public static final String subscriptionInventoryBufferDays          = "subscriptionInventoryBufferDays";
+
+
     }
 
     /*

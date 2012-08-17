@@ -1,12 +1,12 @@
 package com.hk.pact.dao.sku;
 
+import java.util.List;
+
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.pact.dao.BaseDao;
-
-import java.util.List;
 
 public interface SkuGroupDao extends BaseDao {
 

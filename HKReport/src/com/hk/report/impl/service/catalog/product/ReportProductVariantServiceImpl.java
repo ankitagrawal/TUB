@@ -11,11 +11,19 @@ import org.springframework.stereotype.Service;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
-import com.hk.report.dto.inventory.*;
+import com.hk.report.dto.inventory.ExpiryAlertReportDto;
+import com.hk.report.dto.inventory.InventorySoldDto;
+import com.hk.report.dto.inventory.RTODamageReportDto;
+import com.hk.report.dto.inventory.RTOFineReportDto;
+import com.hk.report.dto.inventory.RTOReportDto;
+import com.hk.report.dto.inventory.RVReportDto;
+import com.hk.report.dto.inventory.StockReportDto;
 import com.hk.report.pact.dao.catalog.product.ReportProductVariantDao;
 import com.hk.report.pact.service.catalog.product.ReportProductVariantService;
 
@@ -33,6 +41,10 @@ public class ReportProductVariantServiceImpl implements ReportProductVariantServ
 
     public InventorySoldDto findInventorySoldByDateAndProduct(Date startDate, Date endDate, String productId) {
         return getReportProductVariantDao().findInventorySoldByDateAndProduct(startDate, endDate,productId);
+    }
+
+    public Long findSkuInventorySold(Date startDate, Date endDate, Sku sku) {
+        return getReportProductVariantDao().findSkuInventorySold(startDate, endDate, sku);
     }
 
     public List<ExpiryAlertReportDto> getToBeExpiredProductDetails(Date startDate, Date endDate, Warehouse warehouse) {
@@ -146,6 +158,10 @@ public class ReportProductVariantServiceImpl implements ReportProductVariantServ
     public List<RVReportDto> getReconciliationVoucherDetail(String productVariantId, Warehouse warehouse, Date startDate, Date endDate) {
         List<RVReportDto> rvReportDtoList = reportProductVariantDao.getReconciliationVoucherDetail(productVariantId, warehouse, startDate, endDate);
         return rvReportDtoList;
+    }
+
+    public List<GrnLineItem> getGrnLineItemForPurchaseOrder(ProductVariant productVariant, Warehouse warehouse, Date startDate, Date endDate){
+        return getReportProductVariantDao().getGrnLineItemForPurchaseOrder(productVariant, warehouse, startDate, endDate);
     }
 
     public ReportProductVariantDao getReportProductVariantDao() {
