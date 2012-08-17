@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Iterator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -138,6 +139,15 @@ public class GenerateExcelAction extends BaseAction {
         List<Product> products = productDao.getAllProductByCategory(category);
         String excelFilePath = adminDownloadsPath + "/categoryExcelFiles/Amazon_" + sdf.format(new Date()) + "/" + category + "_" + sdf.format(new Date()) + ".xls";
         excelFile = new File(excelFilePath);
+
+      // non-deleted
+
+      for (Iterator<Product> productIterator = products.iterator(); productIterator.hasNext();) {
+        Product product = productIterator.next();
+        if (product.isDeleted()) {
+          productIterator.remove();
+        }
+      }
 
         amazonXslGenerator.generateCatalogExcel(products, excelFilePath);
         addRedirectAlertMessage(new SimpleMessage("Downlaod complete"));

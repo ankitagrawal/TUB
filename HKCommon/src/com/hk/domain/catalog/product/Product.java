@@ -1,4 +1,3 @@
-
 package com.hk.domain.catalog.product;
 
 import java.util.ArrayList;
@@ -122,23 +121,27 @@ public class Product implements java.io.Serializable {
     @JsonSkip
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "product_has_related_product", joinColumns = { @JoinColumn(name = "product_id", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "related_product_id", nullable = false, updatable = false) })
-    private List<Product>        relatedProducts = new ArrayList<Product>(0);
+    private List<Product>        relatedProducts  = new ArrayList<Product>(0);
 
     @JsonSkip
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
-    private List<ProductVariant> productVariants = new ArrayList<ProductVariant>(0);
+    private List<ProductVariant> productVariants  = new ArrayList<ProductVariant>(0);
 
     @JsonSkip
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "category_has_product", joinColumns = { @JoinColumn(name = "product_id", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "category_name", nullable = false, updatable = false) })
-    private List<Category>       categories      = new ArrayList<Category>(0);
+    private List<Category>       categories       = new ArrayList<Category>(0);
+
+    @JsonSkip
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
+    private List<SimilarProduct> similarProducts  = new ArrayList<SimilarProduct>(0);
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
-    private List<ProductFeature> productFeatures = new ArrayList<ProductFeature>();
+    private List<ProductFeature> productFeatures  = new ArrayList<ProductFeature>();
 
     @JsonSkip
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
-    private List<ProductImage>   productImages   = new ArrayList<ProductImage>();
+    private List<ProductImage>   productImages    = new ArrayList<ProductImage>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "primary_category", nullable = false)
@@ -153,7 +156,6 @@ public class Product implements java.io.Serializable {
 
     @Column(name = "is_subscribable", nullable = true)
     private Boolean              isSubscribable;
-
 
     @Transient
     private String               categoriesPipeSeparated;
@@ -525,13 +527,21 @@ public class Product implements java.io.Serializable {
     }
 
     public String getProductURL() {
-      return productURL;
+        return productURL;
     }
 
-	  public void setProductURL(String productURL) {
-		  this.productURL = productURL;
-	  }
-  
+    public void setProductURL(String productURL) {
+        this.productURL = productURL;
+    }
+
+    public List<SimilarProduct> getSimilarProducts() {
+        return similarProducts;
+    }
+
+    public void setSimilarProducts(List<SimilarProduct> similarProducts) {
+        this.similarProducts = similarProducts;
+    }
+
     public String getPipeSeparatedCategories() {
         StringBuffer stringBuffer = new StringBuffer();
         for (Iterator<Category> categoriesIterator = categories.iterator(); categoriesIterator.hasNext();) {
@@ -630,9 +640,9 @@ public class Product implements java.io.Serializable {
     }
 
     public boolean isSubscribable() {
-        if(isSubscribable!=null){
+        if (isSubscribable != null) {
             return isSubscribable;
-        }else{
+        } else {
             return false;
         }
     }

@@ -44,6 +44,7 @@
     <%--<jsp:include page="/categoryBanners/holiBanner.jsp"/>--%>
     <%--<jsp:include page="/categoryBanners/beautyIntroDiscount.jsp"/>--%>
     <%--<jsp:include page="/categoryBanners/absoluteComingSoon.jsp"/>--%>
+    <jsp:include page="/categoryBanners/beautyPrepayDiscount.jsp"/>
   </c:if>
 
   <c:if test="${hk:collectionContains(categoryNameList, 'clinical-supplies')}">
