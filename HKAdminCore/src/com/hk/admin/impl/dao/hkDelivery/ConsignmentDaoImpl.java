@@ -1,12 +1,9 @@
 package com.hk.admin.impl.dao.hkDelivery;
 
 import com.hk.domain.courier.Awb;
+import com.hk.domain.hkDelivery.*;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.admin.pact.dao.hkDelivery.ConsignmentDao;
-import com.hk.domain.hkDelivery.Consignment;
-import com.hk.domain.hkDelivery.Hub;
-import com.hk.domain.hkDelivery.ConsignmentTracking;
-import com.hk.domain.hkDelivery.RunsheetStatus;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.user.User;
 import com.hk.constants.hkDelivery.EnumConsignmentStatus;
@@ -24,7 +21,7 @@ public class ConsignmentDaoImpl extends BaseDaoImpl implements ConsignmentDao {
     public Consignment createConsignment(String awbNumber,String cnnNumber ,double amount, String paymentMode ,Hub hub) {
         Consignment consignmentObj = new Consignment();
         consignmentObj.setHub(hub);
-        consignmentObj.setConsignmentStatus(EnumConsignmentStatus.ShipmntRcvdAtHub.asConsignmentStatus());
+        consignmentObj.setConsignmentStatus(get(ConsignmentStatus.class, EnumConsignmentStatus.ShipmentReceivedAtHub.getId()));
         consignmentObj.setAwbNumber(awbNumber);
         consignmentObj.setAmount(amount);
         consignmentObj.setCnnNumber(cnnNumber);

@@ -2,9 +2,9 @@ package com.hk.web.action.admin.hkDelivery;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
+import com.hk.admin.pact.dao.hkDelivery.RunSheetDao;
 import com.hk.admin.pact.service.hkDelivery.RunSheetService;
-import com.hk.domain.hkDelivery.Runsheet;
-import com.hk.domain.hkDelivery.RunsheetStatus;
+import com.hk.domain.hkDelivery.*;
 import com.hk.domain.user.User;
 import com.hk.util.CustomDateTypeConvertor;
 import net.sourceforge.stripes.action.*;
@@ -16,8 +16,6 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Shipment;
-import com.hk.domain.hkDelivery.Consignment;
-import com.hk.domain.hkDelivery.Hub;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.UserService;
 import com.hk.admin.pact.service.courier.AwbService;
@@ -78,6 +76,8 @@ public class HKDRunsheetAction extends BasePaginatedAction {
     RunSheetService                       runsheetService;
     @Autowired
     HubService                            hubService;
+    @Autowired
+    RunSheetDao                           runSheetDao;
 
 
     @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
@@ -136,7 +136,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
     public Resolution closeRunsheet(){
         if(runsheet != null){
             if(runsheetService.isRunsheetClosable(runsheet)){
-                runsheet.setRunsheetStatus(EnumRunsheetStatus.Close.asRunsheetStatus());
+                runsheet.setRunsheetStatus(getRunSheetDao().get(RunsheetStatus.class, EnumRunsheetStatus.Close.getId()));
             }
             runsheetService.saveRunSheet(runsheet);
         }
@@ -168,7 +168,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
             Courier               hkDeliveryCourier               = EnumCourier.HK_Delivery.asCourier();
             List<String>          duplicatedAwbNumbers            = null ;
             String                duplicateAwbString              = "";
-
+            ConsignmentStatus outForDelivery = getBaseDao().get(ConsignmentStatus.class, EnumConsignmentStatus.ShipmentOutForDelivery.getId());
             //Checking if agent selected has any open runsheet or not.
             if (runsheetService.agentHasOpenRunsheet(agent) == true) {
                 addRedirectAlertMessage(new SimpleMessage(agent.getName() + " already has an open runsheet"));
@@ -203,7 +203,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
                             shippingOrderList.add(shipmentService.findByAwb(awbService.findByCourierAwbNumber(hkDeliveryCourier, trackingNum)).getShippingOrder());
 
                             //Changing consignment-status from ShipmntRcvdAtHub(10) to ShipmntOutForDelivry(20).
-                            consignment.setConsignmentStatus(EnumConsignmentStatus.ShipmntOutForDelivry.asConsignmentStatus());
+                            consignment.setConsignmentStatus(outForDelivery);
                             consignments.add(consignment);
                         } else {
                             //adding the trackingId without a consignment to a list.
@@ -220,7 +220,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
             try {
                 xlsFile = new File(adminDownloads + "/" + CourierConstants.HKDELIVERY_WORKSHEET_FOLDER + "/" + CourierConstants.HKDELIVERY_WORKSHEET + "_" + sdf.format(new Date()) + ".xls");
                 // Creating Runsheet object.
-                runsheetObj = runsheetService.createRunsheet(hub, consignments, EnumRunsheetStatus.Open.asRunsheetStatus(), agent, prePaidBoxCount, Long.parseLong(totalCODPackets + ""), totalCODAmount);
+                runsheetObj = runsheetService.createRunsheet(hub, consignments, getRunSheetDao().get(RunsheetStatus.class, EnumRunsheetStatus.Open.getId()), agent, prePaidBoxCount, Long.parseLong(totalCODPackets + ""), totalCODAmount);
                 // Saving Runsheet in db.
                 runsheetService.saveRunSheet(runsheetObj);
                 //making corresponding entry in consignment tracking.
@@ -392,5 +392,13 @@ public class HKDRunsheetAction extends BasePaginatedAction {
 
     public void setRunsheetConsignments(List<Consignment> runsheetConsignments) {
         this.runsheetConsignments = runsheetConsignments;
+    }
+
+    public RunSheetDao getRunSheetDao() {
+        return runSheetDao;
+    }
+
+    public void setRunSheetDao(RunSheetDao runSheetDao) {
+        this.runSheetDao = runSheetDao;
     }
 }

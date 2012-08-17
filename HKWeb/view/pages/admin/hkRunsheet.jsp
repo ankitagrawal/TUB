@@ -44,11 +44,14 @@
                 <tr>
                     <td><label>Agent:</label></td>
                     <td>
+<%--
                         <s:select name="runsheet.agent" value="${runsheetAction.runsheet.agent.id}">
                             <hk:master-data-collection service="<%=MasterDataDao.class%>"
                                                        serviceProperty="HKDeliveryAgentList" value="id"
                                                        label="name"/>
                         </s:select>
+--%>
+                        ${runsheetAction.runsheet.agent.name}
                     </td>
                     <td><label>Remarks: </label></td>
                     <td><s:textarea name="runsheet.remarks" style="height:50px;"/></td>

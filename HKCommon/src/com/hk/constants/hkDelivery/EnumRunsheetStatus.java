@@ -36,19 +36,5 @@ public enum EnumRunsheetStatus {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public RunsheetStatus asRunsheetStatus() {
-    RunsheetStatus runsheetStatus = new RunsheetStatus();
-    runsheetStatus.setId(this.getId());
-    runsheetStatus.setStatus(this.getStatus());
-    return runsheetStatus;
-  }
-    
-    public static List<RunsheetStatus> getAll() {
-        return Arrays.asList(
-                EnumRunsheetStatus.Open.asRunsheetStatus(),
-                EnumRunsheetStatus.Close.asRunsheetStatus(),
-                EnumRunsheetStatus.OnHold.asRunsheetStatus());
-    }
+    }       
 }
