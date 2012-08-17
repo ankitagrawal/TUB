@@ -576,24 +576,37 @@
 						style="vertical-align: top; padding-top: 5px;"><span
 						style="font-weight: bold">How to choose the frame that fits
 					you?</span><br />
-					Frames are typically of 3 sizes – <span
-						style="font-weight: bold">Large, Medium and Small.</span> 90% of
-					adult population use medium sized frames. What you need to look at
-					is at the measurement indicated on the frame. So for example the
-					measurement mentioned in your current frame is <span
-						style="font-weight: bold">52-16-130.</span> The first
-					figure, 52, is the Eye Size of the frame. This is also indicated in
-					the diagram on the side. The table below gives the size range for
-					the different types of frames. <br/><br/>
+					Frames are typically of 3 sizes – <span style="font-weight: bold">Large,
+					Medium and Small.</span> 90% of adult population use medium sized
+					frames. What you need to look at is at the measurement indicated on
+					the frame. So for example the measurement mentioned in your current
+					frame is <span style="font-weight: bold">52-16-130.</span> The
+					first figure, 52, is the Eye Size of the frame. This is also
+					indicated in the diagram on the side. The table below gives the
+					size range for the different types of frames. <br />
+					<br />
 					<div align="center">
 					<table style="text-align: center">
-					<tr><td><span
-						style="font-weight: bold">Frame Type</span></td><td><span
-						style="font-weight: bold">Dimension Range</span></td></tr>
-					<tr><td>Small</td><td style="text-align: center;">40-48 mm</td></tr>
-					<tr><td>Medium</td><td style="text-align: center;">49-54 mm</td></tr>
-					<tr><td>Large</td><td style="text-align: center;">55-58 mm</td></tr>
-					<tr><td>Extra Large</td><td style="text-align: center;">58 mm and above</td></tr>
+						<tr>
+							<td><span style="font-weight: bold">Frame Type</span></td>
+							<td><span style="font-weight: bold">Dimension Range</span></td>
+						</tr>
+						<tr>
+							<td>Small</td>
+							<td style="text-align: center;">40-48 mm</td>
+						</tr>
+						<tr>
+							<td>Medium</td>
+							<td style="text-align: center;">49-54 mm</td>
+						</tr>
+						<tr>
+							<td>Large</td>
+							<td style="text-align: center;">55-58 mm</td>
+						</tr>
+						<tr>
+							<td>Extra Large</td>
+							<td style="text-align: center;">58 mm and above</td>
+						</tr>
 					</table>
 					</div>
 					<a target="_blank"
