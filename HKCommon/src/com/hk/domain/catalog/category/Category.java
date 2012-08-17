@@ -125,11 +125,13 @@ public class Category implements java.io.Serializable {
   }
 
   public static void main(String[] args) {
-    System.out.println(getNameFromDisplayName("Cloth Diapers/Nappies"));
+      
+      System.out.println(getNameFromDisplayName("Accu-Chek Freedom from Diabetes Combo"));
+    /*System.out.println(getNameFromDisplayName("Cloth Diapers/Nappies"));
     System.out.println(getNameFromDisplayName("Pacifiers & Teethers"));
     System.out.println(getNameFromDisplayName("Soaps, Shampoos & Body Wash"));
     System.out.println(getNameFromDisplayName("Soaps, Shampoos (helo) & Body Wash"));
-    System.out.println(getNameFromDisplayName("Soaps, Shampoos % (helo) & Body Wash"));
+    System.out.println(getNameFromDisplayName("Soaps, Shampoos % (helo) & Body Wash"));*/
   }
 
 }

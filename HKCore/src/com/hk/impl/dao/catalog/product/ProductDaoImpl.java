@@ -1,15 +1,12 @@
 package com.hk.impl.dao.catalog.product;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -165,7 +162,38 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
         return null;
     }
 
-    // test code
+	public Page getProductByCategoryBrandAndOptions(List<String> categoryNames, String brand, List<Long> filters, int groupsCount, Double minPrice, Double maxPrice, int page, int perPage) {
+		if (categoryNames != null && categoryNames.size() > 0) {
+			String query = "select pv.product.id from ProductVariant pv inner join pv.product.categories c where c.name in (:categories) and pv.hkPrice between :min and :max group by pv.product.id having count(*) = :tagCount";
+			List<String> productIds;
+			Query queryObj = getSession().createQuery(query).setParameterList("categories", categoryNames);
+			queryObj = queryObj.setParameter("min", minPrice).setParameter("max", maxPrice).setInteger("tagCount", categoryNames.size());
+			productIds = queryObj.list();
+			logger.debug("productIds: " + productIds);
+			if (productIds != null && productIds.size() > 0) {
+				if (filters != null && !filters.isEmpty()) {
+					String query2 = "select distinct pv.product_id from product_variant_has_product_option pvhpo, product_variant pv " + "where pvhpo.product_variant_id=pv.id and pvhpo.product_option_id in (:options) and pv.product_id in (:productIds) " + "group by pvhpo.product_variant_id having count(pvhpo.product_variant_id) = :groupsCount";
+					productIds = getSession().createSQLQuery(query2).setParameterList("options", filters).setParameterList("productIds", productIds).setInteger("groupsCount", groupsCount).list();
+					logger.debug("productIds: " + productIds);
+				}
+				if (productIds != null && !productIds.isEmpty()) {
+					DetachedCriteria criteria = DetachedCriteria.forClass(Product.class);
+					if (StringUtils.isNotBlank(brand)) {
+						criteria.add(Restrictions.eq("brand", brand));
+					}
+					criteria.add(Restrictions.in("id", productIds));
+					criteria.add(Restrictions.eq("deleted", false));
+					criteria.add(Restrictions.eq("isGoogleAdDisallowed", false));
+					criteria.addOrder(Order.asc("orderRanking"));
+
+					return list(criteria, page, perPage);
+				}
+			}
+		}
+		return null;
+	}
+
+	// test code
     public Page getProductByCategoryAndBrandNew(Category cat1, Category cat2, Category cat3, String brand, int page, int perPage) {
 
         String q = "SELECT c.product_id FROM category_has_product c WHERE c.category_name =\"" + cat1.getName() + ""
@@ -281,6 +309,10 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
         List<ProductOption> optionList = getSession().createQuery("from ProductOption po where po.name = :name and po.value = :value").setString("name", name).setString("value",
                 value).list();
         return optionList != null && optionList.size() > 0 ? optionList.get(0) : null;
+    }
+	
+	public List<ProductOption> getProductOptions(List<Long> options) {
+        return getSession().createQuery("from ProductOption po where po.id in(:options) order by upper(po.name), po.value asc").setParameterList("options", options).list();
     }
 
 }
