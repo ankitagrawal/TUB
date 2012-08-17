@@ -4,7 +4,10 @@ import java.util.List;
 import java.util.Set;
 
 import com.hk.domain.catalog.category.Category;
+import com.hk.domain.catalog.product.ProductOption;
 import com.hk.pact.dao.BaseDao;
+import com.hk.dto.ProductOptionDto;
+import com.hk.dto.PriceRangeDto;
 
 public interface CategoryDao extends BaseDao {
 
@@ -17,5 +20,9 @@ public interface CategoryDao extends BaseDao {
     public Category getCategoryByName(String name);
 
     public List<Category> getPrimaryCategories();
+
+	public List<ProductOptionDto> getProductOptions(List<String> categoryNames, List<Long> filterOptions, int groupsCount);
+
+	public PriceRangeDto getPriceRange(List<String> categoryNames, List<Long> filterOptions, int groupsCount);
 
 }

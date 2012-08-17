@@ -96,4 +96,6 @@ public interface ProductService {
     public Map<String,List<String>> getRecommendedProducts(Product product);
 
     Map<String, List<String>> getRelatedMoogaProducts(Product findProduct);
+
+    public Map<String, List<Long>> getGroupedFilters(List<Long> filters);
 }

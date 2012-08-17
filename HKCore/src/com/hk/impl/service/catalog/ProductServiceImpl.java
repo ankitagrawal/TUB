@@ -1,13 +1,6 @@
 package com.hk.impl.service.catalog;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import net.sourceforge.stripes.controller.StripesFilter;
 
@@ -319,6 +312,23 @@ public class ProductServiceImpl implements ProductService {
         }
         return primaryCategoryHeading.getProducts();
     }
+
+	public Map<String, List<Long>> getGroupedFilters(List<Long> filters){
+		Map<String, List<Long>> filterMap = new HashMap<String, List<Long>>();
+		List<Long> groupedFilters;
+		List<ProductOption> options = getProductDAO().getProductOptions(filters);
+		for (ProductOption option : options) {
+			String group = option.getName().toUpperCase();
+			if (filterMap.containsKey(group)) {
+				groupedFilters = filterMap.get(group);
+			} else {
+				groupedFilters = new ArrayList<Long>(0);
+			}
+			groupedFilters.add(option.getId());
+			filterMap.put(group, groupedFilters);
+		}
+		return filterMap;
+	}
 }
 
 
