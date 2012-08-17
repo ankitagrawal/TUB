@@ -1,6 +1,7 @@
 package com.hk.admin.impl.service.hkDelivery;
 
 import com.hk.domain.courier.Awb;
+import com.hk.domain.hkDelivery.ConsignmentStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
@@ -38,7 +39,7 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     public Consignment createConsignment(String awbNumber,String cnnNumber ,double amount, String paymentMode ,Hub hub){
         Consignment consignmentObj = new Consignment();
         consignmentObj.setHub(hub);
-        consignmentObj.setConsignmentStatus(EnumConsignmentStatus.ShipmntRcvdAtHub.asConsignmentStatus());
+        consignmentObj.setConsignmentStatus(consignmentDao.get(ConsignmentStatus.class, EnumConsignmentStatus.ShipmentReceivedAtHub.getId()));
         consignmentObj.setAwbNumber(awbNumber);
         consignmentObj.setAmount(amount);
         consignmentObj.setCnnNumber(cnnNumber);

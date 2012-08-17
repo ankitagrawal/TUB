@@ -325,10 +325,10 @@ public class MasterDataDaoImpl implements MasterDataDao {
     }
 
     public List<RunsheetStatus> getRunsheetStatusList(){
-        return EnumRunsheetStatus.getAll();
+        return getBaseDao().getAll(RunsheetStatus.class);
     }
 
     public List<ConsignmentStatus> getConsignmentStatusList(){
-        return EnumConsignmentStatus.getAll();
+        return getBaseDao().getAll(ConsignmentStatus.class);
     }
 }

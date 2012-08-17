@@ -8,12 +8,12 @@ import java.util.List;
 
 public enum EnumConsignmentStatus {
 
-    ShipmntRcvdAtHub       (10L, "Shipment Received at Hub"),
-    ShipmntOutForDelivry   (20L, "Shipment out for Delivery"),
-    ShpmntDelivered        (30L, "Shipment Delivered"),
-    ShipmntOnHold          (40L, "Shipment on Hold"),
-    ShipmntLost            (50L, "Shipment Lost"),
-    ShipmntDamaged         (60L, "Shipment Damaged"),
+    ShipmentReceivedAtHub       (10L, "Shipment Received at Hub"),
+    ShipmentOutForDelivery   (20L, "Shipment out for Delivery"),
+    ShipmentDelivered        (30L, "Shipment Delivered"),
+    ShipmentOnHold          (40L, "Shipment on Hold"),
+    ShipmentLost            (50L, "Shipment Lost"),
+    ShipmentDamaged         (60L, "Shipment Damaged"),
     ShipmentRTO            (70L, "Shipment Returned");
 
 
@@ -40,24 +40,5 @@ public enum EnumConsignmentStatus {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public ConsignmentStatus asConsignmentStatus() {
-        ConsignmentStatus consignmentStatus = new ConsignmentStatus();
-        consignmentStatus.setId(this.getId());
-        consignmentStatus.setStatus(this.getStatus());
-        return consignmentStatus;
-    }
-
-    public static List<ConsignmentStatus> getAll() {
-        return Arrays.asList(
-                EnumConsignmentStatus.ShipmntRcvdAtHub.asConsignmentStatus(),
-                EnumConsignmentStatus.ShipmntOutForDelivry.asConsignmentStatus(),
-                EnumConsignmentStatus.ShpmntDelivered.asConsignmentStatus(),
-                EnumConsignmentStatus.ShipmntOnHold.asConsignmentStatus(),
-                EnumConsignmentStatus.ShipmntLost.asConsignmentStatus(),
-                EnumConsignmentStatus.ShipmntDamaged.asConsignmentStatus(),
-                EnumConsignmentStatus.ShipmentRTO.asConsignmentStatus()
-        );
     }
 }

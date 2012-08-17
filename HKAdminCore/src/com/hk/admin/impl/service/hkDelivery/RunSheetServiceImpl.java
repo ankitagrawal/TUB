@@ -54,7 +54,7 @@ public class RunSheetServiceImpl implements RunSheetService {
     @Override
     public boolean isRunsheetClosable(Runsheet runsheet) {
         for (Consignment consignment : runsheet.getConsignments()){
-            if(consignment.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmntOutForDelivry.getId())){
+            if(consignment.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentOutForDelivery.getId())){
                 return false;
             }
         }
@@ -64,14 +64,14 @@ public class RunSheetServiceImpl implements RunSheetService {
     public Runsheet markAllConsignmentsAsDelivered(Runsheet runsheet){
         Set<Consignment> consignments = runsheet.getConsignments();
         for (Consignment consignment : consignments){
-            consignment.setConsignmentStatus(EnumConsignmentStatus.ShpmntDelivered.asConsignmentStatus());
+            consignment.setConsignmentStatus(runsheetDao.get(ConsignmentStatus.class, EnumConsignmentStatus.ShipmentDelivered.getId()));
         }
         runsheet.setConsignments(consignments);
         return runsheet;
     }
 
     public boolean agentHasOpenRunsheet(User agent){
-        if(searchRunsheet(null,null,null, EnumRunsheetStatus.Open.asRunsheetStatus(),agent,null,1,10).getList().size() > 0){
+        if(searchRunsheet(null,null,null, runsheetDao.get(RunsheetStatus.class, EnumRunsheetStatus.Open.getId()),agent,null,1,10).getList().size() > 0){
             return true;
         }
         return false;
