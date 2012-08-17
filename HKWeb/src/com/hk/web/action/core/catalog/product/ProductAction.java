@@ -211,11 +211,12 @@ public class ProductAction extends BaseAction {
         for (Combo relatedCombo : relatedCombosForProduct) {
             if (getProductService().isComboInStock(relatedCombo)) {
                 relatedCombos.add(relatedCombo);
+                relatedCombo.setProductURL(linkManager.getRelativeProductURL(relatedCombo, ProductReferrerMapper.getProductReferrerid(EnumProductReferrer.relatedProductsPage.getName())));
                 if (relatedCombos.size() == 6) {
                     break;
                 }
             }
-            relatedCombo.setProductURL(linkManager.getRelativeProductURL(relatedCombo, ProductReferrerMapper.getProductReferrerid(EnumProductReferrer.relatedProductsPage.getName())));
+            
         }
 
         if (combo == null) {
