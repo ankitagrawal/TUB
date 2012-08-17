@@ -137,6 +137,20 @@
 			$(".filterCatalogForm").submit();
 		});
 
+		$(".filterOptionLink").click(function() {
+			var li = $(this).parents(".filterOptionLi");
+			var cb = li.find(".filterOption");
+			cb.attr("checked", true);
+			var ctr = 0;
+			$(".filterOption").each(function() {
+				if ($(this).attr("checked")) {
+					$('<input type="hidden" value="' + $(this).val() + '" name="filterOptions[' + ctr + ']">').appendTo('.filterCatalogForm');
+					ctr++;
+				}
+			});
+			$(".filterCatalogForm").submit();
+		});
+
 		$(".removeFilters").click(function() {
 			$("#minPrice").val(${priceRange.minPrice});
 			$("#maxPrice").val(${priceRange.maxPrice});
@@ -244,7 +258,7 @@
 					</h5>
 					<ul style="padding-left:10px;" id="${filter.key}">
 						<c:forEach items="${filter.value}" var="option">
-							<li style="vertical-align:middle;">
+							<li style="vertical-align:middle;" class="filterOptionLi">
 								<c:choose>
 									<c:when test="${hk:collectionContains(ca.filterOptions, option.id)}">
 										<input type="checkbox" class="filterOption" value="${option.id}"
@@ -254,7 +268,7 @@
 										<input type="checkbox" class="filterOption" value="${option.id}"/>
 									</c:otherwise>
 								</c:choose>
-									${option.value} (${option.qty})
+									<a style="color:black;cursor:pointer;" class="filterOptionLink">${option.value} (${option.qty})</a>
 							</li>
 							<c:set var="ctr2" value="${ctr}"/>
 							<c:set var="ctr" value="${ctr2+1}"/>
