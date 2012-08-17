@@ -55,17 +55,7 @@
 		}
 	}
 
-
 	CatalogFilter catalogFilter = (CatalogFilter) ServiceLocatorFactory.getService("CatalogFilter");
-	/*String childCategory = ca.getChildCategorySlug();
-	if (ca.getSecondaryChildCategorySlug() != null) {
-		childCategory = ca.getSecondaryChildCategorySlug();
-	}
-	if (ca.getTertiaryChildCategorySlug() != null) {
-		childCategory = ca.getTertiaryChildCategorySlug();
-	}*/
-	Map<String, List<ProductOptionDto>> filterMap = catalogFilter.getFilterOptions(categoryNames, ca.getFilterOptions());
-	pageContext.setAttribute("filterMap", filterMap);
 
 	PriceRangeDto priceRange = catalogFilter.getPriceRange(categoryNames, ca.getFilterOptions());
 	pageContext.setAttribute("priceRange", priceRange);
@@ -77,6 +67,9 @@
 		filteredPriceRange = priceRange;
 	}
 	pageContext.setAttribute("filteredPriceRange", filteredPriceRange);
+
+	Map<String, List<ProductOptionDto>> filterMap = catalogFilter.getFilterOptions(categoryNames, ca.getFilterOptions(), filteredPriceRange.getMinPrice(), filteredPriceRange.getMaxPrice());
+	pageContext.setAttribute("filterMap", filterMap);
 
 %>
 

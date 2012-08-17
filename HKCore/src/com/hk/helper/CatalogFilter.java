@@ -24,9 +24,9 @@ public class CatalogFilter {
 	private Map<String, List<ProductOptionDto>> filterMap;
 	private List<ProductOptionDto> filterOptionDtoSet;
 
-	public Map<String, List<ProductOptionDto>> getFilterOptions(List<String> categoryNames, List<Long> filterOptions) {
+	public Map<String, List<ProductOptionDto>> getFilterOptions(List<String> categoryNames, List<Long> filterOptions, Double minPrice, Double maxPrice) {
 		filterMap = new HashMap<String, List<ProductOptionDto>>();
-		List<ProductOptionDto> optionDtoList = categoryService.getFilterOptions(categoryNames, filterOptions);
+		List<ProductOptionDto> optionDtoList = categoryService.getFilterOptions(categoryNames, filterOptions, minPrice, maxPrice);
 		if (optionDtoList != null) {
 			for (ProductOptionDto productOptionDto : optionDtoList) {
 				String option = productOptionDto.getName().toUpperCase();

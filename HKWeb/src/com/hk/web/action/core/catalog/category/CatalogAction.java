@@ -161,7 +161,7 @@ public class CatalogAction extends BasePaginatedAction {
 		}
 
 		try {
-			if(!filterOptions.isEmpty()){
+			if (!filterOptions.isEmpty() || (minPrice != null && maxPrice != null)) {
 				throw new Exception("Using filters. SOLR can't return results so hitting DB");
 			}
 			productPage = solrManager.getCatalogResults(rootCategorySlug, smallestCategory, secondSmallestCategory, thirdSmallestCategory, brand, getCustomSortBy(), getCustomSortOrder(), getCustomStartRange(), getCustomEndRange(), getPageNo(), getPerPage(), preferredZone);
