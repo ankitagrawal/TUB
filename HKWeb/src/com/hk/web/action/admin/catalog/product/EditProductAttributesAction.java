@@ -3,7 +3,11 @@ package com.hk.web.action.admin.catalog.product;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.JsonResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -38,7 +42,6 @@ import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.util.HKImageUtils;
 import com.hk.util.XslGenerator;
 import com.hk.web.HealthkartResponse;
-import com.hk.web.action.core.catalog.product.ProductAction;
 
 /**
  * Created by IntelliJ IDEA. User: PRATHAM Date: 3/23/12 Time: 11:31 PM To change this template use File | Settings |

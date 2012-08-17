@@ -1,9 +1,10 @@
 package com.hk.impl.dao.subscription;
 
+import org.springframework.stereotype.Repository;
+
 import com.hk.domain.subscription.SubscriptionLifecycle;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.subscription.SubscriptionLifecycleDao;
-import org.springframework.stereotype.Repository;
 
 /**
  * Created by IntelliJ IDEA.

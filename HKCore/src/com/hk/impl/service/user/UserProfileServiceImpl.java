@@ -7,10 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.hk.constants.subscription.EnumSubscriptionStatus;
-import com.hk.domain.subscription.Subscription;
-import com.hk.domain.subscription.SubscriptionStatus;
-import com.hk.pact.service.subscription.SubscriptionStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +21,7 @@ import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
 import com.hk.pact.dao.user.UserProfileDao;
 import com.hk.pact.service.OrderStatusService;
+import com.hk.pact.service.subscription.SubscriptionStatusService;
 import com.hk.pact.service.user.UserProfileService;
 
 @Service

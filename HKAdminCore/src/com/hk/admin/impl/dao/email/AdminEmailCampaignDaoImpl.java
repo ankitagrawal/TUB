@@ -1,16 +1,14 @@
 package com.hk.admin.impl.dao.email;
 
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
+
 import com.akube.framework.dao.Page;
+import com.hk.admin.pact.dao.email.AdminEmailCampaignDao;
 import com.hk.domain.core.EmailType;
 import com.hk.domain.email.EmailCampaign;
 import com.hk.impl.dao.BaseDaoImpl;
-import com.hk.admin.pact.dao.email.AdminEmailCampaignDao;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
-import org.hibernate.Criteria;
-import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 public class AdminEmailCampaignDaoImpl extends BaseDaoImpl implements AdminEmailCampaignDao {

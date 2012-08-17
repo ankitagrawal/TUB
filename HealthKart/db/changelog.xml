@@ -8415,4 +8415,34 @@
     <changeSet author="Tarun (generated)" id="1339071974252-10">
       <dropTable tableName="product_thumb_tag"/>
     </changeSet>
+    <changeSet author="Rohit (generated)" id="1344867984432-1">
+        <addColumn tableName="debit_note">
+            <column name="remarks" type="TEXT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1344867984432-2">
+        <addColumn tableName="goods_received_note">
+            <column name="remarks" type="TEXT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="vaibhav (generated)" id="1345107754347-1">
+        <createTable tableName="similar_product">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="product_id" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="similar_product_id" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="relationship" type="VARCHAR(500)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="vaibhav (generated)" id="1345107754347-4">
+        <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="similar_product"  constraintName="fk_similar_product_product1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="vaibhav (generated)" id="1345107754347-5">
+        <addForeignKeyConstraint baseColumnNames="similar_product_id" baseTableName="similar_product" constraintName="fk_similar_product_product2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product"  referencesUniqueColumn="false"/>
+    </changeSet>
 </databaseChangeLog>

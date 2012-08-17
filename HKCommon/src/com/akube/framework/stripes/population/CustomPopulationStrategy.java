@@ -1,10 +1,10 @@
 package com.akube.framework.stripes.population;
 
-import net.sourceforge.stripes.tag.DefaultPopulationStrategy;
-import net.sourceforge.stripes.tag.PopulationStrategy;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+
+import net.sourceforge.stripes.tag.DefaultPopulationStrategy;
+import net.sourceforge.stripes.tag.PopulationStrategy;
 
 /**
  * Created with IntelliJ IDEA.

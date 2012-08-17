@@ -1,5 +1,16 @@
 package com.hk.web.action.admin.order.split;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.Resolution;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.order.EnumCartLineItemType;
@@ -17,15 +28,6 @@ import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.OrderSplitterService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.

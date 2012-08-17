@@ -1,11 +1,7 @@
 package com.hk.constants.inventory;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import com.hk.domain.core.PaymentMode;
-import com.hk.constants.payment.EnumPaymentType;
 
 
 public enum EnumAuditStatus {

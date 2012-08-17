@@ -3,10 +3,11 @@ package com.hk.db.seed.inventory;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.hk.constants.inventory.EnumReconciliationStatus;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.inventory.rv.ReconciliationStatus;
-import org.springframework.stereotype.Component;
 
 /**
  * Created by IntelliJ IDEA. User: Pratham Date: Jul 5, 2011 Time: 2:00:18 PM To change this template use File |

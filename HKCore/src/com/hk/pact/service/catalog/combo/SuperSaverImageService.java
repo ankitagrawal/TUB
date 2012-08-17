@@ -1,10 +1,10 @@
 package com.hk.pact.service.catalog.combo;
 
-import com.hk.domain.catalog.product.combo.SuperSaverImage;
-import com.hk.domain.catalog.product.Product;
-import com.akube.framework.dao.Page;
-
 import java.util.List;
+
+import com.akube.framework.dao.Page;
+import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.combo.SuperSaverImage;
 
 public interface SuperSaverImageService {
     public SuperSaverImage saveSuperSaverImage(SuperSaverImage superSaverImage);

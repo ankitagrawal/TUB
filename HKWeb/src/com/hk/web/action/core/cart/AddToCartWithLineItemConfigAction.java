@@ -1,16 +1,33 @@
 package com.hk.web.action.core.cart;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.JsonResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.validation.SimpleError;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.VariantConfigOption;
 import com.hk.domain.catalog.product.VariantConfigOptionParam;
 import com.hk.domain.catalog.product.VariantConfigValues;
+import com.hk.domain.marketing.ProductReferrer;
 import com.hk.domain.order.CartLineItemConfig;
 import com.hk.domain.order.CartLineItemConfigValues;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
-import com.hk.domain.marketing.ProductReferrer;
 import com.hk.exception.OutOfStockException;
 import com.hk.manager.LinkManager;
 import com.hk.manager.OrderManager;
@@ -21,17 +38,6 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.report.dto.order.LineItemConfigValuesDTO;
 import com.hk.web.HealthkartResponse;
-import net.sourceforge.stripes.action.JsonResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.validation.SimpleError;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA. User: AdminUser Date: Feb 14, 2012 Time: 11:35:48 AM To change this template use File |
@@ -45,7 +51,11 @@ public class AddToCartWithLineItemConfigAction extends BaseAction {
 
     private String                        variantId;
 
+    private String                        nameToBeEngraved;
+
     private List<LineItemConfigValuesDTO> configValues = new ArrayList<LineItemConfigValuesDTO>();
+
+    private String                        jsonConfigValues;
 
     private Long                          productReferrerId;
 
@@ -70,7 +80,10 @@ public class AddToCartWithLineItemConfigAction extends BaseAction {
 
     @SuppressWarnings("unchecked")
     @JsonHandler
+    @DefaultHandler
     public Resolution buyNow() {
+        getConfigValuesFromJson(jsonConfigValues);
+
         ProductVariant productVariant = getProductVariantService().getVariantById(variantId);
         User user = null;
         ProductReferrer productReferrer = null;
@@ -95,19 +108,23 @@ public class AddToCartWithLineItemConfigAction extends BaseAction {
                 VariantConfigValues selectedConfigValue = getBaseDao().get(VariantConfigValues.class, dto.getValueId());
 
                 if (configOption != null && selectedConfigValue != null) {
-                    configValue.setValue(selectedConfigValue.getValue());
+                    if(configOption.getAdditionalParam().equalsIgnoreCase(VariantConfigOptionParam.ENGRAVING.param())) {
+                        configValue.setValue(getNameToBeEngraved());
+                    } else {
+                        configValue.setValue(selectedConfigValue.getValue());
+                    }
                 }
                 if (VariantConfigOptionParam.shouldPriceBeDoubledForParam(configOption.getAdditionalParam())) {
                     configValue.setAdditionalPrice(selectedConfigValue.getAdditonalPrice() * 2);
                 } else {
-                    configValue.setAdditionalPrice(selectedConfigValue.getAdditonalPrice() * 2);
+                    configValue.setAdditionalPrice(selectedConfigValue.getAdditonalPrice());
                 }
 
-        if (VariantConfigOptionParam.shouldPriceBeDoubledForParam(configOption.getAdditionalParam())) {
-          configValue.setCostPrice(selectedConfigValue.getCostPrice() * 2);
-        } else {
-          configValue.setCostPrice(selectedConfigValue.getCostPrice() * 2);
-        }
+                if (VariantConfigOptionParam.shouldPriceBeDoubledForParam(configOption.getAdditionalParam())) {
+                    configValue.setCostPrice(selectedConfigValue.getCostPrice() * 2);
+                } else {
+                    configValue.setCostPrice(selectedConfigValue.getCostPrice());
+                }
                 configValue.setVariantConfigOption(configOption);
 
                 lineItemConfig.getCartLineItemConfigValues().add(configValue);
@@ -175,6 +192,31 @@ public class AddToCartWithLineItemConfigAction extends BaseAction {
 
     public void setBaseDao(BaseDao baseDao) {
         this.baseDao = baseDao;
+    }
+
+    public String getJsonConfigValues() {
+        return jsonConfigValues;
+    }
+
+    public void setJsonConfigValues(String jsonConfigValues) {
+        this.jsonConfigValues = jsonConfigValues;
+    }
+
+    public String getNameToBeEngraved() {
+        return nameToBeEngraved;
+    }
+
+    public void setNameToBeEngraved(String nameToBeEngraved) {
+        this.nameToBeEngraved = nameToBeEngraved;
+    }
+
+    private void getConfigValuesFromJson(String jsonConfigValue) {
+        if(jsonConfigValue != null && !jsonConfigValue.equalsIgnoreCase("")) {
+            Type listType = new TypeToken<List<LineItemConfigValuesDTO>>() {}.getType();
+            Object obj = new Gson().fromJson(jsonConfigValue, listType);
+            List<LineItemConfigValuesDTO> lineItemConfigValuesDTOs = (List<LineItemConfigValuesDTO>)obj;
+            setConfigValues(lineItemConfigValuesDTOs);
+        }
     }
 
     public Long getProductReferrerId() {

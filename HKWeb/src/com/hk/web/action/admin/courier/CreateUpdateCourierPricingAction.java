@@ -1,16 +1,18 @@
 package com.hk.web.action.admin.courier;
 
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.dao.courier.CourierPricingEngineDao;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierPricingEngine;
 import com.hk.domain.courier.RegionType;
 import com.hk.pact.dao.BaseDao;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Created by IntelliJ IDEA.

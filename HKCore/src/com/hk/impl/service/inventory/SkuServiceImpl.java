@@ -1,5 +1,13 @@
 package com.hk.impl.service.inventory;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.core.EnumTax;
 import com.hk.domain.catalog.product.Product;
@@ -12,13 +20,6 @@ import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.core.TaxService;
 import com.hk.pact.service.inventory.SkuService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * @author vaibhav.adlakha

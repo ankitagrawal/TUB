@@ -1,5 +1,13 @@
 package com.hk.web.action;
 
+import java.util.List;
+
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.Resolution;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.category.CategoryImage;
@@ -9,12 +17,6 @@ import com.hk.manager.UserManager;
 import com.hk.pact.dao.catalog.category.CategoryImageDao;
 import com.hk.pact.dao.content.PrimaryCategoryHeadingDao;
 import com.hk.pact.service.catalog.CategoryService;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 
 //@HttpCache(expires=20000)

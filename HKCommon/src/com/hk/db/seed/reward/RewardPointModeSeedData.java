@@ -3,10 +3,11 @@ package com.hk.db.seed.reward;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.offer.rewardPoint.RewardPointMode;
-import org.springframework.stereotype.Component;
 
 @Component
 public class RewardPointModeSeedData extends BaseSeedData {

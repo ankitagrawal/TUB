@@ -20,7 +20,6 @@ import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.SkuService;
-import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.web.HealthkartResponse;
 
 @Component
@@ -30,8 +29,8 @@ public class ShippingOrderAction extends BaseAction {
     @Autowired
     WarehouseService                  warehouseService;
 
-    @Autowired
-    private ShippingOrderService      shippingOrderService;
+    /*@Autowired
+    private ShippingOrderService      shippingOrderService;*/
     @Autowired
     private AdminShippingOrderService adminShippingOrderService;
     @Autowired
