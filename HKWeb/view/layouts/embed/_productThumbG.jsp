@@ -25,10 +25,10 @@
 		pageContext.setAttribute("combo", combo);
 	%>
 	<style type="text/css">
-		.opaque{
+		.opaque {
 			opacity: 0.4;
 			filter: alpha(opacity = 40);
-			
+
 		}
 
 		.opaque:hover {
@@ -36,19 +36,18 @@
 			filter: alpha(opacity = 100);
 		}
 	</style>
-
-	<div class='grid_4 product'>
-		<c:choose>
-			<c:when test="${product.googleAdDisallowed || product.deleted}">
-			</c:when>
-			<c:otherwise>
+	<c:choose>
+		<c:when test="${product.googleAdDisallowed || product.deleted}">
+		</c:when>
+		<c:otherwise>
+			<div class='grid_4 product'>
 				<h3>
 					<s:link href="${product.productURL}" title="${product.name}" class="prod_link">
 						${product.name}
 					</s:link>
 				</h3>
 
-				<%--  Commented by tarun to resolve conflict. Not sure if it should be here.
+					<%--  Commented by tarun to resolve conflict. Not sure if it should be here.
 
 						<s:link href="${product.productURL}" class="prod_link" title="${product.name}">
 						  <s:param name="productId" value="${product.id}"/>
@@ -63,11 +62,11 @@
 								                 alt="${product.name}"/>
 							</c:when>
 							<c:otherwise>
-								<img  src='<hk:vhostImage/>/images/ProductImages/ProductImagesThumb/${product.id}.jpg'
+								<img src='<hk:vhostImage/>/images/ProductImages/ProductImagesThumb/${product.id}.jpg'
 								     alt="${product.name}"/>
 							</c:otherwise>
-						</c:choose>							
-					</s:link>					
+						</c:choose>
+					</s:link>
 				</div>
 				<c:choose>
 					<c:when test="${combo != null}">
@@ -174,8 +173,9 @@
 						</c:if>
 					</c:otherwise>
 				</c:choose>
-			</c:otherwise>
-		</c:choose>
-		<div class="floatfix"></div>
-	</div>
+
+				<div class="floatfix"></div>
+			</div>
+		</c:otherwise>
+	</c:choose>
 </s:layout-definition>
