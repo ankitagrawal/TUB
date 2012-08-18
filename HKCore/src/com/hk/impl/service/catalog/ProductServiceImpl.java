@@ -230,7 +230,7 @@ public class ProductServiceImpl implements ProductService {
         List<ProductVariant> productVariants = product.getProductVariants();
         boolean isOutOfStock = true;
         for (ProductVariant pv : productVariants) {
-            if (!pv.getOutOfStock()) {
+            if (!pv.getOutOfStock() && !pv.getDeleted()) {
                 isOutOfStock = false;
                 break;
             }
@@ -328,6 +328,20 @@ public class ProductServiceImpl implements ProductService {
 			filterMap.put(group, groupedFilters);
 		}
 		return filterMap;
+	}
+
+	public List<Product> getSortedByStock(List<Product> productList){
+		//List<Product> inStockproductList = new ArrayList<Product>();
+		List<Product> outOfStockproductList = new ArrayList<Product>();
+		for (Product product : productList) {
+			if(isProductOutOfStock(product)){
+				product.setOutOfStock(true);
+				outOfStockproductList.add(product);
+			}
+		}
+		productList.removeAll(outOfStockproductList);
+		productList.addAll(outOfStockproductList);
+		return productList;
 	}
 }
 
