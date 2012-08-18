@@ -222,6 +222,24 @@ public class ProductServiceImpl implements ProductService {
         return true;
     }
 
+	public boolean isComboInStock(String comboId) {
+		Combo combo = getComboDao().getComboById(comboId);
+        if (combo.isDeleted() != null && combo.isDeleted()) {
+            return false;
+        } else {
+            for (ComboProduct comboProduct : combo.getComboProducts()) {
+                if (!comboProduct.getAllowedProductVariants().isEmpty() && comboProduct.getAllowedInStockVariants().isEmpty()) {
+                    return false;
+                } else if (comboProduct.getProduct().getInStockVariants().isEmpty()) {
+                    return false;
+                } else if (comboProduct.getProduct().isDeleted() != null && comboProduct.getProduct().isDeleted()) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     public List<Combo> getRelatedCombos(Product product) {
         return getComboDao().getCombos(product);
     }
@@ -338,6 +356,9 @@ public class ProductServiceImpl implements ProductService {
 					product.setOutOfStock(true);
 					outOfStockproductList.add(product);
 				}
+			} else if (!isComboInStock(product.getId())) {
+				product.setOutOfStock(true);
+				outOfStockproductList.add(product);
 			}
 		}
 		productList.removeAll(outOfStockproductList);
