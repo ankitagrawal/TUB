@@ -20,6 +20,7 @@ import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.impl.dao.BaseDaoImpl;
 
 @SuppressWarnings("unchecked")
@@ -214,5 +215,7 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
     String query = "select count(pvi.id) from ProductVariantInventory pvi where pvi.stockTransferLineItem = :stockTransferLineItem and pvi.qty = :checkedInQty";
     return (Long) getSession().createQuery(query).setParameter("stockTransferLineItem", stockTransferLineItem).setLong("checkedInQty", 1L).uniqueResult();
   }
+
+    public void updateProductVariantsConfig (ProductVariant ProductVariant , )
 
 }

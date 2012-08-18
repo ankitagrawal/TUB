@@ -13,9 +13,9 @@
         <table>
             <tr>
                 <td>Product Variant</td>
-                <td><s:text style="width:100px" name="Product_variant"/></td>
+                <td><s:text style="width:100px" name="productVariantist"/></td>
                 <td>
-                    <s:select name="configService">
+                    <s:select name="configId">
                     <s:option value="">-select- </s:option>
                     <s:option value="1">config</s:option>
                     </s:select>
