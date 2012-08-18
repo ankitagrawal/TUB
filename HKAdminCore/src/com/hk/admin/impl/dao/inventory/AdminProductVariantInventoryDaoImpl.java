@@ -216,6 +216,8 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
     return (Long) getSession().createQuery(query).setParameter("stockTransferLineItem", stockTransferLineItem).setLong("checkedInQty", 1L).uniqueResult();
   }
 
-    public void updateProductVariantsConfig (ProductVariant ProductVariant , )
+    public void updateProductVariantsConfig (ProductVariant ProductVariant , Integer configId){
+        
+    }
 
 }
