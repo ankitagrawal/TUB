@@ -330,13 +330,14 @@ public class ProductServiceImpl implements ProductService {
 		return filterMap;
 	}
 
-	public List<Product> getSortedByStock(List<Product> productList){
-		//List<Product> inStockproductList = new ArrayList<Product>();
+	public List<Product> getSortedByStock(List<Product> productList) {
 		List<Product> outOfStockproductList = new ArrayList<Product>();
 		for (Product product : productList) {
-			if(isProductOutOfStock(product)){
-				product.setOutOfStock(true);
-				outOfStockproductList.add(product);
+			if (product.getProductVariants() != null && !product.getProductVariants().isEmpty()) {
+				if (isProductOutOfStock(product)) {
+					product.setOutOfStock(true);
+					outOfStockproductList.add(product);
+				}
 			}
 		}
 		productList.removeAll(outOfStockproductList);
