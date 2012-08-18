@@ -8636,10 +8636,10 @@
         </addColumn>
     </changeSet>
     <changeSet author="Tarun (generated)" id="1345197771767-4">
-        <dropForeignKeyConstraint baseTableName="consignment" baseTableSchemaName="healthkart_dev" constraintName="fk_consignment_payment_reconciliation1"/>
+        <dropForeignKeyConstraint baseTableName="consignment"  constraintName="fk_consignment_payment_reconciliation1"/>
     </changeSet>
     <changeSet author="Tarun (generated)" id="1345197771767-5">
-        <dropForeignKeyConstraint baseTableName="payment_reconciliation" baseTableSchemaName="healthkart_dev" constraintName="fk_payment_reconciliation_user1"/>
+        <dropForeignKeyConstraint baseTableName="payment_reconciliation"  constraintName="fk_payment_reconciliation_user1"/>
     </changeSet>
     <changeSet author="Tarun (generated)" id="1345197771767-6">
         <addForeignKeyConstraint baseColumnNames="payment_reconciliation_id" baseTableName="consignment" constraintName="fk_consignment_payment_reconciliation1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="hkdelivery_payment_reconciliation" referencesUniqueColumn="false"/>

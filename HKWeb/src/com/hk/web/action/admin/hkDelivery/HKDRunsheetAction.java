@@ -49,6 +49,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
     private         Hub                   hub;
     private         List<Runsheet>        runsheetList                       = new ArrayList<Runsheet>();
     private         Boolean               runsheetDownloadFunctionality;
+    private         SimpleDateFormat      sdf                                = new SimpleDateFormat("yyyyMMdd");
     private         Runsheet              runsheet;
     private         Page                  runsheetPage;
     //search filters for runsheet list
@@ -154,7 +155,6 @@ public class HKDRunsheetAction extends BasePaginatedAction {
             Long                  prePaidBoxCount                 = null;
             User                  loggedOnUser                    = null;
             Hub                   deliveryHub                     = hubService.findHubByName(HKDeliveryConstants.DELIVERY_HUB);
-            SimpleDateFormat      sdf                             = new SimpleDateFormat("yyyyMMdd");
             List<ShippingOrder>   shippingOrderList               = new ArrayList<ShippingOrder>();
             int                   totalPackets                    = 0;
             int                   totalCODPackets                 = 0;
@@ -257,6 +257,28 @@ public class HKDRunsheetAction extends BasePaginatedAction {
             }
         }
 
+    }
+
+    public Resolution downloadRunsheetAgain(){
+        consignments = runsheet.getConsignments();
+        List<ShippingOrder> shippingOrderList = consignmentService.getShippingOrderFromConsignments(new ArrayList<Consignment>(consignments));
+        List<Object> runsheetParamList = consignmentService.getRunsheetParams(consignments);
+        try {
+                xlsFile = new File(adminDownloads + "/" + CourierConstants.HKDELIVERY_WORKSHEET_FOLDER + "/" + CourierConstants.HKDELIVERY_WORKSHEET + "_" + sdf.format(new Date()) + ".xls");
+
+                // generating Xls file.
+                xlsFile = hkdRunsheetManager.generateWorkSheetXls(xlsFile.getPath(),shippingOrderList,runsheet.getAgent().getName(), (Double)runsheetParamList.get(0), consignments.size(), (Integer)runsheetParamList.get(1));
+            } catch (IOException ioe) {
+                addRedirectAlertMessage(new SimpleMessage(CourierConstants.HKDELIVERY_IOEXCEPTION));
+                return new ForwardResolution(HKDRunsheetAction.class).addParameter(HKDeliveryConstants.RUNSHEET_DOWNLOAD, false);
+            } catch (NullPointerException npe) {
+                addRedirectAlertMessage(new SimpleMessage(CourierConstants.HKDELIVERY_NULLEXCEPTION));
+                return new ForwardResolution(HKDRunsheetAction.class).addParameter(HKDeliveryConstants.RUNSHEET_DOWNLOAD, false);
+            } catch (Exception ex) {
+                addRedirectAlertMessage(new SimpleMessage(CourierConstants.HKDELIVERY_EXCEPTION));
+                return new ForwardResolution(HKDRunsheetAction.class).addParameter(HKDeliveryConstants.RUNSHEET_DOWNLOAD, false);
+            }
+            return new HTTPResponseResolution(); 
     }
 
     public String getAssignedTo() {

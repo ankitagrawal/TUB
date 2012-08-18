@@ -35,4 +35,8 @@ public interface ConsignmentService {
 
     public List<Consignment> getConsignmentListByAwbNumbers(List<String> awbNumbers);
 
+    public List<ShippingOrder> getShippingOrderFromConsignments(List<Consignment> consignments);
+
+    public List<Object> getRunsheetParams(Set<Consignment> consignments);
+
 }

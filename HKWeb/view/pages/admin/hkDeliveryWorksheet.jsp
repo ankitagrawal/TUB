@@ -167,6 +167,9 @@
                                 Download Delivery Worksheet
                                 <s:param name="runsheetDownloadFunctionality" value="true"/>
                                 </s:submit>
+                             <s:submit id="submitButtonTwo" name="pre" value="Download Runsheet Again">
+                                Download Runsheet Again !!
+                                </s:submit>
                         </li>
                     </ul>
                 </fieldset>

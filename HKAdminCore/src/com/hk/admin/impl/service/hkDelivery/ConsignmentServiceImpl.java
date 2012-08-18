@@ -104,4 +104,30 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     public List<Consignment> getConsignmentListByAwbNumbers(List<String> awbNumbers) {
         return consignmentDao.getConsignmentListByAwbNumbers(awbNumbers);
     }
+
+    @Override
+    public List<ShippingOrder> getShippingOrderFromConsignments(List<Consignment> consignments) {
+        List<String> cnnNumberList = new ArrayList<String>();
+        for(Consignment consignment:consignments){
+            cnnNumberList.add(consignment.getCnnNumber());
+        }
+        return consignmentDao.getShippingOrderFromConsignments(cnnNumberList);
+    }
+
+    @Override
+    public List<Object> getRunsheetParams(Set<Consignment> consignments) {
+        List<Object> runsheetParams = new ArrayList<Object>();
+        double totalCODAmount = 0.0 ;
+        int totalCODPackets  = 0;
+
+        for(Consignment consignment : consignments){
+            if(consignment.getPaymentMode().equals(HKDeliveryConstants.COD)){
+                totalCODAmount = totalCODAmount + consignment.getAmount();
+                ++ totalCODPackets;
+            }
+        }
+        runsheetParams.add(totalCODAmount);
+        runsheetParams.add(totalCODPackets);
+        return runsheetParams;
+    }
 }

@@ -6,6 +6,7 @@ import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.admin.pact.dao.hkDelivery.ConsignmentDao;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.user.User;
+import com.hk.domain.order.ShippingOrder;
 import com.hk.constants.hkDelivery.EnumConsignmentStatus;
 import com.hk.constants.hkDelivery.EnumRunsheetStatus;
 import org.springframework.stereotype.Repository;
@@ -40,6 +41,12 @@ public class ConsignmentDaoImpl extends BaseDaoImpl implements ConsignmentDao {
     public List<Consignment> getConsignmentListByAwbNumbers(List<String> awbNumbers) {
         String query = "from Consignment cn where cn.awbNumber in (:trackingIdList)";
         return (List<Consignment>)findByNamedParams(query,new String[]{"trackingIdList"},new Object[]{awbNumbers});
+    }
+
+    @Override
+    public List<ShippingOrder> getShippingOrderFromConsignments(List<String> cnnNumberList) {
+        String query = "from ShippingOrder sh where sh.gatewayOrderId in (:cnnNumberList)";
+        return (List<ShippingOrder>) findByNamedParams(query,new String[]{"cnnNumberList"},new Object[]{cnnNumberList});
     }
 }
 
