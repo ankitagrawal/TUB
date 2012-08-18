@@ -358,6 +358,7 @@ public class ProductServiceImpl implements ProductService {
 				}
 			} else if (!isComboInStock(product.getId())) {
 				product.setOutOfStock(true);
+				product.setDeleted(false);
 				outOfStockproductList.add(product);
 			}
 		}
