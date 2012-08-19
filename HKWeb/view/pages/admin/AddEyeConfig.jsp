@@ -1,3 +1,5 @@
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.admin.pact.service.inventory.AdminInventoryService" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 
@@ -7,17 +9,23 @@
     </s:layout-component>
 
     <s:layout-component name="content">
+        <%
+           AdminInventoryService adminInventoryService= ServiceLocatorFactory.getService(AdminInventoryService.class);
+            pageContext.setAttribute("confList",adminInventoryService.getAllVariantConfig());
+         %>
 
-      	<s:form beanclass="com.hk.web.action.admin.marketing.MarketingExpenseAction">
-
+      	<s:form beanclass="com.hk.web.action.admin.catalog.product.AddEyeConfigAction" focus="">
+           <s:errors/>                
         <table>
             <tr>
                 <td>Product Variant</td>
-                <td><s:text style="width:100px" name="productVariantist"/></td>
+                <td><s:text  name="productVariantList" style="width:100px"/></td>
                 <td>
                     <s:select name="configId">
-                    <s:option value="">-select- </s:option>
-                    <s:option value="1">config</s:option>
+                    <s:option value="0">-select- </s:option>
+                      <c:forEach items="${confList}" var = "conf">
+                          <s:option value ="${conf.id}">${conf.name}</s:option>
+                      </c:forEach>                    
                     </s:select>
                 </td>
                 <td>

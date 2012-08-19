@@ -3,7 +3,12 @@ package com.hk.web.action.admin.catalog.product;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.validation.Validate;
+import net.sourceforge.stripes.validation.ValidationMethod;
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by IntelliJ IDEA.
@@ -12,33 +17,47 @@ import com.akube.framework.stripes.action.BaseAction;
  * Time: 5:31:34 PM
  * To change this template use File | Settings | File Templates.
  */
+
+@Component
 public class AddEyeConfigAction extends BaseAction {
+    @Autowired
+    AdminProductVariantInventoryDao adminProductVariantInventoryDao;
 
-    String productVariantList = "";
-    Integer configId = 0;
+    @Validate(required = true)
+    private String productVariantList;
 
-   @DefaultHandler
-    public Resolution pre(){
+    private Long configId;
+
+    @DefaultHandler
+    public Resolution pre() {
         return new ForwardResolution("/pages/admin/AddEyeConfig.jsp");
 
     }
 
-    public Resolution save(){
-         String [] poductVariantArray =         productVariantList.split(",");
+    public Resolution save() {
+        String[] poductVariantArray  = productVariantList.split(",");
         for (String prodctVariantId : poductVariantArray) {
-            updateProductVariantsConfig (prodctVariantId,configId);
-            
+            adminProductVariantInventoryDao.updateProductVariantsConfig(prodctVariantId, configId);
+
         }
-        
+
         return new ForwardResolution("/pages/admin/AddEyeConfig.jsp");
     }
 
     public String getProductVariantList() {
-           return productVariantList;
-       }
+        return productVariantList;
+    }
 
-       public void setProductVariantist(String productVariantist) {
-           this.productVariantList = productVariantist;
-       }
+    public void setProductVariantList(String productVariantList) {
+        this.productVariantList = productVariantList;
+    }
+
+    public Long getConfigId() {
+        return configId;
+    }
+
+    public void setConfigId(Long configId) {
+        this.configId = configId;
+    }
 
 }
