@@ -15,7 +15,8 @@
          %>
 
       	<s:form beanclass="com.hk.web.action.admin.catalog.product.AddEyeConfigAction" focus="">
-           <s:errors/>                
+         <s:errors/>
+         <s:messages/>  
         <table>
             <tr>
                 <td>Product Variant</td>

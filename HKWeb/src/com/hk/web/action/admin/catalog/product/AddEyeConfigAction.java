@@ -1,14 +1,14 @@
 package com.hk.web.action.admin.catalog.product;
 
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
 import net.sourceforge.stripes.validation.ValidationMethod;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import net.sourceforge.stripes.validation.ValidationError;
+
 
 /**
  * Created by IntelliJ IDEA.
@@ -23,7 +23,7 @@ public class AddEyeConfigAction extends BaseAction {
     @Autowired
     AdminProductVariantInventoryDao adminProductVariantInventoryDao;
 
-    @Validate(required = true)
+//    @Validate(required = true)
     private String productVariantList;
 
     private Long configId;
@@ -38,10 +38,11 @@ public class AddEyeConfigAction extends BaseAction {
         String[] poductVariantArray  = productVariantList.split(",");
         for (String prodctVariantId : poductVariantArray) {
             adminProductVariantInventoryDao.updateProductVariantsConfig(prodctVariantId, configId);
+            getContext().getMessages().add(new SimpleMessage("Database updated")) ;
 
         }
 
-        return new ForwardResolution("/pages/admin/AddEyeConfig.jsp");
+        return new RedirectResolution("/pages/admin/AddEyeConfig.jsp");
     }
 
     public String getProductVariantList() {
