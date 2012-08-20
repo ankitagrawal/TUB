@@ -118,6 +118,13 @@ public class ReportProductVariantDaoImpl extends BaseDaoImpl implements ReportPr
                 .setParameter("endDate", endDate).setParameter("shippingOrderStatus", shippingOrderStatus.getId()).list();
     }
 
+     public List<ShippingOrder> getShippingOrdersByReturnDate(Date startDate, Date endDate, EnumShippingOrderStatus shippingOrderStatus,Warehouse warehouse) {
+     String query = " from ShippingOrder so where so.shipment.returnDate between :startDate and :endDate and so.shippingOrderStatus.id = :shippingOrderStatus ";     
+
+        return  (List<ShippingOrder>)getSession().createQuery(query).setParameter("startDate", startDate)
+                .setParameter("endDate", endDate).setParameter("shippingOrderStatus", shippingOrderStatus.getId()).list();
+    }
+
     public List<RVReportDto> getReconciliationVoucherDetail(String productVariantId, Warehouse warehouse, Date startDate, Date endDate) {
         String query = "select coalesce(sum(pvi.qty), 0) as qtyRV, rv as reconciliationVoucher, pvi as productVariantInventory " +
                 " from ProductVariantInventory pvi join pvi.rvLineItem rvli join rvli.reconciliationVoucher rv " +

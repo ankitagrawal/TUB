@@ -32,6 +32,8 @@ public interface ReportProductVariantDao{
 
     public List<ShippingOrder> getShippingOrdersByReturnDate(Date startDate, Date endDate, EnumShippingOrderStatus shippingOrderStatus);
 
+    public List<ShippingOrder> getShippingOrdersByReturnDate(Date startDate, Date endDate, EnumShippingOrderStatus shippingOrderStatus,Warehouse warehouse);
+
     public List<RTOFineReportDto> getRTOFineProductVariantDetails(ShippingOrder shippingOrder);
 
     public List<RTODamageReportDto> getRTODamageProductVariantDetails(ShippingOrder shippingOrder);
