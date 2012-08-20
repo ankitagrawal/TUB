@@ -119,10 +119,10 @@ public class ReportProductVariantDaoImpl extends BaseDaoImpl implements ReportPr
     }
 
      public List<ShippingOrder> getShippingOrdersByReturnDate(Date startDate, Date endDate, EnumShippingOrderStatus shippingOrderStatus,Warehouse warehouse) {
-     String query = " from ShippingOrder so where so.shipment.returnDate between :startDate and :endDate and so.shippingOrderStatus.id = :shippingOrderStatus ";     
-
+//     String query = " from ShippingOrder so where so.shipment.returnDate between :startDate and :endDate and so.shippingOrderStatus.id = :shippingOrderStatus ";
+      String query = "from ShippingOrder so, ProductVariantInventory pvi where so.shipment.returnDate between :startDate and :endDate and so.shippingOrderStatus.id = :shippingOrderStatus and  pvi.sku.warehouse = :warehouse";
         return  (List<ShippingOrder>)getSession().createQuery(query).setParameter("startDate", startDate)
-                .setParameter("endDate", endDate).setParameter("shippingOrderStatus", shippingOrderStatus.getId()).list();
+                .setParameter("endDate", endDate).setParameter("shippingOrderStatus", shippingOrderStatus.getId()).setParameter("warehouse",warehouse).list();
     }
 
     public List<RVReportDto> getReconciliationVoucherDetail(String productVariantId, Warehouse warehouse, Date startDate, Date endDate) {
