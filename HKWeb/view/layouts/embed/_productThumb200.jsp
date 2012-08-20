@@ -46,7 +46,7 @@
 					<s:link href="${product.productURL}" class="prod_link" title="${product.name}">
 						<c:choose>
 							<c:when test="${product.mainImageId != null}">
-								<hk:productImage width="170px" height="170px" imageId="${product.mainImageId}" size="<%=EnumImageSize.SmallSize%>"
+								<hk:productImage width="170px" height="170px" imageId="${product.mainImageId}" size="<%=EnumImageSize.MediumSize%>"
 								                 alt="${product.name}"/>
 							</c:when>
 							<c:otherwise>
