@@ -148,6 +148,8 @@ public class MasterDataService {
     ConsignmentStatusSeedData consignmentStatusSeedData;    
     @Autowired
     RunsheetStatusSeedData runsheetStatusSeedData;
+    @Autowired
+    ConsignmentLifecycleStatusSeedData consignmentLifecycleStatusSeedData;
 
     public void insert() {
 
@@ -295,5 +297,8 @@ public class MasterDataService {
 
         logger.debug("inserting runsheet status");
         runsheetStatusSeedData.invokeInsert();
+
+        logger.debug("inserting consignment lifecycle status");
+        consignmentLifecycleStatusSeedData.invokeInsert();
     }
 }

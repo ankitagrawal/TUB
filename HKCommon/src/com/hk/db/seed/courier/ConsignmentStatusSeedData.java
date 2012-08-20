@@ -1,4 +1,4 @@
-package com.hk.db.seed.courier;
+ package com.hk.db.seed.courier;
 
 import com.hk.constants.hkDelivery.EnumConsignmentStatus;
 import com.hk.db.seed.BaseSeedData;
