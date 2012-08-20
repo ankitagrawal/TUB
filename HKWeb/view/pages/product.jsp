@@ -291,6 +291,15 @@
           </span>
 		</c:if>
 		|
+		<c:choose>
+			<c:when test="${product.codAllowed != null && !product.codAllowed}">
+				<span style="color:red;font-weight:bold;">COD Not Allowed</span>
+			</c:when>
+			<c:otherwise>
+				<span style="color:green;font-weight:bold;">COD Allowed</span>
+			</c:otherwise>
+		</c:choose>  		
+		|
     <span class='title'>
       Dispatched in:
     </span>
