@@ -56,11 +56,12 @@
                     <td><label>Remarks: </label></td>
                     <td><s:textarea name="runsheet.remarks" style="height:50px;"/></td>
                     <td><label>Status: </label></td>
-                    <td><s:select name="runsheet.runsheetStatus" value="${runsheetAction.runsheet.runsheetStatus.id}">
+                    <td><%--<s:select name="runsheet.runsheetStatus" value="${runsheetAction.runsheet.runsheetStatus.id}">
                         <hk:master-data-collection service="<%=MasterDataDao.class%>"
                                                    serviceProperty="runsheetStatusList" value="id"
                                                    label="status"/>
-                    </s:select>
+                    </s:select>--%>
+                        ${runsheetAction.runsheet.runsheetStatus.status}
                     </td>
                 </tr>
             </table>

@@ -5,6 +5,7 @@ import com.hk.pact.dao.BaseDao;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.hkDelivery.Consignment;
+import com.hk.domain.hkDelivery.ConsignmentTracking;
 import com.hk.domain.user.User;
 import com.hk.domain.order.ShippingOrder;
 
@@ -23,4 +24,6 @@ public interface ConsignmentDao extends BaseDao {
     public List<Consignment> getConsignmentListByAwbNumbers(List<String> awbNumbers);
 
     public List<ShippingOrder> getShippingOrderFromConsignments(List<String> cnnNumberList);
+
+    public List<ConsignmentTracking> getConsignmentTracking(Consignment consignment);
 }

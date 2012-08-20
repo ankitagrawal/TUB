@@ -48,5 +48,11 @@ public class ConsignmentDaoImpl extends BaseDaoImpl implements ConsignmentDao {
         String query = "from ShippingOrder sh where sh.gatewayOrderId in (:cnnNumberList)";
         return (List<ShippingOrder>) findByNamedParams(query,new String[]{"cnnNumberList"},new Object[]{cnnNumberList});
     }
+
+    @Override
+    public List<ConsignmentTracking> getConsignmentTracking(Consignment consignment) {
+         String query = "from ConsignmentTracking ct where ct.consignment.id = :consignmentId";
+        return (List<ConsignmentTracking>) findByNamedParams(query,new String[]{"consignmentId"},new Object[]{consignment.getId()});
+    }
 }
 

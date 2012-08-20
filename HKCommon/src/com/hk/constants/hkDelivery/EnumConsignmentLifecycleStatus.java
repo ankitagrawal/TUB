@@ -1,9 +1,15 @@
 package com.hk.constants.hkDelivery;
 
 public enum EnumConsignmentLifecycleStatus {
-    Open(10L, "Open"),
-    Close(20L, "Closed"),
-    OnHold(30L, "On Hold");
+
+    ReceivedAtHub(10L, "Received at Hub"),
+    Dispatched(20L, "Dispatched"),
+    ReturnedToHub(30L, "Returned to Hub"),
+    ReturnedToSource(400L, "Returned to Source"),
+    ConsignmentLost(50L, "Consignment Lost"),
+    Hold(60L, "Hold"),
+    Damaged(70L, "Consignment Lost"),
+    Delivered(80L, "Delivered to Customer");
 
 
     private Long id;
