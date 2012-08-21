@@ -36,5 +36,9 @@ public class HKDeliveryConstants {
     public static final String COD = "COD";
     public static final String PREPAID = "PrePaid";
 
+    // Constants for COD params
+    public static final String TOTAL_COD_AMT = "totalCODAmount";
+    public static final String TOTAL_COD_PKTS = "totalCODPackets";
+
 
 }

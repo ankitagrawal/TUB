@@ -31,6 +31,7 @@ import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.hkDelivery.EnumRunsheetStatus;
 import com.hk.constants.hkDelivery.EnumConsignmentStatus;
 import com.hk.constants.hkDelivery.HKDeliveryConstants;
+import com.hk.constants.hkDelivery.EnumConsignmentLifecycleStatus;
 import com.hk.constants.payment.EnumPaymentMode;
 
 import javax.servlet.http.HttpServletRequest;
@@ -137,6 +138,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
                 return new ForwardResolution(HKDRunsheetAction.class, "editRunsheet").addParameter("runsheet", runsheet.getId());
             }
             runsheetService.saveRunSheet(runsheet);
+
         }
         return new RedirectResolution(HKDRunsheetAction.class, "editRunsheet").addParameter("runsheet", runsheet.getId());
 
@@ -165,7 +167,8 @@ public class HKDRunsheetAction extends BasePaginatedAction {
             Courier               hkDeliveryCourier               = EnumCourier.HK_Delivery.asCourier();
             List<String>          duplicatedAwbNumbers            = null ;
             String                duplicateAwbString              = "";
-            ConsignmentStatus outForDelivery = getBaseDao().get(ConsignmentStatus.class, EnumConsignmentStatus.ShipmentOutForDelivery.getId());
+            ConsignmentStatus     outForDelivery = getBaseDao().get(ConsignmentStatus.class, EnumConsignmentStatus.ShipmentOutForDelivery.getId());
+            ConsignmentLifecycleStatus consignmentLifecycleStatus = getBaseDao().get(ConsignmentLifecycleStatus.class, EnumConsignmentLifecycleStatus.Dispatched.getId());
             //Checking if agent selected has any open runsheet or not.
             if (runsheetService.agentHasOpenRunsheet(agent) == true) {
                 addRedirectAlertMessage(new SimpleMessage(agent.getName() + " already has an open runsheet"));
@@ -221,7 +224,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
                 // Saving Runsheet in db.
                 runsheetService.saveRunSheet(runsheetObj);
                 //making corresponding entry in consignment tracking.
-                consignmentService.saveConsignmentTracking(consignmentService.createConsignmentTracking(hub,deliveryHub,loggedOnUser,new ArrayList<Consignment>(consignments)));
+                consignmentService.saveConsignmentTracking(consignmentService.createConsignmentTracking(hub,deliveryHub,loggedOnUser,new ArrayList<Consignment>(consignments),consignmentLifecycleStatus));
                 // generating Xls file.
                 xlsFile = hkdRunsheetManager.generateWorkSheetXls(xlsFile.getPath(), shippingOrderList, agent.getName(), totalCODAmount, totalPackets, totalCODPackets);
             } catch (IOException ioe) {
@@ -262,12 +265,12 @@ public class HKDRunsheetAction extends BasePaginatedAction {
     public Resolution downloadRunsheetAgain(){
         consignments = runsheet.getConsignments();
         List<ShippingOrder> shippingOrderList = consignmentService.getShippingOrderFromConsignments(new ArrayList<Consignment>(consignments));
-        List<Object> runsheetParamList = consignmentService.getRunsheetParams(consignments);
+        Map<Object,Object> runsheetCODParams = consignmentService.getRunsheetCODParams(consignments);
         try {
                 xlsFile = new File(adminDownloads + "/" + CourierConstants.HKDELIVERY_WORKSHEET_FOLDER + "/" + CourierConstants.HKDELIVERY_WORKSHEET + "_" + sdf.format(new Date()) + ".xls");
 
                 // generating Xls file.
-                xlsFile = hkdRunsheetManager.generateWorkSheetXls(xlsFile.getPath(),shippingOrderList,runsheet.getAgent().getName(), (Double)runsheetParamList.get(0), consignments.size(), (Integer)runsheetParamList.get(1));
+                xlsFile = hkdRunsheetManager.generateWorkSheetXls(xlsFile.getPath(),shippingOrderList,runsheet.getAgent().getName(), (Double)runsheetCODParams.get(HKDeliveryConstants.TOTAL_COD_AMT), consignments.size(), (Integer)runsheetCODParams.get(HKDeliveryConstants.TOTAL_COD_PKTS));
             } catch (IOException ioe) {
                 addRedirectAlertMessage(new SimpleMessage(CourierConstants.HKDELIVERY_IOEXCEPTION));
                 return new ForwardResolution(HKDRunsheetAction.class).addParameter(HKDeliveryConstants.RUNSHEET_DOWNLOAD, false);

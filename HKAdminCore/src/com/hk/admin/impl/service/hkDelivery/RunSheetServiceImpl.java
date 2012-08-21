@@ -54,7 +54,8 @@ public class RunSheetServiceImpl implements RunSheetService {
     @Override
     public boolean isRunsheetClosable(Runsheet runsheet) {
         for (Consignment consignment : runsheet.getConsignments()){
-            if(consignment.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentOutForDelivery.getId())){
+            if(consignment.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentOutForDelivery.getId())
+                    || consignment.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentReceivedAtHub.getId())){
                 return false;
             }
         }

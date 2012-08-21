@@ -2,16 +2,13 @@ package com.hk.admin.impl.service.hkDelivery;
 
 import com.akube.framework.dao.Page;
 import com.hk.domain.courier.Awb;
-import com.hk.domain.hkDelivery.ConsignmentStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.dao.hkDelivery.ConsignmentDao;
-import com.hk.domain.hkDelivery.Consignment;
-import com.hk.domain.hkDelivery.Hub;
-import com.hk.domain.hkDelivery.ConsignmentTracking;
+import com.hk.domain.hkDelivery.*;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Courier;
@@ -20,6 +17,7 @@ import com.hk.domain.core.PaymentMode;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.constants.hkDelivery.HKDeliveryConstants;
 import com.hk.constants.hkDelivery.EnumConsignmentStatus;
+import com.hk.constants.hkDelivery.EnumConsignmentLifecycleStatus;
 import com.hk.constants.payment.EnumPaymentMode;
 
 import java.util.*;
@@ -50,7 +48,7 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     }
 
     @Override
-    public List<ConsignmentTracking> createConsignmentTracking(Hub sourceHub, Hub destinationHub, User user, List<Consignment> consignments) {
+    public List<ConsignmentTracking> createConsignmentTracking(Hub sourceHub, Hub destinationHub, User user, List<Consignment> consignments ,ConsignmentLifecycleStatus consignmentLifecycleStatus) {
        List<ConsignmentTracking> consignmntTrackingList = new ArrayList<ConsignmentTracking>();
         for(Consignment consignment: consignments)
         {
@@ -60,6 +58,11 @@ public class ConsignmentServiceImpl implements ConsignmentService {
         consignmntTracking.setSourceHub(sourceHub);
         consignmntTracking.setDestinationHub(destinationHub);
         consignmntTracking.setUser(user);
+            if (consignmentLifecycleStatus == null) {
+       
+            } else {
+                consignmntTracking.setConsignmentLifecycleStatus(consignmentLifecycleStatus);
+            }
         consignmntTrackingList.add(consignmntTracking);
         }
         return consignmntTrackingList;
@@ -116,8 +119,8 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     }
 
     @Override
-    public List<Object> getRunsheetParams(Set<Consignment> consignments) {
-        List<Object> runsheetParams = new ArrayList<Object>();
+    public Map<Object,Object> getRunsheetCODParams(Set<Consignment> consignments) {
+        Map<Object,Object> runsheetCODParams = new HashMap<Object,Object>();
         double totalCODAmount = 0.0 ;
         int totalCODPackets  = 0;
 
@@ -127,9 +130,14 @@ public class ConsignmentServiceImpl implements ConsignmentService {
                 ++ totalCODPackets;
             }
         }
-        runsheetParams.add(totalCODAmount);
-        runsheetParams.add(totalCODPackets);
-        return runsheetParams;
+        runsheetCODParams.put(HKDeliveryConstants.TOTAL_COD_AMT ,totalCODAmount);
+        runsheetCODParams.put(HKDeliveryConstants.TOTAL_COD_PKTS ,totalCODPackets);
+        return runsheetCODParams;
+    }
+
+    @Override
+    public List<ConsignmentTracking> getConsignmentTracking(Consignment consignment) {
+        return consignmentDao.getConsignmentTracking(consignment);
     }
 
     @Override

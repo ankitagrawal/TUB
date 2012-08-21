@@ -76,5 +76,10 @@ public class ConsignmentDaoImpl extends BaseDaoImpl implements ConsignmentDao {
         consignmentCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));
         return list(consignmentCriteria, pageNo, perPage);
     }
+
+    public List<ConsignmentTracking> getConsignmentTracking(Consignment consignment) {
+         String query = "from ConsignmentTracking ct where ct.consignment.id = :consignmentId";
+        return (List<ConsignmentTracking>) findByNamedParams(query,new String[]{"consignmentId"},new Object[]{consignment.getId()});
+    }
 }
 

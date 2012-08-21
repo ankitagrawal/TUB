@@ -7,6 +7,7 @@ import com.hk.domain.hkDelivery.ConsignmentStatus;
 import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.hkDelivery.Consignment;
 import com.hk.domain.hkDelivery.ConsignmentTracking;
+import com.hk.domain.hkDelivery.ConsignmentLifecycleStatus;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.user.User;
@@ -18,6 +19,7 @@ import com.hk.admin.util.HKDeliveryUtil;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.hkDelivery.HKDeliveryConstants;
 import com.hk.util.CustomDateTypeConvertor;
+import com.hk.constants.hkDelivery.EnumConsignmentLifecycleStatus;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
 import org.springframework.stereotype.Component;
@@ -36,6 +38,8 @@ public class HKDConsignmentAction extends BasePaginatedAction {
     private              Hub                  hub;
     private              List<String>         trackingIdList           = new ArrayList<String>();
     private              Courier              hkDelivery               = EnumCourier.HK_Delivery.asCourier();
+    private              String               consignmentNumber        ;
+    private              Boolean              doTracking                   ;
 
     private             Consignment           consignment;
     private             Page                  consignmentPage;
@@ -80,6 +84,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
         List<String> newAwbNumbers                    = null;
         List<Consignment> consignmentList             = new ArrayList<Consignment>();
         List<ConsignmentTracking> consignmentTrackingList = new ArrayList<ConsignmentTracking>();
+        ConsignmentLifecycleStatus consignmentLifecycleStatus = getBaseDao().get(ConsignmentLifecycleStatus.class, EnumConsignmentLifecycleStatus.ReceivedAtHub.getId());
 
         if (trackingIdList != null && trackingIdList.size() > 0) {
             healthkartHub = hubService.findHubByName(HKDeliveryConstants.HEALTHKART_HUB);
@@ -121,7 +126,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
             //fetching the consignments just created above.
             consignmentList = consignmentService.getConsignmentListByAwbNumbers(new ArrayList<String>(awbNumberSet));
             //creating consignmentTrackingList
-            consignmentTrackingList = consignmentService.createConsignmentTracking(healthkartHub,hub,loggedOnUser,consignmentList);
+            consignmentTrackingList = consignmentService.createConsignmentTracking(healthkartHub,hub,loggedOnUser,consignmentList ,consignmentLifecycleStatus);
             //saving it.
             consignmentService.saveConsignmentTracking(consignmentTrackingList);
             addRedirectAlertMessage(new SimpleMessage(consignmentTrackingList.size() + HKDeliveryConstants.CONSIGNMNT_CREATION_SUCCESS + duplicateAwbString));
@@ -140,7 +145,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
     }
 
     public Resolution searchConsignments(){
-        if(consignmentPage){
+        if(consignmentPage != null){
             consignmentPage = consignmentService.searchConsignment(consignment, startDate, endDate, consignmentStatus, hub, getPageNo(), getPerPage());
         }
         consignmentList = consignmentPage.getList();
@@ -150,6 +155,19 @@ public class HKDConsignmentAction extends BasePaginatedAction {
     public Resolution generatePaymentReconciliation(){
         
         return new ForwardResolution("/pages/admin/hkdeliveryPaymentReconciliation.jsp");
+    }
+
+    public Resolution trackConsignment(){
+        Consignment consignment = null;
+        List<ConsignmentTracking> consignmentTrackingList = new ArrayList<ConsignmentTracking>();
+        if(doTracking){
+           consignment = consignmentService.getConsignmentByAwbNumber(consignmentNumber);
+            consignmentTrackingList = consignmentService.getConsignmentTracking(consignment);
+            logger.info(consignment+""+consignmentTrackingList.size());
+
+         return new ForwardResolution("/pages/admin/hkDeliveryConsignment.jsp"); 
+        }
+        return new ForwardResolution("/pages/admin/trackConsignment.jsp");
     }
     
     public Hub getHub() {
@@ -238,5 +256,21 @@ public class HKDConsignmentAction extends BasePaginatedAction {
 
     public void setConsignmentListForPaymentReconciliation(List<Consignment> consignmentListForPaymentReconciliation) {
         this.consignmentListForPaymentReconciliation = consignmentListForPaymentReconciliation;
+    }
+
+    public String getConsignmentNumber() {
+        return consignmentNumber;
+    }
+
+    public void setConsignmentNumber(String consignmentNumber) {
+        this.consignmentNumber = consignmentNumber;
+    }
+
+    public Boolean isDoTracking() {
+        return doTracking;
+    }
+
+    public void setDoTracking(Boolean doTracking) {
+        this.doTracking = doTracking;
     }
 }
