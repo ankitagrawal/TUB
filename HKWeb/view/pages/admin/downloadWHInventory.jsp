@@ -22,7 +22,7 @@
            </s:select>
           <label width="5"> Sub Category:</label><s:text name="subCategory" class="category" width="125%"/>
           <label width="5">Brand:</label><s:text name="brand" class="brand" />
-         <label>Check if UnBooked Inventory</label>  <s:checkbox name="isUnbookedInventoryRequired"/>
+         <label>Check if UnBooked Inventory</label>  <s:checkbox name="unbookedInventoryRequired"/>
           <br>
           <br>
           <br>

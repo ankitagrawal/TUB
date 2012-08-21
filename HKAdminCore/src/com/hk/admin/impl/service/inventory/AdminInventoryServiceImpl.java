@@ -92,7 +92,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
     public Long getBookedInventory(Sku sku) {
         Long bookedInventoryForSku = getShippingOrderDao().getBookedQtyOfSkuInQueue(sku);
         Long bookedInventoryForProductVariant = getOrderDao().getBookedQtyOfProductVariantInQueue(sku.getProductVariant());
-        return bookedInventoryForSku + bookedInventoryForProductVariant;
+        return bookedInventoryForSku + bookedInventoryForProductVariant;           
     }
 
     public Long getBookedInventory(ProductVariant productVariant) {

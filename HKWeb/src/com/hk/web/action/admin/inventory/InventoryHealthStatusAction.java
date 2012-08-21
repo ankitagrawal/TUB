@@ -62,7 +62,7 @@ public class InventoryHealthStatusAction extends BasePaginatedAction {
     Category                      categoryName;
     ProductVariant                productVariant;
     Product                       product;
-    boolean                       isUnbookedInventoryRequired;
+    private Boolean               unbookedInventoryRequired;
     @Autowired
     ProductVariantInventoryDao    productVariantInventoryDao;
     @Autowired
@@ -187,7 +187,7 @@ public class InventoryHealthStatusAction extends BasePaginatedAction {
             xlsWriter.addHeader(GGN_INVENTORY, GGN_INVENTORY);
             xlsWriter.addHeader(MUM_INVENTORY, MUM_INVENTORY);
         }
-        if (isUnbookedInventoryRequired) {
+        if (unbookedInventoryRequired) {
             if (loggedInWarehouse != null ){
                 xlsWriter.addHeader(UNBOOKED_INVENTORY, UNBOOKED_INVENTORY);
             } else {
@@ -203,10 +203,17 @@ public class InventoryHealthStatusAction extends BasePaginatedAction {
             loggedInWHInventory = adminInventoryService.getNetInventory(loggedInSKU);
             ggnInventory = adminInventoryService.getNetInventory(ggnSKU);
             mumInventory = adminInventoryService.getNetInventory(mumSKU);
-            if (isUnbookedInventoryRequired){
+            if (unbookedInventoryRequired){
+               if (loggedInSKU != null) {
                 loggedInWHUnbookedInventory = loggedInWHInventory - adminInventoryService.getBookedInventory(loggedInSKU);
-                ggnUnbookedInventory = ggnInventory - adminInventoryService.getBookedInventory(ggnSKU);
-                mumUnbookedInventory = mumInventory - adminInventoryService.getBookedInventory(mumSKU);
+               }
+                if (mumSKU != null) {
+                   mumUnbookedInventory = mumInventory - adminInventoryService.getBookedInventory(mumSKU);
+                }
+                if (ggnSKU != null) {
+                  ggnUnbookedInventory = ggnInventory - adminInventoryService.getBookedInventory(ggnSKU);
+                }
+
             }
             if (loggedInWarehouse != null) {
                 if (loggedInSKU != null) {
@@ -449,5 +456,13 @@ public class InventoryHealthStatusAction extends BasePaginatedAction {
 
     public void setProductService(ProductService productService) {
         this.productService = productService;
+    }
+
+    public boolean isUnbookedInventoryRequired() {
+        return unbookedInventoryRequired;
+    }
+
+    public void setUnbookedInventoryRequired(boolean unbookedInventoryRequired) {
+        this.unbookedInventoryRequired = unbookedInventoryRequired;
     }
 }
