@@ -1,5 +1,6 @@
 package com.hk.admin.impl.dao.hkDelivery;
 
+import com.akube.framework.dao.Page;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.hkDelivery.*;
 import com.hk.impl.dao.BaseDaoImpl;
@@ -9,6 +10,8 @@ import com.hk.domain.user.User;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.constants.hkDelivery.EnumConsignmentStatus;
 import com.hk.constants.hkDelivery.EnumRunsheetStatus;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
@@ -47,6 +50,31 @@ public class ConsignmentDaoImpl extends BaseDaoImpl implements ConsignmentDao {
     public List<ShippingOrder> getShippingOrderFromConsignments(List<String> cnnNumberList) {
         String query = "from ShippingOrder sh where sh.gatewayOrderId in (:cnnNumberList)";
         return (List<ShippingOrder>) findByNamedParams(query,new String[]{"cnnNumberList"},new Object[]{cnnNumberList});
+    }
+
+    @Override
+    public Page searchConsignment(Consignment consignment, Date startDate, Date endDate, ConsignmentStatus consignmentStatus, Hub hub, int pageNo, int perPage){
+        DetachedCriteria consignmentCriteria = DetachedCriteria.forClass(Consignment.class);
+
+        if (consignment != null) {
+            consignmentCriteria.add(Restrictions.eq("id", consignment.getId()));
+        }
+        if (startDate != null) {
+            consignmentCriteria.add(Restrictions.ge("createDate", startDate));
+        }
+        if (endDate != null) {
+            consignmentCriteria.add(Restrictions.le("createDate", endDate));
+        }
+        if (consignmentStatus != null) {
+            consignmentCriteria.add(Restrictions.eq("consignmentStatus", consignmentStatus));
+        }
+
+        if (hub != null) {
+            consignmentCriteria.add(Restrictions.eq("hub", hub));
+        }
+
+        consignmentCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));
+        return list(consignmentCriteria, pageNo, perPage);
     }
 }
 

@@ -1,5 +1,6 @@
 package com.hk.admin.impl.service.hkDelivery;
 
+import com.akube.framework.dao.Page;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.hkDelivery.ConsignmentStatus;
 import org.springframework.stereotype.Service;
@@ -129,5 +130,10 @@ public class ConsignmentServiceImpl implements ConsignmentService {
         runsheetParams.add(totalCODAmount);
         runsheetParams.add(totalCODPackets);
         return runsheetParams;
+    }
+
+    @Override
+    public Page searchConsignment(Consignment consignment, Date startDate, Date endDate, ConsignmentStatus consignmentStatus, Hub hub, int pageNo, int perPage) {
+        return consignmentDao.searchConsignment(consignment, startDate, endDate, consignmentStatus, hub, pageNo, perPage);
     }
 }

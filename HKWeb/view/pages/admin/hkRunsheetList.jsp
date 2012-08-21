@@ -69,7 +69,6 @@
                 <th>Pre paid boxes</th>
                 <th>Remarks</th>
                 <th>Actions</th>
-                <th>Download</th>
             </tr>
             </thead>
             <c:forEach items="${runsheetAction.runsheetList}" var="runsheet" varStatus="ctr">
@@ -88,12 +87,11 @@
                     <td>${runsheet.remarks}</td>
                     <td>
                         <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDRunsheetAction" event="editRunsheet"
-                                target="_blank">Edit runsheet details
+                                target="_blank">Edit
                             <s:param name="runsheet" value="${runsheet.id}"/></s:link>
-                    </td>
-                    <td>
+                        &nbsp;&nbsp;
                         <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDRunsheetAction" event="downloadRunsheetAgain"
-                                target="_blank">Download Runsheet
+                                target="_blank">Download
                             <s:param name="runsheet" value="${runsheet.id}"/></s:link>
                     </td>
                 </tr>
