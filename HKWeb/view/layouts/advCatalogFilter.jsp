@@ -148,8 +148,8 @@
 			$("#minPrice").val(${priceRange.minPrice});
 			$("#maxPrice").val(${priceRange.maxPrice});
 			$(".filterCatalogForm").submit();
-			//window.location.reload();
 		});
+
 	});
 
 	function toggle(ulId, elm) {
@@ -161,6 +161,17 @@
 			elm.innerHTML = "+";
 			elm.title = "Expand";
 		}
+	}
+
+	function removeFilter(id) {
+		var ctr = 0;
+		$(".filterOption").each(function() {
+			if ($(this).attr("checked") && $(this).val() != id) {
+				$('<input type="hidden" value="' + $(this).val() + '" name="filterOptions[' + ctr + ']">').appendTo('.filterCatalogForm');
+				ctr++;
+			}
+		});
+		$(".filterCatalogForm").submit();
 	}
 </script>
 <div class='' style="border-right:1px dotted #ddd">
@@ -215,7 +226,17 @@
 					<a class="removeFilters"
 					   style="cursor:pointer;float:right;margin-right:10px;color:black;font-size:.9em;font-weight:normal;">Reset</a>
 				</c:if>
+				<c:if test="${!empty ca.filterOptions}">
+				<div>
+					<c:forEach items="${ca.filterProductOptions}" var="filter">
+						<label style="font-size:.9em;font-weight:normal;">
+						${filter.value} <a class="removeFilter" style="cursor:pointer;color:black;" onclick="removeFilter(${filter.id})">X</a></label>
+						<br/>
+					</c:forEach>
+				</div>
+	</c:if>
 			</h5>
+
 		</div>
 		<c:set var="ctr" value="0"/>
 		<s:form beanclass="com.hk.web.action.core.catalog.category.CatalogAction" class="filterCatalogForm">
