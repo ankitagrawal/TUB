@@ -121,54 +121,32 @@
                 </fieldset>
             </s:form>
         </div>
+        <c:if test="${!empty hkdBean.consignmentTrackingList}">
         <div id="consignmentTrackingData">
           <table class="zebra_vert">
             <thead>
             <tr>
-                <th>ID</th>
-                <th>Create Date</th>
-                <th>Hub</th>
-                <th>Assigned to</th>
+                <th>Consignment Number</th>
+                <th>Cnn Number</th>
+                <th>Source Hub</th>
+                <th>Destination Hub</th>
+                <th>Date</th>
                 <th>Status</th>
-                <th>Expected collection</th>
-                <th>Actual collection</th>
-                <th>COD Boxes</th>
-                    <%--<th>Reconciled</th>--%>
-                <th>Pre paid boxes</th>
-                <th>Remarks</th>
-                <th>Actions</th>
-                <th>Download</th>
             </tr>
             </thead>
-            <c:forEach items="${runsheetAction.runsheetList}" var="runsheet" varStatus="ctr">
+            <c:forEach items="${hkdBean.consignmentTrackingList}" var="consignmentTrackingList" varStatus="ctr">
                 <tr>
-                    <td>${runsheet.id}</td>
-                    <td><fmt:formatDate value="${runsheet.createDate}" type="both" timeStyle="short"/></td>
-                    <td>${runsheet.hub.name}</td>
-                    <td>${runsheet.agent.name}</td>
-                    <td>${runsheet.runsheetStatus.status}</td>
-                    <td><fmt:formatNumber value="${runsheet.expectedCollection}" type="currency" currencySymbol=" "
-                                          maxFractionDigits="0"/></td>
-                    <td><fmt:formatNumber value="${runsheet.actualCollection}" type="currency" currencySymbol=" "
-                                          maxFractionDigits="0"/></td>
-                    <td>${runsheet.codBoxCount}</td>
-                    <td>${runsheet.prepaidBoxCount}</td>
-                    <td>${runsheet.remarks}</td>
-                    <td>
-                        <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDRunsheetAction" event="editRunsheet"
-                                target="_blank">Edit runsheet details
-                            <s:param name="runsheet" value="${runsheet.id}"/></s:link>
-                    </td>
-                    <td>
-                        <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDRunsheetAction" event="downloadRunsheetAgain"
-                                target="_blank">Download Runsheet
-                            <s:param name="runsheet" value="${runsheet.id}"/></s:link>
-                    </td>
+                    <td>${consignmentTrackingList.consignment.awbNumber}</td>
+                    <td>${consignmentTrackingList.consignment.cnnNumber}</td>
+                    <td>${consignmentTrackingList.sourceHub.name}</td>
+                    <td>${consignmentTrackingList.destinationHub.name}</td>
+                    <td><fmt:formatDate value="${consignmentTrackingList.createDate}" type="both" timeStyle="short"/></td>
+                    <td>${consignmentTrackingList.consignmentLifecycleStatus.status}</td>
                 </tr>
             </c:forEach>
         </table>       
         </div>
-
+        </c:if>
     </s:layout-component>
 </s:layout-render>
 <script type="text/javascript">

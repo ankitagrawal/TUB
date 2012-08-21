@@ -5,7 +5,7 @@ public enum EnumConsignmentLifecycleStatus {
     ReceivedAtHub(10L, "Received at Hub"),
     Dispatched(20L, "Dispatched"),
     ReturnedToHub(30L, "Returned to Hub"),
-    ReturnedToSource(400L, "Returned to Source"),
+    ReturnedToSource(40L, "Returned to Source"),
     ConsignmentLost(50L, "Consignment Lost"),
     Hold(60L, "Hold"),
     Damaged(70L, "Consignment Lost"),
