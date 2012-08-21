@@ -38,34 +38,34 @@ import com.hk.report.dto.catalog.ComboProductAndAllowedVariantsDto;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.error.AdminPermissionAction;
 
-@Secure(hasAnyPermissions = { PermissionConstants.UPDATE_PRODUCT_CATALOG }, authActionBean = AdminPermissionAction.class)
+@Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PRODUCT_CATALOG}, authActionBean = AdminPermissionAction.class)
 @Component
 public class CreateEditComboAction extends BaseAction {
 
-    private static Logger                           logger                                = Logger.getLogger(CreateEditComboAction.class);
+    private static Logger logger = Logger.getLogger(CreateEditComboAction.class);
 
     @Autowired
-    private ComboDao                                comboDao;
+    private ComboDao comboDao;
     @Autowired
-    private ProductVariantService                   productVariantService;
+    private ProductVariantService productVariantService;
     @Autowired
-    private ProductService                          productService;
+    private ProductService productService;
     @Autowired
-    private XslParser                               xslParser;
+    private XslParser xslParser;
     @Autowired
-    private CategoryService                         categoryService;
-   
-    
-    private Combo                                   combo;
-    private ComboProduct                            comboProduct;
+    private CategoryService categoryService;
 
-    @Validate(required = true)
-    private String                                  categories;
+
+    private Combo combo;
+    private ComboProduct comboProduct;
 
     @Validate(required = true)
-    private String                                  primaryCategory;
+    private String categories;
 
-    private String                                  productId;
+    @Validate(required = true)
+    private String primaryCategory;
+
+    private String productId;
 
     private List<ComboProductAndAllowedVariantsDto> comboProductAndAllowedVariantsDtoList = new ArrayList<ComboProductAndAllowedVariantsDto>();
 
@@ -167,6 +167,9 @@ public class CreateEditComboAction extends BaseAction {
         combo.setThumbUrl("");
         if (combo.getDeleted() == null) {
             combo.setDeleted(Boolean.FALSE);
+        }
+        if (combo.getCodAllowed() == null) {
+            combo.setCodAllowed(Boolean.FALSE);
         }
         combo = (Combo) getComboDao().save(combo);
 

@@ -272,11 +272,11 @@
 ---/home-devices/supports/walking-aids/walkers
 -/home-devices/rehabilitation-aids
 --/home-devices/rehabilitation-aids/walking-aids
----/home-devices/rehabilitation-aids/walking-aids/wheel-chair
----/home-devices/rehabilitation-aids/walking-aids/power-wheel-chair: Power Wheel Chair
 ---/home-devices/rehabilitation-aids/walking-aids/walking-sticks
 ---/home-devices/rehabilitation-aids/walking-aids/crutches
 ---/home-devices/rehabilitation-aids/walking-aids/walkers
+--/home-devices/rehabilitation-aids/wheel-chair
+--/home-devices/rehabilitation-aids/power-wheel-chair: Power Wheel Chair
 --/home-devices/rehabilitation-aids/commode : Commode WheelChair/Stools
 --/home-devices/rehabilitation-aids/physiotherapy-aids
 --/home-devices/rehabilitation-aids/orthotic-aids
@@ -336,7 +336,7 @@
 --/home-devices/miscellaneous/digital-thermometer : Digital Thermometer
 ---/home-devices/miscellaneous/flexible-tip
 ---/home-devices/miscellaneous/rigid-tip
----/home-devices/miscellaneous/forhead-thermometer
+---/home-devices/miscellaneous/forehead-thermometer
 ---/home-devices/miscellaneous/no-contact-thermometer
 ---/home-devices/miscellaneous/ear-thermometer
 --/home-devices/miscellaneous/weight-management
@@ -733,19 +733,20 @@
 ---/parenting/mom-maternity/breast-feeding/breast-milk-cooler-bags
 --/parenting/mom-maternity/multivitamins-nutrition : Multivitamins & Nutrition
 -/parenting/infant
---/parenting/infant/diapering
----/parenting/infant/diapering/diapers
----/parenting/infant/diapering/wipes
----/parenting/infant/diapering/diaper-rash-cream
+--/parenting/infant/diapers-and-wipes    :   Diapers & Wipes
+---/parenting/infant/diapers-and-wipes/diapers
+---/parenting/infant/diapers-and-wipes/wipes
+---/parenting/infant/diapers-and-wipes/diaper-rash-cream
 --/parenting/infant/formula-baby-food : Formula & Baby Food
 --/parenting/infant/feeding-bottles    :   Feeding Bottles
 ---/parenting/infant/feeding-bottles/glass-bottles
----/parenting/infant/feeding-bottles/bpa-free-plastic-bottles       :    BPA Free Plastic Bottles
----/parenting/infant/feeding-bottles/non-bpa-free-plastic-bottles    :   Non BPA Free Plastic Bottles
+---/parenting/infant/feeding-bottles/bpa-free-bottles       :    BPA Free Bottles
+---/parenting/infant/feeding-bottles/plastic-bottles    :   Plastic Bottles
 --/parenting/infant/feeding-accessories    :    Feeding Accessories
 ---/parenting/infant/feeding-accessories/nipples-and-teats    :     Nipples & Teats
 ---/parenting/infant/feeding-accessories/bowls    :   Bowls
 ---/parenting/infant/feeding-accessories/spoons   :  Spoons
+---/parenting/infant/feeding-accessories/forks
 ---/parenting/infant/feeding-accessories/dish-plate    :   Dish Plates
 ---/parenting/infant/feeding-accessories/feeding-set    :   Feeding Set
 ---/parenting/infant/feeding-accessories/misc-accessories
@@ -778,19 +779,23 @@
 ---/parenting/infant/bathtime/lotions
 ---/parenting/infant/bathtime/creams
 ---/parenting/infant/bathtime/bath-towels :  Bath Towels
+---/parenting/infant/bathtime/bath-mitts   :    Bath Mitts
+--/parenting/infant/misc-accessories:  Misc Accessories
 -/parenting/toddler
---/parenting/toddler/diapering
----/parenting/toddler/diapering/diapers
----/parenting/toddler/diapering/wipes
+--/parenting/toddler/diapers-and-wipes     :    Diapers & Wipes
+---/parenting/toddler/diapers-and-wipes/diapers
+---/parenting/toddler/diapers-and-wipes/wipes
+---/parenting/toddler/diapers-and-wipes/diaper-rash-cream
 --/parenting/toddler/formula-baby-food : Formula & Baby Food
 --/parenting/toddler/feeding-bottles    :   Feeding Bottles
 ---/parenting/toddler/feeding-bottles/glass-bottles
----/parenting/toddler/feeding-bottles/bpa-free-plastic-bottles       :    BPA Free Plastic Bottles
----/parenting/toddler/feeding-bottles/non-bpa-free-plastic-bottles    :   Non BPA Free Plastic Bottles
+---/parenting/toddler/feeding-bottles/bpa-free-bottles       :    BPA Free Bottles
+---/parenting/toddler/feeding-bottles/plastic-bottles    :   Plastic Bottles
 --/parenting/toddler/feeding-accessories    :    Feeding Accessories
 ---/parenting/toddler/feeding-accessories/nipples-and-teats    :     Nipples & Teats
 ---/parenting/toddler/feeding-accessories/bowls      :    Bowls
 ---/parenting/toddler/feeding-accessories/spoons     :     Spoons
+---/parenting/toddler/feeding-accessories/forks
 ---/parenting/toddler/feeding-accessories/dish-plates      :    Dish Plates
 ---/parenting/toddler/feeding-accessories/feeding-set      :    Feeding Set
 ---/parenting/toddler/feeding-accessories/misc-accessories
@@ -808,6 +813,7 @@
 ---/parenting/toddler/bathtime/lotions
 ---/parenting/toddler/bathtime/creams
 ---/parenting/toddler/bathtime/bath-towels :  Bath Towels
+---/parenting/toddler/bathtime/bath-mitts   :    Bath Mitts
 --/parenting/toddler/grooming
 ---/parenting/toddler/grooming/comb-hair-brushes:   Comb & Hair Brushes
 ---/parenting/toddler/grooming/nail-clippers-scissors:   Nail Clippers & Scissors
@@ -828,6 +834,7 @@
 ---/parenting/toddler/funtime/comics   :   Comics
 ---/parenting/toddler/funtime/activity-books   :    Activity Books
 ---/parenting/toddler/funtime/accessories   :    Accessories
+--/parenting/toddler/misc-accessories    :   Misc Accessories
 -/parenting/pre-school
 --/parenting/pre-school/apparels  : Apparels
 ---/parenting/pre-school/apparels/t-shirts  :   Tees
