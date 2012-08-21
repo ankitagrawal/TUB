@@ -112,7 +112,6 @@ public class ReportProductVariantDaoImpl extends BaseDaoImpl implements ReportPr
                 .setResultTransformer(Transformers.aliasToBean(RTODamageReportDto.class)).list();
     }
 
-
      public List<ShippingOrder> getShippingOrdersByReturnDate(Date startDate, Date endDate, EnumShippingOrderStatus shippingOrderStatus,Warehouse warehouse) {
       String query = "from ShippingOrder so where so.shipment.returnDate between :startDate and :endDate and so.shippingOrderStatus.id = :shippingOrderStatus and so.warehouse= :warehouse";
         return  (List<ShippingOrder>)getSession().createQuery(query).setParameter("startDate", startDate)

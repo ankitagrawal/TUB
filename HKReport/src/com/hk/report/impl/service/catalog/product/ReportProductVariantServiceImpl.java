@@ -40,7 +40,7 @@ public class ReportProductVariantServiceImpl implements ReportProductVariantServ
     }
 
     public InventorySoldDto findInventorySoldByDateAndProduct(Date startDate, Date endDate, String productId) {
-        return getReportProductVariantDao().findInventorySoldByDateAndProduct(startDate, endDate,productId);
+        return getReportProductVariantDao().findInventorySoldByDateAndProduct(startDate, endDate, productId);
     }
 
     public Long findSkuInventorySold(Date startDate, Date endDate, Sku sku) {
@@ -51,8 +51,8 @@ public class ReportProductVariantServiceImpl implements ReportProductVariantServ
         List<ExpiryAlertReportDto> expiryAlertReportDtoList = reportProductVariantDao.getToBeExpiredProductDetails(startDate, endDate, warehouse);
         List<ExpiryAlertReportDto> expiryAlertReturnList = new ArrayList<ExpiryAlertReportDto>();
 
-        for(ExpiryAlertReportDto expiryAlertReport : expiryAlertReportDtoList) {
-            SkuGroup skuGroup= expiryAlertReport.getSkuGroup();
+        for (ExpiryAlertReportDto expiryAlertReport : expiryAlertReportDtoList) {
+            SkuGroup skuGroup = expiryAlertReport.getSkuGroup();
             ProductVariant productVariant = skuGroup.getSku().getProductVariant();
             expiryAlertReport.setProductName(productVariant.getProduct().getName());
             expiryAlertReport.setBatchNumber(skuGroup.getBatchNumber());
@@ -70,38 +70,38 @@ public class ReportProductVariantServiceImpl implements ReportProductVariantServ
 
         StockReportDto stockReportDtoStore = new StockReportDto();
         stockReportDtoStore.setProductVariant(productVariantId);
-        stockReportDtoStore.setProductName( productVariant.getProduct().getName() );
-        stockReportDtoStore.setProductOption( productVariant.getOptionsSlashSeparated() );
+        stockReportDtoStore.setProductName(productVariant.getProduct().getName());
+        stockReportDtoStore.setProductOption(productVariant.getOptionsSlashSeparated());
 
         Long openingStock = reportProductVariantDao.getOpeningStockOfProductVariantOnDate(productVariantId, startDate, warehouse);
         stockReportDtoStore.setOpeningStock(openingStock);
         stockReportDtoStore.setStockLeft(reportProductVariantDao.getStockLeftQty(productVariantId, warehouse));
         List<StockReportDto> stockReportDtoList = reportProductVariantDao.getProductVariantStockBetweenDates(productVariantId, startDate, endDate, warehouse);
-        for(StockReportDto stockReportDto : stockReportDtoList) {
-            if(stockReportDto.getInventoryTxnType() != null ){
-                if(stockReportDto.getInventoryTxnType().longValue() == EnumInvTxnType.INV_CHECKIN.getId().longValue()) {
+        for (StockReportDto stockReportDto : stockReportDtoList) {
+            if (stockReportDto.getInventoryTxnType() != null) {
+                if (stockReportDto.getInventoryTxnType().longValue() == EnumInvTxnType.INV_CHECKIN.getId().longValue()) {
                     stockReportDtoStore.setGrnCheckin(stockReportDto.getInventoryQty());
-                }else if(stockReportDto.getInventoryTxnType().longValue() == EnumInvTxnType.INV_CHECKOUT.getId().longValue()) {
+                } else if (stockReportDto.getInventoryTxnType().longValue() == EnumInvTxnType.INV_CHECKOUT.getId().longValue()) {
                     stockReportDtoStore.setLineItemCheckout(stockReportDto.getInventoryQty() * -1L);
-                }else if(stockReportDto.getInventoryTxnType().longValue() == EnumInvTxnType.RTO_CHECKIN.getId().longValue()) {
+                } else if (stockReportDto.getInventoryTxnType().longValue() == EnumInvTxnType.RTO_CHECKIN.getId().longValue()) {
                     stockReportDtoStore.setRtoCheckin(stockReportDto.getInventoryQty());
-                }else if(stockReportDto.getInventoryTxnType().longValue() == EnumInvTxnType.RV_DAMAGED.getId().longValue()) {
+                } else if (stockReportDto.getInventoryTxnType().longValue() == EnumInvTxnType.RV_DAMAGED.getId().longValue()) {
                     stockReportDtoStore.setReconcileCheckout(stockReportDto.getInventoryQty() * -1L);
-                }else if(stockReportDto.getInventoryTxnType().longValue() == EnumInvTxnType.RV_CHECKIN.getId().longValue()) {
+                } else if (stockReportDto.getInventoryTxnType().longValue() == EnumInvTxnType.RV_CHECKIN.getId().longValue()) {
                     stockReportDtoStore.setReconcileCheckin(stockReportDto.getInventoryQty());
-                }else if(stockReportDto.getInventoryTxnType().longValue() == EnumInvTxnType.CANCEL_CHECKIN.getId().longValue()) {
+                } else if (stockReportDto.getInventoryTxnType().longValue() == EnumInvTxnType.CANCEL_CHECKIN.getId().longValue()) {
                     stockReportDtoStore.setCancelCheckin(stockReportDto.getInventoryQty());
-                }else if(stockReportDto.getInventoryTxnType().longValue() == EnumInvTxnType.INV_REPEAT_CHECKOUT.getId().longValue()) {
+                } else if (stockReportDto.getInventoryTxnType().longValue() == EnumInvTxnType.INV_REPEAT_CHECKOUT.getId().longValue()) {
                     stockReportDtoStore.setInventoryRepeatCheckout(stockReportDto.getInventoryQty() * -1L);
-                }else if(stockReportDto.getInventoryTxnType().longValue() == EnumInvTxnType.RV_EXPIRED.getId().longValue()) {
+                } else if (stockReportDto.getInventoryTxnType().longValue() == EnumInvTxnType.RV_EXPIRED.getId().longValue()) {
                     stockReportDtoStore.setRvExpired(stockReportDto.getInventoryQty() * -1L);
-                }else if(stockReportDto.getInventoryTxnType().longValue() == EnumInvTxnType.RV_LOST_PILFERAGE.getId().longValue()) {
+                } else if (stockReportDto.getInventoryTxnType().longValue() == EnumInvTxnType.RV_LOST_PILFERAGE.getId().longValue()) {
                     stockReportDtoStore.setRvLostPilferage(stockReportDto.getInventoryQty() * -1L);
-                }else if(stockReportDto.getInventoryTxnType().longValue() == EnumInvTxnType.STOCK_TRANSFER_CHECKIN.getId().longValue()) {
+                } else if (stockReportDto.getInventoryTxnType().longValue() == EnumInvTxnType.STOCK_TRANSFER_CHECKIN.getId().longValue()) {
                     stockReportDtoStore.setStockTransferCheckin(stockReportDto.getInventoryQty());
-                }else if(stockReportDto.getInventoryTxnType().longValue() == EnumInvTxnType.STOCK_TRANSFER_CHECKOUT.getId().longValue()) {
+                } else if (stockReportDto.getInventoryTxnType().longValue() == EnumInvTxnType.STOCK_TRANSFER_CHECKOUT.getId().longValue()) {
                     stockReportDtoStore.setStockTransferCheckout(stockReportDto.getInventoryQty() * -1L);
-                }else if(stockReportDto.getInventoryTxnType().longValue() == EnumInvTxnType.TRANSIT_LOST.getId().longValue()) {
+                } else if (stockReportDto.getInventoryTxnType().longValue() == EnumInvTxnType.TRANSIT_LOST.getId().longValue()) {
                     stockReportDtoStore.setTransitLost(stockReportDto.getInventoryQty() * -1L);
                 }
             }
@@ -111,19 +111,18 @@ public class ReportProductVariantServiceImpl implements ReportProductVariantServ
         return stockReportDtoStore;
     }
 
-
-    public List<RTOReportDto> getRTOProductsDetail(Date startDate, Date endDate,Warehouse warehouse) {
+    public List<RTOReportDto> getRTOProductsDetail(Date startDate, Date endDate, Warehouse warehouse) {
         List<ShippingOrder> shippingOrderList = reportProductVariantDao.getShippingOrdersByReturnDate(startDate, endDate, EnumShippingOrderStatus.SO_Returned, warehouse);
         Iterator<ShippingOrder> iteratorShippingOrder = shippingOrderList.iterator();
         List<RTOReportDto> rtoReportDtoList = new ArrayList<RTOReportDto>();
         RTOReportDto rtoReportDto;
 
-        while(iteratorShippingOrder.hasNext()) {
+        while (iteratorShippingOrder.hasNext()) {
             ShippingOrder shippingOrder = iteratorShippingOrder.next();
             List<RTOFineReportDto> rtoFineReportDtoList = reportProductVariantDao.getRTOFineProductVariantDetails(shippingOrder);
             List<RTODamageReportDto> rtoDamageReportDtoList = reportProductVariantDao.getRTODamageProductVariantDetails(shippingOrder);
 
-            for(RTOFineReportDto rtoFineReportDto : rtoFineReportDtoList) {
+            for (RTOFineReportDto rtoFineReportDto : rtoFineReportDtoList) {
                 rtoReportDto = new RTOReportDto();
                 Long rtoCheckInQty = rtoFineReportDto.getRtoCheckinCount();
                 ProductVariant productVariant = rtoFineReportDto.getProductVariant();
@@ -138,7 +137,7 @@ public class ReportProductVariantServiceImpl implements ReportProductVariantServ
                 rtoReportDtoList.add(rtoReportDto);
             }
 
-            for(RTODamageReportDto rtoFineReportDto : rtoDamageReportDtoList) {
+            for (RTODamageReportDto rtoFineReportDto : rtoDamageReportDtoList) {
                 rtoReportDto = new RTOReportDto();
                 Long rtoDamageCheckInQty = rtoFineReportDto.getRtoDamageCheckinCount();
                 ProductVariant productVariant = rtoFineReportDto.getProductVariant();
@@ -161,7 +160,7 @@ public class ReportProductVariantServiceImpl implements ReportProductVariantServ
         return rvReportDtoList;
     }
 
-    public List<GrnLineItem> getGrnLineItemForPurchaseOrder(ProductVariant productVariant, Warehouse warehouse, Date startDate, Date endDate){
+    public List<GrnLineItem> getGrnLineItemForPurchaseOrder(ProductVariant productVariant, Warehouse warehouse, Date startDate, Date endDate) {
         return getReportProductVariantDao().getGrnLineItemForPurchaseOrder(productVariant, warehouse, startDate, endDate);
     }
 
