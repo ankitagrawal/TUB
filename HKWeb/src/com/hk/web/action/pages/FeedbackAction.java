@@ -1,6 +1,7 @@
 package com.hk.web.action.pages;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.domain.feedback.Feedback;
 import com.hk.domain.order.Order;
 import com.hk.pact.service.feedback.FeedbackService;
 import net.sourceforge.stripes.action.DefaultHandler;
@@ -33,7 +34,10 @@ public class FeedbackAction extends BaseAction {
 	}
 
 	public Resolution save() {
-		getFeedbackService().createFeedbackForOrder(order, recommendToFriends, customerServiceFeedback, websiteExperienceFeedback, comments);
+		Feedback feedback = getFeedbackService().getOrCreateFeedbackForOrder(order);
+
+		getFeedbackService().updateFeedback(feedback, recommendToFriends, customerServiceFeedback, websiteExperienceFeedback, comments);
+
 		return new ForwardResolution("/pages/static/feedback.jsp");
 	}
 

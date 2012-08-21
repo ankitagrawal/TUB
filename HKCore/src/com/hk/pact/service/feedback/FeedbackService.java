@@ -1,5 +1,6 @@
 package com.hk.pact.service.feedback;
 
+import com.hk.domain.feedback.Feedback;
 import com.hk.domain.order.Order;
 
 /**
@@ -11,6 +12,7 @@ import com.hk.domain.order.Order;
  */
 public interface FeedbackService {
 
-	public void createFeedbackForOrder(Order order, Long recommendToFriends, Long customerServiceFeedback,
-	                                   Long websiteExperienceFeedback, String comments);
+	public Feedback getOrCreateFeedbackForOrder(Order order);
+
+	public Feedback updateFeedback(Feedback feedback, Long recommendToFriends, Long customerServiceFeedback, Long websiteExperienceFeedback, String comments);
 }

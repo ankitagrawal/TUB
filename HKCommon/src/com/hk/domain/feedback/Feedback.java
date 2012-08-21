@@ -42,6 +42,10 @@ public class Feedback implements Serializable {
 
 	@Column(name = "comments")
 	private String comments;
+
+	@Column(name = "order_delivery_email_sent")
+	private boolean orderDeliveryEmailSent;
+
 	public Long getId() {
 		return id;
 	}
@@ -96,5 +100,13 @@ public class Feedback implements Serializable {
 
 	public void setComments(String comments) {
 		this.comments = comments;
+	}
+
+	public boolean isOrderDeliveryEmailSent() {
+		return orderDeliveryEmailSent;
+	}
+
+	public void setOrderDeliveryEmailSent(boolean orderDeliveryEmailSent) {
+		this.orderDeliveryEmailSent = orderDeliveryEmailSent;
 	}
 }

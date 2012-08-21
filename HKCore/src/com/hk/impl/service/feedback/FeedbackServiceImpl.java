@@ -4,6 +4,7 @@ import com.hk.domain.feedback.Feedback;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.feedback.FeedbackDao;
 import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.feedback.FeedbackService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,24 +23,34 @@ public class FeedbackServiceImpl implements FeedbackService {
 	@Autowired
 	UserDao userDao;
 	@Autowired
-	BaseDao baseDao;
+	FeedbackDao feedbackDao;
 
-	public void createFeedbackForOrder(Order order, Long recommendToFriends, Long customerServiceFeedback,
-	                                   Long websiteExperienceFeedback, String comments) {
-		User user = userDao.getUserById(1L);
-		Feedback feedback = new Feedback();
-		feedback.setUser(user);
+	public Feedback updateFeedback(Feedback feedback, Long recommendToFriends, Long customerServiceFeedback, Long websiteExperienceFeedback, String comments) {
+		feedback.setRecommendToFriends(recommendToFriends);
 		feedback.setCustomerCareExperience(customerServiceFeedback);
 		feedback.setWebsiteExperience(websiteExperienceFeedback);
 		feedback.setComments(comments);
-		getBaseDao().save(feedback);
+		getFeedbackDao().save(feedback);
+		return feedback;
 	}
 
-	public BaseDao getBaseDao() {
-		return baseDao;
+	public Feedback getOrCreateFeedbackForOrder(Order order) {
+		Feedback feedback = getFeedbackDao().findByOrder(order);
+		if(feedback == null) {
+			feedback = new Feedback();
+			feedback.setOrder(order);
+			feedback.setUser(order.getUser());
+			feedback.setOrderDeliveryEmailSent(false);
+		}
+		return feedback;
+
 	}
 
-	public void setBaseDao(BaseDao baseDao) {
-		this.baseDao = baseDao;
+	public FeedbackDao getFeedbackDao() {
+		return feedbackDao;
+	}
+
+	public void setFeedbackDao(FeedbackDao feedbackDao) {
+		this.feedbackDao = feedbackDao;
 	}
 }

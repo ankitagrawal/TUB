@@ -4,6 +4,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.domain.feedback.Feedback;
+import com.hk.pact.dao.BaseDao;
+import com.hk.pact.service.feedback.FeedbackService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +61,10 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     private OrderLoggingService       orderLoggingService;
     @Autowired
     private SubscriptionOrderService   subscriptionOrderService;
-
+	@Autowired
+	FeedbackService feedbackService;
+	@Autowired
+	BaseDao baseDao;
 
     @Transactional
     public Order putOrderOnHold(Order order) {
@@ -224,7 +230,13 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
             //if the order is a subscription order update subscription status
             subscriptionOrderService.markSubscriptionOrderAsDelivered(order);
-	        getEmailManager().sendOrderDeliveredEmail(order);
+	        Feedback feedback = feedbackService.getOrCreateFeedbackForOrder(order);
+	        if(!feedback.isOrderDeliveryEmailSent()) {
+		        getEmailManager().sendOrderDeliveredEmail(order);
+		        feedback.setOrderDeliveryEmailSent(true);
+		        baseDao.save(feedback);
+	        }
+
         }
         return order;
     }

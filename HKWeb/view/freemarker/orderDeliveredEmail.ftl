@@ -1,4 +1,4 @@
-Your order ${order.baseOrder.gatewayOrderId} has been delivered.
+Your order ${order.gatewayOrderId} has been delivered.
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -102,18 +102,19 @@ Your order ${order.baseOrder.gatewayOrderId} has been delivered.
 						<form action="http://staging.healthkart.com:9090/hk/pages/static/feedback.jsp" method="post">
 							<table>
 								<tr>
-									<td><input type="radio" name="feedback" value="1" onclick=submit(this.form) /> 1</td>
-									<td><input type="radio" name="feedback" value="2" onclick=submit(this.form) /> 2</td>
-									<td><input type="radio" name="feedback" value="3" onclick=submit(this.form) /> 3</td>
-									<td><input type="radio" name="feedback" value="4" onclick=submit(this.form) /> 4</td>
-									<td><input type="radio" name="feedback" value="5" onclick=submit(this.form) /> 5</td>
-									<td><input type="radio" name="feedback" value="6" onclick=submit(this.form) /> 6</td>
-									<td><input type="radio" name="feedback" value="7" onclick=submit(this.form) /> 7</td>
-									<td><input type="radio" name="feedback" value="8" onclick=submit(this.form) /> 8</td>
-									<td><input type="radio" name="feedback" value="9" onclick=submit(this.form) /> 9</td>
-									<td><input type="radio" name="feedback" value="10" onclick=submit(this.form) /> 10</td>
+									<td><input type="radio" name="recommendToFriends" value="1" onclick=submit(this.form) /> 1</td>
+									<td><input type="radio" name="recommendToFriends" value="2" onclick=submit(this.form) /> 2</td>
+									<td><input type="radio" name="recommendToFriends" value="3" onclick=submit(this.form) /> 3</td>
+									<td><input type="radio" name="recommendToFriends" value="4" onclick=submit(this.form) /> 4</td>
+									<td><input type="radio" name="recommendToFriends" value="5" onclick=submit(this.form) /> 5</td>
+									<td><input type="radio" name="recommendToFriends" value="6" onclick=submit(this.form) /> 6</td>
+									<td><input type="radio" name="recommendToFriends" value="7" onclick=submit(this.form) /> 7</td>
+									<td><input type="radio" name="recommendToFriends" value="8" onclick=submit(this.form) /> 8</td>
+									<td><input type="radio" name="recommendToFriends" value="9" onclick=submit(this.form) /> 9</td>
+									<td><input type="radio" name="recommendToFriends" value="10" onclick=submit(this.form) /> 10</td>
 								</tr>
 							</table>
+							<input type="hidden" name="baseOrderId" value="${order}">
 						</form>
 
 						In case you have any queries, feel free to chat with our Customer Care or call them at

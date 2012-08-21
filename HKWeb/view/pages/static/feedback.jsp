@@ -1,10 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%
-	//String feedback = (String)request.getAttribute("feedback");
-	//String feedback = (String)pageContext.getAttribute("feedback");
-	String feedback = (String)request.getParameter("feedback");
-	pageContext.setAttribute("feedback", feedback);
+	String recommendToFriendsFeedback = request.getParameter("recommendToFriends");
+	pageContext.setAttribute("recommendToFriends", recommendToFriendsFeedback);
+	String baseOrderId = request.getParameter("baseOrderId");
+	pageContext.setAttribute("baseOrderId", baseOrderId);
 
 %>
 
@@ -15,7 +15,8 @@
 			<s:form beanclass="com.hk.web.action.pages.FeedbackAction">
 				<div class="left">
 					<h2>Please provide your valuable feedback</h2>
-					<script type="text/javascript">alert('hello ' + ${feedback});</script>
+					<s:hidden name="recommendToFriends" value="${recommendToFriends}" />
+					<s:hidden name="order" value="${baseOrderId}" />
 					<div class='label'><h3>1. How was your website experience?</h3></div>
 					<s:radio value="1" name="websiteExperienceFeedback"/>Poor
 					<s:radio value="2" name="websiteExperienceFeedback"/>Below Average
