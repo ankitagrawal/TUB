@@ -144,4 +144,28 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     public Page searchConsignment(Consignment consignment, Date startDate, Date endDate, ConsignmentStatus consignmentStatus, Hub hub, int pageNo, int perPage) {
         return consignmentDao.searchConsignment(consignment, startDate, endDate, consignmentStatus, hub, pageNo, perPage);
     }
+
+    @Override
+    public HkdeliveryPaymentReconciliation createPaymentReconciliationForConsignmentList(List<Consignment> consignmentListForPaymentReconciliation, User user){
+        HkdeliveryPaymentReconciliation hkdeliveryPaymentReconciliation = new HkdeliveryPaymentReconciliation();
+        Double amount = 0.0;
+        for(Consignment consignment : consignmentListForPaymentReconciliation){
+            if(consignment.getPaymentMode().equals(HKDeliveryConstants.COD)){
+                amount+=consignment.getAmount();
+            }
+        }
+        Set<Consignment> reconciledConsignments = new HashSet<Consignment>(consignmentListForPaymentReconciliation);
+        hkdeliveryPaymentReconciliation.setAmount(amount);
+        hkdeliveryPaymentReconciliation.setUser(user);
+        hkdeliveryPaymentReconciliation.setCreateDate(new Date());
+        hkdeliveryPaymentReconciliation.setUpdateDate(new Date());
+        hkdeliveryPaymentReconciliation.setConsignments(reconciledConsignments);
+        return hkdeliveryPaymentReconciliation;
+    }
+
+    @Override
+    public HkdeliveryPaymentReconciliation saveHkdeliveryPaymentReconciliation(HkdeliveryPaymentReconciliation hkdeliveryPaymentReconciliation){
+        consignmentDao.saveOrUpdate(hkdeliveryPaymentReconciliation);
+        return hkdeliveryPaymentReconciliation;
+    }
 }

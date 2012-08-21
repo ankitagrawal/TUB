@@ -2,8 +2,6 @@ package com.hk.domain.hkDelivery;
 // Generated Aug 14, 2012 1:18:49 PM by Hibernate Tools 3.2.4.CR1
 
 
-import com.hk.domain.courier.Awb;
-
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -37,10 +35,6 @@ public class Consignment implements java.io.Serializable {
     private String awbNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "payment_reconciliation_id")
-    private PaymentReconciliation paymentReconciliation;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hub_id", nullable = false)
     private Hub hub;
 
@@ -68,6 +62,10 @@ public class Consignment implements java.io.Serializable {
     @Column(name = "payment_mode", nullable = false, length = 15)
     private String paymentMode;
 
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="payment_reconciliation_id")
+    private HkdeliveryPaymentReconciliation hkdeliveryPaymentReconciliation;
+    
     public Long getId() {
         return this.id;
     }
@@ -82,14 +80,6 @@ public class Consignment implements java.io.Serializable {
 
     public void setAwbNumber(String awbNumber) {
         this.awbNumber = awbNumber;
-    }
-
-    public PaymentReconciliation getPaymentReconciliation() {
-        return this.paymentReconciliation;
-    }
-
-    public void setPaymentReconciliation(PaymentReconciliation paymentReconciliation) {
-        this.paymentReconciliation = paymentReconciliation;
     }
 
     public Hub getHub() {
@@ -146,6 +136,14 @@ public class Consignment implements java.io.Serializable {
 
     public void setPaymentMode(String paymentMode) {
         this.paymentMode = paymentMode;
+    }
+
+    public HkdeliveryPaymentReconciliation getHkdeliveryPaymentReconciliation() {
+        return hkdeliveryPaymentReconciliation;
+    }
+
+    public void setHkdeliveryPaymentReconciliation(HkdeliveryPaymentReconciliation hkdeliveryPaymentReconciliation) {
+        this.hkdeliveryPaymentReconciliation = hkdeliveryPaymentReconciliation;
     }
 
     @Override

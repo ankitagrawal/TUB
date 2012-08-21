@@ -2,11 +2,7 @@ package com.hk.admin.pact.service.hkDelivery;
 
 import com.akube.framework.dao.Page;
 import com.hk.domain.courier.Awb;
-import com.hk.domain.hkDelivery.Consignment;
-import com.hk.domain.hkDelivery.ConsignmentStatus;
-import com.hk.domain.hkDelivery.Hub;
-import com.hk.domain.hkDelivery.ConsignmentTracking;
-import com.hk.domain.hkDelivery.ConsignmentLifecycleStatus;
+import com.hk.domain.hkDelivery.*;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Courier;
@@ -48,4 +44,7 @@ public interface ConsignmentService {
 
     public Page searchConsignment(Consignment consignment, Date startDate, Date endDate, ConsignmentStatus consignmentStatus, Hub hub, int pageNo, int perPage);
 
+    public HkdeliveryPaymentReconciliation createPaymentReconciliationForConsignmentList(List<Consignment> consignmentListForPaymentReconciliation, User user);
+
+    public HkdeliveryPaymentReconciliation saveHkdeliveryPaymentReconciliation(HkdeliveryPaymentReconciliation hkdeliveryPaymentReconciliation);
 }

@@ -3,11 +3,7 @@ package com.hk.web.action.admin.hkDelivery;
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.action.BasePaginatedAction;
-import com.hk.domain.hkDelivery.ConsignmentStatus;
-import com.hk.domain.hkDelivery.Hub;
-import com.hk.domain.hkDelivery.Consignment;
-import com.hk.domain.hkDelivery.ConsignmentTracking;
-import com.hk.domain.hkDelivery.ConsignmentLifecycleStatus;
+import com.hk.domain.hkDelivery.*;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.user.User;
@@ -50,6 +46,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
     private             Integer               defaultPerPage           = 20;
     private             List<Consignment>     consignmentList          = new ArrayList<Consignment>();
     private             List<Consignment>     consignmentListForPaymentReconciliation = new ArrayList<Consignment>();
+    private             HkdeliveryPaymentReconciliation hkdeliveryPaymentReconciliation;
     
 
     @Autowired
@@ -145,15 +142,16 @@ public class HKDConsignmentAction extends BasePaginatedAction {
     }
 
     public Resolution searchConsignments(){
+        consignmentPage = consignmentService.searchConsignment(consignment, startDate, endDate, consignmentStatus, hub, getPageNo(), getPerPage());
         if(consignmentPage != null){
-            consignmentPage = consignmentService.searchConsignment(consignment, startDate, endDate, consignmentStatus, hub, getPageNo(), getPerPage());
+            consignmentList = consignmentPage.getList();
         }
-        consignmentList = consignmentPage.getList();
         return new ForwardResolution("/pages/admin/hkConsignmentList.jsp");
     }
 
     public Resolution generatePaymentReconciliation(){
-        
+        hkdeliveryPaymentReconciliation = consignmentService.createPaymentReconciliationForConsignmentList(consignmentListForPaymentReconciliation, getUserService().getUserById(getPrincipal().getId()));
+        hkdeliveryPaymentReconciliation = consignmentService.saveHkdeliveryPaymentReconciliation(hkdeliveryPaymentReconciliation);
         return new ForwardResolution("/pages/admin/hkdeliveryPaymentReconciliation.jsp");
     }
 
@@ -272,5 +270,13 @@ public class HKDConsignmentAction extends BasePaginatedAction {
 
     public void setDoTracking(Boolean doTracking) {
         this.doTracking = doTracking;
+    }
+
+    public HkdeliveryPaymentReconciliation getHkdeliveryPaymentReconciliation() {
+        return hkdeliveryPaymentReconciliation;
+    }
+
+    public void setHkdeliveryPaymentReconciliation(HkdeliveryPaymentReconciliation hkdeliveryPaymentReconciliation) {
+        this.hkdeliveryPaymentReconciliation = hkdeliveryPaymentReconciliation;
     }
 }

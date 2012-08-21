@@ -401,12 +401,12 @@
                     title="View Runsheets" >View/Edit Runsheets
             </s:link>
     </h3>
-    <h3>
+    <%--<h3>
             <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction"
                     title="View Consignments" event="searchConsignments" >View/Edit Consignments
             </s:link>
     </h3>
-
+--%>
     <h3>
         <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction"
                 title="Track Consignment" event="trackConsignment">Track Consignment

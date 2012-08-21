@@ -81,7 +81,7 @@
                         <td>${consignment.paymentMode}</td>
                         <td>${consignment.runsheet.id}</td>
                         <td>${consignment.consignmentStatus.status}</td>
-                        <td>${consignment.paymentReconciliation.id}</td>
+                        <td>${consignment.hkdeliveryPaymentReconciliation.id}</td>
                         <td>
                             <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction" event="pre"
                                     target="_blank">View/Edit Consignment
