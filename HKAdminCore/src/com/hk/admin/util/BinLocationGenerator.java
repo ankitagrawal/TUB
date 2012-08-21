@@ -1,10 +1,11 @@
 package com.hk.admin.util;
 
-import com.hk.admin.pact.dao.warehouse.BinDao;
-import com.hk.domain.inventory.Bin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import com.hk.admin.pact.dao.warehouse.BinDao;
+import com.hk.domain.inventory.Bin;
 
 /**
  * Created by IntelliJ IDEA.

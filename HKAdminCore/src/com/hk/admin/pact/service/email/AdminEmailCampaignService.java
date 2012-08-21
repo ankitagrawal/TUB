@@ -1,12 +1,10 @@
 package com.hk.admin.pact.service.email;
 
-import com.hk.domain.email.EmailCampaign;
-import com.hk.domain.core.EmailType;
-import com.hk.constants.EnumS3UploadStatus;
-import com.akube.framework.dao.Page;
-
 import java.io.File;
-import java.util.List;
+
+import com.akube.framework.dao.Page;
+import com.hk.domain.core.EmailType;
+import com.hk.domain.email.EmailCampaign;
 
 public interface AdminEmailCampaignService {
 

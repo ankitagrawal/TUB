@@ -1,12 +1,13 @@
 package com.hk.rest.impl.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.hk.domain.user.User;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.store.StoreService;
 import com.hk.rest.models.user.APIUser;
 import com.hk.rest.pact.service.APIUserService;
-import com.hk.domain.user.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 
 /**

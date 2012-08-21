@@ -36,6 +36,7 @@ import com.hk.admin.manager.PurchaseOrderManager;
 import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
 import com.hk.admin.pact.dao.inventory.GrnLineItemDao;
 import com.hk.admin.pact.dao.inventory.PurchaseOrderDao;
+import com.hk.admin.util.PurchaseOrderPDFGenerator;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.inventory.EnumGrnStatus;
@@ -53,6 +54,7 @@ import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.util.CustomDateTypeConvertor;
+import com.hk.util.XslGenerator;
 import com.hk.web.action.error.AdminPermissionAction;
 
 @Secure(hasAnyPermissions = { PermissionConstants.PO_MANAGEMENT }, authActionBean = AdminPermissionAction.class)
@@ -77,6 +79,11 @@ public class POAction extends BasePaginatedAction {
 
     @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
     String                       adminDownloads;
+
+    @Autowired
+    XslGenerator xslGenerator;
+    @Autowired
+    PurchaseOrderPDFGenerator purchaseOrderPDFGenerator;
 
     private File                 xlsFile;
     Page                         purchaseOrderPage;
@@ -110,6 +117,24 @@ public class POAction extends BasePaginatedAction {
             purchaseOrderList = purchaseOrderPage.getList();
         }
         return new ForwardResolution("/pages/admin/poList.jsp");
+    }
+
+    public Resolution generateExcelReport() {
+        if (productVariant != null) {
+            purchaseOrderList = getPurchaseOrderDao().listPurchaseOrdersWithProductVariant(productVariant);
+        } else {
+            if (warehouse == null && getPrincipalUser() != null && getPrincipalUser().getSelectedWarehouse() != null) {
+                warehouse = getPrincipalUser().getSelectedWarehouse();
+            }
+            purchaseOrderList = getPurchaseOrderDao().searchPO(purchaseOrder, purchaseOrderStatus, approvedBy, createdBy, invoiceNumber, tinNumber, supplierName, warehouse);
+        }
+
+        if (purchaseOrderList != null) {
+            xlsFile = new File(adminDownloads + "/reports/POList.xls");
+            xslGenerator.generatePOListExcel(xlsFile, purchaseOrderList);
+            return new HTTPResponseResolution();
+        }
+        return new RedirectResolution(POAction.class);
     }
 
     public Resolution print() {
@@ -218,6 +243,20 @@ public class POAction extends BasePaginatedAction {
         }
         return new HTTPResponseResolution();
 
+    }
+
+    public Resolution poInPdf() {
+        try {
+            xlsFile = new File(adminDownloads + "/reports/PO-" + purchaseOrder.getId() + ".pdf");
+            String logoImagePath = getContext().getServletContext().getRealPath("/") + "/images/logo/HealthKartLogo.png";
+            purchaseOrderDto = getPurchaseOrderManager().generatePurchaseOrderDto(purchaseOrder);
+            getPurchaseOrderPDFGenerator().generatePurchaseOrderPdf(xlsFile.getPath(), purchaseOrderDto, logoImagePath);
+            addRedirectAlertMessage(new SimpleMessage("Purchase Order successfully generated"));
+        } catch (Exception e) {
+            e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.
+            addRedirectAlertMessage(new SimpleMessage("PurchaseOrder generation failed"));
+        }
+        return new HTTPResponseResolution();
     }
 
     public List<PurchaseOrder> getPurchaseOrderList() {
@@ -406,4 +445,11 @@ public class POAction extends BasePaginatedAction {
         this.purchaseOrderManager = purchaseOrderManager;
     }
 
+    public PurchaseOrderPDFGenerator getPurchaseOrderPDFGenerator() {
+        return purchaseOrderPDFGenerator;
+    }
+
+    public void setPurchaseOrderPDFGenerator(PurchaseOrderPDFGenerator purchaseOrderPDFGenerator) {
+        this.purchaseOrderPDFGenerator = purchaseOrderPDFGenerator;
+    }
 }

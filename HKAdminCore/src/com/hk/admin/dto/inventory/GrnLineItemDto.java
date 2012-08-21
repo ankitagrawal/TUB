@@ -11,63 +11,73 @@ import com.hk.domain.inventory.GrnLineItem;
  */
 public class GrnLineItemDto {
 
-  private GrnLineItem grnLineItem;
+    private GrnLineItem grnLineItem;
 
-  private Double taxable = 0.0;
+    private Double taxable = 0.0;
 
-  private Double tax = 0.0;
+    private Double tax = 0.0;
 
-  private Double surcharge = 0.0;
+    private Double surcharge = 0.0;
 
-  private Double payable = 0.0;
+    private Double payable = 0.0;
 
-  private Long checkedInQty = 0L;
+    private Long checkedInQty = 0L;
 
-  public GrnLineItem getGrnLineItem() {
-    return grnLineItem;
-  }
+    private Double marginMrpVsCP = 0.0;
 
-  public void setGrnLineItem(GrnLineItem grnLineItem) {
-    this.grnLineItem = grnLineItem;
-  }
+    public GrnLineItem getGrnLineItem() {
+        return grnLineItem;
+    }
 
-  public Double getTaxable() {
-    return taxable;
-  }
+    public void setGrnLineItem(GrnLineItem grnLineItem) {
+        this.grnLineItem = grnLineItem;
+    }
 
-  public void setTaxable(Double taxable) {
-    this.taxable = taxable;
-  }
+    public Double getTaxable() {
+        return taxable;
+    }
 
-  public Double getTax() {
-    return tax;
-  }
+    public void setTaxable(Double taxable) {
+        this.taxable = taxable;
+    }
 
-  public void setTax(Double tax) {
-    this.tax = tax;
-  }
+    public Double getTax() {
+        return tax;
+    }
 
-  public Double getSurcharge() {
-    return surcharge;
-  }
+    public void setTax(Double tax) {
+        this.tax = tax;
+    }
 
-  public void setSurcharge(Double surcharge) {
-    this.surcharge = surcharge;
-  }
+    public Double getSurcharge() {
+        return surcharge;
+    }
 
-  public Double getPayable() {
-    return payable;
-  }
+    public void setSurcharge(Double surcharge) {
+        this.surcharge = surcharge;
+    }
 
-  public void setPayable(Double payable) {
-    this.payable = payable;
-  }
+    public Double getPayable() {
+        return payable;
+    }
 
-  public Long getCheckedInQty() {
-    return checkedInQty;
-  }
+    public void setPayable(Double payable) {
+        this.payable = payable;
+    }
 
-  public void setCheckedInQty(Long checkedInQty) {
-    this.checkedInQty = checkedInQty;
-  }
+    public Long getCheckedInQty() {
+        return checkedInQty;
+    }
+
+    public void setCheckedInQty(Long checkedInQty) {
+        this.checkedInQty = checkedInQty;
+    }
+
+    public Double getMarginMrpVsCP() {
+        return marginMrpVsCP;
+    }
+
+    public void setMarginMrpVsCP(Double marginMrpVsCP) {
+        this.marginMrpVsCP = marginMrpVsCP;
+    }
 }

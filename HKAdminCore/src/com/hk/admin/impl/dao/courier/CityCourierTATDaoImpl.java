@@ -1,14 +1,15 @@
 package com.hk.admin.impl.dao.courier;
 
-import com.hk.admin.pact.dao.courier.CityCourierTATDao;
-import com.hk.domain.core.City;
-import com.hk.domain.courier.CityCourierTAT;
-import com.hk.impl.dao.BaseDaoImpl;
+import java.util.List;
+
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import com.hk.admin.pact.dao.courier.CityCourierTATDao;
+import com.hk.domain.core.City;
+import com.hk.domain.courier.CityCourierTAT;
+import com.hk.impl.dao.BaseDaoImpl;
 
 /**
  * Created by IntelliJ IDEA.
@@ -20,6 +21,7 @@ import java.util.List;
 @Repository
 public class CityCourierTATDaoImpl extends BaseDaoImpl implements CityCourierTATDao {
 
+    @SuppressWarnings("unchecked")
     public CityCourierTAT getCityTatByCity(City city) {
         DetachedCriteria cityCourierTATCriteria = DetachedCriteria.forClass(CityCourierTAT.class);
         cityCourierTATCriteria.add(Restrictions.eq("city", city));

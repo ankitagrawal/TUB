@@ -31,6 +31,7 @@ import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.store.StoreService;
+import com.hk.pact.service.subscription.SubscriptionOrderService;
 import com.hk.service.ServiceLocatorFactory;
 
 @Service
@@ -54,7 +55,10 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     @Autowired
     private EmailManager emailManager;
     @Autowired
-    private OrderLoggingService orderLoggingService;
+    private OrderLoggingService       orderLoggingService;
+    @Autowired
+    private SubscriptionOrderService   subscriptionOrderService;
+
 
     @Transactional
     public Order putOrderOnHold(Order order) {
@@ -202,6 +206,8 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Shipped, EnumOrderStatus.Shipped);
         if (isUpdated) {
             logOrderActivity(order, EnumOrderLifecycleActivity.OrderShipped);
+            //update in case of subscription orders
+            subscriptionOrderService.markSubscriptionOrderAsShipped(order);
         }
         return order;
     }
@@ -215,6 +221,10 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             // Currently commented as we aren't doing COD for services as of yet, When we start, We may have to put a
             // check if payment mode was COD and email hasn't been sent yet
             // sendEmailToServiceProvidersForOrder(order);
+
+            //if the order is a subscription order update subscription status
+            subscriptionOrderService.markSubscriptionOrderAsDelivered(order);
+
         }
         return order;
     }
@@ -330,4 +340,11 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         this.orderLoggingService = orderLoggingService;
     }
 
+    public SubscriptionOrderService getSubscriptionOrderService() {
+        return subscriptionOrderService;
+    }
+
+    public void setSubscriptionOrderService(SubscriptionOrderService subscriptionOrderService) {
+        this.subscriptionOrderService = subscriptionOrderService;
+    }
 }

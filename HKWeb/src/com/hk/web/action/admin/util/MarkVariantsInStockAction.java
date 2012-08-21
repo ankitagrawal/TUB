@@ -1,19 +1,21 @@
 package com.hk.web.action.admin.util;
 
-import com.akube.framework.stripes.action.BaseAction;
-import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.pact.dao.catalog.product.ProductVariantDao;
-import com.hk.pact.service.inventory.InventoryService;
+import java.util.ArrayList;
+import java.util.List;
+
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.akube.framework.stripes.action.BaseAction;
+import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.pact.dao.catalog.product.ProductVariantDao;
+import com.hk.pact.service.inventory.InventoryService;
 
 /**
  * Created with IntelliJ IDEA.

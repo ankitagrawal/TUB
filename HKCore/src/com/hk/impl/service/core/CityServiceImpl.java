@@ -1,12 +1,13 @@
 package com.hk.impl.service.core;
 
-import com.hk.domain.core.City;
-import com.hk.pact.dao.core.CityDao;
-import com.hk.pact.service.core.CityService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.hk.domain.core.City;
+import com.hk.pact.dao.core.CityDao;
+import com.hk.pact.service.core.CityService;
 
 /**
  * Created by IntelliJ IDEA.

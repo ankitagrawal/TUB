@@ -24,7 +24,7 @@
     <jsp:include page="myaccount-nav.jsp"/>
   </s:layout-component>
   <s:layout-component name="rhsContent">
-    <p style="text-align:right;">
+    <p style="text-align:left;">
       <s:link beanclass="com.hk.web.action.core.referral.ReferralProgramAction">Referral Program</s:link> |
       My Referrals |
       <s:link beanclass="com.hk.web.action.core.referral.ReferralTermsAction" class="referralTerms">T&C</s:link>

@@ -1,11 +1,12 @@
 package com.hk.admin.impl.service.courier;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.hk.admin.pact.dao.courier.CityCourierTATDao;
 import com.hk.admin.pact.service.courier.CityCourierTATService;
 import com.hk.domain.core.City;
 import com.hk.domain.courier.CityCourierTAT;
-import com.hk.admin.pact.dao.courier.CityCourierTATDao;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
  * Created by IntelliJ IDEA.

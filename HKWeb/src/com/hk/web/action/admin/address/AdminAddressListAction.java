@@ -12,49 +12,66 @@ import org.stripesstuff.plugin.security.Secure;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.order.Order;
+import com.hk.domain.subscription.Subscription;
 import com.hk.domain.user.Address;
 import com.hk.web.action.error.AdminPermissionAction;
 
 @Secure(
-    hasAnyPermissions = {PermissionConstants.VIEW_ACTION_QUEUE, PermissionConstants.UPDATE_ACTION_QUEUE, PermissionConstants.SEARCH_ORDERS},
-    authActionBean = AdminPermissionAction.class
+        hasAnyPermissions = {PermissionConstants.VIEW_ACTION_QUEUE, PermissionConstants.UPDATE_ACTION_QUEUE, PermissionConstants.SEARCH_ORDERS},
+        authActionBean = AdminPermissionAction.class
 )
 @Component
 public class AdminAddressListAction extends BaseAction {
 
-  @Validate(required = true)
-  private Order order;
+    @Validate(required = true, on="changeOrderAddress")
+    private Order order;
+    @Validate(required = true, on="changeSubscriptionAddress")
+    private Subscription subscription;
 
-  List<Address> addressList;
-  Address selectedAddress;
-  
-  public Resolution pre() {
-    addressList = order.getUser().getAddresses();
-    selectedAddress = order.getAddress();
-    return new ForwardResolution("/pages/admin/userAddreses.jsp");
-  }
+    List<Address> addressList;
+    Address selectedAddress;
 
-  public Address getSelectedAddress() {
-    return selectedAddress;
-  }
+    public Resolution changeOrderAddress() {
+        addressList = order.getUser().getAddresses();
+        selectedAddress = order.getAddress();
+        return new ForwardResolution("/pages/admin/userAddreses.jsp");
+    }
 
-  public void setSelectedAddress(Address selectedAddress) {
-    this.selectedAddress = selectedAddress;
-  }
+    public Resolution changeSubscriptionAddress(){
+        addressList = subscription.getUser().getAddresses();
+        selectedAddress = subscription.getAddress();
+        return new ForwardResolution("/pages/admin/userAddreses.jsp");
+    }
 
-  public Order getOrder() {
-    return order;
-  }
+    public Address getSelectedAddress() {
+        return selectedAddress;
+    }
 
-  public void setOrder(Order order) {
-    this.order = order;
-  }
+    public void setSelectedAddress(Address selectedAddress) {
+        this.selectedAddress = selectedAddress;
+    }
 
-  public List<Address> getAddressList() {
-    return addressList;
-  }
+    public Order getOrder() {
+        return order;
+    }
 
-  public void setAddressList(List<Address> addressList) {
-    this.addressList = addressList;
-  }
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+
+    public List<Address> getAddressList() {
+        return addressList;
+    }
+
+    public void setAddressList(List<Address> addressList) {
+        this.addressList = addressList;
+    }
+
+    public Subscription getSubscription() {
+        return subscription;
+    }
+
+    public void setSubscription(Subscription subscription) {
+        this.subscription = subscription;
+    }
 }

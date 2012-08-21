@@ -1,16 +1,14 @@
 package com.hk.helper;
 
-import com.hk.domain.shippingOrder.LineItem;
-import com.hk.domain.order.ReplacementOrder;
-import com.hk.domain.order.ShippingOrder;
-import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
-import com.hk.constants.inventory.EnumReconciliationStatus;
-import com.hk.pact.dao.ReconciliationStatusDao;
-import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
-
 import java.util.Date;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.hk.constants.inventory.EnumReconciliationStatus;
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.domain.order.ReplacementOrder;
+import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.shippingOrder.LineItem;
+import com.hk.pact.dao.ReconciliationStatusDao;
+import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 
 /**
  * Created by IntelliJ IDEA.

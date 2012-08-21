@@ -1,18 +1,18 @@
 package com.hk.admin.impl.service.email;
 
-import com.hk.admin.pact.service.email.AdminEmailCampaignService;
-import com.hk.domain.email.EmailCampaign;
-import com.hk.domain.core.EmailType;
-import com.hk.constants.core.Keys;
-import com.hk.admin.util.S3Utils;
-import com.hk.admin.pact.dao.email.AdminEmailCampaignDao;
-import com.akube.framework.dao.Page;
+import java.io.File;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.util.List;
+import com.akube.framework.dao.Page;
+import com.hk.admin.pact.dao.email.AdminEmailCampaignDao;
+import com.hk.admin.pact.service.email.AdminEmailCampaignService;
+import com.hk.admin.util.S3Utils;
+import com.hk.constants.core.Keys;
+import com.hk.domain.core.EmailType;
+import com.hk.domain.email.EmailCampaign;
 
 @Service
 public class AdminEmailCampaignServiceImpl implements AdminEmailCampaignService {

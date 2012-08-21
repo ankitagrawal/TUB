@@ -7857,7 +7857,137 @@
             <column name="mrp" type="DECIMAL(8,2)"/>
         </addColumn>
     </changeSet>
-
+    <changeSet author="Pradeep (generated)" id="1342694724512-1">
+        <createTable tableName="subscription">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="base_order_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address_id" type="INT"/>
+            <column name="subscription_status_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_variant_id" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="qty" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="qty_per_delivery" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="qty_delivered" type="INT"/>
+            <column name="subscription_period_days" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="frequency_days" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="subscription_price" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="subscription_discount_percent" type="DECIMAL(7,4)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="hk_discount_at_subscription" type="DECIMAL(7,4)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="hk_price_at_subscription" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cost_price_at_subscription" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="marked_price_at_subscription" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="update_date" type="DATETIME"/>
+            <column name="start_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="next_shipment_date" type="DATETIME"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1342694724512-2">
+        <createTable tableName="subscription_lifecycle">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="subscription_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="subscription_lifecycle_activity_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="comments" type="TEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1342694724512-3">
+        <createTable tableName="subscription_lifecycle_activity">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1342694724512-4">
+        <createTable tableName="subscription_order">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="subscription_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="base_order_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="subscription_order_status_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="hk_price_now" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="hk_discount_now" type="DECIMAL(7,4)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="marked_price_now" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cost_price_now" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="update_date" type="DATETIME"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1342694724512-5">
+        <createTable tableName="subscription_order_status">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
     <!--<changeSet author="Ajeet (generated)" id="1342505244718-5">-->
         <!--<addNotNullConstraint columnDataType="VARCHAR(70)" columnName="value" tableName="cart_line_item_config_values"/>-->
     <!--&lt;!&ndash;</changeSet>->-->
@@ -7870,6 +8000,89 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1342694724512-6">
+        <createTable tableName="subscription_product">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="product_id" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="max_qty_per_delivery" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="min_frequency_days" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="max_frequency_days" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="subscription_discount_180days" type="DECIMAL(7,4)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="subscription_discount_360days" type="DECIMAL(7,4)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1342694724512-7">
+        <createTable tableName="subscription_status">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1342694724512-8">
+        <addColumn tableName="base_order">
+            <column defaultValue="0" name="is_subscription_order" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1342694724512-9">
+        <addColumn tableName="product">
+            <column defaultValue="0" name="is_subscribable" type="TINYINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1342694724512-11">
+        <addForeignKeyConstraint baseColumnNames="address_id" baseTableName="subscription"  constraintName="fk_subscription_address1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="address"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1342694724512-12">
+        <addForeignKeyConstraint baseColumnNames="base_order_id" baseTableName="subscription"  constraintName="fk_subscription_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1342694724512-13">
+        <addForeignKeyConstraint baseColumnNames="product_variant_id" baseTableName="subscription"  constraintName="fk_subscription_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1342694724512-14">
+        <addForeignKeyConstraint baseColumnNames="subscription_status_id" baseTableName="subscription"  constraintName="fk_subscription_subscription_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="subscription_status"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1342694724512-15">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="subscription"  constraintName="fk_subscription_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1342694724512-16">
+        <addForeignKeyConstraint baseColumnNames="subscription_id" baseTableName="subscription_lifecycle"  constraintName="fk_subscription_lifecycle_subscription1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="subscription"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1342694724512-17">
+        <addForeignKeyConstraint baseColumnNames="subscription_lifecycle_activity_id" baseTableName="subscription_lifecycle"  constraintName="fk_subscription_lifecycle_subscription_lifecycle_activity1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="subscription_lifecycle_activity"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1342694724512-18">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="subscription_lifecycle"  constraintName="fk_subscription_lifecycle_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1342694724512-19">
+        <addForeignKeyConstraint baseColumnNames="base_order_id" baseTableName="subscription_order"  constraintName="fk_subscription_order_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1342694724512-20">
+        <addForeignKeyConstraint baseColumnNames="subscription_id" baseTableName="subscription_order"  constraintName="fk_subscription_order_subscription1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="subscription"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1342694724512-21">
+        <addForeignKeyConstraint baseColumnNames="subscription_order_status_id" baseTableName="subscription_order"  constraintName="fk_subscription_order_subscription_order_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="subscription_order_status"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1342694724512-22">
+        <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="subscription_product"  constraintName="fk_subscription_product_product1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product"  referencesUniqueColumn="false"/>
     </changeSet>
     <changeSet author="Seema (generated)" id="1342273389422-200">
         <addColumn tableName="awb">
@@ -8130,6 +8343,33 @@
             <column defaultValue="0" name="deleted" type="TINYINT"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Pradeep (generated)" id="1343989161150-1">
+        <createTable tableName="subscription_cart_line_item">
+            <column name="cart_line_item_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="subscription_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1343989161150-2">
+        <addPrimaryKey columnNames="cart_line_item_id, subscription_id" tableName="subscription_cart_line_item"/>
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1343989161150-4">
+        <addForeignKeyConstraint baseColumnNames="cart_line_item_id" baseTableName="subscription_cart_line_item" constraintName="fk_subscription_cart_line_item_cart_line_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="cart_line_item" referencesUniqueColumn="false"/>
+       <!-- <sql>
+            ALTER TABLE subscription_cart_line_item ADD FOREIGN KEY fk_subscription_cart_line_item_cart_line_item1 (cart_line_item_id) REFERENCES cart_line_item(id) ON DELETE CASCADE;
+        </sql>-->
+    </changeSet>
+    <changeSet author="Pradeep (generated)" id="1343989161150-5">
+        <addForeignKeyConstraint baseColumnNames="subscription_id" baseTableName="subscription_cart_line_item" constraintName="fk_subscription_cart_line_item_subscription1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="subscription" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pradeep" id="subscription-3-8-2012-01">
+        <sql>
+            UPDATE base_order SET is_subscription_order=0;
+        </sql>
+    </changeSet>
 
     <changeSet author="Tarun (generated)" id="1339071974252-1">
       <createTable tableName="product_referrer">
@@ -8174,5 +8414,39 @@
     </changeSet>
     <changeSet author="Tarun (generated)" id="1339071974252-10">
       <dropTable tableName="product_thumb_tag"/>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1344867984432-1">
+        <addColumn tableName="debit_note">
+            <column name="remarks" type="TEXT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1344867984432-2">
+        <addColumn tableName="goods_received_note">
+            <column name="remarks" type="TEXT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="vaibhav (generated)" id="1345107754347-1">
+        <createTable tableName="similar_product">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="product_id" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="similar_product_id" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="relationship" type="VARCHAR(500)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="vaibhav (generated)" id="1345107754347-4">
+        <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="similar_product"  constraintName="fk_similar_product_product1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="vaibhav (generated)" id="1345107754347-5">
+        <addForeignKeyConstraint baseColumnNames="similar_product_id" baseTableName="similar_product" constraintName="fk_similar_product_product2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product"  referencesUniqueColumn="false"/>
+    </changeSet>
+	
+    <changeSet author="Ajeet (generated)" id="1345455498259-2">
+        <addNotNullConstraint columnDataType="TINYINT" columnName="cod_allowed" defaultNullValue="1" tableName="product"/>
     </changeSet>
 </databaseChangeLog>

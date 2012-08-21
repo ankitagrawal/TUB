@@ -1,26 +1,24 @@
 package com.hk.admin.impl.dao.email;
 
-import com.hk.impl.dao.BaseDaoImpl;
-import com.hk.domain.email.EmailRecepient;
-import com.hk.domain.email.EmailCampaign;
-import com.hk.domain.catalog.category.Category;
-import com.hk.domain.user.User;
-import com.hk.domain.user.Role;
-import com.hk.constants.core.EnumRole;
-import com.hk.admin.pact.dao.email.AdminEmailDao;
-import com.hk.pact.dao.RoleDao;
-import com.akube.framework.util.BaseUtils;
-
-import java.util.List;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.ArrayList;
-import java.math.BigInteger;
+import java.util.List;
 
-import org.hibernate.*;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.dao.DataAccessException;
+import org.springframework.stereotype.Repository;
+
+import com.hk.admin.pact.dao.email.AdminEmailDao;
+import com.hk.constants.core.EnumRole;
+import com.hk.domain.catalog.category.Category;
+import com.hk.domain.email.EmailCampaign;
+import com.hk.domain.email.EmailRecepient;
+import com.hk.domain.user.Role;
+import com.hk.domain.user.User;
+import com.hk.impl.dao.BaseDaoImpl;
+import com.hk.pact.dao.RoleDao;
 
 /**
  * Created by IntelliJ IDEA.

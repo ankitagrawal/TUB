@@ -1,10 +1,10 @@
 package com.hk.pact.dao.courier;
 
+import java.util.List;
+
 import com.hk.domain.core.State;
 import com.hk.domain.courier.StateCourierService;
 import com.hk.pact.dao.BaseDao;
-
-import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.

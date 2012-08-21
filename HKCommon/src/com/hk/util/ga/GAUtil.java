@@ -1,7 +1,7 @@
 package com.hk.util.ga;
 
-import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by IntelliJ IDEA.

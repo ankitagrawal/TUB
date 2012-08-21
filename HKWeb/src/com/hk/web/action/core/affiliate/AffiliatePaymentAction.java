@@ -1,5 +1,24 @@
 package com.hk.web.action.core.affiliate;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
+
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.validation.SimpleError;
+import net.sourceforge.stripes.validation.Validate;
+import net.sourceforge.stripes.validation.ValidateNestedProperties;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.constants.core.PermissionConstants;
@@ -8,7 +27,6 @@ import com.hk.domain.CheckDetails;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.affiliate.AffiliateCategoryCommission;
 import com.hk.domain.user.Address;
-import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.impl.dao.CheckDetailsDaoImpl;
 import com.hk.impl.dao.affiliate.AffiliateCategoryDaoImpl;
@@ -18,15 +36,6 @@ import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.service.RoleService;
 import com.hk.report.dto.payment.AffiliatePaymentDto;
 import com.hk.web.action.error.AdminPermissionAction;
-import net.sourceforge.stripes.action.*;
-import net.sourceforge.stripes.validation.SimpleError;
-import net.sourceforge.stripes.validation.Validate;
-import net.sourceforge.stripes.validation.ValidateNestedProperties;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-
-import java.util.*;
 
 @Secure(hasAnyPermissions = {PermissionConstants.MANAGE_AFFILIATES}, authActionBean = AdminPermissionAction.class)
 @Component
