@@ -30,12 +30,14 @@ import java.util.*;
 @Component
 public class HKDConsignmentAction extends BasePaginatedAction {
 
-    private static       Logger               logger                   = LoggerFactory.getLogger(HKDConsignmentAction.class);
-    private              Hub                  hub;
-    private              List<String>         trackingIdList           = new ArrayList<String>();
-    private              Courier              hkDelivery               = EnumCourier.HK_Delivery.asCourier();
-    private              String               consignmentNumber        ;
-    private              Boolean              doTracking                   ;
+    private static       Logger                      logger                    = LoggerFactory.getLogger(HKDConsignmentAction.class);
+    private              Hub                         hub;
+    private              List<String>                trackingIdList            = new ArrayList<String>();
+    private              Courier                     hkDelivery                = EnumCourier.HK_Delivery.asCourier();
+    private              String                      consignmentNumber;
+    private              Boolean                     doTracking;
+    private              List<ConsignmentTracking>   consignmentTrackingList   = new ArrayList<ConsignmentTracking>();
+
 
     private             Consignment           consignment;
     private             Page                  consignmentPage;
@@ -50,13 +52,13 @@ public class HKDConsignmentAction extends BasePaginatedAction {
     
 
     @Autowired
-    private              ConsignmentService   consignmentService;
+    private              ConsignmentService          consignmentService;
     @Autowired
-    private              HubService           hubService;
+    private              HubService                  hubService;
     @Autowired
-    private              AwbService           awbService;
+    private              AwbService                  awbService;
     @Autowired
-    private              ShipmentService      shipmentService;
+    private              ShipmentService             shipmentService;
 
 
 
@@ -80,7 +82,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
         Consignment  consignment                      = null;
         List<String> newAwbNumbers                    = null;
         List<Consignment> consignmentList             = new ArrayList<Consignment>();
-        List<ConsignmentTracking> consignmentTrackingList = new ArrayList<ConsignmentTracking>();
+        List<ConsignmentTracking> consignmentTrackingList = null;
         ConsignmentLifecycleStatus consignmentLifecycleStatus = getBaseDao().get(ConsignmentLifecycleStatus.class, EnumConsignmentLifecycleStatus.ReceivedAtHub.getId());
 
         if (trackingIdList != null && trackingIdList.size() > 0) {
@@ -157,13 +159,12 @@ public class HKDConsignmentAction extends BasePaginatedAction {
 
     public Resolution trackConsignment(){
         Consignment consignment = null;
-        List<ConsignmentTracking> consignmentTrackingList = new ArrayList<ConsignmentTracking>();
         if(doTracking){
-           consignment = consignmentService.getConsignmentByAwbNumber(consignmentNumber);
+            consignment = consignmentService.getConsignmentByAwbNumber(consignmentNumber);
             consignmentTrackingList = consignmentService.getConsignmentTracking(consignment);
-            logger.info(consignment+""+consignmentTrackingList.size());
+            logger.info(consignment + "" + consignmentTrackingList.size());
 
-         return new ForwardResolution("/pages/admin/hkDeliveryConsignment.jsp"); 
+            return new ForwardResolution("/pages/admin/trackConsignment.jsp"); 
         }
         return new ForwardResolution("/pages/admin/trackConsignment.jsp");
     }
@@ -278,5 +279,13 @@ public class HKDConsignmentAction extends BasePaginatedAction {
 
     public void setHkdeliveryPaymentReconciliation(HkdeliveryPaymentReconciliation hkdeliveryPaymentReconciliation) {
         this.hkdeliveryPaymentReconciliation = hkdeliveryPaymentReconciliation;
+    }
+    
+    public List<ConsignmentTracking> getConsignmentTrackingList() {
+        return consignmentTrackingList;
+    }
+
+    public void setConsignmentTrackingList(List<ConsignmentTracking> consignmentTrackingList) {
+        this.consignmentTrackingList = consignmentTrackingList;
     }
 }
