@@ -62,6 +62,7 @@ public class InventoryHealthStatusAction extends BasePaginatedAction {
     Category                      categoryName;
     ProductVariant                productVariant;
     Product                       product;
+    boolean                       isUnbookedInventoryRequired;
     @Autowired
     ProductVariantInventoryDao    productVariantInventoryDao;
     @Autowired
@@ -97,6 +98,9 @@ public class InventoryHealthStatusAction extends BasePaginatedAction {
     public static final String    GGN_INVENTORY  = "GGN_INVENTORY";
     public static final String    MUM_INVENTORY  = "MUM_INVENTORY";
     public static final String    NOT_APPLICABLE = "-NA-";
+    public static final String    UNBOOKED_INVENTORY =   "UNBOOKED_INVENTORY";
+    public static final String    GGN_UNBOOKED_INVENTORY  = "GGN_UNBOOKED_INVENTORY";
+    public static final String    MUM_UNBOOKED_INVENTORY  = "MUM_UNBOOKED_INVENTORY";
 
   @ValidationMethod(on = { "generateWHInventoryExcel" })
     public void validateCategoryAndBrand() {
@@ -147,6 +151,9 @@ public class InventoryHealthStatusAction extends BasePaginatedAction {
         Long ggnInventory = 0L;
         Long mumInventory = 0L;
         Long loggedInWHInventory = 0L;
+        Long loggedInWHUnbookedInventory  =0L;
+        Long ggnUnbookedInventory = 0L;
+        Long mumUnbookedInventory = 0L;
         String categoryName = null;
         List<ProductVariant> variants = null;
         // Fetching all non-deleted product-variants.
@@ -180,6 +187,14 @@ public class InventoryHealthStatusAction extends BasePaginatedAction {
             xlsWriter.addHeader(GGN_INVENTORY, GGN_INVENTORY);
             xlsWriter.addHeader(MUM_INVENTORY, MUM_INVENTORY);
         }
+        if (isUnbookedInventoryRequired) {
+            if (loggedInWarehouse != null ){
+                xlsWriter.addHeader(UNBOOKED_INVENTORY, UNBOOKED_INVENTORY);
+            } else {
+             xlsWriter.addHeader (GGN_UNBOOKED_INVENTORY,GGN_UNBOOKED_INVENTORY );
+             xlsWriter.addHeader (MUM_UNBOOKED_INVENTORY,MUM_UNBOOKED_INVENTORY );
+            }
+        }
         int row = 1;
         for (ProductVariant variant : variants) {
             Sku ggnSKU = skuService.findSKU(variant, whGurgaon);
@@ -188,6 +203,11 @@ public class InventoryHealthStatusAction extends BasePaginatedAction {
             loggedInWHInventory = adminInventoryService.getNetInventory(loggedInSKU);
             ggnInventory = adminInventoryService.getNetInventory(ggnSKU);
             mumInventory = adminInventoryService.getNetInventory(mumSKU);
+            if (isUnbookedInventoryRequired){
+                loggedInWHUnbookedInventory = loggedInWHInventory - adminInventoryService.getBookedInventory(loggedInSKU);
+                ggnUnbookedInventory = ggnInventory - adminInventoryService.getBookedInventory(ggnSKU);
+                mumUnbookedInventory = mumInventory - adminInventoryService.getBookedInventory(mumSKU);
+            }
             if (loggedInWarehouse != null) {
                 if (loggedInSKU != null) {
                     xlsWriter.addCell(row, variant.getId());
@@ -195,6 +215,7 @@ public class InventoryHealthStatusAction extends BasePaginatedAction {
                     xlsWriter.addCell(row, variant.getProduct().getName());
                     xlsWriter.addCell(row, variant.getOptionsCommaSeparated());
                     xlsWriter.addCell(row, loggedInWHInventory);
+                    xlsWriter.addCell(row, loggedInWHUnbookedInventory);
                     row++;
                 }
             } else {
@@ -205,6 +226,8 @@ public class InventoryHealthStatusAction extends BasePaginatedAction {
                     xlsWriter.addCell(row, variant.getOptionsCommaSeparated());
                     xlsWriter.addCell(row, ggnInventory);
                     xlsWriter.addCell(row, NOT_APPLICABLE);
+                    xlsWriter.addCell(row, ggnUnbookedInventory);
+                    xlsWriter.addCell(row, NOT_APPLICABLE);
                     row++;
 
                 } else if (mumSKU != null & ggnSKU == null) {
@@ -214,6 +237,9 @@ public class InventoryHealthStatusAction extends BasePaginatedAction {
                     xlsWriter.addCell(row, variant.getOptionsCommaSeparated());
                     xlsWriter.addCell(row, NOT_APPLICABLE);
                     xlsWriter.addCell(row, mumInventory);
+                    xlsWriter.addCell(row, NOT_APPLICABLE);
+                    xlsWriter.addCell(row, mumUnbookedInventory);
+
                     row++;
                 } else if (ggnSKU != null & mumSKU != null) {
                     xlsWriter.addCell(row, variant.getId());
@@ -222,6 +248,8 @@ public class InventoryHealthStatusAction extends BasePaginatedAction {
                     xlsWriter.addCell(row, variant.getOptionsCommaSeparated());
                     xlsWriter.addCell(row, ggnInventory);
                     xlsWriter.addCell(row, mumInventory);
+                    xlsWriter.addCell(row, ggnUnbookedInventory);
+                    xlsWriter.addCell(row, mumUnbookedInventory);
                     row++;
                 }
             }
