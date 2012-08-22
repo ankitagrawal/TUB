@@ -105,6 +105,7 @@ public class Product implements java.io.Serializable {
     @Column(name = "is_amazon_product")
     private Boolean              isAmazonProduct;
 
+    @Column(name = "out_of_stock")
     private Boolean              outOfStock;
 
     @ManyToOne(fetch = FetchType.LAZY)
