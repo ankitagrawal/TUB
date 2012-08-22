@@ -8449,4 +8449,9 @@
     <changeSet author="Ajeet (generated)" id="1345455498259-2">
         <addNotNullConstraint columnDataType="TINYINT" columnName="cod_allowed" defaultNullValue="1" tableName="product"/>
     </changeSet>
+  
+    <changeSet author="Marut (generated)" id="1345635663381-1">
+        <modifyDataType columnName="out_of_stock" newDataType="TINYINT" tableName="product"/>
+    </changeSet>
+    
 </databaseChangeLog>
