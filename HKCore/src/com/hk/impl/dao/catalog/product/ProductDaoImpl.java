@@ -2,11 +2,16 @@ package com.hk.impl.dao.catalog.product;
 
 import java.util.*;
 
+import com.hk.exception.SearchException;
+import com.hk.pact.service.search.ProductSearchService;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.Query;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +28,12 @@ import com.hk.pact.dao.catalog.product.ProductDao;
 @SuppressWarnings("unchecked")
 @Repository
 public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
+
+
+    private static Logger logger = LoggerFactory.getLogger(ProductDaoImpl.class);
+
+    @Autowired
+    ProductSearchService productSearchService;
 
     public Product getProductById(String productId) {
         return get(Product.class, productId);
@@ -45,7 +56,14 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
 	    if (product.getCodAllowed() == null)   {
             product.setCodAllowed(Boolean.FALSE);
         }
-        return (Product) super.save(product);
+        Product savedProduct = (Product) super.save(product);
+        try{
+                productSearchService.indexProduct(savedProduct);
+        }catch (SearchException ex){
+            logger.error(String.format("Unable to refresh index for the product %s. Some problem with Solr"
+                    ,product.getId()), ex);
+        }
+        return savedProduct;
     }
 
     public List<Product> getProductByCategory(String category) {
@@ -269,7 +287,7 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
         return list(criteria, page, perPage);
     }
 
-    public List<Product> getAllProductsById(List<String> productIdList) {
+    public List<Pro> getAllProductsById(List<String> productIdList) {
         DetachedCriteria criteria = DetachedCriteria.forClass(Product.class);
         criteria.add(Restrictions.in("id", productIdList));
         return findByCriteria(criteria);

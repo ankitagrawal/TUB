@@ -4,6 +4,7 @@ import com.akube.framework.dao.Page;
 
 import java.util.List;
 
+import com.hk.domain.catalog.product.Product;
 import com.hk.domain.search.PaginationFilter;
 import com.hk.domain.search.RangeFilter;
 import com.hk.domain.search.SearchFilter;
@@ -32,4 +33,6 @@ public interface ProductSearchService {
     SearchResult getSearchResults(String query, int page, int perPage) throws SearchException;
 
     Page getBrandCatalogResults(String brand, String topLevelCategory, int page, int perPage, String preferredZone) throws SearchException;
+
+    void indexProduct(Product product) throws SearchException;
 }

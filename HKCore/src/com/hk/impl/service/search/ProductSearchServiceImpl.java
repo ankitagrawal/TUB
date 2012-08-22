@@ -92,6 +92,16 @@ class ProductSearchServiceImpl implements ProductSearchService {
         }
     }
 
+    public void indexProduct(Product product) throws SearchException{
+        try{
+            SolrProduct solrProduct = productService.createSolrProduct(product);
+            indexProduct(solrProduct);
+        } catch (Exception ex) {
+            SearchException e = wrapException("Unable to build indexes. Problem with Solr", ex);
+            throw e;
+        }
+    }
+
     public SearchResult getCatalogResults(List<SearchFilter> categories,
                                           List<SearchFilter> searchFilters,
                                           RangeFilter rangeFilter,
