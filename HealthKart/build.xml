@@ -1,9 +1,12 @@
 <project name="HealthKart" basedir="." default="build">
 
+
 	<property file="build.properties" />
 	<property file="environmentLocator.properties" />
 	<property file="${project.common.dir}/resources/${project.env}/setup/setup.properties" />
     <property environment="env"/>
+    <property name="jdk.home" value="${env.JAVA_HOME}"/>
+    <echo message="JAVA_HOME = ${jdk.home}"/>
     <property name="solr.home" value="${env.SOLR_HOME}"/>
     <echo message="SOLR_HOME = ${solr.home}"/>
 
