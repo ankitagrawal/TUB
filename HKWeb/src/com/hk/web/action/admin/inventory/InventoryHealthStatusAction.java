@@ -222,7 +222,9 @@ public class InventoryHealthStatusAction extends BasePaginatedAction {
                     xlsWriter.addCell(row, variant.getProduct().getName());
                     xlsWriter.addCell(row, variant.getOptionsCommaSeparated());
                     xlsWriter.addCell(row, loggedInWHInventory);
-                    xlsWriter.addCell(row, loggedInWHUnbookedInventory);
+                    if (unbookedInventoryRequired) {
+                        xlsWriter.addCell(row, loggedInWHUnbookedInventory);
+                    }
                     row++;
                 }
             } else {
@@ -233,8 +235,10 @@ public class InventoryHealthStatusAction extends BasePaginatedAction {
                     xlsWriter.addCell(row, variant.getOptionsCommaSeparated());
                     xlsWriter.addCell(row, ggnInventory);
                     xlsWriter.addCell(row, NOT_APPLICABLE);
-                    xlsWriter.addCell(row, ggnUnbookedInventory);
-                    xlsWriter.addCell(row, NOT_APPLICABLE);
+                    if (unbookedInventoryRequired)  {
+                        xlsWriter.addCell(row, ggnUnbookedInventory);
+                        xlsWriter.addCell(row, NOT_APPLICABLE);
+                    }
                     row++;
 
                 } else if (mumSKU != null & ggnSKU == null) {
@@ -244,9 +248,10 @@ public class InventoryHealthStatusAction extends BasePaginatedAction {
                     xlsWriter.addCell(row, variant.getOptionsCommaSeparated());
                     xlsWriter.addCell(row, NOT_APPLICABLE);
                     xlsWriter.addCell(row, mumInventory);
-                    xlsWriter.addCell(row, NOT_APPLICABLE);
-                    xlsWriter.addCell(row, mumUnbookedInventory);
-
+                    if (unbookedInventoryRequired) {
+                        xlsWriter.addCell(row, NOT_APPLICABLE);
+                        xlsWriter.addCell(row, mumUnbookedInventory);
+                    }
                     row++;
                 } else if (ggnSKU != null & mumSKU != null) {
                     xlsWriter.addCell(row, variant.getId());
@@ -255,8 +260,10 @@ public class InventoryHealthStatusAction extends BasePaginatedAction {
                     xlsWriter.addCell(row, variant.getOptionsCommaSeparated());
                     xlsWriter.addCell(row, ggnInventory);
                     xlsWriter.addCell(row, mumInventory);
-                    xlsWriter.addCell(row, ggnUnbookedInventory);
-                    xlsWriter.addCell(row, mumUnbookedInventory);
+                    if (unbookedInventoryRequired) {
+                        xlsWriter.addCell(row, ggnUnbookedInventory);
+                        xlsWriter.addCell(row, mumUnbookedInventory);
+                    }
                     row++;
                 }
             }
