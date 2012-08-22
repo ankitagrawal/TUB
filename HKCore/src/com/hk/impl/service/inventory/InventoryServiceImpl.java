@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import com.hk.domain.catalog.product.Product;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,6 +129,14 @@ public class InventoryServiceImpl implements InventoryService {
                 lowInventoryInDB.setOutOfStock(true);
                 getLowInventoryDao().save(lowInventoryInDB);
             }
+            List<ProductVariant> productVariants = productVariant.getProduct().getInStockVariants();
+            //If there are other Variants in stock then there is no way a Product can be marked OutOfStock
+            if (productVariants.size() == 1){
+                if (productVariants.get(0).getId().equals(productVariant.getId())){
+                    productVariant.getProduct().setOutOfStock(Boolean.TRUE);
+                    getBaseDao().save(productVariant.getProduct());
+                }
+            }
 
             logger.debug("Fire Out of Stock Email to Category Admins");
             getEmailManager().sendOutOfStockMail(productVariant);
@@ -135,8 +144,10 @@ public class InventoryServiceImpl implements InventoryService {
             logger.debug("Inventory status is positive now. Setting IN stock.");
             productVariant.setOutOfStock(false);
             productVariant = getProductVariantService().save(productVariant);
-
+            Product product = productVariant.getProduct();
+            product.setOutOfStock(Boolean.FALSE);
             getLowInventoryDao().deleteFromLowInventoryList(productVariant);
+            getBaseDao().save(product);
         }
     }
 

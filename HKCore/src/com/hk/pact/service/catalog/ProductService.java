@@ -12,6 +12,7 @@ import com.hk.domain.catalog.product.ProductGroup;
 import com.hk.domain.catalog.product.ProductImage;
 import com.hk.domain.catalog.product.ProductOption;
 import com.hk.domain.catalog.product.combo.Combo;
+import com.hk.domain.search.SolrProduct;
 
 public interface ProductService {
 
@@ -69,6 +70,8 @@ public interface ProductService {
 
     public Page getPaginatedResults(List<String> productIdList, int page, int perPage);
 
+    public List<Product> getAllProductsById(List<String> productIdList);
+
     public List<Product> getRecentlyAddedProducts();
 
     public ProductImage getProductImageByChecksum(String checksum);
@@ -95,11 +98,11 @@ public interface ProductService {
 
     public Map<String,List<String>> getRecommendedProducts(Product product);
 
-    Map<String, List<String>> getRelatedMoogaProducts(Product findProduct);
-
     public Map<String, List<Long>> getGroupedFilters(List<Long> filters);
 
 	public boolean isProductOutOfStock(Product product);
 
 	public List<Product> getSortedByStock(List<Product> productList);
+
+    SolrProduct createSolrProduct(Product pr);
 }

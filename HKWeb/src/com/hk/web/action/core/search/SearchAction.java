@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.dto.search.SearchResult;
+import com.hk.pact.service.search.ProductSearchService;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
@@ -43,7 +45,7 @@ public class SearchAction extends BasePaginatedAction {
   @Session(key = HealthkartConstants.Session.perPageCatalog) 
   private int perPage;
   @Autowired
-  SolrManager solrManager;
+  ProductSearchService solrManager;
   @Autowired
   LinkManager linkManager;
 
@@ -51,7 +53,8 @@ public class SearchAction extends BasePaginatedAction {
 
   public Resolution search() throws SolrServerException, MalformedURLException {
     try {
-      productPage = solrManager.getSearchResults(query, getPageNo(), getPerPage());
+      SearchResult sr =  solrManager.getSearchResults(query, getPageNo(), getPerPage());
+      productPage = new Page(sr.getSolrProducts(), getPageNo(), (int)sr.getResultSize());
       productList = productPage.getList();
     } catch (Exception e) {
       logger.debug("SOLR NOT WORKING, HITTING DB TO ACCESS DATA");

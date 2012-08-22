@@ -88,4 +88,5 @@ public interface ProductDao extends BaseDao {
 
 	public List<ProductOption> getProductOptions(List<Long> options);
 
+    List<Product> getAllProductsById(List<String> productIdList);
 }

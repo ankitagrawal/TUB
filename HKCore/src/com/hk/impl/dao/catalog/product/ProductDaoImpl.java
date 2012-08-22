@@ -269,6 +269,12 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
         return list(criteria, page, perPage);
     }
 
+    public List<Product> getAllProductsById(List<String> productIdList) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(Product.class);
+        criteria.add(Restrictions.in("id", productIdList));
+        return findByCriteria(criteria);
+    }
+
     public List<Product> getRecentlyAddedProducts() {
         String query = "select p from Product p where p.deleted != :deleted and p.createDate != null order by p.createDate desc";
         return getSession().createQuery(query).setBoolean("deleted", true).list();

@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.pact.service.search.ProductSearchService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
@@ -64,8 +65,12 @@ public class BrandCatalogAction extends BasePaginatedAction {
   private String preferredZone;
 
   private int defaultPerPage = 20;
+  /*@Autowired
+   SolrManager solrManager;*/
+
   @Autowired
-   SolrManager solrManager;
+  ProductSearchService solrManager;
+
   @Autowired
    CategoryDaoImpl categoryDao;
   @Autowired
