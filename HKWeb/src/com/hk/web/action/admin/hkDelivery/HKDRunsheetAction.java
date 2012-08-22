@@ -278,7 +278,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
                 xlsFile = hkdRunsheetManager.generateWorkSheetXls(xlsFile.getPath(),shippingOrderList,runsheet.getAgent().getName(), (Double)runsheetCODParams.get(HKDeliveryConstants.TOTAL_COD_AMT), consignments.size(), (Integer)runsheetCODParams.get(HKDeliveryConstants.TOTAL_COD_PKTS));
 
             } catch (IOException ioe) {
-            logger.debug(ioe.getMessage());
+            logger.debug("IOException Occurred:"+ioe.getMessage());
                 addRedirectAlertMessage(new SimpleMessage(CourierConstants.HKDELIVERY_IOEXCEPTION));
                 return new ForwardResolution("/pages/admin/hkDeliveryWorksheet.jsp");
             } catch (NullPointerException npe) {

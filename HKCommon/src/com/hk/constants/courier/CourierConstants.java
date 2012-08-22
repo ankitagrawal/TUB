@@ -61,7 +61,7 @@ public class CourierConstants {
     public static final String HKDELIVERY_WORKSHEET_FOLDER = "hkDeliveryWorksheet";
     public static final String HKDELIVERY_WORKSHEET = "HKDelivery_worksheet";
     public static final String HKDELIVERY_IOEXCEPTION = "Worksheet download failed.(IOException occurred).";
-    public static final String HKDELIVERY_NULLEXCEPTION = "Worksheet download failed.(NullPointerException occurred.";
+    public static final String HKDELIVERY_NULLEXCEPTION = "Worksheet download failed.(NullPointerException occurred).";
     public static final String HKDELIVERY_EXCEPTION = "Worksheet download failed.";
     public static final String HEALTHKART_DELIVERY = "HealthkartDelivery";
     public static final String HKD_WORKSHEET_HEADING1 = "HEALTHKART DELIVERY";
