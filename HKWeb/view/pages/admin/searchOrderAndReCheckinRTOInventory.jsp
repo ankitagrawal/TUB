@@ -161,12 +161,13 @@
                 <s:param name="order" value="${order}"/>
               </s:link>
             </td>
-          </tr>
-       </c:if>
+          </tr>   
+          </c:if>
         </table>
 
         <div class="buttons"><s:submit name="checkinRTOUnits" value="Checkin RTO Units"/></div>
       </s:form>
+
     </c:if>
   </s:layout-component>
 
