@@ -188,7 +188,7 @@
 </div>
 <c:choose>
 	<c:when test="${ca.childCategorySlug == 'eyeglasses'}">
-		<div class='catalog_filters grid_6 alpha'>
+		<div class='catalog_filters grid_5 alpha'>
 		<s:layout-render name="/layouts/advCatalogFilter.jsp" filterUrlFragment="${ca.urlFragment}"/>
 		</div>
 	</c:when>
@@ -324,12 +324,19 @@
   </div>
 </div>
 
-<div id="prod_grid" class="grid_18" style="${ca.rootCategorySlug == "services"?"display:none":""}">
+<div id="prod_grid" class="${ca.childCategorySlug == 'eyeglasses' ? 'grid_19' : 'grid_18'}" style="${ca.rootCategorySlug == "services"?"display:none":""}">
   <s:form beanclass="com.hk.web.action.core.catalog.CompareAction" target="_blank">
     <c:forEach items="${ca.productList}" var="product">
       <c:if test="${!product.googleAdDisallowed}">
-        <div class="product_box grid_4">
-          <s:layout-render name="/layouts/embed/_productThumbG.jsp" product="${product}"/>
+	      <div class="product_box ${ca.childCategorySlug == 'eyeglasses' ? 'grid_6' : 'grid_4'}">
+		      <c:choose>
+			      <c:when test="${ca.childCategorySlug == 'eyeglasses'}">
+				      <s:layout-render name="/layouts/embed/_productThumb200.jsp" product="${product}"/>
+			      </c:when>
+			      <c:otherwise>
+				      <s:layout-render name="/layouts/embed/_productThumbG.jsp" product="${product}"/>
+			      </c:otherwise>
+		      </c:choose>
           <div class="clear"></div>
 
           <div class="compareDiv">

@@ -181,7 +181,7 @@
     <c:if test="${orderSummary.order.offerInstance.offer.paymentType != prePaidPaymentType}">
         <div id="tabs_content4" class="tab_content" style="display: none;">
             <c:choose>
-                <c:when test="${orderSummary.codAllowed}">
+                <c:when test="${orderSummary.codAllowed && hk:isCodAllowedOnOrder(orderSummary.order)}">
 
                     <div class="grid_5">
                         <h4>Order Total</h4>
@@ -247,8 +247,10 @@
 
                     <p>The net payable is not in the range of <strong>Rs.
                             ${codMinAmount} - Rs. ${codMaxAmount}</strong></p>
+	                <p><strong>OR</strong></p>
+                    <p> COD is not allowed on one of the products in your cart</p>
                     <p><strong>OR</strong></p>
-                    <p> you have subscriptions in your cart</p>
+                    <p> You have subscriptions in your cart</p>
                 </c:otherwise>
             </c:choose></div>
         <div id="tabs_content5" class="tab_content" style="display: none;">
