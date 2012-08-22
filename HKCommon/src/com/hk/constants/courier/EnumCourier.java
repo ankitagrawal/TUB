@@ -15,7 +15,7 @@ public enum EnumCourier {
     Aramex(20L, "Aramex"),
     Speedpost(30L, "Speed Post"),
     Delhivery(40L, "Delhivery"),
-	Delhivery_Surface(41L, "Delhivery Surface"),
+	Delhivery_Surface(41L, "Delhivery-Surface"),
     Chhotu(45L, "Chhotu-Delhi-NCR"),
     OfficePickup(50L, "Office Pickup"),
     AFLWiz(60L, "AFL Wiz"),
