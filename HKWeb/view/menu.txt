@@ -788,7 +788,6 @@
 --/parenting/health-safety/medical-care
 --/parenting/health-safety/child-proofing
 --/parenting/health-safety/disinfectants
---/parenting/health-safety/baby-monitors
 --/parenting/health-safety/repellents
 --/parenting/health-safety/misc
 
@@ -800,7 +799,6 @@
 ---/parenting/toys-more/toys/other-toys
 --/parenting/toys-more/strollers
 --/parenting/toys-more/walkers-cycles : Walkers & Cycles
---/parenting/toys-more/high-chair-car-seats : High Chairs & car Seats
 --/parenting/toys-more/books-cds : Books & Cds
 --/parenting/toys-more/apparels
 ---/parenting/toys-more/apparels/caps
