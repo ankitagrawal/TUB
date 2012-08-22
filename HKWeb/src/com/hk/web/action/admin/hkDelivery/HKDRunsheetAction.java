@@ -12,6 +12,8 @@ import net.sourceforge.stripes.validation.Validate;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.Awb;
@@ -43,6 +45,7 @@ import java.util.*;
 @Component
 public class HKDRunsheetAction extends BasePaginatedAction {
 
+    private static  Logger                logger                             = LoggerFactory.getLogger(HKDRunsheetAction.class);
     private         File                  xlsFile;
     private         String                assignedTo;
     private         String                awbIdsWithoutConsignmntString      = null;
@@ -225,9 +228,12 @@ public class HKDRunsheetAction extends BasePaginatedAction {
                 runsheetService.saveRunSheet(runsheetObj);
                 //making corresponding entry in consignment tracking.
                 consignmentService.saveConsignmentTracking(consignmentService.createConsignmentTracking(hub,deliveryHub,loggedOnUser,new ArrayList<Consignment>(consignments),consignmentLifecycleStatus));
+                logger.info("Inside downloadRunsheet() of HKDRunsheetAction.Created and saved runsheet"+xlsFile.getPath()+"**"+shippingOrderList.size()+"**"+agent.getName()+"**"+totalCODAmount+totalPackets+totalCODPackets);
                 // generating Xls file.
                 xlsFile = hkdRunsheetManager.generateWorkSheetXls(xlsFile.getPath(), shippingOrderList, agent.getName(), totalCODAmount, totalPackets, totalCODPackets);
+                logger.info("xlsFile"+xlsFile);
             } catch (IOException ioe) {
+                logger.info("io exception occurred"+ioe.getMessage());
                 addRedirectAlertMessage(new SimpleMessage(CourierConstants.HKDELIVERY_IOEXCEPTION));
                 return new ForwardResolution(HKDRunsheetAction.class).addParameter(HKDeliveryConstants.RUNSHEET_DOWNLOAD, false);
             } catch (NullPointerException npe) {
