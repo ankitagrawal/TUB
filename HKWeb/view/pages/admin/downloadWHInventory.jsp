@@ -13,7 +13,6 @@
           <legend><h2>Download WH Inventory Excel</h2></legend>
           <br>
           <br>
-          <%--<label width="5"> Primary Category:</label><s:text name="primaryCategory" class="category" />--%>
           <label width="5"> Primary Category:</label>
            <s:select name="primaryCategory">
                         <option value="">All categories</option>
