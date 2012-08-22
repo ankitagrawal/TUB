@@ -287,7 +287,7 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
         return list(criteria, page, perPage);
     }
 
-    public List<Pro> getAllProductsById(List<String> productIdList) {
+    public List<Product> getAllProductsById(List<String> productIdList) {
         DetachedCriteria criteria = DetachedCriteria.forClass(Product.class);
         criteria.add(Restrictions.in("id", productIdList));
         return findByCriteria(criteria);
