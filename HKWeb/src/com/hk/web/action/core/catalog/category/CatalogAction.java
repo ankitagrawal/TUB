@@ -80,6 +80,7 @@ public class CatalogAction extends BasePaginatedAction {
 	List<MenuNode> menuNodes;
 
 	List<Long> filterOptions = new ArrayList<Long>();
+	List<ProductOption> filterProductOptions = new ArrayList<ProductOption>();
 	Double minPrice;
 	Double maxPrice;
 
@@ -162,6 +163,9 @@ public class CatalogAction extends BasePaginatedAction {
 
 		try {
 			if (!filterOptions.isEmpty() || (minPrice != null && maxPrice != null)) {
+				if(!filterOptions.isEmpty()){
+					filterProductOptions = getBaseDao().getAll(ProductOption.class, filterOptions, "id");
+				}
 				throw new Exception("Using filters. SOLR can't return results so hitting DB");
 			}
 			productPage = solrManager.getCatalogResults(rootCategorySlug, smallestCategory, secondSmallestCategory, thirdSmallestCategory, brand, getCustomSortBy(), getCustomSortOrder(), getCustomStartRange(), getCustomEndRange(), getPageNo(), getPerPage(), preferredZone);
@@ -570,6 +574,10 @@ public class CatalogAction extends BasePaginatedAction {
 
 	public void setMaxPrice(Double maxPrice) {
 		this.maxPrice = maxPrice;
+	}
+
+	public List<ProductOption> getFilterProductOptions() {
+		return filterProductOptions;
 	}
 }
 
