@@ -102,10 +102,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
         return new ForwardResolution("/pages/admin/hkRunsheet.jsp");
     }
 
-    public Resolution saveRunsheet(){
-        if(changedConsignmentIdsList == null){
-            return new ForwardResolution(HKDRunsheetAction.class,"editRunsheet").addParameter("runsheet", runsheet.getId());
-        }
+    public Resolution saveRunsheet(){        
         if(runsheet != null){
             consignments = new HashSet<Consignment>(runsheetConsignments);
             runsheet.setConsignments(consignments);
