@@ -24,4 +24,6 @@ public interface RunSheetService {
     public Runsheet markAllConsignmentsAsDelivered(Runsheet runsheet);
 
     public boolean agentHasOpenRunsheet(User agent);
+
+    public void updateConsignmentTrackingForRunsheet(Runsheet runsheet, User user);
 }

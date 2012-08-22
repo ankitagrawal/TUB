@@ -69,6 +69,18 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     }
 
     @Override
+    public ConsignmentTracking createConsignmentTracking(Hub sourceHub, Hub destinationHub, User user, Consignment consignment, ConsignmentLifecycleStatus consignmentLifecycleStatus) {
+        ConsignmentTracking consignmntTracking = new ConsignmentTracking();
+        consignmntTracking.setConsignment(consignment);
+        consignmntTracking.setCreateDate(new Date());
+        consignmntTracking.setSourceHub(sourceHub);
+        consignmntTracking.setDestinationHub(destinationHub);
+        consignmntTracking.setUser(user);
+        consignmntTracking.setConsignmentLifecycleStatus(consignmentLifecycleStatus);
+        return consignmntTracking;
+    }
+
+    @Override
     public void saveConsignments(List<Consignment> consignmentList) {
         consignmentDao.saveOrUpdate(consignmentList);
     }
@@ -167,5 +179,13 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     public HkdeliveryPaymentReconciliation saveHkdeliveryPaymentReconciliation(HkdeliveryPaymentReconciliation hkdeliveryPaymentReconciliation){
         consignmentDao.saveOrUpdate(hkdeliveryPaymentReconciliation);
         return hkdeliveryPaymentReconciliation;
+    }
+
+    @Override
+    public boolean hasConsignmentStatusChanged(Consignment newConsignmentObject){
+        if(consignmentDao.get(Consignment.class, newConsignmentObject.getId()).getConsignmentStatus().equals(newConsignmentObject.getConsignmentStatus())){
+            return false;
+        }
+        return true;
     }
 }

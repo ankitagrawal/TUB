@@ -62,7 +62,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
     private         Integer               defaultPerPage                     = 20;
     private         Set<Consignment>      consignments;
     private         List<Consignment>     runsheetConsignments;
-
+    private         List<Long>            changedConsignmentIdsList        = new ArrayList<Long>();
     @Autowired
     ShippingOrderService                  shippingOrderService;
     @Autowired
@@ -103,13 +103,17 @@ public class HKDRunsheetAction extends BasePaginatedAction {
     }
 
     public Resolution saveRunsheet(){
+        if(changedConsignmentIdsList == null){
+            return new ForwardResolution(HKDRunsheetAction.class,"editRunsheet").addParameter("runsheet", runsheet.getId());
+        }
         if(runsheet != null){
             consignments = new HashSet<Consignment>(runsheetConsignments);
             runsheet.setConsignments(consignments);
             if(runsheet.getRunsheetStatus().getId().equals(EnumRunsheetStatus.Close.getId()) && runsheetService.isRunsheetClosable(runsheet) == false){
                 addRedirectAlertMessage(new SimpleMessage("Cannot close runsheet with a consignment status out for delivery"));
                 return new ForwardResolution(HKDRunsheetAction.class,"editRunsheet").addParameter("runsheet", runsheet.getId());
-            }            
+            }
+
             runsheetService.saveRunSheet(runsheet);
             addRedirectAlertMessage(new SimpleMessage("Runsheet saved"));
             return new RedirectResolution(HKDRunsheetAction.class, "editRunsheet").addParameter("runsheet", runsheet.getId());
@@ -412,5 +416,13 @@ public class HKDRunsheetAction extends BasePaginatedAction {
 
     public void setRunSheetDao(RunSheetDao runSheetDao) {
         this.runSheetDao = runSheetDao;
+    }
+
+    public List<Long> getChangedConsignmentIdsList() {
+        return changedConsignmentIdsList;
+    }
+
+    public void setChangedConsignmentIdsList(List<Long> changedConsignmentIdsList) {
+        this.changedConsignmentIdsList = changedConsignmentIdsList;
     }
 }

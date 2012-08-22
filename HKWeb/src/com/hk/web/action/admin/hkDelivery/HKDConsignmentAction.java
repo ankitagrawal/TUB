@@ -49,7 +49,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
     private             List<Consignment>     consignmentList          = new ArrayList<Consignment>();
     private             List<Consignment>     consignmentListForPaymentReconciliation = new ArrayList<Consignment>();
     private             HkdeliveryPaymentReconciliation hkdeliveryPaymentReconciliation;
-    
+
 
     @Autowired
     private              ConsignmentService          consignmentService;

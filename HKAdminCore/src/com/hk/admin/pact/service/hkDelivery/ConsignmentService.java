@@ -22,6 +22,8 @@ public interface ConsignmentService {
 
     public List<ConsignmentTracking> createConsignmentTracking(Hub sourceHub, Hub destinationHub, User user, List<Consignment> consignment , ConsignmentLifecycleStatus consignmentLifecycleStatus);
 
+    public ConsignmentTracking createConsignmentTracking(Hub sourceHub, Hub destinationHub, User user, Consignment consignment, ConsignmentLifecycleStatus consignmentLifecycleStatus);
+
     public void saveConsignments(List<Consignment> consignmentList);
 
     public void saveConsignmentTracking(List<ConsignmentTracking> consignmentTrackingList);
@@ -47,4 +49,8 @@ public interface ConsignmentService {
     public HkdeliveryPaymentReconciliation createPaymentReconciliationForConsignmentList(List<Consignment> consignmentListForPaymentReconciliation, User user);
 
     public HkdeliveryPaymentReconciliation saveHkdeliveryPaymentReconciliation(HkdeliveryPaymentReconciliation hkdeliveryPaymentReconciliation);
+
+    public boolean hasConsignmentStatusChanged(Consignment newConsignmentObject);
+
+    
 }

@@ -3,6 +3,7 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
+
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Runsheet List">
 
     <s:useActionBean beanclass="com.hk.web.action.admin.hkDelivery.HKDRunsheetAction" var="runsheetAction"/>
@@ -12,17 +13,49 @@
         <script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
         <jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
     </s:layout-component>
-
     <s:layout-component name="heading">
         Edit Runsheet
     </s:layout-component>
 
     <s:layout-component name="content">
+        <script>
+        $(document).ready(function(){
+            $('.consignment-status').change(function(){
+                var cons_id = $(this).attr("id");
+                var current_status = $('#'+cons_id).val();
+
+                $('#new-'+cons_id).val(current_status);
+
+                var old_status = $('#old-'+cons_id).val();
+                var new_status = $('#new-'+cons_id).val();
+            });
+
+            $('#save-runsheet').click(function(){
+                createChangedConsignmentList();
+            });
+
+            function createChangedConsignmentList(){
+                $('.consignment-row').each(function(index){
+                    var consignment_id = $(this).find('.consignment-status').attr('id');
+                    var old_status = $(this).find('.old-status').val();
+                    var new_status = $(this).find('.new-status').val();
+                     if(old_status != new_status){
+                         $(this).find('.changed-consignment-list').val(consignment_id);
+                     }
+                    // alert('consignment: '+consignment_id+'   old: '+old_status+'  new:  '+new_status);
+                });
+
+
+            };
+
+        });
+        </script>
 
         <fieldset class="right_label">
         <legend>Runsheet</legend>
         <s:form beanclass="com.hk.web.action.admin.hkDelivery.HKDRunsheetAction">
             <s:hidden name="runsheet" value="${runsheetAction.runsheet.id}"/>
+
             <table>
                 <tr>
                     <td><label>Runsheet ID:</label></td>
@@ -84,20 +117,24 @@
                 </tr>
                 </thead>
                 <c:forEach items="${runsheetAction.runsheetConsignments}" var="consignment" varStatus="ctr">
-                    <tr>
+                    <tr class="consignment-row">
+                        <s:hidden class = "changed-consignment-list" name="changedConsignmentIdsList[${ctr.index}]" value="" />
                         <td><s:hidden name="runsheetConsignments[${ctr.index}]" value="${consignment.id}"/>${consignment.id}</td>
                         <td>${consignment.awbNumber}</td>
                         <td>${consignment.cnnNumber}</td>
                         <td><fmt:formatNumber value="${consignment.amount}" type="currency" currencySymbol=" "
                                               maxFractionDigits="0"/></td>
                         <td>${consignment.paymentMode}</td>
-                        <td>${consignment.paymentReconciliation.id}</td>
-                        <td><s:select name="runsheetConsignments[${ctr.index}].consignmentStatus"
+                        <td>${consignment.hkdeliveryPaymentReconciliation.id}</td>
+                        <td><s:select class="consignment-status" id= "${consignment.id}" name="runsheetConsignments[${ctr.index}].consignmentStatus"
                                       value="${consignment.consignmentStatus.id}">
                             <hk:master-data-collection service="<%=MasterDataDao.class%>"
                                                        serviceProperty="consignmentStatusList" value="id"
                                                        label="status"/>
-                        </s:select></td>
+                        </s:select>
+                        <input type="hidden" class="old-status" id="old-${consignment.id}" value="${consignment.consignmentStatus.id}" />
+                        <input type="hidden" class="new-status" id="new-${consignment.id}" value="${consignment.consignmentStatus.id}" />
+                        </td>
                         <td>
 
                         </td>
@@ -105,7 +142,7 @@
                 </c:forEach>
             </table>
 
-            <s:submit name="saveRunsheet" value="Save runsheet" />
+            <s:submit id="save-runsheet" name="saveRunsheet" value="Save runsheet" />
             <s:submit name="closeRunsheet" value="Close runsheet" />
             <s:submit name="markAllDelivered" value="Mark all as delivered"/>
         </s:form>

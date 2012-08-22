@@ -2,9 +2,14 @@ package com.hk.admin.impl.service.hkDelivery;
 
 import com.akube.framework.dao.Page;
 import com.hk.admin.pact.dao.hkDelivery.RunSheetDao;
+import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
+import com.hk.admin.pact.service.hkDelivery.HubService;
+import com.hk.admin.util.HKDeliveryUtil;
 import com.hk.constants.hkDelivery.EnumConsignmentStatus;
 import com.hk.constants.hkDelivery.EnumRunsheetStatus;
+import com.hk.constants.hkDelivery.HKDeliveryConstants;
 import com.hk.domain.user.User;
+import com.hk.pact.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +22,9 @@ import com.hk.domain.hkDelivery.*;
 import com.hk.domain.user.User;
 import com.akube.framework.dao.Page;
 
-import java.util.Date;
+import java.util.*;
 
 import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
 @Service
 
@@ -29,6 +32,12 @@ public class RunSheetServiceImpl implements RunSheetService {
 
     @Autowired
     private RunSheetDao runsheetDao;
+    @Autowired
+    ConsignmentService consignmentService;
+    @Autowired
+    HubService hubService;
+    @Autowired
+    UserService userService;
 
     public Runsheet createRunsheet(Hub hub, Set<Consignment> consignments,RunsheetStatus runsheetStatus,User user,Long prePaidBoxCount,Long totalCODPackets,Double totalCODAmount) {
         Runsheet runsheetObj = new Runsheet();
@@ -44,6 +53,7 @@ public class RunSheetServiceImpl implements RunSheetService {
     }
 
     public void saveRunSheet(Runsheet runsheet) {
+        updateConsignmentTrackingForRunsheet(runsheet, userService.getLoggedInUser());
         runsheetDao.saveRunSheet(runsheet);
     }
 
@@ -76,5 +86,35 @@ public class RunSheetServiceImpl implements RunSheetService {
             return true;
         }
         return false;
+    }
+
+    public void updateConsignmentTrackingForRunsheet(Runsheet runsheet, User user){
+        Long consignmentLifecycleStatusId;
+        Hub sourceHub = null;
+        Hub destinationHub = null;
+        List<ConsignmentTracking> consignmentTrackingList = new ArrayList<ConsignmentTracking>();
+        for (Consignment consignmentObj : runsheet.getConsignments()) {
+            if (consignmentService.hasConsignmentStatusChanged(consignmentObj)) {
+                //make an entry in tracking table for changed status
+                consignmentLifecycleStatusId = HKDeliveryUtil.getLifcycleStatusIdFromConsignmentStatus(consignmentObj.getConsignmentStatus().getStatus());
+                ConsignmentLifecycleStatus consignmentLifecycleStatus = runsheetDao.get(ConsignmentLifecycleStatus.class, consignmentLifecycleStatusId);
+                if(consignmentObj.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentDelivered.getId())){
+                    sourceHub = consignmentObj.getHub();
+                    destinationHub =  hubService.findHubByName(HKDeliveryConstants.DELIVERY_HUB);
+                }
+                else if(consignmentObj.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentRTO.getId())){
+                    sourceHub = consignmentObj.getHub();
+                    destinationHub =  hubService.findHubByName(HKDeliveryConstants.HEALTHKART_HUB);
+                }
+                else {
+                    sourceHub =consignmentObj.getHub();
+                    destinationHub = consignmentObj.getHub();
+                }
+                consignmentTrackingList.add(consignmentService.createConsignmentTracking(sourceHub, destinationHub, user, consignmentObj, consignmentLifecycleStatus));
+            }
+        }
+        if(consignmentTrackingList.size() > 0){
+            consignmentService.saveConsignmentTracking(consignmentTrackingList);
+        }
     }
 }
