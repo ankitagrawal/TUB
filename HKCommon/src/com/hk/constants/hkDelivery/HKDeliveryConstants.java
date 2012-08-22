@@ -31,6 +31,7 @@ public class HKDeliveryConstants {
 
     // Constants for url-parameters used in HK Delivery.
     public static final String RUNSHEET_DOWNLOAD ="runsheetDownloadFunctionality";
+    public static final String DOWNLOAD_DELIVERY_SHEET ="downloadDeliveryWorkSheet";
 
     //Constants for consignment payment mode
     public static final String COD = "COD";
