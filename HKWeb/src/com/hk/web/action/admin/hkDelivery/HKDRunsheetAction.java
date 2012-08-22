@@ -269,15 +269,19 @@ public class HKDRunsheetAction extends BasePaginatedAction {
     }
 
     public Resolution downloadRunsheetAgain(){
+
         consignments = runsheet.getConsignments();
         List<ShippingOrder> shippingOrderList = consignmentService.getShippingOrderFromConsignments(new ArrayList<Consignment>(consignments));
         Map<Object,Object> runsheetCODParams = consignmentService.getRunsheetCODParams(consignments);
+        logger.info("Inside download runsheet again"+consignments.size()+"**"+shippingOrderList.size());
         try {
                 xlsFile = new File(adminDownloads + "/" + CourierConstants.HKDELIVERY_WORKSHEET_FOLDER + "/" + CourierConstants.HKDELIVERY_WORKSHEET + "_" + sdf.format(new Date()) + ".xls");
-
+                logger.info("xlsFile**"+xlsFile+"**"+xlsFile.getPath()+runsheet.getAgent().getName()+(Double)runsheetCODParams.get(HKDeliveryConstants.TOTAL_COD_AMT)+consignments.size()+(Integer)runsheetCODParams.get(HKDeliveryConstants.TOTAL_COD_PKTS));
                 // generating Xls file.
                 xlsFile = hkdRunsheetManager.generateWorkSheetXls(xlsFile.getPath(),shippingOrderList,runsheet.getAgent().getName(), (Double)runsheetCODParams.get(HKDeliveryConstants.TOTAL_COD_AMT), consignments.size(), (Integer)runsheetCODParams.get(HKDeliveryConstants.TOTAL_COD_PKTS));
+            logger.info("xlsFile --"+xlsFile);
             } catch (IOException ioe) {
+            logger.debug(ioe.getMessage());
                 addRedirectAlertMessage(new SimpleMessage(CourierConstants.HKDELIVERY_IOEXCEPTION));
                 return new ForwardResolution(HKDRunsheetAction.class).addParameter(HKDeliveryConstants.RUNSHEET_DOWNLOAD, false);
             } catch (NullPointerException npe) {
