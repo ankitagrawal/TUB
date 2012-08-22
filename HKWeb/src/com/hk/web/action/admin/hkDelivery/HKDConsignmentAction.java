@@ -124,7 +124,7 @@ public class HKDConsignmentAction extends BaseAction{
             }
 
             } else {
-                addRedirectAlertMessage(new SimpleMessage(consignmentTrackingList.size() + HKDeliveryConstants.CONSIGNMNT_CREATION_SUCCESS + duplicateAwbString));
+                addRedirectAlertMessage(new SimpleMessage(duplicateAwbString));
                 return new RedirectResolution(HKDConsignmentAction.class);
             }
         } else {
