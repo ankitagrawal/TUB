@@ -8451,7 +8451,9 @@
     </changeSet>
   
     <changeSet author="Marut (generated)" id="1345635663381-1">
-        <modifyDataType columnName="out_of_stock" newDataType="TINYINT" tableName="product"/>
+        <addColumn tableName="product">
+            <column name="out_of_stock" type="TINYINT"/>
+        </addColumn>
     </changeSet>
     
 </databaseChangeLog>
