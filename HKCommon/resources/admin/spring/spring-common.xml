@@ -110,6 +110,12 @@
     <property name="location" value="/WEB-INF/environment.properties" />
 </bean> -->
 
+    <bean id="solr" class="org.apache.solr.client.solrj.impl.CommonsHttpSolrServer">
+        <constructor-arg value="http://localhost:8983/solr"/>
+        <property name="connectionTimeout" value="100"/>
+        <property name="defaultMaxConnectionsPerHost" value="10"/>
+        <property name="maxTotalConnections" value="50"/>
+    </bean>
 <util:properties id="hkEnvProps" location="/WEB-INF/environment.properties" />
 
     
