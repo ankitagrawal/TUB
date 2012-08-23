@@ -113,8 +113,21 @@ public class InventoryServiceImpl implements InventoryService {
         // Mark product variant out of stock if inventory is negative or zero
         if (availableUnbookedInventory <= 0 && !productVariant.isOutOfStock() && !isJit) {
             logger.debug("Inventory status is negative now. Setting OUT of stock.");
+            List<ProductVariant> productVariants = productVariant.getProduct().getInStockVariants();
+            boolean shouldUpdateProduct = false;
+            //If there are other Variants in stock then there is no way a Product can be marked OutOfStock
+            if (productVariants.size() == 1){
+                if (productVariants.get(0).getId().equals(productVariant.getId())){
+                    productVariant.getProduct().setOutOfStock(Boolean.TRUE);
+                    shouldUpdateProduct = true;
+                }
+            }
             productVariant.setOutOfStock(true);
+            //First product variant goes out of stock
             productVariant = getProductVariantService().save(productVariant);
+            if(shouldUpdateProduct){
+                getBaseDao().save(productVariant.getProduct());
+            }
 
             LowInventory lowInventoryInDB = getLowInventoryDao().findLowInventory(productVariant);
             if (lowInventoryInDB == null) {
@@ -129,14 +142,7 @@ public class InventoryServiceImpl implements InventoryService {
                 lowInventoryInDB.setOutOfStock(true);
                 getLowInventoryDao().save(lowInventoryInDB);
             }
-            List<ProductVariant> productVariants = productVariant.getProduct().getInStockVariants();
-            //If there are other Variants in stock then there is no way a Product can be marked OutOfStock
-            if (productVariants.size() == 1){
-                if (productVariants.get(0).getId().equals(productVariant.getId())){
-                    productVariant.getProduct().setOutOfStock(Boolean.TRUE);
-                    getBaseDao().save(productVariant.getProduct());
-                }
-            }
+
 
             logger.debug("Fire Out of Stock Email to Category Admins");
             getEmailManager().sendOutOfStockMail(productVariant);

@@ -10,7 +10,7 @@ package com.hk.constants.catalog;
 public class SolrSchemaConstants {
 
   public static final String productID = "prd_id";
-  public static final String category = "category_name";
+  public static final String category = "category";
   public static final String brand = "brand";
   public static final String name = "name";
   public static final String metaKeywords = "meta_keyword";
