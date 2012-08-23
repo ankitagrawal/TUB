@@ -1154,9 +1154,9 @@
     <requestHandler name="/select" class="solr.SearchHandler" startup="lazy">
         <lst name="defaults">
             <str name="spellcheck.onlyMorePopular">false</str>
-            <str name="spellcheck.extendedResults">true</str>
+            <str name="spellcheck.extendedResults">false</str>
             <str name="spellcheck.count">3</str>
-            <str name="accuracy">1</str>
+
             <str name="spellcheck.collate">true</str>
         </lst>
         <arr name="last-components">
