@@ -181,6 +181,9 @@
     <c:if test="${orderSummary.order.offerInstance.offer.paymentType != prePaidPaymentType}">
         <div id="tabs_content4" class="tab_content" style="display: none;">
             <c:choose>
+                <c:when test="${!orderSummary.groundShippingAllowed}">
+                    <h4 style="text-align: center;">We are sorry Ground Shipping is not available for your pincode</h4>
+                 </c:when>
                 <c:when test="${orderSummary.codAllowed && hk:isCodAllowedOnOrder(orderSummary.order)}">
 
                     <div class="grid_5">

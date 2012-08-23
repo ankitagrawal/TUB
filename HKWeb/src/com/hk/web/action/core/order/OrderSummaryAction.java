@@ -64,6 +64,7 @@ public class OrderSummaryAction extends BaseAction {
     private boolean codAllowed;
     private Double redeemableRewardPoints;
     private List<Courier> availableCourierList;
+    private boolean  groundShippingAllowed;
     private boolean  hideCod;
     private Double  cashbackOnGroundshipped;
     private Double  groundshipItemweight;
@@ -102,24 +103,25 @@ public class OrderSummaryAction extends BaseAction {
         OfferInstance offerInstance = order.getOfferInstance();
 
 
-        Set<CartLineItem> cartLineItems = order.getCartLineItems();
-        for (CartLineItem lineItem : cartLineItems) {
-            if (lineItem != null && lineItem.getProductVariant() != null) {
-                ProductVariant productVariant = lineItem.getProductVariant();
-                if (productVariant.getProduct().isGroundShipping()) {
-                    groundshipItemAmount =  productVariant.getHkPrice() ;
-                     if (groundshipItemAmount == null ) {
-                        groundshipItemAmount = 0.0;
-                    }
-                    groundshipItemweight = productVariant.getWeight();
-                    if (groundshipItemweight == null || groundshipItemweight == 0.0) {
-                        groundshipItemweight = 125D;
-                    }
-                    hideCod = true;
-                    break;
-                }
-            }
-        }
+//        Set<CartLineItem> cartLineItems = order.getCartLineItems();
+//        for (CartLineItem lineItem : cartLineItems) {
+//            if (lineItem != null && lineItem.getProductVariant() != null) {
+//                ProductVariant productVariant = lineItem.getProductVariant();
+//                if (productVariant.getProduct().isGroundShipping()) {
+//                    groundshipItemAmount =  productVariant.getHkPrice() ;
+//                     if (groundshipItemAmount == null ) {
+//                        groundshipItemAmount = 0.0;
+//                    }
+//                    groundshipItemweight = productVariant.getWeight();
+//                    if (groundshipItemweight == null || groundshipItemweight == 0.0) {
+//                        groundshipItemweight = 125D;
+//                    }
+//                    hideCod = true;
+//                    break;
+//                }
+//            }
+//        }
+
 
         Double rewardPointsUsed = 0D;
         redeemableRewardPoints = referrerProgramManager.getTotalRedeemablePoints(user);
@@ -161,15 +163,19 @@ public class OrderSummaryAction extends BaseAction {
             }
         }
 
-        if (hideCod) {
-            cashbackOnGroundshipped = courierService.getCashbackOnGroundShippedItem(groundshipItemAmount, order, groundshipItemweight);
-            if (cashbackOnGroundshipped == null || cashbackOnGroundshipped == -0.0) {
-                cashbackOnGroundshipped = 0.0;
-            } else {
-                cashbackOnGroundshipped = cashbackOnGroundshipped * cashBackPercentageOnGroundShipped;
-            }
+//        if (hideCod) {
+//            groundShippingAllowed= courierService.isGroundShippingAllowed(pin);
+//            cashbackOnGroundshipped = courierService.getCashbackOnGroundShippedItem(groundshipItemAmount, order, groundshipItemweight);
+//            if (cashbackOnGroundshipped == null || cashbackOnGroundshipped == -0.0) {
+//                cashbackOnGroundshipped = 0.0;
+//            } else {
+//                cashbackOnGroundshipped = cashbackOnGroundshipped * cashBackPercentageOnGroundShipped;
+//            }
+//        }
+        hideCod = orderService.isOrderHasGroundShippedItem(order);
+        if (hideCod){
+           groundShippingAllowed= courierService.isGroundShippingAllowed(pin);
         }
-
 
         Double netShopping = pricingDto.getGrandTotalPayable() - pricingDto.getShippingTotal();
         if (netShopping > codFreeAfter) {
@@ -267,4 +273,11 @@ public class OrderSummaryAction extends BaseAction {
         this.cashbackOnGroundshipped = cashbackOnGroundshipped;
     }
 
+    public boolean isGroundShippingAllowed() {
+        return groundShippingAllowed;
+    }
+
+    public void setGroundShippingAllowed(boolean groundShippingAllowed) {
+        this.groundShippingAllowed = groundShippingAllowed;
+    }
 }

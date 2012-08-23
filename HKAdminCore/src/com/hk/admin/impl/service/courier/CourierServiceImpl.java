@@ -131,6 +131,14 @@ public class CourierServiceImpl implements CourierService {
     }
 
 
+    public boolean isGroundShippingAllowed(String pin) {
+        if (StringUtils.isNotEmpty(pin)) {
+            return getCourierServiceInfoDao().isGroundShippingAvailable(pin);
+        }
+        return false;
+    }
+
+
     public CourierDao getCourierDao() {
         return courierDao;
     }

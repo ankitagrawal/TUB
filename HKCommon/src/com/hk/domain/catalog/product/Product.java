@@ -557,12 +557,13 @@ public class Product implements java.io.Serializable {
     public boolean isGroundShipping() {
         return groundShipping;
     }
+    public Boolean getGroundShipping(){
+         return groundShipping;
+    }
 
     public void setGroundShipping(boolean groundShipping) {
         this.groundShipping = groundShipping;
     }
-
-
 
 	public Boolean isCodAllowed() {
 		return codAllowed;

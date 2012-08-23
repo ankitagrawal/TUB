@@ -67,4 +67,6 @@ public interface OrderService {
 
 	public boolean isCODAllowed(Order order);
 
+     public boolean isOrderHasGroundShippedItem(Order order);
+
 }

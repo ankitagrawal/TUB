@@ -34,4 +34,6 @@ public interface CourierService {
 
      public Double getCashbackOnGroundShippedItem(Double groundshipItemAmount, Order order, Double groundshipItemweight);
 
+    public boolean isGroundShippingAllowed (String pin);
+
 }

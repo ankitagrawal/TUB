@@ -57,6 +57,9 @@ public class CourierServiceInfo implements java.io.Serializable {
   @Column(name = "is_deleted", nullable = true)
   private Boolean deleted;
 
+  @Column(name = "ground_shipping_Availabe", nullable = false)  
+  private Boolean groundShippingAvailable;
+
   public Long getId() {
     return this.id;
   }
@@ -120,6 +123,16 @@ public class CourierServiceInfo implements java.io.Serializable {
   public void setDeleted(Boolean deleted) {
     this.deleted = deleted;
   }
+
+
+    public Boolean isGroundShippingAvailable() {
+        return groundShippingAvailable;
+    }
+
+    public void setGroundShippingAvailable(Boolean groundShippingAvailable) {
+        this.groundShippingAvailable = groundShippingAvailable;
+    }
+
 }
 
 

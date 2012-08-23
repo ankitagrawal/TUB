@@ -546,4 +546,20 @@ public class OrderServiceImpl implements OrderService {
 		return true;
 	}
 
+    public boolean isOrderHasGroundShippedItem(Order order){
+        CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
+		Set<CartLineItem> productCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).filter();
+		for (CartLineItem productCartLineItem : productCartLineItems) {
+
+			ProductVariant productVariant = productCartLineItem.getProductVariant();
+			if (productVariant != null && productVariant.getProduct() != null) {
+				Product product = productVariant.getProduct();
+				if (product.isGroundShipping()) {
+					return true;
+				}
+			}
+		}
+		return false;
+
+    }
 }
