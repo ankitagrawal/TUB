@@ -1,10 +1,6 @@
 package com.hk.web.action.core.affiliate;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -56,6 +52,8 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
     List<CheckDetails> checkDetailsList;
     List<AffiliateCategoryCommission> affiliateCategoryCommissionList;
     Page affiliatePage;
+	Date startDate;
+	Date endDate;
 
     Double amount;
     @ValidateNestedProperties({
@@ -83,7 +81,7 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
         for (Affiliate affiliate : affiliates) {
                 AffiliatePaymentDto affiliatePaymentDto = new AffiliatePaymentDto();
                 affiliatePaymentDto.setAffiliate(affiliate);
-                affiliatePaymentDto.setAmount(getAffiliateManager().getAmountInAccount(affiliate));
+                affiliatePaymentDto.setAmount(getAffiliateManager().getAmountInAccount(affiliate, null, null));
                 affiliatePaymentDtoList.add(affiliatePaymentDto);
         }
         return new ForwardResolution("/pages/affiliate/payToAffiliates.jsp");
@@ -109,12 +107,18 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
     }
 
     public Resolution showAffiliateDetails() {
-        amount = getAffiliateManager().getAmountInAccount(affiliate);
+        amount = getAffiliateManager().getAmountInAccount(affiliate, null, null);
         checkDetailsList = getCheckDetailsDao().getCheckListByAffiliate(affiliate);
         return new ForwardResolution("/pages/affiliate/affiliateAccount.jsp");
     }
 
-    public Resolution paymentDetails() {
+	public Resolution showAffiliateDueAmount() {
+		amount = getAffiliateManager().getAmountInAccount(affiliate, startDate, endDate);
+		checkDetailsList = getCheckDetailsDao().getCheckListByAffiliate(affiliate);
+		return new ForwardResolution("/pages/affiliate/affiliateAccount.jsp");
+	}
+
+	public Resolution paymentDetails() {
         if (affiliate.getMainAddressId() != null) {
             checkDeliveryAddress = getAddressDao().get(Address.class, affiliate.getMainAddressId());
         } else {
@@ -284,4 +288,20 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
     public void setEmail(String email) {
         this.email = email;
     }
+
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
 }

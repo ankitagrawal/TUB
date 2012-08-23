@@ -23,5 +23,7 @@ public interface AffiliateTxnDao extends BaseDao {
 
     public long getReferredOrdersCountByAffiliate(Affiliate affiliate, Date startDate, Date endDate);
 
-    public Double getAmountInAccount(Affiliate affiliate);
+    public Double getAmountInAccount(Affiliate affiliate, Date startDate, Date endDate);
+
+	public void approvePendingAffiliateTxn(Affiliate affiliate, Order order);
 }

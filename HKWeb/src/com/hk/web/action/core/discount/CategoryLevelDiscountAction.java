@@ -44,14 +44,6 @@ public class CategoryLevelDiscountAction extends BaseAction {
     @Autowired
     private AffiliateCategoryDaoImpl affiliateCategoryCommissionDao;
     
-    // AffiliateCategoryDao affiliateCategoryDao;
-    // CategoryDao categoryDao;
-
-    // DefaultCategoryCommissionDao defaultCategoryCommissionDao;
-    // AffiliateDao affiliateDao;
-    
-    // ProductVariantDao productVariantDao;
-
     AffiliateCategoryCommission             affiliateCategoryCommission;
     DefaultCategoryCommission               defaultCategoryCommission;
 

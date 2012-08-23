@@ -304,6 +304,7 @@ public class OrderServiceImpl implements OrderService {
         if (isUpdated) {
             getOrderLoggingService().logOrderActivity(order, EnumOrderLifecycleActivity.OrderDelivered);
             approvePendingRewardPointsForOrder(order);
+	        affilateService.approvePendingAffiliateTxn(order);
             // Currently commented as we aren't doing COD for services as of yet, When we start, We may have to put a
             // check if payment mode was COD and email hasn't been sent yet
             // sendEmailToServiceProvidersForOrder(order);
@@ -319,6 +320,7 @@ public class OrderServiceImpl implements OrderService {
         } else {
             getOrderLoggingService().logOrderActivity(order, EnumOrderLifecycleActivity.OrderPartiallyReturned);
         }
+	    affilateService.cancelTxn(order);
         return order;
     }
 

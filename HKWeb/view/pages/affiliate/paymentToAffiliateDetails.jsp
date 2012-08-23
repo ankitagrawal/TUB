@@ -38,7 +38,7 @@
       <table>
         <tr>
           <th>
-            Check No.
+            Transaction Ref No.
           </th>
           <td>
             <s:text name="checkDetails.checkNo"/>
@@ -54,7 +54,7 @@
         </tr>
         <tr>
           <th>
-            Bank
+            Payment Mode
           </th>
           <td>
             <s:text name="checkDetails.bankName"/>
@@ -62,12 +62,20 @@
         </tr>
         <tr>
           <th>
-            Amount
+            Amount Qualified for
           </th>
           <td>
             <s:text name="amountToPay"/>
           </td>
         </tr>
+          <tr>
+              <th>
+                  TDS
+              </th>
+              <td>
+                  <s:text name="checkDetails.tds"/>
+              </td>
+          </tr>
       </table>
       <s:submit name="payToAffiliate" value="Save"/>
       <s:hidden name="affiliate" value="${paymentAction.affiliate.id}"/>

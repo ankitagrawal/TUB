@@ -4,6 +4,10 @@ import java.util.Set;
 
 import javax.servlet.http.Cookie;
 
+import com.akube.framework.dao.Page;
+import com.hk.domain.affiliate.*;
+import com.hk.domain.user.Role;
+import com.hk.pact.dao.affiliate.AffiliateCategoryHasBrandDao;
 import net.sourceforge.stripes.util.CryptoUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,16 +15,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.akube.framework.util.BaseUtils;
-import com.hk.constants.EnumAffiliateTxnType;
+import com.hk.constants.affiliate.EnumAffiliateTxnType;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.discount.OfferConstants;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.core.fliter.CartLineItemFilter;
-import com.hk.domain.affiliate.Affiliate;
-import com.hk.domain.affiliate.AffiliateCategory;
-import com.hk.domain.affiliate.AffiliateCategoryCommission;
-import com.hk.domain.affiliate.AffiliateTxn;
-import com.hk.domain.affiliate.AffiliateTxnType;
 import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
@@ -51,8 +50,10 @@ public class AffilateServiceImpl implements AffilateService {
     private AffiliateTxnDao      affiliateTxnDao;
     @Autowired
     private AffiliateCategoryDao affiliateCategoryCommissionDao;
+	@Autowired
+	private AffiliateCategoryHasBrandDao affiliateCategoryHasBrandDao;
 
-    @Transactional
+	@Transactional
     public void saveOfferInstanceAndSaveAffiliateCommission(Order order, PricingDto pricingDto) {
 
         User user = order.getUser();
@@ -100,7 +101,7 @@ public class AffilateServiceImpl implements AffilateService {
                 }
             }
         }
-        AffiliateTxnType affiliateTxnType = getAffiliateTxnType(EnumAffiliateTxnType.ADD.getId());
+        AffiliateTxnType affiliateTxnType = getAffiliateTxnType(EnumAffiliateTxnType.PENDING.getId());
         getAffiliateTxnDao().saveTxn(affiliate, affiliateSumTotal, affiliateTxnType, order);
     }
 
@@ -117,11 +118,16 @@ public class AffilateServiceImpl implements AffilateService {
                 }
             }
         }
-        AffiliateTxnType affiliateTxnType = getAffiliateTxnType(EnumAffiliateTxnType.ADD.getId());
+        AffiliateTxnType affiliateTxnType = getAffiliateTxnType(EnumAffiliateTxnType.PENDING.getId());
         getAffiliateTxnDao().saveTxn(affiliate, affiliateSumTotal, affiliateTxnType, order);
     }
 
-    @Transactional
+	public void associateBrandToAffiliateCategory(AffiliateCategory affiliateCategory, String brand) {
+		affiliateCategoryHasBrandDao.associateBrandToAffiliateCategory(affiliateCategory, brand);
+		affiliateCategoryHasBrandDao.associateAffiliateCategoryToVariantViaBrand(affiliateCategory, brand);
+	}
+
+	@Transactional
     private boolean applyAffiliateCommission(Order order) {
         // find if the user is referred by online affiliate or not, if yes pay him as per first commission, if first
         // time user and set his affiliate_to corresponding affiliate,
@@ -171,7 +177,26 @@ public class AffilateServiceImpl implements AffilateService {
         }
     }
 
-    @Override
+	public Long getMaxCouponsLeft(Affiliate affiliate){
+		return affiliateDao.getMaxCouponsLeft(affiliate);
+	}
+
+	public void approvePendingAffiliateTxn(Order order) {
+		User affiliateTo = order.getUser().getAffiliateTo();
+		if (affiliateTo != null) {
+			Affiliate affiliate = getAffilateByUser(affiliateTo);
+			if (affiliate != null) {
+				affiliateTxnDao.approvePendingAffiliateTxn(affiliate, order);
+			}
+		}
+	}
+
+	@Override
+	public Page searchAffiliates(AffiliateStatus affiliateStatus, String name, String email, String websiteName, String code, Long affiliateMode, Long affiliateType, Role role, int perPage, int pageNo) {
+		return affiliateDao.searchAffiliates(affiliateStatus,name,email,websiteName,code,affiliateMode,affiliateType, role, perPage, pageNo);
+	}
+
+	@Override
     public Affiliate getAffilateByUser(User affiliateUser) {
         return getAffiliateDao().getAffilateByUser(affiliateUser);
     }

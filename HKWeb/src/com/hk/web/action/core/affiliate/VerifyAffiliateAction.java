@@ -1,97 +1,112 @@
 package com.hk.web.action.core.affiliate;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
+import com.hk.constants.affiliate.EnumAffiliateStatus;
+import com.hk.constants.core.EnumRole;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.constants.core.RoleConstants;
 import com.hk.domain.affiliate.Affiliate;
+import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.manager.AffiliateManager;
 import com.hk.pact.dao.affiliate.AffiliateDao;
 import com.hk.pact.service.RoleService;
 import com.hk.web.action.error.AdminPermissionAction;
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
 
-@Secure(hasAnyPermissions = { PermissionConstants.VERIFY_AFFILIATES }, authActionBean = AdminPermissionAction.class)
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+@Secure(hasAnyPermissions = {PermissionConstants.VERIFY_AFFILIATES}, authActionBean = AdminPermissionAction.class)
 @Component
 public class VerifyAffiliateAction extends BasePaginatedAction {
-    @Autowired
-    private RoleService roleService;
-    @Autowired
-    AffiliateDao        affiliateDao;
-    @Autowired
-    AffiliateManager    affiliateManager;
+	@Autowired
+	private RoleService roleService;
+	@Autowired
+	AffiliateDao affiliateDao;
+	@Autowired
+	AffiliateManager affiliateManager;
 
-    Page          userPage;
-    List<User>          unverifiedAffiliateUsers;
-    List<Affiliate>     unverifiedAffiliates = new ArrayList<Affiliate>();
-    List<User>          affiliateUsersToVerify;
-    String              customMessage;
-    String              name;
-    String              email;
+	Page affiliatePage;
+	List<User> unverifiedAffiliateUsers;
+	List<Affiliate> unverifiedAffiliates = new ArrayList<Affiliate>();
+	List<User> affiliateUsersToVerifyOrReject;
+	String customMessage;
+	String name;
+	String email;
+	String websiteName;
+	String code;
+	Long affiliateMode;
+	Long affiliateType;
+	Role role;
 
-    @DefaultHandler
-    public Resolution pre() {
-        userPage = getUserService().findByRole(name, email,getRoleService().getRoleByName(RoleConstants.HK_AFFILIATE_UNVERIFIED), getPageNo(), getPerPage());
-        unverifiedAffiliateUsers = userPage.getList();
-        for (User user : unverifiedAffiliateUsers) {
-            unverifiedAffiliates.add(affiliateDao.getAffilateByUser(user));
-        }
-        return new ForwardResolution("/pages/affiliate/verifyAffiliate.jsp");
-    }
+	@DefaultHandler
+	public Resolution pre() {
+		affiliatePage = affiliateDao.searchAffiliates(EnumAffiliateStatus.Unverified.asAffiliateStatus(), name, email, websiteName, code, affiliateMode, affiliateType, EnumRole.HK_AFFILIATE_UNVERIFIED.toRole(), getPerPage(), pageNo);
+		unverifiedAffiliates = affiliatePage.getList();
+//        affiliatePage = getUserService().findByRole(name, email,getRoleService().getRoleByName(RoleConstants.HK_AFFILIATE_UNVERIFIED), getPageNo(), getPerPage());
+//        unverifiedAffiliateUsers = affiliatePage.getList();
+//        for (User user : unverifiedAffiliateUsers) {
+//            unverifiedAffiliates.add(affiliateDao.getAffilateByUser(user));
+//        }
+		return new ForwardResolution("/pages/affiliate/verifyAffiliate.jsp");
+	}
 
-    public Resolution verifyAffiliates() {
-        for (User user : affiliateUsersToVerify) {
-            affiliateManager.verifyAffiliate(user, customMessage);
-        }
-        addRedirectAlertMessage(new SimpleMessage("Affiliates are now verified."));
-        return new ForwardResolution("/pages/admin/adminHome.jsp");
-    }
+	public Resolution verifyAffiliates() {
+		for (User user : affiliateUsersToVerifyOrReject) {
+			affiliateManager.verifyAffiliate(user, customMessage);
+		}
+		addRedirectAlertMessage(new SimpleMessage("Affiliates are now verified."));
+		return new ForwardResolution("/pages/admin/adminHome.jsp");
+	}
 
-    public List<User> getUnverifiedAffiliateUsers() {
-        return unverifiedAffiliateUsers;
-    }
+	public Resolution rejectAffiliates() {
+		for (User user : affiliateUsersToVerifyOrReject) {
+			affiliateManager.rejectAffiliate(user);
+		}
+		addRedirectAlertMessage(new SimpleMessage("Affiliates are now rejected."));
+		return new ForwardResolution("/pages/admin/adminHome.jsp");
+	}
 
-    public void setUnverifiedAffiliateUsers(List<User> unverifiedAffiliateUsers) {
-        this.unverifiedAffiliateUsers = unverifiedAffiliateUsers;
-    }
+	public List<User> getUnverifiedAffiliateUsers() {
+		return unverifiedAffiliateUsers;
+	}
 
-    public List<Affiliate> getUnverifiedAffiliates() {
-        return unverifiedAffiliates;
-    }
+	public void setUnverifiedAffiliateUsers(List<User> unverifiedAffiliateUsers) {
+		this.unverifiedAffiliateUsers = unverifiedAffiliateUsers;
+	}
 
-    public void setUnverifiedAffiliates(List<Affiliate> unverifiedAffiliates) {
-        this.unverifiedAffiliates = unverifiedAffiliates;
-    }
+	public List<Affiliate> getUnverifiedAffiliates() {
+		return unverifiedAffiliates;
+	}
 
-    public List<User> getAffiliateUsersToVerify() {
-        return affiliateUsersToVerify;
-    }
+	public void setUnverifiedAffiliates(List<Affiliate> unverifiedAffiliates) {
+		this.unverifiedAffiliates = unverifiedAffiliates;
+	}
 
-    public void setAffiliateUsersToVerify(List<User> affiliateUsersToVerify) {
-        this.affiliateUsersToVerify = affiliateUsersToVerify;
-    }
+	public List<User> getAffiliateUsersToVerifyOrReject() {
+		return affiliateUsersToVerifyOrReject;
+	}
 
-    public String getCustomMessage() {
-        return customMessage;
-    }
+	public void setAffiliateUsersToVerifyOrReject(List<User> affiliateUsersToVerifyOrReject) {
+		this.affiliateUsersToVerifyOrReject = affiliateUsersToVerifyOrReject;
+	}
 
-    public void setCustomMessage(String customMessage) {
-        this.customMessage = customMessage;
-    }
+	public String getCustomMessage() {
+		return customMessage;
+	}
+
+	public void setCustomMessage(String customMessage) {
+		this.customMessage = customMessage;
+	}
 
 
 	public Set<String> getParamSet() {
@@ -100,25 +115,26 @@ public class VerifyAffiliateAction extends BasePaginatedAction {
 		params.add("email");
 		return params;
 	}
-    public int getPerPageDefault() {
-        return 20;
-    }
 
-    public int getPageCount() {
-        return userPage == null ? 0 : userPage.getTotalPages();
-    }
+	public int getPerPageDefault() {
+		return 20;
+	}
 
-    public int getResultCount() {
-        return userPage == null ? 0 : userPage.getTotalResults();
-    }
+	public int getPageCount() {
+		return affiliatePage == null ? 0 : affiliatePage.getTotalPages();
+	}
 
-    public RoleService getRoleService() {
-        return roleService;
-    }
+	public int getResultCount() {
+		return affiliatePage == null ? 0 : affiliatePage.getTotalResults();
+	}
 
-    public void setRoleService(RoleService roleService) {
-        this.roleService = roleService;
-    }
+	public RoleService getRoleService() {
+		return roleService;
+	}
+
+	public void setRoleService(RoleService roleService) {
+		this.roleService = roleService;
+	}
 
 	public String getName() {
 		return name;

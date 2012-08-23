@@ -31,6 +31,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
+import com.hk.constants.coupon.EnumCouponType;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Where;
@@ -402,7 +403,15 @@ public class User {
     }
 
     public Coupon getReferrerCoupon() {
-        return referrerCoupons != null && referrerCoupons.size() > 0 ? referrerCoupons.get(0) : null;
+	    if (referrerCoupons != null) {
+		    for (Coupon referrerCoupon : referrerCoupons) {
+			    if (EnumCouponType.REFERRAL.getId().equals(referrerCoupon.getCouponType().getId())) {
+				    return referrerCoupon;
+			    }
+		    }
+	    }
+	    return null;
+//	    return referrerCoupons != null && referrerCoupons.size() > 0 ? referrerCoupons.get(0) : null;
     }
 
     public User getAffiliateTo() {

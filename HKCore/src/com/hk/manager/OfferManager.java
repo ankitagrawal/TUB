@@ -115,20 +115,20 @@ public class OfferManager {
 
     @Transactional
     public Offer getAffiliateOffer() {
-        Offer offer = getOfferDao().findByIdentifier(OfferConstants.affiliateCommissionOffer);
+        Offer offer = getOfferDao().findByIdentifier(OfferConstants.affiliateCommissionOfferNew);
 
         if (offer == null) {
 
-            OfferTrigger offerTrigger = OfferTriggerBuilder.getInstance().description("Min purchase amount Rs 500").minAmount(500D).build();
+            OfferTrigger offerTrigger = OfferTriggerBuilder.getInstance().description("Min purchase amount Rs 100").minAmount(100D).build();
 
             offerTrigger = (OfferTrigger) offerDao.save(offerTrigger);
 
-            OfferAction offerAction = OfferActionBuilder.getInstance().description("Rs. 100 off").discountAmount(100D).discountOnBasePriceOnly(false).validOnIntlShipping(false).productGroup(
+            OfferAction offerAction = OfferActionBuilder.getInstance().description("Additional 2% off on all Products").discountPercent(0.02).discountOnBasePriceOnly(false).validOnIntlShipping(false).productGroup(
                     getProductService().findProductGroupByName(OfferConstants.productGroupExcludingServices)).qty(1L).build();
             offerAction = (OfferAction) getOfferDao().save(offerAction);
 
-            offer = OfferBuilder.getInstance().description("Rs. 100 off on purchase of 500 or more, affiliate program discount").startDate(new DateTime().toDate()).numberOfTimesAllowed(
-                    1L).carryOverAllowed(false).excludeTriggerProducts(false).offerIdentifier(OfferConstants.affiliateCommissionOffer).offerTrigger(offerTrigger).offerAction(
+            offer = OfferBuilder.getInstance().description("Additional 2% off on all Products, Affiliate program discount").startDate(new DateTime().toDate()).numberOfTimesAllowed(
+                    1000L).carryOverAllowed(false).excludeTriggerProducts(false).offerIdentifier(OfferConstants.affiliateCommissionOfferNew).offerTrigger(offerTrigger).offerAction(
                     offerAction).build();
 
             Set<Role> roles = new HashSet<Role>(1);
@@ -165,7 +165,7 @@ public class OfferManager {
             offer = (Offer) getOfferDao().save(offer);
         }
 
-        Coupon diwaliCoupon = getCouponService().createCoupon("DIWALIDHAMAKA", DateUtils.getEndOfNextDay(new Date()), 500L, 0L, offer, null, false);
+        Coupon diwaliCoupon = getCouponService().createCoupon("DIWALIDHAMAKA", DateUtils.getEndOfNextDay(new Date()), 500L, 0L, offer, null, false, null);
 
         return offer;
     }

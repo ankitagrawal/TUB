@@ -16,20 +16,6 @@
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Report Master">
 
 <s:layout-component name="htmlHead">
-    <%--
-
-      <%
-        OrderStatusDao orderStatusDao = ServiceLocatorFactory.getService(OrderStatusDao.class);
-        pageContext.setAttribute("orderStatusListForReporting", orderStatusDao.listOrderStatusForReporting());
-
-        TaxDao taxDao = ServiceLocatorFactory.getService(TaxDao.class);
-        pageContext.setAttribute("taxList", taxDao.taxListForReport());
-
-        CategoryDao categoryDao = (CategoryDao)ServiceLocatorFactory.getService(CategoryDao.class);
-        pageContext.setAttribute("primaryCategories",categoryDao.getPrimaryCategories());
-
-      %>
-    --%>
 
     <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>

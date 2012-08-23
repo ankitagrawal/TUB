@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.hk.domain.coupon.CouponType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +26,7 @@ public class CouponServiceImpl implements CouponService {
     
     @Override
     @Transactional
-    public Coupon createCoupon(String couponCode, Date endDate, Long allowedTimes, Long alreadyUsed, Offer offer, User referrerUser, Boolean repetitiveUsage) {
+    public Coupon createCoupon(String couponCode, Date endDate, Long allowedTimes, Long alreadyUsed, Offer offer, User referrerUser, Boolean repetitiveUsage, CouponType couponType) {
         Coupon coupon = new Coupon();
         coupon.setCode(couponCode);
         coupon.setEndDate(DateUtils.getEndOfDay(endDate));
@@ -59,7 +60,7 @@ public class CouponServiceImpl implements CouponService {
             if (findByCode(code) == null) {
                 if (repetitiveUsage == null)
                     repetitiveUsage = false;
-                Coupon coupon = createCoupon(code, endDate, allowedTimes, alreadyUsed, offer, null, repetitiveUsage);
+                Coupon coupon = createCoupon(code, endDate, allowedTimes, alreadyUsed, offer, null, repetitiveUsage, null);
                 coupons.add(coupon);
             } else {
                 i--;

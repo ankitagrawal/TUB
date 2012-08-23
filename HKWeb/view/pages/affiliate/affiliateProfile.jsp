@@ -72,8 +72,24 @@
             <s:text name="affiliate.panNo" class="rowText"/>
           </div>
 
-          <div class="clear"></div>
-          <div style="margin-top:5px"></div>
+            <div class="clear"></div>
+            <div style="margin-top:5px"></div>
+
+            <div class="row">
+                <s:label class="rowLabel" name="Bank Account Number"/>
+                <s:text name="affiliate.bankAccountNumber" class="rowText"/>
+            </div>
+
+            <div class="clear"></div>
+            <div style="margin-top:5px"></div>
+
+            <div class="row">
+                <s:label class="rowLabel" name="IFSC Code"/>
+                <s:text name="affiliate.ifscCode" class="rowText"/>
+            </div>
+
+            <div class="clear"></div>
+            <div style="margin-top:5px"></div>
         </div>
 
         <div class="clear"></div>

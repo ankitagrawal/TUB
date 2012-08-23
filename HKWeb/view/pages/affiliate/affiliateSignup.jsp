@@ -1,6 +1,8 @@
 <%@ page import="org.stripesstuff.plugin.security.J2EESecurityManager" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="com.hk.web.action.core.affiliate.AffiliateAction" %>
+<%@ page import="com.hk.constants.affiliate.EnumAffiliateType" %>
+<%@ page import="com.hk.constants.affiliate.EnumAffiliateMode" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -74,7 +76,19 @@
             <s:password name="password" placeholder="Give it a safe password"/>
             <div class='label'>Confirm Password <span class='aster' title="this field is required">*</span></div>
             <s:password name="passwordConfirm" placeholder="Reenter the password"/>
-            <div class="label">Website Name<span class='aster' title="this field is required">*</span></div>
+              <div class='label'>Type<span class="aster">*</span></div>
+              <s:select name="affiliateType">
+                  <c:forEach items="<%=EnumAffiliateType.getAllAffiliateTypes()%>" var="aType">
+                      <s:option value="${aType.id}">${aType.name}</s:option>
+                  </c:forEach>
+              </s:select>
+              <div class='label'>Mode<span class="aster">*</span></div>
+              <s:select name="affiliateMode">
+                  <c:forEach items="<%=EnumAffiliateMode.getAllAffiliateModes()%>" var="aMode">
+                      <s:option value="${aMode.id}">${aMode.name}</s:option>
+                  </c:forEach>
+              </s:select>
+              <div class="label">Website Name<span class='aster' title="this field is required">*</span></div>
             <s:text name="websiteName" placeholder="Your Domain Name"/>
             <div class='label'>
               <s:checkbox name="agreeToTerms"/>Agree to

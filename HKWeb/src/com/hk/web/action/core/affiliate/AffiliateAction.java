@@ -56,6 +56,8 @@ public class AffiliateAction extends BaseAction {
     AffiliateManager      affiliateManager;
     @Autowired
     RoleDao               roleDao;
+	Long affiliateType;
+	Long affiliateMode;
 
     @DefaultHandler
     @DontValidate
@@ -84,7 +86,7 @@ public class AffiliateAction extends BaseAction {
 
     public Resolution signup() throws Exception {
         try {
-            affiliateManager.signup(name, email, password, websiteName);
+            affiliateManager.signup(name, email, password, websiteName, affiliateType, affiliateMode);
         } catch (HealthkartSignupException e) {
             getContext().getValidationErrors().add("already exists", new LocalizableError("/Signup.action.email.id.already.exists"));
             return new ForwardResolution(getContext().getSourcePage());
@@ -127,7 +129,7 @@ public class AffiliateAction extends BaseAction {
         try {
             UserLoginDto userLoginDto = userManager.login(email, password, rememberMe);
             User user = userLoginDto.getLoggedUser();
-            affiliateManager.userToAffiliate(user, websiteName);
+            affiliateManager.userToAffiliate(user, websiteName, affiliateMode, affiliateType);
         } catch (HealthkartLoginException e) {
             addValidationError("e1", new LocalizableError("/Login.action.user.notFound"));
             return new ForwardResolution("/pages/affiliate/affiliateSignup.jsp");
@@ -188,7 +190,23 @@ public class AffiliateAction extends BaseAction {
         this.rememberMe = rememberMe;
     }
 
-    public String getWebsiteName() {
+	public Long getAffiliateMode() {
+		return affiliateMode;
+	}
+
+	public void setAffiliateMode(Long affiliateMode) {
+		this.affiliateMode = affiliateMode;
+	}
+
+	public Long getAffiliateType() {
+		return affiliateType;
+	}
+
+	public void setAffiliateType(Long affiliateType) {
+		this.affiliateType = affiliateType;
+	}
+
+	public String getWebsiteName() {
         return websiteName;
     }
 

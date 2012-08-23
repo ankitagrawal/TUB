@@ -15,10 +15,10 @@
           <s:link beanclass="com.hk.web.action.core.user.CustomerSubscriptionHistoryAction" title="My Subscriptions"> <span
                   id="shLink">My Subscriptions</span> </s:link>
       </li>
-    <li>
-      <s:link beanclass="com.hk.web.action.core.referral.ReferralProgramAction" title="Referral Program"> <span
-          id="rpLink">Referral Program</span> </s:link>
-    </li>
+    <%--<li>--%>
+      <%--<s:link beanclass="com.hk.web.action.core.referral.ReferralProgramAction" title="Referral Program"> <span--%>
+          <%--id="rpLink">Referral Program</span> </s:link>--%>
+    <%--</li>--%>
     <li><s:link beanclass="com.hk.web.action.core.discount.RewardPointTxnStatementAction"
                 title="RewardPointTxnStatement"> <span
         id="rpsLink">Reward Point Txn Statement</span> </s:link>
@@ -32,7 +32,11 @@
         <s:link beanclass="com.hk.web.action.core.affiliate.AffiliateAccountAction" title="Affiliate Account"><span
             id="affiliateAccountLink">Affiliate Account</span> </s:link>
       </li>
-      <li><s:link beanclass="com.hk.web.action.core.affiliate.AffiliateAccountAction" event="checksToAffiliate"
+        <li>
+            <s:link beanclass="com.hk.web.action.core.affiliate.AffiliateAccountAction" event="generateAffiliateCoupons" title="Download Coupon Codes"><span
+                    id="affiliateDownloadCouponLink">Download Coupon Codes</span> </s:link>
+        </li>
+        <li><s:link beanclass="com.hk.web.action.core.affiliate.AffiliateAccountAction" event="checksToAffiliate"
                   title="Checks sent to me">
         <span id="myChecksLink">Cheques Sent</span> </s:link></li>
       <li><s:link beanclass="com.hk.web.action.core.affiliate.AffiliateStatisticsAction" title="Statistics">

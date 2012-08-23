@@ -1,12 +1,16 @@
 package com.hk.manager;
 
+import java.util.Date;
 import java.util.Set;
 
+import com.hk.constants.affiliate.AffiliateConstants;
+import com.hk.constants.affiliate.EnumAffiliateStatus;
+import com.hk.constants.coupon.EnumCouponType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.util.BaseUtils;
-import com.hk.constants.EnumAffiliateTxnType;
+import com.hk.constants.affiliate.EnumAffiliateTxnType;
 import com.hk.constants.core.RoleConstants;
 import com.hk.domain.CheckDetails;
 import com.hk.domain.affiliate.Affiliate;
@@ -60,7 +64,7 @@ public class AffiliateManager {
         return codeLength > 10 ? code.substring(0, 10) + BaseUtils.getRandomStringTypable(5) : code + BaseUtils.getRandomStringTypable(15 - codeLength);
     }
 
-    public Affiliate signup(String name, String email, String password, String websiteName) throws Exception {
+    public Affiliate signup(String name, String email, String password, String websiteName, Long affiliateType, Long affiliateMode) throws Exception {
         Affiliate affiliate = new Affiliate();
         try {
             affiliate.setUser(getUserManager().signup(email, name, password, null, RoleConstants.HK_AFFILIATE_UNVERIFIED));
@@ -73,10 +77,16 @@ public class AffiliateManager {
             code = createCode(affiliate.getUser());
         }
         affiliate.setCode(code);
+        affiliate.setAffiliateMode(affiliateMode);
+        affiliate.setAffiliateType(affiliateType);
+        affiliate.setValidDays(AffiliateConstants.affiliateExpiryDays);
+        affiliate.setWeeklyCouponLimit(AffiliateConstants.weeklyCouponLimit);
+	    affiliate.setAffiliateStatus(EnumAffiliateStatus.Unverified.asAffiliateStatus());
         affiliate.setWebsiteName(websiteName);
         getAffilateService().save(affiliate);
         Offer offer = getOfferManager().getAffiliateOffer();
-        getCouponService().createCoupon(affiliate.getCode(), null, null, 0L, offer, affiliate.getUser(), false);
+	    affiliate.setOffer(offer);
+        getCouponService().createCoupon(affiliate.getCode(), null, null, 0L, offer, affiliate.getUser(), false, EnumCouponType.AFFILIATE.asCouponType());
 
         getEmailManager().affiliateSignupEmail(affiliate.getUser().getEmail(), affiliate.getUser().getName());
         return affiliate;
@@ -92,7 +102,7 @@ public class AffiliateManager {
         return getAffilateService().getAffilateByUser(user);
     }
 
-    public Affiliate userToAffiliate(User user, String websiteName) throws HealthkartSignupException {
+    public Affiliate  userToAffiliate(User user, String websiteName, Long affiliateMode, Long affiliateType) throws HealthkartSignupException {
         if (getAffilateService().getAffiliateByUserId(user.getId()) != null) {
             throw new HealthkartSignupException("User already exists by this id/email");
         }
@@ -103,42 +113,27 @@ public class AffiliateManager {
         getUserService().save(user);
         affiliate.setUser(user);
         affiliate.setWebsiteName(websiteName);
-        String code = createCode(affiliate.getUser());
+	    affiliate.setAffiliateMode(affiliateMode);
+	    affiliate.setAffiliateType(affiliateType);
+	    affiliate.setValidDays(AffiliateConstants.affiliateExpiryDays);
+	    affiliate.setWeeklyCouponLimit(AffiliateConstants.weeklyCouponLimit);
+	    affiliate.setAffiliateStatus(EnumAffiliateStatus.Unverified.asAffiliateStatus());
+	    String code = createCode(affiliate.getUser());
         while (getCouponService().findByCode(code) != null) {
             code = createCode(affiliate.getUser());
         }
         affiliate.setCode(code);
         getAffilateService().save(affiliate);
         Offer offer = getOfferManager().getAffiliateOffer();
-        getCouponService().createCoupon(affiliate.getCode(), null, null, 0L, offer, affiliate.getUser(), false);
+	    affiliate.setOffer(offer);
+	    getCouponService().createCoupon(affiliate.getCode(), null, null, 0L, offer, affiliate.getUser(), false, EnumCouponType.AFFILIATE.asCouponType());
         getEmailManager().affiliateSignupEmail(user.getEmail(), user.getName());
         return affiliate;
     }
 
-    // NEW FUNCTION ADDED BECAUSE THE DATABASE ENTRY CHANGED WITH NEGATIVE VALUES WHEN AMOUNT IS PAID
-    // public Double getAmountInAccount(Affiliate affiliate) {
-    // Double affiliateAccountAmount = 0D;
-    // List<AffiliateTxn> affiliateTxnList = getAffiliateTxnDao().getTxnListByAffiliate(affiliate);
-    // for (AffiliateTxn affiliateTxn : affiliateTxnList) {
-    // if (affiliateTxn.getAffiliateTxnType() ==
-    // affiliateTxnTypeDaoProvider.get().find(EnumAffiliateTxnType.ADD.getId())) {
-    // affiliateAccountAmount += affiliateTxn.getAmount();
-    // } else if (affiliateTxn.getAffiliateTxnType() ==
-    // affiliateTxnTypeDaoProvider.get().find(EnumAffiliateTxnType.SENT.getId())) {
-    // // to handle a case if account balance is negative and we still pay him for some reason
-    // if (affiliateAccountAmount >= 0) {
-    // affiliateAccountAmount -= affiliateTxn.getAmount();
-    // } else {
-    // affiliateAccountAmount += affiliateTxn.getAmount();
-    // }
-    // }
-    // }
-    // return affiliateAccountAmount;
-    // }
-
-    public Double getAmountInAccount(Affiliate affiliate) {
+    public Double getAmountInAccount(Affiliate affiliate, Date startDate, Date endDate) {
         Double affiliateAccountAmount = 0D;
-        affiliateAccountAmount = getAffiliateTxnDao().getAmountInAccount(affiliate);
+        affiliateAccountAmount = getAffiliateTxnDao().getAmountInAccount(affiliate, startDate, endDate);
         return affiliateAccountAmount;
     }
 
@@ -165,13 +160,20 @@ public class AffiliateManager {
             user.getRoles().add(getRoleService().getRoleByName(RoleConstants.HK_AFFILIATE));
             user = getUserService().save(user);
             Affiliate affiliate = getAffilateService().getAffilateByUser(user);
+	        affiliate.setAffiliateStatus(EnumAffiliateStatus.Verified.asAffiliateStatus());
             getAffiliateCategoryCommissionDao().insertCategoryCommissionsAffiliateWise(affiliate);
             getAffilateService().save(affiliate);
             getEmailManager().affiliateVerfiedEmail(user.getEmail(), user.getName(), affiliate.getCode(), customMessage);
         }
     }
 
-    public UserService getUserService() {
+	public void rejectAffiliate(User user) {
+			Affiliate affiliate = getAffilateService().getAffilateByUser(user);
+			affiliate.setAffiliateStatus(EnumAffiliateStatus.Rejected.asAffiliateStatus());
+			getAffilateService().save(affiliate);
+	}
+
+	public UserService getUserService() {
         return userService;
     }
 

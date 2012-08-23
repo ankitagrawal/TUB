@@ -1,108 +1,122 @@
 package com.hk.impl.dao.affiliate;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.stereotype.Repository;
-
 import com.akube.framework.dao.Page;
-import com.hk.constants.EnumAffiliateTxnType;
+import com.hk.constants.affiliate.EnumAffiliateTxnType;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.affiliate.AffiliateTxn;
 import com.hk.domain.affiliate.AffiliateTxnType;
 import com.hk.domain.order.Order;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.affiliate.AffiliateTxnDao;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Repository
 public class AffiliateTxnDaoImpl extends BaseDaoImpl implements AffiliateTxnDao {
 
-    @SuppressWarnings("unchecked")
-    public List<AffiliateTxn> getTxnListByAffiliate(Affiliate affiliate) {
-        String queryString = "from AffiliateTxn a where a.affiliate=:affiliate";
-        return findByNamedParams(queryString, new String[] { "affiliate" }, new Object[] { affiliate });
-    }
+	@SuppressWarnings("unchecked")
+	public List<AffiliateTxn> getTxnListByAffiliate(Affiliate affiliate) {
+		String queryString = "from AffiliateTxn a where a.affiliate=:affiliate";
+		return findByNamedParams(queryString, new String[]{"affiliate"}, new Object[]{affiliate});
+	}
 
-    public AffiliateTxn getTxnByOrder(Order order) {
-        String queryString = "from AffiliateTxn aT where aT.order =:order";
-        return (AffiliateTxn) findUniqueByNamedParams(queryString, new String[] { "order" }, new Object[] { order });
-    }
+	public AffiliateTxn getTxnByOrder(Order order) {
+		String queryString = "from AffiliateTxn aT where aT.order =:order";
+		return (AffiliateTxn) findUniqueByNamedParams(queryString, new String[]{"order"}, new Object[]{order});
+	}
 
-    public AffiliateTxn saveTxn(Affiliate affiliate, Double amountToAdd, AffiliateTxnType affiliateTxnType, Order order) {
-        AffiliateTxn affiliateTxn = new AffiliateTxn();
-        affiliateTxn.setAffiliate(affiliate);
-        if (affiliateTxnType.getId() == 10L) {
-            affiliateTxn.setAmount(amountToAdd);
-        } else if (affiliateTxnType.getId() == 20L) {
-            affiliateTxn.setAmount(amountToAdd * -1);
-        }
-        affiliateTxn.setAffiliateTxnType(affiliateTxnType);
-        affiliateTxn.setOrder(order);
-        affiliateTxn.setDate(new Date());
-        return (AffiliateTxn) save(affiliateTxn);
-    }
+	public AffiliateTxn saveTxn(Affiliate affiliate, Double amountToAdd, AffiliateTxnType affiliateTxnType, Order order) {
+		AffiliateTxn affiliateTxn = new AffiliateTxn();
+		affiliateTxn.setAffiliate(affiliate);
+		if (affiliateTxnType.getId().equals(EnumAffiliateTxnType.PENDING.getId())) {
+			affiliateTxn.setAmount(amountToAdd);
+		} else if (affiliateTxnType.getId().equals(EnumAffiliateTxnType.SENT.getId())) {
+			affiliateTxn.setAmount(amountToAdd * -1);
+		}
+		affiliateTxn.setAffiliateTxnType(affiliateTxnType);
+		affiliateTxn.setOrder(order);
+		affiliateTxn.setDate(new Date());
+		return (AffiliateTxn) save(affiliateTxn);
+	}
 
-    @SuppressWarnings("unchecked")
-    public Page getReferredOrderListByAffiliate(Affiliate affiliate, Date startDate, Date endDate, int pageNo, int perPage) {
+	@SuppressWarnings("unchecked")
+	public Page getReferredOrderListByAffiliate(Affiliate affiliate, Date startDate, Date endDate, int pageNo, int perPage) {
 
-        List<Long> applicableTxnTypes = new ArrayList<Long>();
-        applicableTxnTypes.add(EnumAffiliateTxnType.ADD.getId());
-        applicableTxnTypes.add(EnumAffiliateTxnType.ORDER_CANCELLED.getId());
+		List<Long> applicableTxnTypes = new ArrayList<Long>();
+		applicableTxnTypes.add(EnumAffiliateTxnType.ADD.getId());
+		applicableTxnTypes.add(EnumAffiliateTxnType.ORDER_CANCELLED.getId());
 
-        DetachedCriteria applicableTxnCriteria = DetachedCriteria.forClass(AffiliateTxnType.class);
-        applicableTxnCriteria.add(Restrictions.in("id", applicableTxnTypes));
-        List<AffiliateTxnType> applicableTxns = findByCriteria(applicableTxnCriteria);
+		DetachedCriteria applicableTxnCriteria = DetachedCriteria.forClass(AffiliateTxnType.class);
+		applicableTxnCriteria.add(Restrictions.in("id", applicableTxnTypes));
+		List<AffiliateTxnType> applicableTxns = findByCriteria(applicableTxnCriteria);
 
-        String hqlQuery = "select id from AffiliateTxn at where at.affiliate=:affiliate and "
-                + "at.affiliateTxnType in (:applicableTxns)and at.date >= :startDate and at.date <= :endDate";
+		String hqlQuery = "select id from AffiliateTxn at where at.affiliate=:affiliate and "
+				+ "at.affiliateTxnType in (:applicableTxns)and at.date >= :startDate and at.date <= :endDate";
 
-        List<Long> affiliateTxns = findByNamedParams(hqlQuery, new String[] { "affiliate", "applicableTxns", "startDate", "endDate" }, new Object[] {
-                affiliate,
-                applicableTxns,
-                startDate,
-                endDate });
+		List<Long> affiliateTxns = findByNamedParams(hqlQuery, new String[]{"affiliate", "applicableTxns", "startDate", "endDate"}, new Object[]{
+				affiliate,
+				applicableTxns,
+				startDate,
+				endDate});
 
-        DetachedCriteria criteria = DetachedCriteria.forClass(AffiliateTxn.class);
-        criteria.add(Restrictions.in("id", affiliateTxns));
+		DetachedCriteria criteria = DetachedCriteria.forClass(AffiliateTxn.class);
+		criteria.add(Restrictions.in("id", affiliateTxns));
 
-        return list(criteria, pageNo, perPage);
-    }
+		return list(criteria, pageNo, perPage);
+	}
 
-    public long getReferredOrdersCountByAffiliate(Affiliate affiliate, Date startDate, Date endDate) {
-        List<AffiliateTxnType> applicableTxns = new ArrayList<AffiliateTxnType>();
-        applicableTxns.add(get(AffiliateTxnType.class, EnumAffiliateTxnType.ADD.getId()));
+	public long getReferredOrdersCountByAffiliate(Affiliate affiliate, Date startDate, Date endDate) {
+		List<AffiliateTxnType> applicableTxns = new ArrayList<AffiliateTxnType>();
+		applicableTxns.add(get(AffiliateTxnType.class, EnumAffiliateTxnType.ADD.getId()));
 
-        String queryString = "select count(at.id) from AffiliateTxn at where at.affiliate=:affiliate and at.affiliateTxnType in (:applicableTxns)and at.date >= :startDate and at.date <= :endDate";
+		String queryString = "select count(at.id) from AffiliateTxn at where at.affiliate=:affiliate and at.affiliateTxnType in (:applicableTxns)and at.date >= :startDate and at.date <= :endDate";
 
-        return countByNamedParams(queryString, new String[] { "affiliate", "applicableTxns", "startDate", "endDate" },
-                new Object[] { affiliate, applicableTxns, startDate, endDate });
-    }
+		return countByNamedParams(queryString, new String[]{"affiliate", "applicableTxns", "startDate", "endDate"},
+				new Object[]{affiliate, applicableTxns, startDate, endDate});
+	}
 
-    @SuppressWarnings("unchecked")
-    public Double getAmountInAccount(Affiliate affiliate) {
-        List<Long> applicableTxnTypes = new ArrayList<Long>();
-        applicableTxnTypes.add(EnumAffiliateTxnType.ADD.getId());
-        applicableTxnTypes.add(EnumAffiliateTxnType.SENT.getId());
+	@SuppressWarnings("unchecked")
+	public Double getAmountInAccount(Affiliate affiliate, Date startDate, Date endDate) {
+		List<Long> applicableTxnTypes = new ArrayList<Long>();
+		applicableTxnTypes.add(EnumAffiliateTxnType.ADD.getId());
+		applicableTxnTypes.add(EnumAffiliateTxnType.SENT.getId());
 
-        DetachedCriteria applicableTxnCriteria = DetachedCriteria.forClass(AffiliateTxnType.class);
-        applicableTxnCriteria.add(Restrictions.in("id", applicableTxnTypes));
-        List<AffiliateTxnType> applicableTxns = findByCriteria(applicableTxnCriteria);
+		DetachedCriteria applicableTxnCriteria = DetachedCriteria.forClass(AffiliateTxnType.class);
+		applicableTxnCriteria.add(Restrictions.in("id", applicableTxnTypes));
+		List<AffiliateTxnType> applicableTxns = findByCriteria(applicableTxnCriteria);
 
-        String queryString = "select sum(at.amount) from AffiliateTxn at where at.affiliate =:affiliate and at.affiliateTxnType in (:applicableTxns)";
-        Double ammountInAccount = (Double) findUniqueByNamedParams(queryString, new String[] { "affiliate", "applicableTxns" }, new Object[] {
-                affiliate,
-                applicableTxns });
+		Double ammountInAccount = 0D;
 
-        /*
-         * ammountInAccount = (Double) getSession().createQuery( "").setParameterList("", ).setParameter("affiliate",
-         * affiliate).uniqueResult();
-         */
-        if (ammountInAccount == null) {
-            ammountInAccount = 0.0;
-        }
-        return ammountInAccount;
-    }
+		if (startDate == null || endDate == null) {
+			String queryString = "select sum(at.amount) from AffiliateTxn at where at.affiliate =:affiliate and at.affiliateTxnType in (:applicableTxns)";
+			ammountInAccount = (Double) findUniqueByNamedParams(queryString, new String[]{"affiliate", "applicableTxns"}, new Object[]{
+					affiliate,
+					applicableTxns});
+		} else {
+			String queryString = "select sum(at.amount) from AffiliateTxn at where at.affiliate =:affiliate and at.affiliateTxnType in (:applicableTxns) and at.date >= :startDate and at.date <= :endDate";
+			ammountInAccount = (Double) findUniqueByNamedParams(queryString, new String[]{"affiliate", "applicableTxns", "startDate", "endDate"}, new Object[]{
+					affiliate,
+					applicableTxns, startDate, endDate});
+		}
+		if (ammountInAccount == null) {
+			ammountInAccount = 0.0;
+		}
+		return ammountInAccount;
+	}
+
+	@Transactional
+	public void approvePendingAffiliateTxn(Affiliate affiliate, Order order) {
+		String queryString = "from AffiliateTxn aT where aT.order =:order and aT.affiliate = :affiliate and aT.affiliateTxnTypeId =:affiliateTxnTypeId ";
+		AffiliateTxn affiliateTxn = (AffiliateTxn) findUniqueByNamedParams(queryString, new String[]{"order", "affiliate", "affiliateTxnTypeId"}, new Object[]{order, affiliate, EnumAffiliateTxnType.PENDING.getId()});
+		if (affiliateTxn != null) {
+			affiliateTxn.setAffiliateTxnType(EnumAffiliateTxnType.ADD.asAffiliateTxnType());
+			save(affiliateTxn);
+		}
+	}
 }

@@ -56,7 +56,11 @@ public class Coupon implements java.io.Serializable {
   @JoinColumn(name = "referrer_user_id", nullable = true)
   private User referrerUser;
 
-  @Temporal(TemporalType.TIMESTAMP)
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "coupon_type_id", nullable = true)
+	private CouponType couponType;
+
+	@Temporal(TemporalType.TIMESTAMP)
   @Column(name = "create_date", nullable = false, length = 19)
   private Date createDate;
 
@@ -153,6 +157,14 @@ public class Coupon implements java.io.Serializable {
   public void setComplimentaryCoupon(String complimentaryCoupon) {
     this.complimentaryCoupon = complimentaryCoupon;
   }
+
+	public CouponType getCouponType() {
+		return couponType;
+	}
+
+	public void setCouponType(CouponType couponType) {
+		this.couponType = couponType;
+	}
 }
 
 
