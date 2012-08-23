@@ -78,10 +78,15 @@ public class RunSheetServiceImpl implements RunSheetService {
     }
 
     public Runsheet markAllConsignmentsAsDelivered(Runsheet runsheet){
+        List<Consignment> consignmentListWithChangedStatuses = new ArrayList<Consignment>();
         Set<Consignment> consignments = runsheet.getConsignments();
         for (Consignment consignment : consignments){
-            consignment.setConsignmentStatus(runsheetDao.get(ConsignmentStatus.class, EnumConsignmentStatus.ShipmentDelivered.getId()));
+            if(!consignment.getConsignmentStatus().getStatus().equals(EnumConsignmentStatus.ShipmentDelivered.getStatus())){
+                consignmentListWithChangedStatuses.add(consignment);
+                consignment.setConsignmentStatus(runsheetDao.get(ConsignmentStatus.class, EnumConsignmentStatus.ShipmentDelivered.getId()));
+            }
         }
+        updateConsignmentTrackingForRunsheet(consignmentListWithChangedStatuses, userService.getLoggedInUser());
         runsheet.setConsignments(consignments);
         return runsheet;
     }
@@ -99,6 +104,7 @@ public class RunSheetServiceImpl implements RunSheetService {
         Hub destinationHub = null;
         List<ConsignmentTracking> consignmentTrackingList = new ArrayList<ConsignmentTracking>();
         for (Consignment consignmentObj : changedConsignmentsList) {
+            if(consignmentObj != null){
                 consignmentLifecycleStatusId = HKDeliveryUtil.getLifcycleStatusIdFromConsignmentStatus(consignmentObj.getConsignmentStatus().getStatus());
                 ConsignmentLifecycleStatus consignmentLifecycleStatus = runsheetDao.get(ConsignmentLifecycleStatus.class, consignmentLifecycleStatusId);
                 if(consignmentObj.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentDelivered.getId())){
@@ -114,7 +120,8 @@ public class RunSheetServiceImpl implements RunSheetService {
                     destinationHub = consignmentObj.getHub();
                 }
                 consignmentTrackingList.add(consignmentService.createConsignmentTracking(sourceHub, destinationHub, user, consignmentObj, consignmentLifecycleStatus));
-        }
+            }
+            }
         if(consignmentTrackingList.size() > 0){
             consignmentService.saveConsignmentTracking(consignmentTrackingList);
         }
@@ -124,7 +131,8 @@ public class RunSheetServiceImpl implements RunSheetService {
     public Runsheet updateExpectedAmountForClosingRunsheet(Runsheet runsheet) {
         Double expectedCollection = 0.0;
         for(Consignment consignment : runsheet.getConsignments()){
-            if(consignment.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentDelivered.getId())){
+            if(consignment.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentDelivered.getId()) &&
+               consignment.getPaymentMode().equals(HKDeliveryConstants.COD)){
                 expectedCollection += consignment.getAmount();
             }
         }

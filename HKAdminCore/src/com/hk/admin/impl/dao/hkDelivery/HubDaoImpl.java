@@ -16,7 +16,7 @@ public class HubDaoImpl extends BaseDaoImpl implements HubDao {
     public List<Hub> getAllHubs() {
         List<Hub> validHubs = new ArrayList<Hub>();
         for (Hub hubObj : getAll(Hub.class)) {
-            if (hubObj.getId().equals(HKDeliveryConstants.HEALTHKART_HUB_ID) || hubObj.getId().equals(HKDeliveryConstants.DELIVERY_HUB_ID)) {
+            if (hubObj.getName().equals(HKDeliveryConstants.HEALTHKART_HUB) || hubObj.getName().equals(HKDeliveryConstants.DELIVERY_HUB)) {
                 continue;
             }
             validHubs.add(hubObj);
