@@ -18,7 +18,7 @@
       SubscriptionProduct subscriptionProduct = (SubscriptionProduct) pageContext.getAttribute("subscriptionProduct");
       pageContext.setAttribute("subscriptionProduct", subscriptionProduct);
   %>
-<div class='variants'>
+<div class='variants' itemprop="offerDetails" itemscope itemtype="http://data-vocabulary.org/Offer-aggregate">
     <span style="font-style: italic; font-size: 16px;;"> ${hk:getNonDeletedVariants(product)}</span>
     variants
     available.

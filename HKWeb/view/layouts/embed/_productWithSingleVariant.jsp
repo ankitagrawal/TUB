@@ -19,7 +19,8 @@
     pageContext.setAttribute("eyeGlass", eyeGlass);
 
   %>
-  <div class="buy_prod">
+  <div class="buy_prod" itemprop="offerDetails" itemscope itemtype="http://data-vocabulary.org/Offer">
+    <meta itemprop="currency" content="INR" />
     <div class="left_col">
       <div class='prices' style="font-size: 14px;">
         <c:if test="${product.productVariants[0].discountPercent > 0}">
@@ -31,9 +32,9 @@
           <div class='hk' style="font-size: 16px;">
             Our Price
                 <span class='num' style="font-size: 20px;">
-                  Rs <fmt:formatNumber
+                  Rs <span itemprop="price"><fmt:formatNumber
                     value="${hk:getApplicableOfferPrice(product.productVariants[0])+ hk:getPostpaidAmount(product.productVariants[0])}"
-                    maxFractionDigits="0"/>
+                    maxFractionDigits="0"/></span>
                 </span>
           </div>
           <div class="special green" style="font-size: 14px;">
@@ -47,9 +48,9 @@
           <div class='hk' style="font-size: 16px;">
             Our Price
                 <span class='num' style="font-size: 20px;">
-                  Rs <fmt:formatNumber
+                  Rs <span itemprop="price"><fmt:formatNumber
                     value="${hk:getApplicableOfferPrice(product.productVariants[0]) + hk:getPostpaidAmount(product.productVariants[0])}"
-                    maxFractionDigits="0"/>
+                    maxFractionDigits="0"/></span>
                 </span>
           </div>
         </c:if>
