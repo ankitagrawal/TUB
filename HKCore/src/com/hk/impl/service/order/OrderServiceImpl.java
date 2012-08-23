@@ -25,6 +25,7 @@ import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.core.search.OrderSearchCriteria;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.catalog.product.Product;
 import com.hk.domain.core.OrderLifecycleActivity;
 import com.hk.domain.core.OrderStatus;
 import com.hk.domain.order.CartLineItem;
@@ -92,6 +93,7 @@ public class OrderServiceImpl implements OrderService {
     private OrderLoggingService orderLoggingService;
     @Autowired
     private OrderSplitterService orderSplitterService;
+	
 
 
 
@@ -527,5 +529,21 @@ public class OrderServiceImpl implements OrderService {
     public void setOrderLoggingService(OrderLoggingService orderLoggingService) {
         this.orderLoggingService = orderLoggingService;
     }
+
+	public boolean isCODAllowed(Order order) {
+		CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
+		Set<CartLineItem> productCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).filter();
+		for (CartLineItem productCartLineItem : productCartLineItems) {
+
+			ProductVariant productVariant = productCartLineItem.getProductVariant();
+			if (productVariant != null && productVariant.getProduct() != null) {
+				Product product = productVariant.getProduct();
+				if (product.isCodAllowed() != null && !product.isCodAllowed()) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
 
 }

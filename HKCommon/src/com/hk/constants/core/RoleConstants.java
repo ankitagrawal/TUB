@@ -30,6 +30,7 @@ public class RoleConstants {
     public static final String CATEGORY_MANAGER              = "CATEGORY_MANAGER";
     public static final String SUPPLIER                      = "SUPPLIER";
     public static final String FINANCE                       = "FINANCE";
+    public static final String HR                       = "HR";
     public static final String MARKETING                     = "MARKETING";
     public static final String TICKETADMIN                   = "TICKETADMIN";
     public static final String SITE_CONTENT_MANAGER          = "SITE_CONTENT_MANAGER";
@@ -59,4 +60,5 @@ public class RoleConstants {
 
     public static final String DEVELOPER                     = "DEVELOPER";
     public static final String HK_DELIVERY_GUY               = "HK_DELIVERY_GUY";
+    public static final String PAYMENT_MANAGER               = "PAYMENT_MANAGER";
 }

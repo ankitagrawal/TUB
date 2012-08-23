@@ -64,5 +64,7 @@ public interface OrderService {
     public ProductVariant getTopDealVariant(Order order);
 
     public Order findByGatewayOrderId(String gatewayOrderId);
-    
+
+	public boolean isCODAllowed(Order order);
+
 }

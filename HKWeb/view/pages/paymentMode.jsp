@@ -107,15 +107,12 @@
 <div class='left_controls tabs'>
     <ul>
         <li class='selected' id="tab1">Credit/Debit Cards</li>
-        <li id="tab3">Internet Banking</li>          
+        <li id="tab3">Internet Banking</li>
         <shiro:lacksRole name="<%=RoleConstants.COD_BLOCKED%>">
-
-
-            <c:if test="${(orderSummary.order.offerInstance.offer.paymentType != prePaidPaymentType)}">
+            <c:if test="${orderSummary.order.offerInstance.offer.paymentType != prePaidPaymentType}">
                 <li id="tab4" class="cod-mode">Cash on Delivery</li>
                 <li id="tab5">Cheque / Bank Deposit</li>
             </c:if>
-            
         </shiro:lacksRole>
         <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_ADMINS%>">
             <li id="tab6">Counter Cash</li>
@@ -184,19 +181,8 @@
     <c:if test="${orderSummary.order.offerInstance.offer.paymentType != prePaidPaymentType}">
         <div id="tabs_content4" class="tab_content" style="display: none;">
             <c:choose>
-                <c:when test="${(orderSummary.hideCod == true)}">
-                    <h4 style="text-align: center;">We are sorry</h4>
+                <c:when test="${orderSummary.codAllowed && hk:isCodAllowedOnOrder(orderSummary.order)}">
 
-                    <p>Cash on Delivery is not available for Ground Shipped items.
-                        <br/>
-                        We suggest you to choose pre-payment option and you will get <strong style="color:green">
-                            CASHBACK </strong> of <strong class='num' style="color:green"> <fmt:formatNumber
-                                value="${orderSummary.cashbackOnGroundshipped}" currencySymbol="Rs. "
-                                type="currency"/> </strong></p>
-                    <p><strong>And</strong></p>
-                    <p>Delivery may take 5-8 days</p>
-                </c:when>
-                <c:when test="${orderSummary.codAllowed}">
                     <div class="grid_5">
                         <h4>Order Total</h4>
                         <br />
@@ -246,25 +232,32 @@
                             given location for pick-up at all times.<br />
                         </p>
                     </s:form>
-                </c:when>        
+                </c:when>
+	            <c:otherwise>
+		            <h4 style="text-align: center;">We are sorry Cash on Delivery is not available for your order</h4>
+		            <c:if test="${!orderSummary.codAllowed}">
+			            <c:choose>
+				            <c:when test="${orderSummary.pricingDto.grandTotalPayable > codMinAmount && orderSummary.pricingDto.grandTotalPayable < codMaxAmount}">
+					            <p>COD is not available for your delivery
+					               location (Pincode : <strong>${orderSummary.order.address.pin}</strong>).
+						            <br/>
+					               We provide cash on delivery option for select PIN codes only.</p>
+				            </c:when>
+				            <c:otherwise>
+					            <p>The net payable is not in the range of <strong>Rs.
+							            ${codMinAmount} - Rs. ${codMaxAmount}</strong></p>
+				            </c:otherwise>
+			            </c:choose>
+		            </c:if>
 
-                <c:otherwise>
-                    <h4 style="text-align: center;">We are sorry</h4>
+		            <c:if test="${!hk:isCodAllowedOnOrder(orderSummary.order)}">
+			            <p>COD is not allowed on one of the products in your cart</p>
+		            </c:if>
+					<c:if test="${orderSummary.order.subscriptionOrder}">
+						<p>You have subscriptions in your cart</p>
+		            </c:if>
 
-                    <p><strong>Either</strong></p>
-
-                    <p>Cash on Delivery is not available for your delivery
-                        location (Pincode : <strong>${orderSummary.order.address.pin}</strong>).
-                        <br />
-                        We provide cash on delivery option for select PIN codes only.</p>
-
-                    <p><strong>OR</strong></p>
-
-                    <p>The net payable is not in the range of <strong>Rs.
-                            ${codMinAmount} - Rs. ${codMaxAmount}</strong></p>
-                    <p><strong>OR</strong></p>
-                    <p> you have subscriptions in your cart</p>
-                </c:otherwise>
+	            </c:otherwise>
             </c:choose></div>
         <div id="tabs_content5" class="tab_content" style="display: none;">
             <h2 class="offer">Payment Details</h2>

@@ -21,6 +21,7 @@ import com.hk.impl.dao.BaseDaoImpl;
 @Repository
 public class CityCourierTATDaoImpl extends BaseDaoImpl implements CityCourierTATDao {
 
+    @SuppressWarnings("unchecked")
     public CityCourierTAT getCityTatByCity(City city) {
         DetachedCriteria cityCourierTATCriteria = DetachedCriteria.forClass(CityCourierTAT.class);
         cityCourierTATCriteria.add(Restrictions.eq("city", city));

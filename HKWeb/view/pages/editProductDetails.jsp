@@ -37,6 +37,8 @@
           <li><label>Is JIT</label><s:checkbox name="product.jit"/></li>
           <li><label>Is Drop Shipping</label><s:checkbox name="product.dropShipping"/></li>  
            <li><label>Is Ground Shipping</label><s:checkbox name="product.groundShipping"/></li>
+          <li><label>Is COD Allowed</label><s:checkbox name="product.codAllowed"/></li>
+
           <li>
 
             <label>Select Manufacturer</label>
