@@ -50,7 +50,4 @@ public interface ConsignmentService {
 
     public HkdeliveryPaymentReconciliation saveHkdeliveryPaymentReconciliation(HkdeliveryPaymentReconciliation hkdeliveryPaymentReconciliation);
 
-    public boolean hasConsignmentStatusChanged(Consignment newConsignmentObject);
-
-    
 }

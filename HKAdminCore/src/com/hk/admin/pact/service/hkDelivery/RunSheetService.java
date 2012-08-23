@@ -17,6 +17,8 @@ public interface RunSheetService {
 
     public void saveRunSheet(Runsheet runsheet);
 
+    public void saveRunSheet(Runsheet runsheet, List<Consignment> changedConsignmentList);
+
     public Page searchRunsheet(Runsheet runsheet, Date startDate, Date endDate, RunsheetStatus runsheetStatus, User agent, Hub hub, int pageNo, int perPage);
 
     public boolean isRunsheetClosable(Runsheet runsheet);
@@ -25,5 +27,5 @@ public interface RunSheetService {
 
     public boolean agentHasOpenRunsheet(User agent);
 
-    public void updateConsignmentTrackingForRunsheet(Runsheet runsheet, User user);
+    public void updateConsignmentTrackingForRunsheet(List<Consignment> changedConsignmentsList, User user);
 }

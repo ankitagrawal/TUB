@@ -180,12 +180,4 @@ public class ConsignmentServiceImpl implements ConsignmentService {
         consignmentDao.saveOrUpdate(hkdeliveryPaymentReconciliation);
         return hkdeliveryPaymentReconciliation;
     }
-
-    @Override
-    public boolean hasConsignmentStatusChanged(Consignment newConsignmentObject){
-        if(consignmentDao.get(Consignment.class, newConsignmentObject.getId()).getConsignmentStatus().equals(newConsignmentObject.getConsignmentStatus())){
-            return false;
-        }
-        return true;
-    }
 }

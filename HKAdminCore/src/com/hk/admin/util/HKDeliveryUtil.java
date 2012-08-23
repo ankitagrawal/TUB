@@ -1,8 +1,5 @@
 package com.hk.admin.util;
 
-import com.hk.domain.hkDelivery.ConsignmentStatus;
-import com.hk.domain.hkDelivery.ConsignmentLifecycleStatus;
-import com.hk.pact.dao.BaseDao;
 import com.hk.constants.hkDelivery.EnumConsignmentStatus;
 import com.hk.constants.hkDelivery.EnumConsignmentLifecycleStatus;
 
@@ -33,7 +30,11 @@ public class HKDeliveryUtil {
         consignmentStatusMap.put(EnumConsignmentStatus.ShipmentOnHold.getStatus(), EnumConsignmentLifecycleStatus.Hold.getId());
         consignmentStatusMap.put(EnumConsignmentStatus.ShipmentDelivered.getStatus(), EnumConsignmentLifecycleStatus.Delivered.getId());
         consignmentStatusMap.put(EnumConsignmentStatus.ShipmentDamaged.getStatus(), EnumConsignmentLifecycleStatus.Damaged.getId());
-        consignmentStatusMap.put(EnumConsignmentStatus.ShipmentRTO.getStatus(), EnumConsignmentLifecycleStatus.ReturnedToHub.getId());
+        consignmentStatusMap.put(EnumConsignmentStatus.ShipmentRTH.getStatus(), EnumConsignmentLifecycleStatus.ReturnedToHub.getId());
+
+        consignmentStatusMap.put(EnumConsignmentStatus.ShipmentOnHoldByCustomer.getStatus(), EnumConsignmentLifecycleStatus.OnHoldByCustomer.getId());
+        consignmentStatusMap.put(EnumConsignmentStatus.ShipmentReceivedAtHub.getStatus(), EnumConsignmentLifecycleStatus.ReceivedAtHub.getId());
+        consignmentStatusMap.put(EnumConsignmentStatus.ShipmentLost.getStatus(), EnumConsignmentLifecycleStatus.ConsignmentLost.getId());
     }
 
     public static Long getLifcycleStatusIdFromConsignmentStatus(String consignmentStatus){

@@ -16,8 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.courier.Courier;
-import com.hk.domain.courier.Awb;
-import com.hk.domain.courier.Shipment;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.UserService;
 import com.hk.admin.pact.service.courier.AwbService;
@@ -28,13 +26,11 @@ import com.hk.admin.manager.HKDRunsheetManager;
 import com.hk.admin.util.HKDeliveryUtil;
 import com.hk.constants.core.Keys;
 import com.hk.constants.courier.EnumCourier;
-import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.hkDelivery.EnumRunsheetStatus;
 import com.hk.constants.hkDelivery.EnumConsignmentStatus;
 import com.hk.constants.hkDelivery.HKDeliveryConstants;
 import com.hk.constants.hkDelivery.EnumConsignmentLifecycleStatus;
-import com.hk.constants.payment.EnumPaymentMode;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -65,7 +61,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
     private         Integer               defaultPerPage                     = 20;
     private         Set<Consignment>      consignments;
     private         List<Consignment>     runsheetConsignments;
-    private         List<Long>            changedConsignmentIdsList        = new ArrayList<Long>();
+    private         List<Consignment> changedConsignmentList = new ArrayList<Consignment>();
     @Autowired
     ShippingOrderService                  shippingOrderService;
     @Autowired
@@ -114,7 +110,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
                 return new ForwardResolution(HKDRunsheetAction.class,"editRunsheet").addParameter("runsheet", runsheet.getId());
             }
 
-            runsheetService.saveRunSheet(runsheet);
+            runsheetService.saveRunSheet(runsheet, changedConsignmentList);
             addRedirectAlertMessage(new SimpleMessage("Runsheet saved"));
             return new RedirectResolution(HKDRunsheetAction.class, "editRunsheet").addParameter("runsheet", runsheet.getId());
         }
@@ -127,7 +123,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
     public Resolution markAllDelivered(){
         if(runsheet != null){
             runsheetService.markAllConsignmentsAsDelivered(runsheet);
-            runsheetService.saveRunSheet(runsheet);
+            runsheetService.saveRunSheet(runsheet, changedConsignmentList);
         }
         return new RedirectResolution(HKDRunsheetAction.class, "editRunsheet").addParameter("runsheet", runsheet.getId());
     }
@@ -141,7 +137,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
                 addRedirectAlertMessage(new SimpleMessage("cannot close runsheet with consignment status out for delivery"));
                 return new ForwardResolution(HKDRunsheetAction.class, "editRunsheet").addParameter("runsheet", runsheet.getId());
             }
-            runsheetService.saveRunSheet(runsheet);
+            runsheetService.saveRunSheet(runsheet, changedConsignmentList);
 
         }
         return new RedirectResolution(HKDRunsheetAction.class, "editRunsheet").addParameter("runsheet", runsheet.getId());
@@ -431,11 +427,11 @@ public class HKDRunsheetAction extends BasePaginatedAction {
         this.runSheetDao = runSheetDao;
     }
 
-    public List<Long> getChangedConsignmentIdsList() {
-        return changedConsignmentIdsList;
+    public List<Consignment> getChangedConsignmentList() {
+        return changedConsignmentList;
     }
 
-    public void setChangedConsignmentIdsList(List<Long> changedConsignmentIdsList) {
-        this.changedConsignmentIdsList = changedConsignmentIdsList;
+    public void setChangedConsignmentList(List<Consignment> changedConsignmentList) {
+        this.changedConsignmentList = changedConsignmentList;
     }
 }
