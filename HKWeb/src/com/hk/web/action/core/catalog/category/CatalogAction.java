@@ -171,7 +171,6 @@ public class CatalogAction extends BasePaginatedAction {
 			productPage = solrManager.getCatalogResults(rootCategorySlug, smallestCategory, secondSmallestCategory, thirdSmallestCategory, brand, getCustomSortBy(), getCustomSortOrder(), getCustomStartRange(), getCustomEndRange(), getPageNo(), getPerPage(), preferredZone);
 			if (productPage != null) {
 				productList = productPage.getList();
-				productList = productService.getSortedByStock(productList);
 			}
 			category = categoryDao.getCategoryByName(smallestCategory);
 		} catch (Exception e) {
@@ -227,7 +226,6 @@ public class CatalogAction extends BasePaginatedAction {
 				}
 				if (productPage != null) {
 					productList = productPage.getList();
-					productList = productService.getSortedByStock(productList);
 					for (Product product : productList) {
 						product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
 					}

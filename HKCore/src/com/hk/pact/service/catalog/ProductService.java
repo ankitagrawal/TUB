@@ -102,7 +102,5 @@ public interface ProductService {
 
 	public boolean isProductOutOfStock(Product product);
 
-	public List<Product> getSortedByStock(List<Product> productList);
-
     SolrProduct createSolrProduct(Product pr);
 }

@@ -474,25 +474,6 @@ public class ProductServiceImpl implements ProductService {
         }
         return solrProducts;
     }
-
-	public List<Product> getSortedByStock(List<Product> productList) {
-		List<Product> outOfStockproductList = new ArrayList<Product>();
-		for (Product product : productList) {
-			if (product.getProductVariants() != null && !product.getProductVariants().isEmpty()) {
-				if (isProductOutOfStock(product)) {
-					product.setOutOfStock(true);
-					outOfStockproductList.add(product);
-				}
-			} else if (!isComboInStock(product.getId())) {
-				product.setOutOfStock(true);
-				outOfStockproductList.add(product);
-				//productList.remove(product);
-			}
-		}
-		productList.removeAll(outOfStockproductList);
-		productList.addAll(outOfStockproductList);
-		return productList;
-	}
 }
 
 
