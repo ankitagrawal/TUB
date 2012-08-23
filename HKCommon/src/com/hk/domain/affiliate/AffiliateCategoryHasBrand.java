@@ -10,7 +10,7 @@ import javax.persistence.*;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name = "brands_to_audit")
+@Table(name = "affiliate_category_has_brand")
 public class AffiliateCategoryHasBrand implements java.io.Serializable {
 
 	@Id

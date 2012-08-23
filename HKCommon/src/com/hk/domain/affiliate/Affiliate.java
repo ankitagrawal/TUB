@@ -39,10 +39,10 @@ public class Affiliate {
 	@Column(name = "api_key")
 	private String apiKey;
 
-	@Column(name = "main_address_id")
+	@Column(name = "affiliate_type")
 	Long affiliateType;
 
-	@Column(name = "main_address_id")
+	@Column(name = "affiliate_mode")
 	Long affiliateMode;
 
 	@Column(name = "main_address_id")

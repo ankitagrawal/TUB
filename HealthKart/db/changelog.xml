@@ -8449,4 +8449,102 @@
     <changeSet author="Ajeet (generated)" id="1345455498259-2">
         <addNotNullConstraint columnDataType="TINYINT" columnName="cod_allowed" defaultNullValue="1" tableName="product"/>
     </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-1">
+        <createTable tableName="affiliate_category_has_brand">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="affiliate_category_name_id" type="VARCHAR(80)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="brand" type="VARCHAR(80)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-2">
+        <createTable tableName="affiliate_status">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-3">
+        <createTable tableName="coupon_type">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-4">
+        <addColumn tableName="affiliate">
+            <column name="affiliate_mode" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-5">
+        <addColumn tableName="affiliate">
+            <column name="affiliate_status_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-6">
+        <addColumn tableName="affiliate">
+            <column name="affiliate_type" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-7">
+        <addColumn tableName="affiliate">
+            <column name="api_key" type="VARCHAR(100)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-8">
+        <addColumn tableName="affiliate">
+            <column name="bank_account_number" type="VARCHAR(45)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-9">
+        <addColumn tableName="affiliate">
+            <column name="ifsc_code" type="VARCHAR(45)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-10">
+        <addColumn tableName="affiliate">
+            <column name="offer_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-11">
+        <addColumn tableName="affiliate">
+            <column name="valid_days" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-12">
+        <addColumn tableName="affiliate">
+            <column name="weekly_coupon_limit" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-13">
+        <addColumn tableName="check_details">
+            <column name="tds" type="DECIMAL(8,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-14">
+        <addColumn tableName="coupon">
+            <column name="coupon_type_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-15">
+        <addForeignKeyConstraint baseColumnNames="affiliate_status_id" baseTableName="affiliate" constraintName="fk_affiliate_affiliate_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="affiliate_status" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-16">
+        <addForeignKeyConstraint baseColumnNames="offer_id" baseTableName="affiliate" constraintName="fk_affiliate_offer1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="offer" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-17">
+        <addForeignKeyConstraint baseColumnNames="affiliate_category_name_id" baseTableName="affiliate_category_has_brand" constraintName="fk_affiliate_category_has_brand_affiliate_category1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="affiliate_category_name" referencedTableName="affiliate_category" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1345723398289-18">
+        <addForeignKeyConstraint baseColumnNames="coupon_type_id" baseTableName="coupon" constraintName="fk_coupon_coupon_type1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="coupon_type" referencesUniqueColumn="false"/>
+    </changeSet>
 </databaseChangeLog>

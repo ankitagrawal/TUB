@@ -1,5 +1,6 @@
-<%@ page import="com.hk.pact.dao.MasterDataDao" %>
-<%@ page import="com.akube.framework.util.FormatUtils" %>
+<%@ page import="com.hk.constants.affiliate.EnumAffiliateMode" %>
+<%@ page import="com.hk.constants.affiliate.EnumAffiliateType" %>
+<%@ page import="com.hk.constants.affiliate.EnumAffiliateStatus" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.core.affiliate.VerifyAffiliateAction" var="verifyAction"/>
@@ -10,36 +11,30 @@
               <legend>Search Affiliates</legend>
               <ul>
                   <div class="grouped">
-                      <label>Name:</label><s:text name="name" style="width:150px"/>
-                      &nbsp; &nbsp;
-                      <label>Email:</label><s:text name="email" style="width:150px"/>
-                      <li><label>BO Order ID</label> <s:text name="orderId" style="width: 100px;"/></li>
-                      <li><label>BO Gateway Order ID</label> <s:text name="gatewayOrderId"/></li>
-                      <li><label>Email ID</label> <s:text name="email"/></li>
-                      <li><label>Login ID</label> <s:text name="login"/></li>
-                      <li><label>Name</label> <s:text name="name"/></li>
-                      <li><label>Phone</label> <s:text name="phone"/></li>
-                      <li><label>Status</label><s:select name="orderStatus">
-                          <option value="">Any order status</option>
-                          <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="orderStatusList" value="id"
-                                                     label="name"/>
-                      </s:select></li>
-                      <li><label>Payment Mode</label><s:select name="paymentMode">
-                          <option value="">Any Payment Mode</option>
-                          <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="paymentModes" value="id"
-                                                     label="name"/>
-                      </s:select></li>
-                          <%--<li><label>Tracking ID</label> <s:text name="trackingId" style="width: 120px;"/></li>--%>
-                      <li>
-                          <label>Start
-                              date</label><s:text class="date_input" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
-                                                  name="startDate"/>
-                      </li>
-                      <li>
-                          <label>End
-                              date</label><s:text class="date_input" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
-                                                  name="endDate"/>
-                      </li>
+                      <div class='label'>Name</div>
+                      <s:text name="name" style="width:150px"/>
+                      <div class='label'>Email</div>
+                      <s:text name="email" style="width:150px"/>
+                      <div class='label'>Website</div>
+                      <s:text name="websiteName" style="width: 100px;"/>
+                      <div class='label'>Type</div>
+                      <s:select name="affiliateType">
+                          <c:forEach items="<%=EnumAffiliateType.getAllAffiliateTypes()%>" var="aType">
+                              <s:option value="${aType.id}">${aType.name}</s:option>
+                          </c:forEach>
+                      </s:select>
+                      <div class='label'>Mode</div>
+                      <s:select name="affiliateMode">
+                          <c:forEach items="<%=EnumAffiliateMode.getAllAffiliateModes()%>" var="aMode">
+                              <s:option value="${aMode.id}">${aMode.name}</s:option>
+                          </c:forEach>
+                      </s:select>
+                      <div class='label'>Status</div>
+                      <s:select name="affiliateMode">
+                          <c:forEach items="<%=EnumAffiliateStatus.getAllAffiliateStatus()%>" var="aStatus">
+                              <s:option value="${aStatus.id}">${aStatus.name}</s:option>
+                          </c:forEach>
+                      </s:select>
                   </div>
               </ul>
               <s:submit name="pre" value="Search"/>
