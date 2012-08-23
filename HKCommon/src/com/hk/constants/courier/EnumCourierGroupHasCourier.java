@@ -35,6 +35,7 @@ public enum EnumCourierGroupHasCourier {
                     EnumCourier.Quantium,
                     EnumCourier.Smile_EExpress,
                     EnumCourier.Safexpress,
+                    EnumCourier.Delhivery_Surface,
                     EnumCourier.Delhivery
             )
     ),;
