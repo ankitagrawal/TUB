@@ -183,7 +183,7 @@
             <c:choose>
                 <c:when test="${!orderSummary.groundShippingAllowed}">
                     <h4 style="text-align: center;">We are sorry Ground Shipping is not available for your pincode</h4>
-                 </c:when>
+                </c:when>
                 <c:when test="${orderSummary.codAllowed && hk:isCodAllowedOnOrder(orderSummary.order)}">
 
                     <div class="grid_5">
