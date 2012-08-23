@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.manager.SolrManager;
 import com.hk.web.action.HomeAction;
 
 @Component
@@ -20,11 +19,11 @@ public class DataIndexRefreshAction extends BaseAction {
     private static Logger logger = LoggerFactory.getLogger(DataIndexRefreshAction.class);
 
     @Autowired
-    ProductSearchService solrManager;
+    ProductSearchService productSearchService;
 
     public Resolution pre() {
         try{
-            solrManager.refreshDataIndexes();
+            productSearchService.refreshDataIndexes();
         }catch (SearchException ex){
             logger.error("Unable to refresh solr indexes");
         }

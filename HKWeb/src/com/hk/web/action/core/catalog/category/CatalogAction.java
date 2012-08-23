@@ -6,6 +6,11 @@ import java.util.*;
 
 import javax.servlet.http.Cookie;
 
+import com.hk.constants.catalog.SolrSchemaConstants;
+import com.hk.domain.search.SolrProduct;
+import com.hk.domain.search.*;
+import com.hk.dto.search.SearchResult;
+import com.hk.pact.service.search.ProductSearchService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
@@ -36,7 +41,6 @@ import com.hk.helper.MenuHelper;
 import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
 import com.hk.impl.dao.catalog.category.CategoryImageDaoImpl;
 import com.hk.manager.LinkManager;
-import com.hk.manager.SolrManager;
 import com.hk.manager.UserManager;
 import com.hk.pact.dao.catalog.combo.ComboDao;
 import com.hk.pact.dao.catalog.product.ProductDao;
@@ -114,7 +118,7 @@ public class CatalogAction extends BasePaginatedAction {
 	@Autowired
 	SeoManager seoManager;
 	@Autowired
-	SolrManager solrManager;
+    ProductSearchService productSearchService;
 	@Autowired
 	UserDao userDao;
 	@Autowired
@@ -168,11 +172,36 @@ public class CatalogAction extends BasePaginatedAction {
 				}
 				throw new Exception("Using filters. SOLR can't return results so hitting DB");
 			}
-			productPage = solrManager.getCatalogResults(rootCategorySlug, smallestCategory, secondSmallestCategory, thirdSmallestCategory, brand, getCustomSortBy(), getCustomSortOrder(), getCustomStartRange(), getCustomEndRange(), getPageNo(), getPerPage(), preferredZone);
-			if (productPage != null) {
-				productList = productPage.getList();
-			}
-			category = categoryDao.getCategoryByName(smallestCategory);
+            List<SearchFilter> categoryList = new ArrayList<SearchFilter>();
+            SearchFilter searchFilter = new SearchFilter(SolrSchemaConstants.category, rootCategorySlug);
+            categoryList.add(searchFilter);
+            searchFilter = new SearchFilter(SolrSchemaConstants.category, smallestCategory);
+            categoryList.add(searchFilter);
+            searchFilter = new SearchFilter(SolrSchemaConstants.category, secondSmallestCategory);
+            categoryList.add(searchFilter);
+            searchFilter = new SearchFilter(SolrSchemaConstants.category, thirdSmallestCategory);
+            categoryList.add(searchFilter);
+
+            SortFilter sortFilter = new SortFilter(getCustomSortBy(), getCustomSortOrder());
+            PaginationFilter paginationFilter = new PaginationFilter(getPageNo(), getPerPage());
+            RangeFilter rangeFilter = new RangeFilter(SolrSchemaConstants.hkPrice,getCustomStartRange(), getCustomEndRange());
+
+            SearchFilter brandFilter = new SearchFilter(SolrSchemaConstants.brand, brand);
+            List<SearchFilter> searchFilters = new ArrayList<SearchFilter>();
+            searchFilters.add(brandFilter);
+            SearchResult searchResult = productSearchService.getCatalogResults(categoryList, searchFilters, rangeFilter,paginationFilter,sortFilter);
+
+            List<Product> filteredProducts = trimListByDistance(searchResult.getSolrProducts(), preferredZone);
+            //Find out how many products have been filtered
+            int diff = 0;
+            long totalResultSize = searchResult.getResultSize();
+            //totalResultSize = filteredProducts.size();
+
+            productPage = new Page(filteredProducts, getPerPage(), getPageNo(), (int)totalResultSize);
+            if (productPage != null) {
+                productList = productPage.getList();
+            }
+            category = categoryDao.getCategoryByName(smallestCategory);
 		} catch (Exception e) {
 			logger.info("SOLR NOT WORKING, HITTING DB TO ACCESS DATA");
 			urlFragment = getContext().getRequest().getRequestURI().replaceAll(getContext().getRequest().getContextPath(), "");
@@ -302,7 +331,9 @@ public class CatalogAction extends BasePaginatedAction {
 				if (manufacturer != null && manufacturer.isAvailableAllOverIndia() != null && manufacturer.isAvailableAllOverIndia()) {
 					if (!cityFiltered.contains(product)) cityFiltered.add(product);
 				}
-			}
+			}else{
+                cityFiltered.add(product);
+            }
 		}
 		return cityFiltered;
 	}

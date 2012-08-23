@@ -26,7 +26,6 @@ import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.marketing.ProductReferrerConstants;
 import com.hk.domain.catalog.product.Product;
 import com.hk.manager.LinkManager;
-import com.hk.manager.SolrManager;
 import com.hk.pact.dao.catalog.product.ProductDao;
 import com.hk.util.ProductReferrerMapper;
 
@@ -45,7 +44,7 @@ public class SearchAction extends BasePaginatedAction {
   @Session(key = HealthkartConstants.Session.perPageCatalog) 
   private int perPage;
   @Autowired
-  ProductSearchService solrManager;
+  ProductSearchService productSearchService;
   @Autowired
   LinkManager linkManager;
 
@@ -53,7 +52,7 @@ public class SearchAction extends BasePaginatedAction {
 
   public Resolution search() throws SolrServerException, MalformedURLException {
     try {
-      SearchResult sr =  solrManager.getSearchResults(query, getPageNo(), getPerPage());
+      SearchResult sr =  productSearchService.getSearchResults(query, getPageNo(), getPerPage());
       productPage = new Page(sr.getSolrProducts(), getPageNo(), (int)sr.getResultSize());
       productList = productPage.getList();
     } catch (Exception e) {

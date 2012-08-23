@@ -32,7 +32,7 @@ public interface ProductSearchService {
 
     SearchResult getSearchResults(String query, int page, int perPage) throws SearchException;
 
-    Page getBrandCatalogResults(String brand, String topLevelCategory, int page, int perPage, String preferredZone) throws SearchException;
+    SearchResult getBrandCatalogResults(String brand, String topLevelCategory, int page, int perPage, String preferredZone) throws SearchException;
 
     void indexProduct(Product product) throws SearchException;
 }

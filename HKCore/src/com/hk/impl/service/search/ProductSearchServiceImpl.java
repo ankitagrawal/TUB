@@ -124,7 +124,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
         return resultsMap;//new Page(resultsMap.getSolrProducts(), perPage, page, (int) resultsMap.getResultSize().longValue());
     }
 
-    public Page getBrandCatalogResults(String brand, String topLevelCategory, int page, int perPage, String preferredZone) throws SearchException {
+    public SearchResult getBrandCatalogResults(String brand, String topLevelCategory, int page, int perPage, String preferredZone) throws SearchException {
         SolrQuery query = new SolrQuery();
         //Create the query syntax
         String myQuery = SolrSchemaConstants.brand + SolrSchemaConstants.paramAppender + "\"" + brand + "\"" + SolrSchemaConstants.queryInnerJoin + SolrSchemaConstants.category
@@ -139,17 +139,19 @@ class ProductSearchServiceImpl implements ProductSearchService {
         query.addSortField(SolrSchemaConstants.sortBy, SolrQuery.ORDER.asc);
         List<SolrProduct> solrProductList = new ArrayList<SolrProduct>();
         long resultCount = 0;
+        SearchResult searchResult = null;
         try{
             QueryResponse response = solr.query(query);
             SolrDocumentList documents = response.getResults();
             resultCount = response.getResults().getNumFound();
             solrProductList.addAll(response.getBeans(SolrProduct.class));
-            resultCount = solrProductList != null ? solrProductList.size() : 0;
+            searchResult = getSearchResult(solrProductList);
+            resultCount = searchResult.getResultSize();
         }catch (SolrServerException ex){
             SearchException e = wrapException("Unable to get brand catalog results", ex);
             throw e;
         }
-        return new Page(solrProductList, perPage, page, (int) resultCount);
+        return searchResult;
     }
 
     private void buildDictionary() throws SolrServerException {
@@ -239,13 +241,22 @@ class ProductSearchServiceImpl implements ProductSearchService {
             }
         }
         List<Product> products = new ArrayList<Product>();
+        List<Product> inStockProducts = new ArrayList<Product>();
+        List<Product> outOfStockProducts = new ArrayList<Product>();
         if (productIds.size() > 0){
             products = productService.getAllProductsById(productIds);
             for (Product product : products){
                 product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.SEARCH_PAGE)));
+                if (product.isOutOfStock()){
+                    outOfStockProducts.add(product);
+                }else{
+                    inStockProducts.add(product);
+                }
             }
         }
-        return new SearchResult(products, counter);
+        //Push out of stock products to the last
+        inStockProducts.addAll(outOfStockProducts);
+        return new SearchResult(inStockProducts, counter);
     }
 
     private SearchResult getProductSuggestions(QueryResponse response, String userQuery, int page, int perPage) throws SolrServerException
