@@ -132,6 +132,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
         if(runsheet != null){
             if(runsheetService.isRunsheetClosable(runsheet)){
                 runsheet.setRunsheetStatus(getRunSheetDao().get(RunsheetStatus.class, EnumRunsheetStatus.Close.getId()));
+                runsheet = runsheetService.updateExpectedAmountForClosingRunsheet(runsheet);
             }
             else{
                 addRedirectAlertMessage(new SimpleMessage("cannot close runsheet with consignment status out for delivery"));

@@ -119,4 +119,16 @@ public class RunSheetServiceImpl implements RunSheetService {
             consignmentService.saveConsignmentTracking(consignmentTrackingList);
         }
     }
+
+    @Override
+    public Runsheet updateExpectedAmountForClosingRunsheet(Runsheet runsheet) {
+        Double expectedCollection = 0.0;
+        for(Consignment consignment : runsheet.getConsignments()){
+            if(consignment.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentDelivered.getId())){
+                expectedCollection += consignment.getAmount();
+            }
+        }
+        runsheet.setExpectedCollection(expectedCollection);
+        return runsheet;
+    }
 }

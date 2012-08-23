@@ -141,10 +141,11 @@
                     </tr>
                 </c:forEach>
             </table>
-
-            <s:submit id="save-runsheet" name="saveRunsheet" value="Save runsheet" />
-            <s:submit name="closeRunsheet" value="Close runsheet" />
-            <s:submit name="markAllDelivered" value="Mark all as delivered"/>
+            <c:if test="${runsheetAction.runsheet.runsheetStatus.id !=  20}" >
+                <s:submit id="save-runsheet" name="saveRunsheet" value="Save runsheet" />
+                <s:submit name="closeRunsheet" value="Close runsheet" />
+                <s:submit name="markAllDelivered" value="Mark all as delivered"/>
+            </c:if>
         </s:form>
     </s:layout-component>
 </s:layout-render>
