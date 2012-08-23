@@ -6,6 +6,7 @@ import com.hk.constants.core.Keys;
 import com.hk.constants.marketing.ProductReferrerConstants;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.search.*;
 import com.hk.dto.search.SearchResult;
 import com.hk.exception.SearchException;
@@ -77,7 +78,11 @@ class ProductSearchServiceImpl implements ProductSearchService {
             List<SolrProduct> products = new ArrayList<SolrProduct>();
             for (Product pr : productList){
                 if (!pr.getDeleted()){
+
                     SolrProduct solrProduct = productService.createSolrProduct(pr);
+                    for (ProductVariant pv : pr.getProductVariants()){
+                       solrProduct.getVariantNames().add(pv.getVariantName());
+                    }
                     products.add(solrProduct);
                 }
             }
@@ -224,12 +229,12 @@ class ProductSearchServiceImpl implements ProductSearchService {
     private SearchResult getSearchResult(List<SolrProduct> solrProducts){
         List<String> productIds = new ArrayList<String>();
 
-        int maxCount = 60;//Hard Coded for now
+        int maxCount = 80;//Hard Coded for now
         int counter = 0;
         for (SolrProduct solrProduct : solrProducts){
             productIds.add(solrProduct.getId());
             counter++;
-            if (counter == 60){
+            if (counter == maxCount){
                 break;
             }
         }

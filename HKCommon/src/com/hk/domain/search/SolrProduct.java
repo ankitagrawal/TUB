@@ -2,6 +2,7 @@ package com.hk.domain.search;
 
 import org.apache.solr.client.solrj.beans.Field;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -53,6 +54,10 @@ public class SolrProduct {
     @Field
     private
     List<String> category;
+
+    @Field
+    private
+    List<String> variantNames = new ArrayList<String>();
 
     @Field
     private
@@ -409,8 +414,16 @@ public class SolrProduct {
         this.comboDiscountPercent = comboDiscountPercent;
     }
 
+    public List<String> getVariantNames() {
+        return variantNames;
+    }
+
+    public void setVariantNames(List<String> variantNames) {
+        this.variantNames = variantNames;
+    }
+
     public SolrProduct(){
 
     }
-    
+
 }
