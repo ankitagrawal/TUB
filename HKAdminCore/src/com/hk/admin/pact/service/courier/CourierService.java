@@ -7,7 +7,6 @@ import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.domain.order.Order;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.dto.pricing.PricingDto;
 
 public interface CourierService {
 
@@ -33,8 +32,6 @@ public interface CourierService {
 
     public Courier getDefaultCourier(Pincode pincode, boolean isCOD, Warehouse warehouse);
 
-    public Double getCashbackOnGroundShippedItem(Double groundshipItemAmount,Order order,Double groundshipItemweight)  ;
-
-
+     public Double getCashbackOnGroundShippedItem(Double groundshipItemAmount, Order order, Double groundshipItemweight);
 
 }
