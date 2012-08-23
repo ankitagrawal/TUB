@@ -8449,4 +8449,9 @@
     <changeSet author="Ajeet (generated)" id="1345455498259-2">
         <addNotNullConstraint columnDataType="TINYINT" columnName="cod_allowed" defaultNullValue="1" tableName="product"/>
     </changeSet>
+    <changeSet author="Ankit (generated)" id="1345701844710-1">
+        <addColumn tableName="product">
+            <column defaultValue="0" name="ground_shipping" type="TINYINT"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
