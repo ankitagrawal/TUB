@@ -118,7 +118,7 @@
                 </thead>
                 <c:forEach items="${runsheetAction.runsheetConsignments}" var="consignment" varStatus="ctr">
                     <tr class="consignment-row">
-                        <s:hidden class = "changed-consignment-list" name="changedConsignmentIdsList[${ctr.index}]" value="" />
+                        <s:hidden class = "changed-consignment-list" name="changedConsignmentList[${ctr.index}]" value="" />
                         <td><s:hidden name="runsheetConsignments[${ctr.index}]" value="${consignment.id}"/>${consignment.id}</td>
                         <td>${consignment.awbNumber}</td>
                         <td>${consignment.cnnNumber}</td>
