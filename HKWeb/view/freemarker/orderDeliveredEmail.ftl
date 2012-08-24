@@ -93,7 +93,7 @@ Your order ${order.gatewayOrderId} has been delivered.
 						</table>
 						<br>
 
-						<table cellpadding="5" cellspacing="5" >
+						<table cellpadding="5" cellspacing="5">
 							<tr>
 								<td colspan="10" style="font-size: medium;">How likely is it that you would recommend
 									HealthKart to a friend or colleague?
@@ -101,12 +101,11 @@ Your order ${order.gatewayOrderId} has been delivered.
 							</tr>
 							<tr>
 								<td>
-									<a href="http://staging.healthkart.com:9090/hk/pages/static/feedback.jsp?recommendToFriends=1&baseOrderId=${order}"
-									   target="_blank">
+									<a href="${feedbackPage}?recommendToFriends=1&baseOrderId=${order}">
 										<input type="radio" name="recommendToFriends" value="1"/></a> 1
 								</td>
 								<td>
-									<a href="http://staging.healthkart.com:9090/hk/pages/static/feedback.jsp?recommendToFriends=2&baseOrderId=${order}"
+									<a href="${feedbackPage}?recommendToFriends=2&baseOrderId=${order}"
 									   target="_blank">
 										<input type="radio" name="recommendToFriends" value="2"/></a> 2
 								</td>

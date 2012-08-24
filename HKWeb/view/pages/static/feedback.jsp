@@ -20,10 +20,9 @@
 			<s:form beanclass="com.hk.web.action.pages.FeedbackAction">
 				<div class="left">
 					<h2>Please provide your valuable feedback</h2>
-					<%--<s:hidden name="recommendToFriends" value="${recommendToFriends}" />--%>
 					<s:hidden name="order" value="${baseOrderId}" />
 					<div class='label'><h3>1. How likely is it that you would recommend HealthKart to a friend or colleague?</h3></div>
-					<table>
+					<table cellpadding="5" cellspacing="5">
 						<tr>
 							<td><s:radio value="1" name="recommendToFriends" /> 1</td>
 							<td><s:radio value="2" name="recommendToFriends" /> 2</td>
