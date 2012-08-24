@@ -159,7 +159,7 @@
             <c:otherwise>
                 <span class="codOrderText">&middot;</span>
 
-                <s:link href="#" class="confirmSubscriptionOrderLink">(confirm subscription Order)</s:link>
+                <a href="#" class="confirmSubscriptionOrderLink">(confirm subscription Order)</a>
                 <div class="confirmSubscriptionDiv" style="display: none;">
                     <s:form beanclass="com.hk.web.action.admin.subscription.SubscriptionAdminAction" class="confirmSubscriptionOrderForm" >
                         <s:param name="subscription" value="${subscription.id}"/>
@@ -375,9 +375,9 @@
             </c:when>
             <c:otherwise>
                 next due date: <strong><span class="or"><fmt:formatDate value="${subscription.nextShipmentDate}"/> </span></strong>
-                <s:link class="changeNextShipmentDateLink" href="#">
+                <a class="changeNextShipmentDateLink" href="#">
                     (change)
-                </s:link>
+                </a>
             </c:otherwise>
         </c:choose>
 
