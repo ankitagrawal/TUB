@@ -9,6 +9,7 @@ import com.hk.pact.service.core.AffilateService;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -19,6 +20,7 @@ import java.util.List;
  * Time: 3:55 PM
  * To change this template use File | Settings | File Templates.
  */
+@Component
 public class SearchAffiliateAction extends BaseAction {
 
 	AffiliateStatus affiliateStatus;
