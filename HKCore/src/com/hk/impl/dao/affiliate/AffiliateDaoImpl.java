@@ -103,7 +103,7 @@ public class AffiliateDaoImpl extends BaseDaoImpl implements AffiliateDao {
 		if (email != null) {
 			userCriteria.add(Restrictions.eq("email", email));
 		}
-		DetachedCriteria roleCriteria = affiliateCriteria.createCriteria("roles");
+		DetachedCriteria roleCriteria = userCriteria.createCriteria("roles");
 		if (role != null) {
 			roleCriteria.add(Restrictions.eq("name", role.getName()));
 		}

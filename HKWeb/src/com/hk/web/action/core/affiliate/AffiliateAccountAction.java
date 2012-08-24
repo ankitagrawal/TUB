@@ -96,70 +96,80 @@ public class AffiliateAccountAction extends BaseAction {
 	public Resolution generateAffiliateCoupons() {
 		String couponCode = "HK";
 		String endPart = "AFF";
-		Offer offer = affiliate.getOffer();
-		Long numberOfCoupons = affiliate.getWeeklyCouponLimit() - affilateService.getMaxCouponsLeft(affiliate);
-		if (numberOfCoupons > 0) {
-			try {
-				coupons = couponService.generateCoupons("AFF", "HK", numberOfCoupons, false, new DateTime().plusMonths(1).toDate(), 1L, 0L, offer);
-//				addRedirectAlertMessage(new SimpleMessage("your preferences have been saved."));
-			} catch (HealthKartCouponException e) {
-				addRedirectAlertMessage(new SimpleMessage(e.getMessage()));
-				return getContext().getSourcePageResolution();
-			}
-			// save coupons file to admin dir
-			File couponsDir = new File(getSavedCouponsDirPath());
-			if (!couponsDir.exists()) {
-				couponsDir.mkdirs();
-			}
-
-			String couponFileName = couponCode + "-" + endPart + "-" + coupons.size() + "-coupons-" + BaseUtils.getCurrentTimestamp().getTime() + ".txt";
-			final File couponFile = new File(couponsDir.getAbsolutePath() + "/" + couponFileName);
-			Writer output = null;
-			try {
-				couponFile.createNewFile();
-				output = new BufferedWriter(new FileWriter(couponFile));
-				output.write("Offer: " + offer.getDescription() + BaseUtils.newline);
-				output.write("Nuber of coupons: " + numberOfCoupons + BaseUtils.newline);
-				output.write("Coupons: " + BaseUtils.newline);
-				for (Coupon coupon : coupons) {
-					output.write(coupon.getCode() + BaseUtils.newline);
-				}
-			} catch (IOException e) {
-				logger.error("Error while making a coupons file:", e);
-			} finally {
-				if (output != null) {
-					try {
-						output.close();
-					} catch (IOException e) {
-						logger.error("error while closing the coupons file", e);
-					}
-				}
-			}
-
-			final int contentLength = (int) couponFile.length();
-
-			addRedirectAlertMessage(new LocalizableMessage("/CreateCoupon.action.coupon.created"));
-			// give option to download the coupons file
-			return new Resolution() {
-				public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
-					OutputStream out = null;
-					InputStream in = new BufferedInputStream(new FileInputStream(couponFile));
-					res.setContentLength(contentLength);
-					res.setHeader("Content-Disposition", "attachment; filename=\"" + couponFile.getName() + "\";");
-					out = res.getOutputStream();
-
-					// Copy the contents of the file to the output stream
-					byte[] buf = new byte[4096];
-					int count = 0;
-					while ((count = in.read(buf)) >= 0) {
-						out.write(buf, 0, count);
-					}
-				}
-			};
-		} else {
-			addRedirectAlertMessage(new SimpleMessage("You have already exceeded your max weekly coupon limit, that being " + affiliate.getWeeklyCouponLimit()));
-			return new RedirectResolution(AffiliateAccountAction.class);
+		if (getPrincipal() != null) {
+			User user = getUserService().getUserById(getPrincipal().getId());
+			affiliate = affiliateDao.getAffilateByUser(user);
 		}
+		if (affiliate != null) {
+			Offer offer = affiliate.getOffer();
+			if (offer != null) {
+				Long numberOfCoupons = affiliate.getWeeklyCouponLimit() - affilateService.getMaxCouponsLeft(affiliate);
+				if (numberOfCoupons > 0) {
+					try {
+						coupons = couponService.generateCoupons("AFF", "HK", numberOfCoupons, false, new DateTime().plusMonths(1).toDate(), 1L, 0L, offer);
+//				addRedirectAlertMessage(new SimpleMessage("your preferences have been saved."));
+					} catch (HealthKartCouponException e) {
+						addRedirectAlertMessage(new SimpleMessage(e.getMessage()));
+						return getContext().getSourcePageResolution();
+					}
+					// save coupons file to admin dir
+					File couponsDir = new File(getSavedCouponsDirPath());
+					if (!couponsDir.exists()) {
+						couponsDir.mkdirs();
+					}
+
+					String couponFileName = couponCode + "-" + endPart + "-" + coupons.size() + "-coupons-" + BaseUtils.getCurrentTimestamp().getTime() + ".txt";
+					final File couponFile = new File(couponsDir.getAbsolutePath() + "/" + couponFileName);
+					Writer output = null;
+					try {
+						couponFile.createNewFile();
+						output = new BufferedWriter(new FileWriter(couponFile));
+						output.write("Offer: " + offer.getDescription() + BaseUtils.newline);
+						output.write("Nuber of coupons: " + numberOfCoupons + BaseUtils.newline);
+						output.write("Coupons: " + BaseUtils.newline);
+						for (Coupon coupon : coupons) {
+							output.write(coupon.getCode() + BaseUtils.newline);
+						}
+					} catch (IOException e) {
+						logger.error("Error while making a coupons file:", e);
+					} finally {
+						if (output != null) {
+							try {
+								output.close();
+							} catch (IOException e) {
+								logger.error("error while closing the coupons file", e);
+							}
+						}
+					}
+
+					final int contentLength = (int) couponFile.length();
+
+					addRedirectAlertMessage(new LocalizableMessage("/CreateCoupon.action.coupon.created"));
+					// give option to download the coupons file
+					return new Resolution() {
+						public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
+							OutputStream out = null;
+							InputStream in = new BufferedInputStream(new FileInputStream(couponFile));
+							res.setContentLength(contentLength);
+							res.setHeader("Content-Disposition", "attachment; filename=\"" + couponFile.getName() + "\";");
+							out = res.getOutputStream();
+
+							// Copy the contents of the file to the output stream
+							byte[] buf = new byte[4096];
+							int count = 0;
+							while ((count = in.read(buf)) >= 0) {
+								out.write(buf, 0, count);
+							}
+						}
+					};
+				} else {
+					addRedirectAlertMessage(new SimpleMessage("You have already exceeded your max weekly coupon limit, that being " + affiliate.getWeeklyCouponLimit()));
+					return new RedirectResolution(AffiliateAccountAction.class);
+				}
+			}
+		}
+		addRedirectAlertMessage(new SimpleMessage("Sorry some error occurred!!"));
+		return new RedirectResolution(AffiliateAccountAction.class);
 	}
 
 	public Affiliate getAffiliate() {
