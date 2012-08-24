@@ -83,9 +83,9 @@ public class AffiliateManager {
         affiliate.setWeeklyCouponLimit(AffiliateConstants.weeklyCouponLimit);
 	    affiliate.setAffiliateStatus(EnumAffiliateStatus.Unverified.asAffiliateStatus());
         affiliate.setWebsiteName(websiteName);
-        getAffilateService().save(affiliate);
-        Offer offer = getOfferManager().getAffiliateOffer();
+	    Offer offer = getOfferManager().getAffiliateOffer();
 	    affiliate.setOffer(offer);
+	    getAffilateService().save(affiliate);
         getCouponService().createCoupon(affiliate.getCode(), null, null, 0L, offer, affiliate.getUser(), false, EnumCouponType.AFFILIATE.asCouponType());
 
         getEmailManager().affiliateSignupEmail(affiliate.getUser().getEmail(), affiliate.getUser().getName());

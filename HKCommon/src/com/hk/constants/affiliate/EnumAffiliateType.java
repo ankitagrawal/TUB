@@ -12,8 +12,8 @@ import java.util.List;
  */
 public enum EnumAffiliateType {
 
-	Individual(10L, "PrePaid"),
-	Company(20L, "All"),;
+	Individual(10L, "Individual"),
+	Company(20L, "Company"),;
 
 	private String name;
 	private Long id;

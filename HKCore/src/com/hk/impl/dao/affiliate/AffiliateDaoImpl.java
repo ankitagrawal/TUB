@@ -1,6 +1,7 @@
 package com.hk.impl.dao.affiliate;
 
 import com.akube.framework.dao.Page;
+import com.akube.framework.util.DateUtils;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.coupon.EnumCouponType;
@@ -13,6 +14,7 @@ import com.hk.domain.user.User;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.affiliate.AffiliateDao;
 import com.hk.pact.service.RoleService;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,6 +76,7 @@ public class AffiliateDaoImpl extends BaseDaoImpl implements AffiliateDao {
 		DetachedCriteria detachedCriteria = DetachedCriteria.forClass(Coupon.class);
 		detachedCriteria.add(Restrictions.eq("referrerUser", affiliate.getUser()));
 		detachedCriteria.add(Restrictions.eq("couponType", EnumCouponType.AFFILIATE.asCouponType()));
+		detachedCriteria.add(Restrictions.ge("createDate", DateUtils.getDateMinusDays(7)));
 		List<Coupon> couponsList = (List<Coupon>) findByCriteria(detachedCriteria);
 		return couponsList != null && !couponsList.isEmpty() ? couponsList.size() : 0L;
 	}
@@ -84,10 +87,10 @@ public class AffiliateDaoImpl extends BaseDaoImpl implements AffiliateDao {
 		if (affiliateStatus != null) {
 			affiliateCriteria.add(Restrictions.eq("affiliateStatus", affiliateStatus));
 		}
-		if (websiteName != null) {
+		if (websiteName != null && StringUtils.isNotBlank(websiteName)) {
 			affiliateCriteria.add(Restrictions.eq("websiteName", websiteName));
 		}
-		if (code != null) {
+		if (code != null && StringUtils.isNotBlank(code)) {
 			affiliateCriteria.add(Restrictions.eq("code", code));
 		}
 		if (affiliateMode != null) {
@@ -97,10 +100,10 @@ public class AffiliateDaoImpl extends BaseDaoImpl implements AffiliateDao {
 			affiliateCriteria.add(Restrictions.eq("affiliateType", affiliateType));
 		}
 		DetachedCriteria userCriteria = affiliateCriteria.createCriteria("user");
-		if (name != null) {
+		if (name != null && StringUtils.isNotBlank(name)) {
 			userCriteria.add(Restrictions.eq("name", name));
 		}
-		if (email != null) {
+		if (email != null && StringUtils.isNotBlank(email)) {
 			userCriteria.add(Restrictions.eq("email", email));
 		}
 		DetachedCriteria roleCriteria = userCriteria.createCriteria("roles");
@@ -108,7 +111,7 @@ public class AffiliateDaoImpl extends BaseDaoImpl implements AffiliateDao {
 			roleCriteria.add(Restrictions.eq("name", role.getName()));
 		}
 		affiliateCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));
-		return list(affiliateCriteria,pageNo, perPage);
+		return list(affiliateCriteria, pageNo, perPage);
 	}
 
 	public RoleService getRoleService() {

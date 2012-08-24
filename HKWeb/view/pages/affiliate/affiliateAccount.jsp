@@ -7,34 +7,39 @@
         <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
         <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
+        <jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
     </s:layout-component>
     <s:layout-component name="content">
         <h2>${paymentAction.affiliate.user.name}</h2>
-        <fieldset class="right_label">
-            <legend>Affiliate Due Amount Calculator</legend>
-            <ul>
 
-                <li>
-                    <label>Start
-                        date</label><s:text class="date_input startDate" style="width:150px"
-                                            formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startDate"/>
-                </li>
-                <li>
-                    <label>End
-                        date</label><s:text class="date_input endDate" style="width:150px"
-                                            formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endDate"/>
-                </li>
+        <div class="reportBox">
+            <s:form beanclass="com.hk.web.action.core.affiliate.AffiliatePaymentAction" method="get">
+                <fieldset class="right_label">
+                    <legend>Affiliate Due Amount Calculator</legend>
+                    <ul>
+                        <li>
+                            <label>Start date</label>
+                            <s:text class="date_input startDate" style="width:150px"
+                                    formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startDate"/>
+                        </li>
 
-                <li><label>Net Amount Due</label>
+                        <li>
+                            <label>End date</label>
+                            <s:text class="date_input endDate" style="width:150px"
+                                    formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endDate"/>
+                        </li>
 
-                    <h3>${paymentAction.amount}</h3></li>
+                        <li>
+                            <label>Net Amount Due</label>
 
-                <li>
-                    <s:submit name="showAffiliateDueAmount" value="Calculate Affiliate Due Amount"/>
-                </li>
-
-            </ul>
-        </fieldset>
+                            <h3>${paymentAction.amount}</h3></li>
+                        <li>
+                            <s:submit name="showAffiliateDueAmount" value="Calculate Affiliate Due Amount"/>
+                        </li>
+                    </ul>
+                </fieldset>
+            </s:form>
+        </div>
         <br/>
         <h4>Checks Sent</h4>
         <table>

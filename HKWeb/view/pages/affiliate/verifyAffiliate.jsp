@@ -10,31 +10,34 @@
           <legend>Search Affiliates</legend>
           <s:form beanclass="com.hk.web.action.core.affiliate.VerifyRejectAffiliateAction" method="get"
                   autocomplete="false">
-              <div class='label'>Name</div>
+              <label>Name</label>
               <s:text name="name" style="width:150px"/>
-              <div class='label'>Email</div>
+              <label>Email</label>
               <s:text name="email" style="width:150px"/>
-              <div class='label'>Website</div>
+              <label>Website</label>
               <s:text name="websiteName" style="width: 100px;"/>
-              <div class='label'>Type</div>
+              <label>Type</label>
               <s:select name="affiliateType">
+                  <option value="">Select</option>
                   <c:forEach items="<%=EnumAffiliateType.getAllAffiliateTypes()%>" var="aType">
                       <s:option value="${aType.id}">${aType.name}</s:option>
                   </c:forEach>
               </s:select>
-              <div class='label'>Mode</div>
+              <label>Mode</label>
               <s:select name="affiliateMode">
+                  <option value="">Select</option>
                   <c:forEach items="<%=EnumAffiliateMode.getAllAffiliateModes()%>" var="aMode">
                       <s:option value="${aMode.id}">${aMode.name}</s:option>
                   </c:forEach>
               </s:select>
-              <div class='label'>Status</div>
+              <label>Status</label>
               <s:select name="affiliateMode">
+                  <option value="">Select</option>
                   <c:forEach items="<%=EnumAffiliateStatus.getAllAffiliateStatus()%>" var="aStatus">
                       <s:option value="${aStatus.id}">${aStatus.name}</s:option>
                   </c:forEach>
               </s:select>
-              <s:submit name="pre" value="Search"/>
+              <s:submit name="search" value="Search"/>
           </s:form>
       </fieldset>
 

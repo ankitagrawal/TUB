@@ -41,11 +41,11 @@ public enum EnumAffiliateStatus {
 		return affiliateStatus;
 	}
 
-	public static List<EnumAffiliateMode> getAllAffiliateStatus() {
+	public static List<EnumAffiliateStatus> getAllAffiliateStatus() {
 		return Arrays.asList(
-				EnumAffiliateMode.Offline,
-				EnumAffiliateMode.Online,
-				EnumAffiliateMode.Both);
+				EnumAffiliateStatus.Unverified,
+				EnumAffiliateStatus.Verified,
+				EnumAffiliateStatus.Rejected);
 	}
 
 }

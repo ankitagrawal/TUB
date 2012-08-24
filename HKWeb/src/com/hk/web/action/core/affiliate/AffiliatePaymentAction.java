@@ -2,12 +2,16 @@ package com.hk.web.action.core.affiliate;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
+import com.hk.constants.affiliate.EnumAffiliateStatus;
+import com.hk.constants.core.EnumRole;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.core.RoleConstants;
 import com.hk.domain.CheckDetails;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.affiliate.AffiliateCategoryCommission;
+import com.hk.domain.affiliate.AffiliateStatus;
 import com.hk.domain.user.Address;
+import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.impl.dao.CheckDetailsDaoImpl;
 import com.hk.impl.dao.affiliate.AffiliateCategoryDaoImpl;
@@ -45,7 +49,6 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
 	Affiliate affiliate;
 	List<CheckDetails> checkDetailsList;
 	List<AffiliateCategoryCommission> affiliateCategoryCommissionList;
-	Page affiliatePage;
 	Date startDate;
 	Date endDate;
 
@@ -60,17 +63,38 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
 	Address checkDeliveryAddress;
 	String name;
 	String email;
+	String websiteName;
+	String code;
+	Long affiliateMode;
+	Long affiliateType;
+	Role role;
+	AffiliateStatus affiliateStatus;
+
+	Page affiliatePage;
+	List<Affiliate> affiliates = new ArrayList<Affiliate>();
 
 	@Autowired
 	private RoleService roleService;
 
 	@DefaultHandler
 	public Resolution pre() {
-		affiliatePage = getUserService().findByRole(name, email, getRoleService().getRoleByName(RoleConstants.HK_AFFILIATE), getPageNo(), getPerPage());
-		List<User> affiliatesUsers = affiliatePage.getList();
-		List<Affiliate> affiliates = new ArrayList<Affiliate>();
-		for (User user : affiliatesUsers) {
-			affiliates.add(affiliateDao.getAffilateByUser(user));
+		affiliatePage = affiliateDao.searchAffiliates(EnumAffiliateStatus.Verified.asAffiliateStatus(), name, email, websiteName, code, affiliateMode, affiliateType, EnumRole.HK_AFFILIATE.toRole(), getPerPage(), pageNo);
+		if(affiliatePage != null){
+			affiliates = affiliatePage.getList();
+		}
+		for (Affiliate affiliate : affiliates) {
+			AffiliatePaymentDto affiliatePaymentDto = new AffiliatePaymentDto();
+			affiliatePaymentDto.setAffiliate(affiliate);
+			affiliatePaymentDto.setAmount(getAffiliateManager().getAmountInAccount(affiliate, null, null));
+			affiliatePaymentDtoList.add(affiliatePaymentDto);
+		}
+		return new ForwardResolution("/pages/affiliate/payToAffiliates.jsp");
+	}
+
+	public Resolution search() {
+		affiliatePage = affiliateDao.searchAffiliates(affiliateStatus, name, email, websiteName, code, affiliateMode, affiliateType, role, getPerPage(), pageNo);
+		if(affiliatePage != null){
+			affiliates = affiliatePage.getList();
 		}
 		for (Affiliate affiliate : affiliates) {
 			AffiliatePaymentDto affiliatePaymentDto = new AffiliatePaymentDto();
@@ -297,5 +321,61 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
 
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
+	}
+
+	public Page getAffiliatePage() {
+		return affiliatePage;
+	}
+
+	public void setAffiliatePage(Page affiliatePage) {
+		this.affiliatePage = affiliatePage;
+	}
+
+	public String getWebsiteName() {
+		return websiteName;
+	}
+
+	public void setWebsiteName(String websiteName) {
+		this.websiteName = websiteName;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public Long getAffiliateMode() {
+		return affiliateMode;
+	}
+
+	public void setAffiliateMode(Long affiliateMode) {
+		this.affiliateMode = affiliateMode;
+	}
+
+	public Long getAffiliateType() {
+		return affiliateType;
+	}
+
+	public void setAffiliateType(Long affiliateType) {
+		this.affiliateType = affiliateType;
+	}
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
+	public AffiliateStatus getAffiliateStatus() {
+		return affiliateStatus;
+	}
+
+	public void setAffiliateStatus(AffiliateStatus affiliateStatus) {
+		this.affiliateStatus = affiliateStatus;
 	}
 }

@@ -85,7 +85,7 @@ public class AffiliateAction extends BaseAction {
 			return new ForwardResolution(getContext().getSourcePage());
 		}
 		addRedirectAlertMessage(new SimpleMessage(
-				"Welcome!!..Your account has not been verfied yet. You will be informed as soon as it is verified. Mean while, why dont you fill up the requisted information, so that we can contact you"));
+				"Welcome!!..Your account has not been verified yet. You will be informed as soon as it is verified. Mean while, why don't you fill up the requisted information"));
 		return new ForwardResolution(UserManageAddressAction.class, "editUserAddresses");
 	}
 
