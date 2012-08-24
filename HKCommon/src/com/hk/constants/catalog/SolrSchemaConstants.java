@@ -13,6 +13,7 @@ public class SolrSchemaConstants {
     public static final String category = "category";
     public static final String brand = "brand";
     public static final String name = "name";
+    public static final String variantName = "variantNames";
     public static final String metaKeywords = "metaKeyword";
     public static final String title = "title";
     public static final String description_title = "descriptionTitle";

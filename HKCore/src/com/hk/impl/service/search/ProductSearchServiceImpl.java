@@ -6,6 +6,7 @@ import com.hk.constants.core.Keys;
 import com.hk.constants.marketing.ProductReferrerConstants;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductOption;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.search.*;
 import com.hk.dto.search.SearchResult;
@@ -78,11 +79,8 @@ class ProductSearchServiceImpl implements ProductSearchService {
             List<SolrProduct> products = new ArrayList<SolrProduct>();
             for (Product pr : productList){
                 if (!pr.getDeleted()){
-
                     SolrProduct solrProduct = productService.createSolrProduct(pr);
-                    for (ProductVariant pv : pr.getProductVariants()){
-                       solrProduct.getVariantNames().add(pv.getVariantName());
-                    }
+                    updateExtraProperties(pr, solrProduct);
                     products.add(solrProduct);
                 }
             }
@@ -100,10 +98,19 @@ class ProductSearchServiceImpl implements ProductSearchService {
     public void indexProduct(Product product) throws SearchException{
         try{
             SolrProduct solrProduct = productService.createSolrProduct(product);
+            updateExtraProperties(product, solrProduct);
             indexProduct(solrProduct);
         } catch (Exception ex) {
             SearchException e = wrapException("Unable to build indexes. Problem with Solr", ex);
             throw e;
+        }
+    }
+
+    private void updateExtraProperties(Product pr, SolrProduct solrProduct){
+        for (ProductVariant pv : pr.getProductVariants()){
+            for (ProductOption po : pv.getProductOptions()){
+                solrProduct.getVariantNames().add(pr.getName() +  po.getValue());
+            }
         }
     }
 
@@ -345,6 +352,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
         SolrQuery solrQuery = new SolrQuery(); // &defType=dismax&qf=
         String qf = "";
         qf += SolrSchemaConstants.name + "^1000.0 ";
+        qf += SolrSchemaConstants.variantName + "^1002.0 ";  //If variant matches then it should be bit higher in score
         qf += SolrSchemaConstants.brand + "^100 ";
         qf += SolrSchemaConstants.keywords + "^90 ";
         qf += SolrSchemaConstants.title + "^80 ";
