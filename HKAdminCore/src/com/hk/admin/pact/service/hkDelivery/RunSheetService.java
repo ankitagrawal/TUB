@@ -28,4 +28,6 @@ public interface RunSheetService {
     public boolean agentHasOpenRunsheet(User agent);
 
     public void updateConsignmentTrackingForRunsheet(List<Consignment> changedConsignmentsList, User user);
+
+    public Runsheet updateExpectedAmountForClosingRunsheet(Runsheet runsheet);
 }

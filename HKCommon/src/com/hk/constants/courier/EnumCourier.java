@@ -15,6 +15,7 @@ public enum EnumCourier {
     Aramex(20L, "Aramex"),
     Speedpost(30L, "Speed Post"),
     Delhivery(40L, "Delhivery"),
+	Delhivery_Surface(41L, "Delhivery-Surface"),
     Chhotu(45L, "Chhotu-Delhi-NCR"),
     OfficePickup(50L, "Office Pickup"),
     AFLWiz(60L, "AFL Wiz"),
@@ -83,6 +84,7 @@ public enum EnumCourier {
                 EnumCourier.DTDC_COD,
                 EnumCourier.Speedpost,
                 EnumCourier.Delhivery,
+                EnumCourier.Delhivery_Surface,
                 EnumCourier.Smile_EExpress,
                 EnumCourier.AFLWiz,
                 EnumCourier.BlueDart,
@@ -114,6 +116,7 @@ public enum EnumCourier {
     public static List<Long> getDelhiveryCourierIds() {
         List<Long> delhiveryCourierIds = new ArrayList<Long>();
         delhiveryCourierIds.add(EnumCourier.Delhivery.getId());
+        delhiveryCourierIds.add(EnumCourier.Delhivery_Surface.getId());
         return delhiveryCourierIds;
     }
 }

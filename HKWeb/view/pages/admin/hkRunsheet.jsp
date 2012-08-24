@@ -34,6 +34,20 @@
                 createChangedConsignmentList();
             });
 
+            $('.closeConfirmationDialogue').click(function(event){
+                var confirm_action = confirm("Are you sure you want to close the runsheet?");
+                if(confirm_action==false){
+                    event.preventDefault();
+                }
+            });
+
+            $('.markAllConfirmationDialogue').click(function(event){
+                var confirm_action = confirm("Are you sure you want to Mark all consignment delivered?");
+                if(confirm_action!=true){
+                    event.preventDefault();
+                }
+            });
+
             function createChangedConsignmentList(){
                 $('.consignment-row').each(function(index){
                     var consignment_id = $(this).find('.consignment-status').attr('id');
@@ -97,6 +111,19 @@
                         ${runsheetAction.runsheet.runsheetStatus.status}
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        <label>Distance Traveled (Kms): </label></td>
+                    </td>
+                    <td>
+                        <s:text name="runsheet.distanceTraveled"
+                                value="${runsheetAction.runsheet.distanceTraveled}"/>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
             </table>
 
             </fieldset>
@@ -118,7 +145,7 @@
                 </thead>
                 <c:forEach items="${runsheetAction.runsheetConsignments}" var="consignment" varStatus="ctr">
                     <tr class="consignment-row">
-                        <s:hidden class = "changed-consignment-list" name="changedConsignmentIdsList[${ctr.index}]" value="" />
+                        <s:hidden class = "changed-consignment-list" name="changedConsignmentList[${ctr.index}]" value="" />
                         <td><s:hidden name="runsheetConsignments[${ctr.index}]" value="${consignment.id}"/>${consignment.id}</td>
                         <td>${consignment.awbNumber}</td>
                         <td>${consignment.cnnNumber}</td>
@@ -141,10 +168,11 @@
                     </tr>
                 </c:forEach>
             </table>
-
-            <s:submit id="save-runsheet" name="saveRunsheet" value="Save runsheet" />
-            <s:submit name="closeRunsheet" value="Close runsheet" />
-            <s:submit name="markAllDelivered" value="Mark all as delivered"/>
+            <c:if test="${runsheetAction.runsheet.runsheetStatus.id !=  20}" >
+                <s:submit id="save-runsheet" name="saveRunsheet" value="Save runsheet" />
+                <s:submit class="closeConfirmationDialogue" name="closeRunsheet" value="Close runsheet" />
+                <s:submit class="markAllConfirmationDialogue" name="markAllDelivered" value="Mark all as delivered"/>
+            </c:if>
         </s:form>
     </s:layout-component>
 </s:layout-render>

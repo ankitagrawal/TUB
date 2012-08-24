@@ -77,6 +77,9 @@ public class Runsheet implements java.io.Serializable {
     @Column(name = "remarks", length = 16777215)
     private String remarks;
 
+   @Column(name="distance_traveled")
+   private Long distanceTraveled;
+    
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "runsheet_id")
     private Set<Consignment> consignments = new HashSet<Consignment>(0);
@@ -175,6 +178,14 @@ public class Runsheet implements java.io.Serializable {
 
     public void setConsignments(Set<Consignment> consignments) {
         this.consignments = consignments;
+    }
+
+    public Long getDistanceTraveled() {
+        return distanceTraveled;
+    }
+
+    public void setDistanceTraveled(Long distanceTraveled) {
+        this.distanceTraveled = distanceTraveled;
     }
 
     @Override

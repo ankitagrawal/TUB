@@ -40,33 +40,28 @@
 		<c:when test="${product.googleAdDisallowed || product.deleted}">
 		</c:when>
 		<c:otherwise>
-			<div class='grid_4 product'>
-				<h3>
-					<s:link href="${product.productURL}" title="${product.name}" class="prod_link">
-						${product.name}
-					</s:link>
-				</h3>
+			<div class='grid_6 product' style="width:200px;height:300px;">
 
-					<%--  Commented by tarun to resolve conflict. Not sure if it should be here.
-
-						<s:link href="${product.productURL}" class="prod_link" title="${product.name}">
-						  <s:param name="productId" value="${product.id}"/>
-						  <s:param name="productSlug" value="${product.slug}"/>
-					--%>
-
-				<div class='img128 ${product.outOfStock ? 'opaque' : ''}'>
+				<div class='img170 ${product.outOfStock ? 'opaque' : ''}' style="margin-bottom:20px;">
 					<s:link href="${product.productURL}" class="prod_link" title="${product.name}">
 						<c:choose>
 							<c:when test="${product.mainImageId != null}">
-								<hk:productImage imageId="${product.mainImageId}" size="<%=EnumImageSize.SmallSize%>"
+								<hk:productImage width="170px" height="170px" imageId="${product.mainImageId}" size="<%=EnumImageSize.MediumSize%>"
 								                 alt="${product.name}"/>
 							</c:when>
 							<c:otherwise>
-								<img src='<hk:vhostImage/>/images/ProductImages/ProductImagesThumb/${product.id}.jpg'
+								<img width="170px" height="170px" src='<hk:vhostImage/>/images/ProductImages/ProductImagesThumb/${product.id}.jpg'
 								     alt="${product.name}"/>
 							</c:otherwise>
 						</c:choose>
 					</s:link>
+				</div>
+				<div>
+					<h3 style="height:20px;">
+					<s:link href="${product.productURL}" title="${product.name}" class="prod_link">
+						${product.name}
+					</s:link>
+				</h3>
 				</div>
 				<c:choose>
 					<c:when test="${combo != null}">
