@@ -521,7 +521,7 @@ any data added to them will be ignored outright.  -->
 
         <field name="id" type="string" indexed="true" stored="true" required="true"/>
 
-        <field name="name" type="text_en_splitting" indexed="true" stored="true" />
+        <field name="name" type="text" indexed="true" stored="true" />
         <field name="variantNames" type="text_en_splitting" indexed="true" stored="true" multiValued="true" />
         <field name="nameSort" type="string" indexed="true" stored="false"/>
         <field name="alphaNameSort" type="alphaOnlySort" indexed="true" stored="false"/>
@@ -667,14 +667,15 @@ via copyField further on in this schema  -->
 
 
     <copyField source="name" dest="spellfind"/>
+    <copyField source="variantNames" dest="spellfind"/>
     <copyField source="overview" dest="spellfind"/>
     <copyField source="description" dest="spellfind"/>
     <copyField source="brand" dest="spellfind"/>
-    <copyField source="variantNames" dest="spellfind"/>
-    <!--<copyField source="title" dest="spellfind"/>
-     <copyField source="descriptionTitle" dest="spellfind"/>
-     <copyField source="metaDescription" dest="spellfind"/>
-     <copyField source="category" dest="spellfind"/>-->
+    <copyField source="title" dest="spellfind"/>
+    <copyField source="descriptionTitle" dest="spellfind"/>
+    <copyField source="metaDescription" dest="spellfind"/>
+    <copyField source="seoDescription" dest="spellfind"/>
+    <!--<copyField source="category" dest="spellfind"/>-->
 
 
     <!-- Above, multiple source fields are copied to the [text] field.

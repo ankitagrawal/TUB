@@ -109,7 +109,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
     private void updateExtraProperties(Product pr, SolrProduct solrProduct){
         for (ProductVariant pv : pr.getProductVariants()){
             for (ProductOption po : pv.getProductOptions()){
-                solrProduct.getVariantNames().add(pr.getName() +  po.getValue());
+                solrProduct.getVariantNames().add(pr.getName() + " " + po.getValue());
             }
         }
     }
@@ -348,10 +348,25 @@ class ProductSearchServiceImpl implements ProductSearchService {
         return productList;
     }
 
-    private SolrQuery getResultsQuery(String query, int page, int perPage){
+    private SolrQuery buildSolrQuery(String query, String qf,  int page, int perPage){
         SolrQuery solrQuery = new SolrQuery(); // &defType=dismax&qf=
+       /* String fq= String.format("{!cache=false}deleted:false");  //Do not cache the results*/
+        solrQuery.setParam("q", query);
+        solrQuery.setParam("defType", "dismax");
+        solrQuery.setParam("qf", qf);
+        //solrQuery.setParam("fq", fq);
+        solrQuery.setStart((page - 1) * perPage);
+        solrQuery.set("fl", "*");
+        solrQuery.setHighlight(true);
+        solrQuery.setStart((page - 1) * perPage);
+        solrQuery.setRows(perPage);
+        return solrQuery;
+    }
+
+    private SolrQuery getResultsQuery(String query, int page, int perPage){
+
         String qf = "";
-        qf += SolrSchemaConstants.name + "^1000.0 ";
+       /* qf += SolrSchemaConstants.name + "^1000.0 ";
         qf += SolrSchemaConstants.variantName + "^1002.0 ";  //If variant matches then it should be bit higher in score
         qf += SolrSchemaConstants.brand + "^100 ";
         qf += SolrSchemaConstants.keywords + "^90 ";
@@ -360,22 +375,26 @@ class ProductSearchServiceImpl implements ProductSearchService {
         qf += SolrSchemaConstants.description + "^69.9 ";
         qf += SolrSchemaConstants.category + "^10 ";
         qf += SolrSchemaConstants.h1 + "^10 ";
-        qf += SolrSchemaConstants.metaKeywords + "^1 ";
+        qf += SolrSchemaConstants.metaKeywords + "^79 ";
         qf += SolrSchemaConstants.metaDescription + "^0.9 ";
-        qf += SolrSchemaConstants.seoDescription + "^0.5 ";
-        //qf += SolrSchemaConstants.description_title + "^0.5 ";
+        qf += SolrSchemaConstants.seoDescription + "^0.5 ";*/
 
-        String fq= String.format("{!cache=false}deleted:false");  //Do not cache the results
-        solrQuery.setParam("q", query);
-        solrQuery.setParam("defType", "dismax");
-        solrQuery.setParam("qf", qf);
-        solrQuery.setParam("fq", fq);
-        solrQuery.setStart((page - 1) * perPage);
-        solrQuery.set("fl", "*");
-        solrQuery.setHighlight(true);
-        solrQuery.setStart((page - 1) * perPage);
-        solrQuery.setRows(perPage);
-        return solrQuery;
+        qf += SolrSchemaConstants.name + "^2.0 ";
+        qf += SolrSchemaConstants.variantName + "^1.9 ";
+        qf += SolrSchemaConstants.brand + "^1.8 ";
+        qf += SolrSchemaConstants.category + "^1.6 ";
+        qf += SolrSchemaConstants.metaKeywords + "^1.4 ";
+        qf += SolrSchemaConstants.overview + "^1.2 ";
+        qf += SolrSchemaConstants.description + "^1.0 ";
+        qf += SolrSchemaConstants.keywords + "^0.8 ";
+        qf += SolrSchemaConstants.h1 + "^0.5 ";
+        qf += SolrSchemaConstants.title + "^0.5 ";
+        qf += SolrSchemaConstants.metaDescription + "^0.5 ";
+        qf += SolrSchemaConstants.seoDescription + "^0.5 ";
+        qf += SolrSchemaConstants.description_title + "^0.5 ";
+
+        //qf += SolrSchemaConstants.description_title + "^0.5 ";
+        return buildSolrQuery(query, qf, page, perPage);
     }
 
     private void indexProduct(List<SolrProduct> products){

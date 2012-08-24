@@ -2,7 +2,9 @@ package com.hk.impl.service.catalog;
 
 import java.util.*;
 
+import com.hk.domain.content.SeoData;
 import com.hk.domain.search.SolrProduct;
+import com.hk.pact.dao.seo.SeoDao;
 import net.sourceforge.stripes.controller.StripesFilter;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +49,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private LinkManager               linkManager;
+
+    @Autowired
+    private SeoDao seoDao;
 
     public Product getProductById(String productId) {
         return getProductDAO().getProductById(productId);
@@ -378,6 +383,7 @@ public class ProductServiceImpl implements ProductService {
 
     public SolrProduct createSolrProduct(Product product){
         SolrProduct solrProduct = new SolrProduct();
+        SeoData seoData = seoDao.getSeoById(product.getId());
         if (product.getKeywords() != null){
             solrProduct.setKeywords(product.getKeywords());
         }
@@ -398,6 +404,26 @@ public class ProductServiceImpl implements ProductService {
         }
         if (product.getDescription() != null){
             solrProduct.setDescription(product.getDescription());
+        }
+        if (seoData != null){
+            if (seoData.getH1() != null){
+                solrProduct.setH1(seoData.getH1());
+            }
+            if (seoData.getTitle() != null){
+                solrProduct.setTitle(seoData.getTitle());
+            }
+            if (seoData.getMetaKeyword() != null){
+                solrProduct.setMetaKeyword(seoData.getMetaKeyword());
+            }
+            if (seoData.getMetaDescription() != null){
+                solrProduct.setMetaDescription(seoData.getMetaDescription());
+            }
+            if (seoData.getDescriptionTitle() != null){
+                solrProduct.setDescriptionTitle(seoData.getDescriptionTitle());
+            }
+            if (seoData.getDescription() != null){
+                solrProduct.setSeoDescription(seoData.getDescription());
+            }
         }
         if (product.isGoogleAdDisallowed() != null){
             solrProduct.setGoogleAdDisallowed(product.isGoogleAdDisallowed());
