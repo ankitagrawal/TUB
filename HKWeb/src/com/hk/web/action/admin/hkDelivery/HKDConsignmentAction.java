@@ -3,6 +3,7 @@ package com.hk.web.action.admin.hkDelivery;
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.action.BasePaginatedAction;
+import com.hk.constants.hkDelivery.EnumConsignmentStatus;
 import com.hk.domain.hkDelivery.*;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.Shipment;
@@ -153,9 +154,19 @@ public class HKDConsignmentAction extends BasePaginatedAction {
     }
 
     public Resolution generatePaymentReconciliation(){
+        for(Consignment consignment : consignmentListForPaymentReconciliation){
+            if(!consignment.getConsignmentStatus().getStatus().equals(EnumConsignmentStatus.ShipmentDelivered.getStatus())){
+                addRedirectAlertMessage(new SimpleMessage("Status of consignment "+ consignment.getAwbNumber() + " is not delivered."));
+                return new ForwardResolution(HKDConsignmentAction.class, "searchConsignments");
+            }
+        }
         hkdeliveryPaymentReconciliation = consignmentService.createPaymentReconciliationForConsignmentList(consignmentListForPaymentReconciliation, getUserService().getUserById(getPrincipal().getId()));
-        hkdeliveryPaymentReconciliation = consignmentService.saveHkdeliveryPaymentReconciliation(hkdeliveryPaymentReconciliation);
         return new ForwardResolution("/pages/admin/hkdeliveryPaymentReconciliation.jsp");
+    }
+
+    public Resolution savePaymentReconciliation(){
+        hkdeliveryPaymentReconciliation = consignmentService.saveHkdeliveryPaymentReconciliation(hkdeliveryPaymentReconciliation);
+        return new ForwardResolution(HKDConsignmentAction.class, "searchConsignments");
     }
 
     public Resolution trackConsignment(){

@@ -42,8 +42,8 @@ public class HkdeliveryPaymentReconciliation implements java.io.Serializable {
     private User user;
 
 
-    @Column(name = "amount", nullable = false, precision = 22, scale = 0)
-    private double amount;
+    @Column(name = "expected_amount", nullable = false, precision = 22, scale = 0)
+    private double expectedAmount;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_date", length = 19)
@@ -53,9 +53,14 @@ public class HkdeliveryPaymentReconciliation implements java.io.Serializable {
     @Column(name = "update_date", length = 19)
     private Date updateDate;
 
+    @Column(name = "actual_amount", nullable = false, precision = 22, scale = 0)
+    private double actualAmount;
+
+    @Column(name = "remarks")
+    private String remarks;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "payment_reconciliation_id")
+    @JoinColumn(name = "hkdelivery_payment_reconciliation_id")
     private Set<Consignment> consignments = new HashSet<Consignment>(0);
 
     public Long getId() {
@@ -74,12 +79,12 @@ public class HkdeliveryPaymentReconciliation implements java.io.Serializable {
         this.user = user;
     }
 
-    public double getAmount() {
-        return this.amount;
+    public double getExpectedAmount() {
+        return this.expectedAmount;
     }
 
-    public void setAmount(double amount) {
-        this.amount = amount;
+    public void setExpectedAmount(double expectedAmount) {
+        this.expectedAmount = expectedAmount;
     }
 
     public Date getCreateDate() {
@@ -106,7 +111,21 @@ public class HkdeliveryPaymentReconciliation implements java.io.Serializable {
         this.consignments = consignments;
     }
 
+    public double getActualAmount() {
+        return actualAmount;
+    }
 
+    public void setActualAmount(double actualAmount) {
+        this.actualAmount = actualAmount;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
 }
 
 
