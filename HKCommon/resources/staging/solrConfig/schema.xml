@@ -522,6 +522,7 @@ any data added to them will be ignored outright.  -->
         <field name="id" type="string" indexed="true" stored="true" required="true"/>
 
         <field name="name" type="text_en_splitting" indexed="true" stored="true" />
+        <field name="variantNames" type="text_en_splitting" indexed="true" stored="true" />
         <field name="nameSort" type="string" indexed="true" stored="false"/>
         <field name="alphaNameSort" type="alphaOnlySort" indexed="true" stored="false"/>
         <field name="brand" type="text_en_splitting" indexed="true" stored="true" />
@@ -665,6 +666,7 @@ via copyField further on in this schema  -->
     <copyField source="name" dest="title_autocomplete"/>
 
     <copyField source="name" dest="spellfind"/>
+    <copyField source="variantNames" dest="spellfind"/>
     <copyField source="overview" dest="spellfind"/>
     <copyField source="description" dest="spellfind"/>
     <copyField source="brand" dest="spellfind"/>
