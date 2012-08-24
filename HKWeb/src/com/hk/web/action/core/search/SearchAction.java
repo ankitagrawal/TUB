@@ -52,7 +52,7 @@ public class SearchAction extends BasePaginatedAction {
 
   public Resolution search() throws SolrServerException, MalformedURLException {
     try {
-      SearchResult sr =  productSearchService.getSearchResults(query, getPageNo(), getPerPage());
+      SearchResult sr =  productSearchService.getSearchResults(query, getPageNo(), getPerPage(), false);
       productPage = new Page(sr.getSolrProducts(), getPageNo(), (int)sr.getResultSize());
       productList = productPage.getList();
     } catch (Exception e) {

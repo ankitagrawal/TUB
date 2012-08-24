@@ -316,7 +316,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
         return sr;
     }
 
-    public SearchResult getSearchResults(String query, int page, int perPage) throws SearchException {
+    public SearchResult getSearchResults(String query, int page, int perPage, boolean isRetry) throws SearchException {
 
         QueryResponse response = null;
         SearchResult searchResult = new SearchResult();
@@ -326,8 +326,12 @@ class ProductSearchServiceImpl implements ProductSearchService {
             searchResult = getSearchResult(productList);
 
             long resultsCount = response.getResults().getNumFound();
-            if(resultsCount == 0){
-                final SearchResult searchResults = getProductSuggestions(response, query, page, perPage);
+            if(resultsCount == 0 && !isRetry){
+                SearchResult searchResults = getProductSuggestions(response, query, page, perPage);
+                if ((searchResults != null) && searchResults.getResultSize() == 0){
+                    query = query.replaceAll(" ","");
+                    searchResults = getSearchResults(query, page, perPage, true);
+                }
                 if (searchResults != null){
                     searchResult.setSearchSuggestions(searchResults.getSearchSuggestions());
                     resultsCount += searchResults.getResultSize();
