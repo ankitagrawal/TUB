@@ -123,9 +123,9 @@ public class AffiliateManager {
             code = createCode(affiliate.getUser());
         }
         affiliate.setCode(code);
-        getAffilateService().save(affiliate);
-        Offer offer = getOfferManager().getAffiliateOffer();
+	    Offer offer = getOfferManager().getAffiliateOffer();
 	    affiliate.setOffer(offer);
+	    getAffilateService().save(affiliate);
 	    getCouponService().createCoupon(affiliate.getCode(), null, null, 0L, offer, affiliate.getUser(), false, EnumCouponType.AFFILIATE.asCouponType());
         getEmailManager().affiliateSignupEmail(user.getEmail(), user.getName());
         return affiliate;

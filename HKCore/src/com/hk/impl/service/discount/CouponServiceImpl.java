@@ -46,7 +46,7 @@ public class CouponServiceImpl implements CouponService {
 
     @Override
     public List<Coupon> generateCoupons(String endPart, String couponCode, Long numberOfCoupons, Boolean repetitiveUsage, Date endDate, Long allowedTimes, Long alreadyUsed,
-                                        Offer offer, CouponType couponType) throws HealthKartCouponException {
+                                        Offer offer, CouponType couponType, User referredUser) throws HealthKartCouponException {
         List<Coupon> coupons = new ArrayList<Coupon>(1000);
         if (endPart == null)
             endPart = "";

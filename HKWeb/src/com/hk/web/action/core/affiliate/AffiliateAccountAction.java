@@ -107,7 +107,7 @@ public class AffiliateAccountAction extends BaseAction {
 				Long numberOfCoupons = affiliate.getWeeklyCouponLimit() - affilateService.getMaxCouponsLeft(affiliate);
 				if (numberOfCoupons > 0) {
 					try {
-						coupons = couponService.generateCoupons("AFF", "HK", numberOfCoupons, false, new DateTime().plusMonths(1).toDate(), 1L, 0L, offer, EnumCouponType.AFFILIATE.asCouponType());
+						coupons = couponService.generateCoupons("AFF", "HK", numberOfCoupons, false, new DateTime().plusMonths(1).toDate(), 1L, 0L, offer, EnumCouponType.AFFILIATE.asCouponType(), affiliate.getUser());
 //				addRedirectAlertMessage(new SimpleMessage("your preferences have been saved."));
 					} catch (HealthKartCouponException e) {
 						addRedirectAlertMessage(new SimpleMessage(e.getMessage()));

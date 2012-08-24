@@ -111,7 +111,7 @@ public class CreateCouponAction extends BaseAction {
 
         List<Coupon> coupons = null;
         try {
-            coupons = getCouponService().generateCoupons(endPart, couponCode, numberOfCoupons, repetitiveUsage, endDate, allowedTimes, alreadyUsed, offer, null);
+            coupons = getCouponService().generateCoupons(endPart, couponCode, numberOfCoupons, repetitiveUsage, endDate, allowedTimes, alreadyUsed, offer, null, null);
         } catch (HealthKartCouponException e) {
             addRedirectAlertMessage(new SimpleMessage(e.getMessage()));
             return getContext().getSourcePageResolution();
@@ -173,7 +173,7 @@ public class CreateCouponAction extends BaseAction {
 
         List<Coupon> coupons = null;
         try {
-            coupons = getCouponService().generateCoupons(endPart, couponCode, numberOfCoupons, repetitiveUsage, endDate, allowedTimes, alreadyUsed, offer, null);
+            coupons = getCouponService().generateCoupons(endPart, couponCode, numberOfCoupons, repetitiveUsage, endDate, allowedTimes, alreadyUsed, offer, null, null);
         } catch (HealthKartCouponException e) {
             addRedirectAlertMessage(new SimpleMessage(e.getMessage()));
             return getContext().getSourcePageResolution();
