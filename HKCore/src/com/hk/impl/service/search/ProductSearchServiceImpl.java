@@ -366,7 +366,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
     private SolrQuery getResultsQuery(String query, int page, int perPage){
 
         String qf = "";
-       /* qf += SolrSchemaConstants.name + "^1000.0 ";
+        qf += SolrSchemaConstants.name + "^1000.0 ";
         qf += SolrSchemaConstants.variantName + "^1002.0 ";  //If variant matches then it should be bit higher in score
         qf += SolrSchemaConstants.brand + "^100 ";
         qf += SolrSchemaConstants.keywords + "^90 ";
@@ -377,9 +377,9 @@ class ProductSearchServiceImpl implements ProductSearchService {
         qf += SolrSchemaConstants.h1 + "^10 ";
         qf += SolrSchemaConstants.metaKeywords + "^79 ";
         qf += SolrSchemaConstants.metaDescription + "^0.9 ";
-        qf += SolrSchemaConstants.seoDescription + "^0.5 ";*/
+        qf += SolrSchemaConstants.seoDescription + "^0.5 ";
 
-        qf += SolrSchemaConstants.name + "^2.0 ";
+       /* qf += SolrSchemaConstants.name + "^2.0 ";
         qf += SolrSchemaConstants.variantName + "^1.9 ";
         qf += SolrSchemaConstants.brand + "^1.8 ";
         qf += SolrSchemaConstants.category + "^1.6 ";
@@ -391,7 +391,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
         qf += SolrSchemaConstants.title + "^0.5 ";
         qf += SolrSchemaConstants.metaDescription + "^0.5 ";
         qf += SolrSchemaConstants.seoDescription + "^0.5 ";
-        qf += SolrSchemaConstants.description_title + "^0.5 ";
+        qf += SolrSchemaConstants.description_title + "^0.5 ";*/
 
         //qf += SolrSchemaConstants.description_title + "^0.5 ";
         return buildSolrQuery(query, qf, page, perPage);
