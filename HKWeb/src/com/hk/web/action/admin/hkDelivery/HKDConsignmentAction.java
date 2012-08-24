@@ -49,6 +49,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
     private             List<Consignment>     consignmentList          = new ArrayList<Consignment>();
     private             List<Consignment>     consignmentListForPaymentReconciliation = new ArrayList<Consignment>();
     private             HkdeliveryPaymentReconciliation hkdeliveryPaymentReconciliation;
+    private             Boolean               reconciled;
 
 
     @Autowired
@@ -144,7 +145,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
     }
 
     public Resolution searchConsignments(){
-        consignmentPage = consignmentService.searchConsignment(consignment, startDate, endDate, consignmentStatus, hub, getPageNo(), getPerPage());
+        consignmentPage = consignmentService.searchConsignment(consignment, consignmentNumber, startDate, endDate, consignmentStatus, hub, reconciled, getPageNo(), getPerPage());
         if(consignmentPage != null){
             consignmentList = consignmentPage.getList();
         }
@@ -199,11 +200,11 @@ public class HKDConsignmentAction extends BasePaginatedAction {
 
     public Set<String> getParamSet() {
         HashSet<String> params = new HashSet<String>();
-        params.add("consignment");
         params.add("hub");
         params.add("consignmentStatus");
         params.add("startDate");
         params.add("endDate");
+        params.add("reconciled");
         return params;
     }
 
@@ -287,5 +288,13 @@ public class HKDConsignmentAction extends BasePaginatedAction {
 
     public void setConsignmentTrackingList(List<ConsignmentTracking> consignmentTrackingList) {
         this.consignmentTrackingList = consignmentTrackingList;
+    }
+
+    public Boolean getReconciled() {
+        return reconciled;
+    }
+
+    public void setReconciled(Boolean reconciled) {
+        this.reconciled = reconciled;
     }
 }

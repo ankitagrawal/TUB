@@ -53,12 +53,21 @@ public class ConsignmentDaoImpl extends BaseDaoImpl implements ConsignmentDao {
     }
 
     @Override
-    public Page searchConsignment(Consignment consignment, Date startDate, Date endDate, ConsignmentStatus consignmentStatus, Hub hub, int pageNo, int perPage){
+    public Page searchConsignment(Consignment consignment, String awbNumber, Date startDate, Date endDate, ConsignmentStatus consignmentStatus, Hub hub, Boolean reconciled, int pageNo, int perPage){
         DetachedCriteria consignmentCriteria = DetachedCriteria.forClass(Consignment.class);
 
         if (consignment != null) {
             consignmentCriteria.add(Restrictions.eq("id", consignment.getId()));
         }
+
+        if (awbNumber != null) {
+            consignmentCriteria.add(Restrictions.eq("awbNumber", awbNumber));
+        }
+
+        if (consignment != null) {
+            consignmentCriteria.add(Restrictions.eq("id", consignment.getId()));
+        }
+
         if (startDate != null) {
             consignmentCriteria.add(Restrictions.ge("createDate", startDate));
         }
@@ -71,6 +80,15 @@ public class ConsignmentDaoImpl extends BaseDaoImpl implements ConsignmentDao {
 
         if (hub != null) {
             consignmentCriteria.add(Restrictions.eq("hub", hub));
+        }
+
+        if(reconciled != null){
+            if(reconciled){
+                consignmentCriteria.add(Restrictions.isNotNull("paymentReconciliationId"));
+            }
+            else{
+                consignmentCriteria.add(Restrictions.isNull("paymentReconciliationId"));
+            }
         }
 
         consignmentCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));
