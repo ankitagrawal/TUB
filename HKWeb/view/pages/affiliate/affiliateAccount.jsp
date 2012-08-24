@@ -34,7 +34,8 @@
 
                             <h3>${paymentAction.amount}</h3></li>
                         <li>
-                            <s:submit name="showAffiliateDueAmount" value="Calculate Affiliate Due Amount"/>
+                            <s:hidden name="affiliate" value="${paymentAction.affiliate.id}"/>
+                            <s:submit name="showAffiliateDetails" value="Calculate Affiliate Due Amount"/>
                         </li>
                     </ul>
                 </fieldset>

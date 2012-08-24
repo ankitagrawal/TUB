@@ -130,12 +130,6 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
 		return new ForwardResolution("/pages/affiliate/affiliateAccount.jsp");
 	}
 
-	public Resolution showAffiliateDueAmount() {
-		amount = getAffiliateManager().getAmountInAccount(affiliate, startDate, endDate);
-		checkDetailsList = getCheckDetailsDao().getCheckListByAffiliate(affiliate);
-		return new ForwardResolution("/pages/affiliate/affiliateAccount.jsp");
-	}
-
 	public Resolution paymentDetails() {
 		if (affiliate.getMainAddressId() != null) {
 			checkDeliveryAddress = getAddressDao().get(Address.class, affiliate.getMainAddressId());

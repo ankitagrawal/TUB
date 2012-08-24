@@ -83,7 +83,7 @@ public class AffiliateDaoImpl extends BaseDaoImpl implements AffiliateDao {
 
 	@Override
 	public Page searchAffiliates(AffiliateStatus affiliateStatus, String name, String email, String websiteName, String code, Long affiliateMode, Long affiliateType, Role role, int perPage, int pageNo) {
-		DetachedCriteria affiliateCriteria = DetachedCriteria.forClass(Affiliate.class);
+		DetachedCriteria affiliateCriteria = DetachedCriteria.forClass(Affiliate.class);   //todo ps duplicate results
 		if (affiliateStatus != null) {
 			affiliateCriteria.add(Restrictions.eq("affiliateStatus", affiliateStatus));
 		}

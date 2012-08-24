@@ -87,27 +87,19 @@ public class AffiliateTxnDaoImpl extends BaseDaoImpl implements AffiliateTxnDao 
 		applicableTxnTypes.add(EnumAffiliateTxnType.ADD.getId());
 		applicableTxnTypes.add(EnumAffiliateTxnType.SENT.getId());
 
-		DetachedCriteria applicableTxnCriteria = DetachedCriteria.forClass(AffiliateTxnType.class);
-		applicableTxnCriteria.add(Restrictions.in("id", applicableTxnTypes));
-		List<AffiliateTxnType> applicableTxns = findByCriteria(applicableTxnCriteria);
-
-		Double ammountInAccount = 0D;
-
+		Double amountInAccount = 0D;
 		if (startDate == null || endDate == null) {
-			String queryString = "select sum(at.amount) from AffiliateTxn at where at.affiliate =:affiliate and at.affiliateTxnType in (:applicableTxns)";
-			ammountInAccount = (Double) findUniqueByNamedParams(queryString, new String[]{"affiliate", "applicableTxns"}, new Object[]{
+			String queryString = "select sum(at.amount) from AffiliateTxn at where at.affiliate =:affiliate and at.affiliateTxnType.id in (:applicableTxnTypes)";
+			amountInAccount = (Double) findUniqueByNamedParams(queryString, new String[]{"affiliate", "applicableTxnTypes"}, new Object[]{
 					affiliate,
-					applicableTxns});
+					applicableTxnTypes});
 		} else {
-			String queryString = "select sum(at.amount) from AffiliateTxn at where at.affiliate =:affiliate and at.affiliateTxnType in (:applicableTxns) and at.date >= :startDate and at.date <= :endDate";
-			ammountInAccount = (Double) findUniqueByNamedParams(queryString, new String[]{"affiliate", "applicableTxns", "startDate", "endDate"}, new Object[]{
+			String queryString = "select sum(at.amount) from AffiliateTxn at where at.affiliate =:affiliate and at.affiliateTxnType.id in (:applicableTxnTypes) and at.date >= :startDate and at.date <= :endDate";
+			amountInAccount = (Double) findUniqueByNamedParams(queryString, new String[]{"affiliate", "applicableTxnTypes", "startDate", "endDate"}, new Object[]{
 					affiliate,
-					applicableTxns, startDate, endDate});
+					applicableTxnTypes, startDate, endDate});
 		}
-		if (ammountInAccount == null) {
-			ammountInAccount = 0.0;
-		}
-		return ammountInAccount;
+		return amountInAccount != null ? amountInAccount : 0D;
 	}
 
 	@Transactional
