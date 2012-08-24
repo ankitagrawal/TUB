@@ -3,6 +3,7 @@
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="com.hk.constants.payment.EnumPaymentMode" %>
 <%@ page import="com.hk.constants.core.Keys" %>
+<%@ page import="com.hk.dto.pricing.PricingDto" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -10,6 +11,8 @@
   Double codMaxAmount = Double.parseDouble((String)ServiceLocatorFactory.getProperty(Keys.Env.codMaxAmount));
   Double codMinAmount = Double.parseDouble((String)ServiceLocatorFactory.getProperty(Keys.Env.codMinAmount));
   Double codCharges = Double.parseDouble((String)ServiceLocatorFactory.getProperty(Keys.Env.codCharges));
+   PricingDto pricingDto = (PricingDto) pageContext.getAttribute("pricingDto");
+
 %>
 <c:set var="codMaxAmount" value="<%=codMaxAmount%>"/>
 <c:set var="codMinAmount" value="<%=codMinAmount%>"/>
@@ -22,6 +25,11 @@
 
 
   </s:layout-component>
+
+    <s:layout-component name="modal">
+    <div class="jqmWindow" style="display:none;" id="notifyMeWindow"></div>
+</s:layout-component>
+
   <s:layout-component name="steps">
     <div class='steps'>
       <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" style="margin-top: 0; margin-bottom: 0;">
@@ -153,8 +161,26 @@
               <s:submit name="orderReviewed" value="Make Payment"/>
             </div>
           </div>
+
       </div>
       </s:form>
+
+ <% if (pricingDto != null)  { %>
+  <c:forEach items="${pricingDto.productLineItems}" var="invoiceLineItem" varStatus="ctr1">
+      <c:if test="${invoiceLineItem.productVariant.product.groundShipping &&  !orderSummary.groundShippingAllowed}">
+          <script type="text/javascript">
+              $(document).ready(function() {
+                  $('#notifyMeWindow').jqm({ ajax: '@href'});
+
+              });
+          </script>
+      </c:if>
+  </c:forEach>
+
+  <% } %>
+
+
+
     </div>
   </s:layout-component>
 </s:layout-render>
