@@ -35,6 +35,7 @@ public class CouponServiceImpl implements CouponService {
         coupon.setOffer(offer);
         coupon.setReferrerUser(referrerUser);
         coupon.setRepetitiveUsage(repetitiveUsage);
+	    coupon.setCouponType(couponType);
         return save(coupon);
     }
 
@@ -45,7 +46,7 @@ public class CouponServiceImpl implements CouponService {
 
     @Override
     public List<Coupon> generateCoupons(String endPart, String couponCode, Long numberOfCoupons, Boolean repetitiveUsage, Date endDate, Long allowedTimes, Long alreadyUsed,
-            Offer offer) throws HealthKartCouponException {
+                                        Offer offer, CouponType couponType) throws HealthKartCouponException {
         List<Coupon> coupons = new ArrayList<Coupon>(1000);
         if (endPart == null)
             endPart = "";
@@ -60,7 +61,7 @@ public class CouponServiceImpl implements CouponService {
             if (findByCode(code) == null) {
                 if (repetitiveUsage == null)
                     repetitiveUsage = false;
-                Coupon coupon = createCoupon(code, endDate, allowedTimes, alreadyUsed, offer, null, repetitiveUsage, null);
+                Coupon coupon = createCoupon(code, endDate, allowedTimes, alreadyUsed, offer, null, repetitiveUsage, couponType);
                 coupons.add(coupon);
             } else {
                 i--;

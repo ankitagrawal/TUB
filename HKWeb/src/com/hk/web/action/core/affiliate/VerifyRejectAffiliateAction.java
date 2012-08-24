@@ -12,10 +12,7 @@ import com.hk.manager.AffiliateManager;
 import com.hk.pact.dao.affiliate.AffiliateDao;
 import com.hk.pact.service.RoleService;
 import com.hk.web.action.error.AdminPermissionAction;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.action.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
@@ -27,7 +24,7 @@ import java.util.Set;
 
 @Secure(hasAnyPermissions = {PermissionConstants.VERIFY_AFFILIATES}, authActionBean = AdminPermissionAction.class)
 @Component
-public class VerifyAffiliateAction extends BasePaginatedAction {
+public class VerifyRejectAffiliateAction extends BasePaginatedAction {
 	@Autowired
 	private RoleService roleService;
 	@Autowired
@@ -64,16 +61,16 @@ public class VerifyAffiliateAction extends BasePaginatedAction {
 		for (User user : affiliateUsersToVerifyOrReject) {
 			affiliateManager.verifyAffiliate(user, customMessage);
 		}
-		addRedirectAlertMessage(new SimpleMessage("Affiliates are now verified."));
-		return new ForwardResolution("/pages/admin/adminHome.jsp");
+		addRedirectAlertMessage(new SimpleMessage("Selected Affiliates verified."));
+		return new RedirectResolution(VerifyRejectAffiliateAction.class);
 	}
 
 	public Resolution rejectAffiliates() {
 		for (User user : affiliateUsersToVerifyOrReject) {
 			affiliateManager.rejectAffiliate(user);
 		}
-		addRedirectAlertMessage(new SimpleMessage("Affiliates are now rejected."));
-		return new ForwardResolution("/pages/admin/adminHome.jsp");
+		addRedirectAlertMessage(new SimpleMessage("Selected Affiliates rejected."));
+		return new RedirectResolution(VerifyRejectAffiliateAction.class);
 	}
 
 	public List<User> getUnverifiedAffiliateUsers() {

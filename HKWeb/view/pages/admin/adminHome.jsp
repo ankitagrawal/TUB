@@ -310,7 +310,7 @@
 <div class="left roundBox">
 	<h2>Affiliate</h2>
 
-	<h3><s:link beanclass="com.hk.web.action.core.affiliate.VerifyAffiliateAction">Verify Affiliates</s:link></h3>
+	<h3><s:link beanclass="com.hk.web.action.core.affiliate.VerifyRejectAffiliateAction">Verify Affiliates</s:link></h3>
 
 	<h3><s:link beanclass="com.hk.web.action.core.affiliate.AffiliatePaymentAction">Affiliate Account</s:link></h3>
 

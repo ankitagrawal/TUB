@@ -3,45 +3,42 @@
 <%@ page import="com.hk.constants.affiliate.EnumAffiliateStatus" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.core.affiliate.VerifyAffiliateAction" var="verifyAction"/>
+<s:useActionBean beanclass="com.hk.web.action.core.affiliate.VerifyRejectAffiliateAction" var="verifyAction"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp">
   <s:layout-component name="content">
-      <s:form beanclass="com.hk.web.action.core.affiliate.VerifyAffiliateAction" method="get" autocomplete="false">
-          <fieldset class="top_label">
-              <legend>Search Affiliates</legend>
-              <ul>
-                  <div class="grouped">
-                      <div class='label'>Name</div>
-                      <s:text name="name" style="width:150px"/>
-                      <div class='label'>Email</div>
-                      <s:text name="email" style="width:150px"/>
-                      <div class='label'>Website</div>
-                      <s:text name="websiteName" style="width: 100px;"/>
-                      <div class='label'>Type</div>
-                      <s:select name="affiliateType">
-                          <c:forEach items="<%=EnumAffiliateType.getAllAffiliateTypes()%>" var="aType">
-                              <s:option value="${aType.id}">${aType.name}</s:option>
-                          </c:forEach>
-                      </s:select>
-                      <div class='label'>Mode</div>
-                      <s:select name="affiliateMode">
-                          <c:forEach items="<%=EnumAffiliateMode.getAllAffiliateModes()%>" var="aMode">
-                              <s:option value="${aMode.id}">${aMode.name}</s:option>
-                          </c:forEach>
-                      </s:select>
-                      <div class='label'>Status</div>
-                      <s:select name="affiliateMode">
-                          <c:forEach items="<%=EnumAffiliateStatus.getAllAffiliateStatus()%>" var="aStatus">
-                              <s:option value="${aStatus.id}">${aStatus.name}</s:option>
-                          </c:forEach>
-                      </s:select>
-                  </div>
-              </ul>
+      <fieldset class="right_label">
+          <legend>Search Affiliates</legend>
+          <s:form beanclass="com.hk.web.action.core.affiliate.VerifyRejectAffiliateAction" method="get"
+                  autocomplete="false">
+              <div class='label'>Name</div>
+              <s:text name="name" style="width:150px"/>
+              <div class='label'>Email</div>
+              <s:text name="email" style="width:150px"/>
+              <div class='label'>Website</div>
+              <s:text name="websiteName" style="width: 100px;"/>
+              <div class='label'>Type</div>
+              <s:select name="affiliateType">
+                  <c:forEach items="<%=EnumAffiliateType.getAllAffiliateTypes()%>" var="aType">
+                      <s:option value="${aType.id}">${aType.name}</s:option>
+                  </c:forEach>
+              </s:select>
+              <div class='label'>Mode</div>
+              <s:select name="affiliateMode">
+                  <c:forEach items="<%=EnumAffiliateMode.getAllAffiliateModes()%>" var="aMode">
+                      <s:option value="${aMode.id}">${aMode.name}</s:option>
+                  </c:forEach>
+              </s:select>
+              <div class='label'>Status</div>
+              <s:select name="affiliateMode">
+                  <c:forEach items="<%=EnumAffiliateStatus.getAllAffiliateStatus()%>" var="aStatus">
+                      <s:option value="${aStatus.id}">${aStatus.name}</s:option>
+                  </c:forEach>
+              </s:select>
               <s:submit name="pre" value="Search"/>
-          </fieldset>
-      </s:form>
+          </s:form>
+      </fieldset>
 
-    <s:form beanclass="com.hk.web.action.core.affiliate.VerifyAffiliateAction">
+      <s:form beanclass="com.hk.web.action.core.affiliate.VerifyRejectAffiliateAction">
       <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${verifyAction}"/>
       <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${verifyAction}"/>
       <table>
@@ -53,7 +50,7 @@
             Email
           </th>
           <th>
-            Verify
+            Verify/Reject
           </th>
             <th>
             WebSite

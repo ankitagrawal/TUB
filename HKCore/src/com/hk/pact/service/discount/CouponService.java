@@ -18,5 +18,5 @@ public interface CouponService {
     public Coupon findByCode(String couponCode);
 
     public List<Coupon> generateCoupons(String endPart, String couponCode, Long numberOfCoupons, Boolean repetitiveUsage, Date endDate, Long allowedTimes, Long alreadyUsed,
-            Offer offer) throws HealthKartCouponException;
+                                        Offer offer, CouponType couponType) throws HealthKartCouponException;
 }

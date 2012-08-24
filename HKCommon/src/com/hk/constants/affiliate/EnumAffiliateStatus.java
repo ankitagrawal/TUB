@@ -14,9 +14,9 @@ import java.util.List;
  */
 public enum EnumAffiliateStatus {
 
-	Unverified(10L, "Online"),
-	Verified(20L, "Offline"),
-	Rejected(30L, "Both");
+	Unverified(10L, "Unverified"),
+	Verified(20L, "Verified"),
+	Rejected(30L, "Rejected");
 
 	private String name;
 	private Long id;
