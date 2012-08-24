@@ -130,7 +130,7 @@ public class CourierServiceImpl implements CourierService {
         return minimumShippingCost(arrShipmentCost);
     }
 
-
+    
     public boolean isGroundShippingAllowed(String pin) {
         if (StringUtils.isNotEmpty(pin)) {
             return getCourierServiceInfoDao().isGroundShippingAvailable(pin);

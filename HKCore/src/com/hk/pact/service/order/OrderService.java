@@ -69,4 +69,6 @@ public interface OrderService {
 
      public boolean isOrderHasGroundShippedItem(Order order);
 
+    public void getProductVariantOnGroundShippingNOTAllowed (Order order);
+
 }

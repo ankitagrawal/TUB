@@ -175,6 +175,9 @@ public class OrderSummaryAction extends BaseAction {
         hideCod = orderService.isOrderHasGroundShippedItem(order);
         if (hideCod){
            groundShippingAllowed= courierService.isGroundShippingAllowed(pin);
+         if (!groundShippingAllowed ){
+//                               getProductVariantOnGroundShippingNOTAllowed(order) ;
+           }
         }
 
         Double netShopping = pricingDto.getGrandTotalPayable() - pricingDto.getShippingTotal();
