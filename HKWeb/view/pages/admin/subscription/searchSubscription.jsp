@@ -210,7 +210,7 @@
 	</c:if>
     <br/> <br/>
     <c:if test="${!(subscription.subscriptionStatus.id == subscriptionStatusCancelled || subscription.subscriptionStatus.id == subscriptionStatusCart || subscription.subscriptionStatus.id == subscriptionStatusAbandoned || subscription.subscriptionStatus.id == subscriptionStatusInProcess || subscription.subscriptionStatus.id== subscriptionStatusExpired)}">
-        <s:link href="#" class="cancelSubscriptionLink">(cancel subscription)</s:link>
+        <a href="#" class="cancelSubscriptionLink">(cancel subscription)</a>
         <div class="cancelSubscriptionDiv" style="display: none;">
             <s:form beanclass="com.hk.web.action.admin.subscription.SubscriptionAdminAction" class="cancelSubscriptionForm" >
                 <s:param name="subscription" value="${subscription.id}"/>
