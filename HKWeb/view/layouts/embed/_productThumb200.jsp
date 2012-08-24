@@ -46,11 +46,11 @@
 					<s:link href="${product.productURL}" class="prod_link" title="${product.name}">
 						<c:choose>
 							<c:when test="${product.mainImageId != null}">
-								<hk:productImage width="170px" height="170px" imageId="${product.mainImageId}" size="<%=EnumImageSize.MediumSize%>"
+								<hk:productImage style="max-height:170px;max-width:170px;" imageId="${product.mainImageId}" size="<%=EnumImageSize.MediumSize%>"
 								                 alt="${product.name}"/>
 							</c:when>
 							<c:otherwise>
-								<img width="170px" height="170px" src='<hk:vhostImage/>/images/ProductImages/ProductImagesThumb/${product.id}.jpg'
+								<img style="max-height:170px;max-width:170px;" src='<hk:vhostImage/>/images/ProductImages/ProductImagesThumb/${product.id}.jpg'
 								     alt="${product.name}"/>
 							</c:otherwise>
 						</c:choose>
