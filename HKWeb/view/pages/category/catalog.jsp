@@ -28,7 +28,7 @@
     List<Category> applicableCategories = new ArrayList<Category>();
     applicableCategories.add(categoryDao.getCategoryByName("bp-monitor"));
     pageContext.setAttribute("applicableCategories", applicableCategories);
-    pageContext.setAttribute("advCatalogCategories", Arrays.asList("eyeglasses", "sports-nutrition"));
+    pageContext.setAttribute("advCatalogCategories", Arrays.asList("eyeglasses", "proteins"));
 
     boolean isSecure = pageContext.getRequest().isSecure();
     pageContext.setAttribute("isSecure", isSecure);
