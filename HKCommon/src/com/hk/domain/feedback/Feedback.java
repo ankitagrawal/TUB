@@ -24,7 +24,7 @@ public class Feedback implements Serializable {
 	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "base_order_id")
+	@JoinColumn(name = "base_order_id", unique = true, nullable = false)
 	private Order order;
 
 	@ManyToOne(fetch = FetchType.LAZY)

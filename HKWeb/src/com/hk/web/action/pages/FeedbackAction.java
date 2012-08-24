@@ -4,10 +4,7 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.hk.domain.feedback.Feedback;
 import com.hk.domain.order.Order;
 import com.hk.pact.service.feedback.FeedbackService;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.UrlBinding;
+import net.sourceforge.stripes.action.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -36,10 +33,13 @@ public class FeedbackAction extends BaseAction {
 	}
 
 	public Resolution save() {
-		Feedback feedback = getFeedbackService().getOrCreateFeedbackForOrder(order);
-
-		getFeedbackService().updateFeedback(feedback, recommendToFriends, customerServiceFeedback, websiteExperienceFeedback, comments);
-
+		if (order != null) {
+			Feedback feedback = getFeedbackService().getOrCreateFeedbackForOrder(order);
+			getFeedbackService().updateFeedback(feedback, recommendToFriends, customerServiceFeedback, websiteExperienceFeedback, comments);
+			addRedirectAlertMessage(new SimpleMessage("Thanks for your feedback, your feedback has been captured."));
+		} else {
+			addRedirectAlertMessage(new SimpleMessage("Feedback should be against any order, give the feedback using the order delivered email"));
+		}
 		return new ForwardResolution("/pages/static/feedback.jsp");
 	}
 

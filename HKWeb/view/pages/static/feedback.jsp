@@ -12,10 +12,16 @@
 		$('#recommendToFriends').val(${recommendToFriends});
 
 	});
+
 </script>
 <s:layout-render name="/layouts/default.jsp" pageTitle="Please provide your valuable feedback">
-
 	<s:layout-component name="left_col">
+		<style type="text/css">
+			.alert{
+			    color: green;
+				font-weight: bold;
+			}
+		</style>
 		<div style="background: #fcfcfc; padding: 15px; ">
 			<s:form beanclass="com.hk.web.action.pages.FeedbackAction">
 				<div class="left">
@@ -37,21 +43,21 @@
 						</tr>
 					</table>
 
-					<div class='label'><h3>1. How was your website experience?</h3></div>
+					<div class='label'><h3>2. How was your website experience?</h3></div>
 					<s:radio value="1" name="websiteExperienceFeedback"/>Poor
 					<s:radio value="2" name="websiteExperienceFeedback"/>Below Average
 					<s:radio value="3" name="websiteExperienceFeedback"/>Satisfactory
 					<s:radio value="4" name="websiteExperienceFeedback"/>Excellent
 					<s:radio value="5" name="websiteExperienceFeedback"/>Above Expectations
 
-					<div class='label'><h3>2. How was your customer care experience?</h3></div>
+					<div class='label'><h3>3. How was your customer care experience?</h3></div>
 					<s:radio value="1" name="customerServiceFeedback"/>Poor
 					<s:radio value="2" name="customerServiceFeedback"/>Below Average
 					<s:radio value="3" name="customerServiceFeedback"/>Satisfactory
 					<s:radio value="4" name="customerServiceFeedback"/>Excellent
 					<s:radio value="5" name="customerServiceFeedback"/>Above Expectations
 
-					<div class='label'><h3>3. Any feedback that you want to share with us?</h3></div>
+					<div class='label'><h3>4. Any feedback that you want to share with us?</h3></div>
 					<s:textarea name="comments" rows="8" cols="50"/>
 				</div>
 				<s:submit name="save" />
