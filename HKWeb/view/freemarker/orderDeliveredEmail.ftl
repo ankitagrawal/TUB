@@ -64,7 +64,6 @@ Your order ${order.gatewayOrderId} has been delivered.
 							<tr>
 								<td><strong>Item</strong></td>
 								<td><strong>Quantity</strong></td>
-								<td><strong>TrackingId</strong></td>
 								<td><strong>Courier</strong></td>
 							</tr>
 						<#list order.shippingOrders as shippingOrder>
@@ -86,37 +85,54 @@ Your order ${order.gatewayOrderId} has been delivered.
 									${lineItem.qty}
 									</td>
 									<td>
-									${shippingOrder.shipment.awb.awbNumber}
-										<#if shippingOrder.shipment.trackLink??>
-											<h5><a href="${shippingOrder.shipment.trackLink}" target="_blank"> Track This </a></h5>
-										</#if>
-									</td>
-									<td>
 									${shippingOrder.shipment.courier.name}
 									</td>
 								</tr>
 							</#list>
 						</#list>
 						</table>
-						How likely is it that you would recommend HealthKart to a friend or colleague?
-						<form action="http://staging.healthkart.com:9090/hk/pages/static/feedback.jsp" method="post">
-							<table>
-								<tr>
-									<td><input type="radio" name="recommendToFriends" value="1" onclick=submit(this.form) /> 1</td>
-									<td><input type="radio" name="recommendToFriends" value="2" onclick=submit(this.form) /> 2</td>
-									<td><input type="radio" name="recommendToFriends" value="3" onclick=submit(this.form) /> 3</td>
-									<td><input type="radio" name="recommendToFriends" value="4" onclick=submit(this.form) /> 4</td>
-									<td><input type="radio" name="recommendToFriends" value="5" onclick=submit(this.form) /> 5</td>
-									<td><input type="radio" name="recommendToFriends" value="6" onclick=submit(this.form) /> 6</td>
-									<td><input type="radio" name="recommendToFriends" value="7" onclick=submit(this.form) /> 7</td>
-									<td><input type="radio" name="recommendToFriends" value="8" onclick=submit(this.form) /> 8</td>
-									<td><input type="radio" name="recommendToFriends" value="9" onclick=submit(this.form) /> 9</td>
-									<td><input type="radio" name="recommendToFriends" value="10" onclick=submit(this.form) /> 10</td>
-								</tr>
-							</table>
-							<input type="hidden" name="baseOrderId" value="${order}">
-						</form>
+						<br>
 
+						<table cellpadding="5" cellspacing="5" >
+							<tr>
+								<td colspan="10" style="font-size: medium;">How likely is it that you would recommend
+									HealthKart to a friend or colleague?
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<a href="http://staging.healthkart.com:9090/hk/pages/static/feedback.jsp?recommendToFriends=1&baseOrderId=${order}"
+									   target="_blank">
+										<input type="radio" name="recommendToFriends" value="1"/></a> 1
+								</td>
+								<td>
+									<a href="http://staging.healthkart.com:9090/hk/pages/static/feedback.jsp?recommendToFriends=2&baseOrderId=${order}"
+									   target="_blank">
+										<input type="radio" name="recommendToFriends" value="2"/></a> 2
+								</td>
+								<td>
+									<a href="http://staging.healthkart.com:9090/hk/pages/static/feedback.jsp?recommendToFriends=2&baseOrderId=${order}"
+									   target="_blank">
+										<input type="radio" name="recommendToFriends" value="3"/></a> 3
+								</td>
+								<td><input type="radio" name="recommendToFriends" value="4"/> 4</td>
+								<td><input type="radio" name="recommendToFriends" value="5"/> 5</td>
+								<td><input type="radio" name="recommendToFriends" value="6"/> 6</td>
+								<td><input type="radio" name="recommendToFriends" value="7"/> 7</td>
+								<td><input type="radio" name="recommendToFriends" value="8"/> 8</td>
+								<td><input type="radio" name="recommendToFriends" value="9"/> 9</td>
+								<td><input type="radio" name="recommendToFriends" value="10"/> 10</td>
+							</tr>
+							<tr>
+								<td colspan="3">Least likely</td>
+								<td></td>
+								<td colspan="3">May be</td>
+								<td colspan="3" align="right">Definitely</td>
+							</tr>
+						</table>
+
+
+						<br/>
 						In case you have any queries, feel free to chat with our Customer Care or call them at
 						0124-4551616. <br/>
 						<br/>
