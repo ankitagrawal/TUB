@@ -18,9 +18,11 @@ public class HKDeliveryUtil {
     // Getting comma seperated string for the duplicated
     public static String convertListToString(List<String> list) {
         StringBuffer strBuffr = new StringBuffer();
+        if(list.size()>0){
         for (String string : new HashSet<String>(list) ) {
             strBuffr.append(string);
             strBuffr.append(",");
+        }
         }
         return strBuffr.toString();
     }

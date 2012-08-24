@@ -180,4 +180,26 @@ public class ConsignmentServiceImpl implements ConsignmentService {
         consignmentDao.saveOrUpdate(hkdeliveryPaymentReconciliation);
         return hkdeliveryPaymentReconciliation;
     }
+
+    @Override
+    public boolean isConsignmentValidForRunsheet(Consignment consignment) {
+        if(consignment.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentDamaged.getId()) ||
+        consignment.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentDelivered.getId()) ||
+        consignment.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentLost.getId()) ||
+        consignment.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentRTH.getId()) ||
+        consignment.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentOutForDelivery.getId()))
+        {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public List<Consignment> getConsignmentsFromShippingOrderList(List<ShippingOrder> shippingOrderList) {
+        List<String> awbNumbers = new ArrayList<String>();
+        for(ShippingOrder shippingOrder : shippingOrderList){
+            awbNumbers.add(shippingOrder.getShipment().getAwb().getAwbNumber());
+        }
+        return getConsignmentListByAwbNumbers(awbNumbers);
+    }
 }

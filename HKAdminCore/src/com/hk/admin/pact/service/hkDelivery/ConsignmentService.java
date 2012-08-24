@@ -50,4 +50,8 @@ public interface ConsignmentService {
 
     public HkdeliveryPaymentReconciliation saveHkdeliveryPaymentReconciliation(HkdeliveryPaymentReconciliation hkdeliveryPaymentReconciliation);
 
+    public boolean isConsignmentValidForRunsheet(Consignment consignment);
+
+    public List<Consignment> getConsignmentsFromShippingOrderList(List<ShippingOrder> shippingOrderList);
+
 }

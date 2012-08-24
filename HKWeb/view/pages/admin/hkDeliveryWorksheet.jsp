@@ -162,23 +162,26 @@
 
                         </li>
                         <li>
-                            <s:submit id="submitButton" name="downloadDeliveryWorkSheet" value="Download Delivery Worksheet"
-                                      class="verifyData">
-                                Download Delivery Worksheet
-                                <s:param name="runsheetDownloadFunctionality" value="true"/>
+                            <p style="color:red;font-size:120%">( Please preview the runsheet first and then download it. )</p>
+                            <s:submit id="previewButton" name="previewRunsheet" target="_blank">
+                                <s:param name="runsheetPreview" value="true"/>
+                                Preview Runsheet
+                            </s:submit>
+
+                            <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDRunsheetAction"
+                                    event="previewRunsheet"
+                                    target="_blank">
+                                Preview Runsheet
+                                <s:param name="runsheetPreview" value="true"/>
+                            </s:link>
+
+                            <s:submit id="downloadButton" name="downloadDeliveryWorkSheet">
+                                Download Runsheet
                                 </s:submit>
-                             <s:submit id="submitButtonTwo" name="pre" value="Download Runsheet Again">
-                                Download Runsheet Again !!
-                                </s:submit>
-                        </li>
+                         </li>
                     </ul>
                 </fieldset>
-                <c:if test="${hkdBean.awbIdsWithoutConsignmntString != null}">
-                               <p> Consignment not created for following Tracking Ids:</p>
-                                <p>${hkdBean.awbIdsWithoutConsignmntString}</p>
-
-                            </c:if>
-            </s:form>
+             </s:form>
         </div>
 
     </s:layout-component>
@@ -198,6 +201,13 @@
            return false;
        }
   });
-   </script>
+   $(document).ready(function () {
+       $('.popup').popupWindow({
+				height:600,
+				width:900
+			});
+   });
+
+</script>
 
 
