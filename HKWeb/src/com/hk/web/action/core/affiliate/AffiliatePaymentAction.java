@@ -125,7 +125,7 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
 	}
 
 	public Resolution showAffiliateDetails() {
-		amount = getAffiliateManager().getAmountInAccount(affiliate, null, null);
+		amount = getAffiliateManager().getAmountInAccount(affiliate, startDate, endDate);
 		checkDetailsList = getCheckDetailsDao().getCheckListByAffiliate(affiliate);
 		return new ForwardResolution("/pages/affiliate/affiliateAccount.jsp");
 	}
