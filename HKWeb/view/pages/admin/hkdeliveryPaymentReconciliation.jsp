@@ -17,15 +17,24 @@
             <table>
                 <tr>
                     <td><label><strong>Date: </strong></label></td>
-                    <td>${consignmentAction.hkdeliveryPaymentReconciliation.createDate}</td>
+                    <td>
+                        <s:hidden name="hkdeliveryPaymentReconciliation.createDate" />
+                        <fmt:formatDate value="${consignmentAction.hkdeliveryPaymentReconciliation.createDate}" type="both" timeStyle="short"/>
+                    </td>
                     <td><label><strong>Expected COD Amount:</strong></label></td>
-                    <td>${consignmentAction.hkdeliveryPaymentReconciliation.expectedAmount}</td>
+                    <td>
+                        <s:hidden name="hkdeliveryPaymentReconciliation.expectedAmount" />
+                        <fmt:formatNumber value="${consignmentAction.hkdeliveryPaymentReconciliation.expectedAmount}" type="currency" currencySymbol=" "
+                                          maxFractionDigits="0"/>
+                    </td>
                     <td><label><strong>Actual Amount:</strong></label></td>
-                    <td><s:text name="hkdeliveryPaymentReconciliation.actualAmount" /></td>
+                    <td><s:text name="hkdeliveryPaymentReconciliation.actualAmount"/></td>
                 </tr>
                 <tr>
                     <td><label><strong>User: </strong></label></td>
-                    <td>${consignmentAction.hkdeliveryPaymentReconciliation.user.name}</td>
+                    <td>
+                        <s:hidden name="hkdeliveryPaymentReconciliation.user" value="${consignmentAction.hkdeliveryPaymentReconciliation.user.id}" />
+                        ${consignmentAction.hkdeliveryPaymentReconciliation.user.name}</td>
                     <td><label><strong>Remarks: </strong></label></td>
                     <td><s:textarea name="hkdeliveryPaymentReconciliation.remarks" style="height:50px;"/></td>
                 </tr>

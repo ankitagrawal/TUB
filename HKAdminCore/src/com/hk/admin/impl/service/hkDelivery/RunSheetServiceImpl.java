@@ -40,6 +40,7 @@ public class RunSheetServiceImpl implements RunSheetService {
         Runsheet runsheetObj = new Runsheet();
         runsheetObj.setCodBoxCount(totalCODPackets);
         runsheetObj.setCreateDate(new Date());
+        runsheetObj.setUpdateDate(new Date());
         runsheetObj.setExpectedCollection(totalCODAmount);
         runsheetObj.setPrepaidBoxCount(prePaidBoxCount);
         runsheetObj.setAgent(user);
@@ -51,6 +52,7 @@ public class RunSheetServiceImpl implements RunSheetService {
 
     @Override
     public void saveRunSheet(Runsheet runsheet) {
+        runsheet.setUpdateDate(new Date());
         runsheetDao.saveRunSheet(runsheet);
     }
 
@@ -59,6 +61,7 @@ public class RunSheetServiceImpl implements RunSheetService {
         if(changedConsignmentsList != null){
             updateConsignmentTrackingForRunsheet(changedConsignmentsList, userService.getLoggedInUser());
         }
+        runsheet.setUpdateDate(new Date());
         runsheetDao.saveRunSheet(runsheet);
     }
 

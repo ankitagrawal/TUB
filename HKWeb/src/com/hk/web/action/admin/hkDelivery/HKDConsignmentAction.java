@@ -161,10 +161,12 @@ public class HKDConsignmentAction extends BasePaginatedAction {
             }
         }
         hkdeliveryPaymentReconciliation = consignmentService.createPaymentReconciliationForConsignmentList(consignmentListForPaymentReconciliation, getUserService().getUserById(getPrincipal().getId()));
+        addRedirectAlertMessage(new SimpleMessage("Payment Reconciliation saved."));
         return new ForwardResolution("/pages/admin/hkdeliveryPaymentReconciliation.jsp");
     }
 
     public Resolution savePaymentReconciliation(){
+        hkdeliveryPaymentReconciliation.setConsignments(new HashSet<Consignment>(consignmentListForPaymentReconciliation));
         hkdeliveryPaymentReconciliation = consignmentService.saveHkdeliveryPaymentReconciliation(hkdeliveryPaymentReconciliation);
         return new ForwardResolution(HKDConsignmentAction.class, "searchConsignments");
     }

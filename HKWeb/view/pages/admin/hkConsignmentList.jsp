@@ -90,9 +90,13 @@
                         <td>${consignment.consignmentStatus.status}</td>
                         <td>${consignment.hkdeliveryPaymentReconciliation.id}</td>
                         <td>
-                            <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction" event="pre"
-                                    target="_blank">View/Edit Consignment
-                                <s:param name="consignment" value="${consignment.id}"/></s:link>
+                            <%--<s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction" event="pre"
+                                    target="_blank">View/Edit
+                                <s:param name="consignment" value="${consignment.id}"/></s:link>--%>
+                            <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction" event="trackConsignment">
+                                <s:param name="consignmentNumber" value="${consignment.awbNumber}" />
+                                <s:param name="doTracking" value="true" />Track Consignment
+                            </s:link>
                         </td>
                         <td>
                             <s:checkbox name="consignmentListForPaymentReconciliation[]" value="${consignment.id}"

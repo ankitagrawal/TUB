@@ -170,6 +170,7 @@ public class ConsignmentServiceImpl implements ConsignmentService {
 
     @Override
     public HkdeliveryPaymentReconciliation saveHkdeliveryPaymentReconciliation(HkdeliveryPaymentReconciliation hkdeliveryPaymentReconciliation){
+        hkdeliveryPaymentReconciliation.setUpdateDate(new Date());
         consignmentDao.saveOrUpdate(hkdeliveryPaymentReconciliation);
         return hkdeliveryPaymentReconciliation;
     }

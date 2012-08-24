@@ -84,10 +84,10 @@ public class ConsignmentDaoImpl extends BaseDaoImpl implements ConsignmentDao {
 
         if(reconciled != null){
             if(reconciled){
-                consignmentCriteria.add(Restrictions.isNotNull("paymentReconciliationId"));
+                consignmentCriteria.add(Restrictions.isNotNull("hkdeliveryPaymentReconciliation"));
             }
             else{
-                consignmentCriteria.add(Restrictions.isNull("paymentReconciliationId"));
+                consignmentCriteria.add(Restrictions.isNull("hkdeliveryPaymentReconciliation"));
             }
         }
 
