@@ -56,7 +56,7 @@ public class SearchAction extends BasePaginatedAction {
       productPage = new Page(sr.getSolrProducts(), getPageNo(), (int)sr.getResultSize());
       productList = productPage.getList();
     } catch (Exception e) {
-      logger.debug("SOLR NOT WORKING, HITTING DB TO ACCESS DATA");
+      logger.debug("SOLR NOT WORKING, HITTING DB TO ACCESS DATA", e);
       productPage = productDao.getProductByName(query, getPageNo(), getPerPage());
       productList = productPage.getList();
       for(Product product : productList){
