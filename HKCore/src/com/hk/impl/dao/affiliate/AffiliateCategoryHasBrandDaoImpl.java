@@ -8,6 +8,7 @@ import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.affiliate.AffiliateCategoryHasBrandDao;
 import com.hk.pact.service.catalog.ProductVariantService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ import java.util.List;
  * Time: 3:12 PM
  * To change this template use File | Settings | File Templates.
  */
+@Repository
 public class AffiliateCategoryHasBrandDaoImpl extends BaseDaoImpl implements AffiliateCategoryHasBrandDao  {
 
 	@Autowired
