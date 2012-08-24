@@ -159,7 +159,7 @@
             <c:otherwise>
                 <span class="codOrderText">&middot;</span>
 
-                <s:link href="#" class="confirmSubscriptionOrderLink">(confirm subscription Order)</s:link>
+                <a href="#" class="confirmSubscriptionOrderLink">(confirm subscription Order)</a>
                 <div class="confirmSubscriptionDiv" style="display: none;">
                     <s:form beanclass="com.hk.web.action.admin.subscription.SubscriptionAdminAction" class="confirmSubscriptionOrderForm" >
                         <s:param name="subscription" value="${subscription.id}"/>
@@ -194,19 +194,23 @@
         </c:if>
     </c:if>
     <hr/>
-    <c:if test="${! empty subscription.subscriptionLifecycles}">
-        <s:link beanclass="com.hk.web.action.admin.subscription.SubscriptionLifecycleAction" event="pre" target="_blank">
-            <label style="font-weight:bold;">Last Activity:</label><br>
-            ${subscription.subscriptionLifecycles[fn:length(subscription.subscriptionLifecycles)-1].subscriptionLifecycleActivity.name} on <br>
-            <fmt:formatDate value="${subscription.subscriptionLifecycles[fn:length(subscription.subscriptionLifecycles)-1].date}" type="both"/> by
-            "${subscription.subscriptionLifecycles[fn:length(subscription.subscriptionLifecycles)-1].user.name}"
-            <s:param name="subscription" value="${subscription}"/>
-        </s:link>
-
-    </c:if>
+	<c:if test="${! empty subscription.subscriptionLifecycles}">
+		<c:set var="subLifeCycleCnt" value="${fn:length(subscription.subscriptionLifecycles)}"/>
+		<c:if test="${subLifeCycleCnt > 0}">
+			<s:link beanclass="com.hk.web.action.admin.subscription.SubscriptionLifecycleAction" event="pre"
+			        target="_blank">
+				<label style="font-weight:bold;">Last Activity:</label><br>
+				<c:set var="lastActivity" value="${subscription.subscriptionLifecycles[subLifeCycleCnt-1]}"/>
+				${lastActivity.subscriptionLifecycleActivity.name} on <br>
+				<fmt:formatDate value="${lastActivity.date}" type="both"/> by
+				"${lastActivity.user.name}"
+				<s:param name="subscription" value="${subscription}"/>
+			</s:link>
+		</c:if>
+	</c:if>
     <br/> <br/>
     <c:if test="${!(subscription.subscriptionStatus.id == subscriptionStatusCancelled || subscription.subscriptionStatus.id == subscriptionStatusCart || subscription.subscriptionStatus.id == subscriptionStatusAbandoned || subscription.subscriptionStatus.id == subscriptionStatusInProcess || subscription.subscriptionStatus.id== subscriptionStatusExpired)}">
-        <s:link href="#" class="cancelSubscriptionLink">(cancel subscription)</s:link>
+        <a href="#" class="cancelSubscriptionLink">(cancel subscription)</a>
         <div class="cancelSubscriptionDiv" style="display: none;">
             <s:form beanclass="com.hk.web.action.admin.subscription.SubscriptionAdminAction" class="cancelSubscriptionForm" >
                 <s:param name="subscription" value="${subscription.id}"/>
@@ -371,9 +375,9 @@
             </c:when>
             <c:otherwise>
                 next due date: <strong><span class="or"><fmt:formatDate value="${subscription.nextShipmentDate}"/> </span></strong>
-                <s:link class="changeNextShipmentDateLink" href="#">
+                <a class="changeNextShipmentDateLink" href="#">
                     (change)
-                </s:link>
+                </a>
             </c:otherwise>
         </c:choose>
 

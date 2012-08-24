@@ -836,4 +836,26 @@
             ${hk:isEngravingProvidedForProduct(${object})}
         </example>
     </function>
+    <function>
+        <description>
+            get product url for a product
+        </description>
+        <name>getProductURL</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.String getProductURL(com.hk.domain.catalog.product.Product , java.lang.Long )</function-signature>
+        <example>
+            ${hk:getProductURL(${product},1)}
+        </example>
+    </function>
+	<function>
+        <description>
+            returns true if cod is allowed on order
+        </description>
+        <name>isCodAllowedOnOrder</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>boolean isCODAllowed(com.hk.domain.order.Order)</function-signature>
+        <example>
+            ${hk:isCodAllowedOnOrder(${order})}
+        </example>
+    </function>
 </taglib>

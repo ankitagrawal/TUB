@@ -181,7 +181,7 @@
     <c:if test="${orderSummary.order.offerInstance.offer.paymentType != prePaidPaymentType}">
         <div id="tabs_content4" class="tab_content" style="display: none;">
             <c:choose>
-                <c:when test="${orderSummary.codAllowed}">
+                <c:when test="${orderSummary.codAllowed && hk:isCodAllowedOnOrder(orderSummary.order)}">
 
                     <div class="grid_5">
                         <h4>Order Total</h4>
@@ -233,23 +233,31 @@
                         </p>
                     </s:form>
                 </c:when>
-                <c:otherwise>
-                    <h4 style="text-align: center;">We are sorry</h4>
+	            <c:otherwise>
+		            <h4 style="text-align: center;">We are sorry Cash on Delivery is not available for your order</h4>
+		            <c:if test="${!orderSummary.codAllowed}">
+			            <c:choose>
+				            <c:when test="${orderSummary.pricingDto.grandTotalPayable > codMinAmount && orderSummary.pricingDto.grandTotalPayable < codMaxAmount}">
+					            <p>COD is not available for your delivery
+					               location (Pincode : <strong>${orderSummary.order.address.pin}</strong>).
+						            <br/>
+					               We provide cash on delivery option for select PIN codes only.</p>
+				            </c:when>
+				            <c:otherwise>
+					            <p>The net payable is not in the range of <strong>Rs.
+							            ${codMinAmount} - Rs. ${codMaxAmount}</strong></p>
+				            </c:otherwise>
+			            </c:choose>
+		            </c:if>
 
-                    <p><strong>Either</strong></p>
+		            <c:if test="${!hk:isCodAllowedOnOrder(orderSummary.order)}">
+			            <p>COD is not allowed on one of the products in your cart</p>
+		            </c:if>
+					<c:if test="${orderSummary.order.subscriptionOrder}">
+						<p>You have subscriptions in your cart</p>
+		            </c:if>
 
-                    <p>Cash on Delivery is not available for your delivery
-                        location (Pincode : <strong>${orderSummary.order.address.pin}</strong>).
-                        <br />
-                        We provide cash on delivery option for select PIN codes only.</p>
-
-                    <p><strong>OR</strong></p>
-
-                    <p>The net payable is not in the range of <strong>Rs.
-                            ${codMinAmount} - Rs. ${codMaxAmount}</strong></p>
-                    <p><strong>OR</strong></p>
-                    <p> you have subscriptions in your cart</p>
-                </c:otherwise>
+	            </c:otherwise>
             </c:choose></div>
         <div id="tabs_content5" class="tab_content" style="display: none;">
             <h2 class="offer">Payment Details</h2>

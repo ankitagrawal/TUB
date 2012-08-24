@@ -18,7 +18,7 @@
       SubscriptionProduct subscriptionProduct = (SubscriptionProduct) pageContext.getAttribute("subscriptionProduct");
       pageContext.setAttribute("subscriptionProduct", subscriptionProduct);
   %>
-<div class='variants'>
+<div class='variants' itemprop="offerDetails" itemscope itemtype="http://data-vocabulary.org/Offer-aggregate">
     <span style="font-style: italic; font-size: 16px;;"> ${hk:getNonDeletedVariants(product)}</span>
     variants
     available.
@@ -113,7 +113,7 @@
                         </div>
                         <div class='hk'>
                             Our Price <br/>
-                <span class='num' style="font-size: 14px;" :>
+                <span class='num' style="font-size: 14px;">
                   Rs <fmt:formatNumber value="${hk:getApplicableOfferPrice(variant) + hk:getPostpaidAmount(variant)}"
                                        maxFractionDigits="0"/>
                 </span>
@@ -132,7 +132,7 @@
                 <c:if test="${variant.discountPercent == 0}">
                   <div class='prices'>
                     <div class='hk'>
-                <span class='num' style="font-size: 14px;" :>
+                <span class='num' style="font-size: 14px;">
                   Rs <fmt:formatNumber value="${hk:getApplicableOfferPrice(variant) + hk:getPostpaidAmount(variant)}"
                                        maxFractionDigits="0"/>
                 </span>
@@ -140,7 +140,7 @@
                   </div>
                 </c:if>
 
-                <div class='add'>
+                <div class='add' itemprop="availability" content="${variant.outOfStock ? '' : 'in_stock'}">
                   <c:choose>
                     <c:when test="${variant.outOfStock}">
                       <%--<c:choose>--%>

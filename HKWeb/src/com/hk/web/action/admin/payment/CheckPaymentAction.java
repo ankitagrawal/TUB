@@ -32,7 +32,6 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pricing.PricingEngine;
 import com.hk.web.action.error.AdminPermissionAction;
 
-@Secure(hasAnyPermissions = { PermissionConstants.UPDATE_PAYMENT }, authActionBean = AdminPermissionAction.class)
 @Component
 public class CheckPaymentAction extends BaseAction {
 
@@ -88,6 +87,7 @@ public class CheckPaymentAction extends BaseAction {
         return new ForwardResolution("/pages/admin/checkPayment.jsp");
     }
 
+	@Secure(hasAnyPermissions = { PermissionConstants.UPDATE_PAYMENT }, authActionBean = AdminPermissionAction.class)
     public Resolution acceptAsAuthPending() {
         User loggedOnUser = null;
         if (getPrincipal() != null) {
@@ -100,6 +100,7 @@ public class CheckPaymentAction extends BaseAction {
         return new RedirectResolution(CheckPaymentAction.class).addParameter("order", order.getId());
     }
 
+	@Secure(hasAnyPermissions = { PermissionConstants.UPDATE_PAYMENT }, authActionBean = AdminPermissionAction.class)
     public Resolution acceptAsSuccessful() {
         User loggedOnUser = null;
         if (getPrincipal() != null) {
@@ -113,6 +114,7 @@ public class CheckPaymentAction extends BaseAction {
         return new RedirectResolution(CheckPaymentAction.class).addParameter("order", order.getId());
     }
 
+	@Secure(hasAnyPermissions = { PermissionConstants.UPDATE_PAYMENT }, authActionBean = AdminPermissionAction.class)
     public Resolution associateToPayment() {
         getPaymentManager().associateToOrder(payment.getGatewayOrderId());
         User loggedOnUser = null;
@@ -134,6 +136,7 @@ public class CheckPaymentAction extends BaseAction {
         return new RedirectResolution(CheckPaymentAction.class).addParameter("order", order.getId());
     }
 
+	@Secure(hasAnyPermissions = { PermissionConstants.UPDATE_PAYMENT }, authActionBean = AdminPermissionAction.class)
     public Resolution updateToSuccess() {
         Payment payment = order.getPayment();
         payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.SUCCESS));

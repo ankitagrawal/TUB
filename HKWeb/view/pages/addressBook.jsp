@@ -36,6 +36,13 @@
 
 
   </script>
+    <%-- use attribute selectors to apply a specify styles  --%>
+    <style type="text/css">
+        select.error {
+            background: none repeat scroll 0 0 #FFFAFA;
+            border: 1px solid #CC0000;
+        }
+ </style>
 </s:layout-component>
 
 <s:layout-component name="modal">
@@ -150,12 +157,13 @@
 		        document.location.href = add_url;
 	        });
 	        $('.addressValidation').click(function() {
-		        var pincodeRegEx = /^([0-9]{6})$/;
-		        var pincode = $('.pincode').val();
-		        if (!pincodeRegEx.test(pincode)) {
-			        alert("Please enter a valid (6 digit) Pincode.");
-			        return false;
-		        }
+                var pincodeRegEx = /^([0-9]{6})$/;
+                var pincode = $('.pincode').val();
+                var state = $('.stateselect').val();
+                if (!pincodeRegEx.test(pincode)) {
+                    alert("Please enter a valid (6 digit) Pincode.");
+                    return false;
+                }
 	        });
         });
 
@@ -189,7 +197,8 @@
           <div class='label'>City<span class="aster">*</span></div>
           <s:text name="address.city"/>
           <div class='label'>State<span class="aster">*</span></div>
-          <s:select name="address.state" style="width:310px;">
+          <s:select  name="address.state" style="width:310px;">
+            <s:option> </s:option>
             <c:forEach items="<%=StateList.stateList%>" var="state">
               <s:option value="${state}">${state}</s:option>
             </c:forEach>

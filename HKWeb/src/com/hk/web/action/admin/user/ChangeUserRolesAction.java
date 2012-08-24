@@ -64,6 +64,8 @@ public class ChangeUserRolesAction extends BaseAction {
             roleList = roleDao.listAllCustomerSupportRoles();
         } else if (getSubject().hasRole(RoleConstants.OPS_MANAGER_L2)) {
             roleList = roleDao.listAllOperationsRoles();
+        } else if (getSubject().hasRole(RoleConstants.HR)) {
+            roleList = roleDao.listAllHRRoles();
         } else {
             roleList = roleDao.listAllBasicRoles();
         }

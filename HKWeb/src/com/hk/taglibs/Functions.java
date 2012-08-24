@@ -60,6 +60,7 @@ import com.hk.domain.sku.SkuItem;
 import com.hk.domain.user.User;
 import com.hk.dto.menu.MenuNode;
 import com.hk.helper.MenuHelper;
+import com.hk.manager.LinkManager;
 import com.hk.manager.OrderManager;
 import com.hk.manager.UserManager;
 import com.hk.pact.dao.BaseDao;
@@ -555,6 +556,17 @@ public class Functions {
         Date endDate = calendar.getTime();
 
         return reportProductVariantService.findSkuInventorySold(DateUtils.getDateMinusDays(noOfDays), endDate, sku);
+    }
+    
+    public static String getProductURL(Product product, Long productReferrerId){
+       LinkManager linkManager = (LinkManager) ServiceLocatorFactory.getService("LinkManager");
+       
+       return linkManager.getProductURL(product, productReferrerId);
+    }
+
+	public static boolean isCODAllowed(Order order) {
+		OrderService orderService = ServiceLocatorFactory.getService(OrderService.class);
+        return orderService.isCODAllowed(order);
     }
 
 }

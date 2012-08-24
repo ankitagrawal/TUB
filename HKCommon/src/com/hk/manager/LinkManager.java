@@ -100,11 +100,6 @@ public class LinkManager {
 		return getUrlFromResolution(redirectResolution);
 	}
 
-	public String getFeedbackPage() {
-		RedirectResolution redirectResolution = new RedirectResolution("/pages/Feedback.action");
-		return getUrlFromResolution(redirectResolution);
-	}
-
 	public String getViewTicketUrl(Ticket ticket) {
 		RedirectResolution redirectResolution = new RedirectResolution("/admin/ticket/ViewAndEditTicket.action").addParameter("ticket", ticket.getId());
 		return getUrlFromResolution(redirectResolution);
@@ -139,19 +134,20 @@ public class LinkManager {
 		String productURL = null;
 		String productSlug = product.getSlug();
 		String productId = product.getId();
-		//commented to stop internal product tagging
-		//       productURL = "/product/" + productSlug + "/" + productId + "?productReferrerId=" + productReferrerId;
+		// commented to stop internal product tagging
+		// productURL = "/product/" + productSlug + "/" + productId + "?productReferrerId=" + productReferrerId;
 		productURL = "/product/" + productSlug + "/" + productId;
 		/*
-					 RedirectResolution redirectResolution = new RedirectResolution(ProductAction.class).
-						 addParameter("referrer", referrerId).
-						 addParameter("productId", productId).addParameter("productSlug", productSlug);
-					 return getUrlFromResolution(redirectResolution);
-				*/
+				 * RedirectResolution redirectResolution = new RedirectResolution(ProductAction.class). addParameter("referrer",
+				 * referrerId). addParameter("productId", productId).addParameter("productSlug", productSlug); return
+				 * getUrlFromResolution(redirectResolution);
+				 */
 
-		/*RedirectResolution redirectResolution = new RedirectResolution("/core/catalog/product/Product.action").
-						addParameter("productId", productId).addParameter("productSlug", productSlug);
-				return getUrlFromResolution(redirectResolution);*/
+		/*
+				 * RedirectResolution redirectResolution = new RedirectResolution("/core/catalog/product/Product.action").
+				 * addParameter("productId", productId).addParameter("productSlug", productSlug); return
+				 * getUrlFromResolution(redirectResolution);
+				 */
 		return productURL;
 	}
 
@@ -162,7 +158,11 @@ public class LinkManager {
 		String productId = product.getId();
 		productURL = "/product/" + productSlug + "/" + productId;
 
-		RedirectResolution redirectResolution = new RedirectResolution(productURL).addParameter("productReferrerId", productReferrerId);
+		RedirectResolution redirectResolution = new RedirectResolution(productURL);
+		if (productReferrerId != null && productReferrerId != 0) {
+			redirectResolution.addParameter("productReferrerId", productReferrerId);
+		}
+
 		return getUrlFromResolution(redirectResolution);
 
 		/*
@@ -171,5 +171,10 @@ public class LinkManager {
 				 * getUrlFromResolution(redirectResolution);
 				 */
 
+	}
+
+	public String getFeedbackPage() {
+		RedirectResolution redirectResolution = new RedirectResolution("/pages/Feedback.action");
+		return getUrlFromResolution(redirectResolution);
 	}
 }
