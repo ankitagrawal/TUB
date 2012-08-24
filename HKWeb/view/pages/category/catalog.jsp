@@ -9,6 +9,7 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Arrays" %>
+<%@ page import="com.hk.taglibs.Functions" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -28,7 +29,10 @@
     List<Category> applicableCategories = new ArrayList<Category>();
     applicableCategories.add(categoryDao.getCategoryByName("bp-monitor"));
     pageContext.setAttribute("applicableCategories", applicableCategories);
-    pageContext.setAttribute("advCatalogCategories", Arrays.asList("eyeglasses", "proteins"));
+	boolean renderNewCatalogUI = (Functions.collectionContains(Arrays.asList("eyeglasses", "proteins"), ca.getChildCategorySlug())
+			|| Functions.collectionContains(Arrays.asList("eyeglasses", "proteins"), ca.getSecondaryChildCategorySlug())); 
+	pageContext.setAttribute("renderNewCatalogUI", renderNewCatalogUI);
+
 
     boolean isSecure = pageContext.getRequest().isSecure();
     pageContext.setAttribute("isSecure", isSecure);
@@ -188,7 +192,7 @@
   </div>
 </div>
 <c:choose>
-	<c:when test="${hk:collectionContains(advCatalogCategories, ca.childCategorySlug)}">
+	<c:when test="${renderNewCatalogUI}">
 		<div class='catalog_filters grid_5 alpha'>
 		<s:layout-render name="/layouts/advCatalogFilter.jsp" filterUrlFragment="${ca.urlFragment}"/>
 		</div>
@@ -325,13 +329,13 @@
   </div>
 </div>
 
-<div id="prod_grid" class="${hk:collectionContains(advCatalogCategories, ca.childCategorySlug) ? 'grid_19' : 'grid_18'}" style="${ca.rootCategorySlug == "services"?"display:none":""}">
+<div id="prod_grid" class="${renderNewCatalogUI ? 'grid_19' : 'grid_18'}" style="${ca.rootCategorySlug == "services"?"display:none":""}">
   <s:form beanclass="com.hk.web.action.core.catalog.CompareAction" target="_blank">
     <c:forEach items="${ca.productList}" var="product">
       <c:if test="${!product.googleAdDisallowed}">
-	      <div class="product_box ${hk:collectionContains(advCatalogCategories, ca.childCategorySlug) ? 'grid_6' : 'grid_4'}">
+	      <div class="product_box ${renderNewCatalogUI ? 'grid_6' : 'grid_4'}">
 		      <c:choose>
-			      <c:when test="${hk:collectionContains(advCatalogCategories, ca.childCategorySlug)}">
+			      <c:when test="${renderNewCatalogUI}">
 				      <s:layout-render name="/layouts/embed/_productThumb200.jsp" product="${product}"/>
 			      </c:when>
 			      <c:otherwise>
