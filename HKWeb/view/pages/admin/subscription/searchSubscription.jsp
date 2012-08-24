@@ -200,9 +200,10 @@
 			<s:link beanclass="com.hk.web.action.admin.subscription.SubscriptionLifecycleAction" event="pre"
 			        target="_blank">
 				<label style="font-weight:bold;">Last Activity:</label><br>
-				${subscription.subscriptionLifecycles[subLifeCycleCnt-1].subscriptionLifecycleActivity.name} on <br>
-				<fmt:formatDate value="${subscription.subscriptionLifecycles[subLifeCycleCnt-1].date}" type="both"/> by
-				"${subscription.subscriptionLifecycles[fn:length(subscription.subscriptionLifecycles)-1].user.name}"
+				<c:set var="lastActivity" value="${subscription.subscriptionLifecycles[subLifeCycleCnt-1]}"/>
+				${lastActivity.subscriptionLifecycleActivity.name} on <br>
+				<fmt:formatDate value="${lastActivity.date}" type="both"/> by
+				"${lastActivity.user.name}"
 				<s:param name="subscription" value="${subscription}"/>
 			</s:link>
 		</c:if>
