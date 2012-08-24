@@ -194,16 +194,19 @@
         </c:if>
     </c:if>
     <hr/>
-    <c:if test="${! empty subscription.subscriptionLifecycles}">
-        <s:link beanclass="com.hk.web.action.admin.subscription.SubscriptionLifecycleAction" event="pre" target="_blank">
-            <label style="font-weight:bold;">Last Activity:</label><br>
-            ${subscription.subscriptionLifecycles[fn:length(subscription.subscriptionLifecycles)-1].subscriptionLifecycleActivity.name} on <br>
-            <fmt:formatDate value="${subscription.subscriptionLifecycles[fn:length(subscription.subscriptionLifecycles)-1].date}" type="both"/> by
-            "${subscription.subscriptionLifecycles[fn:length(subscription.subscriptionLifecycles)-1].user.name}"
-            <s:param name="subscription" value="${subscription}"/>
-        </s:link>
-
-    </c:if>
+	<c:if test="${! empty subscription.subscriptionLifecycles}">
+		<c:set var="subLifeCycleCnt" value="${fn:length(subscription.subscriptionLifecycles)}"/>
+		<c:if test="${subLifeCycleCnt > 0}">
+			<s:link beanclass="com.hk.web.action.admin.subscription.SubscriptionLifecycleAction" event="pre"
+			        target="_blank">
+				<label style="font-weight:bold;">Last Activity:</label><br>
+				${subscription.subscriptionLifecycles[subLifeCycleCnt-1].subscriptionLifecycleActivity.name} on <br>
+				<fmt:formatDate value="${subscription.subscriptionLifecycles[subLifeCycleCnt-1].date}" type="both"/> by
+				"${subscription.subscriptionLifecycles[fn:length(subscription.subscriptionLifecycles)-1].user.name}"
+				<s:param name="subscription" value="${subscription}"/>
+			</s:link>
+		</c:if>
+	</c:if>
     <br/> <br/>
     <c:if test="${!(subscription.subscriptionStatus.id == subscriptionStatusCancelled || subscription.subscriptionStatus.id == subscriptionStatusCart || subscription.subscriptionStatus.id == subscriptionStatusAbandoned || subscription.subscriptionStatus.id == subscriptionStatusInProcess || subscription.subscriptionStatus.id== subscriptionStatusExpired)}">
         <s:link href="#" class="cancelSubscriptionLink">(cancel subscription)</s:link>
