@@ -43,7 +43,7 @@
 
     <s:layout-component name="topBanner"></s:layout-component>
 
-    <div class="main_container">
+    <div class="main_container" itemscope itemtype="http://data-vocabulary.org/Product">
 
       <s:layout-component name="prod_title"></s:layout-component>
 
