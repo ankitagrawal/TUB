@@ -174,7 +174,7 @@ public class LinkManager {
 	}
 
 	public String getFeedbackPage() {
-		RedirectResolution redirectResolution = new RedirectResolution("/pages/Feedback.action");
+		RedirectResolution redirectResolution = new RedirectResolution("/feedback");
 		return getUrlFromResolution(redirectResolution);
 	}
 }
