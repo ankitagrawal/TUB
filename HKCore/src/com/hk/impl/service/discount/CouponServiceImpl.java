@@ -61,7 +61,7 @@ public class CouponServiceImpl implements CouponService {
             if (findByCode(code) == null) {
                 if (repetitiveUsage == null)
                     repetitiveUsage = false;
-                Coupon coupon = createCoupon(code, endDate, allowedTimes, alreadyUsed, offer, null, repetitiveUsage, couponType);
+                Coupon coupon = createCoupon(code, endDate, allowedTimes, alreadyUsed, offer, referredUser, repetitiveUsage, couponType);
                 coupons.add(coupon);
             } else {
                 i--;

@@ -5,6 +5,7 @@ import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.affiliate.AffiliateCategory;
 import com.hk.pact.service.core.AffilateService;
 import com.hk.web.action.error.AdminPermissionAction;
+import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
@@ -28,6 +29,10 @@ public class AddBrandToAffiliateCategoryAction extends BaseAction {
 
 	AffiliateCategory affiliateCategory;
 	String brand;
+
+	public Resolution pre(){
+		return new ForwardResolution("/pages/admin/affiliate/brandAffiliateCategory.jsp");
+	}
 
 	public Resolution addBrandsToExistingAffiliateCategory() {
 		affilateService.associateBrandToAffiliateCategory(affiliateCategory, brand);

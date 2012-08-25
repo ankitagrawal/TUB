@@ -316,6 +316,8 @@
 
 	<h3><s:link
 			beanclass="com.hk.web.action.core.discount.CategoryLevelDiscountAction">Category Level Discount</s:link></h3>
+    <h3><s:link
+            beanclass="com.hk.web.action.admin.affiliate.AddBrandToAffiliateCategoryAction">Assign Brand an Affiliate Category</s:link></h3>
 </div>
 
 <div class="cl"></div>
