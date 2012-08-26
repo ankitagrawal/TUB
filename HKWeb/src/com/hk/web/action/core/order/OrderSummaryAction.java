@@ -102,7 +102,6 @@ public class OrderSummaryAction extends BaseAction {
         orderManager.trimEmptyLineItems(order);
         OfferInstance offerInstance = order.getOfferInstance();
 
-
 //        Set<CartLineItem> cartLineItems = order.getCartLineItems();
 //        for (CartLineItem lineItem : cartLineItems) {
 //            if (lineItem != null && lineItem.getProductVariant() != null) {
@@ -172,6 +171,7 @@ public class OrderSummaryAction extends BaseAction {
 //                cashbackOnGroundshipped = cashbackOnGroundshipped * cashBackPercentageOnGroundShipped;
 //            }
 //        }
+
         hideCod = orderService.isOrderHasGroundShippedItem(order);
         if (hideCod){
            groundShippingAllowed= courierService.isGroundShippingAllowed(pin);

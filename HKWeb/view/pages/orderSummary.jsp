@@ -4,6 +4,7 @@
 <%@ page import="com.hk.constants.payment.EnumPaymentMode" %>
 <%@ page import="com.hk.constants.core.Keys" %>
 <%@ page import="com.hk.dto.pricing.PricingDto" %>
+<%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -165,21 +166,211 @@
       </div>
       </s:form>
 
- <%--<% if (pricingDto != null)  { %>--%>
-  <%--<c:forEach items="${pricingDto.productLineItems}" var="invoiceLineItem" varStatus="ctr1">--%>
-      <%--<c:if test="${invoiceLineItem.productVariant.product.groundShipping &&  !orderSummary.groundShippingAllowed}">--%>
-          <%--<script type="text/javascript">--%>
-              <%--$(document).ready(function() {--%>
-                  <%--$('#notifyMeWindow').jqm({ ajax: '@href'});--%>
-
-              <%--});--%>
-          <%--</script>--%>
-      <%--</c:if>--%>
-  <%--</c:forEach>--%>
-
-  <%--<% } %>--%>
-
-
     </div>
+    <c:if test="${!orderSummary.groundShippingAllowed}">
+      <script type="text/javascript">
+          $(document).ready(function () {
+              ShowDialog(true);
+              e.preventDefault();
+          });
+
+          function ShowDialog(modal)
+          {
+              $("#overlay").show();
+              $("#dialog").fadeIn(300);
+
+              if (modal)
+              {
+                  $("#overlay").unbind("click");
+              }
+          }
+
+          function HideDialog()
+          {
+              alert("hello");
+              $("#overlay").hide();
+              $("#dialog").fadeOut(300);
+          }
+
+          $("#btnClose").click(function (e)
+          {
+              alert("hello");
+              HideDialog();
+              e.preventDefault();
+          });
+
+      </script>
+     </c:if>
   </s:layout-component>
 </s:layout-render>
+
+<div id="overlay" class="web_dialog_overlay"></div>
+   <div id="dialog" class="web_dialog">
+
+  <s:form beanclass="com.hk.web.action.core.cart.CartAction" rel="noFollow">
+       <table style="width:100%; border: 0px;" cellpadding="3" cellspacing="0">
+           <tr>
+               <td colspan="2" class="web_dialog_title">Undeliverable Items</td>
+               <td class="web_dialog_title align_right">
+                   <a href="#" id="btnClose">Close</a>
+               </td>
+           </tr>
+           <tr>
+               <td>&nbsp;</td>
+               <td>&nbsp;</td>
+           </tr>
+           <tr>
+               <td colspan="3" style="padding-left: 15px;">
+                   <b>We are sorry below items cannot be delivered. Please remove them from cart. </b>
+               </td>
+           </tr>
+           <tr>
+               <td>&nbsp;</td>
+               <td>&nbsp;</td>
+           </tr>
+
+               <c:forEach items="${orderSummary.pricingDto.productLineItems}" var="invoiceLineItem"
+                              varStatus="ctr1">
+                   <tr>
+                       <div class='product' style="border-bottom-style: solid;">
+                         <td style="padding-left: 15px;">
+                           <div class='img48' style="width: 48px; height: 48px; display: inline-block; text-align: center; vertical-align: top;">
+                               <c:choose>
+                                   <c:when test="${invoiceLineItem.productVariant.product.mainImageId != null}">
+                                       <hk:productImage imageId="${invoiceLineItem.productVariant.product.mainImageId}"
+                                                        size="<%=EnumImageSize.TinySize%>"/>
+                                   </c:when>
+                                   <c:otherwise>
+                                       <img class="prod48"
+                                            src="${pageContext.request.contextPath}/images/ProductImages/ProductImagesThumb/${invoiceLineItem.productVariant.product.id}.jpg"
+                                            alt="${invoiceLineItem.productVariant.product.name}"/>
+                                   </c:otherwise>
+                               </c:choose>
+                           </div>
+                         </td>
+                         <td>
+                           <div class='name'>
+                               <table width="50%">
+                                   <tr>
+                                       <td>
+                                               ${invoiceLineItem.productVariant.product.name} <br/>
+
+                                               ${invoiceLineItem.productVariant.variantName}
+                                       </td>
+                                   </tr>
+                               </table>
+                           </div>
+                         </td>
+                           <td>
+                               <table width="50%" style="display: inline-block; font-size: 12px;">
+                                   <c:forEach items="${invoiceLineItem.productVariant.productOptions}" var="productOption"
+                                              varStatus="ctr">
+                                   <tr>
+                                       <td style="text-align: right;  padding: 0.3em 2em;border: 1px solid #f0f0f0; background: #fafafa;">${productOption.name}</td>
+                                       <td style="text-align: left; padding: 0.3em 2em;border: 1px solid #f0f0f0; background: #fff;">
+                                           <c:if test="${fn:startsWith(productOption.value, '-')}">
+                                               ${productOption.value}
+                                           </c:if>
+                                           <c:if test="${!fn:startsWith(productOption.value, '-')}">
+                                               &nbsp;${productOption.value}
+                                           </c:if>
+                                       </td>
+                                       </c:forEach>
+                                       <br/>
+                                       <c:forEach items="${invoiceLineItem.cartLineItemExtraOptions}" var="extraOption">
+                                   <tr>
+                                       <td style="text-align: left;  padding: 5px; border: 1px solid #f0f0f0;background: #fafafa;">${extraOption.name}</td>
+                                       <td style="text-align: left; padding: 0px;border: 1px solid #f0f0f0;background: #fff;">
+                                           <c:if test="${fn:startsWith(extraOption.value, '-')}">
+                                               ${extraOption.value}
+                                           </c:if>
+                                           <c:if test="${!fn:startsWith(extraOption.value, '-')}">
+                                               &nbsp;${extraOption.value}
+                                           </c:if>
+                                       </td>
+                                   </tr>
+                                   </c:forEach>
+                            </table>
+                              </td>
+                       </div>
+                   </tr>
+                   </c:forEach>
+
+
+           <tr>
+               <td>&nbsp;</td>
+               <td>&nbsp;</td>
+           </tr>
+           <tr>
+
+           </tr>
+           <tr>
+               <td colspan="2" style="text-align: center;">
+                   <s:link beanclass="com.hk.web.action.core.cart.CartAction"  class="  button_green"
+                                                           style="width: 120px; height: 15px; align_right ">Back to cart
+                   </s:link>
+
+               </td>
+           </tr>
+       </table>
+   </s:form>
+   </div>
+
+
+<style type="text/css">
+
+     .web_dialog_overlay
+   {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      background: #000000;
+      opacity: .15;
+      filter: alpha(opacity=15);
+      -moz-opacity: .15;
+      z-index: 101;
+      display: none;
+   }
+   .web_dialog
+   {
+      display: none;
+      position: fixed;
+      width: 580px;
+      height: 400px;
+      top: 50%;
+      left: 50%;
+      margin-left: -190px;
+      margin-top: -100px;
+      background-color: #ffffff;
+      border: 2px solid #336699;
+      padding: 0px;
+      z-index: 102;
+      font-family: Verdana;
+      font-size: 10pt;
+   }
+   .web_dialog_title
+   {
+      border-bottom: solid 2px #336699;
+      background-color: #336699;
+      padding: 4px;
+      color: White;
+      font-weight:bold;
+   }
+   .web_dialog_title a
+   {
+      color: White;
+      text-decoration: none;
+   }
+   .align_right
+   {
+      text-align: right;
+   }
+
+   </style>
+
