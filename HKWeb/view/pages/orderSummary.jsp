@@ -165,20 +165,19 @@
       </div>
       </s:form>
 
- <% if (pricingDto != null)  { %>
-  <c:forEach items="${pricingDto.productLineItems}" var="invoiceLineItem" varStatus="ctr1">
-      <c:if test="${invoiceLineItem.productVariant.product.groundShipping &&  !orderSummary.groundShippingAllowed}">
-          <script type="text/javascript">
-              $(document).ready(function() {
-                  $('#notifyMeWindow').jqm({ ajax: '@href'});
+ <%--<% if (pricingDto != null)  { %>--%>
+  <%--<c:forEach items="${pricingDto.productLineItems}" var="invoiceLineItem" varStatus="ctr1">--%>
+      <%--<c:if test="${invoiceLineItem.productVariant.product.groundShipping &&  !orderSummary.groundShippingAllowed}">--%>
+          <%--<script type="text/javascript">--%>
+              <%--$(document).ready(function() {--%>
+                  <%--$('#notifyMeWindow').jqm({ ajax: '@href'});--%>
 
-              });
-          </script>
-      </c:if>
-  </c:forEach>
+              <%--});--%>
+          <%--</script>--%>
+      <%--</c:if>--%>
+  <%--</c:forEach>--%>
 
-  <% } %>
-
+  <%--<% } %>--%>
 
 
     </div>
