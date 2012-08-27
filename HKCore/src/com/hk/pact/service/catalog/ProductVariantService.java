@@ -1,14 +1,13 @@
 package com.hk.pact.service.catalog;
 
-import java.util.List;
-import java.util.Set;
-
-import org.springframework.transaction.annotation.Transactional;
-
 import com.hk.constants.catalog.product.EnumProductVariantServiceType;
 import com.hk.domain.affiliate.AffiliateCategory;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.ProductVariantServiceType;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author vaibhav.adlakha
@@ -58,5 +57,7 @@ public interface ProductVariantService {
     public List<ProductVariant> getAllProductVariantsByCategory(String category);
 
     public List<ProductVariant> getAllProductVariant();
+
+	public boolean isAnySiblingVariantInStock(ProductVariant productVariant);
 
 }
