@@ -255,6 +255,9 @@
 --/home-devices/respiratory-care/accessories
 -/home-devices/supports
 --/home-devices/supports/cervical-support
+---/home-devices/supports/cervical-support/collars
+---/home-devices/supports/cervical-support/pillows
+---/home-devices/supports/cervical-support/supplements
 --/home-devices/supports/shoulder-support
 --/home-devices/supports/elbow-support
 --/home-devices/supports/wrist-support
