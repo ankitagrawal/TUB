@@ -272,11 +272,11 @@
 ---/home-devices/supports/walking-aids/walkers
 -/home-devices/rehabilitation-aids
 --/home-devices/rehabilitation-aids/walking-aids
----/home-devices/rehabilitation-aids/walking-aids/wheel-chair
----/home-devices/rehabilitation-aids/walking-aids/power-wheel-chair: Power Wheel Chair
 ---/home-devices/rehabilitation-aids/walking-aids/walking-sticks
 ---/home-devices/rehabilitation-aids/walking-aids/crutches
 ---/home-devices/rehabilitation-aids/walking-aids/walkers
+---/home-devices/rehabilitation-aids/wheel-chair
+---/home-devices/rehabilitation-aids/power-wheel-chair: Power Wheel Chair
 --/home-devices/rehabilitation-aids/commode : Commode WheelChair/Stools
 --/home-devices/rehabilitation-aids/physiotherapy-aids
 --/home-devices/rehabilitation-aids/orthotic-aids
@@ -336,7 +336,7 @@
 --/home-devices/miscellaneous/digital-thermometer : Digital Thermometer
 ---/home-devices/miscellaneous/flexible-tip
 ---/home-devices/miscellaneous/rigid-tip
----/home-devices/miscellaneous/forhead-thermometer
+---/home-devices/miscellaneous/forehead-thermometer
 ---/home-devices/miscellaneous/no-contact-thermometer
 ---/home-devices/miscellaneous/ear-thermometer
 --/home-devices/miscellaneous/weight-management
@@ -716,131 +716,100 @@
 --/baby/what-s-new/latest-arrivals
 
 /parenting
--/parenting/planning-your-baby
---/parenting/planning-your-baby/am-i-pregnant : Am I Pregnant?
---/parenting/planning-your-baby/ovulation-kits
--/parenting/mom-maternity/ : Mom & Maternity
---/parenting/mom-maternity/personal-care
---/parenting/mom-maternity/skin-care
---/parenting/mom-maternity/maternity-belts
---/parenting/mom-maternity/maternity-pads
---/parenting/mom-maternity/maternity-bags
---/parenting/mom-maternity/child-safety
---/parenting/mom-maternity/breast-feeding
----/parenting/mom-maternity/breast-feeding/breast-pumps
----/parenting/mom-maternity/breast-feeding/breast-pads
----/parenting/mom-maternity/breast-feeding/breast-milk-bottles
----/parenting/mom-maternity/breast-feeding/breast-milk-cooler-bags
---/parenting/mom-maternity/multivitamins-nutrition : Multivitamins & Nutrition
--/parenting/infant
---/parenting/infant/diapering
----/parenting/infant/diapering/diapers
----/parenting/infant/diapering/wipes
----/parenting/infant/diapering/diaper-rash-cream
---/parenting/infant/formula-baby-food : Formula & Baby Food
---/parenting/infant/feeding-bottles    :   Feeding Bottles
----/parenting/infant/feeding-bottles/glass-bottles
----/parenting/infant/feeding-bottles/bpa-free-plastic-bottles       :    BPA Free Plastic Bottles
----/parenting/infant/feeding-bottles/non-bpa-free-plastic-bottles    :   Non BPA Free Plastic Bottles
---/parenting/infant/feeding-accessories    :    Feeding Accessories
----/parenting/infant/feeding-accessories/nipples-and-teats    :     Nipples & Teats
----/parenting/infant/feeding-accessories/bowls    :   Bowls
----/parenting/infant/feeding-accessories/spoons   :  Spoons
----/parenting/infant/feeding-accessories/dish-plate    :   Dish Plates
----/parenting/infant/feeding-accessories/feeding-set    :   Feeding Set
----/parenting/infant/feeding-accessories/misc-accessories
---/parenting/infant/bottle-cleaning
----/parenting/infant/bottle-cleaning/bottle-and-nipple-brushes  :   Bottle & Nipple Brushes
----/parenting/infant/bottle-cleaning/bottle-cleaners
----/parenting/infant/bottle-cleaning/sterilizers-warmers : Sterilizers & Warmers
---/parenting/infant/sippers-mugs :Sippers & Mugs
---/parenting/infant/gifts-combos : Gifts & Combos
---/parenting/infant/health-safety : Health & Safety
----/parenting/infant/health-safety/thermometers
----/parenting/infant/health-safety/medicine-dispensers
----/parenting/infant/health-safety/accessories
---/parenting/infant/pacifiers-teethers : Pacifiers & Teethers
---/parenting/infant/toys
---/parenting/infant/grooming
----/parenting/infant/grooming/comb-hair-brushes:   Comb & Hair Brushes
----/parenting/infant/grooming/nail-clippers-scissors:   Nail Clippers & Scissors
----/parenting/infant/grooming/buds    :    Ear Buds
----/parenting/infant/grooming/cotton-balls   :    Cotton Balls
----/parenting/infant/grooming/safety-pins    :   Safety Pins
---/parenting/infant/room-accessories
---/parenting/infant/walkers
---/parenting/infant/bedtime
---/parenting/infant/bathtime
----/parenting/infant/bathtime/soaps-and-bath-foams: Soaps & Bath Foams
----/parenting/infant/bathtime/oil
----/parenting/infant/bathtime/powder
----/parenting/infant/bathtime/shampoo
----/parenting/infant/bathtime/lotions
----/parenting/infant/bathtime/creams
----/parenting/infant/bathtime/bath-towels :  Bath Towels
--/parenting/toddler
---/parenting/toddler/diapering
----/parenting/toddler/diapering/diapers
----/parenting/toddler/diapering/wipes
---/parenting/toddler/formula-baby-food : Formula & Baby Food
---/parenting/toddler/feeding-bottles    :   Feeding Bottles
----/parenting/toddler/feeding-bottles/glass-bottles
----/parenting/toddler/feeding-bottles/bpa-free-plastic-bottles       :    BPA Free Plastic Bottles
----/parenting/toddler/feeding-bottles/non-bpa-free-plastic-bottles    :   Non BPA Free Plastic Bottles
---/parenting/toddler/feeding-accessories    :    Feeding Accessories
----/parenting/toddler/feeding-accessories/nipples-and-teats    :     Nipples & Teats
----/parenting/toddler/feeding-accessories/bowls      :    Bowls
----/parenting/toddler/feeding-accessories/spoons     :     Spoons
----/parenting/toddler/feeding-accessories/dish-plates      :    Dish Plates
----/parenting/toddler/feeding-accessories/feeding-set      :    Feeding Set
----/parenting/toddler/feeding-accessories/misc-accessories
---/parenting/toddler/bottle-cleaning   :    Bottle Cleaning
----/parenting/toddler/bottle-cleaning/bottle-and-nipple-brushes  :   Bottle & Nipple Brushes
----/parenting/toddler/bottle-cleaning/sterilizers-and-warmers    :   Sterilizers & Warmers
----/parenting/toddler/bottle-cleaning/bottle-cleaners
---/parenting/toddler/sippers-and-mugs:       Sippers & Mugs
---/parenting/toddler/bedtime
---/parenting/toddler/bathtime
----/parenting/toddler/bathtime/soaps-and-bath-foams: Soaps & Bath Foams
----/parenting/toddler/bathtime/oil
----/parenting/toddler/bathtime/powder
----/parenting/toddler/bathtime/shampoo
----/parenting/toddler/bathtime/lotions
----/parenting/toddler/bathtime/creams
----/parenting/toddler/bathtime/bath-towels :  Bath Towels
---/parenting/toddler/grooming
----/parenting/toddler/grooming/comb-hair-brushes:   Comb & Hair Brushes
----/parenting/toddler/grooming/nail-clippers-scissors:   Nail Clippers & Scissors
----/parenting/toddler/grooming/buds    :    Ear Buds
----/parenting/toddler/grooming/cotton-balls   :    Cotton Balls
----/parenting/toddler/grooming/safety-pins    :   Safety Pins
---/parenting/toddler/oral-care
----/parenting/toddler/oral-care/toothbrushes
----/parenting/toddler/oral-care/toothpaste-and-tooth-gel:Toothpaste & Tooth gel
---/parenting/toddler/furniture
---/parenting/toddler/travel-safety : Travel & Safety
----/parenting/toddler/travel-safety/baby-prams-and-strollers    : Baby Prams & Strollers
----/parenting/toddler/travel-safety/baby-nursing-bags
----/parenting/toddler/travel-safety/baby-carriers
---/parenting/toddler/toys
---/parenting/toddler/funtime     :        Funtime
----/parenting/toddler/funtime/cds-dvds   :   CD's & DVD's
----/parenting/toddler/funtime/comics   :   Comics
----/parenting/toddler/funtime/activity-books   :    Activity Books
----/parenting/toddler/funtime/accessories   :    Accessories
--/parenting/pre-school
---/parenting/pre-school/apparels  : Apparels
----/parenting/pre-school/apparels/t-shirts  :   Tees
----/parenting/pre-school/apparels/shoes-booties  :  Shoes & Booties
---/parenting/pre-school/oral-care
----/parenting/pre-school/oral-care/toothbrushes
----/parenting/pre-school/oral-care/toothpaste-and-tooth-gel:toothpaste & tooth gel
---/parenting/pre-school/school-bags
---/parenting/pre-school/lunch-boxes
---/parenting/pre-school/water-bottles
---/parenting/pre-school/sippers
---/parenting/pre-school/toys
---/parenting/pre-school/accessories  : Accessories
+-/parenting/moms-maternity : Moms & Maternity
+--/parenting/moms-maternity/am-i-pregnant : Am I Pregnant?
+--/parenting/moms-maternity/ovulation-kits
+--/parenting/moms-maternity/skin-care-for-moms
+--/parenting/moms-maternity/nutrition-for-moms
+--/parenting/moms-maternity/maternity-belts
+--/parenting/moms-maternity/maternity-pads
+
+-/parenting/diapering
+--/parenting/diapering/diapers
+---/parenting/diapering/diapers/small
+---/parenting/diapering/diapers/medium
+---/parenting/diapering/diapers/large
+---/parenting/diapering/diapers/xl-xxl : XL/XXL
+--/parenting/diapering/nappies
+--/parenting/diapering/wipes
+--/parenting/diapering/diaper-rash-creams
+--/parenting/diapering/changing-mats
+--/parenting/diapering/diaper-bags
+--/parenting/diapering/potty-training
+
+-/parenting/feeding-nursing : Feeding & Nursing
+--/parenting/feeding-nursing/breastfeeding-aids
+---/parenting/feeding-nursing/breastfeeding-aids/breast-pumps
+---/parenting/feeding-nursing/breastfeeding-aids/breast-milk-bottles
+---/parenting/feeding-nursing/breastfeeding-aids/breast-pads
+---/parenting/feeding-nursing/breastfeeding-aids/breast-shields
+---/parenting/feeding-nursing/breastfeeding-aids/misc
+--/parenting/feeding-nursing/nipples-teats : Nipples & Teats
+--/parenting/feeding-nursing/formula-supplements : Formula & Supplements
+--/parenting/feeding-nursing/bibs-napkins : Bibs & Napkins
+--/parenting/feeding-nursing/sterilizers-warmers : Sterilizers & Warmers
+--/parenting/feeding-nursing/bottle-cleaning
+--/parenting/feeding-nursing/teethers
+--/parenting/feeding-nursing/pacifiers
+--/parenting/feeding-nursing/bottles
+---/parenting/feeding-nursing/bottles/breast-milk-bottles
+---/parenting/feeding-nursing/bottles/glass-bottles
+---/parenting/feeding-nursing/bottles/plastic-bottles
+--/parenting/feeding-nursing/baby-kids-utensils : Baby & Kids Utensils
+---/parenting/feeding-nursing/baby-kids-utensils/bowls-plates : Bowls & Plates
+---/parenting/feeding-nursing/baby-kids-utensils/feeders
+---/parenting/feeding-nursing/baby-kids-utensils/sippers-cups : Sippers & Cups
+---/parenting/feeding-nursing/baby-kids-utensils/spoons-forks : Spoons & Forks
+---/parenting/feeding-nursing/baby-kids-utensils/food-storage
+---/parenting/feeding-nursing/baby-kids-utensils/lunch-boxes
+---/parenting/feeding-nursing/baby-kids-utensils/water-bottles
+
+-/parenting/bath-skin-care : Bath & Skin Care
+--/parenting/bath-skin-care/soaps-gels : Soaps & Gels
+--/parenting/bath-skin-care/shampoo
+--/parenting/bath-skin-care/creams-lotions : Creams & Lotions
+--/parenting/bath-skin-care/powder
+--/parenting/bath-skin-care/oral-care
+---/parenting/bath-skin-care/oral-care/toothpaste
+---/parenting/bath-skin-care/oral-care/toothbrush
+--/parenting/bath-skin-care/massage-oils
+--/parenting/bath-skin-care/towels-wraps
+--/parenting/bath-skin-care/laundry-detergents
+--/parenting/bath-skin-care/bath-tubs-accessories : Bath Tubs & Accessories
+---/parenting/bath-skin-care/bath-tubs-accessories/bath-tubs
+---/parenting/bath-skin-care/bath-tubs-accessories/accessories
+---/parenting/bath-skin-care/bath-tubs-accessories/bath-toys
+--/parenting/bath-skin-care/grooming
+--/parenting/bath-skin-care/sunscreen
+--/parenting/bath-skin-care/combo-packs
+
+-/parenting/health-safety : Health & Safety
+--/parenting/health-safety/thermometers
+--/parenting/health-safety/medical-care
+--/parenting/health-safety/child-proofing
+--/parenting/health-safety/disinfectants
+--/parenting/health-safety/repellents
+--/parenting/health-safety/misc
+
+-/parenting/toys-more : Toys & More
+--/parenting/toys-more/toys
+---/parenting/toys-more/toys/rattles
+---/parenting/toys-more/toys/bath-toys
+---/parenting/toys-more/toys/teethers
+---/parenting/toys-more/toys/other-toys
+--/parenting/toys-more/strollers
+--/parenting/toys-more/walkers-cycles : Walkers & Cycles
+--/parenting/toys-more/books-cds : Books & Cds
+--/parenting/toys-more/apparels
+---/parenting/toys-more/apparels/caps
+---/parenting/toys-more/apparels/shoes
+---/parenting/toys-more/apparels/socks
+---/parenting/toys-more/apparels/t-shirts : T-shirts
+--/parenting/toys-more/school-supplies
+---/parenting/toys-more/school-supplies/school-bags
+---/parenting/toys-more/school-supplies/lunch-boxes
+---/parenting/toys-more/school-supplies/water-bottles
+--/parenting/toys-more/misc
 
 /services
 -/services/health-checkups
