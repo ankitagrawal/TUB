@@ -254,7 +254,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
             products = productService.getAllProductsById(productIds);
             for (Product product : products){
                 product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.SEARCH_PAGE)));
-                if (product.isOutOfStock()){
+                if ((product.isOutOfStock() != null) && product.isOutOfStock()){
                     outOfStockProducts.add(product);
                 }else{
                     inStockProducts.add(product);
