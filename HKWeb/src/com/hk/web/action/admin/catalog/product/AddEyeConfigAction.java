@@ -1,13 +1,16 @@
 package com.hk.web.action.admin.catalog.product;
 
-import net.sourceforge.stripes.action.*;
-import net.sourceforge.stripes.validation.Validate;
-import net.sourceforge.stripes.validation.ValidationMethod;
-import com.akube.framework.stripes.action.BaseAction;
-import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import net.sourceforge.stripes.validation.ValidationError;
+
+import com.akube.framework.stripes.action.BaseAction;
+import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
 
 
 /**
@@ -30,7 +33,7 @@ public class AddEyeConfigAction extends BaseAction {
 
     @DefaultHandler
     public Resolution pre() {
-        return new ForwardResolution("/pages/admin/AddEyeConfig.jsp");
+        return new ForwardResolution("/pages/admin/addEyeConfig.jsp");
 
     }
 
@@ -40,7 +43,7 @@ public class AddEyeConfigAction extends BaseAction {
             adminProductVariantInventoryDao.updateProductVariantsConfig(prodctVariantId, configId);
         }
         getContext().getMessages().add(new SimpleMessage("Database updated"));
-        return new RedirectResolution("/pages/admin/AddEyeConfig.jsp");
+        return new RedirectResolution("/pages/admin/addEyeConfig.jsp");
     }
 
     public String getProductVariantList() {

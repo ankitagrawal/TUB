@@ -191,7 +191,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>StripesDispatcher</servlet-name>
-        <!--<url-pattern>*.action</url-pattern>-->
+        <url-pattern>*.action</url-pattern>
         <url-pattern>/action/*</url-pattern>
         <url-pattern>/index</url-pattern>
         <url-pattern>/login</url-pattern>
