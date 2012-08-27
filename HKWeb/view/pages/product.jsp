@@ -486,7 +486,7 @@
 						<c:otherwise>
 							<s:layout-render name="/layouts/embed/_productWithMultipleVariantsWithColorOptions.jsp"
 							                 product="${product}"/>
-							<s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>
+							<%--<s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>--%>
 						</c:otherwise>
 					</c:choose>
 				</c:when>
