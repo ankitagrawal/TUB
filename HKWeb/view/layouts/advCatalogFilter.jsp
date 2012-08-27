@@ -88,10 +88,10 @@
 		padding-bottom: 10px; /*padding-top: 5px;*/
 	}
 
-	.filterOption{
-		font-size:.9em;
-		padding:0px;
-		border:0px;
+	.filterOption {
+		font-size: .9em;
+		padding: 0px;
+		border: 0px;
 	}
 </style>
 <script type="text/javascript" src="<hk:vhostJs/>/js/jquery-ui.min.js"></script>
@@ -154,10 +154,10 @@
 
 	function toggle(ulId, elm) {
 		$("#" + ulId).toggle();
-		if (elm.innerHTML == "+"){
+		if (elm.innerHTML == "+") {
 			elm.innerHTML = "-";
 			elm.title = "Collapse";
-		}else{
+		} else {
 			elm.innerHTML = "+";
 			elm.title = "Expand";
 		}
@@ -227,14 +227,15 @@
 					   style="cursor:pointer;float:right;margin-right:10px;color:black;font-size:.9em;font-weight:normal;">Reset</a>
 				</c:if>
 				<c:if test="${!empty ca.filterOptions}">
-				<div>
-					<c:forEach items="${ca.filterProductOptions}" var="filter">
-						<label style="font-size:.9em;font-weight:normal;">
-						${filter.value} <a class="removeFilter" style="cursor:pointer;color:black;" onclick="removeFilter(${filter.id})">X</a></label>
-						<br/>
-					</c:forEach>
-				</div>
-	</c:if>
+					<div>
+						<c:forEach items="${ca.filterProductOptions}" var="filter">
+							<label style="font-size:.9em;font-weight:normal;">
+									${filter.value} <a class="removeFilter" style="cursor:pointer;color:black;"
+									                   onclick="removeFilter(${filter.id})">X</a></label>
+							<br/>
+						</c:forEach>
+					</div>
+				</c:if>
 			</h5>
 
 		</div>
@@ -268,7 +269,8 @@
 				<div class="">
 					<h5 class='heading1' style="padding:5px;background-color:#DDD;">
 							${filter.key}
-						<a title="Collapse" style="float:right; font-size:1.2em;color:black;cursor:pointer;" onclick="toggle('${filter.key}', this)">-</a>
+						<a title="Collapse" style="float:right; font-size:1.2em;color:black;cursor:pointer;"
+						   onclick="toggle('${filter.key}', this)">-</a>
 					</h5>
 					<ul style="padding-left:10px;" id="${filter.key}">
 						<c:forEach items="${filter.value}" var="option">
@@ -279,10 +281,26 @@
 										       checked="checked"/>
 									</c:when>
 									<c:otherwise>
-										<input type="checkbox" class="filterOption" value="${option.id}"/>
+										<c:choose>
+											<c:when test="${option.applicable}">
+												<input type="checkbox" class="filterOption" value="${option.id}"/>
+											</c:when>
+											<c:otherwise>
+												<input type="checkbox" class="filterOption" value="${option.id}"
+												       disabled="disabled"/>
+											</c:otherwise>
+										</c:choose>
 									</c:otherwise>
 								</c:choose>
-								<a style="color:black;cursor:pointer;" class="filterOptionLink">${option.value} (${option.qty})</a>
+								<c:choose>
+									<c:when test="${option.applicable}">
+										<a style="color:black;cursor:pointer;" class="filterOptionLink">${option.value}
+											(${option.qty})</a>
+									</c:when>
+									<c:otherwise>
+										${option.value}
+									</c:otherwise>
+								</c:choose>
 								<c:if test="${filter.key == 'COLOR'}">
 									<span style="background-color:${option.value};height:10px;width:10px;float:right;margin-right:10px;margin-top:8px;">&nbsp;&nbsp;&nbsp;&nbsp;</span>
 								</c:if>

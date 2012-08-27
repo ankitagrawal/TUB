@@ -115,32 +115,7 @@
         });
       </script>
 
-	    <c:choose>
-		    <c:when test="${product.productVariants[0].outOfStock && !empty product.similarProducts}">
-			    <div style="font-size: 1.1em;margin-bottom:5px;">We also have the following similar products from other brands :</div>
-			    <c:forEach items="${product.similarProducts}" var="similarProduct">
-				    <c:set var="sProduct" value="${similarProduct.similarProduct}"/>
-				    <s:link href="${sProduct.productURL}" class="prod_link" title="${sProduct.name}">
-					    <div class='img128' style="float:left; width:100px;height:100px;padding-right:5px;">
-						    <c:choose>
-							    <c:when test="${sProduct.mainImageId != null}">
-								    <hk:productImage width="100px" height="100px" imageId="${sProduct.mainImageId}"
-								                     size="<%=EnumImageSize.SmallSize%>"/>
-							    </c:when>
-							    <c:otherwise>
-								    <img height="100px" width="100px" src='<hk:vhostImage/>/images/ProductImages/ProductImagesThumb/${sProduct.id}.jpg'
-								         alt="${sProduct.name}"/>
-							    </c:otherwise>
-						    </c:choose>
-					    </div>
-				    </s:link>
-			    </c:forEach>
-		    </c:when>
-		    <c:otherwise>
-			    <s:layout-render name="/layouts/embed/_hkAssistanceMessageForSingleVariant.jsp"/>
-		    </c:otherwise>
-	    </c:choose>
-
+	  <%--<s:layout-render name="/layouts/embed/_hkAssistanceMessageForSingleVariant.jsp"/>--%>
     </div>
     <script type="text/javascript">
       $(document).ready(function() {

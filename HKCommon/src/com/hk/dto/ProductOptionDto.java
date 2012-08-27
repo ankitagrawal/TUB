@@ -1,14 +1,5 @@
 package com.hk.dto;
 
-import com.hk.domain.catalog.product.ProductOption;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
 
 public class ProductOptionDto implements java.io.Serializable {
 
@@ -16,6 +7,7 @@ public class ProductOptionDto implements java.io.Serializable {
 	private String name;
 	private String value;
 	private Long qty;
+	private boolean applicable;
 
 	public Long getId() {
 		return id;
@@ -47,5 +39,17 @@ public class ProductOptionDto implements java.io.Serializable {
 
 	public void setQty(Long qty) {
 		this.qty = qty;
+	}
+
+	public boolean isApplicable() {
+		return applicable;
+	}
+
+	public boolean getApplicable() {
+		return applicable;
+	}
+
+	public void setApplicable(boolean applicable) {
+		this.applicable = applicable;
 	}
 }

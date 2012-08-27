@@ -8,8 +8,6 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 
 <s:layout-definition>
-
-
 	<%
 		Product product_productThumb = (Product) pageContext.getAttribute("product");
 		if (product_productThumb == null) {
@@ -40,17 +38,19 @@
 		<c:when test="${product.googleAdDisallowed || product.deleted}">
 		</c:when>
 		<c:otherwise>
-			<div class='grid_6 product' style="width:200px;height:300px;">
+			<div class='grid_6 product' style="width:240px;height:300px;">
 
 				<div class='img170 ${product.outOfStock ? 'opaque' : ''}' style="margin-bottom:20px;">
 					<s:link href="${product.productURL}" class="prod_link" title="${product.name}">
 						<c:choose>
 							<c:when test="${product.mainImageId != null}">
-								<hk:productImage style="max-height:170px;max-width:170px;" imageId="${product.mainImageId}" size="<%=EnumImageSize.MediumSize%>"
+								<hk:productImage style="max-height:170px;max-width:170px;"
+								                 imageId="${product.mainImageId}" size="<%=EnumImageSize.MediumSize%>"
 								                 alt="${product.name}"/>
 							</c:when>
 							<c:otherwise>
-								<img style="max-height:170px;max-width:170px;" src='<hk:vhostImage/>/images/ProductImages/ProductImagesThumb/${product.id}.jpg'
+								<img style="max-height:170px;max-width:170px;"
+								     src='<hk:vhostImage/>/images/ProductImages/ProductImagesThumb/${product.id}.jpg'
 								     alt="${product.name}"/>
 							</c:otherwise>
 						</c:choose>
@@ -58,27 +58,25 @@
 				</div>
 				<div>
 					<h3 style="height:20px;">
-					<s:link href="${product.productURL}" title="${product.name}" class="prod_link">
-						${product.name}
-					</s:link>
-				</h3>
+						<s:link href="${product.productURL}" title="${product.name}" class="prod_link">
+							${product.name}
+						</s:link>
+					</h3>
 				</div>
 				<c:choose>
 					<c:when test="${combo != null}">
 						<div class='prices'>
-							<div class='cut'>
+							<span class='cut'>
                   <span class='num'>
                     Rs. <fmt:formatNumber value="${combo.markedPrice}" maxFractionDigits="0"/>
                   </span>
-							</div>
-							<div class='hk'>
-								Our Price
+								</span><span class="hk">
                   <span class='num'>
                     Rs. <fmt:formatNumber
 		                  value="${combo.hkPrice}"
 		                  maxFractionDigits="0"/>
                   </span>
-							</div>
+							</span>>
 						</div>
 						<div class="special green">
 							<c:if test="${combo.discountPercent >= .33}">
@@ -97,19 +95,18 @@
 					<c:otherwise>
 						<div class='prices'>
 							<c:if test="${product.minimumMRPProducVariant.discountPercent > 0}">
-								<div class='cut'>
+								<span class='cut'>
                   <span class='num'>
                     Rs. <fmt:formatNumber value="${product.minimumMRPProducVariant.markedPrice}" maxFractionDigits="0"/>
                   </span>
-								</div>
-								<div class='hk'>
-									Our Price
+				</span>
+				<span class='hk'>
                   <span class='num'>
                     Rs. <fmt:formatNumber
 		                  value="${hk:getApplicableOfferPrice(product.minimumMRPProducVariant) + hk:getPostpaidAmount(product.minimumMRPProducVariant)}"
 		                  maxFractionDigits="0"/>
                   </span>
-								</div>
+								</span>
 							</c:if>
 							<c:if test="${product.minimumMRPProducVariant.discountPercent == 0}">
 								<div class='cut' style="min-width: 1px; height: 12px;">
