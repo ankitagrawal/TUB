@@ -3,10 +3,11 @@ package com.hk.db.seed.order;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.order.ShippingOrderLifeCycleActivity;
-import org.springframework.stereotype.Component;
 
 @Component
 public class ShippingOrderLifecycleActivitySeedData extends BaseSeedData {

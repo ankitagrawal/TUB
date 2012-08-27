@@ -21,6 +21,7 @@ import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
 import com.hk.pact.dao.user.UserProfileDao;
 import com.hk.pact.service.OrderStatusService;
+import com.hk.pact.service.subscription.SubscriptionStatusService;
 import com.hk.pact.service.user.UserProfileService;
 
 @Service
@@ -30,6 +31,8 @@ public class UserProfileServiceImpl implements UserProfileService {
     private OrderStatusService orderStatusService;
     @Autowired
     private UserProfileDao     userProfileDao;
+    @Autowired
+    private SubscriptionStatusService subscriptionStatusService;
 
     public Set<ProductVariant> getRecentlyOrderedProductVariantsForUser(User user) {
         Map<String, ProductVariant> recentlyOrderedProductVariantsMap = new HashMap<String, ProductVariant>();
@@ -39,7 +42,7 @@ public class UserProfileServiceImpl implements UserProfileService {
         if (!ordersByRecentDate.isEmpty()) {
             for (Order order : ordersByRecentDate) {
                 CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(new HashSet<CartLineItem>(order.getCartLineItems()));
-                Set<CartLineItem> productCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).filter();
+                Set<CartLineItem> productCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
                 for (CartLineItem cartLineItem : productCartLineItems) {
                     productVariant = cartLineItem.getProductVariant();
                     product = cartLineItem.getProductVariant().getProduct();
@@ -81,4 +84,11 @@ public class UserProfileServiceImpl implements UserProfileService {
         this.userProfileDao = userProfileDao;
     }
 
+    public SubscriptionStatusService getSubscriptionStatusService() {
+        return subscriptionStatusService;
+    }
+
+    public void setSubscriptionStatusService(SubscriptionStatusService subscriptionStatusService) {
+        this.subscriptionStatusService = subscriptionStatusService;
+    }
 }

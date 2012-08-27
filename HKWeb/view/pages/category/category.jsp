@@ -227,7 +227,7 @@
         </shiro:hasPermission>
 
         <div class="grid_24" style="width: 950px;">
-          <c:forEach var="product" items='${heading.productSortedByOrderRanking}'>
+          <c:forEach var="product" items='${hk:getCategoryHeadingProductsSortedByOrder(heading.id, categoryBean.category.name)}'>
             <div class="grid_4 alpha omega">
               <s:layout-render name="/layouts/embed/_productThumbG.jsp" product='${product}'/>
             </div>
@@ -257,7 +257,13 @@
   </div>
 
   <div class="clear"></div>
-	      
+
+<c:if test="${hk:isNotBlank(categoryBean.seoData.description)}">
+  <div style="margin-top: 45px; background-color: #FAFCFE; padding: 10px; float: none; clear: both;">
+    <h2><i>${categoryBean.seoData.descriptionTitle}</i>: </h2>
+      ${categoryBean.seoData.description}
+  </div>
+</c:if>
 		
 	<c:choose>
 		<c:when test="${not isSecure}">

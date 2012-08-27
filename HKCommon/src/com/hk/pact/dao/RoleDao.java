@@ -19,4 +19,6 @@ public interface RoleDao extends BaseDao {
 
     public List<Role> listAllOperationsRoles();
 
+    public List<Role> listAllHRRoles();
+
 }

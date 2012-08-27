@@ -34,6 +34,29 @@
           <%--});--%>
         <%--</script>--%>
 
+      <script type="text/javascript">
+          $(document).ready(function() {
+
+              $('.button').click(function(event) {
+                  var tracking = $("#trackingId").val();
+                  if (tracking == "" || tracking == null) {
+                       $('.error').html("");
+                      $('.error').append("Enter Tracking Id");
+                      $('.error').show();
+                      return false;
+                  }
+                  if (tracking.length > 20) {
+                      $('.error').html("");
+                      $('.error').append(" Tracking Id length can not be greater than 20");
+                      $('.error').show();
+                      return false;
+                  }
+
+              });
+
+          });
+
+      </script>
 
     <style type="text/css">
       .text {
@@ -52,6 +75,9 @@
 
   </s:layout-component>
   <s:layout-component name="content">
+      <div  class="error" style= "background-color:salmon; width:380px; display:none;">
+
+    </div>
     <div>
       <div style="float: left; width:40%">
         <s:form beanclass="com.hk.web.action.admin.shipment.ChangeShipmentDetailsAction">
@@ -123,7 +149,7 @@
               <s:hidden name="shippingOrder" value="shippingOrder"/>
               <s:hidden name="shipment" value="shipment"/>
               <s:hidden name="originalShippingOrderStatus" value="tempShippingOrderStatus"/>
-              <s:submit name="save" value="Save Changes" class="button"/>
+              <s:submit name="save" value="Save Changes"  id ="s"class="button"/>
             </fieldset>
           </s:form>
         </c:if>

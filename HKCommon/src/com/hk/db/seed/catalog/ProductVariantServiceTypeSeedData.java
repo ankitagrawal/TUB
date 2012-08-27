@@ -3,10 +3,11 @@ package com.hk.db.seed.catalog;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.hk.constants.catalog.product.EnumProductVariantServiceType;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.core.ProductVariantServiceType;
-import org.springframework.stereotype.Component;
 
 @Component
 public class ProductVariantServiceTypeSeedData extends BaseSeedData {

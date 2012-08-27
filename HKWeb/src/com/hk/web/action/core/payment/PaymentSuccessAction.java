@@ -3,7 +3,6 @@ package com.hk.web.action.core.payment;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.validation.Validate;
@@ -14,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
@@ -122,6 +122,7 @@ public class PaymentSuccessAction extends BaseAction {
                  * Order lifecycle activity logging - Order split to shipping orders
                  */
                 getOrderLoggingService().logOrderActivity(order, getUserService().getAdminUser(), getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), null);
+
 
                 // auto escalate shipping orders if possible
                 if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {

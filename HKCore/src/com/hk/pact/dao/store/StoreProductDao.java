@@ -1,12 +1,11 @@
 package com.hk.pact.dao.store;
 
+import java.util.List;
+
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.store.Store;
 import com.hk.domain.store.StoreProduct;
 import com.hk.pact.dao.BaseDao;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.

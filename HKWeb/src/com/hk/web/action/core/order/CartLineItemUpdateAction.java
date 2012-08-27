@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.hk.pact.service.mooga.RecommendationEngine;
 import net.sourceforge.stripes.action.JsonResolution;
 import net.sourceforge.stripes.action.Resolution;
 
@@ -24,6 +23,7 @@ import com.hk.manager.OrderManager;
 import com.hk.pact.dao.catalog.combo.ComboInstanceDao;
 import com.hk.pact.dao.catalog.combo.ComboInstanceHasProductVariantDao;
 import com.hk.pact.dao.order.cartLineItem.CartLineItemDao;
+import com.hk.pact.service.mooga.RecommendationEngine;
 import com.hk.pact.service.order.CartFreebieService;
 import com.hk.pact.service.order.CartLineItemService;
 import com.hk.pricing.PricingEngine;
@@ -93,7 +93,8 @@ public class CartLineItemUpdateAction extends BaseAction {
         if (getPrincipalUser() != null) {
             Order order = orderManager.getOrCreateOrder(getPrincipalUser());
             Address address = order.getAddress() != null ? order.getAddress() : new Address();
-            PricingDto pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), address, 0D), address);
+
+           PricingDto pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), address, 0D), address);
 
             //If it is remove from cart event then report it to recommendation engine
             /*if (cartLineItem.getQty() == 0){

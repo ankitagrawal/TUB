@@ -3,10 +3,11 @@ package com.hk.db.seed.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.hk.constants.core.EnumPermission;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.user.Permission;
-import org.springframework.stereotype.Component;
 
 @Component
 public class PermissionSeedData extends BaseSeedData {

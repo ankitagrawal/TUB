@@ -3,8 +3,6 @@ package com.hk.pact.service.faq;
 import com.akube.framework.dao.Page;
 import com.hk.domain.faq.Faq;
 
-import java.util.List;
-
 /**
  * Created by IntelliJ IDEA.
  * User: user

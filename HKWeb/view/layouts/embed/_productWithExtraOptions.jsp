@@ -98,7 +98,7 @@
 
 		<div class="buy_prod">
 
-			<div class="left_col">
+			<div class="left_col" style="border-right:none;">
 				<div class='prices' style="font-size: 14px;">
 					<c:if test="${variant.discountPercent > 0}">
 						<div class='cut' style="font-size: 14px;">
@@ -131,15 +131,18 @@
                 </span>
 						</div>
 					</c:if>
-					
+				 
 				</div>
 
 
 			</div>
-			<div class="right_col">
-				<c:if test="${variant.freeProductVariant != null}">
-					<p style="font-weight:bold;font-size:1.0em">+ FREE!! ${variant.freeProductVariant.product.name}</p>
-				</c:if>
+			<div class="right_col" style="border-left:1px dotted #DDDDDD">
+				 <c:if test="${variant.freeProductVariant != null}">
+						<div align="left" style="border:1px solid transparent;color:white;padding:3px;margin:5px 20px 5px 3px;background:#37BCDD;-moz-border-radius: 0.3em;
+border-radius: 0.3em;"><!--<span style="font-size:16px;font-weight:bold;">Offer:</span><br/>
+						--><span style="clear:both;margin-top: 5px;"> Buy ${variant.product.name} & Get ${variant.freeProductVariant.product.name} Free With Every Box!! </span>
+</div>
+				  </c:if>
 				<s:submit name="addToCart" value="Place Order"
 				          class="addToCartButton cta button_green"/>
 			</div>
@@ -148,6 +151,8 @@
 
 	<script type="text/javascript">
 		$(document).ready(function() {
+            var params = {};
+            params.productReferrerId = $('#productReferrerId').val();
 			function _addToCart2(res) {
 				if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
 					$('.message .line1').html("<strong>" + res.data.name + "</strong> is added to your shopping cart");
@@ -159,7 +164,7 @@
 				$('.progressLoader').hide();
 			}
 
-			$('.addToCartForm2').ajaxForm({dataType: 'json', success: _addToCart2});
+			$('.addToCartForm2').ajaxForm({dataType: 'json', data: params,success: _addToCart2});
 		});
 		validateCheckbox = 1;
 	</script>

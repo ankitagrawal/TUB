@@ -1,26 +1,26 @@
 package com.hk.web.action.faq;
 
-import com.akube.framework.dao.Page;
-import com.akube.framework.stripes.action.BaseAction;
-import com.akube.framework.stripes.action.BasePaginatedAction;
-import com.hk.domain.faq.Faq;
-import com.hk.pact.service.faq.FaqService;
-import com.hk.constants.FaqCategoryEnums;
-import com.hk.constants.core.PermissionConstants;
-import com.hk.web.action.error.AdminPermissionAction;
-import net.sourceforge.stripes.action.*;
-import net.sourceforge.stripes.validation.ValidationMethod;
-import net.sourceforge.stripes.validation.SimpleError;
-
 import java.util.HashSet;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Set;
+
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.action.UrlBinding;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.apache.commons.lang.StringUtils;
 import org.stripesstuff.plugin.security.Secure;
+
+import com.akube.framework.dao.Page;
+import com.akube.framework.stripes.action.BasePaginatedAction;
+import com.hk.constants.core.PermissionConstants;
+import com.hk.domain.faq.Faq;
+import com.hk.pact.service.faq.FaqService;
+import com.hk.web.action.error.AdminPermissionAction;
 
 /**
  * Created by IntelliJ IDEA.

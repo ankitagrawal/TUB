@@ -215,7 +215,7 @@
 
             <h2 class="paymentH2">Shipping & Delivery</h2>
 
-            <p>Your order will be dispatched within 1-3 business days. Additional time will be taken by the courier company.</p>
+            <p>Your order will be dispatched within ${hk:getDispatchDaysForOrder(actionBean.payment.order)}. Additional time will be taken by the courier company.</p>
 
             <h2 class="paymentH2">Customer Support</h2>
 

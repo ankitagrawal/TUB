@@ -1,17 +1,16 @@
 package com.hk.admin.pact.service.email;
 
-import com.hk.domain.email.EmailRecepient;
-import com.hk.domain.email.EmailCampaign;
-import com.hk.domain.catalog.category.Category;
-import com.hk.domain.user.User;
-import com.hk.domain.user.Role;
-
-import java.util.List;
 import java.util.Collection;
-import java.math.BigInteger;
+import java.util.List;
 
-import org.springframework.dao.DataAccessException;
 import org.hibernate.Session;
+import org.springframework.dao.DataAccessException;
+
+import com.hk.domain.catalog.category.Category;
+import com.hk.domain.email.EmailCampaign;
+import com.hk.domain.email.EmailRecepient;
+import com.hk.domain.user.Role;
+import com.hk.domain.user.User;
 
 /**
  * Created by IntelliJ IDEA.

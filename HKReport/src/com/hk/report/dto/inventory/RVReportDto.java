@@ -1,7 +1,7 @@
 package com.hk.report.dto.inventory;
 
-import com.hk.domain.inventory.rv.ReconciliationVoucher;
 import com.hk.domain.inventory.ProductVariantInventory;
+import com.hk.domain.inventory.rv.ReconciliationVoucher;
 
 /**
  * Created by IntelliJ IDEA.

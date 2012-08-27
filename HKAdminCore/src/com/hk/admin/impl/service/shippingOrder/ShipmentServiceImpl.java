@@ -1,5 +1,10 @@
 package com.hk.admin.impl.service.shippingOrder;
 
+import java.util.Date;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hk.admin.engine.ShipmentPricingEngine;
 import com.hk.admin.pact.dao.courier.AwbDao;
 import com.hk.admin.pact.dao.shipment.ShipmentDao;
@@ -20,11 +25,6 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
-import org.apache.poi.ddf.EscherBSERecord;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.Date;
 
 @Service
 public class ShipmentServiceImpl implements ShipmentService {
@@ -60,6 +60,19 @@ public class ShipmentServiceImpl implements ShipmentService {
         if (suggestedAwb == null) {
             return null;
         }
+        Double estimatedWeight = 100D;
+        for (LineItem lineItem : shippingOrder.getLineItems()) {
+            ProductVariant productVariant = lineItem.getSku().getProductVariant();
+            if (lineItem.getSku().getProductVariant().getProduct().isDropShipping()) {
+                return null;
+            }
+            Double variantWeight = productVariant.getWeight();
+            if (variantWeight == null || variantWeight == 0D) {
+                estimatedWeight += 0D;
+            } else {
+                estimatedWeight += variantWeight;
+            }
+        }
         Shipment shipment = new Shipment();
         shipment.setCourier(suggestedCourier);
         shipment.setEmailSent(false);
@@ -68,16 +81,6 @@ public class ShipmentServiceImpl implements ShipmentService {
         suggestedAwb = awbService.save(suggestedAwb);
         shipment.setAwb(suggestedAwb);
         shipment.setShippingOrder(shippingOrder);
-        Double estimatedWeight = 0D;
-        for (LineItem lineItem : shippingOrder.getLineItems()) {
-            ProductVariant productVariant = lineItem.getSku().getProductVariant();
-            Double variantWeight = productVariant.getWeight();
-            if (variantWeight == null || variantWeight == 0D) {
-                estimatedWeight += 0D;
-            } else {
-                estimatedWeight += variantWeight;
-            }
-        }
         shipment.setBoxWeight(estimatedWeight/1000);
         shipment.setBoxSize(EnumBoxSize.MIGRATE.asBoxSize());
         shippingOrder.setShipment(shipment);
@@ -114,5 +117,9 @@ public class ShipmentServiceImpl implements ShipmentService {
 
     public Shipment findByAwb(Awb awb) {
         return shipmentDao.findByAwb(awb);
+    }
+
+    public void delete(Shipment shipment){
+         shipmentDao.delete(shipment);
     }
 }

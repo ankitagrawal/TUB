@@ -27,28 +27,17 @@ public class SuperSaversAction extends BasePaginatedAction {
     Page superSaverPage;
 
     @Autowired
-    SuperSaverImageService superSaverImageService;
+    private SuperSaverImageService superSaverImageService;
 
     @DefaultHandler
     public Resolution pre() {
-        superSaverPage = superSaverImageService.getSuperSaverImages(categories, brands, Boolean.TRUE, getPageNo(), getPerPage());
+        superSaverPage = getSuperSaverImageService().getSuperSaverImages(categories, brands, Boolean.TRUE, Boolean.FALSE, getPageNo(), getPerPage());
         superSaverImages = superSaverPage.getList();
-
-        //superSaverImages = superSaverImageService.getSuperSaverImages(Boolean.TRUE, Boolean.TRUE);
         return new ForwardResolution("/pages/superSavers.jsp");
     }
 
     public List<SuperSaverImage> getSuperSaverImages() {
         return superSaverImages;
-    }
-
-    public Resolution getSuperSaversForCategoryAndBrand() {
-        /*superSaverPage = superSaverImageService.getSuperSaverImages(categories, brands, Boolean.TRUE, getPageNo(), getPerPage());
-        superSaverImages = superSaverPage.getList();
-        HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK,"super savers found",superSaverImages);
-        noCache();
-        return new JsonResolution(healthkartResponse);*/
-        return pre();
     }
 
     public void setSuperSaverImages(List<SuperSaverImage> superSaverImages) {
@@ -88,5 +77,9 @@ public class SuperSaversAction extends BasePaginatedAction {
         params.add("categories");
         params.add("brands");
         return params;
+    }
+
+    public SuperSaverImageService getSuperSaverImageService() {
+        return superSaverImageService;
     }
 }

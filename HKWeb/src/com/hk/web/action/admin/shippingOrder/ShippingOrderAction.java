@@ -20,7 +20,6 @@ import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.SkuService;
-import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.web.HealthkartResponse;
 
 @Component
@@ -30,8 +29,8 @@ public class ShippingOrderAction extends BaseAction {
     @Autowired
     WarehouseService                  warehouseService;
 
-    @Autowired
-    private ShippingOrderService      shippingOrderService;
+    /*@Autowired
+    private ShippingOrderService      shippingOrderService;*/
     @Autowired
     private AdminShippingOrderService adminShippingOrderService;
     @Autowired
@@ -46,7 +45,7 @@ public class ShippingOrderAction extends BaseAction {
         if (isWarehouseUpdated) {
             responseMsg = "warehouse flipped";
         } else {
-            responseMsg = "All products not avaialable in other warehouse. so cannot update.";
+            responseMsg = " Either All products not avaialable in other warehouse or sku for all products are nor available , so cannot update.";
         }
 
         Map<String, Object> data = new HashMap<String, Object>(1);

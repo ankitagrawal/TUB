@@ -1,3 +1,4 @@
+<%--
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
@@ -7,7 +8,9 @@
 <s:layout-render name="/layouts/defaultAdmin.jsp">
 
   <s:layout-component name="content">
-    <%--<p>${pa.product.id}</p>--%>
+    --%>
+<%--<p>${pa.product.id}</p>--%>
+<%--
     <h2>
       ${comboActionBean.combo.name}
     </h2>
@@ -50,4 +53,4 @@
 
   </s:layout-component>
 
-</s:layout-render>
+</s:layout-render>--%>

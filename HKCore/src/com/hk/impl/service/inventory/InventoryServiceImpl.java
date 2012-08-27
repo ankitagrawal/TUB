@@ -1,16 +1,8 @@
 package com.hk.impl.service.inventory;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.domain.catalog.Supplier;
+import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.InvTxnType;
 import com.hk.domain.inventory.LowInventory;
@@ -27,6 +19,14 @@ import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class InventoryServiceImpl implements InventoryService {
@@ -57,7 +57,7 @@ public class InventoryServiceImpl implements InventoryService {
     public void checkInventoryHealth(ProductVariant productVariant) {
         List<Sku> skuList = getSkuService().getSKUsForProductVariant(productVariant);
         if (skuList != null && !skuList.isEmpty()) {
-            checkInventoryHealth(skuList);
+            checkInventoryHealth(skuList, productVariant);
         }
     }
 
@@ -83,10 +83,19 @@ public class InventoryServiceImpl implements InventoryService {
         return getBaseDao().get(InvTxnType.class, enumInvTxnType.getId());
     }
 
-    private void checkInventoryHealth(List<Sku> skuList) {
+    private void checkInventoryHealth(List<Sku> skuList, ProductVariant productVariant) {
         Long availableUnbookedInventory = this.getAvailableUnbookedInventory(skuList);
-        ProductVariant productVariant = skuList.get(0).getProductVariant();
+        //ProductVariant productVariant = skuList.get(0).getProductVariant();
+	    Product product = productVariant.getProduct();
         boolean isJit = productVariant.getProduct().isJit() != null && productVariant.getProduct().isJit();
+
+	    if(!productVariantService.isAnySiblingVariantInStock(productVariant) && availableUnbookedInventory <= 0 && !productVariant.isOutOfStock()){
+		    getEmailManager().sendProductStatusMail(product, "Out of Stock");
+	    }
+	    if(!productVariantService.isAnySiblingVariantInStock(productVariant) && availableUnbookedInventory > 0 && productVariant.isOutOfStock()){
+		    getEmailManager().sendProductStatusMail(product, "In Stock");
+	    }
+
         logger.debug("isJit: " + isJit);
         if (getAggregateCutoffInventory(skuList) != null && !isJit) {
             if (availableUnbookedInventory <= getAggregateCutoffInventory(skuList)) {

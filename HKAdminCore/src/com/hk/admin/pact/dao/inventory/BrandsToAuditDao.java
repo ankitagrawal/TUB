@@ -1,15 +1,12 @@
 package com.hk.admin.pact.dao.inventory;
 
-import com.akube.framework.dao.Page;
-import com.hk.domain.accounting.DebitNoteStatus;
-import com.hk.domain.inventory.GoodsReceivedNote;
-import com.hk.domain.inventory.BrandsToAudit;
-import com.hk.domain.warehouse.Warehouse;
-import com.hk.domain.user.User;
-import com.hk.pact.dao.BaseDao;
-
 import java.util.Date;
 import java.util.List;
+
+import com.akube.framework.dao.Page;
+import com.hk.domain.user.User;
+import com.hk.domain.warehouse.Warehouse;
+import com.hk.pact.dao.BaseDao;
 
 public interface BrandsToAuditDao extends BaseDao {
 

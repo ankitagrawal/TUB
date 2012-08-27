@@ -1,10 +1,12 @@
 package com.hk.pact.dao.inventory;
 
-import com.hk.domain.warehouse.DemandForecast;
-
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 
 import org.springframework.dao.DataAccessException;
+
+import com.hk.domain.warehouse.DemandForecast;
 
 /**
  * Created by IntelliJ IDEA.
