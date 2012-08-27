@@ -275,8 +275,8 @@
 ---/home-devices/rehabilitation-aids/walking-aids/walking-sticks
 ---/home-devices/rehabilitation-aids/walking-aids/crutches
 ---/home-devices/rehabilitation-aids/walking-aids/walkers
----/home-devices/rehabilitation-aids/wheel-chair
----/home-devices/rehabilitation-aids/power-wheel-chair: Power Wheel Chair
+--/home-devices/rehabilitation-aids/wheel-chair
+--/home-devices/rehabilitation-aids/power-wheel-chair: Power Wheel Chair
 --/home-devices/rehabilitation-aids/commode : Commode WheelChair/Stools
 --/home-devices/rehabilitation-aids/physiotherapy-aids
 --/home-devices/rehabilitation-aids/orthotic-aids
