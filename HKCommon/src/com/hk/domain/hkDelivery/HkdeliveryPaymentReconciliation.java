@@ -126,6 +126,11 @@ public class HkdeliveryPaymentReconciliation implements java.io.Serializable {
     public void setRemarks(String remarks) {
         this.remarks = remarks;
     }
+
+    @Override
+    public String toString() {
+        return id == null ? "" : id.toString();
+    }
 }
 
 

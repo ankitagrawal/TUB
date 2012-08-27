@@ -14,6 +14,7 @@
     </s:layout-component>
     <s:layout-component name="content">
         <s:form beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction">
+            <s:hidden name="hkdeliveryPaymentReconciliation" value="${consignmentAction.hkdeliveryPaymentReconciliation.id}" />
             <table>
                 <tr>
                     <td><label><strong>Date: </strong></label></td>

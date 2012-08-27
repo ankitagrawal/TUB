@@ -88,7 +88,12 @@
                         <td>${consignment.paymentMode}</td>
                         <td>${consignment.runsheet.id}</td>
                         <td>${consignment.consignmentStatus.status}</td>
-                        <td>${consignment.hkdeliveryPaymentReconciliation.id}</td>
+                        <td>${consignment.hkdeliveryPaymentReconciliation.id}
+                            <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction" event="editPaymentReconciliation">
+                                <s:param name="hkdeliveryPaymentReconciliation" value="${consignment.hkdeliveryPaymentReconciliation.id}" />
+                                (View)
+                            </s:link>
+                        </td>
                         <td>
                             <%--<s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction" event="pre"
                                     target="_blank">View/Edit
@@ -99,8 +104,10 @@
                             </s:link>
                         </td>
                         <td>
-                            <s:checkbox name="consignmentListForPaymentReconciliation[]" value="${consignment.id}"
-                                        class="purchaseLineItemCheckBox"/>
+                            <c:if test="${consignment.hkdeliveryPaymentReconciliation == null}" >
+                                <s:checkbox name="consignmentListForPaymentReconciliation[]" value="${consignment.id}"
+                                            class="purchaseLineItemCheckBox"/>
+                            </c:if>
                         </td>
                     </tr>
                 </c:forEach>
