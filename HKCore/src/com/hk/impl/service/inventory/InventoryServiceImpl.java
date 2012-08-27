@@ -89,10 +89,10 @@ public class InventoryServiceImpl implements InventoryService {
 	    Product product = productVariant.getProduct();
         boolean isJit = productVariant.getProduct().isJit() != null && productVariant.getProduct().isJit();
 
-	    if(!productVariantService.isAnySiblingVariantInStock(productVariant) && availableUnbookedInventory <= 0){
+	    if(!productVariantService.isAnySiblingVariantInStock(productVariant) && availableUnbookedInventory <= 0 && !productVariant.isOutOfStock()){
 		    getEmailManager().sendProductStatusMail(product, "Out of Stock");
 	    }
-	    if(!productVariantService.isAnySiblingVariantInStock(productVariant) && availableUnbookedInventory > 0){
+	    if(!productVariantService.isAnySiblingVariantInStock(productVariant) && availableUnbookedInventory > 0 && productVariant.isOutOfStock()){
 		    getEmailManager().sendProductStatusMail(product, "In Stock");
 	    }
 
