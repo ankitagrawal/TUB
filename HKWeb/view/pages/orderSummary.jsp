@@ -167,7 +167,7 @@
       </s:form>
 
     </div>
-    <c:if test="${!orderSummary.groundShippingAllowed}">
+    <c:if test="${orderSummary.hideCod && !(orderSummary.groundShippingAllowed)}">
       <script type="text/javascript">
           $(document).ready(function () {
               ShowDialog(true);

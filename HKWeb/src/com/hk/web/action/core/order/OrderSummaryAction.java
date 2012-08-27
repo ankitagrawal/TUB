@@ -64,7 +64,7 @@ public class OrderSummaryAction extends BaseAction {
     private boolean codAllowed;
     private Double redeemableRewardPoints;
     private List<Courier> availableCourierList;
-    private boolean  groundShippingAllowed;
+    private boolean  groundShippingAllowed ;
     private boolean  hideCod;
     private Double  cashbackOnGroundshipped;
     private Double  groundshipItemweight;
@@ -171,7 +171,7 @@ public class OrderSummaryAction extends BaseAction {
 //                cashbackOnGroundshipped = cashbackOnGroundshipped * cashBackPercentageOnGroundShipped;
 //            }
 //        }
-
+        groundShippingAllowed = false;
         hideCod = orderService.isOrderHasGroundShippedItem(order);
         if (hideCod){
            groundShippingAllowed= courierService.isGroundShippingAllowed(pin);        
