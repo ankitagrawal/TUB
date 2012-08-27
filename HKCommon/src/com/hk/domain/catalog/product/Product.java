@@ -154,6 +154,9 @@ public class Product implements java.io.Serializable {
     @Column(name = "drop_shipping")
     private boolean              dropShipping;
 
+	@Column(name = "cod_allowed", nullable = false, scale = 1)
+    private Boolean              codAllowed;
+
     @Column(name = "is_subscribable", nullable = true)
     private Boolean              isSubscribable;
 
@@ -566,7 +569,19 @@ public class Product implements java.io.Serializable {
         this.dropShipping = dropShipping;
     }
 
-    @Override
+	public Boolean isCodAllowed() {
+		return codAllowed;
+	}
+	
+	public Boolean getCodAllowed() {
+		return codAllowed;
+	}  	
+
+	public void setCodAllowed(Boolean codAllowed) {
+		this.codAllowed = codAllowed;
+	}
+
+	@Override
     public boolean equals(Object o) {
         if (this == o)
             return true;

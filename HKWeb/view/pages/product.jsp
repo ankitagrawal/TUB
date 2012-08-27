@@ -214,7 +214,7 @@
 		<div class="img320">
 			<a href="${hk:getS3ImageUrl(imageLargeSize, product.mainImageId,isSecure)}" class="jqzoom" rel='gal1'
 			   title="${product.name}">
-				<img src="${hk:getS3ImageUrl(imageMediumSize, product.mainImageId,isSecure)}" alt="${product.name}"
+				<img itemprop="image" src="${hk:getS3ImageUrl(imageMediumSize, product.mainImageId,isSecure)}" alt="${product.name}"
 				     title="${product.name}">
 			</a>
 		</div>
@@ -222,9 +222,9 @@
 			<c:if test="${fn:length(pa.productImages) > 1}">
 				<ul class="thumblist">
 					<c:forEach items="${pa.productImages}" var="productImage">
-						<li><a href='javascript:void(0);'
-						       rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, productImage.id,isSecure)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, productImage.id,isSecure)}'}"><img
-								src='${hk:getS3ImageUrl(imageSmallSize, productImage.id,isSecure)}'></a></li>
+						<li><a href='javascript:void(0);' rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, productImage.id,isSecure)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, productImage.id,isSecure)}'}">
+              <img itemprop="image" src='${hk:getS3ImageUrl(imageSmallSize, productImage.id,isSecure)}'></a>
+            </li>
 					</c:forEach>
 				</ul>
 			</c:if>
@@ -264,7 +264,7 @@
 </s:layout-component>
 
 <s:layout-component name="product_detail_links">
-	<h2 class='prod_title'>
+	<h2 class='prod_title' itemprop="name">
 			${product.name}
 	</h2>
 
@@ -273,7 +273,7 @@
           <span class='title'>
             Brand:
           </span>
-          <span class='info'>
+          <span class='info' itemprop="brand">
             <s:link beanclass="com.hk.web.action.core.catalog.BrandCatalogAction" class="bl">
 	            ${product.brand}
 	            <s:param name="brand" value="${fn:toLowerCase(product.brand)}"/>
@@ -290,6 +290,15 @@
 		          ${product.manufacturer.name}
           </span>
 		</c:if>
+		|
+		<c:choose>
+			<c:when test="${product.codAllowed != null && !product.codAllowed}">
+				<span style="color:red;font-weight:bold;">COD Not Allowed</span>
+			</c:when>
+			<c:otherwise>
+				<span style="color:green;font-weight:bold;">COD Allowed</span>
+			</c:otherwise>
+		</c:choose>  		
 		|
     <span class='title'>
       Dispatched in:
@@ -537,13 +546,13 @@
 
 			<c:if test="${!empty product.similarProducts}">
 				<div class="content" id="similarProducts"
-					style="background-color: #DDDDDD; padding: 5px; cursor: pointer; font-weight: bold; text-align: left;">
-				Colors/Sizes for glasses</div>
+					style="background-color: #F2F2F2; padding: 5px; cursor: pointer; font-weight: bold; text-align: left;">
+				Colors options</div>
 				<div id="similarProductsVM" style="margin-top: 5px;">
 				<table width="900px;" style="margin-left: 10px; margin-right: 10px;">
 					<tr>
 						<c:forEach items="${product.similarProducts}" var="similarProduct">
-							<td>
+							<td width="160px">
 							<div class="relatedGlass" style="float: left; margin-left: 3px;">
 							<a href="${hk:getProductURL(similarProduct.similarProduct,null)}"
 								style="text-decoration: none; cursor: pointer; border-bottom: none;">
@@ -563,22 +572,55 @@
 			
 			<div id="sizeGuide"
 		     class="content"
-		     style="background-color:#DDDDDD;padding:5px; cursor:pointer;font-weight:bold;text-align:left;">
+		     style="background-color:#F2F2F2;padding:5px; cursor:pointer;font-weight:bold;text-align:left;">
 			Size Guide
 		</div>
 		<div id="frameChart">
 			<table width="900px;">
 				<tr>
 					<td>
-						<img src="${pageContext.request.contextPath}/images/banners/frame_chart.jpg"/>
+						<img src="${pageContext.request.contextPath}/images/banners/frame_chart_new_1.jpg"/>
 					</td>
-					<td valign="top" class="content" style="vertical-align:top;padding-top:10px;">
-						It is very important to verify the size of your eyes before you venture into the market looking
-						for the perfect pair of frames to wear. This manual will help you decide what the pre-requisites
-						are and how to go about it in a proper structured manner.<a target="_blank"
-						                                                            href="${pageContext.request.contextPath}/pages/lp/eye_glasses/choosing-eye-glasses.html">
-						Read More.....</a>
-					</td>
+					<td valign="top" class="content"
+						style="vertical-align: top; padding-top: 5px;"><span
+						style="font-weight: bold">How to choose the frame that fits
+					you?</span><br />
+					Frames are typically of 3 sizes – <span style="font-weight: bold">Large,
+					Medium and Small.</span> 90% of adult population use medium sized
+					frames. What you need to look at is at the measurement indicated on
+					the frame. So for example the measurement mentioned in your current
+					frame is <span style="font-weight: bold">52-16-130.</span> The
+					first figure, 52, is the Eye Size of the frame. This is also
+					indicated in the diagram on the side. The table below gives the
+					size range for the different types of frames. <br />
+					<br />
+					<div align="center">
+					<table style="text-align: center">
+						<tr>
+							<td><span style="font-weight: bold">Frame Type</span></td>
+							<td><span style="font-weight: bold">Dimension Range</span></td>
+						</tr>
+						<tr>
+							<td>Small</td>
+							<td style="text-align: center;">40-48 mm</td>
+						</tr>
+						<tr>
+							<td>Medium</td>
+							<td style="text-align: center;">49-54 mm</td>
+						</tr>
+						<tr>
+							<td>Large</td>
+							<td style="text-align: center;">55-58 mm</td>
+						</tr>
+						<tr>
+							<td>Extra Large</td>
+							<td style="text-align: center;">58 mm and above</td>
+						</tr>
+					</table>
+					</div>
+					<a target="_blank"
+						href="${pageContext.request.contextPath}/pages/lp/eye_glasses/choosing-eye-glasses.html">
+					Read More.....</a></td>
 				</tr>
 			</table>
 
@@ -712,17 +754,17 @@
 </s:layout-component>--%>
 
 <s:layout-component name="user_reviews">
-	<div class='products content' id="user_reviews">
+	<div class='products content' id="user_reviews" itemscope itemtype="http://data-vocabulary.org/Review-aggregate">
+
 	<hr style="color:#F0F0F0;border-style:hidden"/>
 
 	<c:choose>
 		<c:when test="${!empty pa.userReviews}">
 			<table width="950" class="reviewLinksTable">
 				<tr height="40">
-					<td style="font-size:14px;font-weight:bold;border-style:none">Reviews of ${product.name}</td>
+					<td style="font-size:14px;font-weight:bold;border-style:none">Reviews of <span itemprop="itemreviewed">${product.name}</span></td>
 					<td style="border-style:none">
-						<s:link beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction"
-						        event="writeNewReview">
+						<s:link beanclass="com.hk.web.action.core.catalog.product.ProductReviewAction" event="writeNewReview">
 							<s:param name="product" value="${product.id}"/>
 							<strong>Write a Review</strong>
 						</s:link>
@@ -730,10 +772,9 @@
 				</tr>
 
 				<tr height="50">
-					<td colspan="2" style="border-style:none">Average Rating : <strong><fmt:formatNumber
-							value="${pa.averageRating}"
-							maxFractionDigits="1"/>/5</strong> <br/>
-						(based on ${pa.totalReviews} reviews) <br/>
+					<td colspan="2" style="border-style:none"><span itemprop="rating" itemscope itemtype="http://data-vocabulary.org/Rating">Average Rating : <strong>
+            <span itemprop="rating"><fmt:formatNumber value="${pa.averageRating}" maxFractionDigits="1"/></span>/<span itemprop="best">5</span></strong> </span><br/>
+						(based on <span itemprop="count">${pa.totalReviews}</span> reviews) <br/>
 
 						<div class="rating_bar">
 							<div id="blueStar" class="blueStar">

@@ -564,4 +564,9 @@ public class Functions {
        return linkManager.getProductURL(product, productReferrerId);
     }
 
+	public static boolean isCODAllowed(Order order) {
+		OrderService orderService = ServiceLocatorFactory.getService(OrderService.class);
+        return orderService.isCODAllowed(order);
+    }
+
 }
