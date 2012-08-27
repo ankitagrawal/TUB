@@ -23,7 +23,7 @@ public class AddEyeConfigAction extends BaseAction {
     @Autowired
     AdminProductVariantInventoryDao adminProductVariantInventoryDao;
 
-//    @Validate(required = true)
+    //    @Validate(required = true)
     private String productVariantList;
 
     private Long configId;
@@ -35,13 +35,11 @@ public class AddEyeConfigAction extends BaseAction {
     }
 
     public Resolution save() {
-        String[] poductVariantArray  = productVariantList.split(",");
+        String[] poductVariantArray = productVariantList.split(",");
         for (String prodctVariantId : poductVariantArray) {
             adminProductVariantInventoryDao.updateProductVariantsConfig(prodctVariantId, configId);
-            getContext().getMessages().add(new SimpleMessage("Database updated")) ;
-
         }
-
+        getContext().getMessages().add(new SimpleMessage("Database updated"));
         return new RedirectResolution("/pages/admin/AddEyeConfig.jsp");
     }
 
