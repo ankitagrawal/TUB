@@ -23,22 +23,16 @@ import com.hk.impl.dao.BaseDaoImpl;
 public class DebitNoteDaoImpl extends BaseDaoImpl implements DebitNoteDao {
 
     public Page searchDebitNote(GoodsReceivedNote grn, DebitNoteStatus debitNoteStatus, String tinNumber, String supplierName, int pageNo, int perPage) {
-        List<Supplier> supplierList = new ArrayList<Supplier>();
+
+        DetachedCriteria debitNoteCriteria = DetachedCriteria.forClass(DebitNote.class);
         if (StringUtils.isNotBlank(tinNumber) || StringUtils.isNotBlank(supplierName)) {
-            DetachedCriteria supplierCriteria = DetachedCriteria.forClass(Supplier.class);
+            DetachedCriteria supplierCriteria = debitNoteCriteria.createCriteria("supplier");
             if (StringUtils.isNotBlank(tinNumber)) {
                 supplierCriteria.add(Restrictions.eq("tinNumber", tinNumber));
             }
             if (StringUtils.isNotBlank(supplierName)) {
                 supplierCriteria.add(Restrictions.like("name", "%" + supplierName + "%"));
             }
-            supplierList = findByCriteria(supplierCriteria);
-        }
-
-
-        DetachedCriteria debitNoteCriteria = DetachedCriteria.forClass(DebitNote.class);
-        if (supplierList != null && supplierList.size() > 0) {
-            debitNoteCriteria.add(Restrictions.eq("supplier", supplierList.get(0)));
         }
 
         if (debitNoteStatus != null) {

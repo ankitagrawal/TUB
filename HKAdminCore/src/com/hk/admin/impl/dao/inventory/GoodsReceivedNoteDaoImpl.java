@@ -83,16 +83,18 @@ public class GoodsReceivedNoteDaoImpl extends BaseDaoImpl implements GoodsReceiv
         DetachedCriteria purchaseOrderCriteria = null;
         DetachedCriteria supplierCriteria = null;
         if (supplierName != null || tinNumber != null) {
-            purchaseOrderCriteria  = grnCriteria.createCriteria("purchaseOrder");
-
-            if(tinNumber != null) {
-            purchaseOrderCriteria.add(Restrictions.eq("tinNumber", tinNumber));
-            }
-
-            if(supplierName != null ){
+            purchaseOrderCriteria = grnCriteria.createCriteria("purchaseOrder");
+            if (supplierName != null || tinNumber != null) {
                 supplierCriteria = purchaseOrderCriteria.createCriteria("supplier");
+            }
+            if (supplierName != null) {
                 supplierCriteria.add(Restrictions.like("name", "%" + supplierName + "%"));
             }
+
+            if (tinNumber != null) {
+                supplierCriteria.add(Restrictions.eq("tinNumber", tinNumber));
+            }
+
 
         }
         /*if (!poList.isEmpty() && poList.size() > 0) {
