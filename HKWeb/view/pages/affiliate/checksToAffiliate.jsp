@@ -29,7 +29,7 @@
                       ${checkDetails.checkNo}
                   </td>
                   <td>
-                    <fmt:formatDate value="${checkDetails.issueDate}" type="both"/>
+                    <fmt:formatDate value="${checkDetails.issueDate}" pattern="dd/MM/yyyy"/>
                   </td>
                   <td>
                       ${checkDetails.bankName}

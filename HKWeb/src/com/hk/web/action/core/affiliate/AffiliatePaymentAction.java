@@ -5,17 +5,16 @@ import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.constants.affiliate.EnumAffiliateStatus;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.constants.core.RoleConstants;
 import com.hk.domain.CheckDetails;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.affiliate.AffiliateCategoryCommission;
 import com.hk.domain.affiliate.AffiliateStatus;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.Role;
-import com.hk.domain.user.User;
 import com.hk.impl.dao.CheckDetailsDaoImpl;
 import com.hk.impl.dao.affiliate.AffiliateCategoryDaoImpl;
 import com.hk.manager.AffiliateManager;
+import com.hk.pact.dao.CheckDetailsDao;
 import com.hk.pact.dao.affiliate.AffiliateDao;
 import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.service.RoleService;
@@ -39,7 +38,7 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
 	@Autowired
 	AffiliateManager affiliateManager;
 	@Autowired
-	CheckDetailsDaoImpl checkDetailsDao;
+	CheckDetailsDao checkDetailsDao;
 	@Autowired
 	AddressDao addressDao;
 	@Autowired
@@ -79,13 +78,33 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
 	@DefaultHandler
 	public Resolution pre() {
 		affiliatePage = affiliateDao.searchAffiliates(EnumAffiliateStatus.Verified.asAffiliateStatus(), name, email, websiteName, code, affiliateMode, affiliateType, EnumRole.HK_AFFILIATE.toRole(), getPerPage(), pageNo);
-		if(affiliatePage != null){
+		if (affiliatePage != null) {
 			affiliates = affiliatePage.getList();
 		}
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(new Date());
+
+//		int month = calendar.get(Calendar.MONTH);
+		int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+		Calendar startCalender = Calendar.getInstance();
+		startCalender.setTime(new Date());
+
+		if (day <= 5) {
+			startCalender.add(Calendar.MONTH, -1);
+		}
+		startCalender.set(Calendar.DAY_OF_MONTH, 5);
+		Date startDate = startCalender.getTime();
+
+		Calendar endCalender = Calendar.getInstance();
+		endCalender.set(Calendar.DAY_OF_MONTH, 5);
+		Date endDate = endCalender.getTime();
+
 		for (Affiliate affiliate : affiliates) {
 			AffiliatePaymentDto affiliatePaymentDto = new AffiliatePaymentDto();
 			affiliatePaymentDto.setAffiliate(affiliate);
 			affiliatePaymentDto.setAmount(getAffiliateManager().getAmountInAccount(affiliate, null, null));
+			affiliatePaymentDto.setPayableAmount(getAffiliateManager().getAmountInAccount(affiliate, startDate, endDate));
 			affiliatePaymentDtoList.add(affiliatePaymentDto);
 		}
 		return new ForwardResolution("/pages/affiliate/payToAffiliates.jsp");
@@ -93,13 +112,14 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
 
 	public Resolution search() {
 		affiliatePage = affiliateDao.searchAffiliates(affiliateStatus, name, email, websiteName, code, affiliateMode, affiliateType, role, getPerPage(), pageNo);
-		if(affiliatePage != null){
+		if (affiliatePage != null) {
 			affiliates = affiliatePage.getList();
 		}
 		for (Affiliate affiliate : affiliates) {
 			AffiliatePaymentDto affiliatePaymentDto = new AffiliatePaymentDto();
 			affiliatePaymentDto.setAffiliate(affiliate);
 			affiliatePaymentDto.setAmount(getAffiliateManager().getAmountInAccount(affiliate, null, null));
+			affiliatePaymentDto.setPayableAmount(getAffiliateManager().getAmountInAccount(affiliate, startDate, endDate));
 			affiliatePaymentDtoList.add(affiliatePaymentDto);
 		}
 		return new ForwardResolution("/pages/affiliate/payToAffiliates.jsp");
@@ -261,7 +281,7 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
 		this.affiliateManager = affiliateManager;
 	}
 
-	public CheckDetailsDaoImpl getCheckDetailsDao() {
+	public CheckDetailsDao getCheckDetailsDao() {
 		return checkDetailsDao;
 	}
 

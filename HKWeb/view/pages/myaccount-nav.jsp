@@ -33,12 +33,12 @@
             id="affiliateAccountLink">Affiliate Account</span> </s:link>
       </li>
         <li>
-            <s:link beanclass="com.hk.web.action.core.affiliate.AffiliateAccountAction" event="generateAffiliateCoupons" title="Download Coupon Codes"><span
-                    id="affiliateDownloadCouponLink">Download Coupon Codes</span> </s:link>
+            <s:link beanclass="com.hk.web.action.core.affiliate.AffiliateAccountAction" event="showCouponScreen" title="Download Coupon Codes"><span
+                    id="affiliateShowCouponScreen">Affiliate Offer Program</span> </s:link>
         </li>
         <li><s:link beanclass="com.hk.web.action.core.affiliate.AffiliateAccountAction" event="checksToAffiliate"
-                  title="Checks sent to me">
-        <span id="myChecksLink">Cheques Sent</span> </s:link></li>
+                  title="Payment Details">
+        <span id="myChecksLink">Payment Details</span> </s:link></li>
       <li><s:link beanclass="com.hk.web.action.core.affiliate.AffiliateStatisticsAction" title="Statistics">
         <span id="myTrafficStats">Statistics</span> </s:link></li>
       <li><s:link beanclass="com.hk.web.action.core.affiliate.AffiliateInsightsAction" title="Insights">

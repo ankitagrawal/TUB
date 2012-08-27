@@ -55,7 +55,10 @@
                 Website
             </th>
             <th>
-                Due Amount
+                Total Amount
+            </th>
+            <th>
+                Payable
             </th>
             <th>
                 Plan
@@ -83,6 +86,10 @@
                               value="${affiliateDetails.affiliate}"/>
                     <td>
                         <fmt:formatNumber value=" ${affiliateDetails.amount}"
+                                          pattern="<%=FormatUtils.currencyFormatPattern%>"/>
+                    </td>
+                    <td>
+                        <fmt:formatNumber value=" ${affiliateDetails.payableAmount}"
                                           pattern="<%=FormatUtils.currencyFormatPattern%>"/>
                     </td>
                     <td>

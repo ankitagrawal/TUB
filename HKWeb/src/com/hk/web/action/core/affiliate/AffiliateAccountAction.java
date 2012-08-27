@@ -29,6 +29,8 @@ import org.stripesstuff.plugin.security.Secure;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Secure(hasAnyRoles = {RoleConstants.HK_AFFILIATE, RoleConstants.ADMIN, RoleConstants.HK_AFFILIATE_MANAGER})
@@ -36,7 +38,9 @@ import java.util.List;
 public class AffiliateAccountAction extends BaseAction {
 
 	Affiliate affiliate;
+	Offer offer;
 	Double affiliateAccountAmount;
+	Double affiliatePayableAmount;
 	List<CheckDetails> checkDetailsList;
 	List<Coupon> coupons;
 	@Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
@@ -65,7 +69,26 @@ public class AffiliateAccountAction extends BaseAction {
 				logger.debug("user name : " + user.getName());
 			if (affiliate != null) {
 				logger.debug("affiliate id : " + affiliate.getId());
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(new Date());
+
+//		int month = calendar.get(Calendar.MONTH);
+				int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+				Calendar startCalender = Calendar.getInstance();
+				startCalender.setTime(new Date());
+
+				if (day <= 5) {
+					startCalender.add(Calendar.MONTH, -1);
+				}
+				startCalender.set(Calendar.DAY_OF_MONTH, 5);
+				Date startDate = startCalender.getTime();
+
+				Calendar endCalender = Calendar.getInstance();
+				endCalender.set(Calendar.DAY_OF_MONTH, 5);
+				Date endDate = endCalender.getTime();
 				affiliateAccountAmount = affiliateManager.getAmountInAccount(affiliate, null, null);
+				affiliatePayableAmount = affiliateManager.getAmountInAccount(affiliate, startDate, endDate);
 			} else {
 				logger.debug("affiliate is null");
 				addValidationError("e1", new LocalizableError("/Login.action.user.notFound"));
@@ -92,6 +115,15 @@ public class AffiliateAccountAction extends BaseAction {
 			addRedirectAlertMessage(new SimpleMessage("your preferences have been saved."));
 		}
 		return new RedirectResolution(AffiliateAccountAction.class);
+	}
+
+	public Resolution showCouponScreen() {
+		if (getPrincipal() != null) {
+			User user = getUserService().getUserById(getPrincipal().getId());
+			affiliate = affiliateDao.getAffilateByUser(user);
+			offer = affiliate.getOffer();
+		}
+		return new ForwardResolution("/pages/affiliate/affiliateCouponDownload.jsp");
 	}
 
 	public Resolution generateAffiliateCoupons() {
@@ -201,4 +233,19 @@ public class AffiliateAccountAction extends BaseAction {
 		return adminDownloads + "/coupons";
 	}
 
+	public Offer getOffer() {
+		return offer;
+	}
+
+	public void setOffer(Offer offer) {
+		this.offer = offer;
+	}
+
+	public Double getAffiliatePayableAmount() {
+		return affiliatePayableAmount;
+	}
+
+	public void setAffiliatePayableAmount(Double affiliatePayableAmount) {
+		this.affiliatePayableAmount = affiliatePayableAmount;
+	}
 }

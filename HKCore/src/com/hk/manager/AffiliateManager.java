@@ -6,6 +6,7 @@ import java.util.Set;
 import com.hk.constants.affiliate.AffiliateConstants;
 import com.hk.constants.affiliate.EnumAffiliateStatus;
 import com.hk.constants.coupon.EnumCouponType;
+import com.hk.pact.dao.CheckDetailsDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,10 +22,8 @@ import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.exception.HealthkartLoginException;
 import com.hk.exception.HealthkartSignupException;
-import com.hk.impl.dao.CheckDetailsDaoImpl;
 import com.hk.impl.dao.affiliate.AffiliateCategoryDaoImpl;
 import com.hk.impl.dao.affiliate.AffiliateTxnDaoImpl;
-import com.hk.pact.dao.CheckDetailsDao;
 import com.hk.pact.dao.affiliate.AffiliateCategoryDao;
 import com.hk.pact.dao.affiliate.AffiliateTxnDao;
 import com.hk.pact.service.RoleService;
@@ -54,7 +53,7 @@ public class AffiliateManager {
     @Autowired
     private AffiliateTxnDao      affiliateTxnDao;
     @Autowired
-    private CheckDetailsDao      checkDetailsDao;
+    private CheckDetailsDao checkDetailsDao;
     @Autowired
     private AffiliateCategoryDao affiliateCategoryCommissionDao;
 
@@ -140,9 +139,8 @@ public class AffiliateManager {
 
 
     public void paidToAffiiliate(Affiliate affiliate, Double amountPaid, CheckDetails checkDetails) {
-        AffiliateTxn affiliateTxn = new AffiliateTxn();
         AffiliateTxnType affiliateTxnType = getAffilateService().getAffiliateTxnType(EnumAffiliateTxnType.SENT.getId());
-        affiliateTxn = getAffiliateTxnDao().saveTxn(affiliate, amountPaid, affiliateTxnType, null);
+	    AffiliateTxn affiliateTxn = getAffiliateTxnDao().saveTxn(affiliate, amountPaid, affiliateTxnType, null);
         checkDetails.setAffiliateTxn(affiliateTxn);
         checkDetails.setAffiliate(affiliate);
         getCheckDetailsDao().save(checkDetails);
@@ -233,7 +231,7 @@ public class AffiliateManager {
         return checkDetailsDao;
     }
 
-    public void setCheckDetailsDao(CheckDetailsDaoImpl checkDetailsDao) {
+    public void setCheckDetailsDao(CheckDetailsDao checkDetailsDao) {
         this.checkDetailsDao = checkDetailsDao;
     }
 
