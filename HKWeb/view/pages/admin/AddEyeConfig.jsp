@@ -23,7 +23,7 @@
                 <td><s:text  name="productVariantList" style="width:100px"/></td>
                 <td>
                     <s:select name="configId">
-                    <s:option value="0">-select- </s:option>
+                    <s:option value="">-select- </s:option>
                       <c:forEach items="${confList}" var = "conf">
                           <s:option value ="${conf.id}">${conf.name}</s:option>
                       </c:forEach>                    

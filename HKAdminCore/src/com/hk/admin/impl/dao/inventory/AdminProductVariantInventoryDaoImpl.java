@@ -223,9 +223,9 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
         detachedCriteria.add(Restrictions.eq("id", id));
         ProductVariant productVariant = (ProductVariant)findByCriteria(detachedCriteria).get(0);
        
-        DetachedCriteria detachedCriteria1 = DetachedCriteria.forClass(VariantConfig.class);
-        detachedCriteria1.add(Restrictions.eq("id", variantconfigId));
-        VariantConfig variantConfig = (VariantConfig) findByCriteria(detachedCriteria1).get(0);
+        DetachedCriteria detachedCriteriaVariantConfig = DetachedCriteria.forClass(VariantConfig.class);
+        detachedCriteriaVariantConfig.add(Restrictions.eq("id", variantconfigId));
+        VariantConfig variantConfig = (VariantConfig) findByCriteria(detachedCriteriaVariantConfig).get(0);
 
         productVariant.setVariantConfig(variantConfig);
         save(productVariant)  ;
