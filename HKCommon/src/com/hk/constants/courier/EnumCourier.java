@@ -30,6 +30,7 @@ public enum EnumCourier {
     Safexpress(170L, " Safexpress"),
     Quantium(180L, "Quantium"),
     Smile_EExpress(190L, "Smile EExpress"),
+    Smile_Express_DSP(195L,"Smile Express DSP"),
     EarthMoversPune(200L, "Earth Movers Pune"),
     HK_Delivery(500L, "HealthKart Delivery"),
 
@@ -86,6 +87,7 @@ public enum EnumCourier {
                 EnumCourier.Delhivery,
                 EnumCourier.Delhivery_Surface,
                 EnumCourier.Smile_EExpress,
+                EnumCourier.Smile_Express_DSP,
                 EnumCourier.AFLWiz,
                 EnumCourier.BlueDart,
                 EnumCourier.BlueDart_COD,
