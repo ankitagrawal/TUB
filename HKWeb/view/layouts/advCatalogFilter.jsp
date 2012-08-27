@@ -293,7 +293,7 @@
 									</c:otherwise>
 								</c:choose>
 								<c:choose>
-									<c:when test="${option.applicable}">
+									<c:when test="${option.qty > 0}">
 										<a style="color:black;cursor:pointer;" class="filterOptionLink">${option.value}
 											(${option.qty})</a>
 									</c:when>
