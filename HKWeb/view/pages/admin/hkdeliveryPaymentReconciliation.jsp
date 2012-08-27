@@ -13,13 +13,59 @@
         Reconcile HKDelivery payments
     </s:layout-component>
     <s:layout-component name="content">
-        <table>
-            <tr>
-                <td><label><strong>Reconciliation Id:</strong></label></td>
-                <td>${consignmentAction.hkdeliveryPaymentReconciliation.id}</td>
-                <td><label><strong>COD Amount:</strong></label></td>
-                <td>${consignmentAction.hkdeliveryPaymentReconciliation.amount}</td>
-            </tr>
-        </table>
+        <s:form beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction">
+            <s:hidden name="hkdeliveryPaymentReconciliation" value="${consignmentAction.hkdeliveryPaymentReconciliation.id}" />
+            <table>
+                <tr>
+                    <td><label><strong>Date: </strong></label></td>
+                    <td>
+                        <s:hidden name="hkdeliveryPaymentReconciliation.createDate" />
+                        <fmt:formatDate value="${consignmentAction.hkdeliveryPaymentReconciliation.createDate}" type="both" timeStyle="short"/>
+                    </td>
+                    <td><label><strong>Expected COD Amount:</strong></label></td>
+                    <td>
+                        <s:hidden name="hkdeliveryPaymentReconciliation.expectedAmount" />
+                        <fmt:formatNumber value="${consignmentAction.hkdeliveryPaymentReconciliation.expectedAmount}" type="currency" currencySymbol=" "
+                                          maxFractionDigits="0"/>
+                    </td>
+                    <td><label><strong>Actual Amount:</strong></label></td>
+                    <td><s:text name="hkdeliveryPaymentReconciliation.actualAmount"/></td>
+                </tr>
+                <tr>
+                    <td><label><strong>User: </strong></label></td>
+                    <td>
+                        <s:hidden name="hkdeliveryPaymentReconciliation.user" value="${consignmentAction.hkdeliveryPaymentReconciliation.user.id}" />
+                        ${consignmentAction.hkdeliveryPaymentReconciliation.user.name}</td>
+                    <td><label><strong>Remarks: </strong></label></td>
+                    <td><s:textarea name="hkdeliveryPaymentReconciliation.remarks" style="height:50px;"/></td>
+                </tr>
+            </table>
+             <h3><strong>Consignments</strong></h3>
+            <table class="zebra_vert">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>AWB Number</th>
+                    <th>CNN Number</th>
+                    <th>Amount</th>
+                    <th>Payment Mode</th>
+                    <th>Status</th>
+
+                </tr>
+                </thead>
+                <c:forEach items="${consignmentAction.consignmentListForPaymentReconciliation}" var="consignment" varStatus="ctr">
+                    <tr class="consignment-row">
+                        <td><s:hidden name="consignmentListForPaymentReconciliation[${ctr.index}]" value="${consignment.id}"/>${consignment.id}</td>
+                        <td>${consignment.awbNumber}</td>
+                        <td>${consignment.cnnNumber}</td>
+                        <td><fmt:formatNumber value="${consignment.amount}" type="currency" currencySymbol=" "
+                                              maxFractionDigits="0"/></td>
+                        <td>${consignment.paymentMode}</td>
+                        <td>${consignment.consignmentStatus.status}</td>
+                    </tr>
+                </c:forEach>
+            </table>
+            <s:submit name="savePaymentReconciliation" value="Save payment Reconciliation" />
+        </s:form>
     </s:layout-component>
 </s:layout-render>

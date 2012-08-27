@@ -23,12 +23,14 @@
             <legend>Search Consignment</legend>
             <s:form beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction">
                 <label>Consignment ID:</label><s:text name="consignment"/>
+                <label>Awb Number:</label><s:text name="consignmentNumber"/>
                 <label>Start Date:</label><s:text style="width:150px" class="date_input startDate"
                                                   formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
                                                   name="startDate"/>
                 <label>End Date:</label><s:text style="width:150px" class="date_input endDate"
                                                 formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
                                                 name="endDate"/>
+                <br/>
                 <label>Status:</label>
                 <s:select name="consignmentStatus">
                     <s:option value="-Select Status-">-Select Status-</s:option>
@@ -36,13 +38,18 @@
                                                serviceProperty="consignmentStatusList" value="id"
                                                label="status"/>
                 </s:select>
-                <br/>
                 <label>Hub:</label>
                 <s:select name="hub" class="hubName">
                     <s:option value="-Select Hub-">-Select Hub-</s:option>
                     <hk:master-data-collection service="<%=MasterDataDao.class%>"
                                                serviceProperty="hubList" value="id"
                                                label="name"/>
+                </s:select>
+                <label>Reconciled: </label>
+                <s:select name="reconciled">
+                    <s:option value="">--All--</s:option>
+                    <s:option value="true">Yes</s:option>
+                    <s:option value="false">No</s:option>
                 </s:select>
                 <s:submit name="searchConsignments" value="Search Consignments"/>
             </s:form>
@@ -81,15 +88,26 @@
                         <td>${consignment.paymentMode}</td>
                         <td>${consignment.runsheet.id}</td>
                         <td>${consignment.consignmentStatus.status}</td>
-                        <td>${consignment.hkdeliveryPaymentReconciliation.id}</td>
-                        <td>
-                            <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction" event="pre"
-                                    target="_blank">View/Edit Consignment
-                                <s:param name="consignment" value="${consignment.id}"/></s:link>
+                        <td>${consignment.hkdeliveryPaymentReconciliation.id}
+                            <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction" event="editPaymentReconciliation">
+                                <s:param name="hkdeliveryPaymentReconciliation" value="${consignment.hkdeliveryPaymentReconciliation.id}" />
+                                (View)
+                            </s:link>
                         </td>
                         <td>
-                            <s:checkbox name="consignmentListForPaymentReconciliation[]" value="${consignment.id}"
-                                        class="purchaseLineItemCheckBox"/>
+                            <%--<s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction" event="pre"
+                                    target="_blank">View/Edit
+                                <s:param name="consignment" value="${consignment.id}"/></s:link>--%>
+                            <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction" event="trackConsignment">
+                                <s:param name="consignmentNumber" value="${consignment.awbNumber}" />
+                                <s:param name="doTracking" value="true" />Track Consignment
+                            </s:link>
+                        </td>
+                        <td>
+                            <c:if test="${consignment.hkdeliveryPaymentReconciliation == null}" >
+                                <s:checkbox name="consignmentListForPaymentReconciliation[]" value="${consignment.id}"
+                                            class="purchaseLineItemCheckBox"/>
+                            </c:if>
                         </td>
                     </tr>
                 </c:forEach>

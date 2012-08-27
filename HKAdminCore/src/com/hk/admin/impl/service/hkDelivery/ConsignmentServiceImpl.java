@@ -1,7 +1,6 @@
 package com.hk.admin.impl.service.hkDelivery;
 
 import com.akube.framework.dao.Page;
-import com.hk.domain.courier.Awb;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
@@ -9,16 +8,10 @@ import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.dao.hkDelivery.ConsignmentDao;
 import com.hk.domain.hkDelivery.*;
-import com.hk.domain.courier.Shipment;
-import com.hk.domain.courier.Awb;
-import com.hk.domain.courier.Courier;
 import com.hk.domain.user.User;
-import com.hk.domain.core.PaymentMode;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.constants.hkDelivery.HKDeliveryConstants;
 import com.hk.constants.hkDelivery.EnumConsignmentStatus;
-import com.hk.constants.hkDelivery.EnumConsignmentLifecycleStatus;
-import com.hk.constants.payment.EnumPaymentMode;
 
 import java.util.*;
 
@@ -153,12 +146,12 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     }
 
     @Override
-    public Page searchConsignment(Consignment consignment, Date startDate, Date endDate, ConsignmentStatus consignmentStatus, Hub hub, int pageNo, int perPage) {
-        return consignmentDao.searchConsignment(consignment, startDate, endDate, consignmentStatus, hub, pageNo, perPage);
+    public Page searchConsignment(Consignment consignment,  String awbNumber, Date startDate, Date endDate, ConsignmentStatus consignmentStatus, Hub hub, Boolean reconciled, int pageNo, int perPage) {
+        return consignmentDao.searchConsignment(consignment, awbNumber, startDate, endDate, consignmentStatus, hub, reconciled, pageNo, perPage);
     }
 
     @Override
-    public HkdeliveryPaymentReconciliation createPaymentReconciliationForConsignmentList(List<Consignment> consignmentListForPaymentReconciliation, User user){
+    public HkdeliveryPaymentReconciliation  createPaymentReconciliationForConsignmentList(List<Consignment> consignmentListForPaymentReconciliation, User user){
         HkdeliveryPaymentReconciliation hkdeliveryPaymentReconciliation = new HkdeliveryPaymentReconciliation();
         Double amount = 0.0;
         for(Consignment consignment : consignmentListForPaymentReconciliation){
@@ -167,7 +160,7 @@ public class ConsignmentServiceImpl implements ConsignmentService {
             }
         }
         Set<Consignment> reconciledConsignments = new HashSet<Consignment>(consignmentListForPaymentReconciliation);
-        hkdeliveryPaymentReconciliation.setAmount(amount);
+        hkdeliveryPaymentReconciliation.setExpectedAmount(amount);
         hkdeliveryPaymentReconciliation.setUser(user);
         hkdeliveryPaymentReconciliation.setCreateDate(new Date());
         hkdeliveryPaymentReconciliation.setUpdateDate(new Date());
@@ -177,6 +170,7 @@ public class ConsignmentServiceImpl implements ConsignmentService {
 
     @Override
     public HkdeliveryPaymentReconciliation saveHkdeliveryPaymentReconciliation(HkdeliveryPaymentReconciliation hkdeliveryPaymentReconciliation){
+        hkdeliveryPaymentReconciliation.setUpdateDate(new Date());
         consignmentDao.saveOrUpdate(hkdeliveryPaymentReconciliation);
         return hkdeliveryPaymentReconciliation;
     }

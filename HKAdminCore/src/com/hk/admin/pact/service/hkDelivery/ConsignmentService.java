@@ -44,7 +44,7 @@ public interface ConsignmentService {
 
     public List<ConsignmentTracking> getConsignmentTracking(Consignment consignment);
 
-    public Page searchConsignment(Consignment consignment, Date startDate, Date endDate, ConsignmentStatus consignmentStatus, Hub hub, int pageNo, int perPage);
+    public Page searchConsignment(Consignment consignment, String awbNumber, Date startDate, Date endDate, ConsignmentStatus consignmentStatus, Hub hub, Boolean reconciled, int pageNo, int perPage);
 
     public HkdeliveryPaymentReconciliation createPaymentReconciliationForConsignmentList(List<Consignment> consignmentListForPaymentReconciliation, User user);
 
