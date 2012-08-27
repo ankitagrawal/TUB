@@ -61,7 +61,7 @@ public class CategoryDaoImpl extends BaseDaoImpl implements CategoryDao{
 					pvIds = getSession().createSQLQuery("select distinct pv.id from product_variant_has_product_option pvhpo, product_variant pv where pvhpo.product_variant_id=pv.id and pv.id in (:pvIds) and pvhpo.product_option_id in (:filterOptions) group by pvhpo.product_variant_id having count(pvhpo.product_variant_id) = :groupsCount").setParameterList("pvIds", pvIds).setParameterList("filterOptions", filterOptions).setParameter("groupsCount", groupsCount).list();
 				}
 				if (pvIds != null && !pvIds.isEmpty()) {
-					return getSession().createQuery("select po.id as id, upper(po.name) as name, po.value as value, count(po.id) as qty from ProductVariant pv inner join pv.productOptions po where pv.id in(:pvIds) and pv.product.deleted <> 1 and pv.deleted <> 1 and pv.outOfStock <> 1 group by po.id order by po.name desc , po.value asc").setParameterList("pvIds", pvIds).setResultTransformer(Transformers.aliasToBean(ProductOptionDto.class)).list();
+					return getSession().createQuery("select po.id as id, upper(po.name) as name, po.value as value, count(distinct pv.product.id) as qty from ProductVariant pv inner join pv.productOptions po where pv.id in(:pvIds) and pv.product.deleted <> 1 and pv.deleted <> 1 and pv.outOfStock <> 1 group by po.id order by po.name desc , po.value asc").setParameterList("pvIds", pvIds).setResultTransformer(Transformers.aliasToBean(ProductOptionDto.class)).list();
 				}
 			}
 		}
