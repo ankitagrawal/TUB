@@ -42,7 +42,12 @@ public class FeedbackServiceImpl implements FeedbackService {
 			feedback.setUser(order.getUser());
 		}
 		return feedback;
+	}
 
+	public Feedback createFeedbackForUser(User user, Long recommendToFriends, Long customerServiceFeedback, Long websiteExperienceFeedback, String comments) {
+		Feedback feedback = new Feedback();
+		feedback.setUser(user);
+		return updateFeedback(feedback, recommendToFriends, customerServiceFeedback, websiteExperienceFeedback, comments);
 	}
 
 	public FeedbackDao getFeedbackDao() {

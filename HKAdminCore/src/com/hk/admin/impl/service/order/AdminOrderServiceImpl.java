@@ -8,14 +8,12 @@ import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.fliter.ShippingOrderFilter;
 import com.hk.domain.core.CancellationType;
 import com.hk.domain.core.OrderLifecycleActivity;
-import com.hk.domain.feedback.Feedback;
 import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.User;
 import com.hk.manager.EmailManager;
 import com.hk.manager.ReferrerProgramManager;
-import com.hk.pact.dao.BaseDao;
 import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.core.AffilateService;
@@ -62,8 +60,6 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 	private SubscriptionOrderService subscriptionOrderService;
 	@Autowired
 	FeedbackService feedbackService;
-	@Autowired
-	BaseDao baseDao;
 
 	@Transactional
 	public Order putOrderOnHold(Order order) {
@@ -231,13 +227,6 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 				//if the order is a subscription order update subscription status
 				subscriptionOrderService.markSubscriptionOrderAsDelivered(order);
 				getEmailManager().sendOrderDeliveredEmail(order);
-				/*Feedback feedback = feedbackService.getOrCreateFeedbackForOrder(order);
-				if (!feedback.isOrderDeliveryEmailSent()) {
-					getEmailManager().sendOrderDeliveredEmail(order);
-					feedback.setOrderDeliveryEmailSent(true);
-					baseDao.save(feedback);
-				}
-*/
 			}
 		}
 		return order;

@@ -60,7 +60,7 @@
 					<div class='label'><h3>4. Any feedback that you want to share with us?</h3></div>
 					<s:textarea name="comments" rows="8" cols="50"/>
 				</div>
-				<s:submit name="save" />
+				<s:submit name="save" value="save" />
 			</s:form>
 		</div>
 
