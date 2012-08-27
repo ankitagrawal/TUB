@@ -41,16 +41,16 @@ public class ReconciliationVoucherDaoImpl extends BaseDaoImpl implements Reconci
         return list(reconciliationVoucherCriteria, pageNo, perPage);
     }
 
+    @SuppressWarnings("unchecked")
+    public RvLineItem getRvLineItem(ReconciliationVoucher reconciliationVoucher, Sku sku) {
+        DetachedCriteria rvLineItemCriteria = DetachedCriteria.forClass(RvLineItem.class);
+        rvLineItemCriteria.add(Restrictions.eq("reconciliationVoucher", reconciliationVoucher));
+        rvLineItemCriteria.add(Restrictions.eq("sku", sku));
+        List<RvLineItem> rvLineItemList = findByCriteria(rvLineItemCriteria);
+        if (rvLineItemList != null && rvLineItemList.size() > 0)
+            return rvLineItemList.get(0);
+        else
+            return null;
 
-  public RvLineItem getRvLineItem(ReconciliationVoucher reconciliationVoucher , Sku sku){
-      DetachedCriteria rvLineItemCriteria = DetachedCriteria.forClass(RvLineItem.class);
-      rvLineItemCriteria.add(Restrictions.eq("reconciliationVoucher",reconciliationVoucher));
-      rvLineItemCriteria.add(Restrictions.eq("sku",sku));
-      List<RvLineItem> rvLineItemList =findByCriteria(rvLineItemCriteria);
-     if(rvLineItemList != null && rvLineItemList.size() > 0)
-     return rvLineItemList.get(0);
-    else
-       return null;
-
-  }
+    }
 }

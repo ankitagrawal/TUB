@@ -222,6 +222,17 @@ img.prod320 {
     margin: 0 auto;
 }
 
+.img170 {
+    height: 170px;
+    width: 170px;
+    margin: auto auto;
+}
+
+.img170 img {
+    display: block;
+    margin: 0 auto;
+}
+
 /* line 172, ../sass/_base.scss */
 .img128 {
     height: 128px;

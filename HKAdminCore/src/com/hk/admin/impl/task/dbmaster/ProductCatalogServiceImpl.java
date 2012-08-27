@@ -12,8 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.akube.framework.gson.JsonUtils;
-import com.google.gson.Gson;
 import com.hk.admin.util.XslParser;
 import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.category.Category;
@@ -33,7 +31,7 @@ import com.hk.pact.service.core.TaxService;
 public class ProductCatalogServiceImpl {
 
 	private static Logger logger = LoggerFactory.getLogger(ProductCatalogServiceImpl.class);
-	private static Gson gson = JsonUtils.getGsonDefault();
+	/*private static Gson gson = JsonUtils.getGsonDefault();*/
 
 	@Autowired
 	private XslParser xslParser;

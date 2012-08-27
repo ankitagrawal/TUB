@@ -17,7 +17,7 @@
 
     MenuNode menuNode = menuHelper.getMenuNode(urlFragment);
     pageContext.setAttribute("currentMenuNode", menuNode);
-    MenuNode topParentNode = menuHelper.getTopParentMenuNode(menuNode);
+	MenuNode topParentNode = menuHelper.getTopParentMenuNode(menuNode);
     List<MenuNode> firstChildMenuNodes = menuHelper.getSiblings(topParentNode.getChildNodes().get(0).getUrl());
     pageContext.setAttribute("firstChildMenuNodes", firstChildMenuNodes);
     List<MenuNode> hierarchicalMenuNodes = menuHelper.getHierarchicalMenuNodes(menuNode);

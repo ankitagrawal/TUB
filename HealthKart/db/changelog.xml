@@ -8445,4 +8445,8 @@
     <changeSet author="vaibhav (generated)" id="1345107754347-5">
         <addForeignKeyConstraint baseColumnNames="similar_product_id" baseTableName="similar_product" constraintName="fk_similar_product_product2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product"  referencesUniqueColumn="false"/>
     </changeSet>
+	
+    <changeSet author="Ajeet (generated)" id="1345455498259-2">
+        <addNotNullConstraint columnDataType="TINYINT" columnName="cod_allowed" defaultNullValue="1" tableName="product"/>
+    </changeSet>
 </databaseChangeLog>

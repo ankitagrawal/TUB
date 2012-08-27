@@ -128,6 +128,7 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
         return sortedCourierCostingTreeMap.lastKey();
     }
 
+    @SuppressWarnings("unchecked")
     public TreeMap<List<DummyOrder>, Long> splitBOPractically(Order order) {
 
         // get static things
@@ -254,6 +255,7 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
     }
 
 
+    @SuppressWarnings("unchecked")
     public TreeMap<List<DummyOrder>, Long> splitBOIdeally(Order order, Warehouse ggnWarehouse, Warehouse mumWarehouse) {
         // get static things
         Pincode pincode = pincodeDao.getByPincode(order.getAddress().getPin());
