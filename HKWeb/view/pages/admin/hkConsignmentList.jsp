@@ -45,6 +45,7 @@
                                                serviceProperty="hubList" value="id"
                                                label="name"/>
                 </s:select>
+                <label>Runsheet Id:</label><s:text name="runsheet"/>
                 <label>Reconciled: </label>
                 <s:select name="reconciled">
                     <s:option value="">--All--</s:option>

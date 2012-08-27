@@ -51,6 +51,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
     private             List<Consignment>     consignmentListForPaymentReconciliation = new ArrayList<Consignment>();
     private             HkdeliveryPaymentReconciliation hkdeliveryPaymentReconciliation;
     private             Boolean               reconciled;
+    private             Runsheet              runsheet;
 
 
     @Autowired
@@ -146,7 +147,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
     }
 
     public Resolution searchConsignments(){
-        consignmentPage = consignmentService.searchConsignment(consignment, consignmentNumber, startDate, endDate, consignmentStatus, hub, reconciled, getPageNo(), getPerPage());
+        consignmentPage = consignmentService.searchConsignment(consignment, consignmentNumber, startDate, endDate, consignmentStatus, hub, runsheet, reconciled, getPageNo(), getPerPage());
         if(consignmentPage != null){
             consignmentList = consignmentPage.getList();
         }
@@ -318,5 +319,13 @@ public class HKDConsignmentAction extends BasePaginatedAction {
 
     public void setReconciled(Boolean reconciled) {
         this.reconciled = reconciled;
+    }
+
+    public Runsheet getRunsheet() {
+        return runsheet;
+    }
+
+    public void setRunsheet(Runsheet runsheet) {
+        this.runsheet = runsheet;
     }
 }
