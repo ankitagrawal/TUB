@@ -89,10 +89,12 @@
                         <td>${consignment.runsheet.id}</td>
                         <td>${consignment.consignmentStatus.status}</td>
                         <td>${consignment.hkdeliveryPaymentReconciliation.id}
-                            <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction" event="editPaymentReconciliation">
-                                <s:param name="hkdeliveryPaymentReconciliation" value="${consignment.hkdeliveryPaymentReconciliation.id}" />
-                                (View)
-                            </s:link>
+                            <c:if test="${consignment.hkdeliveryPaymentReconciliation.id != null}" >
+                                <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction" event="editPaymentReconciliation" target="_blank">
+                                    <s:param name="hkdeliveryPaymentReconciliation" value="${consignment.hkdeliveryPaymentReconciliation.id}" />
+                                    (View)
+                                </s:link>
+                            </c:if>
                         </td>
                         <td>
                             <%--<s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction" event="pre"

@@ -176,6 +176,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
             consignmentListForPaymentReconciliation = new ArrayList<Consignment>(hkdeliveryPaymentReconciliation.getConsignments());
             return new ForwardResolution("/pages/admin/hkdeliveryPaymentReconciliation.jsp");
         }
+        addRedirectAlertMessage(new SimpleMessage("Payment Reconciliation saved."));
         return new ForwardResolution(HKDConsignmentAction.class, "searchConsignments");
     }
 
