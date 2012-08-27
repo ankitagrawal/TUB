@@ -562,11 +562,5 @@ public class OrderServiceImpl implements OrderService {
 		return false;
 
     }
-
-    public void getProductVariantOnGroundShippingNOTAllowed(Order order){
-        
-
-    }
-
-
+    
 }
