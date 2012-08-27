@@ -81,13 +81,16 @@
         $.getJSON($('#lineItemUpdateLink').attr('href'), {'cartLineItem':lineItemId,'cartLineItem.qty':0}, function(responseData) {
           removeItem(lineItemStyleId);
           count = Math.round($('#productsInCart').html());
-          if (count == 1) {
+          simpleProductCount = Math.round($('#simpleProductsInCart').html())
+          if (count == 1 || simpleProductCount==1) {
             location.reload();
           }
           else if (count > 2) {
             $('#productsInCart').html(count - 1);
+            $('#simpleProductsInCart').html(simpleProductCount-1);
           }
           else {
+              $('#simpleProductsInCart').html(simpleProductCount-1);
             $('.cartButton').html("<img class='icon' src='${pageContext.request.contextPath}/images/icons/cart.png'/>&nbsp;<span class='num' id='productsInCart'>1</span> item in<br/>your shopping cart");
           }
           $('#numProdTitle').html(count - 1);
@@ -169,6 +172,12 @@
         $('#summaryPromoDiscountContainer').show();
       }
       $('#summaryPromoDiscount').html('Rs. ' + responseData.data.totalPromoDiscount);
+      if (responseData.data.subscriptionDiscount == "0.00") {
+        $('#summarySubscriptionDiscountContainer').hide();
+      } else {
+        $('#summarySubscriptionDiscountContainer').show();
+      }
+      $('#totalSubscriptionDiscount').html('Rs. ' + responseData.data.subscriptionDiscount);
 
       if (responseData.data.totalCashback == "0.00") {
         $('#summaryTotalCashbackContainer').hide();
@@ -247,9 +256,25 @@
     <a href="/" class="back"> &larr; go back to add products to your shopping cart</a>
   </c:if>
 </s:layout-component>
+
 <c:if test="${cartAction.pricingDto.productLineCount >= 1}">
+
 <s:layout-component name="cart_items">
 <div class='products_container' style="min-height: 500px;">
+
+<div style="display: none;">
+    <s:link beanclass="com.hk.web.action.core.order.CartLineItemUpdateAction" id="lineItemUpdateLink"></s:link>
+    <s:link beanclass="com.hk.web.action.core.discount.ApplyCouponAction" style="display:none;" id="couponBaseLink"></s:link>
+    <s:link beanclass="com.hk.web.action.core.cart.CartAction" style="display:none;" id="updatePricingLink" event="pricing"></s:link>
+</div>
+
+<c:if test="${cartAction.pricingDto.subscriptionLineCount>=1}">
+  <span id="subscriptionsInCart" style="display: none;">${cartAction.pricingDto.subscriptionLineCount}</span>
+  <s:layout-render name="/layouts/embed/_subscriptionCart.jsp"
+                   subscriptions="${cartAction.subscriptions}" />
+</c:if>
+<c:if test="${(cartAction.pricingDto.productLineCount-cartAction.pricingDto.subscriptionLineCount)>=1}">
+<span id="simpleProductsInCart" style="display: none;">${(cartAction.pricingDto.productLineCount-cartAction.pricingDto.subscriptionLineCount)}</span>
 <div class='tabletitle'>
   <div class='name'>
     Product
@@ -262,13 +287,6 @@
   </div>
   <div class='floatfix'></div>
 </div>
-<s:form beanclass="com.hk.web.action.core.cart.CartAction" id="cartForm">
-<div style="display: none;">
-  <s:link beanclass="com.hk.web.action.core.order.CartLineItemUpdateAction" id="lineItemUpdateLink"></s:link>
-  <s:link beanclass="com.hk.web.action.core.discount.ApplyCouponAction" style="display:none;" id="couponBaseLink"></s:link>
-  <s:link beanclass="com.hk.web.action.core.cart.CartAction" style="display:none;" id="updatePricingLink" event="pricing"></s:link>
-</div>
-
 <c:forEach items="${cartAction.order.exclusivelyProductCartLineItems}" var="cartLineItem" varStatus="ctr">
   <div class="lineItemRow product">
     <input type="hidden" value="${cartLineItem.id}" class="lineItemId" id="item_${cartLineItem.id}"/>
@@ -401,6 +419,7 @@
                   pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
             </div>
           </div>
+
         </c:otherwise>
       </c:choose>
 
@@ -409,11 +428,26 @@
           to the service provider
         </span>
       </c:if>
+      <c:if test="${cartLineItem.productVariant.product.subscribable}">
+       <br/> <div style="font-style: italic; font-size: 11px; font-weight: normal; font-family: Georgia, Cambria, serif;">
+          <s:link beanclass="com.hk.web.action.core.subscription.SubscriptionAction" class="addSubscriptionLink"><b>subscribe and save more</b>
+              <s:param name="productVariant" value="${cartLineItem.productVariant}"/>
+          <s:param name="fromCart" value="true"/> </s:link>
     </div>
-    <div class="floatfix"></div>
+      </c:if>
+    </div>
+    <div class="floatfix"> </div>
+
   </div>
 </c:forEach>
+<div class="jqmWindow" style="display:none;" id="addSubscriptionWindow"></div>
 
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#addSubscriptionWindow').jqm({trigger: '.addSubscriptionLink', ajax: '@href'});
+    });
+
+</script>
 <c:forEach items="${cartAction.order.exclusivelyComboCartLineItems}" var="cartLineItem" varStatus="ctr1">
   <div class="lineItemRow product">
     <input type="hidden" value="${cartLineItem.id}" class="lineItemId" id="item_${cartLineItem.id}"/>
@@ -496,8 +530,8 @@
   <s:link beanclass="com.hk.web.action.HomeAction"
           class="back"> &larr; go back to add products to your shopping cart</s:link>
 </c:if>
+</c:if>
 </div>
-
 <shiro:lacksRole name="<%=RoleConstants.COUPON_BLOCKED%>">
     <div class='right_container coupon'>
   <shiro:hasAnyRoles name="<%=RoleConstants.HK_USER%>">
@@ -570,6 +604,13 @@
           </c:if>
         </span>
   <br/>
+
+      <span class="special" id="summarySubscriptionDiscountContainer"
+            style="display: ${cartAction.pricingDto.subscriptionDiscount > 0 ? 'block':'none'};">
+        <span style="font-size: 11px;">Subscription Discount</span>: <br/><strong>(<span id="totalSubscriptionDiscount"
+                                                                                  class="green"><fmt:formatNumber
+          value="${cartAction.pricingDto.subscriptionDiscount}" type="currency" currencySymbol="Rs. "/></span>)</strong>
+      </span>
       <span class="special" id="summaryPromoDiscountContainer"
             style="display: ${cartAction.pricingDto.totalPromoDiscount > 0 ? 'block':'none'};">
         <span style="font-size: 11px;">Promo Discount</span>: <br/><strong>(<span id="summaryPromoDiscount"
@@ -624,7 +665,7 @@
     (inclusive of shipping, handling and taxes.)
   </div>
 </c:if>
-
+<s:form beanclass="com.hk.web.action.core.cart.CartAction" id="cartForm">
 <s:hidden name="order" value="${cartAction.order}"/>
 <s:submit name="checkout" value="Place order >" class="button" style="font-size: 1em"/>
 

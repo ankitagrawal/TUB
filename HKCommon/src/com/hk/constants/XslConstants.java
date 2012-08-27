@@ -2,9 +2,9 @@
 package com.hk.constants;
 
 public class XslConstants {
-    
+
     public static final String    PRODUCT_ID                      = "PRODUCT_ID";
-    public static final String    CROSS_PRODUCT_ID                = "CROSS_PRODUCT_ID";
+    public static final String    RELATED_PRODUCT_ID = "RELATED_PRODUCT_ID";
     public static final String    VARIANT_ID                      = "VARIANT_ID";
     public static final String    GRN_LINE_ITEM_ID                = "GRN_LINE_ITEM_ID";
     public static final String    CATEGORY                        = "CATEGORY";
@@ -95,8 +95,12 @@ public class XslConstants {
     public static final String    PAYMENT_TYPE                    = "PAYMENT_TYPE";
     public static final String    SERVICE_TYPE                    = "SERVICE_TYPE";
     public static final String    POSTPAID_AMOUNT                 = "POSTPAID_AMOUNT";
+    public static final String    MARGIN_HK_CP                    = "MARGIN(HK vs CP)";
+    public static final String    MARGIN_MRP_CP                   = "MARGIN(MRP vs CP)";
+
     public static final String   OTHER_REMARK                     = "OTHER_REMARK";
     public static final String   SUPPLIER_CODE                    = "SUPPLIER_CODE" ;
+
 
     //Excel Constants needed while uploading AWB for couriers
     public static final String AWB_NUMBER = "AWB_NUMBER";
@@ -112,7 +116,29 @@ public class XslConstants {
     public static final String VARIABLE_COD_CHARGES = "VARIABLE_COD_CHARGES";
     public static final String FUEL_CHARGES = "FUEL_CHARGES";
 
-  //Excel Constants needed while uploading CityCourierTaT for couriers
+    //Excel Constants needed while uploading CityCourierTaT for couriers
     public static final String CITY_TAT = "CITY_TAT";
 
+    //Excel constant for GRN List
+    public static final String GRN_ID = "GRN ID";
+    public static final String INVOICE_NO = "INVOICE NO";
+    public static final String RECEIVED_BY = "RECEIVED BY";
+    public static final String SUPPLIER_NAME = "SUPPLIER";
+    public static final String STATUS = "STATUS";
+    public static final String RECONCILED = "RECONCILED";
+    public static final String PAYABLE = "PAYABLE";
+    public static final String GRN_LIST_SHEET = "GRNList";
+    public static final String CREATE_DATE = "CREATE DATE";
+    public static final String CREATED_BY = "CREATED BY";
+    public static final String NO_OF_SKU = "NO. OF SKU";
+    public static final String APPROVER = "APPROVER";
+    public static final String LAST_UPDATED_DATE = "LAST UPDATED DATE";
+
+    //For supplier
+    public static final String ADDRESS = "ADDRESS";
+    public static final String CONTACT_PERSON = "CONTACT PERSON";
+    public static final String CONTACT_NUMBER = "CONTACT NUMBER";
+    public static final String CREDIT_PERIOD = "CREDIT PERIOD";
+    public static final String MARGIN = "MARGIN";
+    public static final String VALIDITY_TERMS_OF_TRADE = "VALIDITY OF TERMS OF TRADE";
 }

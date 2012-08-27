@@ -43,7 +43,17 @@ public class GoodsReceivedNoteDaoImpl extends BaseDaoImpl implements GoodsReceiv
     }
 
     public Page searchGRN(GoodsReceivedNote grn, GrnStatus grnStatus, String invoiceNumber, String tinNumber, String supplierName, Boolean isReconciled,
-            Warehouse warehouse, int pageNo, int perPage) {
+                          Warehouse warehouse, int pageNo, int perPage) {
+        return list(getGRNCriteria(grn, grnStatus, invoiceNumber, tinNumber, supplierName, isReconciled, warehouse), pageNo, perPage);
+    }
+
+    public List<GoodsReceivedNote> searchGRN(GoodsReceivedNote grn, GrnStatus grnStatus, String invoiceNumber, String tinNumber, String supplierName, Boolean isReconciled,
+                                             Warehouse warehouse) {
+        return findByCriteria( getGRNCriteria(grn, grnStatus, invoiceNumber, tinNumber, supplierName, isReconciled, warehouse) );
+    }
+
+    private DetachedCriteria getGRNCriteria(GoodsReceivedNote grn, GrnStatus grnStatus, String invoiceNumber, String tinNumber, String supplierName, Boolean isReconciled,
+                                            Warehouse warehouse) {
         List<PurchaseOrder> poList = new ArrayList<PurchaseOrder>();
         if (StringUtils.isNotBlank(tinNumber) || StringUtils.isNotBlank(supplierName)) {
             Criteria purchaseOrderCriteria = getSession().createCriteria(PurchaseOrder.class);
@@ -52,7 +62,6 @@ public class GoodsReceivedNoteDaoImpl extends BaseDaoImpl implements GoodsReceiv
                 supplierCriteria.add(Restrictions.eq("tinNumber", tinNumber));
             }
             if (StringUtils.isNotBlank(supplierName)) {
-
                 supplierCriteria.add(Restrictions.like("name", "%" + supplierName + "%"));
             }
             poList = purchaseOrderCriteria.list();
@@ -66,13 +75,29 @@ public class GoodsReceivedNoteDaoImpl extends BaseDaoImpl implements GoodsReceiv
                 grnCriteria.add(Restrictions.eq("reconciled", isReconciled));
             }
         }
+
         if (grn != null) {
             grnCriteria.add(Restrictions.eq("id", grn.getId()));
         }
 
-        if (!poList.isEmpty() && poList.size() > 0) {
-            grnCriteria.add(Restrictions.in("purchaseOrder", poList));
+        DetachedCriteria purchaseOrderCriteria = null;
+        DetachedCriteria supplierCriteria = null;
+        if (supplierName != null || tinNumber != null) {
+            purchaseOrderCriteria  = grnCriteria.createCriteria("purchaseOrder");
+
+            if(tinNumber != null) {
+            purchaseOrderCriteria.add(Restrictions.eq("tinNumber", tinNumber));
+            }
+
+            if(supplierName != null ){
+                supplierCriteria = purchaseOrderCriteria.createCriteria("supplier");
+                supplierCriteria.add(Restrictions.like("name", "%" + supplierName + "%"));
+            }
+
         }
+        /*if (!poList.isEmpty() && poList.size() > 0) {
+            grnCriteria.add(Restrictions.in("purchaseOrder", poList));
+        }*/
         if (StringUtils.isNotBlank(invoiceNumber)) {
             grnCriteria.add(Restrictions.eq("invoiceNumber", invoiceNumber));
         }
@@ -83,8 +108,7 @@ public class GoodsReceivedNoteDaoImpl extends BaseDaoImpl implements GoodsReceiv
             grnCriteria.add(Restrictions.eq("warehouse", warehouse));
         }
         grnCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));
-        return list(grnCriteria, pageNo, perPage);
-
+        return grnCriteria;
     }
 
     public List<GoodsReceivedNote> listGRNsIncludingStatus(List<Long> grnStatusList) {

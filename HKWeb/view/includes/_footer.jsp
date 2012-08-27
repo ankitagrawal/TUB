@@ -16,7 +16,7 @@
             <a href="${pageContext.request.contextPath}/pages/aboutCompany.jsp"><span class="txt-white">About Us</span></a>
           </li>
           <li><a href="${pageContext.request.contextPath}/affiliate"><span class="txt-white">Affiliate</span></a></li>
-          <li><a href="${pageContext.request.contextPath}/b2b"><span class="txt-white">For Business</span></a></li>
+          <%--<li><a href="${pageContext.request.contextPath}/b2b"><span class="txt-white">For Business</span></a></li>--%>
           <li><s:link beanclass="com.hk.web.action.pages.ContactAction"><span class="txt-white">Contact Us</span></s:link>
           </li>
           <li><a href="${pageContext.request.contextPath}/pages/termsAndConditions.jsp"><span class="txt-white">Terms & Conditions</span></a>
@@ -26,6 +26,7 @@
           <li><a href="${pageContext.request.contextPath}/blog" target="_blank"><span class="txt-white">Blog</span></a></li>
           <li><a href="${pageContext.request.contextPath}/pages/careers.jsp"><span class="txt-white">Careers</span></a>
           </li>
+
         </ul>
       </div>
       <div class='column'>
@@ -54,15 +55,26 @@
             <li><s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="toplinksSecondary">Login</s:link></li>
             <li><s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="toplinksSecondary">Signup</s:link></li>
           </shiro:notAuthenticated>
+          <shiro:authenticated>
+              <li><s:link beanclass="com.hk.web.action.core.auth.LogoutAction" class="toplinksSecondary">Logout</s:link></li>
+          </shiro:authenticated>
           <shiro:lacksRole name="<%=RoleConstants.TEMP_USER%>">
             <li>
-              <s:link beanclass="com.hk.web.action.core.user.MyAccountAction" title='view past orders / edit personal details'>Your Account</s:link></li>
-            <li><s:link beanclass="com.hk.web.action.core.auth.LogoutAction" class="toplinksSecondary">Logout</s:link></li>
+            <s:link beanclass="com.hk.web.action.core.user.MyAccountAction" title='view past orders / edit personal details'>Your Account</s:link></li>
             <li><s:link beanclass="com.hk.web.action.core.user.CustomerOrderHistoryAction">Order History</s:link></li>
+            <li><s:link beanclass="com.hk.web.action.core.user.CustomerSubscriptionHistoryAction">Subscription History</s:link> </li>
             <li><s:link beanclass="com.hk.web.action.core.referral.ReferralProgramAction">Referral Program</s:link></li>
           </shiro:lacksRole>
         </ul>
       </div>
+        <div class='column'>
+            <h5>
+                Misc
+            </h5>
+            <ul>
+                <li>   <s:link beanclass="com.hk.web.action.core.subscription.AboutSubscriptionAction" event="pre" >Subscriptions </s:link> </li>
+            </ul>
+        </div>
       <div style="float:right;">
         <img src="<hk:vhostImage/>/images/banners/home/safe_secure_footer.gif" alt="safe and secure shopping at healthkart">
       </div>
@@ -74,7 +86,7 @@
       <div class='floatfix'></div>
     </div>
     <div class='floatfix'></div>
-    <div class="footer-bottom" style=" padding: 1 linink kahomepx 0;">
+    <div class="footer-bottom" style=" padding: 1 0;">
       <div class="fb-contents">
         <span style="color: white;" class="serif"> &copy; 2012 healthkart.com</span>
 

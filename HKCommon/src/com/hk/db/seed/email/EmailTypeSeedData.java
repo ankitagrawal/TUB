@@ -3,10 +3,11 @@ package com.hk.db.seed.email;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.hk.constants.core.EnumEmailType;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.core.EmailType;
-import org.springframework.stereotype.Component;
 
 @Component
 public class EmailTypeSeedData extends BaseSeedData {

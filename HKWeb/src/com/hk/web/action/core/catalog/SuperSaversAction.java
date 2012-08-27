@@ -16,7 +16,6 @@ import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.domain.catalog.product.combo.SuperSaverImage;
 import com.hk.pact.service.catalog.combo.SuperSaverImageService;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 
 @UrlBinding("/super-savers")
 @Component

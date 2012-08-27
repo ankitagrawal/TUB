@@ -1,20 +1,27 @@
 package com.hk.util;
 
-import com.hk.constants.core.Keys;
-import org.apache.commons.io.IOUtils;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.jsoup.Jsoup;
-import org.jsoup.select.Elements;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 
-import javax.annotation.PostConstruct;
-import java.io.*;
+import com.hk.constants.core.Keys;
 
 @Component
 public class FtlUtils {

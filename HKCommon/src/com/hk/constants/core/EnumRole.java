@@ -1,9 +1,9 @@
 package com.hk.constants.core;
 
-import com.hk.domain.user.Role;
-
 import java.util.Arrays;
 import java.util.List;
+
+import com.hk.domain.user.Role;
 
 public enum EnumRole {
 
@@ -49,6 +49,8 @@ public enum EnumRole {
   HK_AFFILIATE_MANAGER(RoleConstants.HK_AFFILIATE_MANAGER),
   FINANCE_ADMIN(RoleConstants.FINANCE_ADMIN),
   DEVELOPER(RoleConstants.DEVELOPER),
+  PAYMENT_MANAGER(RoleConstants.PAYMENT_MANAGER),
+  HR(RoleConstants.HR),
   HK_DELIVERY_GUY(RoleConstants.HK_DELIVERY_GUY);
 
   String roleName;
@@ -80,6 +82,7 @@ public enum EnumRole {
                 EnumRole.COD_BLOCKED.getRoleName(),
                 EnumRole.CUSTOMER_SUPPORT.getRoleName(),
                 EnumRole.CUSTOMER_SUPPORT_L2.getRoleName(),
+                EnumRole.PAYMENT_MANAGER.getRoleName(),
                 EnumRole.COUPON_BLOCKED.getRoleName(),
                 EnumRole.HK_BLOCKED.getRoleName(),
                 EnumRole.HK_DEACTIVATED.getRoleName(),
@@ -101,6 +104,16 @@ public enum EnumRole {
                 EnumRole.WH_EMPLOYEE.getRoleName(),
                 EnumRole.WH_MANAGER.getRoleName());
     }
+
+	public static List<String> listHRRoles() {
+	    return Arrays.asList(
+	            EnumRole.HK_USER.getRoleName(),
+	            EnumRole.HK_EMPLOYEE.getRoleName(),
+	            EnumRole.BASIC_ROLES.getRoleName(),
+	            EnumRole.TICKETADMIN.getRoleName(),
+	            EnumRole.WH_EMPLOYEE.getRoleName(),
+	            EnumRole.WH_MANAGER.getRoleName());
+	}
 
     public Role toRole() {
     Role role = new Role();

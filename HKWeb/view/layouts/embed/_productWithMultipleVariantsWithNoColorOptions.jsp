@@ -1,4 +1,5 @@
 <%@ page import="com.hk.domain.catalog.product.Product" %>
+<%@ page import="com.hk.domain.subscription.SubscriptionProduct" %>
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
@@ -13,8 +14,11 @@
 
       boolean isSecure = pageContext.getRequest().isSecure();
       pageContext.setAttribute("isSecure", isSecure);
+
+      SubscriptionProduct subscriptionProduct = (SubscriptionProduct) pageContext.getAttribute("subscriptionProduct");
+      pageContext.setAttribute("subscriptionProduct", subscriptionProduct);
   %>
-<div class='variants'>
+<div class='variants' itemprop="offerDetails" itemscope itemtype="http://data-vocabulary.org/Offer-aggregate">
     <span style="font-style: italic; font-size: 16px;;"> ${hk:getNonDeletedVariants(product)}</span>
     variants
     available.
@@ -109,7 +113,7 @@
                         </div>
                         <div class='hk'>
                             Our Price <br/>
-                <span class='num' style="font-size: 14px;" :>
+                <span class='num' style="font-size: 14px;">
                   Rs <fmt:formatNumber value="${hk:getApplicableOfferPrice(variant) + hk:getPostpaidAmount(variant)}"
                                        maxFractionDigits="0"/>
                 </span>
@@ -128,7 +132,7 @@
                 <c:if test="${variant.discountPercent == 0}">
                   <div class='prices'>
                     <div class='hk'>
-                <span class='num' style="font-size: 14px;" :>
+                <span class='num' style="font-size: 14px;">
                   Rs <fmt:formatNumber value="${hk:getApplicableOfferPrice(variant) + hk:getPostpaidAmount(variant)}"
                                        maxFractionDigits="0"/>
                 </span>
@@ -136,7 +140,7 @@
                   </div>
                 </c:if>
 
-                <div class='add'>
+                <div class='add' itemprop="availability" content="${variant.outOfStock ? '' : 'in_stock'}">
                   <c:choose>
                     <c:when test="${variant.outOfStock}">
                       <%--<c:choose>--%>
@@ -156,6 +160,12 @@
 
                     </c:when>
                     <c:otherwise>
+                      <c:if test="${!empty subscriptionProduct}">
+                        <div style="text-align: center">
+                        <s:link beanclass="com.hk.web.action.core.subscription.SubscriptionAction" class="addSubscriptionButton"><b>Subscribe</b>
+                          <s:param name="productVariant" value="${variant}"/> </s:link>
+                        </div>
+                       </c:if>
                       <s:submit name="addToCart" value="Place Order"
                                 class="addToCartButton cta button_green"
                                 style="float:right;"/>
@@ -177,7 +187,6 @@
           $('.addToCartButton').click(function() {
             $(this).parent().parent().children('.progressLoader').show();
           });
-
         </script>
 
       </div>

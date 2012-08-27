@@ -5,12 +5,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.hk.constants.catalog.category.CategoryConstants;
-import com.hk.constants.clm.EnumCLMMargin;
-import com.hk.domain.catalog.category.Category;
-import com.hk.domain.clm.CategoryKarmaProfile;
-import com.hk.domain.user.User;
-import com.hk.pact.service.catalog.CategoryService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.FileBean;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -24,8 +18,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.core.Keys;
+import com.hk.domain.catalog.category.Category;
+import com.hk.domain.clm.CategoryKarmaProfile;
 import com.hk.domain.clm.KarmaProfile;
+import com.hk.domain.user.User;
+import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.clm.KarmaProfileService;
 import com.hk.util.io.ExcelSheetParser;
 import com.hk.util.io.HKRow;

@@ -1,5 +1,28 @@
 package com.hk.taglibs;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import net.sourceforge.stripes.util.CryptoUtil;
+
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
+import org.joda.time.Period;
+import org.joda.time.format.PeriodFormatter;
+import org.joda.time.format.PeriodFormatterBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.akube.framework.util.DateUtils;
 import com.akube.framework.util.FormatUtils;
 import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
 import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
@@ -17,6 +40,10 @@ import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.catalog.product.VariantConfig;
+import com.hk.domain.catalog.product.VariantConfigOption;
+import com.hk.domain.catalog.product.VariantConfigOptionParam;
+import com.hk.domain.catalog.product.VariantConfigValues;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.inventory.GrnLineItem;
@@ -33,6 +60,7 @@ import com.hk.domain.sku.SkuItem;
 import com.hk.domain.user.User;
 import com.hk.dto.menu.MenuNode;
 import com.hk.helper.MenuHelper;
+import com.hk.manager.LinkManager;
 import com.hk.manager.OrderManager;
 import com.hk.manager.UserManager;
 import com.hk.pact.dao.BaseDao;
@@ -46,22 +74,10 @@ import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
+import com.hk.report.pact.service.catalog.product.ReportProductVariantService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.CartLineItemUtil;
 import com.hk.util.HKImageUtils;
-import net.sourceforge.stripes.util.CryptoUtil;
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
-import org.joda.time.Period;
-import org.joda.time.format.PeriodFormatter;
-import org.joda.time.format.PeriodFormatterBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.*;
 
 public class Functions {
 
@@ -71,7 +87,7 @@ public class Functions {
     private static final String          DEFAULT_DELIEVERY_DAYS = "1-3";
     private static final String          BUSINESS_DAYS          = " business days";
     private static final long            DEFAULT_MIN_DEL_DAYS   = 1;
-    
+
 
     // TODO: rewrite
     static {
@@ -456,8 +472,8 @@ public class Functions {
     }
 
     public static List<Product> getCategoryHeadingProductsSortedByOrder(Long primaryCategoryHeadingId, String productReferrer){
-      ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
-      return productService.productsSortedByOrder(primaryCategoryHeadingId, productReferrer);
+        ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
+        return productService.productsSortedByOrder(primaryCategoryHeadingId, productReferrer);
     }
 
     public static boolean isComboInStock(Object o) {
@@ -497,4 +513,60 @@ public class Functions {
         }
 
     }
+
+
+    public static boolean isCollectionContainsObject(Collection c, Object o) {
+        return c.contains(o);
+    }
+
+    public static Double getEngravingPrice(Object o) {
+        ProductVariant productVariant = (ProductVariant) o;
+        VariantConfig variantConfig = productVariant.getVariantConfig();
+        if(variantConfig != null) {
+            Set<VariantConfigOption> variantConfigOptions = variantConfig.getVariantConfigOptions();
+            for(VariantConfigOption variantConfigOption : variantConfigOptions) {
+                if(variantConfigOption.getAdditionalParam().equals(VariantConfigOptionParam.ENGRAVING.param())){
+                    for(VariantConfigValues variantConfigValue : variantConfigOption.getVariantConfigValues()) {
+                        return variantConfigValue.getAdditonalPrice();
+                    }
+                }
+            }
+        }
+        return 0D;
+    }
+
+    public static boolean isEngravingProvidedForProduct(Object o) {
+        ProductVariant productVariant = (ProductVariant) o;
+        VariantConfig variantConfig = productVariant.getVariantConfig();
+        if(variantConfig != null) {
+            Set<VariantConfigOption> variantConfigOptions = variantConfig.getVariantConfigOptions();
+            for(VariantConfigOption variantConfigOption : variantConfigOptions) {
+                if(variantConfigOption.getAdditionalParam().equals(VariantConfigOptionParam.ENGRAVING.param())){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static Long findInventorySoldInGivenNoOfDays(Sku sku, int noOfDays) {
+        ReportProductVariantService reportProductVariantService = ServiceLocatorFactory.getService(ReportProductVariantService.class);
+
+        Calendar calendar = Calendar.getInstance();
+        Date endDate = calendar.getTime();
+
+        return reportProductVariantService.findSkuInventorySold(DateUtils.getDateMinusDays(noOfDays), endDate, sku);
+    }
+    
+    public static String getProductURL(Product product, Long productReferrerId){
+       LinkManager linkManager = (LinkManager) ServiceLocatorFactory.getService("LinkManager");
+       
+       return linkManager.getProductURL(product, productReferrerId);
+    }
+
+	public static boolean isCODAllowed(Order order) {
+		OrderService orderService = ServiceLocatorFactory.getService(OrderService.class);
+        return orderService.isCODAllowed(order);
+    }
+
 }

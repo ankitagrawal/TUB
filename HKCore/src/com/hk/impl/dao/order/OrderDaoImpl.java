@@ -25,8 +25,8 @@ import com.hk.domain.core.OrderLifecycleActivity;
 import com.hk.domain.core.OrderStatus;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.OrderLifecycle;
-import com.hk.domain.user.User;
 import com.hk.domain.payment.Payment;
+import com.hk.domain.user.User;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.dao.order.OrderLifecycleDao;
@@ -59,8 +59,10 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao {
 
     public Page listOrdersForUser(List<OrderStatus> orderStatusList, User user, int page, int perPage) {
         DetachedCriteria criteria = DetachedCriteria.forClass(Order.class);
+        Boolean[] subscriptionOrders={false};
         criteria.add(Restrictions.in("orderStatus", orderStatusList));
         criteria.add(Restrictions.eq("user", user));
+        criteria.add(Restrictions.in("subscriptionOrder",subscriptionOrders));
         criteria.addOrder(org.hibernate.criterion.Order.desc("createDate"));
         return list(criteria, page, perPage);
     }

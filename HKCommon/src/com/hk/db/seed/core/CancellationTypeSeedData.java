@@ -3,10 +3,11 @@ package com.hk.db.seed.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.hk.constants.core.EnumCancellationType;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.core.CancellationType;
-import org.springframework.stereotype.Component;
 
 @Component
 public class CancellationTypeSeedData extends BaseSeedData {

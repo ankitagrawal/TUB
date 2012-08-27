@@ -31,10 +31,11 @@ public enum EnumCourierGroupHasCourier {
     Local(
             EnumCourierGroup.Local,
             Arrays.asList(
-                    EnumCourier.Chhotu,
+                    EnumCourier.HK_Delivery,
                     EnumCourier.Quantium,
                     EnumCourier.Smile_EExpress,
                     EnumCourier.Safexpress,
+                    EnumCourier.Delhivery_Surface,
                     EnumCourier.Delhivery
             )
     ),;

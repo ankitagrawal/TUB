@@ -114,6 +114,8 @@ public class CartLineItemConfig implements java.io.Serializable {
   public boolean equals(Object o) {
     if (this == o) return true;
 
+    if(o == null) return false;
+
     CartLineItemConfig config = (CartLineItemConfig) o;
     List<CartLineItemConfigValues> curConfigValues = new ArrayList(this.getCartLineItemConfigValues());
     List<CartLineItemConfigValues> otherConfigValues = new ArrayList(config.getCartLineItemConfigValues());

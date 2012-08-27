@@ -17,7 +17,7 @@
       boolean isSecure = pageContext.getRequest().isSecure();
       pageContext.setAttribute("isSecure", isSecure);
   %>
-  <div class='variants'>
+  <div class='variants' itemprop="offerDetails" itemscope itemtype="http://data-vocabulary.org/Offer-aggregate">
     <div class='add_to_cart'>
       <div class='tip'>
         <div class='prices' style="font-size: 14px;">

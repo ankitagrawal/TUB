@@ -1,20 +1,26 @@
 package com.hk.web.action.core.order;
 
-import com.akube.framework.stripes.action.BaseAction;
-import com.google.gson.JsonObject;
-import com.hk.admin.util.ChhotuCourierDelivery;
-import com.hk.admin.util.CourierStatusUpdateHelper;
-import com.hk.constants.courier.EnumCourier;
-import com.hk.constants.courier.CourierConstants;
-import com.hk.domain.order.ShippingOrder;
-import com.hk.exception.HealthkartCheckedException;
-import net.sourceforge.stripes.action.*;
+import java.util.Map;
+
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.validation.Validate;
+
 import org.jdom.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import java.util.Map;
+
+import com.akube.framework.stripes.action.BaseAction;
+import com.google.gson.JsonObject;
+import com.hk.admin.util.ChhotuCourierDelivery;
+import com.hk.admin.util.CourierStatusUpdateHelper;
+import com.hk.constants.courier.CourierConstants;
+import com.hk.constants.courier.EnumCourier;
+import com.hk.domain.order.ShippingOrder;
+import com.hk.exception.HealthkartCheckedException;
 
 /**
  * User: rahul
@@ -39,6 +45,7 @@ public class TrackCourierAction extends BaseAction {
     CourierStatusUpdateHelper courierStatusUpdateHelper;
 
 
+    @SuppressWarnings("unchecked")
     @DefaultHandler
     public Resolution pre() {
         Resolution resolution = null;

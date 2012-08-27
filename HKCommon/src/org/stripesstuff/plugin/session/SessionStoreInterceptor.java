@@ -37,6 +37,7 @@ import org.slf4j.LoggerFactory;
 @Intercepts(value={LifecycleStage.ActionBeanResolution, LifecycleStage.EventHandling, LifecycleStage.RequestComplete})
 public class SessionStoreInterceptor implements Interceptor {
 
+    @SuppressWarnings("unused")
     private static Logger logger = LoggerFactory.getLogger(SessionStoreInterceptor.class);
 
     /** Lazily filled in map of Class to fields annotated with Session. */
