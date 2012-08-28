@@ -112,7 +112,8 @@ public class HKDRunsheetAction extends BasePaginatedAction {
                 addRedirectAlertMessage(new SimpleMessage("Cannot close runsheet with a consignment status out for delivery"));
                 return new ForwardResolution(HKDRunsheetAction.class,"editRunsheet").addParameter("runsheet", runsheet.getId());
             }
-            if(runsheet.getActualCollection().doubleValue() > runsheet.getExpectedCollection().doubleValue()){
+            if((runsheet.getActualCollection() != null) &&
+                (runsheet.getActualCollection().doubleValue() > runsheet.getExpectedCollection().doubleValue())){
                 getContext().getValidationErrors().add("1", new SimpleError("Actual collected amount cannot be greater than expected amount "));
                 return new ForwardResolution(HKDRunsheetAction.class, "editRunsheet").addParameter("runsheet", runsheet.getId());
             }
@@ -150,7 +151,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
                 runsheet = runsheetService.updateExpectedAmountForClosingRunsheet(runsheet);
             }
             else{
-                addRedirectAlertMessage(new SimpleMessage("cannot close runsheet with consignment status out for delivery"));
+                addRedirectAlertMessage(new SimpleMessage("cannot close runsheet with consignment status out for delivery or receieved at hub."));
                 return new ForwardResolution(HKDRunsheetAction.class, "editRunsheet").addParameter("runsheet", runsheet.getId());
             }
             runsheetService.saveRunSheet(runsheet, changedConsignmentList);
