@@ -144,6 +144,19 @@
 			$(".filterCatalogForm").submit();
 		});
 
+		$(".resetAndFilterOption").click(function() {
+			$('<input type="hidden" value="' + $(this).val() + '" name="filterOptions[0]">').appendTo('.filterCatalogForm');
+			$(".filterCatalogForm").submit();
+		});
+
+		$(".resetAndFilterOptionLink").click(function() {
+			var li = $(this).parents(".filterOptionLi");
+			var cb = li.find(".resetAndFilterOption");
+			cb.attr("checked", true);
+			$('<input type="hidden" value="' + $(this).val() + '" name="filterOptions[0]">').appendTo('.filterCatalogForm');
+			$(".filterCatalogForm").submit();
+		});
+
 		$(".removeFilters").click(function() {
 			$("#minPrice").val(${priceRange.minPrice});
 			$("#maxPrice").val(${priceRange.maxPrice});
@@ -266,52 +279,62 @@
 				</div>
 			</c:if>
 			<c:forEach items="${filterMap}" var="filter">
-				<div class="">
-					<h5 class='heading1' style="padding:5px;background-color:#DDD;">
-							${filter.key}
-						<a title="Collapse" style="float:right; font-size:1.2em;color:black;cursor:pointer;"
-						   onclick="toggle('${filter.key}', this)">-</a>
-					</h5>
-					<ul style="padding-left:10px;" id="${filter.key}">
-						<c:forEach items="${filter.value}" var="option">
-							<li style="vertical-align:middle;" class="filterOptionLi">
-								<c:choose>
-									<c:when test="${hk:collectionContains(ca.filterOptions, option.id)}">
-										<input type="checkbox" class="filterOption" value="${option.id}"
-										       checked="checked"/>
-									</c:when>
-									<c:otherwise>
+				<c:choose>
+					<c:when test="${ca.rootCategorySlug == 'nutrition' && filter.key == 'SIZE'}">
+						<%--Do Nothing--%>
+					</c:when>
+					<c:otherwise>
+						<div class="">
+							<h5 class='heading1' style="padding:5px;background-color:#DDD;">
+									${filter.key}
+								<a title="Collapse" style="float:right; font-size:1.2em;color:black;cursor:pointer;"
+								   onclick="toggle('${filter.key}', this)">-</a>
+							</h5>
+							<ul style="padding-left:10px;" id="${filter.key}">
+								<c:forEach items="${filter.value}" var="option">
+									<li style="vertical-align:middle;" class="filterOptionLi">
 										<c:choose>
-											<c:when test="${option.applicable}">
-												<input type="checkbox" class="filterOption" value="${option.id}"/>
+											<c:when test="${hk:collectionContains(ca.filterOptions, option.id)}">
+												<input type="checkbox" class="filterOption" value="${option.id}"
+												       checked="checked"/>
 											</c:when>
 											<c:otherwise>
-												<input type="checkbox" class="filterOption" value="${option.id}"
-												       disabled="disabled"/>
+												<c:choose>
+											  <c:when test="${option.applicable}">
+												  <input type="checkbox" class="filterOption" value="${option.id}"/>
+											  </c:when>
+											  <c:otherwise>
+												  <input type="checkbox" class="resetAndFilterOption" value="${option.id}"/>
+											  </c:otherwise>
+										  </c:choose>
 											</c:otherwise>
 										</c:choose>
-									</c:otherwise>
-								</c:choose>
-								<c:choose>
-									<c:when test="${option.applicable}">
-										<a style="color:black;cursor:pointer;" class="filterOptionLink">${option.value}
-											<c:if test="${option.qty > 0}">
-												(${option.qty})</c:if></a>
-									</c:when>
-									<c:otherwise>
-										${option.value}
-									</c:otherwise>
-								</c:choose>
-								<c:if test="${filter.key == 'COLOR'}">
-									<span style="background-color:${option.value};height:10px;width:10px;float:right;margin-right:10px;margin-top:8px;">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-								</c:if>
+										<c:choose>
+											<c:when test="${option.applicable}">
+												<a style="color:black;cursor:pointer;"
+												   class="filterOptionLink">${option.value}
+													<c:if test="${option.qty > 0}">
+														(${option.qty})
+												</c:if></a>
+											</c:when>
+											<c:otherwise>
+												<a style="color:gray;cursor:pointer;"
+												   class="resetAndFilterOptionLink">${option.value}
+												</a>
+											</c:otherwise>
+										</c:choose>
+										<c:if test="${filter.key == 'COLOR'}">
+											<span style="background-color:${option.value};height:10px;width:10px;float:right;margin-right:10px;margin-top:8px;">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+										</c:if>
 
-							</li>
-							<c:set var="ctr2" value="${ctr}"/>
-							<c:set var="ctr" value="${ctr2+1}"/>
-						</c:forEach>
-					</ul>
-				</div>
+									</li>
+									<c:set var="ctr2" value="${ctr}"/>
+									<c:set var="ctr" value="${ctr2+1}"/>
+								</c:forEach>
+							</ul>
+						</div>
+					</c:otherwise>
+				</c:choose>
 			</c:forEach>
 		</s:form>
 	</div>

@@ -30,7 +30,6 @@
                 </span>
           </div>
           <div class='hk' style="font-size: 16px;">
-            Our Price
                 <span class='num' style="font-size: 20px;">
                   Rs <span itemprop="price"><fmt:formatNumber
                     value="${hk:getApplicableOfferPrice(product.productVariants[0])+ hk:getPostpaidAmount(product.productVariants[0])}"
@@ -46,7 +45,6 @@
         </c:if>
         <c:if test="${product.productVariants[0].discountPercent == 0}">
           <div class='hk' style="font-size: 16px;">
-            Our Price
                 <span class='num' style="font-size: 20px;">
                   Rs <span itemprop="price"><fmt:formatNumber
                     value="${hk:getApplicableOfferPrice(product.productVariants[0]) + hk:getPostpaidAmount(product.productVariants[0])}"
@@ -55,11 +53,14 @@
           </div>
         </c:if>
       </div>
-      <div style="font-size: 12px; text-align: right; margin-right: 5px;">
-        <c:if test="${hk:isNotBlank(product.productVariants[0].optionsCommaSeparated)}">
-          ${product.productVariants[0].optionsCommaSeparated}
-        </c:if>
-      </div>
+	    <div style="font-size: 12px; text-align: right; margin-right: 5px;">
+		    <c:forEach items="${product.productVariants[0].productOptions}" var="variantOption">
+			    <c:if
+					    test="${variantOption.name == 'TYPE' || variantOption.name == 'type' || variantOption.name == 'Type' || variantOption.name == 'BABY WEIGHT' || variantOption.name == 'baby weight' || variantOption.name == 'Baby Weight' || variantOption.name == 'SIZE' || variantOption.name == 'Size' || variantOption.name == 'size' || variantOption.name == 'FLAVOR' || variantOption.name == 'flavor' || variantOption.name == 'Flavor'}">
+				    ${variantOption.name}:${variantOption.value}<br/>
+			    </c:if>
+		    </c:forEach>
+	    </div>
 
     </div>
     <div class="right_col" itemprop="availability" content="${product.productVariants[0].outOfStock ? '' : 'in_stock'}">

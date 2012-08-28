@@ -49,7 +49,7 @@ public class CatalogFilter {
 				} else {
 					if (productOptionHeads.contains(option)) {
 						productOptionDto.setApplicable(true);
-						productOptionDto.setQty(null);
+						productOptionDto.setQty(0L);
 					} else {
 						productOptionDto.setApplicable(false);
 						productOptionDto.setQty(0L);
