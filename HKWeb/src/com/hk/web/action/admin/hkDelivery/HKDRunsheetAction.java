@@ -259,6 +259,9 @@ public class HKDRunsheetAction extends BasePaginatedAction {
         ConsignmentStatus outForDelivery = getBaseDao().get(ConsignmentStatus.class, EnumConsignmentStatus.ShipmentOutForDelivery.getId());
         ConsignmentLifecycleStatus consignmentLifecycleStatus = getBaseDao().get(ConsignmentLifecycleStatus.class, EnumConsignmentLifecycleStatus.Dispatched.getId());
         if (runsheetConsignments != null && runsheetConsignments.size() > 0) {
+            if (getPrincipal() != null) {
+                loggedOnUser = getUserService().getUserById(getPrincipal().getId());
+            }
             consignments = new HashSet(runsheetConsignments);
             runsheetCODParams = consignmentService.getRunsheetCODParams(consignments);
             totalPackets = consignments.size();
@@ -270,6 +273,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
             }
             
             try {
+                shippingOrderList = consignmentService.getShippingOrderFromConsignments(new ArrayList(consignments));
                 xlsFile = new File(adminDownloads + "/" + CourierConstants.HKDELIVERY_WORKSHEET_FOLDER + "/" + CourierConstants.HKDELIVERY_WORKSHEET + "_" + sdf.format(new Date()) + ".xls");
                 // Creating Runsheet object.
                 runsheetObj = runsheetService.createRunsheet(hub, consignments, getRunSheetDao().get(RunsheetStatus.class, EnumRunsheetStatus.Open.getId()), agent, prePaidBoxCount, Long.parseLong(totalCODPackets + ""), totalCODAmount);

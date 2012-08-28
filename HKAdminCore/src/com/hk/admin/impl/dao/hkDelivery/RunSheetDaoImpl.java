@@ -54,4 +54,10 @@ public class RunSheetDaoImpl extends BaseDaoImpl implements RunSheetDao {
         String query = "select rs.agent from Runsheet rs where rs.runsheetStatus = :runsheetStatus";
         return (List<User>) findByNamedParams(query, new String[]{"runsheetStatus"}, new Object[]{runsheetStatus});
     }
+
+    @Override
+    public List<Runsheet> getRunsheetForAgent(User agent) {
+        String query = "from Runsheet rs where rs.agent = :agent";
+        return (List<Runsheet>) findByNamedParams(query, new String[]{"agent"}, new Object[]{agent}).get(0);
+    }
 }

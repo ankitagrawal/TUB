@@ -52,6 +52,7 @@
                     <th>Payment Mode</th>
                     <th>Address</th>
                     <th>Transfer to Agent</th>
+                    <th>Action</th>
                 </tr>
                 </thead>
                 <c:forEach items="${runsheetAction.runsheetConsignments}" var="consignment" varStatus="ctr">
@@ -63,23 +64,19 @@
                         <td><fmt:formatNumber value="${consignment.amount}" type="currency" currencySymbol=" "
                                               maxFractionDigits="0"/></td>
                         <td>
-                            <%--<c:choose>
-                            <c:when test="${consignment.paymentMode eq 'COD'}">
-                                COD
-                            </c:when>
-                                <c:otherwise>
-                                Prepaid
-                                </c:otherwise>
-                            </c:choose>--%>
                            ${consignment.paymentMode}
                         </td>
                         <td>${consignment.address}</td>
-                        <td><s:select name="agent" class="agentName">
+                        <td><s:select name="runsheetConsignments[${ctr.index}].runsheet.agent" class="agentName">
                                 <s:option value="-Select Agent-">-Select Agent-</s:option>
                                 <hk:master-data-collection service="<%=MasterDataDao.class%>"
                                                            serviceProperty="agentsWithOpenRunsheet" value="id"
                                                            label="name"/>
                             </s:select>
+                        </td>
+                        <td>
+                            <a href="hkDeliveryWorksheet.jsp#" class="removeRowButton"
+                               style="font-size:1.2em;color:blue;">Remove Consignment</a>
                         </td>
                     </tr>
                 </c:forEach>
