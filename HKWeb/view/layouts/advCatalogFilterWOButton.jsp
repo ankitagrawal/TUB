@@ -119,7 +119,7 @@
 			}
 		});
 
-		/*$(".filterOption").click(function() {
+		$(".filterOption").click(function() {
 			var ctr = 0;
 			$(".filterOption").each(function() {
 				if ($(this).attr("checked")) {
@@ -154,36 +154,6 @@
 			var cb = li.find(".resetAndFilterOption");
 			cb.attr("checked", true);
 			$('<input type="hidden" value="' + $(this).val() + '" name="filterOptions[0]">').appendTo('.filterCatalogForm');
-			$(".filterCatalogForm").submit();
-		});*/
-
-		$(".filterOptionLink").click(function() {
-			var li = $(this).parents(".filterOptionLi");
-			var cb = li.find(".filterOption");
-			cb.attr("checked", true);
-		});
-		$(".resetAndFilterOptionLink").click(function() {
-			var li = $(this).parents(".filterOptionLi");
-			var cb = li.find(".resetAndFilterOption");
-			cb.attr("checked", true);
-		});
-
-		$(".filterCatalogFormButton").click(function() {
-			var ctr = 0;
-			$(".resetAndFilterOption").each(function() {
-				if ($(this).attr("checked")) {
-					$('<input type="hidden" value="' + $(this).val() + '" name="filterOptions[' + ctr + ']">').appendTo('.filterCatalogForm');
-					ctr++;
-				}
-			});
-			if (ctr == 0) {
-				$(".filterOption").each(function() {
-					if ($(this).attr("checked")) {
-						$('<input type="hidden" value="' + $(this).val() + '" name="filterOptions[' + ctr + ']">').appendTo('.filterCatalogForm');
-						ctr++;
-					}
-				});
-			}
 			$(".filterCatalogForm").submit();
 		});
 
@@ -265,11 +235,10 @@
 		<div class="">
 			<h5 class='heading1' style="background-color:#DDD;padding:5px;">
 				Filter By
-
 				<c:if test="${!empty ca.filterOptions || (filteredPriceRange.minPrice != priceRange.minPrice) || (filteredPriceRange.maxPrice != priceRange.maxPrice)}">
 					<a class="removeFilters"
 					   style="cursor:pointer;float:right;margin-right:10px;color:black;font-size:.9em;font-weight:normal;">Reset</a>
-				</c:if>				
+				</c:if>
 				<c:if test="${!empty ca.filterOptions}">
 					<div>
 						<c:forEach items="${ca.filterProductOptions}" var="filter">
@@ -317,10 +286,9 @@
 					<c:otherwise>
 						<div class="">
 							<h5 class='heading1' style="padding:5px;background-color:#DDD;">
-									<a title="Collapse" style="float:left; font-size:1.2em;color:black;cursor:pointer;padding-right:2px;"
-								   onclick="toggle('${filter.key}', this)">-</a>${filter.key}
-								<a class="filterCatalogFormButton" style="cursor:pointer;float:right;margin-right:10px;color:black;font-size:.9em;font-weight:normal;">Filter</a>
-
+									${filter.key}
+								<a title="Collapse" style="float:right; font-size:1.2em;color:black;cursor:pointer;"
+								   onclick="toggle('${filter.key}', this)">-</a>
 							</h5>
 							<ul style="padding-left:10px;" id="${filter.key}">
 								<c:forEach items="${filter.value}" var="option">
@@ -368,7 +336,6 @@
 					</c:otherwise>
 				</c:choose>
 			</c:forEach>
-			<s:submit name="pre" value="Filter" class="filterCatalogFormButton" style="padding:3px;"/>
 		</s:form>
 	</div>
 </c:if>
