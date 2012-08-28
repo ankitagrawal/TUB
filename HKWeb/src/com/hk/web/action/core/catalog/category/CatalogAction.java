@@ -214,6 +214,7 @@ public class CatalogAction extends BasePaginatedAction {
 				productPage = productDao.getProductByCategoryBrandAndOptions(categoryNames, brand, filterOptions, groupsCount, minPrice, maxPrice, getPageNo(), getPerPage());
 				if (productPage != null) {
 					productList = productPage.getList();
+					productList = productService.getSortedByStock(productList);
 					for (Product product : productList) {
 						product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
 					}
