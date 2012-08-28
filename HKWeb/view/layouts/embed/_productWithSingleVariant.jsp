@@ -56,7 +56,7 @@
 	    <div style="font-size: 12px; text-align: right; margin-right: 5px;">
 		    <c:forEach items="${product.productVariants[0].productOptions}" var="variantOption">
 			    <c:if
-					    test="${variantOption.name == 'TYPE' || variantOption.name == 'type' || variantOption.name == 'Type' || variantOption.name == 'BABY WEIGHT' || variantOption.name == 'baby weight' || variantOption.name == 'Baby Weight' || variantOption.name == 'SIZE' || variantOption.name == 'Size' || variantOption.name == 'size' || variantOption.name == 'FLAVOR' || variantOption.name == 'flavor' || variantOption.name == 'Flavor'}">
+					    test="${fn:toUpperCase(variantOption.name) == 'TYPE' || fn:toUpperCase(variantOption.name) == 'BABY WEIGHT' || fn:toUpperCase(variantOption.name) == 'SIZE' || fn:toUpperCase(variantOption.name) == 'FLAVOR'}">
 				    ${variantOption.name}:${variantOption.value}<br/>
 			    </c:if>
 		    </c:forEach>

@@ -78,7 +78,7 @@
                               <c:otherwise>
                                   <c:forEach items="${variant.productOptions}" var="variantOption">
                                       <c:if
-                                              test="${variantOption.name == 'TYPE' || variantOption.name == 'type' || variantOption.name == 'Type' || variantOption.name == 'BABY WEIGHT' || variantOption.name == 'baby weight' || variantOption.name == 'Baby Weight' || variantOption.name == 'SIZE' || variantOption.name == 'Size' || variantOption.name == 'size' || variantOption.name == 'FLAVOR' || variantOption.name == 'flavor' || variantOption.name == 'Flavor'}">
+                                              test="${fn:toUpperCase(variantOption.name) == 'TYPE' || fn:toUpperCase(variantOption.name) == 'BABY WEIGHT' || fn:toUpperCase(variantOption.name) == 'SIZE' || fn:toUpperCase(variantOption.name) == 'FLAVOR'}">
                                           ${variantOption.value}
                                           <br/>
                                           <br/>
@@ -100,8 +100,11 @@
                 </div>
                 <div class='desc'>
                   <c:forEach items="${variant.productOptions}" var="variantOption">
-                    <span
-                        style="/*text-transform:lowercase;*/ font-size: 12px; line-height:18px;"> ${variantOption.name}</span><span>: ${variantOption.value}</span><br/>
+	                  <c:if
+                                              test="${fn:toUpperCase(variantOption.name) == 'TYPE' || fn:toUpperCase(variantOption.name) == 'BABY WEIGHT' || fn:toUpperCase(variantOption.name) == 'SIZE' || fn:toUpperCase(variantOption.name) == 'FLAVOR'}">
+                                          <span style="font-size: 12px; line-height:18px;"> ${variantOption.name}</span><span>: ${variantOption.value}</span><br/>
+                                      </c:if>
+
                   </c:forEach>
                 </div>
                 <c:if test="${variant.discountPercent > 0}">
