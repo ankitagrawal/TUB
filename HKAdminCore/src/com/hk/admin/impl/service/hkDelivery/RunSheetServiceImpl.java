@@ -142,4 +142,9 @@ public class RunSheetServiceImpl implements RunSheetService {
         runsheet.setExpectedCollection(expectedCollection);
         return runsheet;
     }
+
+    @Override
+    public List<User> getAgentList(RunsheetStatus runsheetStatus) {
+       return runsheetDao.getAgentList(runsheetStatus);
+    }
 }

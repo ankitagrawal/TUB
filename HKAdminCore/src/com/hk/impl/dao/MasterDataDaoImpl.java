@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.hk.admin.pact.dao.courier.CourierDao;
 import com.hk.admin.pact.service.hkDelivery.HubService;
+import com.hk.admin.pact.service.hkDelivery.RunSheetService;
 import com.hk.constants.catalog.product.EnumProductVariantPaymentType;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.courier.CourierConstants;
@@ -87,7 +88,9 @@ public class MasterDataDaoImpl implements MasterDataDao {
     @Autowired
     private StateService     stateService;
     @Autowired
-    private HubService hubService;
+    private HubService       hubService;
+    @Autowired
+    private RunSheetService  runsheetService;
 
 
     public List<PaymentStatus> getPaymentStatusList() {
@@ -330,5 +333,10 @@ public class MasterDataDaoImpl implements MasterDataDao {
 
     public List<ConsignmentStatus> getConsignmentStatusList(){
         return getBaseDao().getAll(ConsignmentStatus.class);
+    }
+
+    @Override
+    public List<User> getAgentsWithOpenRunsheet() {
+        return runsheetService.getAgentList(getBaseDao().get(RunsheetStatus.class,EnumRunsheetStatus.Open.getId()));
     }
 }

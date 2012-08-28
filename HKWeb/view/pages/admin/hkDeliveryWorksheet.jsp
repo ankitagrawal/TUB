@@ -162,22 +162,10 @@
 
                         </li>
                         <li>
-                            <p style="color:red;font-size:120%">( Please preview the runsheet first and then download it. )</p>
-                            <s:submit id="previewButton" name="previewRunsheet" target="_blank">
+                            <s:submit id="previewButton" name="previewRunsheet">
                                 <s:param name="runsheetPreview" value="true"/>
                                 Preview Runsheet
                             </s:submit>
-
-                            <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDRunsheetAction"
-                                    event="previewRunsheet"
-                                    target="_blank">
-                                Preview Runsheet
-                                <s:param name="runsheetPreview" value="true"/>
-                            </s:link>
-
-                            <s:submit id="downloadButton" name="downloadDeliveryWorkSheet">
-                                Download Runsheet
-                                </s:submit>
                          </li>
                     </ul>
                 </fieldset>

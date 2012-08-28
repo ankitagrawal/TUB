@@ -245,9 +245,8 @@ public class HKDRunsheetAction extends BasePaginatedAction {
         Map<Object, Object> runsheetCODParams = null;
         ConsignmentStatus outForDelivery = getBaseDao().get(ConsignmentStatus.class, EnumConsignmentStatus.ShipmentOutForDelivery.getId());
         ConsignmentLifecycleStatus consignmentLifecycleStatus = getBaseDao().get(ConsignmentLifecycleStatus.class, EnumConsignmentLifecycleStatus.Dispatched.getId());
-        if (trackingIdList != null && trackingIdList.size() > 0) {
-            consignments = new HashSet(consignmentService.getConsignmentListByAwbNumbers(trackingIdList));
-            shippingOrderList = consignmentService.getShippingOrderFromConsignments(new ArrayList<Consignment>(consignments));
+        if (shippingOrderList != null && shippingOrderList.size() > 0) {
+            consignments = new HashSet(consignmentService.getConsignmentsFromShippingOrderList(shippingOrderList));
             runsheetCODParams = consignmentService.getRunsheetCODParams(consignments);
             totalPackets = consignments.size();
             totalCODAmount = (Double) runsheetCODParams.get(HKDeliveryConstants.TOTAL_COD_AMT);

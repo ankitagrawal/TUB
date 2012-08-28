@@ -128,4 +128,6 @@ public interface MasterDataDao
 
     public List<SubscriptionStatus> getSubscriptionStatusList();
 
+    public List<User> getAgentsWithOpenRunsheet();
+
 }

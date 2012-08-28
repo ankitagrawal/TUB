@@ -30,4 +30,6 @@ public interface RunSheetService {
     public void updateConsignmentTrackingForRunsheet(List<Consignment> changedConsignmentsList, User user);
 
     public Runsheet updateExpectedAmountForClosingRunsheet(Runsheet runsheet);
+
+    public List<User> getAgentList(RunsheetStatus runsheetStatus);
 }

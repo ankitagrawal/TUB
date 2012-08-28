@@ -20,13 +20,13 @@
             <table>
                 <tr>
                     <td><label>Agent Name:</label></td>
-                    <td> ${runsheetAction.agent.name}</td>
+                    <td> <s:hidden name="agent"/> ${runsheetAction.agent.name}</td>
                     <td></td>
                     <td><label>Total COD Boxes: </label></td>
                     <td>${runsheetAction.runsheet.codBoxCount}</td>
                     <td></td>
                     <td><label>Hub: </label></td>
-                    <td> ${runsheetAction.runsheet.hub.name}</td>
+                    <td><s:hidden name="hub"/> ${runsheetAction.hub.name} </td>
                 </tr>
                 <tr>
                     <td><label>Total Prepaid Boxes:</label></td>
@@ -45,6 +45,7 @@
             <table class="zebra_vert">
                 <thead>
                 <tr>
+                    <th>SL No.</th>
                     <th>AWB Number</th>
                     <th>CNN Number</th>
                     <th>Amount</th>
@@ -52,10 +53,13 @@
                     <th>Address</th>
                     <th>City</th>
                     <th>Pincode</th>
+                    <th>Transfer to Agent</th>
                 </tr>
                 </thead>
                 <c:forEach items="${runsheetAction.shippingOrderList}" var="shippingOrder" varStatus="ctr">
+                    <s:hidden name="shippingOrderList[${ctr.index}]" value="${shippingOrder.id}"/>
                     <tr>
+                        <td>${ctr.count}</td>
                         <td>${shippingOrder.shipment.awb.awbNumber}</td>
                         <td>${shippingOrder.baseOrder.gatewayOrderId}</td>
                         <td><fmt:formatNumber value="${shippingOrder.amount}" type="currency" currencySymbol=" "
@@ -72,9 +76,31 @@
                         <td>${shippingOrder.baseOrder.address.line1},${shippingOrder.baseOrder.address.line2},</td>
                         <td>${shippingOrder.baseOrder.address.city}</td>
                         <td>${shippingOrder.baseOrder.address.pin}</td>
+                        <td><s:select name="agent" class="agentName">
+                                <s:option value="-Select Agent-">-Select Agent-</s:option>
+                                <hk:master-data-collection service="<%=MasterDataDao.class%>"
+                                                           serviceProperty="agentsWithOpenRunsheet" value="id"
+                                                           label="name"/>
+                            </s:select>
+                        </td>
                     </tr>
                 </c:forEach>
             </table>
+            <s:submit name="downloadDeliveryWorkSheet" id="runsheetDownloadButton" value="Download Runsheet" class="runsheetDownloadButton"></s:submit>
+            <s:submit name="pre" id="downloadRunsheetAgainButton" value="Download Runsheet Again" class="downloadRunsheetAgainButton"></s:submit>
         </s:form>
     </s:layout-component>
 </s:layout-render>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+       $('#downloadRunsheetAgainButton').hide();
+   });
+
+    $('.runsheetDownloadButton').click(function() {
+    $('#runsheetDownloadButton').hide();
+    $('#downloadRunsheetAgainButton').show();
+
+
+  });
+  </script>

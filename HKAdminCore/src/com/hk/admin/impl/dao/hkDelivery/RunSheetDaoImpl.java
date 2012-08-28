@@ -12,6 +12,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
+import java.util.List;
 
 @Repository
 public class RunSheetDaoImpl extends BaseDaoImpl implements RunSheetDao {
@@ -46,5 +47,11 @@ public class RunSheetDaoImpl extends BaseDaoImpl implements RunSheetDao {
 
         runsheetCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));
         return list(runsheetCriteria, pageNo, perPage);
+    }
+
+    @Override
+    public List<User> getAgentList(RunsheetStatus runsheetStatus) {
+        String query = "select rs.agent from Runsheet rs where rs.runsheetStatus = :runsheetStatus";
+        return (List<User>) findByNamedParams(query, new String[]{"runsheetStatus"}, new Object[]{runsheetStatus});
     }
 }
