@@ -168,8 +168,8 @@ public class HKDConsignmentAction extends BasePaginatedAction {
 
     public Resolution savePaymentReconciliation(){
         hkdeliveryPaymentReconciliation.setConsignments(new HashSet<Consignment>(consignmentListForPaymentReconciliation));
-        if( (hkdeliveryPaymentReconciliation.getActualAmount() != hkdeliveryPaymentReconciliation.getExpectedAmount()) &&
-            (hkdeliveryPaymentReconciliation.getActualAmount() > hkdeliveryPaymentReconciliation.getExpectedAmount())){
+        if( (!hkdeliveryPaymentReconciliation.getActualAmount().equals(hkdeliveryPaymentReconciliation.getExpectedAmount())) &&
+            (hkdeliveryPaymentReconciliation.getActualAmount().doubleValue() > hkdeliveryPaymentReconciliation.getExpectedAmount().doubleValue())){
                 getContext().getValidationErrors().add("1", new SimpleError("Actual collected amount cannot be greater than expected amount"));
                 return new ForwardResolution(HKDConsignmentAction.class, "savePaymentReconciliation");
             }
