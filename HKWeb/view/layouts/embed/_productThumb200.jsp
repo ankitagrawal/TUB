@@ -57,7 +57,7 @@
 					</s:link>
 				</div>
 				<div>
-					<h3 style="height:20px;margin-bottom:20px;">
+					<h3 style="height:20px;margin-bottom:15px;">
 						<s:link href="${product.productURL}" title="${product.name}" class="prod_link">
 							${product.name}
 						</s:link>
