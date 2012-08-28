@@ -37,6 +37,7 @@ public class ConsignmentServiceImpl implements ConsignmentService {
         consignmentObj.setCnnNumber(cnnNumber);
         consignmentObj.setCreateDate(new Date());
         consignmentObj.setPaymentMode(paymentMode);
+        consignmentObj.setAddress(address);
         return consignmentObj;
     }
 
