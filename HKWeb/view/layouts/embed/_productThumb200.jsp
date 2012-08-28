@@ -109,11 +109,7 @@
 								</span>
 							</c:if>
 							<c:if test="${product.minimumMRPProducVariant.discountPercent == 0}">
-								<div class='cut' style="min-width: 1px; height: 12px;">
-								</div>
 								<div class="hk">
-									Our Price
-
                   <span class='num'>
                     Rs. <fmt:formatNumber
 		                  value="${hk:getApplicableOfferPrice(product.minimumMRPProducVariant) + hk:getPostpaidAmount(product.minimumMRPProducVariant)}"
