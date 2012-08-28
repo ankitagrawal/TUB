@@ -18,6 +18,7 @@ import com.hk.constants.hkDelivery.HKDeliveryConstants;
 import com.hk.util.CustomDateTypeConvertor;
 import com.hk.constants.hkDelivery.EnumConsignmentLifecycleStatus;
 import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.validation.SimpleError;
 import net.sourceforge.stripes.validation.Validate;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
     private             List<Consignment>     consignmentListForPaymentReconciliation = new ArrayList<Consignment>();
     private             HkdeliveryPaymentReconciliation hkdeliveryPaymentReconciliation;
     private             Boolean               reconciled;
+    private             Runsheet              runsheet;
 
 
     @Autowired
@@ -146,7 +148,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
     }
 
     public Resolution searchConsignments(){
-        consignmentPage = consignmentService.searchConsignment(consignment, consignmentNumber, startDate, endDate, consignmentStatus, hub, reconciled, getPageNo(), getPerPage());
+        consignmentPage = consignmentService.searchConsignment(consignment, consignmentNumber, startDate, endDate, consignmentStatus, hub, runsheet, reconciled, getPageNo(), getPerPage());
         if(consignmentPage != null){
             consignmentList = consignmentPage.getList();
         }
@@ -166,6 +168,11 @@ public class HKDConsignmentAction extends BasePaginatedAction {
 
     public Resolution savePaymentReconciliation(){
         hkdeliveryPaymentReconciliation.setConsignments(new HashSet<Consignment>(consignmentListForPaymentReconciliation));
+        if( (!hkdeliveryPaymentReconciliation.getActualAmount().equals(hkdeliveryPaymentReconciliation.getExpectedAmount())) &&
+            (hkdeliveryPaymentReconciliation.getActualAmount().doubleValue() > hkdeliveryPaymentReconciliation.getExpectedAmount().doubleValue())){
+                getContext().getValidationErrors().add("1", new SimpleError("Actual collected amount cannot be greater than expected amount"));
+                return new ForwardResolution(HKDConsignmentAction.class, "savePaymentReconciliation");
+            }
         hkdeliveryPaymentReconciliation = consignmentService.saveHkdeliveryPaymentReconciliation(hkdeliveryPaymentReconciliation);
         addRedirectAlertMessage(new SimpleMessage("Payment Reconciliation saved."));        
         return new ForwardResolution(HKDConsignmentAction.class, "searchConsignments");
@@ -176,6 +183,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
             consignmentListForPaymentReconciliation = new ArrayList<Consignment>(hkdeliveryPaymentReconciliation.getConsignments());
             return new ForwardResolution("/pages/admin/hkdeliveryPaymentReconciliation.jsp");
         }
+        addRedirectAlertMessage(new SimpleMessage("Payment Reconciliation saved."));
         return new ForwardResolution(HKDConsignmentAction.class, "searchConsignments");
     }
 
@@ -317,5 +325,13 @@ public class HKDConsignmentAction extends BasePaginatedAction {
 
     public void setReconciled(Boolean reconciled) {
         this.reconciled = reconciled;
+    }
+
+    public Runsheet getRunsheet() {
+        return runsheet;
+    }
+
+    public void setRunsheet(Runsheet runsheet) {
+        this.runsheet = runsheet;
     }
 }

@@ -59,7 +59,7 @@ public class Runsheet implements java.io.Serializable {
 
 
     @Column(name = "expected_collection", nullable = false, precision = 22, scale = 0)
-    private double expectedCollection;
+    private Double expectedCollection;
 
 
     @Column(name = "actual_collection", precision = 22, scale = 0)
@@ -78,7 +78,7 @@ public class Runsheet implements java.io.Serializable {
     private String remarks;
 
    @Column(name="distance_traveled")
-   private Long distanceTraveled;
+   private Double distanceTraveled;
     
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "runsheet_id")
@@ -132,11 +132,11 @@ public class Runsheet implements java.io.Serializable {
         this.updateDate = updateDate;
     }
 
-    public double getExpectedCollection() {
+    public Double getExpectedCollection() {
         return this.expectedCollection;
     }
 
-    public void setExpectedCollection(double expectedCollection) {
+    public void setExpectedCollection(Double expectedCollection) {
         this.expectedCollection = expectedCollection;
     }
 
@@ -180,11 +180,11 @@ public class Runsheet implements java.io.Serializable {
         this.consignments = consignments;
     }
 
-    public Long getDistanceTraveled() {
+    public Double getDistanceTraveled() {
         return distanceTraveled;
     }
 
-    public void setDistanceTraveled(Long distanceTraveled) {
+    public void setDistanceTraveled(Double distanceTraveled) {
         this.distanceTraveled = distanceTraveled;
     }
 

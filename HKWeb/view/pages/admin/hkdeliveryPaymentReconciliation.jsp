@@ -26,7 +26,7 @@
                     <td>
                         <s:hidden name="hkdeliveryPaymentReconciliation.expectedAmount" />
                         <fmt:formatNumber value="${consignmentAction.hkdeliveryPaymentReconciliation.expectedAmount}" type="currency" currencySymbol=" "
-                                          maxFractionDigits="0"/>
+                                          maxFractionDigits="2"/>
                     </td>
                     <td><label><strong>Actual Amount:</strong></label></td>
                     <td><s:text name="hkdeliveryPaymentReconciliation.actualAmount"/></td>
@@ -59,7 +59,7 @@
                         <td>${consignment.awbNumber}</td>
                         <td>${consignment.cnnNumber}</td>
                         <td><fmt:formatNumber value="${consignment.amount}" type="currency" currencySymbol=" "
-                                              maxFractionDigits="0"/></td>
+                                              maxFractionDigits="2"/></td>
                         <td>${consignment.paymentMode}</td>
                         <td>${consignment.consignmentStatus.status}</td>
                     </tr>

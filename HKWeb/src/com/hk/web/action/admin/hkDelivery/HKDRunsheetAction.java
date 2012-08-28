@@ -8,6 +8,7 @@ import com.hk.domain.hkDelivery.*;
 import com.hk.domain.user.User;
 import com.hk.util.CustomDateTypeConvertor;
 import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.validation.SimpleError;
 import net.sourceforge.stripes.validation.Validate;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,7 +112,10 @@ public class HKDRunsheetAction extends BasePaginatedAction {
                 addRedirectAlertMessage(new SimpleMessage("Cannot close runsheet with a consignment status out for delivery"));
                 return new ForwardResolution(HKDRunsheetAction.class,"editRunsheet").addParameter("runsheet", runsheet.getId());
             }
-
+            if(runsheet.getActualCollection().doubleValue() > runsheet.getExpectedCollection().doubleValue()){
+                getContext().getValidationErrors().add("1", new SimpleError("Actual collected amount cannot be greater than expected amount "));
+                return new ForwardResolution(HKDRunsheetAction.class, "editRunsheet").addParameter("runsheet", runsheet.getId());
+            }
             runsheetService.saveRunSheet(runsheet, changedConsignmentList);
             addRedirectAlertMessage(new SimpleMessage("Runsheet saved"));
             return new RedirectResolution(HKDRunsheetAction.class, "editRunsheet").addParameter("runsheet", runsheet.getId());
@@ -132,6 +136,15 @@ public class HKDRunsheetAction extends BasePaginatedAction {
 
     public Resolution closeRunsheet(){
         if(runsheet != null){
+            if((runsheet.getActualCollection() != null)
+                    && (runsheet.getActualCollection().doubleValue() > runsheet.getExpectedCollection().doubleValue())){
+                getContext().getValidationErrors().add("1", new SimpleError("Actual collected amount ("+runsheet.getActualCollection()+") cannot be greater than expected amount("+runsheet.getExpectedCollection()+") "));
+                return new ForwardResolution(HKDRunsheetAction.class, "editRunsheet").addParameter("runsheet", runsheet.getId());
+            }
+            if(runsheet.getActualCollection() == null){
+                getContext().getValidationErrors().add("2", new SimpleError("Please enter actual collection"));
+                return new ForwardResolution(HKDRunsheetAction.class, "editRunsheet").addParameter("runsheet", runsheet.getId());
+            }
             if(runsheetService.isRunsheetClosable(runsheet)){
                 runsheet.setRunsheetStatus(getRunSheetDao().get(RunsheetStatus.class, EnumRunsheetStatus.Close.getId()));
                 runsheet = runsheetService.updateExpectedAmountForClosingRunsheet(runsheet);

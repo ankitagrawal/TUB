@@ -43,7 +43,7 @@ public class HkdeliveryPaymentReconciliation implements java.io.Serializable {
 
 
     @Column(name = "expected_amount", nullable = false, precision = 22, scale = 0)
-    private double expectedAmount;
+    private Double expectedAmount;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_date", length = 19)
@@ -54,7 +54,7 @@ public class HkdeliveryPaymentReconciliation implements java.io.Serializable {
     private Date updateDate;
 
     @Column(name = "actual_amount", nullable = false, precision = 22, scale = 0)
-    private double actualAmount;
+    private Double actualAmount;
 
     @Column(name = "remarks")
     private String remarks;
@@ -79,11 +79,11 @@ public class HkdeliveryPaymentReconciliation implements java.io.Serializable {
         this.user = user;
     }
 
-    public double getExpectedAmount() {
+    public Double getExpectedAmount() {
         return this.expectedAmount;
     }
 
-    public void setExpectedAmount(double expectedAmount) {
+    public void setExpectedAmount(Double expectedAmount) {
         this.expectedAmount = expectedAmount;
     }
 
@@ -111,11 +111,11 @@ public class HkdeliveryPaymentReconciliation implements java.io.Serializable {
         this.consignments = consignments;
     }
 
-    public double getActualAmount() {
+    public Double getActualAmount() {
         return actualAmount;
     }
 
-    public void setActualAmount(double actualAmount) {
+    public void setActualAmount(Double actualAmount) {
         this.actualAmount = actualAmount;
     }
 

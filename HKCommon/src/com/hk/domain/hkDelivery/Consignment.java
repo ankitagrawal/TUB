@@ -62,6 +62,9 @@ public class Consignment implements java.io.Serializable {
     @Column(name = "payment_mode", nullable = false, length = 15)
     private String paymentMode;
 
+    @Column(name = "address")
+    private String address;
+
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="hkdelivery_payment_reconciliation_id")
     private HkdeliveryPaymentReconciliation hkdeliveryPaymentReconciliation;
@@ -144,6 +147,14 @@ public class Consignment implements java.io.Serializable {
 
     public void setHkdeliveryPaymentReconciliation(HkdeliveryPaymentReconciliation hkdeliveryPaymentReconciliation) {
         this.hkdeliveryPaymentReconciliation = hkdeliveryPaymentReconciliation;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     @Override

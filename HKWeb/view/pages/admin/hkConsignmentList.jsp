@@ -45,6 +45,7 @@
                                                serviceProperty="hubList" value="id"
                                                label="name"/>
                 </s:select>
+                <label>Runsheet Id:</label><s:text name="runsheet"/>
                 <label>Reconciled: </label>
                 <s:select name="reconciled">
                     <s:option value="">--All--</s:option>
@@ -83,16 +84,18 @@
                         <td>${consignment.awbNumber}</td>
                         <td>${consignment.cnnNumber}</td>
                         <td><fmt:formatNumber value="${consignment.amount}" type="currency" currencySymbol=" "
-                                              maxFractionDigits="0"/></td>
+                                              maxFractionDigits="2"/></td>
                         <td>${consignment.hub.name}</td>
                         <td>${consignment.paymentMode}</td>
                         <td>${consignment.runsheet.id}</td>
                         <td>${consignment.consignmentStatus.status}</td>
                         <td>${consignment.hkdeliveryPaymentReconciliation.id}
-                            <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction" event="editPaymentReconciliation">
-                                <s:param name="hkdeliveryPaymentReconciliation" value="${consignment.hkdeliveryPaymentReconciliation.id}" />
-                                (View)
-                            </s:link>
+                            <c:if test="${consignment.hkdeliveryPaymentReconciliation.id != null}" >
+                                <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction" event="editPaymentReconciliation" target="_blank">
+                                    <s:param name="hkdeliveryPaymentReconciliation" value="${consignment.hkdeliveryPaymentReconciliation.id}" />
+                                    (View)
+                                </s:link>
+                            </c:if>
                         </td>
                         <td>
                             <%--<s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction" event="pre"

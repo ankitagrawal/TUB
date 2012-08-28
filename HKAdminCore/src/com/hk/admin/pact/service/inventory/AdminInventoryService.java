@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.catalog.product.VariantConfig;
 import com.hk.domain.core.InvTxnType;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.GrnLineItem;
@@ -60,5 +61,7 @@ public interface AdminInventoryService {
     public Long countOfCheckedInUnitsForStockTransferLineItem(StockTransferLineItem stockTransferLineItem);
 
     public SkuGroup getSkuGroupByHkBarcode(String barcode);
+
+    public List<VariantConfig> getAllVariantConfig();
 
 }
