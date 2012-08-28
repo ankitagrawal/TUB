@@ -145,8 +145,8 @@ public class PricingDto {
                     rewardPointOffer = offerAction.isCashback();
                 }
                 offerTrigger = offer.getOfferTrigger();
-                cashbackLimit = offerAction.getRewardPointCashbackLimit();
-                cashbackPercent = offerAction.getRewardPointDiscountPercent();
+	            cashbackPercent = offerAction.getRewardPointDiscountPercent();
+	            cashbackLimit = offerAction.getRewardPointCashbackLimit();
                 productGroup = offerAction.getProductGroup();
             }
             if (offerInstance != null && Boolean.TRUE.equals(rewardPointOffer)) {
