@@ -79,9 +79,9 @@
                     <td>${runsheet.agent.name}</td>
                     <td>${runsheet.runsheetStatus.status}</td>
                     <td><fmt:formatNumber value="${runsheet.expectedCollection}" type="currency" currencySymbol=" "
-                                          maxFractionDigits="0"/></td>
+                                          maxFractionDigits="2"/></td>
                     <td><fmt:formatNumber value="${runsheet.actualCollection}" type="currency" currencySymbol=" "
-                                          maxFractionDigits="0"/></td>
+                                          maxFractionDigits="2"/></td>
                     <td>${runsheet.codBoxCount}</td>
                     <td>${runsheet.prepaidBoxCount}</td>
                     <td>${runsheet.remarks}</td>

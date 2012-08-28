@@ -84,7 +84,7 @@
                         <td>${consignment.awbNumber}</td>
                         <td>${consignment.cnnNumber}</td>
                         <td><fmt:formatNumber value="${consignment.amount}" type="currency" currencySymbol=" "
-                                              maxFractionDigits="0"/></td>
+                                              maxFractionDigits="2"/></td>
                         <td>${consignment.hub.name}</td>
                         <td>${consignment.paymentMode}</td>
                         <td>${consignment.runsheet.id}</td>

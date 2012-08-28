@@ -150,7 +150,7 @@
                         <td>${consignment.awbNumber}</td>
                         <td>${consignment.cnnNumber}</td>
                         <td><fmt:formatNumber value="${consignment.amount}" type="currency" currencySymbol=" "
-                                              maxFractionDigits="0"/></td>
+                                              maxFractionDigits="2"/></td>
                         <td>${consignment.paymentMode}</td>
                         <td>${consignment.hkdeliveryPaymentReconciliation.id}</td>
                         <td><s:select class="consignment-status" id= "${consignment.id}" name="runsheetConsignments[${ctr.index}].consignmentStatus"
