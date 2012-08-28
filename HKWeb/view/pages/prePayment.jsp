@@ -131,21 +131,18 @@
                             </div>
                         </s:form></div>
                     <script type="text/javascript">
-                        $(document).ready(function () {
+                        $(document).ready(function() {
                             $('.tab_content').hide();
                             $('.tab_content').first().show();
-                            $('.tabs ul li').click(function () {
+                            $('.tabs ul li').click(function() {
                                 $('.tabs ul li').removeClass('selected');
                                 $(this).addClass('selected');
-                                /*if(this.id == "tab4" &&
-                                ${orderSummary.codAllowed} &&
-                                ${pricingDto.grandTotalPayable < 1000.0}){
+                                /*if(this.id == "tab4" && ${orderSummary.codAllowed} && ${orderSummary.pricingDto.grandTotalPayable < 1000.0}){
                                  $('.offer-banner').css("visibility", "visible");
                                  $.getJSON(
                                  $('#setInCookieLink').attr('href'), {wantedCOD: "true"},
                                  function(res) {
-                                 if (res.code == '
-                                <%=HealthkartResponse.STATUS_OK%>') {
+                                 if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
                                  } else {
                                  }
                                  }
@@ -164,15 +161,12 @@
                                 var sTab = $.session("selected-tab");
                                 $('.tabs ul li').removeClass('selected');
                                 $('#' + sTab).addClass('selected');
-                                /*if(sTab == "tab4" &&
-                            ${orderSummary.codAllowed} &&
-                            ${pricingDto.grandTotalPayable < 1000.0}){
+                                /*if(sTab == "tab4" && ${orderSummary.codAllowed} && ${orderSummary.pricingDto.grandTotalPayable < 1000.0}){
                                  $('.offer-banner').css("visibility", "visible");
                                  $.getJSON(
                                  $('#setInCookieLink').attr('href'), {wantedCOD: "true"},
                                  function(res) {
-                                 if (res.code == '
-                            <%=HealthkartResponse.STATUS_OK%>') {
+                                 if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
                                  } else {
                                  }
                                  }
@@ -185,7 +179,7 @@
                                 $('#' + selected).fadeIn(200);
                             }
 
-                            $('.makePayment').click(function disablePaymentButton() {
+                            $('.makePayment').click(function disablePaymentButton(){
                                 $(this).css("display", "none");
                             });
                         });
