@@ -2099,12 +2099,12 @@ h3 a.prod_link {
 .catalog .controls .per {
     text-align: right;
     float: right;
-    font-size: 0.8em;
+    font-size: 0.9em;
 }
 
 .catalog .controls .per .per_page {
     border: 0;
-    font-size: 0.8em;
+    font-size: 0.9em;
 }
 
 .catalog .controls .per .active {

@@ -50,6 +50,7 @@ import com.hk.web.AppConstants;
 import com.hk.web.ConvertEncryptedToNormalDouble;
 import com.hk.web.action.HomeAction;
 import com.hk.web.filter.WebContext;
+import com.hk.taglibs.Functions;
 
 @UrlBinding ("/{rootCategorySlug}/{childCategorySlug}/{secondaryChildCategorySlug}/{tertiaryChildCategorySlug}")
 public class CatalogAction extends BasePaginatedAction {
@@ -162,6 +163,11 @@ public class CatalogAction extends BasePaginatedAction {
 		}
 
 		try {
+			boolean renderNewCatalogUI = Functions.collectionContains(Arrays.asList("eyeglasses", "proteins"), childCategorySlug)
+			|| Functions.collectionContains(Arrays.asList("eyeglasses", "proteins"), secondaryChildCategorySlug);
+			if(renderNewCatalogUI){
+				defaultPerPage = 21;
+			}
 			if (!filterOptions.isEmpty() || (minPrice != null && maxPrice != null)) {
 				if(!filterOptions.isEmpty()){
 					filterProductOptions = getBaseDao().getAll(ProductOption.class, filterOptions, "id");

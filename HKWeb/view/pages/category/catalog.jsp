@@ -32,6 +32,15 @@
 	boolean renderNewCatalogUI = (Functions.collectionContains(Arrays.asList("eyeglasses", "proteins"), ca.getChildCategorySlug())
 			|| Functions.collectionContains(Arrays.asList("eyeglasses", "proteins"), ca.getSecondaryChildCategorySlug())); 
 	pageContext.setAttribute("renderNewCatalogUI", renderNewCatalogUI);
+	  if (renderNewCatalogUI) {
+		  pageContext.setAttribute("resultsPerPage1", 21);
+		  pageContext.setAttribute("resultsPerPage2", 42);
+		  pageContext.setAttribute("resultsPerPage3", 63);
+	  } else {
+		  pageContext.setAttribute("resultsPerPage1", 20);
+		  pageContext.setAttribute("resultsPerPage2", 40);
+		  pageContext.setAttribute("resultsPerPage3", 60);
+	  }
 
 
     boolean isSecure = pageContext.getRequest().isSecure();
@@ -59,7 +68,7 @@
         $('.per_page').removeClass('active');
         $('.per_page').each(function(index) {
           if ($(this).text() == perPage) {
-            $(this).addClass('active');
+            //$(this).addClass('active');
           }
         });
       }
@@ -266,8 +275,8 @@
 
   <div class='per grid_11'>
     show
-    <s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction" class="per_page active" rel="nofollow">
-      20
+    <s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction" class="per_page" rel="nofollow">
+      ${resultsPerPage1}
       <s:param name="rootCategorySlug" value="${ca.rootCategorySlug}"/>
       <s:param name="childCategorySlug" value="${ca.childCategorySlug}"/>
       <s:param name="secondaryChildCategorySlug" value="${ca.secondaryChildCategorySlug}"/>
@@ -275,14 +284,14 @@
       <s:param name="brand" value="${ca.brand}"/>
       <s:param name="startRange" value="${ca.startRange}"/>
       <s:param name="endRange" value="${ca.endRange}"/>
-      <s:param name="perPage" value="20"/>
+      <s:param name="perPage" value="${resultsPerPage1}"/>
       <s:param name="pageNo" value="${ca.pageNo}"/>
       <s:param name="sortBy" value="${ca.sortBy}"/>
       <s:param name="sortOrder" value="${ca.sortOrder}"/>
     </s:link>
     |
     <s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction" class="per_page" rel="nofollow">
-      40
+      ${resultsPerPage2}
       <s:param name="rootCategorySlug" value="${ca.rootCategorySlug}"/>
       <s:param name="childCategorySlug" value="${ca.childCategorySlug}"/>
       <s:param name="secondaryChildCategorySlug" value="${ca.secondaryChildCategorySlug}"/>
@@ -290,14 +299,14 @@
       <s:param name="brand" value="${ca.brand}"/>
       <s:param name="startRange" value="${ca.startRange}"/>
       <s:param name="endRange" value="${ca.endRange}"/>
-      <s:param name="perPage" value="40"/>
+      <s:param name="perPage" value="${resultsPerPage2}"/>
       <s:param name="pageNo" value="${ca.pageNo}"/>
       <s:param name="sortBy" value="${ca.sortBy}"/>
       <s:param name="sortOrder" value="${ca.sortOrder}"/>
     </s:link>
     |
     <s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction" class="per_page" rel="nofollow">
-      60
+      ${resultsPerPage3}
       <s:param name="rootCategorySlug" value="${ca.rootCategorySlug}"/>
       <s:param name="childCategorySlug" value="${ca.childCategorySlug}"/>
       <s:param name="secondaryChildCategorySlug" value="${ca.secondaryChildCategorySlug}"/>
@@ -305,22 +314,7 @@
       <s:param name="brand" value="${ca.brand}"/>
       <s:param name="startRange" value="${ca.startRange}"/>
       <s:param name="endRange" value="${ca.endRange}"/>
-      <s:param name="perPage" value="60"/>
-      <s:param name="pageNo" value="${ca.pageNo}"/>
-      <s:param name="sortBy" value="${ca.sortBy}"/>
-      <s:param name="sortOrder" value="${ca.sortOrder}"/>
-    </s:link>
-    |
-    <s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction" class="per_page" rel="nofollow">
-      80
-      <s:param name="rootCategorySlug" value="${ca.rootCategorySlug}"/>
-      <s:param name="childCategorySlug" value="${ca.childCategorySlug}"/>
-      <s:param name="secondaryChildCategorySlug" value="${ca.secondaryChildCategorySlug}"/>
-      <s:param name="tertiaryChildCategorySlug" value="${ca.tertiaryChildCategorySlug}"/>
-      <s:param name="brand" value="${ca.brand}"/>
-      <s:param name="startRange" value="${ca.startRange}"/>
-      <s:param name="endRange" value="${ca.endRange}"/>
-      <s:param name="perPage" value="80"/>
+      <s:param name="perPage" value="${resultsPerPage3}"/>
       <s:param name="pageNo" value="${ca.pageNo}"/>
       <s:param name="sortBy" value="${ca.sortBy}"/>
       <s:param name="sortOrder" value="${ca.sortOrder}"/>
