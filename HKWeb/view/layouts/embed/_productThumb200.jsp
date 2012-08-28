@@ -40,16 +40,16 @@
 		<c:otherwise>
 			<div class='grid_6 product' style="width:240px;height:300px;">
 
-				<div class='img170 ${product.outOfStock ? 'opaque' : ''}' style="margin-bottom:20px;">
+				<div class='img180 ${product.outOfStock ? 'opaque' : ''}' style="margin-bottom:20px;">
 					<s:link href="${product.productURL}" class="prod_link" title="${product.name}">
 						<c:choose>
 							<c:when test="${product.mainImageId != null}">
-								<hk:productImage style="max-height:170px;max-width:170px;"
+								<hk:productImage style="max-height:180px;max-width:180px;"
 								                 imageId="${product.mainImageId}" size="<%=EnumImageSize.MediumSize%>"
 								                 alt="${product.name}"/>
 							</c:when>
 							<c:otherwise>
-								<img style="max-height:170px;max-width:170px;"
+								<img style="max-height:180px;max-width:180px;"
 								     src='<hk:vhostImage/>/images/ProductImages/ProductImagesThumb/${product.id}.jpg'
 								     alt="${product.name}"/>
 							</c:otherwise>
@@ -57,7 +57,7 @@
 					</s:link>
 				</div>
 				<div>
-					<h3 style="height:20px;">
+					<h3 style="height:20px;margin-bottom:20px;">
 						<s:link href="${product.productURL}" title="${product.name}" class="prod_link">
 							${product.name}
 						</s:link>
