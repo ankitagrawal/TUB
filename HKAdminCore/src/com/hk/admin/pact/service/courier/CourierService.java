@@ -36,4 +36,5 @@ public interface CourierService {
 
     public boolean isGroundShippingAllowed (String pin);
 
+    public boolean isCodAllowedOnGroundShipping(String pin);
 }

@@ -60,6 +60,9 @@ public class CourierServiceInfo implements java.io.Serializable {
   @Column(name = "ground_shipping_Availabe", nullable = false)  
   private Boolean groundShippingAvailable;
 
+  @Column(name = "cod_on_ground_shipping", nullable = false)    
+  private Boolean codAvailableOnGroundShipping ;
+
   public Long getId() {
     return this.id;
   }
@@ -133,6 +136,13 @@ public class CourierServiceInfo implements java.io.Serializable {
         this.groundShippingAvailable = groundShippingAvailable;
     }
 
+    public Boolean isCodAvailableOnGroundShipping() {
+        return codAvailableOnGroundShipping;
+    }
+
+    public void setCodAvailableOnGroundShipping(Boolean codAvailableOnGroundShipping) {
+        this.codAvailableOnGroundShipping = codAvailableOnGroundShipping;
+    }
 }
 
 

@@ -65,7 +65,8 @@ public class OrderSummaryAction extends BaseAction {
     private Double redeemableRewardPoints;
     private List<Courier> availableCourierList;
     private boolean  groundShippingAllowed ;
-    private boolean  hideCod;
+    private boolean  groundShippedItemPresent;
+    private boolean  codAllowedOnGroundShipping;
     private Double  cashbackOnGroundshipped;
     private Double  groundshipItemweight;
     private Double  groundshipItemAmount;
@@ -170,10 +171,13 @@ public class OrderSummaryAction extends BaseAction {
 //                cashbackOnGroundshipped = cashbackOnGroundshipped * cashBackPercentageOnGroundShipped;
 //            }
 //        }
-        groundShippingAllowed = false;
-        hideCod = orderService.isOrderHasGroundShippedItem(order);
-        if (hideCod){
-           groundShippingAllowed= courierService.isGroundShippingAllowed(pin);        
+       
+        groundShippedItemPresent = orderService.isOrderHasGroundShippedItem(order);
+        if (groundShippedItemPresent){
+           groundShippingAllowed= courierService.isGroundShippingAllowed(pin);
+            if (groundShippingAllowed) {
+              codAllowedOnGroundShipping = courierService.isCodAllowedOnGroundShipping(pin);
+            }
         }
 
         Double netShopping = pricingDto.getGrandTotalPayable() - pricingDto.getShippingTotal();
@@ -256,12 +260,12 @@ public class OrderSummaryAction extends BaseAction {
         this.availableCourierList = availableCourierList;
     }
 
-    public boolean isHideCod() {
-        return hideCod;
+    public boolean isGroundShippedItemPresent() {
+        return groundShippedItemPresent;
     }
 
-    public void setHideCod(boolean hideCod) {
-        this.hideCod = hideCod;
+    public void setGroundShippedItemPresent(boolean groundShippedItemPresent) {
+        this.groundShippedItemPresent = groundShippedItemPresent;
     }
 
     public Double getCashbackOnGroundshipped() {
@@ -278,5 +282,13 @@ public class OrderSummaryAction extends BaseAction {
 
     public void setGroundShippingAllowed(boolean groundShippingAllowed) {
         this.groundShippingAllowed = groundShippingAllowed;
+    }
+
+    public boolean isCodAllowedOnGroundShipping() {
+        return codAllowedOnGroundShipping;
+    }
+
+    public void setCodAllowedOnGroundShipping(boolean codAllowedOnGroundShipping) {
+        this.codAllowedOnGroundShipping = codAllowedOnGroundShipping;
     }
 }

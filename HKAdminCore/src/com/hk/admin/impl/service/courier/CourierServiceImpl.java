@@ -138,7 +138,14 @@ public class CourierServiceImpl implements CourierService {
         return false;
     }
 
+    public boolean isCodAllowedOnGroundShipping(String pin) {
+            if (StringUtils.isNotEmpty(pin)) {
+                return getCourierServiceInfoDao().isCodAvailableOnGroundShipping(pin);
+            }
+            return false;
+        }
 
+    
     public CourierDao getCourierDao() {
         return courierDao;
     }

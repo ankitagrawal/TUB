@@ -130,4 +130,13 @@ public class CourierServiceInfoDaoImpl extends BaseDaoImpl implements CourierSer
         List<CourierServiceInfo> courierServiceInfoList = criteria.list();
         return courierServiceInfoList != null && courierServiceInfoList.size() > 0;
     }
+
+    public boolean isCodAvailableOnGroundShipping(String pincode) {
+        Criteria criteria = getSession().createCriteria(CourierServiceInfo.class);
+        Criteria pincodeCriteria = criteria.createCriteria("pincode");
+        pincodeCriteria.add(Restrictions.eq("pincode", pincode));
+        criteria.add(Restrictions.eq("codAvailableOnGroundShipping", true));
+        List<CourierServiceInfo> courierServiceInfoList = criteria.list();
+        return courierServiceInfoList != null && courierServiceInfoList.size() > 0;
+    }
 }

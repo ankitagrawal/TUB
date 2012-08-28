@@ -858,4 +858,5 @@
             ${hk:isCodAllowedOnOrder(${order})}
         </example>
     </function>
+    
 </taglib>
