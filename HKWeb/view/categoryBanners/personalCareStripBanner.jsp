@@ -10,7 +10,7 @@
   if (dateTime.isBefore(endOfOfferDate.getTime())) {
 %>
 <div style="margin-left: auto; margin-right: auto; width:960px;">
-  <img src="${pageContext.request.contextPath}/images/banners/top/eCigareete_strip_banner.jpg" alt="E-Health Cigarette helps to quit smoking">
+  <img src="${pageContext.request.contextPath}/images/banners/top/pc_triactive_stripbanner.jpg" alt="On Orders of Rs. 400.0 and above, get a free hand sanitizer">
 </div>
 <%
   }
