@@ -218,6 +218,7 @@ public class CartAction extends BaseAction {
     }
 
     public Resolution removeGroundShippedItem() {
+         orderManager.setGroundShippedItemquantity(order);
          orderManager.trimEmptyLineItems(order);
          return new RedirectResolution(OrderSummaryAction.class);
     }

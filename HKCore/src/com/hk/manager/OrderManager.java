@@ -734,6 +734,20 @@ public class OrderManager {
         return margin;
     }
 
+
+    public void setGroundShippedItemquantity(Order order) {
+        if (order != null && order.getCartLineItems() != null && !(order.getCartLineItems()).isEmpty()) {
+            for (Iterator<CartLineItem> iterator = order.getCartLineItems().iterator(); iterator.hasNext();) {
+                CartLineItem lineItem = iterator.next();
+                if (lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Product.getId()) || lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Subscription.getId())) {
+                    if (lineItem.getProductVariant().getProduct().getGroundShipping()) {
+                        lineItem.setQty(0L);
+                    }
+                }
+            }
+        }
+    }
+
     public CartLineItemService getCartLineItemService() {
         return cartLineItemService;
     }
@@ -909,4 +923,5 @@ public class OrderManager {
     public void setSubscriptionService(SubscriptionService subscriptionService) {
         this.subscriptionService = subscriptionService;
     }
+
 }
