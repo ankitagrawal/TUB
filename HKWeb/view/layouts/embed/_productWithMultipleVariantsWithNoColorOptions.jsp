@@ -73,7 +73,6 @@
                                       test="${hk:isNotBlank(variant.variantName) && hk:topLevelCategory(variant.product).name != 'eye'}">
                                   ${variant.variantName}
                                   <br/>
-                                  <br/>
                               </c:when>
                               <c:otherwise>
                                   <c:forEach items="${variant.productOptions}" var="variantOption">
@@ -81,19 +80,10 @@
                                               test="${fn:toUpperCase(variantOption.name) == 'TYPE' || fn:toUpperCase(variantOption.name) == 'BABY WEIGHT' || fn:toUpperCase(variantOption.name) == 'SIZE' || fn:toUpperCase(variantOption.name) == 'FLAVOR'}">
                                           ${variantOption.value}
                                           <br/>
-                                          <br/>
                                       </c:if>
                                   </c:forEach>
                               </c:otherwise>
                           </c:choose>
-                          <c:if test="${variant.discountPercent > 0}">
-                              <div class="special green" style="text-align: center;">
-                                                <span style="font-weight: bold;"><fmt:formatNumber
-                                                        value="${variant.discountPercent*100}"
-                                                        maxFractionDigits="0"/>%</span>
-                                  off
-                              </div>
-                          </c:if>
                       </c:otherwise>
                   </c:choose>
                     <br/><br/>
@@ -115,11 +105,18 @@
                 </span>
                         </div>
                         <div class='hk'>
-                            Our Price <br/>
                 <span class='num' style="font-size: 14px;">
                   Rs <fmt:formatNumber value="${hk:getApplicableOfferPrice(variant) + hk:getPostpaidAmount(variant)}"
                                        maxFractionDigits="0"/>
                 </span>
+	                        <c:if test="${variant.discountPercent > 0}">
+                              <div class="special green" style="text-align: center;font-size:1.1em;">
+                                                <span style="font-weight: bold;"><fmt:formatNumber
+                                                        value="${variant.discountPercent*100}"
+                                                        maxFractionDigits="0"/>%</span>
+                                  off
+                              </div>
+                          </c:if>
                         </div>
                         <br/><br/>
                         <c:if test="${variant.mainImageId != null}">

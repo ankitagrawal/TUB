@@ -57,11 +57,11 @@
 					</s:link>
 				</div>
 				<div>
-					<h3 style="height:20px;margin-bottom:15px;">
+					<span style="height:20px;max-width:240px;">
 						<s:link href="${product.productURL}" title="${product.name}" class="prod_link">
 							${product.name}
 						</s:link>
-					</h3>
+					</span>
 				</div>
 				<c:choose>
 					<c:when test="${combo != null}">
