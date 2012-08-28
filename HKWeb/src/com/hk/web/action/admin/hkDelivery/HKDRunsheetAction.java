@@ -232,7 +232,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
                 if (consignments.size() > 0) {
                     // Creating Runsheet object.
                     runsheet = runsheetService.createRunsheet(hub, consignments, getRunSheetDao().get(RunsheetStatus.class, EnumRunsheetStatus.Open.getId()), agent, prePaidBoxCount, Long.parseLong(totalCODPackets + ""), totalCODAmount);
-                    shippingOrderList = consignmentService.getShippingOrderFromConsignments(new ArrayList(runsheet.getConsignments()));
+                    runsheetConsignments = new ArrayList<Consignment>(consignments);
                 } else {
                     addRedirectAlertMessage(new SimpleMessage("Runsheet Cannot be created." + awbWithoutConsignmentString));
                     return new ForwardResolution(HKDRunsheetAction.class, HKDeliveryConstants.PREVIEW_RUNSHEET).addParameter(HKDeliveryConstants.RUNSHEET_PREVIEW_PARAM, false);
@@ -258,8 +258,8 @@ public class HKDRunsheetAction extends BasePaginatedAction {
         Map<Object, Object> runsheetCODParams = null;
         ConsignmentStatus outForDelivery = getBaseDao().get(ConsignmentStatus.class, EnumConsignmentStatus.ShipmentOutForDelivery.getId());
         ConsignmentLifecycleStatus consignmentLifecycleStatus = getBaseDao().get(ConsignmentLifecycleStatus.class, EnumConsignmentLifecycleStatus.Dispatched.getId());
-        if (shippingOrderList != null && shippingOrderList.size() > 0) {
-            consignments = new HashSet(consignmentService.getConsignmentsFromShippingOrderList(shippingOrderList));
+        if (runsheetConsignments != null && runsheetConsignments.size() > 0) {
+            consignments = new HashSet(runsheetConsignments);
             runsheetCODParams = consignmentService.getRunsheetCODParams(consignments);
             totalPackets = consignments.size();
             totalCODAmount = (Double) runsheetCODParams.get(HKDeliveryConstants.TOTAL_COD_AMT);

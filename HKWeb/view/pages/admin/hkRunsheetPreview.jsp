@@ -51,31 +51,29 @@
                     <th>Amount</th>
                     <th>Payment Mode</th>
                     <th>Address</th>
-                    <th>City</th>
-                    <th>Pincode</th>
                     <th>Transfer to Agent</th>
                 </tr>
                 </thead>
-                <c:forEach items="${runsheetAction.shippingOrderList}" var="shippingOrder" varStatus="ctr">
-                    <s:hidden name="shippingOrderList[${ctr.index}]" value="${shippingOrder.id}"/>
+                <c:forEach items="${runsheetAction.runsheetConsignments}" var="consignment" varStatus="ctr">
+                    <s:hidden name="runsheetConsignments[${ctr.index}]" value="${consignment.id}"/>
                     <tr>
                         <td>${ctr.count}</td>
-                        <td>${shippingOrder.shipment.awb.awbNumber}</td>
-                        <td>${shippingOrder.baseOrder.gatewayOrderId}</td>
-                        <td><fmt:formatNumber value="${shippingOrder.amount}" type="currency" currencySymbol=" "
+                        <td>${consignment.awbNumber}</td>
+                        <td>${consignment.cnnNumber}</td>
+                        <td><fmt:formatNumber value="${consignment.amount}" type="currency" currencySymbol=" "
                                               maxFractionDigits="0"/></td>
                         <td>
-                            <c:choose>
-                            <c:when test="${shippingOrder.baseOrder.payment.paymentMode.name eq 'COD'}">
+                            <%--<c:choose>
+                            <c:when test="${consignment.paymentMode eq 'COD'}">
                                 COD
                             </c:when>
                                 <c:otherwise>
                                 Prepaid
                                 </c:otherwise>
-                            </c:choose>
-                        <td>${shippingOrder.baseOrder.address.line1},${shippingOrder.baseOrder.address.line2},</td>
-                        <td>${shippingOrder.baseOrder.address.city}</td>
-                        <td>${shippingOrder.baseOrder.address.pin}</td>
+                            </c:choose>--%>
+                           ${consignment.paymentMode}
+                        </td>
+                        <td>${consignment.address}</td>
                         <td><s:select name="agent" class="agentName">
                                 <s:option value="-Select Agent-">-Select Agent-</s:option>
                                 <hk:master-data-collection service="<%=MasterDataDao.class%>"

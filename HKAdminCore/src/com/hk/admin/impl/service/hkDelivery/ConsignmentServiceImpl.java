@@ -28,7 +28,7 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     private AwbService awbService;
 
     @Override
-    public Consignment createConsignment(String awbNumber,String cnnNumber ,double amount, String paymentMode ,Hub hub){
+    public Consignment createConsignment(String awbNumber,String cnnNumber ,double amount, String paymentMode , String address, Hub hub){
         Consignment consignmentObj = new Consignment();
         consignmentObj.setHub(hub);
         consignmentObj.setConsignmentStatus(consignmentDao.get(ConsignmentStatus.class, EnumConsignmentStatus.ShipmentReceivedAtHub.getId()));

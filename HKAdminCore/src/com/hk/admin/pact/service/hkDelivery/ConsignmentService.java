@@ -18,7 +18,7 @@ import java.util.Map;
 
 public interface ConsignmentService {
 
-    public Consignment createConsignment(String awbNumber,String cnnNumber ,double amount, String paymentMode ,Hub hub);
+    public Consignment createConsignment(String awbNumber,String cnnNumber ,double amount, String paymentMode ,String address ,Hub hub);
 
     public List<ConsignmentTracking> createConsignmentTracking(Hub sourceHub, Hub destinationHub, User user, List<Consignment> consignment , ConsignmentLifecycleStatus consignmentLifecycleStatus);
 

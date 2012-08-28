@@ -83,6 +83,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
         String       cnnNumber                        = null;
         String       paymentMode                      = null;
         Double       amount                           = null;
+        String       address                          = null;
         Consignment  consignment                      = null;
         List<String> newAwbNumbers                    = null;
         List<Consignment> consignmentList             = new ArrayList<Consignment>();
@@ -115,9 +116,11 @@ public class HKDConsignmentAction extends BasePaginatedAction {
                 shipmentObj = shipmentService.findByAwb(awbService.findByCourierAwbNumber(hkDelivery,awbNumber));
                 amount = shipmentObj.getShippingOrder().getAmount();
                 cnnNumber = shipmentObj.getShippingOrder().getGatewayOrderId();
+                address = shipmentObj.getShippingOrder().getBaseOrder().getAddress().getLine1()+","+shipmentObj.getShippingOrder().getBaseOrder().getAddress().getLine2()+","+
+                        shipmentObj.getShippingOrder().getBaseOrder().getAddress().getCity()+"-"+shipmentObj.getShippingOrder().getBaseOrder().getAddress().getPin();
                 paymentMode = consignmentService.getConsignmentPaymentMode(shipmentObj.getShippingOrder());
                 // Creating consignment object and adding to consignmentList.
-                consignmentList.add(consignmentService.createConsignment(awbNumber,cnnNumber,amount,paymentMode,hub));
+                consignmentList.add(consignmentService.createConsignment(awbNumber,cnnNumber,amount,paymentMode,address ,hub));
             } catch (Exception ex) {
                 logger.info("Exception occurred"+ex.getMessage());
                 continue;
