@@ -121,7 +121,6 @@ public class OrderSummaryAction extends BaseAction {
 //            }
 //        }
 
-
         Double rewardPointsUsed = 0D;
         redeemableRewardPoints = referrerProgramManager.getTotalRedeemablePoints(user);
         if (useRewardPoints)

@@ -20,9 +20,6 @@ Pass an attribute called pricingDto to render a table with pricing details
 
 <div class='products_container' style="overflow: visible;">
 <c:forEach items="${pricingDto.productLineItems}" var="invoiceLineItem" varStatus="ctr1">
-    <c:if test="${invoiceLineItem.productVariant.product.groundShipping &&  !orderSummary.groundShippingAllowed}">
-        <script> alert("This product cannot be shipped ");</script>
-    </c:if>
   <c:if
       test="${invoiceLineItem.comboInstance == null && invoiceLineItem.productVariant.paymentType.name != 'Postpaid'}">
     <div class='product' style="border-bottom-style: solid;">

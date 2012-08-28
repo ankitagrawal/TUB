@@ -172,6 +172,12 @@
           $(document).ready(function () {
               ShowDialog(true);
               e.preventDefault();
+              $('.classClose').click(function (e)
+          {
+             
+              HideDialog();
+              e.preventDefault();
+          });
           });
 
           function ShowDialog(modal)
@@ -187,17 +193,12 @@
 
           function HideDialog()
           {
-              alert("hello");
+
               $("#overlay").hide();
               $("#dialog").fadeOut(300);
           }
 
-          $("#btnClose").click(function (e)
-          {
-              alert("hello");
-              HideDialog();
-              e.preventDefault();
-          });
+
 
       </script>
      </c:if>
@@ -212,7 +213,7 @@
            <tr>
                <td colspan="2" class="web_dialog_title">Undeliverable Items</td>
                <td class="web_dialog_title align_right">
-                   <a href="#" id="btnClose">Close</a>
+                   <%--<a href="#" id="btnClose" class="classClose">Close</a>                   --%>
                </td>
            </tr>
            <tr>
