@@ -5,6 +5,7 @@
 <%@ page import="com.hk.constants.core.Keys" %>
 <%@ page import="com.hk.dto.pricing.PricingDto" %>
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
+<%@ page import="com.hk.web.action.core.cart.AddToCartAction" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -232,6 +233,7 @@
 
                <c:forEach items="${orderSummary.pricingDto.productLineItems}" var="invoiceLineItem"
                               varStatus="ctr1">
+                 <c:if test="${invoiceLineItem.productVariant.product.groundShipping}"  >
                    <tr>
                        <div class='product' style="border-bottom-style: solid;">
                          <td style="padding-left: 15px;">
@@ -257,6 +259,7 @@
                                                ${invoiceLineItem.productVariant.product.name} <br/>
 
                                                ${invoiceLineItem.productVariant.variantName}
+                                           <%--<c:set var="${invoiceLineItem.qty}" value="0"/>--%>
                                        </td>
                                    </tr>
                                </table>
@@ -295,7 +298,8 @@
                               </td>
                        </div>
                    </tr>
-                   </c:forEach>
+                 </c:if>
+                 </c:forEach>
 
 
            <tr>
@@ -307,8 +311,9 @@
            </tr>
            <tr>
                <td colspan="2" style="text-align: center;">
-                   <s:link beanclass="com.hk.web.action.core.cart.CartAction"  class="  button_green"
+                   <s:link beanclass="com.hk.web.action.core.cart.CartAction" event="removeGroundShippedItem" class=" button_green"
                                                            style="width: 120px; height: 15px; align_right ">Back to cart
+                       <s:param name="order" value="${orderSummary.order}"/>
                    </s:link>
 
                </td>

@@ -175,8 +175,11 @@ public class OrderSummaryAction extends BaseAction {
         groundShippedItemPresent = orderService.isOrderHasGroundShippedItem(order);
         if (groundShippedItemPresent){
            groundShippingAllowed= courierService.isGroundShippingAllowed(pin);
+
             if (groundShippingAllowed) {
               codAllowedOnGroundShipping = courierService.isCodAllowedOnGroundShipping(pin);
+            }  else {
+           //   to remove item from  database          
             }
         }
 
