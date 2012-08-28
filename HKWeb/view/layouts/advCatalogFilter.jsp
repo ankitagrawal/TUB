@@ -309,20 +309,20 @@
 					</div>
 				</div>
 			</c:if>
-			<c:forEach items="${filterMap}" var="filter">
+			<c:forEach items="${filterMap}" var="filter" varStatus="headCtr">
 				<c:choose>
-					<c:when test="${ca.rootCategorySlug == 'nutrition' && filter.key == 'SIZE'}">
+					<c:when test="${ca.secondaryChildCategorySlug == 'proteins' && filter.key == 'SIZE'}">
 						<%--Do Nothing--%>
 					</c:when>
 					<c:otherwise>
 						<div class="">
 							<h5 class='heading1' style="padding:5px;background-color:#DDD;">
 									<a title="Collapse" style="float:left; font-size:1.2em;color:black;cursor:pointer;padding-right:2px;"
-								   onclick="toggle('${filter.key}', this)">-</a>${filter.key}
+								   onclick="toggle('body${headCtr.index}', this)">-</a>${filter.key}
 								<a class="filterCatalogFormButton" style="cursor:pointer;float:right;margin-right:10px;color:black;font-size:.9em;font-weight:normal;">Filter</a>
 
 							</h5>
-							<ul style="padding-left:10px;" id="${filter.key}">
+							<ul style="padding-left:10px;" id="body${headCtr.index}">
 								<c:forEach items="${filter.value}" var="option">
 									<li style="vertical-align:middle;" class="filterOptionLi">
 										<c:choose>
