@@ -733,7 +733,7 @@ public class ReportAction extends BaseAction {
     }
 
     public Resolution generateRTOReport() {
-        List<RTOReportDto> rtoReportList = reportProductVariantService.getRTOProductsDetail(startDate, endDate);
+        List<RTOReportDto> rtoReportList = reportProductVariantService.getRTOProductsDetail(startDate, endDate, warehouse);
         xlsFile = new File(adminDownloads + "/reports/RTOReport.xls");
         HkXlsWriter xlsWriter = new HkXlsWriter();
 

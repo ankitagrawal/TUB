@@ -308,7 +308,7 @@
                 <td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.upc" value="${productVariant.upc}"/></td>
                 <td>${productVariant.supplierCode}</td>
                 <td>${productVariant.otherRemark}</td>
-                <td>${product.name}<br/>${productVariant.optionsCommaSeparated}
+                <td>${product.name}<br/>${productVariant.variantName}<br/>${productVariant.optionsCommaSeparated}
                 </td>
                 <td class="taxCategory">
                         <%--<shiro:hasPermission name="<%=PermissionConstants.UPDATE_RECONCILIATION_REPORTS%>">

@@ -1,22 +1,5 @@
 package com.hk.manager;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.PostConstruct;
-
-import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.core.EnumEmailType;
@@ -55,8 +38,16 @@ import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.service.impl.FreeMarkerService;
 import com.hk.util.HtmlUtil;
-
 import freemarker.template.Template;
+import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import java.util.*;
 
 @SuppressWarnings("unchecked")
 @Component
@@ -74,6 +65,7 @@ public class EmailManager {
     private Set<String> personalCareAdminEmails = null;
     private Set<String> sportsAdminEmails = null;
     private Set<String> servicesAdminEmails = null;
+    //private Set<String> marketingAdsMonitorEmails = null;
 
     @Autowired
     private BaseDao baseDao;
@@ -117,6 +109,9 @@ public class EmailManager {
     private String nutritionAdminEmailsString = null;
     @Value("#{hkEnvProps['" + Keys.Env.personalCareAdminEmails + "']}")
     private String personalCareAdminEmailsString = null;
+	//@Value("#{hkEnvProps['" + Keys.Env.marketingAdsMonitorEmails + "']}")
+	//private String marketingAdsMonitorEmailsString = null;
+
     /*
     * @Value("#{hkEnvProps['" + Keys.Env.logisticsAdminEmails + "']}") private String logisticsAdminEmailsString =
     * null;
@@ -145,6 +140,7 @@ public class EmailManager {
         // this.logisticsAdminEmails = BaseUtils.split(logisticsAdminEmailsString, ",");
         this.sportsAdminEmails = BaseUtils.split(sportsAdminEmailsString, ",");
         this.servicesAdminEmails = BaseUtils.split(servicesAdminEmailsString, ",");
+        //this.marketingAdsMonitorEmails = BaseUtils.split(marketingAdsMonitorEmailsString, ",");
         // this.marketingAdminEmails = BaseUtils.split(marketingAdminEmailsString, ",");
         // this.categoryHealthkartList = BaseUtils.split(categoryHealthkartListString, ",");
     }
@@ -780,6 +776,27 @@ public class EmailManager {
         }
         return emailRecepients;
     }
+
+/*
+	public boolean sendProductStatusMail(Product product, String stockStatus) {
+		HashMap valuesMap = new HashMap();
+		valuesMap.put("product", product);
+		valuesMap.put("stockStatus", stockStatus);
+
+		boolean success = true;
+
+		Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.productStockStatusEmail);
+		for (String marketingAdsMonitorEmail : marketingAdsMonitorEmails) {
+			boolean sent = emailService.sendHtmlEmailNoReply(freemarkerTemplate, valuesMap, marketingAdsMonitorEmail, " Adv Admin");
+			if (!sent)
+				success = false;
+		}
+
+		return success;
+
+	}
+*/
+
 
     public EmailService getEmailService() {
         return emailService;

@@ -108,7 +108,9 @@
   <h3><s:link beanclass="com.hk.web.action.admin.catalog.product.RelatedProductAction">Update Related Products</s:link></h3>
   <h3><s:link beanclass="com.hk.web.action.admin.catalog.subscription.CreateEditSubscriptionProductAction">Create/edit Subscription(s) <br/><span class="sml gry">(includes excels)</span></s:link> </h3>
   <h3><s:link beanclass="com.hk.web.action.admin.store.StorePricingAction">Store pricing</s:link></h3>
+  <h3><s:link beanclass="com.hk.web.action.admin.catalog.product.AddEyeConfigAction">Add Eye Config</s:link></h3>
   <h3><s:link beanclass="com.hk.web.action.admin.inventory.EditSimilarProductsAction">Similar Products</s:link></h3>      
+
 
 </div>
 
