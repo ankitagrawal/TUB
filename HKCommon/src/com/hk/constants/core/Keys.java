@@ -29,7 +29,7 @@ public class Keys {
 		public static final String hkReportAdminEmails = "hkReportAdminEmails";
 		public static final String marketingAdminEmails = "marketingAdminEmails";
 		public static final String categoryHealthkart = "categoryHealthkart";
-		public static final String marketingAdsMonitorEmails = "marketingAdsMonitorEmails";
+		//public static final String marketingAdsMonitorEmails = "marketingAdsMonitorEmails";
 
 		public static final String hkSMSURL = "hkSMSURL";
 		public static final String hkSMSUserName = "hkSMSUserName";

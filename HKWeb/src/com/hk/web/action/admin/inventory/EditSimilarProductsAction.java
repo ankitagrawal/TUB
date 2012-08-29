@@ -6,11 +6,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.commons.lang.StringUtils;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.catalog.product.SimilarProductsDao;
 import com.hk.pact.service.catalog.ProductService;
-import com.hk.domain.catalog.product.ProductVariant;
+
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.SimilarProduct;
-import com.hk.domain.sku.Sku;
+
 import com.hk.web.HealthkartResponse;
 import com.akube.framework.stripes.action.BaseAction;
 import net.sourceforge.stripes.action.*;
@@ -37,10 +38,16 @@ public class EditSimilarProductsAction extends BaseAction {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    SimilarProductsDao similarProductsDao;    
+
     public String productId;
     Product inputProduct;
-    List<SimilarProduct> similarProductsList = new ArrayList<SimilarProduct>();
 
+    List<SimilarProduct> similarProductsList = new ArrayList<SimilarProduct>();
+    SimilarProduct similarProductToDel;
+
+    
     @DefaultHandler
     public Resolution pre() {
         logger.debug("similarProduct@Pre: ");
@@ -73,20 +80,51 @@ public class EditSimilarProductsAction extends BaseAction {
            return new JsonResolution(healthkartResponse);
        }
 
+    public Resolution search(){
+      if (inputProduct != null && inputProduct.getId() != null) {
+        similarProductsList = similarProductsDao.getSimProdsFromDB(inputProduct);
+      }
+      else{
+         addRedirectAlertMessage(new SimpleMessage("Please enter a valid product in the text field above."));
+      }
+      if(similarProductsList.size() == 0){
+           addRedirectAlertMessage(new SimpleMessage("No similar products exist for this product"));
+      }
+      return new ForwardResolution("/pages/admin/addSimilarProducts.jsp");
+    }
+
+    public Resolution delete(){
+        if(similarProductToDel != null){
+            baseDao.delete(similarProductToDel);
+        }
+         return new RedirectResolution(EditSimilarProductsAction.class, "search").addParameter("inputProduct", inputProduct.getId());
+    }
+
+    public Resolution update(){
+      if (similarProductsList.size()!= 0 ){
+          for (SimilarProduct similarItem : similarProductsList){              
+              baseDao.update(similarItem);
+          }
+          addRedirectAlertMessage(new SimpleMessage("Updated Changes."));
+      }
+      else{
+          addRedirectAlertMessage(new SimpleMessage("Nothing to Update"));
+      }
+        return new ForwardResolution("/pages/admin/addSimilarProducts.jsp");
+    }
+
     public Resolution save() {
         if (inputProduct != null && inputProduct.getId() != null) {
             for (SimilarProduct similarItem : similarProductsList){
-
                 similarItem.setProduct(inputProduct);
                 baseDao.save(similarItem);
             }
-
             addRedirectAlertMessage(new SimpleMessage("Changes saved."));
         }
         else{
         addRedirectAlertMessage(new SimpleMessage("Please enter a valid product in the text field above."));
         }
-        return new RedirectResolution(EditSimilarProductsAction.class);
+        return new RedirectResolution(EditSimilarProductsAction.class, "search").addParameter("inputProduct", inputProduct.getId());
     }
 
     public ProductService getProductService() {
@@ -111,5 +149,13 @@ public class EditSimilarProductsAction extends BaseAction {
 
     public void setSimilarProductsList(List<SimilarProduct> similarProductsList) {
         this.similarProductsList = similarProductsList;
+    }   
+
+    public SimilarProduct getSimilarProductToDel() {
+        return similarProductToDel;
+    }
+
+    public void setSimilarProductToDel(SimilarProduct similarProductToDel) {
+        this.similarProductToDel = similarProductToDel;
     }
 }
