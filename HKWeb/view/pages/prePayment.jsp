@@ -18,6 +18,25 @@
         <script type="text/javascript"
                 src="${pageContext.request.contextPath}/otherScripts/jquery.session.js"></script>
     </s:layout-component>
+    <s:layout-component name="steps">
+        <div class='steps'>
+            <div class='step prev_step' id="step1">
+                <h2>Step 1</h2>
+
+                <div class='small'>Select shipping address</div>
+            </div>
+            <div class='step prev_step' id="step2">
+                <h2>Step 2</h2>
+
+                <div class='small'>Confirm your order</div>
+            </div>
+            <div class='step current_step'>
+                <h2>Step 3</h2>
+
+                <div class='small'>Choose Payment Method</div>
+            </div>
+        </div>
+    </s:layout-component>
     <s:layout-component name="steps_content">
         <div class='current_step_content step3'>
         <jsp:include
@@ -106,6 +125,25 @@
                         $(document).ready(function () {
                             $('.tab_content').hide();
                             $('.tab_content').first().show();
+                            $('.tabs ul li').click(function () {
+                                $('.tabs ul li').removeClass('selected');
+                                $(this).addClass('selected');
+                                var selected = $(this).attr('id').replace('tab', 'tabs_content');
+                                $.session("selected-tab", $(this).attr('id'));
+                                $('.tab_content').hide();
+                                $('#' + selected).fadeIn(200);
+
+                            });
+
+                            if ($.session("selected-tab")) {
+                                var sTab = $.session("selected-tab");
+                                $('.tabs ul li').removeClass('selected');
+                                $('#' + sTab).addClass('selected');
+                                var selected = $('#' + sTab).attr('id').replace('tab', 'tabs_content');
+                                $('.tab_content').hide();
+                                $('#' + selected).fadeIn(200);
+                            }
+
                             $('.makePayment').click(function disablePaymentButton() {
                                 $(this).css("display", "none");
                             });

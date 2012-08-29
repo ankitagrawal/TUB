@@ -186,19 +186,21 @@ public class PaymentSuccessAction extends BaseAction {
 							}
 							Set<CartLineItem> codCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.CodCharges).filter();
 							CartLineItem codCartLineItem = codCartLineItems != null && !codCartLineItems.isEmpty() ? codCartLineItems.iterator().next() : null;
-							Double applicableCodCharges = 0D;
-							if (codCartLineItem != null) {
+							if (codCartLineItems != null && !codCartLineItems.isEmpty()) {
+								Double applicableCodCharges = 0D;
 								applicableCodCharges = codCartLineItem.getHkPrice() - codCartLineItem.getDiscountOnHkPrice();
 								cartLineItemService.remove(codCartLineItem.getId());
-								if (applicableCodCharges > 0D) {
-									order.setAmount(order.getAmount() - (applicableCodCharges));
-									orderService.save(order);
-									if (shippingOrders != null) {
-										for (ShippingOrder shippingOrder : shippingOrders) {
-											shippingOrderService.nullifyCodCharges(shippingOrder);
-										}
+								order.setAmount(order.getAmount() - (applicableCodCharges));
+								if (shippingOrders != null) {
+									for (ShippingOrder shippingOrder : shippingOrders) {
+										shippingOrderService.nullifyCodCharges(shippingOrder);
 									}
 								}
+								Set<CartLineItem> cartLineItems = order.getCartLineItems();
+								cartLineItems.removeAll(codCartLineItems);
+								getBaseDao().deleteAll(codCartLineItems);
+								order.getCartLineItems().addAll(cartLineItems);
+								order = getOrderService().save(order);
 							}
 							break;
 						}
