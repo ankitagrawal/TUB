@@ -10,6 +10,7 @@ import com.hk.domain.core.OrderStatus;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.OrderCategory;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.order.CartLineItem;
 import com.hk.domain.user.User;
 import com.hk.exception.OrderSplitException;
 
@@ -53,7 +54,7 @@ public interface OrderService {
      * @throws OrderSplitException
      */
 
-    public Set<ShippingOrder> splitOrder(Order order) throws OrderSplitException;
+    public Set<ShippingOrder> splitOrder(Order order) throws OrderSplitException;         
 
     public boolean updateOrderStatusFromShippingOrders(Order order, EnumShippingOrderStatus soStatus, EnumOrderStatus boStatusOnSuccess);
 
@@ -67,6 +68,8 @@ public interface OrderService {
 
 	public boolean isCODAllowed(Order order);
 
-     public boolean isOrderHasGroundShippedItem(Order order);   
+     public boolean isOrderHasGroundShippedItem(Order order);
 
+//      public Set<CartLineItem> getGroundShippedCartLineItemforOrder(Order order);
+     public Set<CartLineItem> getMatchCartLineItemOrder(Order order, boolean groundshippedFlag);    
 }

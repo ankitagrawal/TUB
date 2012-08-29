@@ -312,7 +312,7 @@
            <tr>
                <td colspan="2" style="text-align: center;">
                    <s:link beanclass="com.hk.web.action.core.cart.CartAction" event="removeGroundShippedItem" class=" button_green"
-                                                           style="width: 120px; height: 15px; align_right ">Back to cart
+                                                           style="width: 190px; height: 18px; align_right ">Remove and Proceed
                        <s:param name="order" value="${orderSummary.order}"/>                         
                    </s:link>
 

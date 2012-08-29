@@ -344,43 +344,53 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public Set<ShippingOrder> splitOrder(Order order) throws OrderSplitException {
 
-        List<DummyOrder> dummyOrders = orderSplitterService.listBestDummyOrdersPractically(order);
-
+        Set<CartLineItem> groundShippedCartLineItem = getMatchCartLineItemOrder(order,true);
+        Set<CartLineItem> baseCartLineItem = getMatchCartLineItemOrder (order,false);
+        List listOfCartLineItemSet = new ArrayList<Set<CartLineItem>>();
+        listOfCartLineItemSet.add(groundShippedCartLineItem);
+        listOfCartLineItemSet.add(baseCartLineItem);
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
-        if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
-            long startTime = (new Date()).getTime();
 
-            // Create Shipping orders and Save it in DB
-            for (DummyOrder dummyOrder : dummyOrders) {
-                if (dummyOrder.getCartLineItemList().size() > 0) {
-                    Warehouse warehouse = dummyOrder.getWarehouse();
-                    ShippingOrder shippingOrder = shippingOrderService.createSOWithBasicDetails(order, warehouse);
-                    for (CartLineItem cartLineItem : dummyOrder.getCartLineItemList()) {
-                        Sku sku = skuService.getSKU(cartLineItem.getProductVariant(), warehouse);
-                        LineItem shippingOrderLineItem = LineItemHelper.createLineItemWithBasicDetails(sku, shippingOrder, cartLineItem);
-                        shippingOrder.getLineItems().add(shippingOrderLineItem);
+        for (int i = 0; i < listOfCartLineItemSet.size(); i++) {
+
+//            List<DummyOrder> dummyOrders = orderSplitterService.listBestDummyOrdersPractically(order);
+             List<DummyOrder> dummyOrders = orderSplitterService.listBestDummyOrdersPractically(order, (Set<CartLineItem>)listOfCartLineItemSet.get(i) );
+
+            if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
+                long startTime = (new Date()).getTime();
+
+                // Create Shipping orders and Save it in DB
+                for (DummyOrder dummyOrder : dummyOrders) {
+                    if (dummyOrder.getCartLineItemList().size() > 0) {
+                        Warehouse warehouse = dummyOrder.getWarehouse();
+                        ShippingOrder shippingOrder = shippingOrderService.createSOWithBasicDetails(order, warehouse);
+                        for (CartLineItem cartLineItem : dummyOrder.getCartLineItemList()) {
+                            Sku sku = skuService.getSKU(cartLineItem.getProductVariant(), warehouse);
+                            LineItem shippingOrderLineItem = LineItemHelper.createLineItemWithBasicDetails(sku, shippingOrder, cartLineItem);
+                            shippingOrder.getLineItems().add(shippingOrderLineItem);
+                        }
+                        shippingOrder.setBasketCategory(getBasketCategory(shippingOrder).getName());
+                        ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, order);
+                        shippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(shippingOrder));
+                        shippingOrder = shippingOrderService.save(shippingOrder);
+                        /**
+                         * this additional call to save is done so that we have shipping order id to generate shipping order
+                         * gateway id
+                         */
+                        shippingOrder = ShippingOrderHelper.setGatewayIdOnShippingOrder(shippingOrder);
+                        shippingOrder = shippingOrderService.save(shippingOrder);
+                        shippingOrders.add(shippingOrder);
                     }
-                    shippingOrder.setBasketCategory(getBasketCategory(shippingOrder).getName());
-                    ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, order);
-                    shippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(shippingOrder));
-                    shippingOrder = shippingOrderService.save(shippingOrder);
-                    /**
-                     * this additional call to save is done so that we have shipping order id to generate shipping order
-                     * gateway id
-                     */
-                    shippingOrder = ShippingOrderHelper.setGatewayIdOnShippingOrder(shippingOrder);
-                    shippingOrder = shippingOrderService.save(shippingOrder);
-                    shippingOrders.add(shippingOrder);
                 }
+
+                long endTime = (new Date()).getTime();
+                logger.debug("Total time to split order[" + order.getId() + "] = " + (endTime - startTime));
+            } else {
+                logger.debug("order with gatewayId:" + order.getGatewayOrderId() + " is not in placed status. abort system split and do a manual split");
             }
-
-            long endTime = (new Date()).getTime();
-            logger.debug("Total time to split order[" + order.getId() + "] = " + (endTime - startTime));
-        } else {
-            logger.debug("order with gatewayId:" + order.getGatewayOrderId() + " is not in placed status. abort system split and do a manual split");
         }
-
         return shippingOrders;
+
     }
 
     public ProductVariant getTopDealVariant(Order order) {
@@ -562,5 +572,27 @@ public class OrderServiceImpl implements OrderService {
 		return false;
 
     }
-    
+
+
+    public Set<CartLineItem> getMatchCartLineItemOrder(Order order, boolean groundshippedLineItemRequired) {
+        Set<CartLineItem> cartLineItems = order.getCartLineItems();
+//        Set<CartLineItem> groundShippedCartLineItem = new HashSet<CartLineItem>();
+//
+        Set<CartLineItem> cartLineItem1 = new HashSet<CartLineItem>();
+
+
+        for (CartLineItem productCartLineItem : cartLineItems) {
+            ProductVariant productVariant = productCartLineItem.getProductVariant();
+            if (productVariant != null && productVariant.getProduct() != null) {
+                Product product = productVariant.getProduct();
+                if (groundshippedLineItemRequired && product.isGroundShipping()) {
+                    cartLineItem1.add(productCartLineItem);
+                } else {
+                    cartLineItem1.add(productCartLineItem);
+                }
+            }
+        }
+        return cartLineItem1;
+    }    
+
 }

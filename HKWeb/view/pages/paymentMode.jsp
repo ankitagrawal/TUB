@@ -182,7 +182,7 @@
         <div id="tabs_content4" class="tab_content" style="display: none;">
             <c:choose>
                 <c:when test="${orderSummary.groundShippingAllowed && ! orderSummary.codAllowedOnGroundShipping  }">
-                    <h4 style="text-align: center;">We are sorry Cash on Delivery is not available for your order</h4>
+                    <h4 style="text-align: center;">We are sorry Cash on Delivery is not allowed on one of the products in your cart</h4>
 
                     <p>COD is not available for your delivery
                         location (Pincode : <strong>${orderSummary.order.address.pin}</strong>).
