@@ -46,11 +46,12 @@
                                              <%--   + '<br/>' + res.data.options --%>
                                 );
                             } else {
-                                $('.variantDetails').html('<h2>' + res.message + '</h2>');
+                                $('.Details').html('<h2>' + res.message + '</h2>');
                             }
                         }
                 );
             });
+           
         });
     </script>
 </s:layout-component>
@@ -60,10 +61,54 @@
     <s:link beanclass="com.hk.web.action.admin.inventory.EditSimilarProductsAction" id="pvInfoLink"
             event="getPVDetails"></s:link>
 </div>
+ 
 <s:form beanclass="com.hk.web.action.admin.inventory.EditSimilarProductsAction">
   <h4>Product :</h4>
-  <input type="text" name="inputProduct"/>
+  <input type="text" name="inputProduct" class="inputProduct" value="${spa.inputProduct.id}"/>
     <p><p>
+    <s:submit name="search" value="Search"/>
+    <%--<s:button name="Search" value="search" event="search"/>--%>
+    <table border="1">
+    <thead>
+    <th>Product</th>
+    <th>SimilarProduct</th>
+    <th>Relationship</th>
+    <th>Actions</th>
+
+    </thead>
+    <tbody>
+     <c:forEach var="similarProductItem" items="${spa.similarProductsList}" varStatus="ctr">
+         <s:hidden name="similarProductsList[${ctr.index}].id" value="${similarProductItem.id}" />
+         <tr>
+             <td>
+                 <s:hidden name="similarProductsList[${ctr.index}].product" value="${similarProductItem.product}" />
+                    ${similarProductItem.product}
+             </td>
+             <td>
+                   <s:hidden name="similarProductsList[${ctr.index}].similarProduct" value="${similarProductItem.similarProduct}" />
+                    ${similarProductItem.similarProduct}
+             </td>
+             <td>
+                    <input type="text" name="similarProductsList[${ctr.index}].relationShip" value ="${similarProductItem.relationShip}" />
+             </td>
+             <td>
+                  <s:link beanclass="com.hk.web.action.admin.inventory.EditSimilarProductsAction" id="deleteLink" event="delete">
+                      <%--<s:hidden name="similarProductsList" value="${spa.similarProductsList}" />--%>
+                      <%--<s:param name="delSimProduct" value="${similarProductItem.similarProduct}" />--%>
+                     <s:param name="similarProductToDel" value="${similarProductItem.id}"/>
+                     <s:param name="inputProduct" value="${spa.inputProduct.id}" /> 
+                      Delete
+                  </s:link>
+             </td>
+         </tr>
+     </c:forEach>
+    </tbody>
+    </table>
+    <%--<s:hidden name="similarProductsList" value="${spa.similarProductsList}" />--%>
+    <s:submit name="update" value="Update" />
+  </s:form>
+    
+<s:form beanclass="com.hk.web.action.admin.inventory.EditSimilarProductsAction">
   <h4>Add Similar Products</h4>
     <p></p>
   <a href="addSimilarProducts.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>
@@ -79,22 +124,24 @@
     </tr>
     </thead>
     <tbody id="spaTable">
-    <c:forEach var="similarProductItem" items="${spa.similarProductsList}" varStatus="ctr">
-       <tr count="${ctr.index}" class="${ctr.last ? 'lastRow productRow':'productRow'}">
-            <td>${ctr.index+1}.</td>
-            <td></td>
-             <td>
-                    ${similarProductItem.similarProduct}
-             </td>
-             <td></td>
-             <td>
-                     ${similarProductItem.relationShip}
-             </td>
-       </tr>
-    </c:forEach>
+    <%--<c:forEach var="similarProductItem" items="${spa.similarProductsList}" varStatus="ctr">--%>
+       <%--<tr count="${ctr.index}" class="${ctr.last ? 'lastRow productRow':'productRow'}">--%>
+            <%--<td>${ctr.index+1}.</td>--%>
+            <%--<td></td>--%>
+             <%--<td>--%>
+                    <%--${similarProductItem.similarProduct}--%>
+             <%--</td>--%>
+             <%--<td></td>--%>
+             <%--<td>--%>
+                     <%--${similarProductItem.relationShip}--%>
+             <%--</td>--%>
+       <%--</tr>--%>
+    <%--</c:forEach>--%>
     </tbody>
     </table>
-        <s:submit name="save" value="Save"/>
+    <div class="Details"></div>
+        <s:hidden name="inputProduct" value="${spa.inputProduct.id}" /> 
+        <s:submit name="save" value="Save New"/>
 
     </s:form>
 </s:layout-component>

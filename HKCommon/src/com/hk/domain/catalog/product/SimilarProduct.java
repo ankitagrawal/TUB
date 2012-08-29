@@ -18,7 +18,7 @@ public class SimilarProduct {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", unique = true, nullable = false)
-    private String  id;
+    private Long  id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
@@ -31,11 +31,11 @@ public class SimilarProduct {
     @Column(name = "relationship", nullable = true, length = 500)
     private String  relationShip;
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -63,4 +63,8 @@ public class SimilarProduct {
         this.relationShip = relationShip;
     }
 
+     @Override
+    public String toString() {
+      return id == null ? "" : id.toString();
+    }
 }
