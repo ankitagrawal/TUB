@@ -92,8 +92,6 @@ public class PaymentSuccessAction extends BaseAction {
 	ReferrerProgramManager referrerProgramManager;
 	@Value("#{hkEnvProps['" + Keys.Env.cashBackPercentage + "']}")
 	private Double cashBackPercentage;
-	@Autowired
-	CartLineItemService cartLineItemService;
 
 
 	public Resolution pre() {
@@ -189,7 +187,6 @@ public class PaymentSuccessAction extends BaseAction {
 							if (codCartLineItems != null && !codCartLineItems.isEmpty()) {
 								Double applicableCodCharges = 0D;
 								applicableCodCharges = codCartLineItem.getHkPrice() - codCartLineItem.getDiscountOnHkPrice();
-								cartLineItemService.remove(codCartLineItem.getId());
 								order.setAmount(order.getAmount() - (applicableCodCharges));
 								if (shippingOrders != null) {
 									for (ShippingOrder shippingOrder : shippingOrders) {
