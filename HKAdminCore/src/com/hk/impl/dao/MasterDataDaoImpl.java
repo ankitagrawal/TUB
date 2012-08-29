@@ -333,13 +333,6 @@ public class MasterDataDaoImpl implements MasterDataDao {
         return getBaseDao().getAll(RunsheetStatus.class);
     }
 
-    public List<ConsignmentStatus> getConsignmentStatusList(){
-        List<ConsignmentStatus> consignmentStatuses =   getBaseDao().getAll(ConsignmentStatus.class);
-        consignmentStatuses.remove(getBaseDao().get(ConsignmentStatus.class, EnumConsignmentStatus.ShipmentReceivedAtHub.getId()));
-        return consignmentStatuses;
-    }
-
-    @Override
     public List<User> getAgentsWithOpenRunsheet() {
         return runsheetService.getAgentList(getBaseDao().get(RunsheetStatus.class,EnumRunsheetStatus.Open.getId()));
     }

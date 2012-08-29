@@ -197,4 +197,10 @@ public class ConsignmentServiceImpl implements ConsignmentService {
         }
         return getConsignmentListByAwbNumbers(awbNumbers);
     }
+
+    public List<ConsignmentStatus> getConsignmentStatusList(){
+        List<ConsignmentStatus> consignmentStatuses =  consignmentDao.getAll(ConsignmentStatus.class);
+        consignmentStatuses.remove(consignmentDao.get(ConsignmentStatus.class, EnumConsignmentStatus.ShipmentReceivedAtHub.getId()));
+        return consignmentStatuses;
+    }
 }

@@ -8,14 +8,14 @@ import java.util.List;
 
 public enum EnumConsignmentStatus {
 
-    ShipmentReceivedAtHub    (10L, "Shipment Received at Hub"),
-    ShipmentOutForDelivery   (20L, "Shipment out for Delivery"),
-    ShipmentDelivered        (30L, "Shipment Delivered"),
-    ShipmentOnHold           (40L, "Shipment on Hold by agent"),
-    ShipmentLost             (50L, "Shipment Lost"),
-    ShipmentDamaged          (60L, "Shipment Damaged"),
-    ShipmentRTH              (70L, "Shipment Returned to hub"),
-    ShipmentOnHoldByCustomer (80L, "Shipment On hold by Customer");
+    ShipmentReceivedAtHub    (10L, "Received at Hub"),
+    ShipmentOutForDelivery   (20L, "Out for Delivery"),
+    ShipmentDelivered        (30L, "Delivered"),
+    ShipmentOnHold           (40L, "On Hold by agent"),
+    ShipmentLost             (50L, "Lost"),
+    ShipmentDamaged          (60L, "Damaged"),
+    ShipmentRTH              (70L, "Returned to hub"),
+    ShipmentOnHoldByCustomer (80L, "On hold by Customer");
 
 
     private java.lang.Long id;

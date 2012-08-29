@@ -6,6 +6,7 @@ import com.hk.admin.pact.dao.hkDelivery.RunSheetDao;
 import com.hk.admin.pact.service.hkDelivery.RunSheetService;
 import com.hk.domain.hkDelivery.*;
 import com.hk.domain.user.User;
+import com.hk.pact.dao.MasterDataDao;
 import com.hk.taglibs.Functions;
 import com.hk.util.CustomDateTypeConvertor;
 import net.sourceforge.stripes.action.*;
@@ -67,6 +68,8 @@ public class HKDRunsheetAction extends BasePaginatedAction {
     private         List<Consignment> changedConsignmentList = new ArrayList<Consignment>();
     private         List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>();
 
+    private         List<ConsignmentStatus> consignmentStatuses;
+
     private         User                loggedOnUser;
     @Autowired
     ShippingOrderService                  shippingOrderService;
@@ -105,6 +108,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
         if(runsheet == null){
             return new ForwardResolution("/pages/admin/hkRunsheetList.jsp");
         }
+        consignmentStatuses = consignmentService.getConsignmentStatusList();
         runsheetConsignments = new ArrayList<Consignment>(runsheet.getConsignments());
         return new ForwardResolution("/pages/admin/hkRunsheet.jsp");
     }
@@ -513,5 +517,13 @@ public class HKDRunsheetAction extends BasePaginatedAction {
 
     public void setLoggedOnUser(User loggedOnUser) {
         this.loggedOnUser = loggedOnUser;
+    }
+
+    public List<ConsignmentStatus> getConsignmentStatuses() {
+        return consignmentStatuses;
+    }
+
+    public void setConsignmentStatuses(List<ConsignmentStatus> consignmentStatuses) {
+        this.consignmentStatuses = consignmentStatuses;
     }
 }
