@@ -1,8 +1,8 @@
 package com.hk.rest.models.order;
 
-import com.hk.rest.models.user.APIUser;
-
 import org.codehaus.jackson.annotate.JsonProperty;
+
+import com.hk.rest.models.user.APIUser;
 
 /**
  * Created by IntelliJ IDEA.

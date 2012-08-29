@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
@@ -68,6 +69,8 @@ public class PaymentSuccessAction extends BaseAction {
     private OrderStatusService orderStatusService;
     @Autowired
     private LineItemDao lineItemDao;
+    @Autowired
+    ShipmentService shipmentService;
 
 
     public Resolution pre() {
@@ -120,11 +123,16 @@ public class PaymentSuccessAction extends BaseAction {
                  */
                 getOrderLoggingService().logOrderActivity(order, getUserService().getAdminUser(), getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), null);
 
+
                 // auto escalate shipping orders if possible
                 if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
                     for (ShippingOrder shippingOrder : shippingOrders) {
                         getShippingOrderService().autoEscalateShippingOrder(shippingOrder);
                     }
+                }
+
+                for (ShippingOrder shippingOrder : shippingOrders) {
+                    shipmentService.createShipment(shippingOrder);
                 }
 
             }

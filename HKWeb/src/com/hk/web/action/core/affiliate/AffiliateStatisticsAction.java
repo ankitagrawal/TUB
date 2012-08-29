@@ -9,7 +9,6 @@ import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
@@ -32,7 +31,7 @@ import com.hk.pact.dao.user.UserDao;
 @Secure(hasAnyRoles = { RoleConstants.HK_AFFILIATE, RoleConstants.ADMIN })
 @Component
 public class AffiliateStatisticsAction extends BasePaginatedAction {
-    private static Logger                 logger = Logger.getLogger(AffiliateStatisticsAction.class);
+    /*private static Logger                 logger = Logger.getLogger(AffiliateStatisticsAction.class);*/
     Affiliate                             affiliate;
     private Date                          startDate;
     private Date                          endDate;

@@ -44,7 +44,6 @@ public enum EnumRoleHasPermission {
                     EnumPermission.INVENTORY_CHECKOUT,
                     EnumPermission.UPDATE_USER,
                     EnumPermission.UPDATE_ORDER,
-                    EnumPermission.UPDATE_PAYMENT,
                     EnumPermission.CONFIRM_COD,
                     EnumPermission.SEND_SHIPPING_MAILS,
                     EnumPermission.SEND_SMS,
@@ -52,6 +51,8 @@ public enum EnumRoleHasPermission {
                     EnumPermission.DETAILED_SALES_REPORT,
                     EnumPermission.REPORT_ADMIN,
                     EnumPermission.SEARCH_ORDERS,
+                    EnumPermission.SEARCH_SUBSCRIPTIONS,
+                    EnumPermission.UPDATE_SUBSCRIPTION,
                     EnumPermission.SEARCH_USERS,
                     EnumPermission.CREATE_OFFER,
                     EnumPermission.UPDATE_OFFER,
@@ -87,7 +88,8 @@ public enum EnumRoleHasPermission {
                     EnumPermission.FINANCE_MANAGEMENT,
                     EnumPermission.RUN_ANT_BUILDS,
                     EnumPermission.HK_DELIVERY_WORKSHEET_DOWNLOAD,
-                    EnumPermission.UPDATE_COURIER_DELIVERY_STATUS
+                    EnumPermission.UPDATE_COURIER_DELIVERY_STATUS,
+                    EnumPermission.CREATE_REPLACEMENT_ORDER
             )
     ),
 
@@ -133,9 +135,9 @@ public enum EnumRoleHasPermission {
                     EnumPermission.INVENTORY_CHECKOUT,
                     EnumPermission.UPDATE_USER,
                     EnumPermission.UPDATE_ORDER,
-                    EnumPermission.UPDATE_PAYMENT,
                     EnumPermission.SEND_SHIPPING_MAILS,
                     EnumPermission.SEARCH_ORDERS,
+                    EnumPermission.SEARCH_SUBSCRIPTIONS,
                     EnumPermission.SEARCH_USERS,
                     EnumPermission.VIEW_TICKETS,
                     EnumPermission.CREATE_TICKETS,
@@ -166,14 +168,16 @@ public enum EnumRoleHasPermission {
                     EnumPermission.UPDATE_USER,
                     EnumPermission.CHANGE_USER_ROLES,
                     EnumPermission.UPDATE_ORDER,
-                    EnumPermission.UPDATE_PAYMENT,
                     EnumPermission.CONFIRM_COD,
                     EnumPermission.SEARCH_ORDERS,
+                    EnumPermission.SEARCH_SUBSCRIPTIONS,
+                    EnumPermission.UPDATE_SUBSCRIPTION,
                     EnumPermission.SEARCH_USERS,
                     EnumPermission.VIEW_TICKETS,
                     EnumPermission.CREATE_TICKETS,
                     EnumPermission.AWARD_REWARD_POINTS,
-                    EnumPermission.HK_EMPLOYEE
+                    EnumPermission.HK_EMPLOYEE,
+                    EnumPermission.CREATE_REPLACEMENT_ORDER
             )
     ),
 
@@ -219,6 +223,7 @@ public enum EnumRoleHasPermission {
                     EnumPermission.VIEW_SERVICE_QUEUE,
                     EnumPermission.UPDATE_SERVICE_QUEUE,
                     EnumPermission.SEARCH_ORDERS,
+                    EnumPermission.SEARCH_SUBSCRIPTIONS,
                     EnumPermission.SEARCH_USERS,
                     EnumPermission.AWARD_REWARD_POINTS,
                     EnumPermission.VIEW_OFFER,
@@ -249,6 +254,7 @@ public enum EnumRoleHasPermission {
             EnumRole.BASIC_ROLES,
             Arrays.asList(
                     EnumPermission.SEARCH_ORDERS,
+                    EnumPermission.SEARCH_SUBSCRIPTIONS,
                     EnumPermission.SEARCH_USERS
             )
     ),
@@ -381,9 +387,13 @@ public enum EnumRoleHasPermission {
                     EnumPermission.DOWNLOAD_COURIER_EXCEL,
                     EnumPermission.UPDATE_DELIVERY_QUEUE
             )
-    );
+    ),
 
-    EnumRole enumRole;
+	PAYMENT_MANAGER(EnumRole.PAYMENT_MANAGER, Arrays.asList(EnumPermission.UPDATE_PAYMENT)),
+
+	HR(EnumRole.HR, Arrays.asList(EnumPermission.HK_EMPLOYEE));
+
+	EnumRole enumRole;
     List<EnumPermission> enumPermissions;
 
     EnumRoleHasPermission(EnumRole enumRole, List<EnumPermission> enumPermissions) {

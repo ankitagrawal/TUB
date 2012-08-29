@@ -16,7 +16,8 @@ public class CategoryImageTag extends HtmlTagSupport {
   public int doEndTag() throws JspException {
 
     JspWriter out = getPageContext().getOut();
-    set("src", HKImageUtils.getS3CategoryImageUrl(size, imageId));
+    boolean isSecure = pageContext.getRequest().isSecure();
+    set("src", HKImageUtils.getS3CategoryImageUrl(size, imageId,isSecure));
     writeSingletonTag(out, "img");
 
     return EVAL_PAGE;

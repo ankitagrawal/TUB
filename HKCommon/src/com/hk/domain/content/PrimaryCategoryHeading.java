@@ -1,8 +1,6 @@
 package com.hk.domain.content;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -79,6 +77,7 @@ public class PrimaryCategoryHeading implements java.io.Serializable {
     return products;
   }
 
+/*
   public List<Product> getProductSortedByOrderRanking() {
     Collections.sort(products, new ProductComparator());
     return products;
@@ -92,6 +91,7 @@ public class PrimaryCategoryHeading implements java.io.Serializable {
       return -1;
     }
   }
+*/
 
   public String getName() {
     return this.name;

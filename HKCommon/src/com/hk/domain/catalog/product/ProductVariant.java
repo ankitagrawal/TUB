@@ -2,14 +2,33 @@ package com.hk.domain.catalog.product;
 
 // Generated 10 Mar, 2011 5:37:39 PM by Hibernate Tools 3.2.4.CR1
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+
 import com.akube.framework.gson.JsonSkip;
 import com.hk.constants.core.EnumRole;
 import com.hk.domain.affiliate.AffiliateCategory;
 import com.hk.domain.core.ProductVariantPaymentType;
 import com.hk.domain.core.ProductVariantServiceType;
-
-import javax.persistence.*;
-import java.util.*;
 
 @SuppressWarnings("serial")
 @Entity
@@ -102,8 +121,7 @@ public class ProductVariant implements java.io.Serializable {
   private Double weight;
 
   @Column(name = "upc")
-  private String upc;                                                       // Universal Product
-  // Code
+  private String upc;    // Universal Product Code
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "affiliate_category_name")
@@ -162,6 +180,12 @@ public class ProductVariant implements java.io.Serializable {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "free_product_variant_id", nullable = true)
   private ProductVariant freeProductVariant;
+
+  @Column(name = "supplier_code")
+  private String supplierCode;
+
+  @Column(name = "other_remark")
+  private String otherRemark;  
 
   public List<ProductImage> getProductImages() {
     return productImages;
@@ -662,4 +686,19 @@ public class ProductVariant implements java.io.Serializable {
     this.freeProductVariant = freeProductVariant;
   }
 
+	public String getSupplierCode() {
+		return supplierCode;
+	}
+
+	public void setSupplierCode(String supplierCode) {
+		this.supplierCode = supplierCode;
+	}
+
+	public String getOtherRemark() {
+		return otherRemark;
+	}
+
+	public void setOtherRemark(String otherRemark) {
+		this.otherRemark = otherRemark;
+	}
 }

@@ -1,5 +1,18 @@
 package com.hk.web.action.core.payment.gateway;
 
+import java.util.Date;
+import java.util.Properties;
+
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
+
+import org.apache.commons.lang.math.NumberUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.akube.framework.stripes.action.BasePaymentGatewaySendReceiveAction;
 import com.akube.framework.util.BaseUtils;
@@ -18,17 +31,6 @@ import com.hk.pact.dao.payment.PaymentDao;
 import com.hk.web.AppConstants;
 import com.hk.web.action.core.payment.PaymentFailAction;
 import com.hk.web.action.core.payment.PaymentSuccessAction;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import org.apache.commons.lang.math.NumberUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.util.Date;
-import java.util.Properties;
 
 @Component
 public class CitrusCreditDebitSendReceiveAction extends BasePaymentGatewaySendReceiveAction<CitrusPaymentGatewayWrapper> {
@@ -64,7 +66,7 @@ public class CitrusCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
         citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.orderAmount, amountStr);
         citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.currency, currency);
         citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.firstName, user.getName());
-//        citrusPaymentGatewayWrapper.addParameter("lastName", "HK");
+        citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.lastName, "HK");        //hardcoded last name, disabled it from citrus UI
         citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.phoneNumber, address.getPhone());
         citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.returnUrl, linkManager.getCitrusPaymentCreditDebitGatewayUrl());
         citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.reqtime, new Date().getTime());

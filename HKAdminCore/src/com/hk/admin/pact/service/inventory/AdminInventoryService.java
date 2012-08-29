@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.catalog.product.VariantConfig;
 import com.hk.domain.core.InvTxnType;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.GrnLineItem;
@@ -31,8 +32,7 @@ public interface AdminInventoryService {
     /**
      * SkuGroup/SkuItem/PVI Inventory Checkin / Checkout Functions
      */
-    public SkuGroup createSkuGroup(String batch, Date mfgDate, Date expiryDate, GoodsReceivedNote goodsReceivedNote, ReconciliationVoucher reconciliationVoucher,
-            StockTransfer stockTransfer, Sku sku);
+    public SkuGroup createSkuGroup(String batch, Date mfgDate, Date expiryDate, Double costPrice, Double mrp, GoodsReceivedNote goodsReceivedNote, ReconciliationVoucher reconciliationVoucher, StockTransfer stockTransfer, Sku sku);
 
     public void createSkuItemsAndCheckinInventory(SkuGroup skuGroup, Long qty, LineItem lineItem, GrnLineItem grnLineItem, RvLineItem rvLineItem,
             StockTransferLineItem stockTransferLineItem, InvTxnType invTxnType, User txnBy);
@@ -61,5 +61,7 @@ public interface AdminInventoryService {
     public Long countOfCheckedInUnitsForStockTransferLineItem(StockTransferLineItem stockTransferLineItem);
 
     public SkuGroup getSkuGroupByHkBarcode(String barcode);
+
+    public List<VariantConfig> getAllVariantConfig();
 
 }

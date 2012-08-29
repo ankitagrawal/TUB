@@ -3,10 +3,11 @@ package com.hk.db.seed.courier;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.hk.constants.shipment.EnumBoxSize;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.courier.BoxSize;
-import org.springframework.stereotype.Component;
 
 /**
  * Generated

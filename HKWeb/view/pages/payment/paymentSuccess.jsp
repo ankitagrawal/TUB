@@ -11,10 +11,12 @@
 <%
     Double cashBackPercentage = Double.parseDouble((String)ServiceLocatorFactory.getProperty(Keys.Env.cashBackPercentage));
     Long defaultGateway = Long.parseLong((String)ServiceLocatorFactory.getProperty(Keys.Env.defaultGateway));
+    
+    boolean isSecure = pageContext.getRequest().isSecure();
+    pageContext.setAttribute("isSecure", isSecure);
 %>
 <c:set var="paymentModeId_DefaultGateway" value="<%=defaultGateway%>"/>
 <c:set var="cashBackPercentage" value="<%=cashBackPercentage%>"/>
-<c:set var="paymentModeTechProcess" value="<%=EnumPaymentMode.TECHPROCESS.getId()%>"/>
 
 <s:useActionBean beanclass="com.hk.web.action.core.payment.PaymentSuccessAction" var="actionBean"/>
 <s:layout-render name="/layouts/default.jsp" pageTitle="Payment Successful">
@@ -155,7 +157,7 @@
 
             <%--<h2 class="green" style="font-size: 1.2em;" >Your payment was successful.</h2>--%>
 
-            <h2 style="font-size: 1em; padding-left: 5px;">
+            <h2 style="font-size: 1em; padding-left: 15px;">
                 Your order ID is <strong>${actionBean.payment.order.gatewayOrderId}</strong>.</h2>
             <br/>
             <shiro:hasRole name="<%=RoleConstants.HK_UNVERIFIED%>">
@@ -211,11 +213,11 @@
             </c:if>--%>
             <br/>
 
-            <h2 style="font-size: 1.2em;">Shipping & Delivery</h2>
+            <h2 class="paymentH2">Shipping & Delivery</h2>
 
-            <p>Your order will be dispatched within 1-3 business days. Additional time will be taken by the courier company.</p>
+            <p>Your order will be dispatched within ${hk:getDispatchDaysForOrder(actionBean.payment.order)}. Additional time will be taken by the courier company.</p>
 
-            <h2 style="font-size: 1.2em;">Customer Support</h2>
+            <h2 class="paymentH2">Customer Support</h2>
 
             <p><s:link beanclass="com.hk.web.action.pages.ContactAction">Write to us</s:link> with your Order ID if you have any questions or call us on 0124-4551616</p>
 
@@ -244,15 +246,17 @@
             </c:if>
 
             <div class="step2 success_order_summary" style="padding: 5px; float: left; margin-right: 5px;">
-                <h2 style="font-size:1.2em;">Order Summary</h2>
+                <h2 class="paymentH2">Order Summary</h2>
 
                 <s:layout-render name="/layouts/embed/orderSummaryTableDetailed.jsp" pricingDto="${actionBean.pricingDto}"
                                  orderDate="${actionBean.payment.paymentDate}"/>
                 <div class="floatfix"></div>
-            </div>
 
-            <div style="margin-top: 10px; float: right; margin-right: 5px;">
-                <h2 style="font-size: 1.2em;">Shipping address${actionBean.pricingDto.shippingLineCount > 1 ? 'es' : ''}</h2>
+            </div>
+          
+          <div style="clear:both;"></div>
+             <div style="margin-top: 10px; float: left; margin-right: 5px;">
+                <h2 class="paymentH2">Shipping address${actionBean.pricingDto.shippingLineCount > 1 ? 'es' : ''}</h2>
 
                 <p>
                     <c:set var="address" value="${actionBean.payment.order.address}"/>
@@ -266,6 +270,8 @@
                     <span class="sml lgry upc">Phone </span> ${address.phone}<br/>
                 </p>
             </div>
+              <div class="floatfix"></div>
+
 
 
         </c:when>

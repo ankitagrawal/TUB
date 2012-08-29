@@ -8,6 +8,8 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.Arrays" %>
+<%@ page import="com.hk.taglibs.Functions" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -27,7 +29,23 @@
     List<Category> applicableCategories = new ArrayList<Category>();
     applicableCategories.add(categoryDao.getCategoryByName("bp-monitor"));
     pageContext.setAttribute("applicableCategories", applicableCategories);
+	boolean renderNewCatalogUI = (Functions.collectionContains(Arrays.asList("eyeglasses", "proteins", "creatine"), ca.getChildCategorySlug())
+			|| Functions.collectionContains(Arrays.asList("eyeglasses", "proteins", "creatine"), ca.getSecondaryChildCategorySlug())); 
+	pageContext.setAttribute("renderNewCatalogUI", renderNewCatalogUI);
+	  if (renderNewCatalogUI) {
+		  pageContext.setAttribute("resultsPerPage1", 21);
+		  pageContext.setAttribute("resultsPerPage2", 42);
+		  pageContext.setAttribute("resultsPerPage3", 63);
+	  } else {
+		  pageContext.setAttribute("resultsPerPage1", 20);
+		  pageContext.setAttribute("resultsPerPage2", 40);
+		  pageContext.setAttribute("resultsPerPage3", 60);
+	  }
 
+
+    boolean isSecure = pageContext.getRequest().isSecure();
+    pageContext.setAttribute("isSecure", isSecure);
+    
     Category services = categoryDao.getCategoryByName("services");
     pageContext.setAttribute("services", services);
     if (ca.getRootCategorySlug().equals("services")) {
@@ -50,7 +68,7 @@
         $('.per_page').removeClass('active');
         $('.per_page').each(function(index) {
           if ($(this).text() == perPage) {
-            $(this).addClass('active');
+            //$(this).addClass('active');
           }
         });
       }
@@ -182,9 +200,19 @@
 
   </div>
 </div>
-<div class='catalog_filters grid_6 bk_blue alpha'>
-  <s:layout-render name="/layouts/catalogFilter.jsp" filterUrlFragment="${ca.urlFragment}"/>
-</div>
+<c:choose>
+	<c:when test="${renderNewCatalogUI}">
+		<div class='catalog_filters grid_5 alpha'>
+		<s:layout-render name="/layouts/advCatalogFilter.jsp" filterUrlFragment="${ca.urlFragment}"/>
+		</div>
+	</c:when>
+	<c:otherwise>
+		<div class='catalog_filters grid_6 bk_blue alpha'>
+		<s:layout-render name="/layouts/catalogFilter.jsp" filterUrlFragment="${ca.urlFragment}"/>
+		</div>
+	</c:otherwise>
+</c:choose>
+
 
 <div class="catalog container_24">
 
@@ -247,8 +275,8 @@
 
   <div class='per grid_11'>
     show
-    <s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction" class="per_page active" rel="nofollow">
-      20
+    <s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction" class="per_page" rel="nofollow">
+      ${resultsPerPage1}
       <s:param name="rootCategorySlug" value="${ca.rootCategorySlug}"/>
       <s:param name="childCategorySlug" value="${ca.childCategorySlug}"/>
       <s:param name="secondaryChildCategorySlug" value="${ca.secondaryChildCategorySlug}"/>
@@ -256,14 +284,14 @@
       <s:param name="brand" value="${ca.brand}"/>
       <s:param name="startRange" value="${ca.startRange}"/>
       <s:param name="endRange" value="${ca.endRange}"/>
-      <s:param name="perPage" value="20"/>
+      <s:param name="perPage" value="${resultsPerPage1}"/>
       <s:param name="pageNo" value="${ca.pageNo}"/>
       <s:param name="sortBy" value="${ca.sortBy}"/>
       <s:param name="sortOrder" value="${ca.sortOrder}"/>
     </s:link>
     |
     <s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction" class="per_page" rel="nofollow">
-      40
+      ${resultsPerPage2}
       <s:param name="rootCategorySlug" value="${ca.rootCategorySlug}"/>
       <s:param name="childCategorySlug" value="${ca.childCategorySlug}"/>
       <s:param name="secondaryChildCategorySlug" value="${ca.secondaryChildCategorySlug}"/>
@@ -271,14 +299,14 @@
       <s:param name="brand" value="${ca.brand}"/>
       <s:param name="startRange" value="${ca.startRange}"/>
       <s:param name="endRange" value="${ca.endRange}"/>
-      <s:param name="perPage" value="40"/>
+      <s:param name="perPage" value="${resultsPerPage2}"/>
       <s:param name="pageNo" value="${ca.pageNo}"/>
       <s:param name="sortBy" value="${ca.sortBy}"/>
       <s:param name="sortOrder" value="${ca.sortOrder}"/>
     </s:link>
     |
     <s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction" class="per_page" rel="nofollow">
-      60
+      ${resultsPerPage3}
       <s:param name="rootCategorySlug" value="${ca.rootCategorySlug}"/>
       <s:param name="childCategorySlug" value="${ca.childCategorySlug}"/>
       <s:param name="secondaryChildCategorySlug" value="${ca.secondaryChildCategorySlug}"/>
@@ -286,22 +314,7 @@
       <s:param name="brand" value="${ca.brand}"/>
       <s:param name="startRange" value="${ca.startRange}"/>
       <s:param name="endRange" value="${ca.endRange}"/>
-      <s:param name="perPage" value="60"/>
-      <s:param name="pageNo" value="${ca.pageNo}"/>
-      <s:param name="sortBy" value="${ca.sortBy}"/>
-      <s:param name="sortOrder" value="${ca.sortOrder}"/>
-    </s:link>
-    |
-    <s:link beanclass="com.hk.web.action.core.catalog.category.CatalogAction" class="per_page" rel="nofollow">
-      80
-      <s:param name="rootCategorySlug" value="${ca.rootCategorySlug}"/>
-      <s:param name="childCategorySlug" value="${ca.childCategorySlug}"/>
-      <s:param name="secondaryChildCategorySlug" value="${ca.secondaryChildCategorySlug}"/>
-      <s:param name="tertiaryChildCategorySlug" value="${ca.tertiaryChildCategorySlug}"/>
-      <s:param name="brand" value="${ca.brand}"/>
-      <s:param name="startRange" value="${ca.startRange}"/>
-      <s:param name="endRange" value="${ca.endRange}"/>
-      <s:param name="perPage" value="80"/>
+      <s:param name="perPage" value="${resultsPerPage3}"/>
       <s:param name="pageNo" value="${ca.pageNo}"/>
       <s:param name="sortBy" value="${ca.sortBy}"/>
       <s:param name="sortOrder" value="${ca.sortOrder}"/>
@@ -310,12 +323,19 @@
   </div>
 </div>
 
-<div id="prod_grid" class="grid_18" style="${ca.rootCategorySlug == "services"?"display:none":""}">
+<div id="prod_grid" class="${renderNewCatalogUI ? 'grid_19' : 'grid_18'}" style="${ca.rootCategorySlug == "services"?"display:none":""}">
   <s:form beanclass="com.hk.web.action.core.catalog.CompareAction" target="_blank">
     <c:forEach items="${ca.productList}" var="product">
       <c:if test="${!product.googleAdDisallowed}">
-        <div class="product_box grid_4">
-          <s:layout-render name="/layouts/embed/_productThumbG.jsp" product="${product}"/>
+	      <div class="product_box ${renderNewCatalogUI ? 'grid_6' : 'grid_4'}">
+		      <c:choose>
+			      <c:when test="${renderNewCatalogUI}">
+				      <s:layout-render name="/layouts/embed/_productThumb200.jsp" product="${product}"/>
+			      </c:when>
+			      <c:otherwise>
+				      <s:layout-render name="/layouts/embed/_productThumbG.jsp" product="${product}"/>
+			      </c:otherwise>
+		      </c:choose>
           <div class="clear"></div>
 
           <div class="compareDiv">
@@ -427,10 +447,16 @@
   </div>
 </c:if>
 </div>
-<iframe
-    src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e200&pid=&catid=${ca.rootCategorySlug}&subcat1id=${ca.childCategorySlug}&subcat2id=${ca.secondaryChildCategorySlug}&section=1&level=1"
-    scrolling="no" width="1" height="1" marginheight="0" marginwidth="0" frameborder="0"></iframe>
-<div style="height:75px"></div>
+
+		<c:if test="${not isSecure }">
+			<iframe
+				src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e200&pid=&catid=${ca.rootCategorySlug}&subcat1id=${ca.childCategorySlug}&subcat2id=${ca.secondaryChildCategorySlug}&section=1&level=1"
+				scrolling="no" width="1" height="1" marginheight="0" marginwidth="0"
+				frameborder="0"></iframe>
+		</c:if>
+		
+
+		<div style="height:75px"></div>
 </s:layout-component>
 
 </s:layout-render>

@@ -186,6 +186,7 @@ public class AmazonXslGenerator {
         int initialRowNo = 2;
         for (Product product : products) {
             for (ProductVariant productVariant : product.getProductVariants()) {
+                if (productVariant.isDeleted()) continue;
                 AmazonFeed amazonFeed = amazonFeedDao.findByPV(productVariant);
                 row = sheet1.createRow(initialRowNo);
                 for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
@@ -372,8 +373,8 @@ public class AmazonXslGenerator {
     }
 
     private String getImageUrl(Product product) {
-        if (product.getMainImageId() != null && HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, product.getMainImageId()) != null) {
-            return HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, product.getMainImageId());
+        if (product.getMainImageId() != null && HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, product.getMainImageId(),false) != null) {
+            return HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, product.getMainImageId(),false);
         } else {
             return "http://img.healthkart.com/images/ProductImages/ProductImagesOriginal/" + product.getId();
         }

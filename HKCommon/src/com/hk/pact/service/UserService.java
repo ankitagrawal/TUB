@@ -1,7 +1,6 @@
 package com.hk.pact.service;
 
 import java.util.List;
-import java.math.BigInteger;
 
 import com.akube.framework.dao.Page;
 import com.hk.domain.catalog.category.Category;
@@ -9,8 +8,6 @@ import com.hk.domain.order.Order;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.domain.email.EmailCampaign;
-import com.hk.domain.email.EmailRecepient;
 
 public interface UserService {
 
@@ -42,7 +39,7 @@ public interface UserService {
 
   public List<User> findByRole(Role role);
 
-  public Page findByRole(Role role, int pageNo, int perPage);
+  public Page findByRole(String name, String email, Role role, int pageNo, int perPage);
 
   public User findByLoginAndStoreId(String login, Long storeId);
 }

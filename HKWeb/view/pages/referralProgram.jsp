@@ -35,7 +35,7 @@
       }
     </style>
   </s:layout-component>
-  <s:layout-component name="heading">Referral Program</s:layout-component>
+  <s:layout-component name="heading">100/100 Referral Program!</s:layout-component>
   <s:layout-component name="lhsContent">
     <jsp:include page="myaccount-nav.jsp"/>
   </s:layout-component>
@@ -44,11 +44,7 @@
       <div class="jqmWindow" id="referralTerms"></div>
     </s:layout-component>
 
-    <h2>
-      100/100 Referral Program!
-    </h2>
-
-    <p style="text-align:right;">
+    <p style="text-align:left;">
       Referral Program |
       <s:link beanclass="com.hk.web.action.core.referral.ReferralManagerAction">My Referrals</s:link> |
       
@@ -56,7 +52,7 @@
     </p>
     <br/>
 
-    <h2>How it works?</h2>
+    <h4>How it works?</h4>
 
     <div class="">
       <p class="lrg">
@@ -69,21 +65,22 @@
     <br>
 
 
-    <h2>How to refer?</h2>
+    <h4>How to refer?</h4>
     <ul class="instr">
       <li>
         <strong>1. Facebook : </strong> Publish your referral link on Facebook wall.
+          <br/>
         <table cellpadding="0" cellspacing="0">
 
           <tr>
             <td></td>
             <td><!-- AddThis Button BEGIN -->
               <div class="addthis_toolbox addthis_default_style addthis_32x32_style"
-                   addThis:url="http://www.healthkart.com/action/invite/${couponBean.principal.userHash}"
+                   addThis:url="${pageContext.request.contextPath}/action/invite/${couponBean.principal.userHash}"
                    addTHis:title="HealthKart referral program"
                    addTHis:description="Get Rs. 100 and Gift Rs. 100">
                 <a class="addthis_button_preferred_1">
-                  &nbsp;&nbsp;http://www.healthkart.com/action/invite/${couponBean.principal.userHash}</a>
+                  &nbsp;&nbsp;${pageContext.request.contextPath}/action/invite/${couponBean.principal.userHash}</a>
               </div>
               <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-4df7053a23664e11"></script>
               <!-- AddThis Button END --></td>
@@ -93,6 +90,7 @@
       </li>
 
       <li>
+          <br/>
         <strong>2. Email : </strong>
         <table cellpadding="0" cellspacing="0">
           <tr>
@@ -105,7 +103,7 @@
                     <s:hidden name="senderEmail"/>
                     <li>
                       <label><strong>Your friends' email addresses</strong></label><br />
-                        <span class="small">(Separate emails by a comma. Maximum 50 allowed at a time.)</span>
+                        <span >(Separate emails by a comma. Maximum 50 allowed at a time.)</span>
 
                       <div class="text_input_grouped">
                         <s:textarea rows="" cols="50" name="recipientEmails" id="emails"></s:textarea>

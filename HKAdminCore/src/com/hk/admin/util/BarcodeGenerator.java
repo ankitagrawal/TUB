@@ -24,18 +24,26 @@ public class BarcodeGenerator {
 
     public static Logger logger = LoggerFactory.getLogger(BarcodeGenerator.class);
 
-    public String getBarcodePath(String gatewayOrderId) {
-        String barcodeFilePath = barcodeDir + "/" + gatewayOrderId + ".png";
+
+    public static void main(String[] args) {
+        new BarcodeGenerator().getBarcodePath("psq1334w73472dfsk",1.5f, 225, false);
+    }
+
+    public String getBarcodePath(String barcodeString, float inch, int dpi, boolean useFontSize) {
+        String barcodeFilePath = barcodeDir + "/" + barcodeString + ".png";
         try {
             Code128Bean bean = new Code128Bean();
-            final int dpi = 150;
+//            final int dpi = 150;
 
             // Configure the barcode generator
-            bean.setModuleWidth(UnitConv.in2mm(1.0f / dpi)); // makes the narrow bar
+            bean.setModuleWidth(UnitConv.in2mm(inch / dpi)); // makes the narrow bar
             // width exactly one pixel
             // bean.setWideFactor(3);
             bean.setHeight(7.5);
             bean.doQuietZone(false);
+            if(useFontSize){
+                bean.setFontSize(Double.parseDouble("2"));
+            }
 
             // Open output file
             File outputFile = new File(barcodeFilePath);
@@ -45,7 +53,7 @@ public class BarcodeGenerator {
                 BitmapCanvasProvider canvas = new BitmapCanvasProvider(out, "image/x-png", dpi, BufferedImage.TYPE_BYTE_BINARY, false, 0);
 
                 // Generate the barcode
-                bean.generateBarcode(canvas, gatewayOrderId);
+                bean.generateBarcode(canvas, barcodeString);
 
                 // Signal end of generation
                 canvas.finish();

@@ -1,8 +1,10 @@
 package com.hk.admin.engine;
 
-import com.hk.admin.pact.dao.courier.CourierPricingEngineDao;
-import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
-import com.hk.admin.pact.dao.courier.PincodeRegionZoneDao;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.hk.admin.pact.service.courier.CourierCostCalculator;
 import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.constants.core.EnumTax;
@@ -19,11 +21,6 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.courier.PincodeDao;
-import com.hk.pact.service.core.WarehouseService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  * Created with IntelliJ IDEA.
@@ -37,18 +34,6 @@ import org.springframework.stereotype.Component;
 public class ShipmentPricingEngine {
 
     private static Logger logger = LoggerFactory.getLogger(ShipmentPricingEngine.class);
-
-    @Autowired
-    CourierPricingEngineDao courierPricingEngineDao;
-
-    @Autowired
-    PincodeRegionZoneDao pincodeRegionZoneDao;
-
-    @Autowired
-    WarehouseService warehouseService;
-
-    @Autowired
-    CourierServiceInfoDao courierServiceInfoDao;
 
     @Autowired
     PincodeDao pincodeDao;
@@ -66,8 +51,8 @@ public class ShipmentPricingEngine {
         if (EnumCourierGroup.COMMON.getId().equals(courierGroupService.getCourierGroup(courier).getId())) {
             EnumBoxSize enumBoxSize = EnumBoxSize.getBoxSize(shipment.getBoxSize());
             if (enumBoxSize != null) {
-                if (enumBoxSize.getWeight() > weight) {
-                    weight = enumBoxSize.getWeight();
+                if (enumBoxSize.getVolumetricWeight() > weight) {
+                    weight = enumBoxSize.getVolumetricWeight();
                 }
             }
         }
@@ -131,7 +116,7 @@ public class ShipmentPricingEngine {
     public Double calculatePackagingCost(ShippingOrder shippingOrder) {
         Shipment shipment = shippingOrder.getShipment();
         EnumBoxSize enumBoxSize = EnumBoxSize.getBoxSize(shipment.getBoxSize());
-        return enumBoxSize.getPackagingCost();
+        return enumBoxSize != null && enumBoxSize.getId() != -1 ? enumBoxSize.getPackagingCost() : 15.5D;
     }
 
     public Double calculateReconciliationCost(CourierPricingEngine courierPricingEngine, ShippingOrder shippingOrder) {
@@ -144,10 +129,9 @@ public class ShipmentPricingEngine {
             if (payment.isCODPayment()) {
                 reconciliationCharges = amount > courierPricingEngine.getCodCutoffAmount() ? amount * courierPricingEngine.getVariableCodCharges() : courierPricingEngine.getMinCodCharges();
                 reconciliationCharges = reconciliationCharges * (1 + EnumTax.VAT_12_36.getValue());
-            } else if (payment.getPaymentMode().getId().equals(EnumPaymentMode.CITRUS.getId())) {
-                reconciliationCharges = amount * 0.02;
-            } else if (payment.getPaymentMode().getId().equals(EnumPaymentMode.TECHPROCESS.getId())) {
-                reconciliationCharges = amount * 0.0236;
+            }else{
+                reconciliationCharges = amount * EnumPaymentMode.getPaymentMode(payment.getPaymentMode()).getReconciliationCharges();
+                reconciliationCharges = reconciliationCharges * (1 + EnumTax.VAT_12_36.getValue());
             }
         }
         return reconciliationCharges;
@@ -159,7 +143,7 @@ public class ShipmentPricingEngine {
             reconciliationCharges = amount > courierPricingEngine.getCodCutoffAmount() ? amount * courierPricingEngine.getVariableCodCharges() : courierPricingEngine.getMinCodCharges();
             reconciliationCharges = reconciliationCharges * (1 + EnumTax.VAT_12_36.getValue());
         } else {
-            reconciliationCharges = amount * 0.0218;
+            reconciliationCharges = amount * 0.022;
         }
         return reconciliationCharges;
     }

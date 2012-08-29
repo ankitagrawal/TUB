@@ -1,5 +1,6 @@
 package com.hk.web.action.admin.shipment;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TreeMap;
@@ -18,10 +19,12 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.engine.ShipmentPricingEngine;
+import com.hk.admin.pact.dao.courier.CourierDao;
 import com.hk.admin.pact.service.courier.CourierCostCalculator;
 import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.courier.Courier;
@@ -92,9 +95,11 @@ public class ShipmentCostCalculatorAction extends BaseAction {
     @Autowired
     CourierGroupService courierGroupService;
 
-    List<Courier> applicableCourierList;
+    @Autowired
+    CourierDao courierDao;
 
     TreeMap<Courier, Long> courierCostingMap = new TreeMap<Courier, java.lang.Long>();
+    List<Courier> applicableCourierList;
 
     @DefaultHandler
     public Resolution pre() {
@@ -146,8 +151,18 @@ public class ShipmentCostCalculatorAction extends BaseAction {
 
 
     public Resolution saveHistoricalShipmentCost() {
+        List<Courier> courierList = new ArrayList<Courier>();
+        for (Courier courier : applicableCourierList) {
+            if (courier != null) {
+                courierList.add(courier);
+            }
+        }
+        if (courierList.size() == 0) {
+            courierList = courierDao.getCourierByIds(EnumCourier.getCourierIDs(EnumCourier.getCurrentlyApplicableCouriers()));
+        }
         ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
         shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusSearchingInDeliveryQueue()));
+        shippingOrderSearchCriteria.setCourierList(courierList);
         shippingOrderSearchCriteria.setShipmentStartDate(shippedStartDate).setShipmentEndDate(shippedEndDate);
         List<ShippingOrder> shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, false);
 
@@ -259,7 +274,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
         return shippedEndDate;
     }
 
-    @Validate (converter = CustomDateTypeConvertor.class)
+    @Validate(converter = CustomDateTypeConvertor.class)
     public void setShippedEndDate(Date shippedEndDate) {
         this.shippedEndDate = shippedEndDate;
     }

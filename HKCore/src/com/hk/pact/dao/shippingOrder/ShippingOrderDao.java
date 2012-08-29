@@ -15,9 +15,7 @@ public interface ShippingOrderDao extends BaseDao {
 
     public ShippingOrder findById(Long shippingOrderId);
 
-    public ShippingOrder findByTrackingId(String trackingId);
-
-    public ShippingOrder findByGatewayOrderId(String gatewayOrderId);
+     public ShippingOrder findByGatewayOrderId(String gatewayOrderId);
 
     public Page searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, int pageNo, int perPage);
 
@@ -36,5 +34,4 @@ public interface ShippingOrderDao extends BaseDao {
     public Long getBookedQtyOfSkuInQueue(Sku sku);
 
     public List<Long> getShippingOrderListByCourier(Date startDate, Date endDate, Long courierId);
-
 }

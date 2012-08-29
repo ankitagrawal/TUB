@@ -1,5 +1,15 @@
 package com.hk.admin.engine;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+
 import com.hk.admin.pact.dao.courier.CourierPricingEngineDao;
 import com.hk.admin.pact.dao.courier.PincodeRegionZoneDao;
 import com.hk.admin.pact.service.courier.CourierCostCalculator;
@@ -22,13 +32,6 @@ import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-
-import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -71,9 +74,10 @@ public class PreferredWarehouseDecider {
     @Autowired
     CourierCostCalculator courierCostCalculator;
 
-    private static Logger logger = LoggerFactory.getLogger(PreferredWarehouseDecider.class);
+    /*private static Logger logger = LoggerFactory.getLogger(PreferredWarehouseDecider.class);*/
 
     //todo rewrite generic
+    @SuppressWarnings("unchecked")
     public Warehouse getPreferredWareHouse(LineItem lineItem) {
 
         // get static things
@@ -119,7 +123,7 @@ public class PreferredWarehouseDecider {
     }
 
     public Map<Warehouse, Map<Courier, Long>> getPreferredWareHouse(List<ProductVariant> productVariants, boolean isCod, String pincode) {
-        Pincode pincodeObj = pincodeDao.getByPincode(pincode);
+        /*Pincode pincodeObj = pincodeDao.getByPincode(pincode);*/
         Map<Warehouse, Map<Courier, Long>> warehouseCheapestCourierCostingMap = new HashMap<Warehouse, Map<Courier, Long>>();
 
         for (Warehouse warehouse : warehouseService.getServiceableWarehouses()) {

@@ -1,29 +1,55 @@
 package com.hk.admin.impl.task.dbmaster;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.hk.db.seed.catalog.ProductVariantPaymentTypeSeedData;
 import com.hk.db.seed.catalog.ProductVariantServiceTypeSeedData;
-import com.hk.db.seed.core.*;
+import com.hk.db.seed.core.AffiliateTxnTypeSeedData;
+import com.hk.db.seed.core.CancellationTypeSeedData;
+import com.hk.db.seed.core.PermissionSeedData;
+import com.hk.db.seed.core.RoleHasPermissionSeedData;
+import com.hk.db.seed.core.RoleSeedData;
+import com.hk.db.seed.core.StateSeedData;
+import com.hk.db.seed.core.SurchargeSeedData;
+import com.hk.db.seed.core.TaxSeedData;
+import com.hk.db.seed.courier.AwbStatusSeedData;
 import com.hk.db.seed.courier.BoxSizeSeedData;
 import com.hk.db.seed.courier.CourierGroupHasCourierSeedData;
 import com.hk.db.seed.courier.CourierGroupSeedData;
 import com.hk.db.seed.courier.CourierSeedData;
 import com.hk.db.seed.email.EmailTypeSeedData;
-import com.hk.db.seed.inventory.*;
+import com.hk.db.seed.inventory.DebitNoteStatusSeedData;
+import com.hk.db.seed.inventory.GrnStatusSeedData;
+import com.hk.db.seed.inventory.InvTxnTypeSeedData;
+import com.hk.db.seed.inventory.PurchaseFormTypeSeedData;
+import com.hk.db.seed.inventory.PurchaseInvoiceStatusSeedData;
+import com.hk.db.seed.inventory.PurchaseOrderStatusSeedData;
+import com.hk.db.seed.inventory.ReconciliationStatusSeedData;
+import com.hk.db.seed.inventory.ReconciliationTypeSeedData;
 import com.hk.db.seed.marketing.AdNetworksSeedData;
 import com.hk.db.seed.marketing.GoogleBannedWordSeedData;
-import com.hk.db.seed.order.*;
+import com.hk.db.seed.marketing.ProductReferrerSeedData;
+import com.hk.db.seed.order.CartLineItemTypeSeedData;
+import com.hk.db.seed.order.OrderLifecycleActivitySeedData;
+import com.hk.db.seed.order.OrderStatusSeedData;
+import com.hk.db.seed.order.PrimaryReferrerForOrderSeedData;
+import com.hk.db.seed.order.SecondaryReferrerForOrderSeedData;
+import com.hk.db.seed.order.ShippingOrderLifecycleActivitySeedData;
+import com.hk.db.seed.order.ShippingOrderStatusSeedData;
 import com.hk.db.seed.payment.PaymentModeSeedData;
 import com.hk.db.seed.payment.PaymentStatusSeedData;
 import com.hk.db.seed.reward.ReviewStatusSeedData;
 import com.hk.db.seed.reward.RewardPointModeSeedData;
 import com.hk.db.seed.reward.RewardPointStatusSeedData;
 import com.hk.db.seed.reward.RewardPointTxnTypeSeedData;
+import com.hk.db.seed.subscription.SubscriptionLifeCycleActivitySeedData;
+import com.hk.db.seed.subscription.SubscriptionOrderStatusSeedData;
+import com.hk.db.seed.subscription.SubscriptionStatusSeedData;
 import com.hk.db.seed.ticket.TicketStatusSeedData;
 import com.hk.db.seed.ticket.TicketTypeSeedData;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  * Author: Kani Date: Jul 23, 2009
@@ -100,6 +126,8 @@ public class MasterDataService {
     ReconciliationTypeSeedData             reconciliationTypeSeedData;
     @Autowired
     ReviewStatusSeedData                   reviewStatusSeedData;
+	@Autowired
+    ProductReferrerSeedData                productReferrerSeedData;
     @Autowired
     CourierGroupSeedData                   courierGroupSeedData;
     @Autowired
@@ -110,8 +138,16 @@ public class MasterDataService {
     PrimaryReferrerForOrderSeedData        primaryReferrerForOrderSeedData;
     @Autowired
     SecondaryReferrerForOrderSeedData      secondaryReferrerForOrderSeedData;
-   @Autowired
-   StateSeedData stateSeedData;
+    @Autowired
+    SubscriptionStatusSeedData subscriptionStatusSeedData;
+    @Autowired
+    SubscriptionOrderStatusSeedData subscriptionOrderStatusSeedData;
+    @Autowired
+    SubscriptionLifeCycleActivitySeedData subscriptionLifeCycleActivitySeedData;
+    @Autowired
+    StateSeedData stateSeedData;
+    @Autowired
+    AwbStatusSeedData awbStatusSeedData;
 
     public void insert() {
 
@@ -224,6 +260,9 @@ public class MasterDataService {
         logger.debug("inserting courier group seed data");
         courierGroupSeedData.invokeInsert();
 
+        logger.debug("inserting product referrer seed data");
+        productReferrerSeedData.invokeInsert();
+
         logger.debug("inserting courier group has courier seed data");
         courierGroupHasCourierSeedData.invokeInsert();
 
@@ -236,8 +275,19 @@ public class MasterDataService {
         logger.debug("inserting secondary referrer for order  seed data");
         secondaryReferrerForOrderSeedData.invokeInsert();
 
-       logger.debug("inserting state names");
+        logger.debug("inserting state names");
         stateSeedData.invokeInsert();
-    }
 
+        logger.debug("inserting subscription status data");
+        subscriptionStatusSeedData.invokeInsert();
+
+        logger.debug("inserting subscription order status data");
+        subscriptionOrderStatusSeedData.invokeInsert();
+
+        logger.debug("inserting subscription lifecycle activity data");
+        subscriptionLifeCycleActivitySeedData.invokeInsert();
+
+        logger.debug("inserting awb status");
+        awbStatusSeedData.invokeInsert();
+    }
 }

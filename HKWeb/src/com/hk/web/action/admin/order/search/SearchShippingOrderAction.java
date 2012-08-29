@@ -9,6 +9,7 @@ import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.SimpleError;
 import net.sourceforge.stripes.validation.ValidationMethod;
 
@@ -19,22 +20,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BasePaginatedAction;
+import com.hk.admin.pact.service.courier.AwbService;
+import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
+import com.hk.domain.courier.Awb;
+import com.hk.domain.courier.Courier;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 
 @Component
 public class SearchShippingOrderAction extends BasePaginatedAction {
 
-  private static Logger logger = LoggerFactory.getLogger(SearchShippingOrderAction.class);
+  private static Logger logger = LoggerFactory.getLogger(SearchShippingOrderAction.class);                  
 
   private String shippingOrderGatewayId;
   private Long shippingOrderId;
   private String trackingId;
+  private Courier courier=null;
   private List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>();
 
   @Autowired
   ShippingOrderService shippingOrderService;
+    @Autowired
+    AwbService awbService;
 
   @ValidationMethod(on = "searchShippingOrder")
   public void validateSearch() {
@@ -49,20 +57,25 @@ public class SearchShippingOrderAction extends BasePaginatedAction {
     return new ForwardResolution("/pages/admin/searchShippingOrder.jsp");
   }
 
+    public Resolution searchShippingOrder() {
+        List<Awb> awbList = new ArrayList<Awb>();
+        if (trackingId != null) {
+            awbList = awbService.getAvailableAwbListForCourierByWarehouseCodStatus(null, trackingId, null, null, EnumAwbStatus.Used.getAsAwbStatus());
+            if(awbList.isEmpty()){
+                addRedirectAlertMessage(new SimpleMessage("InValid Tracking ID"));
+                return new ForwardResolution("/pages/admin/searchShippingOrder.jsp");
+            }
+        }
+        ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
+        shippingOrderSearchCriteria.setOrderId(shippingOrderId).setGatewayOrderId(shippingOrderGatewayId);
+        shippingOrderSearchCriteria.setAwbList(awbList);
 
-  public Resolution searchShippingOrder() {
-
-    ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
-    shippingOrderSearchCriteria.setOrderId(shippingOrderId).setGatewayOrderId(shippingOrderGatewayId);
-    shippingOrderSearchCriteria.setTrackingId(trackingId);
-    shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, false);
-
-    return new ForwardResolution("/pages/admin/searchShippingOrder.jsp");
-
-  }
+        shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, false);
+        return new ForwardResolution("/pages/admin/searchShippingOrder.jsp");
+    }
 
 
-  public String getShippingOrderGatewayId() {
+    public String getShippingOrderGatewayId() {
     return shippingOrderGatewayId;
   }
 
@@ -114,4 +127,12 @@ public class SearchShippingOrderAction extends BasePaginatedAction {
   public void setShippingOrderId(Long shippingOrderId) {
     this.shippingOrderId = shippingOrderId;
   }
+
+    public Courier getCourier() {
+        return courier;
+    }
+
+    public void setCourier(Courier courier) {
+        this.courier = courier;
+    }
 }

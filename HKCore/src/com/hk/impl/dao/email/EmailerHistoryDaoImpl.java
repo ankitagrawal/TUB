@@ -1,8 +1,7 @@
 package com.hk.impl.dao.email;
 
-import java.util.List;
-import java.util.Date;
 import java.util.Calendar;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

@@ -35,193 +35,204 @@ import com.hk.domain.warehouse.Warehouse;
 @Table(name = "goods_received_note")
 public class GoodsReceivedNote implements java.io.Serializable {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "id", unique = true, nullable = false)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", unique = true, nullable = false)
+    private Long id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "grn_status_id", nullable = false)
-  private GrnStatus grnStatus;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "grn_status_id", nullable = false)
+    private GrnStatus grnStatus;
 
-  @Temporal(TemporalType.TIMESTAMP)
-  @Column(name = "grn_date", nullable = false, length = 19)
-  private Date grnDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "grn_date", nullable = false, length = 19)
+    private Date grnDate;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "purchase_order_id", nullable = false)
-  private PurchaseOrder purchaseOrder;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "purchase_order_id", nullable = false)
+    private PurchaseOrder purchaseOrder;
 
-  @Column(name = "payable", precision = 12)
-  private Double payable;
+    @Column(name = "payable", precision = 12)
+    private Double payable;
 
-  @Column(name = "payment_details", length = 100)
-  private String paymentDetails;
+    @Column(name = "payment_details", length = 100)
+    private String paymentDetails;
 
-  @Temporal(TemporalType.TIMESTAMP)
-  @Column(name = "payment_date", length = 19)
-  private Date paymentDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "payment_date", length = 19)
+    private Date paymentDate;
 
-  @Column(name = "invoice_number", length = 100)
-  private String invoiceNumber;
+    @Column(name = "invoice_number", length = 100)
+    private String invoiceNumber;
 
-  @Temporal(TemporalType.TIMESTAMP)
-  @Column(name = "invoice_date", length = 19)
-  private Date invoiceDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "invoice_date", length = 19)
+    private Date invoiceDate;
 
-  @Column(name = "reconciled")
-  private Boolean reconciled;
+    @Column(name = "reconciled")
+    private Boolean reconciled;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "received_by")
-  private User receivedBy;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "received_by")
+    private User receivedBy;
 
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "goodsReceivedNote")
-  private List<GrnLineItem> grnLineItems = new ArrayList<GrnLineItem>(0);
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "goodsReceivedNote")
+    private List<GrnLineItem> grnLineItems = new ArrayList<GrnLineItem>(0);
 
-	@JsonSkip
-  @ManyToMany(fetch = FetchType.LAZY)
-  @JoinTable(
-      name = "purchase_invoice_has_grn",
-      joinColumns = {@JoinColumn(name = "goods_received_note_id", nullable = false, updatable = false)},
-      inverseJoinColumns = {@JoinColumn(name = "purchase_invoice_id", nullable = false, updatable = false)}
-  )
-  private List<PurchaseInvoice> purchaseInvoices = new ArrayList<PurchaseInvoice>();
+    @JsonSkip
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "purchase_invoice_has_grn",
+            joinColumns = {@JoinColumn(name = "goods_received_note_id", nullable = false, updatable = false)},
+            inverseJoinColumns = {@JoinColumn(name = "purchase_invoice_id", nullable = false, updatable = false)}
+    )
+    private List<PurchaseInvoice> purchaseInvoices = new ArrayList<PurchaseInvoice>();
 
-	@Transient
-	private boolean selected;
+    @Transient
+    private boolean selected;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "warehouse_id")
-  private Warehouse warehouse;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "warehouse_id")
+    private Warehouse warehouse;
 
-  public Long getId() {
-    return this.id;
-  }
+    @Column(name = "remarks")
+    private String remarks;
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+    public Long getId() {
+        return this.id;
+    }
 
-  public GrnStatus getGrnStatus() {
-    return this.grnStatus;
-  }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-  public void setGrnStatus(GrnStatus grnStatus) {
-    this.grnStatus = grnStatus;
-  }
+    public GrnStatus getGrnStatus() {
+        return this.grnStatus;
+    }
 
-  public Date getGrnDate() {
-    return this.grnDate;
-  }
+    public void setGrnStatus(GrnStatus grnStatus) {
+        this.grnStatus = grnStatus;
+    }
 
-  public void setGrnDate(Date grnDate) {
-    this.grnDate = grnDate;
-  }
+    public Date getGrnDate() {
+        return this.grnDate;
+    }
 
-  public PurchaseOrder getPurchaseOrder() {
-    return purchaseOrder;
-  }
+    public void setGrnDate(Date grnDate) {
+        this.grnDate = grnDate;
+    }
 
-  public void setPurchaseOrder(PurchaseOrder purchaseOrder) {
-    this.purchaseOrder = purchaseOrder;
-  }
+    public PurchaseOrder getPurchaseOrder() {
+        return purchaseOrder;
+    }
 
-  public Double getPayable() {
-    return this.payable;
-  }
+    public void setPurchaseOrder(PurchaseOrder purchaseOrder) {
+        this.purchaseOrder = purchaseOrder;
+    }
 
-  public void setPayable(Double payable) {
-    this.payable = payable;
-  }
+    public Double getPayable() {
+        return this.payable;
+    }
 
-  public String getPaymentDetails() {
-    return this.paymentDetails;
-  }
+    public void setPayable(Double payable) {
+        this.payable = payable;
+    }
 
-  public void setPaymentDetails(String paymentDetails) {
-    this.paymentDetails = paymentDetails;
-  }
+    public String getPaymentDetails() {
+        return this.paymentDetails;
+    }
 
-  public Date getPaymentDate() {
-    return this.paymentDate;
-  }
+    public void setPaymentDetails(String paymentDetails) {
+        this.paymentDetails = paymentDetails;
+    }
 
-  public void setPaymentDate(Date paymentDate) {
-    this.paymentDate = paymentDate;
-  }
+    public Date getPaymentDate() {
+        return this.paymentDate;
+    }
 
-  public List<GrnLineItem> getGrnLineItems() {
-    return this.grnLineItems;
-  }
+    public void setPaymentDate(Date paymentDate) {
+        this.paymentDate = paymentDate;
+    }
 
-  public void setGrnLineItems(List<GrnLineItem> grnLineItems) {
-    this.grnLineItems = grnLineItems;
-  }
+    public List<GrnLineItem> getGrnLineItems() {
+        return this.grnLineItems;
+    }
 
-  public String getInvoiceNumber() {
-    return invoiceNumber;
-  }
+    public void setGrnLineItems(List<GrnLineItem> grnLineItems) {
+        this.grnLineItems = grnLineItems;
+    }
 
-  public void setInvoiceNumber(String invoiceNumber) {
-    this.invoiceNumber = invoiceNumber;
-  }
+    public String getInvoiceNumber() {
+        return invoiceNumber;
+    }
 
-  public Date getInvoiceDate() {
-    return invoiceDate;
-  }
+    public void setInvoiceNumber(String invoiceNumber) {
+        this.invoiceNumber = invoiceNumber;
+    }
 
-  public void setInvoiceDate(Date invoiceDate) {
-    this.invoiceDate = invoiceDate;
-  }
+    public Date getInvoiceDate() {
+        return invoiceDate;
+    }
 
-  public Boolean isReconciled() {
-    return reconciled;
-  }
+    public void setInvoiceDate(Date invoiceDate) {
+        this.invoiceDate = invoiceDate;
+    }
 
-  public Boolean getReconciled() {
-    return reconciled;
-  }
+    public Boolean isReconciled() {
+        return reconciled;
+    }
 
-  public void setReconciled(Boolean reconciled) {
-    this.reconciled = reconciled;
-  }
+    public Boolean getReconciled() {
+        return reconciled;
+    }
 
-  public User getReceivedBy() {
-    return receivedBy;
-  }
+    public void setReconciled(Boolean reconciled) {
+        this.reconciled = reconciled;
+    }
 
-  public void setReceivedBy(User receivedBy) {
-    this.receivedBy = receivedBy;
-  }
+    public User getReceivedBy() {
+        return receivedBy;
+    }
 
-	public boolean isSelected() {
-		return selected;
-	}
+    public void setReceivedBy(User receivedBy) {
+        this.receivedBy = receivedBy;
+    }
 
-	public boolean getSelected(){
-		return selected;
-	}
+    public boolean isSelected() {
+        return selected;
+    }
 
-	public void setSelected(boolean selected) {
-		this.selected = selected;
-	}
+    public boolean getSelected(){
+        return selected;
+    }
 
-	public List<PurchaseInvoice> getPurchaseInvoices() {
-		return purchaseInvoices;
-	}
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
 
-	public void setPurchaseInvoices(List<PurchaseInvoice> purchaseInvoices) {
-		this.purchaseInvoices = purchaseInvoices;
-	}
+    public List<PurchaseInvoice> getPurchaseInvoices() {
+        return purchaseInvoices;
+    }
 
-  public Warehouse getWarehouse() {
-    return warehouse;
-  }
+    public void setPurchaseInvoices(List<PurchaseInvoice> purchaseInvoices) {
+        this.purchaseInvoices = purchaseInvoices;
+    }
 
-  public void setWarehouse(Warehouse warehouse) {
-    this.warehouse = warehouse;
-  }
+    public Warehouse getWarehouse() {
+        return warehouse;
+    }
+
+    public void setWarehouse(Warehouse warehouse) {
+        this.warehouse = warehouse;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
 }
 
 

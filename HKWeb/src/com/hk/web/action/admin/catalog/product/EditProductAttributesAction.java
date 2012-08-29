@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.JsonResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 
@@ -41,7 +42,6 @@ import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.util.HKImageUtils;
 import com.hk.util.XslGenerator;
 import com.hk.web.HealthkartResponse;
-import com.hk.web.action.core.catalog.product.ProductAction;
 
 /**
  * Created by IntelliJ IDEA. User: PRATHAM Date: 3/23/12 Time: 11:31 PM To change this template use File | Settings |
@@ -199,13 +199,13 @@ public class EditProductAttributesAction extends BaseAction {
             if (productVariant.isClearanceSale() == null || !productVariant.isClearanceSale()) {
                 if (productVariant.getCostPrice() != null && productVariant.getCostPrice() > productVariant.getHkPrice(null)) {
                     addRedirectAlertMessage(new SimpleMessage("HK Price of variant " + productVariant.getId() + " is less than Cost Price. Please fix it."));
-                    return new ForwardResolution(ProductAction.class, "editProductVariantDetails");
+                    return new RedirectResolution(EditProductAttributesAction.class, "editProductVariantDetails").addParameter("product", product);
                 }
             }
 
             if (productVariant.getMarkedPrice() != null && productVariant.getMarkedPrice() < productVariant.getHkPrice(null)) {
                 addRedirectAlertMessage(new SimpleMessage("HK Price of variant " + productVariant.getId() + " is more than Marked Price. Please fix it."));
-                return new ForwardResolution(ProductAction.class, "editProductVariantDetails");
+                return new RedirectResolution(EditProductAttributesAction.class, "editProductVariantDetails").addParameter("product", product);
             }
 
             String productOpts = "";
@@ -370,7 +370,7 @@ public class EditProductAttributesAction extends BaseAction {
         product = getProductService().getProductById(productId);
         productImages = product.getProductImages();
         if (productImageId != null) {
-            String productImageLink = HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, Long.parseLong(productImageId));
+            String productImageLink = HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, Long.parseLong(productImageId),isSecureRequest());
             HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "success", productImageLink);
             return new JsonResolution(healthkartResponse);
         } else {

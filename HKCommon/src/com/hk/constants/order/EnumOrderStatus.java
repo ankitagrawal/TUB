@@ -60,15 +60,13 @@ public enum EnumOrderStatus {
 
   public static List<EnumOrderStatus> getStatusForCustomers() {
     return Arrays.asList(EnumOrderStatus.Placed,
+        EnumOrderStatus.Cancelled,
         EnumOrderStatus.InProcess,
         EnumOrderStatus.OnHold,
         EnumOrderStatus.Shipped,
         EnumOrderStatus.Delivered);
   }
 
-/*public static List<EnumOrderStatus> getStatusForDelivered() {
-  return Arrays.asList(EnumOrderStatus.SO_Shipped);
-}*/
 
   public static List<EnumOrderStatus> getStatusForReporting() {
     return Arrays.asList(

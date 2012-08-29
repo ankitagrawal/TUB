@@ -1,5 +1,34 @@
 package com.hk.web.action.admin.inventory;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.validation.Validate;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.dto.inventory.GRNDto;
@@ -30,21 +59,8 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.util.CustomDateTypeConvertor;
+import com.hk.util.XslGenerator;
 import com.hk.web.action.error.AdminPermissionAction;
-import net.sourceforge.stripes.action.*;
-import net.sourceforge.stripes.validation.Validate;
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 @Secure(hasAnyPermissions = { PermissionConstants.PO_MANAGEMENT }, authActionBean = AdminPermissionAction.class)
 @Component
@@ -71,6 +87,9 @@ public class GRNAction extends BasePaginatedAction {
     @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
     String adminDownloads;
 
+    @Autowired
+    XslGenerator xslGenerator;
+
     private File xlsFile;
     Page grnPage;
     Long grnStatusValue;
@@ -83,7 +102,7 @@ public class GRNAction extends BasePaginatedAction {
     private String tinNumber;
     private String invoiceNumber;
     private String supplierName;
-    private Boolean isReconciled;
+    private Boolean reconciled;
     private Warehouse warehouse;
     public GRNDto grnDto;
     private ProductVariant productVariant;
@@ -101,11 +120,31 @@ public class GRNAction extends BasePaginatedAction {
             if (warehouse == null && getPrincipalUser() != null && getPrincipalUser().getSelectedWarehouse() != null) {
                 warehouse = getPrincipalUser().getSelectedWarehouse();
             }
-            grnPage = goodsReceivedNoteDao.searchGRN(grn, grnStatus, invoiceNumber, tinNumber, supplierName, isReconciled, warehouse, getPageNo(), getPerPage());
+            grnPage = goodsReceivedNoteDao.searchGRN(grn, grnStatus, invoiceNumber, tinNumber, supplierName, reconciled, warehouse, getPageNo(), getPerPage());
             grnList = grnPage.getList();
         }
         return new ForwardResolution("/pages/admin/grnList.jsp");
     }
+
+    public Resolution generateExcelReport() {
+        if (productVariant != null) {
+            grnList = goodsReceivedNoteDao.listGRNsWithProductVariant(productVariant);
+        } else {
+            if (warehouse == null && getPrincipalUser() != null && getPrincipalUser().getSelectedWarehouse() != null) {
+                warehouse = getPrincipalUser().getSelectedWarehouse();
+            }
+            grnList = goodsReceivedNoteDao.searchGRN(grn, grnStatus, invoiceNumber, tinNumber, supplierName, reconciled, warehouse);
+        }
+        if(grnList != null) {
+            xlsFile = new File(adminDownloads + "/reports/GRNList.xls");
+            xlsFile = xslGenerator.generateGRNListExcel(xlsFile, grnList);
+
+            return new HTTPResponseResolution();
+        }
+        return new RedirectResolution(GRNAction.class);
+
+    }
+
 
     public Resolution print() {
         logger.debug("grn: " + grn);
@@ -123,9 +162,9 @@ public class GRNAction extends BasePaginatedAction {
     }
 
     public Resolution save() {
-      if (warehouse == null && getPrincipalUser() != null && getPrincipalUser().getSelectedWarehouse() != null) {
-        warehouse = getPrincipalUser().getSelectedWarehouse();
-      }
+        if (warehouse == null && getPrincipalUser() != null && getPrincipalUser().getSelectedWarehouse() != null) {
+            warehouse = getPrincipalUser().getSelectedWarehouse();
+        }
         if (grn != null && grn.getId() != null) {
             logger.debug("grnLineItems@Save: " + grnLineItems.size());
 
@@ -137,7 +176,7 @@ public class GRNAction extends BasePaginatedAction {
             for (GrnLineItem grnLineItem : grnLineItems) {
                 //setting sku when adding new grn line item
                 if(grnLineItem.getSku() == null && grnLineItem.getProductVariant() != null){
-                  grnLineItem.setSku(skuService.getSKU(grnLineItem.getProductVariant(), warehouse));
+                    grnLineItem.setSku(skuService.getSKU(grnLineItem.getProductVariant(), warehouse));
                 }
                 if (grnLineItem.getQty() != null && grnLineItem.getQty() == 0 && grnLineItem.getId() != null) {
                     grnLineItemDao.delete(grnLineItem);
@@ -192,7 +231,7 @@ public class GRNAction extends BasePaginatedAction {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
             xlsFile = new File(adminDownloads + "/reports/Purchase_Order-GRN-" + sdf.format(new Date()) + ".xls");
-            xlsFile = grnManager.generateGRNXls(xlsFile.getPath(), grnStatusValue, startDate, endDate, warehouse);
+            xlsFile = grnManager.generateGRNXls(xlsFile.getPath(), grnStatusValue, startDate, endDate, warehouse, reconciled);
             addRedirectAlertMessage(new SimpleMessage("Purchase Order successfully generated"));
         } catch (Exception e) {
             e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.
@@ -439,6 +478,7 @@ public class GRNAction extends BasePaginatedAction {
         params.add("supplierName");
         params.add("grn");
         params.add("grnStatus");
+        params.add("reconciled");
         return params;
     }
 
@@ -463,15 +503,15 @@ public class GRNAction extends BasePaginatedAction {
     }
 
     public Boolean isReconciled() {
-        return isReconciled;
+        return reconciled;
     }
 
     public Boolean getReconciled() {
-        return isReconciled;
+        return reconciled;
     }
 
     public void setReconciled(Boolean reconciled) {
-        isReconciled = reconciled;
+        this.reconciled = reconciled;
     }
 
     public Long getGrnStatusValue() {

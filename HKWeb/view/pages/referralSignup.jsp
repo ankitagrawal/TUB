@@ -11,7 +11,7 @@
     <meta name="description"
           content="HealthKart.com is India's first health and wellness online store. They are running a referral program where you get a Rs. 100 discount if you signup through this link. Check it out!"/>
     <link rel="image_src"
-          href="http://www.healthkart.com/images/logo/healthkart-logo.png"/>
+          href="${pageContext.request.contextPath}/images/logo/healthkart-logo.png"/>
 
     <style type="text/css">
       fieldset.right_label label {

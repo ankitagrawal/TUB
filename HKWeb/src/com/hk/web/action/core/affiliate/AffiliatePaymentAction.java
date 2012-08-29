@@ -27,7 +27,7 @@ import com.hk.domain.CheckDetails;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.affiliate.AffiliateCategoryCommission;
 import com.hk.domain.user.Address;
-import com.hk.domain.user.Role;
+import com.hk.domain.user.User;
 import com.hk.impl.dao.CheckDetailsDaoImpl;
 import com.hk.impl.dao.affiliate.AffiliateCategoryDaoImpl;
 import com.hk.manager.AffiliateManager;
@@ -37,51 +37,54 @@ import com.hk.pact.service.RoleService;
 import com.hk.report.dto.payment.AffiliatePaymentDto;
 import com.hk.web.action.error.AdminPermissionAction;
 
-@Secure(hasAnyPermissions = { PermissionConstants.MANAGE_AFFILIATES }, authActionBean = AdminPermissionAction.class)
+@Secure(hasAnyPermissions = {PermissionConstants.MANAGE_AFFILIATES}, authActionBean = AdminPermissionAction.class)
 @Component
 public class AffiliatePaymentAction extends BasePaginatedAction {
     @Autowired
-    AffiliateDao                      affiliateDao;
+    AffiliateDao affiliateDao;
     @Autowired
-    AffiliateManager                  affiliateManager;
+    AffiliateManager affiliateManager;
     @Autowired
-    CheckDetailsDaoImpl                   checkDetailsDao;
+    CheckDetailsDaoImpl checkDetailsDao;
     @Autowired
-    AddressDao                        addressDao;
+    AddressDao addressDao;
     @Autowired
-    AffiliateCategoryDaoImpl              affiliateCategoryCommissionDao;
+    AffiliateCategoryDaoImpl affiliateCategoryCommissionDao;
 
-    List<AffiliatePaymentDto>         affiliatePaymentDtoList = new ArrayList<AffiliatePaymentDto>();
-    Affiliate                         affiliate;
-    List<CheckDetails>                checkDetailsList;
+    List<AffiliatePaymentDto> affiliatePaymentDtoList = new ArrayList<AffiliatePaymentDto>();
+    Affiliate affiliate;
+    List<CheckDetails> checkDetailsList;
     List<AffiliateCategoryCommission> affiliateCategoryCommissionList;
-    Page                              affiliatePage;
+    Page affiliatePage;
 
-    Double                            amount;
-    @ValidateNestedProperties( {
+    Double amount;
+    @ValidateNestedProperties({
             @Validate(field = "checkNo", required = true, on = "payToAffiliate"),
             @Validate(field = "issueDate", required = true, on = "payToAffiliate"),
-            @Validate(field = "bankName", required = true, on = "payToAffiliate") })
-    CheckDetails                      checkDetails;
+            @Validate(field = "bankName", required = true, on = "payToAffiliate")})
+    CheckDetails checkDetails;
     @Validate(required = true, on = "payToAffiliate")
-    Double                            amountToPay;
-    Address                           checkDeliveryAddress;
+    Double amountToPay;
+    Address checkDeliveryAddress;
+    String name;
+    String email;
 
     @Autowired
-    private RoleService               roleService;
+    private RoleService roleService;
 
     @DefaultHandler
     public Resolution pre() {
-        affiliatePage = getAffiliateDao().getAffiliateVerifiedUsers(getPageNo(), getPerPage());
-        List<Affiliate> affiliates = affiliatePage.getList();
-        Role unverifiedAffiliate = getRoleService().getRoleByName(RoleConstants.HK_AFFILIATE_UNVERIFIED);
+        affiliatePage = getUserService().findByRole(name, email, getRoleService().getRoleByName(RoleConstants.HK_AFFILIATE), getPageNo(), getPerPage());
+        List<User> affiliatesUsers = affiliatePage.getList();
+        List<Affiliate> affiliates = new ArrayList<Affiliate>();
+        for (User user : affiliatesUsers) {
+            affiliates.add(affiliateDao.getAffilateByUser(user));
+        }
         for (Affiliate affiliate : affiliates) {
-            if (!affiliate.getUser().getRoles().contains(unverifiedAffiliate)) {
                 AffiliatePaymentDto affiliatePaymentDto = new AffiliatePaymentDto();
                 affiliatePaymentDto.setAffiliate(affiliate);
                 affiliatePaymentDto.setAmount(getAffiliateManager().getAmountInAccount(affiliate));
                 affiliatePaymentDtoList.add(affiliatePaymentDto);
-            }
         }
         return new ForwardResolution("/pages/affiliate/payToAffiliates.jsp");
     }
@@ -266,4 +269,19 @@ public class AffiliatePaymentAction extends BasePaginatedAction {
         this.affiliateCategoryCommissionDao = affiliateCategoryCommissionDao;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }

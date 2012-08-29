@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.dto.accounting.InvoiceDto;
 import com.hk.constants.core.EnumTax;
+import com.hk.domain.order.ReplacementOrder;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.B2bUserDetails;
 import com.hk.helper.InvoiceNumHelper;
@@ -54,7 +55,14 @@ public class AccountingInvoiceAction extends BaseAction {
             if (invoiceType.equals(InvoiceNumHelper.PREFIX_FOR_B2B_ORDER)) {
                 b2bUserDetails = b2bUserDetailsDao.getB2bUserDetails(shippingOrder.getBaseOrder().getUser());
             }
-            invoiceDto = new InvoiceDto(shippingOrder, b2bUserDetails);
+            ReplacementOrder replacementOrder = getBaseDao().get(ReplacementOrder.class, shippingOrder.getId());
+
+            if(replacementOrder != null){
+              invoiceDto = new InvoiceDto(replacementOrder, b2bUserDetails);
+            }
+            else{
+              invoiceDto = new InvoiceDto(shippingOrder, b2bUserDetails);
+            }
             return new ForwardResolution("/pages/accountingInvoice.jsp");
         } else {
             addRedirectAlertMessage(new SimpleMessage("Given shipping order doesnot exist"));

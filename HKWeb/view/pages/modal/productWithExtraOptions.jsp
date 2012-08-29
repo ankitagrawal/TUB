@@ -7,8 +7,8 @@
 
 <s:layout-definition>
   <%
-      Product product = (Product) pageContext.getAttribute("product");
-      pageContext.setAttribute("product", product);
+    Product product = (Product) pageContext.getAttribute("product");
+    pageContext.setAttribute("product", product);
   %>
   <div class="jqmWindow" id="cartWindow2">
     <s:layout-render name="/layouts/modal.jsp">

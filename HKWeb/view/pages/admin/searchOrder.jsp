@@ -46,6 +46,11 @@
     <%--
     Cancel order
     --%>
+
+        $('.cancelOrderButton').click(function(){
+            var proceed = confirm('Are you sure?');
+            if (!proceed) return false;
+        });
       $('.cancelOrderLink').click(function() {
         var proceed = confirm('Are you sure?');
         if (!proceed) return false;
@@ -291,14 +296,11 @@
       Remark:
       <s:textarea name="cancellationRemark" style="height:100px"/>
       <div class="buttons">
-        <s:submit name="pre" value="Cancel" class="cancelOrderButton"/>
+        <s:submit name="pre" value="Cancel" class="cancelOrderButton" />
       </div>
     </s:form>
     <script type="text/javascript">
-      $('.cancelOrderButton').click(function() {
-        var proceed = confirm('Are you sure?');
-        if (!proceed) return false;
-      });
+
       $('.cancelOrderForm').ajaxForm({dataType: 'json', success: _cancelOrder});
 
       function _cancelOrder(res) {
@@ -499,8 +501,8 @@
               Track Link: <s:link beanclass="com.hk.web.action.core.order.TrackCourierAction" target="_blank">
               <s:param name="courierId" value="${shippingOrder.shipment.courier.id}"/>
                <s:param name="shippingOrder" value="${shippingOrder.id}"/>
-              <s:param name="trackingId" value="${shippingOrder.shipment.trackingId}"/>
-              ${shippingOrder.shipment.trackingId}
+              <s:param name="trackingId" value="${shippingOrder.shipment.awb.awbNumber}"/>
+              ${shippingOrder.shipment.awb.awbNumber}
             </s:link>
             </c:if>
           </td>

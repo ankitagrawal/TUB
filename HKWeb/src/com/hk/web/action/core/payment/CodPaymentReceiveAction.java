@@ -1,5 +1,7 @@
 package com.hk.web.action.core.payment;
 
+import java.util.Set;
+
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
@@ -15,8 +17,11 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.constants.core.Keys;
+import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumPaymentMode;
+import com.hk.core.fliter.CartLineItemFilter;
+import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.user.Address;
@@ -61,7 +66,7 @@ public class CodPaymentReceiveAction extends BaseAction {
 
     public Resolution pre() {
         Resolution resolution = null;
-        if (order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())) {
+        if (order != null && order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())) {
 
             if (StringUtils.isBlank(codContactName)) {
                 addRedirectAlertMessage(new SimpleMessage("Cod Contact Name cannot be blank"));
@@ -76,6 +81,12 @@ public class CodPaymentReceiveAction extends BaseAction {
                 addRedirectAlertMessage(new SimpleMessage("Cod Contact Phone cannot be longer than 25 characters"));
                 return new RedirectResolution(PaymentModeAction.class);
             }
+
+            Set<CartLineItem> subscriptionCartLineItems=new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
+           if(subscriptionCartLineItems!=null && subscriptionCartLineItems.size()>0){
+             addRedirectAlertMessage(new SimpleMessage("Cod is not allowed as you have subscriptions in your cart"));
+             return new RedirectResolution(PaymentModeAction.class);
+           }
 
             // recalculate the pricing before creating a payment.
             order = orderManager.recalAndUpdateAmount(order);
@@ -111,7 +122,7 @@ public class CodPaymentReceiveAction extends BaseAction {
                 resolution = e.getRedirectResolution().addParameter("gatewayOrderId", gatewayOrderId);
             }
         } else {
-            addRedirectAlertMessage(new SimpleMessage("Payment for the order is already made."));
+            addRedirectAlertMessage(new SimpleMessage("Please try again, else Payment for the order has already been recorded."));
             resolution = new RedirectResolution(PaymentModeAction.class).addParameter("order", order);
         }
         return resolution;

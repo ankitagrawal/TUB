@@ -1,5 +1,33 @@
 package com.hk.admin.util;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Pattern;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.hk.admin.pact.dao.inventory.GrnLineItemDao;
 import com.hk.admin.pact.dao.inventory.PoLineItemDao;
 import com.hk.admin.pact.dao.inventory.PurchaseOrderDao;
@@ -19,7 +47,11 @@ import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.product.*;
+import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductExtraOption;
+import com.hk.domain.catalog.product.ProductImage;
+import com.hk.domain.catalog.product.ProductOption;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.City;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.core.State;
@@ -48,34 +80,19 @@ import com.hk.pact.service.RoleService;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
-import com.hk.pact.service.core.*;
+import com.hk.pact.service.core.CityService;
+import com.hk.pact.service.core.PincodeService;
+import com.hk.pact.service.core.StateService;
+import com.hk.pact.service.core.TaxService;
+import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.payment.PaymentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.service.ServiceLocatorFactory;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.regex.Pattern;
 
 @Component
+@SuppressWarnings("unchecked")
 public class XslParser {
 
   @Autowired
@@ -172,6 +189,8 @@ public class XslParser {
 
       // Iterating on the available rows
       boolean productDeleted = false;
+      boolean outOfStock = false;
+      boolean isJitBoolean = false;
       String refProdId = "";
       Boolean refIsService = false;
       Product refProduct = null;
@@ -258,11 +277,14 @@ public class XslParser {
           String isGoogleAdDisallowed = getCellValue(XslConstants.IS_GOOGLE_AD_DISALLOWED, rowMap, headerMap);
           boolean isGoogleAdDisallowedBoolean = StringUtils.isNotBlank(isGoogleAdDisallowed) && isGoogleAdDisallowed.trim().toLowerCase().equals("y") ? true : false;
           product.setGoogleAdDisallowed(isGoogleAdDisallowedBoolean);
+          String isJit = getCellValue(XslConstants.IS_JIT, rowMap, headerMap);
+          isJitBoolean =  StringUtils.isNotBlank(isJit) && isJit.trim().toLowerCase().equals("y") ? true : false;
+          product.setJit(isJitBoolean);  
           product.setProductVariants(productVariants);
           product.setRelatedProducts(getRelatedProductsFromExcel(getCellValue(XslConstants.RELATED_PRODUCTS, rowMap, headerMap)));
           productDeleted = true;
           product.setDeleted(productDeleted);
-          product.setSupplier(getSupplierDetails(getCellValue(XslConstants.SUPPLIER_TIN, rowMap, headerMap),
+            product.setSupplier(getSupplierDetails(getCellValue(XslConstants.SUPPLIER_TIN, rowMap, headerMap),
               getCellValue(XslConstants.SUPPLIER_STATE, rowMap, headerMap), rowCount));
 
           product.setMaxDays(getLong(getCellValue(XslConstants.MAX_DAYS_TO_PROCESS, rowMap, headerMap)));
@@ -315,6 +337,8 @@ public class XslParser {
           }
         }
         productVariant.setUpc(getCellValue(XslConstants.UPC, rowMap, headerMap) == null ? "" : getCellValue(XslConstants.UPC, rowMap, headerMap));
+        productVariant.setOtherRemark(getCellValue(XslConstants.OTHER_REMARK, rowMap, headerMap) == null ? "" : getCellValue(XslConstants.OTHER_REMARK, rowMap, headerMap));
+        productVariant.setSupplierCode(getCellValue(XslConstants.SUPPLIER_CODE, rowMap, headerMap) == null ? "" : getCellValue(XslConstants.SUPPLIER_CODE, rowMap, headerMap));
         productVariant.setColorHex(getCellValue(XslConstants.COLOR_HEX, rowMap, headerMap));
         productVariant.setVariantName(getCellValue(XslConstants.VARIANT_NAME, rowMap, headerMap));
         Double mrp = Double.parseDouble(getCellValue(XslConstants.MRP, rowMap, headerMap));
@@ -351,8 +375,12 @@ public class XslParser {
         productVariant.setProductOptions(productOptions);
         productVariant.setProductExtraOptions(productExtraOptions);
         String availability = getCellValue(XslConstants.AVAILABILITY, rowMap, headerMap);
-        boolean outOfStock = StringUtils.isNotBlank(availability) && availability.trim().toLowerCase().equals("y") ? false : true;
-        productVariant.setOutOfStock(outOfStock);
+         if (isJitBoolean) {
+              outOfStock = false;
+          } else {
+              outOfStock = StringUtils.isNotBlank(availability) && availability.trim().toLowerCase().equals("y") ? false : true;
+          }
+          productVariant.setOutOfStock(outOfStock);
         String deleted = getCellValue(XslConstants.DELETED, rowMap, headerMap);
         boolean deletedBoolean = StringUtils.isNotBlank(deleted) && deleted.trim().toLowerCase().equals("y") ? true : false;
         productVariant.setDeleted(deletedBoolean);
@@ -469,7 +497,8 @@ public class XslParser {
 
   }
 
-  public Set<Pincode> readPincodeList(File objInFile) throws Exception {
+  @SuppressWarnings("unchecked")
+public Set<Pincode> readPincodeList(File objInFile) throws Exception {
 
     logger.debug("parsing pincode info : " + objInFile.getAbsolutePath());
 
@@ -666,7 +695,7 @@ public class XslParser {
             if (checkinQty != null && checkinQty > 0) {
               String batch = getCellValue(XslConstants.BATCH_NUMBER, rowMap, headerMap);
               SkuGroup skuGroup = adminInventoryService.createSkuGroup(batch, getDate(getCellValue(XslConstants.MFG_DATE, rowMap, headerMap)), getDate(getCellValue(
-                  XslConstants.EXP_DATE, rowMap, headerMap)), goodsReceivedNote, null, null, null);
+                  XslConstants.EXP_DATE, rowMap, headerMap)), 0.0, 0.0, goodsReceivedNote, null, null, null);
               adminInventoryService.createSkuItemsAndCheckinInventory(skuGroup, checkinQty, null, grnLineItem, null, null, getInventoryService().getInventoryTxnType(
                   EnumInvTxnType.INV_CHECKIN), null);
 
@@ -883,14 +912,15 @@ public class XslParser {
         }
         if (StringUtils.isNotBlank(awb)) {
 
-          if (!(shipment.getTrackingId().equals(awb))) {
+          if (!(shipment.getAwb() != null && shipment.getAwb().getAwbNumber().equals(awb))) {
             messagePostUpdation += "AWB and shippingOrder no. mismatch at row" + rowCount + ".<br/>";
             continue;
           }
         }
-        shipment.setCollectionCharge(collectionCharge);
-        shipment.setShipmentCharge(shippingCharge);
-        shipmentService.save(shipment);
+          shipment.setCollectionCharge(collectionCharge);
+          shipment.setShipmentCharge(shippingCharge);
+          shipment.setShippingOrder(shippingOrder);
+          shipmentService.save(shipment);
 
         /*
         * if (courier != null) { productLineItemsByCourier =
@@ -1032,7 +1062,7 @@ public class XslParser {
         }
         if (StringUtils.isNotBlank(awb)) {
 
-          if (!(shipment.getTrackingId().equals(awb))) {
+          if (!(shipment.getAwb() != null && shipment.getAwb().getAwbNumber().equals(awb))) {
             messagePostUpdation += "AWB and shippingOrder no. mismatch at row" + rowCount + ".<br/>";
             continue;
           }
@@ -1165,68 +1195,56 @@ public class XslParser {
     return relatedProducts;
   }
 
-  public Set<Product> readAndSetRelatedProducts(File objInFile) throws Exception {
-    Set<Product> productSet = new HashSet<Product>();
+	public Set<Product> readAndSetRelatedProducts(File objInFile) throws Exception {
+		Set<Product> productSet = new HashSet<Product>();
 
-    InputStream poiInputStream = new FileInputStream(objInFile);
-    POIFSFileSystem objInFileSys = new POIFSFileSystem(poiInputStream);
+		InputStream poiInputStream = new FileInputStream(objInFile);
+		POIFSFileSystem objInFileSys = new POIFSFileSystem(poiInputStream);
 
-    HSSFWorkbook workbook = new HSSFWorkbook(objInFileSys);
+		HSSFWorkbook workbook = new HSSFWorkbook(objInFileSys);
 
-    // Assuming there is only one sheet, the first one only will be picked
-    for (int i = 0; i < 8; i++) {
-      HSSFSheet excelSheet = workbook.getSheetAt(i);
-      if (excelSheet != null) {
-        Iterator<Row> objRowIt = excelSheet.rowIterator();
+		// Assuming there is only one sheet, the first one only will be picked
+		HSSFSheet excelSheet = workbook.getSheetAt(0);
+		if (excelSheet != null) {
+			Iterator<Row> objRowIt = excelSheet.rowIterator();
 
-        // Declaring data elements
-        Map<Integer, String> headerMap;
-        Map<Integer, String> rowMap;
+			// Declaring data elements
+			Map<Integer, String> headerMap;
+			Map<Integer, String> rowMap;
 
-        int rowCount = 1;
-        try {
-          headerMap = getRowMap(objRowIt);
-          Product mainProduct = null;
-          List<Product> relatedProducts = new ArrayList<Product>();
-          while (objRowIt.hasNext()) {
-            rowMap = getRowMap(objRowIt);
-            if (StringUtils.isBlank(getCellValue(XslConstants.PRODUCT_ID, rowMap, headerMap))) {
-              // this is not a new product. add a new product variant
-            } else {
-              Product product = getProductService().getProductById(getCellValue(XslConstants.PRODUCT_ID, rowMap, headerMap));
-              if (mainProduct == null || !mainProduct.equals(product)) {
-                if (mainProduct != null) {
-                  getProductService().save(mainProduct);
-                  logger.debug("Saved old product. Will set new product as main product now.");
-                  productSet.add(mainProduct);
-                }
-                mainProduct = product;
-                relatedProducts = new ArrayList<Product>();
-              }
-            }
-            if (mainProduct != null && relatedProducts.size() < 6) {
-              Product crossProduct = getProductService().getProductById(getCellValue(XslConstants.CROSS_PRODUCT_ID, rowMap, headerMap));
-              if (crossProduct != null && !crossProduct.equals(mainProduct) && !crossProduct.isDeleted()) {
-                relatedProducts.add(crossProduct);
-                mainProduct.setRelatedProducts(relatedProducts);
-              }
-            }
-            logger.debug("Read row " + rowCount);
-            rowCount++;
-          }
-        } catch (Exception e) {
-          logger.error("Exception @ Row:" + rowCount + 1 + e.getMessage());
-          throw new Exception("Exception @ Row:" + rowCount + " at Sheet:" + i, e);
-        } finally {
-          if (poiInputStream != null) {
-            IOUtils.closeQuietly(poiInputStream);
-          }
-        }
-      }
-    }
-    return productSet;
+			int rowCount = 1;
+			try {
+				headerMap = getRowMap(objRowIt);
+				List<Product> relatedProducts;
+				while (objRowIt.hasNext()) {
+					rowMap = getRowMap(objRowIt);
+					Product product = getProductService().getProductById(getCellValue(XslConstants.PRODUCT_ID, rowMap, headerMap));
+					relatedProducts = product.getRelatedProducts();
+					if (product != null && relatedProducts.size() < 6) {
+						Product relatedProduct = getProductService().getProductById(getCellValue(XslConstants.RELATED_PRODUCT_ID, rowMap, headerMap));
+						if (relatedProduct != null && !relatedProduct.equals(product) && !relatedProduct.isDeleted() && !relatedProducts.contains(relatedProduct)) {
+							relatedProducts.add(relatedProduct);
+							product.setRelatedProducts(relatedProducts);
+							getProductService().save(product);
+							productSet.add(product);
+						}
+					}
+					logger.debug("Read row " + rowCount);
+					rowCount++;
+				}
+			} catch (Exception e) {
+				logger.error("Exception @ Row:" + rowCount + 1, e.getMessage());
+				throw new Exception("Exception @ Row:" + rowCount, e);
+			} finally {
+				if (poiInputStream != null) {
+					IOUtils.closeQuietly(poiInputStream);
+				}
+			}
+		}
 
-  }
+		return productSet;
+
+	}
 
   /**
    * Returns a list of categories. Category format Eg: <p/> Baby, Baby Food, Cereal ; Baby, Baby Food, Formula <p/>

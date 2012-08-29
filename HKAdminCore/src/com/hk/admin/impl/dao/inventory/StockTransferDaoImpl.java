@@ -43,10 +43,13 @@ public class StockTransferDaoImpl extends BaseDaoImpl implements StockTransferDa
     }
 
     @SuppressWarnings("unchecked")
-    public StockTransferLineItem getStockTransferLineItem(StockTransfer stockTransfer, ProductVariant productVariant) {
+    public StockTransferLineItem getStockTransferLineItem(StockTransfer stockTransfer, ProductVariant productVariant, String batchNumber) {
         List<StockTransferLineItem> stockTransferLineItems = getSession().createQuery(
-                "from StockTransferLineItem stli where stli.stockTransfer = :stockTransfer and stli.sku.productVariant = :productVariant").setParameter("stockTransfer",
-                stockTransfer).setParameter("productVariant", productVariant).list();
+                "from StockTransferLineItem stli where stli.stockTransfer = :stockTransfer and stli.sku.productVariant = :productVariant" +
+		                " and stli.batchNumber = :batchNumber")
+		        .setParameter("stockTransfer", stockTransfer)
+		        .setParameter("productVariant", productVariant)
+		        .setParameter("batchNumber", batchNumber).list();
         return stockTransferLineItems != null && !stockTransferLineItems.isEmpty() ? stockTransferLineItems.get(0) : null;
     }
 

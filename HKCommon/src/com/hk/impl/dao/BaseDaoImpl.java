@@ -14,7 +14,6 @@ import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.transform.Transformers;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -97,7 +96,7 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
     return getHibernateTemplate().find(queryString, bindings);
   }
 
-  @Override
+  //@Override
   @SuppressWarnings("unchecked")
   public Object findUnique(String queryString) {
     List<Object> results = getHibernateTemplate().find(queryString);
@@ -184,7 +183,6 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
   }
 
   @SuppressWarnings("unchecked")
-  @Override
   public Object findUniqueByNamedQueryAndNamedParam(String queryString, String[] paramNames, Object[] paramValues) {
     List<Object> results = getHibernateTemplate().findByNamedQueryAndNamedParam(queryString, paramNames, paramValues);
 
@@ -313,7 +311,7 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
   public int executeNativeSql(final String sql, final Object... params) {
     return ((Integer) getHibernateTemplate().execute(new HibernateCallback() {
 
-      @Override
+      //@Override
       public Object doInHibernate(Session session) throws HibernateException, SQLException {
         SQLQuery sqlQuery = session.createSQLQuery(sql);
 
@@ -332,7 +330,7 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
   public List<Object[]> findByNativeSql(final String sql, final int start, final int rows, final Object... params) {
     return (List<Object[]>) getHibernateTemplate().execute(new HibernateCallback() {
 
-      @Override
+      //@Override
       public Object doInHibernate(Session session) throws HibernateException, SQLException {
         SQLQuery sqlQuery = session.createSQLQuery("select * from (" + sql + ") t");
 
@@ -367,7 +365,7 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
     return "DESC";
   }
 
-  @Override
+  //@Override
   public int countByNativeSql(String sql, Object... params) {
     List result = findByNativeSql(sql, 0, 0, params);
     if (result.isEmpty() || result.get(0) == null) {
@@ -377,20 +375,20 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
   }
 
   @SuppressWarnings("unchecked")
-  @Override
+  //@Override
   public long count(String sql, Object... params) {
     List result = findByQuery(sql, params);
     return ((Number) result.get(0)).longValue();
   }
 
   @SuppressWarnings("unchecked")
-  @Override
+  //@Override
   public long countByNamedParams(String queryString, String[] params, Object[] values) {
     List result = findByNamedParams(queryString, params, values);
     return ((Number) result.get(0)).longValue();
   }
 
-  @Override
+  //@Override
   public void flush() {
     getHibernateTemplate().flush();
   }
@@ -409,7 +407,7 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
     return totalResults;
   }
 
-  @Override
+  //@Override
   public Page list(DetachedCriteria criteria, boolean hasDistinctRootEntity, int pageNo, int perPage) {
 
     int totalResults = count(criteria, hasDistinctRootEntity);
@@ -424,13 +422,14 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
     return new Page(resultList, perPage, pageNo, totalResults);
   }
 
-  @Override
+  //@Override
   public Page list(DetachedCriteria criteria, int pageNo, int perPage) {
     return list(criteria, false, pageNo, perPage);
   }
 
-  @Override
+  //@Override
   public void refresh(Object entity) {
     getHibernateTemplate().refresh(entity);
   }
+
 }

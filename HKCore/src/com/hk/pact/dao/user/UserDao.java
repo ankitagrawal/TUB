@@ -1,7 +1,6 @@
 package com.hk.pact.dao.user;
 
 import java.util.List;
-import java.math.BigInteger;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,12 +9,9 @@ import com.hk.domain.catalog.category.Category;
 import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
-import com.hk.domain.email.EmailCampaign;
-import com.hk.domain.email.EmailRecepient;
 import com.hk.dto.user.UserFilterDto;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.RoleDao;
-import com.hk.impl.dto.mail.UserEmailDto;
 
 public interface UserDao extends BaseDao {
 
@@ -38,7 +34,7 @@ public interface UserDao extends BaseDao {
 
   public List<User> findByRole(Role role);
 
-  public Page findByRole(Role role, int pageNo, int perPage);
+  public Page findByRole(String name, String email, Role role, int pageNo, int perPage);
 
   public Page listUsersByRole(Role role, int page, int perPage);
 

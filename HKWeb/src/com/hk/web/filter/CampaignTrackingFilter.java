@@ -9,8 +9,8 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
@@ -30,6 +30,8 @@ import com.shiro.PrincipalImpl;
  * Settings | File Templates.
  */
 public class CampaignTrackingFilter implements Filter {
+
+    private static final String PING_URL = "http://www.healthkart.com/hello.jsp";
 
     private static Logger logger = LoggerFactory.getLogger(CampaignTrackingFilter.class);
 
@@ -51,7 +53,15 @@ public class CampaignTrackingFilter implements Filter {
             chain.doFilter(request, response);
             return;
         }
+        
         HttpServletRequest httpRequest = (HttpServletRequest) request;
+        
+        String requestURL = httpRequest.getRequestURL().toString();
+        
+        if(requestURL.equals(PING_URL)){
+            return ;
+        }
+        
         String utm_source = httpRequest.getParameter(HttpRequestAndSessionConstants.UTM_SOURCE);
         String utm_campaign = httpRequest.getParameter(HttpRequestAndSessionConstants.UTM_CAMPAIGN);
         String utm_medium = httpRequest.getParameter(HttpRequestAndSessionConstants.UTM_MEDIUM);

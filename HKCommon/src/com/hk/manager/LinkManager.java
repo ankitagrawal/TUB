@@ -1,19 +1,22 @@
 package com.hk.manager;
 
+import java.util.Locale;
+
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.util.ssl.SslUtil;
+
+import org.springframework.stereotype.Component;
+
 import com.hk.domain.TempToken;
 import com.hk.domain.Ticket;
 import com.hk.domain.accounting.AccountingInvoice;
+import com.hk.domain.catalog.product.Product;
 import com.hk.domain.email.EmailRecepient;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.User;
 import com.hk.web.AppConstants;
 import com.hk.web.filter.WebContext;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.util.ssl.SslUtil;
-import org.springframework.stereotype.Component;
-
-import java.util.Locale;
 
 @Component
 public class LinkManager {
@@ -108,21 +111,67 @@ public class LinkManager {
         RedirectResolution redirectResolution = new RedirectResolution("/core/user/PasswordReset.action").addParameter("token", token.getToken());
         return getUrlFromResolution(redirectResolution);
     }
+
     public String getCitrusPaymentNetBankingGatewayUrl() {
         RedirectResolution redirectResolution = new RedirectResolution("/core/payment/gateway/CitrusNetbankingSendReceive.action");
         return getUrlFromResolution(redirectResolution);
     }
+
     public String getCitrusPaymentGatewayUrl() {
         RedirectResolution redirectResolution = new RedirectResolution("/core/payment/gateway/CitrusGatewaySendReceive.action");
         return getUrlFromResolution(redirectResolution);
     }
+
     public String getCitrusPaymentCreditDebitGatewayUrl() {
         RedirectResolution redirectResolution = new RedirectResolution("/core/payment/gateway/CitrusCreditDebitSendReceive.action");
         return getUrlFromResolution(redirectResolution);
     }
 
     public String getEbsPaymentGatewayReturnUrl() {
-        RedirectResolution redirectResolution = new RedirectResolution("/core/payment/test/EbsSendReceive.action");
+        RedirectResolution redirectResolution = new RedirectResolution("/core/payment/gateway/EbsSendReceive.action");
         return getUrlFromResolution(redirectResolution);
+    }
+
+    public String getRelativeProductURL(Product product, Long productReferrerId) {
+        String productURL = null;
+        String productSlug = product.getSlug();
+        String productId = product.getId();
+        // commented to stop internal product tagging
+        // productURL = "/product/" + productSlug + "/" + productId + "?productReferrerId=" + productReferrerId;
+        productURL = "/product/" + productSlug + "/" + productId;
+        /*
+         * RedirectResolution redirectResolution = new RedirectResolution(ProductAction.class). addParameter("referrer",
+         * referrerId). addParameter("productId", productId).addParameter("productSlug", productSlug); return
+         * getUrlFromResolution(redirectResolution);
+         */
+
+        /*
+         * RedirectResolution redirectResolution = new RedirectResolution("/core/catalog/product/Product.action").
+         * addParameter("productId", productId).addParameter("productSlug", productSlug); return
+         * getUrlFromResolution(redirectResolution);
+         */
+        return productURL;
+    }
+
+    public String getProductURL(Product product, Long productReferrerId) {
+
+        String productURL = null;
+        String productSlug = product.getSlug();
+        String productId = product.getId();
+        productURL = "/product/" + productSlug + "/" + productId;
+
+        RedirectResolution redirectResolution = new RedirectResolution(productURL);
+        if(productReferrerId !=null && productReferrerId !=0){
+            redirectResolution.addParameter("productReferrerId", productReferrerId);
+        }
+        
+        return getUrlFromResolution(redirectResolution);
+
+        /*
+         * RedirectResolution redirectResolution = new RedirectResolution(ProductAction.class). addParameter("referrer",
+         * referrerId). addParameter("productId", productId).addParameter("productSlug", productSlug); return
+         * getUrlFromResolution(redirectResolution);
+         */
+
     }
 }

@@ -1,13 +1,17 @@
 package com.hk.admin.impl.service.courier;
 
-import com.hk.admin.pact.dao.courier.CityCourierTATDao;
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hk.admin.pact.dao.courier.CourierDao;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.service.courier.CourierService;
-import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.core.Pincode;
-import com.hk.domain.courier.CityCourierTAT;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.domain.order.Order;
@@ -15,13 +19,6 @@ import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.core.PincodeService;
 import com.hk.pact.service.payment.PaymentService;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
 
 @Service
 public class CourierServiceImpl implements CourierService {
@@ -81,80 +78,12 @@ public class CourierServiceImpl implements CourierService {
         return getCourierServiceInfoDao().getCouriersForPincode(pinCode, isCOD);
     }
 
-    public Courier getSuggestedCourierService(String pincode, boolean isCOD) {
-
-/*
-        Pincode pincodeObj = getPincodeService().getByPincode(pincode);
-        if (pincodeObj != null) {
-            Courier courier;
-            if (pincode.startsWith("122")) { // Gurgaon
-                courier = getCourierById(EnumCourier.Delhivery.getId());
-                return courier;
-            } else if (pincode.startsWith("110")) { // New Delhi
-                Integer random = (new Random()).nextInt(100);
-                if (random % 2 == 0) {
-                    courier = getCourierById(EnumCourier.Chhotu.getId());
-                } else {
-                    courier = getCourierById(EnumCourier.Delhivery.getId());
-                }
-                return courier;
-            } else if (pincode.startsWith("2013")) { // Noida
-                courier = getCourierById(EnumCourier.Delhivery.getId());
-                return courier;
-            } else {
-                Courier stateCourier = getCourierDao().getPreferredCourierForState(pincodeObj.getState());
-                if (stateCourier != null) {
-                    CourierServiceInfo courierServiceInfo = getCourierServiceInfoDao().getCourierServiceByPincodeAndCourier(stateCourier.getId(), pincode, isCOD);
-                    if (courierServiceInfo != null) {
-                        return stateCourier;
-                    } else {
-                        return selectCourierViaRoundRobin(pincode, isCOD);
-                    }
-                } else {
-                    return selectCourierViaRoundRobin(pincode, isCOD);
-                }
-            }
-        }
-*/
-        return null;
-    }
-
-    private Courier selectCourierViaRoundRobin(String pinCode, boolean isCod) {
-        // List<Courier> courierList = getCourierDao().listRestOfIndiaAvailableCouriers();
-
-        Courier dtdcPlus = getCourierById(EnumCourier.DTDC_Plus.getId());
-        Courier dtdcLite = getCourierById(EnumCourier.DTDC_Lite.getId());
-
-        List<Courier> applicableCourierList = this.getAvailableCouriers(pinCode, isCod);
-
-        if (applicableCourierList != null && !applicableCourierList.isEmpty()) {
-            Integer random = (new Random()).nextInt(applicableCourierList.size());
-            Courier serviceProviderCourier = applicableCourierList.get(random);
-            if (isCod) {
-                if (serviceProviderCourier.equals(dtdcPlus) || serviceProviderCourier.equals(dtdcLite)) {
-                    return getCourierById(EnumCourier.DTDC_COD.getId());
-                } else if (serviceProviderCourier.equals(getCourierById(EnumCourier.BlueDart.getId()))) {
-                    return getCourierById(EnumCourier.BlueDart_COD.getId());
-                } else {
-                    return serviceProviderCourier; // AFLWIz COD
-                }
-            } else {
-                if (serviceProviderCourier.equals(dtdcPlus) || serviceProviderCourier.equals(dtdcLite)) {
-                    if (applicableCourierList.contains(dtdcPlus)) {
-                        return dtdcPlus;
-                    } else {
-                        return dtdcLite;
-                    }
-                } else {
-                    return serviceProviderCourier;
-                }
-            }
-        }
-        return getCourierById(EnumCourier.Speedpost.getId());
-    }
-
-    public Courier getDefaultCourierByPincodeAndWarehouse(Pincode pincode, boolean isCOD) {
+    public Courier getDefaultCourierByPincodeForLoggedInWarehouse(Pincode pincode, boolean isCOD) {
         Warehouse warehouse = getUserService().getWarehouseForLoggedInUser();
+        return getCourierServiceInfoDao().getDefaultCourierForPincode(pincode, isCOD, warehouse);
+    }
+
+    public Courier getDefaultCourier(Pincode pincode, boolean isCOD, Warehouse warehouse) {
         return getCourierServiceInfoDao().getDefaultCourierForPincode(pincode, isCOD, warehouse);
     }
 

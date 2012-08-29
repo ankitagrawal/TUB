@@ -10,4 +10,5 @@ import com.hk.pact.dao.BaseDao;
 public interface UserProfileDao extends BaseDao{
 
     public List<Order> getOrdersForUserSortedByDate(List<OrderStatus> orderStatusList, User user);
+
 }

@@ -222,6 +222,17 @@ img.prod320 {
     margin: 0 auto;
 }
 
+.img180 {
+    height:180px;
+    width:180px;
+    margin: auto auto;
+}
+
+.img180 img {
+    display: block;
+    margin: 0 auto;
+}
+
 /* line 172, ../sass/_base.scss */
 .img128 {
     height: 128px;
@@ -1505,7 +1516,7 @@ span.error {
     width: 960px;
     margin-left: auto;
     margin-right: auto;
-    font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
+    font-family:"Helvetica Neue",Helvetica, Arial, sans-serif;
     padding-bottom: 250px;
     /*border-left: 1px solid #f0f0f0;
  border-right: 1px solid #f0f0f0;*/
@@ -2088,13 +2099,13 @@ h3 a.prod_link {
 .catalog .controls .per {
     text-align: right;
     float: right;
-    font-size: 0.8em;
+    font-size: 0.9em;
 }
 
 .catalog .controls .per .per_page {
     border: 0;
-    font-size: 0.8em;
-}
+    font-size: 0.9em;
+}                                                                    img170
 
 .catalog .controls .per .active {
     font-weight: bold;

@@ -1,5 +1,17 @@
 package com.hk.web.action.core.payment.gateway;
 
+import java.util.Properties;
+
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
+
+import org.apache.commons.lang.math.NumberUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.akube.framework.stripes.action.BasePaymentGatewaySendReceiveAction;
 import com.akube.framework.util.BaseUtils;
@@ -18,16 +30,6 @@ import com.hk.pact.dao.payment.PaymentDao;
 import com.hk.web.AppConstants;
 import com.hk.web.action.core.payment.PaymentFailAction;
 import com.hk.web.action.core.payment.PaymentSuccessAction;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import org.apache.commons.lang.math.NumberUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.util.Properties;
 
 @Component
 public class CitrusNetbankingSendReceiveAction extends BasePaymentGatewaySendReceiveAction<CitrusPaymentGatewayWrapper> {
@@ -71,15 +73,10 @@ public class CitrusNetbankingSendReceiveAction extends BasePaymentGatewaySendRec
         cust.setPhoneNumber(address.getPhone());
 
         com.citruspay.pg.model.Address addressDummy = new com.citruspay.pg.model.Address();
-        addressDummy.setAddressCity("PUNE");
-        addressDummy.setAddressCountry("India");
-        addressDummy.setAddressState("MH");
-        addressDummy.setAddressStreet1("Test");
-        addressDummy.setAddressStreet2("Test");
-        addressDummy.setAddressZip("411045");
 
         params.put(CitrusPaymentGatewayWrapper.merchantAccessKey, properties.get(CitrusPaymentGatewayWrapper.merchantAccessKey));
-        params.put("bankName", "ICICI Bank");
+//        params.put("bankName", "ICICI Bank");
+        params.put("issuerCode", data.getPaymentMethod());
         params.put(CitrusPaymentGatewayWrapper.transactionId, merchantTxnId);
         params.put(CitrusPaymentGatewayWrapper.amount, amountStr);
         params.put(CitrusPaymentGatewayWrapper.returnUrl, linkManager.getCitrusPaymentNetBankingGatewayUrl());

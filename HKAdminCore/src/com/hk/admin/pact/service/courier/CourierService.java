@@ -1,16 +1,17 @@
 package com.hk.admin.pact.service.courier;
 
+import java.util.List;
+
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.domain.order.Order;
-
-import java.util.List;
+import com.hk.domain.warehouse.Warehouse;
 
 public interface CourierService {
 
     public List<Courier> getAllCouriers();
-    
+
     public Courier getCourierById(Long courierId);
     
     public Courier getCourierByName(String name);
@@ -27,9 +28,9 @@ public interface CourierService {
 
     public List<Courier> getAvailableCouriers(String pinCode, boolean isCOD);
 
-    public Courier getSuggestedCourierService(String pincode, boolean isCOD);
+    public Courier getDefaultCourierByPincodeForLoggedInWarehouse(Pincode pincode, boolean isCOD);
 
-    public Courier getDefaultCourierByPincodeAndWarehouse(Pincode pincode, boolean isCOD);
+    public Courier getDefaultCourier(Pincode pincode, boolean isCOD, Warehouse warehouse);
 
 
 

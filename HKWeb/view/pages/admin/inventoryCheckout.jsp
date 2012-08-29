@@ -45,7 +45,7 @@
     <s:hidden name="wronglyPickedBox" id="wronglyPickedBox" />
     <s:hidden name="earlierExpiryDate" id="earlierExpiryDate" />
     <s:hidden name="earlierMfgDate" id="earlierMfgDate" />
-    <s:hidden name="earlierCreationDate" id="earlierCreationDate" />  
+    <s:hidden name="earlierCreationDate" id="earlierCreationDate" />
     </s:form>
     <c:choose>
         <c:when test="${! hk:allItemsCheckedOut(icBean.shippingOrder)}">
@@ -60,7 +60,7 @@
         </c:otherwise>
       </c:choose>
     <div style="display:inline;float:left;">
-      
+
       <c:choose><c:when test="${empty icBean.skuGroups}">
         <c:choose>
           <c:when test="${icBean.upc == null}">
@@ -107,9 +107,9 @@
             <s:hidden name="shippingOrder" value="${icBean.shippingOrder.id}"/>
             <s:hidden name="upc" value="${icBean.upc}"/>
             <s:hidden name="lineItem" value="${icBean.lineItem.id}"/>
-            <%--<h2>Select from the following In-stock Batches</h2>--%>
             <br/>
-            <h2 style="color:blue">${icBean.productVariant.product.name} - ${icBean.productVariant.id}</h2>
+            <strong style="color:blue">${icBean.productVariant.product.name} - ${icBean.productVariant.id}
+			<br/>MRP=${icBean.productVariant.markedPrice}</strong>
             <table>
               <thead>
               <tr>
@@ -119,14 +119,22 @@
                 <th>Batch No.</th>
                 <th>Mfg. Date</th>
                 <th>Expiry Date</th>
-                <th>Checkin Date</th>
-                <th>VariantID</th>
-                <th>In-stock Units</th>
+                <th>MRP</th>
+                <th>Inv.</th>
+                <th></th>
               </tr>
               </thead>
               <c:forEach items="${icBean.skuGroups}" var="skuGroup" varStatus="ctr">
                 <c:set var="productVariant" value="${skuGroup.sku.productVariant}"/>
-                <tr>
+	              <c:choose>
+		              <c:when test="${productVariant.markedPrice > skuGroup.mrp}">
+			           <tr style="background:lightpink">
+		              </c:when>
+		              <c:otherwise>
+			          <tr>
+		              </c:otherwise>
+	              </c:choose>
+
                   <td>
                     <c:choose>
                       <c:when test="${ctr.index == 0}">
@@ -142,9 +150,15 @@
                   <td>${skuGroup.batchNumber}</td>
                   <td><fmt:formatDate value="${skuGroup.mfgDate}" pattern="yyyy-MM-dd"/></td>
                   <td><fmt:formatDate value="${skuGroup.expiryDate}" pattern="yyyy-MM-dd"/></td>
-                  <td><fmt:formatDate value="${skuGroup.createDate}" pattern="yyyy-MM-dd"/></td>
-                  <td>${productVariant.id}</td>
+                  <td>${skuGroup.mrp}</td>
                   <td>${fn:length(hk:getInStockSkuItems(skuGroup))}</td>
+	              <td>
+		              <s:link beanclass="com.hk.web.action.admin.inventory.SkuGroupAction">
+			              <s:param name="gatewayOrderId" value="${icBean.shippingOrder.gatewayOrderId}"/>
+			              <s:param name="skuGroup" value="${skuGroup.id}"/>
+			              <img src="${pageContext.request.contextPath}/images/edit.gif" alt="Edit Batch"/>
+		              </s:link>
+	              </td>
                 </tr>
               </c:forEach>
               <tfoot style="border-top:1px solid gray">

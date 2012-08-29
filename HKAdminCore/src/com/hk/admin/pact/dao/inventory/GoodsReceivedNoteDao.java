@@ -22,8 +22,11 @@ public interface GoodsReceivedNoteDao extends BaseDao {
     public Page searchGRN(GoodsReceivedNote grn, GrnStatus grnStatus, String invoiceNumber, String tinNumber, String supplierName, Boolean isReconciled, Warehouse warehouse,
             int pageNo, int perPage);
 
+    public List<GoodsReceivedNote> searchGRN(GoodsReceivedNote grn, GrnStatus grnStatus, String invoiceNumber, String tinNumber, String supplierName, Boolean isReconciled,
+                                                 Warehouse warehouse);
+
     public List<GoodsReceivedNote> listGRNsIncludingStatus(List<Long> grnStatusList);
 
-    public List<GoodsReceivedNote> listGRNsExcludingStatusInTimeFrame(Long grnStatusValue, Date startDate, Date endDate, Warehouse warehouse);
+    public List<GoodsReceivedNote> listGRNsExcludingStatusInTimeFrame(Long grnStatusValue, Date startDate, Date endDate, Warehouse warehouse, Boolean reconciled);
 
 }

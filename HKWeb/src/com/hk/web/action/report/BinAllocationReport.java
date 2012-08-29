@@ -1,5 +1,32 @@
 package com.hk.web.action.report;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.manager.BinManager;
 import com.hk.admin.pact.dao.inventory.GrnLineItemDao;
@@ -17,20 +44,6 @@ import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.util.io.HkXlsWriter;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -162,7 +175,7 @@ public class BinAllocationReport extends BaseAction {
         Double mrp = reconciliationVoucherDao.getRvLineItem(skugroup.getReconciliationVoucher(), skugroup.getSku()).getMrp();
         markedPrice = Double.toString(mrp);
       } else if (skugroup.getStockTransfer() != null) {
-        Double mrp = stockTransferDao.getStockTransferLineItem(skugroup.getStockTransfer(), productVariant).getMrp();
+        Double mrp = stockTransferDao.getStockTransferLineItem(skugroup.getStockTransfer(), productVariant, skugroup.getBatchNumber()).getMrp();
         markedPrice = Double.toString(mrp);
       } else {
         markedPrice = Double.toString(skugroup.getSku().getProductVariant().getMarkedPrice());

@@ -223,66 +223,6 @@ public class ReportManager {
   }
 
   public File generateSalesReportXslForBusy(String xslFilePath, Date startDate, Date endDate) throws Exception {
-
-    /*
-    * File file = new File(xslFilePath); FileOutputStream out = new FileOutputStream(file); Workbook wb = new
-    * HSSFWorkbook(); CellStyle style = wb.createCellStyle(); Font font = wb.createFont();
-    * font.setFontHeightInPoints((short) 11); font.setColor(Font.COLOR_NORMAL);
-    * font.setBoldweight(Font.BOLDWEIGHT_BOLD); style.setFont(font); Sheet sheet1 = wb.createSheet("Sales for
-    * Busy"); Row row = sheet1.createRow(0); row.setHeightInPoints((short) 30); SimpleDateFormat sdf = new
-    * SimpleDateFormat("dd/MM/yyyy"); int totalColumnNo = 30; int columnmCtr = 0; Cell cell; for (int columnNo = 0;
-    * columnNo < totalColumnNo; columnNo++) { cell = row.createCell(columnNo); cell.setCellStyle(style); }
-    * setCellValue(row, 0, PAYMENT_MODE); setCellValue(row, 1, INVOICE_DATE); setCellValue(row, 2, INVOICE_ID);
-    * setCellValue(row, 3, SALES_TYPE); setCellValue(row, 4, NAME); setCellValue(row, 5, MAIN_STORE);
-    * setCellValue(row, 6, ADDRESS); setCellValue(row, 7, COURIER); setCellValue(row, 8, AWB); setCellValue(row, 9,
-    * CITY); setCellValue(row, 10, ITEM_NAME); setCellValue(row, 11, QTY); setCellValue(row, 12, UNIT);
-    * setCellValue(row, 13, RATE); setCellValue(row, 14, AMOUNT); setCellValue(row, 15, SHIPPING);
-    * setCellValue(row, 16, SHIPPING_CHARGE); int rowCounter = 1; List<AccountingInvoice> orderList =
-    * accountingInvoiceDaoProvider.get().findAccountingInvoicesForTimeFrame(startDate, endDate);
-    * System.out.println("orderList: " + orderList.size()); List<LineItemStatus> applicableLineItemStatus = new
-    * ArrayList<LineItemStatus>();
-    * applicableLineItemStatus.add(lineItemStatusDao.find(EnumLineItemStatus.PACKED.getId()));
-    * applicableLineItemStatus.add(lineItemStatusDao.find(EnumLineItemStatus.SHIPPED.getId()));
-    * applicableLineItemStatus.add(lineItemStatusDao.find(EnumLineItemStatus.DELIVERED.getId())); for
-    * (AccountingInvoice accountingInvoice : orderList) { Order order = accountingInvoice.getOrder(); List<LineItem>
-    * lineItems = new ArrayList<LineItem>(); for (InvoiceLineItem invoiceLineItem :
-    * accountingInvoice.getInvoiceLineItems()) { lineItems.add(invoiceLineItem.getLineItem()); } if
-    * (lineItems.isEmpty()) { lineItems = order.getLineItems(); } boolean sameOrder = false; for (LineItem lineItem :
-    * lineItems) { if (lineItem.getLineItemType().equals(lineItemTypeDao.find(EnumLineItemType.Product.getId())) &&
-    * applicableLineItemStatus.contains(lineItem.getLineItemStatus())) { rowCounter++; row =
-    * sheet1.createRow(rowCounter); for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) { cell =
-    * row.createCell(columnNo); } if (!sameOrder) { PaymentMode paymentMode = order.getPayment().getPaymentMode();
-    * String paymentModeString = BANK_DEPO; String party = DEBTORS_BANK_DEPOSIT_OTHERS; if (paymentMode != null &&
-    * (paymentMode.equals(paymentModeDao.find(EnumPaymentMode.TECHPROCESS.getId())) ||
-    * paymentMode.equals(paymentModeDao.find(EnumPaymentMode.CITRUS.getId()))) && lineItem.getCourier() != null) {
-    * paymentModeString = TECH_PROC; party = DEBTORS_TECHPROCESS; } else if (paymentMode != null &&
-    * paymentMode.equals(paymentModeDao.find(EnumPaymentMode.COD.getId())) && lineItem.getCourier() != null) {
-    * paymentModeString = COD; party = DEBTORS_COD; } else if (paymentMode != null &&
-    * paymentMode.equals(paymentModeDao.find(EnumPaymentMode.CashDeposit.getId())) && lineItem.getCourier() !=
-    * null) { paymentModeString = BANK_DEPO; party = DEBTORS_BANK_DEPOSIT_CASH; } else if (paymentMode != null &&
-    * paymentMode.equals(paymentModeDao.find(EnumPaymentMode.COUNTER_CASH.getId())) && lineItem.getCourier() !=
-    * null) { paymentModeString = COUNTER_CASH; party = DEBTORS_COUNTER_CASH; } setCellValue(row, 0,
-    * paymentModeString); setCellValue(row, 1, sdf.format(accountingInvoice.getInvoiceDate())); setCellValue(row,
-    * 2, "R-" + accountingInvoice.getRetailInvoiceId()); if (order.getAddress().getState() != null) { if
-    * (order.getAddress().getState().equalsIgnoreCase("haryana") ||
-    * order.getAddress().getState().equalsIgnoreCase("hr")) { setCellValue(row, 3, "VAT/TaxIncl.(R)"); } else {
-    * setCellValue(row, 3, "CST/TaxIncl."); } } setCellValue(row, 4, party); setCellValue(row, 5, "Main Store");
-    * setCellValue(row, 6, order.getAddress().getLine1() + ", " + order.getAddress().getLine2()); setCellValue(row,
-    * 7, lineItem.getCourier().getName()); setCellValue(row, 8, lineItem.getTrackingId()); setCellValue(row, 9,
-    * order.getAddress().getCity()); setCellValue(row, 15, "Freight & Forwarding Charges"); Double freight = 0D;
-    * List<LineItem> shippingLineItem = order.getLineItems(EnumLineItemType.Shipping); if (shippingLineItem !=
-    * null && !order.getLineItems(EnumLineItemType.Shipping).isEmpty()) { freight +=
-    * shippingLineItem.get(0).getHkPrice() - shippingLineItem.get(0).getDiscountOnHkPrice(); } List<LineItem>
-    * codLineItem = order.getLineItems(EnumLineItemType.CodCharges); if (codLineItem != null &&
-    * !order.getLineItems(EnumLineItemType.CodCharges).isEmpty()) { freight += codLineItem.get(0).getHkPrice() -
-    * codLineItem.get(0).getDiscountOnHkPrice(); } setCellValue(row, 16, freight); sameOrder = true; }
-    * setCellValue(row, 10, lineItem.getProductVariant().getId()); setCellValue(row, 11, lineItem.getQty());
-    * setCellValue(row, 12, "Nos."); Double netPreDiscount = lineItem.getHkPrice() * lineItem.getQty(); Double
-    * discount = orderManagerProvider.get().getNetDiscountOnLineItem(lineItem); Double netPostDiscount =
-    * netPreDiscount - discount; setCellValue(row, 13, netPostDiscount / lineItem.getQty()); setCellValue(row, 14,
-    * netPostDiscount); } } } wb.write(out); out.close(); return file;
-    */
-
     return null;
   }
 
@@ -410,7 +350,11 @@ public class ReportManager {
               }
               Shipment shipment = order.getShipment();
               Address address = order.getBaseOrder().getAddress();
-              setCellValue(row, 0, shipment.getTrackingId());
+              String trackingId=null;
+              if(shipment.getAwb() != null){
+                trackingId= shipment.getAwb().getAwbNumber(); 
+              }
+              setCellValue(row, 0, trackingId);
               setCellValue(row, 1, order.getGatewayOrderId());
               setCellValue(row, 2, address.getName());
               setCellValue(row, 3, address.getName());
@@ -534,9 +478,11 @@ public class ReportManager {
       /**
        * Realted changed for Partial Escalation
        */
-      Address address = order.getBaseOrder().getAddress();
-      Shipment shipment = order.getShipment();
-      setCellValue(row, 0, shipment.getTrackingId());
+        Address address = order.getBaseOrder().getAddress();
+        Shipment shipment = order.getShipment();
+        if (shipment != null && shipment.getAwb() != null) {
+            setCellValue(row, 0, shipment.getAwb().getAwbNumber());
+        }
       setCellValue(row, 1, order.getGatewayOrderId());
       setCellValue(row, 2, "AQUAMARINE HEALTHCARE");
       setCellValue(row, 3, address.getName());
@@ -927,9 +873,11 @@ public class ReportManager {
       Shipment shipment = shippingOrder.getShipment();
       days_to_deliver = 0;
       rowCounter++;
-      xlsWriter.addCell(rowCounter, shippingOrder.getId());
-      xlsWriter.addCell(rowCounter, shipment.getTrackingId());
-      xlsWriter.addCell(rowCounter, shipment.getCourier().getName());
+        xlsWriter.addCell(rowCounter, shippingOrder.getId());
+        if (shipment != null && shipment.getAwb() != null) {
+            xlsWriter.addCell(rowCounter, shipment.getAwb().getAwbNumber());
+        }
+        xlsWriter.addCell(rowCounter, shipment.getCourier().getName());
       xlsWriter.addCell(rowCounter, shippingOrder.getWarehouse().getName());
       xlsWriter.addCell(rowCounter, shipment.getShipDate().toString());
       xlsWriter.addCell(rowCounter, shipment.getDeliveryDate().toString());

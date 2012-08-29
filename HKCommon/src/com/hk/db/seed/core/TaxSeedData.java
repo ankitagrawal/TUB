@@ -1,11 +1,12 @@
 package com.hk.db.seed.core;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.hk.constants.core.EnumTax;
 import com.hk.db.seed.BaseSeedData;
 import com.hk.domain.core.Tax;
 import com.hk.pact.dao.TaxDao;
-import org.springframework.stereotype.Component;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Component
 public class TaxSeedData extends BaseSeedData {

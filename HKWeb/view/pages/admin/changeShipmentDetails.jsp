@@ -34,6 +34,29 @@
           <%--});--%>
         <%--</script>--%>
 
+      <script type="text/javascript">
+          $(document).ready(function() {
+
+              $('.button').click(function(event) {
+                  var tracking = $("#trackingId").val();
+                  if (tracking == "" || tracking == null) {
+                       $('.error').html("");
+                      $('.error').append("Enter Tracking Id");
+                      $('.error').show();
+                      return false;
+                  }
+                  if (tracking.length > 20) {
+                      $('.error').html("");
+                      $('.error').append(" Tracking Id length can not be greater than 20");
+                      $('.error').show();
+                      return false;
+                  }
+
+              });
+
+          });
+
+      </script>
 
     <style type="text/css">
       .text {
@@ -52,13 +75,16 @@
 
   </s:layout-component>
   <s:layout-component name="content">
+      <div  class="error" style= "background-color:salmon; width:380px; display:none;">
+
+    </div>
     <div>
       <div style="float: left; width:40%">
         <s:form beanclass="com.hk.web.action.admin.shipment.ChangeShipmentDetailsAction">
           <fieldset class="top_label">
             <legend> Search Shipping Order</legend>
             <s:label name="gatewayOrderId" class="label">Gateway Order Id</s:label>
-            <s:text name="gatewayOrderId" style="width:200px" class="text"/> <br/>
+            <s:text name="gatewayOrderId" style="width:170px" class="text"/> <br/>
 
             <div class="clear"></div>
             <div style="margin-top:15px;"></div>
@@ -72,7 +98,8 @@
       <div style="margin-top:40px;"></div>
       <div style="float: left; width:40%">
         <c:if test="${csda.visible == true}">
-          <s:form beanclass="com.hk.web.action.admin.shipment.ChangeShipmentDetailsAction" id="newFormForAWB">
+            <s:form beanclass="com.hk.web.action.admin.shipment.ChangeShipmentDetailsAction" id="newFormForAWB">
+                <s:hidden name="attachedCourier" value="${csda.shipment.courier}"/>
             <fieldset>
               <legend> Edit Courier Or Tracking Id</legend>
 
@@ -88,21 +115,22 @@
               </s:select>
 
               <div class="clear"></div>
-
-              <s:label name="trackingId" class="label">Tracking Id</s:label>
-              <s:text name="shipment.trackingId" id="trackingId" value="${csda.shipment.trackingId}" style="width:170px"
+                <%--//todo ps need to rethink--%>
+              <!--TO DO we will change it later on change --  -->
+              <s:label name="trackingId" class="label">Tracking Id</s:label>               
+              <s:text name="trackingId" id="trackingId" value="${csda.shipment.awb.awbNumber}" style="width:170px"
                       class="text fields"/>
 
               <div class="clear"></div>
 
               <s:label name="Delivery Date" class="label"/>
-              <s:text name="shipment.deliveryDate" class="date_input startDate text fields" style="width:170px"
+              <s:text name="shipment.deliveryDate" class="date_input startDate text fields" style="width:160px"
                       id="deliveryDate" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"/>
 
               <div class="clear"></div>
 
               <s:label name="returnDate" class="label">Return Date</s:label>
-              <s:text name="shipment.returnDate" class="date_input startDate text fields" style="width:170px"
+              <s:text name="shipment.returnDate" class="date_input startDate text fields" style="width:160px"
                       id="returnDate" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"/>
 
               <div class="clear"></div>
@@ -121,7 +149,7 @@
               <s:hidden name="shippingOrder" value="shippingOrder"/>
               <s:hidden name="shipment" value="shipment"/>
               <s:hidden name="originalShippingOrderStatus" value="tempShippingOrderStatus"/>
-              <s:submit name="save" value="Save Changes" class="button"/>
+              <s:submit name="save" value="Save Changes"  id ="s"class="button"/>
             </fieldset>
           </s:form>
         </c:if>

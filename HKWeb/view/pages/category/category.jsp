@@ -23,6 +23,10 @@
     CategoryDao categoryDao = (CategoryDao)ServiceLocatorFactory.getService(CategoryDao.class);
     Category services = categoryDao.getCategoryByName("services");
     pageContext.setAttribute("services", services);
+    
+    boolean isSecure = pageContext.getRequest().isSecure();
+    pageContext.setAttribute("isSecure", isSecure);
+    
     MapIndiaDao mapIndiaDao = (MapIndiaDao)ServiceLocatorFactory.getService(MapIndiaDao.class);
     Cookie preferredZoneCookie = BaseUtils.getCookie(WebContext.getRequest(), HealthkartConstants.Cookie.preferredZone);
     if (preferredZoneCookie != null && preferredZoneCookie.getValue() != null) {
@@ -223,7 +227,7 @@
         </shiro:hasPermission>
 
         <div class="grid_24" style="width: 950px;">
-          <c:forEach var="product" items='${heading.productSortedByOrderRanking}'>
+          <c:forEach var="product" items='${hk:getCategoryHeadingProductsSortedByOrder(heading.id, categoryBean.category.name)}'>
             <div class="grid_4 alpha omega">
               <s:layout-render name="/layouts/embed/_productThumbG.jsp" product='${product}'/>
             </div>
@@ -254,8 +258,28 @@
 
   <div class="clear"></div>
 
-  <iframe
-      src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e200&catid=${categoryBean.category.name}&subcat1id=&subcat2id=&section=1&level=1"
-      scrolling="no" width="1" height="1" marginheight="0" marginwidth="0" frameborder="0"></iframe>
-</s:layout-component>
+<c:if test="${hk:isNotBlank(categoryBean.seoData.description)}">
+  <div style="margin-top: 45px; background-color: #FAFCFE; padding: 10px; float: none; clear: both;">
+    <h2><i>${categoryBean.seoData.descriptionTitle}</i>: </h2>
+      ${categoryBean.seoData.description}
+  </div>
+</c:if>
+		
+	<c:choose>
+		<c:when test="${not isSecure}">
+		</c:when>
+		<c:otherwise>
+			<iframe
+					src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e200&catid=${categoryBean.category.name}&subcat1id=&subcat2id=&section=1&level=1"
+					scrolling="no" width="1" height="1" marginheight="0" marginwidth="0"
+					frameborder="0"></iframe>
+		</c:otherwise>
+	</c:choose>
+		<%--<c:if test="${not isSecure }">
+			<iframe
+				src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e200&catid=${categoryBean.category.name}&subcat1id=&subcat2id=&section=1&level=1"
+				scrolling="no" width="1" height="1" marginheight="0" marginwidth="0"
+				frameborder="0"></iframe>
+		</c:if>--%>
+	</s:layout-component>
 </s:layout-render>

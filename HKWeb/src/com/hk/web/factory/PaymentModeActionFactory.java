@@ -4,10 +4,11 @@ package com.hk.web.factory;
 import com.akube.framework.stripes.action.BasePaymentGatewaySendReceiveAction;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.web.action.core.payment.CodGatewaySendReceiveAction;
+import com.hk.web.action.core.payment.TekprocessGatewaySendReceiveAction;
 import com.hk.web.action.core.payment.gateway.CitrusCreditDebitSendReceiveAction;
 import com.hk.web.action.core.payment.gateway.CitrusGatewaySendReceiveAction;
 import com.hk.web.action.core.payment.gateway.CitrusNetbankingSendReceiveAction;
-import com.hk.web.action.core.payment.TekprocessGatewaySendReceiveAction;
+import com.hk.web.action.core.payment.gateway.EbsSendReceiveAction;
 import com.hk.web.action.core.payment.gateway.test.CCAvenueDummyGatewaySendReceiveAction;
 import com.hk.web.action.core.payment.gateway.test.TekprocessTestGatewaySendReceiveAction;
 
@@ -24,12 +25,14 @@ public class PaymentModeActionFactory {
             return TekprocessGatewaySendReceiveAction.class;
         } else if (EnumPaymentMode.COD.getId().equals(enumPaymentMode.getId())) {
             return CodGatewaySendReceiveAction.class;
-        } else if (EnumPaymentMode.CITRUS.getId().equals(enumPaymentMode.getId())) {
+        } else if (EnumPaymentMode.CITRUS_NetBanking_Old.getId().equals(enumPaymentMode.getId())) {
             return CitrusGatewaySendReceiveAction.class;
         } else if (EnumPaymentMode.CITRUS_NetBanking_New.getId().equals(enumPaymentMode.getId())) {
             return CitrusNetbankingSendReceiveAction.class;
         } else if (EnumPaymentMode.CITRUS_CreditDebit.getId().equals(enumPaymentMode.getId())) {
             return CitrusCreditDebitSendReceiveAction.class;
+        } else if (EnumPaymentMode.EBS.getId().equals(enumPaymentMode.getId())) {
+            return EbsSendReceiveAction.class;
         } else {
             return null;
         }

@@ -1,6 +1,7 @@
 package com.hk.web.action.core.affiliate;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -39,10 +40,12 @@ public class VerifyAffiliateAction extends BasePaginatedAction {
     List<Affiliate>     unverifiedAffiliates = new ArrayList<Affiliate>();
     List<User>          affiliateUsersToVerify;
     String              customMessage;
+    String              name;
+    String              email;
 
     @DefaultHandler
     public Resolution pre() {
-        userPage = getUserService().findByRole(getRoleService().getRoleByName(RoleConstants.HK_AFFILIATE_UNVERIFIED), getPageNo(), getPerPage());
+        userPage = getUserService().findByRole(name, email,getRoleService().getRoleByName(RoleConstants.HK_AFFILIATE_UNVERIFIED), getPageNo(), getPerPage());
         unverifiedAffiliateUsers = userPage.getList();
         for (User user : unverifiedAffiliateUsers) {
             unverifiedAffiliates.add(affiliateDao.getAffilateByUser(user));
@@ -90,10 +93,13 @@ public class VerifyAffiliateAction extends BasePaginatedAction {
         this.customMessage = customMessage;
     }
 
-    public Set<String> getParamSet() {
-        return null;
-    }
 
+	public Set<String> getParamSet() {
+		HashSet<String> params = new HashSet<String>();
+		params.add("name");
+		params.add("email");
+		return params;
+	}
     public int getPerPageDefault() {
         return 20;
     }
@@ -114,4 +120,19 @@ public class VerifyAffiliateAction extends BasePaginatedAction {
         this.roleService = roleService;
     }
 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
 }

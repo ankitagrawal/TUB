@@ -16,70 +16,83 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import com.akube.framework.gson.JsonSkip;
+import com.hk.domain.order.ShippingOrder;
 
-@SuppressWarnings("serial")
+@SuppressWarnings ("serial")
 @Entity
-@Table(name = "shipment")
+@Table (name = "shipment")
 public class Shipment implements java.io.Serializable, Comparable<Shipment> {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "id", unique = true, nullable = false)
+	@GeneratedValue (strategy = GenerationType.AUTO)
+	@Column (name = "id", unique = true, nullable = false)
 	private Long id;
 
-	@JsonSkip
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "courier_id")
-  private Courier courier;
+    @JsonSkip
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "courier_id")
+    private Courier courier;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "box_size_id")
-	private BoxSize boxSize;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "awb_id")
+    private Awb awb;
 
-	@Column(name = "box_weight")
+    @JsonSkip
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "shipping_order_id")
+    private ShippingOrder shippingOrder;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "box_size_id")
+    private BoxSize boxSize;
+
+    @Column (name = "box_weight")
 	private Double boxWeight;
 
-	@Column(name = "tracking_id", length = 45)
-	private String trackingId;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "ship_date", length = 19)
+	@Temporal (TemporalType.TIMESTAMP)
+	@Column (name = "ship_date", length = 19)
 	private Date shipDate;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "delivery_date", length = 19)
+	@Temporal (TemporalType.TIMESTAMP)
+	@Column (name = "delivery_date", length = 19)
 	private Date deliveryDate;
 
-  @Temporal(TemporalType.TIMESTAMP)
-  @Column(name = "return_date", length = 19)
-  private Date returnDate;
+	@Temporal (TemporalType.TIMESTAMP)
+	@Column (name = "return_date", length = 19)
+	private Date returnDate;
 
-  @Column(name = "email_sent")
-  private Boolean isEmailSent;
+	@Column (name = "email_sent")
+	private Boolean isEmailSent;
 
-	@Column(name = "shipment_charge")
-  private Double shipmentCharge;
+	@Column (name = "shipment_charge")
+	private Double shipmentCharge;
 
-	@Column(name = "collection_charge")
-  private Double collectionCharge;
+	@Column (name = "collection_charge")
+	private Double collectionCharge;
 
-	@Column(name = "estm_shipment_charge")
-  private Double estmShipmentCharge;
+	@Column (name = "estm_shipment_charge")
+	private Double estmShipmentCharge;
 
-	@Column(name = "estm_collection_charge")
-  private Double estmCollectionCharge;
+	@Column (name = "estm_collection_charge")
+	private Double estmCollectionCharge;
 
-	@Column(name = "extra_charge")
-  private Double extraCharge;
+	@Column (name = "extra_charge")
+	private Double extraCharge;
 
-  @Transient
-  private String trackLink;
+	@Column (name = "picker")
+	private String picker;
+
+	@Column (name = "packer")
+	private String packer;
+
+	@Transient
+	private String trackLink;
 
 	public int compareTo(Shipment shipment) {
-    if (this.getId() < shipment.getId()) return -1;
-    if (this.getId() > shipment.getId()) return 1;
-    return 0;
-  }
+		if (this.getId() < shipment.getId()) return -1;
+		if (this.getId() > shipment.getId()) return 1;
+		return 0;
+	}
 
 	public Long getId() {
 		return id;
@@ -113,14 +126,6 @@ public class Shipment implements java.io.Serializable, Comparable<Shipment> {
 		this.boxWeight = boxWeight;
 	}
 
-	public String getTrackingId() {
-		return trackingId;
-	}
-
-	public void setTrackingId(String trackingId) {
-		this.trackingId = trackingId;
-	}
-
 	public Date getShipDate() {
 		return shipDate;
 	}
@@ -137,29 +142,29 @@ public class Shipment implements java.io.Serializable, Comparable<Shipment> {
 		this.deliveryDate = deliveryDate;
 	}
 
-  public String getTrackLink() {
-    return trackLink;
-  }
+	public String getTrackLink() {
+		return trackLink;
+	}
 
-  public void setTrackLink(String trackLink) {
-    this.trackLink = trackLink;
-  }
+	public void setTrackLink(String trackLink) {
+		this.trackLink = trackLink;
+	}
 
-  public Boolean isEmailSent() {
-    return isEmailSent;
-  }
+	public Boolean isEmailSent() {
+		return isEmailSent;
+	}
 
-  public void setEmailSent(Boolean emailSent) {
-    isEmailSent = emailSent;
-  }
+	public void setEmailSent(Boolean emailSent) {
+		isEmailSent = emailSent;
+	}
 
-  public Date getReturnDate() {
-    return returnDate;
-  }
+	public Date getReturnDate() {
+		return returnDate;
+	}
 
-  public void setReturnDate(Date returnDate) {
-    this.returnDate = returnDate;
-  }
+	public void setReturnDate(Date returnDate) {
+		this.returnDate = returnDate;
+	}
 
 	public Double getEstmShipmentCharge() {
 		return estmShipmentCharge;
@@ -201,8 +206,40 @@ public class Shipment implements java.io.Serializable, Comparable<Shipment> {
 		this.collectionCharge = collectionCharge;
 	}
 
-	@Override
-  public String toString() {
-    return id != null ? id.toString() : "";
-  }
+	public String getPicker() {
+		return picker;
+	}
+
+	public void setPicker(String picker) {
+		this.picker = picker;
+	}
+
+	public String getPacker() {
+		return packer;
+	}
+
+	public void setPacker(String packer) {
+		this.packer = packer;
+	}
+
+    public Awb getAwb() {
+        return awb;
+    }
+
+    public void setAwb(Awb awb) {
+        this.awb = awb;
+    }
+
+    public ShippingOrder getShippingOrder() {
+        return shippingOrder;
+    }
+
+    public void setShippingOrder(ShippingOrder shippingOrder) {
+        this.shippingOrder = shippingOrder;
+    }
+
+    @Override
+	public String toString() {
+		return id != null ? id.toString() : "";
+	}
 }

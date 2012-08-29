@@ -14,6 +14,7 @@ import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.util.BarcodeUtil;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.catalog.product.VariantConfig;
 import com.hk.domain.core.InvTxnType;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.GrnLineItem;
@@ -131,12 +132,13 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
         }
     }
 
-    public SkuGroup createSkuGroup(String batch, Date mfgDate, Date expiryDate, GoodsReceivedNote goodsReceivedNote, ReconciliationVoucher reconciliationVoucher,
-            StockTransfer stockTransfer, Sku sku) {
+    public SkuGroup createSkuGroup(String batch, Date mfgDate, Date expiryDate, Double costPrice, Double mrp, GoodsReceivedNote goodsReceivedNote, ReconciliationVoucher reconciliationVoucher, StockTransfer stockTransfer, Sku sku) {
         SkuGroup skuGroup = new SkuGroup();
         skuGroup.setBatchNumber(batch);
         skuGroup.setMfgDate(mfgDate);
         skuGroup.setExpiryDate(expiryDate);
+        skuGroup.setCostPrice(costPrice);
+        skuGroup.setMrp(mrp);
         skuGroup.setGoodsReceivedNote(goodsReceivedNote);
         skuGroup.setReconciliationVoucher(reconciliationVoucher);
         skuGroup.setStockTransfer(stockTransfer);
@@ -153,7 +155,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
     }
 
     public void createSkuItemsAndCheckinInventory(SkuGroup skuGroup, Long qty, LineItem lineItem, GrnLineItem grnLineItem, RvLineItem rvLineItem,
-            StockTransferLineItem stockTransferLineItem, InvTxnType invTxnType, User txnBy) {
+                                                  StockTransferLineItem stockTransferLineItem, InvTxnType invTxnType, User txnBy) {
         for (int i = 0; i < qty; i++) {
             SkuItem skuItem = new SkuItem();
             skuItem.setSkuGroup(skuGroup);
@@ -168,7 +170,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
     }
 
     public void inventoryCheckinCheckout(Sku sku, SkuItem skuItem, LineItem lineItem, ShippingOrder shippingOrder, GrnLineItem grnLineItem, RvLineItem rvLineItem,
-            StockTransferLineItem stockTransferLineItem, InvTxnType invTxnType, Long qty, User txnBy) {
+                                         StockTransferLineItem stockTransferLineItem, InvTxnType invTxnType, Long qty, User txnBy) {
         ProductVariantInventory pvi = new ProductVariantInventory();
         // pvi.setProductVariant(sku.getProductVariant());
         pvi.setSku(sku);
@@ -261,6 +263,11 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
         }
         return count;
     }
+
+
+     public List<VariantConfig> getAllVariantConfig(){
+         return getAdminPVIDao().getAllVariantConfig();
+     }
 
     public SkuGroup getSkuGroupByHkBarcode(String barcode) {
         return getSkuGroupDao().getSkuGroup(barcode);
@@ -369,7 +376,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
     public void setSkuGroupDao(SkuGroupDao skuGroupDao) {
         this.skuGroupDao = skuGroupDao;
     }
-    
-    
+
+
 
 }

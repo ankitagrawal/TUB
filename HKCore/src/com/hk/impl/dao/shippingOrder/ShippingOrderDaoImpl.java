@@ -27,11 +27,6 @@ public class ShippingOrderDaoImpl extends BaseDaoImpl implements ShippingOrderDa
         return get(ShippingOrder.class, shippingOrderId);
     }
 
-    public ShippingOrder findByTrackingId(String trackingId) {
-        String query = "select distinct so  from ShippingOrder so  where so.shipment.trackingId =:trackingId";
-        return (ShippingOrder) getSession().createQuery(query).setString("trackingId", trackingId).uniqueResult();
-    }
-
     public ShippingOrder findByGatewayOrderId(String gatewayOrderId) {
         return (ShippingOrder) getSession().createQuery("from ShippingOrder o where o.gatewayOrderId = :gatewayOrderId").setString("gatewayOrderId", gatewayOrderId).uniqueResult();
     }
@@ -62,38 +57,17 @@ public class ShippingOrderDaoImpl extends BaseDaoImpl implements ShippingOrderDa
         return (List<ShippingOrder>) shippingOrderListQuery.list();
     }
 
-    /*
-     * public Page<ShippingOrder> findShippingOrdersPageWithStatus(List<EnumOrderStatus> orderStatuses, boolean
-     * orderByDateAsc, int pageNo, int perPage) { Long totalOrders = getCountForShippingOrdersWithStatus(orderStatuses);
-     * List<ShippingOrder> ordersList = findShippingOrdersWithStatus(orderStatuses, orderByDateAsc, pageNo, perPage);
-     * if (ordersList.size() == 0) { return new Page<ShippingOrder>(new ArrayList<ShippingOrder>(0), perPage, pageNo,
-     * 0, 0); } return new Page<ShippingOrder>(ordersList, perPage, pageNo, ((totalOrders.intValue() - 1) / perPage +
-     * 1), totalOrders.intValue()); } private Long getCountForShippingOrdersWithStatus(List<EnumOrderStatus>
-     * orderStatuses) { List<Long> orderStatusList = EnumOrderStatus.getShippingOrderStatusIDs(orderStatuses); String
-     * hqlCountQuery = "select count(DISTINCT so.id) from ShippingOrder so where so.orderStatus.id in (:orderStatusList) ";
-     * Query countQuery = getSession().createQuery(hqlCountQuery). setParameterList("orderStatusList", orderStatusList);
-     * Long totalOrders = (Long) countQuery.uniqueResult(); return totalOrders; } private List<ShippingOrder>
-     * findShippingOrdersWithStatus(List<EnumOrderStatus> orderStatuses, boolean orderByDateAsc, int pageNo, int
-     * perPage) { List<Long> orderStatusList = EnumOrderStatus.getShippingOrderStatusIDs(orderStatuses); StringBuilder
-     * hqlQuery = new StringBuilder("select DISTINCT so from ShippingOrder so where so.orderStatus.id in(
-     * :orderStatusList)"); if (orderByDateAsc) { hqlQuery.append("order by so.baseOrder.payment.paymentDate asc "); }
-     * else { hqlQuery.append("order by so.baseOrder.payment.paymentDate desc "); } Query orderListQuery =
-     * getSession().createQuery(hqlQuery.toString()). setParameterList("orderStatusList", orderStatusList); if (pageNo >
-     * 0 && perPage > 0) { orderListQuery.setFirstResult((pageNo - 1) * perPage).setMaxResults(perPage); } List<ShippingOrder>
-     * ordersList = (List<ShippingOrder>) orderListQuery.list(); return ordersList; }
-     */
-
     public Long getBookedQtyOfSkuInQueue(List<Sku> skuList) {
-      Long qtyInQueue = 0L;
-      if(skuList != null && !skuList.isEmpty()){
-        String query = "select sum(li.qty) from LineItem li " + "where li.sku in (:skuList) " + "and li.shippingOrder.shippingOrderStatus.id in (:orderStatusIdList) ";
-        qtyInQueue = (Long) getSession().createQuery(query).setParameterList("skuList", skuList).setParameterList("orderStatusIdList",
-                EnumShippingOrderStatus.getShippingOrderStatusIDs(EnumShippingOrderStatus.getStatusForBookedInventory())).uniqueResult();
-        if (qtyInQueue == null) {
-            qtyInQueue = 0L;
+        Long qtyInQueue = 0L;
+        if (skuList != null && !skuList.isEmpty()) {
+            String query = "select sum(li.qty) from LineItem li " + "where li.sku in (:skuList) " + "and li.shippingOrder.shippingOrderStatus.id in (:orderStatusIdList) ";
+            qtyInQueue = (Long) getSession().createQuery(query).setParameterList("skuList", skuList).setParameterList("orderStatusIdList",
+                    EnumShippingOrderStatus.getShippingOrderStatusIDs(EnumShippingOrderStatus.getStatusForBookedInventory())).uniqueResult();
+            if (qtyInQueue == null) {
+                qtyInQueue = 0L;
+            }
         }
-      }
-      return qtyInQueue;
+        return qtyInQueue;
     }
 
     /**

@@ -1,20 +1,20 @@
 package com.hk.manager.payment;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+import java.util.StringTokenizer;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.akube.framework.service.PaymentGatewayWrapper;
 import com.akube.framework.util.BaseUtils;
 import com.ecs.epg.sfa.java.EPGCryptLib;
 import com.ecs.epg.sfa.java.EPGMerchantEncryptionLib;
 import com.hk.exception.HealthkartPaymentGatewayException;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-import java.util.StringTokenizer;
 
 public class CitrusPaymentGatewayWrapper extends BasePaymentGatewayWrapper<CitrusPaymentGatewayWrapper> implements PaymentGatewayWrapper {
 
@@ -49,6 +49,7 @@ public class CitrusPaymentGatewayWrapper extends BasePaymentGatewayWrapper<Citru
     public static String CurrCode = "CurrCode";
     public static String currency = "currency";
     public static String firstName = "firstName";
+    public static String lastName = "lastName";
     public static String phoneNumber = "phoneNumber";
     public static String returnUrl = "returnUrl";
     public static String reqtime = "reqtime";
