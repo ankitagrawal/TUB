@@ -165,7 +165,7 @@
 
             &nbsp; <span> <fmt:formatNumber value="${sp.subscriptionDiscount180Days}" maxFractionDigits="2"/>&#37; for <%=SubscriptionConstants.minSubscriptionDays%>-360 days and <fmt:formatNumber value="${sp.subscriptionDiscount360Days}" maxFractionDigits="2"/>&#37; for 360-<%=SubscriptionConstants.maxSubscriptionDays%> day plans. &nbsp; </span>
             <s:link beanclass="com.hk.web.action.core.subscription.AboutSubscriptionAction" event="pre" target="_blank">(click here) </s:link> to know more
-            <script type="text/javascript" src="<hk:vhostJs/>/js/jquery-ui.min.js"></script>
+            <%--<script type="text/javascript" src="<hk:vhostJs/>/js/jquery-ui.min.js"></script>--%>
             <script type="text/javascript">
 	            $(document).ready(function () {
 		            function _addSubscription(res) {

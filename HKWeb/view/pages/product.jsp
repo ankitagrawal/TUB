@@ -83,6 +83,7 @@
 
 	<link href="${pageContext.request.contextPath}/css/jquery.jqzoom.css" rel="stylesheet" type="text/css"/>
 	<script type="text/javascript" src="<hk:vhostJs/>/js/jquery.jqzoom-core.js"></script>
+	<script type="text/javascript" src="<hk:vhostJs/>/js/jquery-ui.min.js"></script>	
 
 	<script type="text/javascript">
 		$(document).ready(function () {
