@@ -20,7 +20,7 @@ import org.springframework.stereotype.Repository;
 public class SimilarProductsDaoImpl extends BaseDaoImpl implements SimilarProductsDao{
 
     public List<SimilarProduct> getSimProdsFromDB (Product inputProduct){
-      return (List<SimilarProduct>) findByNamedParams("from SimilarProduct sp where sp.product like :inputProduct", new String[] { "inputProduct" },
+      return (List<SimilarProduct>) findByNamedParams("from SimilarProduct sp where sp.product =  :inputProduct", new String[] { "inputProduct" },
                    new Object[] { inputProduct });
     }
 
