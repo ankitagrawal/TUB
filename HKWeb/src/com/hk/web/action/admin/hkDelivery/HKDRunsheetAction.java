@@ -6,6 +6,7 @@ import com.hk.admin.pact.dao.hkDelivery.RunSheetDao;
 import com.hk.admin.pact.service.hkDelivery.RunSheetService;
 import com.hk.domain.hkDelivery.*;
 import com.hk.domain.user.User;
+import com.hk.taglibs.Functions;
 import com.hk.util.CustomDateTypeConvertor;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.SimpleError;
@@ -65,6 +66,8 @@ public class HKDRunsheetAction extends BasePaginatedAction {
     private         List<Consignment>     runsheetConsignments;
     private         List<Consignment> changedConsignmentList = new ArrayList<Consignment>();
     private         List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>();
+
+    private         User                loggedOnUser;
     @Autowired
     ShippingOrderService                  shippingOrderService;
     @Autowired
@@ -91,6 +94,8 @@ public class HKDRunsheetAction extends BasePaginatedAction {
 
     @DefaultHandler
     public Resolution pre() {
+        loggedOnUser = getUserService().getUserById(getPrincipal().getId());
+        hub = hubService.getHubForUser(loggedOnUser);
         runsheetPage = runsheetService.searchRunsheet(runsheet, startDate, endDate, runsheetStatus, agent, hub, getPageNo(), getPerPage());
         runsheetList = runsheetPage.getList();
         return new ForwardResolution("/pages/admin/hkRunsheetList.jsp");
@@ -164,6 +169,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
     //Method to create Runsheet preview and do necessary validation for runsheet creation.
     public Resolution previewRunsheet() {
         //checking url-parameter to see if only jsp has to be displayed or runsheet preview has to be created.
+        loggedOnUser = getUserService().getUserById(getPrincipal().getId());
         if (!runsheetPreview) {
             trackingIdList = null;
             return new ForwardResolution("/pages/admin/hkDeliveryWorksheet.jsp");
@@ -251,7 +257,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
 
         Runsheet runsheetObj = null;
         Long prePaidBoxCount = null;
-        User loggedOnUser = null;
+        loggedOnUser = getUserService().getUserById(getPrincipal().getId());
         Hub deliveryHub = hubService.findHubByName(HKDeliveryConstants.DELIVERY_HUB);
         int totalPackets = 0;
         int totalCODPackets = 0;
@@ -499,5 +505,13 @@ public class HKDRunsheetAction extends BasePaginatedAction {
 
     public void setShippingOrderList(List<ShippingOrder> shippingOrderList) {
         this.shippingOrderList = shippingOrderList;
+    }
+
+    public User getLoggedOnUser() {
+        return loggedOnUser;
+    }
+
+    public void setLoggedOnUser(User loggedOnUser) {
+        this.loggedOnUser = loggedOnUser;
     }
 }

@@ -97,4 +97,6 @@ public class PermissionConstants {
 
     public static final String SEARCH_SUBSCRIPTIONS                  ="SEARCH_SUBSCRIPTIONS";
     public static final String UPDATE_SUBSCRIPTION                   ="UPDATE_SUBSCRIPTION";
+    public static final String SELECT_HUB                            ="SELECT_HUB";
+    public static final String VIEW_HUB                              ="VIEW_HUB";
 }

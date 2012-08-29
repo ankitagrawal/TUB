@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.hk.admin.pact.service.hkDelivery.HubService;
+import com.hk.domain.hkDelivery.Hub;
 import net.sourceforge.stripes.util.CryptoUtil;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -567,6 +569,11 @@ public class Functions {
 	public static boolean isCODAllowed(Order order) {
 		OrderService orderService = ServiceLocatorFactory.getService(OrderService.class);
         return orderService.isCODAllowed(order);
+    }
+
+    public static Hub getHubForHkdeliveryUser(User user){
+        HubService hubService = ServiceLocatorFactory.getService(HubService.class);
+        return hubService.getHubForUser(user);
     }
 
 }

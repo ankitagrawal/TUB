@@ -54,6 +54,8 @@ public class HKDConsignmentAction extends BasePaginatedAction {
     private             Boolean               reconciled;
     private             Runsheet              runsheet;
 
+    User                loggedOnUser;                     
+
 
     @Autowired
     private              ConsignmentService          consignmentService;
@@ -69,6 +71,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
 
     @DefaultHandler
     public Resolution pre(){
+        loggedOnUser = getUserService().getUserById(getPrincipal().getId());
         return new ForwardResolution("/pages/admin/hkDeliveryConsignment.jsp");        
     }
 
@@ -78,7 +81,6 @@ public class HKDConsignmentAction extends BasePaginatedAction {
         List<String> existingAwbNumbers;
         Hub          healthkartHub;
         String       duplicateAwbString               = "";
-        User         loggedOnUser                     = null;
         Shipment     shipmentObj                      = null;
         String       cnnNumber                        = null;
         String       paymentMode                      = null;
@@ -151,6 +153,8 @@ public class HKDConsignmentAction extends BasePaginatedAction {
     }
 
     public Resolution searchConsignments(){
+        loggedOnUser = getUserService().getUserById(getPrincipal().getId());
+        hub = hubService.getHubForUser(loggedOnUser);
         consignmentPage = consignmentService.searchConsignment(consignment, consignmentNumber, startDate, endDate, consignmentStatus, hub, runsheet, reconciled, getPageNo(), getPerPage());
         if(consignmentPage != null){
             consignmentList = consignmentPage.getList();
@@ -339,5 +343,13 @@ public class HKDConsignmentAction extends BasePaginatedAction {
 
     public void setRunsheet(Runsheet runsheet) {
         this.runsheet = runsheet;
+    }
+
+    public User getLoggedOnUser() {
+        return loggedOnUser;
+    }
+
+    public void setLoggedOnUser(User loggedOnUser) {
+        this.loggedOnUser = loggedOnUser;
     }
 }

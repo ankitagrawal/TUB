@@ -1,6 +1,7 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Consignment List">
@@ -39,12 +40,18 @@
                                                label="status"/>
                 </s:select>
                 <label>Hub:</label>
-                <s:select name="hub" class="hubName">
-                    <s:option value="-Select Hub-">-Select Hub-</s:option>
-                    <hk:master-data-collection service="<%=MasterDataDao.class%>"
-                                               serviceProperty="hubList" value="id"
-                                               label="name"/>
-                </s:select>
+                <shiro:hasPermission name="<%=PermissionConstants.SELECT_HUB%>">
+                    <s:select name="hub" class="hubName">
+                        <s:option value="-Select Hub-">-Select Hub-</s:option>
+                        <hk:master-data-collection service="<%=MasterDataDao.class%>"
+                                                   serviceProperty="hubList" value="id"
+                                                   label="name"/>
+                    </s:select>
+                </shiro:hasPermission>
+                <shiro:hasPermission name="<%=PermissionConstants.VIEW_HUB%>">
+                    <c:set var="hub" value="${hk:getHubForHkdeliveryUser(consignmentAction.loggedOnUser)}" />
+                     <s:hidden name="hub" value="${hub.id}"/><strong>${hub.name}</strong>
+                </shiro:hasPermission>
                 <label>Runsheet Id:</label><s:text name="runsheet"/>
                 <label>Reconciled: </label>
                 <s:select name="reconciled">

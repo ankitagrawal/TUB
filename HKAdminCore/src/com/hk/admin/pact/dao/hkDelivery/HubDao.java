@@ -13,4 +13,6 @@ public interface HubDao extends BaseDao{
     public Hub findHubByName(String hubName);
 
     public Hub getHubForUser(User user);
+
+    public List<User> getAgentsForHub(Hub hub);
 }

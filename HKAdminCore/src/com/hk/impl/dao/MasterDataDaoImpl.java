@@ -324,7 +324,9 @@ public class MasterDataDaoImpl implements MasterDataDao {
     }
 
     public List<User> getHKDeliveryAgentList(){
-        return getUserService().findByRole(getRoleService().getRoleByName(EnumRole.HK_DELIVERY_GUY));
+        User loggedOnUser = getUserService().getLoggedInUser();
+        return hubService.getAgentsForHub(hubService.getHubForUser(loggedOnUser));
+//        return getUserService().findByRole(getRoleService().getRoleByName(EnumRole.HK_DELIVERY_GUY));
     }
 
     public List<RunsheetStatus> getRunsheetStatusList(){
@@ -332,7 +334,9 @@ public class MasterDataDaoImpl implements MasterDataDao {
     }
 
     public List<ConsignmentStatus> getConsignmentStatusList(){
-        return getBaseDao().getAll(ConsignmentStatus.class);
+        List<ConsignmentStatus> consignmentStatuses =   getBaseDao().getAll(ConsignmentStatus.class);
+        consignmentStatuses.remove(getBaseDao().get(ConsignmentStatus.class, EnumConsignmentStatus.ShipmentReceivedAtHub.getId()));
+        return consignmentStatuses;
     }
 
     @Override

@@ -3,6 +3,8 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Runsheet List">
 
     <s:useActionBean beanclass="com.hk.web.action.admin.hkDelivery.HKDRunsheetAction" var="runsheetAction"/>
@@ -41,12 +43,18 @@
                 </s:select>
                 <br />
                 <label>Hub:</label>
-                <s:select name="hub" class="hubName">
-                    <s:option value="-Select Hub-">-Select Hub-</s:option>
-                    <hk:master-data-collection service="<%=MasterDataDao.class%>"
-                                               serviceProperty="hubList" value="id"
-                                               label="name"/>
-                </s:select>
+                <shiro:hasPermission name="<%=PermissionConstants.SELECT_HUB%>">
+                    <s:select name="hub" class="hubName">
+                        <s:option value="-Select Hub-">-Select Hub-</s:option>
+                        <hk:master-data-collection service="<%=MasterDataDao.class%>"
+                                                   serviceProperty="hubList" value="id"
+                                                   label="name"/>
+                    </s:select>
+                </shiro:hasPermission>
+                <shiro:hasPermission name="<%=PermissionConstants.VIEW_HUB%>">
+                    <c:set var="hub" value="${hk:getHubForHkdeliveryUser(runsheetAction.loggedOnUser)}" />
+                     <s:hidden name="hub" value="${hub.id}"/><strong>${hub.name}</strong> 
+                </shiro:hasPermission>
                 <s:submit name="pre" value="Search Runsheets"/>
             </s:form>
         </fieldset>
