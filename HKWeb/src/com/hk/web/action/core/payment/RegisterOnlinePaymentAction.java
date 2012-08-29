@@ -15,6 +15,7 @@ import com.hk.pact.dao.payment.PaymentModeDao;
 import com.hk.web.factory.PaymentModeActionFactory;
 import com.hk.web.filter.WebContext;
 import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.util.CryptoUtil;
 import net.sourceforge.stripes.validation.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -31,28 +32,6 @@ import java.util.Random;
  * Time: 6:05 PM
  * To change this template use File | Settings | File Templates.
  */
-
-/*
-  parametrized read encrypted gateway order id from url
-
-  the payment amount would again be precomputed using pricing engine, good thing is pricing engine doesn't apply cod charges
-  whereas the shipping charges will be as applicable
-
-  read encrypted offerID from url
-
-  steps involved, if all is well, create a payment and mark it as successful  --> like always
-
-  then for the previous payment if any, mark the payment status as Retried for Prepay  --> no need to
-
-  change the payment id for the corresponding order     --> automatically plan done
-
-  no need to change the order status, but at the final step it should not be in cart.   --> done
-
-  remove cod cart_line_item if any, and nullify cod charges on line_item        --> done
-
- */
-
-
 @Component
 public class RegisterOnlinePaymentAction extends BaseAction {
 
@@ -75,11 +54,11 @@ public class RegisterOnlinePaymentAction extends BaseAction {
 	@DefaultHandler
 	public Resolution pre() {
 		//currently i can safely assume, that most people whom we give conversion benefit will have 0 cod charges only, no order amount is pretty much their online payment amount
-		//todo verify if pricing engine will return the right amount or not, i would prefer using the previous payment amount as the base parameter
+		//verify if pricing engine will return the right amount or not, i would prefer using the previous payment amount as the base parameter
 		bankList = getBaseDao().getAll(PreferredBankGateway.class);
 		if (order != null && order.isCOD()) {
 			HttpServletResponse httpResponse = WebContext.getResponse();
-			Cookie wantedCODCookie = new Cookie(HealthkartConstants.Cookie.wantedCOD, "true");
+			Cookie wantedCODCookie = new Cookie(HealthkartConstants.Cookie.codConverterID, CryptoUtil.encrypt(order.getId().toString()));
 			wantedCODCookie.setPath("/");
 			wantedCODCookie.setMaxAge(600);
 			httpResponse.addCookie(wantedCODCookie);

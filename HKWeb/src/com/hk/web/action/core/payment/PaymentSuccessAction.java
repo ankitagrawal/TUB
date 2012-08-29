@@ -27,7 +27,6 @@ import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.inventory.InventoryService;
-import com.hk.pact.service.order.CartLineItemService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.RewardPointService;
@@ -36,6 +35,7 @@ import com.hk.util.ga.GAUtil;
 import com.hk.web.filter.WebContext;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.util.CryptoUtil;
 import net.sourceforge.stripes.validation.Validate;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -169,8 +169,9 @@ public class PaymentSuccessAction extends BaseAction {
 			HttpServletResponse httpResponse = WebContext.getResponse();
 			if (httpRequest.getCookies() != null) {
 				for (Cookie cookie : httpRequest.getCookies()) {
-					if (cookie.getName() != null && cookie.getName().equals(HealthkartConstants.Cookie.wantedCOD)) {
-						if (cookie.getValue().equals("true")) {
+					if (cookie.getName() != null && cookie.getName().equals(HealthkartConstants.Cookie.codConverterID)) {
+						if (cookie.getValue() != null && CryptoUtil.decrypt(cookie.getValue()).equalsIgnoreCase(order.getId().toString())) {
+//							if (cookie.getValue().equals("true")) {
 							if (rewardPointService.findByReferredOrderAndRewardMode(order, prepayOfferRewardPoint) == null) {
 								if (EnumPaymentMode.getPrePaidPaymentModes().contains(order.getPayment().getPaymentMode().getId())) {
 									rewardPointStatus = EnumRewardPointStatus.APPROVED;
@@ -205,7 +206,7 @@ public class PaymentSuccessAction extends BaseAction {
 				}
 			}
 			//Resetting value and expiring cookie
-			Cookie wantedCODCookie = new Cookie(HealthkartConstants.Cookie.wantedCOD, "false");
+			Cookie wantedCODCookie = new Cookie(HealthkartConstants.Cookie.codConverterID, "false");
 			wantedCODCookie.setPath("/");
 			wantedCODCookie.setMaxAge(0);
 			httpResponse.addCookie(wantedCODCookie);

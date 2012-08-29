@@ -564,6 +564,12 @@ public class Functions {
        return linkManager.getProductURL(product, productReferrerId);
     }
 
+	public static String getCodConverterLink(Order order){
+		LinkManager linkManager = (LinkManager) ServiceLocatorFactory.getService("LinkManager");
+
+		return linkManager.getCodConverterLink(order);
+	}
+
 	public static boolean isCODAllowed(Order order) {
 		OrderService orderService = ServiceLocatorFactory.getService(OrderService.class);
         return orderService.isCODAllowed(order);

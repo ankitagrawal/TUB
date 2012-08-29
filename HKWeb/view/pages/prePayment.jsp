@@ -1,6 +1,9 @@
 <%@ page import="com.hk.constants.core.Keys" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="org.joda.time.DateTime" %>
+<%@ page import="com.hk.taglibs.Functions" %>
+<%@ page import="java.util.Date" %>
+<%@ page import="com.hk.constants.payment.EnumPaymentMode" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -18,23 +21,34 @@
         <script type="text/javascript"
                 src="${pageContext.request.contextPath}/otherScripts/jquery.session.js"></script>
     </s:layout-component>
+<%--    <%
+        DateTime dateTime = new DateTime();
+        Date endOfOfferDate = new Date(new DateTime(2011, 12, 31, 23, 59, 59, 59).getMillis());
+    %>
+
+    <%
+        if (dateTime.isBefore(endOfOfferDate.getTime())) {
+    %>
+    <div class="siteNotice">
+        <div style="border-top: 5px solid #ff9999; border-bottom: 5px solid #ff6666; height: 24px; padding-top: 6px; font-size: 1em;">
+            <strong>Pay Online Now</strong> : Another 2.5 % Cash Back
+                <span style="background-color: #ccff00;">Only <strong><%=Functions.periodFromNow(endOfOfferDate)%>
+                </strong> remaining</span>
+        </div>
+    </div>
+    <%
+        }
+    %>--%>
     <s:layout-component name="steps">
-        <div class='steps'>
-            <div class='step prev_step' id="step1">
-                <h2>Step 1</h2>
-
-                <div class='small'>Select shipping address</div>
-            </div>
-            <div class='step prev_step' id="step2">
-                <h2>Step 2</h2>
-
-                <div class='small'>Confirm your order</div>
-            </div>
-            <div class='step current_step'>
-                <h2>Step 3</h2>
-
-                <div class='small'>Choose Payment Method</div>
-            </div>
+        <div class='steps_prepay'>
+            <c:set var="codPaymentModeId" value="<%=EnumPaymentMode.COD.getId()%>"/>
+            <c:if test="${order != null}">
+                <c:if test="${order.payment.paymentMode.id == codPaymentModeId  && order.amount < 1200}">
+                    <div>
+                        <img src="${pageContext.request.contextPath}/images/banners/pay_online_banner2.5.jpg">
+                    </div>
+                </c:if>
+            </c:if>
         </div>
     </s:layout-component>
     <s:layout-component name="steps_content">
@@ -54,9 +68,6 @@
             <s:errors/><s:messages key="generalMessages"/></div>
 
         <div class='payment_container'>
-            <div style="display: none;"><s:link
-                    beanclass="com.hk.web.action.admin.SetInCookieAction"
-                    id="setInCookieLink"/></div>
             <div class='outer'>
                 <div class='left_controls tabs'>
                     <ul>

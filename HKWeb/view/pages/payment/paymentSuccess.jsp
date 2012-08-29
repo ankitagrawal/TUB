@@ -17,6 +17,7 @@
 %>
 <c:set var="paymentModeId_DefaultGateway" value="<%=defaultGateway%>"/>
 <c:set var="cashBackPercentage" value="<%=cashBackPercentage%>"/>
+<c:set var="codPaymentModeId" value="<%=EnumPaymentMode.COD.getId()%>"/>
 
 <s:useActionBean beanclass="com.hk.web.action.core.payment.PaymentSuccessAction" var="actionBean"/>
 <s:layout-render name="/layouts/default.jsp" pageTitle="Payment Successful">
@@ -148,22 +149,20 @@
 
     <c:choose>
         <c:when test="${actionBean.payment != null}">
-            <div class="right" style="float: right;">
+            <c:if test="${actionBean.payment.paymentMode.id == codPaymentModeId && actionBean.payment.amount < 1200}">
+                <div>
+                    <s:link beanclass="com.hk.web.action.core.payment.RegisterOnlinePaymentAction">
+                        <s:param name="order" value="${actionBean.order}"/>
+                        <img src="${pageContext.request.contextPath}/images/banners/pay_online_banner2.5.jpg">
+                    </s:link>
+                </div>
+            </c:if>
+            <%--<div class="right" style="float: right;">
                 <s:link beanclass="com.hk.web.action.core.referral.ReferralProgramAction">
                     <img src="<hk:vhostImage/>/images/banners/refer_earn.jpg">
                 </s:link>
-            </div>
-            <div class="right" style="float: right;">
-                <s:link beanclass="com.hk.web.action.core.payment.RegisterOnlinePaymentAction">
-                    <s:param name="order" value="${actionBean.order}"/>
-                    <img src="<hk:vhostImage/>/images/citrus.jpeg">
-                </s:link>
-            </div>
-
-
-            <%--<h2 class="green" style="font-size: 1.2em;" >Your payment was successful.</h2>--%>
-
-            <h2 style="font-size: 1em; padding-left: 15px;">
+            </div>--%>
+            <h2 style="font-size: 1em; padding-left: 15px;margin-top: 20px;">
                 Your order ID is <strong>${actionBean.payment.order.gatewayOrderId}</strong>.</h2>
             <br/>
             <shiro:hasRole name="<%=RoleConstants.HK_UNVERIFIED%>">
