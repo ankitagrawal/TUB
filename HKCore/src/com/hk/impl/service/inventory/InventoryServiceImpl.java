@@ -58,7 +58,7 @@ public class InventoryServiceImpl implements InventoryService {
     public void checkInventoryHealth(ProductVariant productVariant) {
         List<Sku> skuList = getSkuService().getSKUsForProductVariant(productVariant);
         if (skuList != null && !skuList.isEmpty()) {
-            checkInventoryHealth(skuList);
+            checkInventoryHealth(skuList, productVariant);
         }
     }
 
@@ -84,10 +84,21 @@ public class InventoryServiceImpl implements InventoryService {
         return getBaseDao().get(InvTxnType.class, enumInvTxnType.getId());
     }
 
-    private void checkInventoryHealth(List<Sku> skuList) {
+    private void checkInventoryHealth(List<Sku> skuList, ProductVariant productVariant) {
         Long availableUnbookedInventory = this.getAvailableUnbookedInventory(skuList);
-        ProductVariant productVariant = skuList.get(0).getProductVariant();
+        //ProductVariant productVariant = skuList.get(0).getProductVariant();
+	    Product product = productVariant.getProduct();
         boolean isJit = productVariant.getProduct().isJit() != null && productVariant.getProduct().isJit();
+
+	    /*
+	    boolean shouldFireOOSEmail = false, shouldFireInStockEmail = false;
+	    if(!productVariantService.isAnySiblingVariantInStock(productVariant) && availableUnbookedInventory <= 0 && !productVariant.isOutOfStock()){
+		    shouldFireOOSEmail = true;
+	    }
+	    if(!productVariantService.isAnySiblingVariantInStock(productVariant) && availableUnbookedInventory > 0 && productVariant.isOutOfStock()){
+		    shouldFireInStockEmail = true;
+	    }*/
+
         logger.debug("isJit: " + isJit);
         if (getAggregateCutoffInventory(skuList) != null && !isJit) {
             if (availableUnbookedInventory <= getAggregateCutoffInventory(skuList)) {
@@ -150,7 +161,7 @@ public class InventoryServiceImpl implements InventoryService {
             logger.debug("Inventory status is positive now. Setting IN stock.");
             productVariant.setOutOfStock(false);
             productVariant = getProductVariantService().save(productVariant);
-            Product product = productVariant.getProduct();
+            product = productVariant.getProduct();
             product.setOutOfStock(Boolean.FALSE);
             getLowInventoryDao().deleteFromLowInventoryList(productVariant);
             getBaseDao().save(product);

@@ -8449,7 +8449,6 @@
     <changeSet author="Ajeet (generated)" id="1345455498259-2">
         <addNotNullConstraint columnDataType="TINYINT" columnName="cod_allowed" defaultNullValue="1" tableName="product"/>
     </changeSet>
-  
     <changeSet author="Marut (generated)" id="1345635663381-1">
         <addColumn tableName="product">
             <column defaultValue="0" name="out_of_stock" type="TINYINT">
@@ -8470,5 +8469,10 @@
             )
         </sql>
     </changeSet>
-    
+    <changeSet author="Neha (generated)" id="1346058956497-1">
+        <createIndex indexName="unique_prod_simProd" tableName="similar_product" unique="true">
+            <column name="product_id"/>
+            <column name="similar_product_id"/>
+        </createIndex>
+    </changeSet>
 </databaseChangeLog>

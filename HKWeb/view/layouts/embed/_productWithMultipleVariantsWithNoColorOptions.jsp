@@ -18,7 +18,7 @@
       SubscriptionProduct subscriptionProduct = (SubscriptionProduct) pageContext.getAttribute("subscriptionProduct");
       pageContext.setAttribute("subscriptionProduct", subscriptionProduct);
   %>
-<div class='variants'>
+<div class='variants' itemprop="offerDetails" itemscope itemtype="http://data-vocabulary.org/Offer-aggregate">
     <span style="font-style: italic; font-size: 16px;;"> ${hk:getNonDeletedVariants(product)}</span>
     variants
     available.
@@ -73,35 +73,28 @@
                                       test="${hk:isNotBlank(variant.variantName) && hk:topLevelCategory(variant.product).name != 'eye'}">
                                   ${variant.variantName}
                                   <br/>
-                                  <br/>
                               </c:when>
                               <c:otherwise>
                                   <c:forEach items="${variant.productOptions}" var="variantOption">
                                       <c:if
-                                              test="${variantOption.name == 'TYPE' || variantOption.name == 'type' || variantOption.name == 'Type' || variantOption.name == 'BABY WEIGHT' || variantOption.name == 'baby weight' || variantOption.name == 'Baby Weight' || variantOption.name == 'SIZE' || variantOption.name == 'Size' || variantOption.name == 'size' || variantOption.name == 'FLAVOR' || variantOption.name == 'flavor' || variantOption.name == 'Flavor'}">
+                                              test="${fn:toUpperCase(variantOption.name) == 'TYPE' || fn:toUpperCase(variantOption.name) == 'BABY WEIGHT' || fn:toUpperCase(variantOption.name) == 'SIZE' || fn:toUpperCase(variantOption.name) == 'FLAVOR'}">
                                           ${variantOption.value}
-                                          <br/>
                                           <br/>
                                       </c:if>
                                   </c:forEach>
                               </c:otherwise>
                           </c:choose>
-                          <c:if test="${variant.discountPercent > 0}">
-                              <div class="special green" style="text-align: center;">
-                                                <span style="font-weight: bold;"><fmt:formatNumber
-                                                        value="${variant.discountPercent*100}"
-                                                        maxFractionDigits="0"/>%</span>
-                                  off
-                              </div>
-                          </c:if>
                       </c:otherwise>
                   </c:choose>
                     <br/><br/>
                 </div>
                 <div class='desc'>
                   <c:forEach items="${variant.productOptions}" var="variantOption">
-                    <span
-                        style="/*text-transform:lowercase;*/ font-size: 12px; line-height:18px;"> ${variantOption.name}</span><span>: ${variantOption.value}</span><br/>
+	                  <c:if
+                                              test="${fn:toUpperCase(variantOption.name) == 'TYPE' || fn:toUpperCase(variantOption.name) == 'BABY WEIGHT' || fn:toUpperCase(variantOption.name) == 'SIZE' || fn:toUpperCase(variantOption.name) == 'FLAVOR'}">
+                                          <span style="font-size: 12px; line-height:18px;"> ${variantOption.name}</span><span>: ${variantOption.value}</span><br/>
+                                      </c:if>
+
                   </c:forEach>
                 </div>
                 <c:if test="${variant.discountPercent > 0}">
@@ -112,11 +105,18 @@
                 </span>
                         </div>
                         <div class='hk'>
-                            Our Price <br/>
-                <span class='num' style="font-size: 14px;" :>
+                <span class='num' style="font-size: 14px;">
                   Rs <fmt:formatNumber value="${hk:getApplicableOfferPrice(variant) + hk:getPostpaidAmount(variant)}"
                                        maxFractionDigits="0"/>
                 </span>
+	                        <c:if test="${variant.discountPercent > 0}">
+                              <div class="special green" style="text-align: center;font-size:1.1em;">
+                                                <span style="font-weight: bold;"><fmt:formatNumber
+                                                        value="${variant.discountPercent*100}"
+                                                        maxFractionDigits="0"/>%</span>
+                                  off
+                              </div>
+                          </c:if>
                         </div>
                         <br/><br/>
                         <c:if test="${variant.mainImageId != null}">
@@ -132,7 +132,7 @@
                 <c:if test="${variant.discountPercent == 0}">
                   <div class='prices'>
                     <div class='hk'>
-                <span class='num' style="font-size: 14px;" :>
+                <span class='num' style="font-size: 14px;">
                   Rs <fmt:formatNumber value="${hk:getApplicableOfferPrice(variant) + hk:getPostpaidAmount(variant)}"
                                        maxFractionDigits="0"/>
                 </span>
@@ -140,7 +140,7 @@
                   </div>
                 </c:if>
 
-                <div class='add'>
+                <div class='add' itemprop="availability" content="${variant.outOfStock ? '' : 'in_stock'}">
                   <c:choose>
                     <c:when test="${variant.outOfStock}">
                       <%--<c:choose>--%>

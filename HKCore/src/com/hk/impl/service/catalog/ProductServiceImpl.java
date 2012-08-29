@@ -13,13 +13,9 @@ import org.springframework.stereotype.Service;
 
 import com.akube.framework.dao.Page;
 import com.hk.constants.core.Keys;
+import com.hk.constants.marketing.EnumProductReferrer;
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.product.ProductExtraOption;
-import com.hk.domain.catalog.product.ProductGroup;
-import com.hk.domain.catalog.product.ProductImage;
-import com.hk.domain.catalog.product.ProductOption;
-import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.catalog.product.*;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.catalog.product.combo.ComboProduct;
 import com.hk.domain.content.PrimaryCategoryHeading;
@@ -499,6 +495,21 @@ public class ProductServiceImpl implements ProductService {
             solrProducts.add(createSolrProduct(product));
         }
         return solrProducts;
+    }
+
+    public List<Product> getSimilarProducts(Product product) {
+        List<Product> inStockSimilarProducts = new ArrayList<Product>();
+        int ctr = 0;
+        for (SimilarProduct similarProduct : product.getSimilarProducts()) {
+            Product sProduct = similarProduct.getSimilarProduct();
+            if (!sProduct.isDeleted() && product.getInStockVariants().size() > 0) {  // Will add out of stock constraint instead of in stock variants size
+                sProduct.setProductURL(linkManager.getRelativeProductURL(sProduct, ProductReferrerMapper.getProductReferrerid(EnumProductReferrer.relatedProductsPage.getName())));
+                inStockSimilarProducts.add(sProduct);
+                ctr++;
+                if (ctr >= 5) break;
+            }
+        }
+        return inStockSimilarProducts;
     }
 }
 
