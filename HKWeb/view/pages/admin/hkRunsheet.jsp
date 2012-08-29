@@ -28,7 +28,7 @@
                 $('#'+consignment).val(new_status);
                 var new_status_text = $(this).text();
                 $('#current-status-'+consignment).text(new_status_text);
-                $('#new-'+cons_id).val(new_status);
+                $('#new-'+consignment).val(new_status);
             });
 
 /*
