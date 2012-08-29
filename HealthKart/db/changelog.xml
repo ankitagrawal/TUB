@@ -8452,8 +8452,23 @@
   
     <changeSet author="Marut (generated)" id="1345635663381-1">
         <addColumn tableName="product">
-            <column name="out_of_stock" type="TINYINT"/>
+            <column defaultValue="0" name="out_of_stock" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
         </addColumn>
+    </changeSet>
+    <changeSet author="Marut (generated)" id="1345635663381-2">
+        <sql>
+            UPDATE `product` SET out_of_stock = true
+            where id in (
+            select v1.id from(
+            (select DISTINCT(pv.product_id) as id from `product_variant` pv
+            join `product` on product.id = pv.product_id
+            GROUP BY pv.product_id
+            having SUM(pv.out_of_stock) = 0)v1
+            )
+            )
+        </sql>
     </changeSet>
     
 </databaseChangeLog>
