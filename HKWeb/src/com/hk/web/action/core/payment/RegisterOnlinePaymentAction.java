@@ -3,34 +3,27 @@ package com.hk.web.action.core.payment;
 import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
-import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumPaymentMode;
-import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.core.PaymentMode;
-import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.payment.PreferredBankGateway;
-import com.hk.domain.user.User;
-import com.hk.dto.pricing.PricingDto;
-import com.hk.manager.OrderManager;
 import com.hk.manager.payment.PaymentManager;
-import com.hk.pact.dao.RoleDao;
-import com.hk.pact.dao.offer.OfferInstanceDao;
 import com.hk.pact.dao.payment.PaymentModeDao;
-import com.hk.pact.dao.user.UserDao;
-import com.hk.pricing.PricingEngine;
-import com.hk.web.action.core.cart.CartAction;
+import com.hk.web.action.admin.SetInCookieAction;
 import com.hk.web.factory.PaymentModeActionFactory;
+import com.hk.web.filter.WebContext;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -64,56 +57,45 @@ import java.util.Set;
 @Component
 public class RegisterOnlinePaymentAction extends BaseAction {
 
-	@Validate(required = true)
+//	@Validate(required = true)
 	private PaymentMode paymentMode;
-
-	Long bankId;
-
+//	@Validate(required = true)
+	private boolean isCodConversion;
 	@Validate(required = true, encrypted = true)
 	private Order order;
 
-	private User user;
-	PreferredBankGateway bank;
 	@Autowired
 	PaymentManager paymentManager;
 	@Autowired
-	OrderManager orderManager;
-	@Autowired
-	OfferInstanceDao offerInstanceDao;
-	@Autowired
-	UserDao userDao;
-	@Autowired
-	RoleDao roleDao;
-	@Autowired
 	PaymentModeDao paymentModeDao;
-	@Autowired
-	PricingEngine pricingEngine;
 
 	List<PreferredBankGateway> bankList;
-	PricingDto pricingDto;
+	PreferredBankGateway bank;
+	Long bankId;
 
 	@DefaultHandler
 	public Resolution pre() {
-		bankList = getBaseDao().getAll(PreferredBankGateway.class); //todo verify if pricing engine will return the right amount or not, i would prefer using the previous payment amount as the base parameter
-		Set<CartLineItem> pCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
-		pricingDto = new PricingDto(pricingEngine.calculatePricing(pCartLineItems, order.getOfferInstance(), order.getAddress(), order.getRewardPointsUsed()), order.getAddress());
-		return new ForwardResolution("/pages/payment/prePayment.jsp");
+		//currently i can safely assume, that most people whom we give conversion benefit will have 0 cod charges only, no order amount is pretty much their online payment amount
+		//todo verify if pricing engine will return the right amount or not, i would prefer using the previous payment amount as the base parameter
+		bankList = getBaseDao().getAll(PreferredBankGateway.class);
+		if(order.isCOD()){
+			HttpServletResponse httpResponse = WebContext.getResponse();
+			Cookie wantedCODCookie = new Cookie(HealthkartConstants.Cookie.wantedCOD, "true");
+			wantedCODCookie.setPath("/");
+			wantedCODCookie.setMaxAge(600);
+			httpResponse.addCookie(wantedCODCookie);
+		}
+		return new ForwardResolution("/pages/prePayment.jsp");
 	}
 
 	@SuppressWarnings("unchecked")
-	public Resolution proceed() {
+	public Resolution prepay() {
 		if (!order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())) {
-			// recalculate the pricing before creating a payment.
-			order = orderManager.recalAndUpdateAmount(order);
-
-			if (order.getAmount() == 0) {
-				addRedirectAlertMessage(new LocalizableMessage("/CheckoutAction.action.checkout.not.allowed.on.empty.cart"));
-				return new RedirectResolution(CartAction.class);
-			}
 
 			if (bankId != null) {
 				bank = getBaseDao().get(PreferredBankGateway.class, bankId);
 			}
+
 			if (bank != null) {
 				if (bank.getPreferredGatewayId() == null) {
 					Integer random = (new Random()).nextInt(100);
@@ -149,7 +131,6 @@ public class RegisterOnlinePaymentAction extends BaseAction {
 				return redirectResolution.addParameter(BasePaymentGatewayWrapper.TRANSACTION_DATA_PARAM, BasePaymentGatewayWrapper.encodeTransactionDataParam(order.getAmount(),
 						payment.getGatewayOrderId(), order.getId(), payment.getPaymentChecksum(), bankCode));
 			} else {
-				// ccavneue is the default gateway
 				Class actionClass = PaymentModeActionFactory.getActionClassForPaymentMode(EnumPaymentMode.CCAVENUE_DUMMY);
 				redirectResolution = new RedirectResolution(actionClass, "proceed");
 			}
@@ -185,14 +166,6 @@ public class RegisterOnlinePaymentAction extends BaseAction {
 		this.bankId = bankId;
 	}
 
-	public PricingDto getPricingDto() {
-		return pricingDto;
-	}
-
-	public void setPricingDto(PricingDto pricingDto) {
-		this.pricingDto = pricingDto;
-	}
-
 	public List<PreferredBankGateway> getBankList() {
 		return bankList;
 	}
@@ -207,6 +180,14 @@ public class RegisterOnlinePaymentAction extends BaseAction {
 
 	public void setBank(PreferredBankGateway bank) {
 		this.bank = bank;
+	}
+
+	public boolean isCodConversion() {
+		return isCodConversion;
+	}
+
+	public void setCodConversion(boolean codConversion) {
+		isCodConversion = codConversion;
 	}
 }
 

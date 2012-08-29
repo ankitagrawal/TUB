@@ -186,14 +186,18 @@ public class PaymentSuccessAction extends BaseAction {
 							}
 							Set<CartLineItem> codCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.CodCharges).filter();
 							CartLineItem codCartLineItem = codCartLineItems != null && !codCartLineItems.isEmpty() ? codCartLineItems.iterator().next() : null;
-							if(codCartLineItem != null){
-								order.setAmount(order.getAmount() - (codCartLineItem.getHkPrice() - codCartLineItem.getDiscountOnHkPrice()));
-								orderService.save(order);
+							Double applicableCodCharges = 0D;
+							if (codCartLineItem != null) {
+								applicableCodCharges = codCartLineItem.getHkPrice() - codCartLineItem.getDiscountOnHkPrice();
 								cartLineItemService.remove(codCartLineItem.getId());
-							}
-							if (shippingOrders != null) {
-								for (ShippingOrder shippingOrder : shippingOrders) {
-									shippingOrderService.nullifyCodCharges(shippingOrder);
+								if (applicableCodCharges > 0D) {
+									order.setAmount(order.getAmount() - (applicableCodCharges));
+									orderService.save(order);
+									if (shippingOrders != null) {
+										for (ShippingOrder shippingOrder : shippingOrders) {
+											shippingOrderService.nullifyCodCharges(shippingOrder);
+										}
+									}
 								}
 							}
 							break;

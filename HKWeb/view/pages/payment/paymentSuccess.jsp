@@ -153,6 +153,12 @@
                     <img src="<hk:vhostImage/>/images/banners/refer_earn.jpg">
                 </s:link>
             </div>
+            <div class="right" style="float: right;">
+                <s:link beanclass="com.hk.web.action.core.payment.RegisterOnlinePaymentAction">
+                    <s:param name="order" value="${actionBean.order}"/>
+                    <img src="<hk:vhostImage/>/images/citrus.jpeg">
+                </s:link>
+            </div>
 
 
             <%--<h2 class="green" style="font-size: 1.2em;" >Your payment was successful.</h2>--%>
