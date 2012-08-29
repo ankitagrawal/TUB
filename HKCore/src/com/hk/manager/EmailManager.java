@@ -11,7 +11,6 @@ import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.Ticket;
 import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.EmailType;
 import com.hk.domain.coupon.Coupon;
@@ -66,7 +65,7 @@ public class EmailManager {
     private Set<String> personalCareAdminEmails = null;
     private Set<String> sportsAdminEmails = null;
     private Set<String> servicesAdminEmails = null;
-    private Set<String> marketingAdsMonitorEmails = null;
+    //private Set<String> marketingAdsMonitorEmails = null;
 
     @Autowired
     private BaseDao baseDao;
@@ -110,8 +109,8 @@ public class EmailManager {
     private String nutritionAdminEmailsString = null;
     @Value("#{hkEnvProps['" + Keys.Env.personalCareAdminEmails + "']}")
     private String personalCareAdminEmailsString = null;
-	@Value("#{hkEnvProps['" + Keys.Env.marketingAdsMonitorEmails + "']}")
-	private String marketingAdsMonitorEmailsString = null;
+	//@Value("#{hkEnvProps['" + Keys.Env.marketingAdsMonitorEmails + "']}")
+	//private String marketingAdsMonitorEmailsString = null;
 
     /*
     * @Value("#{hkEnvProps['" + Keys.Env.logisticsAdminEmails + "']}") private String logisticsAdminEmailsString =
@@ -141,7 +140,7 @@ public class EmailManager {
         // this.logisticsAdminEmails = BaseUtils.split(logisticsAdminEmailsString, ",");
         this.sportsAdminEmails = BaseUtils.split(sportsAdminEmailsString, ",");
         this.servicesAdminEmails = BaseUtils.split(servicesAdminEmailsString, ",");
-        this.marketingAdsMonitorEmails = BaseUtils.split(marketingAdsMonitorEmailsString, ",");
+        //this.marketingAdsMonitorEmails = BaseUtils.split(marketingAdsMonitorEmailsString, ",");
         // this.marketingAdminEmails = BaseUtils.split(marketingAdminEmailsString, ",");
         // this.categoryHealthkartList = BaseUtils.split(categoryHealthkartListString, ",");
     }
@@ -778,6 +777,7 @@ public class EmailManager {
         return emailRecepients;
     }
 
+/*
 	public boolean sendProductStatusMail(Product product, String stockStatus) {
 		HashMap valuesMap = new HashMap();
 		valuesMap.put("product", product);
@@ -795,6 +795,7 @@ public class EmailManager {
 		return success;
 
 	}
+*/
 
 
     public EmailService getEmailService() {

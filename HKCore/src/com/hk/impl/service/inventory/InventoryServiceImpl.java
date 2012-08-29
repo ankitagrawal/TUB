@@ -89,12 +89,14 @@ public class InventoryServiceImpl implements InventoryService {
 	    Product product = productVariant.getProduct();
         boolean isJit = productVariant.getProduct().isJit() != null && productVariant.getProduct().isJit();
 
+	    /*
+	    boolean shouldFireOOSEmail = false, shouldFireInStockEmail = false;
 	    if(!productVariantService.isAnySiblingVariantInStock(productVariant) && availableUnbookedInventory <= 0 && !productVariant.isOutOfStock()){
-		    getEmailManager().sendProductStatusMail(product, "Out of Stock");
+		    shouldFireOOSEmail = true;
 	    }
 	    if(!productVariantService.isAnySiblingVariantInStock(productVariant) && availableUnbookedInventory > 0 && productVariant.isOutOfStock()){
-		    getEmailManager().sendProductStatusMail(product, "In Stock");
-	    }
+		    shouldFireInStockEmail = true;
+	    }*/
 
         logger.debug("isJit: " + isJit);
         if (getAggregateCutoffInventory(skuList) != null && !isJit) {
@@ -147,6 +149,15 @@ public class InventoryServiceImpl implements InventoryService {
 
             getLowInventoryDao().deleteFromLowInventoryList(productVariant);
         }
+
+/*  Commented as it is of no use.
+	    if(shouldFireOOSEmail){
+		   getEmailManager().sendProductStatusMail(product, "Out of Stock"); 
+	    }
+	    if(shouldFireInStockEmail){
+		    getEmailManager().sendProductStatusMail(product, "In Stock");
+	    }
+*/
     }
 
     @Override

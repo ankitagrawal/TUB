@@ -97,7 +97,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 	public List<ProductOptionDto> getFilterOptions(String primaryCategory, List<String> categoryNames, List<Long> filterOptions, Double minPrice, Double maxPrice) {
 		int groupsCount = 0;
-		if (!filterOptions.isEmpty()) {
+		if (filterOptions != null && !filterOptions.isEmpty()) {
 			Map<String, List<Long>> groupedFilters = productService.getGroupedFilters(filterOptions);
 			groupsCount = groupedFilters.size();
 		}
