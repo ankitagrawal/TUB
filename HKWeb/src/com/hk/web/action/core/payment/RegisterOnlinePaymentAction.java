@@ -12,7 +12,6 @@ import com.hk.domain.payment.Payment;
 import com.hk.domain.payment.PreferredBankGateway;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.payment.PaymentModeDao;
-import com.hk.web.action.admin.SetInCookieAction;
 import com.hk.web.factory.PaymentModeActionFactory;
 import com.hk.web.filter.WebContext;
 import net.sourceforge.stripes.action.*;
@@ -57,9 +56,9 @@ import java.util.Random;
 @Component
 public class RegisterOnlinePaymentAction extends BaseAction {
 
-//	@Validate(required = true)
+	//	@Validate(required = true)
 	private PaymentMode paymentMode;
-//	@Validate(required = true)
+	//	@Validate(required = true)
 	private boolean isCodConversion;
 	@Validate(required = true, encrypted = true)
 	private Order order;
@@ -78,7 +77,7 @@ public class RegisterOnlinePaymentAction extends BaseAction {
 		//currently i can safely assume, that most people whom we give conversion benefit will have 0 cod charges only, no order amount is pretty much their online payment amount
 		//todo verify if pricing engine will return the right amount or not, i would prefer using the previous payment amount as the base parameter
 		bankList = getBaseDao().getAll(PreferredBankGateway.class);
-		if(order.isCOD()){
+		if (order.isCOD()) {
 			HttpServletResponse httpResponse = WebContext.getResponse();
 			Cookie wantedCODCookie = new Cookie(HealthkartConstants.Cookie.wantedCOD, "true");
 			wantedCODCookie.setPath("/");
