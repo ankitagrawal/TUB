@@ -32,4 +32,6 @@ public interface RunSheetService {
     public Runsheet updateExpectedAmountForClosingRunsheet(Runsheet runsheet);
 
     public List<User> getAgentList(RunsheetStatus runsheetStatus);
+
+    public Runsheet getOpenRunsheetForAgent(User agent);
 }
