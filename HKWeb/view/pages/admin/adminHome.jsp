@@ -421,6 +421,11 @@
                 title="Add/Edit Hub">Add/Edit Hub
         </s:link>
     </h3>
+    <h3>
+        <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDHubAction" event="addUserToHub"
+                title="Add agent">Add agent to hub
+        </s:link>
+    </h3>
 
 
 </div>
