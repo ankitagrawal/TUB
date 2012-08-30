@@ -8640,5 +8640,24 @@
                 ('Source Hub','Dummy hub for source','India',4925),
                 ('Delivered Hub','Dummy hub for delivered','India',4925);
         </sql>
-    </changeSet>    
+    </changeSet>
+      <changeSet author="Tarun (generated)" id="1346225918880-1">
+        <createTable tableName="hub_has_user">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="hub_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1346225918880-2">
+        <addForeignKeyConstraint baseColumnNames="hub_id" baseTableName="hub_has_user" constraintName="fk_hub_has_user_hub1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="hub" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1346225918880-3">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="hub_has_user" constraintName="fk_hub_has_user_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
 </databaseChangeLog>

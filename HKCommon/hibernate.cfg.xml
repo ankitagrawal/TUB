@@ -169,6 +169,8 @@
         <mapping class="com.hk.domain.hkDelivery.HkdeliveryPaymentReconciliation"/>
         <mapping class="com.hk.domain.hkDelivery.ConsignmentTracking"/>
         <mapping class="com.hk.domain.hkDelivery.RunsheetStatus"/>
+        <mapping class="com.hk.domain.hkDelivery.HubHasUser"/>
+        <mapping class="com.hk.domain.hkDelivery.ConsignmentLifecycleStatus"/>
 
         <!-- Ajeet Added His on 10-July-->
         <mapping class="com.hk.domain.inventory.BrandsToAudit"/>

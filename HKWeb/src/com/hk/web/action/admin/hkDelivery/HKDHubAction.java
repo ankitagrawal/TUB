@@ -1,5 +1,8 @@
 package com.hk.web.action.admin.hkDelivery;
 
+import com.hk.admin.pact.service.hkDelivery.HubService;
+import com.hk.domain.user.User;
+import com.hk.pact.service.UserService;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.akube.framework.stripes.action.BaseAction;
@@ -26,10 +29,17 @@ public class HKDHubAction extends BaseAction {
     private     Hub               hub;
     private     String            pincode;
     private     Pincode           pincodeObj          = null;
+    private     User              agent;
+    private     User              loggedOnUser;
+    private     String            userEmailId;
     @Autowired
     private     HubDao            hubDao;
     @Autowired
     private     PincodeService    pincodeService;
+    @Autowired
+    private     HubService        hubService;
+    @Autowired
+    private     UserService       userService;
 
     @DefaultHandler
     public Resolution pre() {
@@ -78,6 +88,35 @@ public class HKDHubAction extends BaseAction {
             pincode = hub.getPincode().getPincode();
             return new ForwardResolution("/pages/admin/editHub.jsp");
         }
+    }
+
+    public Resolution addUserToHub(){
+        loggedOnUser = getUserService().getUserById(getPrincipal().getId());
+        return new ForwardResolution("/pages/admin/addAgentToHub.jsp");
+    }
+
+    public Resolution searchAgent(){
+        loggedOnUser = getUserService().getUserById(getPrincipal().getId());
+        agent = userService.findByLogin(userEmailId);
+        if(agent == null){
+            addRedirectAlertMessage(new SimpleMessage("No agent found with given email id"));
+        }
+        return new ForwardResolution("/pages/admin/addAgentToHub.jsp");
+    }
+
+    public Resolution saveUserToHub(){
+        loggedOnUser = getUserService().getUserById(getPrincipal().getId());
+        boolean status = false;
+        if(agent != null && hub!=null){
+            status = hubService.addAgentToHub(hub, agent);
+        }
+        if(status){
+            addRedirectAlertMessage(new SimpleMessage("Agent added to hub"));
+        }
+        else{
+            addRedirectAlertMessage(new SimpleMessage("Unable to add agent. Agent might already be present in the hub."));
+        }
+        return new ForwardResolution("/pages/admin/addAgentToHub.jsp");
     }
 
     public List<Hub> getHubList() {
@@ -134,5 +173,29 @@ public class HKDHubAction extends BaseAction {
 
     public void setPincode(String pincode) {
         this.pincode = pincode;
+    }
+
+    public User getAgent() {
+        return agent;
+    }
+
+    public void setAgent(User agent) {
+        this.agent = agent;
+    }
+
+    public User getLoggedOnUser() {
+        return loggedOnUser;
+    }
+
+    public void setLoggedOnUser(User loggedOnUser) {
+        this.loggedOnUser = loggedOnUser;
+    }
+
+    public String getUserEmailId() {
+        return userEmailId;
+    }
+
+    public void setUserEmailId(String userEmailId) {
+        this.userEmailId = userEmailId;
     }
 }

@@ -50,12 +50,16 @@ public class Hub implements java.io.Serializable {
     @Column(name = "country", length = 50)
     private String country;
 
-  /*  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "hub")
-    private Set<Consignment> consignments = new HashSet<Consignment>(0);
-
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "hub")
-    private Set<Runsheet> runsheets = new HashSet<Runsheet>(0);
-*/
+    private Set<HubHasUser> hubHasUsers = new HashSet<HubHasUser>(0);
+
+
+    /*  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "hub")
+        private Set<Consignment> consignments = new HashSet<Consignment>(0);
+
+        @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "hub")
+        private Set<Runsheet> runsheets = new HashSet<Runsheet>(0);
+    */
     public Long getId() {
         return this.id;
     }
@@ -95,25 +99,14 @@ public class Hub implements java.io.Serializable {
     public void setCountry(String country) {
         this.country = country;
     }
-/*
 
-    public Set<Consignment> getConsignments() {
-        return this.consignments;
+    public Set<HubHasUser> getHubHasUsers() {
+        return this.hubHasUsers;
     }
 
-    public void setConsignments(Set<Consignment> consignments) {
-        this.consignments = consignments;
+    public void setHubHasUsers(Set<HubHasUser> hubHasUsers) {
+        this.hubHasUsers = hubHasUsers;
     }
-
-    public Set<Runsheet> getRunsheets() {
-        return this.runsheets;
-    }
-
-    public void setRunsheets(Set<Runsheet> runsheets) {
-        this.runsheets = runsheets;
-    }
-
-*/
 
 }
 

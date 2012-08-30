@@ -89,7 +89,13 @@ public enum EnumRoleHasPermission {
                     EnumPermission.RUN_ANT_BUILDS,
                     EnumPermission.HK_DELIVERY_WORKSHEET_DOWNLOAD,
                     EnumPermission.UPDATE_COURIER_DELIVERY_STATUS,
-                    EnumPermission.CREATE_REPLACEMENT_ORDER
+                    EnumPermission.CREATE_REPLACEMENT_ORDER,
+                    EnumPermission.HK_DELIVERY_WORKSHEET_DOWNLOAD,
+                    EnumPermission.VIEW_DELIVERY_QUEUE,
+                    EnumPermission.DOWNLOAD_COURIER_EXCEL,
+                    EnumPermission.UPDATE_DELIVERY_QUEUE,
+                    EnumPermission.SELECT_HUB
+
             )
     ),
 
@@ -382,10 +388,37 @@ public enum EnumRoleHasPermission {
     HK_DELIVERY_GUY(
             EnumRole.HK_DELIVERY_GUY,
             Arrays.asList(
+                    EnumPermission.SUPER_LOGIN,
                     EnumPermission.HK_DELIVERY_WORKSHEET_DOWNLOAD,
                     EnumPermission.VIEW_DELIVERY_QUEUE,
                     EnumPermission.DOWNLOAD_COURIER_EXCEL,
-                    EnumPermission.UPDATE_DELIVERY_QUEUE
+                    EnumPermission.UPDATE_DELIVERY_QUEUE,
+                    EnumPermission.VIEW_HUB
+            )
+    ),
+
+    HK_DELIVERY_ADMIN(
+            EnumRole.HK_DELIVERY_ADMIN,
+            Arrays.asList(
+                    EnumPermission.SUPER_LOGIN,
+                    EnumPermission.HK_DELIVERY_WORKSHEET_DOWNLOAD,
+                    EnumPermission.VIEW_DELIVERY_QUEUE,
+                    EnumPermission.DOWNLOAD_COURIER_EXCEL,
+                    EnumPermission.UPDATE_DELIVERY_QUEUE,
+                    EnumPermission.SELECT_HUB,
+                    EnumPermission.ADD_HK_DELIVERY_AGENT
+            )
+    ),
+    HK_DELIVERY_HUB_MANAGER(
+            EnumRole.HK_DELIVERY_HUB_MANAGER,
+            Arrays.asList(
+                    EnumPermission.SUPER_LOGIN,
+                    EnumPermission.HK_DELIVERY_WORKSHEET_DOWNLOAD,
+                    EnumPermission.VIEW_DELIVERY_QUEUE,
+                    EnumPermission.DOWNLOAD_COURIER_EXCEL,
+                    EnumPermission.UPDATE_DELIVERY_QUEUE,
+                    EnumPermission.VIEW_HUB,
+                    EnumPermission.ADD_HK_DELIVERY_AGENT
             )
     ),
 

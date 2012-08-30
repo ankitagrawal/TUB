@@ -20,15 +20,25 @@
     <s:layout-component name="content">
         <script>
         $(document).ready(function(){
+            $('.consignment-status-button').click(function(event){
+                event.preventDefault();
+                var new_status = $(this).attr('name');
+                var consignment = $(this).attr('id');
+                consignment= consignment.substring(7);
+                $('#'+consignment).val(new_status);
+                var new_status_text = $(this).text();
+                $('#current-status-'+consignment).text(new_status_text);
+                $('#new-'+consignment).val(new_status);
+            });
+
+/*
             $('.consignment-status').change(function(){
                 var cons_id = $(this).attr("id");
                 var current_status = $('#'+cons_id).val();
 
                 $('#new-'+cons_id).val(current_status);
-
-                var old_status = $('#old-'+cons_id).val();
-                var new_status = $('#new-'+cons_id).val();
             });
+*/
 
             $('#save-runsheet').click(function(){
                 createChangedConsignmentList();
@@ -153,17 +163,22 @@
                                               maxFractionDigits="2"/></td>
                         <td>${consignment.paymentMode}</td>
                         <td>${consignment.hkdeliveryPaymentReconciliation.id}</td>
-                        <td><s:select class="consignment-status" id= "${consignment.id}" name="runsheetConsignments[${ctr.index}].consignmentStatus"
+                        <td><s:hidden class="consignment-status" id= "${consignment.id}" name="runsheetConsignments[${ctr.index}].consignmentStatus"
                                       value="${consignment.consignmentStatus.id}">
-                            <hk:master-data-collection service="<%=MasterDataDao.class%>"
-                                                       serviceProperty="consignmentStatusList" value="id"
-                                                       label="status"/>
-                        </s:select>
+                            </s:hidden>
+                            <span id="current-status-${consignment.id}">${consignment.consignmentStatus.status}</span>
                         <input type="hidden" class="old-status" id="old-${consignment.id}" value="${consignment.consignmentStatus.id}" />
                         <input type="hidden" class="new-status" id="new-${consignment.id}" value="${consignment.consignmentStatus.id}" />
                         </td>
                         <td>
-
+                             <c:forEach items="${runsheetAction.consignmentStatuses}" var="consignmentStatus" varStatus="statusCtr">
+                                 <s:link href="#" class="linkbutton consignment-status-button" id= "status-${consignment.id}" name="${consignmentStatus.id}">
+                                    ${consignmentStatus .status}
+                                     <c:if test="${statusCtr.index == 3}" >
+                                         <br />
+                                     </c:if>
+                                 </s:link>&nbsp;&nbsp;
+                             </c:forEach>
                         </td>
                     </tr>
                 </c:forEach>
