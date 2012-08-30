@@ -7,6 +7,7 @@ import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.dao.hkDelivery.ConsignmentDao;
+import com.hk.admin.dto.ConsignmentDto;
 import com.hk.domain.hkDelivery.*;
 import com.hk.domain.user.User;
 import com.hk.domain.order.ShippingOrder;
@@ -202,5 +203,21 @@ public class ConsignmentServiceImpl implements ConsignmentService {
         List<ConsignmentStatus> consignmentStatuses =  consignmentDao.getAll(ConsignmentStatus.class);
         consignmentStatuses.remove(consignmentDao.get(ConsignmentStatus.class, EnumConsignmentStatus.ShipmentReceivedAtHub.getId()));
         return consignmentStatuses;
+    }
+
+    @Override
+    public List<ConsignmentDto> getConsignmentDtoList(Set<Consignment> consignments) {
+        List<ConsignmentDto> consignmentDtos = new ArrayList<ConsignmentDto>();
+        ConsignmentDto consignmentDto = new  ConsignmentDto();
+        for(Consignment consignment : consignments){
+            consignmentDto.setAwbNumber(consignment.getAwbNumber());
+            consignmentDto.setCnnNumber(consignment.getCnnNumber());
+            consignmentDto.setAddress(consignment.getAddress());
+            consignmentDto.setPaymentMode(consignment.getPaymentMode());
+            consignmentDto.setAmount(consignment.getAmount());
+            consignmentDtos.add(consignmentDto);
+
+        }
+        return consignmentDtos;
     }
 }

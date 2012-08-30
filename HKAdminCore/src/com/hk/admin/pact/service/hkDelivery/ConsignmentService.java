@@ -9,6 +9,7 @@ import com.hk.domain.courier.Courier;
 import com.hk.domain.user.User;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.admin.dto.ConsignmentDto;
 
 import java.util.Date;
 import java.util.List;
@@ -55,5 +56,7 @@ public interface ConsignmentService {
     public List<Consignment> getConsignmentsFromShippingOrderList(List<ShippingOrder> shippingOrderList);
 
     public List<ConsignmentStatus> getConsignmentStatusList();
+
+    public List<ConsignmentDto> getConsignmentDtoList(Set<Consignment> consignments);
 
 }
