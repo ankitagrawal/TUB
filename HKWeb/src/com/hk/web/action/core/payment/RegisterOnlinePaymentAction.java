@@ -60,7 +60,7 @@ public class RegisterOnlinePaymentAction extends BaseAction {
 		//currently i can safely assume, that most people whom we give conversion benefit will have 0 cod charges only, no order amount is pretty much their online payment amount
 		//verify if pricing engine will return the right amount or not, i would prefer using the previous payment amount as the base parameter
 		bankList = getBaseDao().getAll(PreferredBankGateway.class);
-		if (order != null && order.isCOD()) {
+		if (order != null && order.isCOD() && !order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())) {
 			HttpServletResponse httpResponse = WebContext.getResponse();
 			Cookie wantedCODCookie = new Cookie(HealthkartConstants.Cookie.codConverterID, CryptoUtil.encrypt(order.getId().toString()));
 			wantedCODCookie.setPath("/");

@@ -7,6 +7,7 @@ import com.hk.constants.core.Keys;
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.core.fliter.CartLineItemFilter;
@@ -22,6 +23,7 @@ import com.hk.dto.pricing.PricingDto;
 import com.hk.manager.ReferrerProgramManager;
 import com.hk.pact.dao.payment.PaymentDao;
 import com.hk.pact.dao.user.UserDao;
+import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
@@ -77,6 +79,8 @@ public class PaymentSuccessAction extends BaseAction {
 	private Double cashBackPercentage;
 	@Autowired
 	AdminOrderService adminOrderService;
+	@Autowired
+	OrderLoggingService orderLoggingService;
 
 
 	public Resolution pre() {
@@ -141,6 +145,7 @@ public class PaymentSuccessAction extends BaseAction {
 								getBaseDao().deleteAll(codCartLineItems);
 								order.getCartLineItems().addAll(cartLineItems);
 								order = getOrderService().save(order);
+								orderLoggingService.logOrderActivity(order, EnumOrderLifecycleActivity.Cod_Conversion);
 							}
 							break;
 						}
