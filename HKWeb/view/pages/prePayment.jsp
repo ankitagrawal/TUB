@@ -43,7 +43,7 @@
         <div class='steps_prepay'>
             <c:set var="codPaymentModeId" value="<%=EnumPaymentMode.COD.getId()%>"/>
             <c:if test="${order != null}">
-                <c:if test="${order.payment.paymentMode.id == codPaymentModeId  && order.amount < 1500}">
+                <c:if test="${order.payment.paymentMode.id == codPaymentModeId  && order.amount < 1500 && order.amount > 250}">
                     <div>
                         <img src="${pageContext.request.contextPath}/images/banners/pay_online_banner2.5.jpg">
                     </div>

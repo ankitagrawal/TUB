@@ -851,6 +851,17 @@
         <description>
             get cod converter url for an order
         </description>
+        <name>splitBOEscalateSOCreateShipmentAndRelatedTasks</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.String splitBOEscalateSOCreateShipmentAndRelatedTasks(com.hk.domain.order.Order)</function-signature>
+        <example>
+            ${hk:splitBOEscalateSOCreateShipmentAndRelatedTasks(${order})}
+        </example>
+    </function>
+    <function>
+        <description>
+            get cod converter url for an order
+        </description>
         <name>getCodConverterLink</name>
         <function-class>com.hk.taglibs.Functions</function-class>
         <function-signature>java.lang.String getCodConverterLink(com.hk.domain.order.Order)</function-signature>

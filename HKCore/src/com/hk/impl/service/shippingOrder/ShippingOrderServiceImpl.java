@@ -188,6 +188,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     }
 
 	@Override
+	@Transactional
 	public void nullifyCodCharges(ShippingOrder shippingOrder) {
 		Double codChargesApplied = 0D;
 		for (LineItem lineItem : shippingOrder.getLineItems()) {
