@@ -128,4 +128,5 @@ public interface MasterDataDao
 
     public List<User> getAgentsWithOpenRunsheet();
 
+    public List<ConsignmentStatus> getConsignmentStatusList();
 }

@@ -339,4 +339,8 @@ public class MasterDataDaoImpl implements MasterDataDao {
     public List<User> getAgentsWithOpenRunsheet() {
         return runsheetService.getAgentList(getBaseDao().get(RunsheetStatus.class,EnumRunsheetStatus.Open.getId()));
     }
+
+    public List<ConsignmentStatus> getConsignmentStatusList(){
+        return getBaseDao().getAll(ConsignmentStatus.class);
+    }
 }
