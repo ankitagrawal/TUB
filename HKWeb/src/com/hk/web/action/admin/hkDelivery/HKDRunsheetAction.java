@@ -123,7 +123,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
                 return new ForwardResolution(HKDRunsheetAction.class,"editRunsheet").addParameter("runsheet", runsheet.getId());
             }
             if((runsheet.getActualCollection() != null) &&
-                (runsheet.getActualCollection().doubleValue() > runsheet.getExpectedCollection().doubleValue())){
+                ((runsheet.getActualCollection().doubleValue() - runsheet.getExpectedCollection().doubleValue()) > 10.0)){
                 getContext().getValidationErrors().add("1", new SimpleError("Actual collected amount cannot be greater than expected amount "));
                 return new ForwardResolution(HKDRunsheetAction.class, "editRunsheet").addParameter("runsheet", runsheet.getId());
             }
@@ -148,7 +148,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
     public Resolution closeRunsheet(){
         if(runsheet != null){
             if((runsheet.getActualCollection() != null)
-                    && (runsheet.getActualCollection().doubleValue() > runsheet.getExpectedCollection().doubleValue())){
+                    && ((runsheet.getActualCollection().doubleValue() - runsheet.getExpectedCollection().doubleValue())> 10)){
                 getContext().getValidationErrors().add("1", new SimpleError("Actual collected amount ("+runsheet.getActualCollection()+") cannot be greater than expected amount("+runsheet.getExpectedCollection()+") "));
                 return new ForwardResolution(HKDRunsheetAction.class, "editRunsheet").addParameter("runsheet", runsheet.getId());
             }
