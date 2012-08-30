@@ -34,10 +34,10 @@ import java.util.List;
 public class PurchaseOrderManager {
 
 	@Autowired
-	PurchaseOrderDao purchaseOrderDao;
+	PoLineItemDao poLineItemDao;
 
 	@Autowired
-	PoLineItemDao poLineItemDao;
+	PurchaseOrderDao purchaseOrderDao;
 
 	@Autowired
 	InventoryService inventoryService;
@@ -55,6 +55,7 @@ public class PurchaseOrderManager {
 	private static final String QTY = "QTY";
 	private static final String COST_PRICE = "COST_PRICE";
 	private static final String MRP = "MRP";
+	public static final String SUPPLIER_CODE = "SUPPLIER CODE";
 	public static final String CHECKED_IN_QTY = "CHECKED-IN QTY";
 	private static final String ID = "ID:";
 	private static final String CREATED_DATE = "Created Date:";
@@ -104,6 +105,7 @@ public class PurchaseOrderManager {
 		setCellValue(row1, 4, QTY);
 		setCellValue(row1, 5, COST_PRICE);
 		setCellValue(row1, 6, MRP);
+		setCellValue(row1, 7, SUPPLIER_CODE);
 
 		int rowCounter = 1;
 
@@ -138,6 +140,7 @@ public class PurchaseOrderManager {
 
 			//check for variant name null
 			String variantName = productVariant.getProduct().getName().concat(" ").concat(productVariant.getVariantName() == null ? "" : productVariant.getVariantName());
+			String supplierCode = productVariant.getSupplierCode();
 			setCellValue(row1, 1, variantName);
 
 			setCellValue(row1, 2, productVariant.getUpc());
@@ -145,6 +148,7 @@ public class PurchaseOrderManager {
 			setCellValue(row1, 4, poLineItem.getQty());
 			setCellValue(row1, 5, String.valueOf(poLineItem.getCostPrice()));
 			setCellValue(row1, 6, String.valueOf(poLineItem.getMrp()));
+			setCellValue(row1, 7, supplierCode == null ? "" : supplierCode);
 		}
 		addEmptyLine(row1, sheet1, ++rowCounter, cell);
 		row1 = sheet1.createRow(++rowCounter);
@@ -175,7 +179,6 @@ public class PurchaseOrderManager {
 	}
 
 	public PurchaseOrderDto generatePurchaseOrderDto(PurchaseOrder purchaseOrder) {
-
 		PurchaseOrderDto purchaseOrderDto = new PurchaseOrderDto();
 		List<PoLineItemDto> poLineItemDtoList = new ArrayList<PoLineItemDto>();
 		purchaseOrderDto.setPurchaseOrder(purchaseOrder);
@@ -213,13 +216,13 @@ public class PurchaseOrderManager {
 				tax = taxComponent.getTax();
 				surcharge = taxComponent.getSurcharge();
 				/*
-								* if (purchaseOrder.getSupplier().getState().equals(sku.getWarehouse().getState())) { tax =
-								* sku.getTax().getValue() * taxable; Surcharge is calculated only if the state is HARYANA
-								*//*
-                     * if(sku.getWarehouse().getState().equalsIgnoreCase(StateList.HARYANA)){ surcharge = tax *
-                     * StateList.SURCHARGE; } } else { if (sku.getTax().getValue() != 0.0) { tax = StateList.CST *
-                     * taxable; //surcharge = tax * StateList.SURCHARGE; } }
-                     */
+							   * if (purchaseOrder.getSupplier().getState().equals(sku.getWarehouse().getState())) { tax =
+							   * sku.getTax().getValue() * taxable; Surcharge is calculated only if the state is HARYANA
+							   *//*
+	                     * if(sku.getWarehouse().getState().equalsIgnoreCase(StateList.HARYANA)){ surcharge = tax *
+	                     * StateList.SURCHARGE; } } else { if (sku.getTax().getValue() != 0.0) { tax = StateList.CST *
+	                     * taxable; //surcharge = tax * StateList.SURCHARGE; } }
+	                     */
 			}
 			payable = taxable + tax + surcharge;
 			poLineItemDto.setTaxable(taxable);
@@ -248,6 +251,7 @@ public class PurchaseOrderManager {
 		return purchaseOrderDto;
 
 	}
+
 
 	private void setCellValue(Row row, int column, Long cellValue) {
 		if (cellValue != null) {
