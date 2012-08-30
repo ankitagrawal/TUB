@@ -9,9 +9,6 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.Query;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,12 +25,6 @@ import com.hk.pact.dao.catalog.product.ProductDao;
 @SuppressWarnings("unchecked")
 @Repository
 public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
-
-
-    private static Logger logger = LoggerFactory.getLogger(ProductDaoImpl.class);
-
-    @Autowired
-    ProductSearchService productSearchService;
 
     public Product getProductById(String productId) {
         return get(Product.class, productId);
@@ -56,14 +47,7 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
 	    if (product.getCodAllowed() == null)   {
             product.setCodAllowed(Boolean.FALSE);
         }
-        Product savedProduct = (Product) super.save(product);
-        try{
-                productSearchService.indexProduct(savedProduct);
-        }catch (SearchException ex){
-            logger.error(String.format("Unable to refresh index for the product %s. Some problem with Solr"
-                    ,product.getId()), ex);
-        }
-        return savedProduct;
+        return (Product) super.save(product);
     }
 
     public List<Product> getProductByCategory(String category) {
@@ -195,16 +179,17 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
 				if (filterOptions != null && !filterOptions.isEmpty() && groupsCount > 0) {
 					productIds = getSession().createSQLQuery("select distinct pv.product_id from product_variant_has_product_option pvhpo, product_variant pv where pvhpo.product_variant_id=pv.id and pv.product_id in (:productIds) and pvhpo.product_option_id in (:filterOptions) group by pvhpo.product_variant_id having count(pvhpo.product_variant_id) = :groupsCount").setParameterList("productIds", productIds).setParameterList("filterOptions", filterOptions).setParameter("groupsCount", groupsCount).list();
 				}
-			
-				DetachedCriteria criteria = DetachedCriteria.forClass(Product.class);
-				if (StringUtils.isNotBlank(brand)) {
-					criteria.add(Restrictions.eq("brand", brand));
+				if (productIds != null && !productIds.isEmpty()) {
+					DetachedCriteria criteria = DetachedCriteria.forClass(Product.class);
+					if (StringUtils.isNotBlank(brand)) {
+						criteria.add(Restrictions.eq("brand", brand));
+					}
+					criteria.add(Restrictions.in("id", productIds));
+					criteria.add(Restrictions.eq("deleted", false));
+					criteria.add(Restrictions.eq("isGoogleAdDisallowed", false));
+					criteria.addOrder(Order.asc("orderRanking"));
+					return list(criteria, page, perPage);
 				}
-				criteria.add(Restrictions.in("id", productIds));
-				criteria.add(Restrictions.eq("deleted", false));
-				criteria.add(Restrictions.eq("isGoogleAdDisallowed", false));
-				criteria.addOrder(Order.asc("orderRanking"));
-				return list(criteria, page, perPage);
 			}
 		}
 		return null;
@@ -285,16 +270,16 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
 
     }
 
-    public Page getPaginatedResults(List<String> productIdList, int page, int perPage) {
-        DetachedCriteria criteria = DetachedCriteria.forClass(Product.class);
-        criteria.add(Restrictions.in("id", productIdList));
-        return list(criteria, page, perPage);
-    }
-
     public List<Product> getAllProductsById(List<String> productIdList) {
         DetachedCriteria criteria = DetachedCriteria.forClass(Product.class);
         criteria.add(Restrictions.in("id", productIdList));
         return findByCriteria(criteria);
+    }
+
+    public Page getPaginatedResults(List<String> productIdList, int page, int perPage) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(Product.class);
+        criteria.add(Restrictions.in("id", productIdList));
+        return list(criteria, page, perPage);
     }
 
     public List<Product> getRecentlyAddedProducts() {

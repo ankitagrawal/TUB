@@ -4,7 +4,9 @@ import java.util.*;
 
 import com.hk.domain.content.SeoData;
 import com.hk.domain.search.SolrProduct;
+import com.hk.exception.SearchException;
 import com.hk.pact.dao.seo.SeoDao;
+import com.hk.pact.service.search.ProductSearchService;
 import net.sourceforge.stripes.controller.StripesFilter;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,9 @@ import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.review.ReviewService;
 import com.hk.util.ProductReferrerMapper;
 import com.hk.web.filter.WebContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -47,7 +52,12 @@ public class ProductServiceImpl implements ProductService {
     private LinkManager               linkManager;
 
     @Autowired
+    ProductSearchService productSearchService;
+
+    @Autowired
     private SeoDao seoDao;
+
+    private static Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
 
     public Product getProductById(String productId) {
         return getProductDAO().getProductById(productId);
@@ -169,7 +179,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public Product save(Product product) {
-        return getProductDAO().save(product);
+        Product savedProduct = getProductDAO().save(product);
+        try{
+            productSearchService.indexProduct(savedProduct);
+        }catch (SearchException se){
+            logger.error(String.format("Unable to index product %s", product.getId(), se));
+        }
+        return savedProduct;
     }
 
     public Page getProductReviews(Product product, List<Long> reviewStatusList, int page, int perPage) {

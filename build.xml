@@ -35,7 +35,7 @@
 	<target name="dev-clean" depends="clean, build"/>
 	<target name="db">
 		<updateDatabase changelogfile="${project.healthkart.dir}/db/changelog.xml" driver="${database.driver}" url="${database.url.dev}" username="${database.username}" password="${database.password}" classpathref="compile.classpath" />
-	</target>
+	    </target>
 
 	<target name="db-diff" description="Does a diff of the current db with the workbench db. adds to changelog.xml any changes to db">
 		<diffDatabaseToChangeLog driver="${database.driver}" url="${database.url.dev}" username="${database.username}" password="${database.password}" changelogfile="${project.healthkart.dir}/db/changelog.xml" referencedriver="${database.driver}" referenceurl="${database.url.workbench}" referenceusername="${database.username}" referencepassword="${database.password}" classpathref="compile.classpath">
