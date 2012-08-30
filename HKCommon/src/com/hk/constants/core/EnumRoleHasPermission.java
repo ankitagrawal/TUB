@@ -388,7 +388,6 @@ public enum EnumRoleHasPermission {
     HK_DELIVERY_GUY(
             EnumRole.HK_DELIVERY_GUY,
             Arrays.asList(
-                    EnumPermission.SUPER_LOGIN,
                     EnumPermission.HK_DELIVERY_WORKSHEET_DOWNLOAD,
                     EnumPermission.VIEW_DELIVERY_QUEUE,
                     EnumPermission.DOWNLOAD_COURIER_EXCEL,
@@ -400,7 +399,6 @@ public enum EnumRoleHasPermission {
     HK_DELIVERY_ADMIN(
             EnumRole.HK_DELIVERY_ADMIN,
             Arrays.asList(
-                    EnumPermission.SUPER_LOGIN,
                     EnumPermission.HK_DELIVERY_WORKSHEET_DOWNLOAD,
                     EnumPermission.VIEW_DELIVERY_QUEUE,
                     EnumPermission.DOWNLOAD_COURIER_EXCEL,
@@ -412,7 +410,6 @@ public enum EnumRoleHasPermission {
     HK_DELIVERY_HUB_MANAGER(
             EnumRole.HK_DELIVERY_HUB_MANAGER,
             Arrays.asList(
-                    EnumPermission.SUPER_LOGIN,
                     EnumPermission.HK_DELIVERY_WORKSHEET_DOWNLOAD,
                     EnumPermission.VIEW_DELIVERY_QUEUE,
                     EnumPermission.DOWNLOAD_COURIER_EXCEL,

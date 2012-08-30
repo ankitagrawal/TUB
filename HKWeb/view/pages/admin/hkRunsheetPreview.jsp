@@ -56,8 +56,7 @@
                 </tr>
                 </thead>
                 <c:forEach items="${runsheetAction.consignmentDtoList}" var="consignmentDto" varStatus="ctr">
-                    <s:hidden name="consignmentDtoList[${ctr.index}]" value="${consignment.id}"/>
-                    <tr>
+                    <tr id="consignmentRow${ctr.count}" class="consignmentRow${ctr.count}" >
                         <td>${ctr.count}</td>
                         <td>${consignmentDto.awbNumber}<s:hidden name="consignmentDtoList[${ctr.index}].awbNumber"/></td>
                         <td>${consignmentDto.cnnNumber}<s:hidden name="consignmentDtoList[${ctr.index}].cnnNumber"/></td>
@@ -75,7 +74,7 @@
                             </s:select>
                         </td>
                         <td>
-                            <a href="hkDeliveryWorksheet.jsp#" class="removeRowButton"
+                            <a href="hkDeliveryWorksheet.jsp#" class="removeRowButton" id="removeRowButton"
                                style="font-size:1.2em;color:blue;">Remove Consignment</a>
                         </td>
                     </tr>
@@ -90,7 +89,13 @@
 
     $(document).ready(function () {
        $('#downloadRunsheetAgainButton').hide();
+
+        $("#removeRowButton").click(function() {
+            alert("Handler for .click() called.");
+        });
+
    });
+
 
     $('.runsheetDownloadButton').click(function() {
     $('#runsheetDownloadButton').hide();
