@@ -54,7 +54,6 @@ public class BulkOrderSplitterAction extends BaseAction {
 		return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
 	}
 
-	@DefaultHandler
 	public Resolution splitSingleOrder() {
 		adminOrderService.splitBOEscalateSOCreateShipmentAndRelatedTasks(order);
 		return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
