@@ -344,53 +344,61 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public Set<ShippingOrder> splitOrder(Order order) throws OrderSplitException {
 
-        Set<CartLineItem> groundShippedCartLineItem = getMatchCartLineItemOrder(order, true);
-        Set<CartLineItem> baseCartLineItem = getMatchCartLineItemOrder(order, false);
-        List listOfCartLineItemSet = new ArrayList<Set<CartLineItem>>();
-        if (groundShippedCartLineItem != null) {
-            listOfCartLineItemSet.add(groundShippedCartLineItem);
-        }
-        if (baseCartLineItem != null) {
-            listOfCartLineItemSet.add(baseCartLineItem);
-        }
+//        Set<CartLineItem> groundShippedCartLineItem = getMatchCartLineItemOrder(order, true);
+//        Set<CartLineItem> baseCartLineItem = getMatchCartLineItemOrder(order, false);
+//
+//
+//        List listOfCartLineItemSet = new ArrayList<Set<CartLineItem>>();
+//        if (groundShippedCartLineItem != null) {
+//            listOfCartLineItemSet.add(groundShippedCartLineItem);
+//        }
+//        if (baseCartLineItem != null) {
+//            listOfCartLineItemSet.add(baseCartLineItem);
+//        }
+
+
+        List listOfCartLineItemSet = getMatchCartLineItemOrder(order);
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
 
-        for (int i = 0; i < listOfCartLineItemSet.size(); i++) {         
+        for (int i = 0; i < listOfCartLineItemSet.size(); i++) {
 
-//            List<DummyOrder> dummyOrders = orderSplitterService.listBestDummyOrdersPractically(order);
-             List<DummyOrder> dummyOrders = orderSplitterService.listBestDummyOrdersPractically(order, (Set<CartLineItem>)listOfCartLineItemSet.get(i) );
+//            List<DummyOrder> dummyOrders = orderSplitterService.listBestDummyOrdersPractically(order)
 
-            if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
-                long startTime = (new Date()).getTime();
+            if ((listOfCartLineItemSet.get(i)) != null && listOfCartLineItemSet.size() > 0) {
+                List<DummyOrder> dummyOrders = orderSplitterService.listBestDummyOrdersPractically(order, (Set<CartLineItem>) listOfCartLineItemSet.get(i));
 
-                // Create Shipping orders and Save it in DB
-                for (DummyOrder dummyOrder : dummyOrders) {
-                    if (dummyOrder.getCartLineItemList().size() > 0) {
-                        Warehouse warehouse = dummyOrder.getWarehouse();
-                        ShippingOrder shippingOrder = shippingOrderService.createSOWithBasicDetails(order, warehouse);
-                        for (CartLineItem cartLineItem : dummyOrder.getCartLineItemList()) {
-                            Sku sku = skuService.getSKU(cartLineItem.getProductVariant(), warehouse);
-                            LineItem shippingOrderLineItem = LineItemHelper.createLineItemWithBasicDetails(sku, shippingOrder, cartLineItem);
-                            shippingOrder.getLineItems().add(shippingOrderLineItem);
+                if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
+                    long startTime = (new Date()).getTime();
+
+                    // Create Shipping orders and Save it in DB
+                    for (DummyOrder dummyOrder : dummyOrders) {
+                        if (dummyOrder.getCartLineItemList().size() > 0) {
+                            Warehouse warehouse = dummyOrder.getWarehouse();
+                            ShippingOrder shippingOrder = shippingOrderService.createSOWithBasicDetails(order, warehouse);
+                            for (CartLineItem cartLineItem : dummyOrder.getCartLineItemList()) {
+                                Sku sku = skuService.getSKU(cartLineItem.getProductVariant(), warehouse);
+                                LineItem shippingOrderLineItem = LineItemHelper.createLineItemWithBasicDetails(sku, shippingOrder, cartLineItem);
+                                shippingOrder.getLineItems().add(shippingOrderLineItem);
+                            }
+                            shippingOrder.setBasketCategory(getBasketCategory(shippingOrder).getName());
+                            ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, order);
+                            shippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(shippingOrder));
+                            shippingOrder = shippingOrderService.save(shippingOrder);
+                            /**
+                             * this additional call to save is done so that we have shipping order id to generate shipping order
+                             * gateway id
+                             */
+                            shippingOrder = ShippingOrderHelper.setGatewayIdOnShippingOrder(shippingOrder);
+                            shippingOrder = shippingOrderService.save(shippingOrder);
+                            shippingOrders.add(shippingOrder);
                         }
-                        shippingOrder.setBasketCategory(getBasketCategory(shippingOrder).getName());
-                        ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, order);
-                        shippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(shippingOrder));
-                        shippingOrder = shippingOrderService.save(shippingOrder);
-                        /**
-                         * this additional call to save is done so that we have shipping order id to generate shipping order
-                         * gateway id
-                         */
-                        shippingOrder = ShippingOrderHelper.setGatewayIdOnShippingOrder(shippingOrder);
-                        shippingOrder = shippingOrderService.save(shippingOrder);
-                        shippingOrders.add(shippingOrder);
                     }
-                }
 
-                long endTime = (new Date()).getTime();
-                logger.debug("Total time to split order[" + order.getId() + "] = " + (endTime - startTime));
-            } else {
-                logger.debug("order with gatewayId:" + order.getGatewayOrderId() + " is not in placed status. abort system split and do a manual split");
+                    long endTime = (new Date()).getTime();
+                    logger.debug("Total time to split order[" + order.getId() + "] = " + (endTime - startTime));
+                } else {
+                    logger.debug("order with gatewayId:" + order.getGatewayOrderId() + " is not in placed status. abort system split and do a manual split");
+                }
             }
         }
         return shippingOrders;
@@ -578,22 +586,54 @@ public class OrderServiceImpl implements OrderService {
     }
 
 
-    public Set<CartLineItem> getMatchCartLineItemOrder(Order order, boolean groundshippedLineItemRequired) {
+//    public Set<CartLineItem> getMatchCartLineItemOrder(Order order, boolean groundshippedLineItemRequired) {
+//        CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
+//		Set<CartLineItem> productCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).filter();
+//        Set<CartLineItem> cartLineItem1 = new HashSet<CartLineItem>();
+//        Set<CartLineItem> cartLineItem2 = new HashSet<CartLineItem>();
+//
+//        for (CartLineItem productCartLineItem : productCartLineItems) {
+//            ProductVariant productVariant = productCartLineItem.getProductVariant();
+//            if (productVariant != null && productVariant.getProduct() != null) {
+//                Product product = productVariant.getProduct();
+//                if (groundshippedLineItemRequired && product.isGroundShipping()) {
+//                    cartLineItem1.add(productCartLineItem);
+//                } else {
+//                    cartLineItem2.add(productCartLineItem);
+//                }
+//            }
+//        }
+//        return cartLineItem1;
+//    }
+
+
+    public List<Set<CartLineItem>> getMatchCartLineItemOrder(Order order) {
         CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
-		Set<CartLineItem> productCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).filter();
+        Set<CartLineItem> productCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).filter();
         Set<CartLineItem> cartLineItem1 = new HashSet<CartLineItem>();
+        Set<CartLineItem> cartLineItem2 = new HashSet<CartLineItem>();
+
         for (CartLineItem productCartLineItem : productCartLineItems) {
             ProductVariant productVariant = productCartLineItem.getProductVariant();
             if (productVariant != null && productVariant.getProduct() != null) {
                 Product product = productVariant.getProduct();
-                if (groundshippedLineItemRequired && product.isGroundShipping()) {
+                if (product.isGroundShipping()) {
                     cartLineItem1.add(productCartLineItem);
                 } else {
-                    cartLineItem1.add(productCartLineItem);
+                    cartLineItem2.add(productCartLineItem);
                 }
             }
         }
-        return cartLineItem1;
-    }    
+        List al1 = new ArrayList<Set<CartLineItem>>();
+        if (cartLineItem1 != null && cartLineItem1.size() > 0) {
+            al1.add(cartLineItem1);
+        }
+        if (cartLineItem2 != null && cartLineItem2.size() > 0) {
+            al1.add(cartLineItem2);
+        }
+
+
+        return al1;
+    }
 
 }
