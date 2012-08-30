@@ -8,11 +8,13 @@ import com.hk.admin.util.HKDeliveryUtil;
 import com.hk.constants.hkDelivery.EnumConsignmentStatus;
 import com.hk.constants.hkDelivery.EnumRunsheetStatus;
 import com.hk.constants.hkDelivery.HKDeliveryConstants;
+import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.user.User;
 import com.hk.pact.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.hk.admin.pact.service.hkDelivery.RunSheetService;
+import com.hk.admin.dto.ConsignmentDto;
 import com.hk.domain.hkDelivery.Runsheet;
 import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.hkDelivery.RunsheetStatus;
@@ -160,5 +162,23 @@ public class RunSheetServiceImpl implements RunSheetService {
         }
         return runsheetObj;
 
+    }
+
+    @Override
+    public Runsheet updateRunsheetParams(Runsheet runsheet, ConsignmentDto consignmentDto) {
+        Double expectedCollection = runsheet.getExpectedCollection();
+        Long codBoxCount = runsheet.getCodBoxCount();
+        Long prepaidBoxCount = runsheet.getPrepaidBoxCount();
+
+        if (consignmentDto.getPaymentMode().equals(EnumPaymentMode.COD)) {
+            expectedCollection = expectedCollection + consignmentDto.getAmount();
+            ++codBoxCount;
+        } else {
+            ++prepaidBoxCount;
+        }
+        runsheet.setCodBoxCount(codBoxCount);
+        runsheet.setExpectedCollection(expectedCollection);
+        runsheet.setPrepaidBoxCount(prepaidBoxCount);
+        return runsheet;
     }
 }
