@@ -57,7 +57,7 @@
                 </thead>
                 <c:forEach items="${runsheetAction.consignmentDtoList}" var="consignmentDto" varStatus="ctr">
                     <s:hidden name="consignmentDtoList[${ctr.index}]" value="${consignment.id}"/>
-                    <tr>
+                    <tr class="consignment-row">
                         <td>${ctr.count}</td>
                         <td>${consignmentDto.awbNumber}<s:hidden name="consignmentDtoList[${ctr.index}].awbNumber"/></td>
                         <td>${consignmentDto.cnnNumber}<s:hidden name="consignmentDtoList[${ctr.index}].cnnNumber"/></td>
@@ -90,6 +90,13 @@
 
     $(document).ready(function () {
        $('#downloadRunsheetAgainButton').hide();
+
+       $('.removeRowButton').click(function(event){
+          event.preventDefault();
+           var row = $(this).closest('.consignment-row');
+           row.slideUp();
+           row.remove();
+       });
    });
 
     $('.runsheetDownloadButton').click(function() {
