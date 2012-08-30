@@ -118,7 +118,7 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
     }
 
     public List<Product> getAllNonDeletedProducts() {
-        return getHibernateTemplate().find("select p from Product p where p.deleted = false");
+        return super.findByQuery("select p from Product p where p.deleted = false");
     }
 
     public List<Product> getAllProductByBrand(String brand) {
