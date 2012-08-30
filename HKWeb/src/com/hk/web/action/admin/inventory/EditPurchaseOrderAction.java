@@ -121,12 +121,22 @@ public class EditPurchaseOrderAction extends BaseAction {
     public Resolution save() {
         if (purchaseOrder != null && purchaseOrder.getId() != null) {
             logger.debug("poLineItems@Save: " + poLineItems.size());
-
+	        double discountRatio = 0;
+	        if(purchaseOrder.getPayable() != null && purchaseOrder.getPayable() > 0 && purchaseOrder.getDiscount() != null) {
+		        discountRatio = purchaseOrder.getDiscount()/purchaseOrder.getPayable();
+	        }
             for (PoLineItem poLineItem : poLineItems) {
                 if (poLineItem.getQty() != null) {
                     if (poLineItem.getQty() == 0 && poLineItem.getId() != null) {
                         getBaseDao().delete(poLineItem);
                     } else if (poLineItem.getQty() > 0) {
+	                    if(poLineItem.getCostPrice() != null) {
+		                    double poLineItemDiscount = 0;
+		                    if(poLineItem.getDiscountPercent() != null){
+			                    poLineItemDiscount = poLineItem.getCostPrice() * poLineItem.getDiscountPercent()/100;
+		                    }
+		                    poLineItem.setProcurementPrice( poLineItem.getCostPrice() - poLineItemDiscount - poLineItem.getCostPrice()*discountRatio/poLineItem.getQty() );
+	                    }
                         Sku sku = null;
                         try {
                             sku = skuService.getSKU(poLineItem.getProductVariant(), purchaseOrder.getWarehouse());
@@ -146,9 +156,12 @@ public class EditPurchaseOrderAction extends BaseAction {
                     }
                 }
             }
+
             purchaseOrder.setUpdateDate(new Date());
             purchaseOrderDto = purchaseOrderManager.generatePurchaseOrderDto(purchaseOrder);
             purchaseOrder.setPayable(purchaseOrderDto.getTotalPayable());
+	        double overallDiscount = purchaseOrder.getDiscount() != null ? purchaseOrder.getDiscount() : 0;
+	        purchaseOrder.setFinalPayableAmount(purchaseOrder.getPayable() - overallDiscount);
             purchaseOrderDao.save(purchaseOrder);
 
             if (purchaseOrder.getPurchaseOrderStatus().getId() == EnumPurchaseOrderStatus.SentForApproval.getId()) {
@@ -233,4 +246,12 @@ public class EditPurchaseOrderAction extends BaseAction {
     public void setProductVariantService(ProductVariantService productVariantService) {
         this.productVariantService = productVariantService;
     }
+
+	public PurchaseOrderManager getPurchaseOrderManager() {
+		return purchaseOrderManager;
+	}
+
+	public void setPurchaseOrderManager(PurchaseOrderManager purchaseOrderManager) {
+		this.purchaseOrderManager = purchaseOrderManager;
+	}
 }

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.hk.admin.pact.dao.inventory.PoLineItemDao;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -41,6 +42,9 @@ public class PurchaseOrderManager {
 
     @Autowired
     PurchaseOrderDao purchaseOrderDao;
+
+	@Autowired
+	PoLineItemDao poLineItemDao;
 
     @Autowired
     InventoryService inventoryService;
@@ -207,6 +211,9 @@ public class PurchaseOrderManager {
                 if(poLineItem.getMrp() != null) {
                     marginMrpVsCP = (poLineItem.getMrp() - poLineItem.getCostPrice())/poLineItem.getCostPrice()*100;
                 }
+	            if(poLineItem.getDiscountPercent() != null) {
+		            taxable = taxable - poLineItem.getDiscountPercent()/100*taxable;
+	            }
             }
             if (purchaseOrder.getSupplier() != null && purchaseOrder.getSupplier().getState() != null && productVariant != null && sku.getTax() != null) {
                 TaxComponent taxComponent = TaxUtil.getSupplierTaxForPV(purchaseOrder.getSupplier(), sku, taxable);
@@ -234,6 +241,11 @@ public class PurchaseOrderManager {
             totalTax += tax;
             totalSurcharge += surcharge;
             totalPayable += payable;
+	        poLineItem.setTaxableAmount(taxable);
+	        poLineItem.setPayableAmount(payable);
+	        poLineItem.setSurchargeAmount(surcharge);
+	        poLineItem.setTaxAmount(tax);
+	        poLineItemDao.save(poLineItem);
         }
         purchaseOrderDto.setPoLineItemDtoList(poLineItemDtoList);
         purchaseOrderDto.setTotalTaxable(totalTaxable);

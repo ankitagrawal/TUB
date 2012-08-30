@@ -193,6 +193,7 @@ public class POAction extends BasePaginatedAction {
             } else {
                 grnLineItem.setMrp(0.0);
             }
+	        grnLineItem.setDiscountPercent(poLineItem.getDiscountPercent());
             getGoodsReceivedNoteDao().save(grnLineItem);
         }
 
