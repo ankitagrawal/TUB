@@ -127,10 +127,12 @@ public class InventoryServiceImpl implements InventoryService {
             List<ProductVariant> productVariants = productVariant.getProduct().getInStockVariants();
             boolean shouldUpdateProduct = false;
             //If there are other Variants in stock then there is no way a Product can be marked OutOfStock
-            if (productVariants.size() == 1){
+            if (productVariants.size() == 1 && !productVariant.isDeleted()){
                 if (productVariants.get(0).getId().equals(productVariant.getId())){
-                    productVariant.getProduct().setOutOfStock(Boolean.TRUE);
-                    shouldUpdateProduct = true;
+                    if (!product.getDropShipping()){
+                        productVariant.getProduct().setOutOfStock(Boolean.TRUE);
+                        shouldUpdateProduct = true;
+                    }
                 }
             }
             productVariant.setOutOfStock(true);
