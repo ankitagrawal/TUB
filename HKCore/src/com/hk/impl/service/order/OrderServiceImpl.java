@@ -344,19 +344,6 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public Set<ShippingOrder> splitOrder(Order order) throws OrderSplitException {
 
-//        Set<CartLineItem> groundShippedCartLineItem = getMatchCartLineItemOrder(order, true);
-//        Set<CartLineItem> baseCartLineItem = getMatchCartLineItemOrder(order, false);
-//
-//
-//        List listOfCartLineItemSet = new ArrayList<Set<CartLineItem>>();
-//        if (groundShippedCartLineItem != null) {
-//            listOfCartLineItemSet.add(groundShippedCartLineItem);
-//        }
-//        if (baseCartLineItem != null) {
-//            listOfCartLineItemSet.add(baseCartLineItem);
-//        }
-
-
         List listOfCartLineItemSet = getMatchCartLineItemOrder(order);
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
 
@@ -585,28 +572,6 @@ public class OrderServiceImpl implements OrderService {
 
     }
 
-
-//    public Set<CartLineItem> getMatchCartLineItemOrder(Order order, boolean groundshippedLineItemRequired) {
-//        CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
-//		Set<CartLineItem> productCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).filter();
-//        Set<CartLineItem> cartLineItem1 = new HashSet<CartLineItem>();
-//        Set<CartLineItem> cartLineItem2 = new HashSet<CartLineItem>();
-//
-//        for (CartLineItem productCartLineItem : productCartLineItems) {
-//            ProductVariant productVariant = productCartLineItem.getProductVariant();
-//            if (productVariant != null && productVariant.getProduct() != null) {
-//                Product product = productVariant.getProduct();
-//                if (groundshippedLineItemRequired && product.isGroundShipping()) {
-//                    cartLineItem1.add(productCartLineItem);
-//                } else {
-//                    cartLineItem2.add(productCartLineItem);
-//                }
-//            }
-//        }
-//        return cartLineItem1;
-//    }
-
-
     public List<Set<CartLineItem>> getMatchCartLineItemOrder(Order order) {
         CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
         Set<CartLineItem> productCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).filter();
@@ -631,8 +596,6 @@ public class OrderServiceImpl implements OrderService {
         if (cartLineItem2 != null && cartLineItem2.size() > 0) {
             al1.add(cartLineItem2);
         }
-
-
         return al1;
     }
 
