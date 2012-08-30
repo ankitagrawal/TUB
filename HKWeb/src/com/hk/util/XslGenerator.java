@@ -63,6 +63,8 @@ public class XslGenerator {
     public static final String TECH_PROCESS_COURIER_ID = "TECH_PROCESS_COURIER_ID";
     public static final String ESTIMATED_SHIPPING_COST_COD = "ESTIMATED_SHIPPING_COST_COD";
     public static final String ESTIMATED_SHIPPING_COST_TECH = "ESTIMATED_SHIPPING_COST_TECH";
+    public static final String    GROUND_SHIPPING_AVAILABLE      = "GROUND_SHIPPING_AVAILABLE";
+    public static final String    COD_ON_GROUND_SHIPPING         = "COD_ON_GROUND_SHIPPING";
 
     @Autowired
     private CourierDao            courierDao;
@@ -301,7 +303,7 @@ private SkuService                    skuService;*/
         Row row = sheet1.createRow(0);
         row.setHeightInPoints((short) 25);
 
-        int totalColumnNo = 8;
+        int totalColumnNo = 10;
 
         Cell cell;
         for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
@@ -315,6 +317,8 @@ private SkuService                    skuService;*/
         setCellValue(row, 4, IS_PREFERRED_COD);
         setCellValue(row, 5, ROUTING_CODE);
         setCellValue(row, 6, IS_DELETED);
+        setCellValue(row, 7, GROUND_SHIPPING_AVAILABLE);
+        setCellValue(row, 8, COD_ON_GROUND_SHIPPING);
 
         int initialRowNo = 1;
         for (CourierServiceInfo courierServiceInfo : courierServiceInfoList) {
@@ -332,6 +336,8 @@ private SkuService                    skuService;*/
             setCellValue(row, 4, courierServiceInfo.isPreferredCod() ? "Y" : "N");
             setCellValue(row, 5, courierServiceInfo.getRoutingCode());
             setCellValue(row, 6, courierServiceInfo.isDeleted() ? "Y" : "N");
+            setCellValue(row, 7, courierServiceInfo.isGroundShippingAvailable() ? "Y" : "N");
+            setCellValue(row, 8, courierServiceInfo.isCodAvailableOnGroundShipping() ? "Y" : "N");
 
             initialRowNo++;
 

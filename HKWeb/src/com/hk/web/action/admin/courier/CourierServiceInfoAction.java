@@ -166,6 +166,8 @@ public class CourierServiceInfoAction extends BaseAction {
             CourierServiceInfo courierServiceInfoLocal = courierServiceInfoDao.getCourierServiceByPincodeAndCourierWithoutCOD(courierServiceInfo.getCourier().getId(), pincode);
             if (courierServiceInfoLocal != null) {
                 courierServiceInfoLocal.setCodAvailable(courierServiceInfo.isCodAvailable());
+                courierServiceInfoLocal.setGroundShippingAvailable(courierServiceInfo.isGroundShippingAvailable());
+                courierServiceInfoLocal.setCodAvailableOnGroundShipping(courierServiceInfo.isCodAvailableOnGroundShipping());                
                 courierServiceInfoDao.save(courierServiceInfoLocal);
             } else {
                 courierServiceInfo.setPincode(pincodeObj);
