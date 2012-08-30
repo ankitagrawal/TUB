@@ -43,9 +43,6 @@ import java.util.List;
 class ProductSearchServiceImpl implements ProductSearchService {
     private static Logger logger = LoggerFactory.getLogger(ProductSearchServiceImpl.class);
 
-    @Value("#{hkEnvProps['" + Keys.Env.solrUrl + "']}")
-    String                solrUrl;
-
     @Autowired
     CategoryService categoryService;
 
@@ -153,7 +150,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
             resultCount = response.getResults().getNumFound();
             solrProductList.addAll(response.getBeans(SolrProduct.class));
             searchResult = getSearchResult(solrProductList);
-            resultCount = searchResult.getResultSize();
+            searchResult.setResultSize((int)resultCount);
         }catch (SolrServerException ex){
             SearchException e = wrapException("Unable to get brand catalog results", ex);
             throw e;
@@ -230,9 +227,9 @@ class ProductSearchServiceImpl implements ProductSearchService {
         long resultCount = response.getResults().getNumFound();
         List<SolrProduct> productList = new ArrayList<SolrProduct>();
         productList.addAll(response.getBeans(SolrProduct.class));
-
-        return getSearchResult(productList);
-
+        SearchResult searchResult = getSearchResult(productList);
+        searchResult.setResultSize((int)resultCount);
+        return searchResult;
     }
 
     private SearchResult getSearchResult(List<SolrProduct> solrProducts){
