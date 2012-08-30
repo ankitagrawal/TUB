@@ -170,7 +170,7 @@ public class RunSheetServiceImpl implements RunSheetService {
         Long codBoxCount = runsheet.getCodBoxCount();
         Long prepaidBoxCount = runsheet.getPrepaidBoxCount();
 
-        if (consignmentDto.getPaymentMode().equals(EnumPaymentMode.COD)) {
+        if (consignmentDto.getPaymentMode().equals(EnumPaymentMode.COD.getName())) {
             expectedCollection = expectedCollection + consignmentDto.getAmount();
             ++codBoxCount;
         } else {
