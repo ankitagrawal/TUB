@@ -8455,4 +8455,114 @@
             <column name="similar_product_id"/>
         </createIndex>
     </changeSet>
+    <changeSet author="Rohit (generated)" id="1346329168462-1">
+        <addColumn tableName="goods_received_note">
+            <column name="discount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1346329168462-2">
+        <addColumn tableName="goods_received_note">
+            <column name="final_payable_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1346329168462-3">
+        <addColumn tableName="goods_received_note">
+            <column name="surcharge_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1346329168462-4">
+        <addColumn tableName="goods_received_note">
+            <column name="tax_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1346329168462-5">
+        <addColumn tableName="goods_received_note">
+            <column name="taxable_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1346329168462-6">
+        <addColumn tableName="grn_line_item">
+            <column name="discount_percent" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1346329168462-7">
+        <addColumn tableName="grn_line_item">
+            <column name="payable_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1346329168462-8">
+        <addColumn tableName="grn_line_item">
+            <column name="procurement_price" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1346329168462-9">
+        <addColumn tableName="grn_line_item">
+            <column name="surcharge_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1346329168462-10">
+        <addColumn tableName="grn_line_item">
+            <column name="tax_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1346329168462-11">
+        <addColumn tableName="grn_line_item">
+            <column name="taxable_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1346329168462-12">
+        <addColumn tableName="po_line_item">
+            <column name="discount_percent" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1346329168462-13">
+        <addColumn tableName="po_line_item">
+            <column name="payable_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1346329168462-14">
+        <addColumn tableName="po_line_item">
+            <column name="procurement_price" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1346329168462-15">
+        <addColumn tableName="po_line_item">
+            <column name="surcharge_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1346329168462-16">
+        <addColumn tableName="po_line_item">
+            <column name="tax_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1346329168462-17">
+        <addColumn tableName="po_line_item">
+            <column name="taxable_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1346329168462-18">
+        <addColumn tableName="purchase_order">
+            <column name="discount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1346329168462-19">
+        <addColumn tableName="purchase_order">
+            <column name="final_payable_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1346329168462-20">
+        <addColumn tableName="purchase_order">
+            <column name="surcharge_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1346329168462-21">
+        <addColumn tableName="purchase_order">
+            <column name="tax_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1346329168462-22">
+        <addColumn tableName="purchase_order">
+            <column name="taxable_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
