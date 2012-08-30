@@ -582,8 +582,6 @@ public class OrderServiceImpl implements OrderService {
         CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
 		Set<CartLineItem> productCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).filter();
         Set<CartLineItem> cartLineItem1 = new HashSet<CartLineItem>();
-
-
         for (CartLineItem productCartLineItem : productCartLineItems) {
             ProductVariant productVariant = productCartLineItem.getProductVariant();
             if (productVariant != null && productVariant.getProduct() != null) {
