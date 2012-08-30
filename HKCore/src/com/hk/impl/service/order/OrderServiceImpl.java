@@ -344,14 +344,18 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public Set<ShippingOrder> splitOrder(Order order) throws OrderSplitException {
 
-        Set<CartLineItem> groundShippedCartLineItem = getMatchCartLineItemOrder(order,true);
-        Set<CartLineItem> baseCartLineItem = getMatchCartLineItemOrder (order,false);
+        Set<CartLineItem> groundShippedCartLineItem = getMatchCartLineItemOrder(order, true);
+        Set<CartLineItem> baseCartLineItem = getMatchCartLineItemOrder(order, false);
         List listOfCartLineItemSet = new ArrayList<Set<CartLineItem>>();
-        listOfCartLineItemSet.add(groundShippedCartLineItem);
-        listOfCartLineItemSet.add(baseCartLineItem);
+        if (groundShippedCartLineItem != null) {
+            listOfCartLineItemSet.add(groundShippedCartLineItem);
+        }
+        if (baseCartLineItem != null) {
+            listOfCartLineItemSet.add(baseCartLineItem);
+        }
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
 
-        for (int i = 0; i < listOfCartLineItemSet.size(); i++) {
+        for (int i = 0; i < listOfCartLineItemSet.size(); i++) {         
 
 //            List<DummyOrder> dummyOrders = orderSplitterService.listBestDummyOrdersPractically(order);
              List<DummyOrder> dummyOrders = orderSplitterService.listBestDummyOrdersPractically(order, (Set<CartLineItem>)listOfCartLineItemSet.get(i) );
@@ -575,13 +579,12 @@ public class OrderServiceImpl implements OrderService {
 
 
     public Set<CartLineItem> getMatchCartLineItemOrder(Order order, boolean groundshippedLineItemRequired) {
-        Set<CartLineItem> cartLineItems = order.getCartLineItems();
-//        Set<CartLineItem> groundShippedCartLineItem = new HashSet<CartLineItem>();
-//
+        CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
+		Set<CartLineItem> productCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).filter();
         Set<CartLineItem> cartLineItem1 = new HashSet<CartLineItem>();
 
 
-        for (CartLineItem productCartLineItem : cartLineItems) {
+        for (CartLineItem productCartLineItem : productCartLineItems) {
             ProductVariant productVariant = productCartLineItem.getProductVariant();
             if (productVariant != null && productVariant.getProduct() != null) {
                 Product product = productVariant.getProduct();
