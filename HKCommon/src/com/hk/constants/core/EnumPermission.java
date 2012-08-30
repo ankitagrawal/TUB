@@ -94,7 +94,8 @@ public enum EnumPermission {
   HK_DELIVERY_WORKSHEET_DOWNLOAD                 (PermissionConstants.HK_DELIVERY_WORKSHEET_DOWNLOAD),
   CREATE_REPLACEMENT_ORDER                       (PermissionConstants.CREATE_REPLACEMENT_ORDER),
   SELECT_HUB                                     (PermissionConstants.SELECT_HUB),
-  VIEW_HUB                                       (PermissionConstants.VIEW_HUB);
+  VIEW_HUB                                       (PermissionConstants.VIEW_HUB),
+  ADD_HK_DELIVERY_AGENT                          (PermissionConstants.ADD_HK_DELIVERY_AGENT);
 
   String permissionName;
 

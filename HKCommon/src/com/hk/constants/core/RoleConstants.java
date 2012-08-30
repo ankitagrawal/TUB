@@ -62,4 +62,5 @@ public class RoleConstants {
     public static final String HK_DELIVERY_GUY               = "HK_DELIVERY_GUY";
     public static final String PAYMENT_MANAGER               = "PAYMENT_MANAGER";
     public static final String HK_DELIVERY_ADMIN             = "HK_DELIVERY_ADMIN";
+    public static final String HK_DELIVERY_HUB_MANAGER       = "HK_DELIVERY_HUB_MANAGER";
 }
