@@ -86,10 +86,10 @@ class ProductSearchServiceImpl implements ProductSearchService {
         }catch (SolrException ex) {
             SearchException e = wrapException("Unable to build indexes. Problem with Solr", ex);
             throw e;
-        } catch (Exception ex) {
-            SearchException e = wrapException("Unable to build indexes. Problem with Solr", ex);
-            throw e;
-        }
+            } catch (Exception ex) {
+                SearchException e = wrapException("Unable to build indexes. Problem with Solr", ex);
+                throw e;
+            }
     }
 
     public void indexProduct(Product product) throws SearchException{
@@ -149,8 +149,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
             SolrDocumentList documents = response.getResults();
             resultCount = response.getResults().getNumFound();
             solrProductList.addAll(response.getBeans(SolrProduct.class));
-            searchResult = getSearchResult(solrProductList);
-            searchResult.setResultSize((int)resultCount);
+            searchResult = getSearchResult(solrProductList, (int)resultCount);
         }catch (SolrServerException ex){
             SearchException e = wrapException("Unable to get brand catalog results", ex);
             throw e;
@@ -227,22 +226,16 @@ class ProductSearchServiceImpl implements ProductSearchService {
         long resultCount = response.getResults().getNumFound();
         List<SolrProduct> productList = new ArrayList<SolrProduct>();
         productList.addAll(response.getBeans(SolrProduct.class));
-        SearchResult searchResult = getSearchResult(productList);
+        SearchResult searchResult = getSearchResult(productList, (int)resultCount);
         searchResult.setResultSize((int)resultCount);
         return searchResult;
     }
 
-    private SearchResult getSearchResult(List<SolrProduct> solrProducts){
+    private SearchResult getSearchResult(List<SolrProduct> solrProducts, int totalResultCount){
         List<String> productIds = new ArrayList<String>();
 
-        int maxCount = 80;//Hard Coded for now
-        int counter = 0;
         for (SolrProduct solrProduct : solrProducts){
             productIds.add(solrProduct.getId());
-            counter++;
-            if (counter == maxCount){
-                break;
-            }
         }
         List<Product> products = new ArrayList<Product>();
         List<Product> inStockProducts = new ArrayList<Product>();
@@ -260,7 +253,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
         }
         //Push out of stock products to the last
         inStockProducts.addAll(outOfStockProducts);
-        return new SearchResult(inStockProducts, counter);
+        return new SearchResult(inStockProducts, totalResultCount);
     }
 
     private SearchResult getProductSuggestions(QueryResponse response, String userQuery, int page, int perPage) throws SolrServerException
@@ -305,9 +298,8 @@ class ProductSearchServiceImpl implements ProductSearchService {
             SolrQuery solrQuery = getResultsQuery(sb.toString(),page,perPage);
             response = solr.query(solrQuery);
             List<SolrProduct> solrProductList = getQueryResults(response);
-            sr = getSearchResult(solrProductList);
-            sr.setResultSize((int)response.getResults().getNumFound());
-            //sr.setSolrProducts(solrProductList);
+            int totalResultCount = (int)response.getResults().getNumFound();
+            sr = getSearchResult(solrProductList, totalResultCount);
             sr.setSearchSuggestions(suggestions);
         }
         return sr;
@@ -320,7 +312,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
         try{
             response = solr.query(getResultsQuery(query, page, perPage));
             List<SolrProduct> productList = getQueryResults(response);
-            searchResult = getSearchResult(productList);
+            searchResult = getSearchResult(productList, (int)response.getResults().getNumFound());
 
             long resultsCount = response.getResults().getNumFound();
             if(resultsCount == 0 && !isRetry){
