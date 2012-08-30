@@ -4,6 +4,7 @@ import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.core.HealthkartConstants;
+import com.hk.constants.core.RoleConstants;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.core.PaymentMode;
@@ -12,6 +13,7 @@ import com.hk.domain.payment.Payment;
 import com.hk.domain.payment.PreferredBankGateway;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.payment.PaymentModeDao;
+import com.hk.web.action.core.auth.LoginAction;
 import com.hk.web.factory.PaymentModeActionFactory;
 import com.hk.web.filter.WebContext;
 import net.sourceforge.stripes.action.*;
@@ -19,6 +21,7 @@ import net.sourceforge.stripes.util.CryptoUtil;
 import net.sourceforge.stripes.validation.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -33,6 +36,7 @@ import java.util.Random;
  * To change this template use File | Settings | File Templates.
  */
 @Component
+@Secure(hasAnyRoles = { RoleConstants.HK_UNVERIFIED, RoleConstants.HK_USER }, authUrl = "/core/auth/Login.action?source=" + LoginAction.SOURCE_CHECKOUT, disallowRememberMe = true)
 public class RegisterOnlinePaymentAction extends BaseAction {
 
 	//	@Validate(required = true)

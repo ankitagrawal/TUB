@@ -3,6 +3,7 @@ package com.hk.web.action.core.payment;
 import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
+import com.hk.constants.core.RoleConstants;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.core.PaymentMode;
@@ -16,6 +17,7 @@ import com.hk.pact.dao.RoleDao;
 import com.hk.pact.dao.offer.OfferInstanceDao;
 import com.hk.pact.dao.payment.PaymentModeDao;
 import com.hk.pact.dao.user.UserDao;
+import com.hk.web.action.core.auth.LoginAction;
 import com.hk.web.action.core.cart.CartAction;
 import com.hk.web.factory.PaymentModeActionFactory;
 import net.sourceforge.stripes.action.LocalizableMessage;
@@ -25,6 +27,7 @@ import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
 
 import java.util.Random;
 
@@ -32,6 +35,7 @@ import java.util.Random;
  * Author: Kani Date: Dec 29, 2008
  */
 @Component
+@Secure(hasAnyRoles = { RoleConstants.HK_UNVERIFIED, RoleConstants.HK_USER }, authUrl = "/core/auth/Login.action?source=" + LoginAction.SOURCE_CHECKOUT, disallowRememberMe = true)
 public class PaymentAction extends BaseAction {
 
 	@Validate(required = true)
