@@ -52,34 +52,31 @@
                     <th>Payment Mode</th>
                     <th>Address</th>
                     <th>Transfer to Agent</th>
+                    <th>Action</th>
                 </tr>
                 </thead>
-                <c:forEach items="${runsheetAction.runsheetConsignments}" var="consignment" varStatus="ctr">
-                    <s:hidden name="runsheetConsignments[${ctr.index}]" value="${consignment.id}"/>
+                <c:forEach items="${runsheetAction.consignmentDtoList}" var="consignmentDto" varStatus="ctr">
+                    <s:hidden name="consignmentDtoList[${ctr.index}]" value="${consignment.id}"/>
                     <tr>
                         <td>${ctr.count}</td>
-                        <td>${consignment.awbNumber}</td>
-                        <td>${consignment.cnnNumber}</td>
-                        <td><fmt:formatNumber value="${consignment.amount}" type="currency" currencySymbol=" "
-                                              maxFractionDigits="0"/></td>
+                        <td>${consignmentDto.awbNumber}<s:hidden name="consignmentDtoList[${ctr.index}].awbNumber"/></td>
+                        <td>${consignmentDto.cnnNumber}<s:hidden name="consignmentDtoList[${ctr.index}].cnnNumber"/></td>
+                        <td><fmt:formatNumber value="${consignmentDto.amount}" type="currency" currencySymbol=" "
+                                              maxFractionDigits="0"/><s:hidden name="consignmentDtoList[${ctr.index}].amount"/></td>
                         <td>
-                            <%--<c:choose>
-                            <c:when test="${consignment.paymentMode eq 'COD'}">
-                                COD
-                            </c:when>
-                                <c:otherwise>
-                                Prepaid
-                                </c:otherwise>
-                            </c:choose>--%>
-                           ${consignment.paymentMode}
+                           ${consignmentDto.paymentMode}<s:hidden name="consignmentDtoList[${ctr.index}].paymentMode"/>
                         </td>
-                        <td>${consignment.address}</td>
-                        <td><s:select name="agent" class="agentName">
-                                <s:option value="-Select Agent-">-Select Agent-</s:option>
+                        <td>${consignmentDto.address}<s:hidden name="consignmentDtoList[${ctr.index}].address"/></td>
+                        <td><s:select name="consignmentDtoList[${ctr.index}].transferredToAgent.id" class="agentName">
+                                <s:option value="${runsheetAction.agent.id}">-Select Agent-</s:option>
                                 <hk:master-data-collection service="<%=MasterDataDao.class%>"
                                                            serviceProperty="agentsWithOpenRunsheet" value="id"
                                                            label="name"/>
                             </s:select>
+                        </td>
+                        <td>
+                            <a href="hkDeliveryWorksheet.jsp#" class="removeRowButton"
+                               style="font-size:1.2em;color:blue;">Remove Consignment</a>
                         </td>
                     </tr>
                 </c:forEach>

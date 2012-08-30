@@ -196,13 +196,6 @@
            return false;
        }
   });
-   $(document).ready(function () {
-       $('.popup').popupWindow({
-				height:600,
-				width:900
-			});
-   });
-
 </script>
 
 
