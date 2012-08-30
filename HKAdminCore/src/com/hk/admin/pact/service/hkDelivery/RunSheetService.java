@@ -4,6 +4,7 @@ import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.hkDelivery.*;
 import com.hk.domain.user.User;
 import com.hk.constants.hkDelivery.EnumRunsheetStatus;
+import com.hk.admin.dto.ConsignmentDto;
 import com.akube.framework.dao.Page;
 
 import java.util.Date;
@@ -34,4 +35,6 @@ public interface RunSheetService {
     public List<User> getAgentList(RunsheetStatus runsheetStatus);
 
     public Runsheet getOpenRunsheetForAgent(User agent);
+
+    public Runsheet updateRunsheetParams(Runsheet runsheet, ConsignmentDto consignmentDto);
 }

@@ -212,6 +212,7 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     @Override
     public List<ConsignmentDto> getConsignmentDtoList(Set<Consignment> consignments) {
         List<ConsignmentDto> consignmentDtos = new ArrayList<ConsignmentDto>();
+
         for(Consignment consignment : consignments){
             ConsignmentDto consignmentDto = new  ConsignmentDto();
             consignmentDto.setAwbNumber(consignment.getAwbNumber());
@@ -246,6 +247,7 @@ public class ConsignmentServiceImpl implements ConsignmentService {
                   runsheet = runsheetService.getOpenRunsheetForAgent(consignmentDto.getTransferredToAgent());
                   consignment = getConsignmentByAwbNumber(consignmentDto.getAwbNumber());
                   consignment.setConsignmentStatus(consignmentDao.get(ConsignmentStatus.class, EnumConsignmentStatus.ShipmentOutForDelivery.getId()));
+                  runsheet = runsheetService.updateRunsheetParams(runsheet,consignmentDto);
                   consignment.setRunsheet(runsheet);
                   consignmentList.add(consignment);
               }
