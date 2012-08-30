@@ -69,7 +69,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
 
     public void refreshDataIndexes() throws SearchException{
         try {
-            List<Product> productList = productService.getAllProducts();
+            List<Product> productList = productService.getAllNonDeletedProducts();
             SolrQuery solrQuery = new SolrQuery();
             //clear Solr Index
             solr.deleteByQuery("*:*");

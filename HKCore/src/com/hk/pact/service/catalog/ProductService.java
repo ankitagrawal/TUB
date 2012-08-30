@@ -42,6 +42,12 @@ public interface ProductService {
     
     public List<Product> getAllProducts();
 
+    /**
+     * returns the product which are not deleted
+     * @return
+     */
+    List<Product> getAllNonDeletedProducts();
+
     public List<Product> getAllProductBySubCategory(String category);
 
     public List<Product> getAllProductNotByCategory(List<String> categoryNames);
@@ -106,4 +112,6 @@ public interface ProductService {
 
 
 	public List<Product> getSimilarProducts(Product product);
+
+
 }

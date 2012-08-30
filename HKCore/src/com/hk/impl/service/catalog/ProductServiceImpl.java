@@ -57,6 +57,10 @@ public class ProductServiceImpl implements ProductService {
         return getProductDAO().getAll(Product.class);
     }
 
+    public List<Product> getAllNonDeletedProducts() {
+        return getProductDAO().getAllNonDeletedProducts();
+    }
+
     public boolean doesBrandExist(String brandName) {
         return getProductDAO().doesBrandExist(brandName);
     }

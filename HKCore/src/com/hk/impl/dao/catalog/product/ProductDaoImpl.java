@@ -117,6 +117,10 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
         return getSession().createQuery("select p from Product p left join p.categories c where c.name = :category order by p.orderRanking asc").setString("category", category).list();
     }
 
+    public List<Product> getAllNonDeletedProducts() {
+        return getHibernateTemplate().find("select p from Product p where p.deleted = false");
+    }
+
     public List<Product> getAllProductByBrand(String brand) {
         return getSession().createQuery("select p from Product p where p.brand = :brand order by p.orderRanking asc").setString("brand", brand).list();
     }
