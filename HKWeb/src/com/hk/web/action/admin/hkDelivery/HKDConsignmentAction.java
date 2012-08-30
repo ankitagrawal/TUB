@@ -179,7 +179,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
             getContext().getValidationErrors().add("1", new SimpleError("Please Enter actual collected amount"));
             return new ForwardResolution(HKDConsignmentAction.class, "savePaymentReconciliation");
         }
-        if(hkdeliveryPaymentReconciliation.getActualAmount().doubleValue() > hkdeliveryPaymentReconciliation.getExpectedAmount().doubleValue()){
+        if((hkdeliveryPaymentReconciliation.getActualAmount().doubleValue() - hkdeliveryPaymentReconciliation.getExpectedAmount().doubleValue()) > 10){
             getContext().getValidationErrors().add("1", new SimpleError("Actual collected amount cannot be blank or greater than expected amount"));
             return new ForwardResolution(HKDConsignmentAction.class, "savePaymentReconciliation");
         }
