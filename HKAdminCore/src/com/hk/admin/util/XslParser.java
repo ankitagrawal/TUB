@@ -473,6 +473,7 @@ public class XslParser {
               boolean isPreferredCod = StringUtils.isNotBlank(preferredCod) && preferredCod.trim().toLowerCase().equals("y") ? true : false;
               courierServiceInfo.setPreferredCod(isPreferredCod);
               courierServiceInfo.setRoutingCode(getCellValue(XslConstants.ROUTING_CODE, rowMap, headerMap));
+                
               String groundShippingAvailable = getCellValue(XslConstants.GROUND_SHIPPING_AVAILABLE, rowMap, headerMap);
               boolean isGroundShippingAvailable =  StringUtils.isNotBlank(groundShippingAvailable) && groundShippingAvailable.trim().toLowerCase().equals("y") ? true : false;
               courierServiceInfo.setGroundShippingAvailable(isGroundShippingAvailable);               
