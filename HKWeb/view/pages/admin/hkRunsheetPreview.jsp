@@ -59,16 +59,16 @@
                     <s:hidden name="consignmentDtoList[${ctr.index}]" value="${consignment.id}"/>
                     <tr>
                         <td>${ctr.count}</td>
-                        <td>${consignmentDto.awbNumber}</td>
-                        <td>${consignmentDto.cnnNumber}</td>
+                        <td>${consignmentDto.awbNumber}<s:hidden name="consignmentDtoList[${ctr.index}].awbNumber"/></td>
+                        <td>${consignmentDto.cnnNumber}<s:hidden name="consignmentDtoList[${ctr.index}].cnnNumber"/></td>
                         <td><fmt:formatNumber value="${consignmentDto.amount}" type="currency" currencySymbol=" "
-                                              maxFractionDigits="0"/></td>
+                                              maxFractionDigits="0"/><s:hidden name="consignmentDtoList[${ctr.index}].amount"/></td>
                         <td>
-                           ${consignmentDto.paymentMode}
+                           ${consignmentDto.paymentMode}<s:hidden name="consignmentDtoList[${ctr.index}].paymentMode"/>
                         </td>
-                        <td>${consignmentDto.address}</td>
-                        <td><s:select name="consignmentDtoList[${ctr.index}].transferredToAgent" class="agentName">
-                                <s:option value="-Select Agent-">-Select Agent-</s:option>
+                        <td>${consignmentDto.address}<s:hidden name="consignmentDtoList[${ctr.index}].address"/></td>
+                        <td><s:select name="consignmentDtoList[${ctr.index}].transferredToAgent.id" class="agentName">
+                                <s:option value="${runsheetAction.agent.id}">-Select Agent-</s:option>
                                 <hk:master-data-collection service="<%=MasterDataDao.class%>"
                                                            serviceProperty="agentsWithOpenRunsheet" value="id"
                                                            label="name"/>

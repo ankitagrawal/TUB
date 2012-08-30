@@ -4,6 +4,7 @@ import com.akube.framework.dao.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
+import com.hk.admin.pact.service.hkDelivery.RunSheetService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.dao.hkDelivery.ConsignmentDao;
@@ -27,6 +28,9 @@ public class ConsignmentServiceImpl implements ConsignmentService {
 
     @Autowired
     private AwbService awbService;
+
+    @Autowired
+    private RunSheetService runsheetService;
 
     @Override
     public Consignment createConsignment(String awbNumber,String cnnNumber ,double amount, String paymentMode , String address, Hub hub){
@@ -219,5 +223,33 @@ public class ConsignmentServiceImpl implements ConsignmentService {
 
         }
         return consignmentDtos;
+    }
+
+    @Override
+    public List<Consignment> getConsignmentsFromConsignmentDtos(List<ConsignmentDto> consignmentDtoList) {
+        List<Consignment> consignments = new ArrayList<Consignment>();
+        Consignment consignmentObj;
+        for (ConsignmentDto consignmentDto : consignmentDtoList) {
+            consignmentObj = getConsignmentByAwbNumber(consignmentDto.getAwbNumber());
+            consignments.add(consignmentObj);
+        }
+        return consignments;
+    }
+
+    @Override
+    public List<Consignment> updateTransferredConsignments(List<ConsignmentDto> consignmentDtoList ,User agent) {
+        Runsheet runsheet = null;
+        Consignment consignment = null;
+        List<Consignment> consignmentList = new ArrayList<Consignment>();
+        for(ConsignmentDto conignmentDto : consignmentDtoList) {
+              if(!conignmentDto.getTransferredToAgent().getId().equals(agent.getId())){
+                  runsheet = runsheetService.getOpenRunsheetForAgent(conignmentDto.getTransferredToAgent());
+                  consignment = getConsignmentByAwbNumber(conignmentDto.getAwbNumber());
+                  consignment.setRunsheet(runsheet);
+                  consignmentList.add(consignment);
+              }
+        }
+        saveConsignments(consignmentList);
+        return consignmentList;
     }
 }

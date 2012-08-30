@@ -59,4 +59,8 @@ public interface ConsignmentService {
 
     public List<ConsignmentDto> getConsignmentDtoList(Set<Consignment> consignments);
 
+    public List<Consignment>  getConsignmentsFromConsignmentDtos(List<ConsignmentDto> consignmentDtoList);
+
+    public List<Consignment> updateTransferredConsignments(List<ConsignmentDto> consignmentDtoList , User agent);
+
 }

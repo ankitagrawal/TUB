@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.apache.commons.collections.CollectionUtils;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.courier.Courier;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
@@ -263,18 +264,24 @@ public class HKDRunsheetAction extends BasePaginatedAction {
         Long prePaidBoxCount = null;
         loggedOnUser = getUserService().getUserById(getPrincipal().getId());
         Hub deliveryHub = hubService.findHubByName(HKDeliveryConstants.DELIVERY_HUB);
+        List<Consignment> transferredConsignments = new ArrayList<Consignment>();
         int totalPackets = 0;
         int totalCODPackets = 0;
         double totalCODAmount = 0.0;
         Map<Object, Object> runsheetCODParams = null;
         ConsignmentStatus outForDelivery = getBaseDao().get(ConsignmentStatus.class, EnumConsignmentStatus.ShipmentOutForDelivery.getId());
         ConsignmentLifecycleStatus consignmentLifecycleStatus = getBaseDao().get(ConsignmentLifecycleStatus.class, EnumConsignmentLifecycleStatus.Dispatched.getId());
-        int size = consignmentDtoList.size();
-        if (runsheetConsignments != null && runsheetConsignments.size() > 0) {
+        if (consignmentDtoList != null && consignmentDtoList.size() > 0) {
             if (getPrincipal() != null) {
                 loggedOnUser = getUserService().getUserById(getPrincipal().getId());
             }
-            consignments = new HashSet(runsheetConsignments);
+
+            transferredConsignments = consignmentService.updateTransferredConsignments(consignmentDtoList, agent);
+            if(transferredConsignments != null && transferredConsignments.size()>0) {
+            consignments = new HashSet(CollectionUtils.subtract(consignmentService.getConsignmentsFromConsignmentDtos(consignmentDtoList),transferredConsignments));
+            } else {
+                consignments = new HashSet(consignmentService.getConsignmentsFromConsignmentDtos(consignmentDtoList));
+            }
             runsheetCODParams = consignmentService.getRunsheetCODParams(consignments);
             totalPackets = consignments.size();
             totalCODAmount = (Double) runsheetCODParams.get(HKDeliveryConstants.TOTAL_COD_AMT);
@@ -283,7 +290,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
             for (Consignment consignment : consignments) {
                 consignment.setConsignmentStatus(outForDelivery);
             }
-            
+              if(consignments.size()>0) {
             try {
                 shippingOrderList = consignmentService.getShippingOrderFromConsignments(new ArrayList(consignments));
                 xlsFile = new File(adminDownloads + "/" + CourierConstants.HKDELIVERY_WORKSHEET_FOLDER + "/" + CourierConstants.HKDELIVERY_WORKSHEET + "_" + sdf.format(new Date()) + ".xls");
@@ -309,6 +316,10 @@ public class HKDRunsheetAction extends BasePaginatedAction {
                 return new ForwardResolution(HKDRunsheetAction.class, HKDeliveryConstants.PREVIEW_RUNSHEET).addParameter(HKDeliveryConstants.RUNSHEET_PREVIEW_PARAM, false);
             }
             return new HTTPResponseResolution();
+        } else {
+                  addRedirectAlertMessage(new SimpleMessage("Sorry no consignment left for making a runsheet."));
+                  return new ForwardResolution(HKDRunsheetAction.class, HKDeliveryConstants.PREVIEW_RUNSHEET).addParameter(HKDeliveryConstants.RUNSHEET_PREVIEW_PARAM, false);
+              }
         }
         return new ForwardResolution(HKDRunsheetAction.class, HKDeliveryConstants.PREVIEW_RUNSHEET).addParameter(HKDeliveryConstants.RUNSHEET_PREVIEW_PARAM, false);
     }
