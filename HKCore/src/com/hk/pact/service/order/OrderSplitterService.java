@@ -20,7 +20,7 @@ import com.hk.pojo.DummyOrder;
  */
 public interface OrderSplitterService {
 
-//    public List<DummyOrder> listBestDummyOrdersPractically(Order order);
+   public List<DummyOrder> listBestDummyOrdersPractically(Order order);
 
     public List<DummyOrder> listBestDummyOrdersPractically(Order order, Set<CartLineItem> cartlineitems);
 

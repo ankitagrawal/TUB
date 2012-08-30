@@ -54,7 +54,7 @@ public interface OrderService {
      * @throws OrderSplitException
      */
 
-    public Set<ShippingOrder> splitOrder(Order order) throws OrderSplitException;         
+    public Set<ShippingOrder> splitOrder(Order order) throws OrderSplitException;
 
     public boolean updateOrderStatusFromShippingOrders(Order order, EnumShippingOrderStatus soStatus, EnumOrderStatus boStatusOnSuccess);
 
@@ -66,13 +66,11 @@ public interface OrderService {
 
     public Order findByGatewayOrderId(String gatewayOrderId);
 
-	public boolean isCODAllowed(Order order);
+    public boolean isCODAllowed(Order order);
 
-     public boolean isOrderHasGroundShippedItem(Order order);
+    public boolean isOrderHasGroundShippedItem(Order order);
 
-//      public Set<CartLineItem> getGroundShippedCartLineItemforOrder(Order order);
-//     public Set<CartLineItem> getMatchCartLineItemOrder(Order order, boolean groundshippedFlag);
-     public List <Set<CartLineItem>> getMatchCartLineItemOrder(Order order);
+    public List<Set<CartLineItem>> getMatchCartLineItemOrder(Order order);
 
 }
 

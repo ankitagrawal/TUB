@@ -102,26 +102,6 @@ public class OrderSummaryAction extends BaseAction {
         // Trimming empty line items once again.
         orderManager.trimEmptyLineItems(order);
         OfferInstance offerInstance = order.getOfferInstance();
-
-//        Set<CartLineItem> cartLineItems = order.getCartLineItems();
-//        for (CartLineItem lineItem : cartLineItems) {
-//            if (lineItem != null && lineItem.getProductVariant() != null) {
-//                ProductVariant productVariant = lineItem.getProductVariant();
-//                if (productVariant.getProduct().isGroundShipping()) {
-//                    groundshipItemAmount =  productVariant.getHkPrice() ;
-//                     if (groundshipItemAmount == null ) {
-//                        groundshipItemAmount = 0.0;
-//                    }
-//                    groundshipItemweight = productVariant.getWeight();
-//                    if (groundshipItemweight == null || groundshipItemweight == 0.0) {
-//                        groundshipItemweight = 125D;
-//                    }
-//                    hideCod = true;
-//                    break;
-//                }
-//            }
-//        }
-
         Double rewardPointsUsed = 0D;
         redeemableRewardPoints = referrerProgramManager.getTotalRedeemablePoints(user);
         if (useRewardPoints)
@@ -162,26 +142,16 @@ public class OrderSummaryAction extends BaseAction {
             }
         }
 
-//        if (hideCod) {
-//            groundShippingAllowed= courierService.isGroundShippingAllowed(pin);
-//            cashbackOnGroundshipped = courierService.getCashbackOnGroundShippedItem(groundshipItemAmount, order, groundshipItemweight);
-//            if (cashbackOnGroundshipped == null || cashbackOnGroundshipped == -0.0) {
-//                cashbackOnGroundshipped = 0.0;
-//            } else {
-//                cashbackOnGroundshipped = cashbackOnGroundshipped * cashBackPercentageOnGroundShipped;
-//            }
-//        }
-       
+ // Ground Shipping logic starts ---
         groundShippedItemPresent = orderService.isOrderHasGroundShippedItem(order);
-        if (groundShippedItemPresent){
-           groundShippingAllowed= courierService.isGroundShippingAllowed(pin);
+        if (groundShippedItemPresent) {
+            groundShippingAllowed = courierService.isGroundShippingAllowed(pin);
 
             if (groundShippingAllowed) {
-              codAllowedOnGroundShipping = courierService.isCodAllowedOnGroundShipping(pin);
-            }  else {
-           //   to remove item from  database          
+                codAllowedOnGroundShipping = courierService.isCodAllowedOnGroundShipping(pin);
             }
         }
+  // Ground Shipping logic ends --
 
         Double netShopping = pricingDto.getGrandTotalPayable() - pricingDto.getShippingTotal();
         if (netShopping > codFreeAfter) {
