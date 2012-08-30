@@ -4847,7 +4847,7 @@ span.outOfStock {
 
 .buy_prod {
     width: 100%;
-    height: 200px;
+    max-height: 200px;
     margin-top: 1em;
 }
 

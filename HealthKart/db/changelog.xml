@@ -8449,4 +8449,10 @@
     <changeSet author="Ajeet (generated)" id="1345455498259-2">
         <addNotNullConstraint columnDataType="TINYINT" columnName="cod_allowed" defaultNullValue="1" tableName="product"/>
     </changeSet>
+    <changeSet author="Neha (generated)" id="1346058956497-1">
+        <createIndex indexName="unique_prod_simProd" tableName="similar_product" unique="true">
+            <column name="product_id"/>
+            <column name="similar_product_id"/>
+        </createIndex>
+    </changeSet>
 </databaseChangeLog>
