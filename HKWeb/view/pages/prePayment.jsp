@@ -43,7 +43,7 @@
         <div class='steps_prepay'>
             <c:set var="codPaymentModeId" value="<%=EnumPaymentMode.COD.getId()%>"/>
             <c:if test="${order != null}">
-                <c:if test="${order.payment.paymentMode.id == codPaymentModeId  && order.amount < 1200}">
+                <c:if test="${order.payment.paymentMode.id == codPaymentModeId  && order.amount < 1500}">
                     <div>
                         <img src="${pageContext.request.contextPath}/images/banners/pay_online_banner2.5.jpg">
                     </div>
@@ -59,7 +59,7 @@
         <div class='pre'>
             <h4>Your total billable amount is <strong class='num'> <fmt:formatNumber
                     value="${order.amount}" type="currency"
-                    currencySymbol="Rs "/> </strong></h4>
+                    currencySymbol="Rs "/> </strong> for Order Id <strong>${order.gatewayOrderId}</strong></h4>
             <h6>If you have any trouble during the payment process, call our
                 helpline number <strong class='red'> 0124 - 4551616 </strong></h6>
         </div>
