@@ -324,18 +324,15 @@ public class MasterDataDaoImpl implements MasterDataDao {
     }
 
     public List<User> getHKDeliveryAgentList(){
-        return getUserService().findByRole(getRoleService().getRoleByName(EnumRole.HK_DELIVERY_GUY));
+        User loggedOnUser = getUserService().getLoggedInUser();
+        return hubService.getAgentsForHub(hubService.getHubForUser(loggedOnUser));
+//        return getUserService().findByRole(getRoleService().getRoleByName(EnumRole.HK_DELIVERY_GUY));
     }
 
     public List<RunsheetStatus> getRunsheetStatusList(){
         return getBaseDao().getAll(RunsheetStatus.class);
     }
 
-    public List<ConsignmentStatus> getConsignmentStatusList(){
-        return getBaseDao().getAll(ConsignmentStatus.class);
-    }
-
-    @Override
     public List<User> getAgentsWithOpenRunsheet() {
         return runsheetService.getAgentList(getBaseDao().get(RunsheetStatus.class,EnumRunsheetStatus.Open.getId()));
     }

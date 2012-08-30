@@ -83,6 +83,7 @@
 
 	<link href="${pageContext.request.contextPath}/css/jquery.jqzoom.css" rel="stylesheet" type="text/css"/>
 	<script type="text/javascript" src="<hk:vhostJs/>/js/jquery.jqzoom-core.js"></script>
+	<script type="text/javascript" src="<hk:vhostJs/>/js/jquery-ui.min.js"></script>	
 
 	<script type="text/javascript">
 		$(document).ready(function () {
@@ -293,10 +294,10 @@
 		|
 		<c:choose>
 			<c:when test="${product.codAllowed != null && !product.codAllowed}">
-				<span style="color:red;font-weight:bold;">COD Not Allowed</span>
+				<span style="color:red;font-weight:bold;">COD Not Available</span>
 			</c:when>
 			<c:otherwise>
-				<span style="color:green;font-weight:bold;">COD Allowed</span>
+				<span style="color:green;font-weight:bold;">COD Available</span>
 			</c:otherwise>
 		</c:choose>  		
 		|
@@ -473,15 +474,20 @@
 					<c:choose>
 						<c:when test="${!product.productHaveColorOptions}">
 							<s:layout-render name="/layouts/embed/_productWithMultipleVariantsWithNoColorOptions.jsp"
-
 							                 product="${product}" subscriptionProduct="${subscriptionProduct}"/>
-
-							<s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>
+							<c:choose>
+								<c:when test="${empty product.inStockVariants && !empty product.similarProducts}">
+									<s:layout-render name="/layouts/embed/_hkSimilarProducts.jsp" product="${product}"/>
+								</c:when>
+								<c:otherwise>
+									<%--<s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>--%>
+								</c:otherwise>
+							</c:choose>
 						</c:when>
 						<c:otherwise>
 							<s:layout-render name="/layouts/embed/_productWithMultipleVariantsWithColorOptions.jsp"
 							                 product="${product}"/>
-							<s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>
+							<%--<s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>--%>
 						</c:otherwise>
 					</c:choose>
 				</c:when>
@@ -495,7 +501,15 @@
 						</c:when>
 						<c:otherwise>
 							<s:layout-render name="/layouts/embed/_productWithSingleVariant.jsp" product="${product}"
-							                 subscriptionProduct="${subscriptionProduct}"/>
+							                 subscriptionProduct="${subscriptionProduct}"/>							
+							<c:choose>
+								<c:when test="${empty product.inStockVariants && !empty product.similarProducts}">
+									<s:layout-render name="/layouts/embed/_hkSimilarProducts.jsp" product="${product}"/>
+								</c:when>
+								<c:otherwise>
+									<%--<s:layout-render name="/layouts/embed/_hkAssistanceMessageForMultiVariants.jsp"/>--%>
+								</c:otherwise>
+							</c:choose>
 
 						</c:otherwise>
 					</c:choose>

@@ -54,6 +54,8 @@ public class HKDConsignmentAction extends BasePaginatedAction {
     private             Boolean               reconciled;
     private             Runsheet              runsheet;
 
+    User                loggedOnUser;                     
+
 
     @Autowired
     private              ConsignmentService          consignmentService;
@@ -69,6 +71,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
 
     @DefaultHandler
     public Resolution pre(){
+        loggedOnUser = getUserService().getUserById(getPrincipal().getId());
         return new ForwardResolution("/pages/admin/hkDeliveryConsignment.jsp");        
     }
 
@@ -78,7 +81,6 @@ public class HKDConsignmentAction extends BasePaginatedAction {
         List<String> existingAwbNumbers;
         Hub          healthkartHub;
         String       duplicateAwbString               = "";
-        User         loggedOnUser                     = null;
         Shipment     shipmentObj                      = null;
         String       cnnNumber                        = null;
         String       paymentMode                      = null;
@@ -151,6 +153,8 @@ public class HKDConsignmentAction extends BasePaginatedAction {
     }
 
     public Resolution searchConsignments(){
+        loggedOnUser = getUserService().getUserById(getPrincipal().getId());
+        hub = hubService.getHubForUser(loggedOnUser);
         consignmentPage = consignmentService.searchConsignment(consignment, consignmentNumber, startDate, endDate, consignmentStatus, hub, runsheet, reconciled, getPageNo(), getPerPage());
         if(consignmentPage != null){
             consignmentList = consignmentPage.getList();
@@ -171,14 +175,17 @@ public class HKDConsignmentAction extends BasePaginatedAction {
 
     public Resolution savePaymentReconciliation(){
         hkdeliveryPaymentReconciliation.setConsignments(new HashSet<Consignment>(consignmentListForPaymentReconciliation));
-        if( (!hkdeliveryPaymentReconciliation.getActualAmount().equals(hkdeliveryPaymentReconciliation.getExpectedAmount())) &&
-            (hkdeliveryPaymentReconciliation.getActualAmount().doubleValue() > hkdeliveryPaymentReconciliation.getExpectedAmount().doubleValue())){
-                getContext().getValidationErrors().add("1", new SimpleError("Actual collected amount cannot be greater than expected amount"));
-                return new ForwardResolution(HKDConsignmentAction.class, "savePaymentReconciliation");
-            }
+        if(hkdeliveryPaymentReconciliation.getActualAmount() == null){
+            getContext().getValidationErrors().add("1", new SimpleError("Please Enter actual collected amount"));
+            return new ForwardResolution(HKDConsignmentAction.class, "savePaymentReconciliation");
+        }
+        if(hkdeliveryPaymentReconciliation.getActualAmount().doubleValue() > hkdeliveryPaymentReconciliation.getExpectedAmount().doubleValue()){
+            getContext().getValidationErrors().add("1", new SimpleError("Actual collected amount cannot be blank or greater than expected amount"));
+            return new ForwardResolution(HKDConsignmentAction.class, "savePaymentReconciliation");
+        }
         hkdeliveryPaymentReconciliation = consignmentService.saveHkdeliveryPaymentReconciliation(hkdeliveryPaymentReconciliation);
         addRedirectAlertMessage(new SimpleMessage("Payment Reconciliation saved."));        
-        return new ForwardResolution(HKDConsignmentAction.class, "searchConsignments");
+        return new ForwardResolution(HKDConsignmentAction.class, "editPaymentReconciliation").addParameter("hkdeliveryPaymentReconciliation", hkdeliveryPaymentReconciliation.getId());
     }
 
     public Resolution editPaymentReconciliation(){
@@ -187,7 +194,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
             return new ForwardResolution("/pages/admin/hkdeliveryPaymentReconciliation.jsp");
         }
         addRedirectAlertMessage(new SimpleMessage("Payment Reconciliation saved."));
-        return new ForwardResolution(HKDConsignmentAction.class, "searchConsignments");
+        return new ForwardResolution(HKDConsignmentAction.class, "editPaymentReconciliation").addParameter("hkdeliveryPaymentReconciliation", hkdeliveryPaymentReconciliation.getId());
     }
 
     public Resolution trackConsignment(){
@@ -336,5 +343,13 @@ public class HKDConsignmentAction extends BasePaginatedAction {
 
     public void setRunsheet(Runsheet runsheet) {
         this.runsheet = runsheet;
+    }
+
+    public User getLoggedOnUser() {
+        return loggedOnUser;
+    }
+
+    public void setLoggedOnUser(User loggedOnUser) {
+        this.loggedOnUser = loggedOnUser;
     }
 }

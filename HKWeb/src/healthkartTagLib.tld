@@ -858,4 +858,15 @@
             ${hk:isCodAllowedOnOrder(${order})}
         </example>
     </function>
+    <function>
+        <description>
+            returns true if cod is allowed on order
+        </description>
+        <name>getHubForHkdeliveryUser</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>com.hk.domain.hkDelivery.Hub getHubForHkdeliveryUser(com.hk.domain.user.User)</function-signature>
+        <example>
+            ${hk:getHubForHkdeliveryUser(${user})}
+        </example>
+    </function>
 </taglib>

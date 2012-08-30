@@ -51,7 +51,8 @@ public enum EnumRole {
   DEVELOPER(RoleConstants.DEVELOPER),
   PAYMENT_MANAGER(RoleConstants.PAYMENT_MANAGER),
   HR(RoleConstants.HR),
-  HK_DELIVERY_GUY(RoleConstants.HK_DELIVERY_GUY);
+  HK_DELIVERY_GUY(RoleConstants.HK_DELIVERY_GUY),
+  HK_DELIVERY_ADMIN(RoleConstants.HK_DELIVERY_ADMIN);
 
   String roleName;
 

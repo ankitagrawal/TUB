@@ -124,8 +124,6 @@ public interface MasterDataDao
 
     public List<RunsheetStatus> getRunsheetStatusList();
 
-    public List<ConsignmentStatus> getConsignmentStatusList();
-
     public List<SubscriptionStatus> getSubscriptionStatusList();
 
     public List<User> getAgentsWithOpenRunsheet();

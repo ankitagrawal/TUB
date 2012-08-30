@@ -385,7 +385,19 @@ public enum EnumRoleHasPermission {
                     EnumPermission.HK_DELIVERY_WORKSHEET_DOWNLOAD,
                     EnumPermission.VIEW_DELIVERY_QUEUE,
                     EnumPermission.DOWNLOAD_COURIER_EXCEL,
-                    EnumPermission.UPDATE_DELIVERY_QUEUE
+                    EnumPermission.UPDATE_DELIVERY_QUEUE,
+                    EnumPermission.VIEW_HUB
+            )
+    ),
+
+    HK_DELIVERY_ADMIN(
+            EnumRole.HK_DELIVERY_ADMIN,
+            Arrays.asList(
+                    EnumPermission.HK_DELIVERY_WORKSHEET_DOWNLOAD,
+                    EnumPermission.VIEW_DELIVERY_QUEUE,
+                    EnumPermission.DOWNLOAD_COURIER_EXCEL,
+                    EnumPermission.UPDATE_DELIVERY_QUEUE,
+                    EnumPermission.SELECT_HUB
             )
     ),
 

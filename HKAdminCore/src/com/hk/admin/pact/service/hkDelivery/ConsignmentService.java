@@ -54,4 +54,6 @@ public interface ConsignmentService {
 
     public List<Consignment> getConsignmentsFromShippingOrderList(List<ShippingOrder> shippingOrderList);
 
+    public List<ConsignmentStatus> getConsignmentStatusList();
+
 }
