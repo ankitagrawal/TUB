@@ -50,11 +50,11 @@ public class RoleConstants {
     public static final String PAYMENT_MANAGER               = "PAYMENT_MANAGER";
     public static final String HK_DELIVERY_ADMIN             = "HK_DELIVERY_ADMIN";
     public static final String HK_DELIVERY_HUB_MANAGER       = "HK_DELIVERY_HUB_MANAGER";
-    public static final String ROLE_GROUP_HK_DELIVERY_ADMIN  = HK_DELIVERY_GUY+" ,"+HK_DELIVERY_ADMIN+", "+HK_DELIVERY_HUB_MANAGER;
+    public static final String ROLE_GROUP_HK_DELIVERY_ADMIN  = HK_DELIVERY_GUY+","+HK_DELIVERY_ADMIN+","+HK_DELIVERY_HUB_MANAGER;
 
 
     public static final String ROLE_GROUP_ADMINS             = GOD + ", " + ADMIN + ", " + ROCKSTAR + ", " + OPS_MANAGER + ", " + CUSTOMER_SUPPORT + ", " + FINANCE + ", "
-                                                                     + CATEGORY_MANAGER + ", " + TICKETADMIN + "," + REPORT_ADMIN +"," +BASIC_ROLES+", "+ROLE_GROUP_HK_DELIVERY_ADMIN;
+                                                                     + CATEGORY_MANAGER + ", " + TICKETADMIN + "," + REPORT_ADMIN +"," +BASIC_ROLES+","+ROLE_GROUP_HK_DELIVERY_ADMIN;
     public static final String HK_AFFILIATE                  = "HK_AFFILIATE";
     public static final String HK_AFFILIATE_UNVERIFIED       = "HK_AFFILIATE_UNVERIFIED";
     public static final String AFFILIATE                     = HK_AFFILIATE_UNVERIFIED + ", " + HK_AFFILIATE;
