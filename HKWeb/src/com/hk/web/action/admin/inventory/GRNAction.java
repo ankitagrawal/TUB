@@ -304,6 +304,7 @@ public class GRNAction extends BasePaginatedAction {
 		purchaseInvoice.setWarehouse(warehouseForPI);
 		purchaseInvoice = (PurchaseInvoice) getPurchaseInvoiceDao().save(purchaseInvoice);
 		Double totalTaxable = 0.0D, totalTax = 0.0D, totalSurcharge = 0.0D, totalPayable = 0.0D;
+		Double overallDiscount = 0.0D;
 		for (GoodsReceivedNote grn : grnListForPurchaseInvoice) {
 			for (GrnLineItem grnLineItem : grn.getGrnLineItems()) {
 				Double taxableAmount = 0.0D;
@@ -318,6 +319,9 @@ public class GRNAction extends BasePaginatedAction {
 				}
 				if (grnLineItem.getQty() != null) {
 					purchaseInvoiceLineItem.setQty(grnLineItem.getQty());
+				}
+				if (grnLineItem.getDiscountPercent() != null) {
+					purchaseInvoiceLineItem.setDiscountPercent(grnLineItem.getDiscountPercent());
 				}
 				sku = grnLineItem.getSku();
 				if (sku != null) {
@@ -347,15 +351,19 @@ public class GRNAction extends BasePaginatedAction {
 				getPurchaseInvoiceDao().save(purchaseInvoiceLineItem);
 
 			}
+			if(grn.getDiscount() != null) {
+				overallDiscount += grn.getDiscount();
+			}
 			grn.setReconciled(true);
 			goodsReceivedNoteDao.save(grn);
 		}
+		purchaseInvoice.setDiscount(overallDiscount);
 		purchaseInvoice.setGoodsReceivedNotes(grnListForPurchaseInvoice);
 		purchaseInvoice.setTaxableAmount(totalTaxable);
 		purchaseInvoice.setTaxAmount(totalTax);
 		purchaseInvoice.setSurchargeAmount(totalSurcharge);
 		purchaseInvoice.setPayableAmount(totalPayable);
-		purchaseInvoice.setFinalPayableAmount(totalPayable);
+		purchaseInvoice.setFinalPayableAmount(totalPayable - overallDiscount);
 		purchaseInvoiceDao.save(purchaseInvoice);
 
 		addRedirectAlertMessage(new SimpleMessage("Purchase Invoice generated from GRN(s). Please adjust it according to invoice"));

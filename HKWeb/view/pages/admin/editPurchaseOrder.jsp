@@ -371,7 +371,8 @@
 			<td>${productVariant.product.name}<br/>${productVariant.optionsCommaSeparated}
 			</td>
 			<td>
-				<input type="text" name="taxCategory" class="taxCategory"  value="${sku.tax.value * 100}" disabled="disabled" />
+				<%--<input type="text" name="taxCategory" class="taxCategory"  value="${sku.tax.value * 100}" disabled="disabled" />--%>
+				<input type="text" name="taxCategory" class="taxCategory"  value="${poLineItemDto.poLineItem.sku.tax.value * 100}" disabled="disabled" />
 			</td>
 			<td>
 					${hk:netInventory(sku)}
@@ -417,16 +418,6 @@
 	<tr>
 		&nbsp; &nbsp;
 		<td colspan="16">Total</td>
-			<%--<td><fmt:formatNumber value="${pa.purchaseOrderDto.totalTaxable}" maxFractionDigits="2"/></td>
-		 &nbsp;
-		 <td><fmt:formatNumber value="${pa.purchaseOrderDto.totalTax}" maxFractionDigits="2"/></td>
-		 &nbsp;
-		 <td><fmt:formatNumber value="${pa.purchaseOrderDto.totalSurcharge}" maxFractionDigits="2"/></td>
-		 &nbsp;--%>
-			<%--<td><fmt:formatNumber value="${pa.purchaseOrderDto.totalPayable}" maxFractionDigits="2"/></td>--%>
-			<%--<td><s:text readonly="readonly" class="totalTaxable" name="purchaseInvoice.taxableAmount" value="${pia.purchaseInvoice.taxableAmount}"/></td>
-					<td><s:text readonly="readonly" class="totalTax" name="purchaseInvoice.taxAmount" value="${pia.purchaseInvoice.taxAmount}"/></td>
-					<td><s:text readonly="readonly" class="totalSurcharge" name="purchaseInvoice.surchargeAmount" value="${pia.purchaseInvoice.surchargeAmount}"/></td>--%>
 		<td><s:text readonly="readonly" class="totalTaxable" name="purchaseOrderDto.totalTaxable" value="${pa.purchaseOrderDto.totalTaxable}" /></td>
 		<td><s:text readonly="readonly" class="totalTax" name="purchaseOrderDto.totalTax" value="${pa.purchaseOrderDto.totalTax}" /></td>
 		<td><s:text readonly="readonly" class="totalSurcharge" name="purchaseOrderDto.totalSurcharge" value="${pa.purchaseOrderDto.totalSurcharge}"/></td>

@@ -13,192 +13,181 @@
 %>
 <s:layout-component name="htmlHead">
 
-<link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
-<jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
-<script type="text/javascript">
-$(document).ready(function() {
+	<link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
+	<jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
+	<script type="text/javascript">
+		$(document).ready(function() {
 
-	/*function updateTotal(fromTotalClass,toTotalClass){
-	 var total=0;
-	 $.each($(fromTotalClass),function(index,value){
-	 var eachRow=$(value);
-	 var eachRowValue=eachRow.val().trim();
-	 total+=parseFloat(eachRowValue);
-	 });
-	 $(toTotalClass).html(total);
-	 };
-	 */
+			$('.addRowButton').click(function() {
 
-	$('.addRowButton').click(function() {
-
-		var lastIndex = $('.lastRow').attr('count');
-		if (!lastIndex) {
-			lastIndex = -1;
-		}
-		$('.lastRow').removeClass('lastRow');
-
-		var nextIndex = eval(lastIndex + "+1");
-		var newRowHtml =
-				'<tr count="' + nextIndex + '" class="lastRow lineItemRow">' +
-						'<td>' + Math.round(nextIndex + 1) + '.</td>' +
-						'<td></td>' +
-						'  <td>' +
-						'    <input type="hidden" name="grnLineItems[' + nextIndex + '].id" />' +
-						'    <input type="text" class="variant" name="grnLineItems[' + nextIndex + '].productVariant"/>' +
-						'  </td>' +
-						'<td></td>' +
-						'<td></td>' +
-						'<td></td>' +
-						'  <td class="pvDetails"></td>' +
-						'<td class="taxCategory"></td>' +
-						'<td></td>' +
-						'  <td>' +
-						'    <input type="text" name="grnLineItems[' + nextIndex + '].qty" class="receivedQuantity valueChange" />' +
-						'  </td>' +
-						'  <td>' +
-						'    <input class="costPrice valueChange" type="text" name="grnLineItems[' + nextIndex + '].costPrice" />' +
-						'  </td>' +
-						'  <td>' +
-						'    <input class="mrp" type="text" name="grnLineItems[' + nextIndex + '].mrp" />' +
-						' </td>'+
-						'  <td ><label class="taxableAmount"></label></td>' +
-						'  </tr>';
-
-		$('#poTable').append(newRowHtml);
-		return false;
-	});
-
-	$('.variant').live("change", function() {
-		var variantRow = $(this).parents('.lineItemRow');
-		var productVariantId = variantRow.find('.variant').val();
-		var productVariantDetails = variantRow.find('.pvDetails');
-		$.getJSON(
-				$('#pvInfoLink').attr('href'), {productVariantId: productVariantId, warehouse: ${pa.grn.warehouse.id}},
-				function(res) {
-					if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
-						variantRow.find('.mrp').val(res.data.variant.markedPrice);
-						variantRow.find('.costPrice').val(res.data.variant.costPrice);
-						productVariantDetails.html(
-								res.data.product + '<br/>' +
-										res.data.options
-						);
-					} else {
-						$('.variantDetails').html('<h2>'+res.message+'</h2>');
-					}
+				var lastIndex = $('.lastRow').attr('count');
+				if (!lastIndex) {
+					lastIndex = -1;
 				}
-		);
-	});
-	$('.valueChange').live("change", function() {
-		var valueChangeRow = $(this).parents('.lineItemRow');
-		var costPrice = valueChangeRow.find('.costPrice').val();
-		var mrp = valueChangeRow.find('.mrp').val();
-		var qty = valueChangeRow.find('.receivedQuantity').val();
-		var taxIdentifier = valueChangeRow.find('.taxIdentifier').val();
-		if(qty=="" || costPrice=="" ){
-			alert("All fields are compulsory.");
-			return false;
-		}
-		if(isNaN(qty) || isNaN(costPrice) || qty<0 || costPrice<0){
-			alert("Enter values in correct format.");
-			return false;
-		}
-		var taxCategory;
-		if (taxIdentifier == 'finance') {
-			var taxCat = valueChangeRow.find('.taxCategory');
-			var selectedTax = $(taxCat).find('option:selected');
-			taxCategory = selectedTax.text();
-		} else {
-			taxCategory = parseFloat(valueChangeRow.find('.taxCategory').html().trim());
-		}
+				$('.lastRow').removeClass('lastRow');
 
-		if (isNaN(qty)) {
-			alert("Enter Valid Quantity.");
-			return;
-		}
-		var surchargeCategory = 0.0;
-		var stateIdentifier = $('.state').html();
-		if (stateIdentifier == 'CST') {
-			surchargeCategory = 0.0;
-			taxCategory = 0.02;
-		} else {
-			surchargeCategory = 0.05;
-		}
-		var taxable = costPrice * qty;
-		var discountPercentage = valueChangeRow.find('.discountPercentage').val();
-		var discountedAmount;
-		if (isNaN(discountPercentage) || discountPercentage < 0) {
-			alert("Enter valid discount");
-			return;
-		}
-		discountedAmount = (discountPercentage / 100) * taxable;
-		taxable -= discountedAmount;
+				var nextIndex = eval(lastIndex + "+1");
+				var newRowHtml =
+						'<tr count="' + nextIndex + '" class="lastRow lineItemRow">' +
+								'<td>' + Math.round(nextIndex + 1) + '.</td>' +
+								'<td></td>' +
+								'  <td>' +
+								'    <input type="hidden" name="grnLineItems[' + nextIndex + '].id" />' +
+								'    <input type="text" class="variant" name="grnLineItems[' + nextIndex + '].productVariant"/>' +
+								'  </td>' +
+								'<td></td>' +
+								'<td></td>' +
+								'<td></td>' +
+								'  <td class="pvDetails"></td>' +
+								'<td class="taxCategory"></td>' +
+								'<td></td>' +
+								'  <td>' +
+								'    <input type="text" name="grnLineItems[' + nextIndex + '].qty" class="receivedQuantity valueChange" />' +
+								'  </td>' +
+								'  <td>' +
+								'    <input class="costPrice valueChange" type="text" name="grnLineItems[' + nextIndex + '].costPrice" />' +
+								'  </td>' +
+								'  <td>' +
+								'    <input class="mrp" type="text" name="grnLineItems[' + nextIndex + '].mrp" />' +
+								' </td>'+
+								'  <td ><label class="taxableAmount"></label></td>' +
+								'  </tr>';
 
-		var tax = taxable * taxCategory;
-		var surcharge = tax * surchargeCategory;
-		var payable = surcharge + taxable + tax;
+				$('#poTable').append(newRowHtml);
+				return false;
+			});
 
-		valueChangeRow.find('.taxableAmount').val(taxable.toFixed(2));
-		valueChangeRow.find('.taxAmount').val(tax.toFixed(2));
-		valueChangeRow.find('.surchargeAmount').val(surcharge.toFixed(2));
-		valueChangeRow.find('.payableAmount').val(payable.toFixed(2));
+			$('.variant').live("change", function() {
+				var variantRow = $(this).parents('.lineItemRow');
+				var productVariantId = variantRow.find('.variant').val();
+				var productVariantDetails = variantRow.find('.pvDetails');
+				$.getJSON(
+						$('#pvInfoLink').attr('href'), {productVariantId: productVariantId, warehouse: ${pa.grn.warehouse.id}},
+						function(res) {
+							if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+								variantRow.find('.mrp').val(res.data.variant.markedPrice);
+								variantRow.find('.costPrice').val(res.data.variant.costPrice);
+								productVariantDetails.html(
+										res.data.product + '<br/>' +
+												res.data.options
+								);
+							} else {
+								$('.variantDetails').html('<h2>'+res.message+'</h2>');
+							}
+						}
+				);
+			});
+			$('.valueChange').live("change", function() {
+				var valueChangeRow = $(this).parents('.lineItemRow');
+				var costPrice = valueChangeRow.find('.costPrice').val();
+				var mrp = valueChangeRow.find('.mrp').val();
+				var qty = valueChangeRow.find('.receivedQuantity').val();
+				var taxIdentifier = valueChangeRow.find('.taxIdentifier').val();
+				if(qty=="" || costPrice=="" ){
+					alert("All fields are compulsory.");
+					return false;
+				}
+				if(isNaN(qty) || isNaN(costPrice) || qty<0 || costPrice<0){
+					alert("Enter values in correct format.");
+					return false;
+				}
+				var taxCategory;
+				if (taxIdentifier == 'finance') {
+					var taxCat = valueChangeRow.find('.taxCategory');
+					var selectedTax = $(taxCat).find('option:selected');
+					taxCategory = selectedTax.text();
+				} else {
+					taxCategory = parseFloat(valueChangeRow.find('.taxCategory').html().trim());
+				}
 
-		updateTotal('.receivedQuantity','.totalQuantity',0);
-		updateTotal('.payableAmount', '.totalPayable',0);
-		updateTotal('.taxableAmount','.totalTaxable',0);
-		updateTotal('.taxAmount','.totalTax',0);
-		updateTotal('.surchargeAmount','.totalSurcharge',0);
-		updateTotal('.payableAmount', '.finalPayable',0);
+				if (isNaN(qty)) {
+					alert("Enter Valid Quantity.");
+					return;
+				}
+				var surchargeCategory = 0.0;
+				var stateIdentifier = $('.state').html();
+				if (stateIdentifier == 'CST') {
+					surchargeCategory = 0.0;
+					taxCategory = 0.02;
+				} else {
+					surchargeCategory = 0.05;
+				}
+				var taxable = costPrice * qty;
+				var discountPercentage = valueChangeRow.find('.discountPercentage').val();
+				var discountedAmount;
+				if (isNaN(discountPercentage) || discountPercentage < 0) {
+					alert("Enter valid discount");
+					return;
+				}
+				discountedAmount = (discountPercentage / 100) * taxable;
+				taxable -= discountedAmount;
 
-		var finalPayable = parseFloat($('.finalPayable').val().replace(/,/g, ''));
-		var overallDiscount = $('.overallDiscount').val();
-		if (isNaN(overallDiscount)) {
-			overallDiscount = 0;
-		}
+				var tax = taxable * taxCategory;
+				var surcharge = tax * surchargeCategory;
+				var payable = surcharge + taxable + tax;
 
-		finalPayable -= overallDiscount;
-		$('.finalPayable').val(finalPayable.toFixed(2));
-	});
+				valueChangeRow.find('.taxableAmount').val(taxable.toFixed(2));
+				valueChangeRow.find('.taxAmount').val(tax.toFixed(2));
+				valueChangeRow.find('.surchargeAmount').val(surcharge.toFixed(2));
+				valueChangeRow.find('.payableAmount').val(payable.toFixed(2));
 
-	function updateTotal(fromTotalClass,toTotalClass,toHtml){
-		var total=0;
-		$.each($(fromTotalClass),function(index,value){
-			var eachRow=$(value);
-			var eachRowValue=eachRow.val().trim();
-			total+=parseFloat(eachRowValue);
+				updateTotal('.receivedQuantity','.totalQuantity',1);
+				updateTotal('.payableAmount', '.totalPayable',0);
+				updateTotal('.taxableAmount','.totalTaxable',0);
+				updateTotal('.taxAmount','.totalTax',0);
+				updateTotal('.surchargeAmount','.totalSurcharge',0);
+				updateTotal('.payableAmount', '.finalPayable',0);
+
+				var finalPayable = parseFloat($('.finalPayable').val().replace(/,/g, ''));
+				var overallDiscount = $('.overallDiscount').val();
+				if (isNaN(overallDiscount)) {
+					overallDiscount = 0;
+				}
+
+				finalPayable -= overallDiscount;
+				$('.finalPayable').val(finalPayable.toFixed(2));
+			});
+
+			function updateTotal(fromTotalClass,toTotalClass,toHtml){
+				var total=0;
+				$.each($(fromTotalClass),function(index,value){
+					var eachRow=$(value);
+					var eachRowValue=eachRow.val().trim();
+					total+=parseFloat(eachRowValue);
+				});
+				if(toHtml == 1){
+					$(toTotalClass).html(total);
+				} else {
+					$(toTotalClass).val(total.toFixed(2));
+				}
+			};
+
+			$('.footerChanges').live("change", function overallDiscount() {
+				var overallDiscount=parseFloat($('.overallDiscount').val());
+				if(isNaN(overallDiscount)){
+					overallDiscount=0;
+				}
+				updateTotal('.payableAmount','.finalPayable');
+				var finalPayable=parseFloat($('.finalPayable').val().replace(/,/g,''));
+				finalPayable-=overallDiscount;
+				$('.finalPayable').val(finalPayable.toFixed(2));
+			} );
+
+			$('.requiredFieldValidator').click(function() {
+				var qty = $('.receivedQuantity').val();
+				var costPrice = $('.costPrice').val();
+				if(qty=="" || costPrice=="" || qty<0 || costPrice<0){
+					alert("Enter values in correct format.");
+					return false;
+				}
+				$(this).css("display", "none");
+			} );
+
+			//updateTotal('.receivedQuantity','.totalQuantity',1);
 		});
-		if(toHtml == 1){
-			$(toTotalClass).html(total);
-		} else {
-			$(toTotalClass).val(total.toFixed(2));
-		}
-	};
-
-	$('.footerChanges').live("change", function overallDiscount() {
-		var overallDiscount=parseFloat($('.overallDiscount').val());
-		if(isNaN(overallDiscount)){
-			overallDiscount=0;
-		}
-		updateTotal('.payableAmount','.finalPayable');
-		var finalPayable=parseFloat($('.finalPayable').val().replace(/,/g,''));
-		finalPayable-=overallDiscount;
-		$('.finalPayable').val(finalPayable.toFixed(2));
-	} );
-
-	$('.requiredFieldValidator').click(function() {
-		var qty = $('.receivedQuantity').val();
-		var costPrice = $('.costPrice').val();
-		if(qty=="" || costPrice=="" || qty<0 || costPrice<0){
-			alert("Enter values in correct format.");
-			return false;
-		}
-		$(this).css("display", "none");
-	} );
-
-	updateTotal('.receivedQuantity','.totalQuantity',1);
-});
-</script>
+	</script>
 </s:layout-component>
 <s:layout-component name="heading">
 	Edit GRN of PO # ${pa.grn.purchaseOrder.id}
