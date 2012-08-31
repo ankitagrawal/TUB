@@ -6,8 +6,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
@@ -76,9 +74,10 @@ public class PreferredWarehouseDecider {
     @Autowired
     CourierCostCalculator courierCostCalculator;
 
-    private static Logger logger = LoggerFactory.getLogger(PreferredWarehouseDecider.class);
+    /*private static Logger logger = LoggerFactory.getLogger(PreferredWarehouseDecider.class);*/
 
     //todo rewrite generic
+    @SuppressWarnings("unchecked")
     public Warehouse getPreferredWareHouse(LineItem lineItem) {
 
         // get static things
@@ -124,7 +123,7 @@ public class PreferredWarehouseDecider {
     }
 
     public Map<Warehouse, Map<Courier, Long>> getPreferredWareHouse(List<ProductVariant> productVariants, boolean isCod, String pincode) {
-        Pincode pincodeObj = pincodeDao.getByPincode(pincode);
+        /*Pincode pincodeObj = pincodeDao.getByPincode(pincode);*/
         Map<Warehouse, Map<Courier, Long>> warehouseCheapestCourierCostingMap = new HashMap<Warehouse, Map<Courier, Long>>();
 
         for (Warehouse warehouse : warehouseService.getServiceableWarehouses()) {

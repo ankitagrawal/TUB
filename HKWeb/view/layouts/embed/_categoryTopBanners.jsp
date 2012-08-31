@@ -44,6 +44,7 @@
     <%--<jsp:include page="/categoryBanners/holiBanner.jsp"/>--%>
     <%--<jsp:include page="/categoryBanners/beautyIntroDiscount.jsp"/>--%>
     <%--<jsp:include page="/categoryBanners/absoluteComingSoon.jsp"/>--%>
+    <jsp:include page="/categoryBanners/beautyPrepayDiscount.jsp"/>
   </c:if>
 
   <c:if test="${hk:collectionContains(categoryNameList, 'clinical-supplies')}">
@@ -72,9 +73,9 @@
       <%--<jsp:include page="/categoryBanners/holiBanner.jsp"/>--%>
       <%--<jsp:include page="/categoryBanners/sportsDiscount.jsp"/>--%>
     </c:if>
-    <%--<c:if test="${hk:collectionContains(topCategoryNameList, 'personal-care')}">
+    <c:if test="${hk:collectionContains(topCategoryNameList, 'personal-care')}">
       <jsp:include page="/categoryBanners/personalCareStripBanner.jsp"/>
-    </c:if>--%>
+    </c:if>
     <c:if test="${hk:collectionContains(topCategoryNameList, 'diabetes')}">
       <%--<jsp:include page="/categoryBanners/holiBanner.jsp"/>--%>
       <%--<jsp:include page="/categoryBanners/sportsDiscount.jsp"/>--%>

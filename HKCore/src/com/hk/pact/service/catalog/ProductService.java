@@ -6,11 +6,7 @@ import java.util.Set;
 
 import com.akube.framework.dao.Page;
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.product.ProductExtraOption;
-import com.hk.domain.catalog.product.ProductGroup;
-import com.hk.domain.catalog.product.ProductImage;
-import com.hk.domain.catalog.product.ProductOption;
+import com.hk.domain.catalog.product.*;
 import com.hk.domain.catalog.product.combo.Combo;
 
 public interface ProductService {
@@ -96,4 +92,12 @@ public interface ProductService {
     public Map<String,List<String>> getRecommendedProducts(Product product);
 
     Map<String, List<String>> getRelatedMoogaProducts(Product findProduct);
+
+    public Map<String, List<Long>> getGroupedFilters(List<Long> filters);
+
+	public boolean isProductOutOfStock(Product product);
+
+	public List<Product> getSortedByStock(List<Product> productList);
+
+	public List<Product> getSimilarProducts(Product product);
 }

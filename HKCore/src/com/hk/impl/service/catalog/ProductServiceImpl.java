@@ -1,13 +1,6 @@
 package com.hk.impl.service.catalog;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import net.sourceforge.stripes.controller.StripesFilter;
 
@@ -17,13 +10,9 @@ import org.springframework.stereotype.Service;
 
 import com.akube.framework.dao.Page;
 import com.hk.constants.core.Keys;
+import com.hk.constants.marketing.EnumProductReferrer;
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.product.ProductExtraOption;
-import com.hk.domain.catalog.product.ProductGroup;
-import com.hk.domain.catalog.product.ProductImage;
-import com.hk.domain.catalog.product.ProductOption;
-import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.catalog.product.*;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.catalog.product.combo.ComboProduct;
 import com.hk.domain.content.PrimaryCategoryHeading;
@@ -229,6 +218,24 @@ public class ProductServiceImpl implements ProductService {
         return true;
     }
 
+	public boolean isComboInStock(String comboId) {
+		Combo combo = getComboDao().getComboById(comboId);
+        if (combo.isDeleted() != null && combo.isDeleted()) {
+            return false;
+        } else {
+            for (ComboProduct comboProduct : combo.getComboProducts()) {
+                if (!comboProduct.getAllowedProductVariants().isEmpty() && comboProduct.getAllowedInStockVariants().isEmpty()) {
+                    return false;
+                } else if (comboProduct.getProduct().getInStockVariants().isEmpty()) {
+                    return false;
+                } else if (comboProduct.getProduct().isDeleted() != null && comboProduct.getProduct().isDeleted()) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     public List<Combo> getRelatedCombos(Product product) {
         return getComboDao().getCombos(product);
     }
@@ -237,7 +244,7 @@ public class ProductServiceImpl implements ProductService {
         List<ProductVariant> productVariants = product.getProductVariants();
         boolean isOutOfStock = true;
         for (ProductVariant pv : productVariants) {
-            if (!pv.getOutOfStock()) {
+            if (!pv.getOutOfStock() && !pv.getDeleted()) {
                 isOutOfStock = false;
                 break;
             }
@@ -319,6 +326,57 @@ public class ProductServiceImpl implements ProductService {
         }
         return primaryCategoryHeading.getProducts();
     }
+
+	public Map<String, List<Long>> getGroupedFilters(List<Long> filters){
+		Map<String, List<Long>> filterMap = new HashMap<String, List<Long>>();
+		List<Long> groupedFilters;
+		List<ProductOption> options = getProductDAO().getProductOptions(filters);
+		for (ProductOption option : options) {
+			String group = option.getName().toUpperCase();
+			if (filterMap.containsKey(group)) {
+				groupedFilters = filterMap.get(group);
+			} else {
+				groupedFilters = new ArrayList<Long>(0);
+			}
+			groupedFilters.add(option.getId());
+			filterMap.put(group, groupedFilters);
+		}
+		return filterMap;
+	}
+
+	public List<Product> getSortedByStock(List<Product> productList) {
+		List<Product> outOfStockproductList = new ArrayList<Product>();
+		for (Product product : productList) {
+			if (product.getProductVariants() != null && !product.getProductVariants().isEmpty()) {
+				if (isProductOutOfStock(product)) {
+					product.setOutOfStock(true);
+					outOfStockproductList.add(product);
+				}
+			} else if (!isComboInStock(product.getId())) {
+				product.setOutOfStock(true);
+				outOfStockproductList.add(product);
+				//productList.remove(product);
+			}
+		}
+		productList.removeAll(outOfStockproductList);
+		productList.addAll(outOfStockproductList);
+		return productList;
+	}
+
+	public List<Product> getSimilarProducts(Product product) {
+		List<Product> inStockSimilarProducts = new ArrayList<Product>();
+		int ctr = 0;
+		for (SimilarProduct similarProduct : product.getSimilarProducts()) {
+			Product sProduct = similarProduct.getSimilarProduct();
+			if (!sProduct.isDeleted() && product.getInStockVariants().size() > 0) {  // Will add out of stock constraint instead of in stock variants size
+				sProduct.setProductURL(linkManager.getRelativeProductURL(sProduct, ProductReferrerMapper.getProductReferrerid(EnumProductReferrer.relatedProductsPage.getName())));
+				inStockSimilarProducts.add(sProduct);
+				ctr++;
+				if (ctr >= 5) break;
+			}
+		}
+		return inStockSimilarProducts;
+	}
 }
 
 

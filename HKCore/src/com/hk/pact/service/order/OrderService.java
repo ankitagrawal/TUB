@@ -65,4 +65,6 @@ public interface OrderService {
 
     public Order findByGatewayOrderId(String gatewayOrderId);
 
+	public boolean isCODAllowed(Order order);
+
 }

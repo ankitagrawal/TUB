@@ -361,6 +361,18 @@
                         date</label><s:text class="date_input endDate" style="width:150px"
                                             formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endDate"/>
                 </li>
+                <li>
+                    <label>
+                        Warehouse
+                    </label>
+
+                    <s:select name="warehouse" style="height:30px;font-size:1.2em;padding:1px;">
+                        <c:forEach items="${whList}" var="wh">
+                            <s:option value="${wh.id}">${wh.city}</s:option>
+                        </c:forEach>
+                    </s:select>
+
+                </li>
             </ul>
             <s:submit name="generateRTOReport" value="Generate Report"/>
         </fieldset>
