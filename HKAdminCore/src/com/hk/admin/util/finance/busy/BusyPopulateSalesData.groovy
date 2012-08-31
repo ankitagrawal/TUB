@@ -69,7 +69,7 @@ public class BusyPopulateSalesData {
 
                     where so.shipping_order_status_id in (180, 190, 200)
                       and (ship.ship_date > ${lastUpdateDate} and ship.ship_date > '2011-11-08 19:59:36')
-                      ORDER BY ship.ship_date ASC
+                      ORDER BY ship.ship_date ASC   LIMIT 2000
                  """) {
       accountingInvoice ->
 
