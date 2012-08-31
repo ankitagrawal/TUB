@@ -95,7 +95,7 @@ public class BrandCatalogAction extends BasePaginatedAction {
     } else {
       try {
         SearchResult searchResult = productSearchService.getBrandCatalogResults(URLDecoder.decode(brand), topLevelCategory, getPageNo(), getPerPage(), preferredZone);
-          productPage = new Page(searchResult.getSolrProducts(), getPageNo(), searchResult.getResultSize());
+          productPage = new Page(searchResult.getSolrProducts(),getPerPage(), getPageNo(), searchResult.getResultSize());
       } catch (Exception e) {
         logger.debug("SOLR NOT WORKING, HITTING DB TO ACCESS DATA");
         categories = categoryDao.getCategoriesByBrand(brand, topLevelCategory);
