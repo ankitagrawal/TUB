@@ -117,13 +117,16 @@ public class BusyPopulateSalesData {
       }
       vch_no = vch_prefix+accountingInvoice.vch_no;
 
-      if(accountingInvoice.shipping_order_status_id == 200){
+      vch_type = 9;
+
+      //Following is for RTO. to be used when busy's RTO model goes live
+      /*if(accountingInvoice.shipping_order_status_id == 200){
         vch_type = 3;
         date =   accountingInvoice.return_date;
       }
       else{
         vch_type = 9;
-      }
+      }*/
 
       sale_type = "VAT TAX INC";
       account_name = accountingInvoice.account_name;
