@@ -131,11 +131,12 @@ public class EditPurchaseOrderAction extends BaseAction {
                         getBaseDao().delete(poLineItem);
                     } else if (poLineItem.getQty() > 0) {
 	                    if(poLineItem.getCostPrice() != null) {
-		                    double poLineItemDiscount = 0;
+		                    /*double poLineItemDiscount = 0;
 		                    if(poLineItem.getDiscountPercent() != null){
 			                    poLineItemDiscount = poLineItem.getCostPrice() * poLineItem.getDiscountPercent()/100;
-		                    }
-		                    poLineItem.setProcurementPrice( poLineItem.getCostPrice() - poLineItemDiscount - poLineItem.getCostPrice()*discountRatio/poLineItem.getQty() );
+		                    }*/
+		                    poLineItem.setProcurementPrice(poLineItem.getPayableAmount() * discountRatio / poLineItem.getQty());
+		                    //poLineItem.setProcurementPrice( poLineItem.getCostPrice() - poLineItemDiscount - poLineItem.getCostPrice()*discountRatio/poLineItem.getQty() );
 	                    }
                         Sku sku = null;
                         try {
