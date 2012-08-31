@@ -77,11 +77,18 @@
 					return false;
 				}
 				var taxCategory = valueChangeRow.find('.taxCategory').val();
-				var surchargeCategory = 0;
-				var tax = valueChangeRow.find('.taxAmount').val();
-				if(tax > 0) {
-					surchargeCategory = valueChangeRow.find('.surchargeAmount').val()/tax;
+				var surchargeCategory = 0.0;
+				var stateIdentifier = $('.state').html();
+				if (stateIdentifier == 'CST') {
+					surchargeCategory = 0.0;
+					taxCategory = 0.02;
+				} else {
+					surchargeCategory = 0.05;
 				}
+				var tax = valueChangeRow.find('.taxAmount').val();
+				/*if(tax > 0) {
+					surchargeCategory = valueChangeRow.find('.surchargeAmount').val()/tax;
+				}*/
 				var taxable = costPrice * qty;
 
 				var discountedAmount;
@@ -91,8 +98,7 @@
 				}
 				discountedAmount = (discountPercentage / 100) * taxable;
 				taxable -= discountedAmount;
-
-				tax = taxable * taxCategory/100;
+				tax = taxable*taxCategory;
 				var surcharge = tax * surchargeCategory;
 				var payable = surcharge + taxable + tax;
 
@@ -222,10 +228,10 @@
 		<td>
 			<c:choose>
 				<c:when test="${pa.purchaseOrder.supplier.state == pa.purchaseOrder.warehouse.state}">
-					Non - CST
+					<label class="state">Non - CST</label>
 				</c:when>
 				<c:otherwise>
-					CST
+					<label class="state">CST</label>
 				</c:otherwise>
 			</c:choose>
 		</td>
@@ -370,9 +376,9 @@
 			<td class="otherRemark">${productVariant.otherRemark} </label></td>
 			<td>${productVariant.product.name}<br/>${productVariant.optionsCommaSeparated}
 			</td>
-			<td>
-				<%--<input type="text" name="taxCategory" class="taxCategory"  value="${sku.tax.value * 100}" disabled="disabled" />--%>
-				<input type="text" name="taxCategory" class="taxCategory"  value="${poLineItemDto.poLineItem.sku.tax.value * 100}" disabled="disabled" />
+			<td class="taxCategory"> ${sku.tax.value}
+				<%--<input type="text" name="taxCategory" class="taxCategory"  value="${sku.tax.value}" disabled="disabled" />--%>
+
 			</td>
 			<td>
 					${hk:netInventory(sku)}

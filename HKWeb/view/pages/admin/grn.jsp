@@ -52,7 +52,17 @@
 								'  <td>' +
 								'    <input class="mrp" type="text" name="grnLineItems[' + nextIndex + '].mrp" />' +
 								' </td>'+
-								'  <td ><label class="taxableAmount"></label></td>' +
+								'  <td>' +
+								'    <input class="discountPercentage valueChange" type="text" name="grnLineItems[' + nextIndex + '].discountPercent" />' +
+								'  </td>'+
+								'  <td></td>'+
+								'  <td ><input class="taxableAmount" type="text" readonly="readonly" name="grnLineItems['+nextIndex+'].taxableAmount"/></td>' +
+								'  <td ><input class="taxAmount" type="text" readonly="readonly" name="grnLineItems['+nextIndex+'].taxAmount"></td>' +
+								'  <td ><input class="surchargeAmount" type="text" readonly="readonly" name="grnLineItems['+nextIndex+'].surchargeAmount"/></td>' +
+								'  <td ><input class="payableAmount" type="text" readonly="readonly" name="grnLineItems['+nextIndex+'].payableAmount"/></td>' +
+							/*'  <td ><label class="taxableAmount"></label></td>' +
+							 '  <td ><label class="taxAmount"></label></td>' +
+							 '  <td ><label class="surchargeAmount"></label></td>' +*/
 								'  </tr>';
 
 				$('#poTable').append(newRowHtml);
@@ -116,14 +126,15 @@
 				}
 				var taxable = costPrice * qty;
 				var discountPercentage = valueChangeRow.find('.discountPercentage').val();
-				var discountedAmount;
-				if (isNaN(discountPercentage) || discountPercentage < 0) {
+				var discountedAmount = 0.0;
+				if (discountPercentage!=null && (isNaN(discountPercentage) || discountPercentage < 0)) {
 					alert("Enter valid discount");
 					return;
 				}
-				discountedAmount = (discountPercentage / 100) * taxable;
+				if(discountPercentage > 0) {
+					discountedAmount = (discountPercentage / 100) * taxable;
+				}
 				taxable -= discountedAmount;
-
 				var tax = taxable * taxCategory;
 				var surcharge = tax * surchargeCategory;
 				var payable = surcharge + taxable + tax;
@@ -132,7 +143,6 @@
 				valueChangeRow.find('.taxAmount').val(tax.toFixed(2));
 				valueChangeRow.find('.surchargeAmount').val(surcharge.toFixed(2));
 				valueChangeRow.find('.payableAmount').val(payable.toFixed(2));
-
 				updateTotal('.receivedQuantity','.totalQuantity',1);
 				updateTotal('.payableAmount', '.totalPayable',0);
 				updateTotal('.taxableAmount','.totalTaxable',0);
@@ -151,6 +161,7 @@
 			});
 
 			function updateTotal(fromTotalClass,toTotalClass,toHtml){
+				//alert(fromTotalClass);
 				var total=0;
 				$.each($(fromTotalClass),function(index,value){
 					var eachRow=$(value);

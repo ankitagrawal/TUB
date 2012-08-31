@@ -197,6 +197,9 @@ public class GRNAction extends BasePaginatedAction {
 
 			grnDto = grnManager.generateGRNDto(grn);
 			grn.setPayable(grnDto.getTotalPayable());
+
+			double overallDiscount = grn.getDiscount() != null ? grn.getDiscount() : 0;
+			grn.setFinalPayableAmount(grn.getPayable() - overallDiscount);
 			goodsReceivedNoteDao.save(grn);
 		}
 		addRedirectAlertMessage(new SimpleMessage("Changes saved."));
