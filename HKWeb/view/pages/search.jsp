@@ -11,10 +11,16 @@
     <c:if test="${searchAction.resultCount > 0}">
       <div class='catalog_header'>
         <div class="content">
-          <h2>
-            <span>search Results for <strong>${searchAction.query}</strong></span>
-          </h2>
-
+              <c:choose>
+                <c:when test="${hk:isNotBlank(searchAction.searchSuggestion)}">
+                 <span>your search <i>"${searchAction.query}"</i> did not match any product</span>
+                 <br/>
+                 <span>showing results for <strong>"${searchAction.searchSuggestion}"</strong></span>
+             </c:when>
+              <c:otherwise>
+                  <span>search results for <strong>"${searchAction.query}"</strong></span>
+              </c:otherwise>
+            </c:choose>
           <h3><s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${searchAction}"/></h3>
           <h3><s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${searchAction}"/></h3>
         </div>

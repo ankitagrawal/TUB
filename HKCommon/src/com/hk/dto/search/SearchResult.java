@@ -15,7 +15,7 @@ import java.util.List;
 public class SearchResult {
     private List<Product> solrProducts;
     private int resultSize;
-    private List<String> searchSuggestions;
+    private String searchSuggestions = "";
     private String primarySuggestion;
 
 
@@ -44,11 +44,11 @@ public class SearchResult {
         this.resultSize = resultSize;
     }
 
-    public List<String> getSearchSuggestions() {
+    public String getSearchSuggestions() {
         return searchSuggestions;
     }
 
-    public void setSearchSuggestions(List<String> searchSuggestions) {
+    public void setSearchSuggestions(String searchSuggestions) {
         this.searchSuggestions = searchSuggestions;
     }
 

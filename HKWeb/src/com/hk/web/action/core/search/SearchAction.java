@@ -36,7 +36,7 @@ public class SearchAction extends BasePaginatedAction {
   private static Logger logger = LoggerFactory.getLogger(SearchAction.class);
 
   String query;
-
+  String searchSuggestion;
   Page productPage;
   List<Product> productList = new ArrayList<Product>();
   @Autowired
@@ -55,6 +55,7 @@ public class SearchAction extends BasePaginatedAction {
       SearchResult sr =  productSearchService.getSearchResults(query, getPageNo(), getPerPage(), false);
       productPage = new Page(sr.getSolrProducts(),getPerPage(), getPageNo(), (int)sr.getResultSize());
       productList = productPage.getList();
+      searchSuggestion = sr.getSearchSuggestions();
     } catch (Exception e) {
       logger.debug("SOLR NOT WORKING, HITTING DB TO ACCESS DATA", e);
       productPage = productDao.getProductByName(query, getPageNo(), getPerPage());
@@ -106,4 +107,12 @@ public class SearchAction extends BasePaginatedAction {
   public void setQuery(String query) {
     this.query = query;
   }
+
+    public String getSearchSuggestion() {
+        return searchSuggestion;
+    }
+
+    public void setSearchSuggestion(String searchSuggestion) {
+        this.searchSuggestion = searchSuggestion;
+    }
 }

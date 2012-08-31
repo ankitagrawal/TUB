@@ -267,7 +267,8 @@ class ProductSearchServiceImpl implements ProductSearchService {
         SpellCheckResponse spellCheckResponse = response.getSpellCheckResponse();
         StringBuilder sb = new StringBuilder();
         boolean canRunSpellQuery = false;
-        List<String> suggestions = new ArrayList<String>();
+        //List<String> suggestions = new ArrayList<String>();
+        String suggestions = "";
         if ((spellCheckResponse != null) && !spellCheckResponse.isCorrectlySpelled()) {
 
             List<SpellCheckResponse.Suggestion> solrSuggestions =   response.getSpellCheckResponse().getSuggestions();
@@ -287,14 +288,12 @@ class ProductSearchServiceImpl implements ProductSearchService {
                     logger.debug("original token: " + suggestion.getToken() + " - alternatives: " + suggestion.getAlternatives());
                 }
             }
-            suggestions.add(spellCheckResponse.getCollatedResult());
-            if (suggestions.size() > 0)
-                sb.append(suggestions.get(0));
+            suggestions = spellCheckResponse.getCollatedResult();
         }
 
         if (canRunSpellQuery)
         {
-            SolrQuery solrQuery = getResultsQuery(sb.toString(),page,perPage);
+            SolrQuery solrQuery = getResultsQuery(suggestions,page,perPage);
             response = solr.query(solrQuery);
             List<SolrProduct> solrProductList = getQueryResults(response);
             int totalResultCount = (int)response.getResults().getNumFound();
