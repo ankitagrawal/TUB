@@ -63,11 +63,13 @@ public class StockTransferAction extends BasePaginatedAction {
     public Resolution pre() {
         stockTransferPage = stockTransferDao.searchStockTransfer(createDate, userLogin, fromWarehouse, toWarehouse, getPageNo(), getPerPage());
         stockTransferList = stockTransferPage.getList();
+        Comparator comparator = Collections.reverseOrder();
+        Collections.sort(stockTransferList, comparator);
         return new ForwardResolution("/pages/admin/stockTransferList.jsp");
     }
 
     public Resolution view() {
-        if (stockTransfer != null) {
+        if (stockTransfer != null) {          
             logger.debug("stockTransfer@Pre: " + stockTransfer.getId());
         }
         return new ForwardResolution("/pages/admin/stockTransfer.jsp");
