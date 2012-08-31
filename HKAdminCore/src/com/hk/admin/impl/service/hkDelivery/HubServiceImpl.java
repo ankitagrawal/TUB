@@ -45,8 +45,10 @@ public class HubServiceImpl implements HubService {
             return false;
         }
         else{
-            Set<Role> userRole = new HashSet<Role>();
-            userRole.add(EnumRole.HK_DELIVERY_GUY.toRole());
+            Set<Role> userRole = user.getRoles();
+            if(!userRole.contains(EnumRole.HK_DELIVERY_HUB_MANAGER.toRole())){
+                userRole.add(EnumRole.HK_DELIVERY_GUY.toRole());
+            }
             user.setRoles(userRole);
             HubHasUser hubHasUser = new HubHasUser();
             hubHasUser.setHub(hub);

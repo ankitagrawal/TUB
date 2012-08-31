@@ -53,7 +53,7 @@
                 </shiro:hasPermission>
                 <shiro:hasPermission name="<%=PermissionConstants.VIEW_HUB%>">
                     <c:set var="hub" value="${hk:getHubForHkdeliveryUser(runsheetAction.loggedOnUser)}" />
-                     <s:hidden name="hub" value="${hub.id}"/><strong>${hub.name}</strong> 
+                &nbsp;&nbsp;     <s:hidden name="hub" value="${hub.id}"/><strong>${hub.name}</strong>&nbsp;&nbsp; 
                 </shiro:hasPermission>
                 <s:submit name="pre" value="Search Runsheets"/>
             </s:form>

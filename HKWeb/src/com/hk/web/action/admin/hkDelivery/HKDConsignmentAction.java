@@ -3,6 +3,8 @@ package com.hk.web.action.admin.hkDelivery;
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.action.BasePaginatedAction;
+import com.hk.constants.core.EnumPermission;
+import com.hk.constants.core.EnumRole;
 import com.hk.constants.hkDelivery.EnumConsignmentStatus;
 import com.hk.domain.hkDelivery.*;
 import com.hk.domain.courier.Courier;
@@ -154,7 +156,9 @@ public class HKDConsignmentAction extends BasePaginatedAction {
 
     public Resolution searchConsignments(){
         loggedOnUser = getUserService().getUserById(getPrincipal().getId());
-        hub = hubService.getHubForUser(loggedOnUser);
+        if(!loggedOnUser.hasPermission(EnumPermission.SELECT_HUB)){
+            hub = hubService.getHubForUser(loggedOnUser);
+        }
         consignmentPage = consignmentService.searchConsignment(consignment, consignmentNumber, startDate, endDate, consignmentStatus, hub, runsheet, reconciled, getPageNo(), getPerPage());
         if(consignmentPage != null){
             consignmentList = consignmentPage.getList();
