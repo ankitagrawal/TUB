@@ -50,7 +50,6 @@
                     </s:select>
                 </shiro:hasPermission>
                 <shiro:hasPermission name="<%=PermissionConstants.VIEW_HUB%>">
-                    &nbsp;&nbsp;
                     <c:set var="hub" value="${hk:getHubForHkdeliveryUser(consignmentAction.loggedOnUser)}" />
                      <s:hidden name="hub" value="${hub.id}"/><strong>${hub.name}</strong>&nbsp;&nbsp;
                 </shiro:hasPermission>
