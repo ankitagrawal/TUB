@@ -177,10 +177,9 @@
 					To Warehouse :
 				</td>
 				<td><s:select name="toWarehouse" class="toWarehouse">
+					<s:option> </s:option>
 					<c:forEach items="${whList}" var="wh">
-						<c:if test="${whAction.setWarehouse.id != wh.id}">
-							<s:option value="${wh}">${wh.city}</s:option>
-						</c:if>
+						<s:option value="${wh}">${wh.city}</s:option>
 					</c:forEach>
 				</s:select></td>
 			</tr>
