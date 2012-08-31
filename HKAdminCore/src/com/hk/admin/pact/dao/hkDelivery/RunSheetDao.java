@@ -20,5 +20,7 @@ public interface RunSheetDao extends BaseDao {
 
     public List<User> getAgentList(RunsheetStatus runsheetStatus, Hub hub);
 
-     public List<Runsheet> getRunsheetForAgent(User agent);
+    public List<Runsheet> getRunsheetForAgent(User agent);
+
+    public Runsheet getOpenRunsheetForAgent(User agent);
 }

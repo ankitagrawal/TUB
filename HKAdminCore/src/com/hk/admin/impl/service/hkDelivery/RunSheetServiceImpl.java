@@ -154,16 +154,7 @@ public class RunSheetServiceImpl implements RunSheetService {
 
     @Override
     public Runsheet getOpenRunsheetForAgent(User agent) {
-        Runsheet runsheetObj = new Runsheet();
-        for(Runsheet runsheet : runsheetDao.getRunsheetForAgent(agent))
-        {
-              if(runsheet.getRunsheetStatus().getId().equals(EnumRunsheetStatus.Open.getId()))
-              {
-                  runsheetObj = runsheet;
-              }
-        }
-        return runsheetObj;
-
+        return runsheetDao.getOpenRunsheetForAgent(agent);
     }
 
     @Override
