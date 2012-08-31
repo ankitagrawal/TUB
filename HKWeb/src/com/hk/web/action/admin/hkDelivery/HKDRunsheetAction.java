@@ -4,6 +4,7 @@ import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.pact.dao.hkDelivery.RunSheetDao;
 import com.hk.admin.pact.service.hkDelivery.RunSheetService;
+import com.hk.constants.core.EnumPermission;
 import com.hk.domain.hkDelivery.*;
 import com.hk.domain.user.User;
 import com.hk.util.CustomDateTypeConvertor;
@@ -99,7 +100,9 @@ public class HKDRunsheetAction extends BasePaginatedAction {
     @DefaultHandler
     public Resolution pre() {
         loggedOnUser = getUserService().getUserById(getPrincipal().getId());
-        hub = hubService.getHubForUser(loggedOnUser);
+        if(!loggedOnUser.hasPermission(EnumPermission.SELECT_HUB)){
+            hub = hubService.getHubForUser(loggedOnUser);
+        }
         runsheetPage = runsheetService.searchRunsheet(runsheet, startDate, endDate, runsheetStatus, agent, hub, getPageNo(), getPerPage());
         runsheetList = runsheetPage.getList();
         return new ForwardResolution("/pages/admin/hkRunsheetList.jsp");

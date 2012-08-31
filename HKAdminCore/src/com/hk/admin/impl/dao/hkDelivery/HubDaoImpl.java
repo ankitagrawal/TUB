@@ -1,6 +1,7 @@
 package com.hk.admin.impl.dao.hkDelivery;
 
 import com.hk.admin.pact.dao.hkDelivery.HubDao;
+import com.hk.constants.core.EnumRole;
 import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.hkDelivery.HubHasUser;
 import com.hk.domain.user.User;
@@ -40,7 +41,8 @@ public class HubDaoImpl extends BaseDaoImpl implements HubDao {
     public List<User> getAgentsForHub(Hub hub){
         List<User> agents = new ArrayList<User>();
         for(HubHasUser hubUserRow : getAll(HubHasUser.class)){
-            if(hubUserRow.getHub().getId().equals(hub.getId())){
+            if(hubUserRow.getHub().getId().equals(hub.getId()) &&
+                    hubUserRow.getUser().getRoles().contains(EnumRole.HK_DELIVERY_GUY.toRole())){
                 agents.add(hubUserRow.getUser());
             }
         }

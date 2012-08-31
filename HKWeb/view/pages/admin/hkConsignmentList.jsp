@@ -39,6 +39,7 @@
                                                serviceProperty="consignmentStatusList" value="id"
                                                label="status"/>
                 </s:select>
+                &nbsp;&nbsp;
                 <label>Hub:</label>
                 <shiro:hasPermission name="<%=PermissionConstants.SELECT_HUB%>">
                     <s:select name="hub" class="hubName">
@@ -49,8 +50,9 @@
                     </s:select>
                 </shiro:hasPermission>
                 <shiro:hasPermission name="<%=PermissionConstants.VIEW_HUB%>">
+                    &nbsp;&nbsp;
                     <c:set var="hub" value="${hk:getHubForHkdeliveryUser(consignmentAction.loggedOnUser)}" />
-                     <s:hidden name="hub" value="${hub.id}"/><strong>${hub.name}</strong>
+                     <s:hidden name="hub" value="${hub.id}"/><strong>${hub.name}</strong>&nbsp;&nbsp;
                 </shiro:hasPermission>
                 <label>Runsheet Id:</label><s:text name="runsheet"/>
                 <label>Reconciled: </label>
