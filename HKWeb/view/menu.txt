@@ -13,7 +13,7 @@
 --/nutrition/sports-nutrition/protein-bars  : Protein Bars
 --/nutrition/sports-nutrition/athletes      :  Athletes
 --/nutrition/sports-nutrition/fat-burner
---/nutrition/sports-nutrition/more...
+--/nutrition/sports-nutrition/more... : Other Supplements
 --/nutrition/sports-nutrition/shakers-accessories        :Shakers & Accessories
 --/nutrition/sports-nutrition/muscle-building-combos :Supersavers !!!
 -/nutrition/dietary-supplements : Dietary Supplements
@@ -31,7 +31,6 @@
 --/nutrition/dietary-supplements/herbal-cleanser :Herbal Cleanser
 --/nutrition/dietary-supplements/herbal-teas
 --/nutrition/dietary-supplements/herbs-a-z  :Herbs A-Z
-
 -/nutrition/condition-specific-supplements : Condition Specific
 --/nutrition/condition-specific-supplements/cardiovascular
 --/nutrition/condition-specific-supplements/joint-muscle    :Joint & Muscle
@@ -42,7 +41,7 @@
 --/nutrition/condition-specific-supplements/brain-memory     :Brain & Memory
 --/nutrition/condition-specific-supplements/vitality :Sexual Health
 --/nutrition/condition-specific-supplements/energy-endurance     :Energy & Endurance
---/nutrition/condition-specific-supplements/daily-nutrition-combos :Everyday Supersavers !!!
+--/nutrition/condition-specific-supplements/daily-nutrition-combos :Everyday Supersavers!!!
 -/nutrition/weight-management
 --/nutrition/weight-management/fat-burner
 --/nutrition/weight-management/appetite-control :Appetite Control
