@@ -16,11 +16,13 @@ import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.courier.EnumAwbStatus;
+import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.courier.Shipment;
+import com.hk.domain.courier.Awb;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
@@ -61,6 +63,8 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     private ShipmentService shipmentService;
     @Autowired
     private AdminShippingOrderDao adminShippingOrderDao;
+    @Autowired
+    AwbService awbService;
 
     // public List<Long> getShippingOrderListByCourier(Date startDate, Date endDate, Long courierId) {
     // List<Long> shippingOrderList = getAdminShippingOrderDao().getShippingOrderListByCourier(startDate, endDate,
@@ -91,21 +95,34 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 
         boolean shouldUpdate = true;
         Set<LineItem> lineItems = shippingOrder.getLineItems();
+        try {
         for (LineItem lineItem : lineItems) {
             Sku skuInOtherWarehouse = getSkuService().getSKU(lineItem.getSku().getProductVariant(), warehouse);
-            if (skuInOtherWarehouse == null) {
-                shouldUpdate = false;
-                break;
-            } else {
+//            if (skuInOtherWarehouse == null) {
+//                shouldUpdate = false;
+//                break;
+//            } else {
                 lineItemToSkuUpdate.put(lineItem.getId(), skuInOtherWarehouse);
-            }
+//            }
         }
-
+        }catch(NoSkuException noSku){
+        shouldUpdate = false;
+        }
         if (shouldUpdate) {
             for (LineItem lineItem : lineItems) {
                 lineItem.setSku(lineItemToSkuUpdate.get(lineItem.getId()));
             }
             shippingOrder.setWarehouse(warehouse);
+            if (shippingOrder.getShipment() != null) {
+                Shipment oldShipment=shippingOrder.getShipment();
+                Awb awb = oldShipment.getAwb();
+                awb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
+                awbService.save(awb);
+                Shipment shipment = shipmentService.createShipment(shippingOrder);
+                shippingOrder.setShipment(shipment);
+                shipmentService.delete(oldShipment);                
+
+            }
             shippingOrder = getShippingOrderService().save(shippingOrder);
             getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_WarehouseChanged);
 
