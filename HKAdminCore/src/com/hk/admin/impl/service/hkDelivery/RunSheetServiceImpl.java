@@ -147,7 +147,9 @@ public class RunSheetServiceImpl implements RunSheetService {
 
     @Override
     public List<User> getAgentList(RunsheetStatus runsheetStatus) {
-       return runsheetDao.getAgentList(runsheetStatus);
+       User loggedOnUser = userService.getLoggedInUser();
+       Hub hub = hubService.getHubForUser(loggedOnUser);
+       return runsheetDao.getAgentList(runsheetStatus, hub);
     }
 
     @Override

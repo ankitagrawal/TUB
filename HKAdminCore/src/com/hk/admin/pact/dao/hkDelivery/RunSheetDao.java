@@ -18,7 +18,7 @@ public interface RunSheetDao extends BaseDao {
 
     public Page searchRunsheet(Runsheet runsheet, Date startDate, Date endDate, RunsheetStatus runsheetStatus, User agent, Hub hub, int pageNo, int perPage);
 
-    public List<User> getAgentList(RunsheetStatus runsheetStatus);
+    public List<User> getAgentList(RunsheetStatus runsheetStatus, Hub hub);
 
      public List<Runsheet> getRunsheetForAgent(User agent);
 }
