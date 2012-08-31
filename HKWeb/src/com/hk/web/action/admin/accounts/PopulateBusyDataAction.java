@@ -7,6 +7,7 @@ import com.hk.admin.util.finance.busy.BusyPopulateSupplierData;
 import com.hk.admin.util.finance.busy.BusyTableTransactionGenerator;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -42,6 +43,7 @@ public class PopulateBusyDataAction extends BaseAction {
     }catch (Exception e){
       logger.error("Unable to insert: ", e);
     }
-     return new ForwardResolution("/pages/admin/taskManager.jsp");
+      addRedirectAlertMessage(new SimpleMessage("Busy data upadted !!"));
+     return new ForwardResolution("/pages/admin/adminHome.jsp");
   }
 }
