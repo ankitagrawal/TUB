@@ -100,7 +100,7 @@ public class XslConstants {
 
     public static final String   OTHER_REMARK                     = "OTHER_REMARK";
     public static final String   SUPPLIER_CODE                    = "SUPPLIER_CODE" ;
-     public static final String   GROUND_SHIPPING_AVAILABLE      = "GROUND_SHIPPING_AVAILABLE";
+    public static final String   GROUND_SHIPPING_AVAILABLE      = "GROUND_SHIPPING_AVAILABLE";
     public static final String    COD_ON_GROUND_SHIPPING         = "COD_ON_GROUND_SHIPPING";
 
 

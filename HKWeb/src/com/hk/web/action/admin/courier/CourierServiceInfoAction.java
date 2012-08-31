@@ -136,6 +136,8 @@ public class CourierServiceInfoAction extends BaseAction {
                         courierServiceInfoDao.delete(tmpObj2);
                     } else {
                         tmpObj2.setCodAvailable(courierServiceInfo.isCodAvailable());
+                        tmpObj2.setGroundShippingAvailable(courierServiceInfo.isGroundShippingAvailable());
+                        tmpObj2.setCodAvailableOnGroundShipping(courierServiceInfo.isCodAvailableOnGroundShipping());
                         courierServiceInfoDao.save(tmpObj2);
                     }
                 } else if (courierServiceInfo != null) {
