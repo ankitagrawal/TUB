@@ -13,7 +13,7 @@
         <div class="content">
               <c:choose>
                 <c:when test="${hk:isNotBlank(searchAction.searchSuggestion)}">
-                 <span>your search <i>"${searchAction.query}"</i> did not match any product</span>
+                 <span>your search <strong>"${searchAction.query}"</strong> did not match any product</span>
                  <br/>
                  <span>showing results for <strong>"${searchAction.searchSuggestion}"</strong></span>
              </c:when>
