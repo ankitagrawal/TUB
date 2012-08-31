@@ -586,8 +586,12 @@ public class OrderManager {
                             if (skuList != null && !skuList.isEmpty()) {
                                 Long unbookedInventory = inventoryService.getAvailableUnbookedInventory(skuList);
                                 if (unbookedInventory != null && unbookedInventory < lineItem.getQty()) {
-                                    lineItem.setQty(unbookedInventory);
-                                    cartLineItemService.save(lineItem);
+	                                //Check in case of negative unbooked inventory
+	                                if (unbookedInventory < 0) {
+		                                unbookedInventory = 0L;
+	                                }
+	                                lineItem.setQty(unbookedInventory);
+	                                cartLineItemService.save(lineItem);
                                     logger.debug("Set LineItem Qty equals to available unbooked Inventory: " + unbookedInventory + " for Variant:" + productVariant.getId());
                                 }
                             }
