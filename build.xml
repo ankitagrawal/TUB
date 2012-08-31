@@ -42,36 +42,4 @@
 		</diffDatabaseToChangeLog>
 	</target>
 
-
-    <property name="solr.conf.dir" value="${solr.home}/solr/conf"/>
-
-    <target name="solrSetup" description="Task needed if any changes are made to solr configuration files, then solr config files are copied into solr.home">
-        <echo message="${solr.home}"/>
-        <copy
-                file="${project.common.dir}/resources/${project.env}/solrConfig/solrconfig.xml"
-                tofile="${solr.conf.dir}/solrconfig.xml"
-                failonerror="true"
-                overwrite="true"
-                />
-        <copy
-                file="${project.common.dir}/resources/${project.env}/solrConfig/schema.xml"
-                tofile="${solr.conf.dir}/schema.xml"
-                failonerror="true"
-                overwrite="true"
-                />
-        <copy
-                file="${project.common.dir}/resources/${project.env}/solrConfig/data-config.xml"
-                tofile="${solr.conf.dir}/data-config.xml"
-                failonerror="true"
-                overwrite="true"
-                />
-        <copy
-                file="${project.common.dir}/resources/${project.env}/solrConfig/synonyms.txt"
-                tofile="${solr.conf.dir}/synonyms.txt"
-                failonerror="true"
-                overwrite="true"
-                />
-    </target>
-
-
 </project>
