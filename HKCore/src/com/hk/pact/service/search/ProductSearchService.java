@@ -34,5 +34,5 @@ public interface ProductSearchService {
 
     SearchResult getBrandCatalogResults(String brand, String topLevelCategory, int page, int perPage, String preferredZone) throws SearchException;
 
-    void indexProduct(Product product) throws SearchException;
+    void indexProduct(Product product);
 }

@@ -180,11 +180,7 @@ public class ProductServiceImpl implements ProductService {
 
     public Product save(Product product) {
         Product savedProduct = getProductDAO().save(product);
-        try{
-            productSearchService.indexProduct(savedProduct);
-        }catch (SearchException se){
-            logger.error(String.format("Unable to index product %s", product.getId(), se));
-        }
+        productSearchService.indexProduct(savedProduct);
         return savedProduct;
     }
 
