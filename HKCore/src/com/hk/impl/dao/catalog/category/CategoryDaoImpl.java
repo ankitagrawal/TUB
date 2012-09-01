@@ -85,10 +85,10 @@ public class CategoryDaoImpl extends BaseDaoImpl implements CategoryDao {
         if (categoryNames != null && categoryNames.size() > 0) {
             List<String> productIds = getSession().createQuery(
                     "select p.id from Product p inner " + "join p.categories c where p.primaryCategory.name =:primaryCategory and c.name in (:categories) "
-                            + "group by p.id having count(*) = :tagCount and p.deleted <> 1").setParameter("primaryCategory", primaryCategory).setParameterList("categories",
+                            + "group by p.id having count(*) = :tagCount and p.deleted != :deleted").setParameter("primaryCategory", primaryCategory).setBoolean("deleted", true).setParameterList("categories",
                     categoryNames).setInteger("tagCount", categoryNames.size()).list();
 
-            if (productIds != null && !productIds.isEmpty()) {
+git push origin             if (productIds != null && !productIds.isEmpty()) {
                 /*
                  * if (filterOptions != null && !filterOptions.isEmpty()) { String query2 = "select distinct pv.id from
                  * product_variant_has_product_option pvhpo, product_variant pv " + "where
