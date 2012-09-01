@@ -48,8 +48,6 @@ public class BusyPopulateSalesData {
       lastUpdateDate = "2009-01-01";
     }
 
-    System.out.println("Inserting...");
-    
     sql.eachRow("""
                     select so.id as shipping_order_id, ship.ship_date as order_date, so.accounting_invoice_number_id as vch_no,
                            u.name as account_name, pm.name as debtors, pm.id as payment_mode_id,
@@ -69,7 +67,7 @@ public class BusyPopulateSalesData {
 
                     where so.shipping_order_status_id in (180, 190, 200)
                       and (ship.ship_date > ${lastUpdateDate} and ship.ship_date > '2011-11-08 19:59:36')
-                      ORDER BY ship.ship_date ASC   LIMIT 2000
+                      ORDER BY ship.ship_date ASC
                  """) {
       accountingInvoice ->
 

@@ -2,6 +2,8 @@
 package com.hk.admin.util.finance.busy
 
 import groovy.sql.Sql
+import org.slf4j.LoggerFactory
+import org.slf4j.Logger
 
 /**
  * Created by IntelliJ IDEA.
@@ -18,6 +20,7 @@ public class BusyTableTransactionGenerator {
   private String hostName;
   Sql sqlProd;
   Sql sqlReport;
+   private static org.slf4j.Logger logger = LoggerFactory.getLogger(BusyTableTransactionGenerator.class);
 
   BusyTableTransactionGenerator(String hostName, String dbName, String serverUser, String serverPassword){
     this.hostName = hostName;
@@ -207,7 +210,7 @@ public class BusyTableTransactionGenerator {
 
 
         } catch (Exception e2) {
-          System.out.println("insertion into transaction_header is failed" + e2);
+          logger.debug("Unable to insert in  supplier: ", e);
         }
       }
     }

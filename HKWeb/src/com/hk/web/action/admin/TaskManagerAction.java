@@ -52,32 +52,6 @@ public class TaskManagerAction extends BaseAction {
         return new ForwardResolution("/pages/admin/taskManager.jsp");
   }
 
-  public Resolution populate_busy(){
-    String hostName = "localhost";
-    String dbName = "healthkart_stag";
-    String serverUser = "root";
-    String serverPassword = "admin2K11!";
-//    Logger.info("Starting Busy Scripts at: " + new Date());
-    try{
-      BusyPopulateItemData busyPopulateItemData = new BusyPopulateItemData(hostName, dbName, serverUser, serverPassword);
-      BusyPopulateSupplierData busyPopulateSupplierData = new BusyPopulateSupplierData(hostName, dbName, serverUser, serverPassword);
-      BusyTableTransactionGenerator busyTableTransactionGenerator = new BusyTableTransactionGenerator(hostName, dbName, serverUser, serverPassword);
-      BusyPopulateSalesData busyPopulateSalesData = new BusyPopulateSalesData(hostName, dbName, serverUser, serverPassword);
-
-      System.out.println("Populating Items ");
-        busyPopulateItemData.populateItemData();
-      System.out.println("Populating Suppliers ");
-        busyPopulateSupplierData.busySupplierUpdate();
-      System.out.println("Populating Sales ");
-        busyPopulateSalesData.transactionHeaderForSalesGenerator();
-      System.out.println("Populating Purchases ");
-        busyTableTransactionGenerator.populatePurchaseData();
-    }catch (Exception e){
-      logger.error("Unable to insert: ", e);
-    }
-     return new ForwardResolution("/pages/admin/taskManager.jsp");
-  }
-
   public String getDb_master_service() {
     return db_master_service;
   }

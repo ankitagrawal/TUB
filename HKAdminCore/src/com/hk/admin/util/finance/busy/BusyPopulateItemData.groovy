@@ -49,8 +49,6 @@ public class BusyPopulateItemData {
       lastUpdateDate = "2009-01-01";
     }
 
-    System.out.println("Inserting...");
-    
 
      try{
       sql.executeInsert("""
