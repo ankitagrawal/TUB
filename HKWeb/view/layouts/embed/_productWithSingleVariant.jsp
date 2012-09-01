@@ -60,8 +60,7 @@
 					    || fn:toUpperCase(variantOption.name) == 'FLAVOR' || fn:toUpperCase(variantOption.name) == 'QUANTITY' || fn:toUpperCase(variantOption.name) == 'WEIGHT'} ">
 				    ${variantOption.name}:${variantOption.value}<br/>
 			    </c:if>--%>
-			    <span style="font-size: 12px; line-height:18px;">${variantOption.value}</span>
-                                      <br/>
+			    <span style="font-size: 12px; line-height:18px;"> ${variantOption.name}</span><span>: ${variantOption.value}</span><br/>
 		    </c:forEach>
 	    </div>
 
