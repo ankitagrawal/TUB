@@ -85,7 +85,7 @@ public class CategoryDaoImpl extends BaseDaoImpl implements CategoryDao {
         if (categoryNames != null && categoryNames.size() > 0) {
             List<String> productIds = getSession().createQuery(
                     "select p.id from Product p inner " + "join p.categories c where p.primaryCategory.name =:primaryCategory and c.name in (:categories) "
-                            + "group by p.id having count(*) = :tagCount and p.deleted != :deleted").setParameter("primaryCategory", primaryCategory).setBoolean("deleted", true).setParameterList("categories",
+                            + "and p.deleted != :deleted group by p.id having count(*) = :tagCount ").setParameter("primaryCategory", primaryCategory).setBoolean("deleted", true).setParameterList("categories",
                     categoryNames).setInteger("tagCount", categoryNames.size()).list();
 
             if (productIds != null && !productIds.isEmpty()) {
@@ -111,7 +111,7 @@ public class CategoryDaoImpl extends BaseDaoImpl implements CategoryDao {
                 Double minPrice = (Double) getSession().createQuery(queryString).setParameterList("productIds", productIds).uniqueResult();
                 String queryString2 = "select max(pv.hkPrice) from ProductVariant pv where pv.product.id in (:productIds) and pv.product.deleted <> 1 and pv.deleted <> 1 and pv.outOfStock <> 1";
                 Query query = getSession().createQuery(queryString2);
-                
+
                 Double maxPrice = (Double) query.setParameterList("productIds", productIds).uniqueResult();
                 if(minPrice == null || maxPrice == null){
                     logger.error("null min or max price for" + productIds);
