@@ -88,7 +88,7 @@ public class CategoryDaoImpl extends BaseDaoImpl implements CategoryDao {
                             + "group by p.id having count(*) = :tagCount and p.deleted != :deleted").setParameter("primaryCategory", primaryCategory).setBoolean("deleted", true).setParameterList("categories",
                     categoryNames).setInteger("tagCount", categoryNames.size()).list();
 
-git push origin             if (productIds != null && !productIds.isEmpty()) {
+            if (productIds != null && !productIds.isEmpty()) {
                 /*
                  * if (filterOptions != null && !filterOptions.isEmpty()) { String query2 = "select distinct pv.id from
                  * product_variant_has_product_option pvhpo, product_variant pv " + "where
