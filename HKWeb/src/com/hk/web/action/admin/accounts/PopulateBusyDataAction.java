@@ -22,8 +22,8 @@ public class PopulateBusyDataAction extends BaseAction {
 
   public Resolution pre(){
     String hostName = "localhost";
-    String dbName = "healthkart_dev";
-    String serverUser = "root";
+    String dbName = "healthkart_stag";
+    String serverUser = "hkadmin";
     String serverPassword = "admin2K11!";
 //    Logger.info("Starting Busy Scripts at: " + new Date());
     try{
