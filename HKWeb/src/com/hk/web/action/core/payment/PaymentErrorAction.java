@@ -1,16 +1,14 @@
 package com.hk.web.action.core.payment;
 
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.validation.Validate;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.domain.payment.Payment;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.pact.dao.payment.PaymentDao;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.validation.Validate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Author: Kani
@@ -18,40 +16,40 @@ import com.hk.pact.dao.payment.PaymentDao;
  */
 @Component
 public class PaymentErrorAction extends BaseAction {
-  @Validate(required = true, encrypted = true)
-  private String gatewayOrderId;
+	@Validate(required = true, encrypted = true)
+	private String gatewayOrderId;
 
-  private Payment payment;
+	private Payment payment;
 
-  private int errorCode;
-  private String errorMessage;
+	private int errorCode;
+	private String errorMessage;
 
-  @Autowired
-  PaymentDao paymentDao;
+	@Autowired
+	PaymentDao paymentDao;
 
-  public Resolution pre() {
-    payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
-    errorMessage = HealthkartPaymentGatewayException.Error.getErrorFromCode(errorCode).getMessage();
-    return new ForwardResolution("/pages/payment/paymentError.jsp");
-  }
+	public Resolution pre() {
+		payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
+		errorMessage = HealthkartPaymentGatewayException.Error.getErrorFromCode(errorCode).getMessage();
+		return new ForwardResolution("/pages/payment/paymentError.jsp");
+	}
 
-  public String getGatewayOrderId() {
-    return gatewayOrderId;
-  }
+	public String getGatewayOrderId() {
+		return gatewayOrderId;
+	}
 
-  public void setGatewayOrderId(String gatewayOrderId) {
-    this.gatewayOrderId = gatewayOrderId;
-  }
+	public void setGatewayOrderId(String gatewayOrderId) {
+		this.gatewayOrderId = gatewayOrderId;
+	}
 
-  public Payment getPayment() {
-    return payment;
-  }
+	public Payment getPayment() {
+		return payment;
+	}
 
-  public void setErrorCode(int errorCode) {
-    this.errorCode = errorCode;
-  }
+	public void setErrorCode(int errorCode) {
+		this.errorCode = errorCode;
+	}
 
-  public String getErrorMessage() {
-    return errorMessage;
-  }
+	public String getErrorMessage() {
+		return errorMessage;
+	}
 }

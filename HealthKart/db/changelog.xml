@@ -8455,4 +8455,14 @@
             <column name="similar_product_id"/>
         </createIndex>
     </changeSet>
+
+	<changeSet author="rahul" id="09-01-2012">
+		<sql>
+			INSERT INTO `warehouse` (`id`, `city`, `state`, `wh_phone`, `line1`, `line2`, `name`, `pincode`, `tin`)
+			VALUES
+			(101, 'Gurgaon Pharma', 'HARYANA', '123456789', 'Khasra No. 146/25/2/1', 'Jail Road, Dhumaspur, Badshahpur
+			', 'Gurgaon Pharma Warehouse', '122101', '06101832327');
+		</sql>
+	</changeSet>
+	
 </databaseChangeLog>

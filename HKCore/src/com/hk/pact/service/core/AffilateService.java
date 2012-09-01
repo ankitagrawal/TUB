@@ -8,16 +8,16 @@ import com.hk.dto.pricing.PricingDto;
 
 public interface AffilateService {
 
-    //TODO: javadoc
-    public void saveOfferInstanceAndSaveAffiliateCommission(Order order, PricingDto pricingDto);
+	//TODO: javadoc
+	public void saveOfferInstanceAndSaveAffiliateCommission(Order order, PricingDto pricingDto);
 
-    public void cancelTxn(Order order);
+	public void cancelTxn(Order order);
 
-    public Affiliate save(Affiliate affiliate);
-    
-    public Affiliate getAffiliateByUserId(Long userId);
-    
-    public Affiliate getAffilateByUser(User affiliateUser);
-    
-    public AffiliateTxnType getAffiliateTxnType(Long txnId);
+	public Affiliate save(Affiliate affiliate);
+
+	public Affiliate getAffiliateByUserId(Long userId);
+
+	public Affiliate getAffilateByUser(User affiliateUser);
+
+	public AffiliateTxnType getAffiliateTxnType(Long txnId);
 }
