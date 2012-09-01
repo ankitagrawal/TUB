@@ -17,6 +17,7 @@
 <s:useActionBean beanclass="com.hk.web.action.admin.queue.ActionAwaitingQueueAction" var="actionQueueBean" event="pre"/>
 
 <c:set var="orderStatusHold" value="<%=EnumOrderStatus.OnHold.getId()%>"/>
+<c:set var="orderStatusPlaced" value="<%=EnumOrderStatus.Placed.getId()%>"/>
 
 <c:set var="paymentStatusPending" value="<%=EnumPaymentStatus.AUTHORIZATION_PENDING.getId()%>"/>
 <c:set var="paymentStatusSuccess" value="<%=EnumPaymentStatus.SUCCESS.getId()%>"/>
@@ -385,6 +386,13 @@
                             </c:choose>
                         </div>
                         <div class="floatright">
+                            <c:if test="${order.orderStatus.id == orderStatusPlaced}">
+                                (<s:link beanclass="com.hk.web.action.admin.order.split.BulkOrderSplitterAction"
+                                         event="splitSingleOrder" target="_blank" style="color:red">
+                                Split Order
+                                <s:param name="order" value="${order}"/>
+                            </s:link>)
+                            </c:if>
                             (<s:link beanclass="com.hk.web.action.admin.order.OrderLifecycleAction" event="pre" target="_blank">
                             Order Lifecycle
                             <s:param name="order" value="${order}"/>

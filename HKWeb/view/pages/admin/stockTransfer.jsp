@@ -8,7 +8,7 @@
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Create/Edit Stock Transfer">
 <jsp:useBean id="now" class="java.util.Date" scope="request"/>
 <s:layout-component name="htmlHead">
-
+ <c:set var="fromwarehouse" value="${whAction.setWarehouse}"/>
 	<%
 		WarehouseDao warehouseDao = ServiceLocatorFactory.getService(WarehouseDao.class);
 		pageContext.setAttribute("whList", warehouseDao.getAllWarehouses());
@@ -24,6 +24,11 @@
 
 			var validateForm = function() {
 				var isValidated = true;
+                if($('.toWarehouse').val() == " "){
+                 alert("Select  To Warehouse");
+                     isValidated = false;
+                }
+
 				if ($('.checkedoutQty').length > 0 && isValidated) {
 					$.each($('.checkedoutQty'), function() {
 						var checkedoutQty = $(this).val();
@@ -69,11 +74,23 @@
 				return isValidated;
 			};
 
-			$("#saveBtn").click(function() {
-				var isValidated = validateForm();
-				return isValidated;
+            $("#saveBtn").click(function() {
+                var isValidated = validateForm();
+                if (!isValidated) {
+                    return isValidated;
+                }
+                if (isValidated) {
+                    var fromWarehouse = $('.toWarehouse').val();
+                    if (fromWarehouse == ${fromwarehouse}) {
+                        return confirm("To Warehouse value  and  From Warehouse are  same. Click Ok To Proceed");
+                    }
+                    else {
+                        return isValidated;
+                    }
+                }
 
-			});
+
+            });
 
 			$('.addRowButton').click(function() {
 
@@ -140,6 +157,7 @@
 			});
 		});
 	</script>
+
 </s:layout-component>
 <s:layout-component name="content">
 	<div style="display: none;">
@@ -176,11 +194,10 @@
 				<td>
 					To Warehouse :
 				</td>
-				<td><s:select name="toWarehouse" class="toWarehouse">
+				<td><s:select name="toWarehouse" value="${sta.stockTransfer.toWarehouse}" class="toWarehouse">
+					<s:option> </s:option>
 					<c:forEach items="${whList}" var="wh">
-						<c:if test="${whAction.setWarehouse.id != wh.id}">
-							<s:option value="${wh}">${wh.city}</s:option>
-						</c:if>
+						<s:option value="${wh}">${wh.city}</s:option>
 					</c:forEach>
 				</s:select></td>
 			</tr>

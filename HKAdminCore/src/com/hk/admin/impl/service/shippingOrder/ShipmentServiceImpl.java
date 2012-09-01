@@ -1,10 +1,5 @@
 package com.hk.admin.impl.service.shippingOrder;
 
-import java.util.Date;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hk.admin.engine.ShipmentPricingEngine;
 import com.hk.admin.pact.dao.courier.AwbDao;
 import com.hk.admin.pact.dao.shipment.ShipmentDao;
@@ -14,6 +9,7 @@ import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.shipment.EnumBoxSize;
+import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Awb;
@@ -25,6 +21,10 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Date;
 
 @Service
 public class ShipmentServiceImpl implements ShipmentService {
@@ -89,8 +89,10 @@ public class ShipmentServiceImpl implements ShipmentService {
             shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
             shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
         }
-//        shipment.setShippingOrder(shippingOrder);
         shippingOrder = shippingOrderService.save(shippingOrder);
+	    String trackingId = shipment.getAwb().getAwbNumber();
+	    String comment = "Shipment Details: " + shipment.getCourier().getName() + "/" + trackingId;
+	    shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Shipment_Auto_Created, comment);
         return shippingOrder.getShipment();
     }
 

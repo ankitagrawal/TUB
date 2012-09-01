@@ -12,8 +12,6 @@ public enum EnumCourierGroupHasCourier {
                     EnumCourier.DTDC_Lite,
                     EnumCourier.DTDC_Plus,
                     EnumCourier.DTDC_Surface,
-                    EnumCourier.FirstFLight,
-                    EnumCourier.FirstFLight_COD,
                     EnumCourier.Speedpost,
                     EnumCourier.AFLWiz
             )
