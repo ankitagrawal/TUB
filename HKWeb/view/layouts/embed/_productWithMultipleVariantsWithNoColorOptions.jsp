@@ -112,6 +112,7 @@
                           </c:if>
                         </div>
                         <br/><br/>
+	                    <%-- Commented below as it was showing discount twice--%>
                         <%--<c:if test="${variant.mainImageId != null}">
                             <div class="special green" style="text-align: center;font-size: 12px">
                                                 <span style="font-weight: bold;"><fmt:formatNumber
