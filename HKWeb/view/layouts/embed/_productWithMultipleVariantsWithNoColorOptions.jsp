@@ -112,14 +112,14 @@
                           </c:if>
                         </div>
                         <br/><br/>
-                        <c:if test="${variant.mainImageId != null}">
+                        <%--<c:if test="${variant.mainImageId != null}">
                             <div class="special green" style="text-align: center;font-size: 12px">
                                                 <span style="font-weight: bold;"><fmt:formatNumber
                                                         value="${variant.discountPercent*100}"
                                                         maxFractionDigits="0"/>%</span>
                                 off
                             </div>
-                        </c:if>
+                        </c:if>--%>
                     </div>
                 </c:if>
                 <c:if test="${variant.discountPercent == 0}">
