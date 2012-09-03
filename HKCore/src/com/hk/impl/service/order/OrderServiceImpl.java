@@ -340,7 +340,20 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     public Set<ShippingOrder> splitOrder(Order order) throws OrderSplitException {
-        List<Set<CartLineItem>> listOfCartLineItemSet = getMatchCartLineItemOrder(order);
+//        List<Set<CartLineItem>> listOfCartLineItemSet = getMatchCartLineItemOrder(order);
+        CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());         
+        Set<CartLineItem> productCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).filter();
+        Set<CartLineItem> groundShippedCartLineItemSet = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).hasOnlyGroundShippedItems(true).filter();
+        productCartLineItems.removeAll(groundShippedCartLineItemSet);
+
+        List<Set<CartLineItem>> listOfCartLineItemSet = new ArrayList<Set<CartLineItem>>();
+        if (groundShippedCartLineItemSet != null && groundShippedCartLineItemSet.size() > 0) {
+            listOfCartLineItemSet.add(groundShippedCartLineItemSet);
+        }
+        if (productCartLineItems != null && productCartLineItems.size() > 0) {
+            listOfCartLineItemSet.add(productCartLineItems);
+        }
+        
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
 
         for (Set<CartLineItem> cartlineitems : listOfCartLineItemSet) {
@@ -567,6 +580,7 @@ public class OrderServiceImpl implements OrderService {
     public List<Set<CartLineItem>> getMatchCartLineItemOrder(Order order) {
         CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
         Set<CartLineItem> productCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).filter();
+
         Set<CartLineItem> groundShippedCartLineItemSet = new HashSet<CartLineItem>();
         Set<CartLineItem> airShippedcartLineItemSet = new HashSet<CartLineItem>();
 
