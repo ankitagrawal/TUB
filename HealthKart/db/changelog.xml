@@ -8675,4 +8675,12 @@
     <changeSet author="Tarun (generated)" id="1346225918880-3">
         <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="hub_has_user" constraintName="fk_hub_has_user_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
     </changeSet>
+	<changeSet author="rahul" id="09-01-2012">
+		<sql>
+			INSERT INTO `warehouse` (`id`, `city`, `state`, `wh_phone`, `line1`, `line2`, `name`, `pincode`, `tin`)
+			VALUES
+			(101, 'Gurgaon Pharma', 'HARYANA', '123456789', 'Khasra No. 146/25/2/1', 'Jail Road, Dhumaspur, Badshahpur
+			', 'Gurgaon Pharma Warehouse', '122101', '06101832327');
+		</sql>
+	</changeSet>	
 </databaseChangeLog>

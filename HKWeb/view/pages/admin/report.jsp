@@ -424,7 +424,7 @@
     <s:form beanclass="com.hk.web.action.report.ReportAction" target="_blank">
         <s:errors/>
         <fieldset class="right_label">
-            <legend>Purchase Order Report (Product Id Optional)</legend>
+            <legend>Purchase Order Report (Variant Id Optional)</legend>
             <ul>
                 <li>
                     <label>Start date</label>
@@ -440,11 +440,8 @@
 
                 <li>
                     <label>
-                        Product Ids
+                        Variant Ids
                     </label><s:text name="productIdListCommaSeparated" style="width:200px"/>
-                </li>
-                <li>
-                    (Enter Ids separated by comma)
                 </li>
                 <li>
                     <label>

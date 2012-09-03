@@ -10,7 +10,9 @@ import com.hk.domain.order.Order;
 public interface CartLineItemService {
 
     public CartLineItem save(CartLineItem cartLineItem);
-    
+
+    public void remove(Long id);
+
     public CartLineItemType getCartLineItemType(EnumCartLineItemType enumCartLineItemType);
 
     /**
