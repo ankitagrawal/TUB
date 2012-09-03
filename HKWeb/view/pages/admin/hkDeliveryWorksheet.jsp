@@ -169,7 +169,7 @@
 
                         </li>
                         <li>
-                            <s:submit id="previewButton" name="previewRunsheet">
+                            <s:submit id="previewButton" name="previewRunsheet" class="verifyData">
                                 <s:param name="runsheetPreview" value="true"/>
                                 Preview Runsheet
                             </s:submit>

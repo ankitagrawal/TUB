@@ -11,10 +11,7 @@ import com.hk.domain.core.Pincode;
 import com.hk.admin.pact.dao.hkDelivery.HubDao;
 import com.hk.pact.service.core.PincodeService;
 import com.hk.constants.hkDelivery.HKDeliveryConstants;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.action.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,11 +54,13 @@ public class HKDHubAction extends BaseAction {
                     addRedirectAlertMessage(new SimpleMessage(HKDeliveryConstants.HUB_CREATION_SUCCESS));
                 } else {
                     addRedirectAlertMessage(new SimpleMessage(HKDeliveryConstants.INVALID_PINCODE_MSG));
+                    return new ForwardResolution("/pages/admin/addNewHub.jsp");
                 }
             } catch (Exception ex) {
                 addRedirectAlertMessage(new SimpleMessage(HKDeliveryConstants.HUB_CREATION_FAILURE));
+                return new ForwardResolution("/pages/admin/addNewHub.jsp");
             }
-            return new ForwardResolution("/pages/admin/addNewHub.jsp");
+            return new RedirectResolution(HKDHubAction.class);
         } else {
             return new ForwardResolution("/pages/admin/addNewHub.jsp");
         }

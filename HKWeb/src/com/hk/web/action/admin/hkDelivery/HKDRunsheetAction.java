@@ -212,7 +212,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
                     duplicateAwbString = HKDeliveryUtil.convertListToString(duplicatedAwbNumbers);
                     duplicateAwbString = HKDeliveryConstants.OPEN_RUNSHEET_MESSAGE + duplicateAwbString;
                     addRedirectAlertMessage(new SimpleMessage(duplicateAwbString));
-                    return new ForwardResolution(HKDRunsheetAction.class, HKDeliveryConstants.PREVIEW_RUNSHEET).addParameter(HKDeliveryConstants.RUNSHEET_DOWNLOAD, false);
+                    return new ForwardResolution(HKDRunsheetAction.class, HKDeliveryConstants.PREVIEW_RUNSHEET).addParameter(HKDeliveryConstants.RUNSHEET_PREVIEW_PARAM, false);
                 }
                 //Iterating over trackingIdList(entered by the user) to get coressponding shippingOrderList,consignmentList.
                 for (String trackingNum : trackingIdList) {
