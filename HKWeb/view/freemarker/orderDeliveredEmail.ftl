@@ -47,11 +47,11 @@ Your order ${order.gatewayOrderId} has been delivered.
 				<td align="left" height="15"></td>
 			</tr>
 			<tr>
-				<td width="579" valign="top">Hi ${order.user.name}!<br/>
-					Greetings from HealthKart!<br/>
-					Thank you for shopping with us!</br>
-					Your Order No.: ${order.gatewayOrderId} has been successfully delivered.</br>
-					Summary of your order: </br>
+				<td width="579" valign="top">Hi ${order.user.name}!<br/> <br/>
+					Greetings from HealthKart!<br/> <br/>
+					Thank you for shopping with us!<br/> <br/>
+					Your Order No.: ${order.gatewayOrderId} has been successfully delivered.<br/>
+					Summary of your order: <br/>
 
 					<br/>
 					<table style="font-size:12px;" cellpadding="5" cellspacing="0" border="1">
@@ -81,17 +81,17 @@ Your order ${order.gatewayOrderId} has been delivered.
 						</#list>
 					</#list>
 					</table>
-					We hope that you are happy with your purchase. We would appreciate your feedback on our services. </br>
+					We hope that you are happy with your purchase. We would appreciate your feedback on our services. <br/>
 
-					Your comments and feedback help us improve our products and services for other customers. </br>
+					Your comments and feedback help us improve our products and services for other customers. <br/>
 					<br>
 					<table style="font-size:12px;" cellpadding="5" cellspacing="0" border="1">
 						<tr>
 							<td>
 								<table cellpadding="5" cellspacing="5">
 									<tr>
-										<td colspan="10">How likely is it that you would
-											recommend HealthKart to a friend or colleague?
+										<td colspan="10"><strong>How likely is it that you would
+											recommend HealthKart to a friend or colleague? </strong>
 										</td>
 									</tr>
 									<tr>
@@ -136,19 +136,13 @@ Your order ${order.gatewayOrderId} has been delivered.
 												<input type="radio" name="recommendToFriends" value="10"/></a> 10
 										</td>
 									</tr>
-									<tr>
-										<td colspan="3">Least likely</em></td>
-										<td></td>
-										<td colspan="3">May be</td>
-										<td colspan="3" align="right">Definitely</td>
-									</tr>
 								</table>
 							</td>
 						</tr>
 					</table>
-					</br>
+					<br/> <br/>
 					If you have any problems or concerns about your recent purchase, please get in touch with our customer service as soon as possible and we will do everything we can to help.
-					<br/>
+					<br/> <br/>
 					Reach our Customer Care at 0124-4551616.
 					<br/>
 
