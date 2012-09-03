@@ -8481,9 +8481,9 @@
         </createTable>
     </changeSet>
     <changeSet author="Rohit (generated)" id="1346673016472-2">
-        <addForeignKeyConstraint baseColumnNames="base_order_id" baseTableName="feedback" baseTableSchemaName="healthkart_workbench" constraintName="fk_feedback_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order" referencedTableSchemaName="healthkart_workbench" referencesUniqueColumn="false"/>
+        <addForeignKeyConstraint baseColumnNames="base_order_id" baseTableName="feedback" constraintName="fk_feedback_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order" referencesUniqueColumn="false"/>
     </changeSet>
     <changeSet author="Rohit (generated)" id="1346673016472-3">
-        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="feedback" baseTableSchemaName="healthkart_workbench" constraintName="fk_feedback_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencedTableSchemaName="healthkart_workbench" referencesUniqueColumn="false"/>
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="feedback" constraintName="fk_feedback_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
     </changeSet>
 </databaseChangeLog>
