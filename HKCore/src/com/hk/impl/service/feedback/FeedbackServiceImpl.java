@@ -40,7 +40,6 @@ public class FeedbackServiceImpl implements FeedbackService {
 			feedback = new Feedback();
 			feedback.setOrder(order);
 			feedback.setUser(order.getUser());
-			feedbackDao.save(feedback);
 		}
 		return feedback;
 	}
