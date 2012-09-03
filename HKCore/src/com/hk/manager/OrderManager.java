@@ -697,7 +697,7 @@ public class OrderManager {
 	}
 
 
-     public void setGroundShippedItemquantity(Order order) {
+     public void setGroundShippedItemQuantity(Order order) {
         if (order != null && order.getCartLineItems() != null && !(order.getCartLineItems()).isEmpty()) {
             for (Iterator<CartLineItem> iterator = order.getCartLineItems().iterator(); iterator.hasNext();) {
                 CartLineItem lineItem = iterator.next();

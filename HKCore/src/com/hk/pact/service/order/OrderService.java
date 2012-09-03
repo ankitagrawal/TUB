@@ -68,9 +68,5 @@ public interface OrderService {
 
     public boolean isCODAllowed(Order order);
 
-    public boolean isOrderHasGroundShippedItem(Order order);
-
-    public List<Set<CartLineItem>> getMatchCartLineItemOrder(Order order);
-
 }
 

@@ -559,50 +559,5 @@ public class OrderServiceImpl implements OrderService {
         }
         return true;
     }
-
-    public boolean isOrderHasGroundShippedItem(Order order) {
-        CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
-        Set<CartLineItem> productCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).filter();
-        for (CartLineItem productCartLineItem : productCartLineItems) {
-
-            ProductVariant productVariant = productCartLineItem.getProductVariant();
-            if (productVariant != null && productVariant.getProduct() != null) {
-                Product product = productVariant.getProduct();
-                if (product.isGroundShipping()) {
-                    return true;
-                }
-            }
-        }
-        return false;
-
-    }
-
-    public List<Set<CartLineItem>> getMatchCartLineItemOrder(Order order) {
-        CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
-        Set<CartLineItem> productCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).filter();
-
-        Set<CartLineItem> groundShippedCartLineItemSet = new HashSet<CartLineItem>();
-        Set<CartLineItem> airShippedcartLineItemSet = new HashSet<CartLineItem>();
-
-        for (CartLineItem productCartLineItem : productCartLineItems) {
-            ProductVariant productVariant = productCartLineItem.getProductVariant();
-            if (productVariant != null && productVariant.getProduct() != null) {
-                Product product = productVariant.getProduct();
-                if (product.isGroundShipping()) {
-                    groundShippedCartLineItemSet.add(productCartLineItem);
-                } else {
-                    airShippedcartLineItemSet.add(productCartLineItem);
-                }
-            }
-        }
-        List listOfCartLineItemSet = new ArrayList<Set<CartLineItem>>();
-        if (groundShippedCartLineItemSet != null && groundShippedCartLineItemSet.size() > 0) {
-            listOfCartLineItemSet.add(groundShippedCartLineItemSet);
-        }
-        if (airShippedcartLineItemSet != null && airShippedcartLineItemSet.size() > 0) {
-            listOfCartLineItemSet.add(airShippedcartLineItemSet);
-        }
-        return listOfCartLineItemSet;
-    }
-
+    
 }

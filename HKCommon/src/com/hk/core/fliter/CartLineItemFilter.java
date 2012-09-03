@@ -21,7 +21,6 @@ public class CartLineItemFilter {
   private boolean onlyProductLineItems = false;*/
   private boolean onlyServiceLineItems = false;
   private boolean onlyGroundShippedItems = false;
-   private boolean allItemsExceptGroundShipped = false;
 
   private String productVariantId;
   private Long cartLineItemConfigId;
