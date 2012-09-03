@@ -41,7 +41,7 @@
 								'<td></td>' +
 								'<td></td>' +
 								'  <td class="pvDetails"></td>' +
-								'<td class="taxCategory"></td>' +
+								'<td><input type="text" class="taxCategory" readonly="readonly" name="poLineItems[' + nextIndex + '].taxCategory"/></td>' +
 								'<td></td>' +
 								'  <td>' +
 								'    <input type="text" name="grnLineItems[' + nextIndex + '].qty" class="receivedQuantity valueChange" />' +
@@ -83,6 +83,7 @@
 										res.data.product + '<br/>' +
 												res.data.options
 								);
+								variantRow.find('.taxCategory').val(res.data.tax);
 							} else {
 								$('.variantDetails').html('<h2>'+res.message+'</h2>');
 							}

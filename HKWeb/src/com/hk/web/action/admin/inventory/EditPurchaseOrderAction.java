@@ -97,7 +97,12 @@ public class EditPurchaseOrderAction extends BaseAction {
                     dataMap.put("variant", pv);
                     if (warehouse != null) {
                         Sku sku = skuService.getSKU(pv, warehouse);
-                        dataMap.put("sku", sku);
+	                    if(sku != null) {
+		                    dataMap.put("sku", sku);
+		                    if(sku.getTax() != null) {
+			                    dataMap.put("tax", sku.getTax().getValue());
+		                    }
+	                    }
                     }
                     dataMap.put("product", pv.getProduct().getName());
                     dataMap.put("options", pv.getOptionsCommaSeparated());
@@ -130,13 +135,8 @@ public class EditPurchaseOrderAction extends BaseAction {
                     if (poLineItem.getQty() == 0 && poLineItem.getId() != null) {
                         getBaseDao().delete(poLineItem);
                     } else if (poLineItem.getQty() > 0) {
-	                    if(poLineItem.getCostPrice() != null) {
-		                    /*double poLineItemDiscount = 0;
-		                    if(poLineItem.getDiscountPercent() != null){
-			                    poLineItemDiscount = poLineItem.getCostPrice() * poLineItem.getDiscountPercent()/100;
-		                    }*/
-		                    poLineItem.setProcurementPrice(poLineItem.getPayableAmount() * discountRatio / poLineItem.getQty());
-		                    //poLineItem.setProcurementPrice( poLineItem.getCostPrice() - poLineItemDiscount - poLineItem.getCostPrice()*discountRatio/poLineItem.getQty() );
+	                    if(poLineItem.getPayableAmount() != null) {
+		                    poLineItem.setProcurementPrice((poLineItem.getPayableAmount() / poLineItem.getQty()) - (poLineItem.getPayableAmount() / poLineItem.getQty() * discountRatio ));
 	                    }
                         Sku sku = null;
                         try {

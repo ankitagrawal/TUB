@@ -152,13 +152,14 @@ public class GRNAction extends BasePaginatedAction {
 		}
 		if (grn != null && grn.getId() != null) {
 			logger.debug("grnLineItems@Save: " + grnLineItems.size());
-			double discountRatio = 0;
-			if (grn.getPayable() != null && grn.getPayable() > 0 && grn.getDiscount() != null) {
-				discountRatio = grn.getDiscount() / grn.getPayable();
-			}
+
 			if (StringUtils.isBlank(grn.getInvoiceNumber()) || grn.getInvoiceDate() == null) {
 				addRedirectAlertMessage(new SimpleMessage("Invoice date and number are mandatory."));
 				return new RedirectResolution(GRNAction.class).addParameter("view").addParameter("grn", grn.getId());
+			}
+			double discountRatio = 0;
+			if (grn.getPayable() != null && grn.getPayable() > 0 && grn.getDiscount() != null) {
+				discountRatio = grn.getDiscount() / grn.getPayable();
 			}
 
 			for (GrnLineItem grnLineItem : grnLineItems) {
@@ -169,11 +170,9 @@ public class GRNAction extends BasePaginatedAction {
 				if (grnLineItem.getQty() != null && grnLineItem.getQty() == 0 && grnLineItem.getId() != null) {
 					grnLineItemDao.delete(grnLineItem);
 				} else if (grnLineItem.getQty() > 0) {
-					double grnLineItemDiscount = 0;
-					if (grnLineItem.getDiscountPercent() != null) {
-						grnLineItemDiscount = grnLineItem.getCostPrice() * grnLineItem.getDiscountPercent() / 100;
+					if(grnLineItem.getPayableAmount() != null) {
+						grnLineItem.setProcurementPrice((grnLineItem.getPayableAmount() / grnLineItem.getQty()) - (grnLineItem.getPayableAmount() / grnLineItem.getQty() * discountRatio ));
 					}
-					grnLineItem.setProcurementPrice(grnLineItem.getCostPrice() - grnLineItemDiscount - grnLineItem.getCostPrice() * discountRatio / grnLineItem.getQty());
 
 					if (grnLineItem.getId() != null) {
 						GrnLineItem grnLineItemInDB = grnLineItemDao.get(GrnLineItem.class, grnLineItem.getId());
@@ -311,7 +310,7 @@ public class GRNAction extends BasePaginatedAction {
 		for (GoodsReceivedNote grn : grnListForPurchaseInvoice) {
 			for (GrnLineItem grnLineItem : grn.getGrnLineItems()) {
 				Double taxableAmount = 0.0D;
-
+				Double discountPercentage = 0D;
 				PurchaseInvoiceLineItem purchaseInvoiceLineItem = new PurchaseInvoiceLineItem();
 				purchaseInvoiceLineItem.setPurchaseInvoice(purchaseInvoice);
 				if (grnLineItem.getCostPrice() != null) {
@@ -324,7 +323,8 @@ public class GRNAction extends BasePaginatedAction {
 					purchaseInvoiceLineItem.setQty(grnLineItem.getQty());
 				}
 				if (grnLineItem.getDiscountPercent() != null) {
-					purchaseInvoiceLineItem.setDiscountPercent(grnLineItem.getDiscountPercent());
+					discountPercentage = grnLineItem.getDiscountPercent();
+					purchaseInvoiceLineItem.setDiscountPercent(discountPercentage);
 				}
 				sku = grnLineItem.getSku();
 				if (sku != null) {
@@ -337,7 +337,7 @@ public class GRNAction extends BasePaginatedAction {
 
 				}
 				if (grnLineItem.getQty() != null && grnLineItem.getCostPrice() != null) {
-					taxableAmount = (grnLineItem.getQty() * grnLineItem.getCostPrice());
+					taxableAmount = (grnLineItem.getQty() * (grnLineItem.getCostPrice() - grnLineItem.getCostPrice()*discountPercentage/100));
 					totalTaxable += taxableAmount;
 					purchaseInvoiceLineItem.setTaxableAmount(taxableAmount);
 				}

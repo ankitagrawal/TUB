@@ -42,19 +42,27 @@
 								'<td class="supplierCode"></td>' +
 								'<td class="otherRemark"></td>' +
 								' <td class="pvDetails"></td>' +
-								'<td></td>' +
+								'<td><input type="text" class="taxCategory" readonly="readonly" name="poLineItems[' + nextIndex + '].taxCategory"/></td>' +
 								'<td></td>' +
 								'<td></td>' +
 								'<td></td>' +
 								'  <td>' +
-								'    <input type="text" name="poLineItems[' + nextIndex + '].qty" class="quantity" />' +
+								'    <input type="text" name="poLineItems[' + nextIndex + '].qty" class="quantity valueChange" />' +
 								'  </td>' +
 								'  <td>' +
-								'    <input class="costPrice" type="text" name="poLineItems[' + nextIndex + '].costPrice" />' +
+								'    <input class="costPrice valueChange" type="text" name="poLineItems[' + nextIndex + '].costPrice" />' +
 								'  </td>' +
 								'  <td>' +
 								'    <input class="mrp" type="text" name="poLineItems[' + nextIndex + '].mrp" />' +
 								'  </td>' +
+								'  <td>' +
+								'    <input class="discountPercentage valueChange" type="text" name="poLineItems[' + nextIndex + '].discountPercent" />' +
+								'  </td>'+
+								'  <td></td>'+
+								'  <td ><input class="taxableAmount" type="text" readonly="readonly" name="poLineItems['+nextIndex+'].taxableAmount"/></td>' +
+								'  <td ><input class="taxAmount" type="text" readonly="readonly" name="poLineItems['+nextIndex+'].taxAmount"></td>' +
+								'  <td ><input class="surchargeAmount" type="text" readonly="readonly" name="poLineItems['+nextIndex+'].surchargeAmount"/></td>' +
+								'  <td ><input class="payableAmount" type="text" readonly="readonly" name="poLineItems['+nextIndex+'].payableAmount"/></td>' +
 								'</tr>';
 
 				$('#poTable').append(newRowHtml);
@@ -77,6 +85,9 @@
 					return false;
 				}
 				var taxCategory = valueChangeRow.find('.taxCategory').val();
+				if(taxCategory == null) {
+					taxCategory = 0;
+				}
 				var surchargeCategory = 0.0;
 				var stateIdentifier = $('.state').html();
 				if (stateIdentifier == 'CST') {
@@ -86,22 +97,21 @@
 					surchargeCategory = 0.05;
 				}
 				var tax = valueChangeRow.find('.taxAmount').val();
-				/*if(tax > 0) {
-					surchargeCategory = valueChangeRow.find('.surchargeAmount').val()/tax;
-				}*/
 				var taxable = costPrice * qty;
 
-				var discountedAmount;
-				if (isNaN(discountPercentage)) {
+				var discountedAmount = 0.0;
+				if (discountPercentage!=null && (isNaN(discountPercentage) || discountPercentage < 0)) {
 					alert("Enter valid discount");
 					return;
 				}
-				discountedAmount = (discountPercentage / 100) * taxable;
+				if(discountPercentage > 0) {
+					discountedAmount = (discountPercentage / 100) * taxable;
+				}
+
 				taxable -= discountedAmount;
 				tax = taxable*taxCategory;
 				var surcharge = tax * surchargeCategory;
 				var payable = surcharge + taxable + tax;
-
 				valueChangeRow.find('.taxableAmount').val(taxable.toFixed(2));
 				valueChangeRow.find('.taxAmount').val(tax.toFixed(2));
 				valueChangeRow.find('.surchargeAmount').val(surcharge.toFixed(2));
@@ -142,13 +152,14 @@
 				var productVariantId = variantRow.find('.variant').val();
 				var productVariantDetails = variantRow.find('.pvDetails');
 				$.getJSON(
-						$('#pvInfoLink').attr('href'), {productVariantId:productVariantId},
+						$('#pvInfoLink').attr('href'), {productVariantId:productVariantId, warehouse : ${pa.purchaseOrder.warehouse}},
 						function (res) {
 							if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
 								variantRow.find('.supplierCode').html(res.data.variant.supplierCode);
 								variantRow.find('.otherRemark').html(res.data.variant.otherRemark);
 								variantRow.find('.mrp').val(res.data.variant.markedPrice);
 								variantRow.find('.costPrice').val(res.data.variant.costPrice);
+								variantRow.find('.taxCategory').val(res.data.tax);
 								productVariantDetails.html(
 										res.data.product + '<br/>' +
 												res.data.options
@@ -203,10 +214,10 @@
 		});
 	</script>
 	<%--<style type="text/css">
-		  input {
-			text-transform: uppercase;
-		  }
-		</style>--%>
+			input {
+			  text-transform: uppercase;
+			}
+		  </style>--%>
 </s:layout-component>
 
 <s:layout-component name="content">
@@ -308,7 +319,7 @@
 	<tr>
 		<td>For Warehouse</td>
 		<td>
-			<s:hidden name="purchaseOrder.warehouse" value="${pa.purchaseOrder.warehouse}"/>
+			<s:hidden name="purchaseOrder.warehouse" value="${pa.purchaseOrder.warehouse}" class="warehouse"/>
 				${pa.purchaseOrder.warehouse}
 		</td>
 	</tr>
@@ -377,7 +388,7 @@
 			<td>${productVariant.product.name}<br/>${productVariant.optionsCommaSeparated}
 			</td>
 			<td class="taxCategory"> ${sku.tax.value}
-				<%--<input type="text" name="taxCategory" class="taxCategory"  value="${sku.tax.value}" disabled="disabled" />--%>
+					<%--<input type="text" name="taxCategory" class="taxCategory"  value="${sku.tax.value}" disabled="disabled" />--%>
 
 			</td>
 			<td>
