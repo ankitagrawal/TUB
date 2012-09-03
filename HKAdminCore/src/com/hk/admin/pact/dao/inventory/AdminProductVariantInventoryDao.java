@@ -12,6 +12,7 @@ import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.domain.catalog.product.VariantConfig;
 import com.hk.pact.dao.BaseDao;
 
 public interface AdminProductVariantInventoryDao extends BaseDao {
@@ -41,5 +42,9 @@ public interface AdminProductVariantInventoryDao extends BaseDao {
     public Long getCheckedinItemCountForStockTransferLineItem(StockTransferLineItem stockTransferLineItem) ;
     
     public List<ProductVariantInventory> getPVIForStockTransfer(Sku sku, StockTransferLineItem stockTransferLineItem);
+
+    public void updateProductVariantsConfig (String id, Long variantconfigId);
+
+     public List<VariantConfig> getAllVariantConfig();
 
 }

@@ -8449,25 +8449,20 @@
     <changeSet author="Ajeet (generated)" id="1345455498259-2">
         <addNotNullConstraint columnDataType="TINYINT" columnName="cod_allowed" defaultNullValue="1" tableName="product"/>
     </changeSet>
-    <changeSet author="Rohit (generated)" id="1346054081550-1">
-        <createTable tableName="feedback">
-            <column name="id" type="INT">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="base_order_id" type="INT"/>
-            <column name="user_id" type="INT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="recommend_to_friends" type="INT"/>
-            <column name="website_experience" type="INT"/>
-            <column name="customer_care_experience" type="INT"/>
-            <column name="comments" type="TEXT"/>
-        </createTable>
+    <changeSet author="Neha (generated)" id="1346058956497-1">
+        <createIndex indexName="unique_prod_simProd" tableName="similar_product" unique="true">
+            <column name="product_id"/>
+            <column name="similar_product_id"/>
+        </createIndex>
     </changeSet>
-    <changeSet author="Rohit (generated)" id="1346054081550-2">
-        <addForeignKeyConstraint baseColumnNames="base_order_id" baseTableName="feedback" constraintName="fk_feedback_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="Rohit (generated)" id="1346054081550-3">
-        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="feedback" constraintName="fk_feedback_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
-    </changeSet>
+
+	<changeSet author="rahul" id="09-01-2012">
+		<sql>
+			INSERT INTO `warehouse` (`id`, `city`, `state`, `wh_phone`, `line1`, `line2`, `name`, `pincode`, `tin`)
+			VALUES
+			(101, 'Gurgaon Pharma', 'HARYANA', '123456789', 'Khasra No. 146/25/2/1', 'Jail Road, Dhumaspur, Badshahpur
+			', 'Gurgaon Pharma Warehouse', '122101', '06101832327');
+		</sql>
+	</changeSet>
+	
 </databaseChangeLog>

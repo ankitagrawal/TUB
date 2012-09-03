@@ -3,6 +3,7 @@ package com.hk.impl.service.shippingOrder;
 import java.util.Date;
 import java.util.List;
 
+import com.hk.pact.dao.shippingOrder.LineItemDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,8 +52,10 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     private ShippingOrderStatusService shippingOrderStatusService;
     @Autowired
     private ReconciliationStatusDao    reconciliationStatusDao;
+	@Autowired
+	private LineItemDao lineItemDao;
 
-    private OrderService orderService;
+	private OrderService orderService;
     
     public ShippingOrder findByGatewayOrderId(String gatewayOrderId) {
         return getShippingOrderDao().findByGatewayOrderId(gatewayOrderId);
@@ -184,7 +187,20 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         return shippingOrder;
     }
 
-    public void logShippingOrderActivity(ShippingOrder shippingOrder, EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity) {
+	@Override
+	@Transactional
+	public void nullifyCodCharges(ShippingOrder shippingOrder) {
+		Double codChargesApplied = 0D;
+		for (LineItem lineItem : shippingOrder.getLineItems()) {
+			codChargesApplied += lineItem.getCodCharges();
+			lineItem.setCodCharges(0D);
+			lineItemDao.save(lineItem);
+		}
+		shippingOrder.setAmount(shippingOrder.getAmount() - codChargesApplied);
+		save(shippingOrder);
+	}
+
+	public void logShippingOrderActivity(ShippingOrder shippingOrder, EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity) {
         User loggedOnUser = getUserService().getLoggedInUser();
         if(loggedOnUser == null){
             loggedOnUser = shippingOrder.getBaseOrder().getUser();
