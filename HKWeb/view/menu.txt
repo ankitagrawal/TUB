@@ -1,10 +1,6 @@
 /nutrition
 -/nutrition/sports-nutrition
 --/nutrition/sports-nutrition/proteins
----/nutrition/sports-nutrition/proteins/blended
----/nutrition/sports-nutrition/proteins/isolated
----/nutrition/sports-nutrition/proteins/hydrolyzed
----/nutrition/sports-nutrition/proteins/soy-casein  :Soy & Casein
 --/nutrition/sports-nutrition/creatine
 --/nutrition/sports-nutrition/pre-workout : Pre Workout
 --/nutrition/sports-nutrition/intra-workout  :Intra Workout
