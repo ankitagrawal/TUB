@@ -1,24 +1,18 @@
 package com.hk.impl.dao.catalog.product;
 
-import java.util.*;
-
+import com.akube.framework.dao.Page;
+import com.hk.domain.catalog.category.Category;
+import com.hk.domain.catalog.product.*;
+import com.hk.impl.dao.BaseDaoImpl;
+import com.hk.pact.dao.catalog.product.ProductDao;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.akube.framework.dao.Page;
-import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.product.ProductExtraOption;
-import com.hk.domain.catalog.product.ProductGroup;
-import com.hk.domain.catalog.product.ProductImage;
-import com.hk.domain.catalog.product.ProductOption;
-import com.hk.impl.dao.BaseDaoImpl;
-import com.hk.pact.dao.catalog.product.ProductDao;
+import java.util.*;
 
 @SuppressWarnings("unchecked")
 @Repository
@@ -167,22 +161,23 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
 
 	public Page getProductByCategoryBrandAndOptions(List<String> categoryNames, String brand, List<Long> filterOptions, int groupsCount, Double minPrice, Double maxPrice, int page, int perPage) {
 		if (categoryNames != null && categoryNames.size() > 0) {
-			List<String> productIds = getSession().createQuery("select p.id from Product p inner join p.categories c where c.name in (:categories) group by p.id having count(*) = :tagCount").setParameterList("categories", categoryNames).setInteger("tagCount", categoryNames.size()).list();
+			List<String> productIds = getSession().createQuery("select p.id from Product p inner join p.categories c where c.name in (:categories) and p.deleted <> 1 group by p.id having count(*) = :tagCount").setParameterList("categories", categoryNames).setInteger("tagCount", categoryNames.size()).list();
 			if (productIds != null && !productIds.isEmpty()) {
-				productIds = getSession().createQuery("select distinct pv.product.id from ProductVariant pv where pv.product.id in (:productIds) and pv.hkPrice between :minPrice and :maxPrice").setParameterList("productIds", productIds).setParameter("minPrice", minPrice).setParameter("maxPrice", maxPrice).list();
-				if (filterOptions != null && !filterOptions.isEmpty()) {
+				productIds = getSession().createQuery("select pv.product.id from ProductVariant pv where pv.product.id in (:productIds) and pv.hkPrice between :minPrice and :maxPrice and pv.deleted <> 1").setParameterList("productIds", productIds).setParameter("minPrice", minPrice).setParameter("maxPrice", maxPrice).list();
+				if (filterOptions != null && !filterOptions.isEmpty() && groupsCount > 0) {
 					productIds = getSession().createSQLQuery("select distinct pv.product_id from product_variant_has_product_option pvhpo, product_variant pv where pvhpo.product_variant_id=pv.id and pv.product_id in (:productIds) and pvhpo.product_option_id in (:filterOptions) group by pvhpo.product_variant_id having count(pvhpo.product_variant_id) = :groupsCount").setParameterList("productIds", productIds).setParameterList("filterOptions", filterOptions).setParameter("groupsCount", groupsCount).list();
 				}
-			
-				DetachedCriteria criteria = DetachedCriteria.forClass(Product.class);
-				if (StringUtils.isNotBlank(brand)) {
-					criteria.add(Restrictions.eq("brand", brand));
+				if (productIds != null && !productIds.isEmpty()) {
+					DetachedCriteria criteria = DetachedCriteria.forClass(Product.class);
+					if (StringUtils.isNotBlank(brand)) {
+						criteria.add(Restrictions.eq("brand", brand));
+					}
+					criteria.add(Restrictions.in("id", productIds));
+					criteria.add(Restrictions.eq("deleted", false));
+					criteria.add(Restrictions.eq("isGoogleAdDisallowed", false));
+					criteria.addOrder(Order.asc("orderRanking"));
+					return list(criteria, page, perPage);
 				}
-				criteria.add(Restrictions.in("id", productIds));
-				criteria.add(Restrictions.eq("deleted", false));
-				criteria.add(Restrictions.eq("isGoogleAdDisallowed", false));
-				criteria.addOrder(Order.asc("orderRanking"));
-				return list(criteria, page, perPage);
 			}
 		}
 		return null;

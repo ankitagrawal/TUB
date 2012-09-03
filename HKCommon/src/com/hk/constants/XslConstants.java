@@ -4,7 +4,7 @@ package com.hk.constants;
 public class XslConstants {
 
     public static final String    PRODUCT_ID                      = "PRODUCT_ID";
-    public static final String    CROSS_PRODUCT_ID                = "CROSS_PRODUCT_ID";
+    public static final String    RELATED_PRODUCT_ID = "RELATED_PRODUCT_ID";
     public static final String    VARIANT_ID                      = "VARIANT_ID";
     public static final String    GRN_LINE_ITEM_ID                = "GRN_LINE_ITEM_ID";
     public static final String    CATEGORY                        = "CATEGORY";

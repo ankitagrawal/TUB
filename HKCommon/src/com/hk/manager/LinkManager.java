@@ -132,7 +132,12 @@ public class LinkManager {
         return getUrlFromResolution(redirectResolution);
     }
 
-    public String getRelativeProductURL(Product product, Long productReferrerId) {
+	public String getCodConverterLink(Order order) {
+		RedirectResolution redirectResolution = new RedirectResolution("/core/payment/RegisterOnlinePayment.action").addParameter("order", order);
+		return getUrlFromResolution(redirectResolution);
+	}
+
+	public String getRelativeProductURL(Product product, Long productReferrerId) {
         String productURL = null;
         String productSlug = product.getSlug();
         String productId = product.getId();

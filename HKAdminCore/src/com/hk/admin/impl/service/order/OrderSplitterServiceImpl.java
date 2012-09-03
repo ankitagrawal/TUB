@@ -1,21 +1,5 @@
 package com.hk.admin.impl.service.order;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.NavigableMap;
-import java.util.Set;
-import java.util.TreeMap;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
 import com.hk.admin.engine.ShipmentPricingEngine;
 import com.hk.admin.pact.dao.courier.CourierPricingEngineDao;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
@@ -47,6 +31,13 @@ import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderSplitterService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pojo.DummyOrder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -369,9 +360,10 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
 
     private boolean validCase(List<DummyOrder> splitDummyOrders) {
         boolean validCase = true;
+	    Double codMinAmountForSplitting = 50D;  //so that orders get split
         for (DummyOrder splitDummyOrder : splitDummyOrders) {
             double amount = splitDummyOrder.getAmount();
-            if (splitDummyOrder.getCartLineItemList().size() > 0 && amount > 0D && amount < codMinAmount) {
+            if (splitDummyOrder.getCartLineItemList().size() > 0 && amount > 0D && amount < codMinAmountForSplitting) {
                 validCase = false;
             }
         }

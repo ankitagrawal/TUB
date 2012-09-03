@@ -85,8 +85,8 @@ public class B2BAction extends BaseAction {
     public Resolution signup() throws Exception {
         try {
             User signedupUser = userManager.signup(email, name, password, null);
-            signedupUser.getRoles().add(getRoleService().getRoleByName(EnumRole.B2B_USER));
-            getUserService().save(signedupUser);
+            //signedupUser.getRoles().add(getRoleService().getRoleByName(EnumRole.B2B_USER));
+            //getUserService().save(signedupUser);
         } catch (HealthkartSignupException e) {
             getContext().getValidationErrors().add("already exists", new LocalizableError("/Signup.action.email.id.already.exists"));
             return new ForwardResolution(getContext().getSourcePage());
@@ -106,7 +106,7 @@ public class B2BAction extends BaseAction {
                 } else {
                     logger.debug("b2b user is null.");
                     getSubject().logout();
-                    addRedirectAlertMessage(new SimpleMessage("You can't log in as a b2b user"));
+                    addRedirectAlertMessage(new SimpleMessage("You can't log in as a b2b user. Your account will be verified."));
                     return new RedirectResolution(B2BAction.class);
                 }
             }
