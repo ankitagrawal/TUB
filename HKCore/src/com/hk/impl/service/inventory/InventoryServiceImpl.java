@@ -135,7 +135,7 @@ public class InventoryServiceImpl implements InventoryService {
             //If there are other Variants in stock then there is no way a Product can be marked OutOfStock
             if (productVariants.size() == 1 && !productVariant.isDeleted()){
                 if (productVariants.get(0).getId().equals(productVariant.getId())){
-                    if (!product.getDropShipping()){
+                    if (!product.getDropShipping() && !product.getDeleted()){
                         isProductOutOfStock = Boolean.TRUE;
                         shouldUpdateProduct = true;
                     }
@@ -164,8 +164,10 @@ public class InventoryServiceImpl implements InventoryService {
             productVariant = getProductVariantService().save(productVariant);
             product = productVariant.getProduct();
             getLowInventoryDao().deleteFromLowInventoryList(productVariant);
-            isProductOutOfStock = Boolean.FALSE;
-            shouldUpdateProduct = true;
+            if (!isJit && !product.getDropShipping() && !product.getDeleted()) {
+                isProductOutOfStock = Boolean.FALSE;
+                shouldUpdateProduct = true;
+            }
         }
 
         if(shouldUpdateProduct){
