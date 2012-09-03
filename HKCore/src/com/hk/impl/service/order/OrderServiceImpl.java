@@ -340,13 +340,13 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     public Set<ShippingOrder> splitOrder(Order order) throws OrderSplitException {
-        List listOfCartLineItemSet = getMatchCartLineItemOrder(order);
+        List<Set<CartLineItem>> listOfCartLineItemSet = getMatchCartLineItemOrder(order);
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
 
-        for (int i = 0; i < listOfCartLineItemSet.size(); i++) {
-//            List<DummyOrder> dummyOrders = orderSplitterService.listBestDummyOrdersPractically(order)
-            if ((listOfCartLineItemSet.get(i)) != null && (((Set<CartLineItem>)listOfCartLineItemSet.get(i)).size()) > 0) {
-                List<DummyOrder> dummyOrders = orderSplitterService.listBestDummyOrdersPractically(order, (Set<CartLineItem>) listOfCartLineItemSet.get(i));
+        for (Set<CartLineItem> cartlineitems : listOfCartLineItemSet) {
+            if (cartlineitems != null && cartlineitems.size() > 0) {
+
+                List<DummyOrder> dummyOrders = orderSplitterService.listBestDummyOrdersPractically(order, cartlineitems);
                 if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
                     long startTime = (new Date()).getTime();
 
