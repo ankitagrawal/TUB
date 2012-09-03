@@ -8465,4 +8465,25 @@
 		</sql>
 	</changeSet>
 	
+    <changeSet author="Rohit (generated)" id="1346673016472-1">
+        <createTable tableName="feedback">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="base_order_id" type="INT"/>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="recommend_to_friends" type="INT"/>
+            <column name="website_experience" type="INT"/>
+            <column name="customer_care_experience" type="INT"/>
+            <column name="comments" type="TEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1346673016472-2">
+        <addForeignKeyConstraint baseColumnNames="base_order_id" baseTableName="feedback" baseTableSchemaName="healthkart_workbench" constraintName="fk_feedback_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order" referencedTableSchemaName="healthkart_workbench" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1346673016472-3">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="feedback" baseTableSchemaName="healthkart_workbench" constraintName="fk_feedback_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencedTableSchemaName="healthkart_workbench" referencesUniqueColumn="false"/>
+    </changeSet>
 </databaseChangeLog>
