@@ -3,7 +3,7 @@ Your order ${order.gatewayOrderId} has been delivered.
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-	<title>Just waiting eagerly to come home...</title>
+	<title>Your order has been delivered...</title>
 </head>
 
 <body style="margin:0; padding:0; font-family:Arial, Helvetica, sans-serif; background-color:#FFFFFF;">
@@ -37,13 +37,6 @@ Your order ${order.gatewayOrderId} has been delivered.
 						<tr>
 							<td colspan="5" height="10"></td>
 						</tr>
-						<tr>
-							<td colspan="5"><a href="http://www.healthkart.com"><img
-									src="http://img.healthkart.com/email/order_shipped_email_new/main_banner.jpg"
-									width="500"
-									height="148" alt="Just waiting eagerly to come home..." border="0"/></a></td>
-						</tr>
-
 
 					</table>
 				</td>
@@ -55,16 +48,16 @@ Your order ${order.gatewayOrderId} has been delivered.
 			</tr>
 			<tr>
 				<td width="579" valign="top">Hi ${order.user.name}!<br/>
+					Greetings from HealthKart!<br/>
+					Thank you for shopping with us!</br>
+					Your Order No.: ${order.gatewayOrderId} has been successfully delivered.</br>
+					Summary of your order: </br>
 
-					Following items of your order ${order.gatewayOrderId}, placed
-					on ${order.payment.paymentDate} has been delivered. Here are
-					the details:<br/>
 					<br/>
 					<table style="font-size:12px;" cellpadding="5" cellspacing="0" border="1">
 						<tr>
 							<td><strong>Item</strong></td>
 							<td><strong>Quantity</strong></td>
-							<td><strong>Courier</strong></td>
 						</tr>
 					<#list order.shippingOrders as shippingOrder>
 						<#list shippingOrder.lineItems as lineItem>
@@ -84,13 +77,13 @@ Your order ${order.gatewayOrderId} has been delivered.
 								<td>
 								${lineItem.qty}
 								</td>
-								<td>
-								${shippingOrder.shipment.courier.name}
-								</td>
 							</tr>
 						</#list>
 					</#list>
 					</table>
+					We hope that you are happy with your purchase. We would appreciate your feedback on our services. </br>
+
+					Your comments and feedback help us improve our products and services for other customers. </br>
 					<br>
 					<table style="font-size:12px;" cellpadding="5" cellspacing="0" border="1">
 						<tr>
@@ -153,10 +146,10 @@ Your order ${order.gatewayOrderId} has been delivered.
 							</td>
 						</tr>
 					</table>
-
+					</br>
+					If you have any problems or concerns about your recent purchase, please get in touch with our customer service as soon as possible and we will do everything we can to help.
 					<br/>
-					In case you have any queries, feel free to chat with our Customer Care or call them at
-					0124-4551616. <br/>
+					Reach our Customer Care at 0124-4551616.
 					<br/>
 
 					Healthy Shopping!<br/>
