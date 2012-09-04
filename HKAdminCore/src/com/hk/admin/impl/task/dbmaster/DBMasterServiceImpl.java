@@ -12,6 +12,7 @@ import com.hk.domain.inventory.rv.RvLineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.courier.PincodeDao;
+import com.hk.pact.dao.BaseDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.inventory.SkuService;
 import org.slf4j.Logger;
@@ -53,6 +54,9 @@ public class DBMasterServiceImpl implements TaskService{
 
   @Autowired
   PincodeDao pincodeDao;
+
+  @Autowired
+  BaseDao baseDao;
 
   @Value("#{hkEnvProps['" + Keys.Env.testDataDump + "']}")
   String                          testDataDump;
@@ -96,11 +100,12 @@ public class DBMasterServiceImpl implements TaskService{
         File[] listOfRVExcels = rvFolder.listFiles();
 
         /* Inserting product catalog for different categories*/
-	    for (int i = 0; i < listOfCatalogExcels.length; i++) {
-
+        List<Long> a =  baseDao.findByQuery("select count(*) from Product");
+        if (a.get(0).intValue() == 1) {
+	       for (int i = 0; i < listOfCatalogExcels.length; i++) {
 		    if (listOfCatalogExcels[i].isFile()) {
 			    catalogFiles = listOfCatalogExcels[i].getName();
-			    if (catalogFiles.endsWith(".xls") || catalogFiles.endsWith(".XLS")) {
+			    if (catalogFiles.endsWith(".xls") || catalogFiles.endsWith(".XLS")) {                   
                    try{
 				    getProductManager().insertCatalogue(listOfCatalogExcels[i], null);
                    }
@@ -108,16 +113,19 @@ public class DBMasterServiceImpl implements TaskService{
                       logger.error("Exception while reading catalog excel sheet.", e);
                         }
                    }
-			    }
-		    }
+			}
+		   }
+        }
 
         /* Inserting Sku for different categories  */
+        a =  baseDao.findByQuery("select count(*) from Sku");
+        if (a.get(0).intValue() == 0){
 	    for (int i = 0; i < listOfSkuExcels.length; i++) {
 		    if (listOfSkuExcels[i].isFile()) {
 			    skuFiles = listOfSkuExcels[i].getName();
 			    if (skuFiles.endsWith(".xls") || skuFiles.endsWith(".XLS")) {
                   try{
-                    Set<Sku>skuSet = skuXslParser.readSKUCatalog(listOfSkuExcels[i]);
+                    Set<Sku>skuSet = skuXslParser.readSKUCatalog(listOfSkuExcels[i]); // doesnt insert sku which already exists in DB : fail excel
 				    getSkuServiceImpl().insertSKUs(skuSet);
                   }
                   catch(Exception e){
@@ -125,27 +133,33 @@ public class DBMasterServiceImpl implements TaskService{
                   }
                 }
 		    }
-	    }
+	      }
+        }
 
         /* adding pincodes */
-        for (int i = 0; i < listOfPincodeExcels.length; i++) {
+        a =  baseDao.findByQuery("select count(*) from Pincode");
+        if (a.get(0).intValue() == 0){
+          for (int i = 0; i < listOfPincodeExcels.length; i++) {
 		    String pincodeFile = listOfPincodeExcels[i].getName();
-	        if (pincodeFile.endsWith(".xls") || pincodeFile.endsWith(".XLS")) {
+	        if (pincodeFile.endsWith(".xls") || pincodeFile.endsWith(".XLS")) {               
               try {
                 Set<Pincode> pincodeSet = xslParser.readPincodeList(listOfPincodeExcels[i]);
                 for (Pincode pincode : pincodeSet) {
                 if (pincode != null)
                     pincodeDao.save(pincode);   //avoided changing the service class
-                    logger.info("inserting or updating:" + pincode.getPincode());
+                logger.info("inserting or updating:" + pincode.getPincode());
                 }
                } catch (Exception e) {
                 logger.error("Exception while reading pincode excel sheet.", e);
                  }
 	        }
-         }
+          }
+        }
 
           /* Creating inventory via reconciliation voucher */
-         for (int i = 0; i < listOfRVExcels.length; i++) {
+         a =  baseDao.findByQuery("select count(*) from ReconciliationVoucher");
+         if (a.get(0).intValue() == 0){
+           for (int i = 0; i < listOfRVExcels.length; i++) {
             String reconciliationVoucherFile = listOfRVExcels[i].getName();
 	        if (reconciliationVoucherFile.endsWith(".xls") || reconciliationVoucherFile.endsWith(".XLS")) {
               try{
@@ -162,8 +176,8 @@ public class DBMasterServiceImpl implements TaskService{
                     logger.error("Exception while reading reconciliationVoucher excel sheet.", e);
                     }
 	        }
+           }
          }
-
          isSuccessful = true;
          
       }

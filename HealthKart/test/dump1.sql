@@ -2,31 +2,18 @@
 --
 -- Dumping data for table `role`
 --
-DELIMITER $$;
-DROP PROCEDURE IF EXISTS `role`$$
-CREATE PROCEDURE `role` ()
-BEGIN
-IF 
-(SELECT count(*) from `role`) = 0 then
+
 INSERT INTO `role` (`name`) VALUES 
 ('HKUNVERIFIED'),
 ('HK_USER'),
 ('ADMIN'),
 ('DEVELOPER');
-END IF;
-END$$
-DELIMITER ;$$
-call role;
+
 
 --
 -- Dumping data for table `city`
 --
-DELIMITER $$;
-DROP PROCEDURE IF EXISTS `city`$$
-CREATE PROCEDURE `city` ()
-BEGIN
-IF 
-(SELECT count(*) from `city`) = 0 then
+
 INSERT INTO `city` (`id`, `name`) VALUES
 (1, 'NICOBAR'),
 (2, 'NORTH AND MIDDLE ANDAMAN'),
@@ -78,37 +65,19 @@ INSERT INTO `city` (`id`, `name`) VALUES
 (49, 'DHUBRI'),
 (50, 'DIBRUGARH'),
 (51, 'GOALPARA');
-END IF;
-END$$
-DELIMITER ;$$
-call city;
-
 
 --
 -- Dumping data for table `variant_config`
 --
-DELIMITER $$;
-DROP PROCEDURE IF EXISTS `variant_config`$$
-CREATE PROCEDURE `variant_config` ()
-BEGIN
-IF 
-(SELECT count(*) from `variant_config`) = 0 then
+
 INSERT INTO `variant_config` (`id`, `name`) VALUES
 (1, 'glasses_gen_config');
-END IF;
-END$$
-DELIMITER ;$$
-call variant_config;
+
 
 --
 -- Dumping data for table `variant_config_option`
 --
-DELIMITER $$;
-DROP PROCEDURE IF EXISTS `variant_config_option`$$
-CREATE PROCEDURE `variant_config_option`()
-BEGIN
-IF 
-(SELECT count(*) from `variant_config_option`) = 0 then
+
 INSERT INTO `variant_config_option` (`id`, `name`, `variant_config_id`, `additional_param`, `display_name`, `display_order`) VALUES
 (15, 'RSPH', 1, 'PR', 'Power (SPH)', 100),
 (16, 'LSPH', 1, 'PR', 'Power (SPH)', 99),
@@ -127,21 +96,11 @@ INSERT INTO `variant_config_option` (`id`, `name`, `variant_config_id`, `additio
 (29, 'BRANDCO', 1, 'BRANDCO', 'Branded Coating', 86),
 (30, 'BRANDTH', 1, 'BRANDTH', 'Thickness & Material Branded', 85),
 (31, 'BRANDTHBF', 1, 'BRANDTHBF', 'Thickness & Material Bi focal Branded', 84);
-END IF;
-END$$
-DELIMITER ;$$
-call variant_config_option;
-
 
 --
 -- Dumping data for table `variant_config_values`
 --
-DELIMITER $$;
-DROP PROCEDURE IF EXISTS `variant_config_values`$$
-CREATE PROCEDURE `variant_config_values` ()
-BEGIN
-IF 
-(SELECT count(*) from `variant_config_values`) = 0 then
+
 INSERT INTO `variant_config_values` (`id`, `value`, `additonal_price`, `variant_config_option_id`, `display_order`, `cost_price`) VALUES
 (1, '-0.25', '0.00', 15, 67, '0.00'),
 (2, '-0.5', '0.00', 15, 68, '0.00'),
@@ -261,10 +220,6 @@ INSERT INTO `variant_config_values` (`id`, `value`, `additonal_price`, `variant_
 (421, '1.50 CR Thin plastic for Bifocal (Crizal)', '450.00', 31, 100, '587.50'),
 (422, '1.50 CR Thin plastic for Progressive (Crizal)', '800.00', 31, 99, '862.50'),
 (423, '1.56 CR Very Thin plastic for Progressive (Crizal)', '800.00', 31, 98, '862.50');
-END IF;
-END$$
-DELIMITER ;$$
-call variant_config_values;
 
 
 
@@ -272,12 +227,7 @@ call variant_config_values;
 --
 -- Dumping data for table `supplier`
 --
-DELIMITER $$;
-DROP PROCEDURE IF EXISTS `supplier`$$
-CREATE PROCEDURE `supplier` ()
-BEGIN
-IF 
-(SELECT count(*) from `supplier`) = 0 then
+
 INSERT INTO `supplier` (`id`, `name`, `state`, `city`, `contact_number`, `contact_person`, `line1`, `line2`, `tin_number`, `pincode`, `create_date`, `update_date`, `brands`, `dam_exp_cond`, `email_id`, `terms_of_trade`, `credit_period`, `margins`) VALUES
 (1, 'Healthpoint', 'DELHI', 'New Delhi', NULL, NULL, 'A-21 Basement Amar Colony, Lajpat', 'Nagar-4', '07510305402', NULL, '2012-05-02 10:00:00', '2012-05-02 10:00:00', NULL, NULL, NULL, NULL, NULL, NULL),
 (2, 'Decent Healthcare', 'DELHI', 'New Delhi', '9810611270', NULL, '36/05 Ashok Nagar Near tilak Nagar Metro Station', NULL, '07840284026', '110018', '2012-05-02 10:00:00', '2012-05-02 10:00:00', NULL, NULL, NULL, NULL, NULL, NULL),
@@ -589,7 +539,3 @@ INSERT INTO `supplier` (`id`, `name`, `state`, `city`, `contact_number`, `contac
 (373, 'Sigma Sales & Services', 'PUNJAB', 'Jalandhar', NULL, NULL, '30/2,New Vijay Nagar,', 'Near Zandian wala peer', '03241135403', NULL, '2012-07-24 13:16:38', '2012-07-24 13:16:38', NULL, NULL, NULL, NULL, NULL, NULL),
 (374, 'VIHAAN NATURAL HEALTHCARE PVT.LTD', 'MAHARASHTRA', NULL, NULL, NULL, NULL, NULL, '27880765861', NULL, '2012-07-25 15:06:35', '2012-07-25 15:06:35', NULL, NULL, NULL, NULL, NULL, NULL),
 (375, 'M.S.International', 'MAHARASHTRA', 'Mumbai', '09920018503', 'Mr.Arshad', '566/70 Motilal Nagar Rd.No.1,', 'Next to Police Chowki,Goregaon (w)', '27xxxxxxxxx', '104', '2012-08-04 14:46:33', '2012-08-04 14:46:33', 'RevAyur, Jordana,NYX, Hollywood Style', NULL, 'arshshaikh79@gmail.com', NULL, '0', '40');
-END IF;
-END$$
-DELIMITER ;$$
-call supplier;

@@ -57,7 +57,7 @@
 				beanclass="com.hk.web.action.admin.queue.ActionAwaitingQueueAction">Action Awaiting Queue</s:link></h3>
 	</c:if>
 	<h3><s:link beanclass="com.hk.web.action.admin.marketing.NotifyMeListAction"> Notify Me List </s:link></h3>
-	<shiro:hasRole name="<%=RoleConstants.ADMIN%>">
+	<shiro:hasRole name="<%=RoleConstants.DEVELOPER%>">
 		<h3><s:link beanclass="com.hk.web.action.admin.TaskManagerAction"> Ant Builds </s:link></h3>
 	</shiro:hasRole>
 		<%--<h3><s:link beanclass="com.hk.web.action.admin.payment.PaymentHistoryAction"> Check Payment History </s:link></h3>--%>
