@@ -41,14 +41,14 @@ public class PopulateBusyDataAction extends BaseAction {
 			BusyPopulateSalesData busyPopulateSalesData = new BusyPopulateSalesData(dbHostName, dbName, dbUser, dbPassword);
 			BusyPopulateRtoData busyPopulateRtoData = new BusyPopulateRtoData(dbHostName, dbName, dbUser, dbPassword);
 
-			/*logger.debug("Populating Items ");
+			logger.debug("Populating Items ");
 			busyPopulateItemData.populateItemData();
 			logger.debug("Populating Suppliers ");
 			busyPopulateSupplierData.busySupplierUpdate();
 			logger.debug("Populating Sales ");
 			busyPopulateSalesData.transactionHeaderForSalesGenerator();
 			logger.debug("Populating Purchases ");
-			busyTableTransactionGenerator.populatePurchaseData();*/
+			busyTableTransactionGenerator.populatePurchaseData();
 			logger.debug("Populating RTO data ");
 			busyPopulateRtoData.transactionHeaderForRtoGenerator();
 		} catch (Exception e) {
