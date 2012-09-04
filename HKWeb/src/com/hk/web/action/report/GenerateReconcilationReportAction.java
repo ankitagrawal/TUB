@@ -73,6 +73,7 @@ public class GenerateReconcilationReportAction extends BaseAction {
     }
 
     public Resolution generateReconilationReport() {
+	    SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy");
         List<ReconcilationReportDto> reconcilationReportDtoList = new ArrayList<ReconcilationReportDto>();
         reconcilationReportDtoList = shippingOrderReportingService.findReconcilationReportByDate(startDate, endDate, paymentProcess, courier, warehouseId,shippingOrderStatusId);
         if (reconcilationReportDtoList.isEmpty() == true) {
@@ -105,7 +106,7 @@ public class GenerateReconcilationReportAction extends BaseAction {
         int row = 1;
         for (ReconcilationReportDto reconcilationReportDto : reconcilationReportDtoList) {
             xlsWriter.addCell(row, reconcilationReportDto.getInvoiceId());
-            xlsWriter.addCell(row, reconcilationReportDto.getOrderDate());
+            xlsWriter.addCell(row, sdf.format(reconcilationReportDto.getOrderDate()));
             xlsWriter.addCell(row, reconcilationReportDto.getName());
             xlsWriter.addCell(row, reconcilationReportDto.getCity());
             xlsWriter.addCell(row, reconcilationReportDto.getPincode());
@@ -113,11 +114,11 @@ public class GenerateReconcilationReportAction extends BaseAction {
             xlsWriter.addCell(row, reconcilationReportDto.getTotal());
             xlsWriter.addCell(row, reconcilationReportDto.getCourier().getName());
             xlsWriter.addCell(row, reconcilationReportDto.getAwb());
-            xlsWriter.addCell(row, reconcilationReportDto.getShipmentDate());
+            xlsWriter.addCell(row, sdf.format(reconcilationReportDto.getShipmentDate()));
             if (reconcilationReportDto.getDeliveryDate() == null) {
                 xlsWriter.addCell(row, "");
             } else {
-                xlsWriter.addCell(row, reconcilationReportDto.getDeliveryDate());
+                xlsWriter.addCell(row, sdf.format(reconcilationReportDto.getDeliveryDate()));
             }
 
             xlsWriter.addCell(row, reconcilationReportDto.getReconciled());
