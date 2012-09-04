@@ -7,6 +7,7 @@ import com.hk.constants.core.RoleConstants;
 import com.hk.constants.coupon.EnumCouponType;
 import com.hk.domain.CheckDetails;
 import com.hk.domain.affiliate.Affiliate;
+import com.hk.domain.catalog.category.Category;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.offer.Offer;
 import com.hk.domain.user.User;
@@ -14,6 +15,7 @@ import com.hk.exception.HealthKartCouponException;
 import com.hk.impl.dao.CheckDetailsDaoImpl;
 import com.hk.manager.AffiliateManager;
 import com.hk.pact.dao.affiliate.AffiliateDao;
+import com.hk.pact.dao.catalog.category.CategoryDao;
 import com.hk.pact.service.core.AffilateService;
 import com.hk.pact.service.discount.CouponService;
 import com.hk.web.action.core.auth.LogoutAction;
@@ -29,9 +31,7 @@ import org.stripesstuff.plugin.security.Secure;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Secure(hasAnyRoles = {RoleConstants.HK_AFFILIATE, RoleConstants.ADMIN, RoleConstants.HK_AFFILIATE_MANAGER})
 @Component
@@ -42,6 +42,7 @@ public class AffiliateAccountAction extends BaseAction {
 	Double affiliateAccountAmount;
 	Double affiliatePayableAmount;
 	List<CheckDetails> checkDetailsList;
+	private List<String> categories = new ArrayList<String>();
 	List<Coupon> coupons;
 	@Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
 	private String adminDownloads;
@@ -57,6 +58,8 @@ public class AffiliateAccountAction extends BaseAction {
 	CouponService couponService;
 	@Autowired
 	AffilateService affilateService;
+	@Autowired
+	CategoryDao categoryDao;
 
 	@DefaultHandler
 	@DontValidate
@@ -111,6 +114,14 @@ public class AffiliateAccountAction extends BaseAction {
 
 	public Resolution saveAffiliatePreferences() {
 		if (affiliate != null) {
+			Set<Category> categoryList = new HashSet<Category>();
+			for (String category : categories) {
+				if (category != null) {
+					categoryList.add((Category) categoryDao.getCategoryByName(category));
+				}
+			}
+			affiliate.setCategories(categoryList);
+			affiliateDao.save(affiliate);
 			affiliateDao.save(affiliate);
 			addRedirectAlertMessage(new SimpleMessage("your preferences have been saved."));
 		}
@@ -124,6 +135,20 @@ public class AffiliateAccountAction extends BaseAction {
 			offer = affiliate.getOffer();
 		}
 		return new ForwardResolution("/pages/affiliate/affiliateCouponDownload.jsp");
+	}
+
+	public Resolution saveAffiliateCategoryPreferences() {
+		if (affiliate != null) {
+			Set<Category> categoryList = new HashSet<Category>();
+			for (String category : categories) {
+				if (category != null) {
+					categoryList.add((Category) categoryDao.getCategoryByName(category));
+				}
+			}
+			affiliate.setCategories(categoryList);
+			affiliateDao.save(affiliate);
+		}
+		return new ForwardResolution("/pages/affiliate/affiliateProfile.jsp");
 	}
 
 	public Resolution generateAffiliateCoupons() {
@@ -247,5 +272,13 @@ public class AffiliateAccountAction extends BaseAction {
 
 	public void setAffiliatePayableAmount(Double affiliatePayableAmount) {
 		this.affiliatePayableAmount = affiliatePayableAmount;
+	}
+
+	public List<String> getCategories() {
+		return categories;
+	}
+
+	public void setCategories(List<String> categories) {
+		this.categories = categories;
 	}
 }

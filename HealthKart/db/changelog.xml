@@ -8562,4 +8562,23 @@
     <changeSet author="Pratham (generated)" id="1345723398289-18">
         <addForeignKeyConstraint baseColumnNames="coupon_type_id" baseTableName="coupon" constraintName="fk_coupon_coupon_type1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="coupon_type" referencesUniqueColumn="false"/>
     </changeSet>	
+    <changeSet author="Pratham (generated)" id="1346752484668-1">
+        <createTable tableName="affiliate_has_category">
+            <column name="affiliate_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category_name" type="VARCHAR(80)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1346752484668-2">
+        <addPrimaryKey columnNames="affiliate_id, category_name" tableName="affiliate_has_category"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1346752484668-3">
+        <addForeignKeyConstraint baseColumnNames="affiliate_id" baseTableName="affiliate_has_category" constraintName="fk_affiliate_has_category_affiliate1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="affiliate" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1346752484668-4">
+        <addForeignKeyConstraint baseColumnNames="category_name" baseTableName="affiliate_has_category" constraintName="fk_affiliate_has_category_category1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="name" referencedTableName="category" referencesUniqueColumn="false"/>
+    </changeSet>
 </databaseChangeLog>

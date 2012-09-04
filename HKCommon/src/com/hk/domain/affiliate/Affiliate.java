@@ -1,10 +1,11 @@
 package com.hk.domain.affiliate;
 
+import com.hk.domain.catalog.category.Category;
 import com.hk.domain.offer.Offer;
 import com.hk.domain.user.User;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.util.*;
 
 @Entity
 @Table(name = "affiliate")
@@ -57,6 +58,17 @@ public class Affiliate {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	private User user;
+
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(
+			name = "affiliate_has_category",
+			joinColumns = {@JoinColumn(name = "affiliate_id", nullable = false, updatable = false)},
+			inverseJoinColumns = {@JoinColumn(name = "category_name", nullable = false, updatable = false)}
+	)
+	private Set<Category> categories = new HashSet<Category>(0);
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "affiliate")
+	private Set<AffiliateTxn> affiliateTxns = new HashSet<AffiliateTxn>(0);
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "offer_id")
@@ -200,6 +212,22 @@ public class Affiliate {
 
 	public void setBankAccountNumber(String bankAccountNumber) {
 		this.bankAccountNumber = bankAccountNumber;
+	}
+
+	public Set<Category> getCategories() {
+		return categories;
+	}
+
+	public void setCategories(Set<Category> categories) {
+		this.categories = categories;
+	}
+
+	public Set<AffiliateTxn> getAffiliateTxns() {
+		return affiliateTxns;
+	}
+
+	public void setAffiliateTxns(Set<AffiliateTxn> affiliateTxns) {
+		this.affiliateTxns = affiliateTxns;
 	}
 
 	@Override

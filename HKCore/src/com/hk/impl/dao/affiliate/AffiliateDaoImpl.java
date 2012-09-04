@@ -5,6 +5,7 @@ import com.akube.framework.util.DateUtils;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.coupon.EnumCouponType;
+import com.hk.core.search.OrderBySqlFormula;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.affiliate.AffiliateCategoryCommission;
 import com.hk.domain.affiliate.AffiliateStatus;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Repository
@@ -83,6 +85,10 @@ public class AffiliateDaoImpl extends BaseDaoImpl implements AffiliateDao {
 
 	@Override
 	public Page searchAffiliates(AffiliateStatus affiliateStatus, String name, String email, String websiteName, String code, Long affiliateMode, Long affiliateType, Role role, int perPage, int pageNo) {
+//		DetachedCriteria affiliateTxnCriteria = DetachedCriteria.forClass(AffiliateTxn.class);
+//
+//		DetachedCriteria affiliateCriteria = affiliateTxnCriteria.createCriteria("affiliate", JoinFragment.LEFT_OUTER_JOIN);
+
 		DetachedCriteria affiliateCriteria = DetachedCriteria.forClass(Affiliate.class);   //todo ps duplicate results
 		if (affiliateStatus != null) {
 			affiliateCriteria.add(Restrictions.eq("affiliateStatus", affiliateStatus));
@@ -106,11 +112,13 @@ public class AffiliateDaoImpl extends BaseDaoImpl implements AffiliateDao {
 		if (email != null && StringUtils.isNotBlank(email)) {
 			userCriteria.add(Restrictions.eq("email", email));
 		}
-		DetachedCriteria roleCriteria = userCriteria.createCriteria("roles");
-		if (role != null) {
-			roleCriteria.add(Restrictions.eq("name", role.getName()));
-		}
-		affiliateCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));
+
+		DetachedCriteria affiliateTxnCriteria = affiliateCriteria.createCriteria("affiliateTxns");
+
+		affiliateTxnCriteria.add(Restrictions.in("affiliateTxnType.id", Arrays.asList(new Long[]{10L, 20L})));
+
+		affiliateTxnCriteria.addOrder(OrderBySqlFormula.sqlFormula(" sum(amount) desc"));
+
 		return list(affiliateCriteria, pageNo, perPage);
 	}
 

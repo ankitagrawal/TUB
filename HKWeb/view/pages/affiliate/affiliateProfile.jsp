@@ -2,11 +2,17 @@
 <%@ page import="com.hk.constants.affiliate.EnumAffiliateMode" %>
 <%@ page import="com.hk.constants.affiliate.EnumAffiliateType" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
+<%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.core.affiliate.AffiliateAccountAction" var="affiliateBean"/>
 <s:layout-render name="/layouts/default.jsp">
     <s:layout-component name="heading">Your Address</s:layout-component>
+    <%
+        CategoryDao categoryDao = (CategoryDao) ServiceLocatorFactory.getService(CategoryDao.class);
+        pageContext.setAttribute("categoryList", categoryDao.getPrimaryCategories());
+    %>
 
     <s:layout-component name="lhsContent">
         <jsp:include page="../myaccount-nav.jsp"/>
@@ -98,6 +104,23 @@
                 <div class="clear"></div>
                 <div style="margin-top:10px"></div>
 
+                <div class="categoryInfo" style="font-size:0.8em;">
+                    <h4 class="strikeline">Business Modes</h4>
+
+                    <br/><s:label class="rowLabel" name="Select Categories"/><br/><br/>
+
+                    <div class="checkBoxList">
+                        <c:forEach items="${categoryList}" var="category" varStatus="ctr">
+                            <label><s:checkbox name="categories[${ctr.index}]"
+                                               value="${category.name}"/> ${category.displayName}</label>
+                            <br/>
+                        </c:forEach>
+                    </div>
+                </div>
+
+                <div class="clear"></div>
+                <div style="margin-top:10px"></div>
+
                 <div class="paymentInfo" style="font-size:0.8em;">
                     <h4 class="strikeline">Payment Info</h4>
 
@@ -140,7 +163,7 @@
                 <div style="margin-top:10px"></div>
 
                 <div style="float: right; font-size: 0.7em; width: 65%; margin-top: 10px;">
-                    <s:submit name="saveAffiliatePreferences" value="Save Changes" class="button_orange"/>
+                    <s:submit name="saveAffiliatePreferences" value="Save Preferences" class="button_orange"/>
                 </div>
 
                 <div class="clear"></div>

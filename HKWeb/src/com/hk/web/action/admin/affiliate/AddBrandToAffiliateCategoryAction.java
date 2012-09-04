@@ -5,10 +5,7 @@ import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.affiliate.AffiliateCategory;
 import com.hk.pact.service.core.AffilateService;
 import com.hk.web.action.error.AdminPermissionAction;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.action.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
@@ -30,6 +27,7 @@ public class AddBrandToAffiliateCategoryAction extends BaseAction {
 	AffiliateCategory affiliateCategory;
 	String brand;
 
+	@DefaultHandler
 	public Resolution pre(){
 		return new ForwardResolution("/pages/admin/affiliate/brandAffiliateCategory.jsp");
 	}

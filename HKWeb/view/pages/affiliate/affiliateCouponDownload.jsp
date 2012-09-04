@@ -17,7 +17,7 @@
                     <h4 class="strikeline"> Affiliate Program</h4>
 
                     <div class="row">
-                        <s:label class="rowLabel" name="Affiliate Code (Online Program)"/>
+                        <s:label class="rowLabel" name="Affiliate Code"/>
                         <label class="rowText">${affiliateBean.affiliate.code}</label>
                     </div>
 
@@ -25,7 +25,7 @@
                     <div style="margin-top:5px"></div>
 
                     <div class="row">
-                        <s:label class="rowLabel" name="Affilaite Offer (Offline Program)"/>
+                        <s:label class="rowLabel" name="Affiliate Offer"/>
                         <s:label name="${affiliateBean.offer.description}" class="rowText"/>
                     </div>
 
