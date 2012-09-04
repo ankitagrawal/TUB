@@ -57,6 +57,8 @@ public interface ShippingOrderService {
      */
     public ShippingOrder createSOWithBasicDetails(Order baseOrder, Warehouse warehouse);
 
+    public void nullifyCodCharges(ShippingOrder shippingOrder);
+
 
     public void logShippingOrderActivity(ShippingOrder shippingOrder, EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity);
 

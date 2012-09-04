@@ -25,6 +25,7 @@ public class RoleConstants {
     public static final String CUSTOMER_SUPPORT              = "CUSTOMER_SUPPORT";
     public static final String CUSTOMER_SUPPORT_L2           = "CUSTOMER_SUPPORT_L2";
     public static final String CUSTOMER_SUPPORT_L3           = "CUSTOMER_SUPPORT_L3";
+    public static final String CUSTOMER_SUPPORT_L3_ADMINS    = CUSTOMER_SUPPORT_L3 + ", " + ADMIN;
     public static final String CATEGORY_MANAGER_L1           = "CATEGORY_MANAGER_L1";
     public static final String CATEGORY_MANAGER_L2           = "CATEGORY_MANAGER_L2";
     public static final String CATEGORY_MANAGER              = "CATEGORY_MANAGER";

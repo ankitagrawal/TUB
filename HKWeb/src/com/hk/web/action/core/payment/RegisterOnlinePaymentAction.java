@@ -3,6 +3,7 @@ package com.hk.web.action.core.payment;
 import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
+import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumPaymentMode;
@@ -10,71 +11,73 @@ import com.hk.domain.core.PaymentMode;
 import com.hk.domain.order.Order;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.payment.PreferredBankGateway;
-import com.hk.domain.user.User;
-import com.hk.manager.OrderManager;
 import com.hk.manager.payment.PaymentManager;
-import com.hk.pact.dao.RoleDao;
-import com.hk.pact.dao.offer.OfferInstanceDao;
 import com.hk.pact.dao.payment.PaymentModeDao;
-import com.hk.pact.dao.user.UserDao;
 import com.hk.web.action.core.auth.LoginAction;
-import com.hk.web.action.core.cart.CartAction;
 import com.hk.web.factory.PaymentModeActionFactory;
-import net.sourceforge.stripes.action.LocalizableMessage;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
+import com.hk.web.filter.WebContext;
+import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.util.CryptoUtil;
 import net.sourceforge.stripes.validation.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.Random;
 
 /**
- * Author: Kani Date: Dec 29, 2008
+ * Created with IntelliJ IDEA.
+ * User: Pratham
+ * Date: 8/27/12
+ * Time: 6:05 PM
+ * To change this template use File | Settings | File Templates.
  */
 @Component
 @Secure(hasAnyRoles = { RoleConstants.HK_UNVERIFIED, RoleConstants.HK_USER }, authUrl = "/core/auth/Login.action?source=" + LoginAction.SOURCE_CHECKOUT, disallowRememberMe = true)
-public class PaymentAction extends BaseAction {
+public class RegisterOnlinePaymentAction extends BaseAction {
 
-	@Validate(required = true)
+	//	@Validate(required = true)
 	private PaymentMode paymentMode;
-
-	Long bankId;
-
+	//	@Validate(required = true)
+	private boolean isCodConversion;
 	@Validate(required = true, encrypted = true)
 	private Order order;
 
-	private User user;
-	PreferredBankGateway bank;
 	@Autowired
 	PaymentManager paymentManager;
 	@Autowired
-	OrderManager orderManager;
-	@Autowired
-	OfferInstanceDao offerInstanceDao;
-	@Autowired
-	UserDao userDao;
-	@Autowired
-	RoleDao roleDao;
-	@Autowired
 	PaymentModeDao paymentModeDao;
 
-	@SuppressWarnings("unchecked")
-	public Resolution proceed() {
-		if (order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())) {
-			// recalculate the pricing before creating a payment.
-			order = orderManager.recalAndUpdateAmount(order);
+	List<PreferredBankGateway> bankList;
+	PreferredBankGateway bank;
+	Long bankId;
 
-			if (order.getAmount() == 0) {
-				addRedirectAlertMessage(new LocalizableMessage("/CheckoutAction.action.checkout.not.allowed.on.empty.cart"));
-				return new RedirectResolution(CartAction.class);
-			}
+	@DefaultHandler
+	public Resolution pre() {
+		//currently i can safely assume, that most people whom we give conversion benefit will have 0 cod charges only, no order amount is pretty much their online payment amount
+		//verify if pricing engine will return the right amount or not, i would prefer using the previous payment amount as the base parameter
+		bankList = getBaseDao().getAll(PreferredBankGateway.class);
+		if (order != null && order.isCOD() && !order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())) {
+			HttpServletResponse httpResponse = WebContext.getResponse();
+			Cookie wantedCODCookie = new Cookie(HealthkartConstants.Cookie.codConverterID, CryptoUtil.encrypt(order.getId().toString()));
+			wantedCODCookie.setPath("/");
+			wantedCODCookie.setMaxAge(600);
+			httpResponse.addCookie(wantedCODCookie);
+		}
+		return new ForwardResolution("/pages/prePayment.jsp");
+	}
+
+	@SuppressWarnings("unchecked")
+	public Resolution prepay() {
+		if (!order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())) {
 
 			if (bankId != null) {
 				bank = getBaseDao().get(PreferredBankGateway.class, bankId);
 			}
+
 			if (bank != null) {
 				if (bank.getPreferredGatewayId() == null) {
 					Integer random = (new Random()).nextInt(100);
@@ -110,7 +113,6 @@ public class PaymentAction extends BaseAction {
 				return redirectResolution.addParameter(BasePaymentGatewayWrapper.TRANSACTION_DATA_PARAM, BasePaymentGatewayWrapper.encodeTransactionDataParam(order.getAmount(),
 						payment.getGatewayOrderId(), order.getId(), payment.getPaymentChecksum(), bankCode));
 			} else {
-				// ccavneue is the default gateway
 				Class actionClass = PaymentModeActionFactory.getActionClassForPaymentMode(EnumPaymentMode.CCAVENUE_DUMMY);
 				redirectResolution = new RedirectResolution(actionClass, "proceed");
 			}
@@ -118,7 +120,7 @@ public class PaymentAction extends BaseAction {
 					payment.getGatewayOrderId(), order.getId(), payment.getPaymentChecksum(), null));
 
 		}
-		addRedirectAlertMessage(new SimpleMessage("Payment for the order is already made."));
+		addRedirectAlertMessage(new SimpleMessage("Some Error Occurred, Unable to process your request"));
 		return new RedirectResolution(PaymentModeAction.class).addParameter("order", order);
 	}
 
@@ -145,4 +147,29 @@ public class PaymentAction extends BaseAction {
 	public void setBankId(Long bankId) {
 		this.bankId = bankId;
 	}
+
+	public List<PreferredBankGateway> getBankList() {
+		return bankList;
+	}
+
+	public void setBankList(List<PreferredBankGateway> bankList) {
+		this.bankList = bankList;
+	}
+
+	public PreferredBankGateway getBank() {
+		return bank;
+	}
+
+	public void setBank(PreferredBankGateway bank) {
+		this.bank = bank;
+	}
+
+	public boolean isCodConversion() {
+		return isCodConversion;
+	}
+
+	public void setCodConversion(boolean codConversion) {
+		isCodConversion = codConversion;
+	}
 }
+
