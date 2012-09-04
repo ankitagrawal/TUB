@@ -3,7 +3,7 @@ package com.hk.constants.hkDelivery;
 public enum EnumConsignmentLifecycleStatus {
 
     ReceivedAtHub(10L, "Received at Hub"),
-    Dispatched(20L, "Dispatched"),
+    Dispatched(20L, "Out for Delivery"),
     ReturnedToHub(30L, "Returned to Hub"),
     ReturnedToSource(40L, "Returned to Source"),
     ConsignmentLost(50L, "Consignment Lost"),

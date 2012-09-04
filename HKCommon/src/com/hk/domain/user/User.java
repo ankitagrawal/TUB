@@ -159,7 +159,7 @@ public class User {
     private KarmaProfile          karmaProfile;
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "hub_has_user", uniqueConstraints = @UniqueConstraint(columnNames = { "user_id", "hub_id" }), joinColumns = { @JoinColumn(name = "user_id", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "hub_id", nullable = false, updatable = false) })
+    @JoinTable(name = "hub_has_user", uniqueConstraints = @UniqueConstraint(columnNames = { "user_id", "hub_id" }), joinColumns = { @JoinColumn(name = "user_id", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "hub_id", updatable = false) })
     private Hub hub;
 
     public KarmaProfile getKarmaProfile() {

@@ -40,7 +40,7 @@ public class HKDHubAction extends BaseAction {
 
     @DefaultHandler
     public Resolution pre() {
-        hubList = hubDao.getAll(Hub.class);
+        hubList = hubDao.getAllHubs();
         return new ForwardResolution("/pages/admin/hubList.jsp");
     }
 
