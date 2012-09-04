@@ -107,8 +107,10 @@
 	<tr>
 		<th>S.No.</th>
 		<th>Product Name</th>
+		<th>Product Variant Id</th>
 		<th>Batch Number</th>
 		<th>Cost Price</th>
+		<th>MRP</th>
 		<th>Checked Out Quantity</th>
 		<th>Value</th>
 
@@ -129,11 +131,13 @@
 
 				</em>
 			</td>
+			<td>${stockTransferLineItem.sku.productVariant}</td>
 			<td>
 					${stockTransferLineItem.batchNumber}
 			</td>
 			<td>${stockTransferLineItem.costPrice}
 			</td>
+			<td>${stockTransferLineItem.mrp}</td>
 			<td>${stockTransferLineItem.checkedoutQty}
 			</td>
 			<td>${stockTransferLineItem.checkedoutQty * stockTransferLineItem.costPrice}
