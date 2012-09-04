@@ -1,10 +1,7 @@
 package com.hk.web.action.admin.accounts;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.admin.util.finance.busy.BusyPopulateItemData;
-import com.hk.admin.util.finance.busy.BusyPopulateSalesData;
-import com.hk.admin.util.finance.busy.BusyPopulateSupplierData;
-import com.hk.admin.util.finance.busy.BusyTableTransactionGenerator;
+import com.hk.admin.util.finance.busy.*;
 import com.hk.constants.core.Keys;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -42,15 +39,18 @@ public class PopulateBusyDataAction extends BaseAction {
 			BusyPopulateSupplierData busyPopulateSupplierData = new BusyPopulateSupplierData(dbHostName, dbName, dbUser, dbPassword);
 			BusyTableTransactionGenerator busyTableTransactionGenerator = new BusyTableTransactionGenerator(dbHostName, dbName, dbUser, dbPassword);
 			BusyPopulateSalesData busyPopulateSalesData = new BusyPopulateSalesData(dbHostName, dbName, dbUser, dbPassword);
+			BusyPopulateRtoData busyPopulateRtoData = new BusyPopulateRtoData(dbHostName, dbName, dbUser, dbPassword);
 
-			logger.debug("Populating Items ");
+			/*logger.debug("Populating Items ");
 			busyPopulateItemData.populateItemData();
 			logger.debug("Populating Suppliers ");
 			busyPopulateSupplierData.busySupplierUpdate();
 			logger.debug("Populating Sales ");
 			busyPopulateSalesData.transactionHeaderForSalesGenerator();
 			logger.debug("Populating Purchases ");
-			busyTableTransactionGenerator.populatePurchaseData();
+			busyTableTransactionGenerator.populatePurchaseData();*/
+			logger.debug("Populating RTO data ");
+			busyPopulateRtoData.transactionHeaderForRtoGenerator();
 		} catch (Exception e) {
 			logger.error("Unable to insert: ", e);
 		}
