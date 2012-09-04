@@ -8658,9 +8658,6 @@
     </changeSet>
       <changeSet author="Tarun (generated)" id="1346225918880-1">
         <createTable tableName="hub_has_user">
-            <column autoIncrement="true" name="id" type="INT">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
             <column name="user_id" type="INT">
                 <constraints nullable="false"/>
             </column>
