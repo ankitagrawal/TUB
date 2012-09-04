@@ -206,6 +206,7 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     public List<ConsignmentStatus> getConsignmentStatusList(){
         List<ConsignmentStatus> consignmentStatuses =  consignmentDao.getAll(ConsignmentStatus.class);
         consignmentStatuses.remove(consignmentDao.get(ConsignmentStatus.class, EnumConsignmentStatus.ShipmentReceivedAtHub.getId()));
+	    consignmentStatuses.remove(consignmentDao.get(ConsignmentStatus.class, EnumConsignmentStatus.ShipmentOutForDelivery.getId()));
         return consignmentStatuses;
     }
 

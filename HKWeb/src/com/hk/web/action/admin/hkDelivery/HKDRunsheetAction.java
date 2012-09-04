@@ -150,18 +150,18 @@ public class HKDRunsheetAction extends BasePaginatedAction {
 
     public Resolution closeRunsheet(){
         if(runsheet != null){
-            if((runsheet.getActualCollection() != null)
-                    && ((runsheet.getActualCollection().doubleValue() - runsheet.getExpectedCollection().doubleValue())> 10)){
-                getContext().getValidationErrors().add("1", new SimpleError("Actual collected amount ("+runsheet.getActualCollection()+") cannot be greater than expected amount("+runsheet.getExpectedCollection()+") "));
-                return new ForwardResolution(HKDRunsheetAction.class, "editRunsheet").addParameter("runsheet", runsheet.getId());
-            }
             if(runsheet.getActualCollection() == null){
-                getContext().getValidationErrors().add("2", new SimpleError("Please enter actual collection"));
+                getContext().getValidationErrors().add("1", new SimpleError("Please enter actual collection"));
                 return new ForwardResolution(HKDRunsheetAction.class, "editRunsheet").addParameter("runsheet", runsheet.getId());
             }
             if(runsheetService.isRunsheetClosable(runsheet)){
-                runsheet.setRunsheetStatus(getRunSheetDao().get(RunsheetStatus.class, EnumRunsheetStatus.Close.getId()));
                 runsheet = runsheetService.updateExpectedAmountForClosingRunsheet(runsheet);
+	            if ((runsheet.getActualCollection() != null) &&
+			            ((runsheet.getActualCollection().doubleValue() - runsheet.getExpectedCollection().doubleValue()) > 10.0)) {
+		            getContext().getValidationErrors().add("1", new SimpleError("Actual collected amount cannot be greater than expected amount "));
+		            return new ForwardResolution(HKDRunsheetAction.class, "editRunsheet").addParameter("runsheet", runsheet.getId());
+	            }
+	            runsheet.setRunsheetStatus(getRunSheetDao().get(RunsheetStatus.class, EnumRunsheetStatus.Close.getId()));
             }
             else{
                 addRedirectAlertMessage(new SimpleMessage("cannot close runsheet with consignment status out for delivery or receieved at hub."));
