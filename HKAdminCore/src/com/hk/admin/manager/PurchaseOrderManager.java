@@ -250,8 +250,10 @@ public class PurchaseOrderManager {
         purchaseOrderDto.setTotalTax(totalTax);
         purchaseOrderDto.setTotalSurcharge(totalSurcharge);
         purchaseOrderDto.setTotalPayable(totalPayable);
-        return purchaseOrderDto;
+	    double overallDiscount = purchaseOrder.getDiscount() == null ? 0.0 : purchaseOrder.getDiscount();
+	    purchaseOrderDto.setFinalPayable(totalPayable - overallDiscount);
 
+        return purchaseOrderDto;
     }
 
     private void setCellValue(Row row, int column, Long cellValue) {

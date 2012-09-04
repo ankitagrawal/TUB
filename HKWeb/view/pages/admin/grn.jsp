@@ -253,7 +253,7 @@
 	<tr>
 		<td>Payable</td>
 		<td class="payable">
-			<fmt:formatNumber value="${actionBean.grnDto.totalPayable}" type="currency" currencySymbol=" "
+			<fmt:formatNumber value="${actionBean.grnDto.finalPayable}" type="currency" currencySymbol=" "
 			                  maxFractionDigits="0"/></td>
 		<td>Payment Details<br/><span class="sml gry">(eg. Cheque no.)</span></td>
 		<td><s:textarea name="grn.paymentDetails" style="height:50px;"/></td>

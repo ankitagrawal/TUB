@@ -101,7 +101,7 @@
           <td>${purchaseOrder.purchaseOrderStatus.name}</td>
           <td><fmt:formatDate value="${purchaseOrder.updateDate}" type="both" timeStyle="short"/></td>
           <td>
-            <fmt:formatNumber value="${purchaseOrder.payable}" type="currency" currencySymbol=" " maxFractionDigits="0"/></td>
+            <fmt:formatNumber value="${purchaseOrder.finalPayableAmount}" type="currency" currencySymbol=" " maxFractionDigits="0"/></td>
           <td>
             ${purchaseOrder.paymentDetails}
             <br />

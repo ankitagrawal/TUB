@@ -260,7 +260,7 @@
 	<tr>
 		<td>Payable<br/>Adv. Payment</td>
 		<td class="payable">
-			<fmt:formatNumber value="${actionBean.purchaseOrderDto.totalPayable}" type="currency" currencySymbol=" "
+			<fmt:formatNumber value="${actionBean.purchaseOrderDto.finalPayable}" type="currency" currencySymbol=" "
 			                  maxFractionDigits="0"/>
 			<br/> <s:text name="purchaseOrder.advPayment"/>
 		</td>
@@ -387,9 +387,9 @@
 			<td class="otherRemark">${productVariant.otherRemark} </label></td>
 			<td>${productVariant.product.name}<br/>${productVariant.optionsCommaSeparated}
 			</td>
-			<td class="taxCategory"> ${sku.tax.value}
-					<%--<input type="text" name="taxCategory" class="taxCategory"  value="${sku.tax.value}" disabled="disabled" />--%>
-
+			<%--<td class="taxCategory"> ${sku.tax.value}--%>
+			<td>
+				<input type="text" class="taxCategory" value="${sku.tax.value}" disabled="disabled"/>
 			</td>
 			<td>
 					${hk:netInventory(sku)}
