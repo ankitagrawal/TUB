@@ -176,6 +176,7 @@
         <mapping class="com.hk.domain.core.State" />
         <mapping class="com.hk.domain.core.City" />
         <mapping class="com.hk.domain.courier.AwbStatus" />
+        <mapping class="com.hk.domain.catalog.product.SimilarProduct" />
         <mapping class="com.hk.domain.affiliate.AffiliateCategoryHasBrand" />
         <mapping class="com.hk.domain.affiliate.AffiliateStatus" />
     </session-factory>

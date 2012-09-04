@@ -92,7 +92,7 @@ public class OrderServiceImpl implements OrderService {
     private OrderLoggingService orderLoggingService;
     @Autowired
     private OrderSplitterService orderSplitterService;
-	
+
 
     @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
     private Double codMinAmount;

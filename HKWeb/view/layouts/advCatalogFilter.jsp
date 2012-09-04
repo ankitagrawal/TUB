@@ -88,10 +88,10 @@
 		padding-bottom: 10px; /*padding-top: 5px;*/
 	}
 
-	.filterOption{
-		font-size:.9em;
-		padding:0px;
-		border:0px;
+	.filterOption {
+		font-size: .9em;
+		padding: 0px;
+		border: 0px;
 	}
 </style>
 <script type="text/javascript" src="<hk:vhostJs/>/js/jquery-ui.min.js"></script>
@@ -119,7 +119,7 @@
 			}
 		});
 
-		$(".filterOption").click(function() {
+		/*$(".filterOption").click(function() {
 			var ctr = 0;
 			$(".filterOption").each(function() {
 				if ($(this).attr("checked")) {
@@ -144,6 +144,49 @@
 			$(".filterCatalogForm").submit();
 		});
 
+		$(".resetAndFilterOption").click(function() {
+			$('<input type="hidden" value="' + $(this).val() + '" name="filterOptions[0]">').appendTo('.filterCatalogForm');
+			$(".filterCatalogForm").submit();
+		});
+
+		$(".resetAndFilterOptionLink").click(function() {
+			var li = $(this).parents(".filterOptionLi");
+			var cb = li.find(".resetAndFilterOption");
+			cb.attr("checked", true);
+			$('<input type="hidden" value="' + $(this).val() + '" name="filterOptions[0]">').appendTo('.filterCatalogForm');
+			$(".filterCatalogForm").submit();
+		});*/
+
+		$(".filterOptionLink").click(function() {
+			var li = $(this).parents(".filterOptionLi");
+			var cb = li.find(".filterOption");
+			cb.attr("checked", true);
+		});
+		$(".resetAndFilterOptionLink").click(function() {
+			var li = $(this).parents(".filterOptionLi");
+			var cb = li.find(".resetAndFilterOption");
+			cb.attr("checked", true);
+		});
+
+		$(".filterCatalogFormButton").click(function() {
+			var ctr = 0;
+			$(".resetAndFilterOption").each(function() {
+				if ($(this).attr("checked")) {
+					$('<input type="hidden" value="' + $(this).val() + '" name="filterOptions[' + ctr + ']">').appendTo('.filterCatalogForm');
+					ctr++;
+				}
+			});
+			if (ctr == 0) {
+				$(".filterOption").each(function() {
+					if ($(this).attr("checked")) {
+						$('<input type="hidden" value="' + $(this).val() + '" name="filterOptions[' + ctr + ']">').appendTo('.filterCatalogForm');
+						ctr++;
+					}
+				});
+			}
+			$(".filterCatalogForm").submit();
+		});
+
 		$(".removeFilters").click(function() {
 			$("#minPrice").val(${priceRange.minPrice});
 			$("#maxPrice").val(${priceRange.maxPrice});
@@ -154,10 +197,10 @@
 
 	function toggle(ulId, elm) {
 		$("#" + ulId).toggle();
-		if (elm.innerHTML == "+"){
+		if (elm.innerHTML == "+") {
 			elm.innerHTML = "-";
 			elm.title = "Collapse";
-		}else{
+		} else {
 			elm.innerHTML = "+";
 			elm.title = "Expand";
 		}
@@ -222,19 +265,21 @@
 		<div class="">
 			<h5 class='heading1' style="background-color:#DDD;padding:5px;">
 				Filter By
+
 				<c:if test="${!empty ca.filterOptions || (filteredPriceRange.minPrice != priceRange.minPrice) || (filteredPriceRange.maxPrice != priceRange.maxPrice)}">
 					<a class="removeFilters"
 					   style="cursor:pointer;float:right;margin-right:10px;color:black;font-size:.9em;font-weight:normal;">Reset</a>
-				</c:if>
+				</c:if>				
 				<c:if test="${!empty ca.filterOptions}">
-				<div>
-					<c:forEach items="${ca.filterProductOptions}" var="filter">
-						<label style="font-size:.9em;font-weight:normal;">
-						${filter.value} <a class="removeFilter" style="cursor:pointer;color:black;" onclick="removeFilter(${filter.id})">X</a></label>
-						<br/>
-					</c:forEach>
-				</div>
-	</c:if>
+					<div>
+						<c:forEach items="${ca.filterProductOptions}" var="filter">
+							<label style="font-size:.9em;font-weight:normal;">
+									${filter.value} <a class="removeFilter" style="cursor:pointer;color:black;"
+									                   onclick="removeFilter(${filter.id})">X</a></label>
+							<br/>
+						</c:forEach>
+					</div>
+				</c:if>
 			</h5>
 
 		</div>
@@ -264,36 +309,66 @@
 					</div>
 				</div>
 			</c:if>
-			<c:forEach items="${filterMap}" var="filter">
-				<div class="">
-					<h5 class='heading1' style="padding:5px;background-color:#DDD;">
-							${filter.key}
-						<a title="Collapse" style="float:right; font-size:1.2em;color:black;cursor:pointer;" onclick="toggle('${filter.key}', this)">-</a>
-					</h5>
-					<ul style="padding-left:10px;" id="${filter.key}">
-						<c:forEach items="${filter.value}" var="option">
-							<li style="vertical-align:middle;" class="filterOptionLi">
-								<c:choose>
-									<c:when test="${hk:collectionContains(ca.filterOptions, option.id)}">
-										<input type="checkbox" class="filterOption" value="${option.id}"
-										       checked="checked"/>
-									</c:when>
-									<c:otherwise>
-										<input type="checkbox" class="filterOption" value="${option.id}"/>
-									</c:otherwise>
-								</c:choose>
-								<a style="color:black;cursor:pointer;" class="filterOptionLink">${option.value} (${option.qty})</a>
-								<c:if test="${filter.key == 'COLOR'}">
-									<span style="background-color:${option.value};height:10px;width:10px;float:right;margin-right:10px;margin-top:8px;">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-								</c:if>
+			<c:forEach items="${filterMap}" var="filter" varStatus="headCtr">
+				<c:choose>
+					<c:when test="${ca.secondaryChildCategorySlug == 'proteins' && filter.key == 'SIZE'}">
+						<%--Do Nothing--%>
+					</c:when>
+					<c:otherwise>
+						<div class="">
+							<h5 class='heading1' style="padding:5px;background-color:#DDD;">
+									<a title="Collapse" style="float:left; font-size:1.2em;color:black;cursor:pointer;padding-right:2px;"
+								   onclick="toggle('body${headCtr.index}', this)">-</a>${filter.key}
+								<a class="filterCatalogFormButton" style="cursor:pointer;float:right;margin-right:10px;color:black;font-size:.9em;font-weight:normal;">Filter</a>
 
-							</li>
-							<c:set var="ctr2" value="${ctr}"/>
-							<c:set var="ctr" value="${ctr2+1}"/>
-						</c:forEach>
-					</ul>
-				</div>
+							</h5>
+							<ul style="padding-left:10px;" id="body${headCtr.index}">
+								<c:forEach items="${filter.value}" var="option">
+									<li style="vertical-align:middle;" class="filterOptionLi">
+										<c:choose>
+											<c:when test="${hk:collectionContains(ca.filterOptions, option.id)}">
+												<input type="checkbox" class="filterOption" value="${option.id}"
+												       checked="checked"/>
+											</c:when>
+											<c:otherwise>
+												<c:choose>
+											  <c:when test="${option.applicable}">
+												  <input type="checkbox" class="filterOption" value="${option.id}"/>
+											  </c:when>
+											  <c:otherwise>
+												  <input type="checkbox" class="resetAndFilterOption" value="${option.id}"/>
+											  </c:otherwise>
+										  </c:choose>
+											</c:otherwise>
+										</c:choose>
+										<c:choose>
+											<c:when test="${option.applicable}">
+												<a style="color:black;cursor:pointer;"
+												   class="filterOptionLink">${option.value}
+													<c:if test="${option.qty > 0}">
+														(${option.qty})
+												</c:if></a>
+											</c:when>
+											<c:otherwise>
+												<a style="color:gray;cursor:pointer;"
+												   class="resetAndFilterOptionLink">${option.value}
+												</a>
+											</c:otherwise>
+										</c:choose>
+										<c:if test="${filter.key == 'COLOR'}">
+											<span style="background-color:${option.value};height:10px;width:10px;float:right;margin-right:10px;margin-top:8px;">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+										</c:if>
+
+									</li>
+									<c:set var="ctr2" value="${ctr}"/>
+									<c:set var="ctr" value="${ctr2+1}"/>
+								</c:forEach>
+							</ul>
+						</div>
+					</c:otherwise>
+				</c:choose>
 			</c:forEach>
+			<s:submit name="pre" value="Filter" class="filterCatalogFormButton" style="padding:3px;"/>
 		</s:form>
 	</div>
 </c:if>

@@ -145,8 +145,8 @@ public class PricingDto {
                     rewardPointOffer = offerAction.isCashback();
                 }
                 offerTrigger = offer.getOfferTrigger();
-                cashbackLimit = offerAction.getRewardPointCashbackLimit();
-                cashbackPercent = offerAction.getRewardPointDiscountPercent();
+	            cashbackPercent = offerAction.getRewardPointDiscountPercent();
+	            cashbackLimit = offerAction.getRewardPointCashbackLimit();
                 productGroup = offerAction.getProductGroup();
             }
             if (offerInstance != null && Boolean.TRUE.equals(rewardPointOffer)) {
@@ -168,44 +168,45 @@ public class PricingDto {
             Double roundedOffDiscount = NumberUtil.roundOff(cartLineItem.getDiscountOnHkPrice());
             cartLineItem.setDiscountOnHkPrice(roundedOffDiscount);
 
-            if (cartLineItem.isType(EnumCartLineItemType.Product)) {
-                //if (cartLineItem.getComboInstance() == null) {
-                if (cartLineItem.getProductVariant().getPaymentType() != null && cartLineItem.getProductVariant().getPaymentType().equals(baseDao.get(ProductVariantPaymentType.class, EnumProductVariantPaymentType.Prepaid.getId()))) {
-                    prepaidServiceMrpSubTotal += cartLineItem.getMarkedPrice() * cartLineItem.getQty();
-                    prepaidServiceHkSubTotal += cartLineItem.getHkPrice() * cartLineItem.getQty();
-                    prepaidServiceDiscount += cartLineItem.getDiscountOnHkPrice();
-                    prepaidServicesTotal += cartLineItem.getHkPrice() * cartLineItem.getQty() - cartLineItem.getDiscountOnHkPrice();
-                    prepaidServicesLineCount++;
-                } else if (cartLineItem.getProductVariant().getPaymentType() != null && cartLineItem.getProductVariant().getPaymentType().equals(baseDao.get(ProductVariantPaymentType.class, EnumProductVariantPaymentType.Postpaid.getId()))) {
-                    postpaidServiceMrpSubTotal += cartLineItem.getMarkedPrice() * cartLineItem.getQty();
-                    postpaidServiceHkSubTotal += cartLineItem.getHkPrice() * cartLineItem.getQty();
-                    postpaidServiceDiscount += cartLineItem.getDiscountOnHkPrice();
-                    postpaidServicesTotal += cartLineItem.getHkPrice() * cartLineItem.getQty() - cartLineItem.getDiscountOnHkPrice();
-                    postpaidServicesLineCount++;
-                } else {
-                    productsMrpSubTotal += cartLineItem.getMarkedPrice() * cartLineItem.getQty();
-                    productsHkSubTotal += cartLineItem.getHkPrice() * cartLineItem.getQty();
-                    productsDiscount += cartLineItem.getDiscountOnHkPrice();
-                    productsTotal += cartLineItem.getHkPrice() * cartLineItem.getQty() - cartLineItem.getDiscountOnHkPrice();
-                }
-                totalPostpaidAmount += cartLineItem.getProductVariant().getPostpaidAmount() * cartLineItem.getQty();
-                if (offerTriggerActive) {
-                    if (productGroup == null || productGroup.contains(cartLineItem.getProductVariant())) {
-                        totalCashback += cartLineItem.getHkPrice() * cartLineItem.getQty();
-                    }
-                }
-                productLineCount++;
-                /*} else {
-                  ComboInstance comboInstance = cartLineItem.getComboInstance();
-                  if (!comboInstanceSet.contains(comboInstance)) {
-                    Long comboQty = cartLineItem.getQty() / cartLineItem.getComboInstance().getComboInstanceProductVariant(cartLineItem.getProductVariant()).getQty();
-                    productsMrpSubTotal += cartLineItem.getComboInstance().getCombo().getMarkedPrice() * comboQty;
-                    productsHkSubTotal += cartLineItem.getComboInstance().getCombo().getHkPrice() * comboQty;
-                    productsTotal += cartLineItem.getComboInstance().getCombo().getHkPrice() * comboQty;
-                    productLineCount++;
-                    comboInstanceSet.add(comboInstance);
-                  }
-                }*/
+	        if (cartLineItem.isType(EnumCartLineItemType.Product)) {
+		        if (cartLineItem.getComboInstance() == null ||
+				        (cartLineItem.getComboInstance() != null && cartLineItem.getComboInstance().getCombo().getId().equals("CMB-DIA05"))) {
+			        if (cartLineItem.getProductVariant().getPaymentType() != null && cartLineItem.getProductVariant().getPaymentType().equals(baseDao.get(ProductVariantPaymentType.class, EnumProductVariantPaymentType.Prepaid.getId()))) {
+				        prepaidServiceMrpSubTotal += cartLineItem.getMarkedPrice() * cartLineItem.getQty();
+				        prepaidServiceHkSubTotal += cartLineItem.getHkPrice() * cartLineItem.getQty();
+				        prepaidServiceDiscount += cartLineItem.getDiscountOnHkPrice();
+				        prepaidServicesTotal += cartLineItem.getHkPrice() * cartLineItem.getQty() - cartLineItem.getDiscountOnHkPrice();
+				        prepaidServicesLineCount++;
+			        } else if (cartLineItem.getProductVariant().getPaymentType() != null && cartLineItem.getProductVariant().getPaymentType().equals(baseDao.get(ProductVariantPaymentType.class, EnumProductVariantPaymentType.Postpaid.getId()))) {
+				        postpaidServiceMrpSubTotal += cartLineItem.getMarkedPrice() * cartLineItem.getQty();
+				        postpaidServiceHkSubTotal += cartLineItem.getHkPrice() * cartLineItem.getQty();
+				        postpaidServiceDiscount += cartLineItem.getDiscountOnHkPrice();
+				        postpaidServicesTotal += cartLineItem.getHkPrice() * cartLineItem.getQty() - cartLineItem.getDiscountOnHkPrice();
+				        postpaidServicesLineCount++;
+			        } else {
+				        productsMrpSubTotal += cartLineItem.getMarkedPrice() * cartLineItem.getQty();
+				        productsHkSubTotal += cartLineItem.getHkPrice() * cartLineItem.getQty();
+				        productsDiscount += cartLineItem.getDiscountOnHkPrice();
+				        productsTotal += cartLineItem.getHkPrice() * cartLineItem.getQty() - cartLineItem.getDiscountOnHkPrice();
+			        }
+			        totalPostpaidAmount += cartLineItem.getProductVariant().getPostpaidAmount() * cartLineItem.getQty();
+			        if (offerTriggerActive) {
+				        if (productGroup == null || productGroup.contains(cartLineItem.getProductVariant())) {
+					        totalCashback += cartLineItem.getHkPrice() * cartLineItem.getQty();
+				        }
+			        }
+			        productLineCount++;
+		        } else {
+			        ComboInstance comboInstance = cartLineItem.getComboInstance();
+			        if (!comboInstanceSet.contains(comboInstance)) {
+				        Long comboQty = cartLineItem.getQty() / cartLineItem.getComboInstance().getComboInstanceProductVariant(cartLineItem.getProductVariant()).getQty();
+				        productsMrpSubTotal += cartLineItem.getComboInstance().getCombo().getMarkedPrice() * comboQty;
+				        productsHkSubTotal += cartLineItem.getComboInstance().getCombo().getHkPrice() * comboQty;
+				        productsTotal += cartLineItem.getComboInstance().getCombo().getHkPrice() * comboQty;
+				        productLineCount++;
+				        comboInstanceSet.add(comboInstance);
+			        }
+		        }
                 productLineItems.add(cartLineItem);
                 if (cartLineItem.getProductVariant() != null && cartLineItem.getProductVariant().isOutOfStock()) {
                     outOfStockLineItems.add(cartLineItem);

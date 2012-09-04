@@ -184,7 +184,7 @@ public class ReportAction extends BaseAction {
     @DefaultHandler
     @DontValidate
     public Resolution pre() {
-        List<OrderStatus> orderStatusList = orderStatusService.getOrderStatuses(EnumOrderStatus.getStatusForCustomers());
+        List<OrderStatus> orderStatusList = orderStatusService.getOrderStatuses(EnumOrderStatus.getStatusForReporting());
         daySaleList = reportOrderService.findSaleForTimeFrame(orderStatusList, DateUtils.getStartOfDay(new Date()), DateUtils.getEndOfDay(new Date()));
         for (DaySaleDto daySaleDto : daySaleList) {
             totalOrders += daySaleDto.getTxnCount().intValue();
@@ -250,7 +250,7 @@ public class ReportAction extends BaseAction {
 
     @Secure (hasAnyPermissions = {PermissionConstants.SALES_REPORT}, authActionBean = AdminPermissionAction.class)
     public Resolution generateSalesByDateReport() {
-        List<OrderStatus> orderStatusList = orderStatusService.getOrderStatuses(EnumOrderStatus.getStatusForCustomers());
+        List<OrderStatus> orderStatusList = orderStatusService.getOrderStatuses(EnumOrderStatus.getStatusForReporting());
         daySaleList = reportOrderService.findSaleForTimeFrame(orderStatusList, startDate, endDate);
         for (DaySaleDto daySaleDto : daySaleList) {
             /*
@@ -733,7 +733,7 @@ public class ReportAction extends BaseAction {
     }
 
     public Resolution generateRTOReport() {
-        List<RTOReportDto> rtoReportList = reportProductVariantService.getRTOProductsDetail(startDate, endDate);
+        List<RTOReportDto> rtoReportList = reportProductVariantService.getRTOProductsDetail(startDate, endDate, warehouse);
         xlsFile = new File(adminDownloads + "/reports/RTOReport.xls");
         HkXlsWriter xlsWriter = new HkXlsWriter();
 
